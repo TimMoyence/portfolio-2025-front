@@ -6,16 +6,16 @@
 .slide-deck {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  min-height: var(--slide-deck-hauteur-min, 100vh);
   outline: none;
   color: var(--text, #0c0902);
   background: var(--slide-deck-bg, var(--cream, #fffaf2));
 
   &.mode-scroll {
-    overflow-y: auto;
-    scroll-snap-type: y mandatory;
+    overflow-y: var(--slide-deck-defilement, auto);
+    scroll-snap-type: var(--slide-deck-accroche, y mandatory);
     scroll-behavior: smooth;
-    height: 100vh;
+    height: var(--slide-deck-hauteur, 100vh);
   }
 
   &.mode-fullscreen {

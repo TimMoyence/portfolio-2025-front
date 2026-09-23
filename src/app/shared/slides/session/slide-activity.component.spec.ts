@@ -6,6 +6,7 @@ import {
   buildEcranQuestionnaire,
   buildExitBillet,
   buildNumericQuestion,
+  buildSheetPlan,
   createBrouillonsStub,
 } from '../../../../testing/factories/cours.factory';
 import { buildDetailDeBrique } from '../../../../testing/factories/evenements-brique.factory';
@@ -14,8 +15,11 @@ import {
   buildResultatsSeance,
 } from '../../../../testing/factories/formations.factory';
 import {
+  TRI_CORRIGE,
+  buildVerdictDuTri,
   buildVisualQuizSlide,
   buildVisualSlide,
+  buildVisualSortCorrectionSlide,
 } from '../../../../testing/factories/visual-slide.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { EvenementBrique, RetourBrique } from './contrat-hote';
@@ -60,6 +64,10 @@ function monter(entrees: Readonly<Record<string, unknown>>): Fixture {
 
 const brique = briqueMontee;
 
+function directRevele(revele: boolean) {
+  return { pilotage: revele ? { revele: true } : {}, resultats: null, comptesJalon: null };
+}
+
 function evenements(fixture: Fixture): EvenementBrique[] {
   const recus: EvenementBrique[] = [];
   fixture.componentInstance.evenement.subscribe((evenement) => recus.push(evenement));
@@ -99,6 +107,20 @@ describe('SlideActivityComponent : deck visuel B2', () => {
         .querySelector('[data-testid="slide-quiz-reponses-recues"]')
         ?.textContent?.replace(/\s+/g, ' '),
     ).toContain('7 / 12');
+  });
+
+  it('L4 · transmet les retours du tri a l ecran de correction pour border les cartes mal placees', () => {
+    const fixture = monter({
+      slide: buildVisualSortCorrectionSlide(),
+      role: 'etudiant',
+      sessionId: 'seance-1',
+      retours: new Map([[TRI_CORRIGE.screenId, [buildVerdictDuTri({ inflation: false })]]]),
+    });
+
+    const erreurs = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>(
+      '.slide-sort-review__carte--erreur',
+    );
+    expect([...erreurs].map((carte) => carte.dataset['carte'])).toEqual(['inflation']);
   });
 
   it('utilise le même renderer visuel que le catalogue pour l’étudiant', () => {
@@ -160,6 +182,110 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     expect(element.querySelectorAll('fp-numeric, fp-vote').length).toBe(2);
   });
 
+  it('RET-20 · projette l histogramme des votes d un questionnaire une fois la correction revelee', async () => {
+    const resultats = [
+      buildResultatQuestion({ questionId: 'Q-CAP-03', total: 4, parOption: { a: 1, b: 3 } }),
+    ];
+    const direct = (revele: boolean) => ({
+      pilotage: revele ? { revele: true } : {},
+      resultats,
+      comptesJalon: null,
+    });
+    const fixture = monter({
+      slide: buildEcranQuestionnaire(),
+      render: 'stage',
+      role: 'presentateur',
+      direct: direct(false),
+    });
+    const vote = await brique(fixture, 'fp-vote');
+    const barres = (): number =>
+      vote.shadowRoot?.querySelectorAll('[data-testid="barre"]').length ?? 0;
+
+    expect(barres()).toBe(0);
+    fixture.componentRef.setInput('direct', direct(true));
+    fixture.detectChanges();
+    expect(barres()).toBeGreaterThan(0);
+  });
+
+  it('RET-32 · projette la bonne reponse de chaque question du questionnaire une fois revelee', async () => {
+    const reponses = {
+      type: 'reponses',
+      reponses: { 'Q-VA-07': '1 480,24', 'Q-CAP-03': '1 480,24 €' },
+    };
+    const direct = directRevele;
+    const fixture = monter({
+      slide: buildEcranQuestionnaire(),
+      render: 'stage',
+      role: 'presentateur',
+      direct: direct(false),
+      donneesFormateur: reponses,
+    });
+    const vote = await brique(fixture, 'fp-vote');
+    const numerique = await brique(fixture, 'fp-numeric');
+
+    expect(dans(vote, 'bonne-reponse')).toBeNull();
+    expect(dans(numerique, 'bonne-reponse')).toBeNull();
+    fixture.componentRef.setInput('direct', direct(true));
+    fixture.detectChanges();
+    expect(dans(vote, 'bonne-reponse')?.textContent).toContain('1 480,24 €');
+    expect(dans(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
+  });
+
+  it('RET-32 · ferme aux reponses le poste etudiant une fois la correction du questionnaire revelee', async () => {
+    const direct = directRevele;
+    const fixture = monter({
+      slide: buildEcranQuestionnaire(),
+      role: 'etudiant',
+      sessionId: 'seance-1',
+      direct: direct(false),
+    });
+    const vote = await brique(fixture, 'fp-vote');
+    const numerique = await brique(fixture, 'fp-numeric');
+    const options = (): HTMLButtonElement[] => [
+      ...(vote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-option]') ?? []),
+    ];
+
+    expect(options().every((option) => !option.disabled)).toBeTrue();
+    expect((dans(numerique, 'champ') as HTMLInputElement).disabled).toBeFalse();
+    fixture.componentRef.setInput('direct', direct(true));
+    fixture.detectChanges();
+    expect(options().length).toBeGreaterThan(0);
+    expect(options().every((option) => option.disabled)).toBeTrue();
+    expect((dans(numerique, 'champ') as HTMLInputElement).disabled).toBeTrue();
+    expect(dans(numerique, 'reponses-closes')).not.toBeNull();
+  });
+
+  it('RET-31 · projette la correction de la feuille au rythme de l etayage du pupitre', async () => {
+    const direct = (etayage: number) => ({
+      pilotage: etayage === 0 ? {} : { etayage },
+      resultats: null,
+      comptesJalon: null,
+    });
+    const fixture = monter({
+      slide: buildEcran({
+        id: 'b2-01-feuille',
+        type: 'fp-sheet',
+        donnees: { plan: buildSheetPlan() },
+      }),
+      render: 'stage',
+      role: 'presentateur',
+      direct: direct(0),
+      donneesFormateur: {
+        type: 'feuille',
+        attendus: [{ reference: 'D3', formuleReference: '=C3*(1+$B$1)', valeur: 64.8 }],
+      },
+    });
+    const feuille = await brique(fixture, 'fp-sheet');
+
+    expect(dans(feuille, 'correction-feuille')).toBeNull();
+    fixture.componentRef.setInput('direct', direct(1));
+    fixture.detectChanges();
+    expect(dans(feuille, 'correction-feuille')?.textContent?.trim()).toBe('=C3*(1+$B$1)');
+    fixture.componentRef.setInput('direct', direct(2));
+    fixture.detectChanges();
+    expect(dans(feuille, 'correction-feuille')?.textContent?.trim()).toBe('=C3*(1+$B$1) 64,8');
+  });
+
   it('traduit la soumission d une brique en evenement de seance', async () => {
     const fixture = monter({ slide: ECRAN_NUMERIQUE, sessionId: 'seance-1' });
     const recus = evenements(fixture);
@@ -173,6 +299,24 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
         valeur: 1480.24,
         dureeMs: jasmine.any(Number),
       },
+    ]);
+  });
+
+  it('L3 · relaie les reponses libres d un cas professionnel a la seance', async () => {
+    const fixture = monter({ slide: ECRAN_NUMERIQUE });
+    const recus = evenements(fixture);
+    const numerique = await brique(fixture, 'fp-numeric');
+
+    numerique.dispatchEvent(
+      new CustomEvent('fp-pro-submit', {
+        detail: buildDetailDeBrique('fp-pro-submit'),
+        bubbles: true,
+        composed: true,
+      }),
+    );
+
+    expect(recus).toEqual([
+      jasmine.objectContaining({ kind: 'libre', activityId: 'b2-01-a1-mission:mesure' }),
     ]);
   });
 

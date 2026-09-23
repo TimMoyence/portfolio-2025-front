@@ -83,6 +83,17 @@ export const worked = `
   color: var(--fp-en-attente);
 }
 
+:where(.fp-root) .fp-worked__reponse {
+  min-height: calc(var(--fp-corps) * 1.5 + 2 * var(--fp-s-2));
+  padding: var(--fp-s-2);
+  border: 1px dashed var(--fp-bordure);
+  border-radius: var(--fp-r-sm);
+  background: var(--fp-en-attente-fond);
+  color: var(--fp-texte-fort);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
 :where(.fp-root) .fp-worked__valider {
   justify-self: start;
   padding: var(--fp-s-2) var(--fp-s-4);
@@ -104,6 +115,11 @@ export const worked = `
 :where(.fp-root) .fp-worked__retour {
   min-height: calc(1.5rem * var(--fp-echelle));
   color: var(--fp-texte-fort);
+}
+
+:where(.fp-root) .fp-worked__suite {
+  color: var(--fp-en-attente);
+  font-style: italic;
 }
 
 :where(.fp-root) .fp-worked__niveau {

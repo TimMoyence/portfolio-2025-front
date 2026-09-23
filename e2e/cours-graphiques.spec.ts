@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
-import { B2_SLUG, coursB2Catalogue, ecranB2Graphique, servirCatalogueB2 } from './fixtures';
+import { ecranB2Graphique, ouvrirEcranEtudiantB2 } from './fixtures';
 
 type Plage = readonly [number, number];
 
@@ -186,7 +186,16 @@ async function boite(
 }
 
 async function graphiquePret(page: Page, rang: number): Promise<Locator> {
-  const graphique = page.locator('app-slide-chart').nth(rang);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await ouvrirEcranEtudiantB2(
+    page,
+    GRAPHIQUES.map((graphique, position) => ecranB2Graphique(position + 1, graphique.props)),
+    rang,
+  );
+  const graphique = page.locator('app-slide-chart');
+  await expect(graphique).toHaveCount(1);
+  await page.addStyleTag({ content: SANS_SURCOUCHES });
+  await page.evaluate(() => document.fonts.ready);
   await graphique.scrollIntoViewIfNeeded();
   await expect(
     graphique.locator('.slide-chart__bar.is-visible, .slide-chart__line.is-visible').first(),
@@ -197,20 +206,6 @@ async function graphiquePret(page: Page, rang: number): Promise<Locator> {
 test.use({ viewport: { width: 1280, height: 1200 } });
 
 test.describe('Graphiques v2 du B2-01 (F13 : AC-26, AC-29, AC-30)', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await servirCatalogueB2(
-      page,
-      coursB2Catalogue(
-        GRAPHIQUES.map((graphique, rang) => ecranB2Graphique(rang + 1, graphique.props)),
-      ),
-    );
-    await page.goto(`/formations/${B2_SLUG}`);
-    await page.addStyleTag({ content: SANS_SURCOUCHES });
-    await expect(page.locator('app-slide-chart')).toHaveCount(GRAPHIQUES.length);
-    await page.evaluate(() => document.fonts.ready);
-  });
-
   for (const [rang, graphique] of GRAPHIQUES.entries()) {
     test(`${graphique.nom} : titre, unité, lecture, source et échelle graduée (AC-26, AC-29)`, async ({
       page,

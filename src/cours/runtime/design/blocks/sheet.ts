@@ -212,7 +212,8 @@ export const sheet = `
   padding-left: var(--fp-s-3);
 }
 
-:where(.fp-root) .fp-sheet__attendu {
+:where(.fp-root) .fp-sheet__attendu,
+:where(.fp-root) .fp-sheet__correction {
   color: var(--fp-texte-fort);
   font-variant-numeric: tabular-nums;
 }

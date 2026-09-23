@@ -59,6 +59,7 @@ export abstract class FpBlock extends HTMLElement {
   private idAffiche: string | null = null;
   private affiche = 0;
   private interneDejaRepondu = false;
+  private interneCloture = false;
   private interneErreur: string | null = null;
   private brouillonRepris = false;
 
@@ -79,6 +80,15 @@ export abstract class FpBlock extends HTMLElement {
 
   get dejaRepondu(): boolean {
     return this.interneDejaRepondu;
+  }
+
+  set cloture(valeur: boolean) {
+    this.interneCloture = valeur === true;
+    this.refreshSiConnecte();
+  }
+
+  get cloture(): boolean {
+    return this.interneCloture && !this.enApercu();
   }
 
   set erreur(valeur: string | null) {
@@ -177,7 +187,12 @@ export abstract class FpBlock extends HTMLElement {
     if (this.enApercu()) {
       return false;
     }
-    return (envoye && this.interneErreur === null) || verdictRecu || this.interneDejaRepondu;
+    return (
+      (envoye && this.interneErreur === null) ||
+      verdictRecu ||
+      this.interneDejaRepondu ||
+      this.interneCloture
+    );
   }
 
   protected messageApresEnvoi(): string {
@@ -206,7 +221,11 @@ export abstract class FpBlock extends HTMLElement {
       this.brouillonRepris && !this.interneDejaRepondu
         ? safeHtml`<p class="fp-annonce" role="status" data-testid="brouillon-restaure">${escapeHtml(this.texte('brouillon-restaure'))}</p>`
         : VIDE;
-    return safeHtml`${erreur}${deja}${brouillon}`;
+    const close =
+      this.interneCloture && !this.enApercu()
+        ? safeHtml`<p class="fp-annonce" role="status" data-testid="reponses-closes">${escapeHtml(this.texte('reponses-closes'))}</p>`
+        : VIDE;
+    return safeHtml`${erreur}${deja}${brouillon}${close}`;
   }
 
   protected reperes(metadonnees: MetadonneesBrique): EscapedHtml {

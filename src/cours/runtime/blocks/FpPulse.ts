@@ -19,6 +19,8 @@ export interface PulseSondage {
 
 const ETATS: readonly EtatPulse[] = ['perdu', 'ca-va', 'clair'];
 const SEUIL_DE_PROJECTION = 5;
+const VIDE = escapeHtml('');
+const DESACTIVE = safeHtml`disabled`;
 
 const FORMES: Readonly<Record<EtatPulse, string>> = {
   perdu: '▲',
@@ -110,7 +112,14 @@ export class FpPulse extends FpBlock {
     }
     const comptes = this.interneComptes;
     const projetables = comptes !== null && comptes.total >= SEUIL_DE_PROJECTION;
-    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(sondage.invite)}</p>${projetables ? this.agregat() : this.masque()}</div>`;
+    return safeHtml`
+      <fieldset class="fp-carte fp-pulse__panneau">
+        <legend>${escapeHtml(sondage.invite)}</legend>
+        <p class="fp-pulse__anonymat" data-testid="anonymat">${escapeHtml(this.texte('pulse-anonymat'))}</p>
+        <div class="fp-pulse__choix">${ETATS.map((etat) => this.bouton(etat, true))}</div>
+        ${projetables ? this.agregat() : this.masque()}
+      </fieldset>
+    `;
   }
 
   renderBoard(): EscapedHtml {
@@ -148,8 +157,8 @@ export class FpPulse extends FpBlock {
     return `${this.texte('pulse-votre-etat')} ${this.libelle(this.choix)}`;
   }
 
-  private bouton(etat: EtatPulse): EscapedHtml {
-    return safeHtml`<button type="button" class="fp-pulse__etat" data-testid="etat" data-etat-pulse="${escapeHtml(etat)}" aria-pressed="${escapeHtml(String(etat === this.choix))}"><span class="fp-pulse__forme" aria-hidden="true">${escapeHtml(FORMES[etat])}</span><span class="fp-pulse__libelle">${escapeHtml(this.libelle(etat))}</span></button>`;
+  private bouton(etat: EtatPulse, inerte = false): EscapedHtml {
+    return safeHtml`<button type="button" class="fp-pulse__etat" data-testid="etat" data-etat-pulse="${escapeHtml(etat)}" aria-pressed="${escapeHtml(String(!inerte && etat === this.choix))}" ${inerte ? DESACTIVE : VIDE}><span class="fp-pulse__forme" aria-hidden="true">${escapeHtml(FORMES[etat])}</span><span class="fp-pulse__libelle">${escapeHtml(this.libelle(etat))}</span></button>`;
   }
 
   private ligne(comptes: Required<PulseComptes>, etat: EtatPulse): EscapedHtml {

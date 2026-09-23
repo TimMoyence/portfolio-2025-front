@@ -2,6 +2,13 @@ import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
+import { estObjet } from './retours';
+
+export interface QuestionLibre {
+  readonly id: string;
+  readonly question: string;
+  readonly placeholder?: string;
+}
 
 export interface ProCas {
   readonly id: string;
@@ -9,13 +16,37 @@ export interface ProCas {
   readonly situation: string;
   readonly geste: string;
   readonly consequence: string | null;
+  readonly questionsLibres?: readonly QuestionLibre[];
   readonly metadonnees: MetadonneesBrique;
+}
+
+type Reponses = Readonly<Record<string, string>>;
+
+const LONGUEUR_MAX_REPONSE_LIBRE = 10000;
+
+function copierQuestion({ id, question, placeholder }: QuestionLibre): QuestionLibre {
+  return placeholder === undefined ? { id, question } : { id, question, placeholder };
+}
+
+function lireReponses(valeur: unknown): Reponses {
+  if (!estObjet(valeur)) {
+    return {};
+  }
+  return Object.fromEntries(
+    Object.entries(valeur).filter(
+      (entree): entree is [string, string] => typeof entree[1] === 'string',
+    ),
+  );
 }
 
 export class FpPro extends FpBlock {
   private interne: ProCas | null = null;
+  private reponses: Reponses = {};
+  private message = '';
+  private soumise = false;
 
   set cas(valeur: ProCas | null) {
+    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
     this.interne =
       valeur === null
         ? null
@@ -25,8 +56,16 @@ export class FpPro extends FpBlock {
             situation: valeur.situation,
             geste: valeur.geste,
             consequence: valeur.consequence,
+            ...(valeur.questionsLibres === undefined
+              ? {}
+              : { questionsLibres: valeur.questionsLibres.map(copierQuestion) }),
             metadonnees: projeterMetadonnees(valeur.metadonnees),
           };
+    if (change) {
+      this.reponses = {};
+      this.message = '';
+      this.soumise = false;
+    }
     this.refreshSiConnecte();
   }
 
@@ -34,18 +73,27 @@ export class FpPro extends FpBlock {
     return this.interne;
   }
 
+  set brouillon(valeur: unknown) {
+    if (!estObjet(valeur) || this.soumise) {
+      return;
+    }
+    this.reponses = lireReponses(valeur['reponses']);
+    this.noterBrouillonRepris();
+    this.refreshSiConnecte();
+  }
+
   renderHand(): EscapedHtml {
     if (this.cas === null) {
       return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    return this.dossier('fp-carte', 'fp-pro__geste-texte', safeHtml``);
+    return this.dossier('fp-carte', 'fp-pro__geste-texte', this.formulaire());
   }
 
   renderStage(): EscapedHtml {
     if (this.cas === null) {
       return safeHtml``;
     }
-    return this.dossier('fp-scene', 'fp-enonce fp-pro__geste-texte', safeHtml``);
+    return this.dossier('fp-scene', 'fp-enonce fp-pro__geste-texte', this.enonces());
   }
 
   renderBoard(): EscapedHtml {
@@ -53,15 +101,36 @@ export class FpPro extends FpBlock {
     if (cas === null) {
       return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
     }
-    const reperes = safeHtml`<div class="fp-pro__reperes">${this.reperes(cas.metadonnees)}</div>`;
+    const reperes = safeHtml`${this.enonces()}<div class="fp-pro__reperes">${this.reperes(cas.metadonnees)}</div>`;
     return this.dossier('fp-carte', 'fp-pro__geste-texte', reperes);
   }
 
-  bind(): void {
-    return;
+  bind(racine: ShadowRoot): void {
+    this.suivreAffichage(this.interne?.id ?? null);
+    if (this.mode() !== 'hand' || this.questions().length === 0) {
+      return;
+    }
+    const verrouille = this.verrouilleApresEnvoi(this.soumise, false);
+    for (const champ of racine.querySelectorAll<HTMLTextAreaElement>('textarea[data-question]')) {
+      const cle = champ.dataset['question'] ?? '';
+      champ.disabled = verrouille;
+      champ.addEventListener('input', () => {
+        this.noter(cle, champ.value);
+        this.effacerRappel(racine);
+      });
+    }
+    const valider = racine.querySelector<HTMLButtonElement>('[data-testid="valider"]');
+    if (valider !== null) {
+      valider.disabled = verrouille;
+      valider.addEventListener('click', () => this.valider());
+    }
   }
 
-  private dossier(cadre: string, styleGeste: string, reperes: EscapedHtml): EscapedHtml {
+  private questions(): readonly QuestionLibre[] {
+    return this.interne?.questionsLibres ?? [];
+  }
+
+  private dossier(cadre: string, styleGeste: string, suite: EscapedHtml): EscapedHtml {
     const cas = this.cas;
     if (cas === null) {
       return safeHtml``;
@@ -77,7 +146,7 @@ export class FpPro extends FpBlock {
           </div>
           ${this.consequence(cas)}
         </div>
-        ${reperes}
+        ${suite}
       </aside>
     `;
   }
@@ -88,5 +157,85 @@ export class FpPro extends FpBlock {
       return safeHtml``;
     }
     return safeHtml`<p class="fp-pro__consequence" data-testid="consequence">${escapeHtml(this.texte('pro-consequence'))} ${escapeHtml(retombee)}</p>`;
+  }
+
+  private enonces(): EscapedHtml {
+    const questions = this.questions();
+    if (questions.length === 0) {
+      return safeHtml``;
+    }
+    return safeHtml`
+      <ol class="fp-pro__questions">
+        ${questions.map(
+          (question) =>
+            safeHtml`<li class="fp-pro__question" data-testid="question-libre">${escapeHtml(question.question)}</li>`,
+        )}
+      </ol>
+    `;
+  }
+
+  private formulaire(): EscapedHtml {
+    const questions = this.questions();
+    if (questions.length === 0) {
+      return safeHtml``;
+    }
+    return safeHtml`
+      <ol class="fp-pro__questions">${questions.map((question) => this.champ(question))}</ol>
+      <button type="button" class="fp-pro__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
+      <p class="fp-pro__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
+      ${this.annonces()}
+    `;
+  }
+
+  private champ(question: QuestionLibre): EscapedHtml {
+    const identifiant = `fp-pro-reponse-${question.id}`;
+    return safeHtml`
+      <li class="fp-pro__question">
+        <label class="fp-pro__libelle" for="${escapeHtml(identifiant)}">${escapeHtml(question.question)}</label>
+        <textarea class="fp-pro__champ" id="${escapeHtml(identifiant)}" data-question="${escapeHtml(question.id)}" placeholder="${escapeHtml(question.placeholder ?? '')}" maxlength="${LONGUEUR_MAX_REPONSE_LIBRE}" rows="3">${escapeHtml(this.reponses[question.id] ?? '')}</textarea>
+      </li>
+    `;
+  }
+
+  private noter(cle: string, valeur: string): void {
+    this.reponses = { ...this.reponses, [cle]: valeur };
+    this.signalerBrouillon(this.interne?.id ?? '', { reponses: this.reponses });
+  }
+
+  private effacerRappel(racine: ShadowRoot): void {
+    if (this.message.length === 0) {
+      return;
+    }
+    this.message = '';
+    const retour = racine.querySelector<HTMLElement>('[data-testid="retour"]');
+    if (retour !== null) {
+      retour.textContent = '';
+    }
+  }
+
+  private valider(): void {
+    const cas = this.interne;
+    if (cas === null || this.verrouilleApresEnvoi(this.soumise, false)) {
+      return;
+    }
+    const questions = this.questions();
+    const manquante = questions.some(
+      (question) => (this.reponses[question.id] ?? '').trim().length === 0,
+    );
+    if (manquante) {
+      this.message = this.texte('pro-reponse-vide');
+      this.refresh();
+      return;
+    }
+    this.soumise = true;
+    this.message = this.messageApresEnvoi();
+    this.emit('fp-pro-submit', {
+      casId: cas.id,
+      reponses: Object.fromEntries(
+        questions.map((question) => [question.id, this.reponses[question.id] ?? '']),
+      ),
+      dureeMs: this.depuisAffichage(),
+    });
+    this.refresh();
   }
 }

@@ -27,7 +27,7 @@ export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> 
   'fp-quote': ['citation'],
   'fp-story': ['recit'],
   'fp-pro': ['cas'],
-  'fp-worked': ['exemple', 'etayage'],
+  'fp-worked': ['exemple', 'etayage', 'pilote'],
   'fp-concept4': ['definition'],
   'fp-plot': ['definition'],
   'fp-challenge': ['probleme'],
@@ -56,6 +56,7 @@ const PORTEURS: Readonly<Record<string, readonly string[]>> = {
   'fp-spaced': ['rappel'],
   'fp-pulse': ['sondage'],
   'fp-worked': ['exemple'],
+  'fp-pro': ['cas'],
 };
 
 const PORTEURS_DE_QUESTION: Readonly<Record<string, readonly string[]>> = {
@@ -72,6 +73,11 @@ const CHAMP_ENONCE: Readonly<Record<string, string>> = {
   billet: 'question',
   plan: 'intitule',
 };
+
+export interface ReponsesDuQuestionnaire {
+  readonly type: 'reponses';
+  readonly reponses: Readonly<Record<string, string>>;
+}
 
 const QUESTIONNAIRE = 'questionnaire';
 export const ECRAN_VERROUILLE = 'ecran-verrouille';

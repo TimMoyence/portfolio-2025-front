@@ -233,6 +233,24 @@ export function buildProCas(overrides: Partial<ProCas> = {}): ProCas {
   };
 }
 
+export function buildProCasAQuestionsLibres(overrides: Partial<ProCas> = {}): ProCas {
+  return buildProCas({
+    id: 'B2-01-A1-03-MISSION',
+    questionsLibres: [
+      {
+        id: 'b2-01-a1-mission:mesure',
+        question: 'Que mesure chaque chiffre ?',
+        placeholder: 'Un montant, une part, une évolution…',
+      },
+      {
+        id: 'b2-01-a1-mission:comparable',
+        question: 'Les bases et les périodes sont-elles comparables ?',
+      },
+    ],
+    ...overrides,
+  });
+}
+
 export function buildConcept4Definition(
   overrides: Partial<Concept4Definition> = {},
 ): Concept4Definition {
@@ -312,6 +330,41 @@ export function buildPlotDefinition(overrides: Partial<PlotDefinition> = {}): Pl
     metadonnees: metadonnees({ dureeMinutes: 7, modalite: 'binome' }),
     ...overrides,
   };
+}
+
+export function buildPlotEnBarres(overrides: Partial<PlotDefinition> = {}): PlotDefinition {
+  return buildPlotDefinition({
+    id: 'K-BARRES-01',
+    forme: 'barres',
+    unite: 'euros',
+    abscisse: { libelle: 'Année', min: 0, max: 3 },
+    etiquettes: ['2022', '2023', '2024', '2025'],
+    ordonnee: 'Marge brute (€)',
+    bornesOrdonnee: { minParametre: 'origine', max: 292000 },
+    parametres: [
+      {
+        cle: 'origine',
+        libelle: 'Origine de l’axe',
+        min: 0,
+        max: 284000,
+        pas: 4000,
+        defaut: 284000,
+      },
+    ],
+    prereglages: [
+      { libelle: 'Axe de Samir', valeurs: { origine: 284000 } },
+      { libelle: 'Axe à zéro', valeurs: { origine: 0 } },
+    ],
+    series: [
+      {
+        id: 'marge',
+        libelle: 'Marge brute',
+        trait: 'plein',
+        calcul: 'SI(x<=1;285000+3000*x;SI(x<=2;288000+1800*(x-1);289800+1200*(x-2)))',
+      },
+    ],
+    ...overrides,
+  });
 }
 
 export function buildTableBuildPlan(

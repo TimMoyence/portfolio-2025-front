@@ -38,16 +38,19 @@ import type {
 } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
-import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
+import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import { enoncesDuDeroule, questionsDeLEcran } from '../../../shared/slides/session/lecture-ecran';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { objet } from '../../../shared/slides/visual/presentation-v2';
+import { annexeFormateurDeLEcran } from './annexe-formateur';
 import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
 import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
 import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
 import { phraseDeNotation } from './regle-de-notation';
+import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
+import { correctionsAffichees } from './corrections-affichees';
 
 type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
 
@@ -109,6 +112,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
   selector: 'app-cours-presentateur',
   standalone: true,
   imports: [
+    CoursBandeauCorrectionComponent,
     CoursPanneauActiviteComponent,
     CoursPanneauQuestionComponent,
     CoursPanneauPedagogiqueComponent,
@@ -482,9 +486,18 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                     [slide]="ecranAffiche"
                     [resultats]="resultats()"
                     [direct]="direct()"
-                    [donneesFormateur]="ecranAffiche.corrigeEcran"
+                    [donneesFormateur]="annexeDeLEcran()"
                     [maitrise]="maitrise()"
+                    [renvoi]="ecranRenvoye()"
+                    [surimpression]="correction"
+                    (evenement)="relayerLeReglage($event)"
                   />
+                  <ng-template #correction>
+                    <app-cours-bandeau-correction
+                      [corrections]="correctionsDeLEcran()"
+                      [revele]="direct()?.pilotage?.revele === true"
+                    />
+                  </ng-template>
                   @if (maitriseIndisponible()) {
                     <p
                       class="muted"
@@ -503,6 +516,18 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                 aria-label="Informations de séance"
                 i18n-aria-label="@@presentateurInformationsSeance"
               >
+                @if (ecranAffiche.notes !== '') {
+                  <section class="presentateur-notes" data-testid="presentateur-notes">
+                    <h3 i18n="presentateur.notes|@@presentateurNotes">Notes du formateur</h3>
+                    <p class="notes">{{ ecranAffiche.notes }}</p>
+                  </section>
+                }
+                <app-cours-panneau-pedagogique
+                  [ecran]="ecranAffiche"
+                  [resultats]="resultatsDesQuestions()"
+                  [participants]="participants()"
+                  [sessionId]="sessionId()"
+                />
                 <app-cours-panneau-activite
                   [ecran]="ecranAffiche"
                   [resultats]="resultats()"
@@ -512,18 +537,6 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   [pilotageBloque]="pilotageBloque()"
                   (commande)="piloterLEcran($event)"
                 />
-                <app-cours-panneau-pedagogique
-                  [ecran]="ecranAffiche"
-                  [resultats]="resultatsDesQuestions()"
-                  [participants]="participants()"
-                  [sessionId]="sessionId()"
-                />
-                @if (ecranAffiche.notes !== '') {
-                  <section class="presentateur-notes" data-testid="presentateur-notes">
-                    <h3 i18n="presentateur.notes|@@presentateurNotes">Notes du formateur</h3>
-                    <p class="notes">{{ ecranAffiche.notes }}</p>
-                  </section>
-                }
                 @if (questions().length > 0) {
                   <section class="presentateur-questions-panel">
                     <div class="presentateur-sidebar__head">
@@ -676,6 +689,20 @@ export class CoursPresentateurComponent {
   readonly ecranCourant = computed<EcranDeroule | null>(
     () => this.deroule()?.ecrans[this.ecran()] ?? null,
   );
+
+  readonly annexeDeLEcran = computed(() => {
+    const ecran = this.ecranCourant();
+    return ecran === null ? null : annexeFormateurDeLEcran(ecran);
+  });
+
+  readonly correctionsDeLEcran = computed(() =>
+    correctionsAffichees(this.ecranCourant() ?? undefined),
+  );
+
+  readonly ecranRenvoye = computed<EcranDeroule | null>(() => {
+    const renvoi = this.ecranCourant()?.renvoi;
+    return this.deroule()?.ecrans.find(({ id }) => id === renvoi) ?? null;
+  });
 
   readonly questions = computed<readonly QuestionDuPanneau[]>(() => {
     const ecran = this.ecranCourant();
@@ -1007,6 +1034,12 @@ export class CoursPresentateurComponent {
         this.maitriseEnVol = false;
       });
     this.chantier = Promise.all([this.chantier, lecture]).then(() => undefined);
+  }
+
+  protected relayerLeReglage(evenement: EvenementBrique): void {
+    if (evenement.kind === 'reglage') {
+      this.piloterLEcran({ screenId: evenement.screenId, reglages: evenement.reglages });
+    }
   }
 
   protected piloterLEcran(commande: CommandeDEcran): void {

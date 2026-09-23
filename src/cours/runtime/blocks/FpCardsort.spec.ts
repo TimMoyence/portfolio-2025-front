@@ -313,6 +313,35 @@ describe('FpCardsort', () => {
     expect(zoneDe(hote, MATIERES)).toBe(FIXE);
   });
 
+  it('R7 · entoure de vert la carte bien placee et de rouge la carte mal placee', () => {
+    toutClasser(hote);
+    activerAuClavier(noeud(hote, 'valider'));
+    hote.verdict = buildVerdictDeProduction({
+      questionId: PLAN.id,
+      details: [
+        { cle: LOYER, juste: true, libelleConfusion: null },
+        { cle: MATIERES, juste: false, libelleConfusion: null },
+      ],
+    });
+    const contour = (
+      id: string,
+    ): { rouge: number; vert: number; bleu: number; epaisseur: number } => {
+      const style = getComputedStyle(carte(hote, id));
+      const [rouge = 0, vert = 0, bleu = 0] = (style.borderTopColor.match(/\d+/g) ?? []).map(
+        Number,
+      );
+      return { rouge, vert, bleu, epaisseur: parseFloat(style.borderTopWidth) };
+    };
+    const juste = contour(LOYER);
+    const fausse = contour(MATIERES);
+
+    expect(juste.vert).toBeGreaterThan(juste.rouge + 60);
+    expect(juste.vert).toBeGreaterThan(juste.bleu + 30);
+    expect(fausse.rouge).toBeGreaterThan(fausse.vert + 60);
+    expect(fausse.rouge).toBeGreaterThan(fausse.bleu + 60);
+    expect(Math.min(juste.epaisseur, fausse.epaisseur)).toBeGreaterThanOrEqual(2);
+  });
+
   it('ignore un verdict adresse a un autre plan', () => {
     hote.verdict = buildVerdictDeProduction({ questionId: 'K-AUTRE' });
     expect(noeud(hote, 'verdict')).toBeNull();

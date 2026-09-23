@@ -303,6 +303,56 @@ describe('FpSheet', () => {
     expect(texteDe(hote, 'attendu')).toBe('D3 =C3*(1+$B$1) 64,8');
   });
 
+  it('RET-31 · projette les formules de correction au niveau 1 puis les valeurs au niveau 2', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.setAttribute('render', 'stage');
+    hote.corrige = ATTENDUS_FORMATEUR;
+    expect(repere(hote, 'correction-feuille')).toBeNull();
+
+    hote.etayage = 1;
+    const formule = hote.shadowRoot?.querySelector(
+      '[data-testid="correction-feuille"][data-nom="D3"]',
+    );
+    expect(formule?.textContent?.trim()).toBe('=C3*(1+$B$1)');
+
+    hote.etayage = 2;
+    const valeur = hote.shadowRoot?.querySelector(
+      '[data-testid="correction-feuille"][data-nom="D3"]',
+    );
+    expect(valeur?.textContent?.trim()).toBe('=C3*(1+$B$1) 64,8');
+  });
+
+  it('RET-31 · laisse reprendre les seules cases fausses apres verdict, sans renvoyer', () => {
+    const recus = envois(hote);
+    const brouillons: unknown[] = [];
+    chiffrer(hote);
+    cliquer(hote, 'valider');
+    hote.verdict = buildVerdictDeProduction({ questionId: PLAN.id });
+    hote.addEventListener('fp-brouillon', (evenement) =>
+      brouillons.push((evenement as CustomEvent).detail),
+    );
+
+    expect(cellule(hote, 'C3').hasAttribute('readonly')).toBe(true);
+    expect(cellule(hote, 'D3').hasAttribute('readonly')).toBe(false);
+    saisir(hote, 'D3', '=C3*(1+$B$2)');
+    expect(formuleDe(hote, 'D3')).toBe('=C3*(1+$B$2)');
+    expect(cellule(hote, 'D3').closest('td')?.getAttribute('data-etat')).toBe('reprise');
+    expect(brouillons).toEqual([{ id: PLAN.id, valeur: { C3: MONTANT_HT, D3: '=C3*(1+$B$2)' } }]);
+    expect((repere(hote, 'valider') as HTMLButtonElement).disabled).toBe(true);
+    expect(recus.length).toBe(1);
+  });
+
+  it('RET-31 · ferme la feuille aux reponses des que sa correction est revelee', () => {
+    const recus = envois(hote);
+    hote.etayage = 1;
+
+    expect(cellule(hote, 'C3').hasAttribute('readonly')).toBe(true);
+    expect((repere(hote, 'valider') as HTMLButtonElement).disabled).toBe(true);
+    expect((repere(hote, 'je-ne-sais-pas') as HTMLButtonElement).disabled).toBe(true);
+    cliquer(hote, 'je-ne-sais-pas');
+    expect(recus).toEqual([]);
+  });
+
   it('echappe le html de l intitule et de la formule tapee par l etudiant', () => {
     hote.plan = buildSheetPlan({ id: 'K-TABLEUR-XSS', intitule: CHARGE_XSS });
     saisir(hote, 'C3', CHARGE_XSS);

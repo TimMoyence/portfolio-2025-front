@@ -1,5 +1,10 @@
-import type { RenderMode, ResultatQuestion, Role } from '../../../../cours/content/types';
-import { PROPRIETE_FORMATEUR } from '../../../../cours/runtime/blocks/retours';
+import type {
+  RenderMode,
+  ResultatQuestion,
+  Role,
+  VotePhase,
+} from '../../../../cours/content/types';
+import { estObjet, PROPRIETE_FORMATEUR } from '../../../../cours/runtime/blocks/retours';
 import type { SyntheseConcept } from '../../../core/ports/formations.port';
 import type { DirectEcran, RetourBrique } from './contrat-hote';
 import type { Montage } from './lecture-ecran';
@@ -23,10 +28,12 @@ export type Pose = readonly [propriete: string, valeur: unknown];
 type Genre<K extends RetourBrique['kind']> = Extract<RetourBrique, { kind: K }>;
 
 const QUESTIONS_SIMPLES: ReadonlySet<string> = new Set(['fp-numeric', 'fp-recall', 'fp-exit']);
+const QUESTIONS_REVELABLES: ReadonlySet<string> = new Set([...QUESTIONS_SIMPLES, 'fp-vote']);
 const PRODUCTIONS: ReadonlySet<string> = new Set(['fp-sheet', 'fp-table-build', 'fp-cardsort']);
 const LECTRICES_DU_FORMATEUR: ReadonlySet<string> = new Set([
   ...PRODUCTIONS,
   'fp-vote',
+  'fp-numeric',
   'fp-challenge',
   'fp-escape',
 ]);
@@ -51,11 +58,15 @@ function questionAffichee(montage: MontageIdentifie, direct: DirectEcran | null)
   return montage.identifiants.at(0) ?? null;
 }
 
-function resultatsDuVote(
-  montage: MontageIdentifie,
+interface ResultatsDeVote {
+  readonly total: number;
+  readonly parOption: Readonly<Record<string, number>>;
+}
+
+function resultatsDe(
+  identifiant: string | null | undefined,
   direct: DirectEcran | null,
-): { total: number; parOption: Readonly<Record<string, number>> } | null {
-  const identifiant = questionAffichee(montage, direct);
+): ResultatsDeVote | null {
   const resultat: ResultatQuestion | undefined = direct?.resultats?.find(
     (question) => question.questionId === identifiant,
   );
@@ -64,15 +75,44 @@ function resultatsDuVote(
     : { total: resultat.total, parOption: resultat.parOption ?? {} };
 }
 
+function resultatsDuVote(
+  montage: MontageIdentifie,
+  direct: DirectEcran | null,
+): ResultatsDeVote | null {
+  return resultatsDe(questionAffichee(montage, direct), direct);
+}
+
+function resultatsDuPremierVote(
+  montage: MontageIdentifie,
+  direct: DirectEcran | null,
+): ResultatsDeVote | null {
+  return montage.identifiants.length < 2 ? null : resultatsDe(montage.identifiants[0], direct);
+}
+
+function phaseDuVote(direct: DirectEcran | null): VotePhase | null {
+  const pilotage = direct?.pilotage;
+  return pilotage?.phase ?? (pilotage?.revele === true ? 'revele' : null);
+}
+
 function donneesFormateurVisibles(contexte: ContexteDeReinjection): unknown {
   if (contexte.role !== 'presentateur') {
     return null;
   }
   const pilotage = contexte.direct?.pilotage;
-  const revele = pilotage?.phase === 'revele' || pilotage?.revele === true;
+  const revele =
+    pilotage?.phase === 'revele' || pilotage?.revele === true || (pilotage?.etayage ?? 0) > 0;
   return contexte.render === 'board' || (contexte.render === 'stage' && revele)
     ? contexte.donneesFormateur
     : null;
+}
+
+function annexeDuMontage(montage: MontageIdentifie, donnees: unknown): unknown {
+  if (!estObjet(donnees) || donnees['type'] !== 'reponses') {
+    return donnees;
+  }
+  const reponses = donnees['reponses'];
+  const cible = estObjet(reponses) ? reponses[montage.identifiants.at(0) ?? ''] : undefined;
+  return typeof cible === 'string' ? { type: 'cible', cible } : null;
 }
 
 function posesDesQuestions(montage: MontageIdentifie, contexte: ContexteDeReinjection): Pose[] {
@@ -83,8 +123,9 @@ function posesDesQuestions(montage: MontageIdentifie, contexte: ContexteDeReinje
         'verdicts',
         verdicts.filter((verdict) => viseUnIdentifiant(montage.identifiants, verdict.questionId)),
       ],
-      ['phase', contexte.direct?.pilotage.phase ?? null],
+      ['phase', phaseDuVote(contexte.direct)],
       ['resultats', resultatsDuVote(montage, contexte.direct)],
+      ['resultatsPremierVote', resultatsDuPremierVote(montage, contexte.direct)],
     ];
   }
   if (QUESTIONS_SIMPLES.has(montage.brique)) {
@@ -150,9 +191,12 @@ function posesDuPilotage(montage: MontageIdentifie, contexte: ContexteDeReinject
         ['revele', pilotage?.revele === true],
       ];
     case 'fp-worked':
-      return pilotage?.etayage === undefined ? [] : [['etayage', pilotage.etayage]];
+    case 'fp-sheet':
+      return [['etayage', pilotage?.etayage ?? 0]];
     case 'fp-pulse':
       return [['comptes', contexte.direct?.comptesJalon ?? null]];
+    case 'fp-concept4':
+      return contexte.role === 'presentateur' ? [['reglages', pilotage?.reglages ?? null]] : [];
     default:
       return [];
   }
@@ -164,9 +208,17 @@ function posesCommunes(montage: MontageIdentifie, contexte: ContexteDeReinjectio
   );
   const refus = contexte.dernierEmetteur ? deGenre(contexte.retours, 'refus').at(-1) : undefined;
   const formateur: Pose[] = LECTRICES_DU_FORMATEUR.has(montage.brique)
-    ? [[PROPRIETE_FORMATEUR, donneesFormateurVisibles(contexte)]]
+    ? [[PROPRIETE_FORMATEUR, annexeDuMontage(montage, donneesFormateurVisibles(contexte))]]
     : [];
-  return [['dejaRepondu', dejaRepondu], ['erreur', refus?.message ?? null], ...formateur];
+  const cloture: Pose[] = QUESTIONS_REVELABLES.has(montage.brique)
+    ? [['cloture', contexte.direct?.pilotage.revele === true]]
+    : [];
+  return [
+    ['dejaRepondu', dejaRepondu],
+    ['erreur', refus?.message ?? null],
+    ...cloture,
+    ...formateur,
+  ];
 }
 
 export function posesDeReinjection(

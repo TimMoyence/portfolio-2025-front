@@ -302,10 +302,7 @@ export class GroupeRefuse extends Error {
 }
 
 export interface FormationsPort {
-  ouvrirSeance(
-    courseSlug: string,
-    options?: { version?: number; capacite?: number },
-  ): Observable<SeanceOuverte>;
+  ouvrirSeance(courseSlug: string, options?: { capacite?: number }): Observable<SeanceOuverte>;
   lireDeroule(sessionId: string): Observable<DerouleCours>;
   lireSujet(sessionId: string, jeton: string): Observable<CoursContent>;
   demarrer(sessionId: string): Observable<void>;

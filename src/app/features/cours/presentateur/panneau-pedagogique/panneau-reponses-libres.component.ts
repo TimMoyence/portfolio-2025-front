@@ -36,8 +36,10 @@ import type { ReponseLibreFormateur } from '../../../../core/ports/formations.po
 export class PanneauReponsesLibresComponent {
   readonly reponses = input.required<readonly ReponseLibreFormateur[]>();
   readonly ecranId = input.required<string>();
+  readonly renvoi = input<string | undefined>(undefined);
 
-  protected readonly reponsesDeLEcran = computed(() =>
-    this.reponses().filter((reponse) => reponse.screenId === this.ecranId()),
-  );
+  protected readonly reponsesDeLEcran = computed(() => {
+    const ecrans = new Set([this.ecranId(), this.renvoi()]);
+    return this.reponses().filter((reponse) => ecrans.has(reponse.screenId));
+  });
 }

@@ -1,11 +1,12 @@
 import { PercentPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import type {
   ConfusionComptee,
   CorrigePresentateur,
   DerouleCours,
   ResultatQuestion,
 } from '../../../../cours/content/types';
+import { enFrancais } from './corrections-affichees';
 
 export interface QuestionDuPanneau {
   readonly numero: number;
@@ -62,7 +63,7 @@ function lirePanneau(
   const sousLeSeuil = seuil !== null && resultat.total > 0 && part < seuil;
   return {
     questionId: corrige.questionId,
-    bonneReponse: corrige.bonneReponse,
+    bonneReponse: enFrancais(corrige.bonneReponse),
     total: resultat.total,
     part,
     neSaitPas: resultat.neSaitPas,
@@ -85,18 +86,6 @@ function lirePanneau(
   styles: `
     :host {
       display: block;
-    }
-
-    .correction-toggle {
-      margin-block-start: 0.7rem;
-      padding: 0.45rem 0.65rem;
-      border: 1px solid rgba(39, 124, 112, 0.35);
-      border-radius: 999px;
-      background: transparent;
-      color: var(--teal-deep, #277c70);
-      font: inherit;
-      font-size: 0.76rem;
-      cursor: pointer;
     }
 
     [data-etat='sous-le-seuil'] {
@@ -131,28 +120,11 @@ function lirePanneau(
             <dt i18n="presentateur.seuil|@@presentateurSeuil">Seuil</dt>
             <dd data-testid="presentateur-question-seuil">{{ seuil() | percent }}</dd>
           }
-          @if (correctionVisible()) {
-            <dt i18n="presentateur.bonneReponse|@@presentateurBonneReponse">Bonne réponse</dt>
-            <dd data-testid="presentateur-question-bonne-reponse">{{ panneau.bonneReponse }}</dd>
-          }
+          <dt i18n="presentateur.reponseAttendue|@@presentateurReponseAttendue">
+            Réponse attendue
+          </dt>
+          <dd data-testid="presentateur-question-bonne-reponse">{{ panneau.bonneReponse }}</dd>
         </dl>
-        <button
-          type="button"
-          class="correction-toggle"
-          data-testid="presentateur-question-reveler-correction"
-          [attr.aria-expanded]="correctionVisible()"
-          (click)="basculerLaCorrection()"
-        >
-          @if (correctionVisible()) {
-            <span i18n="presentateur.masquerCorrection|@@presentateurMasquerCorrection"
-              >Masquer la correction</span
-            >
-          } @else {
-            <span i18n="presentateur.revelerCorrection|@@presentateurRevelerCorrection"
-              >Révéler la correction</span
-            >
-          }
-        </button>
         @if (panneau.sousLeSeuil) {
           <p
             data-testid="presentateur-question-alerte"
@@ -192,11 +164,6 @@ export class CoursPanneauQuestionComponent {
   readonly participants = input.required<number>();
   readonly pilotageBloque = input.required<boolean>();
   readonly remediation = output<number>();
-  protected readonly correctionVisible = signal(false);
-
-  protected basculerLaCorrection(): void {
-    this.correctionVisible.update((visible) => !visible);
-  }
 
   protected readonly panneau = computed(() =>
     lirePanneau(this.deroule(), this.seuil(), this.question().corrige, this.resultats()),

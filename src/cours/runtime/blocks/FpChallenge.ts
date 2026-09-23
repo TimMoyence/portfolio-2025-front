@@ -4,10 +4,16 @@ import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
 import { estObjet, type StrategieServie } from './retours';
 
+export interface LigneDuDossier {
+  readonly libelle: string;
+  readonly valeur: string;
+}
+
 export interface ChallengeProblemePublic {
   readonly id: string;
   readonly enonce: string;
   readonly invite: string;
+  readonly rappel?: readonly LigneDuDossier[];
   readonly strategies: readonly [];
   readonly metadonnees: MetadonneesBrique;
 }
@@ -36,6 +42,29 @@ function lireStrategies(valeur: unknown): readonly StrategieServie[] {
     : [];
 }
 
+function lireRappel(valeur: unknown): readonly LigneDuDossier[] {
+  return Array.isArray(valeur)
+    ? valeur.filter(
+        (ligne): ligne is LigneDuDossier =>
+          estObjet(ligne) &&
+          typeof ligne['libelle'] === 'string' &&
+          typeof ligne['valeur'] === 'string',
+      )
+    : [];
+}
+
+function dossier(probleme: ChallengeProblemePublic): EscapedHtml {
+  const rappel = probleme.rappel ?? [];
+  if (rappel.length === 0) {
+    return VIDE;
+  }
+  const lignes = rappel.map(
+    (ligne) =>
+      safeHtml`<div class="fp-challenge__ligne"><dt>${escapeHtml(ligne.libelle)}</dt><dd>${escapeHtml(ligne.valeur)}</dd></div>`,
+  );
+  return safeHtml`<dl class="fp-challenge__rappel" data-testid="rappel">${lignes}</dl>`;
+}
+
 export class FpChallenge extends FpBlock {
   private interne: ChallengeProblemePublic | null = null;
   private servies: readonly StrategieServie[] = [];
@@ -54,6 +83,7 @@ export class FpChallenge extends FpBlock {
             id: valeur.id,
             enonce: valeur.enonce,
             invite: valeur.invite,
+            ...(valeur.rappel === undefined ? {} : { rappel: lireRappel(valeur.rappel) }),
             strategies: [],
             metadonnees: projeterMetadonnees(valeur.metadonnees),
           };
@@ -113,6 +143,7 @@ export class FpChallenge extends FpBlock {
     return safeHtml`
       <fieldset class="fp-carte fp-challenge__probleme">
         <legend>${escapeHtml(probleme.enonce)}</legend>
+        ${dossier(probleme)}
         <p class="fp-challenge__consigne" data-testid="consigne">${escapeHtml(this.texte('challenge-consigne'))}</p>
         <label class="fp-challenge__invite" for="${escapeHtml(ID_TENTATIVE)}">${escapeHtml(probleme.invite)}</label>
         <textarea class="fp-challenge__champ" id="${escapeHtml(ID_TENTATIVE)}" data-testid="tentative" rows="5">${escapeHtml(this.tentative)}</textarea>
@@ -130,7 +161,16 @@ export class FpChallenge extends FpBlock {
       return safeHtml``;
     }
     const projetees = this.formateur.length > 0 ? this.formateur : this.servies;
-    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(probleme.enonce)}</p>${this.interneRevele ? this.liste(projetees, true) : VIDE}</div>`;
+    return safeHtml`
+      <fieldset class="fp-carte fp-challenge__probleme">
+        <legend>${escapeHtml(probleme.enonce)}</legend>
+        ${dossier(probleme)}
+        <p class="fp-challenge__consigne" data-testid="consigne">${escapeHtml(this.texte('challenge-consigne'))}</p>
+        <label class="fp-challenge__invite" for="${escapeHtml(ID_TENTATIVE)}">${escapeHtml(probleme.invite)}</label>
+        <textarea class="fp-challenge__champ" id="${escapeHtml(ID_TENTATIVE)}" rows="5" disabled></textarea>
+        ${this.interneRevele ? this.liste(projetees, true) : VIDE}
+      </fieldset>
+    `;
   }
 
   renderBoard(): EscapedHtml {
@@ -142,6 +182,7 @@ export class FpChallenge extends FpBlock {
     return safeHtml`
       <div class="fp-carte fp-challenge__probleme">
         <p class="fp-enonce">${escapeHtml(probleme.enonce)}</p>
+        ${dossier(probleme)}
         <p class="fp-challenge__concepts" data-testid="concepts">${escapeHtml(metadonnees.concepts.join(' · '))}</p>
         <p class="fp-reperes">${this.reperes(metadonnees)}</p>
         ${this.roleActuel() === 'presentateur' ? this.liste(this.formateur, true) : VIDE}

@@ -637,6 +637,7 @@ export class CoursEtudiantComponent {
   private deck: Deck | null = null;
   private rythmeDistant: PacingMode = 'pilote';
   private rappelsDemandes = false;
+  private relectureDesEtapes = false;
   private detruit = false;
   private videEnCours = false;
   private chantier: Promise<void> = Promise.resolve();
@@ -937,7 +938,38 @@ export class CoursEtudiantComponent {
       this.viderLaFile(),
       this.reprendreLesReponsesLibres(),
       this.relireLesStrategiesRevelees(),
+      this.relireLesEtapesRevelees(),
     ]).then(() => undefined);
+  }
+
+  private async relireLesEtapesRevelees(): Promise<void> {
+    const sessionId = this.sessionId();
+    const sujet = this.sujet();
+    if (sessionId === null || sujet === null || this.relectureDesEtapes) {
+      return;
+    }
+    const enRetard = sujet.ecrans.some((ecran) => {
+      const servi = ecran.donnees?.['etayage'];
+      return (
+        ecran.type === 'fp-worked' &&
+        typeof servi === 'number' &&
+        (this.pilotage()[ecran.id]?.etayage ?? 0) > servi
+      );
+    });
+    if (!enRetard) {
+      return;
+    }
+    this.relectureDesEtapes = true;
+    try {
+      const relu = await firstValueFrom(this.port.lireSujet(sessionId, this.jeton()));
+      if (!this.detruit) {
+        this.sujet.set(relu);
+      }
+    } catch {
+      this.echecEcran.set({ motif: 'sujet-indisponible', message: MESSAGE_ECRAN_ECHEC });
+    } finally {
+      this.relectureDesEtapes = false;
+    }
   }
 
   private async reprendreLesReponsesLibres(): Promise<void> {

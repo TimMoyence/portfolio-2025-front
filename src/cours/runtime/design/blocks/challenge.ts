@@ -13,6 +13,35 @@ export const challenge = `
   line-height: 1.25;
 }
 
+:where(.fp-root) .fp-challenge__rappel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--fp-s-2);
+  margin: 0;
+  padding: var(--fp-s-3);
+  border: 1px solid var(--fp-bordure);
+  border-radius: var(--fp-r);
+  background: var(--fp-surface);
+}
+
+:where(.fp-root) .fp-challenge__ligne {
+  display: grid;
+  gap: calc(var(--fp-s-1) / 2);
+}
+
+:where(.fp-root) .fp-challenge__ligne dt {
+  color: var(--fp-ink-mute);
+  font-size: calc(0.85rem * var(--fp-echelle));
+  font-weight: 600;
+}
+
+:where(.fp-root) .fp-challenge__ligne dd {
+  margin: 0;
+  color: var(--fp-texte-fort);
+  font-size: var(--fp-corps);
+  font-variant-numeric: tabular-nums;
+}
+
 :where(.fp-root) .fp-challenge__consigne {
   padding: var(--fp-s-2) var(--fp-s-3);
   border-left: var(--fp-s-1) solid var(--fp-gold-deep);

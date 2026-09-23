@@ -60,7 +60,7 @@ interface LigneDeCle {
     .activite-section {
       display: grid;
       gap: 0.5rem;
-      padding: 0.9rem 1rem;
+      padding: var(--s-3, 20px);
       border: 1px solid var(--line, #e4d8c4);
       border-radius: 12px;
       background: var(--ivory, #fbf3e6);
@@ -127,9 +127,61 @@ interface LigneDeCle {
         </button>
       </section>
     }
+    @if (correctionRevelable()) {
+      <section class="activite-section" data-testid="activite-correction">
+        <h3 i18n="@@panneauActiviteCorrectionTitre">Correction à l’écran</h3>
+        <p i18n="@@panneauActiviteCorrectionAide">
+          La correction s’affiche sur l’écran projeté au clic, pas avant.
+        </p>
+        <button
+          type="button"
+          class="control-btn"
+          data-testid="activite-reveler-correction"
+          [disabled]="pilotageBloque() || pilotage().revele === true"
+          (click)="reveler()"
+        >
+          @if (pilotage().revele === true) {
+            <ng-container i18n="@@panneauActiviteCorrectionRevelee"
+              >Correction révélée</ng-container
+            >
+          } @else {
+            <ng-container i18n="@@panneauActiviteRevelerCorrection"
+              >Révéler la correction</ng-container
+            >
+          }
+        </button>
+      </section>
+    }
+    @if (ecran().type === 'fp-sheet') {
+      <section class="activite-section" data-testid="activite-correction-feuille">
+        <h3 i18n="@@panneauActiviteCorrectionFeuilleTitre">Correction de la feuille</h3>
+        <div class="activite-commandes">
+          <button
+            type="button"
+            class="control-btn"
+            data-testid="activite-feuille-formules"
+            [disabled]="pilotageBloque() || etayage() >= 1"
+            (click)="etayer(1)"
+            i18n="@@panneauActiviteFeuilleFormules"
+          >
+            Afficher les formules
+          </button>
+          <button
+            type="button"
+            class="control-btn"
+            data-testid="activite-feuille-reponses"
+            [disabled]="pilotageBloque() || etayage() !== 1"
+            (click)="etayer(2)"
+            i18n="@@panneauActiviteFeuilleReponses"
+          >
+            Afficher les réponses
+          </button>
+        </div>
+      </section>
+    }
     @if (etapes() > 0) {
       <section class="activite-section" data-testid="activite-etayage">
-        <h3 i18n="@@panneauActiviteEtayageTitre">Étayage de l’exemple</h3>
+        <h3 i18n="@@panneauActiviteCorrectionExerciceTitre">Correction de l’exercice</h3>
         <p data-testid="activite-etayage-niveau">{{ etayage() }} / {{ etapes() }}</p>
         <div class="activite-commandes">
           <button
@@ -138,9 +190,9 @@ interface LigneDeCle {
             data-testid="activite-etayage-moins"
             [disabled]="pilotageBloque() || etayage() <= 0"
             (click)="etayer(etayage() - 1)"
-            i18n="@@panneauActiviteEtayageMoins"
+            i18n="@@panneauActiviteCorrectionMasquer"
           >
-            Montrer une étape de moins
+            Masquer la dernière correction
           </button>
           <button
             type="button"
@@ -148,9 +200,9 @@ interface LigneDeCle {
             data-testid="activite-etayage-plus"
             [disabled]="pilotageBloque() || etayage() >= etapes()"
             (click)="etayer(etayage() + 1)"
-            i18n="@@panneauActiviteEtayagePlus"
+            i18n="@@panneauActiviteCorrectionEtapeSuivante"
           >
-            Montrer une étape de plus
+            Corriger une étape de plus
           </button>
         </div>
       </section>
@@ -252,6 +304,15 @@ interface LigneDeCle {
           </p>
         }
         @default {
+          <button
+            type="button"
+            class="control-btn"
+            data-testid="activite-participants-masquer"
+            (click)="masquerLesParticipants()"
+            i18n="@@panneauActiviteParticipantsMasquer"
+          >
+            Masquer les participants
+          </button>
           <ul>
             @for (participant of listeDesParticipants(); track participant.id) {
               <li
@@ -312,6 +373,14 @@ export class CoursPanneauActiviteComponent {
       this.ecran().type === 'fp-vote' && objet(this.ecran().donnees?.['questionJumelle']) !== null,
   );
 
+  protected readonly correctionRevelable = computed(
+    () =>
+      this.ecran().type !== 'fp-challenge' &&
+      this.ecran().type !== 'fp-sheet' &&
+      !this.phaseVisible() &&
+      (this.ecran().corriges.length > 0 || this.ecran().questions.length > 0),
+  );
+
   protected readonly phaseCourante = computed<VotePhase>(() => this.pilotage().phase ?? 'vote');
 
   protected readonly libellePhase = computed(() => LIBELLES_DE_PHASE[this.phaseCourante()]);
@@ -325,10 +394,7 @@ export class CoursPanneauActiviteComponent {
     return this.ecran().type === 'fp-worked' && Array.isArray(etapes) ? etapes.length : 0;
   });
 
-  protected readonly etayage = computed(() => {
-    const initial = this.ecran().donnees?.['etayage'];
-    return this.pilotage().etayage ?? (typeof initial === 'number' ? initial : this.etapes());
-  });
+  protected readonly etayage = computed(() => this.pilotage().etayage ?? 0);
 
   protected readonly production = computed<ResultatQuestion | null>(() => {
     if (!PRODUCTIONS.has(this.ecran().type)) {
@@ -385,6 +451,10 @@ export class CoursPanneauActiviteComponent {
     } catch {
       this.lecture.set('echec');
     }
+  }
+
+  protected masquerLesParticipants(): void {
+    this.lecture.set('fermee');
   }
 
   protected evincer(participant: ParticipantDeSeance): Promise<void> {

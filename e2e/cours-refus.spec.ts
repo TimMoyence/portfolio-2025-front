@@ -120,7 +120,7 @@ async function installerLaSeance(page: Page, refus: Record<string, unknown>): Pr
         headers: { ...CORS, 'content-type': 'text/event-stream' },
         body:
           fluxDeLaSeance(3, {}) +
-          fluxDeLaSeance(4, { 'ecran-sortie': { phase: 'revote', revele: true } }),
+          fluxDeLaSeance(4, { 'ecran-sortie': { phase: 'revote', revele: false } }),
       });
     } else {
       await route.fulfill({ status: 204, headers: CORS });

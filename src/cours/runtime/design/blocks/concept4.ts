@@ -52,7 +52,8 @@ export const concept4 = `
 
 :where(.fp-root) .fp-concept4__parametres {
   display: grid;
-  gap: var(--fp-s-2);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: var(--fp-s-2) var(--fp-s-3);
 }
 
 :where(.fp-root) .fp-concept4__valeur {
@@ -144,6 +145,12 @@ export const concept4 = `
   stroke: var(--fp-teal-deep);
   stroke-width: 2.5;
   stroke-linejoin: round;
+}
+
+:where(.fp-root) .fp-concept4__repere {
+  stroke: var(--fp-bordure);
+  stroke-dasharray: 6 4;
+  stroke-width: 1.5;
 }
 
 :where(.fp-root) .fp-concept4__point {

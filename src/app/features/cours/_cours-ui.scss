@@ -21,9 +21,9 @@
   text-wrap: balance;
 }
 
-.cours-presentateur button:not(.btn),
-.cours-etudiant button:not(.btn),
-.cours-synthese button:not(.btn) {
+.cours-presentateur button:not(.btn, app-cours-presentation *),
+.cours-etudiant button:not(.btn, app-cours-presentation *),
+.cours-synthese button:not(.btn, app-cours-presentation *) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -44,24 +44,24 @@
     transform 180ms var(--ease);
 }
 
-.cours-presentateur button:not(.btn):hover,
-.cours-etudiant button:not(.btn):hover,
-.cours-synthese button:not(.btn):hover {
+.cours-presentateur button:not(.btn, app-cours-presentation *):hover,
+.cours-etudiant button:not(.btn, app-cours-presentation *):hover,
+.cours-synthese button:not(.btn, app-cours-presentation *):hover {
   border-color: var(--teal-deep);
   background: var(--cream);
   box-shadow: var(--shadow-soft);
   transform: translateY(-1px);
 }
 
-.cours-presentateur button:not(.btn):active,
-.cours-etudiant button:not(.btn):active,
-.cours-synthese button:not(.btn):active {
+.cours-presentateur button:not(.btn, app-cours-presentation *):active,
+.cours-etudiant button:not(.btn, app-cours-presentation *):active,
+.cours-synthese button:not(.btn, app-cours-presentation *):active {
   transform: translateY(1px) scale(0.99);
 }
 
-.cours-presentateur button:not(.btn):disabled,
-.cours-etudiant button:not(.btn):disabled,
-.cours-synthese button:not(.btn):disabled {
+.cours-presentateur button:not(.btn, app-cours-presentation *):disabled,
+.cours-etudiant button:not(.btn, app-cours-presentation *):disabled,
+.cours-synthese button:not(.btn, app-cours-presentation *):disabled {
   cursor: not-allowed;
   opacity: 0.52;
   transform: none;
@@ -165,6 +165,13 @@
   gap: 4px;
   color: rgba(255, 250, 242, 0.72);
   font-size: 0.9rem;
+}
+
+.join-panel__meta p {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  margin: 0;
 }
 
 .join-panel__meta strong {
@@ -455,7 +462,7 @@
 
 .presentateur-notes,
 .presentateur-questions-panel__body {
-  padding: var(--s-4);
+  padding: var(--s-3);
 }
 
 .presentateur-notes {
@@ -915,8 +922,7 @@
 }
 
 @media (max-width: 900px) {
-  .join-panel,
-  .presentateur-workspace {
+  .join-panel {
     grid-template-columns: 1fr;
   }
 
@@ -1153,13 +1159,10 @@
 
 .student-session app-slide-deck {
   --slide-min-height: calc(100dvh - 150px);
-}
-
-.student-session .slide-deck.mode-scroll {
-  height: auto;
-  min-height: calc(100dvh - 150px);
-  overflow: visible;
-  scroll-snap-type: none;
+  --slide-deck-hauteur: auto;
+  --slide-deck-hauteur-min: calc(100dvh - 150px);
+  --slide-deck-defilement: visible;
+  --slide-deck-accroche: none;
 }
 
 .student-session__navigation {
@@ -1184,5 +1187,15 @@
 
   .presentateur-sidebar {
     max-height: none;
+  }
+}
+
+.cours-presentateur {
+  container: pupitre / inline-size;
+}
+
+@container pupitre (max-width: 900px) {
+  .presentateur-workspace {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

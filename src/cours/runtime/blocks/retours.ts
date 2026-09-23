@@ -52,6 +52,14 @@ export function estObjet(valeur: unknown): valeur is Readonly<Record<string, unk
   return typeof valeur === 'object' && valeur !== null && !Array.isArray(valeur);
 }
 
+export function lireBonneReponse(valeur: unknown): string | null {
+  if (!estObjet(valeur) || valeur['type'] !== 'cible') {
+    return null;
+  }
+  const bonneReponse = valeur['cible'];
+  return typeof bonneReponse === 'string' ? bonneReponse : null;
+}
+
 export function estVerdictDeReponse(valeur: unknown): valeur is VerdictDeReponse {
   return (
     estObjet(valeur) &&

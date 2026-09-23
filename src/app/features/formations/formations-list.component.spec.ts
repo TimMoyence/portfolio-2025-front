@@ -5,6 +5,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormationsListComponent } from './formations-list.component';
 import { FORMATION_BENEFITS, FORMATIONS } from './formations-list.data';
+import { INSTANTANE_B2_01 } from '../../../testing/fixtures/instantane-b2-01';
 
 describe('FormationsListComponent', () => {
   let component: FormationsListComponent;
@@ -104,18 +105,43 @@ describe('FormationsListComponent', () => {
     expect(bonusCard).not.toBeNull();
   });
 
+  it('L1 · ne promet plus de lecture libre du B2-01, seulement la séance accompagnée', () => {
+    const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
+
+    expect(b2?.description).not.toContain('librement');
+    expect(b2?.description).toContain('À suivre en séance accompagnée');
+  });
+
+  it('L1 · annonce les 55 écrans de la version servie, badge, description et durée', () => {
+    const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
+    const annonces = [b2?.badge, b2?.description, ...(b2?.meta.map((row) => row.value) ?? [])];
+
+    expect(annonces.filter((texte) => texte?.includes('72'))).toEqual([]);
+    expect(annonces.filter((texte) => texte?.includes('55 écrans')).length).toBe(3);
+  });
+
+  it('L1 · annonce le nombre d écrans et la durée du cours réellement servi', () => {
+    const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
+    const annonce = b2?.meta.find((row) => row.value.includes('écrans'))?.value ?? '';
+    const [, heures, minutes, ecrans] = /^(\d+) h (\d+) · (\d+) écrans$/.exec(annonce) ?? [];
+    const { duree, ecrans: servis } = INSTANTANE_B2_01.sujet;
+
+    expect(Number(ecrans)).toBe(servis.length);
+    expect(Math.abs(Number(heures) * 60 + Number(minutes) - duree)).toBeLessThan(15);
+  });
+
   it('devrait mener au cours B2-01 public et annoncer le déroulé réellement servi', () => {
     const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
 
     expect(b2).toBeDefined();
     expect(b2?.link).toBe('/formations/b2-01-traitement-information-chiffree');
     expect(b2?.title).toContain('B2-01');
-    expect(b2?.meta.some((row) => row.value === '3 h 30 · 72 écrans')).toBeTrue();
+    expect(b2?.meta.some((row) => row.value === '3 h 30 · 55 écrans')).toBeTrue();
 
     const compiled = fixture.nativeElement as HTMLElement;
     const card = compiled.querySelector('.formation.formation--live');
     expect(card).not.toBeNull();
-    expect(card?.textContent).toContain('72 écrans');
+    expect(card?.textContent).toContain('55 écrans');
     expect(card?.textContent).not.toContain('12 écrans');
     expect(card?.querySelector('a')?.getAttribute('href')).toBe(
       '/formations/b2-01-traitement-information-chiffree',

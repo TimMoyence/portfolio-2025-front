@@ -2,7 +2,7 @@ import type { MetadonneesBrique, VotePhase } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import { estObjet, estVerdictDeReponse, type VerdictDeReponse } from './retours';
+import { estObjet, estVerdictDeReponse, lireBonneReponse, type VerdictDeReponse } from './retours';
 
 export interface VoteQuestionPublique {
   readonly id: string;
@@ -24,6 +24,11 @@ interface Revelation {
 const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
 const PHASES: readonly VotePhase[] = ['vote', 'discussion', 'revote', 'revele'];
 const VIDE = escapeHtml('');
+
+const TITRES_DES_VOTES: Readonly<Record<'premier' | 'second', string>> = {
+  premier: 'vote-premier',
+  second: 'vote-second',
+};
 
 const ANNONCE_DE_PHASE: Readonly<Record<VotePhase, string>> = {
   vote: 'vote-phase-vote',
@@ -67,7 +72,9 @@ export class FpVote extends FpBlock {
   private jumelle: VoteQuestionPublique | null = null;
   private internePhase: VotePhase | null = null;
   private interneResultats: VoteResultats | null = null;
+  private premierVote: VoteResultats | null = null;
   private revelation: Revelation | null = null;
+  private bonneReponse: string | null = null;
   private recus = new Map<string, VerdictDeReponse>();
   private choix = new Map<string, string>();
 
@@ -111,6 +118,15 @@ export class FpVote extends FpBlock {
     return this.interneResultats;
   }
 
+  set resultatsPremierVote(valeur: VoteResultats | null) {
+    this.premierVote = valeur;
+    this.refreshSiConnecte();
+  }
+
+  get resultatsPremierVote(): VoteResultats | null {
+    return this.premierVote;
+  }
+
   set verdicts(valeur: readonly VerdictDeReponse[] | null) {
     const connus = new Set([this.principale?.id, this.jumelle?.id]);
     this.recus = new Map(
@@ -128,6 +144,7 @@ export class FpVote extends FpBlock {
 
   set corrige(valeur: unknown) {
     this.revelation = lireRevelation(valeur);
+    this.bonneReponse = lireBonneReponse(valeur);
     this.refreshSiConnecte();
   }
 
@@ -162,11 +179,21 @@ export class FpVote extends FpBlock {
       return safeHtml``;
     }
     const options = safeHtml`<ul class="fp-vote__liste" data-testid="options">${question.options.map((option) => elementDeListe(option.libelle))}</ul>`;
-    const revele = this.internePhase === 'revele';
-    const suivi = revele
-      ? safeHtml`${this.histogramme(question)}${this.revelationFormateur()}`
-      : this.decompte();
-    return safeHtml`<div class="fp-carte fp-scene">${this.annoncePhase()}<p class="fp-enonce">${escapeHtml(question.enonce)}</p>${options}${suivi}</div>`;
+    return safeHtml`<div class="fp-carte fp-scene">${this.annoncePhase()}<p class="fp-enonce">${escapeHtml(question.enonce)}</p>${options}${this.suiviProjete(question)}</div>`;
+  }
+
+  private suiviProjete(question: VoteQuestionPublique): EscapedHtml {
+    if (this.internePhase === 'discussion' && this.surDeuxTemps()) {
+      return this.histogramme(question, this.interneResultats, 'premier');
+    }
+    if (this.internePhase !== 'revele') {
+      return this.decompte();
+    }
+    const comparaison =
+      this.jumelle !== null && this.principale !== null && this.premierVote !== null
+        ? safeHtml`${this.histogramme(this.principale, this.premierVote, 'premier')}${this.histogramme(question, this.interneResultats, 'second')}`
+        : this.histogramme(question, this.interneResultats);
+    return safeHtml`${comparaison}${this.bonneReponseFormateur()}${this.revelationFormateur()}`;
   }
 
   renderBoard(): EscapedHtml {
@@ -179,7 +206,7 @@ export class FpVote extends FpBlock {
         ${this.annoncePhase()}
         <p class="fp-enonce">${escapeHtml(question.enonce)}</p>
         ${this.reperesDeLaQuestion(question)}
-        ${this.resultats === null ? safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>` : this.histogramme(question)}
+        ${this.resultats === null ? safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>` : this.histogramme(question, this.interneResultats)}
         ${this.decompte()}
         ${this.revelationFormateur()}
       </div>
@@ -216,7 +243,7 @@ export class FpVote extends FpBlock {
     }
     const repondue =
       (this.choix.has(question.id) && this.erreur === null) || this.recus.has(question.id);
-    return !repondue && !this.dejaRepondu;
+    return !repondue && !this.dejaRepondu && !this.cloture;
   }
 
   private annoncePhase(): EscapedHtml {
@@ -258,6 +285,13 @@ export class FpVote extends FpBlock {
     return safeHtml`<p class="fp-vote__decompte" data-testid="decompte">${escapeHtml(this.texte('pulse-total'))} ${this.interneResultats.total}</p>`;
   }
 
+  private bonneReponseFormateur(): EscapedHtml {
+    if (this.bonneReponse === null || this.roleActuel() !== 'presentateur') {
+      return VIDE;
+    }
+    return safeHtml`<p class="fp-encadre" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(this.bonneReponse)}</p>`;
+  }
+
   private revelationFormateur(): EscapedHtml {
     const revelation = this.revelation;
     if (revelation === null || this.roleActuel() !== 'presentateur') {
@@ -284,10 +318,18 @@ export class FpVote extends FpBlock {
     return safeHtml`<div class="fp-vote__barre" data-testid="barre" data-option="${escapeHtml(id)}"><span class="fp-vote__barre__libelle" data-testid="barre-libelle">${escapeHtml(this.libelleOption(question, id))}</span><span class="fp-vote__barre__piste"><span class="fp-vote__barre__valeur" data-testid="barre-valeur" style="width:${pourcentage}%"></span></span><span class="fp-vote__barre__pourcentage">${pourcentage}%</span></div>`;
   }
 
-  private histogramme(question: VoteQuestionPublique): EscapedHtml {
-    const resultats = this.interneResultats;
+  private histogramme(
+    question: VoteQuestionPublique,
+    resultats: VoteResultats | null,
+    vote?: 'premier' | 'second',
+  ): EscapedHtml {
+    const marqueDuVote = vote === undefined ? VIDE : safeHtml` data-vote="${escapeHtml(vote)}"`;
+    const titre =
+      vote === undefined
+        ? VIDE
+        : safeHtml`<p class="fp-vote__titre">${escapeHtml(this.texte(TITRES_DES_VOTES[vote]))}</p>`;
     if (!resultats || resultats.total === 0) {
-      return safeHtml`<p data-testid="histogramme"></p>`;
+      return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"${marqueDuVote}>${titre}</div>`;
     }
     const idsConnus = new Set([...question.options.map((option) => option.id), ID_JE_NE_SAIS_PAS]);
     const barres = [...question.options.map((option) => option.id), ID_JE_NE_SAIS_PAS]
@@ -299,6 +341,6 @@ export class FpVote extends FpBlock {
           Math.round(((resultats.parOption[id] ?? 0) / resultats.total) * 100),
         ),
       );
-    return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme">${barres}</div>`;
+    return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"${marqueDuVote}>${titre}${barres}</div>`;
   }
 }

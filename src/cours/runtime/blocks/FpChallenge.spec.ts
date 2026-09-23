@@ -88,6 +88,30 @@ describe('FpChallenge', () => {
     }
   });
 
+  it('R4 · rappelle le dossier chiffré sur chaque rendu, sans en échapper le contenu', () => {
+    hote.probleme = buildChallengeProbleme({
+      id: 'D-DEFI-RAPPEL',
+      rappel: [
+        { libelle: 'Marge brute', valeur: '289 800 € → 291 000 €' },
+        { libelle: CHARGE_XSS, valeur: '34 % → 45,5 %' },
+      ],
+    });
+
+    for (const rendu of RENDUS) {
+      hote.setAttribute('render', rendu);
+      const lignes = [
+        ...(hote.shadowRoot?.querySelectorAll(
+          '[data-testid="rappel"] dt, [data-testid="rappel"] dd',
+        ) ?? []),
+      ].map((ligne) => ligne.textContent?.trim());
+
+      expect(lignes)
+        .withContext(`rendu ${rendu}`)
+        .toEqual(['Marge brute', '289 800 € → 291 000 €', CHARGE_XSS, '34 % → 45,5 %']);
+      expect(hote.shadowRoot?.querySelector('img')).withContext(`rendu ${rendu}`).toBeNull();
+    }
+  });
+
   it('ne prend pas une tentative vide pour un echec productif', () => {
     const emises = tentativesEmises(hote);
     tenter(hote, '   \n  ');
@@ -158,6 +182,21 @@ describe('FpChallenge', () => {
     hote.revele = true;
 
     expect(marquesDe(hote)).toEqual(['diviser-cent']);
+  });
+
+  it('G2 · projette l énoncé, la consigne et la zone de réponse du poste étudiant, inertes', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.setAttribute('render', 'stage');
+    const racine = hote.shadowRoot;
+    const zone = racine?.querySelector<HTMLTextAreaElement>('textarea');
+
+    expect(racine?.querySelector('legend')?.textContent?.trim()).toBe(PROBLEME.enonce);
+    expect(racine?.querySelector('[data-testid="consigne"]')?.textContent?.trim()).toBe(
+      'Cherchez par vous-même : aucune méthode ne vous a encore été donnée',
+    );
+    expect(racine?.querySelector('label')?.textContent?.trim()).toBe(PROBLEME.invite);
+    expect(zone?.disabled).toBeTrue();
+    expect(racine?.querySelector('[data-testid="envoyer"]')).toBeNull();
   });
 
   it('montre au pupitre les strategies de reference et leur piste fausse', () => {

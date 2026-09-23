@@ -1,6 +1,4 @@
-import { of } from 'rxjs';
 import type { CoursCatalogue } from '../../cours/content/types';
-import type { FormationCataloguePort } from '../../app/core/ports/formation-catalogue.port';
 import { buildVisualSlide } from './visual-slide.factory';
 
 export function buildVisualCourse(overrides: Partial<CoursCatalogue> = {}): CoursCatalogue {
@@ -17,12 +15,4 @@ export function buildVisualCourse(overrides: Partial<CoursCatalogue> = {}): Cour
     ),
     ...overrides,
   };
-}
-
-export function createFormationCataloguePortStub(
-  course: CoursCatalogue = buildVisualCourse(),
-): jasmine.SpyObj<FormationCataloguePort> {
-  return jasmine.createSpyObj<FormationCataloguePort>('FormationCataloguePort', {
-    lire: of(course),
-  });
 }

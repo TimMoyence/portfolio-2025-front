@@ -50,9 +50,9 @@ export class FpWorked extends FpBlock {
   private interne: WorkedExemple | null = null;
   private montrees = 0;
   private redactions: Champs = {};
-  private explications: Champs = {};
   private message = '';
   private soumise = false;
+  private estPilote = false;
 
   set exemple(valeur: WorkedExemple | null) {
     const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
@@ -66,9 +66,8 @@ export class FpWorked extends FpBlock {
             metadonnees: projeterMetadonnees(valeur.metadonnees),
           };
     if (change) {
-      this.montrees = this.total();
+      this.montrees = 0;
       this.redactions = {};
-      this.explications = {};
       this.message = '';
       this.soumise = false;
     }
@@ -99,12 +98,16 @@ export class FpWorked extends FpBlock {
     return this.montrees;
   }
 
+  set pilote(valeur: boolean | null | undefined) {
+    this.estPilote = valeur === true;
+    this.refreshSiConnecte();
+  }
+
   set brouillon(valeur: unknown) {
     if (!estObjet(valeur) || this.soumise) {
       return;
     }
     this.redactions = lireChamps(valeur['redactions']);
-    this.explications = lireChamps(valeur['explications']);
     this.noterBrouillonRepris();
     this.refreshSiConnecte();
   }
@@ -113,6 +116,9 @@ export class FpWorked extends FpBlock {
     const exemple = this.exemple;
     if (exemple === null) {
       return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+    }
+    if (this.estPilote) {
+      return this.etapesPilotees(exemple);
     }
     return safeHtml`
       <section class="fp-carte fp-worked__exemple">
@@ -134,7 +140,7 @@ export class FpWorked extends FpBlock {
     return safeHtml`
       <section class="fp-scene fp-worked__exemple">
         <p class="fp-enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
-        <ol class="fp-worked__etapes">${exemple.etapes.slice(0, this.montrees).map((etape) => this.etapeMontree(etape))}</ol>
+        <ol class="fp-worked__etapes">${exemple.etapes.map((etape, rang) => this.etapeProjetee(etape, rang))}</ol>
       </section>
     `;
   }
@@ -161,15 +167,29 @@ export class FpWorked extends FpBlock {
     const verrouille = this.verrouilleApresEnvoi(this.soumise, false);
     for (const champ of racine.querySelectorAll<HTMLTextAreaElement>('textarea[data-etape]')) {
       const cle = champ.dataset['etape'] ?? '';
-      const explication = champ.dataset['testid'] === 'explication';
       champ.disabled = verrouille;
-      champ.addEventListener('input', () => this.noter(explication, cle, champ.value));
+      champ.addEventListener('input', () => this.noter(cle, champ.value));
+      champ.addEventListener('change', () => this.envoyerEtape(cle));
     }
     const valider = racine.querySelector<HTMLButtonElement>('[data-testid="valider"]');
     if (valider !== null) {
-      valider.disabled = verrouille;
+      valider.disabled = verrouille || this.aCompleter().length === 0;
       valider.addEventListener('click', () => this.valider());
     }
+  }
+
+  private etapesPilotees(exemple: WorkedExemple): EscapedHtml {
+    const suite =
+      this.montrees < this.total()
+        ? safeHtml`<p class="fp-worked__suite" data-testid="suite-au-tableau">${escapeHtml(this.texte('worked-suite-au-tableau'))}</p>`
+        : safeHtml``;
+    return safeHtml`
+      <section class="fp-carte fp-worked__exemple">
+        <p class="fp-worked__enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
+        <ol class="fp-worked__etapes">${exemple.etapes.slice(0, this.montrees).map((etape) => this.etapeMontree(etape))}</ol>
+        ${suite}
+      </section>
+    `;
   }
 
   private total(): number {
@@ -195,8 +215,26 @@ export class FpWorked extends FpBlock {
     return safeHtml`
       <li class="fp-worked__etape" data-testid="etape" data-etape="${escapeHtml(etape.id)}" data-resolue="${escapeHtml(String(resolue))}">
         <p class="fp-worked__intitule">${escapeHtml(etape.intitule)}</p>
-        ${resolue ? this.raisonnement(etape) : this.redaction(etape)}
-        ${this.invite(etape)}
+        ${resolue ? this.saisieFigee(etape) : this.redaction(etape)}
+        ${resolue ? this.correction(etape) : safeHtml``}
+      </li>
+    `;
+  }
+
+  private correction(etape: WorkedEtape): EscapedHtml {
+    return safeHtml`
+      <p class="fp-worked__demande" data-testid="correction">${escapeHtml(this.texte('worked-correction'))}</p>
+      ${this.raisonnement(etape)}
+    `;
+  }
+
+  private etapeProjetee(etape: WorkedEtape, rang: number): EscapedHtml {
+    const resolue = rang < this.montrees;
+    return safeHtml`
+      <li class="fp-worked__etape" data-testid="etape" data-etape="${escapeHtml(etape.id)}" data-resolue="${escapeHtml(String(resolue))}">
+        <p class="fp-worked__intitule">${escapeHtml(etape.intitule)}</p>
+        <p class="fp-worked__invite" data-testid="question">${escapeHtml(etape.invite)}</p>
+        ${resolue ? this.correction(etape) : safeHtml``}
       </li>
     `;
   }
@@ -217,30 +255,34 @@ export class FpWorked extends FpBlock {
   private redaction(etape: WorkedEtape): EscapedHtml {
     const identifiant = `fp-worked-saisie-${etape.id}`;
     return safeHtml`
-      <label class="fp-worked__demande" for="${escapeHtml(identifiant)}">${escapeHtml(this.texte('worked-a-vous'))}</label>
+      <label class="fp-worked__invite" for="${escapeHtml(identifiant)}">${escapeHtml(etape.invite)}</label>
       <textarea class="fp-worked__champ" id="${escapeHtml(identifiant)}" data-testid="saisie" data-etape="${escapeHtml(etape.id)}" rows="3">${escapeHtml(this.redactions[etape.id] ?? '')}</textarea>
     `;
   }
 
-  private invite(etape: WorkedEtape): EscapedHtml {
-    const identifiant = `fp-worked-explication-${etape.id}`;
-    const question = etape.invite.trim().length > 0 ? etape.invite : this.texte('worked-pourquoi');
+  private saisieFigee(etape: WorkedEtape): EscapedHtml {
     return safeHtml`
-      <label class="fp-worked__invite" for="${escapeHtml(identifiant)}">${escapeHtml(question)}</label>
-      <textarea class="fp-worked__champ" id="${escapeHtml(identifiant)}" data-testid="explication" data-etape="${escapeHtml(etape.id)}" rows="2">${escapeHtml(this.explications[etape.id] ?? '')}</textarea>
+      <p class="fp-worked__invite">${escapeHtml(etape.invite)}</p>
+      <p class="fp-worked__reponse" data-testid="saisie-figee" data-etape="${escapeHtml(etape.id)}">${escapeHtml(this.redactions[etape.id] ?? '')}</p>
     `;
   }
 
-  private noter(explication: boolean, cle: string, valeur: string): void {
-    if (explication) {
-      this.explications = { ...this.explications, [cle]: valeur };
-    } else {
-      this.redactions = { ...this.redactions, [cle]: valeur };
+  private envoyerEtape(cle: string): void {
+    const exemple = this.interne;
+    const texte = (this.redactions[cle] ?? '').trim();
+    if (exemple === null || texte.length === 0 || this.verrouilleApresEnvoi(this.soumise, false)) {
+      return;
     }
-    this.signalerBrouillon(this.interne?.id ?? '', {
-      redactions: this.redactions,
-      explications: this.explications,
+    this.emit('fp-worked-submit', {
+      exempleId: exemple.id,
+      redactions: { [cle]: texte },
+      dureeMs: this.depuisAffichage(),
     });
+  }
+
+  private noter(cle: string, valeur: string): void {
+    this.redactions = { ...this.redactions, [cle]: valeur };
+    this.signalerBrouillon(this.interne?.id ?? '', { redactions: this.redactions });
   }
 
   private aCompleter(): readonly WorkedEtape[] {
@@ -249,10 +291,15 @@ export class FpWorked extends FpBlock {
 
   private valider(): void {
     const exemple = this.interne;
-    if (exemple === null || this.verrouilleApresEnvoi(this.soumise, false)) {
+    const ouvertes = this.aCompleter();
+    if (
+      exemple === null ||
+      ouvertes.length === 0 ||
+      this.verrouilleApresEnvoi(this.soumise, false)
+    ) {
       return;
     }
-    const manquante = this.aCompleter().some(
+    const manquante = ouvertes.some(
       (etape) => (this.redactions[etape.id] ?? '').trim().length === 0,
     );
     if (manquante) {
@@ -264,8 +311,9 @@ export class FpWorked extends FpBlock {
     this.message = this.messageApresEnvoi();
     this.emit('fp-worked-submit', {
       exempleId: exemple.id,
-      redactions: remplis(this.redactions),
-      explications: remplis(this.explications),
+      redactions: remplis(
+        Object.fromEntries(ouvertes.map((etape) => [etape.id, this.redactions[etape.id] ?? ''])),
+      ),
       dureeMs: this.depuisAffichage(),
     });
     this.refresh();

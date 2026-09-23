@@ -23,13 +23,13 @@ export interface FormationBenefit {
 export const FORMATIONS: readonly FormationCard[] = [
   {
     link: '/formations/b2-01-traitement-information-chiffree',
-    badge: $localize`:@@formations-list.b2.badge:BTS CG · Cours interactif · 72 écrans`,
+    badge: $localize`:@@formations-list.b2.badge:BTS CG · Cours interactif · 55 écrans`,
     title: $localize`:@@formations-list.b2.title:B2-01 — Lire et contrôler l’information chiffrée`,
-    description: $localize`:@@formations-list.b2.description:72 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À parcourir librement, ou à suivre en séance accompagnée avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b2.description:55 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
     meta: [
       {
         key: $localize`:@@formations-list.meta.duration:Durée`,
-        value: $localize`:@@formations-list.b2.duration:3 h 30 · 72 écrans`,
+        value: $localize`:@@formations-list.b2.duration:3 h 30 · 55 écrans`,
       },
       {
         key: $localize`:@@formations-list.meta.format:Format`,

@@ -12,6 +12,7 @@ import {
   GATE,
   githubAnnotation,
   isInScope,
+  isolatedGitEnv,
   parseArgs,
   ratchetCeiling,
   runGate,
@@ -30,7 +31,7 @@ const withRepo = ({ files = {}, ratchet }, run) => {
   const root = mkdtempSync(join(tmpdir(), 'guard-no-comments-'));
   try {
     // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
-    execFileSync('git', ['-C', root, 'init', '-q']);
+    execFileSync('git', ['-C', root, 'init', '-q'], { env: isolatedGitEnv() });
     const manifest = { name: 'guard-fixture', ...(ratchet && { [GATE]: ratchet }) };
     writeFileSync(join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`);
     for (const [rel, text] of Object.entries(files)) {
@@ -38,12 +39,29 @@ const withRepo = ({ files = {}, ratchet }, run) => {
       writeFileSync(join(root, rel), text);
     }
     // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
-    execFileSync('git', ['-C', root, 'add', '-A']);
+    execFileSync('git', ['-C', root, 'add', '-A'], { env: isolatedGitEnv() });
     run(root);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
 };
+
+/** @param {string} gitDir @param {() => void} run @returns {void} */
+const underInheritedGitDir = (gitDir, run) => {
+  const inherited = process.env.GIT_DIR;
+  process.env.GIT_DIR = gitDir;
+  try {
+    run();
+  } finally {
+    if (inherited === undefined) delete process.env.GIT_DIR;
+    else process.env.GIT_DIR = inherited;
+  }
+};
+
+/** @param {string} repo @param {string[]} args @returns {string} */
+const gitIn = (repo, args) =>
+  // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
+  execFileSync('git', ['-C', repo, ...args], { encoding: 'utf8', env: isolatedGitEnv() });
 
 /** @param {string} root @returns {unknown} */
 const declaredCeiling = (root) =>
@@ -346,6 +364,28 @@ void test('offense : file, line et snippet designent la ligne reelle', () => {
       snippet: '// prose en ligne trois',
     },
   ]);
+});
+
+void test('HOOK-WT-1 · collectFiles lit le depot de root sous le GIT_DIR exporte par un pre-push de worktree', () => {
+  withRepo({ files: { 'src/a.service.ts': 'export const a = 1;\n' } }, (root) => {
+    withRepo({ files: { 'src/b.service.ts': 'export const b = 1;\n' } }, (hookRepo) => {
+      underInheritedGitDir(join(hookRepo, '.git'), () => {
+        assert.deepEqual(collectFiles({ root }), ['src/a.service.ts']);
+      });
+    });
+  });
+});
+
+void test('HOOK-WT-2 · le depot de fixture laisse intact le depot designe par un GIT_DIR herite', () => {
+  withRepo({ files: { 'src/b.service.ts': 'export const b = 1;\n' } }, (hookRepo) => {
+    underInheritedGitDir(join(hookRepo, '.git'), () => {
+      withRepo({ files: { 'src/a.service.ts': 'export const a = 1;\n' } }, () => {});
+    });
+    assert.deepEqual(
+      { tracked: gitIn(hookRepo, ['ls-files']), bare: gitIn(hookRepo, ['config', 'core.bare']) },
+      { tracked: 'package.json\nsrc/b.service.ts\n', bare: 'false\n' },
+    );
+  });
 });
 
 void test('PLANCHER ANTI-VACUITE : un perimetre vide leve une erreur citant le gate', () => {

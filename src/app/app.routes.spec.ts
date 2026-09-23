@@ -117,6 +117,14 @@ describe('app routes', () => {
       expect(route?.data?.['robots']).toBe('noindex, nofollow');
     });
 
+    it('L1 · ne charge plus de page de lecture libre pour le B2', () => {
+      const route = routeDe('formations/b2-01-traitement-information-chiffree');
+
+      expect(route?.loadComponent).toBeUndefined();
+      expect(route?.component).toBeUndefined();
+      expect(route?.children).toEqual([]);
+    });
+
     async function verifieReserveAUnFormateur(chemin: string, nomComposant: string): Promise<void> {
       const route = routeDe(chemin);
       setupTestBed({ router: true });

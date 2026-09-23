@@ -27,6 +27,8 @@ export const EVENEMENTS_DES_BRIQUES: readonly string[] = [
   'fp-pulse-change',
   'fp-challenge-submit',
   'fp-worked-submit',
+  'fp-pro-submit',
+  'fp-concept4-reglage',
 ];
 
 function texteNonVide(valeur: unknown): valeur is string {
@@ -127,14 +129,30 @@ function redactions(screenId: string, detail: Detail, dureeMs: number): Evenemen
   if (!identifiant(exempleId)) {
     return [];
   }
-  return [
-    ...champsTextuels(detail['redactions']).flatMap(([etape, texte]) =>
-      libre(screenId, `${exempleId}:${etape}`, texte, dureeMs),
-    ),
-    ...champsTextuels(detail['explications']).flatMap(([etape, texte]) =>
-      libre(screenId, `${exempleId}:${etape}:pourquoi`, texte, dureeMs),
-    ),
-  ];
+  return champsTextuels(detail['redactions']).flatMap(([etape, texte]) =>
+    libre(screenId, `${exempleId}:${etape}`, texte, dureeMs),
+  );
+}
+
+function reglage(screenId: string, detail: Detail): EvenementBrique[] {
+  const reglages = objet(detail['reglages']);
+  if (reglages === null) {
+    return [];
+  }
+  const valeurs = Object.entries(reglages);
+  return valeurs.length > 0 &&
+    valeurs.every(([, valeur]) => typeof valeur === 'number' && Number.isFinite(valeur))
+    ? [{ kind: 'reglage', screenId, reglages: reglages as Readonly<Record<string, number>> }]
+    : [];
+}
+
+function reponsesDuCas(screenId: string, detail: Detail, dureeMs: number): EvenementBrique[] {
+  if (!identifiant(detail['casId'])) {
+    return [];
+  }
+  return champsTextuels(detail['reponses']).flatMap(([questionId, texte]) =>
+    libre(screenId, questionId, texte, dureeMs),
+  );
 }
 
 function tentative(screenId: string, detail: Detail, dureeMs: number): EvenementBrique[] {
@@ -183,6 +201,8 @@ function selon(nom: string, screenId: string, detail: Detail, dureeMs: number): 
       return defi(screenId, detail, dureeMs);
     case 'fp-worked-submit':
       return redactions(screenId, detail, dureeMs);
+    case 'fp-pro-submit':
+      return reponsesDuCas(screenId, detail, dureeMs);
     default:
       return Object.hasOwn(PRODUCTIONS, nom) ? production(screenId, nom, detail, dureeMs) : [];
   }
@@ -195,6 +215,9 @@ export function evenementsDe(nom: string, brut: unknown, screenId: string): Even
   }
   if (nom === 'fp-pulse-change') {
     return jalon(screenId, detail);
+  }
+  if (nom === 'fp-concept4-reglage') {
+    return reglage(screenId, detail);
   }
   const dureeMs = duree(detail);
   return dureeMs === null ? [] : selon(nom, screenId, detail, dureeMs);

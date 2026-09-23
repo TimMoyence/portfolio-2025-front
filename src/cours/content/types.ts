@@ -30,6 +30,7 @@ export interface PilotageEcran {
   readonly phase?: VotePhase;
   readonly revele?: boolean;
   readonly etayage?: number;
+  readonly reglages?: Readonly<Record<string, number>>;
 }
 
 export interface Tolerance {
@@ -223,6 +224,7 @@ export interface EcranDeroule extends EcranContent {
   }[];
   readonly corrigeEcran: CorrigeEcranPresentateur | null;
   readonly guide?: GuideFormateur;
+  readonly renvoi?: string;
 }
 
 export interface EtatParticipant {

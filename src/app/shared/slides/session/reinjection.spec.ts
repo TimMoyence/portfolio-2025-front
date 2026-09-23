@@ -78,6 +78,20 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     });
   });
 
+  it('RET-20 · pose sur le vote jumele les resultats du premier vote, quelle que soit la phase', () => {
+    const revele = direct({
+      pilotage: { phase: 'revele' },
+      resultats: [
+        buildResultatQuestion({ questionId: 'Q-CAP-03', total: 20, parOption: { b: 20 } }),
+        buildResultatQuestion({ questionId: 'Q-CAP-03-bis', total: 18, parOption: { a: 18 } }),
+      ],
+    });
+    expect(
+      pose('fp-vote', ['Q-CAP-03', 'Q-CAP-03-bis'], 'resultatsPremierVote', { direct: revele }),
+    ).toEqual({ total: 20, parOption: { b: 20 } });
+    expect(pose('fp-vote', ['Q-CAP-03'], 'resultatsPremierVote', { direct: revele })).toBeNull();
+  });
+
   it('ne donne les donnees du formateur qu au pupitre, et en projection qu apres la revelation', () => {
     const cartes = ['K-CHARGES-01'];
     expect(
@@ -98,7 +112,7 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     ).toBe(DONNEES_FORMATEUR);
     expect(
       posesDeReinjection(
-        montage('fp-numeric', ['Q-VA-07']),
+        montage('fp-recall', ['Q-VA-07']),
         contexte({ role: 'presentateur', render: 'board' }),
       ).map(([propriete]) => propriete),
     )
@@ -160,6 +174,23 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     expect(
       pose('fp-pulse', ['P-PULSE-01'], 'comptes', { direct: direct({ comptesJalon: comptes }) }),
     ).toBe(comptes);
+  });
+
+  it('RET-21 · pose les reglages pilotes sur la machine du formateur, jamais sur celle de l etudiant', () => {
+    const pilote = direct({ pilotage: { reglages: { n: 20 } } });
+    expect(
+      pose('fp-concept4', ['K-MACHINE'], 'reglages', { role: 'presentateur', direct: pilote }),
+    ).toEqual({ n: 20 });
+    expect(
+      pose('fp-concept4', ['K-MACHINE'], 'reglages', { role: 'etudiant', direct: pilote }),
+    ).toBeUndefined();
+  });
+
+  it('RET-23 · pose zero correction sur l exemple guide tant que le formateur n a rien revele', () => {
+    expect(pose('fp-worked', ['E-CAP-01'], 'etayage', { direct: direct({ pilotage: {} }) })).toBe(
+      0,
+    );
+    expect(pose('fp-worked', ['E-CAP-01'], 'etayage', {})).toBe(0);
   });
 
   it('marque deja repondu la brique visee et ne montre un refus qu a la brique qui a emis', () => {

@@ -193,10 +193,7 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   constructor(private readonly http: HttpClient) {}
 
-  ouvrirSeance(
-    courseSlug: string,
-    options?: { version?: number; capacite?: number },
-  ): Observable<SeanceOuverte> {
+  ouvrirSeance(courseSlug: string, options?: { capacite?: number }): Observable<SeanceOuverte> {
     return this.http.post<SeanceOuverte>(`${this.baseUrl}/sessions`, { courseSlug, ...options });
   }
 

@@ -81,7 +81,7 @@ export const plot = `
 
 :where(.fp-root) .fp-plot__graphique {
   width: 100%;
-  min-height: min(36vh, 22rem);
+  min-height: min(36cqh, 22rem);
   height: auto;
   border: 1px solid var(--fp-bordure);
   border-radius: var(--fp-r);
@@ -92,17 +92,37 @@ export const plot = `
   width: min(100%, 72rem);
   box-sizing: border-box;
   margin-inline: auto;
-  padding: clamp(1.25rem, 3vw, 2.5rem);
+  padding: clamp(1.25rem, 3cqi, 2.5rem);
   background: var(--fp-surface);
   border: 1px solid var(--fp-bordure);
   border-radius: var(--fp-r-lg);
   box-shadow: var(--fp-shadow-card);
 }
 
+:where(.fp-root[data-render='stage']) .fp-plot__atelier {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  align-items: start;
+}
+
+:where(.fp-root[data-render='stage']) .fp-plot__zone {
+  display: contents;
+}
+
+:where(.fp-root[data-render='stage']) .fp-plot__description,
+:where(.fp-root[data-render='stage']) .fp-plot__reglages,
+:where(.fp-root[data-render='stage']) .fp-plot__lecture {
+  grid-column: 1;
+}
+
+:where(.fp-root[data-render='stage']) .fp-plot__figure {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+}
+
 :where(.fp-root[data-render='stage']) .fp-plot__graphique {
-  width: min(100%, 760px);
+  width: 100%;
   min-height: 0;
-  max-height: min(34vh, 21rem);
+  max-height: min(60cqh, 30rem);
   margin-inline: auto;
 }
 
@@ -112,7 +132,7 @@ export const plot = `
 
 :where(.fp-root[data-render='board']) .fp-plot__graphique {
   min-height: 0;
-  max-height: min(30vh, 18rem);
+  max-height: min(30cqh, 18rem);
 }
 
 :where(.fp-root) .fp-plot__axe {
@@ -137,6 +157,55 @@ export const plot = `
 :where(.fp-root) .fp-plot__trace[data-trait='tirets'] {
   stroke: var(--fp-gold-deep);
   stroke-dasharray: 7 5;
+}
+
+:where(.fp-root) .fp-plot__barre {
+  fill: var(--fp-teal-deep);
+}
+
+:where(.fp-root) .fp-plot__montant-barre {
+  fill: var(--fp-texte-fort);
+  font-family: var(--fp-font-mono);
+  font-size: calc(10px * var(--fp-echelle));
+  font-weight: 600;
+}
+
+:where(.fp-root) .fp-plot__prereglages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fp-s-2);
+}
+
+:where(.fp-root) .fp-plot__prereglage {
+  min-height: 44px;
+  padding: var(--fp-s-2) var(--fp-s-3);
+  border: 1px solid var(--fp-teal-deep);
+  border-radius: var(--fp-r-sm);
+  background: var(--fp-surface);
+  color: var(--fp-teal-ink);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+:where(.fp-root) .fp-plot__prereglage:hover {
+  background: var(--fp-teal-deep);
+  color: var(--fp-cream);
+}
+
+:where(.fp-root) .fp-plot__prereglage:focus-visible {
+  outline: 2px solid var(--fp-teal);
+  outline-offset: 4px;
+}
+
+:where(.fp-root) .fp-plot__rapport {
+  color: var(--fp-texte-fort);
+  line-height: 1.5;
+}
+
+:where(.fp-root) .fp-plot__chiffre-cle {
+  color: var(--fp-teal-ink);
+  font-family: var(--fp-font-mono);
 }
 
 :where(.fp-root) .fp-plot__vide {

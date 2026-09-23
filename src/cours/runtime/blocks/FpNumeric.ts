@@ -2,7 +2,7 @@ import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
-import { estVerdictDeReponse, type VerdictDeReponse } from './retours';
+import { estVerdictDeReponse, lireBonneReponse, type VerdictDeReponse } from './retours';
 import { lireNombreSaisi } from './saisie-numerique';
 
 export interface NumericQuestionPublique {
@@ -26,6 +26,7 @@ function projeterQuestion(source: NumericQuestionPublique): NumericQuestionPubli
 export class FpNumeric extends FpBlock {
   private interne: NumericQuestionPublique | null = null;
   private interneVerdict: VerdictDeReponse | null = null;
+  private bonneReponse: string | null = null;
   private saisie = '';
   private message = '';
   private envoye = false;
@@ -54,6 +55,11 @@ export class FpNumeric extends FpBlock {
 
   get verdict(): VerdictDeReponse | null {
     return this.interneVerdict;
+  }
+
+  set corrige(valeur: unknown) {
+    this.bonneReponse = lireBonneReponse(valeur);
+    this.refreshSiConnecte();
   }
 
   renderHand(): EscapedHtml {
@@ -93,7 +99,14 @@ export class FpNumeric extends FpBlock {
       unite === null
         ? escapeHtml('')
         : safeHtml`<p class="fp-numeric__unite" data-testid="unite">${escapeHtml(unite)}</p>`;
-    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(question.enonce)}</p>${rappel}</div>`;
+    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(question.enonce)}</p>${rappel}${this.bonneReponseFormateur()}</div>`;
+  }
+
+  private bonneReponseFormateur(): EscapedHtml {
+    if (this.bonneReponse === null || this.roleActuel() !== 'presentateur') {
+      return escapeHtml('');
+    }
+    return safeHtml`<p class="fp-encadre" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(this.bonneReponse.replace('.', ','))}</p>`;
   }
 
   renderBoard(): EscapedHtml {

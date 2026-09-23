@@ -20,7 +20,13 @@ export interface Concept4Definition {
   readonly formuleLatexSimplifie: string;
   readonly calcul: string;
   readonly phrase: string;
+  readonly etapes?: readonly Concept4Etape[];
   readonly metadonnees: MetadonneesBrique;
+}
+
+export interface Concept4Etape {
+  readonly libelle: string;
+  readonly calcul: string;
 }
 
 type Valeurs = Readonly<Record<string, number>>;
@@ -105,6 +111,7 @@ export class FpConcept4 extends FpBlock {
             formuleLatexSimplifie: valeur.formuleLatexSimplifie,
             calcul: valeur.calcul,
             phrase: valeur.phrase,
+            etapes: (valeur.etapes ?? []).map(({ libelle, calcul }) => ({ libelle, calcul })),
             metadonnees: projeterMetadonnees(valeur.metadonnees),
           };
     this.courantes = {};
@@ -123,6 +130,20 @@ export class FpConcept4 extends FpBlock {
     return { ...this.courantes };
   }
 
+  set reglages(valeur: Valeurs | null) {
+    if (valeur === null) {
+      return;
+    }
+    this.arreterAnimation();
+    for (const parametre of this.interne?.parametres ?? []) {
+      const pilote = valeur[parametre.cle];
+      if (typeof pilote === 'number') {
+        this.courantes[parametre.cle] = borner(parametre, pilote);
+      }
+    }
+    this.refreshSiConnecte();
+  }
+
   disconnectedCallback(): void {
     this.arreterAnimation();
   }
@@ -131,14 +152,14 @@ export class FpConcept4 extends FpBlock {
     if (this.definition === null) {
       return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    return safeHtml`<section class="fp-carte fp-concept4__atelier">${this.reglages()}<div class="fp-concept4__zone" data-zone="faces">${this.faces('fp-prose')}</div></section>`;
+    return safeHtml`<section class="fp-carte fp-concept4__atelier">${this.panneauDeReglages()}<div class="fp-concept4__zone" data-zone="faces">${this.faces('fp-prose')}</div></section>`;
   }
 
   renderStage(): EscapedHtml {
     if (this.definition === null) {
       return safeHtml``;
     }
-    return safeHtml`<section class="fp-scene fp-concept4__atelier">${this.faces('fp-enonce')}</section>`;
+    return safeHtml`<section class="fp-scene fp-concept4__atelier">${this.panneauDeReglages()}<div class="fp-concept4__zone" data-zone="faces">${this.faces('fp-enonce')}</div></section>`;
   }
 
   renderBoard(): EscapedHtml {
@@ -156,7 +177,7 @@ export class FpConcept4 extends FpBlock {
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.definition?.id ?? null);
-    if (this.mode() !== 'hand') {
+    if (this.mode() === 'board') {
       return;
     }
     racine
@@ -165,6 +186,14 @@ export class FpConcept4 extends FpBlock {
         this.animer();
       });
     brancherCurseurs(racine, (cle, valeur) => this.regler(cle, valeur));
+    if (this.roleActuel() !== 'presentateur' || this.enApercu()) {
+      return;
+    }
+    for (const curseur of racine.querySelectorAll('input[data-testid="curseur"]')) {
+      curseur.addEventListener('change', () => {
+        this.emit('fp-concept4-reglage', { reglages: this.valeurs });
+      });
+    }
   }
 
   private regler(cle: string, valeur: number): void {
@@ -181,7 +210,7 @@ export class FpConcept4 extends FpBlock {
     if (sortie !== null) {
       sortie.textContent = formater(this.courantes[cle]);
     }
-    this.rafraichirZone('faces', this.faces('fp-prose'));
+    this.rafraichirZone('faces', this.faces(this.mode() === 'stage' ? 'fp-enonce' : 'fp-prose'));
   }
 
   private faces(stylePhrase: string): EscapedHtml {
@@ -279,17 +308,50 @@ export class FpConcept4 extends FpBlock {
     if (parametre === null) {
       return safeHtml``;
     }
-    const trace = this.trace(parametre, valeurs);
+    const trajectoire = this.trajectoire(valeurs);
+    const trace = trajectoire ?? this.trace(parametre, valeurs);
     const etiquette = `${this.texte('concept4-courbe')} ${parametre.libelle}`;
     return safeHtml`
       <figure class="fp-concept4__face" data-testid="graphique" data-valeur="${escapeHtml(String(this.resultat(valeurs)))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-graphique'))}</h3>
         <svg class="fp-concept4__courbe" data-testid="courbe" viewBox="0 0 ${LARGEUR} ${HAUTEUR}" role="img" aria-label="${escapeHtml(etiquette)}">
+          ${trajectoire === null ? safeHtml`` : safeHtml`<line class="fp-concept4__repere" data-testid="repere" x1="${MARGE}" x2="${LARGEUR - MARGE}" y1="${trajectoire.repere}" y2="${trajectoire.repere}"></line>`}
           <polyline class="fp-concept4__trace" data-testid="trace" points="${escapeHtml(trace.points)}"></polyline>
           <circle class="fp-concept4__point" data-testid="point" cx="${trace.cx}" cy="${trace.cy}" r="6"></circle>
         </svg>
       </figure>
     `;
+  }
+
+  private valeursDesEtapes(valeurs: Valeurs): number[] {
+    return (this.definition?.etapes ?? []).map((etape) =>
+      nombre(evaluerExpression(etape.calcul, valeurs).valeur ?? Number.NaN, 0),
+    );
+  }
+
+  private trajectoire(valeurs: Valeurs): (Trace & { readonly repere: number }) | null {
+    const ordonnees = this.valeursDesEtapes(valeurs);
+    if (ordonnees.length < 2) {
+      return null;
+    }
+    const plancher = Math.min(...ordonnees);
+    const plafond = Math.max(...ordonnees);
+    const marge = (plafond - plancher || Math.abs(plafond) || 1) * 0.1;
+    const versX = (rang: number): number =>
+      MARGE + (rang / (ordonnees.length - 1)) * (LARGEUR - 2 * MARGE);
+    const versY = (ordonnee: number): number =>
+      HAUTEUR -
+      MARGE -
+      ((ordonnee - (plancher - marge)) / (plafond - plancher + 2 * marge)) * (HAUTEUR - 2 * MARGE);
+    const derniere = ordonnees.length - 1;
+    return {
+      points: ordonnees
+        .map((ordonnee, rang) => `${arrondi(versX(rang))},${arrondi(versY(ordonnee))}`)
+        .join(' '),
+      cx: arrondi(versX(derniere)),
+      cy: arrondi(versY(ordonnees[derniere])),
+      repere: arrondi(versY(ordonnees[0])),
+    };
   }
 
   private trace(parametre: Concept4Parametre, valeurs: Valeurs): Trace {
@@ -322,6 +384,9 @@ export class FpConcept4 extends FpBlock {
     if (parametre === null) {
       return safeHtml``;
     }
+    if ((this.definition?.etapes ?? []).length > 0) {
+      return this.tableauDesEtapes(valeurs);
+    }
     const lignes = this.lignes(parametre, valeurs);
     const courante = lignes.find((ligne) => ligne.courant);
     return safeHtml`
@@ -335,6 +400,29 @@ export class FpConcept4 extends FpBlock {
             </tr>
           </thead>
           <tbody>${lignes.map((ligne) => this.ligne(ligne))}</tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  private tableauDesEtapes(valeurs: Valeurs): EscapedHtml {
+    const etapes = this.definition?.etapes ?? [];
+    const resultats = this.valeursDesEtapes(valeurs);
+    const derniere = etapes.length - 1;
+    return safeHtml`
+      <div class="fp-concept4__face" data-testid="tableau" data-valeur="${escapeHtml(String(this.resultat(valeurs)))}">
+        <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-tableau'))}</h3>
+        <table class="fp-concept4__tableau">
+          <thead>
+            <tr>
+              <th scope="col">${escapeHtml(this.texte('concept4-etape'))}</th>
+              <th scope="col">${escapeHtml(this.texte('concept4-resultat'))}</th>
+            </tr>
+          </thead>
+          <tbody>${etapes.map(
+            (etape, rang) =>
+              safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(rang === derniere))}"><td>${escapeHtml(etape.libelle)}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(formater(resultats[rang]))}</td></tr>`,
+          )}</tbody>
         </table>
       </div>
     `;
@@ -376,7 +464,7 @@ export class FpConcept4 extends FpBlock {
     `;
   }
 
-  private reglages(): EscapedHtml {
+  private panneauDeReglages(): EscapedHtml {
     const parametres = this.definition?.parametres ?? [];
     return safeHtml`
       <fieldset class="fp-concept4__reglages">

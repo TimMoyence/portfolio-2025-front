@@ -125,7 +125,7 @@ const SPACED = {
   options: OPTIONS,
 } satisfies SpacedQuestionPublique;
 
-describe('Contrats figés du cours B2-01 V3 côté front (§ 9, lot 0)', () => {
+describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
   describe('§ 9.3 — types miroirs', () => {
     it('titre un écran sans l’exiger d’un serveur v2', () => {
       const titre = {
