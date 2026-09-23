@@ -87,6 +87,14 @@ function writeCeiling({ root, ceiling }) {
 }
 
 /**
+ * @param {NodeJS.ProcessEnv} [env]
+ * @returns {NodeJS.ProcessEnv}
+ */
+export function isolatedGitEnv(env = process.env) {
+  return Object.fromEntries(Object.entries(env).filter(([name]) => !name.startsWith('GIT_')));
+}
+
+/**
  * @param {string} root
  * @returns {string[]}
  */
@@ -95,6 +103,7 @@ function trackedFiles(root) {
   const out = execFileSync('git', ['-C', root, 'ls-files', '-z'], {
     encoding: 'utf8',
     maxBuffer: 1 << 28,
+    env: isolatedGitEnv(),
   });
   return out.split('\0').filter(Boolean);
 }
