@@ -48,6 +48,8 @@ import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
 import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
 import { phraseDeNotation } from './regle-de-notation';
+import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
+import { correctionsAffichees } from './corrections-affichees';
 
 type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
 
@@ -109,6 +111,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
   selector: 'app-cours-presentateur',
   standalone: true,
   imports: [
+    CoursBandeauCorrectionComponent,
     CoursPanneauActiviteComponent,
     CoursPanneauQuestionComponent,
     CoursPanneauPedagogiqueComponent,
@@ -485,7 +488,14 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                     [donneesFormateur]="ecranAffiche.corrigeEcran"
                     [maitrise]="maitrise()"
                     [renvoi]="ecranRenvoye()"
+                    [surimpression]="correction"
                   />
+                  <ng-template #correction>
+                    <app-cours-bandeau-correction
+                      [corrections]="correctionsDeLEcran()"
+                      [revele]="direct()?.pilotage?.revele === true"
+                    />
+                  </ng-template>
                   @if (maitriseIndisponible()) {
                     <p
                       class="muted"
@@ -676,6 +686,10 @@ export class CoursPresentateurComponent {
 
   readonly ecranCourant = computed<EcranDeroule | null>(
     () => this.deroule()?.ecrans[this.ecran()] ?? null,
+  );
+
+  readonly correctionsDeLEcran = computed(() =>
+    correctionsAffichees(this.ecranCourant() ?? undefined),
   );
 
   readonly ecranRenvoye = computed<EcranDeroule | null>(() => {

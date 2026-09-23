@@ -12616,24 +12616,6 @@
         <target> Full-screen projection </target>
       </segment>
     </unit>
-    <unit id="presentateurEcranSuivantSynthese">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:687</note>
-      </notes>
-      <segment>
-        <source>la synthèse de la séance</source>
-        <target>the session summary</target>
-      </segment>
-    </unit>
-    <unit id="presentateurEcranSuivantRang">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:690</note>
-      </notes>
-      <segment>
-        <source>l’écran <ph id="0" equiv="rang" disp="rang"/></source>
-        <target>screen <ph id="0" equiv="rang" disp="rang"/></target>
-      </segment>
-    </unit>
     <unit id="panneauAnnotationTitre">
       <notes>
         <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:60,62</note>
@@ -12814,15 +12796,6 @@
         <target>Group name</target>
       </segment>
     </unit>
-    <unit id="panneauGuideADire">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:22</note>
-      </notes>
-      <segment>
-        <source>À dire</source>
-        <target>To say</target>
-      </segment>
-    </unit>
     <unit id="panneauGuideQuestion">
       <notes>
         <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:23</note>
@@ -12841,15 +12814,6 @@
         <target>Expected answer</target>
       </segment>
     </unit>
-    <unit id="panneauGuideCalcul">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:25</note>
-      </notes>
-      <segment>
-        <source>Calcul</source>
-        <target>Calculation</target>
-      </segment>
-    </unit>
     <unit id="panneauGuideRelance">
       <notes>
         <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:26</note>
@@ -12857,15 +12821,6 @@
       <segment>
         <source>Relance</source>
         <target>Follow-up prompt</target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideTransition">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:27</note>
-      </notes>
-      <segment>
-        <source>Transition</source>
-        <target>Transition</target>
       </segment>
     </unit>
     <unit id="panneauGuideTitre">
@@ -12902,15 +12857,6 @@
       <segment>
         <source>Révéler la réponse attendue</source>
         <target>Reveal the expected answer</target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideTransitionParDefaut">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:102</note>
-      </notes>
-      <segment>
-        <source>Enchaîner sur « <ph id="0" equiv="ecranSuivant" disp="this.ecranSuivant()"/> ».</source>
-        <target>Move on to “<ph id="0" equiv="ecranSuivant" disp="this.ecranSuivant()"/>”.</target>
       </segment>
     </unit>
     <unit id="panneauLectureConfianceAucune">
@@ -13044,8 +12990,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:26</note>
       </notes>
       <segment>
-        <source>BTS CG · Cours interactif · 54 écrans</source>
-        <target>BTS CG · Interactive course · 54 screens</target>
+        <source>BTS CG · Cours interactif · 55 écrans</source>
+        <target>BTS CG · Interactive course · 55 screens</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.title">
@@ -13062,8 +13008,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:28</note>
       </notes>
       <segment>
-        <source>54 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
-        <target>54 screens to read, check and explain numerical information: proportions, percentages, changes over time. To follow in a guided session, with the code your teacher gives you.</target>
+        <source>55 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>55 screens to read, check and explain numerical information: proportions, percentages, changes over time. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.duration">
@@ -13071,8 +13017,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:32</note>
       </notes>
       <segment>
-        <source>3 h 30 · 54 écrans</source>
-        <target>3 h 30 min · 54 screens</target>
+        <source>3 h 30 · 55 écrans</source>
+        <target>3 h 30 min · 55 screens</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.format">
@@ -16716,6 +16662,42 @@
       <segment>
         <source> Réadmettre dans la séance </source>
         <target> Readmit to the session </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteCorrectionTitre">
+      <segment>
+        <source>Correction à l’écran</source>
+        <target>On-screen correction</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteCorrectionAide">
+      <segment>
+        <source> La correction s’affiche sur l’écran projeté au clic, pas avant. </source>
+        <target> The correction appears on the projected screen when you click, not before. </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteCorrectionRevelee">
+      <segment>
+        <source>Correction révélée</source>
+        <target>Correction revealed</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteRevelerCorrection">
+      <segment>
+        <source>Révéler la correction</source>
+        <target>Reveal the correction</target>
+      </segment>
+    </unit>
+    <unit id="slideSortReviewBienPlacee">
+      <segment>
+        <source> Bien placée dans votre tri </source>
+        <target> Correctly placed in your sort </target>
+      </segment>
+    </unit>
+    <unit id="coursCorrectionTitre">
+      <segment>
+        <source>Correction</source>
+        <target>Correction</target>
       </segment>
     </unit>
     <unit id="presentateurMaitriseEchec">

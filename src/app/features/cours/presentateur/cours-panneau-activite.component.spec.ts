@@ -127,6 +127,33 @@ describe('CoursPanneauActiviteComponent', () => {
     ).toBeTrue();
   });
 
+  it('R1 · révèle à l écran la correction de tout écran porteur d un corrigé, une seule fois', () => {
+    const tableau = buildEcranDeroule({
+      id: 'ecran-tableau',
+      type: 'fp-table-build',
+      donnees: {},
+      corriges: [],
+      questions: [{ id: 'q-tableau', enonce: 'Prix et indice de la toile', options: null }],
+    });
+    const { fixture, commandes } = monter(tableau);
+
+    cliquer(fixture, 'activite-reveler-correction');
+    expect(commandes).toEqual([{ screenId: 'ecran-tableau', revele: true }]);
+
+    fixture.componentRef.setInput('pilotage', { revele: true });
+    fixture.detectChanges();
+    expect(
+      (cibleMarque(fixture, 'activite-reveler-correction', 'le panneau') as HTMLButtonElement)
+        .disabled,
+    ).toBeTrue();
+  });
+
+  it('R1 · ne propose aucune révélation sur un écran sans corrigé', () => {
+    const recit = buildEcranDeroule({ type: 'fp-story', donnees: {}, corriges: [] });
+
+    expect(lire(monter(recit).fixture, 'activite-reveler-correction')).toBeNull();
+  });
+
   it('dose l etayage de l exemple guide entre zero et le nombre d etapes', () => {
     const exemple = buildWorkedExemple();
     const guide = buildEcranDeroule({

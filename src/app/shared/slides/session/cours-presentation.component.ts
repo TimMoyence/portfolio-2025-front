@@ -10,6 +10,7 @@ import {
   output,
   PLATFORM_ID,
   signal,
+  type TemplateRef,
   viewChild,
 } from '@angular/core';
 import type {
@@ -78,6 +79,9 @@ interface Cadre {
                     </div>
                   </div>
                 </aside>
+              }
+              @if (surimpression(); as calque) {
+                <ng-container *ngTemplateOutlet="calque" />
               }
             </div>
           </div>
@@ -207,6 +211,7 @@ export class CoursPresentationComponent {
   readonly maitrise = input<readonly SyntheseConcept[] | null>(null);
   readonly brouillons = input<Brouillons | null>(null);
   readonly renvoi = input<EcranContent | null>(null);
+  readonly surimpression = input<TemplateRef<unknown> | null>(null);
   readonly evenement = output<EvenementBrique>();
 
   private readonly cadreObserve = viewChild<ElementRef<HTMLElement>>('cadre');

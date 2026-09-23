@@ -47,9 +47,10 @@ const layouts: Readonly<Record<string, Type<unknown>>> = {
   'sort-review': SlideSortReviewComponent,
 };
 
-function cartesMalPlacees(
+function cartesDuTri(
   source: Readonly<Record<string, unknown>> | null,
   retours: ReadonlyMap<string, readonly RetourBrique[]>,
+  juste: boolean,
 ): readonly string[] {
   const screenId = source?.['screenId'];
   const sortId = source?.['sortId'];
@@ -58,7 +59,7 @@ function cartesMalPlacees(
   }
   return (retours.get(screenId) ?? []).flatMap((retour) =>
     retour.kind === 'verdict-production' && retour.questionId === sortId
-      ? retour.details.filter((detail) => !detail.juste).map((detail) => detail.cle)
+      ? retour.details.filter((detail) => detail.juste === juste).map((detail) => detail.cle)
       : [],
   );
 }
@@ -186,7 +187,8 @@ export class SlideVisualComponent {
     const reviewInputs =
       renderer === 'sort-review'
         ? {
-            misplaced: cartesMalPlacees(objet(props['source']), this.retours()),
+            misplaced: cartesDuTri(objet(props['source']), this.retours(), false),
+            wellPlaced: cartesDuTri(objet(props['source']), this.retours(), true),
           }
         : {};
     return {

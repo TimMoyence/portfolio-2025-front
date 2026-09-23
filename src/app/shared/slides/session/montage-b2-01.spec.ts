@@ -2,19 +2,17 @@ import type { EcranContent, RenderMode, Role } from '../../../../cours/content/t
 import { monterEcran, RENDUS_DE_MONTAGE } from '../../../../testing/briques-montees';
 import { buildInstantaneDeSubstitution } from '../../../../testing/factories/instantane-b2-01.factory';
 import {
-  ecransDuPupitreV3,
-  ecransPublicsV3,
-  INSTANTANE_V3,
-} from '../../../../testing/fixtures/instantane-b2-01-v3';
+  ecransDuPupitreB2_01,
+  ecransPublicsB2_01,
+  INSTANTANE_B2_01,
+} from '../../../../testing/fixtures/instantane-b2-01';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { SlideActivityComponent } from './slide-activity.component';
 
 const EMPREINTE_PUBLIEE_PAR_LE_BACK =
-  '461a90dbd1b9f6a9db72dba8a9725d8404af88bcaadf1be84c26577be7a2a5fa';
+  'd52afc532cecf45bb9672039feb05e065def9d03ea806e80c219ed2243869699';
 
-const VERSION_PUBLIEE = 3;
-
-const ECRANS_PUBLIES = 54;
+const ECRANS_PUBLIES = 55;
 
 const SUBSTITUTION = buildInstantaneDeSubstitution();
 
@@ -42,12 +40,12 @@ async function attesterLeMontage(
   monte.detruire();
 }
 
-describe('AC-24 : l instantané V3 réel du back se monte en main, au tableau et en projection', () => {
+describe('AC-24 : l instantané réel du B2-01 servi par le back se monte en main, au tableau et en projection', () => {
   beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
   it('garde la diapositive de Samir réglable au pupitre et la consigne courte de l atelier', async () => {
-    const diapositive = ecransDuPupitreV3()[13];
-    const atelier = ecransPublicsV3()[14];
+    const diapositive = ecransDuPupitreB2_01()[13];
+    const atelier = ecransPublicsB2_01()[14];
     const monte = await monterEcran(diapositive, 'hand', 'presentateur');
     const graphique = monte.montees()[0] as HTMLElement;
 
@@ -65,20 +63,19 @@ describe('AC-24 : l instantané V3 réel du back se monte en main, au tableau et
   });
 
   it('porte l empreinte et le nombre d écrans publiés par le back', () => {
-    expect(INSTANTANE_V3.empreinte).toBe(EMPREINTE_PUBLIEE_PAR_LE_BACK);
-    expect(INSTANTANE_V3.version).toBe(VERSION_PUBLIEE);
+    expect(INSTANTANE_B2_01.empreinte).toBe(EMPREINTE_PUBLIEE_PAR_LE_BACK);
     expect([
-      ecransPublicsV3().length,
-      ecransDuPupitreV3().length,
-      INSTANTANE_V3.catalogue.ecrans.length,
+      ecransPublicsB2_01().length,
+      ecransDuPupitreB2_01().length,
+      INSTANTANE_B2_01.catalogue.ecrans.length,
     ]).toEqual([ECRANS_PUBLIES, ECRANS_PUBLIES, ECRANS_PUBLIES]);
-    expect(ecransDuPupitreV3().map((ecran) => ecran.id)).toEqual(
-      ecransPublicsV3().map((ecran) => ecran.id),
+    expect(ecransDuPupitreB2_01().map((ecran) => ecran.id)).toEqual(
+      ecransPublicsB2_01().map((ecran) => ecran.id),
     );
   });
 
   it('ne livre au poste étudiant ni corrigé, ni notes, ni guide', () => {
-    const clesPubliees = new Set(clesDe(ecransPublicsV3()));
+    const clesPubliees = new Set(clesDe(ecransPublicsB2_01()));
 
     for (const cle of [
       'corriges',
@@ -95,11 +92,11 @@ describe('AC-24 : l instantané V3 réel du back se monte en main, au tableau et
     expect(clesPubliees.has('donnees')).toBeTrue();
   });
 
-  for (const ecran of ecransPublicsV3()) {
+  for (const ecran of ecransPublicsB2_01()) {
     it(`${ecran.id} (${ecran.type}) en hand`, () => attesterLeMontage(ecran, 'hand', 'etudiant'));
   }
 
-  for (const ecran of ecransDuPupitreV3()) {
+  for (const ecran of ecransDuPupitreB2_01()) {
     for (const render of ['board', 'stage'] as const) {
       it(`${ecran.id} (${ecran.type}) en ${render}`, () =>
         attesterLeMontage(ecran, render, 'presentateur'));
@@ -111,7 +108,7 @@ describe('les factories du front couvrent chaque type d écran du contrat § 9.4
   beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
   it('produit les 18 types, dont ceux absents de l instantané réel', () => {
-    const typesReels = new Set(ecransPublicsV3().map((ecran) => ecran.type));
+    const typesReels = new Set(ecransPublicsB2_01().map((ecran) => ecran.type));
     const typesFabriques = new Set(SUBSTITUTION.map((ecran) => ecran.type));
 
     expect(typesFabriques.size).toBe(18);

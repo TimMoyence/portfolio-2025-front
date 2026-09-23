@@ -295,6 +295,22 @@ describe('CoursSceneComponent', () => {
     expect(double.flux.close).toHaveBeenCalledTimes(1);
   });
 
+  it('R1 · projette dans la toile la réponse attendue une fois la correction révélée, pas avant', async () => {
+    const fixture = await monterEtStabiliser();
+    const bandeau = (): string | undefined =>
+      (fixture.nativeElement as HTMLElement)
+        .querySelector('[data-testid="cours-toile"] [data-testid="cours-correction"]')
+        ?.textContent?.replace(/\s+/g, ' ');
+
+    diffuser(fixture, { ecranCourant: 0 });
+
+    expect(bandeau()).toBeUndefined();
+
+    diffuser(fixture, { ecranCourant: 0, pilotage: { 'ecran-vote': { revele: true } } });
+
+    expect(bandeau()).toContain('1 480,24');
+  });
+
   it('ne projette les comptes d un jalon qu a partir de cinq reponses', async () => {
     const annexe = { type: 'revelation' as const, titre: 'Méthode', lignes: ['Capitaliser'] };
     deroule = buildDerouleCours({

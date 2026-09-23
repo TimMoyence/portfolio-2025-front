@@ -922,8 +922,7 @@
 }
 
 @media (max-width: 900px) {
-  .join-panel,
-  .presentateur-workspace {
+  .join-panel {
     grid-template-columns: 1fr;
   }
 
@@ -1160,13 +1159,10 @@
 
 .student-session app-slide-deck {
   --slide-min-height: calc(100dvh - 150px);
-}
-
-.student-session .slide-deck.mode-scroll {
-  height: auto;
-  min-height: calc(100dvh - 150px);
-  overflow: visible;
-  scroll-snap-type: none;
+  --slide-deck-hauteur: auto;
+  --slide-deck-hauteur-min: calc(100dvh - 150px);
+  --slide-deck-defilement: visible;
+  --slide-deck-accroche: none;
 }
 
 .student-session__navigation {
@@ -1191,5 +1187,15 @@
 
   .presentateur-sidebar {
     max-height: none;
+  }
+}
+
+.cours-presentateur {
+  container: pupitre / inline-size;
+}
+
+@container pupitre (max-width: 900px) {
+  .presentateur-workspace {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

@@ -26,6 +26,8 @@ import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
 import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { objet } from '../../../shared/slides/visual/presentation-v2';
+import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
+import { correctionsAffichees } from './corrections-affichees';
 
 type Chargement = 'chargement' | 'succes' | 'echec';
 
@@ -45,7 +47,7 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
 @Component({
   selector: 'app-cours-scene',
   standalone: true,
-  imports: [CoursPresentationComponent],
+  imports: [CoursPresentationComponent, CoursBandeauCorrectionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
@@ -271,7 +273,14 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
               [direct]="direct()"
               [donneesFormateur]="annexeDeLEcran()"
               [renvoi]="ecranRenvoye()"
+              [surimpression]="correction"
             />
+            <ng-template #correction>
+              <app-cours-bandeau-correction
+                [corrections]="correctionsDeLEcran()"
+                [revele]="direct()?.pilotage?.revele === true"
+              />
+            </ng-template>
           }
         </main>
       </div>
@@ -337,6 +346,10 @@ export class CoursSceneComponent {
     const cible = deroule?.ecrans.find(({ id }) => id === renvoi);
     return cible === undefined ? null : ecranProjete(cible);
   });
+
+  readonly correctionsDeLEcran = computed(() =>
+    correctionsAffichees(this.deroule()?.ecrans[this.ecran()]),
+  );
 
   readonly annexeDeLEcran = computed(
     () => this.deroule()?.ecrans[this.ecran()]?.corrigeEcran ?? null,
