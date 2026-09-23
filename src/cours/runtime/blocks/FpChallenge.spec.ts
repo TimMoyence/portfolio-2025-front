@@ -160,6 +160,21 @@ describe('FpChallenge', () => {
     expect(marquesDe(hote)).toEqual(['diviser-cent']);
   });
 
+  it('G2 · projette l énoncé, la consigne et la zone de réponse du poste étudiant, inertes', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.setAttribute('render', 'stage');
+    const racine = hote.shadowRoot;
+    const zone = racine?.querySelector<HTMLTextAreaElement>('textarea');
+
+    expect(racine?.querySelector('legend')?.textContent?.trim()).toBe(PROBLEME.enonce);
+    expect(racine?.querySelector('[data-testid="consigne"]')?.textContent?.trim()).toBe(
+      'Cherchez par vous-même : aucune méthode ne vous a encore été donnée',
+    );
+    expect(racine?.querySelector('label')?.textContent?.trim()).toBe(PROBLEME.invite);
+    expect(zone?.disabled).toBeTrue();
+    expect(racine?.querySelector('[data-testid="envoyer"]')).toBeNull();
+  });
+
   it('montre au pupitre les strategies de reference et leur piste fausse', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.setAttribute('render', 'board');

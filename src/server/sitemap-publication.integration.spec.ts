@@ -16,6 +16,13 @@ const DELAI_DU_LECTEUR_MS = 2_000;
 
 const metadata = metadataDuSite as unknown as SeoMetadataFile;
 
+const metadataAvecLeCoursIndexe: SeoMetadataFile = {
+  ...metadata,
+  pages: metadata.pages.map((page) =>
+    page.path === CHEMIN_DU_COURS_B2 ? { ...page, index: true } : page,
+  ),
+};
+
 function lastmodDuCoursDansLeFichier(): string {
   const page = metadata.pages.find(({ path }) => path === CHEMIN_DU_COURS_B2);
   if (page?.lastmod === undefined) {
@@ -35,7 +42,7 @@ function reponseDuCatalogue(publieLe?: string): Response {
 async function sitemap(appels: typeof fetch, journal: Pick<Console, 'warn'>): Promise<string> {
   const reponse = createReponseExpressStub();
   await routeDuSitemap({
-    lireMetadata: () => metadata,
+    lireMetadata: () => metadataAvecLeCoursIndexe,
     lireArticles: () => Promise.resolve([]),
     lirePublicationsDeCours: lecteurDePublicationsDeCours({
       apiBaseUrl: API,

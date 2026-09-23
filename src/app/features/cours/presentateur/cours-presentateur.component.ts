@@ -484,6 +484,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                     [direct]="direct()"
                     [donneesFormateur]="ecranAffiche.corrigeEcran"
                     [maitrise]="maitrise()"
+                    [renvoi]="ecranRenvoye()"
                   />
                   @if (maitriseIndisponible()) {
                     <p
@@ -503,6 +504,18 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                 aria-label="Informations de séance"
                 i18n-aria-label="@@presentateurInformationsSeance"
               >
+                @if (ecranAffiche.notes !== '') {
+                  <section class="presentateur-notes" data-testid="presentateur-notes">
+                    <h3 i18n="presentateur.notes|@@presentateurNotes">Notes du formateur</h3>
+                    <p class="notes">{{ ecranAffiche.notes }}</p>
+                  </section>
+                }
+                <app-cours-panneau-pedagogique
+                  [ecran]="ecranAffiche"
+                  [resultats]="resultatsDesQuestions()"
+                  [participants]="participants()"
+                  [sessionId]="sessionId()"
+                />
                 <app-cours-panneau-activite
                   [ecran]="ecranAffiche"
                   [resultats]="resultats()"
@@ -512,18 +525,6 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   [pilotageBloque]="pilotageBloque()"
                   (commande)="piloterLEcran($event)"
                 />
-                <app-cours-panneau-pedagogique
-                  [ecran]="ecranAffiche"
-                  [resultats]="resultatsDesQuestions()"
-                  [participants]="participants()"
-                  [sessionId]="sessionId()"
-                />
-                @if (ecranAffiche.notes !== '') {
-                  <section class="presentateur-notes" data-testid="presentateur-notes">
-                    <h3 i18n="presentateur.notes|@@presentateurNotes">Notes du formateur</h3>
-                    <p class="notes">{{ ecranAffiche.notes }}</p>
-                  </section>
-                }
                 @if (questions().length > 0) {
                   <section class="presentateur-questions-panel">
                     <div class="presentateur-sidebar__head">
@@ -676,6 +677,11 @@ export class CoursPresentateurComponent {
   readonly ecranCourant = computed<EcranDeroule | null>(
     () => this.deroule()?.ecrans[this.ecran()] ?? null,
   );
+
+  readonly ecranRenvoye = computed<EcranDeroule | null>(() => {
+    const renvoi = this.ecranCourant()?.renvoi;
+    return this.deroule()?.ecrans.find(({ id }) => id === renvoi) ?? null;
+  });
 
   readonly questions = computed<readonly QuestionDuPanneau[]>(() => {
     const ecran = this.ecranCourant();

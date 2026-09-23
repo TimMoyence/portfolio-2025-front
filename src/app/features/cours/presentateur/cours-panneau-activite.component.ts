@@ -60,7 +60,7 @@ interface LigneDeCle {
     .activite-section {
       display: grid;
       gap: 0.5rem;
-      padding: 0.9rem 1rem;
+      padding: var(--s-3, 20px);
       border: 1px solid var(--line, #e4d8c4);
       border-radius: 12px;
       background: var(--ivory, #fbf3e6);
@@ -252,6 +252,15 @@ interface LigneDeCle {
           </p>
         }
         @default {
+          <button
+            type="button"
+            class="control-btn"
+            data-testid="activite-participants-masquer"
+            (click)="masquerLesParticipants()"
+            i18n="@@panneauActiviteParticipantsMasquer"
+          >
+            Masquer les participants
+          </button>
           <ul>
             @for (participant of listeDesParticipants(); track participant.id) {
               <li
@@ -385,6 +394,10 @@ export class CoursPanneauActiviteComponent {
     } catch {
       this.lecture.set('echec');
     }
+  }
+
+  protected masquerLesParticipants(): void {
+    this.lecture.set('fermee');
   }
 
   protected evincer(participant: ParticipantDeSeance): Promise<void> {

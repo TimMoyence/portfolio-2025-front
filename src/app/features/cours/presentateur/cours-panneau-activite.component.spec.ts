@@ -283,6 +283,15 @@ describe('CoursPanneauActiviteComponent', () => {
       expect(evinces(fixture)).toEqual(['true', 'false']);
     });
 
+    it('R5 · referme la liste des participants a la demande du formateur', async () => {
+      const fixture = await afficherDeuxParticipants();
+
+      await cliquerLePremier(fixture, 'activite-participants-masquer');
+
+      expect(lire(fixture, 'activite-participant')).toBeNull();
+      expect(lire(fixture, 'activite-participants-afficher')).not.toBeNull();
+    });
+
     it('readmet l evince que le formateur avait retire par erreur', async () => {
       const fixture = await afficherDeuxParticipants();
       await cliquerLePremier(fixture, 'activite-evincer');

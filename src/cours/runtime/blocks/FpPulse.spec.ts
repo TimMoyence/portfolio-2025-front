@@ -172,6 +172,16 @@ describe('FpPulse', () => {
     expect(presses(hote)).toEqual([]);
   });
 
+  it('G2 · projette l invite, l anonymat et les trois états du poste étudiant, inertes', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.setAttribute('render', 'stage');
+
+    expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(SONDAGE.invite);
+    expect(lireTexte(hote, 'anonymat')).not.toBe('');
+    expect(boutonsEtat(hote).map((bouton) => bouton.disabled)).toEqual([true, true, true]);
+    expect(presses(hote)).toEqual([]);
+  });
+
   it('masque les comptes en projection sous cinq reponses, jamais au pupitre', () => {
     hote.comptes = { perdu: 1, 'ca-va': 2, clair: 1, total: 4 };
     hote.setAttribute('render', 'stage');

@@ -109,10 +109,6 @@ export async function authenticateUser(page: Page): Promise<void> {
 
 export const B2_SLUG = 'b2-01-traitement-information-chiffree';
 
-export const B2_ECRANS = 72;
-
-export const CLES_DE_CORRECTION: readonly string[] = ['correctIndex', 'explanation', 'notes'];
-
 interface EcranCatalogue {
   readonly id: string;
   readonly type: 'fp-story';
@@ -150,14 +146,6 @@ function ecranB2(
   };
 }
 
-export function ecranB2Recit(rang: number, titre = `Écran ${rang}`): EcranCatalogue {
-  return ecranB2(rang, 'hero', {
-    title: titre,
-    subtitle: 'Contrôler avant de décider',
-    bullets: ['Cours B2 servi par le serveur'],
-  });
-}
-
 export function ecranB2Graphique(
   rang: number,
   props: Readonly<Record<string, unknown>>,
@@ -165,20 +153,9 @@ export function ecranB2Graphique(
   return ecranB2(rang, 'chart', props);
 }
 
-export function ecranB2Quiz(
-  rang: number,
-  question: string,
-  options: string[],
-  correction: Readonly<Record<string, unknown>> = {},
-): EcranCatalogue {
-  return ecranB2(rang, 'quiz', {
-    questionData: { id: `b2-s${rang}-quiz`, type: 'quiz', question, options, ...correction },
-  });
-}
+const B2_VERSION_PUBLIEE = 3;
 
-export const B2_VERSION_PUBLIEE = 3;
-
-export const B2_PUBLIE_LE = '2026-09-15T09:30:00.000Z';
+const B2_PUBLIE_LE = '2026-09-15T09:30:00.000Z';
 
 export function coursB2Catalogue(ecrans: readonly EcranCatalogue[]) {
   return {

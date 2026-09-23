@@ -14,8 +14,11 @@ import {
   buildResultatsSeance,
 } from '../../../../testing/factories/formations.factory';
 import {
+  TRI_CORRIGE,
+  buildVerdictDuTri,
   buildVisualQuizSlide,
   buildVisualSlide,
+  buildVisualSortCorrectionSlide,
 } from '../../../../testing/factories/visual-slide.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { EvenementBrique, RetourBrique } from './contrat-hote';
@@ -101,6 +104,20 @@ describe('SlideActivityComponent : deck visuel B2', () => {
     ).toContain('7 / 12');
   });
 
+  it('L4 · transmet les retours du tri a l ecran de correction pour border les cartes mal placees', () => {
+    const fixture = monter({
+      slide: buildVisualSortCorrectionSlide(),
+      role: 'etudiant',
+      sessionId: 'seance-1',
+      retours: new Map([[TRI_CORRIGE.screenId, [buildVerdictDuTri({ inflation: false })]]]),
+    });
+
+    const erreurs = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>(
+      '.slide-sort-review__carte--erreur',
+    );
+    expect([...erreurs].map((carte) => carte.dataset['carte'])).toEqual(['inflation']);
+  });
+
   it('utilise le même renderer visuel que le catalogue pour l’étudiant', () => {
     const fixture = monter({ slide: buildVisualSlide(), role: 'etudiant' });
 
@@ -173,6 +190,24 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
         valeur: 1480.24,
         dureeMs: jasmine.any(Number),
       },
+    ]);
+  });
+
+  it('L3 · relaie les reponses libres d un cas professionnel a la seance', async () => {
+    const fixture = monter({ slide: ECRAN_NUMERIQUE });
+    const recus = evenements(fixture);
+    const numerique = await brique(fixture, 'fp-numeric');
+
+    numerique.dispatchEvent(
+      new CustomEvent('fp-pro-submit', {
+        detail: buildDetailDeBrique('fp-pro-submit'),
+        bubbles: true,
+        composed: true,
+      }),
+    );
+
+    expect(recus).toEqual([
+      jasmine.objectContaining({ kind: 'libre', activityId: 'b2-01-a1-mission:mesure' }),
     ]);
   });
 

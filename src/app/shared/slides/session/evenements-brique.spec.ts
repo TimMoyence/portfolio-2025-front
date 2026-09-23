@@ -98,6 +98,19 @@ describe('evenementsDe : traduction des evenements de brique vers le contrat hot
     ).toEqual(['E-CAP-01:etape-2', 'E-CAP-01:etape-2:pourquoi']);
   });
 
+  it('L3 · traduit chaque reponse non vide d un cas professionnel en texte libre de sa question', () => {
+    expect(traduire('fp-pro-submit')).toEqual([
+      {
+        kind: 'libre',
+        screenId: ECRAN,
+        activityId: 'b2-01-a1-mission:mesure',
+        response: 'Un montant de chiffre d affaires',
+        dureeMs: 1200,
+      },
+    ]);
+    expect(traduire('fp-pro-submit', { casId: '' })).toEqual([]);
+  });
+
   it('refuse un detail sans duree entiere, sans identifiant ou d etat inconnu', () => {
     expect(traduire('fp-vote-submit', { dureeMs: -1 })).toEqual([]);
     expect(traduire('fp-vote-submit', { dureeMs: 1.5 })).toEqual([]);

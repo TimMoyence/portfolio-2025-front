@@ -158,6 +158,12 @@ describe('identifiants portes par un montage', () => {
     ).toEqual([]);
   });
 
+  it('L3 · identifie le cas professionnel pour reprendre le brouillon de ses reponses', () => {
+    expect(
+      identifiantsDuMontage({ brique: 'fp-pro', donnees: { cas: { id: 'B2-01-A1-03-MISSION' } } }),
+    ).toEqual(['B2-01-A1-03-MISSION']);
+  });
+
   it('ne rend aucun identifiant pour une brique sans porteur declare', () => {
     expect(
       identifiantsDuMontage({ brique: 'fp-story', donnees: { recit: { id: 'R-1' } } }),

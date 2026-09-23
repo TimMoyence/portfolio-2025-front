@@ -223,6 +223,7 @@ export interface EcranDeroule extends EcranContent {
   }[];
   readonly corrigeEcran: CorrigeEcranPresentateur | null;
   readonly guide?: GuideFormateur;
+  readonly renvoi?: string;
 }
 
 export interface EtatParticipant {

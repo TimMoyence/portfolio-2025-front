@@ -27,6 +27,7 @@ export const EVENEMENTS_DES_BRIQUES: readonly string[] = [
   'fp-pulse-change',
   'fp-challenge-submit',
   'fp-worked-submit',
+  'fp-pro-submit',
 ];
 
 function texteNonVide(valeur: unknown): valeur is string {
@@ -137,6 +138,15 @@ function redactions(screenId: string, detail: Detail, dureeMs: number): Evenemen
   ];
 }
 
+function reponsesDuCas(screenId: string, detail: Detail, dureeMs: number): EvenementBrique[] {
+  if (!identifiant(detail['casId'])) {
+    return [];
+  }
+  return champsTextuels(detail['reponses']).flatMap(([questionId, texte]) =>
+    libre(screenId, questionId, texte, dureeMs),
+  );
+}
+
 function tentative(screenId: string, detail: Detail, dureeMs: number): EvenementBrique[] {
   const { parcoursId, enigmeId, reponse: saisie } = detail;
   return identifiant(parcoursId) && identifiant(enigmeId) && texteNonVide(saisie)
@@ -183,6 +193,8 @@ function selon(nom: string, screenId: string, detail: Detail, dureeMs: number): 
       return defi(screenId, detail, dureeMs);
     case 'fp-worked-submit':
       return redactions(screenId, detail, dureeMs);
+    case 'fp-pro-submit':
+      return reponsesDuCas(screenId, detail, dureeMs);
     default:
       return Object.hasOwn(PRODUCTIONS, nom) ? production(screenId, nom, detail, dureeMs) : [];
   }

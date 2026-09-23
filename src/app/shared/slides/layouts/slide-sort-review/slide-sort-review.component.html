@@ -1,0 +1,32 @@
+<div class="slide-sort-review">
+  @if (title()) {
+    <h2>{{ title() }}</h2>
+  }
+  @if (subtitle()) {
+    <p class="slide-sort-review__subtitle">{{ subtitle() }}</p>
+  }
+  <div class="slide-sort-review__zones">
+    @for (zone of zones(); track zone.id) {
+      <section class="slide-sort-review__zone" [attr.data-zone]="zone.id">
+        <h3>{{ zone.label }}</h3>
+        <ul>
+          @for (carte of zone.cartes; track carte.id) {
+            <li
+              class="slide-sort-review__carte"
+              [class.slide-sort-review__carte--erreur]="carte.malPlacee"
+              [attr.data-carte]="carte.id"
+            >
+              <p class="slide-sort-review__libelle">{{ carte.label }}</p>
+              <p class="slide-sort-review__justification">{{ carte.justification }}</p>
+              @if (carte.malPlacee) {
+                <p class="slide-sort-review__signal" i18n="@@slideSortReviewMalPlacee">
+                  Mal placée dans votre tri
+                </p>
+              }
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  </div>
+</div>

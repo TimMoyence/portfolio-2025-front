@@ -267,6 +267,22 @@ describe('FpWorked', () => {
     expect(reperes(hote, 'duree')[0]?.textContent).toBe('8 min');
   });
 
+  it('E17 · en correction, le poste étudiant suit les étapes déroulées au pupitre, sans saisie ni envoi', () => {
+    hote.pilote = true;
+    hote.etayage = 1;
+
+    expect(montrees(hote)).toEqual(ETAPES.slice(0, 1));
+    expect(hote.shadowRoot?.querySelectorAll('textarea').length).toBe(0);
+    expect(reperes(hote, 'valider')).toEqual([]);
+    expect(reperes(hote, 'suite-au-tableau').length).toBe(1);
+
+    hote.etayage = PLEIN;
+
+    expect(montrees(hote)).toEqual(ETAPES);
+    expect(reperes(hote, 'suite-au-tableau')).toEqual([]);
+    expect(envoisEmis()).toEqual([]);
+  });
+
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
     expect(classesOrphelines(hote, 'worked')).toEqual([]);

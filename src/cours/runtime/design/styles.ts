@@ -25,6 +25,7 @@ export const tokens = `
   --fp-en-attente: var(--fp-ink-mute);
   --fp-en-attente-fond: var(--fp-cream);
   --fp-erreur: #c0563c;
+  --fp-juste: #2e7d4f;
 
   --fp-font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --fp-font-sans: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
@@ -103,8 +104,8 @@ export const base = `
 }
 
 :where(.fp-root) {
-  --fp-gouttiere: clamp(20px, calc(0.5rem + 3.3333vw), 72px);
-  --fp-respiration: clamp(32px, calc(1.25rem + 3.3333vw), 84px);
+  --fp-gouttiere: clamp(20px, calc(0.5rem + 3.3333cqi), 72px);
+  --fp-respiration: clamp(32px, calc(1.25rem + 3.3333cqi), 84px);
 }
 
 :where(.fp-root) .fp-grille {
@@ -255,23 +256,7 @@ export const base = `
 
 export const stage = `
 :where(.fp-root[data-render='stage']) {
-  --fp-echelle: clamp(1.15, 0.8rem + 0.8vw, 1.7);
-  --fp-fond: var(--fp-cream);
-  --fp-surface: #fbf3e6;
-  --fp-texte: var(--fp-ink-soft);
-  --fp-texte-fort: var(--fp-ink);
-  --fp-bordure: var(--fp-line);
-  --fp-confirme: #0c0902;
-  --fp-confirme-fond: #eaf6f3;
-  --fp-a-revoir: #0c0902;
-  --fp-a-revoir-fond: #fdf4e3;
-  --fp-en-cours: #0c0902;
-  --fp-en-cours-fond: var(--fp-sand);
-  --fp-en-attente: #0c0902;
-  --fp-en-attente-fond: #fffaf2;
-  --fp-shadow-card: 0 4px 14px rgba(28, 22, 10, 0.06), 0 22px 50px rgba(28, 22, 10, 0.09);
-  --fp-piste: var(--fp-sand);
-  --fp-remplissage: var(--fp-teal-ink);
+  --fp-echelle: var(--fp-echelle-scene, 1.25);
 }
 
 :where(.fp-root[data-render='stage']) .fp-carte {

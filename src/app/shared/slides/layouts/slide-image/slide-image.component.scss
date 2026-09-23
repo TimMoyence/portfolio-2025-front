@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: 1fr;
   width: 100%;
-  min-height: 100vh;
+  min-height: 100cqh;
   align-items: center;
   gap: 2rem;
   padding: 2rem;
@@ -25,7 +25,7 @@
 
 .slide-image__content {
   h2 {
-    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    font-size: clamp(1.75rem, 3cqi, 2.75rem);
     font-weight: 700;
     margin: 0 0 1rem;
     line-height: 1.2;
@@ -33,14 +33,14 @@
 }
 
 .slide-image__subtitle {
-  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  font-size: clamp(1.05rem, 1.4cqi, 1.25rem);
   font-weight: 600;
   color: var(--accent-dark, var(--teal-dark));
   margin: 0 0 1.5rem;
 }
 
 .slide-image__paragraph {
-  font-size: clamp(1rem, 1.4vw, 1.125rem);
+  font-size: clamp(1rem, 1.4cqi, 1.125rem);
   line-height: 1.6;
   margin: 0 0 1rem;
 
@@ -60,7 +60,7 @@
   li {
     position: relative;
     padding-left: 1.75rem;
-    font-size: clamp(0.95rem, 1.3vw, 1.0625rem);
+    font-size: clamp(0.95rem, 1.3cqi, 1.0625rem);
     line-height: 1.6;
 
     &::before {
@@ -140,7 +140,7 @@
     margin: 0.35rem 0 0;
     line-height: 1.55;
     color: var(--text, #0c0902);
-    font-size: clamp(0.95rem, 1.2vw, 1.0625rem);
+    font-size: clamp(0.95rem, 1.2cqi, 1.0625rem);
   }
 }
 
@@ -153,7 +153,26 @@
   strong {
     font-weight: 700;
     color: var(--text, #0c0902);
-    font-size: clamp(1rem, 1.3vw, 1.125rem);
+    font-size: clamp(1rem, 1.3cqi, 1.125rem);
+  }
+}
+
+@container (min-height: 0px) {
+  .slide-image {
+    grid-template-columns: 1fr 1fr;
+    height: 100cqh;
+    min-height: 0;
+    padding: 2.5rem 3rem;
+  }
+
+  .slide-image__media img {
+    max-height: calc(100cqh - 5rem);
+    object-fit: contain;
+  }
+
+  .slide-image__items {
+    flex-flow: row wrap;
+    gap: 0.5rem 1.5rem;
   }
 }
 

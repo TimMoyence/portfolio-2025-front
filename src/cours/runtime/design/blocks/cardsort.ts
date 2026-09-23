@@ -79,6 +79,14 @@ export const cardsort = `
   box-shadow: 0 0 0 2px var(--fp-teal-deep);
 }
 
+:where(.fp-root) .fp-cardsort__carte[data-etat='confirme'] {
+  border: 2px solid var(--fp-juste);
+}
+
+:where(.fp-root) .fp-cardsort__carte[data-etat='a-revoir'] {
+  border: 2px solid var(--fp-erreur);
+}
+
 :where(.fp-root) .fp-cardsort__carte:focus-visible {
   outline: 2px solid var(--fp-teal);
   outline-offset: 2px;

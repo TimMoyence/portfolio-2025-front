@@ -10,9 +10,11 @@ import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { SlideActivityComponent } from './slide-activity.component';
 
 const EMPREINTE_PUBLIEE_PAR_LE_BACK =
-  'd9f24f34dd1a8184579a4c41dbb17e2eb5ecce5a0fa23e20df4bf64bd87b9281';
+  '461a90dbd1b9f6a9db72dba8a9725d8404af88bcaadf1be84c26577be7a2a5fa';
 
-const ECRANS_PUBLIES = 52;
+const VERSION_PUBLIEE = 3;
+
+const ECRANS_PUBLIES = 54;
 
 const SUBSTITUTION = buildInstantaneDeSubstitution();
 
@@ -44,15 +46,17 @@ describe('AC-24 : l instantané V3 réel du back se monte en main, au tableau et
   beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
   it('garde la diapositive de Samir réglable au pupitre et la consigne courte de l atelier', async () => {
-    const diapositive = ecransDuPupitreV3()[12];
-    const atelier = ecransPublicsV3()[13];
+    const diapositive = ecransDuPupitreV3()[13];
+    const atelier = ecransPublicsV3()[14];
     const monte = await monterEcran(diapositive, 'hand', 'presentateur');
     const graphique = monte.montees()[0] as HTMLElement;
 
     expect(graphique.shadowRoot?.querySelector('[data-testid="titre"]')?.textContent).toContain(
       'Samir',
     );
-    expect(graphique.shadowRoot?.querySelectorAll('[data-testid="parametre"]').length).toBe(2);
+    expect(graphique.shadowRoot?.querySelectorAll('[data-testid="parametre"]').length).toBe(1);
+    expect(graphique.shadowRoot?.querySelectorAll('[data-testid="prereglage"]').length).toBe(2);
+    expect(graphique.shadowRoot?.querySelectorAll('[data-testid="barre"]').length).toBe(4);
     expect(atelier.donnees?.['consigne']).toBe(
       'Calculatrice autorisée, sauf pour la question sur le nombre de commandes (ordre de grandeur). Répondez seul·e, puis comparez avec votre voisin·e avant la correction.',
     );
@@ -62,7 +66,7 @@ describe('AC-24 : l instantané V3 réel du back se monte en main, au tableau et
 
   it('porte l empreinte et le nombre d écrans publiés par le back', () => {
     expect(INSTANTANE_V3.empreinte).toBe(EMPREINTE_PUBLIEE_PAR_LE_BACK);
-    expect(INSTANTANE_V3.version).toBe(1);
+    expect(INSTANTANE_V3.version).toBe(VERSION_PUBLIEE);
     expect([
       ecransPublicsV3().length,
       ecransDuPupitreV3().length,

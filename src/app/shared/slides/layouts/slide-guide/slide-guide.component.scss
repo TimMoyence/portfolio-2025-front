@@ -1,11 +1,11 @@
 .slide-guide {
   width: min(100%, 76rem);
-  min-height: 100vh;
+  min-height: 100cqh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: clamp(1.5rem, 4vw, 3rem);
-  padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 6vw, 7rem);
+  gap: clamp(1.5rem, 4cqi, 3rem);
+  padding: clamp(4rem, 8cqi, 7rem) clamp(1.25rem, 6cqi, 7rem);
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -19,7 +19,7 @@
   margin: 0;
   color: var(--ink, #0c0902);
   font-family: var(--font-display, Georgia, serif);
-  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  font-size: clamp(2.25rem, 5cqi, 4.5rem);
   font-weight: 400;
   line-height: 0.98;
   text-wrap: balance;
@@ -29,14 +29,14 @@
   max-width: 62ch;
   margin: 1rem 0 0;
   color: var(--text-muted, var(--slide-text-muted));
-  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  font-size: clamp(1rem, 1.5cqi, 1.2rem);
   line-height: 1.55;
 }
 
 .slide-guide__body {
   display: grid;
   grid-template-columns: minmax(12rem, 0.75fr) minmax(0, 1.45fr);
-  gap: clamp(1.5rem, 5vw, 5rem);
+  gap: clamp(1.5rem, 5cqi, 5rem);
   align-items: start;
 }
 
@@ -44,7 +44,7 @@
   margin: 0;
   padding-top: 0.25rem;
   color: var(--ink-soft, #3c3529);
-  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-size: clamp(1.05rem, 1.6cqi, 1.35rem);
   line-height: 1.5;
 }
 
@@ -85,7 +85,7 @@
 .slide-guide h3 {
   margin: 0;
   color: var(--ink, #0c0902);
-  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  font-size: clamp(1.05rem, 1.6cqi, 1.3rem);
 }
 
 .slide-guide__steps p {

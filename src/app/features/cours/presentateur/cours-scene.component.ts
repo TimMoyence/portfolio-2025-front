@@ -9,7 +9,12 @@ import {
   signal,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import type { DerouleCours, EcranContent, PilotageEcran } from '../../../../cours/content/types';
+import type {
+  DerouleCours,
+  EcranContent,
+  EcranDeroule,
+  PilotageEcran,
+} from '../../../../cours/content/types';
 import type {
   EtatSession,
   ResultatsDuFlux,
@@ -25,6 +30,17 @@ import { objet } from '../../../shared/slides/visual/presentation-v2';
 type Chargement = 'chargement' | 'succes' | 'echec';
 
 const SEUIL_DE_PROJECTION = 5;
+
+function ecranProjete(ecran: EcranDeroule): EcranContent {
+  return {
+    id: ecran.id,
+    type: ecran.type,
+    titre: ecran.titre ?? null,
+    duree: ecran.duree,
+    interactif: ecran.interactif,
+    donnees: ecran.donnees,
+  };
+}
 
 @Component({
   selector: 'app-cours-scene',
@@ -254,6 +270,7 @@ const SEUIL_DE_PROJECTION = 5;
               [resultats]="resultats()"
               [direct]="direct()"
               [donneesFormateur]="annexeDeLEcran()"
+              [renvoi]="ecranRenvoye()"
             />
           }
         </main>
@@ -311,17 +328,14 @@ export class CoursSceneComponent {
 
   readonly ecranCourant = computed<EcranContent | null>(() => {
     const ecran = this.deroule()?.ecrans[this.ecran()];
-    if (ecran === undefined) {
-      return null;
-    }
-    return {
-      id: ecran.id,
-      type: ecran.type,
-      titre: ecran.titre ?? null,
-      duree: ecran.duree,
-      interactif: ecran.interactif,
-      donnees: ecran.donnees,
-    };
+    return ecran === undefined ? null : ecranProjete(ecran);
+  });
+
+  readonly ecranRenvoye = computed<EcranContent | null>(() => {
+    const deroule = this.deroule();
+    const renvoi = deroule?.ecrans[this.ecran()]?.renvoi;
+    const cible = deroule?.ecrans.find(({ id }) => id === renvoi);
+    return cible === undefined ? null : ecranProjete(cible);
   });
 
   readonly annexeDeLEcran = computed(

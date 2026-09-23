@@ -117,6 +117,21 @@ describe('CoursSceneComponent', () => {
     TestBed.inject(AuthStateService).clearSession();
   });
 
+  it('E10 · projette en miniature, sans corrigé, l écran auquel renvoie l écran courant', async () => {
+    const [vote, rappel] = derouleDeSeance().ecrans;
+    deroule = buildDerouleCours({ ecrans: [vote, { ...rappel, renvoi: vote.id }] });
+    port.lireDeroule.and.returnValue(of(deroule));
+    const fixture = await monterEtStabiliser();
+
+    diffuser(fixture, { ecranCourant: 1 });
+    const ecrans = fixture.debugElement
+      .queryAll(By.directive(SlideActivityComponent))
+      .map((ecran) => (ecran.componentInstance as SlideActivityComponent).slide());
+
+    expect(ecrans.map(({ id }) => id)).toEqual([rappel.id, vote.id]);
+    expect(Object.hasOwn(ecrans[1], 'corriges')).toBeFalse();
+  });
+
   it('lit le deroule de la session puis ouvre le flux formateur pour suivre l ecran courant', async () => {
     const fixture = await monterEtStabiliser();
 

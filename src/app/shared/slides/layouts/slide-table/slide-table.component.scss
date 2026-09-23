@@ -4,13 +4,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(4rem, 9vh, 7rem) clamp(1rem, 4vw, 3rem) clamp(3rem, 6vh, 5rem);
+  padding: clamp(4rem, 9cqh, 7rem) clamp(1rem, 4cqi, 3rem) clamp(3rem, 6cqh, 5rem);
   max-width: 1200px;
   margin: 0 auto;
 
   h2 {
     text-align: center;
-    font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+    font-size: clamp(1.5rem, 2.5cqi, 2.25rem);
     margin: 0 0 2rem;
   }
 }

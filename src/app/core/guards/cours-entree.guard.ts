@@ -14,8 +14,7 @@ export const coursEntreeGuard: CanActivateFn = (route) => {
     (authState.hasRole('teacher') &&
       typeof slug === 'string' &&
       router.createUrlTree(['/cours/presenter', slug])) ||
-    (authState.isLoggedIn() && router.createUrlTree(['/cours/rejoindre'])) ||
-    true;
+    router.createUrlTree(['/cours/rejoindre']);
 
   const sessionCheckWasComplete = authState.isSessionCheckComplete();
   if (!sessionCheckWasComplete) {

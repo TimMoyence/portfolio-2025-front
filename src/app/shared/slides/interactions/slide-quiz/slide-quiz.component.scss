@@ -3,7 +3,7 @@
 .slide-quiz {
   @include slide.interaction;
   justify-content: flex-start;
-  padding-top: clamp(5.5rem, 11vh, 8rem);
+  padding-top: clamp(5.5rem, 11cqh, 8rem);
 }
 
 .slide-quiz__question {

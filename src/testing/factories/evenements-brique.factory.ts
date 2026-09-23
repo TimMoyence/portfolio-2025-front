@@ -45,6 +45,14 @@ const DETAILS: Readonly<Partial<Record<string, Readonly<Record<string, unknown>>
     explications: { 'etape-2': 'Le taux s applique au capital augmente' },
     dureeMs: DUREE_MS,
   },
+  'fp-pro-submit': {
+    casId: 'B2-01-A1-03-MISSION',
+    reponses: {
+      'b2-01-a1-mission:mesure': 'Un montant de chiffre d affaires',
+      'b2-01-a1-mission:comparable': '   ',
+    },
+    dureeMs: DUREE_MS,
+  },
 };
 
 export function buildDetailDeBrique(

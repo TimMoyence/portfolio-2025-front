@@ -130,7 +130,15 @@ export class FpChallenge extends FpBlock {
       return safeHtml``;
     }
     const projetees = this.formateur.length > 0 ? this.formateur : this.servies;
-    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(probleme.enonce)}</p>${this.interneRevele ? this.liste(projetees, true) : VIDE}</div>`;
+    return safeHtml`
+      <fieldset class="fp-carte fp-challenge__probleme">
+        <legend>${escapeHtml(probleme.enonce)}</legend>
+        <p class="fp-challenge__consigne" data-testid="consigne">${escapeHtml(this.texte('challenge-consigne'))}</p>
+        <label class="fp-challenge__invite" for="${escapeHtml(ID_TENTATIVE)}">${escapeHtml(probleme.invite)}</label>
+        <textarea class="fp-challenge__champ" id="${escapeHtml(ID_TENTATIVE)}" rows="5" disabled></textarea>
+        ${this.interneRevele ? this.liste(projetees, true) : VIDE}
+      </fieldset>
+    `;
   }
 
   renderBoard(): EscapedHtml {

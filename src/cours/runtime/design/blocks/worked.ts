@@ -106,6 +106,11 @@ export const worked = `
   color: var(--fp-texte-fort);
 }
 
+:where(.fp-root) .fp-worked__suite {
+  color: var(--fp-en-attente);
+  font-style: italic;
+}
+
 :where(.fp-root) .fp-worked__niveau {
   color: var(--fp-ink-mute);
   font-family: var(--fp-font-mono);

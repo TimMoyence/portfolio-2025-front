@@ -96,7 +96,11 @@ type QuestionDeQuestionnaire =
 export interface DonneesParBrique {
   readonly 'fp-story': { readonly recit: StoryRecit };
   readonly 'fp-pro': { readonly cas: ProCas };
-  readonly 'fp-worked': { readonly exemple: WorkedExemple; readonly etayage: number };
+  readonly 'fp-worked': {
+    readonly exemple: WorkedExemple;
+    readonly etayage: number;
+    readonly pilote?: boolean;
+  };
   readonly 'fp-concept4': { readonly definition: Concept4Definition };
   readonly 'fp-plot': { readonly definition: PlotDefinition };
   readonly 'fp-challenge': {

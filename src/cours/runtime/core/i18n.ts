@@ -41,6 +41,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'challenge-fausse': () => $localize`:@@coursRuntimeChallengeFausse:Piste fausse`,
   'pro-geste': () => $localize`:@@coursRuntimeProGeste:Le geste professionnel`,
   'pro-consequence': () => $localize`:@@coursRuntimeProConsequence:Sur le terrain :`,
+  'pro-reponse-vide': () =>
+    $localize`:@@coursRuntimeProReponseVide:Répondez à chaque question avant de valider`,
   'concept4-reglages': () =>
     $localize`:@@coursRuntimeConcept4Reglages:Faites varier les paramètres et observez les quatre faces`,
   'concept4-animer': () => $localize`:@@coursRuntimeConcept4Animer:Animer le calcul`,
@@ -61,6 +63,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'worked-etape-vide': () =>
     $localize`:@@coursRuntimeWorkedEtapeVide:Rédigez chaque étape laissée de côté avant de valider`,
   'worked-niveau': () => $localize`:@@coursRuntimeWorkedNiveau:Étapes montrées :`,
+  'worked-suite-au-tableau': () =>
+    $localize`:@@coursRuntimeWorkedSuiteAuTableau:La suite de la correction s’affiche au fil du cours`,
   'plot-reglages': () =>
     $localize`:@@coursRuntimePlotReglages:Faites varier les paramètres et observez la forme des courbes`,
   'plot-animer': () => $localize`:@@coursRuntimePlotAnimer:Voir l’évolution`,
@@ -75,6 +79,10 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimePlotAucuneSerie:Aucune courbe à tracer : la définition ne porte aucune série`,
   'plot-plage': () => $localize`:@@coursRuntimePlotPlage:de`,
   'plot-plage-fin': () => $localize`:@@coursRuntimePlotPlageFin:à`,
+  'plot-prereglages': () => $localize`:@@coursRuntimePlotPrereglages:Préréglages de l’axe`,
+  'plot-rapport-hauteurs': () => $localize`:@@coursRuntimePlotRapportHauteurs:Hauteur de la barre`,
+  'plot-rapport-a': () => $localize`:@@coursRuntimePlotRapportA:rapportée à celle de`,
+  'plot-evolution-reelle': () => $localize`:@@coursRuntimePlotEvolutionReelle:évolution réelle`,
   'table-build-consigne': () =>
     $localize`:@@coursRuntimeTableBuildConsigne:Bâtissez le tableau ligne à ligne : chaque cellule déduite se recalcule dès que vous saisissez`,
   'table-build-echeance': () => $localize`:@@coursRuntimeTableBuildEcheance:Échéance`,
