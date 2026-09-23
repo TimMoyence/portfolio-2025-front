@@ -111,12 +111,12 @@ describe('FormationsListComponent', () => {
     expect(b2?.description).toContain('À suivre en séance accompagnée');
   });
 
-  it('L1 · annonce les 53 écrans de la version servie, badge, description et durée', () => {
+  it('L1 · annonce les 54 écrans de la version servie, badge, description et durée', () => {
     const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
     const annonces = [b2?.badge, b2?.description, ...(b2?.meta.map((row) => row.value) ?? [])];
 
     expect(annonces.filter((texte) => texte?.includes('72'))).toEqual([]);
-    expect(annonces.filter((texte) => texte?.includes('53 écrans')).length).toBe(3);
+    expect(annonces.filter((texte) => texte?.includes('54 écrans')).length).toBe(3);
   });
 
   it('devrait mener au cours B2-01 public et annoncer le déroulé réellement servi', () => {
@@ -125,12 +125,12 @@ describe('FormationsListComponent', () => {
     expect(b2).toBeDefined();
     expect(b2?.link).toBe('/formations/b2-01-traitement-information-chiffree');
     expect(b2?.title).toContain('B2-01');
-    expect(b2?.meta.some((row) => row.value === '3 h 30 · 53 écrans')).toBeTrue();
+    expect(b2?.meta.some((row) => row.value === '3 h 30 · 54 écrans')).toBeTrue();
 
     const compiled = fixture.nativeElement as HTMLElement;
     const card = compiled.querySelector('.formation.formation--live');
     expect(card).not.toBeNull();
-    expect(card?.textContent).toContain('53 écrans');
+    expect(card?.textContent).toContain('54 écrans');
     expect(card?.textContent).not.toContain('12 écrans');
     expect(card?.querySelector('a')?.getAttribute('href')).toBe(
       '/formations/b2-01-traitement-information-chiffree',

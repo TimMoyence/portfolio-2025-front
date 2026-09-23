@@ -108,7 +108,7 @@ describe('seo-metadata.json — parcours B2 servi par le serveur', () => {
     const textes = JSON.stringify(page?.locales);
 
     expect(textes).not.toContain('72');
-    expect(textes).toContain('53 écrans');
-    expect(textes).toContain('53 screens');
+    expect(textes).toContain('54 écrans');
+    expect(textes).toContain('54 screens');
   });
 });

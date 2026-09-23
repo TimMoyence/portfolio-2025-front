@@ -16,7 +16,7 @@ test.describe('Parcours public des formations', () => {
     const card = page.locator('.formation--live');
     await expect(card).toBeVisible();
     await expect(card).toContainText('B2-01');
-    await expect(card).toContainText('3 h 30 · 72 écrans');
+    await expect(card).toContainText('3 h 30 · 54 écrans');
     await expect(card).toContainText('À suivre en séance accompagnée');
     await expect(card).not.toContainText('librement');
     await card.getByRole('link', { name: /Consulter/ }).click();

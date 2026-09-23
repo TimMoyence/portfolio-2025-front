@@ -12981,8 +12981,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:26</note>
       </notes>
       <segment>
-        <source>BTS CG · Cours interactif · 53 écrans</source>
-        <target>BTS CG · Interactive course · 53 screens</target>
+        <source>BTS CG · Cours interactif · 54 écrans</source>
+        <target>BTS CG · Interactive course · 54 screens</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.title">
@@ -12999,8 +12999,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:28</note>
       </notes>
       <segment>
-        <source>53 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
-        <target>53 screens to read, check and explain numerical information: proportions, percentages, changes over time. To follow in a guided session, with the code your teacher gives you.</target>
+        <source>54 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>54 screens to read, check and explain numerical information: proportions, percentages, changes over time. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.duration">
@@ -13008,8 +13008,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:32</note>
       </notes>
       <segment>
-        <source>3 h 30 · 53 écrans</source>
-        <target>3 h 30 min · 53 screens</target>
+        <source>3 h 30 · 54 écrans</source>
+        <target>3 h 30 min · 54 screens</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.format">
