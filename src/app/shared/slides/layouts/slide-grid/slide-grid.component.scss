@@ -218,6 +218,12 @@
   }
 }
 
+@container (min-width: 64rem) {
+  .slide-grid__grid {
+    grid-template-columns: repeat(var(--slide-grid-colonnes), minmax(0, 1fr));
+  }
+}
+
 @media screen {
   ::ng-deep .impression-fiche {
     display: none;

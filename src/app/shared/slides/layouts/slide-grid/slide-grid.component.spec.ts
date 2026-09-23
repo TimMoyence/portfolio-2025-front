@@ -59,6 +59,22 @@ describe('SlideGridComponent', () => {
     expect(cards[1].textContent).toContain('Analyse');
   });
 
+  it('R7 · equilibre les rangees : au plus six colonnes, sans rangee orpheline', () => {
+    const colonnesPour = (nombre: number): string => {
+      const fixture = TestBed.createComponent(SlideGridComponent);
+      fixture.componentRef.setInput(
+        'items',
+        Array.from({ length: nombre }, (_, rang) => ({ title: `C${rang}`, description: '' })),
+      );
+      fixture.detectChanges();
+      return (fixture.nativeElement as HTMLElement)
+        .querySelector<HTMLElement>('.slide-grid__grid')!
+        .style.getPropertyValue('--slide-grid-colonnes');
+    };
+
+    expect([3, 5, 7, 11, 12, 15].map(colonnesPour)).toEqual(['3', '5', '4', '6', '6', '5']);
+  });
+
   it('R8 · garde le verso d une carte retournee dans sa carte', () => {
     const fixture = TestBed.createComponent(HoteRetournableComponent);
     fixture.detectChanges();

@@ -2,6 +2,7 @@ import { DOCUMENT, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
   inject,
   input,
@@ -20,6 +21,7 @@ export interface SlideGridItem {
 
 const CLASSE_D_IMPRESSION = 'impression-fiche';
 const ATTRIBUT_D_IMPRESSION = 'data-impression-fiche';
+const COLONNES_AU_PLUS = 6;
 
 @Component({
   selector: 'app-slide-grid',
@@ -36,6 +38,10 @@ export class SlideGridComponent {
   readonly imprimable = input<boolean>(false);
 
   protected readonly flipped = signal<ReadonlySet<string>>(new Set());
+  protected readonly colonnesEquilibrees = computed(() => {
+    const cartes = Math.max(this.items().length, 1);
+    return Math.ceil(cartes / Math.ceil(cartes / COLONNES_AU_PLUS));
+  });
 
   private readonly document = inject(DOCUMENT);
   private readonly navigateur = isPlatformBrowser(inject(PLATFORM_ID));

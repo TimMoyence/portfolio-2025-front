@@ -16,7 +16,11 @@
       Imprimer ou enregistrer en PDF
     </button>
   }
-  <div class="slide-grid__grid" [class.is-five]="items().length === 5">
+  <div
+    class="slide-grid__grid"
+    [class.is-five]="items().length === 5"
+    [style.--slide-grid-colonnes]="colonnesEquilibrees()"
+  >
     @for (item of items(); track item.title) {
       @if (item.href) {
         <a
