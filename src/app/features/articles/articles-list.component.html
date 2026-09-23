@@ -43,6 +43,34 @@
         </article>
       }
     </div>
+    @if (nextCursor) {
+      <div class="load-more">
+        @if (hasLoadMoreError) {
+          <p
+            class="state"
+            role="status"
+            data-testid="articles-load-more-error"
+            i18n="@@articlesListLoadMoreError"
+          >
+            Les éditions précédentes n’ont pas pu être chargées. Réessayez dans un instant.
+          </p>
+        }
+        <button
+          type="button"
+          class="btn btn-ghost"
+          data-testid="articles-load-more"
+          [disabled]="isLoadingMore"
+          [attr.aria-busy]="isLoadingMore"
+          (click)="loadMore()"
+        >
+          @if (isLoadingMore) {
+            <ng-container i18n="@@articlesListLoadingMore">Chargement…</ng-container>
+          } @else {
+            <ng-container i18n="@@articlesListLoadMore">Éditions précédentes</ng-container>
+          }
+        </button>
+      </div>
+    }
   }
 </main>
 

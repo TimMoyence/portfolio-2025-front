@@ -34,4 +34,5 @@ USER nodeuser
 EXPOSE 4000
 
 ENV SSR_LOCALE=fr
+ENV PORTFOLIO_ARTICLE_API_URL=http://api:3000/api/v1/portfolio25
 CMD ["sh", "-c", "node dist/portfolio-app/server/${SSR_LOCALE}/server.mjs"]

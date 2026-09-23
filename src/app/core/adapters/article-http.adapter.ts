@@ -10,8 +10,9 @@ export class ArticleHttpAdapter {
 
   constructor(private readonly http: HttpClient) {}
 
-  list(locale: 'fr' | 'en', limit = 12): Observable<ArticleListResponse> {
-    const params = new HttpParams().set('locale', locale).set('limit', limit);
+  list(locale: 'fr' | 'en', limit = 12, cursor?: string): Observable<ArticleListResponse> {
+    let params = new HttpParams().set('locale', locale).set('limit', limit);
+    if (cursor) params = params.set('cursor', cursor);
     return this.http.get<ArticleListResponse>(`${this.baseUrl}/articles`, { params });
   }
 

@@ -254,6 +254,27 @@
           <context context-type="linenumber">22,24</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="articlesListLoadMoreError" datatype="html">
+        <source> Les éditions précédentes n’ont pas pu être chargées. Réessayez dans un instant. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/articles-list.component.html</context>
+          <context context-type="linenumber">54,56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="articlesListLoadingMore" datatype="html">
+        <source>Chargement…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/articles-list.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="articlesListLoadMore" datatype="html">
+        <source>Éditions précédentes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/articles-list.component.html</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="articlesListReadArticle" datatype="html">
         <source>Lire l’article</source>
         <context-group purpose="location">
