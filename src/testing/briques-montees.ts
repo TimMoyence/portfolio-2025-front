@@ -8,6 +8,8 @@ import { ECRAN_VERROUILLE, planDeMontage } from '../app/shared/slides/session/le
 const ESSAIS = 200;
 const PAUSE_MS = 5;
 
+export const DELAI_DE_MONTAGE_MS = 30_000;
+
 export async function attendreQue(
   fixture: ComponentFixture<unknown>,
   condition: () => boolean,
