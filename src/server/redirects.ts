@@ -17,9 +17,23 @@ export const PERMANENT_REDIRECTS: Readonly<Record<string, string>> = {
   '/client-project': '/fr/projets',
   '/fr/client-project': '/fr/projets',
   '/en/client-project': '/en/projets',
+  '/commonbudgettm': '/fr',
+  '/fr/commonbudgettm': '/fr',
+  '/en/commonbudgettm': '/en',
+};
+
+const PERMANENT_SUBTREE_REDIRECTS: Readonly<Record<string, string>> = {
+  '/atelier': '/fr/projets',
+  '/fr/atelier': '/fr/projets',
+  '/en/atelier': '/en/projets',
 };
 
 export const REDIRECT_SOURCES: string[] = Object.keys(PERMANENT_REDIRECTS);
+
+const SUBTREE_SOURCES: string[] = Object.keys(PERMANENT_SUBTREE_REDIRECTS).flatMap((racine) => [
+  racine,
+  `${racine}/*`,
+]);
 
 /**
  * Reproduit le matching d'Express, configure par defaut en
@@ -34,11 +48,20 @@ const normalizeForLookup = (path: string): string => {
   return lower;
 };
 
-export const resolveRedirect = (path: string): string | null =>
-  PERMANENT_REDIRECTS[normalizeForLookup(path)] ?? null;
+const resolveSubtreeRedirect = (path: string): string | null => {
+  const racine = Object.keys(PERMANENT_SUBTREE_REDIRECTS).find(
+    (candidate) => path === candidate || path.startsWith(`${candidate}/`),
+  );
+  return racine ? PERMANENT_SUBTREE_REDIRECTS[racine] : null;
+};
+
+export const resolveRedirect = (path: string): string | null => {
+  const normalized = normalizeForLookup(path);
+  return PERMANENT_REDIRECTS[normalized] ?? resolveSubtreeRedirect(normalized);
+};
 
 export const registerPermanentRedirects = (app: express.Application): void => {
-  app.get(REDIRECT_SOURCES, (req, res, next) => {
+  app.get([...REDIRECT_SOURCES, ...SUBTREE_SOURCES], (req, res, next) => {
     const target = resolveRedirect(req.path);
     if (!target) {
       next();

@@ -65,6 +65,26 @@ describe('redirects', () => {
       expect(resolveRedirect('/en/home')).toBe('/en');
     });
 
+    it("redirige l'atelier retire et chacune de ses sous-pages vers /projets, locale preservee", () => {
+      expect(resolveRedirect('/atelier')).toBe('/fr/projets');
+      expect(resolveRedirect('/atelier/meteo/app')).toBe('/fr/projets');
+      expect(resolveRedirect('/fr/atelier')).toBe('/fr/projets');
+      expect(resolveRedirect('/fr/atelier/sebastian/app/badges')).toBe('/fr/projets');
+      expect(resolveRedirect('/en/atelier')).toBe('/en/projets');
+      expect(resolveRedirect('/en/Atelier/meteo/')).toBe('/en/projets');
+    });
+
+    it('redirige le module budget retire vers la racine localisee', () => {
+      expect(resolveRedirect('/commonbudgetTM')).toBe('/fr');
+      expect(resolveRedirect('/fr/commonbudgetTM')).toBe('/fr');
+      expect(resolveRedirect('/en/commonbudgetTM')).toBe('/en');
+    });
+
+    it('ne prend pas pour l atelier un chemin qui en partage seulement le debut', () => {
+      expect(resolveRedirect('/ateliers')).toBeNull();
+      expect(resolveRedirect('/fr/atelier-ia')).toBeNull();
+    });
+
     it('ne redirige pas un chemin hors table', () => {
       expect(resolveRedirect('/projets')).toBeNull();
       expect(resolveRedirect('/fr/projets')).toBeNull();
@@ -96,7 +116,7 @@ describe('redirects', () => {
       registerPermanentRedirects(app);
 
       expect(routes.length).toBe(1);
-      expect(routes[0].paths).toEqual(REDIRECT_SOURCES);
+      expect(routes[0].paths).toEqual(jasmine.arrayContaining(REDIRECT_SOURCES));
     });
 
     it('emet un vrai 301 vers la cible attendue pour chaque source', () => {
@@ -126,6 +146,18 @@ describe('redirects', () => {
         { status: 301, location: '/fr/projets' },
       ]);
       expect(runHandler(handler, '/en/client-project').calls).toEqual([
+        { status: 301, location: '/en/projets' },
+      ]);
+    });
+
+    it("ecoute toutes les sous-pages de l'atelier et emet un 301 pour elles", () => {
+      const { app, routes } = stubApp();
+      registerPermanentRedirects(app);
+
+      expect(routes[0].paths).toEqual(
+        jasmine.arrayContaining(['/atelier/*', '/fr/atelier/*', '/en/atelier/*']),
+      );
+      expect(runHandler(routes[0].handler, '/en/atelier/meteo/app').calls).toEqual([
         { status: 301, location: '/en/projets' },
       ]);
     });
