@@ -1,13 +1,11 @@
-import { PLATFORM_ID } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot } from '@angular/router';
 import { UrlTree } from '@angular/router';
 import { Observable, firstValueFrom, throwError } from 'rxjs';
-import { AUTH_PORT } from '../ports/auth.port';
-import { AuthStateService } from '../services/auth-state.service';
+import type { AuthStateService } from '../services/auth-state.service';
+import { etatAuth } from '../../../testing/etat-auth';
 import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
-import { setupTestBed } from '../../../testing/setup-test-bed';
 import { authGuard } from './auth.guard';
 
 describe('authGuard', () => {
@@ -15,15 +13,7 @@ describe('authGuard', () => {
     let authState: AuthStateService;
 
     beforeEach(() => {
-      setupTestBed({
-        router: true,
-        providers: [
-          { provide: PLATFORM_ID, useValue: 'server' },
-          { provide: AUTH_PORT, useValue: createAuthPortStub() },
-        ],
-      });
-
-      authState = TestBed.inject(AuthStateService);
+      authState = etatAuth('server');
     });
 
     it('devrait autoriser l acces si l utilisateur est connecte', () => {
@@ -56,15 +46,7 @@ describe('authGuard', () => {
     beforeEach(() => {
       const port = createAuthPortStub();
       port.refresh.and.returnValue(throwError(() => new HttpErrorResponse({ status: 401 })));
-      setupTestBed({
-        router: true,
-        providers: [
-          { provide: PLATFORM_ID, useValue: 'browser' },
-          { provide: AUTH_PORT, useValue: port },
-        ],
-      });
-
-      authState = TestBed.inject(AuthStateService);
+      authState = etatAuth('browser', port);
     });
 
     it('devrait retourner un Observable quand la session n est pas resolue', () => {

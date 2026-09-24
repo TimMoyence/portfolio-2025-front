@@ -52,6 +52,17 @@ export function estObjet(valeur: unknown): valeur is Readonly<Record<string, unk
   return typeof valeur === 'object' && valeur !== null && !Array.isArray(valeur);
 }
 
+export function lireTextes(valeur: unknown): Readonly<Record<string, string>> {
+  if (!estObjet(valeur)) {
+    return {};
+  }
+  return Object.fromEntries(
+    Object.entries(valeur).filter(
+      (entree): entree is [string, string] => typeof entree[1] === 'string',
+    ),
+  );
+}
+
 export function lireBonneReponse(valeur: unknown): string | null {
   if (!estObjet(valeur) || valeur['type'] !== 'cible') {
     return null;

@@ -16,14 +16,4 @@
   </h2>
 </app-asili-method>
 
-<app-asili-cta-band [title]="ctaTitle">
-  <span kicker class="kicker cta-kicker">{{ ctaKicker }}</span>
-  <ng-container cta>
-    <a class="btn btn-teal" routerLink="/contact">
-      {{ ctaPrimary }} <span class="arrow" aria-hidden="true">→</span>
-    </a>
-    <a class="btn btn-ghost" routerLink="/growth-audit">
-      {{ ctaSecondary }}
-    </a>
-  </ng-container>
-</app-asili-cta-band>
+<app-asili-cta-band [kicker]="ctaKicker" [title]="ctaTitle" [actions]="ctaActions" />

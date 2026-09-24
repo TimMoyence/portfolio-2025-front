@@ -1,5 +1,6 @@
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import type { AppConfig } from '../config/app-config.model';
 import { APP_CONFIG } from '../config/app-config.token';
 import { COOKIE_CONSENT_PORT } from '../ports/cookie-consent.port';
 import { CookieConsentService } from './cookie-consent.service';
@@ -9,6 +10,31 @@ import {
   createMockAppConfig,
 } from '../../../testing/factories/cookie-consent.factory';
 
+interface MontageConsentement {
+  readonly plateforme: 'server' | 'browser';
+  readonly locale?: string;
+  readonly config?: AppConfig;
+  readonly port?: ReturnType<typeof createCookieConsentPortStub>;
+}
+
+function serviceDeConsentement({
+  plateforme,
+  locale = 'fr',
+  config = createMockAppConfig(),
+  port = createCookieConsentPortStub(),
+}: MontageConsentement): CookieConsentService {
+  TestBed.configureTestingModule({
+    providers: [
+      CookieConsentService,
+      { provide: PLATFORM_ID, useValue: plateforme },
+      { provide: LOCALE_ID, useValue: locale },
+      { provide: APP_CONFIG, useValue: config },
+      { provide: COOKIE_CONSENT_PORT, useValue: port },
+    ],
+  });
+  return TestBed.inject(CookieConsentService);
+}
+
 describe('CookieConsentService', () => {
   describe('en contexte serveur (SSR)', () => {
     let service: CookieConsentService;
@@ -16,17 +42,7 @@ describe('CookieConsentService', () => {
 
     beforeEach(() => {
       mockConsentPort = createCookieConsentPortStub();
-      TestBed.configureTestingModule({
-        providers: [
-          CookieConsentService,
-          { provide: PLATFORM_ID, useValue: 'server' },
-          { provide: LOCALE_ID, useValue: 'fr' },
-          { provide: APP_CONFIG, useValue: createMockAppConfig() },
-          { provide: COOKIE_CONSENT_PORT, useValue: mockConsentPort },
-        ],
-      });
-
-      service = TestBed.inject(CookieConsentService);
+      service = serviceDeConsentement({ plateforme: 'server', port: mockConsentPort });
     });
 
     it('devrait etre cree en SSR', () => {
@@ -92,17 +108,7 @@ describe('CookieConsentService', () => {
     beforeEach(() => {
       document.cookie = 'moyence_cookie_consent=; Max-Age=0; Path=/; SameSite=Lax';
       mockConsentPort = createCookieConsentPortStub();
-      TestBed.configureTestingModule({
-        providers: [
-          CookieConsentService,
-          { provide: PLATFORM_ID, useValue: 'browser' },
-          { provide: LOCALE_ID, useValue: 'fr' },
-          { provide: APP_CONFIG, useValue: createMockAppConfig() },
-          { provide: COOKIE_CONSENT_PORT, useValue: mockConsentPort },
-        ],
-      });
-
-      service = TestBed.inject(CookieConsentService);
+      service = serviceDeConsentement({ plateforme: 'browser', port: mockConsentPort });
     });
 
     afterEach(() => {
@@ -209,56 +215,17 @@ describe('CookieConsentService', () => {
         },
       });
 
-      TestBed.configureTestingModule({
-        providers: [
-          CookieConsentService,
-          { provide: PLATFORM_ID, useValue: 'server' },
-          { provide: LOCALE_ID, useValue: 'fr' },
-          { provide: APP_CONFIG, useValue: config },
-          {
-            provide: COOKIE_CONSENT_PORT,
-            useValue: createCookieConsentPortStub(),
-          },
-        ],
-      });
-
-      const svc = TestBed.inject(CookieConsentService);
+      const svc = serviceDeConsentement({ plateforme: 'server', config });
       expect(svc.isConsentRequired()).toBeFalse();
     });
 
     it('devrait retourner true pour locale en', () => {
-      TestBed.configureTestingModule({
-        providers: [
-          CookieConsentService,
-          { provide: PLATFORM_ID, useValue: 'server' },
-          { provide: LOCALE_ID, useValue: 'en' },
-          { provide: APP_CONFIG, useValue: createMockAppConfig() },
-          {
-            provide: COOKIE_CONSENT_PORT,
-            useValue: createCookieConsentPortStub(),
-          },
-        ],
-      });
-
-      const svc = TestBed.inject(CookieConsentService);
+      const svc = serviceDeConsentement({ plateforme: 'server', locale: 'en' });
       expect(svc.isConsentRequired()).toBeTrue();
     });
 
     it('devrait retourner false pour une locale non eligible', () => {
-      TestBed.configureTestingModule({
-        providers: [
-          CookieConsentService,
-          { provide: PLATFORM_ID, useValue: 'server' },
-          { provide: LOCALE_ID, useValue: 'de' },
-          { provide: APP_CONFIG, useValue: createMockAppConfig() },
-          {
-            provide: COOKIE_CONSENT_PORT,
-            useValue: createCookieConsentPortStub(),
-          },
-        ],
-      });
-
-      const svc = TestBed.inject(CookieConsentService);
+      const svc = serviceDeConsentement({ plateforme: 'server', locale: 'de' });
       expect(svc.isConsentRequired()).toBeFalse();
     });
   });

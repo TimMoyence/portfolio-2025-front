@@ -17,6 +17,7 @@ import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/cont
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import type { SyntheseConcept } from '../../../core/ports/formations.port';
 import type { DirectEcran, EvenementBrique, RetourBrique } from './contrat-hote';
+import { extraireDuRenvoi } from './extrait-du-renvoi';
 import { SlideActivityComponent } from './slide-activity.component';
 import { SlideComponent } from '../deck/slide.component';
 
@@ -27,6 +28,7 @@ const HAUTEUR_DE_TOILE = 720;
 const LARGEUR_COMPACTE = 700;
 const ECHELLE_LISIBLE = 0.8;
 const ECHELLE_DU_RENVOI_AVANT_MESURE = 0.46;
+const MARGES_DE_LA_TOILE_DU_RENVOI = 48;
 
 interface Mesure {
   readonly largeur: number;
@@ -46,6 +48,7 @@ interface Mesure {
             class="cours-toile"
             data-testid="cours-toile"
             [class.cours-toile--renvoi]="renvoi() !== null"
+            [style.--part-du-renvoi]="partDuRenvoi()"
             [style.transform]="transformation()"
             [style.block-size.px]="hauteurDeToile()"
           >
@@ -73,14 +76,19 @@ interface Mesure {
                 </app-slide>
               </div>
             </div>
-            @if (renvoi(); as reference) {
+            @if (renvoiAffiche(); as reference) {
               <aside class="cours-renvoi" data-testid="cours-renvoi">
                 <p class="cours-renvoi__legende" i18n="@@coursRenvoiLegende">
                   Diapositive commentée
                 </p>
                 <div class="cours-renvoi__cadre" #renvoiCadre>
                   <div class="cours-renvoi__toile" [style.transform]="transformationDuRenvoi()">
-                    <app-slide-activity [slide]="reference" [role]="role()" [apercu]="true" />
+                    <app-slide-activity
+                      #renvoiContenu
+                      [slide]="reference"
+                      [role]="role()"
+                      [apercu]="true"
+                    />
                   </div>
                 </div>
               </aside>
@@ -158,13 +166,12 @@ interface Mesure {
     }
 
     .cours-toile--renvoi .cours-toile__principal {
-      flex-basis: 50%;
       padding-inline-end: 1rem;
     }
 
     .cours-renvoi {
       display: flex;
-      flex: 0 0 50%;
+      flex: 0 0 var(--part-du-renvoi, 50%);
       min-inline-size: 0;
       flex-direction: column;
       justify-content: center;
@@ -184,8 +191,9 @@ interface Mesure {
     .cours-renvoi__cadre {
       position: relative;
       box-sizing: border-box;
+      flex: 1 1 0;
+      min-block-size: 0;
       inline-size: 100%;
-      aspect-ratio: 16 / 9;
       overflow: hidden;
       border: 1px solid rgba(12, 9, 2, 0.16);
       border-radius: 0.5rem;
@@ -205,6 +213,10 @@ interface Mesure {
       transform: scale(${ECHELLE_DU_RENVOI_AVANT_MESURE});
       transform-origin: 0 0;
       pointer-events: none;
+    }
+
+    .cours-renvoi__toile app-slide-activity {
+      display: block;
     }
 
     :host(.cours-presentation--formateur) {
@@ -246,6 +258,11 @@ interface Mesure {
       border-inline-start: 0;
       border-block-start: 1px solid rgba(12, 9, 2, 0.12);
     }
+
+    :host(.cours-presentation--compacte) .cours-renvoi__cadre {
+      flex: none;
+      aspect-ratio: 16 / 9;
+    }
   `,
   host: {
     '[class.cours-presentation--projection]': "mode() === 'projection'",
@@ -273,15 +290,37 @@ export class CoursPresentationComponent {
   private readonly principalObserve = viewChild<ElementRef<HTMLElement>>('principal');
   private readonly contenuObserve = viewChild<ElementRef<HTMLElement>>('contenu');
   private readonly renvoiObserve = viewChild<ElementRef<HTMLElement>>('renvoiCadre');
+  private readonly contenuDuRenvoiObserve = viewChild('renvoiContenu', { read: ElementRef });
   private readonly navigateur = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly cadre = signal<Mesure | null>(null);
   private readonly place = signal<number | null>(null);
   private readonly hauteurDuContenu = signal<number | null>(null);
-  private readonly largeurDuRenvoi = signal<number | null>(null);
+  private readonly cadreDuRenvoi = signal<Mesure | null>(null);
+  private readonly hauteurDuRenvoi = signal<number | null>(null);
+
+  protected readonly renvoiAffiche = computed(() => {
+    const renvoi = this.renvoi();
+    return renvoi === null ? null : extraireDuRenvoi(renvoi, this.slide()?.cadrageDuRenvoi);
+  });
+
+  protected readonly partDuRenvoi = computed(() => {
+    const part = this.slide()?.cadrageDuRenvoi?.part;
+    return part === undefined ? null : `${part}%`;
+  });
 
   protected readonly transformationDuRenvoi = computed(() => {
-    const largeur = this.largeurDuRenvoi();
-    return largeur === null || largeur === 0 ? null : `scale(${largeur / LARGEUR_DE_TOILE})`;
+    const cadre = this.cadreDuRenvoi();
+    if (cadre === null || cadre.largeur === 0) {
+      return null;
+    }
+    const hauteur = Math.min(
+      HAUTEUR_DE_TOILE,
+      (this.hauteurDuRenvoi() ?? HAUTEUR_DE_TOILE) + MARGES_DE_LA_TOILE_DU_RENVOI,
+    );
+    const echelle = Math.min(cadre.largeur / LARGEUR_DE_TOILE, cadre.hauteur / hauteur);
+    const decalageX = (cadre.largeur - LARGEUR_DE_TOILE * echelle) / 2;
+    const decalageY = (cadre.hauteur - hauteur * echelle) / 2;
+    return `translate(${decalageX}px, ${decalageY}px) scale(${echelle})`;
   });
 
   protected readonly role = computed<Role>(() =>
@@ -362,7 +401,12 @@ export class CoursPresentationComponent {
     this.observer(this.contenuObserve, (element) =>
       this.hauteurDuContenu.set(element.offsetHeight),
     );
-    this.observer(this.renvoiObserve, (element) => this.largeurDuRenvoi.set(element.clientWidth));
+    this.observer(this.renvoiObserve, (element) =>
+      this.cadreDuRenvoi.set({ largeur: element.clientWidth, hauteur: element.clientHeight }),
+    );
+    this.observer(this.contenuDuRenvoiObserve, (element) =>
+      this.hauteurDuRenvoi.set(element.offsetHeight),
+    );
   }
 
   private observer(

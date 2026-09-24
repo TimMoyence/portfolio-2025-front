@@ -68,7 +68,7 @@ export class FpStory extends FpBlock {
   render(): EscapedHtml {
     const recit = this.recit;
     if (recit === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
     return safeHtml`
       <aside class="fp-scene fp-story__recit">

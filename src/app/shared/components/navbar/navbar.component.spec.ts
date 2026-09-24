@@ -131,7 +131,7 @@ describe('NavbarComponent', () => {
           lastName: 'Test',
           phone: null,
           isActive: true,
-          roles: ['weather'],
+          roles: ['user'],
         },
       });
       fixture.detectChanges();

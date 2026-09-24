@@ -164,45 +164,32 @@ describe('AuthComponent', () => {
     expect(component.loginSuccessMessage).toContain('Bienvenue');
   });
 
-  it('devrait rediriger vers returnUrl apres login si present', () => {
-    const router = TestBed.inject(Router);
-    const navigateSpy = spyOn(router, 'navigateByUrl');
-    const route = TestBed.inject(ActivatedRoute);
-    spyOn(route.snapshot.queryParamMap, 'get').and.callFake((key: string) =>
-      key === 'returnUrl' ? '/profil' : null,
-    );
+  const redirectionsApresLogin: readonly [string, string | null, string][] = [
+    ['vers returnUrl apres login si present', '/profil', '/profil'],
+    ['vers / si pas de returnUrl', null, '/'],
+  ];
 
-    const form = buildForm(false);
-    component.loginForm = {
-      email: 'john@example.com',
-      password: VALID_PASSWORD,
-    };
-    authService.login.and.returnValue(
-      of(buildAuthSession({ user: buildAuthUser({ firstName: 'John' }) })),
-    );
+  for (const [cas, returnUrl, destination] of redirectionsApresLogin) {
+    it(`devrait rediriger ${cas}`, () => {
+      const navigateSpy = spyOn(TestBed.inject(Router), 'navigateByUrl');
+      if (returnUrl !== null) {
+        spyOn(TestBed.inject(ActivatedRoute).snapshot.queryParamMap, 'get').and.callFake(
+          (key: string) => (key === 'returnUrl' ? returnUrl : null),
+        );
+      }
+      component.loginForm = {
+        email: 'john@example.com',
+        password: VALID_PASSWORD,
+      };
+      authService.login.and.returnValue(
+        of(buildAuthSession({ user: buildAuthUser({ firstName: 'John' }) })),
+      );
 
-    component.handleLoginSubmit(form);
+      component.handleLoginSubmit(buildForm(false));
 
-    expect(navigateSpy).toHaveBeenCalledWith('/profil');
-  });
-
-  it('devrait rediriger vers / si pas de returnUrl', () => {
-    const router = TestBed.inject(Router);
-    const navigateSpy = spyOn(router, 'navigateByUrl');
-
-    const form = buildForm(false);
-    component.loginForm = {
-      email: 'john@example.com',
-      password: VALID_PASSWORD,
-    };
-    authService.login.and.returnValue(
-      of(buildAuthSession({ user: buildAuthUser({ firstName: 'John' }) })),
-    );
-
-    component.handleLoginSubmit(form);
-
-    expect(navigateSpy).toHaveBeenCalledWith('/');
-  });
+      expect(navigateSpy).toHaveBeenCalledWith(destination);
+    });
+  }
 
   describe('route /register', () => {
     beforeEach(async () => {

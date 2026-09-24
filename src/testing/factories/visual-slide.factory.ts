@@ -166,7 +166,7 @@ export function buildVerdictDuTri(
 
 export function buildVisualChartSlide(
   props: Readonly<Record<string, unknown>>,
-  id = 'B2-01-A2-04-MARGE-AXE-ZERO',
+  id = 'K-GRAPHIQUE-DE-REFERENCE',
 ): EcranContent {
   return buildVisualSlide({
     id,

@@ -17,18 +17,33 @@ class TestHostComponent {
   title = 'Titre test';
 }
 
+async function monterLHote(
+  plateforme: 'browser' | 'server',
+): Promise<ComponentFixture<TestHostComponent>> {
+  await TestBed.configureTestingModule({
+    imports: [TestHostComponent, NoopAnimationsModule],
+    providers: [{ provide: PLATFORM_ID, useValue: plateforme }],
+  }).compileComponents();
+  return TestBed.createComponent(TestHostComponent);
+}
+
 describe('BottomSheetComponent', () => {
   describe('en contexte navigateur (desktop)', () => {
     let host: TestHostComponent;
     let fixture: ComponentFixture<TestHostComponent>;
 
-    beforeEach(async () => {
-      await TestBed.configureTestingModule({
-        imports: [TestHostComponent, NoopAnimationsModule],
-        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
-      }).compileComponents();
+    function ouvrir(selecteur: string): HTMLElement {
+      host.open.set(true);
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+      const element = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(selecteur);
+      expect(element).toBeTruthy();
+      return element!;
+    }
 
-      fixture = TestBed.createComponent(TestHostComponent);
+    beforeEach(async () => {
+      fixture = await monterLHote('browser');
       host = fixture.componentInstance;
       fixture.detectChanges();
     });
@@ -44,72 +59,34 @@ describe('BottomSheetComponent', () => {
     });
 
     it('devrait afficher le panel quand open=true', fakeAsync(() => {
-      host.open.set(true);
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const panel = fixture.nativeElement.querySelector('[data-testid="bottom-sheet-panel"]');
-      expect(panel).toBeTruthy();
+      ouvrir('[data-testid="bottom-sheet-panel"]');
     }));
 
     it('devrait projeter le contenu', fakeAsync(() => {
-      host.open.set(true);
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const content = fixture.nativeElement.querySelector('.test-content');
-      expect(content).toBeTruthy();
-      expect(content.textContent).toContain('Contenu projete');
+      expect(ouvrir('.test-content').textContent).toContain('Contenu projete');
     }));
 
     it('devrait afficher le titre', fakeAsync(() => {
-      host.open.set(true);
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const title = fixture.nativeElement.querySelector('[data-testid="bottom-sheet-title"]');
-      expect(title).toBeTruthy();
-      expect(title.textContent).toContain('Titre test');
+      expect(ouvrir('[data-testid="bottom-sheet-title"]').textContent).toContain('Titre test');
     }));
 
     it('devrait avoir role=dialog et aria-modal=true', fakeAsync(() => {
-      host.open.set(true);
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const panel = fixture.nativeElement.querySelector('[data-testid="bottom-sheet-panel"]');
-      expect(panel).toBeTruthy();
+      const panel = ouvrir('[data-testid="bottom-sheet-panel"]');
       expect(panel.getAttribute('role')).toBe('dialog');
       expect(panel.getAttribute('aria-modal')).toBe('true');
     }));
 
     it('devrait emettre openChange(false) au clic sur le bouton fermer', fakeAsync(() => {
-      host.open.set(true);
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const closeBtn = fixture.nativeElement.querySelector('[data-testid="bottom-sheet-close"]');
-      expect(closeBtn).toBeTruthy();
-      closeBtn.click();
+      ouvrir('[data-testid="bottom-sheet-close"]').click();
       fixture.detectChanges();
 
       expect(host.open()).toBe(false);
     }));
 
     it('devrait fermer avec la touche Escape', fakeAsync(() => {
-      host.open.set(true);
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-
-      const panel = fixture.nativeElement.querySelector('[data-testid="bottom-sheet-panel"]');
-      expect(panel).toBeTruthy();
-      panel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      ouvrir('[data-testid="bottom-sheet-panel"]').dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape' }),
+      );
       fixture.detectChanges();
 
       expect(host.open()).toBe(false);
@@ -120,12 +97,7 @@ describe('BottomSheetComponent', () => {
     let fixture: ComponentFixture<TestHostComponent>;
 
     beforeEach(async () => {
-      await TestBed.configureTestingModule({
-        imports: [TestHostComponent, NoopAnimationsModule],
-        providers: [{ provide: PLATFORM_ID, useValue: 'server' }],
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(TestHostComponent);
+      fixture = await monterLHote('server');
       fixture.componentInstance.open.set(true);
       fixture.detectChanges();
     });

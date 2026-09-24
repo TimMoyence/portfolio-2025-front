@@ -4,9 +4,6 @@ export interface AppConfig {
   apiBaseUrl: string;
   baseUrl: string;
   googleClientId?: string;
-  external: {
-    sebastianUrl: string;
-  };
   gdpr?: {
     regionScope: 'EU_UK';
     policyVersion: string;

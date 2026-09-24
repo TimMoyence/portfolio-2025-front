@@ -4,18 +4,12 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AUTH_PORT } from '../../core/ports/auth.port';
-import { WEATHER_PORT } from '../../core/ports/weather.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
-import { WeatherLevelService } from '../weather/services/weather-level.service';
 import {
   buildAuthUser,
   buildSetPasswordPayload,
   createAuthPortStub,
 } from '../../../testing/factories/auth.factory';
-import {
-  createWeatherPortStub,
-  buildWeatherPreferences,
-} from '../../../testing/factories/weather.factory';
 import { ProfileComponent } from './profile.component';
 
 const NEW_PASSWORD = buildSetPasswordPayload().newPassword;
@@ -23,7 +17,7 @@ const NEW_PASSWORD = buildSetPasswordPayload().newPassword;
 function createAuthStateMock(overrides?: Partial<{ hasPassword: boolean; roles: string[] }>) {
   const user = buildAuthUser({
     hasPassword: overrides?.hasPassword ?? false,
-    roles: overrides?.roles ?? ['weather'],
+    roles: overrides?.roles ?? ['user'],
   });
   return {
     restoreSession: jasmine.createSpy('restoreSession'),
@@ -34,29 +28,6 @@ function createAuthStateMock(overrides?: Partial<{ hasPassword: boolean; roles: 
     isLoggedIn: signal(true),
     hasRole: (role: string) => user.roles.includes(role),
   };
-}
-
-function createWeatherPortMock() {
-  const stub = createWeatherPortStub();
-  stub.getPreferences.and.returnValue(
-    of(
-      buildWeatherPreferences({
-        level: 'curious',
-        favoriteCities: [
-          {
-            name: 'Paris',
-            latitude: 48.85,
-            longitude: 2.35,
-            country: 'France',
-          },
-        ],
-        daysUsed: 12,
-      }),
-    ),
-  );
-  stub.updatePreferences.and.returnValue(of(buildWeatherPreferences({ favoriteCities: [] })));
-  stub.recordUsage.and.returnValue(of(void 0));
-  return stub;
 }
 
 describe('ProfileComponent', () => {
@@ -75,8 +46,6 @@ describe('ProfileComponent', () => {
         provideRouter([]),
         { provide: AUTH_PORT, useValue: authService },
         { provide: AuthStateService, useValue: authState },
-        { provide: WEATHER_PORT, useValue: createWeatherPortMock() },
-        WeatherLevelService,
       ],
     }).compileComponents();
 
@@ -130,26 +99,11 @@ describe('ProfileComponent', () => {
     expect(component.setPasswordSuccess).toBeDefined();
   });
 
-  it('charge les preferences meteo au init', () => {
-    expect(component.favoriteCities.length).toBe(1);
-    expect(component.favoriteCities[0].name).toBe('Paris');
-  });
+  it('ne presente plus l atelier retire', () => {
+    const page: HTMLElement = fixture.nativeElement;
 
-  it('supprime une ville favorite', () => {
-    const city = component.favoriteCities[0];
-    component.removeFavoriteCity(city);
-    expect(component.favoriteCities.length).toBe(0);
-  });
-
-  it('restaure la liste si removeFavoriteCity echoue cote backend', () => {
-    const weatherPort = TestBed.inject(WEATHER_PORT) as ReturnType<typeof createWeatherPortStub>;
-    weatherPort.updatePreferences.and.returnValue(throwError(() => new Error('backend KO')));
-    const before = [...component.favoriteCities];
-    expect(before.length).toBe(1);
-
-    component.removeFavoriteCity(component.favoriteCities[0]);
-
-    expect(component.favoriteCities).toEqual(before);
+    expect(page.textContent).not.toMatch(/Atelier|Météo|Sebastian/);
+    expect(page.querySelector('a[href^="/atelier"]')).toBeNull();
   });
 
   describe('mode edition du profil', () => {

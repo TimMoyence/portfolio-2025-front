@@ -138,7 +138,7 @@ export class FpChallenge extends FpBlock {
   render(): EscapedHtml {
     const probleme = this.probleme;
     if (!probleme) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
     const reponse = this.presentateur()
       ? safeHtml`<p class="fp-challenge__invite">${escapeHtml(probleme.invite)}</p>`

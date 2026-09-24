@@ -1,20 +1,24 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { evaluerExpression } from '../core/formula';
 import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
-import { brancherCurseurs, curseur } from './curseurs';
-import { FpBlock } from './FpBlock';
+import { type Reglages, borner } from './animation';
+import { type ParametreReglable, curseur } from './curseurs';
+import {
+  FpReglable,
+  type Prereglage,
+  arrondi,
+  copierParametres,
+  copierPrereglages,
+  fini,
+  formater,
+  plafondDe,
+  plancherDe,
+} from './reglable';
 import { projeterMetadonnees } from './projection';
 
 export type TraitSerie = 'plein' | 'tirets';
 
-export interface PlotParametre {
-  readonly cle: string;
-  readonly libelle: string;
-  readonly min: number;
-  readonly max: number;
-  readonly pas: number;
-  readonly defaut: number;
-}
+export type PlotParametre = ParametreReglable;
 
 export interface PlotAxe {
   readonly libelle: string;
@@ -36,10 +40,7 @@ export interface PlotSerie {
   readonly calcul: string;
 }
 
-export interface PlotPrereglage {
-  readonly libelle: string;
-  readonly valeurs: Readonly<Record<string, number>>;
-}
+export type PlotPrereglage = Prereglage;
 
 export interface PlotDefinition {
   readonly id: string;
@@ -57,10 +58,11 @@ export interface PlotDefinition {
   readonly etiquettes?: readonly string[];
   readonly prereglages?: readonly PlotPrereglage[];
   readonly reference?: string;
+  readonly animation?: readonly Reglages[];
   readonly metadonnees: MetadonneesBrique;
 }
 
-type Valeurs = Readonly<Record<string, number>>;
+type Valeurs = Reglages;
 
 interface Echantillon {
   readonly abscisse: number;
@@ -106,18 +108,6 @@ function centreDeBarre(rang: number, total: number): number {
   return MARGE_GAUCHE + ((rang + 0.5) * LARGEUR_TRACE) / Math.max(total, 1);
 }
 
-function fini(valeur: number, repli: number): number {
-  return Number.isFinite(valeur) ? valeur : repli;
-}
-
-function arrondi(valeur: number): number {
-  return Math.round(valeur * 100) / 100;
-}
-
-function formater(valeur: number): string {
-  return Number.isFinite(valeur) ? String(arrondi(valeur)).replace('.', ',') : '—';
-}
-
 const EUROS = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
   currency: 'EUR',
@@ -145,20 +135,6 @@ function entiers(depart: number, arrivee: number): number[] {
   );
 }
 
-function plancherDe(bornes: { readonly min: number; readonly max: number }): number {
-  return fini(bornes.min, 0);
-}
-
-function plafondDe(bornes: { readonly min: number; readonly max: number }): number {
-  const bas = plancherDe(bornes);
-  return Math.max(fini(bornes.max, bas), bas);
-}
-
-function borner(parametre: PlotParametre, valeur: number): number {
-  const bas = plancherDe(parametre);
-  return Math.min(Math.max(fini(valeur, bas), bas), plafondDe(parametre));
-}
-
 function jalons(depart: number, arrivee: number, intervalles: number): number[] {
   return Array.from(
     { length: intervalles + 1 },
@@ -174,17 +150,6 @@ function versX(cadre: Cadre, abscisse: number): number {
 function versY(cadre: Cadre, ordonnee: number): number {
   const etendue = cadre.plafond - cadre.plancher || 1;
   return LIGNE_BASSE - ((ordonnee - cadre.plancher) / etendue) * HAUTEUR_TRACE;
-}
-
-function copierParametre(parametre: PlotParametre): PlotParametre {
-  return {
-    cle: parametre.cle,
-    libelle: parametre.libelle,
-    min: parametre.min,
-    max: parametre.max,
-    pas: parametre.pas,
-    defaut: parametre.defaut,
-  };
 }
 
 function copierSerie(serie: PlotSerie): PlotSerie {
@@ -210,18 +175,14 @@ function copierDefinition(source: PlotDefinition): PlotDefinition {
     },
     ordonnee: source.ordonnee,
     bornesOrdonnee: source.bornesOrdonnee === undefined ? undefined : { ...source.bornesOrdonnee },
-    parametres: source.parametres
-      .filter((parametre) => parametre.cle.trim().length > 0)
-      .map(copierParametre),
+    parametres: copierParametres(source.parametres),
     series: source.series.map(copierSerie),
     forme: source.forme === 'barres' ? 'barres' : 'courbes',
     unite: source.unite === 'euros' ? 'euros' : undefined,
     etiquettes: source.etiquettes === undefined ? undefined : [...source.etiquettes],
-    prereglages: (source.prereglages ?? []).map((prereglage) => ({
-      libelle: prereglage.libelle,
-      valeurs: { ...prereglage.valeurs },
-    })),
+    prereglages: copierPrereglages(source.prereglages),
     reference: source.reference,
+    animation: source.animation?.map((etape) => ({ ...etape })),
     metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
@@ -234,94 +195,26 @@ function premiereOrdonnee(tracee: SerieTracee): number {
   return tracee.echantillons[0]?.ordonnee ?? Number.NaN;
 }
 
-export class FpPlot extends FpBlock {
-  private interne: PlotDefinition | null = null;
-  private courantes: Record<string, number> = {};
-  private animation: ReturnType<typeof setInterval> | null = null;
+export class FpPlot extends FpReglable<PlotDefinition> {
+  protected readonly evenementDeReglage = 'fp-plot-reglage';
 
-  set definition(valeur: PlotDefinition | null) {
-    this.arreterAnimation();
-    this.interne = valeur === null ? null : copierDefinition(valeur);
-    this.courantes = {};
-    for (const parametre of this.interne?.parametres ?? []) {
-      this.courantes[parametre.cle] = borner(parametre, parametre.defaut);
-    }
-    this.refreshSiConnecte();
+  protected copier(valeur: PlotDefinition): PlotDefinition {
+    return copierDefinition(valeur);
   }
 
-  get definition(): PlotDefinition | null {
-    return this.interne;
+  protected rafraichirLeRendu(): void {
+    this.rafraichirZone('rendu', this.rendu());
   }
 
-  get valeurs(): Valeurs {
-    return { ...this.courantes };
-  }
-
-  disconnectedCallback(): void {
-    this.arreterAnimation();
-  }
-
-  set reglages(valeur: Valeurs | null) {
-    if (valeur === null) {
-      return;
-    }
-    this.arreterAnimation();
-    for (const parametre of this.interne?.parametres ?? []) {
-      const pilote = valeur[parametre.cle];
-      if (typeof pilote === 'number') {
-        this.courantes[parametre.cle] = borner(parametre, pilote);
-      }
-    }
-    this.refreshSiConnecte();
+  protected override afficherValeur(valeur: number): string {
+    return this.chiffre(valeur);
   }
 
   render(): EscapedHtml {
     if (this.interne === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
     return safeHtml`<section class="fp-carte fp-scene fp-plot__atelier">${this.description()}${this.panneauDeReglages()}<div class="fp-plot__zone" data-zone="rendu">${this.rendu()}</div></section>`;
-  }
-
-  bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.interne?.id ?? null);
-    racine
-      .querySelector<HTMLButtonElement>('[data-testid="animer"]')
-      ?.addEventListener('click', () => {
-        this.animer();
-      });
-    brancherCurseurs(racine, (cle, valeur) => this.regler(cle, valeur));
-    racine.querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]').forEach((bouton) => {
-      bouton.addEventListener('click', () => {
-        this.appliquerPrereglage(Number(bouton.dataset['rang']));
-        this.relayerReglages();
-      });
-    });
-    for (const curseur of racine.querySelectorAll('input[data-testid="curseur"]')) {
-      curseur.addEventListener('change', () => this.relayerReglages());
-    }
-  }
-
-  private relayerReglages(): void {
-    if (this.presentateur() && !this.enApercu()) {
-      this.emit('fp-plot-reglage', { reglages: this.valeurs });
-    }
-  }
-
-  private appliquerPrereglage(rang: number): void {
-    const prereglage = this.interne?.prereglages?.[rang];
-    if (prereglage === undefined) {
-      return;
-    }
-    this.arreterAnimation();
-    for (const parametre of this.interne?.parametres ?? []) {
-      if (Object.hasOwn(prereglage.valeurs, parametre.cle)) {
-        this.courantes = {
-          ...this.courantes,
-          [parametre.cle]: borner(parametre, prereglage.valeurs[parametre.cle]),
-        };
-      }
-    }
-    this.refresh();
   }
 
   private enBarres(): boolean {
@@ -386,35 +279,6 @@ export class FpPlot extends FpBlock {
       return safeHtml``;
     }
     return safeHtml`<p class="fp-plot__description" data-testid="description">${escapeHtml(description)}</p>`;
-  }
-
-  private regler(cle: string, valeur: number): void {
-    const parametre = this.interne?.parametres.find((candidat) => candidat.cle === cle);
-    if (parametre === undefined) {
-      return;
-    }
-    this.arreterAnimation();
-    this.courantes = { ...this.courantes, [cle]: borner(parametre, valeur) };
-    const sortie = this.racine.querySelector<HTMLOutputElement>(
-      `output[data-testid="valeur"][data-cle="${cle}"]`,
-    );
-    if (sortie !== null) {
-      sortie.textContent = this.chiffre(this.courantes[cle]);
-    }
-    this.rafraichirZone('rendu', this.rendu());
-    this.racine
-      .querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]')
-      .forEach((bouton) => {
-        const prereglage = this.interne?.prereglages?.[Number(bouton.dataset['rang'])];
-        bouton.setAttribute('aria-pressed', String(this.estActif(prereglage)));
-      });
-  }
-
-  private estActif(prereglage: PlotPrereglage | undefined): boolean {
-    return (
-      prereglage !== undefined &&
-      Object.entries(prereglage.valeurs).every(([cle, valeur]) => this.courantes[cle] === valeur)
-    );
   }
 
   private tracees(valeurs: Valeurs): SerieTracee[] {
@@ -748,10 +612,7 @@ export class FpPlot extends FpBlock {
     if (prereglages.length === 0) {
       return safeHtml`<button class="fp-plot__animation" data-testid="animer" type="button">${escapeHtml(this.texte('plot-animer'))}</button>`;
     }
-    return safeHtml`<div class="fp-plot__prereglages" role="group" aria-label="${escapeHtml(this.texte('plot-prereglages'))}">${prereglages.map(
-      (prereglage, rang) =>
-        safeHtml`<button class="fp-plot__prereglage" data-testid="prereglage" data-rang="${rang}" type="button" aria-pressed="${escapeHtml(String(this.estActif(prereglage)))}">${escapeHtml(prereglage.libelle)}</button>`,
-    )}</div>`;
+    return safeHtml`<div class="fp-plot__prereglages" role="group" aria-label="${escapeHtml(this.texte('plot-prereglages'))}">${this.boutonsDePrereglage('fp-plot')}</div>`;
   }
 
   private parametreAffiche(parametre: PlotParametre): EscapedHtml {
@@ -768,45 +629,5 @@ export class FpPlot extends FpBlock {
   private enonceValeur(parametre: PlotParametre, valeur: number): string {
     const plage = `${this.texte('plot-plage')} ${this.chiffre(plancherDe(parametre))} ${this.texte('plot-plage-fin')} ${this.chiffre(plafondDe(parametre))}`;
     return `${parametre.libelle} : ${this.chiffre(valeur)} (${plage})`;
-  }
-
-  private animer(): void {
-    const parametres = this.interne?.parametres ?? [];
-    if (parametres.length === 0) {
-      return;
-    }
-    this.arreterAnimation();
-    const depart = Object.fromEntries(
-      parametres.map((parametre) => [
-        parametre.cle,
-        borner(parametre, fini(this.courantes[parametre.cle], parametre.defaut)),
-      ]),
-    );
-    let etape = 0;
-    const total = 6;
-    const avancer = (): void => {
-      etape += 1;
-      const progression = etape / total;
-      this.courantes = Object.fromEntries(
-        parametres.map((parametre) => {
-          const valeurDepart = depart[parametre.cle] ?? parametre.defaut;
-          const valeur = valeurDepart + (plafondDe(parametre) - valeurDepart) * progression;
-          return [parametre.cle, borner(parametre, valeur)];
-        }),
-      );
-      this.refresh();
-      if (etape >= total) {
-        this.arreterAnimation();
-      }
-    };
-    this.animation = setInterval(avancer, 180);
-    avancer();
-  }
-
-  private arreterAnimation(): void {
-    if (this.animation !== null) {
-      clearInterval(this.animation);
-      this.animation = null;
-    }
   }
 }

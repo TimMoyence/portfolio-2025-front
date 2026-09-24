@@ -1,5 +1,10 @@
+import {
+  attendreChaqueClasseCouverte,
+  attendreLaCorrectionNicheeEffacee,
+  attendreSansModaliteNiDuree,
+  parcourirLesRolesSansEffet,
+} from '../../../testing/assertions-briques';
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
-import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import { buildProCas, buildProCasAQuestionsLibres } from '../../../testing/factories/cours.factory';
 import { FpPro } from './FpPro';
@@ -59,6 +64,14 @@ describe('FpPro', () => {
     expect(hote.shadowRoot?.querySelector('.fp-pro__intitule')?.textContent?.trim()).toBe(
       'Le geste professionnel',
     );
+  });
+
+  it('R3 · ne pose ni badge métier ni encadré du geste quand l extrait les a vidés', () => {
+    hote.cas = buildProCas({ id: 'M-METIER-EXTRAIT', metier: '', geste: '', consequence: null });
+
+    expect(cible(hote, 'metier')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('.fp-pro__geste')).toBeNull();
+    expect(lu(hote, 'situation')).toBe(CAS.situation);
   });
 
   it('annonce la portee du geste quand la consequence est renseignee', () => {
@@ -137,39 +150,29 @@ describe('FpPro', () => {
   }
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
-    const piege = buildProCas({ id: 'M-METIER-09' });
-    const metadonnees = { ...piege.metadonnees, bonneReponse: 'a' };
-    hote.cas = { ...piege, metadonnees };
-    expect(JSON.stringify(hote.cas)).not.toContain('bonneReponse');
+    attendreLaCorrectionNicheeEffacee(buildProCas({ id: 'M-METIER-09' }), (contamine) => {
+      hote.cas = contamine;
+      return hote.cas;
+    });
   });
 
   it('ne diffuse aucun evenement et n ecrit dans aucun stockage', () => {
     hote.cas = buildProCas({ id: 'M-METIER-10' });
-    for (const role of ROLES_DE_MONTAGE) {
-      hote.setAttribute('data-cours-role', role);
-    }
-    expect(traces.evenements).toEqual([]);
-    expect(traces.ecritures).toEqual([]);
+    parcourirLesRolesSansEffet(hote, traces);
   });
 
   it('ne rend aucun badge de modalite ni de duree, pour aucun role', () => {
-    for (const role of ROLES_DE_MONTAGE) {
-      hote.setAttribute('data-cours-role', role);
-      expect(cible(hote, 'modalite')).withContext(`role ${role}`).toBeNull();
-      expect(cible(hote, 'duree')).withContext(`role ${role}`).toBeNull();
-    }
+    attendreSansModaliteNiDuree(hote, (repere) => cible(hote, repere));
     expect(hote.cas?.metadonnees.dureeMinutes).toBe(4);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
-    expect(classesOrphelines(hote, 'pro')).toEqual([]);
+    attendreChaqueClasseCouverte(hote, 'pro', CLASSES_ATTENDUES);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise avec des questions libres', () => {
     hote.cas = buildProCasAQuestionsLibres();
-    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_AVEC_QUESTIONS);
-    expect(classesOrphelines(hote, 'pro')).toEqual([]);
+    attendreChaqueClasseCouverte(hote, 'pro', CLASSES_AVEC_QUESTIONS);
   });
 
   describe('questions libres', () => {

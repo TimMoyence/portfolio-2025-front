@@ -23,7 +23,12 @@ import type { Deck } from '../../../../cours/runtime/core/deck';
 import { createDeck } from '../../../../cours/runtime/core/deck';
 import { texte } from '../../../../cours/runtime/core/i18n';
 import type { Identity } from '../../../../cours/runtime/core/identity';
-import { saveIdentity } from '../../../../cours/runtime/core/identity';
+import {
+  clearIdentity,
+  lireSecretDeReprise,
+  memoriserSecretDeReprise,
+  saveIdentity,
+} from '../../../../cours/runtime/core/identity';
 import type { Lock } from '../../../../cours/runtime/core/lock';
 import { createLock } from '../../../../cours/runtime/core/lock';
 import type { EnvoiReponse, NatureEnvoi } from '../../../../cours/runtime/core/queue';
@@ -35,7 +40,12 @@ import {
 } from '../../../../cours/runtime/core/queue';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import { creerBrouillons, purgerLesAutresBrouillons } from '../../../../cours/runtime/core/storage';
-import type { EtatSession, StatutSession, Sync } from '../../../../cours/runtime/core/sync';
+import type {
+  EtatSession,
+  RaisonDeFin,
+  StatutSession,
+  Sync,
+} from '../../../../cours/runtime/core/sync';
 import { getApiBaseUrl } from '../../../core/http/api-config';
 import type {
   IncidentEtudiant,
@@ -281,7 +291,21 @@ function sourceRevelee(pilotage: PilotageEcran | undefined): boolean {
                 </button>
               </header>
             }
-            @if (terminee()) {
+            @if (evince()) {
+              <p data-testid="etudiant-evince" role="alert" i18n="cours.evince|@@coursEvince">
+                Votre formateur vous a retiré de la séance. S’il vous y réadmet, rejoignez-la à
+                nouveau avec le même code depuis ce poste.
+              </p>
+            } @else if (posteLibere()) {
+              <p
+                data-testid="etudiant-poste-libere"
+                role="alert"
+                i18n="cours.posteLibere|@@coursPosteLibere"
+              >
+                Votre formateur a libéré cette place pour un autre poste : ce poste ne suit plus la
+                séance.
+              </p>
+            } @else if (terminee()) {
               <p data-testid="etudiant-fin" role="status" i18n="cours.fin|@@coursFin">
                 La séance est terminée. Merci de votre participation.
               </p>
@@ -578,6 +602,8 @@ export class CoursEtudiantComponent {
   readonly enAttente = signal(false);
   readonly fileRefusee = signal(false);
   readonly terminee = signal(false);
+  readonly evince = signal(false);
+  readonly posteLibere = signal(false);
   readonly peutAvancer = signal(false);
   readonly peutReculer = signal(false);
   readonly statutSeance = signal<StatutSession | null>(null);
@@ -684,6 +710,7 @@ export class CoursEtudiantComponent {
   private rythmeDistant: PacingMode = 'pilote';
   private rappelsDemandes = false;
   private relectureEnCours = false;
+  private lectureDuSujet: Promise<CoursContent> | null = null;
   private detruit = false;
   private videEnCours = false;
   private chantier: Promise<void> = Promise.resolve();
@@ -798,15 +825,18 @@ export class CoursEtudiantComponent {
       return null;
     }
     try {
-      return await firstValueFrom(
+      const rattachement = await firstValueFrom(
         this.port.rejoindre(code, {
           prenom: identite.prenom,
           nom: identite.nom,
           email: identite.email,
           website: String(donnees.get('website') ?? ''),
           formStartedAt: this.debutFormulaire,
+          secretDeReprise: lireSecretDeReprise(code),
         }),
       );
+      memoriserSecretDeReprise(code, rattachement.secretDeReprise);
+      return rattachement;
     } catch (erreur) {
       this.etat.set('code');
       const refus = erreur instanceof RattachementRefuse ? erreur : null;
@@ -863,7 +893,7 @@ export class CoursEtudiantComponent {
     flux.onStatut((statut) => {
       this.refusDuFlux.set(statut.etat === 'refuse' ? { statut: statut.statut } : null);
     });
-    flux.onFin(() => this.clore());
+    flux.onFin((raison) => this.finirSelon(raison));
     flux.ouvrir();
     this.flux = flux;
     this.identite = identite;
@@ -871,9 +901,19 @@ export class CoursEtudiantComponent {
     this.etat.set('seance');
   }
 
+  private finirSelon(raison: RaisonDeFin | null): void {
+    if (raison === 'evince') {
+      this.evince.set(true);
+      return;
+    }
+    this.posteLibere.set(raison === 'revoque');
+    this.clore();
+  }
+
   private clore(): void {
     this.terminee.set(true);
     this.brouillons()?.purger();
+    clearIdentity();
   }
 
   private monterLeDeck(sujet: CoursContent, rattachement: Rattachement): Deck {
@@ -926,7 +966,7 @@ export class CoursEtudiantComponent {
     this.chargementEcran.set(true);
     this.echecEcran.set(null);
     try {
-      const sujet = await firstValueFrom(this.port.lireSujet(sessionId, jeton));
+      const sujet = await this.relireLeSujet(sessionId, jeton);
       if (!this.detruit) {
         this.sujet.set(sujet);
         const relu = sujet.ecrans[index];
@@ -954,6 +994,13 @@ export class CoursEtudiantComponent {
         this.chargementEcran.set(false);
       }
     }
+  }
+
+  private relireLeSujet(sessionId: string, jeton: string): Promise<CoursContent> {
+    this.lectureDuSujet ??= firstValueFrom(this.port.lireSujet(sessionId, jeton)).finally(() => {
+      this.lectureDuSujet = null;
+    });
+    return this.lectureDuSujet;
   }
 
   private async chargerLesDonneesDeLEcran(ecran: EcranContent | undefined): Promise<void> {
@@ -1041,7 +1088,7 @@ export class CoursEtudiantComponent {
     }
     this.relectureEnCours = true;
     try {
-      const relu = await firstValueFrom(this.port.lireSujet(sessionId, this.jeton()));
+      const relu = await this.relireLeSujet(sessionId, this.jeton());
       if (!this.detruit) {
         this.sujet.set(relu);
         this.suivreLeSujetRelu(relu);
@@ -1282,13 +1329,18 @@ export class CoursEtudiantComponent {
         retourDeTentative(evenement.parcoursId, evenement.enigmeId, verdict),
       ]);
     } catch (erreur) {
-      const refus = refusDe(erreur);
-      const message = refus.motif === 'reseau' ? texte('tentatives-reseau') : refus.message;
-      this.ajouter(evenement.screenId, [retourDeRefus(refus.motif, message)]);
+      const refus = this.signalerLeRefusDeTentative(evenement.screenId, erreur);
       if (MOTIFS_DE_RESYNCHRONISATION.includes(refus.motif) || refus.motif === 'deja-repondue') {
         await this.relireMonEtat();
       }
     }
+  }
+
+  private signalerLeRefusDeTentative(screenId: string, erreur: unknown): ReponseRefusee {
+    const refus = refusDe(erreur);
+    const message = refus.motif === 'reseau' ? texte('tentatives-reseau') : refus.message;
+    this.ajouter(screenId, [retourDeRefus(refus.motif, message)]);
+    return refus;
   }
 
   private async defier(evenement: EvenementDe<'defi'>): Promise<void> {
@@ -1307,9 +1359,7 @@ export class CoursEtudiantComponent {
         { kind: 'strategies', defiId: evenement.defiId, strategies },
       ]);
     } catch (erreur) {
-      const refus = refusDe(erreur);
-      const message = refus.motif === 'reseau' ? texte('tentatives-reseau') : refus.message;
-      this.ajouter(evenement.screenId, [retourDeRefus(refus.motif, message)]);
+      this.signalerLeRefusDeTentative(evenement.screenId, erreur);
     }
   }
 

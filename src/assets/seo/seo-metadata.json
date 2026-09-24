@@ -159,7 +159,7 @@
       "index": true,
       "changefreq": "weekly",
       "priority": 1,
-      "lastmod": "2026-09-15",
+      "lastmod": "2026-09-24",
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
@@ -221,7 +221,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-08-08",
+      "lastmod": "2026-09-24",
       "locales": {
         "fr": {
           "title": "Présentation — Tim Moyence Portfolio",
@@ -369,7 +369,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-09-19",
+      "lastmod": "2026-09-24",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -633,7 +633,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-09-11",
+      "lastmod": "2026-09-24",
       "locales": {
         "fr": {
           "title": "Offres — Services professionnels web",
@@ -853,7 +853,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-09-19",
+      "lastmod": "2026-09-24",
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
@@ -1050,228 +1050,12 @@
       }
     },
     {
-      "id": "atelier",
-      "path": "/atelier",
-      "index": false,
-      "changefreq": "monthly",
-      "priority": 0.7,
-      "lastmod": "2026-08-07",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "L'Atelier",
-          "path": "/atelier"
-        }
-      ],
-      "locales": {
-        "fr": {
-          "title": "L'Atelier — Météo & Sebastian, démos jouables",
-          "description": "Le bac à sable d'Asili Design : un laboratoire vivant où vous manipulez Météo et Sebastian directement, sans inscription. Des preuves jouables, pas des produits à vendre.",
-          "ogTitle": "L'Atelier — le bac à sable d'Asili Design",
-          "ogDescription": "Deux expériences jouables — Météo et Sebastian — à manipuler en direct, sans login. La preuve par l'usage.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "CollectionPage",
-            "name": "L'Atelier — Asili Design",
-            "description": "Laboratoire d'expériences jouables : Météo et Sebastian, manipulables sans inscription.",
-            "url": "https://asilidesign.fr/fr/atelier",
-            "hasPart": [
-              {
-                "@type": "SoftwareApplication",
-                "name": "Météo — L'Atelier",
-                "applicationCategory": "WeatherApplication",
-                "url": "https://asilidesign.fr/fr/atelier/meteo"
-              },
-              {
-                "@type": "SoftwareApplication",
-                "name": "Sebastian — L'Atelier",
-                "applicationCategory": "LifestyleApplication",
-                "url": "https://asilidesign.fr/fr/atelier/sebastian"
-              }
-            ]
-          }
-        },
-        "en": {
-          "title": "The Atelier — Weather & Sebastian, playable demos",
-          "description": "Asili Design's sandbox: a living lab where you handle Weather and Sebastian directly, no sign-up. Playable proof, not products to sell.",
-          "ogTitle": "The Atelier — Asili Design's sandbox",
-          "ogDescription": "Two playable experiences — Weather and Sebastian — to handle live, no login. Proof through use.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "CollectionPage",
-            "name": "The Atelier — Asili Design",
-            "description": "A lab of playable experiences: Weather and Sebastian, usable without sign-up.",
-            "url": "https://asilidesign.fr/en/atelier",
-            "hasPart": [
-              {
-                "@type": "SoftwareApplication",
-                "name": "Weather — The Atelier",
-                "applicationCategory": "WeatherApplication",
-                "url": "https://asilidesign.fr/en/atelier/meteo"
-              },
-              {
-                "@type": "SoftwareApplication",
-                "name": "Sebastian — The Atelier",
-                "applicationCategory": "LifestyleApplication",
-                "url": "https://asilidesign.fr/en/atelier/sebastian"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "weather",
-      "path": "/atelier/meteo",
-      "index": false,
-      "changefreq": "monthly",
-      "priority": 0.5,
-      "lastmod": "2026-08-07",
-      "locales": {
-        "fr": {
-          "title": "Météo — L'Atelier",
-          "description": "Application météo en temps réel avec prévisions détaillées, inspirée d'Apple Weather.",
-          "ogTitle": "Météo — L'Atelier",
-          "ogDescription": "Consultez la météo en temps réel avec une interface élégante et des prévisions détaillées.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "Météo — L'Atelier",
-            "description": "Application météo en temps réel avec prévisions détaillées, inspirée d'Apple Weather.",
-            "applicationCategory": "WeatherApplication",
-            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "EUR"
-            },
-            "screenshot": "https://asilidesign.fr/assets/images/ateliers/meteo-screenshot.png",
-            "url": "https://asilidesign.fr/fr/atelier/meteo"
-          }
-        },
-        "en": {
-          "title": "Weather — L'Atelier",
-          "description": "Real-time weather app with detailed forecasts, inspired by Apple Weather.",
-          "ogTitle": "Weather — L'Atelier",
-          "ogDescription": "Check real-time weather with an elegant interface and detailed forecasts.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "Weather — L'Atelier",
-            "description": "Real-time weather app with detailed forecasts, inspired by Apple Weather.",
-            "applicationCategory": "WeatherApplication",
-            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "EUR"
-            },
-            "screenshot": "https://asilidesign.fr/assets/images/ateliers/meteo-screenshot.png",
-            "url": "https://asilidesign.fr/en/atelier/meteo"
-          }
-        }
-      }
-    },
-    {
-      "id": "sebastian",
-      "path": "/atelier/sebastian",
-      "index": false,
-      "changefreq": "monthly",
-      "priority": 0.4,
-      "lastmod": "2026-08-07",
-      "locales": {
-        "fr": {
-          "title": "Sebastian — L'Atelier",
-          "description": "Tracker de consommation personnel avec objectifs, graphiques et suivi dans le temps.",
-          "ogTitle": "Sebastian — L'Atelier",
-          "ogDescription": "Suivez votre consommation, fixez des objectifs et visualisez vos progrès avec Sebastian.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "Sebastian — L'Atelier",
-            "description": "Tracker de consommation personnel avec objectifs, graphiques et suivi dans le temps.",
-            "applicationCategory": "HealthApplication",
-            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "EUR"
-            },
-            "screenshot": "https://asilidesign.fr/assets/images/ateliers/sebastian-screenshot.png",
-            "url": "https://asilidesign.fr/fr/atelier/sebastian"
-          }
-        },
-        "en": {
-          "title": "Sebastian — L'Atelier",
-          "description": "Personal consumption tracker with goals, charts, and time tracking.",
-          "ogTitle": "Sebastian — L'Atelier",
-          "ogDescription": "Track your consumption, set goals, and visualize progress with Sebastian.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "Sebastian — L'Atelier",
-            "description": "Personal consumption tracker with goals, charts, and time tracking.",
-            "applicationCategory": "HealthApplication",
-            "operatingSystem": "Web (Chrome, Safari, Firefox, Edge)",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "EUR"
-            },
-            "screenshot": "https://asilidesign.fr/assets/images/ateliers/sebastian-screenshot.png",
-            "url": "https://asilidesign.fr/en/atelier/sebastian"
-          }
-        }
-      }
-    },
-    {
-      "id": "weather-app",
-      "path": "/atelier/meteo/app",
-      "index": false,
-      "locales": {
-        "fr": {
-          "title": "Météo — Application",
-          "description": "Application météo en temps réel.",
-          "ogTitle": "Météo — Application",
-          "ogDescription": "Application météo en temps réel."
-        },
-        "en": {
-          "title": "Weather — Application",
-          "description": "Real-time weather application.",
-          "ogTitle": "Weather — Application",
-          "ogDescription": "Real-time weather application."
-        }
-      }
-    },
-    {
-      "id": "sebastian-app",
-      "path": "/atelier/sebastian/app",
-      "index": false,
-      "locales": {
-        "fr": {
-          "title": "Sebastian — Application",
-          "description": "Tracker de consommation personnel.",
-          "ogTitle": "Sebastian — Application",
-          "ogDescription": "Tracker de consommation personnel."
-        },
-        "en": {
-          "title": "Sebastian — Application",
-          "description": "Personal consumption tracker.",
-          "ogTitle": "Sebastian — Application",
-          "ogDescription": "Personal consumption tracker."
-        }
-      }
-    },
-    {
       "id": "terms",
       "path": "/terms",
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-09-24",
       "locales": {
         "fr": {
           "title": "Conditions de services — Moyence",
@@ -1293,7 +1077,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-09-24",
       "locales": {
         "fr": {
           "title": "Politique de confidentialité — Moyence",
@@ -1435,7 +1219,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-09-23",
+      "lastmod": "2026-09-24",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1503,7 +1287,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-08-08",
+      "lastmod": "2026-09-24",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1687,7 +1471,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.6,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-09-24",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1766,7 +1550,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-08-08",
+      "lastmod": "2026-09-24",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1962,7 +1746,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-08-08",
+      "lastmod": "2026-09-24",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -2160,7 +1944,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.6,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-09-24",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -2220,7 +2004,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.6,
-      "lastmod": "2026-08-07",
+      "lastmod": "2026-09-24",
       "breadcrumb": [
         {
           "name": "Accueil",

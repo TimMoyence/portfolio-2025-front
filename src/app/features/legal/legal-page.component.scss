@@ -1,0 +1,143 @@
+@use '../../styles-shared/lists';
+@use './legal-hero';
+
+:host {
+  display: block;
+}
+
+.lg-section {
+  padding-bottom: clamp(60px, 9vh, 120px);
+}
+
+.lg-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: clamp(30px, 5vw, 72px);
+  padding-top: clamp(40px, 6vh, 70px);
+  align-items: start;
+}
+
+.lg-toc {
+  position: sticky;
+  top: 100px;
+}
+.lg-toc .toc-k {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 16px;
+}
+.lg-toc ol {
+  @include lists.list-reset;
+  counter-reset: toc;
+  display: grid;
+  gap: 3px;
+}
+.lg-toc a {
+  display: block;
+  font-size: 14px;
+  color: var(--ink-soft);
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  border-left: 2px solid transparent;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+  counter-increment: toc;
+}
+.lg-toc a::before {
+  content: counter(toc, decimal-leading-zero) '  ';
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+.lg-toc a:hover {
+  background: var(--ivory);
+  color: var(--ink);
+}
+.lg-toc a.active {
+  border-left-color: var(--teal);
+  color: var(--teal-deep);
+  background: rgba(var(--teal-rgb), 0.06);
+}
+
+.lg-body {
+  max-width: 680px;
+}
+.lg-body ::ng-deep section {
+  margin-bottom: clamp(40px, 6vh, 70px);
+  scroll-margin-top: 100px;
+}
+.lg-body ::ng-deep h2 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin-bottom: 20px;
+}
+.lg-body ::ng-deep h3 {
+  font-size: 19px;
+  margin: 26px 0 10px;
+  color: var(--ink);
+}
+.lg-body ::ng-deep p {
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+}
+.lg-body ::ng-deep ul {
+  margin: 0 0 18px;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 11px;
+}
+.lg-body ::ng-deep ul li {
+  display: flex;
+  gap: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.lg-body ::ng-deep ul li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+  flex: none;
+  margin-top: 10px;
+}
+.lg-body ::ng-deep a.inl {
+  color: var(--teal-deep);
+  font-weight: 600;
+  border-bottom: 1px solid var(--line);
+}
+.lg-body ::ng-deep a.inl:hover {
+  border-color: var(--teal);
+}
+.lg-body ::ng-deep strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.lg-body ::ng-deep .lg-note {
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 20px 22px;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 880px) {
+  .lg-layout {
+    grid-template-columns: 1fr;
+  }
+  .lg-toc {
+    display: none;
+  }
+}

@@ -4,6 +4,11 @@ export const plot = `
   gap: var(--fp-s-4);
 }
 
+:where(.fp-root) .fp-plot__zone {
+  display: grid;
+  gap: var(--fp-s-3);
+}
+
 :where(.fp-root) .fp-plot__reglages {
   display: grid;
   gap: var(--fp-s-3);
@@ -333,11 +338,6 @@ export const plot = `
   display: flex;
   flex-wrap: wrap;
   gap: var(--fp-s-2);
-}
-
-:where(.fp-root) .fp-plot__zone {
-  display: grid;
-  gap: var(--fp-s-3);
 }
 
 :where(.fp-root) .fp-plot__description {

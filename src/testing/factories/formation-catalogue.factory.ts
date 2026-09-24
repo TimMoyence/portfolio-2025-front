@@ -16,3 +16,10 @@ export function buildVisualCourse(overrides: Partial<CoursCatalogue> = {}): Cour
     ...overrides,
   };
 }
+
+export function buildReponseDuCatalogue(publieLe?: string): Response {
+  return new Response(JSON.stringify(buildVisualCourse({ ecrans: [], publieLe })), {
+    status: 200,
+    headers: { 'content-type': 'application/json' },
+  });
+}

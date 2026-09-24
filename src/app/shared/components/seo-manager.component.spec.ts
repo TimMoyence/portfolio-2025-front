@@ -97,6 +97,16 @@ describe('SeoManagerComponent', () => {
     component = fixture.componentInstance;
   }
 
+  function naviguer(
+    url: string,
+    donnees: Record<string, unknown> = { seoKey: 'test-page' },
+  ): SeoConfig {
+    fixture.detectChanges();
+    routerEvents$.next(new NavigationEnd(1, url, url));
+    routeData$.next(donnees);
+    return seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
+  }
+
   it('devrait se creer', () => {
     expect(component).toBeTruthy();
   });
@@ -109,54 +119,32 @@ describe('SeoManagerComponent', () => {
       twitterCard: 'summary_large_image',
     };
 
-    fixture.detectChanges();
-
-    routerEvents$.next(new NavigationEnd(1, '/fr/test', '/fr/test'));
-    routeData$.next({ seo: routeDataSeo });
+    const call = naviguer('/fr/test', { seo: routeDataSeo });
 
     expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(1);
-    const call = seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
     expect(call.title).toBe('Titre depuis route data');
     expect(call.description).toBe('Description depuis route data');
   });
 
   it('devrait appliquer la config SEO depuis le registre par cle', () => {
-    seoRegistrySpy.getSeoByKey.and.returnValue(of(resolvedConfig));
-
-    fixture.detectChanges();
-
-    routerEvents$.next(new NavigationEnd(1, '/fr/test', '/fr/test'));
-    routeData$.next({ seoKey: 'test-page' });
+    const call = naviguer('/fr/test');
 
     expect(seoRegistrySpy.getSeoByKey).toHaveBeenCalledWith('test-page');
     expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(1);
-    const call = seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
     expect(call.title).toBe('Page de test');
   });
 
   it('devrait appliquer la config SEO par defaut si aucune config fournie', () => {
-    seoRegistrySpy.getSeoByPath.and.returnValue(of(null));
-
-    fixture.detectChanges();
-
-    routerEvents$.next(new NavigationEnd(1, '/fr/unknown', '/fr/unknown'));
-    routeData$.next({});
+    const call = naviguer('/fr/unknown', {});
 
     expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(1);
-    const call = seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
     expect(call.robots).toBe('index, follow');
     expect(call.canonicalUrl).toContain('https://example.com');
   });
 
   it('devrait construire les hreflangs pour toutes les locales', () => {
-    seoRegistrySpy.getSeoByKey.and.returnValue(of(resolvedConfig));
+    const call = naviguer('/fr/test');
 
-    fixture.detectChanges();
-
-    routerEvents$.next(new NavigationEnd(1, '/fr/test', '/fr/test'));
-    routeData$.next({ seoKey: 'test-page' });
-
-    const call = seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
     expect(call.hreflangs).toBeDefined();
     expect(call.hreflangs!['fr']).toBe('https://example.com/fr/test');
     expect(call.hreflangs!['en']).toBe('https://example.com/en/test');
@@ -164,14 +152,8 @@ describe('SeoManagerComponent', () => {
   });
 
   it('devrait construire les URLs canoniques correctement', () => {
-    seoRegistrySpy.getSeoByKey.and.returnValue(of(resolvedConfig));
+    const call = naviguer('/fr/test');
 
-    fixture.detectChanges();
-
-    routerEvents$.next(new NavigationEnd(1, '/fr/test', '/fr/test'));
-    routeData$.next({ seoKey: 'test-page' });
-
-    const call = seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
     expect(call.canonicalUrl).toBe('https://example.com/fr/test');
     expect(call.ogUrl).toBe('https://example.com/fr/test');
   });
@@ -186,24 +168,15 @@ describe('SeoManagerComponent', () => {
     };
     seoRegistrySpy.getSeoByKey.and.returnValue(of(configAvecImageRelative));
 
-    fixture.detectChanges();
-
-    routerEvents$.next(new NavigationEnd(1, '/fr/test', '/fr/test'));
-    routeData$.next({ seoKey: 'test-page' });
-
-    const call = seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
-    expect(call.ogImage).toBe('https://example.com/assets/images/og.webp');
+    expect(naviguer('/fr/test').ogImage).toBe('https://example.com/assets/images/og.webp');
   });
 
   describe('normalisation des slashes', () => {
     it('retire les slashes de tete et de queue du chemin', () => {
       routerStub.url = '//fr//test//';
 
-      fixture.detectChanges();
-      routerEvents$.next(new NavigationEnd(1, '//fr//test//', '//fr//test//'));
-      routeData$.next({ seoKey: 'test-page' });
+      const call = naviguer('//fr//test//');
 
-      const call = seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
       expect(call.canonicalUrl).toBe('https://example.com/fr/test');
       expect(call.hreflangs!['en']).toBe('https://example.com/en/test');
     });
@@ -212,12 +185,7 @@ describe('SeoManagerComponent', () => {
       TestBed.resetTestingModule();
       await configure('https://example.com//');
 
-      fixture.detectChanges();
-      routerEvents$.next(new NavigationEnd(1, '/fr/test', '/fr/test'));
-      routeData$.next({ seoKey: 'test-page' });
-
-      const call = seoServiceSpy.updateSeoMetadata.calls.mostRecent().args[0];
-      expect(call.canonicalUrl).toBe('https://example.com/fr/test');
+      expect(naviguer('/fr/test').canonicalUrl).toBe('https://example.com/fr/test');
     });
   });
 });

@@ -6,23 +6,27 @@ import { buildClientReport } from '../../../testing/factories/audit-request.fact
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuditRequestHttpAdapter } from './audit-request-http.adapter';
 
+function injecterAdapter(plateforme: 'server' | 'browser'): AuditRequestHttpAdapter {
+  setupTestBed({
+    http: false,
+    providers: [
+      AuditRequestHttpAdapter,
+      {
+        provide: HttpClient,
+        useValue: jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'post']),
+      },
+      { provide: PLATFORM_ID, useValue: plateforme },
+    ],
+  });
+  return TestBed.inject(AuditRequestHttpAdapter);
+}
+
 describe('AuditRequestHttpAdapter', () => {
   describe('en contexte serveur (SSR)', () => {
     let adapter: AuditRequestHttpAdapter;
 
     beforeEach(() => {
-      const httpSpy = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'post']);
-
-      setupTestBed({
-        http: false,
-        providers: [
-          AuditRequestHttpAdapter,
-          { provide: HttpClient, useValue: httpSpy },
-          { provide: PLATFORM_ID, useValue: 'server' },
-        ],
-      });
-
-      adapter = TestBed.inject(AuditRequestHttpAdapter);
+      adapter = injecterAdapter('server');
     });
 
     it('devrait etre cree en SSR', () => {
@@ -50,18 +54,7 @@ describe('AuditRequestHttpAdapter', () => {
     let adapter: AuditRequestHttpAdapter;
 
     beforeEach(() => {
-      const httpSpy = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'post']);
-
-      setupTestBed({
-        http: false,
-        providers: [
-          AuditRequestHttpAdapter,
-          { provide: HttpClient, useValue: httpSpy },
-          { provide: PLATFORM_ID, useValue: 'browser' },
-        ],
-      });
-
-      adapter = TestBed.inject(AuditRequestHttpAdapter);
+      adapter = injecterAdapter('browser');
     });
 
     it('devrait etre cree', () => {

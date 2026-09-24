@@ -1,4 +1,9 @@
-import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
+import {
+  attendreAucunEffet,
+  attendreChaqueClasseCouverte,
+  attendreLaCorrectionNicheeEffacee,
+} from '../../../testing/assertions-briques';
+import { classesOrphelines } from '../../../testing/classes-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import { buildPlotDefinition, buildPlotEnBarres } from '../../../testing/factories/cours.factory';
 import {
@@ -545,23 +550,96 @@ describe('FpPlot', () => {
       expect(valeurAffichee(hote, 'C')).toBe('3000');
       expect(valeurAffichee(hote, 'i')).toBe('10');
     });
+
+    describe('R9 · animation de l écran', () => {
+      const SIMULATEUR = buildPlotDefinition({
+        id: 'K-SIMULATEUR-MIX',
+        abscisse: { libelle: 'Part de la marketplace (%)', min: 0, max: 80 },
+        parametres: [
+          { cle: 'taux', libelle: 'Taux marketplace (%)', min: 10, max: 30, pas: 1, defaut: 16 },
+        ],
+        series: [
+          { id: 'global', libelle: 'Taux global', trait: 'plein', calcul: 'x * taux / 100' },
+        ],
+        animation: [{ taux: 16 }, { taux: 20 }, { taux: 24 }],
+      });
+
+      beforeEach(() => {
+        jasmine.clock().install();
+        hote.definition = SIMULATEUR;
+      });
+
+      afterEach(() => {
+        jasmine.clock().uninstall();
+      });
+
+      it('passe d une valeur à la suivante toutes les trois secondes', () => {
+        animer(hote);
+        expect(hote.valeurs).toEqual({ taux: 16 });
+
+        jasmine.clock().tick(2999);
+        expect(valeurAffichee(hote, 'taux')).toBe('16');
+
+        jasmine.clock().tick(1);
+        expect(valeurAffichee(hote, 'taux')).toBe('20');
+
+        jasmine.clock().tick(3000);
+        expect(hote.valeurs).toEqual({ taux: 24 });
+      });
+
+      it('relaie au pupitre chaque valeur jouée, pour que la projection la suive', () => {
+        hote.setAttribute('data-cours-role', 'presentateur');
+        const emis = reglagesEmis();
+
+        animer(hote);
+        jasmine.clock().tick(6000);
+
+        expect(emis).toEqual([
+          { reglages: { taux: 16 } },
+          { reglages: { taux: 20 } },
+          { reglages: { taux: 24 } },
+        ]);
+      });
+
+      it('poursuit l animation quand le pupitre reçoit en écho la valeur qu il affiche', () => {
+        animer(hote);
+        hote.reglages = { taux: 16 };
+        jasmine.clock().tick(3000);
+
+        expect(hote.valeurs).toEqual({ taux: 20 });
+      });
+
+      it('s arrête dès qu un curseur est réglé à la main', () => {
+        animer(hote);
+        relacherCurseur('12');
+        jasmine.clock().tick(6000);
+
+        expect(hote.valeurs).toEqual({ taux: 12 });
+      });
+
+      it('va directement à la dernière valeur quand le mouvement est réduit', () => {
+        spyOn(window, 'matchMedia').and.returnValue({ matches: true } as MediaQueryList);
+
+        animer(hote);
+
+        expect(hote.valeurs).toEqual({ taux: 24 });
+      });
+    });
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
-    const piege = buildPlotDefinition({ id: 'K-COURBE-02' });
-    const contamine = { ...piege.metadonnees, bonneReponse: 'a' };
-    hote.definition = { ...piege, metadonnees: contamine };
-    expect(JSON.stringify(hote.definition)).not.toContain('bonneReponse');
+    attendreLaCorrectionNicheeEffacee(buildPlotDefinition({ id: 'K-COURBE-02' }), (contamine) => {
+      hote.definition = contamine;
+      return hote.definition;
+    });
   });
 
   it('explore sans rien emettre vers la seance ni ecrire dans un stockage', () => {
     animer(hote);
-    expect(traces.evenements).toEqual([]);
-    expect(traces.ecritures).toEqual([]);
+    attendreAucunEffet(traces);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
-    expect(classesOrphelines(hote, 'plot')).toEqual([]);
+    attendreChaqueClasseCouverte(hote, 'plot', CLASSES_ATTENDUES);
   });
 });

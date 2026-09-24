@@ -14,9 +14,6 @@ const baseAnglaise = process.env['SSR_EN_BASE_URL'] ?? '';
 
 const ROUTES_EN = [
   '/en',
-  '/en/atelier',
-  '/en/atelier/meteo',
-  '/en/atelier/sebastian',
   '/en/client-project',
   '/en/commonbudgetTM',
   '/en/contact',

@@ -2,7 +2,7 @@ import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
-import { estObjet } from './retours';
+import { estObjet, lireTextes } from './retours';
 
 export interface WorkedEtape {
   readonly id: string;
@@ -32,17 +32,6 @@ function copierEtape(etape: WorkedEtape): WorkedEtape {
 function remplis(champs: Champs): Record<string, string> {
   return Object.fromEntries(
     Object.entries(champs).filter(([, valeur]) => valeur.trim().length > 0),
-  );
-}
-
-function lireChamps(valeur: unknown): Champs {
-  if (!estObjet(valeur)) {
-    return {};
-  }
-  return Object.fromEntries(
-    Object.entries(valeur).filter(
-      (entree): entree is [string, string] => typeof entree[1] === 'string',
-    ),
   );
 }
 
@@ -107,7 +96,7 @@ export class FpWorked extends FpBlock {
     if (!estObjet(valeur) || this.soumise) {
       return;
     }
-    this.redactions = lireChamps(valeur['redactions']);
+    this.redactions = lireTextes(valeur['redactions']);
     this.noterBrouillonRepris();
     this.refreshSiConnecte();
   }
@@ -115,7 +104,7 @@ export class FpWorked extends FpBlock {
   render(): EscapedHtml {
     const exemple = this.exemple;
     if (exemple === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
     if (this.estPilote || this.presentateur()) {
       return this.etapesPilotees(exemple);

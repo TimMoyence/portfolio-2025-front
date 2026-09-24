@@ -106,11 +106,15 @@ describe('FpWorked', () => {
     }
   });
 
-  it('RET-25 · ne montre aucune correction a la premiere presentation', () => {
+  function attendreAucuneEtapePreRemplie(): void {
     expect(hote.etayage).toBe(0);
     expect(montrees(hote)).toEqual([]);
     expect(aCompleter(hote)).toEqual(ETAPES);
     expect(reperes(hote, 'saisie').length).toBe(PLEIN);
+  }
+
+  it('RET-25 · ne montre aucune correction a la premiere presentation', () => {
+    attendreAucuneEtapePreRemplie();
   });
 
   it('RET-23 · pose sous chaque etape sa question puis un seul champ de reponse', () => {
@@ -180,10 +184,7 @@ describe('FpWorked', () => {
 
   it('ne pre remplit aucune etape au dernier niveau d etayage', () => {
     hote.etayage = 0;
-    expect(hote.etayage).toBe(0);
-    expect(montrees(hote)).toEqual([]);
-    expect(aCompleter(hote)).toEqual(ETAPES);
-    expect(reperes(hote, 'saisie').length).toBe(PLEIN);
+    attendreAucuneEtapePreRemplie();
   });
 
   it('suit l etayage pilote par le formateur, a la baisse comme a la hausse, dans les bornes', () => {

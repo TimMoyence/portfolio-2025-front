@@ -198,8 +198,9 @@ describe('SlideReflectionComponent', () => {
       expect(await pendingFreeResponses(sessionId, cleEtudiante())).toEqual([]);
     });
 
-    it('annonce le depart quand la reflexion gardee part depuis un autre relais', async () => {
-      const sessionId = `seance-depart-ailleurs-${Date.now()}`;
+    async function garderSurEcranNonServi(
+      sessionId: string,
+    ): Promise<ReturnType<typeof monterEnSeance>> {
       formations.enregistrerReponseLibre.and.returnValue(
         throwError(() => new ReponseLibreRefusee('ecran-non-servi', 404)),
       );
@@ -207,6 +208,12 @@ describe('SlideReflectionComponent', () => {
 
       garder(fixture, 'Trop tôt pour cet écran.');
       await jusqua(fixture, () => etat(fixture) === 'ecran_non_servi');
+      return fixture;
+    }
+
+    it('annonce le depart quand la reflexion gardee part depuis un autre relais', async () => {
+      const sessionId = `seance-depart-ailleurs-${Date.now()}`;
+      const fixture = await garderSurEcranNonServi(sessionId);
 
       formations.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
       await TestBed.inject(ReponsesLibresService).reprendre(sessionId, 'jeton-1');
@@ -218,13 +225,7 @@ describe('SlideReflectionComponent', () => {
 
     it('sur un ecran pas encore servi, l annonce et garde la reflexion en file', async () => {
       const sessionId = `seance-ecran-non-servi-${Date.now()}`;
-      formations.enregistrerReponseLibre.and.returnValue(
-        throwError(() => new ReponseLibreRefusee('ecran-non-servi', 404)),
-      );
-      const fixture = monterEnSeance('seance', sessionId);
-
-      garder(fixture, 'Trop tôt pour cet écran.');
-      await jusqua(fixture, () => etat(fixture) === 'ecran_non_servi');
+      const fixture = await garderSurEcranNonServi(sessionId);
 
       expect(racine(fixture).textContent).toContain('pas encore ouvert');
       expect(

@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { balisesInjectees, CHARGE_XSS, xssDeclenche } from '../../../../../testing/charge-xss';
 import { buildReponseLibreFormateur } from '../../../../../testing/factories/formations.factory';
 import { PanneauReponsesLibresComponent } from './panneau-reponses-libres.component';
 
@@ -86,6 +87,21 @@ describe('PanneauReponsesLibresComponent', () => {
 
   it('relit au pupitre d une correction les reponses de l ecran auquel elle renvoie', () => {
     expect(textes(monter('ecran-3', 'ecran-2'))).toEqual(['Lire la source.']);
+  });
+
+  it('T6 · affiche une reponse piegee en texte brut, sans creer ni executer de balise', async () => {
+    const fixture = TestBed.createComponent(PanneauReponsesLibresComponent);
+    fixture.componentRef.setInput('reponses', [
+      buildReponseLibreFormateur({ id: 'r-xss', screenId: 'ecran-1', response: CHARGE_XSS }),
+    ]);
+    fixture.componentRef.setInput('ecranId', 'ecran-1');
+    fixture.componentRef.setInput('enonces', new Map([['mesure', CHARGE_XSS]]));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(textes(fixture)).toEqual([CHARGE_XSS]);
+    expect(balisesInjectees(hote(fixture))).toBe(0);
+    expect(xssDeclenche()).toBeFalse();
   });
 
   it('ne rend rien sur un ecran sans activite libre ni reponse', () => {

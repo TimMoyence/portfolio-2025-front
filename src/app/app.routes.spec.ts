@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { buildAuthSession, buildAuthUser } from '../testing/factories/auth.factory';
 import { setupTestBed } from '../testing/setup-test-bed';
 import { authGuard } from './core/guards/auth.guard';
@@ -39,10 +40,7 @@ describe('app routes', () => {
       'terms',
       'privacy',
       'growth-audit',
-      'atelier/meteo',
-      'atelier/sebastian',
-      'atelier/meteo/app',
-      'atelier/sebastian/app',
+      'atelier',
       'commonbudgetTM',
       '**',
     ];
@@ -68,6 +66,28 @@ describe('app routes', () => {
     expect(commonBudgetRedirect).toBeDefined();
     expect(commonBudgetRedirect?.redirectTo).toBe('');
     expect(commonBudgetRedirect?.pathMatch).toBe('full');
+  });
+
+  for (const ancienneUrl of [
+    '/atelier',
+    '/atelier/meteo',
+    '/atelier/sebastian',
+    '/atelier/meteo/app',
+    '/atelier/sebastian/app/badges',
+  ]) {
+    it(`redirige l ancienne url de l atelier ${ancienneUrl} vers /projets`, async () => {
+      setupTestBed({ providers: [provideRouter(routes)] });
+
+      await TestBed.inject(Router).navigateByUrl(ancienneUrl);
+
+      expect(TestBed.inject(Router).url).toBe('/projets');
+    });
+  }
+
+  it('ne sert plus aucune application de l atelier', () => {
+    const cheminsDeLAtelier = routes.filter((r) => r.path?.startsWith('atelier'));
+
+    expect(cheminsDeLAtelier.every((r) => !r.loadComponent && !r.canActivate)).toBeTrue();
   });
 
   it('devrait rediriger /client-project vers /projets sans servir de composant', () => {
@@ -138,7 +158,7 @@ describe('app routes', () => {
       expect(authentification).toBe(authGuard);
       expect(autres).toEqual([]);
 
-      authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['weather'] }) }));
+      authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['user'] }) }));
       expect(String(decider())).toBe('/contact?reason=access&app=teacher');
 
       authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) }));

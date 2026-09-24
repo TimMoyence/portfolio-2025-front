@@ -9,6 +9,13 @@ function dispatcherEvenementsSensibles(): { copie: Event; raccourci: KeyboardEve
   return { copie, raccourci };
 }
 
+function attendreQueRienNeSoitBloque(verrou: Lock): void {
+  const { copie, raccourci } = dispatcherEvenementsSensibles();
+  expect(copie.defaultPrevented).toBe(false);
+  expect(raccourci.defaultPrevented).toBe(false);
+  expect(verrou.incidents()).toEqual([]);
+}
+
 function typesEcoutes(espion: jasmine.Spy): string[] {
   return espion.calls.allArgs().map(([type]) => String(type));
 }
@@ -24,10 +31,7 @@ describe('lock', () => {
   it('le regime ouvert n enregistre rien et ne bloque rien', () => {
     lock = createLock('ouvert');
     lock.arm();
-    const { copie, raccourci } = dispatcherEvenementsSensibles();
-    expect(copie.defaultPrevented).toBe(false);
-    expect(raccourci.defaultPrevented).toBe(false);
-    expect(lock.incidents()).toEqual([]);
+    attendreQueRienNeSoitBloque(lock);
   });
 
   it('le regime focus ne journalise un changement de visibilite que si l onglet est cache', () => {
@@ -155,10 +159,7 @@ describe('lock', () => {
     lock = createLock('examen');
     lock.arm();
     lock.disarm();
-    const { copie, raccourci } = dispatcherEvenementsSensibles();
-    expect(copie.defaultPrevented).toBe(false);
-    expect(raccourci.defaultPrevented).toBe(false);
-    expect(lock.incidents()).toEqual([]);
+    attendreQueRienNeSoitBloque(lock);
   });
 
   it('arm est idempotent et ne pose pas les ecouteurs deux fois', () => {

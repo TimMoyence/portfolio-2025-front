@@ -10,9 +10,9 @@ import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { SlideActivityComponent } from './slide-activity.component';
 
 const EMPREINTE_PUBLIEE_PAR_LE_BACK =
-  '926cef4cb67e6c41e621e233f3f5b1306796bf8ccdc688bcb17bd52bdef770cd';
+  'c56ed8e46763df63facea77e2b7f10595b2a0e8839e74a24b9c8209c997fe175';
 
-const ECRANS_PUBLIES = 75;
+const ECRANS_PUBLIES = 74;
 
 function ecranNomme<T extends EcranContent>(ecrans: readonly T[], id: string): T {
   const ecran = ecrans.find((candidat) => candidat.id === id);

@@ -4,10 +4,10 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 import {
   AsiliAiMethodComponent,
   type AsiliAiMethodStep,
-  AsiliCtaBandComponent,
-  AsiliFaqComponent,
-  type AsiliFaqItem,
+  type AsiliClosing,
+  AsiliClosingComponent,
   AsiliHeroComponent,
+  type AsiliHeroMetaRow,
 } from '../../shared/sections';
 
 interface PresentationSkill {
@@ -33,8 +33,7 @@ interface PresentationMilestone {
     RevealOnScrollDirective,
     AsiliHeroComponent,
     AsiliAiMethodComponent,
-    AsiliCtaBandComponent,
-    AsiliFaqComponent,
+    AsiliClosingComponent,
   ],
   templateUrl: './presentation.component.html',
   styleUrl: './presentation.component.scss',
@@ -51,7 +50,7 @@ export class PresentationComponent {
 
   protected readonly heroLead = $localize`:@@presentationHeroLead:Je m'appelle Tim Moyence — développeur full-stack & IA, freelance à Bordeaux (remote). Six ans manager chez Decathlon avant de me reconvertir au code. J'aide TPE, PME et solopreneurs à transformer un besoin flou en outils nets, robustes et durables — avec une exigence d'ingénierie forte.`;
 
-  protected readonly heroMeta: readonly { key: string; value: string }[] = [
+  protected readonly heroMeta: readonly AsiliHeroMetaRow[] = [
     {
       key: $localize`:@@presentationHeroMeta1Key:Basé à`,
       value: $localize`:@@presentationHeroMeta1Value:Bordeaux · France`,
@@ -173,7 +172,7 @@ export class PresentationComponent {
     {
       year: $localize`:@@presentationMilestone2Year:2025`,
       title: $localize`:@@presentationMilestone2Title:Plateforme SaaS multi-apps`,
-      descHtml: $localize`:@@presentationMilestone2Desc:Un socle Angular 19 SSR + NestJS 11 réunissant plusieurs apps en production : Weather, Sebastian, Growth Audit, Formations — avec auth, RGPD et lead-magnets.`,
+      descHtml: $localize`:@@presentationMilestone2Desc:Un socle Angular 19 SSR + NestJS 11 réunissant plusieurs apps en production : Growth Audit, Formations — avec auth, RGPD et lead-magnets.`,
       tags: [
         $localize`:@@presentationMilestone2Tag1:Angular 19 SSR`,
         $localize`:@@presentationMilestone2Tag2:NestJS 11`,
@@ -200,34 +199,44 @@ export class PresentationComponent {
     },
   ];
 
-  protected readonly faqKicker = $localize`:@@presentationFaqKicker:Questions fréquentes`;
-
-  protected readonly faqTitle = $localize`:@@presentationFaqTitle:Ce qu'on me demande souvent.`;
-
-  protected readonly faqItems: readonly AsiliFaqItem[] = [
-    {
-      q: $localize`:@@presentationFaq1Q:Travaillez-vous avec des non-techniciens ?`,
-      a: $localize`:@@presentationFaq1A:Absolument — c'est même mon terrain de prédilection. Je traduis le technique en décisions claires, sans jargon. Vous n'avez pas besoin de comprendre le code pour piloter un bon projet.`,
+  protected readonly closing: AsiliClosing = {
+    faq: {
+      kicker: $localize`:@@presentationFaqKicker:Questions fréquentes`,
+      title: $localize`:@@presentationFaqTitle:Ce qu'on me demande souvent.`,
+      items: [
+        {
+          q: $localize`:@@presentationFaq1Q:Travaillez-vous avec des non-techniciens ?`,
+          a: $localize`:@@presentationFaq1A:Absolument — c'est même mon terrain de prédilection. Je traduis le technique en décisions claires, sans jargon. Vous n'avez pas besoin de comprendre le code pour piloter un bon projet.`,
+        },
+        {
+          q: $localize`:@@presentationFaq2Q:Quels types de projets prenez-vous ?`,
+          a: $localize`:@@presentationFaq2A:Des interventions ciblées aux projets structurants, en passant par l'accompagnement dans la durée. Le périmètre est défini sur votre besoin réel, pas sur un catalogue figé.`,
+        },
+        {
+          q: $localize`:@@presentationFaq3Q:L'IA est-elle obligatoire dans vos projets ?`,
+          a: $localize`:@@presentationFaq3A:Jamais. L'IA est un levier parmi d'autres. Si elle apporte une valeur mesurable, on l'intègre proprement. Sinon, on s'en passe — la sobriété est une qualité.`,
+        },
+        {
+          q: $localize`:@@presentationFaq4Q:Comment démarre-t-on ?`,
+          a: $localize`:@@presentationFaq4A:Par une conversation. Décrivez votre situation via la page contact ; je reviens vers vous avec un regard honnête et une proposition de cadrage — pas un devis générique.`,
+        },
+      ],
     },
-    {
-      q: $localize`:@@presentationFaq2Q:Quels types de projets prenez-vous ?`,
-      a: $localize`:@@presentationFaq2A:Des interventions ciblées aux projets structurants, en passant par l'accompagnement dans la durée. Le périmètre est défini sur votre besoin réel, pas sur un catalogue figé.`,
+    cta: {
+      kicker: $localize`:@@presentationCtaKicker:On en parle ?`,
+      title: $localize`:@@presentationCtaTitle:Votre projet mérite d'être clarifié avant d'être construit.`,
+      actions: [
+        {
+          libelle: $localize`:@@presentationCtaPrimary:Démarrer la conversation`,
+          lien: '/contact',
+          variante: 'principale',
+        },
+        {
+          libelle: $localize`:@@presentationCtaSecondary:Voir les services`,
+          lien: '/offer',
+          variante: 'secondaire',
+        },
+      ],
     },
-    {
-      q: $localize`:@@presentationFaq3Q:L'IA est-elle obligatoire dans vos projets ?`,
-      a: $localize`:@@presentationFaq3A:Jamais. L'IA est un levier parmi d'autres. Si elle apporte une valeur mesurable, on l'intègre proprement. Sinon, on s'en passe — la sobriété est une qualité.`,
-    },
-    {
-      q: $localize`:@@presentationFaq4Q:Comment démarre-t-on ?`,
-      a: $localize`:@@presentationFaq4A:Par une conversation. Décrivez votre situation via la page contact ; je reviens vers vous avec un regard honnête et une proposition de cadrage — pas un devis générique.`,
-    },
-  ];
-
-  protected readonly ctaKicker = $localize`:@@presentationCtaKicker:On en parle ?`;
-
-  protected readonly ctaTitle = $localize`:@@presentationCtaTitle:Votre projet mérite d'être clarifié avant d'être construit.`;
-
-  protected readonly ctaPrimary = $localize`:@@presentationCtaPrimary:Démarrer la conversation`;
-
-  protected readonly ctaSecondary = $localize`:@@presentationCtaSecondary:Voir les services`;
+  };
 }

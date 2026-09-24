@@ -5,7 +5,7 @@ export const URL_API = process.env['BANC_URL_API'] ?? 'http://127.0.0.1:3010/api
 
 export const URL_FRONT = process.env['BANC_URL_FRONT'] ?? 'http://localhost:4010';
 
-export const SLUG_B2 = 'b2-01-traitement-information-chiffree';
+const SLUG_B2 = 'b2-01-traitement-information-chiffree';
 
 export const EN_TETE_JETON = 'x-participant-token';
 
@@ -36,17 +36,22 @@ export interface QuestionDuCours {
   readonly options: readonly string[];
 }
 
-export interface EcranDuCours extends QuestionDuCours {
+export interface EcranRepere {
   readonly rang: number;
   readonly id: string;
+}
+
+export interface EcranDuCours extends QuestionDuCours, EcranRepere {
   readonly jumelle: QuestionDuCours | null;
 }
 
 export interface ReleveDuCours {
   readonly total: number;
+  readonly ecrans: readonly string[];
   readonly questions: readonly EcranDuCours[];
   readonly votes: readonly EcranDuCours[];
   readonly reflexions: readonly EcranDuCours[];
+  readonly recitsSansActivite: readonly EcranRepere[];
 }
 
 const RANG_DU_RELEVE = 90;
@@ -225,11 +230,20 @@ export async function lireMonEtat(
   seance: Seance,
   poste: Poste,
 ): Promise<Record<string, unknown>> {
-  const reponse = await request.get(`${URL_API}/formations/sessions/${seance.sessionId}/moi`, {
-    headers: { [EN_TETE_JETON]: poste.jeton },
-  });
+  const reponse = await lireDepuisLePoste(request, seance, poste, 'moi');
   expect(reponse.status(), await reponse.text()).toBe(200);
   return (await reponse.json()) as Record<string, unknown>;
+}
+
+export function lireDepuisLePoste(
+  request: APIRequestContext,
+  seance: Seance,
+  poste: Poste,
+  ressource: 'sujet' | 'moi' | 'rappels',
+): Promise<import('@playwright/test').APIResponse> {
+  return request.get(`${URL_API}/formations/sessions/${seance.sessionId}/${ressource}`, {
+    headers: { [EN_TETE_JETON]: poste.jeton },
+  });
 }
 
 export function lireLeSujet(
@@ -237,9 +251,7 @@ export function lireLeSujet(
   seance: Seance,
   poste: Poste,
 ): Promise<import('@playwright/test').APIResponse> {
-  return request.get(`${URL_API}/formations/sessions/${seance.sessionId}/sujet`, {
-    headers: { [EN_TETE_JETON]: poste.jeton },
-  });
+  return lireDepuisLePoste(request, seance, poste, 'sujet');
 }
 
 interface QuestionDuSujet {
@@ -284,6 +296,7 @@ function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
   const questions: EcranDuCours[] = [];
   const votes: EcranDuCours[] = [];
   const reflexions: EcranDuCours[] = [];
+  const recitsSansActivite: EcranRepere[] = [];
   ecrans.forEach((ecran, rang) => {
     const jumelle = ecran.donnees.questionJumelle;
     for (const question of questionsDeLEcran(ecran)) {
@@ -311,9 +324,18 @@ function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
         options: [],
         jumelle: null,
       });
+    } else if (ecran.type === 'fp-story' && questionsDeLEcran(ecran).length === 0) {
+      recitsSansActivite.push({ rang, id: ecran.id });
     }
   });
-  return { total: ecrans.length, questions, votes, reflexions };
+  return {
+    total: ecrans.length,
+    ecrans: ecrans.map((ecran) => ecran.id),
+    questions,
+    votes,
+    reflexions,
+    recitsSansActivite,
+  };
 }
 
 async function relever(request: APIRequestContext): Promise<ReleveDuCours> {
@@ -367,13 +389,24 @@ export function phaseDuPoste(page: Page): import('@playwright/test').Locator {
   return page.locator('[data-testid="slide-activity-host"] [data-testid="phase"]');
 }
 
-export async function connecterLeFormateur(page: Page): Promise<void> {
+async function connecterLeFormateur(page: Page): Promise<void> {
   await page.goto('/fr/login');
   await page.locator('#auth-trigger-log-in').click();
   await page.locator('#auth-tab-log-in #login-email').fill(IDENTIFIANTS_FORMATEUR.email);
   await page.locator('#auth-tab-log-in #login-password').fill(IDENTIFIANTS_FORMATEUR.motDePasse);
   await page.locator('#auth-tab-log-in button[type="submit"]').click();
   await expect(page).toHaveURL(/\/(fr\/)?$/);
+}
+
+export async function ouvrirLePupitre(page: Page): Promise<Seance> {
+  await connecterLeFormateur(page);
+  await page.goto(`/fr/cours/presenter/${SLUG_B2}`);
+  await page.locator('app-cookie-banner').getByRole('button', { name: 'Tout refuser' }).click();
+  await expect(page.getByTestId('presentateur-code')).toHaveText(/^\d{4}$/);
+  const code = ((await page.getByTestId('presentateur-code').textContent()) ?? '').trim();
+  await expect(page).toHaveURL(/seance=/);
+  const sessionId = new URL(page.url()).searchParams.get('seance') ?? '';
+  return { sessionId, code };
 }
 
 export async function rejoindreDansLeNavigateur(

@@ -3,6 +3,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { isolateAnimReady } from '../../../../testing/anim-ready';
+import { rendreLHoteNavigateur } from '../../../../testing/montage-page';
 import type { AsiliAiMethodStep } from './asili-ai-method.component';
 import { AsiliAiMethodComponent } from './asili-ai-method.component';
 
@@ -153,13 +154,7 @@ describe('AsiliAiMethodComponent', () => {
     }
 
     it("projette le kicker, le titre riche (accent <em>) et l'accroche", () => {
-      const hostFixture = TestBed.configureTestingModule({
-        imports: [HostComponent],
-        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
-      }).createComponent(HostComponent);
-      hostFixture.detectChanges();
-
-      const host = hostFixture.nativeElement as HTMLElement;
+      const host = rendreLHoteNavigateur(HostComponent);
       expect(host.querySelector('.kicker')?.textContent).toContain('Slot kicker');
       const accent = host.querySelector<HTMLElement>('.ai-method-title em');
       expect(accent?.textContent?.trim()).toBe('remplace pas');

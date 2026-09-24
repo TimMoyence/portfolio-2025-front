@@ -12,13 +12,14 @@ import { APP_CONFIG } from '../../core/config/app-config.token';
 import type { PublishedArticle } from '../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../core/adapters/article-http.adapter';
 import { SeoService } from '../../core/seo/seo.service';
-import { AsiliCtaBandComponent } from '../../shared/sections';
+import { ArticlesCtaComponent } from './articles-cta.component';
+import { localeDesArticles, type LocaleDesArticles } from './locale-des-articles';
 import { renderArticleMarkdown } from './markdown-article.utils';
 
 @Component({
   selector: 'app-article-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, AsiliCtaBandComponent],
+  imports: [CommonModule, RouterLink, ArticlesCtaComponent],
   templateUrl: './article-detail.component.html',
   styleUrl: './article-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +32,7 @@ export class ArticleDetailComponent {
   protected renderedContent = '';
   protected isLoading = true;
   protected hasError = false;
-  protected readonly locale: 'fr' | 'en';
+  protected readonly locale: LocaleDesArticles;
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly seo = inject(SeoService);
   private readonly config = inject(APP_CONFIG);
@@ -42,10 +43,7 @@ export class ArticleDetailComponent {
     @Inject(LOCALE_ID) localeId: string,
     @Inject(DOCUMENT) document: Document,
   ) {
-    this.locale =
-      localeId.toLowerCase().startsWith('en') || document.location.pathname.startsWith('/en')
-        ? 'en'
-        : 'fr';
+    this.locale = localeDesArticles(localeId, document.location.pathname);
     const slug = route.snapshot.paramMap.get('slug');
     if (!slug) {
       this.isLoading = false;

@@ -1,0 +1,10 @@
+.auth-msg {
+  font-size: 13.5px;
+  margin-top: 14px;
+}
+.auth-msg.ok {
+  color: var(--success);
+}
+.auth-msg.err {
+  color: var(--danger);
+}

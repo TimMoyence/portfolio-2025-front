@@ -54,14 +54,9 @@
   </a>
 </app-asili-projects-grid>
 
-<app-asili-cta-band [title]="ctaTitle" [lead]="ctaLead">
-  <span kicker class="kicker cta-kicker">{{ ctaKicker }}</span>
-  <ng-container cta>
-    <a class="btn btn-teal" routerLink="/contact">
-      {{ ctaPrimary }} <span class="arrow" aria-hidden="true">→</span>
-    </a>
-    <a class="btn btn-ghost" routerLink="/projets">
-      {{ ctaSecondary }}
-    </a>
-  </ng-container>
-</app-asili-cta-band>
+<app-asili-cta-band
+  [kicker]="ctaKicker"
+  [title]="ctaTitle"
+  [lead]="ctaLead"
+  [actions]="ctaActions"
+/>

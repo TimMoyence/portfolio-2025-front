@@ -295,16 +295,20 @@ describe('FpCardsort', () => {
     expect(brouillons).toEqual([]);
   });
 
-  it('marque chaque carte selon le verdict recu et garde le classement affiche', () => {
+  function validerPuisRecevoirLeVerdict(confusionSurMatieres: string | null): void {
     toutClasser(hote);
     activerAuClavier(noeud(hote, 'valider'));
     hote.verdict = buildVerdictDeProduction({
       questionId: PLAN.id,
       details: [
         { cle: LOYER, juste: true, libelleConfusion: null },
-        { cle: MATIERES, juste: false, libelleConfusion: 'Charge liée au volume' },
+        { cle: MATIERES, juste: false, libelleConfusion: confusionSurMatieres },
       ],
     });
+  }
+
+  it('marque chaque carte selon le verdict recu et garde le classement affiche', () => {
+    validerPuisRecevoirLeVerdict('Charge liée au volume');
 
     expect(carte(hote, LOYER).getAttribute('data-etat')).toBe('confirme');
     expect(carte(hote, MATIERES).getAttribute('data-etat')).toBe('a-revoir');
@@ -317,15 +321,7 @@ describe('FpCardsort', () => {
   });
 
   it('R7 · entoure de vert la carte bien placee et de rouge la carte mal placee', () => {
-    toutClasser(hote);
-    activerAuClavier(noeud(hote, 'valider'));
-    hote.verdict = buildVerdictDeProduction({
-      questionId: PLAN.id,
-      details: [
-        { cle: LOYER, juste: true, libelleConfusion: null },
-        { cle: MATIERES, juste: false, libelleConfusion: null },
-      ],
-    });
+    validerPuisRecevoirLeVerdict(null);
     const contour = (
       id: string,
     ): { rouge: number; vert: number; bleu: number; epaisseur: number } => {
@@ -416,6 +412,18 @@ describe('FpCardsort', () => {
       expect(noeuds(hote, 'cardsort-justification').map((ligne) => ligne.textContent?.trim()))
         .withContext(role)
         .toEqual(['Loyer de l atelier — Charges fixes Le loyer ne suit pas le volume']);
+    }
+  });
+
+  it('R1 · laisse les justifications a l ecran de correction qui suit, sans perdre la coloration', () => {
+    deplacerAuClavier(hote, LOYER, FIXE);
+    hote.resoluAilleurs = true;
+    for (const role of ROLES) {
+      hote.setAttribute('data-cours-role', role);
+      hote.corrige = ATTENDUS_FORMATEUR;
+
+      expect(noeud(hote, 'cardsort-correction')).withContext(role).toBeNull();
+      expect(carte(hote, LOYER).getAttribute('data-correction')).withContext(role).toBe('juste');
     }
   });
 

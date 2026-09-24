@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
+import { AsiliKickerComponent } from '../asili-kicker/asili-kicker.component';
 
 export interface AsiliMethodStep {
   num: string;
@@ -11,7 +12,7 @@ export interface AsiliMethodStep {
 @Component({
   selector: 'app-asili-method',
   standalone: true,
-  imports: [RevealOnScrollDirective],
+  imports: [RevealOnScrollDirective, AsiliKickerComponent],
   templateUrl: './asili-method.component.html',
   styleUrls: ['./asili-method.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

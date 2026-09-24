@@ -2,6 +2,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { isolateAnimReady } from '../../../../testing/anim-ready';
+import { decrireEnTeteDeSection } from '../../../../testing/en-tete-de-section';
 import { AsiliPillarsComponent, type AsiliPillar } from './asili-pillars.component';
 
 const PILLARS: readonly AsiliPillar[] = [
@@ -116,30 +117,18 @@ describe('AsiliPillarsComponent', () => {
     expect(fixture.nativeElement.querySelector('.pillar-foot')).toBeNull();
   });
 
-  it("affiche le kicker, le titre <h2> et l'intro quand fournis en inputs", () => {
-    setup();
-    fixture.componentRef.setInput('kicker', 'Deux facons de travailler');
-    fixture.componentRef.setInput('heading', 'Services & Formations');
-    fixture.componentRef.setInput('intro', 'A parts egales.');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.kicker')?.textContent).toContain(
-      'Deux facons de travailler',
-    );
-    expect(fixture.nativeElement.querySelector('h2')?.textContent).toContain(
-      'Services & Formations',
-    );
-    expect(fixture.nativeElement.querySelector('.pillars-head__intro')?.textContent).toContain(
-      'A parts egales.',
-    );
-  });
-
-  it("n'affiche ni kicker ni titre ni intro quand non fournis", () => {
-    setup();
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.kicker')).toBeNull();
-    expect(fixture.nativeElement.querySelector('h2')).toBeNull();
-    expect(fixture.nativeElement.querySelector('.pillars-head__intro')).toBeNull();
-  });
+  decrireEnTeteDeSection(
+    () => {
+      setup();
+      return fixture;
+    },
+    '.pillars-head__intro',
+    {
+      kicker: 'Deux facons de travailler',
+      heading: 'Services & Formations',
+      intro: 'A parts egales.',
+    },
+  );
 
   it("reste rendu cote serveur (SSR fail-open : pas d'anim-ready)", () => {
     setup('server');

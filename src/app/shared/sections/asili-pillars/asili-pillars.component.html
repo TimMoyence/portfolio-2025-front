@@ -1,23 +1,17 @@
 <section class="pillars-section section-pad">
   <div class="wrap">
-    <div class="pillars-head">
-      <div appReveal>
-        <ng-content select="[kicker]">
-          @if (kicker(); as k) {
-            <span class="kicker">{{ k }}</span>
-          }
-        </ng-content>
-        <ng-content select="[heading]">
-          @if (heading(); as h) {
-            <h2 class="h-xl pillars-head__title">{{ h }}</h2>
-          }
-        </ng-content>
-        <ng-content select="[intro]">
-          @if (intro(); as i) {
-            <p class="lead pillars-head__intro">{{ i }}</p>
-          }
-        </ng-content>
-      </div>
+    <div class="pillars-head" appReveal>
+      <ng-content select="[kicker]"><app-asili-kicker [texte]="kicker()" /></ng-content>
+      <ng-content select="[heading]">
+        @if (heading(); as h) {
+          <h2 class="h-xl pillars-head__title">{{ h }}</h2>
+        }
+      </ng-content>
+      <ng-content select="[intro]">
+        @if (intro(); as i) {
+          <p class="lead pillars-head__intro">{{ i }}</p>
+        }
+      </ng-content>
     </div>
 
     <div class="pillars">

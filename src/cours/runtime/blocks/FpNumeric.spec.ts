@@ -2,6 +2,7 @@ import {
   buildNumericQuestion,
   buildVerdictDeReponse,
 } from '../../../testing/factories/cours.factory';
+import { attendreUneRegionLive } from '../../../testing/assertions-briques';
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { FpNumeric, type NumericQuestionPublique } from './FpNumeric';
@@ -293,8 +294,7 @@ describe('FpNumeric', () => {
   });
 
   it('annonce le retour dans une region live', () => {
-    expect(hote.shadowRoot?.querySelector('[aria-live="polite"]')).toBeTruthy();
-    expect(hote.shadowRoot?.querySelector('fieldset')).toBeTruthy();
+    attendreUneRegionLive(hote);
   });
 
   it('ne recapitule plus la modalite ni la duree prevue, quel que soit le role', () => {

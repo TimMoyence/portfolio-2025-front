@@ -1,19 +1,13 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
-
-interface PrivacyTocItem {
-  readonly anchor: string;
-  readonly label: string;
-}
+import { LegalPageComponent, type LegalTocItem } from '../legal/legal-page.component';
 
 @Component({
   selector: 'app-privacy',
   standalone: true,
-  imports: [CommonModule, RouterModule, RevealOnScrollDirective],
+  imports: [RouterModule, RevealOnScrollDirective, LegalPageComponent],
   templateUrl: './privacy.component.html',
-  styleUrl: './privacy.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PrivacyComponent {
@@ -22,7 +16,7 @@ export class PrivacyComponent {
     updated: $localize`:privacy.hero.updated@@privacyMetaLastUpdated:Dernière mise à jour : 4 juin 2026`,
   };
 
-  readonly toc: readonly PrivacyTocItem[] = [
+  readonly toc: readonly LegalTocItem[] = [
     {
       anchor: 'principe',
       label: $localize`:privacy.toc.principe@@privacyTocPrincipe:Notre principe`,

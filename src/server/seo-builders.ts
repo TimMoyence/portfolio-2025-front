@@ -183,9 +183,6 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
       p.id.startsWith('formations-'),
   );
   const aboutPages = indexablePages.filter((p) => ['presentation', 'projets'].includes(p.id));
-  const appPages = indexablePages.filter(
-    (p) => p.path.startsWith('/atelier/') || ['weather', 'sebastian'].includes(p.id),
-  );
   const contactPages = indexablePages.filter((p) => p.id === 'contact');
   const legalPages = indexablePages.filter((p) =>
     ['terms', 'privacy', 'cookie-settings'].includes(p.id),
@@ -208,7 +205,6 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
     '',
     ...section('Services', servicePages),
     ...section('A propos', aboutPages),
-    ...section('Applications metier', appPages),
     ...section('Contact', contactPages),
     ...section('Legal', legalPages),
   ];

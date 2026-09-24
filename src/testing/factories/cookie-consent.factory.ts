@@ -15,7 +15,6 @@ export function createMockAppConfig(overrides?: Partial<AppConfig>): AppConfig {
     appName: 'test',
     apiBaseUrl: 'http://localhost:3000',
     baseUrl: 'http://localhost:4200',
-    external: { sebastianUrl: '' },
     gdpr: {
       regionScope: 'EU_UK',
       policyVersion: '2026-02-11',

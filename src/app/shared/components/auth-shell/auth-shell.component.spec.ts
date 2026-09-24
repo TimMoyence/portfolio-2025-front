@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { monterAvecRouteur } from '../../../../testing/montage-page';
 import { AuthShellComponent } from './auth-shell.component';
 
 @Component({
@@ -21,24 +20,9 @@ import { AuthShellComponent } from './auth-shell.component';
 class HostComponent {}
 
 describe('AuthShellComponent', () => {
-  function setupBare(): ComponentFixture<AuthShellComponent> {
-    TestBed.configureTestingModule({
-      imports: [AuthShellComponent],
-      providers: [provideRouter([])],
-    });
-    const fixture = TestBed.createComponent(AuthShellComponent);
-    fixture.detectChanges();
-    return fixture;
-  }
-
-  function setupWithHost(): ComponentFixture<HostComponent> {
-    const fixture = TestBed.configureTestingModule({
-      imports: [HostComponent],
-      providers: [provideRouter([])],
-    }).createComponent(HostComponent);
-    fixture.detectChanges();
-    return fixture;
-  }
+  const setupBare = (): ComponentFixture<AuthShellComponent> =>
+    monterAvecRouteur(AuthShellComponent);
+  const setupWithHost = (): ComponentFixture<HostComponent> => monterAvecRouteur(HostComponent);
 
   it('se cree', () => {
     const fixture = setupBare();

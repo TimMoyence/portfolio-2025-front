@@ -14,7 +14,7 @@ import {
   servirLEcran,
   verdictDuPoste,
 } from './contexte';
-import type { EcranDuCours, SeanceOuverte } from './contexte';
+import type { EcranDuCours, EcranRepere, SeanceOuverte } from './contexte';
 
 const PHASES = ['vote', 'discussion', 'revote', 'revele'] as const;
 
@@ -28,14 +28,14 @@ let principale: EcranDuCours;
 
 let suivant: EcranDuCours;
 
-let reflexion: EcranDuCours;
+let sansCorrige: EcranRepere;
 
 async function seanceDuFichier(request: APIRequestContext): Promise<SeanceOuverte> {
   return seancePartagee('vote-jumele', async () => {
-    const { votes, reflexions } = await coursReleve(request);
+    const { votes, recitsSansActivite } = await coursReleve(request);
     [principale, suivant] = votes;
     expect(principale.jumelle, 'le premier vote n’a pas de question jumelle').not.toBeNull();
-    reflexion = reflexions[0];
+    [sansCorrige] = recitsSansActivite;
     return seanceDemarreeSurLEcran(request, principale.rang);
   });
 }
@@ -145,7 +145,7 @@ test.describe('Banc — vote à question jumelle', () => {
     const { seance, jeton } = await seanceDuFichier(request);
 
     const horsVote = await piloterLaPhase(request, jeton, seance.sessionId, {
-      screenId: reflexion.id,
+      screenId: sansCorrige.id,
       phase: 'vote',
     });
     expect(horsVote.status(), await horsVote.text()).toBe(400);
@@ -154,7 +154,7 @@ test.describe('Banc — vote à question jumelle', () => {
     );
 
     const revelation = await piloterLaPhase(request, jeton, seance.sessionId, {
-      screenId: reflexion.id,
+      screenId: sansCorrige.id,
       revele: true,
     });
     expect(revelation.status(), await revelation.text()).toBe(400);

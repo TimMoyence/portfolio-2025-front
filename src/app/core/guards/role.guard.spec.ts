@@ -14,7 +14,7 @@ import {
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { roleGuard } from './role.guard';
 
-const REDIRECTION_WEATHER = '/contact?reason=access&app=weather';
+const REDIRECTION_FORMATEUR = '/contact?reason=access&app=teacher';
 
 describe('roleGuard', () => {
   let authState: AuthStateService;
@@ -55,30 +55,30 @@ describe('roleGuard', () => {
   });
 
   it('devrait autoriser l acces si l utilisateur possede le role requis', () => {
-    authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['weather'] }) }));
+    authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) }));
 
-    expect(decisionsDe('weather')).toEqual([true]);
+    expect(decisionsDe('teacher')).toEqual([true]);
   });
 
   it('devrait rediriger vers /contact avec queryParams si l utilisateur ne possede pas le role', () => {
-    authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['sebastian'] }) }));
+    authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['user'] }) }));
 
-    const [decision] = decisionsDe('weather');
+    const [decision] = decisionsDe('teacher');
 
     expect(decision).toBeInstanceOf(UrlTree);
-    expect(String(decision)).toBe(REDIRECTION_WEATHER);
+    expect(String(decision)).toBe(REDIRECTION_FORMATEUR);
   });
 
   it('devrait rediriger vers /contact une fois la session resolue sans jeton', () => {
     sessionRestauree.error(new HttpErrorResponse({ status: 401 }));
-    const decisions = decisionsDe('weather');
+    const decisions = decisionsDe('teacher');
 
     rendreLaPage();
     rendreLaPage();
 
     expect(decisions.length).toBe(1);
     expect(decisions[0]).toBeInstanceOf(UrlTree);
-    expect(String(decisions[0])).toBe(REDIRECTION_WEATHER);
+    expect(String(decisions[0])).toBe(REDIRECTION_FORMATEUR);
   });
 
   describe('au chargement d une page avec un cookie de refresh', () => {
@@ -123,7 +123,7 @@ describe('roleGuard', () => {
       const decisions = decisionsDe('teacher');
 
       rendreLaPage();
-      sessionRestauree.next(buildAuthSession({ user: buildAuthUser({ roles: ['weather'] }) }));
+      sessionRestauree.next(buildAuthSession({ user: buildAuthUser({ roles: ['user'] }) }));
       sessionRestauree.complete();
       rendreLaPage();
 

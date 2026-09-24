@@ -39,7 +39,7 @@ export class FpQuote extends FpBlock {
   render(): EscapedHtml {
     const citation = this.citation;
     if (citation === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
     return safeHtml`
       <figure class="fp-scene fp-quote__figure">

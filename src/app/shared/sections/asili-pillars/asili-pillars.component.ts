@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
+import { AsiliKickerComponent } from '../asili-kicker/asili-kicker.component';
 
 type AsiliPillarVariant = 'services' | 'formations';
 
@@ -20,7 +21,7 @@ export interface AsiliPillar {
 @Component({
   selector: 'app-asili-pillars',
   standalone: true,
-  imports: [RevealOnScrollDirective],
+  imports: [RevealOnScrollDirective, AsiliKickerComponent],
   templateUrl: './asili-pillars.component.html',
   styleUrls: ['./asili-pillars.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
