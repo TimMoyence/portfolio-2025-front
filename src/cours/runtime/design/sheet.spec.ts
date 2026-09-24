@@ -37,11 +37,11 @@ describe('adoptCoursStyles', () => {
   it('G2 · donne à la projection les couleurs du poste étudiant et une échelle valide', () => {
     adoptCoursStyles(racine);
     racine.innerHTML = `
-      <div class="fp-root" data-render="hand" data-testid="hand"></div>
-      <div class="fp-root" data-render="stage" data-testid="stage"></div>
+      <div class="fp-root" data-role="etudiant" data-testid="etudiant"></div>
+      <div class="fp-root" data-role="presentateur" data-testid="presentateur"></div>
     `;
-    const jetons = (render: string): Record<string, string> => {
-      const element = racine.querySelector(`[data-testid="${render}"]`);
+    const jetons = (role: string): Record<string, string> => {
+      const element = racine.querySelector(`[data-testid="${role}"]`);
       const style = element === null ? null : getComputedStyle(element);
       return Object.fromEntries(
         ['--fp-surface', '--fp-confirme', '--fp-a-revoir', '--fp-en-cours', '--fp-remplissage'].map(
@@ -49,9 +49,9 @@ describe('adoptCoursStyles', () => {
         ),
       );
     };
-    const corps = racine.querySelector('[data-testid="stage"]');
+    const corps = racine.querySelector('[data-testid="presentateur"]');
 
-    expect(jetons('stage')).toEqual(jetons('hand'));
+    expect(jetons('presentateur')).toEqual(jetons('etudiant'));
     expect(
       corps === null ? '' : getComputedStyle(corps).getPropertyValue('--fp-echelle').trim(),
     ).toMatch(/^\d+(\.\d+)?$/);

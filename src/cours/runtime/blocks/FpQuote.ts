@@ -36,45 +36,21 @@ export class FpQuote extends FpBlock {
     return this.interne;
   }
 
-  renderHand(): EscapedHtml {
-    if (this.citation === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
-    }
-    return this.figure('fp-carte', 'fp-quote__texte', safeHtml``);
-  }
-
-  renderStage(): EscapedHtml {
-    if (this.citation === null) {
-      return safeHtml``;
-    }
-    return this.figure('fp-scene', 'fp-enonce fp-quote__texte', safeHtml``);
-  }
-
-  renderBoard(): EscapedHtml {
+  render(): EscapedHtml {
     const citation = this.citation;
     if (citation === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    const reperes = safeHtml`<p class="fp-reperes">${this.reperes(citation.metadonnees)}</p>`;
-    return this.figure('fp-carte', 'fp-quote__texte', reperes);
+    return safeHtml`
+      <figure class="fp-scene fp-quote__figure">
+        <blockquote class="fp-enonce fp-quote__texte" data-testid="texte">${escapeHtml(citation.texte)}</blockquote>
+        ${this.attribution(citation)}
+      </figure>
+    `;
   }
 
   bind(): void {
     return;
-  }
-
-  private figure(cadre: string, styleTexte: string, reperes: EscapedHtml): EscapedHtml {
-    const citation = this.citation;
-    if (citation === null) {
-      return safeHtml``;
-    }
-    return safeHtml`
-      <figure class="${escapeHtml(cadre)} fp-quote__figure">
-        <blockquote class="${escapeHtml(styleTexte)}" data-testid="texte">${escapeHtml(citation.texte)}</blockquote>
-        ${this.attribution(citation)}
-        ${reperes}
-      </figure>
-    `;
   }
 
   private attribution(citation: QuoteCitation): EscapedHtml {

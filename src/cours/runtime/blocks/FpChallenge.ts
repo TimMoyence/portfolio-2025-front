@@ -135,72 +135,45 @@ export class FpChallenge extends FpBlock {
     }
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     const probleme = this.probleme;
     if (!probleme) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    return safeHtml`
-      <fieldset class="fp-carte fp-challenge__probleme">
-        <legend>${escapeHtml(probleme.enonce)}</legend>
-        ${dossier(probleme)}
-        <p class="fp-challenge__consigne" data-testid="consigne">${escapeHtml(this.texte('challenge-consigne'))}</p>
-        <label class="fp-challenge__invite" for="${escapeHtml(ID_TENTATIVE)}">${escapeHtml(probleme.invite)}</label>
-        <textarea class="fp-challenge__champ" id="${escapeHtml(ID_TENTATIVE)}" data-testid="tentative" rows="5">${escapeHtml(this.tentative)}</textarea>
+    const reponse = this.presentateur()
+      ? safeHtml`<p class="fp-challenge__invite">${escapeHtml(probleme.invite)}</p>`
+      : safeHtml`<label class="fp-challenge__invite" for="${escapeHtml(ID_TENTATIVE)}">${escapeHtml(probleme.invite)}</label>
+        <textarea class="fp-challenge__champ" id="${escapeHtml(ID_TENTATIVE)}" data-testid="tentative" rows="4" aria-label="${escapeHtml(this.texte('challenge-reponse'))}">${escapeHtml(this.tentative)}</textarea>
         <button type="button" class="fp-challenge__envoyer" data-testid="envoyer">${escapeHtml(this.texte('envoyer'))}</button>
         <p class="fp-challenge__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
-        ${this.annonces()}
-        ${this.liste(this.servies, false)}
+        ${this.annonces()}`;
+    return safeHtml`
+      <fieldset class="fp-carte fp-scene fp-challenge__probleme">
+        <legend class="fp-enonce">${escapeHtml(probleme.enonce)}</legend>
+        ${dossier(probleme)}
+        ${reponse}
+        ${this.correction()}
       </fieldset>
     `;
   }
 
-  renderStage(): EscapedHtml {
-    const probleme = this.probleme;
-    if (!probleme) {
-      return safeHtml``;
+  private correction(): EscapedHtml {
+    const connues = this.formateur.length > 0 ? this.formateur : this.servies;
+    if (this.interneRevele) {
+      return this.liste(connues, true);
     }
-    const projetees = this.formateur.length > 0 ? this.formateur : this.servies;
-    return safeHtml`
-      <fieldset class="fp-carte fp-challenge__probleme">
-        <legend>${escapeHtml(probleme.enonce)}</legend>
-        ${dossier(probleme)}
-        <p class="fp-challenge__consigne" data-testid="consigne">${escapeHtml(this.texte('challenge-consigne'))}</p>
-        <label class="fp-challenge__invite" for="${escapeHtml(ID_TENTATIVE)}">${escapeHtml(probleme.invite)}</label>
-        <textarea class="fp-challenge__champ" id="${escapeHtml(ID_TENTATIVE)}" rows="5" disabled></textarea>
-        ${this.interneRevele ? this.liste(projetees, true) : VIDE}
-      </fieldset>
-    `;
-  }
-
-  renderBoard(): EscapedHtml {
-    const probleme = this.probleme;
-    if (!probleme) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    const metadonnees = probleme.metadonnees;
-    return safeHtml`
-      <div class="fp-carte fp-challenge__probleme">
-        <p class="fp-enonce">${escapeHtml(probleme.enonce)}</p>
-        ${dossier(probleme)}
-        <p class="fp-challenge__concepts" data-testid="concepts">${escapeHtml(metadonnees.concepts.join(' · '))}</p>
-        <p class="fp-reperes">${this.reperes(metadonnees)}</p>
-        ${this.roleActuel() === 'presentateur' ? this.liste(this.formateur, true) : VIDE}
-      </div>
-    `;
+    return this.presentateur() ? VIDE : this.liste(this.servies, false);
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.probleme?.id ?? null);
-    if (this.mode() !== 'hand') {
-      return;
-    }
     const champ = racine.querySelector<HTMLTextAreaElement>('[data-testid="tentative"]');
     const envoyer = racine.querySelector<HTMLButtonElement>('[data-testid="envoyer"]');
     if (champ === null || envoyer === null) {
       return;
     }
-    const verrouille = this.verrouilleApresEnvoi(this.soumise, this.servies.length > 0);
+    const verrouille =
+      this.interneRevele || this.verrouilleApresEnvoi(this.soumise, this.servies.length > 0);
     champ.disabled = verrouille;
     envoyer.disabled = verrouille;
     champ.addEventListener('input', () => {

@@ -65,47 +65,23 @@ export class FpStory extends FpBlock {
     return this.interne;
   }
 
-  renderHand(): EscapedHtml {
-    if (this.recit === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
-    }
-    return this.aparte('fp-carte', 'fp-story__titre', VIDE);
-  }
-
-  renderStage(): EscapedHtml {
-    if (this.recit === null) {
-      return VIDE;
-    }
-    return this.aparte('fp-scene', 'fp-enonce fp-story__titre', VIDE);
-  }
-
-  renderBoard(): EscapedHtml {
+  render(): EscapedHtml {
     const recit = this.recit;
     if (recit === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    const reperes = safeHtml`<div class="fp-story__reperes">${this.reperes(recit.metadonnees)}</div>`;
-    return this.aparte('fp-carte', 'fp-story__titre', reperes);
+    return safeHtml`
+      <aside class="fp-scene fp-story__recit">
+        <h2 class="fp-enonce fp-story__titre" data-testid="titre">${escapeHtml(recit.titre)}</h2>
+        ${this.visuel(recit)}
+        ${this.video(recit)}
+        <div class="fp-prose fp-story__corps">${recit.paragraphes.map((texte) => this.paragraphe(texte))}</div>
+      </aside>
+    `;
   }
 
   bind(): void {
     return;
-  }
-
-  private aparte(cadre: string, styleTitre: string, reperes: EscapedHtml): EscapedHtml {
-    const recit = this.recit;
-    if (recit === null) {
-      return VIDE;
-    }
-    return safeHtml`
-      <aside class="${escapeHtml(cadre)} fp-story__recit">
-        <h2 class="${escapeHtml(styleTitre)}" data-testid="titre">${escapeHtml(recit.titre)}</h2>
-        ${this.visuel(recit)}
-        ${this.video(recit)}
-        <div class="fp-prose fp-story__corps">${recit.paragraphes.map((texte) => this.paragraphe(texte))}</div>
-        ${reperes}
-      </aside>
-    `;
   }
 
   private paragraphe(texte: string): EscapedHtml {
@@ -138,7 +114,7 @@ export class FpStory extends FpBlock {
   }
 
   private sourceDeLaVideo(video: StoryVideo): string {
-    return this.mode() === 'hand' && video.srcPoste !== undefined ? video.srcPoste : video.src;
+    return !this.presentateur() && video.srcPoste !== undefined ? video.srcPoste : video.src;
   }
 
   private piste(video: StoryVideo): EscapedHtml {

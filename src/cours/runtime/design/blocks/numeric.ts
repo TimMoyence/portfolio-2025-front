@@ -79,7 +79,7 @@ export const numeric = `
   cursor: default;
 }
 
-@media (max-width: 520px) {
+@container (max-width: 32.5rem) {
   :where(.fp-root) .fp-numeric__saisie {
     flex-wrap: wrap;
   }

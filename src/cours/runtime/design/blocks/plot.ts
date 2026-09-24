@@ -31,7 +31,7 @@ export const plot = `
 
 :where(.fp-root) .fp-plot__animation:focus-visible {
   outline: 2px solid var(--fp-teal);
-  outline-offset: 4px;
+  outline-offset: 0.25rem;
 }
 
 :where(.fp-root) .fp-plot__animation {
@@ -63,7 +63,7 @@ export const plot = `
 
 :where(.fp-root) .fp-plot__curseur {
   width: 100%;
-  min-height: 44px;
+  min-height: 2.75rem;
   accent-color: var(--fp-teal-deep);
 }
 
@@ -88,51 +88,96 @@ export const plot = `
   background: var(--fp-surface);
 }
 
-:where(.fp-root[data-render='stage']) .fp-plot__atelier {
-  width: min(100%, 72rem);
-  box-sizing: border-box;
-  margin-inline: auto;
-  padding: clamp(1.25rem, 3cqi, 2.5rem);
-  background: var(--fp-surface);
-  border: 1px solid var(--fp-bordure);
-  border-radius: var(--fp-r-lg);
-  box-shadow: var(--fp-shadow-card);
+@container (max-width: 44.99rem) {
+  :where(.fp-root) .fp-plot__atelier {
+    gap: var(--fp-s-2);
+    padding: var(--fp-s-3);
+  }
+
+  :where(.fp-root) .fp-plot__zone,
+  :where(.fp-root) .fp-plot__lecture {
+    gap: var(--fp-s-2);
+  }
+
+  :where(.fp-root) .fp-plot__reglages {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--fp-s-2) var(--fp-s-3);
+  }
+
+  :where(.fp-root) .fp-plot__graphique {
+    min-height: 0;
+    max-height: 25cqh;
+  }
 }
 
-:where(.fp-root[data-render='stage']) .fp-plot__atelier {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+@container (min-width: 45rem) {
+  :where(.fp-root) .fp-plot__atelier {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    align-items: start;
+  }
+
+  :where(.fp-root) .fp-plot__zone {
+    display: contents;
+  }
+
+  :where(.fp-root) .fp-plot__description,
+  :where(.fp-root) .fp-plot__reglages,
+  :where(.fp-root) .fp-plot__lecture {
+    grid-column: 1;
+  }
+
+  :where(.fp-root) .fp-plot__figure,
+  :where(.fp-root) .fp-plot__comparaison {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+
+  :where(.fp-root) .fp-plot__vues > .fp-plot__figure {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  :where(.fp-root) .fp-plot__graphique {
+    min-height: 0;
+    max-height: 26rem;
+    margin-inline: auto;
+  }
+
+  :where(.fp-root) .fp-plot__comparaison .fp-plot__graphique {
+    max-height: 18rem;
+  }
+}
+
+:where(.fp-root) .fp-plot__comparaison {
+  display: grid;
+  gap: var(--fp-s-2);
+  min-width: 0;
+}
+
+:where(.fp-root) .fp-plot__vues {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
   align-items: start;
+  gap: var(--fp-s-3);
+  min-width: 0;
 }
 
-:where(.fp-root[data-render='stage']) .fp-plot__zone {
-  display: contents;
+:where(.fp-root) .fp-plot__vues .fp-plot__rapport {
+  font-size: calc(0.8rem * var(--fp-echelle));
+  line-height: 1.35;
 }
 
-:where(.fp-root[data-render='stage']) .fp-plot__description,
-:where(.fp-root[data-render='stage']) .fp-plot__reglages,
-:where(.fp-root[data-render='stage']) .fp-plot__lecture {
-  grid-column: 1;
+:where(.fp-root) .fp-plot__vue {
+  color: var(--fp-teal-ink);
+  font-size: calc(0.85rem * var(--fp-echelle));
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-:where(.fp-root[data-render='stage']) .fp-plot__figure {
-  grid-column: 2;
-  grid-row: 1 / span 3;
-}
-
-:where(.fp-root[data-render='stage']) .fp-plot__graphique {
-  width: 100%;
-  min-height: 0;
-  max-height: min(60cqh, 30rem);
-  margin-inline: auto;
-}
-
-:where(.fp-root[data-render='board']) .fp-plot__atelier {
-  padding: var(--fp-s-3);
-}
-
-:where(.fp-root[data-render='board']) .fp-plot__graphique {
-  min-height: 0;
-  max-height: min(30cqh, 18rem);
+:where(.fp-root) .fp-plot__figure[data-vue='reference'] .fp-plot__barre {
+  fill: var(--fp-gold-deep);
 }
 
 :where(.fp-root) .fp-plot__axe {
@@ -143,7 +188,7 @@ export const plot = `
 :where(.fp-root) .fp-plot__graduation {
   fill: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
-  font-size: calc(11px * var(--fp-echelle));
+  font-size: calc(0.6875rem * var(--fp-echelle));
 }
 
 :where(.fp-root) .fp-plot__trace {
@@ -166,7 +211,7 @@ export const plot = `
 :where(.fp-root) .fp-plot__montant-barre {
   fill: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
-  font-size: calc(10px * var(--fp-echelle));
+  font-size: calc(0.625rem * var(--fp-echelle));
   font-weight: 600;
 }
 
@@ -177,7 +222,7 @@ export const plot = `
 }
 
 :where(.fp-root) .fp-plot__prereglage {
-  min-height: 44px;
+  min-height: 2.75rem;
   padding: var(--fp-s-2) var(--fp-s-3);
   border: 1px solid var(--fp-teal-deep);
   border-radius: var(--fp-r-sm);
@@ -195,7 +240,7 @@ export const plot = `
 
 :where(.fp-root) .fp-plot__prereglage:focus-visible {
   outline: 2px solid var(--fp-teal);
-  outline-offset: 4px;
+  outline-offset: 0.25rem;
 }
 
 :where(.fp-root) .fp-plot__rapport {
@@ -238,7 +283,7 @@ export const plot = `
 :where(.fp-root) .fp-plot__echantillon {
   display: inline-block;
   width: var(--fp-s-4);
-  border-top: 3px solid var(--fp-teal-deep);
+  border-top: 0.1875rem solid var(--fp-teal-deep);
 }
 
 :where(.fp-root) .fp-plot__serie[data-trait='tirets'] .fp-plot__echantillon {
@@ -307,7 +352,7 @@ export const plot = `
 }
 
 :where(.fp-root) .fp-plot__bouton-donnees {
-  min-height: 44px;
+  min-height: 2.75rem;
   color: var(--fp-teal-ink);
   font-weight: 600;
   cursor: pointer;

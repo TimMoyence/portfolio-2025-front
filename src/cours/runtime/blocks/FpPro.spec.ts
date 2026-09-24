@@ -1,3 +1,4 @@
+import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import { buildProCas, buildProCasAQuestionsLibres } from '../../../testing/factories/cours.factory';
@@ -11,7 +12,8 @@ interface EnvoiPro {
 
 const CAS = buildProCas();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
-const CLASSES_ATTENDUES = 16;
+const CLASSES_ATTENDUES = 13;
+const CLASSES_AVEC_QUESTIONS = 19;
 
 function cible(element: FpPro, repere: string): Element | null {
   return element.shadowRoot?.querySelector(`[data-testid="${repere}"]`) ?? null;
@@ -85,24 +87,52 @@ describe('FpPro', () => {
     expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
   });
 
-  it('passe le geste a la grande typographie de projection en rendu stage seulement', () => {
-    expect(cible(hote, 'geste')?.classList.contains('fp-enonce')).toBe(false);
-    hote.setAttribute('render', 'stage');
-    expect(cible(hote, 'geste')?.classList.contains('fp-enonce')).toBe(true);
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-render')).toBe('stage');
+  it('pose le meme dossier, avec la meme typographie du geste, pour les deux roles', () => {
+    const dossier = (): string => hote.shadowRoot?.querySelector('.fp-pro__corps')?.outerHTML ?? '';
+    const etudiant = dossier();
+    expect(cible(hote, 'geste')?.className).toBe('fp-pro__geste-texte');
+
+    hote.setAttribute('data-cours-role', 'presentateur');
+
+    expect(dossier()).toBe(etudiant);
+    expect(cible(hote, 'geste')?.className).toBe('fp-pro__geste-texte');
+    expect(hote.shadowRoot?.querySelector('.fp-pro__cas')?.className).toBe('fp-scene fp-pro__cas');
+    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(
+      'presentateur',
+    );
   });
 
-  for (const rendu of ['hand', 'board'] as const) {
-    it(`R4 · centre le cas metier dans sa carte en rendu ${rendu}`, () => {
+  for (const role of ROLES_DE_MONTAGE) {
+    it(`R4 · centre le cas metier dans sa carte pour le role ${role}`, () => {
       hote.style.display = 'block';
       hote.style.width = '1200px';
-      hote.setAttribute('render', rendu);
+      hote.setAttribute('data-cours-role', role);
       const carte = hote.shadowRoot?.querySelector('.fp-pro__cas')?.getBoundingClientRect();
       const corps = hote.shadowRoot?.querySelector('.fp-pro__corps')?.getBoundingClientRect();
       const milieu = (boite: DOMRect | undefined): number =>
         boite === undefined ? NaN : boite.left + boite.width / 2;
 
       expect(Math.abs(milieu(corps) - milieu(carte))).toBeLessThanOrEqual(1);
+    });
+  }
+
+  for (const role of ROLES_DE_MONTAGE) {
+    it(`F04 · aligne les questions libres sur la colonne du récit pour le role ${role}`, () => {
+      hote.style.display = 'block';
+      hote.style.width = '1200px';
+      hote.cas = buildProCasAQuestionsLibres();
+      hote.setAttribute('data-cours-role', role);
+      const corps = hote.shadowRoot?.querySelector('.fp-pro__corps')?.getBoundingClientRect();
+      const questions = hote.shadowRoot
+        ?.querySelector('.fp-pro__questions')
+        ?.parentElement?.getBoundingClientRect();
+      const bouton = cible(hote, 'valider')?.getBoundingClientRect();
+
+      expect(questions?.left).toBeCloseTo(corps?.left ?? NaN, 0);
+      expect(questions?.width).toBeCloseTo(corps?.width ?? NaN, 0);
+      if (bouton !== undefined) {
+        expect(bouton.left).toBeGreaterThanOrEqual((corps?.left ?? NaN) - 1);
+      }
     });
   }
 
@@ -115,15 +145,30 @@ describe('FpPro', () => {
 
   it('ne diffuse aucun evenement et n ecrit dans aucun stockage', () => {
     hote.cas = buildProCas({ id: 'M-METIER-10' });
-    for (const rendu of ['stage', 'board', 'hand']) {
-      hote.setAttribute('render', rendu);
+    for (const role of ROLES_DE_MONTAGE) {
+      hote.setAttribute('data-cours-role', role);
     }
     expect(traces.evenements).toEqual([]);
     expect(traces.ecritures).toEqual([]);
   });
 
+  it('ne rend aucun badge de modalite ni de duree, pour aucun role', () => {
+    for (const role of ROLES_DE_MONTAGE) {
+      hote.setAttribute('data-cours-role', role);
+      expect(cible(hote, 'modalite')).withContext(`role ${role}`).toBeNull();
+      expect(cible(hote, 'duree')).withContext(`role ${role}`).toBeNull();
+    }
+    expect(hote.cas?.metadonnees.dureeMinutes).toBe(4);
+  });
+
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
+    expect(classesOrphelines(hote, 'pro')).toEqual([]);
+  });
+
+  it('couvre par une regle de la feuille chaque classe fp emise avec des questions libres', () => {
+    hote.cas = buildProCasAQuestionsLibres();
+    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_AVEC_QUESTIONS);
     expect(classesOrphelines(hote, 'pro')).toEqual([]);
   });
 
@@ -162,14 +207,14 @@ describe('FpPro', () => {
       ecouteur = (evenement) => envois.push((evenement as CustomEvent<EnvoiPro>).detail);
       hote.addEventListener('fp-pro-submit', ecouteur);
       hote.cas = MISSION;
-      hote.setAttribute('render', 'hand');
+      hote.setAttribute('data-cours-role', 'etudiant');
     });
 
     afterEach(() => {
       hote.removeEventListener('fp-pro-submit', ecouteur);
     });
 
-    it('L3 · pose un champ de reponse sous chaque question en rendu hand', () => {
+    it('L3 · pose un champ de reponse sous chaque question pour l etudiant', () => {
       expect(champs().map((champ) => champ.dataset['question'])).toEqual([
         MESURE.id,
         COMPARABLE.id,
@@ -244,18 +289,27 @@ describe('FpPro', () => {
       expect(traces.ecritures).toEqual([]);
     });
 
-    for (const rendu of ['stage', 'board'] as const) {
-      it(`L3 · affiche les questions sans champ de saisie en rendu ${rendu}`, () => {
-        hote.setAttribute('render', rendu);
+    it('L3 · affiche au presentateur les questions sans champ de saisie ni bouton de validation', () => {
+      hote.setAttribute('data-cours-role', 'presentateur');
 
-        expect(champs()).toEqual([]);
-        expect(
-          [...(hote.shadowRoot?.querySelectorAll('[data-testid="question-libre"]') ?? [])].map(
-            (question) => question.textContent?.trim(),
-          ),
-        ).toEqual([MESURE.question, COMPARABLE.question]);
-      });
-    }
+      expect(champs()).toEqual([]);
+      expect(cible(hote, 'valider')).toBeNull();
+      expect(cible(hote, 'retour')).toBeNull();
+      expect(
+        [...(hote.shadowRoot?.querySelectorAll('[data-testid="question-libre"]') ?? [])].map(
+          (question) => question.textContent?.trim(),
+        ),
+      ).toEqual([MESURE.question, COMPARABLE.question]);
+    });
+
+    it('L3 · garde la meme liste de questions pour les deux roles', () => {
+      const ordre = (): number =>
+        hote.shadowRoot?.querySelectorAll('.fp-pro__question').length ?? 0;
+      const etudiant = ordre();
+      hote.setAttribute('data-cours-role', 'presentateur');
+      expect(ordre()).toBe(etudiant);
+      expect(hote.shadowRoot?.querySelector('ol.fp-pro__questions')).not.toBeNull();
+    });
 
     it('L3 · echappe le html injecte dans une question libre', () => {
       hote.cas = buildProCasAQuestionsLibres({

@@ -60,6 +60,14 @@ export function lireBonneReponse(valeur: unknown): string | null {
   return typeof bonneReponse === 'string' ? bonneReponse : null;
 }
 
+export function lireBonneOption(valeur: unknown): string | null {
+  if (!estObjet(valeur) || valeur['type'] !== 'cible') {
+    return null;
+  }
+  const option = valeur['optionId'];
+  return typeof option === 'string' ? option : null;
+}
+
 export function estVerdictDeReponse(valeur: unknown): valeur is VerdictDeReponse {
   return (
     estObjet(valeur) &&

@@ -7,7 +7,7 @@ describe('libellés des briques runtime', () => {
   it('rend le libellé français de la source quand aucune traduction n’est chargée', () => {
     expect(texte('valider')).toBe('Valider');
     expect(texte('spaced-consigne')).toBe(
-      'Rappel : quelques questions sur ce que vous avez travaillé plus tôt, de mémoire, sans vos notes',
+      'Quelques questions sur ce que vous avez travaillé plus tôt.',
     );
     expect(texte('deja-repondu')).toBe('Réponse déjà enregistrée : voici votre verdict');
   });

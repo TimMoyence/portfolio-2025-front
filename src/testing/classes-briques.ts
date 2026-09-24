@@ -1,12 +1,12 @@
 import { feuilleDe } from '../cours/runtime/design/blocks';
-import { base, stage, tokens } from '../cours/runtime/design/styles';
+import { base, correction, tokens } from '../cours/runtime/design/styles';
 
-const RENDUS = ['stage', 'hand', 'board'] as const;
+const ROLES = ['etudiant', 'presentateur'] as const;
 
 export function classesEmises(hote: HTMLElement): Set<string> {
   const emises = new Set<string>();
-  for (const rendu of RENDUS) {
-    hote.setAttribute('render', rendu);
+  for (const role of ROLES) {
+    hote.setAttribute('data-cours-role', role);
     for (const noeud of hote.shadowRoot?.querySelectorAll('[class]') ?? []) {
       noeud.classList.forEach((classe) => emises.add(classe));
     }
@@ -15,7 +15,7 @@ export function classesEmises(hote: HTMLElement): Set<string> {
 }
 
 export function classesOrphelines(hote: HTMLElement, brique: string): string[] {
-  const feuille = [tokens, base, feuilleDe(brique), stage].join('\n');
+  const feuille = [tokens, base, feuilleDe(brique), correction].join('\n');
   return [...classesEmises(hote)].filter(
     (classe) => !new RegExp(`\\.${classe}(?![\\w-])`).test(feuille),
   );

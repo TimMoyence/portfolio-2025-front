@@ -54,13 +54,13 @@ describe('coursEntreeGuard', () => {
     const result = decision();
 
     expect(result).toBeInstanceOf(UrlTree);
-    expect(String(result)).toBe('/cours/rejoindre');
+    expect(String(result)).toBe(`/cours/rejoindre?cours=${SLUG}`);
   });
 
-  it('R3 · envoie le visiteur non connecté directement au rattachement étudiant', () => {
+  it('R3 · F03 · envoie le visiteur non connecté au rattachement étudiant, en gardant le cours visé', () => {
     const result = decision();
 
     expect(result).toBeInstanceOf(UrlTree);
-    expect(String(result)).toBe('/cours/rejoindre');
+    expect(String(result)).toBe(`/cours/rejoindre?cours=${SLUG}`);
   });
 });

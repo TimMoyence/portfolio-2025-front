@@ -1070,10 +1070,6 @@
   background: rgba(255, 250, 242, 0.58);
 }
 
-.student-session app-slide-deck {
-  display: block;
-}
-
 .cours-presentateur,
 .cours-etudiant {
   width: 100%;
@@ -1113,12 +1109,13 @@
 }
 
 .presentateur-workspace {
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
   gap: 16px;
 }
 
 .presentateur-stage__body {
-  padding: clamp(16px, 2.5vw, 32px);
+  min-block-size: 0;
+  padding: clamp(12px, 1.5vw, 20px);
   --slide-min-height: 100%;
 }
 
@@ -1134,49 +1131,74 @@
   min-width: 0;
 }
 
+.cours-etudiant:has(> .student-session) {
+  min-height: 100dvh;
+  padding: 0;
+}
+
 .student-session {
-  width: min(100%, 1280px);
-  min-height: calc(100dvh - 32px);
-  margin: 0 auto;
-  gap: 12px;
-  padding: clamp(16px, 2.5vw, 32px);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+  gap: 0.5rem;
+  padding: 0.5rem clamp(0.5rem, 1.5vw, 1rem);
+  border: 0;
+  border-radius: 0;
   box-shadow: none;
 }
 
+.student-session > * {
+  flex: 0 0 auto;
+}
+
 .student-session__head {
+  display: flex;
   align-items: center;
-  padding-bottom: 10px;
+  gap: 0.75rem;
+  padding-bottom: 0.5rem;
 }
 
 .student-session__head h2 {
-  font-size: clamp(1.15rem, 2vw, 1.75rem);
-  line-height: 1.1;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.student-progress {
-  display: none;
+.student-session__plein-ecran {
+  min-height: 2.25rem;
+  padding-block: 0.25rem;
 }
 
-.student-session app-slide-deck {
-  --slide-min-height: calc(100dvh - 150px);
-  --slide-deck-hauteur: auto;
-  --slide-deck-hauteur-min: calc(100dvh - 150px);
-  --slide-deck-defilement: visible;
-  --slide-deck-accroche: none;
+.student-session > .student-session__cadre {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
 }
 
 .student-session__navigation {
   display: flex;
-  min-height: 44px;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding-top: 4px;
+  gap: 0.75rem;
+}
+
+.student-session__navigation:empty,
+.student-verdicts:empty {
+  display: none;
 }
 
 .student-verdicts,
-.student-feedback {
+.student-feedback,
+.student-status {
   margin: 0;
+  padding: 0.5rem 0.75rem;
 }
 
 @media (max-width: 900px) {

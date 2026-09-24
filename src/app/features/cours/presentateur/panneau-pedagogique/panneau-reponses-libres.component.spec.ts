@@ -6,43 +6,91 @@ import { PanneauReponsesLibresComponent } from './panneau-reponses-libres.compon
 type Fixture = ComponentFixture<PanneauReponsesLibresComponent>;
 
 const REPONSES = [
-  buildReponseLibreFormateur({ id: 'r-1', screenId: 'ecran-1', response: 'Comparer les bases.' }),
+  buildReponseLibreFormateur({
+    id: 'r-1',
+    screenId: 'ecran-1',
+    activityId: 'mesure',
+    response: 'Comparer les bases.',
+  }),
   buildReponseLibreFormateur({ id: 'r-2', screenId: 'ecran-2', response: 'Lire la source.' }),
-  buildReponseLibreFormateur({ id: 'r-3', screenId: 'ecran-1', response: 'Vérifier l’unité.' }),
+  buildReponseLibreFormateur({
+    id: 'r-3',
+    screenId: 'ecran-1',
+    activityId: 'unite',
+    response: 'Vérifier l’unité.',
+  }),
+  buildReponseLibreFormateur({
+    id: 'r-4',
+    screenId: 'ecran-1',
+    activityId: 'mesure',
+    response: 'Un montant.',
+  }),
 ];
 
-function monter(ecranId: string, renvoi?: string): Fixture {
+const ENONCES = new Map([
+  ['mesure', 'Que mesure chaque chiffre ?'],
+  ['unite', 'Quelle unité ?'],
+  ['periode', 'Quelle période ?'],
+]);
+
+function monter(
+  ecranId: string,
+  renvoi?: string,
+  enonces: ReadonlyMap<string, string> = new Map(),
+): Fixture {
   const fixture = TestBed.createComponent(PanneauReponsesLibresComponent);
   fixture.componentRef.setInput('reponses', REPONSES);
   fixture.componentRef.setInput('ecranId', ecranId);
   fixture.componentRef.setInput('renvoi', renvoi);
+  fixture.componentRef.setInput('enonces', enonces);
   fixture.detectChanges();
   return fixture;
 }
 
+function hote(fixture: Fixture): HTMLElement {
+  return fixture.nativeElement as HTMLElement;
+}
+
 function textes(fixture: Fixture): string[] {
-  return [
-    ...(fixture.nativeElement as HTMLElement).querySelectorAll('[data-testid="reponse-libre"]'),
-  ].map((element) => element.textContent?.trim() ?? '');
+  return [...hote(fixture).querySelectorAll('[data-testid="reponse-libre"]')].map(
+    (element) => element.textContent?.trim() ?? '',
+  );
 }
 
 describe('PanneauReponsesLibresComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({ imports: [PanneauReponsesLibresComponent] }));
 
   it('ne montre que les reponses libres de l ecran courant', () => {
-    expect(textes(monter('ecran-1'))).toEqual(['Comparer les bases.', 'Vérifier l’unité.']);
+    expect(textes(monter('ecran-1'))).toEqual([
+      'Comparer les bases.',
+      'Un montant.',
+      'Vérifier l’unité.',
+    ]);
+  });
+
+  it('groupe les reponses sous chaque question, dans l ordre de l ecran', () => {
+    const fixture = monter('ecran-1', undefined, ENONCES);
+    const groupes = [...hote(fixture).querySelectorAll('[data-testid="reponses-libres-groupe"]')];
+
+    expect(groupes.map((groupe) => groupe.getAttribute('data-activite'))).toEqual([
+      'mesure',
+      'unite',
+      'periode',
+    ]);
+    expect(
+      groupes[0].querySelector('[data-testid="reponses-libres-question"]')?.textContent?.trim(),
+    ).toBe('Que mesure chaque chiffre ?');
+    expect(groupes[0].querySelectorAll('[data-testid="reponse-libre"]').length).toBe(2);
+    expect(groupes[2].querySelector('[data-testid="reponses-libres-vide"]')).not.toBeNull();
   });
 
   it('relit au pupitre d une correction les reponses de l ecran auquel elle renvoie', () => {
     expect(textes(monter('ecran-3', 'ecran-2'))).toEqual(['Lire la source.']);
   });
 
-  it('annonce l absence de reponse sur l ecran meme si d autres ecrans en ont recu', () => {
+  it('ne rend rien sur un ecran sans activite libre ni reponse', () => {
     const fixture = monter('ecran-3');
 
-    expect(textes(fixture)).toEqual([]);
-    expect(
-      (fixture.nativeElement as HTMLElement).querySelector('[data-testid="reponses-libres-vide"]'),
-    ).not.toBeNull();
+    expect(hote(fixture).querySelector('.panneau-reponses')).toBeNull();
   });
 });

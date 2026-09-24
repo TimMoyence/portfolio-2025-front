@@ -95,10 +95,10 @@ describe('PanneauGuideComponent', () => {
     expect(racine(fixture).querySelector('[data-testid="panneau-guide-reveler"]')).toBeNull();
   });
 
-  it('dit qu aucun guide n est fourni pour un ecran sans guide', () => {
+  it('ne rend rien, pas meme un titre, pour un ecran sans guide', () => {
     const fixture = monter(undefined);
 
-    expect(racine(fixture).querySelector('[data-testid="panneau-guide-vide"]')).not.toBeNull();
-    expect(rubriques(fixture).map(([cle]) => cle)).toEqual([]);
+    expect(racine(fixture).querySelector('[data-testid="presentateur-guide"]')).toBeNull();
+    expect(racine(fixture).textContent?.trim()).toBe('');
   });
 });

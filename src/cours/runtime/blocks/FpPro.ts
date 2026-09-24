@@ -82,32 +82,16 @@ export class FpPro extends FpBlock {
     this.refreshSiConnecte();
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     if (this.cas === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    return this.dossier('fp-carte', 'fp-pro__geste-texte', this.formulaire());
-  }
-
-  renderStage(): EscapedHtml {
-    if (this.cas === null) {
-      return safeHtml``;
-    }
-    return this.dossier('fp-scene', 'fp-enonce fp-pro__geste-texte', this.enonces());
-  }
-
-  renderBoard(): EscapedHtml {
-    const cas = this.cas;
-    if (cas === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    const reperes = safeHtml`${this.enonces()}<div class="fp-pro__reperes">${this.reperes(cas.metadonnees)}</div>`;
-    return this.dossier('fp-carte', 'fp-pro__geste-texte', reperes);
+    return this.dossier(this.presentateur() ? this.enonces() : this.formulaire());
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.interne?.id ?? null);
-    if (this.mode() !== 'hand' || this.questions().length === 0) {
+    if (this.presentateur() || this.questions().length === 0) {
       return;
     }
     const verrouille = this.verrouilleApresEnvoi(this.soumise, false);
@@ -130,19 +114,19 @@ export class FpPro extends FpBlock {
     return this.interne?.questionsLibres ?? [];
   }
 
-  private dossier(cadre: string, styleGeste: string, suite: EscapedHtml): EscapedHtml {
+  private dossier(suite: EscapedHtml): EscapedHtml {
     const cas = this.cas;
     if (cas === null) {
       return safeHtml``;
     }
     return safeHtml`
-      <aside class="${escapeHtml(cadre)} fp-pro__cas">
+      <aside class="fp-scene fp-pro__cas">
         <p class="fp-badge fp-pro__metier" data-testid="metier">${escapeHtml(cas.metier)}</p>
         <div class="fp-prose fp-pro__corps">
           <p class="fp-pro__situation" data-testid="situation">${escapeHtml(cas.situation)}</p>
           <div class="fp-encadre fp-pro__geste">
             <h3 class="fp-pro__intitule">${escapeHtml(this.texte('pro-geste'))}</h3>
-            <p class="${escapeHtml(styleGeste)}" data-testid="geste">${escapeHtml(cas.geste)}</p>
+            <p class="fp-pro__geste-texte" data-testid="geste">${escapeHtml(cas.geste)}</p>
           </div>
           ${this.consequence(cas)}
         </div>
@@ -165,12 +149,14 @@ export class FpPro extends FpBlock {
       return safeHtml``;
     }
     return safeHtml`
-      <ol class="fp-pro__questions">
-        ${questions.map(
-          (question) =>
-            safeHtml`<li class="fp-pro__question" data-testid="question-libre">${escapeHtml(question.question)}</li>`,
-        )}
-      </ol>
+      <div class="fp-prose fp-pro__reponses">
+        <ol class="fp-pro__questions">
+          ${questions.map(
+            (question) =>
+              safeHtml`<li class="fp-pro__question" data-testid="question-libre">${escapeHtml(question.question)}</li>`,
+          )}
+        </ol>
+      </div>
     `;
   }
 
@@ -180,9 +166,11 @@ export class FpPro extends FpBlock {
       return safeHtml``;
     }
     return safeHtml`
-      <ol class="fp-pro__questions">${questions.map((question) => this.champ(question))}</ol>
-      <button type="button" class="fp-pro__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
-      <p class="fp-pro__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
+      <div class="fp-prose fp-pro__reponses">
+        <ol class="fp-pro__questions">${questions.map((question) => this.champ(question))}</ol>
+        <button type="button" class="fp-pro__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
+        <p class="fp-pro__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
+      </div>
       ${this.annonces()}
     `;
   }

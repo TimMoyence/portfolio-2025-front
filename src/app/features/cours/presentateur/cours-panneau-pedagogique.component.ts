@@ -16,34 +16,25 @@ import {
   debounceTime,
   firstValueFrom,
   forkJoin,
-  lastValueFrom,
   map,
   of,
   Subject,
   switchMap,
   tap,
 } from 'rxjs';
-import type { EcranDeroule, ResultatQuestion } from '../../../../cours/content/types';
+import type { EcranContent, EcranDeroule, ResultatQuestion } from '../../../../cours/content/types';
 import type {
   AnnotationFormateur,
-  GroupeFormation,
-  MotifRefusGroupe,
-  ParticipantDeSeance,
   ReponseLibreFormateur,
 } from '../../../core/ports/formations.port';
-import { FORMATIONS_PORT, GroupeRefuse } from '../../../core/ports/formations.port';
+import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
+import { enoncesDesActivites } from '../../../shared/slides/session/lecture-ecran';
 import { telechargerFichier } from '../../../shared/utils/telechargement.utils';
 import type {
   EtatSauvegarde,
   SaisieAnnotation,
 } from './panneau-pedagogique/panneau-annotation.component';
 import { PanneauAnnotationComponent } from './panneau-pedagogique/panneau-annotation.component';
-import type {
-  AffectationDeParticipant,
-  RenommageDeGroupe,
-} from './panneau-pedagogique/panneau-groupes.component';
-import { PanneauGroupesComponent } from './panneau-pedagogique/panneau-groupes.component';
-import { PanneauGuideComponent } from './panneau-pedagogique/panneau-guide.component';
 import { PanneauLectureClasseComponent } from './panneau-pedagogique/panneau-lecture-classe.component';
 import { PanneauReponsesLibresComponent } from './panneau-pedagogique/panneau-reponses-libres.component';
 
@@ -65,7 +56,7 @@ function lire<T>(source: Observable<T>): Observable<Lecture<T>> {
 }
 
 function cleDAnnotation(annotation: AnnotationFormateur): string {
-  return `${annotation.screenId}\u0000${annotation.groupName}`;
+  return annotation.screenId;
 }
 
 function fusionnerLesAnnotations(
@@ -87,8 +78,6 @@ function fusionnerLesAnnotations(
   standalone: true,
   imports: [
     PanneauAnnotationComponent,
-    PanneauGroupesComponent,
-    PanneauGuideComponent,
     PanneauLectureClasseComponent,
     PanneauReponsesLibresComponent,
   ],
@@ -128,11 +117,10 @@ function fusionnerLesAnnotations(
           data-testid="panneau-lecture-echec"
           i18n="@@panneauPedagogiqueLectureEchec"
         >
-          Les notes, groupes et réponses de la séance n’ont pas pu être relus : l’affichage peut
-          être en retard.
+          Les notes et réponses de la séance n’ont pas pu être relues : l’affichage peut être en
+          retard.
         </p>
       }
-      <app-panneau-guide [guide]="ecran().guide" [ecranId]="ecran().id" />
       <app-panneau-lecture-classe
         [questionIds]="questionIds()"
         [resultats]="resultats()"
@@ -142,18 +130,10 @@ function fusionnerLesAnnotations(
         [reponses]="reponsesLibres()"
         [ecranId]="ecran().id"
         [renvoi]="ecran().renvoi"
-      />
-      <app-panneau-groupes
-        [groupes]="groupes()"
-        [participants]="participantsDeSeance()"
-        [refus]="refusDeGroupe()"
-        (creation)="creerGroupe($event)"
-        (renommage)="renommerGroupe($event)"
-        (affectation)="affecterParticipant($event)"
+        [enonces]="enonces()"
       />
       <app-panneau-annotation
         [ecranId]="ecran().id"
-        [groupes]="groupes()"
         [annotations]="annotations()"
         [etat]="sauvegarde()"
         (saisie)="enregistrer($event)"
@@ -166,15 +146,21 @@ export class CoursPanneauPedagogiqueComponent {
   readonly resultats = input.required<readonly ResultatQuestion[]>();
   readonly participants = input.required<number>();
   readonly sessionId = input.required<string | null>();
+  readonly renvoi = input<EcranContent | null>(null);
 
   protected readonly annotations = signal<readonly AnnotationFormateur[]>([]);
-  protected readonly groupes = signal<readonly GroupeFormation[]>([]);
-  protected readonly participantsDeSeance = signal<readonly ParticipantDeSeance[]>([]);
   protected readonly reponsesLibres = signal<readonly ReponseLibreFormateur[]>([]);
   protected readonly lectureEchouee = signal(false);
   protected readonly sauvegarde = signal<EtatSauvegarde>('repos');
-  protected readonly refusDeGroupe = signal<MotifRefusGroupe | null>(null);
   protected readonly export = signal<EtatExport>('repos');
+
+  protected readonly enonces = computed<ReadonlyMap<string, string>>(() => {
+    const renvoi = this.renvoi();
+    return new Map([
+      ...enoncesDesActivites(this.ecran()),
+      ...(renvoi === null ? [] : enoncesDesActivites(renvoi)),
+    ]);
+  });
 
   protected readonly questionIds = computed(() =>
     this.ecran().corriges.map((corrige) => corrige.questionId),
@@ -196,12 +182,6 @@ export class CoursPanneauPedagogiqueComponent {
         if (lecture.annotations.lue) {
           const recues = lecture.annotations.valeur.annotations;
           this.annotations.update((connues) => fusionnerLesAnnotations(connues, recues));
-        }
-        if (lecture.groupes.lue) this.groupes.set(lecture.groupes.valeur.groups);
-        if (lecture.participants.lue) {
-          this.participantsDeSeance.set(
-            lecture.participants.valeur.participants.filter((participant) => !participant.evince),
-          );
         }
         if (lecture.reponses.lue) this.reponsesLibres.set(lecture.reponses.valeur.responses);
         this.lectureEchouee.set(Object.values(lecture).some((resultat) => !resultat.lue));
@@ -231,40 +211,6 @@ export class CoursPanneauPedagogiqueComponent {
     }
   }
 
-  protected creerGroupe(nom: string): Promise<void> {
-    return this.commanderLesGroupes(async (sessionId) => {
-      const groupe = await firstValueFrom(this.port.creerGroupe(sessionId, nom));
-      this.groupes.update((groupes) => [...groupes, groupe]);
-    });
-  }
-
-  protected renommerGroupe({ groupe, nom }: RenommageDeGroupe): Promise<void> {
-    return this.commanderLesGroupes(async (sessionId) => {
-      const renomme = await firstValueFrom(this.port.renommerGroupe(sessionId, groupe.id, nom));
-      this.groupes.update((groupes) =>
-        groupes.map((existant) => (existant.id === renomme.id ? renomme : existant)),
-      );
-    });
-  }
-
-  protected affecterParticipant({
-    participantId,
-    groupId,
-  }: AffectationDeParticipant): Promise<void> {
-    return this.commanderLesGroupes(async (sessionId) => {
-      const commande =
-        groupId === null
-          ? this.port.retirerParticipantDuGroupe(sessionId, participantId)
-          : this.port.affecterParticipant(sessionId, participantId, groupId);
-      await lastValueFrom(commande, { defaultValue: undefined });
-      this.participantsDeSeance.update((participants) =>
-        participants.map((participant) =>
-          participant.id === participantId ? { ...participant, groupId } : participant,
-        ),
-      );
-    });
-  }
-
   protected async exporterLeBilan(): Promise<void> {
     const sessionId = this.sessionId();
     if (sessionId === null || !this.navigateur) {
@@ -288,8 +234,6 @@ export class CoursPanneauPedagogiqueComponent {
   private relire(sessionId: string) {
     return forkJoin({
       annotations: lire(this.port.lireAnnotations(sessionId)),
-      groupes: lire(this.port.lireGroupes(sessionId)),
-      participants: lire(this.port.lireParticipants(sessionId)),
       reponses: lire(this.port.lireReponsesLibres(sessionId)),
     });
   }
@@ -302,7 +246,6 @@ export class CoursPanneauPedagogiqueComponent {
     return this.port
       .enregistrerAnnotation(saisie.sessionId, {
         screenId: saisie.screenId,
-        groupName: saisie.groupName,
         note,
       })
       .pipe(
@@ -312,22 +255,5 @@ export class CoursPanneauPedagogiqueComponent {
         map((): EtatSauvegarde => 'enregistre'),
         catchError(() => of<EtatSauvegarde>('echec')),
       );
-  }
-
-  private async commanderLesGroupes(commande: (sessionId: string) => Promise<void>): Promise<void> {
-    const sessionId = this.sessionId();
-    if (sessionId === null) {
-      return;
-    }
-    try {
-      await commande(sessionId);
-      this.refusDeGroupe.set(null);
-    } catch (erreur) {
-      const motif = erreur instanceof GroupeRefuse ? erreur.motif : 'echec';
-      this.refusDeGroupe.set(motif);
-      if (motif === 'introuvable') {
-        this.relectures.next(sessionId);
-      }
-    }
   }
 }

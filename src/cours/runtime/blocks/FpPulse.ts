@@ -89,56 +89,36 @@ export class FpPulse extends FpBlock {
     }
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     const sondage = this.sondage;
     if (!sondage) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
+    const inerte = this.presentateur();
+    const suivi = inerte
+      ? this.suiviProjete()
+      : safeHtml`<p class="fp-pulse__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.retour())}</p>${this.annonces()}`;
     return safeHtml`
-      <fieldset class="fp-carte fp-pulse__panneau">
-        <legend>${escapeHtml(sondage.invite)}</legend>
+      <fieldset class="fp-carte fp-scene fp-pulse__panneau">
+        <legend class="fp-enonce">${escapeHtml(sondage.invite)}</legend>
         <p class="fp-pulse__anonymat" data-testid="anonymat">${escapeHtml(this.texte('pulse-anonymat'))}</p>
-        <div class="fp-pulse__choix">${ETATS.map((etat) => this.bouton(etat))}</div>
-        <p class="fp-pulse__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.retour())}</p>
-        ${this.annonces()}
+        <div class="fp-pulse__choix">${ETATS.map((etat) => this.bouton(etat, inerte))}</div>
+        ${suivi}
       </fieldset>
     `;
   }
 
-  renderStage(): EscapedHtml {
-    const sondage = this.sondage;
-    if (!sondage) {
-      return safeHtml``;
-    }
+  private suiviProjete(): EscapedHtml {
     const comptes = this.interneComptes;
-    const projetables = comptes !== null && comptes.total >= SEUIL_DE_PROJECTION;
-    return safeHtml`
-      <fieldset class="fp-carte fp-pulse__panneau">
-        <legend>${escapeHtml(sondage.invite)}</legend>
-        <p class="fp-pulse__anonymat" data-testid="anonymat">${escapeHtml(this.texte('pulse-anonymat'))}</p>
-        <div class="fp-pulse__choix">${ETATS.map((etat) => this.bouton(etat, true))}</div>
-        ${projetables ? this.agregat() : this.masque()}
-      </fieldset>
-    `;
-  }
-
-  renderBoard(): EscapedHtml {
-    const sondage = this.sondage;
-    if (!sondage) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
+    if (comptes === null) {
+      return VIDE;
     }
-    return safeHtml`
-      <div class="fp-carte fp-pulse__panneau">
-        <p class="fp-enonce">${escapeHtml(sondage.invite)}</p>
-        ${this.agregat()}
-        <p class="fp-reperes">${this.reperes(sondage.metadonnees)}</p>
-      </div>
-    `;
+    return comptes.total >= SEUIL_DE_PROJECTION ? this.agregat(comptes) : this.masque();
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.sondage?.id ?? null);
-    if (this.mode() !== 'hand') {
+    if (this.presentateur()) {
       return;
     }
     for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-etat-pulse]')) {
@@ -169,11 +149,7 @@ export class FpPulse extends FpBlock {
     return safeHtml`<p class="fp-pulse__masque" data-testid="masque">${escapeHtml(this.texte('pulse-masque'))}</p>`;
   }
 
-  private agregat(): EscapedHtml {
-    const comptes = this.interneComptes;
-    if (comptes === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
+  private agregat(comptes: Required<PulseComptes>): EscapedHtml {
     return safeHtml`
       <ul class="fp-pulse__agregat" data-testid="agregat">${ETATS.map((etat) => this.ligne(comptes, etat))}</ul>
       <p class="fp-pulse__total" data-testid="total">${escapeHtml(this.texte('pulse-total'))} ${comptes.total}</p>

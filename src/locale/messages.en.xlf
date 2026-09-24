@@ -12219,6 +12219,16 @@
         <target>No attempts left: the next puzzle opens, without a code piece</target>
       </segment>
     </unit>
+    <unit id="coursReponseReprisesEpuisees">
+      <notes>
+        <note category="location">src/app/core/ports/formations.port.ts:255</note>
+        <note category="meaning">cours.reponseReprisesEpuisees</note>
+      </notes>
+      <segment>
+        <source>Production déjà envoyée trois fois : votre dernière version reste enregistrée jusqu’à la correction.</source>
+        <target>Work already sent three times: your latest version stays saved until the answer is revealed.</target>
+      </segment>
+    </unit>
     <unit id="coursReponseProductionVide">
       <notes>
         <note category="location">src/app/core/ports/formations.port.ts:262</note>
@@ -12439,13 +12449,24 @@
         <target> Try again </target>
       </segment>
     </unit>
-    <unit id="coursEtudiantKicker">
+    <unit id="coursQuitterPleinEcran">
       <notes>
-        <note category="meaning">cours.etudiantKicker</note>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:278,281</note>
+        <note category="meaning">cours.quitterPleinEcran</note>
       </notes>
       <segment>
-        <source> Séance en cours </source>
-        <target> Session in progress </target>
+        <source>Quitter le plein écran</source>
+        <target>Exit full screen</target>
+      </segment>
+    </unit>
+    <unit id="coursPleinEcran">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:281,283</note>
+        <note category="meaning">cours.pleinEcran</note>
+      </notes>
+      <segment>
+        <source>Plein écran</source>
+        <target>Full screen</target>
       </segment>
     </unit>
     <unit id="presentateurParticipantsEnDirect">
@@ -12471,10 +12492,6 @@
     <unit id="presentateurStageTitre">
       <notes><note category="meaning">presentateur.stageTitre</note></notes>
       <segment><source> Écran projeté </source><target> Projected screen </target></segment>
-    </unit>
-    <unit id="presentateurStageApercu">
-      <notes><note category="meaning">presentateur.stageApercu</note></notes>
-      <segment><source>Aperçu formateur</source><target>Teacher preview</target></segment>
     </unit>
     <unit id="presentateurInformationsSeance">
       <notes><note category="meaning">presentateurInformationsSeance</note></notes>
@@ -12530,8 +12547,8 @@
         <note category="location">src/app/features/cours/presentateur/cours-panneau-pedagogique.component.ts:131,135</note>
       </notes>
       <segment>
-        <source> Les notes, groupes et réponses de la séance n’ont pas pu être relus : l’affichage peut être en retard. </source>
-        <target> The session notes, groups and answers could not be reloaded: the display may be out of date. </target>
+        <source> Les notes et réponses de la séance n’ont pas pu être relues : l’affichage peut être en retard. </source>
+        <target> The session notes and answers could not be reloaded: the display may be out of date. </target>
       </segment>
     </unit>
     <unit id="presentateurStatMoyenne">
@@ -12616,6 +12633,106 @@
         <target> Full-screen projection </target>
       </segment>
     </unit>
+    <unit id="presentateurMasquerResultats">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:496,498</note>
+      </notes>
+      <segment>
+        <source>Retirer les résultats de la projection</source>
+        <target>Remove the results from the projection</target>
+      </segment>
+    </unit>
+    <unit id="presentateurProjeterResultats">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:500,502</note>
+      </notes>
+      <segment>
+        <source>Projeter les résultats</source>
+        <target>Project the results</target>
+      </segment>
+    </unit>
+    <unit id="presentateurCorrectionRevelee">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:582,584</note>
+      </notes>
+      <segment>
+        <source>Correction révélée</source>
+        <target>Answer key revealed</target>
+      </segment>
+    </unit>
+    <unit id="presentateurRevelerCorrection">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:586,588</note>
+      </notes>
+      <segment>
+        <source>Révéler la correction</source>
+        <target>Reveal the answer key</target>
+      </segment>
+    </unit>
+    <unit id="resultatsProjetesTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-resultats-projetes.component.ts:90,92</note>
+      </notes>
+      <segment>
+        <source> Résultats de la classe </source>
+        <target> Class results </target>
+      </segment>
+    </unit>
+    <unit id="resultatsProjetesParticipants">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-resultats-projetes.component.ts:93,94</note>
+      </notes>
+      <segment>
+        <source>Participants</source>
+        <target>Participants</target>
+      </segment>
+    </unit>
+    <unit id="resultatsProjetesReponses">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-resultats-projetes.component.ts:105,106</note>
+        <note category="location">src/app/features/cours/presentateur/cours-resultats-projetes.component.ts:139,141</note>
+      </notes>
+      <segment>
+        <source>réponse(s)</source>
+        <target>answer(s)</target>
+      </segment>
+    </unit>
+    <unit id="resultatsProjetesScoreMoyen">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-resultats-projetes.component.ts:109,110</note>
+      </notes>
+      <segment>
+        <source>score moyen</source>
+        <target>average score</target>
+      </segment>
+    </unit>
+    <unit id="resultatsProjetesJustes">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-resultats-projetes.component.ts:113,115</note>
+      </notes>
+      <segment>
+        <source>de réponses justes</source>
+        <target>correct answers</target>
+      </segment>
+    </unit>
+    <unit id="resultatsProjetesEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-resultats-projetes.component.ts:155,157</note>
+      </notes>
+      <segment>
+        <source> Les réponses libres n’ont pas pu être relues : elles le seront au prochain résultat. </source>
+        <target> The free answers could not be reloaded: they will be with the next result. </target>
+      </segment>
+    </unit>
+    <unit id="resultatsProjetesVide">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-resultats-projetes.component.ts:160,162</note>
+      </notes>
+      <segment>
+        <source> Aucune réponse reçue pour l’instant. </source>
+        <target> No answers received yet. </target>
+      </segment>
+    </unit>
     <unit id="panneauAnnotationTitre">
       <notes>
         <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:60,62</note>
@@ -12623,24 +12740,6 @@
       <segment>
         <source> Annotation du formateur </source>
         <target> Teacher annotation </target>
-      </segment>
-    </unit>
-    <unit id="panneauAnnotationGroupe">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:62,64</note>
-      </notes>
-      <segment>
-        <source>Groupe suivi</source>
-        <target>Tracked group</target>
-      </segment>
-    </unit>
-    <unit id="panneauAnnotationClasseEntiere">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-annotation.component.ts:73,75</note>
-      </notes>
-      <segment>
-        <source> Classe entière </source>
-        <target> Whole class </target>
       </segment>
     </unit>
     <unit id="panneauAnnotationNote">
@@ -12688,114 +12787,6 @@
         <target>The note could not be saved: it stays displayed here, edit it again to retry.</target>
       </segment>
     </unit>
-    <unit id="panneauGroupesNomDejaPris">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:20</note>
-      </notes>
-      <segment>
-        <source>Ce nom de groupe est déjà pris dans la séance.</source>
-        <target>This group name is already used in the session.</target>
-      </segment>
-    </unit>
-    <unit id="panneauGroupesIntrouvable">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:21</note>
-      </notes>
-      <segment>
-        <source>Ce groupe ou ce participant n’existe plus : la liste a été relue.</source>
-        <target>This group or participant no longer exists: the list has been reloaded.</target>
-      </segment>
-    </unit>
-    <unit id="panneauGroupesEchec">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:22</note>
-      </notes>
-      <segment>
-        <source>La modification des groupes n’a pas abouti. Réessayez.</source>
-        <target>The group change did not go through. Try again.</target>
-      </segment>
-    </unit>
-    <unit id="panneauGroupesTitre">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:38,40</note>
-      </notes>
-      <segment>
-        <source> Groupes de suivi </source>
-        <target> Tracking groups </target>
-      </segment>
-    </unit>
-    <unit id="panneauGroupesVide">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:42,44</note>
-      </notes>
-      <segment>
-        <source> Aucun groupe créé pour cette séance. </source>
-        <target> No group has been created for this session. </target>
-      </segment>
-    </unit>
-    <unit id="panneauGroupesNouveauLibelle">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:62,63</note>
-      </notes>
-      <segment>
-        <source>Nouveau groupe</source>
-        <target>New group</target>
-      </segment>
-    </unit>
-    <unit id="panneauGroupesNouveauIndice">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:64,65</note>
-      </notes>
-      <segment>
-        <source>Nouveau groupe</source>
-        <target>New group</target>
-      </segment>
-    </unit>
-    <unit id="panneauGroupesCreer">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:68,70</note>
-      </notes>
-      <segment>
-        <source>Créer</source>
-        <target>Create</target>
-      </segment>
-    </unit>
-    <unit id="panneauGroupesParticipants">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:75,76</note>
-      </notes>
-      <segment>
-        <source>Participants</source>
-        <target>Participants</target>
-      </segment>
-    </unit>
-    <unit id="panneauGroupesParticipantsVide">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:78,81</note>
-      </notes>
-      <segment>
-        <source> Aucun participant n’a encore rejoint la séance. </source>
-        <target> No participant has joined the session yet. </target>
-      </segment>
-    </unit>
-    <unit id="panneauGroupesSansGroupe">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:101,102</note>
-      </notes>
-      <segment>
-        <source> Sans groupe </source>
-        <target> No group </target>
-      </segment>
-    </unit>
-    <unit id="panneauGroupesNomDuGroupe">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-groupes.component.ts:125</note>
-      </notes>
-      <segment>
-        <source>Nom du groupe</source>
-        <target>Group name</target>
-      </segment>
-    </unit>
     <unit id="panneauGuideQuestion">
       <notes>
         <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:23</note>
@@ -12830,15 +12821,6 @@
       <segment>
         <source> Guide de facilitation </source>
         <target> Facilitation guide </target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideVide">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:46,49</note>
-      </notes>
-      <segment>
-        <source> Aucun guide de facilitation n’est fourni pour cet écran. </source>
-        <target> No facilitation guide is provided for this screen. </target>
       </segment>
     </unit>
     <unit id="panneauGuideMasquer">
@@ -12936,8 +12918,8 @@
         <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-reponses-libres.component.ts:24,27</note>
       </notes>
       <segment>
-        <source> Aucune réponse reçue sur cet écran. </source>
-        <target> No answer received on this screen. </target>
+        <source> Aucune réponse reçue pour l’instant. </source>
+        <target> No answers received yet. </target>
       </segment>
     </unit>
     <unit id="presentateurNotationNeSaitPasCompte">
@@ -12990,8 +12972,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:26</note>
       </notes>
       <segment>
-        <source>BTS CG · Cours interactif · 55 écrans</source>
-        <target>BTS CG · Interactive course · 55 screens</target>
+        <source>BTS CG · Cours interactif</source>
+        <target>BTS CG · Interactive course</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.title">
@@ -13008,8 +12990,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:28</note>
       </notes>
       <segment>
-        <source>55 écrans pour lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
-        <target>55 screens to read, check and explain numerical information: proportions, percentages, changes over time. To follow in a guided session, with the code your teacher gives you.</target>
+        <source>Lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Read, check and explain numerical information: proportions, percentages, changes over time. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.duration">
@@ -13017,8 +12999,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:32</note>
       </notes>
       <segment>
-        <source>3 h 30 · 55 écrans</source>
-        <target>3 h 30 min · 55 screens</target>
+        <source>3 h 30</source>
+        <target>3 h 30 min</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.format">
@@ -13427,6 +13409,16 @@
       <segment>
         <source> Pas de compte à créer. Ces informations restent liées à cette séance. </source>
         <target> No account to create. This information stays tied to this session. </target>
+      </segment>
+    </unit>
+    <unit id="coursEntreeConnexionFormateur">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:558,562</note>
+        <note category="meaning">cours.entreeConnexionFormateur</note>
+      </notes>
+      <segment>
+        <source>Vous êtes formateur ? Se connecter</source>
+        <target>Are you the instructor? Sign in</target>
       </segment>
     </unit>
     <unit id="presentateurPleinEcranAria">
@@ -15470,12 +15462,6 @@
         <target>I don’t know</target>
       </segment>
     </unit>
-    <unit id="coursRuntimeEnAttente">
-      <segment>
-        <source>En attente de votre réponse</source>
-        <target>Waiting for your answer</target>
-      </segment>
-    </unit>
     <unit id="coursRuntimeReponseEnregistree">
       <segment>
         <source>Réponse enregistrée</source>
@@ -15520,20 +15506,26 @@
     </unit>
     <unit id="coursRuntimeRappelConsigne">
       <segment>
-        <source>Écrivez tout ce dont vous vous souvenez, sans regarder vos notes</source>
-        <target>Write down everything you remember, without looking at your notes</target>
+        <source>Écrivez votre calcul avant de voir les propositions.</source>
+        <target>Write down your calculation before seeing the options.</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeRappelChamp">
+      <segment>
+        <source>Ce dont vous vous souvenez</source>
+        <target>What you remember</target>
       </segment>
     </unit>
     <unit id="coursRuntimeRappelRestant">
       <segment>
-        <source>Options disponibles dans</source>
-        <target>Options available in</target>
+        <source>Temps d’écriture libre : propositions de réponse dans</source>
+        <target>Free writing time: answer options in</target>
       </segment>
     </unit>
     <unit id="coursRuntimeRappelTermine">
       <segment>
-        <source>Options disponibles</source>
-        <target>Options available</target>
+        <source>Choisissez maintenant la proposition qui correspond</source>
+        <target>Now choose the matching option</target>
       </segment>
     </unit>
     <unit id="coursRuntimeChoixObligatoire">
@@ -15602,28 +15594,28 @@
         <target>Answers received:</target>
       </segment>
     </unit>
-    <unit id="coursRuntimeChallengeConsigne">
+    <unit id="coursRuntimeChallengeReponse">
       <segment>
-        <source>Cherchez par vous-même : aucune méthode ne vous a encore été donnée</source>
-        <target>Work it out yourself: no method has been given to you yet</target>
+        <source>Votre réponse</source>
+        <target>Your answer</target>
       </segment>
     </unit>
     <unit id="coursRuntimeChallengeTentativeVide">
       <segment>
-        <source>Écrivez votre tentative, même imparfaite : c’est elle qui compte</source>
-        <target>Write your attempt, even an imperfect one: it is what counts</target>
+        <source>Écrivez votre réponse avant de l’envoyer</source>
+        <target>Write your answer before sending it</target>
       </segment>
     </unit>
     <unit id="coursRuntimeChallengeReveler">
       <segment>
-        <source>Voir les stratégies</source>
-        <target>Show the strategies</target>
+        <source>Voir la correction</source>
+        <target>Show the answer key</target>
       </segment>
     </unit>
     <unit id="coursRuntimeChallengeStrategies">
       <segment>
-        <source>Stratégies typiques</source>
-        <target>Typical strategies</target>
+        <source>Correction</source>
+        <target>Answer key</target>
       </segment>
     </unit>
     <unit id="coursRuntimeChallengeFausse">
@@ -15652,8 +15644,8 @@
     </unit>
     <unit id="coursRuntimeConcept4Reglages">
       <segment>
-        <source>Faites varier les paramètres et observez les quatre faces</source>
-        <target>Vary the parameters and watch the four views</target>
+        <source>Faites varier les taux et observez l’arrivée.</source>
+        <target>Vary the rates and watch the end value.</target>
       </segment>
     </unit>
     <unit id="coursRuntimeConcept4Animer">
@@ -15712,8 +15704,8 @@
     </unit>
     <unit id="coursRuntimeWorkedConsigne">
       <segment>
-        <source>Répondez à chaque question sous son étape. La correction s’affichera sous votre réponse quand le formateur la montrera.</source>
-        <target>Answer each question under its step. The answer will appear under yours when the trainer reveals it.</target>
+        <source>Répondez à la question de chaque étape, puis validez : la correction sera projetée après l’exercice.</source>
+        <target>Answer the question at each step, then submit: the answer key will be projected after the exercise.</target>
       </segment>
     </unit>
     <unit id="coursRuntimeWorkedCorrection">
@@ -15728,12 +15720,6 @@
         <target>Answer every question still without an answer before submitting</target>
       </segment>
     </unit>
-    <unit id="coursRuntimeWorkedNiveau">
-      <segment>
-        <source>Corrections montrées :</source>
-        <target>Answers shown:</target>
-      </segment>
-    </unit>
     <unit id="coursRuntimeConcept4Etape">
       <segment>
         <source>Étape</source>
@@ -15746,16 +15732,10 @@
         <target>Correct answer:</target>
       </segment>
     </unit>
-    <unit id="coursRuntimeWorkedSuiteAuTableau">
-      <segment>
-        <source>La suite de la correction s’affiche au fil du cours</source>
-        <target>The rest of the correction appears as the class goes on</target>
-      </segment>
-    </unit>
     <unit id="coursRuntimePlotReglages">
       <segment>
-        <source>Faites varier les paramètres et observez la forme des courbes</source>
-        <target>Vary the parameters and watch the shape of the curves</target>
+        <source>Réglage</source>
+        <target>Setting</target>
       </segment>
     </unit>
     <unit id="coursRuntimePlotAnimer">
@@ -15830,6 +15810,24 @@
         <target>Axis presets</target>
       </segment>
     </unit>
+    <unit id="coursRuntimePlotReference">
+      <segment>
+        <source>figé</source>
+        <target>frozen</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimePlotReglable">
+      <segment>
+        <source>Votre réglage</source>
+        <target>Your setting</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeConcept4Prereglages">
+      <segment>
+        <source>Couples de taux à comparer</source>
+        <target>Rate pairs to compare</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimePlotRapportHauteurs">
       <segment>
         <source>Hauteur de la barre</source>
@@ -15850,14 +15848,14 @@
     </unit>
     <unit id="coursRuntimeTableBuildConsigne">
       <segment>
-        <source>Bâtissez le tableau ligne à ligne : chaque cellule déduite se recalcule dès que vous saisissez</source>
-        <target>Build the table row by row: each derived cell updates as soon as you type</target>
+        <source>Remplissez les cellules à saisir ligne par ligne ; les autres colonnes se calculent seules.</source>
+        <target>Fill in the input cells row by row; the other columns are calculated automatically.</target>
       </segment>
     </unit>
     <unit id="coursRuntimeTableBuildEcheance">
       <segment>
-        <source>Échéance</source>
-        <target>Instalment</target>
+        <source>Révision</source>
+        <target>Revision</target>
       </segment>
     </unit>
     <unit id="coursRuntimeTableBuildASaisir">
@@ -15964,8 +15962,8 @@
     </unit>
     <unit id="coursRuntimeCardsortConsigne">
       <segment>
-        <source>Choisissez une carte, désignez sa catégorie, puis déplacez-la — à la souris comme au clavier</source>
-        <target>Pick a card, choose its category, then move it — with the mouse or the keyboard</target>
+        <source>Glissez chaque carte dans sa catégorie. Au clavier : choisissez la carte, puis la catégorie, puis « Déplacer la carte ».</source>
+        <target>Drag each card into its category. With the keyboard: choose the card, then the category, then “Move the card”.</target>
       </segment>
     </unit>
     <unit id="coursRuntimeCardsortPioche">
@@ -16032,6 +16030,12 @@
       <segment>
         <source>Aucune carte à trier : le plan ne porte aucune carte</source>
         <target>No card to sort: the plan has no card</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeCardsortCorrection">
+      <segment>
+        <source>Correction du classement</source>
+        <target>Sorting answer key</target>
       </segment>
     </unit>
     <unit id="coursRuntimeEscapeConsigne">
@@ -16130,12 +16134,6 @@
         <target>Ask for a hint</target>
       </segment>
     </unit>
-    <unit id="coursRuntimeEscapeIndiceGratuit">
-      <segment>
-        <source>Prendre un indice ne retire rien à votre parcours</source>
-        <target>Taking a hint costs you nothing</target>
-      </segment>
-    </unit>
     <unit id="coursRuntimeEscapeIndiceAttente">
       <segment>
         <source>L’indice s’ouvre dans</source>
@@ -16150,8 +16148,8 @@
     </unit>
     <unit id="coursRuntimeEscapeIndicePris">
       <segment>
-        <source>Indice ouvert : il ne retire rien à votre parcours</source>
-        <target>Hint opened: it costs you nothing</target>
+        <source>Indice ouvert</source>
+        <target>Hint opened</target>
       </segment>
     </unit>
     <unit id="coursRuntimeEscapeIndiceDonne">
@@ -16180,8 +16178,8 @@
     </unit>
     <unit id="coursRuntimeSpacedConsigne">
       <segment>
-        <source>Rappel : quelques questions sur ce que vous avez travaillé plus tôt, de mémoire, sans vos notes</source>
-        <target>Recall: a few questions on what you worked on earlier, from memory, without your notes</target>
+        <source>Quelques questions sur ce que vous avez travaillé plus tôt.</source>
+        <target>A few questions on what you worked on earlier.</target>
       </segment>
     </unit>
     <unit id="coursRuntimeSpacedProgression">
@@ -16394,6 +16392,12 @@
         <target>Enter at least one value or choose “I don’t know”</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeProductionRenvoyer">
+      <segment>
+        <source>Renvoyer les cases corrigées</source>
+        <target>Resend the corrected cells</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimeBrouillonRestaure">
       <segment>
         <source>Brouillon restauré</source>
@@ -16428,30 +16432,6 @@
       <segment>
         <source>min</source>
         <target>min</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeModaliteSolo">
-      <segment>
-        <source>Individuel</source>
-        <target>Individual</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeModaliteBinome">
-      <segment>
-        <source>En binôme</source>
-        <target>In pairs</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeModaliteGroupe">
-      <segment>
-        <source>En groupe</source>
-        <target>In groups</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeModaliteClasse">
-      <segment>
-        <source>Classe entière</source>
-        <target>Whole class</target>
       </segment>
     </unit>
     <unit id="coursRuntimeRegimeOuvert">
@@ -16566,6 +16546,24 @@
       <segment>
         <source> Afficher les réponses </source>
         <target> Show the answers </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteCorrectionTableauTitre">
+      <segment>
+        <source>Correction du tableau</source>
+        <target>Table answer key</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteTableauCoefficients">
+      <segment>
+        <source> Afficher les coefficients </source>
+        <target> Show the coefficients </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteTableauValeurs">
+      <segment>
+        <source> Afficher les prix et les indices </source>
+        <target> Show the prices and indices </target>
       </segment>
     </unit>
     <unit id="panneauActiviteCorrectionExerciceTitre">
@@ -16694,6 +16692,12 @@
         <target> The participant list could not be loaded. </target>
       </segment>
     </unit>
+    <unit id="panneauActiviteParticipantsReessayer">
+      <segment>
+        <source> Réessayer </source>
+        <target> Try again </target>
+      </segment>
+    </unit>
     <unit id="panneauActiviteEvincer">
       <segment>
         <source> Retirer de la séance </source>
@@ -16734,6 +16738,48 @@
       <segment>
         <source> Bien placée dans votre tri </source>
         <target> Correctly placed in your sort </target>
+      </segment>
+    </unit>
+    <unit id="slideSortReviewCompte">
+      <segment>
+        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ compte.justes }}"/> / <ph id="1" equiv="INTERPOLATION_1" disp="{{ compte.total }}"/> bien placée </source>
+        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ compte.justes }}"/> / <ph id="1" equiv="INTERPOLATION_1" disp="{{ compte.total }}"/> correctly placed </target>
+      </segment>
+    </unit>
+    <unit id="slideAnswerReviewCible">
+      <segment>
+        <source>Réponse attendue :</source>
+        <target>Expected answer:</target>
+      </segment>
+    </unit>
+    <unit id="slideAnswerReviewJuste">
+      <segment>
+        <source> Votre réponse est juste </source>
+        <target> Your answer is correct </target>
+      </segment>
+    </unit>
+    <unit id="slideAnswerReviewARevoir">
+      <segment>
+        <source> Votre réponse est à revoir </source>
+        <target> Your answer needs another look </target>
+      </segment>
+    </unit>
+    <unit id="slideAnswerReviewReussite">
+      <segment>
+        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ reussite.justes }}"/> / <ph id="1" equiv="INTERPOLATION_1" disp="{{ reussite.total }}"/> réponses justes </source>
+        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ reussite.justes }}"/> / <ph id="1" equiv="INTERPOLATION_1" disp="{{ reussite.total }}"/> correct answers </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteOptionsRappelTitre">
+      <segment>
+        <source>Options du rappel</source>
+        <target>Recall options</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteAfficherOptions">
+      <segment>
+        <source> Afficher les options maintenant </source>
+        <target> Show the options now </target>
       </segment>
     </unit>
     <unit id="coursCorrectionTitre">

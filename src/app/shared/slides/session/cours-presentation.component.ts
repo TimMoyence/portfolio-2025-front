@@ -13,26 +13,22 @@ import {
   type TemplateRef,
   viewChild,
 } from '@angular/core';
-import type {
-  EcranContent,
-  RenderMode,
-  ResultatsSeance,
-  Role,
-} from '../../../../cours/content/types';
+import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import type { SyntheseConcept } from '../../../core/ports/formations.port';
 import type { DirectEcran, EvenementBrique, RetourBrique } from './contrat-hote';
 import { SlideActivityComponent } from './slide-activity.component';
 import { SlideComponent } from '../deck/slide.component';
-import { SlideDeckComponent } from '../deck/slide-deck.component';
 
 export type CoursPresentationMode = 'etudiant' | 'formateur' | 'projection';
 
 const LARGEUR_DE_TOILE = 1280;
 const HAUTEUR_DE_TOILE = 720;
-const ECHELLE_DE_MINIATURE = 0.25;
+const LARGEUR_COMPACTE = 700;
+const ECHELLE_LISIBLE = 0.8;
+const ECHELLE_DU_RENVOI_AVANT_MESURE = 0.46;
 
-interface Cadre {
+interface Mesure {
   readonly largeur: number;
   readonly hauteur: number;
 }
@@ -40,100 +36,84 @@ interface Cadre {
 @Component({
   selector: 'app-cours-presentation',
   standalone: true,
-  imports: [NgTemplateOutlet, SlideActivityComponent, SlideComponent, SlideDeckComponent],
+  imports: [NgTemplateOutlet, SlideActivityComponent, SlideComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (slide(); as current) {
       @for (screen of [current]; track screen.id) {
-        @if (mode() === 'etudiant') {
-          <app-slide-deck mode="scroll" [allowFullscreen]="true" [progressLabel]="progressLabel()">
-            <app-slide [id]="screen.id">
-              <ng-container
-                *ngTemplateOutlet="activity; context: { $implicit: screen }"
-              ></ng-container>
-            </app-slide>
-          </app-slide-deck>
-        } @else {
-          <div class="cours-cadre" #cadre>
-            <div class="cours-toile" data-testid="cours-toile" [style.transform]="transformation()">
-              <div class="cours-toile__principal">
+        <div class="cours-cadre" #cadre data-testid="cours-cadre">
+          <div
+            class="cours-toile"
+            data-testid="cours-toile"
+            [class.cours-toile--renvoi]="renvoi() !== null"
+            [style.transform]="transformation()"
+            [style.block-size.px]="hauteurDeToile()"
+          >
+            <div class="cours-toile__principal" #principal>
+              <div
+                class="cours-toile__contenu"
+                #contenu
+                data-testid="cours-contenu"
+                [style.transform]="ajustement()"
+              >
                 <app-slide [id]="screen.id">
-                  <ng-container
-                    *ngTemplateOutlet="activity; context: { $implicit: screen }"
-                  ></ng-container>
+                  <app-slide-activity
+                    [slide]="screen"
+                    [role]="role()"
+                    [resultats]="resultats()"
+                    [sessionId]="sessionId()"
+                    [jeton]="jeton()"
+                    [retours]="retours()"
+                    [direct]="direct()"
+                    [donneesFormateur]="$any(donneesFormateur())"
+                    [maitrise]="maitrise()"
+                    [brouillons]="brouillons()"
+                    (evenement)="evenement.emit($event)"
+                  />
                 </app-slide>
               </div>
-              @if (renvoi(); as reference) {
-                <aside class="cours-renvoi" data-testid="cours-renvoi">
-                  <p class="cours-renvoi__legende" i18n="@@coursRenvoiLegende">
-                    Diapositive commentée
-                  </p>
-                  <div class="cours-renvoi__cadre">
-                    <div class="cours-renvoi__toile">
-                      <app-slide-activity
-                        [slide]="reference"
-                        render="stage"
-                        role="presentateur"
-                        [apercu]="true"
-                      />
-                    </div>
-                  </div>
-                </aside>
-              }
-              @if (surimpression(); as calque) {
-                <ng-container *ngTemplateOutlet="calque" />
-              }
             </div>
+            @if (renvoi(); as reference) {
+              <aside class="cours-renvoi" data-testid="cours-renvoi">
+                <p class="cours-renvoi__legende" i18n="@@coursRenvoiLegende">
+                  Diapositive commentée
+                </p>
+                <div class="cours-renvoi__cadre" #renvoiCadre>
+                  <div class="cours-renvoi__toile" [style.transform]="transformationDuRenvoi()">
+                    <app-slide-activity [slide]="reference" [role]="role()" [apercu]="true" />
+                  </div>
+                </div>
+              </aside>
+            }
+            @if (surimpression(); as calque) {
+              <ng-container *ngTemplateOutlet="calque" />
+            }
           </div>
-        }
+        </div>
       }
     }
-
-    <ng-template #activity let-current>
-      <app-slide-activity
-        [slide]="current"
-        [render]="renderMode()"
-        [role]="role()"
-        [resultats]="resultats()"
-        [sessionId]="sessionId()"
-        [jeton]="jeton()"
-        [retours]="retours()"
-        [direct]="direct()"
-        [donneesFormateur]="$any(donneesFormateur())"
-        [maitrise]="maitrise()"
-        [brouillons]="brouillons()"
-        (evenement)="evenement.emit($event)"
-      />
-    </ng-template>
   `,
   styles: `
     :host {
       display: block;
       inline-size: 100%;
       min-inline-size: 0;
-    }
-
-    :host(.cours-presentation--projection) {
       block-size: 100%;
     }
 
     app-slide {
       display: block;
       inline-size: 100%;
-      block-size: 100%;
       min-inline-size: 0;
+      --slide-min-height: 0;
     }
 
     .cours-cadre {
       position: relative;
       inline-size: 100%;
-      aspect-ratio: 16 / 9;
-      overflow: hidden;
-    }
-
-    :host(.cours-presentation--projection) .cours-cadre {
-      aspect-ratio: auto;
       block-size: 100%;
+      min-block-size: 0;
+      overflow: hidden;
     }
 
     .cours-toile {
@@ -143,25 +123,54 @@ interface Cadre {
       inline-size: ${LARGEUR_DE_TOILE}px;
       block-size: ${HAUTEUR_DE_TOILE}px;
       display: flex;
-      container-type: size;
-      overflow: auto;
+      overflow: hidden;
       transform-origin: 0 0;
+      color: var(--ink, #0c0902);
+      background: var(--cream, #fffaf2);
     }
 
     .cours-toile__principal {
       flex: 1 1 0;
       min-inline-size: 0;
       block-size: 100%;
+      box-sizing: border-box;
+      padding: 1.5rem 2rem;
       container-type: size;
+      overflow: hidden;
+    }
+
+    .cours-toile__contenu {
+      --slide-marge-bloc: 0;
+      --slide-marge-ligne: 0;
+      --fp-densite-imposee: 0.75;
+      display: flex;
+      flex-direction: column;
+      justify-content: safe center;
+      min-block-size: 100%;
+      transform-origin: 50% 0;
+    }
+
+    .cours-toile--renvoi .cours-toile__contenu {
+      --fp-densite-imposee: 0.6;
+      --fp-echelle-imposee: 1;
+      --fp-titre-impose: 1.3rem;
+      --fp-marge-carte-imposee: 1rem;
+    }
+
+    .cours-toile--renvoi .cours-toile__principal {
+      flex-basis: 50%;
+      padding-inline-end: 1rem;
     }
 
     .cours-renvoi {
       display: flex;
-      flex: 0 0 auto;
+      flex: 0 0 50%;
+      min-inline-size: 0;
       flex-direction: column;
       justify-content: center;
       gap: 0.5rem;
-      padding: 1rem;
+      box-sizing: border-box;
+      padding: 1rem 1.5rem 1rem 1rem;
       border-inline-start: 1px solid rgba(12, 9, 2, 0.12);
     }
 
@@ -174,8 +183,9 @@ interface Cadre {
 
     .cours-renvoi__cadre {
       position: relative;
-      inline-size: ${LARGEUR_DE_TOILE * ECHELLE_DE_MINIATURE}px;
-      block-size: ${HAUTEUR_DE_TOILE * ECHELLE_DE_MINIATURE}px;
+      box-sizing: border-box;
+      inline-size: 100%;
+      aspect-ratio: 16 / 9;
       overflow: hidden;
       border: 1px solid rgba(12, 9, 2, 0.16);
       border-radius: 0.5rem;
@@ -188,20 +198,65 @@ interface Cadre {
       inset-inline-start: 0;
       inline-size: ${LARGEUR_DE_TOILE}px;
       block-size: ${HAUTEUR_DE_TOILE}px;
+      box-sizing: border-box;
+      padding: 1.5rem 2rem;
       container-type: size;
-      transform: scale(${ECHELLE_DE_MINIATURE});
+      overflow: hidden;
+      transform: scale(${ECHELLE_DU_RENVOI_AVANT_MESURE});
       transform-origin: 0 0;
+      pointer-events: none;
+    }
+
+    :host(.cours-presentation--formateur) {
+      block-size: auto;
+    }
+
+    :host(.cours-presentation--formateur) .cours-cadre {
+      block-size: auto;
+      aspect-ratio: 16 / 9;
+    }
+
+    :host(.cours-presentation--compacte) .cours-cadre {
+      block-size: auto;
+      overflow: visible;
+    }
+
+    :host(.cours-presentation--compacte) .cours-toile {
+      position: static;
+      inline-size: 100%;
+      block-size: auto;
+      flex-direction: column;
+      overflow: visible;
+    }
+
+    :host(.cours-presentation--compacte) .cours-toile__principal {
+      block-size: auto;
+      padding: 1rem;
+      container-type: inline-size;
+    }
+
+    :host(.cours-presentation--defilante) .cours-cadre,
+    :host(.cours-presentation--defilante) .cours-toile,
+    :host(.cours-presentation--defilante) .cours-toile__principal {
+      overflow: visible;
+    }
+
+    :host(.cours-presentation--compacte) .cours-renvoi {
+      flex-basis: auto;
+      border-inline-start: 0;
+      border-block-start: 1px solid rgba(12, 9, 2, 0.12);
     }
   `,
   host: {
     '[class.cours-presentation--projection]': "mode() === 'projection'",
+    '[class.cours-presentation--formateur]': "mode() === 'formateur'",
+    '[class.cours-presentation--compacte]': 'compacte()',
+    '[class.cours-presentation--defilante]': 'defilante()',
   },
 })
 export class CoursPresentationComponent {
   readonly mode = input<CoursPresentationMode>('etudiant');
   readonly slide = input<EcranContent | null>(null);
-  readonly index = input<number | null>(null);
-  readonly total = input<number | null>(null);
   readonly resultats = input<ResultatsSeance | null>(null);
   readonly sessionId = input<string | null>(null);
   readonly jeton = input('');
@@ -215,46 +270,113 @@ export class CoursPresentationComponent {
   readonly evenement = output<EvenementBrique>();
 
   private readonly cadreObserve = viewChild<ElementRef<HTMLElement>>('cadre');
+  private readonly principalObserve = viewChild<ElementRef<HTMLElement>>('principal');
+  private readonly contenuObserve = viewChild<ElementRef<HTMLElement>>('contenu');
+  private readonly renvoiObserve = viewChild<ElementRef<HTMLElement>>('renvoiCadre');
   private readonly navigateur = isPlatformBrowser(inject(PLATFORM_ID));
-  private readonly cadre = signal<Cadre | null>(null);
+  private readonly cadre = signal<Mesure | null>(null);
+  private readonly place = signal<number | null>(null);
+  private readonly hauteurDuContenu = signal<number | null>(null);
+  private readonly largeurDuRenvoi = signal<number | null>(null);
 
-  protected readonly transformation = computed(() => {
-    const cadre = this.cadre();
-    if (cadre === null) {
-      return null;
-    }
-    const echelle = Math.min(cadre.largeur / LARGEUR_DE_TOILE, cadre.hauteur / HAUTEUR_DE_TOILE);
-    const decalageX = (cadre.largeur - LARGEUR_DE_TOILE * echelle) / 2;
-    const decalageY = (cadre.hauteur - HAUTEUR_DE_TOILE * echelle) / 2;
-    return `translate(${decalageX}px, ${decalageY}px) scale(${echelle})`;
+  protected readonly transformationDuRenvoi = computed(() => {
+    const largeur = this.largeurDuRenvoi();
+    return largeur === null || largeur === 0 ? null : `scale(${largeur / LARGEUR_DE_TOILE})`;
   });
-
-  constructor() {
-    effect((onCleanup) => {
-      const cadre = this.cadreObserve()?.nativeElement;
-      if (cadre === undefined || !this.navigateur || typeof ResizeObserver === 'undefined') {
-        return;
-      }
-      const observateur = new ResizeObserver(([entree]) => {
-        const { width, height } = entree.contentRect;
-        this.cadre.set({ largeur: width, hauteur: height });
-      });
-      observateur.observe(cadre);
-      onCleanup(() => observateur.disconnect());
-    });
-  }
 
   protected readonly role = computed<Role>(() =>
     this.mode() === 'etudiant' ? 'etudiant' : 'presentateur',
   );
 
-  protected readonly renderMode = computed<RenderMode>(() =>
-    this.mode() === 'etudiant' ? 'hand' : 'stage',
-  );
-
-  protected readonly progressLabel = computed(() => {
-    const index = this.index();
-    const total = this.total();
-    return index === null || total === null ? null : `${index + 1} / ${total}`;
+  protected readonly compacte = computed(() => {
+    const cadre = this.cadre();
+    return this.mode() === 'etudiant' && cadre !== null && cadre.largeur < LARGEUR_COMPACTE;
   });
+
+  private readonly echelleDeToile = computed(() => {
+    const cadre = this.cadre();
+    if (cadre === null || this.compacte()) {
+      return null;
+    }
+    return Math.min(cadre.largeur / LARGEUR_DE_TOILE, cadre.hauteur / HAUTEUR_DE_TOILE);
+  });
+
+  protected readonly hauteurDeToile = computed(() => {
+    const cadre = this.cadre();
+    const echelle = this.echelleDeToile();
+    if (this.mode() !== 'etudiant' || cadre === null || echelle === null || echelle === 0) {
+      return null;
+    }
+    return Math.max(HAUTEUR_DE_TOILE, cadre.hauteur / echelle);
+  });
+
+  protected readonly transformation = computed(() => {
+    const cadre = this.cadre();
+    const echelle = this.echelleDeToile();
+    if (cadre === null || echelle === null) {
+      return null;
+    }
+    const hauteur = this.hauteurDeToile() ?? HAUTEUR_DE_TOILE;
+    const decalageX = (cadre.largeur - LARGEUR_DE_TOILE * echelle) / 2;
+    const decalageY = this.defilante() ? 0 : (cadre.hauteur - hauteur * echelle) / 2;
+    return `translate(${decalageX}px, ${decalageY}px) scale(${echelle})`;
+  });
+
+  private readonly reduction = computed(() => {
+    const place = this.place();
+    const contenu = this.hauteurDuContenu();
+    if (this.compacte() || place === null || contenu === null || contenu <= place + 1) {
+      return null;
+    }
+    return place / contenu;
+  });
+
+  private readonly reductionLisible = computed(() => {
+    const echelle = this.echelleDeToile();
+    return echelle === null ? ECHELLE_LISIBLE : ECHELLE_LISIBLE / Math.max(1, echelle);
+  });
+
+  protected readonly defilante = computed(() => {
+    const reduction = this.reduction();
+    return this.mode() === 'etudiant' && reduction !== null && reduction < this.reductionLisible();
+  });
+
+  protected readonly ajustement = computed(() => {
+    const reduction = this.reduction();
+    if (reduction === null) {
+      return null;
+    }
+    return `scale(${this.defilante() ? this.reductionLisible() : reduction})`;
+  });
+
+  constructor() {
+    this.observer(this.cadreObserve, (element) =>
+      this.cadre.set({ largeur: element.clientWidth, hauteur: element.clientHeight }),
+    );
+    this.observer(this.principalObserve, (element) => {
+      const style = getComputedStyle(element);
+      const marges =
+        Number.parseFloat(style.paddingBlockStart) + Number.parseFloat(style.paddingBlockEnd);
+      this.place.set(element.clientHeight - marges);
+    });
+    this.observer(this.contenuObserve, (element) =>
+      this.hauteurDuContenu.set(element.offsetHeight),
+    );
+    this.observer(this.renvoiObserve, (element) => this.largeurDuRenvoi.set(element.clientWidth));
+  }
+
+  private observer(
+    cible: () => ElementRef<HTMLElement> | undefined,
+    mesurer: (element: HTMLElement) => void,
+  ): void {
+    effect((onCleanup) => {
+      const element = cible()?.nativeElement;
+      if (element === undefined || !this.navigateur || typeof ResizeObserver === 'undefined') {
+        return;
+      }
+      const observateur = new ResizeObserver(() => mesurer(element));
+      observateur.observe(element);
+      onCleanup(() => observateur.disconnect());
+    });
+  }
 }

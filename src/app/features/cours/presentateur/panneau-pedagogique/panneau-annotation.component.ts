@@ -1,17 +1,15 @@
 import { ChangeDetectionStrategy, Component, input, linkedSignal, output } from '@angular/core';
-import type { AnnotationFormateur, GroupeFormation } from '../../../../core/ports/formations.port';
+import type { AnnotationFormateur } from '../../../../core/ports/formations.port';
 import { readInputValue } from '../../../../shared/utils/dom-event.utils';
 
 export type EtatSauvegarde = 'repos' | 'en_cours' | 'enregistre' | 'echec';
 
 export interface SaisieAnnotation {
   readonly screenId: string;
-  readonly groupName: string;
   readonly note: string;
 }
 
 interface Brouillon {
-  readonly groupe: string;
   readonly note: string;
   readonly modifie: boolean;
 }
@@ -21,28 +19,10 @@ interface SourceDuBrouillon {
   readonly annotations: readonly AnnotationFormateur[];
 }
 
-const CLASSE_ENTIERE = 'Classe entière';
-
-function noteDe(source: SourceDuBrouillon, groupe: string): string {
+function noteDe(source: SourceDuBrouillon): string {
   return (
-    source.annotations.find(
-      (annotation) => annotation.screenId === source.ecranId && annotation.groupName === groupe,
-    )?.note ?? ''
+    source.annotations.find((annotation) => annotation.screenId === source.ecranId)?.note ?? ''
   );
-}
-
-function brouillonDeLEcran(source: SourceDuBrouillon): Brouillon {
-  const premiere = source.annotations.find((annotation) => annotation.screenId === source.ecranId);
-  return {
-    groupe: premiere?.groupName ?? CLASSE_ENTIERE,
-    note: premiere?.note ?? '',
-    modifie: false,
-  };
-}
-
-function valeurChoisie(evenement: Event): string {
-  const cible = evenement.target;
-  return cible instanceof HTMLSelectElement ? cible.value : CLASSE_ENTIERE;
 }
 
 @Component({
@@ -59,25 +39,6 @@ function valeurChoisie(evenement: Event): string {
       >
         Annotation du formateur
       </h4>
-      <label for="panneau-annotation-groupe" i18n="@@panneauAnnotationGroupe">Groupe suivi</label>
-      <select
-        id="panneau-annotation-groupe"
-        data-testid="annotation-groupe"
-        (change)="choisirLeGroupe($event)"
-      >
-        <option
-          [value]="classeEntiere"
-          [selected]="brouillon().groupe === classeEntiere"
-          i18n="@@panneauAnnotationClasseEntiere"
-        >
-          Classe entière
-        </option>
-        @for (groupe of groupes(); track groupe.id) {
-          <option [value]="groupe.name" [selected]="brouillon().groupe === groupe.name">
-            {{ groupe.name }}
-          </option>
-        }
-      </select>
       <label for="panneau-annotation-note" i18n="@@panneauAnnotationNote">Note du formateur</label>
       <textarea
         id="panneau-annotation-note"
@@ -113,37 +74,29 @@ function valeurChoisie(evenement: Event): string {
 })
 export class PanneauAnnotationComponent {
   readonly ecranId = input.required<string>();
-  readonly groupes = input.required<readonly GroupeFormation[]>();
   readonly annotations = input.required<readonly AnnotationFormateur[]>();
   readonly etat = input.required<EtatSauvegarde>();
   readonly saisie = output<SaisieAnnotation>();
 
-  protected readonly classeEntiere = CLASSE_ENTIERE;
-
   protected readonly brouillon = linkedSignal<SourceDuBrouillon, Brouillon>({
     source: () => ({ ecranId: this.ecranId(), annotations: this.annotations() }),
     computation: (source, precedent) => {
-      if (precedent === undefined || precedent.source.ecranId !== source.ecranId) {
-        return brouillonDeLEcran(source);
-      }
-      const serveur = noteDe(source, precedent.value.groupe);
-      if (precedent.value.modifie && serveur !== precedent.value.note) {
+      const serveur = noteDe(source);
+      if (
+        precedent !== undefined &&
+        precedent.source.ecranId === source.ecranId &&
+        precedent.value.modifie &&
+        serveur !== precedent.value.note
+      ) {
         return precedent.value;
       }
-      return { groupe: precedent.value.groupe, note: serveur, modifie: false };
+      return { note: serveur, modifie: false };
     },
   });
 
   protected saisirLaNote(evenement: Event): void {
     const note = readInputValue(evenement);
-    const groupe = this.brouillon().groupe;
-    this.brouillon.set({ groupe, note, modifie: true });
-    this.saisie.emit({ screenId: this.ecranId(), groupName: groupe, note });
-  }
-
-  protected choisirLeGroupe(evenement: Event): void {
-    const groupe = valeurChoisie(evenement);
-    const source = { ecranId: this.ecranId(), annotations: this.annotations() };
-    this.brouillon.set({ groupe, note: noteDe(source, groupe), modifie: false });
+    this.brouillon.set({ note, modifie: true });
+    this.saisie.emit({ screenId: this.ecranId(), note });
   }
 }

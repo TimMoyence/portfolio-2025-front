@@ -29,6 +29,8 @@ import { objet } from '../../../shared/slides/visual/presentation-v2';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
 import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
 import { correctionsAffichees } from './corrections-affichees';
+import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
+import { sourceCorrigeePar } from './sources-de-correction';
 
 type Chargement = 'chargement' | 'succes' | 'echec';
 
@@ -48,7 +50,11 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
 @Component({
   selector: 'app-cours-scene',
   standalone: true,
-  imports: [CoursPresentationComponent, CoursBandeauCorrectionComponent],
+  imports: [
+    CoursPresentationComponent,
+    CoursBandeauCorrectionComponent,
+    CoursResultatsProjetesComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
@@ -281,6 +287,16 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
                 [corrections]="correctionsDeLEcran()"
                 [revele]="direct()?.pilotage?.revele === true"
               />
+              @if (ecranDuDeroule(); as ecranSource) {
+                <app-cours-resultats-projetes
+                  [ecran]="ecranSource"
+                  [renvoi]="ecranRenvoye()"
+                  [resultats]="resultats()"
+                  [sessionId]="sessionId()"
+                  [actif]="direct()?.pilotage?.resultatsProjetes === true"
+                  [revele]="direct()?.pilotage?.revele === true"
+                />
+              }
             </ng-template>
           }
         </main>
@@ -336,17 +352,28 @@ export class CoursSceneComponent {
     return suivi?.etat === 'refuse' ? suivi.statut : null;
   });
 
+  readonly ecranDuDeroule = computed<EcranDeroule | null>(
+    () => this.deroule()?.ecrans[this.ecran()] ?? null,
+  );
+
   readonly ecranCourant = computed<EcranContent | null>(() => {
-    const ecran = this.deroule()?.ecrans[this.ecran()];
-    return ecran === undefined ? null : ecranProjete(ecran);
+    const ecran = this.ecranDuDeroule();
+    return ecran === null ? null : ecranProjete(ecran);
   });
 
   readonly ecranRenvoye = computed<EcranContent | null>(() => {
     const deroule = this.deroule();
     const renvoi = deroule?.ecrans[this.ecran()]?.renvoi;
     const cible = deroule?.ecrans.find(({ id }) => id === renvoi);
-    return cible === undefined ? null : ecranProjete(cible);
+    return cible === undefined || this.correctionEncoreVerrouillee(cible)
+      ? null
+      : ecranProjete(cible);
   });
+
+  private correctionEncoreVerrouillee(ecran: EcranDeroule): boolean {
+    const source = sourceCorrigeePar(ecran);
+    return source !== null && !this.termine() && this.pilotage()[source]?.revele !== true;
+  }
 
   readonly correctionsDeLEcran = computed(() =>
     correctionsAffichees(this.deroule()?.ecrans[this.ecran()]),

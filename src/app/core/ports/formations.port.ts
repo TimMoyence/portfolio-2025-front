@@ -99,7 +99,6 @@ export interface AnnotationFormateur {
   sessionId: string;
   teacherId: string;
   screenId: string;
-  groupName: string;
   note: string;
   updatedAt: string;
 }
@@ -116,19 +115,10 @@ export interface ReponseLibreFormateur {
   submittedAt: string;
 }
 
-export interface GroupeFormation {
-  id: string;
-  sessionId: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface ParticipantDeSeance {
   id: string;
   prenom: string;
   nom: string;
-  groupId: string | null;
   evince: boolean;
 }
 
@@ -248,6 +238,7 @@ export type MotifRefusReponse =
   | 'phase-fermee'
   | 'enigme-verrouillee'
   | 'tentatives-epuisees'
+  | 'reprises-epuisees'
   | 'production-vide'
   | 'evince'
   | 'refusee';
@@ -261,6 +252,7 @@ const MESSAGES_REFUS_REPONSE: Readonly<Record<MotifRefusReponse, string>> = {
   'phase-fermee': $localize`:cours.reponsePhaseFermee|@@coursReponsePhaseFermee:Le vote est fermé pour cette question`,
   'enigme-verrouillee': $localize`:cours.reponseEnigmeVerrouillee|@@coursReponseEnigmeVerrouillee:Verrouillée : l’énigme précédente l’ouvrira`,
   'tentatives-epuisees': $localize`:cours.reponseTentativesEpuisees|@@coursReponseTentativesEpuisees:Tentatives épuisées : l’énigme suivante s’ouvre, sans fragment`,
+  'reprises-epuisees': $localize`:cours.reponseReprisesEpuisees|@@coursReponseReprisesEpuisees:Production déjà envoyée trois fois : votre dernière version reste enregistrée jusqu’à la correction.`,
   'production-vide': $localize`:cours.reponseProductionVide|@@coursReponseProductionVide:Saisissez au moins une valeur ou choisissez « Je ne sais pas »`,
   evince: $localize`:cours.reponseEvince|@@coursReponseEvince:Votre formateur a retiré ce poste de la séance : votre réponse n’a pas été enregistrée.`,
   refusee: $localize`:cours.reponseRefusee|@@coursReponseRefusee:Votre réponse n’a pas été acceptée par le serveur : prévenez votre formateur.`,
@@ -289,18 +281,6 @@ export class ReponseLibreRefusee extends Error {
   }
 }
 
-export type MotifRefusGroupe = 'nom-deja-pris' | 'introuvable' | 'echec';
-
-export class GroupeRefuse extends Error {
-  constructor(
-    readonly motif: MotifRefusGroupe,
-    readonly statut: number,
-  ) {
-    super(`Commande de groupe refusée : ${motif} (statut ${statut})`);
-    this.name = 'GroupeRefuse';
-  }
-}
-
 export interface FormationsPort {
   ouvrirSeance(courseSlug: string, options?: { capacite?: number }): Observable<SeanceOuverte>;
   lireDeroule(sessionId: string): Observable<DerouleCours>;
@@ -313,16 +293,11 @@ export interface FormationsPort {
   lireAnnotations(sessionId: string): Observable<{ annotations: readonly AnnotationFormateur[] }>;
   enregistrerAnnotation(
     sessionId: string,
-    annotation: Pick<AnnotationFormateur, 'screenId' | 'groupName' | 'note'>,
+    annotation: Pick<AnnotationFormateur, 'screenId' | 'note'>,
   ): Observable<AnnotationFormateur>;
   lireReponsesLibres(
     sessionId: string,
   ): Observable<{ responses: readonly ReponseLibreFormateur[] }>;
-  lireGroupes(sessionId: string): Observable<{ groups: readonly GroupeFormation[] }>;
-  creerGroupe(sessionId: string, name: string): Observable<GroupeFormation>;
-  renommerGroupe(sessionId: string, groupId: string, name: string): Observable<GroupeFormation>;
-  affecterParticipant(sessionId: string, participantId: string, groupId: string): Observable<void>;
-  retirerParticipantDuGroupe(sessionId: string, participantId: string): Observable<void>;
   lireParticipants(sessionId: string): Observable<{ participants: readonly ParticipantDeSeance[] }>;
   rejoindre(code: string, inscription: InscriptionParticipant): Observable<Rattachement>;
   repondre(sessionId: string, jeton: string, reponse: ReponseEtudiant): Observable<VerdictReponse>;

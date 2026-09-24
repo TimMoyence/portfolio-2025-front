@@ -1,5 +1,5 @@
-import type { EcranContent, RenderMode, Role } from '../../../../cours/content/types';
-import { monterEcran, RENDUS_DE_MONTAGE } from '../../../../testing/briques-montees';
+import type { EcranContent, Role } from '../../../../cours/content/types';
+import { monterEcran, ROLES_DE_MONTAGE } from '../../../../testing/briques-montees';
 import { buildInstantaneDeSubstitution } from '../../../../testing/factories/instantane-b2-01.factory';
 import {
   ecransDuPupitreB2_01,
@@ -10,9 +10,17 @@ import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { SlideActivityComponent } from './slide-activity.component';
 
 const EMPREINTE_PUBLIEE_PAR_LE_BACK =
-  'f75ea034686e2f7b1fc2e9bb92aab3e4eac28c29505de169bee6387170c6d902';
+  '926cef4cb67e6c41e621e233f3f5b1306796bf8ccdc688bcb17bd52bdef770cd';
 
-const ECRANS_PUBLIES = 55;
+const ECRANS_PUBLIES = 75;
+
+function ecranNomme<T extends EcranContent>(ecrans: readonly T[], id: string): T {
+  const ecran = ecrans.find((candidat) => candidat.id === id);
+  if (ecran === undefined) {
+    throw new Error(`écran absent de l instantané : ${id}`);
+  }
+  return ecran;
+}
 
 const SUBSTITUTION = buildInstantaneDeSubstitution();
 
@@ -26,27 +34,37 @@ function clesDe(valeur: unknown): readonly string[] {
   return Object.entries(valeur).flatMap(([cle, contenu]) => [cle, ...clesDe(contenu)]);
 }
 
-async function attesterLeMontage(
-  ecran: EcranContent,
-  render: RenderMode,
-  role: Role,
-): Promise<void> {
-  const monte = await monterEcran(ecran, render, role);
+async function attesterLeMontage(ecran: EcranContent, role: Role): Promise<void> {
+  const monte = await monterEcran(ecran, role);
 
   expect(monte.erreurs).toEqual([]);
   expect(monte.element.querySelector('[data-testid="slide-activity-error"]')).toBeNull();
   expect(monte.element.querySelector('[data-testid="slide-activity-unknown"]')).toBeNull();
-  expect(monte.montees().every((brique) => brique.getAttribute('render') === render)).toBeTrue();
+  expect(monte.element.querySelector('app-slide-visual [role="alert"]'))
+    .withContext(`${ecran.id} en ${role}`)
+    .toBeNull();
+  expect(
+    monte.montees().every((brique) => brique.getAttribute('data-cours-role') === role),
+  ).toBeTrue();
+  expect(monte.montees().some((brique) => brique.hasAttribute('render'))).toBeFalse();
+  expect(
+    monte
+      .montees()
+      .every(
+        (brique) =>
+          brique.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role') === role,
+      ),
+  ).toBeTrue();
   monte.detruire();
 }
 
-describe('AC-24 : l instantané réel du B2-01 servi par le back se monte en main, au tableau et en projection', () => {
+describe('AC-24 : l instantané réel du B2-01 servi par le back se monte pour l étudiant et pour le présentateur', () => {
   beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
   it('garde la diapositive de Samir réglable au pupitre et la consigne courte de l atelier', async () => {
-    const diapositive = ecransDuPupitreB2_01()[13];
-    const atelier = ecransPublicsB2_01()[14];
-    const monte = await monterEcran(diapositive, 'hand', 'presentateur');
+    const diapositive = ecranNomme(ecransDuPupitreB2_01(), 'B2-01-A2-02-ORIGINE-AXE');
+    const atelier = ecranNomme(ecransPublicsB2_01(), 'B2-01-A2-03-ATELIER-1-SUITE');
+    const monte = await monterEcran(diapositive, 'presentateur');
     const graphique = monte.montees()[0] as HTMLElement;
 
     expect(graphique.shadowRoot?.querySelector('[data-testid="titre"]')?.textContent).toContain(
@@ -54,7 +72,11 @@ describe('AC-24 : l instantané réel du B2-01 servi par le back se monte en mai
     );
     expect(graphique.shadowRoot?.querySelectorAll('[data-testid="parametre"]').length).toBe(1);
     expect(graphique.shadowRoot?.querySelectorAll('[data-testid="prereglage"]').length).toBe(2);
-    expect(graphique.shadowRoot?.querySelectorAll('[data-testid="barre"]').length).toBe(4);
+    expect(graphique.shadowRoot?.querySelectorAll('[data-testid="barre"]').length).toBe(8);
+    expect(
+      graphique.shadowRoot?.querySelector('[data-vue="reference"] [data-testid="vue"]')
+        ?.textContent,
+    ).toContain('Axe de Samir');
     expect(atelier.donnees?.['consigne']).toBe(
       'Calculatrice autorisée, sauf pour la question sur le nombre de commandes (ordre de grandeur). Répondez seul·e, puis comparez avec votre voisin·e avant la correction.',
     );
@@ -93,14 +115,12 @@ describe('AC-24 : l instantané réel du B2-01 servi par le back se monte en mai
   });
 
   for (const ecran of ecransPublicsB2_01()) {
-    it(`${ecran.id} (${ecran.type}) en hand`, () => attesterLeMontage(ecran, 'hand', 'etudiant'));
+    it(`${ecran.id} (${ecran.type}) pour l étudiant`, () => attesterLeMontage(ecran, 'etudiant'));
   }
 
   for (const ecran of ecransDuPupitreB2_01()) {
-    for (const render of ['board', 'stage'] as const) {
-      it(`${ecran.id} (${ecran.type}) en ${render}`, () =>
-        attesterLeMontage(ecran, render, 'presentateur'));
-    }
+    it(`${ecran.id} (${ecran.type}) pour le présentateur`, () =>
+      attesterLeMontage(ecran, 'presentateur'));
   }
 });
 
@@ -125,8 +145,8 @@ describe('les factories du front couvrent chaque type d écran du contrat § 9.4
   });
 
   for (const ecran of SUBSTITUTION) {
-    for (const { render, role } of RENDUS_DE_MONTAGE) {
-      it(`${ecran.id} (${ecran.type}) en ${render}`, () => attesterLeMontage(ecran, render, role));
+    for (const role of ROLES_DE_MONTAGE) {
+      it(`${ecran.id} (${ecran.type}) pour le rôle ${role}`, () => attesterLeMontage(ecran, role));
     }
   }
 });

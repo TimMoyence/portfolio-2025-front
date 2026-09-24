@@ -10,11 +10,14 @@ export const coursEntreeGuard: CanActivateFn = (route) => {
   const router = inject(Router);
   const slug = route.data['coursSlug'];
 
-  const decide = (): GuardResult =>
-    (authState.hasRole('teacher') &&
-      typeof slug === 'string' &&
-      router.createUrlTree(['/cours/presenter', slug])) ||
-    router.createUrlTree(['/cours/rejoindre']);
+  const decide = (): GuardResult => {
+    if (typeof slug !== 'string') {
+      return router.createUrlTree(['/cours/rejoindre']);
+    }
+    return authState.hasRole('teacher')
+      ? router.createUrlTree(['/cours/presenter', slug])
+      : router.createUrlTree(['/cours/rejoindre'], { queryParams: { cours: slug } });
+  };
 
   const sessionCheckWasComplete = authState.isSessionCheckComplete();
   if (!sessionCheckWasComplete) {

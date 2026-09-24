@@ -21,7 +21,13 @@ export interface Concept4Definition {
   readonly calcul: string;
   readonly phrase: string;
   readonly etapes?: readonly Concept4Etape[];
+  readonly prereglages?: readonly Concept4Prereglage[];
   readonly metadonnees: MetadonneesBrique;
+}
+
+export interface Concept4Prereglage {
+  readonly libelle: string;
+  readonly valeurs: Readonly<Record<string, number>>;
 }
 
 export interface Concept4Etape {
@@ -112,6 +118,10 @@ export class FpConcept4 extends FpBlock {
             calcul: valeur.calcul,
             phrase: valeur.phrase,
             etapes: (valeur.etapes ?? []).map(({ libelle, calcul }) => ({ libelle, calcul })),
+            prereglages: (valeur.prereglages ?? []).map(({ libelle, valeurs }) => ({
+              libelle,
+              valeurs: { ...valeurs },
+            })),
             metadonnees: projeterMetadonnees(valeur.metadonnees),
           };
     this.courantes = {};
@@ -148,52 +158,71 @@ export class FpConcept4 extends FpBlock {
     this.arreterAnimation();
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     if (this.definition === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    return safeHtml`<section class="fp-carte fp-concept4__atelier">${this.panneauDeReglages()}<div class="fp-concept4__zone" data-zone="faces">${this.faces('fp-prose')}</div></section>`;
-  }
-
-  renderStage(): EscapedHtml {
-    if (this.definition === null) {
-      return safeHtml``;
-    }
-    return safeHtml`<section class="fp-scene fp-concept4__atelier">${this.panneauDeReglages()}<div class="fp-concept4__zone" data-zone="faces">${this.faces('fp-enonce')}</div></section>`;
-  }
-
-  renderBoard(): EscapedHtml {
-    const definition = this.definition;
-    if (definition === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    return safeHtml`
-      <section class="fp-carte fp-concept4__atelier">
-        ${this.faces('fp-prose')}
-        <div class="fp-concept4__reperes">${this.reperes(definition.metadonnees)}</div>
-      </section>
-    `;
+    return safeHtml`<section class="fp-carte fp-scene fp-concept4__atelier">${this.panneauDeReglages()}<div class="fp-concept4__zone" data-zone="faces">${this.faces()}</div></section>`;
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.definition?.id ?? null);
-    if (this.mode() === 'board') {
-      return;
-    }
     racine
       .querySelector<HTMLButtonElement>('[data-testid="animer"]')
       ?.addEventListener('click', () => {
         this.animer();
       });
     brancherCurseurs(racine, (cle, valeur) => this.regler(cle, valeur));
-    if (this.roleActuel() !== 'presentateur' || this.enApercu()) {
+    racine.querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]').forEach((bouton) => {
+      bouton.addEventListener('click', () => {
+        this.appliquerPrereglage(Number(bouton.dataset['rang']));
+        this.relayerReglages();
+      });
+    });
+    for (const curseur of racine.querySelectorAll('input[data-testid="curseur"]')) {
+      curseur.addEventListener('change', () => this.relayerReglages());
+    }
+  }
+
+  private relayerReglages(): void {
+    if (this.roleActuel() === 'presentateur' && !this.enApercu()) {
+      this.emit('fp-concept4-reglage', { reglages: this.valeurs });
+    }
+  }
+
+  private appliquerPrereglage(rang: number): void {
+    const prereglage = this.definition?.prereglages?.[rang];
+    if (prereglage === undefined) {
       return;
     }
-    for (const curseur of racine.querySelectorAll('input[data-testid="curseur"]')) {
-      curseur.addEventListener('change', () => {
-        this.emit('fp-concept4-reglage', { reglages: this.valeurs });
-      });
+    this.arreterAnimation();
+    for (const parametre of this.definition?.parametres ?? []) {
+      if (Object.hasOwn(prereglage.valeurs, parametre.cle)) {
+        this.courantes = {
+          ...this.courantes,
+          [parametre.cle]: borner(parametre, prereglage.valeurs[parametre.cle]),
+        };
+      }
     }
+    this.refresh();
+  }
+
+  private estActif(prereglage: Concept4Prereglage | undefined): boolean {
+    return (
+      prereglage !== undefined &&
+      Object.entries(prereglage.valeurs).every(([cle, valeur]) => this.courantes[cle] === valeur)
+    );
+  }
+
+  private prereglagesAffiches(): EscapedHtml {
+    const prereglages = this.definition?.prereglages ?? [];
+    if (prereglages.length === 0) {
+      return safeHtml``;
+    }
+    return safeHtml`<div class="fp-concept4__prereglages" role="group" aria-label="${escapeHtml(this.texte('concept4-prereglages'))}">${prereglages.map(
+      (prereglage, rang) =>
+        safeHtml`<button class="fp-concept4__prereglage" data-testid="prereglage" data-rang="${rang}" type="button" aria-pressed="${escapeHtml(String(this.estActif(prereglage)))}">${escapeHtml(prereglage.libelle)}</button>`,
+    )}</div>`;
   }
 
   private regler(cle: string, valeur: number): void {
@@ -210,17 +239,23 @@ export class FpConcept4 extends FpBlock {
     if (sortie !== null) {
       sortie.textContent = formater(this.courantes[cle]);
     }
-    this.rafraichirZone('faces', this.faces(this.mode() === 'stage' ? 'fp-enonce' : 'fp-prose'));
+    this.rafraichirZone('faces', this.faces());
+    this.racine
+      .querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]')
+      .forEach((bouton) => {
+        const prereglage = this.definition?.prereglages?.[Number(bouton.dataset['rang'])];
+        bouton.setAttribute('aria-pressed', String(this.estActif(prereglage)));
+      });
   }
 
-  private faces(stylePhrase: string): EscapedHtml {
+  private faces(): EscapedHtml {
     const valeurs = this.valeurs;
     return safeHtml`
       <div class="fp-concept4__faces">
         ${this.formule(valeurs)}
         ${this.graphique(valeurs)}
         ${this.tableau(valeurs)}
-        ${this.enMots(valeurs, stylePhrase)}
+        ${this.enMots(valeurs)}
       </div>
     `;
   }
@@ -449,7 +484,7 @@ export class FpConcept4 extends FpBlock {
     return safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(ligne.courant))}"><td class="fp-montant">${escapeHtml(formater(ligne.valeur))}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(formater(ligne.resultat))}</td></tr>`;
   }
 
-  private enMots(valeurs: Valeurs, stylePhrase: string): EscapedHtml {
+  private enMots(valeurs: Valeurs): EscapedHtml {
     const definition = this.definition;
     if (definition === null) {
       return safeHtml``;
@@ -459,7 +494,7 @@ export class FpConcept4 extends FpBlock {
     return safeHtml`
       <div class="fp-concept4__face" data-testid="phrase" data-valeur="${escapeHtml(String(resultat))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-phrase'))}</h3>
-        <p class="${escapeHtml(stylePhrase)} fp-concept4__phrase" data-testid="phrase-texte">${escapeHtml(phrase)}</p>
+        <p class="fp-prose fp-concept4__phrase" data-testid="phrase-texte">${escapeHtml(phrase)}</p>
       </div>
     `;
   }
@@ -472,6 +507,7 @@ export class FpConcept4 extends FpBlock {
         <button class="fp-concept4__animation" data-testid="animer" type="button">
           ${escapeHtml(this.texte('concept4-animer'))}
         </button>
+        ${this.prereglagesAffiches()}
         <div class="fp-concept4__parametres" aria-live="polite">
           ${parametres.map((parametre) => this.parametreAffiche(parametre))}
         </div>

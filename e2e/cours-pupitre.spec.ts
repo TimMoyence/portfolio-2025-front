@@ -5,7 +5,6 @@ import { API_BASE } from './fixtures';
 const SESSION = '33333333-3333-4333-8333-333333333333';
 const SLUG = 'b2-01-traitement-information-chiffree';
 const PARTICIPANT = '55555555-5555-4555-8555-555555555555';
-const GROUPE = '66666666-6666-4666-8666-666666666666';
 const REPONSE_ATTENDUE = 'Des milliers d’euros, pas des euros.';
 const ENONCE_PROBLEME = 'Le prix monte de 20 %, puis baisse de 20 %. Où arrive-t-il ?';
 const NOTE = 'Relancer Léa sur la base de départ.';
@@ -135,7 +134,6 @@ type Corps = Record<string, unknown>;
 
 interface SaisieAnnotation {
   readonly screenId: string;
-  readonly groupName: string;
   readonly note: string;
 }
 
@@ -145,7 +143,6 @@ function annotationServie(saisie: SaisieAnnotation, rang: number): Record<string
     sessionId: SESSION,
     teacherId: FORMATEUR.id,
     screenId: saisie.screenId,
-    groupName: saisie.groupName,
     note: saisie.note,
     updatedAt: `2026-09-20T09:0${rang + 1}:00.000Z`,
   };
@@ -153,8 +150,6 @@ function annotationServie(saisie: SaisieAnnotation, rang: number): Record<string
 
 interface Journal {
   readonly annotations: () => readonly SaisieAnnotation[];
-  readonly groupesCrees: () => readonly string[];
-  readonly affectations: () => readonly { participantId: string; groupId: string | null }[];
   readonly bilansExportes: () => number;
 }
 
@@ -168,10 +163,6 @@ async function servir(route: Route, corps: unknown, statut = 200): Promise<void>
 
 async function installerLePupitre(page: Page): Promise<Journal> {
   const annotations: SaisieAnnotation[] = [];
-  const groupesCrees: string[] = [];
-  const affectations: { participantId: string; groupId: string | null }[] = [];
-  const groupes: Record<string, unknown>[] = [];
-  let participantGroupId: string | null = null;
   let bilansExportes = 0;
   let ecranPilote = 0;
 
@@ -187,36 +178,12 @@ async function installerLePupitre(page: Page): Promise<Journal> {
     await servir(route, annotationServie(saisie, annotations.length - 1), 201);
   };
 
-  const groupeCree = async (route: Route, nom: string): Promise<void> => {
-    groupesCrees.push(nom);
-    const groupe = {
-      id: GROUPE,
-      sessionId: SESSION,
-      name: nom,
-      createdAt: '2026-09-20T09:00:00.000Z',
-      updatedAt: '2026-09-20T09:00:00.000Z',
-    };
-    groupes.push(groupe);
-    await servir(route, groupe, 201);
-  };
-
-  const affectationEnregistree = async (route: Route, groupId: string | null): Promise<void> => {
-    participantGroupId = groupId;
-    affectations.push({ participantId: PARTICIPANT, groupId });
-    await route.fulfill({ status: 204, headers: CORS });
-  };
-
   const ecritures = new Map<string, (route: Route, corps: Corps) => Promise<void>>([
     [
       `POST ${SESSION}/annotations`,
       (route, corps) => annotationEnregistree(route, corps as unknown as SaisieAnnotation),
     ],
-    [`POST ${SESSION}/groups`, (route, corps) => groupeCree(route, String(corps['name'] ?? ''))],
     [`PATCH ${SESSION}/control`, pilotageApplique],
-    [
-      `PATCH /participants/${PARTICIPANT}/group`,
-      (route, corps) => affectationEnregistree(route, (corps['groupId'] ?? null) as string | null),
-    ],
   ]);
 
   const lectures = new Map<string, () => unknown>([
@@ -224,7 +191,6 @@ async function installerLePupitre(page: Page): Promise<Journal> {
     [`/sessions/${SESSION}/results`, () => RAPPORT],
     [`/sessions/${SESSION}/deroule`, () => DEROULE],
     [`/sessions/${SESSION}/free-responses`, () => ({ responses: [] })],
-    [`/sessions/${SESSION}/groups`, () => ({ groups: groupes })],
     [
       `/sessions/${SESSION}/annotations`,
       () => ({ annotations: annotations.map(annotationServie) }),
@@ -232,9 +198,7 @@ async function installerLePupitre(page: Page): Promise<Journal> {
     [
       `/sessions/${SESSION}/participants`,
       () => ({
-        participants: [
-          { id: PARTICIPANT, prenom: 'Léa', nom: 'Dubois', groupId: participantGroupId },
-        ],
+        participants: [{ id: PARTICIPANT, prenom: 'Léa', nom: 'Dubois' }],
       }),
     ],
   ]);
@@ -278,8 +242,6 @@ async function installerLePupitre(page: Page): Promise<Journal> {
 
   return {
     annotations: () => annotations,
-    groupesCrees: () => groupesCrees,
-    affectations: () => affectations,
     bilansExportes: () => bilansExportes,
   };
 }
@@ -314,23 +276,18 @@ test.describe('pupitre du formateur (QA-09, QA-10, QA-11)', () => {
     expect(await page.content()).not.toContain(REPONSE_ATTENDUE);
   });
 
-  test('crée un groupe, y affecte un participant, annote, relit l’annotation et exporte le bilan', async ({
+  test('G05 · annote l’écran sans groupe de suivi, relit l’annotation et exporte le bilan', async ({
     page,
   }) => {
     const journal = await installerLePupitre(page);
     await ouvrirLePupitre(page);
 
+    await page.getByTestId('activite-participants-afficher').click();
     const ligne = page.locator(`[data-participant="${PARTICIPANT}"]`);
     await expect(ligne).toContainText('Léa Dubois');
+    await expect(page.locator('[data-testid^="groupe-"]')).toHaveCount(0);
+    await expect(ligne.getByTestId('participant-groupe')).toHaveCount(0);
 
-    await page.getByTestId('groupe-nouveau').fill('Table 2');
-    await page.getByTestId('groupe-creer').click();
-    await expect(page.getByTestId('groupe-nom')).toHaveValue('Table 2');
-
-    await ligne.getByTestId('participant-groupe').selectOption({ label: 'Table 2' });
-    await expect(ligne.getByTestId('participant-groupe')).toHaveValue(GROUPE);
-
-    await page.getByTestId('annotation-groupe').selectOption('Table 2');
     await page.getByTestId('annotation-note').fill(NOTE);
     await expect(page.getByTestId('annotation-etat')).toHaveAttribute('data-etat', 'enregistre');
 
@@ -345,11 +302,7 @@ test.describe('pupitre du formateur (QA-09, QA-10, QA-11)', () => {
 
     expect(fichier.suggestedFilename()).toBe(`bilan-seance-${SESSION}.json`);
     await expect(page.getByTestId('panneau-export-echec')).toHaveCount(0);
-    expect(journal.groupesCrees()).toEqual(['Table 2']);
-    expect(journal.affectations()).toEqual([{ participantId: PARTICIPANT, groupId: GROUPE }]);
-    expect(journal.annotations()).toEqual([
-      { screenId: ECRAN.id, groupName: 'Table 2', note: NOTE },
-    ]);
+    expect(journal.annotations()).toEqual([{ screenId: ECRAN.id, note: NOTE }]);
     expect(journal.bilansExportes()).toBe(1);
   });
 

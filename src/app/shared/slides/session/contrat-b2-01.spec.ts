@@ -556,6 +556,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
         'phase-fermee',
         'enigme-verrouillee',
         'tentatives-epuisees',
+        'reprises-epuisees',
         'production-vide',
         'evince',
         'refusee',
@@ -579,7 +580,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
       expect([production.score, tentative.tentativesRestantes]).toEqual([14 / 17, 8]);
       expect(strategies.filter((strategie) => strategie.fausse === true)).toHaveSize(1);
       expect(synthese.boite1 + synthese.boite2 + synthese.boite3 + synthese.nonVus).toBe(24);
-      expect(new Set(motifs).size).toBe(11);
+      expect(new Set(motifs).size).toBe(12);
       expect([...notation.typesNotables]).toEqual([
         'vote',
         'numeric',

@@ -32,6 +32,15 @@
                   Bien placée dans votre tri
                 </p>
               }
+              @if (carte.compte; as compte) {
+                <p
+                  class="slide-sort-review__compte"
+                  data-testid="sort-review-compte"
+                  i18n="@@slideSortReviewCompte"
+                >
+                  {{ compte.justes }} / {{ compte.total }} bien placée
+                </p>
+              }
             </li>
           }
         </ul>

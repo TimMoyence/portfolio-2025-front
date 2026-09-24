@@ -246,10 +246,44 @@ describe('FpExit', () => {
     expect(JSON.stringify(hote.billet)).not.toContain('bonneReponse');
   });
 
-  it('rappelle le regime et la duree en mode tableau', () => {
-    hote.setAttribute('render', 'board');
-    expect(texteDe(hote, 'regime')).toBe('Régime ouvert');
-    expect(texteDe(hote, 'duree')).toBe('5 min');
+  it('garde le regime et la duree dans les metadonnees sans les afficher en badge', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    expect(hote.billet?.metadonnees.regime).toBe('ouvert');
+    expect(hote.billet?.metadonnees.dureeMinutes).toBe(5);
+    expect(hote.shadowRoot?.querySelector('[data-testid="regime"]')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="duree"]')).toBeNull();
+  });
+
+  it('montre au presentateur la meme question et les memes options, inertes, avec l invite sans champ', () => {
+    const carte = hote.shadowRoot?.querySelector('fieldset')?.getAttribute('class');
+    hote.setAttribute('data-cours-role', 'presentateur');
+    const options = [
+      ...(hote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-testid="option"]') ?? []),
+    ];
+
+    expect(hote.shadowRoot?.querySelector('fieldset')?.getAttribute('class')).toBe(carte);
+    expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(BILLET.question);
+    expect(options.length).toBe(BILLET.options.length);
+    expect(options.every((option) => option.disabled)).toBeTrue();
+    expect(texteDe(hote, 'invite')).toBe(BILLET.invite);
+    expect(hote.shadowRoot?.querySelector('textarea')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="envoyer"]')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="jauge"]')).toBeNull();
+  });
+
+  it('n emet rien ni ne memorise de brouillon depuis le poste presentateur', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    const details = detailsEmis(hote);
+    const brouillons: unknown[] = [];
+    hote.addEventListener('fp-brouillon', (evenement) => brouillons.push(evenement));
+
+    choisir(hote, 'a');
+
+    expect(details).toEqual([]);
+    expect(brouillons).toEqual([]);
+    expect(hote.shadowRoot?.querySelector('[data-option="a"]')?.getAttribute('aria-pressed')).toBe(
+      'false',
+    );
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {

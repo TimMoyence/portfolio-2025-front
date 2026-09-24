@@ -14,6 +14,8 @@ export interface ExitBilletPublic {
 
 const LIMITE_TEXTE_LIBRE = 500;
 const ID_TEXTE_LIBRE = 'fp-exit-texte-libre';
+const VIDE = escapeHtml('');
+const DESACTIVE = safeHtml`disabled`;
 
 export class FpExit extends FpBlock {
   private interne: ExitBilletPublic | null = null;
@@ -71,52 +73,33 @@ export class FpExit extends FpBlock {
     this.refreshSiConnecte();
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     const billet = this.billet;
     if (!billet) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    return safeHtml`
-      <fieldset class="fp-carte fp-exit__billet">
-        <legend>${escapeHtml(billet.question)}</legend>
-        <div class="fp-exit__choix">${this.boutonsOption(billet.options)}</div>
-        <label class="fp-exit__invite" for="${escapeHtml(ID_TEXTE_LIBRE)}">${escapeHtml(billet.invite)}</label>
-        <textarea class="fp-exit__champ" id="${escapeHtml(ID_TEXTE_LIBRE)}" data-testid="texte-libre" rows="4">${escapeHtml(this.texteLibre)}</textarea>
+    const redaction = this.presentateur()
+      ? safeHtml`<p class="fp-exit__invite" data-testid="invite">${escapeHtml(billet.invite)}</p>`
+      : safeHtml`<label class="fp-exit__invite" for="${escapeHtml(ID_TEXTE_LIBRE)}">${escapeHtml(billet.invite)}</label>
+        <textarea class="fp-exit__champ" id="${escapeHtml(ID_TEXTE_LIBRE)}" data-testid="texte-libre" rows="3">${escapeHtml(this.texteLibre)}</textarea>
         <p class="fp-exit__jauge" data-testid="jauge">${this.texteLibre.length} / ${LIMITE_TEXTE_LIBRE}</p>
         <button type="button" class="fp-exit__envoyer" data-testid="envoyer">${escapeHtml(this.texte('envoyer'))}</button>
         <p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
         ${this.recapitulatif()}
         ${this.verdictDeReponse(this.interneVerdict)}
-        ${this.annonces()}
-      </fieldset>
-    `;
-  }
-
-  renderStage(): EscapedHtml {
-    const billet = this.billet;
-    if (!billet) {
-      return safeHtml``;
-    }
-    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(billet.question)}</p><p class="fp-exit__invite" data-testid="invite">${escapeHtml(billet.invite)}</p></div>`;
-  }
-
-  renderBoard(): EscapedHtml {
-    const billet = this.billet;
-    if (!billet) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    const metadonnees = billet.metadonnees;
+        ${this.annonces()}`;
     return safeHtml`
-      <div class="fp-carte fp-exit__billet">
-        <p class="fp-enonce">${escapeHtml(billet.question)}</p>
-        <p class="fp-reperes"><span class="fp-badge" data-testid="regime">${escapeHtml(this.texte(`regime-${metadonnees.regime}`))}</span>${this.reperes(metadonnees)}</p>
-      </div>
+      <fieldset class="fp-carte fp-scene fp-exit__billet">
+        <legend class="fp-enonce">${escapeHtml(billet.question)}</legend>
+        <div class="fp-exit__choix">${this.boutonsOption(billet.options)}</div>
+        ${redaction}
+      </fieldset>
     `;
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.billet?.id ?? null);
-    if (this.mode() !== 'hand') {
+    if (this.presentateur()) {
       return;
     }
     const champ = racine.querySelector<HTMLTextAreaElement>('[data-testid="texte-libre"]');
@@ -152,7 +135,7 @@ export class FpExit extends FpBlock {
   private boutonsOption(options: readonly OptionPublique[]): readonly EscapedHtml[] {
     return options.map(
       (option) =>
-        safeHtml`<button type="button" class="fp-exit__option" data-testid="option" data-option="${escapeHtml(option.id)}" aria-pressed="${escapeHtml(String(option.id === this.choix))}">${escapeHtml(option.libelle)}</button>`,
+        safeHtml`<button type="button" class="fp-exit__option" data-testid="option" data-option="${escapeHtml(option.id)}" aria-pressed="${escapeHtml(String(option.id === this.choix))}" ${this.presentateur() ? DESACTIVE : VIDE}>${escapeHtml(option.libelle)}</button>`,
     );
   }
 

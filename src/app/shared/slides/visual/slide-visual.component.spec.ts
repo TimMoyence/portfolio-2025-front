@@ -1,8 +1,18 @@
 import { TestBed } from '@angular/core/testing';
+import type { ResultatsSeance, Role } from '../../../../cours/content/types';
+import { buildRevelationServie } from '../../../../testing/factories/cours.factory';
+import {
+  buildResultatQuestion,
+  buildResultatsSeance,
+} from '../../../../testing/factories/formations.factory';
+import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
+  ATELIER_CORRIGE,
   TRI_CORRIGE,
+  buildVerdictDeQuestion,
   buildVerdictDuTri,
+  buildVisualAnswerReviewSlide,
   buildVisualImageHeroSlide,
   buildVisualQuizSlide,
   buildVisualSlide,
@@ -116,6 +126,166 @@ describe('SlideVisualComponent', () => {
       );
 
       expect(enErreur(element)).toEqual([]);
+    });
+
+    it('F07 · projette au presentateur, carte par carte, combien l ont bien placee', () => {
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput('slide', buildVisualSortCorrectionSlide());
+      fixture.componentRef.setInput('role', 'presentateur');
+      fixture.componentRef.setInput(
+        'resultats',
+        buildResultatsSeance({
+          questions: [
+            buildResultatQuestion({
+              questionId: TRI_CORRIGE.sortId,
+              ecranId: TRI_CORRIGE.screenId,
+              total: 12,
+              parCle: { inflation: { total: 12, justes: 5 }, 'ca-2025': { total: 12, justes: 11 } },
+            }),
+          ],
+        }),
+      );
+      fixture.detectChanges();
+      const element = fixture.nativeElement as HTMLElement;
+      const compte = (id: string): string =>
+        element
+          .querySelector(`[data-carte="${id}"] [data-testid="sort-review-compte"]`)
+          ?.textContent?.replace(/\s+/g, ' ')
+          .trim() ?? '';
+
+      expect(compte('inflation')).toBe('5 / 12 bien placée');
+      expect(compte('ca-2025')).toBe('11 / 12 bien placée');
+    });
+
+    it('F07 · ne montre aucun compte de classe a l etudiant', () => {
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput('slide', buildVisualSortCorrectionSlide());
+      fixture.componentRef.setInput(
+        'resultats',
+        buildResultatsSeance({
+          questions: [
+            buildResultatQuestion({
+              questionId: TRI_CORRIGE.sortId,
+              ecranId: TRI_CORRIGE.screenId,
+              parCle: { inflation: { total: 12, justes: 5 } },
+            }),
+          ],
+        }),
+      );
+      fixture.detectChanges();
+
+      expect(
+        (fixture.nativeElement as HTMLElement).querySelector('[data-testid="sort-review-compte"]'),
+      ).toBeNull();
+    });
+  });
+
+  describe('correction des reponses', () => {
+    const [EVOLUTION, PART] = ATELIER_CORRIGE.questions;
+
+    function monter(
+      role: Role,
+      retours: ReadonlyMap<string, RetourBrique[]> = new Map(),
+      resultats: ResultatsSeance | null = null,
+    ): HTMLElement {
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput(
+        'slide',
+        buildVisualAnswerReviewSlide({
+          revelation: buildRevelationServie({
+            ecranId: ATELIER_CORRIGE.screenId,
+            questions: [{ questionId: PART, cible: '45,5 %', optionId: null }],
+          }),
+        }),
+      );
+      fixture.componentRef.setInput('role', role);
+      fixture.componentRef.setInput('retours', retours);
+      fixture.componentRef.setInput('resultats', resultats);
+      fixture.detectChanges();
+      return fixture.nativeElement as HTMLElement;
+    }
+
+    function ligne(element: HTMLElement, reference: string): HTMLElement | null {
+      return element.querySelector<HTMLElement>(`[data-reference="${reference}"]`);
+    }
+
+    it('T6 · rend l ecran answer-review avec le layout de correction', () => {
+      const element = monter('etudiant');
+
+      expect(element.querySelector('app-slide-answer-review')).not.toBeNull();
+      expect(element.querySelector('[role="alert"]')).toBeNull();
+    });
+
+    it('T6 · montre a l etudiant sa reponse attendue et ses verdicts sur l ecran source', () => {
+      const element = monter(
+        'etudiant',
+        new Map([
+          [
+            ATELIER_CORRIGE.screenId,
+            [buildVerdictDeQuestion(EVOLUTION, true), buildVerdictDeQuestion(PART, false)],
+          ],
+          ['B2-01-AUTRE', [buildVerdictDeQuestion(EVOLUTION, false)]],
+        ]),
+      );
+
+      expect(ligne(element, PART)?.textContent).toContain('45,5 %');
+      expect(ligne(element, EVOLUTION)?.classList).toContain(
+        'slide-answer-review__explication--juste',
+      );
+      expect(ligne(element, PART)?.classList).toContain('slide-answer-review__explication--erreur');
+    });
+
+    it('T10 · projette au presentateur la reussite de la classe sur les questions de la source', () => {
+      const element = monter(
+        'presentateur',
+        new Map(),
+        buildResultatsSeance({
+          questions: [
+            buildResultatQuestion({
+              questionId: EVOLUTION,
+              ecranId: ATELIER_CORRIGE.screenId,
+              total: 20,
+              correctes: 14,
+            }),
+            buildResultatQuestion({ questionId: PART, ecranId: 'B2-01-AUTRE', total: 9 }),
+          ],
+        }),
+      );
+
+      expect(ligne(element, EVOLUTION)?.textContent).toContain('14 / 20');
+      expect(ligne(element, PART)?.querySelector('.slide-answer-review__reussite')).toBeNull();
+    });
+
+    it('T6 · colore en vert et rouge chaque énigme du coffre sur sa correction du B2-01', () => {
+      const correction = ecransDuPupitreB2_01().find(({ id }) => id === 'B2-01-A6-02-CORRECTION');
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput('slide', correction);
+      fixture.componentRef.setInput('role', 'etudiant');
+      fixture.componentRef.setInput(
+        'retours',
+        new Map<string, RetourBrique[]>([
+          [
+            'B2-01-A6-02-COFFRE',
+            [
+              {
+                kind: 'progression-enigmes',
+                parcoursId: 'b2-01-a6-coffre',
+                resolues: [{ enigmeId: 'b2-01-a6-e1-mix', fragment: 'A' }],
+                tentativesRestantes: { 'b2-01-a6-e1-mix': 2, 'b2-01-a6-e2-points': 0 },
+              },
+            ],
+          ],
+        ]),
+      );
+      fixture.detectChanges();
+      const element = fixture.nativeElement as HTMLElement;
+
+      expect(ligne(element, 'b2-01-a6-e1-mix')?.classList).toContain(
+        'slide-answer-review__explication--juste',
+      );
+      expect(ligne(element, 'b2-01-a6-e2-points')?.classList).toContain(
+        'slide-answer-review__explication--erreur',
+      );
     });
   });
 

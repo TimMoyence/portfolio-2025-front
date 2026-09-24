@@ -25,9 +25,7 @@ import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { CoursContent, DerouleCours } from '../../../cours/content/types';
 import type {
   AnnotationFormateur,
-  GroupeFormation,
   InscriptionParticipant,
-  MotifRefusGroupe,
   MotifRefusRattachement,
   MotifRefusReponse,
   MotifRefusReponseLibre,
@@ -42,7 +40,6 @@ import type {
 } from '../ports/formations.port';
 import {
   FORMATIONS_PORT,
-  GroupeRefuse,
   RattachementRefuse,
   ReponseLibreRefusee,
   ReponseRefusee,
@@ -140,6 +137,59 @@ describe('FormationsHttpAdapter', () => {
     req.flush(sujet);
 
     expect(recus).toEqual([sujet]);
+  });
+
+  it('lireSujet traduit l ecran source et la revelation servis par le fil', () => {
+    const base = buildCoursContent();
+    const [premier, ...reste] = base.ecrans;
+    const recus: CoursContent[] = [];
+
+    adapter.lireSujet(SESSION_ID, JETON).subscribe((valeur) => recus.push(valeur));
+
+    attendre(`${URL_SEANCE}/sujet`, 'GET').flush({
+      ...base,
+      ecrans: [
+        {
+          ...premier,
+          ecranCorrige: 'ecran-source',
+          correction: {
+            ecranId: premier.id,
+            questions: [{ questionId: 'Q-CAP-03', bonneReponse: '1 480,24 €', optionId: 'b' }],
+            corrige: null,
+            reflexion: null,
+          },
+        },
+        ...reste,
+      ],
+    });
+
+    expect(recus[0].ecrans[0]).toEqual({
+      ...premier,
+      ecranSource: 'ecran-source',
+      revelation: {
+        ecranId: premier.id,
+        questions: [{ questionId: 'Q-CAP-03', cible: '1 480,24 €', optionId: 'b' }],
+        annexe: null,
+        reflexion: null,
+      },
+    });
+    expect(Object.keys(recus[0].ecrans[0])).not.toContain('correction');
+    expect(recus[0].ecrans.slice(1)).toEqual(reste);
+  });
+
+  it('lireDeroule traduit l ecran source servi par le fil', () => {
+    const base = buildDerouleCours();
+    const [premier, ...reste] = base.ecrans;
+    const recus: DerouleCours[] = [];
+
+    adapter.lireDeroule(SESSION_ID).subscribe((valeur) => recus.push(valeur));
+
+    attendre(`${URL_SEANCE}/deroule`, 'GET').flush({
+      ...base,
+      ecrans: [{ ...premier, ecranCorrige: 'ecran-source' }, ...reste],
+    });
+
+    expect(recus[0].ecrans[0]).toEqual({ ...premier, ecranSource: 'ecran-source' });
   });
 
   it('lireSujet transforme un 409 en refus motive par le changement du cours', () => {
@@ -259,10 +309,10 @@ describe('FormationsHttpAdapter', () => {
     expect(recues).toEqual([reponse]);
   });
 
-  it('lireParticipants GETe les participants et leur groupe sur participants', () => {
+  it('lireParticipants GETe les participants de la seance', () => {
     const participants = [
       buildParticipantDeSeance(),
-      buildParticipantDeSeance({ id: 'participant-2', prenom: 'Nora', groupId: 'groupe-1' }),
+      buildParticipantDeSeance({ id: 'participant-2', prenom: 'Nora' }),
     ];
     const recus: ParticipantDeSeance[] = [];
 
@@ -330,48 +380,6 @@ describe('FormationsHttpAdapter', () => {
     }
   });
 
-  describe('refus d une commande de groupe', () => {
-    const commandes: readonly (readonly [string, () => Observable<unknown>, string])[] = [
-      ['creerGroupe', () => adapter.creerGroupe(SESSION_ID, 'Groupe A'), `${URL_SEANCE}/groups`],
-      [
-        'renommerGroupe',
-        () => adapter.renommerGroupe(SESSION_ID, 'groupe-1', 'Groupe A'),
-        `${URL_SEANCE}/groups/groupe-1`,
-      ],
-      [
-        'affecterParticipant',
-        () => adapter.affecterParticipant(SESSION_ID, 'participant-1', 'groupe-1'),
-        `${URL_SEANCE}/participants/participant-1/group`,
-      ],
-      [
-        'retirerParticipantDuGroupe',
-        () => adapter.retirerParticipantDuGroupe(SESSION_ID, 'participant-1'),
-        `${URL_SEANCE}/participants/participant-1/group`,
-      ],
-    ];
-    const statuts: readonly (readonly [number, MotifRefusGroupe])[] = [
-      [409, 'nom-deja-pris'],
-      [404, 'introuvable'],
-      [500, 'echec'],
-    ];
-
-    for (const [nom, appeler, url] of commandes) {
-      for (const [statut, motif] of statuts) {
-        it(`${nom} classe un ${statut} en ${motif}`, () => {
-          const erreurs: unknown[] = [];
-
-          appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
-          httpMock
-            .expectOne(url)
-            .flush(buildProblemeHttp({ status: statut }), { status: statut, statusText: 'Erreur' });
-
-          expect(erreurs[0]).toBeInstanceOf(GroupeRefuse);
-          expect((erreurs[0] as GroupeRefuse).motif).toBe(motif);
-        });
-      }
-    }
-  });
-
   it('persiste les reponses libres et les annotations du formateur', () => {
     const reponse = {
       screenId: 'screen-1',
@@ -379,7 +387,7 @@ describe('FormationsHttpAdapter', () => {
       response: 'raisonnement',
       dureeMs: 3200,
     };
-    const annotation = { screenId: 'screen-1', groupName: 'Groupe A', note: 'À reprendre' };
+    const annotation = { screenId: 'screen-1', note: 'À reprendre' };
 
     adapter.enregistrerReponseLibre(SESSION_ID, JETON, reponse).subscribe();
     const reponseRequest = attendre(`${URL_SEANCE}/free-responses`, 'POST');
@@ -397,39 +405,6 @@ describe('FormationsHttpAdapter', () => {
       ...annotation,
       updatedAt: '2026-09-19T00:00:00.000Z',
     });
-  });
-
-  it('expose les groupes et leurs commandes d affectation', () => {
-    const groupe: GroupeFormation = {
-      id: 'group-1',
-      sessionId: SESSION_ID,
-      name: 'Groupe A',
-      createdAt: '2026-09-19T00:00:00.000Z',
-      updatedAt: '2026-09-19T00:00:00.000Z',
-    };
-    const groupes: GroupeFormation[] = [];
-
-    adapter.lireGroupes(SESSION_ID).subscribe(({ groups }) => groupes.push(...groups));
-    attendre(`${URL_SEANCE}/groups`, 'GET').flush({ groups: [groupe] });
-    expect(groupes).toEqual([groupe]);
-
-    adapter.creerGroupe(SESSION_ID, 'Groupe B').subscribe();
-    const creation = attendre(`${URL_SEANCE}/groups`, 'POST');
-    expect(creation.request.body).toEqual({ name: 'Groupe B' });
-    creation.flush(groupe);
-
-    adapter.renommerGroupe(SESSION_ID, groupe.id, 'Groupe renommé').subscribe();
-    const renommage = attendre(`${URL_SEANCE}/groups/${groupe.id}`, 'PATCH');
-    expect(renommage.request.body).toEqual({ name: 'Groupe renommé' });
-    renommage.flush(groupe);
-
-    adapter.affecterParticipant(SESSION_ID, 'participant-1', groupe.id).subscribe();
-    const affectation = attendre(`${URL_SEANCE}/participants/participant-1/group`, 'PATCH');
-    expect(affectation.request.body).toEqual({ groupId: groupe.id });
-    affectation.flush(null);
-
-    adapter.retirerParticipantDuGroupe(SESSION_ID, 'participant-1').subscribe();
-    attendre(`${URL_SEANCE}/participants/participant-1/group`, 'DELETE').flush(null);
   });
 
   it('rejoindre POSTe l inscription sur le code et rend le jeton du participant', () => {
@@ -885,6 +860,7 @@ describe('FormationsHttpAdapter', () => {
         [409, 'PHASE_FERMEE', 'phase-fermee'],
         [409, 'ENIGME_VERROUILLEE', 'enigme-verrouillee'],
         [409, 'TENTATIVES_EPUISEES', 'tentatives-epuisees'],
+        [409, 'REPRISES_EPUISEES', 'reprises-epuisees'],
         [400, 'PRODUCTION_VIDE', 'production-vide'],
         [400, 'TYPE_DE_QUESTION', 'refusee'],
         [400, 'PRODUCTION_INVALIDE', 'refusee'],

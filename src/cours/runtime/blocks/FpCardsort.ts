@@ -136,58 +136,43 @@ export class FpCardsort extends FpBlock {
     this.arreter();
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     const plan = this.interne;
     if (plan === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    const verrouille = this.verrouille();
     return safeHtml`
-      <section class="fp-carte fp-cardsort__atelier">
+      <section class="fp-carte fp-scene fp-cardsort__atelier">
         <p class="fp-enonce fp-cardsort__intitule">${escapeHtml(plan.intitule)}</p>
-        <p class="fp-cardsort__consigne">${escapeHtml(this.texte('cardsort-consigne'))}</p>
+        ${this.presentateur() ? VIDE : safeHtml`<p class="fp-cardsort__consigne">${escapeHtml(this.texte('cardsort-consigne'))}</p>`}
         ${this.chrono()}
-        ${this.plateau(true)}
-        ${this.pilote()}
-        <div class="fp-cardsort__actions">
-          <button type="button" class="fp-cardsort__valider" data-testid="valider" ${verrouille ? DESACTIVE : VIDE}>${escapeHtml(this.texte('valider'))}</button>
-          ${this.boutonNeSaitPas(verrouille)}
-        </div>
-        <p class="fp-cardsort__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>
-        ${this.verdictDeProduction(this.interneVerdict, 'cardsort-verdict', this.justes(), plan.cartes.length)}
-        ${this.annonces()}
+        ${this.plateau(!this.presentateur())}
+        ${this.presentateur() ? VIDE : this.commandes(plan)}
+        ${this.correction()}
       </section>
     `;
   }
 
-  renderStage(): EscapedHtml {
-    if (this.interne === null) {
-      return safeHtml``;
-    }
-    return safeHtml`<section class="fp-scene fp-cardsort__atelier">${this.plateau(false)}</section>`;
-  }
-
-  renderBoard(): EscapedHtml {
-    const plan = this.interne;
-    if (plan === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
+  private commandes(plan: CardsortPlanPublic): EscapedHtml {
+    const verrouille = this.verrouille();
     return safeHtml`
-      <section class="fp-carte fp-cardsort__atelier">
-        <p class="fp-enonce fp-cardsort__intitule">${escapeHtml(plan.intitule)}</p>
-        <div class="fp-cardsort__reperes">${this.reperes(plan.metadonnees)}</div>
-        ${this.roleActuel() === 'presentateur' ? this.attendusFormateur(plan) : VIDE}
-      </section>
+      ${this.pilote()}
+      <div class="fp-cardsort__actions">
+        <button type="button" class="fp-cardsort__valider" data-testid="valider" ${verrouille ? DESACTIVE : VIDE}>${escapeHtml(this.texte('valider'))}</button>
+        ${this.boutonNeSaitPas(verrouille)}
+      </div>
+      <p class="fp-cardsort__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>
+      ${this.verdictDeProduction(this.interneVerdict, 'cardsort-verdict', this.justes(), plan.cartes.length)}
+      ${this.annonces()}
     `;
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.interne?.id ?? null);
-    if (this.mode() !== 'hand') {
-      this.arreter();
+    this.planifier();
+    if (this.presentateur()) {
       return;
     }
-    this.planifier();
     for (const carte of racine.querySelectorAll<HTMLElement>('[data-testid="carte"]')) {
       this.brancherCarte(carte);
     }
@@ -235,7 +220,7 @@ export class FpCardsort extends FpBlock {
 
   private planifier(): void {
     const restant = this.restantMs();
-    if (this.minuteur !== null || restant === null || restant <= 0 || this.mode() !== 'hand') {
+    if (this.minuteur !== null || restant === null || restant <= 0) {
       return;
     }
     this.minuteur = setInterval(() => this.battre(), PAS_MS);
@@ -326,6 +311,10 @@ export class FpCardsort extends FpBlock {
   }
 
   private zoneDe(carte: string): string {
+    if (this.presentateur()) {
+      const attendu = this.attendus.find((candidat) => candidat.carteId === carte);
+      return this.zoneConnue(attendu?.categorieId ?? PIOCHE);
+    }
     return this.zoneConnue(this.places[carte] ?? PIOCHE);
   }
 
@@ -356,25 +345,55 @@ export class FpCardsort extends FpBlock {
     const cartes = this.cartesDe(zone.id);
     const repere = `fp-cardsort-zone-${zone.id === PIOCHE ? 'pioche' : zone.id}`;
     return safeHtml`
-      <section class="fp-cardsort__zone" data-testid="zone" aria-labelledby="${escapeHtml(repere)}">
+      <section class="fp-cardsort__zone" data-testid="zone" data-pioche="${escapeHtml(String(zone.id === PIOCHE))}" aria-labelledby="${escapeHtml(repere)}">
         <h3 class="fp-cardsort__titre" id="${escapeHtml(repere)}">${escapeHtml(zone.libelle)} <span class="fp-cardsort__compte fp-montant" data-testid="compte">${cartes.length}</span></h3>
         <ul class="fp-cardsort__pile" data-testid="pile" data-zone="${escapeHtml(zone.id)}">${cartes.map((carte) => this.place(carte, zone, interactif))}</ul>
       </section>
     `;
   }
 
-  private etatDeLaCarte(carteId: string): EscapedHtml {
+  private attenduDe(carteId: string): AttenduFormateur | null {
+    return this.attendus.find((attendu) => attendu.carteId === carteId) ?? null;
+  }
+
+  private carteJuste(carteId: string): boolean | null {
     const detail = this.detailDe(carteId);
-    if (detail === null) {
+    if (detail !== null) {
+      return detail.juste;
+    }
+    const attendu = this.attenduDe(carteId);
+    return attendu === null ? null : this.places[carteId] === attendu.categorieId;
+  }
+
+  private etatDeLaCarte(carteId: string): EscapedHtml {
+    const juste = this.carteJuste(carteId);
+    if (juste === null) {
       return VIDE;
     }
-    return safeHtml`data-etat="${escapeHtml(detail.juste ? 'confirme' : 'a-revoir')}"`;
+    return safeHtml`data-etat="${escapeHtml(juste ? 'confirme' : 'a-revoir')}" data-correction="${escapeHtml(juste ? 'juste' : 'fausse')}"`;
+  }
+
+  private correction(): EscapedHtml {
+    if (this.attendus.length === 0) {
+      return VIDE;
+    }
+    return safeHtml`
+      <section class="fp-cardsort__zone" data-testid="cardsort-correction">
+        <h3 class="fp-cardsort__titre">${escapeHtml(this.texte('cardsort-correction'))}</h3>
+        <ul class="fp-cardsort__attendus">${this.attendus.map((attendu) => this.justification(attendu))}</ul>
+      </section>
+    `;
+  }
+
+  private justification(attendu: AttenduFormateur): EscapedHtml {
+    return safeHtml`<li class="fp-cardsort__attendu" data-testid="cardsort-justification" data-carte="${escapeHtml(attendu.carteId)}"><strong>${escapeHtml(this.libelleCarte(attendu.carteId))} — ${escapeHtml(this.libelleZone(this.zoneConnue(attendu.categorieId)))}</strong> <span class="fp-cardsort__justification">${escapeHtml(attendu.justification)}</span></li>`;
   }
 
   private place(carte: OptionPublique, zone: OptionPublique, interactif: boolean): EscapedHtml {
     const enonce = `${carte.libelle} — ${zone.libelle}`;
     if (!interactif) {
-      return safeHtml`<li class="fp-cardsort__place"><span class="fp-carte fp-cardsort__carte" data-testid="carte" data-carte="${escapeHtml(carte.id)}">${escapeHtml(carte.libelle)}</span></li>`;
+      const marque = this.attenduDe(carte.id) === null ? VIDE : safeHtml`data-correction="juste"`;
+      return safeHtml`<li class="fp-cardsort__place"><span class="fp-carte fp-cardsort__carte" data-testid="carte" data-carte="${escapeHtml(carte.id)}" ${marque}>${escapeHtml(carte.libelle)}</span></li>`;
     }
     const choisie = carte.id === this.selection;
     const detail = this.detailDe(carte.id);
@@ -399,19 +418,6 @@ export class FpCardsort extends FpBlock {
 
   private choix(zone: OptionPublique): EscapedHtml {
     return safeHtml`<option value="${escapeHtml(zone.id)}" ${zone.id === this.destination ? RETENU : VIDE}>${escapeHtml(zone.libelle)}</option>`;
-  }
-
-  private attendusFormateur(plan: CardsortPlanPublic): EscapedHtml {
-    if (this.attendus.length === 0) {
-      return VIDE;
-    }
-    const libelle = (liste: readonly OptionPublique[], id: string): string =>
-      liste.find((element) => element.id === id)?.libelle ?? id;
-    const lignes = this.attendus.map(
-      (attendu) =>
-        safeHtml`<li class="fp-cardsort__attendu" data-testid="attendu" data-carte="${escapeHtml(attendu.carteId)}"><strong>${escapeHtml(libelle(plan.cartes, attendu.carteId))}</strong> → ${escapeHtml(libelle(plan.categories, attendu.categorieId))} <span class="fp-cardsort__justification">${escapeHtml(attendu.justification)}</span></li>`,
-    );
-    return safeHtml`<ul class="fp-cardsort__attendus" data-testid="attendus">${lignes}</ul>`;
   }
 
   private choisir(id: string): void {

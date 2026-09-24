@@ -6,7 +6,8 @@ import { FpSheet } from './FpSheet';
 const PLAN = buildSheetPlan();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const CLASSES_ATTENDUES = 26;
-const RENDUS = ['stage', 'hand', 'board'] as const;
+const ROLES = ['etudiant', 'presentateur'] as const;
+const RENVOYER = 'Renvoyer les cases corrigées';
 const MONTANT_HT = '=A3*B3';
 const MONTANT_TTC = '=C3*(1+$B$1)';
 const ATTENDU_CACHE = '64,8';
@@ -287,25 +288,27 @@ describe('FpSheet', () => {
     expect(texteDe(hote, 'decompte')).toBe('Cellules justes : 1/2');
   });
 
-  it('ne publie dans aucun rendu etudiant une valeur attendue non calculee', () => {
+  it('ne publie pour aucun role une valeur attendue tant que la correction n est pas revelee', () => {
     hote.corrige = ATTENDUS_FORMATEUR;
-    for (const rendu of RENDUS) {
-      hote.setAttribute('render', rendu);
+    for (const role of ROLES) {
+      hote.setAttribute('data-cours-role', role);
       expect(hote.shadowRoot?.innerHTML ?? '').not.toContain(ATTENDU_CACHE);
       expect(hote.shadowRoot?.innerHTML ?? '').not.toContain(ATTENDU_CACHE_MACHINE);
+      expect(repere(hote, 'correction-feuille')).toBeNull();
+      expect(repere(hote, 'attendus')).toBeNull();
     }
   });
 
-  it('montre au pupitre les formules de reference', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.setAttribute('render', 'board');
+  it('RET-31 · sert a l etudiant la formule de reference au niveau 1 puis sa valeur au niveau 2', () => {
     hote.corrige = ATTENDUS_FORMATEUR;
+    hote.etayage = 1;
+    expect(texteDe(hote, 'attendu')).toBe('D3 =C3*(1+$B$1)');
+    hote.etayage = 2;
     expect(texteDe(hote, 'attendu')).toBe('D3 =C3*(1+$B$1) 64,8');
   });
 
   it('RET-31 · projette les formules de correction au niveau 1 puis les valeurs au niveau 2', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
-    hote.setAttribute('render', 'stage');
     hote.corrige = ATTENDUS_FORMATEUR;
     expect(repere(hote, 'correction-feuille')).toBeNull();
 
@@ -322,8 +325,7 @@ describe('FpSheet', () => {
     expect(valeur?.textContent?.trim()).toBe('=C3*(1+$B$1) 64,8');
   });
 
-  it('RET-31 · laisse reprendre les seules cases fausses apres verdict, sans renvoyer', () => {
-    const recus = envois(hote);
+  it('RET-31 · laisse reprendre les seules cases fausses apres verdict', () => {
     const brouillons: unknown[] = [];
     chiffrer(hote);
     cliquer(hote, 'valider');
@@ -332,13 +334,51 @@ describe('FpSheet', () => {
       brouillons.push((evenement as CustomEvent).detail),
     );
 
+    expect((repere(hote, 'valider') as HTMLButtonElement).disabled).toBe(true);
     expect(cellule(hote, 'C3').hasAttribute('readonly')).toBe(true);
     expect(cellule(hote, 'D3').hasAttribute('readonly')).toBe(false);
     saisir(hote, 'D3', '=C3*(1+$B$2)');
     expect(formuleDe(hote, 'D3')).toBe('=C3*(1+$B$2)');
     expect(cellule(hote, 'D3').closest('td')?.getAttribute('data-etat')).toBe('reprise');
     expect(brouillons).toEqual([{ id: PLAN.id, valeur: { C3: MONTANT_HT, D3: '=C3*(1+$B$2)' } }]);
-    expect((repere(hote, 'valider') as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it('RET-31 · renvoie les cases reprises tant que la correction n est pas revelee, une seule fois', () => {
+    const recus = envois(hote);
+    chiffrer(hote);
+    cliquer(hote, 'valider');
+    hote.verdict = buildVerdictDeProduction({ questionId: PLAN.id });
+    saisir(hote, 'D3', '=C3+C3*$B$1');
+
+    const valider = repere(hote, 'valider') as HTMLButtonElement;
+    expect(valider.disabled).toBe(false);
+    expect(valider.textContent?.trim()).toBe(RENVOYER);
+    cliquer(hote, 'valider');
+
+    expect(recus.map((detail) => detail['cellules'])).toEqual([
+      { C3: MONTANT_HT, D3: MONTANT_TTC },
+      { C3: MONTANT_HT, D3: '=C3+C3*$B$1' },
+    ]);
+    const apres = repere(hote, 'valider') as HTMLButtonElement;
+    expect(apres.disabled).toBe(true);
+    expect(apres.textContent?.trim()).not.toBe(RENVOYER);
+    cliquer(hote, 'valider');
+    expect(recus.length).toBe(2);
+  });
+
+  it('RET-31 · ne renvoie plus de reprise des que la correction est revelee', () => {
+    const recus = envois(hote);
+    chiffrer(hote);
+    cliquer(hote, 'valider');
+    hote.verdict = buildVerdictDeProduction({ questionId: PLAN.id });
+    hote.etayage = 1;
+    expect(cellule(hote, 'D3').hasAttribute('readonly')).toBe(true);
+    saisir(hote, 'D3', '=C3*(1+$B$1)');
+
+    const valider = repere(hote, 'valider') as HTMLButtonElement;
+    expect(valider.disabled).toBe(true);
+    expect(valider.textContent?.trim()).not.toBe(RENVOYER);
+    cliquer(hote, 'valider');
     expect(recus.length).toBe(1);
   });
 
@@ -384,20 +424,30 @@ describe('FpSheet', () => {
     expect(texteDe(hote, 'vide')).toContain('Aucune cellule');
   });
 
-  it('retire les champs en projection et affiche les reperes au tableau', () => {
+  it('partage la meme grille entre les roles et retire champs et actions au presentateur', () => {
     chiffrer(hote);
-    hote.setAttribute('render', 'stage');
+    for (const role of ROLES) {
+      hote.setAttribute('data-cours-role', role);
+      expect(hote.shadowRoot?.querySelector('caption')?.textContent?.trim()).toBe(PLAN.intitule);
+      expect(reperes(hote, 'colonne').map((th) => th.textContent)).toEqual(['A', 'B', 'C', 'D']);
+      expect(hote.shadowRoot?.querySelectorAll('tbody tr').length).toBe(PLAN.lignes);
+      expect(repere(hote, 'consignes')).not.toBeNull();
+    }
     expect(hote.shadowRoot?.querySelectorAll('input').length).toBe(0);
     expect(hote.shadowRoot?.querySelector('[data-nom="C3"]')?.textContent).toBe('54');
-    hote.setAttribute('render', 'board');
-    expect(texteDe(hote, 'modalite')).toBe('Individuel');
-    expect(texteDe(hote, 'duree')).toBe('15 min');
+    expect(repere(hote, 'valider')).toBeNull();
+    expect(repere(hote, 'barre')).toBeNull();
+    expect(repere(hote, 'modalite')).toBeNull();
+    hote.setAttribute('data-cours-role', 'etudiant');
+    expect(hote.shadowRoot?.querySelectorAll('input[data-role="cellule"]').length).toBe(
+      PLAN.lignes * PLAN.colonnes,
+    );
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
     hote.corrige = ATTENDUS_FORMATEUR;
     saisir(hote, 'C3', '=A3/0');
+    hote.etayage = 2;
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
     expect(classesOrphelines(hote, 'sheet')).toEqual([]);
   });

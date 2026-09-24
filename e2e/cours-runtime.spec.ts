@@ -16,12 +16,15 @@ test.describe('Parcours public des formations', () => {
     const card = page.locator('.formation--live');
     await expect(card).toBeVisible();
     await expect(card).toContainText('B2-01');
-    await expect(card).toContainText('3 h 30 · 55 écrans');
+    await expect(card).toContainText('3 h 30');
+    await expect(card).not.toContainText(/\d écrans/);
     await expect(card).toContainText('À suivre en séance accompagnée');
     await expect(card).not.toContainText('librement');
     await card.getByRole('link', { name: /Consulter/ }).click();
 
-    await expect(page).toHaveURL(/\/cours\/rejoindre$/);
+    await expect(page).toHaveURL(
+      /\/cours\/rejoindre\?cours=b2-01-traitement-information-chiffree$/,
+    );
     await expect(page.locator('app-slide-deck')).toHaveCount(0);
   });
 

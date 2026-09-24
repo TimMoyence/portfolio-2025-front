@@ -2,7 +2,13 @@ import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import { estObjet, estVerdictDeReponse, type VerdictDeReponse } from './retours';
+import {
+  estObjet,
+  estVerdictDeReponse,
+  lireBonneOption,
+  lireBonneReponse,
+  type VerdictDeReponse,
+} from './retours';
 
 export interface RecallQuestionPublique {
   readonly id: string;
@@ -14,15 +20,37 @@ export interface RecallQuestionPublique {
 const DELAI_RAPPEL_MS = 8000;
 const PAS_MS = 1000;
 const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
+const VIDE = escapeHtml('');
+const DESACTIVE = safeHtml`disabled`;
 
 export class FpRecall extends FpBlock {
   private interne: RecallQuestionPublique | null = null;
   private interneDelaiMs = DELAI_RAPPEL_MS;
+  private interneOptionsAffichees = false;
   private interneVerdict: VerdictDeReponse | null = null;
   private rappel = '';
   private message = '';
   private envoye = false;
+  private choisie: string | null = null;
+  private interneConsigne: string | null = null;
+  private bonneReponse: string | null = null;
+  private bonneOption: string | null = null;
   private minuteur: ReturnType<typeof setInterval> | null = null;
+
+  set consigne(valeur: string | null | undefined) {
+    this.interneConsigne = typeof valeur === 'string' && valeur.trim() !== '' ? valeur : null;
+    this.refreshSiConnecte();
+  }
+
+  get consigne(): string | null {
+    return this.interneConsigne;
+  }
+
+  set corrige(valeur: unknown) {
+    this.bonneReponse = lireBonneReponse(valeur);
+    this.bonneOption = lireBonneOption(valeur);
+    this.refreshSiConnecte();
+  }
 
   set question(valeur: RecallQuestionPublique | null) {
     const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
@@ -39,6 +67,7 @@ export class FpRecall extends FpBlock {
       this.rappel = '';
       this.message = '';
       this.envoye = false;
+      this.choisie = null;
       this.interneVerdict = null;
     }
     this.ouvrirLeRappel();
@@ -56,6 +85,18 @@ export class FpRecall extends FpBlock {
 
   get delaiMs(): number {
     return this.interneDelaiMs;
+  }
+
+  set optionsAffichees(valeur: boolean) {
+    this.interneOptionsAffichees = valeur === true;
+    if (this.interneOptionsAffichees) {
+      this.arreter();
+    }
+    this.refreshSiConnecte();
+  }
+
+  get optionsAffichees(): boolean {
+    return this.interneOptionsAffichees;
   }
 
   set verdict(valeur: VerdictDeReponse | null) {
@@ -85,54 +126,48 @@ export class FpRecall extends FpBlock {
     this.arreter();
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     const question = this.question;
     if (!question) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
+    const saisie = this.presentateur()
+      ? escapeHtml('')
+      : safeHtml`<textarea class="fp-recall__champ" data-testid="rappel" rows="4" aria-label="${escapeHtml(this.texte('rappel-champ'))}">${escapeHtml(this.rappel)}</textarea>`;
+    const suivi = this.presentateur()
+      ? escapeHtml('')
+      : safeHtml`<p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
+        ${this.verdictDeReponse(this.interneVerdict)}
+        ${this.annonces()}`;
     return safeHtml`
-      <fieldset class="fp-carte fp-recall__billet">
-        <legend>${escapeHtml(question.enonce)}</legend>
-        <p class="fp-recall__consigne">${escapeHtml(this.texte('rappel-consigne'))}</p>
-        <textarea class="fp-recall__champ" data-testid="rappel" rows="5">${escapeHtml(this.rappel)}</textarea>
+      <fieldset class="fp-carte fp-scene fp-recall__billet">
+        <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
+        <p class="fp-recall__consigne" data-testid="consigne">${escapeHtml(this.consigneAffichee())}</p>
+        ${saisie}
         ${this.compteur()}
         ${this.optionsVisibles()}
-        <p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
-        ${this.verdictDeReponse(this.interneVerdict)}
-        ${this.annonces()}
+        ${suivi}
+        ${this.bonneReponseRevelee()}
       </fieldset>
     `;
   }
 
-  renderStage(): EscapedHtml {
-    const question = this.question;
-    if (!question) {
-      return safeHtml``;
-    }
-    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(question.enonce)}</p>${this.compteur()}</div>`;
+  private consigneAffichee(): string {
+    return this.interneConsigne ?? this.texte('rappel-consigne');
   }
 
-  renderBoard(): EscapedHtml {
-    const question = this.question;
-    if (!question) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
+  private bonneReponseRevelee(): EscapedHtml {
+    if (this.bonneReponse === null) {
+      return escapeHtml('');
     }
-    const metadonnees = question.metadonnees;
-    return safeHtml`
-      <div class="fp-carte fp-recall__billet">
-        <p class="fp-enonce">${escapeHtml(question.enonce)}</p>
-        <p class="fp-recall__concepts" data-testid="concepts">${escapeHtml(metadonnees.concepts.join(' · '))}</p>
-        <p class="fp-reperes">${this.reperes(metadonnees)}</p>
-      </div>
-    `;
+    return safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(this.bonneReponse)}</p>`;
   }
 
   bind(racine: ShadowRoot): void {
-    if (this.mode() !== 'hand') {
-      this.arreter();
+    this.planifier();
+    if (this.presentateur()) {
       return;
     }
-    this.planifier();
     const verrouille = this.verrouille();
     const champ = racine.querySelector<HTMLTextAreaElement>('[data-testid="rappel"]');
     if (champ !== null) {
@@ -157,7 +192,7 @@ export class FpRecall extends FpBlock {
   }
 
   private restantMs(): number {
-    return Math.max(0, this.delaiMs - this.depuisAffichage());
+    return this.interneOptionsAffichees ? 0 : Math.max(0, this.delaiMs - this.depuisAffichage());
   }
 
   private annonce(): string {
@@ -181,11 +216,24 @@ export class FpRecall extends FpBlock {
       ...question.options,
       { id: ID_JE_NE_SAIS_PAS, libelle: this.texte('je-ne-sais-pas') },
     ];
-    const boutons = options.map(
+    const proposees = this.presentateur()
+      ? options.filter((option) => option.id !== ID_JE_NE_SAIS_PAS)
+      : options;
+    const boutons = proposees.map(
       (option) =>
-        safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,
+        safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}"${this.marqueDeCorrection(option.id)} ${this.presentateur() ? DESACTIVE : VIDE}>${escapeHtml(option.libelle)}</button>`,
     );
     return safeHtml`<div class="fp-recall__options" data-testid="options">${boutons}</div>`;
+  }
+
+  private marqueDeCorrection(id: string): EscapedHtml {
+    if (this.bonneOption === null) {
+      return escapeHtml('');
+    }
+    if (id === this.bonneOption) {
+      return safeHtml` data-correction="juste"`;
+    }
+    return id === this.choisie ? safeHtml` data-correction="fausse"` : escapeHtml('');
   }
 
   private planifier(): void {
@@ -219,6 +267,7 @@ export class FpRecall extends FpBlock {
       return;
     }
     this.envoye = true;
+    this.choisie = valeur;
     this.message = this.messageApresEnvoi();
     this.emit('fp-recall-submit', {
       questionId: this.question?.id,

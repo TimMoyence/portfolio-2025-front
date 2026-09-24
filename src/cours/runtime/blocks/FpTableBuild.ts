@@ -13,6 +13,8 @@ import { lireNombreSaisi } from './saisie-numerique';
 
 export type RoleColonne = 'donnee' | 'saisie' | 'deduite';
 
+type RenduDuTableau = 'saisie' | 'lecture' | 'correction';
+
 export interface TableColonne {
   readonly cle: string;
   readonly intitule: string;
@@ -64,6 +66,7 @@ const VIDE = escapeHtml('');
 const LECTURE_SEULE = safeHtml`readonly`;
 const DESACTIVE = safeHtml`disabled`;
 const DECIMALES_MAX = 6;
+const COLONNE_DES_COEFFICIENTS = 'coef';
 const ROLES: readonly RoleColonne[] = ['donnee', 'saisie', 'deduite'];
 const MENTIONS_DE_ROLE: Readonly<Record<Exclude<RoleColonne, 'donnee'>, string>> = {
   saisie: 'table-build-a-saisir',
@@ -147,6 +150,8 @@ export class FpTableBuild extends FpBlock {
   private soumis = false;
   private interneVerdict: VerdictDeProduction | null = null;
   private attendus: readonly SaisieDeTableau[] = [];
+  private correction = 0;
+  private reprises: ReadonlySet<string> = new Set();
 
   set plan(valeur: TableBuildPlanPublic | null) {
     const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
@@ -157,6 +162,7 @@ export class FpTableBuild extends FpBlock {
       this.message = '';
       this.soumis = false;
       this.interneVerdict = null;
+      this.reprises = new Set();
     }
     this.refreshSiConnecte();
   }
@@ -195,57 +201,59 @@ export class FpTableBuild extends FpBlock {
     this.refreshSiConnecte();
   }
 
-  renderHand(): EscapedHtml {
+  set etayage(valeur: number) {
+    this.correction = valeur;
+    this.refreshSiConnecte();
+  }
+
+  render(): EscapedHtml {
     const plan = this.interne;
     if (plan === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+    }
+    if (this.presentateur()) {
+      const lignes = this.corrigeVisible()
+        ? this.batir((rang, cle) => this.attenduDe(rang, cle))
+        : this.batir();
+      return safeHtml`
+        <section class="fp-carte fp-scene fp-table-build__atelier">
+          ${this.consignes(plan)}
+          ${this.tableau(lignes, this.corrigeVisible() ? 'correction' : 'lecture')}
+          ${this.corrigeVisible() && this.correction < 2 ? VIDE : this.soldeFinal(lignes)}
+        </section>
+      `;
     }
     const lignes = this.batir();
-    const verrouille = this.verrouille();
+    const bloque = this.verrouille() && !this.enReprise();
     return safeHtml`
-      <section class="fp-carte fp-table-build__atelier">
+      <section class="fp-carte fp-scene fp-table-build__atelier">
         <p class="fp-table-build__consigne">${escapeHtml(this.texte('table-build-consigne'))}</p>
         ${this.consignes(plan)}
-        ${this.tableau(lignes, true)}
+        ${this.tableau(lignes, 'saisie')}
         ${this.soldeFinal(lignes)}
         ${this.synthese(lignes)}
         <div class="fp-table-build__actions">
-          <button type="button" class="fp-table-build__valider" data-testid="valider" ${verrouille ? DESACTIVE : VIDE}>${escapeHtml(this.texte('valider'))}</button>
-          ${this.boutonNeSaitPas(verrouille)}
+          <button type="button" class="fp-table-build__valider" data-testid="valider" ${bloque ? DESACTIVE : VIDE}>${escapeHtml(this.texte(this.enReprise() ? 'production-renvoyer' : 'valider'))}</button>
+          ${this.boutonNeSaitPas(this.verrouille())}
         </div>
         <p class="fp-table-build__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
         ${this.verdictDeProduction(this.interneVerdict, 'table-build-verdict', this.lignesJustes(), this.lignesVerifiees())}
+        ${
+          this.corrigeVisible()
+            ? this.tableau(
+                this.batir((rang, cle) => this.attenduDe(rang, cle)),
+                'correction',
+              )
+            : VIDE
+        }
         ${this.annonces()}
-      </section>
-    `;
-  }
-
-  renderStage(): EscapedHtml {
-    if (this.interne === null) {
-      return safeHtml``;
-    }
-    const lignes = this.batir();
-    return safeHtml`<section class="fp-scene fp-table-build__atelier">${this.tableau(lignes, false)}${this.soldeFinal(lignes)}</section>`;
-  }
-
-  renderBoard(): EscapedHtml {
-    const plan = this.interne;
-    if (plan === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    return safeHtml`
-      <section class="fp-carte fp-table-build__atelier">
-        <p class="fp-enonce">${escapeHtml(plan.intitule)}</p>
-        ${this.consignes(plan)}
-        <div class="fp-table-build__reperes">${this.reperes(plan.metadonnees)}</div>
-        ${this.roleActuel() === 'presentateur' ? this.attendusFormateur(plan) : VIDE}
       </section>
     `;
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.interne?.id ?? null);
-    if (this.mode() !== 'hand') {
+    if (this.presentateur()) {
       return;
     }
     for (const champ of racine.querySelectorAll<HTMLInputElement>('[data-role="saisie"]')) {
@@ -260,23 +268,55 @@ export class FpTableBuild extends FpBlock {
   }
 
   private verrouille(): boolean {
-    return this.verrouilleApresEnvoi(this.soumis, this.interneVerdict !== null);
+    return (
+      this.verrouilleApresEnvoi(this.soumis, this.interneVerdict !== null) ||
+      (this.correction > 0 && !this.enApercu())
+    );
+  }
+
+  private enReprise(): boolean {
+    return this.correction === 0 && this.interneVerdict !== null && this.reprises.size > 0;
+  }
+
+  private corrigeVisible(): boolean {
+    return this.correction >= 1 && this.attendus.length > 0;
+  }
+
+  private attenduDe(rang: number, cle: string): number {
+    return (
+      this.attendus.find((attendu) => attendu.rang === rang && attendu.cle === cle)?.valeur ??
+      Number.NaN
+    );
+  }
+
+  private accessible(cle: string): boolean {
+    if (!this.verrouille()) {
+      return true;
+    }
+    const [rang, colonne] = cle.split(':');
+    return this.correction === 0 && this.detailDe(Number(rang), colonne)?.juste === false;
   }
 
   private brancher(champ: HTMLInputElement): void {
     const cle = `${champ.dataset['rang']}:${champ.dataset['cle']}`;
-    champ.disabled = this.verrouille();
+    champ.disabled = !this.accessible(cle);
     champ.addEventListener('input', () => this.noter(cle, champ.value));
-    if (cle === this.suivie && !this.verrouille()) {
+    if (cle === this.suivie && this.accessible(cle)) {
       champ.focus();
       champ.setSelectionRange(champ.value.length, champ.value.length);
     }
   }
 
   private noter(cle: string, valeur: string): void {
+    if (!this.accessible(cle)) {
+      return;
+    }
     this.tapees = { ...this.tapees, [cle]: valeur };
     this.suivie = cle;
     this.message = '';
+    if (this.verrouille()) {
+      this.reprises = new Set([...this.reprises, cle]);
+    }
     this.signalerBrouillon(this.interne?.id ?? '', { ...this.tapees });
     this.refresh();
   }
@@ -316,7 +356,9 @@ export class FpTableBuild extends FpBlock {
     return evaluerExpression(formule, variables).valeur ?? Number.NaN;
   }
 
-  private batir(): LigneBatie[] {
+  private batir(
+    lire: (rang: number, cle: string) => number = (rang, cle) => this.saisieDe(rang, cle),
+  ): LigneBatie[] {
     const lignes: LigneBatie[] = [];
     let precedente: Record<string, number> | null = null;
     for (let rang = 0; rang < (this.interne?.echeances ?? 0); rang += 1) {
@@ -325,7 +367,7 @@ export class FpTableBuild extends FpBlock {
         if (colonne.role === 'donnee') {
           valeurs[colonne.cle] = colonne.valeurs?.[rang] ?? Number.NaN;
         } else if (colonne.role === 'saisie') {
-          valeurs[colonne.cle] = this.saisieDe(rang, colonne.cle);
+          valeurs[colonne.cle] = lire(rang, colonne.cle);
         }
       }
       for (const colonne of this.colonnes().filter((candidate) => candidate.role === 'deduite')) {
@@ -373,12 +415,17 @@ export class FpTableBuild extends FpBlock {
     return safeHtml`<ol class="fp-table-build__consignes" data-testid="consignes">${plan.consignes.map(ligneDeConsigne)}</ol>`;
   }
 
-  private tableau(lignes: readonly LigneBatie[], interactif: boolean): EscapedHtml {
+  private tableau(lignes: readonly LigneBatie[], rendu: RenduDuTableau): EscapedHtml {
+    const intitule =
+      rendu === 'correction'
+        ? `${this.texte('worked-correction')} — ${this.interne?.intitule ?? ''}`
+        : (this.interne?.intitule ?? '');
+    const marque = rendu === 'correction' ? safeHtml`data-correction="juste"` : VIDE;
     return safeHtml`
-      <table class="fp-table-build__tableau" data-testid="tableau">
-        <caption class="fp-table-build__intitule">${escapeHtml(this.interne?.intitule ?? '')}</caption>
+      <table class="fp-table-build__tableau" data-testid="${escapeHtml(rendu === 'correction' ? 'tableau-corrige' : 'tableau')}" ${marque}>
+        <caption class="fp-table-build__intitule">${escapeHtml(intitule)}</caption>
         <thead><tr>${this.enteteRang()}${this.colonnes().map((colonne) => this.entete(colonne))}</tr></thead>
-        <tbody>${lignes.map((ligne) => this.ligne(ligne, interactif))}</tbody>
+        <tbody>${lignes.map((ligne) => this.ligne(ligne, rendu))}</tbody>
         <tfoot>${this.ligneDesTotaux(lignes)}</tfoot>
       </table>
       ${lignes.length === 0 ? this.vide() : VIDE}
@@ -408,11 +455,11 @@ export class FpTableBuild extends FpBlock {
     return this.interne?.libellesLignes[rang] ?? String(rang + 1);
   }
 
-  private ligne(ligne: LigneBatie, interactif: boolean): EscapedHtml {
+  private ligne(ligne: LigneBatie, rendu: RenduDuTableau): EscapedHtml {
     return safeHtml`
       <tr class="fp-table-build__ligne" data-testid="ligne" data-rang="${ligne.rang}">
         <th class="${escapeHtml(STYLE_RANG)}" scope="row" id="${escapeHtml(PREFIXE_LIGNE + ligne.rang)}">${escapeHtml(this.libelleDeLigne(ligne.rang))}</th>
-        ${this.colonnes().map((colonne) => this.cellule(colonne, ligne, interactif))}
+        ${this.colonnes().map((colonne) => this.cellule(colonne, ligne, rendu))}
       </tr>
     `;
   }
@@ -421,16 +468,23 @@ export class FpTableBuild extends FpBlock {
     return this.interneVerdict?.details.find((detail) => detail.cle === `${rang}:${cle}`) ?? null;
   }
 
-  private cellule(colonne: TableColonne, ligne: LigneBatie, interactif: boolean): EscapedHtml {
+  private cellule(colonne: TableColonne, ligne: LigneBatie, rendu: RenduDuTableau): EscapedHtml {
     const portes = `${PREFIXE_COLONNE}${colonne.cle} ${PREFIXE_LIGNE}${ligne.rang}`;
-    const contenu = interactif ? this.champ(colonne, ligne) : this.lecture(colonne, ligne);
-    const detail = interactif ? this.detailDe(ligne.rang, colonne.cle) : null;
+    const saisie = rendu === 'saisie';
+    const contenu = saisie ? this.champ(colonne, ligne) : this.lecture(colonne, ligne, rendu);
+    const detail = saisie ? this.detailDe(ligne.rang, colonne.cle) : null;
     const etat = detail === null ? VIDE : this.etatDuDetail(detail);
     return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}" headers="${escapeHtml(portes)}" ${etat}>${contenu}</td>`;
   }
 
-  private lecture(colonne: TableColonne, ligne: LigneBatie): EscapedHtml {
-    return safeHtml`<span data-testid="cellule" data-rang="${ligne.rang}" data-cle="${escapeHtml(colonne.cle)}">${escapeHtml(this.valeurAffichee(colonne, ligne))}</span>`;
+  private lecture(colonne: TableColonne, ligne: LigneBatie, rendu: RenduDuTableau): EscapedHtml {
+    const masquee =
+      rendu === 'correction' &&
+      this.correction < 2 &&
+      colonne.role !== 'donnee' &&
+      colonne.cle !== COLONNE_DES_COEFFICIENTS;
+    const affichee = masquee ? TIRET : this.valeurAffichee(colonne, ligne);
+    return safeHtml`<span data-testid="cellule" data-rang="${ligne.rang}" data-cle="${escapeHtml(colonne.cle)}">${escapeHtml(affichee)}</span>`;
   }
 
   private valeurAffichee(colonne: TableColonne, ligne: LigneBatie): string {
@@ -447,7 +501,10 @@ export class FpTableBuild extends FpBlock {
   }
 
   private ligneDesTotaux(lignes: readonly LigneBatie[]): EscapedHtml {
-    if (!this.colonnes().some((colonne) => colonne.totalise)) {
+    if (
+      (this.interne?.synthese.length ?? 0) > 0 ||
+      !this.colonnes().some((colonne) => colonne.totalise)
+    ) {
       return VIDE;
     }
     const totaux = this.totaux(lignes);
@@ -518,19 +575,6 @@ export class FpTableBuild extends FpBlock {
     return [...parRang.values()].filter(Boolean).length;
   }
 
-  private attendusFormateur(plan: TableBuildPlanPublic): EscapedHtml {
-    if (this.attendus.length === 0) {
-      return VIDE;
-    }
-    const intitule = (cle: string): string =>
-      plan.colonnes.find((colonne) => colonne.cle === cle)?.intitule ?? cle;
-    const lignes = this.attendus.map(
-      (attendu) =>
-        safeHtml`<li class="fp-table-build__attendu" data-testid="attendu" data-rang="${attendu.rang}" data-cle="${escapeHtml(attendu.cle)}">${escapeHtml(this.libelleDeLigne(attendu.rang))} — ${escapeHtml(intitule(attendu.cle))} : <span class="fp-montant">${escapeHtml(formater(attendu.valeur, 2))}</span></li>`,
-    );
-    return safeHtml`<ul class="fp-table-build__attendus" data-testid="attendus">${lignes}</ul>`;
-  }
-
   private relever(): SaisieDeTableau[] {
     return this.cellulesASaisir()
       .map((cle) => {
@@ -550,9 +594,10 @@ export class FpTableBuild extends FpBlock {
 
   private valider(): void {
     const plan = this.interne;
-    if (plan === null || this.verrouille()) {
+    if (plan === null || (this.verrouille() && !this.enReprise())) {
       return;
     }
+    this.reprises = new Set();
     const saisies = this.relever();
     if (saisies.length === 0) {
       this.message = this.texte('production-vide');

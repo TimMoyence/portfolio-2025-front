@@ -1,6 +1,5 @@
 import { buildPulseSondage } from '../../../testing/factories/cours.factory';
-import { feuilleDe } from '../design/blocks';
-import { base, stage, tokens } from '../design/styles';
+import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { FpPulse } from './FpPulse';
 
 const SONDAGE = buildPulseSondage();
@@ -8,7 +7,6 @@ const COMPTES = { perdu: 4, 'ca-va': 11, clair: 7 };
 const INSTANT_INITIAL = '2026-09-13T09:00:00.000Z';
 const NOM_ETUDIANT = 'Nadia Mbarek';
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
-const RENDUS = ['hand', 'stage', 'board'];
 
 function boutonsEtat(element: FpPulse): HTMLButtonElement[] {
   return [...(element.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-etat-pulse]') ?? [])];
@@ -73,6 +71,17 @@ describe('FpPulse', () => {
     expect(presses(hote)).toEqual([]);
   });
 
+  it('F11 · pose l invite dans la carte, sous sa bordure et dans sa marge interieure', () => {
+    const carte = hote.shadowRoot?.querySelector<HTMLElement>('fieldset');
+    const invite = carte?.querySelector<HTMLElement>(':scope > legend');
+
+    expect(carte).toBeDefined();
+    expect(invite).toBeDefined();
+    const bordure = carte?.getBoundingClientRect().top ?? 0;
+    const marge = Number.parseFloat(getComputedStyle(carte as HTMLElement).paddingTop);
+    expect(invite?.getBoundingClientRect().top ?? 0).toBeGreaterThanOrEqual(bordure + marge);
+  });
+
   it('n emet aucun identifiant d etudiant avec l etat declare', () => {
     const recus = changements(hote);
     declarer(hote, 'perdu');
@@ -131,7 +140,7 @@ describe('FpPulse', () => {
   it('agrege la classe en comptes et ne nomme jamais un etudiant', () => {
     const bruts = { ...COMPTES, [NOM_ETUDIANT]: 1, etudiants: [NOM_ETUDIANT] };
     hote.comptes = bruts;
-    hote.setAttribute('render', 'board');
+    hote.setAttribute('data-cours-role', 'presentateur');
     const lignes = [...(hote.shadowRoot?.querySelectorAll('[data-testid="ligne"]') ?? [])];
     expect(lignes.map((ligne) => ligne.getAttribute('data-etat-pulse'))).toEqual([
       'perdu',
@@ -173,28 +182,44 @@ describe('FpPulse', () => {
   });
 
   it('G2 · projette l invite, l anonymat et les trois états du poste étudiant, inertes', () => {
+    declarer(hote, 'clair');
     hote.setAttribute('data-cours-role', 'presentateur');
-    hote.setAttribute('render', 'stage');
 
     expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(SONDAGE.invite);
     expect(lireTexte(hote, 'anonymat')).not.toBe('');
     expect(boutonsEtat(hote).map((bouton) => bouton.disabled)).toEqual([true, true, true]);
     expect(presses(hote)).toEqual([]);
+    expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')).toBeNull();
   });
 
-  it('masque les comptes en projection sous cinq reponses, jamais au pupitre', () => {
+  it('n emet rien quand le presentateur clique un etat inerte', () => {
+    const recus = changements(hote);
+    hote.setAttribute('data-cours-role', 'presentateur');
+    for (const bouton of boutonsEtat(hote)) {
+      bouton.disabled = false;
+      bouton.click();
+    }
+    expect(recus).toEqual([]);
+  });
+
+  it('masque les comptes au presentateur sous cinq reponses et les montre des cinq', () => {
     hote.comptes = { perdu: 1, 'ca-va': 2, clair: 1, total: 4 };
-    hote.setAttribute('render', 'stage');
+    hote.setAttribute('data-cours-role', 'presentateur');
 
     expect(lireTexte(hote, 'masque')).toBe('Comptes affichés à partir de 5 réponses');
     expect(hote.shadowRoot?.querySelector('[data-testid="agregat"]')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="total"]')).toBeNull();
 
-    hote.setAttribute('render', 'board');
-    expect(lireTexte(hote, 'total')).toBe('Réponses reçues : 4');
-
-    hote.setAttribute('render', 'stage');
     hote.comptes = { perdu: 1, 'ca-va': 2, clair: 2, total: 5 };
     expect(lireTexte(hote, 'total')).toBe('Réponses reçues : 5');
+    expect(hote.shadowRoot?.querySelector('[data-testid="masque"]')).toBeNull();
+  });
+
+  it('ne montre jamais les comptes de la classe au poste etudiant', () => {
+    hote.comptes = COMPTES;
+    expect(hote.shadowRoot?.querySelector('[data-testid="agregat"]')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="masque"]')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="total"]')).toBeNull();
   });
 
   it('memorise l etat declare et le restaure apres rechargement', () => {
@@ -211,19 +236,9 @@ describe('FpPulse', () => {
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    const feuille = [tokens, base, feuilleDe('pulse'), stage].join('\n');
     hote.comptes = COMPTES;
     declarer(hote, 'clair');
-    const couverte = (classe: string): boolean =>
-      new RegExp(`\\.${classe}(?![\\w-])`).test(feuille);
-    const emises = new Set(
-      RENDUS.flatMap((rendu) => {
-        hote.setAttribute('render', rendu);
-        const portant = hote.shadowRoot?.querySelectorAll('[class]') ?? [];
-        return [...portant].flatMap((noeud) => [...noeud.classList]);
-      }),
-    );
-    expect(emises.size).toBeGreaterThanOrEqual(10);
-    expect(triees([...emises].filter((classe) => !couverte(classe)))).toEqual([]);
+    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(10);
+    expect(triees(classesOrphelines(hote, 'pulse'))).toEqual([]);
   });
 });

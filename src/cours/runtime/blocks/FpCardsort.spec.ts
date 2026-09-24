@@ -9,7 +9,7 @@ import { FpCardsort } from './FpCardsort';
 const PLAN = buildCardsortPlan();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const CLASSES_ATTENDUES = 23;
-const RENDUS = ['stage', 'hand', 'board'] as const;
+const ROLES = ['etudiant', 'presentateur'] as const;
 const PIOCHE = '';
 const FIXE = 'fixe';
 const VARIABLE = 'variable';
@@ -308,6 +308,9 @@ describe('FpCardsort', () => {
 
     expect(carte(hote, LOYER).getAttribute('data-etat')).toBe('confirme');
     expect(carte(hote, MATIERES).getAttribute('data-etat')).toBe('a-revoir');
+    expect(carte(hote, LOYER).getAttribute('data-correction')).toBe('juste');
+    expect(carte(hote, MATIERES).getAttribute('data-correction')).toBe('fausse');
+    expect(carte(hote, 'assurance').hasAttribute('data-correction')).toBeFalse();
     expect(libelleDe(hote, 'confusion')).toBe('Charge liée au volume');
     expect(libelleDe(hote, 'decompte')).toBe('Cartes bien placées : 1/6');
     expect(zoneDe(hote, MATIERES)).toBe(FIXE);
@@ -373,17 +376,56 @@ describe('FpCardsort', () => {
     expect(JSON.stringify(hote.plan)).not.toContain('fixe-pour-le-loyer');
   });
 
-  it('montre au pupitre le classement de reference, jamais a un poste etudiant', () => {
-    hote.corrige = ATTENDUS_FORMATEUR;
-    for (const rendu of RENDUS) {
-      hote.setAttribute('render', rendu);
-      expect(noeud(hote, 'attendus')).withContext(rendu).toBeNull();
-    }
-
+  it('projette au presentateur le classement de reference, seules les cartes attendues marquees', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
-    hote.setAttribute('render', 'board');
-    expect(libelleDe(hote, 'attendu')).toContain('Le loyer ne suit pas le volume');
-    expect(libelleDe(hote, 'attendu')).toContain('Charges fixes');
+    expect(TOUS_LES_IDS.every((id) => zoneDe(hote, id) === PIOCHE)).toBe(true);
+
+    hote.corrige = ATTENDUS_FORMATEUR;
+
+    expect(zoneDe(hote, LOYER)).toBe(FIXE);
+    expect(zoneDe(hote, MATIERES)).toBe(PIOCHE);
+    expect(carte(hote, LOYER).getAttribute('data-correction')).toBe('juste');
+    expect(carte(hote, MATIERES).hasAttribute('data-correction')).toBe(false);
+  });
+
+  it('T6 · laisse l etudiant a son classement, colore en vert et rouge d apres le corrige', () => {
+    deplacerAuClavier(hote, LOYER, FIXE);
+    deplacerAuClavier(hote, MATIERES, FIXE);
+    hote.corrige = {
+      type: 'classement',
+      attendus: [
+        ...ATTENDUS_FORMATEUR.attendus,
+        { carteId: MATIERES, categorieId: VARIABLE, justification: 'Suit le volume produit' },
+      ],
+    };
+
+    expect(zoneDe(hote, LOYER)).toBe(FIXE);
+    expect(zoneDe(hote, MATIERES)).toBe(FIXE);
+    expect(carte(hote, LOYER).getAttribute('data-correction')).toBe('juste');
+    expect(carte(hote, MATIERES).getAttribute('data-correction')).toBe('fausse');
+  });
+
+  it('T6 · affiche aux deux roles le meme corrige justifie, jamais avant sa pose', () => {
+    for (const role of ROLES) {
+      hote.setAttribute('data-cours-role', role);
+      hote.corrige = null;
+      expect(noeud(hote, 'cardsort-correction')).withContext(role).toBeNull();
+
+      hote.corrige = ATTENDUS_FORMATEUR;
+
+      expect(noeuds(hote, 'cardsort-justification').map((ligne) => ligne.textContent?.trim()))
+        .withContext(role)
+        .toEqual(['Loyer de l atelier — Charges fixes Le loyer ne suit pas le volume']);
+    }
+  });
+
+  it('ignore un corrige d un autre type', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.corrige = { ...ATTENDUS_FORMATEUR, type: 'tableau' };
+    expect(zoneDe(hote, LOYER)).toBe(PIOCHE);
+    expect(noeuds(hote, 'carte').some((element) => element.hasAttribute('data-correction'))).toBe(
+      false,
+    );
   });
 
   it('echappe le html injecte dans les libelles des cartes et des categories', () => {
@@ -398,19 +440,40 @@ describe('FpCardsort', () => {
     expect(carte(hote, LOYER).getAttribute('aria-label')).toContain(CHARGE_XSS);
   });
 
-  it('retire toute commande en projection et affiche les reperes au tableau', () => {
-    hote.setAttribute('render', 'stage');
+  it('partage le meme plateau entre les roles et retire toute commande au presentateur', () => {
+    for (const role of ROLES) {
+      hote.setAttribute('data-cours-role', role);
+      expect(noeuds(hote, 'zone').map((zone) => titreDeZone(hote, zone)))
+        .withContext(role)
+        .toEqual(['Cartes à trier', 'Charges fixes', 'Charges variables']);
+      expect(ordreAffiche(hote)).withContext(role).toEqual(TOUS_LES_IDS);
+      expect(hote.shadowRoot?.querySelector('.fp-cardsort__intitule')?.textContent?.trim())
+        .withContext(role)
+        .toBe(PLAN.intitule);
+    }
     expect(hote.shadowRoot?.querySelectorAll('button').length).toBe(0);
     expect(hote.shadowRoot?.querySelectorAll('select').length).toBe(0);
-    expect(noeuds(hote, 'carte').length).toBe(PLAN.cartes.length);
-    hote.setAttribute('render', 'board');
-    expect(libelleDe(hote, 'modalite')).toBe('En binôme');
-    expect(libelleDe(hote, 'duree')).toBe('8 min');
+    expect(hote.shadowRoot?.querySelector('.fp-cardsort__consigne')).toBeNull();
+    expect(noeud(hote, 'annonce')).toBeNull();
+    expect(noeud(hote, 'modalite')).toBeNull();
+    expect(carte(hote, LOYER).tagName).toBe('SPAN');
+  });
+
+  it('ne projette pas au presentateur le classement en cours d un poste', () => {
+    deplacerAuClavier(hote, LOYER, FIXE);
+    hote.setAttribute('data-cours-role', 'presentateur');
+    expect(zoneDe(hote, LOYER)).toBe(PIOCHE);
+  });
+
+  it('decompte aussi le temps de jeu en projection', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.plan = buildCardsortPlan({ id: 'K-CHARGES-CHRONO-SCENE', dureeJeuMs: 90_000 });
+    expect(libelleDe(hote, 'chrono')).toBe('Temps restant : 1:30');
+    jasmine.clock().tick(31_000);
+    expect(libelleDe(hote, 'chrono')).toBe('Temps restant : 0:59');
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.corrige = ATTENDUS_FORMATEUR;
     hote.plan = buildCardsortPlan({ id: 'K-CHARGES-CLASSES', dureeJeuMs: 60_000 });
     toutClasser(hote);
     activerAuClavier(noeud(hote, 'valider'));
@@ -418,6 +481,7 @@ describe('FpCardsort', () => {
       questionId: 'K-CHARGES-CLASSES',
       details: [{ cle: MATIERES, juste: false, libelleConfusion: 'Charge liée au volume' }],
     });
+    hote.corrige = ATTENDUS_FORMATEUR;
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
     expect(classesOrphelines(hote, 'cardsort')).toEqual([]);
   });

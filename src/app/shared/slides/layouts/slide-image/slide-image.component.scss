@@ -160,8 +160,7 @@
 @container (min-height: 0px) {
   .slide-image {
     grid-template-columns: 1fr 1fr;
-    height: 100cqh;
-    min-height: 0;
+    min-height: 100cqh;
     padding: 2.5rem 3rem;
   }
 

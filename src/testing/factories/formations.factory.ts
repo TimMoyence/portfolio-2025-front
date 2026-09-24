@@ -13,7 +13,6 @@ import type { SpacedQuestionPublique } from '../../cours/runtime/blocks/donnees-
 import type {
   AnnotationFormateur,
   FormationsPort,
-  GroupeFormation,
   ParticipantDeSeance,
   RapportSeance,
   Rattachement,
@@ -253,17 +252,6 @@ export function buildRattachement(overrides: Partial<Rattachement> = {}): Rattac
   };
 }
 
-export function buildGroupeFormation(overrides: Partial<GroupeFormation> = {}): GroupeFormation {
-  return {
-    id: 'groupe-1',
-    sessionId: 'seance-1',
-    name: 'Groupe A',
-    createdAt: HORODATAGE,
-    updatedAt: HORODATAGE,
-    ...overrides,
-  };
-}
-
 export function buildAnnotationFormateur(
   overrides: Partial<AnnotationFormateur> = {},
 ): AnnotationFormateur {
@@ -272,8 +260,7 @@ export function buildAnnotationFormateur(
     sessionId: 'seance-1',
     teacherId: 'formateur-1',
     screenId: 'ecran-1',
-    groupName: 'Classe entière',
-    note: 'Relancer le groupe du fond sur la base de calcul.',
+    note: 'Relancer le rang du fond sur la base de calcul.',
     updatedAt: HORODATAGE,
     ...overrides,
   };
@@ -303,7 +290,6 @@ export function buildParticipantDeSeance(
     id: 'participant-1',
     prenom: 'Lea',
     nom: 'Dubois',
-    groupId: null,
     evince: false,
     ...overrides,
   };
@@ -322,11 +308,6 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
     'lireAnnotations',
     'enregistrerAnnotation',
     'lireReponsesLibres',
-    'lireGroupes',
-    'creerGroupe',
-    'renommerGroupe',
-    'affecterParticipant',
-    'retirerParticipantDuGroupe',
     'lireParticipants',
     'rejoindre',
     'repondre',
@@ -357,13 +338,6 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
     of(buildAnnotationFormateur({ sessionId, ...annotation })),
   );
   port.lireReponsesLibres.and.returnValue(of({ responses: [] }));
-  port.lireGroupes.and.returnValue(of({ groups: [] }));
-  port.creerGroupe.and.callFake((sessionId, name) => of(buildGroupeFormation({ sessionId, name })));
-  port.renommerGroupe.and.callFake((sessionId, id, name) =>
-    of(buildGroupeFormation({ sessionId, id, name })),
-  );
-  port.affecterParticipant.and.returnValue(of(undefined));
-  port.retirerParticipantDuGroupe.and.returnValue(of(undefined));
   port.lireParticipants.and.returnValue(of({ participants: [] }));
   port.rejoindre.and.returnValue(of(buildRattachement()));
   port.repondre.and.returnValue(of({ reussite: true, libelleConfusion: null }));

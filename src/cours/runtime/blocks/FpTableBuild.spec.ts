@@ -9,7 +9,16 @@ import { FpTableBuild } from './FpTableBuild';
 const PLAN = buildTableBuildPlan();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const CLASSES_ATTENDUES = 14;
-const RENDUS = ['stage', 'hand', 'board'] as const;
+const ROLES = ['etudiant', 'presentateur'] as const;
+const RENVOYER = 'Renvoyer les cases corrigées';
+const VERDICT_PARTIEL = buildVerdictDeProduction({
+  questionId: PLAN.id,
+  details: [
+    { cle: '0:prix', juste: true, libelleConfusion: null },
+    { cle: '0:indice', juste: true, libelleConfusion: null },
+    { cle: '1:prix', juste: false, libelleConfusion: 'Taux appliqué au prix initial' },
+  ],
+});
 const PRIX_SAISIS = ['21,60', '20,52', '21,34', '20,70'];
 const INDICES_SAISIS = ['108', '102,6', '106,7', '103,5'];
 const COEFFICIENTS_DEDUITS = ['1,0800', '0,9500', '1,0400', '0,9700'];
@@ -45,6 +54,22 @@ function colonneAffichee(hote: FpTableBuild, cle: string): string[] {
   return reperes(hote, 'cellule')
     .filter((noeud) => noeud.getAttribute('data-cle') === cle)
     .map((noeud) => (noeud instanceof HTMLInputElement ? noeud.value : (noeud.textContent ?? '')));
+}
+
+function colonneCorrigee(hote: FpTableBuild, cle: string): string[] {
+  return [
+    ...(hote.shadowRoot?.querySelectorAll(
+      `[data-testid="tableau-corrige"] [data-testid="cellule"][data-cle="${cle}"]`,
+    ) ?? []),
+  ].map((noeud) => noeud.textContent ?? '');
+}
+
+function boutonValider(hote: FpTableBuild): HTMLButtonElement {
+  const bouton = repere(hote, 'valider');
+  if (!(bouton instanceof HTMLButtonElement)) {
+    throw new Error('aucun bouton valider');
+  }
+  return bouton;
 }
 
 function saisir(hote: FpTableBuild, rang: number, cle: string, texte: string): void {
@@ -130,10 +155,9 @@ describe('FpTableBuild', () => {
     expect(cellule(hote, 0, 'coef').value).toBe('54,0000');
   });
 
-  it('totalise les colonnes marquees et calcule la synthese', () => {
+  it('calcule la synthese sans ligne de totaux a cote', () => {
     toutSaisir(hote);
-    const total = hote.shadowRoot?.querySelector('[data-testid="total"][data-cle="taux"]');
-    expect(total?.textContent?.trim()).toBe('4');
+    expect(hote.shadowRoot?.querySelector('[data-testid="total"]')).toBeNull();
     expect(
       reperes(hote, 'synthese-ligne').map((ligne) => ligne.querySelector('dd')?.textContent),
     ).toEqual(['4,00 %', '3,50 %']);
@@ -204,14 +228,7 @@ describe('FpTableBuild', () => {
   it('marque les cellules selon le verdict recu et compte les lignes justes', () => {
     toutSaisir(hote);
     cliquer(hote, 'valider');
-    hote.verdict = buildVerdictDeProduction({
-      questionId: PLAN.id,
-      details: [
-        { cle: '0:prix', juste: true, libelleConfusion: null },
-        { cle: '0:indice', juste: true, libelleConfusion: null },
-        { cle: '1:prix', juste: false, libelleConfusion: 'Taux appliqué au prix initial' },
-      ],
-    });
+    hote.verdict = VERDICT_PARTIEL;
 
     const fausse = cellule(hote, 1, 'prix').closest('td');
     expect(fausse?.getAttribute('data-etat')).toBe('a-revoir');
@@ -220,27 +237,130 @@ describe('FpTableBuild', () => {
     expect(texteDe(hote, 'decompte')).toBe('Lignes justes : 1/2');
   });
 
-  it('montre au pupitre les valeurs de reference, jamais a un poste etudiant', () => {
-    hote.corrige = ATTENDUS_FORMATEUR;
-    for (const rendu of RENDUS) {
-      hote.setAttribute('render', rendu);
-      expect(repere(hote, 'attendus')).withContext(rendu).toBeNull();
-    }
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.setAttribute('render', 'board');
-    expect(texteDe(hote, 'attendu')).toBe(
-      '1er mars : +8 % — Prix du m² après révision (€ HT) : 21,60',
-    );
+  it('RET-31 · laisse reprendre les seules cases fausses apres verdict puis les renvoie une fois', () => {
+    const recus = envois(hote);
+    toutSaisir(hote);
+    cliquer(hote, 'valider');
+    hote.verdict = VERDICT_PARTIEL;
+
+    expect(boutonValider(hote).disabled).toBeTrue();
+    expect(cellule(hote, 0, 'prix').disabled).toBeTrue();
+    expect(cellule(hote, 1, 'prix').disabled).toBeFalse();
+    saisir(hote, 1, 'prix', '20,52');
+
+    expect(boutonValider(hote).disabled).toBeFalse();
+    expect(boutonValider(hote).textContent?.trim()).toBe(RENVOYER);
+    cliquer(hote, 'valider');
+
+    expect(recus.length).toBe(2);
+    expect(recus[1]['saisies']).toContain({ rang: 1, cle: 'prix', valeur: 20.52 });
+    expect(boutonValider(hote).disabled).toBeTrue();
+    expect(boutonValider(hote).textContent?.trim()).not.toBe(RENVOYER);
+    cliquer(hote, 'valider');
+    expect(recus.length).toBe(2);
   });
 
-  it('retire les champs en projection et affiche les reperes au tableau', () => {
+  it('RET-31 · ferme la reprise des cases fausses des que la correction est revelee', () => {
+    const recus = envois(hote);
     toutSaisir(hote);
-    hote.setAttribute('render', 'stage');
+    cliquer(hote, 'valider');
+    hote.verdict = VERDICT_PARTIEL;
+    hote.etayage = 1;
+
+    expect(cellule(hote, 1, 'prix').disabled).toBeTrue();
+    saisir(hote, 1, 'prix', '20,52');
+    expect(boutonValider(hote).disabled).toBeTrue();
+    cliquer(hote, 'valider');
+    expect(recus.length).toBe(1);
+  });
+
+  it('ne sert aucun tableau corrige tant que la correction n est pas revelee', () => {
+    hote.corrige = ATTENDUS_FORMATEUR;
+    for (const role of ROLES) {
+      hote.setAttribute('data-cours-role', role);
+      expect(repere(hote, 'tableau-corrige')).withContext(role).toBeNull();
+    }
+    hote.corrige = null;
+    hote.etayage = 2;
+    for (const role of ROLES) {
+      hote.setAttribute('data-cours-role', role);
+      expect(repere(hote, 'tableau-corrige')).withContext(role).toBeNull();
+    }
+  });
+
+  it('RET-31 · projette le tableau corrige, saisies masquees au niveau 1 puis revelees au niveau 2', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.corrige = ATTENDUS_FORMATEUR;
+    hote.etayage = 1;
+
+    const corrige = repere(hote, 'tableau-corrige');
+    expect(corrige?.getAttribute('data-correction')).toBe('juste');
+    expect(corrige?.querySelector('caption')?.textContent?.trim()).toBe(
+      `Correction — ${PLAN.intitule}`,
+    );
+    expect(repere(hote, 'tableau')).toBeNull();
+    expect(colonneCorrigee(hote, 'prix')).toEqual(['—', '—', '—', '—']);
+
+    hote.etayage = 2;
+    expect(colonneCorrigee(hote, 'prix')).toEqual(['21,60', '—', '—', '—']);
+  });
+
+  it('n additionne pas les taux successifs quand la synthese les resume deja', () => {
+    for (const role of ROLES) {
+      hote.setAttribute('data-cours-role', role);
+      expect(repere(hote, 'totaux')).withContext(role).toBeNull();
+    }
+    hote.plan = buildTableBuildPlan({ id: 'TB-SANS-SYNTHESE', synthese: [] });
+    expect(repere(hote, 'totaux')).not.toBeNull();
+  });
+
+  it('F27 · ne laisse deviner au niveau 1 ni les prix ni les indices par les colonnes deduites', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.corrige = {
+      type: 'tableau',
+      attendus: [
+        { rang: 0, cle: 'prix', valeur: 21.6 },
+        { rang: 0, cle: 'indice', valeur: 108 },
+      ],
+    };
+    hote.etayage = 1;
+
+    expect(colonneCorrigee(hote, 'coef')[0]).toBe(COEFFICIENTS_DEDUITS[0]);
+    expect(colonneCorrigee(hote, 'indice')[0]).toBe('—');
+    expect(colonneCorrigee(hote, 'evolution')[0]).toBe('—');
+
+    hote.etayage = 2;
+    expect(colonneCorrigee(hote, 'indice')[0]).toBe('108,00');
+    expect(colonneCorrigee(hote, 'evolution')[0]).toBe(EVOLUTIONS_DEDUITES[0]);
+  });
+
+  it('RET-31 · sert a l etudiant le meme tableau corrige sous sa grille de saisie', () => {
+    toutSaisir(hote);
+    hote.corrige = ATTENDUS_FORMATEUR;
+    hote.etayage = 2;
+
+    expect(repere(hote, 'tableau')).not.toBeNull();
+    expect(repere(hote, 'tableau-corrige')?.querySelectorAll('input').length).toBe(0);
+    expect(colonneCorrigee(hote, 'prix')).toEqual(['21,60', '—', '—', '—']);
+    expect(cellule(hote, 0, 'prix').value).toBe(PRIX_SAISIS[0]);
+  });
+
+  it('partage le meme tableau entre les roles et retire champs et actions au presentateur', () => {
+    toutSaisir(hote);
+    for (const role of ROLES) {
+      hote.setAttribute('data-cours-role', role);
+      expect(hote.shadowRoot?.querySelector('caption')?.textContent?.trim())
+        .withContext(role)
+        .toBe(PLAN.intitule);
+      expect(reperes(hote, 'entete').length).withContext(role).toBe(PLAN.colonnes.length);
+      expect(reperes(hote, 'ligne').length).withContext(role).toBe(PLAN.echeances);
+      expect(repere(hote, 'consignes')).withContext(role).not.toBeNull();
+    }
     expect(hote.shadowRoot?.querySelectorAll('input').length).toBe(0);
     expect(colonneAffichee(hote, 'prix')).toEqual(PRIX_SAISIS);
-    hote.setAttribute('render', 'board');
-    expect(texteDe(hote, 'modalite')).toBe('Individuel');
-    expect(texteDe(hote, 'duree')).toBe('11 min');
+    expect(repere(hote, 'valider')).toBeNull();
+    expect(repere(hote, 'synthese')).toBeNull();
+    expect(repere(hote, 'modalite')).toBeNull();
   });
 
   it('bati un plan sans echeance sans casser le tableau', () => {
@@ -260,9 +380,9 @@ describe('FpTableBuild', () => {
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.corrige = ATTENDUS_FORMATEUR;
     toutSaisir(hote);
+    hote.corrige = ATTENDUS_FORMATEUR;
+    hote.etayage = 2;
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
     expect(classesOrphelines(hote, 'table-build')).toEqual([]);
   });
