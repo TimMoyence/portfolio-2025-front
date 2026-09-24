@@ -172,7 +172,8 @@ export class FpChallenge extends FpBlock {
     if (champ === null || envoyer === null) {
       return;
     }
-    const verrouille = this.verrouilleApresEnvoi(this.soumise, this.servies.length > 0);
+    const verrouille =
+      this.interneRevele || this.verrouilleApresEnvoi(this.soumise, this.servies.length > 0);
     champ.disabled = verrouille;
     envoyer.disabled = verrouille;
     champ.addEventListener('input', () => {

@@ -204,6 +204,15 @@ describe('FpChallenge', () => {
     });
   }
 
+  it('SEC-4 · ferme la zone de tentative une fois le defi revele, meme sans envoi', () => {
+    hote.revele = true;
+
+    expect(zoneTentative(hote).disabled).toBeTrue();
+    expect(
+      hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="envoyer"]')?.disabled,
+    ).toBeTrue();
+  });
+
   it('ne montre pas au presentateur les strategies servies avant la revelation', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.strategies = buildStrategiesServies();
