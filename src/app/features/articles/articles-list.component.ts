@@ -14,6 +14,8 @@ import { AsiliHeroComponent } from '../../shared/sections';
 import { ArticlesCtaComponent } from './articles-cta.component';
 import { localeDesArticles, type LocaleDesArticles } from './locale-des-articles';
 
+const ARTICLES_PAGE_SIZE = 12;
+
 @Component({
   selector: 'app-articles-list',
   standalone: true,
@@ -31,6 +33,9 @@ export class ArticlesListComponent {
   protected readonly articles: ArticleSummary[] = [];
   protected isLoading = true;
   protected hasError = false;
+  protected nextCursor: string | null = null;
+  protected isLoadingMore = false;
+  protected hasLoadMoreError = false;
   protected readonly locale: LocaleDesArticles;
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -40,15 +45,35 @@ export class ArticlesListComponent {
     @Inject(DOCUMENT) document: Document,
   ) {
     this.locale = localeDesArticles(localeId, document.location.pathname);
-    this.api.list(this.locale).subscribe({
+    this.api.list(this.locale, ARTICLES_PAGE_SIZE).subscribe({
       next: (response) => {
         this.articles.push(...response.items);
+        this.nextCursor = response.next_cursor;
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: () => {
         this.isLoading = false;
         this.hasError = true;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  protected loadMore(): void {
+    if (!this.nextCursor || this.isLoadingMore) return;
+    this.isLoadingMore = true;
+    this.hasLoadMoreError = false;
+    this.api.list(this.locale, ARTICLES_PAGE_SIZE, this.nextCursor).subscribe({
+      next: (response) => {
+        this.articles.push(...response.items);
+        this.nextCursor = response.next_cursor;
+        this.isLoadingMore = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.isLoadingMore = false;
+        this.hasLoadMoreError = true;
         this.cdr.markForCheck();
       },
     });

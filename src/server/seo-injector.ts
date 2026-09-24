@@ -150,6 +150,25 @@ const buildSeoLinkTags = (
   ].join('\n');
 };
 
+const ARTICLE_FEED_PATH = '/api/v1/portfolio25/articles/feed.xml';
+const ARTICLE_FEED_TITLES: Record<string, string> = {
+  fr: 'Veille IA — Asili Design',
+  en: 'AI Watch — Asili Design',
+};
+
+const buildArticleFeedLink = (
+  metadata: SeoMetadataFile,
+  originalUrl: string,
+  baseUrl: string,
+): string => {
+  const defaultLocale = metadata.site.defaultLocale ?? 'fr';
+  const prefixed = LOCALE_PREFIX_RE.exec(originalUrl)?.[1] ?? defaultLocale;
+  const locale = prefixed in ARTICLE_FEED_TITLES ? prefixed : defaultLocale;
+  const href = new URL(ARTICLE_FEED_PATH, baseUrl);
+  href.searchParams.set('locale', locale);
+  return `<link rel="alternate" type="application/rss+xml" title="${ARTICLE_FEED_TITLES[locale] ?? ARTICLE_FEED_TITLES['fr']}" href="${href.toString()}" />`;
+};
+
 export const isKnownRoute = (routePath: string, metadata: SeoMetadataFile): boolean => {
   const normalized = routePath === '' ? '/' : routePath;
   return metadata.pages.some((page) => page.path === normalized);
@@ -162,12 +181,16 @@ export const injectSeoHead = (
   baseUrl: string,
 ): string => {
   const links = buildSeoLinkTags(metadata, originalUrl, baseUrl);
+  const feed = buildArticleFeedLink(metadata, originalUrl, baseUrl);
   const scripts = buildJsonLdScripts(metadata, originalUrl);
-  const combined = [links, scripts].filter((value) => value).join('\n');
-  if (!combined) return html;
+  const combined = [links, feed, scripts].filter((value) => value).join('\n');
 
   let cleaned = html;
   cleaned = cleaned.replace(/<link\s+rel="canonical"[^>]*>\s*/gi, '');
   cleaned = cleaned.replace(/<link\s+rel="alternate"\s+hreflang="[^"]*"[^>]*>\s*/gi, '');
+  cleaned = cleaned.replace(
+    /<link\s+rel="alternate"\s+type="application\/rss\+xml"[^>]*>\s*/gi,
+    '',
+  );
   return cleaned.replace('</head>', `${combined}\n</head>`);
 };

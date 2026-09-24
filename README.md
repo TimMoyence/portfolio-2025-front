@@ -46,7 +46,9 @@ Source de verite : [`src/app/app.routes.ts`](./src/app/app.routes.ts) (et [`src/
 - `/verify-email` — Verification d'email (lien magique)
 - `/profil` — Profil utilisateur (`authGuard`, rendu client)
 
-Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL` pointe vers le backend public (`.../api/v1/portfolio25`). Sans cette variable, il reste statique et ne publie aucune URL inventee. Le `lastmod` des autres pages suit le dernier commit front qui les touche (`npm run seo:lastmod`) ; pour un cours servi par l'API, comme le B2, la même variable sert à lire `publieLe` sur `/formations/catalogue/:slug` et le sitemap publie la plus récente des deux dates, avec un avertissement journalisé à chaque repli : voir [`docs/seo-lastmod.md`](./docs/seo-lastmod.md).
+Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL` pointe vers le backend (`.../api/v1/portfolio25`). L'image Docker la fixe par défaut à `http://api:3000/api/v1/portfolio25` (réseau compose). Le lecteur pagine par 24, la limite de l'API, en suivant `next_cursor` (50 pages au plus par langue), et garde en cache 5 minutes. Sans cette variable, il reste statique et ne publie aucune URL inventee.
+
+Pages d'articles : un slug inconnu rend une vraie 404, et une API indisponible rend une 503 non mise en cache. Les deux passent par le token `HTTP_RESPONSE_STATUS` que `server.ts` fournit au rendu SSR. La liste pagine avec « Éditions précédentes » (`next_cursor`). Chaque page annonce le flux RSS de sa langue (`<link rel="alternate" type="application/rss+xml">`). Le `lastmod` des autres pages suit le dernier commit front qui les touche (`npm run seo:lastmod`) ; pour un cours servi par l'API, comme le B2, la même variable sert à lire `publieLe` sur `/formations/catalogue/:slug` et le sitemap publie la plus récente des deux dates, avec un avertissement journalisé à chaque repli : voir [`docs/seo-lastmod.md`](./docs/seo-lastmod.md).
 
 ### Formations
 

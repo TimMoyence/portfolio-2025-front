@@ -1,17 +1,11 @@
 import { buildVisualCourse } from '../testing/factories/formation-catalogue.factory';
+import { reponseJson } from '../testing/lecteur-http-simule';
 import { lecteurDePublicationsDeCours } from './cours-publication';
 
 const API = 'https://api.asilidesign.fr/api/v1/portfolio25';
 const API_AVEC_BARRE = `${API}/`;
 const SLUG = 'b2-01-traitement-information-chiffree';
 const CINQ_MINUTES = 300_000;
-
-function reponseJson(corps: unknown, status = 200): Response {
-  return new Response(JSON.stringify(corps), {
-    status,
-    headers: { 'content-type': 'application/json' },
-  });
-}
 
 function coursPublie(champs: Readonly<Record<string, unknown>>): Record<string, unknown> {
   const cours: Record<string, unknown> = { ...buildVisualCourse({ ecrans: [] }) };

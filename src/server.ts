@@ -6,16 +6,14 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import bootstrap from './main.server';
 import type { SeoMetadataFile } from './app/core/seo/seo-metadata.model';
+import { HTTP_RESPONSE_STATUS } from './app/core/ssr/http-response-status';
+import { documentCacheControlFor } from './server/document-cache';
 import { COURS_SERVIS_PAR_L_API, lecteurDePublicationsDeCours } from './server/cours-publication';
 import { loadCsrShell } from './server/csr-shell';
 import { isClientOnlyRoute } from './server/routes-client';
 import { registerPermanentRedirects } from './server/redirects';
-import {
-  buildLlmsFullTxt,
-  buildLlmsTxt,
-  buildRobotsTxt,
-  type DynamicArticleSitemapEntry,
-} from './server/seo-builders';
+import { lecteurDArticlesDuSitemap } from './server/article-sitemap';
+import { buildLlmsFullTxt, buildLlmsTxt, buildRobotsTxt } from './server/seo-builders';
 import { buildSecurityHeaders } from './server/security-headers';
 import { injectSeoHead, isKnownRoute } from './server/seo-injector';
 import { routeDuSitemap } from './server/sitemap-route';
@@ -87,11 +85,6 @@ const SEO_METADATA_CANDIDATES = [
 
 let cachedSeoMetadata: SeoMetadataFile | null = null;
 
-let cachedArticleSitemap: {
-  expiresAt: number;
-  entries: DynamicArticleSitemapEntry[];
-} = { expiresAt: 0, entries: [] };
-
 const loadSeoMetadata = (): SeoMetadataFile | null => {
   if (cachedSeoMetadata) return cachedSeoMetadata;
 
@@ -109,47 +102,11 @@ const loadSeoMetadata = (): SeoMetadataFile | null => {
   return null;
 };
 
-const loadArticleSitemap = async (): Promise<DynamicArticleSitemapEntry[]> => {
-  const apiBaseUrl = process.env['PORTFOLIO_ARTICLE_API_URL']?.replace(/\/$/, '');
-  if (!apiBaseUrl) return [];
-  if (cachedArticleSitemap.expiresAt > Date.now()) return cachedArticleSitemap.entries;
-
-  const entries = (
-    await Promise.all(
-      ['fr', 'en'].map(async (locale): Promise<DynamicArticleSitemapEntry[]> => {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 2_000);
-        try {
-          const response = await fetch(`${apiBaseUrl}/articles?locale=${locale}&limit=100`, {
-            headers: { accept: 'application/json' },
-            signal: controller.signal,
-          });
-          if (!response.ok) return [];
-          const payload = (await response.json()) as {
-            items?: Array<{ slug?: unknown; updated_at?: unknown }>;
-          };
-          return (payload.items ?? []).flatMap((item) => {
-            if (typeof item.slug !== 'string') return [];
-            return [
-              {
-                locale,
-                slug: item.slug,
-                lastmod: typeof item.updated_at === 'string' ? item.updated_at : undefined,
-              },
-            ];
-          });
-        } catch {
-          return [];
-        } finally {
-          clearTimeout(timeout);
-        }
-      }),
-    )
-  ).flat();
-
-  cachedArticleSitemap = { expiresAt: Date.now() + 300_000, entries };
-  return entries;
-};
+const loadArticleSitemap = lecteurDArticlesDuSitemap({
+  apiBaseUrl: process.env['PORTFOLIO_ARTICLE_API_URL'],
+  fetch: (url, init) => fetch(url, init),
+  journal: console,
+});
 
 const loadCoursPublications = lecteurDePublicationsDeCours({
   apiBaseUrl: process.env['PORTFOLIO_ARTICLE_API_URL'],
@@ -252,8 +209,6 @@ app.use(
   }),
 );
 
-const DOCUMENT_CACHE_CONTROL = 'public, max-age=3600, s-maxage=14400';
-
 const localeOf = (originalUrl: string): string | null =>
   LOCALE_PREFIX_RE.exec(originalUrl)?.[1] ?? null;
 
@@ -283,7 +238,7 @@ const sendPrerendered = (
   }
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Content-Language', urlLocale);
-  res.setHeader('Cache-Control', DOCUMENT_CACHE_CONTROL);
+  res.setHeader('Cache-Control', documentCacheControlFor(res.statusCode));
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.send(html);
 };
@@ -315,15 +270,23 @@ const renderWithSsr = (
 ): void => {
   const { urlLocale, baseHref } = input;
   const { protocol, originalUrl, headers } = req;
+  let status = 200;
   commonEngine
     .render({
       bootstrap,
       documentFilePath: resolveIndexHtml(urlLocale),
       url: `${protocol}://${headers.host}${originalUrl}`,
       publicPath: ssrPublicPathOf(urlLocale),
-      providers: [{ provide: APP_BASE_HREF, useValue: baseHref }],
+      providers: [
+        { provide: APP_BASE_HREF, useValue: baseHref },
+        {
+          provide: HTTP_RESPONSE_STATUS,
+          useValue: { set: (code: number) => (status = Math.max(status, code)) },
+        },
+      ],
     })
     .then((rendered) => {
+      res.status(status);
       const metadata = loadSeoMetadata();
       let html = rendered;
       if (metadata) {
@@ -331,7 +294,7 @@ const renderWithSsr = (
         html = injectSeoHead(html, metadata, originalUrl, baseUrl);
       }
       res.setHeader('Content-Language', urlLocale ?? metadata?.site.defaultLocale ?? 'fr');
-      res.setHeader('Cache-Control', DOCUMENT_CACHE_CONTROL);
+      res.setHeader('Cache-Control', documentCacheControlFor(status));
       res.setHeader('X-Content-Type-Options', 'nosniff');
       res.send(html);
     })

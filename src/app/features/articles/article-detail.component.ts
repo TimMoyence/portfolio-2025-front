@@ -1,4 +1,5 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -12,6 +13,7 @@ import { APP_CONFIG } from '../../core/config/app-config.token';
 import type { PublishedArticle } from '../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../core/adapters/article-http.adapter';
 import { SeoService } from '../../core/seo/seo.service';
+import { HTTP_RESPONSE_STATUS } from '../../core/ssr/http-response-status';
 import { ArticlesCtaComponent } from './articles-cta.component';
 import { localeDesArticles, type LocaleDesArticles } from './locale-des-articles';
 import { renderArticleMarkdown } from './markdown-article.utils';
@@ -36,6 +38,7 @@ export class ArticleDetailComponent {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly seo = inject(SeoService);
   private readonly config = inject(APP_CONFIG);
+  private readonly responseStatus = inject(HTTP_RESPONSE_STATUS, { optional: true });
 
   constructor(
     route: ActivatedRoute,
@@ -48,6 +51,7 @@ export class ArticleDetailComponent {
     if (!slug) {
       this.isLoading = false;
       this.hasError = true;
+      this.responseStatus?.set(404);
       return;
     }
     this.api.getBySlug(slug, this.locale).subscribe({
@@ -76,9 +80,12 @@ export class ArticleDetailComponent {
         });
         this.cdr.markForCheck();
       },
-      error: () => {
+      error: (error: unknown) => {
         this.isLoading = false;
         this.hasError = true;
+        this.responseStatus?.set(
+          error instanceof HttpErrorResponse && error.status === 404 ? 404 : 503,
+        );
         this.cdr.markForCheck();
       },
     });
