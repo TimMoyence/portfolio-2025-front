@@ -17,9 +17,10 @@ réduction descendait jusqu'à 0,35 : lisible sur un vidéoprojecteur, illisible
   Angular des marges nulles (`--slide-marge-bloc`, `--slide-marge-ligne`) et aux briques runtime
   une densité resserrée (`--fp-densite-imposee`, `--fp-echelle-imposee`, `--fp-titre-impose`,
   `--fp-marge-carte-imposee`), plus serrée encore dans la demi-toile d'un renvoi.
-- Au poste étudiant, la taille affichée du contenu (échelle de la toile × réduction du contenu)
-  ne descend jamais sous 0,8 (`ECHELLE_LISIBLE`) : sur un écran plus large que la toile, la
-  réduction peut donc descendre jusqu'à `0,8 ÷ échelle de la toile`. Au-delà, le contenu garde
+- Au poste étudiant, la réduction du contenu ne descend jamais sous 0,8 (`ECHELLE_LISIBLE`)
+  quand la toile est réduite ; quand elle est agrandie, c'est la taille affichée (échelle de la
+  toile × réduction) qui ne descend jamais sous 0,8, et la réduction peut aller jusqu'à
+  `0,8 ÷ échelle de la toile`. Au-delà, le contenu garde
   cette taille, la toile s'aligne en haut et le cadre de l'écran défile
   (`cours-presentation--defilante`, `.student-session__cadre`), la navigation restant visible ;
   aucune brique ne défile en interne.

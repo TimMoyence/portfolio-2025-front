@@ -333,9 +333,7 @@ export class CoursPresentationComponent {
 
   private readonly reductionLisible = computed(() => {
     const echelle = this.echelleDeToile();
-    return echelle === null || echelle === 0
-      ? ECHELLE_LISIBLE
-      : Math.min(1, ECHELLE_LISIBLE / echelle);
+    return echelle === null ? ECHELLE_LISIBLE : ECHELLE_LISIBLE / Math.max(1, echelle);
   });
 
   protected readonly defilante = computed(() => {

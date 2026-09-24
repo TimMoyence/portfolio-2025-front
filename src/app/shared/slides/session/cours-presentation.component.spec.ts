@@ -206,24 +206,27 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     expect(fautes).toEqual([]);
   });
 
-  it('G01 · au poste étudiant, la réduction du contenu ne descend jamais sous une taille affichée de 0,8', async () => {
+  it('G01 · au poste étudiant, le contenu d une toile réduite garde 0,8 et celui d une toile agrandie s affiche au moins à 0,8', async () => {
     const recommandation = ecransPublicsB2_01().find(({ id }) =>
       id.endsWith('A5-08-RECOMMANDATION'),
     );
     if (recommandation === undefined) {
       throw new Error('écran absent du poste étudiant : A5-08-RECOMMANDATION');
     }
-    for (const [largeur, hauteur] of [
-      [1280, 720],
-      [1350, 700],
-    ] as const) {
-      const monte = await monterDansUnCadre(recommandation, 'etudiant', largeur, hauteur);
+    const reduite = await monterDansUnCadre(recommandation, 'etudiant', 1350, 700);
 
-      expect(echelleAffichee(monte))
-        .withContext(`${largeur} × ${hauteur}`)
-        .toBeGreaterThanOrEqual(ECHELLE_MINIMALE - 0.001);
-      monte.detruire();
-    }
+    expect(echelleDuContenu(reduite.toile())).toBeCloseTo(ECHELLE_MINIMALE, 3);
+    reduite.detruire();
+
+    const agrandie = await monterDansUnCadre(
+      recommandation,
+      'etudiant',
+      CADRE_ETUDIANT_14_POUCES.largeur,
+      CADRE_ETUDIANT_14_POUCES.hauteur,
+    );
+
+    expect(echelleAffichee(agrandie)).toBeGreaterThanOrEqual(ECHELLE_MINIMALE - 0.001);
+    agrandie.detruire();
   });
 
   for (const mode of ['formateur', 'projection'] as const) {
