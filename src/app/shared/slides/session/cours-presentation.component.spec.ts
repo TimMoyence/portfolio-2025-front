@@ -180,6 +180,52 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     });
   }
 
+  it('G01 · sur un portable 14 pouces, chaque écran étudiant du B2-01 tient dans son cadre sans défiler, à une taille lisible', async () => {
+    const pupitre = ecransDuPupitreB2_01();
+    const fautes: string[] = [];
+    for (const ecran of ecransPublicsB2_01()) {
+      const renvoi = pupitre.find(({ id }) => id === ecran.renvoi) ?? null;
+      const monte = await monterDansUnCadre(
+        ecran,
+        'etudiant',
+        CADRE_ETUDIANT_14_POUCES.largeur,
+        CADRE_ETUDIANT_14_POUCES.hauteur,
+        renvoi,
+      );
+      const defile = monte.cadre.scrollHeight > monte.cadre.clientHeight + 1;
+      const horsToile = elementsHorsToile(monte);
+      const echelle = echelleAffichee(monte);
+      if (defile || horsToile.length > 0 || echelle < ECHELLE_MINIMALE - 0.001) {
+        fautes.push(
+          `${ecran.id} defile=${String(defile)} hors=${horsToile.join(',')} echelle=${echelle.toFixed(3)}`,
+        );
+      }
+      monte.detruire();
+    }
+
+    expect(fautes).toEqual([]);
+  });
+
+  it('G01 · au poste étudiant, la réduction du contenu ne descend jamais sous une taille affichée de 0,8', async () => {
+    const recommandation = ecransPublicsB2_01().find(({ id }) =>
+      id.endsWith('A5-08-RECOMMANDATION'),
+    );
+    if (recommandation === undefined) {
+      throw new Error('écran absent du poste étudiant : A5-08-RECOMMANDATION');
+    }
+    for (const [largeur, hauteur] of [
+      [1280, 720],
+      [1350, 700],
+    ] as const) {
+      const monte = await monterDansUnCadre(recommandation, 'etudiant', largeur, hauteur);
+
+      expect(echelleAffichee(monte))
+        .withContext(`${largeur} × ${hauteur}`)
+        .toBeGreaterThanOrEqual(ECHELLE_MINIMALE - 0.001);
+      monte.detruire();
+    }
+  });
+
   for (const mode of ['formateur', 'projection'] as const) {
     it(`G01 · en ${mode}, un écran trop long ne défile jamais : il est mis à l échelle de la toile`, async () => {
       const ecrans = ecransDuPupitreB2_01();
@@ -451,6 +497,14 @@ function elementsHorsToile(monte: EcranCadre): string[] {
 }
 
 const ECHELLE_MINIMALE = 0.8;
+
+const CADRE_ETUDIANT_14_POUCES = { largeur: 1480, hauteur: 913 } as const;
+
+function echelleAffichee(monte: EcranCadre): number {
+  const toile = monte.toile();
+  const largeur = toile?.getBoundingClientRect().width ?? 0;
+  return (largeur / 1280) * echelleDuContenu(toile);
+}
 
 function defilante(monte: EcranCadre): boolean {
   return monte.hote.classList.contains('cours-presentation--defilante');

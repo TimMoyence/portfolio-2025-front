@@ -47,6 +47,7 @@ interface Mesure {
             data-testid="cours-toile"
             [class.cours-toile--renvoi]="renvoi() !== null"
             [style.transform]="transformation()"
+            [style.block-size.px]="hauteurDeToile()"
           >
             <div class="cours-toile__principal" #principal>
               <div
@@ -292,14 +293,32 @@ export class CoursPresentationComponent {
     return this.mode() === 'etudiant' && cadre !== null && cadre.largeur < LARGEUR_COMPACTE;
   });
 
-  protected readonly transformation = computed(() => {
+  private readonly echelleDeToile = computed(() => {
     const cadre = this.cadre();
     if (cadre === null || this.compacte()) {
       return null;
     }
-    const echelle = Math.min(cadre.largeur / LARGEUR_DE_TOILE, cadre.hauteur / HAUTEUR_DE_TOILE);
+    return Math.min(cadre.largeur / LARGEUR_DE_TOILE, cadre.hauteur / HAUTEUR_DE_TOILE);
+  });
+
+  protected readonly hauteurDeToile = computed(() => {
+    const cadre = this.cadre();
+    const echelle = this.echelleDeToile();
+    if (this.mode() !== 'etudiant' || cadre === null || echelle === null || echelle === 0) {
+      return null;
+    }
+    return Math.max(HAUTEUR_DE_TOILE, cadre.hauteur / echelle);
+  });
+
+  protected readonly transformation = computed(() => {
+    const cadre = this.cadre();
+    const echelle = this.echelleDeToile();
+    if (cadre === null || echelle === null) {
+      return null;
+    }
+    const hauteur = this.hauteurDeToile() ?? HAUTEUR_DE_TOILE;
     const decalageX = (cadre.largeur - LARGEUR_DE_TOILE * echelle) / 2;
-    const decalageY = this.defilante() ? 0 : (cadre.hauteur - HAUTEUR_DE_TOILE * echelle) / 2;
+    const decalageY = this.defilante() ? 0 : (cadre.hauteur - hauteur * echelle) / 2;
     return `translate(${decalageX}px, ${decalageY}px) scale(${echelle})`;
   });
 
@@ -312,9 +331,16 @@ export class CoursPresentationComponent {
     return place / contenu;
   });
 
+  private readonly reductionLisible = computed(() => {
+    const echelle = this.echelleDeToile();
+    return echelle === null || echelle === 0
+      ? ECHELLE_LISIBLE
+      : Math.min(1, ECHELLE_LISIBLE / echelle);
+  });
+
   protected readonly defilante = computed(() => {
     const reduction = this.reduction();
-    return this.mode() === 'etudiant' && reduction !== null && reduction < ECHELLE_LISIBLE;
+    return this.mode() === 'etudiant' && reduction !== null && reduction < this.reductionLisible();
   });
 
   protected readonly ajustement = computed(() => {
@@ -322,7 +348,7 @@ export class CoursPresentationComponent {
     if (reduction === null) {
       return null;
     }
-    return `scale(${this.defilante() ? ECHELLE_LISIBLE : reduction})`;
+    return `scale(${this.defilante() ? this.reductionLisible() : reduction})`;
   });
 
   constructor() {
