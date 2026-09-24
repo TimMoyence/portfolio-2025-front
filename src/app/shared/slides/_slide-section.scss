@@ -16,6 +16,32 @@
   margin: 0 0 2rem;
 }
 
+@mixin competence {
+  color: var(--accent-dark, var(--teal-dark));
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@mixin sous-titre($largeur, $marge, $taille, $interligne) {
+  max-width: $largeur;
+  margin: $marge;
+  color: var(--text-muted, var(--slide-text-muted));
+  font-size: $taille;
+  line-height: $interligne;
+  text-align: center;
+}
+
+@mixin sous-titre-de-revue {
+  @include sous-titre(62ch, -1.5rem auto 1.5rem, 1.05rem, 1.5);
+}
+
+@mixin sous-titre-de-parcours($largeur) {
+  @include sous-titre($largeur, -1.35rem auto 2.5rem, clamp(1rem, 1.4cqi, 1.2rem), 1.45);
+}
+
 @mixin section {
   width: 100%;
   min-height: 100cqh;

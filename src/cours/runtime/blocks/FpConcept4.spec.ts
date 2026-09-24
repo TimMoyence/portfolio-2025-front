@@ -1,4 +1,8 @@
-import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
+import {
+  attendreAucunEffet,
+  attendreChaqueClasseCouverte,
+  attendreLaCorrectionNicheeEffacee,
+} from '../../../testing/assertions-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import { buildConcept4Definition } from '../../../testing/factories/cours.factory';
 import { evaluerExpression, remplirGabarit } from '../core/formula';
@@ -435,23 +439,77 @@ describe('FpConcept4', () => {
       expect(hote.valeurs).toEqual({ C: 1000, i: 10, n: 20 });
       expect(valeurDe(hote, 'formule')).toBe(String(resultatAttendu({ C: 1000, i: 10, n: 20 })));
     });
+
+    describe('R8 · animation de la machine à coefficients', () => {
+      const ANIMEE = buildConcept4Definition({
+        ...MACHINE,
+        animation: [{ depart: 100, tauxUn: 0, tauxDeux: 0 }, { tauxUn: 50 }, { tauxDeux: -50 }],
+      });
+
+      beforeEach(() => {
+        jasmine.clock().install();
+        hote.definition = ANIMEE;
+      });
+
+      afterEach(() => {
+        jasmine.clock().uninstall();
+      });
+
+      it('change une seule valeur toutes les trois secondes, de +50 % à −50 %', () => {
+        animer(hote);
+        expect(hote.valeurs).toEqual({ depart: 100, tauxUn: 0, tauxDeux: 0 });
+
+        jasmine.clock().tick(2999);
+        expect(hote.valeurs).toEqual({ depart: 100, tauxUn: 0, tauxDeux: 0 });
+
+        jasmine.clock().tick(1);
+        expect(hote.valeurs).toEqual({ depart: 100, tauxUn: 50, tauxDeux: 0 });
+
+        jasmine.clock().tick(3000);
+        expect(hote.valeurs).toEqual({ depart: 100, tauxUn: 50, tauxDeux: -50 });
+        expect(valeurDe(hote, 'phrase')).toBe('75');
+      });
+
+      it('relaie au pupitre chaque état joué', () => {
+        hote.setAttribute('data-cours-role', 'presentateur');
+        const emis = reglagesEmis();
+
+        animer(hote);
+        jasmine.clock().tick(6000);
+
+        expect(emis).toEqual([
+          { reglages: { depart: 100, tauxUn: 0, tauxDeux: 0 } },
+          { reglages: { depart: 100, tauxUn: 50, tauxDeux: 0 } },
+          { reglages: { depart: 100, tauxUn: 50, tauxDeux: -50 } },
+        ]);
+      });
+
+      it('s arrête dès qu un préréglage est choisi', () => {
+        animer(hote);
+        prereglage(hote, '+10 % puis −10 %');
+        jasmine.clock().tick(6000);
+
+        expect(hote.valeurs).toEqual({ depart: 100, tauxUn: 10, tauxDeux: -10 });
+      });
+    });
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
-    const piege = buildConcept4Definition({ id: 'K-QUATRE-FACES-04' });
-    const metadonnees = { ...piege.metadonnees, bonneReponse: 'a' };
-    hote.definition = { ...piege, metadonnees };
-    expect(JSON.stringify(hote.definition)).not.toContain('bonneReponse');
+    attendreLaCorrectionNicheeEffacee(
+      buildConcept4Definition({ id: 'K-QUATRE-FACES-04' }),
+      (contamine) => {
+        hote.definition = contamine;
+        return hote.definition;
+      },
+    );
   });
 
   it('explore sans rien emettre vers la seance ni ecrire dans un stockage', () => {
     animer(hote);
-    expect(traces.evenements).toEqual([]);
-    expect(traces.ecritures).toEqual([]);
+    attendreAucunEffet(traces);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
-    expect(classesOrphelines(hote, 'concept4')).toEqual([]);
+    attendreChaqueClasseCouverte(hote, 'concept4', CLASSES_ATTENDUES);
   });
 });

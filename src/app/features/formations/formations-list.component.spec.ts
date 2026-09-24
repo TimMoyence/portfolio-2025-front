@@ -1,29 +1,17 @@
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormationsListComponent } from './formations-list.component';
 import { FORMATION_BENEFITS, FORMATIONS } from './formations-list.data';
 import { INSTANTANE_B2_01 } from '../../../testing/fixtures/instantane-b2-01';
+import { montagePage } from '../../../testing/montage-page';
 
 describe('FormationsListComponent', () => {
+  const page = montagePage(FormationsListComponent);
   let component: FormationsListComponent;
   let fixture: ComponentFixture<FormationsListComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FormationsListComponent],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(FormationsListComponent);
+  beforeEach(() => {
+    fixture = page();
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    document.documentElement.classList.remove('anim-ready');
   });
 
   it('devrait etre cree', () => {

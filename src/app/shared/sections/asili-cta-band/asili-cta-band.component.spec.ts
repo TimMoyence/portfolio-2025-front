@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
+import { provideRouter } from '@angular/router';
 import { isolateAnimReady } from '../../../../testing/anim-ready';
+import { rendreLHoteNavigateur } from '../../../../testing/montage-page';
 import { AsiliCtaBandComponent } from './asili-cta-band.component';
 
 const TITLE = 'Et si on clarifiait, ensemble, avant de construire ?';
@@ -59,6 +61,27 @@ describe('AsiliCtaBandComponent', () => {
     expect(fixture.nativeElement.querySelector('.cta-lead')).toBeNull();
   });
 
+  it('rend les actions fournies : la principale avec sa fleche, puis la secondaire', () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    setup();
+    fixture.componentRef.setInput('actions', [
+      { libelle: 'Demarrer', lien: '/contact', variante: 'principale' },
+      { libelle: 'Explorer', lien: '/projets', variante: 'secondaire' },
+    ]);
+    fixture.detectChanges();
+
+    const liens = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLAnchorElement>('.cta-actions a'),
+    );
+    expect(liens.map((lien) => [lien.className, lien.getAttribute('href')])).toEqual([
+      ['btn btn-teal', '/contact'],
+      ['btn btn-ghost', '/projets'],
+    ]);
+    expect(liens[0].querySelector('.arrow[aria-hidden="true"]')).not.toBeNull();
+    expect(liens[1].querySelector('.arrow')).toBeNull();
+    expect(liens.map((lien) => lien.textContent?.trim())).toEqual(['Demarrer →', 'Explorer']);
+  });
+
   it("reste rendu cote serveur (SSR fail-open : pas d'anim-ready)", () => {
     setup('server');
     fixture.detectChanges();
@@ -75,7 +98,7 @@ describe('AsiliCtaBandComponent', () => {
           <span kicker class="kicker cta-kicker">Slot kicker</span>
           <p lead class="cta-lead">Accroche projetee.</p>
           <a cta class="btn btn-teal" href="/contact">Demarrer</a>
-          <a cta class="btn btn-ghost" href="/atelier">Explorer</a>
+          <a cta class="btn btn-ghost" href="/projets">Explorer</a>
         </app-asili-cta-band>
       `,
     })
@@ -84,13 +107,7 @@ describe('AsiliCtaBandComponent', () => {
     }
 
     it("projette le kicker, l'accroche et les CTA fournis par la page", () => {
-      const hostFixture = TestBed.configureTestingModule({
-        imports: [HostComponent],
-        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
-      }).createComponent(HostComponent);
-      hostFixture.detectChanges();
-
-      const host = hostFixture.nativeElement as HTMLElement;
+      const host = rendreLHoteNavigateur(HostComponent);
       expect(host.querySelector('.cta-kicker')?.textContent).toContain('Slot kicker');
       expect(host.querySelector('.cta-lead')?.textContent).toContain('Accroche projetee.');
 

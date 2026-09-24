@@ -2,6 +2,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { fondEffectif, rapportDeContraste } from '../../../../../testing/contraste';
 import { setupTestBed } from '../../../../../testing/setup-test-bed';
+import { textes } from '../../../../../testing/textes-dom';
 import type { SlideChartKind, SlideChartSeries } from './slide-chart.component';
 import { SlideChartComponent } from './slide-chart.component';
 
@@ -46,12 +47,6 @@ function monter(
 
 function element(fixture: ComponentFixture<SlideChartComponent>): HTMLElement {
   return fixture.nativeElement as HTMLElement;
-}
-
-function textes(racine: HTMLElement, selecteur: string): (string | undefined)[] {
-  return Array.from(racine.querySelectorAll(selecteur)).map((noeud) =>
-    noeud.textContent?.replace(/\s+/g, ' ').trim(),
-  );
 }
 
 function variables(racine: HTMLElement, selecteur: string, variable: string): string[] {

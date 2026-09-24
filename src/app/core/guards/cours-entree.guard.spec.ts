@@ -1,15 +1,9 @@
-import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot, GuardResult, RouterStateSnapshot } from '@angular/router';
 import { UrlTree } from '@angular/router';
-import { AUTH_PORT } from '../ports/auth.port';
-import { AuthStateService } from '../services/auth-state.service';
-import {
-  buildAuthSession,
-  buildAuthUser,
-  createAuthPortStub,
-} from '../../../testing/factories/auth.factory';
-import { setupTestBed } from '../../../testing/setup-test-bed';
+import type { AuthStateService } from '../services/auth-state.service';
+import { etatAuth } from '../../../testing/etat-auth';
+import { buildAuthSession, buildAuthUser } from '../../../testing/factories/auth.factory';
 import { coursEntreeGuard } from './cours-entree.guard';
 
 const SLUG = 'b2-01-traitement-information-chiffree';
@@ -27,14 +21,7 @@ describe('coursEntreeGuard', () => {
   }
 
   beforeEach(() => {
-    setupTestBed({
-      router: true,
-      providers: [
-        { provide: PLATFORM_ID, useValue: 'server' },
-        { provide: AUTH_PORT, useValue: createAuthPortStub() },
-      ],
-    });
-    authState = TestBed.inject(AuthStateService);
+    authState = etatAuth('server');
   });
 
   afterEach(() => authState.clearSession());

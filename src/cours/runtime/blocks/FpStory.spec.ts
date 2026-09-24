@@ -1,5 +1,10 @@
-import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
-import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
+import {
+  attendreChaqueClasseCouverte,
+  attendreLaCorrectionNicheeEffacee,
+  attendreLaMemeTypographieAuPresentateur,
+  attendreSansModaliteNiDuree,
+  parcourirLesRolesSansEffet,
+} from '../../../testing/assertions-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import { buildStoryRecit } from '../../../testing/factories/cours.factory';
 import { FpStory, type StoryVideo } from './FpStory';
@@ -124,14 +129,7 @@ describe('FpStory', () => {
   });
 
   it('donne la grande typographie au titre pour le presentateur comme pour l etudiant', () => {
-    const etudiant = hote.shadowRoot?.querySelector('.fp-root')?.innerHTML;
-    expect(marque(hote, 'titre')?.classList.contains('fp-enonce')).toBe(true);
-    hote.setAttribute('data-cours-role', 'presentateur');
-    expect(marque(hote, 'titre')?.classList.contains('fp-enonce')).toBe(true);
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(
-      'presentateur',
-    );
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.innerHTML).toBe(etudiant);
+    attendreLaMemeTypographieAuPresentateur(hote, () => marque(hote, 'titre'));
   });
 
   it('sert la video allegee au poste etudiant et la source pleine au presentateur', () => {
@@ -145,31 +143,22 @@ describe('FpStory', () => {
   });
 
   it('n affiche plus la modalite ni la duree, quel que soit le role', () => {
-    for (const role of ROLES_DE_MONTAGE) {
-      hote.setAttribute('data-cours-role', role);
-      expect(marque(hote, 'modalite')).withContext(role).toBeNull();
-      expect(marque(hote, 'duree')).withContext(role).toBeNull();
-    }
+    attendreSansModaliteNiDuree(hote, (repere) => marque(hote, repere));
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
-    const piege = buildStoryRecit({ id: 'R-RECIT-06' });
-    const metadonnees = { ...piege.metadonnees, bonneReponse: 'a' };
-    hote.recit = { ...piege, metadonnees };
-    expect(JSON.stringify(hote.recit)).not.toContain('bonneReponse');
+    attendreLaCorrectionNicheeEffacee(buildStoryRecit({ id: 'R-RECIT-06' }), (contamine) => {
+      hote.recit = contamine;
+      return hote.recit;
+    });
   });
 
   it('ne diffuse aucun evenement et n ecrit dans aucun stockage', () => {
     hote.recit = buildStoryRecit({ id: 'R-RECIT-07' });
-    for (const role of ROLES_DE_MONTAGE) {
-      hote.setAttribute('data-cours-role', role);
-    }
-    expect(traces.evenements).toEqual([]);
-    expect(traces.ecritures).toEqual([]);
+    parcourirLesRolesSansEffet(hote, traces);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
-    expect(classesOrphelines(hote, 'story')).toEqual([]);
+    attendreChaqueClasseCouverte(hote, 'story', CLASSES_ATTENDUES);
   });
 });

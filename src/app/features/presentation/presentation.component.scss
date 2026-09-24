@@ -1,12 +1,6 @@
 @use '../../styles-shared/breakpoints' as bp;
-@use '../../styles-shared/hero-meta' as hero;
+@use '../../styles-shared/lists';
 @use '../../styles-shared/surfaces' as surfaces;
-
-/* Double classe : spécificité (0,2,0) > `.hero-meta div` (0,1,1) hérité du
-   slot, pour bien neutraliser le filet gauche sur le conteneur lui-même. */
-.presentation-hero-meta.presentation-hero-meta {
-  @include hero.key-value-rows;
-}
 
 .intro-split {
   display: grid;
@@ -127,6 +121,7 @@
 }
 
 .timeline {
+  @include lists.list-reset;
   display: grid;
   gap: 0;
   max-width: 880px;

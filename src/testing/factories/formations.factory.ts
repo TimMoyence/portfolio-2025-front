@@ -248,6 +248,7 @@ export function buildRattachement(overrides: Partial<Rattachement> = {}): Rattac
     ecranCourant: 0,
     modeRythme: 'pilote',
     jeton: 'jeton-1',
+    secretDeReprise: 'secret-de-reprise-1',
     ...overrides,
   };
 }
@@ -324,6 +325,7 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
     'lireSyntheseRappels',
     'evincerParticipant',
     'readmettreParticipant',
+    'libererPoste',
   ]);
   port.ouvrirSeance.and.returnValue(of({ sessionId: 'seance-1', code: '4821' }));
   port.lireDeroule.and.returnValue(of(buildDerouleCours()));
@@ -354,5 +356,6 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   port.lireSyntheseRappels.and.returnValue(of({ concepts: [buildSyntheseConcept()] }));
   port.evincerParticipant.and.returnValue(of(undefined));
   port.readmettreParticipant.and.returnValue(of(undefined));
+  port.libererPoste.and.returnValue(of(undefined));
   return port;
 }

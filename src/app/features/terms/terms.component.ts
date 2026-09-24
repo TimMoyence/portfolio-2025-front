@@ -1,19 +1,13 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
-
-interface TermsTocItem {
-  readonly anchor: string;
-  readonly label: string;
-}
+import { LegalPageComponent, type LegalTocItem } from '../legal/legal-page.component';
 
 @Component({
   selector: 'app-terms',
   standalone: true,
-  imports: [CommonModule, RouterModule, RevealOnScrollDirective],
+  imports: [RouterModule, RevealOnScrollDirective, LegalPageComponent],
   templateUrl: './terms.component.html',
-  styleUrl: './terms.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TermsComponent {
@@ -22,7 +16,7 @@ export class TermsComponent {
     updated: $localize`:terms.hero.updated@@termsMetaLastUpdated:Dernière mise à jour : 4 juin 2026`,
   };
 
-  readonly toc: readonly TermsTocItem[] = [
+  readonly toc: readonly LegalTocItem[] = [
     {
       anchor: 'editeur',
       label: $localize`:terms.toc.editeur@@termsTocEditeur:Éditeur du site`,

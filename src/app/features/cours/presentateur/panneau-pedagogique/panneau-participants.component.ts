@@ -81,6 +81,15 @@ type LectureDesParticipants = 'fermee' | 'chargement' | 'ouverte' | 'echec';
                 } @else {
                   <button
                     type="button"
+                    class="control-btn"
+                    data-testid="activite-liberer"
+                    (click)="libererLePoste(participant)"
+                    i18n="@@panneauActiviteLibererPoste"
+                  >
+                    Libérer le poste
+                  </button>
+                  <button
+                    type="button"
                     class="control-danger"
                     data-testid="activite-evincer"
                     (click)="evincer(participant)"
@@ -92,6 +101,16 @@ type LectureDesParticipants = 'fermee' | 'chargement' | 'ouverte' | 'echec';
               </li>
             }
           </ul>
+          @if (posteLibere(); as libere) {
+            <p
+              role="status"
+              data-testid="activite-poste-libere"
+              i18n="@@panneauActivitePosteLibere"
+            >
+              Poste de {{ libere.prenom }} {{ libere.nom }} libéré : il peut rejoindre depuis un
+              autre appareil.
+            </p>
+          }
         }
       }
     </section>
@@ -102,6 +121,7 @@ export class PanneauParticipantsComponent {
 
   protected readonly lecture = signal<LectureDesParticipants>('fermee');
   protected readonly listeDesParticipants = signal<readonly ParticipantDeSeance[]>([]);
+  protected readonly posteLibere = signal<ParticipantDeSeance | null>(null);
 
   private readonly port = inject(FORMATIONS_PORT);
 
@@ -130,6 +150,22 @@ export class PanneauParticipantsComponent {
 
   protected readmettre(participant: ParticipantDeSeance): Promise<void> {
     return this.basculerLEviction(participant, false);
+  }
+
+  protected async libererLePoste(participant: ParticipantDeSeance): Promise<void> {
+    const sessionId = this.sessionId();
+    if (sessionId === null) {
+      return;
+    }
+    this.posteLibere.set(null);
+    try {
+      await firstValueFrom(this.port.libererPoste(sessionId, participant.id), {
+        defaultValue: undefined,
+      });
+      this.posteLibere.set(participant);
+    } catch {
+      this.lecture.set('echec');
+    }
   }
 
   private async basculerLEviction(

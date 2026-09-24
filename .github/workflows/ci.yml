@@ -113,7 +113,7 @@ jobs:
       # Le cache ne restaure pas les dependances systeme du navigateur :
       # `--with-deps` est rejoue meme sur un cache touche, et n installe que
       # chromium, le seul navigateur des deux projets de playwright.config.ts.
-      # `test:e2e:portail` joue `chromium` ; seul `banc` reste hors CI.
+      # `test:e2e:portail` joue `chromium` ; `banc` a son propre job.
       - name: Installation de chromium
         run: npx playwright install --with-deps chromium
 
@@ -135,6 +135,76 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report/
+          retention-days: 7
+
+  # scripts/banc/jouer.mjs cherche le back en frere du front
+  # (../portfolio-2025-back) : les deux depots sont extraits cote a cote.
+  banc:
+    name: banc
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: portfolio-2025-front
+    steps:
+      - name: Checkout du front
+        uses: actions/checkout@v4
+        with:
+          path: portfolio-2025-front
+
+      - name: Branche du back jumelle de la PR
+        id: back
+        working-directory: .
+        env:
+          BRANCHE: ${{ github.head_ref || 'master' }}
+        run: |
+          if git ls-remote --exit-code --heads https://github.com/TimMoyence/portfolio-2025-back.git "$BRANCHE" > /dev/null; then
+            echo "ref=$BRANCHE" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=master" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout du back
+        uses: actions/checkout@v4
+        with:
+          repository: TimMoyence/portfolio-2025-back
+          ref: ${{ steps.back.outputs.ref }}
+          path: portfolio-2025-back
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: portfolio-2025-back/package.json
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: portfolio-2025-front/package-lock.json
+
+      - name: Dependances du front
+        run: npm ci
+
+      - name: Dependances du back
+        working-directory: portfolio-2025-back
+        run: pnpm install --frozen-lockfile
+
+      - name: Installation de chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Banc navigateur reel (porte bloquante)
+        env:
+          CI: 'true'
+        run: npm run test:banc
+
+      - name: Journaux du banc
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: banc
+          path: |
+            portfolio-2025-front/test-results/
+            portfolio-2025-front/playwright-report/
           retention-days: 7
 
   security:

@@ -20,12 +20,7 @@
 }
 
 .slide-grid__subtitle {
-  max-width: 58ch;
-  margin: -1.35rem auto 2.5rem;
-  color: var(--text-muted, var(--slide-text-muted));
-  font-size: clamp(1rem, 1.4cqi, 1.2rem);
-  line-height: 1.45;
-  text-align: center;
+  @include slide.sous-titre-de-parcours(58ch);
 }
 
 .slide-grid__card {

@@ -1,4 +1,5 @@
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
+import { CHARGE_XSS } from '../../../testing/charge-xss';
 import { classesOrphelines } from '../../../testing/classes-briques';
 import {
   buildChallengeProbleme,
@@ -15,7 +16,6 @@ interface DetailChallenge {
 const PROBLEME = buildChallengeProbleme();
 const LIBELLE_FAUSSE = 'Diviser 100 par 7 et arrondir';
 const TENTATIVE = 'A vue de nez une dizaine d annees, j ai ajoute 7 % chaque annee de tete';
-const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const INSTANT_INITIAL = '2026-09-13T10:00:00.000Z';
 const CORRIGE_DU_DEFI = { type: 'defi', strategies: buildStrategiesServies(true) };
 

@@ -2,8 +2,21 @@ import {
   estObjet,
   estVerdictDeProduction,
   estVerdictDeReponse,
+  lireTextes,
   PROPRIETE_FORMATEUR,
 } from './retours';
+
+describe('lireTextes', () => {
+  it('ne garde que les entrees textuelles d un brouillon', () => {
+    expect(lireTextes({ a: 'rediger', b: 3, c: null, d: '' })).toEqual({ a: 'rediger', d: '' });
+  });
+
+  it('rend un recueil vide pour ce qui n est pas un objet', () => {
+    expect(lireTextes(['a'])).toEqual({});
+    expect(lireTextes('a')).toEqual({});
+    expect(lireTextes(null)).toEqual({});
+  });
+});
 
 const VERDICT_REPONSE = { questionId: 'Q', correcte: true, libelleConfusion: null };
 

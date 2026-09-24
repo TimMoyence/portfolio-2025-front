@@ -1,21 +1,10 @@
-<app-asili-hero [kicker]="heroKicker" [lead]="heroLead">
+<app-asili-hero [kicker]="heroKicker" [lead]="heroLead" [metaRows]="heroMeta">
   <ng-container title>
     <span data-testid="hero-title">
       {{ heroTitlePre }}
       <span class="accent">{{ heroTitleAccent }}</span>
       {{ heroTitlePost }}
     </span>
-  </ng-container>
-
-  <ng-container meta>
-    <div class="offer-hero-meta">
-      @for (row of heroMeta; track row.key) {
-        <div class="row">
-          <span class="k">{{ row.key }}</span>
-          <span class="v">{{ row.value }}</span>
-        </div>
-      }
-    </div>
   </ng-container>
 </app-asili-hero>
 
@@ -70,16 +59,4 @@
   </div>
 </section>
 
-<app-asili-faq [kicker]="faqKicker" [title]="faqTitle" [items]="faqItems" />
-
-<app-asili-cta-band [title]="ctaTitle">
-  <span kicker class="kicker cta-kicker">{{ ctaKicker }}</span>
-  <ng-container cta>
-    <a class="btn btn-teal" routerLink="/contact">
-      {{ ctaPrimary }} <span class="arrow" aria-hidden="true">→</span>
-    </a>
-    <a class="btn btn-ghost" routerLink="/projets">
-      {{ ctaSecondary }}
-    </a>
-  </ng-container>
-</app-asili-cta-band>
+<app-asili-closing [contenu]="closing" />

@@ -3,6 +3,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { isolateAnimReady } from '../../../../testing/anim-ready';
+import { rendreLHoteNavigateur } from '../../../../testing/montage-page';
 import { AsiliHeroComponent } from './asili-hero.component';
 
 const KICKER = 'Studio digital & IA · Bordeaux';
@@ -84,6 +85,40 @@ describe('AsiliHeroComponent', () => {
     expect(scrollHint?.querySelector('.bar')).toBeTruthy();
   });
 
+  it('rend les lignes cle/valeur fournies en panneau, sans le filet des statistiques', () => {
+    setup();
+    fixture.componentRef.setInput('metaRows', [
+      { key: 'Format', value: 'Sur-mesure' },
+      { key: 'Engagement', value: 'Du ponctuel au continu' },
+    ]);
+    attachSoGetComputedStyleAppliesTheCascade(fixture);
+    fixture.detectChanges();
+
+    const panneau = (fixture.nativeElement as HTMLElement).querySelector(
+      '.hero-meta .hero-meta-rows',
+    ) as HTMLElement;
+    expect(panneau).not.toBeNull();
+    const lignes = Array.from(panneau.querySelectorAll('.row')).map((row) => [
+      row.querySelector('.k')?.textContent,
+      row.querySelector('.v')?.textContent,
+    ]);
+    expect(lignes).toEqual([
+      ['Format', 'Sur-mesure'],
+      ['Engagement', 'Du ponctuel au continu'],
+    ]);
+    expect(getComputedStyle(panneau).borderLeftWidth).toBe('0px');
+    expect(getComputedStyle(panneau.querySelector('.row') as HTMLElement).borderLeftWidth).toBe(
+      '0px',
+    );
+    (fixture.nativeElement as HTMLElement).remove();
+  });
+
+  it("n'affiche aucun panneau cle/valeur sans lignes", () => {
+    setup();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.hero-meta-rows')).toBeNull();
+  });
+
   it("n'affiche pas l'indication de scroll quand non fournie", () => {
     setup();
     fixture.detectChanges();
@@ -109,7 +144,7 @@ describe('AsiliHeroComponent', () => {
             >Clarifier <span class="accent">avant</span> de construire.
           </ng-container>
           <a cta class="btn btn-teal" href="/services">Voir</a>
-          <a cta class="btn btn-ghost" href="/atelier">Essayer</a>
+          <a cta class="btn btn-ghost" href="/projets">Essayer</a>
           <div meta>
             <div class="n">2</div>
             <div class="l">piliers</div>
@@ -120,13 +155,7 @@ describe('AsiliHeroComponent', () => {
     class HostComponent {}
 
     it('projette la puce, le titre, les CTA et la meta fournis par la page', () => {
-      const hostFixture = TestBed.configureTestingModule({
-        imports: [HostComponent],
-        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
-      }).createComponent(HostComponent);
-      hostFixture.detectChanges();
-
-      const host = hostFixture.nativeElement as HTMLElement;
+      const host = rendreLHoteNavigateur(HostComponent);
       expect(host.querySelector('[chip].live-chip')?.textContent).toContain('Projection chip');
 
       const h1 = host.querySelector('h1.hero-title');

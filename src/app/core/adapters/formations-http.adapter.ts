@@ -55,6 +55,8 @@ const MOTIFS_DE_REFUS_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusRepons
 const MOTIFS_DE_RATTACHEMENT_PAR_CODE: Readonly<Record<string, MotifRefusRattachement>> = {
   SEANCE_COMPLETE: 'seance-complete',
   SEANCE_TERMINEE: 'seance-terminee',
+  PLACE_DEJA_PRISE: 'place-deja-prise',
+  PARTICIPANT_EVINCE: 'participant-evince',
 };
 
 const MOTIFS_D_ECRITURE_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = {
@@ -252,12 +254,13 @@ export class FormationsHttpAdapter implements FormationsPort {
   rejoindre(code: string, inscription: InscriptionParticipant): Observable<Rattachement> {
     const url = `${this.baseUrl}/sessions/${encodeURIComponent(code)}/join`;
     return this.http.post<Rattachement>(url, inscription).pipe(
-      map(({ participantId, sessionId, ecranCourant, modeRythme, jeton }) => ({
+      map(({ participantId, sessionId, ecranCourant, modeRythme, jeton, secretDeReprise }) => ({
         participantId,
         sessionId,
         ecranCourant,
         modeRythme,
         jeton,
+        secretDeReprise,
       })),
       catchError((erreur: unknown) => throwError(() => refuserRattachement(erreur))),
     );
@@ -398,6 +401,13 @@ export class FormationsHttpAdapter implements FormationsPort {
   readmettreParticipant(sessionId: string, participantId: string): Observable<void> {
     return this.http.post<void>(
       `${this.urlDuParticipant(sessionId, participantId)}/readmission`,
+      {},
+    );
+  }
+
+  libererPoste(sessionId: string, participantId: string): Observable<void> {
+    return this.http.post<void>(
+      `${this.urlDuParticipant(sessionId, participantId)}/liberation`,
       {},
     );
   }

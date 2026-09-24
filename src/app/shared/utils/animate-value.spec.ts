@@ -213,17 +213,19 @@ describe('animateValue', () => {
   });
 
   describe('cancel()', () => {
-    it("devrait stopper l'animation et ne pas appeler onComplete", () => {
+    function animerDeZeroACent(): {
+      handle: AnimationHandle;
+      onFrame: jasmine.Spy;
+      onComplete: jasmine.Spy;
+    } {
       const onFrame = jasmine.createSpy('onFrame');
       const onComplete = jasmine.createSpy('onComplete');
+      const handle = animateValue({ from: 0, to: 100, durationMs: 100, onFrame, onComplete });
+      return { handle, onFrame, onComplete };
+    }
 
-      const handle = animateValue({
-        from: 0,
-        to: 100,
-        durationMs: 100,
-        onFrame,
-        onComplete,
-      });
+    it("devrait stopper l'animation et ne pas appeler onComplete", () => {
+      const { handle, onFrame, onComplete } = animerDeZeroACent();
 
       runFrame(1000);
       const callsBeforeCancel = onFrame.calls.count();
@@ -235,15 +237,7 @@ describe('animateValue', () => {
     });
 
     it('devrait etre un no-op apres completion (idempotent)', () => {
-      const onComplete = jasmine.createSpy('onComplete');
-
-      const handle = animateValue({
-        from: 0,
-        to: 100,
-        durationMs: 100,
-        onFrame: () => {},
-        onComplete,
-      });
+      const { handle, onComplete } = animerDeZeroACent();
 
       runFrame(1000);
       runFrame(1100);
@@ -253,16 +247,7 @@ describe('animateValue', () => {
     });
 
     it('devrait empecher tout onFrame quand appele avant la 1re frame', () => {
-      const onFrame = jasmine.createSpy('onFrame');
-      const onComplete = jasmine.createSpy('onComplete');
-
-      const handle = animateValue({
-        from: 0,
-        to: 100,
-        durationMs: 100,
-        onFrame,
-        onComplete,
-      });
+      const { handle, onFrame, onComplete } = animerDeZeroACent();
 
       handle.cancel();
 

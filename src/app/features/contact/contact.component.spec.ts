@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { ContactComponent } from './contact.component';
 import { createContactPortStubWithDefault } from '../../../testing/factories/contact.factory';
@@ -167,5 +168,35 @@ describe('ContactComponent', () => {
         .toBeTrue();
       expect(roleLabel.classList.contains('text-scheme-text-muted')).toBeFalse();
     }
+  });
+});
+
+describe('ContactComponent — demande d acces redirigee par le garde de role', () => {
+  const messagePour = (app: string): string => {
+    setupTestBed({
+      router: true,
+      imports: [ContactComponent],
+      providers: [
+        { provide: CONTACT_PORT, useValue: createContactPortStubWithDefault() },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { queryParamMap: convertToParamMap({ reason: 'access', app }) } },
+        },
+      ],
+    });
+    const fixture = TestBed.createComponent(ContactComponent);
+    fixture.detectChanges();
+    return fixture.componentInstance.contactForm.message;
+  };
+
+  it('nomme l espace formateur pour le role teacher', () => {
+    expect(messagePour('teacher')).toContain("l'espace formateur");
+  });
+
+  it('nomme une application inconnue sans la presenter comme un atelier', () => {
+    const message = messagePour('inconnue');
+
+    expect(message).toContain("l'application inconnue");
+    expect(message).not.toContain('atelier');
   });
 });

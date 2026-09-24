@@ -1,27 +1,15 @@
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { montagePage } from '../../../testing/montage-page';
 import { ProjetsComponent } from './projets.component';
 
 describe('ProjetsComponent', () => {
+  const page = montagePage(ProjetsComponent);
   let component: ProjetsComponent;
   let fixture: ComponentFixture<ProjetsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ProjetsComponent],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(ProjetsComponent);
+  beforeEach(() => {
+    fixture = page();
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    document.documentElement.classList.remove('anim-ready');
   });
 
   it('should create', () => {

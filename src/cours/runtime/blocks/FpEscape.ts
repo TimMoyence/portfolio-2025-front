@@ -166,7 +166,7 @@ export class FpEscape extends FpBlock {
   render(): EscapedHtml {
     const parcours = this.interne;
     if (parcours === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
     const corrige = this.solutionnaire !== null;
     const jeu =

@@ -1,3 +1,4 @@
+import { attendreLeRenduEchappe } from '../../../testing/assertions-briques';
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import {
@@ -276,10 +277,7 @@ describe('FpRecall', () => {
   it('echappe le rappel libre reaffiche apres l apparition des options', () => {
     saisirRappel(hote, CHARGE_XSS);
     jasmine.clock().tick(DELAI_DEFAUT_MS);
-    const rendu = hote.shadowRoot?.innerHTML ?? '';
-    expect(rendu).not.toContain('<img src=x');
-    expect(rendu).toContain('&lt;img');
-    expect(hote.shadowRoot?.querySelector('img')).toBeNull();
+    attendreLeRenduEchappe(hote);
     expect(champRappel(hote).value).toBe(CHARGE_XSS);
   });
 

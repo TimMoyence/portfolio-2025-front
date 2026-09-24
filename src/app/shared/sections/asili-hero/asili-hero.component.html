@@ -32,6 +32,16 @@
         }
         <div class="hero-meta" appReveal [appRevealDelay]="3">
           <ng-content select="[meta]"></ng-content>
+          @if (metaRows().length > 0) {
+            <div class="hero-meta-rows">
+              @for (row of metaRows(); track row.key) {
+                <div class="row">
+                  <span class="k">{{ row.key }}</span>
+                  <span class="v">{{ row.value }}</span>
+                </div>
+              }
+            </div>
+          }
         </div>
       </div>
 

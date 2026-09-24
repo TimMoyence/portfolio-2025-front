@@ -1,13 +1,9 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
+import { Battement, SECONDE_MS } from './battement';
+import { FpProduction, lireAttendusDuCorrige } from './production';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import {
-  estObjet,
-  estVerdictDeProduction,
-  type DetailDeVerdict,
-  type VerdictDeProduction,
-} from './retours';
+import { estObjet, type DetailDeVerdict } from './retours';
 
 export interface CardsortPlanPublic {
   readonly id: string;
@@ -31,7 +27,6 @@ const VIDE = escapeHtml('');
 const DESACTIVE = safeHtml`disabled`;
 const RETENU = safeHtml`selected`;
 const TOUCHES_ACTION: readonly string[] = ['Enter', ' '];
-const PAS_MS = 1000;
 const MS_PAR_MINUTE = 60_000;
 
 function copierPlan(source: CardsortPlanPublic): CardsortPlanPublic {
@@ -48,71 +43,33 @@ function copierPlan(source: CardsortPlanPublic): CardsortPlanPublic {
   };
 }
 
-function lireAttendus(valeur: unknown): readonly AttenduFormateur[] {
-  if (!estObjet(valeur) || valeur['type'] !== 'classement' || !Array.isArray(valeur['attendus'])) {
-    return [];
-  }
-  return valeur['attendus'].filter(
-    (attendu): attendu is AttenduFormateur =>
-      estObjet(attendu) &&
-      typeof attendu['carteId'] === 'string' &&
-      typeof attendu['categorieId'] === 'string' &&
-      typeof attendu['justification'] === 'string',
-  );
-}
-
 function formaterChrono(restantMs: number): string {
-  const secondes = Math.ceil(restantMs / PAS_MS);
-  const minutes = Math.floor((secondes * PAS_MS) / MS_PAR_MINUTE);
+  const secondes = Math.ceil(restantMs / SECONDE_MS);
+  const minutes = Math.floor((secondes * SECONDE_MS) / MS_PAR_MINUTE);
   return `${minutes}:${String(secondes % 60).padStart(2, '0')}`;
 }
 
-export class FpCardsort extends FpBlock {
-  private interne: CardsortPlanPublic | null = null;
+export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateur> {
+  protected readonly evenementDeSoumission = 'fp-cardsort-submit';
   private places: Record<string, string> = {};
   private selection: string | null = null;
   private derniere: string | null = null;
   private destination = PIOCHE;
   private foyer: Foyer = null;
-  private message = '';
-  private soumis = false;
   private deposee = false;
-  private interneVerdict: VerdictDeProduction | null = null;
-  private attendus: readonly AttenduFormateur[] = [];
-  private minuteur: ReturnType<typeof setInterval> | null = null;
+  private justificationsAilleurs = false;
+  private readonly battement = new Battement(() => this.battre());
 
   set plan(valeur: CardsortPlanPublic | null) {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne = valeur === null ? null : copierPlan(valeur);
-    if (change) {
-      this.places = {};
-      this.selection = null;
-      this.derniere = null;
-      this.destination = PIOCHE;
-      this.foyer = null;
-      this.message = '';
-      this.soumis = false;
-      this.interneVerdict = null;
-    }
-    this.refreshSiConnecte();
+    this.poserLePlan(valeur, copierPlan);
   }
 
   get plan(): CardsortPlanPublic | null {
     return this.interne;
   }
 
-  set verdict(valeur: VerdictDeProduction | null) {
-    this.interneVerdict =
-      estVerdictDeProduction(valeur) && valeur.questionId === this.interne?.id ? valeur : null;
-    this.refreshSiConnecte();
-  }
-
-  get verdict(): VerdictDeProduction | null {
-    return this.interneVerdict;
-  }
-
-  set corrige(valeur: unknown) {
-    this.attendus = lireAttendus(valeur);
+  set resoluAilleurs(valeur: unknown) {
+    this.justificationsAilleurs = valeur === true;
     this.refreshSiConnecte();
   }
 
@@ -133,13 +90,13 @@ export class FpCardsort extends FpBlock {
   }
 
   disconnectedCallback(): void {
-    this.arreter();
+    this.battement.arreter();
   }
 
   render(): EscapedHtml {
     const plan = this.interne;
     if (plan === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
     return safeHtml`
       <section class="fp-carte fp-scene fp-cardsort__atelier">
@@ -189,8 +146,24 @@ export class FpCardsort extends FpBlock {
     );
   }
 
-  private verrouille(): boolean {
-    return this.verrouilleApresEnvoi(this.soumis, this.interneVerdict !== null);
+  protected lireLesAttendus(valeur: unknown): readonly AttenduFormateur[] {
+    return lireAttendusDuCorrige<AttenduFormateur>(valeur, 'classement', {
+      carteId: 'string',
+      categorieId: 'string',
+      justification: 'string',
+    });
+  }
+
+  protected relacherLaSaisie(): void {
+    this.selection = null;
+    this.foyer = null;
+  }
+
+  protected reinitialiserLaSaisie(): void {
+    this.relacherLaSaisie();
+    this.places = {};
+    this.derniere = null;
+    this.destination = PIOCHE;
   }
 
   private detailDe(carteId: string): DetailDeVerdict | null {
@@ -211,25 +184,19 @@ export class FpCardsort extends FpBlock {
     if (restant === null) {
       return VIDE;
     }
-    const texte =
-      restant > 0
-        ? `${this.texte('cardsort-chrono')} ${formaterChrono(restant)}`
-        : this.texte('cardsort-chrono-echu');
-    return safeHtml`<p class="fp-cardsort__chrono" aria-live="off" data-testid="chrono" data-echu="${escapeHtml(String(restant === 0))}">${escapeHtml(texte)}</p>`;
+    return safeHtml`<p class="fp-cardsort__chrono" aria-live="off" data-testid="chrono" data-echu="${escapeHtml(String(restant === 0))}">${escapeHtml(this.texteDuChrono(restant))}</p>`;
+  }
+
+  private texteDuChrono(restant: number): string {
+    return restant > 0
+      ? `${this.texte('cardsort-chrono')} ${formaterChrono(restant)}`
+      : this.texte('cardsort-chrono-echu');
   }
 
   private planifier(): void {
     const restant = this.restantMs();
-    if (this.minuteur !== null || restant === null || restant <= 0) {
-      return;
-    }
-    this.minuteur = setInterval(() => this.battre(), PAS_MS);
-  }
-
-  private arreter(): void {
-    if (this.minuteur !== null) {
-      clearInterval(this.minuteur);
-      this.minuteur = null;
+    if (restant !== null && restant > 0) {
+      this.battement.demarrer();
     }
   }
 
@@ -237,14 +204,11 @@ export class FpCardsort extends FpBlock {
     const restant = this.restantMs() ?? 0;
     const chrono = this.racine.querySelector<HTMLElement>('[data-testid="chrono"]');
     if (chrono !== null) {
-      chrono.textContent =
-        restant > 0
-          ? `${this.texte('cardsort-chrono')} ${formaterChrono(restant)}`
-          : this.texte('cardsort-chrono-echu');
+      chrono.textContent = this.texteDuChrono(restant);
       chrono.dataset['echu'] = String(restant === 0);
     }
     if (restant <= 0) {
-      this.arreter();
+      this.battement.arreter();
     }
   }
 
@@ -374,7 +338,7 @@ export class FpCardsort extends FpBlock {
   }
 
   private correction(): EscapedHtml {
-    if (this.attendus.length === 0) {
+    if (this.attendus.length === 0 || this.justificationsAilleurs) {
       return VIDE;
     }
     return safeHtml`
@@ -494,15 +458,6 @@ export class FpCardsort extends FpBlock {
     this.refresh();
   }
 
-  private conclure(detail: Readonly<Record<string, unknown>>): void {
-    this.soumis = true;
-    this.selection = null;
-    this.foyer = null;
-    this.message = this.messageApresEnvoi();
-    this.emit('fp-cardsort-submit', { ...detail, dureeMs: this.depuisAffichage() });
-    this.refresh();
-  }
-
   private valider(): void {
     const plan = this.interne;
     if (plan === null || this.verrouille()) {
@@ -515,12 +470,5 @@ export class FpCardsort extends FpBlock {
       return;
     }
     this.conclure({ planId: plan.id, classement: { ...this.places } });
-  }
-
-  private neSaitPas(): void {
-    const plan = this.interne;
-    if (plan !== null && !this.verrouille()) {
-      this.conclure({ planId: plan.id, neSaitPas: true });
-    }
   }
 }

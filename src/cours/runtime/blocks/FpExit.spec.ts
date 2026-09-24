@@ -1,3 +1,4 @@
+import { attendreLeRenduEchappe, attendreUneRegionLive } from '../../../testing/assertions-briques';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { buildExitBillet, buildVerdictDeReponse } from '../../../testing/factories/cours.factory';
 import { FpExit } from './FpExit';
@@ -145,10 +146,7 @@ describe('FpExit', () => {
     choisir(hote, 'a');
     ecrire(hote, CHARGE_XSS);
     envoyer(hote);
-    const rendu = hote.shadowRoot?.innerHTML ?? '';
-    expect(rendu).not.toContain('<img src=x');
-    expect(rendu).toContain('&lt;img');
-    expect(hote.shadowRoot?.querySelector('img')).toBeNull();
+    attendreLeRenduEchappe(hote);
     expect(texteDe(hote, 'recap-texte')).toBe(CHARGE_XSS);
     expect(champLibre(hote).value).toBe(CHARGE_XSS);
   });
@@ -182,8 +180,7 @@ describe('FpExit', () => {
   });
 
   it('annonce le retour dans une region live', () => {
-    expect(hote.shadowRoot?.querySelector('[aria-live="polite"]')).toBeTruthy();
-    expect(hote.shadowRoot?.querySelector('fieldset')).toBeTruthy();
+    attendreUneRegionLive(hote);
   });
 
   it('affiche la longueur saisie face a la limite', () => {

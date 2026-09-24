@@ -1,6 +1,6 @@
 import { melangeur } from '../testing/melangeur';
 import { lastmodDeLaPage } from '../testing/sitemap-xml';
-import { buildVisualCourse } from '../testing/factories/formation-catalogue.factory';
+import { buildReponseDuCatalogue } from '../testing/factories/formation-catalogue.factory';
 import {
   buildPageDuCoursB2,
   buildSeoMetadata,
@@ -24,31 +24,23 @@ type Tirage = {
   readonly publie: boolean;
 };
 
-function catalogue(publieLe: string | undefined): Response {
-  const cours = { ...buildVisualCourse({ ecrans: [] }), version: 3, publieLe };
-  return new Response(JSON.stringify(cours), {
-    status: 200,
-    headers: { 'content-type': 'application/json' },
-  });
-}
-
 const TIRAGES_POSSIBLES: readonly Tirage[] = [
   {
     nom: 'publication lisible',
     apiBaseUrl: 'https://api.asilidesign.fr/api/v1/portfolio25',
-    repond: (publieLe) => Promise.resolve(catalogue(publieLe)),
+    repond: (publieLe) => Promise.resolve(buildReponseDuCatalogue(publieLe)),
     publie: true,
   },
   {
     nom: 'publieLe absent',
     apiBaseUrl: 'https://api.asilidesign.fr/api/v1/portfolio25',
-    repond: () => Promise.resolve(catalogue(undefined)),
+    repond: () => Promise.resolve(buildReponseDuCatalogue()),
     publie: false,
   },
   {
     nom: 'publieLe illisible',
     apiBaseUrl: 'https://api.asilidesign.fr/api/v1/portfolio25',
-    repond: () => Promise.resolve(catalogue('la semaine prochaine')),
+    repond: () => Promise.resolve(buildReponseDuCatalogue('la semaine prochaine')),
     publie: false,
   },
   {
@@ -120,7 +112,7 @@ describe('lastmod du cours servi par l API (H1, simulation)', () => {
     const journal = jasmine.createSpyObj<Pick<Console, 'warn'>>('journal', ['warn']);
     const appels = jasmine
       .createSpy<typeof fetch>('fetch')
-      .and.callFake(() => Promise.resolve(catalogue('2026-10-02T08:15:00.000Z')));
+      .and.callFake(() => Promise.resolve(buildReponseDuCatalogue('2026-10-02T08:15:00.000Z')));
     let horloge = Date.UTC(2026, 9, 2);
     const lire = lecteurDePublicationsDeCours({
       apiBaseUrl: 'https://api.asilidesign.fr/api/v1/portfolio25',

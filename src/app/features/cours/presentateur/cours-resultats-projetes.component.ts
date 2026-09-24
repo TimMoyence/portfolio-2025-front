@@ -11,7 +11,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, map, of, Subject, switchMap } from 'rxjs';
 import type {
-  EcranContent,
   EcranDeroule,
   ResultatQuestion,
   ResultatsSeance,
@@ -300,7 +299,6 @@ function resultatsProjetes(
 })
 export class CoursResultatsProjetesComponent {
   readonly ecran = input.required<EcranDeroule>();
-  readonly renvoi = input<EcranContent | null>(null);
   readonly resultats = input<ResultatsSeance | null>(null);
   readonly sessionId = input<string | null>(null);
   readonly actif = input(false);
@@ -308,23 +306,19 @@ export class CoursResultatsProjetesComponent {
 
   protected readonly questions = computed(() => resultatsProjetes(this.ecran(), this.resultats()));
 
-  private readonly enonces = computed<ReadonlyMap<string, string>>(() => {
-    const renvoi = this.renvoi();
-    return new Map([
-      ...enoncesDesActivites(this.ecran()),
-      ...(renvoi === null ? [] : enoncesDesActivites(renvoi)),
-    ]);
-  });
+  private readonly enonces = computed<ReadonlyMap<string, string>>(
+    () => new Map(enoncesDesActivites(this.ecran())),
+  );
 
   private readonly reponsesLibres = signal<readonly ReponseLibreFormateur[]>([]);
   protected readonly lectureEchouee = signal(false);
 
   protected readonly groupes = computed<readonly GroupeDeReponses[]>(() => {
-    const ecrans = new Set([this.ecran().id, this.renvoi()?.id]);
+    const ecran = this.ecran().id;
     return this.enonces().size === 0
       ? []
       : grouperLesReponses(
-          this.reponsesLibres().filter(({ screenId }) => ecrans.has(screenId)),
+          this.reponsesLibres().filter(({ screenId }) => screenId === ecran),
           this.enonces(),
         );
   });

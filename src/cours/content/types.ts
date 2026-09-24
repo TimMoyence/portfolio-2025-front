@@ -20,6 +20,14 @@ export interface RevelationServie {
   readonly reflexion: { readonly attendu: string; readonly suite: string | null } | null;
 }
 
+export interface CadrageDuRenvoi {
+  readonly part: number;
+  readonly extrait?: {
+    readonly lignes?: readonly number[];
+    readonly champs?: readonly string[];
+  };
+}
+
 export interface EcranContent {
   id: string;
   type: string;
@@ -28,7 +36,9 @@ export interface EcranContent {
   interactif: boolean;
   donnees?: Record<string, unknown>;
   renvoi?: string;
+  cadrageDuRenvoi?: CadrageDuRenvoi;
   ecranSource?: string;
+  resoluPar?: readonly string[];
   revelation?: RevelationServie;
 }
 

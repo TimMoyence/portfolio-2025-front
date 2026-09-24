@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import {
   AsiliCtaBandComponent,
+  type AsiliCtaAction,
   AsiliHeroComponent,
   AsiliMethodComponent,
   type AsiliMethodStep,
@@ -13,7 +13,6 @@ import {
   selector: 'app-projets',
   standalone: true,
   imports: [
-    RouterLink,
     AsiliHeroComponent,
     AsiliProjectsGridComponent,
     AsiliMethodComponent,
@@ -244,7 +243,16 @@ export class ProjetsComponent {
 
   protected readonly ctaTitle = $localize`:@@projetsCtaTitle:Racontez-moi votre situation. On verra ce qui mérite d'être construit.`;
 
-  protected readonly ctaPrimary = $localize`:@@projetsCtaPrimary:Démarrer la conversation`;
-
-  protected readonly ctaSecondary = $localize`:@@projetsCtaSecondary:Découvrir l'audit`;
+  protected readonly ctaActions: readonly AsiliCtaAction[] = [
+    {
+      libelle: $localize`:@@projetsCtaPrimary:Démarrer la conversation`,
+      lien: '/contact',
+      variante: 'principale',
+    },
+    {
+      libelle: $localize`:@@projetsCtaSecondary:Découvrir l'audit`,
+      lien: '/growth-audit',
+      variante: 'secondaire',
+    },
+  ];
 }

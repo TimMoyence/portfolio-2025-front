@@ -14,6 +14,7 @@ import type { PulseSondage } from './FpPulse';
 import type { SheetPlanPublic as SheetPlanBrique } from './FpSheet';
 import type { SpacedQuestionPublique as SpacedQuestionBrique } from './FpSpaced';
 import type { StoryRecit as StoryRecitBrique } from './FpStory';
+import type { TableBuildPlanPublic, TableColonne } from './FpTableBuild';
 import type { WorkedExemple } from './FpWorked';
 import type { OptionPublique } from './projection';
 
@@ -39,34 +40,9 @@ export interface CardsortPlanPublic extends CardsortPlanBrique {
   readonly dureeJeuMs?: number;
 }
 
-export interface TableColonneServie {
-  readonly cle: string;
-  readonly intitule: string;
-  readonly role: 'donnee' | 'saisie' | 'deduite';
-  readonly decimales: number;
-  readonly valeurs?: readonly number[];
-  readonly formule?: string;
-  readonly formuleInitiale?: string;
-  readonly soldeDe?: string;
-  readonly totalise: boolean;
-}
+export type { TableBuildPlanPublic };
 
-export interface TableBuildPlanPublic {
-  readonly id: string;
-  readonly intitule: string;
-  readonly consignes: readonly string[];
-  readonly echeances: number;
-  readonly libellesLignes: readonly string[];
-  readonly parametres: Readonly<Record<string, number>>;
-  readonly colonnes: readonly TableColonneServie[];
-  readonly synthese: readonly {
-    readonly libelle: string;
-    readonly formule: string;
-    readonly unite: string | null;
-    readonly decimales: number;
-  }[];
-  readonly metadonnees: MetadonneesBrique;
-}
+export type TableColonneServie = TableColonne;
 
 export interface EscapeParcoursPublic extends Omit<EscapeParcoursBrique, 'enigmes'> {
   readonly tentativesMax: number;

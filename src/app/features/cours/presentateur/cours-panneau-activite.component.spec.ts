@@ -109,18 +109,23 @@ describe('CoursPanneauActiviteComponent', () => {
     });
   });
 
-  it('revele les pistes fausses d un defi une seule fois', () => {
-    const defi = buildEcranDeroule({ id: 'ecran-defi', type: 'fp-challenge', donnees: {} });
-    const { fixture, commandes } = monter(defi);
-
-    cliquer(fixture, 'activite-reveler');
-    expect(commandes).toEqual([{ screenId: 'ecran-defi', revele: true }]);
+  function revelerUneSeuleFois(
+    { fixture, commandes }: ReturnType<typeof monter>,
+    marque: string,
+    screenId: string,
+  ): void {
+    cliquer(fixture, marque);
+    expect(commandes).toEqual([{ screenId, revele: true }]);
 
     fixture.componentRef.setInput('pilotage', { revele: true });
     fixture.detectChanges();
-    expect(
-      (cibleMarque(fixture, 'activite-reveler', 'le panneau') as HTMLButtonElement).disabled,
-    ).toBeTrue();
+    expect((cibleMarque(fixture, marque, 'le panneau') as HTMLButtonElement).disabled).toBeTrue();
+  }
+
+  it('revele les pistes fausses d un defi une seule fois', () => {
+    const defi = buildEcranDeroule({ id: 'ecran-defi', type: 'fp-challenge', donnees: {} });
+
+    revelerUneSeuleFois(monter(defi), 'activite-reveler', 'ecran-defi');
   });
 
   it('R1 · révèle à l écran la correction d un tri de cartes, une seule fois', () => {
@@ -130,17 +135,8 @@ describe('CoursPanneauActiviteComponent', () => {
       donnees: { plan: buildCardsortPlan() },
       corriges: [],
     });
-    const { fixture, commandes } = monter(tri);
 
-    cliquer(fixture, 'activite-reveler-correction');
-    expect(commandes).toEqual([{ screenId: 'ecran-tri', revele: true }]);
-
-    fixture.componentRef.setInput('pilotage', { revele: true });
-    fixture.detectChanges();
-    expect(
-      (cibleMarque(fixture, 'activite-reveler-correction', 'le panneau') as HTMLButtonElement)
-        .disabled,
-    ).toBeTrue();
+    revelerUneSeuleFois(monter(tri), 'activite-reveler-correction', 'ecran-tri');
   });
 
   it('T9 · révèle un écran à réponses libres pour déverrouiller sa correction', () => {
@@ -262,18 +258,10 @@ describe('CoursPanneauActiviteComponent', () => {
       corriges: [],
       questions: [{ id: 'q-atelier', enonce: 'Quel taux ?', options: null }],
     });
-    const { fixture, commandes } = monter(questionnaire);
+    const monte = monter(questionnaire);
 
-    expect(texte(fixture, 'activite-reveler-correction')).toBe('Révéler la correction');
-    cliquer(fixture, 'activite-reveler-correction');
-    expect(commandes).toEqual([{ screenId: 'ecran-atelier', revele: true }]);
-
-    fixture.componentRef.setInput('pilotage', { revele: true });
-    fixture.detectChanges();
-    expect(
-      (cibleMarque(fixture, 'activite-reveler-correction', 'le panneau') as HTMLButtonElement)
-        .disabled,
-    ).toBeTrue();
+    expect(texte(monte.fixture, 'activite-reveler-correction')).toBe('Révéler la correction');
+    revelerUneSeuleFois(monte, 'activite-reveler-correction', 'ecran-atelier');
   });
 
   it('RET-31 · corrige la feuille en deux temps, les formules puis les reponses', () => {

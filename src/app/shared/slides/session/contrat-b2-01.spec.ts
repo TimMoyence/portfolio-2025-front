@@ -46,7 +46,9 @@ import {
 import {
   buildDerouleCours,
   buildEcranDeroule,
+  buildRegleNotation,
   buildResultatQuestion,
+  buildResumeBareme,
   buildStatistiquesSeance,
 } from '../../../../testing/factories/formations.factory';
 import type {
@@ -158,17 +160,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
             epuisees: 1,
           } satisfies ProgressionEnigme,
         ],
-        bareme: {
-          questionsNotees: 31,
-          parType: {
-            vote: { notees: 19, nonNotees: 13 },
-            numeric: { notees: 7, nonNotees: 0 },
-            classement: { notees: 3, nonNotees: 0 },
-            feuille: { notees: 1, nonNotees: 0 },
-            tableau: { notees: 1, nonNotees: 0 },
-            enigme: { notees: 0, nonNotees: 4 },
-          },
-        } satisfies ResumeBareme,
+        bareme: buildResumeBareme() satisfies ResumeBareme,
       } satisfies ResultatsEnDirect;
       const types: TypeQuestion[] = Object.keys(enDirect.bareme.parType) as TypeQuestion[];
 
@@ -561,20 +553,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
         'evince',
         'refusee',
       ];
-      const notation = {
-        noteMax: 20,
-        base: 'participation-relative-cohorte',
-        partCohorteReference: 0.2,
-        ratioSeuilValidation: 0.4,
-        neSaitPasCompteCommeReponse: true,
-        pointsNonReponse: 0,
-        reponsesLibresNotees: false,
-        seuilQuestionProbleme: 0.7,
-        decimalesStatistiques: 2,
-        typesNotables: ['vote', 'numeric', 'classement', 'feuille', 'tableau'],
-        productionCompteSi: 'au-moins-une-saisie',
-        statistiquesSurQuestionsNotees: true,
-      } satisfies RegleNotation;
+      const notation = buildRegleNotation() satisfies RegleNotation;
 
       expect(commande.pilotage.etayage).toBe(1);
       expect([production.score, tentative.tentativesRestantes]).toEqual([14 / 17, 8]);

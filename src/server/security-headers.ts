@@ -7,18 +7,15 @@
  * aux ressources reellement chargees par l'application :
  * - `plausible.io` : analytics (script + events).
  * - `accounts.google.com` / `apis.google.com` : OAuth Google.
- * - `nominatim.openstreetmap.org` : reverse-geocoding (app meteo).
- * - `api.rainviewer.com` : index des tuiles radar (app meteo).
- * - `img-src ... https:` couvre les tuiles cartographiques (cartocdn, rainviewer).
  * - `style-src 'unsafe-inline'` requis par Angular (styles inline d'hydratation).
  */
 const CSP_REPORT_ONLY = [
   "default-src 'self'",
   "frame-ancestors 'self'",
-  "img-src 'self' data: https:",
+  "img-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
   "script-src 'self' https://plausible.io https://accounts.google.com https://apis.google.com",
-  "connect-src 'self' https://plausible.io https://nominatim.openstreetmap.org https://api.rainviewer.com",
+  "connect-src 'self' https://plausible.io",
   "font-src 'self' data:",
 ].join('; ');
 

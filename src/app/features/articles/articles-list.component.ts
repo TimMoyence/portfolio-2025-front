@@ -10,12 +10,14 @@ import {
 import { RouterLink } from '@angular/router';
 import type { ArticleSummary } from '../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../core/adapters/article-http.adapter';
-import { AsiliCtaBandComponent, AsiliHeroComponent } from '../../shared/sections';
+import { AsiliHeroComponent } from '../../shared/sections';
+import { ArticlesCtaComponent } from './articles-cta.component';
+import { localeDesArticles, type LocaleDesArticles } from './locale-des-articles';
 
 @Component({
   selector: 'app-articles-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, AsiliHeroComponent, AsiliCtaBandComponent],
+  imports: [CommonModule, RouterLink, AsiliHeroComponent, ArticlesCtaComponent],
   templateUrl: './articles-list.component.html',
   styleUrl: './articles-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +31,7 @@ export class ArticlesListComponent {
   protected readonly articles: ArticleSummary[] = [];
   protected isLoading = true;
   protected hasError = false;
-  protected readonly locale: 'fr' | 'en';
+  protected readonly locale: LocaleDesArticles;
   private readonly cdr = inject(ChangeDetectorRef);
 
   constructor(
@@ -37,10 +39,7 @@ export class ArticlesListComponent {
     @Inject(LOCALE_ID) localeId: string,
     @Inject(DOCUMENT) document: Document,
   ) {
-    this.locale =
-      localeId.toLowerCase().startsWith('en') || document.location.pathname.startsWith('/en')
-        ? 'en'
-        : 'fr';
+    this.locale = localeDesArticles(localeId, document.location.pathname);
     this.api.list(this.locale).subscribe({
       next: (response) => {
         this.articles.push(...response.items);

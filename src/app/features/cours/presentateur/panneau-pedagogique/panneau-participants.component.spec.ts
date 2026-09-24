@@ -1,6 +1,7 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import { balisesInjectees, CHARGE_XSS, xssDeclenche } from '../../../../../testing/charge-xss';
 import {
   buildParticipantDeSeance,
   createFormationsPortStub,
@@ -118,6 +119,52 @@ describe('PanneauParticipantsComponent', () => {
 
     expect(lire(fixture, 'activite-participants-echec')?.getAttribute('role')).toBe('alert');
     expect(lire(fixture, 'activite-participants-masquer')).not.toBeNull();
+  });
+
+  it('S1 · libere le poste d un participant pour qu il reprenne sa place depuis un autre appareil', async () => {
+    const fixture = await afficherDeuxParticipants();
+
+    await cliquerLePremier(fixture, 'activite-liberer');
+
+    expect(port.libererPoste).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
+    expect(lire(fixture, 'activite-poste-libere')?.getAttribute('role')).toBe('status');
+    expect(lire(fixture, 'activite-poste-libere')?.textContent).toContain('Lea Dubois');
+    expect(evinces(fixture)).toEqual(['false', 'false']);
+  });
+
+  it('S1 · ne propose pas de liberer le poste d un participant evince', async () => {
+    const fixture = await afficherDeuxParticipants();
+    await cliquerLePremier(fixture, 'activite-evincer');
+
+    const ligne = (fixture.nativeElement as HTMLElement).querySelector(
+      '[data-participant="participant-1"]',
+    );
+    expect(ligne?.querySelector('[data-testid="activite-liberer"]')).toBeNull();
+  });
+
+  it('S1 · alerte quand la liberation du poste est refusee', async () => {
+    const fixture = await afficherDeuxParticipants();
+    port.libererPoste.and.returnValue(throwError(() => new Error('participant introuvable')));
+
+    await cliquerLePremier(fixture, 'activite-liberer');
+
+    expect(lire(fixture, 'activite-participants-echec')?.getAttribute('role')).toBe('alert');
+    expect(lire(fixture, 'activite-poste-libere')).toBeNull();
+  });
+
+  it('T6 · affiche un nom piege en texte brut dans la liste comme dans l avis de liberation', async () => {
+    port.lireParticipants.and.returnValue(
+      of({ participants: [buildParticipantDeSeance({ prenom: CHARGE_XSS, nom: CHARGE_XSS })] }),
+    );
+    const fixture = monter();
+    await cliquerLePremier(fixture, 'activite-participants-afficher');
+
+    await cliquerLePremier(fixture, 'activite-liberer');
+
+    expect(lire(fixture, 'activite-participant')?.textContent).toContain(CHARGE_XSS);
+    expect(lire(fixture, 'activite-poste-libere')?.textContent).toContain(CHARGE_XSS);
+    expect(balisesInjectees(fixture.nativeElement as HTMLElement)).toBe(0);
+    expect(xssDeclenche()).toBeFalse();
   });
 
   it('ne lit rien sans seance ouverte', () => {

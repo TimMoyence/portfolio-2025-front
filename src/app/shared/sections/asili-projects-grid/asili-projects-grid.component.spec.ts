@@ -3,6 +3,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { isolateAnimReady } from '../../../../testing/anim-ready';
+import { rendreLHoteNavigateur } from '../../../../testing/montage-page';
 import type { AsiliProject } from './asili-projects-grid.component';
 import { AsiliProjectsGridComponent } from './asili-projects-grid.component';
 
@@ -275,13 +276,7 @@ describe('AsiliProjectsGridComponent', () => {
     }
 
     it("projette le kicker, le titre riche et le lien d'entete", () => {
-      const hostFixture = TestBed.configureTestingModule({
-        imports: [HostComponent],
-        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
-      }).createComponent(HostComponent);
-      hostFixture.detectChanges();
-
-      const host = hostFixture.nativeElement as HTMLElement;
+      const host = rendreLHoteNavigateur(HostComponent);
       expect(host.querySelector('.kicker')?.textContent).toContain('Slot kicker');
       expect(host.querySelector('h2.h-xl em')?.textContent).toBe('projete');
       const headLink = host.querySelector<HTMLAnchorElement>('.projects-head a[headLink]');

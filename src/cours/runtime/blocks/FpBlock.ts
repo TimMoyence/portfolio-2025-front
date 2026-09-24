@@ -204,6 +204,10 @@ export abstract class FpBlock extends HTMLElement {
     this.brouillonRepris = true;
   }
 
+  protected attente(): EscapedHtml {
+    return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+  }
+
   protected annonces(): EscapedHtml {
     const erreur =
       this.interneErreur === null

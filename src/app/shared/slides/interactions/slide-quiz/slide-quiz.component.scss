@@ -23,12 +23,7 @@
 .slide-quiz__competency {
   width: min(100%, 46rem);
   margin: 0 0 1rem;
-  color: var(--accent-dark, var(--teal-dark));
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  @include slide.competence;
 }
 
 .slide-quiz__options {

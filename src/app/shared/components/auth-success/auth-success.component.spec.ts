@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { provideRouter, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { monterAvecRouteur } from '../../../../testing/montage-page';
 import { AuthSuccessComponent } from './auth-success.component';
 
 const MESSAGE = 'Un email de réinitialisation vous a été envoyé.';
@@ -24,24 +24,9 @@ class HostComponent {
 }
 
 describe('AuthSuccessComponent', () => {
-  function setupBare(message = MESSAGE): ComponentFixture<AuthSuccessComponent> {
-    TestBed.configureTestingModule({
-      imports: [AuthSuccessComponent],
-    });
-    const fixture = TestBed.createComponent(AuthSuccessComponent);
-    fixture.componentRef.setInput('message', message);
-    fixture.detectChanges();
-    return fixture;
-  }
-
-  function setupWithHost(): ComponentFixture<HostComponent> {
-    const fixture = TestBed.configureTestingModule({
-      imports: [HostComponent],
-      providers: [provideRouter([])],
-    }).createComponent(HostComponent);
-    fixture.detectChanges();
-    return fixture;
-  }
+  const setupBare = (message = MESSAGE): ComponentFixture<AuthSuccessComponent> =>
+    monterAvecRouteur(AuthSuccessComponent, { message });
+  const setupWithHost = (): ComponentFixture<HostComponent> => monterAvecRouteur(HostComponent);
 
   it('se cree', () => {
     expect(setupBare().componentInstance).toBeTruthy();

@@ -41,8 +41,8 @@ import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import { enoncesDuDeroule, questionsDeLEcran } from '../../../shared/slides/session/lecture-ecran';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
-import { objet } from '../../../shared/slides/visual/presentation-v2';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
+import { directDeLEcran } from './direct-de-l-ecran';
 import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
 import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
@@ -523,7 +523,6 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                     />
                     <app-cours-resultats-projetes
                       [ecran]="ecranAffiche"
-                      [renvoi]="ecranRenvoye()"
                       [resultats]="resultats()"
                       [sessionId]="sessionId()"
                       [actif]="pilotageDeLEcran().resultatsProjetes === true"
@@ -788,16 +787,9 @@ export class CoursPresentateurComponent {
 
   readonly direct = computed<DirectEcran | null>(() => {
     const ecran = this.ecranCourant();
-    if (ecran === null) {
-      return null;
-    }
-    const sondageId = objet(ecran.donnees?.['sondage'])?.['id'];
-    return {
-      pilotage: this.pilotageDeLEcran(),
-      resultats: this.resultats()?.questions ?? null,
-      comptesJalon:
-        typeof sondageId === 'string' ? (this.resultats()?.jalons?.[sondageId] ?? null) : null,
-    };
+    return ecran === null
+      ? null
+      : directDeLEcran(ecran, this.pilotageDeLEcran(), this.resultats(), 0);
   });
 
   private readonly port = inject(FORMATIONS_PORT);

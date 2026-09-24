@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
-import { AsiliCtaBandComponent, AsiliHeroComponent } from '../../shared/sections';
+import {
+  AsiliCtaBandComponent,
+  type AsiliCtaAction,
+  AsiliHeroComponent,
+} from '../../shared/sections';
 import {
   FORMATION_BENEFITS,
   FORMATIONS,
@@ -34,7 +38,16 @@ export class FormationsListComponent {
 
   protected readonly ctaLead = $localize`:@@formationsCtaLead:Aucune inscription. Votre email n'est demandé que si vous voulez le toolkit PDF.`;
 
-  protected readonly ctaPrimary = $localize`:@@formationsCtaPrimary:Commencer par l'IA`;
-
-  protected readonly ctaSecondary = $localize`:@@formationsCtaSecondary:Poser une question`;
+  protected readonly ctaActions: readonly AsiliCtaAction[] = [
+    {
+      libelle: $localize`:@@formationsCtaPrimary:Commencer par l'IA`,
+      lien: '/formations/ia-solopreneurs',
+      variante: 'principale',
+    },
+    {
+      libelle: $localize`:@@formationsCtaSecondary:Poser une question`,
+      lien: '/contact',
+      variante: 'secondaire',
+    },
+  ];
 }

@@ -92,7 +92,7 @@ export class FpPulse extends FpBlock {
   render(): EscapedHtml {
     const sondage = this.sondage;
     if (!sondage) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
     const inerte = this.presentateur();
     const suivi = inerte

@@ -164,7 +164,7 @@ export class FpVote extends FpBlock {
   render(): EscapedHtml {
     const question = this.questionAffichee;
     if (!question) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
     const neSaitPas = this.presentateur()
       ? VIDE

@@ -293,11 +293,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     expect(dans(numerique, 'bonne-reponse')).toBeNull();
     fixture.componentRef.setInput('direct', direct(true));
     fixture.detectChanges();
-    expect(dans(vote, 'bonne-reponse')?.textContent).toContain('1 480,24 €');
-    expect(
-      vote.shadowRoot?.querySelector('[data-option="b"]')?.getAttribute('data-correction'),
-    ).toBe('juste');
-    expect(dans(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
+    attendreLeCorrigeDuQuestionnaire(vote, numerique);
   });
 
   it('RET-32 · montre a l etudiant la bonne reponse servie avec l ecran, comme au presentateur', async () => {
@@ -321,12 +317,16 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     await attendreQue(fixture, () => dans(vote, 'bonne-reponse') !== null, 'la correction');
 
     expect(await brique(fixture, 'fp-vote')).toBe(vote);
+    attendreLeCorrigeDuQuestionnaire(vote, numerique);
+  });
+
+  function attendreLeCorrigeDuQuestionnaire(vote: HTMLElement, numerique: HTMLElement): void {
     expect(dans(vote, 'bonne-reponse')?.textContent).toContain('1 480,24 €');
     expect(
       vote.shadowRoot?.querySelector('[data-option="b"]')?.getAttribute('data-correction'),
     ).toBe('juste');
     expect(dans(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
-  });
+  }
 
   it('ne montre pas a l etudiant les donnees du formateur, meme une fois la correction revelee', async () => {
     const fixture = monter({

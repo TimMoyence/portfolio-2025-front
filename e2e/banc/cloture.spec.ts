@@ -1,29 +1,15 @@
 import { expect, test } from '@playwright/test';
-import type { Page } from '@playwright/test';
 import {
-  SLUG_B2,
-  connecterLeFormateur,
   coursReleve,
   optionsDuPoste,
+  ouvrirLePupitre,
   posteDansSonNavigateur,
   verdictDuPoste,
 } from './contexte';
-import type { Seance } from './contexte';
 
 const POSTES = 3;
 
 const PREMIER_RANG = 50;
-
-async function ouvrirLePupitre(page: Page): Promise<Seance> {
-  await connecterLeFormateur(page);
-  await page.goto(`/fr/cours/presenter/${SLUG_B2}`);
-  await page.locator('app-cookie-banner').getByRole('button', { name: 'Tout refuser' }).click();
-  await expect(page.getByTestId('presentateur-code')).toHaveText(/^\d{4}$/);
-  const code = ((await page.getByTestId('presentateur-code').textContent()) ?? '').trim();
-  await expect(page).toHaveURL(/seance=/);
-  const sessionId = new URL(page.url()).searchParams.get('seance') ?? '';
-  return { sessionId, code };
-}
 
 test.describe('Banc — clôture et synthèse', () => {
   test('le pupitre mène la séance de bout en bout et la synthèse reflète les réponses', async ({

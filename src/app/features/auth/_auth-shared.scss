@@ -1,4 +1,5 @@
 @use '../../styles-shared/forms' as forms;
+@use './auth-msg';
 
 .auth-split {
   display: grid;
@@ -285,17 +286,6 @@ h1 em {
 .auth-alt a:hover,
 .auth-alt button:hover {
   text-decoration: underline;
-}
-
-.auth-msg {
-  font-size: 13.5px;
-  margin-top: 14px;
-}
-.auth-msg.ok {
-  color: var(--success);
-}
-.auth-msg.err {
-  color: var(--danger);
 }
 
 .auth-illus {

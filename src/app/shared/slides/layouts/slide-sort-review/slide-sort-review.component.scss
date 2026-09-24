@@ -5,12 +5,7 @@
 }
 
 .slide-sort-review__subtitle {
-  max-width: 62ch;
-  margin: -1.5rem auto 1.5rem;
-  color: var(--text-muted, var(--slide-text-muted));
-  font-size: 1.05rem;
-  line-height: 1.5;
-  text-align: center;
+  @include slide.sous-titre-de-revue;
 }
 
 .slide-sort-review__zones {

@@ -100,13 +100,10 @@ export class ContactComponent implements OnInit {
   }
 
   private appLabel(normalizedApp: string): string {
-    if (normalizedApp === 'weather') {
-      return $localize`:contact.access.app.weather@@contactAccessAppWeather:l'application Météo`;
+    if (normalizedApp === 'teacher') {
+      return $localize`:contact.access.app.teacher@@contactAccessAppTeacher:l'espace formateur`;
     }
-    if (normalizedApp === 'sebastian') {
-      return $localize`:contact.access.app.sebastian@@contactAccessAppSebastian:l'application Sebastian`;
-    }
-    return $localize`:contact.access.app.generic@@contactAccessAppGeneric:l'atelier ${normalizedApp}:app:`;
+    return $localize`:contact.access.app.generic@@contactAccessAppGeneric:l'application ${normalizedApp}:app:`;
   }
 
   private buildAccessRequestMessage(app: string): string {

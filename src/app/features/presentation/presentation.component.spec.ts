@@ -1,27 +1,16 @@
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { faqRendue } from '../../../testing/faq-rendue';
+import { montagePage } from '../../../testing/montage-page';
 import { PresentationComponent } from './presentation.component';
 
 describe('PresentationComponent', () => {
+  const page = montagePage(PresentationComponent);
   let component: PresentationComponent;
   let fixture: ComponentFixture<PresentationComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [PresentationComponent],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PresentationComponent);
+  beforeEach(() => {
+    fixture = page();
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    document.documentElement.classList.remove('anim-ready');
   });
 
   it('should create', () => {
@@ -48,17 +37,13 @@ describe('PresentationComponent', () => {
     expect(skills.length).toBe(3);
   });
 
-  it('should render the career timeline milestones', () => {
+  it('should render the career timeline milestones as an ordered list', () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    const items = compiled.querySelectorAll('.timeline .tl-item');
+    const items = compiled.querySelectorAll('ol.timeline > li.tl-item');
     expect(items.length).toBe(component['milestones'].length);
   });
 
   it('should render an SSR-safe FAQ with FAQPage microdata', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const faq = compiled.querySelector('.faq[itemtype="https://schema.org/FAQPage"]');
-    expect(faq).not.toBeNull();
-    const questions = compiled.querySelectorAll('.faq details.faq-item');
-    expect(questions.length).toBe(component['faqItems'].length);
+    faqRendue(fixture.nativeElement, component['closing'].faq.items.length);
   });
 });

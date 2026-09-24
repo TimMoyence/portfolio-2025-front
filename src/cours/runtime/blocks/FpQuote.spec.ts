@@ -1,5 +1,10 @@
-import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
-import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
+import {
+  attendreChaqueClasseCouverte,
+  attendreLaCorrectionNicheeEffacee,
+  attendreLaMemeTypographieAuPresentateur,
+  attendreSansModaliteNiDuree,
+  parcourirLesRolesSansEffet,
+} from '../../../testing/assertions-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import { buildQuoteCitation } from '../../../testing/factories/cours.factory';
 import { FpQuote } from './FpQuote';
@@ -76,42 +81,26 @@ describe('FpQuote', () => {
   });
 
   it('donne la grande typographie de l enonce au presentateur comme a l etudiant', () => {
-    const etudiant = hote.shadowRoot?.querySelector('.fp-root')?.innerHTML;
-    expect(noeud(hote, 'texte')?.classList.contains('fp-enonce')).toBe(true);
-    hote.setAttribute('data-cours-role', 'presentateur');
-    expect(noeud(hote, 'texte')?.classList.contains('fp-enonce')).toBe(true);
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(
-      'presentateur',
-    );
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.innerHTML).toBe(etudiant);
+    attendreLaMemeTypographieAuPresentateur(hote, () => noeud(hote, 'texte'));
   });
 
   it('n affiche plus la modalite ni la duree, quel que soit le role', () => {
-    for (const role of ROLES_DE_MONTAGE) {
-      hote.setAttribute('data-cours-role', role);
-      expect(noeud(hote, 'modalite')).withContext(role).toBeNull();
-      expect(noeud(hote, 'duree')).withContext(role).toBeNull();
-    }
+    attendreSansModaliteNiDuree(hote, (repere) => noeud(hote, repere));
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
-    const piege = buildQuoteCitation({ id: 'C-CITATION-05' });
-    const metadonnees = { ...piege.metadonnees, bonneReponse: 'a' };
-    hote.citation = { ...piege, metadonnees };
-    expect(JSON.stringify(hote.citation)).not.toContain('bonneReponse');
+    attendreLaCorrectionNicheeEffacee(buildQuoteCitation({ id: 'C-CITATION-05' }), (contamine) => {
+      hote.citation = contamine;
+      return hote.citation;
+    });
   });
 
   it('ne diffuse aucun evenement et n ecrit dans aucun stockage', () => {
     hote.citation = buildQuoteCitation({ id: 'C-CITATION-06' });
-    for (const role of ROLES_DE_MONTAGE) {
-      hote.setAttribute('data-cours-role', role);
-    }
-    expect(traces.evenements).toEqual([]);
-    expect(traces.ecritures).toEqual([]);
+    parcourirLesRolesSansEffet(hote, traces);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
-    expect(classesOrphelines(hote, 'quote')).toEqual([]);
+    attendreChaqueClasseCouverte(hote, 'quote', CLASSES_ATTENDUES);
   });
 });

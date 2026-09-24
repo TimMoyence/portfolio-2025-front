@@ -4,14 +4,12 @@
       <span class="kicker" i18n="@@authAsideRegisterKicker">Bienvenue</span>
       <h2 i18n="@@authAsideRegisterTitle">Un compte, <em>tout l'écosystème</em> Asili.</h2>
       <p i18n="@@authAsideRegisterSub">
-        Créez votre espace pour accéder à l'Atelier, aux formations et à votre profil.
+        Créez votre espace pour accéder aux formations et à votre profil.
       </p>
     } @else {
       <span class="kicker" i18n="@@authAsideLoginKicker">Bon retour</span>
       <h2 i18n="@@authAsideLoginTitle">Reprenez là où vous <em>vous étiez arrêté</em>.</h2>
-      <p i18n="@@authAsideLoginSub">
-        Accédez à vos formations, à l'Atelier et à votre espace personnel.
-      </p>
+      <p i18n="@@authAsideLoginSub">Accédez à vos formations et à votre espace personnel.</p>
     }
   </div>
 
@@ -97,21 +95,10 @@
               }
             </div>
             @if (control.invalid && (control.touched || isLoginSubmitted)) {
-              <p class="err">
-                @if (control.errors?.['required']) {
-                  <span i18n="auth.error.required|Required field error@@authErrorRequired"
-                    >Ce champ est obligatoire.</span
-                  >
-                } @else if (control.errors?.['email']) {
-                  <span i18n="auth.error.email|Invalid email error@@authErrorEmail"
-                    >Merci d’entrer une adresse email valide.</span
-                  >
-                } @else {
-                  <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric"
-                    >Valeur invalide.</span
-                  >
-                }
-              </p>
+              <ng-container
+                [ngTemplateOutlet]="erreurDeChamp"
+                [ngTemplateOutletContext]="{ $implicit: control.errors, longueur: false }"
+              />
             }
           </div>
         }
@@ -218,26 +205,13 @@
               }
             </div>
             @if (control.invalid && (control.touched || isSignupSubmitted)) {
-              <p class="err">
-                @if (control.errors?.['required']) {
-                  <span i18n="auth.error.required|Required field error@@authErrorRequired"
-                    >Ce champ est obligatoire.</span
-                  >
-                } @else if (control.errors?.['email']) {
-                  <span i18n="auth.error.email|Invalid email error@@authErrorEmail"
-                    >Merci d’entrer une adresse email valide.</span
-                  >
-                } @else if (control.errors?.['minlength'] && field.key === 'password') {
-                  <span
-                    i18n="auth.error.passwordLength|Password length error@@authErrorPasswordLength"
-                    >Le mot de passe doit contenir au moins 8 caractères.</span
-                  >
-                } @else {
-                  <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric"
-                    >Valeur invalide.</span
-                  >
-                }
-              </p>
+              <ng-container
+                [ngTemplateOutlet]="erreurDeChamp"
+                [ngTemplateOutletContext]="{
+                  $implicit: control.errors,
+                  longueur: field.key === 'password',
+                }"
+              />
             }
           </div>
         }
@@ -306,4 +280,26 @@
       ></app-svg-icon>
     </button>
   </span>
+</ng-template>
+
+<ng-template #erreurDeChamp let-erreurs let-longueur="longueur">
+  <p class="err">
+    @if (erreurs?.['required']) {
+      <span i18n="auth.error.required|Required field error@@authErrorRequired"
+        >Ce champ est obligatoire.</span
+      >
+    } @else if (erreurs?.['email']) {
+      <span i18n="auth.error.email|Invalid email error@@authErrorEmail"
+        >Merci d’entrer une adresse email valide.</span
+      >
+    } @else if (erreurs?.['minlength'] && longueur) {
+      <span i18n="auth.error.passwordLength|Password length error@@authErrorPasswordLength"
+        >Le mot de passe doit contenir au moins 8 caractères.</span
+      >
+    } @else {
+      <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric"
+        >Valeur invalide.</span
+      >
+    }
+  </p>
 </ng-template>

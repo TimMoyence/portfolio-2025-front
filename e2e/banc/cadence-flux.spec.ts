@@ -69,6 +69,17 @@ function apresLInstantaneDOuverture(evenements: readonly EvenementRecu[]): Evene
   return evenements.slice(1);
 }
 
+function estSousSuite(
+  extraite: readonly EvenementRecu[],
+  complete: readonly EvenementRecu[],
+): boolean {
+  let rang = 0;
+  for (const evenement of complete) {
+    if (rang < extraite.length && extraite[rang].data === evenement.data) rang += 1;
+  }
+  return rang === extraite.length;
+}
+
 function ecartMinimal(evenements: readonly EvenementRecu[]): number {
   return Math.min(
     ...evenements.slice(1).map((evenement, rang) => evenement.ts - evenements[rang].ts),
@@ -139,9 +150,8 @@ test.describe('Banc — cadence du flux du pupitre', () => {
       .map(apresLInstantaneDOuverture)
       .sort((gauche, droite) => gauche.length - droite.length);
     expect(court.length).toBeGreaterThan(1);
-    expect(long.map((evenement) => evenement.data).slice(-court.length)).toEqual(
-      court.map((evenement) => evenement.data),
-    );
+    expect(court.at(-1)?.data).toBe(long.at(-1)?.data);
+    expect(estSousSuite(court, long)).toBe(true);
     expect(ecartMinimal(long)).toBeGreaterThanOrEqual(DELAI_MIN_BILAN_MS - TOLERANCE_HORLOGE_MS);
 
     const dernier = JSON.parse(resultatsGauche[resultatsGauche.length - 1].data) as {

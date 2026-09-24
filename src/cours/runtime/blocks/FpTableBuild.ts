@@ -1,14 +1,9 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { evaluerExpression } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
+import { FpProductionEtayee, lireAttendusDuCorrige } from './production';
 import { projeterMetadonnees } from './projection';
-import {
-  estObjet,
-  estVerdictDeProduction,
-  type DetailDeVerdict,
-  type VerdictDeProduction,
-} from './retours';
+import { estObjet, type DetailDeVerdict } from './retours';
 import { lireNombreSaisi } from './saisie-numerique';
 
 export type RoleColonne = 'donnee' | 'saisie' | 'deduite';
@@ -97,10 +92,6 @@ function nombresFinis(source: Readonly<Record<string, number>>): Record<string, 
   return Object.fromEntries(Object.entries(source).filter(([, valeur]) => Number.isFinite(valeur)));
 }
 
-function ligneDeConsigne(consigne: string): EscapedHtml {
-  return safeHtml`<li>${escapeHtml(consigne)}</li>`;
-}
-
 function copierColonne(colonne: TableColonne): TableColonne {
   return {
     cle: colonne.cle,
@@ -129,61 +120,17 @@ function copierPlan(source: TableBuildPlanPublic): TableBuildPlanPublic {
   };
 }
 
-function lireAttendus(valeur: unknown): readonly SaisieDeTableau[] {
-  if (!estObjet(valeur) || valeur['type'] !== 'tableau' || !Array.isArray(valeur['attendus'])) {
-    return [];
-  }
-  return valeur['attendus'].filter(
-    (attendu): attendu is SaisieDeTableau =>
-      estObjet(attendu) &&
-      typeof attendu['rang'] === 'number' &&
-      typeof attendu['cle'] === 'string' &&
-      typeof attendu['valeur'] === 'number',
-  );
-}
-
-export class FpTableBuild extends FpBlock {
-  private interne: TableBuildPlanPublic | null = null;
+export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, SaisieDeTableau> {
+  protected readonly evenementDeSoumission = 'fp-table-build-submit';
   private tapees: Record<string, string> = {};
   private suivie: string | null = null;
-  private message = '';
-  private soumis = false;
-  private interneVerdict: VerdictDeProduction | null = null;
-  private attendus: readonly SaisieDeTableau[] = [];
-  private correction = 0;
-  private reprises: ReadonlySet<string> = new Set();
 
   set plan(valeur: TableBuildPlanPublic | null) {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne = valeur === null ? null : copierPlan(valeur);
-    if (change) {
-      this.tapees = {};
-      this.suivie = null;
-      this.message = '';
-      this.soumis = false;
-      this.interneVerdict = null;
-      this.reprises = new Set();
-    }
-    this.refreshSiConnecte();
+    this.poserLePlan(valeur, copierPlan);
   }
 
   get plan(): TableBuildPlanPublic | null {
     return this.interne;
-  }
-
-  set verdict(valeur: VerdictDeProduction | null) {
-    this.interneVerdict =
-      estVerdictDeProduction(valeur) && valeur.questionId === this.interne?.id ? valeur : null;
-    this.refreshSiConnecte();
-  }
-
-  get verdict(): VerdictDeProduction | null {
-    return this.interneVerdict;
-  }
-
-  set corrige(valeur: unknown) {
-    this.attendus = lireAttendus(valeur);
-    this.refreshSiConnecte();
   }
 
   set brouillon(valeur: unknown) {
@@ -201,28 +148,20 @@ export class FpTableBuild extends FpBlock {
     this.refreshSiConnecte();
   }
 
-  set etayage(valeur: number) {
-    this.correction = valeur;
-    this.refreshSiConnecte();
+  protected scene(plan: TableBuildPlanPublic): EscapedHtml {
+    const lignes = this.corrigeVisible()
+      ? this.batir((rang, cle) => this.attenduDe(rang, cle))
+      : this.batir();
+    return safeHtml`
+      <section class="fp-carte fp-scene fp-table-build__atelier">
+        ${this.consignes(plan)}
+        ${this.tableau(lignes, this.corrigeVisible() ? 'correction' : 'lecture')}
+        ${this.corrigeVisible() && this.correction < 2 ? VIDE : this.soldeFinal(lignes)}
+      </section>
+    `;
   }
 
-  render(): EscapedHtml {
-    const plan = this.interne;
-    if (plan === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
-    }
-    if (this.presentateur()) {
-      const lignes = this.corrigeVisible()
-        ? this.batir((rang, cle) => this.attenduDe(rang, cle))
-        : this.batir();
-      return safeHtml`
-        <section class="fp-carte fp-scene fp-table-build__atelier">
-          ${this.consignes(plan)}
-          ${this.tableau(lignes, this.corrigeVisible() ? 'correction' : 'lecture')}
-          ${this.corrigeVisible() && this.correction < 2 ? VIDE : this.soldeFinal(lignes)}
-        </section>
-      `;
-    }
+  protected atelier(plan: TableBuildPlanPublic): EscapedHtml {
     const lignes = this.batir();
     const bloque = this.verrouille() && !this.enReprise();
     return safeHtml`
@@ -251,11 +190,7 @@ export class FpTableBuild extends FpBlock {
     `;
   }
 
-  bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.interne?.id ?? null);
-    if (this.presentateur()) {
-      return;
-    }
+  protected brancherLAtelier(racine: ShadowRoot): void {
     for (const champ of racine.querySelectorAll<HTMLInputElement>('[data-role="saisie"]')) {
       this.brancher(champ);
     }
@@ -267,15 +202,21 @@ export class FpTableBuild extends FpBlock {
       ?.addEventListener('click', () => this.neSaitPas());
   }
 
-  private verrouille(): boolean {
-    return (
-      this.verrouilleApresEnvoi(this.soumis, this.interneVerdict !== null) ||
-      (this.correction > 0 && !this.enApercu())
-    );
+  protected lireLesAttendus(valeur: unknown): readonly SaisieDeTableau[] {
+    return lireAttendusDuCorrige<SaisieDeTableau>(valeur, 'tableau', {
+      rang: 'number',
+      cle: 'string',
+      valeur: 'number',
+    });
   }
 
-  private enReprise(): boolean {
-    return this.correction === 0 && this.interneVerdict !== null && this.reprises.size > 0;
+  protected relacherLaSaisie(): void {
+    this.suivie = null;
+  }
+
+  protected reinitialiserLaSaisie(): void {
+    this.relacherLaSaisie();
+    this.tapees = {};
   }
 
   private corrigeVisible(): boolean {
@@ -409,10 +350,7 @@ export class FpTableBuild extends FpBlock {
   }
 
   private consignes(plan: TableBuildPlanPublic): EscapedHtml {
-    if (plan.consignes.length === 0) {
-      return VIDE;
-    }
-    return safeHtml`<ol class="fp-table-build__consignes" data-testid="consignes">${plan.consignes.map(ligneDeConsigne)}</ol>`;
+    return this.consignesNumerotees(plan.consignes, 'fp-table-build__consignes');
   }
 
   private tableau(lignes: readonly LigneBatie[], rendu: RenduDuTableau): EscapedHtml {
@@ -584,38 +522,20 @@ export class FpTableBuild extends FpBlock {
       .filter((saisie) => Number.isFinite(saisie.valeur));
   }
 
-  private conclure(detail: Readonly<Record<string, unknown>>): void {
-    this.soumis = true;
-    this.suivie = null;
-    this.message = this.messageApresEnvoi();
-    this.emit('fp-table-build-submit', { ...detail, dureeMs: this.depuisAffichage() });
-    this.refresh();
-  }
-
   private valider(): void {
-    const plan = this.interne;
-    if (plan === null || (this.verrouille() && !this.enReprise())) {
+    const plan = this.planAValider();
+    if (plan === null) {
       return;
     }
-    this.reprises = new Set();
     const saisies = this.relever();
     if (saisies.length === 0) {
-      this.message = this.texte('production-vide');
-      this.refresh();
+      this.refuserLEnvoi('production-vide');
       return;
     }
     if (saisies.length < this.cellulesASaisir().length) {
-      this.message = this.texte('table-build-cellule-vide');
-      this.refresh();
+      this.refuserLEnvoi('table-build-cellule-vide');
       return;
     }
     this.conclure({ planId: plan.id, saisies });
-  }
-
-  private neSaitPas(): void {
-    const plan = this.interne;
-    if (plan !== null && !this.verrouille()) {
-      this.conclure({ planId: plan.id, neSaitPas: true });
-    }
   }
 }

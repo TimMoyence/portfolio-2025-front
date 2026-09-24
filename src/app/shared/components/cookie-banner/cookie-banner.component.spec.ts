@@ -50,20 +50,21 @@ describe('CookieBannerComponent', () => {
     expect(bannerEl).toBeNull();
   });
 
-  it('devrait appeler acceptAll au clic sur Tout accepter', () => {
+  function cliquerSur(libelle: 'acceptAll' | 'rejectAll'): void {
     consentServiceStub.shouldShowBanner.and.returnValue(true);
-
     const fixture = TestBed.createComponent(CookieBannerComponent);
     fixture.detectChanges();
 
-    const buttons = fixture.nativeElement.querySelectorAll(
-      'button',
-    ) as NodeListOf<HTMLButtonElement>;
-    const acceptAllBtn = Array.from(buttons).find((btn) =>
-      btn.textContent?.includes(fixture.componentInstance.content.acceptAll),
+    const boutons = (fixture.nativeElement as HTMLElement).querySelectorAll('button');
+    const bouton = Array.from(boutons).find((btn) =>
+      btn.textContent?.includes(fixture.componentInstance.content[libelle]),
     );
-    expect(acceptAllBtn).toBeTruthy();
-    acceptAllBtn!.click();
+    expect(bouton).toBeTruthy();
+    bouton!.click();
+  }
+
+  it('devrait appeler acceptAll au clic sur Tout accepter', () => {
+    cliquerSur('acceptAll');
 
     expect(consentServiceStub.saveConsent).toHaveBeenCalledWith(
       {
@@ -78,19 +79,7 @@ describe('CookieBannerComponent', () => {
   });
 
   it('devrait appeler rejectAll au clic sur Tout refuser (CNIL compliant)', () => {
-    consentServiceStub.shouldShowBanner.and.returnValue(true);
-
-    const fixture = TestBed.createComponent(CookieBannerComponent);
-    fixture.detectChanges();
-
-    const buttons = fixture.nativeElement.querySelectorAll(
-      'button',
-    ) as NodeListOf<HTMLButtonElement>;
-    const rejectAllBtn = Array.from(buttons).find((btn) =>
-      btn.textContent?.includes(fixture.componentInstance.content.rejectAll),
-    );
-    expect(rejectAllBtn).toBeTruthy();
-    rejectAllBtn!.click();
+    cliquerSur('rejectAll');
 
     expect(consentServiceStub.saveConsent).toHaveBeenCalledWith(
       {

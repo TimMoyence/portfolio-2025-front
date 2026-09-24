@@ -3252,109 +3252,7 @@
     <!-- Navbar — L'Atelier dropdown -->
     <!-- Weather presentation -->
     <!-- Weather app -->
-    <unit id="weatherAppTitle">
-      <segment>
-        <source>Météo</source>
-        <target>Weather</target>
-      </segment>
-    </unit>
-    <unit id="weatherAppLive">
-      <segment>
-        <source>En direct</source>
-        <target>Live</target>
-      </segment>
-    </unit>
-    <unit id="weatherSearchPlaceholder">
-      <segment>
-        <source>Rechercher une ville...</source>
-        <target>Search for a city...</target>
-      </segment>
-    </unit>
-    <unit id="weatherErrorLoading">
-      <segment>
-        <source>Erreur lors du chargement des prévisions.</source>
-        <target>Error loading forecast.</target>
-      </segment>
-    </unit>
-    <unit id="weatherInitialHint">
-      <segment>
-        <source>Recherchez une ville pour afficher la météo</source>
-        <target>Search for a city to display the weather</target>
-      </segment>
-    </unit>
-    <unit id="weatherCurrentFeelsLike">
-      <segment>
-        <source> Ressenti <pc id="0" equivStart="START_BOLD_TEXT" equivEnd="CLOSE_BOLD_TEXT" type="fmt" dispStart="&lt;b class=&quot;font-medium text-white&quot;&gt;" dispEnd="&lt;/b&gt;"><ph id="1" equiv="INTERPOLATION" type="var" disp="{{ current()!.apparent_temperature | unit: unitService.temperatureUnit() }}"/></pc></source>
-        <target> Feels like <pc id="0" equivStart="START_BOLD_TEXT" equivEnd="CLOSE_BOLD_TEXT" type="fmt" dispStart="&lt;b class=&quot;font-medium text-white&quot;&gt;" dispEnd="&lt;/b&gt;"><ph id="1" equiv="INTERPOLATION" type="var" disp="{{ current()!.apparent_temperature | unit: unitService.temperatureUnit() }}"/></pc></target>
-      </segment>
-    </unit>
-    <unit id="weatherCurrentWind">
-      <segment>
-        <source> Vent <pc id="0" equivStart="START_BOLD_TEXT" equivEnd="CLOSE_BOLD_TEXT" type="fmt" dispStart="&lt;b class=&quot;font-medium text-white&quot;&gt;" dispEnd="&lt;/b&gt;"><ph id="1" equiv="INTERPOLATION" type="var" disp="{{ current()!.wind_speed_10m | unit: unitService.speedUnit() }}"/></pc></source>
-        <target> Wind <pc id="0" equivStart="START_BOLD_TEXT" equivEnd="CLOSE_BOLD_TEXT" type="fmt" dispStart="&lt;b class=&quot;font-medium text-white&quot;&gt;" dispEnd="&lt;/b&gt;"><ph id="1" equiv="INTERPOLATION" type="var" disp="{{ current()!.wind_speed_10m | unit: unitService.speedUnit() }}"/></pc></target>
-      </segment>
-    </unit>
-    <unit id="weatherHourlyTitle">
-      <segment>
-        <source>Prévisions horaires</source>
-        <target>Hourly forecast</target>
-      </segment>
-    </unit>
-    <unit id="weatherDailyToday">
-      <segment>
-        <source>Aujourd'hui</source>
-        <target>Today</target>
-      </segment>
-    </unit>
     <!-- Weather level system -->
-    <unit id="weatherLevelSelectorAria">
-      <segment>
-        <source>Sélecteur de niveau météo</source>
-        <target>Weather level selector</target>
-      </segment>
-    </unit>
-    <unit id="weatherLevelDiscovery">
-      <segment>
-        <source>Découverte</source>
-        <target>Discovery</target>
-      </segment>
-    </unit>
-    <unit id="weatherLevelCurious">
-      <segment>
-        <source>Curieux</source>
-        <target>Curious</target>
-      </segment>
-    </unit>
-    <unit id="weatherLevelExpert">
-      <segment>
-        <source>Expert</source>
-        <target>Expert</target>
-      </segment>
-    </unit>
-    <unit id="weatherTransitionMessage">
-      <segment>
-        <source>Des donnees avancees sont disponibles.</source>
-        <target>Advanced data is available.</target>
-      </segment>
-    </unit>
-    <unit id="weatherTransitionActivateCurious">
-      <segment>
-        <source>Activer le mode Curieux</source>
-        <target>Enable Curious mode</target>
-      </segment>
-    </unit>
-    <unit id="weatherTransitionActivateExpert">
-      <segment>
-        <source>Activer le mode Expert</source>
-        <target>Enable Expert mode</target>
-      </segment>
-    </unit>
-    <unit id="weatherTransitionDismiss">
-      <segment>
-        <source>Fermer la suggestion</source>
-        <target>Dismiss suggestion</target>
-      </segment>
-    </unit>
     <!-- Budget app -->
     <!-- Dashboard hero -->
     <!-- Empty state -->
@@ -3366,350 +3264,8 @@
     <!-- Sebastian presentation -->
 
     <!-- Cartes meteo Curieux (Phase 2B) -->
-    <unit id="weatherUvTitle">
-      <segment>
-        <source>Indice UV</source>
-        <target>UV Index</target>
-      </segment>
-    </unit>
-    <unit id="weatherUvLow">
-      <segment>
-        <source>Faible</source>
-        <target>Low</target>
-      </segment>
-    </unit>
-    <unit id="weatherUvModerate">
-      <segment>
-        <source>Modéré</source>
-        <target>Moderate</target>
-      </segment>
-    </unit>
-    <unit id="weatherUvHigh">
-      <segment>
-        <source>Élevé</source>
-        <target>High</target>
-      </segment>
-    </unit>
-    <unit id="weatherUvVeryHigh">
-      <segment>
-        <source>Très élevé</source>
-        <target>Very high</target>
-      </segment>
-    </unit>
-    <unit id="weatherUvExtreme">
-      <segment>
-        <source>Extrême</source>
-        <target>Extreme</target>
-      </segment>
-    </unit>
-    <unit id="weatherAqiTitle">
-      <segment>
-        <source>Qualité de l'air</source>
-        <target>Air Quality</target>
-      </segment>
-    </unit>
-    <unit id="weatherAqiGood">
-      <segment>
-        <source>Bon</source>
-        <target>Good</target>
-      </segment>
-    </unit>
-    <unit id="weatherAqiFair">
-      <segment>
-        <source>Correct</source>
-        <target>Fair</target>
-      </segment>
-    </unit>
-    <unit id="weatherAqiModerate">
-      <segment>
-        <source>Modéré</source>
-        <target>Moderate</target>
-      </segment>
-    </unit>
-    <unit id="weatherAqiPoor">
-      <segment>
-        <source>Mauvais</source>
-        <target>Poor</target>
-      </segment>
-    </unit>
-    <unit id="weatherAqiVeryPoor">
-      <segment>
-        <source>Très mauvais</source>
-        <target>Very poor</target>
-      </segment>
-    </unit>
-    <unit id="weatherAqiExtremelyPoor">
-      <segment>
-        <source>Extrêmement mauvais</source>
-        <target>Extremely poor</target>
-      </segment>
-    </unit>
-    <unit id="weatherPressureTitle">
-      <segment>
-        <source>Pression atmosphérique</source>
-        <target>Atmospheric Pressure</target>
-      </segment>
-    </unit>
-    <unit id="weatherPressureRising">
-      <segment>
-        <source>En hausse</source>
-        <target>Rising</target>
-      </segment>
-    </unit>
-    <unit id="weatherPressureFalling">
-      <segment>
-        <source>En baisse</source>
-        <target>Falling</target>
-      </segment>
-    </unit>
-    <unit id="weatherPressureStable">
-      <segment>
-        <source>Stable</source>
-        <target>Stable</target>
-      </segment>
-    </unit>
-    <unit id="weatherWindTitle">
-      <segment>
-        <source>Vent</source>
-        <target>Wind</target>
-      </segment>
-    </unit>
-    <unit id="weatherWindGusts">
-      <segment>
-        <source>Rafales</source>
-        <target>Gusts</target>
-      </segment>
-    </unit>
-    <unit id="weatherSunTitle">
-      <segment>
-        <source>Lever &amp; coucher du soleil</source>
-        <target>Sunrise &amp; Sunset</target>
-      </segment>
-    </unit>
-    <unit id="weatherSunUnavailable">
-      <segment>
-        <source>Données indisponibles</source>
-        <target>Data unavailable</target>
-      </segment>
-    </unit>
-    <unit id="weatherHumidityTitle">
-      <segment>
-        <source>Humidité</source>
-        <target>Humidity</target>
-      </segment>
-    </unit>
-    <unit id="weatherHumidityDewPoint">
-      <segment>
-        <source>Point de rosée</source>
-        <target>Dew point</target>
-      </segment>
-    </unit>
-    <unit id="weatherHumidityDry">
-      <segment>
-        <source>Sec</source>
-        <target>Dry</target>
-      </segment>
-    </unit>
-    <unit id="weatherHumidityComfortable">
-      <segment>
-        <source>Confortable</source>
-        <target>Comfortable</target>
-      </segment>
-    </unit>
-    <unit id="weatherHumidityHumid">
-      <segment>
-        <source>Humide</source>
-        <target>Humid</target>
-      </segment>
-    </unit>
-    <unit id="weatherCloudTitle">
-      <segment>
-        <source>Couverture nuageuse</source>
-        <target>Cloud Cover</target>
-      </segment>
-    </unit>
-    <unit id="weatherCloudVisibility">
-      <segment>
-        <source>Visibilité</source>
-        <target>Visibility</target>
-      </segment>
-    </unit>
-    <unit id="weatherCloudClear">
-      <segment>
-        <source>Dégagé</source>
-        <target>Clear</target>
-      </segment>
-    </unit>
-    <unit id="weatherCloudFewClouds">
-      <segment>
-        <source>Peu nuageux</source>
-        <target>Few clouds</target>
-      </segment>
-    </unit>
-    <unit id="weatherCloudPartlyCloudy">
-      <segment>
-        <source>Partiellement nuageux</source>
-        <target>Partly cloudy</target>
-      </segment>
-    </unit>
-    <unit id="weatherCloudMostlyCloudy">
-      <segment>
-        <source>Très nuageux</source>
-        <target>Mostly cloudy</target>
-      </segment>
-    </unit>
-    <unit id="weatherCloudOvercast">
-      <segment>
-        <source>Couvert</source>
-        <target>Overcast</target>
-      </segment>
-    </unit>
 
     <!-- Cartes meteo Expert (Phase 3) -->
-    <unit id="weatherModelComparisonTitle">
-      <segment>
-        <source>Comparaison des modèles</source>
-        <target>Model Comparison</target>
-      </segment>
-    </unit>
-    <unit id="weatherModelComparisonMetric">
-      <segment>
-        <source>Métrique</source>
-        <target>Metric</target>
-      </segment>
-    </unit>
-    <unit id="weatherModelComparisonAvgTemp">
-      <segment>
-        <source>Temp. moy. 24h</source>
-        <target>Avg. temp. 24h</target>
-      </segment>
-    </unit>
-    <unit id="weatherModelComparisonTotalPrecip">
-      <segment>
-        <source>Précip. totales 24h</source>
-        <target>Total precip. 24h</target>
-      </segment>
-    </unit>
-    <unit id="weatherModelComparisonDivergence">
-      <segment>
-        <source>Les modèles divergent significativement (> 3 °C).</source>
-        <target>Models diverge significantly (> 3 °C).</target>
-      </segment>
-    </unit>
-    <unit id="weatherModelComparisonUnavailable">
-      <segment>
-        <source>Données indisponibles</source>
-        <target>Data unavailable</target>
-      </segment>
-    </unit>
-    <unit id="weatherSpaghettiPlotTitle">
-      <segment>
-        <source>Comparaison des modèles (courbes)</source>
-        <target>Model Comparison (curves)</target>
-      </segment>
-    </unit>
-    <unit id="weatherCapeTitle">
-      <segment>
-        <source>CAPE (instabilité)</source>
-        <target>CAPE (instability)</target>
-      </segment>
-    </unit>
-    <unit id="weatherCapeTooltipTitle">
-      <segment>
-        <source>Qu'est-ce que le CAPE ?</source>
-        <target>What is CAPE?</target>
-      </segment>
-    </unit>
-    <unit id="weatherCapeTooltipContent">
-      <segment>
-        <source>CAPE mesure l'énergie disponible pour les orages. Plus la valeur est élevée, plus les orages peuvent être violents.</source>
-        <target>CAPE measures the energy available for thunderstorms. The higher the value, the more violent the storms can be.</target>
-      </segment>
-    </unit>
-    <unit id="weatherCapeStable">
-      <segment>
-        <source>Stable</source>
-        <target>Stable</target>
-      </segment>
-    </unit>
-    <unit id="weatherCapeMarginal">
-      <segment>
-        <source>Instabilité marginale</source>
-        <target>Marginal instability</target>
-      </segment>
-    </unit>
-    <unit id="weatherCapeModerate">
-      <segment>
-        <source>Instabilité modérée</source>
-        <target>Moderate instability</target>
-      </segment>
-    </unit>
-    <unit id="weatherCapeStrong">
-      <segment>
-        <source>Instabilité forte</source>
-        <target>Strong instability</target>
-      </segment>
-    </unit>
-    <unit id="weatherCapeExtreme">
-      <segment>
-        <source>Instabilité extrême</source>
-        <target>Extreme instability</target>
-      </segment>
-    </unit>
-    <unit id="weatherHistoricalTitle">
-      <segment>
-        <source>Historique (30 jours)</source>
-        <target>Historical (30 days)</target>
-      </segment>
-    </unit>
-    <unit id="weatherHistoricalMax">
-      <segment>
-        <source>Max</source>
-        <target>Max</target>
-      </segment>
-    </unit>
-    <unit id="weatherHistoricalMin">
-      <segment>
-        <source>Min</source>
-        <target>Min</target>
-      </segment>
-    </unit>
-    <unit id="weatherHistoricalMean">
-      <segment>
-        <source>Moyenne</source>
-        <target>Mean</target>
-      </segment>
-    </unit>
-    <unit id="weatherHistoricalCurrent">
-      <segment>
-        <source>Actuelle</source>
-        <target>Current</target>
-      </segment>
-    </unit>
-    <unit id="weatherDataExportTitle">
-      <segment>
-        <source>Export des données</source>
-        <target>Data Export</target>
-      </segment>
-    </unit>
-    <unit id="weatherDataExportCsv">
-      <segment>
-        <source>Exporter CSV</source>
-        <target>Export CSV</target>
-      </segment>
-    </unit>
-    <unit id="weatherDataExportJson">
-      <segment>
-        <source>Exporter JSON</source>
-        <target>Export JSON</target>
-      </segment>
-    </unit>
-    <unit id="weatherDataExportRadarPlaceholder">
-      <segment>
-        <source>Carte radar — bientôt disponible</source>
-        <target>Radar map — coming soon</target>
-      </segment>
-    </unit>
     <unit id="navProfileLabel">
       <segment>
         <source>Profil</source>
@@ -3914,72 +3470,6 @@
         <target>Password changed successfully.</target>
       </segment>
     </unit>
-    <unit id="profileWeatherTitle">
-      <segment>
-        <source>Préférences météo</source>
-        <target>Weather preferences</target>
-      </segment>
-    </unit>
-    <unit id="profileWeatherLevelLabel">
-      <segment>
-        <source>Niveau :</source>
-        <target>Level:</target>
-      </segment>
-    </unit>
-    <unit id="profileWeatherLevelDiscovery">
-      <segment>
-        <source>Decouverte</source>
-        <target>Discovery</target>
-      </segment>
-    </unit>
-    <unit id="profileWeatherLevelCurious">
-      <segment>
-        <source>Curieux</source>
-        <target>Curious</target>
-      </segment>
-    </unit>
-    <unit id="profileWeatherLevelExpert">
-      <segment>
-        <source>Expert</source>
-        <target>Expert</target>
-      </segment>
-    </unit>
-    <unit id="profileWeatherDaysUsed">
-      <segment>
-        <source>jours d&apos;utilisation</source>
-        <target>days of usage</target>
-      </segment>
-    </unit>
-    <unit id="profileWeatherTransitionReady">
-      <segment>
-        <source>Prêt pour le niveau suivant !</source>
-        <target>Ready for the next level!</target>
-      </segment>
-    </unit>
-    <unit id="profileWeatherFavoritesTitle">
-      <segment>
-        <source>Villes favorites</source>
-        <target>Favorite cities</target>
-      </segment>
-    </unit>
-    <unit id="profileWeatherLoading">
-      <segment>
-        <source>Chargement...</source>
-        <target>Loading...</target>
-      </segment>
-    </unit>
-    <unit id="profileWeatherNoFavorites">
-      <segment>
-        <source>Aucune ville favorite. Ajoutez-en depuis l&apos;app météo.</source>
-        <target>No favorite cities. Add some from the weather app.</target>
-      </segment>
-    </unit>
-    <unit id="profileWeatherRemoveFavorite">
-      <segment>
-        <source>Supprimer</source>
-        <target>Remove</target>
-      </segment>
-    </unit>
     <unit id="profileEditButton">
       <segment>
         <source>Modifier</source>
@@ -4044,264 +3534,6 @@
       <segment>
         <source>Profil mis a jour avec succes.</source>
         <target>Profile updated successfully.</target>
-      </segment>
-    </unit>
-    <unit id="weatherGeoMyPosition">
-      <segment>
-        <source>Ma position</source>
-        <target>My location</target>
-      </segment>
-    </unit>
-    <unit id="weatherGeoButtonTitle">
-      <segment>
-        <source>Me localiser</source>
-        <target>Locate me</target>
-      </segment>
-    </unit>
-    <unit id="weatherFavoritesAdd">
-      <segment>
-        <source>Ajouter aux favoris</source>
-        <target>Add to favorites</target>
-      </segment>
-    </unit>
-    <unit id="weatherFavoritesRemove">
-      <segment>
-        <source>Retirer des favoris</source>
-        <target>Remove from favorites</target>
-      </segment>
-    </unit>
-    <unit id="weatherFavoritesSetDefault">
-      <segment>
-        <source>Definir comme ville par defaut</source>
-        <target>Set as default city</target>
-      </segment>
-    </unit>
-    <unit id="weatherFavoritesRemoveDefault">
-      <segment>
-        <source>Retirer la ville par defaut</source>
-        <target>Remove default city</target>
-      </segment>
-    </unit>
-    <unit id="weatherRadarLegend">
-      <segment>
-        <source>Précipitations</source>
-        <target>Precipitation</target>
-      </segment>
-    </unit>
-    <unit id="weatherRadarLight">
-      <segment>
-        <source>Faible</source>
-        <target>Light</target>
-      </segment>
-    </unit>
-    <unit id="weatherRadarHeavy">
-      <segment>
-        <source>Fort</source>
-        <target>Heavy</target>
-      </segment>
-    </unit>
-    <unit id="weatherRadarTitle">
-      <segment>
-        <source>Carte radar</source>
-        <target>Radar map</target>
-      </segment>
-    </unit>
-    <unit id="weatherAqiTooltipTitle">
-      <segment>
-        <source>Qualité de l'air</source>
-        <target>Air quality</target>
-      </segment>
-    </unit>
-    <unit id="weatherAqiTooltipContent">
-      <segment>
-        <source>L'indice AQI européen combine les niveaux de particules fines (PM2.5, PM10) et d'ozone (O₃). En dessous de 20 l'air est bon, au-dessus de 60 les personnes sensibles doivent limiter les efforts en extérieur.</source>
-        <target>The European Air Quality Index (AQI) measures air pollution from 0 (good) to 500+ (hazardous). Values above 100 may affect sensitive individuals. PM2.5 and PM10 are fine particulate matter, ozone irritates the respiratory tract.</target>
-      </segment>
-    </unit>
-    <unit id="weatherCardUnavailable">
-      <segment>
-        <source> Données indisponibles </source>
-        <target> Data unavailable </target>
-      </segment>
-    </unit>
-    <unit id="weatherCloudTooltipTitle">
-      <segment>
-        <source>Couverture nuageuse</source>
-        <target>Cloud cover &amp; visibility</target>
-      </segment>
-    </unit>
-    <unit id="weatherCloudTooltipContent">
-      <segment>
-        <source>La couverture nuageuse indique le pourcentage du ciel masqué par les nuages. La visibilité mesure la distance maximale à laquelle on distingue un objet : elle diminue avec le brouillard, la pluie ou les particules en suspension.</source>
-        <target>Cloud cover indicates the percentage of sky hidden by clouds. Visibility represents the maximum distance at which an object can be clearly seen, reduced by fog, rain, or pollution.</target>
-      </segment>
-    </unit>
-    <unit id="weatherCurrentHumidity">
-      <segment>
-        <source> Humidité </source>
-        <target> Humidity </target>
-      </segment>
-    </unit>
-    <unit id="weatherCurrentPrecip">
-      <segment>
-        <source> Pluie </source>
-        <target> Rain </target>
-      </segment>
-    </unit>
-    <unit id="weatherCurrentVisibility">
-      <segment>
-        <source> Visibilité </source>
-        <target> Visibility </target>
-      </segment>
-    </unit>
-    <unit id="weatherDayDetailGusts">
-      <segment>
-        <source>Rafales</source>
-        <target>Gusts</target>
-      </segment>
-    </unit>
-    <unit id="weatherDayDetailPrecip">
-      <segment>
-        <source> Précipitations </source>
-        <target> Precipitation </target>
-      </segment>
-    </unit>
-    <unit id="weatherDayDetailSun">
-      <segment>
-        <source> Soleil </source>
-        <target> Sun </target>
-      </segment>
-    </unit>
-    <unit id="weatherDayDetailUv">
-      <segment>
-        <source> UV max </source>
-        <target> UV max </target>
-      </segment>
-    </unit>
-    <unit id="weatherDayDetailWind">
-      <segment>
-        <source> Vent max </source>
-        <target> Max wind </target>
-      </segment>
-    </unit>
-    <unit id="weatherHumidityTooltipTitle">
-      <segment>
-        <source>Humidité</source>
-        <target>Humidity</target>
-      </segment>
-    </unit>
-    <unit id="weatherHumidityTooltipContent">
-      <segment>
-        <source>L'humidité relative indique le pourcentage de vapeur d'eau dans l'air par rapport au maximum possible. Le point de rosée est la température à laquelle l'air devient saturé : plus il est proche de la température réelle, plus l'air semble moite.</source>
-        <target>Relative humidity indicates the percentage of water vapor in the air compared to its maximum capacity. The dew point is the temperature at which air becomes saturated: the closer it is to the actual temperature, the more muggy the air feels.</target>
-      </segment>
-    </unit>
-    <unit id="weatherPressureTooltipTitle">
-      <segment>
-        <source>Pression atmosphérique</source>
-        <target>Atmospheric pressure</target>
-      </segment>
-    </unit>
-    <unit id="weatherPressureTooltipContent">
-      <segment>
-        <source>La pression atmosphérique est le poids de l'air au-dessus de vous, mesurée en hectopascals (hPa). Une pression en hausse annonce généralement du beau temps, une baisse rapide signale l'arrivée d'une perturbation.</source>
-        <target>Atmospheric pressure is the weight of the air above you, measured in hectopascals (hPa). Rising pressure generally signals fair weather, while a rapid drop indicates an approaching weather system.</target>
-      </segment>
-    </unit>
-    <unit id="weatherSunTooltipTitle">
-      <segment>
-        <source>Lever &amp; coucher du soleil</source>
-        <target>Sunrise &amp; sunset</target>
-      </segment>
-    </unit>
-    <unit id="weatherSunTooltipContent">
-      <segment>
-        <source>L'arc montre la trajectoire du soleil dans le ciel. Le point jaune indique sa position actuelle. La durée du jour varie selon la saison : environ 16h en été et 8h en hiver en France métropolitaine.</source>
-        <target>The arc shows the sun's path across the sky. The yellow dot indicates its current position. Day length varies by season: about 16h in summer and 8h in winter in metropolitan France.</target>
-      </segment>
-    </unit>
-    <unit id="weatherUnitsButtonAria">
-      <segment>
-        <source>Paramètres d'unités</source>
-        <target>Unit settings</target>
-      </segment>
-    </unit>
-    <unit id="weatherUnitsPressure">
-      <segment>
-        <source> Pression </source>
-        <target> Pressure </target>
-      </segment>
-    </unit>
-    <unit id="weatherUnitsSpeed">
-      <segment>
-        <source> Vitesse </source>
-        <target> Speed </target>
-      </segment>
-    </unit>
-    <unit id="weatherUnitsTemperature">
-      <segment>
-        <source> Température </source>
-        <target> Temperature </target>
-      </segment>
-    </unit>
-    <unit id="weatherUnitsTitle">
-      <segment>
-        <source>Unités de mesure</source>
-        <target>Units of measurement</target>
-      </segment>
-    </unit>
-    <unit id="weatherUvTooltipTitle">
-      <segment>
-        <source>Indice UV</source>
-        <target>UV index</target>
-      </segment>
-    </unit>
-    <unit id="weatherUvTooltipContent">
-      <segment>
-        <source>L'indice UV mesure l'intensité du rayonnement ultraviolet solaire. Plus il est élevé, plus le risque de coup de soleil est rapide. À partir de 3, crème solaire et lunettes recommandées. Au-delà de 8, limitez l'exposition entre 11h et 16h.</source>
-        <target>The UV index measures the intensity of solar ultraviolet radiation. The higher it is, the faster you can get sunburnt. From 3, sunscreen and sunglasses are recommended. Above 8, limit exposure between 11am and 4pm.</target>
-      </segment>
-    </unit>
-    <unit id="weatherWindTooltipTitle">
-      <segment>
-        <source>Vent</source>
-        <target>Wind</target>
-      </segment>
-    </unit>
-    <unit id="weatherWindTooltipContent">
-      <segment>
-        <source>La vitesse du vent est mesurée à 10 m du sol. La direction indique d'où vient le vent (un vent de Nord souffle du nord vers le sud). Les rafales sont des accélérations brèves pouvant dépasser le double de la vitesse moyenne.</source>
-        <target>Wind speed is measured at 10m above ground. The direction indicates where the wind comes from (a north wind blows from north to south). Gusts are brief accelerations that can exceed twice the average speed.</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTitle">
-      <segment>
-        <source>Sebastian</source>
-        <target>Sebastian</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDescription">
-      <segment>
-        <source>Votre majordome de suivi de consommation</source>
-        <target>Your consumption tracking butler</target>
-      </segment>
-    </unit>
-    <unit id="sebastianCounterAlcohol">
-      <segment>
-        <source>Alcool aujourd'hui</source>
-        <target>Alcohol today</target>
-      </segment>
-    </unit>
-    <unit id="sebastianCounterCoffee">
-      <segment>
-        <source>Café aujourd&apos;hui</source>
-        <target>Coffee today</target>
-      </segment>
-    </unit>
-    <unit id="sebastianCounterGoal">
-      <segment>
-        <source>Objectif</source>
-        <target>Goal</target>
       </segment>
     </unit>
 
@@ -5095,264 +4327,6 @@
     <!-- Members panel -->
     <!-- Contributions panel -->
     <!-- Savings goals -->
-    <unit id="weatherGeoDenied">
-      <segment>
-        <source>Géolocalisation refusée. Autorisez l&apos;accès dans les paramètres du navigateur.</source>
-        <target>Location access denied. Allow access in your browser settings.</target>
-      </segment>
-    </unit>
-    <unit id="weatherGeoError">
-      <segment>
-        <source>Impossible de vous localiser. Vérifiez vos paramètres.</source>
-        <target>Unable to locate you. Please check your settings.</target>
-      </segment>
-    </unit>
-    <unit id="weatherOverviewTitle">
-      <segment>
-        <source> Prévisions </source>
-        <target> Forecasts </target>
-      </segment>
-    </unit>
-    <unit id="weatherOverviewGranularityAria">
-      <segment>
-        <source>Granularité</source>
-        <target>Granularity</target>
-      </segment>
-    </unit>
-    <unit id="weatherTableDay">
-      <segment>
-        <source> Jour </source>
-        <target> Day </target>
-      </segment>
-    </unit>
-    <unit id="weatherTableMin">
-      <segment>
-        <source> Min </source>
-        <target> Min </target>
-      </segment>
-    </unit>
-    <unit id="weatherTableMax">
-      <segment>
-        <source> Max </source>
-        <target> Max </target>
-      </segment>
-    </unit>
-    <unit id="weatherTableRain">
-      <segment>
-        <source> Pluie </source>
-        <target> Rain </target>
-      </segment>
-    </unit>
-    <unit id="weatherTableWind">
-      <segment>
-        <source> Vent </source>
-        <target> Wind </target>
-      </segment>
-    </unit>
-    <unit id="weatherTableHumidity">
-      <segment>
-        <source> Hum. </source>
-        <target> Hum. </target>
-      </segment>
-    </unit>
-    <unit id="weatherTableGusts">
-      <segment>
-        <source> Raf. </source>
-        <target> Gusts </target>
-      </segment>
-    </unit>
-    <unit id="weatherTablePressure">
-      <segment>
-        <source> Pression </source>
-        <target> Pressure </target>
-      </segment>
-    </unit>
-    <unit id="weatherTableHour">
-      <segment>
-        <source> Heure </source>
-        <target> Hour </target>
-      </segment>
-    </unit>
-    <unit id="weatherTableTemp">
-      <segment>
-        <source> Temp. </source>
-        <target> Temp. </target>
-      </segment>
-    </unit>
-    <unit id="wmo0">
-      <segment>
-        <source>Ciel dégagé</source>
-        <target>Clear sky</target>
-      </segment>
-    </unit>
-    <unit id="wmo1">
-      <segment>
-        <source>Principalement dégagé</source>
-        <target>Mainly clear</target>
-      </segment>
-    </unit>
-    <unit id="wmo2">
-      <segment>
-        <source>Partiellement nuageux</source>
-        <target>Partly cloudy</target>
-      </segment>
-    </unit>
-    <unit id="wmo3">
-      <segment>
-        <source>Couvert</source>
-        <target>Overcast</target>
-      </segment>
-    </unit>
-    <unit id="wmo45">
-      <segment>
-        <source>Brouillard</source>
-        <target>Fog</target>
-      </segment>
-    </unit>
-    <unit id="wmo48">
-      <segment>
-        <source>Brouillard givrant</source>
-        <target>Depositing rime fog</target>
-      </segment>
-    </unit>
-    <unit id="wmo51">
-      <segment>
-        <source>Bruine légère</source>
-        <target>Light drizzle</target>
-      </segment>
-    </unit>
-    <unit id="wmo53">
-      <segment>
-        <source>Bruine modérée</source>
-        <target>Moderate drizzle</target>
-      </segment>
-    </unit>
-    <unit id="wmo55">
-      <segment>
-        <source>Bruine dense</source>
-        <target>Dense drizzle</target>
-      </segment>
-    </unit>
-    <unit id="wmo56">
-      <segment>
-        <source>Bruine verglaçante légère</source>
-        <target>Light freezing drizzle</target>
-      </segment>
-    </unit>
-    <unit id="wmo57">
-      <segment>
-        <source>Bruine verglaçante dense</source>
-        <target>Dense freezing drizzle</target>
-      </segment>
-    </unit>
-    <unit id="wmo61">
-      <segment>
-        <source>Pluie légère</source>
-        <target>Slight rain</target>
-      </segment>
-    </unit>
-    <unit id="wmo63">
-      <segment>
-        <source>Pluie modérée</source>
-        <target>Moderate rain</target>
-      </segment>
-    </unit>
-    <unit id="wmo65">
-      <segment>
-        <source>Pluie forte</source>
-        <target>Heavy rain</target>
-      </segment>
-    </unit>
-    <unit id="wmo66">
-      <segment>
-        <source>Pluie verglaçante légère</source>
-        <target>Light freezing rain</target>
-      </segment>
-    </unit>
-    <unit id="wmo67">
-      <segment>
-        <source>Pluie verglaçante forte</source>
-        <target>Heavy freezing rain</target>
-      </segment>
-    </unit>
-    <unit id="wmo71">
-      <segment>
-        <source>Neige légère</source>
-        <target>Slight snow</target>
-      </segment>
-    </unit>
-    <unit id="wmo73">
-      <segment>
-        <source>Neige modérée</source>
-        <target>Moderate snow</target>
-      </segment>
-    </unit>
-    <unit id="wmo75">
-      <segment>
-        <source>Neige forte</source>
-        <target>Heavy snow</target>
-      </segment>
-    </unit>
-    <unit id="wmo77">
-      <segment>
-        <source>Grains de neige</source>
-        <target>Snow grains</target>
-      </segment>
-    </unit>
-    <unit id="wmo80">
-      <segment>
-        <source>Averses légères</source>
-        <target>Slight rain showers</target>
-      </segment>
-    </unit>
-    <unit id="wmo81">
-      <segment>
-        <source>Averses modérées</source>
-        <target>Moderate rain showers</target>
-      </segment>
-    </unit>
-    <unit id="wmo82">
-      <segment>
-        <source>Averses violentes</source>
-        <target>Violent rain showers</target>
-      </segment>
-    </unit>
-    <unit id="wmo85">
-      <segment>
-        <source>Averses de neige légères</source>
-        <target>Slight snow showers</target>
-      </segment>
-    </unit>
-    <unit id="wmo86">
-      <segment>
-        <source>Averses de neige fortes</source>
-        <target>Heavy snow showers</target>
-      </segment>
-    </unit>
-    <unit id="wmo95">
-      <segment>
-        <source>Orage</source>
-        <target>Thunderstorm</target>
-      </segment>
-    </unit>
-    <unit id="wmo96">
-      <segment>
-        <source>Orage avec grêle légère</source>
-        <target>Thunderstorm with slight hail</target>
-      </segment>
-    </unit>
-    <unit id="wmo99">
-      <segment>
-        <source>Orage avec grêle forte</source>
-        <target>Thunderstorm with heavy hail</target>
-      </segment>
-    </unit>
-    <unit id="wmoUnknown">
-      <segment>
-        <source>Conditions inconnues</source>
-        <target>Unknown conditions</target>
-      </segment>
-    </unit>
     <unit id="navFormationsLabel">
       <segment>
         <source>Formations</source>
@@ -5767,22 +4741,16 @@
         <target>App access request</target>
       </segment>
     </unit>
-    <unit id="contactAccessAppWeather">
-      <segment>
-        <source>l&apos;application Météo</source>
-        <target>the Weather app</target>
-      </segment>
-    </unit>
-    <unit id="contactAccessAppSebastian">
-      <segment>
-        <source>l&apos;application Sebastian</source>
-        <target>the Sebastian app</target>
-      </segment>
-    </unit>
     <unit id="contactAccessAppGeneric">
       <segment>
-        <source>l&apos;atelier <ph id="0" equiv="app" disp="normalizedApp"/></source>
-        <target>the <ph id="0" equiv="app" disp="normalizedApp"/> workshop</target>
+        <source>l&apos;application <ph id="0" equiv="app" disp="normalizedApp"/></source>
+        <target>the <ph id="0" equiv="app" disp="normalizedApp"/> app</target>
+      </segment>
+    </unit>
+    <unit id="contactAccessAppTeacher">
+      <segment>
+        <source>l&apos;espace formateur</source>
+        <target>the teacher space</target>
       </segment>
     </unit>
     <unit id="contactAccessMessage">
@@ -8415,8 +7383,8 @@
         <note category="location">src/app/features/presentation/presentation.component.ts:251</note>
       </notes>
       <segment>
-        <source>Un socle Angular 19 SSR + NestJS 11 réunissant plusieurs apps en production : Weather, Sebastian, Growth Audit, Formations — avec auth, RGPD et lead-magnets.</source>
-        <target>An Angular 19 SSR + NestJS 11 foundation bringing together several apps in production: Weather, Sebastian, Growth Audit, Training — with auth, GDPR and lead magnets.</target>
+        <source>Un socle Angular 19 SSR + NestJS 11 réunissant plusieurs apps en production : Growth Audit, Formations — avec auth, RGPD et lead-magnets.</source>
+        <target>An Angular 19 SSR + NestJS 11 foundation bringing together several apps in production: Growth Audit, Training — with auth, GDPR and lead magnets.</target>
       </segment>
     </unit>
     <unit id="presentationMilestone2Tag1">
@@ -9780,8 +8748,8 @@
         <note category="location">src/app/features/auth/auth.component.html:30,33</note>
       </notes>
       <segment>
-        <source> Accédez à vos formations, à l&apos;Atelier et à votre espace personnel. </source>
-        <target> Access your training, the Workshop and your personal space. </target>
+        <source> Accédez à vos formations et à votre espace personnel. </source>
+        <target> Access your training and your personal space. </target>
       </segment>
     </unit>
     <unit id="authAsideLoginTitle">
@@ -9816,8 +8784,8 @@
         <note category="location">src/app/features/auth/auth.component.html:21,24</note>
       </notes>
       <segment>
-        <source> Créez votre espace pour accéder à l&apos;Atelier, aux formations et à votre profil. </source>
-        <target> Create your space to access the Workshop, the training and your profile. </target>
+        <source> Créez votre espace pour accéder aux formations et à votre profil. </source>
+        <target> Create your space to access the training and your profile. </target>
       </segment>
     </unit>
     <unit id="authAsideRegisterTitle">
@@ -9987,8 +8955,8 @@
         <note category="location">src/app/features/auth/verify-email.component.html:16,18</note>
       </notes>
       <segment>
-        <source> Dernière étape avant <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">l&apos;Atelier</pc>. </source>
-        <target> Last step before <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">the Workshop</pc>. </target>
+        <source> Dernière étape avant <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">votre espace</pc>. </source>
+        <target> Last step before <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">your space</pc>. </target>
       </segment>
     </unit>
     <unit id="authVerifyErrorTitle">
@@ -10181,15 +9149,6 @@
       <segment>
         <source> Selon votre usage du site, nous pouvons traiter : </source>
         <target> Depending on how you use the site, we may process: </target>
-      </segment>
-    </unit>
-    <unit id="privacyCollecteBody2">
-      <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:68,71</note>
-      </notes>
-      <segment>
-        <source> Les expériences de l&apos;Atelier fonctionnent sans collecte personnelle pour leur démonstration. </source>
-        <target> The Workshop experiences run without personal collection for their demonstration. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteItem1">
@@ -10408,15 +9367,6 @@
         <target>1. Our principle</target>
       </segment>
     </unit>
-    <unit id="privacyTocAria">
-      <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:19,20</note>
-      </notes>
-      <segment>
-        <source>Sommaire</source>
-        <target>Contents</target>
-      </segment>
-    </unit>
     <unit id="privacyTocBase">
       <notes>
         <note category="location">src/app/features/privacy/privacy.component.ts:50</note>
@@ -10467,15 +9417,6 @@
         <target>Your rights</target>
       </segment>
     </unit>
-    <unit id="privacyTocHeading">
-      <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:22,24</note>
-      </notes>
-      <segment>
-        <source>Sommaire</source>
-        <target>Contents</target>
-      </segment>
-    </unit>
     <unit id="privacyTocPartage">
       <notes>
         <note category="location">src/app/features/privacy/privacy.component.ts:54</note>
@@ -10520,8 +9461,8 @@
         <note category="location">src/app/features/privacy/privacy.component.html:78,80</note>
       </notes>
       <segment>
-        <source> Gérer votre compte et vos accès (formations, Atelier). </source>
-        <target> Manage your account and your access (training, Workshop). </target>
+        <source> Gérer votre compte et vos accès (formations). </source>
+        <target> Manage your account and your access (training). </target>
       </segment>
     </unit>
     <unit id="privacyUsageItem2">
@@ -10558,114 +9499,6 @@
       <segment>
         <source>3. Usage des données</source>
         <target>3. Data use</target>
-      </segment>
-    </unit>
-    <unit id="profileAccessActive">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:189,191</note>
-      </notes>
-      <segment>
-        <source>Actif</source>
-        <target>Active</target>
-      </segment>
-    </unit>
-    <unit id="profileAccessDiscoverMeteo">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:232,235</note>
-      </notes>
-      <segment>
-        <source>Demander un accès</source>
-        <target>Request access</target>
-      </segment>
-    </unit>
-    <unit id="profileAccessDiscoverSeb">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:242,244</note>
-      </notes>
-      <segment>
-        <source>Demander un accès</source>
-        <target>Request access</target>
-      </segment>
-    </unit>
-    <unit id="profileAccessLocked">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:192,194</note>
-      </notes>
-      <segment>
-        <source>Verrouillé</source>
-        <target>Locked</target>
-      </segment>
-    </unit>
-    <unit id="profileAccessMeteoDesc">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:185,186</note>
-      </notes>
-      <segment>
-        <source> Tableau de bord météo immersif </source>
-        <target> Immersive weather dashboard </target>
-      </segment>
-    </unit>
-    <unit id="profileAccessMeteoTitle">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:183,184</note>
-      </notes>
-      <segment>
-        <source>Météo</source>
-        <target>Weather</target>
-      </segment>
-    </unit>
-    <unit id="profileAccessOpenMeteo">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:228,230</note>
-      </notes>
-      <segment>
-        <source>Ouvrir Météo</source>
-        <target>Open Weather</target>
-      </segment>
-    </unit>
-    <unit id="profileAccessOpenSeb">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:237,239</note>
-      </notes>
-      <segment>
-        <source>Ouvrir Sebastian</source>
-        <target>Open Sebastian</target>
-      </segment>
-    </unit>
-    <unit id="profileAccessSebDesc">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:212,213</note>
-      </notes>
-      <segment>
-        <source> Suivi d&apos;habitudes gamifié </source>
-        <target> Gamified habit tracking </target>
-      </segment>
-    </unit>
-    <unit id="profileAccessSebTitle">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:210,211</note>
-      </notes>
-      <segment>
-        <source>Sebastian</source>
-        <target>Sebastian</target>
-      </segment>
-    </unit>
-    <unit id="profileAccessSub">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:160,163</note>
-      </notes>
-      <segment>
-        <source> Vos expériences déverrouillées. </source>
-        <target> Your unlocked experiences. </target>
-      </segment>
-    </unit>
-    <unit id="profileAccessTitle">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:157,159</note>
-      </notes>
-      <segment>
-        <source> Accès Atelier </source>
-        <target> Workshop access </target>
       </segment>
     </unit>
     <unit id="profileBadge">
@@ -10756,15 +9589,6 @@
       <segment>
         <source> Sécurisez votre compte avec un mot de passe. </source>
         <target> Secure your account with a password. </target>
-      </segment>
-    </unit>
-    <unit id="profileWeatherSub">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.html:394,397</note>
-      </notes>
-      <segment>
-        <source> Votre progression et vos villes favorites. </source>
-        <target> Your progress and your favorite cities. </target>
       </segment>
     </unit>
     <unit id="termsDroitBody1">
@@ -10880,8 +9704,8 @@
         <note category="location">src/app/features/terms/terms.component.html:55,58</note>
       </notes>
       <segment>
-        <source> Les présentes conditions régissent l&apos;utilisation du site et l&apos;accès aux prestations proposées : services de développement et de conseil, formations en ligne, ressources gratuites et expériences de l&apos;Atelier. </source>
-        <target> These terms govern the use of the site and access to the services offered: development and consulting services, online training, free resources and Workshop experiences. </target>
+        <source> Les présentes conditions régissent l&apos;utilisation du site et l&apos;accès aux prestations proposées : services de développement et de conseil, formations en ligne et ressources gratuites. </source>
+        <target> These terms govern the use of the site and access to the services offered: development and consulting services, online training and free resources. </target>
       </segment>
     </unit>
     <unit id="termsObjetBody2">
@@ -11046,18 +9870,9 @@
         <target> Free resources (toolkit, audit) are provided as is, for informational purposes. </target>
       </segment>
     </unit>
-    <unit id="termsServicesItem3">
+    <unit id="legalTocAria">
       <notes>
-        <note category="location">src/app/features/terms/terms.component.html:86,88</note>
-      </notes>
-      <segment>
-        <source> Les expériences de l&apos;Atelier sont des démonstrations ; les données affichées peuvent être simulées. </source>
-        <target> The Workshop experiences are demonstrations; the data shown may be simulated. </target>
-      </segment>
-    </unit>
-    <unit id="termsTocAria">
-      <notes>
-        <note category="location">src/app/features/terms/terms.component.html:19</note>
+        <note category="location">src/app/features/legal/legal-page.component.html:11</note>
       </notes>
       <segment>
         <source>Sommaire</source>
@@ -11084,9 +9899,9 @@
         <target>Site publisher</target>
       </segment>
     </unit>
-    <unit id="termsTocHeading">
+    <unit id="legalTocHeading">
       <notes>
-        <note category="location">src/app/features/terms/terms.component.html:20,22</note>
+        <note category="location">src/app/features/legal/legal-page.component.html:12,14</note>
       </notes>
       <segment>
         <source>Sommaire</source>
@@ -11489,6 +10304,26 @@
       <segment>
         <source> La séance est terminée. Merci de votre participation. </source>
         <target> The session has ended. Thank you for taking part. </target>
+      </segment>
+    </unit>
+    <unit id="coursEvince">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:290,293</note>
+        <note category="meaning">cours.evince</note>
+      </notes>
+      <segment>
+        <source> Votre formateur vous a retiré de la séance. S’il vous y réadmet, rejoignez-la à nouveau avec le même code depuis ce poste. </source>
+        <target> Your trainer has removed you from the session. If they let you back in, join again with the same code from this computer. </target>
+      </segment>
+    </unit>
+    <unit id="coursPosteLibere">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:300,303</note>
+        <note category="meaning">cours.posteLibere</note>
+      </notes>
+      <segment>
+        <source> Votre formateur a libéré cette place pour un autre poste : ce poste ne suit plus la séance. </source>
+        <target> Your trainer has freed this seat for another computer: this computer no longer follows the session. </target>
       </segment>
     </unit>
     <unit id="coursEcranSuivant">
@@ -12097,6 +10932,24 @@
       <segment>
         <source>Cette séance est terminée : elle n’accepte plus de nouveau participant.</source>
         <target>This session is over: it no longer accepts new participants.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusPlaceDejaPrise">
+      <notes>
+        <note category="meaning">cours.refusPlaceDejaPrise</note>
+      </notes>
+      <segment>
+        <source>Votre place est déjà ouverte sur un autre appareil : demandez au formateur de libérer votre poste.</source>
+        <target>Your seat is already open on another device: ask the trainer to release your seat.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusParticipantEvince">
+      <notes>
+        <note category="meaning">cours.refusParticipantEvince</note>
+      </notes>
+      <segment>
+        <source>Le formateur vous a retiré de cette séance : adressez-vous à lui pour être réadmis.</source>
+        <target>The trainer removed you from this session: ask them to readmit you.</target>
       </segment>
     </unit>
     <unit id="coursRefusRattachementImpossible">
@@ -13516,25 +12369,6 @@
         <target>12 characters minimum</target>
       </segment>
     </unit>
-    <unit id="profileWeatherRemoveFavoriteAriaLabel">
-      <notes>
-        <note category="location">src/app/features/profile/profile.component.ts:193</note>
-      </notes>
-      <segment>
-        <source>Supprimer <ph id="0" equiv="city" disp="city.name"/> des favoris</source>
-        <target>Remove <ph id="0" equiv="city" disp="city.name"/> from favorites</target>
-      </segment>
-    </unit>
-    <unit id="bottomSheetClose">
-      <notes>
-        <note category="location">src/app/shared/components/bottom-sheet/bottom-sheet.component.ts:51</note>
-        <note category="location">src/app/shared/components/bottom-sheet/bottom-sheet.component.ts:90</note>
-      </notes>
-      <segment>
-        <source>Fermer</source>
-        <target>Close</target>
-      </segment>
-    </unit>
     <unit id="contactCtaInfoAriaLabel">
       <notes>
         <note category="location">src/app/shared/components/cta-contact/cta-contact.component.html:5,6</note>
@@ -14511,907 +13345,6 @@
       <segment>
         <source>IA</source>
         <target>AI</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDrinkBeer">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:27</note>
-      </notes>
-      <segment>
-        <source>Biere</source>
-        <target>Beer</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDrinkWine">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:31</note>
-      </notes>
-      <segment>
-        <source>Vin</source>
-        <target>Wine</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDrinkChampagne">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:33</note>
-      </notes>
-      <segment>
-        <source>Champagne</source>
-        <target>Champagne</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDrinkCocktail">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:38</note>
-      </notes>
-      <segment>
-        <source>Cocktail</source>
-        <target>Cocktail</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDrinkSpirits">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:43</note>
-      </notes>
-      <segment>
-        <source>Spiritueux</source>
-        <target>Spirits</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDrinkCider">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:48</note>
-      </notes>
-      <segment>
-        <source>Cidre</source>
-        <target>Cider</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDrinkCoffee">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:53</note>
-      </notes>
-      <segment>
-        <source>Café</source>
-        <target>Coffee</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTimeNow">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:70</note>
-      </notes>
-      <segment>
-        <source>Maintenant</source>
-        <target>Now</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTime30m">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:71</note>
-      </notes>
-      <segment>
-        <source>Il y a 30m</source>
-        <target>30m ago</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTime1h">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:72</note>
-      </notes>
-      <segment>
-        <source>Il y a 1h</source>
-        <target>1h ago</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTimeYesterdayEvening">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:73</note>
-      </notes>
-      <segment>
-        <source>Hier soir</source>
-        <target>Last night</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTimeCustom">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:74</note>
-      </notes>
-      <segment>
-        <source>Personnalise</source>
-        <target>Custom</target>
-      </segment>
-    </unit>
-    <unit id="sebastianAddSheetRecents">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:87,89</note>
-      </notes>
-      <segment>
-        <source> Recents </source>
-        <target> Recent </target>
-      </segment>
-    </unit>
-    <unit id="sebastianAddSheetType">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:112,114</note>
-      </notes>
-      <segment>
-        <source> Type </source>
-        <target> Type </target>
-      </segment>
-    </unit>
-    <unit id="sebastianAddSheetQuantity">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:136,138</note>
-      </notes>
-      <segment>
-        <source> Quantité </source>
-        <target> Quantity </target>
-      </segment>
-    </unit>
-    <unit id="sebastianAddSheetDegree">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:172,173</note>
-      </notes>
-      <segment>
-        <source> Degre (%) </source>
-        <target> ABV (%) </target>
-      </segment>
-    </unit>
-    <unit id="sebastianAddSheetVolume">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:208,209</note>
-      </notes>
-      <segment>
-        <source> Volume (cL) </source>
-        <target> Volume (cL) </target>
-      </segment>
-    </unit>
-    <unit id="sebastianAddSheetWhen">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:244,246</note>
-      </notes>
-      <segment>
-        <source> Quand </source>
-        <target> When </target>
-      </segment>
-    </unit>
-    <unit id="sebastianAddSheetNotes">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:286,288</note>
-      </notes>
-      <segment>
-        <source> Notes </source>
-        <target> Notes </target>
-      </segment>
-    </unit>
-    <unit id="sebastianAddSheetNotesPlaceholder">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:291,292</note>
-      </notes>
-      <segment>
-        <source>Ajouter une note...</source>
-        <target>Add a note...</target>
-      </segment>
-    </unit>
-    <unit id="sebastianAddSheetSubmit">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:306,310</note>
-      </notes>
-      <segment>
-        <source> Ajouter <ph id="0" equiv="INTERPOLATION" disp="{{ quantity() }}"/> <ph id="1" equiv="INTERPOLATION_1" disp="{{ drinkUi[selectedDrinkType()].icon }}"/> <ph id="2" equiv="INTERPOLATION_2" disp="{{ drinkUi[selectedDrinkType()].label }}"/> </source>
-        <target> Add <ph id="0" equiv="INTERPOLATION" disp="{{ quantity() }}"/> <ph id="1" equiv="INTERPOLATION_1" disp="{{ drinkUi[selectedDrinkType()].icon }}"/> <ph id="2" equiv="INTERPOLATION_2" disp="{{ drinkUi[selectedDrinkType()].label }}"/> </target>
-      </segment>
-    </unit>
-    <unit id="sebastianAddSheetTitle">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-add-drink-sheet.component.ts:342</note>
-      </notes>
-      <segment>
-        <source>Ajouter une boisson</source>
-        <target>Add a drink</target>
-      </segment>
-    </unit>
-    <unit id="sebastianBacLegalLimit">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-bac-curve.component.ts:71</note>
-      </notes>
-      <segment>
-        <source>Limite legale</source>
-        <target>Legal limit</target>
-      </segment>
-    </unit>
-    <unit id="sebastianHeatmapCombined">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:65</note>
-      </notes>
-      <segment>
-        <source>Combine</source>
-        <target>Combined</target>
-      </segment>
-    </unit>
-    <unit id="sebastianCategoryAlcohol">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:66</note>
-        <note category="location">src/app/features/sebastian/components/sebastian-trend-chart.component.ts:57</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:41,42</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:37,38</note>
-      </notes>
-      <segment>
-        <source>Alcool</source>
-        <target>Alcohol</target>
-      </segment>
-    </unit>
-    <unit id="sebastianCategoryCoffee">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:67</note>
-        <note category="location">src/app/features/sebastian/components/sebastian-trend-chart.component.ts:67</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:42,44</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:38,41</note>
-      </notes>
-      <segment>
-        <source>Café</source>
-        <target>Coffee</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDayMonShort">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:71</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:211</note>
-      </notes>
-      <segment>
-        <source>Lun</source>
-        <target>Mon</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDayTueShort">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:72</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:212</note>
-      </notes>
-      <segment>
-        <source>Mar</source>
-        <target>Tue</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDayWedShort">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:73</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:213</note>
-      </notes>
-      <segment>
-        <source>Mer</source>
-        <target>Wed</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDayThuShort">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:74</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:214</note>
-      </notes>
-      <segment>
-        <source>Jeu</source>
-        <target>Thu</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDayFriShort">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:75</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:215</note>
-      </notes>
-      <segment>
-        <source>Ven</source>
-        <target>Fri</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDaySatShort">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:76</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:216</note>
-      </notes>
-      <segment>
-        <source>Sam</source>
-        <target>Sat</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDaySunShort">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-heatmap.component.ts:77</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:217</note>
-      </notes>
-      <segment>
-        <source>Dim</source>
-        <target>Sun</target>
-      </segment>
-    </unit>
-    <unit id="sebastianScorePhase">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-score-card.component.ts:20,22</note>
-      </notes>
-      <segment>
-        <source> Phase <ph id="0" equiv="INTERPOLATION" disp="{{ score().phase }}"/>/3 </source>
-        <target> Phase <ph id="0" equiv="INTERPOLATION" disp="{{ score().phase }}"/>/3 </target>
-      </segment>
-    </unit>
-    <unit id="sebastianScoreGoalAdherence">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-score-card.component.ts:27,28</note>
-      </notes>
-      <segment>
-        <source>Adherence objectifs</source>
-        <target>Goal adherence</target>
-      </segment>
-    </unit>
-    <unit id="sebastianScoreTrendBonus">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-score-card.component.ts:40,41</note>
-      </notes>
-      <segment>
-        <source>Bonus tendance</source>
-        <target>Trend bonus</target>
-      </segment>
-    </unit>
-    <unit id="sebastianScoreStreakBonus">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-score-card.component.ts:47,48</note>
-      </notes>
-      <segment>
-        <source>Bonus streak</source>
-        <target>Streak bonus</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTrendGoalAlcohol">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-trend-chart.component.ts:77</note>
-      </notes>
-      <segment>
-        <source>Obj. alcool</source>
-        <target>Alcohol goal</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTrendGoalCoffee">
-      <notes>
-        <note category="location">src/app/features/sebastian/components/sebastian-trend-chart.component.ts:83</note>
-      </notes>
-      <segment>
-        <source>Obj. cafe</source>
-        <target>Coffee goal</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDashboardSetGoal">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:35,37</note>
-      </notes>
-      <segment>
-        <source> Definir un objectif </source>
-        <target> Set a goal </target>
-      </segment>
-    </unit>
-    <unit id="sebastianDashboardEditGoals">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:46,48</note>
-      </notes>
-      <segment>
-        <source> Modifier les objectifs </source>
-        <target> Edit goals </target>
-      </segment>
-    </unit>
-    <unit id="sebastianDashboardBac">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:55,57</note>
-      </notes>
-      <segment>
-        <source> Taux d&apos;alcoolemie </source>
-        <target> Blood alcohol level </target>
-      </segment>
-    </unit>
-    <unit id="sebastianDashboardSoberAt">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:72,73</note>
-      </notes>
-      <segment>
-        <source> Sobriete estimee : <ph id="0" equiv="INTERPOLATION" disp="{{ formatTime(bac.estimatedSoberAt) }}"/> </source>
-        <target> Estimated sober at: <ph id="0" equiv="INTERPOLATION" disp="{{ formatTime(bac.estimatedSoberAt) }}"/> </target>
-      </segment>
-    </unit>
-    <unit id="sebastianDashboardLast7Days">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:85,87</note>
-      </notes>
-      <segment>
-        <source> 7 derniers jours </source>
-        <target> Last 7 days </target>
-      </segment>
-    </unit>
-    <unit id="sebastianDashboardLast30Days">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:93,95</note>
-      </notes>
-      <segment>
-        <source> 30 derniers jours </source>
-        <target> Last 30 days </target>
-      </segment>
-    </unit>
-    <unit id="sebastianDashboardAvgAlcohol">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:101,102</note>
-      </notes>
-      <segment>
-        <source>Moy. alcool : <ph id="0" equiv="INTERPOLATION" disp="{{ trends30d()!.summary.avgAlcohol }}"/>/j</source>
-        <target>Avg. alcohol: <ph id="0" equiv="INTERPOLATION" disp="{{ trends30d()!.summary.avgAlcohol }}"/>/day</target>
-      </segment>
-    </unit>
-    <unit id="sebastianDashboardAvgCoffee">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-dashboard.component.ts:104,105</note>
-      </notes>
-      <segment>
-        <source>Moy. cafe : <ph id="0" equiv="INTERPOLATION" disp="{{ trends30d()!.summary.avgCoffee }}"/>/j</source>
-        <target>Avg. coffee: <ph id="0" equiv="INTERPOLATION" disp="{{ trends30d()!.summary.avgCoffee }}"/>/day</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalPerDay">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:12</note>
-      </notes>
-      <segment>
-        <source>jour</source>
-        <target>day</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalPerWeek">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:13</note>
-      </notes>
-      <segment>
-        <source>sem.</source>
-        <target>wk</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalPerMonth">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:14</note>
-      </notes>
-      <segment>
-        <source>mois</source>
-        <target>month</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalPeriodDaily">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:18</note>
-      </notes>
-      <segment>
-        <source>Quotidien</source>
-        <target>Daily</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalPeriodWeekly">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:19</note>
-      </notes>
-      <segment>
-        <source>Hebdomadaire</source>
-        <target>Weekly</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalPeriodMonthly">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:20</note>
-      </notes>
-      <segment>
-        <source>Mensuel</source>
-        <target>Monthly</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalNew">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:33,35</note>
-      </notes>
-      <segment>
-        <source> Nouvel objectif </source>
-        <target> New goal </target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalQuantityPlaceholder">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:50,51</note>
-      </notes>
-      <segment>
-        <source>Quantité max</source>
-        <target>Max quantity</target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalSubmit">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:69,71</note>
-      </notes>
-      <segment>
-        <source> Definir l&apos;objectif </source>
-        <target> Set the goal </target>
-      </segment>
-    </unit>
-    <unit id="sebastianDelete">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:92,93</note>
-        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:103,104</note>
-      </notes>
-      <segment>
-        <source> Supprimer </source>
-        <target> Delete </target>
-      </segment>
-    </unit>
-    <unit id="sebastianGoalEmpty">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-goals.component.ts:105,107</note>
-      </notes>
-      <segment>
-        <source> Aucun objectif actif </source>
-        <target> No active goal </target>
-      </segment>
-    </unit>
-    <unit id="sebastianUnitWine">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:8</note>
-      </notes>
-      <segment>
-        <source>verre(s) de vin</source>
-        <target>glass(es) of wine</target>
-      </segment>
-    </unit>
-    <unit id="sebastianUnitChampagne">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:9</note>
-      </notes>
-      <segment>
-        <source>coupe(s) de champagne</source>
-        <target>flute(s) of champagne</target>
-      </segment>
-    </unit>
-    <unit id="sebastianUnitAlcohol">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:10</note>
-      </notes>
-      <segment>
-        <source>biere(s)</source>
-        <target>beer(s)</target>
-      </segment>
-    </unit>
-    <unit id="sebastianUnitCoffee">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:11</note>
-      </notes>
-      <segment>
-        <source>tasse(s)</source>
-        <target>cup(s)</target>
-      </segment>
-    </unit>
-    <unit id="sebastianHistoryAllCategories">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:36,37</note>
-      </notes>
-      <segment>
-        <source>Toutes les categories</source>
-        <target>All categories</target>
-      </segment>
-    </unit>
-    <unit id="sebastianHistoryDateFrom">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:47,48</note>
-      </notes>
-      <segment>
-        <source>Date debut</source>
-        <target>Start date</target>
-      </segment>
-    </unit>
-    <unit id="sebastianHistoryDateTo">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:56,57</note>
-      </notes>
-      <segment>
-        <source>Date fin</source>
-        <target>End date</target>
-      </segment>
-    </unit>
-    <unit id="sebastianHistoryEmpty">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-history.component.ts:112,114</note>
-      </notes>
-      <segment>
-        <source> Aucune entree enregistree </source>
-        <target> No entries recorded </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsTotalAlcohol">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:77,79</note>
-      </notes>
-      <segment>
-        <source> Total alcool </source>
-        <target> Total alcohol </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsTotalCoffee">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:88,90</note>
-      </notes>
-      <segment>
-        <source> Total cafe </source>
-        <target> Total coffee </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsAvgAlcohol">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:99,101</note>
-      </notes>
-      <segment>
-        <source> Moy. alcool/jour </source>
-        <target> Avg. alcohol/day </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsAvgCoffee">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:110,112</note>
-      </notes>
-      <segment>
-        <source> Moy. cafe/jour </source>
-        <target> Avg. coffee/day </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsVsPrevious">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:123,125</note>
-      </notes>
-      <segment>
-        <source> vs periode precedente : </source>
-        <target> vs previous period: </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsAlcoholDelta">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:130,132</note>
-      </notes>
-      <segment>
-        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.comparison.alcoholDelta &gt; 0 ? &apos;+&apos; : &apos;&apos;
-              }}"/><ph id="1" equiv="INTERPOLATION_1" disp="{{ report()!.comparison.alcoholDelta }}"/>% alcool </source>
-        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.comparison.alcoholDelta &gt; 0 ? &apos;+&apos; : &apos;&apos;
-              }}"/><ph id="1" equiv="INTERPOLATION_1" disp="{{ report()!.comparison.alcoholDelta }}"/>% alcohol </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsCoffeeDelta">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:137,139</note>
-      </notes>
-      <segment>
-        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.comparison.coffeeDelta &gt; 0 ? &apos;+&apos; : &apos;&apos;
-              }}"/><ph id="1" equiv="INTERPOLATION_1" disp="{{ report()!.comparison.coffeeDelta }}"/>% cafe </source>
-        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.comparison.coffeeDelta &gt; 0 ? &apos;+&apos; : &apos;&apos;
-              }}"/><ph id="1" equiv="INTERPOLATION_1" disp="{{ report()!.comparison.coffeeDelta }}"/>% coffee </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsBestDay">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:149,151</note>
-      </notes>
-      <segment>
-        <source> Meilleur jour </source>
-        <target> Best day </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsBestScore">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:155,157</note>
-      </notes>
-      <segment>
-        <source> Score <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.best.score }}"/> </source>
-        <target> Score <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.best.score }}"/> </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsWorstDay">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:163,165</note>
-      </notes>
-      <segment>
-        <source> Pire jour </source>
-        <target> Worst day </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsWorstScore">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:169,171</note>
-      </notes>
-      <segment>
-        <source> Score <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.worst.score }}"/> </source>
-        <target> Score <ph id="0" equiv="INTERPOLATION" disp="{{ report()!.worst.score }}"/> </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsDistribution">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:181,183</note>
-      </notes>
-      <segment>
-        <source> Distribution par jour </source>
-        <target> Distribution by day </target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsPeriodWeek">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:205</note>
-      </notes>
-      <segment>
-        <source>Semaine</source>
-        <target>Week</target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsPeriodMonth">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:206</note>
-      </notes>
-      <segment>
-        <source>Mois</source>
-        <target>Month</target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsPeriodQuarter">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:207</note>
-      </notes>
-      <segment>
-        <source>Trimestre</source>
-        <target>Quarter</target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsWeekOf">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:236</note>
-      </notes>
-      <segment>
-        <source>Semaine du <ph id="0" equiv="day" disp="day"/> <ph id="1" equiv="month" disp="month"/></source>
-        <target>Week of <ph id="1" equiv="month" disp="month"/> <ph id="0" equiv="day" disp="day"/></target>
-      </segment>
-    </unit>
-    <unit id="sebastianReportsQuarterOf">
-      <notes>
-        <note category="location">src/app/features/sebastian/pages/sebastian-reports.component.ts:240</note>
-      </notes>
-      <segment>
-        <source>T<ph id="0" equiv="quarter" disp="Math.floor(date.getMonth() / 3) + 1"/> <ph id="1" equiv="year" disp="year"/></source>
-        <target>Q<ph id="0" equiv="quarter" disp="Math.floor(date.getMonth() / 3) + 1"/> <ph id="1" equiv="year" disp="year"/></target>
-      </segment>
-    </unit>
-    <unit id="sebastianAddEntryAriaLabel">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:117,118</note>
-      </notes>
-      <segment>
-        <source>Ajouter une consommation</source>
-        <target>Log a drink</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTabDashboard">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:137</note>
-      </notes>
-      <segment>
-        <source>Dashboard</source>
-        <target>Dashboard</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTabReports">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:138</note>
-      </notes>
-      <segment>
-        <source>Rapports</source>
-        <target>Reports</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTabBadges">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:139</note>
-      </notes>
-      <segment>
-        <source>Badges</source>
-        <target>Badges</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTabHistory">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:140</note>
-      </notes>
-      <segment>
-        <source>Historique</source>
-        <target>History</target>
-      </segment>
-    </unit>
-    <unit id="sebastianTabGoals">
-      <notes>
-        <note category="location">src/app/features/sebastian/sebastian-app.component.ts:141</note>
-      </notes>
-      <segment>
-        <source>Objectifs</source>
-        <target>Goals</target>
-      </segment>
-    </unit>
-    <unit id="weatherGeoButton">
-      <notes>
-        <note category="location">src/app/features/weather/components/city-search/city-search.component.ts:80,81</note>
-        <note category="meaning">weather.geo.button</note>
-      </notes>
-      <segment>
-        <source>Me localiser</source>
-        <target>Locate me</target>
-      </segment>
-    </unit>
-    <unit id="weatherChartTemperature">
-      <notes>
-        <note category="location">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts:16</note>
-      </notes>
-      <segment>
-        <source>Température</source>
-        <target>Temperature</target>
-      </segment>
-    </unit>
-    <unit id="weatherChartPrecipitation">
-      <notes>
-        <note category="location">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts:27</note>
-      </notes>
-      <segment>
-        <source>Précipitations</source>
-        <target>Precipitation</target>
-      </segment>
-    </unit>
-    <unit id="weatherChartWind">
-      <notes>
-        <note category="location">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts:38</note>
-      </notes>
-      <segment>
-        <source>Vent</source>
-        <target>Wind</target>
-      </segment>
-    </unit>
-    <unit id="weatherChartHumidity">
-      <notes>
-        <note category="location">src/app/features/weather/components/hourly-chart/chart-datasets.config.ts:49</note>
-      </notes>
-      <segment>
-        <source>Humidité</source>
-        <target>Humidity</target>
-      </segment>
-    </unit>
-    <unit id="weatherMetricCollapse">
-      <notes>
-        <note category="location">src/app/features/weather/components/metric-card/metric-card.component.ts:93</note>
-      </notes>
-      <segment>
-        <source>Réduire les détails</source>
-        <target>Hide details</target>
-      </segment>
-    </unit>
-    <unit id="weatherMetricExpand">
-      <notes>
-        <note category="location">src/app/features/weather/components/metric-card/metric-card.component.ts:94</note>
-      </notes>
-      <segment>
-        <source>Afficher les détails</source>
-        <target>Show details</target>
-      </segment>
-    </unit>
-    <unit id="weatherRadarMapAriaLabel">
-      <notes>
-        <note category="location">src/app/features/weather/components/radar-map/radar-map.component.ts:61,62</note>
-      </notes>
-      <segment>
-        <source>Carte radar des précipitations</source>
-        <target>Precipitation radar map</target>
-      </segment>
-    </unit>
-    <unit id="weatherGranularityDay">
-      <notes>
-        <note category="location">src/app/features/weather/components/weekly-overview/weekly-overview.component.ts:66</note>
-      </notes>
-      <segment>
-        <source>Jour</source>
-        <target>Day</target>
       </segment>
     </unit>
     <unit id="slideDeckFullscreenExit">
@@ -16708,6 +14641,18 @@
       <segment>
         <source> Réadmettre dans la séance </source>
         <target> Readmit to the session </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteLibererPoste">
+      <segment>
+        <source> Libérer le poste </source>
+        <target> Release the seat </target>
+      </segment>
+    </unit>
+    <unit id="panneauActivitePosteLibere">
+      <segment>
+        <source> Poste de <ph id="0" equiv="INTERPOLATION" disp="{{ libere.prenom }}"/> <ph id="1" equiv="INTERPOLATION_1" disp="{{ libere.nom }}"/> libéré : il peut rejoindre depuis un autre appareil. </source>
+        <target> Seat of <ph id="0" equiv="INTERPOLATION" disp="{{ libere.prenom }}"/> <ph id="1" equiv="INTERPOLATION_1" disp="{{ libere.nom }}"/> released: they can join from another device. </target>
       </segment>
     </unit>
     <unit id="panneauActiviteCorrectionTitre">

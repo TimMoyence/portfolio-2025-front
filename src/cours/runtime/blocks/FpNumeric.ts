@@ -1,8 +1,8 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
+import { FpReponse } from './reponse';
 import { projeterMetadonnees } from './projection';
-import { estVerdictDeReponse, lireBonneReponse, type VerdictDeReponse } from './retours';
+import { lireBonneReponse } from './retours';
 import { lireNombreSaisi } from './saisie-numerique';
 
 export interface NumericQuestionPublique {
@@ -23,38 +23,17 @@ function projeterQuestion(source: NumericQuestionPublique): NumericQuestionPubli
   };
 }
 
-export class FpNumeric extends FpBlock {
-  private interne: NumericQuestionPublique | null = null;
-  private interneVerdict: VerdictDeReponse | null = null;
+export class FpNumeric extends FpReponse<NumericQuestionPublique> {
   private bonneReponse: string | null = null;
   private saisie = '';
-  private message = '';
-  private envoye = false;
 
   set question(valeur: NumericQuestionPublique | null) {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne = valeur === null ? null : projeterQuestion(valeur);
-    if (change) {
-      this.saisie = '';
-      this.message = '';
-      this.envoye = false;
-      this.interneVerdict = null;
-    }
+    this.poserLaQuestion(valeur, projeterQuestion);
     this.refreshSiConnecte();
   }
 
   get question(): NumericQuestionPublique | null {
     return this.interne;
-  }
-
-  set verdict(valeur: VerdictDeReponse | null) {
-    this.interneVerdict =
-      estVerdictDeReponse(valeur) && valeur.questionId === this.interne?.id ? valeur : null;
-    this.refreshSiConnecte();
-  }
-
-  get verdict(): VerdictDeReponse | null {
-    return this.interneVerdict;
   }
 
   set corrige(valeur: unknown) {
@@ -65,7 +44,7 @@ export class FpNumeric extends FpBlock {
   render(): EscapedHtml {
     const question = this.question;
     if (!question) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
     const unite = question.unite;
     const etiquette =
@@ -125,8 +104,8 @@ export class FpNumeric extends FpBlock {
     valider.addEventListener('click', () => this.soumettre(champ.value));
   }
 
-  private verrouille(): boolean {
-    return this.verrouilleApresEnvoi(this.envoye, this.interneVerdict !== null);
+  protected effacerLaReponse(): void {
+    this.saisie = '';
   }
 
   private soumettre(brut: string): void {

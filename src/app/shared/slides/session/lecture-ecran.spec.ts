@@ -132,6 +132,21 @@ describe('lecture de l ecran', () => {
     ]);
   });
 
+  it('R1 · signale a la brique que son ecran est resolu par un ecran suivant', () => {
+    const plan = { intitule: 'Classez', cartes: [], categories: [] };
+    const resolu = buildEcran({
+      type: 'fp-cardsort',
+      donnees: { plan },
+      resoluPar: ['B2-01-A1-05-CORRECTION'],
+    });
+
+    expect(planDeMontage(resolu)?.[0].donnees).toEqual({ plan, resoluAilleurs: true });
+    expect(
+      planDeMontage(buildEcran({ type: 'fp-cardsort', donnees: { plan } }))?.[0].donnees,
+    ).toEqual({ plan, resoluAilleurs: false });
+    expect(PROPRIETES_PAR_BRIQUE['fp-cardsort']).toContain('resoluAilleurs');
+  });
+
   it('refuse le plan de montage d une brique inconnue', () => {
     expect(planDeMontage(buildVisualSlide({ type: 'brique-inconnue' }))).toBeNull();
   });

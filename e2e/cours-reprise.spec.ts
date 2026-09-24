@@ -1,53 +1,22 @@
 import { expect, test } from '@playwright/test';
-import type { Page, Route } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import {
+  BILLET_DE_SORTIE,
+  EN_TETES_CORS,
+  ETAT_EN_COURS,
+  SUJET_DE_SORTIE,
+  intercepterApi,
+  remplirLaJonction,
+  servirFlux,
+  servirJson,
+} from './fixtures';
 
-const API = 'http://localhost:3000/api/v1/portfolio25';
 const PARTICIPANT = '22222222-2222-4222-8222-222222222222';
 const SEANCE_A = { id: '11111111-1111-4111-8111-111111111111', code: '4821' };
 const SEANCE_B = { id: '44444444-4444-4444-8444-444444444444', code: '5932' };
 const TEXTE = 'Le passage du taux annuel au taux mensuel reste flou';
 const CONFUSION = 'Taux annuel divisé par 12';
 const DELAI_ENTREE_MS = 20_000;
-
-const BILLET = {
-  id: 'B-SORTIE-09',
-  question: 'Le taux équivalent mensuel d’un taux annuel de 12 % vaut :',
-  invite: 'Qu’est-ce qui reste flou ?',
-  options: [
-    { id: 'a', libelle: 'Un peu moins de 1 %' },
-    { id: 'b', libelle: 'Exactement 1 %' },
-  ],
-  metadonnees: {
-    concepts: ['taux-equivalent'],
-    misconceptionsCiblees: [],
-    dureeMinutes: 5,
-    modalite: 'solo',
-    regime: 'ouvert',
-  },
-};
-
-const SUJET = {
-  id: 'b2-01-traitement-information-chiffree',
-  titre: 'Décider avec des taux fiables',
-  niveau: 'B2',
-  duree: 195,
-  concepts: ['taux'],
-  ecrans: [
-    {
-      id: 'ecran-sortie',
-      type: 'fp-exit',
-      duree: 5,
-      interactif: true,
-      donnees: { billet: BILLET },
-    },
-  ],
-};
-
-const CORS = {
-  'access-control-allow-origin': 'http://localhost:4200',
-  'access-control-allow-headers': 'content-type, accept, x-participant-token, authorization',
-  'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS',
-};
 
 interface Seance {
   readonly id: string;
@@ -62,7 +31,7 @@ function etatDuParticipant(seance: Seance, repondu: boolean): Record<string, unk
     reponses: repondu
       ? [
           {
-            questionId: BILLET.id,
+            questionId: BILLET_DE_SORTIE.id,
             valeur: 'b',
             correcte: false,
             score: null,
@@ -79,23 +48,11 @@ function etatDuParticipant(seance: Seance, repondu: boolean): Record<string, unk
   };
 }
 
-async function servir(route: Route, corps: unknown, statut = 200): Promise<void> {
-  await route.fulfill({
-    status: statut,
-    headers: { ...CORS, 'content-type': 'application/json' },
-    body: JSON.stringify(corps),
-  });
-}
-
 async function installerLaSeance(page: Page, seance: Seance): Promise<void> {
   let repondu = false;
-  await page.route(`${API}/**`, async (route) => {
-    const requete = route.request();
-    const chemin = new URL(requete.url()).pathname;
-    if (requete.method() === 'OPTIONS') {
-      await route.fulfill({ status: 204, headers: CORS });
-    } else if (chemin.endsWith(`/sessions/${seance.code}/join`)) {
-      await servir(
+  await intercepterApi(page, async (route, chemin) => {
+    if (chemin.endsWith(`/sessions/${seance.code}/join`)) {
+      await servirJson(
         route,
         {
           participantId: PARTICIPANT,
@@ -107,26 +64,22 @@ async function installerLaSeance(page: Page, seance: Seance): Promise<void> {
         201,
       );
     } else if (chemin.endsWith(`/sessions/${seance.id}/sujet`)) {
-      await servir(route, SUJET);
+      await servirJson(route, SUJET_DE_SORTIE);
     } else if (chemin.endsWith(`/sessions/${seance.id}/moi`)) {
-      await servir(route, etatDuParticipant(seance, repondu));
+      await servirJson(route, etatDuParticipant(seance, repondu));
     } else if (chemin.endsWith(`/sessions/${seance.id}/answers`)) {
       repondu = true;
-      await servir(
+      await servirJson(
         route,
         { correcte: false, misconception: null, libelleConfusion: CONFUSION },
         201,
       );
     } else if (chemin.endsWith(`/sessions/${seance.id}/free-responses`)) {
-      await servir(route, { status: 'enregistre' }, 201);
+      await servirJson(route, { status: 'enregistre' }, 201);
     } else if (chemin.endsWith(`/sessions/${seance.id}/stream`)) {
-      await route.fulfill({
-        status: 200,
-        headers: { ...CORS, 'content-type': 'text/event-stream' },
-        body: `event: etat\ndata: ${JSON.stringify({ etat: 'en_cours', modeRythme: 'pilote', ecranCourant: 0, intervalleLibre: null, participants: 1 })}\n\n`,
-      });
+      await servirFlux(route, ETAT_EN_COURS);
     } else {
-      await route.fulfill({ status: 204, headers: CORS });
+      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
     }
   });
 }
@@ -137,18 +90,14 @@ async function rejoindre(page: Page, seance: Seance): Promise<void> {
   if (await bannièreCookies.isVisible().catch(() => false)) {
     await bannièreCookies.getByRole('button').last().click();
   }
-  await page.getByLabel('Code de la séance').fill(seance.code);
-  await page.getByLabel('Prénom').fill('Lea');
-  await page.getByLabel('Nom', { exact: true }).fill('Dubois');
-  await page.getByLabel('Adresse e-mail').fill('lea.dubois@example.com');
-  await page.getByRole('button', { name: 'Entrer dans la séance' }).click();
+  await remplirLaJonction(page, seance.code);
   await expect(page.locator('fp-exit [data-testid="texte-libre"]')).toBeVisible({
     timeout: DELAI_ENTREE_MS,
   });
 }
 
 function cleDuBrouillon(seance: Seance): string {
-  return `fp.${seance.id}.${PARTICIPANT}.fp-exit.${BILLET.id}`;
+  return `fp.${seance.id}.${PARTICIPANT}.fp-exit.${BILLET_DE_SORTIE.id}`;
 }
 
 async function brouillonEcrit(page: Page, seance: Seance): Promise<void> {

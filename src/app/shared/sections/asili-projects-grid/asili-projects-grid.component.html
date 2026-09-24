@@ -2,11 +2,7 @@
   <div class="wrap">
     <div class="projects-head" appReveal>
       <div>
-        <ng-content select="[kicker]">
-          @if (kicker(); as k) {
-            <span class="kicker">{{ k }}</span>
-          }
-        </ng-content>
+        <ng-content select="[kicker]"><app-asili-kicker [texte]="kicker()" /></ng-content>
         <ng-content select="[heading]">
           @if (heading(); as h) {
             <h2 class="h-xl projects-head__title">{{ h }}</h2>

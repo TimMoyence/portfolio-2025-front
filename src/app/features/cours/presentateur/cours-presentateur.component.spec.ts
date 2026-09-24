@@ -11,6 +11,14 @@ import type {
   ResultatsSeance,
 } from '../../../../cours/content/types';
 import type { EtatSession, StatutFlux } from '../../../../cours/runtime/core/sync';
+import {
+  attendreAucunEnTeteSansSession,
+  buildEcranDeVoteCorrige,
+  demonterLeBancDuPupitre,
+  JETON_FORMATEUR,
+  monterLeBancDuPupitre,
+  monterSurLeBanc,
+} from '../../../../testing/banc-du-pupitre';
 import { buildAuthSession } from '../../../../testing/factories/auth.factory';
 import {
   buildPlotDefinition,
@@ -36,11 +44,8 @@ import {
   buildVisualSlide,
 } from '../../../../testing/factories/visual-slide.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
-import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formations.port';
-import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
-import { CREATEUR_FLUX } from '../cours-flux.token';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { CoursPresentateurComponent } from './cours-presentateur.component';
 
@@ -49,7 +54,7 @@ type Fixture = ComponentFixture<CoursPresentateurComponent>;
 const SLUG = 'b1-09-interets-composes';
 const SESSION = 'seance-1';
 const CODE = '4821';
-const JETON = 'jwt-formateur';
+const JETON = JETON_FORMATEUR;
 const BASE_DE_L_APPLICATION = '/fr/';
 
 const CONFUSIONS_DE_LA_CLASSE: readonly ConfusionComptee[] = [
@@ -61,18 +66,7 @@ function derouleDeSeance(): DerouleCours {
   const sansQuestion = { seuil: null, corriges: [] };
   return buildDerouleCours({
     ecrans: [
-      buildEcranDeroule({
-        id: 'ecran-vote',
-        type: 'fp-vote',
-        donnees: { question: buildVoteQuestion() },
-        corriges: [
-          {
-            questionId: 'Q-CAP-03',
-            bonneReponse: '1480.24',
-            confusions: CONFUSIONS_DE_LA_CLASSE.map(({ id, libelle }) => ({ id, libelle })),
-          },
-        ],
-      }),
+      buildEcranDeVoteCorrige(CONFUSIONS_DE_LA_CLASSE),
       buildEcranDeroule({ id: 'ecran-rappel', ...sansQuestion }),
       buildEcranDeroule({ id: 'ecran-exercice', ...sansQuestion }),
       buildEcranDeroule({ id: 'ecran-taux', ...sansQuestion }),
@@ -120,7 +114,6 @@ describe('CoursPresentateurComponent', () => {
   let port: jasmine.SpyObj<FormationsPort>;
   let double: FluxDouble;
   let deroule: DerouleCours;
-  const montees: Fixture[] = [];
 
   function cible(fixture: Fixture, marque: string): HTMLElement {
     return cibleMarque(fixture, marque, 'le pupitre');
@@ -143,8 +136,7 @@ describe('CoursPresentateurComponent', () => {
   }
 
   function monter(seance?: string): Fixture {
-    const fixture = TestBed.createComponent(CoursPresentateurComponent);
-    montees.push(fixture);
+    const fixture = monterSurLeBanc(CoursPresentateurComponent);
     fixture.componentRef.setInput('slug', SLUG);
     if (seance !== undefined) {
       fixture.componentRef.setInput('seance', seance);
@@ -186,25 +178,15 @@ describe('CoursPresentateurComponent', () => {
     port.ouvrirSeance.and.returnValue(of({ sessionId: SESSION, code: CODE }));
     port.lireDeroule.and.returnValue(of(deroule));
     double = createFluxDouble();
-    await setupTestBed({
+    await monterLeBancDuPupitre(CoursPresentateurComponent, {
+      port,
+      double,
       router: true,
-      imports: [CoursPresentateurComponent],
-      providers: [
-        { provide: FORMATIONS_PORT, useValue: port },
-        { provide: CREATEUR_FLUX, useValue: double.fabrique },
-        { provide: APP_BASE_HREF, useValue: BASE_DE_L_APPLICATION },
-      ],
-    }).compileComponents();
-    TestBed.inject(AuthStateService).login(buildAuthSession({ accessToken: JETON }));
+      providers: [{ provide: APP_BASE_HREF, useValue: BASE_DE_L_APPLICATION }],
+    });
   });
 
-  afterEach(() => {
-    for (const fixture of montees) {
-      fixture.destroy();
-    }
-    montees.length = 0;
-    TestBed.inject(AuthStateService).clearSession();
-  });
+  afterEach(demonterLeBancDuPupitre);
 
   it('propose une seule commande pour ouvrir la projection', async () => {
     const fixture = await ouvrirLaSeance();
@@ -739,11 +721,8 @@ describe('CoursPresentateurComponent', () => {
 
   it('n envoie aucun en-tete authorization au flux sans session', async () => {
     await ouvrirLaSeance();
-    const options = double.fabrique.calls.mostRecent().args[0];
 
-    TestBed.inject(AuthStateService).clearSession();
-
-    expect(options.entetes?.()).toEqual({});
+    attendreAucunEnTeteSansSession(double);
   });
 
   it('ouvre le flux formateur avec le jeton du compte, sans rejoindre comme un etudiant', async () => {
@@ -1106,13 +1085,21 @@ describe('CoursPresentateurComponent', () => {
     });
   }
 
-  it('la cloture demande confirmation, ne part qu une fois puis mene a la synthese', async () => {
+  async function ouvrirAvantUneClotureLente(): Promise<{
+    navigation: jasmine.Spy;
+    fermeture: Subject<void>;
+    fixture: Fixture;
+  }> {
     const navigation = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
     const fermeture = new Subject<void>();
     port.cloturer.and.returnValue(fermeture);
     const fixture = await ouvrirLaSeance();
-
     await cliquer(fixture, 'presentateur-cloturer');
+    return { navigation, fermeture, fixture };
+  }
+
+  it('la cloture demande confirmation, ne part qu une fois puis mene a la synthese', async () => {
+    const { navigation, fermeture, fixture } = await ouvrirAvantUneClotureLente();
 
     expect(lire(fixture, 'presentateur-cloture-confirmation')).toBeTruthy();
     expect(port.cloturer).not.toHaveBeenCalled();
@@ -1134,11 +1121,7 @@ describe('CoursPresentateurComponent', () => {
   });
 
   it('ne ramene pas a la synthese un formateur parti avant la fin de la cloture', async () => {
-    const navigation = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
-    const fermeture = new Subject<void>();
-    port.cloturer.and.returnValue(fermeture);
-    const fixture = await ouvrirLaSeance();
-    await cliquer(fixture, 'presentateur-cloturer');
+    const { navigation, fermeture, fixture } = await ouvrirAvantUneClotureLente();
     bouton(fixture, 'presentateur-cloture-confirmer').click();
 
     fixture.destroy();
@@ -1264,13 +1247,18 @@ describe('CoursPresentateurComponent', () => {
       });
     });
 
-    it('lit la carte de maitrise sur l ecran de rappel espace et la confie au rendu tableau', async () => {
+    async function projeterLeRappelEspace(): Promise<Fixture> {
       deroule = derouleAvecEcran({ id: 'ecran-rappel-espace', type: 'fp-spaced', donnees: {} });
       port.lireDeroule.and.returnValue(of(deroule));
       const fixture = await ouvrirLaSeance();
 
       diffuser(fixture, { ecranCourant: 0 });
       await stabiliser(fixture);
+      return fixture;
+    }
+
+    it('lit la carte de maitrise sur l ecran de rappel espace et la confie au rendu tableau', async () => {
+      const fixture = await projeterLeRappelEspace();
 
       expect(port.lireSyntheseRappels).toHaveBeenCalledWith(SESSION);
       expect(apercu(fixture).maitrise()).toEqual([
@@ -1281,12 +1269,7 @@ describe('CoursPresentateurComponent', () => {
 
     it('dit au formateur que la carte de maitrise n a pas pu etre lue', async () => {
       port.lireSyntheseRappels.and.returnValue(throwError(() => new Error('reseau coupe')));
-      deroule = derouleAvecEcran({ id: 'ecran-rappel-espace', type: 'fp-spaced', donnees: {} });
-      port.lireDeroule.and.returnValue(of(deroule));
-      const fixture = await ouvrirLaSeance();
-
-      diffuser(fixture, { ecranCourant: 0 });
-      await stabiliser(fixture);
+      const fixture = await projeterLeRappelEspace();
 
       expect(cible(fixture, 'presentateur-maitrise-echec').getAttribute('role')).toBe('status');
     });

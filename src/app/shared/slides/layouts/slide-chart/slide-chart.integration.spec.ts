@@ -4,29 +4,19 @@ import { firstValueFrom } from 'rxjs';
 import { buildAppConfig } from '../../../../../testing/factories/app-config.factory';
 import { buildVisualCourse } from '../../../../../testing/factories/formation-catalogue.factory';
 import { buildVisualChartSlide } from '../../../../../testing/factories/visual-slide.factory';
+import { GRAPHIQUE_MARGE_BRUTE } from '../../../../../testing/fixtures/graphique-marge-brute';
 import { setupTestBed } from '../../../../../testing/setup-test-bed';
+import { textes } from '../../../../../testing/textes-dom';
 import { FormationCatalogueHttpAdapter } from '../../../../core/adapters/formation-catalogue-http.adapter';
 import { SlideActivityComponent } from '../../session/slide-activity.component';
 
 const SLUG = 'b2-01-traitement-information-chiffree';
 
 const G1 = {
-  title: 'Marge brute d’Atelier Rivage, 2022–2025',
-  caption: 'Axe vertical de 0 à 300 000 €',
-  labels: ['2022', '2023', '2024', '2025'],
-  series: [{ label: 'Marge brute', values: [285000, 288000, 289800, 291000], tone: 'teal' }],
-  axisRanges: [[0, 300000]],
-  unit: '€',
+  ...GRAPHIQUE_MARGE_BRUTE,
   reading: 'La marge brute passe de 285 000 € à 291 000 € : +6 000 € en trois ans, soit +2,1 %.',
-  source: 'Comptes de résultat 2022 à 2025 d’Atelier Rivage (données fictives).',
   description: 'Diagramme en barres à partir de zéro : quatre barres presque égales.',
 };
-
-function textes(racine: HTMLElement, selecteur: string): (string | undefined)[] {
-  return Array.from(racine.querySelectorAll(selecteur)).map((noeud) =>
-    noeud.textContent?.replace(/\s+/g, ' ').trim(),
-  );
-}
 
 describe('Graphique v2 servi par le catalogue (F13, intégration)', () => {
   it('rend G1 depuis la réponse HTTP réelle de /formations/catalogue/:slug', async () => {

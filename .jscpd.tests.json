@@ -1,0 +1,13 @@
+{
+  "path": ["src", "e2e"],
+  "format": ["typescript"],
+  "minLines": 5,
+  "minTokens": 50,
+  "mode": "weak",
+  "gitignore": true,
+  "absolute": false,
+  "pattern": "{src/**/*.spec.ts,src/testing/**/*.ts,e2e/**/*.ts}",
+  "ignore": ["**/node_modules/**", "**/dist/**", "**/coverage/**"],
+  "reporters": ["console", "threshold"],
+  "threshold": 0
+}

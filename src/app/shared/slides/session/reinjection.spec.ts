@@ -233,44 +233,32 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
       });
     }
 
-    it('decoupe aussi les reponses du questionnaire servies au presentateur', () => {
-      const donneesFormateur = {
-        type: 'reponses',
-        reponses: { 'Q-VA-07': { cible: '1 124,86', optionId: null } },
-      };
-      expect(
-        pose('fp-numeric', ['Q-VA-07'], 'corrige', {
-          role: 'presentateur',
-          donneesFormateur,
-          direct: direct({ pilotage: { revele: true } }),
-        }),
-      ).toEqual({ type: 'cible', cible: '1 124,86', optionId: null });
-    });
+    const CIBLE_SANS_OPTION = { type: 'cible', cible: '1 124,86', optionId: null };
+    const reponsesAuPresentateur: readonly (readonly [string, unknown, unknown])[] = [
+      [
+        'decoupe aussi les reponses du questionnaire servies au presentateur',
+        { cible: '1 124,86', optionId: null },
+        CIBLE_SANS_OPTION,
+      ],
+      ['ecarte une reponse du questionnaire sans cible textuelle', '1 124,86', null],
+      [
+        'ignore une option qui n est pas une chaine',
+        { cible: '1 124,86', optionId: 7 },
+        CIBLE_SANS_OPTION,
+      ],
+    ];
 
-    it('ecarte une reponse du questionnaire sans cible textuelle', () => {
-      const donneesFormateur = { type: 'reponses', reponses: { 'Q-VA-07': '1 124,86' } };
-      expect(
-        pose('fp-numeric', ['Q-VA-07'], 'corrige', {
-          role: 'presentateur',
-          donneesFormateur,
-          direct: direct({ pilotage: { revele: true } }),
-        }),
-      ).toBeNull();
-    });
-
-    it('ignore une option qui n est pas une chaine', () => {
-      const donneesFormateur = {
-        type: 'reponses',
-        reponses: { 'Q-VA-07': { cible: '1 124,86', optionId: 7 } },
-      };
-      expect(
-        pose('fp-numeric', ['Q-VA-07'], 'corrige', {
-          role: 'presentateur',
-          donneesFormateur,
-          direct: direct({ pilotage: { revele: true } }),
-        }),
-      ).toEqual({ type: 'cible', cible: '1 124,86', optionId: null });
-    });
+    for (const [cas, reponse, attendu] of reponsesAuPresentateur) {
+      it(cas, () => {
+        expect(
+          pose('fp-numeric', ['Q-VA-07'], 'corrige', {
+            role: 'presentateur',
+            donneesFormateur: { type: 'reponses', reponses: { 'Q-VA-07': reponse } },
+            direct: direct({ pilotage: { revele: true } }),
+          }),
+        ).toEqual(attendu);
+      });
+    }
   });
 
   it('ne pose le corrige que sur les briques qui le lisent', () => {

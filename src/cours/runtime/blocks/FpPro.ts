@@ -2,7 +2,7 @@ import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
-import { estObjet } from './retours';
+import { estObjet, lireTextes } from './retours';
 
 export interface QuestionLibre {
   readonly id: string;
@@ -26,17 +26,6 @@ const LONGUEUR_MAX_REPONSE_LIBRE = 10000;
 
 function copierQuestion({ id, question, placeholder }: QuestionLibre): QuestionLibre {
   return placeholder === undefined ? { id, question } : { id, question, placeholder };
-}
-
-function lireReponses(valeur: unknown): Reponses {
-  if (!estObjet(valeur)) {
-    return {};
-  }
-  return Object.fromEntries(
-    Object.entries(valeur).filter(
-      (entree): entree is [string, string] => typeof entree[1] === 'string',
-    ),
-  );
 }
 
 export class FpPro extends FpBlock {
@@ -77,14 +66,14 @@ export class FpPro extends FpBlock {
     if (!estObjet(valeur) || this.soumise) {
       return;
     }
-    this.reponses = lireReponses(valeur['reponses']);
+    this.reponses = lireTextes(valeur['reponses']);
     this.noterBrouillonRepris();
     this.refreshSiConnecte();
   }
 
   render(): EscapedHtml {
     if (this.cas === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
     return this.dossier(this.presentateur() ? this.enonces() : this.formulaire());
   }
@@ -121,18 +110,32 @@ export class FpPro extends FpBlock {
     }
     return safeHtml`
       <aside class="fp-scene fp-pro__cas">
-        <p class="fp-badge fp-pro__metier" data-testid="metier">${escapeHtml(cas.metier)}</p>
+        ${this.metier(cas)}
         <div class="fp-prose fp-pro__corps">
           <p class="fp-pro__situation" data-testid="situation">${escapeHtml(cas.situation)}</p>
-          <div class="fp-encadre fp-pro__geste">
-            <h3 class="fp-pro__intitule">${escapeHtml(this.texte('pro-geste'))}</h3>
-            <p class="fp-pro__geste-texte" data-testid="geste">${escapeHtml(cas.geste)}</p>
-          </div>
+          ${this.geste(cas)}
           ${this.consequence(cas)}
         </div>
         ${suite}
       </aside>
     `;
+  }
+
+  private metier(cas: ProCas): EscapedHtml {
+    if (cas.metier.trim().length === 0) {
+      return safeHtml``;
+    }
+    return safeHtml`<p class="fp-badge fp-pro__metier" data-testid="metier">${escapeHtml(cas.metier)}</p>`;
+  }
+
+  private geste(cas: ProCas): EscapedHtml {
+    if (cas.geste.trim().length === 0) {
+      return safeHtml``;
+    }
+    return safeHtml`<div class="fp-encadre fp-pro__geste">
+      <h3 class="fp-pro__intitule">${escapeHtml(this.texte('pro-geste'))}</h3>
+      <p class="fp-pro__geste-texte" data-testid="geste">${escapeHtml(cas.geste)}</p>
+    </div>`;
   }
 
   private consequence(cas: ProCas): EscapedHtml {

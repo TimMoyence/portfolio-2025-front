@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page, Route } from '@playwright/test';
-import { API_BASE } from './fixtures';
+import { EN_TETES_CORS, intercepterApi, servirFlux, servirJson } from './fixtures';
 
 const SESSION = '33333333-3333-4333-8333-333333333333';
 const SLUG = 'b2-01-traitement-information-chiffree';
@@ -8,12 +8,6 @@ const PARTICIPANT = '55555555-5555-4555-8555-555555555555';
 const REPONSE_ATTENDUE = 'Des milliers d’euros, pas des euros.';
 const ENONCE_PROBLEME = 'Le prix monte de 20 %, puis baisse de 20 %. Où arrive-t-il ?';
 const NOTE = 'Relancer Léa sur la base de départ.';
-const CORS = {
-  'access-control-allow-origin': 'http://localhost:4200',
-  'access-control-allow-credentials': 'true',
-  'access-control-allow-headers': 'content-type, accept, authorization',
-  'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS',
-};
 
 const FORMATEUR = {
   id: '1',
@@ -153,14 +147,6 @@ interface Journal {
   readonly bilansExportes: () => number;
 }
 
-async function servir(route: Route, corps: unknown, statut = 200): Promise<void> {
-  await route.fulfill({
-    status: statut,
-    headers: { ...CORS, 'content-type': 'application/json' },
-    body: JSON.stringify(corps),
-  });
-}
-
 async function installerLePupitre(page: Page): Promise<Journal> {
   const annotations: SaisieAnnotation[] = [];
   let bilansExportes = 0;
@@ -170,12 +156,12 @@ async function installerLePupitre(page: Page): Promise<Journal> {
     if (typeof corps['ecran'] === 'number') {
       ecranPilote = corps['ecran'];
     }
-    await route.fulfill({ status: 204, headers: CORS });
+    await route.fulfill({ status: 204, headers: EN_TETES_CORS });
   };
 
   const annotationEnregistree = async (route: Route, saisie: SaisieAnnotation): Promise<void> => {
     annotations.push(saisie);
-    await servir(route, annotationServie(saisie, annotations.length - 1), 201);
+    await servirJson(route, annotationServie(saisie, annotations.length - 1), 201);
   };
 
   const ecritures = new Map<string, (route: Route, corps: Corps) => Promise<void>>([
@@ -203,38 +189,29 @@ async function installerLePupitre(page: Page): Promise<Journal> {
     ],
   ]);
 
-  await page.route(`${API_BASE}/**`, async (route) => {
-    const requete = route.request();
-    const chemin = new URL(requete.url()).pathname;
-    const methode = requete.method();
+  await intercepterApi(page, async (route, chemin, methode) => {
     const ecriture = [...ecritures].find(
       ([cle]) => cle.startsWith(`${methode} `) && chemin.endsWith(cle.split(' ')[1] ?? ''),
     );
     const lecture = [...lectures].find(([cle]) => methode === 'GET' && chemin.endsWith(cle));
 
-    if (methode === 'OPTIONS') {
-      await route.fulfill({ status: 204, headers: CORS });
-    } else if (methode === 'POST' && chemin.endsWith('/auth/refresh')) {
-      await servir(route, {
+    if (methode === 'POST' && chemin.endsWith('/auth/refresh')) {
+      await servirJson(route, {
         accessToken: 'jeton-formateur',
         expiresIn: 900,
         user: FORMATEUR,
       });
     } else if (ecriture !== undefined) {
-      await ecriture[1](route, (requete.postDataJSON() ?? {}) as Corps);
+      await ecriture[1](route, (route.request().postDataJSON() ?? {}) as Corps);
     } else if (chemin.endsWith(`/sessions/${SESSION}/report`)) {
       bilansExportes += 1;
-      await servir(route, RAPPORT);
+      await servirJson(route, RAPPORT);
     } else if (chemin.includes(`/sessions/${SESSION}/`) && chemin.endsWith('stream')) {
-      await route.fulfill({
-        status: 200,
-        headers: { ...CORS, 'content-type': 'text/event-stream' },
-        body: `event: etat\ndata: ${JSON.stringify({ ...ETAT_DU_FLUX, ecranCourant: ecranPilote })}\n\n`,
-      });
+      await servirFlux(route, { ...ETAT_DU_FLUX, ecranCourant: ecranPilote });
     } else if (lecture !== undefined) {
-      await servir(route, lecture[1]());
+      await servirJson(route, lecture[1]());
     } else {
-      await route.fulfill({ status: 204, headers: CORS });
+      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
     }
   });
 

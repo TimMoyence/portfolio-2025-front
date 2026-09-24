@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Page, Route } from '@playwright/test';
 
 export const API_BASE = 'http://localhost:3000/api/v1/portfolio25';
 
@@ -9,7 +9,7 @@ const MOCK_USER = {
   lastName: 'User',
   phone: null,
   isActive: true,
-  roles: ['weather'],
+  roles: [],
   hasPassword: true,
   createdAt: '2025-01-01T00:00:00.000Z',
   updatedAt: '2025-01-01T00:00:00.000Z',
@@ -21,91 +21,6 @@ export const MOCK_SESSION = {
   expiresIn: 3600,
   user: MOCK_USER,
 };
-
-export const MOCK_WEATHER_PREFERENCES = {
-  id: 'pref-1',
-  userId: '1',
-  level: 'discovery' as const,
-  favoriteCities: [],
-  daysUsed: 5,
-  lastUsedAt: '2025-04-01T10:00:00.000Z',
-  tooltipsSeen: [],
-  units: undefined,
-};
-
-export const MOCK_GEOCODING_RESPONSE = {
-  results: [
-    {
-      id: 2988507,
-      name: 'Paris',
-      latitude: 48.8566,
-      longitude: 2.3522,
-      country: 'France',
-      country_code: 'FR',
-      admin1: 'Ile-de-France',
-    },
-    {
-      id: 4717560,
-      name: 'Paris',
-      latitude: 33.6609,
-      longitude: -95.5555,
-      country: 'United States',
-      country_code: 'US',
-      admin1: 'Texas',
-    },
-  ],
-};
-
-export const MOCK_FORECAST = {
-  current: {
-    time: '2025-04-01T12:00',
-    temperature_2m: 18.5,
-    weather_code: 1,
-    wind_speed_10m: 12.3,
-    apparent_temperature: 16.2,
-    relative_humidity_2m: 65,
-    pressure_msl: 1013,
-    uv_index: 4,
-    wind_direction_10m: 220,
-    wind_gusts_10m: 25,
-  },
-  hourly: {
-    time: Array.from({ length: 24 }, (_, i) => `2025-04-01T${String(i).padStart(2, '0')}:00`),
-    temperature_2m: Array.from({ length: 24 }, (_, i) => 14 + Math.sin(i / 4) * 5),
-    weather_code: Array(24).fill(1),
-    wind_speed_10m: Array(24).fill(12),
-    precipitation: Array(24).fill(0),
-    relative_humidity_2m: Array(24).fill(65),
-  },
-  daily: {
-    time: ['2025-04-01', '2025-04-02', '2025-04-03'],
-    weather_code: [1, 2, 3],
-    temperature_2m_max: [20, 22, 19],
-    temperature_2m_min: [12, 14, 11],
-    sunrise: ['2025-04-01T06:30', '2025-04-02T06:28', '2025-04-03T06:26'],
-    sunset: ['2025-04-01T19:45', '2025-04-02T19:47', '2025-04-03T19:49'],
-    precipitation_sum: [0, 2.5, 0.3],
-  },
-};
-
-export async function authenticateUser(page: Page): Promise<void> {
-  await page.route(`${API_BASE}/auth/refresh`, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(MOCK_SESSION),
-    });
-  });
-  await page.route(`${API_BASE}/auth/me`, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(MOCK_USER),
-    });
-  });
-
-  await page.goto('/');
-}
 
 export const B2_SLUG = 'b2-01-traitement-information-chiffree';
 
@@ -164,46 +79,36 @@ export const EN_TETES_CORS = {
   'access-control-allow-origin': 'http://localhost:4200',
   'access-control-allow-credentials': 'true',
   'access-control-allow-headers': 'content-type, accept, x-participant-token, authorization',
-  'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS',
+  'access-control-allow-methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
 };
 
-function reponseDeLaSeanceB2(
-  chemin: string,
-  methode: string,
-  ecrans: readonly EcranCatalogue[],
-  ecranCourant: number,
-): { readonly status: number; readonly type: string; readonly corps: string } | null {
-  const { sessionId, participantId, jeton, code } = SEANCE_B2;
-  if (methode === 'POST' && chemin.endsWith(`/sessions/${code}/join`)) {
-    const corps = { participantId, sessionId, ecranCourant, modeRythme: 'pilote', jeton };
-    return { status: 201, type: 'application/json', corps: JSON.stringify(corps) };
-  }
-  if (methode === 'GET' && chemin.endsWith(`/sessions/${sessionId}/sujet`)) {
-    const sujet = {
-      id: B2_SLUG,
-      titre: 'Lire et contrôler l’information chiffrée',
-      niveau: 'B2',
-      duree: 210,
-      concepts: ['proportions', 'taux', 'evolutions'],
-      ecrans,
-    };
-    return { status: 200, type: 'application/json', corps: JSON.stringify(sujet) };
-  }
-  if (methode === 'GET' && chemin.endsWith(`/sessions/${sessionId}/stream`)) {
-    const etat = { etat: 'en_cours', modeRythme: 'pilote', ecranCourant, participants: 1 };
-    return {
-      status: 200,
-      type: 'text/event-stream',
-      corps: `event: etat\ndata: ${JSON.stringify({ ...etat, intervalleLibre: null })}\n\n`,
-    };
-  }
-  return null;
+export async function servirJson(route: Route, corps: unknown, statut = 200): Promise<void> {
+  await route.fulfill({
+    status: statut,
+    headers: { ...EN_TETES_CORS, 'content-type': 'application/json' },
+    body: JSON.stringify(corps),
+  });
 }
 
-export async function ouvrirEcranEtudiantB2(
+export async function servirFlux(route: Route, ...etats: readonly unknown[]): Promise<void> {
+  await route.fulfill({
+    status: 200,
+    headers: { ...EN_TETES_CORS, 'content-type': 'text/event-stream' },
+    body: etats.map((etat) => `event: etat\ndata: ${JSON.stringify(etat)}\n\n`).join(''),
+  });
+}
+
+export const ETAT_EN_COURS = {
+  etat: 'en_cours',
+  modeRythme: 'pilote',
+  ecranCourant: 0,
+  intervalleLibre: null,
+  participants: 1,
+} as const;
+
+export async function intercepterApi(
   page: Page,
-  ecrans: readonly EcranCatalogue[],
-  ecranCourant: number,
+  traiter: (route: Route, chemin: string, methode: string) => Promise<void>,
 ): Promise<void> {
   await page.route(`${API_BASE}/**`, async (route) => {
     const requete = route.request();
@@ -211,36 +116,94 @@ export async function ouvrirEcranEtudiantB2(
       await route.fulfill({ status: 204, headers: EN_TETES_CORS });
       return;
     }
-    const reponse = reponseDeLaSeanceB2(
-      new URL(requete.url()).pathname,
-      requete.method(),
-      ecrans,
-      ecranCourant,
-    );
-    if (reponse === null) {
-      await route.continue();
-      return;
-    }
-    await route.fulfill({
-      status: reponse.status,
-      headers: { ...EN_TETES_CORS, 'content-type': reponse.type },
-      body: reponse.corps,
-    });
+    await traiter(route, new URL(requete.url()).pathname, requete.method());
   });
-  await page.goto('/cours/rejoindre');
-  await page.getByLabel('Code de la séance').fill(SEANCE_B2.code);
-  await page.getByLabel('Prénom').fill('Lea');
-  await page.getByLabel('Nom', { exact: true }).fill('Dubois');
-  await page.getByLabel('Adresse e-mail').fill('lea.dubois@example.com');
+}
+
+export interface IdentiteEtudiante {
+  readonly prenom: string;
+  readonly nom: string;
+  readonly email: string;
+}
+
+const LEA: IdentiteEtudiante = {
+  prenom: 'Lea',
+  nom: 'Dubois',
+  email: 'lea.dubois@example.com',
+};
+
+export async function remplirLaJonction(
+  page: Page,
+  code: string,
+  identite: IdentiteEtudiante = LEA,
+): Promise<void> {
+  await page.getByLabel('Code de la séance').fill(code);
+  await page.getByLabel('Prénom').fill(identite.prenom);
+  await page.getByLabel('Nom', { exact: true }).fill(identite.nom);
+  await page.getByLabel('Adresse e-mail').fill(identite.email);
   await page.getByRole('button', { name: 'Entrer dans la séance' }).click();
 }
 
-export async function mockWeatherRecordUsage(page: Page): Promise<void> {
-  await page.route(`${API_BASE}/weather/preferences/record-usage`, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(undefined),
-    });
+export const BILLET_DE_SORTIE = {
+  id: 'B-SORTIE-09',
+  question: 'Le taux équivalent mensuel d’un taux annuel de 12 % vaut :',
+  invite: 'Qu’est-ce qui reste flou ?',
+  options: [
+    { id: 'a', libelle: 'Un peu moins de 1 %' },
+    { id: 'b', libelle: 'Exactement 1 %' },
+  ],
+  metadonnees: {
+    concepts: ['taux-equivalent'],
+    misconceptionsCiblees: [],
+    dureeMinutes: 5,
+    modalite: 'solo',
+    regime: 'ouvert',
+  },
+};
+
+export const SUJET_DE_SORTIE = {
+  id: B2_SLUG,
+  titre: 'Décider avec des taux fiables',
+  niveau: 'B2',
+  duree: 195,
+  concepts: ['taux'],
+  ecrans: [
+    {
+      id: 'ecran-sortie',
+      type: 'fp-exit',
+      titre: 'Billet de sortie',
+      duree: 5,
+      interactif: true,
+      donnees: { billet: BILLET_DE_SORTIE },
+    },
+  ],
+};
+
+export async function ouvrirEcranEtudiantB2(
+  page: Page,
+  ecrans: readonly EcranCatalogue[],
+  ecranCourant: number,
+): Promise<void> {
+  const { sessionId, participantId, jeton, code } = SEANCE_B2;
+  await intercepterApi(page, async (route, chemin, methode) => {
+    if (methode === 'POST' && chemin.endsWith(`/sessions/${code}/join`)) {
+      const corps = { participantId, sessionId, ecranCourant, modeRythme: 'pilote', jeton };
+      await servirJson(route, corps, 201);
+    } else if (methode === 'GET' && chemin.endsWith(`/sessions/${sessionId}/sujet`)) {
+      await servirJson(route, {
+        id: B2_SLUG,
+        titre: 'Lire et contrôler l’information chiffrée',
+        niveau: 'B2',
+        duree: 210,
+        concepts: ['proportions', 'taux', 'evolutions'],
+        ecrans,
+      });
+    } else if (methode === 'GET' && chemin.endsWith(`/sessions/${sessionId}/stream`)) {
+      await servirFlux(route, { ...ETAT_EN_COURS, ecranCourant });
+    } else {
+      await route.continue();
+    }
   });
+  await page.goto('/cours/rejoindre');
+  await remplirLaJonction(page, code);
 }

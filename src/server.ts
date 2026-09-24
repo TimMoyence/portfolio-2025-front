@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url';
 import bootstrap from './main.server';
 import type { SeoMetadataFile } from './app/core/seo/seo-metadata.model';
 import { COURS_SERVIS_PAR_L_API, lecteurDePublicationsDeCours } from './server/cours-publication';
-import { isClientOnlyRoute, loadCsrShell } from './server/csr-shell';
+import { loadCsrShell } from './server/csr-shell';
+import { isClientOnlyRoute } from './server/routes-client';
 import { registerPermanentRedirects } from './server/redirects';
 import {
   buildLlmsFullTxt,

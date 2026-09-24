@@ -66,6 +66,7 @@ const RATTACHEMENT: Rattachement = {
   ecranCourant: 0,
   modeRythme: 'pilote',
   jeton: JETON,
+  secretDeReprise: 'secret-de-reprise-du-poste',
 };
 
 describe('FormationsHttpAdapter', () => {
@@ -76,6 +77,24 @@ describe('FormationsHttpAdapter', () => {
     const req = httpMock.expectOne(url);
     expect(req.request.method).toBe(methode);
     return req;
+  };
+
+  const lus = <T>(appel: Observable<T>, url: string, corps: object): T[] => {
+    const recus: T[] = [];
+    appel.subscribe((valeur) => recus.push(valeur));
+    attendre(url, 'GET').flush(corps);
+    return recus;
+  };
+
+  const erreursApres = (
+    appel: Observable<unknown>,
+    url: string,
+    repondre: (requete: TestRequest) => void,
+  ): unknown[] => {
+    const erreurs: unknown[] = [];
+    appel.subscribe({ error: (recue: unknown) => erreurs.push(recue) });
+    repondre(httpMock.expectOne(url));
+    return erreurs;
   };
 
   beforeEach(() => {
@@ -192,40 +211,26 @@ describe('FormationsHttpAdapter', () => {
     expect(recus[0].ecrans[0]).toEqual({ ...premier, ecranSource: 'ecran-source' });
   });
 
-  it('lireSujet transforme un 409 en refus motive par le changement du cours', () => {
-    const erreurs: unknown[] = [];
+  const refusDeSujet = [
+    { statut: 409, statusText: 'Conflict', motif: 'cours-modifie' },
+    { statut: 500, statusText: 'Server Error', motif: 'sujet-indisponible' },
+  ] as const;
 
-    adapter.lireSujet(SESSION_ID, JETON).subscribe({
-      error: (recue: unknown) => erreurs.push(recue),
+  for (const { statut, statusText, motif } of refusDeSujet) {
+    it(`lireSujet transforme un ${statut} en refus motive ${motif}`, () => {
+      const erreurs = erreursApres(
+        adapter.lireSujet(SESSION_ID, JETON),
+        `${URL_SEANCE}/sujet`,
+        (req) => req.flush('', { status: statut, statusText }),
+      );
+
+      expect(erreurs.length).toBe(1);
+      expect(erreurs[0]).toBeInstanceOf(SujetRefuse);
+      const refus = erreurs[0] as SujetRefuse;
+      expect([refus.motif, refus.statut]).toEqual([motif, statut]);
+      expect(refus.message).not.toBe('');
     });
-
-    httpMock.expectOne(`${URL_SEANCE}/sujet`).flush('', { status: 409, statusText: 'Conflict' });
-
-    expect(erreurs.length).toBe(1);
-    expect(erreurs[0]).toBeInstanceOf(SujetRefuse);
-    const refus = erreurs[0] as SujetRefuse;
-    expect(refus.motif).toBe('cours-modifie');
-    expect(refus.statut).toBe(409);
-    expect(refus.message).not.toBe('');
-  });
-
-  it('lireSujet transforme les autres erreurs en sujet indisponible', () => {
-    const erreurs: unknown[] = [];
-
-    adapter.lireSujet(SESSION_ID, JETON).subscribe({
-      error: (recue: unknown) => erreurs.push(recue),
-    });
-
-    httpMock
-      .expectOne(`${URL_SEANCE}/sujet`)
-      .flush('', { status: 500, statusText: 'Server Error' });
-
-    expect(erreurs.length).toBe(1);
-    expect(erreurs[0]).toBeInstanceOf(SujetRefuse);
-    const refus = erreurs[0] as SujetRefuse;
-    expect(refus.motif).toBe('sujet-indisponible');
-    expect(refus.statut).toBe(500);
-  });
+  }
 
   it('demarrer POSTe sur start', () => {
     adapter.demarrer(SESSION_ID).subscribe();
@@ -255,24 +260,18 @@ describe('FormationsHttpAdapter', () => {
 
   it('lireResultats GETe le rapport, y compris les resultats agreges, sur results', () => {
     const rapport = buildRapportSeance();
-    const recus: RapportSeance[] = [];
 
-    adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
-
-    attendre(`${URL_SEANCE}/results`, 'GET').flush(rapport);
-
-    expect(recus).toEqual([rapport]);
+    expect(lus(adapter.lireResultats(SESSION_ID), `${URL_SEANCE}/results`, rapport)).toEqual([
+      rapport,
+    ]);
   });
 
   it('exporterBilan GETe le rapport telechargeable sur report', () => {
     const rapport = buildRapportSeance();
-    const recus: RapportSeance[] = [];
 
-    adapter.exporterBilan(SESSION_ID).subscribe((valeur) => recus.push(valeur));
-
-    attendre(`${URL_SEANCE}/report`, 'GET').flush(rapport);
-
-    expect(recus).toEqual([rapport]);
+    expect(lus(adapter.exporterBilan(SESSION_ID), `${URL_SEANCE}/report`, rapport)).toEqual([
+      rapport,
+    ]);
   });
 
   it('lireResultats transmet la regle de notation et les statistiques servies par le serveur', () => {
@@ -280,10 +279,8 @@ describe('FormationsHttpAdapter', () => {
       notation: buildRegleNotation(),
       statistiques: buildStatistiquesSeance(),
     });
-    const recus: RapportSeance[] = [];
 
-    adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
-    attendre(`${URL_SEANCE}/results`, 'GET').flush(rapport);
+    const recus = lus(adapter.lireResultats(SESSION_ID), `${URL_SEANCE}/results`, rapport);
 
     expect(recus[0].notation).toEqual(buildRegleNotation());
     expect(recus[0].statistiques).toEqual(buildStatistiquesSeance());
@@ -431,8 +428,17 @@ describe('FormationsHttpAdapter', () => {
       'jeton',
       'modeRythme',
       'participantId',
+      'secretDeReprise',
       'sessionId',
     ]);
+  });
+
+  it('rejoindre presente le secret de reprise du poste quand il en a un', () => {
+    adapter.rejoindre(CODE, { ...INSCRIPTION, secretDeReprise: 'secret-precedent' }).subscribe();
+
+    const req = attendre(`${RACINE}/${CODE}/join`, 'POST');
+    expect(req.request.body).toEqual({ ...INSCRIPTION, secretDeReprise: 'secret-precedent' });
+    req.flush(RATTACHEMENT);
   });
 
   it('rejoindre ne pose pas l en-tete de participant, que l etudiant n a pas encore', () => {
@@ -467,19 +473,31 @@ describe('FormationsHttpAdapter', () => {
       expect(refus.message).not.toBe('');
     };
 
-    it('distingue le 409 SEANCE_COMPLETE servi par le back', () => {
-      const refus = refusPour(409, 'Conflict', buildProblemeHttp({ code: 'SEANCE_COMPLETE' }));
+    const REFUS_NOMMES: ReadonlyArray<{
+      readonly statut: number;
+      readonly libelle: string;
+      readonly code: string;
+      readonly motif: MotifRefusRattachement;
+    }> = [
+      { statut: 409, libelle: 'Conflict', code: 'SEANCE_COMPLETE', motif: 'seance-complete' },
+      { statut: 409, libelle: 'Conflict', code: 'SEANCE_TERMINEE', motif: 'seance-terminee' },
+      { statut: 409, libelle: 'Conflict', code: 'PLACE_DEJA_PRISE', motif: 'place-deja-prise' },
+      {
+        statut: 403,
+        libelle: 'Forbidden',
+        code: 'PARTICIPANT_EVINCE',
+        motif: 'participant-evince',
+      },
+    ];
 
-      attendreMotif(refus, 'seance-complete');
-      expect(refus.statut).toBe(409);
-    });
+    for (const { statut, libelle, code, motif } of REFUS_NOMMES) {
+      it(`distingue le ${statut} ${code} servi par le back`, () => {
+        const refus = refusPour(statut, libelle, buildProblemeHttp({ code }));
 
-    it('distingue le 409 SEANCE_TERMINEE servi par le back', () => {
-      const refus = refusPour(409, 'Conflict', buildProblemeHttp({ code: 'SEANCE_TERMINEE' }));
-
-      attendreMotif(refus, 'seance-terminee');
-      expect(refus.statut).toBe(409);
-    });
+        attendreMotif(refus, motif);
+        expect(refus.statut).toBe(statut);
+      });
+    }
 
     it('distingue le 404 code inconnu', () => {
       const refus = refusPour(404, 'Not Found');
@@ -558,18 +576,23 @@ describe('FormationsHttpAdapter', () => {
     const TERMINEE =
       'La séance est terminée : les réponses ne sont plus acceptées, les résultats restent consultables.';
 
+    const erreursDeReponse = (repondre: (requete: TestRequest) => void): unknown[] =>
+      erreursApres(
+        adapter.repondre(SESSION_ID, JETON, {
+          questionId: 'Q-CAP-03',
+          valeur: 1300,
+          dureeMs: 1000,
+        }),
+        `${URL_SEANCE}/answers`,
+        repondre,
+      );
+
     const refusPour = (
       statut: number,
       corps: ProblemeHttp | null,
       statusText = 'Erreur',
     ): ReponseRefusee => {
-      const erreurs: unknown[] = [];
-
-      adapter
-        .repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1300, dureeMs: 1000 })
-        .subscribe({ error: (recue: unknown) => erreurs.push(recue) });
-
-      httpMock.expectOne(`${URL_SEANCE}/answers`).flush(corps, { status: statut, statusText });
+      const erreurs = erreursDeReponse((req) => req.flush(corps, { status: statut, statusText }));
 
       expect(erreurs.length).toBe(1);
       expect(erreurs[0]).toBeInstanceOf(ReponseRefusee);
@@ -658,12 +681,7 @@ describe('FormationsHttpAdapter', () => {
     }
 
     it('classe une coupure reseau, sans statut, en panne reseau', () => {
-      const erreurs: unknown[] = [];
-
-      adapter
-        .repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1300, dureeMs: 1000 })
-        .subscribe({ error: (recue: unknown) => erreurs.push(recue) });
-      httpMock.expectOne(`${URL_SEANCE}/answers`).error(new ProgressEvent('error'));
+      const erreurs = erreursDeReponse((req) => req.error(new ProgressEvent('error')));
 
       expect((erreurs[0] as ReponseRefusee).motif).toBe('reseau');
       expect((erreurs[0] as ReponseRefusee).statut).toBe(0);
@@ -813,6 +831,15 @@ describe('FormationsHttpAdapter', () => {
         reponse: null,
       },
       {
+        nom: 'libererPoste',
+        appeler: () => adapter.libererPoste(SESSION_ID, PARTICIPANT),
+        url: `${URL_SEANCE}/participants/${PARTICIPANT}/liberation`,
+        methode: 'POST',
+        corps: {},
+        jeton: null,
+        reponse: null,
+      },
+      {
         nom: 'ouvrirSeance avec capacite',
         appeler: () => adapter.ouvrirSeance('b2-01-x', { capacite: 40 }),
         url: RACINE,
@@ -873,13 +900,12 @@ describe('FormationsHttpAdapter', () => {
       for (const [statut, code, motif] of cas) {
         it(`classe un ${statut} ${code ?? 'sans code'} en ${motif} pour chaque ecriture`, () => {
           for (const ecriture of ecritures()) {
-            const erreurs: unknown[] = [];
-
-            ecriture.appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
-            httpMock.expectOne(ecriture.url).flush(buildProblemeHttp({ status: statut, code }), {
-              status: statut,
-              statusText: 'Erreur',
-            });
+            const erreurs = erreursApres(ecriture.appeler(), ecriture.url, (req) =>
+              req.flush(buildProblemeHttp({ status: statut, code }), {
+                status: statut,
+                statusText: 'Erreur',
+              }),
+            );
 
             const refus = erreurs[0] as ReponseRefusee;
             expect(refus).withContext(ecriture.nom).toBeInstanceOf(ReponseRefusee);
@@ -891,10 +917,9 @@ describe('FormationsHttpAdapter', () => {
 
       it('classe une coupure reseau, sans statut, en panne reseau', () => {
         for (const ecriture of ecritures()) {
-          const erreurs: unknown[] = [];
-
-          ecriture.appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
-          httpMock.expectOne(ecriture.url).error(new ProgressEvent('error'));
+          const erreurs = erreursApres(ecriture.appeler(), ecriture.url, (req) =>
+            req.error(new ProgressEvent('error')),
+          );
 
           expect((erreurs[0] as ReponseRefusee).motif)
             .withContext(ecriture.nom)
@@ -904,15 +929,12 @@ describe('FormationsHttpAdapter', () => {
 
       it('lit un 404 sans code comme une eviction, sauf la ou il designe une enigme absente', () => {
         for (const ecriture of ecritures()) {
-          const erreurs: unknown[] = [];
-
-          ecriture.appeler().subscribe({ error: (recue: unknown) => erreurs.push(recue) });
-          httpMock
-            .expectOne(ecriture.url)
-            .flush(buildProblemeHttp({ status: 404, title: 'Not Found' }), {
+          const erreurs = erreursApres(ecriture.appeler(), ecriture.url, (req) =>
+            req.flush(buildProblemeHttp({ status: 404, title: 'Not Found' }), {
               status: 404,
               statusText: 'Not Found',
-            });
+            }),
+          );
 
           expect((erreurs[0] as ReponseRefusee).motif)
             .withContext(ecriture.nom)

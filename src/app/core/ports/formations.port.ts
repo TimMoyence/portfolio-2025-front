@@ -67,6 +67,7 @@ export interface InscriptionParticipant {
   email: string;
   website?: string;
   formStartedAt?: number;
+  secretDeReprise?: string;
 }
 
 export interface Rattachement {
@@ -75,6 +76,7 @@ export interface Rattachement {
   ecranCourant: number;
   modeRythme: PacingMode;
   jeton: string;
+  secretDeReprise: string;
 }
 
 export interface ReponseEtudiant {
@@ -193,12 +195,19 @@ export interface RapportSeance {
 }
 
 export type MotifRefusRattachement =
-  'code-inconnu' | 'seance-complete' | 'seance-terminee' | 'rattachement-impossible';
+  | 'code-inconnu'
+  | 'seance-complete'
+  | 'seance-terminee'
+  | 'place-deja-prise'
+  | 'participant-evince'
+  | 'rattachement-impossible';
 
 const MESSAGES_REFUS_RATTACHEMENT: Readonly<Record<MotifRefusRattachement, string>> = {
   'code-inconnu': $localize`:cours.refusCodeInconnu|@@coursRefusCodeInconnu:Ce code de séance n'existe pas : vérifiez les caractères dictés.`,
   'seance-complete': $localize`:cours.refusSeanceComplete|@@coursRefusSeanceComplete:Cette séance a atteint sa capacité : demandez à votre formateur de libérer une place.`,
   'seance-terminee': $localize`:cours.refusSeanceTerminee|@@coursRefusSeanceTerminee:Cette séance est terminée : elle n’accepte plus de nouveau participant.`,
+  'place-deja-prise': $localize`:cours.refusPlaceDejaPrise|@@coursRefusPlaceDejaPrise:Votre place est déjà ouverte sur un autre appareil : demandez au formateur de libérer votre poste.`,
+  'participant-evince': $localize`:cours.refusParticipantEvince|@@coursRefusParticipantEvince:Le formateur vous a retiré de cette séance : adressez-vous à lui pour être réadmis.`,
   'rattachement-impossible': $localize`:cours.refusRattachementImpossible|@@coursRefusRattachementImpossible:Le rattachement à la séance a échoué.`,
 };
 
@@ -348,6 +357,7 @@ export interface FormationsPort {
   lireSyntheseRappels(sessionId: string): Observable<{ concepts: readonly SyntheseConcept[] }>;
   evincerParticipant(sessionId: string, participantId: string): Observable<void>;
   readmettreParticipant(sessionId: string, participantId: string): Observable<void>;
+  libererPoste(sessionId: string, participantId: string): Observable<void>;
 }
 
 export const FORMATIONS_PORT = new InjectionToken<FormationsPort>('FORMATIONS_PORT');

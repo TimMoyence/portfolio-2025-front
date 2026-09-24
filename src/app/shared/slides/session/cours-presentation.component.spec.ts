@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import type { EcranContent } from '../../../../cours/content/types';
 import { attendreQue } from '../../../../testing/briques-montees';
 import {
@@ -132,7 +132,6 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
   for (const [reference, suffixe] of [
     ['G1', 'A1-09-DIAPOSITIVE'],
     ['G1', 'A2-01-PLAYFAIR'],
-    ['G1', 'A2-04-MARGE-AXE-ZERO'],
     ['E13', 'A2-02-ORIGINE-AXE'],
     ['E14', 'A2-03-ATELIER-1'],
     ['R6', 'A5-04-SIMULATEUR-MIX'],
@@ -375,11 +374,63 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
       audit.top < cadreMiniature.bottom;
 
     expect(miniature?.textContent).toContain('Marge brute : une croissance continue');
-    expect(cadreMiniature?.width).toBeCloseTo(1280 / 2, 0);
+    expect(cadreMiniature?.width).toBeCloseTo(1280 * 0.6, 0);
     expect(toileDuRenvoi?.width).toBeLessThanOrEqual((cadreDuRenvoi?.width ?? 0) + 1);
     expect(toileDuRenvoi?.height).toBeLessThanOrEqual((cadreDuRenvoi?.height ?? 0) + 1);
     expect(seChevauchent).toBeFalse();
     expect(toile?.scrollHeight).toBeLessThanOrEqual(720);
+    monte.detruire();
+  });
+
+  it('R3 · donne à chaque diapositive commentée la part de toile que fixe son cadrage, et la fait remplir son cadre', async () => {
+    const ecrans = ecransDuPupitreB2_01();
+    const fautes: string[] = [];
+    for (const ecran of ecrans.filter(({ renvoi }) => renvoi !== undefined)) {
+      const renvoi = ecrans.find(({ id }) => id === ecran.renvoi) ?? null;
+      const monte = await monterDansUnCadre(ecran, 'projection', 1280, 720, renvoi);
+      await new Promise((suite) => setTimeout(suite, 50));
+      const miniature = monte.toile()?.querySelector<HTMLElement>('[data-testid="cours-renvoi"]');
+      const colonne = miniature?.getBoundingClientRect();
+      const cadre = miniature?.querySelector('.cours-renvoi__cadre')?.getBoundingClientRect();
+      const contenu = miniature
+        ?.querySelector('.cours-renvoi__toile app-slide-activity')
+        ?.getBoundingClientRect();
+      const part = ecran.cadrageDuRenvoi?.part ?? 0;
+      const remplissage =
+        cadre === undefined || contenu === undefined
+          ? 0
+          : Math.max(contenu.width / cadre.width, contenu.height / cadre.height);
+      if (Math.abs((colonne?.width ?? 0) - (1280 * part) / 100) > 1 || remplissage < 0.9) {
+        fautes.push(
+          `${ecran.id} colonne=${colonne?.width} part=${part} remplissage=${remplissage.toFixed(2)}`,
+        );
+      }
+      monte.detruire();
+    }
+
+    expect(fautes).toEqual([]);
+  });
+
+  it('R7 · ne montre, à l écran des points, que la ligne du taux de marge du tableau de bord', async () => {
+    const ecrans = ecransDuPupitreB2_01();
+    const points = ecranDuPupitre('A2-06-POINTS');
+    const monte = await monterDansUnCadre(
+      points,
+      'projection',
+      1280,
+      720,
+      ecrans.find(({ id }) => id === points.renvoi) ?? null,
+    );
+    await new Promise((suite) => setTimeout(suite, 50));
+    const miniature = monte.toile()?.querySelector('[data-testid="cours-renvoi"]');
+    const texte = [...(miniature?.querySelectorAll('*') ?? [])]
+      .map((element) => element.shadowRoot?.textContent ?? '')
+      .join(' ')
+      .concat(miniature?.textContent ?? '');
+
+    expect(texte).toContain('Taux de marge');
+    expect(texte).not.toContain('CA HT total');
+    expect(texte).not.toContain('Tableau de bord 2025 transmis au comité');
     monte.detruire();
   });
 
@@ -576,48 +627,47 @@ function defileursInternes(racine: ParentNode): string[] {
 describe('CoursPresentationComponent au poste étudiant', () => {
   beforeEach(() => setupTestBed({ imports: [CoursPresentationComponent] }));
 
-  it('R5 · COFFRE : la page défile, aucun bloc ne défile en interne', async () => {
-    const coffre = ecransPublicsB2_01().find(({ id }) => id.endsWith('A6-02-COFFRE'));
+  async function monterAuPosteEtudiant(
+    suffixe: string,
+    largeur: number,
+    pret: (racine: HTMLElement) => boolean,
+  ): Promise<{ fixture: ComponentFixture<CoursPresentationComponent>; racine: HTMLElement }> {
+    const ecran = ecransPublicsB2_01().find(({ id }) => id.endsWith(suffixe));
+    expect(ecran).withContext(suffixe).toBeDefined();
     const poste = document.createElement('section');
     poste.className = 'student-session';
-    poste.style.cssText = 'display:block;width:390px;';
+    poste.style.cssText = `display:block;width:${largeur}px;`;
     document.body.appendChild(poste);
     const fixture = TestBed.createComponent(CoursPresentationComponent);
     poste.appendChild(fixture.nativeElement as HTMLElement);
+    fixture.componentRef.onDestroy(() => poste.remove());
     fixture.componentRef.setInput('mode', 'etudiant');
-    fixture.componentRef.setInput('slide', coffre ?? null);
+    fixture.componentRef.setInput('slide', ecran ?? null);
     const racine = fixture.nativeElement as HTMLElement;
-    await attendreQue(
-      fixture,
-      () =>
-        racine.querySelector('app-slide-activity [data-cours-role]')?.shadowRoot?.firstChild !=
+    await attendreQue(fixture, () => pret(racine), `${suffixe} au poste étudiant`);
+    return { fixture, racine };
+  }
+
+  it('R5 · COFFRE : la page défile, aucun bloc ne défile en interne', async () => {
+    const { fixture, racine } = await monterAuPosteEtudiant(
+      'A6-02-COFFRE',
+      390,
+      (element) =>
+        element.querySelector('app-slide-activity [data-cours-role]')?.shadowRoot?.firstChild !=
         null,
-      'le coffre au poste étudiant',
     );
     await new Promise((suite) => setTimeout(suite, 50));
 
-    expect(coffre).toBeDefined();
     expect(defileursInternes(racine)).toEqual([]);
     fixture.destroy();
-    poste.remove();
   });
 
   for (const largeur of [390, 1280]) {
     it(`R7 · BOITE-A-OUTILS à ${largeur} px : chaque carte, recto puis verso, tient dans son contenant`, async () => {
-      const boite = ecransPublicsB2_01().find(({ id }) => id.endsWith('A6-07-BOITE-A-OUTILS'));
-      const poste = document.createElement('section');
-      poste.className = 'student-session';
-      poste.style.cssText = `display:block;width:${largeur}px;`;
-      document.body.appendChild(poste);
-      const fixture = TestBed.createComponent(CoursPresentationComponent);
-      poste.appendChild(fixture.nativeElement as HTMLElement);
-      fixture.componentRef.setInput('mode', 'etudiant');
-      fixture.componentRef.setInput('slide', boite ?? null);
-      const racine = fixture.nativeElement as HTMLElement;
-      await attendreQue(
-        fixture,
-        () => racine.querySelector('.slide-grid__card') !== null,
-        'la boîte à outils au poste étudiant',
+      const { fixture, racine } = await monterAuPosteEtudiant(
+        'A6-07-BOITE-A-OUTILS',
+        largeur,
+        (element) => element.querySelector('.slide-grid__card') !== null,
       );
       const recto = cartesQuiDebordent(racine);
       for (const carte of racine.querySelectorAll<HTMLElement>('.slide-grid__card--flip')) {
@@ -628,7 +678,6 @@ describe('CoursPresentationComponent au poste étudiant', () => {
 
       expect({ recto, verso: cartesQuiDebordent(racine) }).toEqual({ recto: [], verso: [] });
       fixture.destroy();
-      poste.remove();
     });
   }
 });

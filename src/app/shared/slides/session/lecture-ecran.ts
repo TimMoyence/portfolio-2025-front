@@ -23,6 +23,8 @@ export interface EnteteDeQuestionnaire {
   readonly consigne: string;
 }
 
+const RESOLU_AILLEURS = 'resoluAilleurs';
+
 export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> = {
   'fp-quote': ['citation'],
   'fp-story': ['recit'],
@@ -31,7 +33,7 @@ export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> 
   'fp-concept4': ['definition'],
   'fp-plot': ['definition'],
   'fp-challenge': ['probleme'],
-  'fp-cardsort': ['plan'],
+  'fp-cardsort': ['plan', RESOLU_AILLEURS],
   'fp-sheet': ['plan'],
   'fp-table-build': ['plan'],
   'fp-escape': ['parcours'],
@@ -59,15 +61,19 @@ const PORTEURS: Readonly<Record<string, readonly string[]>> = {
   'fp-pro': ['cas'],
 };
 
-const PORTEURS_DE_QUESTION: Readonly<Record<string, readonly string[]>> = {
-  'fp-numeric': ['question'],
-  'fp-vote': ['question', 'questionJumelle'],
-  'fp-recall': ['question'],
-  'fp-exit': ['billet'],
-  'fp-cardsort': ['plan'],
-  'fp-sheet': ['plan'],
-  'fp-table-build': ['plan'],
-};
+const BRIQUES_A_QUESTION: readonly string[] = [
+  'fp-numeric',
+  'fp-vote',
+  'fp-recall',
+  'fp-exit',
+  'fp-cardsort',
+  'fp-sheet',
+  'fp-table-build',
+];
+
+const PORTEURS_DE_QUESTION: Readonly<Record<string, readonly string[]>> = Object.fromEntries(
+  BRIQUES_A_QUESTION.map((brique) => [brique, PORTEURS[brique]]),
+);
 
 const CHAMP_ENONCE: Readonly<Record<string, string>> = {
   billet: 'question',
@@ -91,10 +97,18 @@ function lireMontage(brique: unknown, donnees: unknown): Montage | null {
   return { brique, donnees: objet(donnees) ?? {} };
 }
 
+function signalerLeRenvoi(montage: Montage, ecran: EcranContent): Montage {
+  if (!PROPRIETES_PAR_BRIQUE[montage.brique].includes(RESOLU_AILLEURS)) {
+    return montage;
+  }
+  const resoluAilleurs = (ecran.resoluPar?.length ?? 0) > 0;
+  return { ...montage, donnees: { ...montage.donnees, [RESOLU_AILLEURS]: resoluAilleurs } };
+}
+
 export function planDeMontage(ecran: EcranContent): readonly Montage[] | null {
   if (ecran.type !== QUESTIONNAIRE) {
     const montage = lireMontage(ecran.type, ecran.donnees);
-    return montage === null ? null : [montage];
+    return montage === null ? null : [signalerLeRenvoi(montage, ecran)];
   }
   const questions = ecran.donnees?.['questions'];
   if (!Array.isArray(questions) || questions.length === 0) {

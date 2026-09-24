@@ -36,9 +36,16 @@ test('variablesDeBase dirige TypeORM vers la base dédiée du banc', () => {
 test("environnementDeLApi neutralise les integrations sortantes de l'API", () => {
   const environnement = environnementDeLApi({ secrets: SECRETS });
 
-  for (const cle of ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS', 'OPENAI_API_KEY', 'TELEGRAM_BOT_TOKEN'])
+  for (const cle of ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS', 'OPENAI_API_KEY'])
     assert.equal(environnement[cle], '', cle);
   assert.equal(environnement.AUDIT_QUEUE_ENABLED, 'false');
+});
+
+test("environnementDeLApi ne transmet plus les cles des apps de l'atelier retirees", () => {
+  const environnement = environnementDeLApi({ secrets: SECRETS });
+
+  for (const cle of ['OPENWEATHERMAP_API_KEY', 'TELEGRAM_BOT_TOKEN'])
+    assert.equal(Object.hasOwn(environnement, cle), false, cle);
 });
 
 test('environnementDeLApi autorise le front du banc et sert son propre prefixe', () => {

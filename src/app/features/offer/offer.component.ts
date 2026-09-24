@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import {
-  AsiliCtaBandComponent,
+  type AsiliClosing,
+  AsiliClosingComponent,
   AsiliHeroComponent,
+  type AsiliHeroMetaRow,
   AsiliMethodComponent,
-  AsiliFaqComponent,
-  type AsiliFaqItem,
   type AsiliMethodStep,
 } from '../../shared/sections';
 
@@ -33,8 +33,7 @@ interface OfferDiff {
     RevealOnScrollDirective,
     AsiliHeroComponent,
     AsiliMethodComponent,
-    AsiliCtaBandComponent,
-    AsiliFaqComponent,
+    AsiliClosingComponent,
   ],
   templateUrl: './offer.component.html',
   styleUrl: './offer.component.scss',
@@ -51,7 +50,7 @@ export class OfferComponent {
 
   protected readonly heroLead = $localize`:@@offerHeroLead:Pas un catalogue de prix figés. Quatre façons de travailler ensemble, choisies selon votre situation réelle — de l'intervention ciblée à l'accompagnement dans la durée.`;
 
-  protected readonly heroMeta: readonly { key: string; value: string }[] = [
+  protected readonly heroMeta: readonly AsiliHeroMetaRow[] = [
     {
       key: $localize`:@@offerHeroMeta1Key:Format`,
       value: $localize`:@@offerHeroMeta1Value:Sur-mesure`,
@@ -151,34 +150,44 @@ export class OfferComponent {
     },
   ];
 
-  protected readonly faqKicker = $localize`:@@offerFaqKicker:Questions fréquentes`;
-
-  protected readonly faqTitle = $localize`:@@offerFaqTitle:Avant de se lancer.`;
-
-  protected readonly faqItems: readonly AsiliFaqItem[] = [
-    {
-      q: $localize`:@@offerFaq1Q:Pourquoi pas de grille de prix ?`,
-      a: $localize`:@@offerFaq1A:Parce qu'un prix figé répond rarement à un besoin réel. Je préfère cadrer votre situation, puis proposer un périmètre et un budget justes. Transparent, mais sur-mesure.`,
+  protected readonly closing: AsiliClosing = {
+    faq: {
+      kicker: $localize`:@@offerFaqKicker:Questions fréquentes`,
+      title: $localize`:@@offerFaqTitle:Avant de se lancer.`,
+      items: [
+        {
+          q: $localize`:@@offerFaq1Q:Pourquoi pas de grille de prix ?`,
+          a: $localize`:@@offerFaq1A:Parce qu'un prix figé répond rarement à un besoin réel. Je préfère cadrer votre situation, puis proposer un périmètre et un budget justes. Transparent, mais sur-mesure.`,
+        },
+        {
+          q: $localize`:@@offerFaq2Q:Combien de temps dure un projet ?`,
+          a: $localize`:@@offerFaq2A:D'une intervention de quelques jours à un accompagnement de plusieurs mois. On définit ensemble le rythme adapté à vos contraintes et à votre maturité.`,
+        },
+        {
+          q: $localize`:@@offerFaq3Q:Reprenez-vous un projet existant ?`,
+          a: $localize`:@@offerFaq3A:Oui, fréquemment. J'audite l'existant, j'identifie ce qui mérite d'être gardé, et je propose un chemin réaliste vers plus de clarté et de robustesse.`,
+        },
+        {
+          q: $localize`:@@offerFaq4Q:Travaillez-vous à distance ?`,
+          a: $localize`:@@offerFaq4A:Basé à Bordeaux, je travaille avec des clients partout en France, à distance comme en présentiel selon les besoins. La proximité humaine ne dépend pas de la géographie.`,
+        },
+      ],
     },
-    {
-      q: $localize`:@@offerFaq2Q:Combien de temps dure un projet ?`,
-      a: $localize`:@@offerFaq2A:D'une intervention de quelques jours à un accompagnement de plusieurs mois. On définit ensemble le rythme adapté à vos contraintes et à votre maturité.`,
+    cta: {
+      kicker: $localize`:@@offerCtaKicker:Prêt à clarifier ?`,
+      title: $localize`:@@offerCtaTitle:Décrivez votre besoin. Je propose un cadrage, pas un devis générique.`,
+      actions: [
+        {
+          libelle: $localize`:@@offerCtaPrimary:Démarrer la conversation`,
+          lien: '/contact',
+          variante: 'principale',
+        },
+        {
+          libelle: $localize`:@@offerCtaSecondary:Voir les réalisations`,
+          lien: '/projets',
+          variante: 'secondaire',
+        },
+      ],
     },
-    {
-      q: $localize`:@@offerFaq3Q:Reprenez-vous un projet existant ?`,
-      a: $localize`:@@offerFaq3A:Oui, fréquemment. J'audite l'existant, j'identifie ce qui mérite d'être gardé, et je propose un chemin réaliste vers plus de clarté et de robustesse.`,
-    },
-    {
-      q: $localize`:@@offerFaq4Q:Travaillez-vous à distance ?`,
-      a: $localize`:@@offerFaq4A:Basé à Bordeaux, je travaille avec des clients partout en France, à distance comme en présentiel selon les besoins. La proximité humaine ne dépend pas de la géographie.`,
-    },
-  ];
-
-  protected readonly ctaKicker = $localize`:@@offerCtaKicker:Prêt à clarifier ?`;
-
-  protected readonly ctaTitle = $localize`:@@offerCtaTitle:Décrivez votre besoin. Je propose un cadrage, pas un devis générique.`;
-
-  protected readonly ctaPrimary = $localize`:@@offerCtaPrimary:Démarrer la conversation`;
-
-  protected readonly ctaSecondary = $localize`:@@offerCtaSecondary:Voir les réalisations`;
+  };
 }

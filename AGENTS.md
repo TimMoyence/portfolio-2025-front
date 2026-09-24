@@ -65,7 +65,7 @@ L'agent respecte strictement cette stack. Il n'introduit pas React, Vue, un stat
 - Creer ou reutiliser une factory pour chaque objet mock recurrent :
   - `buildAuthUser(overrides?)` — objet `AuthUser` avec valeurs par defaut
   - `createAuthPortStub()` — stub complet du port auth
-  - `createWeatherPortStub()` — stub complet du port weather
+  - `createFormationsPortStub()` — stub complet du port formations
   - `buildAppConfig(overrides?)` — `AppConfig` derive de `environment`, chaque champ surchargeable
 - Helpers de test :
   - `setupTestBed(options?)` (`src/testing/setup-test-bed.ts`) — configure le
@@ -94,9 +94,9 @@ L'agent respecte strictement cette stack. Il n'introduit pas React, Vue, un stat
 - Pattern builder avec overrides pour les cas specifiques :
   ```typescript
   // OK
-  const user = buildAuthUser({ email: "test@example.com", roles: ["budget"] });
+  const user = buildAuthUser({ email: "test@example.com", roles: ["teacher"] });
   const authStub = createAuthPortStub();
-  setupTestBed({ providers: [WeatherHttpAdapter] });
+  setupTestBed({ providers: [FormationsHttpAdapter] });
   // INTERDIT
   const authStub = { login: () => {}, register: () => {}, me: () => {} }; // copie dans chaque spec
   ```
