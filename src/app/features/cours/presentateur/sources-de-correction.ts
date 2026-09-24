@@ -3,7 +3,7 @@ import { objet, presentationDe } from '../../../shared/slides/visual/presentatio
 
 const RENDUS_DE_CORRECTION: ReadonlySet<string> = new Set(['sort-review', 'answer-review']);
 
-function sourceCorrigeePar(ecran: EcranDeroule): string | null {
+export function sourceCorrigeePar(ecran: EcranDeroule): string | null {
   if (ecran.type === 'fp-worked') {
     const source = ecran.donnees?.['corrigeDe'];
     return typeof source === 'string' ? source : null;

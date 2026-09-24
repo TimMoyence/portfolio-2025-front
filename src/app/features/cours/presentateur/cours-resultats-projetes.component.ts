@@ -29,6 +29,10 @@ import { grouperLesReponses } from './panneau-pedagogique/panneau-reponses-libre
 
 const REPONSES_PROJETEES_PAR_QUESTION = 6;
 
+type LectureDesReponses =
+  | { readonly etat: 'lue'; readonly reponses: readonly ReponseLibreFormateur[] }
+  | { readonly etat: 'echec' };
+
 interface BarreDOption {
   readonly id: string;
   readonly libelle: string;
@@ -332,15 +336,15 @@ export class CoursResultatsProjetesComponent {
       .pipe(
         switchMap((sessionId) =>
           this.port.lireReponsesLibres(sessionId).pipe(
-            map(({ responses }) => responses),
-            catchError(() => of(null)),
+            map(({ responses }): LectureDesReponses => ({ etat: 'lue', reponses: responses })),
+            catchError(() => of<LectureDesReponses>({ etat: 'echec' })),
           ),
         ),
         takeUntilDestroyed(),
       )
-      .subscribe((reponses) => {
-        this.lectureEchouee.set(reponses === null);
-        if (reponses !== null) this.reponsesLibres.set(reponses);
+      .subscribe((lecture) => {
+        this.lectureEchouee.set(lecture.etat === 'echec');
+        if (lecture.etat === 'lue') this.reponsesLibres.set(lecture.reponses);
       });
     effect(() => {
       const sessionId = this.sessionId();

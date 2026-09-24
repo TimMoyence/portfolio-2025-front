@@ -30,6 +30,7 @@ import { annexeFormateurDeLEcran } from './annexe-formateur';
 import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
 import { correctionsAffichees } from './corrections-affichees';
 import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
+import { sourceCorrigeePar } from './sources-de-correction';
 
 type Chargement = 'chargement' | 'succes' | 'echec';
 
@@ -363,8 +364,15 @@ export class CoursSceneComponent {
     const deroule = this.deroule();
     const renvoi = deroule?.ecrans[this.ecran()]?.renvoi;
     const cible = deroule?.ecrans.find(({ id }) => id === renvoi);
-    return cible === undefined ? null : ecranProjete(cible);
+    return cible === undefined || this.correctionEncoreVerrouillee(cible)
+      ? null
+      : ecranProjete(cible);
   });
+
+  private correctionEncoreVerrouillee(ecran: EcranDeroule): boolean {
+    const source = sourceCorrigeePar(ecran);
+    return source !== null && !this.termine() && this.pilotage()[source]?.revele !== true;
+  }
 
   readonly correctionsDeLEcran = computed(() =>
     correctionsAffichees(this.deroule()?.ecrans[this.ecran()]),
