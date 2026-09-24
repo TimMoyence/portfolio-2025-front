@@ -1,8 +1,9 @@
-/**
- * Les routes listees ici DOIVENT correspondre a celles marquees
- * `RenderMode.Client` dans `src/app/app.routes.server.ts`.
- */
-const CLIENT_ONLY_ROUTE_PATTERNS: RegExp[] = [/^profil\/?$/];
+import { RenderMode } from '@angular/ssr';
+import { serverRoutes } from '../app/app.routes.server';
+
+const CLIENT_ONLY_ROUTE_PATTERNS: RegExp[] = serverRoutes
+  .filter((route) => route.renderMode === RenderMode.Client)
+  .map((route) => new RegExp(`^${route.path.replace(/:[A-Za-z]+/g, '[^/]+')}/?$`));
 
 export const isClientOnlyRoute = (routePath: string): boolean => {
   const normalized = routePath.replace(/^\//, '');

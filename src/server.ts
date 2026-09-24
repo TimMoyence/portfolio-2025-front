@@ -252,6 +252,7 @@ const sendCsrShell = (res: Response, input: { urlLocale: string; baseHref: strin
   res.setHeader('Content-Language', urlLocale);
   res.setHeader('Cache-Control', 'private, no-store');
   res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
   res.send(withBase);
   return true;
 };
