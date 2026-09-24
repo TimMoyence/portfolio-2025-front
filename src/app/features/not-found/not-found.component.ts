@@ -9,6 +9,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { HTTP_RESPONSE_STATUS } from '../../core/ssr/http-response-status';
 import { clamp } from '../../shared/utils/math.utils';
 
 @Component({
@@ -151,6 +152,7 @@ export class NotFoundComponent {
   private readonly zero = viewChild<ElementRef<HTMLElement>>('zero');
 
   constructor() {
+    inject(HTTP_RESPONSE_STATUS, { optional: true })?.set(404);
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }

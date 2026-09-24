@@ -13086,6 +13086,33 @@
         <target>The first edition is coming soon.</target>
       </segment>
     </unit>
+    <unit id="articlesListLoadMoreError">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:54,56</note>
+      </notes>
+      <segment>
+        <source> Les éditions précédentes n’ont pas pu être chargées. Réessayez dans un instant. </source>
+        <target> Earlier editions could not be loaded. Please try again in a moment. </target>
+      </segment>
+    </unit>
+    <unit id="articlesListLoadingMore">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:67</note>
+      </notes>
+      <segment>
+        <source>Chargement…</source>
+        <target>Loading…</target>
+      </segment>
+    </unit>
+    <unit id="articlesListLoadMore">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:69</note>
+      </notes>
+      <segment>
+        <source>Éditions précédentes</source>
+        <target>Earlier editions</target>
+      </segment>
+    </unit>
     <unit id="articlesListReadArticle">
       <notes>
         <note category="location">src/app/features/articles/articles-list.component.html:40,41</note>

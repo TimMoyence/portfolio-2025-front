@@ -31,6 +31,27 @@ describe('ArticleHttpAdapter', () => {
     request.flush(response);
   });
 
+  it('transmet le curseur de la page suivante', () => {
+    adapter.list('en', 12, 'curseur-opaque').subscribe();
+
+    const request = httpMock.expectOne(
+      (candidate) =>
+        candidate.url === `${environment.apiBaseUrl}/articles` &&
+        candidate.params.get('locale') === 'en' &&
+        candidate.params.get('cursor') === 'curseur-opaque',
+    );
+    expect(request.request.method).toBe('GET');
+    request.flush({ items: [], next_cursor: null });
+  });
+
+  it('n envoie pas de curseur pour la première page', () => {
+    adapter.list('fr').subscribe();
+
+    const request = httpMock.expectOne(`${environment.apiBaseUrl}/articles?locale=fr&limit=12`);
+    expect(request.request.params.has('cursor')).toBeFalse();
+    request.flush({ items: [], next_cursor: null });
+  });
+
   it('encode le slug avant de charger le contenu public', () => {
     const response = {
       article_id: 'morning-brief-2026-09-09-fr',

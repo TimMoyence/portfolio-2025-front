@@ -67,6 +67,33 @@ describe('injectSeoHead — echappement JSON-LD', () => {
   });
 });
 
+describe('injectSeoHead — flux RSS des articles', () => {
+  const metadata = buildMetadata({ '@type': 'LocalBusiness' });
+
+  it('annonce le flux RSS de la langue de la page', () => {
+    const html = injectSeoHead(EMPTY_HTML, metadata, '/en/articles', BASE_URL);
+
+    expect(html).toContain(
+      '<link rel="alternate" type="application/rss+xml" title="AI Watch — Asili Design" href="https://asilidesign.fr/api/v1/portfolio25/articles/feed.xml?locale=en" />',
+    );
+  });
+
+  it('retombe sur la langue par défaut hors préfixe', () => {
+    const html = injectSeoHead(EMPTY_HTML, metadata, '/', BASE_URL);
+
+    expect(html).toContain(
+      'title="Veille IA — Asili Design" href="https://asilidesign.fr/api/v1/portfolio25/articles/feed.xml?locale=fr"',
+    );
+  });
+
+  it('ne duplique pas le lien sur un HTML déjà injecté', () => {
+    const once = injectSeoHead(EMPTY_HTML, metadata, '/fr/', BASE_URL);
+    const twice = injectSeoHead(once, metadata, '/fr/', BASE_URL);
+
+    expect(twice.match(/application\/rss\+xml/g)?.length).toBe(1);
+  });
+});
+
 describe('isKnownRoute', () => {
   it('reconnait une route declaree et rejette les autres', () => {
     const metadata = buildMetadata(
