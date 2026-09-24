@@ -1,5 +1,9 @@
 import type { EcranContent, Role } from '../../../../cours/content/types';
-import { monterEcran, ROLES_DE_MONTAGE } from '../../../../testing/briques-montees';
+import {
+  DELAI_DE_MONTAGE_MS,
+  monterEcran,
+  ROLES_DE_MONTAGE,
+} from '../../../../testing/briques-montees';
 import { buildInstantaneDeSubstitution } from '../../../../testing/factories/instantane-b2-01.factory';
 import {
   ecransDuPupitreB2_01,
@@ -61,28 +65,32 @@ async function attesterLeMontage(ecran: EcranContent, role: Role): Promise<void>
 describe('AC-24 : l instantané réel du B2-01 servi par le back se monte pour l étudiant et pour le présentateur', () => {
   beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
-  it('garde la diapositive de Samir réglable au pupitre et la consigne courte de l atelier', async () => {
-    const diapositive = ecranNomme(ecransDuPupitreB2_01(), 'B2-01-A2-02-ORIGINE-AXE');
-    const atelier = ecranNomme(ecransPublicsB2_01(), 'B2-01-A2-03-ATELIER-1-SUITE');
-    const monte = await monterEcran(diapositive, 'presentateur');
-    const graphique = monte.montees()[0] as HTMLElement;
+  it(
+    'garde la diapositive de Samir réglable au pupitre et la consigne courte de l atelier',
+    async () => {
+      const diapositive = ecranNomme(ecransDuPupitreB2_01(), 'B2-01-A2-02-ORIGINE-AXE');
+      const atelier = ecranNomme(ecransPublicsB2_01(), 'B2-01-A2-03-ATELIER-1-SUITE');
+      const monte = await monterEcran(diapositive, 'presentateur');
+      const graphique = monte.montees()[0] as HTMLElement;
 
-    expect(graphique.shadowRoot?.querySelector('[data-testid="titre"]')?.textContent).toContain(
-      'Samir',
-    );
-    expect(graphique.shadowRoot?.querySelectorAll('[data-testid="parametre"]').length).toBe(1);
-    expect(graphique.shadowRoot?.querySelectorAll('[data-testid="prereglage"]').length).toBe(2);
-    expect(graphique.shadowRoot?.querySelectorAll('[data-testid="barre"]').length).toBe(8);
-    expect(
-      graphique.shadowRoot?.querySelector('[data-vue="reference"] [data-testid="vue"]')
-        ?.textContent,
-    ).toContain('Axe de Samir');
-    expect(atelier.donnees?.['consigne']).toBe(
-      'Calculatrice autorisée, sauf pour la question sur le nombre de commandes (ordre de grandeur). Répondez seul·e, puis comparez avec votre voisin·e avant la correction.',
-    );
+      expect(graphique.shadowRoot?.querySelector('[data-testid="titre"]')?.textContent).toContain(
+        'Samir',
+      );
+      expect(graphique.shadowRoot?.querySelectorAll('[data-testid="parametre"]').length).toBe(1);
+      expect(graphique.shadowRoot?.querySelectorAll('[data-testid="prereglage"]').length).toBe(2);
+      expect(graphique.shadowRoot?.querySelectorAll('[data-testid="barre"]').length).toBe(8);
+      expect(
+        graphique.shadowRoot?.querySelector('[data-vue="reference"] [data-testid="vue"]')
+          ?.textContent,
+      ).toContain('Axe de Samir');
+      expect(atelier.donnees?.['consigne']).toBe(
+        'Calculatrice autorisée, sauf pour la question sur le nombre de commandes (ordre de grandeur). Répondez seul·e, puis comparez avec votre voisin·e avant la correction.',
+      );
 
-    monte.detruire();
-  });
+      monte.detruire();
+    },
+    DELAI_DE_MONTAGE_MS,
+  );
 
   it('porte l empreinte et le nombre d écrans publiés par le back', () => {
     expect(INSTANTANE_B2_01.empreinte).toBe(EMPREINTE_PUBLIEE_PAR_LE_BACK);
@@ -115,12 +123,19 @@ describe('AC-24 : l instantané réel du B2-01 servi par le back se monte pour l
   });
 
   for (const ecran of ecransPublicsB2_01()) {
-    it(`${ecran.id} (${ecran.type}) pour l étudiant`, () => attesterLeMontage(ecran, 'etudiant'));
+    it(
+      `${ecran.id} (${ecran.type}) pour l étudiant`,
+      () => attesterLeMontage(ecran, 'etudiant'),
+      DELAI_DE_MONTAGE_MS,
+    );
   }
 
   for (const ecran of ecransDuPupitreB2_01()) {
-    it(`${ecran.id} (${ecran.type}) pour le présentateur`, () =>
-      attesterLeMontage(ecran, 'presentateur'));
+    it(
+      `${ecran.id} (${ecran.type}) pour le présentateur`,
+      () => attesterLeMontage(ecran, 'presentateur'),
+      DELAI_DE_MONTAGE_MS,
+    );
   }
 });
 
@@ -146,7 +161,11 @@ describe('les factories du front couvrent chaque type d écran du contrat § 9.4
 
   for (const ecran of SUBSTITUTION) {
     for (const role of ROLES_DE_MONTAGE) {
-      it(`${ecran.id} (${ecran.type}) pour le rôle ${role}`, () => attesterLeMontage(ecran, role));
+      it(
+        `${ecran.id} (${ecran.type}) pour le rôle ${role}`,
+        () => attesterLeMontage(ecran, role),
+        DELAI_DE_MONTAGE_MS,
+      );
     }
   }
 });
