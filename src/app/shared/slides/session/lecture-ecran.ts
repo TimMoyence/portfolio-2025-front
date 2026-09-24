@@ -23,6 +23,8 @@ export interface EnteteDeQuestionnaire {
   readonly consigne: string;
 }
 
+const RESOLU_AILLEURS = 'resoluAilleurs';
+
 export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> = {
   'fp-quote': ['citation'],
   'fp-story': ['recit'],
@@ -31,7 +33,7 @@ export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> 
   'fp-concept4': ['definition'],
   'fp-plot': ['definition'],
   'fp-challenge': ['probleme'],
-  'fp-cardsort': ['plan'],
+  'fp-cardsort': ['plan', RESOLU_AILLEURS],
   'fp-sheet': ['plan'],
   'fp-table-build': ['plan'],
   'fp-escape': ['parcours'],
@@ -39,7 +41,7 @@ export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> 
   'fp-spaced': ['rappel'],
   'fp-numeric': ['question'],
   'fp-vote': ['question', 'questionJumelle'],
-  'fp-recall': ['question', 'delaiMs'],
+  'fp-recall': ['question', 'delaiMs', 'consigne'],
   'fp-exit': ['billet'],
 };
 
@@ -59,15 +61,19 @@ const PORTEURS: Readonly<Record<string, readonly string[]>> = {
   'fp-pro': ['cas'],
 };
 
-const PORTEURS_DE_QUESTION: Readonly<Record<string, readonly string[]>> = {
-  'fp-numeric': ['question'],
-  'fp-vote': ['question', 'questionJumelle'],
-  'fp-recall': ['question'],
-  'fp-exit': ['billet'],
-  'fp-cardsort': ['plan'],
-  'fp-sheet': ['plan'],
-  'fp-table-build': ['plan'],
-};
+const BRIQUES_A_QUESTION: readonly string[] = [
+  'fp-numeric',
+  'fp-vote',
+  'fp-recall',
+  'fp-exit',
+  'fp-cardsort',
+  'fp-sheet',
+  'fp-table-build',
+];
+
+const PORTEURS_DE_QUESTION: Readonly<Record<string, readonly string[]>> = Object.fromEntries(
+  BRIQUES_A_QUESTION.map((brique) => [brique, PORTEURS[brique]]),
+);
 
 const CHAMP_ENONCE: Readonly<Record<string, string>> = {
   billet: 'question',
@@ -76,7 +82,9 @@ const CHAMP_ENONCE: Readonly<Record<string, string>> = {
 
 export interface ReponsesDuQuestionnaire {
   readonly type: 'reponses';
-  readonly reponses: Readonly<Record<string, string>>;
+  readonly reponses: Readonly<
+    Record<string, { readonly cible: string; readonly optionId: string | null }>
+  >;
 }
 
 const QUESTIONNAIRE = 'questionnaire';
@@ -89,10 +97,18 @@ function lireMontage(brique: unknown, donnees: unknown): Montage | null {
   return { brique, donnees: objet(donnees) ?? {} };
 }
 
+function signalerLeRenvoi(montage: Montage, ecran: EcranContent): Montage {
+  if (!PROPRIETES_PAR_BRIQUE[montage.brique].includes(RESOLU_AILLEURS)) {
+    return montage;
+  }
+  const resoluAilleurs = (ecran.resoluPar?.length ?? 0) > 0;
+  return { ...montage, donnees: { ...montage.donnees, [RESOLU_AILLEURS]: resoluAilleurs } };
+}
+
 export function planDeMontage(ecran: EcranContent): readonly Montage[] | null {
   if (ecran.type !== QUESTIONNAIRE) {
     const montage = lireMontage(ecran.type, ecran.donnees);
-    return montage === null ? null : [montage];
+    return montage === null ? null : [signalerLeRenvoi(montage, ecran)];
   }
   const questions = ecran.donnees?.['questions'];
   if (!Array.isArray(questions) || questions.length === 0) {
@@ -177,6 +193,58 @@ export function enoncesDuDeroule(deroule: DerouleCours): ReadonlyMap<string, str
       .filter((question) => question.enonce !== '')
       .map((question) => [question.id, question.enonce]),
   );
+}
+
+function entreesPortees(
+  porteurs: unknown,
+  champEnonce: string,
+  prefixe = '',
+): readonly (readonly [string, string])[] {
+  return (Array.isArray(porteurs) ? porteurs : [porteurs]).flatMap((porteur) => {
+    const entree = objet(porteur);
+    const id = entree?.['id'];
+    const enonce = entree?.[champEnonce];
+    return typeof id === 'string' && typeof enonce === 'string'
+      ? [[`${prefixe}${id}`, enonce] as const]
+      : [];
+  });
+}
+
+function activitesDuTravaille(donnees: Donnees): readonly (readonly [string, string])[] {
+  const exemple = objet(donnees['exemple']);
+  const id = exemple?.['id'];
+  if (donnees['pilote'] === true || typeof id !== 'string') {
+    return [];
+  }
+  return entreesPortees(exemple?.['etapes'], 'invite', `${id}:`);
+}
+
+function activitesDuRappel(donnees: Donnees): readonly (readonly [string, string])[] {
+  return entreesPortees(donnees['question'], 'enonce').map(
+    ([id, enonce]) => [`${id}:rappel`, enonce] as const,
+  );
+}
+
+export function enoncesDesActivites(ecran: EcranContent): ReadonlyMap<string, string> {
+  const donnees = ecran.donnees ?? {};
+  switch (ecran.type) {
+    case 'fp-pro':
+      return new Map(entreesPortees(objet(donnees['cas'])?.['questionsLibres'], 'question'));
+    case 'fp-worked':
+      return new Map(activitesDuTravaille(donnees));
+    case 'fp-recall':
+      return new Map(activitesDuRappel(donnees));
+    case 'fp-exit':
+      return new Map(entreesPortees(donnees['billet'], 'question'));
+    case 'fp-story': {
+      const presentation = presentationDe(ecran);
+      return presentation?.renderer === 'reflection'
+        ? new Map(entreesPortees(presentation.props['promptData'], 'question'))
+        : new Map();
+    }
+    default:
+      return new Map();
+  }
 }
 
 export function ecransDesIdentifiants(cours: CoursContent): ReadonlyMap<string, string> {

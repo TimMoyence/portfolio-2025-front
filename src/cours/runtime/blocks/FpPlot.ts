@@ -1,20 +1,24 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { evaluerExpression } from '../core/formula';
 import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
-import { brancherCurseurs, curseur } from './curseurs';
-import { FpBlock } from './FpBlock';
+import { type Reglages, borner } from './animation';
+import { type ParametreReglable, curseur } from './curseurs';
+import {
+  FpReglable,
+  type Prereglage,
+  arrondi,
+  copierParametres,
+  copierPrereglages,
+  fini,
+  formater,
+  plafondDe,
+  plancherDe,
+} from './reglable';
 import { projeterMetadonnees } from './projection';
 
 export type TraitSerie = 'plein' | 'tirets';
 
-export interface PlotParametre {
-  readonly cle: string;
-  readonly libelle: string;
-  readonly min: number;
-  readonly max: number;
-  readonly pas: number;
-  readonly defaut: number;
-}
+export type PlotParametre = ParametreReglable;
 
 export interface PlotAxe {
   readonly libelle: string;
@@ -36,10 +40,7 @@ export interface PlotSerie {
   readonly calcul: string;
 }
 
-export interface PlotPrereglage {
-  readonly libelle: string;
-  readonly valeurs: Readonly<Record<string, number>>;
-}
+export type PlotPrereglage = Prereglage;
 
 export interface PlotDefinition {
   readonly id: string;
@@ -56,10 +57,12 @@ export interface PlotDefinition {
   readonly unite?: 'euros';
   readonly etiquettes?: readonly string[];
   readonly prereglages?: readonly PlotPrereglage[];
+  readonly reference?: string;
+  readonly animation?: readonly Reglages[];
   readonly metadonnees: MetadonneesBrique;
 }
 
-type Valeurs = Readonly<Record<string, number>>;
+type Valeurs = Reglages;
 
 interface Echantillon {
   readonly abscisse: number;
@@ -69,6 +72,11 @@ interface Echantillon {
 interface SerieTracee {
   readonly serie: PlotSerie;
   readonly echantillons: readonly Echantillon[];
+}
+
+interface VueComparee {
+  readonly nom: 'reference' | 'reglable';
+  readonly libelle: string;
 }
 
 interface Cadre {
@@ -100,18 +108,6 @@ function centreDeBarre(rang: number, total: number): number {
   return MARGE_GAUCHE + ((rang + 0.5) * LARGEUR_TRACE) / Math.max(total, 1);
 }
 
-function fini(valeur: number, repli: number): number {
-  return Number.isFinite(valeur) ? valeur : repli;
-}
-
-function arrondi(valeur: number): number {
-  return Math.round(valeur * 100) / 100;
-}
-
-function formater(valeur: number): string {
-  return Number.isFinite(valeur) ? String(arrondi(valeur)).replace('.', ',') : '—';
-}
-
 const EUROS = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
   currency: 'EUR',
@@ -139,20 +135,6 @@ function entiers(depart: number, arrivee: number): number[] {
   );
 }
 
-function plancherDe(bornes: { readonly min: number; readonly max: number }): number {
-  return fini(bornes.min, 0);
-}
-
-function plafondDe(bornes: { readonly min: number; readonly max: number }): number {
-  const bas = plancherDe(bornes);
-  return Math.max(fini(bornes.max, bas), bas);
-}
-
-function borner(parametre: PlotParametre, valeur: number): number {
-  const bas = plancherDe(parametre);
-  return Math.min(Math.max(fini(valeur, bas), bas), plafondDe(parametre));
-}
-
 function jalons(depart: number, arrivee: number, intervalles: number): number[] {
   return Array.from(
     { length: intervalles + 1 },
@@ -168,17 +150,6 @@ function versX(cadre: Cadre, abscisse: number): number {
 function versY(cadre: Cadre, ordonnee: number): number {
   const etendue = cadre.plafond - cadre.plancher || 1;
   return LIGNE_BASSE - ((ordonnee - cadre.plancher) / etendue) * HAUTEUR_TRACE;
-}
-
-function copierParametre(parametre: PlotParametre): PlotParametre {
-  return {
-    cle: parametre.cle,
-    libelle: parametre.libelle,
-    min: parametre.min,
-    max: parametre.max,
-    pas: parametre.pas,
-    defaut: parametre.defaut,
-  };
 }
 
 function copierSerie(serie: PlotSerie): PlotSerie {
@@ -204,17 +175,14 @@ function copierDefinition(source: PlotDefinition): PlotDefinition {
     },
     ordonnee: source.ordonnee,
     bornesOrdonnee: source.bornesOrdonnee === undefined ? undefined : { ...source.bornesOrdonnee },
-    parametres: source.parametres
-      .filter((parametre) => parametre.cle.trim().length > 0)
-      .map(copierParametre),
+    parametres: copierParametres(source.parametres),
     series: source.series.map(copierSerie),
     forme: source.forme === 'barres' ? 'barres' : 'courbes',
     unite: source.unite === 'euros' ? 'euros' : undefined,
     etiquettes: source.etiquettes === undefined ? undefined : [...source.etiquettes],
-    prereglages: (source.prereglages ?? []).map((prereglage) => ({
-      libelle: prereglage.libelle,
-      valeurs: { ...prereglage.valeurs },
-    })),
+    prereglages: copierPrereglages(source.prereglages),
+    reference: source.reference,
+    animation: source.animation?.map((etape) => ({ ...etape })),
     metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
@@ -227,93 +195,26 @@ function premiereOrdonnee(tracee: SerieTracee): number {
   return tracee.echantillons[0]?.ordonnee ?? Number.NaN;
 }
 
-export class FpPlot extends FpBlock {
-  private interne: PlotDefinition | null = null;
-  private courantes: Record<string, number> = {};
-  private animation: ReturnType<typeof setInterval> | null = null;
+export class FpPlot extends FpReglable<PlotDefinition> {
+  protected readonly evenementDeReglage = 'fp-plot-reglage';
 
-  set definition(valeur: PlotDefinition | null) {
-    this.arreterAnimation();
-    this.interne = valeur === null ? null : copierDefinition(valeur);
-    this.courantes = {};
-    for (const parametre of this.interne?.parametres ?? []) {
-      this.courantes[parametre.cle] = borner(parametre, parametre.defaut);
-    }
-    this.refreshSiConnecte();
+  protected copier(valeur: PlotDefinition): PlotDefinition {
+    return copierDefinition(valeur);
   }
 
-  get definition(): PlotDefinition | null {
-    return this.interne;
+  protected rafraichirLeRendu(): void {
+    this.rafraichirZone('rendu', this.rendu());
   }
 
-  get valeurs(): Valeurs {
-    return { ...this.courantes };
+  protected override afficherValeur(valeur: number): string {
+    return this.chiffre(valeur);
   }
 
-  disconnectedCallback(): void {
-    this.arreterAnimation();
-  }
-
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     if (this.interne === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
-    return safeHtml`<section class="fp-carte fp-plot__atelier">${this.description()}${this.reglages()}<div class="fp-plot__zone" data-zone="rendu">${this.rendu('fp-prose')}</div></section>`;
-  }
-
-  renderStage(): EscapedHtml {
-    if (this.interne === null) {
-      return safeHtml``;
-    }
-    return this.renderHand();
-  }
-
-  renderBoard(): EscapedHtml {
-    const definition = this.interne;
-    if (definition === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    return safeHtml`
-      <section class="fp-carte fp-plot__atelier">
-        ${this.description()}
-        ${this.figure()}
-        <div class="fp-plot__reperes">${this.reperes(definition.metadonnees)}</div>
-      </section>
-    `;
-  }
-
-  bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.interne?.id ?? null);
-    if (this.mode() !== 'board') {
-      racine
-        .querySelector<HTMLButtonElement>('[data-testid="animer"]')
-        ?.addEventListener('click', () => {
-          this.animer();
-        });
-      brancherCurseurs(racine, (cle, valeur) => this.regler(cle, valeur));
-      racine.querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]').forEach((bouton) => {
-        bouton.addEventListener('click', () => {
-          this.appliquerPrereglage(Number(bouton.dataset['rang']));
-        });
-      });
-    }
-  }
-
-  private appliquerPrereglage(rang: number): void {
-    const prereglage = this.interne?.prereglages?.[rang];
-    if (prereglage === undefined) {
-      return;
-    }
-    this.arreterAnimation();
-    for (const parametre of this.interne?.parametres ?? []) {
-      if (Object.hasOwn(prereglage.valeurs, parametre.cle)) {
-        this.courantes = {
-          ...this.courantes,
-          [parametre.cle]: borner(parametre, prereglage.valeurs[parametre.cle]),
-        };
-      }
-    }
-    this.refresh();
+    return safeHtml`<section class="fp-carte fp-scene fp-plot__atelier">${this.description()}${this.panneauDeReglages()}<div class="fp-plot__zone" data-zone="rendu">${this.rendu()}</div></section>`;
   }
 
   private enBarres(): boolean {
@@ -340,8 +241,36 @@ export class FpPlot extends FpBlock {
     return definition?.etiquettes?.[rang] ?? formater(abscisse);
   }
 
-  private rendu(stylePhrase: string): EscapedHtml {
-    return safeHtml`${this.figure()}${this.lecture(stylePhrase)}`;
+  private rendu(): EscapedHtml {
+    const reference = this.prereglageDeReference();
+    if (reference === undefined) {
+      return safeHtml`${this.figure(this.valeurs, null)}${this.lecture(true)}`;
+    }
+    return safeHtml`<div class="fp-plot__comparaison" data-testid="comparaison">${this.titre()}<div class="fp-plot__vues">${this.figure(
+      this.valeursDu(reference),
+      { nom: 'reference', libelle: `${reference.libelle} · ${this.texte('plot-reference')}` },
+    )}${this.figure(this.valeurs, { nom: 'reglable', libelle: this.texte('plot-reglable') })}</div>${this.sourceCommune()}</div>${this.lecture(false)}`;
+  }
+
+  private prereglageDeReference(): PlotPrereglage | undefined {
+    const definition = this.interne;
+    return definition?.prereglages?.find(
+      (prereglage) => prereglage.libelle === definition.reference,
+    );
+  }
+
+  private valeursDu(prereglage: PlotPrereglage): Valeurs {
+    return Object.fromEntries(
+      (this.interne?.parametres ?? []).map((parametre) => [
+        parametre.cle,
+        borner(
+          parametre,
+          Object.hasOwn(prereglage.valeurs, parametre.cle)
+            ? prereglage.valeurs[parametre.cle]
+            : parametre.defaut,
+        ),
+      ]),
+    );
   }
 
   private description(): EscapedHtml {
@@ -352,41 +281,11 @@ export class FpPlot extends FpBlock {
     return safeHtml`<p class="fp-plot__description" data-testid="description">${escapeHtml(description)}</p>`;
   }
 
-  private regler(cle: string, valeur: number): void {
-    const parametre = this.interne?.parametres.find((candidat) => candidat.cle === cle);
-    if (parametre === undefined) {
-      return;
-    }
-    this.arreterAnimation();
-    this.courantes = { ...this.courantes, [cle]: borner(parametre, valeur) };
-    const sortie = this.racine.querySelector<HTMLOutputElement>(
-      `output[data-testid="valeur"][data-cle="${cle}"]`,
-    );
-    if (sortie !== null) {
-      sortie.textContent = this.chiffre(this.courantes[cle]);
-    }
-    this.rafraichirZone('rendu', this.rendu('fp-prose'));
-    this.racine
-      .querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]')
-      .forEach((bouton) => {
-        const prereglage = this.interne?.prereglages?.[Number(bouton.dataset['rang'])];
-        bouton.setAttribute('aria-pressed', String(this.estActif(prereglage)));
-      });
-  }
-
-  private estActif(prereglage: PlotPrereglage | undefined): boolean {
-    return (
-      prereglage !== undefined &&
-      Object.entries(prereglage.valeurs).every(([cle, valeur]) => this.courantes[cle] === valeur)
-    );
-  }
-
-  private tracees(): SerieTracee[] {
+  private tracees(valeurs: Valeurs): SerieTracee[] {
     const definition = this.interne;
     if (definition === null) {
       return [];
     }
-    const valeurs = this.valeurs;
     const depart = plancherDe(definition.abscisse);
     const arrivee = plafondDe(definition.abscisse);
     const abscisses = this.enBarres()
@@ -404,7 +303,7 @@ export class FpPlot extends FpBlock {
     }));
   }
 
-  private cadre(tracees: readonly SerieTracee[]): Cadre {
+  private cadre(tracees: readonly SerieTracee[], valeurs: Valeurs): Cadre {
     const definition = this.interne;
     const axe = definition?.abscisse ?? { libelle: '', min: 0, max: 1 };
     const ordonnees = tracees.flatMap((tracee) =>
@@ -412,9 +311,9 @@ export class FpPlot extends FpBlock {
     );
     const bornes = definition?.bornesOrdonnee;
     const minParametre =
-      bornes?.minParametre === undefined ? undefined : this.valeurs[bornes.minParametre];
+      bornes?.minParametre === undefined ? undefined : valeurs[bornes.minParametre];
     const maxParametre =
-      bornes?.maxParametre === undefined ? undefined : this.valeurs[bornes.maxParametre];
+      bornes?.maxParametre === undefined ? undefined : valeurs[bornes.maxParametre];
     const minConfigure = minParametre ?? bornes?.min;
     const maxConfigure = maxParametre ?? bornes?.max;
     const plancher = this.borne(minConfigure, ordonnees, 0, Math.min);
@@ -439,40 +338,69 @@ export class FpPlot extends FpBlock {
     return ordonnees.length > 0 ? calculer(...ordonnees) : repli;
   }
 
-  private figure(): EscapedHtml {
-    const tracees = this.tracees();
+  private titre(): EscapedHtml {
+    const titre = this.interne?.titre;
+    return titre === undefined
+      ? safeHtml``
+      : safeHtml`<h3 class="fp-plot__titre" data-testid="titre">${escapeHtml(titre)}</h3>`;
+  }
+
+  private figure(valeurs: Valeurs, vue: VueComparee | null): EscapedHtml {
+    const tracees = this.tracees(valeurs);
+    const cadre = this.cadre(tracees, valeurs);
     const dessinees = tracees.filter((tracee) => tracee.echantillons.length > 0);
     const definition = this.interne;
     return safeHtml`
-      <figure class="fp-plot__figure" data-testid="figure">
-        ${definition?.titre === undefined ? safeHtml`` : safeHtml`<h3 class="fp-plot__titre" data-testid="titre">${escapeHtml(definition.titre)}</h3>`}
-        ${this.graphique(tracees)}
+      <figure class="fp-plot__figure" data-testid="figure" data-vue="${escapeHtml(vue?.nom ?? 'unique')}">
+        ${vue === null ? this.titre() : safeHtml`<p class="fp-plot__vue" data-testid="vue">${escapeHtml(vue.libelle)}</p>`}
+        ${this.graphique(tracees, cadre, vue)}
         ${dessinees.length > 0 ? safeHtml`` : this.vide()}
-        ${this.source(definition)}
+        ${vue !== null && this.enBarres() ? this.rapport(tracees, cadre, vue.nom === 'reglable') : safeHtml``}
+        ${vue === null ? this.source(definition) : safeHtml``}
       </figure>
     `;
   }
 
   private source(definition: PlotDefinition | null): EscapedHtml {
+    const libelle = this.libelleDeSource(definition);
+    return libelle === null
+      ? safeHtml``
+      : safeHtml`<figcaption class="fp-plot__source" data-testid="source">${libelle}</figcaption>`;
+  }
+
+  private sourceCommune(): EscapedHtml {
+    const libelle = this.libelleDeSource(this.interne);
+    return libelle === null
+      ? safeHtml``
+      : safeHtml`<p class="fp-plot__source" data-testid="source">${libelle}</p>`;
+  }
+
+  private libelleDeSource(definition: PlotDefinition | null): EscapedHtml | null {
     if (definition?.source === undefined) {
-      return safeHtml``;
+      return null;
     }
     if (definition.sourceUrl === undefined) {
-      return safeHtml`<figcaption class="fp-plot__source" data-testid="source">${escapeHtml(definition.source)}</figcaption>`;
+      return escapeHtml(definition.source);
     }
-    return safeHtml`<figcaption class="fp-plot__source" data-testid="source"><a href="${escapeUrl(definition.sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(definition.source)}</a></figcaption>`;
+    return safeHtml`<a href="${escapeUrl(definition.sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(definition.source)}</a>`;
   }
 
   private vide(): EscapedHtml {
     return safeHtml`<p class="fp-plot__vide" data-testid="vide">${escapeHtml(this.texte('plot-aucune-serie'))}</p>`;
   }
 
-  private graphique(tracees: readonly SerieTracee[]): EscapedHtml {
-    const cadre = this.cadre(tracees);
+  private graphique(
+    tracees: readonly SerieTracee[],
+    cadre: Cadre,
+    vue: VueComparee | null,
+  ): EscapedHtml {
+    const suffixe = vue === null ? '' : `-${vue.nom}`;
+    const titre =
+      vue === null ? this.titreDuGraphique() : `${this.titreDuGraphique()} — ${vue.libelle}`;
     return safeHtml`
-      <svg class="fp-plot__graphique" data-testid="graphique" viewBox="0 0 ${LARGEUR} ${HAUTEUR}" role="img" aria-labelledby="fp-plot-titre fp-plot-description">
-        <title id="fp-plot-titre" data-testid="titre-svg">${escapeHtml(this.titreDuGraphique())}</title>
-        <desc id="fp-plot-description" data-testid="description-svg">${escapeHtml(this.descriptionDuGraphique(tracees))}</desc>
+      <svg class="fp-plot__graphique" data-testid="graphique" viewBox="0 0 ${LARGEUR} ${HAUTEUR}" role="img" aria-labelledby="${escapeHtml(`fp-plot-titre${suffixe} fp-plot-description${suffixe}`)}">
+        <title id="${escapeHtml(`fp-plot-titre${suffixe}`)}" data-testid="titre-svg">${escapeHtml(titre)}</title>
+        <desc id="${escapeHtml(`fp-plot-description${suffixe}`)}" data-testid="description-svg">${escapeHtml(this.descriptionDuGraphique(tracees))}</desc>
         <g>
           <line class="fp-plot__axe" x1="${MARGE_GAUCHE}" y1="${MARGE_HAUT}" x2="${MARGE_GAUCHE}" y2="${LIGNE_BASSE}"></line>
           <line class="fp-plot__axe" x1="${MARGE_GAUCHE}" y1="${LIGNE_BASSE}" x2="${BORD_DROIT}" y2="${LIGNE_BASSE}"></line>
@@ -529,25 +457,29 @@ export class FpPlot extends FpBlock {
     return safeHtml`<polyline class="fp-plot__trace" data-testid="trace" data-serie="${escapeHtml(tracee.serie.id)}" data-trait="${escapeHtml(tracee.serie.trait)}" points="${escapeHtml(points)}"></polyline>`;
   }
 
-  private lecture(stylePhrase: string): EscapedHtml {
-    const tracees = this.tracees();
+  private lecture(avecRapport: boolean): EscapedHtml {
+    const valeurs = this.valeurs;
+    const tracees = this.tracees(valeurs);
+    const rapport = avecRapport
+      ? this.rapport(tracees, this.cadre(tracees, valeurs), true)
+      : safeHtml``;
     return safeHtml`
       <div class="fp-plot__lecture">
-        ${this.enBarres() ? this.rapport(tracees) : this.legende(tracees)}
+        ${this.enBarres() ? rapport : this.legende(tracees)}
         ${this.tableau(tracees)}
-        <p class="${escapeHtml(stylePhrase)} fp-plot__synthese" data-testid="synthese">${escapeHtml(this.phraseDeLecture(tracees))}</p>
+        ${this.enBarres() ? safeHtml`` : safeHtml`<p class="fp-prose fp-plot__synthese" data-testid="synthese">${escapeHtml(this.phraseDeLecture(tracees))}</p>`}
       </div>
     `;
   }
 
-  private rapport(tracees: readonly SerieTracee[]): EscapedHtml {
+  private rapport(tracees: readonly SerieTracee[], cadre: Cadre, vivant: boolean): EscapedHtml {
     if (tracees.length === 0 || tracees[0].echantillons.length < 2) {
       return safeHtml``;
     }
     const [tracee] = tracees;
     const premiere = tracee.echantillons[0];
     const derniere = tracee.echantillons[tracee.echantillons.length - 1];
-    const plancher = this.cadre(tracees).plancher;
+    const plancher = cadre.plancher;
     const hauteurs = (derniere.ordonnee - plancher) / (premiere.ordonnee - plancher);
     const rapport =
       premiere.ordonnee > plancher && derniere.ordonnee >= plancher
@@ -557,7 +489,7 @@ export class FpPlot extends FpBlock {
       premiere.ordonnee === 0
         ? '—'
         : EVOLUTION.format((derniere.ordonnee - premiere.ordonnee) / premiere.ordonnee);
-    return safeHtml`<p class="fp-plot__rapport" data-testid="rapport" aria-live="polite">${escapeHtml(this.texte('plot-rapport-hauteurs'))} ${escapeHtml(this.etiquette(derniere.abscisse))} ${escapeHtml(this.texte('plot-rapport-a'))} ${escapeHtml(this.etiquette(premiere.abscisse))} : <strong class="fp-plot__chiffre-cle" data-testid="rapport-hauteurs">${escapeHtml(rapport)}</strong> — ${escapeHtml(this.texte('plot-evolution-reelle'))} : <strong class="fp-plot__chiffre-cle" data-testid="evolution-reelle">${escapeHtml(evolution)}</strong></p>`;
+    return safeHtml`<p class="fp-plot__rapport" data-testid="rapport" aria-live="${escapeHtml(vivant ? 'polite' : 'off')}">${escapeHtml(this.texte('plot-rapport-hauteurs'))} ${escapeHtml(this.etiquette(derniere.abscisse))} ${escapeHtml(this.texte('plot-rapport-a'))} ${escapeHtml(this.etiquette(premiere.abscisse))} : <strong class="fp-plot__chiffre-cle" data-testid="rapport-hauteurs">${escapeHtml(rapport)}</strong> — ${escapeHtml(this.texte('plot-evolution-reelle'))} : <strong class="fp-plot__chiffre-cle" data-testid="evolution-reelle">${escapeHtml(evolution)}</strong></p>`;
   }
 
   private enteteAbscisse(abscisse: number): string {
@@ -663,7 +595,7 @@ export class FpPlot extends FpBlock {
     return Math.abs(haut - bas);
   }
 
-  private reglages(): EscapedHtml {
+  private panneauDeReglages(): EscapedHtml {
     return safeHtml`
       <fieldset class="fp-plot__reglages">
         <legend>${escapeHtml(this.texte('plot-reglages'))}</legend>
@@ -680,10 +612,7 @@ export class FpPlot extends FpBlock {
     if (prereglages.length === 0) {
       return safeHtml`<button class="fp-plot__animation" data-testid="animer" type="button">${escapeHtml(this.texte('plot-animer'))}</button>`;
     }
-    return safeHtml`<div class="fp-plot__prereglages" role="group" aria-label="${escapeHtml(this.texte('plot-prereglages'))}">${prereglages.map(
-      (prereglage, rang) =>
-        safeHtml`<button class="fp-plot__prereglage" data-testid="prereglage" data-rang="${rang}" type="button" aria-pressed="${escapeHtml(String(this.estActif(prereglage)))}">${escapeHtml(prereglage.libelle)}</button>`,
-    )}</div>`;
+    return safeHtml`<div class="fp-plot__prereglages" role="group" aria-label="${escapeHtml(this.texte('plot-prereglages'))}">${this.boutonsDePrereglage('fp-plot')}</div>`;
   }
 
   private parametreAffiche(parametre: PlotParametre): EscapedHtml {
@@ -700,45 +629,5 @@ export class FpPlot extends FpBlock {
   private enonceValeur(parametre: PlotParametre, valeur: number): string {
     const plage = `${this.texte('plot-plage')} ${this.chiffre(plancherDe(parametre))} ${this.texte('plot-plage-fin')} ${this.chiffre(plafondDe(parametre))}`;
     return `${parametre.libelle} : ${this.chiffre(valeur)} (${plage})`;
-  }
-
-  private animer(): void {
-    const parametres = this.interne?.parametres ?? [];
-    if (parametres.length === 0) {
-      return;
-    }
-    this.arreterAnimation();
-    const depart = Object.fromEntries(
-      parametres.map((parametre) => [
-        parametre.cle,
-        borner(parametre, fini(this.courantes[parametre.cle], parametre.defaut)),
-      ]),
-    );
-    let etape = 0;
-    const total = 6;
-    const avancer = (): void => {
-      etape += 1;
-      const progression = etape / total;
-      this.courantes = Object.fromEntries(
-        parametres.map((parametre) => {
-          const valeurDepart = depart[parametre.cle] ?? parametre.defaut;
-          const valeur = valeurDepart + (plafondDe(parametre) - valeurDepart) * progression;
-          return [parametre.cle, borner(parametre, valeur)];
-        }),
-      );
-      this.refresh();
-      if (etape >= total) {
-        this.arreterAnimation();
-      }
-    };
-    this.animation = setInterval(avancer, 180);
-    avancer();
-  }
-
-  private arreterAnimation(): void {
-    if (this.animation !== null) {
-      clearInterval(this.animation);
-      this.animation = null;
-    }
   }
 }

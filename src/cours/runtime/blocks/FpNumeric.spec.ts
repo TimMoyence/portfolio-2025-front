@@ -2,8 +2,9 @@ import {
   buildNumericQuestion,
   buildVerdictDeReponse,
 } from '../../../testing/factories/cours.factory';
-import { feuilleDe } from '../design/blocks';
-import { base, stage, tokens } from '../design/styles';
+import { attendreUneRegionLive } from '../../../testing/assertions-briques';
+import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
+import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { FpNumeric, type NumericQuestionPublique } from './FpNumeric';
 
 type ClesIdentiques<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
@@ -26,8 +27,8 @@ const SAISIE_VALIDE = '12,5';
 const MESSAGE_REFUS = 'Saisissez un nombre — la virgule décimale est acceptée';
 const INSTANT_INITIAL = '2026-09-12T08:00:00.000Z';
 const DELAI_SAISIE_MS = 300;
-const RENDUS = ['hand', 'stage', 'board'];
 const AUTRE_QUESTION = 'Q-TAUX-02';
+const CORRIGE = { type: 'cible', cible: VALEUR_ATTENDUE };
 
 function champDe(element: FpNumeric): HTMLInputElement | null {
   return element.shadowRoot?.querySelector<HTMLInputElement>('[data-testid="champ"]') ?? null;
@@ -76,17 +77,6 @@ function dureeEmise(lectureMs: number, rafraichissements: number): number | unde
   } finally {
     jasmine.clock().uninstall();
   }
-}
-
-function classesEmises(element: FpNumeric): string[] {
-  const classes = new Set<string>();
-  for (const rendu of RENDUS) {
-    element.setAttribute('render', rendu);
-    for (const noeud of element.shadowRoot?.querySelectorAll('[class]') ?? []) {
-      noeud.classList.forEach((classe) => classes.add(classe));
-    }
-  }
-  return [...classes];
 }
 
 describe('FpNumeric', () => {
@@ -238,10 +228,61 @@ describe('FpNumeric', () => {
     expect(JSON.stringify(hote.question)).not.toContain(VALEUR_ATTENDUE);
   });
 
-  it('ne publie dans le DOM aucune valeur attendue', () => {
-    for (const rendu of RENDUS) {
-      hote.setAttribute('render', rendu);
-      expect(hote.shadowRoot?.innerHTML).not.toContain(VALEUR_ATTENDUE);
+  it('ne publie dans le DOM aucune valeur attendue tant qu aucun corrige n est pose', () => {
+    for (const role of ROLES_DE_MONTAGE) {
+      hote.setAttribute('data-cours-role', role);
+      expect(hote.shadowRoot?.innerHTML).withContext(role).not.toContain(VALEUR_ATTENDUE);
+      expect(hote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]'))
+        .withContext(role)
+        .toBeNull();
+    }
+  });
+
+  it('revele la bonne reponse au presentateur comme a l etudiant quand le corrige est pose', () => {
+    hote.corrige = CORRIGE;
+    for (const role of ROLES_DE_MONTAGE) {
+      hote.setAttribute('data-cours-role', role);
+      const bonneReponse = hote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]');
+      expect(bonneReponse?.textContent).withContext(role).toContain('1480,24');
+      expect(bonneReponse?.getAttribute('data-etat')).withContext(role).toBe('confirme');
+    }
+  });
+
+  it('ignore un corrige qui n est pas une cible', () => {
+    hote.corrige = { type: 'option', option: 'A' };
+    expect(hote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]')).toBeNull();
+  });
+
+  it('marque la saisie juste ou fausse quand corrige et verdict sont reinjectes', () => {
+    hote.corrige = CORRIGE;
+    expect(champDe(hote)?.hasAttribute('data-correction')).toBeFalse();
+
+    hote.verdict = buildVerdictDeReponse({ questionId: QUESTION_NOTEE.id });
+    expect(champDe(hote)?.getAttribute('data-correction')).toBe('fausse');
+
+    hote.verdict = buildVerdictDeReponse({ questionId: QUESTION_NOTEE.id, correcte: true });
+    expect(champDe(hote)?.getAttribute('data-correction')).toBe('juste');
+  });
+
+  it('montre le meme enonce au presentateur, sans champ ni bouton de saisie', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(
+      QUESTION_NOTEE.enonce,
+    );
+    expect(champDe(hote)).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="valider"]')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')).toBeNull();
+  });
+
+  it('attend la question sous le meme libelle pour les deux roles', () => {
+    for (const role of ROLES_DE_MONTAGE) {
+      const vide = document.createElement('fp-numeric') as FpNumeric;
+      vide.setAttribute('data-cours-role', role);
+      document.body.appendChild(vide);
+      expect(vide.shadowRoot?.querySelector('[data-testid="attente"]')?.textContent?.trim())
+        .withContext(role)
+        .toBe(vide.texte('chargement'));
+      vide.remove();
     }
   });
 
@@ -253,16 +294,18 @@ describe('FpNumeric', () => {
   });
 
   it('annonce le retour dans une region live', () => {
-    expect(hote.shadowRoot?.querySelector('[aria-live="polite"]')).toBeTruthy();
-    expect(hote.shadowRoot?.querySelector('fieldset')).toBeTruthy();
+    attendreUneRegionLive(hote);
   });
 
-  it('recapitule la modalite et la duree prevue en mode tableau, en libelles traduits', () => {
-    hote.setAttribute('render', 'board');
-    const modalite = hote.shadowRoot?.querySelector('[data-testid="modalite"]');
-    const duree = hote.shadowRoot?.querySelector('[data-testid="duree"]');
-    expect(modalite?.textContent?.trim()).toBe('Individuel');
-    expect(duree?.textContent?.trim()).toBe('3 min');
+  it('ne recapitule plus la modalite ni la duree prevue, quel que soit le role', () => {
+    for (const role of ROLES_DE_MONTAGE) {
+      hote.setAttribute('data-cours-role', role);
+      expect(hote.shadowRoot?.querySelector('[data-testid="modalite"]'))
+        .withContext(role)
+        .toBeNull();
+      expect(hote.shadowRoot?.querySelector('[data-testid="duree"]')).withContext(role).toBeNull();
+    }
+    expect(hote.question?.metadonnees.modalite).toBe(QUESTION_NOTEE.metadonnees.modalite);
   });
 
   it('accepte le signe moins typographique', () => {
@@ -309,12 +352,8 @@ describe('FpNumeric', () => {
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    const feuille = [tokens, base, feuilleDe('numeric'), stage].join('\n');
-    const emises = classesEmises(hote);
-    expect(emises.length).toBeGreaterThanOrEqual(10);
-    const orphelines = emises.filter(
-      (classe) => !new RegExp(`\\.${classe}(?![\\w-])`).test(feuille),
-    );
-    expect(orphelines).toEqual([]);
+    hote.corrige = CORRIGE;
+    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(10);
+    expect(classesOrphelines(hote, 'numeric')).toEqual([]);
   });
 });

@@ -1,3 +1,5 @@
+import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
+import { CHARGE_XSS } from '../../../testing/charge-xss';
 import { classesOrphelines } from '../../../testing/classes-briques';
 import {
   buildChallengeProbleme,
@@ -14,8 +16,6 @@ interface DetailChallenge {
 const PROBLEME = buildChallengeProbleme();
 const LIBELLE_FAUSSE = 'Diviser 100 par 7 et arrondir';
 const TENTATIVE = 'A vue de nez une dizaine d annees, j ai ajoute 7 % chaque annee de tete';
-const CHARGE_XSS = '<img src=x onerror="alert(1)">';
-const RENDUS = ['hand', 'stage', 'board'];
 const INSTANT_INITIAL = '2026-09-13T10:00:00.000Z';
 const CORRIGE_DU_DEFI = { type: 'defi', strategies: buildStrategiesServies(true) };
 
@@ -75,20 +75,36 @@ describe('FpChallenge', () => {
   });
 
   it('pose le probleme sans methode ni strategie avant toute tentative', () => {
-    expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(PROBLEME.enonce);
-    expect(hote.shadowRoot?.querySelector('[data-testid="consigne"]')?.textContent?.trim()).toBe(
-      'Cherchez par vous-même : aucune méthode ne vous a encore été donnée',
-    );
-    for (const rendu of RENDUS) {
-      hote.setAttribute('render', rendu);
-      expect(strategiesDe(hote).length).withContext(`rendu ${rendu}`).toBe(0);
-      expect(hote.shadowRoot?.innerHTML)
-        .withContext(`rendu ${rendu}`)
-        .not.toContain(LIBELLE_FAUSSE);
+    for (const role of ROLES_DE_MONTAGE) {
+      hote.setAttribute('data-cours-role', role);
+      expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim())
+        .withContext(`role ${role}`)
+        .toBe(PROBLEME.enonce);
+      expect(hote.shadowRoot?.querySelector('.fp-challenge__invite')?.textContent?.trim())
+        .withContext(`role ${role}`)
+        .toBe(PROBLEME.invite);
+      expect(strategiesDe(hote).length).withContext(`role ${role}`).toBe(0);
+      expect(hote.shadowRoot?.innerHTML).withContext(`role ${role}`).not.toContain(LIBELLE_FAUSSE);
     }
   });
 
-  it('R4 · rappelle le dossier chiffré sur chaque rendu, sans en échapper le contenu', () => {
+  it('pose la meme carte pour les deux roles, seule la zone de reponse est reservee a l etudiant', () => {
+    const carte = (): string =>
+      hote.shadowRoot?.querySelector('fieldset')?.getAttribute('class') ?? '';
+    const etudiant = carte();
+    expect(zoneTentative(hote).getAttribute('aria-label')).toBeTruthy();
+    expect(hote.shadowRoot?.querySelector('label.fp-challenge__invite')).not.toBeNull();
+
+    hote.setAttribute('data-cours-role', 'presentateur');
+
+    expect(carte()).toBe(etudiant);
+    expect(hote.shadowRoot?.querySelector('p.fp-challenge__invite')).not.toBeNull();
+    expect(hote.shadowRoot?.querySelector('textarea')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="envoyer"]')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')).toBeNull();
+  });
+
+  it('R4 · rappelle le dossier chiffré pour chaque rôle, sans en échapper le contenu', () => {
     hote.probleme = buildChallengeProbleme({
       id: 'D-DEFI-RAPPEL',
       rappel: [
@@ -97,8 +113,8 @@ describe('FpChallenge', () => {
       ],
     });
 
-    for (const rendu of RENDUS) {
-      hote.setAttribute('render', rendu);
+    for (const role of ROLES_DE_MONTAGE) {
+      hote.setAttribute('data-cours-role', role);
       const lignes = [
         ...(hote.shadowRoot?.querySelectorAll(
           '[data-testid="rappel"] dt, [data-testid="rappel"] dd',
@@ -106,9 +122,9 @@ describe('FpChallenge', () => {
       ].map((ligne) => ligne.textContent?.trim());
 
       expect(lignes)
-        .withContext(`rendu ${rendu}`)
+        .withContext(`role ${role}`)
         .toEqual(['Marge brute', '289 800 € → 291 000 €', CHARGE_XSS, '34 % → 45,5 %']);
-      expect(hote.shadowRoot?.querySelector('img')).withContext(`rendu ${rendu}`).toBeNull();
+      expect(hote.shadowRoot?.querySelector('img')).withContext(`role ${role}`).toBeNull();
     }
   });
 
@@ -117,7 +133,7 @@ describe('FpChallenge', () => {
     tenter(hote, '   \n  ');
     expect(emises).toEqual([]);
     expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')?.textContent?.trim()).toBe(
-      'Écrivez votre tentative, même imparfaite : c’est elle qui compte',
+      'Écrivez votre réponse avant de l’envoyer',
     );
   });
 
@@ -172,44 +188,60 @@ describe('FpChallenge', () => {
     expect(brouillons).toEqual([{ id: PROBLEME.id, valeur: { tentative: 'debut' } }]);
   });
 
-  it('ne projette les pistes, fausse comprise, qu une fois la revelation pilotee', () => {
+  for (const role of ROLES_DE_MONTAGE) {
+    it(`au role ${role}, ne montre les pistes de reference, fausse comprise, qu une fois la revelation pilotee`, () => {
+      hote.setAttribute('data-cours-role', role);
+      hote.corrige = CORRIGE_DU_DEFI;
+
+      expect(strategiesDe(hote).length).toBe(0);
+
+      hote.revele = true;
+
+      expect(marquesDe(hote)).toEqual(['diviser-cent']);
+      expect(
+        hote.shadowRoot?.querySelector('[data-testid="revelation"]')?.hasAttribute('open'),
+      ).toBeTrue();
+    });
+  }
+
+  it('SEC-4 · ferme la zone de tentative une fois le defi revele, meme sans envoi', () => {
+    hote.revele = true;
+
+    expect(zoneTentative(hote).disabled).toBeTrue();
+    expect(
+      hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="envoyer"]')?.disabled,
+    ).toBeTrue();
+  });
+
+  it('ne montre pas au presentateur les strategies servies avant la revelation', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
-    hote.setAttribute('render', 'stage');
-    hote.corrige = CORRIGE_DU_DEFI;
+    hote.strategies = buildStrategiesServies();
 
     expect(strategiesDe(hote).length).toBe(0);
 
     hote.revele = true;
 
-    expect(marquesDe(hote)).toEqual(['diviser-cent']);
+    expect(strategiesDe(hote).length).toBe(2);
   });
 
-  it('G2 · projette l énoncé, la consigne et la zone de réponse du poste étudiant, inertes', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.setAttribute('render', 'stage');
-    const racine = hote.shadowRoot;
-    const zone = racine?.querySelector<HTMLTextAreaElement>('textarea');
-
-    expect(racine?.querySelector('legend')?.textContent?.trim()).toBe(PROBLEME.enonce);
-    expect(racine?.querySelector('[data-testid="consigne"]')?.textContent?.trim()).toBe(
-      'Cherchez par vous-même : aucune méthode ne vous a encore été donnée',
-    );
-    expect(racine?.querySelector('label')?.textContent?.trim()).toBe(PROBLEME.invite);
-    expect(zone?.disabled).toBeTrue();
-    expect(racine?.querySelector('[data-testid="envoyer"]')).toBeNull();
-  });
-
-  it('montre au pupitre les strategies de reference et leur piste fausse', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.setAttribute('render', 'board');
+  it('a la revelation, prefere les strategies de reference aux strategies servies', () => {
+    tenter(hote, TENTATIVE);
+    hote.strategies = [{ id: 'x', libelle: 'piste servie' }];
     hote.corrige = CORRIGE_DU_DEFI;
 
-    expect(marquesDe(hote)).toEqual(['diviser-cent']);
+    expect(strategiesDe(hote).map((ligne) => ligne.getAttribute('data-strategie'))).toEqual(['x']);
+
+    hote.revele = true;
+
+    expect(strategiesDe(hote).map((ligne) => ligne.getAttribute('data-strategie'))).toEqual([
+      'diviser-cent',
+      'ajouter-sept',
+    ]);
   });
 
-  it('ne montre jamais les strategies de reference a un poste etudiant', () => {
-    hote.setAttribute('render', 'board');
-    hote.corrige = CORRIGE_DU_DEFI;
+  it('ignore un corrige qui n est pas celui d un defi', () => {
+    hote.corrige = { type: 'cible', cible: 'x' };
+    hote.revele = true;
     expect(strategiesDe(hote).length).toBe(0);
   });
 
@@ -228,21 +260,24 @@ describe('FpChallenge', () => {
     expect(strategiesDe(hote)[0].textContent?.trim()).toBe(CHARGE_XSS);
   });
 
-  it('rappelle les concepts et la modalite en mode tableau', () => {
-    hote.setAttribute('render', 'board');
-    expect(hote.shadowRoot?.querySelector('[data-testid="concepts"]')?.textContent?.trim()).toBe(
-      'capitalisation',
-    );
-    expect(hote.shadowRoot?.querySelector('[data-testid="modalite"]')?.textContent?.trim()).toBe(
-      'En binôme',
-    );
+  it('garde les metadonnees projetees sans les afficher en badge, pour aucun role', () => {
+    for (const role of ROLES_DE_MONTAGE) {
+      hote.setAttribute('data-cours-role', role);
+      expect(hote.probleme?.metadonnees.modalite).withContext(`role ${role}`).toBe('binome');
+      expect(hote.shadowRoot?.querySelector('[data-testid="modalite"]'))
+        .withContext(`role ${role}`)
+        .toBeNull();
+      expect(hote.shadowRoot?.querySelector('[data-testid="concepts"]'))
+        .withContext(`role ${role}`)
+        .toBeNull();
+    }
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.corrige = CORRIGE_DU_DEFI;
     tenter(hote, TENTATIVE);
     hote.strategies = buildStrategiesServies();
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.corrige = CORRIGE_DU_DEFI;
     hote.revele = true;
     expect(classesOrphelines(hote, 'challenge')).toEqual([]);
   });

@@ -1,4 +1,5 @@
-import type { EtatParticipant } from '../../../cours/content/types';
+import type { EtatParticipant, ResultatsSeance } from '../../../cours/content/types';
+import type { ReussiteDeLaClasse } from '../../shared/slides/layouts/slide-answer-review/slide-answer-review.component';
 import type { RetourBrique } from '../../shared/slides/session/contrat-hote';
 import type {
   MotifRefusReponse,
@@ -108,6 +109,43 @@ export function retirerLesRefus(existants: RetoursParEcran, screenId: string): R
     retours.filter((retour) => retour.kind !== 'refus'),
   );
   return suite;
+}
+
+function verdictsDuRetour(retour: RetourBrique): readonly (readonly [string, boolean])[] {
+  switch (retour.kind) {
+    case 'verdict-reponse':
+    case 'verdict-production':
+      return [[retour.questionId, retour.correcte]];
+    case 'tentative':
+      return [[retour.enigmeId, retour.correcte]];
+    case 'progression-enigmes': {
+      const resolues = new Set(retour.resolues.map(({ enigmeId }) => enigmeId));
+      const epuisees = Object.entries(retour.tentativesRestantes).flatMap(
+        ([enigmeId, restantes]) =>
+          restantes === 0 && !resolues.has(enigmeId) ? [[enigmeId, false] as const] : [],
+      );
+      return [...epuisees, ...[...resolues].map((enigmeId) => [enigmeId, true] as const)];
+    }
+    default:
+      return [];
+  }
+}
+
+export function verdictsDeLEcran(
+  retours: readonly RetourBrique[],
+): Readonly<Record<string, boolean>> {
+  return Object.fromEntries(retours.flatMap(verdictsDuRetour));
+}
+
+export function reussitesDeLEcran(
+  resultats: ResultatsSeance | null,
+  ecranId: string | null,
+): Readonly<Record<string, ReussiteDeLaClasse>> {
+  return Object.fromEntries(
+    (resultats?.questions ?? [])
+      .filter((question) => question.ecranId === ecranId && question.total > 0)
+      .map(({ questionId, correctes, total }) => [questionId, { justes: correctes, total }]),
+  );
 }
 
 export function retoursDeLEtat(

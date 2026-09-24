@@ -1,6 +1,6 @@
 import type { SeoMetadataFile } from '../app/core/seo/seo-metadata.model';
 import metadataDuSite from '../assets/seo/seo-metadata.json';
-import { buildVisualCourse } from '../testing/factories/formation-catalogue.factory';
+import { buildReponseDuCatalogue } from '../testing/factories/formation-catalogue.factory';
 import {
   buildRequeteExpress,
   createReponseExpressStub,
@@ -28,14 +28,6 @@ function lastmodDuCoursDansLeFichier(): string {
     throw new Error(`Aucun lastmod pour ${CHEMIN_DU_COURS_B2} dans seo-metadata.json`);
   }
   return page.lastmod;
-}
-
-function reponseDuCatalogue(publieLe?: string): Response {
-  const cours = { ...buildVisualCourse({ ecrans: [] }), version: 3, publieLe };
-  return new Response(JSON.stringify(cours), {
-    status: 200,
-    headers: { 'content-type': 'application/json' },
-  });
 }
 
 async function sitemap(appels: typeof fetch, journal: Pick<Console, 'warn'>): Promise<string> {
@@ -72,7 +64,7 @@ describe('sitemap du cours servi par l API (H1, intégration)', () => {
   it('date la page du cours par publieLe quand l API la publie après le dernier commit front', async () => {
     const appels = jasmine
       .createSpy<typeof fetch>('fetch')
-      .and.resolveTo(reponseDuCatalogue('2026-12-24T07:30:00.000Z'));
+      .and.resolveTo(buildReponseDuCatalogue('2026-12-24T07:30:00.000Z'));
 
     const xml = await sitemap(appels, journal);
 
@@ -87,13 +79,15 @@ describe('sitemap du cours servi par l API (H1, intégration)', () => {
   it('garde le lastmod du fichier SEO quand la publication lui est antérieure', async () => {
     const appels = jasmine
       .createSpy<typeof fetch>('fetch')
-      .and.resolveTo(reponseDuCatalogue('2020-01-01T00:00:00.000Z'));
+      .and.resolveTo(buildReponseDuCatalogue('2020-01-01T00:00:00.000Z'));
 
     expect(lastmodDuCours(await sitemap(appels, journal))).toBe(lastmodDuCoursDansLeFichier());
   });
 
   it('garde le lastmod du fichier SEO quand le back ne renvoie pas encore publieLe', async () => {
-    const appels = jasmine.createSpy<typeof fetch>('fetch').and.resolveTo(reponseDuCatalogue());
+    const appels = jasmine
+      .createSpy<typeof fetch>('fetch')
+      .and.resolveTo(buildReponseDuCatalogue());
 
     expect(lastmodDuCours(await sitemap(appels, journal))).toBe(lastmodDuCoursDansLeFichier());
     expect(journal.warn).toHaveBeenCalledOnceWith(jasmine.stringContaining('publieLe'));

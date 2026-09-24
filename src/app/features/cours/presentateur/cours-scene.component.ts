@@ -25,10 +25,12 @@ import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
 import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
-import { objet } from '../../../shared/slides/visual/presentation-v2';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
+import { directDeLEcran } from './direct-de-l-ecran';
 import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
 import { correctionsAffichees } from './corrections-affichees';
+import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
+import { sourceCorrigeePar } from './sources-de-correction';
 
 type Chargement = 'chargement' | 'succes' | 'echec';
 
@@ -42,13 +44,18 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
     duree: ecran.duree,
     interactif: ecran.interactif,
     donnees: ecran.donnees,
+    ...(ecran.cadrageDuRenvoi === undefined ? {} : { cadrageDuRenvoi: ecran.cadrageDuRenvoi }),
   };
 }
 
 @Component({
   selector: 'app-cours-scene',
   standalone: true,
-  imports: [CoursPresentationComponent, CoursBandeauCorrectionComponent],
+  imports: [
+    CoursPresentationComponent,
+    CoursBandeauCorrectionComponent,
+    CoursResultatsProjetesComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
@@ -281,6 +288,15 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
                 [corrections]="correctionsDeLEcran()"
                 [revele]="direct()?.pilotage?.revele === true"
               />
+              @if (ecranDuDeroule(); as ecranSource) {
+                <app-cours-resultats-projetes
+                  [ecran]="ecranSource"
+                  [resultats]="resultats()"
+                  [sessionId]="sessionId()"
+                  [actif]="direct()?.pilotage?.resultatsProjetes === true"
+                  [revele]="direct()?.pilotage?.revele === true"
+                />
+              }
             </ng-template>
           }
         </main>
@@ -336,17 +352,28 @@ export class CoursSceneComponent {
     return suivi?.etat === 'refuse' ? suivi.statut : null;
   });
 
+  readonly ecranDuDeroule = computed<EcranDeroule | null>(
+    () => this.deroule()?.ecrans[this.ecran()] ?? null,
+  );
+
   readonly ecranCourant = computed<EcranContent | null>(() => {
-    const ecran = this.deroule()?.ecrans[this.ecran()];
-    return ecran === undefined ? null : ecranProjete(ecran);
+    const ecran = this.ecranDuDeroule();
+    return ecran === null ? null : ecranProjete(ecran);
   });
 
   readonly ecranRenvoye = computed<EcranContent | null>(() => {
     const deroule = this.deroule();
     const renvoi = deroule?.ecrans[this.ecran()]?.renvoi;
     const cible = deroule?.ecrans.find(({ id }) => id === renvoi);
-    return cible === undefined ? null : ecranProjete(cible);
+    return cible === undefined || this.correctionEncoreVerrouillee(cible)
+      ? null
+      : ecranProjete(cible);
   });
+
+  private correctionEncoreVerrouillee(ecran: EcranDeroule): boolean {
+    const source = sourceCorrigeePar(ecran);
+    return source !== null && !this.termine() && this.pilotage()[source]?.revele !== true;
+  }
 
   readonly correctionsDeLEcran = computed(() =>
     correctionsAffichees(this.deroule()?.ecrans[this.ecran()]),
@@ -359,17 +386,14 @@ export class CoursSceneComponent {
 
   readonly direct = computed<DirectEcran | null>(() => {
     const ecran = this.ecranCourant();
-    if (ecran === null) {
-      return null;
-    }
-    const sondageId = objet(ecran.donnees?.['sondage'])?.['id'];
-    const comptes =
-      typeof sondageId === 'string' ? (this.resultats()?.jalons[sondageId] ?? null) : null;
-    return {
-      pilotage: this.pilotage()[ecran.id] ?? {},
-      resultats: this.resultats()?.questions ?? null,
-      comptesJalon: comptes !== null && comptes.total >= SEUIL_DE_PROJECTION ? comptes : null,
-    };
+    return ecran === null
+      ? null
+      : directDeLEcran(
+          ecran,
+          this.pilotage()[ecran.id] ?? {},
+          this.resultats(),
+          SEUIL_DE_PROJECTION,
+        );
   });
 
   private readonly port = inject(FORMATIONS_PORT);

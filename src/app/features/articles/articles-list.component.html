@@ -74,11 +74,4 @@
   }
 </main>
 
-<app-asili-cta-band [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead">
-  <ng-container cta>
-    <a class="btn btn-teal" routerLink="/contact"
-      ><ng-container i18n="@@articlesCtaStart">Démarrer la conversation</ng-container>
-      <span class="arrow" aria-hidden="true">→</span></a
-    >
-  </ng-container>
-</app-asili-cta-band>
+<app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />

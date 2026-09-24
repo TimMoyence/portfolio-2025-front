@@ -1,14 +1,4 @@
 @use '../../styles-shared/breakpoints' as bp;
-@use '../../styles-shared/hero-meta' as hero;
-
-/* `asili-hero.component.scss` stylise le slot [meta] pour des statistiques :
-   `.hero-meta ::ng-deep div` y pose un filet gauche et un padding, neutralisés
-   ici parce que ce panneau aligne des lignes clé/valeur. */
-/* Double classe : spécificité (0,2,0) > `.hero-meta div` (0,1,1) hérité du
-   slot, pour bien neutraliser le filet gauche sur le conteneur lui-même. */
-.offer-hero-meta.offer-hero-meta {
-  @include hero.key-value-rows;
-}
 
 .modes {
   display: grid;

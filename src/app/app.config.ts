@@ -14,12 +14,9 @@ import { AuditRequestHttpAdapter } from './core/adapters/audit-request-http.adap
 import { ContactHttpAdapter } from './core/adapters/contact-http.adapter';
 import { LeadMagnetHttpAdapter } from './core/adapters/lead-magnet-http.adapter';
 import { PresentationHttpAdapter } from './core/adapters/presentation-http.adapter';
-import { RadarHttpAdapter } from './core/adapters/radar-http.adapter';
 import { CookieConsentHttpAdapter } from './core/adapters/cookie-consent-http.adapter';
 import { FormationsHttpAdapter } from './core/adapters/formations-http.adapter';
 import { FormationCatalogueHttpAdapter } from './core/adapters/formation-catalogue-http.adapter';
-import { SebastianHttpAdapter } from './core/adapters/sebastian-http.adapter';
-import { WeatherHttpAdapter } from './core/adapters/weather-http.adapter';
 import { APP_CONFIG } from './core/config/app-config.token';
 import { authInterceptor } from './core/http/interceptors/auth.interceptor';
 import { requestIdInterceptor } from './core/http/interceptors/request-id.interceptor';
@@ -30,10 +27,7 @@ import { FORMATIONS_PORT } from './core/ports/formations.port';
 import { FORMATION_CATALOGUE_PORT } from './core/ports/formation-catalogue.port';
 import { LEAD_MAGNET_PORT } from './core/ports/lead-magnet.port';
 import { PRESENTATION_PORT } from './core/ports/presentation.port';
-import { RADAR_PORT } from './core/ports/radar.port';
 import { COOKIE_CONSENT_PORT } from './core/ports/cookie-consent.port';
-import { SEBASTIAN_PORT } from './core/ports/sebastian.port';
-import { WEATHER_PORT } from './core/ports/weather.port';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -76,24 +70,12 @@ export const appConfig: ApplicationConfig = {
       useClass: CookieConsentHttpAdapter,
     },
     {
-      provide: WEATHER_PORT,
-      useClass: WeatherHttpAdapter,
-    },
-    {
-      provide: SEBASTIAN_PORT,
-      useClass: SebastianHttpAdapter,
-    },
-    {
       provide: LEAD_MAGNET_PORT,
       useClass: LeadMagnetHttpAdapter,
     },
     {
       provide: PRESENTATION_PORT,
       useClass: PresentationHttpAdapter,
-    },
-    {
-      provide: RADAR_PORT,
-      useClass: RadarHttpAdapter,
     },
     {
       provide: FORMATIONS_PORT,

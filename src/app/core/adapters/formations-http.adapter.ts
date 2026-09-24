@@ -15,10 +15,8 @@ import type {
   CommandePilotage,
   AnnotationFormateur,
   FormationsPort,
-  GroupeFormation,
   IncidentEtudiant,
   InscriptionParticipant,
-  MotifRefusGroupe,
   MotifRefusRattachement,
   MotifRefusReponse,
   MotifRefusReponseLibre,
@@ -39,13 +37,13 @@ import type {
   VerdictTentative,
 } from '../ports/formations.port';
 import {
-  GroupeRefuse,
   RattachementRefuse,
   ReponseLibreRefusee,
   ReponseRefusee,
   SujetRefuse,
 } from '../ports/formations.port';
 import { getApiBaseUrl } from '../http/api-config';
+import { type DerouleDuFil, derouleDuFil, type SujetDuFil, sujetDuFil } from './formations-fil';
 import { ENTETE_JETON_PARTICIPANT } from '../http/jeton-participant';
 
 const MOTIFS_DE_REFUS_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusReponseLibre>> = {
@@ -54,14 +52,11 @@ const MOTIFS_DE_REFUS_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusRepons
   ECRAN_NON_SERVI: 'ecran-non-servi',
 };
 
-const MOTIFS_DE_REFUS_DE_GROUPE: Readonly<Record<number, MotifRefusGroupe>> = {
-  404: 'introuvable',
-  409: 'nom-deja-pris',
-};
-
 const MOTIFS_DE_RATTACHEMENT_PAR_CODE: Readonly<Record<string, MotifRefusRattachement>> = {
   SEANCE_COMPLETE: 'seance-complete',
   SEANCE_TERMINEE: 'seance-terminee',
+  PLACE_DEJA_PRISE: 'place-deja-prise',
+  PARTICIPANT_EVINCE: 'participant-evince',
 };
 
 const MOTIFS_D_ECRITURE_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = {
@@ -73,6 +68,7 @@ const MOTIFS_D_ECRITURE_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = 
   PHASE_FERMEE: 'phase-fermee',
   ENIGME_VERROUILLEE: 'enigme-verrouillee',
   TENTATIVES_EPUISEES: 'tentatives-epuisees',
+  REPRISES_EPUISEES: 'reprises-epuisees',
   PRODUCTION_VIDE: 'production-vide',
 };
 
@@ -176,17 +172,6 @@ function completerNotation(rapport: RapportSeance): RapportSeance {
     : { ...rapport, notation: { ...NOTATION_ABSENTE_D_UN_SERVEUR_V2, ...rapport.notation } };
 }
 
-function refuserCommandeDeGroupe(erreur: unknown): GroupeRefuse {
-  const statut = erreur instanceof HttpErrorResponse ? erreur.status : 0;
-  return new GroupeRefuse(MOTIFS_DE_REFUS_DE_GROUPE[statut] ?? 'echec', statut);
-}
-
-function commandeDeGroupe<T>(requete: Observable<T>): Observable<T> {
-  return requete.pipe(
-    catchError((erreur: unknown) => throwError(() => refuserCommandeDeGroupe(erreur))),
-  );
-}
-
 @Injectable()
 export class FormationsHttpAdapter implements FormationsPort {
   private readonly baseUrl = `${getApiBaseUrl()}/formations`;
@@ -198,13 +183,18 @@ export class FormationsHttpAdapter implements FormationsPort {
   }
 
   lireDeroule(sessionId: string): Observable<DerouleCours> {
-    return this.http.get<DerouleCours>(`${this.urlSeance(sessionId)}/deroule`);
+    return this.http
+      .get<DerouleDuFil>(`${this.urlSeance(sessionId)}/deroule`)
+      .pipe(map(derouleDuFil));
   }
 
   lireSujet(sessionId: string, jeton: string): Observable<CoursContent> {
     return this.http
-      .get<CoursContent>(`${this.urlSeance(sessionId)}/sujet`, { headers: entetes(jeton) })
-      .pipe(catchError((erreur: unknown) => throwError(() => refuserSujet(erreur))));
+      .get<SujetDuFil>(`${this.urlSeance(sessionId)}/sujet`, { headers: entetes(jeton) })
+      .pipe(
+        map(sujetDuFil),
+        catchError((erreur: unknown) => throwError(() => refuserSujet(erreur))),
+      );
   }
 
   demarrer(sessionId: string): Observable<void> {
@@ -237,7 +227,7 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   enregistrerAnnotation(
     sessionId: string,
-    annotation: Pick<AnnotationFormateur, 'screenId' | 'groupName' | 'note'>,
+    annotation: Pick<AnnotationFormateur, 'screenId' | 'note'>,
   ): Observable<AnnotationFormateur> {
     return this.http.post<AnnotationFormateur>(
       `${this.urlSeance(sessionId)}/annotations`,
@@ -253,39 +243,6 @@ export class FormationsHttpAdapter implements FormationsPort {
     );
   }
 
-  lireGroupes(sessionId: string): Observable<{ groups: readonly GroupeFormation[] }> {
-    return this.http.get<{ groups: readonly GroupeFormation[] }>(
-      `${this.urlSeance(sessionId)}/groups`,
-    );
-  }
-
-  creerGroupe(sessionId: string, name: string): Observable<GroupeFormation> {
-    return commandeDeGroupe(
-      this.http.post<GroupeFormation>(`${this.urlSeance(sessionId)}/groups`, { name }),
-    );
-  }
-
-  renommerGroupe(sessionId: string, groupId: string, name: string): Observable<GroupeFormation> {
-    return commandeDeGroupe(
-      this.http.patch<GroupeFormation>(
-        `${this.urlSeance(sessionId)}/groups/${encodeURIComponent(groupId)}`,
-        { name },
-      ),
-    );
-  }
-
-  affecterParticipant(sessionId: string, participantId: string, groupId: string): Observable<void> {
-    return commandeDeGroupe(
-      this.http.patch<void>(this.urlGroupeDuParticipant(sessionId, participantId), { groupId }),
-    );
-  }
-
-  retirerParticipantDuGroupe(sessionId: string, participantId: string): Observable<void> {
-    return commandeDeGroupe(
-      this.http.delete<void>(this.urlGroupeDuParticipant(sessionId, participantId)),
-    );
-  }
-
   lireParticipants(
     sessionId: string,
   ): Observable<{ participants: readonly ParticipantDeSeance[] }> {
@@ -297,12 +254,13 @@ export class FormationsHttpAdapter implements FormationsPort {
   rejoindre(code: string, inscription: InscriptionParticipant): Observable<Rattachement> {
     const url = `${this.baseUrl}/sessions/${encodeURIComponent(code)}/join`;
     return this.http.post<Rattachement>(url, inscription).pipe(
-      map(({ participantId, sessionId, ecranCourant, modeRythme, jeton }) => ({
+      map(({ participantId, sessionId, ecranCourant, modeRythme, jeton, secretDeReprise }) => ({
         participantId,
         sessionId,
         ecranCourant,
         modeRythme,
         jeton,
+        secretDeReprise,
       })),
       catchError((erreur: unknown) => throwError(() => refuserRattachement(erreur))),
     );
@@ -447,6 +405,13 @@ export class FormationsHttpAdapter implements FormationsPort {
     );
   }
 
+  libererPoste(sessionId: string, participantId: string): Observable<void> {
+    return this.http.post<void>(
+      `${this.urlDuParticipant(sessionId, participantId)}/liberation`,
+      {},
+    );
+  }
+
   private urlDuParticipant(sessionId: string, participantId: string): string {
     return `${this.urlSeance(sessionId)}/participants/${encodeURIComponent(participantId)}`;
   }
@@ -457,10 +422,6 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   private urlSeance(sessionId: string): string {
     return `${this.baseUrl}/sessions/${encodeURIComponent(sessionId)}`;
-  }
-
-  private urlGroupeDuParticipant(sessionId: string, participantId: string): string {
-    return `${this.urlSeance(sessionId)}/participants/${encodeURIComponent(participantId)}/group`;
   }
 }
 

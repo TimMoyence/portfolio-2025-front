@@ -1,18 +1,22 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { evaluerExpression, remplirGabarit } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { brancherCurseurs, curseur } from './curseurs';
-import { FpBlock } from './FpBlock';
+import { type Reglages, borner } from './animation';
+import { type ParametreReglable, curseur } from './curseurs';
+import {
+  FpReglable,
+  type Prereglage,
+  arrondi,
+  copierParametres,
+  copierPrereglages,
+  fini as nombre,
+  formater,
+  plafondDe as haut,
+  plancherDe as bas,
+} from './reglable';
 import { projeterMetadonnees } from './projection';
 
-export interface Concept4Parametre {
-  readonly cle: string;
-  readonly libelle: string;
-  readonly min: number;
-  readonly max: number;
-  readonly pas: number;
-  readonly defaut: number;
-}
+export type Concept4Parametre = ParametreReglable;
 
 export interface Concept4Definition {
   readonly id: string;
@@ -21,15 +25,19 @@ export interface Concept4Definition {
   readonly calcul: string;
   readonly phrase: string;
   readonly etapes?: readonly Concept4Etape[];
+  readonly prereglages?: readonly Concept4Prereglage[];
+  readonly animation?: readonly Reglages[];
   readonly metadonnees: MetadonneesBrique;
 }
+
+export type Concept4Prereglage = Prereglage;
 
 export interface Concept4Etape {
   readonly libelle: string;
   readonly calcul: string;
 }
 
-type Valeurs = Readonly<Record<string, number>>;
+type Valeurs = Reglages;
 
 interface LigneTableau {
   readonly valeur: number;
@@ -49,42 +57,6 @@ const LARGEUR = 320;
 const HAUTEUR = 180;
 const MARGE = 12;
 const SPECIAUX = /[.*+?^${}()|[\]\\]/g;
-function nombre(valeur: number, repli: number): number {
-  return Number.isFinite(valeur) ? valeur : repli;
-}
-
-function bas(parametre: Concept4Parametre): number {
-  return nombre(parametre.min, 0);
-}
-
-function haut(parametre: Concept4Parametre): number {
-  return Math.max(nombre(parametre.max, bas(parametre)), bas(parametre));
-}
-
-function borner(parametre: Concept4Parametre, valeur: number): number {
-  return Math.min(Math.max(nombre(valeur, bas(parametre)), bas(parametre)), haut(parametre));
-}
-
-function arrondi(valeur: number): number {
-  return Math.round(valeur * 100) / 100;
-}
-
-function formater(valeur: number): string {
-  return Number.isFinite(valeur) ? String(arrondi(valeur)).replace('.', ',') : '—';
-}
-
-function projeterParametres(source: readonly Concept4Parametre[]): Concept4Parametre[] {
-  return source
-    .filter((parametre) => parametre.cle.trim().length > 0)
-    .map((parametre) => ({
-      cle: parametre.cle,
-      libelle: parametre.libelle,
-      min: parametre.min,
-      max: parametre.max,
-      pas: parametre.pas,
-      defaut: parametre.defaut,
-    }));
-}
 
 function motifDesTermes(cles: readonly string[]): RegExp {
   const alternatives = [...cles]
@@ -94,133 +66,63 @@ function motifDesTermes(cles: readonly string[]): RegExp {
   return new RegExp(`(?<![A-Za-z0-9_])(?:${alternatives})(?![A-Za-z0-9_])`, 'g');
 }
 
-export class FpConcept4 extends FpBlock {
-  private interne: Concept4Definition | null = null;
-  private courantes: Record<string, number> = {};
+export class FpConcept4 extends FpReglable<Concept4Definition> {
+  protected readonly evenementDeReglage = 'fp-concept4-reglage';
   private actif: string | null = null;
-  private animation: ReturnType<typeof setInterval> | null = null;
 
-  set definition(valeur: Concept4Definition | null) {
-    this.arreterAnimation();
-    this.interne =
-      valeur === null
-        ? null
-        : {
-            id: valeur.id,
-            parametres: projeterParametres(valeur.parametres),
-            formuleLatexSimplifie: valeur.formuleLatexSimplifie,
-            calcul: valeur.calcul,
-            phrase: valeur.phrase,
-            etapes: (valeur.etapes ?? []).map(({ libelle, calcul }) => ({ libelle, calcul })),
-            metadonnees: projeterMetadonnees(valeur.metadonnees),
-          };
-    this.courantes = {};
+  protected copier(valeur: Concept4Definition): Concept4Definition {
+    return {
+      id: valeur.id,
+      parametres: copierParametres(valeur.parametres),
+      formuleLatexSimplifie: valeur.formuleLatexSimplifie,
+      calcul: valeur.calcul,
+      phrase: valeur.phrase,
+      etapes: (valeur.etapes ?? []).map(({ libelle, calcul }) => ({ libelle, calcul })),
+      prereglages: copierPrereglages(valeur.prereglages),
+      animation: valeur.animation?.map((etape) => ({ ...etape })),
+      metadonnees: projeterMetadonnees(valeur.metadonnees),
+    };
+  }
+
+  protected override apresDefinition(): void {
     this.actif = null;
-    for (const parametre of this.interne?.parametres ?? []) {
-      this.courantes[parametre.cle] = borner(parametre, parametre.defaut);
-    }
-    this.refreshSiConnecte();
   }
 
-  get definition(): Concept4Definition | null {
-    return this.interne;
+  protected override apresReglage(cle: string): void {
+    this.actif = cle;
   }
 
-  get valeurs(): Valeurs {
-    return { ...this.courantes };
+  protected override apresEtape(etape: Reglages): void {
+    const parametres = this.definition?.parametres ?? [];
+    this.actif = parametres.filter(({ cle }) => cle in etape).at(-1)?.cle ?? this.actif;
   }
 
-  set reglages(valeur: Valeurs | null) {
-    if (valeur === null) {
-      return;
-    }
-    this.arreterAnimation();
-    for (const parametre of this.interne?.parametres ?? []) {
-      const pilote = valeur[parametre.cle];
-      if (typeof pilote === 'number') {
-        this.courantes[parametre.cle] = borner(parametre, pilote);
-      }
-    }
-    this.refreshSiConnecte();
+  protected rafraichirLeRendu(): void {
+    this.rafraichirZone('faces', this.faces());
   }
 
-  disconnectedCallback(): void {
-    this.arreterAnimation();
-  }
-
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     if (this.definition === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
-    return safeHtml`<section class="fp-carte fp-concept4__atelier">${this.panneauDeReglages()}<div class="fp-concept4__zone" data-zone="faces">${this.faces('fp-prose')}</div></section>`;
+    return safeHtml`<section class="fp-carte fp-scene fp-concept4__atelier">${this.panneauDeReglages()}<div class="fp-concept4__zone" data-zone="faces">${this.faces()}</div></section>`;
   }
 
-  renderStage(): EscapedHtml {
-    if (this.definition === null) {
+  private prereglagesAffiches(): EscapedHtml {
+    if ((this.definition?.prereglages ?? []).length === 0) {
       return safeHtml``;
     }
-    return safeHtml`<section class="fp-scene fp-concept4__atelier">${this.panneauDeReglages()}<div class="fp-concept4__zone" data-zone="faces">${this.faces('fp-enonce')}</div></section>`;
+    return safeHtml`<div class="fp-concept4__prereglages" role="group" aria-label="${escapeHtml(this.texte('concept4-prereglages'))}">${this.boutonsDePrereglage('fp-concept4')}</div>`;
   }
 
-  renderBoard(): EscapedHtml {
-    const definition = this.definition;
-    if (definition === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    return safeHtml`
-      <section class="fp-carte fp-concept4__atelier">
-        ${this.faces('fp-prose')}
-        <div class="fp-concept4__reperes">${this.reperes(definition.metadonnees)}</div>
-      </section>
-    `;
-  }
-
-  bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.definition?.id ?? null);
-    if (this.mode() === 'board') {
-      return;
-    }
-    racine
-      .querySelector<HTMLButtonElement>('[data-testid="animer"]')
-      ?.addEventListener('click', () => {
-        this.animer();
-      });
-    brancherCurseurs(racine, (cle, valeur) => this.regler(cle, valeur));
-    if (this.roleActuel() !== 'presentateur' || this.enApercu()) {
-      return;
-    }
-    for (const curseur of racine.querySelectorAll('input[data-testid="curseur"]')) {
-      curseur.addEventListener('change', () => {
-        this.emit('fp-concept4-reglage', { reglages: this.valeurs });
-      });
-    }
-  }
-
-  private regler(cle: string, valeur: number): void {
-    const parametre = this.parametre(cle);
-    if (parametre === null) {
-      return;
-    }
-    this.arreterAnimation();
-    this.courantes = { ...this.courantes, [cle]: borner(parametre, valeur) };
-    this.actif = cle;
-    const sortie = this.racine.querySelector<HTMLOutputElement>(
-      `output[data-testid="valeur"][data-cle="${cle}"]`,
-    );
-    if (sortie !== null) {
-      sortie.textContent = formater(this.courantes[cle]);
-    }
-    this.rafraichirZone('faces', this.faces(this.mode() === 'stage' ? 'fp-enonce' : 'fp-prose'));
-  }
-
-  private faces(stylePhrase: string): EscapedHtml {
+  private faces(): EscapedHtml {
     const valeurs = this.valeurs;
     return safeHtml`
       <div class="fp-concept4__faces">
         ${this.formule(valeurs)}
         ${this.graphique(valeurs)}
         ${this.tableau(valeurs)}
-        ${this.enMots(valeurs, stylePhrase)}
+        ${this.enMots(valeurs)}
       </div>
     `;
   }
@@ -449,7 +351,7 @@ export class FpConcept4 extends FpBlock {
     return safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(ligne.courant))}"><td class="fp-montant">${escapeHtml(formater(ligne.valeur))}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(formater(ligne.resultat))}</td></tr>`;
   }
 
-  private enMots(valeurs: Valeurs, stylePhrase: string): EscapedHtml {
+  private enMots(valeurs: Valeurs): EscapedHtml {
     const definition = this.definition;
     if (definition === null) {
       return safeHtml``;
@@ -459,7 +361,7 @@ export class FpConcept4 extends FpBlock {
     return safeHtml`
       <div class="fp-concept4__face" data-testid="phrase" data-valeur="${escapeHtml(String(resultat))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-phrase'))}</h3>
-        <p class="${escapeHtml(stylePhrase)} fp-concept4__phrase" data-testid="phrase-texte">${escapeHtml(phrase)}</p>
+        <p class="fp-prose fp-concept4__phrase" data-testid="phrase-texte">${escapeHtml(phrase)}</p>
       </div>
     `;
   }
@@ -472,6 +374,7 @@ export class FpConcept4 extends FpBlock {
         <button class="fp-concept4__animation" data-testid="animer" type="button">
           ${escapeHtml(this.texte('concept4-animer'))}
         </button>
+        ${this.prereglagesAffiches()}
         <div class="fp-concept4__parametres" aria-live="polite">
           ${parametres.map((parametre) => this.parametreAffiche(parametre))}
         </div>
@@ -493,46 +396,5 @@ export class FpConcept4 extends FpBlock {
   private enonceValeur(parametre: Concept4Parametre, valeur: number): string {
     const plage = `${this.texte('concept4-plage')} ${formater(bas(parametre))} ${this.texte('concept4-plage-fin')} ${formater(haut(parametre))}`;
     return `${parametre.libelle} : ${formater(valeur)} (${plage})`;
-  }
-
-  private animer(): void {
-    const parametres = this.definition?.parametres ?? [];
-    if (parametres.length === 0) {
-      return;
-    }
-    this.arreterAnimation();
-    const depart = Object.fromEntries(
-      parametres.map((parametre) => [
-        parametre.cle,
-        this.valeurCourante(parametre, this.courantes),
-      ]),
-    );
-    let etape = 0;
-    const total = 6;
-    const avancer = (): void => {
-      etape += 1;
-      const progression = etape / total;
-      this.courantes = Object.fromEntries(
-        parametres.map((parametre) => {
-          const valeurDepart = depart[parametre.cle] ?? parametre.defaut;
-          const valeur = valeurDepart + (haut(parametre) - valeurDepart) * progression;
-          return [parametre.cle, borner(parametre, valeur)];
-        }),
-      );
-      this.actif = parametres[parametres.length - 1].cle;
-      this.refresh();
-      if (etape >= total) {
-        this.arreterAnimation();
-      }
-    };
-    this.animation = setInterval(avancer, 180);
-    avancer();
-  }
-
-  private arreterAnimation(): void {
-    if (this.animation !== null) {
-      clearInterval(this.animation);
-      this.animation = null;
-    }
   }
 }

@@ -3,10 +3,8 @@ import { NEVER, Observable, of, throwError } from 'rxjs';
 import {
   buildAnnotationFormateur,
   buildEcranDeroule,
-  buildGroupeFormation,
-  buildGuideFormateur,
-  buildParticipantDeSeance,
   buildRapportSeance,
+  buildReponseLibreFormateur,
   buildResultatQuestion,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
@@ -20,20 +18,13 @@ import {
 } from '../../../../testing/panneau-pedagogique';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { AnnotationFormateur, FormationsPort } from '../../../core/ports/formations.port';
-import { FORMATIONS_PORT, GroupeRefuse } from '../../../core/ports/formations.port';
+import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
 
 const SESSION = SEANCE_DU_PANNEAU;
 
 describe('CoursPanneauPedagogiqueComponent', () => {
   let port: jasmine.SpyObj<FormationsPort>;
-
-  function changer(fixture: FixtureDuPanneau, champ: HTMLSelectElement, valeur: string): void {
-    champ.value = valeur;
-    champ.dispatchEvent(new Event('change'));
-    tick();
-    fixture.detectChanges();
-  }
 
   function etatDeLaNote(fixture: FixtureDuPanneau): string | null {
     return repereDuPanneau(fixture, 'annotation-etat').getAttribute('data-etat');
@@ -47,15 +38,10 @@ describe('CoursPanneauPedagogiqueComponent', () => {
     });
   });
 
-  it('lit annotations, groupes, participants et reponses libres de la seance', fakeAsync(() => {
+  it('lit annotations et reponses libres de la seance', fakeAsync(() => {
     monterLePanneau();
 
-    for (const lecture of [
-      port.lireAnnotations,
-      port.lireGroupes,
-      port.lireParticipants,
-      port.lireReponsesLibres,
-    ]) {
+    for (const lecture of [port.lireAnnotations, port.lireReponsesLibres]) {
       expect(lecture).toHaveBeenCalledOnceWith(SESSION);
     }
   }));
@@ -68,7 +54,7 @@ describe('CoursPanneauPedagogiqueComponent', () => {
     tick();
 
     expect(port.lireAnnotations).toHaveBeenCalledTimes(2);
-    expect(port.lireParticipants).toHaveBeenCalledTimes(2);
+    expect(port.lireReponsesLibres).toHaveBeenCalledTimes(2);
     tick(60_000);
     expect(port.lireAnnotations).toHaveBeenCalledTimes(2);
   }));
@@ -79,17 +65,6 @@ describe('CoursPanneauPedagogiqueComponent', () => {
     const fixture = monterLePanneau();
 
     expect(repereDuPanneau(fixture, 'panneau-lecture-echec').getAttribute('role')).toBe('alert');
-  }));
-
-  it('montre le guide de l ecran sans reveler la reponse attendue', fakeAsync(() => {
-    const fixture = monterLePanneau();
-
-    expect(repereDuPanneau(fixture, 'presentateur-guide').textContent).toContain(
-      'Question à poser',
-    );
-    expect(repereDuPanneau(fixture, 'presentateur-guide').textContent).not.toContain(
-      buildGuideFormateur().reponse ?? '',
-    );
   }));
 
   describe('enregistrement de la note', () => {
@@ -109,7 +84,6 @@ describe('CoursPanneauPedagogiqueComponent', () => {
 
       expect(port.enregistrerAnnotation).toHaveBeenCalledOnceWith(SESSION, {
         screenId: 'ecran-1',
-        groupName: 'Classe entière',
         note: 'Relancer',
       });
       expect(etatDeLaNote(fixture)).toBe('enregistre');
@@ -191,80 +165,46 @@ describe('CoursPanneauPedagogiqueComponent', () => {
 
       expect(noteAffichee(fixture)).toBe('');
       expect(port.enregistrerAnnotation.calls.allArgs()).toEqual([
-        [SESSION, { screenId: 'ecran-1', groupName: 'Classe entière', note: 'Note de l ecran 1' }],
+        [SESSION, { screenId: 'ecran-1', note: 'Note de l ecran 1' }],
       ]);
     }));
   });
 
-  describe('groupes', () => {
-    it('cree un groupe et le propose au suivi de l annotation', fakeAsync(() => {
-      const fixture = monterLePanneau();
-      const champ = repereDuPanneau<HTMLInputElement>(fixture, 'groupe-nouveau');
+  it('ne propose plus aucun suivi par groupe', fakeAsync(() => {
+    const fixture = monterLePanneau();
+    const hote = fixture.nativeElement as HTMLElement;
 
-      champ.value = 'Groupe du fond';
-      champ.dispatchEvent(new Event('input'));
-      repereDuPanneau<HTMLButtonElement>(fixture, 'groupe-creer').click();
-      tick();
-      fixture.detectChanges();
+    expect(hote.querySelector('[data-testid="groupe-nouveau"]')).toBeNull();
+    expect(hote.querySelector('select')).toBeNull();
+  }));
 
-      expect(port.creerGroupe).toHaveBeenCalledOnceWith(SESSION, 'Groupe du fond');
-      expect(
-        [...repereDuPanneau<HTMLSelectElement>(fixture, 'annotation-groupe').options].map(
-          (option) => option.value,
-        ),
-      ).toEqual(['Classe entière', 'Groupe du fond']);
-    }));
+  it('groupe les reponses libres sous la question de l ecran', fakeAsync(() => {
+    port.lireReponsesLibres.and.returnValue(
+      of({
+        responses: [
+          buildReponseLibreFormateur({ activityId: 'mission:mesure', response: 'Un montant.' }),
+        ],
+      }),
+    );
+    const fixture = monterLePanneau();
+    fixture.componentRef.setInput(
+      'ecran',
+      buildEcranDeroule({
+        type: 'fp-pro',
+        donnees: {
+          cas: { questionsLibres: [{ id: 'mission:mesure', question: 'Que mesure-t-il ?' }] },
+        },
+      }),
+    );
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
 
-    it('explique le refus d un nom deja pris', fakeAsync(() => {
-      port.creerGroupe.and.returnValue(throwError(() => new GroupeRefuse('nom-deja-pris', 409)));
-      const fixture = monterLePanneau();
-      const champ = repereDuPanneau<HTMLInputElement>(fixture, 'groupe-nouveau');
-
-      champ.value = 'Groupe A';
-      champ.dispatchEvent(new Event('input'));
-      repereDuPanneau<HTMLButtonElement>(fixture, 'groupe-creer').click();
-      tick();
-      fixture.detectChanges();
-
-      expect(repereDuPanneau(fixture, 'groupes-refus').textContent).toContain('déjà pris');
-    }));
-
-    it('affecte un participant a un groupe puis l en retire', fakeAsync(() => {
-      port.lireGroupes.and.returnValue(of({ groups: [buildGroupeFormation()] }));
-      port.lireParticipants.and.returnValue(of({ participants: [buildParticipantDeSeance()] }));
-      const fixture = monterLePanneau();
-      const choix = repereDuPanneau<HTMLSelectElement>(fixture, 'participant-groupe');
-
-      changer(fixture, choix, 'groupe-1');
-      changer(fixture, choix, '');
-
-      expect(port.affecterParticipant).toHaveBeenCalledOnceWith(
-        SESSION,
-        'participant-1',
-        'groupe-1',
-      );
-      expect(port.retirerParticipantDuGroupe).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
-    }));
-
-    it('n offre pas d affectation de groupe a un participant evince', fakeAsync(() => {
-      port.lireGroupes.and.returnValue(of({ groups: [buildGroupeFormation()] }));
-      port.lireParticipants.and.returnValue(
-        of({
-          participants: [
-            buildParticipantDeSeance(),
-            buildParticipantDeSeance({ id: 'participant-2', prenom: 'Sami', evince: true }),
-          ],
-        }),
-      );
-      const fixture = monterLePanneau();
-
-      expect(
-        (fixture.nativeElement as HTMLElement).querySelectorAll(
-          '[data-testid="participant-groupe"]',
-        ).length,
-      ).toBe(1);
-    }));
-  });
+    expect(repereDuPanneau(fixture, 'reponses-libres-question').textContent?.trim()).toBe(
+      'Que mesure-t-il ?',
+    );
+    expect(repereDuPanneau(fixture, 'reponse-libre').textContent?.trim()).toBe('Un montant.');
+  }));
 
   it('exporte le bilan de la seance en JSON', fakeAsync(() => {
     const creation = spyOn(URL, 'createObjectURL').and.returnValue('blob:bilan');

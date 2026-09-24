@@ -3,7 +3,7 @@
   "minTokens": 50,
   "mode": "weak",
   "format": ["typescript", "markup", "scss", "css", "javascript"],
-  "threshold": 1,
+  "threshold": 0,
   "reporters": ["console", "threshold"],
   "gitignore": true,
   "absolute": false,

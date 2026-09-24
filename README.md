@@ -35,7 +35,7 @@ Source de verite : [`src/app/app.routes.ts`](./src/app/app.routes.ts) (et [`src/
 - `/offer` — Page des offres
 - `/contact` — Formulaire de contact
 - `/growth-audit` — Audit SEO automatise
-- `/atelier`, `/atelier/meteo`, `/atelier/sebastian`, `/client-project` — Redirections permanentes vers `/projets`
+- `/atelier` et toutes ses sous-routes, `/client-project` — Redirections vers `/projets` (les apps de l'atelier sont retirees)
 
 ### Auth
 
@@ -45,13 +45,6 @@ Source de verite : [`src/app/app.routes.ts`](./src/app/app.routes.ts) (et [`src/
 - `/reset-password` — Reinitialisation
 - `/verify-email` — Verification d'email (lien magique)
 - `/profil` — Profil utilisateur (`authGuard`, rendu client)
-
-### Ateliers — apps (protegees auth + role)
-
-Apps reelles non indexables, en rendu client (`RenderMode.Client`).
-
-- `/atelier/meteo/app` — App meteo (`authGuard` + `roleGuard("weather")`)
-- `/atelier/sebastian/app` — App Sebastian (`authGuard` + `roleGuard("sebastian")`) avec sous-routes : `dashboard`, `rapports`, `badges`, `historique`, `objectifs`
 
 Le sitemap ajoute les slugs d'articles publies quand `PORTFOLIO_ARTICLE_API_URL` pointe vers le backend (`.../api/v1/portfolio25`). L'image Docker la fixe par défaut à `http://api:3000/api/v1/portfolio25` (réseau compose). Le lecteur pagine par 24, la limite de l'API, en suivant `next_cursor` (50 pages au plus par langue), et garde en cache 5 minutes. Sans cette variable, il reste statique et ne publie aucune URL inventee.
 

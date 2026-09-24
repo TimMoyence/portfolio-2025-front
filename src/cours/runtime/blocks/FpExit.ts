@@ -1,8 +1,8 @@
 import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
+import { FpReponse } from './reponse';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import { estObjet, estVerdictDeReponse, type VerdictDeReponse } from './retours';
+import { estObjet } from './retours';
 
 export interface ExitBilletPublic {
   readonly id: string;
@@ -14,49 +14,30 @@ export interface ExitBilletPublic {
 
 const LIMITE_TEXTE_LIBRE = 500;
 const ID_TEXTE_LIBRE = 'fp-exit-texte-libre';
+const VIDE = escapeHtml('');
+const DESACTIVE = safeHtml`disabled`;
 
-export class FpExit extends FpBlock {
-  private interne: ExitBilletPublic | null = null;
-  private interneVerdict: VerdictDeReponse | null = null;
+function projeterBillet(source: ExitBilletPublic): ExitBilletPublic {
+  return {
+    id: source.id,
+    question: source.question,
+    invite: source.invite,
+    options: projeterOptions(source.options),
+    metadonnees: projeterMetadonnees(source.metadonnees),
+  };
+}
+
+export class FpExit extends FpReponse<ExitBilletPublic> {
   private texteLibre = '';
   private choix: string | null = null;
-  private message = '';
-  private envoye = false;
 
   set billet(valeur: ExitBilletPublic | null) {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne =
-      valeur === null
-        ? null
-        : {
-            id: valeur.id,
-            question: valeur.question,
-            invite: valeur.invite,
-            options: projeterOptions(valeur.options),
-            metadonnees: projeterMetadonnees(valeur.metadonnees),
-          };
-    if (change) {
-      this.texteLibre = '';
-      this.choix = null;
-      this.message = '';
-      this.envoye = false;
-      this.interneVerdict = null;
-    }
+    this.poserLaQuestion(valeur, projeterBillet);
     this.refreshSiConnecte();
   }
 
   get billet(): ExitBilletPublic | null {
     return this.interne;
-  }
-
-  set verdict(valeur: VerdictDeReponse | null) {
-    this.interneVerdict =
-      estVerdictDeReponse(valeur) && valeur.questionId === this.interne?.id ? valeur : null;
-    this.refreshSiConnecte();
-  }
-
-  get verdict(): VerdictDeReponse | null {
-    return this.interneVerdict;
   }
 
   set brouillon(valeur: unknown) {
@@ -71,52 +52,33 @@ export class FpExit extends FpBlock {
     this.refreshSiConnecte();
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     const billet = this.billet;
     if (!billet) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
-    return safeHtml`
-      <fieldset class="fp-carte fp-exit__billet">
-        <legend>${escapeHtml(billet.question)}</legend>
-        <div class="fp-exit__choix">${this.boutonsOption(billet.options)}</div>
-        <label class="fp-exit__invite" for="${escapeHtml(ID_TEXTE_LIBRE)}">${escapeHtml(billet.invite)}</label>
-        <textarea class="fp-exit__champ" id="${escapeHtml(ID_TEXTE_LIBRE)}" data-testid="texte-libre" rows="4">${escapeHtml(this.texteLibre)}</textarea>
+    const redaction = this.presentateur()
+      ? safeHtml`<p class="fp-exit__invite" data-testid="invite">${escapeHtml(billet.invite)}</p>`
+      : safeHtml`<label class="fp-exit__invite" for="${escapeHtml(ID_TEXTE_LIBRE)}">${escapeHtml(billet.invite)}</label>
+        <textarea class="fp-exit__champ" id="${escapeHtml(ID_TEXTE_LIBRE)}" data-testid="texte-libre" rows="3">${escapeHtml(this.texteLibre)}</textarea>
         <p class="fp-exit__jauge" data-testid="jauge">${this.texteLibre.length} / ${LIMITE_TEXTE_LIBRE}</p>
         <button type="button" class="fp-exit__envoyer" data-testid="envoyer">${escapeHtml(this.texte('envoyer'))}</button>
         <p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
         ${this.recapitulatif()}
         ${this.verdictDeReponse(this.interneVerdict)}
-        ${this.annonces()}
-      </fieldset>
-    `;
-  }
-
-  renderStage(): EscapedHtml {
-    const billet = this.billet;
-    if (!billet) {
-      return safeHtml``;
-    }
-    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(billet.question)}</p><p class="fp-exit__invite" data-testid="invite">${escapeHtml(billet.invite)}</p></div>`;
-  }
-
-  renderBoard(): EscapedHtml {
-    const billet = this.billet;
-    if (!billet) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    const metadonnees = billet.metadonnees;
+        ${this.annonces()}`;
     return safeHtml`
-      <div class="fp-carte fp-exit__billet">
-        <p class="fp-enonce">${escapeHtml(billet.question)}</p>
-        <p class="fp-reperes"><span class="fp-badge" data-testid="regime">${escapeHtml(this.texte(`regime-${metadonnees.regime}`))}</span>${this.reperes(metadonnees)}</p>
-      </div>
+      <fieldset class="fp-carte fp-scene fp-exit__billet">
+        <legend class="fp-enonce">${escapeHtml(billet.question)}</legend>
+        <div class="fp-exit__choix">${this.boutonsOption(billet.options)}</div>
+        ${redaction}
+      </fieldset>
     `;
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.billet?.id ?? null);
-    if (this.mode() !== 'hand') {
+    if (this.presentateur()) {
       return;
     }
     const champ = racine.querySelector<HTMLTextAreaElement>('[data-testid="texte-libre"]');
@@ -138,8 +100,9 @@ export class FpExit extends FpBlock {
     }
   }
 
-  private verrouille(): boolean {
-    return this.verrouilleApresEnvoi(this.envoye, this.interneVerdict !== null);
+  protected effacerLaReponse(): void {
+    this.texteLibre = '';
+    this.choix = null;
   }
 
   private memoriser(): void {
@@ -152,7 +115,7 @@ export class FpExit extends FpBlock {
   private boutonsOption(options: readonly OptionPublique[]): readonly EscapedHtml[] {
     return options.map(
       (option) =>
-        safeHtml`<button type="button" class="fp-exit__option" data-testid="option" data-option="${escapeHtml(option.id)}" aria-pressed="${escapeHtml(String(option.id === this.choix))}">${escapeHtml(option.libelle)}</button>`,
+        safeHtml`<button type="button" class="fp-exit__option" data-testid="option" data-option="${escapeHtml(option.id)}" aria-pressed="${escapeHtml(String(option.id === this.choix))}" ${this.presentateur() ? DESACTIVE : VIDE}>${escapeHtml(option.libelle)}</button>`,
     );
   }
 

@@ -72,12 +72,7 @@ describe('ReponsesLibresService', () => {
     ).toEqual(['B-SORTIE-09']);
 
     port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
-    const reprise = await service.reprendre(seance, JETON);
-
-    expect(reprise.get(cleDeReponseLibre(seance, 'b2-01-sortie', 'B-SORTIE-09'))).toBe(
-      'enregistre',
-    );
-    expect(await pendingFreeResponses(seance, cleCourante())).toEqual([]);
+    await attendreLaRepriseEnregistree(seance);
   });
 
   it('garde en file un texte bloque par le reseau et le renvoie a la reprise', async () => {
@@ -87,13 +82,17 @@ describe('ReponsesLibresService', () => {
     );
 
     expect(await service.envoyer(SESSION, JETON, REPONSE)).toBe('attente_reseau');
-    const reprise = await service.reprendre(SESSION, JETON);
+    await attendreLaRepriseEnregistree(SESSION);
+  });
 
-    expect(reprise.get(cleDeReponseLibre(SESSION, 'b2-01-sortie', 'B-SORTIE-09'))).toBe(
+  async function attendreLaRepriseEnregistree(seance: string): Promise<void> {
+    const reprise = await service.reprendre(seance, JETON);
+
+    expect(reprise.get(cleDeReponseLibre(seance, 'b2-01-sortie', 'B-SORTIE-09'))).toBe(
       'enregistre',
     );
-    expect(await pendingFreeResponses(SESSION, cleCourante())).toEqual([]);
-  });
+    expect(await pendingFreeResponses(seance, cleCourante())).toEqual([]);
+  }
 
   describe('poste partage entre deux etudiants', () => {
     const ECRAN_COMMUN = { ...REPONSE, response: 'texte de A' };

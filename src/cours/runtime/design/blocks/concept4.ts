@@ -31,7 +31,7 @@ export const concept4 = `
 
 :where(.fp-root) .fp-concept4__animation:focus-visible {
   outline: 2px solid var(--fp-teal);
-  outline-offset: 4px;
+  outline-offset: 0.25rem;
 }
 
 :where(.fp-root) .fp-concept4__animation {
@@ -50,9 +50,38 @@ export const concept4 = `
   background: var(--fp-teal-ink);
 }
 
+:where(.fp-root) .fp-concept4__prereglages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fp-s-2);
+}
+
+:where(.fp-root) .fp-concept4__prereglage {
+  min-height: 2.75rem;
+  padding: var(--fp-s-2) var(--fp-s-3);
+  border: 1px solid var(--fp-teal-deep);
+  border-radius: var(--fp-r-sm);
+  background: var(--fp-surface);
+  color: var(--fp-teal-ink);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+:where(.fp-root) .fp-concept4__prereglage:hover,
+:where(.fp-root) .fp-concept4__prereglage[aria-pressed='true'] {
+  background: var(--fp-teal-deep);
+  color: var(--fp-cream);
+}
+
+:where(.fp-root) .fp-concept4__prereglage:focus-visible {
+  outline: 2px solid var(--fp-teal);
+  outline-offset: 0.25rem;
+}
+
 :where(.fp-root) .fp-concept4__parametres {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.75rem), 1fr));
   gap: var(--fp-s-2) var(--fp-s-3);
 }
 
@@ -64,13 +93,13 @@ export const concept4 = `
 
 :where(.fp-root) .fp-concept4__curseur {
   width: 100%;
-  min-height: 44px;
+  min-height: 2.75rem;
   accent-color: var(--fp-teal-deep);
 }
 
 :where(.fp-root) .fp-concept4__faces {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16.25rem), 1fr));
   gap: var(--fp-s-3);
   width: 100%;
 }

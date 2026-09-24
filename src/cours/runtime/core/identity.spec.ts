@@ -1,5 +1,11 @@
 import { sansStockageLocal, saturationDuStockage } from '../../../testing/sans-stockage';
-import { clearIdentity, readIdentity, saveIdentity } from './identity';
+import {
+  clearIdentity,
+  lireSecretDeReprise,
+  memoriserSecretDeReprise,
+  readIdentity,
+  saveIdentity,
+} from './identity';
 
 const THEO = { prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' };
 
@@ -60,6 +66,48 @@ describe('identity', () => {
     saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' });
     clearIdentity();
     expect(readIdentity()).toBeNull();
+  });
+
+  it('memorise le secret de reprise de chaque seance rejointe par le poste', () => {
+    saveIdentity(THEO);
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    memoriserSecretDeReprise('XYZ789', 'secret-b');
+    expect(lireSecretDeReprise('ABC123')).toBe('secret-a');
+    expect(lireSecretDeReprise('XYZ789')).toBe('secret-b');
+    expect(lireSecretDeReprise('INCONNU')).toBeUndefined();
+  });
+
+  it('remplace le secret d une seance a chaque rotation servie par le serveur', () => {
+    saveIdentity(THEO);
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    memoriserSecretDeReprise('ABC123', 'secret-a-tourne');
+    expect(lireSecretDeReprise('ABC123')).toBe('secret-a-tourne');
+  });
+
+  it('garde les secrets quand le meme etudiant ressaisit son identite', () => {
+    saveIdentity(THEO);
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    saveIdentity(THEO);
+    expect(lireSecretDeReprise('ABC123')).toBe('secret-a');
+  });
+
+  it('ne transmet pas les secrets d un etudiant a l identite suivante du poste', () => {
+    saveIdentity(THEO);
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    saveIdentity({ prenom: 'Lea', nom: 'Dubois', email: 'lea@example.com' });
+    expect(lireSecretDeReprise('ABC123')).toBeUndefined();
+  });
+
+  it('ignore un secret sans identite enregistree', () => {
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    expect(lireSecretDeReprise('ABC123')).toBeUndefined();
+  });
+
+  it('efface les secrets avec l identite', () => {
+    saveIdentity(THEO);
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    clearIdentity();
+    expect(lireSecretDeReprise('ABC123')).toBeUndefined();
   });
 
   it('refuse une adresse invalide', () => {

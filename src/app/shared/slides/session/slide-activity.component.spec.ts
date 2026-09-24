@@ -1,11 +1,12 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { attendreQue, briqueMontee } from '../../../../testing/briques-montees';
+import { attendreQue, briqueMontee, ROLES_DE_MONTAGE } from '../../../../testing/briques-montees';
 import {
   buildCardsortPlan,
   buildEcran,
   buildEcranQuestionnaire,
   buildExitBillet,
   buildNumericQuestion,
+  buildRevelationServie,
   buildSheetPlan,
   createBrouillonsStub,
 } from '../../../../testing/factories/cours.factory';
@@ -21,6 +22,10 @@ import {
   buildVisualSlide,
   buildVisualSortCorrectionSlide,
 } from '../../../../testing/factories/visual-slide.factory';
+import {
+  ecransDuPupitreB2_01,
+  ecransPublicsB2_01,
+} from '../../../../testing/fixtures/instantane-b2-01';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { EvenementBrique, RetourBrique } from './contrat-hote';
 import { EVENEMENTS_DES_BRIQUES } from './evenements-brique';
@@ -91,7 +96,6 @@ describe('SlideActivityComponent : deck visuel B2', () => {
   it('projette le quiz v2 sans interaction pour le formateur et compte les reponses recues', () => {
     const fixture = monter({
       slide: buildVisualQuizSlide(),
-      render: 'stage',
       role: 'presentateur',
       resultats: buildResultatsSeance({
         participants: 12,
@@ -132,6 +136,64 @@ describe('SlideActivityComponent : deck visuel B2', () => {
     expect(element.querySelector('fp-story')).toBeNull();
   });
 
+  describe('T9 · raisonnement attendu d une réflexion révélée (écrans 9 et 40)', () => {
+    const REFLEXIONS = ['B2-01-A1-08-QUESTION-DE-GESTION', 'B2-01-A3-09-NOTE-CONJONCTURE'];
+
+    function debrief(fixture: Fixture): HTMLDetailsElement | null {
+      return (fixture.nativeElement as HTMLElement).querySelector(
+        '[data-testid="slide-reflection-debrief"]',
+      );
+    }
+
+    for (const id of REFLEXIONS) {
+      it(`${id} : l étudiant lit l attendu servi à la révélation, et rien avant`, () => {
+        const pupitre = ecransDuPupitreB2_01().find((ecran) => ecran.id === id);
+        const publie = ecransPublicsB2_01().find((ecran) => ecran.id === id);
+        const corrige = pupitre?.corrigeEcran;
+        if (publie === undefined || corrige?.type !== 'reflexion') {
+          throw new Error(`réflexion sans corrigé : ${id}`);
+        }
+        const avant = monter({ slide: publie, role: 'etudiant', sessionId: 'seance-1' });
+        expect(debrief(avant)).toBeNull();
+
+        const apres = monter({
+          slide: {
+            ...publie,
+            revelation: buildRevelationServie({
+              ecranId: id,
+              questions: [],
+              annexe: corrige,
+              reflexion: { attendu: corrige.attendu, suite: corrige.suite },
+            }),
+          },
+          role: 'etudiant',
+          sessionId: 'seance-1',
+        });
+
+        expect(debrief(apres)?.open).toBeTrue();
+        expect(debrief(apres)?.textContent).toContain(corrige.attendu);
+      });
+
+      it(`${id} : le formateur projette l attendu une fois l écran révélé`, () => {
+        const pupitre = ecransDuPupitreB2_01().find((ecran) => ecran.id === id);
+        if (pupitre?.corrigeEcran?.type !== 'reflexion') {
+          throw new Error(`réflexion sans corrigé : ${id}`);
+        }
+        const entrees = {
+          slide: pupitre,
+          role: 'presentateur',
+          sessionId: 'seance-1',
+          donneesFormateur: pupitre.corrigeEcran,
+        };
+
+        expect(debrief(monter({ ...entrees, direct: directRevele(false) }))).toBeNull();
+        const revele = monter({ ...entrees, direct: directRevele(true) });
+        expect(debrief(revele)?.open).toBeTrue();
+        expect(debrief(revele)?.textContent).toContain(pupitre.corrigeEcran.attendu);
+      });
+    }
+  });
+
   it('transmet le choix QCM à la séance comme événement de brique, sans bonne réponse côté client', () => {
     const fixture = monter({
       slide: buildVisualQuizSlide(),
@@ -162,14 +224,17 @@ describe('SlideActivityComponent : deck visuel B2', () => {
 describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
   beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
-  it('monte la brique de l ecran avec son rendu et le role du poste (F3)', async () => {
-    const fixture = monter({ slide: ECRAN_NUMERIQUE, render: 'board', role: 'presentateur' });
-    const numerique = await brique(fixture, 'fp-numeric');
+  for (const role of ROLES_DE_MONTAGE) {
+    it(`monte la brique de l ecran avec le seul role du poste ${role}, sans mode de rendu (F3)`, async () => {
+      const fixture = monter({ slide: ECRAN_NUMERIQUE, role });
+      const numerique = await brique(fixture, 'fp-numeric');
 
-    expect(numerique.getAttribute('render')).toBe('board');
-    expect(numerique.getAttribute('data-cours-role')).toBe('presentateur');
-    expect(numerique.hasAttribute('data-apercu')).toBeFalse();
-  });
+      expect(numerique.getAttribute('data-cours-role')).toBe(role);
+      expect(numerique.hasAttribute('render')).toBeFalse();
+      expect(numerique.hasAttribute('data-apercu')).toBeFalse();
+      expect(numerique.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(role);
+    });
+  }
 
   it('pose l entete d un questionnaire et monte une brique par question', async () => {
     const fixture = monter({ slide: buildEcranQuestionnaire() });
@@ -193,7 +258,6 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     });
     const fixture = monter({
       slide: buildEcranQuestionnaire(),
-      render: 'stage',
       role: 'presentateur',
       direct: direct(false),
     });
@@ -210,12 +274,14 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
   it('RET-32 · projette la bonne reponse de chaque question du questionnaire une fois revelee', async () => {
     const reponses = {
       type: 'reponses',
-      reponses: { 'Q-VA-07': '1 480,24', 'Q-CAP-03': '1 480,24 €' },
+      reponses: {
+        'Q-VA-07': { cible: '1 480,24', optionId: null },
+        'Q-CAP-03': { cible: '1 480,24 €', optionId: 'b' },
+      },
     };
     const direct = directRevele;
     const fixture = monter({
       slide: buildEcranQuestionnaire(),
-      render: 'stage',
       role: 'presentateur',
       direct: direct(false),
       donneesFormateur: reponses,
@@ -227,8 +293,55 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     expect(dans(numerique, 'bonne-reponse')).toBeNull();
     fixture.componentRef.setInput('direct', direct(true));
     fixture.detectChanges();
+    attendreLeCorrigeDuQuestionnaire(vote, numerique);
+  });
+
+  it('RET-32 · montre a l etudiant la bonne reponse servie avec l ecran, comme au presentateur', async () => {
+    const ecran = buildEcranQuestionnaire();
+    const fixture = monter({ slide: ecran, role: 'etudiant', sessionId: 'seance-1' });
+    const vote = await brique(fixture, 'fp-vote');
+    const numerique = await brique(fixture, 'fp-numeric');
+
+    expect(dans(vote, 'bonne-reponse')).toBeNull();
+    fixture.componentRef.setInput('slide', {
+      ...ecran,
+      revelation: buildRevelationServie({
+        ecranId: ecran.id,
+        questions: [
+          { questionId: 'Q-VA-07', cible: '1 480,24', optionId: null },
+          { questionId: 'Q-CAP-03', cible: '1 480,24 €', optionId: 'b' },
+        ],
+      }),
+    });
+    fixture.detectChanges();
+    await attendreQue(fixture, () => dans(vote, 'bonne-reponse') !== null, 'la correction');
+
+    expect(await brique(fixture, 'fp-vote')).toBe(vote);
+    attendreLeCorrigeDuQuestionnaire(vote, numerique);
+  });
+
+  function attendreLeCorrigeDuQuestionnaire(vote: HTMLElement, numerique: HTMLElement): void {
     expect(dans(vote, 'bonne-reponse')?.textContent).toContain('1 480,24 €');
+    expect(
+      vote.shadowRoot?.querySelector('[data-option="b"]')?.getAttribute('data-correction'),
+    ).toBe('juste');
     expect(dans(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
+  }
+
+  it('ne montre pas a l etudiant les donnees du formateur, meme une fois la correction revelee', async () => {
+    const fixture = monter({
+      slide: buildEcranQuestionnaire(),
+      role: 'etudiant',
+      direct: directRevele(true),
+      donneesFormateur: {
+        type: 'reponses',
+        reponses: { 'Q-CAP-03': { cible: '1 480,24 €', optionId: 'b' } },
+      },
+    });
+    const vote = await brique(fixture, 'fp-vote');
+
+    expect(dans(vote, 'bonne-reponse')).toBeNull();
+    expect(vote.shadowRoot?.querySelector('[data-correction]')).toBeNull();
   });
 
   it('RET-32 · ferme aux reponses le poste etudiant une fois la correction du questionnaire revelee', async () => {
@@ -267,7 +380,6 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
         type: 'fp-sheet',
         donnees: { plan: buildSheetPlan() },
       }),
-      render: 'stage',
       role: 'presentateur',
       direct: direct(0),
       donneesFormateur: {
@@ -425,35 +537,54 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     );
   });
 
-  it('ne donne le classement de reference qu au pupitre', async () => {
-    const etudiant = monter({
-      slide: ECRAN_CLASSEMENT,
-      render: 'board',
-      donneesFormateur: ATTENDUS,
-    });
-    expect(dans(await brique(etudiant, 'fp-cardsort'), 'attendus')).toBeNull();
-
+  it('ne range au pupitre les cartes a leur place de reference qu une fois la correction revelee', async () => {
     const pupitre = monter({
       slide: ECRAN_CLASSEMENT,
-      render: 'board',
       role: 'presentateur',
+      direct: directRevele(false),
       donneesFormateur: ATTENDUS,
     });
-    expect(dans(await brique(pupitre, 'fp-cardsort'), 'attendu')?.textContent).toContain(
-      'Indépendant du volume',
-    );
+    const classement = await brique(pupitre, 'fp-cardsort');
+    const pileDuLoyer = (): string | null =>
+      classement.shadowRoot
+        ?.querySelector('[data-carte="loyer"]')
+        ?.closest('[data-testid="pile"]')
+        ?.getAttribute('data-zone') ?? null;
+
+    expect(pileDuLoyer()).toBe('');
+    expect(classement.shadowRoot?.querySelector('[data-correction]')).toBeNull();
+
+    pupitre.componentRef.setInput('direct', directRevele(true));
+    pupitre.detectChanges();
+
+    expect(pileDuLoyer()).toBe('fixe');
+    expect(
+      classement.shadowRoot?.querySelector('[data-carte="loyer"]')?.getAttribute('data-correction'),
+    ).toBe('juste');
   });
 
-  it('remonte la brique quand le rendu change', async () => {
+  it('ne donne jamais le classement de reference du formateur au poste etudiant', async () => {
+    const etudiant = monter({
+      slide: ECRAN_CLASSEMENT,
+      direct: directRevele(true),
+      donneesFormateur: ATTENDUS,
+    });
+    const classement = await brique(etudiant, 'fp-cardsort');
+
+    expect(classement.shadowRoot?.innerHTML).not.toContain('Indépendant du volume');
+    expect(classement.shadowRoot?.querySelector('[data-correction]')).toBeNull();
+  });
+
+  it('remonte la brique quand le role change', async () => {
     const fixture = monter({ slide: ECRAN_NUMERIQUE });
     const avant = await brique(fixture, 'fp-numeric');
-    fixture.componentRef.setInput('render', 'stage');
+    fixture.componentRef.setInput('role', 'presentateur');
     fixture.detectChanges();
     await fixture.whenStable();
     const apres = await brique(fixture, 'fp-numeric');
 
     expect(apres).not.toBe(avant);
-    expect(apres.getAttribute('render')).toBe('stage');
+    expect(apres.getAttribute('data-cours-role')).toBe('presentateur');
   });
 
   it('presente un ecran verrouille par son titre et sa duree, sans brique', () => {

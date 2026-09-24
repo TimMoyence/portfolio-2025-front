@@ -61,6 +61,19 @@ describe('NavbarComponent', () => {
       expect(url).toMatch(/^\/en/);
     });
 
+    it('G02 · donne a l entree Formations la meme taille que les autres liens', () => {
+      fixture.detectChanges();
+      const nav = fixture.nativeElement as HTMLElement;
+      const lien = nav.querySelector('a.asili-nav__link:not(.is-mobile)');
+      const formations = nav.querySelector('button.asili-nav__trigger');
+      expect(lien).withContext('lien de navigation').not.toBeNull();
+      expect(formations).withContext('entree Formations').not.toBeNull();
+
+      const style = (element: Element): CSSStyleDeclaration => getComputedStyle(element);
+      expect(style(formations as Element).fontSize).toBe(style(lien as Element).fontSize);
+      expect(style(formations as Element).lineHeight).toBe(style(lien as Element).lineHeight);
+    });
+
     it('devrait afficher le logo Asili (image + nom « Asili design »)', () => {
       fixture.detectChanges();
       const nav = fixture.nativeElement as HTMLElement;
@@ -118,7 +131,7 @@ describe('NavbarComponent', () => {
           lastName: 'Test',
           phone: null,
           isActive: true,
-          roles: ['weather'],
+          roles: ['user'],
         },
       });
       fixture.detectChanges();

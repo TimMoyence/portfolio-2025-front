@@ -38,6 +38,32 @@ function projeterQuestion(source: SpacedQuestionPublique): SpacedQuestionPubliqu
   };
 }
 
+interface BonneReponse {
+  readonly cible: string;
+  readonly optionId: string | null;
+}
+
+function lireBonnesReponses(valeur: unknown): ReadonlyMap<string, BonneReponse> | null {
+  if (!estObjet(valeur) || valeur['type'] !== 'reponses' || !estObjet(valeur['reponses'])) {
+    return null;
+  }
+  return new Map(
+    Object.entries(valeur['reponses']).flatMap(([questionId, bonne]) =>
+      estObjet(bonne) && typeof bonne['cible'] === 'string'
+        ? [
+            [
+              questionId,
+              {
+                cible: bonne['cible'],
+                optionId: typeof bonne['optionId'] === 'string' ? bonne['optionId'] : null,
+              },
+            ] as const,
+          ]
+        : [],
+    ),
+  );
+}
+
 function estConceptMaitrise(valeur: unknown): valeur is ConceptMaitrise {
   return (
     estObjet(valeur) &&
@@ -53,6 +79,7 @@ export class FpSpaced extends FpBlock {
   private recus = new Map<string, VerdictDeReponse>();
   private repondues = new Set<string>();
   private carte: readonly ConceptMaitrise[] = [];
+  private bonnes: ReadonlyMap<string, BonneReponse> | null = null;
   private message = '';
 
   set rappel(valeur: SpacedRappel | null) {
@@ -103,40 +130,30 @@ export class FpSpaced extends FpBlock {
     return this.carte;
   }
 
-  renderHand(): EscapedHtml {
+  set corrige(valeur: unknown) {
+    this.bonnes = lireBonnesReponses(valeur);
+    this.refreshSiConnecte();
+  }
+
+  render(): EscapedHtml {
+    const corps = this.presentateur()
+      ? this.carteDeMaitrise()
+      : safeHtml`${this.annonces()}
+        ${this.pupitreAvantRevelation()}
+        ${this.bilan()}
+        <p class="fp-spaced__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>`;
     return safeHtml`
-      <section class="fp-carte fp-spaced__seance">
+      <section class="fp-carte fp-scene fp-spaced__seance">
         ${this.entete()}
         <p class="fp-spaced__consigne">${escapeHtml(this.texte('spaced-consigne'))}</p>
-        ${this.annonces()}
-        ${this.pupitre()}
-        ${this.bilan()}
-        <p class="fp-spaced__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>
-      </section>
-    `;
-  }
-
-  renderStage(): EscapedHtml {
-    return safeHtml`
-      <section class="fp-scene fp-spaced__seance">
-        ${this.entete()}
-        <p class="fp-enonce fp-spaced__consigne">${escapeHtml(this.texte('spaced-consigne'))}</p>
-      </section>
-    `;
-  }
-
-  renderBoard(): EscapedHtml {
-    return safeHtml`
-      <section class="fp-carte fp-spaced__seance">
-        ${this.entete()}
-        ${this.roleActuel() === 'presentateur' ? this.carteDeMaitrise() : VIDE}
+        ${corps}
       </section>
     `;
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.cleAffichage());
-    if (this.mode() !== 'hand') {
+    if (this.presentateur()) {
       return;
     }
     for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
@@ -169,6 +186,10 @@ export class FpSpaced extends FpBlock {
 
   private cleAffichage(): string | null {
     return this.questionCourante()?.questionId ?? null;
+  }
+
+  private pupitreAvantRevelation(): EscapedHtml {
+    return this.bonnes === null ? this.pupitre() : VIDE;
   }
 
   private pupitre(): EscapedHtml {
@@ -205,8 +226,7 @@ export class FpSpaced extends FpBlock {
   private reperesDeQuestion(question: SpacedQuestionPublique): EscapedHtml {
     return safeHtml`
       <p class="fp-spaced__reperes">
-        <span class="fp-badge fp-spaced__origine" data-testid="origine"><span class="fp-spaced__mention">${escapeHtml(this.texte('spaced-origine'))}</span> ${escapeHtml(question.cours)}</span>
-        <span class="fp-badge fp-spaced__boite" data-testid="boite" data-boite="${question.boite}">${escapeHtml(this.texte('spaced-boite'))} ${question.boite}</span>
+        <span class="fp-badge fp-spaced__origine" data-testid="origine"><span class="fp-spaced__mention">${escapeHtml(this.texte('spaced-origine'))}</span><span data-testid="origine-cours">${escapeHtml(question.cours)}</span></span>
       </p>
     `;
   }
@@ -225,17 +245,30 @@ export class FpSpaced extends FpBlock {
 
   private bilan(): EscapedHtml {
     const lignes = (this.interne ?? [])
-      .filter((question) => this.recus.has(question.questionId))
+      .filter((question) => this.bonnes !== null || this.recus.has(question.questionId))
       .map((question) => {
         const verdict = this.recus.get(question.questionId) ?? null;
-        return safeHtml`<li class="fp-spaced__ligne" data-testid="ligne" data-question="${escapeHtml(question.questionId)}"><span class="fp-spaced__nom">${escapeHtml(question.enonce)}</span>${this.verdictDeReponse(verdict)}</li>`;
+        return safeHtml`<li class="fp-spaced__ligne" data-testid="ligne" data-question="${escapeHtml(question.questionId)}"><span class="fp-spaced__nom">${escapeHtml(question.enonce)}</span>${this.verdictDeReponse(verdict)}${this.bonneReponse(question)}</li>`;
       });
     return lignes.length === 0
       ? VIDE
       : safeHtml`<ul class="fp-spaced__liste" data-testid="bilan">${lignes}</ul>`;
   }
 
+  private bonneReponse(question: SpacedQuestionPublique): EscapedHtml {
+    const bonne = this.bonnes?.get(question.questionId);
+    if (bonne === undefined) {
+      return VIDE;
+    }
+    const libelle =
+      question.options.find((option) => option.id === bonne.optionId)?.libelle ?? bonne.cible;
+    return safeHtml`<span class="fp-spaced__bonne" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(libelle)}</span>`;
+  }
+
   private carteDeMaitrise(): EscapedHtml {
+    if (this.carte.length === 0) {
+      return VIDE;
+    }
     const entetes = BOITES.map(
       (boite) => safeHtml`<th scope="col">${escapeHtml(this.texte('spaced-boite'))} ${boite}</th>`,
     );

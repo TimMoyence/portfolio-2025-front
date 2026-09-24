@@ -2,6 +2,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { isolateAnimReady } from '../../../../testing/anim-ready';
+import { decrireEnTeteDeSection } from '../../../../testing/en-tete-de-section';
 import { AsiliMethodComponent, type AsiliMethodStep } from './asili-method.component';
 
 const STEPS: readonly AsiliMethodStep[] = [
@@ -90,27 +91,14 @@ describe('AsiliMethodComponent', () => {
     expect(fixture.nativeElement.querySelector('.step h3')?.textContent).toContain('Comprendre');
   });
 
-  it("affiche le kicker, le titre <h2> et l'intro quand fournis en inputs", () => {
-    setup();
-    fixture.componentRef.setInput('kicker', 'La methode');
-    fixture.componentRef.setInput('heading', 'Un fil conducteur');
-    fixture.componentRef.setInput('intro', 'Le digital est un levier.');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.kicker')?.textContent).toContain('La methode');
-    const h2 = fixture.nativeElement.querySelector('h2');
-    expect(h2?.textContent).toContain('Un fil conducteur');
-    expect(fixture.nativeElement.querySelector('.method-head__intro')?.textContent).toContain(
-      'Le digital est un levier.',
-    );
-  });
-
-  it("n'affiche ni kicker ni titre ni intro quand non fournis", () => {
-    setup();
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.kicker')).toBeNull();
-    expect(fixture.nativeElement.querySelector('h2')).toBeNull();
-    expect(fixture.nativeElement.querySelector('.method-head__intro')).toBeNull();
-  });
+  decrireEnTeteDeSection(
+    () => {
+      setup();
+      return fixture;
+    },
+    '.method-head__intro',
+    { kicker: 'La methode', heading: 'Un fil conducteur', intro: 'Le digital est un levier.' },
+  );
 
   it("rend la ligne pointillee masquee aux lecteurs d'ecran", () => {
     setup();

@@ -14,3 +14,4 @@ Les ADR servent a garder une trace courte, lisible et datee des choix d'architec
 - [0000 - Template](./0000-template.md)
 - [0001 - Gouvernance qualite et protection de branche](./0001-governance-and-quality-gates.md)
 - [0002 - Structuration frontend en core features shared](./0002-frontend-layering-core-features-shared.md)
+- [0003 - Toile de cours et seuil de lisibilité étudiant](./0003-toile-de-cours-et-seuil-de-lisibilite.md)

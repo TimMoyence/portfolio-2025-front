@@ -1,6 +1,7 @@
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
+import { verifierPostRelaye } from '../../../testing/http-attendu';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { CookieConsentPayload } from '../models/cookie-consent.model';
 import type { MessageResponse } from '../models/message.response';
@@ -40,14 +41,13 @@ describe('CookieConsentHttpAdapter', () => {
       httpCode: 201,
     };
 
-    adapter.recordConsent(payload).subscribe((result) => {
-      expect(result).toEqual(response);
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/cookie-consents`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(payload);
-    req.flush(response);
+    verifierPostRelaye(
+      adapter.recordConsent(payload),
+      httpMock,
+      '/cookie-consents',
+      payload,
+      response,
+    );
   });
 
   it('should propagate HTTP errors', () => {

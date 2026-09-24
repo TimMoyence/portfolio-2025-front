@@ -1,27 +1,16 @@
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { faqRendue } from '../../../testing/faq-rendue';
+import { montagePage } from '../../../testing/montage-page';
 import { OfferComponent } from './offer.component';
 
 describe('OfferComponent', () => {
+  const page = montagePage(OfferComponent);
   let component: OfferComponent;
   let fixture: ComponentFixture<OfferComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [OfferComponent],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(OfferComponent);
+  beforeEach(() => {
+    fixture = page();
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    document.documentElement.classList.remove('anim-ready');
   });
 
   it('should create', () => {
@@ -61,11 +50,7 @@ describe('OfferComponent', () => {
   });
 
   it('should render an SSR-safe FAQ with FAQPage microdata and the pricing question', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const faq = compiled.querySelector('.faq[itemtype="https://schema.org/FAQPage"]');
-    expect(faq).not.toBeNull();
-    const questions = compiled.querySelectorAll('.faq details.faq-item');
-    expect(questions.length).toBe(component['faqItems'].length);
-    expect(faq?.textContent).toContain('Pourquoi pas de grille de prix ?');
+    const faq = faqRendue(fixture.nativeElement, component['closing'].faq.items.length);
+    expect(faq.textContent).toContain('Pourquoi pas de grille de prix ?');
   });
 });

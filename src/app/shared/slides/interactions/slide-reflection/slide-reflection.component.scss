@@ -1,13 +1,8 @@
+@use '../../slide-section' as slide;
+
 .slide-reflection {
-  width: 100%;
-  min-height: 100cqh;
-  display: flex;
-  flex-direction: column;
+  @include slide.interaction;
   align-items: stretch;
-  justify-content: center;
-  padding: 4rem 2rem;
-  max-width: 50rem;
-  margin: 0 auto;
   gap: 1rem;
 
   textarea {
@@ -42,13 +37,8 @@
 
 .slide-reflection__competency {
   margin: 0;
-  color: var(--accent-dark, var(--teal-dark));
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  @include slide.competence;
   text-align: center;
-  text-transform: uppercase;
 }
 
 .slide-reflection__save {

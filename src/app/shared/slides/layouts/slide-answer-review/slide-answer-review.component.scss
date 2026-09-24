@@ -1,0 +1,81 @@
+@use '../../slide-section' as slide;
+
+.slide-answer-review {
+  @include slide.section;
+}
+
+.slide-answer-review__subtitle {
+  @include slide.sous-titre-de-revue;
+}
+
+.slide-answer-review__liste {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: 1rem;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  counter-reset: explication;
+}
+
+.slide-answer-review__explication {
+  position: relative;
+  padding: 0.85rem 1rem 0.85rem 2.75rem;
+  border: 2px solid var(--border, rgba(var(--ink-rgb), 0.16));
+  border-radius: 0.75rem;
+  background: var(--card-bg, #fff);
+  counter-increment: explication;
+
+  &::before {
+    content: counter(explication);
+    position: absolute;
+    inset-block-start: 0.85rem;
+    inset-inline-start: 1rem;
+    color: var(--teal-dark);
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.slide-answer-review__explication--juste {
+  border-color: #2f7d4f;
+}
+
+.slide-answer-review__explication--erreur {
+  border-color: #c0563c;
+}
+
+.slide-answer-review__cible {
+  margin-bottom: 0.35rem;
+  color: var(--teal-dark);
+}
+
+.slide-answer-review__texte {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.slide-answer-review__signal,
+.slide-answer-review__reussite {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.slide-answer-review__signal {
+  color: #c0563c;
+}
+
+.slide-answer-review__signal--juste {
+  color: #2f7d4f;
+}
+
+.slide-answer-review__reussite {
+  color: var(--text-muted, var(--slide-text-muted));
+  font-variant-numeric: tabular-nums;
+}

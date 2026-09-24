@@ -1,6 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import type { EcranContent, RenderMode, Role } from '../cours/content/types';
+import type { EcranContent, Role } from '../cours/content/types';
 import { SlideActivityComponent } from '../app/shared/slides/session/slide-activity.component';
 import { aUnePresentation } from '../app/shared/slides/visual/presentation-v2';
 import { ECRAN_VERROUILLE, planDeMontage } from '../app/shared/slides/session/lecture-ecran';
@@ -41,11 +41,7 @@ export async function briqueMontee(
   return brique;
 }
 
-export const RENDUS_DE_MONTAGE: readonly { render: RenderMode; role: Role }[] = [
-  { render: 'hand', role: 'etudiant' },
-  { render: 'board', role: 'presentateur' },
-  { render: 'stage', role: 'presentateur' },
-];
+export const ROLES_DE_MONTAGE: readonly Role[] = ['etudiant', 'presentateur'];
 
 function nombreDeBriques(ecran: EcranContent): number {
   return aUnePresentation(ecran) || ecran.type === ECRAN_VERROUILLE
@@ -60,17 +56,12 @@ export interface EcranMonte {
   readonly detruire: () => void;
 }
 
-export async function monterEcran(
-  ecran: EcranContent,
-  render: RenderMode,
-  role: Role,
-): Promise<EcranMonte> {
+export async function monterEcran(ecran: EcranContent, role: Role): Promise<EcranMonte> {
   const erreurs: Event[] = [];
   const fixture = TestBed.createComponent(SlideActivityComponent);
   const element = fixture.nativeElement as HTMLElement;
   element.addEventListener('fp-block-error', (evenement) => erreurs.push(evenement));
   fixture.componentRef.setInput('slide', ecran);
-  fixture.componentRef.setInput('render', render);
   fixture.componentRef.setInput('role', role);
   const montees = (): Element[] =>
     [...element.querySelectorAll('[data-testid="slide-activity-host"] > *')].filter(
@@ -79,7 +70,7 @@ export async function monterEcran(
   await attendreQue(
     fixture,
     () => montees().length === nombreDeBriques(ecran),
-    `${ecran.id} en ${render}`,
+    `${ecran.id} pour ${role}`,
   );
   return { erreurs, element, montees, detruire: () => fixture.destroy() };
 }

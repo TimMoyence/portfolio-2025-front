@@ -98,7 +98,7 @@ export const story = `
   object-fit: contain;
 }
 
-:where(.fp-root[data-render='stage']) .fp-story__video {
+:where(.fp-root) .fp-story__video {
   width: min(100%, 72rem);
   box-sizing: border-box;
   margin-inline: auto;
@@ -108,16 +108,11 @@ export const story = `
   box-shadow: var(--fp-shadow-card);
 }
 
-:where(.fp-root[data-render='stage']) .fp-story__video video {
-  width: min(100%, 860px);
+:where(.fp-root) .fp-story__video video {
+  width: min(100%, 53.75rem);
   min-height: 0;
-  max-height: min(38cqh, 22rem);
+  max-height: min(60cqh, 26rem);
   margin-inline: auto;
-}
-
-:where(.fp-root[data-render='board']) .fp-story__video video {
-  min-height: 0;
-  max-height: min(30cqh, 18rem);
 }
 
 :where(.fp-root) .fp-story__transcription {
@@ -215,12 +210,6 @@ export const pro = `
   overflow-wrap: anywhere;
 }
 
-:where(.fp-root) .fp-pro__reperes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--fp-s-2);
-}
-
 :where(.fp-root) .fp-pro__questions {
   display: grid;
   gap: var(--fp-s-3);
@@ -279,35 +268,53 @@ export const pro = `
   color: var(--fp-texte-fort);
 }
 
-:where(.fp-root[data-render='stage']) .fp-pro__cas {
+:where(.fp-root) .fp-pro__cas {
   width: min(100%, 64rem);
   box-sizing: border-box;
   margin-inline: auto;
-  padding: clamp(1rem, 2.5cqi, 2rem);
-  background: var(--fp-surface);
-  border: 1px solid var(--fp-bordure);
-  border-radius: var(--fp-r-lg);
-  box-shadow: var(--fp-shadow-card);
 }
 
-:where(.fp-root[data-render='stage']) .fp-pro__metier {
+:where(.fp-root) .fp-pro__metier {
   justify-self: center;
   text-align: center;
 }
 
-:where(.fp-root[data-render='stage']) .fp-pro__corps {
+:where(.fp-root) .fp-pro__corps,
+:where(.fp-root) .fp-pro__reponses {
   max-width: 62ch;
   margin-inline: auto;
 }
 
-:where(.fp-root[data-render='stage']) .fp-pro__geste-texte {
-  font-size: clamp(1.15rem, 2cqi, 1.75rem);
+:where(.fp-root) .fp-pro__reponses {
+  display: grid;
+  gap: var(--fp-s-3);
+  width: 100%;
+}
+
+:where(.fp-root) .fp-pro__geste-texte {
+  font-size: calc(1.2rem * var(--fp-echelle));
   line-height: 1.35;
 }
 
-:where(.fp-root[data-render='stage']) .fp-pro__geste {
+:where(.fp-root) .fp-pro__geste {
   padding: clamp(1rem, 2cqi, 1.5rem);
   border-left-width: 0.35rem;
   background: var(--fp-ivory);
+}
+
+@container (min-width: 60rem) {
+  :where(.fp-root) .fp-pro__cas:has(.fp-pro__reponses) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  :where(.fp-root) .fp-pro__cas:has(.fp-pro__reponses) > :not(.fp-pro__corps, .fp-pro__reponses) {
+    grid-column: 1 / -1;
+  }
+
+  :where(.fp-root) .fp-pro__cas:has(.fp-pro__reponses) .fp-pro__corps,
+  :where(.fp-root) .fp-pro__cas:has(.fp-pro__reponses) .fp-pro__reponses {
+    margin-inline: 0;
+  }
 }
 `;

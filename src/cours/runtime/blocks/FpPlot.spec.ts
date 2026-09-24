@@ -1,4 +1,9 @@
-import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
+import {
+  attendreAucunEffet,
+  attendreChaqueClasseCouverte,
+  attendreLaCorrectionNicheeEffacee,
+} from '../../../testing/assertions-briques';
+import { classesOrphelines } from '../../../testing/classes-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import { buildPlotDefinition, buildPlotEnBarres } from '../../../testing/factories/cours.factory';
 import {
@@ -304,7 +309,6 @@ describe('FpPlot', () => {
 
   it('G2 · projette les curseurs réglables et la lecture du poste étudiant', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
-    hote.setAttribute('render', 'stage');
     const curseur = repere(hote, 'curseur') as HTMLInputElement | null;
     const avant = texteDe(hote, 'tableau');
 
@@ -382,27 +386,260 @@ describe('FpPlot', () => {
     expect(pressions()).toEqual(['false', 'true']);
   });
 
-  it('affiche les reperes au tableau', () => {
-    hote.setAttribute('render', 'board');
-    expect(texteDe(hote, 'modalite')).toBe('En binôme');
-    expect(texteDe(hote, 'duree')).toContain(String(DEFINITION.metadonnees.dureeMinutes));
+  it('G06 · en barres, laisse la lecture au rapport et à la description du graphique sans phrase redondante', () => {
+    hote.definition = buildPlotEnBarres();
+
+    expect(repere(hote, 'synthese')).toBeNull();
+    expect(repere(hote, 'rapport')).not.toBeNull();
+    expect(texteDe(hote, 'description-svg')).toContain('Marge brute');
+  });
+
+  describe('F13 · diapositive de référence figée à côté de l axe réglable', () => {
+    function vue(nom: string): Element | null {
+      return hote.shadowRoot?.querySelector(`[data-testid="figure"][data-vue="${nom}"]`) ?? null;
+    }
+
+    function rapportDe(nom: string): string {
+      return vue(nom)?.querySelector('[data-testid="rapport-hauteurs"]')?.textContent?.trim() ?? '';
+    }
+
+    beforeEach(() => {
+      hote.definition = buildPlotEnBarres({ reference: 'Axe de Samir' });
+    });
+
+    it('rend les deux graphiques côte à côte, chacun avec son rapport des hauteurs', () => {
+      expect(repere(hote, 'comparaison')).not.toBeNull();
+      expect(vue('reference')?.querySelectorAll('[data-testid="barre"]').length).toBe(4);
+      expect(vue('reglable')?.querySelectorAll('[data-testid="barre"]').length).toBe(4);
+      expect(rapportDe('reference')).toBe('×7');
+      expect(rapportDe('reglable')).toBe('×7');
+      expect(vue('reference')?.querySelector('[data-testid="vue"]')?.textContent).toContain(
+        'Axe de Samir',
+      );
+    });
+
+    it('garde la référence figée quand l axe réglable change', () => {
+      prereglage(hote, 'Axe à zéro');
+
+      expect(rapportDe('reference')).toBe('×7');
+      expect(rapportDe('reglable')).toBe('×1,02');
+      expect(
+        sansEspaces(
+          vue('reference')?.querySelectorAll('[data-testid="graduation-y"]')[0]?.textContent ?? '',
+        ),
+      ).not.toBe('0€');
+    });
+
+    it('n annonce en direct que le rapport de l axe réglable', () => {
+      expect(
+        vue('reference')?.querySelector('[data-testid="rapport"]')?.getAttribute('aria-live'),
+      ).toBe('off');
+      expect(
+        vue('reglable')?.querySelector('[data-testid="rapport"]')?.getAttribute('aria-live'),
+      ).toBe('polite');
+    });
+
+    it('donne à chaque graphique des identifiants accessibles uniques', () => {
+      const ids = [...(hote.shadowRoot?.querySelectorAll('[id]') ?? [])].map((noeud) => noeud.id);
+
+      expect(new Set(ids).size).toBe(ids.length);
+      for (const graphique of reperes(hote, 'graphique')) {
+        for (const id of (graphique.getAttribute('aria-labelledby') ?? '').split(' ')) {
+          expect(graphique.querySelector(`#${id}`)).not.toBeNull();
+        }
+      }
+    });
+
+    it('rend un seul graphique quand la référence ne nomme aucun préréglage', () => {
+      hote.definition = buildPlotEnBarres({ reference: 'Axe inconnu' });
+
+      expect(repere(hote, 'comparaison')).toBeNull();
+      expect(reperes(hote, 'figure').length).toBe(1);
+    });
+
+    it('couvre par une règle de la feuille chaque classe fp de la comparaison', () => {
+      expect(classesOrphelines(hote, 'plot')).toEqual([]);
+    });
+  });
+
+  it('rend la meme figure et les memes reglages pour l etudiant et le presentateur', () => {
+    const structure = (): Readonly<Record<string, number>> => ({
+      traces: reperes(hote, 'trace').length,
+      curseurs: reperes(hote, 'curseur').length,
+      animer: reperes(hote, 'animer').length,
+      lignes: reperes(hote, 'ligne').length,
+    });
+    const etudiant = structure();
+    const synthese = texteDe(hote, 'synthese');
+
+    hote.setAttribute('data-cours-role', 'presentateur');
+
+    expect(structure()).toEqual(etudiant);
+    expect(etudiant['curseurs']).toBe(DEFINITION.parametres.length);
+    expect(texteDe(hote, 'synthese')).toBe(synthese);
+    expect(repere(hote, 'modalite')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(
+      'presentateur',
+    );
+  });
+
+  describe('synchronisation du pupitre vers la projection', () => {
+    function reglagesEmis(): unknown[] {
+      const emis: unknown[] = [];
+      hote.addEventListener('fp-plot-reglage', (evenement) =>
+        emis.push((evenement as CustomEvent).detail),
+      );
+      return emis;
+    }
+
+    function relacherCurseur(valeur: string): void {
+      const curseur = repere(hote, 'curseur') as HTMLInputElement;
+      curseur.value = valeur;
+      curseur.dispatchEvent(new Event('input', { bubbles: true }));
+      curseur.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    it('RET-21 · au pupitre, emet les reglages une fois le curseur relache', () => {
+      hote.setAttribute('data-cours-role', 'presentateur');
+      const emis = reglagesEmis();
+
+      relacherCurseur('3000');
+
+      expect(emis).toEqual([{ reglages: { C: 3000, i: 4 } }]);
+    });
+
+    it('RET-21 · au pupitre, emet les reglages au clic d un prereglage', () => {
+      hote.definition = buildPlotEnBarres();
+      hote.setAttribute('data-cours-role', 'presentateur');
+      const emis = reglagesEmis();
+
+      prereglage(hote, 'Axe à zéro');
+
+      expect(emis).toEqual([{ reglages: { origine: 0 } }]);
+    });
+
+    it('RET-21 · chez l etudiant, ni curseur ni prereglage n emet de reglage', () => {
+      const emis = reglagesEmis();
+
+      relacherCurseur('3000');
+      hote.definition = buildPlotEnBarres();
+      prereglage(hote, 'Axe à zéro');
+
+      expect(emis).toEqual([]);
+      expect(hote.valeurs).toEqual({ origine: 0 });
+    });
+
+    it('RET-21 · en apercu, le pupitre n emet jamais de reglage', () => {
+      hote.setAttribute('data-cours-role', 'presentateur');
+      hote.setAttribute('data-apercu', '');
+      const emis = reglagesEmis();
+
+      relacherCurseur('3000');
+      hote.definition = buildPlotEnBarres();
+      prereglage(hote, 'Axe à zéro');
+
+      expect(emis).toEqual([]);
+    });
+
+    it('RET-21 · la projection suit les reglages pilotes, bornes au graphique', () => {
+      hote.setAttribute('data-cours-role', 'presentateur');
+
+      hote.reglages = { C: 3000, i: 99, inconnu: 1 };
+
+      expect(hote.valeurs).toEqual({ C: 3000, i: 10 });
+      expect(valeurAffichee(hote, 'C')).toBe('3000');
+      expect(valeurAffichee(hote, 'i')).toBe('10');
+    });
+
+    describe('R9 · animation de l écran', () => {
+      const SIMULATEUR = buildPlotDefinition({
+        id: 'K-SIMULATEUR-MIX',
+        abscisse: { libelle: 'Part de la marketplace (%)', min: 0, max: 80 },
+        parametres: [
+          { cle: 'taux', libelle: 'Taux marketplace (%)', min: 10, max: 30, pas: 1, defaut: 16 },
+        ],
+        series: [
+          { id: 'global', libelle: 'Taux global', trait: 'plein', calcul: 'x * taux / 100' },
+        ],
+        animation: [{ taux: 16 }, { taux: 20 }, { taux: 24 }],
+      });
+
+      beforeEach(() => {
+        jasmine.clock().install();
+        hote.definition = SIMULATEUR;
+      });
+
+      afterEach(() => {
+        jasmine.clock().uninstall();
+      });
+
+      it('passe d une valeur à la suivante toutes les trois secondes', () => {
+        animer(hote);
+        expect(hote.valeurs).toEqual({ taux: 16 });
+
+        jasmine.clock().tick(2999);
+        expect(valeurAffichee(hote, 'taux')).toBe('16');
+
+        jasmine.clock().tick(1);
+        expect(valeurAffichee(hote, 'taux')).toBe('20');
+
+        jasmine.clock().tick(3000);
+        expect(hote.valeurs).toEqual({ taux: 24 });
+      });
+
+      it('relaie au pupitre chaque valeur jouée, pour que la projection la suive', () => {
+        hote.setAttribute('data-cours-role', 'presentateur');
+        const emis = reglagesEmis();
+
+        animer(hote);
+        jasmine.clock().tick(6000);
+
+        expect(emis).toEqual([
+          { reglages: { taux: 16 } },
+          { reglages: { taux: 20 } },
+          { reglages: { taux: 24 } },
+        ]);
+      });
+
+      it('poursuit l animation quand le pupitre reçoit en écho la valeur qu il affiche', () => {
+        animer(hote);
+        hote.reglages = { taux: 16 };
+        jasmine.clock().tick(3000);
+
+        expect(hote.valeurs).toEqual({ taux: 20 });
+      });
+
+      it('s arrête dès qu un curseur est réglé à la main', () => {
+        animer(hote);
+        relacherCurseur('12');
+        jasmine.clock().tick(6000);
+
+        expect(hote.valeurs).toEqual({ taux: 12 });
+      });
+
+      it('va directement à la dernière valeur quand le mouvement est réduit', () => {
+        spyOn(window, 'matchMedia').and.returnValue({ matches: true } as MediaQueryList);
+
+        animer(hote);
+
+        expect(hote.valeurs).toEqual({ taux: 24 });
+      });
+    });
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
-    const piege = buildPlotDefinition({ id: 'K-COURBE-02' });
-    const contamine = { ...piege.metadonnees, bonneReponse: 'a' };
-    hote.definition = { ...piege, metadonnees: contamine };
-    expect(JSON.stringify(hote.definition)).not.toContain('bonneReponse');
+    attendreLaCorrectionNicheeEffacee(buildPlotDefinition({ id: 'K-COURBE-02' }), (contamine) => {
+      hote.definition = contamine;
+      return hote.definition;
+    });
   });
 
   it('explore sans rien emettre vers la seance ni ecrire dans un stockage', () => {
     animer(hote);
-    expect(traces.evenements).toEqual([]);
-    expect(traces.ecritures).toEqual([]);
+    attendreAucunEffet(traces);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
-    expect(classesOrphelines(hote, 'plot')).toEqual([]);
+    attendreChaqueClasseCouverte(hote, 'plot', CLASSES_ATTENDUES);
   });
 });

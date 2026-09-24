@@ -1,11 +1,17 @@
-import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
+import {
+  attendreChaqueClasseCouverte,
+  attendreLaCorrectionNicheeEffacee,
+  attendreLaMemeTypographieAuPresentateur,
+  attendreSansModaliteNiDuree,
+  parcourirLesRolesSansEffet,
+} from '../../../testing/assertions-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import { buildQuoteCitation } from '../../../testing/factories/cours.factory';
 import { FpQuote } from './FpQuote';
 
 const CITATION = buildQuoteCitation();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
-const CLASSES_ATTENDUES = 8;
+const CLASSES_ATTENDUES = 6;
 
 function noeud(element: FpQuote, marqueur: string): Element | null {
   return element.shadowRoot?.querySelector(`[data-testid="${marqueur}"]`) ?? null;
@@ -74,31 +80,27 @@ describe('FpQuote', () => {
     expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
   });
 
-  it('passe a la grande typographie de projection en rendu stage seulement', () => {
-    expect(noeud(hote, 'texte')?.classList.contains('fp-enonce')).toBe(false);
-    hote.setAttribute('render', 'stage');
-    expect(noeud(hote, 'texte')?.classList.contains('fp-enonce')).toBe(true);
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-render')).toBe('stage');
+  it('donne la grande typographie de l enonce au presentateur comme a l etudiant', () => {
+    attendreLaMemeTypographieAuPresentateur(hote, () => noeud(hote, 'texte'));
+  });
+
+  it('n affiche plus la modalite ni la duree, quel que soit le role', () => {
+    attendreSansModaliteNiDuree(hote, (repere) => noeud(hote, repere));
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
-    const piege = buildQuoteCitation({ id: 'C-CITATION-05' });
-    const metadonnees = { ...piege.metadonnees, bonneReponse: 'a' };
-    hote.citation = { ...piege, metadonnees };
-    expect(JSON.stringify(hote.citation)).not.toContain('bonneReponse');
+    attendreLaCorrectionNicheeEffacee(buildQuoteCitation({ id: 'C-CITATION-05' }), (contamine) => {
+      hote.citation = contamine;
+      return hote.citation;
+    });
   });
 
   it('ne diffuse aucun evenement et n ecrit dans aucun stockage', () => {
     hote.citation = buildQuoteCitation({ id: 'C-CITATION-06' });
-    for (const rendu of ['stage', 'board', 'hand']) {
-      hote.setAttribute('render', rendu);
-    }
-    expect(traces.evenements).toEqual([]);
-    expect(traces.ecritures).toEqual([]);
+    parcourirLesRolesSansEffet(hote, traces);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
-    expect(classesOrphelines(hote, 'quote')).toEqual([]);
+    attendreChaqueClasseCouverte(hote, 'quote', CLASSES_ATTENDUES);
   });
 });

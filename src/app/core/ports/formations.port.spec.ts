@@ -30,11 +30,6 @@ const METHODES_DU_PORT = {
   lireAnnotations: true,
   enregistrerAnnotation: true,
   lireReponsesLibres: true,
-  lireGroupes: true,
-  creerGroupe: true,
-  renommerGroupe: true,
-  affecterParticipant: true,
-  retirerParticipantDuGroupe: true,
   lireParticipants: true,
   rejoindre: true,
   repondre: true,
@@ -51,6 +46,7 @@ const METHODES_DU_PORT = {
   lireSyntheseRappels: true,
   evincerParticipant: true,
   readmettreParticipant: true,
+  libererPoste: true,
 } satisfies Record<keyof FormationsPort, true>;
 
 describe('createFormationsPortStub', () => {

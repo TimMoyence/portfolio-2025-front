@@ -1,18 +1,19 @@
 import { expect, test } from '@playwright/test';
-import type { Page, Route } from '@playwright/test';
-import { EN_TETES_CORS } from './fixtures';
+import type { Page } from '@playwright/test';
+import {
+  EN_TETES_CORS,
+  ETAT_EN_COURS,
+  intercepterApi,
+  remplirLaJonction,
+  servirFlux,
+  servirJson,
+} from './fixtures';
 
-const API = 'http://localhost:3000/api/v1/portfolio25';
 const SESSION = '11111111-1111-4111-8111-111111111111';
 const PARTICIPANT = '22222222-2222-4222-8222-222222222222';
 const JETON = 'participant-token';
 const CODE = '4821';
 const REPONSE_LENTE_MS = 4000;
-const IDENTITE = {
-  prenom: 'Lea',
-  nom: 'Dubois',
-  email: 'lea.dubois@example.com',
-};
 
 const QUESTION = {
   id: 'Q-CAP-03',
@@ -67,16 +68,18 @@ const DEROULE = {
   remediations: {},
 };
 
-function sse(etat: Record<string, unknown>): string {
-  return `event: etat\ndata: ${JSON.stringify(etat)}\n\n`;
-}
+const FORMATRICE = {
+  id: 'teacher-1',
+  email: 'formateur@example.com',
+  firstName: 'Anne',
+  lastName: 'Formateur',
+  phone: null,
+  isActive: true,
+  roles: ['teacher'],
+};
 
-async function repondre(route: Route, body: unknown, status = 200): Promise<void> {
-  await route.fulfill({
-    status,
-    headers: { ...EN_TETES_CORS, 'content-type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+function accesFormatrice(accessToken: string): Record<string, unknown> {
+  return { accessToken, expiresIn: 900, user: FORMATRICE };
 }
 
 async function installerApiEtudiant(
@@ -86,16 +89,9 @@ async function installerApiEtudiant(
   let fluxOuverts = 0;
   let reponses = 0;
 
-  await page.route(`${API}/**`, async (route) => {
-    const requete = route.request();
-    const url = new URL(requete.url());
-
-    if (requete.method() === 'OPTIONS') {
-      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
-      return;
-    }
-    if (url.pathname.endsWith(`/sessions/${CODE}/join`) && requete.method() === 'POST') {
-      await repondre(
+  await intercepterApi(page, async (route, chemin, methode) => {
+    if (chemin.endsWith(`/sessions/${CODE}/join`) && methode === 'POST') {
+      await servirJson(
         route,
         {
           participantId: PARTICIPANT,
@@ -106,40 +102,24 @@ async function installerApiEtudiant(
         },
         201,
       );
-      return;
-    }
-    if (url.pathname.endsWith(`/sessions/${SESSION}/sujet`) && requete.method() === 'GET') {
+    } else if (chemin.endsWith(`/sessions/${SESSION}/sujet`) && methode === 'GET') {
       if (options.sujetLent) {
         await new Promise((resolve) => setTimeout(resolve, REPONSE_LENTE_MS));
       }
-      await repondre(route, SUJET);
-      return;
-    }
-    if (url.pathname.endsWith(`/sessions/${SESSION}/stream`) && requete.method() === 'GET') {
+      await servirJson(route, SUJET);
+    } else if (chemin.endsWith(`/sessions/${SESSION}/stream`) && methode === 'GET') {
       fluxOuverts += 1;
       if (options.fluxRefuse) {
-        await repondre(route, { title: 'Flux refusé' }, 429);
+        await servirJson(route, { title: 'Flux refusé' }, 429);
       } else {
-        await route.fulfill({
-          status: 200,
-          headers: { ...EN_TETES_CORS, 'content-type': 'text/event-stream' },
-          body: sse({
-            etat: 'en_cours',
-            modeRythme: 'pilote',
-            ecranCourant: 0,
-            intervalleLibre: null,
-            participants: 1,
-          }),
-        });
+        await servirFlux(route, ETAT_EN_COURS);
       }
-      return;
-    }
-    if (url.pathname.endsWith(`/sessions/${SESSION}/answers`) && requete.method() === 'POST') {
+    } else if (chemin.endsWith(`/sessions/${SESSION}/answers`) && methode === 'POST') {
       reponses += 1;
-      await repondre(route, { correcte: true, misconception: null, libelleConfusion: null }, 201);
-      return;
+      await servirJson(route, { correcte: true, misconception: null, libelleConfusion: null }, 201);
+    } else {
+      await route.continue();
     }
-    await route.continue();
   });
 
   return { flux: () => fluxOuverts, reponses: () => reponses };
@@ -147,11 +127,7 @@ async function installerApiEtudiant(
 
 async function rejoindre(page: Page): Promise<void> {
   await page.goto('/cours/rejoindre');
-  await page.getByLabel('Code de la séance').fill(CODE);
-  await page.getByLabel('Prénom').fill(IDENTITE.prenom);
-  await page.getByLabel('Nom', { exact: true }).fill(IDENTITE.nom);
-  await page.getByLabel('Adresse e-mail').fill(IDENTITE.email);
-  await page.getByRole('button', { name: 'Entrer dans la séance' }).click();
+  await remplirLaJonction(page, CODE);
 }
 
 test.describe('Séance de cours dans un navigateur réel', () => {
@@ -191,12 +167,7 @@ test.describe('Séance de cours dans un navigateur réel', () => {
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await installerApiEtudiant(page, { sujetLent: true });
-    await page.goto('/cours/rejoindre');
-    await page.getByLabel('Code de la séance').fill(CODE);
-    await page.getByLabel('Prénom').fill(IDENTITE.prenom);
-    await page.getByLabel('Nom', { exact: true }).fill(IDENTITE.nom);
-    await page.getByLabel('Adresse e-mail').fill(IDENTITE.email);
-    await page.getByRole('button', { name: 'Entrer dans la séance' }).click();
+    await rejoindre(page);
 
     await expect(page.getByTestId('etudiant-chargement')).toBeVisible();
     await expect(page.getByTestId('etudiant-seance')).toBeVisible();
@@ -206,37 +177,13 @@ test.describe('Séance de cours dans un navigateur réel', () => {
   });
 
   test('reprend un pupitre rechargé avec son déroulé et son flux', async ({ page }) => {
-    await page.route(`${API}/**`, async (route) => {
-      const requete = route.request();
-      const url = new URL(requete.url());
-      if (requete.method() === 'OPTIONS') {
-        await route.fulfill({ status: 204, headers: EN_TETES_CORS });
-      } else if (url.pathname.endsWith('/auth/refresh')) {
-        await repondre(route, {
-          accessToken: 'teacher-token',
-          expiresIn: 900,
-          user: {
-            id: 'teacher-1',
-            email: 'formateur@example.com',
-            firstName: 'Anne',
-            lastName: 'Formateur',
-            phone: null,
-            isActive: true,
-            roles: ['teacher'],
-          },
-        });
-      } else if (url.pathname.endsWith('/auth/me')) {
-        await repondre(route, {
-          id: 'teacher-1',
-          email: 'formateur@example.com',
-          firstName: 'Anne',
-          lastName: 'Formateur',
-          phone: null,
-          isActive: true,
-          roles: ['teacher'],
-        });
-      } else if (url.pathname.endsWith(`/sessions/${SESSION}/results`)) {
-        await repondre(route, {
+    await intercepterApi(page, async (route, chemin) => {
+      if (chemin.endsWith('/auth/refresh')) {
+        await servirJson(route, accesFormatrice('teacher-token'));
+      } else if (chemin.endsWith('/auth/me')) {
+        await servirJson(route, FORMATRICE);
+      } else if (chemin.endsWith(`/sessions/${SESSION}/results`)) {
+        await servirJson(route, {
           courseSlug: 'b2-01-traitement-information-chiffree',
           code: CODE,
           ouverteLe: '2026-09-15T08:00:00.000Z',
@@ -245,20 +192,10 @@ test.describe('Séance de cours dans un navigateur réel', () => {
           conceptsFragiles: [],
           resultats: { participants: 1, questions: [] },
         });
-      } else if (url.pathname.endsWith(`/sessions/${SESSION}/deroule`)) {
-        await repondre(route, DEROULE);
-      } else if (url.pathname.endsWith(`/sessions/${SESSION}/presenter-stream`)) {
-        await route.fulfill({
-          status: 200,
-          headers: { ...EN_TETES_CORS, 'content-type': 'text/event-stream' },
-          body: sse({
-            etat: 'en_cours',
-            modeRythme: 'pilote',
-            ecranCourant: 0,
-            intervalleLibre: null,
-            participants: 1,
-          }),
-        });
+      } else if (chemin.endsWith(`/sessions/${SESSION}/deroule`)) {
+        await servirJson(route, DEROULE);
+      } else if (chemin.endsWith(`/sessions/${SESSION}/presenter-stream`)) {
+        await servirFlux(route, ETAT_EN_COURS);
       } else {
         await route.continue();
       }
@@ -280,26 +217,10 @@ test.describe('Séance de cours dans un navigateur réel', () => {
   test('renouvelle un accès après plus de quinze minutes dans le navigateur', async ({ page }) => {
     let renouvellements = 0;
     await page.clock.install();
-    await page.route(`${API}/**`, async (route) => {
-      const requete = route.request();
-      const url = new URL(requete.url());
-      if (requete.method() === 'OPTIONS') {
-        await route.fulfill({ status: 204, headers: EN_TETES_CORS });
-      } else if (url.pathname.endsWith('/auth/refresh')) {
+    await intercepterApi(page, async (route, chemin) => {
+      if (chemin.endsWith('/auth/refresh')) {
         renouvellements += 1;
-        await repondre(route, {
-          accessToken: `renewed-${renouvellements}`,
-          expiresIn: 900,
-          user: {
-            id: 'teacher-1',
-            email: 'formateur@example.com',
-            firstName: 'Anne',
-            lastName: 'Formateur',
-            phone: null,
-            isActive: true,
-            roles: ['teacher'],
-          },
-        });
+        await servirJson(route, accesFormatrice(`renewed-${renouvellements}`));
       } else {
         await route.continue();
       }
@@ -326,16 +247,9 @@ test.describe('Séance de cours dans un navigateur réel', () => {
 test('R3 · envoie le visiteur sans session de la page du cours au rattachement étudiant', async ({
   page,
 }) => {
-  await page.route(`${API}/**`, async (route) => {
-    const requete = route.request();
-    if (requete.method() === 'OPTIONS') {
-      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
-    } else if (new URL(requete.url()).pathname.endsWith('/auth/refresh')) {
-      await route.fulfill({
-        status: 401,
-        headers: { ...EN_TETES_CORS, 'content-type': 'application/json' },
-        body: JSON.stringify({ status: 401, code: 'REFRESH_ABSENT' }),
-      });
+  await intercepterApi(page, async (route, chemin) => {
+    if (chemin.endsWith('/auth/refresh')) {
+      await servirJson(route, { status: 401, code: 'REFRESH_ABSENT' }, 401);
     } else {
       await route.fulfill({ status: 204, headers: EN_TETES_CORS });
     }
@@ -343,7 +257,7 @@ test('R3 · envoie le visiteur sans session de la page du cours au rattachement 
 
   await page.goto('/formations/b2-01-traitement-information-chiffree');
 
-  await expect(page).toHaveURL(/\/cours\/rejoindre$/);
+  await expect(page).toHaveURL(/\/cours\/rejoindre\?cours=b2-01-traitement-information-chiffree$/);
   await expect(page.getByLabel('Code de la séance')).toBeVisible();
 });
 

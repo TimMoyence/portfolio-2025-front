@@ -150,75 +150,7 @@ export const routes: Routes = [
   },
   {
     path: 'atelier',
-    pathMatch: 'full',
-    redirectTo: 'projets',
-  },
-  {
-    path: 'atelier/meteo',
-    pathMatch: 'full',
-    redirectTo: 'projets',
-  },
-  {
-    path: 'atelier/sebastian',
-    pathMatch: 'full',
-    redirectTo: 'projets',
-  },
-
-  {
-    path: 'atelier/meteo/app',
-    canActivate: [authGuard, roleGuard('weather')],
-    loadComponent: () =>
-      import('./features/weather/weather-app.component').then((m) => m.WeatherAppComponent),
-    data: {
-      seoKey: 'weather-app',
-    },
-  },
-  {
-    path: 'atelier/sebastian/app',
-    canActivate: [authGuard, roleGuard('sebastian')],
-    loadComponent: () =>
-      import('./features/sebastian/sebastian-app.component').then((m) => m.SebastianAppComponent),
-    data: {
-      seoKey: 'sebastian-app',
-    },
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      {
-        path: 'dashboard',
-        loadComponent: () =>
-          import('./features/sebastian/pages/sebastian-dashboard.component').then(
-            (m) => m.SebastianDashboardComponent,
-          ),
-      },
-      {
-        path: 'rapports',
-        loadComponent: () =>
-          import('./features/sebastian/pages/sebastian-reports.component').then(
-            (m) => m.SebastianReportsComponent,
-          ),
-      },
-      {
-        path: 'badges',
-        loadComponent: () =>
-          import('./features/sebastian/pages/sebastian-badges.component').then(
-            (m) => m.SebastianBadgesComponent,
-          ),
-      },
-      {
-        path: 'historique',
-        loadComponent: () =>
-          import('./features/sebastian/pages/sebastian-history.component').then(
-            (m) => m.SebastianHistoryComponent,
-          ),
-      },
-      {
-        path: 'objectifs',
-        loadComponent: () =>
-          import('./features/sebastian/pages/sebastian-goals.component').then(
-            (m) => m.SebastianGoalsComponent,
-          ),
-      },
-    ],
+    children: [{ path: '**', redirectTo: '/projets' }],
   },
   {
     path: 'commonbudgetTM',
@@ -333,6 +265,7 @@ export const routes: Routes = [
     data: {
       seoKey: 'cours-rejoindre',
       robots: 'noindex, nofollow',
+      coquille: false,
     },
   },
   {

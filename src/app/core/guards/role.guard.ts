@@ -1,9 +1,8 @@
 import { inject } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import type { CanActivateFn, GuardResult } from '@angular/router';
 import { Router } from '@angular/router';
-import { filter, map, take } from 'rxjs';
 import { AuthStateService } from '../services/auth-state.service';
+import { deciderApresLaSession } from './apres-la-session';
 
 export function roleGuard(requiredRole: string): CanActivateFn {
   return () => {
@@ -16,16 +15,6 @@ export function roleGuard(requiredRole: string): CanActivateFn {
         queryParams: { reason: 'access', app: requiredRole },
       });
 
-    if (!authState.isSessionResolved()) {
-      authState.restoreSession();
-    }
-
-    return authState.isSessionResolved()
-      ? decide()
-      : toObservable(authState.isSessionResolved).pipe(
-          filter((resolved) => resolved),
-          take(1),
-          map(decide),
-        );
+    return deciderApresLaSession(authState, authState.isSessionResolved, decide);
   };
 }

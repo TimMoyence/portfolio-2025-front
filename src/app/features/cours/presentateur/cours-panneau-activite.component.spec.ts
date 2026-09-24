@@ -1,6 +1,5 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
 import type { EcranDeroule } from '../../../../cours/content/types';
 import {
   buildCardsortPlan,
@@ -11,7 +10,6 @@ import {
 } from '../../../../testing/factories/cours.factory';
 import {
   buildEcranDeroule,
-  buildParticipantDeSeance,
   buildResultatQuestion,
   buildResultatsSeance,
   createFormationsPortStub,
@@ -24,8 +22,6 @@ import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activit
 import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
 
 type Fixture = ComponentFixture<CoursPanneauActiviteComponent>;
-
-const SESSION = 'seance-1';
 
 function cellulesDe(ligne: Element): (string | undefined)[] {
   return [...ligne.children].map((cellule) => cellule.textContent?.trim());
@@ -113,39 +109,73 @@ describe('CoursPanneauActiviteComponent', () => {
     });
   });
 
+  function revelerUneSeuleFois(
+    { fixture, commandes }: ReturnType<typeof monter>,
+    marque: string,
+    screenId: string,
+  ): void {
+    cliquer(fixture, marque);
+    expect(commandes).toEqual([{ screenId, revele: true }]);
+
+    fixture.componentRef.setInput('pilotage', { revele: true });
+    fixture.detectChanges();
+    expect((cibleMarque(fixture, marque, 'le panneau') as HTMLButtonElement).disabled).toBeTrue();
+  }
+
   it('revele les pistes fausses d un defi une seule fois', () => {
     const defi = buildEcranDeroule({ id: 'ecran-defi', type: 'fp-challenge', donnees: {} });
-    const { fixture, commandes } = monter(defi);
 
-    cliquer(fixture, 'activite-reveler');
-    expect(commandes).toEqual([{ screenId: 'ecran-defi', revele: true }]);
-
-    fixture.componentRef.setInput('pilotage', { revele: true });
-    fixture.detectChanges();
-    expect(
-      (cibleMarque(fixture, 'activite-reveler', 'le panneau') as HTMLButtonElement).disabled,
-    ).toBeTrue();
+    revelerUneSeuleFois(monter(defi), 'activite-reveler', 'ecran-defi');
   });
 
-  it('R1 · révèle à l écran la correction de tout écran porteur d un corrigé, une seule fois', () => {
-    const tableau = buildEcranDeroule({
-      id: 'ecran-tableau',
-      type: 'fp-table-build',
-      donnees: {},
+  it('R1 · révèle à l écran la correction d un tri de cartes, une seule fois', () => {
+    const tri = buildEcranDeroule({
+      id: 'ecran-tri',
+      type: 'fp-cardsort',
+      donnees: { plan: buildCardsortPlan() },
       corriges: [],
-      questions: [{ id: 'q-tableau', enonce: 'Prix et indice de la toile', options: null }],
     });
-    const { fixture, commandes } = monter(tableau);
+
+    revelerUneSeuleFois(monter(tri), 'activite-reveler-correction', 'ecran-tri');
+  });
+
+  it('T9 · révèle un écran à réponses libres pour déverrouiller sa correction', () => {
+    const exercice = buildEcranDeroule({
+      id: 'ecran-exercice',
+      type: 'fp-pro',
+      corriges: [],
+      donnees: { cas: { questionsLibres: [{ id: 'exercice:mesure', question: 'Que mesure ?' }] } },
+    });
+    const { fixture, commandes } = monter(exercice, { corrigeAilleurs: true });
 
     cliquer(fixture, 'activite-reveler-correction');
-    expect(commandes).toEqual([{ screenId: 'ecran-tableau', revele: true }]);
 
-    fixture.componentRef.setInput('pilotage', { revele: true });
-    fixture.detectChanges();
-    expect(
-      (cibleMarque(fixture, 'activite-reveler-correction', 'le panneau') as HTMLButtonElement)
-        .disabled,
-    ).toBeTrue();
+    expect(commandes).toEqual([{ screenId: 'ecran-exercice', revele: true }]);
+  });
+
+  it('G07 · ne propose aucune révélation sur un écran à réponses libres que rien ne corrige', () => {
+    const mission = buildEcranDeroule({
+      type: 'fp-pro',
+      corriges: [],
+      donnees: { cas: { questionsLibres: [{ id: 'mission:mesure', question: 'Que mesure ?' }] } },
+    });
+
+    expect(lire(monter(mission).fixture, 'activite-reveler-correction')).toBeNull();
+  });
+
+  it('T9 · révèle le raisonnement attendu d une réflexion sans écran de correction', () => {
+    const reflexion = buildEcranDeroule({
+      type: 'fp-story',
+      corriges: [],
+      donnees: {},
+      corrigeEcran: { type: 'reflexion', attendu: 'Un indicateur rapporté à une base.', suite: '' },
+    });
+
+    expect(lire(monter(reflexion).fixture, 'activite-reveler-correction')).not.toBeNull();
+  });
+
+  it('F35 · laisse la révélation d un écran corrigé à la lecture de la classe, sans doublon', () => {
+    expect(lire(monter(buildEcranDeroule()).fixture, 'activite-reveler-correction')).toBeNull();
   });
 
   it('R1 · ne propose aucune révélation sur un écran sans corrigé', () => {
@@ -154,12 +184,60 @@ describe('CoursPanneauActiviteComponent', () => {
     expect(lire(monter(recit).fixture, 'activite-reveler-correction')).toBeNull();
   });
 
+  it('F27 · corrige le tableau en deux temps, les coefficients puis les prix et indices', () => {
+    const tableau = buildEcranDeroule({
+      id: 'ecran-tableau',
+      type: 'fp-table-build',
+      donnees: {},
+      corriges: [],
+    });
+    const { fixture, commandes } = monter(tableau);
+
+    expect(lire(fixture, 'activite-reveler-correction')).toBeNull();
+    cliquer(fixture, 'activite-tableau-coefficients');
+    fixture.componentRef.setInput('pilotage', { etayage: 1 });
+    fixture.detectChanges();
+    cliquer(fixture, 'activite-tableau-valeurs');
+
+    expect(commandes).toEqual([
+      { screenId: 'ecran-tableau', revele: true, etayage: 1 },
+      { screenId: 'ecran-tableau', etayage: 2 },
+    ]);
+  });
+
+  it('F02 · affiche tout de suite les options d un rappel, une seule fois', () => {
+    const rappel = buildEcranDeroule({ id: 'ecran-rappel', type: 'fp-recall', donnees: {} });
+    const { fixture, commandes } = monter(rappel);
+
+    expect(texte(fixture, 'activite-afficher-options')).toBe('Afficher les options maintenant');
+    cliquer(fixture, 'activite-afficher-options');
+    expect(commandes).toEqual([{ screenId: 'ecran-rappel', optionsAffichees: true }]);
+
+    fixture.componentRef.setInput('pilotage', { optionsAffichees: true });
+    fixture.detectChanges();
+    expect(
+      (cibleMarque(fixture, 'activite-afficher-options', 'le panneau') as HTMLButtonElement)
+        .disabled,
+    ).toBeTrue();
+    expect(lire(monter(buildEcranDeroule()).fixture, 'activite-afficher-options')).toBeNull();
+  });
+
+  it('T7 · ne pilote aucune etape sur l exercice travaille non pilote, corrige a l ecran suivant', () => {
+    const exercice = buildEcranDeroule({
+      id: 'ecran-exercice',
+      type: 'fp-worked',
+      donnees: { exemple: buildWorkedExemple(), etayage: 0 },
+    });
+
+    expect(lire(monter(exercice).fixture, 'activite-etayage')).toBeNull();
+  });
+
   it('RET-23 · part de zero correction revelee quel que soit l etayage prevu par le cours', () => {
     const exemple = buildWorkedExemple();
     const guide = buildEcranDeroule({
       id: 'ecran-guide',
       type: 'fp-worked',
-      donnees: { exemple, etayage: 2 },
+      donnees: { exemple, etayage: 2, pilote: true },
     });
     const { fixture, commandes } = monter(guide);
 
@@ -177,19 +255,13 @@ describe('CoursPanneauActiviteComponent', () => {
       id: 'ecran-atelier',
       type: 'questionnaire',
       donnees: {},
+      corriges: [],
+      questions: [{ id: 'q-atelier', enonce: 'Quel taux ?', options: null }],
     });
-    const { fixture, commandes } = monter(questionnaire);
+    const monte = monter(questionnaire);
 
-    expect(texte(fixture, 'activite-reveler-correction')).toBe('Révéler la correction');
-    cliquer(fixture, 'activite-reveler-correction');
-    expect(commandes).toEqual([{ screenId: 'ecran-atelier', revele: true }]);
-
-    fixture.componentRef.setInput('pilotage', { revele: true });
-    fixture.detectChanges();
-    expect(
-      (cibleMarque(fixture, 'activite-reveler-correction', 'le panneau') as HTMLButtonElement)
-        .disabled,
-    ).toBeTrue();
+    expect(texte(monte.fixture, 'activite-reveler-correction')).toBe('Révéler la correction');
+    revelerUneSeuleFois(monte, 'activite-reveler-correction', 'ecran-atelier');
   });
 
   it('RET-31 · corrige la feuille en deux temps, les formules puis les reponses', () => {
@@ -212,7 +284,7 @@ describe('CoursPanneauActiviteComponent', () => {
     fixture.detectChanges();
     expect(bouton(fixture, 'activite-feuille-reponses').disabled).toBeTrue();
     expect(commandes).toEqual([
-      { screenId: 'ecran-feuille', etayage: 1 },
+      { screenId: 'ecran-feuille', revele: true, etayage: 1 },
       { screenId: 'ecran-feuille', etayage: 2 },
     ]);
   });
@@ -221,7 +293,7 @@ describe('CoursPanneauActiviteComponent', () => {
     const guide = buildEcranDeroule({
       id: 'ecran-guide',
       type: 'fp-worked',
-      donnees: { exemple: buildWorkedExemple(), etayage: 0 },
+      donnees: { exemple: buildWorkedExemple(), etayage: 0, pilote: true },
     });
     const { fixture } = monter(guide);
     const section = cibleMarque(fixture, 'activite-etayage', 'le panneau');
@@ -311,98 +383,7 @@ describe('CoursPanneauActiviteComponent', () => {
     expect(texte(fixture, 'activite-billets-recus')).toBe('17 billets reçus / 22 participants');
   });
 
-  describe('participants de la seance', () => {
-    const ecran = buildEcranDeroule();
-
-    it('alerte quand la liste des participants ne peut pas etre lue', async () => {
-      port.lireParticipants.and.returnValue(throwError(() => new Error('reseau coupe')));
-      const { fixture } = monter(ecran, { sessionId: SESSION });
-
-      cliquer(fixture, 'activite-participants-afficher');
-      await fixture.whenStable();
-      fixture.detectChanges();
-
-      expect(lire(fixture, 'activite-participants-echec')?.getAttribute('role')).toBe('alert');
-    });
-
-    const afficherDeuxParticipants = async (): Promise<Fixture> => {
-      port.lireParticipants.and.returnValue(
-        of({
-          participants: [
-            buildParticipantDeSeance(),
-            buildParticipantDeSeance({ id: 'participant-2', prenom: 'Sami' }),
-          ],
-        }),
-      );
-      const { fixture } = monter(ecran, { sessionId: SESSION });
-
-      cliquer(fixture, 'activite-participants-afficher');
-      await fixture.whenStable();
-      fixture.detectChanges();
-      return fixture;
-    };
-
-    const cliquerLePremier = async (fixture: Fixture, marque: string): Promise<void> => {
-      const boutons = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>(
-        `[data-testid="${marque}"]`,
-      );
-      expect(boutons.length).withContext(marque).toBeGreaterThan(0);
-      boutons[0].click();
-      await fixture.whenStable();
-      fixture.detectChanges();
-    };
-
-    const evinces = (fixture: Fixture): readonly (string | null)[] =>
-      [
-        ...(fixture.nativeElement as HTMLElement).querySelectorAll(
-          '[data-testid="activite-participant"]',
-        ),
-      ].map((ligne) => ligne.getAttribute('data-evince'));
-
-    it('lit les participants puis marque evince celui que le formateur retire', async () => {
-      const fixture = await afficherDeuxParticipants();
-
-      await cliquerLePremier(fixture, 'activite-evincer');
-
-      expect(port.evincerParticipant).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
-      expect(evinces(fixture)).toEqual(['true', 'false']);
-    });
-
-    it('R5 · referme la liste des participants a la demande du formateur', async () => {
-      const fixture = await afficherDeuxParticipants();
-
-      await cliquerLePremier(fixture, 'activite-participants-masquer');
-
-      expect(lire(fixture, 'activite-participant')).toBeNull();
-      expect(lire(fixture, 'activite-participants-afficher')).not.toBeNull();
-    });
-
-    it('readmet l evince que le formateur avait retire par erreur', async () => {
-      const fixture = await afficherDeuxParticipants();
-      await cliquerLePremier(fixture, 'activite-evincer');
-
-      await cliquerLePremier(fixture, 'activite-readmettre');
-
-      expect(port.readmettreParticipant).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
-      expect(evinces(fixture)).toEqual(['false', 'false']);
-    });
-
-    it('alerte quand la readmission est refusee, la place ayant ete reprise', async () => {
-      const fixture = await afficherDeuxParticipants();
-      await cliquerLePremier(fixture, 'activite-evincer');
-      port.readmettreParticipant.and.returnValue(throwError(() => new Error('seance complete')));
-
-      await cliquerLePremier(fixture, 'activite-readmettre');
-
-      expect(lire(fixture, 'activite-participants-echec')?.getAttribute('role')).toBe('alert');
-    });
-
-    it('ne lit rien sans seance ouverte', () => {
-      const { fixture } = monter(ecran);
-      expect(
-        (cibleMarque(fixture, 'activite-participants-afficher', 'le panneau') as HTMLButtonElement)
-          .disabled,
-      ).toBeTrue();
-    });
+  it('ne liste plus les participants, confies a leur propre panneau', () => {
+    expect(lire(monter(buildEcranDeroule()).fixture, 'activite-participants')).toBeNull();
   });
 });

@@ -1,6 +1,11 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
 
+export interface AsiliHeroMetaRow {
+  readonly key: string;
+  readonly value: string;
+}
+
 @Component({
   selector: 'app-asili-hero',
   standalone: true,
@@ -23,4 +28,6 @@ export class AsiliHeroComponent {
   readonly lead = input<string | null>(null);
 
   readonly scrollHint = input<string | null>(null);
+
+  readonly metaRows = input<readonly AsiliHeroMetaRow[]>([]);
 }

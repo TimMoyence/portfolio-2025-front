@@ -2,7 +2,7 @@ import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { projeterMetadonnees } from './projection';
-import { estObjet } from './retours';
+import { estObjet, lireTextes } from './retours';
 
 export interface WorkedEtape {
   readonly id: string;
@@ -32,17 +32,6 @@ function copierEtape(etape: WorkedEtape): WorkedEtape {
 function remplis(champs: Champs): Record<string, string> {
   return Object.fromEntries(
     Object.entries(champs).filter(([, valeur]) => valeur.trim().length > 0),
-  );
-}
-
-function lireChamps(valeur: unknown): Champs {
-  if (!estObjet(valeur)) {
-    return {};
-  }
-  return Object.fromEntries(
-    Object.entries(valeur).filter(
-      (entree): entree is [string, string] => typeof entree[1] === 'string',
-    ),
   );
 }
 
@@ -107,22 +96,22 @@ export class FpWorked extends FpBlock {
     if (!estObjet(valeur) || this.soumise) {
       return;
     }
-    this.redactions = lireChamps(valeur['redactions']);
+    this.redactions = lireTextes(valeur['redactions']);
     this.noterBrouillonRepris();
     this.refreshSiConnecte();
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     const exemple = this.exemple;
     if (exemple === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
-    if (this.estPilote) {
+    if (this.estPilote || this.presentateur()) {
       return this.etapesPilotees(exemple);
     }
     return safeHtml`
-      <section class="fp-carte fp-worked__exemple">
-        <p class="fp-worked__enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
+      <section class="fp-carte fp-scene fp-worked__exemple">
+        <p class="fp-enonce fp-worked__enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
         <p class="fp-worked__consigne">${escapeHtml(this.texte('worked-consigne'))}</p>
         <ol class="fp-worked__etapes">${exemple.etapes.map((etape, rang) => this.etape(etape, rang))}</ol>
         <button type="button" class="fp-worked__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
@@ -132,36 +121,9 @@ export class FpWorked extends FpBlock {
     `;
   }
 
-  renderStage(): EscapedHtml {
-    const exemple = this.exemple;
-    if (exemple === null) {
-      return safeHtml``;
-    }
-    return safeHtml`
-      <section class="fp-scene fp-worked__exemple">
-        <p class="fp-enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
-        <ol class="fp-worked__etapes">${exemple.etapes.map((etape, rang) => this.etapeProjetee(etape, rang))}</ol>
-      </section>
-    `;
-  }
-
-  renderBoard(): EscapedHtml {
-    const exemple = this.exemple;
-    if (exemple === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    return safeHtml`
-      <section class="fp-carte fp-worked__exemple">
-        <p class="fp-enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
-        <p class="fp-worked__niveau" data-testid="niveau" data-niveau="${this.montrees}">${escapeHtml(this.texte('worked-niveau'))} ${this.montrees} / ${this.total()}</p>
-        <p class="fp-reperes">${this.reperes(exemple.metadonnees)}</p>
-      </section>
-    `;
-  }
-
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.interne?.id ?? null);
-    if (this.mode() !== 'hand') {
+    if (this.estPilote || this.presentateur()) {
       return;
     }
     const verrouille = this.verrouilleApresEnvoi(this.soumise, false);
@@ -179,15 +141,10 @@ export class FpWorked extends FpBlock {
   }
 
   private etapesPilotees(exemple: WorkedExemple): EscapedHtml {
-    const suite =
-      this.montrees < this.total()
-        ? safeHtml`<p class="fp-worked__suite" data-testid="suite-au-tableau">${escapeHtml(this.texte('worked-suite-au-tableau'))}</p>`
-        : safeHtml``;
     return safeHtml`
-      <section class="fp-carte fp-worked__exemple">
-        <p class="fp-worked__enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
-        <ol class="fp-worked__etapes">${exemple.etapes.slice(0, this.montrees).map((etape) => this.etapeMontree(etape))}</ol>
-        ${suite}
+      <section class="fp-carte fp-scene fp-worked__exemple" data-pilote="${escapeHtml(String(this.estPilote))}">
+        <p class="fp-enonce fp-worked__enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
+        <ol class="fp-worked__etapes">${exemple.etapes.map((etape, rang) => this.etapeProjetee(etape, rang))}</ol>
       </section>
     `;
   }
@@ -204,7 +161,7 @@ export class FpWorked extends FpBlock {
   }
 
   private projeterEtape(etape: WorkedEtape, rang: number): WorkedEtape {
-    if (rang < this.montrees || this.roleActuel() === 'presentateur') {
+    if (rang < this.montrees) {
       return copierEtape(etape);
     }
     return { ...copierEtape(etape), raisonnement: '' };
@@ -216,7 +173,7 @@ export class FpWorked extends FpBlock {
       <li class="fp-worked__etape" data-testid="etape" data-etape="${escapeHtml(etape.id)}" data-resolue="${escapeHtml(String(resolue))}">
         <p class="fp-worked__intitule">${escapeHtml(etape.intitule)}</p>
         ${resolue ? this.saisieFigee(etape) : this.redaction(etape)}
-        ${resolue ? this.correction(etape) : safeHtml``}
+        ${resolue && etape.raisonnement !== '' ? this.correction(etape) : safeHtml``}
       </li>
     `;
   }
@@ -235,15 +192,6 @@ export class FpWorked extends FpBlock {
         <p class="fp-worked__intitule">${escapeHtml(etape.intitule)}</p>
         <p class="fp-worked__invite" data-testid="question">${escapeHtml(etape.invite)}</p>
         ${resolue ? this.correction(etape) : safeHtml``}
-      </li>
-    `;
-  }
-
-  private etapeMontree(etape: WorkedEtape): EscapedHtml {
-    return safeHtml`
-      <li class="fp-worked__etape" data-testid="etape" data-etape="${escapeHtml(etape.id)}" data-resolue="true">
-        <p class="fp-worked__intitule">${escapeHtml(etape.intitule)}</p>
-        ${this.raisonnement(etape)}
       </li>
     `;
   }

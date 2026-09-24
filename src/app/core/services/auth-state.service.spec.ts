@@ -275,13 +275,13 @@ describe('AuthStateService', () => {
             lastName: 'B',
             phone: null,
             isActive: true,
-            roles: ['weather', 'sebastian'],
+            roles: ['user', 'teacher'],
           },
         }),
       );
 
-      expect(service.hasRole('weather')).toBeTrue();
-      expect(service.hasRole('sebastian')).toBeTrue();
+      expect(service.hasRole('user')).toBeTrue();
+      expect(service.hasRole('teacher')).toBeTrue();
       expect(service.hasRole('admin')).toBeFalse();
     });
 
@@ -329,27 +329,26 @@ describe('AuthStateService', () => {
       expect(service.isLoggedIn()).toBeFalse();
     });
 
-    it('devrait purger la session locale meme si la revocation serveur echoue', () => {
-      const authPortStub = TestBed.inject(AUTH_PORT) as Record<keyof AuthPort, jasmine.Spy>;
-      authPortStub.logout.and.returnValue(throwError(() => new Error('API injoignable')));
-      service.login(buildAuthSession());
+    const echecsDeRevocation: readonly [string, (logout: jasmine.Spy) => void][] = [
+      [
+        'la revocation serveur echoue',
+        (logout) => logout.and.returnValue(throwError(() => new Error('API injoignable'))),
+      ],
+      ["le port jette avant d'emettre", (logout) => logout.and.throwError('port indisponible')],
+    ];
 
-      expect(() => service.logout()).not.toThrow();
+    for (const [cas, echouer] of echecsDeRevocation) {
+      it(`devrait purger la session locale meme si ${cas}`, () => {
+        const authPortStub = TestBed.inject(AUTH_PORT) as Record<keyof AuthPort, jasmine.Spy>;
+        echouer(authPortStub.logout);
+        service.login(buildAuthSession());
 
-      expect(service.isLoggedIn()).toBeFalse();
-      expect(service.user()).toBeNull();
-    });
+        expect(() => service.logout()).not.toThrow();
 
-    it("devrait purger la session locale meme si le port jette avant d'emettre", () => {
-      const authPortStub = TestBed.inject(AUTH_PORT) as Record<keyof AuthPort, jasmine.Spy>;
-      authPortStub.logout.and.throwError('port indisponible');
-      service.login(buildAuthSession());
-
-      expect(() => service.logout()).not.toThrow();
-
-      expect(service.isLoggedIn()).toBeFalse();
-      expect(service.user()).toBeNull();
-    });
+        expect(service.isLoggedIn()).toBeFalse();
+        expect(service.user()).toBeNull();
+      });
+    }
 
     it('devrait annuler le timer de refresh au logout', fakeAsync(() => {
       const authPortStub = TestBed.inject(AUTH_PORT) as Record<keyof AuthPort, jasmine.Spy>;

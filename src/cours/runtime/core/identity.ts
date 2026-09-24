@@ -8,6 +8,7 @@ export interface Identity {
   prenom: string;
   nom: string;
   email: string;
+  secretsDeReprise?: Readonly<Record<string, string>>;
 }
 
 export interface IdentityInput {
@@ -43,14 +44,31 @@ export function saveIdentity(input: IdentityInput): IdentityRegistration {
     existante.prenom === prenom &&
     existante.nom === nom &&
     existante.email === email;
-  const identite: Identity = {
-    studentKey: memeEtudiant ? existante.studentKey : creerCle(),
-    prenom,
-    nom,
-    email,
-  };
+  const identite: Identity = memeEtudiant
+    ? existante
+    : { studentKey: creerCle(), prenom, nom, email };
+  return { identite, persistee: enregistrer(identite) };
+}
+
+export function memoriserSecretDeReprise(code: string, secret: string): void {
+  const identite = readIdentity();
+  if (identite === null) {
+    return;
+  }
+  enregistrer({
+    ...identite,
+    secretsDeReprise: { ...identite.secretsDeReprise, [code]: secret },
+  });
+}
+
+export function lireSecretDeReprise(code: string): string | undefined {
+  const secrets = readIdentity()?.secretsDeReprise;
+  return secrets !== undefined && Object.hasOwn(secrets, code) ? secrets[code] : undefined;
+}
+
+function enregistrer(identite: Identity): boolean {
   enMemoire = identite;
-  return { identite, persistee: persistJson(CLE, identite) };
+  return persistJson(CLE, identite);
 }
 
 export function clearIdentity(): void {

@@ -15,10 +15,12 @@ import {
   buildVisualQuizSlide,
   buildVisualSlide,
 } from '../../../../testing/factories/visual-slide.factory';
+import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import {
   ECRAN_VERROUILLE,
   ecranDuRappel,
   ecransDesIdentifiants,
+  enoncesDesActivites,
   enoncesDuDeroule,
   enteteDeQuestionnaire,
   identifiantsDesQuestions,
@@ -28,6 +30,57 @@ import {
   questionsDeLEcran,
   titreDeLEcran,
 } from './lecture-ecran';
+
+describe('enonces des activites libres du cours B2-01', () => {
+  const ecran = (suffixe: string) => {
+    const trouve = ecransDuPupitreB2_01().find(({ id }) => id.endsWith(suffixe));
+    if (trouve === undefined) {
+      throw new Error(`écran ${suffixe} absent de l'instantané`);
+    }
+    return trouve;
+  };
+
+  it('lit les trois questions libres de la mission', () => {
+    const enonces = enoncesDesActivites(ecran('A1-03-MISSION'));
+
+    expect(enonces.size).toBe(3);
+    expect(enonces.get('b2-01-a1-mission:mesure')).toBe('Que mesure chaque chiffre ?');
+  });
+
+  it('lit la question d un ecran de reflexion', () => {
+    const enonces = enoncesDesActivites(ecran('A1-08-QUESTION-DE-GESTION'));
+
+    expect([...enonces.keys()]).toEqual(['b2-01-a1-question-gestion']);
+    expect(enonces.get('b2-01-a1-question-gestion')).toContain('Hélène demande');
+  });
+
+  it('lit l invite de chaque etape d un exercice travaille non pilote', () => {
+    const exercice = ecransDuPupitreB2_01().find(
+      (candidat) => candidat.type === 'fp-worked' && candidat.donnees?.['pilote'] !== true,
+    );
+    if (exercice === undefined) {
+      throw new Error('aucun exercice travaillé non piloté dans l instantané');
+    }
+    const enonces = enoncesDesActivites(exercice);
+
+    expect(enonces.size).toBeGreaterThan(0);
+    for (const cle of enonces.keys()) {
+      expect(cle).toMatch(/^[^:]+:[^:]+$/);
+    }
+  });
+
+  it('lit la question du billet de sortie', () => {
+    const enonces = enoncesDesActivites(ecran('BILLET-DE-SORTIE'));
+
+    expect(enonces.get('b2-01-a6-billet')).toContain('Le comité ne retiendra');
+  });
+
+  it('ne trouve aucune activite libre sur un ecran de vote', () => {
+    const vote = ecransDuPupitreB2_01().find(({ type }) => type === 'fp-vote');
+
+    expect(vote === undefined ? null : enoncesDesActivites(vote).size).toBe(0);
+  });
+});
 
 describe('lecture de l ecran', () => {
   it('lit la question du QCM principal d un ecran servi en presentation v2, sans correction', () => {
@@ -79,6 +132,21 @@ describe('lecture de l ecran', () => {
     ]);
   });
 
+  it('R1 · signale a la brique que son ecran est resolu par un ecran suivant', () => {
+    const plan = { intitule: 'Classez', cartes: [], categories: [] };
+    const resolu = buildEcran({
+      type: 'fp-cardsort',
+      donnees: { plan },
+      resoluPar: ['B2-01-A1-05-CORRECTION'],
+    });
+
+    expect(planDeMontage(resolu)?.[0].donnees).toEqual({ plan, resoluAilleurs: true });
+    expect(
+      planDeMontage(buildEcran({ type: 'fp-cardsort', donnees: { plan } }))?.[0].donnees,
+    ).toEqual({ plan, resoluAilleurs: false });
+    expect(PROPRIETES_PAR_BRIQUE['fp-cardsort']).toContain('resoluAilleurs');
+  });
+
   it('refuse le plan de montage d une brique inconnue', () => {
     expect(planDeMontage(buildVisualSlide({ type: 'brique-inconnue' }))).toBeNull();
   });
@@ -107,7 +175,7 @@ describe('lecture de l ecran', () => {
 describe('table des proprietes par brique', () => {
   it('donne a chaque brique montable la liste des proprietes qu elle lit', () => {
     expect(PROPRIETES_PAR_BRIQUE['fp-vote']).toEqual(['question', 'questionJumelle']);
-    expect(PROPRIETES_PAR_BRIQUE['fp-recall']).toEqual(['question', 'delaiMs']);
+    expect(PROPRIETES_PAR_BRIQUE['fp-recall']).toEqual(['question', 'delaiMs', 'consigne']);
     expect(PROPRIETES_PAR_BRIQUE[ECRAN_VERROUILLE]).toBeUndefined();
     expect(PROPRIETES_PAR_BRIQUE['questionnaire']).toBeUndefined();
   });

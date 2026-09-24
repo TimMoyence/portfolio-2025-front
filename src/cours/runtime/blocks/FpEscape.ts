@@ -163,56 +163,35 @@ export class FpEscape extends FpBlock {
     }
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     const parcours = this.interne;
     if (parcours === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
+    const corrige = this.solutionnaire !== null;
+    const jeu =
+      this.presentateur() || corrige
+        ? VIDE
+        : safeHtml`${this.progressionAffichee()}${this.minuteur()}`;
+    const retour = this.presentateur()
+      ? VIDE
+      : safeHtml`<p class="fp-escape__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>
+        ${this.annonces()}`;
     return safeHtml`
-      <section class="fp-carte fp-escape__parcours">
+      <section class="fp-carte fp-scene fp-escape__parcours">
         <p class="fp-enonce fp-escape__intitule" data-testid="intitule">${escapeHtml(parcours.intitule)}</p>
         <p class="fp-escape__consigne">${escapeHtml(this.texte('escape-consigne'))}</p>
-        ${this.progressionAffichee()}
-        ${this.minuteur()}
-        ${this.enigmes(true)}
-        ${this.coffre()}
-        <p class="fp-escape__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>
-        ${this.annonces()}
-      </section>
-    `;
-  }
-
-  renderStage(): EscapedHtml {
-    const parcours = this.interne;
-    if (parcours === null) {
-      return safeHtml``;
-    }
-    return safeHtml`
-      <section class="fp-scene fp-escape__parcours">
-        <p class="fp-enonce fp-escape__intitule" data-testid="intitule">${escapeHtml(parcours.intitule)}</p>
-        <p class="fp-escape__consigne">${escapeHtml(this.texte('escape-consigne'))}</p>
-        <ol class="fp-escape__liste">${parcours.enigmes.map((enigme) => safeHtml`<li class="fp-escape__enigme" data-testid="enigme" data-enigme="${escapeHtml(enigme.id)}"><span class="fp-escape__nom">${escapeHtml(enigme.intitule)}</span></li>`)}</ol>
-      </section>
-    `;
-  }
-
-  renderBoard(): EscapedHtml {
-    const parcours = this.interne;
-    if (parcours === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    return safeHtml`
-      <section class="fp-carte fp-escape__parcours">
-        <p class="fp-enonce fp-escape__intitule" data-testid="intitule">${escapeHtml(parcours.intitule)}</p>
-        <div class="fp-escape__reperes">${this.reperes(parcours.metadonnees)}</div>
-        ${this.roleActuel() === 'presentateur' ? this.solutions(parcours) : VIDE}
+        ${jeu}
+        ${this.presentateur() || corrige ? this.enigmesProjetees(parcours) : this.enigmes()}
+        ${this.issue(corrige)}
+        ${retour}
       </section>
     `;
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.cleAffichage());
-    if (this.mode() !== 'hand') {
+    if (this.presentateur()) {
       return;
     }
     const champ = racine.querySelector<HTMLInputElement>('[data-testid="saisie"]');
@@ -331,18 +310,38 @@ export class FpEscape extends FpBlock {
     return safeHtml`<span class="fp-escape__echeance" data-testid="echeance">${escapeHtml(this.texte('escape-echu'))}</span>`;
   }
 
-  private enigmes(interactif: boolean): EscapedHtml {
+  private parcoursVide(): EscapedHtml {
+    return safeHtml`<p class="fp-escape__vide" data-testid="vide">${escapeHtml(this.texte('escape-vide'))}</p>`;
+  }
+
+  private enigmes(): EscapedHtml {
     if (this.total() === 0) {
-      return safeHtml`<p class="fp-escape__vide" data-testid="vide">${escapeHtml(this.texte('escape-vide'))}</p>`;
+      return this.parcoursVide();
     }
-    return safeHtml`<ol class="fp-escape__liste">${(this.interne?.enigmes ?? []).map((enigme) => this.enigme(enigme, interactif))}</ol>`;
+    return safeHtml`<ol class="fp-escape__liste">${(this.interne?.enigmes ?? []).map((enigme) => this.enigme(enigme))}</ol>`;
+  }
+
+  private enigmesProjetees(parcours: EscapeParcoursPublic): EscapedHtml {
+    if (parcours.enigmes.length === 0) {
+      return this.parcoursVide();
+    }
+    const solution = (id: string): EscapedHtml => {
+      const trouvee = this.solutionnaire?.enigmes.find((enigme) => enigme.enigmeId === id);
+      return trouvee === undefined
+        ? VIDE
+        : safeHtml`<p class="fp-encadre fp-escape__solution" data-etat="confirme" data-testid="solution">${escapeHtml(trouvee.solution)} · <span class="fp-montant">${escapeHtml(trouvee.fragment)}</span></p>`;
+    };
+    return safeHtml`<ol class="fp-escape__liste">${parcours.enigmes.map(
+      (enigme) =>
+        safeHtml`<li class="fp-escape__enigme" data-testid="enigme" data-enigme="${escapeHtml(enigme.id)}"><p class="fp-escape__titre"><span class="fp-escape__nom">${escapeHtml(enigme.intitule)}</span></p><p class="fp-escape__enonce fp-prose" data-testid="enonce">${escapeHtml(enigme.enonce)}</p>${solution(enigme.id)}</li>`,
+    )}</ol>`;
   }
 
   private libelleEtat(etat: EtatEnigme): string {
     return this.texte(etat === 'epuisee' ? 'escape-etat-verrouillee' : `escape-etat-${etat}`);
   }
 
-  private enigme(enigme: EscapeEnigmePublique, interactif: boolean): EscapedHtml {
+  private enigme(enigme: EscapeEnigmePublique): EscapedHtml {
     const etat = this.etatDe(enigme.id);
     return safeHtml`
       <li class="fp-escape__enigme" data-testid="enigme" data-enigme="${escapeHtml(enigme.id)}" data-etat="${escapeHtml(etat)}">
@@ -350,16 +349,12 @@ export class FpEscape extends FpBlock {
           <span class="fp-escape__nom">${escapeHtml(enigme.intitule)}</span>
           <span class="fp-badge fp-escape__etat" data-testid="etat">${escapeHtml(this.libelleEtat(etat))}</span>
         </p>
-        ${this.corpsEnigme(enigme, etat, interactif)}
+        ${this.corpsEnigme(enigme, etat)}
       </li>
     `;
   }
 
-  private corpsEnigme(
-    enigme: EscapeEnigmePublique,
-    etat: EtatEnigme,
-    interactif: boolean,
-  ): EscapedHtml {
+  private corpsEnigme(enigme: EscapeEnigmePublique, etat: EtatEnigme): EscapedHtml {
     if (etat === 'verrouillee') {
       return safeHtml`<p class="fp-escape__verrou" data-testid="verrou">${escapeHtml(this.texte('escape-verrouillee'))}</p>`;
     }
@@ -371,7 +366,7 @@ export class FpEscape extends FpBlock {
     }
     return safeHtml`
       <p class="fp-escape__enonce fp-prose" data-testid="enonce">${escapeHtml(enigme.enonce)}</p>
-      ${interactif ? this.atelier(enigme) : VIDE}
+      ${this.atelier(enigme)}
     `;
   }
 
@@ -385,9 +380,7 @@ export class FpEscape extends FpBlock {
       </p>
       <p class="fp-escape__restantes" data-testid="tentatives-restantes">${escapeHtml(this.texte('escape-tentatives-restantes'))} ${this.restantesDe(enigme.id)}</p>
       <p class="fp-escape__aide">
-        <button type="button" class="fp-escape__indice" data-testid="demander-indice" data-pret="${escapeHtml(this.indiceDisponible())}" ${this.indiceOuvert ? DESACTIVE : VIDE}>${escapeHtml(this.texte('escape-indice'))}</button>
-        <span class="fp-escape__gratuite" data-testid="gratuite">${escapeHtml(this.texte('escape-indice-gratuit'))}</span>
-      </p>
+        <button type="button" class="fp-escape__indice" data-testid="demander-indice" data-pret="${escapeHtml(this.indiceDisponible())}" ${this.indiceOuvert ? DESACTIVE : VIDE}>${escapeHtml(this.texte('escape-indice'))}</button>      </p>
       ${this.indiceOuvert ? this.indice(enigme) : VIDE}
     `;
   }
@@ -403,17 +396,19 @@ export class FpEscape extends FpBlock {
     return safeHtml`<p class="fp-escape__coffre" data-testid="code"><span class="fp-escape__mention">${escapeHtml(this.texte('escape-code'))}</span> <span class="fp-montant">${escapeHtml(this.codeReconstitue())}</span></p>`;
   }
 
-  private solutions(parcours: EscapeParcoursPublic): EscapedHtml {
+  private issue(corrige: boolean): EscapedHtml {
+    if (corrige) {
+      return this.codeFinal();
+    }
+    return this.presentateur() ? VIDE : this.coffre();
+  }
+
+  private codeFinal(): EscapedHtml {
     const solutionnaire = this.solutionnaire;
     if (solutionnaire === null) {
       return VIDE;
     }
-    const intitule = (id: string): string =>
-      parcours.enigmes.find((enigme) => enigme.id === id)?.intitule ?? id;
-    return safeHtml`
-      <ul class="fp-escape__solutions" data-testid="solutions">${solutionnaire.enigmes.map((enigme) => safeHtml`<li class="fp-escape__solution"><strong>${escapeHtml(intitule(enigme.enigmeId))}</strong> ${escapeHtml(enigme.solution)} · ${escapeHtml(enigme.fragment)}</li>`)}</ul>
-      <p class="fp-escape__coffre" data-testid="code-final"><span class="fp-escape__mention">${escapeHtml(this.texte('escape-code'))}</span> <span class="fp-montant">${escapeHtml(solutionnaire.codeFinal)}</span></p>
-    `;
+    return safeHtml`<p class="fp-escape__coffre" data-testid="code-final"><span class="fp-escape__mention">${escapeHtml(this.texte('escape-code'))}</span> <span class="fp-montant">${escapeHtml(solutionnaire.codeFinal)}</span></p>`;
   }
 
   private indiceDisponible(): boolean {

@@ -1,7 +1,7 @@
 @use './panneau' as panneau;
 
 :host {
-  display: block;
+  display: contents;
 }
 
 .panneau-guide {
@@ -11,10 +11,6 @@
 
 .panneau-guide__titre {
   margin: 0;
-}
-
-.panneau-guide__vide {
-  @include panneau.discret;
 }
 
 .panneau-guide__liste {

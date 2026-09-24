@@ -1,3 +1,4 @@
+import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import { buildWorkedExemple } from '../../../testing/factories/cours.factory';
@@ -105,11 +106,15 @@ describe('FpWorked', () => {
     }
   });
 
-  it('RET-25 · ne montre aucune correction a la premiere presentation', () => {
+  function attendreAucuneEtapePreRemplie(): void {
     expect(hote.etayage).toBe(0);
     expect(montrees(hote)).toEqual([]);
     expect(aCompleter(hote)).toEqual(ETAPES);
     expect(reperes(hote, 'saisie').length).toBe(PLEIN);
+  }
+
+  it('RET-25 · ne montre aucune correction a la premiere presentation', () => {
+    attendreAucuneEtapePreRemplie();
   });
 
   it('RET-23 · pose sous chaque etape sa question puis un seul champ de reponse', () => {
@@ -179,10 +184,7 @@ describe('FpWorked', () => {
 
   it('ne pre remplit aucune etape au dernier niveau d etayage', () => {
     hote.etayage = 0;
-    expect(hote.etayage).toBe(0);
-    expect(montrees(hote)).toEqual([]);
-    expect(aCompleter(hote)).toEqual(ETAPES);
-    expect(reperes(hote, 'saisie').length).toBe(PLEIN);
+    attendreAucuneEtapePreRemplie();
   });
 
   it('suit l etayage pilote par le formateur, a la baisse comme a la hausse, dans les bornes', () => {
@@ -249,14 +251,20 @@ describe('FpWorked', () => {
     expect(traces.ecritures).toEqual([]);
   });
 
-  it('ne livre pas a l etudiant le raisonnement d une etape qu il doit completer', () => {
-    hote.etayage = PLEIN - 1;
-    const cache = EXEMPLE.etapes[PLEIN - 1].raisonnement;
-    expect(JSON.stringify(hote.exemple)).not.toContain(cache);
-    expect(hote.shadowRoot?.innerHTML ?? '').not.toContain(cache);
-    hote.setAttribute('data-cours-role', 'presentateur');
-    expect(JSON.stringify(hote.exemple)).toContain(cache);
-  });
+  for (const role of ROLES_DE_MONTAGE) {
+    it(`ne livre au role ${role} le raisonnement d une etape qu une fois l etayage avance`, () => {
+      hote.setAttribute('data-cours-role', role);
+      hote.etayage = PLEIN - 1;
+      const cache = EXEMPLE.etapes[PLEIN - 1].raisonnement;
+      expect(JSON.stringify(hote.exemple)).not.toContain(cache);
+      expect(hote.shadowRoot?.innerHTML ?? '').not.toContain(cache);
+
+      hote.etayage = PLEIN;
+
+      expect(JSON.stringify(hote.exemple)).toContain(cache);
+      expect(hote.shadowRoot?.innerHTML ?? '').toContain(cache);
+    });
+  }
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
     const piege = buildWorkedExemple({ id: 'K-RESOLU-09' });
@@ -283,21 +291,33 @@ describe('FpWorked', () => {
     expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
   });
 
-  it('projette sans zone de saisie et annonce au tableau le niveau d etayage', () => {
+  it('montre au presentateur les etapes revelees sans zone de saisie ni badge de niveau', () => {
     hote.etayage = 2;
-    hote.setAttribute('render', 'stage');
+    hote.setAttribute('data-cours-role', 'presentateur');
     expect(reperes(hote, 'saisie')).toEqual([]);
     expect(reperes(hote, 'explication')).toEqual([]);
+    expect(reperes(hote, 'valider')).toEqual([]);
     expect(montrees(hote)).toEqual(ETAPES.slice(0, 2));
-    hote.setAttribute('render', 'board');
-    expect(reperes(hote, 'niveau')[0]?.dataset['niveau']).toBe('2');
-    expect(reperes(hote, 'modalite')[0]?.textContent).toBe('Individuel');
-    expect(reperes(hote, 'duree')[0]?.textContent).toBe('8 min');
+    expect(reperes(hote, 'niveau')).toEqual([]);
+    expect(reperes(hote, 'modalite')).toEqual([]);
+    expect(reperes(hote, 'duree')).toEqual([]);
+    expect(hote.exemple?.metadonnees.dureeMinutes).toBe(8);
   });
 
-  it('RET-23 · projette chaque question et, dessous, les seules corrections revelees', () => {
+  it('pose la meme section et le meme enonce pour les deux roles', () => {
+    const cadre = (): string =>
+      [...(hote.shadowRoot?.querySelectorAll('section, [data-testid="enonce"]') ?? [])]
+        .map((noeud) => noeud.className)
+        .join('|');
+    const etudiant = cadre();
+    hote.setAttribute('data-cours-role', 'presentateur');
+    expect(cadre()).toBe(etudiant);
+    expect(hote.shadowRoot?.querySelector('section')?.getAttribute('data-pilote')).toBe('false');
+  });
+
+  it('RET-23 · projette au presentateur chaque question et, dessous, les seules corrections revelees', () => {
     hote.etayage = 1;
-    hote.setAttribute('render', 'stage');
+    hote.setAttribute('data-cours-role', 'presentateur');
     const etapes = reperes(hote, 'etape');
 
     expect(
@@ -320,16 +340,29 @@ describe('FpWorked', () => {
     expect(montrees(hote)).toEqual(ETAPES.slice(0, 1));
     expect(hote.shadowRoot?.querySelectorAll('textarea').length).toBe(0);
     expect(reperes(hote, 'valider')).toEqual([]);
-    expect(reperes(hote, 'suite-au-tableau').length).toBe(1);
+    expect(reperes(hote, 'question').length).toBe(PLEIN);
+    expect(hote.shadowRoot?.querySelector('section')?.getAttribute('data-pilote')).toBe('true');
 
     hote.etayage = PLEIN;
 
     expect(montrees(hote)).toEqual(ETAPES);
-    expect(reperes(hote, 'suite-au-tableau')).toEqual([]);
     expect(envoisEmis()).toEqual([]);
   });
 
+  it('E17 · en correction, le poste etudiant a le meme rendu que le presentateur', () => {
+    hote.pilote = true;
+    hote.etayage = 2;
+    const etapes = (): string =>
+      hote.shadowRoot?.querySelector('ol.fp-worked__etapes')?.innerHTML ?? '';
+    const etudiant = etapes();
+
+    hote.setAttribute('data-cours-role', 'presentateur');
+
+    expect(etapes()).toBe(etudiant);
+  });
+
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
+    hote.etayage = 1;
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
     expect(classesOrphelines(hote, 'worked')).toEqual([]);
   });

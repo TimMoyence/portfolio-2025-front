@@ -94,6 +94,58 @@ export function buildVisualSortCorrectionSlide(
   });
 }
 
+export const ATELIER_CORRIGE = {
+  screenId: 'B2-01-A2-03-ATELIER-1',
+  questions: ['b2-01-a2-evolution-marge', 'b2-01-a2-part-marketplace'],
+} as const;
+
+export function buildAnswerReviewProps(
+  overrides: Readonly<Record<string, unknown>> = {},
+): Readonly<Record<string, unknown>> {
+  return {
+    title: 'Correction de l’atelier 1',
+    subtitle: 'Chaque calcul, avec son contrôle.',
+    source: { screenId: ATELIER_CORRIGE.screenId },
+    explications: [
+      {
+        reference: ATELIER_CORRIGE.questions[0],
+        texte: '(291 000 − 285 000) ÷ 285 000 ≈ 0,021 : +2,1 % en trois ans.',
+      },
+      {
+        reference: ATELIER_CORRIGE.questions[1],
+        texte: '523 000 ÷ 1 150 000 ≈ 0,455, soit 45,5 % du CA.',
+      },
+    ],
+    ...overrides,
+  };
+}
+
+export function buildVisualAnswerReviewSlide(
+  overrides: Partial<EcranContent> = {},
+  id = 'B2-01-A2-03-CORRECTION-1',
+): EcranContent {
+  return buildVisualSlide({
+    id,
+    donnees: {
+      recit: {
+        id,
+        presentation: {
+          version: 2,
+          screenId: id,
+          renderer: 'answer-review',
+          props: buildAnswerReviewProps(),
+        },
+      },
+    },
+    ecranSource: ATELIER_CORRIGE.screenId,
+    ...overrides,
+  });
+}
+
+export function buildVerdictDeQuestion(questionId: string, correcte: boolean): RetourBrique {
+  return { kind: 'verdict-reponse', questionId, correcte, libelleConfusion: null };
+}
+
 export function buildVerdictDuTri(
   justes: Readonly<Record<string, boolean>>,
   questionId = TRI_CORRIGE.sortId,
@@ -114,7 +166,7 @@ export function buildVerdictDuTri(
 
 export function buildVisualChartSlide(
   props: Readonly<Record<string, unknown>>,
-  id = 'B2-01-A2-04-MARGE-AXE-ZERO',
+  id = 'K-GRAPHIQUE-DE-REFERENCE',
 ): EcranContent {
   return buildVisualSlide({
     id,

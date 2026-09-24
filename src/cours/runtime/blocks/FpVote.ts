@@ -2,7 +2,13 @@ import type { MetadonneesBrique, VotePhase } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import { estObjet, estVerdictDeReponse, lireBonneReponse, type VerdictDeReponse } from './retours';
+import {
+  estObjet,
+  estVerdictDeReponse,
+  lireBonneOption,
+  lireBonneReponse,
+  type VerdictDeReponse,
+} from './retours';
 
 export interface VoteQuestionPublique {
   readonly id: string;
@@ -75,6 +81,7 @@ export class FpVote extends FpBlock {
   private premierVote: VoteResultats | null = null;
   private revelation: Revelation | null = null;
   private bonneReponse: string | null = null;
+  private bonneOption: string | null = null;
   private recus = new Map<string, VerdictDeReponse>();
   private choix = new Map<string, string>();
 
@@ -145,6 +152,7 @@ export class FpVote extends FpBlock {
   set corrige(valeur: unknown) {
     this.revelation = lireRevelation(valeur);
     this.bonneReponse = lireBonneReponse(valeur);
+    this.bonneOption = lireBonneOption(valeur);
     this.refreshSiConnecte();
   }
 
@@ -153,75 +161,59 @@ export class FpVote extends FpBlock {
     return surLaJumelle && this.jumelle !== null ? this.jumelle : this.principale;
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     const question = this.questionAffichee;
     if (!question) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return this.attente();
     }
-    const retour = this.choix.has(question.id) ? this.messageApresEnvoi() : '';
-    const verdict = this.verdictVisible() ? (this.recus.get(question.id) ?? null) : null;
-    return safeHtml`
+    const neSaitPas = this.presentateur()
+      ? VIDE
+      : this.bouton(
+          question,
+          ID_JE_NE_SAIS_PAS,
+          this.texte('je-ne-sais-pas'),
+          'fp-vote__option fp-vote__option--neutre',
+        );
+    return safeHtml`<div class="fp-carte fp-scene">
       ${this.annoncePhase()}
-      <fieldset class="fp-carte">
-        <legend>${escapeHtml(question.enonce)}</legend>
+      <fieldset class="fp-vote__options">
+        <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
         ${question.options.map((option) => this.bouton(question, option.id, option.libelle, 'fp-vote__option'))}
-        ${this.bouton(question, ID_JE_NE_SAIS_PAS, this.texte('je-ne-sais-pas'), 'fp-vote__option fp-vote__option--neutre')}
+        ${neSaitPas}
       </fieldset>
-      <p aria-live="polite" data-testid="retour">${escapeHtml(retour)}</p>
-      ${this.verdictDeReponse(verdict)}
-      ${this.annonces()}
-    `;
+      ${this.presentateur() ? this.suiviProjete(question) : this.suiviEtudiant(question)}
+      ${this.bonneReponseRevelee()}${this.revelationRevelee()}
+    </div>`;
   }
 
-  renderStage(): EscapedHtml {
-    const question = this.questionAffichee;
-    if (!question) {
-      return safeHtml``;
-    }
-    const options = safeHtml`<ul class="fp-vote__liste" data-testid="options">${question.options.map((option) => elementDeListe(option.libelle))}</ul>`;
-    return safeHtml`<div class="fp-carte fp-scene">${this.annoncePhase()}<p class="fp-enonce">${escapeHtml(question.enonce)}</p>${options}${this.suiviProjete(question)}</div>`;
+  private suiviEtudiant(question: VoteQuestionPublique): EscapedHtml {
+    const retour = this.choix.has(question.id) ? this.messageApresEnvoi() : '';
+    const verdict = this.verdictVisible() ? (this.recus.get(question.id) ?? null) : null;
+    return safeHtml`<p aria-live="polite" data-testid="retour">${escapeHtml(retour)}</p>${this.verdictDeReponse(verdict)}${this.annonces()}`;
   }
 
   private suiviProjete(question: VoteQuestionPublique): EscapedHtml {
     if (this.internePhase === 'discussion' && this.surDeuxTemps()) {
       return this.histogramme(question, this.interneResultats, 'premier');
     }
-    if (this.internePhase !== 'revele') {
+    if (this.internePhase !== 'revele' && !this.cloture) {
       return this.decompte();
     }
     const comparaison =
       this.jumelle !== null && this.principale !== null && this.premierVote !== null
         ? safeHtml`${this.histogramme(this.principale, this.premierVote, 'premier')}${this.histogramme(question, this.interneResultats, 'second')}`
         : this.histogramme(question, this.interneResultats);
-    return safeHtml`${comparaison}${this.bonneReponseFormateur()}${this.revelationFormateur()}`;
-  }
-
-  renderBoard(): EscapedHtml {
-    const question = this.questionAffichee;
-    if (!question) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    return safeHtml`
-      <div class="fp-carte">
-        ${this.annoncePhase()}
-        <p class="fp-enonce">${escapeHtml(question.enonce)}</p>
-        ${this.reperesDeLaQuestion(question)}
-        ${this.resultats === null ? safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>` : this.histogramme(question, this.interneResultats)}
-        ${this.decompte()}
-        ${this.revelationFormateur()}
-      </div>
-    `;
+    return safeHtml`${comparaison}${this.decompte()}`;
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.questionAffichee?.id ?? null);
-    if (this.mode() !== 'hand') {
-      return;
-    }
-    const ouverte = this.ouverte();
+    const ouverte = !this.presentateur() && this.ouverte();
     for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
       bouton.disabled = !ouverte;
-      bouton.addEventListener('click', () => this.choisir(bouton.dataset['option'] ?? ''));
+      if (ouverte) {
+        bouton.addEventListener('click', () => this.choisir(bouton.dataset['option'] ?? ''));
+      }
     }
   }
 
@@ -261,7 +253,17 @@ export class FpVote extends FpBlock {
   ): EscapedHtml {
     const choisie = this.choix.get(question.id) === id;
     const marque = id === ID_JE_NE_SAIS_PAS ? 'je-ne-sais-pas' : 'option';
-    return safeHtml`<button type="button" class="${escapeHtml(classes)}" data-testid="${escapeHtml(marque)}" data-option="${escapeHtml(id)}" aria-pressed="${escapeHtml(String(choisie))}">${escapeHtml(libelle)}</button>`;
+    return safeHtml`<button type="button" class="${escapeHtml(classes)}" data-testid="${escapeHtml(marque)}" data-option="${escapeHtml(id)}" aria-pressed="${escapeHtml(String(choisie))}"${this.marqueDeCorrection(id, choisie)}>${escapeHtml(libelle)}</button>`;
+  }
+
+  private marqueDeCorrection(id: string, choisie: boolean): EscapedHtml {
+    if (this.bonneOption === null) {
+      return VIDE;
+    }
+    if (id === this.bonneOption) {
+      return safeHtml` data-correction="juste"`;
+    }
+    return choisie ? safeHtml` data-correction="fausse"` : VIDE;
   }
 
   private choisir(valeur: string): void {
@@ -285,26 +287,19 @@ export class FpVote extends FpBlock {
     return safeHtml`<p class="fp-vote__decompte" data-testid="decompte">${escapeHtml(this.texte('pulse-total'))} ${this.interneResultats.total}</p>`;
   }
 
-  private bonneReponseFormateur(): EscapedHtml {
-    if (this.bonneReponse === null || this.roleActuel() !== 'presentateur') {
+  private bonneReponseRevelee(): EscapedHtml {
+    if (this.bonneReponse === null) {
       return VIDE;
     }
-    return safeHtml`<p class="fp-encadre" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(this.bonneReponse)}</p>`;
+    return safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(this.bonneReponse)}</p>`;
   }
 
-  private revelationFormateur(): EscapedHtml {
+  private revelationRevelee(): EscapedHtml {
     const revelation = this.revelation;
-    if (revelation === null || this.roleActuel() !== 'presentateur') {
+    if (revelation === null) {
       return VIDE;
     }
     return safeHtml`<div class="fp-encadre fp-vote__revelation" data-testid="revelation"><p class="fp-vote__titre">${escapeHtml(revelation.titre)}</p><ul>${revelation.lignes.map(elementDeListe)}</ul></div>`;
-  }
-
-  private reperesDeLaQuestion(question: VoteQuestionPublique): EscapedHtml {
-    if (question.metadonnees === undefined) {
-      return VIDE;
-    }
-    return safeHtml`<p class="fp-reperes">${this.reperes(question.metadonnees)}</p>`;
   }
 
   private libelleOption(question: VoteQuestionPublique, id: string): string {

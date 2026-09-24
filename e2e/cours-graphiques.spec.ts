@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
+import { GRAPHIQUE_MARGE_BRUTE } from '../src/testing/fixtures/graphique-marge-brute';
 import { ecranB2Graphique, ouvrirEcranEtudiantB2 } from './fixtures';
 
 type Plage = readonly [number, number];
@@ -36,17 +37,11 @@ const G1: Graphique = {
   nom: 'G1 marge brute, axe à zéro',
   plage: [0, 300000],
   props: {
-    title: 'Marge brute d’Atelier Rivage, 2022–2025',
-    caption: 'Axe vertical de 0 à 300 000 €',
-    labels: ['2022', '2023', '2024', '2025'],
-    series: [{ label: 'Marge brute', values: [285000, 288000, 289800, 291000], tone: 'teal' }],
-    axisRanges: [[0, 300000]],
+    ...GRAPHIQUE_MARGE_BRUTE,
     axisLabels: ['0 à 300 000 €'],
-    unit: '€',
     formula: 'Évolution 2022–2025 = (291 000 − 285 000) ÷ 285 000 ≈ 0,021',
     reading:
       'La marge brute passe de 285 000 € à 291 000 € : +6 000 € en trois ans, soit +2,1 %. La progression est réelle mais faible, et elle ralentit chaque année.',
-    source: 'Comptes de résultat 2022 à 2025 d’Atelier Rivage (données fictives).',
     description:
       'Diagramme en barres à partir de zéro : quatre barres presque égales, de 285 000 € en 2022 à 291 000 € en 2025.',
   },

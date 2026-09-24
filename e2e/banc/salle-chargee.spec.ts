@@ -17,7 +17,7 @@ import {
 
 const CAPACITE = 35;
 
-const LIMITE_SUJET_PAR_PARTICIPANT = 20;
+const LIMITE_SUJET_PAR_PARTICIPANT = 180;
 
 const NAVIGATEURS = 3;
 
@@ -30,7 +30,7 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
     browser,
     request,
   }) => {
-    const { votes } = await coursReleve(request);
+    const { votes, total } = await coursReleve(request);
     const { seance, jeton } = await seanceDemarreeSurLEcran(request, votes[0].rang, {
       capacite: CAPACITE,
     });
@@ -81,7 +81,11 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
     expect(statutsDuBride[LIMITE_SUJET_PAR_PARTICIPANT]).toBe(429);
     expect((await lireLeSujet(request, seance, voisin)).status()).toBe(200);
 
+    const dernierVote = votes[REPONSES_PAR_POSTE - 1];
     for (const page of pages) {
+      await expect(page.getByTestId('etudiant-progression')).toHaveText(
+        `${dernierVote.rang + 1} / ${total}`,
+      );
       await optionsDuPoste(page).first().click();
       await expect(verdictDuPoste(page)).toHaveCount(1);
     }

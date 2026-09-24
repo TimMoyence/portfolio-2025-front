@@ -1,29 +1,17 @@
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormationsListComponent } from './formations-list.component';
 import { FORMATION_BENEFITS, FORMATIONS } from './formations-list.data';
 import { INSTANTANE_B2_01 } from '../../../testing/fixtures/instantane-b2-01';
+import { montagePage } from '../../../testing/montage-page';
 
 describe('FormationsListComponent', () => {
+  const page = montagePage(FormationsListComponent);
   let component: FormationsListComponent;
   let fixture: ComponentFixture<FormationsListComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FormationsListComponent],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(FormationsListComponent);
+  beforeEach(() => {
+    fixture = page();
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    document.documentElement.classList.remove('anim-ready');
   });
 
   it('devrait etre cree', () => {
@@ -112,21 +100,19 @@ describe('FormationsListComponent', () => {
     expect(b2?.description).toContain('À suivre en séance accompagnée');
   });
 
-  it('L1 · annonce les 55 écrans de la version servie, badge, description et durée', () => {
+  it('L1 · n annonce aucun nombre d écrans, qui suit le contenu servi', () => {
     const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
     const annonces = [b2?.badge, b2?.description, ...(b2?.meta.map((row) => row.value) ?? [])];
 
-    expect(annonces.filter((texte) => texte?.includes('72'))).toEqual([]);
-    expect(annonces.filter((texte) => texte?.includes('55 écrans')).length).toBe(3);
+    expect(annonces.filter((texte) => /\d écrans/.test(texte ?? ''))).toEqual([]);
   });
 
-  it('L1 · annonce le nombre d écrans et la durée du cours réellement servi', () => {
+  it('L1 · annonce la durée du cours réellement servi', () => {
     const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
-    const annonce = b2?.meta.find((row) => row.value.includes('écrans'))?.value ?? '';
-    const [, heures, minutes, ecrans] = /^(\d+) h (\d+) · (\d+) écrans$/.exec(annonce) ?? [];
-    const { duree, ecrans: servis } = INSTANTANE_B2_01.sujet;
+    const annonce = b2?.meta.find((row) => /^\d+ h \d+$/.test(row.value))?.value ?? '';
+    const [, heures, minutes] = /^(\d+) h (\d+)$/.exec(annonce) ?? [];
+    const { duree } = INSTANTANE_B2_01.sujet;
 
-    expect(Number(ecrans)).toBe(servis.length);
     expect(Math.abs(Number(heures) * 60 + Number(minutes) - duree)).toBeLessThan(15);
   });
 
@@ -136,13 +122,13 @@ describe('FormationsListComponent', () => {
     expect(b2).toBeDefined();
     expect(b2?.link).toBe('/formations/b2-01-traitement-information-chiffree');
     expect(b2?.title).toContain('B2-01');
-    expect(b2?.meta.some((row) => row.value === '3 h 30 · 55 écrans')).toBeTrue();
+    expect(b2?.meta.some((row) => row.value === '3 h 30')).toBeTrue();
 
     const compiled = fixture.nativeElement as HTMLElement;
     const card = compiled.querySelector('.formation.formation--live');
     expect(card).not.toBeNull();
-    expect(card?.textContent).toContain('55 écrans');
-    expect(card?.textContent).not.toContain('12 écrans');
+    expect(card?.textContent).toContain('3 h 30');
+    expect(card?.textContent).not.toMatch(/\d écrans/);
     expect(card?.querySelector('a')?.getAttribute('href')).toBe(
       '/formations/b2-01-traitement-information-chiffree',
     );

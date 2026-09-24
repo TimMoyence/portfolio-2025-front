@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, type Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { SlideImageComponent } from './slide-image.component';
 
@@ -68,6 +68,36 @@ class HostRightFullComponent {
   readonly items = ['Item un', 'Item deux', 'Item trois'];
 }
 
+function decrireLeContenuComplet(hote: Type<HostLeftFullComponent | HostRightFullComponent>): void {
+  const rendu = (): HTMLElement => {
+    const fixture = TestBed.createComponent(hote);
+    fixture.detectChanges();
+    return fixture.nativeElement.querySelector('.slide-image');
+  };
+
+  it('rend chaque paragraph en <p> separe', () => {
+    const paragraphs = rendu().querySelectorAll('p.slide-image__paragraph');
+    expect(paragraphs.length).toBe(2);
+    expect(paragraphs[0].textContent).toContain('Premier paragraphe');
+    expect(paragraphs[1].textContent).toContain('Second paragraphe');
+  });
+
+  it('rend chaque item en <li>', () => {
+    const items = rendu().querySelectorAll('ul.slide-image__items li');
+    expect(items.length).toBe(3);
+    expect(items[0].textContent).toContain('Item un');
+    expect(items[2].textContent).toContain('Item trois');
+  });
+
+  it('rend titre + paragraphs + items + ng-content combines', () => {
+    const root = rendu();
+    expect(root.querySelector('h2')).toBeTruthy();
+    expect(root.querySelectorAll('p.slide-image__paragraph').length).toBe(2);
+    expect(root.querySelectorAll('.slide-image__items li').length).toBe(3);
+    expect(root.querySelector('.extra')).toBeTruthy();
+  });
+}
+
 describe('SlideImageComponent', () => {
   describe('position left (app-slide-image-left)', () => {
     it('rend image gauche + titre + projection ng-content', () => {
@@ -92,35 +122,7 @@ describe('SlideImageComponent', () => {
       expect(children[1].classList).toContain('slide-image__content');
     });
 
-    it('rend chaque paragraph en <p> separe', () => {
-      const fixture = TestBed.createComponent(HostLeftFullComponent);
-      fixture.detectChanges();
-      const paragraphs = fixture.nativeElement.querySelectorAll('p.slide-image__paragraph');
-      expect(paragraphs.length).toBe(2);
-      expect(paragraphs[0].textContent).toContain('Premier paragraphe');
-      expect(paragraphs[1].textContent).toContain('Second paragraphe');
-    });
-
-    it('rend chaque item en <li>', () => {
-      const fixture = TestBed.createComponent(HostLeftFullComponent);
-      fixture.detectChanges();
-      const ul = fixture.nativeElement.querySelector('ul.slide-image__items');
-      expect(ul).toBeTruthy();
-      const items = ul.querySelectorAll('li');
-      expect(items.length).toBe(3);
-      expect(items[0].textContent).toContain('Item un');
-      expect(items[2].textContent).toContain('Item trois');
-    });
-
-    it('rend titre + paragraphs + items + ng-content combines', () => {
-      const fixture = TestBed.createComponent(HostLeftFullComponent);
-      fixture.detectChanges();
-      const root = fixture.nativeElement.querySelector('.slide-image');
-      expect(root.querySelector('h2')).toBeTruthy();
-      expect(root.querySelectorAll('p.slide-image__paragraph').length).toBe(2);
-      expect(root.querySelectorAll('.slide-image__items li').length).toBe(3);
-      expect(root.querySelector('.extra')).toBeTruthy();
-    });
+    decrireLeContenuComplet(HostLeftFullComponent);
   });
 
   describe('position right (app-slide-image-right)', () => {
@@ -143,33 +145,6 @@ describe('SlideImageComponent', () => {
       expect(root.querySelector('p').textContent).toContain('Liste des outils.');
     });
 
-    it('rend chaque paragraph en <p> separe', () => {
-      const fixture = TestBed.createComponent(HostRightFullComponent);
-      fixture.detectChanges();
-      const paragraphs = fixture.nativeElement.querySelectorAll('p.slide-image__paragraph');
-      expect(paragraphs.length).toBe(2);
-      expect(paragraphs[0].textContent).toContain('Premier paragraphe');
-      expect(paragraphs[1].textContent).toContain('Second paragraphe');
-    });
-
-    it('rend chaque item en <li>', () => {
-      const fixture = TestBed.createComponent(HostRightFullComponent);
-      fixture.detectChanges();
-      const ul = fixture.nativeElement.querySelector('ul.slide-image__items');
-      expect(ul).toBeTruthy();
-      const items = ul.querySelectorAll('li');
-      expect(items.length).toBe(3);
-      expect(items[2].textContent).toContain('Item trois');
-    });
-
-    it('rend titre + paragraphs + items + ng-content combines', () => {
-      const fixture = TestBed.createComponent(HostRightFullComponent);
-      fixture.detectChanges();
-      const root = fixture.nativeElement.querySelector('.slide-image');
-      expect(root.querySelector('h2')).toBeTruthy();
-      expect(root.querySelectorAll('p.slide-image__paragraph').length).toBe(2);
-      expect(root.querySelectorAll('.slide-image__items li').length).toBe(3);
-      expect(root.querySelector('.extra')).toBeTruthy();
-    });
+    decrireLeContenuComplet(HostRightFullComponent);
   });
 });

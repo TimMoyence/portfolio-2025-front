@@ -30,6 +30,11 @@ export interface ReflectionInteraction {
   nextAction?: string;
 }
 
+export interface DebriefDeReflexion {
+  readonly attendu: string;
+  readonly suite: string | null;
+}
+
 type EtatEnvoi = 'repos' | 'envoi' | Exclude<EtatEnvoiLibre, 'vide'>;
 
 const ETATS_GARDES_EN_FILE: readonly EtatEnvoi[] = ['attente_reseau', 'ecran_non_servi'];
@@ -55,6 +60,7 @@ export class SlideReflectionComponent implements OnInit {
   readonly sessionId = input<string | null>(null);
   readonly jeton = input<string>('');
   readonly mode = input<ModeInteraction>('apercu');
+  readonly debrief = input<DebriefDeReflexion | null>(null);
 
   protected readonly reflection = signal<ReflectionInteraction | null>(null);
   protected readonly activeReflection = computed(() => this.promptData() ?? this.reflection());

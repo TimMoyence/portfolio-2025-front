@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
+import { AsiliKickerComponent } from '../asili-kicker/asili-kicker.component';
 
 export type AsiliProjectSize = 'big' | 'small';
 
@@ -48,7 +49,7 @@ const IMAGE_DIMENSIONS: Readonly<
 @Component({
   selector: 'app-asili-projects-grid',
   standalone: true,
-  imports: [RevealOnScrollDirective, NgTemplateOutlet],
+  imports: [RevealOnScrollDirective, NgTemplateOutlet, AsiliKickerComponent],
   templateUrl: './asili-projects-grid.component.html',
   styleUrls: ['./asili-projects-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

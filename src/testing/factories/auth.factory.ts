@@ -20,7 +20,7 @@ export function buildAuthUser(overrides?: Partial<AuthUser>): AuthUser {
     lastName: 'Dupont',
     phone: null,
     isActive: true,
-    roles: ['weather'],
+    roles: ['user'],
     ...overrides,
   };
 }

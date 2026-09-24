@@ -1,14 +1,5 @@
 import { PercentPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-  output,
-  signal,
-} from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import type {
   EcranDeroule,
   PilotageEcran,
@@ -18,8 +9,6 @@ import type {
   VotePhase,
 } from '../../../../cours/content/types';
 import type { ResultatsDuFlux } from '../../../../cours/runtime/core/sync';
-import type { ParticipantDeSeance } from '../../../core/ports/formations.port';
-import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
 import { objet } from '../../../shared/slides/visual/presentation-v2';
 
@@ -28,10 +17,14 @@ export type CommandeDEcran = { readonly screenId: string } & PilotageEcran;
 export type ResultatsDuPupitre = ResultatsSeance &
   Partial<Pick<ResultatsDuFlux, 'jalons' | 'enigmes' | 'bareme'>>;
 
-type LectureDesParticipants = 'fermee' | 'chargement' | 'ouverte' | 'echec';
-
 const PHASES: readonly VotePhase[] = ['vote', 'discussion', 'revote', 'revele'];
 const PRODUCTIONS: ReadonlySet<string> = new Set(['fp-sheet', 'fp-table-build', 'fp-cardsort']);
+const REVELATIONS_DEDIEES: ReadonlySet<string> = new Set([
+  'fp-challenge',
+  'fp-sheet',
+  'fp-table-build',
+]);
+const REVELATIONS_SANS_QUESTION: ReadonlySet<string> = new Set(['fp-cardsort', 'fp-escape']);
 
 const LIBELLES_DE_PHASE: Readonly<Record<VotePhase, string>> = {
   vote: $localize`:@@panneauActivitePhaseVote:Vote individuel`,
@@ -152,6 +145,21 @@ interface LigneDeCle {
         </button>
       </section>
     }
+    @if (ecran().type === 'fp-recall') {
+      <section class="activite-section" data-testid="activite-options-rappel">
+        <h3 i18n="@@panneauActiviteOptionsRappelTitre">Options du rappel</h3>
+        <button
+          type="button"
+          class="control-btn"
+          data-testid="activite-afficher-options"
+          [disabled]="pilotageBloque() || pilotage().optionsAffichees === true"
+          (click)="afficherLesOptions()"
+          i18n="@@panneauActiviteAfficherOptions"
+        >
+          Afficher les options maintenant
+        </button>
+      </section>
+    }
     @if (ecran().type === 'fp-sheet') {
       <section class="activite-section" data-testid="activite-correction-feuille">
         <h3 i18n="@@panneauActiviteCorrectionFeuilleTitre">Correction de la feuille</h3>
@@ -161,7 +169,7 @@ interface LigneDeCle {
             class="control-btn"
             data-testid="activite-feuille-formules"
             [disabled]="pilotageBloque() || etayage() >= 1"
-            (click)="etayer(1)"
+            (click)="ouvrirLaCorrection()"
             i18n="@@panneauActiviteFeuilleFormules"
           >
             Afficher les formules
@@ -175,6 +183,33 @@ interface LigneDeCle {
             i18n="@@panneauActiviteFeuilleReponses"
           >
             Afficher les réponses
+          </button>
+        </div>
+      </section>
+    }
+    @if (ecran().type === 'fp-table-build') {
+      <section class="activite-section" data-testid="activite-correction-tableau">
+        <h3 i18n="@@panneauActiviteCorrectionTableauTitre">Correction du tableau</h3>
+        <div class="activite-commandes">
+          <button
+            type="button"
+            class="control-btn"
+            data-testid="activite-tableau-coefficients"
+            [disabled]="pilotageBloque() || etayage() >= 1"
+            (click)="ouvrirLaCorrection()"
+            i18n="@@panneauActiviteTableauCoefficients"
+          >
+            Afficher les coefficients
+          </button>
+          <button
+            type="button"
+            class="control-btn"
+            data-testid="activite-tableau-valeurs"
+            [disabled]="pilotageBloque() || etayage() !== 1"
+            (click)="etayer(2)"
+            i18n="@@panneauActiviteTableauValeurs"
+          >
+            Afficher les prix et les indices
           </button>
         </div>
       </section>
@@ -276,78 +311,6 @@ interface LigneDeCle {
         </p>
       </section>
     }
-    <section class="activite-section" data-testid="activite-participants">
-      <h3 i18n="@@panneauActiviteParticipantsTitre">Participants</h3>
-      @switch (lecture()) {
-        @case ('fermee') {
-          <button
-            type="button"
-            class="control-btn"
-            data-testid="activite-participants-afficher"
-            [disabled]="sessionId() === null"
-            (click)="afficherLesParticipants()"
-            i18n="@@panneauActiviteParticipantsAfficher"
-          >
-            Afficher les participants
-          </button>
-        }
-        @case ('chargement') {
-          <p role="status" i18n="@@panneauActiviteParticipantsChargement">Chargement…</p>
-        }
-        @case ('echec') {
-          <p
-            role="alert"
-            data-testid="activite-participants-echec"
-            i18n="@@panneauActiviteParticipantsEchec"
-          >
-            La liste des participants n’a pas pu être lue.
-          </p>
-        }
-        @default {
-          <button
-            type="button"
-            class="control-btn"
-            data-testid="activite-participants-masquer"
-            (click)="masquerLesParticipants()"
-            i18n="@@panneauActiviteParticipantsMasquer"
-          >
-            Masquer les participants
-          </button>
-          <ul>
-            @for (participant of listeDesParticipants(); track participant.id) {
-              <li
-                data-testid="activite-participant"
-                [attr.data-participant]="participant.id"
-                [attr.data-evince]="participant.evince"
-              >
-                {{ participant.prenom }} {{ participant.nom }}
-                @if (participant.evince) {
-                  <button
-                    type="button"
-                    class="control-btn"
-                    data-testid="activite-readmettre"
-                    (click)="readmettre(participant)"
-                    i18n="@@panneauActiviteReadmettre"
-                  >
-                    Réadmettre dans la séance
-                  </button>
-                } @else {
-                  <button
-                    type="button"
-                    class="control-danger"
-                    data-testid="activite-evincer"
-                    (click)="evincer(participant)"
-                    i18n="@@panneauActiviteEvincer"
-                  >
-                    Retirer de la séance
-                  </button>
-                }
-              </li>
-            }
-          </ul>
-        }
-      }
-    </section>
   `,
 })
 export class CoursPanneauActiviteComponent {
@@ -357,12 +320,8 @@ export class CoursPanneauActiviteComponent {
   readonly participants = input(0);
   readonly sessionId = input<string | null>(null);
   readonly pilotageBloque = input(false);
+  readonly corrigeAilleurs = input(false);
   readonly commande = output<CommandeDEcran>();
-
-  protected readonly lecture = signal<LectureDesParticipants>('fermee');
-  protected readonly listeDesParticipants = signal<readonly ParticipantDeSeance[]>([]);
-
-  private readonly port = inject(FORMATIONS_PORT);
 
   private readonly identifiants = computed<readonly string[]>(() =>
     (planDeMontage(this.ecran()) ?? []).flatMap(identifiantsDuMontage),
@@ -373,12 +332,22 @@ export class CoursPanneauActiviteComponent {
       this.ecran().type === 'fp-vote' && objet(this.ecran().donnees?.['questionJumelle']) !== null,
   );
 
-  protected readonly correctionRevelable = computed(
-    () =>
-      this.ecran().type !== 'fp-challenge' &&
-      this.ecran().type !== 'fp-sheet' &&
+  protected readonly correctionRevelable = computed(() => {
+    const ecran = this.ecran();
+    return (
+      !REVELATIONS_DEDIEES.has(ecran.type) &&
       !this.phaseVisible() &&
-      (this.ecran().corriges.length > 0 || this.ecran().questions.length > 0),
+      !this.etapesPilotees() &&
+      ecran.corriges.length === 0 &&
+      (ecran.questions.length > 0 ||
+        REVELATIONS_SANS_QUESTION.has(ecran.type) ||
+        ecran.corrigeEcran !== null ||
+        this.corrigeAilleurs())
+    );
+  });
+
+  private readonly etapesPilotees = computed(
+    () => this.ecran().type === 'fp-worked' && this.ecran().donnees?.['pilote'] === true,
   );
 
   protected readonly phaseCourante = computed<VotePhase>(() => this.pilotage().phase ?? 'vote');
@@ -391,7 +360,7 @@ export class CoursPanneauActiviteComponent {
 
   protected readonly etapes = computed(() => {
     const etapes = objet(this.ecran().donnees?.['exemple'])?.['etapes'];
-    return this.ecran().type === 'fp-worked' && Array.isArray(etapes) ? etapes.length : 0;
+    return this.etapesPilotees() && Array.isArray(etapes) ? etapes.length : 0;
   });
 
   protected readonly etayage = computed(() => this.pilotage().etayage ?? 0);
@@ -434,58 +403,16 @@ export class CoursPanneauActiviteComponent {
     this.commande.emit({ screenId: this.ecran().id, revele: true });
   }
 
+  protected ouvrirLaCorrection(): void {
+    this.commande.emit({ screenId: this.ecran().id, revele: true, etayage: 1 });
+  }
+
+  protected afficherLesOptions(): void {
+    this.commande.emit({ screenId: this.ecran().id, optionsAffichees: true });
+  }
+
   protected etayer(etayage: number): void {
     this.commande.emit({ screenId: this.ecran().id, etayage });
-  }
-
-  protected async afficherLesParticipants(): Promise<void> {
-    const sessionId = this.sessionId();
-    if (sessionId === null) {
-      return;
-    }
-    this.lecture.set('chargement');
-    try {
-      const { participants } = await firstValueFrom(this.port.lireParticipants(sessionId));
-      this.listeDesParticipants.set(participants);
-      this.lecture.set('ouverte');
-    } catch {
-      this.lecture.set('echec');
-    }
-  }
-
-  protected masquerLesParticipants(): void {
-    this.lecture.set('fermee');
-  }
-
-  protected evincer(participant: ParticipantDeSeance): Promise<void> {
-    return this.basculerLEviction(participant, true);
-  }
-
-  protected readmettre(participant: ParticipantDeSeance): Promise<void> {
-    return this.basculerLEviction(participant, false);
-  }
-
-  private async basculerLEviction(
-    participant: ParticipantDeSeance,
-    evince: boolean,
-  ): Promise<void> {
-    const sessionId = this.sessionId();
-    if (sessionId === null) {
-      return;
-    }
-    const commande = evince
-      ? this.port.evincerParticipant(sessionId, participant.id)
-      : this.port.readmettreParticipant(sessionId, participant.id);
-    try {
-      await firstValueFrom(commande, { defaultValue: undefined });
-      this.listeDesParticipants.update((liste) =>
-        liste.map((candidat) =>
-          candidat.id === participant.id ? { ...candidat, evince } : candidat,
-        ),
-      );
-    } catch {
-      this.lecture.set('echec');
-    }
   }
 
   private resultatDe(questionId: string): ResultatQuestion | null {

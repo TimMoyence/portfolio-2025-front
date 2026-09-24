@@ -62,7 +62,7 @@ export interface ResultatsDuFlux extends ResultatsSeance {
   readonly bareme: ResumeBareme | null;
 }
 
-export type RaisonDeFin = 'cloturee' | 'introuvable' | 'expiree';
+export type RaisonDeFin = 'cloturee' | 'introuvable' | 'expiree' | 'evince' | 'revoque';
 
 export type SyncListener = (etat: EtatSession) => void;
 export type ResultatsListener = (resultats: ResultatsDuFlux) => void;
@@ -301,7 +301,13 @@ function completerResultats(recus: ResultatsRecus): ResultatsDuFlux {
   };
 }
 
-const RAISONS_DE_FIN: readonly RaisonDeFin[] = ['cloturee', 'introuvable', 'expiree'];
+const RAISONS_DE_FIN: readonly RaisonDeFin[] = [
+  'cloturee',
+  'introuvable',
+  'expiree',
+  'evince',
+  'revoque',
+];
 
 function lireRaisonDeFin(donnees: string): RaisonDeFin | null {
   const charge = analyser(donnees);

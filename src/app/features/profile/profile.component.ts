@@ -1,24 +1,17 @@
 import { CommonModule } from '@angular/common';
-import type { OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  DestroyRef,
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import type { FavoriteCity } from '../../core/models/weather.model';
 import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
-import type { WeatherPort } from '../../core/ports/weather.port';
-import { WEATHER_PORT } from '../../core/ports/weather.port';
-import { WeatherLevelService } from '../weather/services/weather-level.service';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 
@@ -28,17 +21,13 @@ import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
   imports: [CommonModule, FormsModule, RouterModule, RevealOnScrollDirective],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
-  providers: [WeatherLevelService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent {
   private readonly authService: AuthPort = inject(AUTH_PORT);
   readonly authState = inject(AuthStateService);
-  readonly levelService = inject(WeatherLevelService);
-  private readonly weatherService: WeatherPort = inject(WEATHER_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
 
   isEditing = signal(false);
   editFirstName = '';
@@ -60,15 +49,6 @@ export class ProfileComponent implements OnInit {
   changePasswordLoading = false;
   changePasswordSuccess?: string;
   changePasswordError?: string;
-
-  favoriteCities: FavoriteCity[] = [];
-  weatherLoading = false;
-
-  ngOnInit(): void {
-    if (this.authState.hasRole('weather')) {
-      this.loadWeatherPreferences();
-    }
-  }
 
   initial(firstName?: string, lastName?: string, email?: string): string {
     const source = firstName || lastName || email || '?';
@@ -187,51 +167,5 @@ export class ProfileComponent implements OnInit {
         },
       },
     );
-  }
-
-  protected removeFavoriteAriaLabel(city: FavoriteCity): string {
-    return $localize`:@@profileWeatherRemoveFavoriteAriaLabel:Supprimer ${city.name}:city: des favoris`;
-  }
-
-  removeFavoriteCity(city: FavoriteCity): void {
-    const previous = this.favoriteCities;
-    this.favoriteCities = this.favoriteCities.filter(
-      (c) => c.latitude !== city.latitude || c.longitude !== city.longitude,
-    );
-    this.weatherService
-      .updatePreferences({ favoriteCities: this.favoriteCities })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        error: () => {
-          this.favoriteCities = previous;
-          this.cdr.markForCheck();
-        },
-      });
-  }
-
-  levelLabel(level: string): string {
-    const labels: Record<string, string> = {
-      discovery: $localize`:profile.weather.level.discovery@@profileWeatherLevelDiscovery:Decouverte`,
-      curious: $localize`:profile.weather.level.curious@@profileWeatherLevelCurious:Curieux`,
-      expert: $localize`:profile.weather.level.expert@@profileWeatherLevelExpert:Expert`,
-    };
-    return labels[level] ?? level;
-  }
-
-  private loadWeatherPreferences(): void {
-    this.weatherLoading = true;
-    this.weatherService.getPreferences().subscribe({
-      next: (prefs) => {
-        this.favoriteCities = prefs.favoriteCities ?? [];
-        this.levelService.level.set(prefs.level);
-        this.levelService.daysUsed.set(prefs.daysUsed);
-        this.weatherLoading = false;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.weatherLoading = false;
-        this.cdr.markForCheck();
-      },
-    });
   }
 }

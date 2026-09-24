@@ -14,18 +14,11 @@ import { RenderMode, type ServerRoute } from '@angular/ssr';
  * coquille HTML minimale et le client Angular gère le routing après
  * hydratation, moment où le cookie de refresh peut restaurer la session.
  *
- * Les routes publiques de l'ancien Atelier redirigent désormais vers
- * /projets. Les applications privées restent côté client et protégées.
  */
 export const serverRoutes: ServerRoute[] = [
   { path: 'profil', renderMode: RenderMode.Client },
-  { path: 'atelier/meteo/app', renderMode: RenderMode.Client },
-  { path: 'atelier/sebastian/app', renderMode: RenderMode.Client },
-  { path: 'atelier/sebastian/app/dashboard', renderMode: RenderMode.Client },
-  { path: 'atelier/sebastian/app/rapports', renderMode: RenderMode.Client },
-  { path: 'atelier/sebastian/app/badges', renderMode: RenderMode.Client },
-  { path: 'atelier/sebastian/app/historique', renderMode: RenderMode.Client },
-  { path: 'atelier/sebastian/app/objectifs', renderMode: RenderMode.Client },
+  { path: 'atelier', renderMode: RenderMode.Server },
+  { path: 'atelier/**', renderMode: RenderMode.Server },
   { path: 'cours/rejoindre', renderMode: RenderMode.Client },
   { path: 'cours/presenter/:slug', renderMode: RenderMode.Client },
   { path: 'cours/presenter/:slug/scene/:sessionId', renderMode: RenderMode.Client },

@@ -1,0 +1,26 @@
+<section class="lg-hero">
+  <div class="wrap" appReveal>
+    <span class="kicker">{{ kicker() }}</span>
+    <h1><ng-content select="[title]"></ng-content></h1>
+    <div class="updated"><span class="dot"></span>{{ updated() }}</div>
+  </div>
+</section>
+
+<section class="lg-section">
+  <div class="wrap lg-layout">
+    <nav class="lg-toc" aria-label="Sommaire" i18n-aria-label="@@legalTocAria">
+      <div class="toc-k" i18n="@@legalTocHeading">Sommaire</div>
+      <ol>
+        @for (item of toc(); track item.anchor) {
+          <li>
+            <a [href]="'#' + item.anchor">{{ item.label }}</a>
+          </li>
+        }
+      </ol>
+    </nav>
+
+    <div class="lg-body">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</section>

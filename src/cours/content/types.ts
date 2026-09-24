@@ -1,12 +1,31 @@
-export type RenderMode = 'stage' | 'hand' | 'board';
-
-export type Role = 'presentateur' | 'etudiant' | 'revision';
+export type Role = 'presentateur' | 'etudiant';
 
 export type PacingMode = 'pilote' | 'libre';
 
 export interface FreeRange {
   premier: number;
   dernier: number;
+}
+
+export interface QuestionRevelee {
+  readonly questionId: string;
+  readonly cible: string;
+  readonly optionId: string | null;
+}
+
+export interface RevelationServie {
+  readonly ecranId: string;
+  readonly questions: readonly QuestionRevelee[];
+  readonly annexe: CorrigeEcranPresentateur | null;
+  readonly reflexion: { readonly attendu: string; readonly suite: string | null } | null;
+}
+
+export interface CadrageDuRenvoi {
+  readonly part: number;
+  readonly extrait?: {
+    readonly lignes?: readonly number[];
+    readonly champs?: readonly string[];
+  };
 }
 
 export interface EcranContent {
@@ -16,6 +35,11 @@ export interface EcranContent {
   duree: number;
   interactif: boolean;
   donnees?: Record<string, unknown>;
+  renvoi?: string;
+  cadrageDuRenvoi?: CadrageDuRenvoi;
+  ecranSource?: string;
+  resoluPar?: readonly string[];
+  revelation?: RevelationServie;
 }
 
 export type Diffusion = 'catalogue' | 'seance';
@@ -30,7 +54,10 @@ export interface PilotageEcran {
   readonly phase?: VotePhase;
   readonly revele?: boolean;
   readonly etayage?: number;
+  readonly etayageAtteint?: number;
   readonly reglages?: Readonly<Record<string, number>>;
+  readonly resultatsProjetes?: boolean;
+  readonly optionsAffichees?: boolean;
 }
 
 export interface Tolerance {
@@ -210,6 +237,11 @@ export type CorrigeEcranPresentateur =
       readonly type: 'revelation';
       readonly titre: string;
       readonly lignes: readonly string[];
+    }
+  | {
+      readonly type: 'reflexion';
+      readonly attendu: string;
+      readonly suite: string;
     };
 
 export interface EcranDeroule extends EcranContent {
@@ -224,7 +256,6 @@ export interface EcranDeroule extends EcranContent {
   }[];
   readonly corrigeEcran: CorrigeEcranPresentateur | null;
   readonly guide?: GuideFormateur;
-  readonly renvoi?: string;
 }
 
 export interface EtatParticipant {

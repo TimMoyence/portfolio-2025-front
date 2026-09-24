@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,7 +7,9 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { firstValueFrom, map } from 'rxjs';
 import type {
   CoursContent,
   EcranContent,
@@ -20,7 +23,12 @@ import type { Deck } from '../../../../cours/runtime/core/deck';
 import { createDeck } from '../../../../cours/runtime/core/deck';
 import { texte } from '../../../../cours/runtime/core/i18n';
 import type { Identity } from '../../../../cours/runtime/core/identity';
-import { saveIdentity } from '../../../../cours/runtime/core/identity';
+import {
+  clearIdentity,
+  lireSecretDeReprise,
+  memoriserSecretDeReprise,
+  saveIdentity,
+} from '../../../../cours/runtime/core/identity';
 import type { Lock } from '../../../../cours/runtime/core/lock';
 import { createLock } from '../../../../cours/runtime/core/lock';
 import type { EnvoiReponse, NatureEnvoi } from '../../../../cours/runtime/core/queue';
@@ -32,7 +40,12 @@ import {
 } from '../../../../cours/runtime/core/queue';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import { creerBrouillons, purgerLesAutresBrouillons } from '../../../../cours/runtime/core/storage';
-import type { EtatSession, StatutSession, Sync } from '../../../../cours/runtime/core/sync';
+import type {
+  EtatSession,
+  RaisonDeFin,
+  StatutSession,
+  Sync,
+} from '../../../../cours/runtime/core/sync';
 import { getApiBaseUrl } from '../../../core/http/api-config';
 import type {
   IncidentEtudiant,
@@ -118,6 +131,8 @@ const REGIMES_VERROU: readonly RegimeVerrou[] = ['ouvert', 'focus', 'examen'];
 
 const STATUTS_SANS_RETOUR: readonly number[] = [401, 403];
 
+const SLUG_DE_COURS = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 const ETATS_LIBRES_EN_ATTENTE: readonly EtatEnvoiLibre[] = ['attente_reseau', 'ecran_non_servi'];
 
 const MESSAGE_CODE = $localize`:cours.codeInvalide|@@coursCodeInvalide:Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.`;
@@ -195,10 +210,16 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
   return ecran?.type === 'ecran-verrouille';
 }
 
+function sourceRevelee(pilotage: PilotageEcran | undefined): boolean {
+  return (
+    pilotage?.revele === true || pilotage?.phase === 'revele' || (pilotage?.etayageAtteint ?? 0) > 0
+  );
+}
+
 @Component({
   selector: 'app-cours-etudiant',
   standalone: true,
-  imports: [CoursPresentationComponent],
+  imports: [CoursPresentationComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="cours-etudiant">
@@ -248,22 +269,43 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
         @case ('seance') {
           <section class="student-session" data-testid="etudiant-seance">
             @if (sujet(); as cours) {
-              <div class="student-session__head">
-                <div>
-                  <p
-                    class="cours-etudiant__kicker"
-                    i18n="cours.etudiantKicker|@@coursEtudiantKicker"
-                  >
-                    Séance en cours
-                  </p>
-                  <h2 data-testid="etudiant-titre">{{ cours.titre }}</h2>
-                </div>
+              <header class="student-session__head">
+                <h2 data-testid="etudiant-titre">{{ cours.titre }}</h2>
                 <p class="student-progress" data-testid="etudiant-progression">
                   {{ indexEcran() + 1 }} / {{ cours.ecrans.length }}
                 </p>
-              </div>
+                <button
+                  type="button"
+                  class="btn btn-ghost student-session__plein-ecran"
+                  data-testid="etudiant-plein-ecran"
+                  [attr.aria-pressed]="pleinEcran()"
+                  (click)="basculerPleinEcran()"
+                >
+                  @if (pleinEcran()) {
+                    <span i18n="cours.quitterPleinEcran|@@coursQuitterPleinEcran"
+                      >Quitter le plein écran</span
+                    >
+                  } @else {
+                    <span i18n="cours.pleinEcran|@@coursPleinEcran">Plein écran</span>
+                  }
+                </button>
+              </header>
             }
-            @if (terminee()) {
+            @if (evince()) {
+              <p data-testid="etudiant-evince" role="alert" i18n="cours.evince|@@coursEvince">
+                Votre formateur vous a retiré de la séance. S’il vous y réadmet, rejoignez-la à
+                nouveau avec le même code depuis ce poste.
+              </p>
+            } @else if (posteLibere()) {
+              <p
+                data-testid="etudiant-poste-libere"
+                role="alert"
+                i18n="cours.posteLibere|@@coursPosteLibere"
+              >
+                Votre formateur a libéré cette place pour un autre poste : ce poste ne suit plus la
+                séance.
+              </p>
+            } @else if (terminee()) {
               <p data-testid="etudiant-fin" role="status" i18n="cours.fin|@@coursFin">
                 La séance est terminée. Merci de votre participation.
               </p>
@@ -319,18 +361,19 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
                   </p>
                 } @else {
                   @if (ecranCourant(); as ecran) {
-                    <app-cours-presentation
-                      mode="etudiant"
-                      [slide]="ecran"
-                      [index]="indexEcran()"
-                      [total]="sujet()?.ecrans?.length ?? 0"
-                      [sessionId]="sessionId()"
-                      [jeton]="jeton()"
-                      [retours]="retours()"
-                      [direct]="direct()"
-                      [brouillons]="brouillons()"
-                      (evenement)="surEvenement($event)"
-                    />
+                    <div class="student-session__cadre">
+                      <app-cours-presentation
+                        mode="etudiant"
+                        [slide]="ecran"
+                        [renvoi]="ecranRenvoye()"
+                        [sessionId]="sessionId()"
+                        [jeton]="jeton()"
+                        [retours]="retours()"
+                        [direct]="direct()"
+                        [brouillons]="brouillons()"
+                        (evenement)="surEvenement($event)"
+                      />
+                    </div>
                   }
                   <div class="student-session__navigation">
                     @if (peutReculer()) {
@@ -527,6 +570,16 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
               >
                 Pas de compte à créer. Ces informations restent liées à cette séance.
               </p>
+              @if (retourFormateur(); as returnUrl) {
+                <a
+                  class="student-entry__privacy"
+                  data-testid="etudiant-connexion-formateur"
+                  routerLink="/login"
+                  [queryParams]="{ returnUrl }"
+                  i18n="cours.entreeConnexionFormateur|@@coursEntreeConnexionFormateur"
+                  >Vous êtes formateur ? Se connecter</a
+                >
+              }
             </div>
             @if (messageEchec(); as message) {
               <p data-testid="etudiant-echec" role="alert" [attr.data-motif]="motifEchec()">
@@ -549,6 +602,8 @@ export class CoursEtudiantComponent {
   readonly enAttente = signal(false);
   readonly fileRefusee = signal(false);
   readonly terminee = signal(false);
+  readonly evince = signal(false);
+  readonly posteLibere = signal(false);
   readonly peutAvancer = signal(false);
   readonly peutReculer = signal(false);
   readonly statutSeance = signal<StatutSession | null>(null);
@@ -558,6 +613,7 @@ export class CoursEtudiantComponent {
   readonly chargementEcran = signal(false);
   readonly retours = signal<ReadonlyMap<string, readonly RetourBrique[]>>(new Map());
   readonly repriseIndisponible = signal(false);
+  readonly pleinEcran = signal(false);
 
   readonly reflexionEnAttente = computed<EtatEnvoiLibre | null>(() => {
     const sessionId = this.sessionId();
@@ -580,6 +636,12 @@ export class CoursEtudiantComponent {
   readonly ecranCourant = computed<EcranContent | null>(() => {
     const ecran = this.sujet()?.ecrans[this.indexEcran()];
     return estEcranVerrouille(ecran) ? null : (ecran ?? null);
+  });
+
+  readonly ecranRenvoye = computed<EcranContent | null>(() => {
+    const renvoi = this.ecranCourant()?.renvoi;
+    const cible = this.sujet()?.ecrans.find(({ id }) => id === renvoi);
+    return cible === undefined || estEcranVerrouille(cible) ? null : cible;
   });
 
   readonly direct = computed<DirectEcran | null>(() => {
@@ -620,11 +682,21 @@ export class CoursEtudiantComponent {
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFlux = inject(CREATEUR_FLUX);
   private readonly reponsesLibres = inject(ReponsesLibresService);
+  private readonly document = inject(DOCUMENT);
+  private readonly coursVise = toSignal(
+    inject(ActivatedRoute).queryParamMap.pipe(map((parametres) => parametres.get('cours'))),
+    { initialValue: null },
+  );
+  protected readonly retourFormateur = computed(() => {
+    const slug = this.coursVise();
+    return slug !== null && SLUG_DE_COURS.test(slug) ? `/cours/presenter/${slug}` : null;
+  });
   private readonly baseUrl = `${getApiBaseUrl()}/formations`;
   private readonly enLigne = signal(typeof navigator === 'undefined' || navigator.onLine);
   private readonly incidents: IncidentEtudiant[] = [];
   private readonly debutFormulaire = Date.now();
   private readonly defisReveles = new Set<string>();
+  private readonly relectures = new Set<string>();
 
   private readonly seanceOuverte = signal<Pick<Rattachement, 'sessionId' | 'jeton'> | null>(null);
   protected readonly sessionId = computed(() => this.seanceOuverte()?.sessionId ?? null);
@@ -637,7 +709,8 @@ export class CoursEtudiantComponent {
   private deck: Deck | null = null;
   private rythmeDistant: PacingMode = 'pilote';
   private rappelsDemandes = false;
-  private relectureDesEtapes = false;
+  private relectureEnCours = false;
+  private lectureDuSujet: Promise<CoursContent> | null = null;
   private detruit = false;
   private videEnCours = false;
   private chantier: Promise<void> = Promise.resolve();
@@ -651,11 +724,15 @@ export class CoursEtudiantComponent {
         this.chantier = this.reprendreLesEnvois();
       };
       const surPerte = (): void => this.enLigne.set(false);
+      const surPleinEcran = (): void =>
+        this.pleinEcran.set(this.document.fullscreenElement !== null);
       fenetre.addEventListener('online', surRetour);
       fenetre.addEventListener('offline', surPerte);
+      this.document.addEventListener('fullscreenchange', surPleinEcran);
       aLaDestruction.onDestroy(() => {
         fenetre.removeEventListener('online', surRetour);
         fenetre.removeEventListener('offline', surPerte);
+        this.document.removeEventListener('fullscreenchange', surPleinEcran);
       });
     }
     aLaDestruction.onDestroy(() => {
@@ -677,6 +754,14 @@ export class CoursEtudiantComponent {
 
   protected surEvenement(evenement: EvenementBrique): void {
     this.chantier = this.traiterEvenement(evenement);
+  }
+
+  protected basculerPleinEcran(): void {
+    const page = this.document;
+    const bascule = page.fullscreenElement
+      ? page.exitFullscreen?.()
+      : page.documentElement.requestFullscreen?.();
+    bascule?.catch(() => this.pleinEcran.set(page.fullscreenElement !== null));
   }
 
   protected avancer(): void {
@@ -740,15 +825,18 @@ export class CoursEtudiantComponent {
       return null;
     }
     try {
-      return await firstValueFrom(
+      const rattachement = await firstValueFrom(
         this.port.rejoindre(code, {
           prenom: identite.prenom,
           nom: identite.nom,
           email: identite.email,
           website: String(donnees.get('website') ?? ''),
           formStartedAt: this.debutFormulaire,
+          secretDeReprise: lireSecretDeReprise(code),
         }),
       );
+      memoriserSecretDeReprise(code, rattachement.secretDeReprise);
+      return rattachement;
     } catch (erreur) {
       this.etat.set('code');
       const refus = erreur instanceof RattachementRefuse ? erreur : null;
@@ -805,7 +893,7 @@ export class CoursEtudiantComponent {
     flux.onStatut((statut) => {
       this.refusDuFlux.set(statut.etat === 'refuse' ? { statut: statut.statut } : null);
     });
-    flux.onFin(() => this.clore());
+    flux.onFin((raison) => this.finirSelon(raison));
     flux.ouvrir();
     this.flux = flux;
     this.identite = identite;
@@ -813,9 +901,19 @@ export class CoursEtudiantComponent {
     this.etat.set('seance');
   }
 
+  private finirSelon(raison: RaisonDeFin | null): void {
+    if (raison === 'evince') {
+      this.evince.set(true);
+      return;
+    }
+    this.posteLibere.set(raison === 'revoque');
+    this.clore();
+  }
+
   private clore(): void {
     this.terminee.set(true);
     this.brouillons()?.purger();
+    clearIdentity();
   }
 
   private monterLeDeck(sujet: CoursContent, rattachement: Rattachement): Deck {
@@ -868,7 +966,7 @@ export class CoursEtudiantComponent {
     this.chargementEcran.set(true);
     this.echecEcran.set(null);
     try {
-      const sujet = await firstValueFrom(this.port.lireSujet(sessionId, jeton));
+      const sujet = await this.relireLeSujet(sessionId, jeton);
       if (!this.detruit) {
         this.sujet.set(sujet);
         const relu = sujet.ecrans[index];
@@ -896,6 +994,13 @@ export class CoursEtudiantComponent {
         this.chargementEcran.set(false);
       }
     }
+  }
+
+  private relireLeSujet(sessionId: string, jeton: string): Promise<CoursContent> {
+    this.lectureDuSujet ??= firstValueFrom(this.port.lireSujet(sessionId, jeton)).finally(() => {
+      this.lectureDuSujet = null;
+    });
+    return this.lectureDuSujet;
   }
 
   private async chargerLesDonneesDeLEcran(ecran: EcranContent | undefined): Promise<void> {
@@ -938,38 +1043,75 @@ export class CoursEtudiantComponent {
       this.viderLaFile(),
       this.reprendreLesReponsesLibres(),
       this.relireLesStrategiesRevelees(),
-      this.relireLesEtapesRevelees(),
+      this.relireLesRevelations(),
     ]).then(() => undefined);
   }
 
-  private async relireLesEtapesRevelees(): Promise<void> {
-    const sessionId = this.sessionId();
-    const sujet = this.sujet();
-    if (sessionId === null || sujet === null || this.relectureDesEtapes) {
-      return;
-    }
-    const enRetard = sujet.ecrans.some((ecran) => {
+  private relecturesEnRetard(sujet: CoursContent): readonly string[] {
+    const pilotage = this.pilotage();
+    return sujet.ecrans.flatMap((ecran) => {
+      const courant = pilotage[ecran.id];
       const servi = ecran.donnees?.['etayage'];
-      return (
+      if (
         ecran.type === 'fp-worked' &&
         typeof servi === 'number' &&
-        (this.pilotage()[ecran.id]?.etayage ?? 0) > servi
-      );
+        (courant?.etayage ?? 0) > servi
+      ) {
+        return [`etapes:${ecran.id}:${courant?.etayage ?? 0}`];
+      }
+      if (
+        estEcranVerrouille(ecran) &&
+        ecran.ecranSource !== undefined &&
+        pilotage[ecran.ecranSource]?.revele === true
+      ) {
+        return [`verrou:${ecran.id}`];
+      }
+      if (ecran.revelation === undefined && sourceRevelee(courant)) {
+        return [`source:${ecran.id}`];
+      }
+      return [];
     });
-    if (!enRetard) {
+  }
+
+  private async relireLesRevelations(): Promise<void> {
+    const sessionId = this.sessionId();
+    const sujet = this.sujet();
+    if (sessionId === null || sujet === null || this.relectureEnCours) {
       return;
     }
-    this.relectureDesEtapes = true;
+    const nouvelles = this.relecturesEnRetard(sujet).filter((cle) => !this.relectures.has(cle));
+    if (nouvelles.length === 0) {
+      return;
+    }
+    for (const cle of nouvelles) {
+      this.relectures.add(cle);
+    }
+    this.relectureEnCours = true;
     try {
-      const relu = await firstValueFrom(this.port.lireSujet(sessionId, this.jeton()));
+      const relu = await this.relireLeSujet(sessionId, this.jeton());
       if (!this.detruit) {
         this.sujet.set(relu);
+        this.suivreLeSujetRelu(relu);
       }
     } catch {
+      for (const cle of nouvelles) {
+        this.relectures.delete(cle);
+      }
       this.echecEcran.set({ motif: 'sujet-indisponible', message: MESSAGE_ECRAN_ECHEC });
     } finally {
-      this.relectureDesEtapes = false;
+      this.relectureEnCours = false;
     }
+  }
+
+  private suivreLeSujetRelu(relu: CoursContent): void {
+    const index = this.indexEcran();
+    const ecran = relu.ecrans[index];
+    if (estEcranVerrouille(ecran) || this.deck === null) {
+      return;
+    }
+    this.echecEcran.set(null);
+    this.peutAvancer.set(this.deck.canNavigate(index + 1));
+    this.peutReculer.set(this.deck.canNavigate(index - 1));
   }
 
   private async reprendreLesReponsesLibres(): Promise<void> {
@@ -1187,13 +1329,18 @@ export class CoursEtudiantComponent {
         retourDeTentative(evenement.parcoursId, evenement.enigmeId, verdict),
       ]);
     } catch (erreur) {
-      const refus = refusDe(erreur);
-      const message = refus.motif === 'reseau' ? texte('tentatives-reseau') : refus.message;
-      this.ajouter(evenement.screenId, [retourDeRefus(refus.motif, message)]);
+      const refus = this.signalerLeRefusDeTentative(evenement.screenId, erreur);
       if (MOTIFS_DE_RESYNCHRONISATION.includes(refus.motif) || refus.motif === 'deja-repondue') {
         await this.relireMonEtat();
       }
     }
+  }
+
+  private signalerLeRefusDeTentative(screenId: string, erreur: unknown): ReponseRefusee {
+    const refus = refusDe(erreur);
+    const message = refus.motif === 'reseau' ? texte('tentatives-reseau') : refus.message;
+    this.ajouter(screenId, [retourDeRefus(refus.motif, message)]);
+    return refus;
   }
 
   private async defier(evenement: EvenementDe<'defi'>): Promise<void> {
@@ -1212,9 +1359,7 @@ export class CoursEtudiantComponent {
         { kind: 'strategies', defiId: evenement.defiId, strategies },
       ]);
     } catch (erreur) {
-      const refus = refusDe(erreur);
-      const message = refus.motif === 'reseau' ? texte('tentatives-reseau') : refus.message;
-      this.ajouter(evenement.screenId, [retourDeRefus(refus.motif, message)]);
+      this.signalerLeRefusDeTentative(evenement.screenId, erreur);
     }
   }
 

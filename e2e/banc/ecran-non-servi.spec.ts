@@ -1,12 +1,11 @@
 import { expect, test } from '@playwright/test';
 import type { APIRequestContext } from '@playwright/test';
 import {
-  EN_TETE_JETON,
-  URL_API,
   coursReleve,
   envoyerUneReponseLibre,
   identiteDuPoste,
   inscrireUnPoste,
+  lireDepuisLePoste,
   rejoindreDansLeNavigateur,
   seanceDemarreeSurLEcran,
   seancePartagee,
@@ -59,10 +58,7 @@ test.describe('Banc — écran non servi', () => {
     const { seance } = await seanceDuFichier(request);
     const poste = await inscrireUnPoste(request, seance, 5);
 
-    const reponse = await request.get(
-      `${URL_API}/formations/sessions/${seance.sessionId}/rappels`,
-      { headers: { [EN_TETE_JETON]: poste.jeton } },
-    );
+    const reponse = await lireDepuisLePoste(request, seance, poste, 'rappels');
 
     expect(reponse.status(), await reponse.text()).toBe(404);
     expect(((await reponse.json()) as { code: string }).code).toBe('ECRAN_NON_SERVI');
@@ -75,10 +71,7 @@ test.describe('Banc — écran non servi', () => {
     const poste = await inscrireUnPoste(request, seance, 7);
     await servirLEcran(request, jeton, seance.sessionId, ecransDuCours - 1);
 
-    const reponse = await request.get(
-      `${URL_API}/formations/sessions/${seance.sessionId}/rappels`,
-      { headers: { [EN_TETE_JETON]: poste.jeton } },
-    );
+    const reponse = await lireDepuisLePoste(request, seance, poste, 'rappels');
 
     expect(reponse.status(), await reponse.text()).toBe(200);
     const { questions } = (await reponse.json()) as {

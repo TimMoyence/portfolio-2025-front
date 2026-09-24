@@ -8,6 +8,7 @@ import {
   analyserCorrige,
   analyserFrontiere,
   analyserImportsDuPupitre,
+  analyserRevelationEnDur,
   estPupitreFormateur,
   estSurfaceCours,
   formatViolations,
@@ -49,6 +50,7 @@ void test('contrat : le gate expose ses fonctions pures', () => {
     analyserCorrige,
     analyserFrontiere,
     analyserImportsDuPupitre,
+    analyserRevelationEnDur,
     estPupitreFormateur,
     estSurfaceCours,
     formatViolations,
@@ -412,6 +414,103 @@ void test('AD-4 : les routes, hors surface cours, gardent le chargement paresseu
       "export const r = () => import('./features/cours/presentateur/cours-presentateur.component');\n",
   });
   assert.equal(resultat.code, 0);
+});
+
+const REVELATIONS_EN_DUR = [
+  {
+    nom: 'une cible de revelation ecrite en dur dans le rendu partage',
+    fichier: 'src/app/shared/slides/session/revelation.ts',
+    texte: "export const r = { questionId: 'q', cible: '45,5 %', optionId: null };\n",
+    ligne: 1,
+  },
+  {
+    nom: 'une annexe de revelation ecrite en dur dans le contenu',
+    fichier: 'src/cours/content/b2-01.ts',
+    texte: "export const r = {\n  annexe: { type: 'methode', titre: 'Méthode', lignes: [] },\n};\n",
+    ligne: 2,
+  },
+  {
+    nom: 'une revelation ecrite en dur dans une page de cours',
+    fichier: 'src/app/features/formations/b2-01/page.ts',
+    texte: 'export const e = { revelation: [] };\n',
+    ligne: 1,
+  },
+  {
+    nom: 'une cible sous une cle citee',
+    fichier: 'src/cours/content/b2-01.ts',
+    texte: 'export const r = { "cible": "42" };\n',
+    ligne: 1,
+  },
+  {
+    nom: 'une cible sous une cle calculee',
+    fichier: 'src/cours/content/b2-01.ts',
+    texte: "export const r = { ['cible']: '42' };\n",
+    ligne: 1,
+  },
+  {
+    nom: 'une cible dont la valeur passe a la ligne',
+    fichier: 'src/cours/content/b2-01.ts',
+    texte: "export const r = {\n  cible:\n    '42',\n};\n",
+    ligne: 2,
+  },
+  {
+    nom: 'une cible ecrite en dur dans une brique du runtime',
+    fichier: 'src/cours/runtime/blocks/FpNumeric.ts',
+    texte: "export const r = { cible: '42' };\n",
+    ligne: 1,
+  },
+  {
+    nom: 'une cible ecrite en dur dans un json de la surface cours',
+    fichier: 'src/cours/content/revelations.json',
+    texte: '{\n  "cible": "42"\n}\n',
+    ligne: 2,
+  },
+  {
+    nom: 'une cible numerique ecrite en dur dans l adaptateur qui construit la revelation',
+    fichier: 'src/app/core/adapters/formations-fil.ts',
+    texte: 'export const q = { cible: 12, optionId: null };\n',
+    ligne: 1,
+  },
+];
+
+for (const cas of REVELATIONS_EN_DUR) {
+  void test(`AD-4 : ${cas.nom} sort en code 1`, () => {
+    const resultat = garder({ [cas.fichier]: cas.texte });
+    assert.equal(resultat.code, 1);
+    assert.deepEqual(reperes(resultat), [`${cas.fichier}:${cas.ligne}:AD-4`]);
+    assert.match(resultat.violations[0].raison, /revelation ecrite en dur/);
+  });
+}
+
+void test('AD-4 : relayer au runtime la revelation servie par le serveur passe', () => {
+  const resultat = garder({
+    'src/app/shared/slides/session/relais.ts': [
+      'export interface Ligne {',
+      '  readonly cible: string | null;',
+      '}',
+      "export const a = (bonne: Record<string, string>) => ({ type: 'cible', cible: bonne['cible'] });",
+      'export const b = (ecran: { revelation?: unknown }) => ({ revelation: ecran.revelation ?? null });',
+      'export const c = (cibles: Record<string, string>, id: string) => ({ cible: cibles[id] ?? null });',
+      "export const e = (cible: string, ok: boolean) => (ok ? cible : '—');",
+    ].join('\n'),
+    'src/app/core/adapters/formations-fil.ts':
+      'export const d = (q: { attendu: string }) => ({ cible: q.attendu, annexe: null });\n',
+  });
+  assert.deepEqual(reperes(resultat), []);
+});
+
+void test('AD-4 : le pupitre formateur peut nommer une cible en dur', () => {
+  const resultat = garder({
+    'src/app/features/cours/presentateur/cours-exemple.ts': "export const r = { cible: '12' };\n",
+  });
+  assert.equal(resultat.code, 0);
+});
+
+void test('AD-4 : le verdict d une revelation en dur explique le canal runtime', () => {
+  const resultat = garder({
+    'src/app/shared/slides/session/revelation.ts': "export const r = { cible: '45,5 %' };\n",
+  });
+  assert.match(formatViolations(resultat), /servi au runtime apres la revelation par le serveur/);
 });
 
 void test('PLANCHER ANTI-VACUITE : un perimetre vide leve une erreur citant le gate', () => {

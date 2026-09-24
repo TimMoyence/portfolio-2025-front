@@ -130,12 +130,10 @@ describe('seo-metadata.json — parcours B2 servi par le serveur', () => {
     expect([sitemap, llms, llmsComplet].filter((texte) => texte.includes(CHEMIN_B2))).toEqual([]);
   });
 
-  it('L1 · annonce le nombre d écrans de la version 3 servie', () => {
+  it('L1 · n annonce aucun nombre d écrans, qui suit le contenu servi', () => {
     const page = METADONNEES.pages.find((candidate) => candidate.path === CHEMIN_B2);
     const textes = JSON.stringify(page?.locales);
 
-    expect(textes).not.toContain('72');
-    expect(textes).toContain('55 écrans');
-    expect(textes).toContain('55 screens');
+    expect(textes).not.toMatch(/\d (?:écrans|screens)/);
   });
 });

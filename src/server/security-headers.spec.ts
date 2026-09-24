@@ -41,8 +41,13 @@ describe('security-headers', () => {
       const csp = buildSecurityHeaders({ isHttps: true })['Content-Security-Policy-Report-Only'];
       expect(csp).toContain('https://plausible.io');
       expect(csp).toContain('https://accounts.google.com');
-      expect(csp).toContain('https://nominatim.openstreetmap.org');
-      expect(csp).toContain('https://api.rainviewer.com');
+    });
+
+    it('n ouvre plus les services de geolocalisation et de radar de l atelier retire', () => {
+      const csp = buildSecurityHeaders({ isHttps: true })['Content-Security-Policy-Report-Only'];
+      expect(csp).not.toContain('nominatim.openstreetmap.org');
+      expect(csp).not.toContain('rainviewer');
+      expect(csp).toContain("img-src 'self' data:;");
     });
   });
 });

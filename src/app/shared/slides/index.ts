@@ -21,6 +21,7 @@ export { SlideCtaComponent } from './layouts/slide-cta/slide-cta.component';
 export { SlideTableComponent, type TableColumn } from './layouts/slide-table/slide-table.component';
 export { SlideChartComponent } from './layouts/slide-chart/slide-chart.component';
 export { SlideSortReviewComponent } from './layouts/slide-sort-review/slide-sort-review.component';
+export { SlideAnswerReviewComponent } from './layouts/slide-answer-review/slide-answer-review.component';
 
 export { SlideQuizComponent } from './interactions/slide-quiz/slide-quiz.component';
 export { SlidePollComponent } from './interactions/slide-poll/slide-poll.component';

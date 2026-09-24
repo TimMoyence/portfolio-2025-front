@@ -2,6 +2,7 @@ import {
   type CoursContent,
   type EcranContent,
   type MetadonneesBrique,
+  type RevelationServie,
   creerMetadonneesBrique,
 } from '../../cours/content/types';
 import type { CardsortPlanPublic } from '../../cours/runtime/blocks/FpCardsort';
@@ -619,6 +620,16 @@ export function buildVerdictDeTentative(
     correcte: true,
     fragment: 'TR',
     tentativesRestantes: 9,
+    ...overrides,
+  };
+}
+
+export function buildRevelationServie(overrides: Partial<RevelationServie> = {}): RevelationServie {
+  return {
+    ecranId: 'ecran-1',
+    questions: [{ questionId: 'Q-CAP-03', cible: '1 480,24 €', optionId: 'b' }],
+    annexe: null,
+    reflexion: null,
     ...overrides,
   };
 }

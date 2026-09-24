@@ -28,7 +28,7 @@ import type { CorrectionAffichee } from './corrections-affichees';
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
       gap: 0.5rem;
-      max-block-size: 40%;
+      max-block-size: 60%;
       box-sizing: border-box;
       padding: 1rem 1.25rem;
       border-inline-start: 0.375rem solid var(--success, #2f7d4f);
@@ -45,9 +45,9 @@ import type { CorrectionAffichee } from './corrections-affichees';
 
     .cours-correction__liste {
       display: grid;
-      gap: 0.35rem;
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      gap: 0.35rem 1.5rem;
       margin: 0;
-      overflow: auto;
     }
 
     .cours-correction__ligne {

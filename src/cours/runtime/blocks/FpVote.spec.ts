@@ -89,14 +89,57 @@ describe('FpVote', () => {
     hote.remove();
   });
 
-  function presenter(role: 'presentateur' | 'etudiant', rendu: string): void {
-    hote.setAttribute('data-cours-role', role);
-    hote.setAttribute('render', rendu);
+  function presenter(): void {
+    hote.setAttribute('data-cours-role', 'presentateur');
   }
 
-  it('affiche toutes les options et une option je ne sais pas en mode main', () => {
+  function structure(element: FpVote): string[] {
+    return [...(element.shadowRoot?.querySelectorAll('.fp-root *') ?? [])].map(
+      (noeud) => `${noeud.localName}.${noeud.className}`,
+    );
+  }
+
+  it('affiche toutes les options et une option je ne sais pas pour l etudiant', () => {
     expect(ordreAffiche(hote).length).toBe(3);
     expect(marque(hote, 'je-ne-sais-pas')).toBeTruthy();
+  });
+
+  it('montre au presentateur les memes options, desactivees et sans je ne sais pas', () => {
+    presenter();
+
+    expect(ordreAffiche(hote)).toEqual(['a', 'b', 'c']);
+    expect(legende(hote)).toBe(QUESTION.enonce);
+    expect(marque(hote, 'je-ne-sais-pas')).toBeNull();
+    expect(marque(hote, 'retour')).toBeNull();
+    expect(options(hote).every((bouton) => bouton.disabled)).toBeTrue();
+  });
+
+  it('pose la meme carte et le meme fieldset d options pour les deux roles', () => {
+    const etudiant = structure(hote).filter((noeud) => !noeud.includes('neutre'));
+    presenter();
+    const presentateur = structure(hote);
+
+    for (const noeud of [
+      'div.fp-carte fp-scene',
+      'fieldset.fp-vote__options',
+      'legend.fp-enonce',
+    ]) {
+      expect(etudiant).toContain(noeud);
+      expect(presentateur).toContain(noeud);
+    }
+    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(
+      'presentateur',
+    );
+  });
+
+  it('n emet aucun vote depuis le poste presentateur', () => {
+    presenter();
+    const emis: unknown[] = [];
+    hote.addEventListener('fp-vote-submit', (evenement) => emis.push(evenement));
+
+    options(hote)[0].click();
+
+    expect(emis).toEqual([]);
   });
 
   it('garde l ordre servi, deja melange par le serveur, sans graine locale', () => {
@@ -167,9 +210,8 @@ describe('FpVote', () => {
     expect(JSON.stringify(hote.question)).not.toContain('secret');
   });
 
-  it('rappelle au tableau la modalite et la duree quand la question les porte', () => {
-    presenter('presentateur', 'board');
-    expect(marque(hote, 'modalite')).toBeNull();
+  it('garde les metadonnees publiques de la question sans les afficher en badge', () => {
+    presenter();
 
     hote.question = buildVoteQuestion({
       id: 'Q-CAP-04',
@@ -182,8 +224,65 @@ describe('FpVote', () => {
       }),
     });
 
-    expect(marque(hote, 'modalite')?.textContent?.trim()).toBe('Classe entière');
-    expect(marque(hote, 'duree')?.textContent?.trim()).toBe('2 min');
+    expect(hote.question?.metadonnees?.modalite).toBe('classe');
+    expect(hote.question?.metadonnees?.dureeMinutes).toBe(2);
+    expect(marque(hote, 'modalite')).toBeNull();
+    expect(marque(hote, 'duree')).toBeNull();
+  });
+
+  it('en cours de vote simple, ne projette au presentateur que le decompte', () => {
+    presenter();
+    hote.resultats = RESULTATS;
+
+    expect(marque(hote, 'decompte')?.textContent).toContain('12');
+    expect(marque(hote, 'histogramme')).toBeNull();
+  });
+
+  it('projette l histogramme au presentateur une fois le vote clos', () => {
+    presenter();
+    hote.resultats = RESULTATS;
+    hote.cloture = true;
+
+    expect(marque(hote, 'histogramme')?.querySelectorAll('[data-testid="barre"]').length).toBe(4);
+    expect(marque(hote, 'decompte')?.textContent).toContain('12');
+  });
+
+  for (const role of ['etudiant', 'presentateur'] as const) {
+    it(`revele au role ${role} la bonne reponse et marque la bonne option quand le corrige est pose`, () => {
+      hote.setAttribute('data-cours-role', role);
+      expect(marque(hote, 'bonne-reponse')).toBeNull();
+
+      hote.corrige = { type: 'cible', cible: '1 480,24 €', optionId: 'b' };
+
+      expect(marque(hote, 'bonne-reponse')?.textContent).toContain('1 480,24 €');
+      expect(marque(hote, 'bonne-reponse')?.getAttribute('data-etat')).toBe('confirme');
+      expect(
+        hote.shadowRoot?.querySelector('[data-option="b"]')?.getAttribute('data-correction'),
+      ).toBe('juste');
+      expect(
+        hote.shadowRoot?.querySelector('[data-option="a"]')?.hasAttribute('data-correction'),
+      ).toBeFalse();
+    });
+  }
+
+  it('marque comme fausse l option choisie par l etudiant quand ce n est pas la bonne', () => {
+    options(hote)[0].click();
+
+    hote.corrige = { type: 'cible', cible: '1 480,24 €', optionId: 'b' };
+
+    expect(
+      hote.shadowRoot?.querySelector('[data-option="a"]')?.getAttribute('data-correction'),
+    ).toBe('fausse');
+    expect(
+      hote.shadowRoot?.querySelector('[data-option="c"]')?.hasAttribute('data-correction'),
+    ).toBeFalse();
+  });
+
+  it('ne marque aucune option quand le corrige ne porte pas d identifiant d option', () => {
+    hote.corrige = { type: 'cible', cible: '1 480,24 €' };
+
+    expect(marque(hote, 'bonne-reponse')).not.toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-correction]')).toBeNull();
   });
 
   describe('instruction par les pairs', () => {
@@ -246,25 +345,21 @@ describe('FpVote', () => {
       expect(marque(hote, 'verdict')?.getAttribute('data-etat')).toBe('confirme');
     });
 
-    it('en projection, ne montre l histogramme et la revelation qu en phase revele', () => {
-      presenter('presentateur', 'stage');
-      hote.corrige = REVELATION;
+    it('au presentateur, ne montre l histogramme qu en phase revele', () => {
+      presenter();
       hote.resultats = RESULTATS;
       hote.phase = 'revote';
 
       expect(marque(hote, 'histogramme')).toBeNull();
-      expect(marque(hote, 'revelation')).toBeNull();
       expect(marque(hote, 'decompte')?.textContent).toContain('12');
 
       hote.phase = 'revele';
 
       expect(marque(hote, 'histogramme')).not.toBeNull();
-      expect(marque(hote, 'revelation')?.textContent).toContain('Ce que montre le cas jumeau');
     });
 
-    it('RET-20 · projette les resultats du premier vote pendant la discussion, sans la bonne reponse', () => {
-      presenter('presentateur', 'stage');
-      hote.corrige = { type: 'cible', cible: 'b' };
+    it('RET-20 · projette les resultats du premier vote pendant la discussion, sans la bonne reponse tant que le corrige n est pas pose', () => {
+      presenter();
       hote.resultats = RESULTATS;
       hote.phase = 'discussion';
 
@@ -275,7 +370,7 @@ describe('FpVote', () => {
     });
 
     it('RET-20 · projette cote a cote les deux votes une fois la reponse revelee', () => {
-      presenter('presentateur', 'stage');
+      presenter();
       hote.resultatsPremierVote = RESULTATS;
       hote.resultats = { total: 10, parOption: { 'j-a': 2, 'j-b': 8 } };
       hote.phase = 'revele';
@@ -291,13 +386,17 @@ describe('FpVote', () => {
       expect(histogrammes[1].textContent).toContain('80%');
     });
 
-    it('montre toujours la revelation au pupitre', () => {
-      presenter('presentateur', 'board');
-      hote.corrige = REVELATION;
-      hote.phase = 'vote';
+    for (const role of ['etudiant', 'presentateur'] as const) {
+      it(`montre la revelation au role ${role} des que le corrige est pose, quelle que soit la phase`, () => {
+        hote.setAttribute('data-cours-role', role);
+        hote.phase = 'vote';
+        expect(marque(hote, 'revelation')).toBeNull();
 
-      expect(marque(hote, 'revelation')?.textContent).toContain('Le capital double');
-    });
+        hote.corrige = REVELATION;
+
+        expect(marque(hote, 'revelation')?.textContent).toContain('Le capital double');
+      });
+    }
   });
 
   it('montre le verdict d un vote simple des qu il arrive', () => {
@@ -315,7 +414,8 @@ describe('FpVote', () => {
   });
 
   it('ignore une cle html ou un nom d etudiant inconnu dans resultats.parOption', () => {
-    presenter('presentateur', 'board');
+    presenter();
+    hote.phase = 'revele';
     const cleMalicieuse = '<img src=x onerror="alert(1)">';
     hote.resultats = {
       total: 14,
@@ -328,7 +428,8 @@ describe('FpVote', () => {
   });
 
   it('donne a chaque barre une largeur qui reflete sa proportion', () => {
-    presenter('presentateur', 'board');
+    presenter();
+    hote.phase = 'revele';
     hote.resultats = RESULTATS;
     const largeurs = new Map(
       [...(hote.shadowRoot?.querySelectorAll<HTMLElement>('[data-testid="barre"]') ?? [])].map(
@@ -344,7 +445,8 @@ describe('FpVote', () => {
   });
 
   it('etiquette chaque barre avec le libelle de son option', () => {
-    presenter('presentateur', 'board');
+    presenter();
+    hote.phase = 'revele';
     hote.resultats = { total: 12, parOption: { a: 7, b: 4, [ID_JE_NE_SAIS_PAS]: 1 } };
     const libelles = [
       ...(hote.shadowRoot?.querySelectorAll('[data-testid="barre-libelle"]') ?? []),
@@ -355,7 +457,8 @@ describe('FpVote', () => {
   it('pose toutes les pistes sur un rail de meme longueur quels que soient les libelles', () => {
     hote.style.display = 'block';
     hote.style.width = '600px';
-    presenter('presentateur', 'board');
+    presenter();
+    hote.phase = 'revele';
     hote.question = buildVoteQuestion({
       id: 'Q-RAIL-01',
       options: [

@@ -7,21 +7,9 @@ import { resolve } from 'node:path';
  * vers /login (le guard ne peut pas utiliser le cookie de refresh HttpOnly cote serveur), ce qui
  * casse le reload. On sert a la place la coquille CSR (index.csr.html) :
  * un HTML minimal avec les scripts Angular, qui laisse le client gerer le
- * routing apres hydratation.
- *
- * Les routes listees ici DOIVENT correspondre a celles marquees
- * `RenderMode.Client` dans `src/app/app.routes.server.ts`.
+ * routing apres hydratation. Les routes concernees sont decidees par
+ * `isClientOnlyRoute` (`./routes-client`).
  */
-const CLIENT_ONLY_ROUTE_PATTERNS: RegExp[] = [
-  /^profil\/?$/,
-  /^atelier\/meteo\/app(\/|$)/,
-  /^atelier\/sebastian\/app(\/|$)/,
-];
-
-export const isClientOnlyRoute = (routePath: string): boolean => {
-  const normalized = routePath.replace(/^\//, '');
-  return CLIENT_ONLY_ROUTE_PATTERNS.some((pattern) => pattern.test(normalized));
-};
 
 export const loadCsrShell = (locale: string | null, browserDistFolder: string): string | null => {
   const candidates = [

@@ -330,6 +330,12 @@ describe('SeoService', () => {
     });
 
     describe('JSON-LD', () => {
+      const scriptJsonLdAjoute = (): Record<string, unknown> | undefined =>
+        (mockDocument.head as unknown as { appendChild: jasmine.Spy }).appendChild.calls
+          .allArgs()
+          .map((args: unknown[]) => args[0] as Record<string, unknown>)
+          .find((el) => el['type'] === 'application/ld+json');
+
       it('devrait injecter un script JSON-LD dans le head quand jsonLd est fourni', () => {
         const jsonLdData = {
           '@context': 'https://schema.org',
@@ -343,12 +349,7 @@ describe('SeoService', () => {
           jsonLd: jsonLdData,
         });
 
-        const appendSpy = (mockDocument.head as unknown as { appendChild: jasmine.Spy })
-          .appendChild;
-        const appendedArgs = appendSpy.calls
-          .allArgs()
-          .map((args: unknown[]) => args[0] as Record<string, unknown>);
-        const scriptEl = appendedArgs.find((el) => el['type'] === 'application/ld+json');
+        const scriptEl = scriptJsonLdAjoute();
 
         expect(scriptEl).toBeTruthy();
         expect(scriptEl!['textContent']).toBe(JSON.stringify(jsonLdData));
@@ -360,14 +361,7 @@ describe('SeoService', () => {
           description: 'Desc',
         });
 
-        const appendSpy = (mockDocument.head as unknown as { appendChild: jasmine.Spy })
-          .appendChild;
-        const appendedArgs = appendSpy.calls
-          .allArgs()
-          .map((args: unknown[]) => args[0] as Record<string, unknown>);
-        const scriptEl = appendedArgs.find((el) => el['type'] === 'application/ld+json');
-
-        expect(scriptEl).toBeUndefined();
+        expect(scriptJsonLdAjoute()).toBeUndefined();
       });
 
       it('devrait injecter un tableau de JSON-LD comme scripts separes', () => {
@@ -460,12 +454,17 @@ describe('SeoService', () => {
   });
 
   describe('avec document null (SSR sans DOM)', () => {
+    let localMetaSpy: jasmine.SpyObj<Meta>;
+    let localTitleSpy: jasmine.SpyObj<Title>;
+    let svc: SeoService;
+
+    beforeEach(() => {
+      localMetaSpy = jasmine.createSpyObj<Meta>('Meta', ['updateTag']);
+      localTitleSpy = jasmine.createSpyObj<Title>('Title', ['setTitle']);
+      svc = new SeoService(localMetaSpy, localTitleSpy, null as unknown as Document, 'fr');
+    });
+
     it('ne devrait rien faire si document est null', () => {
-      const localMetaSpy = jasmine.createSpyObj<Meta>('Meta', ['updateTag']);
-      const localTitleSpy = jasmine.createSpyObj<Title>('Title', ['setTitle']);
-
-      const svc = new SeoService(localMetaSpy, localTitleSpy, null as unknown as Document, 'fr');
-
       svc.updateSeoMetadata({
         title: 'Titre',
         description: 'Description',
@@ -476,11 +475,6 @@ describe('SeoService', () => {
     });
 
     it('ne devrait pas throw si jsonLd est fourni avec document null', () => {
-      const localMetaSpy = jasmine.createSpyObj<Meta>('Meta', ['updateTag']);
-      const localTitleSpy = jasmine.createSpyObj<Title>('Title', ['setTitle']);
-
-      const svc = new SeoService(localMetaSpy, localTitleSpy, null as unknown as Document, 'fr');
-
       expect(() =>
         svc.updateSeoMetadata({
           title: 'Titre',

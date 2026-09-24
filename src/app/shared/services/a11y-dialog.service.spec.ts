@@ -54,48 +54,34 @@ describe('A11yDialogService', () => {
       expect(() => service.focusFirstDescendant(undefined as unknown as HTMLElement)).not.toThrow();
     });
 
-    it('trapFocus devrait cycler le focus vers le premier element quand Tab atteint le dernier', () => {
-      const container = document.createElement('div');
-      const btn1 = document.createElement('button');
-      btn1.textContent = 'First';
-      const btn2 = document.createElement('button');
-      btn2.textContent = 'Last';
-      container.appendChild(btn1);
-      container.appendChild(btn2);
-      document.body.appendChild(container);
+    const cycles: readonly [string, boolean, 'First' | 'Last', 'First' | 'Last'][] = [
+      ['vers le premier element quand Tab atteint le dernier', false, 'Last', 'First'],
+      ['vers le dernier element quand Shift+Tab atteint le premier', true, 'First', 'Last'],
+    ];
 
-      btn2.focus();
-      const event = new KeyboardEvent('keydown', {
-        key: 'Tab',
-        cancelable: true,
+    for (const [cas, shiftKey, depart, arrivee] of cycles) {
+      it(`trapFocus devrait cycler le focus ${cas}`, () => {
+        const container = document.createElement('div');
+        const boutons = new Map(
+          (['First', 'Last'] as const).map((libelle) => {
+            const bouton = document.createElement('button');
+            bouton.textContent = libelle;
+            container.appendChild(bouton);
+            return [libelle, bouton] as const;
+          }),
+        );
+        document.body.appendChild(container);
+
+        boutons.get(depart)!.focus();
+        service.trapFocus(
+          new KeyboardEvent('keydown', { key: 'Tab', shiftKey, cancelable: true }),
+          container,
+        );
+
+        expect(document.activeElement).toBe(boutons.get(arrivee)!);
+        document.body.removeChild(container);
       });
-      service.trapFocus(event, container);
-
-      expect(document.activeElement).toBe(btn1);
-      document.body.removeChild(container);
-    });
-
-    it('trapFocus devrait cycler le focus vers le dernier element quand Shift+Tab atteint le premier', () => {
-      const container = document.createElement('div');
-      const btn1 = document.createElement('button');
-      btn1.textContent = 'First';
-      const btn2 = document.createElement('button');
-      btn2.textContent = 'Last';
-      container.appendChild(btn1);
-      container.appendChild(btn2);
-      document.body.appendChild(container);
-
-      btn1.focus();
-      const event = new KeyboardEvent('keydown', {
-        key: 'Tab',
-        shiftKey: true,
-        cancelable: true,
-      });
-      service.trapFocus(event, container);
-
-      expect(document.activeElement).toBe(btn2);
-      document.body.removeChild(container);
-    });
+    }
 
     it('trapFocus ne devrait rien faire pour une touche autre que Tab', () => {
       const container = document.createElement('div');

@@ -9,14 +9,9 @@ import {
   nomCellule,
 } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
+import { FpProductionEtayee, lireAttendusDuCorrige } from './production';
 import { projeterMetadonnees } from './projection';
-import {
-  estObjet,
-  estVerdictDeProduction,
-  type DetailDeVerdict,
-  type VerdictDeProduction,
-} from './retours';
+import { estObjet, type DetailDeVerdict } from './retours';
 
 export interface SheetPlanPublic {
   readonly id: string;
@@ -57,10 +52,6 @@ function borner(brut: number): number {
   return Number.isFinite(brut) ? Math.min(LIMITE_GRILLE, Math.max(0, Math.trunc(brut))) : 0;
 }
 
-function ligneDeConsigne(consigne: string): EscapedHtml {
-  return safeHtml`<li>${escapeHtml(consigne)}</li>`;
-}
-
 function nomsDeLaGrille(lignes: number, colonnes: number): ReadonlySet<string> {
   const noms = new Set<string>();
   for (let ligne = 0; ligne < lignes; ligne += 1) {
@@ -97,69 +88,19 @@ function copierPlan(source: SheetPlanPublic): SheetPlanPublic {
   };
 }
 
-function lireAttendus(valeur: unknown): readonly AttenduDeFeuille[] {
-  if (!estObjet(valeur) || valeur['type'] !== 'feuille' || !Array.isArray(valeur['attendus'])) {
-    return [];
-  }
-  return valeur['attendus'].filter(
-    (attendu): attendu is AttenduDeFeuille =>
-      estObjet(attendu) &&
-      typeof attendu['reference'] === 'string' &&
-      typeof attendu['formuleReference'] === 'string' &&
-      typeof attendu['valeur'] === 'number',
-  );
-}
-
-export class FpSheet extends FpBlock {
-  private interne: SheetPlanPublic | null = null;
+export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuille> {
+  protected readonly evenementDeSoumission = 'fp-sheet-submit';
   private contenus: Record<string, string> = {};
   private selection = CELLULE_INITIALE;
   private foyer: Foyer = null;
-  private message = '';
-  private soumis = false;
-  private interneVerdict: VerdictDeProduction | null = null;
-  private attendus: readonly AttenduDeFeuille[] = [];
   private evaluation: EvaluationDeLaFeuille | null = null;
-  private correction = 0;
-  private reprises: ReadonlySet<string> = new Set();
 
   set plan(valeur: SheetPlanPublic | null) {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne = valeur === null ? null : copierPlan(valeur);
-    if (change) {
-      this.contenus = { ...(this.interne?.cellules ?? {}) };
-      this.selection = CELLULE_INITIALE;
-      this.foyer = null;
-      this.message = '';
-      this.soumis = false;
-      this.interneVerdict = null;
-      this.reprises = new Set();
-    }
-    this.refreshSiConnecte();
+    this.poserLePlan(valeur, copierPlan);
   }
 
   get plan(): SheetPlanPublic | null {
     return this.interne;
-  }
-
-  set verdict(valeur: VerdictDeProduction | null) {
-    this.interneVerdict =
-      estVerdictDeProduction(valeur) && valeur.questionId === this.interne?.id ? valeur : null;
-    this.refreshSiConnecte();
-  }
-
-  get verdict(): VerdictDeProduction | null {
-    return this.interneVerdict;
-  }
-
-  set corrige(valeur: unknown) {
-    this.attendus = lireAttendus(valeur);
-    this.refreshSiConnecte();
-  }
-
-  set etayage(valeur: number) {
-    this.correction = valeur;
-    this.refreshSiConnecte();
   }
 
   set brouillon(valeur: unknown) {
@@ -181,58 +122,37 @@ export class FpSheet extends FpBlock {
     this.refreshSiConnecte();
   }
 
-  renderHand(): EscapedHtml {
-    const plan = this.interne;
-    if (plan === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
-    }
-    const verrouille = this.verrouille();
+  protected scene(plan: SheetPlanPublic): EscapedHtml {
     return safeHtml`
-      <section class="fp-carte fp-sheet__atelier">
+      <section class="fp-carte fp-scene fp-sheet__atelier">
+        ${this.consignes(plan)}
+        ${this.tableau(false)}
+      </section>
+    `;
+  }
+
+  protected atelier(plan: SheetPlanPublic): EscapedHtml {
+    return safeHtml`
+      <section class="fp-carte fp-scene fp-sheet__atelier">
         <p class="fp-sheet__consigne">${escapeHtml(this.texte('sheet-consigne'))}</p>
         ${this.consignes(plan)}
         ${this.barre()}
         ${this.tableau(true)}
         <div class="fp-sheet__actions">
           <button type="button" class="fp-sheet__recopier" data-testid="recopier">${escapeHtml(this.texte('sheet-recopier'))}</button>
-          <button type="button" class="fp-sheet__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
-          ${this.boutonNeSaitPas(verrouille)}
+          <button type="button" class="fp-sheet__valider" data-testid="valider">${escapeHtml(this.texte(this.enReprise() ? 'production-renvoyer' : 'valider'))}</button>
+          ${this.boutonNeSaitPas(this.verrouille())}
         </div>
         ${this.bilanErreurs()}
         <p class="fp-sheet__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
         ${this.verdictDeProduction(this.interneVerdict, 'sheet-verdict', this.justes(), this.interneVerdict?.details.length ?? 0)}
+        ${this.correctionServie()}
         ${this.annonces()}
       </section>
     `;
   }
 
-  renderStage(): EscapedHtml {
-    if (this.interne === null) {
-      return safeHtml``;
-    }
-    return safeHtml`<section class="fp-scene fp-sheet__atelier">${this.tableau(false)}</section>`;
-  }
-
-  renderBoard(): EscapedHtml {
-    const plan = this.interne;
-    if (plan === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    return safeHtml`
-      <section class="fp-carte fp-sheet__atelier">
-        <p class="fp-enonce">${escapeHtml(plan.intitule)}</p>
-        ${this.consignes(plan)}
-        <div class="fp-sheet__reperes">${this.reperes(plan.metadonnees)}</div>
-        ${this.roleActuel() === 'presentateur' ? this.attendusFormateur() : VIDE}
-      </section>
-    `;
-  }
-
-  bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.interne?.id ?? null);
-    if (this.mode() !== 'hand') {
-      return;
-    }
+  protected brancherLAtelier(racine: ShadowRoot): void {
     for (const champ of racine.querySelectorAll<HTMLInputElement>('[data-role="cellule"]')) {
       this.brancherCellule(champ);
     }
@@ -240,13 +160,28 @@ export class FpSheet extends FpBlock {
     this.brancherBouton(racine, 'recopier', () => this.recopier());
     this.brancherBouton(racine, 'valider', () => this.valider());
     this.brancherBouton(racine, 'je-ne-sais-pas', () => this.neSaitPas());
+    const valider = racine.querySelector<HTMLButtonElement>('[data-testid="valider"]');
+    if (valider !== null) {
+      valider.disabled = this.verrouille() && !this.enReprise();
+    }
   }
 
-  private verrouille(): boolean {
-    return (
-      this.verrouilleApresEnvoi(this.soumis, this.interneVerdict !== null) ||
-      (this.correction > 0 && !this.enApercu())
-    );
+  protected lireLesAttendus(valeur: unknown): readonly AttenduDeFeuille[] {
+    return lireAttendusDuCorrige<AttenduDeFeuille>(valeur, 'feuille', {
+      reference: 'string',
+      formuleReference: 'string',
+      valeur: 'number',
+    });
+  }
+
+  protected relacherLaSaisie(): void {
+    this.foyer = null;
+  }
+
+  protected reinitialiserLaSaisie(): void {
+    this.relacherLaSaisie();
+    this.contenus = { ...(this.interne?.cellules ?? {}) };
+    this.selection = CELLULE_INITIALE;
   }
 
   private modifiable(nom: string): boolean {
@@ -254,7 +189,7 @@ export class FpSheet extends FpBlock {
   }
 
   private accessible(nom: string): boolean {
-    return !this.verrouille() || this.detailDe(nom)?.juste === false;
+    return !this.verrouille() || (this.correction === 0 && this.detailDe(nom)?.juste === false);
   }
 
   private dansLaGrille(nom: string): boolean {
@@ -273,11 +208,7 @@ export class FpSheet extends FpBlock {
   }
 
   private consignes(plan: SheetPlanPublic): EscapedHtml {
-    const consignes = plan.consignes ?? [];
-    if (consignes.length === 0) {
-      return VIDE;
-    }
-    return safeHtml`<ol class="fp-sheet__consignes" data-testid="consignes">${consignes.map(ligneDeConsigne)}</ol>`;
+    return this.consignesNumerotees(plan.consignes ?? [], 'fp-sheet__consignes');
   }
 
   private brancherBouton(racine: ShadowRoot, nom: string, action: () => void): void {
@@ -503,7 +434,7 @@ export class FpSheet extends FpBlock {
 
   private lecture(nom: string): EscapedHtml {
     const attendu = this.attendus.find((candidat) => candidat.reference === nom);
-    if (attendu !== undefined && this.correction >= 1 && this.roleActuel() === 'presentateur') {
+    if (attendu !== undefined && this.correction >= 1) {
       const valeur =
         this.correction >= 2
           ? safeHtml` <span class="fp-montant">${escapeHtml(formaterResultat({ valeur: attendu.valeur, erreur: null }))}</span>`
@@ -534,43 +465,31 @@ export class FpSheet extends FpBlock {
     return safeHtml`<p class="fp-sheet__bilan fp-sheet__bilan--fautif" aria-live="polite" data-testid="erreurs">${escapeHtml(SIGNE_ERREUR)} ${escapeHtml(this.texte('sheet-erreurs'))} ${escapeHtml(fautives.join(', '))}</p>`;
   }
 
-  private attendusFormateur(): EscapedHtml {
-    if (this.attendus.length === 0) {
+  private correctionServie(): EscapedHtml {
+    if (this.attendus.length === 0 || this.correction < 1) {
       return VIDE;
     }
+    const valeur = (attendu: AttenduDeFeuille): EscapedHtml =>
+      this.correction >= 2
+        ? safeHtml` <span class="fp-montant">${escapeHtml(formaterResultat({ valeur: attendu.valeur, erreur: null }))}</span>`
+        : VIDE;
     const lignes = this.attendus.map(
       (attendu) =>
-        safeHtml`<li class="fp-sheet__attendu" data-testid="attendu" data-nom="${escapeHtml(attendu.reference)}"><strong>${escapeHtml(attendu.reference)}</strong> <code>${escapeHtml(attendu.formuleReference)}</code> <span class="fp-montant">${escapeHtml(formaterResultat({ valeur: attendu.valeur, erreur: null }))}</span></li>`,
+        safeHtml`<li class="fp-sheet__attendu" data-testid="attendu" data-nom="${escapeHtml(attendu.reference)}"><strong>${escapeHtml(attendu.reference)}</strong> <code>${escapeHtml(attendu.formuleReference)}</code>${valeur(attendu)}</li>`,
     );
     return safeHtml`<ul class="fp-sheet__attendus" data-testid="attendus">${lignes}</ul>`;
   }
 
-  private conclure(detail: Readonly<Record<string, unknown>>): void {
-    this.soumis = true;
-    this.foyer = null;
-    this.message = this.messageApresEnvoi();
-    this.emit('fp-sheet-submit', { ...detail, dureeMs: this.depuisAffichage() });
-    this.refresh();
-  }
-
   private valider(): void {
-    const plan = this.interne;
-    if (plan === null || this.verrouille()) {
+    const plan = this.planAValider();
+    if (plan === null) {
       return;
     }
     const cellules = this.saisiesDeLEtudiant();
     if (Object.keys(cellules).length === 0) {
-      this.message = this.texte('production-vide');
-      this.refresh();
+      this.refuserLEnvoi('production-vide');
       return;
     }
     this.conclure({ planId: plan.id, cellules });
-  }
-
-  private neSaitPas(): void {
-    const plan = this.interne;
-    if (plan !== null && !this.verrouille()) {
-      this.conclure({ planId: plan.id, neSaitPas: true });
-    }
   }
 }

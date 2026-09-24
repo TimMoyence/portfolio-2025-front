@@ -1,18 +1,7 @@
-<app-asili-hero [kicker]="heroKicker" [lead]="heroLead">
+<app-asili-hero [kicker]="heroKicker" [lead]="heroLead" [metaRows]="heroMeta">
   <ng-container title>
     {{ heroTitlePre }}<br />
     {{ heroTitleAccent }} <span class="accent">{{ heroTitlePost }}</span>
-  </ng-container>
-
-  <ng-container meta>
-    <div class="presentation-hero-meta">
-      @for (row of heroMeta; track row.key) {
-        <div class="row">
-          <span class="k">{{ row.key }}</span>
-          <span class="v">{{ row.value }}</span>
-        </div>
-      }
-    </div>
   </ng-container>
 </app-asili-hero>
 
@@ -144,9 +133,9 @@
         {{ timelineHeadLink }} <span aria-hidden="true">→</span>
       </a>
     </div>
-    <div class="timeline">
+    <ol class="timeline">
       @for (item of milestones; track item.title) {
-        <div class="tl-item" appReveal>
+        <li class="tl-item" appReveal>
           <div class="tl-year">{{ item.year }}</div>
           <div>
             <h3>{{ item.title }}</h3>
@@ -157,22 +146,10 @@
               }
             </div>
           </div>
-        </div>
+        </li>
       }
-    </div>
+    </ol>
   </div>
 </section>
 
-<app-asili-faq [kicker]="faqKicker" [title]="faqTitle" [items]="faqItems" />
-
-<app-asili-cta-band [title]="ctaTitle">
-  <span kicker class="kicker cta-kicker">{{ ctaKicker }}</span>
-  <ng-container cta>
-    <a class="btn btn-teal" routerLink="/contact">
-      {{ ctaPrimary }} <span class="arrow" aria-hidden="true">→</span>
-    </a>
-    <a class="btn btn-ghost" routerLink="/offer">
-      {{ ctaSecondary }}
-    </a>
-  </ng-container>
-</app-asili-cta-band>
+<app-asili-closing [contenu]="closing" />

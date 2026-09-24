@@ -10,7 +10,7 @@ import { FpEscape } from './FpEscape';
 const PARCOURS = buildEscapeParcours();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const CLASSES_ATTENDUES = 25;
-const RENDUS = ['stage', 'hand', 'board'] as const;
+const ROLES = ['etudiant', 'presentateur'] as const;
 const DELAI_INDICE_MS = 120000;
 const BUDGET_MS = 360000;
 const DEBUT = new Date('2026-09-14T09:00:00.000Z');
@@ -196,7 +196,7 @@ describe('FpEscape', () => {
     expect(libelleDe(hote, 'erreur')).toBe('Envoi impossible pour le moment');
   });
 
-  it('retient l indice jusqu au delai puis l offre sans penalite', () => {
+  it('retient l indice jusqu au delai puis l offre', () => {
     noeud(hote, 'demander-indice')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(libelleDe(hote, 'annonce')).toBe('L’indice s’ouvre dans 120 secondes');
     expect(noeud(hote, 'indice')).toBeNull();
@@ -205,12 +205,22 @@ describe('FpEscape', () => {
     noeud(hote, 'demander-indice')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(libelleDe(hote, 'indice')).toBe(`Indice : ${PARCOURS.enigmes[0].indice}`);
-    expect(libelleDe(hote, 'gratuite')).toBe('Prendre un indice ne retire rien à votre parcours');
+  });
+
+  it('G06 · ne garde aucune mention inutile à côté du bouton d indice, ouvert ou non', () => {
+    expect(noeud(hote, 'gratuite')).toBeNull();
+    expect(hote.shadowRoot?.textContent ?? '').not.toContain('ne retire rien');
+
+    jasmine.clock().tick(DELAI_INDICE_MS);
+    noeud(hote, 'demander-indice')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(libelleDe(hote, 'annonce')).toBe('Indice ouvert');
+    expect(hote.shadowRoot?.textContent ?? '').not.toContain('ne retire rien');
   });
 
   it('signale le budget annonce depasse sans rien fermer', () => {
     jasmine.clock().tick(BUDGET_MS);
-    hote.setAttribute('render', 'hand');
+    hote.setAttribute('data-cours-role', 'etudiant');
     expect(noeud(hote, 'minuteur')?.getAttribute('data-echu')).toBe('true');
     expect(libelleDe(hote, 'echeance')).toContain('rien ne se ferme');
     expect(noeud(hote, 'saisie')).not.toBeNull();
@@ -231,30 +241,91 @@ describe('FpEscape', () => {
     expect((noeud(hote, 'saisie') as HTMLInputElement).value).toBe('29 000');
   });
 
-  it('montre au pupitre les reponses et le code, jamais a un poste etudiant', () => {
-    hote.corrige = SOLUTIONNAIRE;
-    for (const rendu of RENDUS) {
-      hote.setAttribute('render', rendu);
-      expect(hote.shadowRoot?.innerHTML).withContext(rendu).not.toContain('TRESOR');
+  it('ne publie pour aucun role les solutions ni le code final tant que le corrige n est pas pose', () => {
+    for (const role of ROLES) {
+      hote.setAttribute('data-cours-role', role);
+      expect(hote.shadowRoot?.innerHTML).withContext(role).not.toContain('TRESOR');
+      expect(noeuds(hote, 'solution')).withContext(role).toEqual([]);
+      expect(noeud(hote, 'code-final')).withContext(role).toBeNull();
     }
+  });
+
+  it('projette au presentateur chaque enigme avec son enonce, sans champ ni jeu', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
-    hote.setAttribute('render', 'board');
-    expect(noeuds(hote, 'solutions')[0]?.querySelectorAll('li').length).toBe(3);
+
+    expect(noeuds(hote, 'enigme').map((enigme) => enigme.getAttribute('data-enigme'))).toEqual(
+      PARCOURS.enigmes.map((enigme) => enigme.id),
+    );
+    expect(noeuds(hote, 'enonce').map((enonce) => enonce.textContent?.trim())).toEqual(
+      PARCOURS.enigmes.map((enigme) => enigme.enonce),
+    );
+    expect(hote.shadowRoot?.querySelectorAll('input, button').length).toBe(0);
+    expect(noeud(hote, 'progression')).toBeNull();
+    expect(noeud(hote, 'minuteur')).toBeNull();
+    expect(noeud(hote, 'annonce')).toBeNull();
+    expect(libelleDe(hote, 'intitule')).toBe(PARCOURS.intitule);
+  });
+
+  it('ne projette pas au presentateur le code reconstitue par un poste', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.progression = buildProgressionDesEnigmes({
+      resolues: [
+        { enigmeId: 'seuil', fragment: 'TR' },
+        { enigmeId: 'marge', fragment: 'ES' },
+        { enigmeId: 'tva', fragment: 'OR' },
+      ],
+    });
+    expect(noeud(hote, 'code')).toBeNull();
+    expect(noeuds(hote, 'fragment')).toEqual([]);
+  });
+
+  it('projette au presentateur la solution de chaque enigme et le code final une fois le corrige pose', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.corrige = SOLUTIONNAIRE;
+
+    expect(noeuds(hote, 'enonce').length).toBe(PARCOURS.enigmes.length);
+    expect(noeuds(hote, 'solution').map((solution) => solution.textContent?.trim())).toEqual([
+      '30000 · TR',
+      '30000 · ES',
+      '2500 · OR',
+    ]);
+    expect(noeud(hote, 'solution')?.getAttribute('data-etat')).toBe('confirme');
     expect(libelleDe(hote, 'code-final')).toBe('Code final : TRESOR');
   });
 
-  it('projette la liste des enigmes sans enonce ni champ', () => {
-    hote.setAttribute('render', 'stage');
-    expect(noeuds(hote, 'enigme').length).toBe(3);
-    expect(hote.shadowRoot?.querySelectorAll('input').length).toBe(0);
-    expect(hote.shadowRoot?.innerHTML).not.toContain(PARCOURS.enigmes[0].enonce);
+  it('sert a l etudiant la meme projection corrigee, jeu retire, une fois le corrige pose', () => {
+    hote.corrige = SOLUTIONNAIRE;
+    const etudiant = hote.shadowRoot?.querySelector('ol')?.innerHTML;
+
+    expect(noeuds(hote, 'solution').length).toBe(3);
+    expect(libelleDe(hote, 'code-final')).toBe('Code final : TRESOR');
+    expect(noeud(hote, 'saisie')).toBeNull();
+    expect(noeud(hote, 'progression')).toBeNull();
+    expect(noeud(hote, 'minuteur')).toBeNull();
+    expect(noeud(hote, 'annonce')).not.toBeNull();
+
+    hote.setAttribute('data-cours-role', 'presentateur');
+    expect(hote.shadowRoot?.querySelector('ol')?.innerHTML).toBe(etudiant);
+  });
+
+  it('ignore un corrige mal forme', () => {
+    hote.corrige = { type: 'enigmes', enigmes: SOLUTIONNAIRE.enigmes };
+    expect(noeud(hote, 'code-final')).toBeNull();
+    expect(noeud(hote, 'saisie')).not.toBeNull();
+  });
+
+  it('annonce aux deux roles un parcours sans enigme', () => {
+    hote.parcours = buildEscapeParcours({ id: 'ESC-VIDE', enigmes: [] });
+    for (const role of ROLES) {
+      hote.setAttribute('data-cours-role', role);
+      expect(noeud(hote, 'vide')).withContext(role).not.toBeNull();
+    }
   });
 
   it('ne parle jamais de classement ni de competition', () => {
     hote.corrige = SOLUTIONNAIRE;
-    hote.setAttribute('data-cours-role', 'presentateur');
-    const textes = RENDUS.map((rendu) => {
-      hote.setAttribute('render', rendu);
+    const textes = ROLES.map((role) => {
+      hote.setAttribute('data-cours-role', role);
       return sansAccent(hote.shadowRoot?.textContent ?? '');
     }).join(' ');
     for (const mot of MOTS_DE_CLASSEMENT) {
@@ -272,12 +343,13 @@ describe('FpEscape', () => {
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.corrige = SOLUTIONNAIRE;
     hote.progression = buildProgressionDesEnigmes();
     jasmine.clock().tick(BUDGET_MS);
     noeud(hote, 'demander-indice')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
+    expect(classesOrphelines(hote, 'escape')).toEqual([]);
+
+    hote.corrige = SOLUTIONNAIRE;
     expect(classesOrphelines(hote, 'escape')).toEqual([]);
   });
 });

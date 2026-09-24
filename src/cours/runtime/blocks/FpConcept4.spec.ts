@@ -1,4 +1,8 @@
-import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
+import {
+  attendreAucunEffet,
+  attendreChaqueClasseCouverte,
+  attendreLaCorrectionNicheeEffacee,
+} from '../../../testing/assertions-briques';
 import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import { buildConcept4Definition } from '../../../testing/factories/cours.factory';
 import { evaluerExpression, remplirGabarit } from '../core/formula';
@@ -19,6 +23,11 @@ const MACHINE = buildConcept4Definition({
     { libelle: 'Départ', calcul: 'depart' },
     { libelle: 'Après t₁', calcul: 'depart * (1 + tauxUn / 100)' },
     { libelle: 'Arrivée', calcul: 'depart * (1 + tauxUn / 100) * (1 + tauxDeux / 100)' },
+  ],
+  prereglages: [
+    { libelle: '+10 % puis −10 %', valeurs: { tauxUn: 10, tauxDeux: -10 } },
+    { libelle: '−10 % puis +10 %', valeurs: { tauxUn: -10, tauxDeux: 10 } },
+    { libelle: '+20 % puis −20 %', valeurs: { tauxUn: 20, tauxDeux: -20 } },
   ],
 });
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
@@ -54,6 +63,20 @@ function animer(hote: FpConcept4): void {
   const bouton = hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="animer"]');
   if (bouton === null || bouton === undefined) {
     throw new Error('aucun bouton d animation');
+  }
+  bouton.click();
+}
+
+function boutonsDePrereglage(hote: FpConcept4): HTMLButtonElement[] {
+  return tous(hote, '[data-testid="prereglage"]') as HTMLButtonElement[];
+}
+
+function prereglage(hote: FpConcept4, libelle: string): void {
+  const bouton = boutonsDePrereglage(hote).find(
+    (candidat) => candidat.textContent?.trim() === libelle,
+  );
+  if (bouton === undefined) {
+    throw new Error(`préréglage absent : ${libelle}`);
   }
   bouton.click();
 }
@@ -199,6 +222,34 @@ describe('FpConcept4', () => {
     expect(resultatsDuTableau(hote)).toEqual(['100', '110', '99']);
   });
 
+  it('F20 · propose les couples de taux en un clic et marque celui qui est en place', () => {
+    hote.definition = MACHINE;
+
+    expect(boutonsDePrereglage(hote).map((bouton) => bouton.textContent?.trim())).toEqual([
+      '+10 % puis −10 %',
+      '−10 % puis +10 %',
+      '+20 % puis −20 %',
+    ]);
+    expect(boutonsDePrereglage(hote).map((b) => b.getAttribute('aria-pressed'))).toEqual([
+      'true',
+      'false',
+      'false',
+    ]);
+
+    prereglage(hote, '+20 % puis −20 %');
+
+    expect(resultatsDuTableau(hote)).toEqual(['100', '120', '96']);
+    expect(boutonsDePrereglage(hote).map((b) => b.getAttribute('aria-pressed'))).toEqual([
+      'false',
+      'false',
+      'true',
+    ]);
+  });
+
+  it('F20 · ne montre aucun prereglage sur une machine qui n en porte pas', () => {
+    expect(boutonsDePrereglage(hote)).toEqual([]);
+  });
+
   it('ramene un defaut hors bornes dans les bornes au lieu de l ignorer', () => {
     hote.definition = avecDefaut('n', 99);
     expect(hote.valeurs['n']).toBe(30);
@@ -250,14 +301,35 @@ describe('FpConcept4', () => {
     expect(un(hote, 'courbe')).toBeInstanceOf(SVGSVGElement);
   });
 
-  it('passe la phrase a la grande typographie de projection en rendu stage seulement', () => {
-    expect(un(hote, 'phrase-texte')?.classList.contains('fp-enonce')).toBe(false);
-    hote.setAttribute('render', 'stage');
-    expect(un(hote, 'phrase-texte')?.classList.contains('fp-enonce')).toBe(true);
+  it('rend la meme machine pour l etudiant et le presentateur, seul le role de la racine change', () => {
+    const structure = (): Readonly<Record<string, number>> => ({
+      faces: tous(hote, '.fp-concept4__face').length,
+      curseurs: tous(hote, '[data-testid="curseur"]').length,
+      animer: tous(hote, '[data-testid="animer"]').length,
+      lignes: tous(hote, '[data-testid="ligne"]').length,
+    });
+    const etudiant = structure();
+    const phraseEtudiant = lu(hote, 'phrase-texte');
+    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe('etudiant');
+
+    hote.setAttribute('data-cours-role', 'presentateur');
+
+    expect(structure()).toEqual(etudiant);
+    expect(etudiant).toEqual({
+      faces: 4,
+      curseurs: DEFINITION.parametres.length,
+      animer: 1,
+      lignes: jasmine.any(Number),
+    });
+    expect(lu(hote, 'phrase-texte')).toBe(phraseEtudiant);
+    expect(un(hote, 'phrase-texte')?.classList.contains('fp-prose')).toBe(true);
+    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(
+      'presentateur',
+    );
   });
 
   it('RET-21 · laisse le formateur manipuler la machine en projection', () => {
-    hote.setAttribute('render', 'stage');
+    hote.setAttribute('data-cours-role', 'presentateur');
     const curseurDeN = hote.shadowRoot?.querySelector<HTMLInputElement>(
       '[data-testid="curseur"][data-cle="n"]',
     );
@@ -269,7 +341,6 @@ describe('FpConcept4', () => {
 
     expect(hote.valeurs['n']).toBe(20);
     expect(valeurDe(hote, 'formule')).toBe(String(resultatAttendu({ C: 1000, i: 4, n: 20 })));
-    expect(un(hote, 'phrase-texte')?.classList.contains('fp-enonce')).toBe(true);
     expect(tous(hote, '[data-testid="animer"]').length).toBe(1);
   });
 
@@ -296,12 +367,39 @@ describe('FpConcept4', () => {
 
     it('RET-21 · au pupitre, emet les reglages une fois le curseur relache', () => {
       hote.setAttribute('data-cours-role', 'presentateur');
-      hote.setAttribute('render', 'stage');
       const emis = reglagesEmis();
 
       reglerN('20');
 
       expect(emis).toEqual([{ reglages: { C: 1000, i: 4, n: 20 } }]);
+    });
+
+    it('RET-21 · au pupitre, n emet rien tant que le curseur glisse sans etre relache', () => {
+      hote.setAttribute('data-cours-role', 'presentateur');
+      const emis = reglagesEmis();
+      const curseurDeN = hote.shadowRoot?.querySelector<HTMLInputElement>(
+        '[data-testid="curseur"][data-cle="n"]',
+      );
+      if (curseurDeN === null || curseurDeN === undefined) {
+        throw new Error('aucun curseur pour n');
+      }
+
+      curseurDeN.value = '20';
+      curseurDeN.dispatchEvent(new Event('input', { bubbles: true }));
+
+      expect(emis).toEqual([]);
+      expect(hote.valeurs['n']).toBe(20);
+    });
+
+    it('RET-21 · en apercu, le pupitre n emet aucun reglage vers la seance', () => {
+      hote.setAttribute('data-cours-role', 'presentateur');
+      hote.setAttribute('data-apercu', '');
+      const emis = reglagesEmis();
+
+      reglerN('20');
+
+      expect(emis).toEqual([]);
+      expect(hote.valeurs['n']).toBe(20);
     });
 
     it('RET-21 · chez l etudiant, la machine reste une exploration personnelle', () => {
@@ -313,32 +411,105 @@ describe('FpConcept4', () => {
       expect(hote.valeurs['n']).toBe(20);
     });
 
+    it('F20 · au pupitre, emet les reglages au clic d un prereglage', () => {
+      hote.definition = MACHINE;
+      hote.setAttribute('data-cours-role', 'presentateur');
+      const emis = reglagesEmis();
+
+      prereglage(hote, '+20 % puis −20 %');
+
+      expect(emis).toEqual([{ reglages: { depart: 100, tauxUn: 20, tauxDeux: -20 } }]);
+    });
+
+    it('F20 · chez l etudiant, un prereglage regle la machine sans rien emettre', () => {
+      hote.definition = MACHINE;
+      const emis = reglagesEmis();
+
+      prereglage(hote, '−10 % puis +10 %');
+
+      expect(emis).toEqual([]);
+      expect(hote.valeurs).toEqual({ depart: 100, tauxUn: -10, tauxDeux: 10 });
+    });
+
     it('RET-21 · la projection suit les reglages pilotes, bornes a la machine', () => {
       hote.setAttribute('data-cours-role', 'presentateur');
-      hote.setAttribute('render', 'stage');
 
       hote.reglages = { n: 20, i: 99 };
 
       expect(hote.valeurs).toEqual({ C: 1000, i: 10, n: 20 });
       expect(valeurDe(hote, 'formule')).toBe(String(resultatAttendu({ C: 1000, i: 10, n: 20 })));
     });
+
+    describe('R8 · animation de la machine à coefficients', () => {
+      const ANIMEE = buildConcept4Definition({
+        ...MACHINE,
+        animation: [{ depart: 100, tauxUn: 0, tauxDeux: 0 }, { tauxUn: 50 }, { tauxDeux: -50 }],
+      });
+
+      beforeEach(() => {
+        jasmine.clock().install();
+        hote.definition = ANIMEE;
+      });
+
+      afterEach(() => {
+        jasmine.clock().uninstall();
+      });
+
+      it('change une seule valeur toutes les trois secondes, de +50 % à −50 %', () => {
+        animer(hote);
+        expect(hote.valeurs).toEqual({ depart: 100, tauxUn: 0, tauxDeux: 0 });
+
+        jasmine.clock().tick(2999);
+        expect(hote.valeurs).toEqual({ depart: 100, tauxUn: 0, tauxDeux: 0 });
+
+        jasmine.clock().tick(1);
+        expect(hote.valeurs).toEqual({ depart: 100, tauxUn: 50, tauxDeux: 0 });
+
+        jasmine.clock().tick(3000);
+        expect(hote.valeurs).toEqual({ depart: 100, tauxUn: 50, tauxDeux: -50 });
+        expect(valeurDe(hote, 'phrase')).toBe('75');
+      });
+
+      it('relaie au pupitre chaque état joué', () => {
+        hote.setAttribute('data-cours-role', 'presentateur');
+        const emis = reglagesEmis();
+
+        animer(hote);
+        jasmine.clock().tick(6000);
+
+        expect(emis).toEqual([
+          { reglages: { depart: 100, tauxUn: 0, tauxDeux: 0 } },
+          { reglages: { depart: 100, tauxUn: 50, tauxDeux: 0 } },
+          { reglages: { depart: 100, tauxUn: 50, tauxDeux: -50 } },
+        ]);
+      });
+
+      it('s arrête dès qu un préréglage est choisi', () => {
+        animer(hote);
+        prereglage(hote, '+10 % puis −10 %');
+        jasmine.clock().tick(6000);
+
+        expect(hote.valeurs).toEqual({ depart: 100, tauxUn: 10, tauxDeux: -10 });
+      });
+    });
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
-    const piege = buildConcept4Definition({ id: 'K-QUATRE-FACES-04' });
-    const metadonnees = { ...piege.metadonnees, bonneReponse: 'a' };
-    hote.definition = { ...piege, metadonnees };
-    expect(JSON.stringify(hote.definition)).not.toContain('bonneReponse');
+    attendreLaCorrectionNicheeEffacee(
+      buildConcept4Definition({ id: 'K-QUATRE-FACES-04' }),
+      (contamine) => {
+        hote.definition = contamine;
+        return hote.definition;
+      },
+    );
   });
 
   it('explore sans rien emettre vers la seance ni ecrire dans un stockage', () => {
     animer(hote);
-    expect(traces.evenements).toEqual([]);
-    expect(traces.ecritures).toEqual([]);
+    attendreAucunEffet(traces);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
-    expect(classesOrphelines(hote, 'concept4')).toEqual([]);
+    attendreChaqueClasseCouverte(hote, 'concept4', CLASSES_ATTENDUES);
   });
 });

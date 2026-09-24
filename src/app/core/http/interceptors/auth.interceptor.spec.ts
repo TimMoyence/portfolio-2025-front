@@ -39,57 +39,29 @@ describe('authInterceptor', () => {
     httpMock.verify();
   });
 
+  function enTeteAuthorizationEnvoye(url: string): string | null {
+    http.get(url).subscribe();
+    const req = httpMock.expectOne(url);
+    req.flush({});
+    return req.request.headers.get('Authorization');
+  }
+
   it('devrait ajouter le header Authorization aux requetes de notre API', () => {
     authState.login(buildAuthSession({ accessToken: 'mon-token-jwt' }));
 
-    const url = `${environment.apiBaseUrl}/weather/forecast`;
-    http.get(url).subscribe();
-
-    const req = httpMock.expectOne(url);
-    expect(req.request.headers.get('Authorization')).toBe('Bearer mon-token-jwt');
-    req.flush({});
-  });
-
-  it("devrait attacher le token aux requetes de l'API externe Sebastian (sous apiBaseUrl)", () => {
-    authState.login(buildAuthSession({ accessToken: 'mon-token-jwt' }));
-
-    const url = `${environment.external.sebastianUrl}/entries`;
-    http.get(url).subscribe();
-
-    const req = httpMock.expectOne(url);
-    expect(req.request.headers.get('Authorization')).toBe('Bearer mon-token-jwt');
-    req.flush({});
+    expect(enTeteAuthorizationEnvoye(`${environment.apiBaseUrl}/formations`)).toBe(
+      'Bearer mon-token-jwt',
+    );
   });
 
   it('devrait ne pas ajouter le header quand aucun token', () => {
-    const url = `${environment.apiBaseUrl}/weather/forecast`;
-    http.get(url).subscribe();
-
-    const req = httpMock.expectOne(url);
-    expect(req.request.headers.has('Authorization')).toBeFalse();
-    req.flush({});
+    expect(enTeteAuthorizationEnvoye(`${environment.apiBaseUrl}/formations`)).toBeNull();
   });
 
-  it('ne devrait PAS attacher le token a une requete externe RainViewer', () => {
+  it('ne devrait PAS attacher le token a une requete vers un service tiers', () => {
     authState.login(buildAuthSession({ accessToken: 'mon-token-jwt' }));
 
-    const url = 'https://api.rainviewer.com/public/weather-maps.json';
-    http.get(url).subscribe();
-
-    const req = httpMock.expectOne(url);
-    expect(req.request.headers.has('Authorization')).toBeFalse();
-    req.flush({});
-  });
-
-  it('ne devrait PAS attacher le token a une requete externe Nominatim', () => {
-    authState.login(buildAuthSession({ accessToken: 'mon-token-jwt' }));
-
-    const url = 'https://nominatim.openstreetmap.org/reverse?lat=48&lon=2';
-    http.get(url).subscribe();
-
-    const req = httpMock.expectOne(url);
-    expect(req.request.headers.has('Authorization')).toBeFalse();
-    req.flush({});
+    expect(enTeteAuthorizationEnvoye('https://tiers.example.com/reverse?lat=48&lon=2')).toBeNull();
   });
 
   it('devrait appeler clearSession et naviguer vers /login sur erreur 401', () => {

@@ -1,3 +1,5 @@
+import { attendreLeRenduEchappe } from '../../../testing/assertions-briques';
+import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import {
   buildRecallQuestion,
@@ -19,7 +21,7 @@ const INSTANT_INITIAL = '2026-09-12T09:00:00.000Z';
 const LIBELLE_PREMIERE = 'On multiplie par (1 + i) puissance n';
 const RAPPEL_ETUDIANT = 'On applique le taux chaque annee sur le capital deja augmente';
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
-const RENDUS = ['hand', 'stage', 'board'];
+const CORRIGE = { type: 'cible', cible: LIBELLE_PREMIERE, optionId: 'a' };
 
 function champRappel(element: FpRecall): HTMLTextAreaElement {
   const champ = element.shadowRoot?.querySelector<HTMLTextAreaElement>('[data-testid="rappel"]');
@@ -99,11 +101,11 @@ describe('FpRecall', () => {
       jasmine.clock().tick(instant);
       expect(optionsDe(hote).length).toBe(0);
       expect(hote.shadowRoot?.innerHTML).not.toContain(LIBELLE_PREMIERE);
-      for (const rendu of RENDUS) {
-        hote.setAttribute('render', rendu);
-        expect(optionsDe(hote).length).withContext(`rendu ${rendu}`).toBe(0);
+      for (const role of ROLES_DE_MONTAGE) {
+        hote.setAttribute('data-cours-role', role);
+        expect(optionsDe(hote).length).withContext(`role ${role}`).toBe(0);
         expect(hote.shadowRoot?.innerHTML)
-          .withContext(`rendu ${rendu}`)
+          .withContext(`role ${role}`)
           .not.toContain(LIBELLE_PREMIERE);
       }
     });
@@ -115,7 +117,7 @@ describe('FpRecall', () => {
     document.body.appendChild(neuve);
     expect(neuve.shadowRoot?.querySelectorAll('[data-testid="option"]').length).toBe(0);
     expect(neuve.shadowRoot?.innerHTML).not.toContain(LIBELLE_PREMIERE);
-    expect(annonceDe(neuve)).toBe('Options disponibles dans 8 s');
+    expect(annonceDe(neuve)).toBe('Temps d’écriture libre : propositions de réponse dans 8 s');
     neuve.remove();
   });
 
@@ -123,7 +125,7 @@ describe('FpRecall', () => {
     expect(hote.delaiMs).toBe(DELAI_DEFAUT_MS);
     jasmine.clock().tick(DELAI_DEFAUT_MS);
     expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
-    expect(annonceDe(hote)).toBe('Options disponibles');
+    expect(annonceDe(hote)).toBe('Choisissez maintenant la proposition qui correspond');
   });
 
   it('respecte un delai configure a la place des huit secondes', () => {
@@ -134,16 +136,29 @@ describe('FpRecall', () => {
     expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
   });
 
+  it('F02 · montre les options sans attendre quand le formateur les affiche', () => {
+    hote.delaiMs = 30000;
+    jasmine.clock().tick(1000);
+    expect(optionsDe(hote).length).toBe(0);
+
+    hote.optionsAffichees = true;
+
+    expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
+    expect(annonceDe(hote)).toBe('Choisissez maintenant la proposition qui correspond');
+    optionsDe(hote)[0].click();
+    expect(optionsDe(hote)[0].disabled).toBeTrue();
+  });
+
   it('annonce le compte a rebours dans une region live', () => {
     const compte = hote.shadowRoot?.querySelector('[data-testid="compte-a-rebours"]');
     expect(compte?.getAttribute('aria-live')).toBe('polite');
   });
 
   const PALIERS: ReadonlyArray<{ ecoule: number; annonce: string }> = [
-    { ecoule: 0, annonce: 'Options disponibles dans 8 s' },
-    { ecoule: 1000, annonce: 'Options disponibles dans 7 s' },
-    { ecoule: 5000, annonce: 'Options disponibles dans 3 s' },
-    { ecoule: 7000, annonce: 'Options disponibles dans 1 s' },
+    { ecoule: 0, annonce: 'Temps d’écriture libre : propositions de réponse dans 8 s' },
+    { ecoule: 1000, annonce: 'Temps d’écriture libre : propositions de réponse dans 7 s' },
+    { ecoule: 5000, annonce: 'Temps d’écriture libre : propositions de réponse dans 3 s' },
+    { ecoule: 7000, annonce: 'Temps d’écriture libre : propositions de réponse dans 1 s' },
   ];
 
   for (const palier of PALIERS) {
@@ -157,7 +172,7 @@ describe('FpRecall', () => {
     jasmine.clock().tick(5000);
     hote.remove();
     document.body.appendChild(hote);
-    expect(annonceDe(hote)).toBe('Options disponibles dans 3 s');
+    expect(annonceDe(hote)).toBe('Temps d’écriture libre : propositions de réponse dans 3 s');
     jasmine.clock().tick(3000);
     expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
   });
@@ -262,22 +277,88 @@ describe('FpRecall', () => {
   it('echappe le rappel libre reaffiche apres l apparition des options', () => {
     saisirRappel(hote, CHARGE_XSS);
     jasmine.clock().tick(DELAI_DEFAUT_MS);
-    const rendu = hote.shadowRoot?.innerHTML ?? '';
-    expect(rendu).not.toContain('<img src=x');
-    expect(rendu).toContain('&lt;img');
-    expect(hote.shadowRoot?.querySelector('img')).toBeNull();
+    attendreLeRenduEchappe(hote);
     expect(champRappel(hote).value).toBe(CHARGE_XSS);
   });
 
-  it('recapitule les concepts la modalite et la duree en mode tableau', () => {
-    hote.setAttribute('render', 'board');
-    expect(texteDe(hote, 'concepts')).toBe('capitalisation');
-    expect(texteDe(hote, 'modalite')).toBe('Individuel');
-    expect(texteDe(hote, 'duree')).toBe('4 min');
+  it('garde concepts, modalite et duree dans les metadonnees sans les afficher en badge', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    expect(hote.question?.metadonnees.concepts).toEqual(['capitalisation']);
+    expect(hote.question?.metadonnees.modalite).toBe('solo');
+    expect(hote.question?.metadonnees.dureeMinutes).toBe(4);
+    for (const repere of ['concepts', 'modalite', 'duree']) {
+      expect(hote.shadowRoot?.querySelector(`[data-testid="${repere}"]`))
+        .withContext(repere)
+        .toBeNull();
+    }
+  });
+
+  it('affiche la consigne par defaut, remplacee par une consigne servie non vide', () => {
+    const parDefaut = texteDe(hote, 'consigne');
+    expect(parDefaut).not.toBe('');
+
+    hote.consigne = 'Redites la formule avant de voir les options';
+    expect(texteDe(hote, 'consigne')).toBe('Redites la formule avant de voir les options');
+
+    hote.consigne = '   ';
+    expect(texteDe(hote, 'consigne')).toBe(parDefaut);
+  });
+
+  it('montre au presentateur l enonce, la consigne et le compte a rebours, sans champ ni suivi', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+
+    expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(QUESTION.enonce);
+    expect(texteDe(hote, 'consigne')).not.toBe('');
+    expect(annonceDe(hote)).toBe('Temps d’écriture libre : propositions de réponse dans 8 s');
+    expect(hote.shadowRoot?.querySelector('[data-testid="rappel"]')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')).toBeNull();
+  });
+
+  it('au terme du delai, montre au presentateur les options inertes sans je ne sais pas', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    const details = detailsEmis(hote);
+    jasmine.clock().tick(DELAI_DEFAUT_MS);
+
+    expect(ordreAffiche(hote)).toEqual(QUESTION.options.map((option) => option.id));
+    expect(optionsDe(hote).every((option) => option.disabled)).toBeTrue();
+    optionsDe(hote)[0].click();
+    expect(details).toEqual([]);
+  });
+
+  for (const role of ROLES_DE_MONTAGE) {
+    it(`revele au role ${role} la bonne reponse et marque la bonne option quand le corrige est pose`, () => {
+      hote.setAttribute('data-cours-role', role);
+      jasmine.clock().tick(DELAI_DEFAUT_MS);
+      expect(hote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]')).toBeNull();
+
+      hote.corrige = CORRIGE;
+
+      expect(texteDe(hote, 'bonne-reponse')).toContain(LIBELLE_PREMIERE);
+      expect(
+        hote.shadowRoot?.querySelector('[data-option="a"]')?.getAttribute('data-correction'),
+      ).toBe('juste');
+    });
+  }
+
+  it('marque comme fausse l option choisie par l etudiant quand ce n est pas la bonne', () => {
+    jasmine.clock().tick(DELAI_DEFAUT_MS);
+    optionsDe(hote)
+      .find((option) => option.getAttribute('data-option') === 'b')
+      ?.click();
+
+    hote.corrige = CORRIGE;
+
+    expect(
+      hote.shadowRoot?.querySelector('[data-option="b"]')?.getAttribute('data-correction'),
+    ).toBe('fausse');
+    expect(
+      hote.shadowRoot?.querySelector('[data-option="c"]')?.hasAttribute('data-correction'),
+    ).toBeFalse();
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
     jasmine.clock().tick(DELAI_DEFAUT_MS);
+    hote.corrige = CORRIGE;
 
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(10);
     expect(classesOrphelines(hote, 'recall')).toEqual([]);

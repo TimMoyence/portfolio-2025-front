@@ -14,6 +14,15 @@
           }
         </ng-content>
         <div class="cta-actions">
+          @for (action of actions(); track action.lien) {
+            @if (action.variante === 'principale') {
+              <a class="btn btn-teal" [routerLink]="action.lien">
+                {{ action.libelle }} <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            } @else {
+              <a class="btn btn-ghost" [routerLink]="action.lien">{{ action.libelle }}</a>
+            }
+          }
           <ng-content select="[cta]"></ng-content>
         </div>
       </div>
