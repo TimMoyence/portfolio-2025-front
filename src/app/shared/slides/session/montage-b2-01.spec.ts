@@ -10,7 +10,7 @@ import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { SlideActivityComponent } from './slide-activity.component';
 
 const EMPREINTE_PUBLIEE_PAR_LE_BACK =
-  '03bfd433930cb53cedebafe76e05c8c49144cf9ed657ec34365ec688c7adc750';
+  '926cef4cb67e6c41e621e233f3f5b1306796bf8ccdc688bcb17bd52bdef770cd';
 
 const ECRANS_PUBLIES = 75;
 
