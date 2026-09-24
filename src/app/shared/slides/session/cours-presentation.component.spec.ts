@@ -6,6 +6,7 @@ import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
 } from '../../../../testing/fixtures/instantane-b2-01';
+import { chargerLesPolicesDeLApplication } from '../../../../testing/polices';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
   CoursPresentationComponent,
@@ -71,6 +72,7 @@ async function monterDansUnCadre(
     () => racine.querySelector('app-slide-activity *') !== null,
     `l écran ${ecran.id} en ${mode}`,
   );
+  await chargerLesPolicesDeLApplication();
   await new Promise((suite) => setTimeout(suite, 50));
   fixture.detectChanges();
   return {
@@ -87,6 +89,14 @@ async function monterDansUnCadre(
 
 describe('CoursPresentationComponent : un seul écran pour la projection et le pupitre', () => {
   beforeEach(() => setupTestBed({ imports: [CoursPresentationComponent] }));
+
+  it('mesure les écrans avec les polices servies par l application, quelle que soit la machine', async () => {
+    expect(await chargerLesPolicesDeLApplication()).toEqual([
+      'Geist Mono',
+      'Hanken Grotesk',
+      'Instrument Serif',
+    ]);
+  });
 
   it('G1 · rend l aperçu formateur dans une toile 1280 × 720 mise à l échelle de son cadre', async () => {
     const monte = await monterDansUnCadre(
