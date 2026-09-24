@@ -239,6 +239,43 @@ describe('lecture des verdicts et réussites d’un écran révélé', () => {
     expect(verdictsDeLEcran(lot)).toEqual({ [QUESTION]: true, [PRODUCTION]: false });
   });
 
+  it('T6 · rend le verdict de chaque énigme du coffre, résolue ou manquée', () => {
+    const lot: RetourBrique[] = [
+      retourDeTentative(PARCOURS, 'b2-01-a6-e1-mix', {
+        correcte: false,
+        fragment: null,
+        tentativesRestantes: 2,
+      }),
+      retourDeTentative(PARCOURS, 'b2-01-a6-e1-mix', {
+        correcte: true,
+        fragment: 'A',
+        tentativesRestantes: 1,
+      }),
+      retourDeTentative(PARCOURS, 'b2-01-a6-e2-points', {
+        correcte: false,
+        fragment: null,
+        tentativesRestantes: 2,
+      }),
+      {
+        kind: 'progression-enigmes',
+        parcoursId: PARCOURS,
+        resolues: [{ enigmeId: 'b2-01-a6-e3-rouleau', fragment: 'C' }],
+        tentativesRestantes: {
+          'b2-01-a6-e3-rouleau': 2,
+          'b2-01-a6-e4-tva': 0,
+          'b2-01-a6-e5-jamais': 3,
+        },
+      },
+    ];
+
+    expect(verdictsDeLEcran(lot)).toEqual({
+      'b2-01-a6-e1-mix': true,
+      'b2-01-a6-e2-points': false,
+      'b2-01-a6-e3-rouleau': true,
+      'b2-01-a6-e4-tva': false,
+    });
+  });
+
   it('rend la réussite de la classe par question de l’écran, sans les questions sans réponse', () => {
     const resultats = buildResultatsSeance({
       questions: [

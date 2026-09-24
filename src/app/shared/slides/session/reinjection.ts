@@ -178,7 +178,10 @@ function posesDuRappel(montage: MontageIdentifie, contexte: ContexteDeReinjectio
   }
   const questions = deGenre(contexte.retours, 'rappels').at(-1)?.questions ?? null;
   const servies = new Set((questions ?? []).map((question) => question.questionId));
+  const corrige: Pose[] =
+    contexte.role === 'presentateur' ? [] : [[PROPRIETE_FORMATEUR, annexeVisible(contexte)]];
   return [
+    ...corrige,
     ['questions', questions],
     [
       'verdicts',

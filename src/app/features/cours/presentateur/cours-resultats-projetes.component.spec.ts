@@ -43,9 +43,10 @@ const ECRAN_MISSION = buildEcranDeroule({
 describe('CoursResultatsProjetesComponent', () => {
   let port: jasmine.SpyObj<FormationsPort>;
 
-  function monter(ecran = ECRAN_VOTE, actif = true): Fixture {
+  function monter(ecran = ECRAN_VOTE, actif = true, revele = true): Fixture {
     const fixture = TestBed.createComponent(CoursResultatsProjetesComponent);
     fixture.componentRef.setInput('ecran', ecran);
+    fixture.componentRef.setInput('revele', revele);
     fixture.componentRef.setInput('sessionId', SESSION);
     fixture.componentRef.setInput(
       'resultats',
@@ -96,6 +97,16 @@ describe('CoursResultatsProjetesComponent', () => {
       jasmine.stringContaining('1'),
     ]);
     expect(tous(fixture, 'resultats-projetes-participants')[0].textContent).toContain('20');
+  });
+
+  it('ne projette la part de reponses justes qu une fois l ecran revele', () => {
+    const compte = (fixture: Fixture): string =>
+      tous(fixture, 'resultats-projetes-question')[0]
+        .querySelector('.resultats-projetes__compte')
+        ?.textContent?.replace(/\s+/g, '') ?? '';
+
+    expect(compte(monter(ECRAN_VOTE, true, false))).toBe('10réponse(s)');
+    expect(compte(monter())).toBe('10réponse(s)·60%deréponsesjustes');
   });
 
   it('projette les reponses libres groupees par question, sans nom d etudiant', () => {

@@ -127,6 +127,12 @@ export const spaced = `
   font-weight: 600;
 }
 
+:where(.fp-root) .fp-spaced__bonne {
+  flex-basis: 100%;
+  color: var(--fp-confirme);
+  font-weight: 600;
+}
+
 :where(.fp-root) .fp-spaced__diagnostics {
   display: grid;
   gap: var(--fp-s-1);

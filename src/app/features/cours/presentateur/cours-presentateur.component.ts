@@ -527,6 +527,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                       [resultats]="resultats()"
                       [sessionId]="sessionId()"
                       [actif]="pilotageDeLEcran().resultatsProjetes === true"
+                      [revele]="pilotageDeLEcran().revele === true"
                     />
                   </ng-template>
                   @if (maitriseIndisponible()) {

@@ -294,6 +294,7 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
                   [resultats]="resultats()"
                   [sessionId]="sessionId()"
                   [actif]="direct()?.pilotage?.resultatsProjetes === true"
+                  [revele]="direct()?.pilotage?.revele === true"
                 />
               }
             </ng-template>

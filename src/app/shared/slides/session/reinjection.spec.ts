@@ -332,6 +332,18 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     ).toBe(maitrise);
   });
 
+  it('T9 · pose au rappel espacé de l étudiant les bonnes réponses révélées de ses questions', () => {
+    const revelation = buildRevelationServie({
+      questions: [{ questionId: 'Q-VAN-02', cible: 'Non', optionId: 'van-a' }],
+    });
+
+    expect(pose('fp-spaced', ['b2-01-rappel'], 'corrige', { revelation })).toEqual({
+      type: 'reponses',
+      reponses: { 'Q-VAN-02': { cible: 'Non', optionId: 'van-a' } },
+    });
+    expect(pose('fp-spaced', ['b2-01-rappel'], 'corrige', {})).toBeNull();
+  });
+
   it('pose sur le coffre la progression reprise et les tentatives de son parcours', () => {
     const progression: RetourBrique = {
       kind: 'progression-enigmes',

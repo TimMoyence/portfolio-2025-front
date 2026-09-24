@@ -96,6 +96,45 @@ describe('FpSpaced', () => {
     ).toBeGreaterThanOrEqual(3);
   });
 
+  it('T9 · une fois le rappel revele, montre la bonne reponse de chaque question, meme sans reponse, sans plus rien proposer', () => {
+    hote.questions = DUES;
+    hote.verdicts = [
+      buildVerdictDeReponse({
+        questionId: DUES[0].questionId,
+        correcte: false,
+        libelleConfusion: null,
+      }),
+    ];
+    hote.corrige = {
+      type: 'reponses',
+      reponses: {
+        [DUES[0].questionId]: { cible: 'x', optionId: DUES[0].options[0].id },
+        [DUES[1].questionId]: { cible: 'Non', optionId: 'van-a' },
+        [DUES[2].questionId]: { cible: 'Charge calculee', optionId: null },
+        [CHARGE_XSS]: { cible: CHARGE_XSS, optionId: null },
+      },
+    };
+    const ligne = (question: string): string =>
+      hote.shadowRoot
+        ?.querySelector(`[data-question="${question}"]`)
+        ?.textContent?.replace(/\s+/g, ' ') ?? '';
+
+    expect(noeuds(hote, 'option')).toEqual([]);
+    expect(noeuds(hote, 'ligne').length).toBe(DUES.length);
+    expect(ligne(DUES[0].questionId)).toContain(DUES[0].options[0].libelle);
+    expect(ligne(DUES[1].questionId)).toContain('Non, il detruit de la valeur');
+    expect(ligne(DUES[2].questionId)).toContain('Charge calculee');
+    expect(hote.shadowRoot?.querySelector('img')).toBeNull();
+  });
+
+  it('T9 · sans revelation, ne montre aucune bonne reponse et garde les options', () => {
+    hote.questions = DUES;
+    hote.corrige = null;
+
+    expect(noeuds(hote, 'option').length).toBe(DUES[0].options.length + 1);
+    expect(noeuds(hote, 'bonne-reponse')).toEqual([]);
+  });
+
   it('emet la reponse avec l identifiant stable de l option, puis passe a la suivante', () => {
     hote.questions = DUES;
     jasmine.clock().tick(REFLEXION_MS);

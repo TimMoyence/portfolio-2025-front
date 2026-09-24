@@ -5,6 +5,7 @@ import {
   buildResultatQuestion,
   buildResultatsSeance,
 } from '../../../../testing/factories/formations.factory';
+import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
   ATELIER_CORRIGE,
@@ -253,6 +254,38 @@ describe('SlideVisualComponent', () => {
 
       expect(ligne(element, EVOLUTION)?.textContent).toContain('14 / 20');
       expect(ligne(element, PART)?.querySelector('.slide-answer-review__reussite')).toBeNull();
+    });
+
+    it('T6 · colore en vert et rouge chaque énigme du coffre sur sa correction du B2-01', () => {
+      const correction = ecransDuPupitreB2_01().find(({ id }) => id === 'B2-01-A6-02-CORRECTION');
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput('slide', correction);
+      fixture.componentRef.setInput('role', 'etudiant');
+      fixture.componentRef.setInput(
+        'retours',
+        new Map<string, RetourBrique[]>([
+          [
+            'B2-01-A6-02-COFFRE',
+            [
+              {
+                kind: 'progression-enigmes',
+                parcoursId: 'b2-01-a6-coffre',
+                resolues: [{ enigmeId: 'b2-01-a6-e1-mix', fragment: 'A' }],
+                tentativesRestantes: { 'b2-01-a6-e1-mix': 2, 'b2-01-a6-e2-points': 0 },
+              },
+            ],
+          ],
+        ]),
+      );
+      fixture.detectChanges();
+      const element = fixture.nativeElement as HTMLElement;
+
+      expect(ligne(element, 'b2-01-a6-e1-mix')?.classList).toContain(
+        'slide-answer-review__explication--juste',
+      );
+      expect(ligne(element, 'b2-01-a6-e2-points')?.classList).toContain(
+        'slide-answer-review__explication--erreur',
+      );
     });
   });
 

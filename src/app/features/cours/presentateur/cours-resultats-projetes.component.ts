@@ -115,7 +115,7 @@ function resultatsProjetes(
               <p class="resultats-projetes__compte">
                 <strong data-testid="resultats-projetes-total">{{ question.total }}</strong>
                 <span i18n="@@resultatsProjetesReponses">réponse(s)</span>
-                @if (question.total > 0) {
+                @if (revele() && question.total > 0) {
                   ·
                   @if (question.scoreMoyen !== null) {
                     <span i18n="@@resultatsProjetesScoreMoyen">score moyen</span>
@@ -304,6 +304,7 @@ export class CoursResultatsProjetesComponent {
   readonly resultats = input<ResultatsSeance | null>(null);
   readonly sessionId = input<string | null>(null);
   readonly actif = input(false);
+  readonly revele = input(false);
 
   protected readonly questions = computed(() => resultatsProjetes(this.ecran(), this.resultats()));
 
