@@ -36,6 +36,8 @@ export const spaced = `
 }
 
 :where(.fp-root) .fp-spaced__origine {
+  display: inline-flex;
+  gap: 0.35em;
   background: var(--fp-sand);
   color: var(--fp-texte-fort);
 }
@@ -44,10 +46,6 @@ export const spaced = `
   color: var(--fp-ink-mute);
   font-size: calc(0.9rem * var(--fp-echelle));
   letter-spacing: 0.02em;
-}
-
-:where(.fp-root) .fp-spaced__boite {
-  font-variant-numeric: tabular-nums;
 }
 
 :where(.fp-root) .fp-spaced__enonce {

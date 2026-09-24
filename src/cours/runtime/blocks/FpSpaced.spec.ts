@@ -1,3 +1,4 @@
+import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { classesOrphelines } from '../../../testing/classes-briques';
 import {
   buildSpacedQuestions,
@@ -10,7 +11,6 @@ import { FpSpaced } from './FpSpaced';
 const RAPPEL = buildSpacedRappel();
 const DUES = buildSpacedQuestions();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
-const RENDUS = ['stage', 'hand', 'board'] as const;
 const DEBUT = new Date('2026-09-14T09:00:00.000Z');
 const REFLEXION_MS = 4000;
 
@@ -75,6 +75,27 @@ describe('FpSpaced', () => {
     ]);
   });
 
+  it('G06 · ne montre a l etudiant ni la boite de revision ni une consigne qui repete l intitule', () => {
+    hote.questions = DUES;
+
+    expect(noeud(hote, 'boite')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('.fp-spaced__consigne')?.textContent?.trim()).toBe(
+      'Quelques questions sur ce que vous avez travaillé plus tôt.',
+    );
+  });
+
+  it('G06 · separe la mention d origine du cours d ou vient la question', () => {
+    hote.questions = DUES;
+    const origine = noeud(hote, 'origine') as HTMLElement;
+    const mention = origine.querySelector('.fp-spaced__mention') as HTMLElement;
+    const cours = noeud(hote, 'origine-cours') as HTMLElement;
+
+    expect(cours.textContent).toBe(DUES[0].cours);
+    expect(
+      cours.getBoundingClientRect().left - mention.getBoundingClientRect().right,
+    ).toBeGreaterThanOrEqual(3);
+  });
+
   it('emet la reponse avec l identifiant stable de l option, puis passe a la suivante', () => {
     hote.questions = DUES;
     jasmine.clock().tick(REFLEXION_MS);
@@ -115,9 +136,8 @@ describe('FpSpaced', () => {
     expect(libelleDe(hote, 'vide')).toBe('Rien à revoir pour l’instant');
   });
 
-  it('montre au pupitre la carte de maitrise par concept, jamais une liste de questions', () => {
+  it('montre au presentateur la carte de maitrise par concept, jamais une liste de questions', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
-    hote.setAttribute('render', 'board');
     hote.questions = DUES;
     hote.maitrise = [buildSyntheseConcept()];
 
@@ -129,14 +149,39 @@ describe('FpSpaced', () => {
       ),
     ).toEqual([['Évolution réciproque', '6', '14', '3', '1']]);
     expect(hote.shadowRoot?.innerHTML).not.toContain(DUES[0].enonce);
+    expect(noeuds(hote, 'option')).toEqual([]);
+    expect(noeud(hote, 'annonce')).toBeNull();
   });
 
-  it('ne montre la carte de maitrise a aucun poste etudiant ni en projection', () => {
+  it('ne montre la carte de maitrise a aucun poste etudiant', () => {
+    hote.questions = DUES;
     hote.maitrise = [buildSyntheseConcept()];
-    for (const rendu of RENDUS) {
-      hote.setAttribute('render', rendu);
-      expect(noeud(hote, 'carte-maitrise')).withContext(rendu).toBeNull();
+    expect(noeud(hote, 'carte-maitrise')).toBeNull();
+    expect(libelleDe(hote, 'enonce')).toBe(DUES[0].enonce);
+  });
+
+  it('ne pose aucun tableau vide au presentateur tant que la maitrise n est pas servie', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.questions = DUES;
+    expect(noeud(hote, 'carte-maitrise')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('table')).toBeNull();
+  });
+
+  it('pose la meme section, le meme intitule et la meme consigne pour les deux roles', () => {
+    hote.questions = DUES;
+    const entete = (): string[] =>
+      [
+        ...(hote.shadowRoot?.querySelectorAll(
+          'section.fp-spaced__seance, .fp-spaced__intitule, .fp-spaced__consigne',
+        ) ?? []),
+      ].map((element) => `${element.className}:${element.firstChild?.textContent?.trim() ?? ''}`);
+    const etudiant = entete();
+
+    for (const role of ROLES_DE_MONTAGE) {
+      hote.setAttribute('data-cours-role', role);
+      expect(entete()).withContext(role).toEqual(etudiant);
     }
+    expect(etudiant.length).toBe(3);
   });
 
   it('echappe le html injecte dans un enonce et un libelle', () => {

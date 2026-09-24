@@ -1,4 +1,5 @@
-import type { EtatParticipant } from '../../../cours/content/types';
+import type { EtatParticipant, ResultatsSeance } from '../../../cours/content/types';
+import type { ReussiteDeLaClasse } from '../../shared/slides/layouts/slide-answer-review/slide-answer-review.component';
 import type { RetourBrique } from '../../shared/slides/session/contrat-hote';
 import type {
   MotifRefusReponse,
@@ -108,6 +109,29 @@ export function retirerLesRefus(existants: RetoursParEcran, screenId: string): R
     retours.filter((retour) => retour.kind !== 'refus'),
   );
   return suite;
+}
+
+export function verdictsDeLEcran(
+  retours: readonly RetourBrique[],
+): Readonly<Record<string, boolean>> {
+  return Object.fromEntries(
+    retours.flatMap((retour) =>
+      retour.kind === 'verdict-reponse' || retour.kind === 'verdict-production'
+        ? [[retour.questionId, retour.correcte]]
+        : [],
+    ),
+  );
+}
+
+export function reussitesDeLEcran(
+  resultats: ResultatsSeance | null,
+  ecranId: string | null,
+): Readonly<Record<string, ReussiteDeLaClasse>> {
+  return Object.fromEntries(
+    (resultats?.questions ?? [])
+      .filter((question) => question.ecranId === ecranId && question.total > 0)
+      .map(({ questionId, correctes, total }) => [questionId, { justes: correctes, total }]),
+  );
 }
 
 export function retoursDeLEtat(

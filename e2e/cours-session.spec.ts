@@ -343,7 +343,7 @@ test('R3 · envoie le visiteur sans session de la page du cours au rattachement 
 
   await page.goto('/formations/b2-01-traitement-information-chiffree');
 
-  await expect(page).toHaveURL(/\/cours\/rejoindre$/);
+  await expect(page).toHaveURL(/\/cours\/rejoindre\?cours=b2-01-traitement-information-chiffree$/);
   await expect(page.getByLabel('Code de la séance')).toBeVisible();
 });
 

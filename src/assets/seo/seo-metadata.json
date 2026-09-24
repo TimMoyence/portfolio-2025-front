@@ -1637,14 +1637,14 @@
       "locales": {
         "fr": {
           "title": "Lire et contrôler l’information chiffrée — B2 — Tim Moyence",
-          "description": "Formation B2 interactive en 55 écrans pour vérifier proportions, pourcentages et évolutions avant de décider.",
+          "description": "Formation B2 interactive pour vérifier proportions, pourcentages et évolutions avant de décider.",
           "ogTitle": "Lire et contrôler l’information chiffrée — B2",
-          "ogDescription": "55 écrans interactifs pour passer d’un chiffre affiché à une décision contrôlée.",
+          "ogDescription": "Un cours interactif pour passer d’un chiffre affiché à une décision contrôlée.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
             "name": "Lire et contrôler l’information chiffrée",
-            "description": "Formation B2 interactive en 55 écrans sur les proportions, pourcentages et évolutions.",
+            "description": "Formation B2 interactive sur les proportions, pourcentages et évolutions.",
             "provider": {
               "@type": "Organization",
               "name": "Asili Design",
@@ -1659,14 +1659,14 @@
         },
         "en": {
           "title": "Read and control numerical information — B2 — Tim Moyence",
-          "description": "Interactive B2 course in 55 screens to check proportions, percentages and changes before deciding.",
+          "description": "Interactive B2 course to check proportions, percentages and changes before deciding.",
           "ogTitle": "Read and control numerical information — B2",
-          "ogDescription": "55 interactive screens to turn a displayed number into a controlled decision.",
+          "ogDescription": "An interactive course to turn a displayed number into a controlled decision.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
             "name": "Read and control numerical information",
-            "description": "Interactive B2 course in 55 screens on proportions, percentages and changes.",
+            "description": "Interactive B2 course on proportions, percentages and changes.",
             "provider": {
               "@type": "Organization",
               "name": "Asili Design",

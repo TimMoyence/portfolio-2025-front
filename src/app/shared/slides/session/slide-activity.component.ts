@@ -17,15 +17,11 @@ import {
   viewChild,
 } from '@angular/core';
 import type { CorrigeEcranPresentateur } from '../../../../cours/content/types';
-import type {
-  EcranContent,
-  RenderMode,
-  ResultatsSeance,
-  Role,
-} from '../../../../cours/content/types';
+import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import { texte } from '../../../../cours/runtime/core/i18n';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import type { SyntheseConcept } from '../../../core/ports/formations.port';
+import type { DebriefDeReflexion } from '../interactions/slide-reflection/slide-reflection.component';
 import { aUnePresentation } from '../visual/presentation-v2';
 import { SlideVisualComponent } from '../visual/slide-visual.component';
 import type { DirectEcran, EvenementBrique, RetourBrique } from './contrat-hote';
@@ -96,6 +92,7 @@ interface ReponseVisuelle {
       (fp-worked-submit)="relayer($event)"
       (fp-pro-submit)="relayer($event)"
       (fp-concept4-reglage)="relayer($event)"
+      (fp-plot-reglage)="relayer($event)"
       (fp-brouillon)="memoriser($event)"
       (fp-block-error)="showError()"
     ></div>
@@ -108,6 +105,7 @@ interface ReponseVisuelle {
         [resultats]="resultats()"
         [prioritaire]="prioritaire()"
         [retours]="retours()"
+        [debrief]="debrief()"
         (reponse)="relayerVisuel($event)"
       />
     }
@@ -175,29 +173,21 @@ interface ReponseVisuelle {
       text-align: center;
     }
 
-    @container (min-height: 0px) {
-      :host(.slide-activity--questionnaire) {
-        display: flex;
-        flex-direction: column;
-        block-size: 100cqh;
-        padding: 1.25rem 1.75rem;
-        box-sizing: border-box;
-      }
+    :host(.slide-activity--questionnaire) .slide-activity__entete {
+      max-width: none;
+      margin: 0 0 0.75rem;
+    }
 
-      :host(.slide-activity--questionnaire) .slide-activity__entete {
-        max-width: none;
-        margin: 0 0 0.75rem;
-      }
+    :host(.slide-activity--questionnaire) {
+      --fp-titre-impose: 1.3rem;
+      --fp-marge-carte-imposee: 1.25rem;
+    }
 
-      :host(.slide-activity--questionnaire) .slide-activity__blocks {
-        --fp-echelle-scene: 0.7;
-        flex: 1 1 0;
-        min-height: 0;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        grid-auto-rows: minmax(0, 1fr);
-        gap: 0.75rem;
-        width: 100%;
-      }
+    :host(.slide-activity--questionnaire) .slide-activity__blocks {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+      align-items: start;
+      gap: 0.75rem;
+      width: 100%;
     }
   `,
   host: {
@@ -206,7 +196,6 @@ interface ReponseVisuelle {
 })
 export class SlideActivityComponent {
   readonly slide = input.required<EcranContent>();
-  readonly render = input<RenderMode>('hand');
   readonly role = input<Role>('etudiant');
   readonly resultats = input<ResultatsSeance | null>(null);
   readonly sessionId = input<string | null>(null);
@@ -221,6 +210,15 @@ export class SlideActivityComponent {
   readonly evenement = output<EvenementBrique>();
 
   protected readonly visual = computed(() => aUnePresentation(this.slide()));
+  protected readonly debrief = computed<DebriefDeReflexion | null>(() => {
+    if (this.role() !== 'presentateur') {
+      return this.slide().revelation?.reflexion ?? null;
+    }
+    const donnees = this.donneesFormateur();
+    return this.direct()?.pilotage.revele === true && donnees?.type === 'reflexion'
+      ? { attendu: donnees.attendu, suite: donnees.suite }
+      : null;
+  });
   protected readonly verrouille = computed(() => this.slide().type === ECRAN_VERROUILLE);
   protected readonly entete = computed(() => enteteDeQuestionnaire(this.slide()));
   protected readonly libelleVerrouille = texte('ecran-verrouille');
@@ -243,7 +241,7 @@ export class SlideActivityComponent {
     inject(DestroyRef).onDestroy(() => {
       this.destroyed = true;
     });
-    effect(() => this.scheduleMount(this.slide(), this.render(), this.role(), this.apercu()));
+    effect(() => this.scheduleMount(this.slide(), this.role(), this.apercu()));
     effect(() => {
       this.retours();
       this.direct();
@@ -312,12 +310,7 @@ export class SlideActivityComponent {
     );
   }
 
-  private scheduleMount(
-    slide: EcranContent,
-    render: RenderMode,
-    role: Role,
-    apercu: boolean,
-  ): void {
+  private scheduleMount(slide: EcranContent, role: Role, apercu: boolean): void {
     if (aUnePresentation(slide) || slide.type === ECRAN_VERROUILLE) {
       this.clearHost();
       this.unknown.set(false);
@@ -332,11 +325,11 @@ export class SlideActivityComponent {
         this.error.set(true);
         return;
       }
-      this.mount(slide, render, role, apercu);
+      this.mount(slide, role, apercu);
     });
   }
 
-  private mount(slide: EcranContent, render: RenderMode, role: Role, apercu: boolean): void {
+  private mount(slide: EcranContent, role: Role, apercu: boolean): void {
     const plan = planDeMontage(slide);
     if (plan === null) {
       this.clearHost();
@@ -344,13 +337,13 @@ export class SlideActivityComponent {
       this.error.set(false);
       return;
     }
-    const cle = `${slide.id}|${render}|${role}|${String(apercu)}|${plan.map((montage) => montage.brique).join(',')}`;
+    const cle = `${slide.id}|${role}|${String(apercu)}|${plan.map((montage) => montage.brique).join(',')}`;
     try {
       if (cle === this.cleDeMontage && this.montes.length === plan.length) {
         this.montes = this.montes.map((actif, rang) => this.mettreAJour(actif, plan[rang]));
       } else {
         this.clearHost();
-        this.montes = plan.map((montage) => this.creer(montage, render, role, apercu));
+        this.montes = plan.map((montage) => this.creer(montage, role, apercu));
         this.cleDeMontage = cle;
       }
       this.unknown.set(false);
@@ -361,9 +354,8 @@ export class SlideActivityComponent {
     }
   }
 
-  private creer(montage: Montage, render: RenderMode, role: Role, apercu: boolean): MontageActif {
+  private creer(montage: Montage, role: Role, apercu: boolean): MontageActif {
     const element: HTMLElement = this.renderer.createElement(montage.brique);
-    this.renderer.setAttribute(element, 'render', render);
     this.renderer.setAttribute(element, 'data-cours-role', role);
     if (apercu) {
       this.renderer.setAttribute(element, 'data-apercu', '');
@@ -415,7 +407,7 @@ export class SlideActivityComponent {
         const poses = posesDeReinjection(actif, {
           retours,
           direct: this.direct(),
-          render: this.render(),
+          revelation: this.slide().revelation ?? null,
           role: this.role(),
           donneesFormateur: this.donneesFormateur(),
           maitrise: this.maitrise(),

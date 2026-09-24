@@ -20,6 +20,7 @@ import {
 import {
   buildDerouleCours,
   buildEcranDeroule,
+  buildGuideFormateur,
   buildRapportSeance,
   buildRegleNotation,
   buildResultatQuestion,
@@ -29,6 +30,7 @@ import {
 } from '../../../../testing/factories/formations.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
+import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import {
   buildVisualQuizSlide,
   buildVisualSlide,
@@ -538,20 +540,23 @@ describe('CoursPresentateurComponent', () => {
     );
     const fixture = await ouvrirLaSeance();
 
-    expect(texte(fixture, 'presentateur-guide')).not.toContain('Lire un chiffre');
-    expect(texte(fixture, 'presentateur-guide')).not.toContain(buildVisualSlide().id);
+    const guide = (fixture.nativeElement as HTMLElement).querySelector(
+      '[data-testid="presentateur-guide"]',
+    );
+    expect(guide?.textContent ?? '').not.toContain('Lire un chiffre');
+    expect(guide?.textContent ?? '').not.toContain(buildVisualSlide().id);
   });
 
-  it('relit notes, groupes, participants et reponses libres a chaque resultat du flux', async () => {
+  it('relit notes et reponses libres a chaque resultat du flux', async () => {
     const fixture = await ouvrirLaSeance();
     const lecturesAvant = port.lireAnnotations.calls.count();
+    const reponsesAvant = port.lireReponsesLibres.calls.count();
 
     publier(fixture, resultatsDeLaQuestion(3, 2));
     await stabiliser(fixture);
 
     expect(port.lireAnnotations.calls.count()).toBe(lecturesAvant + 1);
-    expect(port.lireParticipants).toHaveBeenCalledWith(SESSION);
-    expect(port.lireReponsesLibres).toHaveBeenCalledWith(SESSION);
+    expect(port.lireReponsesLibres.calls.count()).toBe(reponsesAvant + 1);
   });
 
   describe('statistiques de la seance', () => {
@@ -813,7 +818,7 @@ describe('CoursPresentateurComponent', () => {
       .nativeElement as HTMLElement;
 
     expect(ecran.slide()).toBe(deroule.ecrans[0]);
-    expect(ecran.render()).toBe('stage');
+    expect(ecran.apercu()).toBeFalse();
     expect(ecran.role()).toBe('presentateur');
     expect(hote.hasAttribute('role'))
       .withContext('presentateur est un role du runtime, pas un role ARIA')
@@ -825,7 +830,11 @@ describe('CoursPresentateurComponent', () => {
     expect(apercu(fixture)).toBe(ecran);
   });
 
-  it('R5 · presente les notes du formateur, puis le guide de facilitation, puis les participants', async () => {
+  it('R5 · presente les notes, le guide de facilitation, les participants, puis l activite, la lecture de la classe et la pedagogie', async () => {
+    deroule = buildDerouleCours({
+      ecrans: [buildEcranDeroule({ guide: buildGuideFormateur() })],
+    });
+    port.lireDeroule.and.returnValue(of(deroule));
     const fixture = await ouvrirLaSeance();
     const suit = (avant: string, apres: string): boolean =>
       (cible(fixture, avant).compareDocumentPosition(cible(fixture, apres)) &
@@ -834,13 +843,63 @@ describe('CoursPresentateurComponent', () => {
 
     expect(suit('presentateur-notes', 'presentateur-guide')).toBeTrue();
     expect(suit('presentateur-guide', 'activite-participants')).toBeTrue();
+    expect(suit('activite-participants', 'presentateur-questions')).toBeTrue();
+    expect(suit('presentateur-questions', 'panneau-exporter-bilan')).toBeTrue();
+  });
+
+  it('F05 · permet de masquer la liste des participants, meme apres un echec de lecture', async () => {
+    port.lireParticipants.and.returnValue(throwError(() => new Error('500')));
+    const fixture = await ouvrirLaSeance();
+
+    bouton(fixture, 'activite-participants-afficher').click();
+    await stabiliser(fixture);
+
+    expect(lire(fixture, 'activite-participants-echec')).not.toBeNull();
+    bouton(fixture, 'activite-participants-masquer').click();
+    fixture.detectChanges();
+    expect(lire(fixture, 'activite-participants-echec')).toBeNull();
+    expect(lire(fixture, 'activite-participants-afficher')).not.toBeNull();
+  });
+
+  it('F35 · revele la correction depuis la lecture de la classe', async () => {
+    const fixture = await ouvrirLaSeance();
+
+    bouton(fixture, 'presentateur-questions-reveler').click();
+    await stabiliser(fixture);
+
+    expect(port.piloter).toHaveBeenCalledWith(SESSION, {
+      pilotage: { screenId: deroule.ecrans[0].id, revele: true },
+    });
+  });
+
+  it('T10 · projette puis retire les resultats de l ecran', async () => {
+    const fixture = await ouvrirLaSeance();
+
+    bouton(fixture, 'presentateur-projeter-resultats').click();
+    await stabiliser(fixture);
+
+    expect(port.piloter).toHaveBeenCalledWith(SESSION, {
+      pilotage: { screenId: deroule.ecrans[0].id, resultatsProjetes: true },
+    });
+    diffuser(fixture, {
+      ecranCourant: 0,
+      pilotage: { [deroule.ecrans[0].id]: { resultatsProjetes: true } },
+    });
+    expect(lire(fixture, 'resultats-projetes')).not.toBeNull();
+
+    bouton(fixture, 'presentateur-projeter-resultats').click();
+    await stabiliser(fixture);
+
+    expect(port.piloter).toHaveBeenCalledWith(SESSION, {
+      pilotage: { screenId: deroule.ecrans[0].id, resultatsProjetes: false },
+    });
   });
 
   it('R1 · donne la meme marge interieure de 20 px a chaque panneau de la colonne', async () => {
     const fixture = await ouvrirLaSeance();
     const panneaux = [
       ...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>(
-        '.presentateur-notes, .pedagogie-panel, .activite-section',
+        '.presentateur-notes, .pedagogie-panel, .activite-section, .panneau-participants',
       ),
     ];
 
@@ -851,6 +910,28 @@ describe('CoursPresentateurComponent', () => {
         .withContext(panneau.className)
         .toEqual(['20px', '20px']);
     }
+  });
+
+  it('F01 · ajuste le panneau de l ecran projete a son apercu, sans vide autour', async () => {
+    const fixture = await ouvrirLaSeance();
+    const racine = fixture.nativeElement as HTMLElement;
+    racine.style.display = 'block';
+    racine.style.width = '1100px';
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const corps = racine.querySelector<HTMLElement>('.presentateur-stage__body');
+    const cadre = racine.querySelector<HTMLElement>('[data-testid="cours-cadre"]');
+
+    expect(corps).not.toBeNull();
+    expect(cadre).not.toBeNull();
+    const style = getComputedStyle(corps as HTMLElement);
+    const marges = Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom);
+    const vide =
+      (corps as HTMLElement).getBoundingClientRect().height -
+      (cadre as HTMLElement).getBoundingClientRect().height -
+      marges;
+    expect(vide).toBeLessThanOrEqual(2);
   });
 
   it('R1 · separe le libelle des participants du nombre de connectes', async () => {
@@ -911,6 +992,21 @@ describe('CoursPresentateurComponent', () => {
 
     expect(port.piloter).not.toHaveBeenCalled();
     expect(texte(fixture, 'presentateur-ecran')).toBe('4 / 4');
+  });
+
+  it('G07 · ne propose la révélation d un écran à réponses libres du B2-01 que si un écran le corrige', async () => {
+    const ecrans = ecransDuPupitreB2_01();
+    const rang = (id: string): number => ecrans.findIndex((ecran) => ecran.id === id);
+    port.lireDeroule.and.returnValue(of(buildDerouleCours({ ecrans })));
+    const fixture = await ouvrirLaSeance();
+
+    diffuser(fixture, { etat: 'en_cours', ecranCourant: rang('B2-01-A1-03-MISSION') });
+    const mission = lire(fixture, 'activite-reveler-correction');
+    diffuser(fixture, { ecranCourant: rang('B2-01-A2-06-POINTS') });
+    const exercice = lire(fixture, 'activite-reveler-correction');
+
+    expect(mission).toBeNull();
+    expect(exercice).not.toBeNull();
   });
 
   it('ouvre le rythme libre de l ecran courant au dernier ecran, puis reprend la main', async () => {
@@ -1105,7 +1201,8 @@ describe('CoursPresentateurComponent', () => {
 
       const fixture = await ouvrirLaSeance();
 
-      expect(apercu(fixture).render()).toBe('stage');
+      expect(apercu(fixture).slide().type).toBe('fp-plot');
+      expect(apercu(fixture).apercu()).toBeFalse();
     });
 
     it('donne au rendu tableau le pilotage, les resultats et l annexe formateur de l ecran', async () => {

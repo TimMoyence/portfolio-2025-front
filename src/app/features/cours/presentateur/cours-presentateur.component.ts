@@ -48,9 +48,13 @@ import { CoursPanneauActiviteComponent } from './cours-panneau-activite.componen
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
 import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
+import { PanneauGuideComponent } from './panneau-pedagogique/panneau-guide.component';
+import { PanneauParticipantsComponent } from './panneau-pedagogique/panneau-participants.component';
 import { phraseDeNotation } from './regle-de-notation';
 import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
 import { correctionsAffichees } from './corrections-affichees';
+import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
+import { sourcesDeCorrection } from './sources-de-correction';
 
 type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
 
@@ -117,6 +121,9 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
     CoursPanneauQuestionComponent,
     CoursPanneauPedagogiqueComponent,
     CoursPresentationComponent,
+    CoursResultatsProjetesComponent,
+    PanneauGuideComponent,
+    PanneauParticipantsComponent,
     PercentPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -476,9 +483,26 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   >
                     Écran projeté
                   </h3>
-                  <span class="muted" i18n="presentateur.stageApercu|@@presentateurStageApercu"
-                    >Aperçu formateur</span
-                  >
+                  @if (ecranAffiche.interactif) {
+                    <button
+                      type="button"
+                      class="control-btn"
+                      data-testid="presentateur-projeter-resultats"
+                      [attr.aria-pressed]="pilotageDeLEcran().resultatsProjetes === true"
+                      [disabled]="pilotageBloque()"
+                      (click)="basculerLaProjectionDesResultats(ecranAffiche.id)"
+                    >
+                      @if (pilotageDeLEcran().resultatsProjetes === true) {
+                        <ng-container i18n="@@presentateurMasquerResultats"
+                          >Retirer les résultats de la projection</ng-container
+                        >
+                      } @else {
+                        <ng-container i18n="@@presentateurProjeterResultats"
+                          >Projeter les résultats</ng-container
+                        >
+                      }
+                    </button>
+                  }
                 </div>
                 <div class="presentateur-stage__body">
                   <app-cours-presentation
@@ -496,6 +520,13 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                     <app-cours-bandeau-correction
                       [corrections]="correctionsDeLEcran()"
                       [revele]="direct()?.pilotage?.revele === true"
+                    />
+                    <app-cours-resultats-projetes
+                      [ecran]="ecranAffiche"
+                      [renvoi]="ecranRenvoye()"
+                      [resultats]="resultats()"
+                      [sessionId]="sessionId()"
+                      [actif]="pilotageDeLEcran().resultatsProjetes === true"
                     />
                   </ng-template>
                   @if (maitriseIndisponible()) {
@@ -522,12 +553,8 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                     <p class="notes">{{ ecranAffiche.notes }}</p>
                   </section>
                 }
-                <app-cours-panneau-pedagogique
-                  [ecran]="ecranAffiche"
-                  [resultats]="resultatsDesQuestions()"
-                  [participants]="participants()"
-                  [sessionId]="sessionId()"
-                />
+                <app-panneau-guide [guide]="ecranAffiche.guide" [ecranId]="ecranAffiche.id" />
+                <app-panneau-participants [sessionId]="sessionId()" />
                 <app-cours-panneau-activite
                   [ecran]="ecranAffiche"
                   [resultats]="resultats()"
@@ -535,6 +562,7 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   [participants]="participants()"
                   [sessionId]="sessionId()"
                   [pilotageBloque]="pilotageBloque()"
+                  [corrigeAilleurs]="sourcesCorrigees().has(ecranAffiche.id)"
                   (commande)="piloterLEcran($event)"
                 />
                 @if (questions().length > 0) {
@@ -544,6 +572,23 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                         Lecture de la classe
                       </h3>
                       <span class="muted">{{ questions().length }}</span>
+                      <button
+                        type="button"
+                        class="control-btn"
+                        data-testid="presentateur-questions-reveler"
+                        [disabled]="pilotageBloque() || pilotageDeLEcran().revele === true"
+                        (click)="revelerLaCorrection(ecranAffiche.id)"
+                      >
+                        @if (pilotageDeLEcran().revele === true) {
+                          <ng-container i18n="@@presentateurCorrectionRevelee"
+                            >Correction révélée</ng-container
+                          >
+                        } @else {
+                          <ng-container i18n="@@presentateurRevelerCorrection"
+                            >Révéler la correction</ng-container
+                          >
+                        }
+                      </button>
                     </div>
                     <div class="presentateur-questions-panel__body">
                       <ul class="presentateur-questions" data-testid="presentateur-questions">
@@ -564,6 +609,13 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                     </div>
                   </section>
                 }
+                <app-cours-panneau-pedagogique
+                  [ecran]="ecranAffiche"
+                  [renvoi]="ecranRenvoye()"
+                  [resultats]="resultatsDesQuestions()"
+                  [participants]="participants()"
+                  [sessionId]="sessionId()"
+                />
               </aside>
             </div>
           }
@@ -698,6 +750,8 @@ export class CoursPresentateurComponent {
   readonly correctionsDeLEcran = computed(() =>
     correctionsAffichees(this.ecranCourant() ?? undefined),
   );
+
+  readonly sourcesCorrigees = computed(() => sourcesDeCorrection(this.deroule()?.ecrans ?? []));
 
   readonly ecranRenvoye = computed<EcranDeroule | null>(() => {
     const renvoi = this.ecranCourant()?.renvoi;
@@ -1040,6 +1094,17 @@ export class CoursPresentateurComponent {
     if (evenement.kind === 'reglage') {
       this.piloterLEcran({ screenId: evenement.screenId, reglages: evenement.reglages });
     }
+  }
+
+  protected revelerLaCorrection(screenId: string): void {
+    this.piloterLEcran({ screenId, revele: true });
+  }
+
+  protected basculerLaProjectionDesResultats(screenId: string): void {
+    this.piloterLEcran({
+      screenId,
+      resultatsProjetes: this.pilotageDeLEcran().resultatsProjetes !== true,
+    });
   }
 
   protected piloterLEcran(commande: CommandeDEcran): void {

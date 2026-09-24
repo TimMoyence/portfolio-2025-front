@@ -45,6 +45,7 @@ const DETAILS: Readonly<Partial<Record<string, Readonly<Record<string, unknown>>
     dureeMs: DUREE_MS,
   },
   'fp-concept4-reglage': { reglages: { prix: 250, taux: -12 } },
+  'fp-plot-reglage': { reglages: { taux: 4 } },
   'fp-pro-submit': {
     casId: 'B2-01-A1-03-MISSION',
     reponses: {

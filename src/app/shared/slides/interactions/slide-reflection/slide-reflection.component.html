@@ -86,16 +86,23 @@
         }
       </p>
     }
-    @if (r.expected || r.nextAction) {
-      <details class="slide-reflection__debrief">
+    @let revele = debrief();
+    @let attendu = revele ? revele.attendu : r.expected;
+    @let suite = revele ? revele.suite : r.nextAction;
+    @if (attendu || suite) {
+      <details
+        class="slide-reflection__debrief"
+        data-testid="slide-reflection-debrief"
+        [open]="revele !== null"
+      >
         <summary i18n="@@slideReflectionRelire">Relire le raisonnement attendu</summary>
-        @if (r.expected) {
-          <p>{{ r.expected }}</p>
+        @if (attendu) {
+          <p>{{ attendu }}</p>
         }
-        @if (r.nextAction) {
+        @if (suite) {
           <p>
             <strong i18n="@@slideReflectionPourProgresser">Pour progresser :</strong>
-            {{ r.nextAction }}
+            {{ suite }}
           </p>
         }
       </details>

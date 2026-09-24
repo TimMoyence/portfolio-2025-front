@@ -28,10 +28,24 @@ export const cardsort = `
 :where(.fp-root) .fp-cardsort__zone {
   display: grid;
   gap: var(--fp-s-2);
-  padding: var(--fp-s-3);
+  padding: var(--fp-s-2);
   border: 1px dashed var(--fp-bordure);
   border-radius: var(--fp-r);
   background: var(--fp-ivory);
+}
+
+:where(.fp-root) .fp-cardsort__zone[data-pioche='true'] {
+  grid-column: 1 / -1;
+}
+
+:where(.fp-root) .fp-cardsort__zone[data-pioche='true'] .fp-cardsort__pile {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+:where(.fp-root) .fp-cardsort__zone[data-pioche='true'] .fp-cardsort__place {
+  flex: 1 1 auto;
+  max-width: 100%;
 }
 
 :where(.fp-root) .fp-cardsort__titre {
@@ -44,7 +58,7 @@ export const cardsort = `
   font-family: var(--fp-font-sans);
   font-size: calc(0.85rem * var(--fp-echelle));
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
@@ -56,7 +70,7 @@ export const cardsort = `
 :where(.fp-root) .fp-cardsort__pile {
   display: grid;
   gap: var(--fp-s-2);
-  min-height: calc(3rem * var(--fp-echelle));
+  min-height: calc(2.25rem * var(--fp-echelle));
   margin: 0;
   padding: 0;
   list-style: none;
@@ -163,12 +177,6 @@ export const cardsort = `
   color: var(--fp-ink-mute);
   font-family: var(--fp-font-mono);
   letter-spacing: 0.02em;
-}
-
-:where(.fp-root) .fp-cardsort__reperes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--fp-s-2);
 }
 
 :where(.fp-root) .fp-cardsort__actions {

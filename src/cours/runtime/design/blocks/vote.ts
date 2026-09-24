@@ -4,7 +4,7 @@ export const vote = `
   align-items: center;
   gap: var(--fp-s-2);
   width: 100%;
-  padding: var(--fp-s-3) var(--fp-s-4);
+  padding: var(--fp-s-2) var(--fp-s-3);
   border: 1px solid var(--fp-bordure);
   border-radius: var(--fp-r);
   background: var(--fp-surface);
@@ -76,7 +76,7 @@ export const vote = `
   color: var(--fp-texte-fort);
 }
 
-@media (max-width: 520px) {
+@container (max-width: 32.5rem) {
   :where(.fp-root) .fp-vote__histogramme {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -93,16 +93,15 @@ export const vote = `
   }
 }
 
-:where(.fp-root[data-render='stage']) .fp-vote__barre__piste {
-  height: var(--fp-s-4);
-  border: 2px solid var(--fp-bordure);
+:where(.fp-root) .fp-vote__options {
+  display: grid;
+  gap: var(--fp-s-2);
+  min-width: 0;
+  border: 0;
 }
 
-:where(.fp-root) .fp-vote__liste {
-  display: grid;
-  gap: var(--fp-s-1);
-  margin: 0;
-  padding-left: var(--fp-s-3);
+:where(.fp-root) .fp-vote__options > legend {
+  margin-bottom: var(--fp-s-3);
 }
 
 :where(.fp-root) .fp-vote__phase {

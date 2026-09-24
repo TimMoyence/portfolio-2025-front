@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-  padding: 4rem 2rem;
+  padding: var(--slide-marge-bloc, 4rem) var(--slide-marge-ligne, 2rem);
   max-width: 50rem;
   margin: 0 auto;
   gap: 1rem;

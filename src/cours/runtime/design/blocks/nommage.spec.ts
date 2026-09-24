@@ -1,5 +1,5 @@
 import { feuilleDe, nomsDesBriques } from './index';
-import { base, stage } from '../styles';
+import { base, correction } from '../styles';
 
 const MOTIF_CLASSE = /\.fp-[\w-]+/g;
 
@@ -14,7 +14,7 @@ describe('nommage css des briques', () => {
 
   for (const [nom, couche] of [
     ['base', base],
-    ['stage', stage],
+    ['correction', correction],
   ] as const) {
     for (const classe of classesDeclarees(couche)) {
       it(`styles.ts (${nom}) ne nomme aucune classe de brique : ${classe}`, () => {

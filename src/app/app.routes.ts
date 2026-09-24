@@ -333,6 +333,7 @@ export const routes: Routes = [
     data: {
       seoKey: 'cours-rejoindre',
       robots: 'noindex, nofollow',
+      coquille: false,
     },
   },
   {

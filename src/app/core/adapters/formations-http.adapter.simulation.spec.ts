@@ -32,6 +32,7 @@ const REFUS_DU_BACK: readonly RefusDuBack[] = [
   { statut: 409, code: 'ENIGME_DEJA_RESOLUE', motif: 'deja-repondue' },
   { statut: 409, code: 'ENIGME_VERROUILLEE', motif: 'enigme-verrouillee' },
   { statut: 409, code: 'TENTATIVES_EPUISEES', motif: 'tentatives-epuisees' },
+  { statut: 409, code: 'REPRISES_EPUISEES', motif: 'reprises-epuisees' },
   { statut: 400, code: 'PRODUCTION_VIDE', motif: 'production-vide' },
   { statut: 400, code: 'PRODUCTION_INVALIDE', motif: 'refusee' },
   { statut: 400, code: 'TYPE_DE_QUESTION', motif: 'refusee' },

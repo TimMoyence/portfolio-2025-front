@@ -1,0 +1,44 @@
+<div class="slide-answer-review">
+  @if (title()) {
+    <h2>{{ title() }}</h2>
+  }
+  @if (subtitle()) {
+    <p class="slide-answer-review__subtitle">{{ subtitle() }}</p>
+  }
+  <ol class="slide-answer-review__liste">
+    @for (ligne of lignes(); track ligne.reference) {
+      <li
+        class="slide-answer-review__explication"
+        [class.slide-answer-review__explication--juste]="ligne.juste === true"
+        [class.slide-answer-review__explication--erreur]="ligne.juste === false"
+        [attr.data-reference]="ligne.reference"
+      >
+        @if (ligne.cible !== null) {
+          <p class="slide-answer-review__cible">
+            <span i18n="@@slideAnswerReviewCible">Réponse attendue :</span>
+            <strong>{{ ligne.cible }}</strong>
+          </p>
+        }
+        <p class="slide-answer-review__texte">{{ ligne.texte }}</p>
+        @if (ligne.juste === true) {
+          <p
+            class="slide-answer-review__signal slide-answer-review__signal--juste"
+            i18n="@@slideAnswerReviewJuste"
+          >
+            Votre réponse est juste
+          </p>
+        }
+        @if (ligne.juste === false) {
+          <p class="slide-answer-review__signal" i18n="@@slideAnswerReviewARevoir">
+            Votre réponse est à revoir
+          </p>
+        }
+        @if (ligne.reussite; as reussite) {
+          <p class="slide-answer-review__reussite" i18n="@@slideAnswerReviewReussite">
+            {{ reussite.justes }} / {{ reussite.total }} réponses justes
+          </p>
+        }
+      </li>
+    }
+  </ol>
+</div>

@@ -1,27 +1,22 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { AnnotationFormateur } from '../../../../core/ports/formations.port';
-import {
-  buildAnnotationFormateur,
-  buildGroupeFormation,
-} from '../../../../../testing/factories/formations.factory';
+import { buildAnnotationFormateur } from '../../../../../testing/factories/formations.factory';
 import type { EtatSauvegarde, SaisieAnnotation } from './panneau-annotation.component';
 import { PanneauAnnotationComponent } from './panneau-annotation.component';
 
 type Fixture = ComponentFixture<PanneauAnnotationComponent>;
 
 const NOTE_ECRAN_1 = buildAnnotationFormateur({ screenId: 'ecran-1', note: 'Reprendre la base.' });
-const NOTE_GROUPE_A = buildAnnotationFormateur({
+const NOTE_ECRAN_2 = buildAnnotationFormateur({
   id: 'annotation-2',
-  screenId: 'ecran-1',
-  groupName: 'Groupe A',
-  note: 'Le groupe A confond les taux.',
+  screenId: 'ecran-2',
+  note: 'La classe confond les taux.',
 });
 
 function monter(annotations: readonly AnnotationFormateur[] = [NOTE_ECRAN_1]): Fixture {
   const fixture = TestBed.createComponent(PanneauAnnotationComponent);
   fixture.componentRef.setInput('ecranId', 'ecran-1');
-  fixture.componentRef.setInput('groupes', [buildGroupeFormation({ name: 'Groupe A' })]);
   fixture.componentRef.setInput('annotations', annotations);
   fixture.componentRef.setInput('etat', 'repos');
   fixture.detectChanges();
@@ -34,65 +29,50 @@ function note(fixture: Fixture): HTMLTextAreaElement {
   ) as HTMLTextAreaElement;
 }
 
-function groupe(fixture: Fixture): HTMLSelectElement {
-  return (fixture.nativeElement as HTMLElement).querySelector(
-    '[data-testid="annotation-groupe"]',
-  ) as HTMLSelectElement;
-}
-
 function saisir(fixture: Fixture, texte: string): void {
   note(fixture).value = texte;
   note(fixture).dispatchEvent(new Event('input'));
   fixture.detectChanges();
 }
 
-function choisirLeGroupe(fixture: Fixture, nom: string): void {
-  groupe(fixture).value = nom;
-  groupe(fixture).dispatchEvent(new Event('change'));
-  fixture.detectChanges();
-}
-
 describe('PanneauAnnotationComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({ imports: [PanneauAnnotationComponent] }));
 
-  it('reprend la note deja enregistree pour l ecran', () => {
+  it('reprend la note deja enregistree pour l ecran, sans selecteur de groupe', () => {
     const fixture = monter();
 
     expect(note(fixture).value).toBe(NOTE_ECRAN_1.note);
-    expect(groupe(fixture).value).toBe('Classe entière');
+    expect((fixture.nativeElement as HTMLElement).querySelector('select')).toBeNull();
   });
 
-  it('emet chaque saisie avec l ecran et le groupe suivis au moment de la frappe', () => {
+  it('emet chaque saisie avec l ecran suivi au moment de la frappe', () => {
     const fixture = monter();
     const saisies: SaisieAnnotation[] = [];
     fixture.componentInstance.saisie.subscribe((saisie) => saisies.push(saisie));
 
-    choisirLeGroupe(fixture, 'Groupe A');
     saisir(fixture, 'Relancer Nora.');
 
-    expect(saisies).toEqual([
-      { screenId: 'ecran-1', groupName: 'Groupe A', note: 'Relancer Nora.' },
-    ]);
+    expect(saisies).toEqual([{ screenId: 'ecran-1', note: 'Relancer Nora.' }]);
   });
 
-  it('affiche la note du groupe choisi pour l ecran', () => {
-    const fixture = monter([NOTE_ECRAN_1, NOTE_GROUPE_A]);
-
-    choisirLeGroupe(fixture, 'Groupe A');
-
-    expect(note(fixture).value).toBe(NOTE_GROUPE_A.note);
-  });
-
-  it('vide la note et revient a la classe entiere sur un ecran sans annotation', () => {
-    const fixture = monter([NOTE_ECRAN_1, NOTE_GROUPE_A]);
-    choisirLeGroupe(fixture, 'Groupe A');
+  it('affiche la note de l ecran suivant quand le formateur change d ecran', () => {
+    const fixture = monter([NOTE_ECRAN_1, NOTE_ECRAN_2]);
     saisir(fixture, 'Brouillon de l ecran 1');
 
     fixture.componentRef.setInput('ecranId', 'ecran-2');
     fixture.detectChanges();
 
+    expect(note(fixture).value).toBe(NOTE_ECRAN_2.note);
+  });
+
+  it('vide la note sur un ecran sans annotation', () => {
+    const fixture = monter([NOTE_ECRAN_1]);
+    saisir(fixture, 'Brouillon de l ecran 1');
+
+    fixture.componentRef.setInput('ecranId', 'ecran-3');
+    fixture.detectChanges();
+
     expect(note(fixture).value).toBe('');
-    expect(groupe(fixture).value).toBe('Classe entière');
   });
 
   it('prend la note relue du serveur tant que le formateur ne la modifie pas', () => {

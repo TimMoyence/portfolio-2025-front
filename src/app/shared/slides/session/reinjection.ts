@@ -1,13 +1,13 @@
 import type {
-  RenderMode,
   ResultatQuestion,
+  RevelationServie,
   Role,
   VotePhase,
 } from '../../../../cours/content/types';
 import { estObjet, PROPRIETE_FORMATEUR } from '../../../../cours/runtime/blocks/retours';
 import type { SyntheseConcept } from '../../../core/ports/formations.port';
 import type { DirectEcran, RetourBrique } from './contrat-hote';
-import type { Montage } from './lecture-ecran';
+import type { Montage, ReponsesDuQuestionnaire } from './lecture-ecran';
 
 export interface MontageIdentifie extends Montage {
   readonly identifiants: readonly string[];
@@ -16,7 +16,7 @@ export interface MontageIdentifie extends Montage {
 export interface ContexteDeReinjection {
   readonly retours: readonly RetourBrique[];
   readonly direct: DirectEcran | null;
-  readonly render: RenderMode;
+  readonly revelation: RevelationServie | null;
   readonly role: Role;
   readonly donneesFormateur: unknown;
   readonly maitrise: readonly SyntheseConcept[] | null;
@@ -30,10 +30,11 @@ type Genre<K extends RetourBrique['kind']> = Extract<RetourBrique, { kind: K }>;
 const QUESTIONS_SIMPLES: ReadonlySet<string> = new Set(['fp-numeric', 'fp-recall', 'fp-exit']);
 const QUESTIONS_REVELABLES: ReadonlySet<string> = new Set([...QUESTIONS_SIMPLES, 'fp-vote']);
 const PRODUCTIONS: ReadonlySet<string> = new Set(['fp-sheet', 'fp-table-build', 'fp-cardsort']);
-const LECTRICES_DU_FORMATEUR: ReadonlySet<string> = new Set([
+const LECTRICES_DE_L_ANNEXE: ReadonlySet<string> = new Set([
   ...PRODUCTIONS,
   'fp-vote',
   'fp-numeric',
+  'fp-recall',
   'fp-challenge',
   'fp-escape',
 ]);
@@ -94,25 +95,49 @@ function phaseDuVote(direct: DirectEcran | null): VotePhase | null {
   return pilotage?.phase ?? (pilotage?.revele === true ? 'revele' : null);
 }
 
-function donneesFormateurVisibles(contexte: ContexteDeReinjection): unknown {
-  if (contexte.role !== 'presentateur') {
-    return null;
-  }
+function ecranRevele(contexte: ContexteDeReinjection): boolean {
   const pilotage = contexte.direct?.pilotage;
-  const revele =
-    pilotage?.phase === 'revele' || pilotage?.revele === true || (pilotage?.etayage ?? 0) > 0;
-  return contexte.render === 'board' || (contexte.render === 'stage' && revele)
-    ? contexte.donneesFormateur
-    : null;
+  return pilotage?.phase === 'revele' || pilotage?.revele === true || (pilotage?.etayage ?? 0) > 0;
 }
 
-function annexeDuMontage(montage: MontageIdentifie, donnees: unknown): unknown {
+function annexeDeLaRevelation(revelation: RevelationServie): unknown {
+  if (revelation.questions.length === 0) {
+    return revelation.annexe;
+  }
+  const reponses: ReponsesDuQuestionnaire = {
+    type: 'reponses',
+    reponses: Object.fromEntries(
+      revelation.questions.map(({ questionId, cible, optionId }) => [
+        questionId,
+        { cible, optionId },
+      ]),
+    ),
+  };
+  return reponses;
+}
+
+function annexeVisible(contexte: ContexteDeReinjection): unknown {
+  if (contexte.role === 'presentateur') {
+    return ecranRevele(contexte) ? contexte.donneesFormateur : null;
+  }
+  return contexte.revelation === null ? null : annexeDeLaRevelation(contexte.revelation);
+}
+
+function annexeDuMontage(
+  montage: MontageIdentifie,
+  donnees: unknown,
+  direct: DirectEcran | null,
+): unknown {
   if (!estObjet(donnees) || donnees['type'] !== 'reponses') {
     return donnees;
   }
   const reponses = donnees['reponses'];
-  const cible = estObjet(reponses) ? reponses[montage.identifiants.at(0) ?? ''] : undefined;
-  return typeof cible === 'string' ? { type: 'cible', cible } : null;
+  const bonne = estObjet(reponses) ? reponses[questionAffichee(montage, direct) ?? ''] : undefined;
+  if (!estObjet(bonne) || typeof bonne['cible'] !== 'string') {
+    return null;
+  }
+  const optionId = typeof bonne['optionId'] === 'string' ? bonne['optionId'] : null;
+  return { type: 'cible', cible: bonne['cible'], optionId };
 }
 
 function posesDesQuestions(montage: MontageIdentifie, contexte: ContexteDeReinjection): Pose[] {
@@ -192,10 +217,14 @@ function posesDuPilotage(montage: MontageIdentifie, contexte: ContexteDeReinject
       ];
     case 'fp-worked':
     case 'fp-sheet':
+    case 'fp-table-build':
       return [['etayage', pilotage?.etayage ?? 0]];
+    case 'fp-recall':
+      return [['optionsAffichees', pilotage?.optionsAffichees === true]];
     case 'fp-pulse':
       return [['comptes', contexte.direct?.comptesJalon ?? null]];
     case 'fp-concept4':
+    case 'fp-plot':
       return contexte.role === 'presentateur' ? [['reglages', pilotage?.reglages ?? null]] : [];
     default:
       return [];
@@ -207,8 +236,8 @@ function posesCommunes(montage: MontageIdentifie, contexte: ContexteDeReinjectio
     viseUnIdentifiant(montage.identifiants, retour.questionId),
   );
   const refus = contexte.dernierEmetteur ? deGenre(contexte.retours, 'refus').at(-1) : undefined;
-  const formateur: Pose[] = LECTRICES_DU_FORMATEUR.has(montage.brique)
-    ? [[PROPRIETE_FORMATEUR, annexeDuMontage(montage, donneesFormateurVisibles(contexte))]]
+  const formateur: Pose[] = LECTRICES_DE_L_ANNEXE.has(montage.brique)
+    ? [[PROPRIETE_FORMATEUR, annexeDuMontage(montage, annexeVisible(contexte), contexte.direct)]]
     : [];
   const cloture: Pose[] = QUESTIONS_REVELABLES.has(montage.brique)
     ? [['cloture', contexte.direct?.pilotage.revele === true]]
@@ -240,6 +269,28 @@ export function memeValeur(gauche: unknown, droite: unknown): boolean {
     return (
       gauche.length === droite.length &&
       gauche.every((element, rang) => Object.is(element, droite[rang]))
+    );
+  }
+  if (estObjet(gauche) && estObjet(droite)) {
+    return egauxEnProfondeur(gauche, droite);
+  }
+  return Object.is(gauche, droite);
+}
+
+function egauxEnProfondeur(gauche: unknown, droite: unknown): boolean {
+  if (Array.isArray(gauche) || Array.isArray(droite)) {
+    return (
+      Array.isArray(gauche) &&
+      Array.isArray(droite) &&
+      gauche.length === droite.length &&
+      gauche.every((element, rang) => egauxEnProfondeur(element, droite[rang]))
+    );
+  }
+  if (estObjet(gauche) && estObjet(droite)) {
+    const cles = Object.keys(gauche);
+    return (
+      cles.length === Object.keys(droite).length &&
+      cles.every((cle) => Object.hasOwn(droite, cle) && egauxEnProfondeur(gauche[cle], droite[cle]))
     );
   }
   return Object.is(gauche, droite);

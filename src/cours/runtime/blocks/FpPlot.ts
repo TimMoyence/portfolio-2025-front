@@ -56,6 +56,7 @@ export interface PlotDefinition {
   readonly unite?: 'euros';
   readonly etiquettes?: readonly string[];
   readonly prereglages?: readonly PlotPrereglage[];
+  readonly reference?: string;
   readonly metadonnees: MetadonneesBrique;
 }
 
@@ -69,6 +70,11 @@ interface Echantillon {
 interface SerieTracee {
   readonly serie: PlotSerie;
   readonly echantillons: readonly Echantillon[];
+}
+
+interface VueComparee {
+  readonly nom: 'reference' | 'reglable';
+  readonly libelle: string;
 }
 
 interface Cadre {
@@ -215,6 +221,7 @@ function copierDefinition(source: PlotDefinition): PlotDefinition {
       libelle: prereglage.libelle,
       valeurs: { ...prereglage.valeurs },
     })),
+    reference: source.reference,
     metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
@@ -254,48 +261,49 @@ export class FpPlot extends FpBlock {
     this.arreterAnimation();
   }
 
-  renderHand(): EscapedHtml {
-    if (this.interne === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+  set reglages(valeur: Valeurs | null) {
+    if (valeur === null) {
+      return;
     }
-    return safeHtml`<section class="fp-carte fp-plot__atelier">${this.description()}${this.reglages()}<div class="fp-plot__zone" data-zone="rendu">${this.rendu('fp-prose')}</div></section>`;
+    this.arreterAnimation();
+    for (const parametre of this.interne?.parametres ?? []) {
+      const pilote = valeur[parametre.cle];
+      if (typeof pilote === 'number') {
+        this.courantes[parametre.cle] = borner(parametre, pilote);
+      }
+    }
+    this.refreshSiConnecte();
   }
 
-  renderStage(): EscapedHtml {
+  render(): EscapedHtml {
     if (this.interne === null) {
-      return safeHtml``;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    return this.renderHand();
-  }
-
-  renderBoard(): EscapedHtml {
-    const definition = this.interne;
-    if (definition === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    return safeHtml`
-      <section class="fp-carte fp-plot__atelier">
-        ${this.description()}
-        ${this.figure()}
-        <div class="fp-plot__reperes">${this.reperes(definition.metadonnees)}</div>
-      </section>
-    `;
+    return safeHtml`<section class="fp-carte fp-scene fp-plot__atelier">${this.description()}${this.panneauDeReglages()}<div class="fp-plot__zone" data-zone="rendu">${this.rendu()}</div></section>`;
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.interne?.id ?? null);
-    if (this.mode() !== 'board') {
-      racine
-        .querySelector<HTMLButtonElement>('[data-testid="animer"]')
-        ?.addEventListener('click', () => {
-          this.animer();
-        });
-      brancherCurseurs(racine, (cle, valeur) => this.regler(cle, valeur));
-      racine.querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]').forEach((bouton) => {
-        bouton.addEventListener('click', () => {
-          this.appliquerPrereglage(Number(bouton.dataset['rang']));
-        });
+    racine
+      .querySelector<HTMLButtonElement>('[data-testid="animer"]')
+      ?.addEventListener('click', () => {
+        this.animer();
       });
+    brancherCurseurs(racine, (cle, valeur) => this.regler(cle, valeur));
+    racine.querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]').forEach((bouton) => {
+      bouton.addEventListener('click', () => {
+        this.appliquerPrereglage(Number(bouton.dataset['rang']));
+        this.relayerReglages();
+      });
+    });
+    for (const curseur of racine.querySelectorAll('input[data-testid="curseur"]')) {
+      curseur.addEventListener('change', () => this.relayerReglages());
+    }
+  }
+
+  private relayerReglages(): void {
+    if (this.presentateur() && !this.enApercu()) {
+      this.emit('fp-plot-reglage', { reglages: this.valeurs });
     }
   }
 
@@ -340,8 +348,36 @@ export class FpPlot extends FpBlock {
     return definition?.etiquettes?.[rang] ?? formater(abscisse);
   }
 
-  private rendu(stylePhrase: string): EscapedHtml {
-    return safeHtml`${this.figure()}${this.lecture(stylePhrase)}`;
+  private rendu(): EscapedHtml {
+    const reference = this.prereglageDeReference();
+    if (reference === undefined) {
+      return safeHtml`${this.figure(this.valeurs, null)}${this.lecture(true)}`;
+    }
+    return safeHtml`<div class="fp-plot__comparaison" data-testid="comparaison">${this.titre()}<div class="fp-plot__vues">${this.figure(
+      this.valeursDu(reference),
+      { nom: 'reference', libelle: `${reference.libelle} · ${this.texte('plot-reference')}` },
+    )}${this.figure(this.valeurs, { nom: 'reglable', libelle: this.texte('plot-reglable') })}</div>${this.sourceCommune()}</div>${this.lecture(false)}`;
+  }
+
+  private prereglageDeReference(): PlotPrereglage | undefined {
+    const definition = this.interne;
+    return definition?.prereglages?.find(
+      (prereglage) => prereglage.libelle === definition.reference,
+    );
+  }
+
+  private valeursDu(prereglage: PlotPrereglage): Valeurs {
+    return Object.fromEntries(
+      (this.interne?.parametres ?? []).map((parametre) => [
+        parametre.cle,
+        borner(
+          parametre,
+          Object.hasOwn(prereglage.valeurs, parametre.cle)
+            ? prereglage.valeurs[parametre.cle]
+            : parametre.defaut,
+        ),
+      ]),
+    );
   }
 
   private description(): EscapedHtml {
@@ -365,7 +401,7 @@ export class FpPlot extends FpBlock {
     if (sortie !== null) {
       sortie.textContent = this.chiffre(this.courantes[cle]);
     }
-    this.rafraichirZone('rendu', this.rendu('fp-prose'));
+    this.rafraichirZone('rendu', this.rendu());
     this.racine
       .querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]')
       .forEach((bouton) => {
@@ -381,12 +417,11 @@ export class FpPlot extends FpBlock {
     );
   }
 
-  private tracees(): SerieTracee[] {
+  private tracees(valeurs: Valeurs): SerieTracee[] {
     const definition = this.interne;
     if (definition === null) {
       return [];
     }
-    const valeurs = this.valeurs;
     const depart = plancherDe(definition.abscisse);
     const arrivee = plafondDe(definition.abscisse);
     const abscisses = this.enBarres()
@@ -404,7 +439,7 @@ export class FpPlot extends FpBlock {
     }));
   }
 
-  private cadre(tracees: readonly SerieTracee[]): Cadre {
+  private cadre(tracees: readonly SerieTracee[], valeurs: Valeurs): Cadre {
     const definition = this.interne;
     const axe = definition?.abscisse ?? { libelle: '', min: 0, max: 1 };
     const ordonnees = tracees.flatMap((tracee) =>
@@ -412,9 +447,9 @@ export class FpPlot extends FpBlock {
     );
     const bornes = definition?.bornesOrdonnee;
     const minParametre =
-      bornes?.minParametre === undefined ? undefined : this.valeurs[bornes.minParametre];
+      bornes?.minParametre === undefined ? undefined : valeurs[bornes.minParametre];
     const maxParametre =
-      bornes?.maxParametre === undefined ? undefined : this.valeurs[bornes.maxParametre];
+      bornes?.maxParametre === undefined ? undefined : valeurs[bornes.maxParametre];
     const minConfigure = minParametre ?? bornes?.min;
     const maxConfigure = maxParametre ?? bornes?.max;
     const plancher = this.borne(minConfigure, ordonnees, 0, Math.min);
@@ -439,40 +474,69 @@ export class FpPlot extends FpBlock {
     return ordonnees.length > 0 ? calculer(...ordonnees) : repli;
   }
 
-  private figure(): EscapedHtml {
-    const tracees = this.tracees();
+  private titre(): EscapedHtml {
+    const titre = this.interne?.titre;
+    return titre === undefined
+      ? safeHtml``
+      : safeHtml`<h3 class="fp-plot__titre" data-testid="titre">${escapeHtml(titre)}</h3>`;
+  }
+
+  private figure(valeurs: Valeurs, vue: VueComparee | null): EscapedHtml {
+    const tracees = this.tracees(valeurs);
+    const cadre = this.cadre(tracees, valeurs);
     const dessinees = tracees.filter((tracee) => tracee.echantillons.length > 0);
     const definition = this.interne;
     return safeHtml`
-      <figure class="fp-plot__figure" data-testid="figure">
-        ${definition?.titre === undefined ? safeHtml`` : safeHtml`<h3 class="fp-plot__titre" data-testid="titre">${escapeHtml(definition.titre)}</h3>`}
-        ${this.graphique(tracees)}
+      <figure class="fp-plot__figure" data-testid="figure" data-vue="${escapeHtml(vue?.nom ?? 'unique')}">
+        ${vue === null ? this.titre() : safeHtml`<p class="fp-plot__vue" data-testid="vue">${escapeHtml(vue.libelle)}</p>`}
+        ${this.graphique(tracees, cadre, vue)}
         ${dessinees.length > 0 ? safeHtml`` : this.vide()}
-        ${this.source(definition)}
+        ${vue !== null && this.enBarres() ? this.rapport(tracees, cadre, vue.nom === 'reglable') : safeHtml``}
+        ${vue === null ? this.source(definition) : safeHtml``}
       </figure>
     `;
   }
 
   private source(definition: PlotDefinition | null): EscapedHtml {
+    const libelle = this.libelleDeSource(definition);
+    return libelle === null
+      ? safeHtml``
+      : safeHtml`<figcaption class="fp-plot__source" data-testid="source">${libelle}</figcaption>`;
+  }
+
+  private sourceCommune(): EscapedHtml {
+    const libelle = this.libelleDeSource(this.interne);
+    return libelle === null
+      ? safeHtml``
+      : safeHtml`<p class="fp-plot__source" data-testid="source">${libelle}</p>`;
+  }
+
+  private libelleDeSource(definition: PlotDefinition | null): EscapedHtml | null {
     if (definition?.source === undefined) {
-      return safeHtml``;
+      return null;
     }
     if (definition.sourceUrl === undefined) {
-      return safeHtml`<figcaption class="fp-plot__source" data-testid="source">${escapeHtml(definition.source)}</figcaption>`;
+      return escapeHtml(definition.source);
     }
-    return safeHtml`<figcaption class="fp-plot__source" data-testid="source"><a href="${escapeUrl(definition.sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(definition.source)}</a></figcaption>`;
+    return safeHtml`<a href="${escapeUrl(definition.sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(definition.source)}</a>`;
   }
 
   private vide(): EscapedHtml {
     return safeHtml`<p class="fp-plot__vide" data-testid="vide">${escapeHtml(this.texte('plot-aucune-serie'))}</p>`;
   }
 
-  private graphique(tracees: readonly SerieTracee[]): EscapedHtml {
-    const cadre = this.cadre(tracees);
+  private graphique(
+    tracees: readonly SerieTracee[],
+    cadre: Cadre,
+    vue: VueComparee | null,
+  ): EscapedHtml {
+    const suffixe = vue === null ? '' : `-${vue.nom}`;
+    const titre =
+      vue === null ? this.titreDuGraphique() : `${this.titreDuGraphique()} — ${vue.libelle}`;
     return safeHtml`
-      <svg class="fp-plot__graphique" data-testid="graphique" viewBox="0 0 ${LARGEUR} ${HAUTEUR}" role="img" aria-labelledby="fp-plot-titre fp-plot-description">
-        <title id="fp-plot-titre" data-testid="titre-svg">${escapeHtml(this.titreDuGraphique())}</title>
-        <desc id="fp-plot-description" data-testid="description-svg">${escapeHtml(this.descriptionDuGraphique(tracees))}</desc>
+      <svg class="fp-plot__graphique" data-testid="graphique" viewBox="0 0 ${LARGEUR} ${HAUTEUR}" role="img" aria-labelledby="${escapeHtml(`fp-plot-titre${suffixe} fp-plot-description${suffixe}`)}">
+        <title id="${escapeHtml(`fp-plot-titre${suffixe}`)}" data-testid="titre-svg">${escapeHtml(titre)}</title>
+        <desc id="${escapeHtml(`fp-plot-description${suffixe}`)}" data-testid="description-svg">${escapeHtml(this.descriptionDuGraphique(tracees))}</desc>
         <g>
           <line class="fp-plot__axe" x1="${MARGE_GAUCHE}" y1="${MARGE_HAUT}" x2="${MARGE_GAUCHE}" y2="${LIGNE_BASSE}"></line>
           <line class="fp-plot__axe" x1="${MARGE_GAUCHE}" y1="${LIGNE_BASSE}" x2="${BORD_DROIT}" y2="${LIGNE_BASSE}"></line>
@@ -529,25 +593,29 @@ export class FpPlot extends FpBlock {
     return safeHtml`<polyline class="fp-plot__trace" data-testid="trace" data-serie="${escapeHtml(tracee.serie.id)}" data-trait="${escapeHtml(tracee.serie.trait)}" points="${escapeHtml(points)}"></polyline>`;
   }
 
-  private lecture(stylePhrase: string): EscapedHtml {
-    const tracees = this.tracees();
+  private lecture(avecRapport: boolean): EscapedHtml {
+    const valeurs = this.valeurs;
+    const tracees = this.tracees(valeurs);
+    const rapport = avecRapport
+      ? this.rapport(tracees, this.cadre(tracees, valeurs), true)
+      : safeHtml``;
     return safeHtml`
       <div class="fp-plot__lecture">
-        ${this.enBarres() ? this.rapport(tracees) : this.legende(tracees)}
+        ${this.enBarres() ? rapport : this.legende(tracees)}
         ${this.tableau(tracees)}
-        <p class="${escapeHtml(stylePhrase)} fp-plot__synthese" data-testid="synthese">${escapeHtml(this.phraseDeLecture(tracees))}</p>
+        ${this.enBarres() ? safeHtml`` : safeHtml`<p class="fp-prose fp-plot__synthese" data-testid="synthese">${escapeHtml(this.phraseDeLecture(tracees))}</p>`}
       </div>
     `;
   }
 
-  private rapport(tracees: readonly SerieTracee[]): EscapedHtml {
+  private rapport(tracees: readonly SerieTracee[], cadre: Cadre, vivant: boolean): EscapedHtml {
     if (tracees.length === 0 || tracees[0].echantillons.length < 2) {
       return safeHtml``;
     }
     const [tracee] = tracees;
     const premiere = tracee.echantillons[0];
     const derniere = tracee.echantillons[tracee.echantillons.length - 1];
-    const plancher = this.cadre(tracees).plancher;
+    const plancher = cadre.plancher;
     const hauteurs = (derniere.ordonnee - plancher) / (premiere.ordonnee - plancher);
     const rapport =
       premiere.ordonnee > plancher && derniere.ordonnee >= plancher
@@ -557,7 +625,7 @@ export class FpPlot extends FpBlock {
       premiere.ordonnee === 0
         ? '—'
         : EVOLUTION.format((derniere.ordonnee - premiere.ordonnee) / premiere.ordonnee);
-    return safeHtml`<p class="fp-plot__rapport" data-testid="rapport" aria-live="polite">${escapeHtml(this.texte('plot-rapport-hauteurs'))} ${escapeHtml(this.etiquette(derniere.abscisse))} ${escapeHtml(this.texte('plot-rapport-a'))} ${escapeHtml(this.etiquette(premiere.abscisse))} : <strong class="fp-plot__chiffre-cle" data-testid="rapport-hauteurs">${escapeHtml(rapport)}</strong> — ${escapeHtml(this.texte('plot-evolution-reelle'))} : <strong class="fp-plot__chiffre-cle" data-testid="evolution-reelle">${escapeHtml(evolution)}</strong></p>`;
+    return safeHtml`<p class="fp-plot__rapport" data-testid="rapport" aria-live="${escapeHtml(vivant ? 'polite' : 'off')}">${escapeHtml(this.texte('plot-rapport-hauteurs'))} ${escapeHtml(this.etiquette(derniere.abscisse))} ${escapeHtml(this.texte('plot-rapport-a'))} ${escapeHtml(this.etiquette(premiere.abscisse))} : <strong class="fp-plot__chiffre-cle" data-testid="rapport-hauteurs">${escapeHtml(rapport)}</strong> — ${escapeHtml(this.texte('plot-evolution-reelle'))} : <strong class="fp-plot__chiffre-cle" data-testid="evolution-reelle">${escapeHtml(evolution)}</strong></p>`;
   }
 
   private enteteAbscisse(abscisse: number): string {
@@ -663,7 +731,7 @@ export class FpPlot extends FpBlock {
     return Math.abs(haut - bas);
   }
 
-  private reglages(): EscapedHtml {
+  private panneauDeReglages(): EscapedHtml {
     return safeHtml`
       <fieldset class="fp-plot__reglages">
         <legend>${escapeHtml(this.texte('plot-reglages'))}</legend>

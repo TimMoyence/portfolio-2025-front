@@ -108,6 +108,24 @@ describe('SlideReflectionComponent', () => {
     expect(formations.enregistrerReponseLibre).not.toHaveBeenCalled();
   }));
 
+  it('T9 · ouvre le raisonnement attendu une fois la réflexion révélée, et rien avant', () => {
+    const fixture = monterEnSeance('seance', 'session-1');
+    const debrief = (): HTMLDetailsElement | null =>
+      racine(fixture).querySelector('[data-testid="slide-reflection-debrief"]');
+
+    expect(debrief()).toBeNull();
+
+    fixture.componentRef.setInput('debrief', {
+      attendu: 'Un montant et un taux, sur deux dates.',
+      suite: 'Nommez toujours le dénominateur.',
+    });
+    fixture.detectChanges();
+
+    expect(debrief()?.open).toBeTrue();
+    expect(debrief()?.textContent).toContain('Un montant et un taux, sur deux dates.');
+    expect(debrief()?.textContent).toContain('Nommez toujours le dénominateur.');
+  });
+
   it('en projection, montre la consigne sans zone de saisie', () => {
     const fixture = monterEnSeance('projection', null);
 

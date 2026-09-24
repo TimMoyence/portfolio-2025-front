@@ -47,6 +47,7 @@ export const escape = `
 
 :where(.fp-root) .fp-escape__liste {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
   gap: var(--fp-s-3);
   margin: 0;
   padding: 0;
@@ -191,10 +192,6 @@ export const escape = `
   cursor: not-allowed;
 }
 
-:where(.fp-root) .fp-escape__gratuite {
-  color: var(--fp-ink-mute);
-  font-size: calc(0.85rem * var(--fp-echelle));
-}
 
 :where(.fp-root) .fp-escape__indication {
   margin: 0;

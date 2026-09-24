@@ -27,6 +27,8 @@ class HoteAvecSurimpressionComponent {
 }
 
 interface EcranCadre {
+  readonly cadre: HTMLElement;
+  readonly hote: HTMLElement;
   readonly toile: () => HTMLElement | null;
   readonly brique: () => HTMLElement | null;
   readonly detruire: () => void;
@@ -48,7 +50,7 @@ async function monterDansUnCadre(
   renvoi: EcranContent | null = null,
 ): Promise<EcranCadre> {
   const cadre = document.createElement('div');
-  cadre.style.cssText = `position:fixed;top:0;left:0;width:${largeur}px;height:${hauteur}px;display:flex;`;
+  cadre.style.cssText = `position:fixed;top:0;left:0;width:${largeur}px;height:${hauteur}px;display:flex;overflow:auto;`;
   document.body.appendChild(cadre);
   const fixture = TestBed.createComponent(CoursPresentationComponent);
   cadre.appendChild(fixture.nativeElement as HTMLElement);
@@ -61,7 +63,9 @@ async function monterDansUnCadre(
   const toile = (): HTMLElement | null =>
     racine.querySelector<HTMLElement>('[data-testid="cours-toile"]');
   const brique = (): HTMLElement | null =>
-    racine.querySelector<HTMLElement>('app-slide-activity [render]');
+    racine.querySelector<HTMLElement>(
+      '[data-testid="cours-contenu"] app-slide-activity [data-cours-role]',
+    );
   await attendreQue(
     fixture,
     () => racine.querySelector('app-slide-activity *') !== null,
@@ -70,6 +74,8 @@ async function monterDansUnCadre(
   await new Promise((suite) => setTimeout(suite, 50));
   fixture.detectChanges();
   return {
+    cadre,
+    hote: racine,
     toile,
     brique,
     detruire: () => {
@@ -123,17 +129,130 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     ['RET-22', 'A3-03-PRIX-SAC'],
     ['RET-26', 'A3-07-ATELIER-2'],
     ['RET-27', 'A3-08-INDICE-PRIX'],
+    ['F33', 'A5-07-CONTROLE-DISCRIMINANT'],
+    ['F33', 'A5-07-CORRECTION'],
   ] as const) {
-    for (const mode of ['formateur', 'projection'] as const) {
+    for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
       it(`${reference} · ${suffixe} tient dans la toile sans défilement en ${mode}`, async () => {
-        const monte = await monterDansUnCadre(ecranDuPupitre(suffixe), mode, 1280, 720);
+        const ecran =
+          mode === 'etudiant'
+            ? ecransPublicsB2_01().find(({ id }) => id.endsWith(suffixe))
+            : ecranDuPupitre(suffixe);
+        if (ecran === undefined) {
+          throw new Error(`écran absent du poste étudiant : ${suffixe}`);
+        }
+        const renvoi = ecransDuPupitreB2_01().find(({ id }) => id === ecran.renvoi) ?? null;
+        const monte = await monterDansUnCadre(ecran, mode, 1280, 720, renvoi);
         const toile = monte.toile();
 
-        expect(toile?.scrollHeight).withContext('hauteur du contenu').toBeLessThanOrEqual(720);
-        expect(toile?.scrollWidth).withContext('largeur du contenu').toBeLessThanOrEqual(1280);
+        if (!defilante(monte)) {
+          expect(toile?.scrollHeight).withContext('hauteur du contenu').toBeLessThanOrEqual(720);
+          expect(toile?.scrollWidth).withContext('largeur du contenu').toBeLessThanOrEqual(1280);
+        }
+        expect(elementsPerdus(monte)).withContext('éléments coupés').toEqual([]);
         monte.detruire();
       });
     }
+  }
+
+  for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
+    it(`T2 · T3 · G01 · chaque écran du B2-01 tient sur une toile 1280 × 720 en ${mode}, sans défilement interne ni tassement`, async () => {
+      const pupitre = ecransDuPupitreB2_01();
+      const ecrans = mode === 'etudiant' ? ecransPublicsB2_01() : pupitre;
+      const fautes: string[] = [];
+      for (const ecran of ecrans) {
+        const renvoi = pupitre.find(({ id }) => id === ecran.renvoi) ?? null;
+        const monte = await monterDansUnCadre(ecran, mode, 1280, 720, renvoi);
+        const toile = monte.toile();
+        const horsToile = elementsPerdus(monte);
+        const defileurs = toile === null ? [] : defileursInternes(toile);
+        const echelle = echelleDuContenu(toile);
+        if (horsToile.length > 0 || defileurs.length > 0 || echelle < ECHELLE_MINIMALE) {
+          fautes.push(
+            `${ecran.id} ${mode} hors=${horsToile.join(',')} defile=${defileurs.join(',')} echelle=${echelle}`,
+          );
+        }
+        monte.detruire();
+      }
+
+      expect(ecrans.length).withContext('écrans du B2-01').toBeGreaterThan(50);
+      expect(fautes).toEqual([]);
+    });
+  }
+
+  for (const mode of ['formateur', 'projection'] as const) {
+    it(`G01 · en ${mode}, un écran trop long ne défile jamais : il est mis à l échelle de la toile`, async () => {
+      const ecrans = ecransDuPupitreB2_01();
+      const recommandation = ecranDuPupitre('A5-08-RECOMMANDATION');
+      const renvoi = ecrans.find(({ id }) => id === recommandation.renvoi) ?? null;
+      const monte = await monterDansUnCadre(recommandation, mode, 1280, 720, renvoi);
+
+      expect(monte.hote.classList).not.toContain('cours-presentation--defilante');
+      expect(echelleDuContenu(monte.toile())).toBeLessThan(1);
+      expect(elementsHorsToile(monte)).toEqual([]);
+      monte.detruire();
+    });
+  }
+
+  it('G01 · T3 · au poste étudiant, un écran trop long garde une taille lisible et fait défiler la page', async () => {
+    const ecrans = ecransPublicsB2_01();
+    const recommandation = ecrans.find(({ id }) => id.endsWith('A5-08-RECOMMANDATION'));
+    if (recommandation === undefined) {
+      throw new Error('écran absent du poste étudiant : A5-08-RECOMMANDATION');
+    }
+    const renvoi = ecrans.find(({ id }) => id === recommandation.renvoi) ?? null;
+    const monte = await monterDansUnCadre(recommandation, 'etudiant', 1280, 720, renvoi);
+    const envoyer = monte.brique()?.shadowRoot?.querySelector('[data-testid="envoyer"]');
+
+    expect(monte.hote.classList).toContain('cours-presentation--defilante');
+    expect(echelleDuContenu(monte.toile())).toBeGreaterThanOrEqual(ECHELLE_MINIMALE);
+    expect(monte.cadre.scrollHeight).toBeGreaterThan(monte.cadre.clientHeight);
+    expect(envoyer).withContext('bouton d envoi de la recommandation').toBeTruthy();
+    expect(elementsHorsDeLaPage(monte)).toEqual([]);
+    expect(defileursInternes(monte.toile() as HTMLElement)).toEqual([]);
+    monte.detruire();
+  });
+
+  for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
+    it(`T1 · chaque écran à renvoi tient entier dans sa demi-toile en ${mode}, titre compris`, async () => {
+      const ecrans = ecransDuPupitreB2_01();
+      const coupes: string[] = [];
+      const aRenvoi = ecrans.filter(({ renvoi }) => renvoi !== undefined);
+      expect(aRenvoi.length).withContext('écrans à renvoi du B2-01').toBeGreaterThan(5);
+      for (const ecran of aRenvoi) {
+        const renvoi = ecrans.find(({ id }) => id === ecran.renvoi) ?? null;
+        const monte = await monterDansUnCadre(ecran, mode, 1280, 720, renvoi);
+        await new Promise((suite) => setTimeout(suite, 50));
+        const horsToile = elementsPerdus(monte);
+        if (horsToile.length > 0) {
+          coupes.push(`${ecran.id} (${horsToile.join(',')})`);
+        }
+        monte.detruire();
+      }
+
+      expect(coupes).toEqual([]);
+    });
+  }
+
+  for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
+    it(`G09 · ORIGINE-AXE remplit sa colonne en ${mode} au lieu d être réduit`, async () => {
+      const ecrans = ecransDuPupitreB2_01();
+      const ecran = ecranDuPupitre('A2-02-ORIGINE-AXE');
+      const renvoi = ecrans.find(({ id }) => id === ecran.renvoi) ?? null;
+      const monte = await monterDansUnCadre(ecran, mode, 1280, 720, renvoi);
+      await new Promise((suite) => setTimeout(suite, 50));
+      const principal = monte.toile()?.querySelector<HTMLElement>('.cours-toile__principal');
+      const style =
+        principal === null || principal === undefined ? null : getComputedStyle(principal);
+      const colonne =
+        (principal?.clientWidth ?? 0) -
+        Number.parseFloat(style?.paddingInlineStart ?? '0') -
+        Number.parseFloat(style?.paddingInlineEnd ?? '0');
+      const carte = monte.brique()?.shadowRoot?.querySelector('.fp-plot__atelier');
+
+      expect(carte?.getBoundingClientRect().width ?? 0).toBeGreaterThanOrEqual(colonne * 0.9);
+      monte.detruire();
+    });
   }
 
   it('R1 · pose dans la toile la surimpression fournie par le poste', () => {
@@ -177,9 +296,16 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
       720,
       ecranDuPupitre('A1-09-DIAPOSITIVE'),
     );
+    await new Promise((suite) => setTimeout(suite, 50));
     const toile = monte.toile();
     const miniature = toile?.querySelector<HTMLElement>('[data-testid="cours-renvoi"]');
     const cadreMiniature = miniature?.getBoundingClientRect();
+    const cadreDuRenvoi = miniature
+      ?.querySelector<HTMLElement>('.cours-renvoi__cadre')
+      ?.getBoundingClientRect();
+    const toileDuRenvoi = miniature
+      ?.querySelector<HTMLElement>('.cours-renvoi__toile')
+      ?.getBoundingClientRect();
     const audit = monte.brique()?.shadowRoot?.querySelector('fieldset')?.getBoundingClientRect();
     const seChevauchent =
       cadreMiniature !== undefined &&
@@ -190,7 +316,9 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
       audit.top < cadreMiniature.bottom;
 
     expect(miniature?.textContent).toContain('Marge brute : une croissance continue');
-    expect(cadreMiniature?.width).toBeLessThanOrEqual(1280 * 0.35);
+    expect(cadreMiniature?.width).toBeCloseTo(1280 / 2, 0);
+    expect(toileDuRenvoi?.width).toBeLessThanOrEqual((cadreDuRenvoi?.width ?? 0) + 1);
+    expect(toileDuRenvoi?.height).toBeLessThanOrEqual((cadreDuRenvoi?.height ?? 0) + 1);
     expect(seChevauchent).toBeFalse();
     expect(toile?.scrollHeight).toBeLessThanOrEqual(720);
     monte.detruire();
@@ -257,15 +385,23 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     'A5-04-SIMULATEUR-MIX',
   ]) {
     it(`G2 · ${suffixe} : l aperçu formateur rend la même brique que la projection`, async () => {
-      const formateur = await monterDansUnCadre(ecranDuPupitre(suffixe), 'formateur', 640, 360);
-      const renduFormateur = formateur.brique()?.getAttribute('render');
-      formateur.detruire();
-      const projection = await monterDansUnCadre(ecranDuPupitre(suffixe), 'projection', 640, 360);
-      const renduProjection = projection.brique()?.getAttribute('render');
-      projection.detruire();
+      const releve = async (mode: CoursPresentationMode) => {
+        const monte = await monterDansUnCadre(ecranDuPupitre(suffixe), mode, 640, 360);
+        const brique = monte.brique();
+        const rendu = {
+          brique: brique?.tagName.toLowerCase(),
+          role: brique?.getAttribute('data-cours-role'),
+          rendu: brique?.shadowRoot?.innerHTML,
+        };
+        monte.detruire();
+        return rendu;
+      };
 
-      expect(renduFormateur).toBe('stage');
-      expect(renduProjection).toBe('stage');
+      const formateur = await releve('formateur');
+
+      expect(formateur.role).toBe('presentateur');
+      expect(formateur.rendu ?? '').not.toBe('');
+      expect(formateur).toEqual(await releve('projection'));
     });
   }
 });
@@ -291,6 +427,64 @@ function cartesQuiDebordent(racine: ParentNode): string[] {
       );
     })
     .map((carte) => carte.querySelector('h3, strong')?.textContent?.trim() ?? '?');
+}
+
+function elementsHorsToile(monte: EcranCadre): string[] {
+  const toile = monte.toile()?.getBoundingClientRect();
+  const contenu = monte.toile()?.querySelector('[data-testid="cours-contenu"]');
+  if (toile === undefined || contenu === null || contenu === undefined) {
+    return ['toile absente'];
+  }
+  return elementsDe(contenu)
+    .filter((element) => {
+      const bloc = element.getBoundingClientRect();
+      const replie = element.parentElement?.closest('details:not([open])');
+      const resume = element.tagName === 'SUMMARY' && element.parentElement === replie;
+      return (
+        bloc.height > 0 &&
+        (replie === null || replie === undefined || resume) &&
+        getComputedStyle(element).visibility === 'visible' &&
+        (bloc.top < toile.top - 1 || bloc.bottom > toile.bottom + 1)
+      );
+    })
+    .map(({ tagName }) => tagName);
+}
+
+const ECHELLE_MINIMALE = 0.8;
+
+function defilante(monte: EcranCadre): boolean {
+  return monte.hote.classList.contains('cours-presentation--defilante');
+}
+
+function elementsPerdus(monte: EcranCadre): string[] {
+  return defilante(monte) ? elementsHorsDeLaPage(monte) : elementsHorsToile(monte);
+}
+
+function elementsHorsDeLaPage(monte: EcranCadre): string[] {
+  const cadre = monte.cadre.getBoundingClientRect();
+  const fond = cadre.top - monte.cadre.scrollTop + monte.cadre.scrollHeight;
+  const contenu = monte.toile()?.querySelector('[data-testid="cours-contenu"]');
+  return contenu === null || contenu === undefined
+    ? ['toile absente']
+    : elementsDe(contenu)
+        .filter((element) => {
+          const bloc = element.getBoundingClientRect();
+          return (
+            bloc.height > 0 &&
+            getComputedStyle(element).visibility === 'visible' &&
+            (bloc.bottom > fond + 1 || bloc.right > cadre.right + 1 || bloc.left < cadre.left - 1)
+          );
+        })
+        .map(({ tagName }) => tagName);
+}
+
+function echelleDuContenu(toile: HTMLElement | null): number {
+  const contenu = toile?.querySelector<HTMLElement>('.cours-toile__contenu');
+  if (contenu === null || contenu === undefined) {
+    return 1;
+  }
+  const { transform } = getComputedStyle(contenu);
+  return transform === 'none' ? 1 : new DOMMatrixReadOnly(transform).a;
 }
 
 function elementsDe(racine: ParentNode): HTMLElement[] {
@@ -328,7 +522,9 @@ describe('CoursPresentationComponent au poste étudiant', () => {
     const racine = fixture.nativeElement as HTMLElement;
     await attendreQue(
       fixture,
-      () => racine.querySelector('app-slide-activity [render]')?.shadowRoot?.firstChild != null,
+      () =>
+        racine.querySelector('app-slide-activity [data-cours-role]')?.shadowRoot?.firstChild !=
+        null,
       'le coffre au poste étudiant',
     );
     await new Promise((suite) => setTimeout(suite, 50));

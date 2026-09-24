@@ -62,10 +62,10 @@ export class FpNumeric extends FpBlock {
     this.refreshSiConnecte();
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     const question = this.question;
     if (!question) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
     const unite = question.unite;
     const etiquette =
@@ -74,59 +74,43 @@ export class FpNumeric extends FpBlock {
         : safeHtml`<span class="fp-numeric__unite" id="${escapeHtml(ID_UNITE)}" data-testid="unite">${escapeHtml(unite)}</span>`;
     const decrit =
       unite === null ? escapeHtml('') : safeHtml`aria-describedby="${escapeHtml(ID_UNITE)}"`;
-    return safeHtml`
-      <fieldset class="fp-carte fp-numeric__numerique">
-        <legend>${escapeHtml(question.enonce)}</legend>
-        <div class="fp-numeric__saisie">
-          <input class="fp-numeric__champ" data-testid="champ" type="text" inputmode="decimal" autocomplete="off" value="${escapeHtml(this.saisie)}" ${decrit}>
+    const saisie = this.presentateur()
+      ? escapeHtml('')
+      : safeHtml`<div class="fp-numeric__saisie">
+          <input class="fp-numeric__champ" data-testid="champ" type="text" inputmode="decimal" autocomplete="off" value="${escapeHtml(this.saisie)}"${this.marqueDeSaisie()} ${decrit}>
           ${etiquette}
         </div>
         <button type="button" class="fp-numeric__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
         <p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
         ${this.verdictDeReponse(this.interneVerdict)}
-        ${this.annonces()}
+        ${this.annonces()}`;
+    return safeHtml`
+      <fieldset class="fp-carte fp-scene fp-numeric__numerique">
+        <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
+        ${saisie}
+        ${this.bonneReponseRevelee()}
       </fieldset>
     `;
   }
 
-  renderStage(): EscapedHtml {
-    const question = this.question;
-    if (!question) {
-      return safeHtml``;
-    }
-    const unite = question.unite;
-    const rappel =
-      unite === null
-        ? escapeHtml('')
-        : safeHtml`<p class="fp-numeric__unite" data-testid="unite">${escapeHtml(unite)}</p>`;
-    return safeHtml`<div class="fp-carte fp-scene"><p class="fp-enonce">${escapeHtml(question.enonce)}</p>${rappel}${this.bonneReponseFormateur()}</div>`;
-  }
-
-  private bonneReponseFormateur(): EscapedHtml {
-    if (this.bonneReponse === null || this.roleActuel() !== 'presentateur') {
+  private marqueDeSaisie(): EscapedHtml {
+    if (this.bonneReponse === null || this.interneVerdict === null) {
       return escapeHtml('');
     }
-    return safeHtml`<p class="fp-encadre" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(this.bonneReponse.replace('.', ','))}</p>`;
+    return this.interneVerdict.correcte
+      ? safeHtml` data-correction="juste"`
+      : safeHtml` data-correction="fausse"`;
   }
 
-  renderBoard(): EscapedHtml {
-    const question = this.question;
-    if (!question) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
+  private bonneReponseRevelee(): EscapedHtml {
+    if (this.bonneReponse === null) {
+      return escapeHtml('');
     }
-    return safeHtml`
-      <div class="fp-carte fp-numeric__numerique">
-        <p class="fp-enonce">${escapeHtml(question.enonce)}</p>
-        <p class="fp-reperes">${this.reperes(question.metadonnees)}</p>
-      </div>
-    `;
+    return safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(this.bonneReponse.replace('.', ','))}</p>`;
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.question?.id ?? null);
-    if (this.mode() !== 'hand') {
-      return;
-    }
     const champ = racine.querySelector<HTMLInputElement>('[data-testid="champ"]');
     const valider = racine.querySelector<HTMLButtonElement>('[data-testid="valider"]');
     if (champ === null || valider === null) {

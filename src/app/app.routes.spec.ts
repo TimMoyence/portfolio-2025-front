@@ -176,10 +176,11 @@ describe('app routes', () => {
       );
     });
 
-    it('projette la scene hors de la coquille du site, et elle seule', () => {
+    it('sort de la coquille du site le poste etudiant et la scene, et eux seuls', () => {
       const sansCoquille = routes.filter((route) => route.data?.['coquille'] === false);
 
       expect(sansCoquille.map((route) => route.path)).toEqual([
+        'cours/rejoindre',
         'cours/presenter/:slug/scene/:sessionId',
       ]);
     });

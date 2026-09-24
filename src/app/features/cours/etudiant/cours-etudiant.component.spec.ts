@@ -2,6 +2,7 @@ import type { DebugElement } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { NEVER, of, Subject, throwError } from 'rxjs';
 import type { CoursContent, EcranContent } from '../../../../cours/content/types';
@@ -12,6 +13,7 @@ import type { EtatSession } from '../../../../cours/runtime/core/sync';
 import {
   buildEcran,
   buildEcranQuestionnaire,
+  buildRevelationServie,
   buildSpacedRappel,
   buildWorkedExemple,
 } from '../../../../testing/factories/cours.factory';
@@ -220,6 +222,7 @@ describe('CoursEtudiantComponent', () => {
     port.lireSujet.and.returnValue(of(sujet));
     double = createFluxDouble();
     await setupTestBed({
+      router: true,
       imports: [CoursEtudiantComponent],
       providers: [
         { provide: FORMATIONS_PORT, useValue: port },
@@ -251,6 +254,25 @@ describe('CoursEtudiantComponent', () => {
     );
     expect(entree?.textContent).toContain('Pas de compte à créer');
     expect(entree?.querySelector('[data-testid="cours-galerie"]')).toBeNull();
+  });
+
+  it('F03 · propose au formateur de se connecter puis de revenir au pupitre du cours vise', async () => {
+    await TestBed.inject(Router).navigateByUrl('/?cours=b2-01-traitement-information-chiffree');
+    const fixture = monter();
+
+    const lien = lire(fixture, 'etudiant-connexion-formateur') as HTMLAnchorElement | null;
+
+    expect(lien).not.toBeNull();
+    expect(lien?.getAttribute('href')).toBe(
+      '/login?returnUrl=%2Fcours%2Fpresenter%2Fb2-01-traitement-information-chiffree',
+    );
+  });
+
+  it('F03 · ne construit aucun retour depuis un cours vise mal forme', async () => {
+    await TestBed.inject(Router).navigateByUrl('/?cours=..%2F..%2Fadmin');
+    const fixture = monter();
+
+    expect(lire(fixture, 'etudiant-connexion-formateur')).toBeNull();
   });
 
   it('refuse un code qui n a pas quatre chiffres avant tout appel reseau', async () => {
@@ -406,7 +428,7 @@ describe('CoursEtudiantComponent', () => {
     expect(ecrit).not.toContain(JETON);
   });
 
-  it('monte en rendu main l ecran que designe le flux sans remonter l ecran repete', async () => {
+  it('monte dans le role etudiant l ecran que designe le flux sans remonter l ecran repete', async () => {
     port.rejoindre.and.returnValue(
       of(buildRattachement({ sessionId: SESSION, jeton: JETON, ecranCourant: 1 })),
     );
@@ -415,7 +437,7 @@ describe('CoursEtudiantComponent', () => {
     const avant = ecranDe(fixture).componentInstance as SlideActivityComponent;
 
     expect(avant.slide()).toBe(sujet.ecrans[1]);
-    expect(avant.render()).toBe('hand');
+    expect(avant.apercu()).toBeFalse();
     expect(avant.role()).toBe('etudiant');
     expect((ecranDe(fixture).nativeElement as HTMLElement).hasAttribute('role'))
       .withContext('etudiant est un role du runtime, pas un role ARIA')
@@ -518,6 +540,32 @@ describe('CoursEtudiantComponent', () => {
     expect(port.lireSujet).toHaveBeenCalledTimes(2);
     expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
     expect(lire(fixture, 'etudiant-ecran-chargement')).toBeNull();
+  });
+
+  it('T9 · relit l écran de correction verrouillé dès que sa source est révélée, même si l étudiant est ailleurs', async () => {
+    const source = { ...sujet.ecrans[0], revelation: buildRevelationServie() };
+    const correction = { ...sujet.ecrans[1], ecranSource: source.id };
+    const verrouillee = {
+      ...correction,
+      type: 'ecran-verrouille',
+      interactif: false,
+      donnees: {},
+    };
+    const sujetInitial = { ...sujet, ecrans: [source, verrouillee, ...sujet.ecrans.slice(2)] };
+    const sujetRelu = { ...sujet, ecrans: [source, correction, ...sujet.ecrans.slice(2)] };
+    port.lireSujet.and.returnValues(of(sujetInitial), of(sujetRelu));
+    const fixture = await rattacherALaSeanceEnCours();
+    diffuser(fixture, { ecranCourant: 0 });
+    await stabiliser(fixture);
+
+    expect(port.lireSujet).toHaveBeenCalledTimes(1);
+
+    diffuser(fixture, { ecranCourant: 0, pilotage: { [source.id]: { revele: true } } });
+    await stabiliser(fixture);
+
+    expect(port.lireSujet).toHaveBeenCalledTimes(2);
+    expect(fixture.componentInstance.sujet()?.ecrans[1]).toBe(correction);
+    expect(ecranAffiche(fixture)).toBe(source);
   });
 
   it('signale l echec d une relecture d ecran sans afficher un ecran vide', async () => {

@@ -1,5 +1,9 @@
 import type { RetourBrique } from '../../shared/slides/session/contrat-hote';
-import { buildEtatParticipant } from '../../../testing/factories/formations.factory';
+import {
+  buildEtatParticipant,
+  buildResultatQuestion,
+  buildResultatsSeance,
+} from '../../../testing/factories/formations.factory';
 import {
   ajouterRetours,
   retirerLesRefus,
@@ -8,6 +12,8 @@ import {
   retourDeReponse,
   retourDeTentative,
   retoursDeLEtat,
+  reussitesDeLEcran,
+  verdictsDeLEcran,
 } from './retours-brique';
 
 const QUESTION = 'b2-01-a4-feuille-canaux';
@@ -213,6 +219,48 @@ describe('AC-33 : reconstruction des retours à la reprise', () => {
 
   it('rend une carte vide pour un état sans réponse ni énigme', () => {
     expect(retoursDeLEtat(buildEtatParticipant(), ecranDe).size).toBe(0);
+  });
+});
+
+describe('lecture des verdicts et réussites d’un écran révélé', () => {
+  it('rend le verdict de chaque réponse et production, sans les autres retours', () => {
+    const lot: RetourBrique[] = [
+      retourDeReponse(QUESTION, { reussite: true, libelleConfusion: null }),
+      retourDeProduction(PRODUCTION, {
+        correcte: false,
+        score: 0.5,
+        details: [DETAIL],
+        libelleConfusion: null,
+      }),
+      { kind: 'deja-repondu', questionId: QUESTION },
+      retourDeRefus('reseau', 'Hors ligne'),
+    ];
+
+    expect(verdictsDeLEcran(lot)).toEqual({ [QUESTION]: true, [PRODUCTION]: false });
+  });
+
+  it('rend la réussite de la classe par question de l’écran, sans les questions sans réponse', () => {
+    const resultats = buildResultatsSeance({
+      questions: [
+        buildResultatQuestion({ questionId: QUESTION, ecranId: ECRAN, total: 20, correctes: 13 }),
+        buildResultatQuestion({ questionId: PRODUCTION, ecranId: ECRAN, total: 0, correctes: 0 }),
+        buildResultatQuestion({
+          questionId: 'autre',
+          ecranId: 'B2-01-A1-02',
+          total: 9,
+          correctes: 9,
+        }),
+      ],
+    });
+
+    expect(reussitesDeLEcran(resultats, ECRAN)).toEqual({
+      [QUESTION]: { justes: 13, total: 20 },
+    });
+  });
+
+  it('ne rend aucune réussite sans résultats ni écran source', () => {
+    expect(reussitesDeLEcran(null, ECRAN)).toEqual({});
+    expect(reussitesDeLEcran(buildResultatsSeance(), null)).toEqual({});
   });
 });
 

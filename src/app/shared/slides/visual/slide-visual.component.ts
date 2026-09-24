@@ -18,6 +18,7 @@ import {
   SlideImageComponent,
   SlideMethodPathComponent,
   SlideQuoteComponent,
+  SlideAnswerReviewComponent,
   SlideReflectionComponent,
   SlideSortReviewComponent,
   SlideStatsComponent,
@@ -26,6 +27,9 @@ import {
 import type { QuizInteraction } from '../interactions/slide-quiz/slide-quiz.component';
 import { SlideQuizComponent } from '../interactions/slide-quiz/slide-quiz.component';
 import type { ModeInteraction } from '../interactions/mode-interaction';
+import type { DebriefDeReflexion } from '../interactions/slide-reflection/slide-reflection.component';
+import { reussitesDeLEcran, verdictsDeLEcran } from '../../../core/ports/retours-brique';
+import type { CompteDeCarte } from '../layouts/slide-sort-review/slide-sort-review.component';
 import type { RetourBrique } from '../session/contrat-hote';
 import { objet, presentationDe, quizImbrique, quizPrincipal } from './presentation-v2';
 
@@ -45,7 +49,10 @@ const layouts: Readonly<Record<string, Type<unknown>>> = {
   cta: SlideCtaComponent,
   guide: SlideGuideComponent,
   'sort-review': SlideSortReviewComponent,
+  'answer-review': SlideAnswerReviewComponent,
 };
+
+const RENDUS_DE_REVELATION: ReadonlySet<string> = new Set(['sort-review', 'answer-review']);
 
 function cartesDuTri(
   source: Readonly<Record<string, unknown>> | null,
@@ -62,6 +69,22 @@ function cartesDuTri(
       ? retour.details.filter((detail) => detail.juste === juste).map((detail) => detail.cle)
       : [],
   );
+}
+
+function comptesDuTri(
+  source: Readonly<Record<string, unknown>> | null,
+  resultats: ResultatsSeance | null,
+): Readonly<Record<string, CompteDeCarte>> {
+  const question = (resultats?.questions ?? []).find(
+    (candidate) =>
+      candidate.ecranId === source?.['screenId'] && candidate.questionId === source?.['sortId'],
+  );
+  return question?.parCle ?? {};
+}
+
+function ecranSourceDe(source: Readonly<Record<string, unknown>> | null): string | null {
+  const screenId = source?.['screenId'];
+  return typeof screenId === 'string' ? screenId : null;
 }
 
 function commeQuiz(quiz: Readonly<Record<string, unknown>> | null): QuizInteraction | null {
@@ -137,6 +160,7 @@ export class SlideVisualComponent {
   readonly resultats = input<ResultatsSeance | null>(null);
   readonly prioritaire = input(false);
   readonly retours = input<ReadonlyMap<string, readonly RetourBrique[]>>(new Map());
+  readonly debrief = input<DebriefDeReflexion | null>(null);
   readonly reponse = output<{
     questionId: string;
     valeur: string;
@@ -172,9 +196,28 @@ export class SlideVisualComponent {
         ([key]) =>
           key !== 'sourceLink' &&
           key !== 'nestedQuiz' &&
-          !(renderer === 'sort-review' && key === 'source'),
+          !(RENDUS_DE_REVELATION.has(renderer ?? '') && key === 'source'),
       ),
     );
+    const ecranSource = ecranSourceDe(objet(props['source']));
+    const answerInputs =
+      renderer === 'answer-review'
+        ? {
+            verdicts: verdictsDeLEcran(
+              ecranSource === null ? [] : (this.retours().get(ecranSource) ?? []),
+            ),
+            cibles: Object.fromEntries(
+              (this.slide().revelation?.questions ?? []).map(({ questionId, cible }) => [
+                questionId,
+                cible,
+              ]),
+            ),
+            reussites:
+              this.role() === 'presentateur'
+                ? reussitesDeLEcran(this.resultats(), ecranSource)
+                : {},
+          }
+        : {};
     const reflectionInputs =
       renderer === 'reflection'
         ? {
@@ -182,6 +225,7 @@ export class SlideVisualComponent {
             sessionId: this.sessionId(),
             jeton: this.jeton(),
             mode: this.mode(),
+            debrief: this.debrief(),
           }
         : {};
     const reviewInputs =
@@ -189,12 +233,17 @@ export class SlideVisualComponent {
         ? {
             misplaced: cartesDuTri(objet(props['source']), this.retours(), false),
             wellPlaced: cartesDuTri(objet(props['source']), this.retours(), true),
+            comptes:
+              this.role() === 'presentateur'
+                ? comptesDuTri(objet(props['source']), this.resultats())
+                : {},
           }
         : {};
     return {
       ...inputs,
       ...reflectionInputs,
       ...reviewInputs,
+      ...answerInputs,
       ...(renderer === 'image-right' ? { reverse: true } : {}),
       ...(renderer === 'hero' && this.prioritaire() ? { priority: true } : {}),
     };

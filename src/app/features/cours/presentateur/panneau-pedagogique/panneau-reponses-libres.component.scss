@@ -16,6 +16,17 @@
   @include panneau.discret;
 }
 
+.panneau-reponses__groupe {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.panneau-reponses__question {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .panneau-reponses__liste {
   @include panneau.liste;
 

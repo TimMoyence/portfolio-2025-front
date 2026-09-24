@@ -1,4 +1,4 @@
-import type { MetadonneesBrique, RenderMode, Role } from '../../content/types';
+import type { Role } from '../../content/types';
 import { adoptCoursStyles } from '../design/sheet';
 import { texte as traduire } from '../core/i18n';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
@@ -51,7 +51,7 @@ function positionDeSaisie(element: HTMLElement): { debut: number | null; fin: nu
 
 export abstract class FpBlock extends HTMLElement {
   static get observedAttributes(): string[] {
-    return ['render', 'data-cours-role', 'data-apercu', 'etat'];
+    return ['data-cours-role', 'data-apercu', 'etat'];
   }
 
   protected readonly racine: ShadowRoot;
@@ -68,9 +68,7 @@ export abstract class FpBlock extends HTMLElement {
     this.racine = this.attachShadow({ mode: 'open' });
   }
 
-  abstract renderStage(): EscapedHtml;
-  abstract renderHand(): EscapedHtml;
-  abstract renderBoard(): EscapedHtml;
+  abstract render(): EscapedHtml;
   abstract bind(racine: ShadowRoot): void;
 
   set dejaRepondu(valeur: boolean) {
@@ -131,14 +129,12 @@ export abstract class FpBlock extends HTMLElement {
     }
   }
 
-  mode(): RenderMode {
-    const brut = this.getAttribute('render');
-    return brut === 'stage' || brut === 'board' ? brut : 'hand';
+  roleActuel(): Role {
+    return this.getAttribute('data-cours-role') === 'presentateur' ? 'presentateur' : 'etudiant';
   }
 
-  roleActuel(): Role {
-    const brut = this.getAttribute('data-cours-role');
-    return brut === 'presentateur' || brut === 'revision' ? brut : 'etudiant';
+  presentateur(): boolean {
+    return this.roleActuel() === 'presentateur';
   }
 
   enApercu(): boolean {
@@ -166,8 +162,7 @@ export abstract class FpBlock extends HTMLElement {
 
   refresh(): void {
     const foyer = this.reperer(this.racine.activeElement);
-    const mode = this.mode();
-    this.racine.innerHTML = safeHtml`<div class="fp-root" data-render="${escapeHtml(mode)}">${this.corps(mode)}</div>`;
+    this.racine.innerHTML = safeHtml`<div class="fp-root" data-role="${escapeHtml(this.roleActuel())}">${this.render()}</div>`;
     this.bind(this.racine);
     if (foyer !== null && this.racine.activeElement === null) {
       this.restaurer(foyer);
@@ -200,7 +195,7 @@ export abstract class FpBlock extends HTMLElement {
   }
 
   protected signalerBrouillon(id: string, valeur: unknown): void {
-    if (!this.enApercu() && this.mode() === 'hand') {
+    if (!this.enApercu() && !this.presentateur()) {
       this.emit('fp-brouillon', { id, valeur });
     }
   }
@@ -226,11 +221,6 @@ export abstract class FpBlock extends HTMLElement {
         ? safeHtml`<p class="fp-annonce" role="status" data-testid="reponses-closes">${escapeHtml(this.texte('reponses-closes'))}</p>`
         : VIDE;
     return safeHtml`${erreur}${deja}${brouillon}${close}`;
-  }
-
-  protected reperes(metadonnees: MetadonneesBrique): EscapedHtml {
-    const modalite = this.texte(`modalite-${metadonnees.modalite}`);
-    return safeHtml`<span class="fp-badge" data-testid="modalite">${escapeHtml(modalite)}</span><span class="fp-badge" data-testid="duree">${metadonnees.dureeMinutes} ${escapeHtml(this.texte('duree-minutes'))}</span>`;
   }
 
   protected etatDuDetail(detail: DetailDeVerdict): EscapedHtml {
@@ -299,15 +289,5 @@ export abstract class FpBlock extends HTMLElement {
     if (selectionnable(cible) && foyer.debut !== null && foyer.fin !== null) {
       cible.setSelectionRange(foyer.debut, foyer.fin);
     }
-  }
-
-  private corps(mode: RenderMode): EscapedHtml {
-    if (mode === 'stage') {
-      return this.renderStage();
-    }
-    if (mode === 'board') {
-      return this.renderBoard();
-    }
-    return this.renderHand();
   }
 }

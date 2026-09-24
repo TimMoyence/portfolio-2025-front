@@ -2,14 +2,8 @@ import { type EscapedHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 
 class FpDemo extends FpBlock {
-  renderStage(): EscapedHtml {
-    return safeHtml`<p data-testid="scene">scene</p>`;
-  }
-  renderHand(): EscapedHtml {
-    return safeHtml`<button data-testid="action">agir</button><input data-testid="champ" data-cle="a" value="saisie">${this.annonces()}`;
-  }
-  renderBoard(): EscapedHtml {
-    return safeHtml`<p data-testid="tableau">tableau</p>`;
+  render(): EscapedHtml {
+    return safeHtml`<p data-testid="scene">scene</p><button data-testid="action">agir</button><input data-testid="champ" data-cle="a" value="saisie">${this.annonces()}`;
   }
   question: string | null = 'Q-1';
 
@@ -22,15 +16,7 @@ class FpDemo extends FpBlock {
 }
 
 class FpBroken extends FpBlock {
-  renderStage(): EscapedHtml {
-    throw new Error('rendu impossible');
-  }
-
-  renderHand(): EscapedHtml {
-    throw new Error('rendu impossible');
-  }
-
-  renderBoard(): EscapedHtml {
+  render(): EscapedHtml {
     throw new Error('rendu impossible');
   }
 
@@ -72,18 +58,21 @@ describe('FpBlock', () => {
     horlogeSimulee.mockDate(new Date(0));
   }
 
-  it('rend le mode main par defaut', () => {
+  it('rend son unique rendu pour le role etudiant par defaut', () => {
+    expect(hote.shadowRoot?.querySelector('[data-testid="scene"]')).toBeTruthy();
     expect(hote.shadowRoot?.querySelector('[data-testid="action"]')).toBeTruthy();
   });
 
-  it('rend le mode scene quand l attribut le demande', () => {
-    hote.setAttribute('render', 'stage');
-    expect(hote.shadowRoot?.querySelector('[data-testid="scene"]')).toBeTruthy();
+  it('rend le meme contenu au presentateur qu a l etudiant', () => {
+    const etudiant = hote.shadowRoot?.querySelector('.fp-root')?.innerHTML;
+    hote.setAttribute('data-cours-role', 'presentateur');
+    expect(hote.shadowRoot?.querySelector('.fp-root')?.innerHTML).toBe(etudiant);
   });
 
-  it('rend le mode tableau quand l attribut le demande', () => {
-    hote.setAttribute('render', 'board');
-    expect(hote.shadowRoot?.querySelector('[data-testid="tableau"]')).toBeTruthy();
+  it('se rafraichit quand l hote change le role', () => {
+    const avant = hote.shadowRoot?.querySelector('.fp-root');
+    hote.setAttribute('data-cours-role', 'presentateur');
+    expect(hote.shadowRoot?.querySelector('.fp-root')).not.toBe(avant);
   });
 
   it('adopte les styles du design system', () => {
@@ -94,10 +83,12 @@ describe('FpBlock', () => {
     expect(hote.shadowRoot?.querySelector('.fp-root')).toBeTruthy();
   });
 
-  it('expose le mode de rendu sur le conteneur', () => {
-    hote.setAttribute('render', 'stage');
-    const racine = hote.shadowRoot?.querySelector('.fp-root');
-    expect(racine?.getAttribute('data-render')).toBe('stage');
+  it('expose le role sur le conteneur', () => {
+    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe('etudiant');
+    hote.setAttribute('data-cours-role', 'presentateur');
+    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(
+      'presentateur',
+    );
   });
 
   it('emet un evenement composed qui traverse le shadow DOM', (done) => {

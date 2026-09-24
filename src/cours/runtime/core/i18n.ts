@@ -3,7 +3,6 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   suivant: () => $localize`:@@coursRuntimeSuivant:Suivant`,
   precedent: () => $localize`:@@coursRuntimePrecedent:Précédent`,
   'je-ne-sais-pas': () => $localize`:@@coursRuntimeJeNeSaisPas:Je ne sais pas`,
-  'en-attente': () => $localize`:@@coursRuntimeEnAttente:En attente de votre réponse`,
   'reponse-enregistree': () => $localize`:@@coursRuntimeReponseEnregistree:Réponse enregistrée`,
   'saisie-non-numerique': () =>
     $localize`:@@coursRuntimeSaisieNonNumerique:Saisissez un nombre — la virgule décimale est acceptée`,
@@ -14,9 +13,12 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   revoter: () => $localize`:@@coursRuntimeRevoter:Voter à nouveau`,
   envoyer: () => $localize`:@@coursRuntimeEnvoyer:Envoyer`,
   'rappel-consigne': () =>
-    $localize`:@@coursRuntimeRappelConsigne:Écrivez tout ce dont vous vous souvenez, sans regarder vos notes`,
-  'rappel-restant': () => $localize`:@@coursRuntimeRappelRestant:Options disponibles dans`,
-  'rappel-termine': () => $localize`:@@coursRuntimeRappelTermine:Options disponibles`,
+    $localize`:@@coursRuntimeRappelConsigne:Écrivez votre calcul avant de voir les propositions.`,
+  'rappel-champ': () => $localize`:@@coursRuntimeRappelChamp:Ce dont vous vous souvenez`,
+  'rappel-restant': () =>
+    $localize`:@@coursRuntimeRappelRestant:Temps d’écriture libre : propositions de réponse dans`,
+  'rappel-termine': () =>
+    $localize`:@@coursRuntimeRappelTermine:Choisissez maintenant la proposition qui correspond`,
   'choix-obligatoire': () =>
     $localize`:@@coursRuntimeChoixObligatoire:Choisissez une réponse avant d’envoyer`,
   'texte-libre-trop-long': () =>
@@ -32,20 +34,21 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimePulseAnonymat:Réponses anonymes : personne ne voit qui a répondu quoi`,
   'pulse-votre-etat': () => $localize`:@@coursRuntimePulseVotreEtat:Votre état actuel :`,
   'pulse-total': () => $localize`:@@coursRuntimePulseTotal:Réponses reçues :`,
-  'challenge-consigne': () =>
-    $localize`:@@coursRuntimeChallengeConsigne:Cherchez par vous-même : aucune méthode ne vous a encore été donnée`,
   'challenge-tentative-vide': () =>
-    $localize`:@@coursRuntimeChallengeTentativeVide:Écrivez votre tentative, même imparfaite : c’est elle qui compte`,
-  'challenge-reveler': () => $localize`:@@coursRuntimeChallengeReveler:Voir les stratégies`,
-  'challenge-strategies': () => $localize`:@@coursRuntimeChallengeStrategies:Stratégies typiques`,
+    $localize`:@@coursRuntimeChallengeTentativeVide:Écrivez votre réponse avant de l’envoyer`,
+  'challenge-reponse': () => $localize`:@@coursRuntimeChallengeReponse:Votre réponse`,
+  'challenge-reveler': () => $localize`:@@coursRuntimeChallengeReveler:Voir la correction`,
+  'challenge-strategies': () => $localize`:@@coursRuntimeChallengeStrategies:Correction`,
   'challenge-fausse': () => $localize`:@@coursRuntimeChallengeFausse:Piste fausse`,
   'pro-geste': () => $localize`:@@coursRuntimeProGeste:Le geste professionnel`,
   'pro-consequence': () => $localize`:@@coursRuntimeProConsequence:Sur le terrain :`,
   'pro-reponse-vide': () =>
     $localize`:@@coursRuntimeProReponseVide:Répondez à chaque question avant de valider`,
   'concept4-reglages': () =>
-    $localize`:@@coursRuntimeConcept4Reglages:Faites varier les paramètres et observez les quatre faces`,
+    $localize`:@@coursRuntimeConcept4Reglages:Faites varier les taux et observez l’arrivée.`,
   'concept4-animer': () => $localize`:@@coursRuntimeConcept4Animer:Animer le calcul`,
+  'concept4-prereglages': () =>
+    $localize`:@@coursRuntimeConcept4Prereglages:Couples de taux à comparer`,
   'concept4-formule': () => $localize`:@@coursRuntimeConcept4Formule:Formule`,
   'concept4-graphique': () => $localize`:@@coursRuntimeConcept4Graphique:Graphique`,
   'concept4-courbe': () =>
@@ -58,16 +61,12 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'concept4-divise-par': () => $localize`:@@coursRuntimeConcept4DivisePar:divisé par`,
   'concept4-etape': () => $localize`:@@coursRuntimeConcept4Etape:Étape`,
   'worked-consigne': () =>
-    $localize`:@@coursRuntimeWorkedConsigne:Répondez à chaque question sous son étape. La correction s’affichera sous votre réponse quand le formateur la montrera.`,
+    $localize`:@@coursRuntimeWorkedConsigne:Répondez à la question de chaque étape, puis validez : la correction sera projetée après l’exercice.`,
   'worked-correction': () => $localize`:@@coursRuntimeWorkedCorrection:Correction`,
   'bonne-reponse': () => $localize`:@@coursRuntimeBonneReponse:Bonne réponse :`,
   'worked-etape-vide': () =>
     $localize`:@@coursRuntimeWorkedEtapeVide:Répondez à chaque question encore sans correction avant de valider`,
-  'worked-niveau': () => $localize`:@@coursRuntimeWorkedNiveau:Corrections montrées :`,
-  'worked-suite-au-tableau': () =>
-    $localize`:@@coursRuntimeWorkedSuiteAuTableau:La suite de la correction s’affiche au fil du cours`,
-  'plot-reglages': () =>
-    $localize`:@@coursRuntimePlotReglages:Faites varier les paramètres et observez la forme des courbes`,
+  'plot-reglages': () => $localize`:@@coursRuntimePlotReglages:Réglage`,
   'plot-animer': () => $localize`:@@coursRuntimePlotAnimer:Voir l’évolution`,
   'plot-selon': () => $localize`:@@coursRuntimePlotSelon:en fonction de`,
   'plot-legende': () => $localize`:@@coursRuntimePlotLegende:Légende des courbes`,
@@ -81,12 +80,14 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'plot-plage': () => $localize`:@@coursRuntimePlotPlage:de`,
   'plot-plage-fin': () => $localize`:@@coursRuntimePlotPlageFin:à`,
   'plot-prereglages': () => $localize`:@@coursRuntimePlotPrereglages:Préréglages de l’axe`,
+  'plot-reference': () => $localize`:@@coursRuntimePlotReference:figé`,
+  'plot-reglable': () => $localize`:@@coursRuntimePlotReglable:Votre réglage`,
   'plot-rapport-hauteurs': () => $localize`:@@coursRuntimePlotRapportHauteurs:Hauteur de la barre`,
   'plot-rapport-a': () => $localize`:@@coursRuntimePlotRapportA:rapportée à celle de`,
   'plot-evolution-reelle': () => $localize`:@@coursRuntimePlotEvolutionReelle:évolution réelle`,
   'table-build-consigne': () =>
-    $localize`:@@coursRuntimeTableBuildConsigne:Bâtissez le tableau ligne à ligne : chaque cellule déduite se recalcule dès que vous saisissez`,
-  'table-build-echeance': () => $localize`:@@coursRuntimeTableBuildEcheance:Échéance`,
+    $localize`:@@coursRuntimeTableBuildConsigne:Remplissez les cellules à saisir ligne par ligne ; les autres colonnes se calculent seules.`,
+  'table-build-echeance': () => $localize`:@@coursRuntimeTableBuildEcheance:Révision`,
   'table-build-a-saisir': () => $localize`:@@coursRuntimeTableBuildASaisir:à saisir`,
   'table-build-deduite': () => $localize`:@@coursRuntimeTableBuildDeduite:déduite`,
   'table-build-totaux': () => $localize`:@@coursRuntimeTableBuildTotaux:Totaux`,
@@ -114,7 +115,7 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'sheet-vide': () =>
     $localize`:@@coursRuntimeSheetVide:Aucune cellule à remplir : le plan ne porte aucune ligne`,
   'cardsort-consigne': () =>
-    $localize`:@@coursRuntimeCardsortConsigne:Choisissez une carte, désignez sa catégorie, puis déplacez-la — à la souris comme au clavier`,
+    $localize`:@@coursRuntimeCardsortConsigne:Glissez chaque carte dans sa catégorie. Au clavier : choisissez la carte, puis la catégorie, puis « Déplacer la carte ».`,
   'cardsort-pioche': () => $localize`:@@coursRuntimeCardsortPioche:Cartes à trier`,
   'cardsort-destination': () =>
     $localize`:@@coursRuntimeCardsortDestination:Catégorie de destination`,
@@ -154,13 +155,10 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'escape-a-chercher': () =>
     $localize`:@@coursRuntimeEscapeAChercher:Ce n’est pas encore cela : relisez l’énoncé et proposez autre chose`,
   'escape-indice': () => $localize`:@@coursRuntimeEscapeIndice:Demander un indice`,
-  'escape-indice-gratuit': () =>
-    $localize`:@@coursRuntimeEscapeIndiceGratuit:Prendre un indice ne retire rien à votre parcours`,
   'escape-indice-attente': () =>
     $localize`:@@coursRuntimeEscapeIndiceAttente:L’indice s’ouvre dans`,
   'escape-secondes': () => $localize`:@@coursRuntimeEscapeSecondes:secondes`,
-  'escape-indice-pris': () =>
-    $localize`:@@coursRuntimeEscapeIndicePris:Indice ouvert : il ne retire rien à votre parcours`,
+  'escape-indice-pris': () => $localize`:@@coursRuntimeEscapeIndicePris:Indice ouvert`,
   'escape-indice-donne': () => $localize`:@@coursRuntimeEscapeIndiceDonne:Indice :`,
   'escape-debloquee': () =>
     $localize`:@@coursRuntimeEscapeDebloquee:Énigme suivante déverrouillée :`,
@@ -168,7 +166,7 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeEscapeTermine:Toutes les énigmes sont résolues, le code est reconstitué :`,
   'escape-code': () => $localize`:@@coursRuntimeEscapeCode:Code final :`,
   'spaced-consigne': () =>
-    $localize`:@@coursRuntimeSpacedConsigne:Rappel : quelques questions sur ce que vous avez travaillé plus tôt, de mémoire, sans vos notes`,
+    $localize`:@@coursRuntimeSpacedConsigne:Quelques questions sur ce que vous avez travaillé plus tôt.`,
   'spaced-progression': () => $localize`:@@coursRuntimeSpacedProgression:Question`,
   'spaced-origine': () => $localize`:@@coursRuntimeSpacedOrigine:Vu en`,
   'spaced-boite': () => $localize`:@@coursRuntimeSpacedBoite:Boîte`,
@@ -183,6 +181,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'verdict-score': () => $localize`:@@coursRuntimeVerdictScore:Score :`,
   'sheet-verdict': () => $localize`:@@coursRuntimeSheetVerdict:Cellules justes :`,
   'cardsort-verdict': () => $localize`:@@coursRuntimeCardsortVerdict:Cartes bien placées :`,
+  'cardsort-correction': () =>
+    $localize`:@@coursRuntimeCardsortCorrection:Correction du classement`,
   'table-build-verdict': () => $localize`:@@coursRuntimeTableBuildVerdict:Lignes justes :`,
   'table-build-synthese': () => $localize`:@@coursRuntimeTableBuildSynthese:Synthèse`,
   'cardsort-chrono': () => $localize`:@@coursRuntimeCardsortChrono:Temps restant :`,
@@ -217,6 +217,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimePulseMasque:Comptes affichés à partir de 5 réponses`,
   'production-vide': () =>
     $localize`:@@coursRuntimeProductionVide:Saisissez au moins une valeur ou choisissez « Je ne sais pas »`,
+  'production-renvoyer': () =>
+    $localize`:@@coursRuntimeProductionRenvoyer:Renvoyer les cases corrigées`,
   'brouillon-restaure': () => $localize`:@@coursRuntimeBrouillonRestaure:Brouillon restauré`,
   'plot-voir-donnees': () => $localize`:@@coursRuntimePlotVoirDonnees:Voir les données`,
   'tentatives-reseau': () =>
@@ -224,10 +226,6 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'story-source-visuel': () => $localize`:@@coursRuntimeStorySourceVisuel:Source du visuel`,
   'story-source-media': () => $localize`:@@coursRuntimeStorySourceMedia:Source du média`,
   'duree-minutes': () => $localize`:@@coursRuntimeDureeMinutes:min`,
-  'modalite-solo': () => $localize`:@@coursRuntimeModaliteSolo:Individuel`,
-  'modalite-binome': () => $localize`:@@coursRuntimeModaliteBinome:En binôme`,
-  'modalite-groupe': () => $localize`:@@coursRuntimeModaliteGroupe:En groupe`,
-  'modalite-classe': () => $localize`:@@coursRuntimeModaliteClasse:Classe entière`,
   'regime-ouvert': () => $localize`:@@coursRuntimeRegimeOuvert:Régime ouvert`,
   'regime-focus': () => $localize`:@@coursRuntimeRegimeFocus:Régime concentré`,
   'regime-examen': () => $localize`:@@coursRuntimeRegimeExamen:Régime d’examen`,

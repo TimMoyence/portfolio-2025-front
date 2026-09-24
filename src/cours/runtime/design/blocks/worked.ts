@@ -22,9 +22,10 @@ export const worked = `
 
 :where(.fp-root) .fp-worked__etapes {
   display: grid;
-  gap: var(--fp-s-3);
-  padding-left: var(--fp-s-4);
-  list-style: decimal;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: var(--fp-s-2);
+  padding: 0;
+  list-style: none;
 }
 
 :where(.fp-root) .fp-worked__etape {

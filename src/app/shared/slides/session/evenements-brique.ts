@@ -29,6 +29,7 @@ export const EVENEMENTS_DES_BRIQUES: readonly string[] = [
   'fp-worked-submit',
   'fp-pro-submit',
   'fp-concept4-reglage',
+  'fp-plot-reglage',
 ];
 
 function texteNonVide(valeur: unknown): valeur is string {
@@ -216,7 +217,7 @@ export function evenementsDe(nom: string, brut: unknown, screenId: string): Even
   if (nom === 'fp-pulse-change') {
     return jalon(screenId, detail);
   }
-  if (nom === 'fp-concept4-reglage') {
+  if (nom === 'fp-concept4-reglage' || nom === 'fp-plot-reglage') {
     return reglage(screenId, detail);
   }
   const dureeMs = duree(detail);

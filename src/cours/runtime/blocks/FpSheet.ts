@@ -181,56 +181,42 @@ export class FpSheet extends FpBlock {
     this.refreshSiConnecte();
   }
 
-  renderHand(): EscapedHtml {
+  render(): EscapedHtml {
     const plan = this.interne;
     if (plan === null) {
-      return safeHtml`<p>${escapeHtml(this.texte('chargement'))}</p>`;
+      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
-    const verrouille = this.verrouille();
+    if (this.presentateur()) {
+      return safeHtml`
+        <section class="fp-carte fp-scene fp-sheet__atelier">
+          ${this.consignes(plan)}
+          ${this.tableau(false)}
+        </section>
+      `;
+    }
     return safeHtml`
-      <section class="fp-carte fp-sheet__atelier">
+      <section class="fp-carte fp-scene fp-sheet__atelier">
         <p class="fp-sheet__consigne">${escapeHtml(this.texte('sheet-consigne'))}</p>
         ${this.consignes(plan)}
         ${this.barre()}
         ${this.tableau(true)}
         <div class="fp-sheet__actions">
           <button type="button" class="fp-sheet__recopier" data-testid="recopier">${escapeHtml(this.texte('sheet-recopier'))}</button>
-          <button type="button" class="fp-sheet__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
-          ${this.boutonNeSaitPas(verrouille)}
+          <button type="button" class="fp-sheet__valider" data-testid="valider">${escapeHtml(this.texte(this.enReprise() ? 'production-renvoyer' : 'valider'))}</button>
+          ${this.boutonNeSaitPas(this.verrouille())}
         </div>
         ${this.bilanErreurs()}
         <p class="fp-sheet__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
         ${this.verdictDeProduction(this.interneVerdict, 'sheet-verdict', this.justes(), this.interneVerdict?.details.length ?? 0)}
+        ${this.correctionServie()}
         ${this.annonces()}
-      </section>
-    `;
-  }
-
-  renderStage(): EscapedHtml {
-    if (this.interne === null) {
-      return safeHtml``;
-    }
-    return safeHtml`<section class="fp-scene fp-sheet__atelier">${this.tableau(false)}</section>`;
-  }
-
-  renderBoard(): EscapedHtml {
-    const plan = this.interne;
-    if (plan === null) {
-      return safeHtml`<p data-testid="attente">${escapeHtml(this.texte('en-attente'))}</p>`;
-    }
-    return safeHtml`
-      <section class="fp-carte fp-sheet__atelier">
-        <p class="fp-enonce">${escapeHtml(plan.intitule)}</p>
-        ${this.consignes(plan)}
-        <div class="fp-sheet__reperes">${this.reperes(plan.metadonnees)}</div>
-        ${this.roleActuel() === 'presentateur' ? this.attendusFormateur() : VIDE}
       </section>
     `;
   }
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.interne?.id ?? null);
-    if (this.mode() !== 'hand') {
+    if (this.presentateur()) {
       return;
     }
     for (const champ of racine.querySelectorAll<HTMLInputElement>('[data-role="cellule"]')) {
@@ -240,6 +226,10 @@ export class FpSheet extends FpBlock {
     this.brancherBouton(racine, 'recopier', () => this.recopier());
     this.brancherBouton(racine, 'valider', () => this.valider());
     this.brancherBouton(racine, 'je-ne-sais-pas', () => this.neSaitPas());
+    const valider = racine.querySelector<HTMLButtonElement>('[data-testid="valider"]');
+    if (valider !== null) {
+      valider.disabled = this.verrouille() && !this.enReprise();
+    }
   }
 
   private verrouille(): boolean {
@@ -249,12 +239,16 @@ export class FpSheet extends FpBlock {
     );
   }
 
+  private enReprise(): boolean {
+    return this.correction === 0 && this.interneVerdict !== null && this.reprises.size > 0;
+  }
+
   private modifiable(nom: string): boolean {
     return !this.verrouillee(nom) && this.accessible(nom);
   }
 
   private accessible(nom: string): boolean {
-    return !this.verrouille() || this.detailDe(nom)?.juste === false;
+    return !this.verrouille() || (this.correction === 0 && this.detailDe(nom)?.juste === false);
   }
 
   private dansLaGrille(nom: string): boolean {
@@ -503,7 +497,7 @@ export class FpSheet extends FpBlock {
 
   private lecture(nom: string): EscapedHtml {
     const attendu = this.attendus.find((candidat) => candidat.reference === nom);
-    if (attendu !== undefined && this.correction >= 1 && this.roleActuel() === 'presentateur') {
+    if (attendu !== undefined && this.correction >= 1) {
       const valeur =
         this.correction >= 2
           ? safeHtml` <span class="fp-montant">${escapeHtml(formaterResultat({ valeur: attendu.valeur, erreur: null }))}</span>`
@@ -534,13 +528,17 @@ export class FpSheet extends FpBlock {
     return safeHtml`<p class="fp-sheet__bilan fp-sheet__bilan--fautif" aria-live="polite" data-testid="erreurs">${escapeHtml(SIGNE_ERREUR)} ${escapeHtml(this.texte('sheet-erreurs'))} ${escapeHtml(fautives.join(', '))}</p>`;
   }
 
-  private attendusFormateur(): EscapedHtml {
-    if (this.attendus.length === 0) {
+  private correctionServie(): EscapedHtml {
+    if (this.attendus.length === 0 || this.correction < 1) {
       return VIDE;
     }
+    const valeur = (attendu: AttenduDeFeuille): EscapedHtml =>
+      this.correction >= 2
+        ? safeHtml` <span class="fp-montant">${escapeHtml(formaterResultat({ valeur: attendu.valeur, erreur: null }))}</span>`
+        : VIDE;
     const lignes = this.attendus.map(
       (attendu) =>
-        safeHtml`<li class="fp-sheet__attendu" data-testid="attendu" data-nom="${escapeHtml(attendu.reference)}"><strong>${escapeHtml(attendu.reference)}</strong> <code>${escapeHtml(attendu.formuleReference)}</code> <span class="fp-montant">${escapeHtml(formaterResultat({ valeur: attendu.valeur, erreur: null }))}</span></li>`,
+        safeHtml`<li class="fp-sheet__attendu" data-testid="attendu" data-nom="${escapeHtml(attendu.reference)}"><strong>${escapeHtml(attendu.reference)}</strong> <code>${escapeHtml(attendu.formuleReference)}</code>${valeur(attendu)}</li>`,
     );
     return safeHtml`<ul class="fp-sheet__attendus" data-testid="attendus">${lignes}</ul>`;
   }
@@ -555,9 +553,10 @@ export class FpSheet extends FpBlock {
 
   private valider(): void {
     const plan = this.interne;
-    if (plan === null || this.verrouille()) {
+    if (plan === null || (this.verrouille() && !this.enReprise())) {
       return;
     }
+    this.reprises = new Set();
     const cellules = this.saisiesDeLEtudiant();
     if (Object.keys(cellules).length === 0) {
       this.message = this.texte('production-vide');
