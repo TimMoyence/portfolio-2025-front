@@ -1,17 +1,15 @@
 import { expect, test } from '@playwright/test';
 import {
-  EN_TETE_JETON,
   URL_API,
-  coursReleve,
-  evincerLePoste,
+  agirSurLePoste,
   identiteDuPoste,
   inscrireUnPoste,
+  lireDepuisLePoste,
   lireLesResultats,
   optionsDuPoste,
-  readmettreLePoste,
   rejoindreDansLeNavigateur,
   repondreDepuisLePoste,
-  seanceDemarreeSurLEcran,
+  seanceLimiteeSurLePremierVote,
   verdictDuPoste,
 } from './contexte';
 
@@ -29,10 +27,11 @@ test.describe('Banc — éviction en séance (AC-37)', () => {
     page,
     request,
   }) => {
-    const { votes } = await coursReleve(request);
-    const { seance, jeton } = await seanceDemarreeSurLEcran(request, votes[0].rang, {
-      capacite: CAPACITE,
-    });
+    const {
+      releve: { votes },
+      seance,
+      jeton,
+    } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
 
     const evince = await rejoindreDansLeNavigateur(page, seance, identiteDuPoste(30));
     await expect(optionsDuPoste(page).first()).toBeVisible();
@@ -48,11 +47,9 @@ test.describe('Banc — éviction en séance (AC-37)', () => {
     expect(complete.status()).toBe(409);
     expect(((await complete.json()) as { code: string }).code).toBe('SEANCE_COMPLETE');
 
-    expect(await evincerLePoste(request, jeton, seance.sessionId, evince.participantId)).toBe(204);
+    expect(await agirSurLePoste(request, jeton, { seance, poste: evince }, 'eviction')).toBe(204);
 
-    const apres = await request.get(`${URL_API}/formations/sessions/${seance.sessionId}/moi`, {
-      headers: { [EN_TETE_JETON]: evince.jeton },
-    });
+    const apres = await lireDepuisLePoste(request, seance, evince, 'moi');
     expect(apres.status()).toBe(404);
     expect(((await apres.json()) as { code: string }).code).toBe('PARTICIPANT_INTROUVABLE');
 
@@ -76,24 +73,21 @@ test.describe('Banc — éviction en séance (AC-37)', () => {
   test('le formateur réadmet le poste évincé par erreur, qui retrouve sa place et ses réponses', async ({
     request,
   }) => {
-    const { votes } = await coursReleve(request);
-    const { seance, jeton } = await seanceDemarreeSurLEcran(request, votes[0].rang, {
-      capacite: CAPACITE,
-    });
+    const {
+      releve: { votes },
+      seance,
+      jeton,
+    } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
     const poste = await inscrireUnPoste(request, seance, 40);
     await repondreDepuisLePoste(request, seance, poste, {
       questionId: votes[0].activiteId,
       valeur: votes[0].options[0],
     });
-    expect(await evincerLePoste(request, jeton, seance.sessionId, poste.participantId)).toBe(204);
+    expect(await agirSurLePoste(request, jeton, { seance, poste }, 'eviction')).toBe(204);
 
-    expect(await readmettreLePoste(request, jeton, seance.sessionId, poste.participantId)).toBe(
-      204,
-    );
+    expect(await agirSurLePoste(request, jeton, { seance, poste }, 'readmission')).toBe(204);
 
-    const apres = await request.get(`${URL_API}/formations/sessions/${seance.sessionId}/moi`, {
-      headers: { [EN_TETE_JETON]: poste.jeton },
-    });
+    const apres = await lireDepuisLePoste(request, seance, poste, 'moi');
     expect(apres.status()).toBe(200);
     const bilan = (await lireLesResultats(request, jeton, seance.sessionId)) as unknown as Bilan;
     expect(bilan.participants.map((candidat) => candidat.nom)).toContain(poste.identite.nom);

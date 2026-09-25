@@ -1,7 +1,4 @@
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import {
@@ -16,6 +13,7 @@ import {
   runGuard,
   specifications,
 } from './guard-cours-runtime.mjs';
+import { avecDossierPlante } from './lib/dossier-temporaire.mjs';
 
 const SOCLE = { 'src/cours/runtime/core/html.ts': 'export const a = 1;\n' };
 
@@ -23,18 +21,10 @@ const SOCLE = { 'src/cours/runtime/core/html.ts': 'export const a = 1;\n' };
  * @param {Record<string, string>} fichiers
  * @returns {ReturnType<typeof runGuard>}
  */
-const garder = (fichiers) => {
-  const root = mkdtempSync(join(tmpdir(), 'guard-cours-runtime-'));
-  try {
-    for (const [relatif, texte] of Object.entries({ ...SOCLE, ...fichiers })) {
-      mkdirSync(join(root, dirname(relatif)), { recursive: true });
-      writeFileSync(join(root, relatif), texte);
-    }
-    return runGuard({ root });
-  } finally {
-    rmSync(root, { recursive: true, force: true });
-  }
-};
+const garder = (fichiers) =>
+  avecDossierPlante('guard-cours-runtime-', { ...SOCLE, ...fichiers }, (root) =>
+    runGuard({ root }),
+  );
 
 /**
  * @param {ReturnType<typeof runGuard>} resultat
@@ -514,10 +504,7 @@ void test('AD-4 : le verdict d une revelation en dur explique le canal runtime',
 });
 
 void test('PLANCHER ANTI-VACUITE : un perimetre vide leve une erreur citant le gate', () => {
-  const root = mkdtempSync(join(tmpdir(), 'guard-cours-runtime-vide-'));
-  try {
+  avecDossierPlante('guard-cours-runtime-vide-', {}, (root) => {
     assert.throws(() => runGuard({ root }), /guard-cours-runtime/);
-  } finally {
-    rmSync(root, { recursive: true, force: true });
-  }
+  });
 });

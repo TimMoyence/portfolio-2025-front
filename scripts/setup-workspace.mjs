@@ -1,33 +1,26 @@
 #!/usr/bin/env node
 
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  writeFileSync,
-} from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import { spawnSync } from "node:child_process";
-import { randomBytes } from "node:crypto";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
+import { randomBytes } from 'node:crypto';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
-const FRONT_DIR = resolve(SCRIPT_DIR, "..");
-const PARENT_DIR = resolve(FRONT_DIR, "..");
-const BACK_DIR = resolve(PARENT_DIR, "portfolio-2025-back");
+const FRONT_DIR = resolve(SCRIPT_DIR, '..');
+const PARENT_DIR = resolve(FRONT_DIR, '..');
+const BACK_DIR = resolve(PARENT_DIR, 'portfolio-2025-back');
 
-const BACK_REPO = "git@github.com:TimMoyence/portfolio-2025-back.git";
-const BACK_REPO_HTTPS =
-  "https://github.com/TimMoyence/portfolio-2025-back.git";
+const BACK_REPO = 'git@github.com:TimMoyence/portfolio-2025-back.git';
+const BACK_REPO_HTTPS = 'https://github.com/TimMoyence/portfolio-2025-back.git';
 
 const PREFERRED_NODE_MAJOR = 22;
-const PNPM_VERSION = "9.15.3";
-const POSTGRES_FORMULA = "postgresql@16";
-const REDIS_FORMULA = "redis";
-const LOCAL_DB_ROLE = "portfolio_dev";
-const LOCAL_DB_PASSWORD =
-  process.env.PORTFOLIO_DEV_DB_PASSWORD ?? LOCAL_DB_ROLE;
-const LOCAL_DB_NAME = "portfolio_2025_dev";
+const PNPM_VERSION = '9.15.3';
+const POSTGRES_FORMULA = 'postgresql@16';
+const REDIS_FORMULA = 'redis';
+const LOCAL_DB_ROLE = 'portfolio_dev';
+const LOCAL_DB_PASSWORD = process.env.PORTFOLIO_DEV_DB_PASSWORD ?? LOCAL_DB_ROLE;
+const LOCAL_DB_NAME = 'portfolio_2025_dev';
 
 function printHelp() {
   console.log(`Setup Workspace — Portfolio 2025
@@ -55,22 +48,22 @@ function parseOptions(args) {
   };
   for (const arg of args) {
     switch (arg) {
-      case "--dry-run":
+      case '--dry-run':
         opts.dryRun = true;
         break;
-      case "--skip-backend":
+      case '--skip-backend':
         opts.skipBackend = true;
         break;
-      case "--skip-database":
+      case '--skip-database':
         opts.skipDatabase = true;
         break;
-      case "--skip-redis":
+      case '--skip-redis':
         opts.skipRedis = true;
         break;
-      case "--skip-claude":
+      case '--skip-claude':
         opts.skipClaude = true;
         break;
-      case "--help":
+      case '--help':
         printHelp();
         process.exit(0);
         break;
@@ -90,76 +83,76 @@ function run(command, args, options = {}) {
     description,
     allowFailure = false,
   } = options;
-  const printable = [command, ...args].join(" ");
+  const printable = [command, ...args].join(' ');
   console.log(`\n> ${description ?? printable}`);
   if (dryRun) {
     console.log(`  [dry-run] ${printable}`);
-    return { status: 0, stdout: "", stderr: "" };
+    return { status: 0, stdout: '', stderr: '' };
   }
   const result = spawnSync(command, args, {
     cwd,
     env,
-    encoding: "utf8",
-    stdio: captureOutput ? "pipe" : "inherit",
+    encoding: 'utf8',
+    stdio: captureOutput ? 'pipe' : 'inherit',
   });
   if (!allowFailure && result.status !== 0) {
     throw new Error(`Commande echouee : ${printable}`);
   }
   return {
     status: result.status ?? 1,
-    stdout: result.stdout ?? "",
-    stderr: result.stderr ?? "",
+    stdout: result.stdout ?? '',
+    stderr: result.stderr ?? '',
   };
 }
 
 function commandExists(cmd, env) {
   return (
-    spawnSync("/bin/zsh", ["-lc", `command -v ${cmd}`], {
+    spawnSync('/bin/zsh', ['-lc', `command -v ${cmd}`], {
       cwd: PARENT_DIR,
       env,
-      encoding: "utf8",
-      stdio: "pipe",
+      encoding: 'utf8',
+      stdio: 'pipe',
     }).status === 0
   );
 }
 
 function prependToPath(env, dir) {
   if (!dir) return;
-  const entries = (env.PATH ?? "").split(":").filter(Boolean);
-  if (!entries.includes(dir)) env.PATH = [dir, ...entries].join(":");
+  const entries = (env.PATH ?? '').split(':').filter(Boolean);
+  if (!entries.includes(dir)) env.PATH = [dir, ...entries].join(':');
 }
 
 function applyBrewEnv(env, opts) {
-  const out = run("brew", ["shellenv"], {
+  const out = run('brew', ['shellenv'], {
     captureOutput: true,
     dryRun: opts.dryRun,
     env,
-    description: "Chargement Homebrew",
+    description: 'Chargement Homebrew',
   }).stdout;
-  for (const line of out.split("\n")) {
+  for (const line of out.split('\n')) {
     const m = line.match(/^export ([A-Z0-9_]+)="([^"]*)";$/);
     if (m) env[m[1]] = m[2];
   }
 }
 
 function ensureHomebrew(opts, env) {
-  if (commandExists("brew", env)) {
+  if (commandExists('brew', env)) {
     applyBrewEnv(env, opts);
     return;
   }
   run(
-    "/bin/bash",
+    '/bin/bash',
     [
-      "-c",
+      '-c',
       'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
     ],
-    { dryRun: opts.dryRun, env, description: "Installation Homebrew" },
+    { dryRun: opts.dryRun, env, description: 'Installation Homebrew' },
   );
   if (!opts.dryRun) applyBrewEnv(env, opts);
 }
 
 function ensureBrewFormula(formula, opts, env) {
-  const info = run("brew", ["list", "--versions", formula], {
+  const info = run('brew', ['list', '--versions', formula], {
     captureOutput: true,
     allowFailure: true,
     dryRun: opts.dryRun,
@@ -167,7 +160,7 @@ function ensureBrewFormula(formula, opts, env) {
     description: `Verification ${formula}`,
   });
   if (opts.dryRun || info.status === 0) return;
-  run("brew", ["install", formula], {
+  run('brew', ['install', formula], {
     dryRun: opts.dryRun,
     env,
     description: `Installation ${formula}`,
@@ -175,31 +168,29 @@ function ensureBrewFormula(formula, opts, env) {
 }
 
 function ensureFormulaBin(formula, opts, env) {
-  const prefix = run("brew", ["--prefix", formula], {
+  const prefix = run('brew', ['--prefix', formula], {
     captureOutput: true,
     dryRun: opts.dryRun,
     env,
     description: `Prefix ${formula}`,
   }).stdout.trim();
-  if (!opts.dryRun) prependToPath(env, resolve(prefix, "bin"));
+  if (!opts.dryRun) prependToPath(env, resolve(prefix, 'bin'));
 }
 
 function ensureXcodeCLT(opts, env) {
-  const probe = run("xcode-select", ["-p"], {
+  const probe = run('xcode-select', ['-p'], {
     captureOutput: true,
     allowFailure: true,
     dryRun: opts.dryRun,
     env,
-    description: "Verification Xcode CLT",
+    description: 'Verification Xcode CLT',
   });
   if (opts.dryRun || probe.status === 0) return;
-  run("xcode-select", ["--install"], {
+  run('xcode-select', ['--install'], {
     env,
-    description: "Installation Xcode CLT",
+    description: 'Installation Xcode CLT',
   });
-  throw new Error(
-    "Terminez l'installation Xcode CLT puis relancez le script.",
-  );
+  throw new Error("Terminez l'installation Xcode CLT puis relancez le script.");
 }
 
 function ensureNode(opts, env) {
@@ -208,24 +199,20 @@ function ensureNode(opts, env) {
 }
 
 function ensurePnpm(opts, env) {
-  if (commandExists("corepack", env)) {
-    run("corepack", ["enable"], {
+  if (commandExists('corepack', env)) {
+    run('corepack', ['enable'], {
       dryRun: opts.dryRun,
       env,
-      description: "Activation Corepack",
+      description: 'Activation Corepack',
     });
-    run(
-      "corepack",
-      ["prepare", `pnpm@${PNPM_VERSION}`, "--activate"],
-      {
-        dryRun: opts.dryRun,
-        env,
-        description: `Activation pnpm ${PNPM_VERSION}`,
-      },
-    );
+    run('corepack', ['prepare', `pnpm@${PNPM_VERSION}`, '--activate'], {
+      dryRun: opts.dryRun,
+      env,
+      description: `Activation pnpm ${PNPM_VERSION}`,
+    });
     return;
   }
-  run("npm", ["install", "-g", `pnpm@${PNPM_VERSION}`], {
+  run('npm', ['install', '-g', `pnpm@${PNPM_VERSION}`], {
     dryRun: opts.dryRun,
     env,
     description: `Installation pnpm ${PNPM_VERSION}`,
@@ -235,24 +222,20 @@ function ensurePnpm(opts, env) {
 function ensurePostgres(opts, env) {
   ensureBrewFormula(POSTGRES_FORMULA, opts, env);
   ensureFormulaBin(POSTGRES_FORMULA, opts, env);
-  run("brew", ["services", "start", POSTGRES_FORMULA], {
+  run('brew', ['services', 'start', POSTGRES_FORMULA], {
     dryRun: opts.dryRun,
     env,
     description: `Demarrage ${POSTGRES_FORMULA}`,
   });
   const max = opts.dryRun ? 1 : 15;
   for (let i = 1; i <= max; i++) {
-    const r = run(
-      "pg_isready",
-      ["-h", "127.0.0.1", "-p", "5432", "-d", "postgres"],
-      {
-        captureOutput: true,
-        allowFailure: true,
-        dryRun: opts.dryRun,
-        env,
-        description: `PostgreSQL readiness (${i}/${max})`,
-      },
-    );
+    const r = run('pg_isready', ['-h', '127.0.0.1', '-p', '5432', '-d', 'postgres'], {
+      captureOutput: true,
+      allowFailure: true,
+      dryRun: opts.dryRun,
+      env,
+      description: `PostgreSQL readiness (${i}/${max})`,
+    });
     if (opts.dryRun || r.status === 0) break;
     if (i === max) throw new Error("PostgreSQL n'a pas demarre.");
     Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 1000);
@@ -261,12 +244,12 @@ function ensurePostgres(opts, env) {
 
 function ensureLocalDatabase(opts, env) {
   run(
-    "psql",
+    'psql',
     [
-      "postgres",
-      "-v",
-      "ON_ERROR_STOP=1",
-      "-tAc",
+      'postgres',
+      '-v',
+      'ON_ERROR_STOP=1',
+      '-tAc',
       `DO $$ BEGIN
        IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${LOCAL_DB_ROLE}') THEN
          CREATE ROLE ${LOCAL_DB_ROLE} WITH LOGIN PASSWORD '${LOCAL_DB_PASSWORD}' CREATEDB;
@@ -275,23 +258,23 @@ function ensureLocalDatabase(opts, env) {
        END IF;
      END $$;`,
     ],
-    { captureOutput: true, dryRun: opts.dryRun, env, description: "Creation role DB" },
+    { captureOutput: true, dryRun: opts.dryRun, env, description: 'Creation role DB' },
   );
 
   const exists = run(
-    "psql",
+    'psql',
     [
-      "postgres",
-      "-v",
-      "ON_ERROR_STOP=1",
-      "-tAc",
+      'postgres',
+      '-v',
+      'ON_ERROR_STOP=1',
+      '-tAc',
       `SELECT 1 FROM pg_database WHERE datname = '${LOCAL_DB_NAME}';`,
     ],
-    { captureOutput: true, dryRun: opts.dryRun, env, description: "Verification base" },
+    { captureOutput: true, dryRun: opts.dryRun, env, description: 'Verification base' },
   ).stdout.trim();
 
-  if (opts.dryRun || exists !== "1") {
-    run("createdb", ["-O", LOCAL_DB_ROLE, LOCAL_DB_NAME], {
+  if (opts.dryRun || exists !== '1') {
+    run('createdb', ['-O', LOCAL_DB_ROLE, LOCAL_DB_NAME], {
       dryRun: opts.dryRun,
       env,
       description: `Creation base ${LOCAL_DB_NAME}`,
@@ -302,31 +285,31 @@ function ensureLocalDatabase(opts, env) {
 
 function ensureRedis(opts, env) {
   ensureBrewFormula(REDIS_FORMULA, opts, env);
-  run("brew", ["services", "start", REDIS_FORMULA], {
+  run('brew', ['services', 'start', REDIS_FORMULA], {
     dryRun: opts.dryRun,
     env,
-    description: "Demarrage Redis",
+    description: 'Demarrage Redis',
   });
 }
 
 function cloneBackend(opts, env) {
   if (existsSync(BACK_DIR)) {
-    console.log("\n> Backend deja present, skip clone.");
+    console.log('\n> Backend deja present, skip clone.');
     return;
   }
 
-  const sshResult = run("git", ["clone", BACK_REPO, "portfolio-2025-back"], {
+  const sshResult = run('git', ['clone', BACK_REPO, 'portfolio-2025-back'], {
     dryRun: opts.dryRun,
     env,
-    description: "Clone backend (SSH)",
+    description: 'Clone backend (SSH)',
     allowFailure: true,
   });
 
   if (!opts.dryRun && sshResult.status !== 0) {
-    run("git", ["clone", BACK_REPO_HTTPS, "portfolio-2025-back"], {
+    run('git', ['clone', BACK_REPO_HTTPS, 'portfolio-2025-back'], {
       dryRun: opts.dryRun,
       env,
-      description: "Clone backend (HTTPS fallback)",
+      description: 'Clone backend (HTTPS fallback)',
     });
   }
 }
@@ -334,10 +317,10 @@ function cloneBackend(opts, env) {
 function parseEnvFile(filePath) {
   if (!existsSync(filePath)) return {};
   const entries = {};
-  for (const line of readFileSync(filePath, "utf8").split("\n")) {
+  for (const line of readFileSync(filePath, 'utf8').split('\n')) {
     const t = line.trim();
-    if (!t || t.startsWith("#")) continue;
-    const i = t.indexOf("=");
+    if (!t || t.startsWith('#')) continue;
+    const i = t.indexOf('=');
     if (i === -1) continue;
     entries[t.slice(0, i)] = t.slice(i + 1);
   }
@@ -345,81 +328,80 @@ function parseEnvFile(filePath) {
 }
 
 function setupBackendEnv(opts) {
-  const envPath = resolve(BACK_DIR, ".env");
-  const examplePath = resolve(BACK_DIR, ".env.example");
+  const envPath = resolve(BACK_DIR, '.env');
+  const examplePath = resolve(BACK_DIR, '.env.example');
 
   if (existsSync(envPath)) {
-    console.log("\n> .env backend existe deja.");
+    console.log('\n> .env backend existe deja.');
     return;
   }
 
   if (!existsSync(examplePath)) {
-    console.log("\n> .env.example introuvable — skip.");
+    console.log('\n> .env.example introuvable — skip.');
     return;
   }
 
-  console.log("\n> Creation .env backend");
+  console.log('\n> Creation .env backend');
   if (opts.dryRun) {
     console.log(`  [dry-run] ${envPath}`);
     return;
   }
 
   const template = parseEnvFile(examplePath);
-  if (!template.JWT_SECRET || template.JWT_SECRET.startsWith("CHANGE_ME"))
-    template.JWT_SECRET = randomBytes(48).toString("base64");
+  if (!template.JWT_SECRET || template.JWT_SECRET.startsWith('CHANGE_ME'))
+    template.JWT_SECRET = randomBytes(48).toString('base64');
   if (
     !template.SECURE_KEY_FOR_PASSWORD_HASHING ||
-    template.SECURE_KEY_FOR_PASSWORD_HASHING.startsWith("CHANGE_ME")
+    template.SECURE_KEY_FOR_PASSWORD_HASHING.startsWith('CHANGE_ME')
   )
-    template.SECURE_KEY_FOR_PASSWORD_HASHING =
-      randomBytes(48).toString("base64");
+    template.SECURE_KEY_FOR_PASSWORD_HASHING = randomBytes(48).toString('base64');
 
-  template.DB_HOST = "127.0.0.1";
-  template.DB_PORT = "5432";
+  template.DB_HOST = '127.0.0.1';
+  template.DB_PORT = '5432';
   template.POSTGRES_DB = LOCAL_DB_NAME;
 
-  const exampleContent = readFileSync(examplePath, "utf8");
-  let output = "";
-  for (const line of exampleContent.split("\n")) {
+  const exampleContent = readFileSync(examplePath, 'utf8');
+  let output = '';
+  for (const line of exampleContent.split('\n')) {
     const t = line.trim();
-    if (!t || t.startsWith("#")) {
-      output += line + "\n";
+    if (!t || t.startsWith('#')) {
+      output += line + '\n';
       continue;
     }
-    const i = t.indexOf("=");
+    const i = t.indexOf('=');
     if (i === -1) {
-      output += line + "\n";
+      output += line + '\n';
       continue;
     }
     const key = t.slice(0, i);
     output += `${key}=${template[key] ?? t.slice(i + 1)}\n`;
   }
-  writeFileSync(envPath, output, "utf8");
-  console.log("  Pensez a renseigner OPENAI_API_KEY et SMTP_* si necessaire.");
+  writeFileSync(envPath, output, 'utf8');
+  console.log('  Pensez a renseigner OPENAI_API_KEY et SMTP_* si necessaire.');
 }
 
 function installBackendDeps(opts, env) {
-  run("pnpm", ["install"], {
+  run('pnpm', ['install'], {
     cwd: BACK_DIR,
     dryRun: opts.dryRun,
     env,
-    description: "Installation deps backend (pnpm)",
+    description: 'Installation deps backend (pnpm)',
   });
 }
 
 function runMigrations(opts, env) {
-  const migrationEnv = { ...env, ...parseEnvFile(resolve(BACK_DIR, ".env")) };
-  run("pnpm", ["run", "build"], {
+  const migrationEnv = { ...env, ...parseEnvFile(resolve(BACK_DIR, '.env')) };
+  run('pnpm', ['run', 'build'], {
     cwd: BACK_DIR,
     dryRun: opts.dryRun,
     env: migrationEnv,
-    description: "Build backend",
+    description: 'Build backend',
   });
-  run("pnpm", ["run", "migration:run"], {
+  run('pnpm', ['run', 'migration:run'], {
     cwd: BACK_DIR,
     dryRun: opts.dryRun,
     env: migrationEnv,
-    description: "Migrations",
+    description: 'Migrations',
     allowFailure: true,
   });
 }
@@ -427,16 +409,16 @@ function runMigrations(opts, env) {
 function setupClaude(opts) {
   if (opts.skipClaude) return;
 
-  console.log("\n--- SETUP CLAUDE ---");
+  console.log('\n--- SETUP CLAUDE ---');
 
-  const claudeDir = resolve(PARENT_DIR, ".claude");
+  const claudeDir = resolve(PARENT_DIR, '.claude');
   const dirs = [
     claudeDir,
-    resolve(claudeDir, "skills/team"),
-    resolve(claudeDir, "commands"),
-    resolve(claudeDir, "agents"),
-    resolve(claudeDir, "team-templates"),
-    resolve(claudeDir, "team-knowledge"),
+    resolve(claudeDir, 'skills/team'),
+    resolve(claudeDir, 'commands'),
+    resolve(claudeDir, 'agents'),
+    resolve(claudeDir, 'team-templates'),
+    resolve(claudeDir, 'team-knowledge'),
   ];
 
   for (const d of dirs) {
@@ -447,74 +429,59 @@ function setupClaude(opts) {
     }
   }
 
+  const lastUpdated = new Date().toISOString().slice(0, 10);
+  const json = (valeur) => JSON.stringify(valeur, null, 2);
   const files = {
-    [resolve(claudeDir, "settings.json")]: JSON.stringify(
-      { enabledPlugins: { "superpowers@superpowers-marketplace": true } },
-      null,
-      2,
-    ),
-    [resolve(claudeDir, "team-knowledge/prompt-enrichments.json")]:
-      JSON.stringify(
+    [resolve(claudeDir, 'settings.json')]: json({
+      enabledPlugins: { 'superpowers@superpowers-marketplace': true },
+    }),
+    [resolve(claudeDir, 'team-knowledge/prompt-enrichments.json')]: json({
+      version: '1.0.0',
+      enrichments: [
         {
-          version: "1.0.0",
-          enrichments: [
-            {
-              id: "PE-001",
-              rule: "Jamais d'acces direct window/document/localStorage sans isPlatformBrowser",
-              severity: "HIGH",
-              injectWhen: "Agent travaille sur le frontend Angular",
-            },
-            {
-              id: "PE-002",
-              rule: "Les standalone components Angular n'ont PAS de NgModule",
-              severity: "MEDIUM",
-              injectWhen: "Agent cree des composants Angular",
-            },
-            {
-              id: "PE-003",
-              rule: "Utiliser authGuard + roleGuard pour proteger les routes privees",
-              severity: "HIGH",
-              injectWhen: "Agent ajoute une route protegee",
-            },
-          ],
-          lastUpdated: new Date().toISOString().slice(0, 10),
+          id: 'PE-001',
+          rule: "Jamais d'acces direct window/document/localStorage sans isPlatformBrowser",
+          severity: 'HIGH',
+          injectWhen: 'Agent travaille sur le frontend Angular',
         },
-        null,
-        2,
-      ),
-    [resolve(claudeDir, "team-knowledge/error-patterns.json")]:
-      JSON.stringify(
-        { version: "1.0.0", patterns: [], lastUpdated: new Date().toISOString().slice(0, 10) },
-        null,
-        2,
-      ),
-    [resolve(claudeDir, "team-knowledge/autonomy-state.json")]:
-      JSON.stringify(
         {
-          currentLevel: "L1",
-          promotionDate: null,
-          runsSinceLastFail: 0,
-          lastUpdated: new Date().toISOString().slice(0, 10),
+          id: 'PE-002',
+          rule: "Les standalone components Angular n'ont PAS de NgModule",
+          severity: 'MEDIUM',
+          injectWhen: 'Agent cree des composants Angular',
         },
-        null,
-        2,
-      ),
-    [resolve(claudeDir, "team-knowledge/next-run.json")]: JSON.stringify(
-      {
-        version: "1.0.0",
-        recommendations: [],
-        lastUpdated: new Date().toISOString().slice(0, 10),
-      },
-      null,
-      2,
-    ),
+        {
+          id: 'PE-003',
+          rule: 'Utiliser authGuard + roleGuard pour proteger les routes privees',
+          severity: 'HIGH',
+          injectWhen: 'Agent ajoute une route protegee',
+        },
+      ],
+      lastUpdated,
+    }),
+    [resolve(claudeDir, 'team-knowledge/error-patterns.json')]: json({
+      version: '1.0.0',
+      patterns: [],
+      lastUpdated,
+    }),
+    [resolve(claudeDir, 'team-knowledge/autonomy-state.json')]: json({
+      currentLevel: 'L1',
+      promotionDate: null,
+      runsSinceLastFail: 0,
+      lastUpdated,
+    }),
+    [resolve(claudeDir, 'team-knowledge/next-run.json')]: json({
+      version: '1.0.0',
+      recommendations: [],
+      lastUpdated,
+    }),
   };
 
   for (const [path, content] of Object.entries(files)) {
     if (opts.dryRun) {
       console.log(`  [dry-run] write ${path}`);
     } else {
-      writeFileSync(path, content + "\n", "utf8");
+      writeFileSync(path, content + '\n', 'utf8');
     }
   }
 
@@ -582,21 +549,21 @@ pnpm run lint && pnpm run format:check && pnpm run typecheck && pnpm run build
 - SSR-safe : toujours verifier isPlatformBrowser avant window/document/localStorage
 `;
 
-  const claudeMdPath = resolve(PARENT_DIR, "CLAUDE.md");
+  const claudeMdPath = resolve(PARENT_DIR, 'CLAUDE.md');
   if (opts.dryRun) {
     console.log(`  [dry-run] write ${claudeMdPath}`);
   } else {
-    writeFileSync(claudeMdPath, claudeMd, "utf8");
+    writeFileSync(claudeMdPath, claudeMd, 'utf8');
   }
 }
 
 function printSummary(opts) {
-  console.log("\n" + "=".repeat(60));
-  console.log("  Setup termine !");
-  console.log("=".repeat(60));
+  console.log('\n' + '='.repeat(60));
+  console.log('  Setup termine !');
+  console.log('='.repeat(60));
 
   if (opts.dryRun) {
-    console.log("\n  Mode dry-run : aucune modification.");
+    console.log('\n  Mode dry-run : aucune modification.');
     return;
   }
 
@@ -624,20 +591,20 @@ function main() {
   const opts = parseOptions(process.argv.slice(2));
   const env = { ...process.env };
 
-  if (process.platform !== "darwin") {
-    throw new Error("Ce script supporte uniquement macOS.");
+  if (process.platform !== 'darwin') {
+    throw new Error('Ce script supporte uniquement macOS.');
   }
 
-  console.log("=".repeat(60));
-  console.log("  Portfolio 2025 — Setup Workspace");
-  console.log("=".repeat(60));
+  console.log('='.repeat(60));
+  console.log('  Portfolio 2025 — Setup Workspace');
+  console.log('='.repeat(60));
 
   ensureXcodeCLT(opts, env);
   ensureHomebrew(opts, env);
   ensureNode(opts, env);
 
   if (!opts.skipBackend) {
-    console.log("\n--- BACKEND ---");
+    console.log('\n--- BACKEND ---');
     ensurePnpm(opts, env);
     cloneBackend(opts, env);
 
@@ -659,8 +626,6 @@ function main() {
 try {
   main();
 } catch (error) {
-  console.error(
-    `\nSetup echoue : ${error instanceof Error ? error.message : String(error)}`,
-  );
+  console.error(`\nSetup echoue : ${error instanceof Error ? error.message : String(error)}`);
   process.exit(1);
 }

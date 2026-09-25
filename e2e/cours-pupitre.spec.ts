@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page, Route } from '@playwright/test';
-import { EN_TETES_CORS, intercepterApi, servirFlux, servirJson } from './fixtures';
+import { intercepterApi, servirFlux, servirJson, servirSansContenu } from './fixtures';
 
 const SESSION = '33333333-3333-4333-8333-333333333333';
 const SLUG = 'b2-01-traitement-information-chiffree';
@@ -156,7 +156,7 @@ async function installerLePupitre(page: Page): Promise<Journal> {
     if (typeof corps['ecran'] === 'number') {
       ecranPilote = corps['ecran'];
     }
-    await route.fulfill({ status: 204, headers: EN_TETES_CORS });
+    await servirSansContenu(route);
   };
 
   const annotationEnregistree = async (route: Route, saisie: SaisieAnnotation): Promise<void> => {
@@ -211,7 +211,7 @@ async function installerLePupitre(page: Page): Promise<Journal> {
     } else if (lecture !== undefined) {
       await servirJson(route, lecture[1]());
     } else {
-      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
+      await servirSansContenu(route);
     }
   });
 

@@ -1,7 +1,20 @@
 import { of, BehaviorSubject } from 'rxjs';
 import type { AppConfig } from '../../app/core/config/app-config.model';
+import type { CookieConsentPreferences } from '../../app/core/models/cookie-consent.model';
 import type { CookieConsentPort } from '../../app/core/ports/cookie-consent.port';
 import type { CookieConsentService } from '../../app/core/services/cookie-consent.service';
+
+export function buildCookiePreferences(
+  overrides: Partial<CookieConsentPreferences> = {},
+): CookieConsentPreferences {
+  return {
+    essential: true,
+    preferences: false,
+    analytics: false,
+    marketing: false,
+    ...overrides,
+  };
+}
 
 export function createCookieConsentPortStub(): jasmine.SpyObj<CookieConsentPort> {
   const stub = jasmine.createSpyObj<CookieConsentPort>('CookieConsentPort', ['recordConsent']);
@@ -42,18 +55,8 @@ export function createCookieConsentServiceStub(): jasmine.SpyObj<CookieConsentSe
     { consentChanges$ },
   );
   stub.shouldShowBanner.and.returnValue(false);
-  stub.getPreferences.and.returnValue({
-    essential: true,
-    preferences: false,
-    analytics: false,
-    marketing: false,
-  });
-  stub.getDefaultPreferences.and.returnValue({
-    essential: true,
-    preferences: false,
-    analytics: false,
-    marketing: false,
-  });
+  stub.getPreferences.and.returnValue(buildCookiePreferences());
+  stub.getDefaultPreferences.and.returnValue(buildCookiePreferences());
   stub.saveConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
   stub.withdrawConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
   stub.isConsentRequired.and.returnValue(true);

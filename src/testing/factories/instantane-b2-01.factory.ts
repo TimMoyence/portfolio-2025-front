@@ -4,6 +4,7 @@ import {
   buildCardsortPlan,
   buildChallengeProbleme,
   buildConcept4Definition,
+  buildDonneesQuestionnaire,
   buildEcran,
   buildEscapeParcours,
   buildExitBillet,
@@ -43,16 +44,7 @@ function buildDonneesParBrique(): DonneesParBrique {
     'fp-vote': { question: vote, questionJumelle: buildVoteQuestion({ id: 'Q-CAP-03-bis' }) },
     'fp-recall': { question: buildRecallQuestion(), delaiMs: 8000 },
     'fp-exit': { billet: buildExitBillet() },
-    questionnaire: {
-      intitule: 'Atelier 1 — Lire, rapporter, estimer',
-      consigne: 'Répondez seul, sans calculatrice, dans l’ordre.',
-      regime: 'focus',
-      ordre: 'fixe',
-      questions: [
-        { brique: 'fp-numeric', donnees: { question: numerique } },
-        { brique: 'fp-vote', donnees: { question: vote } },
-      ],
-    },
+    questionnaire: buildDonneesQuestionnaire(numerique, vote),
     'ecran-verrouille': {},
   };
 }

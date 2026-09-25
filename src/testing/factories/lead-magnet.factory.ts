@@ -2,11 +2,15 @@ import { of, throwError } from 'rxjs';
 import type { LeadMagnetPort } from '../../app/core/ports/lead-magnet.port';
 import type { ToolkitPageData } from '../../app/core/models/toolkit-page.model';
 
-export function createLeadMagnetPortStub(): jasmine.SpyObj<LeadMagnetPort> {
-  const stub = jasmine.createSpyObj<LeadMagnetPort>('LeadMagnetPort', [
+function espionnerLeadMagnetPort(): jasmine.SpyObj<LeadMagnetPort> {
+  return jasmine.createSpyObj<LeadMagnetPort>('LeadMagnetPort', [
     'requestToolkit',
     'getToolkitByToken',
   ]);
+}
+
+export function createLeadMagnetPortStub(): jasmine.SpyObj<LeadMagnetPort> {
+  const stub = espionnerLeadMagnetPort();
   stub.requestToolkit.and.returnValue(
     of({
       message: 'Votre boite a outils a ete envoyee a test@example.com',
@@ -76,10 +80,7 @@ export function buildToolkitPageData(overrides: Partial<ToolkitPageData> = {}): 
 }
 
 export function createLeadMagnetPortStubWithError(): jasmine.SpyObj<LeadMagnetPort> {
-  const stub = jasmine.createSpyObj<LeadMagnetPort>('LeadMagnetPort', [
-    'requestToolkit',
-    'getToolkitByToken',
-  ]);
+  const stub = espionnerLeadMagnetPort();
   stub.requestToolkit.and.returnValue(throwError(() => new Error('Network error')));
   return stub;
 }

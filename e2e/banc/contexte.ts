@@ -141,41 +141,37 @@ export async function servirLEcran(
   expect(reponse.status(), await reponse.text()).toBe(204);
 }
 
+async function objetRenvoye(
+  reponse: import('@playwright/test').APIResponse,
+): Promise<Record<string, unknown>> {
+  expect(reponse.status(), await reponse.text()).toBe(200);
+  return (await reponse.json()) as Record<string, unknown>;
+}
+
 export async function lireLesResultats(
   request: APIRequestContext,
   jeton: string,
   sessionId: string,
 ): Promise<Record<string, unknown>> {
-  const reponse = await request.get(`${URL_API}/formations/sessions/${sessionId}/results`, {
-    headers: entetesDuFormateur(jeton),
-  });
-  expect(reponse.status(), await reponse.text()).toBe(200);
-  return (await reponse.json()) as Record<string, unknown>;
+  return objetRenvoye(
+    await request.get(`${URL_API}/formations/sessions/${sessionId}/results`, {
+      headers: entetesDuFormateur(jeton),
+    }),
+  );
 }
 
-export async function evincerLePoste(
+export async function agirSurLePoste(
   request: APIRequestContext,
   jeton: string,
-  sessionId: string,
-  participantId: string,
+  cible: { readonly seance: Seance; readonly poste: Poste },
+  action: 'eviction' | 'readmission',
 ): Promise<number> {
-  const reponse = await request.delete(
-    `${URL_API}/formations/sessions/${sessionId}/participants/${participantId}`,
-    { headers: entetesDuFormateur(jeton) },
-  );
-  return reponse.status();
-}
-
-export async function readmettreLePoste(
-  request: APIRequestContext,
-  jeton: string,
-  sessionId: string,
-  participantId: string,
-): Promise<number> {
-  const reponse = await request.post(
-    `${URL_API}/formations/sessions/${sessionId}/participants/${participantId}/readmission`,
-    { headers: entetesDuFormateur(jeton), data: {} },
-  );
+  const adresse = `${URL_API}/formations/sessions/${cible.seance.sessionId}/participants/${cible.poste.participantId}`;
+  const options = { headers: entetesDuFormateur(jeton) };
+  const reponse =
+    action === 'eviction'
+      ? await request.delete(adresse, options)
+      : await request.post(`${adresse}/readmission`, { ...options, data: {} });
   return reponse.status();
 }
 
@@ -230,9 +226,7 @@ export async function lireMonEtat(
   seance: Seance,
   poste: Poste,
 ): Promise<Record<string, unknown>> {
-  const reponse = await lireDepuisLePoste(request, seance, poste, 'moi');
-  expect(reponse.status(), await reponse.text()).toBe(200);
-  return (await reponse.json()) as Record<string, unknown>;
+  return objetRenvoye(await lireDepuisLePoste(request, seance, poste, 'moi'));
 }
 
 export function lireDepuisLePoste(
@@ -409,6 +403,29 @@ export async function ouvrirLePupitre(page: Page): Promise<Seance> {
   return { sessionId, code };
 }
 
+export async function avancerLePupitre(
+  pupitre: Page,
+  depuis: number,
+  jusqua: number,
+  total: number,
+): Promise<void> {
+  for (let ecran = depuis; ecran < jusqua; ecran += 1) {
+    await pupitre.getByTestId('presentateur-suivant').click();
+  }
+  await expect(pupitre.getByTestId('presentateur-ecran')).toHaveText(`${jusqua + 1} / ${total}`);
+}
+
+export async function cloturerDepuisLePupitre(
+  pupitre: Page,
+  seance: Seance,
+  postes: readonly Page[],
+): Promise<void> {
+  await pupitre.getByTestId('presentateur-cloturer').click();
+  await pupitre.getByTestId('presentateur-cloture-confirmer').click();
+  await expect(pupitre).toHaveURL(new RegExp(`/cours/seance/${seance.sessionId}/synthese$`));
+  await Promise.all(postes.map((poste) => expect(poste.getByTestId('etudiant-fin')).toBeVisible()));
+}
+
 export async function rejoindreDansLeNavigateur(
   page: Page,
   seance: Seance,
@@ -446,6 +463,15 @@ export async function seanceDemarreeSurLEcran(
   await demarrerLaSeance(request, jeton, seance.sessionId);
   await servirLEcran(request, jeton, seance.sessionId, ecran);
   return { seance, jeton };
+}
+
+export async function seanceLimiteeSurLePremierVote(
+  request: APIRequestContext,
+  capacite: number,
+): Promise<SeanceOuverte & { readonly releve: ReleveDuCours }> {
+  const releve = await coursReleve(request);
+  const ouverte = await seanceDemarreeSurLEcran(request, releve.votes[0].rang, { capacite });
+  return { ...ouverte, releve };
 }
 
 const partagees = new Map<string, Promise<SeanceOuverte>>();

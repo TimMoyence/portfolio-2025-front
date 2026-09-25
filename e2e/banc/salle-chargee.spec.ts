@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import {
   URL_API,
-  coursReleve,
   identiteDuPoste,
   inscrireUnPoste,
   lireLeSujet,
@@ -10,7 +9,7 @@ import {
   optionsDuPoste,
   posteDansSonNavigateur,
   repondreDepuisLePoste,
-  seanceDemarreeSurLEcran,
+  seanceLimiteeSurLePremierVote,
   servirLEcran,
   verdictDuPoste,
 } from './contexte';
@@ -30,10 +29,11 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
     browser,
     request,
   }) => {
-    const { votes, total } = await coursReleve(request);
-    const { seance, jeton } = await seanceDemarreeSurLEcran(request, votes[0].rang, {
-      capacite: CAPACITE,
-    });
+    const {
+      releve: { votes, total },
+      seance,
+      jeton,
+    } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
 
     const pages: Page[] = [];
     for (let rang = 0; rang < NAVIGATEURS; rang += 1) {

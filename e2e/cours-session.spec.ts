@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import {
-  EN_TETES_CORS,
   ETAT_EN_COURS,
   intercepterApi,
   remplirLaJonction,
   servirFlux,
   servirJson,
+  servirSansContenu,
 } from './fixtures';
 
 const SESSION = '11111111-1111-4111-8111-111111111111';
@@ -251,7 +251,7 @@ test('R3 · envoie le visiteur sans session de la page du cours au rattachement 
     if (chemin.endsWith('/auth/refresh')) {
       await servirJson(route, { status: 401, code: 'REFRESH_ABSENT' }, 401);
     } else {
-      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
+      await servirSansContenu(route);
     }
   });
 

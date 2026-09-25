@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 import { after, test } from 'node:test';
 
+import { planterDossier, supprimerDossier } from '../../lib/dossier-temporaire.mjs';
 import { PORTE } from '../porte.mjs';
 import {
   CLE_CORRIGE,
@@ -17,9 +17,7 @@ import {
 const temporaires = [];
 
 after(() => {
-  for (const racine of temporaires) {
-    rmSync(racine, { recursive: true, force: true });
-  }
+  temporaires.forEach(supprimerDossier);
 });
 
 /**
@@ -27,13 +25,8 @@ after(() => {
  * @returns {string}
  */
 function sortie(fichiers) {
-  const racine = mkdtempSync(join(tmpdir(), 'lints-cours-bundle-'));
+  const racine = planterDossier('lints-cours-bundle-', fichiers);
   temporaires.push(racine);
-  for (const [nom, contenu] of Object.entries(fichiers)) {
-    const chemin = join(racine, nom);
-    mkdirSync(dirname(chemin), { recursive: true });
-    writeFileSync(chemin, contenu);
-  }
   return racine;
 }
 
@@ -132,19 +125,16 @@ void test('bundle : un repertoire de sortie inexistant fait echouer la regle au 
   assert.match(trouves[0].raison, /n'a jamais ouvert/);
 });
 
-void test('bundle : un repertoire sans fichier inspectable fait echouer la regle', () => {
-  const racine = sortie({ 'styles.css': 'body{color:red}' });
-  const trouves = manquements(racine);
-  assert.equal(trouves.length, 1);
-  assert.match(trouves[0].raison, /0 octet inspecté/);
-});
-
-void test('bundle : un repertoire dont les fichiers inspectables sont vides fait echouer la regle', () => {
-  const racine = sortie({ 'main.js': '' });
-  const trouves = manquements(racine);
-  assert.equal(trouves.length, 1);
-  assert.match(trouves[0].raison, /0 octet inspecté/);
-});
+for (const [repertoire, fichiers] of [
+  ['sans fichier inspectable', { 'styles.css': 'body{color:red}' }],
+  ['dont les fichiers inspectables sont vides', { 'main.js': '' }],
+]) {
+  void test(`bundle : un repertoire ${repertoire} fait echouer la regle`, () => {
+    const trouves = manquements(sortie(fichiers));
+    assert.equal(trouves.length, 1);
+    assert.match(trouves[0].raison, /0 octet inspecté/);
+  });
+}
 
 void test('bundle : un chemin de sortie vide leve en citant la porte', () => {
   assert.throws(() => inspecterSortie(''), new RegExp(PORTE));

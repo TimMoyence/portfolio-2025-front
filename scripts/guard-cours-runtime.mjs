@@ -132,14 +132,23 @@ function estFramework(specification) {
 /**
  * @param {string} fichier
  * @param {string} specification
+ * @returns {string | null}
+ */
+function cibleRelative(fichier, specification) {
+  if (!specification.startsWith('.')) {
+    return null;
+  }
+  return posix.normalize(posix.join(posix.dirname(fichier), specification));
+}
+
+/**
+ * @param {string} fichier
+ * @param {string} specification
  * @returns {boolean}
  */
 function sortDeCours(fichier, specification) {
-  if (!specification.startsWith('.')) {
-    return false;
-  }
-  const cible = posix.normalize(posix.join(posix.dirname(fichier), specification));
-  if (cible.startsWith(PREFIXE_COURS)) {
+  const cible = cibleRelative(fichier, specification);
+  if (cible === null || cible.startsWith(PREFIXE_COURS)) {
     return false;
   }
   return !(estFichierDeTest(fichier) && cible.startsWith(PREFIXE_TESTS));
@@ -166,11 +175,8 @@ function motifDeRefus(fichier, specification) {
  * @returns {boolean}
  */
 function viseLePupitre(fichier, specification) {
-  if (!specification.startsWith('.')) {
-    return false;
-  }
-  const cible = posix.normalize(posix.join(posix.dirname(fichier), specification));
-  return `${cible}/`.startsWith(PREFIXE_PUPITRE);
+  const cible = cibleRelative(fichier, specification);
+  return cible !== null && `${cible}/`.startsWith(PREFIXE_PUPITRE);
 }
 
 /**

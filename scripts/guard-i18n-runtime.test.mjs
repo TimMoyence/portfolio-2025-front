@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
-import { readdirSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import { test } from 'node:test';
-import { fileURLToPath } from 'node:url';
 
-const RACINE = dirname(dirname(fileURLToPath(import.meta.url)));
-const DICTIONNAIRE = join(RACINE, 'src/cours/runtime/core/i18n.ts');
-const TRADUCTION_EN = join(RACINE, 'src/locale/messages.en.xlf');
+import { cheminDuDepot, lireTexte } from './lib/depot.mjs';
+
+const DICTIONNAIRE = cheminDuDepot('src/cours/runtime/core/i18n.ts');
+const TRADUCTION_EN = cheminDuDepot('src/locale/messages.en.xlf');
 const CLES_DE_L_ANNEXE_D = 151;
 
 const POURQUOI_CIBLE =
@@ -15,7 +15,7 @@ const POURQUOI_CIBLE =
 const POURQUOI_IDENTIFIANT =
   "L'annexe D du document de conception fixe l'identifiant de chaque libellé : @@coursRuntime suivi de la clé en PascalCase. Un identifiant libre rend la traduction introuvable depuis la clé.";
 
-const DOSSIER_BRIQUES = join(RACINE, 'src/cours/runtime/blocks');
+const DOSSIER_BRIQUES = cheminDuDepot('src/cours/runtime/blocks');
 const ENTRE_DEUX_BALISES = />([^<>`{}]+)</g;
 const MOT = /\p{L}{2}/u;
 
@@ -31,7 +31,7 @@ const POURQUOI_CLE_INCONNUE =
 function sourcesDesBriques() {
   return readdirSync(DOSSIER_BRIQUES)
     .filter((fichier) => fichier.endsWith('.ts') && !fichier.endsWith('.spec.ts'))
-    .map((fichier) => ({ fichier, contenu: readFileSync(join(DOSSIER_BRIQUES, fichier), 'utf8') }));
+    .map((fichier) => ({ fichier, contenu: lireTexte(join(DOSSIER_BRIQUES, fichier)) }));
 }
 
 function pascal(cle) {
@@ -42,7 +42,7 @@ function pascal(cle) {
 }
 
 function entreesDuDictionnaire() {
-  const contenu = readFileSync(DICTIONNAIRE, 'utf8');
+  const contenu = lireTexte(DICTIONNAIRE);
   const cles = [...contenu.matchAll(/^ {2}(?:'([a-z0-9-]+)'|([a-z0-9]+)): \(\) =>/gm)].map(
     (trouve) => trouve[1] ?? trouve[2],
   );
@@ -52,7 +52,7 @@ function entreesDuDictionnaire() {
 }
 
 function ciblesAnglaises() {
-  const contenu = readFileSync(TRADUCTION_EN, 'utf8');
+  const contenu = lireTexte(TRADUCTION_EN);
   const cibles = new Map();
   for (const [, id, corps] of contenu.matchAll(/<unit id="([^"]+)">([\s\S]*?)<\/unit>/g)) {
     cibles.set(id, /<target>([\s\S]*?)<\/target>/.exec(corps)?.[1]?.trim() ?? '');

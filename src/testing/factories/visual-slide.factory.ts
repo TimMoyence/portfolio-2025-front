@@ -1,58 +1,52 @@
 import type { RetourBrique } from '../../app/shared/slides/session/contrat-hote';
 import type { EcranContent } from '../../cours/content/types';
 
+type PropsVisuelles = Readonly<Record<string, unknown>>;
+
+function donneesDeRecit(
+  id: string,
+  renderer: string,
+  props: PropsVisuelles,
+): EcranContent['donnees'] {
+  return { recit: { id, presentation: { version: 2, screenId: id, renderer, props } } };
+}
+
 export function buildVisualSlide(overrides: Partial<EcranContent> = {}): EcranContent {
   return {
     id: 'B2-01-S01-ACCROCHE',
     type: 'fp-story',
     duree: 3,
     interactif: false,
-    donnees: {
-      recit: {
-        id: 'B2-01-S01-ACCROCHE',
-        presentation: {
-          version: 2,
-          screenId: 'B2-01-S01-ACCROCHE',
-          renderer: 'hero',
-          props: {
-            title: 'Lire un chiffre',
-            subtitle: 'Contrôler avant de décider',
-            bullets: ['B2'],
-          },
-        },
-      },
-    },
+    donnees: donneesDeRecit('B2-01-S01-ACCROCHE', 'hero', {
+      title: 'Lire un chiffre',
+      subtitle: 'Contrôler avant de décider',
+      bullets: ['B2'],
+    }),
     ...overrides,
   };
 }
 
+function buildRecitVisuel(
+  id: string,
+  renderer: string,
+  props: PropsVisuelles,
+  champs: Partial<EcranContent> = {},
+): EcranContent {
+  return buildVisualSlide({ id, donnees: donneesDeRecit(id, renderer, props), ...champs });
+}
+
 export function buildVisualImageHeroSlide(id = 'B2-01-S01-ACCROCHE'): EcranContent {
-  return buildVisualSlide({
-    id,
-    donnees: {
-      recit: {
-        id,
-        presentation: {
-          version: 2,
-          screenId: id,
-          renderer: 'hero',
-          props: {
-            title: 'Lire un chiffre',
-            bullets: ['B2'],
-            bgImage: `https://images.example/${id}.webp`,
-            bgImageAlt: 'Tableau de chiffres projeté en classe',
-          },
-        },
-      },
-    },
+  return buildRecitVisuel(id, 'hero', {
+    title: 'Lire un chiffre',
+    bullets: ['B2'],
+    bgImage: `https://images.example/${id}.webp`,
+    bgImageAlt: 'Tableau de chiffres projeté en classe',
   });
 }
 
 export const TRI_CORRIGE = { screenId: 'B2-01-A1-05-ANATOMIE', sortId: 'b2-01-a1-anatomie' };
 
-export function buildSortCorrectionProps(
-  overrides: Readonly<Record<string, unknown>> = {},
-): Readonly<Record<string, unknown>> {
+export function buildSortCorrectionProps(overrides: PropsVisuelles = {}): PropsVisuelles {
   return {
     title: 'Correction du tri',
     subtitle: 'Chaque carte à sa place, avec la raison.',
@@ -80,18 +74,10 @@ export function buildSortCorrectionProps(
 }
 
 export function buildVisualSortCorrectionSlide(
-  props: Readonly<Record<string, unknown>> = buildSortCorrectionProps(),
+  props: PropsVisuelles = buildSortCorrectionProps(),
   id = 'B2-01-A1-05-CORRECTION',
 ): EcranContent {
-  return buildVisualSlide({
-    id,
-    donnees: {
-      recit: {
-        id,
-        presentation: { version: 2, screenId: id, renderer: 'sort-review', props },
-      },
-    },
-  });
+  return buildRecitVisuel(id, 'sort-review', props);
 }
 
 export const ATELIER_CORRIGE = {
@@ -99,9 +85,7 @@ export const ATELIER_CORRIGE = {
   questions: ['b2-01-a2-evolution-marge', 'b2-01-a2-part-marketplace'],
 } as const;
 
-export function buildAnswerReviewProps(
-  overrides: Readonly<Record<string, unknown>> = {},
-): Readonly<Record<string, unknown>> {
+export function buildAnswerReviewProps(overrides: PropsVisuelles = {}): PropsVisuelles {
   return {
     title: 'Correction de l’atelier 1',
     subtitle: 'Chaque calcul, avec son contrôle.',
@@ -124,19 +108,7 @@ export function buildVisualAnswerReviewSlide(
   overrides: Partial<EcranContent> = {},
   id = 'B2-01-A2-03-CORRECTION-1',
 ): EcranContent {
-  return buildVisualSlide({
-    id,
-    donnees: {
-      recit: {
-        id,
-        presentation: {
-          version: 2,
-          screenId: id,
-          renderer: 'answer-review',
-          props: buildAnswerReviewProps(),
-        },
-      },
-    },
+  return buildRecitVisuel(id, 'answer-review', buildAnswerReviewProps(), {
     ecranSource: ATELIER_CORRIGE.screenId,
     ...overrides,
   });
@@ -165,69 +137,41 @@ export function buildVerdictDuTri(
 }
 
 export function buildVisualChartSlide(
-  props: Readonly<Record<string, unknown>>,
+  props: PropsVisuelles,
   id = 'K-GRAPHIQUE-DE-REFERENCE',
 ): EcranContent {
-  return buildVisualSlide({
-    id,
-    donnees: {
-      recit: {
-        id,
-        presentation: { version: 2, screenId: id, renderer: 'chart', props },
-      },
-    },
-  });
+  return buildRecitVisuel(id, 'chart', props);
 }
 
 export function buildVisualNestedQuizSlide(overrides: Partial<EcranContent> = {}): EcranContent {
-  return buildVisualSlide({
-    id: 'B2-01-S07-GRAPHIQUE',
-    interactif: true,
-    donnees: {
-      recit: {
-        id: 'B2-01-S07-GRAPHIQUE',
-        presentation: {
-          version: 2,
-          screenId: 'B2-01-S07-GRAPHIQUE',
-          renderer: 'image-left',
-          props: {
-            title: 'Le repère d’abord',
-            nestedQuiz: {
-              id: 'b2-s07-repere',
-              type: 'quiz',
-              question: 'Que faut-il vérifier en premier ?',
-              options: ['L’axe', 'La couleur'],
-            },
-          },
-        },
+  return buildRecitVisuel(
+    'B2-01-S07-GRAPHIQUE',
+    'image-left',
+    {
+      title: 'Le repère d’abord',
+      nestedQuiz: {
+        id: 'b2-s07-repere',
+        type: 'quiz',
+        question: 'Que faut-il vérifier en premier ?',
+        options: ['L’axe', 'La couleur'],
       },
     },
-    ...overrides,
-  });
+    { interactif: true, ...overrides },
+  );
 }
 
 export function buildVisualQuizSlide(overrides: Partial<EcranContent> = {}): EcranContent {
-  return buildVisualSlide({
-    id: 'B2-01-S03-PREDICTION',
-    interactif: true,
-    donnees: {
-      recit: {
-        id: 'B2-01-S03-PREDICTION',
-        presentation: {
-          version: 2,
-          screenId: 'B2-01-S03-PREDICTION',
-          renderer: 'quiz',
-          props: {
-            questionData: {
-              id: 'b2-s03-prediction',
-              type: 'quiz',
-              question: 'Quelle échelle ?',
-              options: ['A', 'B'],
-            },
-          },
-        },
+  return buildRecitVisuel(
+    'B2-01-S03-PREDICTION',
+    'quiz',
+    {
+      questionData: {
+        id: 'b2-s03-prediction',
+        type: 'quiz',
+        question: 'Quelle échelle ?',
+        options: ['A', 'B'],
       },
     },
-    ...overrides,
-  });
+    { interactif: true, ...overrides },
+  );
 }

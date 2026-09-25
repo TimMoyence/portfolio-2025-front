@@ -3,7 +3,8 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import test from 'node:test';
 import { ESLint } from 'eslint';
-import { CHEMIN_MOTEUR, RACINE } from './lib/moteur-formules.mjs';
+import { RACINE } from './lib/depot.mjs';
+import { CHEMIN_MOTEUR } from './lib/moteur-formules.mjs';
 
 const SOURCE = 'src/cours/runtime/core/formula.ts';
 const REGLES = ['no-eval', 'no-implied-eval', 'no-new-func'];

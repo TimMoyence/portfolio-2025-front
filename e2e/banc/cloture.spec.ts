@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 import {
+  avancerLePupitre,
+  cloturerDepuisLePupitre,
   coursReleve,
   optionsDuPoste,
   ouvrirLePupitre,
@@ -31,10 +33,7 @@ test.describe('Banc — clôture et synthèse', () => {
     }
 
     await page.getByTestId('presentateur-demarrer').click();
-    for (let saut = 0; saut < vote.rang; saut += 1) {
-      await page.getByTestId('presentateur-suivant').click();
-    }
-    await expect(page.getByTestId('presentateur-ecran')).toHaveText(`${vote.rang + 1} / ${total}`);
+    await avancerLePupitre(page, 0, vote.rang, total);
 
     for (const poste of postes) {
       await expect(optionsDuPoste(poste).first()).toBeVisible();
@@ -43,13 +42,7 @@ test.describe('Banc — clôture et synthèse', () => {
     }
     await expect(page.getByTestId('presentateur-participants-nombre')).toHaveText(String(POSTES));
 
-    await page.getByTestId('presentateur-cloturer').click();
-    await page.getByTestId('presentateur-cloture-confirmer').click();
-    await expect(page).toHaveURL(new RegExp(`/cours/seance/${seance.sessionId}/synthese$`));
-
-    for (const poste of postes) {
-      await expect(poste.getByTestId('etudiant-fin')).toBeVisible();
-    }
+    await cloturerDepuisLePupitre(page, seance, postes);
 
     await expect(page.getByTestId('synthese-ligne')).toHaveCount(POSTES);
     const ligne = page.getByTestId('synthese-question-ligne').filter({

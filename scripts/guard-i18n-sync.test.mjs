@@ -1,13 +1,11 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
 import { test } from 'node:test';
-import { fileURLToPath } from 'node:url';
 
-const RACINE = dirname(dirname(fileURLToPath(import.meta.url)));
-const SOURCE_FR = join(RACINE, 'src/locale/messages.xlf');
-const TRADUCTION_EN = join(RACINE, 'src/locale/messages.en.xlf');
-const EXCEPTIONS = join(RACINE, 'src/locale/cibles-identiques-justifiees.json');
+import { cheminDuDepot, lireTexte } from './lib/depot.mjs';
+
+const SOURCE_FR = cheminDuDepot('src/locale/messages.xlf');
+const TRADUCTION_EN = cheminDuDepot('src/locale/messages.en.xlf');
+const EXCEPTIONS = cheminDuDepot('src/locale/cibles-identiques-justifiees.json');
 
 const PORTE = 'guard-i18n-sync';
 
@@ -61,7 +59,7 @@ function texteXliff20(source) {
 }
 
 function unitesSource() {
-  const contenu = readFileSync(SOURCE_FR, 'utf8');
+  const contenu = lireTexte(SOURCE_FR);
   const unites = new Map();
   for (const [, id, corps] of contenu.matchAll(
     /<trans-unit id="([^"]+)"[^>]*>([\s\S]*?)<\/trans-unit>/g,
@@ -72,7 +70,7 @@ function unitesSource() {
 }
 
 function unitesTraduction() {
-  const contenu = readFileSync(TRADUCTION_EN, 'utf8');
+  const contenu = lireTexte(TRADUCTION_EN);
   const unites = new Map();
   for (const [, id, corps] of contenu.matchAll(/<unit id="([^"]+)">([\s\S]*?)<\/unit>/g)) {
     unites.set(id, {
@@ -84,7 +82,7 @@ function unitesTraduction() {
 }
 
 function texteTraduction() {
-  const contenu = readFileSync(TRADUCTION_EN, 'utf8');
+  const contenu = lireTexte(TRADUCTION_EN);
   if (contenu.trim() === '') {
     throw new Error(
       `${PORTE} : ${TRADUCTION_EN} est vide - une porte qui lit un fichier vide rend un vert qui ne prouve rien.`,
@@ -118,7 +116,7 @@ function idsIdentiques() {
 }
 
 function exceptionsJustifiees() {
-  const declare = JSON.parse(readFileSync(EXCEPTIONS, 'utf8'));
+  const declare = JSON.parse(lireTexte(EXCEPTIONS));
   const motifs = Object.keys(declare?.motifs ?? {});
   const unites = Object.entries(declare?.unites ?? {});
   if (declare?.porte !== PORTE) {
