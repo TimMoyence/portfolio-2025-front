@@ -87,6 +87,7 @@ import { ReponsesLibresService } from '../../../shared/slides/session/reponses-l
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { aUnePresentation, objet } from '../../../shared/slides/visual/presentation-v2';
 import { CREATEUR_FLUX } from '../cours-flux.token';
+import { directDeLEcranCourant } from '../direct-de-l-ecran';
 
 type EtatEtudiant = 'code' | 'rattachement' | 'chargement' | 'sujet-refuse' | 'seance';
 
@@ -647,12 +648,9 @@ export class CoursEtudiantComponent {
     return cible === undefined || estEcranVerrouille(cible) ? null : cible;
   });
 
-  readonly direct = computed<DirectEcran | null>(() => {
-    const ecran = this.ecranCourant();
-    return ecran === null
-      ? null
-      : { pilotage: this.pilotage()[ecran.id] ?? {}, resultats: null, comptesJalon: null };
-  });
+  readonly direct = computed<DirectEcran | null>(() =>
+    directDeLEcranCourant(this.ecranCourant(), this.pilotage(), null, 0),
+  );
 
   protected readonly brouillons = signal<Brouillons | null>(null);
 
@@ -1117,12 +1115,18 @@ export class CoursEtudiantComponent {
     this.peutReculer.set(this.deck.canNavigate(index - 1));
   }
 
-  private async reprendreLesReponsesLibres(): Promise<void> {
+  private async pourLaSeance(
+    action: (sessionId: string, jeton: string) => Promise<unknown>,
+  ): Promise<void> {
     const sessionId = this.sessionId();
     if (sessionId === null) {
       return;
     }
-    await this.reponsesLibres.reprendre(sessionId, this.jeton());
+    await action(sessionId, this.jeton());
+  }
+
+  private reprendreLesReponsesLibres(): Promise<void> {
+    return this.pourLaSeance((sessionId, jeton) => this.reponsesLibres.reprendre(sessionId, jeton));
   }
 
   private async relireLesStrategiesRevelees(): Promise<void> {
@@ -1315,28 +1319,26 @@ export class CoursEtudiantComponent {
     }
   }
 
-  private async tenter(evenement: EvenementDe<'tentative'>): Promise<void> {
-    const sessionId = this.sessionId();
-    if (sessionId === null) {
-      return;
-    }
-    try {
-      const verdict = await firstValueFrom(
-        this.port.tenterEnigme(sessionId, this.jeton(), evenement.parcoursId, {
-          enigmeId: evenement.enigmeId,
-          reponse: evenement.reponse,
-          dureeMs: evenement.dureeMs,
-        }),
-      );
-      this.ajouter(evenement.screenId, [
-        retourDeTentative(evenement.parcoursId, evenement.enigmeId, verdict),
-      ]);
-    } catch (erreur) {
-      const refus = this.signalerLeRefusDeTentative(evenement.screenId, erreur);
-      if (MOTIFS_DE_RESYNCHRONISATION.includes(refus.motif) || refus.motif === 'deja-repondue') {
-        await this.relireMonEtat();
+  private tenter(evenement: EvenementDe<'tentative'>): Promise<void> {
+    return this.pourLaSeance(async (sessionId, jeton) => {
+      try {
+        const verdict = await firstValueFrom(
+          this.port.tenterEnigme(sessionId, jeton, evenement.parcoursId, {
+            enigmeId: evenement.enigmeId,
+            reponse: evenement.reponse,
+            dureeMs: evenement.dureeMs,
+          }),
+        );
+        this.ajouter(evenement.screenId, [
+          retourDeTentative(evenement.parcoursId, evenement.enigmeId, verdict),
+        ]);
+      } catch (erreur) {
+        const refus = this.signalerLeRefusDeTentative(evenement.screenId, erreur);
+        if (MOTIFS_DE_RESYNCHRONISATION.includes(refus.motif) || refus.motif === 'deja-repondue') {
+          await this.relireMonEtat();
+        }
       }
-    }
+    });
   }
 
   private signalerLeRefusDeTentative(screenId: string, erreur: unknown): ReponseRefusee {
@@ -1346,37 +1348,33 @@ export class CoursEtudiantComponent {
     return refus;
   }
 
-  private async defier(evenement: EvenementDe<'defi'>): Promise<void> {
-    const sessionId = this.sessionId();
-    if (sessionId === null) {
-      return;
-    }
-    try {
-      const { strategies } = await firstValueFrom(
-        this.port.envoyerDefi(sessionId, this.jeton(), evenement.defiId, {
-          texte: evenement.texte,
-          dureeMs: evenement.dureeMs,
-        }),
-      );
-      this.ajouter(evenement.screenId, [
-        { kind: 'strategies', defiId: evenement.defiId, strategies },
-      ]);
-    } catch (erreur) {
-      this.signalerLeRefusDeTentative(evenement.screenId, erreur);
-    }
+  private defier(evenement: EvenementDe<'defi'>): Promise<void> {
+    return this.pourLaSeance(async (sessionId, jeton) => {
+      try {
+        const { strategies } = await firstValueFrom(
+          this.port.envoyerDefi(sessionId, jeton, evenement.defiId, {
+            texte: evenement.texte,
+            dureeMs: evenement.dureeMs,
+          }),
+        );
+        this.ajouter(evenement.screenId, [
+          { kind: 'strategies', defiId: evenement.defiId, strategies },
+        ]);
+      } catch (erreur) {
+        this.signalerLeRefusDeTentative(evenement.screenId, erreur);
+      }
+    });
   }
 
-  private async envoyerLeTexte(evenement: EvenementDe<'libre'>): Promise<void> {
-    const sessionId = this.sessionId();
-    if (sessionId === null) {
-      return;
-    }
-    await this.reponsesLibres.envoyer(sessionId, this.jeton(), {
-      screenId: evenement.screenId,
-      activityId: evenement.activityId,
-      response: evenement.response,
-      dureeMs: evenement.dureeMs,
-    });
+  private envoyerLeTexte(evenement: EvenementDe<'libre'>): Promise<void> {
+    return this.pourLaSeance((sessionId, jeton) =>
+      this.reponsesLibres.envoyer(sessionId, jeton, {
+        screenId: evenement.screenId,
+        activityId: evenement.activityId,
+        response: evenement.response,
+        dureeMs: evenement.dureeMs,
+      }),
+    );
   }
 
   private afficherVerdict(questionId: string, recu: VerdictReponse): void {

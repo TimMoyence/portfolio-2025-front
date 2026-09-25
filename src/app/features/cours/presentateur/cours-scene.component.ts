@@ -1,5 +1,4 @@
 import {
-  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -22,11 +21,12 @@ import type {
   Sync,
 } from '../../../../cours/runtime/core/sync';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
+import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
 import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
-import { directDeLEcran } from './direct-de-l-ecran';
+import { chantierApresRendu } from './chantier-apres-rendu';
+import { directDeLEcranCourant } from '../direct-de-l-ecran';
 import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
 import { correctionsAffichees } from './corrections-affichees';
 import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
@@ -384,35 +384,26 @@ export class CoursSceneComponent {
     return ecran === undefined ? null : annexeFormateurDeLEcran(ecran);
   });
 
-  readonly direct = computed<DirectEcran | null>(() => {
-    const ecran = this.ecranCourant();
-    return ecran === null
-      ? null
-      : directDeLEcran(
-          ecran,
-          this.pilotage()[ecran.id] ?? {},
-          this.resultats(),
-          SEUIL_DE_PROJECTION,
-        );
-  });
+  readonly direct = computed<DirectEcran | null>(() =>
+    directDeLEcranCourant(
+      this.ecranCourant(),
+      this.pilotage(),
+      this.resultats(),
+      SEUIL_DE_PROJECTION,
+    ),
+  );
 
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);
 
   private flux: Sync | null = null;
   private detruit = false;
-  private acheve: () => void = () => undefined;
-  private readonly chantier = new Promise<void>((resoudre) => {
-    this.acheve = resoudre;
-  });
+  private readonly chantier = chantierApresRendu(() => this.lireLeDeroule());
 
   constructor() {
     inject(DestroyRef).onDestroy(() => {
       this.detruit = true;
       this.flux?.close();
-    });
-    afterNextRender(() => {
-      void this.lireLeDeroule().then(this.acheve);
     });
   }
 
@@ -453,12 +444,14 @@ export class CoursSceneComponent {
   }
 
   private ecouterLeFlux(): void {
-    const flux = this.creerFluxFormateur(this.sessionId());
-    flux.onState((etat) => this.suivreLeFlux(etat));
-    flux.onResultats((resultats) => this.resultats.set(resultats));
-    flux.onStatut((statut) => this.suiviDuFlux.set(statut));
-    this.flux = flux;
-    flux.ouvrir();
+    ouvrirLeFluxFormateur(this.creerFluxFormateur(this.sessionId()), {
+      etat: (etat) => this.suivreLeFlux(etat),
+      resultats: (resultats) => this.resultats.set(resultats),
+      suivi: this.suiviDuFlux,
+      retenir: (flux) => {
+        this.flux = flux;
+      },
+    });
   }
 
   private suivreLeFlux(etat: EtatSession): void {

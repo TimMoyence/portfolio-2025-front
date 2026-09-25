@@ -275,12 +275,7 @@ h1 em {
 }
 .auth-alt a,
 .auth-alt button {
-  color: var(--teal-deep);
-  font-weight: 600;
-  cursor: pointer;
-  background: none;
-  border: 0;
-  padding: 0;
+  @include forms.text-button;
   font: inherit;
 }
 .auth-alt a:hover,
@@ -289,13 +284,7 @@ h1 em {
 }
 
 .auth-illus {
-  width: 76px;
-  height: 76px;
-  border-radius: 20px;
-  background: var(--sand);
-  color: var(--teal-deep);
-  display: grid;
-  place-items: center;
+  @include forms.icon-tile(76px, 20px);
   margin-bottom: 26px;
 }
 .auth-success {

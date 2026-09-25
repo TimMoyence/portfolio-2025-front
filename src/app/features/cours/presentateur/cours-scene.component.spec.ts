@@ -9,30 +9,36 @@ import type {
 import type { EtatSession } from '../../../../cours/runtime/core/sync';
 import {
   attendreAucunEnTeteSansSession,
+  buildEcranDeMission,
   buildEcranDeVoteCorrige,
+  buildReponsesALaMission,
   demonterLeBancDuPupitre,
   JETON_FORMATEUR,
-  monterLeBancDuPupitre,
+  monterLeBancSurLeDeroule,
   monterSurLeBanc,
 } from '../../../../testing/banc-du-pupitre';
 import {
   buildDerouleCours,
   buildEcranDeroule,
-  buildReponseLibreFormateur,
   buildResultatQuestion,
   buildResultatsSeance,
-  createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import type { FpPlot } from '../../../../cours/runtime/blocks/FpPlot';
 import { attendreQue, briqueMontee } from '../../../../testing/briques-montees';
 import { buildPlotEnBarres, buildVoteQuestion } from '../../../../testing/factories/cours.factory';
 import { buildVisualSlide } from '../../../../testing/factories/visual-slide.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
-import { createFluxDouble } from '../../../../testing/factories/sync.factory';
 import { cibleMarque } from '../../../../testing/marqueurs-dom';
+import {
+  attendreLaFermetureDuFlux,
+  diffuserSurLaVue,
+  ecransMontes,
+  idsDesEcransMontes,
+  stabiliserLaVue,
+} from '../../../../testing/vue-de-seance';
 import type { FormationsPort } from '../../../core/ports/formations.port';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
-import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import type { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { CoursSceneComponent } from './cours-scene.component';
 import { sourceCorrigeePar } from './sources-de-correction';
@@ -60,15 +66,14 @@ function derouleDeSeance(): DerouleCours {
 describe('CoursSceneComponent', () => {
   let port: jasmine.SpyObj<FormationsPort>;
   let double: FluxDouble;
-  let deroule: DerouleCours;
+  const deroule = derouleDeSeance();
 
   function cible(fixture: Fixture, marque: string): HTMLElement {
     return cibleMarque(fixture, marque, 'la scene');
   }
 
   function apercu(fixture: Fixture): SlideActivityComponent | null {
-    const ecran = fixture.debugElement.queryAll(By.directive(SlideActivityComponent)).at(0);
-    return ecran === undefined ? null : (ecran.componentInstance as SlideActivityComponent);
+    return ecransMontes(fixture).at(0) ?? null;
   }
 
   function monter(): Fixture {
@@ -80,22 +85,17 @@ describe('CoursSceneComponent', () => {
 
   async function monterEtStabiliser(): Promise<Fixture> {
     const fixture = monter();
-    await fixture.componentInstance.quandStabilise();
-    fixture.detectChanges();
+    await stabiliserLaVue(fixture);
     return fixture;
   }
 
-  function diffuser(fixture: Fixture, etat: Partial<EtatSession>): void {
-    double.diffuser(etat);
-    fixture.detectChanges();
+  function monterSur(ecrans: DerouleCours['ecrans']): Promise<Fixture> {
+    port.lireDeroule.and.returnValue(of(buildDerouleCours({ ecrans })));
+    return monterEtStabiliser();
   }
 
   beforeEach(async () => {
-    deroule = derouleDeSeance();
-    port = createFormationsPortStub();
-    port.lireDeroule.and.returnValue(of(deroule));
-    double = createFluxDouble();
-    await monterLeBancDuPupitre(CoursSceneComponent, { port, double });
+    ({ port, double } = await monterLeBancSurLeDeroule(CoursSceneComponent, deroule));
   });
 
   afterEach(demonterLeBancDuPupitre);
@@ -103,16 +103,10 @@ describe('CoursSceneComponent', () => {
   it('E10 · projette en miniature, sans corrigé, l écran auquel renvoie l écran courant', async () => {
     const [vote, rappel] = derouleDeSeance().ecrans;
     const cadrageDuRenvoi = { part: 70, extrait: { champs: ['situation'] } };
-    deroule = buildDerouleCours({
-      ecrans: [vote, { ...rappel, renvoi: vote.id, cadrageDuRenvoi }],
-    });
-    port.lireDeroule.and.returnValue(of(deroule));
-    const fixture = await monterEtStabiliser();
+    const fixture = await monterSur([vote, { ...rappel, renvoi: vote.id, cadrageDuRenvoi }]);
 
-    diffuser(fixture, { ecranCourant: 1 });
-    const ecrans = fixture.debugElement
-      .queryAll(By.directive(SlideActivityComponent))
-      .map((ecran) => (ecran.componentInstance as SlideActivityComponent).slide());
+    diffuserSurLaVue(double, fixture, { ecranCourant: 1 });
+    const ecrans = ecransMontes(fixture).map((ecran) => ecran.slide());
     const presentation = fixture.debugElement.query(By.directive(CoursPresentationComponent))
       .componentInstance as CoursPresentationComponent;
 
@@ -122,37 +116,19 @@ describe('CoursSceneComponent', () => {
   });
 
   it('R4 · ne projette sur un écran qui renvoie à la mission aucune réponse donnée à la mission', async () => {
-    const mission = buildEcranDeroule({
-      id: 'ecran-mission',
-      type: 'fp-pro',
-      corriges: [],
-      donnees: {
-        cas: {
-          questionsLibres: [{ id: 'mission:mesure', question: 'Que mesure chaque chiffre ?' }],
-        },
-      },
-    });
+    const mission = buildEcranDeMission();
     const question = buildEcranDeroule({
       id: 'ecran-question',
       type: 'fp-story',
       corriges: [],
       renvoi: mission.id,
     });
-    port.lireDeroule.and.returnValue(of(buildDerouleCours({ ecrans: [mission, question] })));
     port.lireReponsesLibres.and.returnValue(
-      of({
-        responses: [
-          buildReponseLibreFormateur({
-            screenId: mission.id,
-            activityId: 'mission:mesure',
-            response: 'Réponse donnée à la mission.',
-          }),
-        ],
-      }),
+      of(buildReponsesALaMission('Réponse donnée à la mission.')),
     );
-    const fixture = await monterEtStabiliser();
+    const fixture = await monterSur([mission, question]);
 
-    diffuser(fixture, {
+    diffuserSurLaVue(double, fixture, {
       ecranCourant: 1,
       pilotage: { [question.id]: { resultatsProjetes: true } },
     });
@@ -170,36 +146,26 @@ describe('CoursSceneComponent', () => {
       ecrans.find(({ id }) => id === 'B2-01-A1-05-CORRECTION') ?? ecrans[0],
     );
 
-    function miniatures(fixture: Fixture): readonly string[] {
-      return fixture.debugElement
-        .queryAll(By.directive(SlideActivityComponent))
-        .map((ecran) => (ecran.componentInstance as SlideActivityComponent).slide().id);
+    async function miniaturesDuRenvoyant(
+      pilotage: EtatSession['pilotage'],
+    ): Promise<readonly string[]> {
+      const fixture = await monterSur(ecrans);
+      diffuserSurLaVue(double, fixture, { etat: 'en_cours', ecranCourant: renvoyant, pilotage });
+      return idsDesEcransMontes(fixture);
     }
 
-    beforeEach(() => {
-      port.lireDeroule.and.returnValue(of(buildDerouleCours({ ecrans })));
-    });
-
     it('SEC-4 · ne projette pas la correction tant que sa source n est pas révélée', async () => {
-      const fixture = await monterEtStabiliser();
-
-      diffuser(fixture, { etat: 'en_cours', ecranCourant: renvoyant, pilotage: {} });
+      const miniatures = await miniaturesDuRenvoyant({});
 
       expect(renvoyant).toBeGreaterThan(-1);
       expect(source).not.toBeNull();
-      expect(miniatures(fixture)).toEqual([ecrans[renvoyant].id]);
+      expect(miniatures).toEqual([ecrans[renvoyant].id]);
     });
 
     it('SEC-4 · projette la correction une fois sa source révélée', async () => {
-      const fixture = await monterEtStabiliser();
+      const miniatures = await miniaturesDuRenvoyant({ [source ?? '']: { revele: true } });
 
-      diffuser(fixture, {
-        etat: 'en_cours',
-        ecranCourant: renvoyant,
-        pilotage: { [source ?? '']: { revele: true } },
-      });
-
-      expect(miniatures(fixture)).toEqual([ecrans[renvoyant].id, 'B2-01-A1-05-CORRECTION']);
+      expect(miniatures).toEqual([ecrans[renvoyant].id, 'B2-01-A1-05-CORRECTION']);
     });
   });
 
@@ -226,7 +192,7 @@ describe('CoursSceneComponent', () => {
     expect(apercu(fixture)?.apercu()).toBeFalse();
     expect(apercu(fixture)?.role()).toBe('presentateur');
 
-    diffuser(fixture, { ecranCourant: 1 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 1 });
 
     expect(apercu(fixture)?.slide()).toEqual({
       id: deroule.ecrans[1].id,
@@ -272,14 +238,11 @@ describe('CoursSceneComponent', () => {
       donnees: { question: buildVoteQuestion() },
     });
     const visuel = buildEcranDeroule(buildVisualSlide({ id: 'ecran-visuel' }));
-    deroule = buildDerouleCours({ ecrans: [activite, visuel] });
-    port.lireDeroule.and.returnValue(of(deroule));
-
-    const fixture = await monterEtStabiliser();
+    const fixture = await monterSur([activite, visuel]);
     expect(fixture.nativeElement.querySelectorAll('section.slide').length).toBe(1);
     expect(fixture.nativeElement.querySelector('section.slide')?.id).toBe('ecran-activite');
 
-    diffuser(fixture, { ecranCourant: 1 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 1 });
 
     expect(fixture.nativeElement.querySelectorAll('section.slide').length).toBe(1);
     expect(fixture.nativeElement.querySelector('section.slide')?.id).toBe('ecran-visuel');
@@ -305,7 +268,7 @@ describe('CoursSceneComponent', () => {
   it('affiche un message de fin et ferme le flux quand la seance est close', async () => {
     const fixture = await monterEtStabiliser();
 
-    diffuser(fixture, { etat: 'terminee', ecranCourant: 0 });
+    diffuserSurLaVue(double, fixture, { etat: 'terminee', ecranCourant: 0 });
 
     expect(cible(fixture, 'scene-terminee').getAttribute('role')).toBe('status');
     expect(apercu(fixture)).toBeNull();
@@ -382,11 +345,7 @@ describe('CoursSceneComponent', () => {
   });
 
   it('ferme le flux a la destruction de la scene', async () => {
-    const fixture = await monterEtStabiliser();
-
-    expect(double.flux.close).not.toHaveBeenCalled();
-    fixture.destroy();
-    expect(double.flux.close).toHaveBeenCalledTimes(1);
+    attendreLaFermetureDuFlux(double, await monterEtStabiliser());
   });
 
   it('R1 · projette dans la toile la réponse attendue une fois la correction révélée, pas avant', async () => {
@@ -396,30 +355,32 @@ describe('CoursSceneComponent', () => {
         .querySelector('[data-testid="cours-toile"] [data-testid="cours-correction"]')
         ?.textContent?.replace(/\s+/g, ' ');
 
-    diffuser(fixture, { ecranCourant: 0 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 0 });
 
     expect(bandeau()).toBeUndefined();
 
-    diffuser(fixture, { ecranCourant: 0, pilotage: { 'ecran-vote': { revele: true } } });
+    diffuserSurLaVue(double, fixture, {
+      ecranCourant: 0,
+      pilotage: { 'ecran-vote': { revele: true } },
+    });
 
     expect(bandeau()).toContain('1 480,24');
   });
 
   it('ne projette les comptes d un jalon qu a partir de cinq reponses', async () => {
     const annexe = { type: 'revelation' as const, titre: 'Méthode', lignes: ['Capitaliser'] };
-    deroule = buildDerouleCours({
-      ecrans: [
-        buildEcranDeroule({
-          id: 'ecran-jalon',
-          type: 'fp-pulse',
-          donnees: { sondage: { id: 'P-PULSE-01' } },
-          corrigeEcran: annexe,
-        }),
-      ],
+    const fixture = await monterSur([
+      buildEcranDeroule({
+        id: 'ecran-jalon',
+        type: 'fp-pulse',
+        donnees: { sondage: { id: 'P-PULSE-01' } },
+        corrigeEcran: annexe,
+      }),
+    ]);
+    diffuserSurLaVue(double, fixture, {
+      ecranCourant: 0,
+      pilotage: { 'ecran-jalon': { revele: true } },
     });
-    port.lireDeroule.and.returnValue(of(deroule));
-    const fixture = await monterEtStabiliser();
-    diffuser(fixture, { ecranCourant: 0, pilotage: { 'ecran-jalon': { revele: true } } });
 
     double.diffuserResultats({
       ...buildResultatsSeance(),
@@ -444,7 +405,7 @@ describe('CoursSceneComponent', () => {
       (fixture.nativeElement as HTMLElement).querySelector(
         '[data-testid="cours-toile"] [data-testid="resultats-projetes"]',
       );
-    diffuser(fixture, { ecranCourant: 0 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 0 });
     double.diffuserResultats(
       buildResultatsSeance({
         questions: [buildResultatQuestion({ ecranId: 'ecran-vote', total: 7 })],
@@ -454,7 +415,7 @@ describe('CoursSceneComponent', () => {
 
     expect(projetes()).toBeNull();
 
-    diffuser(fixture, {
+    diffuserSurLaVue(double, fixture, {
       ecranCourant: 0,
       pilotage: { 'ecran-vote': { resultatsProjetes: true } },
     });
@@ -463,7 +424,7 @@ describe('CoursSceneComponent', () => {
       projetes()?.querySelector('[data-testid="resultats-projetes-total"]')?.textContent?.trim(),
     ).toBe('7');
 
-    diffuser(fixture, {
+    diffuserSurLaVue(double, fixture, {
       ecranCourant: 0,
       pilotage: { 'ecran-vote': { resultatsProjetes: false } },
     });
@@ -472,24 +433,20 @@ describe('CoursSceneComponent', () => {
   });
 
   it('T11 · règle la brique projetée sur les réglages manipulés au pupitre', async () => {
-    deroule = buildDerouleCours({
-      ecrans: [
-        buildEcranDeroule({
-          id: 'ecran-trace',
-          type: 'fp-plot',
-          donnees: { definition: buildPlotEnBarres() },
-          corriges: [],
-        }),
-      ],
-    });
-    port.lireDeroule.and.returnValue(of(deroule));
-    const fixture = await monterEtStabiliser();
-    diffuser(fixture, { ecranCourant: 0 });
+    const fixture = await monterSur([
+      buildEcranDeroule({
+        id: 'ecran-trace',
+        type: 'fp-plot',
+        donnees: { definition: buildPlotEnBarres() },
+        corriges: [],
+      }),
+    ]);
+    diffuserSurLaVue(double, fixture, { ecranCourant: 0 });
     const trace = (await briqueMontee(fixture, 'fp-plot')) as FpPlot;
 
     expect(trace.valeurs).toEqual({ origine: 284000 });
 
-    diffuser(fixture, {
+    diffuserSurLaVue(double, fixture, {
       ecranCourant: 0,
       pilotage: { 'ecran-trace': { reglages: { origine: 0 } } },
     });

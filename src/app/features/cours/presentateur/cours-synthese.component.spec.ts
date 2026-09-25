@@ -11,6 +11,7 @@ import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import type {
   ConfusionComptee,
   DerouleCours,
+  ResultatQuestion,
   ResultatsSeance,
 } from '../../../../cours/content/types';
 import {
@@ -112,6 +113,23 @@ async function monter(
   return fixture;
 }
 
+function resultatsDe(
+  participants: number,
+  questions: readonly Partial<ResultatQuestion>[],
+): ResultatsSeance {
+  return buildResultatsSeance({
+    participants,
+    questions: questions.map((question) => buildResultatQuestion(question)),
+  });
+}
+
+function monterMalikFace(
+  participants: number,
+  questions: readonly Partial<ResultatQuestion>[],
+): Promise<Fixture> {
+  return monter(rapportDe([MALIK], resultatsDe(participants, questions)));
+}
+
 describe('CoursSyntheseComponent', () => {
   it('classe les etudiants du plus bas score au plus haut', async () => {
     const fixture = await monter(rapportDe([CHLOE, MALIK, NORA]));
@@ -135,20 +153,16 @@ describe('CoursSyntheseComponent', () => {
   });
 
   it('additionne les confusions au travers des questions et les trie par nombre decroissant', async () => {
-    const resultats = buildResultatsSeance({
-      participants: 3,
-      questions: [
-        buildResultatQuestion({
-          questionId: 'Q-1',
-          confusions: [confusion('interet-simple', 3), confusion('base-arrivee', 1)],
-        }),
-        buildResultatQuestion({
-          questionId: 'Q-2',
-          confusions: [confusion('interet-simple', 2), confusion('base-arrivee', 5)],
-        }),
-      ],
-    });
-    const fixture = await monter(rapportDe([MALIK], resultats));
+    const fixture = await monterMalikFace(3, [
+      {
+        questionId: 'Q-1',
+        confusions: [confusion('interet-simple', 3), confusion('base-arrivee', 1)],
+      },
+      {
+        questionId: 'Q-2',
+        confusions: [confusion('interet-simple', 2), confusion('base-arrivee', 5)],
+      },
+    ]);
 
     expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
       'Libelle base-arrivee',
@@ -158,16 +172,9 @@ describe('CoursSyntheseComponent', () => {
   });
 
   it('classe les confusions a egalite de nombre par id croissant', async () => {
-    const resultats = buildResultatsSeance({
-      participants: 3,
-      questions: [
-        buildResultatQuestion({
-          questionId: 'Q-1',
-          confusions: [confusion('zeta', 4), confusion('alpha', 4)],
-        }),
-      ],
-    });
-    const fixture = await monter(rapportDe([MALIK], resultats));
+    const fixture = await monterMalikFace(3, [
+      { questionId: 'Q-1', confusions: [confusion('zeta', 4), confusion('alpha', 4)] },
+    ]);
 
     expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
       'Libelle alpha',
@@ -176,23 +183,19 @@ describe('CoursSyntheseComponent', () => {
   });
 
   it('garde cinq confusions au plus meme si la classe en genere davantage', async () => {
-    const resultats = buildResultatsSeance({
-      participants: 6,
-      questions: [
-        buildResultatQuestion({
-          questionId: 'Q-1',
-          confusions: [
-            confusion('c1', 9),
-            confusion('c2', 8),
-            confusion('c3', 7),
-            confusion('c4', 6),
-            confusion('c5', 5),
-            confusion('c6', 4),
-          ],
-        }),
-      ],
-    });
-    const fixture = await monter(rapportDe([MALIK], resultats));
+    const fixture = await monterMalikFace(6, [
+      {
+        questionId: 'Q-1',
+        confusions: [
+          confusion('c1', 9),
+          confusion('c2', 8),
+          confusion('c3', 7),
+          confusion('c4', 6),
+          confusion('c5', 5),
+          confusion('c6', 4),
+        ],
+      },
+    ]);
 
     expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
       'Libelle c1',
@@ -204,20 +207,10 @@ describe('CoursSyntheseComponent', () => {
   });
 
   it('affiche a zero une question a laquelle personne n a repondu', async () => {
-    const resultats = buildResultatsSeance({
-      participants: 3,
-      questions: [
-        buildResultatQuestion({ questionId: 'Q-1' }),
-        buildResultatQuestion({
-          questionId: 'Q-2',
-          total: 0,
-          correctes: 0,
-          neSaitPas: 0,
-          confusions: [],
-        }),
-      ],
-    });
-    const fixture = await monter(rapportDe([MALIK], resultats));
+    const fixture = await monterMalikFace(3, [
+      { questionId: 'Q-1' },
+      { questionId: 'Q-2', total: 0, correctes: 0, neSaitPas: 0, confusions: [] },
+    ]);
 
     expect(textes(fixture, 'synthese-question-id')).toEqual(['Q-1', 'Q-2']);
     expect(textes(fixture, 'synthese-question-correctes')).toEqual(['16', '0']);
@@ -230,13 +223,7 @@ describe('CoursSyntheseComponent', () => {
     const NUMERIQUE = buildNumericQuestion({ id: 'Q-2', enonce: 'Quelle valeur acquise ?' });
 
     function resultatsDeDeuxQuestions(): ResultatsSeance {
-      return buildResultatsSeance({
-        participants: 3,
-        questions: [
-          buildResultatQuestion({ questionId: 'Q-1' }),
-          buildResultatQuestion({ questionId: 'Q-2' }),
-        ],
-      });
+      return resultatsDe(3, [{ questionId: 'Q-1' }, { questionId: 'Q-2' }]);
     }
 
     function derouleDesDeuxQuestions(): DerouleCours {
@@ -276,13 +263,7 @@ describe('CoursSyntheseComponent', () => {
         { ...reponse('echelle', 'o2'), questionId: 'b2-s03-prediction' },
       ]);
       const fixture = await monter(
-        rapportDe(
-          [participant],
-          buildResultatsSeance({
-            participants: 1,
-            questions: [buildResultatQuestion({ questionId: 'b2-s03-prediction' })],
-          }),
-        ),
+        rapportDe([participant], resultatsDe(1, [{ questionId: 'b2-s03-prediction' }])),
         of(buildDerouleCours({ ecrans: [buildEcranDeroule(buildVisualQuizSlide())] })),
       );
 
@@ -326,50 +307,38 @@ describe('CoursSyntheseComponent', () => {
     );
   });
 
-  it('protege les champs qui portent un point-virgule ou un retour a la ligne', async () => {
-    const porteur = {
-      ...etudiant('Ana', 9, true, [reponse('actualisation', 'premiere ligne\nseconde ligne')]),
-      nom: 'Dupont;Martin',
-    };
-    const fixture = await monter(rapportDe([porteur]));
+  async function csvDAna(valeur: string, nom?: string): Promise<string> {
+    const ana = etudiant('Ana', 9, true, [reponse('actualisation', valeur)]);
+    const fixture = await monter(rapportDe([nom === undefined ? ana : { ...ana, nom }]));
+    return fixture.componentInstance.exporterCsv();
+  }
 
-    const lignes = fixture.componentInstance.exporterCsv().split('\n');
+  it('protege les champs qui portent un point-virgule ou un retour a la ligne', async () => {
+    const csv = await csvDAna('premiere ligne\nseconde ligne', 'Dupont;Martin');
+
+    const lignes = csv.split('\n');
 
     expect(lignes[1]).toContain('"Dupont;Martin"');
     expect(lignes[1]).toContain('"premiere ligne');
-    expect(fixture.componentInstance.exporterCsv()).toContain(
-      '"premiere ligne\nseconde ligne";4200',
-    );
+    expect(csv).toContain('"premiere ligne\nseconde ligne";4200');
   });
 
   it('neutralise un champ qu Excel interpreterait comme une formule', async () => {
-    const porteur = {
-      ...etudiant('Ana', 9, true, [reponse('actualisation', '+1+1')]),
-      nom: '=HYPERLINK("http://evil.example","Cliquez ici")',
-    };
-    const fixture = await monter(rapportDe([porteur]));
-
-    const csv = fixture.componentInstance.exporterCsv();
+    const csv = await csvDAna('+1+1', '=HYPERLINK("http://evil.example","Cliquez ici")');
 
     expect(csv).toContain("'=HYPERLINK");
     expect(csv).toContain("'+1+1");
   });
 
   it('laisse un montant negatif intact et sommable', async () => {
-    const porteur = etudiant('Ana', 9, true, [reponse('actualisation', '-1500')]);
-    const fixture = await monter(rapportDe([porteur]));
-
-    const csv = fixture.componentInstance.exporterCsv();
+    const csv = await csvDAna('-1500');
 
     expect(csv).toContain('-1500');
     expect(csv).not.toContain("'-1500");
   });
 
   it('neutralise un moins qui n est pas un nombre valide', async () => {
-    const porteur = etudiant('Ana', 9, true, [reponse('actualisation', '-=1+1')]);
-    const fixture = await monter(rapportDe([porteur]));
-
-    expect(fixture.componentInstance.exporterCsv()).toContain("'-=1+1");
+    expect(await csvDAna('-=1+1')).toContain("'-=1+1");
   });
 
   it('une seance sans participant affiche un message plutot qu un tableau vide', async () => {

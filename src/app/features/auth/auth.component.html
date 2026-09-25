@@ -46,137 +46,53 @@
     </button>
   </div>
 
-  @if (isTabActive('log-in')) {
+  @for (onglet of [activeTab]; track onglet) {
+    @let panneau = panneauDe(onglet);
     <section
       class="auth-screen"
       role="tabpanel"
-      id="auth-tab-log-in"
-      [attr.aria-labelledby]="'auth-trigger-log-in'"
+      [id]="'auth-tab-' + onglet"
+      [attr.aria-labelledby]="'auth-trigger-' + onglet"
       tabindex="0"
     >
-      <h1 i18n="auth.login.title|Login panel heading@@authLoginTitle">Se connecter</h1>
-      <p class="sub" i18n="auth.login.lead|Login panel description@@authLoginLead">
-        Votre espace de croissance commence
-      </p>
+      @if (onglet === 'log-in') {
+        <h1 i18n="auth.login.title|Login panel heading@@authLoginTitle">Se connecter</h1>
+        <p class="sub" i18n="auth.login.lead|Login panel description@@authLoginLead">
+          Votre espace de croissance commence
+        </p>
+      } @else {
+        <h1 i18n="auth.signup.title|Signup panel heading@@authSignupTitle">
+          Créer un <em>compte</em>
+        </h1>
+        <p class="sub" i18n="auth.signup.lead|Signup panel description@@authSignupLead">
+          Un compte, tout l'écosystème Asili.
+        </p>
+      }
 
       <button
         type="button"
         class="auth-google"
-        title="Connectez-vous avec Google"
-        i18n-title
-        (click)="handleGoogleAuth('log-in')"
+        [title]="panneau.titreGoogle"
+        (click)="handleGoogleAuth(onglet)"
       >
         <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.4"></app-svg-icon>
-        <span i18n="auth.login.google|Login with Google@@authLoginGoogle">
-          Connectez-vous avec Google
-        </span>
+        @if (onglet === 'log-in') {
+          <span i18n="auth.login.google|Login with Google@@authLoginGoogle">
+            Connectez-vous avec Google
+          </span>
+        } @else {
+          <span i18n="auth.signup.google|Signup with Google@@authSignupGoogle">
+            Inscrivez-vous avec Google
+          </span>
+        }
       </button>
 
       <div class="auth-or" i18n="@@authOrByEmail">ou par email</div>
 
-      <form #loginFormRef="ngForm" (ngSubmit)="handleLoginSubmit(loginFormRef)" novalidate>
-        @for (field of loginFields; track field.key) {
+      <form #formRef="ngForm" (ngSubmit)="soumettre(onglet, formRef)" novalidate>
+        @for (field of panneau.champs; track field.key) {
           <div class="auth-field">
-            <label [for]="'login-' + field.key">{{ field.label }}</label>
-            <div class="ip">
-              <input
-                [type]="field.key === 'password' && showPassword ? 'text' : field.type"
-                [id]="'login-' + field.key"
-                [name]="field.key"
-                [(ngModel)]="loginForm[field.key]"
-                [required]="field.required"
-                [minlength]="field.key === 'password' ? 8 : null"
-                [email]="field.type === 'email' ? '' : false"
-                #control="ngModel"
-                [class.invalid]="control.invalid && (control.touched || isLoginSubmitted)"
-              />
-              @if (field.key === 'password') {
-                <ng-container [ngTemplateOutlet]="passwordToggle" />
-              }
-            </div>
-            @if (control.invalid && (control.touched || isLoginSubmitted)) {
-              <ng-container
-                [ngTemplateOutlet]="erreurDeChamp"
-                [ngTemplateOutletContext]="{ $implicit: control.errors, longueur: false }"
-              />
-            }
-          </div>
-        }
-
-        <div class="auth-row">
-          <span></span>
-          <a class="auth-link" routerLink="/forgot-password" i18n="@@authLoginForgotPassword"
-            >Mot de passe oublié ?</a
-          >
-        </div>
-
-        <button
-          type="submit"
-          class="btn btn-teal auth-submit"
-          [disabled]="isLoginLoading"
-          [attr.aria-busy]="isLoginLoading"
-        >
-          @if (!isLoginLoading) {
-            <span i18n="auth.login.submit|Login submit label@@authLoginSubmit">Se connecter</span>
-            <span class="arrow" aria-hidden="true">→</span>
-          } @else {
-            <span i18n="auth.login.loading|Login loading state@@authLoginLoading"
-              >Connexion en cours...</span
-            >
-          }
-        </button>
-
-        @if (loginErrorMessage) {
-          <p class="auth-msg err" role="alert">{{ loginErrorMessage }}</p>
-        }
-        @if (loginSuccessMessage) {
-          <p class="auth-msg ok" role="status">{{ loginSuccessMessage }}</p>
-        }
-      </form>
-
-      <p class="auth-alt">
-        <span i18n="@@authAltNoAccount">Pas encore de compte ?</span>
-        <button type="button" (click)="selectTab('sign-up')" i18n="@@authAltCreate">
-          Créer un compte
-        </button>
-      </p>
-    </section>
-  }
-
-  @if (isTabActive('sign-up')) {
-    <section
-      class="auth-screen"
-      role="tabpanel"
-      id="auth-tab-sign-up"
-      [attr.aria-labelledby]="'auth-trigger-sign-up'"
-      tabindex="0"
-    >
-      <h1 i18n="auth.signup.title|Signup panel heading@@authSignupTitle">
-        Créer un <em>compte</em>
-      </h1>
-      <p class="sub" i18n="auth.signup.lead|Signup panel description@@authSignupLead">
-        Un compte, tout l'écosystème Asili.
-      </p>
-
-      <button
-        type="button"
-        class="auth-google"
-        title="Inscrivez-vous avec Google"
-        i18n-title
-        (click)="handleGoogleAuth('sign-up')"
-      >
-        <app-svg-icon name="network/google" [fill]="'keep'" [size]="1.4"></app-svg-icon>
-        <span i18n="auth.signup.google|Signup with Google@@authSignupGoogle">
-          Inscrivez-vous avec Google
-        </span>
-      </button>
-
-      <div class="auth-or" i18n="@@authOrByEmail">ou par email</div>
-
-      <form #signupFormRef="ngForm" (ngSubmit)="handleSignupSubmit(signupFormRef)" novalidate>
-        @for (field of signupFields; track field.key) {
-          <div class="auth-field">
-            <label [for]="'reg-' + field.key">
+            <label [for]="panneau.prefixe + field.key">
               {{ field.label }}
               @if (!field.required) {
                 <span i18n="auth.field.optional|Optional field helper@@authFieldOptional"
@@ -186,56 +102,68 @@
             </label>
             <div class="ip">
               <input
-                [type]="
-                  (field.key === 'password' || field.key === 'verifPassword') && showPassword
-                    ? 'text'
-                    : field.type
-                "
-                [id]="'reg-' + field.key"
+                [type]="field.type === 'password' && showPassword ? 'text' : field.type"
+                [id]="panneau.prefixe + field.key"
                 [name]="field.key"
-                [(ngModel)]="signupForm[field.key]"
+                [(ngModel)]="panneau.valeurs[field.key]"
                 [required]="field.required"
                 [minlength]="field.key === 'password' ? 8 : null"
                 [email]="field.type === 'email' ? '' : false"
                 #control="ngModel"
-                [class.invalid]="control.invalid && (control.touched || isSignupSubmitted)"
+                [class.invalid]="control.invalid && (control.touched || panneau.soumis)"
               />
-              @if (field.key === 'password' || field.key === 'verifPassword') {
+              @if (field.type === 'password') {
                 <ng-container [ngTemplateOutlet]="passwordToggle" />
               }
             </div>
-            @if (control.invalid && (control.touched || isSignupSubmitted)) {
-              <ng-container
-                [ngTemplateOutlet]="erreurDeChamp"
-                [ngTemplateOutletContext]="{
-                  $implicit: control.errors,
-                  longueur: field.key === 'password',
-                }"
-              />
+            @if (control.invalid && (control.touched || panneau.soumis)) {
+              <p
+                class="err"
+                appFieldErrors
+                [errors]="control.errors"
+                [longueur]="onglet === 'sign-up' && field.key === 'password'"
+              ></p>
             }
           </div>
         }
 
-        <label class="auth-check" style="margin-bottom: 22px">
-          <input type="checkbox" required name="acceptTerms" ngModel />
-          <span i18n="@@authAcceptTerms">
-            J'accepte les
-            <a routerLink="/terms" class="auth-link">conditions</a> &amp; la
-            <a routerLink="/privacy" class="auth-link">confidentialité</a>
-          </span>
-        </label>
+        @if (onglet === 'log-in') {
+          <div class="auth-row">
+            <span></span>
+            <a class="auth-link" routerLink="/forgot-password" i18n="@@authLoginForgotPassword"
+              >Mot de passe oublié ?</a
+            >
+          </div>
+        } @else {
+          <label class="auth-check" style="margin-bottom: 22px">
+            <input type="checkbox" required name="acceptTerms" ngModel />
+            <span i18n="@@authAcceptTerms">
+              J'accepte les
+              <a routerLink="/terms" class="auth-link">conditions</a> &amp; la
+              <a routerLink="/privacy" class="auth-link">confidentialité</a>
+            </span>
+          </label>
+        }
 
         <button
           type="submit"
           class="btn btn-teal auth-submit"
-          [disabled]="isSignupLoading"
-          [attr.aria-busy]="isSignupLoading"
+          [disabled]="panneau.enCours"
+          [attr.aria-busy]="panneau.enCours"
         >
-          @if (!isSignupLoading) {
-            <span i18n="auth.signup.submit|Signup submit label@@authSignupSubmit"
-              >Créer mon compte</span
-            >
+          @if (!panneau.enCours) {
+            @if (onglet === 'log-in') {
+              <span i18n="auth.login.submit|Login submit label@@authLoginSubmit">Se connecter</span>
+            } @else {
+              <span i18n="auth.signup.submit|Signup submit label@@authSignupSubmit"
+                >Créer mon compte</span
+              >
+            }
             <span class="arrow" aria-hidden="true">→</span>
+          } @else if (onglet === 'log-in') {
+            <span i18n="auth.login.loading|Login loading state@@authLoginLoading"
+              >Connexion en cours...</span
+            >
           } @else {
             <span i18n="auth.signup.loading|Signup loading state@@authSignupLoading"
               >Création en cours...</span
@@ -243,21 +171,26 @@
           }
         </button>
 
-        @if (signupErrorMessage) {
-          <p class="auth-msg err" role="alert">{{ signupErrorMessage }}</p>
+        @if (panneau.erreur) {
+          <p class="auth-msg err" role="alert">{{ panneau.erreur }}</p>
         }
-        @if (signupSuccessMessage) {
-          <p class="auth-msg ok" role="status">
-            {{ signupSuccessMessage }}
-          </p>
+        @if (panneau.succes) {
+          <p class="auth-msg ok" role="status">{{ panneau.succes }}</p>
         }
       </form>
 
       <p class="auth-alt">
-        <span i18n="@@authAltHasAccount">Déjà inscrit ?</span>
-        <button type="button" (click)="selectTab('log-in')" i18n="@@authAltLogin">
-          Se connecter
-        </button>
+        @if (onglet === 'log-in') {
+          <span i18n="@@authAltNoAccount">Pas encore de compte ?</span>
+          <button type="button" (click)="selectTab('sign-up')" i18n="@@authAltCreate">
+            Créer un compte
+          </button>
+        } @else {
+          <span i18n="@@authAltHasAccount">Déjà inscrit ?</span>
+          <button type="button" (click)="selectTab('log-in')" i18n="@@authAltLogin">
+            Se connecter
+          </button>
+        }
       </p>
     </section>
   }
@@ -280,26 +213,4 @@
       ></app-svg-icon>
     </button>
   </span>
-</ng-template>
-
-<ng-template #erreurDeChamp let-erreurs let-longueur="longueur">
-  <p class="err">
-    @if (erreurs?.['required']) {
-      <span i18n="auth.error.required|Required field error@@authErrorRequired"
-        >Ce champ est obligatoire.</span
-      >
-    } @else if (erreurs?.['email']) {
-      <span i18n="auth.error.email|Invalid email error@@authErrorEmail"
-        >Merci d’entrer une adresse email valide.</span
-      >
-    } @else if (erreurs?.['minlength'] && longueur) {
-      <span i18n="auth.error.passwordLength|Password length error@@authErrorPasswordLength"
-        >Le mot de passe doit contenir au moins 8 caractères.</span
-      >
-    } @else {
-      <span i18n="auth.error.generic|Generic validation error@@authErrorGeneric"
-        >Valeur invalide.</span
-      >
-    }
-  </p>
 </ng-template>

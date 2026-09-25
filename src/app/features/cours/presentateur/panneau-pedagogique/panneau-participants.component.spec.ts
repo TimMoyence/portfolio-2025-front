@@ -77,10 +77,15 @@ describe('PanneauParticipantsComponent', () => {
     await cliquerLePremier(fixture, 'activite-participants-reessayer');
     expect(lire(fixture, 'activite-participant')).not.toBeNull();
 
+    await masquerLaListe(fixture);
+  });
+
+  async function masquerLaListe(fixture: Fixture): Promise<void> {
     await cliquerLePremier(fixture, 'activite-participants-masquer');
+
     expect(lire(fixture, 'activite-participant')).toBeNull();
     expect(lire(fixture, 'activite-participants-afficher')).not.toBeNull();
-  });
+  }
 
   it('lit les participants puis marque evince celui que le formateur retire', async () => {
     const fixture = await afficherDeuxParticipants();
@@ -92,12 +97,7 @@ describe('PanneauParticipantsComponent', () => {
   });
 
   it('referme la liste a la demande du formateur', async () => {
-    const fixture = await afficherDeuxParticipants();
-
-    await cliquerLePremier(fixture, 'activite-participants-masquer');
-
-    expect(lire(fixture, 'activite-participant')).toBeNull();
-    expect(lire(fixture, 'activite-participants-afficher')).not.toBeNull();
+    await masquerLaListe(await afficherDeuxParticipants());
   });
 
   it('readmet l evince que le formateur avait retire par erreur', async () => {

@@ -13,13 +13,12 @@ import {
   SEANCE_DU_PANNEAU,
   monterLePanneau,
   noteAffichee,
+  preparerLePanneau,
+  relireLePanneau,
   repereDuPanneau,
   saisirLaNoteDuPanneau,
 } from '../../../../testing/panneau-pedagogique';
-import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { AnnotationFormateur, FormationsPort } from '../../../core/ports/formations.port';
-import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
 
 const SESSION = SEANCE_DU_PANNEAU;
 
@@ -32,10 +31,7 @@ describe('CoursPanneauPedagogiqueComponent', () => {
 
   beforeEach(() => {
     port = createFormationsPortStub();
-    setupTestBed({
-      imports: [CoursPanneauPedagogiqueComponent],
-      providers: [{ provide: FORMATIONS_PORT, useValue: port }],
-    });
+    preparerLePanneau(port);
   });
 
   it('lit annotations et reponses libres de la seance', fakeAsync(() => {
@@ -145,10 +141,7 @@ describe('CoursPanneauPedagogiqueComponent', () => {
       saisirLaNoteDuPanneau(fixture, 'Nouvelle');
       tick(600);
 
-      fixture.componentRef.setInput('resultats', [buildResultatQuestion()]);
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
+      relireLePanneau(fixture);
 
       expect(port.lireAnnotations).toHaveBeenCalledTimes(2);
       expect(noteAffichee(fixture)).toBe('Nouvelle');

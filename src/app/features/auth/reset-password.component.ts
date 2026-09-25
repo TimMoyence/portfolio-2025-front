@@ -1,28 +1,19 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
-import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
-import { AuthSuccessComponent } from '../../shared/components/auth-success/auth-success.component';
-import { AuthErreurComponent } from './auth-erreur.component';
+import { ActivatedRoute } from '@angular/router';
+import { FormulaireAuthComponent } from './formulaire-auth.component';
 import { FormulaireDeMotDePasse } from './formulaire-de-mot-de-passe';
+import { IMPORTS_PAGE_AUTH } from './page-auth.imports';
 
 const LIEN_INCOMPLET = $localize`:auth.reset.error.missingToken@@authResetErrorMissingToken:Le lien de réinitialisation est invalide ou incomplet.`;
+
+type ChampDeMotDePasse = 'newPassword' | 'confirmPassword';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    RevealOnScrollDirective,
-    AuthShellComponent,
-    AuthSuccessComponent,
-    AuthErreurComponent,
-  ],
+  imports: [IMPORTS_PAGE_AUTH, FormsModule, FormulaireAuthComponent],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,8 +22,26 @@ export class ResetPasswordComponent extends FormulaireDeMotDePasse implements On
   private readonly route = inject(ActivatedRoute);
 
   token: string | null = null;
-  newPassword = '';
-  confirmPassword = '';
+  motsDePasse: Record<ChampDeMotDePasse, string> = { newPassword: '', confirmPassword: '' };
+
+  protected readonly champs: readonly {
+    cle: ChampDeMotDePasse;
+    libelle: string;
+    placeholder: string;
+    indication?: string;
+  }[] = [
+    {
+      cle: 'newPassword',
+      libelle: $localize`:@@authResetPasswordLabel:Nouveau mot de passe`,
+      placeholder: $localize`:@@authResetPasswordPlaceholder:12 caractères minimum`,
+    },
+    {
+      cle: 'confirmPassword',
+      libelle: $localize`:@@authResetConfirmLabel:Confirmer le mot de passe`,
+      placeholder: '••••••••',
+      indication: $localize`:@@authResetConfirmHint:Les deux doivent correspondre.`,
+    },
+  ];
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParamMap.get('token');
@@ -50,21 +59,18 @@ export class ResetPasswordComponent extends FormulaireDeMotDePasse implements On
 
     if (!this.token || form.invalid) return;
 
-    if (this.newPassword !== this.confirmPassword) {
+    const { newPassword, confirmPassword } = this.motsDePasse;
+    if (newPassword !== confirmPassword) {
       this.errorMessage = $localize`:auth.reset.error.mismatch@@authResetErrorMismatch:Les mots de passe ne correspondent pas.`;
       return;
     }
 
     this.envoyer(
-      this.authService.resetPassword({
-        token: this.token,
-        newPassword: this.newPassword,
-      }),
+      this.authService.resetPassword({ token: this.token, newPassword }),
       $localize`:auth.reset.error.generic@@authResetErrorGeneric:Impossible de réinitialiser le mot de passe.`,
       () => {
-        this.newPassword = '';
-        this.confirmPassword = '';
-        form.resetForm({ newPassword: '', confirmPassword: '' });
+        this.motsDePasse = { newPassword: '', confirmPassword: '' };
+        form.resetForm(this.motsDePasse);
       },
     );
   }

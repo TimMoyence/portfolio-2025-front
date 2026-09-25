@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import type { RegisterUserPayload } from '../../core/models/auth.model';
+import type { AuthSession, RegisterUserPayload } from '../../core/models/auth.model';
 import type { LoginFormState } from '../../core/models/loginForm.model';
 import type { SignupFormState } from '../../core/models/signupForm.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -24,6 +24,7 @@ import { extractErrorMessage } from '../../shared/utils/http-error.utils';
 import { SvgIconComponent } from '../../shared/components/svg-icon.component';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
+import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 
 const ASCII_SPACE = 32;
 const ASCII_DELETE = 127;
@@ -40,6 +41,24 @@ type AuthTab = 'sign-up' | 'log-in';
 type SignupFormKey = keyof SignupFormState;
 type LoginFormKey = keyof LoginFormState;
 
+interface ChampAuth {
+  key: SignupFormKey;
+  label: string;
+  type: string;
+  required: boolean;
+}
+
+interface PanneauAuth {
+  champs: readonly ChampAuth[];
+  valeurs: Partial<Record<SignupFormKey, string | null>>;
+  prefixe: string;
+  titreGoogle: string;
+  soumis: boolean;
+  enCours: boolean;
+  erreur?: string;
+  succes?: string;
+}
+
 @Component({
   selector: 'app-auth',
   standalone: true,
@@ -50,6 +69,7 @@ type LoginFormKey = keyof LoginFormState;
     SvgIconComponent,
     RevealOnScrollDirective,
     AuthShellComponent,
+    FieldErrorsComponent,
   ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
@@ -94,13 +114,7 @@ export class AuthComponent {
   loginSuccessMessage?: string;
   signupForm: SignupFormState = { ...this.defaultSignupState };
 
-  signupFields: {
-    key: SignupFormKey;
-    label: string;
-    type: string;
-    required: boolean;
-    icon?: string;
-  }[] = [
+  signupFields: readonly ChampAuth[] = [
     {
       key: 'firstName',
       label: $localize`:auth.signup.field.firstName|Signup field label@@authSignupFieldFirstName:Prénom`,
@@ -141,12 +155,7 @@ export class AuthComponent {
 
   loginForm: LoginFormState = { ...this.defaultLoginState };
 
-  loginFields: {
-    key: LoginFormKey;
-    label: string;
-    type: string;
-    required: boolean;
-  }[] = [
+  loginFields: readonly (ChampAuth & { key: LoginFormKey })[] = [
     {
       key: 'email',
       label: $localize`:auth.login.field.email|Login field label@@authLoginFieldEmail:Email`,
@@ -168,6 +177,38 @@ export class AuthComponent {
 
   isTabActive(tab: AuthTab): boolean {
     return this.activeTab === tab;
+  }
+
+  protected panneauDe(onglet: AuthTab): PanneauAuth {
+    return onglet === 'log-in'
+      ? {
+          champs: this.loginFields,
+          valeurs: this.loginForm,
+          prefixe: 'login-',
+          titreGoogle: $localize`Connectez-vous avec Google`,
+          soumis: this.isLoginSubmitted,
+          enCours: this.isLoginLoading,
+          erreur: this.loginErrorMessage,
+          succes: this.loginSuccessMessage,
+        }
+      : {
+          champs: this.signupFields,
+          valeurs: this.signupForm,
+          prefixe: 'reg-',
+          titreGoogle: $localize`Inscrivez-vous avec Google`,
+          soumis: this.isSignupSubmitted,
+          enCours: this.isSignupLoading,
+          erreur: this.signupErrorMessage,
+          succes: this.signupSuccessMessage,
+        };
+  }
+
+  protected soumettre(onglet: AuthTab, form: NgForm): void {
+    if (onglet === 'log-in') {
+      this.handleLoginSubmit(form);
+    } else {
+      this.handleSignupSubmit(form);
+    }
   }
 
   handleSignupSubmit(form: NgForm): void {
@@ -219,6 +260,12 @@ export class AuthComponent {
     return trimmed;
   }
 
+  private ouvrirLaSession(session: AuthSession): void {
+    this.authState.login(session);
+    const returnUrl = this.sanitizeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
+    void this.router.navigateByUrl(returnUrl);
+  }
+
   handleLoginSubmit(form: NgForm): void {
     this.isLoginSubmitted = true;
     this.loginErrorMessage = undefined;
@@ -231,12 +278,8 @@ export class AuthComponent {
     handleFormSubmit(this.authService.login(this.loginForm), this.cdr, {
       fallbackError: $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`,
       onSuccess: (session) => {
-        this.authState.login(session);
         this.loginSuccessMessage = $localize`:auth.login.success|Login success message@@authLoginSuccess:Bienvenue ${session.user.firstName} !`;
-        const returnUrl = this.sanitizeReturnUrl(
-          this.route.snapshot.queryParamMap.get('returnUrl'),
-        );
-        void this.router.navigateByUrl(returnUrl);
+        this.ouvrirLaSession(session);
       },
       onError: (message) => {
         this.loginErrorMessage = message;
@@ -284,13 +327,7 @@ export class AuthComponent {
     context: AuthTab,
   ): void {
     this.authService.googleAuth(response.credential).subscribe({
-      next: (session) => {
-        this.authState.login(session);
-        const returnUrl = this.sanitizeReturnUrl(
-          this.route.snapshot.queryParamMap.get('returnUrl'),
-        );
-        void this.router.navigateByUrl(returnUrl);
-      },
+      next: (session) => this.ouvrirLaSession(session),
       error: (err) => {
         const message =
           extractErrorMessage(err, { includeTopLevelMessage: false }) ??

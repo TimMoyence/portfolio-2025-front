@@ -1,10 +1,49 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { buildAuthSession } from '../../../testing/factories/auth.factory';
 import { createFluxDouble } from '../../../testing/factories/sync.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { getApiBaseUrl } from '../../core/http/api-config';
 import { AuthStateService } from '../../core/services/auth-state.service';
-import { CREATEUR_FLUX, CREATEUR_FLUX_FORMATEUR } from './cours-flux.token';
+import type { StatutFlux, Sync } from '../../../cours/runtime/core/sync';
+import { CREATEUR_FLUX, CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from './cours-flux.token';
+
+describe('ouvrirLeFluxFormateur', () => {
+  it("branche l'etat, les resultats et le suivi du flux", () => {
+    const double = createFluxDouble();
+    const etat = jasmine.createSpy('etat');
+    const resultats = jasmine.createSpy('resultats');
+    const suivi = signal<StatutFlux | null>(null);
+
+    ouvrirLeFluxFormateur(double.flux, { etat, resultats, suivi, retenir: () => undefined });
+    double.diffuser({ ecranCourant: 2 });
+    double.diffuserResultats({ participants: 3, questions: [] });
+    double.diffuserStatut({ etat: 'connecte' });
+
+    expect(etat).toHaveBeenCalledWith(jasmine.objectContaining({ ecranCourant: 2 }));
+    expect(resultats).toHaveBeenCalledWith(jasmine.objectContaining({ participants: 3 }));
+    expect(suivi()).toEqual({ etat: 'connecte' });
+  });
+
+  it("retient le flux avant de l'ouvrir", () => {
+    const double = createFluxDouble();
+    let ouvertAuMomentDeRetenir: boolean | null = null;
+    const retenir = (flux: Sync): void => {
+      ouvertAuMomentDeRetenir = double.flux.ouvrir.calls.any();
+      expect(flux).toBe(double.flux);
+    };
+
+    ouvrirLeFluxFormateur(double.flux, {
+      etat: () => undefined,
+      resultats: () => undefined,
+      suivi: signal<StatutFlux | null>(null),
+      retenir,
+    });
+
+    expect(ouvertAuMomentDeRetenir).toBeFalse();
+    expect(double.flux.ouvrir).toHaveBeenCalledTimes(1);
+  });
+});
 
 describe('CREATEUR_FLUX_FORMATEUR', () => {
   const double = createFluxDouble();

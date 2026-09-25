@@ -37,12 +37,12 @@ import type {
   SyntheseConcept,
 } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import { CREATEUR_FLUX_FORMATEUR } from '../cours-flux.token';
+import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import { enoncesDuDeroule, questionsDeLEcran } from '../../../shared/slides/session/lecture-ecran';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
-import { directDeLEcran } from './direct-de-l-ecran';
+import { directDeLEcranCourant } from '../direct-de-l-ecran';
 import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
 import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
@@ -785,12 +785,9 @@ export class CoursPresentateurComponent {
     return ecran === null ? {} : (this.pilotage()[ecran.id] ?? {});
   });
 
-  readonly direct = computed<DirectEcran | null>(() => {
-    const ecran = this.ecranCourant();
-    return ecran === null
-      ? null
-      : directDeLEcran(ecran, this.pilotageDeLEcran(), this.resultats(), 0);
-  });
+  readonly direct = computed<DirectEcran | null>(() =>
+    directDeLEcranCourant(this.ecranCourant(), this.pilotage(), this.resultats(), 0),
+  );
 
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);
@@ -1011,16 +1008,18 @@ export class CoursPresentateurComponent {
   }
 
   private ecouterLeFlux(sessionId: string): void {
-    const flux = this.creerFluxFormateur(sessionId);
-    flux.onState((etat) => this.suivreLeFlux(etat));
-    flux.onResultats((resultats) => {
-      this.resultats.set(resultats);
-      this.lireLaNotationSiBesoin(sessionId);
-      this.lireLaMaitriseSiBesoin(sessionId);
+    ouvrirLeFluxFormateur(this.creerFluxFormateur(sessionId), {
+      etat: (etat) => this.suivreLeFlux(etat),
+      resultats: (resultats) => {
+        this.resultats.set(resultats);
+        this.lireLaNotationSiBesoin(sessionId);
+        this.lireLaMaitriseSiBesoin(sessionId);
+      },
+      suivi: this.suiviDuFlux,
+      retenir: (flux) => {
+        this.flux = flux;
+      },
     });
-    flux.onStatut((statut) => this.suiviDuFlux.set(statut));
-    this.flux = flux;
-    flux.ouvrir();
   }
 
   private lireLaNotationSiBesoin(sessionId: string): void {

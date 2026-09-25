@@ -1,3 +1,5 @@
+@use '../../styles-shared/segments';
+
 .cours-presentateur,
 .cours-etudiant,
 .cours-synthese {
@@ -315,12 +317,7 @@
   align-items: center;
 }
 
-.presentateur-control-nav .control-danger {
-  border-color: rgba(192, 86, 60, 0.32);
-  background: rgba(192, 86, 60, 0.08);
-  color: var(--danger);
-}
-
+.presentateur-control-nav .control-danger,
 .cours-presentateur .control-danger {
   border-color: rgba(192, 86, 60, 0.32);
   background: rgba(192, 86, 60, 0.08);
@@ -370,9 +367,7 @@
 
 .rhythm-toggle[data-mode='pilote'] .rhythm-toggle__track > span:first-child,
 .rhythm-toggle[data-mode='libre'] .rhythm-toggle__track > span:last-child {
-  background: var(--cream);
-  color: var(--ink);
-  box-shadow: var(--shadow-soft);
+  @include segments.segment-actif;
 }
 
 .screen-progress {

@@ -8,15 +8,17 @@ import { of, Subject, throwError } from 'rxjs';
 import type {
   ConfusionComptee,
   DerouleCours,
+  PilotageEcran,
   ResultatsSeance,
 } from '../../../../cours/content/types';
-import type { EtatSession, StatutFlux } from '../../../../cours/runtime/core/sync';
+import type { StatutFlux } from '../../../../cours/runtime/core/sync';
 import {
   attendreAucunEnTeteSansSession,
   buildEcranDeVoteCorrige,
   demonterLeBancDuPupitre,
   JETON_FORMATEUR,
-  monterLeBancDuPupitre,
+  buildEcranDeVoteJumele,
+  monterLeBancSurLeDeroule,
   monterSurLeBanc,
 } from '../../../../testing/banc-du-pupitre';
 import { buildAuthSession } from '../../../../testing/factories/auth.factory';
@@ -34,16 +36,21 @@ import {
   buildResultatQuestion,
   buildResultatsSeance,
   buildStatistiquesSeance,
-  createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
-import { createFluxDouble } from '../../../../testing/factories/sync.factory';
 import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import {
   buildVisualQuizSlide,
   buildVisualSlide,
 } from '../../../../testing/factories/visual-slide.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
+import {
+  attendreLaFermetureDuFlux,
+  diffuserSurLaVue,
+  idsDesEcransMontes,
+  publierSurLaVue,
+  stabiliserLaVue,
+} from '../../../../testing/vue-de-seance';
 import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formations.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
@@ -145,45 +152,43 @@ describe('CoursPresentateurComponent', () => {
     return fixture;
   }
 
-  async function stabiliser(fixture: Fixture): Promise<void> {
-    await fixture.componentInstance.quandStabilise();
-    fixture.detectChanges();
-  }
-
   async function cliquer(fixture: Fixture, marque: string): Promise<void> {
     bouton(fixture, marque).click();
     fixture.detectChanges();
-    await stabiliser(fixture);
+    await stabiliserLaVue(fixture);
   }
 
   async function ouvrirLaSeance(): Promise<Fixture> {
     const fixture = monter();
-    await stabiliser(fixture);
+    await stabiliserLaVue(fixture);
     return fixture;
   }
 
-  function diffuser(fixture: Fixture, etat: Partial<EtatSession>): void {
-    double.diffuser(etat);
-    fixture.detectChanges();
+  async function ouvrirLaSeanceSur(nouveau: DerouleCours): Promise<Fixture> {
+    deroule = nouveau;
+    port.lireDeroule.and.returnValue(of(deroule));
+    return ouvrirLaSeance();
   }
 
-  function publier(fixture: Fixture, resultats: ResultatsSeance): void {
-    double.diffuserResultats(resultats);
-    fixture.detectChanges();
+  async function attendreLaSceneOuverte(ouvrir: () => Promise<Fixture>): Promise<void> {
+    const fenetre = spyOn(window, 'open').and.returnValue(null);
+    const fixture = await ouvrir();
+
+    bouton(fixture, 'presentateur-plein-ecran').click();
+
+    expect(fenetre).toHaveBeenCalledOnceWith(
+      `${BASE_DE_L_APPLICATION}cours/presenter/${SLUG}/scene/${SESSION}`,
+      'cours-scene',
+    );
   }
 
   beforeEach(async () => {
     deroule = derouleDeSeance();
-    port = createFormationsPortStub();
-    port.ouvrirSeance.and.returnValue(of({ sessionId: SESSION, code: CODE }));
-    port.lireDeroule.and.returnValue(of(deroule));
-    double = createFluxDouble();
-    await monterLeBancDuPupitre(CoursPresentateurComponent, {
-      port,
-      double,
+    ({ port, double } = await monterLeBancSurLeDeroule(CoursPresentateurComponent, deroule, {
       router: true,
       providers: [{ provide: APP_BASE_HREF, useValue: BASE_DE_L_APPLICATION }],
-    });
+    }));
+    port.ouvrirSeance.and.returnValue(of({ sessionId: SESSION, code: CODE }));
   });
 
   afterEach(demonterLeBancDuPupitre);
@@ -230,7 +235,7 @@ describe('CoursPresentateurComponent', () => {
 
     lecture.next(deroule);
     lecture.complete();
-    await stabiliser(fixture);
+    await stabiliserLaVue(fixture);
 
     expect(lire(fixture, 'presentateur-deroule-chargement')).toBeNull();
     expect(texte(fixture, 'presentateur-titre')).toBe(deroule.titre);
@@ -311,7 +316,7 @@ describe('CoursPresentateurComponent', () => {
 
     async function reprendre(): Promise<Fixture> {
       const fixture = monter(SESSION);
-      await stabiliser(fixture);
+      await stabiliserLaVue(fixture);
       return fixture;
     }
 
@@ -327,7 +332,7 @@ describe('CoursPresentateurComponent', () => {
       expect(double.fabrique.calls.mostRecent().args[0].sessionId).toBe(SESSION);
       expect(double.flux.ouvrir).toHaveBeenCalledTimes(1);
 
-      diffuser(fixture, { etat: 'en_cours', ecranCourant: 2 });
+      diffuserSurLaVue(double, fixture, { etat: 'en_cours', ecranCourant: 2 });
 
       expect(texte(fixture, 'presentateur-ecran')).toBe('3 / 4');
       expect(apercu(fixture).slide()).toBe(deroule.ecrans[2]);
@@ -352,14 +357,18 @@ describe('CoursPresentateurComponent', () => {
       pupitre.allerA(1);
       pupitre.demarrer();
       pupitre.basculerLeRythme();
-      await stabiliser(fixture);
+      await stabiliserLaVue(fixture);
       expect(port.piloter).not.toHaveBeenCalled();
       expect(port.demarrer).not.toHaveBeenCalled();
       expect(bouton(fixture, 'presentateur-cloturer').disabled)
         .withContext('la cloture ne depend ni de l ecran ni du rythme')
         .toBeFalse();
 
-      diffuser(fixture, { etat: 'en_cours', ecranCourant: 2, modeRythme: 'pilote' });
+      diffuserSurLaVue(double, fixture, {
+        etat: 'en_cours',
+        ecranCourant: 2,
+        modeRythme: 'pilote',
+      });
 
       for (const marque of [
         'presentateur-precedent',
@@ -376,7 +385,7 @@ describe('CoursPresentateurComponent', () => {
       const fixture = await reprendre();
 
       (fixture.componentInstance as unknown as { ouvrir(): void }).ouvrir();
-      await stabiliser(fixture);
+      await stabiliserLaVue(fixture);
 
       expect(port.ouvrirSeance).not.toHaveBeenCalled();
     });
@@ -401,15 +410,7 @@ describe('CoursPresentateurComponent', () => {
     });
 
     it('ouvre la scene de la seance reprise', async () => {
-      const fenetre = spyOn(window, 'open').and.returnValue(null);
-      const fixture = await reprendre();
-
-      bouton(fixture, 'presentateur-plein-ecran').click();
-
-      expect(fenetre).toHaveBeenCalledOnceWith(
-        `${BASE_DE_L_APPLICATION}cours/presenter/${SLUG}/scene/${SESSION}`,
-        'cours-scene',
-      );
+      await attendreLaSceneOuverte(reprendre);
     });
   });
 
@@ -432,7 +433,7 @@ describe('CoursPresentateurComponent', () => {
 
     slider.value = '2';
     slider.dispatchEvent(new Event('input'));
-    await stabiliser(fixture);
+    await stabiliserLaVue(fixture);
 
     expect(port.piloter).toHaveBeenCalledWith(SESSION, { ecran: 2 });
     expect(texte(fixture, 'presentateur-ecran-slider')).toBe('3 / 4');
@@ -534,8 +535,8 @@ describe('CoursPresentateurComponent', () => {
     const lecturesAvant = port.lireAnnotations.calls.count();
     const reponsesAvant = port.lireReponsesLibres.calls.count();
 
-    publier(fixture, resultatsDeLaQuestion(3, 2));
-    await stabiliser(fixture);
+    publierSurLaVue(double, fixture, resultatsDeLaQuestion(3, 2));
+    await stabiliserLaVue(fixture);
 
     expect(port.lireAnnotations.calls.count()).toBe(lecturesAvant + 1);
     expect(port.lireReponsesLibres.calls.count()).toBe(reponsesAvant + 1);
@@ -550,8 +551,8 @@ describe('CoursPresentateurComponent', () => {
       );
       const fixture = await ouvrirLaSeance();
 
-      publier(fixture, buildResultatsSeance({ statistiques: PROBLEMATIQUE }));
-      await stabiliser(fixture);
+      publierSurLaVue(double, fixture, buildResultatsSeance({ statistiques: PROBLEMATIQUE }));
+      await stabiliserLaVue(fixture);
 
       const statistiques = texte(fixture, 'presentateur-statistiques');
       expect(statistiques).toContain('Participation');
@@ -579,7 +580,7 @@ describe('CoursPresentateurComponent', () => {
         ),
       );
       const fixture = monter(SESSION);
-      await stabiliser(fixture);
+      await stabiliserLaVue(fixture);
 
       expect(texte(fixture, 'presentateur-statistiques')).toContain(buildVoteQuestion().enonce);
       expect(texte(fixture, 'presentateur-notation-tooltip')).toContain('Note /20');
@@ -644,6 +645,13 @@ describe('CoursPresentateurComponent', () => {
       return cible(fixture, 'presentateur-flux');
     }
 
+    function attendreLeBandeauRetireALaConnexion(fixture: Fixture): void {
+      double.diffuserStatut({ etat: 'connecte' });
+      fixture.detectChanges();
+
+      expect(lire(fixture, 'presentateur-flux')).toBeNull();
+    }
+
     it('annonce dans une zone de statut la connexion et la reconnexion sans prose de direct', async () => {
       const fixture = await ouvrirLaSeance();
       const bandeau = cible(fixture, 'presentateur-flux');
@@ -651,10 +659,7 @@ describe('CoursPresentateurComponent', () => {
       expect(bandeau.getAttribute('role')).toBe('status');
       expect(bandeau.getAttribute('data-etat')).toBe('connexion');
 
-      double.diffuserStatut({ etat: 'connecte' });
-      fixture.detectChanges();
-
-      expect(lire(fixture, 'presentateur-flux')).toBeNull();
+      attendreLeBandeauRetireALaConnexion(fixture);
 
       const coupe = annoncer(fixture, { etat: 'reconnexion' });
 
@@ -678,10 +683,7 @@ describe('CoursPresentateurComponent', () => {
         expect(refus.textContent).toContain(consigne);
         expect(refus.textContent).toContain(String(statut));
 
-        double.diffuserStatut({ etat: 'connecte' });
-        fixture.detectChanges();
-
-        expect(lire(fixture, 'presentateur-flux')).toBeNull();
+        attendreLeBandeauRetireALaConnexion(fixture);
       });
     }
 
@@ -698,15 +700,15 @@ describe('CoursPresentateurComponent', () => {
 
     expect(quitterLaPage()).withContext('aucune seance ouverte').toBeFalse();
 
-    await stabiliser(fixture);
+    await stabiliserLaVue(fixture);
 
     expect(quitterLaPage()).withContext('seance ouverte').toBeTrue();
 
-    diffuser(fixture, { etat: 'en_cours' });
+    diffuserSurLaVue(double, fixture, { etat: 'en_cours' });
 
     expect(quitterLaPage()).withContext('seance en cours').toBeTrue();
 
-    diffuser(fixture, { etat: 'terminee' });
+    diffuserSurLaVue(double, fixture, { etat: 'terminee' });
 
     expect(quitterLaPage()).withContext('seance close').toBeFalse();
   });
@@ -746,11 +748,11 @@ describe('CoursPresentateurComponent', () => {
   it('compte les participants dans les resultats et non dans l etat du flux', async () => {
     const fixture = await ouvrirLaSeance();
 
-    diffuser(fixture, { participants: 99 });
+    diffuserSurLaVue(double, fixture, { participants: 99 });
 
     expect(texte(fixture, 'presentateur-participants-nombre')).toBe('0');
 
-    publier(fixture, buildResultatsSeance({ participants: 12 }));
+    publierSurLaVue(double, fixture, buildResultatsSeance({ participants: 12 }));
 
     expect(texte(fixture, 'presentateur-participants-nombre')).toBe('12');
   });
@@ -768,7 +770,7 @@ describe('CoursPresentateurComponent', () => {
     const navigation = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
     const fixture = await ouvrirLaSeance();
 
-    diffuser(fixture, {
+    diffuserSurLaVue(double, fixture, {
       ecranCourant: 2,
       modeRythme: 'libre',
       intervalleLibre: { premier: 2, dernier: 3 },
@@ -778,7 +780,7 @@ describe('CoursPresentateurComponent', () => {
     expect(cible(fixture, 'presentateur-rythme-mode').getAttribute('data-mode')).toBe('libre');
     expect(apercu(fixture).slide()).toBe(deroule.ecrans[2]);
 
-    diffuser(fixture, { etat: 'terminee', ecranCourant: 2 });
+    diffuserSurLaVue(double, fixture, { etat: 'terminee', ecranCourant: 2 });
 
     expect(cible(fixture, 'presentateur-terminee').getAttribute('role')).toBe('status');
     expect(lire(fixture, 'presentateur-suivant')).toBeNull();
@@ -804,17 +806,15 @@ describe('CoursPresentateurComponent', () => {
       .toBeFalse();
     expect(texte(fixture, 'presentateur-notes')).toContain(deroule.ecrans[0].notes);
 
-    diffuser(fixture, { ecranCourant: 0, participants: 5 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 0, participants: 5 });
 
     expect(apercu(fixture)).toBe(ecran);
   });
 
   it('R5 · presente les notes, le guide de facilitation, les participants, puis l activite, la lecture de la classe et la pedagogie', async () => {
-    deroule = buildDerouleCours({
-      ecrans: [buildEcranDeroule({ guide: buildGuideFormateur() })],
-    });
-    port.lireDeroule.and.returnValue(of(deroule));
-    const fixture = await ouvrirLaSeance();
+    const fixture = await ouvrirLaSeanceSur(
+      buildDerouleCours({ ecrans: [buildEcranDeroule({ guide: buildGuideFormateur() })] }),
+    );
     const suit = (avant: string, apres: string): boolean =>
       (cible(fixture, avant).compareDocumentPosition(cible(fixture, apres)) &
         Node.DOCUMENT_POSITION_FOLLOWING) !==
@@ -831,7 +831,7 @@ describe('CoursPresentateurComponent', () => {
     const fixture = await ouvrirLaSeance();
 
     bouton(fixture, 'activite-participants-afficher').click();
-    await stabiliser(fixture);
+    await stabiliserLaVue(fixture);
 
     expect(lire(fixture, 'activite-participants-echec')).not.toBeNull();
     bouton(fixture, 'activite-participants-masquer').click();
@@ -840,37 +840,41 @@ describe('CoursPresentateurComponent', () => {
     expect(lire(fixture, 'activite-participants-afficher')).not.toBeNull();
   });
 
+  async function attendreLePilotageDuPremierEcran(
+    fixture: Fixture,
+    marque: string,
+    pilotage: PilotageEcran,
+  ): Promise<void> {
+    bouton(fixture, marque).click();
+    await stabiliserLaVue(fixture);
+
+    expect(port.piloter).toHaveBeenCalledWith(SESSION, {
+      pilotage: { screenId: deroule.ecrans[0].id, ...pilotage },
+    });
+  }
+
   it('F35 · revele la correction depuis la lecture de la classe', async () => {
     const fixture = await ouvrirLaSeance();
 
-    bouton(fixture, 'presentateur-questions-reveler').click();
-    await stabiliser(fixture);
-
-    expect(port.piloter).toHaveBeenCalledWith(SESSION, {
-      pilotage: { screenId: deroule.ecrans[0].id, revele: true },
+    await attendreLePilotageDuPremierEcran(fixture, 'presentateur-questions-reveler', {
+      revele: true,
     });
   });
 
   it('T10 · projette puis retire les resultats de l ecran', async () => {
     const fixture = await ouvrirLaSeance();
 
-    bouton(fixture, 'presentateur-projeter-resultats').click();
-    await stabiliser(fixture);
-
-    expect(port.piloter).toHaveBeenCalledWith(SESSION, {
-      pilotage: { screenId: deroule.ecrans[0].id, resultatsProjetes: true },
+    await attendreLePilotageDuPremierEcran(fixture, 'presentateur-projeter-resultats', {
+      resultatsProjetes: true,
     });
-    diffuser(fixture, {
+    diffuserSurLaVue(double, fixture, {
       ecranCourant: 0,
       pilotage: { [deroule.ecrans[0].id]: { resultatsProjetes: true } },
     });
     expect(lire(fixture, 'resultats-projetes')).not.toBeNull();
 
-    bouton(fixture, 'presentateur-projeter-resultats').click();
-    await stabiliser(fixture);
-
-    expect(port.piloter).toHaveBeenCalledWith(SESSION, {
-      pilotage: { screenId: deroule.ecrans[0].id, resultatsProjetes: false },
+    await attendreLePilotageDuPremierEcran(fixture, 'presentateur-projeter-resultats', {
+      resultatsProjetes: false,
     });
   });
 
@@ -929,7 +933,7 @@ describe('CoursPresentateurComponent', () => {
     const fixture = await ouvrirLaSeance();
 
     bouton(fixture, 'presentateur-suivant').click();
-    diffuser(fixture, { ecranCourant: 0 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 0 });
 
     expect(texte(fixture, 'presentateur-ecran')).toBe('2 / 4');
     expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, { ecran: 1 });
@@ -949,7 +953,7 @@ describe('CoursPresentateurComponent', () => {
     expect(texte(fixture, 'presentateur-ecran')).toBe('2 / 4');
 
     commande.complete();
-    await stabiliser(fixture);
+    await stabiliserLaVue(fixture);
     suivant.click();
     fixture.detectChanges();
 
@@ -963,7 +967,7 @@ describe('CoursPresentateurComponent', () => {
     expect(bouton(fixture, 'presentateur-precedent').disabled).toBeTrue();
     fixture.componentInstance.allerA(-1);
 
-    diffuser(fixture, { ecranCourant: 3 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 3 });
 
     expect(bouton(fixture, 'presentateur-suivant').disabled).toBeTrue();
     fixture.componentInstance.allerA(4);
@@ -979,9 +983,12 @@ describe('CoursPresentateurComponent', () => {
     port.lireDeroule.and.returnValue(of(buildDerouleCours({ ecrans })));
     const fixture = await ouvrirLaSeance();
 
-    diffuser(fixture, { etat: 'en_cours', ecranCourant: rang('B2-01-A1-03-MISSION') });
+    diffuserSurLaVue(double, fixture, {
+      etat: 'en_cours',
+      ecranCourant: rang('B2-01-A1-03-MISSION'),
+    });
     const mission = lire(fixture, 'activite-reveler-correction');
-    diffuser(fixture, { ecranCourant: rang('B2-01-A2-06-POINTS') });
+    diffuserSurLaVue(double, fixture, { ecranCourant: rang('B2-01-A2-06-POINTS') });
     const exercice = lire(fixture, 'activite-reveler-correction');
 
     expect(mission).toBeNull();
@@ -990,7 +997,7 @@ describe('CoursPresentateurComponent', () => {
 
   it('ouvre le rythme libre de l ecran courant au dernier ecran, puis reprend la main', async () => {
     const fixture = await ouvrirLaSeance();
-    diffuser(fixture, { ecranCourant: 1 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 1 });
 
     await cliquer(fixture, 'presentateur-rythme');
 
@@ -1019,7 +1026,7 @@ describe('CoursPresentateurComponent', () => {
   it('E14 · sous le seuil, detaille la question, sa réponse attendue au format français et vise l ecran de la confusion dominante', async () => {
     const fixture = await ouvrirLaSeance();
 
-    publier(fixture, resultatsDeLaQuestion(10, 5));
+    publierSurLaVue(double, fixture, resultatsDeLaQuestion(10, 5));
 
     expect(apercu(fixture)?.resultats()).toEqual(
       jasmine.objectContaining({ ...resultatsDeLaQuestion(10, 5) }),
@@ -1059,7 +1066,7 @@ describe('CoursPresentateurComponent', () => {
     it(`ne propose aucune remediation quand ${cas}`, async () => {
       const fixture = await ouvrirLaSeance();
 
-      publier(fixture, resultatsDeLaQuestion(total, correctes));
+      publierSurLaVue(double, fixture, resultatsDeLaQuestion(total, correctes));
 
       expect(cible(fixture, 'presentateur-question').hasAttribute('data-etat')).toBeFalse();
       expect(lire(fixture, 'presentateur-remediation')).toBeNull();
@@ -1076,7 +1083,7 @@ describe('CoursPresentateurComponent', () => {
       port.lireDeroule.and.returnValue(of({ ...deroule, remediations }));
       const fixture = await ouvrirLaSeance();
 
-      publier(fixture, resultatsDeLaQuestion(10, 5));
+      publierSurLaVue(double, fixture, resultatsDeLaQuestion(10, 5));
 
       expect(cible(fixture, 'presentateur-question').getAttribute('data-etat')).toBe(
         'sous-le-seuil',
@@ -1113,7 +1120,7 @@ describe('CoursPresentateurComponent', () => {
     expect(allersALaSynthese(navigation)).toBe(0);
 
     fermeture.complete();
-    await stabiliser(fixture);
+    await stabiliserLaVue(fixture);
 
     expect(navigation).toHaveBeenCalledWith(VERS_LA_SYNTHESE);
     expect(allersALaSynthese(navigation)).toBe(1);
@@ -1133,56 +1140,38 @@ describe('CoursPresentateurComponent', () => {
   });
 
   it('ouvre la scene du videoprojecteur dans une fenetre nommee sous la base de l application', async () => {
-    const fenetre = spyOn(window, 'open').and.returnValue(null);
-    const fixture = await ouvrirLaSeance();
-
-    bouton(fixture, 'presentateur-plein-ecran').click();
-
-    expect(fenetre).toHaveBeenCalledOnceWith(
-      `${BASE_DE_L_APPLICATION}cours/presenter/${SLUG}/scene/${SESSION}`,
-      'cours-scene',
-    );
+    await attendreLaSceneOuverte(ouvrirLaSeance);
   });
 
   it('ferme le flux a la destruction du pupitre', async () => {
-    const fixture = await ouvrirLaSeance();
-
-    expect(double.flux.close).not.toHaveBeenCalled();
-    fixture.destroy();
-    expect(double.flux.close).toHaveBeenCalledTimes(1);
+    attendreLaFermetureDuFlux(double, await ouvrirLaSeance());
   });
 
   describe('pilotage des briques de l ecran courant (§ 9.7)', () => {
-    function derouleAvecEcran(ecran: Parameters<typeof buildEcranDeroule>[0]): DerouleCours {
-      return buildDerouleCours({
-        ecrans: [buildEcranDeroule(ecran), ...derouleDeSeance().ecrans.slice(1)],
-      });
+    function ouvrirSurLEcran(ecran: Parameters<typeof buildEcranDeroule>[0]): Promise<Fixture> {
+      return ouvrirLaSeanceSur(
+        buildDerouleCours({
+          ecrans: [buildEcranDeroule(ecran), ...derouleDeSeance().ecrans.slice(1)],
+        }),
+      );
     }
 
     it('E10 · montre au pupitre, en miniature, l écran auquel renvoie l écran courant', async () => {
       const [premier, second, ...suite] = derouleDeSeance().ecrans;
-      deroule = buildDerouleCours({
-        ecrans: [{ ...premier, renvoi: second.id }, second, ...suite],
-      });
-      port.lireDeroule.and.returnValue(of(deroule));
 
-      const fixture = await ouvrirLaSeance();
-      const ecrans = fixture.debugElement
-        .queryAll(By.directive(SlideActivityComponent))
-        .map((ecran) => (ecran.componentInstance as SlideActivityComponent).slide().id);
+      const fixture = await ouvrirLaSeanceSur(
+        buildDerouleCours({ ecrans: [{ ...premier, renvoi: second.id }, second, ...suite] }),
+      );
 
-      expect(ecrans).toEqual([premier.id, second.id]);
+      expect(idsDesEcransMontes(fixture)).toEqual([premier.id, second.id]);
     });
 
     it('G2 · rend le graphique au pupitre comme en projection', async () => {
-      deroule = derouleAvecEcran({
+      const fixture = await ouvrirSurLEcran({
         id: 'ecran-plot',
         type: 'fp-plot',
         donnees: { definition: buildPlotDefinition() },
       });
-      port.lireDeroule.and.returnValue(of(deroule));
-
-      const fixture = await ouvrirLaSeance();
 
       expect(apercu(fixture).slide().type).toBe('fp-plot');
       expect(apercu(fixture).apercu()).toBeFalse();
@@ -1190,18 +1179,16 @@ describe('CoursPresentateurComponent', () => {
 
     it('donne au rendu tableau le pilotage, les resultats et l annexe formateur de l ecran', async () => {
       const annexe = { type: 'revelation' as const, titre: 'Méthode', lignes: ['Capitaliser'] };
-      deroule = derouleAvecEcran({
+      const fixture = await ouvrirSurLEcran({
         id: 'ecran-vote',
         type: 'fp-vote',
         donnees: { question: buildVoteQuestion() },
         corrigeEcran: annexe,
       });
-      port.lireDeroule.and.returnValue(of(deroule));
-      const fixture = await ouvrirLaSeance();
       const resultats = resultatsDeLaQuestion(12, 8);
 
-      diffuser(fixture, { pilotage: { 'ecran-vote': { phase: 'discussion' } } });
-      publier(fixture, resultats);
+      diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase: 'discussion' } } });
+      publierSurLaVue(double, fixture, resultats);
 
       expect(apercu(fixture).donneesFormateur()).toBe(annexe);
       expect(apercu(fixture).direct()).toEqual({
@@ -1212,16 +1199,7 @@ describe('CoursPresentateurComponent', () => {
     });
 
     it('pilote la phase du vote depuis le panneau d activite', async () => {
-      deroule = derouleAvecEcran({
-        id: 'ecran-vote',
-        type: 'fp-vote',
-        donnees: {
-          question: buildVoteQuestion(),
-          questionJumelle: buildVoteQuestion({ id: 'Q-CAP-03-bis' }),
-        },
-      });
-      port.lireDeroule.and.returnValue(of(deroule));
-      const fixture = await ouvrirLaSeance();
+      const fixture = await ouvrirSurLEcran(buildEcranDeVoteJumele());
 
       await cliquer(fixture, 'activite-phase-suivante');
 
@@ -1231,16 +1209,18 @@ describe('CoursPresentateurComponent', () => {
     });
 
     it('RET-21 · envoie au serveur le reglage de la machine fait au pupitre', async () => {
-      deroule = derouleAvecEcran({ id: 'ecran-machine', type: 'fp-concept4', donnees: {} });
-      port.lireDeroule.and.returnValue(of(deroule));
-      const fixture = await ouvrirLaSeance();
+      const fixture = await ouvrirSurLEcran({
+        id: 'ecran-machine',
+        type: 'fp-concept4',
+        donnees: {},
+      });
 
       apercu(fixture).evenement.emit({
         kind: 'reglage',
         screenId: 'ecran-machine',
         reglages: { n: 20 },
       });
-      await stabiliser(fixture);
+      await stabiliserLaVue(fixture);
 
       expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
         pilotage: { screenId: 'ecran-machine', reglages: { n: 20 } },
@@ -1248,12 +1228,14 @@ describe('CoursPresentateurComponent', () => {
     });
 
     async function projeterLeRappelEspace(): Promise<Fixture> {
-      deroule = derouleAvecEcran({ id: 'ecran-rappel-espace', type: 'fp-spaced', donnees: {} });
-      port.lireDeroule.and.returnValue(of(deroule));
-      const fixture = await ouvrirLaSeance();
+      const fixture = await ouvrirSurLEcran({
+        id: 'ecran-rappel-espace',
+        type: 'fp-spaced',
+        donnees: {},
+      });
 
-      diffuser(fixture, { ecranCourant: 0 });
-      await stabiliser(fixture);
+      diffuserSurLaVue(double, fixture, { ecranCourant: 0 });
+      await stabiliserLaVue(fixture);
       return fixture;
     }
 
