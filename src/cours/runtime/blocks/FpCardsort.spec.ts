@@ -1,5 +1,5 @@
+import { detailsEmis, installerBrique } from '../../../testing/banc-de-brique';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
-import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import {
   buildCardsortPlan,
   buildVerdictDeProduction,
@@ -106,44 +106,23 @@ function toutClasser(hote: FpCardsort): void {
 }
 
 function envois(hote: FpCardsort): Record<string, unknown>[] {
-  const recus: Record<string, unknown>[] = [];
-  hote.addEventListener('fp-cardsort-submit', (evenement) =>
-    recus.push((evenement as CustomEvent<Record<string, unknown>>).detail),
-  );
-  return recus;
+  return detailsEmis(hote, 'fp-cardsort-submit');
 }
 
 function brouillonsDe(hote: FpCardsort): unknown[] {
-  const recus: unknown[] = [];
-  hote.addEventListener('fp-brouillon', (evenement) =>
-    recus.push((evenement as CustomEvent).detail),
-  );
-  return recus;
+  return detailsEmis(hote, 'fp-brouillon');
 }
 
 describe('FpCardsort', () => {
   let hote: FpCardsort;
-  let traces: TracesEffets;
-
-  beforeAll(() => {
-    if (!customElements.get('fp-cardsort')) {
-      customElements.define('fp-cardsort', FpCardsort);
-    }
-  });
-
-  beforeEach(() => {
-    jasmine.clock().install();
-    jasmine.clock().mockDate(DEBUT);
-    hote = document.createElement('fp-cardsort') as FpCardsort;
-    traces = surveillerEffets(hote);
-    hote.plan = buildCardsortPlan();
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    traces.restaurer();
-    hote.remove();
-    jasmine.clock().uninstall();
+  const traces = installerBrique<FpCardsort>({
+    balise: 'fp-cardsort',
+    classe: FpCardsort,
+    instant: DEBUT,
+    poser: (brique) => {
+      hote = brique;
+      brique.plan = buildCardsortPlan();
+    },
   });
 
   it('pose une zone nommee par carte a trier et par categorie', () => {

@@ -10,7 +10,9 @@ import {
   type ResultatsDuFlux,
   type StatutFlux,
   type Sync,
+  type SyncOptions,
 } from './sync';
+import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
 
 const BASE = 'https://api.test';
 const SESSION = 's1';
@@ -80,6 +82,17 @@ describe('sync', () => {
     return sync;
   }
 
+  async function ouvrirAvec(options: Pick<SyncOptions, 'chemin' | 'entetes'>): Promise<void> {
+    sync = createSync({
+      baseUrl: BASE,
+      sessionId: SESSION,
+      ouvrirFlux: creerOuverture(flux),
+      ...options,
+    });
+    sync.ouvrir();
+    await vider();
+  }
+
   async function attendreJusqua(condition: () => boolean): Promise<void> {
     for (let tour = 0; tour < 40 && !condition(); tour += 1) {
       await new Promise((resoudre) => setTimeout(resoudre, 0));
@@ -116,18 +129,19 @@ describe('sync', () => {
     return recus;
   }
 
-  function monterAvecRefus(statut: number, chemin: CheminFlux): { readonly nombre: number } {
-    const tentatives = { nombre: 0 };
-    sync = createSync({
-      baseUrl: BASE,
-      sessionId: SESSION,
-      chemin,
-      ouvrirFlux: () => {
-        tentatives.nombre += 1;
-        return Promise.resolve(new Response(null, { status: statut }));
-      },
-    });
-    return tentatives;
+  async function servirLaFin(
+    morceau: string,
+    etats: EtatSession[] = [],
+  ): Promise<(RaisonDeFin | null)[]> {
+    monter();
+    const raisons: (RaisonDeFin | null)[] = [];
+    sync.onState((etat) => etats.push(etat));
+    sync.onFin((raison) => raisons.push(raison));
+    sync.ouvrir();
+    await vider();
+    await flux[0].envoyer(morceau);
+    await attendreJusqua(() => raisons.length > 0);
+    return raisons;
   }
 
   beforeEach(() => {
@@ -155,15 +169,10 @@ describe('sync', () => {
   });
 
   it('ouvre le flux du presentateur sur le chemin dedie avec l en tete authorization', async () => {
-    sync = createSync({
-      baseUrl: BASE,
-      sessionId: SESSION,
+    await ouvrirAvec({
       chemin: 'presenter-stream',
       entetes: () => ({ authorization: `Bearer ${JETON_PRESENTATEUR}` }),
-      ouvrirFlux: creerOuverture(flux),
     });
-    sync.ouvrir();
-    await vider();
     expect(flux.length).toBe(1);
     expect(flux[0].url).toBe('https://api.test/sessions/s1/presenter-stream');
     expect(flux[0].entetes['authorization']).toBe(`Bearer ${JETON_PRESENTATEUR}`);
@@ -171,17 +180,12 @@ describe('sync', () => {
 
   it('relit les en tetes personnalisees a chaque ouverture', async () => {
     let compteur = 0;
-    sync = createSync({
-      baseUrl: BASE,
-      sessionId: SESSION,
-      ouvrirFlux: creerOuverture(flux),
+    await ouvrirAvec({
       entetes: () => {
         compteur += 1;
         return { 'x-compteur': String(compteur) };
       },
     });
-    sync.ouvrir();
-    await vider();
     sync.ouvrir();
     await vider();
     expect(flux.length).toBe(2);
@@ -190,13 +194,7 @@ describe('sync', () => {
   });
 
   it('ouvrir sans identite ouvre le flux sur le chemin par defaut', async () => {
-    sync = createSync({
-      baseUrl: BASE,
-      sessionId: SESSION,
-      ouvrirFlux: creerOuverture(flux),
-    });
-    sync.ouvrir();
-    await vider();
+    await ouvrirAvec({});
     expect(flux.length).toBe(1);
     expect(flux[0].url).toBe('https://api.test/sessions/s1/stream');
   });
@@ -279,17 +277,11 @@ describe('sync', () => {
   }
 
   it('ne livre plus aucun etat servi dans le meme morceau que la fin', async () => {
-    monter();
     const recus: EtatSession[] = [];
-    const raisons: (RaisonDeFin | null)[] = [];
-    sync.onState((etat) => recus.push(etat));
-    sync.onFin((raison) => raisons.push(raison));
-    sync.ouvrir();
-    await vider();
-    await flux[0].envoyer(
+    const raisons = await servirLaFin(
       bloc('fin', { raison: 'cloturee' }) + bloc('etat', { ...ETAT, ecranCourant: 51 }),
+      recus,
     );
-    await attendreJusqua(() => raisons.length > 0);
 
     expect(raisons).toEqual(['cloturee']);
     expect(recus).toEqual([]);
@@ -304,13 +296,7 @@ describe('sync', () => {
 
   for (const [servie, annoncee] of finsServies) {
     it(`annonce a ses ecouteurs la fin « ${servie} » avec la raison ${annoncee}`, async () => {
-      monter();
-      const raisons: (RaisonDeFin | null)[] = [];
-      sync.onFin((raison) => raisons.push(raison));
-      sync.ouvrir();
-      await vider();
-      await flux[0].envoyer(bloc('fin', { raison: servie }));
-      await attendreJusqua(() => raisons.length > 0);
+      const raisons = await servirLaFin(bloc('fin', { raison: servie }));
 
       expect(raisons).toEqual([annoncee]);
     });
@@ -481,40 +467,58 @@ describe('sync', () => {
       jasmine.clock().tick(1);
     }
 
-    async function constaterLaReconnexionPuisLaRelance(): Promise<void> {
-      await laisserPasserLeFlux();
-
-      expect(statuts).toEqual([{ etat: 'connecte' }, { etat: 'reconnexion' }]);
-
+    async function constaterLaRelanceApresUneSeconde(): Promise<void> {
       jasmine.clock().tick(1000);
       await laisserPasserLeFlux();
 
       expect(flux.length).toBe(2);
     }
 
-    beforeEach(() => {
-      jasmine.clock().install();
-    });
+    async function constaterLaReconnexionPuisLaRelance(): Promise<void> {
+      await laisserPasserLeFlux();
 
-    afterEach(() => {
-      jasmine.clock().uninstall();
-    });
+      expect(statuts).toEqual([{ etat: 'connecte' }, { etat: 'reconnexion' }]);
 
-    it('annonce le flux connecte des que le serveur l accepte', async () => {
+      await constaterLaRelanceApresUneSeconde();
+    }
+
+    async function ouvrirEnSuivantLesStatuts(): Promise<void> {
       monter();
       suivreLesStatuts();
-
       sync.ouvrir();
       await vider();
+    }
+
+    async function ouvrirMalgreUnRefus(
+      statut: number,
+      chemin: CheminFlux,
+    ): Promise<{ readonly nombre: number }> {
+      const tentatives = { nombre: 0 };
+      sync = createSync({
+        baseUrl: BASE,
+        sessionId: SESSION,
+        chemin,
+        ouvrirFlux: () => {
+          tentatives.nombre += 1;
+          return Promise.resolve(new Response(null, { status: statut }));
+        },
+      });
+      suivreLesStatuts();
+      sync.ouvrir();
+      await vider();
+      return tentatives;
+    }
+
+    sousHorlogeSimulee();
+
+    it('annonce le flux connecte des que le serveur l accepte', async () => {
+      await ouvrirEnSuivantLesStatuts();
 
       expect(statuts).toEqual([{ etat: 'connecte' }]);
     });
 
     it('annonce la reconnexion quand le flux se coupe, puis la connexion retrouvee', async () => {
-      monter();
-      suivreLesStatuts();
-      sync.ouvrir();
-      await vider();
+      await ouvrirEnSuivantLesStatuts();
 
       await flux[0].couper();
       await constaterLaReconnexionPuisLaRelance();
@@ -524,11 +528,7 @@ describe('sync', () => {
 
     for (const statut of [401, 403]) {
       it(`cesse de rouvrir le flux apres un refus ${statut}, qu aucune relance ne resoudra`, async () => {
-        const tentatives = monterAvecRefus(statut, 'stream');
-        suivreLesStatuts();
-
-        sync.ouvrir();
-        await vider();
+        const tentatives = await ouvrirMalgreUnRefus(statut, 'stream');
         jasmine.clock().tick(60_000);
         await vider();
 
@@ -537,11 +537,7 @@ describe('sync', () => {
       });
 
       it(`rouvre le flux apres un refus ${statut} si le poste le redemande lui-meme`, async () => {
-        const tentatives = monterAvecRefus(statut, 'stream');
-        suivreLesStatuts();
-
-        sync.ouvrir();
-        await vider();
+        const tentatives = await ouvrirMalgreUnRefus(statut, 'stream');
         sync.ouvrir();
         await vider();
 
@@ -551,11 +547,7 @@ describe('sync', () => {
 
     for (const statut of [429, 500, 503]) {
       it(`annonce un refus ${statut} a chaque essai sans le masquer par une reconnexion`, async () => {
-        const tentatives = monterAvecRefus(statut, 'presenter-stream');
-        suivreLesStatuts();
-
-        sync.ouvrir();
-        await vider();
+        const tentatives = await ouvrirMalgreUnRefus(statut, 'presenter-stream');
         jasmine.clock().tick(1000);
         await vider();
 
@@ -646,9 +638,7 @@ describe('sync', () => {
           await vider();
           await flux[0].couper();
           await laisserPasserLeFlux();
-          jasmine.clock().tick(1000);
-          await laisserPasserLeFlux();
-          expect(flux.length).toBe(2);
+          await constaterLaRelanceApresUneSeconde();
           await flux[1].couper();
           await laisserPasserLeFlux();
 
@@ -659,29 +649,29 @@ describe('sync', () => {
         });
       }
 
-      it('rouvre un flux reste muet pendant la veille', async () => {
-        monter();
-        sync.ouvrir();
-        await vider();
-        const premier = flux[0];
-        await premier.envoyer(bloc('etat', ETAT));
-
-        jasmine.clock().mockDate(new Date(2026, 8, 25, 9, 5, 0));
-        window.dispatchEvent(new Event('online'));
-        await vider();
-
-        expect(flux.length).toBe(2);
-      });
-
-      it('laisse en place un flux vivant quand l eleve revient sur l onglet', async () => {
+      async function reveillerApresUnEtat(reveil: Date, reveiller: () => void): Promise<void> {
         monter();
         sync.ouvrir();
         await vider();
         await flux[0].envoyer(bloc('etat', ETAT));
 
-        jasmine.clock().mockDate(new Date(2026, 8, 25, 9, 0, 10));
-        document.dispatchEvent(new Event('visibilitychange'));
+        jasmine.clock().mockDate(reveil);
+        reveiller();
         await vider();
+      }
+
+      it('rouvre un flux reste muet pendant la veille', async () => {
+        await reveillerApresUnEtat(new Date(2026, 8, 25, 9, 5, 0), () =>
+          window.dispatchEvent(new Event('online')),
+        );
+
+        expect(flux.length).toBe(2);
+      });
+
+      it('laisse en place un flux vivant quand l eleve revient sur l onglet', async () => {
+        await reveillerApresUnEtat(new Date(2026, 8, 25, 9, 0, 10), () =>
+          document.dispatchEvent(new Event('visibilitychange')),
+        );
 
         expect(flux.length).toBe(1);
       });
@@ -710,10 +700,7 @@ describe('sync', () => {
     });
 
     it('n annonce rien et ne relance pas apres une fermeture volontaire', async () => {
-      monter();
-      suivreLesStatuts();
-      sync.ouvrir();
-      await vider();
+      await ouvrirEnSuivantLesStatuts();
 
       sync.close();
       jasmine.clock().tick(SILENCE_MAX_MS * 2);

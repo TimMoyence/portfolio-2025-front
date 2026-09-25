@@ -1,7 +1,6 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
-import { projeterMetadonnees } from './projection';
+import { FpEnvoi } from './contenu';
+import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { estObjet, type StrategieServie } from './retours';
 
 export interface LigneDuDossier {
@@ -9,13 +8,11 @@ export interface LigneDuDossier {
   readonly valeur: string;
 }
 
-export interface ChallengeProblemePublic {
-  readonly id: string;
+export interface ChallengeProblemePublic extends ContenuDeBrique {
   readonly enonce: string;
   readonly invite: string;
   readonly rappel?: readonly LigneDuDossier[];
   readonly strategies: readonly [];
-  readonly metadonnees: MetadonneesBrique;
 }
 
 const ID_TENTATIVE = 'fp-challenge-tentative';
@@ -65,34 +62,24 @@ function dossier(probleme: ChallengeProblemePublic): EscapedHtml {
   return safeHtml`<dl class="fp-challenge__rappel" data-testid="rappel">${lignes}</dl>`;
 }
 
-export class FpChallenge extends FpBlock {
-  private interne: ChallengeProblemePublic | null = null;
+function copierProbleme(source: ChallengeProblemePublic): ChallengeProblemePublic {
+  return {
+    ...copierLeSocle(source),
+    enonce: source.enonce,
+    invite: source.invite,
+    ...(source.rappel === undefined ? {} : { rappel: lireRappel(source.rappel) }),
+    strategies: [],
+  };
+}
+
+export class FpChallenge extends FpEnvoi<ChallengeProblemePublic> {
   private servies: readonly StrategieServie[] = [];
   private formateur: readonly StrategieServie[] = [];
   private interneRevele = false;
   private tentative = '';
-  private message = '';
-  private soumise = false;
 
   set probleme(valeur: ChallengeProblemePublic | null) {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne =
-      valeur === null
-        ? null
-        : {
-            id: valeur.id,
-            enonce: valeur.enonce,
-            invite: valeur.invite,
-            ...(valeur.rappel === undefined ? {} : { rappel: lireRappel(valeur.rappel) }),
-            strategies: [],
-            metadonnees: projeterMetadonnees(valeur.metadonnees),
-          };
-    if (change) {
-      this.tentative = '';
-      this.message = '';
-      this.soumise = false;
-      this.servies = [];
-    }
+    this.poserLeContenu(valeur, copierProbleme);
     this.refreshSiConnecte();
   }
 
@@ -103,7 +90,7 @@ export class FpChallenge extends FpBlock {
   set strategies(valeur: readonly StrategieServie[] | null) {
     this.servies = lireStrategies(valeur);
     if (this.servies.length > 0) {
-      this.soumise = true;
+      this.envoye = true;
     }
     this.refreshSiConnecte();
   }
@@ -127,12 +114,17 @@ export class FpChallenge extends FpBlock {
     this.refreshSiConnecte();
   }
 
-  set brouillon(valeur: unknown) {
-    if (estObjet(valeur) && typeof valeur['tentative'] === 'string') {
-      this.tentative = valeur['tentative'];
-      this.noterBrouillonRepris();
-      this.refreshSiConnecte();
+  protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
+    const tentative = brouillon['tentative'];
+    if (typeof tentative !== 'string') {
+      return false;
     }
+    this.tentative = tentative;
+    return true;
+  }
+
+  protected override accepteLeBrouillon(): boolean {
+    return true;
   }
 
   render(): EscapedHtml {
@@ -167,20 +159,21 @@ export class FpChallenge extends FpBlock {
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.probleme?.id ?? null);
-    const champ = racine.querySelector<HTMLTextAreaElement>('[data-testid="tentative"]');
-    const envoyer = racine.querySelector<HTMLButtonElement>('[data-testid="envoyer"]');
-    if (champ === null || envoyer === null) {
-      return;
-    }
-    const verrouille =
-      this.interneRevele || this.verrouilleApresEnvoi(this.soumise, this.servies.length > 0);
-    champ.disabled = verrouille;
-    envoyer.disabled = verrouille;
-    champ.addEventListener('input', () => {
-      this.tentative = champ.value;
-      this.signalerBrouillon(this.interne?.id ?? '', { tentative: champ.value });
-    });
-    envoyer.addEventListener('click', () => this.envoyer(champ.value));
+    this.brancherLaSaisie(
+      racine,
+      {
+        champ: 'tentative',
+        bouton: 'envoyer',
+        verrouille: this.interneRevele || this.verrouille(),
+      },
+      {
+        saisir: (tentative) => {
+          this.tentative = tentative;
+          this.signalerBrouillon(this.interne?.id ?? '', { tentative });
+        },
+        envoyer: (tentative) => this.envoyer(tentative),
+      },
+    );
   }
 
   private marque(strategie: StrategieServie): EscapedHtml {
@@ -205,23 +198,24 @@ export class FpChallenge extends FpBlock {
     return safeHtml`<details class="fp-challenge__revelation" data-testid="revelation" ${ouverte ? OUVERT : VIDE}><summary class="fp-challenge__titre">${escapeHtml(this.texte(ouverte ? 'challenge-strategies' : 'challenge-reveler'))}</summary><ul class="fp-challenge__strategies">${lignes}</ul>${attente}</details>`;
   }
 
+  protected effacerLaSaisie(): void {
+    this.tentative = '';
+    this.servies = [];
+  }
+
+  protected override verdictRecu(): boolean {
+    return this.servies.length > 0;
+  }
+
   private envoyer(brut: string): void {
-    if (this.verrouilleApresEnvoi(this.soumise, this.servies.length > 0)) {
+    if (this.verrouille()) {
       return;
     }
     this.tentative = brut;
     if (brut.trim().length === 0) {
-      this.message = this.texte('challenge-tentative-vide');
-      this.refresh();
+      this.refuserLEnvoi(this.texte('challenge-tentative-vide'));
       return;
     }
-    this.soumise = true;
-    this.message = this.messageApresEnvoi();
-    this.emit('fp-challenge-submit', {
-      problemeId: this.probleme?.id,
-      tentative: brut,
-      dureeMs: this.depuisAffichage(),
-    });
-    this.refresh();
+    this.conclureLEnvoi('fp-challenge-submit', { problemeId: this.probleme?.id, tentative: brut });
   }
 }

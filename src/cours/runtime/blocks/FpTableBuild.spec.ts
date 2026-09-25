@@ -1,5 +1,10 @@
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
-import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
+import {
+  attendreLEnvoiVideRefuse,
+  attendreLeRenvoiEpuise,
+  detailsEmis,
+  installerBrique,
+} from '../../../testing/banc-de-brique';
 import {
   buildTableBuildPlan,
   buildVerdictDeProduction,
@@ -87,34 +92,25 @@ function cliquer(hote: FpTableBuild, nom: string): void {
   repere(hote, nom)?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 }
 
+function recevoirLeVerdictPartiel(hote: FpTableBuild): void {
+  toutSaisir(hote);
+  cliquer(hote, 'valider');
+  hote.verdict = VERDICT_PARTIEL;
+}
+
 function envois(hote: FpTableBuild): Record<string, unknown>[] {
-  const recus: Record<string, unknown>[] = [];
-  hote.addEventListener('fp-table-build-submit', (evenement) =>
-    recus.push((evenement as CustomEvent<Record<string, unknown>>).detail),
-  );
-  return recus;
+  return detailsEmis(hote, 'fp-table-build-submit');
 }
 
 describe('FpTableBuild', () => {
   let hote: FpTableBuild;
-  let traces: TracesEffets;
-
-  beforeAll(() => {
-    if (!customElements.get('fp-table-build')) {
-      customElements.define('fp-table-build', FpTableBuild);
-    }
-  });
-
-  beforeEach(() => {
-    hote = document.createElement('fp-table-build') as FpTableBuild;
-    traces = surveillerEffets(hote);
-    hote.plan = buildTableBuildPlan();
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    traces.restaurer();
-    hote.remove();
+  const traces = installerBrique<FpTableBuild>({
+    balise: 'fp-table-build',
+    classe: FpTableBuild,
+    poser: (brique) => {
+      hote = brique;
+      brique.plan = buildTableBuildPlan();
+    },
   });
 
   it('pose un tableau a entetes portees, une ligne par revision nommee', () => {
@@ -174,10 +170,7 @@ describe('FpTableBuild', () => {
 
   it('refuse un envoi vide puis un envoi incomplet, et envoie les seules valeurs saisies', () => {
     const recus = envois(hote);
-    cliquer(hote, 'valider');
-    expect(texteDe(hote, 'retour')).toBe(
-      'Saisissez au moins une valeur ou choisissez « Je ne sais pas »',
-    );
+    attendreLEnvoiVideRefuse(hote);
     saisir(hote, 0, 'prix', PRIX_SAISIS[0]);
     cliquer(hote, 'valider');
     expect(texteDe(hote, 'retour')).toBe('Complétez chaque cellule à saisir avant de valider');
@@ -209,10 +202,7 @@ describe('FpTableBuild', () => {
   });
 
   it('n ecrit dans aucun stockage : le brouillon passe par l hote', () => {
-    const brouillons: unknown[] = [];
-    hote.addEventListener('fp-brouillon', (evenement) =>
-      brouillons.push((evenement as CustomEvent).detail),
-    );
+    const brouillons = detailsEmis(hote, 'fp-brouillon');
     saisir(hote, 0, 'prix', PRIX_SAISIS[0]);
     expect(brouillons).toEqual([{ id: PLAN.id, valeur: { '0:prix': PRIX_SAISIS[0] } }]);
     expect(traces.ecritures).toEqual([]);
@@ -226,9 +216,7 @@ describe('FpTableBuild', () => {
   });
 
   it('marque les cellules selon le verdict recu et compte les lignes justes', () => {
-    toutSaisir(hote);
-    cliquer(hote, 'valider');
-    hote.verdict = VERDICT_PARTIEL;
+    recevoirLeVerdictPartiel(hote);
 
     const fausse = cellule(hote, 1, 'prix').closest('td');
     expect(fausse?.getAttribute('data-etat')).toBe('a-revoir');
@@ -239,9 +227,7 @@ describe('FpTableBuild', () => {
 
   it('RET-31 · laisse reprendre les seules cases fausses apres verdict puis les renvoie une fois', () => {
     const recus = envois(hote);
-    toutSaisir(hote);
-    cliquer(hote, 'valider');
-    hote.verdict = VERDICT_PARTIEL;
+    recevoirLeVerdictPartiel(hote);
 
     expect(boutonValider(hote).disabled).toBeTrue();
     expect(cellule(hote, 0, 'prix').disabled).toBeTrue();
@@ -254,17 +240,12 @@ describe('FpTableBuild', () => {
 
     expect(recus.length).toBe(2);
     expect(recus[1]['saisies']).toContain({ rang: 1, cle: 'prix', valeur: 20.52 });
-    expect(boutonValider(hote).disabled).toBeTrue();
-    expect(boutonValider(hote).textContent?.trim()).not.toBe(RENVOYER);
-    cliquer(hote, 'valider');
-    expect(recus.length).toBe(2);
+    attendreLeRenvoiEpuise(hote, recus, 2);
   });
 
   it('RET-31 · ferme la reprise des cases fausses des que la correction est revelee', () => {
     const recus = envois(hote);
-    toutSaisir(hote);
-    cliquer(hote, 'valider');
-    hote.verdict = VERDICT_PARTIEL;
+    recevoirLeVerdictPartiel(hote);
     hote.etayage = 1;
 
     expect(cellule(hote, 1, 'prix').disabled).toBeTrue();
@@ -275,17 +256,17 @@ describe('FpTableBuild', () => {
   });
 
   it('ne sert aucun tableau corrige tant que la correction n est pas revelee', () => {
+    const attendreAucunTableauCorrige = (): void => {
+      for (const role of ROLES) {
+        hote.setAttribute('data-cours-role', role);
+        expect(repere(hote, 'tableau-corrige')).withContext(role).toBeNull();
+      }
+    };
     hote.corrige = ATTENDUS_FORMATEUR;
-    for (const role of ROLES) {
-      hote.setAttribute('data-cours-role', role);
-      expect(repere(hote, 'tableau-corrige')).withContext(role).toBeNull();
-    }
+    attendreAucunTableauCorrige();
     hote.corrige = null;
     hote.etayage = 2;
-    for (const role of ROLES) {
-      hote.setAttribute('data-cours-role', role);
-      expect(repere(hote, 'tableau-corrige')).withContext(role).toBeNull();
-    }
+    attendreAucunTableauCorrige();
   });
 
   it('RET-31 · projette le tableau corrige, saisies masquees au niveau 1 puis revelees au niveau 2', () => {

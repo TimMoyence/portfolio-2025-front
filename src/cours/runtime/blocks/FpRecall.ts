@@ -1,15 +1,17 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { Battement, SECONDE_MS } from './battement';
 import { FpReponse } from './reponse';
-import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import { estObjet, lireBonneOption, lireBonneReponse } from './retours';
+import {
+  type ContenuDeBrique,
+  type OptionPublique,
+  copierLeSocle,
+  projeterOptions,
+} from './projection';
+import { lireBonneOption, lireBonneReponse } from './retours';
 
-export interface RecallQuestionPublique {
-  readonly id: string;
+export interface RecallQuestionPublique extends ContenuDeBrique {
   readonly enonce: string;
   readonly options: readonly OptionPublique[];
-  readonly metadonnees: MetadonneesBrique;
 }
 
 const DELAI_RAPPEL_MS = 8000;
@@ -19,10 +21,9 @@ const DESACTIVE = safeHtml`disabled`;
 
 function projeterQuestion(source: RecallQuestionPublique): RecallQuestionPublique {
   return {
-    id: source.id,
+    ...copierLeSocle(source),
     enonce: source.enonce,
     options: projeterOptions(source.options),
-    metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
 
@@ -32,7 +33,6 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   private rappel = '';
   private choisie: string | null = null;
   private interneConsigne: string | null = null;
-  private bonneReponse: string | null = null;
   private bonneOption: string | null = null;
   private readonly battement = new Battement(() => this.battre());
 
@@ -52,7 +52,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   }
 
   set question(valeur: RecallQuestionPublique | null) {
-    this.poserLaQuestion(valeur, projeterQuestion);
+    this.poserLeContenu(valeur, projeterQuestion);
     this.ouvrirLeRappel();
     this.refreshSiConnecte();
   }
@@ -82,12 +82,13 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
     return this.interneOptionsAffichees;
   }
 
-  set brouillon(valeur: unknown) {
-    if (estObjet(valeur) && typeof valeur['rappel'] === 'string' && !this.envoye) {
-      this.rappel = valeur['rappel'];
-      this.noterBrouillonRepris();
-      this.refreshSiConnecte();
+  protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
+    const rappel = brouillon['rappel'];
+    if (typeof rappel !== 'string') {
+      return false;
     }
+    this.rappel = rappel;
+    return true;
   }
 
   override connectedCallback(): void {
@@ -99,19 +100,11 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
     this.battement.arreter();
   }
 
-  render(): EscapedHtml {
-    const question = this.question;
-    if (!question) {
-      return this.attente();
-    }
+  protected rendreLaQuestion(question: RecallQuestionPublique): EscapedHtml {
     const saisie = this.presentateur()
       ? escapeHtml('')
       : safeHtml`<textarea class="fp-recall__champ" data-testid="rappel" rows="4" aria-label="${escapeHtml(this.texte('rappel-champ'))}">${escapeHtml(this.rappel)}</textarea>`;
-    const suivi = this.presentateur()
-      ? escapeHtml('')
-      : safeHtml`<p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
-        ${this.verdictDeReponse(this.interneVerdict)}
-        ${this.annonces()}`;
+    const suivi = this.presentateur() ? escapeHtml('') : this.suiviDeLEnvoi();
     return safeHtml`
       <fieldset class="fp-carte fp-scene fp-recall__billet">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
@@ -120,20 +113,13 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
         ${this.compteur()}
         ${this.optionsVisibles()}
         ${suivi}
-        ${this.bonneReponseRevelee()}
+        ${this.bonneReponseRevelee((bonne) => bonne)}
       </fieldset>
     `;
   }
 
   private consigneAffichee(): string {
     return this.interneConsigne ?? this.texte('rappel-consigne');
-  }
-
-  private bonneReponseRevelee(): EscapedHtml {
-    if (this.bonneReponse === null) {
-      return escapeHtml('');
-    }
-    return safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(this.bonneReponse)}</p>`;
   }
 
   bind(racine: ShadowRoot): void {
@@ -156,7 +142,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
     }
   }
 
-  protected effacerLaReponse(): void {
+  protected effacerLaSaisie(): void {
     this.rappel = '';
     this.choisie = null;
   }
@@ -232,15 +218,11 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
     if (this.verrouille() || this.restantMs() > 0) {
       return;
     }
-    this.envoye = true;
     this.choisie = valeur;
-    this.message = this.messageApresEnvoi();
-    this.emit('fp-recall-submit', {
+    this.conclureLEnvoi('fp-recall-submit', {
       questionId: this.question?.id,
       valeur,
       rappel: this.rappel,
-      dureeMs: this.depuisAffichage(),
     });
-    this.refresh();
   }
 }

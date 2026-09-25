@@ -13,12 +13,19 @@ import type { ProCas } from './FpPro';
 import type { PulseSondage } from './FpPulse';
 import type { SheetPlanPublic as SheetPlanBrique } from './FpSheet';
 import type { SpacedQuestionPublique as SpacedQuestionBrique } from './FpSpaced';
-import type { StoryRecit as StoryRecitBrique } from './FpStory';
+import type { StoryRecit } from './FpStory';
 import type { TableBuildPlanPublic, TableColonne } from './FpTableBuild';
 import type { WorkedExemple } from './FpWorked';
 import type { OptionPublique } from './projection';
 
-export type { Concept4Definition, ExitBilletPublic, OptionPublique, PulseSondage, WorkedExemple };
+export type {
+  Concept4Definition,
+  ExitBilletPublic,
+  OptionPublique,
+  PulseSondage,
+  StoryRecit,
+  WorkedExemple,
+};
 
 export type NumeriquePublic = NumericQuestionPublique;
 
@@ -51,18 +58,6 @@ export interface EscapeParcoursPublic extends Omit<EscapeParcoursBrique, 'enigme
 
 export interface SpacedQuestionPublique extends Omit<SpacedQuestionBrique, 'boite'> {
   readonly boite: 1 | 2 | 3;
-}
-
-export interface StoryRecit extends Omit<StoryRecitBrique, 'video'> {
-  readonly video?: NonNullable<StoryRecitBrique['video']> & {
-    readonly srcPoste?: string;
-    readonly sousTitres?: {
-      readonly src: string;
-      readonly srclang: string;
-      readonly libelle: string;
-    };
-    readonly preload?: 'none' | 'metadata';
-  };
 }
 
 type QuestionDeQuestionnaire =

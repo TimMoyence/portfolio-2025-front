@@ -1,6 +1,6 @@
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
-import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
+import { creerBrique, detailsEmis, installerBrique } from '../../../testing/banc-de-brique';
 import { buildWorkedExemple } from '../../../testing/factories/cours.factory';
 import { FpWorked } from './FpWorked';
 
@@ -57,9 +57,16 @@ function montrees(hote: FpWorked): string[] {
 
 describe('FpWorked', () => {
   let hote: FpWorked;
-  let traces: TracesEffets;
   let envois: EnvoiWorked[];
   let ecouteur: (evenement: Event) => void;
+  const traces = installerBrique<FpWorked>({
+    balise: 'fp-worked',
+    classe: FpWorked,
+    poser: (brique) => {
+      hote = brique;
+      brique.exemple = EXEMPLE;
+    },
+  });
 
   function envoisEmis(): string[] {
     return traces.evenements.filter((nom) => nom !== 'fp-brouillon');
@@ -73,18 +80,11 @@ describe('FpWorked', () => {
   }
 
   function monter(etayage: number): FpWorked {
-    const neuf = document.createElement('fp-worked') as FpWorked;
-    neuf.exemple = EXEMPLE;
-    neuf.etayage = etayage;
-    document.body.appendChild(neuf);
-    return neuf;
+    return creerBrique<FpWorked>('fp-worked', (neuf) => {
+      neuf.exemple = EXEMPLE;
+      neuf.etayage = etayage;
+    });
   }
-
-  beforeAll(() => {
-    if (!customElements.get('fp-worked')) {
-      customElements.define('fp-worked', FpWorked);
-    }
-  });
 
   beforeEach(() => {
     envois = [];
@@ -92,15 +92,10 @@ describe('FpWorked', () => {
       envois.push((evenement as CustomEvent).detail as EnvoiWorked);
     };
     document.addEventListener('fp-worked-submit', ecouteur);
-    hote = document.createElement('fp-worked') as FpWorked;
-    traces = surveillerEffets(hote);
-    hote.exemple = EXEMPLE;
-    document.body.appendChild(hote);
   });
 
   afterEach(() => {
     document.removeEventListener('fp-worked-submit', ecouteur);
-    traces.restaurer();
     for (const reste of [...document.querySelectorAll('fp-worked')]) {
       reste.remove();
     }
@@ -231,10 +226,7 @@ describe('FpWorked', () => {
   });
 
   it('confie chaque frappe au brouillon de l hote et la restaure au remontage, sans stockage', () => {
-    const brouillons: unknown[] = [];
-    hote.addEventListener('fp-brouillon', (evenement) =>
-      brouillons.push((evenement as CustomEvent).detail),
-    );
+    const brouillons = detailsEmis(hote, 'fp-brouillon');
     hote.etayage = PLEIN - 1;
     ecrire(hote, 'saisie', DERNIERE, 'la valeur acquise');
 

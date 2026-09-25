@@ -15,6 +15,15 @@ export function projeterMetadonnees(source: MetadonneesBrique): MetadonneesBriqu
   };
 }
 
+export interface ContenuDeBrique {
+  readonly id: string;
+  readonly metadonnees: MetadonneesBrique;
+}
+
+export function copierLeSocle(source: ContenuDeBrique): ContenuDeBrique {
+  return { id: source.id, metadonnees: projeterMetadonnees(source.metadonnees) };
+}
+
 export function projeterOptions(options: readonly OptionPublique[]): OptionPublique[] {
   return options.map((option) => ({ id: option.id, libelle: option.libelle }));
 }

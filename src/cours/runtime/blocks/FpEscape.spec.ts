@@ -1,5 +1,10 @@
+import {
+  attendreLaChargeInerte,
+  cliquerOmbre,
+  detailsEmis,
+  installerBrique,
+} from '../../../testing/banc-de-brique';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
-import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
 import {
   buildEscapeParcours,
   buildProgressionDesEnigmes,
@@ -72,37 +77,25 @@ function proposer(hote: FpEscape, reponse: string): void {
   noeud(hote, 'repondre')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 }
 
+function ouvrirLIndice(hote: FpEscape): void {
+  jasmine.clock().tick(DELAI_INDICE_MS);
+  cliquerOmbre(hote, 'demander-indice');
+}
+
 function tentativesEmises(hote: FpEscape): DetailTentative[] {
-  const emises: DetailTentative[] = [];
-  hote.addEventListener('fp-escape-tentative', (evenement) =>
-    emises.push((evenement as CustomEvent<DetailTentative>).detail),
-  );
-  return emises;
+  return detailsEmis(hote, 'fp-escape-tentative');
 }
 
 describe('FpEscape', () => {
   let hote: FpEscape;
-  let traces: TracesEffets;
-
-  beforeAll(() => {
-    if (!customElements.get('fp-escape')) {
-      customElements.define('fp-escape', FpEscape);
-    }
-  });
-
-  beforeEach(() => {
-    jasmine.clock().install();
-    jasmine.clock().mockDate(DEBUT);
-    hote = document.createElement('fp-escape') as FpEscape;
-    traces = surveillerEffets(hote);
-    hote.parcours = buildEscapeParcours();
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    traces.restaurer();
-    hote.remove();
-    jasmine.clock().uninstall();
+  const traces = installerBrique<FpEscape>({
+    balise: 'fp-escape',
+    classe: FpEscape,
+    instant: DEBUT,
+    poser: (brique) => {
+      hote = brique;
+      brique.parcours = buildEscapeParcours();
+    },
   });
 
   it('ouvre la premiere enigme et verrouille les suivantes', () => {
@@ -197,12 +190,11 @@ describe('FpEscape', () => {
   });
 
   it('retient l indice jusqu au delai puis l offre', () => {
-    noeud(hote, 'demander-indice')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    cliquerOmbre(hote, 'demander-indice');
     expect(libelleDe(hote, 'annonce')).toBe('L’indice s’ouvre dans 120 secondes');
     expect(noeud(hote, 'indice')).toBeNull();
 
-    jasmine.clock().tick(DELAI_INDICE_MS);
-    noeud(hote, 'demander-indice')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    ouvrirLIndice(hote);
 
     expect(libelleDe(hote, 'indice')).toBe(`Indice : ${PARCOURS.enigmes[0].indice}`);
   });
@@ -211,8 +203,7 @@ describe('FpEscape', () => {
     expect(noeud(hote, 'gratuite')).toBeNull();
     expect(hote.shadowRoot?.textContent ?? '').not.toContain('ne retire rien');
 
-    jasmine.clock().tick(DELAI_INDICE_MS);
-    noeud(hote, 'demander-indice')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    ouvrirLIndice(hote);
 
     expect(libelleDe(hote, 'annonce')).toBe('Indice ouvert');
     expect(hote.shadowRoot?.textContent ?? '').not.toContain('ne retire rien');
@@ -338,14 +329,13 @@ describe('FpEscape', () => {
       id: 'K-EVASION-XSS',
       enigmes: [{ id: 'x', intitule: CHARGE_XSS, enonce: CHARGE_XSS, indice: CHARGE_XSS }],
     });
-    expect(hote.shadowRoot?.querySelector('img')).toBeNull();
-    expect(libelleDe(hote, 'enonce')).toBe(CHARGE_XSS);
+    attendreLaChargeInerte(hote, 'enonce', CHARGE_XSS);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
     hote.progression = buildProgressionDesEnigmes();
     jasmine.clock().tick(BUDGET_MS);
-    noeud(hote, 'demander-indice')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    cliquerOmbre(hote, 'demander-indice');
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
     expect(classesOrphelines(hote, 'escape')).toEqual([]);
 

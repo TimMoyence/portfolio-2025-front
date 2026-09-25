@@ -1,13 +1,20 @@
-import {
-  attendreAucunEffet,
-  attendreChaqueClasseCouverte,
-  attendreLaCorrectionNicheeEffacee,
-} from '../../../testing/assertions-briques';
-import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
+import { detailsEmis, installerBrique, roleAffiche } from '../../../testing/banc-de-brique';
 import { buildConcept4Definition } from '../../../testing/factories/cours.factory';
+import {
+  animer,
+  attendreLeParametreEchappe,
+  attendreParametresAnnonces,
+  decrireLaSobrieteDUneBriqueReglable,
+  emisAuPupitre,
+  glisserCurseur,
+  jouerAuPupitre,
+  relacherCurseur,
+} from '../../../testing/reglages-briques';
+import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
 import { evaluerExpression, remplirGabarit } from '../core/formula';
 import { type Concept4Definition, FpConcept4 } from './FpConcept4';
 
+const REGLAGE = 'fp-concept4-reglage';
 const DEFINITION = buildConcept4Definition();
 const MACHINE = buildConcept4Definition({
   id: 'K-MACHINE-COEFFICIENTS',
@@ -59,14 +66,6 @@ function quatreFaces(hote: FpConcept4): Readonly<Record<string, string>> {
   };
 }
 
-function animer(hote: FpConcept4): void {
-  const bouton = hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="animer"]');
-  if (bouton === null || bouton === undefined) {
-    throw new Error('aucun bouton d animation');
-  }
-  bouton.click();
-}
-
 function boutonsDePrereglage(hote: FpConcept4): HTMLButtonElement[] {
   return tous(hote, '[data-testid="prereglage"]') as HTMLButtonElement[];
 }
@@ -104,24 +103,13 @@ function avecDefaut(cle: string, defaut: number): Concept4Definition {
 
 describe('FpConcept4', () => {
   let hote: FpConcept4;
-  let traces: TracesEffets;
-
-  beforeAll(() => {
-    if (!customElements.get('fp-concept4')) {
-      customElements.define('fp-concept4', FpConcept4);
-    }
-  });
-
-  beforeEach(() => {
-    hote = document.createElement('fp-concept4') as FpConcept4;
-    traces = surveillerEffets(hote);
-    hote.definition = DEFINITION;
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    traces.restaurer();
-    hote.remove();
+  const traces = installerBrique<FpConcept4>({
+    balise: 'fp-concept4',
+    classe: FpConcept4,
+    poser: (brique) => {
+      hote = brique;
+      brique.definition = DEFINITION;
+    },
   });
 
   it('reflete la meme valeur dans les quatre faces apres une animation', () => {
@@ -258,21 +246,7 @@ describe('FpConcept4', () => {
   });
 
   it('annonce chaque parametre en francais lisible et pas par un nombre nu', () => {
-    for (const valeur of tous(hote, '[data-testid="valeur"]')) {
-      const enonce = valeur.getAttribute('aria-label') ?? '';
-      expect(enonce).not.toMatch(/^[\s\d,.]*$/);
-      expect(enonce).toContain(' : ');
-    }
-    expect(
-      hote.shadowRoot
-        ?.querySelector('[data-testid="valeur"][data-cle="n"]')
-        ?.getAttribute('aria-label'),
-    ).toBe('Duree en annees : 10 (de 1 à 30)');
-    expect(
-      hote.shadowRoot
-        ?.querySelector('[data-testid="curseur"][data-cle="n"]')
-        ?.getAttribute('aria-label'),
-    ).toBe('Duree en annees : 10 (de 1 à 30)');
+    attendreParametresAnnonces(hote, 'n', 'Duree en annees : 10 (de 1 à 30)');
   });
 
   it('echappe le html injecte dans la formule, les libelles et la phrase', () => {
@@ -282,15 +256,9 @@ describe('FpConcept4', () => {
       phrase: CHARGE_XSS,
       parametres: DEFINITION.parametres.map((parametre) => ({ ...parametre, libelle: CHARGE_XSS })),
     });
-    expect(hote.shadowRoot?.querySelector('img')).toBeNull();
     expect(lu(hote, 'phrase-texte')).toBe(CHARGE_XSS);
     expect(lu(hote, 'formule')).toContain(CHARGE_XSS);
-    expect(
-      hote.shadowRoot
-        ?.querySelector('[data-testid="valeur"][data-cle="n"]')
-        ?.getAttribute('aria-label'),
-    ).toContain(CHARGE_XSS);
-    expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
+    attendreLeParametreEchappe(hote, 'n', CHARGE_XSS);
   });
 
   it('affiche un tiret quand la formule de calcul est invalide sans casser la brique', () => {
@@ -310,7 +278,7 @@ describe('FpConcept4', () => {
     });
     const etudiant = structure();
     const phraseEtudiant = lu(hote, 'phrase-texte');
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe('etudiant');
+    expect(roleAffiche(hote)).toBe('etudiant');
 
     hote.setAttribute('data-cours-role', 'presentateur');
 
@@ -323,21 +291,12 @@ describe('FpConcept4', () => {
     });
     expect(lu(hote, 'phrase-texte')).toBe(phraseEtudiant);
     expect(un(hote, 'phrase-texte')?.classList.contains('fp-prose')).toBe(true);
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(
-      'presentateur',
-    );
+    expect(roleAffiche(hote)).toBe('presentateur');
   });
 
   it('RET-21 · laisse le formateur manipuler la machine en projection', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
-    const curseurDeN = hote.shadowRoot?.querySelector<HTMLInputElement>(
-      '[data-testid="curseur"][data-cle="n"]',
-    );
-    if (curseurDeN === null || curseurDeN === undefined) {
-      throw new Error('aucun curseur projete pour n');
-    }
-    curseurDeN.value = '20';
-    curseurDeN.dispatchEvent(new Event('input', { bubbles: true }));
+    glisserCurseur(hote, 'n', '20');
 
     expect(hote.valeurs['n']).toBe(20);
     expect(valeurDe(hote, 'formule')).toBe(String(resultatAttendu({ C: 1000, i: 4, n: 20 })));
@@ -346,84 +305,56 @@ describe('FpConcept4', () => {
 
   describe('synchronisation du pupitre vers la projection', () => {
     function reglerN(valeur: string): void {
-      const curseurDeN = hote.shadowRoot?.querySelector<HTMLInputElement>(
-        '[data-testid="curseur"][data-cle="n"]',
-      );
-      if (curseurDeN === null || curseurDeN === undefined) {
-        throw new Error('aucun curseur pour n');
-      }
-      curseurDeN.value = valeur;
-      curseurDeN.dispatchEvent(new Event('input', { bubbles: true }));
-      curseurDeN.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-
-    function reglagesEmis(): unknown[] {
-      const emis: unknown[] = [];
-      hote.addEventListener('fp-concept4-reglage', (evenement) =>
-        emis.push((evenement as CustomEvent).detail),
-      );
-      return emis;
+      relacherCurseur(hote, 'n', valeur);
     }
 
     it('RET-21 · au pupitre, emet les reglages une fois le curseur relache', () => {
-      hote.setAttribute('data-cours-role', 'presentateur');
-      const emis = reglagesEmis();
-
-      reglerN('20');
+      const emis = emisAuPupitre(hote, REGLAGE, () => reglerN('20'));
 
       expect(emis).toEqual([{ reglages: { C: 1000, i: 4, n: 20 } }]);
     });
 
-    it('RET-21 · au pupitre, n emet rien tant que le curseur glisse sans etre relache', () => {
-      hote.setAttribute('data-cours-role', 'presentateur');
-      const emis = reglagesEmis();
-      const curseurDeN = hote.shadowRoot?.querySelector<HTMLInputElement>(
-        '[data-testid="curseur"][data-cle="n"]',
-      );
-      if (curseurDeN === null || curseurDeN === undefined) {
-        throw new Error('aucun curseur pour n');
-      }
+    const REGLAGES_SANS_EMISSION: readonly { titre: string; regler: () => unknown[] }[] = [
+      {
+        titre: 'RET-21 · au pupitre, n emet rien tant que le curseur glisse sans etre relache',
+        regler: () => emisAuPupitre(hote, REGLAGE, () => glisserCurseur(hote, 'n', '20')),
+      },
+      {
+        titre: 'RET-21 · en apercu, le pupitre n emet aucun reglage vers la seance',
+        regler: () => {
+          hote.setAttribute('data-apercu', '');
+          return emisAuPupitre(hote, REGLAGE, () => reglerN('20'));
+        },
+      },
+      {
+        titre: 'RET-21 · chez l etudiant, la machine reste une exploration personnelle',
+        regler: () => {
+          const emis = detailsEmis(hote, REGLAGE);
+          reglerN('20');
+          return emis;
+        },
+      },
+    ];
 
-      curseurDeN.value = '20';
-      curseurDeN.dispatchEvent(new Event('input', { bubbles: true }));
+    for (const cas of REGLAGES_SANS_EMISSION) {
+      it(cas.titre, () => {
+        const emis = cas.regler();
 
-      expect(emis).toEqual([]);
-      expect(hote.valeurs['n']).toBe(20);
-    });
-
-    it('RET-21 · en apercu, le pupitre n emet aucun reglage vers la seance', () => {
-      hote.setAttribute('data-cours-role', 'presentateur');
-      hote.setAttribute('data-apercu', '');
-      const emis = reglagesEmis();
-
-      reglerN('20');
-
-      expect(emis).toEqual([]);
-      expect(hote.valeurs['n']).toBe(20);
-    });
-
-    it('RET-21 · chez l etudiant, la machine reste une exploration personnelle', () => {
-      const emis = reglagesEmis();
-
-      reglerN('20');
-
-      expect(emis).toEqual([]);
-      expect(hote.valeurs['n']).toBe(20);
-    });
+        expect(emis).toEqual([]);
+        expect(hote.valeurs['n']).toBe(20);
+      });
+    }
 
     it('F20 · au pupitre, emet les reglages au clic d un prereglage', () => {
       hote.definition = MACHINE;
-      hote.setAttribute('data-cours-role', 'presentateur');
-      const emis = reglagesEmis();
-
-      prereglage(hote, '+20 % puis −20 %');
+      const emis = emisAuPupitre(hote, REGLAGE, () => prereglage(hote, '+20 % puis −20 %'));
 
       expect(emis).toEqual([{ reglages: { depart: 100, tauxUn: 20, tauxDeux: -20 } }]);
     });
 
     it('F20 · chez l etudiant, un prereglage regle la machine sans rien emettre', () => {
       hote.definition = MACHINE;
-      const emis = reglagesEmis();
+      const emis = detailsEmis(hote, REGLAGE);
 
       prereglage(hote, '−10 % puis +10 %');
 
@@ -446,13 +377,8 @@ describe('FpConcept4', () => {
         animation: [{ depart: 100, tauxUn: 0, tauxDeux: 0 }, { tauxUn: 50 }, { tauxDeux: -50 }],
       });
 
-      beforeEach(() => {
-        jasmine.clock().install();
+      sousHorlogeSimulee(() => {
         hote.definition = ANIMEE;
-      });
-
-      afterEach(() => {
-        jasmine.clock().uninstall();
       });
 
       it('change une seule valeur toutes les trois secondes, de +50 % à −50 %', () => {
@@ -471,13 +397,7 @@ describe('FpConcept4', () => {
       });
 
       it('relaie au pupitre chaque état joué', () => {
-        hote.setAttribute('data-cours-role', 'presentateur');
-        const emis = reglagesEmis();
-
-        animer(hote);
-        jasmine.clock().tick(6000);
-
-        expect(emis).toEqual([
+        expect(jouerAuPupitre(hote, REGLAGE)).toEqual([
           { reglages: { depart: 100, tauxUn: 0, tauxDeux: 0 } },
           { reglages: { depart: 100, tauxUn: 50, tauxDeux: 0 } },
           { reglages: { depart: 100, tauxUn: 50, tauxDeux: -50 } },
@@ -494,22 +414,11 @@ describe('FpConcept4', () => {
     });
   });
 
-  it('efface une donnee de correction nichee dans les metadonnees', () => {
-    attendreLaCorrectionNicheeEffacee(
-      buildConcept4Definition({ id: 'K-QUATRE-FACES-04' }),
-      (contamine) => {
-        hote.definition = contamine;
-        return hote.definition;
-      },
-    );
-  });
-
-  it('explore sans rien emettre vers la seance ni ecrire dans un stockage', () => {
-    animer(hote);
-    attendreAucunEffet(traces);
-  });
-
-  it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    attendreChaqueClasseCouverte(hote, 'concept4', CLASSES_ATTENDUES);
+  decrireLaSobrieteDUneBriqueReglable({
+    hote: () => hote,
+    traces,
+    piege: buildConcept4Definition({ id: 'K-QUATRE-FACES-04' }),
+    brique: 'concept4',
+    classes: CLASSES_ATTENDUES,
   });
 });

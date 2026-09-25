@@ -88,6 +88,31 @@ export function estVerdictDeReponse(valeur: unknown): valeur is VerdictDeReponse
   );
 }
 
+export class VerdictsParQuestion {
+  private readonly parQuestion: ReadonlyMap<string, VerdictDeReponse>;
+
+  constructor(valeur: unknown = null, retenir: (questionId: string) => boolean = () => true) {
+    const verdicts = Array.isArray(valeur) ? valeur.filter(estVerdictDeReponse) : [];
+    this.parQuestion = new Map(
+      verdicts
+        .filter((verdict) => retenir(verdict.questionId))
+        .map((verdict) => [verdict.questionId, verdict]),
+    );
+  }
+
+  a(questionId: string): boolean {
+    return this.parQuestion.has(questionId);
+  }
+
+  de(questionId: string): VerdictDeReponse | null {
+    return this.parQuestion.get(questionId) ?? null;
+  }
+
+  liste(): readonly VerdictDeReponse[] {
+    return [...this.parQuestion.values()];
+  }
+}
+
 function estDetail(valeur: unknown): valeur is DetailDeVerdict {
   return (
     estObjet(valeur) &&

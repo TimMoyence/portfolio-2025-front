@@ -5,7 +5,7 @@ import {
   attendreSansModaliteNiDuree,
   parcourirLesRolesSansEffet,
 } from '../../../testing/assertions-briques';
-import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
+import { installerBrique } from '../../../testing/banc-de-brique';
 import { buildStoryRecit } from '../../../testing/factories/cours.factory';
 import { FpStory, type StoryVideo } from './FpStory';
 
@@ -33,24 +33,13 @@ function paragraphes(element: FpStory): string[] {
 
 describe('FpStory', () => {
   let hote: FpStory;
-  let traces: TracesEffets;
-
-  beforeAll(() => {
-    if (!customElements.get('fp-story')) {
-      customElements.define('fp-story', FpStory);
-    }
-  });
-
-  beforeEach(() => {
-    hote = document.createElement('fp-story') as FpStory;
-    traces = surveillerEffets(hote);
-    hote.recit = RECIT;
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    traces.restaurer();
-    hote.remove();
+  const traces = installerBrique<FpStory>({
+    balise: 'fp-story',
+    classe: FpStory,
+    poser: (brique) => {
+      hote = brique;
+      brique.recit = RECIT;
+    },
   });
 
   it('pose le recit dans un aside et non dans un div nu', () => {

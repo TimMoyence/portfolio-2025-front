@@ -1,34 +1,29 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpReponse } from './reponse';
-import { projeterMetadonnees } from './projection';
+import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { lireBonneReponse } from './retours';
 import { lireNombreSaisi } from './saisie-numerique';
 
-export interface NumericQuestionPublique {
-  readonly id: string;
+export interface NumericQuestionPublique extends ContenuDeBrique {
   readonly enonce: string;
   readonly unite: string | null;
-  readonly metadonnees: MetadonneesBrique;
 }
 
 const ID_UNITE = 'fp-numeric-unite';
 
 function projeterQuestion(source: NumericQuestionPublique): NumericQuestionPublique {
   return {
-    id: source.id,
+    ...copierLeSocle(source),
     enonce: source.enonce,
     unite: source.unite,
-    metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
 
 export class FpNumeric extends FpReponse<NumericQuestionPublique> {
-  private bonneReponse: string | null = null;
   private saisie = '';
 
   set question(valeur: NumericQuestionPublique | null) {
-    this.poserLaQuestion(valeur, projeterQuestion);
+    this.poserLeContenu(valeur, projeterQuestion);
     this.refreshSiConnecte();
   }
 
@@ -41,11 +36,7 @@ export class FpNumeric extends FpReponse<NumericQuestionPublique> {
     this.refreshSiConnecte();
   }
 
-  render(): EscapedHtml {
-    const question = this.question;
-    if (!question) {
-      return this.attente();
-    }
+  protected rendreLaQuestion(question: NumericQuestionPublique): EscapedHtml {
     const unite = question.unite;
     const etiquette =
       unite === null
@@ -60,14 +51,12 @@ export class FpNumeric extends FpReponse<NumericQuestionPublique> {
           ${etiquette}
         </div>
         <button type="button" class="fp-numeric__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
-        <p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
-        ${this.verdictDeReponse(this.interneVerdict)}
-        ${this.annonces()}`;
+        ${this.suiviDeLEnvoi()}`;
     return safeHtml`
       <fieldset class="fp-carte fp-scene fp-numeric__numerique">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
         ${saisie}
-        ${this.bonneReponseRevelee()}
+        ${this.bonneReponseRevelee((bonne) => bonne.replace('.', ','))}
       </fieldset>
     `;
   }
@@ -81,31 +70,26 @@ export class FpNumeric extends FpReponse<NumericQuestionPublique> {
       : safeHtml` data-correction="fausse"`;
   }
 
-  private bonneReponseRevelee(): EscapedHtml {
-    if (this.bonneReponse === null) {
-      return escapeHtml('');
-    }
-    return safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(this.bonneReponse.replace('.', ','))}</p>`;
-  }
-
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.question?.id ?? null);
-    const champ = racine.querySelector<HTMLInputElement>('[data-testid="champ"]');
-    const valider = racine.querySelector<HTMLButtonElement>('[data-testid="valider"]');
-    if (champ === null || valider === null) {
-      return;
-    }
-    const verrouille = this.verrouille();
-    champ.disabled = verrouille;
-    valider.disabled = verrouille;
-    champ.addEventListener('input', () => {
-      this.saisie = champ.value;
-    });
-    valider.addEventListener('click', () => this.soumettre(champ.value));
+    this.brancherLaSaisie(
+      racine,
+      { champ: 'champ', bouton: 'valider', verrouille: this.verrouille() },
+      {
+        saisir: (saisie) => {
+          this.saisie = saisie;
+        },
+        envoyer: (saisie) => this.soumettre(saisie),
+      },
+    );
   }
 
-  protected effacerLaReponse(): void {
+  protected effacerLaSaisie(): void {
     this.saisie = '';
+  }
+
+  protected reprendreLeBrouillon(): boolean {
+    return false;
   }
 
   private soumettre(brut: string): void {
@@ -115,17 +99,9 @@ export class FpNumeric extends FpReponse<NumericQuestionPublique> {
     this.saisie = brut;
     const valeur = lireNombreSaisi(brut);
     if (valeur === null) {
-      this.message = this.texte('saisie-non-numerique');
-      this.refresh();
+      this.refuserLEnvoi(this.texte('saisie-non-numerique'));
       return;
     }
-    this.envoye = true;
-    this.message = this.messageApresEnvoi();
-    this.emit('fp-numeric-submit', {
-      questionId: this.question?.id,
-      valeur,
-      dureeMs: this.depuisAffichage(),
-    });
-    this.refresh();
+    this.conclureLEnvoi('fp-numeric-submit', { questionId: this.question?.id, valeur });
   }
 }

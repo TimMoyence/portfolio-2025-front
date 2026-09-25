@@ -1,10 +1,10 @@
 import * as fc from 'fast-check';
 import { buildEnvoiReponse } from '../../../testing/factories/queue.factory';
+import { verifierLaProprieteAsynchrone } from '../../../testing/proprietes';
 import { enqueue, flush, pending } from './queue';
 import { removeKey } from './storage';
 
 const CLE = 'fp.file-reponses';
-const GRAINE = 20260920;
 const TOURS = 120;
 
 type Coup = { readonly depose: string } | { readonly reseau: boolean };
@@ -23,7 +23,7 @@ describe('simulation : la file hors ligne ne perd ni ne double aucun envoi', () 
   afterEach(() => removeKey(CLE));
 
   it('garde l’égalité « acquittés ∪ file = soumis » sur des coupures tirées à graine fixe', async () => {
-    await fc.assert(
+    await verifierLaProprieteAsynchrone(
       fc.asyncProperty(fc.array(coup, { minLength: 1, maxLength: 40 }), async (coups) => {
         removeKey(CLE);
         const soumis: string[] = [];
@@ -58,12 +58,12 @@ describe('simulation : la file hors ligne ne perd ni ne double aucun envoi', () 
           [...soumis].sort((a, b) => a.localeCompare(b)),
         );
       }),
-      { seed: GRAINE, numRuns: TOURS },
+      TOURS,
     );
   });
 
   it('garde l’ordre de dépôt des envois qui restent en file après un réseau coupé', async () => {
-    await fc.assert(
+    await verifierLaProprieteAsynchrone(
       fc.asyncProperty(
         fc.uniqueArray(fc.stringMatching(/^Q-\d{1,3}$/), { minLength: 1, maxLength: 20 }),
         async (questions) => {
@@ -77,12 +77,12 @@ describe('simulation : la file hors ligne ne perd ni ne double aucun envoi', () 
           expect(pending().map((envoi) => envoi.questionId)).toEqual(questions);
         },
       ),
-      { seed: GRAINE, numRuns: TOURS },
+      TOURS,
     );
   });
 
   it('retire exactement les envois acquittés quand le réseau ne revient qu’à moitié', async () => {
-    await fc.assert(
+    await verifierLaProprieteAsynchrone(
       fc.asyncProperty(
         fc.uniqueArray(fc.stringMatching(/^Q-\d{1,3}$/), { minLength: 2, maxLength: 16 }),
         fc.array(fc.boolean(), { minLength: 2, maxLength: 16 }),
@@ -104,7 +104,7 @@ describe('simulation : la file hors ligne ne perd ni ne double aucun envoi', () 
           expect(pending().map((envoi) => envoi.questionId)).toEqual(attendus);
         },
       ),
-      { seed: GRAINE, numRuns: TOURS },
+      TOURS,
     );
   });
 });

@@ -1,7 +1,6 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
-import { projeterMetadonnees } from './projection';
+import { FpContenu } from './contenu';
+import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { estObjet, type ProgressionDesEnigmes, type VerdictDeTentative } from './retours';
 
 export interface EscapeEnigmePublique {
@@ -11,14 +10,12 @@ export interface EscapeEnigmePublique {
   readonly indice: string;
 }
 
-export interface EscapeParcoursPublic {
-  readonly id: string;
+export interface EscapeParcoursPublic extends ContenuDeBrique {
   readonly intitule: string;
   readonly delaiIndiceMs: number;
   readonly budgetEnigmeMs: number;
   readonly tentativesMax: number;
   readonly enigmes: readonly EscapeEnigmePublique[];
-  readonly metadonnees: MetadonneesBrique;
 }
 
 interface SolutionnaireEnigme {
@@ -43,7 +40,7 @@ const LONGUEUR_MAX_REPONSE = 40;
 
 function projeterParcours(source: EscapeParcoursPublic): EscapeParcoursPublic {
   return {
-    id: source.id,
+    ...copierLeSocle(source),
     intitule: source.intitule,
     delaiIndiceMs: source.delaiIndiceMs,
     budgetEnigmeMs: source.budgetEnigmeMs,
@@ -57,7 +54,6 @@ function projeterParcours(source: EscapeParcoursPublic): EscapeParcoursPublic {
       enonce: enigme.enonce,
       indice: enigme.indice,
     })),
-    metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
 
@@ -91,8 +87,7 @@ function estTentative(valeur: unknown): valeur is VerdictDeTentative {
   );
 }
 
-export class FpEscape extends FpBlock {
-  private interne: EscapeParcoursPublic | null = null;
+export class FpEscape extends FpContenu<EscapeParcoursPublic> {
   private fragments = new Map<string, string>();
   private restantes = new Map<string, number>();
   private enVol: string | null = null;
@@ -102,18 +97,18 @@ export class FpEscape extends FpBlock {
   private solutionnaire: Solutionnaire | null = null;
 
   set parcours(valeur: EscapeParcoursPublic | null) {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne = valeur === null ? null : projeterParcours(valeur);
-    if (change) {
-      this.fragments = new Map();
-      this.restantes = new Map();
-      this.enVol = null;
-      this.saisie = '';
-      this.indiceOuvert = false;
-      this.message = '';
-    }
+    this.poserLeContenu(valeur, projeterParcours);
     this.suivreAffichage(this.cleAffichage());
     this.refreshSiConnecte();
+  }
+
+  protected repartirDeZero(): void {
+    this.fragments = new Map();
+    this.restantes = new Map();
+    this.enVol = null;
+    this.saisie = '';
+    this.indiceOuvert = false;
+    this.message = '';
   }
 
   get parcours(): EscapeParcoursPublic | null {
@@ -190,8 +185,7 @@ export class FpEscape extends FpBlock {
   }
 
   bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.cleAffichage());
-    if (this.presentateur()) {
+    if (!this.suivreEtSaisir(this.cleAffichage())) {
       return;
     }
     const champ = racine.querySelector<HTMLInputElement>('[data-testid="saisie"]');

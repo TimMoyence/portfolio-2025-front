@@ -162,23 +162,38 @@ describe('lock', () => {
     attendreQueRienNeSoitBloque(lock);
   });
 
-  it('arm est idempotent et ne pose pas les ecouteurs deux fois', () => {
-    lock = createLock('focus');
-    lock.arm();
-    lock.arm();
+  const perdreLeFocus = (): void => {
     window.dispatchEvent(new Event('blur'));
-    expect(lock.incidents().length).toBe(1);
-  });
+  };
 
-  it('un nouvel arm apres un disarm repose les ecouteurs', () => {
-    lock = createLock('focus');
-    lock.arm();
-    lock.disarm();
-    window.dispatchEvent(new Event('blur'));
-    lock.arm();
-    window.dispatchEvent(new Event('blur'));
-    expect(lock.incidents().length).toBe(1);
-  });
+  const reArmements: readonly (readonly [string, (verrou: Lock) => void])[] = [
+    [
+      'arm est idempotent et ne pose pas les ecouteurs deux fois',
+      (verrou) => {
+        verrou.arm();
+        verrou.arm();
+        perdreLeFocus();
+      },
+    ],
+    [
+      'un nouvel arm apres un disarm repose les ecouteurs',
+      (verrou) => {
+        verrou.arm();
+        verrou.disarm();
+        perdreLeFocus();
+        verrou.arm();
+        perdreLeFocus();
+      },
+    ],
+  ];
+
+  for (const [titre, jouer] of reArmements) {
+    it(titre, () => {
+      lock = createLock('focus');
+      jouer(lock);
+      expect(lock.incidents().length).toBe(1);
+    });
+  }
 
   it('disarm avant tout arm ne leve pas d erreur', () => {
     lock = createLock('examen');

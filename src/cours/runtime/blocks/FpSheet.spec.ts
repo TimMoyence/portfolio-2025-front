@@ -1,5 +1,10 @@
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
-import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
+import {
+  attendreLEnvoiVideRefuse,
+  attendreLeRenvoiEpuise,
+  detailsEmis,
+  installerBrique,
+} from '../../../testing/banc-de-brique';
 import { buildSheetPlan, buildVerdictDeProduction } from '../../../testing/factories/cours.factory';
 import { FpSheet } from './FpSheet';
 
@@ -79,34 +84,25 @@ function chiffrer(hote: FpSheet): void {
   saisir(hote, 'D3', MONTANT_TTC);
 }
 
+function recevoirLeVerdict(hote: FpSheet): void {
+  chiffrer(hote);
+  cliquer(hote, 'valider');
+  hote.verdict = buildVerdictDeProduction({ questionId: PLAN.id });
+}
+
 function envois(hote: FpSheet): Record<string, unknown>[] {
-  const recus: Record<string, unknown>[] = [];
-  hote.addEventListener('fp-sheet-submit', (evenement) =>
-    recus.push((evenement as CustomEvent<Record<string, unknown>>).detail),
-  );
-  return recus;
+  return detailsEmis(hote, 'fp-sheet-submit');
 }
 
 describe('FpSheet', () => {
   let hote: FpSheet;
-  let traces: TracesEffets;
-
-  beforeAll(() => {
-    if (!customElements.get('fp-sheet')) {
-      customElements.define('fp-sheet', FpSheet);
-    }
-  });
-
-  beforeEach(() => {
-    hote = document.createElement('fp-sheet') as FpSheet;
-    traces = surveillerEffets(hote);
-    hote.plan = buildSheetPlan();
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    traces.restaurer();
-    hote.remove();
+  const traces = installerBrique<FpSheet>({
+    balise: 'fp-sheet',
+    classe: FpSheet,
+    poser: (brique) => {
+      hote = brique;
+      brique.plan = buildSheetPlan();
+    },
   });
 
   it('presente un vrai tableau a entetes de colonne et de ligne portees', () => {
@@ -227,10 +223,7 @@ describe('FpSheet', () => {
 
   it('refuse de valider tant qu aucune formule n a ete ecrite, puis envoie les seules saisies', () => {
     const recus = envois(hote);
-    cliquer(hote, 'valider');
-    expect(texteDe(hote, 'retour')).toBe(
-      'Saisissez au moins une valeur ou choisissez « Je ne sais pas »',
-    );
+    attendreLEnvoiVideRefuse(hote);
     expect(recus).toEqual([]);
     chiffrer(hote);
     cliquer(hote, 'valider');
@@ -262,10 +255,7 @@ describe('FpSheet', () => {
   });
 
   it('confie les saisies au brouillon de l hote et les restaure sans toucher aux cellules verrouillees', () => {
-    const brouillons: unknown[] = [];
-    hote.addEventListener('fp-brouillon', (evenement) =>
-      brouillons.push((evenement as CustomEvent).detail),
-    );
+    const brouillons = detailsEmis(hote, 'fp-brouillon');
     saisir(hote, 'C3', MONTANT_HT);
     expect(brouillons).toEqual([{ id: PLAN.id, valeur: { C3: MONTANT_HT } }]);
 
@@ -278,9 +268,7 @@ describe('FpSheet', () => {
   });
 
   it('marque les cellules selon le verdict recu', () => {
-    chiffrer(hote);
-    cliquer(hote, 'valider');
-    hote.verdict = buildVerdictDeProduction({ questionId: PLAN.id });
+    recevoirLeVerdict(hote);
 
     const marquees = reperes(hote, 'cellule-verdict');
     expect(marquees.map((td) => td.getAttribute('data-etat'))).toEqual(['confirme', 'a-revoir']);
@@ -326,13 +314,8 @@ describe('FpSheet', () => {
   });
 
   it('RET-31 · laisse reprendre les seules cases fausses apres verdict', () => {
-    const brouillons: unknown[] = [];
-    chiffrer(hote);
-    cliquer(hote, 'valider');
-    hote.verdict = buildVerdictDeProduction({ questionId: PLAN.id });
-    hote.addEventListener('fp-brouillon', (evenement) =>
-      brouillons.push((evenement as CustomEvent).detail),
-    );
+    recevoirLeVerdict(hote);
+    const brouillons = detailsEmis(hote, 'fp-brouillon');
 
     expect((repere(hote, 'valider') as HTMLButtonElement).disabled).toBe(true);
     expect(cellule(hote, 'C3').hasAttribute('readonly')).toBe(true);
@@ -345,9 +328,7 @@ describe('FpSheet', () => {
 
   it('RET-31 · renvoie les cases reprises tant que la correction n est pas revelee, une seule fois', () => {
     const recus = envois(hote);
-    chiffrer(hote);
-    cliquer(hote, 'valider');
-    hote.verdict = buildVerdictDeProduction({ questionId: PLAN.id });
+    recevoirLeVerdict(hote);
     saisir(hote, 'D3', '=C3+C3*$B$1');
 
     const valider = repere(hote, 'valider') as HTMLButtonElement;
@@ -359,18 +340,12 @@ describe('FpSheet', () => {
       { C3: MONTANT_HT, D3: MONTANT_TTC },
       { C3: MONTANT_HT, D3: '=C3+C3*$B$1' },
     ]);
-    const apres = repere(hote, 'valider') as HTMLButtonElement;
-    expect(apres.disabled).toBe(true);
-    expect(apres.textContent?.trim()).not.toBe(RENVOYER);
-    cliquer(hote, 'valider');
-    expect(recus.length).toBe(2);
+    attendreLeRenvoiEpuise(hote, recus, 2);
   });
 
   it('RET-31 · ne renvoie plus de reprise des que la correction est revelee', () => {
     const recus = envois(hote);
-    chiffrer(hote);
-    cliquer(hote, 'valider');
-    hote.verdict = buildVerdictDeProduction({ questionId: PLAN.id });
+    recevoirLeVerdict(hote);
     hote.etayage = 1;
     expect(cellule(hote, 'D3').hasAttribute('readonly')).toBe(true);
     saisir(hote, 'D3', '=C3*(1+$B$1)');

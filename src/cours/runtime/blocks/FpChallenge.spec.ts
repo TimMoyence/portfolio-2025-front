@@ -1,3 +1,9 @@
+import {
+  detailsEmis,
+  installerBrique,
+  noeudOmbre,
+  texteOmbre,
+} from '../../../testing/banc-de-brique';
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { CHARGE_XSS } from '../../../testing/charge-xss';
 import { classesOrphelines } from '../../../testing/classes-briques';
@@ -45,33 +51,20 @@ function marquesDe(element: FpChallenge): string[] {
 }
 
 function tentativesEmises(element: FpChallenge): DetailChallenge[] {
-  const emises: DetailChallenge[] = [];
-  element.addEventListener('fp-challenge-submit', (evenement) => {
-    emises.push((evenement as CustomEvent).detail as DetailChallenge);
-  });
-  return emises;
+  return detailsEmis(element, 'fp-challenge-submit');
 }
 
 describe('FpChallenge', () => {
   let hote: FpChallenge;
 
-  beforeAll(() => {
-    if (!customElements.get('fp-challenge')) {
-      customElements.define('fp-challenge', FpChallenge);
-    }
-  });
-
-  beforeEach(() => {
-    jasmine.clock().install();
-    jasmine.clock().mockDate(new Date(INSTANT_INITIAL));
-    hote = document.createElement('fp-challenge') as FpChallenge;
-    hote.probleme = PROBLEME;
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    hote.remove();
-    jasmine.clock().uninstall();
+  installerBrique<FpChallenge>({
+    balise: 'fp-challenge',
+    classe: FpChallenge,
+    instant: INSTANT_INITIAL,
+    poser: (brique) => {
+      hote = brique;
+      brique.probleme = PROBLEME;
+    },
   });
 
   it('pose le probleme sans methode ni strategie avant toute tentative', () => {
@@ -164,9 +157,7 @@ describe('FpChallenge', () => {
     hote.revele = true;
 
     expect(marquesDe(hote)).toEqual(['diviser-cent']);
-    expect(hote.shadowRoot?.querySelector('[data-testid="marque"]')?.textContent?.trim()).toBe(
-      'Piste fausse',
-    );
+    expect(texteOmbre(hote, 'marque')).toBe('Piste fausse');
   });
 
   it('se tient pour soumise quand les strategies arrivent apres un rechargement', () => {
@@ -178,10 +169,7 @@ describe('FpChallenge', () => {
   });
 
   it('memorise la tentative en brouillon a chaque frappe', () => {
-    const brouillons: unknown[] = [];
-    hote.addEventListener('fp-brouillon', (evenement) =>
-      brouillons.push((evenement as CustomEvent).detail),
-    );
+    const brouillons = detailsEmis(hote, 'fp-brouillon');
     const champ = zoneTentative(hote);
     champ.value = 'debut';
     champ.dispatchEvent(new Event('input'));
@@ -198,9 +186,7 @@ describe('FpChallenge', () => {
       hote.revele = true;
 
       expect(marquesDe(hote)).toEqual(['diviser-cent']);
-      expect(
-        hote.shadowRoot?.querySelector('[data-testid="revelation"]')?.hasAttribute('open'),
-      ).toBeTrue();
+      expect(noeudOmbre(hote, 'revelation')?.hasAttribute('open')).toBeTrue();
     });
   }
 

@@ -1,6 +1,7 @@
 import type { CodeErreur, Feuille, ResultatFormule } from './formula';
 import { evaluerExpression, evaluerFeuille, formeR1C1 } from './formula';
 import fichierBrut from './formule.vecteurs.json';
+import { recolterDansLArbre } from '../../../testing/arbre-json';
 import {
   empreinteDesVecteurs,
   serialiserCanonique,
@@ -16,14 +17,8 @@ const FICHIER = fichierBrut as FichierVecteursFormule;
 const TYPES_DE_VECTEUR: readonly VecteurFormule['type'][] = ['feuille', 'expression', 'r1c1'];
 
 function codesErreurDe(valeur: unknown): readonly string[] {
-  if (Array.isArray(valeur)) {
-    return valeur.flatMap(codesErreurDe);
-  }
-  if (typeof valeur !== 'object' || valeur === null) {
-    return [];
-  }
-  return Object.entries(valeur).flatMap(([cle, contenu]) =>
-    cle === 'erreur' && typeof contenu === 'string' ? [contenu] : codesErreurDe(contenu),
+  return recolterDansLArbre(valeur, (cle, contenu, descendre) =>
+    cle === 'erreur' && typeof contenu === 'string' ? [contenu] : descendre(contenu),
   );
 }
 

@@ -1,13 +1,14 @@
-import { FpBlock } from './FpBlock';
+import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { FpEnvoi } from './contenu';
 import { estVerdictDeReponse, type VerdictDeReponse } from './retours';
 
-export abstract class FpReponse<Question extends { readonly id: string }> extends FpBlock {
-  protected interne: Question | null = null;
+export abstract class FpReponse<
+  Question extends { readonly id: string },
+> extends FpEnvoi<Question> {
   protected interneVerdict: VerdictDeReponse | null = null;
-  protected message = '';
-  protected envoye = false;
+  protected bonneReponse: string | null = null;
 
-  protected abstract effacerLaReponse(): void;
+  protected abstract rendreLaQuestion(question: Question): EscapedHtml;
 
   set verdict(valeur: VerdictDeReponse | null) {
     this.interneVerdict =
@@ -19,21 +20,29 @@ export abstract class FpReponse<Question extends { readonly id: string }> extend
     return this.interneVerdict;
   }
 
-  protected poserLaQuestion(
-    valeur: Question | null,
-    projeter: (source: Question) => Question,
-  ): void {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne = valeur === null ? null : projeter(valeur);
-    if (change) {
-      this.effacerLaReponse();
-      this.message = '';
-      this.envoye = false;
-      this.interneVerdict = null;
-    }
+  render(): EscapedHtml {
+    return this.interne === null ? this.attente() : this.rendreLaQuestion(this.interne);
   }
 
-  protected verrouille(): boolean {
-    return this.verrouilleApresEnvoi(this.envoye, this.interneVerdict !== null);
+  protected override repartirDeZero(): void {
+    super.repartirDeZero();
+    this.interneVerdict = null;
+  }
+
+  protected override verdictRecu(): boolean {
+    return this.interneVerdict !== null;
+  }
+
+  protected suiviDeLEnvoi(): EscapedHtml {
+    return safeHtml`<p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
+        ${this.verdictDeReponse(this.interneVerdict)}
+        ${this.annonces()}`;
+  }
+
+  protected bonneReponseRevelee(formater: (bonne: string) => string): EscapedHtml {
+    if (this.bonneReponse === null) {
+      return escapeHtml('');
+    }
+    return safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(formater(this.bonneReponse))}</p>`;
   }
 }

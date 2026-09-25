@@ -1,3 +1,8 @@
+import {
+  attendreLaChargeInerte,
+  detailsEmis,
+  installerBrique,
+} from '../../../testing/banc-de-brique';
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { classesOrphelines } from '../../../testing/classes-briques';
 import {
@@ -7,6 +12,7 @@ import {
 } from '../../../testing/factories/cours.factory';
 import { buildSyntheseConcept } from '../../../testing/factories/formations.factory';
 import { FpSpaced } from './FpSpaced';
+import type { VerdictDeReponse } from './retours';
 
 const RAPPEL = buildSpacedRappel();
 const DUES = buildSpacedQuestions();
@@ -26,6 +32,16 @@ function libelleDe(hote: FpSpaced, nom: string): string {
   return noeud(hote, nom)?.textContent?.trim().replace(/\s+/g, ' ') ?? '';
 }
 
+function verdictsSurLaPremiere(correcte: boolean): VerdictDeReponse[] {
+  return [
+    buildVerdictDeReponse({
+      questionId: DUES[0].questionId,
+      correcte,
+      libelleConfusion: null,
+    }),
+  ];
+}
+
 function repondre(hote: FpSpaced, rangOption: number): void {
   noeuds(hote, 'option')[rangOption]?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 }
@@ -34,27 +50,15 @@ describe('FpSpaced', () => {
   let hote: FpSpaced;
   let recues: Record<string, unknown>[];
 
-  beforeAll(() => {
-    if (!customElements.get('fp-spaced')) {
-      customElements.define('fp-spaced', FpSpaced);
-    }
-  });
-
-  beforeEach(() => {
-    jasmine.clock().install();
-    jasmine.clock().mockDate(DEBUT);
-    recues = [];
-    hote = document.createElement('fp-spaced') as FpSpaced;
-    hote.addEventListener('fp-spaced-reponse', (evenement) => {
-      recues.push((evenement as CustomEvent<Record<string, unknown>>).detail);
-    });
-    hote.rappel = RAPPEL;
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    hote.remove();
-    jasmine.clock().uninstall();
+  installerBrique<FpSpaced>({
+    balise: 'fp-spaced',
+    classe: FpSpaced,
+    instant: DEBUT,
+    poser: (brique) => {
+      hote = brique;
+      recues = detailsEmis(brique, 'fp-spaced-reponse');
+      brique.rappel = RAPPEL;
+    },
   });
 
   it('annonce le chargement tant que les questions ne sont pas arrivees', () => {
@@ -98,13 +102,7 @@ describe('FpSpaced', () => {
 
   it('T9 · une fois le rappel revele, montre la bonne reponse de chaque question, meme sans reponse, sans plus rien proposer', () => {
     hote.questions = DUES;
-    hote.verdicts = [
-      buildVerdictDeReponse({
-        questionId: DUES[0].questionId,
-        correcte: false,
-        libelleConfusion: null,
-      }),
-    ];
+    hote.verdicts = verdictsSurLaPremiere(false);
     hote.corrige = {
       type: 'reponses',
       reponses: {
@@ -149,13 +147,7 @@ describe('FpSpaced', () => {
 
   it('reprend apres rechargement a la premiere question sans verdict', () => {
     hote.questions = DUES;
-    hote.verdicts = [
-      buildVerdictDeReponse({
-        questionId: DUES[0].questionId,
-        correcte: true,
-        libelleConfusion: null,
-      }),
-    ];
+    hote.verdicts = verdictsSurLaPremiere(true);
 
     expect(libelleDe(hote, 'enonce')).toBe(DUES[1].enonce);
     expect(noeuds(hote, 'ligne').length).toBe(1);
@@ -231,8 +223,7 @@ describe('FpSpaced', () => {
         options: [{ id: 'x', libelle: CHARGE_XSS }],
       },
     ];
-    expect(hote.shadowRoot?.querySelector('img')).toBeNull();
-    expect(libelleDe(hote, 'enonce')).toBe(CHARGE_XSS);
+    attendreLaChargeInerte(hote, 'enonce', CHARGE_XSS);
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {

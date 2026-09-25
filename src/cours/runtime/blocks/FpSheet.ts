@@ -1,4 +1,3 @@
-import type { MetadonneesBrique } from '../../content/types';
 import {
   type Feuille,
   type ResultatFormule,
@@ -9,19 +8,13 @@ import {
   nomCellule,
 } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpProductionEtayee, lireAttendusDuCorrige } from './production';
-import { projeterMetadonnees } from './projection';
-import { estObjet, type DetailDeVerdict } from './retours';
+import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
 
-export interface SheetPlanPublic {
-  readonly id: string;
-  readonly intitule: string;
+export interface SheetPlanPublic extends PlanEtaye {
   readonly lignes: number;
   readonly colonnes: number;
   readonly cellules: Readonly<Record<string, string>>;
   readonly verrouillees: readonly string[];
-  readonly consignes?: readonly string[];
-  readonly metadonnees: MetadonneesBrique;
 }
 
 interface AttenduDeFeuille {
@@ -44,6 +37,7 @@ const PREFIXE_COLONNE = 'fp-sheet-col-';
 const PREFIXE_LIGNE = 'fp-sheet-ligne-';
 const VIDE = escapeHtml('');
 const LECTURE_SEULE = safeHtml`readonly`;
+const DESACTIVE = safeHtml`disabled`;
 const SIGNE_ERREUR = '⚠';
 const LIMITE_GRILLE = 40;
 const LONGUEUR_MAX_CELLULE = 200;
@@ -77,19 +71,21 @@ function copierPlan(source: SheetPlanPublic): SheetPlanPublic {
   const lignes = borner(source.lignes);
   const colonnes = borner(source.colonnes);
   return {
-    id: source.id,
-    intitule: source.intitule,
+    ...copierLEnonce(source),
     lignes,
     colonnes,
     cellules: copierCellules(source.cellules, nomsDeLaGrille(lignes, colonnes)),
     verrouillees: source.verrouillees.map((nom) => nom.toUpperCase()),
-    consignes: (source.consignes ?? []).filter((consigne) => typeof consigne === 'string'),
-    metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
 
 export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuille> {
   protected readonly evenementDeSoumission = 'fp-sheet-submit';
+  protected readonly bloc = 'sheet';
+  protected readonly lectureDuCorrige = {
+    type: 'feuille',
+    champs: { reference: 'string', formuleReference: 'string', valeur: 'number' },
+  } as const;
   private contenus: Record<string, string> = {};
   private selection = CELLULE_INITIALE;
   private foyer: Foyer = null;
@@ -103,12 +99,11 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     return this.interne;
   }
 
-  set brouillon(valeur: unknown) {
-    const plan = this.interne;
-    if (plan === null || !estObjet(valeur) || this.soumis) {
-      return;
+  protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
+    if (this.interne === null) {
+      return false;
     }
-    const reprises = Object.entries(valeur).filter(
+    const reprises = Object.entries(brouillon).filter(
       (entree): entree is [string, string] =>
         typeof entree[1] === 'string' &&
         this.dansLaGrille(entree[0].toUpperCase()) &&
@@ -118,8 +113,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
       ...this.contenus,
       ...Object.fromEntries(reprises.map(([nom, contenu]) => [nom.toUpperCase(), contenu])),
     };
-    this.noterBrouillonRepris();
-    this.refreshSiConnecte();
+    return true;
   }
 
   protected scene(plan: SheetPlanPublic): EscapedHtml {
@@ -138,16 +132,9 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
         ${this.consignes(plan)}
         ${this.barre()}
         ${this.tableau(true)}
-        <div class="fp-sheet__actions">
-          <button type="button" class="fp-sheet__recopier" data-testid="recopier">${escapeHtml(this.texte('sheet-recopier'))}</button>
-          <button type="button" class="fp-sheet__valider" data-testid="valider">${escapeHtml(this.texte(this.enReprise() ? 'production-renvoyer' : 'valider'))}</button>
-          ${this.boutonNeSaitPas(this.verrouille())}
-        </div>
+        ${this.actionsDeProduction(this.boutonRecopier())}
         ${this.bilanErreurs()}
-        <p class="fp-sheet__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
-        ${this.verdictDeProduction(this.interneVerdict, 'sheet-verdict', this.justes(), this.interneVerdict?.details.length ?? 0)}
-        ${this.correctionServie()}
-        ${this.annonces()}
+        ${this.suiviDeProduction({ justes: this.justes(), total: this.interneVerdict?.details.length ?? 0 }, this.correctionServie())}
       </section>
     `;
   }
@@ -157,28 +144,16 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
       this.brancherCellule(champ);
     }
     this.brancherBarre(racine.querySelector<HTMLInputElement>('[data-testid="barre"]'));
-    this.brancherBouton(racine, 'recopier', () => this.recopier());
-    this.brancherBouton(racine, 'valider', () => this.valider());
-    this.brancherBouton(racine, 'je-ne-sais-pas', () => this.neSaitPas());
-    const valider = racine.querySelector<HTMLButtonElement>('[data-testid="valider"]');
-    if (valider !== null) {
-      valider.disabled = this.verrouille() && !this.enReprise();
-    }
-  }
-
-  protected lireLesAttendus(valeur: unknown): readonly AttenduDeFeuille[] {
-    return lireAttendusDuCorrige<AttenduDeFeuille>(valeur, 'feuille', {
-      reference: 'string',
-      formuleReference: 'string',
-      valeur: 'number',
-    });
+    racine
+      .querySelector<HTMLButtonElement>('[data-testid="recopier"]')
+      ?.addEventListener('click', () => this.recopier());
   }
 
   protected relacherLaSaisie(): void {
     this.foyer = null;
   }
 
-  protected reinitialiserLaSaisie(): void {
+  protected effacerLaSaisie(): void {
     this.relacherLaSaisie();
     this.contenus = { ...(this.interne?.cellules ?? {}) };
     this.selection = CELLULE_INITIALE;
@@ -207,16 +182,8 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     return false;
   }
 
-  private consignes(plan: SheetPlanPublic): EscapedHtml {
-    return this.consignesNumerotees(plan.consignes ?? [], 'fp-sheet__consignes');
-  }
-
-  private brancherBouton(racine: ShadowRoot, nom: string, action: () => void): void {
-    const bouton = racine.querySelector<HTMLButtonElement>(`[data-testid="${nom}"]`);
-    if (bouton !== null) {
-      bouton.disabled = this.verrouille();
-      bouton.addEventListener('click', action);
-    }
+  private boutonRecopier(): EscapedHtml {
+    return safeHtml`<button type="button" class="fp-sheet__recopier" data-testid="recopier" ${this.verrouille() ? DESACTIVE : VIDE}>${escapeHtml(this.texte('sheet-recopier'))}</button>`;
   }
 
   private brancherBarre(barre: HTMLInputElement | null): void {
@@ -359,14 +326,6 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     );
   }
 
-  private detailDe(nom: string): DetailDeVerdict | null {
-    return this.interneVerdict?.details.find((detail) => detail.cle === nom) ?? null;
-  }
-
-  private justes(): number {
-    return this.interneVerdict?.details.filter((detail) => detail.juste).length ?? 0;
-  }
-
   private barre(): EscapedHtml {
     return safeHtml`
       <p class="fp-sheet__barre">
@@ -480,14 +439,14 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     return safeHtml`<ul class="fp-sheet__attendus" data-testid="attendus">${lignes}</ul>`;
   }
 
-  private valider(): void {
+  protected valider(): void {
     const plan = this.planAValider();
     if (plan === null) {
       return;
     }
     const cellules = this.saisiesDeLEtudiant();
     if (Object.keys(cellules).length === 0) {
-      this.refuserLEnvoi('production-vide');
+      this.refuserLEnvoi(this.texte('production-vide'));
       return;
     }
     this.conclure({ planId: plan.id, cellules });

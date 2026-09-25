@@ -1,4 +1,10 @@
 import { attendreLeRenduEchappe, attendreUneRegionLive } from '../../../testing/assertions-briques';
+import {
+  attributDOption,
+  detailsEmis,
+  installerBrique,
+  texteOmbre,
+} from '../../../testing/banc-de-brique';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { buildExitBillet, buildVerdictDeReponse } from '../../../testing/factories/cours.factory';
 import { FpExit } from './FpExit';
@@ -39,37 +45,20 @@ function envoyer(element: FpExit): void {
   element.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="envoyer"]')?.click();
 }
 
-function texteDe(element: FpExit, identifiant: string): string {
-  return (
-    element.shadowRoot?.querySelector(`[data-testid="${identifiant}"]`)?.textContent?.trim() ?? ''
-  );
-}
-
-function detailsEmis(element: FpExit): DetailExit[] {
-  const details: DetailExit[] = [];
-  element.addEventListener('fp-exit-submit', (evenement) => {
-    details.push((evenement as CustomEvent).detail as DetailExit);
-  });
-  return details;
+function soumissionsDe(element: FpExit): DetailExit[] {
+  return detailsEmis(element, 'fp-exit-submit');
 }
 
 describe('FpExit', () => {
   let hote: FpExit;
 
-  beforeAll(() => {
-    if (!customElements.get('fp-exit')) {
-      customElements.define('fp-exit', FpExit);
-    }
-  });
-
-  beforeEach(() => {
-    hote = document.createElement('fp-exit') as FpExit;
-    hote.billet = BILLET;
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    hote.remove();
+  installerBrique<FpExit>({
+    balise: 'fp-exit',
+    classe: FpExit,
+    poser: (brique) => {
+      hote = brique;
+      brique.billet = BILLET;
+    },
   });
 
   it('presente le quiz conceptuel et la question ouverte', () => {
@@ -87,15 +76,15 @@ describe('FpExit', () => {
   });
 
   it('refuse d envoyer sans reponse a la question fermee', () => {
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     ecrire(hote, TEXTE_COURT);
     envoyer(hote);
     expect(details).toEqual([]);
-    expect(texteDe(hote, 'retour')).toBe('Choisissez une réponse avant d’envoyer');
+    expect(texteOmbre(hote, 'retour')).toBe('Choisissez une réponse avant d’envoyer');
   });
 
   it('accepte un billet sans texte libre', () => {
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     choisir(hote, 'a');
     envoyer(hote);
     expect(details.length).toBe(1);
@@ -105,7 +94,7 @@ describe('FpExit', () => {
   });
 
   it('emet la reponse fermee et le texte libre ensemble', () => {
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     choisir(hote, 'b');
     ecrire(hote, TEXTE_COURT);
     envoyer(hote);
@@ -115,7 +104,7 @@ describe('FpExit', () => {
   });
 
   it('accepte un texte libre de cinq cents caracteres', () => {
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     choisir(hote, 'a');
     ecrire(hote, 'a'.repeat(LIMITE));
     envoyer(hote);
@@ -124,12 +113,12 @@ describe('FpExit', () => {
   });
 
   it('refuse un texte libre plus long que la limite en disant la limite', () => {
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     choisir(hote, 'a');
     ecrire(hote, 'a'.repeat(LIMITE + 1));
     envoyer(hote);
     expect(details).toEqual([]);
-    const retour = texteDe(hote, 'retour');
+    const retour = texteOmbre(hote, 'retour');
     expect(retour).toContain(String(LIMITE));
     expect(retour).toBe('Réduisez votre réponse à 500 caractères maximum');
   });
@@ -147,7 +136,7 @@ describe('FpExit', () => {
     ecrire(hote, CHARGE_XSS);
     envoyer(hote);
     attendreLeRenduEchappe(hote);
-    expect(texteDe(hote, 'recap-texte')).toBe(CHARGE_XSS);
+    expect(texteOmbre(hote, 'recap-texte')).toBe(CHARGE_XSS);
     expect(champLibre(hote).value).toBe(CHARGE_XSS);
   });
 
@@ -157,26 +146,23 @@ describe('FpExit', () => {
       options: [{ id: 'a', libelle: CHARGE_XSS }],
     });
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
-    expect(texteDe(hote, 'option')).toBe(CHARGE_XSS);
+    expect(texteOmbre(hote, 'option')).toBe(CHARGE_XSS);
   });
 
   it('marque l option retenue pour les technologies d assistance', () => {
     choisir(hote, 'c');
-    const retenue = hote.shadowRoot?.querySelector('[data-option="c"]');
-    expect(retenue?.getAttribute('aria-pressed')).toBe('true');
-    expect(hote.shadowRoot?.querySelector('[data-option="a"]')?.getAttribute('aria-pressed')).toBe(
-      'false',
-    );
+    expect(attributDOption(hote, 'c', 'aria-pressed')).toBe('true');
+    expect(attributDOption(hote, 'a', 'aria-pressed')).toBe('false');
   });
 
   it('n emet qu un seul billet et verrouille la saisie', () => {
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     choisir(hote, 'a');
     envoyer(hote);
     envoyer(hote);
     expect(details.length).toBe(1);
     expect(champLibre(hote).disabled).toBe(true);
-    expect(texteDe(hote, 'retour')).toBe('Réponse enregistrée');
+    expect(texteOmbre(hote, 'retour')).toBe('Réponse enregistrée');
   });
 
   it('annonce le retour dans une region live', () => {
@@ -186,7 +172,7 @@ describe('FpExit', () => {
   it('affiche la longueur saisie face a la limite', () => {
     ecrire(hote, TEXTE_COURT);
     choisir(hote, 'a');
-    expect(texteDe(hote, 'jauge')).toBe(`${TEXTE_COURT.length} / ${LIMITE}`);
+    expect(texteOmbre(hote, 'jauge')).toBe(`${TEXTE_COURT.length} / ${LIMITE}`);
   });
 
   it('ne garde que les champs publics des options, meme pour le poste presentateur', () => {
@@ -207,15 +193,12 @@ describe('FpExit', () => {
       libelleConfusion: 'Proportionnalité',
     });
 
-    expect(texteDe(hote, 'verdict')).toContain('Proportionnalité');
-    expect(texteDe(hote, 'recap-texte')).toBe(TEXTE_COURT);
+    expect(texteOmbre(hote, 'verdict')).toContain('Proportionnalité');
+    expect(texteOmbre(hote, 'recap-texte')).toBe(TEXTE_COURT);
   });
 
   it('memorise le choix et le texte en brouillon, puis les restaure', () => {
-    const brouillons: unknown[] = [];
-    hote.addEventListener('fp-brouillon', (evenement) =>
-      brouillons.push((evenement as CustomEvent).detail),
-    );
+    const brouillons = detailsEmis(hote, 'fp-brouillon');
     choisir(hote, 'c');
     ecrire(hote, TEXTE_COURT);
 
@@ -262,7 +245,7 @@ describe('FpExit', () => {
     expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(BILLET.question);
     expect(options.length).toBe(BILLET.options.length);
     expect(options.every((option) => option.disabled)).toBeTrue();
-    expect(texteDe(hote, 'invite')).toBe(BILLET.invite);
+    expect(texteOmbre(hote, 'invite')).toBe(BILLET.invite);
     expect(hote.shadowRoot?.querySelector('textarea')).toBeNull();
     expect(hote.shadowRoot?.querySelector('[data-testid="envoyer"]')).toBeNull();
     expect(hote.shadowRoot?.querySelector('[data-testid="jauge"]')).toBeNull();
@@ -270,7 +253,7 @@ describe('FpExit', () => {
 
   it('n emet rien ni ne memorise de brouillon depuis le poste presentateur', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     const brouillons: unknown[] = [];
     hote.addEventListener('fp-brouillon', (evenement) => brouillons.push(evenement));
 
@@ -278,9 +261,7 @@ describe('FpExit', () => {
 
     expect(details).toEqual([]);
     expect(brouillons).toEqual([]);
-    expect(hote.shadowRoot?.querySelector('[data-option="a"]')?.getAttribute('aria-pressed')).toBe(
-      'false',
-    );
+    expect(attributDOption(hote, 'a', 'aria-pressed')).toBe('false');
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {

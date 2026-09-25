@@ -1,7 +1,7 @@
-import type { EtatPulse, MetadonneesBrique } from '../../content/types';
+import type { EtatPulse } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
-import { projeterMetadonnees } from './projection';
+import { FpContenu } from './contenu';
+import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { estObjet } from './retours';
 
 export interface PulseComptes {
@@ -11,10 +11,8 @@ export interface PulseComptes {
   readonly total?: number;
 }
 
-export interface PulseSondage {
-  readonly id: string;
+export interface PulseSondage extends ContenuDeBrique {
   readonly invite: string;
-  readonly metadonnees: MetadonneesBrique;
 }
 
 const ETATS: readonly EtatPulse[] = ['perdu', 'ca-va', 'clair'];
@@ -47,24 +45,19 @@ function lireEtat(valeur: unknown): EtatPulse | null {
   return ETATS.find((etat) => etat === valeur) ?? null;
 }
 
-export class FpPulse extends FpBlock {
-  private interne: PulseSondage | null = null;
+function copierSondage(source: PulseSondage): PulseSondage {
+  return {
+    ...copierLeSocle(source),
+    invite: source.invite,
+  };
+}
+
+export class FpPulse extends FpContenu<PulseSondage> {
   private interneComptes: Required<PulseComptes> | null = null;
   private choix: EtatPulse | null = null;
 
   set sondage(valeur: PulseSondage | null) {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne =
-      valeur === null
-        ? null
-        : {
-            id: valeur.id,
-            invite: valeur.invite,
-            metadonnees: projeterMetadonnees(valeur.metadonnees),
-          };
-    if (change) {
-      this.choix = null;
-    }
+    this.poserLeContenu(valeur, copierSondage);
     this.refreshSiConnecte();
   }
 
@@ -117,13 +110,16 @@ export class FpPulse extends FpBlock {
   }
 
   bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.sondage?.id ?? null);
-    if (this.presentateur()) {
+    if (!this.suivreEtSaisir(this.sondage?.id ?? null)) {
       return;
     }
     for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-etat-pulse]')) {
       bouton.addEventListener('click', () => this.declarer(bouton.dataset['etatPulse'] ?? ''));
     }
+  }
+
+  protected repartirDeZero(): void {
+    this.choix = null;
   }
 
   private libelle(etat: EtatPulse): string {

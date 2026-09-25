@@ -1,17 +1,18 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { Battement, SECONDE_MS } from './battement';
-import { FpProduction, lireAttendusDuCorrige } from './production';
-import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import { estObjet, type DetailDeVerdict } from './retours';
+import { FpProduction } from './production';
+import {
+  type ContenuDeBrique,
+  type OptionPublique,
+  copierLeSocle,
+  projeterOptions,
+} from './projection';
 
-export interface CardsortPlanPublic {
-  readonly id: string;
+export interface CardsortPlanPublic extends ContenuDeBrique {
   readonly intitule: string;
   readonly cartes: readonly OptionPublique[];
   readonly categories: readonly OptionPublique[];
   readonly dureeJeuMs?: number;
-  readonly metadonnees: MetadonneesBrique;
 }
 
 interface AttenduFormateur {
@@ -32,14 +33,13 @@ const MS_PAR_MINUTE = 60_000;
 function copierPlan(source: CardsortPlanPublic): CardsortPlanPublic {
   const duree = source.dureeJeuMs;
   return {
-    id: source.id,
+    ...copierLeSocle(source),
     intitule: source.intitule,
     cartes: projeterOptions(source.cartes),
     categories: projeterOptions(source.categories),
     ...(typeof duree === 'number' && Number.isFinite(duree) && duree > 0
       ? { dureeJeuMs: duree }
       : {}),
-    metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
 
@@ -51,6 +51,10 @@ function formaterChrono(restantMs: number): string {
 
 export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateur> {
   protected readonly evenementDeSoumission = 'fp-cardsort-submit';
+  protected readonly lectureDuCorrige = {
+    type: 'classement',
+    champs: { carteId: 'string', categorieId: 'string', justification: 'string' },
+  } as const;
   private places: Record<string, string> = {};
   private selection: string | null = null;
   private derniere: string | null = null;
@@ -73,20 +77,16 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
     this.refreshSiConnecte();
   }
 
-  set brouillon(valeur: unknown) {
-    if (!estObjet(valeur) || this.soumis) {
-      return;
-    }
+  protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
     const cartes = new Set(this.interne?.cartes.map((carte) => carte.id) ?? []);
     const categories = new Set(this.interne?.categories.map((categorie) => categorie.id) ?? []);
     this.places = Object.fromEntries(
-      Object.entries(valeur).filter(
+      Object.entries(brouillon).filter(
         (entree): entree is [string, string] =>
           cartes.has(entree[0]) && typeof entree[1] === 'string' && categories.has(entree[1]),
       ),
     );
-    this.noterBrouillonRepris();
-    this.refreshSiConnecte();
+    return true;
   }
 
   disconnectedCallback(): void {
@@ -146,32 +146,16 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
     );
   }
 
-  protected lireLesAttendus(valeur: unknown): readonly AttenduFormateur[] {
-    return lireAttendusDuCorrige<AttenduFormateur>(valeur, 'classement', {
-      carteId: 'string',
-      categorieId: 'string',
-      justification: 'string',
-    });
-  }
-
   protected relacherLaSaisie(): void {
     this.selection = null;
     this.foyer = null;
   }
 
-  protected reinitialiserLaSaisie(): void {
+  protected effacerLaSaisie(): void {
     this.relacherLaSaisie();
     this.places = {};
     this.derniere = null;
     this.destination = PIOCHE;
-  }
-
-  private detailDe(carteId: string): DetailDeVerdict | null {
-    return this.interneVerdict?.details.find((detail) => detail.cle === carteId) ?? null;
-  }
-
-  private justes(): number {
-    return this.interneVerdict?.details.filter((detail) => detail.juste).length ?? 0;
   }
 
   private restantMs(): number | null {
@@ -464,9 +448,10 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
       return;
     }
     if (plan.cartes.length === 0 || this.placees() !== plan.cartes.length) {
-      this.message = this.texte(this.placees() === 0 ? 'production-vide' : 'cardsort-incomplet');
       this.foyer = null;
-      this.refresh();
+      this.refuserLEnvoi(
+        this.texte(this.placees() === 0 ? 'production-vide' : 'cardsort-incomplet'),
+      );
       return;
     }
     this.conclure({ planId: plan.id, classement: { ...this.places } });
