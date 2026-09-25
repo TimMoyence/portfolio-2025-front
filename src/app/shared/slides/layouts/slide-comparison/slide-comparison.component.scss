@@ -17,7 +17,7 @@
   }
 }
 
-.slide-comparison__subtitle,
+.slide-comparison ::ng-deep > .slide-comparison__subtitle,
 .slide-comparison__note {
   max-width: 62ch;
   margin: -1.5rem auto 2rem;

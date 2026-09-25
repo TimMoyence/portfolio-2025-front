@@ -1,4 +1,5 @@
 import { Component, input } from '@angular/core';
+import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { SlideGridComponent } from './slide-grid.component';
 
@@ -75,12 +76,20 @@ describe('SlideGridComponent', () => {
     expect([3, 5, 7, 11, 12, 15].map(colonnesPour)).toEqual(['3', '5', '4', '6', '6', '5']);
   });
 
-  it('R8 · garde le verso d une carte retournee dans sa carte', () => {
+  function carteRetournable(): {
+    fixture: ComponentFixture<HoteRetournableComponent>;
+    carte: HTMLElement | null;
+  } {
     const fixture = TestBed.createComponent(HoteRetournableComponent);
     fixture.detectChanges();
     const carte = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
       '.slide-grid__card--flip',
     );
+    return { fixture, carte };
+  }
+
+  it('R8 · garde le verso d une carte retournee dans sa carte', () => {
+    const { fixture, carte } = carteRetournable();
     carte?.click();
     fixture.detectChanges();
     const verso = carte?.querySelector<HTMLElement>('.slide-grid__face--back');
@@ -91,11 +100,7 @@ describe('SlideGridComponent', () => {
   });
 
   it('R8 · ne reserve pas la hauteur du verso a une carte non retournee', () => {
-    const fixture = TestBed.createComponent(HoteRetournableComponent);
-    fixture.detectChanges();
-    const carte = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
-      '.slide-grid__card--flip',
-    );
+    const { carte } = carteRetournable();
     const recto = carte?.querySelector<HTMLElement>('.slide-grid__face--front');
     const style = carte === null ? null : getComputedStyle(carte);
     const hauteurDuRecto =

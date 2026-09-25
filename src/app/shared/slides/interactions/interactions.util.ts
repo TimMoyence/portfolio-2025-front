@@ -1,5 +1,19 @@
+import type { DestroyRef, WritableSignal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { of, type Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import type { PresentationPort } from '../../../core/ports/presentation.port';
+
+export interface ChargementInteraction<T> {
+  readonly enLigne: T | null;
+  readonly port: PresentationPort | null;
+  readonly slug: string;
+  readonly type: string;
+  readonly interactionId: string;
+  readonly cible: WritableSignal<T | null>;
+  readonly erreur: WritableSignal<boolean>;
+  readonly destroyRef: DestroyRef;
+}
 
 export interface FlatInteraction {
   slideId: string;
@@ -30,6 +44,25 @@ export function loadInteraction<T>(
       return found ? (found as unknown as T) : null;
     }),
   );
+}
+
+export function chargerInteraction<T>(chargement: ChargementInteraction<T>): void {
+  if (chargement.enLigne !== null) {
+    chargement.cible.set(chargement.enLigne);
+    return;
+  }
+  if (chargement.port === null) {
+    chargement.erreur.set(true);
+    return;
+  }
+  loadInteraction<T>(
+    chargement.port.getInteractions(chargement.slug),
+    chargement.type,
+    chargement.interactionId,
+    () => chargement.erreur.set(true),
+  )
+    .pipe(takeUntilDestroyed(chargement.destroyRef))
+    .subscribe((found) => found && chargement.cible.set(found));
 }
 
 function normaliseInteractions(value: unknown): FlatInteraction[] {

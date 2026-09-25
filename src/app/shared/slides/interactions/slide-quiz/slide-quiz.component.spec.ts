@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { throwError } from 'rxjs';
-import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import type { PresentationPort } from '../../../../core/ports/presentation.port';
 import type { ScrollInteraction } from '../../../../core/models/presentation-interactions.model';
 import {
-  buildInteractionsResponse,
-  createPresentationPortStub,
-} from '../../../../../testing/factories/presentation.factory';
+  choisirLOptionDuQuiz,
+  configurerLHoteDInteraction,
+  monterApresChargement,
+} from '../../../../../testing/hote-d-interaction';
 import type { ModeInteraction } from '../mode-interaction';
 import { SlideQuizComponent } from './slide-quiz.component';
 
@@ -31,33 +32,22 @@ describe('SlideQuizComponent', () => {
       },
     ] as unknown as ScrollInteraction[];
 
-    portStub = createPresentationPortStub(
-      buildInteractionsResponse({
-        interactions: {
-          'quiz-intro': { scroll: knowledgeQuizPayload },
-        },
-      }),
-    );
-
-    TestBed.configureTestingModule({
-      imports: [HostComponent],
-      providers: [{ provide: PRESENTATION_PORT, useValue: portStub }],
+    portStub = configurerLHoteDInteraction(HostComponent, {
+      'quiz-intro': { scroll: knowledgeQuizPayload },
     });
   });
 
+  function choisir(index: number): ComponentFixture<HostComponent> {
+    return choisirLOptionDuQuiz(monterApresChargement(HostComponent), index);
+  }
+
   it('appelle PRESENTATION_PORT.getInteractions avec le slug', fakeAsync(() => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
+    monterApresChargement(HostComponent);
     expect(portStub.getInteractions).toHaveBeenCalledWith('ia-solopreneurs');
   }));
 
   it('rend la question et les options', fakeAsync(() => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
+    const fixture = monterApresChargement(HostComponent);
     const question = fixture.nativeElement.querySelector('.slide-quiz__question');
     expect(question.textContent).toContain('premier réflexe IA');
     const options = fixture.nativeElement.querySelectorAll('.slide-quiz__option');
@@ -65,26 +55,12 @@ describe('SlideQuizComponent', () => {
   }));
 
   it('affiche feedback correct quand bonne réponse sélectionnée', fakeAsync(() => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
-    const options = fixture.nativeElement.querySelectorAll('.slide-quiz__option');
-    options[1].click();
-    fixture.detectChanges();
-    const feedback = fixture.nativeElement.querySelector('.slide-quiz__feedback');
+    const feedback = choisir(1).nativeElement.querySelector('.slide-quiz__feedback');
     expect(feedback.classList).toContain('is-correct');
   }));
 
   it('affiche feedback incorrect quand mauvaise réponse', fakeAsync(() => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
-    const options = fixture.nativeElement.querySelectorAll('.slide-quiz__option');
-    options[0].click();
-    fixture.detectChanges();
-    const feedback = fixture.nativeElement.querySelector('.slide-quiz__feedback');
+    const feedback = choisir(0).nativeElement.querySelector('.slide-quiz__feedback');
     expect(feedback.classList).toContain('is-incorrect');
   }));
 
@@ -106,10 +82,7 @@ describe('SlideQuizComponent', () => {
     fixture.componentInstance.selection.subscribe(choix);
     fixture.detectChanges();
 
-    (fixture.nativeElement as HTMLElement)
-      .querySelectorAll<HTMLButtonElement>('.slide-quiz__option')[1]
-      .click();
-    fixture.detectChanges();
+    choisirLOptionDuQuiz(fixture, 1);
     return { texte: (fixture.nativeElement as HTMLElement).textContent ?? '', choix };
   }
 
@@ -134,13 +107,7 @@ describe('SlideQuizComponent', () => {
   });
 
   it('ne collecte aucun niveau de confiance que personne ne reçoit', fakeAsync(() => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
-
-    fixture.nativeElement.querySelectorAll('.slide-quiz__option')[1].click();
-    fixture.detectChanges();
+    const fixture = choisir(1);
 
     expect(fixture.nativeElement.querySelector('.slide-quiz__confidence')).toBeNull();
     expect(fixture.nativeElement.textContent).not.toContain('niveau de confiance');
@@ -148,10 +115,7 @@ describe('SlideQuizComponent', () => {
 
   it('ne rend rien si le port échoue (degradation gracieuse)', fakeAsync(() => {
     portStub.getInteractions.and.returnValue(throwError(() => new Error('network')));
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
+    const fixture = monterApresChargement(HostComponent);
     const root = fixture.nativeElement.querySelector('.slide-quiz');
     expect(root).toBeNull();
   }));

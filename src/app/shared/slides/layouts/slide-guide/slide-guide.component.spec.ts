@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { poserLesEntrees } from '../../../../../testing/montage-page';
 import type { SlideGuideItem } from './slide-guide.component';
 import { SlideGuideComponent } from './slide-guide.component';
 
@@ -15,14 +16,11 @@ const ETAPES: readonly SlideGuideItem[] = [
 function monter(
   entrees: Readonly<Record<string, unknown>> = {},
 ): ComponentFixture<SlideGuideComponent> {
-  const fixture = TestBed.createComponent(SlideGuideComponent);
-  fixture.componentRef.setInput('title', 'Contrôler un pourcentage');
-  fixture.componentRef.setInput('items', ETAPES);
-  for (const [nom, valeur] of Object.entries(entrees)) {
-    fixture.componentRef.setInput(nom, valeur);
-  }
-  fixture.detectChanges();
-  return fixture;
+  return poserLesEntrees(TestBed.createComponent(SlideGuideComponent), {
+    title: 'Contrôler un pourcentage',
+    items: ETAPES,
+    ...entrees,
+  });
 }
 
 describe('SlideGuideComponent', () => {

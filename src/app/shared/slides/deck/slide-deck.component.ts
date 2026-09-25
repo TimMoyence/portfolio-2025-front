@@ -204,12 +204,19 @@ export class SlideDeckComponent implements AfterViewInit {
     });
   }
 
-  private syncCurrentFromScroll(): void {
+  private avecLesSections(action: (sections: HTMLElement[], root: HTMLElement) => void): void {
     const root = this.deckRef().nativeElement;
     const sections = Array.from(root.querySelectorAll<HTMLElement>('section.slide'));
-    if (sections.length === 0) {
-      return;
+    if (sections.length > 0) {
+      action(sections, root);
     }
+  }
+
+  private syncCurrentFromScroll(): void {
+    this.avecLesSections((sections, root) => this.suivreLaSectionAuMilieu(sections, root));
+  }
+
+  private suivreLaSectionAuMilieu(sections: HTMLElement[], root: HTMLElement): void {
     const viewportMiddle = root.scrollTop + root.clientHeight / 2;
     const sectionAtMiddle = sections.find(
       (s) => s.offsetTop <= viewportMiddle && s.offsetTop + s.clientHeight > viewportMiddle,
@@ -301,11 +308,14 @@ export class SlideDeckComponent implements AfterViewInit {
   }
 
   private scrollToSibling(direction: 1 | -1): void {
-    const root = this.deckRef().nativeElement;
-    const sections = Array.from(root.querySelectorAll<HTMLElement>('section.slide'));
-    if (sections.length === 0) {
-      return;
-    }
+    this.avecLesSections((sections, root) => this.defilerVersLaVoisine(sections, root, direction));
+  }
+
+  private defilerVersLaVoisine(
+    sections: HTMLElement[],
+    root: HTMLElement,
+    direction: 1 | -1,
+  ): void {
     const currentId = this.service.current();
     const idx = currentId ? sections.findIndex((s) => s.id === currentId) : 0;
     const targetIdx = Math.max(0, Math.min(sections.length - 1, idx + direction));

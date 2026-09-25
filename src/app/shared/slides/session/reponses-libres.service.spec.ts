@@ -71,21 +71,18 @@ describe('ReponsesLibresService', () => {
       (await pendingFreeResponses(seance, cleCourante())).map((envoi) => envoi.activityId),
     ).toEqual(['B-SORTIE-09']);
 
-    port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
     await attendreLaRepriseEnregistree(seance);
   });
 
   it('garde en file un texte bloque par le reseau et le renvoie a la reprise', async () => {
-    port.enregistrerReponseLibre.and.returnValues(
-      throwError(() => new Error('reseau coupe')),
-      of({ status: 'enregistre' }),
-    );
+    port.enregistrerReponseLibre.and.returnValue(throwError(() => new Error('reseau coupe')));
 
     expect(await service.envoyer(SESSION, JETON, REPONSE)).toBe('attente_reseau');
     await attendreLaRepriseEnregistree(SESSION);
   });
 
   async function attendreLaRepriseEnregistree(seance: string): Promise<void> {
+    port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
     const reprise = await service.reprendre(seance, JETON);
 
     expect(reprise.get(cleDeReponseLibre(seance, 'b2-01-sortie', 'B-SORTIE-09'))).toBe(
@@ -104,53 +101,47 @@ describe('ReponsesLibresService', () => {
       );
     }
 
+    async function textesEnFile(seance: string, cle: string): Promise<string[]> {
+      return (await pendingFreeResponses(seance, cle)).map((envoi) => envoi.response);
+    }
+
+    async function passerDeAABilal(seance: string): Promise<string> {
+      await garderHorsLigne(seance, 'texte de A');
+      const cleDeA = cleCourante();
+      saveIdentity({ prenom: 'Bilal', nom: 'Nour', email: 'bilal@example.com' });
+      return cleDeA;
+    }
+
     it('rend a A sa reflexion en file quand il recharge sa page en pleine seance', async () => {
       const seance = `${SESSION}-reprise-de-a`;
       await garderHorsLigne(seance, 'texte de A');
-      const cleDeA = cleCourante();
 
-      port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
-      const reprise = await service.reprendre(seance, JETON);
-
-      expect(reprise.get(cleDeReponseLibre(seance, 'b2-01-sortie', 'B-SORTIE-09'))).toBe(
-        'enregistre',
-      );
-      expect(await pendingFreeResponses(seance, cleDeA)).toEqual([]);
+      await attendreLaRepriseEnregistree(seance);
     });
 
     it('ne renvoie pas sous le jeton de B la reflexion gardee par A', async () => {
       const seance = `${SESSION}-poste-partage`;
-      await garderHorsLigne(seance, 'texte de A');
-      const cleDeA = cleCourante();
+      const cleDeA = await passerDeAABilal(seance);
 
-      saveIdentity({ prenom: 'Bilal', nom: 'Nour', email: 'bilal@example.com' });
       port.enregistrerReponseLibre.calls.reset();
       port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
       const reprise = await service.reprendre(seance, JETON);
 
       expect(port.enregistrerReponseLibre).not.toHaveBeenCalled();
       expect(reprise.size).toBe(0);
-      expect((await pendingFreeResponses(seance, cleDeA)).map((envoi) => envoi.response)).toEqual([
-        'texte de A',
-      ]);
+      expect(await textesEnFile(seance, cleDeA)).toEqual(['texte de A']);
     });
 
     it('ne fait pas ecraser la reflexion de A par celle de B sur le meme ecran', async () => {
       const seance = `${SESSION}-ecrasement`;
-      await garderHorsLigne(seance, 'texte de A');
-      const cleDeA = cleCourante();
+      const cleDeA = await passerDeAABilal(seance);
 
-      saveIdentity({ prenom: 'Bilal', nom: 'Nour', email: 'bilal@example.com' });
       await garderHorsLigne(seance, 'texte de B');
       const cleDeB = cleCourante();
 
       expect(cleDeB).not.toBe(cleDeA);
-      expect((await pendingFreeResponses(seance, cleDeA)).map((envoi) => envoi.response)).toEqual([
-        'texte de A',
-      ]);
-      expect((await pendingFreeResponses(seance, cleDeB)).map((envoi) => envoi.response)).toEqual([
-        'texte de B',
-      ]);
+      expect(await textesEnFile(seance, cleDeA)).toEqual(['texte de A']);
+      expect(await textesEnFile(seance, cleDeB)).toEqual(['texte de B']);
     });
   });
 });

@@ -65,14 +65,21 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     expect(pose('fp-numeric', ['Q-VA-07'], 'verdict', { retours: [autre] })).toBeNull();
   });
 
-  it('pose sur le vote la phase pilotee et les resultats de la question jumelle au revote', () => {
-    const suivi = direct({
-      pilotage: { phase: 'revote' },
+  function voteJumele(
+    pilotage: DirectEcran['pilotage'],
+    premierVote: Parameters<typeof buildResultatQuestion>[0] = {},
+  ): DirectEcran {
+    return direct({
+      pilotage,
       resultats: [
-        buildResultatQuestion({ questionId: 'Q-CAP-03', total: 20 }),
+        buildResultatQuestion({ questionId: 'Q-CAP-03', total: 20, ...premierVote }),
         buildResultatQuestion({ questionId: 'Q-CAP-03-bis', total: 18, parOption: { a: 18 } }),
       ],
     });
+  }
+
+  it('pose sur le vote la phase pilotee et les resultats de la question jumelle au revote', () => {
+    const suivi = voteJumele({ phase: 'revote' });
     expect(pose('fp-vote', ['Q-CAP-03', 'Q-CAP-03-bis'], 'phase', { direct: suivi })).toBe(
       'revote',
     );
@@ -83,13 +90,7 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
   });
 
   it('RET-20 · pose sur le vote jumele les resultats du premier vote, quelle que soit la phase', () => {
-    const revele = direct({
-      pilotage: { phase: 'revele' },
-      resultats: [
-        buildResultatQuestion({ questionId: 'Q-CAP-03', total: 20, parOption: { b: 20 } }),
-        buildResultatQuestion({ questionId: 'Q-CAP-03-bis', total: 18, parOption: { a: 18 } }),
-      ],
-    });
+    const revele = voteJumele({ phase: 'revele' }, { parOption: { b: 20 } });
     expect(
       pose('fp-vote', ['Q-CAP-03', 'Q-CAP-03-bis'], 'resultatsPremierVote', { direct: revele }),
     ).toEqual({ total: 20, parOption: { b: 20 } });

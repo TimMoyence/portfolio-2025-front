@@ -1,10 +1,7 @@
-<div class="slide-stats">
-  @if (title()) {
-    <h2>{{ title() }}</h2>
-  }
-  @if (subtitle()) {
-    <p class="slide-stats__subtitle">{{ subtitle() }}</p>
-  }
+<div
+  class="slide-stats"
+  [appSlideEnTete]="{ bloc: 'slide-stats', titre: title(), sousTitre: subtitle() }"
+>
   <div class="slide-stats__grid">
     @for (stat of stats(); track stat.label) {
       <div class="slide-stats__item">

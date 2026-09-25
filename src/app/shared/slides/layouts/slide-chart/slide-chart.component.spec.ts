@@ -1,7 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
 import { fondEffectif, rapportDeContraste } from '../../../../../testing/contraste';
-import { setupTestBed } from '../../../../../testing/setup-test-bed';
+import { monterLeGraphique, preparerLeGraphique } from '../../../../../testing/graphique-monte';
 import { textes } from '../../../../../testing/textes-dom';
 import type { SlideChartKind, SlideChartSeries } from './slide-chart.component';
 import { SlideChartComponent } from './slide-chart.component';
@@ -33,16 +32,13 @@ const SEUIL_TRAIT = 3;
 function monter(
   entrees: Readonly<Record<string, unknown>> = {},
 ): ComponentFixture<SlideChartComponent> {
-  const fixture = TestBed.createComponent(SlideChartComponent);
-  fixture.componentRef.setInput('title', 'Une évolution à contrôler');
-  fixture.componentRef.setInput('caption', 'Exercice');
-  fixture.componentRef.setInput('labels', LIBELLES);
-  fixture.componentRef.setInput('series', SERIES);
-  for (const [nom, valeur] of Object.entries(entrees)) {
-    fixture.componentRef.setInput(nom, valeur);
-  }
-  fixture.detectChanges();
-  return fixture;
+  return monterLeGraphique({
+    title: 'Une évolution à contrôler',
+    caption: 'Exercice',
+    labels: LIBELLES,
+    series: SERIES,
+    ...entrees,
+  });
 }
 
 function element(fixture: ComponentFixture<SlideChartComponent>): HTMLElement {
@@ -66,9 +62,7 @@ function pourcentages(valeurs: readonly string[]): number[] {
 }
 
 describe('SlideChartComponent', () => {
-  beforeEach(() => {
-    setupTestBed({ imports: [SlideChartComponent], http: false });
-  });
+  preparerLeGraphique();
 
   it('rend le titre, le contexte, l unité et la légende de chaque série', () => {
     const fixture = monter({ context: 'Deux séries sur trois ans', unit: 'k€' });

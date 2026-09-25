@@ -1,3 +1,4 @@
+import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { ResultatsSeance, Role } from '../../../../cours/content/types';
 import { buildRevelationServie } from '../../../../testing/factories/cours.factory';
@@ -6,6 +7,7 @@ import {
   buildResultatsSeance,
 } from '../../../../testing/factories/formations.factory';
 import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
+import { poserLesEntrees } from '../../../../testing/montage-page';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
   ATELIER_CORRIGE,
@@ -128,24 +130,33 @@ describe('SlideVisualComponent', () => {
       expect(enErreur(element)).toEqual([]);
     });
 
-    it('F07 · projette au presentateur, carte par carte, combien l ont bien placee', () => {
-      const fixture = TestBed.createComponent(SlideVisualComponent);
-      fixture.componentRef.setInput('slide', buildVisualSortCorrectionSlide());
-      fixture.componentRef.setInput('role', 'presentateur');
-      fixture.componentRef.setInput(
-        'resultats',
-        buildResultatsSeance({
+    function monterLaCorrectionAvecLesComptes(
+      entrees: Readonly<Record<string, unknown>>,
+      question: Parameters<typeof buildResultatQuestion>[0],
+    ): ComponentFixture<SlideVisualComponent> {
+      return poserLesEntrees(TestBed.createComponent(SlideVisualComponent), {
+        slide: buildVisualSortCorrectionSlide(),
+        resultats: buildResultatsSeance({
           questions: [
             buildResultatQuestion({
               questionId: TRI_CORRIGE.sortId,
               ecranId: TRI_CORRIGE.screenId,
-              total: 12,
-              parCle: { inflation: { total: 12, justes: 5 }, 'ca-2025': { total: 12, justes: 11 } },
+              ...question,
             }),
           ],
         }),
+        ...entrees,
+      });
+    }
+
+    it('F07 · projette au presentateur, carte par carte, combien l ont bien placee', () => {
+      const fixture = monterLaCorrectionAvecLesComptes(
+        { role: 'presentateur' },
+        {
+          total: 12,
+          parCle: { inflation: { total: 12, justes: 5 }, 'ca-2025': { total: 12, justes: 11 } },
+        },
       );
-      fixture.detectChanges();
       const element = fixture.nativeElement as HTMLElement;
       const compte = (id: string): string =>
         element
@@ -158,21 +169,10 @@ describe('SlideVisualComponent', () => {
     });
 
     it('F07 · ne montre aucun compte de classe a l etudiant', () => {
-      const fixture = TestBed.createComponent(SlideVisualComponent);
-      fixture.componentRef.setInput('slide', buildVisualSortCorrectionSlide());
-      fixture.componentRef.setInput(
-        'resultats',
-        buildResultatsSeance({
-          questions: [
-            buildResultatQuestion({
-              questionId: TRI_CORRIGE.sortId,
-              ecranId: TRI_CORRIGE.screenId,
-              parCle: { inflation: { total: 12, justes: 5 } },
-            }),
-          ],
-        }),
+      const fixture = monterLaCorrectionAvecLesComptes(
+        {},
+        { parCle: { inflation: { total: 12, justes: 5 } } },
       );
-      fixture.detectChanges();
 
       expect(
         (fixture.nativeElement as HTMLElement).querySelector('[data-testid="sort-review-compte"]'),

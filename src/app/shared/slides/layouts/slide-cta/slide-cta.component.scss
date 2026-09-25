@@ -1,3 +1,5 @@
+@use '../../slide-section' as slide;
+
 .slide-cta {
   width: 100%;
   min-height: 100cqh;
@@ -36,13 +38,5 @@
   border-radius: var(--r-pill);
   text-decoration: none;
   font-size: 1.125rem;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-
-  &:hover,
-  &:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
-  }
+  @include slide.bouton-souleve(0.25);
 }

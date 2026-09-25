@@ -9,6 +9,7 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
+import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
 export interface SlideGridItem {
   title: string;
@@ -26,7 +27,7 @@ const COLONNES_AU_PLUS = 6;
 @Component({
   selector: 'app-slide-grid',
   standalone: true,
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, SlideEnTeteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-grid.component.html',
   styleUrl: './slide-grid.component.scss',

@@ -7,6 +7,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
 export interface SlideMethodStep {
   readonly id: string;
@@ -19,6 +20,7 @@ export interface SlideMethodStep {
 @Component({
   selector: 'app-slide-method-path',
   standalone: true,
+  imports: [SlideEnTeteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-method-path.component.html',
   styleUrl: './slide-method-path.component.scss',

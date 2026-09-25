@@ -87,6 +87,24 @@ async function monterDansUnCadre(
   };
 }
 
+async function fautesDesEcrans(
+  ecrans: readonly EcranContent[],
+  monter: (ecran: EcranContent, renvoi: EcranContent | null) => Promise<EcranCadre>,
+  constater: (ecran: EcranContent, monte: EcranCadre) => Promise<string | null> | string | null,
+): Promise<string[]> {
+  const pupitre = ecransDuPupitreB2_01();
+  const fautes: string[] = [];
+  for (const ecran of ecrans) {
+    const monte = await monter(ecran, pupitre.find(({ id }) => id === ecran.renvoi) ?? null);
+    const faute = await constater(ecran, monte);
+    if (faute !== null) {
+      fautes.push(faute);
+    }
+    monte.detruire();
+  }
+  return fautes;
+}
+
 describe('CoursPresentationComponent : un seul écran pour la projection et le pupitre', () => {
   beforeEach(() => setupTestBed({ imports: [CoursPresentationComponent] }));
 
@@ -168,23 +186,20 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     it(
       `T2 · T3 · G01 · chaque écran du B2-01 tient sur une toile 1280 × 720 en ${mode}, sans défilement interne ni tassement`,
       async () => {
-        const pupitre = ecransDuPupitreB2_01();
-        const ecrans = mode === 'etudiant' ? ecransPublicsB2_01() : pupitre;
-        const fautes: string[] = [];
-        for (const ecran of ecrans) {
-          const renvoi = pupitre.find(({ id }) => id === ecran.renvoi) ?? null;
-          const monte = await monterDansUnCadre(ecran, mode, 1280, 720, renvoi);
-          const toile = monte.toile();
-          const horsToile = elementsPerdus(monte);
-          const defileurs = toile === null ? [] : defileursInternes(toile);
-          const echelle = echelleDuContenu(toile);
-          if (horsToile.length > 0 || defileurs.length > 0 || echelle < ECHELLE_MINIMALE) {
-            fautes.push(
-              `${ecran.id} ${mode} hors=${horsToile.join(',')} defile=${defileurs.join(',')} echelle=${echelle}`,
-            );
-          }
-          monte.detruire();
-        }
+        const ecrans = mode === 'etudiant' ? ecransPublicsB2_01() : ecransDuPupitreB2_01();
+        const fautes = await fautesDesEcrans(
+          ecrans,
+          (ecran, renvoi) => monterDansUnCadre(ecran, mode, 1280, 720, renvoi),
+          (ecran, monte) => {
+            const toile = monte.toile();
+            const horsToile = elementsPerdus(monte);
+            const defileurs = toile === null ? [] : defileursInternes(toile);
+            const echelle = echelleDuContenu(toile);
+            return horsToile.length > 0 || defileurs.length > 0 || echelle < ECHELLE_MINIMALE
+              ? `${ecran.id} ${mode} hors=${horsToile.join(',')} defile=${defileurs.join(',')} echelle=${echelle}`
+              : null;
+          },
+        );
 
         expect(ecrans.length).withContext('écrans du B2-01').toBeGreaterThan(50);
         expect(fautes).toEqual([]);
@@ -196,27 +211,25 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
   it(
     'G01 · sur un portable 14 pouces, chaque écran étudiant du B2-01 tient dans son cadre sans défiler, à une taille lisible',
     async () => {
-      const pupitre = ecransDuPupitreB2_01();
-      const fautes: string[] = [];
-      for (const ecran of ecransPublicsB2_01()) {
-        const renvoi = pupitre.find(({ id }) => id === ecran.renvoi) ?? null;
-        const monte = await monterDansUnCadre(
-          ecran,
-          'etudiant',
-          CADRE_ETUDIANT_14_POUCES.largeur,
-          CADRE_ETUDIANT_14_POUCES.hauteur,
-          renvoi,
-        );
-        const defile = monte.cadre.scrollHeight > monte.cadre.clientHeight + 1;
-        const horsToile = elementsHorsToile(monte);
-        const echelle = echelleAffichee(monte);
-        if (defile || horsToile.length > 0 || echelle < ECHELLE_MINIMALE - 0.001) {
-          fautes.push(
-            `${ecran.id} defile=${String(defile)} hors=${horsToile.join(',')} echelle=${echelle.toFixed(3)}`,
-          );
-        }
-        monte.detruire();
-      }
+      const fautes = await fautesDesEcrans(
+        ecransPublicsB2_01(),
+        (ecran, renvoi) =>
+          monterDansUnCadre(
+            ecran,
+            'etudiant',
+            CADRE_ETUDIANT_14_POUCES.largeur,
+            CADRE_ETUDIANT_14_POUCES.hauteur,
+            renvoi,
+          ),
+        (ecran, monte) => {
+          const defile = monte.cadre.scrollHeight > monte.cadre.clientHeight + 1;
+          const horsToile = elementsHorsToile(monte);
+          const echelle = echelleAffichee(monte);
+          return defile || horsToile.length > 0 || echelle < ECHELLE_MINIMALE - 0.001
+            ? `${ecran.id} defile=${String(defile)} hors=${horsToile.join(',')} echelle=${echelle.toFixed(3)}`
+            : null;
+        },
+      );
 
       expect(fautes).toEqual([]);
     },
@@ -283,20 +296,17 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     it(
       `T1 · chaque écran à renvoi tient entier dans sa demi-toile en ${mode}, titre compris`,
       async () => {
-        const ecrans = ecransDuPupitreB2_01();
-        const coupes: string[] = [];
-        const aRenvoi = ecrans.filter(({ renvoi }) => renvoi !== undefined);
+        const aRenvoi = ecransDuPupitreB2_01().filter(({ renvoi }) => renvoi !== undefined);
         expect(aRenvoi.length).withContext('écrans à renvoi du B2-01').toBeGreaterThan(5);
-        for (const ecran of aRenvoi) {
-          const renvoi = ecrans.find(({ id }) => id === ecran.renvoi) ?? null;
-          const monte = await monterDansUnCadre(ecran, mode, 1280, 720, renvoi);
-          await new Promise((suite) => setTimeout(suite, 50));
-          const horsToile = elementsPerdus(monte);
-          if (horsToile.length > 0) {
-            coupes.push(`${ecran.id} (${horsToile.join(',')})`);
-          }
-          monte.detruire();
-        }
+        const coupes = await fautesDesEcrans(
+          aRenvoi,
+          (ecran, renvoi) => monterDansUnCadre(ecran, mode, 1280, 720, renvoi),
+          async (ecran, monte) => {
+            await new Promise((suite) => setTimeout(suite, 50));
+            const horsToile = elementsPerdus(monte);
+            return horsToile.length > 0 ? `${ecran.id} (${horsToile.join(',')})` : null;
+          },
+        );
 
         expect(coupes).toEqual([]);
       },
@@ -397,30 +407,29 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
   it(
     'R3 · donne à chaque diapositive commentée la part de toile que fixe son cadrage, et la fait remplir son cadre',
     async () => {
-      const ecrans = ecransDuPupitreB2_01();
-      const fautes: string[] = [];
-      for (const ecran of ecrans.filter(({ renvoi }) => renvoi !== undefined)) {
-        const renvoi = ecrans.find(({ id }) => id === ecran.renvoi) ?? null;
-        const monte = await monterDansUnCadre(ecran, 'projection', 1280, 720, renvoi);
-        await new Promise((suite) => setTimeout(suite, 50));
-        const miniature = monte.toile()?.querySelector<HTMLElement>('[data-testid="cours-renvoi"]');
-        const colonne = miniature?.getBoundingClientRect();
-        const cadre = miniature?.querySelector('.cours-renvoi__cadre')?.getBoundingClientRect();
-        const contenu = miniature
-          ?.querySelector('.cours-renvoi__toile app-slide-activity')
-          ?.getBoundingClientRect();
-        const part = ecran.cadrageDuRenvoi?.part ?? 0;
-        const remplissage =
-          cadre === undefined || contenu === undefined
-            ? 0
-            : Math.max(contenu.width / cadre.width, contenu.height / cadre.height);
-        if (Math.abs((colonne?.width ?? 0) - (1280 * part) / 100) > 1 || remplissage < 0.9) {
-          fautes.push(
-            `${ecran.id} colonne=${colonne?.width} part=${part} remplissage=${remplissage.toFixed(2)}`,
-          );
-        }
-        monte.detruire();
-      }
+      const fautes = await fautesDesEcrans(
+        ecransDuPupitreB2_01().filter(({ renvoi }) => renvoi !== undefined),
+        (ecran, renvoi) => monterDansUnCadre(ecran, 'projection', 1280, 720, renvoi),
+        async (ecran, monte) => {
+          await new Promise((suite) => setTimeout(suite, 50));
+          const miniature = monte
+            .toile()
+            ?.querySelector<HTMLElement>('[data-testid="cours-renvoi"]');
+          const colonne = miniature?.getBoundingClientRect();
+          const cadre = miniature?.querySelector('.cours-renvoi__cadre')?.getBoundingClientRect();
+          const contenu = miniature
+            ?.querySelector('.cours-renvoi__toile app-slide-activity')
+            ?.getBoundingClientRect();
+          const part = ecran.cadrageDuRenvoi?.part ?? 0;
+          const remplissage =
+            cadre === undefined || contenu === undefined
+              ? 0
+              : Math.max(contenu.width / cadre.width, contenu.height / cadre.height);
+          return Math.abs((colonne?.width ?? 0) - (1280 * part) / 100) > 1 || remplissage < 0.9
+            ? `${ecran.id} colonne=${colonne?.width} part=${part} remplissage=${remplissage.toFixed(2)}`
+            : null;
+        },
+      );
 
       expect(fautes).toEqual([]);
     },

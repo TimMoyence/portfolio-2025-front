@@ -6,6 +6,11 @@ import type {
   ValeurProduction,
 } from '../../../../cours/content/types';
 import type { SpacedQuestionPublique } from '../../../../cours/runtime/blocks/donnees-publiques';
+import type {
+  ProgressionDesEnigmes,
+  StrategieServie,
+  VerdictDeTentative,
+} from '../../../../cours/runtime/blocks/retours';
 import type { MotifRefusReponse } from '../../../core/ports/formations.port';
 
 export type { EtatPulse };
@@ -77,31 +82,12 @@ export type RetourBrique =
         readonly libelleConfusion: string | null;
       }[];
     }
-  | {
-      readonly kind: 'tentative';
-      readonly parcoursId: string;
-      readonly enigmeId: string;
-      readonly correcte: boolean;
-      readonly fragment: string | null;
-      readonly tentativesRestantes: number;
-    }
-  | {
-      readonly kind: 'progression-enigmes';
-      readonly parcoursId: string;
-      readonly resolues: readonly {
-        readonly enigmeId: string;
-        readonly fragment: string;
-      }[];
-      readonly tentativesRestantes: Readonly<Record<string, number>>;
-    }
+  | ({ readonly kind: 'tentative' } & VerdictDeTentative)
+  | ({ readonly kind: 'progression-enigmes' } & ProgressionDesEnigmes)
   | {
       readonly kind: 'strategies';
       readonly defiId: string;
-      readonly strategies: readonly {
-        readonly id: string;
-        readonly libelle: string;
-        readonly fausse?: boolean;
-      }[];
+      readonly strategies: readonly StrategieServie[];
     }
   | {
       readonly kind: 'rappels';

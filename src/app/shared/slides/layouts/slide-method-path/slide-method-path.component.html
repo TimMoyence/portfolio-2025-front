@@ -4,14 +4,8 @@
   (mouseleave)="resume()"
   (focusin)="pause()"
   (focusout)="resume()"
+  [appSlideEnTete]="{ bloc: 'slide-method-path', titre: title(), sousTitre: subtitle() }"
 >
-  @if (title()) {
-    <h2>{{ title() }}</h2>
-  }
-  @if (subtitle()) {
-    <p class="slide-method-path__subtitle">{{ subtitle() }}</p>
-  }
-
   <div class="slide-method-path__layout">
     <nav
       class="slide-method-path__steps"

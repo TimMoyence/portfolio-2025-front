@@ -8,9 +8,8 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
-import { loadInteraction } from '../interactions.util';
+import { chargerInteraction } from '../interactions.util';
 
 interface PollInteraction {
   id?: string;
@@ -76,13 +75,15 @@ export class SlidePollComponent implements OnInit {
   }
 
   private load(): void {
-    loadInteraction<PollInteraction>(
-      this.port.getInteractions(this.slug()),
-      'poll',
-      this.interactionId(),
-      () => this.error.set(true),
-    )
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((found) => found && this.poll.set(found));
+    chargerInteraction<PollInteraction>({
+      enLigne: null,
+      port: this.port,
+      slug: this.slug(),
+      type: 'poll',
+      interactionId: this.interactionId(),
+      cible: this.poll,
+      erreur: this.error,
+      destroyRef: this.destroyRef,
+    });
   }
 }

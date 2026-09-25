@@ -1,10 +1,7 @@
-<div class="slide-sort-review">
-  @if (title()) {
-    <h2>{{ title() }}</h2>
-  }
-  @if (subtitle()) {
-    <p class="slide-sort-review__subtitle">{{ subtitle() }}</p>
-  }
+<div
+  class="slide-sort-review"
+  [appSlideEnTete]="{ bloc: 'slide-sort-review', titre: title(), sousTitre: subtitle() }"
+>
   <div class="slide-sort-review__zones">
     @for (zone of zones(); track zone.id) {
       <section class="slide-sort-review__zone" [attr.data-zone]="zone.id">
