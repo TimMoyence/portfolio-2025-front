@@ -27,6 +27,13 @@ describe('ToolkitGatePageComponent', () => {
   let fixture: ComponentFixture<HostComponent>;
   let host: HostComponent;
 
+  function monter(slug: HostComponent['slug']): void {
+    fixture = TestBed.createComponent(HostComponent);
+    host = fixture.componentInstance;
+    host.slug = slug;
+    fixture.detectChanges();
+  }
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HostComponent],
@@ -36,9 +43,7 @@ describe('ToolkitGatePageComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HostComponent);
-    host = fixture.componentInstance;
-    fixture.detectChanges();
+    monter(null);
   });
 
   afterEach(() => {
@@ -87,15 +92,13 @@ describe('ToolkitGatePageComponent', () => {
   });
 
   it('devrait transmettre le formationSlug fourni au formulaire (cle metier)', () => {
-    host.slug = 'audit-seo-diy';
-    fixture.detectChanges();
+    monter('audit-seo-diy');
     const form = fixture.debugElement.query(By.directive(ToolkitFormComponent));
     expect(form.componentInstance.formationSlug).toBe('audit-seo-diy');
   });
 
   it('devrait afficher le contenu du toolkit de la formation designee par le slug', () => {
-    host.slug = 'audit-seo-diy';
-    fixture.detectChanges();
+    monter('audit-seo-diy');
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.lead')?.textContent).toBe(
       TOOLKITS_FORMATIONS['audit-seo-diy'].lead,
@@ -103,8 +106,7 @@ describe('ToolkitGatePageComponent', () => {
   });
 
   it("devrait deriver des id d'en-tete uniques depuis le slug", () => {
-    host.slug = 'automatiser-avec-ia';
-    fixture.detectChanges();
+    monter('automatiser-avec-ia');
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('#toolkit-automatiser-avec-ia-contents-heading')).not.toBeNull();
     expect(compiled.querySelector('#toolkit-automatiser-avec-ia-faq-heading')).not.toBeNull();
