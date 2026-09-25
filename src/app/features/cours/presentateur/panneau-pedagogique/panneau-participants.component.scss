@@ -14,11 +14,7 @@
 }
 
 .panneau-participants__tete {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  @include panneau.ligne-etalee;
 
   h3 {
     margin: 0;
@@ -30,10 +26,6 @@
   @include panneau.liste;
 
   li {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
+    @include panneau.ligne-etalee;
   }
 }

@@ -1,10 +1,7 @@
-<div class="slide-table">
-  @if (title()) {
-    <h2>{{ title() }}</h2>
-  }
-  @if (subtitle()) {
-    <p class="slide-table__subtitle">{{ subtitle() }}</p>
-  }
+<div
+  class="slide-table"
+  [appSlideEnTete]="{ bloc: 'slide-table', titre: title(), sousTitre: subtitle() }"
+>
   <div class="slide-table__scroll">
     <table>
       <thead>

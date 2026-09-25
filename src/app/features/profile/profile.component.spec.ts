@@ -1,15 +1,12 @@
 import { signal } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { AUTH_PORT } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
-import {
-  buildAuthUser,
-  buildSetPasswordPayload,
-  createAuthPortStub,
-} from '../../../testing/factories/auth.factory';
+import { buildAuthUser, buildSetPasswordPayload } from '../../../testing/factories/auth.factory';
+import type { PageAuthMontee } from '../../../testing/page-auth';
+import { formulaireSoumis, monterPageAuth } from '../../../testing/page-auth';
 import { ProfileComponent } from './profile.component';
 
 const NEW_PASSWORD = buildSetPasswordPayload().newPassword;
@@ -33,24 +30,15 @@ function createAuthStateMock(overrides?: Partial<{ hasPassword: boolean; roles: 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
-  let authService: ReturnType<typeof createAuthPortStub>;
+  let authService: PageAuthMontee<ProfileComponent>['authService'];
   let authState: ReturnType<typeof createAuthStateMock>;
 
   beforeEach(async () => {
-    authService = createAuthPortStub();
     authState = createAuthStateMock();
 
-    await TestBed.configureTestingModule({
-      imports: [ProfileComponent],
-      providers: [
-        provideRouter([]),
-        { provide: AUTH_PORT, useValue: authService },
-        { provide: AuthStateService, useValue: authState },
-      ],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(ProfileComponent);
-    component = fixture.componentInstance;
+    ({ fixture, component, authService } = await monterPageAuth(ProfileComponent, [
+      { provide: AuthStateService, useValue: authState },
+    ]));
     fixture.detectChanges();
   });
 
@@ -87,10 +75,7 @@ describe('ProfileComponent', () => {
     authService.setPassword.and.returnValue(of(buildAuthUser({ hasPassword: true })));
 
     component.newPassword = NEW_PASSWORD;
-    component.setPassword({
-      invalid: false,
-      resetForm: jasmine.createSpy('resetForm'),
-    } as never);
+    component.setPassword(formulaireSoumis());
 
     expect(authService.setPassword).toHaveBeenCalledWith({
       newPassword: NEW_PASSWORD,

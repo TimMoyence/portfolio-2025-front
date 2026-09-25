@@ -1,49 +1,33 @@
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
+import { pageMontee } from '../../../../testing/montage-page';
 import type { ContactMethod } from '../../models/contact.model';
 import { ContactCtaComponent } from './cta-contact.component';
 
 describe('ContactCtaComponent', () => {
-  let component: ContactCtaComponent;
-  let fixture: ComponentFixture<ContactCtaComponent>;
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ContactCtaComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(ContactCtaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+  const cta = pageMontee(ContactCtaComponent);
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(cta.composant).toBeTruthy();
   });
 
   it('should display the heading and lead paragraph when provided', () => {
-    fixture.componentRef.setInput('leadParagraphs', ['Première phrase']);
-    fixture.detectChanges();
-    const compiled: HTMLElement = fixture.nativeElement;
-    expect(compiled.textContent).toContain(component.title);
-    expect(compiled.textContent).toContain('Première phrase');
+    cta.fixture.componentRef.setInput('leadParagraphs', ['Première phrase']);
+    cta.fixture.detectChanges();
+    expect(cta.racine.textContent).toContain(cta.composant.title);
+    expect(cta.racine.textContent).toContain('Première phrase');
   });
 
   it('should render each contact method', () => {
-    component.contactMethods.forEach((_: ContactMethod, index: number) => {
-      const method = fixture.nativeElement.querySelector(`[data-testid="contact-method-${index}"]`);
+    cta.composant.contactMethods.forEach((_: ContactMethod, index: number) => {
+      const method = cta.racine.querySelector(`[data-testid="contact-method-${index}"]`);
       expect(method).withContext(`Missing method at index ${index}`).not.toBeNull();
     });
   });
 
   it('should set href attributes for linkable methods', () => {
-    fixture.detectChanges();
-    const compiled: HTMLElement = fixture.nativeElement;
-    const links = Array.from(compiled.querySelectorAll('a[href]')) as HTMLAnchorElement[];
+    cta.fixture.detectChanges();
+    const links = Array.from(cta.racine.querySelectorAll('a[href]')) as HTMLAnchorElement[];
     expect(links.length).toBeGreaterThan(0);
-    component.contactMethods
+    cta.composant.contactMethods
       .filter((method: ContactMethod): method is ContactMethod & { href: string } => !!method.href)
       .forEach((method) => {
         const match = links.find(
@@ -55,7 +39,7 @@ describe('ContactCtaComponent', () => {
   });
 
   it('should render the contact section heading', () => {
-    const heading = fixture.nativeElement.querySelector('#contact-heading');
-    expect(heading?.textContent).toContain(component.title);
+    const heading = cta.racine.querySelector('#contact-heading');
+    expect(heading?.textContent).toContain(cta.composant.title);
   });
 });

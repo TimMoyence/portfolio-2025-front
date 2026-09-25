@@ -2,11 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import type { NgForm } from '@angular/forms';
 import { of } from 'rxjs';
 import type { AuditStreamEvent } from '../../core/models/audit-request.model';
-import type { AuditRequestPort } from '../../core/ports/audit-request.port';
 import { AUDIT_REQUEST_PORT } from '../../core/ports/audit-request.port';
 import { GrowthAuditComponent } from './growth-audit.component';
 import {
+  buildAuditCompletedEvent,
   buildAuditCreateResponse,
+  buildAuditProgressEvent,
   buildAuditSummaryResponse,
   buildAuditStreamHeartbeat,
   buildClientReport,
@@ -19,21 +20,13 @@ function buildValidForm(): NgForm {
   });
 }
 
-function submitAndStream(
-  component: GrowthAuditComponent,
-  auditServiceMock: jasmine.SpyObj<AuditRequestPort>,
-  event: AuditStreamEvent,
-  auditId: string,
-): void {
-  auditServiceMock.submit.and.returnValue(of(buildAuditCreateResponse({ auditId, httpCode: 201 })));
-  auditServiceMock.stream.and.returnValue(of<AuditStreamEvent>(event));
-
+function remplirEtSoumettre(component: GrowthAuditComponent, rgpdConsent: boolean): void {
   component.auditFormState = {
     websiteName: 'https://example.com',
     contactMethod: 'EMAIL',
     contactValue: 'test@example.com',
   };
-  component.rgpdConsent = true;
+  component.rgpdConsent = rgpdConsent;
 
   component.submit(buildValidForm());
 }
@@ -56,44 +49,47 @@ describe('GrowthAuditComponent', () => {
     }).compileComponents();
   });
 
-  it('renders current URL and synthesis section badges from enriched progress details', () => {
+  function soumettreEtDiffuser(event: AuditStreamEvent, auditId: string) {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
-    const component = fixture.componentInstance;
+    auditServiceMock.submit.and.returnValue(
+      of(buildAuditCreateResponse({ auditId, httpCode: 201 })),
+    );
+    auditServiceMock.stream.and.returnValue(of<AuditStreamEvent>(event));
 
-    submitAndStream(
-      component,
-      auditServiceMock,
-      {
-        type: 'progress',
-        data: {
-          auditId: 'audit-1',
-          status: 'RUNNING',
-          progress: 72,
-          step: 'Recap IA des pages',
-          details: {
-            phase: 'synthesis',
-            iaTask: 'synthesis',
-            iaSubTask: 'prioritySection',
-            currentUrl: 'https://example.com/pricing',
-            recentCompletedUrls: ['https://example.com/', 'https://example.com/about'],
-            sectionStatuses: {
-              summary: 'completed',
-              prioritySection: 'started',
-            },
+    remplirEtSoumettre(fixture.componentInstance, true);
+    fixture.detectChanges();
+
+    return {
+      component: fixture.componentInstance,
+      root: fixture.nativeElement as HTMLElement,
+    };
+  }
+
+  it('renders current URL and synthesis section badges from enriched progress details', () => {
+    const { component, root } = soumettreEtDiffuser(
+      buildAuditProgressEvent({
+        auditId: 'audit-1',
+        progress: 72,
+        step: 'Recap IA des pages',
+        details: {
+          phase: 'synthesis',
+          iaTask: 'synthesis',
+          iaSubTask: 'prioritySection',
+          currentUrl: 'https://example.com/pricing',
+          recentCompletedUrls: ['https://example.com/', 'https://example.com/about'],
+          sectionStatuses: {
+            summary: 'completed',
+            prioritySection: 'started',
           },
-          done: false,
-          updatedAt: '2026-02-19T09:00:00.000Z',
         },
-      },
+      }),
       'audit-1',
     );
-
-    fixture.detectChanges();
 
     expect(component.auditCurrentUrl).toBe('https://example.com/pricing');
     expect(component.auditIaTask).toBe('Synthèse IA');
     expect(component.auditSectionBadges.length).toBeGreaterThan(0);
-    const content = fixture.nativeElement.textContent as string;
+    const content = root.textContent as string;
     expect(content).toContain('URL en cours');
     expect(content).toContain('https://example.com/pricing');
     expect(content).toContain('Résumé: completed');
@@ -101,28 +97,15 @@ describe('GrowthAuditComponent', () => {
   });
 
   it('keeps backward compatibility when progress details only expose done/total', () => {
-    const fixture = TestBed.createComponent(GrowthAuditComponent);
-    const component = fixture.componentInstance;
-
-    submitAndStream(
-      component,
-      auditServiceMock,
-      {
-        type: 'progress',
-        data: {
-          auditId: 'audit-2',
-          status: 'RUNNING',
-          progress: 45,
-          step: 'Analyse des pages',
-          details: { done: 3, total: 10 },
-          done: false,
-          updatedAt: '2026-02-19T09:00:00.000Z',
-        },
-      },
+    const { component } = soumettreEtDiffuser(
+      buildAuditProgressEvent({
+        auditId: 'audit-2',
+        progress: 45,
+        step: 'Analyse des pages',
+        details: { done: 3, total: 10 },
+      }),
       'audit-2',
     );
-
-    fixture.detectChanges();
 
     expect(component.auditStep).toContain('(3/10)');
     expect(component.auditCurrentUrl).toBe('');
@@ -130,96 +113,49 @@ describe('GrowthAuditComponent', () => {
   });
 
   it('renders client report section when event contains clientReport', () => {
-    const fixture = TestBed.createComponent(GrowthAuditComponent);
-    const component = fixture.componentInstance;
     const clientReport = buildClientReport();
 
-    submitAndStream(
-      component,
-      auditServiceMock,
-      {
-        type: 'completed',
-        data: {
-          auditId: 'audit-42',
-          status: 'COMPLETED',
-          progress: 100,
-          done: true,
-          summaryText: 'Résumé legacy',
-          keyChecks: {},
-          quickWins: [],
-          pillarScores: {},
-          clientReport,
-          updatedAt: '2026-04-15T09:00:00.000Z',
-        },
-      },
+    const { component, root } = soumettreEtDiffuser(
+      buildAuditCompletedEvent({
+        auditId: 'audit-42',
+        summaryText: 'Résumé legacy',
+        clientReport,
+      }),
       'audit-42',
     );
 
-    fixture.detectChanges();
-
     expect(component.clientReport).toEqual(clientReport);
-    const root = fixture.nativeElement as HTMLElement;
     expect(root.querySelector('app-audit-client-report-section')).toBeTruthy();
   });
 
   it('falls back to legacy summary when clientReport is absent', () => {
-    const fixture = TestBed.createComponent(GrowthAuditComponent);
-    const component = fixture.componentInstance;
-
-    submitAndStream(
-      component,
-      auditServiceMock,
-      {
-        type: 'completed',
-        data: {
-          auditId: 'audit-43',
-          status: 'COMPLETED',
-          progress: 100,
-          done: true,
-          summaryText: 'Résumé de votre audit',
-          keyChecks: {},
-          quickWins: [],
-          pillarScores: { seo: 80 },
-          updatedAt: '2026-04-15T09:00:00.000Z',
-        },
-      },
+    const { component, root } = soumettreEtDiffuser(
+      buildAuditCompletedEvent({
+        auditId: 'audit-43',
+        summaryText: 'Résumé de votre audit',
+        pillarScores: { seo: 80 },
+      }),
       'audit-43',
     );
 
-    fixture.detectChanges();
-
     expect(component.clientReport).toBeNull();
-    const root = fixture.nativeElement as HTMLElement;
     expect(root.querySelector('app-audit-client-report-section')).toBeNull();
     expect(root.textContent).toContain('Résumé de votre audit');
   });
 
   it('does not crash on unknown details keys', () => {
-    const fixture = TestBed.createComponent(GrowthAuditComponent);
-    const component = fixture.componentInstance;
-
-    submitAndStream(
-      component,
-      auditServiceMock,
-      {
-        type: 'progress',
-        data: {
-          auditId: 'audit-3',
-          status: 'RUNNING',
-          progress: 30,
-          step: 'Analyse',
-          details: {
-            foo: 'bar',
-            nested: { ok: true },
-          },
-          done: false,
-          updatedAt: '2026-02-19T09:00:00.000Z',
+    const { component } = soumettreEtDiffuser(
+      buildAuditProgressEvent({
+        auditId: 'audit-3',
+        progress: 30,
+        step: 'Analyse',
+        details: {
+          foo: 'bar',
+          nested: { ok: true },
         },
-      },
+      }),
       'audit-3',
     );
-
-    fixture.detectChanges();
 
     expect(component.auditPhaseLabel).toBe('');
     expect(component.auditCurrentUrl).toBe('');
@@ -246,14 +182,8 @@ describe('GrowthAuditComponent', () => {
     it('bloque la soumission si rgpdConsent est false', () => {
       const fixture = TestBed.createComponent(GrowthAuditComponent);
       const component = fixture.componentInstance;
-      component.auditFormState = {
-        websiteName: 'https://example.com',
-        contactMethod: 'EMAIL',
-        contactValue: 'test@example.com',
-      };
-      component.rgpdConsent = false;
 
-      component.submit(buildValidForm());
+      remplirEtSoumettre(component, false);
       fixture.detectChanges();
 
       expect(auditServiceMock.submit).not.toHaveBeenCalled();
@@ -267,14 +197,7 @@ describe('GrowthAuditComponent', () => {
         of(buildAuditCreateResponse({ auditId: 'audit-ok', httpCode: 201 })),
       );
 
-      component.auditFormState = {
-        websiteName: 'https://example.com',
-        contactMethod: 'EMAIL',
-        contactValue: 'test@example.com',
-      };
-      component.rgpdConsent = true;
-
-      component.submit(buildValidForm());
+      remplirEtSoumettre(component, true);
       fixture.detectChanges();
 
       expect(auditServiceMock.submit).toHaveBeenCalledTimes(1);

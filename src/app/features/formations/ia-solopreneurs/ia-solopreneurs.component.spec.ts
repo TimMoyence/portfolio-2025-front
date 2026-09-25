@@ -1,93 +1,50 @@
-import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { PRESENTATION_PORT } from '../../../core/ports/presentation.port';
-import { SlideDeckService } from '../../../shared/slides';
-import { createPresentationPortStub } from '../../../../testing/factories/presentation.factory';
+import { montageDeckDeFormation } from '../../../../testing/deck-de-formation';
 import { IaSolopreneursComponent } from './ia-solopreneurs.component';
 
 describe('IaSolopreneursComponent', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [IaSolopreneursComponent],
-      providers: [
-        SlideDeckService,
-        provideRouter([]),
-        {
-          provide: PRESENTATION_PORT,
-          useValue: createPresentationPortStub(),
-        },
-      ],
-    });
-  });
+  const rendu = montageDeckDeFormation(IaSolopreneursComponent);
+  const texte = (): string => rendu().textContent ?? '';
 
   it('rend la slide hero avec le titre attendu', () => {
-    const fixture = TestBed.createComponent(IaSolopreneursComponent);
-    fixture.detectChanges();
-    const hero = fixture.nativeElement.querySelector('app-slide-hero');
+    const hero = rendu().querySelector('app-slide-hero');
     expect(hero).toBeTruthy();
-    expect(hero.textContent).toContain('IA');
+    expect(hero?.textContent).toContain('IA');
   });
 
   it('rend la slide CTA toolkit en fin de presentation', () => {
-    const fixture = TestBed.createComponent(IaSolopreneursComponent);
-    fixture.detectChanges();
-    const cta = fixture.nativeElement.querySelector('app-slide-cta');
+    const cta = rendu().querySelector('app-slide-cta');
     expect(cta).toBeTruthy();
-    expect(cta.textContent.toLowerCase()).toContain('toolkit');
+    expect(cta?.textContent?.toLowerCase()).toContain('toolkit');
   });
 
   it('rend la 3e colonne Gemini dans la comparaison chat-produire', () => {
-    const fixture = TestBed.createComponent(IaSolopreneursComponent);
-    fixture.detectChanges();
-    const root = fixture.nativeElement as HTMLElement;
-    const text = root.textContent ?? '';
-    expect(text).toContain('Gemini');
-    expect(text).toContain('Workspace');
+    expect(texte()).toContain('Gemini');
+    expect(texte()).toContain('Workspace');
   });
 
   it('rend la 3e colonne n8n dans la comparaison automatiser', () => {
-    const fixture = TestBed.createComponent(IaSolopreneursComponent);
-    fixture.detectChanges();
-    const root = fixture.nativeElement as HTMLElement;
-    const text = root.textContent ?? '';
-    expect(text).toContain('n8n');
-    expect(text).toContain('self-host');
+    expect(texte()).toContain('n8n');
+    expect(texte()).toContain('self-host');
   });
 
   it('rend le palier intermediaire 60 euros sur stack-budget', () => {
-    const fixture = TestBed.createComponent(IaSolopreneursComponent);
-    fixture.detectChanges();
-    const root = fixture.nativeElement as HTMLElement;
-    const text = root.textContent ?? '';
-    expect(text).toMatch(/intermédiaire/i);
-    expect(text).toContain('Perplexity Pro');
+    expect(texte()).toMatch(/intermédiaire/i);
+    expect(texte()).toContain('Perplexity Pro');
   });
 
   it('rend la slide outils-detail (table 16 outils) en mode scroll', () => {
-    const fixture = TestBed.createComponent(IaSolopreneursComponent);
-    fixture.detectChanges();
-    const table = fixture.nativeElement.querySelector('app-slide-table');
+    const table = rendu().querySelector('app-slide-table');
     expect(table).toBeTruthy();
-    const rows = table.querySelectorAll('tbody tr');
-    expect(rows.length).toBe(16);
+    expect(table?.querySelectorAll('tbody tr').length).toBe(16);
   });
 
   it('masque les slides present-only en mode scroll', () => {
-    const fixture = TestBed.createComponent(IaSolopreneursComponent);
-    fixture.detectChanges();
-    const root = fixture.nativeElement as HTMLElement;
-    const transition = root.querySelector('[id="transition-pratique"]');
-    const promesse = root.querySelector('[id="promesse"]');
-    const oneMore = root.querySelector('[id="one-more-thing"]');
-    expect(transition).toBeNull();
-    expect(promesse).toBeNull();
-    expect(oneMore).toBeNull();
+    expect(rendu().querySelector('[id="transition-pratique"]')).toBeNull();
+    expect(rendu().querySelector('[id="promesse"]')).toBeNull();
+    expect(rendu().querySelector('[id="one-more-thing"]')).toBeNull();
   });
 
   it('rend les polls accroche, clients et recap-8020', () => {
-    const fixture = TestBed.createComponent(IaSolopreneursComponent);
-    fixture.detectChanges();
-    const polls = fixture.nativeElement.querySelectorAll('app-slide-poll');
-    expect(polls.length).toBeGreaterThanOrEqual(3);
+    expect(rendu().querySelectorAll('app-slide-poll').length).toBeGreaterThanOrEqual(3);
   });
 });

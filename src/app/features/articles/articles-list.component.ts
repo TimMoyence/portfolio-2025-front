@@ -1,18 +1,11 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  LOCALE_ID,
-  inject,
-} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import type { ArticleSummary } from '../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../core/adapters/article-http.adapter';
 import { AsiliHeroComponent } from '../../shared/sections';
 import { ArticlesCtaComponent } from './articles-cta.component';
-import { localeDesArticles, type LocaleDesArticles } from './locale-des-articles';
+import { injecterLocaleDesArticles } from './locale-des-articles';
 
 const ARTICLES_PAGE_SIZE = 12;
 
@@ -36,15 +29,11 @@ export class ArticlesListComponent {
   protected nextCursor: string | null = null;
   protected isLoadingMore = false;
   protected hasLoadMoreError = false;
-  protected readonly locale: LocaleDesArticles;
+  protected readonly locale = injecterLocaleDesArticles();
+  private readonly api = inject(ArticleHttpAdapter);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  constructor(
-    private readonly api: ArticleHttpAdapter,
-    @Inject(LOCALE_ID) localeId: string,
-    @Inject(DOCUMENT) document: Document,
-  ) {
-    this.locale = localeDesArticles(localeId, document.location.pathname);
+  constructor() {
     this.api.list(this.locale, ARTICLES_PAGE_SIZE).subscribe({
       next: (response) => {
         this.articles.push(...response.items);

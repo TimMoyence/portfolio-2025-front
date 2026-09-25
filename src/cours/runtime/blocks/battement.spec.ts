@@ -1,41 +1,54 @@
+import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
 import { Battement, SECONDE_MS } from './battement';
 
+interface CasDeBattement {
+  readonly titre: string;
+  readonly jouer: (battement: Battement, avancer: (duree: number) => void) => void;
+  readonly battements: number;
+}
+
+const CAS: readonly CasDeBattement[] = [
+  {
+    titre: 'bat une fois par seconde une fois demarre',
+    jouer: (battement, avancer) => {
+      battement.demarrer();
+      avancer(SECONDE_MS * 3);
+    },
+    battements: 3,
+  },
+  {
+    titre: 'ne double pas la cadence quand on le demarre deux fois',
+    jouer: (battement, avancer) => {
+      battement.demarrer();
+      battement.demarrer();
+      avancer(SECONDE_MS);
+    },
+    battements: 1,
+  },
+  {
+    titre: 'se tait apres l arret et peut repartir',
+    jouer: (battement, avancer) => {
+      battement.demarrer();
+      battement.arreter();
+      battement.arreter();
+      avancer(SECONDE_MS * 2);
+      battement.demarrer();
+      avancer(SECONDE_MS);
+    },
+    battements: 1,
+  },
+];
+
 describe('Battement', () => {
-  beforeEach(() => jasmine.clock().install());
-  afterEach(() => jasmine.clock().uninstall());
+  sousHorlogeSimulee();
 
-  it('bat une fois par seconde une fois demarre', () => {
-    const battre = jasmine.createSpy('battre');
-    const battement = new Battement(battre);
+  for (const { titre, jouer, battements } of CAS) {
+    it(titre, () => {
+      const battre = jasmine.createSpy('battre');
 
-    battement.demarrer();
-    jasmine.clock().tick(SECONDE_MS * 3);
+      jouer(new Battement(battre), (duree) => jasmine.clock().tick(duree));
 
-    expect(battre).toHaveBeenCalledTimes(3);
-  });
-
-  it('ne double pas la cadence quand on le demarre deux fois', () => {
-    const battre = jasmine.createSpy('battre');
-    const battement = new Battement(battre);
-
-    battement.demarrer();
-    battement.demarrer();
-    jasmine.clock().tick(SECONDE_MS);
-
-    expect(battre).toHaveBeenCalledTimes(1);
-  });
-
-  it('se tait apres l arret et peut repartir', () => {
-    const battre = jasmine.createSpy('battre');
-    const battement = new Battement(battre);
-
-    battement.demarrer();
-    battement.arreter();
-    battement.arreter();
-    jasmine.clock().tick(SECONDE_MS * 2);
-    battement.demarrer();
-    jasmine.clock().tick(SECONDE_MS);
-
-    expect(battre).toHaveBeenCalledTimes(1);
-  });
+      expect(battre).toHaveBeenCalledTimes(battements);
+    });
+  }
 });

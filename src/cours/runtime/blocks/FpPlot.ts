@@ -1,24 +1,17 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { evaluerExpression } from '../core/formula';
 import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
 import { type Reglages, borner } from './animation';
-import { type ParametreReglable, curseur } from './curseurs';
 import {
+  type DefinitionReglable,
   FpReglable,
-  type Prereglage,
   arrondi,
-  copierParametres,
-  copierPrereglages,
-  fini,
+  copierLeReglable,
   formater,
   plafondDe,
   plancherDe,
 } from './reglable';
-import { projeterMetadonnees } from './projection';
 
 export type TraitSerie = 'plein' | 'tirets';
-
-export type PlotParametre = ParametreReglable;
 
 export interface PlotAxe {
   readonly libelle: string;
@@ -40,10 +33,7 @@ export interface PlotSerie {
   readonly calcul: string;
 }
 
-export type PlotPrereglage = Prereglage;
-
-export interface PlotDefinition {
-  readonly id: string;
+export interface PlotDefinition extends DefinitionReglable {
   readonly titre?: string;
   readonly description?: string;
   readonly source?: string;
@@ -51,16 +41,14 @@ export interface PlotDefinition {
   readonly abscisse: PlotAxe;
   readonly ordonnee: string;
   readonly bornesOrdonnee?: PlotBornesOrdonnee;
-  readonly parametres: readonly PlotParametre[];
   readonly series: readonly PlotSerie[];
   readonly forme?: 'courbes' | 'barres';
   readonly unite?: 'euros';
   readonly etiquettes?: readonly string[];
-  readonly prereglages?: readonly PlotPrereglage[];
   readonly reference?: string;
-  readonly animation?: readonly Reglages[];
-  readonly metadonnees: MetadonneesBrique;
 }
+
+type PlotPrereglage = NonNullable<PlotDefinition['prereglages']>[number];
 
 type Valeurs = Reglages;
 
@@ -163,7 +151,7 @@ function copierSerie(serie: PlotSerie): PlotSerie {
 
 function copierDefinition(source: PlotDefinition): PlotDefinition {
   return {
-    id: source.id,
+    ...copierLeReglable(source),
     titre: source.titre,
     description: source.description,
     source: source.source,
@@ -175,15 +163,11 @@ function copierDefinition(source: PlotDefinition): PlotDefinition {
     },
     ordonnee: source.ordonnee,
     bornesOrdonnee: source.bornesOrdonnee === undefined ? undefined : { ...source.bornesOrdonnee },
-    parametres: copierParametres(source.parametres),
     series: source.series.map(copierSerie),
     forme: source.forme === 'barres' ? 'barres' : 'courbes',
     unite: source.unite === 'euros' ? 'euros' : undefined,
     etiquettes: source.etiquettes === undefined ? undefined : [...source.etiquettes],
-    prereglages: copierPrereglages(source.prereglages),
     reference: source.reference,
-    animation: source.animation?.map((etape) => ({ ...etape })),
-    metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
 
@@ -197,6 +181,7 @@ function premiereOrdonnee(tracee: SerieTracee): number {
 
 export class FpPlot extends FpReglable<PlotDefinition> {
   protected readonly evenementDeReglage = 'fp-plot-reglage';
+  protected readonly bloc = 'plot';
 
   protected copier(valeur: PlotDefinition): PlotDefinition {
     return copierDefinition(valeur);
@@ -214,7 +199,11 @@ export class FpPlot extends FpReglable<PlotDefinition> {
     if (this.interne === null) {
       return this.attente();
     }
-    return safeHtml`<section class="fp-carte fp-scene fp-plot__atelier">${this.description()}${this.panneauDeReglages()}<div class="fp-plot__zone" data-zone="rendu">${this.rendu()}</div></section>`;
+    const declencheurs =
+      (this.interne.prereglages ?? []).length === 0
+        ? this.boutonAnimer()
+        : this.prereglagesAffiches();
+    return safeHtml`<section class="fp-carte fp-scene fp-plot__atelier">${this.description()}${this.panneauDeReglages(declencheurs)}<div class="fp-plot__zone" data-zone="rendu">${this.rendu()}</div></section>`;
   }
 
   private enBarres(): boolean {
@@ -593,41 +582,5 @@ export class FpPlot extends FpReglable<PlotDefinition> {
       return null;
     }
     return Math.abs(haut - bas);
-  }
-
-  private panneauDeReglages(): EscapedHtml {
-    return safeHtml`
-      <fieldset class="fp-plot__reglages">
-        <legend>${escapeHtml(this.texte('plot-reglages'))}</legend>
-        ${this.declencheurs()}
-        <div class="fp-plot__parametres" aria-live="polite">
-          ${(this.interne?.parametres ?? []).map((parametre) => this.parametreAffiche(parametre))}
-        </div>
-      </fieldset>
-    `;
-  }
-
-  private declencheurs(): EscapedHtml {
-    const prereglages = this.interne?.prereglages ?? [];
-    if (prereglages.length === 0) {
-      return safeHtml`<button class="fp-plot__animation" data-testid="animer" type="button">${escapeHtml(this.texte('plot-animer'))}</button>`;
-    }
-    return safeHtml`<div class="fp-plot__prereglages" role="group" aria-label="${escapeHtml(this.texte('plot-prereglages'))}">${this.boutonsDePrereglage('fp-plot')}</div>`;
-  }
-
-  private parametreAffiche(parametre: PlotParametre): EscapedHtml {
-    const valeur = borner(parametre, fini(this.courantes[parametre.cle], parametre.defaut));
-    return safeHtml`
-      <div class="fp-plot__parametre" data-testid="parametre" data-cle="${escapeHtml(parametre.cle)}">
-        <span class="fp-plot__etiquette">${escapeHtml(parametre.libelle)}</span>
-        ${curseur('fp-plot', parametre, valeur, this.enonceValeur(parametre, valeur))}
-        <output class="fp-plot__valeur fp-montant" data-testid="valeur" data-cle="${escapeHtml(parametre.cle)}" aria-label="${escapeHtml(this.enonceValeur(parametre, valeur))}">${escapeHtml(this.chiffre(valeur))}</output>
-      </div>
-    `;
-  }
-
-  private enonceValeur(parametre: PlotParametre, valeur: number): string {
-    const plage = `${this.texte('plot-plage')} ${this.chiffre(plancherDe(parametre))} ${this.texte('plot-plage-fin')} ${this.chiffre(plafondDe(parametre))}`;
-    return `${parametre.libelle} : ${this.chiffre(valeur)} (${plage})`;
   }
 }

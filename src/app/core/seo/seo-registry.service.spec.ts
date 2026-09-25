@@ -1,6 +1,6 @@
 import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom } from 'rxjs';
+import { type Observable, firstValueFrom } from 'rxjs';
 import { SeoRegistryService } from './seo-registry.service';
 
 describe('SeoRegistryService', () => {
@@ -10,6 +10,17 @@ describe('SeoRegistryService', () => {
     });
     return TestBed.inject(SeoRegistryService);
   }
+
+  async function seoTrouve<T>(recherche: Observable<T | null>): Promise<T> {
+    const result = await firstValueFrom(recherche);
+    expect(result).not.toBeNull();
+    return result!;
+  }
+
+  const seoParCle = (locale: string, cle: string) =>
+    seoTrouve(createService(locale).getSeoByKey(cle));
+
+  const seoParChemin = (path: string) => seoTrouve(createService('fr').getSeoByPath(path));
 
   describe('getBaseUrl', () => {
     it("devrait retourner l'URL de base du site", () => {
@@ -61,24 +72,20 @@ describe('SeoRegistryService', () => {
 
   describe('getSeoByKey', () => {
     it("devrait retourner la config SEO pour la cle 'home'", async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByKey('home'));
+      const { seo, index, page } = await seoParCle('fr', 'home');
 
-      expect(result).not.toBeNull();
-      expect(result!.seo.title).toBe('Accueil — Tim Moyence Portfolio');
-      expect(result!.seo.description).toBe(
+      expect(seo.title).toBe('Accueil — Tim Moyence Portfolio');
+      expect(seo.description).toBe(
         'Découvrez mes services professionnels, réalisations et solutions digitales sur mesure. Tim Moyence, développeur web freelance à Bordeaux.',
       );
-      expect(result!.index).toBeTrue();
-      expect(result!.page.id).toBe('home');
+      expect(index).toBeTrue();
+      expect(page.id).toBe('home');
     });
 
     it("devrait retourner la config SEO en anglais pour la cle 'home'", async () => {
-      const service = createService('en');
-      const result = await firstValueFrom(service.getSeoByKey('home'));
+      const { seo } = await seoParCle('en', 'home');
 
-      expect(result).not.toBeNull();
-      expect(result!.seo.title).toBe('Home — Tim Moyence, freelance web developer Bordeaux');
+      expect(seo.title).toBe('Home — Tim Moyence, freelance web developer Bordeaux');
     });
 
     it('devrait retourner null pour une cle inexistante', async () => {
@@ -89,31 +96,25 @@ describe('SeoRegistryService', () => {
     });
 
     it('devrait inclure les defaults (keywords, ogImage) si la page ne les definit pas', async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByKey('home'));
+      const { seo } = await seoParCle('fr', 'home');
 
-      expect(result).not.toBeNull();
-      expect(result!.seo.keywords).toBeDefined();
-      expect(result!.seo.keywords!.length).toBeGreaterThan(0);
-      expect(result!.seo.ogImage).toBe('/assets/images/logo.webp');
-      expect(result!.seo.twitterCard).toBe('summary_large_image');
+      expect(seo.keywords).toBeDefined();
+      expect(seo.keywords!.length).toBeGreaterThan(0);
+      expect(seo.ogImage).toBe('/assets/images/logo.webp');
+      expect(seo.twitterCard).toBe('summary_large_image');
     });
 
     it('devrait retourner index false pour la page login', async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByKey('login'));
+      const { index } = await seoParCle('fr', 'login');
 
-      expect(result).not.toBeNull();
-      expect(result!.index).toBeFalse();
+      expect(index).toBeFalse();
     });
 
     it('devrait retourner les ogTitle et ogDescription depuis la page', async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByKey('home'));
+      const { seo } = await seoParCle('fr', 'home');
 
-      expect(result).not.toBeNull();
-      expect(result!.seo.ogTitle).toBe('Accueil de Tim Moyence');
-      expect(result!.seo.ogDescription).toBe(
+      expect(seo.ogTitle).toBe('Accueil de Tim Moyence');
+      expect(seo.ogDescription).toBe(
         'Découvrez mes services professionnels et mes réalisations en développement web.',
       );
     });
@@ -160,21 +161,17 @@ describe('SeoRegistryService', () => {
 
     for (const { label, path, expectedId } of pathCases) {
       it(label, async () => {
-        const service = createService('fr');
-        const result = await firstValueFrom(service.getSeoByPath(path));
+        const { page } = await seoParChemin(path);
 
-        expect(result).not.toBeNull();
-        expect(result!.page.id).toBe(expectedId);
+        expect(page.id).toBe(expectedId);
       });
     }
 
     it("devrait retourner la config SEO pour '/presentation'", async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByPath('/presentation'));
+      const { page, seo } = await seoParChemin('/presentation');
 
-      expect(result).not.toBeNull();
-      expect(result!.page.id).toBe('presentation');
-      expect(result!.seo.title).toBe('Présentation — Tim Moyence Portfolio');
+      expect(page.id).toBe('presentation');
+      expect(seo.title).toBe('Présentation — Tim Moyence Portfolio');
     });
 
     it('devrait retourner null pour un chemin inexistant', async () => {
@@ -187,19 +184,11 @@ describe('SeoRegistryService', () => {
 
   describe('resolution de locale avec fallback', () => {
     it("devrait fallback sur la locale par defaut si la locale demandee n'existe pas dans la page", async () => {
-      const service = createService('ja');
-      const result = await firstValueFrom(service.getSeoByKey('home'));
-
-      expect(result).not.toBeNull();
-      expect(result!.seo.title).toBe('Accueil — Tim Moyence Portfolio');
+      expect((await seoParCle('ja', 'home')).seo.title).toBe('Accueil — Tim Moyence Portfolio');
     });
 
     it('devrait fallback depuis une locale composee vers la langue de base', async () => {
-      const service = createService('fr-CA');
-      const result = await firstValueFrom(service.getSeoByKey('home'));
-
-      expect(result).not.toBeNull();
-      expect(result!.seo.title).toBe('Accueil — Tim Moyence Portfolio');
+      expect((await seoParCle('fr-CA', 'home')).seo.title).toBe('Accueil — Tim Moyence Portfolio');
     });
   });
 });

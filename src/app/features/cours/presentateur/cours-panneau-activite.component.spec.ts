@@ -1,6 +1,7 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { EcranDeroule } from '../../../../cours/content/types';
+import { buildEcranDeVoteJumele } from '../../../../testing/banc-du-pupitre';
 import {
   buildCardsortPlan,
   buildEscapeParcours,
@@ -15,6 +16,7 @@ import {
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
+import { poserLesEntrees } from '../../../../testing/montage-page';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { FormationsPort } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
@@ -37,11 +39,7 @@ describe('CoursPanneauActiviteComponent', () => {
     const fixture = TestBed.createComponent(CoursPanneauActiviteComponent);
     const commandes: CommandeDEcran[] = [];
     fixture.componentInstance.commande.subscribe((commande) => commandes.push(commande));
-    fixture.componentRef.setInput('ecran', ecran);
-    for (const [nom, valeur] of Object.entries(entrees)) {
-      fixture.componentRef.setInput(nom, valeur);
-    }
-    fixture.detectChanges();
+    poserLesEntrees(fixture, { ecran, ...entrees });
     return { fixture, commandes };
   }
 
@@ -71,14 +69,7 @@ describe('CoursPanneauActiviteComponent', () => {
   });
 
   describe('instruction par les pairs', () => {
-    const vote = buildEcranDeroule({
-      id: 'ecran-vote',
-      type: 'fp-vote',
-      donnees: {
-        question: buildVoteQuestion(),
-        questionJumelle: buildVoteQuestion({ id: 'Q-CAP-03-bis' }),
-      },
-    });
+    const vote = buildEcranDeVoteJumele();
 
     it('annonce la phase pilotee et propose la suivante', () => {
       const { fixture, commandes } = monter(vote, { pilotage: { phase: 'discussion' } });

@@ -8,9 +8,7 @@ import type {
   DerouleCours,
   EtatParticipant,
   EtatPulse,
-  ValeurProduction,
 } from '../../../cours/content/types';
-import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donnees-publiques';
 import type {
   CommandePilotage,
   AnnotationFormateur,
@@ -21,7 +19,9 @@ import type {
   MotifRefusReponse,
   MotifRefusReponseLibre,
   ParticipantDeSeance,
+  ProductionEtudiante,
   QuestionsDues,
+  RappelsDus,
   RapportSeance,
   Rattachement,
   RegleNotation,
@@ -30,8 +30,10 @@ import type {
   ReponseLibreEtudiant,
   ReponseLibreFormateur,
   SeanceOuverte,
-  StrategiePublique,
+  StrategiesDuDefi,
   SyntheseConcept,
+  TentativeDefi,
+  TentativeEnigme,
   VerdictProduction,
   VerdictReponse,
   VerdictTentative,
@@ -312,7 +314,7 @@ export class FormationsHttpAdapter implements FormationsPort {
   envoyerProduction(
     sessionId: string,
     jeton: string,
-    production: { questionId: string; valeur: ValeurProduction; dureeMs: number },
+    production: ProductionEtudiante,
   ): Observable<VerdictProduction> {
     return ecritureEtudiante(
       this.http.post<VerdictProduction>(`${this.urlSeance(sessionId)}/productions`, production, {
@@ -325,7 +327,7 @@ export class FormationsHttpAdapter implements FormationsPort {
     sessionId: string,
     jeton: string,
     parcoursId: string,
-    tentative: { enigmeId: string; reponse: string; dureeMs: number },
+    tentative: TentativeEnigme,
   ): Observable<VerdictTentative> {
     const url = `${this.urlSeance(sessionId)}/escape/${encodeURIComponent(parcoursId)}/tentatives`;
     return ecritureEtudiante(
@@ -344,15 +346,11 @@ export class FormationsHttpAdapter implements FormationsPort {
     return ecritureEtudiante(this.http.put<void>(url, { etat }, { headers: entetes(jeton) }));
   }
 
-  lireRappels(
-    sessionId: string,
-    jeton: string,
-  ): Observable<{ questions: readonly SpacedQuestionPublique[] }> {
+  lireRappels(sessionId: string, jeton: string): Observable<RappelsDus> {
     return ecritureEtudiante(
-      this.http.get<{ questions: readonly SpacedQuestionPublique[] }>(
-        `${this.urlSeance(sessionId)}/rappels`,
-        { headers: entetes(jeton) },
-      ),
+      this.http.get<RappelsDus>(`${this.urlSeance(sessionId)}/rappels`, {
+        headers: entetes(jeton),
+      }),
     );
   }
 
@@ -360,26 +358,23 @@ export class FormationsHttpAdapter implements FormationsPort {
     sessionId: string,
     jeton: string,
     defiId: string,
-    tentative: { texte: string; dureeMs: number },
-  ): Observable<{ strategies: readonly StrategiePublique[] }> {
+    tentative: TentativeDefi,
+  ): Observable<StrategiesDuDefi> {
     return ecritureEtudiante(
-      this.http.post<{ strategies: readonly StrategiePublique[] }>(
+      this.http.post<StrategiesDuDefi>(
         `${this.urlDuDefi(sessionId, defiId)}/tentative`,
         tentative,
-        { headers: entetes(jeton) },
+        {
+          headers: entetes(jeton),
+        },
       ),
     );
   }
 
-  lireStrategies(
-    sessionId: string,
-    jeton: string,
-    defiId: string,
-  ): Observable<{ strategies: readonly StrategiePublique[] }> {
-    return this.http.get<{ strategies: readonly StrategiePublique[] }>(
-      `${this.urlDuDefi(sessionId, defiId)}/strategies`,
-      { headers: entetes(jeton) },
-    );
+  lireStrategies(sessionId: string, jeton: string, defiId: string): Observable<StrategiesDuDefi> {
+    return this.http.get<StrategiesDuDefi>(`${this.urlDuDefi(sessionId, defiId)}/strategies`, {
+      headers: entetes(jeton),
+    });
   }
 
   lireMonEtat(sessionId: string, jeton: string): Observable<EtatParticipant> {

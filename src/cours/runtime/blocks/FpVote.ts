@@ -1,14 +1,8 @@
 import type { MetadonneesBrique, VotePhase } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import {
-  estObjet,
-  estVerdictDeReponse,
-  lireBonneOption,
-  lireBonneReponse,
-  type VerdictDeReponse,
-} from './retours';
+import { estObjet, lireBonneOption, lireBonneReponse, VerdictsParQuestion } from './retours';
+import { FpVerdicts } from './verdicts';
 
 export interface VoteQuestionPublique {
   readonly id: string;
@@ -73,7 +67,7 @@ function lireRevelation(valeur: unknown): Revelation | null {
     : null;
 }
 
-export class FpVote extends FpBlock {
+export class FpVote extends FpVerdicts {
   private principale: VoteQuestionPublique | null = null;
   private jumelle: VoteQuestionPublique | null = null;
   private internePhase: VotePhase | null = null;
@@ -82,12 +76,11 @@ export class FpVote extends FpBlock {
   private revelation: Revelation | null = null;
   private bonneReponse: string | null = null;
   private bonneOption: string | null = null;
-  private recus = new Map<string, VerdictDeReponse>();
   private choix = new Map<string, string>();
 
   set question(valeur: VoteQuestionPublique | null) {
     if ((valeur?.id ?? null) !== (this.principale?.id ?? null)) {
-      this.recus = new Map();
+      this.recus = new VerdictsParQuestion();
       this.choix = new Map();
     }
     this.principale = projeter(valeur);
@@ -134,19 +127,8 @@ export class FpVote extends FpBlock {
     return this.premierVote;
   }
 
-  set verdicts(valeur: readonly VerdictDeReponse[] | null) {
-    const connus = new Set([this.principale?.id, this.jumelle?.id]);
-    this.recus = new Map(
-      (valeur ?? [])
-        .filter(estVerdictDeReponse)
-        .filter((verdict) => connus.has(verdict.questionId))
-        .map((verdict) => [verdict.questionId, verdict]),
-    );
-    this.refreshSiConnecte();
-  }
-
-  get verdicts(): readonly VerdictDeReponse[] {
-    return [...this.recus.values()];
+  protected verdictAttendu(questionId: string): boolean {
+    return questionId === this.principale?.id || questionId === this.jumelle?.id;
   }
 
   set corrige(valeur: unknown) {
@@ -188,7 +170,7 @@ export class FpVote extends FpBlock {
 
   private suiviEtudiant(question: VoteQuestionPublique): EscapedHtml {
     const retour = this.choix.has(question.id) ? this.messageApresEnvoi() : '';
-    const verdict = this.verdictVisible() ? (this.recus.get(question.id) ?? null) : null;
+    const verdict = this.verdictVisible() ? this.recus.de(question.id) : null;
     return safeHtml`<p aria-live="polite" data-testid="retour">${escapeHtml(retour)}</p>${this.verdictDeReponse(verdict)}${this.annonces()}`;
   }
 
@@ -234,7 +216,7 @@ export class FpVote extends FpBlock {
       return true;
     }
     const repondue =
-      (this.choix.has(question.id) && this.erreur === null) || this.recus.has(question.id);
+      (this.choix.has(question.id) && this.erreur === null) || this.recus.a(question.id);
     return !repondue && !this.dejaRepondu && !this.cloture;
   }
 

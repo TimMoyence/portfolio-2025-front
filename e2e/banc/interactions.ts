@@ -108,12 +108,37 @@ async function voter(bloc: Locator, numero: number): Promise<void> {
   });
 }
 
-async function repondreAuNumerique(bloc: Locator, numero: number): Promise<void> {
-  await taperVite(bloc.locator('[data-testid="champ"]'), `${12 + numero},5`, numero);
-  await bloc.locator('[data-testid="valider"]').click();
+async function attendreLeVerdict(bloc: Locator): Promise<void> {
   await expect(bloc.locator('[data-testid="verdict"]')).toBeVisible({
     timeout: DELAI_DE_RETOUR_MS,
   });
+}
+
+async function validerPourUnVerdict(bloc: Locator): Promise<void> {
+  await bloc.locator('[data-testid="valider"]').click();
+  await attendreLeVerdict(bloc);
+}
+
+async function envoyerPourUnRetour(bloc: Locator, bouton: string): Promise<void> {
+  await bloc.locator(`[data-testid="${bouton}"]`).click();
+  await expect(bloc.locator('[data-testid="retour"]')).not.toBeEmpty({
+    timeout: DELAI_DE_RETOUR_MS,
+  });
+}
+
+async function remplirChaqueChamp(
+  champs: Locator,
+  numero: number,
+  texte: (rang: number) => string,
+): Promise<void> {
+  for (let rang = 0; rang < (await champs.count()); rang += 1) {
+    await taperVite(champs.nth(rang), texte(numero + rang), numero + rang);
+  }
+}
+
+async function repondreAuNumerique(bloc: Locator, numero: number): Promise<void> {
+  await taperVite(bloc.locator('[data-testid="champ"]'), `${12 + numero},5`, numero);
+  await validerPourUnVerdict(bloc);
 }
 
 async function questionnaire(zone: Locator, numero: number): Promise<void> {
@@ -131,9 +156,7 @@ async function rappel(zone: Locator, numero: number): Promise<void> {
   const bloc = zone.locator('fp-recall');
   await taperVite(bloc.locator('[data-testid="rappel"]'), texteRapide(numero, 'Rappel'), numero);
   await cliquerUneOption(bloc, numero);
-  await expect(bloc.locator('[data-testid="verdict"]')).toBeVisible({
-    timeout: DELAI_DE_RETOUR_MS,
-  });
+  await attendreLeVerdict(bloc);
 }
 
 async function reflexion(zone: Locator, numero: number): Promise<void> {
@@ -149,14 +172,10 @@ async function reflexion(zone: Locator, numero: number): Promise<void> {
 
 async function pro(zone: Locator, numero: number): Promise<void> {
   const bloc = zone.locator('fp-pro');
-  const champs = bloc.locator('textarea[data-question]');
-  for (let rang = 0; rang < (await champs.count()); rang += 1) {
-    await taperVite(champs.nth(rang), texteRapide(numero + rang, 'Mission'), numero + rang);
-  }
-  await bloc.locator('[data-testid="valider"]').click();
-  await expect(bloc.locator('[data-testid="retour"]')).not.toBeEmpty({
-    timeout: DELAI_DE_RETOUR_MS,
-  });
+  await remplirChaqueChamp(bloc.locator('textarea[data-question]'), numero, (rang) =>
+    texteRapide(rang, 'Mission'),
+  );
+  await envoyerPourUnRetour(bloc, 'valider');
 }
 
 async function classement(zone: Locator, numero: number): Promise<void> {
@@ -181,19 +200,13 @@ async function classement(zone: Locator, numero: number): Promise<void> {
   await expect(bloc.locator('[data-testid="progression"]')).toHaveText(
     new RegExp(`${cartes.length}\\s*/\\s*${cartes.length}`),
   );
-  await bloc.locator('[data-testid="valider"]').click();
-  await expect(bloc.locator('[data-testid="verdict"]')).toBeVisible({
-    timeout: DELAI_DE_RETOUR_MS,
-  });
+  await validerPourUnVerdict(bloc);
 }
 
 async function defi(zone: Locator, numero: number): Promise<void> {
   const bloc = zone.locator('fp-challenge');
   await taperVite(bloc.locator('[data-testid="tentative"]'), texteRapide(numero, 'Défi'), numero);
-  await bloc.locator('[data-testid="envoyer"]').click();
-  await expect(bloc.locator('[data-testid="retour"]')).not.toBeEmpty({
-    timeout: DELAI_DE_RETOUR_MS,
-  });
+  await envoyerPourUnRetour(bloc, 'envoyer');
 }
 
 async function pouls(zone: Locator, numero: number): Promise<void> {
@@ -225,10 +238,7 @@ async function exempleResolu(zone: Locator, numero: number): Promise<void> {
     await taperVite(saisie, texteRapide(numero + rang, 'Étape'), numero + rang);
     await saisie.blur();
   }
-  await bloc.locator('[data-testid="valider"]').click();
-  await expect(bloc.locator('[data-testid="retour"]')).not.toBeEmpty({
-    timeout: DELAI_DE_RETOUR_MS,
-  });
+  await envoyerPourUnRetour(bloc, 'valider');
 }
 
 async function feuille(zone: Locator, numero: number): Promise<void> {
@@ -237,22 +247,17 @@ async function feuille(zone: Locator, numero: number): Promise<void> {
   await cellule.click();
   await cellule.pressSequentially(`=${numero}+1`, { delay: 0 });
   await cellule.press('Enter');
-  await bloc.locator('[data-testid="valider"]').click();
-  await expect(bloc.locator('[data-testid="verdict"]')).toBeVisible({
-    timeout: DELAI_DE_RETOUR_MS,
-  });
+  await validerPourUnVerdict(bloc);
 }
 
 async function tableau(zone: Locator, numero: number): Promise<void> {
   const bloc = zone.locator('fp-table-build');
-  const saisies = bloc.locator('input[data-testid="cellule"][data-role="saisie"]');
-  for (let rang = 0; rang < (await saisies.count()); rang += 1) {
-    await taperVite(saisies.nth(rang), String(100 + numero + rang), numero + rang);
-  }
-  await bloc.locator('[data-testid="valider"]').click();
-  await expect(bloc.locator('[data-testid="verdict"]')).toBeVisible({
-    timeout: DELAI_DE_RETOUR_MS,
-  });
+  await remplirChaqueChamp(
+    bloc.locator('input[data-testid="cellule"][data-role="saisie"]'),
+    numero,
+    (rang) => String(100 + rang),
+  );
+  await validerPourUnVerdict(bloc);
 }
 
 async function evasion(zone: Locator, numero: number): Promise<void> {

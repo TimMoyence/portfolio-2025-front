@@ -1,25 +1,21 @@
+@use '../../slide-section' as slide;
+
 .slide-stats {
-  width: 100%;
-  min-height: 100cqh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
+  @include slide.cadre-centre(4rem 2rem);
   text-align: center;
 
-  h2 {
+  @include slide.titre-projete {
     font-size: clamp(1.75rem, 3cqi, 2.5rem);
     margin: 0 0 3rem;
   }
-}
 
-.slide-stats__subtitle {
-  max-width: 62ch;
-  margin: -2rem auto 2.5rem;
-  color: var(--text-muted, var(--slide-text-muted));
-  font-size: 1.05rem;
-  line-height: 1.5;
+  @include slide.sous-titre-projete(slide-stats) {
+    max-width: 62ch;
+    margin: -2rem auto 2.5rem;
+    color: var(--text-muted, var(--slide-text-muted));
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
 }
 
 .slide-stats__grid {

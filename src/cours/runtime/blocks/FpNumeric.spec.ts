@@ -4,6 +4,7 @@ import {
 } from '../../../testing/factories/cours.factory';
 import { attendreUneRegionLive } from '../../../testing/assertions-briques';
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
+import { installerBrique } from '../../../testing/banc-de-brique';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { FpNumeric, type NumericQuestionPublique } from './FpNumeric';
 
@@ -82,20 +83,13 @@ function dureeEmise(lectureMs: number, rafraichissements: number): number | unde
 describe('FpNumeric', () => {
   let hote: FpNumeric;
 
-  beforeAll(() => {
-    if (!customElements.get('fp-numeric')) {
-      customElements.define('fp-numeric', FpNumeric);
-    }
-  });
-
-  beforeEach(() => {
-    hote = document.createElement('fp-numeric') as FpNumeric;
-    hote.question = QUESTION_NOTEE;
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    hote.remove();
+  installerBrique<FpNumeric>({
+    balise: 'fp-numeric',
+    classe: FpNumeric,
+    poser: (brique) => {
+      hote = brique;
+      brique.question = QUESTION_NOTEE;
+    },
   });
 
   it('affiche l enonce de la question', () => {

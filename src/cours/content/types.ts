@@ -1,3 +1,5 @@
+import type { ProgressionDesEnigmes } from '../runtime/blocks/retours';
+
 export type Role = 'presentateur' | 'etudiant';
 
 export type PacingMode = 'pilote' | 'libre';
@@ -284,14 +286,7 @@ export interface EtatParticipant {
     readonly sondageId: string;
     readonly etat: EtatPulse;
   }[];
-  readonly enigmes: readonly {
-    readonly parcoursId: string;
-    readonly resolues: readonly {
-      readonly enigmeId: string;
-      readonly fragment: string;
-    }[];
-    readonly tentativesRestantes: Readonly<Record<string, number>>;
-  }[];
+  readonly enigmes: readonly ProgressionDesEnigmes[];
   readonly defis: readonly {
     readonly defiId: string;
     readonly premiereTentative: string;

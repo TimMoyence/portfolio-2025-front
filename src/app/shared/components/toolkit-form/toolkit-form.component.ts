@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import type { ToolkitRequest } from '../../../core/models/toolkit-request.model';
+import { HoneypotDirective } from '../../directives/honeypot.directive';
 import { InteractionCollectorService } from '../../services/interaction-collector.service';
 import { readInputValue, readCheckboxChecked } from '../../utils/dom-event.utils';
 
@@ -23,7 +24,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
 @Component({
   selector: 'app-toolkit-form',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HoneypotDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @switch (state()) {
@@ -41,14 +42,10 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
       @default {
         <form (submit)="$event.preventDefault(); onSubmit()" class="space-y-4">
           <input
-            type="text"
+            appHoneypot
             name="website"
             [value]="website()"
             (input)="website.set(readInputValue($event))"
-            tabindex="-1"
-            autocomplete="off"
-            aria-hidden="true"
-            class="absolute -left-[10000px] h-px w-px overflow-hidden"
           />
           <input type="hidden" name="formStartedAt" [value]="formStartedAt()" />
           <div>

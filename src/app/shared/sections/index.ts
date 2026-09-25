@@ -6,6 +6,7 @@ export { AsiliPillarsComponent, type AsiliPillar } from './asili-pillars/asili-p
 
 export {
   AsiliCtaBandComponent,
+  type AsiliCta,
   type AsiliCtaAction,
 } from './asili-cta-band/asili-cta-band.component';
 
@@ -20,6 +21,8 @@ export {
   AsiliManifestoComponent,
   type AsiliManifestoLine,
 } from './asili-manifesto/asili-manifesto.component';
+
+export { AsiliSectionTeteComponent } from './asili-section-tete/asili-section-tete.component';
 
 export {
   AsiliAiMethodComponent,

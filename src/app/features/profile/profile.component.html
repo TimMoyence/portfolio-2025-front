@@ -18,24 +18,14 @@
           <p class="ch-sub" i18n="@@profileIdentitySub">Vos coordonnées de compte.</p>
 
           @if (!isEditing()) {
-            <div class="pf-line">
-              <div>
-                <div class="k" i18n="@@profileFirstNameLabel">Prénom</div>
-                <div class="v">{{ user.firstName }}</div>
+            @for (ligne of lignesIdentite(user); track ligne.libelle) {
+              <div class="pf-line">
+                <div>
+                  <div class="k">{{ ligne.libelle }}</div>
+                  <div class="v">{{ ligne.valeur }}</div>
+                </div>
               </div>
-            </div>
-            <div class="pf-line">
-              <div>
-                <div class="k" i18n="@@profileLastNameLabel">Nom</div>
-                <div class="v">{{ user.lastName }}</div>
-              </div>
-            </div>
-            <div class="pf-line">
-              <div>
-                <div class="k" i18n="@@profileEmailLabel">Email</div>
-                <div class="v">{{ user.email }}</div>
-              </div>
-            </div>
+            }
             <div class="pf-line">
               <div>
                 <div class="k" i18n="@@profilePhoneLabel">Téléphone</div>

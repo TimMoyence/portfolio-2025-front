@@ -2,6 +2,8 @@ import { expect, test } from '@playwright/test';
 import type { Page, Response } from '@playwright/test';
 import {
   URL_API,
+  avancerLePupitre,
+  cloturerDepuisLePupitre,
   coursReleve,
   optionsDuPoste,
   ouvrirLePupitre,
@@ -33,13 +35,6 @@ function surveiller(page: Page, poste: string, incidents: Incident[]): void {
   page.on('pageerror', (erreur) =>
     incidents.push({ poste, detail: `pageerror ${erreur.message}` }),
   );
-}
-
-async function avancerJusquA(pupitre: Page, depuis: number, jusqua: number, total: number) {
-  for (let ecran = depuis; ecran < jusqua; ecran += 1) {
-    await pupitre.getByTestId('presentateur-suivant').click();
-  }
-  await expect(pupitre.getByTestId('presentateur-ecran')).toHaveText(`${jusqua + 1} / ${total}`);
 }
 
 async function toutLeMondeVote(postes: readonly Page[]): Promise<number> {
@@ -84,18 +79,13 @@ test.describe('Banc — une classe de trente postes et son formateur sur le mêm
     );
 
     await page.getByTestId('presentateur-demarrer').click();
-    await avancerJusquA(page, 0, premier.rang, total);
+    await avancerLePupitre(page, 0, premier.rang, total);
     const premiereDiffusion = await toutLeMondeVote(postes);
 
-    await avancerJusquA(page, premier.rang, second.rang, total);
+    await avancerLePupitre(page, premier.rang, second.rang, total);
     const secondeDiffusion = await toutLeMondeVote(postes);
 
-    await page.getByTestId('presentateur-cloturer').click();
-    await page.getByTestId('presentateur-cloture-confirmer').click();
-    await expect(page).toHaveURL(new RegExp(`/cours/seance/${seance.sessionId}/synthese$`));
-    await Promise.all(
-      postes.map((poste) => expect(poste.getByTestId('etudiant-fin')).toBeVisible()),
-    );
+    await cloturerDepuisLePupitre(page, seance, postes);
     await expect(page.getByTestId('synthese-ligne')).toHaveCount(ETUDIANTS);
 
     test.info().annotations.push({

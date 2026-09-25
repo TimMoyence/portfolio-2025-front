@@ -1,4 +1,4 @@
-import { Component, PLATFORM_ID } from '@angular/core';
+import { Component, PLATFORM_ID, type Type } from '@angular/core';
 import { clearTranslations, loadTranslations } from '@angular/localize';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SlideComponent } from './slide.component';
@@ -21,9 +21,9 @@ import { SLIDE_DECK_CONFIG } from './slide-deck.tokens';
 })
 class HostComponent {}
 
-function monterLeDeckDeDemonstration(): ComponentFixture<HostComponent> {
+function monterLeDeckDeDemonstration<T>(hote: Type<T>): ComponentFixture<T> {
   TestBed.configureTestingModule({
-    imports: [HostComponent],
+    imports: [hote],
     providers: [
       SlideDeckService,
       FullscreenAdapter,
@@ -31,7 +31,7 @@ function monterLeDeckDeDemonstration(): ComponentFixture<HostComponent> {
       { provide: SLIDE_DECK_CONFIG, useValue: buildSlideDeckConfig() },
     ],
   });
-  const monte = TestBed.createComponent(HostComponent);
+  const monte = TestBed.createComponent(hote);
   monte.detectChanges();
   return monte;
 }
@@ -41,7 +41,7 @@ describe('SlideDeckComponent', () => {
   let deckEl: HTMLElement;
 
   beforeEach(() => {
-    fixture = monterLeDeckDeDemonstration();
+    fixture = monterLeDeckDeDemonstration(HostComponent);
     deckEl = fixture.nativeElement.querySelector('.slide-deck');
   });
 
@@ -98,18 +98,21 @@ describe('SlideDeckComponent', () => {
     expect(enterSpy).toHaveBeenCalled();
   });
 
-  it('affiche un wrapper swiper quand mode = fullscreen', () => {
+  function passerEnPleinEcran(): SlideDeckService {
     const service = TestBed.inject(SlideDeckService);
     service.setMode('fullscreen');
     fixture.detectChanges();
+    return service;
+  }
+
+  it('affiche un wrapper swiper quand mode = fullscreen', () => {
+    passerEnPleinEcran();
     const swiper = deckEl.querySelector('swiper-container');
     expect(swiper).toBeTruthy();
   });
 
   it('rend les slides comme enfants directs de swiper-container en mode fullscreen', () => {
-    const service = TestBed.inject(SlideDeckService);
-    service.setMode('fullscreen');
-    fixture.detectChanges();
+    passerEnPleinEcran();
     const swiper = deckEl.querySelector('swiper-container') as HTMLElement;
     expect(swiper).toBeTruthy();
     const directSlides = swiper.querySelectorAll(':scope > swiper-slide');
@@ -117,9 +120,7 @@ describe('SlideDeckComponent', () => {
   });
 
   it('synchronise le compteur avec la slide active de swiper', () => {
-    const service = TestBed.inject(SlideDeckService);
-    service.setMode('fullscreen');
-    fixture.detectChanges();
+    const service = passerEnPleinEcran();
 
     const swiper = deckEl.querySelector('swiper-container') as HTMLElement;
     swiper.dispatchEvent(
@@ -135,9 +136,7 @@ describe('SlideDeckComponent', () => {
   });
 
   it('repasse en mode scroll quand fullscreenchange retourne au document normal', () => {
-    const service = TestBed.inject(SlideDeckService);
-    service.setMode('fullscreen');
-    fixture.detectChanges();
+    const service = passerEnPleinEcran();
     Object.defineProperty(document, 'fullscreenElement', {
       configurable: true,
       get: () => null,
@@ -150,7 +149,7 @@ describe('SlideDeckComponent', () => {
 
 describe('SlideDeckComponent — libellés du plein écran', () => {
   function monterLeDeck(): { deck: HTMLElement; service: SlideDeckService; rafraichir(): void } {
-    const fix = monterLeDeckDeDemonstration();
+    const fix = monterLeDeckDeDemonstration(HostComponent);
     return {
       deck: fix.nativeElement.querySelector('.slide-deck') as HTMLElement,
       service: TestBed.inject(SlideDeckService),
@@ -210,17 +209,7 @@ describe('SlideDeckComponent — visibility filter', () => {
     })
     class HostFsComponent {}
 
-    TestBed.configureTestingModule({
-      imports: [HostFsComponent],
-      providers: [
-        SlideDeckService,
-        FullscreenAdapter,
-        { provide: PLATFORM_ID, useValue: 'browser' },
-        { provide: SLIDE_DECK_CONFIG, useValue: buildSlideDeckConfig() },
-      ],
-    });
-    const fix = TestBed.createComponent(HostFsComponent);
-    fix.detectChanges();
+    const fix = monterLeDeckDeDemonstration(HostFsComponent);
     const swiper = fix.nativeElement.querySelector('swiper-container') as HTMLElement;
     const slides = swiper.querySelectorAll(':scope > swiper-slide');
     expect(slides.length).toBe(2);
@@ -240,17 +229,7 @@ describe('SlideDeckComponent — visibility filter', () => {
     })
     class HostCounterComponent {}
 
-    TestBed.configureTestingModule({
-      imports: [HostCounterComponent],
-      providers: [
-        SlideDeckService,
-        FullscreenAdapter,
-        { provide: PLATFORM_ID, useValue: 'browser' },
-        { provide: SLIDE_DECK_CONFIG, useValue: buildSlideDeckConfig() },
-      ],
-    });
-    const fix = TestBed.createComponent(HostCounterComponent);
-    fix.detectChanges();
+    const fix = monterLeDeckDeDemonstration(HostCounterComponent);
 
     TestBed.inject(SlideDeckService).goTo('c');
     fix.detectChanges();
@@ -273,17 +252,7 @@ describe('SlideDeckComponent — visibility filter', () => {
     })
     class HostScrollComponent {}
 
-    TestBed.configureTestingModule({
-      imports: [HostScrollComponent],
-      providers: [
-        SlideDeckService,
-        FullscreenAdapter,
-        { provide: PLATFORM_ID, useValue: 'browser' },
-        { provide: SLIDE_DECK_CONFIG, useValue: buildSlideDeckConfig() },
-      ],
-    });
-    const fix = TestBed.createComponent(HostScrollComponent);
-    fix.detectChanges();
+    const fix = monterLeDeckDeDemonstration(HostScrollComponent);
     const sections = fix.nativeElement.querySelectorAll('section.slide');
     expect(sections.length).toBe(2);
   });

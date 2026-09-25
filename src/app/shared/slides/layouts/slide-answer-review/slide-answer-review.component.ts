@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
 export interface ExplicationRevelee {
   readonly reference: string;
@@ -19,6 +20,7 @@ interface LigneRevelee extends ExplicationRevelee {
 @Component({
   selector: 'app-slide-answer-review',
   standalone: true,
+  imports: [SlideEnTeteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-answer-review.component.html',
   styleUrl: './slide-answer-review.component.scss',

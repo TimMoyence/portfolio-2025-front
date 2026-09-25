@@ -1,14 +1,11 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
-import { projeterMetadonnees } from './projection';
+import { type ContenuDeBrique, copierLeSocle } from './projection';
 
-export interface QuoteCitation {
-  readonly id: string;
+export interface QuoteCitation extends ContenuDeBrique {
   readonly texte: string;
   readonly auteur: string | null;
   readonly source: string | null;
-  readonly metadonnees: MetadonneesBrique;
 }
 
 function renseigne(valeur: string | null): valeur is string {
@@ -23,11 +20,10 @@ export class FpQuote extends FpBlock {
       valeur === null
         ? null
         : {
-            id: valeur.id,
+            ...copierLeSocle(valeur),
             texte: valeur.texte,
             auteur: valeur.auteur,
             source: valeur.source,
-            metadonnees: projeterMetadonnees(valeur.metadonnees),
           };
     this.refreshSiConnecte();
   }

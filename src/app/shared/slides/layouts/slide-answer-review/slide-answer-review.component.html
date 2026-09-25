@@ -1,10 +1,7 @@
-<div class="slide-answer-review">
-  @if (title()) {
-    <h2>{{ title() }}</h2>
-  }
-  @if (subtitle()) {
-    <p class="slide-answer-review__subtitle">{{ subtitle() }}</p>
-  }
+<div
+  class="slide-answer-review"
+  [appSlideEnTete]="{ bloc: 'slide-answer-review', titre: title(), sousTitre: subtitle() }"
+>
   <ol class="slide-answer-review__liste">
     @for (ligne of lignes(); track ligne.reference) {
       <li

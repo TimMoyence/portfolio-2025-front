@@ -1,10 +1,10 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import { buildEcranDeMission, buildReponsesALaMission } from '../../../../testing/banc-du-pupitre';
 import { buildVoteQuestion } from '../../../../testing/factories/cours.factory';
 import {
   buildEcranDeroule,
-  buildReponseLibreFormateur,
   buildResultatQuestion,
   buildResultatsSeance,
   createFormationsPortStub,
@@ -31,14 +31,7 @@ const ECRAN_VOTE = buildEcranDeroule({
   ],
 });
 
-const ECRAN_MISSION = buildEcranDeroule({
-  id: 'ecran-mission',
-  type: 'fp-pro',
-  corriges: [],
-  donnees: {
-    cas: { questionsLibres: [{ id: 'mission:mesure', question: 'Que mesure chaque chiffre ?' }] },
-  },
-});
+const ECRAN_MISSION = buildEcranDeMission();
 
 describe('CoursResultatsProjetesComponent', () => {
   let port: jasmine.SpyObj<FormationsPort>;
@@ -110,17 +103,7 @@ describe('CoursResultatsProjetesComponent', () => {
   });
 
   it('projette les reponses libres groupees par question, sans nom d etudiant', () => {
-    port.lireReponsesLibres.and.returnValue(
-      of({
-        responses: [
-          buildReponseLibreFormateur({
-            screenId: 'ecran-mission',
-            activityId: 'mission:mesure',
-            response: 'Un montant.',
-          }),
-        ],
-      }),
-    );
+    port.lireReponsesLibres.and.returnValue(of(buildReponsesALaMission('Un montant.')));
     const fixture = monter(ECRAN_MISSION);
     fixture.detectChanges();
 

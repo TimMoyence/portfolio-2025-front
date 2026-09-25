@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
 export interface CategorieDuTri {
   readonly id: string;
@@ -28,6 +29,7 @@ interface ZoneDuTri extends CategorieDuTri {
 @Component({
   selector: 'app-slide-sort-review',
   standalone: true,
+  imports: [SlideEnTeteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-sort-review.component.html',
   styleUrl: './slide-sort-review.component.scss',

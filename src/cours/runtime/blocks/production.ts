@@ -1,13 +1,26 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
-import { estObjet, estVerdictDeProduction, type VerdictDeProduction } from './retours';
+import { FpEnvoi } from './contenu';
+import {
+  type DetailDeVerdict,
+  estObjet,
+  estVerdictDeProduction,
+  type VerdictDeProduction,
+} from './retours';
+import { type ContenuDeBrique, copierLeSocle } from './projection';
 
 type TypeDeChamp = 'string' | 'number';
 
-export function lireAttendusDuCorrige<Attendu>(
+const VIDE = escapeHtml('');
+const DESACTIVE = safeHtml`disabled`;
+
+export interface LectureDuCorrige<Attendu> {
+  readonly type: string;
+  readonly champs: Readonly<Record<keyof Attendu & string, TypeDeChamp>>;
+}
+
+function lireAttendusDuCorrige<Attendu>(
   valeur: unknown,
-  type: string,
-  champs: Readonly<Record<keyof Attendu & string, TypeDeChamp>>,
+  { type, champs }: LectureDuCorrige<Attendu>,
 ): readonly Attendu[] {
   if (!estObjet(valeur) || valeur['type'] !== type || !Array.isArray(valeur['attendus'])) {
     return [];
@@ -20,34 +33,26 @@ export function lireAttendusDuCorrige<Attendu>(
   );
 }
 
-export abstract class FpProduction<Plan extends { readonly id: string }, Attendu> extends FpBlock {
-  protected interne: Plan | null = null;
+export abstract class FpProduction<
+  Plan extends { readonly id: string },
+  Attendu,
+> extends FpEnvoi<Plan> {
   protected interneVerdict: VerdictDeProduction | null = null;
   protected attendus: readonly Attendu[] = [];
-  protected message = '';
-  protected soumis = false;
 
   protected abstract readonly evenementDeSoumission: string;
 
-  protected abstract lireLesAttendus(valeur: unknown): readonly Attendu[];
+  protected abstract readonly lectureDuCorrige: LectureDuCorrige<Attendu>;
 
   protected abstract relacherLaSaisie(): void;
 
-  protected abstract reinitialiserLaSaisie(): void;
-
   protected poserLePlan(valeur: Plan | null, copier: (plan: Plan) => Plan): void {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne = valeur === null ? null : copier(valeur);
-    if (change) {
-      this.repartirDeZero();
-    }
+    this.poserLeContenu(valeur, copier);
     this.refreshSiConnecte();
   }
 
-  protected repartirDeZero(): void {
-    this.reinitialiserLaSaisie();
-    this.message = '';
-    this.soumis = false;
+  protected override repartirDeZero(): void {
+    super.repartirDeZero();
     this.interneVerdict = null;
   }
 
@@ -62,25 +67,25 @@ export abstract class FpProduction<Plan extends { readonly id: string }, Attendu
   }
 
   set corrige(valeur: unknown) {
-    this.attendus = this.lireLesAttendus(valeur);
+    this.attendus = lireAttendusDuCorrige(valeur, this.lectureDuCorrige);
     this.refreshSiConnecte();
   }
 
-  protected verrouille(): boolean {
-    return this.verrouilleApresEnvoi(this.soumis, this.interneVerdict !== null);
+  protected override verdictRecu(): boolean {
+    return this.interneVerdict !== null;
+  }
+
+  protected detailDe(cle: string): DetailDeVerdict | null {
+    return this.interneVerdict?.details.find((detail) => detail.cle === cle) ?? null;
+  }
+
+  protected justes(): number {
+    return this.interneVerdict?.details.filter((detail) => detail.juste).length ?? 0;
   }
 
   protected conclure(detail: Readonly<Record<string, unknown>>): void {
-    this.soumis = true;
     this.relacherLaSaisie();
-    this.message = this.messageApresEnvoi();
-    this.emit(this.evenementDeSoumission, { ...detail, dureeMs: this.depuisAffichage() });
-    this.refresh();
-  }
-
-  protected refuserLEnvoi(cleDuMotif: string): void {
-    this.message = this.texte(cleDuMotif);
-    this.refresh();
+    this.conclureLEnvoi(this.evenementDeSoumission, detail);
   }
 
   protected neSaitPas(): void {
@@ -91,12 +96,27 @@ export abstract class FpProduction<Plan extends { readonly id: string }, Attendu
   }
 }
 
-export abstract class FpProductionEtayee<
-  Plan extends { readonly id: string },
-  Attendu,
-> extends FpProduction<Plan, Attendu> {
+export interface PlanEtaye extends ContenuDeBrique {
+  readonly intitule: string;
+  readonly consignes?: readonly string[];
+}
+
+export function copierLEnonce(source: PlanEtaye): PlanEtaye {
+  return {
+    ...copierLeSocle(source),
+    intitule: source.intitule,
+    consignes: (source.consignes ?? []).filter((consigne) => typeof consigne === 'string'),
+  };
+}
+
+export abstract class FpProductionEtayee<Plan extends PlanEtaye, Attendu> extends FpProduction<
+  Plan,
+  Attendu
+> {
   protected correction = 0;
   protected reprises: ReadonlySet<string> = new Set();
+
+  protected abstract readonly bloc: string;
 
   set etayage(valeur: number) {
     this.correction = valeur;
@@ -117,19 +137,53 @@ export abstract class FpProductionEtayee<
     return this.presentateur() ? this.scene(plan) : this.atelier(plan);
   }
 
+  protected abstract valider(): void;
+
   bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.interne?.id ?? null);
-    if (!this.presentateur()) {
-      this.brancherLAtelier(racine);
+    if (!this.suivreEtSaisir(this.interne?.id ?? null)) {
+      return;
     }
+    this.brancherLAtelier(racine);
+    racine
+      .querySelector<HTMLButtonElement>('[data-testid="valider"]')
+      ?.addEventListener('click', () => this.valider());
+    racine
+      .querySelector<HTMLButtonElement>('[data-testid="je-ne-sais-pas"]')
+      ?.addEventListener('click', () => this.neSaitPas());
   }
 
-  protected consignesNumerotees(consignes: readonly string[], classe: string): EscapedHtml {
+  protected actionsDeProduction(avant: EscapedHtml = VIDE): EscapedHtml {
+    const bloque = this.verrouille() && !this.enReprise();
+    const bloc = escapeHtml(this.bloc);
+    return safeHtml`
+      <div class="fp-${bloc}__actions">
+        ${avant}
+        <button type="button" class="fp-${bloc}__valider" data-testid="valider" ${bloque ? DESACTIVE : VIDE}>${escapeHtml(this.texte(this.enReprise() ? 'production-renvoyer' : 'valider'))}</button>
+        ${this.boutonNeSaitPas(this.verrouille())}
+      </div>
+    `;
+  }
+
+  protected suiviDeProduction(
+    decompte: { readonly justes: number; readonly total: number },
+    correctionServie: EscapedHtml,
+  ): EscapedHtml {
+    const cleDuDecompte = `${this.bloc}-verdict`;
+    return safeHtml`
+      <p class="fp-${escapeHtml(this.bloc)}__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
+      ${this.verdictDeProduction(this.interneVerdict, cleDuDecompte, decompte.justes, decompte.total)}
+      ${correctionServie}
+      ${this.annonces()}
+    `;
+  }
+
+  protected consignes(plan: Plan): EscapedHtml {
+    const consignes = plan.consignes ?? [];
     if (consignes.length === 0) {
-      return escapeHtml('');
+      return VIDE;
     }
     const lignes = consignes.map((consigne) => safeHtml`<li>${escapeHtml(consigne)}</li>`);
-    return safeHtml`<ol class="${escapeHtml(classe)}" data-testid="consignes">${lignes}</ol>`;
+    return safeHtml`<ol class="fp-${escapeHtml(this.bloc)}__consignes" data-testid="consignes">${lignes}</ol>`;
   }
 
   protected override verrouille(): boolean {

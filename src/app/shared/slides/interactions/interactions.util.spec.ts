@@ -1,17 +1,94 @@
-import { of, throwError } from 'rxjs';
-import { flattenInteractions, loadInteraction, type FlatInteraction } from './interactions.util';
+import { DestroyRef, signal } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { of, throwError, type Observable } from 'rxjs';
+import {
+  buildInteractionsResponse,
+  createPresentationPortStub,
+} from '../../../../testing/factories/presentation.factory';
+import {
+  chargerInteraction,
+  flattenInteractions,
+  loadInteraction,
+  type ChargementInteraction,
+  type FlatInteraction,
+} from './interactions.util';
 
 describe('interactions.util', () => {
+  describe('chargerInteraction', () => {
+    interface Sondage {
+      type: string;
+      question: string;
+    }
+
+    function chargement(
+      overrides: Partial<ChargementInteraction<Sondage>> = {},
+    ): ChargementInteraction<Sondage> {
+      return {
+        enLigne: null,
+        port: createPresentationPortStub(
+          buildInteractionsResponse({
+            interactions: {
+              'slide-a': { present: [{ type: 'poll', question: 'servie', options: [] }] },
+            },
+          }),
+        ),
+        slug: 'demo',
+        type: 'poll',
+        interactionId: 'slide-a',
+        cible: signal<Sondage | null>(null),
+        erreur: signal(false),
+        destroyRef: TestBed.inject(DestroyRef),
+        ...overrides,
+      };
+    }
+
+    it("pose l'interaction en ligne sans interroger le port", () => {
+      const port = createPresentationPortStub();
+      const courant = chargement({ enLigne: { type: 'poll', question: 'en ligne' }, port });
+
+      chargerInteraction(courant);
+
+      expect(courant.cible()?.question).toBe('en ligne');
+      expect(port.getInteractions).not.toHaveBeenCalled();
+    });
+
+    function attendreUneErreur(courant: ChargementInteraction<Sondage>): void {
+      chargerInteraction(courant);
+
+      expect(courant.erreur()).toBeTrue();
+      expect(courant.cible()).toBeNull();
+    }
+
+    it("signale une erreur quand aucun port n'est fourni", () => {
+      attendreUneErreur(chargement({ port: null }));
+    });
+
+    it("pose l'interaction trouvee par le port", () => {
+      const courant = chargement();
+
+      chargerInteraction(courant);
+
+      expect(courant.cible()?.question).toBe('servie');
+      expect(courant.erreur()).toBeFalse();
+    });
+
+    it('signale une erreur quand le port echoue', () => {
+      const port = createPresentationPortStub();
+      port.getInteractions.and.returnValue(throwError(() => new Error('network')));
+
+      attendreUneErreur(chargement({ port }));
+    });
+  });
+
+  function sourceImbriquee(slideA: Record<string, readonly object[]>) {
+    return of({ slug: 'demo', interactions: { 'slide-a': slideA } });
+  }
+
   describe('flattenInteractions / normaliseInteractions', () => {
     it('aplatit la shape nested {interactions:{slideId:{scroll|present}}} en derivant slideId', (done) => {
-      const source = of({
-        slug: 'demo',
-        interactions: {
-          'slide-a': {
-            scroll: [{ type: 'reflection', question: 'Q1' }],
-            present: [{ type: 'poll', question: 'Q2' }],
-          },
-        },
+      const source = sourceImbriquee({
+        scroll: [{ type: 'reflection', question: 'Q1' }],
+        present: [{ type: 'poll', question: 'Q2' }],
       });
 
       flattenInteractions(source).subscribe((list) => {
@@ -58,17 +135,18 @@ describe('interactions.util', () => {
       question: string;
     }
 
-    it("trouve l'interaction par slideId (shape nested)", (done) => {
-      const source = of({
-        slug: 'demo',
-        interactions: {
-          'slide-a': { scroll: [{ type: 'reflection', question: 'trouvee' }] },
-        },
-      });
+    function chargerSansErreur<T extends FlatInteraction>(
+      source: Observable<unknown>,
+      type: string,
+      id: string,
+    ): Observable<T | null> {
+      return loadInteraction<T>(source, type, id, () => fail('onError ne devrait pas etre appele'));
+    }
 
-      loadInteraction<Reflection>(source, 'reflection', 'slide-a', () =>
-        fail('onError ne devrait pas etre appele'),
-      ).subscribe((found) => {
+    it("trouve l'interaction par slideId (shape nested)", (done) => {
+      const source = sourceImbriquee({ scroll: [{ type: 'reflection', question: 'trouvee' }] });
+
+      chargerSansErreur<Reflection>(source, 'reflection', 'slide-a').subscribe((found) => {
         expect(found).not.toBeNull();
         expect(found?.question).toBe('trouvee');
         done();
@@ -78,9 +156,7 @@ describe('interactions.util', () => {
     it("trouve l'interaction par id legacy", (done) => {
       const source = of([{ id: 'q1', type: 'quiz', question: 'legacy-quiz' }]);
 
-      loadInteraction<FlatInteraction>(source, 'quiz', 'q1', () =>
-        fail('onError ne devrait pas etre appele'),
-      ).subscribe((found) => {
+      chargerSansErreur(source, 'quiz', 'q1').subscribe((found) => {
         expect(found).not.toBeNull();
         expect(found?.type).toBe('quiz');
         done();
@@ -88,16 +164,9 @@ describe('interactions.util', () => {
     });
 
     it('retourne null si le type ne correspond pas (mismatch)', (done) => {
-      const source = of({
-        slug: 'demo',
-        interactions: {
-          'slide-a': { scroll: [{ type: 'reflection', question: 'x' }] },
-        },
-      });
+      const source = sourceImbriquee({ scroll: [{ type: 'reflection', question: 'x' }] });
 
-      loadInteraction<FlatInteraction>(source, 'poll', 'slide-a', () =>
-        fail('onError ne devrait pas etre appele'),
-      ).subscribe((found) => {
+      chargerSansErreur(source, 'poll', 'slide-a').subscribe((found) => {
         expect(found).toBeNull();
         done();
       });

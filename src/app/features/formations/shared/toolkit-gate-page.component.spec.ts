@@ -7,43 +7,32 @@ import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import { createLeadMagnetPortStub } from '../../../../testing/factories/lead-magnet.factory';
 import { ToolkitFormComponent } from '../../../shared/components/toolkit-form/toolkit-form.component';
 import { ToolkitGatePageComponent } from './toolkit-gate-page.component';
-import type { ToolkitGatePageData } from './toolkit-gate-page.model';
-
-function buildGateData(overrides: Partial<ToolkitGatePageData> = {}): ToolkitGatePageData {
-  return {
-    lead: 'Un kit de demarrage concret, offert.',
-    items: [{ label: "30 prompts prets a l'emploi" }, { label: 'Une checklist' }],
-    foot: 'Gratuit, sans engagement.',
-    contentsTitle: 'Ce que contient le toolkit',
-    contents: ['16 outils IA selectionnes', 'Les budgets mensuels estimes'],
-    faqTitle: 'Questions frequentes',
-    faq: [
-      { question: "A qui s'adresse ce toolkit ?", answer: 'Aux solopreneurs.' },
-      { question: 'Pourquoi gratuit ?', answer: 'Version condensee.' },
-    ],
-    brand: 'Asili Design — asilidesign.fr',
-    privacyLabel: 'Politique de confidentialite',
-    ...overrides,
-  };
-}
+import { TOOLKITS_FORMATIONS, type ToolkitFormation } from './toolkits-formations.data';
 
 @Component({
   standalone: true,
   imports: [ToolkitGatePageComponent],
   template: `
-    <app-toolkit-gate-page [data]="data" [formationSlug]="slug">
+    <app-toolkit-gate-page [formationSlug]="slug">
       <ng-container title>Le toolkit IA pour <em>solopreneurs</em>.</ng-container>
     </app-toolkit-gate-page>
   `,
 })
 class HostComponent {
-  data: ToolkitGatePageData = buildGateData();
-  slug: string | null = null;
+  slug: Exclude<ToolkitFormation, 'ia-solo'> | null = null;
+  readonly data = TOOLKITS_FORMATIONS['ia-solo'];
 }
 
 describe('ToolkitGatePageComponent', () => {
   let fixture: ComponentFixture<HostComponent>;
   let host: HostComponent;
+
+  function monter(slug: HostComponent['slug']): void {
+    fixture = TestBed.createComponent(HostComponent);
+    host = fixture.componentInstance;
+    host.slug = slug;
+    fixture.detectChanges();
+  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -54,9 +43,7 @@ describe('ToolkitGatePageComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HostComponent);
-    host = fixture.componentInstance;
-    fixture.detectChanges();
+    monter(null);
   });
 
   afterEach(() => {
@@ -79,7 +66,7 @@ describe('ToolkitGatePageComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const items = compiled.querySelectorAll('.tk-items .it');
     expect(items.length).toBe(host.data.items.length);
-    expect(compiled.textContent).toContain("30 prompts prets a l'emploi");
+    expect(compiled.textContent).toContain(host.data.items[0]?.label ?? '');
   });
 
   it('devrait rendre le contenu editorial (contents + FAQ)', () => {
@@ -105,15 +92,21 @@ describe('ToolkitGatePageComponent', () => {
   });
 
   it('devrait transmettre le formationSlug fourni au formulaire (cle metier)', () => {
-    host.slug = 'audit-seo-diy';
-    fixture.detectChanges();
+    monter('audit-seo-diy');
     const form = fixture.debugElement.query(By.directive(ToolkitFormComponent));
     expect(form.componentInstance.formationSlug).toBe('audit-seo-diy');
   });
 
+  it('devrait afficher le contenu du toolkit de la formation designee par le slug', () => {
+    monter('audit-seo-diy');
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.lead')?.textContent).toBe(
+      TOOLKITS_FORMATIONS['audit-seo-diy'].lead,
+    );
+  });
+
   it("devrait deriver des id d'en-tete uniques depuis le slug", () => {
-    host.slug = 'automatiser-avec-ia';
-    fixture.detectChanges();
+    monter('automatiser-avec-ia');
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('#toolkit-automatiser-avec-ia-contents-heading')).not.toBeNull();
     expect(compiled.querySelector('#toolkit-automatiser-avec-ia-faq-heading')).not.toBeNull();

@@ -1,8 +1,6 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
-import { projeterMetadonnees } from './projection';
-import { estObjet, lireTextes } from './retours';
+import { type ContenuDeBrique, copierLeSocle } from './projection';
+import { FpRedaction } from './redaction';
 
 export interface WorkedEtape {
   readonly id: string;
@@ -11,14 +9,10 @@ export interface WorkedEtape {
   readonly invite: string;
 }
 
-export interface WorkedExemple {
-  readonly id: string;
+export interface WorkedExemple extends ContenuDeBrique {
   readonly enonce: string;
   readonly etapes: readonly WorkedEtape[];
-  readonly metadonnees: MetadonneesBrique;
 }
-
-type Champs = Readonly<Record<string, string>>;
 
 function copierEtape(etape: WorkedEtape): WorkedEtape {
   return {
@@ -29,37 +23,21 @@ function copierEtape(etape: WorkedEtape): WorkedEtape {
   };
 }
 
-function remplis(champs: Champs): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(champs).filter(([, valeur]) => valeur.trim().length > 0),
-  );
+function copierExemple(source: WorkedExemple): WorkedExemple {
+  return {
+    ...copierLeSocle(source),
+    enonce: source.enonce,
+    etapes: source.etapes.map(copierEtape),
+  };
 }
 
-export class FpWorked extends FpBlock {
-  private interne: WorkedExemple | null = null;
+export class FpWorked extends FpRedaction<WorkedExemple> {
+  protected readonly cleDuBrouillon = 'redactions';
   private montrees = 0;
-  private redactions: Champs = {};
-  private message = '';
-  private soumise = false;
   private estPilote = false;
 
   set exemple(valeur: WorkedExemple | null) {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne =
-      valeur === null
-        ? null
-        : {
-            id: valeur.id,
-            enonce: valeur.enonce,
-            etapes: valeur.etapes.map(copierEtape),
-            metadonnees: projeterMetadonnees(valeur.metadonnees),
-          };
-    if (change) {
-      this.montrees = 0;
-      this.redactions = {};
-      this.message = '';
-      this.soumise = false;
-    }
+    this.poserLeContenu(valeur, copierExemple);
     this.refreshSiConnecte();
   }
 
@@ -69,10 +47,9 @@ export class FpWorked extends FpBlock {
       return null;
     }
     return {
-      id: source.id,
+      ...copierLeSocle(source),
       enonce: source.enonce,
       etapes: source.etapes.map((etape, rang) => this.projeterEtape(etape, rang)),
-      metadonnees: projeterMetadonnees(source.metadonnees),
     };
   }
 
@@ -89,15 +66,6 @@ export class FpWorked extends FpBlock {
 
   set pilote(valeur: boolean | null | undefined) {
     this.estPilote = valeur === true;
-    this.refreshSiConnecte();
-  }
-
-  set brouillon(valeur: unknown) {
-    if (!estObjet(valeur) || this.soumise) {
-      return;
-    }
-    this.redactions = lireTextes(valeur['redactions']);
-    this.noterBrouillonRepris();
     this.refreshSiConnecte();
   }
 
@@ -122,11 +90,10 @@ export class FpWorked extends FpBlock {
   }
 
   bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.interne?.id ?? null);
-    if (this.estPilote || this.presentateur()) {
+    if (!this.suivreEtSaisir(this.interne?.id ?? null) || this.estPilote) {
       return;
     }
-    const verrouille = this.verrouilleApresEnvoi(this.soumise, false);
+    const verrouille = this.verrouille();
     for (const champ of racine.querySelectorAll<HTMLTextAreaElement>('textarea[data-etape]')) {
       const cle = champ.dataset['etape'] ?? '';
       champ.disabled = verrouille;
@@ -167,15 +134,29 @@ export class FpWorked extends FpBlock {
     return { ...copierEtape(etape), raisonnement: '' };
   }
 
-  private etape(etape: WorkedEtape, rang: number): EscapedHtml {
+  private carteDEtape(
+    etape: WorkedEtape,
+    rang: number,
+    corps: (resolue: boolean) => EscapedHtml,
+  ): EscapedHtml {
     const resolue = rang < this.montrees;
     return safeHtml`
       <li class="fp-worked__etape" data-testid="etape" data-etape="${escapeHtml(etape.id)}" data-resolue="${escapeHtml(String(resolue))}">
         <p class="fp-worked__intitule">${escapeHtml(etape.intitule)}</p>
-        ${resolue ? this.saisieFigee(etape) : this.redaction(etape)}
-        ${resolue && etape.raisonnement !== '' ? this.correction(etape) : safeHtml``}
+        ${corps(resolue)}
       </li>
     `;
+  }
+
+  private etape(etape: WorkedEtape, rang: number): EscapedHtml {
+    return this.carteDEtape(
+      etape,
+      rang,
+      (resolue) => safeHtml`
+        ${resolue ? this.saisieFigee(etape) : this.redaction(etape)}
+        ${resolue && etape.raisonnement !== '' ? this.correction(etape) : safeHtml``}
+      `,
+    );
   }
 
   private correction(etape: WorkedEtape): EscapedHtml {
@@ -186,14 +167,14 @@ export class FpWorked extends FpBlock {
   }
 
   private etapeProjetee(etape: WorkedEtape, rang: number): EscapedHtml {
-    const resolue = rang < this.montrees;
-    return safeHtml`
-      <li class="fp-worked__etape" data-testid="etape" data-etape="${escapeHtml(etape.id)}" data-resolue="${escapeHtml(String(resolue))}">
-        <p class="fp-worked__intitule">${escapeHtml(etape.intitule)}</p>
+    return this.carteDEtape(
+      etape,
+      rang,
+      (resolue) => safeHtml`
         <p class="fp-worked__invite" data-testid="question">${escapeHtml(etape.invite)}</p>
         ${resolue ? this.correction(etape) : safeHtml``}
-      </li>
-    `;
+      `,
+    );
   }
 
   private raisonnement(etape: WorkedEtape): EscapedHtml {
@@ -204,21 +185,21 @@ export class FpWorked extends FpBlock {
     const identifiant = `fp-worked-saisie-${etape.id}`;
     return safeHtml`
       <label class="fp-worked__invite" for="${escapeHtml(identifiant)}">${escapeHtml(etape.invite)}</label>
-      <textarea class="fp-worked__champ" id="${escapeHtml(identifiant)}" data-testid="saisie" data-etape="${escapeHtml(etape.id)}" rows="3">${escapeHtml(this.redactions[etape.id] ?? '')}</textarea>
+      <textarea class="fp-worked__champ" id="${escapeHtml(identifiant)}" data-testid="saisie" data-etape="${escapeHtml(etape.id)}" rows="3">${escapeHtml(this.texteDe(etape.id))}</textarea>
     `;
   }
 
   private saisieFigee(etape: WorkedEtape): EscapedHtml {
     return safeHtml`
       <p class="fp-worked__invite">${escapeHtml(etape.invite)}</p>
-      <p class="fp-worked__reponse" data-testid="saisie-figee" data-etape="${escapeHtml(etape.id)}">${escapeHtml(this.redactions[etape.id] ?? '')}</p>
+      <p class="fp-worked__reponse" data-testid="saisie-figee" data-etape="${escapeHtml(etape.id)}">${escapeHtml(this.texteDe(etape.id))}</p>
     `;
   }
 
   private envoyerEtape(cle: string): void {
     const exemple = this.interne;
-    const texte = (this.redactions[cle] ?? '').trim();
-    if (exemple === null || texte.length === 0 || this.verrouilleApresEnvoi(this.soumise, false)) {
+    const texte = this.texteDe(cle).trim();
+    if (exemple === null || texte.length === 0 || this.verrouille()) {
       return;
     }
     this.emit('fp-worked-submit', {
@@ -228,11 +209,6 @@ export class FpWorked extends FpBlock {
     });
   }
 
-  private noter(cle: string, valeur: string): void {
-    this.redactions = { ...this.redactions, [cle]: valeur };
-    this.signalerBrouillon(this.interne?.id ?? '', { redactions: this.redactions });
-  }
-
   private aCompleter(): readonly WorkedEtape[] {
     return this.interne?.etapes.slice(this.montrees) ?? [];
   }
@@ -240,30 +216,22 @@ export class FpWorked extends FpBlock {
   private valider(): void {
     const exemple = this.interne;
     const ouvertes = this.aCompleter();
-    if (
-      exemple === null ||
-      ouvertes.length === 0 ||
-      this.verrouilleApresEnvoi(this.soumise, false)
-    ) {
+    if (exemple === null || ouvertes.length === 0 || this.verrouille()) {
       return;
     }
-    const manquante = ouvertes.some(
-      (etape) => (this.redactions[etape.id] ?? '').trim().length === 0,
-    );
-    if (manquante) {
-      this.message = this.texte('worked-etape-vide');
-      this.refresh();
+    const cles = ouvertes.map((etape) => etape.id);
+    if (this.manqueUnTexte(cles)) {
+      this.refuserLEnvoi(this.texte('worked-etape-vide'));
       return;
     }
-    this.soumise = true;
-    this.message = this.messageApresEnvoi();
-    this.emit('fp-worked-submit', {
+    this.conclureLEnvoi('fp-worked-submit', {
       exempleId: exemple.id,
-      redactions: remplis(
-        Object.fromEntries(ouvertes.map((etape) => [etape.id, this.redactions[etape.id] ?? ''])),
-      ),
-      dureeMs: this.depuisAffichage(),
+      redactions: this.textesDe(cles),
     });
-    this.refresh();
+  }
+
+  protected override effacerLaSaisie(): void {
+    super.effacerLaSaisie();
+    this.montrees = 0;
   }
 }

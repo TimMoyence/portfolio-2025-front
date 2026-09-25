@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,6 +7,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
 export interface RichListItem {
   title: string;
@@ -17,6 +19,7 @@ export interface RichListItem {
 @Component({
   selector: 'app-slide-image-left, app-slide-image-right',
   standalone: true,
+  imports: [NgTemplateOutlet, SlideEnTeteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-image.component.html',
   styleUrl: './slide-image.component.scss',

@@ -1,9 +1,8 @@
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
-export const RACINE = join(dirname(fileURLToPath(import.meta.url)), '../..');
+import { cheminDuDepot, lireTexte } from './depot.mjs';
+import { planterDossier, supprimerDossier } from './dossier-temporaire.mjs';
 
 export const CHEMIN_MOTEUR = 'src/cours/runtime/core/formula.ts';
 
@@ -11,17 +10,17 @@ const CHEMIN_COMPILATEUR = 'node_modules/typescript/lib/typescript.js';
 
 const PREFIXE_DOSSIER = 'moteur-formules-';
 
+const FICHIER_MOTEUR = 'moteur.mjs';
+
 /**
  * @returns {Promise<{ moteur: any, liberer: () => void }>}
  */
 export async function chargerMoteur() {
-  const { default: ts } = await import(pathToFileURL(join(RACINE, CHEMIN_COMPILATEUR)).href);
-  const transpile = ts.transpileModule(readFileSync(join(RACINE, CHEMIN_MOTEUR), 'utf8'), {
+  const { default: ts } = await import(pathToFileURL(cheminDuDepot(CHEMIN_COMPILATEUR)).href);
+  const transpile = ts.transpileModule(lireTexte(cheminDuDepot(CHEMIN_MOTEUR)), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
   });
-  const dossier = mkdtempSync(join(tmpdir(), PREFIXE_DOSSIER));
-  const fichier = join(dossier, 'moteur.mjs');
-  writeFileSync(fichier, transpile.outputText, 'utf8');
-  const moteur = await import(pathToFileURL(fichier).href);
-  return { moteur, liberer: () => rmSync(dossier, { recursive: true, force: true }) };
+  const dossier = planterDossier(PREFIXE_DOSSIER, { [FICHIER_MOTEUR]: transpile.outputText });
+  const moteur = await import(pathToFileURL(join(dossier, FICHIER_MOTEUR)).href);
+  return { moteur, liberer: () => supprimerDossier(dossier) };
 }

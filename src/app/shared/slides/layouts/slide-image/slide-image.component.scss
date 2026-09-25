@@ -1,3 +1,5 @@
+@use '../../slide-section' as slide;
+
 .slide-image {
   display: grid;
   grid-template-columns: 1fr;
@@ -24,19 +26,19 @@
 }
 
 .slide-image__content {
-  h2 {
+  @include slide.titre-projete {
     font-size: clamp(1.75rem, 3cqi, 2.75rem);
     font-weight: 700;
     margin: 0 0 1rem;
     line-height: 1.2;
   }
-}
 
-.slide-image__subtitle {
-  font-size: clamp(1.05rem, 1.4cqi, 1.25rem);
-  font-weight: 600;
-  color: var(--accent-dark, var(--teal-dark));
-  margin: 0 0 1.5rem;
+  @include slide.sous-titre-projete(slide-image) {
+    font-size: clamp(1.05rem, 1.4cqi, 1.25rem);
+    font-weight: 600;
+    color: var(--accent-dark, var(--teal-dark));
+    margin: 0 0 1.5rem;
+  }
 }
 
 .slide-image__paragraph {

@@ -2,10 +2,9 @@
 
 .slide-method-path {
   @include slide.section;
-}
-
-.slide-method-path__subtitle {
-  @include slide.sous-titre-de-parcours(62ch);
+  @include slide.sous-titre-projete(slide-method-path) {
+    @include slide.sous-titre-de-parcours(62ch);
+  }
 }
 
 .slide-method-path__layout {

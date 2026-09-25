@@ -1,15 +1,14 @@
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { test } from 'node:test';
 
-const RACINE = dirname(dirname(fileURLToPath(import.meta.url)));
+import { cheminDuDepot, RACINE } from './lib/depot.mjs';
+import { avecDossierPlante } from './lib/dossier-temporaire.mjs';
 
-const CHEMIN_PACKAGE = join(RACINE, 'package.json');
+const CHEMIN_PACKAGE = cheminDuDepot('package.json');
 
-const CHEMIN_WORKFLOW = join(RACINE, '.github/workflows/ci.yml');
+const CHEMIN_WORKFLOW = cheminDuDepot('.github/workflows/ci.yml');
 
 const JOB_WORKFLOW = 'quality-gate';
 
@@ -301,12 +300,9 @@ test('ci-portes : ci:check et pre-push:check jouent Playwright apres le build', 
 });
 
 test('PLANCHER ANTI-VACUITE : un perimetre e2e vide leve une erreur citant le gate', () => {
-  const racine = mkdtempSync(join(tmpdir(), 'ci-portes-vide-'));
-  try {
+  avecDossierPlante('ci-portes-vide-', {}, (racine) => {
     assert.throws(() => suitesPlaywright(racine), /ci-portes/);
-  } finally {
-    rmSync(racine, { recursive: true, force: true });
-  }
+  });
   assert.throws(() => portesPlaywright({ build: 'ng build', test: 'ng test' }), /ci-portes/);
 });
 

@@ -2,10 +2,9 @@
 
 .slide-sort-review {
   @include slide.section;
-}
-
-.slide-sort-review__subtitle {
-  @include slide.sous-titre-de-revue;
+  @include slide.sous-titre-projete(slide-sort-review) {
+    @include slide.sous-titre-de-revue;
+  }
 }
 
 .slide-sort-review__zones {

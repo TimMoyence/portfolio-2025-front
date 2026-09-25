@@ -1,8 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { test } from 'node:test';
 
 import {
@@ -18,6 +17,7 @@ import {
   runGate,
   tightenCeiling,
 } from './guard-no-comments.mjs';
+import { avecDossierPlante } from './lib/dossier-temporaire.mjs';
 
 /** @param {string[]} parts @returns {string} */
 const L = (...parts) => parts.join('\n');
@@ -28,22 +28,15 @@ const L = (...parts) => parts.join('\n');
  * @returns {void}
  */
 const withRepo = ({ files = {}, ratchet }, run) => {
-  const root = mkdtempSync(join(tmpdir(), 'guard-no-comments-'));
-  try {
+  const manifest = { name: 'guard-fixture', ...(ratchet && { [GATE]: ratchet }) };
+  const plantes = { 'package.json': `${JSON.stringify(manifest, null, 2)}\n`, ...files };
+  avecDossierPlante('guard-no-comments-', plantes, (root) => {
     // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
     execFileSync('git', ['-C', root, 'init', '-q'], { env: isolatedGitEnv() });
-    const manifest = { name: 'guard-fixture', ...(ratchet && { [GATE]: ratchet }) };
-    writeFileSync(join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`);
-    for (const [rel, text] of Object.entries(files)) {
-      mkdirSync(join(root, dirname(rel)), { recursive: true });
-      writeFileSync(join(root, rel), text);
-    }
     // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
     execFileSync('git', ['-C', root, 'add', '-A'], { env: isolatedGitEnv() });
     run(root);
-  } finally {
-    rmSync(root, { recursive: true, force: true });
-  }
+  });
 };
 
 /** @param {string} gitDir @param {() => void} run @returns {void} */

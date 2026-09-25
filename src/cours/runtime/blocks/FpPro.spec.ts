@@ -5,7 +5,7 @@ import {
   parcourirLesRolesSansEffet,
 } from '../../../testing/assertions-briques';
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
-import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
+import { detailsEmis, installerBrique, roleAffiche } from '../../../testing/banc-de-brique';
 import { buildProCas, buildProCasAQuestionsLibres } from '../../../testing/factories/cours.factory';
 import { FpPro } from './FpPro';
 
@@ -30,24 +30,13 @@ function lu(element: FpPro, repere: string): string {
 
 describe('FpPro', () => {
   let hote: FpPro;
-  let traces: TracesEffets;
-
-  beforeAll(() => {
-    if (!customElements.get('fp-pro')) {
-      customElements.define('fp-pro', FpPro);
-    }
-  });
-
-  beforeEach(() => {
-    hote = document.createElement('fp-pro') as FpPro;
-    traces = surveillerEffets(hote);
-    hote.cas = CAS;
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    traces.restaurer();
-    hote.remove();
+  const traces = installerBrique<FpPro>({
+    balise: 'fp-pro',
+    classe: FpPro,
+    poser: (brique) => {
+      hote = brique;
+      brique.cas = CAS;
+    },
   });
 
   it('pose le cas dans un aside et non dans un div nu', () => {
@@ -110,9 +99,7 @@ describe('FpPro', () => {
     expect(dossier()).toBe(etudiant);
     expect(cible(hote, 'geste')?.className).toBe('fp-pro__geste-texte');
     expect(hote.shadowRoot?.querySelector('.fp-pro__cas')?.className).toBe('fp-scene fp-pro__cas');
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(
-      'presentateur',
-    );
+    expect(roleAffiche(hote)).toBe('presentateur');
   });
 
   for (const role of ROLES_DE_MONTAGE) {
@@ -274,10 +261,7 @@ describe('FpPro', () => {
     });
 
     it('L3 · confie chaque frappe au brouillon et la restaure au remontage', () => {
-      const brouillons: unknown[] = [];
-      hote.addEventListener('fp-brouillon', (evenement) =>
-        brouillons.push((evenement as CustomEvent).detail),
-      );
+      const brouillons = detailsEmis(hote, 'fp-brouillon');
       ecrire(MESURE.id, 'Un montant');
 
       expect(brouillons.at(-1)).toEqual({

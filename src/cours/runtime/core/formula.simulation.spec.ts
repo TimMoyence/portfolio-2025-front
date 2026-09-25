@@ -7,8 +7,8 @@ import {
   evaluerExpression,
   evaluerFeuille,
 } from './formula';
+import { verifierLaPropriete } from '../../../testing/proprietes';
 
-const GRAINE = 20260920;
 const TOURS = 150;
 const CODES: readonly CodeErreur[] = ['#REF!', '#DIV/0!', '#NOM?', '#VALEUR!'];
 const COLONNES = ['A', 'B', 'C', 'D', 'E'] as const;
@@ -30,22 +30,28 @@ function tousRecevables(resultats: ReadonlyMap<string, ResultatFormule>): boolea
   return [...resultats.values()].every(estRecevable);
 }
 
+function verifier<Ts extends unknown[]>(propriete: fc.IProperty<Ts>, tours = TOURS): void {
+  verifierLaPropriete(propriete, tours);
+}
+
+function feuilleColonneA(hauteur: number, contenuDe: (rang: number) => string): Feuille {
+  const cellules: Record<string, string> = {};
+  for (let rang = 1; rang <= hauteur; rang += 1) {
+    cellules[`A${rang}`] = contenuDe(rang);
+  }
+  return { lignes: hauteur, colonnes: 1, cellules };
+}
+
 const nombreDeCellule = fc.integer({ min: -100_000, max: 100_000 }).map((entier) => entier / 100);
+const colonneGeneree = fc.integer({ min: 0, max: COLONNES.length - 1 });
+const ligneGeneree = fc.integer({ min: 0, max: HAUTEUR - 1 });
 
 const formuleGeneree = fc.oneof(
   fc
-    .tuple(
-      fc.integer({ min: 0, max: COLONNES.length - 1 }),
-      fc.integer({ min: 0, max: HAUTEUR - 1 }),
-      fc.constantFrom('+', '-', '*', '/', '^', '<', '>=', '<>'),
-    )
+    .tuple(colonneGeneree, ligneGeneree, fc.constantFrom('+', '-', '*', '/', '^', '<', '>=', '<>'))
     .map(([colonne, ligne, signe]) => `=${nomDe(colonne, ligne)}${signe}2`),
   fc
-    .tuple(
-      fc.constantFrom('SOMME', 'MOYENNE', 'RACINE', 'SI'),
-      fc.integer({ min: 0, max: HAUTEUR - 1 }),
-      fc.integer({ min: 0, max: HAUTEUR - 1 }),
-    )
+    .tuple(fc.constantFrom('SOMME', 'MOYENNE', 'RACINE', 'SI'), ligneGeneree, ligneGeneree)
     .map(([fonction, debut, fin]) => `=${fonction}(A${debut + 1}:A${fin + 1})`),
   fc
     .tuple(fc.integer({ min: 0, max: 9 }), fc.integer({ min: 0, max: 9 }))
@@ -59,14 +65,7 @@ const contenuGenere = fc.oneof(
 );
 
 const feuilleGeneree = fc
-  .array(
-    fc.tuple(
-      fc.integer({ min: 0, max: COLONNES.length - 1 }),
-      fc.integer({ min: 0, max: HAUTEUR - 1 }),
-      contenuGenere,
-    ),
-    { minLength: 1, maxLength: 40 },
-  )
+  .array(fc.tuple(colonneGeneree, ligneGeneree, contenuGenere), { minLength: 1, maxLength: 40 })
   .map((entrees): Feuille => {
     const cellules: Record<string, string> = {};
     for (const [colonne, ligne, contenu] of entrees) {
@@ -77,7 +76,7 @@ const feuilleGeneree = fc
 
 describe('simulation : le moteur de formules borne ce qu il rend', () => {
   it('rend pour chaque cellule remplie une valeur finie ou un code d erreur connu', () => {
-    fc.assert(
+    verifier(
       fc.property(feuilleGeneree, (feuille) => {
         const resultats = evaluerFeuille(feuille);
         const remplies = Object.values(feuille.cellules).filter(
@@ -87,24 +86,22 @@ describe('simulation : le moteur de formules borne ce qu il rend', () => {
         expect(resultats.size).toBe(remplies.length);
         expect(tousRecevables(resultats)).toBeTrue();
       }),
-      { seed: GRAINE, numRuns: TOURS },
     );
   });
 
   it('rend deux fois de suite le meme resultat pour la meme feuille', () => {
-    fc.assert(
+    verifier(
       fc.property(feuilleGeneree, (feuille) => {
         const premier = Object.fromEntries(evaluerFeuille(feuille));
         const second = Object.fromEntries(evaluerFeuille(feuille));
 
         expect(second).toEqual(premier);
       }),
-      { seed: GRAINE, numRuns: TOURS },
     );
   });
 
   it('donne a chaque cellule prise seule le resultat que la passe complete lui donne', () => {
-    fc.assert(
+    verifier(
       fc.property(feuilleGeneree, (feuille) => {
         const passe = evaluerFeuille(feuille);
 
@@ -112,14 +109,13 @@ describe('simulation : le moteur de formules borne ce qu il rend', () => {
           expect(evaluerCellule(feuille, nom)).toEqual(attendu);
         }
       }),
-      { seed: GRAINE, numRuns: TOURS },
     );
   });
 });
 
 describe('simulation : la somme ne depend ni du decoupage ni de l ordre', () => {
   it('coupe une plage en deux sans changer le total', () => {
-    fc.assert(
+    verifier(
       fc.property(
         fc.array(nombreDeCellule, { minLength: 2, maxLength: 20 }),
         fc.integer({ min: 1, max: 19 }),
@@ -140,12 +136,11 @@ describe('simulation : la somme ne depend ni du decoupage ni de l ordre', () => 
           expect(resultats.get('B3')?.valeur).toBeCloseTo(total, DECIMALES);
         },
       ),
-      { seed: GRAINE, numRuns: TOURS },
     );
   });
 
   it('arrondit une expression au millionieme sans jamais rendre un infini', () => {
-    fc.assert(
+    verifier(
       fc.property(nombreDeCellule, nombreDeCellule, (gauche, droite) => {
         const resultat = evaluerExpression('a/b', { a: gauche, b: droite });
 
@@ -156,31 +151,26 @@ describe('simulation : la somme ne depend ni du decoupage ni de l ordre', () => 
         expect(resultat.erreur).toBeNull();
         expect(Number.isFinite(resultat.valeur ?? Number.NaN)).toBeTrue();
       }),
-      { seed: GRAINE, numRuns: TOURS },
     );
   });
 });
 
 describe('simulation : cycles et references invalides', () => {
   it('rend #REF! sur chaque maillon d un cycle, quelle que soit sa longueur', () => {
-    fc.assert(
+    verifier(
       fc.property(fc.integer({ min: 2, max: 200 }), (longueur) => {
-        const cellules: Record<string, string> = {};
-        for (let rang = 1; rang <= longueur; rang += 1) {
-          cellules[`A${rang}`] = `=A${(rang % longueur) + 1}+1`;
-        }
-
-        const resultats = evaluerFeuille({ lignes: longueur, colonnes: 1, cellules });
+        const resultats = evaluerFeuille(
+          feuilleColonneA(longueur, (rang) => `=A${(rang % longueur) + 1}+1`),
+        );
 
         expect(resultats.size).toBe(longueur);
         expect([...resultats.values()].every((resultat) => resultat.erreur === '#REF!')).toBeTrue();
       }),
-      { seed: GRAINE, numRuns: TOURS },
     );
   });
 
   it('rend #REF! pour toute reference hors de la grille servie', () => {
-    fc.assert(
+    verifier(
       fc.property(
         fc.integer({ min: HAUTEUR + 1, max: 9999 }),
         fc.constantFrom('F', 'G', 'AA', 'ZZ'),
@@ -200,12 +190,11 @@ describe('simulation : cycles et references invalides', () => {
           ]);
         },
       ),
-      { seed: GRAINE, numRuns: TOURS },
     );
   });
 
   it('ne leve jamais sur une formule generee, il rend un code', () => {
-    fc.assert(
+    verifier(
       fc.property(formuleGeneree, fc.string({ maxLength: 12 }), (formule, bruit) => {
         const feuille: Feuille = {
           lignes: HAUTEUR,
@@ -216,43 +205,35 @@ describe('simulation : cycles et references invalides', () => {
         expect(tousRecevables(evaluerFeuille(feuille))).toBeTrue();
         expect(estRecevable(evaluerExpression(`${formule}${bruit}`, { a: 1 }))).toBeTrue();
       }),
-      { seed: GRAINE, numRuns: TOURS },
     );
   });
 });
 
 describe('simulation : la borne du nombre de cellules', () => {
   it('evalue plusieurs centaines de cellules et les rend toutes', () => {
-    fc.assert(
+    verifier(
       fc.property(fc.integer({ min: 200, max: CENTAINES }), (nombre) => {
-        const cellules: Record<string, string> = { A1: '3' };
-        for (let rang = 2; rang <= nombre; rang += 1) {
-          cellules[`A${rang}`] = '=$A$1*2+1';
-        }
-
-        const resultats = evaluerFeuille({ lignes: nombre, colonnes: 1, cellules });
+        const resultats = evaluerFeuille(
+          feuilleColonneA(nombre, (rang) => (rang === 1 ? '3' : '=$A$1*2+1')),
+        );
 
         expect(resultats.size).toBe(nombre);
         expect(tousRecevables(resultats)).toBeTrue();
         expect(resultats.get(`A${nombre}`)?.valeur).toBe(7);
       }),
-      { seed: GRAINE, numRuns: 20 },
+      20,
     );
   });
 
   it('refuse toute feuille qui depasse la borne, sans en evaluer une cellule', () => {
-    const cellules: Record<string, string> = {};
-    for (let rang = 1; rang <= NOMBRE_MAX_CELLULES + 1; rang += 1) {
-      cellules[`A${rang}`] = '=1+1';
-    }
-    const feuille: Feuille = { lignes: NOMBRE_MAX_CELLULES + 1, colonnes: 1, cellules };
+    const feuille = feuilleColonneA(NOMBRE_MAX_CELLULES + 1, () => '=1+1');
 
     expect(() => evaluerFeuille(feuille)).toThrowError(FeuilleHorsLimitesError);
     expect(() => evaluerCellule(feuille, 'A1')).toThrowError(FeuilleHorsLimitesError);
   });
 
   it('refuse toute grille qui n est pas un couple d entiers positifs', () => {
-    fc.assert(
+    verifier(
       fc.property(
         fc.oneof(
           fc.integer({ min: -9999, max: -1 }),
@@ -268,7 +249,6 @@ describe('simulation : la borne du nombre de cellules', () => {
           ).toThrowError(FeuilleHorsLimitesError);
         },
       ),
-      { seed: GRAINE, numRuns: TOURS },
     );
   });
 });

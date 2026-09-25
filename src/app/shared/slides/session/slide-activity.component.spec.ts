@@ -26,6 +26,8 @@ import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
 } from '../../../../testing/fixtures/instantane-b2-01';
+import { choisirLOptionDuQuiz } from '../../../../testing/hote-d-interaction';
+import { poserLesEntrees } from '../../../../testing/montage-page';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { EvenementBrique, RetourBrique } from './contrat-hote';
 import { EVENEMENTS_DES_BRIQUES } from './evenements-brique';
@@ -59,12 +61,7 @@ const VERDICT: RetourBrique = {
   libelleConfusion: 'Intérêts simples au lieu de composés',
 };
 function monter(entrees: Readonly<Record<string, unknown>>): Fixture {
-  const fixture = TestBed.createComponent(SlideActivityComponent);
-  for (const [nom, valeur] of Object.entries(entrees)) {
-    fixture.componentRef.setInput(nom, valeur);
-  }
-  fixture.detectChanges();
-  return fixture;
+  return poserLesEntrees(TestBed.createComponent(SlideActivityComponent), entrees);
 }
 
 const brique = briqueMontee;
@@ -210,10 +207,7 @@ describe('SlideActivityComponent : deck visuel B2', () => {
     });
     const recus = evenements(fixture);
 
-    (fixture.nativeElement as HTMLElement)
-      .querySelectorAll<HTMLButtonElement>('.slide-quiz__option')[1]
-      .click();
-    fixture.detectChanges();
+    choisirLOptionDuQuiz(fixture, 1);
 
     expect(recus).toEqual([
       jasmine.objectContaining({
@@ -419,10 +413,17 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     ]);
   });
 
-  it('L3 · relaie les reponses libres d un cas professionnel a la seance', async () => {
+  async function numeriqueEcoutee(): Promise<{
+    recus: EvenementBrique[];
+    numerique: HTMLElement;
+  }> {
     const fixture = monter({ slide: ECRAN_NUMERIQUE });
     const recus = evenements(fixture);
-    const numerique = await brique(fixture, 'fp-numeric');
+    return { recus, numerique: await brique(fixture, 'fp-numeric') };
+  }
+
+  it('L3 · relaie les reponses libres d un cas professionnel a la seance', async () => {
+    const { recus, numerique } = await numeriqueEcoutee();
 
     numerique.dispatchEvent(
       new CustomEvent('fp-pro-submit', {
@@ -438,9 +439,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
   });
 
   it('relaie chaque evenement declare par les briques', async () => {
-    const fixture = monter({ slide: ECRAN_NUMERIQUE });
-    const recus = evenements(fixture);
-    const numerique = await brique(fixture, 'fp-numeric');
+    const { recus, numerique } = await numeriqueEcoutee();
 
     for (const nom of EVENEMENTS_DES_BRIQUES) {
       const avant = recus.length;

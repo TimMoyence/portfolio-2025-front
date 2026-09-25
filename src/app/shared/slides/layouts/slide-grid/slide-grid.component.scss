@@ -19,8 +19,10 @@
   }
 }
 
-.slide-grid__subtitle {
-  @include slide.sous-titre-de-parcours(58ch);
+.slide-grid {
+  @include slide.sous-titre-projete(slide-grid) {
+    @include slide.sous-titre-de-parcours(58ch);
+  }
 }
 
 .slide-grid__card {
@@ -151,15 +153,15 @@
   .slide-grid {
     padding: 1.25rem 2rem;
 
-    h2 {
+    @include slide.titre-projete {
       font-size: 2rem;
       margin: 0 0 0.5rem;
     }
-  }
 
-  .slide-grid__subtitle {
-    margin: 0 auto 1rem;
-    font-size: 1rem;
+    @include slide.sous-titre-projete(slide-grid) {
+      margin: 0 auto 1rem;
+      font-size: 1rem;
+    }
   }
 
   .slide-grid__imprimer {

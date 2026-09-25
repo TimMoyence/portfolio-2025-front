@@ -39,13 +39,17 @@
   font-family: var(--font-sans);
 }
 
-@mixin success-check($size: 76px, $margin-bottom: 24px) {
+@mixin icon-tile($size, $radius, $background: var(--sand)) {
   width: $size;
   height: $size;
-  border-radius: 50%;
-  background: rgba(var(--teal-rgb), 0.16);
+  border-radius: $radius;
+  background: $background;
   color: var(--teal-deep);
   display: grid;
   place-items: center;
+}
+
+@mixin success-check($size: 76px, $margin-bottom: 24px) {
+  @include icon-tile($size, 50%, rgba(var(--teal-rgb), 0.16));
   margin: 0 auto $margin-bottom;
 }

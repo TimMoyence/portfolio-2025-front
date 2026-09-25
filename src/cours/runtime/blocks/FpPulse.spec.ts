@@ -1,3 +1,4 @@
+import { detailsEmis, installerBrique, texteOmbre } from '../../../testing/banc-de-brique';
 import { buildPulseSondage } from '../../../testing/factories/cours.factory';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import { FpPulse } from './FpPulse';
@@ -22,44 +23,25 @@ function presses(element: FpPulse): string[] {
     .map((bouton) => bouton.getAttribute('data-etat-pulse') ?? '');
 }
 
-function lireTexte(element: FpPulse, marqueur: string): string {
-  return (
-    element.shadowRoot?.querySelector(`[data-testid="${marqueur}"]`)?.textContent?.trim() ?? ''
-  );
-}
-
 function triees(cles: readonly string[]): string[] {
   return [...cles].sort((gauche, droite) => gauche.localeCompare(droite));
 }
 
 function changements(element: FpPulse): Record<string, unknown>[] {
-  const recus: Record<string, unknown>[] = [];
-  element.addEventListener('fp-pulse-change', (evenement) => {
-    recus.push((evenement as CustomEvent).detail as Record<string, unknown>);
-  });
-  return recus;
+  return detailsEmis(element, 'fp-pulse-change');
 }
 
 describe('FpPulse', () => {
   let hote: FpPulse;
 
-  beforeAll(() => {
-    if (!customElements.get('fp-pulse')) {
-      customElements.define('fp-pulse', FpPulse);
-    }
-  });
-
-  beforeEach(() => {
-    jasmine.clock().install();
-    jasmine.clock().mockDate(new Date(INSTANT_INITIAL));
-    hote = document.createElement('fp-pulse') as FpPulse;
-    hote.sondage = SONDAGE;
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    hote.remove();
-    jasmine.clock().uninstall();
+  installerBrique<FpPulse>({
+    balise: 'fp-pulse',
+    classe: FpPulse,
+    instant: INSTANT_INITIAL,
+    poser: (brique) => {
+      hote = brique;
+      brique.sondage = SONDAGE;
+    },
   });
 
   it('propose les trois etats des l ouverture', () => {
@@ -133,7 +115,7 @@ describe('FpPulse', () => {
 
   it('rappelle l etat retenu dans une region live', () => {
     declarer(hote, 'perdu');
-    expect(lireTexte(hote, 'retour')).toBe('Votre état actuel : Perdu');
+    expect(texteOmbre(hote, 'retour')).toBe('Votre état actuel : Perdu');
     expect(hote.shadowRoot?.querySelector('[aria-live="polite"]')).toBeTruthy();
   });
 
@@ -150,7 +132,7 @@ describe('FpPulse', () => {
     expect(
       lignes.map((ligne) => ligne.querySelector('[data-testid="compte"]')?.textContent?.trim()),
     ).toEqual(['4', '11', '7']);
-    expect(lireTexte(hote, 'total')).toBe('Réponses reçues : 22');
+    expect(texteOmbre(hote, 'total')).toBe('Réponses reçues : 22');
     expect(hote.shadowRoot?.innerHTML ?? '').not.toContain(NOM_ETUDIANT);
   });
 
@@ -186,7 +168,7 @@ describe('FpPulse', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
 
     expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(SONDAGE.invite);
-    expect(lireTexte(hote, 'anonymat')).not.toBe('');
+    expect(texteOmbre(hote, 'anonymat')).not.toBe('');
     expect(boutonsEtat(hote).map((bouton) => bouton.disabled)).toEqual([true, true, true]);
     expect(presses(hote)).toEqual([]);
     expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')).toBeNull();
@@ -206,12 +188,12 @@ describe('FpPulse', () => {
     hote.comptes = { perdu: 1, 'ca-va': 2, clair: 1, total: 4 };
     hote.setAttribute('data-cours-role', 'presentateur');
 
-    expect(lireTexte(hote, 'masque')).toBe('Comptes affichés à partir de 5 réponses');
+    expect(texteOmbre(hote, 'masque')).toBe('Comptes affichés à partir de 5 réponses');
     expect(hote.shadowRoot?.querySelector('[data-testid="agregat"]')).toBeNull();
     expect(hote.shadowRoot?.querySelector('[data-testid="total"]')).toBeNull();
 
     hote.comptes = { perdu: 1, 'ca-va': 2, clair: 2, total: 5 };
-    expect(lireTexte(hote, 'total')).toBe('Réponses reçues : 5');
+    expect(texteOmbre(hote, 'total')).toBe('Réponses reçues : 5');
     expect(hote.shadowRoot?.querySelector('[data-testid="masque"]')).toBeNull();
   });
 
@@ -223,10 +205,7 @@ describe('FpPulse', () => {
   });
 
   it('memorise l etat declare et le restaure apres rechargement', () => {
-    const brouillons: unknown[] = [];
-    hote.addEventListener('fp-brouillon', (evenement) =>
-      brouillons.push((evenement as CustomEvent).detail),
-    );
+    const brouillons = detailsEmis(hote, 'fp-brouillon');
     declarer(hote, 'perdu');
     expect(brouillons).toEqual([{ id: SONDAGE.id, valeur: { etat: 'perdu' } }]);
 

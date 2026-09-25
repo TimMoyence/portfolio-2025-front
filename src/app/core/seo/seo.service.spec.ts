@@ -336,6 +336,15 @@ describe('SeoService', () => {
           .map((args: unknown[]) => args[0] as Record<string, unknown>)
           .find((el) => el['type'] === 'application/ld+json');
 
+      const contenusJsonLdPresents = (): Record<string, unknown>[] =>
+        (
+          mockDocument.head as unknown as {
+            querySelectorAll: (s: string) => Record<string, unknown>[];
+          }
+        )
+          .querySelectorAll('script[type="application/ld+json"]')
+          .map((script) => JSON.parse(script['textContent'] as string) as Record<string, unknown>);
+
       it('devrait injecter un script JSON-LD dans le head quand jsonLd est fourni', () => {
         const jsonLdData = {
           '@context': 'https://schema.org',
@@ -384,14 +393,10 @@ describe('SeoService', () => {
           jsonLd: jsonLdArray,
         });
 
-        const scripts = (
-          mockDocument.head as unknown as {
-            querySelectorAll: (s: string) => Record<string, unknown>[];
-          }
-        ).querySelectorAll('script[type="application/ld+json"]');
-        expect(scripts.length).toBe(2);
-        expect(JSON.parse(scripts[0]['textContent'] as string)).toEqual(jsonLdArray[0]);
-        expect(JSON.parse(scripts[1]['textContent'] as string)).toEqual(jsonLdArray[1]);
+        const contenus = contenusJsonLdPresents();
+        expect(contenus.length).toBe(2);
+        expect(contenus[0]).toEqual(jsonLdArray[0]);
+        expect(contenus[1]).toEqual(jsonLdArray[1]);
       });
 
       it('devrait supprimer les anciens JSON-LD avant injection', () => {
@@ -407,13 +412,9 @@ describe('SeoService', () => {
           jsonLd: [{ '@type': 'FAQPage' }],
         });
 
-        const scripts = (
-          mockDocument.head as unknown as {
-            querySelectorAll: (s: string) => Record<string, unknown>[];
-          }
-        ).querySelectorAll('script[type="application/ld+json"]');
-        expect(scripts.length).toBe(1);
-        expect(JSON.parse(scripts[0]['textContent'] as string)['@type']).toBe('FAQPage');
+        const contenus = contenusJsonLdPresents();
+        expect(contenus.length).toBe(1);
+        expect(contenus[0]['@type']).toBe('FAQPage');
       });
 
       it('devrait supprimer le script JSON-LD existant avant d en creer un nouveau', () => {

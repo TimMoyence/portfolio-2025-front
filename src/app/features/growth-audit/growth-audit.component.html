@@ -14,15 +14,7 @@
     </p>
 
     <form #auditForm="ngForm" class="grid gap-4" (ngSubmit)="submit(auditForm)">
-      <input
-        type="text"
-        name="website"
-        [(ngModel)]="auditFormState.website"
-        tabindex="-1"
-        autocomplete="off"
-        aria-hidden="true"
-        class="absolute -left-[10000px] h-px w-px overflow-hidden"
-      />
+      <input appHoneypot name="website" [(ngModel)]="auditFormState.website" />
       <input type="hidden" name="formStartedAt" [(ngModel)]="auditFormState.formStartedAt" />
       <label class="text-sm md:text-base font-semibold" for="websiteName">{{
         formLabels.websiteLabel
@@ -110,25 +102,13 @@
             [class.border-red-500]="contactCtrl.invalid && (contactCtrl.touched || isSubmitted)"
           />
           @if (contactCtrl.invalid && (contactCtrl.touched || isSubmitted)) {
-            <p class="mt-1 text-sm md:text-base text-red-500">
-              @if (contactCtrl.errors?.['required']) {
-                <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
-              } @else if (
-                auditFormState.contactMethod === 'EMAIL' && contactCtrl.errors?.['email']
-              ) {
-                <span i18n="auth.error.email@@authErrorEmail"
-                  >Merci d’entrer une adresse email valide.</span
-                >
-              } @else if (
-                auditFormState.contactMethod === 'PHONE' && contactCtrl.errors?.['phone']
-              ) {
-                <span i18n="auth.error.phone@@authErrorPhone"
-                  >Merci d’entrer un numéro de téléphone valide.</span
-                >
-              } @else {
-                <span i18n="auth.error.generic@@authErrorGeneric">Valeur invalide.</span>
-              }
-            </p>
+            <p
+              appFieldErrors
+              class="mt-1 text-sm md:text-base text-red-500"
+              [errors]="contactCtrl.errors"
+              [email]="auditFormState.contactMethod === 'EMAIL'"
+              [phone]="auditFormState.contactMethod === 'PHONE'"
+            ></p>
           }
         </div>
       </div>

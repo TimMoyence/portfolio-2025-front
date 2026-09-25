@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
+import type { ComponentFixture } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import {
-  buildInteractionsResponse,
-  createPresentationPortStub,
-} from '../../../../../testing/factories/presentation.factory';
+  configurerLHoteDInteraction,
+  monterApresChargement,
+} from '../../../../../testing/hote-d-interaction';
 import { SlidePollComponent } from './slide-poll.component';
 
 @Component({
@@ -16,32 +16,31 @@ class HostComponent {}
 
 describe('SlidePollComponent', () => {
   beforeEach(() => {
-    const portStub = createPresentationPortStub(
-      buildInteractionsResponse({
-        interactions: {
-          'poll-1': {
-            present: [
-              {
-                type: 'poll',
-                question: 'Quel outil utilises-tu le plus ?',
-                options: ['ChatGPT', 'Claude', 'Gemini'],
-              },
-            ],
+    configurerLHoteDInteraction(HostComponent, {
+      'poll-1': {
+        present: [
+          {
+            type: 'poll',
+            question: 'Quel outil utilises-tu le plus ?',
+            options: ['ChatGPT', 'Claude', 'Gemini'],
           },
-        },
-      }),
-    );
-    TestBed.configureTestingModule({
-      imports: [HostComponent],
-      providers: [{ provide: PRESENTATION_PORT, useValue: portStub }],
+        ],
+      },
     });
   });
 
+  function voter(index: number): { fixture: ComponentFixture<HostComponent>; opts: HTMLElement[] } {
+    const fixture = monterApresChargement(HostComponent);
+    const opts = Array.from<HTMLElement>(
+      fixture.nativeElement.querySelectorAll('.slide-poll__option'),
+    );
+    opts[index].click();
+    fixture.detectChanges();
+    return { fixture, opts };
+  }
+
   it('rend la question et les options', fakeAsync(() => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
+    const fixture = monterApresChargement(HostComponent);
     expect(fixture.nativeElement.querySelector('.slide-poll__question').textContent.trim()).toBe(
       'Quel outil utilises-tu le plus ?',
     );
@@ -49,25 +48,13 @@ describe('SlidePollComponent', () => {
   }));
 
   it('incrémente le compteur local après vote', fakeAsync(() => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
-    const opts = fixture.nativeElement.querySelectorAll('.slide-poll__option');
-    opts[0].click();
-    fixture.detectChanges();
+    const { fixture } = voter(0);
     const bar = fixture.nativeElement.querySelector(".slide-poll__bar[data-index='0']");
     expect(bar.style.width).toBe('100%');
   }));
 
   it("marque l'option votée avec aria-current et laisse les autres sans", fakeAsync(() => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
-    const opts = fixture.nativeElement.querySelectorAll('.slide-poll__option');
-    opts[1].click();
-    fixture.detectChanges();
+    const { opts } = voter(1);
 
     expect(opts[1].getAttribute('aria-current')).toBe('true');
     expect(opts[0].getAttribute('aria-current')).toBeNull();
@@ -75,10 +62,7 @@ describe('SlidePollComponent', () => {
   }));
 
   it('annonce le vote enregistré dans une région live', fakeAsync(() => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
+    const fixture = monterApresChargement(HostComponent);
 
     const live = fixture.nativeElement.querySelector('.slide-poll__status');
     expect(live).toBeTruthy();

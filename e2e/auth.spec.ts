@@ -1,5 +1,32 @@
 import { test, expect } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import { API_BASE, MOCK_SESSION } from './fixtures';
+
+interface TentativeDeConnexion {
+  readonly email: string;
+  readonly motDePasse: string;
+  readonly statut: number;
+  readonly corps: unknown;
+}
+
+async function soumettreLaConnexion(page: Page, tentative: TentativeDeConnexion): Promise<void> {
+  await page.route(`${API_BASE}/auth/login`, async (route) => {
+    await route.fulfill({
+      status: tentative.statut,
+      contentType: 'application/json',
+      body: JSON.stringify(tentative.corps),
+    });
+  });
+
+  await page.goto('/login');
+
+  await page.locator('#auth-trigger-log-in').click();
+
+  await page.locator('#auth-tab-log-in #login-email').fill(tentative.email);
+  await page.locator('#auth-tab-log-in #login-password').fill(tentative.motDePasse);
+
+  await page.locator('#auth-tab-log-in button[type="submit"]').click();
+}
 
 test.describe('Auth — Page de connexion', () => {
   test('la page login affiche le formulaire avec email et mot de passe', async ({ page }) => {
@@ -19,46 +46,23 @@ test.describe('Auth — Page de connexion', () => {
   });
 
   test("login reussi redirige vers la page d'accueil", async ({ page }) => {
-    await page.route(`${API_BASE}/auth/login`, async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(MOCK_SESSION),
-      });
+    await soumettreLaConnexion(page, {
+      email: 'test@test.com',
+      motDePasse: 'password123',
+      statut: 200,
+      corps: MOCK_SESSION,
     });
-
-    await page.goto('/login');
-
-    await page.locator('#auth-trigger-log-in').click();
-
-    await page.locator('#auth-tab-log-in #login-email').fill('test@test.com');
-    await page.locator('#auth-tab-log-in #login-password').fill('password123');
-
-    await page.locator('#auth-tab-log-in button[type="submit"]').click();
 
     await expect(page).toHaveURL('/');
   });
 
   test("login echoue affiche un message d'erreur", async ({ page }) => {
-    await page.route(`${API_BASE}/auth/login`, async (route) => {
-      await route.fulfill({
-        status: 401,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          message: 'Identifiants invalides',
-          statusCode: 401,
-        }),
-      });
+    await soumettreLaConnexion(page, {
+      email: 'wrong@test.com',
+      motDePasse: 'wrongpassword',
+      statut: 401,
+      corps: { message: 'Identifiants invalides', statusCode: 401 },
     });
-
-    await page.goto('/login');
-
-    await page.locator('#auth-trigger-log-in').click();
-
-    await page.locator('#auth-tab-log-in #login-email').fill('wrong@test.com');
-    await page.locator('#auth-tab-log-in #login-password').fill('wrongpassword');
-
-    await page.locator('#auth-tab-log-in button[type="submit"]').click();
 
     const errorMessage = page.locator('#auth-tab-log-in .auth-msg[role="alert"]');
     await expect(errorMessage).toBeVisible();

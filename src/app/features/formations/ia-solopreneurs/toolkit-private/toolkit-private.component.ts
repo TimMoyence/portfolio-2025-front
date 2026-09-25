@@ -10,13 +10,14 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { LEAD_MAGNET_PORT } from '../../../../core/ports/lead-magnet.port';
 import type { ToolkitPageData } from '../../../../core/models/toolkit-page.model';
+import { PictoComponent } from '../../../../shared/components/picto/picto.component';
 
 type PageState = 'loading' | 'loaded' | 'error';
 
 @Component({
   selector: 'app-toolkit-private',
   standalone: true,
-  imports: [],
+  imports: [PictoComponent],
   templateUrl: './toolkit-private.component.html',
   styleUrl: './toolkit-private.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

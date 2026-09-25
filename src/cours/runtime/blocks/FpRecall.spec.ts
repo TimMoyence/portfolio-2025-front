@@ -1,4 +1,10 @@
 import { attendreLeRenduEchappe } from '../../../testing/assertions-briques';
+import {
+  attendreLaSeuleOptionFausse,
+  detailsEmis,
+  installerBrique,
+  texteOmbre,
+} from '../../../testing/banc-de-brique';
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import {
@@ -53,40 +59,21 @@ function annonceDe(element: FpRecall): string {
   );
 }
 
-function texteDe(element: FpRecall, identifiant: string): string {
-  return (
-    element.shadowRoot?.querySelector(`[data-testid="${identifiant}"]`)?.textContent?.trim() ?? ''
-  );
-}
-
-function detailsEmis(element: FpRecall): DetailRecall[] {
-  const details: DetailRecall[] = [];
-  element.addEventListener('fp-recall-submit', (evenement) => {
-    details.push((evenement as CustomEvent).detail as DetailRecall);
-  });
-  return details;
+function soumissionsDe(element: FpRecall): DetailRecall[] {
+  return detailsEmis(element, 'fp-recall-submit');
 }
 
 describe('FpRecall', () => {
   let hote: FpRecall;
 
-  beforeAll(() => {
-    if (!customElements.get('fp-recall')) {
-      customElements.define('fp-recall', FpRecall);
-    }
-  });
-
-  beforeEach(() => {
-    jasmine.clock().install();
-    jasmine.clock().mockDate(new Date(INSTANT_INITIAL));
-    hote = document.createElement('fp-recall') as FpRecall;
-    hote.question = QUESTION;
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    hote.remove();
-    jasmine.clock().uninstall();
+  installerBrique<FpRecall>({
+    balise: 'fp-recall',
+    classe: FpRecall,
+    instant: INSTANT_INITIAL,
+    poser: (brique) => {
+      hote = brique;
+      brique.question = QUESTION;
+    },
   });
 
   it('presente l enonce et le champ de rappel libre des le depart', () => {
@@ -186,7 +173,7 @@ describe('FpRecall', () => {
   });
 
   it('emet le rappel libre saisi avec la reponse choisie', () => {
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     saisirRappel(hote, RAPPEL_ETUDIANT);
     jasmine.clock().tick(DELAI_DEFAUT_MS);
     jasmine.clock().tick(400);
@@ -201,7 +188,7 @@ describe('FpRecall', () => {
   });
 
   it('n emet qu une seule reponse par question', () => {
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     jasmine.clock().tick(DELAI_DEFAUT_MS);
     optionsDe(hote)[0].click();
     optionsDe(hote)[1]?.click();
@@ -232,15 +219,12 @@ describe('FpRecall', () => {
     jasmine.clock().tick(DELAI_DEFAUT_MS);
     hote.verdict = buildVerdictDeReponse({ questionId: QUESTION.id, correcte: true });
 
-    expect(texteDe(hote, 'verdict')).toContain('Juste');
+    expect(texteOmbre(hote, 'verdict')).toContain('Juste');
     expect(optionsDe(hote).every((option) => option.disabled)).toBeTrue();
   });
 
   it('memorise le rappel en brouillon et le restaure apres rechargement', () => {
-    const brouillons: unknown[] = [];
-    hote.addEventListener('fp-brouillon', (evenement) =>
-      brouillons.push((evenement as CustomEvent).detail),
-    );
+    const brouillons = detailsEmis(hote, 'fp-brouillon');
     saisirRappel(hote, RAPPEL_ETUDIANT);
 
     expect(brouillons.at(-1)).toEqual({ id: QUESTION.id, valeur: { rappel: RAPPEL_ETUDIANT } });
@@ -251,7 +235,7 @@ describe('FpRecall', () => {
     document.body.appendChild(rechargee);
 
     expect(champRappel(rechargee).value).toBe(RAPPEL_ETUDIANT);
-    expect(texteDe(rechargee, 'brouillon-restaure')).toBe('Brouillon restauré');
+    expect(texteOmbre(rechargee, 'brouillon-restaure')).toBe('Brouillon restauré');
     rechargee.remove();
   });
 
@@ -271,7 +255,7 @@ describe('FpRecall', () => {
     jasmine.clock().tick(DELAI_DEFAUT_MS);
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
     expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(CHARGE_XSS);
-    expect(texteDe(hote, 'option')).toBe(CHARGE_XSS);
+    expect(texteOmbre(hote, 'option')).toBe(CHARGE_XSS);
   });
 
   it('echappe le rappel libre reaffiche apres l apparition des options', () => {
@@ -294,21 +278,21 @@ describe('FpRecall', () => {
   });
 
   it('affiche la consigne par defaut, remplacee par une consigne servie non vide', () => {
-    const parDefaut = texteDe(hote, 'consigne');
+    const parDefaut = texteOmbre(hote, 'consigne');
     expect(parDefaut).not.toBe('');
 
     hote.consigne = 'Redites la formule avant de voir les options';
-    expect(texteDe(hote, 'consigne')).toBe('Redites la formule avant de voir les options');
+    expect(texteOmbre(hote, 'consigne')).toBe('Redites la formule avant de voir les options');
 
     hote.consigne = '   ';
-    expect(texteDe(hote, 'consigne')).toBe(parDefaut);
+    expect(texteOmbre(hote, 'consigne')).toBe(parDefaut);
   });
 
   it('montre au presentateur l enonce, la consigne et le compte a rebours, sans champ ni suivi', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
 
     expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(QUESTION.enonce);
-    expect(texteDe(hote, 'consigne')).not.toBe('');
+    expect(texteOmbre(hote, 'consigne')).not.toBe('');
     expect(annonceDe(hote)).toBe('Temps d’écriture libre : propositions de réponse dans 8 s');
     expect(hote.shadowRoot?.querySelector('[data-testid="rappel"]')).toBeNull();
     expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')).toBeNull();
@@ -316,7 +300,7 @@ describe('FpRecall', () => {
 
   it('au terme du delai, montre au presentateur les options inertes sans je ne sais pas', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     jasmine.clock().tick(DELAI_DEFAUT_MS);
 
     expect(ordreAffiche(hote)).toEqual(QUESTION.options.map((option) => option.id));
@@ -333,7 +317,7 @@ describe('FpRecall', () => {
 
       hote.corrige = CORRIGE;
 
-      expect(texteDe(hote, 'bonne-reponse')).toContain(LIBELLE_PREMIERE);
+      expect(texteOmbre(hote, 'bonne-reponse')).toContain(LIBELLE_PREMIERE);
       expect(
         hote.shadowRoot?.querySelector('[data-option="a"]')?.getAttribute('data-correction'),
       ).toBe('juste');
@@ -348,12 +332,7 @@ describe('FpRecall', () => {
 
     hote.corrige = CORRIGE;
 
-    expect(
-      hote.shadowRoot?.querySelector('[data-option="b"]')?.getAttribute('data-correction'),
-    ).toBe('fausse');
-    expect(
-      hote.shadowRoot?.querySelector('[data-option="c"]')?.hasAttribute('data-correction'),
-    ).toBeFalse();
+    attendreLaSeuleOptionFausse(hote, 'b', 'c');
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {

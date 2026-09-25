@@ -63,6 +63,48 @@ function inscriptions() {
   );
 }
 
+const DECLARE_LES_METADONNEES = /metadonnees\??:\s*MetadonneesBrique/;
+
+function interfacesDe(source) {
+  return [...source.matchAll(/interface (\w+)/g)].map((trouve) => {
+    const [entete, nom] = trouve;
+    const finDuNom = trouve.index + entete.length;
+    const debutDuCorps = source.indexOf('{', finDuNom) + 1;
+    const suite = source.slice(finDuNom, debutDuCorps - 1);
+    const finDuCorps = source.indexOf('\n}', debutDuCorps);
+    const clauseExtends = suite.split('extends ')[1] ?? '';
+    return {
+      nom,
+      parents: clauseExtends
+        .split(',')
+        .map((parent) => /\w+/.exec(parent)?.[0])
+        .filter((parent) => parent !== undefined),
+      corps: source.slice(debutDuCorps, finDuCorps === -1 ? source.length : finDuCorps),
+    };
+  });
+}
+
+function porteLesMetadonnees(source, corpus) {
+  const parNom = new Map(interfacesDe(corpus).map((iface) => [iface.nom, iface]));
+  const porte = (iface, vues) => {
+    if (DECLARE_LES_METADONNEES.test(iface.corps)) {
+      return true;
+    }
+    return iface.parents.some((parent) => {
+      const trouve = parNom.get(parent);
+      return trouve !== undefined && !vues.has(parent) && porte(trouve, new Set([...vues, parent]));
+    });
+  };
+  return interfacesDe(source).some((iface) => porte(iface, new Set([iface.nom])));
+}
+
+function corpusDesBriques() {
+  return readdirSync(DOSSIER_BRIQUES)
+    .filter((entree) => entree.endsWith('.ts') && !entree.endsWith('.spec.ts'))
+    .map((entree) => readFileSync(join(DOSSIER_BRIQUES, entree), 'utf8'))
+    .join('\n');
+}
+
 function identifiantsDeFeuille() {
   const contenu = readFileSync(INDEX_FEUILLES, 'utf8');
   const debut = contenu.indexOf('const FEUILLES');
@@ -166,10 +208,11 @@ test('chaque brique inscrite declare ses metadonnees pedagogiques', () => {
 
   assert.ok(inscrites.length > 0, `${REGISTRE} n inscrit aucune brique : la garde ne garde rien.`);
 
+  const corpus = corpusDesBriques();
   const muettes = inscrites
     .filter(({ classe }) => {
       const source = readFileSync(join(DOSSIER_BRIQUES, `${classe}.ts`), 'utf8');
-      return !/metadonnees\??:\s*MetadonneesBrique/.test(source);
+      return !porteLesMetadonnees(source, corpus);
     })
     .map(({ nom }) => nom);
 
@@ -188,4 +231,28 @@ test('chaque brique inscrite porte un nom d element distinct en fp-', () => {
     assert.match(nom, /^fp-[a-z0-9-]+$/, `nom d element invalide : ${nom}`);
   }
   assert.equal(new Set(noms).size, noms.length, `nom d element en double dans ${REGISTRE}`);
+});
+
+test('la lecture des metadonnees suit la chaine extends et refuse une brique qui ne la porte pas', () => {
+  const corpus = `
+export interface Socle {
+  readonly metadonnees: MetadonneesBrique;
+}
+export interface Etage extends Socle {
+  readonly intitule: string;
+}
+export interface Orphelin {
+  readonly id: string;
+}
+`;
+  assert.ok(
+    porteLesMetadonnees('interface Plan extends Etage, Autre {\n  readonly x: number;\n}', corpus),
+  );
+  assert.ok(
+    porteLesMetadonnees('interface Plan {\n  readonly metadonnees?: MetadonneesBrique;\n}', corpus),
+  );
+  assert.ok(
+    !porteLesMetadonnees('interface Plan extends Orphelin {\n  readonly x: number;\n}', corpus),
+  );
+  assert.ok(!porteLesMetadonnees('export class FpRien {}', corpus));
 });

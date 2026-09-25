@@ -1,3 +1,4 @@
+import { enregistrerBrique, roleAffiche } from '../../../testing/banc-de-brique';
 import { type EscapedHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 
@@ -31,12 +32,8 @@ describe('FpBlock', () => {
   let horlogeSimulee: jasmine.Clock | null = null;
 
   beforeAll(() => {
-    if (!customElements.get('fp-demo')) {
-      customElements.define('fp-demo', FpDemo);
-    }
-    if (!customElements.get('fp-broken')) {
-      customElements.define('fp-broken', FpBroken);
-    }
+    enregistrerBrique('fp-demo', FpDemo);
+    enregistrerBrique('fp-broken', FpBroken);
   });
 
   beforeEach(() => {
@@ -56,6 +53,24 @@ describe('FpBlock', () => {
     horlogeSimulee = jasmine.clock();
     horlogeSimulee.install();
     horlogeSimulee.mockDate(new Date(0));
+  }
+
+  function poserLaQuestionChronometree(): void {
+    figerLHorloge();
+    hote.question = 'Q-CHRONO';
+    hote.refresh();
+    jasmine.clock().tick(8000);
+  }
+
+  function attendreLActionSurLeDocument(done: DoneFn): void {
+    document.addEventListener(
+      'fp-action',
+      (event) => {
+        expect((event as CustomEvent).detail).toEqual({ ok: true });
+        done();
+      },
+      { once: true },
+    );
   }
 
   it('rend son unique rendu pour le role etudiant par defaut', () => {
@@ -84,22 +99,13 @@ describe('FpBlock', () => {
   });
 
   it('expose le role sur le conteneur', () => {
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe('etudiant');
+    expect(roleAffiche(hote)).toBe('etudiant');
     hote.setAttribute('data-cours-role', 'presentateur');
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(
-      'presentateur',
-    );
+    expect(roleAffiche(hote)).toBe('presentateur');
   });
 
   it('emet un evenement composed qui traverse le shadow DOM', (done) => {
-    document.addEventListener(
-      'fp-action',
-      (event) => {
-        expect((event as CustomEvent).detail).toEqual({ ok: true });
-        done();
-      },
-      { once: true },
-    );
+    attendreLActionSurLeDocument(done);
     hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="action"]')?.click();
   });
 
@@ -110,14 +116,7 @@ describe('FpBlock', () => {
     racineEnveloppe.appendChild(hoteImbrique);
     document.body.appendChild(enveloppe);
 
-    document.addEventListener(
-      'fp-action',
-      (event) => {
-        expect((event as CustomEvent).detail).toEqual({ ok: true });
-        done();
-      },
-      { once: true },
-    );
+    attendreLActionSurLeDocument(done);
 
     hoteImbrique.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="action"]')?.click();
   });
@@ -190,11 +189,7 @@ describe('FpBlock', () => {
   });
 
   it('ne rearme pas le chronometre quand la meme question est rendue a nouveau', () => {
-    figerLHorloge();
-    hote.question = 'Q-CHRONO';
-    hote.refresh();
-
-    jasmine.clock().tick(8000);
+    poserLaQuestionChronometree();
     hote.refresh();
     hote.refresh();
 
@@ -202,11 +197,7 @@ describe('FpBlock', () => {
   });
 
   it('rearme le chronometre quand la question change', () => {
-    figerLHorloge();
-    hote.question = 'Q-CHRONO';
-    hote.refresh();
-
-    jasmine.clock().tick(8000);
+    poserLaQuestionChronometree();
     hote.question = 'Q-SUIVANTE';
     hote.refresh();
     jasmine.clock().tick(300);

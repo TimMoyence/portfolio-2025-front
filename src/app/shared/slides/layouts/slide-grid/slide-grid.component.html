@@ -1,10 +1,7 @@
-<div class="slide-grid">
-  @if (title()) {
-    <h2>{{ title() }}</h2>
-  }
-  @if (subtitle()) {
-    <p class="slide-grid__subtitle">{{ subtitle() }}</p>
-  }
+<div
+  class="slide-grid"
+  [appSlideEnTete]="{ bloc: 'slide-grid', titre: title(), sousTitre: subtitle() }"
+>
   @if (imprimable()) {
     <button
       type="button"

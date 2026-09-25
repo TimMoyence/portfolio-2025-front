@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { PLATFORM_ID } from '@angular/core';
-import { isolateAnimReady } from '../../../../testing/anim-ready';
 import { rendreLHoteNavigateur } from '../../../../testing/montage-page';
+import { decrireRenduServeur, decrireSectionAsili } from '../../../../testing/section-asili';
 import type { AsiliAiMethodStep } from './asili-ai-method.component';
 import { AsiliAiMethodComponent } from './asili-ai-method.component';
 
@@ -38,25 +36,11 @@ const RULE_WHO = "La regle d'or — la meme que dans mes formations";
 describe('AsiliAiMethodComponent', () => {
   let fixture: ComponentFixture<AsiliAiMethodComponent>;
 
-  function setup(
-    steps: readonly AsiliAiMethodStep[] = STEPS,
-    platformId: 'browser' | 'server' = 'browser',
-  ): void {
-    TestBed.configureTestingModule({
-      imports: [AsiliAiMethodComponent],
-      providers: [{ provide: PLATFORM_ID, useValue: platformId }],
-    });
-    fixture = TestBed.createComponent(AsiliAiMethodComponent);
-    fixture.componentRef.setInput('steps', steps);
+  const monter = decrireSectionAsili(AsiliAiMethodComponent, { steps: STEPS });
+
+  function setup(): void {
+    fixture = monter();
   }
-
-  isolateAnimReady();
-
-  it('se cree', () => {
-    setup();
-    fixture.detectChanges();
-    expect(fixture.componentInstance).toBeTruthy();
-  });
 
   it('applique le theme sombre via .theme-night', () => {
     setup();
@@ -125,15 +109,14 @@ describe('AsiliAiMethodComponent', () => {
     expect(host.querySelector('.ai-rule-who')).toBeNull();
   });
 
-  it("reste rendu cote serveur (SSR fail-open : pas d'anim-ready)", () => {
-    setup(STEPS, 'server');
-    fixture.componentRef.setInput('heading', HEADING);
-    fixture.detectChanges();
-    const host = fixture.nativeElement as HTMLElement;
-    expect(host.querySelectorAll('.ai-step').length).toBe(STEPS.length);
-    expect(host.querySelector('h2.ai-method-title')).not.toBeNull();
-    expect(document.documentElement.classList).not.toContain('anim-ready');
-  });
+  decrireRenduServeur(
+    monter,
+    (hote) => {
+      expect(hote.querySelectorAll('.ai-step').length).toBe(STEPS.length);
+      expect(hote.querySelector('h2.ai-method-title')).not.toBeNull();
+    },
+    { heading: HEADING },
+  );
 
   describe('avec projection (page hote)', () => {
     @Component({

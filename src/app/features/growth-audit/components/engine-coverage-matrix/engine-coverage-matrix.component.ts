@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import type { ClientReport } from '../../../../core/models/audit-client-report.model';
 
 @Component({
   selector: 'app-engine-coverage-matrix',
   standalone: true,
-  imports: [CommonModule],
+  imports: [NgTemplateOutlet],
   templateUrl: './engine-coverage-matrix.component.html',
   styleUrl: './engine-coverage-matrix.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

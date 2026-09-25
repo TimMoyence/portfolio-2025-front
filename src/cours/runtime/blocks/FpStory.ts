@@ -1,7 +1,6 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
-import { projeterMetadonnees } from './projection';
+import { type ContenuDeBrique, copierLeSocle } from './projection';
 
 export interface StoryVideo {
   readonly src: string;
@@ -20,8 +19,7 @@ export interface StoryVideo {
   readonly preload?: 'none' | 'metadata';
 }
 
-export interface StoryRecit {
-  readonly id: string;
+export interface StoryRecit extends ContenuDeBrique {
   readonly titre: string;
   readonly paragraphes: readonly string[];
   readonly visuel?: {
@@ -31,7 +29,6 @@ export interface StoryRecit {
     readonly source?: string;
   };
   readonly video?: StoryVideo;
-  readonly metadonnees: MetadonneesBrique;
 }
 
 const VIDE = safeHtml``;
@@ -51,12 +48,11 @@ export class FpStory extends FpBlock {
       valeur === null
         ? null
         : {
-            id: valeur.id,
+            ...copierLeSocle(valeur),
             titre: valeur.titre,
             paragraphes: [...valeur.paragraphes],
             visuel: valeur.visuel === undefined ? undefined : { ...valeur.visuel },
             video: valeur.video === undefined ? undefined : copierVideo(valeur.video),
-            metadonnees: projeterMetadonnees(valeur.metadonnees),
           };
     this.refreshSiConnecte();
   }

@@ -20,95 +20,82 @@ export interface FormationBenefit {
   desc: string;
 }
 
+interface FormationGratuite extends Pick<
+  FormationCard,
+  'link' | 'badge' | 'title' | 'description'
+> {
+  duree: string;
+  format: string;
+  avecToolkit: boolean;
+  variant: 'default' | 'live';
+}
+
+const META_TOOLKIT: FormationMeta = {
+  key: $localize`:@@formations-list.meta.toolkit:Toolkit`,
+  value: $localize`:@@formations-list.meta.toolkit.value:PDF à télécharger`,
+};
+
+function formationGratuite({
+  duree,
+  format,
+  avecToolkit,
+  variant,
+  ...carte
+}: FormationGratuite): FormationCard {
+  return {
+    ...carte,
+    meta: [
+      { key: $localize`:@@formations-list.meta.duration:Durée`, value: duree },
+      { key: $localize`:@@formations-list.meta.format:Format`, value: format },
+      ...(avecToolkit ? [META_TOOLKIT] : []),
+    ],
+    price: $localize`:@@formations-list.price.free:Gratuit`,
+    cta: $localize`:@@formations-list.cta.view:Consulter`,
+    variant,
+  };
+}
+
 export const FORMATIONS: readonly FormationCard[] = [
-  {
+  formationGratuite({
     link: '/formations/b2-01-traitement-information-chiffree',
     badge: $localize`:@@formations-list.b2.badge:BTS CG · Cours interactif`,
     title: $localize`:@@formations-list.b2.title:B2-01 — Lire et contrôler l’information chiffrée`,
     description: $localize`:@@formations-list.b2.description:Lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
-    meta: [
-      {
-        key: $localize`:@@formations-list.meta.duration:Durée`,
-        value: $localize`:@@formations-list.b2.duration:3 h 30`,
-      },
-      {
-        key: $localize`:@@formations-list.meta.format:Format`,
-        value: $localize`:@@formations-list.b2.format:Slides + séance accompagnée`,
-      },
-    ],
-    price: $localize`:@@formations-list.price.free:Gratuit`,
-    cta: $localize`:@@formations-list.cta.view:Consulter`,
+    duree: $localize`:@@formations-list.b2.duration:3 h 30`,
+    format: $localize`:@@formations-list.b2.format:Slides + séance accompagnée`,
+    avecToolkit: false,
     variant: 'live',
-  },
-  {
+  }),
+  formationGratuite({
     link: '/formations/ia-solopreneurs',
     badge: $localize`:@@formations-list.ia-solo.badge:Gratuit · 17 slides`,
     title: $localize`:@@formations-list.ia-solo.title:L'IA au service des solopreneurs`,
     description: $localize`:@@formations-list.ia-solo.description:16 outils IA triés, un cas pratique en live : on trie le bullshit du vraiment utile. De quoi repartir avec une boîte à outils claire, pas une liste de hype.`,
-    meta: [
-      {
-        key: $localize`:@@formations-list.meta.duration:Durée`,
-        value: $localize`:@@formations-list.ia-solo.duration:30 min · 17 slides`,
-      },
-      {
-        key: $localize`:@@formations-list.meta.format:Format`,
-        value: $localize`:@@formations-list.ia-solo.format:Slides + quiz`,
-      },
-      {
-        key: $localize`:@@formations-list.meta.toolkit:Toolkit`,
-        value: $localize`:@@formations-list.meta.toolkit.value:PDF à télécharger`,
-      },
-    ],
-    price: $localize`:@@formations-list.price.free:Gratuit`,
-    cta: $localize`:@@formations-list.cta.view:Consulter`,
+    duree: $localize`:@@formations-list.ia-solo.duration:30 min · 17 slides`,
+    format: $localize`:@@formations-list.ia-solo.format:Slides + quiz`,
+    avecToolkit: true,
     variant: 'default',
-  },
-  {
+  }),
+  formationGratuite({
     link: '/formations/automatiser-avec-ia',
     badge: $localize`:@@formations-list.auto-ia.badge:Gratuit · 13 slides`,
     title: $localize`:@@formations-list.auto-ia.title:Automatiser avec l'IA — 5 workflows pour non-tech`,
     description: $localize`:@@formations-list.auto-ia.description:5 workflows testés sans coder — devis, emails, réseaux, factures, veille — pour récupérer environ 2h par jour. Concrets, reproductibles, applicables tout de suite.`,
-    meta: [
-      {
-        key: $localize`:@@formations-list.meta.duration:Durée`,
-        value: $localize`:@@formations-list.auto-ia.duration:25 min · 13 slides`,
-      },
-      {
-        key: $localize`:@@formations-list.meta.format:Format`,
-        value: $localize`:@@formations-list.auto-ia.format:Slides + sondages`,
-      },
-      {
-        key: $localize`:@@formations-list.meta.toolkit:Toolkit`,
-        value: $localize`:@@formations-list.meta.toolkit.value:PDF à télécharger`,
-      },
-    ],
-    price: $localize`:@@formations-list.price.free:Gratuit`,
-    cta: $localize`:@@formations-list.cta.view:Consulter`,
+    duree: $localize`:@@formations-list.auto-ia.duration:25 min · 13 slides`,
+    format: $localize`:@@formations-list.auto-ia.format:Slides + sondages`,
+    avecToolkit: true,
     variant: 'default',
-  },
-  {
+  }),
+  formationGratuite({
     link: '/formations/audit-seo-diy',
     badge: $localize`:@@formations-list.audit-seo.badge:Gratuit · 14 slides`,
     title: $localize`:@@formations-list.audit-seo.title:Audit SEO DIY — 7 points en 20 minutes`,
     description: $localize`:@@formations-list.audit-seo.description:7 checks SEO concrets avec 5 outils gratuits, pour savoir si Google trouve votre site — et corriger vous-même ce qui coince.`,
-    meta: [
-      {
-        key: $localize`:@@formations-list.meta.duration:Durée`,
-        value: $localize`:@@formations-list.audit-seo.duration:20 min · 14 slides`,
-      },
-      {
-        key: $localize`:@@formations-list.meta.format:Format`,
-        value: $localize`:@@formations-list.audit-seo.format:Slides + checklist`,
-      },
-      {
-        key: $localize`:@@formations-list.meta.toolkit:Toolkit`,
-        value: $localize`:@@formations-list.meta.toolkit.value:PDF à télécharger`,
-      },
-    ],
-    price: $localize`:@@formations-list.price.free:Gratuit`,
-    cta: $localize`:@@formations-list.cta.view:Consulter`,
+    duree: $localize`:@@formations-list.audit-seo.duration:20 min · 14 slides`,
+    format: $localize`:@@formations-list.audit-seo.format:Slides + checklist`,
+    avecToolkit: true,
     variant: 'default',
-  },
+  }),
   {
     link: '/formations/ia-solopreneurs/toolkit',
     badge: $localize`:@@formations-list.toolkit.badge:Bonus`,

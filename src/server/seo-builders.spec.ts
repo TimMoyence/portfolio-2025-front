@@ -1,31 +1,27 @@
 import type { SeoMetadataFile } from '../app/core/seo/seo-metadata.model';
+import {
+  CHEMIN_DU_COURS_B2,
+  buildPageDuCoursB2,
+  buildPageSeoFr,
+  buildSeoMetadata,
+  type PageSeo,
+} from '../testing/factories/seo-metadata.factory';
 import { buildLlmsFullTxt, buildLlmsTxt, buildRobotsTxt, buildSitemapXml } from './seo-builders';
 
-const buildMetadata = (
-  pages: SeoMetadataFile['pages'],
-  overrides: Partial<SeoMetadataFile> = {},
-): SeoMetadataFile =>
-  ({
-    site: {
-      baseUrl: 'https://asilidesign.fr',
-      defaultLocale: 'fr',
-      locales: ['fr', 'en'],
-      homePath: '/',
-    },
-    pages,
-    ...overrides,
-  }) as SeoMetadataFile;
+const BASE_URL = 'https://asilidesign.fr';
 
 const pageSeule = (id: string, path: string, index: boolean, titre = 'x'): SeoMetadataFile =>
-  buildMetadata([
-    { id, path, index, locales: { fr: { title: titre, description: 'x' } } },
-  ] as SeoMetadataFile['pages']);
+  buildSeoMetadata([buildPageSeoFr(id, path, { title: titre }, { index })]);
+
+const sansPage = (overrides: Partial<SeoMetadataFile> = {}): SeoMetadataFile =>
+  buildSeoMetadata([], overrides);
+
+const sansLocale = (defaultLocale: string, page: PageSeo): SeoMetadataFile =>
+  buildSeoMetadata([page], { site: { defaultLocale, locales: [] as string[] } as never });
 
 describe('buildRobotsTxt', () => {
   it('emet un Disallow pour chaque page non-indexable standard', () => {
-    const metadata = pageSeule('login', '/login', false);
-
-    const robots = buildRobotsTxt(metadata, 'https://asilidesign.fr');
+    const robots = buildRobotsTxt(pageSeule('login', '/login', false), BASE_URL);
 
     expect(robots).toContain('Disallow: /login');
     expect(robots).toContain('Disallow: /fr/login');
@@ -39,16 +35,17 @@ describe('buildRobotsTxt', () => {
       false,
     );
 
-    const robots = buildRobotsTxt(metadata, 'https://asilidesign.fr');
+    const robots = buildRobotsTxt(metadata, BASE_URL);
 
     expect(robots).not.toContain(':token');
     expect(robots).not.toContain('/formations/ia-solopreneurs/toolkit/');
   });
 
   it('ignore cookie-settings pour permettre crawl + noindex meta', () => {
-    const metadata = pageSeule('cookie-settings', '/cookie-settings', false);
-
-    const robots = buildRobotsTxt(metadata, 'https://asilidesign.fr');
+    const robots = buildRobotsTxt(
+      pageSeule('cookie-settings', '/cookie-settings', false),
+      BASE_URL,
+    );
 
     expect(robots).not.toContain('Disallow: /cookie-settings');
     expect(robots).not.toContain('Disallow: /fr/cookie-settings');
@@ -56,17 +53,13 @@ describe('buildRobotsTxt', () => {
   });
 
   it('emet le Sitemap absolu en fin de fichier', () => {
-    const metadata = buildMetadata([] as SeoMetadataFile['pages']);
-
-    const robots = buildRobotsTxt(metadata, 'https://asilidesign.fr');
-
-    expect(robots).toContain('Sitemap: https://asilidesign.fr/sitemap.xml');
+    expect(buildRobotsTxt(sansPage(), BASE_URL)).toContain(
+      'Sitemap: https://asilidesign.fr/sitemap.xml',
+    );
   });
 
   it('emet un bloc Allow / quand toutes les pages sont indexables', () => {
-    const metadata = pageSeule('home', '/', true);
-
-    const robots = buildRobotsTxt(metadata, 'https://asilidesign.fr');
+    const robots = buildRobotsTxt(pageSeule('home', '/', true), BASE_URL);
 
     expect(robots).toContain('User-agent: *');
     expect(robots).toContain('Allow: /');
@@ -74,9 +67,7 @@ describe('buildRobotsTxt', () => {
   });
 
   it('inclut un bloc dedie pour chaque user-agent IA', () => {
-    const metadata = buildMetadata([] as SeoMetadataFile['pages']);
-
-    const robots = buildRobotsTxt(metadata, 'https://asilidesign.fr');
+    const robots = buildRobotsTxt(sansPage(), BASE_URL);
 
     expect(robots).toContain('User-agent: GPTBot');
     expect(robots).toContain('User-agent: ClaudeBot');
@@ -85,19 +76,9 @@ describe('buildRobotsTxt', () => {
   });
 
   it('supporte une metadata sans locales (fallback liste vide)', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'login',
-          path: '/login',
-          index: false,
-          locales: { fr: { title: 'x', description: 'x' } },
-        },
-      ] as SeoMetadataFile['pages'],
-      { site: { defaultLocale: 'fr', locales: [] as string[] } as never },
-    );
+    const metadata = sansLocale('fr', buildPageSeoFr('login', '/login', {}, { index: false }));
 
-    const robots = buildRobotsTxt(metadata, 'https://asilidesign.fr');
+    const robots = buildRobotsTxt(metadata, BASE_URL);
 
     expect(robots).toContain('Disallow: /login');
     expect(robots).not.toContain('Disallow: /fr/login');
@@ -105,10 +86,13 @@ describe('buildRobotsTxt', () => {
 });
 
 describe('buildSitemapXml', () => {
-  it('emet une entree par locale active pour chaque page indexable', () => {
-    const metadata = pageSeule('home', '/', true, 'Accueil');
+  const SLUG_D_ARTICLE = 'morning-brief-2026-09-09-ia';
 
-    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr');
+  const sitemapDArticle = (lastmod: string): string =>
+    buildSitemapXml(sansPage(), BASE_URL, [{ locale: 'fr', slug: SLUG_D_ARTICLE, lastmod }]);
+
+  it('emet une entree par locale active pour chaque page indexable', () => {
+    const xml = buildSitemapXml(pageSeule('home', '/', true, 'Accueil'), BASE_URL);
 
     expect(xml).toContain('<?xml version=');
     expect(xml).toContain('<urlset');
@@ -117,66 +101,40 @@ describe('buildSitemapXml', () => {
   });
 
   it('ajoute les articles publies fournis par le catalogue dynamique', () => {
-    const metadata = buildMetadata([] as SeoMetadataFile['pages']);
+    const xml = sitemapDArticle('2026-09-09');
 
-    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr', [
-      { locale: 'fr', slug: 'morning-brief-2026-09-09-ia', lastmod: '2026-09-09' },
-    ]);
-
-    expect(xml).toContain(
-      '<loc>https://asilidesign.fr/fr/articles/morning-brief-2026-09-09-ia</loc>',
-    );
+    expect(xml).toContain(`<loc>https://asilidesign.fr/fr/articles/${SLUG_D_ARTICLE}</loc>`);
     expect(xml).toContain('<lastmod>2026-09-09</lastmod>');
   });
 
   it('refuse un lastmod d article qui tenterait de sortir de sa balise', () => {
-    const metadata = buildMetadata([] as SeoMetadataFile['pages']);
-
-    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr', [
-      {
-        locale: 'fr',
-        slug: 'morning-brief-2026-09-09-ia',
-        lastmod:
-          '2026-01-01</lastmod></url><url><loc>https://spam.example/</loc><lastmod>2026-01-01',
-      },
-    ]);
+    const xml = sitemapDArticle(
+      '2026-01-01</lastmod></url><url><loc>https://spam.example/</loc><lastmod>2026-01-01',
+    );
 
     expect(xml).not.toContain('https://spam.example/');
     expect(xml).not.toContain('<lastmod>');
   });
 
   it('normalise en jour un lastmod d article servi en horodatage complet', () => {
-    const metadata = buildMetadata([] as SeoMetadataFile['pages']);
-
-    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr', [
-      { locale: 'fr', slug: 'morning-brief-2026-09-09-ia', lastmod: '2026-09-09T14:32:07.000Z' },
-    ]);
-
-    expect(xml).toContain('<lastmod>2026-09-09</lastmod>');
+    expect(sitemapDArticle('2026-09-09T14:32:07.000Z')).toContain('<lastmod>2026-09-09</lastmod>');
   });
 
   it('filtre les pages avec index:false', () => {
-    const metadata = pageSeule('login', '/login', false);
-
-    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr');
-
-    expect(xml).not.toContain('/login');
+    expect(buildSitemapXml(pageSeule('login', '/login', false), BASE_URL)).not.toContain('/login');
   });
 
   it('emet lastmod, changefreq et priority quand fournis', () => {
-    const metadata = buildMetadata([
-      {
-        id: 'offer',
-        path: '/offer',
-        index: true,
-        lastmod: '2026-04-01',
-        changefreq: 'weekly',
-        priority: 0.8,
-        locales: { fr: { title: 'Offre', description: 'x' } },
-      },
-    ] as SeoMetadataFile['pages']);
+    const metadata = buildSeoMetadata([
+      buildPageSeoFr(
+        'offer',
+        '/offer',
+        { title: 'Offre' },
+        { lastmod: '2026-04-01', changefreq: 'weekly', priority: 0.8 },
+      ),
+    ]);
 
-    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr');
+    const xml = buildSitemapXml(metadata, BASE_URL);
 
     expect(xml).toContain('<lastmod>2026-04-01</lastmod>');
     expect(xml).toContain('<changefreq>weekly</changefreq>');
@@ -184,9 +142,7 @@ describe('buildSitemapXml', () => {
   });
 
   it('omet lastmod/changefreq/priority quand absents', () => {
-    const metadata = pageSeule('contact', '/contact', true, 'Contact');
-
-    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr');
+    const xml = buildSitemapXml(pageSeule('contact', '/contact', true, 'Contact'), BASE_URL);
 
     expect(xml).not.toContain('<lastmod>');
     expect(xml).not.toContain('<changefreq>');
@@ -194,9 +150,7 @@ describe('buildSitemapXml', () => {
   });
 
   it('emet des alternates hreflang + x-default', () => {
-    const metadata = pageSeule('home', '/', true, 'Accueil');
-
-    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr');
+    const xml = buildSitemapXml(pageSeule('home', '/', true, 'Accueil'), BASE_URL);
 
     expect(xml).toContain('hreflang="fr"');
     expect(xml).toContain('hreflang="en"');
@@ -204,113 +158,70 @@ describe('buildSitemapXml', () => {
   });
 
   it('traite home en mappant son path sur /', () => {
-    const metadata = pageSeule('home', '/anything', true, 'Accueil');
-
-    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr');
+    const xml = buildSitemapXml(pageSeule('home', '/anything', true, 'Accueil'), BASE_URL);
 
     expect(xml).toContain('<loc>https://asilidesign.fr/fr/</loc>');
     expect(xml).not.toContain('/anything');
   });
 
   describe('lastmod d un cours servi par l API (H1)', () => {
-    const cours = buildMetadata([
-      {
-        id: 'formations-b2-01-traitement-information-chiffree',
-        path: '/formations/b2-01-traitement-information-chiffree',
-        index: true,
-        lastmod: '2026-09-19',
-        locales: { fr: { title: 'B2', description: 'x' } },
-      },
-      {
-        id: 'contact',
-        path: '/contact',
-        index: true,
-        lastmod: '2026-09-01',
-        locales: { fr: { title: 'Contact', description: 'x' } },
-      },
-    ] as SeoMetadataFile['pages']);
+    const cours = buildSeoMetadata([
+      buildPageDuCoursB2('2026-09-19'),
+      buildPageSeoFr('contact', '/contact', { title: 'Contact' }, { lastmod: '2026-09-01' }),
+    ]);
 
     const lastmods = (xml: string): string[] =>
       Array.from(xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g), ([, date]) => date);
 
-    it('garde le lastmod de seo-metadata.json sans API', () => {
-      const xml = buildSitemapXml(cours, 'https://asilidesign.fr');
+    const lastmodsPublies = (metadata: SeoMetadataFile, publieLe?: string): string[] =>
+      lastmods(
+        buildSitemapXml(
+          metadata,
+          BASE_URL,
+          [],
+          publieLe === undefined ? [] : [{ chemin: CHEMIN_DU_COURS_B2, publieLe }],
+        ),
+      );
 
-      expect(lastmods(xml)).toEqual(['2026-09-19', '2026-09-19', '2026-09-01', '2026-09-01']);
+    it('garde le lastmod de seo-metadata.json sans API', () => {
+      expect(lastmodsPublies(cours)).toEqual([
+        '2026-09-19',
+        '2026-09-19',
+        '2026-09-01',
+        '2026-09-01',
+      ]);
     });
 
     it('publie la date de publication du cours quand elle est plus récente', () => {
-      const xml = buildSitemapXml(
-        cours,
-        'https://asilidesign.fr',
-        [],
-        [
-          {
-            chemin: '/formations/b2-01-traitement-information-chiffree',
-            publieLe: '2026-10-02T08:15:00.000Z',
-          },
-        ],
-      );
-
-      expect(lastmods(xml)).toEqual(['2026-10-02', '2026-10-02', '2026-09-01', '2026-09-01']);
+      expect(lastmodsPublies(cours, '2026-10-02T08:15:00.000Z')).toEqual([
+        '2026-10-02',
+        '2026-10-02',
+        '2026-09-01',
+        '2026-09-01',
+      ]);
     });
 
     it('garde le lastmod de seo-metadata.json quand la publication est plus ancienne', () => {
-      const xml = buildSitemapXml(
-        cours,
-        'https://asilidesign.fr',
-        [],
-        [
-          {
-            chemin: '/formations/b2-01-traitement-information-chiffree',
-            publieLe: '2026-09-10T21:00:00.000Z',
-          },
-        ],
-      );
-
-      expect(lastmods(xml)).toEqual(['2026-09-19', '2026-09-19', '2026-09-01', '2026-09-01']);
+      expect(lastmodsPublies(cours, '2026-09-10T21:00:00.000Z')).toEqual([
+        '2026-09-19',
+        '2026-09-19',
+        '2026-09-01',
+        '2026-09-01',
+      ]);
     });
 
     it('date une page sans lastmod par la seule publication', () => {
-      const sansDate = buildMetadata([
-        {
-          id: 'formations-b2-01-traitement-information-chiffree',
-          path: '/formations/b2-01-traitement-information-chiffree',
-          index: true,
-          locales: { fr: { title: 'B2', description: 'x' } },
-        },
-      ] as SeoMetadataFile['pages']);
+      const sansDate = buildSeoMetadata([buildPageDuCoursB2()]);
 
-      const xml = buildSitemapXml(
-        sansDate,
-        'https://asilidesign.fr',
-        [],
-        [
-          {
-            chemin: '/formations/b2-01-traitement-information-chiffree',
-            publieLe: '2026-10-02T08:15:00.000Z',
-          },
-        ],
-      );
-
-      expect(lastmods(xml)).toEqual(['2026-10-02', '2026-10-02']);
+      expect(lastmodsPublies(sansDate, '2026-10-02T08:15:00.000Z')).toEqual([
+        '2026-10-02',
+        '2026-10-02',
+      ]);
     });
   });
 
   it("retombe sur une locale unique vide quand aucune locale n'est definie", () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'page',
-          path: '/page',
-          index: true,
-          locales: { fr: { title: 'x', description: 'x' } },
-        },
-      ] as SeoMetadataFile['pages'],
-      { site: { defaultLocale: '', locales: [] as string[] } as never },
-    );
-
-    const xml = buildSitemapXml(metadata, 'https://asilidesign.fr');
+    const xml = buildSitemapXml(sansLocale('', buildPageSeoFr('page', '/page')), BASE_URL);
 
     expect(xml).toContain('<loc>https://asilidesign.fr/page</loc>');
   });
@@ -326,44 +237,20 @@ describe('buildLlmsTxt', () => {
     siteNavigation: {},
   } as never;
 
-  it('groupe les pages par section (Services, A propos, Contact, Legal)', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'offer',
-          path: '/offer',
-          index: true,
-          locales: { fr: { title: 'Offre', description: "Voir l'offre" } },
-        },
-        {
-          id: 'presentation',
-          path: '/presentation',
-          index: true,
-          locales: { fr: { title: 'Presentation', description: 'A propos' } },
-        },
-        {
-          id: 'weather',
-          path: '/atelier/meteo',
-          index: true,
-          locales: { fr: { title: 'Meteo', description: 'Ancienne app' } },
-        },
-        {
-          id: 'contact',
-          path: '/contact',
-          index: true,
-          locales: { fr: { title: 'Contact', description: 'Nous ecrire' } },
-        },
-        {
-          id: 'terms',
-          path: '/terms',
-          index: true,
-          locales: { fr: { title: 'CGU', description: 'Conditions' } },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
-    );
+  const llmsDe = (...pages: PageSeo[]): string =>
+    buildLlmsTxt(buildSeoMetadata(pages, { global: baseGlobal }), BASE_URL);
 
-    const txt = buildLlmsTxt(metadata, 'https://asilidesign.fr');
+  it('groupe les pages par section (Services, A propos, Contact, Legal)', () => {
+    const txt = llmsDe(
+      buildPageSeoFr('offer', '/offer', { title: 'Offre', description: "Voir l'offre" }),
+      buildPageSeoFr('presentation', '/presentation', {
+        title: 'Presentation',
+        description: 'A propos',
+      }),
+      buildPageSeoFr('weather', '/atelier/meteo', { title: 'Meteo', description: 'Ancienne app' }),
+      buildPageSeoFr('contact', '/contact', { title: 'Contact', description: 'Nous ecrire' }),
+      buildPageSeoFr('terms', '/terms', { title: 'CGU', description: 'Conditions' }),
+    );
 
     expect(txt).toContain('# Asili Design — Tim Moyence');
     expect(txt).toContain('## Services');
@@ -376,45 +263,24 @@ describe('buildLlmsTxt', () => {
   });
 
   it('liste la page des realisations (/projets) dans le fichier curate', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'projets',
-          path: '/projets',
-          index: true,
-          locales: {
-            fr: { title: 'Projets', description: 'Realisations web & IA' },
-          },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
+    const txt = llmsDe(
+      buildPageSeoFr('projets', '/projets', {
+        title: 'Projets',
+        description: 'Realisations web & IA',
+      }),
     );
-
-    const txt = buildLlmsTxt(metadata, 'https://asilidesign.fr');
 
     expect(txt).toContain('[Projets](https://asilidesign.fr/fr/projets)');
   });
 
   it('inclut formations comme Services (hub + sous-formations)', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'formations',
-          path: '/formations',
-          index: true,
-          locales: { fr: { title: 'Formations', description: 'Hub' } },
-        },
-        {
-          id: 'formations-ia-solo',
-          path: '/formations/ia-solopreneurs',
-          index: true,
-          locales: { fr: { title: 'IA Solo', description: 'Formation IA' } },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
+    const txt = llmsDe(
+      buildPageSeoFr('formations', '/formations', { title: 'Formations', description: 'Hub' }),
+      buildPageSeoFr('formations-ia-solo', '/formations/ia-solopreneurs', {
+        title: 'IA Solo',
+        description: 'Formation IA',
+      }),
     );
-
-    const txt = buildLlmsTxt(metadata, 'https://asilidesign.fr');
 
     expect(txt).toContain('## Services');
     expect(txt).toContain('[Formations]');
@@ -422,19 +288,9 @@ describe('buildLlmsTxt', () => {
   });
 
   it('utilise homeTagline en quote si home est indexable', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'home',
-          path: '/',
-          index: true,
-          locales: { fr: { title: 'Accueil', description: 'Mon tagline' } },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
+    const txt = llmsDe(
+      buildPageSeoFr('home', '/', { title: 'Accueil', description: 'Mon tagline' }),
     );
-
-    const txt = buildLlmsTxt(metadata, 'https://asilidesign.fr');
 
     expect(txt).toContain('> Mon tagline');
   });
@@ -452,63 +308,34 @@ describe('buildLlmsTxt', () => {
     it(cas, () => {
       const metadata = { ...pageSeule('offer', '/offer', true, 'Offre'), global };
 
-      expect(buildLlmsTxt(metadata, 'https://asilidesign.fr')).toContain(attendu);
+      expect(buildLlmsTxt(metadata, BASE_URL)).toContain(attendu);
     });
   }
 
   it('utilise une description vide quand meta.description manquante', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'offer',
-          path: '/offer',
-          index: true,
-          locales: { fr: { title: 'Offre', description: '' } },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
-    );
-
-    const txt = buildLlmsTxt(metadata, 'https://asilidesign.fr');
+    const txt = llmsDe(buildPageSeoFr('offer', '/offer', { title: 'Offre', description: '' }));
 
     expect(txt).toContain('[Offre](https://asilidesign.fr/fr/offer)');
     expect(txt).not.toContain('[Offre](https://asilidesign.fr/fr/offer):');
   });
 
   it("retombe sur la premiere locale quand defaultLocale n'a pas de meta", () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'offer',
-          path: '/offer',
-          index: true,
-          locales: { en: { title: 'Offer EN', description: 'Service' } },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
+    const txt = llmsDe(
+      buildPageSeoFr(
+        'offer',
+        '/offer',
+        {},
+        { locales: { en: { title: 'Offer EN', description: 'Service' } } },
+      ),
     );
-
-    const txt = buildLlmsTxt(metadata, 'https://asilidesign.fr');
 
     expect(txt).toContain('Offer EN');
   });
 
   it('ignore les pages avec index:false', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'login',
-          path: '/login',
-          index: false,
-          locales: { fr: { title: 'Login', description: 'x' } },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
-    );
-
-    const txt = buildLlmsTxt(metadata, 'https://asilidesign.fr');
-
-    expect(txt).not.toContain('Login');
+    expect(
+      llmsDe(buildPageSeoFr('login', '/login', { title: 'Login' }, { index: false })),
+    ).not.toContain('Login');
   });
 });
 
@@ -518,32 +345,18 @@ describe('buildLlmsFullTxt', () => {
     siteNavigation: {},
   } as never;
 
+  const llmsFullDe = (...pages: PageSeo[]): string =>
+    buildLlmsFullTxt(buildSeoMetadata(pages, { global: baseGlobal }), BASE_URL);
+
+  const offre = (fr: Partial<PageSeo['locales'][string]>, overrides: Partial<PageSeo> = {}) =>
+    buildPageSeoFr('offer', '/offer', { title: 'Offre', ...fr }, overrides);
+
   it('emet un header avec le nom du site', () => {
-    const metadata = buildMetadata([] as SeoMetadataFile['pages'], {
-      global: baseGlobal,
-    });
-
-    const txt = buildLlmsFullTxt(metadata, 'https://asilidesign.fr');
-
-    expect(txt).toContain('# Asili Design — llms-full');
+    expect(llmsFullDe()).toContain('# Asili Design — llms-full');
   });
 
   it('emet une section par page indexable avec URL et description', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'offer',
-          path: '/offer',
-          index: true,
-          locales: {
-            fr: { title: 'Offre', description: "Voir l'offre detaillee" },
-          },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
-    );
-
-    const txt = buildLlmsFullTxt(metadata, 'https://asilidesign.fr');
+    const txt = llmsFullDe(offre({ description: "Voir l'offre detaillee" }));
 
     expect(txt).toContain('## Offre');
     expect(txt).toContain('- URL: https://asilidesign.fr/fr/offer');
@@ -551,112 +364,35 @@ describe('buildLlmsFullTxt', () => {
   });
 
   it('inclut Last modified quand lastmod est defini', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'offer',
-          path: '/offer',
-          index: true,
-          lastmod: '2026-05-01',
-          locales: { fr: { title: 'Offre', description: 'x' } },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
+    expect(llmsFullDe(offre({}, { lastmod: '2026-05-01' }))).toContain(
+      '- Last modified: 2026-05-01',
     );
-
-    const txt = buildLlmsFullTxt(metadata, 'https://asilidesign.fr');
-
-    expect(txt).toContain('- Last modified: 2026-05-01');
   });
 
   it('inclut Keywords (max 10) quand definis', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'offer',
-          path: '/offer',
-          index: true,
-          locales: {
-            fr: {
-              title: 'Offre',
-              description: 'x',
-              keywords: ['a', 'b', 'c'],
-            },
-          },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
-    );
-
-    const txt = buildLlmsFullTxt(metadata, 'https://asilidesign.fr');
-
-    expect(txt).toContain('- Keywords: a, b, c');
+    expect(llmsFullDe(offre({ keywords: ['a', 'b', 'c'] }))).toContain('- Keywords: a, b, c');
   });
 
   it('omet keywords si liste vide', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'offer',
-          path: '/offer',
-          index: true,
-          locales: {
-            fr: { title: 'Offre', description: 'x', keywords: [] },
-          },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
-    );
-
-    const txt = buildLlmsFullTxt(metadata, 'https://asilidesign.fr');
-
-    expect(txt).not.toContain('- Keywords:');
+    expect(llmsFullDe(offre({ keywords: [] }))).not.toContain('- Keywords:');
   });
 
   it('traite home en mappant son path sur /', () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'home',
-          path: '/whatever',
-          index: true,
-          locales: { fr: { title: 'Accueil', description: 'x' } },
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
-    );
-
-    const txt = buildLlmsFullTxt(metadata, 'https://asilidesign.fr');
+    const txt = llmsFullDe(buildPageSeoFr('home', '/whatever', { title: 'Accueil' }));
 
     expect(txt).toContain('- URL: https://asilidesign.fr/fr');
     expect(txt).not.toContain('/whatever');
   });
 
   it("ignore les pages dont le defaultLocale n'a pas de meta (ni fallback)", () => {
-    const metadata = buildMetadata(
-      [
-        {
-          id: 'ghost',
-          path: '/ghost',
-          index: true,
-          locales: {} as Record<string, never>,
-        },
-      ] as SeoMetadataFile['pages'],
-      { global: baseGlobal },
+    expect(llmsFullDe(buildPageSeoFr('ghost', '/ghost', {}, { locales: {} }))).not.toContain(
+      '/ghost',
     );
-
-    const txt = buildLlmsFullTxt(metadata, 'https://asilidesign.fr');
-
-    expect(txt).not.toContain('/ghost');
   });
 
   it('retombe sur Asili Design quand global.localBusiness est absent', () => {
-    const metadata = buildMetadata([] as SeoMetadataFile['pages'], {
-      global: undefined,
-    });
-
-    const txt = buildLlmsFullTxt(metadata, 'https://asilidesign.fr');
-
-    expect(txt).toContain('# Asili Design — llms-full');
+    expect(buildLlmsFullTxt(sansPage({ global: undefined }), BASE_URL)).toContain(
+      '# Asili Design — llms-full',
+    );
   });
 });

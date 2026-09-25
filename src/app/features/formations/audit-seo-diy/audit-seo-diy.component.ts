@@ -1,33 +1,54 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import {
-  SlideComponent,
-  SlideCtaComponent,
-  SlideDeckComponent,
-  SlideGridComponent,
-  SlideHeroComponent,
-  SlideImageComponent,
-  SlideQuoteComponent,
-  SlideStatsComponent,
-} from '../../../shared/slides';
+import { DECK_FORMATION } from '../shared/deck-formation';
 
 @Component({
   selector: 'app-audit-seo-diy',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    SlideDeckComponent,
-    SlideComponent,
-    SlideHeroComponent,
-    SlideImageComponent,
-    SlideStatsComponent,
-    SlideGridComponent,
-    SlideQuoteComponent,
-    SlideCtaComponent,
-  ],
+  imports: [DECK_FORMATION],
   templateUrl: './audit-seo-diy.component.html',
   styleUrl: './audit-seo-diy.component.scss',
 })
 export class AuditSeoDiyComponent {
+  protected readonly puces = {
+    check1: [
+      $localize`:@@formations.audit-seo-diy.check1.bullets.0: Tapez sur Google : "site:votrenomdedomaine.fr" `,
+      $localize`:@@formations.audit-seo-diy.check1.bullets.1: Google affiche les pages qu'il a indexees — si la liste est vide ou tres courte, alerte rouge `,
+      $localize`:@@formations.audit-seo-diy.check1.bullets.2: Rendez-vous sur Google Search Console (gratuit) pour demander l'indexation manuelle `,
+      $localize`:@@formations.audit-seo-diy.check1.bullets.3: Cas verifie : 1 client sur 4 decouvre ici qu'il bloque accidentellement Google via un fichier robots.txt mal configure `,
+    ],
+    check2: [
+      $localize`:@@formations.audit-seo-diy.check2.bullets.0: Ouvrez chaque page importante de votre site, regardez l'onglet navigateur `,
+      $localize`:@@formations.audit-seo-diy.check2.bullets.1: Un bon titre : "Photographe mariage Lyon — Asilidesign" (metier + ville + marque) `,
+      $localize`:@@formations.audit-seo-diy.check2.bullets.2: Un mauvais titre : "Accueil" ou "Bienvenue sur notre site" `,
+      $localize`:@@formations.audit-seo-diy.check2.bullets.3: Outil gratuit : l'extension SEO Meta in 1 Click sur Chrome affiche le titre de chaque page en un clic `,
+    ],
+    check3: [
+      $localize`:@@formations.audit-seo-diy.check3.bullets.0: Rendez-vous sur pagespeed.web.dev (outil Google gratuit) `,
+      $localize`:@@formations.audit-seo-diy.check3.bullets.1: Collez l'URL de votre page d'accueil — le test prend 30 secondes `,
+      $localize`:@@formations.audit-seo-diy.check3.bullets.2: Verifiez : score mobile >= 70 (bon), entre 50-70 (ameliorable), < 50 (urgence) `,
+      $localize`:@@formations.audit-seo-diy.check3.bullets.3: Les 3 causes frequentes : images trop lourdes, trop de plugins WordPress, pas de mise en cache `,
+    ],
+    check4: [
+      $localize`:@@formations.audit-seo-diy.check4.bullets.0: Ouvrez votre site sur votre propre smartphone `,
+      $localize`:@@formations.audit-seo-diy.check4.bullets.1: Test simple : un visiteur peut-il commander/reserver/vous contacter sans zoomer ni deroulement horizontal ? `,
+      $localize`:@@formations.audit-seo-diy.check4.bullets.2: Bouton trop petit, texte qui deborde, formulaire inutilisable au pouce = red flag `,
+      $localize`:@@formations.audit-seo-diy.check4.bullets.3: Outil gratuit : search.google.com/test/mobile-friendly — verdict Google en 20 secondes `,
+    ],
+    check5: [
+      $localize`:@@formations.audit-seo-diy.check5.bullets.0: Listez les 10 questions que vos clients vous posent avant d'acheter `,
+      $localize`:@@formations.audit-seo-diy.check5.bullets.1: Verifiez : chacune de ces questions a-t-elle une reponse claire (50-100 mots) sur votre site ? `,
+      $localize`:@@formations.audit-seo-diy.check5.bullets.2: Si non, creez une page FAQ ou un blog avec 1 question = 1 page dediee `,
+      $localize`:@@formations.audit-seo-diy.check5.bullets.3: Bonus IA-friendly : utilisez des titres H2 au format question ("Combien coute un audit SEO ?") `,
+    ],
+    quandaider: [
+      $localize`:@@formations.audit-seo-diy.quandaider.bullets.0: Chute brutale de trafic (> 30% sur un mois) — il y a une cause technique ou penalite a identifier `,
+      $localize`:@@formations.audit-seo-diy.quandaider.bullets.1: Migration de site prevue — un audit prealable evite de perdre 100% du trafic `,
+      $localize`:@@formations.audit-seo-diy.quandaider.bullets.2: Site e-commerce avec > 500 pages — la massification change les priorites d'audit `,
+      $localize`:@@formations.audit-seo-diy.quandaider.bullets.3: Concurrence agressive sur des mots-cles a fort CA — analyse concurrentielle approfondie necessaire `,
+    ],
+  };
+
   protected readonly constatStats = [
     {
       value: '68%',

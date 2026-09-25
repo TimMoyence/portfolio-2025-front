@@ -1,5 +1,11 @@
-import { InjectionToken, inject } from '@angular/core';
-import type { Sync, SyncOptions } from '../../../cours/runtime/core/sync';
+import { InjectionToken, inject, type WritableSignal } from '@angular/core';
+import type {
+  ResultatsListener,
+  StatutFlux,
+  Sync,
+  SyncListener,
+  SyncOptions,
+} from '../../../cours/runtime/core/sync';
 import { createSync } from '../../../cours/runtime/core/sync';
 import { getApiBaseUrl } from '../../core/http/api-config';
 import { AuthStateService } from '../../core/services/auth-state.service';
@@ -7,6 +13,21 @@ import { AuthStateService } from '../../core/services/auth-state.service';
 export type CreateurFlux = (options: SyncOptions) => Sync;
 
 export type CreateurFluxFormateur = (sessionId: string) => Sync;
+
+export interface EcouteFormateur {
+  readonly etat: SyncListener;
+  readonly resultats: ResultatsListener;
+  readonly suivi: WritableSignal<StatutFlux | null>;
+  readonly retenir: (flux: Sync) => void;
+}
+
+export function ouvrirLeFluxFormateur(flux: Sync, ecoute: EcouteFormateur): void {
+  flux.onState(ecoute.etat);
+  flux.onResultats(ecoute.resultats);
+  flux.onStatut((statut) => ecoute.suivi.set(statut));
+  ecoute.retenir(flux);
+  flux.ouvrir();
+}
 
 export const CREATEUR_FLUX = new InjectionToken<CreateurFlux>('CREATEUR_FLUX', {
   providedIn: 'root',

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -6,23 +5,15 @@ import {
   OnInit,
   inject,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AUTH_PORT, type AuthPort } from '../../core/ports/auth.port';
-import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
-import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
-import { AuthSuccessComponent } from '../../shared/components/auth-success/auth-success.component';
 import { extractErrorMessage } from '../../shared/utils/http-error.utils';
+import { IMPORTS_PAGE_AUTH } from './page-auth.imports';
 
 @Component({
   selector: 'app-verify-email',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    RevealOnScrollDirective,
-    AuthShellComponent,
-    AuthSuccessComponent,
-  ],
+  imports: [IMPORTS_PAGE_AUTH],
   templateUrl: './verify-email.component.html',
   styleUrl: './verify-email.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

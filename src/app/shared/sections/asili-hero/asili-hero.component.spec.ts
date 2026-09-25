@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
-import { isolateAnimReady } from '../../../../testing/anim-ready';
 import { rendreLHoteNavigateur } from '../../../../testing/montage-page';
+import { decrireRenduServeur, decrireSectionAsili } from '../../../../testing/section-asili';
 import { AsiliHeroComponent } from './asili-hero.component';
 
 const KICKER = 'Studio digital & IA · Bordeaux';
@@ -15,22 +15,11 @@ function attachSoGetComputedStyleAppliesTheCascade(fixture: ComponentFixture<unk
 
 describe('AsiliHeroComponent', () => {
   let fixture: ComponentFixture<AsiliHeroComponent>;
+  const monter = decrireSectionAsili(AsiliHeroComponent);
 
-  function setup(platformId: 'browser' | 'server' = 'browser'): void {
-    TestBed.configureTestingModule({
-      imports: [AsiliHeroComponent],
-      providers: [{ provide: PLATFORM_ID, useValue: platformId }],
-    });
-    fixture = TestBed.createComponent(AsiliHeroComponent);
+  function setup(): void {
+    fixture = monter();
   }
-
-  isolateAnimReady();
-
-  it('se cree', () => {
-    setup();
-    fixture.detectChanges();
-    expect(fixture.componentInstance).toBeTruthy();
-  });
 
   it('structure le hero (.hero, .hero-inner, .hero-grid, voile)', () => {
     setup();
@@ -125,13 +114,13 @@ describe('AsiliHeroComponent', () => {
     expect(fixture.nativeElement.querySelector('.scroll-hint')).toBeNull();
   });
 
-  it("reste rendu cote serveur (SSR fail-open : pas d'anim-ready)", () => {
-    setup('server');
-    fixture.componentRef.setInput('titlePre', 'Clarifier.');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('h1.hero-title')).not.toBeNull();
-    expect(document.documentElement.classList).not.toContain('anim-ready');
-  });
+  decrireRenduServeur(
+    monter,
+    (hote) => {
+      expect(hote.querySelector('h1.hero-title')).not.toBeNull();
+    },
+    { titlePre: 'Clarifier.' },
+  );
 
   describe('avec projection (page hote)', () => {
     @Component({

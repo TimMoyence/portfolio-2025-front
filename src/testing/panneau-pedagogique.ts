@@ -1,13 +1,33 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed, tick } from '@angular/core/testing';
 import { CoursPanneauPedagogiqueComponent } from '../app/features/cours/presentateur/cours-panneau-pedagogique.component';
-import { buildEcranDeroule, buildGuideFormateur } from './factories/formations.factory';
+import { FORMATIONS_PORT, type FormationsPort } from '../app/core/ports/formations.port';
+import {
+  buildEcranDeroule,
+  buildGuideFormateur,
+  buildResultatQuestion,
+} from './factories/formations.factory';
+import { setupTestBed } from './setup-test-bed';
 
 export type FixtureDuPanneau = ComponentFixture<CoursPanneauPedagogiqueComponent>;
 
 export const SEANCE_DU_PANNEAU = 'seance-1';
 
 export const ECRAN_DU_PANNEAU = 'ecran-1';
+
+export function preparerLePanneau(port: jasmine.SpyObj<FormationsPort>): void {
+  setupTestBed({
+    imports: [CoursPanneauPedagogiqueComponent],
+    providers: [{ provide: FORMATIONS_PORT, useValue: port }],
+  });
+}
+
+export function relireLePanneau(fixture: FixtureDuPanneau): void {
+  fixture.componentRef.setInput('resultats', [buildResultatQuestion()]);
+  fixture.detectChanges();
+  tick();
+  fixture.detectChanges();
+}
 
 export function monterLePanneau(sessionId: string | null = SEANCE_DU_PANNEAU): FixtureDuPanneau {
   const fixture = TestBed.createComponent(CoursPanneauPedagogiqueComponent);

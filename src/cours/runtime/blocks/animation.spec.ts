@@ -1,5 +1,6 @@
 import { DUREE_ETAPE_MS, caler, jouerSuite, suiteVersLeMaximum } from './animation';
 import type { ParametreReglable } from './curseurs';
+import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
 
 const TAUX: ParametreReglable = {
   cle: 'taux',
@@ -44,13 +45,8 @@ describe('animation des curseurs', () => {
       appliquees.push(etape);
     };
 
-    beforeEach(() => {
+    sousHorlogeSimulee(() => {
       appliquees = [];
-      jasmine.clock().install();
-    });
-
-    afterEach(() => {
-      jasmine.clock().uninstall();
     });
 
     it('laisse trois secondes entre deux changements de valeur', () => {

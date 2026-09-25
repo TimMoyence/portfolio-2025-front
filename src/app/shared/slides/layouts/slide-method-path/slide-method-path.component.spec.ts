@@ -73,15 +73,21 @@ describe('SlideMethodPathComponent', () => {
     expect(etapeAffichee(fixture)).toBe('Décider');
   });
 
+  function etapeApres(
+    fixture: ComponentFixture<SlideMethodPathComponent>,
+    delaiMs: number,
+  ): string {
+    tick(delaiMs);
+    fixture.detectChanges();
+    const etape = etapeAffichee(fixture);
+    discardPeriodicTasks();
+    return etape;
+  }
+
   it('fait défiler les étapes quand le mouvement est permis', fakeAsync(() => {
     simulerPreferenceDeMouvement(false);
-    const fixture = monter();
 
-    tick(DELAI_AUTOPLAY_MS);
-    fixture.detectChanges();
-
-    expect(etapeAffichee(fixture)).toBe('Contrôler');
-    discardPeriodicTasks();
+    expect(etapeApres(monter(), DELAI_AUTOPLAY_MS)).toBe('Contrôler');
   }));
 
   it('suspend le défilement tant que le pointeur survole la méthode', fakeAsync(() => {
@@ -91,21 +97,13 @@ describe('SlideMethodPathComponent', () => {
     (fixture.nativeElement as HTMLElement)
       .querySelector('.slide-method-path')
       ?.dispatchEvent(new MouseEvent('mouseenter'));
-    tick(DELAI_AUTOPLAY_MS * 2);
-    fixture.detectChanges();
 
-    expect(etapeAffichee(fixture)).toBe('Lire');
-    discardPeriodicTasks();
+    expect(etapeApres(fixture, DELAI_AUTOPLAY_MS * 2)).toBe('Lire');
   }));
 
   it('ne fait pas défiler les étapes quand l utilisateur demande moins de mouvement', fakeAsync(() => {
     simulerPreferenceDeMouvement(true);
-    const fixture = monter();
 
-    tick(DELAI_AUTOPLAY_MS * 2);
-    fixture.detectChanges();
-
-    expect(etapeAffichee(fixture)).toBe('Lire');
-    discardPeriodicTasks();
+    expect(etapeApres(monter(), DELAI_AUTOPLAY_MS * 2)).toBe('Lire');
   }));
 });

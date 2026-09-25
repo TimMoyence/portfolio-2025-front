@@ -1,59 +1,40 @@
-import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { ContactComponent } from './contact.component';
 import { createContactPortStubWithDefault } from '../../../testing/factories/contact.factory';
+import { pageMontee } from '../../../testing/montage-page';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 
 describe('ContactComponent', () => {
-  let component: ContactComponent;
-  let fixture: ComponentFixture<ContactComponent>;
-
-  beforeEach(async () => {
-    await setupTestBed({
-      router: true,
-      imports: [ContactComponent],
-      providers: [
-        {
-          provide: CONTACT_PORT,
-          useValue: createContactPortStubWithDefault(),
-        },
-      ],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(ContactComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  const page = pageMontee(ContactComponent, {
+    providers: [{ provide: CONTACT_PORT, useFactory: createContactPortStubWithDefault }],
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(page.composant).toBeTruthy();
   });
 
   it('should render main title', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const heading = compiled.querySelector('[data-testid="hero-title"]');
-    expect(heading?.textContent).toContain(component.hero.title);
+    const heading = page.racine.querySelector('[data-testid="hero-title"]');
+    expect(heading?.textContent).toContain(page.composant.hero.title);
   });
 
   it('devrait afficher le formulaire de contact avec les champs texte', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const form = compiled.querySelector('form');
+    const form = page.racine.querySelector('form');
     expect(form).not.toBeNull();
 
     const inputs = form?.querySelectorAll('input:not([type=radio]):not([type=checkbox])');
-    expect(inputs?.length).toBeGreaterThanOrEqual(component.contactFields.length);
+    expect(inputs?.length).toBeGreaterThanOrEqual(page.composant.contactFields.length);
 
-    for (const field of component.contactFields) {
-      const input = compiled.querySelector(`#${field.key}`);
+    for (const field of page.composant.contactFields) {
+      const input = page.racine.querySelector(`#${field.key}`);
       expect(input).withContext(`champ ${field.key} attendu`).not.toBeNull();
     }
   });
 
   it('devrait afficher le selecteur de sujet', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const subjectSelect = compiled.querySelector('select[name="subject"]');
+    const subjectSelect = page.racine.querySelector('select[name="subject"]');
     expect(subjectSelect).not.toBeNull();
 
     const options = subjectSelect?.querySelectorAll('option');
@@ -61,39 +42,33 @@ describe('ContactComponent', () => {
   });
 
   it('devrait afficher les boutons radio de role', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const roleRadios = compiled.querySelectorAll('input[name="role"]');
-    expect(roleRadios.length).toBe(component.contactInfo.roles.length);
+    const roleRadios = page.racine.querySelectorAll('input[name="role"]');
+    expect(roleRadios.length).toBe(page.composant.contactInfo.roles.length);
   });
 
   it('devrait afficher le champ message (textarea)', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const textarea = compiled.querySelector('textarea[name="message"]');
-    expect(textarea).not.toBeNull();
+    expect(page.racine.querySelector('textarea[name="message"]')).not.toBeNull();
   });
 
   it('devrait afficher la case a cocher des conditions', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const termsCheckbox = compiled.querySelector('input[name="terms"][type="checkbox"]');
-    expect(termsCheckbox).not.toBeNull();
+    expect(page.racine.querySelector('input[name="terms"][type="checkbox"]')).not.toBeNull();
   });
 
   it("devrait afficher le bouton d'envoi", () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const submitButton = compiled.querySelector('button[type="submit"]');
-    expect(submitButton).not.toBeNull();
+    expect(page.racine.querySelector('button[type="submit"]')).not.toBeNull();
   });
 
   it('devrait initialiser le formulaire avec isContactLoading a false', () => {
-    expect(component.isContactLoading).toBeFalse();
-    expect(component.isContactSubmitted).toBeFalse();
+    expect(page.composant.isContactLoading).toBeFalse();
+    expect(page.composant.isContactSubmitted).toBeFalse();
   });
 
   it('devrait initialiser le formulaire avec les champs vides', () => {
-    expect(component.contactForm.email).toBe('');
-    expect(component.contactForm.firstName).toBe('');
-    expect(component.contactForm.message).toBe('');
-    expect(component.contactForm.terms).toBeFalse();
+    const { contactForm } = page.composant;
+    expect(contactForm.email).toBe('');
+    expect(contactForm.firstName).toBe('');
+    expect(contactForm.message).toBe('');
+    expect(contactForm.terms).toBeFalse();
   });
 
   // Contraste mesuré sur le fond de particules qu'un champ transparent laisse
@@ -102,14 +77,14 @@ describe('ContactComponent', () => {
   // placeholder est seulement contraint à ne pas l'être, sa teinte restant un
   // point ouvert.
   it('devrait afficher la valeur du sujet en couleur pleine et le placeholder en attenue', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const select = compiled.querySelector('select[name="subject"]') as HTMLSelectElement;
+    const { composant, fixture } = page;
+    const select = page.racine.querySelector('select[name="subject"]') as HTMLSelectElement;
 
     expect(select.classList.contains('text-scheme-text')).toBeFalse();
 
-    component.contactForm = {
-      ...component.contactForm,
-      subject: component.contactInfo.subjects[0],
+    composant.contactForm = {
+      ...composant.contactForm,
+      subject: composant.contactInfo.subjects[0],
     };
     fixture.componentRef.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -119,15 +94,14 @@ describe('ContactComponent', () => {
   });
 
   it('devrait afficher les libelles de champs en couleur pleine, y compris au repos', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
     const labelledIds = [
-      ...component.contactFields.map((field) => field.key),
+      ...page.composant.contactFields.map((field) => field.key),
       'message',
       'subject',
     ];
 
     for (const id of labelledIds) {
-      const label = compiled.querySelector(`label[for="${id}"]`);
+      const label = page.racine.querySelector(`label[for="${id}"]`);
       expect(label).withContext(`label du champ ${id}`).not.toBeNull();
       expect(label?.classList.contains('text-scheme-text'))
         .withContext(`label du champ ${id}`)
@@ -149,8 +123,7 @@ describe('ContactComponent', () => {
   });
 
   it('devrait afficher le libelle du groupe de roles en couleur pleine', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const groupLabel = compiled.querySelector('fieldset')?.previousElementSibling;
+    const groupLabel = page.racine.querySelector('fieldset')?.previousElementSibling;
 
     expect(groupLabel).not.toBeNull();
     expect(groupLabel?.classList.contains('text-scheme-text')).toBeTrue();
@@ -158,10 +131,9 @@ describe('ContactComponent', () => {
   });
 
   it('devrait afficher les libelles de role en couleur pleine', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const roleLabels = compiled.querySelectorAll('fieldset label p');
+    const roleLabels = page.racine.querySelectorAll('fieldset label p');
 
-    expect(roleLabels.length).toBe(component.contactInfo.roles.length);
+    expect(roleLabels.length).toBe(page.composant.contactInfo.roles.length);
     for (const roleLabel of Array.from(roleLabels)) {
       expect(roleLabel.classList.contains('text-scheme-text'))
         .withContext(`role « ${roleLabel.textContent?.trim()} »`)

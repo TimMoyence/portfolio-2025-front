@@ -1,4 +1,7 @@
-import { decrireToolkitDeFormation } from '../../../../../testing/toolkit-de-formation';
+import {
+  decrireToolkitDeFormation,
+  verifierFaqDuToolkit,
+} from '../../../../../testing/toolkit-de-formation';
 import { ToolkitAuditSeoComponent } from './toolkit-audit-seo.component';
 
 describe('ToolkitAuditSeoComponent', () => {
@@ -8,7 +11,6 @@ describe('ToolkitAuditSeoComponent', () => {
   });
 
   it('devrait afficher la FAQ (AEO / FAQPage signal)', () => {
-    expect(rendu().textContent?.toLowerCase()).toContain('questions');
-    expect(rendu().querySelectorAll('h3').length).toBeGreaterThanOrEqual(3);
+    verifierFaqDuToolkit(rendu(), 'h3', 3);
   });
 });

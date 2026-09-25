@@ -9,9 +9,8 @@ import {
   signal,
   output,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
-import { loadInteraction } from '../interactions.util';
+import { chargerInteraction } from '../interactions.util';
 import type { ModeInteraction } from '../mode-interaction';
 
 export interface QuizInteraction {
@@ -90,22 +89,15 @@ export class SlideQuizComponent implements OnInit {
   }
 
   private load(): void {
-    const inline = this.questionData();
-    if (inline !== null) {
-      this.quiz.set(inline);
-      return;
-    }
-    if (this.port === null) {
-      this.error.set(true);
-      return;
-    }
-    loadInteraction<QuizInteraction>(
-      this.port.getInteractions(this.slug()),
-      'quiz',
-      this.interactionId(),
-      () => this.error.set(true),
-    )
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((found) => found && this.quiz.set(found));
+    chargerInteraction<QuizInteraction>({
+      enLigne: this.questionData(),
+      port: this.port,
+      slug: this.slug(),
+      type: 'quiz',
+      interactionId: this.interactionId(),
+      cible: this.quiz,
+      erreur: this.error,
+      destroyRef: this.destroyRef,
+    });
   }
 }

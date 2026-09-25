@@ -1,9 +1,7 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { evaluerExpression } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpProductionEtayee, lireAttendusDuCorrige } from './production';
-import { projeterMetadonnees } from './projection';
-import { estObjet, type DetailDeVerdict } from './retours';
+import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
+import { type DetailDeVerdict } from './retours';
 import { lireNombreSaisi } from './saisie-numerique';
 
 export type RoleColonne = 'donnee' | 'saisie' | 'deduite';
@@ -29,16 +27,13 @@ export interface TableSynthese {
   readonly decimales: number;
 }
 
-export interface TableBuildPlanPublic {
-  readonly id: string;
-  readonly intitule: string;
+export interface TableBuildPlanPublic extends PlanEtaye {
   readonly consignes: readonly string[];
   readonly echeances: number;
   readonly libellesLignes: readonly string[];
   readonly parametres: Readonly<Record<string, number>>;
   readonly colonnes: readonly TableColonne[];
   readonly synthese: readonly TableSynthese[];
-  readonly metadonnees: MetadonneesBrique;
 }
 
 interface SaisieDeTableau {
@@ -59,7 +54,6 @@ const STYLE_CELLULE = 'fp-table-build__cellule fp-montant';
 const STYLE_RANG = 'fp-table-build__rang';
 const VIDE = escapeHtml('');
 const LECTURE_SEULE = safeHtml`readonly`;
-const DESACTIVE = safeHtml`disabled`;
 const DECIMALES_MAX = 6;
 const COLONNE_DES_COEFFICIENTS = 'coef';
 const ROLES: readonly RoleColonne[] = ['donnee', 'saisie', 'deduite'];
@@ -108,20 +102,23 @@ function copierColonne(colonne: TableColonne): TableColonne {
 
 function copierPlan(source: TableBuildPlanPublic): TableBuildPlanPublic {
   return {
-    id: source.id,
-    intitule: source.intitule,
+    ...copierLEnonce(source),
     consignes: [...source.consignes],
     echeances: Number.isFinite(source.echeances) ? Math.max(0, Math.trunc(source.echeances)) : 0,
     libellesLignes: [...source.libellesLignes],
     parametres: nombresFinis(source.parametres),
     colonnes: source.colonnes.map(copierColonne),
     synthese: source.synthese.map((element) => ({ ...element })),
-    metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
 
 export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, SaisieDeTableau> {
   protected readonly evenementDeSoumission = 'fp-table-build-submit';
+  protected readonly bloc = 'table-build';
+  protected readonly lectureDuCorrige = {
+    type: 'tableau',
+    champs: { rang: 'number', cle: 'string', valeur: 'number' },
+  } as const;
   private tapees: Record<string, string> = {};
   private suivie: string | null = null;
 
@@ -133,19 +130,15 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     return this.interne;
   }
 
-  set brouillon(valeur: unknown) {
-    if (!estObjet(valeur) || this.soumis) {
-      return;
-    }
+  protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
     const saisies = new Set(this.cellulesASaisir());
     this.tapees = Object.fromEntries(
-      Object.entries(valeur).filter(
+      Object.entries(brouillon).filter(
         (entree): entree is [string, string] =>
           saisies.has(entree[0]) && typeof entree[1] === 'string',
       ),
     );
-    this.noterBrouillonRepris();
-    this.refreshSiConnecte();
+    return true;
   }
 
   protected scene(plan: TableBuildPlanPublic): EscapedHtml {
@@ -163,7 +156,6 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
 
   protected atelier(plan: TableBuildPlanPublic): EscapedHtml {
     const lignes = this.batir();
-    const bloque = this.verrouille() && !this.enReprise();
     return safeHtml`
       <section class="fp-carte fp-scene fp-table-build__atelier">
         <p class="fp-table-build__consigne">${escapeHtml(this.texte('table-build-consigne'))}</p>
@@ -171,21 +163,16 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
         ${this.tableau(lignes, 'saisie')}
         ${this.soldeFinal(lignes)}
         ${this.synthese(lignes)}
-        <div class="fp-table-build__actions">
-          <button type="button" class="fp-table-build__valider" data-testid="valider" ${bloque ? DESACTIVE : VIDE}>${escapeHtml(this.texte(this.enReprise() ? 'production-renvoyer' : 'valider'))}</button>
-          ${this.boutonNeSaitPas(this.verrouille())}
-        </div>
-        <p class="fp-table-build__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
-        ${this.verdictDeProduction(this.interneVerdict, 'table-build-verdict', this.lignesJustes(), this.lignesVerifiees())}
-        ${
+        ${this.actionsDeProduction()}
+        ${this.suiviDeProduction(
+          { justes: this.lignesJustes(), total: this.lignesVerifiees() },
           this.corrigeVisible()
             ? this.tableau(
                 this.batir((rang, cle) => this.attenduDe(rang, cle)),
                 'correction',
               )
-            : VIDE
-        }
-        ${this.annonces()}
+            : VIDE,
+        )}
       </section>
     `;
   }
@@ -194,27 +181,13 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     for (const champ of racine.querySelectorAll<HTMLInputElement>('[data-role="saisie"]')) {
       this.brancher(champ);
     }
-    racine
-      .querySelector<HTMLButtonElement>('[data-testid="valider"]')
-      ?.addEventListener('click', () => this.valider());
-    racine
-      .querySelector<HTMLButtonElement>('[data-testid="je-ne-sais-pas"]')
-      ?.addEventListener('click', () => this.neSaitPas());
-  }
-
-  protected lireLesAttendus(valeur: unknown): readonly SaisieDeTableau[] {
-    return lireAttendusDuCorrige<SaisieDeTableau>(valeur, 'tableau', {
-      rang: 'number',
-      cle: 'string',
-      valeur: 'number',
-    });
   }
 
   protected relacherLaSaisie(): void {
     this.suivie = null;
   }
 
-  protected reinitialiserLaSaisie(): void {
+  protected effacerLaSaisie(): void {
     this.relacherLaSaisie();
     this.tapees = {};
   }
@@ -235,7 +208,7 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
       return true;
     }
     const [rang, colonne] = cle.split(':');
-    return this.correction === 0 && this.detailDe(Number(rang), colonne)?.juste === false;
+    return this.correction === 0 && this.detailDeLaCellule(Number(rang), colonne)?.juste === false;
   }
 
   private brancher(champ: HTMLInputElement): void {
@@ -349,10 +322,6 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     return nombresFinis({ ...(this.interne?.parametres ?? {}), ...dernier, ...totaux });
   }
 
-  private consignes(plan: TableBuildPlanPublic): EscapedHtml {
-    return this.consignesNumerotees(plan.consignes, 'fp-table-build__consignes');
-  }
-
   private tableau(lignes: readonly LigneBatie[], rendu: RenduDuTableau): EscapedHtml {
     const intitule =
       rendu === 'correction'
@@ -402,15 +371,15 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     `;
   }
 
-  private detailDe(rang: number, cle: string): DetailDeVerdict | null {
-    return this.interneVerdict?.details.find((detail) => detail.cle === `${rang}:${cle}`) ?? null;
+  private detailDeLaCellule(rang: number, cle: string): DetailDeVerdict | null {
+    return this.detailDe(`${rang}:${cle}`);
   }
 
   private cellule(colonne: TableColonne, ligne: LigneBatie, rendu: RenduDuTableau): EscapedHtml {
     const portes = `${PREFIXE_COLONNE}${colonne.cle} ${PREFIXE_LIGNE}${ligne.rang}`;
     const saisie = rendu === 'saisie';
     const contenu = saisie ? this.champ(colonne, ligne) : this.lecture(colonne, ligne, rendu);
-    const detail = saisie ? this.detailDe(ligne.rang, colonne.cle) : null;
+    const detail = saisie ? this.detailDeLaCellule(ligne.rang, colonne.cle) : null;
     const etat = detail === null ? VIDE : this.etatDuDetail(detail);
     return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}" headers="${escapeHtml(portes)}" ${etat}>${contenu}</td>`;
   }
@@ -522,18 +491,18 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
       .filter((saisie) => Number.isFinite(saisie.valeur));
   }
 
-  private valider(): void {
+  protected valider(): void {
     const plan = this.planAValider();
     if (plan === null) {
       return;
     }
     const saisies = this.relever();
     if (saisies.length === 0) {
-      this.refuserLEnvoi('production-vide');
+      this.refuserLEnvoi(this.texte('production-vide'));
       return;
     }
     if (saisies.length < this.cellulesASaisir().length) {
-      this.refuserLEnvoi('table-build-cellule-vide');
+      this.refuserLEnvoi(this.texte('table-build-cellule-vide'));
       return;
     }
     this.conclure({ planId: plan.id, saisies });

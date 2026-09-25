@@ -1,15 +1,16 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpReponse } from './reponse';
-import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import { estObjet } from './retours';
+import {
+  type ContenuDeBrique,
+  type OptionPublique,
+  copierLeSocle,
+  projeterOptions,
+} from './projection';
 
-export interface ExitBilletPublic {
-  readonly id: string;
+export interface ExitBilletPublic extends ContenuDeBrique {
   readonly question: string;
   readonly invite: string;
   readonly options: readonly OptionPublique[];
-  readonly metadonnees: MetadonneesBrique;
 }
 
 const LIMITE_TEXTE_LIBRE = 500;
@@ -19,11 +20,10 @@ const DESACTIVE = safeHtml`disabled`;
 
 function projeterBillet(source: ExitBilletPublic): ExitBilletPublic {
   return {
-    id: source.id,
+    ...copierLeSocle(source),
     question: source.question,
     invite: source.invite,
     options: projeterOptions(source.options),
-    metadonnees: projeterMetadonnees(source.metadonnees),
   };
 }
 
@@ -32,7 +32,7 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
   private choix: string | null = null;
 
   set billet(valeur: ExitBilletPublic | null) {
-    this.poserLaQuestion(valeur, projeterBillet);
+    this.poserLeContenu(valeur, projeterBillet);
     this.refreshSiConnecte();
   }
 
@@ -40,23 +40,15 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
     return this.interne;
   }
 
-  set brouillon(valeur: unknown) {
-    if (!estObjet(valeur) || this.envoye) {
-      return;
-    }
-    const texte = valeur['texteLibre'];
-    const choix = valeur['choix'];
+  protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
+    const texte = brouillon['texteLibre'];
+    const choix = brouillon['choix'];
     this.texteLibre = typeof texte === 'string' ? texte : this.texteLibre;
     this.choix = typeof choix === 'string' ? choix : this.choix;
-    this.noterBrouillonRepris();
-    this.refreshSiConnecte();
+    return true;
   }
 
-  render(): EscapedHtml {
-    const billet = this.billet;
-    if (!billet) {
-      return this.attente();
-    }
+  protected rendreLaQuestion(billet: ExitBilletPublic): EscapedHtml {
     const redaction = this.presentateur()
       ? safeHtml`<p class="fp-exit__invite" data-testid="invite">${escapeHtml(billet.invite)}</p>`
       : safeHtml`<label class="fp-exit__invite" for="${escapeHtml(ID_TEXTE_LIBRE)}">${escapeHtml(billet.invite)}</label>
@@ -77,30 +69,31 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
   }
 
   bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.billet?.id ?? null);
-    if (this.presentateur()) {
-      return;
-    }
-    const champ = racine.querySelector<HTMLTextAreaElement>('[data-testid="texte-libre"]');
-    const envoyer = racine.querySelector<HTMLButtonElement>('[data-testid="envoyer"]');
-    if (champ === null || envoyer === null) {
+    if (!this.suivreEtSaisir(this.billet?.id ?? null)) {
       return;
     }
     const verrouille = this.verrouille();
-    champ.disabled = verrouille;
-    envoyer.disabled = verrouille;
-    champ.addEventListener('input', () => {
-      this.texteLibre = champ.value;
-      this.memoriser();
-    });
-    envoyer.addEventListener('click', () => this.envoyer(champ.value));
+    const branche = this.brancherLaSaisie(
+      racine,
+      { champ: 'texte-libre', bouton: 'envoyer', verrouille },
+      {
+        saisir: (texte) => {
+          this.texteLibre = texte;
+          this.memoriser();
+        },
+        envoyer: (texte) => this.envoyer(texte),
+      },
+    );
+    if (!branche) {
+      return;
+    }
     for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
       bouton.disabled = verrouille;
       bouton.addEventListener('click', () => this.selectionner(bouton.dataset['option'] ?? ''));
     }
   }
 
-  protected effacerLaReponse(): void {
+  protected effacerLaSaisie(): void {
     this.texteLibre = '';
     this.choix = null;
   }
@@ -150,23 +143,17 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
     }
     this.texteLibre = brut;
     if (this.choix === null) {
-      this.message = this.texte('choix-obligatoire');
-      this.refresh();
+      this.refuserLEnvoi(this.texte('choix-obligatoire'));
       return;
     }
     if (brut.length > LIMITE_TEXTE_LIBRE) {
-      this.message = this.messageTropLong();
-      this.refresh();
+      this.refuserLEnvoi(this.messageTropLong());
       return;
     }
-    this.envoye = true;
-    this.message = this.messageApresEnvoi();
-    this.emit('fp-exit-submit', {
+    this.conclureLEnvoi('fp-exit-submit', {
       billetId: this.billet?.id,
       valeur: this.choix,
       texteLibre: brut,
-      dureeMs: this.depuisAffichage(),
     });
-    this.refresh();
   }
 }

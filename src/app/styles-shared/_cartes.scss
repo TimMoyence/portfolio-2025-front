@@ -1,0 +1,53 @@
+@mixin carte-soulevee($levee) {
+  transition:
+    transform 0.5s var(--ease),
+    box-shadow 0.5s var(--ease),
+    border-color 0.4s;
+
+  &:hover {
+    transform: translateY($levee);
+    box-shadow: var(--shadow-card);
+    border-color: var(--sand-deep);
+  }
+}
+
+@mixin verre($fond, $bordure) {
+  background: $fond;
+  border: 1px solid $bordure;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: var(--r-lg);
+}
+
+@mixin pastille($taille, $fond) {
+  width: $taille;
+  height: $taille;
+  flex: none;
+  border-radius: 50%;
+  background: $fond;
+  display: grid;
+  place-items: center;
+}
+
+@mixin placeholder-raye($bande, $padding-etiquette, $interlettrage: null) {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    var(--sand) 0 $bande,
+    var(--ivory) $bande $bande * 2
+  );
+  display: grid;
+  place-items: center;
+
+  span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: $interlettrage;
+    background: rgba(255, 250, 242, 0.85);
+    padding: $padding-etiquette;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line);
+  }
+}

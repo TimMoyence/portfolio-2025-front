@@ -1,8 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { PLATFORM_ID } from '@angular/core';
-import { isolateAnimReady } from '../../../../testing/anim-ready';
 import { decrireEnTeteDeSection } from '../../../../testing/en-tete-de-section';
+import { decrireRenduServeur, decrireSectionAsili } from '../../../../testing/section-asili';
 import { AsiliPillarsComponent, type AsiliPillar } from './asili-pillars.component';
 
 const PILLARS: readonly AsiliPillar[] = [
@@ -26,23 +24,11 @@ const PILLARS: readonly AsiliPillar[] = [
 
 describe('AsiliPillarsComponent', () => {
   let fixture: ComponentFixture<AsiliPillarsComponent>;
+  const monter = decrireSectionAsili(AsiliPillarsComponent, { pillars: PILLARS });
 
-  function setup(platformId: 'browser' | 'server' = 'browser'): void {
-    TestBed.configureTestingModule({
-      imports: [AsiliPillarsComponent],
-      providers: [{ provide: PLATFORM_ID, useValue: platformId }],
-    });
-    fixture = TestBed.createComponent(AsiliPillarsComponent);
-    fixture.componentRef.setInput('pillars', PILLARS);
+  function setup(): void {
+    fixture = monter();
   }
-
-  isolateAnimReady();
-
-  it('se cree', () => {
-    setup();
-    fixture.detectChanges();
-    expect(fixture.componentInstance).toBeTruthy();
-  });
 
   it('rend un pilier par element de `pillars`', () => {
     setup();
@@ -130,10 +116,7 @@ describe('AsiliPillarsComponent', () => {
     },
   );
 
-  it("reste rendu cote serveur (SSR fail-open : pas d'anim-ready)", () => {
-    setup('server');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelectorAll('.pillar').length).toBe(PILLARS.length);
-    expect(document.documentElement.classList).not.toContain('anim-ready');
+  decrireRenduServeur(monter, (hote) => {
+    expect(hote.querySelectorAll('.pillar').length).toBe(PILLARS.length);
   });
 });

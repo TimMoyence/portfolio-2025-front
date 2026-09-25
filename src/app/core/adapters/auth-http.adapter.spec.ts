@@ -1,7 +1,5 @@
-import { HttpTestingController } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { setupTestBed } from '../../../testing/setup-test-bed';
+import { bancAdaptateurHttp, verifierPostRelaye } from '../../../testing/http-attendu';
 import {
   buildAuthSession,
   buildAuthUser,
@@ -13,19 +11,7 @@ import {
 import { AuthHttpAdapter } from './auth-http.adapter';
 
 describe('AuthHttpAdapter', () => {
-  let adapter: AuthHttpAdapter;
-  let httpMock: HttpTestingController;
-
-  beforeEach(() => {
-    setupTestBed({ providers: [AuthHttpAdapter] });
-
-    adapter = TestBed.inject(AuthHttpAdapter);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
-  });
+  const banc = bancAdaptateurHttp(AuthHttpAdapter);
 
   it('should POST credentials to the login endpoint with credentials', () => {
     const credentials = buildLoginCredentials();
@@ -33,15 +19,14 @@ describe('AuthHttpAdapter', () => {
       user: buildAuthUser({ email: credentials.email }),
     });
 
-    adapter.login(credentials).subscribe((session) => {
-      expect(session).toEqual(response);
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/login`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(credentials);
+    const req = verifierPostRelaye(
+      banc.adapter.login(credentials),
+      banc.httpMock,
+      '/auth/login',
+      credentials,
+      response,
+    );
     expect(req.request.withCredentials).toBeTrue();
-    req.flush(response);
   });
 
   it('should POST payload to the register endpoint and return a message', () => {
@@ -57,27 +42,25 @@ describe('AuthHttpAdapter', () => {
       message: 'Inscription reussie. Un email de verification a ete envoye a votre adresse.',
     };
 
-    adapter.register(payload).subscribe((result) => {
-      expect(result).toEqual(response);
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/register`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(payload);
-    req.flush(response);
+    verifierPostRelaye(
+      banc.adapter.register(payload),
+      banc.httpMock,
+      '/auth/register',
+      payload,
+      response,
+    );
   });
 
   it('should POST idToken to /auth/google', () => {
     const session = buildAuthSession();
 
-    adapter.googleAuth('google-id-token').subscribe((result) => {
-      expect(result).toEqual(session);
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/google`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual({ idToken: 'google-id-token' });
-    req.flush(session);
+    verifierPostRelaye(
+      banc.adapter.googleAuth('google-id-token'),
+      banc.httpMock,
+      '/auth/google',
+      { idToken: 'google-id-token' },
+      session,
+    );
   });
 
   it('should POST email to /auth/forgot-password', () => {
@@ -86,42 +69,39 @@ describe('AuthHttpAdapter', () => {
       message: 'Si un compte existe avec cet email, un lien de reinitialisation a ete envoye.',
     };
 
-    adapter.requestPasswordReset(payload).subscribe((result) => {
-      expect(result).toEqual(response);
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/forgot-password`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(payload);
-    req.flush(response);
+    verifierPostRelaye(
+      banc.adapter.requestPasswordReset(payload),
+      banc.httpMock,
+      '/auth/forgot-password',
+      payload,
+      response,
+    );
   });
 
   it('should POST token and password to /auth/reset-password', () => {
     const payload = buildResetPasswordPayload();
     const response = { message: 'Mot de passe reinitialise avec succes.' };
 
-    adapter.resetPassword(payload).subscribe((result) => {
-      expect(result).toEqual(response);
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/reset-password`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(payload);
-    req.flush(response);
+    verifierPostRelaye(
+      banc.adapter.resetPassword(payload),
+      banc.httpMock,
+      '/auth/reset-password',
+      payload,
+      response,
+    );
   });
 
   it('should POST password to /auth/set-password', () => {
     const payload = buildSetPasswordPayload();
     const user = buildAuthUser({ id: 'user-1', email: 'john@example.com' });
 
-    adapter.setPassword(payload).subscribe((result) => {
-      expect(result).toEqual(user);
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/set-password`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(payload);
-    req.flush(user);
+    verifierPostRelaye(
+      banc.adapter.setPassword(payload),
+      banc.httpMock,
+      '/auth/set-password',
+      payload,
+      user,
+    );
   });
 
   it('should PATCH profile data to /auth/profile', () => {
@@ -132,11 +112,11 @@ describe('AuthHttpAdapter', () => {
       phone: null,
     });
 
-    adapter.updateProfile(payload).subscribe((result) => {
+    banc.adapter.updateProfile(payload).subscribe((result) => {
       expect(result).toEqual(user);
     });
 
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/profile`);
+    const req = banc.httpMock.expectOne(`${environment.apiBaseUrl}/auth/profile`);
     expect(req.request.method).toBe('PATCH');
     expect(req.request.body).toEqual(payload);
     req.flush(user);
@@ -145,28 +125,26 @@ describe('AuthHttpAdapter', () => {
   it('should POST to /auth/refresh with credentials (cookie HttpOnly)', () => {
     const session = buildAuthSession();
 
-    adapter.refresh().subscribe((result) => {
-      expect(result).toEqual(session);
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/refresh`);
-    expect(req.request.method).toBe('POST');
+    const req = verifierPostRelaye(
+      banc.adapter.refresh(),
+      banc.httpMock,
+      '/auth/refresh',
+      {},
+      session,
+    );
     expect(req.request.withCredentials).toBeTrue();
-    expect(req.request.body).toEqual({});
-    req.flush(session);
   });
 
   it('should POST to /auth/logout with credentials (cookie HttpOnly)', () => {
     const response = { message: 'Deconnexion reussie.' };
 
-    adapter.logout().subscribe((result) => {
-      expect(result).toEqual(response);
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/auth/logout`);
-    expect(req.request.method).toBe('POST');
+    const req = verifierPostRelaye(
+      banc.adapter.logout(),
+      banc.httpMock,
+      '/auth/logout',
+      {},
+      response,
+    );
     expect(req.request.withCredentials).toBeTrue();
-    expect(req.request.body).toEqual({});
-    req.flush(response);
   });
 });

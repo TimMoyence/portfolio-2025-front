@@ -10,11 +10,10 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import type { EtatEnvoiLibre } from '../../session/reponses-libres.service';
 import { cleDeReponseLibre, ReponsesLibresService } from '../../session/reponses-libres.service';
-import { loadInteraction } from '../interactions.util';
+import { chargerInteraction } from '../interactions.util';
 import type { ModeInteraction } from '../mode-interaction';
 
 export interface ReflectionInteraction {
@@ -140,22 +139,15 @@ export class SlideReflectionComponent implements OnInit {
   }
 
   private load(): void {
-    const inline = this.promptData();
-    if (inline !== null) {
-      this.reflection.set(inline);
-      return;
-    }
-    if (this.port === null) {
-      this.error.set(true);
-      return;
-    }
-    loadInteraction<ReflectionInteraction>(
-      this.port.getInteractions(this.slug()),
-      'reflection',
-      this.interactionId(),
-      () => this.error.set(true),
-    )
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((found) => found && this.reflection.set(found));
+    chargerInteraction<ReflectionInteraction>({
+      enLigne: this.promptData(),
+      port: this.port,
+      slug: this.slug(),
+      type: 'reflection',
+      interactionId: this.interactionId(),
+      cible: this.reflection,
+      erreur: this.error,
+      destroyRef: this.destroyRef,
+    });
   }
 }

@@ -1,5 +1,5 @@
-import { PLATFORM_ID } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import type { ComponentFixture } from '@angular/core/testing';
+import { monterSurPlateforme, type PlateformeDeRendu } from '../../../../testing/plateforme';
 import { AsiliBackgroundComponent } from './asili-background.component';
 
 const createMotionQueryStub = (
@@ -29,71 +29,53 @@ const createMotionQueryStub = (
   return stub;
 };
 
+function simulerMouvementReduit(reduit: boolean): ReturnType<typeof createMotionQueryStub> {
+  const motionQuery = createMotionQueryStub(reduit);
+  spyOn(window, 'matchMedia').and.returnValue(motionQuery.mql);
+  return motionQuery;
+}
+
+function monterLeFond(plateforme: PlateformeDeRendu): ComponentFixture<AsiliBackgroundComponent> {
+  const fixture = monterSurPlateforme(AsiliBackgroundComponent, plateforme);
+  fixture.detectChanges();
+  return fixture;
+}
+
 describe('AsiliBackgroundComponent', () => {
   describe('en SSR', () => {
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [AsiliBackgroundComponent],
-        providers: [{ provide: PLATFORM_ID, useValue: 'server' }],
-      });
-    });
-
     it('ne rend pas de <canvas> côté serveur', () => {
-      const fixture = TestBed.createComponent(AsiliBackgroundComponent);
-      fixture.detectChanges();
+      const fixture = monterLeFond('server');
       expect(fixture.nativeElement.querySelector('canvas')).toBeNull();
     });
   });
 
   describe('en browser', () => {
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [AsiliBackgroundComponent],
-        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
-      });
-    });
-
     it('rend un <canvas> aria-hidden', () => {
-      const fixture = TestBed.createComponent(AsiliBackgroundComponent);
-      fixture.detectChanges();
+      const fixture = monterLeFond('browser');
       const canvas = fixture.nativeElement.querySelector('canvas');
       expect(canvas).not.toBeNull();
       expect(canvas.getAttribute('aria-hidden')).toBe('true');
     });
 
     it('ne lance PAS de boucle rAF sous prefers-reduced-motion', () => {
-      spyOn(window, 'matchMedia').and.returnValue({
-        matches: true,
-        media: '(prefers-reduced-motion: reduce)',
-        addEventListener: () => {},
-        removeEventListener: () => {},
-      } as unknown as MediaQueryList);
+      simulerMouvementReduit(true);
       const rafSpy = spyOn(window, 'requestAnimationFrame').and.callThrough();
-      const fixture = TestBed.createComponent(AsiliBackgroundComponent);
-      fixture.detectChanges();
+      monterLeFond('browser');
       expect(rafSpy).not.toHaveBeenCalled();
     });
 
     it('annule la boucle au destroy', () => {
-      spyOn(window, 'matchMedia').and.returnValue({
-        matches: false,
-        media: '',
-        addEventListener: () => {},
-        removeEventListener: () => {},
-      } as unknown as MediaQueryList);
+      simulerMouvementReduit(false);
       const cancelSpy = spyOn(window, 'cancelAnimationFrame').and.callThrough();
-      const fixture = TestBed.createComponent(AsiliBackgroundComponent);
-      fixture.detectChanges();
+      const fixture = monterLeFond('browser');
       fixture.destroy();
       expect(cancelSpy).toHaveBeenCalled();
     });
 
     it("coupe la boucle quand prefers-reduced-motion s'active en cours de session", () => {
-      const motionQuery = createMotionQueryStub(false);
-      spyOn(window, 'matchMedia').and.returnValue(motionQuery.mql);
+      const motionQuery = simulerMouvementReduit(false);
       const cancelSpy = spyOn(window, 'cancelAnimationFrame').and.callThrough();
-      const fixture = TestBed.createComponent(AsiliBackgroundComponent);
-      fixture.detectChanges();
+      const fixture = monterLeFond('browser');
 
       expect(motionQuery.handler)
         .withContext('un ecouteur `change` doit etre enregistre')
@@ -106,11 +88,9 @@ describe('AsiliBackgroundComponent', () => {
     });
 
     it('relance la boucle quand prefers-reduced-motion est desactive en cours de session', () => {
-      const motionQuery = createMotionQueryStub(true);
-      spyOn(window, 'matchMedia').and.returnValue(motionQuery.mql);
+      const motionQuery = simulerMouvementReduit(true);
       const rafSpy = spyOn(window, 'requestAnimationFrame').and.returnValue(1);
-      const fixture = TestBed.createComponent(AsiliBackgroundComponent);
-      fixture.detectChanges();
+      const fixture = monterLeFond('browser');
       expect(rafSpy).not.toHaveBeenCalled();
 
       motionQuery.emit(false);
@@ -120,10 +100,8 @@ describe('AsiliBackgroundComponent', () => {
     });
 
     it("retire l'ecouteur de prefers-reduced-motion au destroy", () => {
-      const motionQuery = createMotionQueryStub(true);
-      spyOn(window, 'matchMedia').and.returnValue(motionQuery.mql);
-      const fixture = TestBed.createComponent(AsiliBackgroundComponent);
-      fixture.detectChanges();
+      const motionQuery = simulerMouvementReduit(true);
+      const fixture = monterLeFond('browser');
 
       fixture.destroy();
 

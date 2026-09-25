@@ -1,8 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import { monterLeGraphique, preparerLeGraphique } from '../../../../../testing/graphique-monte';
 import { melangeur } from '../../../../../testing/melangeur';
-import { setupTestBed } from '../../../../../testing/setup-test-bed';
 import type { SlideChartKind, SlideChartSeries } from './slide-chart.component';
-import { SlideChartComponent } from './slide-chart.component';
 
 const GRAINE = 20260920;
 const TIRAGES = 60;
@@ -44,14 +42,13 @@ function tirer(hasard: () => number): Tirage {
 }
 
 function monter(tirage: Tirage): HTMLElement {
-  const fixture = TestBed.createComponent(SlideChartComponent);
-  fixture.componentRef.setInput('title', 'Simulation');
-  fixture.componentRef.setInput('labels', tirage.labels);
-  fixture.componentRef.setInput('series', tirage.series);
-  fixture.componentRef.setInput('kind', tirage.kind);
-  fixture.componentRef.setInput('axisRanges', tirage.axisRanges);
-  fixture.detectChanges();
-  return fixture.nativeElement as HTMLElement;
+  return monterLeGraphique({
+    title: 'Simulation',
+    labels: tirage.labels,
+    series: tirage.series,
+    kind: tirage.kind,
+    axisRanges: tirage.axisRanges,
+  }).nativeElement as HTMLElement;
 }
 
 function variables(racine: HTMLElement, selecteur: string, variable: string): number[] {
@@ -121,9 +118,7 @@ function verifierLesEtiquettes(rendu: HTMLElement, tirage: Tirage, contexte: str
 }
 
 describe('Graphique v2 (F13, simulation)', () => {
-  beforeEach(() => {
-    setupTestBed({ imports: [SlideChartComponent], http: false });
-  });
+  preparerLeGraphique();
 
   it(`tient ses invariants d échelle et d étiquetage sur ${TIRAGES} jeux de données tirés au sort`, () => {
     const hasard = melangeur(GRAINE);

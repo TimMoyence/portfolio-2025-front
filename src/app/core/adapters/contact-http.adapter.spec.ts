@@ -1,26 +1,14 @@
-import { HttpTestingController } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
-import { environment } from '../../../environments/environment';
-import { verifierPostRelaye } from '../../../testing/http-attendu';
-import { setupTestBed } from '../../../testing/setup-test-bed';
+import {
+  bancAdaptateurHttp,
+  verifierErreurRelayee,
+  verifierPostRelaye,
+} from '../../../testing/http-attendu';
 import type { ContactFormState } from '../models/contact.model';
 import type { MessageResponse } from '../models/message.response';
 import { ContactHttpAdapter } from './contact-http.adapter';
 
 describe('ContactHttpAdapter', () => {
-  let adapter: ContactHttpAdapter;
-  let httpMock: HttpTestingController;
-
-  beforeEach(() => {
-    setupTestBed({ providers: [ContactHttpAdapter] });
-
-    adapter = TestBed.inject(ContactHttpAdapter);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
-  });
+  const banc = bancAdaptateurHttp(ContactHttpAdapter);
 
   it('should POST contact form data to the contacts endpoint', () => {
     const payload: ContactFormState = {
@@ -42,7 +30,13 @@ describe('ContactHttpAdapter', () => {
       httpCode: 201,
     };
 
-    verifierPostRelaye(adapter.contact(payload), httpMock, '/contacts', payload, response);
+    verifierPostRelaye(
+      banc.adapter.contact(payload),
+      banc.httpMock,
+      '/contacts',
+      payload,
+      response,
+    );
   });
 
   it('should propagate HTTP errors', () => {
@@ -56,15 +50,8 @@ describe('ContactHttpAdapter', () => {
       terms: true,
     };
 
-    adapter.contact(payload).subscribe({
-      next: () => fail('should have failed'),
-      error: (error) => {
-        expect(error.status).toBe(422);
-      },
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/contacts`);
-    req.flush('Validation error', {
+    verifierErreurRelayee(banc.adapter.contact(payload), banc.httpMock, '/contacts', {
+      corps: 'Validation error',
       status: 422,
       statusText: 'Unprocessable Entity',
     });

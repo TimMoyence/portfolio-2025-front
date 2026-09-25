@@ -71,6 +71,14 @@ export class CookieSettingsComponent {
   showSaved = false;
   isSaving = false;
 
+  contexteFige(cle: 'analytics' | 'marketing') {
+    return {
+      $implicit: this.categories[cle],
+      actif: this.preferences[cle],
+      aria: this.toggleAria[cle],
+    };
+  }
+
   savePreferences(): void {
     this.persist(this.consentService.saveConsent(this.preferences, 'settings', 'save_preferences'));
   }

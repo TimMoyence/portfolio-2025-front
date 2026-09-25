@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { computed, signal } from '@angular/core';
+import type { Observable } from 'rxjs';
 import { finalize, firstValueFrom, timeout } from 'rxjs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
@@ -121,30 +122,29 @@ export class AuthStateService {
     this._isRestoreFailed.set(false);
     this._isUserLoading.set(true);
     if (token === null) {
-      this.authPort
-        .refresh()
-        .pipe(
-          timeout(ME_TIMEOUT_MS),
-          finalize(() => this._isUserLoading.set(false)),
-        )
-        .subscribe({
-          next: (session: AuthSession) => this.login(session),
-          error: (error: unknown) => this.onRestoreError(error),
-        });
+      this.suivreLaRestauration(this.authPort.refresh(), (session: AuthSession) =>
+        this.login(session),
+      );
       return;
     }
 
-    this.authPort
-      .me()
+    this.suivreLaRestauration(this.authPort.me(), (user: AuthUser) => {
+      this._user.set(user);
+      this.armRefresh();
+    });
+  }
+
+  private suivreLaRestauration<Resultat>(
+    restauration: Observable<Resultat>,
+    appliquer: (resultat: Resultat) => void,
+  ): void {
+    restauration
       .pipe(
         timeout(ME_TIMEOUT_MS),
         finalize(() => this._isUserLoading.set(false)),
       )
       .subscribe({
-        next: (user: AuthUser) => {
-          this._user.set(user);
-          this.armRefresh();
-        },
+        next: appliquer,
         error: (error: unknown) => this.onRestoreError(error),
       });
   }

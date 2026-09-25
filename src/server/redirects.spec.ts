@@ -51,6 +51,12 @@ const runHandler = (
   return { calls, nextCalled };
 };
 
+const routesEnregistrees = (): RegisteredRoute[] => {
+  const { app, routes } = stubApp();
+  registerPermanentRedirects(app);
+  return routes;
+};
+
 describe('redirects', () => {
   describe('resolveRedirect', () => {
     it("redirige l'ancienne etude de cas vers /projets, locale preservee", () => {
@@ -111,18 +117,14 @@ describe('redirects', () => {
 
   describe('registerPermanentRedirects', () => {
     it('enregistre les sources sur une seule route GET', () => {
-      const { app, routes } = stubApp();
-
-      registerPermanentRedirects(app);
+      const routes = routesEnregistrees();
 
       expect(routes.length).toBe(1);
       expect(routes[0].paths).toEqual(jasmine.arrayContaining(REDIRECT_SOURCES));
     });
 
     it('emet un vrai 301 vers la cible attendue pour chaque source', () => {
-      const { app, routes } = stubApp();
-      registerPermanentRedirects(app);
-      const handler = routes[0].handler;
+      const handler = routesEnregistrees()[0].handler;
 
       for (const [source, target] of Object.entries(PERMANENT_REDIRECTS)) {
         const { calls, nextCalled } = runHandler(handler, source);
@@ -135,9 +137,7 @@ describe('redirects', () => {
     });
 
     it('verrouille le comportement observable mesure en production', () => {
-      const { app, routes } = stubApp();
-      registerPermanentRedirects(app);
-      const handler = routes[0].handler;
+      const handler = routesEnregistrees()[0].handler;
 
       expect(runHandler(handler, '/client-project').calls).toEqual([
         { status: 301, location: '/fr/projets' },
@@ -151,8 +151,7 @@ describe('redirects', () => {
     });
 
     it("ecoute toutes les sous-pages de l'atelier et emet un 301 pour elles", () => {
-      const { app, routes } = stubApp();
-      registerPermanentRedirects(app);
+      const routes = routesEnregistrees();
 
       expect(routes[0].paths).toEqual(
         jasmine.arrayContaining(['/atelier/*', '/fr/atelier/*', '/en/atelier/*']),
@@ -163,10 +162,7 @@ describe('redirects', () => {
     });
 
     it("passe au middleware suivant si le chemin n'est pas dans la table", () => {
-      const { app, routes } = stubApp();
-      registerPermanentRedirects(app);
-
-      const { calls, nextCalled } = runHandler(routes[0].handler, '/projets');
+      const { calls, nextCalled } = runHandler(routesEnregistrees()[0].handler, '/projets');
 
       expect(calls).toEqual([]);
       expect(nextCalled).toBeTrue();

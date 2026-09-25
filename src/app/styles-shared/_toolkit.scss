@@ -1,0 +1,17 @@
+@mixin titre-toolkit($taille) {
+  font-family: var(--font-display);
+  font-size: $taille;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+
+  em {
+    font-style: italic;
+    color: var(--teal-deep);
+  }
+}
+
+@mixin lien-souligne {
+  color: var(--teal-deep);
+  text-decoration: underline;
+}

@@ -2,10 +2,9 @@
 
 .slide-answer-review {
   @include slide.section;
-}
-
-.slide-answer-review__subtitle {
-  @include slide.sous-titre-de-revue;
+  @include slide.sous-titre-projete(slide-answer-review) {
+    @include slide.sous-titre-de-revue;
+  }
 }
 
 .slide-answer-review__liste {

@@ -1,3 +1,6 @@
+@use '../styles-shared/cartes';
+@use '../styles-shared/mono';
+
 .lp-shell {
   position: relative;
   z-index: 2;
@@ -26,14 +29,7 @@
 }
 
 .lp-kicker {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--lp-kicker);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  @include mono.kicker(var(--lp-kicker));
 
   &::before {
     content: '';
@@ -237,13 +233,7 @@
   }
 
   .tk {
-    width: 22px;
-    height: 22px;
-    flex: none;
-    border-radius: 50%;
-    background: rgba(var(--lp-accent-rgb), var(--lp-tk-alpha));
-    display: grid;
-    place-items: center;
+    @include cartes.pastille(22px, rgba(var(--lp-accent-rgb), var(--lp-tk-alpha)));
   }
 }
 
@@ -260,11 +250,7 @@
 }
 
 .lp-preview-head {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  @include mono.capitales-mono(11px, 0.14em, rgba(255, 255, 255, 0.55));
   margin-bottom: 18px;
 }
 

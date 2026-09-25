@@ -156,6 +156,11 @@ export abstract class FpBlock extends HTMLElement {
     }
   }
 
+  protected suivreEtSaisir(id: string | null): boolean {
+    this.suivreAffichage(id);
+    return !this.presentateur();
+  }
+
   depuisAffichage(): number {
     return Date.now() - this.affiche;
   }

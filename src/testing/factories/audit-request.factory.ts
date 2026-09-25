@@ -1,6 +1,8 @@
 import type { ClientReport } from '../../app/core/models/audit-client-report.model';
 import type {
+  AuditCompletedEvent,
   AuditCreateResponse,
+  AuditProgressEvent,
   AuditStreamEvent,
   AuditSummaryResponse,
 } from '../../app/core/models/audit-request.model';
@@ -36,6 +38,40 @@ export function buildAuditSummaryResponse(
 
 export function buildAuditStreamHeartbeat(): AuditStreamEvent {
   return { type: 'heartbeat', data: { ts: 'now' } };
+}
+
+export function buildAuditProgressEvent(overrides?: Partial<AuditProgressEvent>): AuditStreamEvent {
+  return {
+    type: 'progress',
+    data: {
+      auditId: 'audit-1',
+      status: 'RUNNING',
+      progress: 10,
+      done: false,
+      updatedAt: '2026-02-19T09:00:00.000Z',
+      ...overrides,
+    },
+  };
+}
+
+export function buildAuditCompletedEvent(
+  overrides?: Partial<AuditCompletedEvent>,
+): AuditStreamEvent {
+  return {
+    type: 'completed',
+    data: {
+      auditId: 'audit-1',
+      status: 'COMPLETED',
+      progress: 100,
+      done: true,
+      summaryText: null,
+      keyChecks: {},
+      quickWins: [],
+      pillarScores: {},
+      updatedAt: '2026-04-15T09:00:00.000Z',
+      ...overrides,
+    },
+  };
 }
 
 export function buildClientReport(overrides?: Partial<ClientReport>): ClientReport {

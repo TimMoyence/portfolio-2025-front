@@ -4,6 +4,11 @@ import { FragmentService } from './fragment.service';
 describe('FragmentService', () => {
   let service: FragmentService;
 
+  function attendreLEtat(visibles: number, complet: boolean): void {
+    expect(service.visibleCount()).toBe(visibles);
+    expect(service.isComplete()).toBe(complet);
+  }
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [FragmentService],
@@ -19,15 +24,13 @@ describe('FragmentService', () => {
     it('devrait initialiser visibleCount a 0 et isComplete a false pour 3 fragments', () => {
       service.reset(3);
 
-      expect(service.visibleCount()).toBe(0);
-      expect(service.isComplete()).toBeFalse();
+      attendreLEtat(0, false);
     });
 
     it('devrait marquer isComplete a true immediatement quand total vaut 0', () => {
       service.reset(0);
 
-      expect(service.visibleCount()).toBe(0);
-      expect(service.isComplete()).toBeTrue();
+      attendreLEtat(0, true);
     });
 
     it('devrait reinitialiser apres une utilisation precedente', () => {
@@ -38,8 +41,7 @@ describe('FragmentService', () => {
 
       service.reset(3);
 
-      expect(service.visibleCount()).toBe(0);
-      expect(service.isComplete()).toBeFalse();
+      attendreLEtat(0, false);
     });
   });
 
@@ -48,16 +50,13 @@ describe('FragmentService', () => {
       service.reset(3);
 
       expect(service.next()).toBeTrue();
-      expect(service.visibleCount()).toBe(1);
-      expect(service.isComplete()).toBeFalse();
+      attendreLEtat(1, false);
 
       expect(service.next()).toBeTrue();
-      expect(service.visibleCount()).toBe(2);
-      expect(service.isComplete()).toBeFalse();
+      attendreLEtat(2, false);
 
       expect(service.next()).toBeTrue();
-      expect(service.visibleCount()).toBe(3);
-      expect(service.isComplete()).toBeTrue();
+      attendreLEtat(3, true);
     });
 
     it('devrait retourner false et ne pas incrementer quand tous les fragments sont visibles', () => {
@@ -78,8 +77,7 @@ describe('FragmentService', () => {
       expect(service.visibleCount()).toBe(2);
 
       expect(service.prev()).toBeTrue();
-      expect(service.visibleCount()).toBe(1);
-      expect(service.isComplete()).toBeFalse();
+      attendreLEtat(1, false);
     });
 
     it('devrait retourner false quand visibleCount vaut 0', () => {
@@ -96,8 +94,7 @@ describe('FragmentService', () => {
 
       service.showAll();
 
-      expect(service.visibleCount()).toBe(5);
-      expect(service.isComplete()).toBeTrue();
+      attendreLEtat(5, true);
     });
 
     it('devrait fonctionner meme si certains fragments sont deja visibles', () => {
@@ -107,8 +104,7 @@ describe('FragmentService', () => {
 
       service.showAll();
 
-      expect(service.visibleCount()).toBe(4);
-      expect(service.isComplete()).toBeTrue();
+      attendreLEtat(4, true);
     });
   });
 });

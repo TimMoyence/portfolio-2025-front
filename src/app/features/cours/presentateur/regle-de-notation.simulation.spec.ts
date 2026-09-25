@@ -63,6 +63,20 @@ function intitule({ regle, bareme }: Combinaison): string {
   ].join(' · ');
 }
 
+function pourChaqueCombinaison(
+  verifier: (
+    regle: RegleNotation,
+    phrase: string,
+    contexte: string,
+    bareme: ResumeBareme | null,
+  ) => void,
+): void {
+  for (const combinaison of COMBINAISONS) {
+    const { regle, bareme } = combinaison;
+    verifier(regle, phraseDeNotation(regle, bareme), intitule(combinaison), bareme);
+  }
+}
+
 describe('simulation : la phrase de notation sur tout le produit des options', () => {
   it('enumere bien le produit cartesien des options servies', () => {
     const attendu = AXES.reduce((compte, axe) => compte * axe.length, 1) * QUESTIONS_NOTEES.length;
@@ -72,21 +86,16 @@ describe('simulation : la phrase de notation sur tout le produit des options', (
   });
 
   it('ne laisse jamais passer undefined, NaN ni une cle de gabarit', () => {
-    for (const combinaison of COMBINAISONS) {
-      const phrase = phraseDeNotation(combinaison.regle, combinaison.bareme);
-      const contexte = intitule(combinaison);
+    pourChaqueCombinaison((_regle, phrase, contexte) => {
       const fuites = INTERDITS.filter((interdit) => phrase.includes(interdit));
 
       expect(fuites).withContext(contexte).toEqual([]);
       expect(phrase.trim().length).withContext(contexte).toBeGreaterThan(0);
-    }
+    });
   });
 
   it('dit la note, les pourcentages et les points que la regle porte', () => {
-    for (const combinaison of COMBINAISONS) {
-      const { regle } = combinaison;
-      const phrase = phraseDeNotation(regle, combinaison.bareme);
-      const contexte = intitule(combinaison);
+    pourChaqueCombinaison((regle, phrase, contexte) => {
       const manquants = [
         pourCent(regle.partCohorteReference),
         pourCent(regle.ratioSeuilValidation),
@@ -98,38 +107,31 @@ describe('simulation : la phrase de notation sur tout le produit des options', (
         .withContext(contexte)
         .toBeTrue();
       expect(manquants).withContext(contexte).toEqual([]);
-    }
+    });
   });
 
   it('suit chaque option binaire au lieu de la supposer', () => {
-    for (const combinaison of COMBINAISONS) {
-      const { regle } = combinaison;
-      const phrase = phraseDeNotation(regle, combinaison.bareme);
-      const contexte = intitule(combinaison);
+    pourChaqueCombinaison((regle, phrase, contexte) => {
       const neComptePas = phrase.includes('« je ne sais pas » ne compte pas');
       const libresNotees = phrase.includes('les réponses libres sont notées');
 
       expect(neComptePas).withContext(contexte).toBe(!regle.neSaitPasCompteCommeReponse);
       expect(libresNotees).withContext(contexte).toBe(regle.reponsesLibresNotees);
-    }
+    });
   });
 
   it('n annonce un denominateur de questions notees que quand le bareme est servi', () => {
-    for (const combinaison of COMBINAISONS) {
-      const phrase = phraseDeNotation(combinaison.regle, combinaison.bareme);
-      const contexte = intitule(combinaison);
-      const bareme = combinaison.bareme;
-
+    pourChaqueCombinaison((regle, phrase, contexte, bareme) => {
       if (bareme === null) {
         expect(phrase).withContext(contexte).not.toContain('questions notées');
-        continue;
+        return;
       }
-      const sansBareme = phraseDeNotation(combinaison.regle, null);
+      const sansBareme = phraseDeNotation(regle, null);
 
       expect(phrase.startsWith(`${sansBareme} `))
         .withContext(contexte)
         .toBeTrue();
       expect(phrase).withContext(contexte).toContain(`sur ${bareme.questionsNotees} questions`);
-    }
+    });
   });
 });

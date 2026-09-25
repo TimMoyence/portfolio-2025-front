@@ -1,4 +1,5 @@
 @use './auth-shared';
+@use '../../styles-shared/segments';
 
 :host {
   display: block;
@@ -28,9 +29,7 @@
     box-shadow 0.25s;
 }
 .auth-tab[aria-selected='true'] {
-  background: var(--cream);
-  color: var(--ink);
-  box-shadow: var(--shadow-soft);
+  @include segments.segment-actif;
 }
 
 .auth-screen {

@@ -5,7 +5,7 @@ import {
   attendreSansModaliteNiDuree,
   parcourirLesRolesSansEffet,
 } from '../../../testing/assertions-briques';
-import { type TracesEffets, surveillerEffets } from '../../../testing/effets-briques';
+import { installerBrique } from '../../../testing/banc-de-brique';
 import { buildQuoteCitation } from '../../../testing/factories/cours.factory';
 import { FpQuote } from './FpQuote';
 
@@ -23,24 +23,13 @@ function texteDe(element: FpQuote, marqueur: string): string {
 
 describe('FpQuote', () => {
   let hote: FpQuote;
-  let traces: TracesEffets;
-
-  beforeAll(() => {
-    if (!customElements.get('fp-quote')) {
-      customElements.define('fp-quote', FpQuote);
-    }
-  });
-
-  beforeEach(() => {
-    hote = document.createElement('fp-quote') as FpQuote;
-    traces = surveillerEffets(hote);
-    hote.citation = CITATION;
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    traces.restaurer();
-    hote.remove();
+  const traces = installerBrique<FpQuote>({
+    balise: 'fp-quote',
+    classe: FpQuote,
+    poser: (brique) => {
+      hote = brique;
+      brique.citation = CITATION;
+    },
   });
 
   it('porte la citation par un blockquote dans une figure et non par un div nu', () => {

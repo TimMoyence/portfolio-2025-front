@@ -1,8 +1,6 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
-import { projeterMetadonnees } from './projection';
-import { estObjet, lireTextes } from './retours';
+import { type ContenuDeBrique, copierLeSocle } from './projection';
+import { FpRedaction } from './redaction';
 
 export interface QuestionLibre {
   readonly id: string;
@@ -10,17 +8,13 @@ export interface QuestionLibre {
   readonly placeholder?: string;
 }
 
-export interface ProCas {
-  readonly id: string;
+export interface ProCas extends ContenuDeBrique {
   readonly metier: string;
   readonly situation: string;
   readonly geste: string;
   readonly consequence: string | null;
   readonly questionsLibres?: readonly QuestionLibre[];
-  readonly metadonnees: MetadonneesBrique;
 }
-
-type Reponses = Readonly<Record<string, string>>;
 
 const LONGUEUR_MAX_REPONSE_LIBRE = 10000;
 
@@ -28,33 +22,24 @@ function copierQuestion({ id, question, placeholder }: QuestionLibre): QuestionL
   return placeholder === undefined ? { id, question } : { id, question, placeholder };
 }
 
-export class FpPro extends FpBlock {
-  private interne: ProCas | null = null;
-  private reponses: Reponses = {};
-  private message = '';
-  private soumise = false;
+function copierCas(source: ProCas): ProCas {
+  return {
+    ...copierLeSocle(source),
+    metier: source.metier,
+    situation: source.situation,
+    geste: source.geste,
+    consequence: source.consequence,
+    ...(source.questionsLibres === undefined
+      ? {}
+      : { questionsLibres: source.questionsLibres.map(copierQuestion) }),
+  };
+}
+
+export class FpPro extends FpRedaction<ProCas> {
+  protected readonly cleDuBrouillon = 'reponses';
 
   set cas(valeur: ProCas | null) {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
-    this.interne =
-      valeur === null
-        ? null
-        : {
-            id: valeur.id,
-            metier: valeur.metier,
-            situation: valeur.situation,
-            geste: valeur.geste,
-            consequence: valeur.consequence,
-            ...(valeur.questionsLibres === undefined
-              ? {}
-              : { questionsLibres: valeur.questionsLibres.map(copierQuestion) }),
-            metadonnees: projeterMetadonnees(valeur.metadonnees),
-          };
-    if (change) {
-      this.reponses = {};
-      this.message = '';
-      this.soumise = false;
-    }
+    this.poserLeContenu(valeur, copierCas);
     this.refreshSiConnecte();
   }
 
@@ -62,28 +47,18 @@ export class FpPro extends FpBlock {
     return this.interne;
   }
 
-  set brouillon(valeur: unknown) {
-    if (!estObjet(valeur) || this.soumise) {
-      return;
-    }
-    this.reponses = lireTextes(valeur['reponses']);
-    this.noterBrouillonRepris();
-    this.refreshSiConnecte();
-  }
-
   render(): EscapedHtml {
     if (this.cas === null) {
       return this.attente();
     }
-    return this.dossier(this.presentateur() ? this.enonces() : this.formulaire());
+    return this.dossier(this.questionsLibres());
   }
 
   bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.interne?.id ?? null);
-    if (this.presentateur() || this.questions().length === 0) {
+    if (!this.suivreEtSaisir(this.interne?.id ?? null) || this.questions().length === 0) {
       return;
     }
-    const verrouille = this.verrouilleApresEnvoi(this.soumise, false);
+    const verrouille = this.verrouille();
     for (const champ of racine.querySelectorAll<HTMLTextAreaElement>('textarea[data-question]')) {
       const cle = champ.dataset['question'] ?? '';
       champ.disabled = verrouille;
@@ -146,36 +121,30 @@ export class FpPro extends FpBlock {
     return safeHtml`<p class="fp-pro__consequence" data-testid="consequence">${escapeHtml(this.texte('pro-consequence'))} ${escapeHtml(retombee)}</p>`;
   }
 
-  private enonces(): EscapedHtml {
+  private questionsLibres(): EscapedHtml {
     const questions = this.questions();
     if (questions.length === 0) {
       return safeHtml``;
     }
+    const projetees = this.presentateur();
+    const lignes = questions.map((question) =>
+      projetees ? this.enonce(question) : this.champ(question),
+    );
+    const envoi = projetees
+      ? safeHtml``
+      : safeHtml`<button type="button" class="fp-pro__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
+        <p class="fp-pro__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>`;
     return safeHtml`
       <div class="fp-prose fp-pro__reponses">
-        <ol class="fp-pro__questions">
-          ${questions.map(
-            (question) =>
-              safeHtml`<li class="fp-pro__question" data-testid="question-libre">${escapeHtml(question.question)}</li>`,
-          )}
-        </ol>
+        <ol class="fp-pro__questions">${lignes}</ol>
+        ${envoi}
       </div>
+      ${projetees ? safeHtml`` : this.annonces()}
     `;
   }
 
-  private formulaire(): EscapedHtml {
-    const questions = this.questions();
-    if (questions.length === 0) {
-      return safeHtml``;
-    }
-    return safeHtml`
-      <div class="fp-prose fp-pro__reponses">
-        <ol class="fp-pro__questions">${questions.map((question) => this.champ(question))}</ol>
-        <button type="button" class="fp-pro__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
-        <p class="fp-pro__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
-      </div>
-      ${this.annonces()}
-    `;
+  private enonce(question: QuestionLibre): EscapedHtml {
+    return safeHtml`<li class="fp-pro__question" data-testid="question-libre">${escapeHtml(question.question)}</li>`;
   }
 
   private champ(question: QuestionLibre): EscapedHtml {
@@ -183,14 +152,9 @@ export class FpPro extends FpBlock {
     return safeHtml`
       <li class="fp-pro__question">
         <label class="fp-pro__libelle" for="${escapeHtml(identifiant)}">${escapeHtml(question.question)}</label>
-        <textarea class="fp-pro__champ" id="${escapeHtml(identifiant)}" data-question="${escapeHtml(question.id)}" placeholder="${escapeHtml(question.placeholder ?? '')}" maxlength="${LONGUEUR_MAX_REPONSE_LIBRE}" rows="3">${escapeHtml(this.reponses[question.id] ?? '')}</textarea>
+        <textarea class="fp-pro__champ" id="${escapeHtml(identifiant)}" data-question="${escapeHtml(question.id)}" placeholder="${escapeHtml(question.placeholder ?? '')}" maxlength="${LONGUEUR_MAX_REPONSE_LIBRE}" rows="3">${escapeHtml(this.texteDe(question.id))}</textarea>
       </li>
     `;
-  }
-
-  private noter(cle: string, valeur: string): void {
-    this.reponses = { ...this.reponses, [cle]: valeur };
-    this.signalerBrouillon(this.interne?.id ?? '', { reponses: this.reponses });
   }
 
   private effacerRappel(racine: ShadowRoot): void {
@@ -206,27 +170,14 @@ export class FpPro extends FpBlock {
 
   private valider(): void {
     const cas = this.interne;
-    if (cas === null || this.verrouilleApresEnvoi(this.soumise, false)) {
+    if (cas === null || this.verrouille()) {
       return;
     }
-    const questions = this.questions();
-    const manquante = questions.some(
-      (question) => (this.reponses[question.id] ?? '').trim().length === 0,
-    );
-    if (manquante) {
-      this.message = this.texte('pro-reponse-vide');
-      this.refresh();
+    const cles = this.questions().map((question) => question.id);
+    if (this.manqueUnTexte(cles)) {
+      this.refuserLEnvoi(this.texte('pro-reponse-vide'));
       return;
     }
-    this.soumise = true;
-    this.message = this.messageApresEnvoi();
-    this.emit('fp-pro-submit', {
-      casId: cas.id,
-      reponses: Object.fromEntries(
-        questions.map((question) => [question.id, this.reponses[question.id] ?? '']),
-      ),
-      dureeMs: this.depuisAffichage(),
-    });
-    this.refresh();
+    this.conclureLEnvoi('fp-pro-submit', { casId: cas.id, reponses: this.textesDe(cles) });
   }
 }

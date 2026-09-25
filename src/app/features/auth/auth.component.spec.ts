@@ -1,19 +1,15 @@
-import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import type { NgForm } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import type { AuthSession } from '../../core/models/auth.model';
-import type { AuthPort } from '../../core/ports/auth.port';
-import { AUTH_PORT } from '../../core/ports/auth.port';
+import type { SignupFormState } from '../../core/models/signupForm.model';
 import {
   buildAuthSession,
   buildAuthUser,
   buildLoginCredentials,
-  createAuthPortStub,
 } from '../../../testing/factories/auth.factory';
-import { setupTestBed } from '../../../testing/setup-test-bed';
+import type { PageAuthMontee } from '../../../testing/page-auth';
+import { formulaireSoumis, monterPageAuth } from '../../../testing/page-auth';
 import { AuthComponent } from './auth.component';
 
 const VALID_PASSWORD = buildLoginCredentials().password;
@@ -21,40 +17,47 @@ const MISMATCHED_PASSWORD = `${VALID_PASSWORD}-different`;
 
 describe('AuthComponent', () => {
   let component: AuthComponent;
-  let fixture: ComponentFixture<AuthComponent>;
-  let authService: jasmine.SpyObj<AuthPort>;
+  let authService: PageAuthMontee<AuthComponent>['authService'];
 
   async function setupWithSeoKey(
     seoKey: string,
     queryParams: Record<string, string | null> = {},
   ): Promise<void> {
-    authService = createAuthPortStub();
-
-    await setupTestBed({
-      router: true,
-      imports: [FormsModule, AuthComponent],
-      providers: [
-        {
-          provide: AUTH_PORT,
-          useValue: authService,
-        },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              data: { seoKey },
-              queryParamMap: {
-                get: (key: string) => queryParams[key] ?? null,
-              },
+    const page = await monterPageAuth(AuthComponent, [
+      {
+        provide: ActivatedRoute,
+        useValue: {
+          snapshot: {
+            data: { seoKey },
+            queryParamMap: {
+              get: (key: string) => queryParams[key] ?? null,
             },
           },
         },
-      ],
-    }).compileComponents();
+      },
+    ]);
+    ({ component, authService } = page);
+    page.fixture.detectChanges();
+  }
 
-    fixture = TestBed.createComponent(AuthComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  function remplirInscription(champs: Partial<SignupFormState> = {}): void {
+    component.signupForm = {
+      email: 'john@example.com',
+      password: VALID_PASSWORD,
+      verifPassword: VALID_PASSWORD,
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: '',
+      ...champs,
+    };
+  }
+
+  function accepterLInscription(): void {
+    authService.register.and.returnValue(
+      of({
+        message: 'Inscription reussie. Un email de verification a ete envoye a votre adresse.',
+      }),
+    );
   }
 
   beforeEach(async () => {
@@ -65,27 +68,10 @@ describe('AuthComponent', () => {
     expect(component.activeTab).toBe('log-in');
   });
 
-  const buildForm = (invalid: boolean): NgForm =>
-    jasmine.createSpyObj<NgForm>('NgForm', ['resetForm'], {
-      invalid,
-      valid: !invalid,
-    });
-
   it('should call the auth service when sign up form is valid and passwords match', () => {
-    const form = buildForm(false);
-    component.signupForm = {
-      email: 'john@example.com',
-      password: VALID_PASSWORD,
-      verifPassword: VALID_PASSWORD,
-      firstName: 'John',
-      lastName: 'Doe',
-      phone: '  +33 6 12 34 56 78  ',
-    };
-    authService.register.and.returnValue(
-      of({
-        message: 'Inscription reussie. Un email de verification a ete envoye a votre adresse.',
-      }),
-    );
+    const form = formulaireSoumis();
+    remplirInscription({ phone: '  +33 6 12 34 56 78  ' });
+    accepterLInscription();
 
     component.handleSignupSubmit(form);
 
@@ -100,21 +86,10 @@ describe('AuthComponent', () => {
   });
 
   it('devrait basculer vers l onglet login apres inscription reussie', () => {
-    const form = buildForm(false);
+    const form = formulaireSoumis();
     component.activeTab = 'sign-up';
-    component.signupForm = {
-      email: 'john@example.com',
-      password: VALID_PASSWORD,
-      verifPassword: VALID_PASSWORD,
-      firstName: 'John',
-      lastName: 'Doe',
-      phone: '',
-    };
-    authService.register.and.returnValue(
-      of({
-        message: 'Inscription reussie. Un email de verification a ete envoye a votre adresse.',
-      }),
-    );
+    remplirInscription();
+    accepterLInscription();
 
     component.handleSignupSubmit(form);
 
@@ -122,15 +97,8 @@ describe('AuthComponent', () => {
   });
 
   it('should not call auth service when passwords do not match', () => {
-    const form = buildForm(false);
-    component.signupForm = {
-      email: 'john@example.com',
-      password: VALID_PASSWORD,
-      verifPassword: MISMATCHED_PASSWORD,
-      firstName: 'John',
-      lastName: 'Doe',
-      phone: '',
-    };
+    const form = formulaireSoumis();
+    remplirInscription({ verifPassword: MISMATCHED_PASSWORD });
 
     component.handleSignupSubmit(form);
 
@@ -139,7 +107,7 @@ describe('AuthComponent', () => {
   });
 
   it('should call auth service login when form is valid', () => {
-    const form = buildForm(false);
+    const form = formulaireSoumis();
     component.loginForm = {
       email: 'john@example.com',
       password: VALID_PASSWORD,
@@ -185,7 +153,7 @@ describe('AuthComponent', () => {
         of(buildAuthSession({ user: buildAuthUser({ firstName: 'John' }) })),
       );
 
-      component.handleLoginSubmit(buildForm(false));
+      component.handleLoginSubmit(formulaireSoumis());
 
       expect(navigateSpy).toHaveBeenCalledWith(destination);
     });

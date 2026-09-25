@@ -9,6 +9,7 @@ import {
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import type { AuthUser } from '../../core/models/auth.model';
 import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
@@ -49,6 +50,20 @@ export class ProfileComponent {
   changePasswordLoading = false;
   changePasswordSuccess?: string;
   changePasswordError?: string;
+
+  private readonly libellesIdentite = {
+    prenom: $localize`:@@profileFirstNameLabel:Prénom`,
+    nom: $localize`:@@profileLastNameLabel:Nom`,
+    email: $localize`:@@profileEmailLabel:Email`,
+  };
+
+  protected lignesIdentite(user: AuthUser): readonly { libelle: string; valeur: string }[] {
+    return [
+      { libelle: this.libellesIdentite.prenom, valeur: user.firstName },
+      { libelle: this.libellesIdentite.nom, valeur: user.lastName },
+      { libelle: this.libellesIdentite.email, valeur: user.email },
+    ];
+  }
 
   initial(firstName?: string, lastName?: string, email?: string): string {
     const source = firstName || lastName || email || '?';

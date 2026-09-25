@@ -1,13 +1,6 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  LOCALE_ID,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { APP_CONFIG } from '../../core/config/app-config.token';
 import type { PublishedArticle } from '../../core/models/article.model';
@@ -15,7 +8,7 @@ import { ArticleHttpAdapter } from '../../core/adapters/article-http.adapter';
 import { SeoService } from '../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../core/ssr/http-response-status';
 import { ArticlesCtaComponent } from './articles-cta.component';
-import { localeDesArticles, type LocaleDesArticles } from './locale-des-articles';
+import { injecterLocaleDesArticles } from './locale-des-articles';
 import { renderArticleMarkdown } from './markdown-article.utils';
 
 @Component({
@@ -34,19 +27,14 @@ export class ArticleDetailComponent {
   protected renderedContent = '';
   protected isLoading = true;
   protected hasError = false;
-  protected readonly locale: LocaleDesArticles;
+  protected readonly locale = injecterLocaleDesArticles();
+  private readonly api = inject(ArticleHttpAdapter);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly seo = inject(SeoService);
   private readonly config = inject(APP_CONFIG);
   private readonly responseStatus = inject(HTTP_RESPONSE_STATUS, { optional: true });
 
-  constructor(
-    route: ActivatedRoute,
-    private readonly api: ArticleHttpAdapter,
-    @Inject(LOCALE_ID) localeId: string,
-    @Inject(DOCUMENT) document: Document,
-  ) {
-    this.locale = localeDesArticles(localeId, document.location.pathname);
+  constructor(route: ActivatedRoute) {
     const slug = route.snapshot.paramMap.get('slug');
     if (!slug) {
       this.isLoading = false;

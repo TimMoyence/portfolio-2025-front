@@ -1,15 +1,21 @@
 import type { Provider, Type } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import type { ConfusionComptee, EcranDeroule } from '../cours/content/types';
-import type { FormationsPort } from '../app/core/ports/formations.port';
+import { of } from 'rxjs';
+import type { ConfusionComptee, DerouleCours, EcranDeroule } from '../cours/content/types';
+import type { FormationsPort, ReponseLibreFormateur } from '../app/core/ports/formations.port';
 import { FORMATIONS_PORT } from '../app/core/ports/formations.port';
 import { AuthStateService } from '../app/core/services/auth-state.service';
 import { CREATEUR_FLUX } from '../app/features/cours/cours-flux.token';
 import { buildAuthSession } from './factories/auth.factory';
 import { buildVoteQuestion } from './factories/cours.factory';
-import { buildEcranDeroule } from './factories/formations.factory';
+import {
+  buildEcranDeroule,
+  buildReponseLibreFormateur,
+  createFormationsPortStub,
+} from './factories/formations.factory';
 import type { FluxDouble } from './factories/sync.factory';
+import { createFluxDouble } from './factories/sync.factory';
 import { setupTestBed } from './setup-test-bed';
 
 export const JETON_FORMATEUR = 'jwt-formateur';
@@ -21,7 +27,7 @@ export interface BancDuPupitre {
   readonly providers?: readonly Provider[];
 }
 
-export async function monterLeBancDuPupitre(
+async function monterLeBancDuPupitre(
   composant: Type<unknown>,
   { port, double, router = false, providers = [] }: BancDuPupitre,
 ): Promise<void> {
@@ -35,6 +41,18 @@ export async function monterLeBancDuPupitre(
     ],
   }).compileComponents();
   TestBed.inject(AuthStateService).login(buildAuthSession({ accessToken: JETON_FORMATEUR }));
+}
+
+export async function monterLeBancSurLeDeroule(
+  composant: Type<unknown>,
+  deroule: DerouleCours,
+  options: Pick<BancDuPupitre, 'router' | 'providers'> = {},
+): Promise<Pick<BancDuPupitre, 'port' | 'double'>> {
+  const port = createFormationsPortStub();
+  port.lireDeroule.and.returnValue(of(deroule));
+  const double = createFluxDouble();
+  await monterLeBancDuPupitre(composant, { port, double, ...options });
+  return { port, double };
 }
 
 const montees: ComponentFixture<unknown>[] = [];
@@ -77,5 +95,41 @@ export function buildEcranDeVoteCorrige(
       },
     ],
     ...overrides,
+  });
+}
+
+export function buildEcranDeVoteJumele(): EcranDeroule {
+  return buildEcranDeroule({
+    id: 'ecran-vote',
+    type: 'fp-vote',
+    donnees: {
+      question: buildVoteQuestion(),
+      questionJumelle: buildVoteQuestion({ id: 'Q-CAP-03-bis' }),
+    },
+  });
+}
+
+export function buildReponsesALaMission(response: string): {
+  responses: readonly ReponseLibreFormateur[];
+} {
+  return {
+    responses: [
+      buildReponseLibreFormateur({
+        screenId: 'ecran-mission',
+        activityId: 'mission:mesure',
+        response,
+      }),
+    ],
+  };
+}
+
+export function buildEcranDeMission(): EcranDeroule {
+  return buildEcranDeroule({
+    id: 'ecran-mission',
+    type: 'fp-pro',
+    corriges: [],
+    donnees: {
+      cas: { questionsLibres: [{ id: 'mission:mesure', question: 'Que mesure chaque chiffre ?' }] },
+    },
   });
 }

@@ -37,6 +37,7 @@ import type {
   WorkedExemple,
 } from '../../../../cours/runtime/blocks/donnees-publiques';
 import {
+  COLONNE_COEFFICIENT_TOILE,
   buildConcept4Definition,
   buildExitBillet,
   buildProCas,
@@ -279,15 +280,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
 
   describe('§ 9.4 — données publiques par brique', () => {
     it('sert chaque brique sans solution, fragment ni stratégie révélée', () => {
-      const colonne = {
-        cle: 'coef',
-        intitule: 'Coefficient appliqué',
-        role: 'deduite',
-        formuleInitiale: 'prix / prixInitial',
-        formule: 'prix / avantPrix',
-        decimales: 4,
-        totalise: false,
-      } satisfies TableColonneServie;
+      const colonne = COLONNE_COEFFICIENT_TOILE satisfies TableColonneServie;
       const tableau = {
         id: 'b2-01-a4-indice-toile',
         intitule: 'Tâche de tableur 2 — Prix et indice de la toile en 2025',

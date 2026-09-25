@@ -3,7 +3,6 @@ import * as fc from 'fast-check';
 import { of } from 'rxjs';
 import {
   buildAnnotationFormateur,
-  buildResultatQuestion,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import type { FixtureDuPanneau } from '../../../../testing/panneau-pedagogique';
@@ -11,17 +10,15 @@ import {
   ECRAN_DU_PANNEAU,
   monterLePanneau,
   noteAffichee,
+  preparerLePanneau,
+  relireLePanneau,
   saisirLaNoteDuPanneau,
 } from '../../../../testing/panneau-pedagogique';
-import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { AnnotationFormateur, FormationsPort } from '../../../core/ports/formations.port';
-import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
 
 const DELAI_ENREGISTREMENT_MS = 600;
 const DEPART = Date.parse('2026-09-20T08:00:00.000Z');
-const GRAINE = 20260920;
-const TOURS = 40;
+const TIRAGE = { seed: 20260920, numRuns: 40 };
 const ATTENTES = [50, 200, 599, 600, 900];
 
 type Coup =
@@ -80,10 +77,7 @@ describe('simulation : frappes et relectures entrelacees sur le panneau pedagogi
 
   function relire(fixture: FixtureDuPanneau, perime: boolean): void {
     serveur.perime = perime;
-    fixture.componentRef.setInput('resultats', [buildResultatQuestion()]);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
+    relireLePanneau(fixture);
   }
 
   function jouer(fixture: FixtureDuPanneau, joue: Coup): void {
@@ -119,42 +113,41 @@ describe('simulation : frappes et relectures entrelacees sur le panneau pedagogi
     port = createFormationsPortStub();
     port.lireAnnotations.and.callFake(() => of({ annotations: serveur.lire() }));
     port.enregistrerAnnotation.and.callFake((_, annotation) => of(serveur.ecrire(annotation.note)));
-    setupTestBed({
-      imports: [CoursPanneauPedagogiqueComponent],
-      providers: [{ provide: FORMATIONS_PORT, useValue: port }],
-    });
+    preparerLePanneau(port);
   });
 
-  it('n ecrase jamais la note tapee, quelle que soit la relecture qui arrive', fakeAsync(() => {
+  function surTousLesDeroules(
+    verifier: (fixture: FixtureDuPanneau, frappes: readonly string[]) => void,
+  ): void {
     fc.assert(
       fc.property(fc.array(coup, { minLength: 1, maxLength: 25 }), (coups) => {
         const { fixture, frappes } = derouler(coups);
-
-        if (frappes.length > 0) {
-          expect(noteAffichee(fixture)).toBe(frappes[frappes.length - 1]);
-        }
+        verifier(fixture, frappes);
         fixture.destroy();
       }),
-      { seed: GRAINE, numRuns: TOURS },
+      TIRAGE,
     );
+  }
+
+  it('n ecrase jamais la note tapee, quelle que soit la relecture qui arrive', fakeAsync(() => {
+    surTousLesDeroules((fixture, frappes) => {
+      if (frappes.length > 0) {
+        expect(noteAffichee(fixture)).toBe(frappes[frappes.length - 1]);
+      }
+    });
   }));
 
   it('envoie les notes dans l ordre des frappes, sans en inventer aucune', fakeAsync(() => {
-    fc.assert(
-      fc.property(fc.array(coup, { minLength: 1, maxLength: 25 }), (coups) => {
-        const { fixture, frappes } = derouler(coups);
-        const envoyees = [...serveur.recues];
+    surTousLesDeroules((_fixture, frappes) => {
+      const envoyees = [...serveur.recues];
 
-        expect(envoyees.every((note) => frappes.includes(note))).toBeTrue();
-        expect(estSousSuite(envoyees, frappes)).toBeTrue();
-        if (frappes.length > 0) {
-          expect(envoyees[envoyees.length - 1]).toBe(frappes[frappes.length - 1]);
-          expect(serveur.noteEnregistree()).toBe(frappes[frappes.length - 1]);
-        }
-        fixture.destroy();
-      }),
-      { seed: GRAINE, numRuns: TOURS },
-    );
+      expect(envoyees.every((note) => frappes.includes(note))).toBeTrue();
+      expect(estSousSuite(envoyees, frappes)).toBeTrue();
+      if (frappes.length > 0) {
+        expect(envoyees[envoyees.length - 1]).toBe(frappes[frappes.length - 1]);
+        expect(serveur.noteEnregistree()).toBe(frappes[frappes.length - 1]);
+      }
+    });
   }));
 
   it('ne renvoie une note que 600 ms apres la derniere frappe de la rafale', fakeAsync(() => {
@@ -178,7 +171,7 @@ describe('simulation : frappes et relectures entrelacees sur le panneau pedagogi
           fixture.destroy();
         },
       ),
-      { seed: GRAINE, numRuns: TOURS },
+      TIRAGE,
     );
   }));
 

@@ -1,19 +1,12 @@
 import { DOCUMENT } from '@angular/common';
-import {
-  afterNextRender,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import type { ResultatQuestion } from '../../../../cours/content/types';
 import { enoncesDuDeroule } from '../../../shared/slides/session/lecture-ecran';
 import { telechargerFichier } from '../../../shared/utils/telechargement.utils';
+import { chantierApresRendu } from './chantier-apres-rendu';
 
 interface LigneClassement {
   participant: ParticipantRapporte;
@@ -252,16 +245,7 @@ export class CoursSyntheseComponent {
   private readonly port = inject(FORMATIONS_PORT);
   private readonly document = inject(DOCUMENT);
 
-  private acheve: () => void = () => undefined;
-  private readonly chantier = new Promise<void>((resoudre) => {
-    this.acheve = resoudre;
-  });
-
-  constructor() {
-    afterNextRender(() => {
-      void this.lire().then(this.acheve);
-    });
-  }
+  private readonly chantier = chantierApresRendu(() => this.lire());
 
   quandStabilise(): Promise<void> {
     return this.chantier;

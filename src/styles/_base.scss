@@ -1,5 +1,7 @@
 @use '../app/styles-shared/breakpoints' as bp;
 @use '../app/styles-shared/heads' as heads;
+@use '../app/styles-shared/mise-en-page';
+@use '../app/styles-shared/mono';
 
 @layer base {
   * {
@@ -116,9 +118,7 @@
 }
 
 .wrap {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding-inline: var(--gutter);
+  @include mise-en-page.conteneur;
 }
 .section-pad {
   padding-block: clamp(80px, 12vh, 160px);
@@ -146,14 +146,7 @@
   color: var(--text-mute);
 }
 .kicker {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent-text);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  @include mono.kicker(var(--accent-text));
   font-weight: 500;
 }
 .kicker::before {

@@ -1,26 +1,14 @@
-import { HttpTestingController } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
-import { environment } from '../../../environments/environment';
-import { verifierPostRelaye } from '../../../testing/http-attendu';
-import { setupTestBed } from '../../../testing/setup-test-bed';
+import {
+  bancAdaptateurHttp,
+  verifierErreurRelayee,
+  verifierPostRelaye,
+} from '../../../testing/http-attendu';
 import type { CookieConsentPayload } from '../models/cookie-consent.model';
 import type { MessageResponse } from '../models/message.response';
 import { CookieConsentHttpAdapter } from './cookie-consent-http.adapter';
 
 describe('CookieConsentHttpAdapter', () => {
-  let adapter: CookieConsentHttpAdapter;
-  let httpMock: HttpTestingController;
-
-  beforeEach(() => {
-    setupTestBed({ providers: [CookieConsentHttpAdapter] });
-
-    adapter = TestBed.inject(CookieConsentHttpAdapter);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
-  });
+  const banc = bancAdaptateurHttp(CookieConsentHttpAdapter);
 
   it('should POST consent payload to the cookie-consents endpoint', () => {
     const payload: CookieConsentPayload = {
@@ -42,8 +30,8 @@ describe('CookieConsentHttpAdapter', () => {
     };
 
     verifierPostRelaye(
-      adapter.recordConsent(payload),
-      httpMock,
+      banc.adapter.recordConsent(payload),
+      banc.httpMock,
       '/cookie-consents',
       payload,
       response,
@@ -65,15 +53,8 @@ describe('CookieConsentHttpAdapter', () => {
       },
     };
 
-    adapter.recordConsent(payload).subscribe({
-      next: () => fail('should have failed'),
-      error: (error) => {
-        expect(error.status).toBe(500);
-      },
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/cookie-consents`);
-    req.flush('Internal Server Error', {
+    verifierErreurRelayee(banc.adapter.recordConsent(payload), banc.httpMock, '/cookie-consents', {
+      corps: 'Internal Server Error',
       status: 500,
       statusText: 'Internal Server Error',
     });

@@ -1,16 +1,15 @@
-import { PLATFORM_ID } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { injecterSurPlateforme } from '../../../testing/plateforme';
 import { A11yDialogService } from './a11y-dialog.service';
 
 describe('A11yDialogService', () => {
-  describe('en contexte navigateur', () => {
-    let service: A11yDialogService;
+  let service: A11yDialogService;
 
+  const tabulation = (): KeyboardEvent => new KeyboardEvent('keydown', { key: 'Tab' });
+  const tabulerSansConteneur = (): void => service.trapFocus(tabulation(), null);
+
+  describe('en contexte navigateur', () => {
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        providers: [A11yDialogService, { provide: PLATFORM_ID, useValue: 'browser' }],
-      });
-      service = TestBed.inject(A11yDialogService);
+      service = injecterSurPlateforme(A11yDialogService, 'browser');
     });
 
     it('devrait etre cree', () => {
@@ -98,29 +97,22 @@ describe('A11yDialogService', () => {
     });
 
     it('trapFocus ne devrait rien faire si container est null', () => {
-      const event = new KeyboardEvent('keydown', { key: 'Tab' });
-      expect(() => service.trapFocus(event, null)).not.toThrow();
+      expect(tabulerSansConteneur).not.toThrow();
     });
 
     it('trapFocus ne devrait rien faire si le container est vide', () => {
       const container = document.createElement('div');
       document.body.appendChild(container);
 
-      const event = new KeyboardEvent('keydown', { key: 'Tab' });
-      expect(() => service.trapFocus(event, container)).not.toThrow();
+      expect(() => service.trapFocus(tabulation(), container)).not.toThrow();
 
       document.body.removeChild(container);
     });
   });
 
   describe('en contexte serveur (SSR)', () => {
-    let service: A11yDialogService;
-
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        providers: [A11yDialogService, { provide: PLATFORM_ID, useValue: 'server' }],
-      });
-      service = TestBed.inject(A11yDialogService);
+      service = injecterSurPlateforme(A11yDialogService, 'server');
     });
 
     it('devrait etre cree en SSR', () => {
@@ -132,8 +124,7 @@ describe('A11yDialogService', () => {
     });
 
     it('trapFocus ne devrait pas crasher en SSR', () => {
-      const event = new KeyboardEvent('keydown', { key: 'Tab' });
-      expect(() => service.trapFocus(event, null)).not.toThrow();
+      expect(tabulerSansConteneur).not.toThrow();
     });
 
     it('restoreFocus ne devrait pas crasher en SSR', () => {

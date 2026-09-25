@@ -23,7 +23,8 @@ import type {
   VerdictProduction,
   VerdictTentative,
 } from '../../app/core/ports/formations.port';
-import { buildCoursContent } from './cours.factory';
+import { etatParticipantVierge } from '../fixtures/etat-participant';
+import { ENTETE_COURS_B1_09, buildCoursContent } from './cours.factory';
 
 export { buildCoursContent };
 
@@ -168,15 +169,11 @@ export function buildSpacedQuestionPublique(
 
 export function buildEtatParticipant(overrides: Partial<EtatParticipant> = {}): EtatParticipant {
   return {
-    sessionId: 'seance-1',
-    participantId: 'participant-1',
-    revision: 0,
-    reponses: [],
-    reponsesLibres: [],
-    jalons: [],
-    enigmes: [],
-    defis: [],
-    rappels: { questionIds: [] },
+    ...etatParticipantVierge({
+      sessionId: 'seance-1',
+      participantId: 'participant-1',
+      revision: 0,
+    }),
     ...overrides,
   };
 }
@@ -230,11 +227,7 @@ export function buildGuideFormateur(overrides: Partial<GuideFormateur> = {}): Gu
 
 export function buildDerouleCours(overrides: Partial<DerouleCours> = {}): DerouleCours {
   return {
-    id: 'b1-09-interets-composes',
-    titre: 'Faire fructifier : interets composes et capitalisation',
-    niveau: 'B1',
-    duree: 210,
-    concepts: ['capitalisation', 'valeur-acquise'],
+    ...ENTETE_COURS_B1_09,
     ecrans: [buildEcranDeroule({ id: 'ecran-1' }), buildEcranDeroule({ id: 'ecran-2' })],
     remediations: { 'interet-simple': 'ecran-2' },
     ...overrides,

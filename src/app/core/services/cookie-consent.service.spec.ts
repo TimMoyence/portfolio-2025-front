@@ -35,6 +35,21 @@ function serviceDeConsentement({
   return TestBed.inject(CookieConsentService);
 }
 
+function consentirAuxPreferencesSansAnalyse(
+  service: CookieConsentService,
+): ReturnType<CookieConsentService['saveConsent']> {
+  return service.saveConsent(
+    {
+      essential: true,
+      preferences: true,
+      analytics: false,
+      marketing: false,
+    },
+    'banner',
+    'accept_all',
+  );
+}
+
 describe('CookieConsentService', () => {
   describe('en contexte serveur (SSR)', () => {
     let service: CookieConsentService;
@@ -55,18 +70,7 @@ describe('CookieConsentService', () => {
 
     it('saveConsent ne devrait pas crasher en SSR (writeConsent protege)', () => {
       expect(() => {
-        service
-          .saveConsent(
-            {
-              essential: true,
-              preferences: true,
-              analytics: false,
-              marketing: false,
-            },
-            'banner',
-            'accept_all',
-          )
-          .subscribe();
+        consentirAuxPreferencesSansAnalyse(service).subscribe();
       }).not.toThrow();
     });
 
@@ -185,18 +189,7 @@ describe('CookieConsentService', () => {
     });
 
     it('getPreferences devrait retourner les preferences stockees apres saveConsent', () => {
-      service
-        .saveConsent(
-          {
-            essential: true,
-            preferences: true,
-            analytics: false,
-            marketing: false,
-          },
-          'banner',
-          'accept_all',
-        )
-        .subscribe();
+      consentirAuxPreferencesSansAnalyse(service).subscribe();
 
       const prefs = service.getPreferences();
       expect(prefs.essential).toBeTrue();

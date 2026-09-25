@@ -1,41 +1,30 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { evaluerExpression, remplirGabarit } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { type Reglages, borner } from './animation';
-import { type ParametreReglable, curseur } from './curseurs';
+import { type Reglages } from './animation';
 import {
+  type DefinitionReglable,
   FpReglable,
-  type Prereglage,
   arrondi,
-  copierParametres,
-  copierPrereglages,
-  fini as nombre,
+  copierLeReglable,
+  fini,
   formater,
-  plafondDe as haut,
-  plancherDe as bas,
+  plafondDe,
+  plancherDe,
 } from './reglable';
-import { projeterMetadonnees } from './projection';
 
-export type Concept4Parametre = ParametreReglable;
-
-export interface Concept4Definition {
-  readonly id: string;
-  readonly parametres: readonly Concept4Parametre[];
+export interface Concept4Definition extends DefinitionReglable {
   readonly formuleLatexSimplifie: string;
   readonly calcul: string;
   readonly phrase: string;
   readonly etapes?: readonly Concept4Etape[];
-  readonly prereglages?: readonly Concept4Prereglage[];
-  readonly animation?: readonly Reglages[];
-  readonly metadonnees: MetadonneesBrique;
 }
-
-export type Concept4Prereglage = Prereglage;
 
 export interface Concept4Etape {
   readonly libelle: string;
   readonly calcul: string;
 }
+
+type Concept4Parametre = Concept4Definition['parametres'][number];
 
 type Valeurs = Reglages;
 
@@ -68,19 +57,16 @@ function motifDesTermes(cles: readonly string[]): RegExp {
 
 export class FpConcept4 extends FpReglable<Concept4Definition> {
   protected readonly evenementDeReglage = 'fp-concept4-reglage';
+  protected readonly bloc = 'concept4';
   private actif: string | null = null;
 
   protected copier(valeur: Concept4Definition): Concept4Definition {
     return {
-      id: valeur.id,
-      parametres: copierParametres(valeur.parametres),
+      ...copierLeReglable(valeur),
       formuleLatexSimplifie: valeur.formuleLatexSimplifie,
       calcul: valeur.calcul,
       phrase: valeur.phrase,
       etapes: (valeur.etapes ?? []).map(({ libelle, calcul }) => ({ libelle, calcul })),
-      prereglages: copierPrereglages(valeur.prereglages),
-      animation: valeur.animation?.map((etape) => ({ ...etape })),
-      metadonnees: projeterMetadonnees(valeur.metadonnees),
     };
   }
 
@@ -105,24 +91,23 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     if (this.definition === null) {
       return this.attente();
     }
-    return safeHtml`<section class="fp-carte fp-scene fp-concept4__atelier">${this.panneauDeReglages()}<div class="fp-concept4__zone" data-zone="faces">${this.faces()}</div></section>`;
-  }
-
-  private prereglagesAffiches(): EscapedHtml {
-    if ((this.definition?.prereglages ?? []).length === 0) {
-      return safeHtml``;
-    }
-    return safeHtml`<div class="fp-concept4__prereglages" role="group" aria-label="${escapeHtml(this.texte('concept4-prereglages'))}">${this.boutonsDePrereglage('fp-concept4')}</div>`;
+    const declencheurs = safeHtml`${this.boutonAnimer()}${this.prereglagesAffiches()}`;
+    return safeHtml`<section class="fp-carte fp-scene fp-concept4__atelier">${this.panneauDeReglages(declencheurs)}<div class="fp-concept4__zone" data-zone="faces">${this.faces()}</div></section>`;
   }
 
   private faces(): EscapedHtml {
+    const definition = this.definition;
+    if (definition === null) {
+      return safeHtml``;
+    }
     const valeurs = this.valeurs;
+    const resultat = this.resultat(valeurs);
     return safeHtml`
       <div class="fp-concept4__faces">
-        ${this.formule(valeurs)}
+        ${this.formule(definition, resultat)}
         ${this.graphique(valeurs)}
         ${this.tableau(valeurs)}
-        ${this.enMots(valeurs)}
+        ${this.enMots(definition, valeurs, resultat)}
       </div>
     `;
   }
@@ -143,16 +128,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     return this.parametre(this.actif ?? '') ?? parametres[0] ?? null;
   }
 
-  private valeurCourante(parametre: Concept4Parametre, valeurs: Valeurs): number {
-    return borner(parametre, nombre(valeurs[parametre.cle], parametre.defaut));
-  }
-
-  private formule(valeurs: Valeurs): EscapedHtml {
-    const definition = this.definition;
-    if (definition === null) {
-      return safeHtml``;
-    }
-    const resultat = this.resultat(valeurs);
+  private formule(definition: Concept4Definition, resultat: number): EscapedHtml {
     return safeHtml`
       <div class="fp-concept4__face fp-encadre" data-testid="formule" data-valeur="${escapeHtml(String(resultat))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-formule'))}</h3>
@@ -227,7 +203,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
 
   private valeursDesEtapes(valeurs: Valeurs): number[] {
     return (this.definition?.etapes ?? []).map((etape) =>
-      nombre(evaluerExpression(etape.calcul, valeurs).valeur ?? Number.NaN, 0),
+      fini(evaluerExpression(etape.calcul, valeurs).valeur ?? Number.NaN, 0),
     );
   }
 
@@ -257,14 +233,14 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
   }
 
   private trace(parametre: Concept4Parametre, valeurs: Valeurs): Trace {
-    const depart = bas(parametre);
-    const arrivee = haut(parametre);
+    const depart = plancherDe(parametre);
+    const arrivee = plafondDe(parametre);
     const abscisses = Array.from(
       { length: POINTS_COURBE + 1 },
       (_, rang) => depart + ((arrivee - depart) * rang) / POINTS_COURBE,
     );
     const ordonnees = abscisses.map((abscisse) =>
-      nombre(this.resultat({ ...valeurs, [parametre.cle]: abscisse }), 0),
+      fini(this.resultat({ ...valeurs, [parametre.cle]: abscisse }), 0),
     );
     const plancher = Math.min(...ordonnees);
     const plafond = Math.max(...ordonnees);
@@ -276,8 +252,8 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
       points: abscisses
         .map((abscisse, rang) => `${arrondi(versX(abscisse))},${arrondi(versY(ordonnees[rang]))}`)
         .join(' '),
-      cx: arrondi(versX(this.valeurCourante(parametre, valeurs))),
-      cy: arrondi(versY(nombre(this.resultat(valeurs), plancher))),
+      cx: arrondi(versX(this.valeurDe(parametre, valeurs))),
+      cy: arrondi(versY(fini(this.resultat(valeurs), plancher))),
     };
   }
 
@@ -331,9 +307,9 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
   }
 
   private lignes(parametre: Concept4Parametre, valeurs: Valeurs): LigneTableau[] {
-    const depart = bas(parametre);
-    const arrivee = haut(parametre);
-    const courante = this.valeurCourante(parametre, valeurs);
+    const depart = plancherDe(parametre);
+    const arrivee = plafondDe(parametre);
+    const courante = this.valeurDe(parametre, valeurs);
     const jalons = Array.from(
       { length: INTERVALLES_TABLEAU + 1 },
       (_, rang) => depart + ((arrivee - depart) * rang) / INTERVALLES_TABLEAU,
@@ -351,12 +327,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     return safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(ligne.courant))}"><td class="fp-montant">${escapeHtml(formater(ligne.valeur))}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(formater(ligne.resultat))}</td></tr>`;
   }
 
-  private enMots(valeurs: Valeurs): EscapedHtml {
-    const definition = this.definition;
-    if (definition === null) {
-      return safeHtml``;
-    }
-    const resultat = this.resultat(valeurs);
+  private enMots(definition: Concept4Definition, valeurs: Valeurs, resultat: number): EscapedHtml {
     const phrase = remplirGabarit(definition.phrase, { ...valeurs, resultat }, formater);
     return safeHtml`
       <div class="fp-concept4__face" data-testid="phrase" data-valeur="${escapeHtml(String(resultat))}">
@@ -364,37 +335,5 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
         <p class="fp-prose fp-concept4__phrase" data-testid="phrase-texte">${escapeHtml(phrase)}</p>
       </div>
     `;
-  }
-
-  private panneauDeReglages(): EscapedHtml {
-    const parametres = this.definition?.parametres ?? [];
-    return safeHtml`
-      <fieldset class="fp-concept4__reglages">
-        <legend>${escapeHtml(this.texte('concept4-reglages'))}</legend>
-        <button class="fp-concept4__animation" data-testid="animer" type="button">
-          ${escapeHtml(this.texte('concept4-animer'))}
-        </button>
-        ${this.prereglagesAffiches()}
-        <div class="fp-concept4__parametres" aria-live="polite">
-          ${parametres.map((parametre) => this.parametreAffiche(parametre))}
-        </div>
-      </fieldset>
-    `;
-  }
-
-  private parametreAffiche(parametre: Concept4Parametre): EscapedHtml {
-    const valeur = this.valeurCourante(parametre, this.courantes);
-    return safeHtml`
-      <div class="fp-concept4__parametre" data-testid="parametre" data-cle="${escapeHtml(parametre.cle)}">
-        <span class="fp-concept4__etiquette">${escapeHtml(parametre.libelle)}</span>
-        ${curseur('fp-concept4', parametre, valeur, this.enonceValeur(parametre, valeur))}
-        <output class="fp-concept4__valeur fp-montant" data-testid="valeur" data-cle="${escapeHtml(parametre.cle)}" aria-label="${escapeHtml(this.enonceValeur(parametre, valeur))}">${escapeHtml(formater(valeur))}</output>
-      </div>
-    `;
-  }
-
-  private enonceValeur(parametre: Concept4Parametre, valeur: number): string {
-    const plage = `${this.texte('concept4-plage')} ${formater(bas(parametre))} ${this.texte('concept4-plage-fin')} ${formater(haut(parametre))}`;
-    return `${parametre.libelle} : ${formater(valeur)} (${plage})`;
   }
 }

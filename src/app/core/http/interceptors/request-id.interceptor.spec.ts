@@ -1,32 +1,21 @@
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
+import { bancAdaptateurHttp } from '../../../../testing/http-attendu';
 import { requestIdInterceptor } from './request-id.interceptor';
 
 describe('requestIdInterceptor', () => {
-  let http: HttpClient;
-  let httpMock: HttpTestingController;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(withInterceptors([requestIdInterceptor])),
-        provideHttpClientTesting(),
-      ],
-    });
-
-    http = TestBed.inject(HttpClient);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
+  const banc = bancAdaptateurHttp(HttpClient, {
+    http: false,
+    providers: [
+      provideHttpClient(withInterceptors([requestIdInterceptor])),
+      provideHttpClientTesting(),
+    ],
   });
 
   it('devrait ajouter un header X-Request-Id a chaque requete', () => {
-    http.get('/api/test').subscribe();
+    banc.adapter.get('/api/test').subscribe();
 
-    const req = httpMock.expectOne('/api/test');
+    const req = banc.httpMock.expectOne('/api/test');
     const requestId = req.request.headers.get('X-Request-Id');
     expect(requestId).toBeTruthy();
     expect(requestId!.length).toBeGreaterThan(0);
@@ -34,10 +23,10 @@ describe('requestIdInterceptor', () => {
   });
 
   it('devrait generer des IDs differents pour chaque requete', () => {
-    http.get('/api/first').subscribe();
-    http.get('/api/second').subscribe();
+    banc.adapter.get('/api/first').subscribe();
+    banc.adapter.get('/api/second').subscribe();
 
-    const reqs = httpMock.match(() => true);
+    const reqs = banc.httpMock.match(() => true);
     expect(reqs.length).toBe(2);
 
     const id1 = reqs[0].request.headers.get('X-Request-Id');

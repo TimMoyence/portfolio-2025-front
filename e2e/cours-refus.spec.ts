@@ -1,29 +1,15 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import {
-  EN_TETES_CORS,
   ETAT_EN_COURS,
-  SUJET_DE_SORTIE,
-  intercepterApi,
+  etatDuParticipant,
+  installerLaSeanceDeSortie,
   remplirLaJonction,
-  servirFlux,
   servirJson,
 } from './fixtures';
 
 const SEANCE = { id: '77777777-7777-4777-8777-777777777777', code: '7412' };
 const PARTICIPANT = '88888888-8888-4888-8888-888888888888';
-
-const ETAT_PARTICIPANT = {
-  sessionId: SEANCE.id,
-  participantId: PARTICIPANT,
-  revision: 3,
-  reponses: [],
-  reponsesLibres: [],
-  jalons: [],
-  enigmes: [],
-  defis: [],
-  rappels: { questionIds: [] },
-};
 
 function problemeDuBack(statut: number, code: string, detail: string): Record<string, unknown> {
   return {
@@ -41,34 +27,16 @@ function etatDeLaSeance(revision: number, pilotage: Record<string, unknown>): ob
 }
 
 async function installerLaSeance(page: Page, refus: Record<string, unknown>): Promise<void> {
-  await intercepterApi(page, async (route, chemin) => {
-    if (chemin.endsWith(`/sessions/${SEANCE.code}/join`)) {
-      await servirJson(
-        route,
-        {
-          participantId: PARTICIPANT,
-          sessionId: SEANCE.id,
-          ecranCourant: 0,
-          modeRythme: 'pilote',
-          jeton: `${PARTICIPANT}.empreinte`,
-        },
-        201,
-      );
-    } else if (chemin.endsWith(`/sessions/${SEANCE.id}/sujet`)) {
-      await servirJson(route, SUJET_DE_SORTIE);
-    } else if (chemin.endsWith(`/sessions/${SEANCE.id}/moi`)) {
-      await servirJson(route, ETAT_PARTICIPANT);
-    } else if (chemin.endsWith(`/sessions/${SEANCE.id}/answers`)) {
-      await servirJson(route, refus, Number(refus['status']));
-    } else if (chemin.endsWith(`/sessions/${SEANCE.id}/stream`)) {
-      await servirFlux(
-        route,
-        etatDeLaSeance(3, {}),
-        etatDeLaSeance(4, { 'ecran-sortie': { phase: 'revote', revele: false } }),
-      );
-    } else {
-      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
-    }
+  await installerLaSeanceDeSortie(page, {
+    seance: SEANCE,
+    participantId: PARTICIPANT,
+    jeton: `${PARTICIPANT}.empreinte`,
+    etat: () => etatDuParticipant(SEANCE, PARTICIPANT, 3),
+    flux: [
+      etatDeLaSeance(3, {}),
+      etatDeLaSeance(4, { 'ecran-sortie': { phase: 'revote', revele: false } }),
+    ],
+    ecritures: { answers: (route) => servirJson(route, refus, Number(refus['status'])) },
   });
 }
 
@@ -83,38 +51,32 @@ async function repondre(page: Page): Promise<void> {
   await page.locator('fp-exit [data-testid="envoyer"]').click();
 }
 
+const REFUS = [
+  {
+    titre: 'dit que l’écran n’est pas encore ouvert quand le back sert un 404 ECRAN_NON_SERVI',
+    statut: 404,
+    code: 'ECRAN_NON_SERVI',
+    detail: 'L’écran ecran-sortie n’a pas encore été projeté : attendez que le formateur y arrive.',
+    message: 'pas encore ouvert',
+  },
+  {
+    titre: 'dit que la séance est terminée quand le back sert un 409 SEANCE_TERMINEE',
+    statut: 409,
+    code: 'SEANCE_TERMINEE',
+    detail:
+      'La séance est terminée : les réponses ne sont plus acceptées, les résultats restent consultables.',
+    message: 'terminée',
+  },
+] as const;
+
 test.describe('refus servis par le back sur une écriture étudiante', () => {
-  test('dit que l’écran n’est pas encore ouvert quand le back sert un 404 ECRAN_NON_SERVI', async ({
-    page,
-  }) => {
-    await installerLaSeance(
-      page,
-      problemeDuBack(
-        404,
-        'ECRAN_NON_SERVI',
-        'L’écran ecran-sortie n’a pas encore été projeté : attendez que le formateur y arrive.',
-      ),
-    );
-    await rejoindre(page);
-    await repondre(page);
+  for (const refus of REFUS) {
+    test(refus.titre, async ({ page }) => {
+      await installerLaSeance(page, problemeDuBack(refus.statut, refus.code, refus.detail));
+      await rejoindre(page);
+      await repondre(page);
 
-    await expect(page.locator('fp-exit [data-testid="erreur"]')).toContainText('pas encore ouvert');
-  });
-
-  test('dit que la séance est terminée quand le back sert un 409 SEANCE_TERMINEE', async ({
-    page,
-  }) => {
-    await installerLaSeance(
-      page,
-      problemeDuBack(
-        409,
-        'SEANCE_TERMINEE',
-        'La séance est terminée : les réponses ne sont plus acceptées, les résultats restent consultables.',
-      ),
-    );
-    await rejoindre(page);
-    await repondre(page);
-
-    await expect(page.locator('fp-exit [data-testid="erreur"]')).toContainText('terminée');
-  });
+      await expect(page.locator('fp-exit [data-testid="erreur"]')).toContainText(refus.message);
+    });
+  }
 });

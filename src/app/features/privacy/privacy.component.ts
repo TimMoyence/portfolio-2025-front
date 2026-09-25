@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
-import { LegalPageComponent, type LegalTocItem } from '../legal/legal-page.component';
+import { LEGAL_PAGE_IMPORTS, type LegalTocItem } from '../legal/legal-page.component';
 
 @Component({
   selector: 'app-privacy',
   standalone: true,
-  imports: [RouterModule, RevealOnScrollDirective, LegalPageComponent],
+  imports: [LEGAL_PAGE_IMPORTS],
   templateUrl: './privacy.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

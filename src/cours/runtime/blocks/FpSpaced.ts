@@ -1,18 +1,15 @@
-import type { MetadonneesBrique } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpBlock } from './FpBlock';
-import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
 import {
-  type ConceptMaitrise,
-  estObjet,
-  estVerdictDeReponse,
-  type VerdictDeReponse,
-} from './retours';
+  type ContenuDeBrique,
+  type OptionPublique,
+  copierLeSocle,
+  projeterOptions,
+} from './projection';
+import { type ConceptMaitrise, estObjet } from './retours';
+import { FpVerdicts } from './verdicts';
 
-export interface SpacedRappel {
-  readonly id: string;
+export interface SpacedRappel extends ContenuDeBrique {
   readonly intitule: string;
-  readonly metadonnees: MetadonneesBrique;
 }
 
 export interface SpacedQuestionPublique {
@@ -73,10 +70,9 @@ function estConceptMaitrise(valeur: unknown): valeur is ConceptMaitrise {
   );
 }
 
-export class FpSpaced extends FpBlock {
+export class FpSpaced extends FpVerdicts {
   private interneRappel: SpacedRappel | null = null;
   private interne: readonly SpacedQuestionPublique[] | null = null;
-  private recus = new Map<string, VerdictDeReponse>();
   private repondues = new Set<string>();
   private carte: readonly ConceptMaitrise[] = [];
   private bonnes: ReadonlyMap<string, BonneReponse> | null = null;
@@ -84,13 +80,7 @@ export class FpSpaced extends FpBlock {
 
   set rappel(valeur: SpacedRappel | null) {
     this.interneRappel =
-      valeur === null
-        ? null
-        : {
-            id: valeur.id,
-            intitule: valeur.intitule,
-            metadonnees: projeterMetadonnees(valeur.metadonnees),
-          };
+      valeur === null ? null : { ...copierLeSocle(valeur), intitule: valeur.intitule };
     this.refreshSiConnecte();
   }
 
@@ -109,16 +99,13 @@ export class FpSpaced extends FpBlock {
     return this.interne;
   }
 
-  set verdicts(valeur: readonly VerdictDeReponse[] | null) {
-    this.recus = new Map(
-      (valeur ?? []).filter(estVerdictDeReponse).map((verdict) => [verdict.questionId, verdict]),
-    );
-    this.suivreAffichage(this.cleAffichage());
-    this.refreshSiConnecte();
+  protected verdictAttendu(): boolean {
+    return true;
   }
 
-  get verdicts(): readonly VerdictDeReponse[] {
-    return [...this.recus.values()];
+  protected override verdictsRecus(): void {
+    this.suivreAffichage(this.cleAffichage());
+    this.refreshSiConnecte();
   }
 
   set maitrise(valeur: readonly ConceptMaitrise[] | null) {
@@ -153,9 +140,6 @@ export class FpSpaced extends FpBlock {
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.cleAffichage());
-    if (this.presentateur()) {
-      return;
-    }
     for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
       bouton.addEventListener('click', () => this.repondre(bouton.dataset['option'] ?? ''));
     }
@@ -169,7 +153,7 @@ export class FpSpaced extends FpBlock {
   }
 
   private dejaTraitee(question: SpacedQuestionPublique): boolean {
-    return this.repondues.has(question.questionId) || this.recus.has(question.questionId);
+    return this.repondues.has(question.questionId) || this.recus.a(question.questionId);
   }
 
   private questionCourante(): SpacedQuestionPublique | null {
@@ -245,9 +229,9 @@ export class FpSpaced extends FpBlock {
 
   private bilan(): EscapedHtml {
     const lignes = (this.interne ?? [])
-      .filter((question) => this.bonnes !== null || this.recus.has(question.questionId))
+      .filter((question) => this.bonnes !== null || this.recus.a(question.questionId))
       .map((question) => {
-        const verdict = this.recus.get(question.questionId) ?? null;
+        const verdict = this.recus.de(question.questionId);
         return safeHtml`<li class="fp-spaced__ligne" data-testid="ligne" data-question="${escapeHtml(question.questionId)}"><span class="fp-spaced__nom">${escapeHtml(question.enonce)}</span>${this.verdictDeReponse(verdict)}${this.bonneReponse(question)}</li>`;
       });
     return lignes.length === 0

@@ -1,3 +1,5 @@
+@use '../../slide-section' as slide;
+
 .slide-table {
   width: 100%;
   box-sizing: border-box;
@@ -8,14 +10,14 @@
   max-width: 1200px;
   margin: 0 auto;
 
-  h2 {
+  @include slide.titre-projete {
     text-align: center;
     font-size: clamp(1.5rem, 2.5cqi, 2.25rem);
     margin: 0 0 2rem;
   }
 }
 
-.slide-table__subtitle,
+.slide-table ::ng-deep > .slide-table__subtitle,
 .slide-table__note {
   max-width: 66ch;
   margin: -1.35rem auto 1.5rem;

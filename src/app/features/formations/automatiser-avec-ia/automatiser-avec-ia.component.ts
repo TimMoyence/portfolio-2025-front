@@ -1,38 +1,49 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import {
-  type ComparisonColumn,
-  SlideComparisonComponent,
-  SlideComponent,
-  SlideCtaComponent,
-  SlideDeckComponent,
-  SlideGridComponent,
-  SlideHeroComponent,
-  SlideImageComponent,
-  SlidePollComponent,
-  SlideQuoteComponent,
-  SlideStatsComponent,
-} from '../../../shared/slides';
+import type { ComparisonColumn } from '../../../shared/slides';
+import { DECK_FORMATION } from '../shared/deck-formation';
 
 @Component({
   selector: 'app-automatiser-avec-ia',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    SlideDeckComponent,
-    SlideComponent,
-    SlideHeroComponent,
-    SlideImageComponent,
-    SlideStatsComponent,
-    SlideGridComponent,
-    SlideComparisonComponent,
-    SlideQuoteComponent,
-    SlidePollComponent,
-    SlideCtaComponent,
-  ],
+  imports: [DECK_FORMATION],
   templateUrl: './automatiser-avec-ia.component.html',
   styleUrl: './automatiser-avec-ia.component.scss',
 })
 export class AutomatiserAvecIaComponent {
+  protected readonly puces = {
+    w1: [
+      $localize`:@@formations.automatiser-avec-ia.w1.bullets.0: Vous dictez a ChatGPT : "prestation X, duree Y, tarif horaire Z" `,
+      $localize`:@@formations.automatiser-avec-ia.w1.bullets.1: L'IA produit un texte formel + un tableau recapitulatif `,
+      $localize`:@@formations.automatiser-avec-ia.w1.bullets.2: Vous copiez dans votre template Word/Google Docs existant `,
+      $localize`:@@formations.automatiser-avec-ia.w1.bullets.3: Gain mesure : de 25 min a 3 min par devis `,
+    ],
+    w2: [
+      $localize`:@@formations.automatiser-avec-ia.w2.bullets.0: Vous listez vos 5 questions clients les plus frequentes `,
+      $localize`:@@formations.automatiser-avec-ia.w2.bullets.1: ChatGPT genere une reponse type personnalisable pour chaque `,
+      $localize`:@@formations.automatiser-avec-ia.w2.bullets.2: Vous les enregistrez comme "reponses standard" dans Gmail `,
+      $localize`:@@formations.automatiser-avec-ia.w2.bullets.3: Chaque email traite en 30 secondes au lieu de 5 minutes `,
+    ],
+    w3: [
+      $localize`:@@formations.automatiser-avec-ia.w3.bullets.0: Vous listez 4 themes de la semaine (une realisation, une astuce, un temoignage, un behind-the-scenes) `,
+      $localize`:@@formations.automatiser-avec-ia.w3.bullets.1: ChatGPT produit 4 textes + 4 idees d'images `,
+      $localize`:@@formations.automatiser-avec-ia.w3.bullets.2: Vous les programmez dans Buffer ou Metricool (gratuit jusqu'a 3 reseaux) `,
+      $localize`:@@formations.automatiser-avec-ia.w3.bullets.3: Publication automatique, vous reprenez la main pour repondre aux commentaires `,
+    ],
+    w4: [
+      $localize`:@@formations.automatiser-avec-ia.w4.bullets.0: Vous glissez une photo de facture dans ChatGPT (version gratuite avec limite quotidienne) `,
+      $localize`:@@formations.automatiser-avec-ia.w4.bullets.1: L'IA retourne un tableau avec montant HT, TVA, TTC, date, fournisseur `,
+      $localize`:@@formations.automatiser-avec-ia.w4.bullets.2: Copie-colle dans votre tableur / logiciel de compta `,
+      $localize`:@@formations.automatiser-avec-ia.w4.bullets.3: 15 factures traitees en 10 minutes au lieu d'une heure `,
+    ],
+    w5: [
+      $localize`:@@formations.automatiser-avec-ia.w5.bullets.0: Vous definissez 3 sujets cles (ex : "reglementation artisan BTP", "nouvelles aides BPI") `,
+      $localize`:@@formations.automatiser-avec-ia.w5.bullets.1: Perplexity.ai fait la recherche web live et cite ses sources `,
+      $localize`:@@formations.automatiser-avec-ia.w5.bullets.2: Vous enregistrez la conversation comme "veille hebdo" `,
+      $localize`:@@formations.automatiser-avec-ia.w5.bullets.3: 5 minutes le lundi = vous etes a jour sur toute la semaine `,
+    ],
+  };
+
   protected readonly constatStats = [
     {
       value: '13h',

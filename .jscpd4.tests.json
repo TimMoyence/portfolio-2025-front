@@ -1,0 +1,20 @@
+{
+  "path": ["src", "e2e"],
+  "format": ["typescript"],
+  "minLines": 5,
+  "minTokens": 30,
+  "maxLines": 100000,
+  "maxSize": "10mb",
+  "mode": "weak",
+  "gitignore": true,
+  "absolute": false,
+  "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/coverage/**",
+    "src/!(testing)/**/!(*.spec).ts",
+    "src/!(*.spec).ts"
+  ],
+  "reporters": ["console", "threshold"],
+  "threshold": 0
+}

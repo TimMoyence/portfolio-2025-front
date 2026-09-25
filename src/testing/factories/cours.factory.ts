@@ -22,6 +22,7 @@ import type { StoryRecit } from '../../cours/runtime/blocks/FpStory';
 import type { TableBuildPlanPublic } from '../../cours/runtime/blocks/FpTableBuild';
 import type { VoteQuestionPublique } from '../../cours/runtime/blocks/FpVote';
 import type { WorkedExemple } from '../../cours/runtime/blocks/FpWorked';
+import type { DonneesParBrique } from '../../cours/runtime/blocks/donnees-publiques';
 import type {
   ProgressionDesEnigmes,
   StrategieServie,
@@ -52,32 +53,43 @@ export function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent 
   };
 }
 
+export function buildDonneesQuestionnaire(
+  numerique: NumericQuestionPublique = buildNumericQuestion(),
+  vote: VoteQuestionPublique = buildVoteQuestion(),
+): DonneesParBrique['questionnaire'] {
+  return {
+    intitule: 'Atelier 1 — Lire, rapporter, estimer',
+    consigne: 'Répondez seul, sans calculatrice, dans l’ordre.',
+    regime: 'focus',
+    ordre: 'fixe',
+    questions: [
+      { brique: 'fp-numeric', donnees: { question: numerique } },
+      { brique: 'fp-vote', donnees: { question: vote } },
+    ],
+  };
+}
+
 export function buildEcranQuestionnaire(overrides: Partial<EcranContent> = {}): EcranContent {
   return buildEcran({
     id: 'ecran-questionnaire',
     type: 'questionnaire',
     duree: 14,
-    donnees: {
-      intitule: 'Atelier 1 — Lire, rapporter, estimer',
-      consigne: 'Répondez seul, sans calculatrice, dans l’ordre.',
-      regime: 'focus',
-      ordre: 'fixe',
-      questions: [
-        { brique: 'fp-numeric', donnees: { question: buildNumericQuestion() } },
-        { brique: 'fp-vote', donnees: { question: buildVoteQuestion() } },
-      ],
-    },
+    donnees: buildDonneesQuestionnaire(),
     ...overrides,
   });
 }
 
+export const ENTETE_COURS_B1_09: Omit<CoursContent, 'ecrans'> = {
+  id: 'b1-09-interets-composes',
+  titre: 'Faire fructifier : interets composes et capitalisation',
+  niveau: 'B1',
+  duree: 210,
+  concepts: ['capitalisation', 'valeur-acquise'],
+};
+
 export function buildCoursContent(overrides: Partial<CoursContent> = {}): CoursContent {
   return {
-    id: 'b1-09-interets-composes',
-    titre: 'Faire fructifier : interets composes et capitalisation',
-    niveau: 'B1',
-    duree: 210,
-    concepts: ['capitalisation', 'valeur-acquise'],
+    ...ENTETE_COURS_B1_09,
     ecrans: [
       buildEcran({ id: 'ecran-1' }),
       buildEcran({ id: 'ecran-2' }),
@@ -368,6 +380,16 @@ export function buildPlotEnBarres(overrides: Partial<PlotDefinition> = {}): Plot
   });
 }
 
+export const COLONNE_COEFFICIENT_TOILE = {
+  cle: 'coef',
+  intitule: 'Coefficient appliqué',
+  role: 'deduite',
+  formuleInitiale: 'prix / prixInitial',
+  formule: 'prix / avantPrix',
+  decimales: 4,
+  totalise: false,
+} satisfies TableBuildPlanPublic['colonnes'][number];
+
 export function buildTableBuildPlan(
   overrides: Partial<TableBuildPlanPublic> = {},
 ): TableBuildPlanPublic {
@@ -402,15 +424,7 @@ export function buildTableBuildPlan(
         decimales: 2,
         totalise: false,
       },
-      {
-        cle: 'coef',
-        intitule: 'Coefficient appliqué',
-        role: 'deduite',
-        formuleInitiale: 'prix / prixInitial',
-        formule: 'prix / avantPrix',
-        decimales: 4,
-        totalise: false,
-      },
+      COLONNE_COEFFICIENT_TOILE,
       {
         cle: 'indice',
         intitule: 'Indice (base 100 au 1er janvier)',

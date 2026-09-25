@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   AsiliCtaBandComponent,
-  type AsiliCtaAction,
+  type AsiliCta,
   AsiliHeroComponent,
   AsiliManifestoComponent,
   type AsiliManifestoLine,
@@ -192,19 +192,21 @@ export class HomeComponent {
     },
   ];
 
-  protected readonly ctaKicker = $localize`:@@homeCtaKicker:Parlons de votre situation`;
-  protected readonly ctaTitle = $localize`:@@homeCtaTitle:Et si on clarifiait, ensemble, avant de construire ?`;
-  protected readonly ctaLead = $localize`:@@homeCtaLead:Décrivez votre contexte en quelques lignes. Je reviens vers vous avec un regard honnête — pas un devis générique.`;
-  protected readonly ctaActions: readonly AsiliCtaAction[] = [
-    {
-      libelle: $localize`:@@homeCtaPrimary:Démarrer la conversation`,
-      lien: '/contact',
-      variante: 'principale',
-    },
-    {
-      libelle: $localize`:@@homeCtaSecondary:Voir les projets`,
-      lien: '/projets',
-      variante: 'secondaire',
-    },
-  ];
+  protected readonly cta: AsiliCta = {
+    kicker: $localize`:@@homeCtaKicker:Parlons de votre situation`,
+    title: $localize`:@@homeCtaTitle:Et si on clarifiait, ensemble, avant de construire ?`,
+    lead: $localize`:@@homeCtaLead:Décrivez votre contexte en quelques lignes. Je reviens vers vous avec un regard honnête — pas un devis générique.`,
+    actions: [
+      {
+        libelle: $localize`:@@homeCtaPrimary:Démarrer la conversation`,
+        lien: '/contact',
+        variante: 'principale',
+      },
+      {
+        libelle: $localize`:@@homeCtaSecondary:Voir les projets`,
+        lien: '/projets',
+        variante: 'secondaire',
+      },
+    ],
+  };
 }

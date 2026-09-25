@@ -187,26 +187,19 @@ function estComptesParOption(valeur: unknown): boolean {
 }
 
 function estFreeRange(valeur: unknown): valeur is FreeRange {
-  if (typeof valeur !== 'object' || valeur === null) {
-    return false;
-  }
-  const candidat = valeur as Record<string, unknown>;
-  return typeof candidat['premier'] === 'number' && typeof candidat['dernier'] === 'number';
+  return estDictionnaire(valeur) && estNombre(valeur['premier']) && estNombre(valeur['dernier']);
 }
 
 function estEtatSession(valeur: unknown): valeur is EtatRecu {
-  if (typeof valeur !== 'object' || valeur === null) {
-    return false;
-  }
-  const candidat = valeur as Record<string, unknown>;
   return (
-    estMembre(STATUTS_VALIDES, candidat['etat']) &&
-    estMembre(MODES_RYTHME_VALIDES, candidat['modeRythme']) &&
-    typeof candidat['ecranCourant'] === 'number' &&
-    typeof candidat['participants'] === 'number' &&
-    (candidat['intervalleLibre'] === null || estFreeRange(candidat['intervalleLibre'])) &&
-    absentOu(candidat['revision'], estEntierPositif) &&
-    absentOu(candidat['pilotage'], estPilotage)
+    estDictionnaire(valeur) &&
+    estMembre(STATUTS_VALIDES, valeur['etat']) &&
+    estMembre(MODES_RYTHME_VALIDES, valeur['modeRythme']) &&
+    estNombre(valeur['ecranCourant']) &&
+    estNombre(valeur['participants']) &&
+    nulOu(valeur['intervalleLibre'], estFreeRange) &&
+    absentOu(valeur['revision'], estEntierPositif) &&
+    absentOu(valeur['pilotage'], estPilotage)
   );
 }
 
@@ -215,14 +208,11 @@ function completerEtat(recu: EtatRecu): EtatSession {
 }
 
 function estConfusionComptee(valeur: unknown): valeur is ConfusionComptee {
-  if (typeof valeur !== 'object' || valeur === null) {
-    return false;
-  }
-  const candidat = valeur as Record<string, unknown>;
   return (
-    typeof candidat['id'] === 'string' &&
-    typeof candidat['libelle'] === 'string' &&
-    typeof candidat['nombre'] === 'number'
+    estDictionnaire(valeur) &&
+    typeof valeur['id'] === 'string' &&
+    typeof valeur['libelle'] === 'string' &&
+    estNombre(valeur['nombre'])
   );
 }
 
@@ -238,18 +228,15 @@ function aDesChampsV3Valides(candidat: Record<string, unknown>): boolean {
 }
 
 function estResultatQuestion(valeur: unknown): valeur is ResultatRecu {
-  if (typeof valeur !== 'object' || valeur === null) {
-    return false;
-  }
-  const candidat = valeur as Record<string, unknown>;
   return (
-    typeof candidat['questionId'] === 'string' &&
-    typeof candidat['total'] === 'number' &&
-    typeof candidat['correctes'] === 'number' &&
-    typeof candidat['neSaitPas'] === 'number' &&
-    Array.isArray(candidat['confusions']) &&
-    candidat['confusions'].every(estConfusionComptee) &&
-    aDesChampsV3Valides(candidat)
+    estDictionnaire(valeur) &&
+    typeof valeur['questionId'] === 'string' &&
+    estNombre(valeur['total']) &&
+    estNombre(valeur['correctes']) &&
+    estNombre(valeur['neSaitPas']) &&
+    Array.isArray(valeur['confusions']) &&
+    valeur['confusions'].every(estConfusionComptee) &&
+    aDesChampsV3Valides(valeur)
   );
 }
 
@@ -297,15 +284,12 @@ function aDesChampsEnDirectValides(candidat: Record<string, unknown>): boolean {
 }
 
 function estResultatsSeance(valeur: unknown): valeur is ResultatsRecus {
-  if (typeof valeur !== 'object' || valeur === null) {
-    return false;
-  }
-  const candidat = valeur as Record<string, unknown>;
   return (
-    typeof candidat['participants'] === 'number' &&
-    Array.isArray(candidat['questions']) &&
-    candidat['questions'].every(estResultatQuestion) &&
-    aDesChampsEnDirectValides(candidat)
+    estDictionnaire(valeur) &&
+    estNombre(valeur['participants']) &&
+    Array.isArray(valeur['questions']) &&
+    valeur['questions'].every(estResultatQuestion) &&
+    aDesChampsEnDirectValides(valeur)
   );
 }
 

@@ -24,7 +24,9 @@ import { AUDIT_REQUEST_PORT } from '../../core/ports/audit-request.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import type { FaqItem } from '../../shared/components/faq-section/faq-section.component';
 import { FaqSectionComponent } from '../../shared/components/faq-section/faq-section.component';
+import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
+import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
 import { AuditClientReportSectionComponent } from './components/audit-client-report-section/audit-client-report-section.component';
 import {
   type AuditSectionBadge,
@@ -54,6 +56,8 @@ interface AuditPillar {
     HeroSectionComponent,
     FaqSectionComponent,
     AuditClientReportSectionComponent,
+    FieldErrorsComponent,
+    HoneypotDirective,
   ],
   templateUrl: './growth-audit.component.html',
   styleUrl: './growth-audit.component.scss',

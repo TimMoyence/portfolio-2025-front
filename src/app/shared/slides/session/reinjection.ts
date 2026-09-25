@@ -140,24 +140,32 @@ function annexeDuMontage(
   return { type: 'cible', cible: bonne['cible'], optionId };
 }
 
+function visantLeMontage<T extends { readonly questionId: string }>(
+  verdicts: readonly T[],
+  montage: MontageIdentifie,
+): T[] {
+  return verdicts.filter((verdict) => viseUnIdentifiant(montage.identifiants, verdict.questionId));
+}
+
+function poseDuDernierVerdict(
+  verdicts: readonly { readonly questionId: string }[],
+  montage: MontageIdentifie,
+): Pose[] {
+  return [['verdict', visantLeMontage(verdicts, montage).at(-1) ?? null]];
+}
+
 function posesDesQuestions(montage: MontageIdentifie, contexte: ContexteDeReinjection): Pose[] {
   const verdicts = deGenre(contexte.retours, 'verdict-reponse');
   if (montage.brique === 'fp-vote') {
     return [
-      [
-        'verdicts',
-        verdicts.filter((verdict) => viseUnIdentifiant(montage.identifiants, verdict.questionId)),
-      ],
+      ['verdicts', visantLeMontage(verdicts, montage)],
       ['phase', phaseDuVote(contexte.direct)],
       ['resultats', resultatsDuVote(montage, contexte.direct)],
       ['resultatsPremierVote', resultatsDuPremierVote(montage, contexte.direct)],
     ];
   }
   if (QUESTIONS_SIMPLES.has(montage.brique)) {
-    const verdict = verdicts.filter((candidat) =>
-      viseUnIdentifiant(montage.identifiants, candidat.questionId),
-    );
-    return [['verdict', verdict.at(-1) ?? null]];
+    return poseDuDernierVerdict(verdicts, montage);
   }
   return [];
 }
@@ -166,10 +174,7 @@ function posesDesProductions(montage: MontageIdentifie, contexte: ContexteDeRein
   if (!PRODUCTIONS.has(montage.brique)) {
     return [];
   }
-  const verdict = deGenre(contexte.retours, 'verdict-production').filter((candidat) =>
-    viseUnIdentifiant(montage.identifiants, candidat.questionId),
-  );
-  return [['verdict', verdict.at(-1) ?? null]];
+  return poseDuDernierVerdict(deGenre(contexte.retours, 'verdict-production'), montage);
 }
 
 function posesDuRappel(montage: MontageIdentifie, contexte: ContexteDeReinjection): Pose[] {

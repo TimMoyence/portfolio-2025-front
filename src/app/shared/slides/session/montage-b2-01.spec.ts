@@ -1,4 +1,5 @@
 import type { EcranContent, Role } from '../../../../cours/content/types';
+import { recolterDansLArbre } from '../../../../testing/arbre-json';
 import {
   DELAI_DE_MONTAGE_MS,
   monterEcran,
@@ -29,13 +30,7 @@ function ecranNomme<T extends EcranContent>(ecrans: readonly T[], id: string): T
 const SUBSTITUTION = buildInstantaneDeSubstitution();
 
 function clesDe(valeur: unknown): readonly string[] {
-  if (Array.isArray(valeur)) {
-    return valeur.flatMap(clesDe);
-  }
-  if (typeof valeur !== 'object' || valeur === null) {
-    return [];
-  }
-  return Object.entries(valeur).flatMap(([cle, contenu]) => [cle, ...clesDe(contenu)]);
+  return recolterDansLArbre(valeur, (cle, contenu, descendre) => [cle, ...descendre(contenu)]);
 }
 
 async function attesterLeMontage(ecran: EcranContent, role: Role): Promise<void> {

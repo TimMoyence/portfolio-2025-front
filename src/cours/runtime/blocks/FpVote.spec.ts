@@ -1,5 +1,10 @@
 import { creerMetadonneesBrique } from '../../content/types';
 import { buildVerdictDeReponse, buildVoteQuestion } from '../../../testing/factories/cours.factory';
+import {
+  attendreLaSeuleOptionFausse,
+  installerBrique,
+  roleAffiche,
+} from '../../../testing/banc-de-brique';
 import { classesOrphelines } from '../../../testing/classes-briques';
 import { FpVote } from './FpVote';
 
@@ -73,20 +78,13 @@ function mesurerDuree(lectureMs: number, rendus: number): number | undefined {
 describe('FpVote', () => {
   let hote: FpVote;
 
-  beforeAll(() => {
-    if (!customElements.get('fp-vote')) {
-      customElements.define('fp-vote', FpVote);
-    }
-  });
-
-  beforeEach(() => {
-    hote = document.createElement('fp-vote') as FpVote;
-    hote.question = QUESTION;
-    document.body.appendChild(hote);
-  });
-
-  afterEach(() => {
-    hote.remove();
+  installerBrique<FpVote>({
+    balise: 'fp-vote',
+    classe: FpVote,
+    poser: (brique) => {
+      hote = brique;
+      brique.question = QUESTION;
+    },
   });
 
   function presenter(): void {
@@ -127,9 +125,7 @@ describe('FpVote', () => {
       expect(etudiant).toContain(noeud);
       expect(presentateur).toContain(noeud);
     }
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(
-      'presentateur',
-    );
+    expect(roleAffiche(hote)).toBe('presentateur');
   });
 
   it('n emet aucun vote depuis le poste presentateur', () => {
@@ -270,12 +266,7 @@ describe('FpVote', () => {
 
     hote.corrige = { type: 'cible', cible: '1 480,24 €', optionId: 'b' };
 
-    expect(
-      hote.shadowRoot?.querySelector('[data-option="a"]')?.getAttribute('data-correction'),
-    ).toBe('fausse');
-    expect(
-      hote.shadowRoot?.querySelector('[data-option="c"]')?.hasAttribute('data-correction'),
-    ).toBeFalse();
+    attendreLaSeuleOptionFausse(hote, 'a', 'c');
   });
 
   it('ne marque aucune option quand le corrige ne porte pas d identifiant d option', () => {

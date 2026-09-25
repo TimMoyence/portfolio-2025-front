@@ -8,6 +8,7 @@ import {
   AsiliClosingComponent,
   AsiliHeroComponent,
   type AsiliHeroMetaRow,
+  AsiliSectionTeteComponent,
 } from '../../shared/sections';
 
 interface PresentationSkill {
@@ -17,6 +18,34 @@ interface PresentationSkill {
   icon: 'code' | 'ai' | 'chart';
   revealDelay: 1 | 2 | 3 | 4 | null;
 }
+
+interface IconeCompetence {
+  cercle: boolean;
+  traits: readonly { d: string; jointureArrondie: boolean }[];
+}
+
+const ICONES_COMPETENCES: Readonly<Record<PresentationSkill['icon'], IconeCompetence>> = {
+  code: {
+    cercle: false,
+    traits: [{ d: 'm8 6-6 6 6 6M16 6l6 6-6 6', jointureArrondie: true }],
+  },
+  ai: {
+    cercle: true,
+    traits: [
+      {
+        d: 'M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2',
+        jointureArrondie: false,
+      },
+    ],
+  },
+  chart: {
+    cercle: false,
+    traits: [
+      { d: 'M3 3v18h18', jointureArrondie: false },
+      { d: 'm7 14 3-3 3 3 5-6', jointureArrondie: true },
+    ],
+  },
+};
 
 interface PresentationMilestone {
   year: string;
@@ -33,6 +62,7 @@ interface PresentationMilestone {
     RevealOnScrollDirective,
     AsiliHeroComponent,
     AsiliAiMethodComponent,
+    AsiliSectionTeteComponent,
     AsiliClosingComponent,
   ],
   templateUrl: './presentation.component.html',
@@ -82,6 +112,8 @@ export class PresentationComponent {
   protected readonly introSignature = $localize`:@@presentationIntroSignature:— Tim Moyence, Asili Design`;
 
   protected readonly skillsKicker = $localize`:@@presentationSkillsKicker:Compétences & approche`;
+
+  protected readonly icones = ICONES_COMPETENCES;
 
   protected readonly skills: readonly PresentationSkill[] = [
     {

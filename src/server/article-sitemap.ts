@@ -1,3 +1,4 @@
+import { lireJsonSousDelai, messageDErreur } from './lecture-api';
 import type { DynamicArticleSitemapEntry } from './seo-builders';
 import { trimTrailingSlashes } from './url-utils';
 
@@ -40,18 +41,13 @@ async function lirePage(
   locale: string,
   dependances: DependancesDuLecteurDArticles,
 ): Promise<PageDArticles | null> {
-  const controleur = new AbortController();
-  const minuterie = setTimeout(() => controleur.abort(), DELAI_MS);
   try {
-    const reponse = await dependances.fetch(url, {
-      headers: { accept: 'application/json' },
-      signal: controleur.signal,
-    });
-    if (!reponse.ok) {
-      dependances.journal.warn(`[sitemap] articles ${locale} : l'API a répondu ${reponse.status}`);
+    const lecture = await lireJsonSousDelai(dependances.fetch, url, DELAI_MS);
+    if (!lecture.ok) {
+      dependances.journal.warn(`[sitemap] articles ${locale} : l'API a répondu ${lecture.statut}`);
       return null;
     }
-    const corps = (await reponse.json()) as Readonly<Record<string, unknown>> | null;
+    const corps = lecture.corps as Readonly<Record<string, unknown>> | null;
     const suivant = corps?.['next_cursor'];
     return {
       entrees: entreesDe(locale, corps?.['items']),
@@ -59,11 +55,9 @@ async function lirePage(
     };
   } catch (erreur) {
     dependances.journal.warn(
-      `[sitemap] articles ${locale} : API injoignable (${erreur instanceof Error ? erreur.message : String(erreur)})`,
+      `[sitemap] articles ${locale} : API injoignable (${messageDErreur(erreur)})`,
     );
     return null;
-  } finally {
-    clearTimeout(minuterie);
   }
 }
 

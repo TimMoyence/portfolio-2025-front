@@ -1,4 +1,5 @@
 import type { Page, Route } from '@playwright/test';
+import { etatParticipantVierge } from '../src/testing/fixtures/etat-participant';
 
 export const API_BASE = 'http://localhost:3000/api/v1/portfolio25';
 
@@ -75,7 +76,7 @@ const SEANCE_B2 = {
   code: '4822',
 } as const;
 
-export const EN_TETES_CORS = {
+const EN_TETES_CORS = {
   'access-control-allow-origin': 'http://localhost:4200',
   'access-control-allow-credentials': 'true',
   'access-control-allow-headers': 'content-type, accept, x-participant-token, authorization',
@@ -88,6 +89,10 @@ export async function servirJson(route: Route, corps: unknown, statut = 200): Pr
     headers: { ...EN_TETES_CORS, 'content-type': 'application/json' },
     body: JSON.stringify(corps),
   });
+}
+
+export async function servirSansContenu(route: Route): Promise<void> {
+  await route.fulfill({ status: 204, headers: EN_TETES_CORS });
 }
 
 export async function servirFlux(route: Route, ...etats: readonly unknown[]): Promise<void> {
@@ -113,7 +118,7 @@ export async function intercepterApi(
   await page.route(`${API_BASE}/**`, async (route) => {
     const requete = route.request();
     if (requete.method() === 'OPTIONS') {
-      await route.fulfill({ status: 204, headers: EN_TETES_CORS });
+      await servirSansContenu(route);
       return;
     }
     await traiter(route, new URL(requete.url()).pathname, requete.method());
@@ -161,7 +166,7 @@ export const BILLET_DE_SORTIE = {
   },
 };
 
-export const SUJET_DE_SORTIE = {
+const SUJET_DE_SORTIE = {
   id: B2_SLUG,
   titre: 'Décider avec des taux fiables',
   niveau: 'B2',
@@ -178,6 +183,59 @@ export const SUJET_DE_SORTIE = {
     },
   ],
 };
+
+export interface SeanceDeSortie {
+  readonly id: string;
+  readonly code: string;
+}
+
+export function etatDuParticipant(
+  seance: SeanceDeSortie,
+  participantId: string,
+  revision: number,
+  reponses: readonly unknown[] = [],
+): Record<string, unknown> {
+  return {
+    ...etatParticipantVierge({ sessionId: seance.id, participantId, revision }),
+    reponses,
+  };
+}
+
+interface MontageDeSortie {
+  readonly seance: SeanceDeSortie;
+  readonly participantId: string;
+  readonly jeton: string;
+  readonly etat: () => unknown;
+  readonly flux: readonly unknown[];
+  readonly ecritures: Readonly<Record<string, (route: Route) => Promise<void>>>;
+}
+
+export async function installerLaSeanceDeSortie(
+  page: Page,
+  montage: MontageDeSortie,
+): Promise<void> {
+  const { seance, participantId, jeton } = montage;
+  const racine = `/sessions/${seance.id}/`;
+  await intercepterApi(page, async (route, chemin) => {
+    const ecriture = Object.entries(montage.ecritures).find(([suffixe]) =>
+      chemin.endsWith(`${racine}${suffixe}`),
+    );
+    if (chemin.endsWith(`/sessions/${seance.code}/join`)) {
+      const corps = { participantId, sessionId: seance.id, ecranCourant: 0, modeRythme: 'pilote' };
+      await servirJson(route, { ...corps, jeton }, 201);
+    } else if (chemin.endsWith(`${racine}sujet`)) {
+      await servirJson(route, SUJET_DE_SORTIE);
+    } else if (chemin.endsWith(`${racine}moi`)) {
+      await servirJson(route, montage.etat());
+    } else if (ecriture !== undefined) {
+      await ecriture[1](route);
+    } else if (chemin.endsWith(`${racine}stream`)) {
+      await servirFlux(route, ...montage.flux);
+    } else {
+      await servirSansContenu(route);
+    }
+  });
+}
 
 export async function ouvrirEcranEtudiantB2(
   page: Page,

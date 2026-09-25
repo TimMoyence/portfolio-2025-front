@@ -1,10 +1,9 @@
-import { HttpTestingController } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import type { HttpTestingController } from '@angular/common/http/testing';
 import * as fc from 'fast-check';
 import type { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { buildProblemeHttp } from '../../../testing/factories/probleme-http.factory';
-import { setupTestBed } from '../../../testing/setup-test-bed';
+import { bancAdaptateurHttp } from '../../../testing/http-attendu';
 import type { MotifRefusReponse } from '../ports/formations.port';
 import { ReponseRefusee } from '../ports/formations.port';
 import { FormationsHttpAdapter } from './formations-http.adapter';
@@ -103,18 +102,11 @@ const refus: fc.Arbitrary<RefusDuBack> = fc.constantFrom(...REFUS_DU_BACK);
 const quatreCentQuatreNu: RefusDuBack = { statut: 404, motif: 'refusee' };
 
 describe('simulation : chaque refus du back devient un motif affichable, quel que soit l’enchaînement', () => {
+  const banc = bancAdaptateurHttp(FormationsHttpAdapter);
   let adapter: FormationsHttpAdapter;
   let httpMock: HttpTestingController;
 
-  beforeEach(() => {
-    setupTestBed({ providers: [FormationsHttpAdapter] });
-    adapter = TestBed.inject(FormationsHttpAdapter);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
-  });
+  beforeEach(() => ({ adapter, httpMock } = banc));
 
   function refuser(cible: EcritureEtudiante, servi: RefusDuBack): ReponseRefusee | 'accepte' {
     const recus: unknown[] = [];

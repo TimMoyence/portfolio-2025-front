@@ -7,16 +7,16 @@ import {
   poserEtape,
   suiteVersLeMaximum,
 } from './animation';
-import { type ParametreReglable, brancherCurseurs } from './curseurs';
+import { type ParametreReglable, brancherCurseurs, curseur } from './curseurs';
 import { FpBlock } from './FpBlock';
+import { type ContenuDeBrique, copierLeSocle } from './projection';
 
 export interface Prereglage {
   readonly libelle: string;
   readonly valeurs: Readonly<Record<string, number>>;
 }
 
-export interface DefinitionReglable {
-  readonly id: string;
+export interface DefinitionReglable extends ContenuDeBrique {
   readonly parametres: readonly ParametreReglable[];
   readonly prereglages?: readonly Prereglage[];
   readonly animation?: readonly Reglages[];
@@ -43,7 +43,7 @@ export function plafondDe(bornes: { readonly min: number; readonly max: number }
   return Math.max(fini(bornes.max, bas), bas);
 }
 
-export function copierParametres(source: readonly ParametreReglable[]): ParametreReglable[] {
+function copierParametres(source: readonly ParametreReglable[]): ParametreReglable[] {
   return source
     .filter((parametre) => parametre.cle.trim().length > 0)
     .map((parametre) => ({
@@ -56,8 +56,17 @@ export function copierParametres(source: readonly ParametreReglable[]): Parametr
     }));
 }
 
-export function copierPrereglages(source: readonly Prereglage[] | undefined): Prereglage[] {
+function copierPrereglages(source: readonly Prereglage[] | undefined): Prereglage[] {
   return (source ?? []).map(({ libelle, valeurs }) => ({ libelle, valeurs: { ...valeurs } }));
+}
+
+export function copierLeReglable(source: DefinitionReglable): DefinitionReglable {
+  return {
+    ...copierLeSocle(source),
+    parametres: copierParametres(source.parametres),
+    prereglages: copierPrereglages(source.prereglages),
+    animation: source.animation?.map((etape) => ({ ...etape })),
+  };
 }
 
 export abstract class FpReglable<Definition extends DefinitionReglable> extends FpBlock {
@@ -66,6 +75,8 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
   private arretDeLAnimation: (() => void) | null = null;
 
   protected abstract readonly evenementDeReglage: string;
+
+  protected abstract readonly bloc: string;
 
   protected abstract copier(valeur: Definition): Definition;
 
@@ -145,12 +156,60 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
     );
   }
 
-  protected boutonsDePrereglage(prefixe: string): EscapedHtml[] {
-    const classe = `${prefixe}__prereglage`;
-    return (this.interne?.prereglages ?? []).map(
+  protected valeurDe(parametre: ParametreReglable, valeurs: Reglages = this.courantes): number {
+    return borner(parametre, fini(valeurs[parametre.cle], parametre.defaut));
+  }
+
+  protected panneauDeReglages(declencheurs: EscapedHtml): EscapedHtml {
+    const bloc = escapeHtml(this.bloc);
+    return safeHtml`
+      <fieldset class="fp-${bloc}__reglages">
+        <legend>${escapeHtml(this.texteDuBloc('reglages'))}</legend>
+        ${declencheurs}
+        <div class="fp-${bloc}__parametres" aria-live="polite">
+          ${(this.interne?.parametres ?? []).map((parametre) => this.parametreAffiche(parametre))}
+        </div>
+      </fieldset>
+    `;
+  }
+
+  protected boutonAnimer(): EscapedHtml {
+    return safeHtml`<button class="fp-${escapeHtml(this.bloc)}__animation" data-testid="animer" type="button">${escapeHtml(this.texteDuBloc('animer'))}</button>`;
+  }
+
+  protected prereglagesAffiches(): EscapedHtml {
+    const prereglages = this.interne?.prereglages ?? [];
+    if (prereglages.length === 0) {
+      return safeHtml``;
+    }
+    const boutons = prereglages.map(
       (prereglage, rang) =>
-        safeHtml`<button class="${escapeHtml(classe)}" data-testid="prereglage" data-rang="${rang}" type="button" aria-pressed="${escapeHtml(String(this.estActif(prereglage)))}">${escapeHtml(prereglage.libelle)}</button>`,
+        safeHtml`<button class="fp-${escapeHtml(this.bloc)}__prereglage" data-testid="prereglage" data-rang="${rang}" type="button" aria-pressed="${escapeHtml(String(this.estActif(prereglage)))}">${escapeHtml(prereglage.libelle)}</button>`,
     );
+    return safeHtml`<div class="fp-${escapeHtml(this.bloc)}__prereglages" role="group" aria-label="${escapeHtml(this.texteDuBloc('prereglages'))}">${boutons}</div>`;
+  }
+
+  private parametreAffiche(parametre: ParametreReglable): EscapedHtml {
+    const bloc = escapeHtml(this.bloc);
+    const valeur = this.valeurDe(parametre);
+    const enonce = this.enonceValeur(parametre, valeur);
+    const prefixe = `fp-${this.bloc}`;
+    return safeHtml`
+      <div class="fp-${bloc}__parametre" data-testid="parametre" data-cle="${escapeHtml(parametre.cle)}">
+        <span class="fp-${bloc}__etiquette">${escapeHtml(parametre.libelle)}</span>
+        ${curseur(prefixe, parametre, valeur, enonce)}
+        <output class="fp-${bloc}__valeur fp-montant" data-testid="valeur" data-cle="${escapeHtml(parametre.cle)}" aria-label="${escapeHtml(enonce)}">${escapeHtml(this.afficherValeur(valeur))}</output>
+      </div>
+    `;
+  }
+
+  private enonceValeur(parametre: ParametreReglable, valeur: number): string {
+    const plage = `${this.texteDuBloc('plage')} ${this.afficherValeur(plancherDe(parametre))} ${this.texteDuBloc('plage-fin')} ${this.afficherValeur(plafondDe(parametre))}`;
+    return `${parametre.libelle} : ${this.afficherValeur(valeur)} (${plage})`;
+  }
+
+  private texteDuBloc(suffixe: string): string {
+    return this.texte([this.bloc, suffixe].join('-'));
   }
 
   private relayerReglages(): void {

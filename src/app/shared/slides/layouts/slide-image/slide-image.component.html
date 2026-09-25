@@ -1,16 +1,16 @@
+<ng-template #media>
+  <div class="slide-image__media">
+    <img [src]="image()" [alt]="imageAlt()" loading="lazy" decoding="async" />
+  </div>
+</ng-template>
 <div class="slide-image" [class]="'accent-' + accent()">
   @if (!isReverse()) {
-    <div class="slide-image__media">
-      <img [src]="image()" [alt]="imageAlt()" loading="lazy" decoding="async" />
-    </div>
+    <ng-container *ngTemplateOutlet="media" />
   }
-  <div class="slide-image__content">
-    @if (title()) {
-      <h2>{{ title() }}</h2>
-    }
-    @if (subtitle()) {
-      <p class="slide-image__subtitle">{{ subtitle() }}</p>
-    }
+  <div
+    class="slide-image__content"
+    [appSlideEnTete]="{ bloc: 'slide-image', titre: title(), sousTitre: subtitle() }"
+  >
     @for (p of paragraphs(); track $index) {
       <p class="slide-image__paragraph">{{ p }}</p>
     }
@@ -48,8 +48,6 @@
     <ng-content />
   </div>
   @if (isReverse()) {
-    <div class="slide-image__media">
-      <img [src]="image()" [alt]="imageAlt()" loading="lazy" decoding="async" />
-    </div>
+    <ng-container *ngTemplateOutlet="media" />
   }
 </div>

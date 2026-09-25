@@ -1,18 +1,17 @@
 import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { FORMATIONS_PORT, ReponseLibreRefusee } from '../../../../core/ports/formations.port';
 import type {
   FormationsPort,
   MotifRefusReponseLibre,
 } from '../../../../core/ports/formations.port';
-import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import { createFormationsPortStub } from '../../../../../testing/factories/formations.factory';
 import {
-  buildInteractionsResponse,
-  createPresentationPortStub,
-} from '../../../../../testing/factories/presentation.factory';
+  configurerLHoteDInteraction,
+  monterApresChargement,
+} from '../../../../../testing/hote-d-interaction';
 import type { ModeInteraction } from '../mode-interaction';
 import {
   clearIdentity,
@@ -38,33 +37,34 @@ describe('SlideReflectionComponent', () => {
   beforeEach(() => {
     clearIdentity();
     saveIdentity({ prenom: 'Anais', nom: 'Rivet', email: 'anais@example.com' });
-    const portStub = createPresentationPortStub(
-      buildInteractionsResponse({
-        interactions: {
-          'reflect-1': {
-            scroll: [
-              {
-                type: 'reflection',
-                question: 'Quelle tâche aimerais-tu déléguer à une IA ?',
-                placeholder: 'Ex: relances email',
-              },
-            ],
-          },
-        },
-      }),
-    );
     formations = createFormationsPortStub();
-    TestBed.configureTestingModule({
-      imports: [HostComponent],
-      providers: [
-        { provide: PRESENTATION_PORT, useValue: portStub },
-        { provide: FORMATIONS_PORT, useValue: formations },
-      ],
-    });
+    configurerLHoteDInteraction(
+      HostComponent,
+      {
+        'reflect-1': {
+          scroll: [
+            {
+              type: 'reflection',
+              question: 'Quelle tâche aimerais-tu déléguer à une IA ?',
+              placeholder: 'Ex: relances email',
+            },
+          ],
+        },
+      },
+      [{ provide: FORMATIONS_PORT, useValue: formations }],
+    );
   });
 
   function racine(fixture: ComponentFixture<unknown>): HTMLElement {
     return fixture.nativeElement as HTMLElement;
+  }
+
+  function garder(fixture: ComponentFixture<unknown>, texte: string): void {
+    const zone = racine(fixture).querySelector('textarea') as HTMLTextAreaElement;
+    zone.value = texte;
+    zone.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    (racine(fixture).querySelector('.slide-reflection__save') as HTMLButtonElement).click();
   }
 
   function monterEnSeance(
@@ -86,10 +86,7 @@ describe('SlideReflectionComponent', () => {
   }
 
   it('rend prompt et textarea', fakeAsync(() => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
+    const fixture = monterApresChargement(HostComponent);
     expect(racine(fixture).querySelector('.slide-reflection__prompt')?.textContent).toContain(
       'Quelle tâche',
     );
@@ -97,10 +94,7 @@ describe('SlideReflectionComponent', () => {
   }));
 
   it('sans seance, se presente en apercu : rien n est envoye, rien ne reste en attente', fakeAsync(() => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
+    const fixture = monterApresChargement(HostComponent);
 
     expect(racine(fixture).querySelector('[data-testid="slide-reflection-apercu"]')).not.toBeNull();
     expect(racine(fixture).querySelector('.slide-reflection__save')).toBeNull();
@@ -140,6 +134,10 @@ describe('SlideReflectionComponent', () => {
   describe('etats de l envoi en seance', () => {
     const CLE = (sessionId: string): string => `${cleEtudiante()}:${sessionId}:ecran-1:reflexion-1`;
 
+    async function clesEnAttente(sessionId: string): Promise<string[]> {
+      return (await pendingFreeResponses(sessionId, cleEtudiante())).map((envoi) => envoi.key);
+    }
+
     function etat(fixture: ComponentFixture<unknown>): string | null {
       return (
         racine(fixture)
@@ -158,14 +156,6 @@ describe('SlideReflectionComponent', () => {
       }
     }
 
-    function garder(fixture: ComponentFixture<unknown>, texte: string): void {
-      const zone = racine(fixture).querySelector('textarea') as HTMLTextAreaElement;
-      zone.value = texte;
-      zone.dispatchEvent(new Event('input'));
-      fixture.detectChanges();
-      (racine(fixture).querySelector('.slide-reflection__save') as HTMLButtonElement).click();
-    }
-
     it('annonce l enregistrement quand le serveur accepte', async () => {
       const fixture = monterEnSeance('seance', `seance-ok-${Date.now()}`);
 
@@ -175,40 +165,47 @@ describe('SlideReflectionComponent', () => {
       expect(racine(fixture).textContent).toContain('Réflexion enregistrée');
     });
 
-    it('hors ligne, garde la reflexion en file et attend le reseau, puis l envoie a son retour', async () => {
-      const sessionId = `seance-reseau-${Date.now()}`;
-      formations.enregistrerReponseLibre.and.returnValue(
-        throwError(() => new ReponseLibreRefusee('reseau', 0)),
-      );
+    async function garderMalgreLeRefus(
+      sessionId: string,
+      refus: ReponseLibreRefusee,
+      texte: string,
+      etatAttendu: string,
+    ): Promise<ReturnType<typeof monterEnSeance>> {
+      formations.enregistrerReponseLibre.and.returnValue(throwError(() => refus));
       const fixture = monterEnSeance('seance', sessionId);
 
-      garder(fixture, 'Envoyée plus tard.');
-      await jusqua(fixture, () => etat(fixture) === 'attente_reseau');
+      garder(fixture, texte);
+      await jusqua(fixture, () => etat(fixture) === etatAttendu);
+      return fixture;
+    }
+
+    it('hors ligne, garde la reflexion en file et attend le reseau, puis l envoie a son retour', async () => {
+      const sessionId = `seance-reseau-${Date.now()}`;
+      const fixture = await garderMalgreLeRefus(
+        sessionId,
+        new ReponseLibreRefusee('reseau', 0),
+        'Envoyée plus tard.',
+        'attente_reseau',
+      );
 
       expect(racine(fixture).textContent).toContain('En attente de réseau');
       expect(racine(fixture).textContent).not.toContain('Échec');
-      expect(
-        (await pendingFreeResponses(sessionId, cleEtudiante())).map((envoi) => envoi.key),
-      ).toEqual([CLE(sessionId)]);
+      expect(await clesEnAttente(sessionId)).toEqual([CLE(sessionId)]);
 
       formations.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
       window.dispatchEvent(new Event('online'));
       await jusqua(fixture, () => etat(fixture) === 'enregistre');
 
-      expect(await pendingFreeResponses(sessionId, cleEtudiante())).toEqual([]);
+      expect(await clesEnAttente(sessionId)).toEqual([]);
     });
 
-    async function garderSurEcranNonServi(
-      sessionId: string,
-    ): Promise<ReturnType<typeof monterEnSeance>> {
-      formations.enregistrerReponseLibre.and.returnValue(
-        throwError(() => new ReponseLibreRefusee('ecran-non-servi', 404)),
+    function garderSurEcranNonServi(sessionId: string): Promise<ReturnType<typeof monterEnSeance>> {
+      return garderMalgreLeRefus(
+        sessionId,
+        new ReponseLibreRefusee('ecran-non-servi', 404),
+        'Trop tôt pour cet écran.',
+        'ecran_non_servi',
       );
-      const fixture = monterEnSeance('seance', sessionId);
-
-      garder(fixture, 'Trop tôt pour cet écran.');
-      await jusqua(fixture, () => etat(fixture) === 'ecran_non_servi');
-      return fixture;
     }
 
     it('annonce le depart quand la reflexion gardee part depuis un autre relais', async () => {
@@ -220,7 +217,7 @@ describe('SlideReflectionComponent', () => {
       await jusqua(fixture, () => etat(fixture) === 'enregistre');
 
       expect(etat(fixture)).toBe('enregistre');
-      expect(await pendingFreeResponses(sessionId, cleEtudiante())).toEqual([]);
+      expect(await clesEnAttente(sessionId)).toEqual([]);
     });
 
     it('sur un ecran pas encore servi, l annonce et garde la reflexion en file', async () => {
@@ -228,9 +225,7 @@ describe('SlideReflectionComponent', () => {
       const fixture = await garderSurEcranNonServi(sessionId);
 
       expect(racine(fixture).textContent).toContain('pas encore ouvert');
-      expect(
-        (await pendingFreeResponses(sessionId, cleEtudiante())).map((envoi) => envoi.key),
-      ).toEqual([CLE(sessionId)]);
+      expect(await clesEnAttente(sessionId)).toEqual([CLE(sessionId)]);
     });
 
     const REFUS: readonly (readonly [MotifRefusReponseLibre, number, string, string])[] = [
@@ -251,29 +246,24 @@ describe('SlideReflectionComponent', () => {
           response: 'Mise en file plus tôt.',
           dureeMs: 10,
         });
-        formations.enregistrerReponseLibre.and.returnValue(
-          throwError(() => new ReponseLibreRefusee(motif, statut)),
+        const fixture = await garderMalgreLeRefus(
+          sessionId,
+          new ReponseLibreRefusee(motif, statut),
+          'Refusée par le serveur.',
+          attendu,
         );
-        const fixture = monterEnSeance('seance', sessionId);
-
-        garder(fixture, 'Refusée par le serveur.');
-        await jusqua(fixture, () => etat(fixture) === attendu);
 
         expect(etat(fixture)).toBe(attendu);
         expect(racine(fixture).textContent).toContain(message);
-        expect(await pendingFreeResponses(sessionId, cleEtudiante())).toEqual([]);
+        expect(await clesEnAttente(sessionId)).toEqual([]);
       });
     }
   });
 
   it('en seance, envoie la reflexion au serveur avec l ecran et l activite', () => {
     const fixture = monterEnSeance('seance', 'seance-envoi');
-    const zone = racine(fixture).querySelector('textarea') as HTMLTextAreaElement;
 
-    zone.value = '  On compare des parts de totaux différents.  ';
-    zone.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-    (racine(fixture).querySelector('.slide-reflection__save') as HTMLButtonElement).click();
+    garder(fixture, '  On compare des parts de totaux différents.  ');
 
     expect(formations.enregistrerReponseLibre).toHaveBeenCalledOnceWith(
       'seance-envoi',

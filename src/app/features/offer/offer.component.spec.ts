@@ -1,56 +1,44 @@
-import type { ComponentFixture } from '@angular/core/testing';
 import { faqRendue } from '../../../testing/faq-rendue';
-import { montagePage } from '../../../testing/montage-page';
+import { pageMontee } from '../../../testing/montage-page';
 import { OfferComponent } from './offer.component';
 
 describe('OfferComponent', () => {
-  const page = montagePage(OfferComponent);
-  let component: OfferComponent;
-  let fixture: ComponentFixture<OfferComponent>;
-
-  beforeEach(() => {
-    fixture = page();
-    component = fixture.componentInstance;
-  });
+  const page = pageMontee(OfferComponent);
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(page.composant).toBeTruthy();
   });
 
   it('should render a single hero title with the accentuated need', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const headings = compiled.querySelectorAll('h1');
+    const headings = page.racine.querySelectorAll('h1');
     expect(headings.length).toBe(1);
-    const title = compiled.querySelector('[data-testid="hero-title"]');
+    const title = page.racine.querySelector('[data-testid="hero-title"]');
     expect(title?.textContent).toContain('Un périmètre défini sur');
     expect(title?.querySelector('.accent')?.textContent).toContain('votre');
   });
 
   it('should compose the Asili sections (hero, méthode, bande CTA)', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('app-asili-hero')).not.toBeNull();
-    expect(compiled.querySelector('app-asili-method')).not.toBeNull();
-    expect(compiled.querySelector('app-asili-cta-band')).not.toBeNull();
+    expect(page.racine.querySelector('app-asili-hero')).not.toBeNull();
+    expect(page.racine.querySelector('app-asili-method')).not.toBeNull();
+    expect(page.racine.querySelector('app-asili-cta-band')).not.toBeNull();
   });
 
   it('should render the four intervention modes', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const modes = compiled.querySelectorAll('[data-testid="modes-section"] .mode');
+    const modes = page.racine.querySelectorAll('[data-testid="modes-section"] .mode');
     expect(modes.length).toBe(4);
   });
 
   it('should sell AI training that includes management practices', () => {
-    expect(component['modes'][3].desc.toLowerCase()).toContain('management');
+    expect(page.composant['modes'][3].desc.toLowerCase()).toContain('management');
   });
 
   it('should render the three differentiators', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const diffs = compiled.querySelectorAll('[data-testid="diff-section"] .diff');
-    expect(diffs.length).toBe(component['diffs'].length);
+    const diffs = page.racine.querySelectorAll('[data-testid="diff-section"] .diff');
+    expect(diffs.length).toBe(page.composant['diffs'].length);
   });
 
   it('should render an SSR-safe FAQ with FAQPage microdata and the pricing question', () => {
-    const faq = faqRendue(fixture.nativeElement, component['closing'].faq.items.length);
+    const faq = faqRendue(page.racine, page.composant['closing'].faq.items.length);
     expect(faq.textContent).toContain('Pourquoi pas de grille de prix ?');
   });
 });

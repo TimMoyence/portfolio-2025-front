@@ -1,3 +1,5 @@
+@use '../../slide-section' as slide;
+
 .slide-hero {
   position: relative;
   width: 100%;
@@ -99,13 +101,5 @@
   font-size: 0.9rem;
   font-weight: 700;
   text-decoration: none;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-
-  &:hover,
-  &:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
-  }
+  @include slide.bouton-souleve(0.2, ease);
 }

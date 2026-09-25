@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
 export interface TableColumn {
   key: string;
@@ -10,6 +11,7 @@ type TableRow = Record<string, string>;
 @Component({
   selector: 'app-slide-table',
   standalone: true,
+  imports: [SlideEnTeteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-table.component.html',
   styleUrl: './slide-table.component.scss',

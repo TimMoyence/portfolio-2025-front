@@ -1,0 +1,13 @@
+@if (errors()?.['required']) {
+  <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
+} @else if (email() && errors()?.['email']) {
+  <span i18n="auth.error.email@@authErrorEmail">Merci d’entrer une adresse email valide.</span>
+} @else if (phone() && errors()?.['phone']) {
+  <span i18n="auth.error.phone@@authErrorPhone">Merci d’entrer un numéro de téléphone valide.</span>
+} @else if (longueur() && errors()?.['minlength']) {
+  <span i18n="auth.error.passwordLength|Password length error@@authErrorPasswordLength"
+    >Le mot de passe doit contenir au moins 8 caractères.</span
+  >
+} @else {
+  <span i18n="auth.error.generic@@authErrorGeneric">Valeur invalide.</span>
+}

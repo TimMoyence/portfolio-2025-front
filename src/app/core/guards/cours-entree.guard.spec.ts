@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import type { ActivatedRouteSnapshot, GuardResult, RouterStateSnapshot } from '@angular/router';
+import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { UrlTree } from '@angular/router';
 import type { AuthStateService } from '../services/auth-state.service';
 import { etatAuth } from '../../../testing/etat-auth';
@@ -11,13 +11,20 @@ const SLUG = 'b2-01-traitement-information-chiffree';
 describe('coursEntreeGuard', () => {
   let authState: AuthStateService;
 
-  function decision(): GuardResult {
-    return TestBed.runInInjectionContext(() =>
+  function connecter(role: string): void {
+    authState.login(buildAuthSession({ user: buildAuthUser({ roles: [role] }) }));
+  }
+
+  function attendreLaRedirectionVers(url: string): void {
+    const result = TestBed.runInInjectionContext(() =>
       coursEntreeGuard(
         { data: { coursSlug: SLUG } } as unknown as ActivatedRouteSnapshot,
         {} as RouterStateSnapshot,
       ),
-    ) as GuardResult;
+    );
+
+    expect(result).toBeInstanceOf(UrlTree);
+    expect(String(result)).toBe(url);
   }
 
   beforeEach(() => {
@@ -27,27 +34,18 @@ describe('coursEntreeGuard', () => {
   afterEach(() => authState.clearSession());
 
   it('ouvre directement le pupitre pour un formateur', () => {
-    authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) }));
+    connecter('teacher');
 
-    const result = decision();
-
-    expect(result).toBeInstanceOf(UrlTree);
-    expect(String(result)).toBe(`/cours/presenter/${SLUG}`);
+    attendreLaRedirectionVers(`/cours/presenter/${SLUG}`);
   });
 
   it('ouvre directement le rattachement étudiant pour un étudiant', () => {
-    authState.login(buildAuthSession({ user: buildAuthUser({ roles: ['student'] }) }));
+    connecter('student');
 
-    const result = decision();
-
-    expect(result).toBeInstanceOf(UrlTree);
-    expect(String(result)).toBe(`/cours/rejoindre?cours=${SLUG}`);
+    attendreLaRedirectionVers(`/cours/rejoindre?cours=${SLUG}`);
   });
 
   it('R3 · F03 · envoie le visiteur non connecté au rattachement étudiant, en gardant le cours visé', () => {
-    const result = decision();
-
-    expect(result).toBeInstanceOf(UrlTree);
-    expect(String(result)).toBe(`/cours/rejoindre?cours=${SLUG}`);
+    attendreLaRedirectionVers(`/cours/rejoindre?cours=${SLUG}`);
   });
 });
