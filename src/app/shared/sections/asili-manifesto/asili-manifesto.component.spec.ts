@@ -1,6 +1,10 @@
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { PLATFORM_ID } from '@angular/core';
+import {
+  installerIntersectionObserverSimule,
+  type IntersectionObserverSimule,
+} from '../../../../testing/factories/intersection-observer.factory';
+import type { PlateformeDeRendu } from '../../../../testing/plateforme';
+import { decrireSectionAsili } from '../../../../testing/section-asili';
 import type { AsiliManifestoLine } from './asili-manifesto.component';
 import { AsiliManifestoComponent } from './asili-manifesto.component';
 
@@ -13,23 +17,11 @@ const LINES: readonly AsiliManifestoLine[] = [
 describe('AsiliManifestoComponent', () => {
   let fixture: ComponentFixture<AsiliManifestoComponent>;
 
-  function setup(
-    lines: readonly AsiliManifestoLine[] = LINES,
-    platformId: 'browser' | 'server' = 'browser',
-  ): void {
-    TestBed.configureTestingModule({
-      imports: [AsiliManifestoComponent],
-      providers: [{ provide: PLATFORM_ID, useValue: platformId }],
-    });
-    fixture = TestBed.createComponent(AsiliManifestoComponent);
-    fixture.componentRef.setInput('lines', lines);
-  }
+  const monter = decrireSectionAsili(AsiliManifestoComponent, { lines: LINES });
 
-  it('se cree', () => {
-    setup();
-    fixture.detectChanges();
-    expect(fixture.componentInstance).toBeTruthy();
-  });
+  function setup(plateforme: PlateformeDeRendu = 'browser'): void {
+    fixture = monter(plateforme);
+  }
 
   it('rend une ligne .mani-line par entree', () => {
     setup();
@@ -58,7 +50,7 @@ describe('AsiliManifestoComponent', () => {
   });
 
   it('rend toutes les lignes allumees (.lit) au depart : fail-open', () => {
-    setup(LINES, 'server');
+    setup('server');
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
     const lit = host.querySelectorAll<HTMLElement>('.mani-line.lit');
@@ -66,7 +58,7 @@ describe('AsiliManifestoComponent', () => {
   });
 
   it('reste rendu cote serveur sans logique browser', () => {
-    setup(LINES, 'server');
+    setup('server');
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
     expect(host.querySelectorAll('.mani-line').length).toBe(LINES.length);
@@ -74,35 +66,14 @@ describe('AsiliManifestoComponent', () => {
   });
 
   describe('scrollytelling browser', () => {
-    let observe: jasmine.Spy;
-    let disconnect: jasmine.Spy;
-    let captured: IntersectionObserverCallback | null;
-    let original: typeof IntersectionObserver;
-    let lastInit: IntersectionObserverInit | undefined;
+    let observateur: IntersectionObserverSimule;
 
     beforeEach(() => {
-      captured = null;
-      lastInit = undefined;
-      observe = jasmine.createSpy('observe');
-      disconnect = jasmine.createSpy('disconnect');
-      original = window.IntersectionObserver;
-      (window as unknown as { IntersectionObserver: unknown }).IntersectionObserver = class {
-        constructor(cb: IntersectionObserverCallback, init?: IntersectionObserverInit) {
-          captured = cb;
-          lastInit = init;
-        }
-        observe = observe;
-        disconnect = disconnect;
-        unobserve = (): void => {};
-        takeRecords = (): IntersectionObserverEntry[] => [];
-        root = null;
-        rootMargin = '';
-        thresholds = [];
-      };
+      observateur = installerIntersectionObserverSimule();
     });
 
     afterEach(() => {
-      (window as unknown as { IntersectionObserver: unknown }).IntersectionObserver = original;
+      observateur.restaurer();
     });
 
     it('retire .lit en mode anime puis observe chaque ligne', () => {
@@ -110,50 +81,34 @@ describe('AsiliManifestoComponent', () => {
       fixture.detectChanges();
       const host = fixture.nativeElement as HTMLElement;
       expect(host.querySelectorAll('.mani-line.lit').length).toBe(0);
-      expect(observe).toHaveBeenCalledTimes(LINES.length);
+      expect(observateur.observe).toHaveBeenCalledTimes(LINES.length);
     });
 
     it("centre la bande d'observation sur le milieu de l'ecran", () => {
       setup();
       fixture.detectChanges();
-      expect(lastInit?.rootMargin).toBe('-48% 0px -48% 0px');
+      expect(observateur.init()?.rootMargin).toBe('-48% 0px -48% 0px');
     });
 
     it("allume une ligne quand elle traverse le centre, l'eteint en sortie", () => {
       setup();
       fixture.detectChanges();
       const host = fixture.nativeElement as HTMLElement;
-      const line = host.querySelector<HTMLElement>('.mani-line');
+      const line = host.querySelector<HTMLElement>('.mani-line') as HTMLElement;
       expect(line).not.toBeNull();
 
-      captured!(
-        [
-          {
-            isIntersecting: true,
-            target: line,
-          } as unknown as IntersectionObserverEntry,
-        ],
-        {} as IntersectionObserver,
-      );
-      expect(line?.classList).toContain('lit');
+      observateur.declencher([{ isIntersecting: true, target: line }]);
+      expect(line.classList).toContain('lit');
 
-      captured!(
-        [
-          {
-            isIntersecting: false,
-            target: line,
-          } as unknown as IntersectionObserverEntry,
-        ],
-        {} as IntersectionObserver,
-      );
-      expect(line?.classList).not.toContain('lit');
+      observateur.declencher([{ isIntersecting: false, target: line }]);
+      expect(line.classList).not.toContain('lit');
     });
 
     it("deconnecte l'observer a la destruction", () => {
       setup();
       fixture.detectChanges();
       fixture.destroy();
-      expect(disconnect).toHaveBeenCalled();
+      expect(observateur.disconnect).toHaveBeenCalled();
     });
   });
 });

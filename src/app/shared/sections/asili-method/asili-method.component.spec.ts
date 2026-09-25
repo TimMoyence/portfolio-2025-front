@@ -1,8 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { PLATFORM_ID } from '@angular/core';
-import { isolateAnimReady } from '../../../../testing/anim-ready';
 import { decrireEnTeteDeSection } from '../../../../testing/en-tete-de-section';
+import { decrireRenduServeur, decrireSectionAsili } from '../../../../testing/section-asili';
 import { AsiliMethodComponent, type AsiliMethodStep } from './asili-method.component';
 
 const STEPS: readonly AsiliMethodStep[] = [
@@ -34,23 +32,11 @@ const STEPS: readonly AsiliMethodStep[] = [
 
 describe('AsiliMethodComponent', () => {
   let fixture: ComponentFixture<AsiliMethodComponent>;
+  const monter = decrireSectionAsili(AsiliMethodComponent, { steps: STEPS });
 
-  function setup(platformId: 'browser' | 'server' = 'browser'): void {
-    TestBed.configureTestingModule({
-      imports: [AsiliMethodComponent],
-      providers: [{ provide: PLATFORM_ID, useValue: platformId }],
-    });
-    fixture = TestBed.createComponent(AsiliMethodComponent);
-    fixture.componentRef.setInput('steps', STEPS);
+  function setup(): void {
+    fixture = monter();
   }
-
-  isolateAnimReady();
-
-  it('se cree', () => {
-    setup();
-    fixture.detectChanges();
-    expect(fixture.componentInstance).toBeTruthy();
-  });
 
   it('rend une etape par element de `steps`', () => {
     setup();
@@ -108,11 +94,8 @@ describe('AsiliMethodComponent', () => {
     expect(line.getAttribute('aria-hidden')).toBe('true');
   });
 
-  it("reste rendu cote serveur (SSR fail-open : pas d'anim-ready)", () => {
-    setup('server');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelectorAll('.step').length).toBe(STEPS.length);
-    expect(document.documentElement.classList).not.toContain('anim-ready');
+  decrireRenduServeur(monter, (hote) => {
+    expect(hote.querySelectorAll('.step').length).toBe(STEPS.length);
   });
 
   it("calcule un delai d'echelonnement cyclique 1..3", () => {

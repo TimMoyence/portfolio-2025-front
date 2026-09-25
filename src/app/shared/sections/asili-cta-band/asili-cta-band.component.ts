@@ -8,6 +8,13 @@ export interface AsiliCtaAction {
   readonly variante: 'principale' | 'secondaire';
 }
 
+export interface AsiliCta {
+  readonly kicker?: string;
+  readonly title: string;
+  readonly lead?: string;
+  readonly actions?: readonly AsiliCtaAction[];
+}
+
 @Component({
   selector: 'app-asili-cta-band',
   standalone: true,
@@ -17,11 +24,5 @@ export interface AsiliCtaAction {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AsiliCtaBandComponent {
-  readonly title = input.required<string>();
-
-  readonly kicker = input<string | null>(null);
-
-  readonly lead = input<string | null>(null);
-
-  readonly actions = input<readonly AsiliCtaAction[]>([]);
+  readonly contenu = input.required<AsiliCta>();
 }

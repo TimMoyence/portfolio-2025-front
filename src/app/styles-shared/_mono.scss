@@ -1,0 +1,14 @@
+@mixin capitales-mono($taille, $interlettrage, $couleur) {
+  font-family: var(--font-mono);
+  font-size: $taille;
+  letter-spacing: $interlettrage;
+  text-transform: uppercase;
+  color: $couleur;
+}
+
+@mixin kicker($couleur) {
+  @include capitales-mono(12px, 0.18em, $couleur);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}

@@ -1,6 +1,8 @@
 import { extractErrorMessage } from './http-error.utils';
 
 describe('extractErrorMessage', () => {
+  const echecHttpSansCorps = { message: 'Http failure response' };
+
   it('devrait extraire un message string depuis error.error.message', () => {
     const error = { error: { message: 'Email deja utilise' } };
     expect(extractErrorMessage(error)).toBe('Email deja utilise');
@@ -14,8 +16,7 @@ describe('extractErrorMessage', () => {
   });
 
   it('devrait fallback sur error.message', () => {
-    const error = { message: 'Http failure response' };
-    expect(extractErrorMessage(error)).toBe('Http failure response');
+    expect(extractErrorMessage(echecHttpSansCorps)).toBe('Http failure response');
   });
 
   it('devrait retourner undefined si pas de message', () => {
@@ -57,13 +58,13 @@ describe('extractErrorMessage', () => {
 
   describe('option includeTopLevelMessage', () => {
     it('devrait, par defaut (true), retomber sur error.message top-level', () => {
-      const error = { message: 'Http failure response' };
-      expect(extractErrorMessage(error)).toBe('Http failure response');
+      expect(extractErrorMessage(echecHttpSansCorps)).toBe('Http failure response');
     });
 
     it('ne devrait PAS retomber sur error.message quand false', () => {
-      const error = { message: 'Http failure response' };
-      expect(extractErrorMessage(error, { includeTopLevelMessage: false })).toBeUndefined();
+      expect(
+        extractErrorMessage(echecHttpSansCorps, { includeTopLevelMessage: false }),
+      ).toBeUndefined();
     });
 
     it('devrait quand meme retourner error.error.message quand false', () => {

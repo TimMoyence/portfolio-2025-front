@@ -1,16 +1,16 @@
 <div class="auth-success" role="status" aria-live="polite">
   <div class="check" aria-hidden="true">
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M5 12.5 10 17l9-10"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
+    <svg [appPicto]="'coche'" [taille]="32"></svg>
   </div>
   <ng-content select="[title]" />
   <p class="sub">{{ message() }}</p>
   <ng-content />
+  @if (libelleConnexion(); as libelle) {
+    <div style="margin-top: 26px">
+      <a class="btn btn-teal" routerLink="/login">
+        <span>{{ libelle }}</span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  }
 </div>

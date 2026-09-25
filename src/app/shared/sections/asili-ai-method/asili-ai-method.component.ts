@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
-import { AsiliKickerComponent } from '../asili-kicker/asili-kicker.component';
+import { AsiliEnTeteDirective, EN_TETE_ASILI } from '../asili-en-tete.directive';
 
 export interface AsiliAiMethodStep {
   num: string;
@@ -11,17 +10,13 @@ export interface AsiliAiMethodStep {
 @Component({
   selector: 'app-asili-ai-method',
   standalone: true,
-  imports: [RevealOnScrollDirective, AsiliKickerComponent],
+  imports: [EN_TETE_ASILI],
   templateUrl: './asili-ai-method.component.html',
   styleUrls: ['./asili-ai-method.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AsiliAiMethodComponent {
+export class AsiliAiMethodComponent extends AsiliEnTeteDirective {
   readonly steps = input.required<readonly AsiliAiMethodStep[]>();
-
-  readonly kicker = input<string | null>(null);
-
-  readonly heading = input<string | null>(null);
 
   readonly lead = input<string | null>(null);
 

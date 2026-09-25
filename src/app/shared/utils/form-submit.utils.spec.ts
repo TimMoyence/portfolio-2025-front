@@ -21,36 +21,30 @@ describe('handleFormSubmit', () => {
     expect(cdr.markForCheck).toHaveBeenCalled();
   });
 
-  it('devrait appeler onError avec le message extrait sur erreur', () => {
+  function soumettreEnEchec(erreur: unknown): jasmine.Spy {
     const onError = jasmine.createSpy('onError');
-    const error = { error: { message: 'Email invalide' } };
 
     handleFormSubmit(
-      throwError(() => error),
+      throwError(() => erreur),
       cdr,
       {
         onError,
         fallbackError: 'Erreur generique',
       },
     );
+
+    return onError;
+  }
+
+  it('devrait appeler onError avec le message extrait sur erreur', () => {
+    const onError = soumettreEnEchec({ error: { message: 'Email invalide' } });
 
     expect(onError).toHaveBeenCalledWith('Email invalide');
     expect(cdr.markForCheck).toHaveBeenCalled();
   });
 
   it('devrait utiliser le fallbackError si pas de message extractible', () => {
-    const onError = jasmine.createSpy('onError');
-
-    handleFormSubmit(
-      throwError(() => ({})),
-      cdr,
-      {
-        onError,
-        fallbackError: 'Erreur generique',
-      },
-    );
-
-    expect(onError).toHaveBeenCalledWith('Erreur generique');
+    expect(soumettreEnEchec({})).toHaveBeenCalledWith('Erreur generique');
   });
 
   it('devrait appeler onComplete et markForCheck sur complete', () => {
@@ -84,19 +78,9 @@ describe('handleFormSubmit', () => {
   });
 
   it('devrait gerer une erreur avec message tableau (NestJS validation)', () => {
-    const onError = jasmine.createSpy('onError');
-    const error = {
+    const onError = soumettreEnEchec({
       error: { message: ['Champ requis', 'Email invalide'] },
-    };
-
-    handleFormSubmit(
-      throwError(() => error),
-      cdr,
-      {
-        onError,
-        fallbackError: 'Erreur generique',
-      },
-    );
+    });
 
     expect(onError).toHaveBeenCalledWith('Champ requis Email invalide');
   });

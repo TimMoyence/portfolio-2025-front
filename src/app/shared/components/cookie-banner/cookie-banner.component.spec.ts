@@ -1,9 +1,12 @@
-import { TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 import { CookieConsentService } from '../../../core/services/cookie-consent.service';
 import { CookieBannerComponent } from './cookie-banner.component';
-import { createCookieConsentServiceStub } from '../../../../testing/factories/cookie-consent.factory';
+import {
+  buildCookiePreferences,
+  createCookieConsentServiceStub,
+} from '../../../../testing/factories/cookie-consent.factory';
 
 describe('CookieBannerComponent', () => {
   const consentServiceStub = createCookieConsentServiceStub();
@@ -67,12 +70,7 @@ describe('CookieBannerComponent', () => {
     cliquerSur('acceptAll');
 
     expect(consentServiceStub.saveConsent).toHaveBeenCalledWith(
-      {
-        essential: true,
-        preferences: true,
-        analytics: false,
-        marketing: false,
-      },
+      buildCookiePreferences({ preferences: true }),
       'banner',
       'accept_all',
     );
@@ -82,43 +80,38 @@ describe('CookieBannerComponent', () => {
     cliquerSur('rejectAll');
 
     expect(consentServiceStub.saveConsent).toHaveBeenCalledWith(
-      {
-        essential: true,
-        preferences: false,
-        analytics: false,
-        marketing: false,
-      },
+      buildCookiePreferences(),
       'banner',
       'essential_only',
     );
   });
 
-  it('devrait ne plus reagir aux changements apres destruction', () => {
+  function rendreVisible(): ComponentFixture<CookieBannerComponent> {
     consentServiceStub.shouldShowBanner.and.returnValue(true);
-
     const fixture = TestBed.createComponent(CookieBannerComponent);
     fixture.detectChanges();
-
     expect(fixture.componentInstance.isVisible).toBeTrue();
+    return fixture;
+  }
 
-    fixture.destroy();
-
+  function masquerParUnChangementDeConsentement(): void {
     consentServiceStub.shouldShowBanner.and.returnValue(false);
     consentServiceStub.consentChanges$.next(null);
+  }
+
+  it('devrait ne plus reagir aux changements apres destruction', () => {
+    const fixture = rendreVisible();
+
+    fixture.destroy();
+    masquerParUnChangementDeConsentement();
 
     expect(fixture.componentInstance.isVisible).toBeTrue();
   });
 
   it("devrait mettre a jour la visibilite lors d'un changement de consentement", () => {
-    consentServiceStub.shouldShowBanner.and.returnValue(true);
+    const fixture = rendreVisible();
 
-    const fixture = TestBed.createComponent(CookieBannerComponent);
-    fixture.detectChanges();
-
-    expect(fixture.componentInstance.isVisible).toBeTrue();
-
-    consentServiceStub.shouldShowBanner.and.returnValue(false);
-    consentServiceStub.consentChanges$.next(null);
+    masquerParUnChangementDeConsentement();
 
     expect(fixture.componentInstance.isVisible).toBeFalse();
   });

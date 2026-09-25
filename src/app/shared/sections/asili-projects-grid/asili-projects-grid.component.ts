@@ -1,7 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
-import { AsiliKickerComponent } from '../asili-kicker/asili-kicker.component';
+import { AsiliEnTeteDirective, EN_TETE_ASILI } from '../asili-en-tete.directive';
 
 export type AsiliProjectSize = 'big' | 'small';
 
@@ -49,17 +48,13 @@ const IMAGE_DIMENSIONS: Readonly<
 @Component({
   selector: 'app-asili-projects-grid',
   standalone: true,
-  imports: [RevealOnScrollDirective, NgTemplateOutlet, AsiliKickerComponent],
+  imports: [EN_TETE_ASILI, NgTemplateOutlet],
   templateUrl: './asili-projects-grid.component.html',
   styleUrls: ['./asili-projects-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AsiliProjectsGridComponent {
+export class AsiliProjectsGridComponent extends AsiliEnTeteDirective {
   readonly projects = input.required<readonly AsiliProject[]>();
-
-  readonly kicker = input<string | null>(null);
-
-  readonly heading = input<string | null>(null);
 
   /**
    * Nombre de cartes de tete dont la capture est chargee en `eager` — les

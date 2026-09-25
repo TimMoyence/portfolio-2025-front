@@ -2,9 +2,9 @@ import * as fc from 'fast-check';
 import type { EtatParticipant } from '../../../cours/content/types';
 import type { RetourBrique } from '../../shared/slides/session/contrat-hote';
 import { buildEtatParticipant } from '../../../testing/factories/formations.factory';
+import { verifierLaPropriete } from '../../../testing/proprietes';
 import { ajouterRetours, retirerLesRefus, retoursDeLEtat } from './retours-brique';
 
-const GRAINE = 20260920;
 const TOURS = 300;
 
 const identifiant = fc.stringMatching(/^[a-z]{1,6}$/);
@@ -52,7 +52,7 @@ function tousLesRetours(carte: ReadonlyMap<string, readonly RetourBrique[]>): Re
 
 describe('simulation : reconstruction des retours à la reprise (AC-33)', () => {
   it('ne pose que des retours dont l’écran est connu, et jamais deux fois le même verdict', () => {
-    fc.assert(
+    verifierLaPropriete(
       fc.property(etatServi, (etat) => {
         const carte = retoursDeLEtat(etat, ecranDe);
         const poses = tousLesRetours(carte);
@@ -69,12 +69,12 @@ describe('simulation : reconstruction des retours à la reprise (AC-33)', () => 
           expect(retours.length).toBeGreaterThan(0);
         }
       }),
-      { seed: GRAINE, numRuns: TOURS },
+      TOURS,
     );
   });
 
   it('choisit le verdict de production si et seulement si le serveur a servi des détails', () => {
-    fc.assert(
+    verifierLaPropriete(
       fc.property(etatServi, (etat) => {
         const poses = tousLesRetours(retoursDeLEtat(etat, ecranDe));
         const detaillees = new Set(
@@ -93,7 +93,7 @@ describe('simulation : reconstruction des retours à la reprise (AC-33)', () => 
           }
         }
       }),
-      { seed: GRAINE, numRuns: TOURS },
+      TOURS,
     );
   });
 });
@@ -108,7 +108,7 @@ describe('simulation : arrivée désordonnée des verdicts sur les écrans', () 
   const refus: RetourBrique = { kind: 'refus', motif: 'reseau', message: 'Coupure.' };
 
   it('pose exactement un verdict par question quel que soit l’ordre d’arrivée', () => {
-    fc.assert(
+    verifierLaPropriete(
       fc.property(fc.uniqueArray(identifiant, { minLength: 1, maxLength: 20 }), (questions) => {
         const arrivees = [...questions].reverse();
         const carte = arrivees.reduce<ReadonlyMap<string, readonly RetourBrique[]>>(
@@ -122,12 +122,12 @@ describe('simulation : arrivée désordonnée des verdicts sur les écrans', () 
           expect(carte.get(`ecran-${questionId}`)).toEqual([verdictPour(questionId)]);
         }
       }),
-      { seed: GRAINE, numRuns: TOURS },
+      TOURS,
     );
   });
 
   it('ne perd aucun verdict quand des refus s’intercalent puis sont retirés', () => {
-    fc.assert(
+    verifierLaPropriete(
       fc.property(
         fc.array(
           fc.oneof(
@@ -159,7 +159,7 @@ describe('simulation : arrivée désordonnée des verdicts sur les écrans', () 
           expect(restants.map((retour) => retour.questionId)).toEqual(attendus);
         },
       ),
-      { seed: GRAINE, numRuns: TOURS },
+      TOURS,
     );
   });
 });

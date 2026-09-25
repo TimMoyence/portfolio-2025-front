@@ -43,15 +43,18 @@ export interface AuditCreateResponse {
   status: AuditProcessingStatus;
 }
 
-export interface AuditSummaryResponse {
-  auditId: string;
-  ready: boolean;
-  status: AuditProcessingStatus;
-  progress: number;
+interface AuditSynthesis {
   summaryText: string | null;
   keyChecks: Record<string, unknown>;
   quickWins: string[];
   pillarScores: Record<string, number>;
+}
+
+export interface AuditSummaryResponse extends AuditSynthesis {
+  auditId: string;
+  ready: boolean;
+  status: AuditProcessingStatus;
+  progress: number;
 }
 
 export interface AuditProgressEvent {
@@ -64,15 +67,11 @@ export interface AuditProgressEvent {
   updatedAt: string;
 }
 
-export interface AuditCompletedEvent {
+export interface AuditCompletedEvent extends AuditSynthesis {
   auditId: string;
   status: 'COMPLETED';
   progress: number;
   done: boolean;
-  summaryText: string | null;
-  keyChecks: Record<string, unknown>;
-  quickWins: string[];
-  pillarScores: Record<string, number>;
   clientReport?: ClientReport | null;
   updatedAt: string;
 }

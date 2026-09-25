@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { PLATFORM_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { isolateAnimReady } from '../../../../testing/anim-ready';
 import { rendreLHoteNavigateur } from '../../../../testing/montage-page';
-import { AsiliCtaBandComponent } from './asili-cta-band.component';
+import { decrireRenduServeur, decrireSectionAsili } from '../../../../testing/section-asili';
+import { AsiliCtaBandComponent, type AsiliCta } from './asili-cta-band.component';
 
 const TITLE = 'Et si on clarifiait, ensemble, avant de construire ?';
 const LEAD = 'Decrivez votre contexte. Je reviens avec un regard honnete.';
@@ -13,22 +12,11 @@ const LEAD = 'Decrivez votre contexte. Je reviens avec un regard honnete.';
 describe('AsiliCtaBandComponent', () => {
   let fixture: ComponentFixture<AsiliCtaBandComponent>;
 
-  function setup(platformId: 'browser' | 'server' = 'browser'): void {
-    TestBed.configureTestingModule({
-      imports: [AsiliCtaBandComponent],
-      providers: [{ provide: PLATFORM_ID, useValue: platformId }],
-    });
-    fixture = TestBed.createComponent(AsiliCtaBandComponent);
-    fixture.componentRef.setInput('title', TITLE);
+  const monter = decrireSectionAsili(AsiliCtaBandComponent, { contenu: { title: TITLE } });
+
+  function setup(contenu: Partial<AsiliCta> = {}): void {
+    fixture = monter('browser', { contenu: { title: TITLE, ...contenu } });
   }
-
-  isolateAnimReady();
-
-  it('se cree', () => {
-    setup();
-    fixture.detectChanges();
-    expect(fixture.componentInstance).toBeTruthy();
-  });
 
   it('rend le titre dans un <h2>', () => {
     setup();
@@ -46,9 +34,7 @@ describe('AsiliCtaBandComponent', () => {
   });
 
   it("affiche le kicker et l'accroche quand fournis en inputs", () => {
-    setup();
-    fixture.componentRef.setInput('kicker', 'Parlons-en');
-    fixture.componentRef.setInput('lead', LEAD);
+    setup({ kicker: 'Parlons-en', lead: LEAD });
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.cta-kicker')?.textContent).toContain('Parlons-en');
     expect(fixture.nativeElement.querySelector('.cta-lead')?.textContent).toBe(LEAD);
@@ -63,11 +49,12 @@ describe('AsiliCtaBandComponent', () => {
 
   it('rend les actions fournies : la principale avec sa fleche, puis la secondaire', () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
-    setup();
-    fixture.componentRef.setInput('actions', [
-      { libelle: 'Demarrer', lien: '/contact', variante: 'principale' },
-      { libelle: 'Explorer', lien: '/projets', variante: 'secondaire' },
-    ]);
+    setup({
+      actions: [
+        { libelle: 'Demarrer', lien: '/contact', variante: 'principale' },
+        { libelle: 'Explorer', lien: '/projets', variante: 'secondaire' },
+      ],
+    });
     fixture.detectChanges();
 
     const liens = Array.from(
@@ -82,11 +69,8 @@ describe('AsiliCtaBandComponent', () => {
     expect(liens.map((lien) => lien.textContent?.trim())).toEqual(['Demarrer →', 'Explorer']);
   });
 
-  it("reste rendu cote serveur (SSR fail-open : pas d'anim-ready)", () => {
-    setup('server');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('h2.cta-title')).not.toBeNull();
-    expect(document.documentElement.classList).not.toContain('anim-ready');
+  decrireRenduServeur(monter, (hote) => {
+    expect(hote.querySelector('h2.cta-title')).not.toBeNull();
   });
 
   describe('avec projection (page hote)', () => {
@@ -94,7 +78,7 @@ describe('AsiliCtaBandComponent', () => {
       standalone: true,
       imports: [AsiliCtaBandComponent],
       template: `
-        <app-asili-cta-band [title]="title">
+        <app-asili-cta-band [contenu]="{ title }">
           <span kicker class="kicker cta-kicker">Slot kicker</span>
           <p lead class="cta-lead">Accroche projetee.</p>
           <a cta class="btn btn-teal" href="/contact">Demarrer</a>

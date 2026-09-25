@@ -1,16 +1,19 @@
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import { BreakpointService } from './breakpoint.service';
+
+function serviceSur(plateforme: 'browser' | 'server'): BreakpointService {
+  setupTestBed({ http: false, providers: [{ provide: PLATFORM_ID, useValue: plateforme }] });
+  return TestBed.inject(BreakpointService);
+}
 
 describe('BreakpointService', () => {
   describe('en contexte navigateur', () => {
     let service: BreakpointService;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
-      });
-      service = TestBed.inject(BreakpointService);
+      service = serviceSur('browser');
     });
 
     it('devrait se creer', () => {
@@ -30,10 +33,7 @@ describe('BreakpointService', () => {
     let service: BreakpointService;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        providers: [{ provide: PLATFORM_ID, useValue: 'server' }],
-      });
-      service = TestBed.inject(BreakpointService);
+      service = serviceSur('server');
     });
 
     it('devrait retourner false pour isMobile en SSR', () => {

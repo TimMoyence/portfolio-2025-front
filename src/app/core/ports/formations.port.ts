@@ -52,6 +52,31 @@ export interface StrategiePublique {
   fausse?: boolean;
 }
 
+export interface StrategiesDuDefi {
+  strategies: readonly StrategiePublique[];
+}
+
+export interface RappelsDus {
+  questions: readonly SpacedQuestionPublique[];
+}
+
+export interface ProductionEtudiante {
+  questionId: string;
+  valeur: ValeurProduction;
+  dureeMs: number;
+}
+
+export interface TentativeEnigme {
+  enigmeId: string;
+  reponse: string;
+  dureeMs: number;
+}
+
+export interface TentativeDefi {
+  texte: string;
+  dureeMs: number;
+}
+
 export interface SyntheseConcept {
   concept: string;
   libelle: string;
@@ -324,13 +349,13 @@ export interface FormationsPort {
   envoyerProduction(
     sessionId: string,
     jeton: string,
-    production: { questionId: string; valeur: ValeurProduction; dureeMs: number },
+    production: ProductionEtudiante,
   ): Observable<VerdictProduction>;
   tenterEnigme(
     sessionId: string,
     jeton: string,
     parcoursId: string,
-    tentative: { enigmeId: string; reponse: string; dureeMs: number },
+    tentative: TentativeEnigme,
   ): Observable<VerdictTentative>;
   declarerJalon(
     sessionId: string,
@@ -338,21 +363,14 @@ export interface FormationsPort {
     sondageId: string,
     etat: EtatPulse,
   ): Observable<void>;
-  lireRappels(
-    sessionId: string,
-    jeton: string,
-  ): Observable<{ questions: readonly SpacedQuestionPublique[] }>;
+  lireRappels(sessionId: string, jeton: string): Observable<RappelsDus>;
   envoyerDefi(
     sessionId: string,
     jeton: string,
     defiId: string,
-    tentative: { texte: string; dureeMs: number },
-  ): Observable<{ strategies: readonly StrategiePublique[] }>;
-  lireStrategies(
-    sessionId: string,
-    jeton: string,
-    defiId: string,
-  ): Observable<{ strategies: readonly StrategiePublique[] }>;
+    tentative: TentativeDefi,
+  ): Observable<StrategiesDuDefi>;
+  lireStrategies(sessionId: string, jeton: string, defiId: string): Observable<StrategiesDuDefi>;
   lireMonEtat(sessionId: string, jeton: string): Observable<EtatParticipant>;
   lireSyntheseRappels(sessionId: string): Observable<{ concepts: readonly SyntheseConcept[] }>;
   evincerParticipant(sessionId: string, participantId: string): Observable<void>;

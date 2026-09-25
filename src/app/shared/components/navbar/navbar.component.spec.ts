@@ -1,6 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
+import { type EnvironmentProviders, LOCALE_ID, PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { throwError } from 'rxjs';
@@ -8,6 +8,27 @@ import { AUTH_PORT } from '../../../core/ports/auth.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { buildAuthSession, createAuthPortStub } from '../../../../testing/factories/auth.factory';
 import { NavbarComponent } from './navbar.component';
+
+async function monterLaNavbar(
+  plateforme: 'browser' | 'server',
+  authPort: ReturnType<typeof createAuthPortStub>,
+  routeur: EnvironmentProviders[] = [],
+): Promise<ComponentFixture<NavbarComponent>> {
+  await TestBed.configureTestingModule({
+    imports: [NavbarComponent],
+    providers: [
+      { provide: PLATFORM_ID, useValue: plateforme },
+      { provide: LOCALE_ID, useValue: 'fr' },
+      ...routeur,
+      { provide: ActivatedRoute, useValue: {} },
+      provideHttpClient(withInterceptorsFromDi()),
+      provideHttpClientTesting(),
+      { provide: AUTH_PORT, useValue: authPort },
+    ],
+  }).compileComponents();
+
+  return TestBed.createComponent(NavbarComponent);
+}
 
 describe('NavbarComponent', () => {
   describe('en contexte navigateur', () => {
@@ -17,21 +38,7 @@ describe('NavbarComponent', () => {
 
     beforeEach(async () => {
       authPort = createAuthPortStub();
-
-      await TestBed.configureTestingModule({
-        imports: [NavbarComponent],
-        providers: [
-          { provide: PLATFORM_ID, useValue: 'browser' },
-          { provide: LOCALE_ID, useValue: 'fr' },
-          provideRouter([]),
-          { provide: ActivatedRoute, useValue: {} },
-          provideHttpClient(withInterceptorsFromDi()),
-          provideHttpClientTesting(),
-          { provide: AUTH_PORT, useValue: authPort },
-        ],
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(NavbarComponent);
+      fixture = await monterLaNavbar('browser', authPort, [provideRouter([])]);
       component = fixture.componentInstance;
     });
 
@@ -158,24 +165,25 @@ describe('NavbarComponent', () => {
         expect(authPort.logout).toHaveBeenCalledWith();
       });
 
-      it("devrait purger la session locale et rediriger vers l'accueil", () => {
-        const navigateSpy = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
-
-        component.logout();
-
-        expect(authState.isLoggedIn()).toBeFalse();
-        expect(navigateSpy).toHaveBeenCalledWith(['/']);
-      });
-
-      it('devrait deconnecter localement meme si la revocation serveur echoue', () => {
-        authPort.logout.and.returnValue(throwError(() => new Error('API injoignable')));
+      function deconnecterSansErreur(): void {
         const navigateSpy = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
 
         expect(() => component.logout()).not.toThrow();
 
-        expect(authPort.logout).toHaveBeenCalledWith();
         expect(authState.isLoggedIn()).toBeFalse();
         expect(navigateSpy).toHaveBeenCalledWith(['/']);
+      }
+
+      it("devrait purger la session locale et rediriger vers l'accueil", () => {
+        deconnecterSansErreur();
+      });
+
+      it('devrait deconnecter localement meme si la revocation serveur echoue', () => {
+        authPort.logout.and.returnValue(throwError(() => new Error('API injoignable')));
+
+        deconnecterSansErreur();
+
+        expect(authPort.logout).toHaveBeenCalledWith();
       });
     });
   });
@@ -185,19 +193,7 @@ describe('NavbarComponent', () => {
     let fixture: ComponentFixture<NavbarComponent>;
 
     beforeEach(async () => {
-      await TestBed.configureTestingModule({
-        imports: [NavbarComponent],
-        providers: [
-          { provide: PLATFORM_ID, useValue: 'server' },
-          { provide: LOCALE_ID, useValue: 'fr' },
-          { provide: ActivatedRoute, useValue: {} },
-          provideHttpClient(withInterceptorsFromDi()),
-          provideHttpClientTesting(),
-          { provide: AUTH_PORT, useValue: createAuthPortStub() },
-        ],
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(NavbarComponent);
+      fixture = await monterLaNavbar('server', createAuthPortStub());
       component = fixture.componentInstance;
     });
 

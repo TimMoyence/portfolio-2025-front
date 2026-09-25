@@ -1,0 +1,5 @@
+@mixin segment-actif {
+  background: var(--cream);
+  color: var(--ink);
+  box-shadow: var(--shadow-soft);
+}

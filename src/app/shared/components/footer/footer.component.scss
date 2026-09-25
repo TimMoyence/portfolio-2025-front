@@ -1,4 +1,6 @@
 @use '../../../styles-shared/breakpoints' as bp;
+@use '../../../styles-shared/mise-en-page';
+@use '../../../styles-shared/mono';
 @use '../../../styles-shared/surfaces' as surfaces;
 @use '../../../styles-shared/lists';
 
@@ -16,9 +18,7 @@
 }
 
 .asili-footer__inner {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding-inline: var(--gutter);
+  @include mise-en-page.conteneur;
 }
 
 .asili-footer__grid {
@@ -102,11 +102,7 @@
 }
 
 .asili-footer__heading {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
+  @include mono.capitales-mono(11px, 0.14em, var(--ink-mute));
   font-weight: 500;
   margin-bottom: 16px;
 }

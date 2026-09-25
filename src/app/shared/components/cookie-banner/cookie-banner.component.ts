@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
+import type { CookieConsentAction } from '../../../core/models/cookie-consent.model';
 import { CookieConsentService } from '../../../core/services/cookie-consent.service';
 
 @Component({
@@ -32,34 +33,24 @@ export class CookieBannerComponent {
   }
 
   acceptAll(): void {
-    this.consentService
-      .saveConsent(
-        {
-          essential: true,
-          preferences: true,
-          analytics: false,
-          marketing: false,
-        },
-        'banner',
-        'accept_all',
-      )
-      .subscribe({
-        next: () => this.updateVisibility(),
-        error: () => this.updateVisibility(),
-      });
+    this.saveBannerChoice(true, 'accept_all');
   }
 
   rejectAll(): void {
+    this.saveBannerChoice(false, 'essential_only');
+  }
+
+  private saveBannerChoice(preferences: boolean, action: CookieConsentAction): void {
     this.consentService
       .saveConsent(
         {
           essential: true,
-          preferences: false,
+          preferences,
           analytics: false,
           marketing: false,
         },
         'banner',
-        'essential_only',
+        action,
       )
       .subscribe({
         next: () => this.updateVisibility(),

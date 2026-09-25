@@ -1,42 +1,29 @@
-import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { pageMontee } from '../../../../testing/montage-page';
 import { HeroSectionComponent } from './hero-section.component';
 
 describe('HeroSectionComponent', () => {
-  let component: HeroSectionComponent;
-  let fixture: ComponentFixture<HeroSectionComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [HeroSectionComponent],
-      providers: [provideRouter([])],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(HeroSectionComponent);
-    component = fixture.componentInstance;
-    component.title = 'Test heading';
-    component.description = 'A short description';
-    component.actions = [
-      { label: 'Primary', href: '/presentation' },
-      { label: 'Secondary', variant: 'secondary', href: '/contact' },
-    ];
-    fixture.detectChanges();
+  const hero = pageMontee(HeroSectionComponent, {
+    avantRendu: ({ componentInstance }) => {
+      componentInstance.title = 'Test heading';
+      componentInstance.description = 'A short description';
+      componentInstance.actions = [
+        { label: 'Primary', href: '/presentation' },
+        { label: 'Secondary', variant: 'secondary', href: '/contact' },
+      ];
+    },
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(hero.composant).toBeTruthy();
   });
 
   it('should render provided title', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const heading = compiled.querySelector('[data-testid="hero-title"]');
+    const heading = hero.racine.querySelector('[data-testid="hero-title"]');
     expect(heading?.textContent).toContain('Test heading');
   });
 
   it('should render actions', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const buttons = compiled.querySelectorAll('button');
+    const buttons = hero.racine.querySelectorAll('button');
     expect(buttons.length).toBe(2);
     expect(buttons[0].textContent).toContain('Primary');
   });

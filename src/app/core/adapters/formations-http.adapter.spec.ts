@@ -1,5 +1,4 @@
-import type { TestRequest } from '@angular/common/http/testing';
-import { HttpTestingController } from '@angular/common/http/testing';
+import type { HttpTestingController, TestRequest } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import type { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -21,8 +20,8 @@ import {
 } from '../../../testing/factories/formations.factory';
 import type { ProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { buildProblemeHttp } from '../../../testing/factories/probleme-http.factory';
-import { setupTestBed } from '../../../testing/setup-test-bed';
-import type { CoursContent, DerouleCours } from '../../../cours/content/types';
+import { bancAdaptateurHttp } from '../../../testing/http-attendu';
+import type { CoursContent } from '../../../cours/content/types';
 import type {
   AnnotationFormateur,
   InscriptionParticipant,
@@ -60,6 +59,13 @@ const INSCRIPTION: InscriptionParticipant = {
   email: 'theo.martin@example.com',
 };
 
+const REPONSE_LIBRE = {
+  screenId: 'screen-1',
+  activityId: 'reflect-1',
+  response: 'raisonnement',
+  dureeMs: 3200,
+};
+
 const RATTACHEMENT: Rattachement = {
   participantId: '8f1c3b2a-5d4e-4f6a-9b8c-7d6e5f4a3b2c',
   sessionId: SESSION_ID,
@@ -70,6 +76,12 @@ const RATTACHEMENT: Rattachement = {
 };
 
 describe('FormationsHttpAdapter', () => {
+  const banc = bancAdaptateurHttp(FormationsHttpAdapter, {
+    providers: [
+      FormationsHttpAdapter,
+      { provide: FORMATIONS_PORT, useExisting: FormationsHttpAdapter },
+    ],
+  });
   let adapter: FormationsHttpAdapter;
   let httpMock: HttpTestingController;
 
@@ -97,21 +109,32 @@ describe('FormationsHttpAdapter', () => {
     return erreurs;
   };
 
-  beforeEach(() => {
-    setupTestBed({
-      providers: [
-        FormationsHttpAdapter,
-        { provide: FORMATIONS_PORT, useExisting: FormationsHttpAdapter },
-      ],
-    });
+  const corpsEnvoye = (appel: Observable<unknown>, url: string, methode: string): unknown => {
+    appel.subscribe();
+    const req = attendre(url, methode);
+    req.flush(null);
+    return req.request.body;
+  };
 
-    adapter = TestBed.inject(FormationsHttpAdapter);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
+  const attendreLeRefus = (
+    refus: { readonly motif: string; readonly statut: number; readonly message: string },
+    motif: string,
+    statut: number,
+  ): void => {
+    expect(refus.motif).toBe(motif);
+    expect(refus.statut).toBe(statut);
+    expect(refus.message).not.toBe('');
+  };
 
-  afterEach(() => {
-    httpMock.verify();
-  });
+  const rejoindreAvec = (reponse: object): { recus: Rattachement[]; requete: TestRequest } => {
+    const recus: Rattachement[] = [];
+    adapter.rejoindre(CODE, INSCRIPTION).subscribe((valeur) => recus.push(valeur));
+    const requete = attendre(`${RACINE}/${CODE}/join`, 'POST');
+    requete.flush(reponse);
+    return { recus, requete };
+  };
+
+  beforeEach(() => ({ adapter, httpMock } = banc));
 
   it('expose l adaptateur derriere le jeton FORMATIONS_PORT', () => {
     expect(TestBed.inject(FORMATIONS_PORT)).toBe(adapter);
@@ -136,13 +159,10 @@ describe('FormationsHttpAdapter', () => {
 
   it('lireDeroule GETe le deroule du presentateur sur deroule', () => {
     const deroule = buildDerouleCours();
-    const recus: DerouleCours[] = [];
 
-    adapter.lireDeroule(SESSION_ID).subscribe((valeur) => recus.push(valeur));
-
-    attendre(`${URL_SEANCE}/deroule`, 'GET').flush(deroule);
-
-    expect(recus).toEqual([deroule]);
+    expect(lus(adapter.lireDeroule(SESSION_ID), `${URL_SEANCE}/deroule`, deroule)).toEqual([
+      deroule,
+    ]);
   });
 
   it('lireSujet GETe le sujet de l etudiant avec l en-tete de participant', () => {
@@ -161,11 +181,8 @@ describe('FormationsHttpAdapter', () => {
   it('lireSujet traduit l ecran source et la revelation servis par le fil', () => {
     const base = buildCoursContent();
     const [premier, ...reste] = base.ecrans;
-    const recus: CoursContent[] = [];
 
-    adapter.lireSujet(SESSION_ID, JETON).subscribe((valeur) => recus.push(valeur));
-
-    attendre(`${URL_SEANCE}/sujet`, 'GET').flush({
+    const recus = lus(adapter.lireSujet(SESSION_ID, JETON), `${URL_SEANCE}/sujet`, {
       ...base,
       ecrans: [
         {
@@ -199,11 +216,8 @@ describe('FormationsHttpAdapter', () => {
   it('lireDeroule traduit l ecran source servi par le fil', () => {
     const base = buildDerouleCours();
     const [premier, ...reste] = base.ecrans;
-    const recus: DerouleCours[] = [];
 
-    adapter.lireDeroule(SESSION_ID).subscribe((valeur) => recus.push(valeur));
-
-    attendre(`${URL_SEANCE}/deroule`, 'GET').flush({
+    const recus = lus(adapter.lireDeroule(SESSION_ID), `${URL_SEANCE}/deroule`, {
       ...base,
       ecrans: [{ ...premier, ecranCorrige: 'ecran-source' }, ...reste],
     });
@@ -233,29 +247,19 @@ describe('FormationsHttpAdapter', () => {
   }
 
   it('demarrer POSTe sur start', () => {
-    adapter.demarrer(SESSION_ID).subscribe();
-
-    const req = attendre(`${URL_SEANCE}/start`, 'POST');
-    expect(req.request.body).toEqual({});
-    req.flush(null);
+    expect(corpsEnvoye(adapter.demarrer(SESSION_ID), `${URL_SEANCE}/start`, 'POST')).toEqual({});
   });
 
   it('piloter PATCHe la commande sur control', () => {
     const commande = { ecran: 4, mode: 'libre' as const, intervalle: { premier: 3, dernier: 9 } };
 
-    adapter.piloter(SESSION_ID, commande).subscribe();
-
-    const req = attendre(`${URL_SEANCE}/control`, 'PATCH');
-    expect(req.request.body).toEqual(commande);
-    req.flush(null);
+    expect(
+      corpsEnvoye(adapter.piloter(SESSION_ID, commande), `${URL_SEANCE}/control`, 'PATCH'),
+    ).toEqual(commande);
   });
 
   it('cloturer POSTe sur close', () => {
-    adapter.cloturer(SESSION_ID).subscribe();
-
-    const req = attendre(`${URL_SEANCE}/close`, 'POST');
-    expect(req.request.body).toEqual({});
-    req.flush(null);
+    expect(corpsEnvoye(adapter.cloturer(SESSION_ID), `${URL_SEANCE}/close`, 'POST')).toEqual({});
   });
 
   it('lireResultats GETe le rapport, y compris les resultats agreges, sur results', () => {
@@ -351,45 +355,40 @@ describe('FormationsHttpAdapter', () => {
         ['un 400 reponse vide', 400, buildProblemeHttp({ status: 400 }), 'refusee'],
       ];
 
+    const refusDeReponseLibre = (
+      statut: number,
+      corps: ProblemeHttp | null,
+    ): ReponseLibreRefusee => {
+      const erreurs = erreursApres(
+        adapter.enregistrerReponseLibre(SESSION_ID, JETON, REPONSE_LIBRE),
+        `${URL_SEANCE}/free-responses`,
+        (requete) => {
+          if (statut === 0) {
+            requete.error(new ProgressEvent('error'));
+          } else {
+            requete.flush(corps, { status: statut, statusText: 'Erreur' });
+          }
+        },
+      );
+
+      expect(erreurs[0]).toBeInstanceOf(ReponseLibreRefusee);
+      return erreurs[0] as ReponseLibreRefusee;
+    };
+
     for (const [nom, statut, corps, motif] of cas) {
       it(`classe ${nom} en ${motif}`, () => {
-        const erreurs: unknown[] = [];
-
-        adapter
-          .enregistrerReponseLibre(SESSION_ID, JETON, {
-            screenId: 'screen-1',
-            activityId: 'reflect-1',
-            response: 'raisonnement',
-            dureeMs: 3200,
-          })
-          .subscribe({ error: (recue: unknown) => erreurs.push(recue) });
-        const requete = httpMock.expectOne(`${URL_SEANCE}/free-responses`);
-        if (statut === 0) {
-          requete.error(new ProgressEvent('error'));
-        } else {
-          requete.flush(corps, { status: statut, statusText: 'Erreur' });
-        }
-
-        expect(erreurs[0]).toBeInstanceOf(ReponseLibreRefusee);
-        expect((erreurs[0] as ReponseLibreRefusee).motif).toBe(motif);
-        expect((erreurs[0] as ReponseLibreRefusee).statut).toBe(statut);
+        attendreLeRefus(refusDeReponseLibre(statut, corps), motif, statut);
       });
     }
   });
 
   it('persiste les reponses libres et les annotations du formateur', () => {
-    const reponse = {
-      screenId: 'screen-1',
-      activityId: 'reflect-1',
-      response: 'raisonnement',
-      dureeMs: 3200,
-    };
     const annotation = { screenId: 'screen-1', note: 'À reprendre' };
 
-    adapter.enregistrerReponseLibre(SESSION_ID, JETON, reponse).subscribe();
+    adapter.enregistrerReponseLibre(SESSION_ID, JETON, REPONSE_LIBRE).subscribe();
     const reponseRequest = attendre(`${URL_SEANCE}/free-responses`, 'POST');
     expect(reponseRequest.request.headers.get(ENTETE_JETON)).toBe(JETON);
-    expect(reponseRequest.request.body).toEqual(reponse);
+    expect(reponseRequest.request.body).toEqual(REPONSE_LIBRE);
     reponseRequest.flush({ status: 'enregistre' });
 
     adapter.enregistrerAnnotation(SESSION_ID, annotation).subscribe();
@@ -405,22 +404,14 @@ describe('FormationsHttpAdapter', () => {
   });
 
   it('rejoindre POSTe l inscription sur le code et rend le jeton du participant', () => {
-    const recus: Rattachement[] = [];
+    const { recus, requete } = rejoindreAvec(RATTACHEMENT);
 
-    adapter.rejoindre(CODE, INSCRIPTION).subscribe((valeur) => recus.push(valeur));
-
-    const req = attendre(`${RACINE}/${CODE}/join`, 'POST');
-    expect(req.request.body).toEqual(INSCRIPTION);
-    req.flush(RATTACHEMENT);
-
+    expect(requete.request.body).toEqual(INSCRIPTION);
     expect(recus).toEqual([RATTACHEMENT]);
   });
 
   it('rejoindre ne garde du rattachement aucune graine, meme si le serveur en envoie encore une', () => {
-    const recus: Rattachement[] = [];
-
-    adapter.rejoindre(CODE, INSCRIPTION).subscribe((valeur) => recus.push(valeur));
-    attendre(`${RACINE}/${CODE}/join`, 'POST').flush({ ...RATTACHEMENT, seed: 1_234_567 });
+    const { recus } = rejoindreAvec({ ...RATTACHEMENT, seed: 1_234_567 });
 
     expect(recus).toEqual([RATTACHEMENT]);
     expect(Object.keys(recus[0]).sort((a, b) => a.localeCompare(b))).toEqual([
@@ -442,11 +433,9 @@ describe('FormationsHttpAdapter', () => {
   });
 
   it('rejoindre ne pose pas l en-tete de participant, que l etudiant n a pas encore', () => {
-    adapter.rejoindre(CODE, INSCRIPTION).subscribe();
+    const { requete } = rejoindreAvec(RATTACHEMENT);
 
-    const req = attendre(`${RACINE}/${CODE}/join`, 'POST');
-    expect(req.request.headers.has(ENTETE_JETON)).toBeFalse();
-    req.flush(RATTACHEMENT);
+    expect(requete.request.headers.has(ENTETE_JETON)).toBeFalse();
   });
 
   describe('refus de rattachement', () => {
@@ -672,11 +661,7 @@ describe('FormationsHttpAdapter', () => {
 
     for (const [nom, statut, corps, motif] of cas) {
       it(`classe ${nom} en ${motif}`, () => {
-        const refus = refusPour(statut, corps);
-
-        expect(refus.motif).toBe(motif);
-        expect(refus.statut).toBe(statut);
-        expect(refus.message).not.toBe('');
+        attendreLeRefus(refusPour(statut, corps), motif, statut);
       });
     }
 

@@ -12,14 +12,7 @@
       aria-label="Asili Design — accueil"
       i18n-aria-label="@@navLogoHomeAriaLabel"
     >
-      <img
-        class="asili-logo_img"
-        aria-hidden="true"
-        src="/assets/images/logo.webp"
-        alt="Logo Asili Design"
-        i18n-alt="@@navLogoAlt"
-      />
-      <span class="asili-logo__name" i18n="@@NavbarCompanyTitle">Asili design</span>
+      <ng-container *ngTemplateOutlet="logoContent" />
     </a>
 
     <div class="asili-nav__links">
@@ -67,14 +60,7 @@
     <div #mobileMenuPanel class="asili-drawer">
       <div class="asili-drawer__top">
         <a class="asili-logo" routerLink="/" (click)="closeMobileMenu()">
-          <img
-            class="asili-logo_img"
-            aria-hidden="true"
-            src="/assets/images/logo.webp"
-            alt="Logo Asili Design"
-            i18n-alt="@@navLogoAlt"
-          />
-          <span class="asili-logo__name" i18n="@@NavbarCompanyTitle">Asili design</span>
+          <ng-container *ngTemplateOutlet="logoContent" />
         </a>
         <button
           type="button"
@@ -217,11 +203,7 @@
             <div class="asili-dropdown asili-dropdown--user open">
               @if (authState.user(); as u) {
                 <div class="asili-user-head">
-                  @if (userInitials()) {
-                    <span class="asili-avatar asili-avatar--sm">
-                      <span class="asili-avatar__initials">{{ userInitials() }}</span>
-                    </span>
-                  }
+                  <ng-container *ngTemplateOutlet="smallAvatar" />
                   <div class="asili-user-head__meta">
                     <p class="asili-user-head__name">{{ u.firstName }} {{ u.lastName }}</p>
                     <p class="asili-user-head__email">{{ u.email }}</p>
@@ -239,11 +221,7 @@
         <div class="asili-drawer__account">
           @if (authState.user(); as u) {
             <div class="asili-drawer__account-head">
-              @if (userInitials()) {
-                <span class="asili-avatar asili-avatar--sm">
-                  <span class="asili-avatar__initials">{{ userInitials() }}</span>
-                </span>
-              }
+              <ng-container *ngTemplateOutlet="smallAvatar" />
               <p class="asili-user-head__name">{{ u.firstName }} {{ u.lastName }}</p>
             </div>
           }
@@ -265,6 +243,25 @@
       </button>
     }
   </div>
+</ng-template>
+
+<ng-template #logoContent>
+  <img
+    class="asili-logo_img"
+    aria-hidden="true"
+    src="/assets/images/logo.webp"
+    alt="Logo Asili Design"
+    i18n-alt="@@navLogoAlt"
+  />
+  <span class="asili-logo__name" i18n="@@NavbarCompanyTitle">Asili design</span>
+</ng-template>
+
+<ng-template #smallAvatar>
+  @if (userInitials()) {
+    <span class="asili-avatar asili-avatar--sm">
+      <span class="asili-avatar__initials">{{ userInitials() }}</span>
+    </span>
+  }
 </ng-template>
 
 <ng-template #navChevron let-open="open" let-size="size">

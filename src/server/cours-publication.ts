@@ -1,3 +1,4 @@
+import { lireJsonSousDelai, messageDErreur } from './lecture-api';
 import { trimTrailingSlashes } from './url-utils';
 
 export interface PublicationDeCours {
@@ -37,20 +38,19 @@ async function lirePublication(
   dependances: DependancesDuLecteur,
 ): Promise<PublicationDeCours | null> {
   const chemin = cheminDuCours(slug);
-  const controleur = new AbortController();
-  const minuterie = setTimeout(() => controleur.abort(), DELAI_MS);
   try {
-    const reponse = await dependances.fetch(`${apiBaseUrl}/formations/catalogue/${slug}`, {
-      headers: { accept: 'application/json' },
-      signal: controleur.signal,
-    });
-    if (!reponse.ok) {
+    const lecture = await lireJsonSousDelai(
+      dependances.fetch,
+      `${apiBaseUrl}/formations/catalogue/${slug}`,
+      DELAI_MS,
+    );
+    if (!lecture.ok) {
       dependances.journal.warn(
-        `[sitemap] ${chemin} : GET /formations/catalogue/${slug} a répondu ${reponse.status}, ${REPLI}`,
+        `[sitemap] ${chemin} : GET /formations/catalogue/${slug} a répondu ${lecture.statut}, ${REPLI}`,
       );
       return null;
     }
-    const publieLe = dateDePublication(await reponse.json());
+    const publieLe = dateDePublication(lecture.corps);
     if (publieLe === null) {
       dependances.journal.warn(
         `[sitemap] ${chemin} : publieLe absent ou invalide dans la réponse de l'API, ${REPLI}`,
@@ -60,11 +60,9 @@ async function lirePublication(
     return { chemin, publieLe };
   } catch (erreur) {
     dependances.journal.warn(
-      `[sitemap] ${chemin} : API injoignable (${erreur instanceof Error ? erreur.message : String(erreur)}), ${REPLI}`,
+      `[sitemap] ${chemin} : API injoignable (${messageDErreur(erreur)}), ${REPLI}`,
     );
     return null;
-  } finally {
-    clearTimeout(minuterie);
   }
 }
 

@@ -1,24 +1,10 @@
-import { HttpTestingController } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { setupTestBed } from '../../../testing/setup-test-bed';
+import { bancAdaptateurHttp, verifierErreurRelayee } from '../../../testing/http-attendu';
 import type { PresentationInteractionsResponse } from '../ports/presentation.port';
 import { PresentationHttpAdapter } from './presentation-http.adapter';
 
 describe('PresentationHttpAdapter', () => {
-  let adapter: PresentationHttpAdapter;
-  let httpMock: HttpTestingController;
-
-  beforeEach(() => {
-    setupTestBed({ providers: [PresentationHttpAdapter] });
-
-    adapter = TestBed.inject(PresentationHttpAdapter);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
-  });
+  const banc = bancAdaptateurHttp(PresentationHttpAdapter);
 
   it('appelle GET /presentations/{slug}/interactions et mappe la reponse', () => {
     const slug = 'ia-solopreneurs';
@@ -38,11 +24,13 @@ describe('PresentationHttpAdapter', () => {
     };
 
     let received: PresentationInteractionsResponse | undefined;
-    adapter.getInteractions(slug).subscribe((result) => {
+    banc.adapter.getInteractions(slug).subscribe((result) => {
       received = result;
     });
 
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/presentations/${slug}/interactions`);
+    const req = banc.httpMock.expectOne(
+      `${environment.apiBaseUrl}/presentations/${slug}/interactions`,
+    );
     expect(req.request.method).toBe('GET');
     req.flush(response);
 
@@ -51,18 +39,12 @@ describe('PresentationHttpAdapter', () => {
 
   it('propage les erreurs HTTP', () => {
     const slug = 'inconnu';
-    let status: number | undefined;
 
-    adapter.getInteractions(slug).subscribe({
-      next: () => fail('aurait dû échouer'),
-      error: (error) => {
-        status = error.status;
-      },
-    });
-
-    const req = httpMock.expectOne(`${environment.apiBaseUrl}/presentations/${slug}/interactions`);
-    req.flush('Not found', { status: 404, statusText: 'Not Found' });
-
-    expect(status).toBe(404);
+    verifierErreurRelayee(
+      banc.adapter.getInteractions(slug),
+      banc.httpMock,
+      `/presentations/${slug}/interactions`,
+      { corps: 'Not found', status: 404, statusText: 'Not Found' },
+    );
   });
 });

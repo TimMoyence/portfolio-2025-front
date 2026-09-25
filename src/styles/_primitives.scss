@@ -1,3 +1,5 @@
+@use '../app/styles-shared/cartes';
+
 @keyframes asili-pulse {
   50% {
     box-shadow: 0 0 0 7px rgba(var(--teal-rgb), 0);
@@ -102,19 +104,11 @@
   }
 
   .glass {
-    background: var(--glass);
-    border: 1px solid var(--glass-line);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-radius: var(--r-lg);
+    @include cartes.verre(var(--glass), var(--glass-line));
   }
 
   .glass-dark {
-    background: var(--glass-dark);
-    border: 1px solid var(--glass-dark-line);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-radius: var(--r-lg);
+    @include cartes.verre(var(--glass-dark), var(--glass-dark-line));
   }
 
   .live-chip {

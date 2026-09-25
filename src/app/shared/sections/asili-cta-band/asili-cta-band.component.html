@@ -1,20 +1,21 @@
+@let cta = contenu();
 <section class="cta-band-section section-pad">
   <div class="wrap">
     <div class="cta" appReveal>
       <div class="cta-inner">
         <ng-content select="[kicker]">
-          @if (kicker(); as k) {
+          @if (cta.kicker; as k) {
             <span class="kicker cta-kicker">{{ k }}</span>
           }
         </ng-content>
-        <h2 class="cta-title">{{ title() }}</h2>
+        <h2 class="cta-title">{{ cta.title }}</h2>
         <ng-content select="[lead]">
-          @if (lead(); as l) {
+          @if (cta.lead; as l) {
             <p class="cta-lead">{{ l }}</p>
           }
         </ng-content>
         <div class="cta-actions">
-          @for (action of actions(); track action.lien) {
+          @for (action of cta.actions ?? []; track action.lien) {
             @if (action.variante === 'principale') {
               <a class="btn btn-teal" [routerLink]="action.lien">
                 {{ action.libelle }} <span class="arrow" aria-hidden="true">→</span>

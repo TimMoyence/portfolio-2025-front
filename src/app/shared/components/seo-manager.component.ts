@@ -96,9 +96,7 @@ export class SeoManagerComponent {
     data: Record<string, unknown>,
     forceNoIndex?: boolean,
   ): void {
-    const baseUrl = this.resolveBaseUrl();
-    const canonicalState = this.resolveCanonicalState(currentUrl);
-    const canonicalUrl = this.buildAbsoluteUrl(baseUrl, canonicalState.canonicalPath);
+    const { baseUrl, canonicalUrl, hreflangs } = this.resolvePageUrls(currentUrl);
     const index = typeof forceNoIndex === 'boolean' ? !forceNoIndex : (resolved?.index ?? true);
     const ogImage = this.resolveAbsoluteUrl(baseUrl, seo.ogImage);
     const twitterImage = this.resolveAbsoluteUrl(baseUrl, seo.twitterImage ?? ogImage);
@@ -110,8 +108,22 @@ export class SeoManagerComponent {
       ogUrl: canonicalUrl,
       canonicalUrl,
       robots: this.resolveRobots(data, index),
-      hreflangs: this.buildHreflangs(baseUrl, canonicalState.relativePath),
+      hreflangs,
     });
+  }
+
+  private resolvePageUrls(currentUrl: string): {
+    baseUrl: string;
+    canonicalUrl: string;
+    hreflangs: Record<string, string>;
+  } {
+    const baseUrl = this.resolveBaseUrl();
+    const canonicalState = this.resolveCanonicalState(currentUrl);
+    return {
+      baseUrl,
+      canonicalUrl: this.buildAbsoluteUrl(baseUrl, canonicalState.canonicalPath),
+      hreflangs: this.buildHreflangs(baseUrl, canonicalState.relativePath),
+    };
   }
 
   private resolveRobots(data: Record<string, unknown>, index: boolean): string {
@@ -140,11 +152,7 @@ export class SeoManagerComponent {
   }
 
   private setDefaultSeo(currentUrl: string, data: Record<string, unknown> = {}): void {
-    const baseUrl = this.resolveBaseUrl();
-    const canonicalState = this.resolveCanonicalState(currentUrl);
-    const canonicalUrl = this.buildAbsoluteUrl(baseUrl, canonicalState.canonicalPath);
-
-    const hreflangs = this.buildHreflangs(baseUrl, canonicalState.relativePath);
+    const { baseUrl, canonicalUrl, hreflangs } = this.resolvePageUrls(currentUrl);
 
     const seoConfig: SeoConfig = {
       title: $localize`:seo.default.title|Fallback SEO title@@seoDefaultTitle:Professional Portfolio | Web Developer & Designer`,

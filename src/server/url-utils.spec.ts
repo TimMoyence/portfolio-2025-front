@@ -138,20 +138,20 @@ describe('url-utils', () => {
       expect(buildBaseUrlFromRequest(req)).toBe('https://asilidesign.fr');
     });
 
-    it('retombe sur le fallback si ni forwarded ni host ne sont allowlistes', () => {
-      const req = stubRequest({
+    const requeteSansHoteAllowliste = () =>
+      stubRequest({
         headers: { 'x-forwarded-host': 'evil.example.com' },
         host: 'also-evil.example.com',
       });
-      expect(buildBaseUrlFromRequest(req, 'https://asilidesign.fr')).toBe('https://asilidesign.fr');
+
+    it('retombe sur le fallback si ni forwarded ni host ne sont allowlistes', () => {
+      expect(buildBaseUrlFromRequest(requeteSansHoteAllowliste(), 'https://asilidesign.fr')).toBe(
+        'https://asilidesign.fr',
+      );
     });
 
     it('retombe sur https://asilidesign.fr sans fallback fourni', () => {
-      const req = stubRequest({
-        headers: { 'x-forwarded-host': 'evil.example.com' },
-        host: 'also-evil.example.com',
-      });
-      expect(buildBaseUrlFromRequest(req)).toBe('https://asilidesign.fr');
+      expect(buildBaseUrlFromRequest(requeteSansHoteAllowliste())).toBe('https://asilidesign.fr');
     });
 
     it('ignore un x-forwarded-proto non http/https et retombe sur req.protocol', () => {

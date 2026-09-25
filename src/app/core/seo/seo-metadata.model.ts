@@ -2,7 +2,7 @@ type SeoChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yea
 
 export type JsonLdBlock = Record<string, unknown> | Record<string, unknown>[];
 
-interface SeoLocaleMeta {
+export interface SeoLocaleMeta {
   title: string;
   description: string;
   keywords?: string[];

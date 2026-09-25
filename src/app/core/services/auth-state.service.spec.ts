@@ -46,6 +46,23 @@ describe('AuthStateService', () => {
       service.clearSession();
     });
 
+    function avancer(ms: number): void {
+      tick(ms);
+      flushMicrotasks();
+    }
+
+    function atteindreLePremierRenouvellement(): void {
+      service.login(buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 }));
+      avancer(30_000);
+    }
+
+    function attendreLeDeuxiemeEssaiApres(delaiMs: number): void {
+      avancer(delaiMs - 1);
+      expect(portStub.refresh).toHaveBeenCalledTimes(1);
+      avancer(1);
+      expect(portStub.refresh).toHaveBeenCalledTimes(2);
+    }
+
     it('restaure une session via le cookie HttpOnly sans persister le jeton', fakeAsync(() => {
       const session = buildAuthSession({ accessToken: 'jwt-restaure', expiresIn: 60 });
       portStub.refresh.and.returnValue(of(session));
@@ -63,19 +80,14 @@ describe('AuthStateService', () => {
     for (const status of [0, 503]) {
       it(`garde la session et retente un nombre borne de fois apres un echec ${status}`, fakeAsync(() => {
         portStub.refresh.and.returnValue(throwError(refusHttp(status)));
-        service.login(buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 }));
-
-        tick(30_000);
-        flushMicrotasks();
+        atteindreLePremierRenouvellement();
 
         expect(portStub.refresh).toHaveBeenCalledTimes(1);
         expect(service.token()).toBe('jwt-initial');
 
-        tick(600_000);
-        flushMicrotasks();
+        avancer(600_000);
         const essais = portStub.refresh.calls.count();
-        tick(600_000);
-        flushMicrotasks();
+        avancer(600_000);
 
         expect(essais).toBeGreaterThan(1);
         expect(portStub.refresh.calls.count()).withContext('nouvel essai borne').toBe(essais);
@@ -88,12 +100,8 @@ describe('AuthStateService', () => {
         throwError(refusHttp(502)),
         of(buildAuthSession({ accessToken: 'jwt-apres-panne', expiresIn: 900 })),
       );
-      service.login(buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 }));
-
-      tick(30_000);
-      flushMicrotasks();
-      tick(30_000);
-      flushMicrotasks();
+      atteindreLePremierRenouvellement();
+      avancer(30_000);
 
       expect(portStub.refresh).toHaveBeenCalledTimes(2);
       expect(service.token()).toBe('jwt-apres-panne');
@@ -105,38 +113,24 @@ describe('AuthStateService', () => {
           throwError(limiteAtteinte('1800')),
           of(buildAuthSession({ accessToken: 'jwt-apres-limite', expiresIn: 900 })),
         );
-        service.login(buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 }));
-
-        tick(30_000);
-        flushMicrotasks();
+        atteindreLePremierRenouvellement();
         expect(portStub.refresh).toHaveBeenCalledTimes(1);
         expect(service.isLoggedIn()).toBeTrue();
 
-        tick(1_799_999);
-        flushMicrotasks();
-        expect(portStub.refresh).toHaveBeenCalledTimes(1);
-
-        tick(1);
-        flushMicrotasks();
-        expect(portStub.refresh).toHaveBeenCalledTimes(2);
+        attendreLeDeuxiemeEssaiApres(1_800_000);
         expect(service.token()).toBe('jwt-apres-limite');
       }));
 
       it('sans Retry-After, retente a la cadence d une rotation sans jamais s arreter', fakeAsync(() => {
         portStub.refresh.and.returnValue(throwError(limiteAtteinte()));
-        service.login(buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 }));
-
-        tick(30_000);
-        flushMicrotasks();
+        atteindreLePremierRenouvellement();
 
         for (let essai = 2; essai <= 8; essai += 1) {
-          tick(CADENCE_D_UNE_ROTATION_MS - 1);
-          flushMicrotasks();
+          avancer(CADENCE_D_UNE_ROTATION_MS - 1);
           expect(portStub.refresh)
             .withContext(`pas d essai ${essai} avant une rotation`)
             .toHaveBeenCalledTimes(essai - 1);
-          tick(1);
-          flushMicrotasks();
+          avancer(1);
           expect(portStub.refresh).withContext(`essai ${essai}`).toHaveBeenCalledTimes(essai);
         }
         expect(service.isLoggedIn()).toBeTrue();
@@ -145,31 +139,19 @@ describe('AuthStateService', () => {
 
       it('un Retry-After plus court qu une rotation ne rapproche pas le nouvel essai', fakeAsync(() => {
         portStub.refresh.and.returnValue(throwError(limiteAtteinte('5')));
-        service.login(buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 }));
+        atteindreLePremierRenouvellement();
 
-        tick(30_000);
-        flushMicrotasks();
-        tick(CADENCE_D_UNE_ROTATION_MS - 1);
-        flushMicrotasks();
-
-        expect(portStub.refresh).toHaveBeenCalledTimes(1);
-        tick(1);
-        flushMicrotasks();
-        expect(portStub.refresh).toHaveBeenCalledTimes(2);
+        attendreLeDeuxiemeEssaiApres(CADENCE_D_UNE_ROTATION_MS);
         service.clearSession();
       }));
     });
 
     it('efface la session quand le renouvellement est refuse en 401', fakeAsync(() => {
       portStub.refresh.and.returnValue(throwError(refusHttp(401)));
-      service.login(buildAuthSession({ accessToken: 'jwt-initial', expiresIn: 60 }));
-
-      tick(30_000);
-      flushMicrotasks();
+      atteindreLePremierRenouvellement();
 
       expect(service.isLoggedIn()).toBeFalse();
-      tick(600_000);
-      flushMicrotasks();
+      avancer(600_000);
       expect(portStub.refresh).toHaveBeenCalledTimes(1);
     }));
 
@@ -179,13 +161,18 @@ describe('AuthStateService', () => {
         TestBed.inject(ApplicationRef).tick();
       }
 
+      function restaurerSansJetonApresUnRefus(status: number): void {
+        portStub.refresh.and.returnValue(throwError(refusHttp(status)));
+
+        restaurer();
+
+        expect(service.token()).toBeNull();
+      }
+
       for (const status of [0, 503]) {
         it(`signale un echec de restauration quand le refresh echoue en ${status}`, () => {
-          portStub.refresh.and.returnValue(throwError(refusHttp(status)));
+          restaurerSansJetonApresUnRefus(status);
 
-          restaurer();
-
-          expect(service.token()).toBeNull();
           expect(service.user()).toBeNull();
           expect(service.isRestoreFailed()).toBeTrue();
           expect(service.isSessionResolved())
@@ -196,11 +183,8 @@ describe('AuthStateService', () => {
 
       for (const status of [401, 403]) {
         it(`efface la session quand le refresh est refuse en ${status}`, () => {
-          portStub.refresh.and.returnValue(throwError(refusHttp(status)));
+          restaurerSansJetonApresUnRefus(status);
 
-          restaurer();
-
-          expect(service.token()).toBeNull();
           expect(service.isRestoreFailed()).toBeFalse();
           expect(service.isSessionResolved()).toBeTrue();
         });

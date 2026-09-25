@@ -10,7 +10,7 @@ const MESSAGE = 'Un email de réinitialisation vous a été envoyé.';
   standalone: true,
   imports: [AuthSuccessComponent, RouterModule],
   template: `
-    <app-auth-success [message]="message">
+    <app-auth-success [message]="message" libelleConnexion="Se connecter">
       <h1 title>Email <em>envoyé</em></h1>
       <p class="sub redirect-probe">Redirection...</p>
       <p class="auth-alt">
@@ -75,6 +75,22 @@ describe('AuthSuccessComponent', () => {
     const back = el.querySelector('.auth-success .back-probe');
     expect(back).not.toBeNull();
     expect((back as HTMLAnchorElement).getAttribute('href')).toBe('/login');
+  });
+
+  it("n'affiche pas d'action vers la connexion par defaut", () => {
+    const el = setupBare().nativeElement as HTMLElement;
+    expect(el.querySelector('.auth-success a.btn')).toBeNull();
+  });
+
+  it('rend le bouton vers /login avec le libelle fourni quand libelleConnexion est renseigne', () => {
+    const el = setupWithHost().nativeElement as HTMLElement;
+    const bouton = el.querySelector('.auth-success a.btn.btn-teal');
+    expect(bouton?.getAttribute('href')).toBe('/login');
+    const libelle = bouton?.querySelector('span:not(.arrow)');
+    expect(libelle?.textContent).toBe('Se connecter');
+    const attributs = Array.from(libelle?.attributes ?? []).map((attribut) => attribut.name);
+    expect(attributs.filter((nom) => !nom.startsWith('_ngcontent'))).toEqual([]);
+    expect(bouton?.querySelector('.arrow')?.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('rend le message pilote (input) + le sous-titre projete (ex. redirect verify)', () => {

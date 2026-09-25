@@ -2,7 +2,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { PLATFORM_ID } from '@angular/core';
 import type { SimpleChanges } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { SvgIconComponent } from './svg-icon.component';
 
 const MOCK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#000" d="M0 0h24v24H0z"/></svg>`;
@@ -26,27 +26,37 @@ function nameChange(currentValue: string, previousValue?: string): SimpleChanges
   };
 }
 
-async function configureTestBed(platformId: 'browser' | 'server'): Promise<void> {
-  SvgIconComponent.clearCache();
-
-  await TestBed.configureTestingModule({
-    imports: [SvgIconComponent],
-    providers: [
-      { provide: PLATFORM_ID, useValue: platformId },
-      provideHttpClient(withInterceptorsFromDi()),
-      provideHttpClientTesting(),
-    ],
-  }).compileComponents();
-}
-
 describe('SvgIconComponent', () => {
   let component: SvgIconComponent;
-  let fixture: ComponentFixture<SvgIconComponent>;
   let httpMock: HttpTestingController;
+
+  async function monterIcone(platformId: 'browser' | 'server'): Promise<void> {
+    SvgIconComponent.clearCache();
+
+    await TestBed.configureTestingModule({
+      imports: [SvgIconComponent],
+      providers: [
+        { provide: PLATFORM_ID, useValue: platformId },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
+    }).compileComponents();
+
+    httpMock = TestBed.inject(HttpTestingController);
+    component = TestBed.createComponent(SvgIconComponent).componentInstance;
+  }
 
   function loadIcon(name: string, previousValue?: string): void {
     component.name = name;
     component.ngOnChanges(nameChange(name, previousValue));
+  }
+
+  function chargerEnGet(name: string): void {
+    loadIcon(name);
+
+    const req = httpMock.expectOne(`assets/icons/${name}.svg`);
+    expect(req.request.method).toBe('GET');
+    req.flush(MOCK_SVG);
   }
 
   afterEach(() => {
@@ -55,11 +65,7 @@ describe('SvgIconComponent', () => {
 
   describe('en contexte navigateur', () => {
     beforeEach(async () => {
-      await configureTestBed('browser');
-
-      httpMock = TestBed.inject(HttpTestingController);
-      fixture = TestBed.createComponent(SvgIconComponent);
-      component = fixture.componentInstance;
+      await monterIcone('browser');
     });
 
     it('devrait se creer', () => {
@@ -67,11 +73,7 @@ describe('SvgIconComponent', () => {
     });
 
     it('devrait charger une icone SVG via HTTP', () => {
-      loadIcon('test-icon');
-
-      const req = httpMock.expectOne('assets/icons/test-icon.svg');
-      expect(req.request.method).toBe('GET');
-      req.flush(MOCK_SVG);
+      chargerEnGet('test-icon');
 
       expect(component.svgContent).not.toBeNull();
     });
@@ -143,11 +145,7 @@ describe('SvgIconComponent', () => {
     it('devrait charger une icone en sous-dossier (network/google)', () => {
       spyOn(console, 'warn');
 
-      loadIcon('network/google');
-
-      const req = httpMock.expectOne('assets/icons/network/google.svg');
-      expect(req.request.method).toBe('GET');
-      req.flush(MOCK_SVG);
+      chargerEnGet('network/google');
 
       expect(component.svgContent).not.toBeNull();
       expect(console.warn).not.toHaveBeenCalled();
@@ -168,11 +166,7 @@ describe('SvgIconComponent', () => {
 
   describe('en contexte serveur (SSR)', () => {
     beforeEach(async () => {
-      await configureTestBed('server');
-
-      httpMock = TestBed.inject(HttpTestingController);
-      fixture = TestBed.createComponent(SvgIconComponent);
-      component = fixture.componentInstance;
+      await monterIcone('server');
     });
 
     it("devrait ne pas charger d'icone en SSR", () => {

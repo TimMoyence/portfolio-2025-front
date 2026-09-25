@@ -1,5 +1,5 @@
 import { animateValue } from './animate-value';
-import type { AnimationHandle } from './animate-value';
+import type { AnimateValueOptions, AnimationHandle } from './animate-value';
 
 /**
  * Harnais de test pilotant manuellement `requestAnimationFrame`.
@@ -66,21 +66,39 @@ describe('animateValue', () => {
     expect(typeof handle.cancel).toBe('function');
   });
 
-  it('devrait produire des frames ease-out croissantes et une frame finale exacte', () => {
+  function animerSurFrames(
+    bornes: Pick<AnimateValueOptions, 'from' | 'to'>,
+    timestamps: readonly number[],
+  ): { frames: number[]; onComplete: jasmine.Spy } {
     const frames: number[] = [];
     const onComplete = jasmine.createSpy('onComplete');
+    animateValue({ ...bornes, durationMs: 100, onFrame: (v) => frames.push(v), onComplete });
+    for (const timestamp of timestamps) {
+      runFrame(timestamp);
+    }
+    return { frames, onComplete };
+  }
 
-    animateValue({
-      from: 0,
-      to: 100,
-      durationMs: 100,
-      onFrame: (v) => frames.push(v),
-      onComplete,
-    });
+  function animerDeZeroACent(durationMs: number): {
+    handle: AnimationHandle;
+    onFrame: jasmine.Spy;
+    onComplete: jasmine.Spy;
+  } {
+    const onFrame = jasmine.createSpy('onFrame');
+    const onComplete = jasmine.createSpy('onComplete');
+    const handle = animateValue({ from: 0, to: 100, durationMs, onFrame, onComplete });
+    return { handle, onFrame, onComplete };
+  }
 
-    runFrame(1000); // progress 0 -> value = from
-    runFrame(1050); // progress 0.5 -> eased 0.875
-    runFrame(1100); // progress 1 -> frame finale = to
+  function attendreLaFinSynchrone(onFrame: jasmine.Spy, onComplete: jasmine.Spy): void {
+    expect(onFrame).toHaveBeenCalledOnceWith(100);
+    expect(onComplete).toHaveBeenCalledTimes(1);
+  }
+
+  const FRAMES_DEBUT_MILIEU_FIN = [1000, 1050, 1100] as const;
+
+  it('devrait produire des frames ease-out croissantes et une frame finale exacte', () => {
+    const { frames, onComplete } = animerSurFrames({ from: 0, to: 100 }, FRAMES_DEBUT_MILIEU_FIN);
 
     expect(frames[0]).toBe(0);
     expect(frames[1]).toBeCloseTo(87.5, 5);
@@ -90,50 +108,20 @@ describe('animateValue', () => {
   });
 
   it('devrait transmettre la valeur brute non arrondie a onFrame', () => {
-    const frames: number[] = [];
-
-    animateValue({
-      from: 0,
-      to: 10,
-      durationMs: 100,
-      onFrame: (v) => frames.push(v),
-    });
-
-    runFrame(1000);
-    runFrame(1050); // eased 0.875 -> 8.75 (non arrondi)
-    runFrame(1100);
+    const { frames } = animerSurFrames({ from: 0, to: 10 }, FRAMES_DEBUT_MILIEU_FIN);
 
     expect(frames[1]).toBeCloseTo(8.75, 5);
     expect(Number.isInteger(frames[1])).toBe(false);
   });
 
   it('devrait utiliser from=0 par defaut quand from est absent', () => {
-    const frames: number[] = [];
-
-    animateValue({
-      to: 100,
-      durationMs: 100,
-      onFrame: (v) => frames.push(v),
-    });
-
-    runFrame(1000);
+    const { frames } = animerSurFrames({ to: 100 }, [1000]);
 
     expect(frames[0]).toBe(0);
   });
 
   it('devrait interpoler de facon decroissante quand to < from (compte a rebours)', () => {
-    const frames: number[] = [];
-
-    animateValue({
-      from: 30,
-      to: 10,
-      durationMs: 100,
-      onFrame: (v) => frames.push(v),
-    });
-
-    runFrame(1000);
-    runFrame(1050);
-    runFrame(1100);
+    const { frames } = animerSurFrames({ from: 30, to: 10 }, FRAMES_DEBUT_MILIEU_FIN);
 
     expect(frames[0]).toBe(30);
     expect(frames[1]).toBeCloseTo(12.5, 5);
@@ -141,20 +129,7 @@ describe('animateValue', () => {
   });
 
   it('devrait rester constant a la valeur cible quand from === to', () => {
-    const frames: number[] = [];
-    const onComplete = jasmine.createSpy('onComplete');
-
-    animateValue({
-      from: 50,
-      to: 50,
-      durationMs: 100,
-      onFrame: (v) => frames.push(v),
-      onComplete,
-    });
-
-    runFrame(1000);
-    runFrame(1050);
-    runFrame(1100);
+    const { frames, onComplete } = animerSurFrames({ from: 50, to: 50 }, FRAMES_DEBUT_MILIEU_FIN);
 
     expect(frames.every((v) => v === 50)).toBe(true);
     expect(onComplete).toHaveBeenCalledTimes(1);
@@ -162,70 +137,37 @@ describe('animateValue', () => {
 
   describe('durationMs <= 0', () => {
     it('devrait appliquer la fin immediatement quand durationMs === 0 (pas de boucle, pas de NaN)', () => {
-      const onFrame = jasmine.createSpy('onFrame');
-      const onComplete = jasmine.createSpy('onComplete');
+      const { onFrame, onComplete } = animerDeZeroACent(0);
 
-      animateValue({ from: 0, to: 100, durationMs: 0, onFrame, onComplete });
-
-      expect(onFrame).toHaveBeenCalledOnceWith(100);
-      expect(onComplete).toHaveBeenCalledTimes(1);
+      attendreLaFinSynchrone(onFrame, onComplete);
       expect(queue.length).toBe(0);
     });
 
     it('ne devrait jamais transmettre NaN a onFrame pour durationMs === 0', () => {
-      const onFrame = jasmine.createSpy('onFrame');
-
-      animateValue({ from: 0, to: 100, durationMs: 0, onFrame });
+      const { onFrame } = animerDeZeroACent(0);
 
       const arg = onFrame.calls.mostRecent().args[0] as number;
       expect(Number.isNaN(arg)).toBe(false);
     });
 
     it('devrait appliquer la fin immediatement quand durationMs < 0', () => {
-      const onFrame = jasmine.createSpy('onFrame');
-      const onComplete = jasmine.createSpy('onComplete');
+      const { onFrame, onComplete } = animerDeZeroACent(-500);
 
-      animateValue({ from: 0, to: 100, durationMs: -500, onFrame, onComplete });
-
-      expect(onFrame).toHaveBeenCalledOnceWith(100);
-      expect(onComplete).toHaveBeenCalledTimes(1);
+      attendreLaFinSynchrone(onFrame, onComplete);
       expect(queue.length).toBe(0);
     });
   });
 
   it('devrait propager NaN sans le garder (to = NaN) et completer quand meme', () => {
-    const frames: number[] = [];
-    const onComplete = jasmine.createSpy('onComplete');
-
-    animateValue({
-      from: 0,
-      to: NaN,
-      durationMs: 100,
-      onFrame: (v) => frames.push(v),
-      onComplete,
-    });
-
-    runFrame(1000);
-    runFrame(1100);
+    const { frames, onComplete } = animerSurFrames({ from: 0, to: NaN }, [1000, 1100]);
 
     expect(Number.isNaN(frames[frames.length - 1])).toBe(true);
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
 
   describe('cancel()', () => {
-    function animerDeZeroACent(): {
-      handle: AnimationHandle;
-      onFrame: jasmine.Spy;
-      onComplete: jasmine.Spy;
-    } {
-      const onFrame = jasmine.createSpy('onFrame');
-      const onComplete = jasmine.createSpy('onComplete');
-      const handle = animateValue({ from: 0, to: 100, durationMs: 100, onFrame, onComplete });
-      return { handle, onFrame, onComplete };
-    }
-
     it("devrait stopper l'animation et ne pas appeler onComplete", () => {
-      const { handle, onFrame, onComplete } = animerDeZeroACent();
+      const { handle, onFrame, onComplete } = animerDeZeroACent(100);
 
       runFrame(1000);
       const callsBeforeCancel = onFrame.calls.count();
@@ -237,7 +179,7 @@ describe('animateValue', () => {
     });
 
     it('devrait etre un no-op apres completion (idempotent)', () => {
-      const { handle, onComplete } = animerDeZeroACent();
+      const { handle, onComplete } = animerDeZeroACent(100);
 
       runFrame(1000);
       runFrame(1100);
@@ -247,7 +189,7 @@ describe('animateValue', () => {
     });
 
     it('devrait empecher tout onFrame quand appele avant la 1re frame', () => {
-      const { handle, onFrame, onComplete } = animerDeZeroACent();
+      const { handle, onFrame, onComplete } = animerDeZeroACent(100);
 
       handle.cancel();
 
@@ -263,13 +205,9 @@ describe('animateValue', () => {
     });
 
     it('devrait appliquer la valeur finale de facon synchrone (onFrame(to) puis onComplete)', () => {
-      const onFrame = jasmine.createSpy('onFrame');
-      const onComplete = jasmine.createSpy('onComplete');
+      const { onFrame, onComplete } = animerDeZeroACent(100);
 
-      animateValue({ from: 0, to: 100, durationMs: 100, onFrame, onComplete });
-
-      expect(onFrame).toHaveBeenCalledOnceWith(100);
-      expect(onComplete).toHaveBeenCalledTimes(1);
+      attendreLaFinSynchrone(onFrame, onComplete);
     });
 
     it('devrait retourner un handle no-op dont cancel ne jette pas', () => {

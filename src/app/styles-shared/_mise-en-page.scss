@@ -1,0 +1,5 @@
+@mixin conteneur {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}

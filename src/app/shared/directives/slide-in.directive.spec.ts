@@ -1,5 +1,6 @@
-import { Component, PLATFORM_ID } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
+import type { ComponentFixture } from '@angular/core/testing';
+import { monterSurPlateforme } from '../../../testing/plateforme';
 import { SlideInDirective } from './slide-in.directive';
 
 @Component({
@@ -14,11 +15,7 @@ describe('SlideInDirective', () => {
     let fixture: ComponentFixture<TestHostComponent>;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [TestHostComponent],
-        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
-      });
-      fixture = TestBed.createComponent(TestHostComponent);
+      fixture = monterSurPlateforme(TestHostComponent, 'browser');
       fixture.detectChanges();
     });
 
@@ -40,11 +37,7 @@ describe('SlideInDirective', () => {
     let fixture: ComponentFixture<TestHostComponent>;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [TestHostComponent],
-        providers: [{ provide: PLATFORM_ID, useValue: 'server' }],
-      });
-      fixture = TestBed.createComponent(TestHostComponent);
+      fixture = monterSurPlateforme(TestHostComponent, 'server');
       fixture.detectChanges();
     });
 

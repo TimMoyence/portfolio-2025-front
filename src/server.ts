@@ -139,31 +139,23 @@ app.get('/robots.txt', (req, res) => {
   res.type('text/plain').send(robots);
 });
 
-app.get('/llms.txt', (req, res) => {
-  const metadata = loadSeoMetadata();
-  if (!metadata) {
-    res.status(404).type('text/plain').send('llms.txt not available');
-    return;
-  }
+for (const [fichier, construire] of [
+  ['llms.txt', buildLlmsTxt],
+  ['llms-full.txt', buildLlmsFullTxt],
+] as const) {
+  app.get(`/${fichier}`, (req, res) => {
+    const metadata = loadSeoMetadata();
+    if (!metadata) {
+      res.status(404).type('text/plain').send(`${fichier} not available`);
+      return;
+    }
 
-  const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
-  const content = buildLlmsTxt(metadata, baseUrl);
-  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
-  res.type('text/plain').send(content);
-});
-
-app.get('/llms-full.txt', (req, res) => {
-  const metadata = loadSeoMetadata();
-  if (!metadata) {
-    res.status(404).type('text/plain').send('llms-full.txt not available');
-    return;
-  }
-
-  const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
-  const content = buildLlmsFullTxt(metadata, baseUrl);
-  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
-  res.type('text/plain').send(content);
-});
+    const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
+    const content = construire(metadata, baseUrl);
+    res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+    res.type('text/plain').send(content);
+  });
+}
 
 app.get('/BingSiteAuth.xml', (_req, res) => {
   res

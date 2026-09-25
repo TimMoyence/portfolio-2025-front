@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { RevealOnScrollDirective } from '../../directives/reveal-on-scroll.directive';
-import { AsiliKickerComponent } from '../asili-kicker/asili-kicker.component';
+import { AsiliEnTeteDirective, EN_TETE_ASILI } from '../asili-en-tete.directive';
 
 type AsiliPillarVariant = 'services' | 'formations';
 
@@ -21,17 +20,13 @@ export interface AsiliPillar {
 @Component({
   selector: 'app-asili-pillars',
   standalone: true,
-  imports: [RevealOnScrollDirective, AsiliKickerComponent],
+  imports: [EN_TETE_ASILI],
   templateUrl: './asili-pillars.component.html',
   styleUrls: ['./asili-pillars.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AsiliPillarsComponent {
+export class AsiliPillarsComponent extends AsiliEnTeteDirective {
   readonly pillars = input.required<readonly AsiliPillar[]>();
-
-  readonly kicker = input<string | null>(null);
-
-  readonly heading = input<string | null>(null);
 
   readonly intro = input<string | null>(null);
 }

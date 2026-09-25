@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { PLATFORM_ID } from '@angular/core';
-import { isolateAnimReady } from '../../../../testing/anim-ready';
 import { rendreLHoteNavigateur } from '../../../../testing/montage-page';
+import { decrireRenduServeur, decrireSectionAsili } from '../../../../testing/section-asili';
 import type { AsiliProject } from './asili-projects-grid.component';
 import { AsiliProjectsGridComponent } from './asili-projects-grid.component';
 
@@ -70,25 +68,11 @@ const IMAGE_PROJECTS: readonly AsiliProject[] = [
 describe('AsiliProjectsGridComponent', () => {
   let fixture: ComponentFixture<AsiliProjectsGridComponent>;
 
-  function setup(
-    projects: readonly AsiliProject[] = PROJECTS,
-    platformId: 'browser' | 'server' = 'browser',
-  ): void {
-    TestBed.configureTestingModule({
-      imports: [AsiliProjectsGridComponent],
-      providers: [{ provide: PLATFORM_ID, useValue: platformId }],
-    });
-    fixture = TestBed.createComponent(AsiliProjectsGridComponent);
-    fixture.componentRef.setInput('projects', projects);
+  const monter = decrireSectionAsili(AsiliProjectsGridComponent, { projects: PROJECTS });
+
+  function setup(projects: readonly AsiliProject[] = PROJECTS): void {
+    fixture = monter('browser', { projects });
   }
-
-  isolateAnimReady();
-
-  it('se cree', () => {
-    setup();
-    fixture.detectChanges();
-    expect(fixture.componentInstance).toBeTruthy();
-  });
 
   it('rend une carte .proj par projet avec son titre en <h3>', () => {
     setup();
@@ -252,11 +236,8 @@ describe('AsiliProjectsGridComponent', () => {
     });
   });
 
-  it("reste rendu cote serveur (SSR fail-open : pas d'anim-ready)", () => {
-    setup(PROJECTS, 'server');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelectorAll('.proj').length).toBe(PROJECTS.length);
-    expect(document.documentElement.classList).not.toContain('anim-ready');
+  decrireRenduServeur(monter, (hote) => {
+    expect(hote.querySelectorAll('.proj').length).toBe(PROJECTS.length);
   });
 
   describe('avec projection (page hote)', () => {

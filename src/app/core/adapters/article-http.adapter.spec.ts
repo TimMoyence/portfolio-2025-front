@@ -1,53 +1,42 @@
-import { HttpTestingController } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import type { TestRequest } from '@angular/common/http/testing';
 import { environment } from '../../../environments/environment';
-import { setupTestBed } from '../../../testing/setup-test-bed';
+import { bancAdaptateurHttp } from '../../../testing/http-attendu';
 import type { ArticleListResponse, PublishedArticle } from '../models/article.model';
 import { ArticleHttpAdapter } from './article-http.adapter';
 
 describe('ArticleHttpAdapter', () => {
-  let adapter: ArticleHttpAdapter;
-  let httpMock: HttpTestingController;
+  const banc = bancAdaptateurHttp(ArticleHttpAdapter);
 
-  beforeEach(() => {
-    setupTestBed({ providers: [ArticleHttpAdapter] });
-    adapter = TestBed.inject(ArticleHttpAdapter);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => httpMock.verify());
+  function attendreLaListe(locale: string, parametre: string, valeur: string): TestRequest {
+    const request = banc.httpMock.expectOne(
+      (candidate) =>
+        candidate.url === `${environment.apiBaseUrl}/articles` &&
+        candidate.params.get('locale') === locale &&
+        candidate.params.get(parametre) === valeur,
+    );
+    expect(request.request.method).toBe('GET');
+    return request;
+  }
 
   it('liste les articles publics avec la locale et la limite', () => {
     const response: ArticleListResponse = { items: [], next_cursor: null };
-    adapter.list('fr', 24).subscribe((result) => expect(result).toEqual(response));
+    banc.adapter.list('fr', 24).subscribe((result) => expect(result).toEqual(response));
 
-    const request = httpMock.expectOne(
-      (candidate) =>
-        candidate.url === `${environment.apiBaseUrl}/articles` &&
-        candidate.params.get('locale') === 'fr' &&
-        candidate.params.get('limit') === '24',
-    );
-    expect(request.request.method).toBe('GET');
-    request.flush(response);
+    attendreLaListe('fr', 'limit', '24').flush(response);
   });
 
   it('transmet le curseur de la page suivante', () => {
-    adapter.list('en', 12, 'curseur-opaque').subscribe();
+    banc.adapter.list('en', 12, 'curseur-opaque').subscribe();
 
-    const request = httpMock.expectOne(
-      (candidate) =>
-        candidate.url === `${environment.apiBaseUrl}/articles` &&
-        candidate.params.get('locale') === 'en' &&
-        candidate.params.get('cursor') === 'curseur-opaque',
-    );
-    expect(request.request.method).toBe('GET');
-    request.flush({ items: [], next_cursor: null });
+    attendreLaListe('en', 'cursor', 'curseur-opaque').flush({ items: [], next_cursor: null });
   });
 
   it('n envoie pas de curseur pour la première page', () => {
-    adapter.list('fr').subscribe();
+    banc.adapter.list('fr').subscribe();
 
-    const request = httpMock.expectOne(`${environment.apiBaseUrl}/articles?locale=fr&limit=12`);
+    const request = banc.httpMock.expectOne(
+      `${environment.apiBaseUrl}/articles?locale=fr&limit=12`,
+    );
     expect(request.request.params.has('cursor')).toBeFalse();
     request.flush({ items: [], next_cursor: null });
   });
@@ -73,11 +62,11 @@ describe('ArticleHttpAdapter', () => {
       provenance: {},
     } satisfies PublishedArticle;
 
-    adapter
+    banc.adapter
       .getBySlug('morning brief/ia', 'fr')
       .subscribe((result) => expect(result).toEqual(response));
 
-    const request = httpMock.expectOne(
+    const request = banc.httpMock.expectOne(
       `${environment.apiBaseUrl}/articles/morning%20brief%2Fia?locale=fr`,
     );
     expect(request.request.method).toBe('GET');
