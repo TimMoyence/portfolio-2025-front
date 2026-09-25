@@ -218,6 +218,67 @@ describe('core/formula', () => {
     });
   });
 
+  describe('fonctions statistiques', () => {
+    const serie = { B1: '4', B2: '2', B3: '9', B4: '4', B5: '5', B6: '4', B7: '7', B8: '5' };
+    const troue = { B1: '1', B2: '', B3: 'absent', B4: '3' };
+
+    it('rend le minimum, le maximum et l effectif d une plage', () => {
+      expect(valeurDe({ ...serie, A1: '=MIN(B1:B8)' })).toBe(2);
+      expect(valeurDe({ ...serie, A1: '=MAX(B1:B8)' })).toBe(9);
+      expect(valeurDe({ ...serie, A1: '=NB(B1:B8)' })).toBe(8);
+      expect(valeurDe({ ...serie, A1: '=MAX(B1:B3;12)' })).toBe(12);
+    });
+
+    it('rend la mediane d un effectif pair comme d un effectif impair', () => {
+      expect(valeurDe({ ...serie, A1: '=MEDIANE(B1:B8)' })).toBe(4.5);
+      expect(valeurDe({ ...serie, A1: '=MEDIANE(B1:B7)' })).toBe(4);
+      expect(calcul('=MEDIANE(3;1;2)')).toBe(2);
+    });
+
+    it('interpole les quartiles comme QUARTILE.INCLURE et tronque le rang demande', () => {
+      expect(calcul('=QUARTILE(1;2;3;4;1)'))
+        .withContext('le dernier argument est le rang du quartile, pas une valeur de la serie')
+        .toBeNull();
+      const quatre = { B1: '1', B2: '2', B3: '3', B4: '4' };
+      expect(valeurDe({ ...quatre, A1: '=QUARTILE(B1:B4;1)' })).toBe(1.75);
+      expect(valeurDe({ ...quatre, A1: '=QUARTILE(B1:B4;3)' })).toBe(3.25);
+      expect(valeurDe({ ...quatre, A1: '=QUARTILE(B1:B4;0)' })).toBe(1);
+      expect(valeurDe({ ...quatre, A1: '=QUARTILE(B1:B4;2)' })).toBe(2.5);
+      expect(valeurDe({ ...quatre, A1: '=QUARTILE(B1:B4;4)' })).toBe(4);
+      expect(valeurDe({ ...quatre, A1: '=QUARTILE(B1:B4;1,9)' })).toBe(1.75);
+      expect(erreurDe({ ...quatre, A1: '=QUARTILE(B1:B4;5)' })).toBe('#VALEUR!');
+      expect(erreurDe({ ...quatre, A1: '=QUARTILE(B1:B4;-1)' })).toBe('#VALEUR!');
+      expect(erreurDe({ ...quatre, A1: '=QUARTILE(B1:B4)' })).toBe('#VALEUR!');
+    });
+
+    it('distingue l ecart type de la population de celui de l echantillon', () => {
+      expect(valeurDe({ ...serie, A1: '=ECARTYPEP(B1:B8)' })).toBe(2);
+      expect(approche('=ECARTYPE(2;4;4;4;5;5;7;9)')).toBeCloseTo(Math.sqrt(32 / 7), 12);
+      expect(refus('=ECARTYPE(5)')).toBe('#DIV/0!');
+      expect(calcul('=ECARTYPEP(5)')).toBe(0);
+    });
+
+    it('ignore les cellules vides et le texte d une plage, comme un tableur', () => {
+      expect(valeurDe({ ...troue, A1: '=NB(B1:B4)' })).toBe(2);
+      expect(valeurDe({ ...troue, A1: '=MEDIANE(B1:B4)' })).toBe(2);
+      expect(valeurDe({ ...troue, A1: '=MIN(B1:B4)' })).toBe(1);
+      expect(valeurDe({ ...troue, A1: '=ECARTYPEP(B1:B4)' })).toBe(1);
+    });
+
+    it('rend une erreur nommee quand la serie est vide, sauf pour MIN, MAX et NB', () => {
+      expect(refus('=MEDIANE(B1:B3)')).toBe('#VALEUR!');
+      expect(refus('=QUARTILE(B1:B3;1)')).toBe('#VALEUR!');
+      expect(refus('=ECARTYPEP(B1:B3)')).toBe('#DIV/0!');
+      expect(calcul('=MIN(B1:B3)')).toBe(0);
+      expect(calcul('=MAX(B1:B3)')).toBe(0);
+      expect(calcul('=NB(B1:B3)')).toBe(0);
+    });
+
+    it('propage l erreur d une cellule de la plage au lieu de l ignorer', () => {
+      expect(erreurDe({ B1: '=1/0', B2: '3', A1: '=MEDIANE(B1:B2)' })).toBe('#DIV/0!');
+    });
+  });
+
   describe('entrees hostiles', () => {
     const HOSTILES: readonly [string, string][] = [
       ['=constructor', '#NOM?'],

@@ -1,0 +1,128 @@
+<figure class="slide-boxplot">
+  <header class="slide-boxplot__header">
+    <div>
+      <h2>{{ title() }}</h2>
+      @if (subtitle()) {
+        <p class="slide-boxplot__subtitle">{{ subtitle() }}</p>
+      }
+    </div>
+    @if (unit()) {
+      <span class="slide-boxplot__unit">{{ unit() }}</span>
+    }
+  </header>
+
+  <p
+    class="slide-boxplot__description"
+    data-testid="slide-boxplot-description"
+    [id]="idDescription"
+  >
+    {{ description() }}
+  </p>
+
+  <div
+    class="slide-boxplot__plot"
+    role="img"
+    [attr.aria-label]="title()"
+    [attr.aria-describedby]="idDescription"
+  >
+    @for (trace of boites(); track trace.serie.label) {
+      <div class="slide-boxplot__row" aria-hidden="true">
+        <span class="slide-boxplot__label">{{ trace.serie.label }}</span>
+        <div class="slide-boxplot__track" [class]="'tone-' + (trace.serie.tone ?? 'teal')">
+          <span
+            class="slide-boxplot__whisker"
+            data-testid="slide-boxplot-moustache"
+            [style.--debut]="trace.moustache.debut + '%'"
+            [style.--fin]="trace.moustache.fin + '%'"
+          ></span>
+          <span
+            class="slide-boxplot__box"
+            data-testid="slide-boxplot-boite"
+            [style.--debut]="trace.boite.debut + '%'"
+            [style.--fin]="trace.boite.fin + '%'"
+          ></span>
+          <span
+            class="slide-boxplot__median"
+            data-testid="slide-boxplot-mediane"
+            [style.--x]="trace.mediane + '%'"
+          ></span>
+          @if (trace.moyenne !== null) {
+            <span
+              class="slide-boxplot__mean"
+              data-testid="slide-boxplot-moyenne"
+              [style.--x]="trace.moyenne + '%'"
+            ></span>
+          }
+        </div>
+      </div>
+    }
+    <div class="slide-boxplot__axis" aria-hidden="true">
+      @for (graduation of graduations(); track graduation.position) {
+        <span
+          class="slide-boxplot__tick"
+          data-testid="slide-boxplot-graduation"
+          [style.--x]="graduation.position + '%'"
+          >{{ graduation.libelle }}</span
+        >
+      }
+    </div>
+  </div>
+
+  <ul class="slide-boxplot__legend" aria-hidden="true">
+    <li>
+      <span class="slide-boxplot__legend-box"></span
+      ><ng-container i18n="@@slideBoxplotLegendeBoite">Q1 à Q3 : la moitié centrale</ng-container>
+    </li>
+    <li>
+      <span class="slide-boxplot__legend-median"></span
+      ><ng-container i18n="@@slideBoxplotLegendeMediane">Médiane</ng-container>
+    </li>
+    <li>
+      <span class="slide-boxplot__legend-mean"></span
+      ><ng-container i18n="@@slideBoxplotLegendeMoyenne">Moyenne</ng-container>
+    </li>
+    <li>
+      <span class="slide-boxplot__legend-whisker"></span
+      ><ng-container i18n="@@slideBoxplotLegendeMoustaches">Du minimum au maximum</ng-container>
+    </li>
+  </ul>
+
+  @if (reading()) {
+    <p class="slide-boxplot__reading">
+      <strong i18n="@@slideBoxplotLecture">Lecture professionnelle</strong>{{ reading() }}
+    </p>
+  }
+
+  <details class="slide-boxplot__data">
+    <summary i18n="@@slideBoxplotVoirDonnees">Voir les valeurs</summary>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col" i18n="@@slideBoxplotSerie">Série</th>
+          <th scope="col">Min</th>
+          <th scope="col">Q1</th>
+          <th scope="col" i18n="@@slideBoxplotMediane">Médiane</th>
+          <th scope="col">Q3</th>
+          <th scope="col">Max</th>
+          <th scope="col" i18n="@@slideBoxplotMoyenne">Moyenne</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (trace of boites(); track trace.serie.label) {
+          <tr>
+            <th scope="row">{{ trace.serie.label }}</th>
+            <td>{{ formater(trace.serie.min) }}</td>
+            <td>{{ formater(trace.serie.q1) }}</td>
+            <td>{{ formater(trace.serie.median) }}</td>
+            <td>{{ formater(trace.serie.q3) }}</td>
+            <td>{{ formater(trace.serie.max) }}</td>
+            <td>{{ formater(trace.serie.mean) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (source()) {
+      <p class="slide-boxplot__source" i18n="@@slideBoxplotSource">Source : {{ source() }}</p>
+    }
+  </details>
+</figure>

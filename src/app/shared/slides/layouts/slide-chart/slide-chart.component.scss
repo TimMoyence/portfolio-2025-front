@@ -1,18 +1,12 @@
+@use '../../slide-figure' as figure;
+
 :host {
   display: block;
   width: 100%;
 }
 
 .slide-chart {
-  display: grid;
-  align-content: center;
-  gap: 1.1rem;
-  width: min(100%, 74rem);
-  min-height: 100cqh;
-  margin: 0 auto;
-  padding: var(--slide-marge-bloc, clamp(4rem, 8cqi, 7rem))
-    var(--slide-marge-ligne, clamp(1.25rem, 6cqi, 7rem));
-  box-sizing: border-box;
+  @include figure.cadre(1.1rem);
 }
 
 .slide-chart__header {
@@ -52,13 +46,7 @@ h2 {
 }
 
 .slide-chart__unit {
-  flex: 0 0 auto;
-  padding: 0.55rem 0.8rem;
-  border: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
-  border-radius: var(--r-pill, 999px);
-  color: var(--text-muted, var(--slide-text-muted));
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 0.75rem;
+  @include figure.unite;
 }
 
 .slide-chart__description {
@@ -342,62 +330,19 @@ h2 {
 }
 
 .slide-chart__reading {
-  margin: -0.35rem 0 0;
-  padding-left: 1rem;
-  border-left: 3px solid var(--accent, #4fb3a2);
-  color: var(--ink-soft, #3c3529);
-  line-height: 1.5;
-}
-
-.slide-chart__reading strong {
-  display: block;
-  margin-bottom: 0.2rem;
-  color: var(--accent-dark, var(--teal-dark));
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  @include figure.lecture(-0.35rem 0 0);
 }
 
 .slide-chart__data {
-  border-top: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
-  color: var(--text-muted, var(--slide-text-muted));
-  font-size: 0.8rem;
-}
-
-.slide-chart__data summary {
-  width: fit-content;
-  padding: 0.55rem 0;
-  cursor: pointer;
-  color: var(--ink, #0c0902);
-  font-weight: 700;
+  @include figure.donnees(34rem, left);
 }
 
 .slide-chart__table-wrap {
   overflow-x: auto;
 }
 
-.slide-chart__data table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 34rem;
-  text-align: left;
-}
-
-.slide-chart__data th,
-.slide-chart__data td {
-  padding: 0.45rem 0.7rem;
-  border-top: 1px solid rgba(var(--ink-rgb), 0.1);
-  white-space: nowrap;
-}
-
-.slide-chart__data th {
-  color: var(--ink, #0c0902);
-  font-weight: 700;
-}
-
 .slide-chart__source {
-  margin: 0.65rem 0 0;
-  font-size: 0.74rem;
+  @include figure.source;
 }
 
 .slide-chart__legend {

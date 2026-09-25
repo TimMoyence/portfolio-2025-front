@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import {
+  SlideBoxplotComponent,
   SlideChartComponent,
   SlideComparisonComponent,
   SlideCtaComponent,
@@ -38,6 +39,7 @@ const layouts: Readonly<Record<string, Type<unknown>>> = {
   'method-path': SlideMethodPathComponent,
   quiz: SlideQuizComponent,
   chart: SlideChartComponent,
+  boxplot: SlideBoxplotComponent,
   grid: SlideGridComponent,
   comparison: SlideComparisonComponent,
   stats: SlideStatsComponent,

@@ -1,0 +1,231 @@
+@use '../../slide-figure' as figure;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.slide-boxplot {
+  @include figure.cadre(1rem);
+}
+
+.slide-boxplot__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+h2 {
+  max-width: 24ch;
+  margin: 0;
+  color: var(--ink, #0c0902);
+  font-family: var(--font-display, Georgia, serif);
+  font-size: clamp(2rem, 4.6cqi, 4.2rem);
+  font-weight: 400;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.slide-boxplot__subtitle {
+  max-width: 60ch;
+  margin: 0.8rem 0 0;
+  color: var(--ink-soft, #3c3529);
+  font-size: clamp(1rem, 1.4cqi, 1.15rem);
+  line-height: 1.45;
+}
+
+.slide-boxplot__unit {
+  @include figure.unite;
+}
+
+.slide-boxplot__description {
+  max-width: 72ch;
+  margin: 0;
+  color: var(--ink-soft, #3c3529);
+  line-height: 1.5;
+}
+
+.slide-boxplot__plot {
+  --libelle: clamp(3.5rem, 9cqi, 6rem);
+  display: grid;
+  gap: clamp(1rem, 3cqh, 1.8rem);
+  padding: 1.6rem 0 0.4rem;
+  border-block: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
+}
+
+.slide-boxplot__row {
+  display: grid;
+  grid-template-columns: var(--libelle) minmax(0, 1fr);
+  align-items: center;
+}
+
+.slide-boxplot__label {
+  color: var(--ink, #0c0902);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: clamp(0.78rem, 1.2cqi, 0.95rem);
+  font-weight: 700;
+}
+
+.slide-boxplot__track {
+  position: relative;
+  height: clamp(2.4rem, 7cqh, 3.4rem);
+}
+
+.tone-teal {
+  --teinte: #277c70;
+}
+.tone-gold {
+  --teinte: #8a5e00;
+}
+.tone-ink {
+  --teinte: #3c3529;
+}
+
+.slide-boxplot__whisker,
+.slide-boxplot__box {
+  position: absolute;
+  left: var(--debut);
+  width: calc(var(--fin) - var(--debut));
+}
+
+.slide-boxplot__whisker {
+  top: 50%;
+  height: 2px;
+  background-color: var(--teinte);
+}
+
+.slide-boxplot__whisker::before,
+.slide-boxplot__whisker::after {
+  position: absolute;
+  top: -0.6rem;
+  width: 2px;
+  height: 1.2rem;
+  background-color: var(--teinte);
+  content: '';
+}
+
+.slide-boxplot__whisker::before {
+  left: 0;
+}
+
+.slide-boxplot__whisker::after {
+  right: 0;
+}
+
+.slide-boxplot__box {
+  inset-block: 0;
+  border: 2px solid var(--teinte);
+  border-radius: 0.3rem;
+  background-color: color-mix(in srgb, var(--teinte) 22%, var(--slide-deck-bg, #fffaf2));
+  box-sizing: border-box;
+}
+
+.slide-boxplot__median,
+.slide-boxplot__mean {
+  position: absolute;
+  left: var(--x);
+  transform: translateX(-50%);
+}
+
+.slide-boxplot__median {
+  inset-block: -0.2rem;
+  width: 0.28rem;
+  background-color: var(--ink, #0c0902);
+}
+
+.slide-boxplot__mean {
+  top: 50%;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 2px solid var(--ink, #0c0902);
+  background-color: var(--slide-deck-bg, var(--cream, #fffaf2));
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.slide-boxplot__axis {
+  position: relative;
+  height: 1.4rem;
+  margin-left: var(--libelle);
+  border-top: 2px solid var(--ink-soft, #3c3529);
+}
+
+.slide-boxplot__tick {
+  position: absolute;
+  top: 0.4rem;
+  left: var(--x);
+  color: var(--text-muted, var(--slide-text-muted));
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.slide-boxplot__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  margin: 0;
+  padding: 0;
+  color: var(--ink-soft, #3c3529);
+  font-size: 0.8rem;
+  list-style: none;
+}
+
+.slide-boxplot__legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.slide-boxplot__legend-box,
+.slide-boxplot__legend-median,
+.slide-boxplot__legend-mean,
+.slide-boxplot__legend-whisker {
+  display: inline-block;
+  flex: none;
+}
+
+.slide-boxplot__legend-box {
+  width: 1.2rem;
+  height: 0.8rem;
+  border: 2px solid #277c70;
+}
+
+.slide-boxplot__legend-median {
+  width: 0.25rem;
+  height: 1rem;
+  background-color: var(--ink, #0c0902);
+}
+
+.slide-boxplot__legend-mean {
+  width: 0.65rem;
+  height: 0.65rem;
+  border: 2px solid var(--ink, #0c0902);
+  transform: rotate(45deg);
+}
+
+.slide-boxplot__legend-whisker {
+  width: 1.2rem;
+  height: 2px;
+  background-color: #277c70;
+}
+
+.slide-boxplot__reading {
+  @include figure.lecture(0);
+}
+
+.slide-boxplot__data {
+  @include figure.donnees(30rem, right);
+  overflow-x: auto;
+
+  th[scope='row'] {
+    text-align: left;
+  }
+}
+
+.slide-boxplot__source {
+  @include figure.source;
+}
