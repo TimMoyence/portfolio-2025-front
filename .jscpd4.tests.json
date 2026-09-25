@@ -8,8 +8,13 @@
   "mode": "weak",
   "gitignore": true,
   "absolute": false,
-  "pattern": "{src/**/*.spec.ts,src/testing/**/*.ts,e2e/**/*.ts}",
-  "ignore": ["**/node_modules/**", "**/dist/**", "**/coverage/**"],
+  "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/coverage/**",
+    "src/!(testing)/**/!(*.spec).ts",
+    "src/!(*.spec).ts"
+  ],
   "reporters": ["console", "threshold"],
   "threshold": 0
 }

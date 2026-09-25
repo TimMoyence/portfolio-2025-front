@@ -38,9 +38,9 @@
     "lighthouse": "lhci autorun",
     "lighthouse:collect": "lhci collect",
     "lighthouse:assert": "lhci assert",
-    "quality:dup": "jscpd src scripts",
-    "quality:dup:tests": "jscpd --config .jscpd.tests.json",
-    "quality:dup:report": "jscpd src scripts --reporters html --output reports/jscpd",
+    "quality:dup": "jscpd --config .jscpd.json && node node_modules/jscpd4/bin/jscpd --config .jscpd.json",
+    "quality:dup:tests": "jscpd --config .jscpd.tests.json && node node_modules/jscpd4/bin/jscpd --config .jscpd4.tests.json",
+    "quality:dup:report": "jscpd --config .jscpd.json --reporters html --output reports/jscpd",
     "quality:knip": "knip"
   },
   "lint-staged": {
@@ -99,6 +99,7 @@
     "husky": "^9.1.7",
     "jasmine-core": "~5.6.0",
     "jscpd": "^5.0.14",
+    "jscpd4": "npm:jscpd@^4.3.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
