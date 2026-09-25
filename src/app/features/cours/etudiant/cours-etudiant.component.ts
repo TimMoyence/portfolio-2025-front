@@ -210,9 +210,12 @@ function estEcranVerrouille(ecran: EcranContent | undefined): boolean {
   return ecran?.type === 'ecran-verrouille';
 }
 
-function sourceRevelee(pilotage: PilotageEcran | undefined): boolean {
+function sourceRevelee(ecran: EcranContent, pilotage: PilotageEcran | undefined): boolean {
+  const etayageRevelateur = ecran.type === 'fp-worked' ? 0 : (pilotage?.etayage ?? 0);
   return (
-    pilotage?.revele === true || pilotage?.phase === 'revele' || (pilotage?.etayageAtteint ?? 0) > 0
+    pilotage?.revele === true ||
+    pilotage?.phase === 'revele' ||
+    Math.max(pilotage?.etayageAtteint ?? 0, etayageRevelateur) > 0
   );
 }
 
@@ -1066,7 +1069,7 @@ export class CoursEtudiantComponent {
       ) {
         return [`verrou:${ecran.id}`];
       }
-      if (ecran.revelation === undefined && sourceRevelee(courant)) {
+      if (ecran.revelation === undefined && sourceRevelee(ecran, courant)) {
         return [`source:${ecran.id}`];
       }
       return [];

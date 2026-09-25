@@ -589,6 +589,24 @@ describe('CoursEtudiantComponent', () => {
     expect(ecranAffiche(fixture)).toBe(source);
   });
 
+  it('relit le sujet quand le formateur corrige un écran par étayage seul, sans marque de révélation', async () => {
+    const source = { ...sujet.ecrans[0], revelation: undefined };
+    const revelee = { ...source, revelation: buildRevelationServie() };
+    port.lireSujet.and.returnValues(
+      of({ ...sujet, ecrans: [source, ...sujet.ecrans.slice(1)] }),
+      of({ ...sujet, ecrans: [revelee, ...sujet.ecrans.slice(1)] }),
+    );
+    const fixture = await rattacherALaSeanceEnCours();
+    diffuser(fixture, { ecranCourant: 0 });
+    await stabiliser(fixture);
+
+    diffuser(fixture, { ecranCourant: 0, pilotage: { [source.id]: { etayage: 2 } } });
+    await stabiliser(fixture);
+
+    expect(port.lireSujet).toHaveBeenCalledTimes(2);
+    expect(fixture.componentInstance.sujet()?.ecrans[0]).toBe(revelee);
+  });
+
   it('ne relit le sujet qu une fois quand le formateur sert et revele dans le meme etat', async () => {
     const { source, correction, sujetInitial, sujetRelu } = correctionVerrouillee();
     port.lireSujet.and.returnValues(of(sujetInitial), of(sujetRelu), of(sujetRelu));
