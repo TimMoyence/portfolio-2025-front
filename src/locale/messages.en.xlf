@@ -12000,6 +12000,96 @@
         <target>Source: <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></target>
       </segment>
     </unit>
+    <unit id="slideBoxplotLegendeBoite">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:74,77</note>
+      </notes>
+      <segment>
+        <source>Q1 à Q3 : la moitié centrale</source>
+        <target>Q1 to Q3: the middle half</target>
+      </segment>
+    </unit>
+    <unit id="slideBoxplotLegendeMediane">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:78,81</note>
+      </notes>
+      <segment>
+        <source>Médiane</source>
+        <target>Median</target>
+      </segment>
+    </unit>
+    <unit id="slideBoxplotLegendeMoyenne">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:82,85</note>
+      </notes>
+      <segment>
+        <source>Moyenne</source>
+        <target>Mean</target>
+      </segment>
+    </unit>
+    <unit id="slideBoxplotLegendeMoustaches">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:86,90</note>
+      </notes>
+      <segment>
+        <source>Du minimum au maximum</source>
+        <target>From minimum to maximum</target>
+      </segment>
+    </unit>
+    <unit id="slideBoxplotLecture">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:92,94</note>
+      </notes>
+      <segment>
+        <source>Lecture professionnelle</source>
+        <target>Professional reading</target>
+      </segment>
+    </unit>
+    <unit id="slideBoxplotVoirDonnees">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:97,100</note>
+      </notes>
+      <segment>
+        <source>Voir les valeurs</source>
+        <target>View the values</target>
+      </segment>
+    </unit>
+    <unit id="slideBoxplotSerie">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:101,102</note>
+      </notes>
+      <segment>
+        <source>Série</source>
+        <target>Series</target>
+      </segment>
+    </unit>
+    <unit id="slideBoxplotMediane">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:104,105</note>
+      </notes>
+      <segment>
+        <source>Médiane</source>
+        <target>Median</target>
+      </segment>
+    </unit>
+    <unit id="slideBoxplotMoyenne">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:107,109</note>
+      </notes>
+      <segment>
+        <source>Moyenne</source>
+        <target>Mean</target>
+      </segment>
+    </unit>
+    <unit id="slideBoxplotSource">
+      <notes>
+        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:125,127</note>
+      </notes>
+      <segment>
+        <source>Source : <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></source>
+        <target>Source: <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></target>
+      </segment>
+    </unit>
     <unit id="slideChartLegende">
       <notes>
         <note category="location">src/app/shared/slides/layouts/slide-chart/slide-chart.component.html:144</note>
