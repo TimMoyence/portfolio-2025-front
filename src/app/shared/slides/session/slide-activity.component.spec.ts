@@ -69,6 +69,14 @@ function monter(entrees: Readonly<Record<string, unknown>>): Fixture {
 
 const brique = briqueMontee;
 
+async function questionnaireDuPosteEtudiant() {
+  const ecran = buildEcranQuestionnaire();
+  const fixture = monter({ slide: ecran, role: 'etudiant', sessionId: 'seance-1' });
+  const vote = await brique(fixture, 'fp-vote');
+  const numerique = await brique(fixture, 'fp-numeric');
+  return { ecran, fixture, vote, numerique };
+}
+
 function directRevele(revele: boolean) {
   return { pilotage: revele ? { revele: true } : {}, resultats: null, comptesJalon: null };
 }
@@ -297,10 +305,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
   });
 
   it('RET-32 · montre a l etudiant la bonne reponse servie avec l ecran, comme au presentateur', async () => {
-    const ecran = buildEcranQuestionnaire();
-    const fixture = monter({ slide: ecran, role: 'etudiant', sessionId: 'seance-1' });
-    const vote = await brique(fixture, 'fp-vote');
-    const numerique = await brique(fixture, 'fp-numeric');
+    const { ecran, fixture, vote, numerique } = await questionnaireDuPosteEtudiant();
 
     expect(dans(vote, 'bonne-reponse')).toBeNull();
     fixture.componentRef.setInput('slide', {
@@ -459,6 +464,23 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     expect(await brique(fixture, 'fp-numeric')).toBe(numerique);
     expect((dans(numerique, 'champ') as HTMLInputElement).value).toBe('1 400');
     expect(dans(numerique, 'confusion')?.textContent).toBe('Intérêts simples au lieu de composés');
+  });
+
+  it('laisse intacte la brique voisine pendant sa saisie quand le verdict d une autre question du questionnaire arrive', async () => {
+    const { ecran, fixture, vote, numerique } = await questionnaireDuPosteEtudiant();
+    const champ = dans(numerique, 'champ') as HTMLInputElement;
+    champ.value = '1 48';
+    champ.dispatchEvent(new Event('input'));
+
+    const verdictDuVote: RetourBrique = { ...VERDICT, questionId: 'Q-CAP-03', correcte: true };
+    fixture.componentRef.setInput('retours', new Map([[ecran.id, [verdictDuVote]]]));
+    fixture.detectChanges();
+    expect(dans(numerique, 'champ')).toBe(champ);
+
+    const votee = vote.shadowRoot?.querySelector('[data-option]');
+    fixture.componentRef.setInput('retours', new Map([[ecran.id, [verdictDuVote, VERDICT]]]));
+    fixture.detectChanges();
+    expect(vote.shadowRoot?.querySelector('[data-option]')).toBe(votee ?? null);
   });
 
   it('annonce deja repondu sur la brique visee', async () => {
