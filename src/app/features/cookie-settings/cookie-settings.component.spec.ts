@@ -1,9 +1,12 @@
-import { TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { CookieConsentService } from '../../core/services/cookie-consent.service';
 import { CookieSettingsComponent } from './cookie-settings.component';
-import { createCookieConsentServiceStub } from '../../../testing/factories/cookie-consent.factory';
+import {
+  buildCookiePreferences,
+  createCookieConsentServiceStub,
+} from '../../../testing/factories/cookie-consent.factory';
 
 describe('CookieSettingsComponent', () => {
   const consentServiceStub = createCookieConsentServiceStub();
@@ -14,18 +17,8 @@ describe('CookieSettingsComponent', () => {
     consentServiceStub.getPreferences.calls.reset();
     consentServiceStub.getDefaultPreferences.calls.reset();
 
-    consentServiceStub.getPreferences.and.returnValue({
-      essential: true,
-      preferences: false,
-      analytics: false,
-      marketing: false,
-    });
-    consentServiceStub.getDefaultPreferences.and.returnValue({
-      essential: true,
-      preferences: false,
-      analytics: false,
-      marketing: false,
-    });
+    consentServiceStub.getPreferences.and.returnValue(buildCookiePreferences());
+    consentServiceStub.getDefaultPreferences.and.returnValue(buildCookiePreferences());
     consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
     consentServiceStub.withdrawConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
 
@@ -38,6 +31,35 @@ describe('CookieSettingsComponent', () => {
     }).compileComponents();
   });
 
+  function rendre(): ComponentFixture<CookieSettingsComponent> {
+    const fixture = TestBed.createComponent(CookieSettingsComponent);
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  function cliquerSurAction(action: 'save' | 'acceptAll'): CookieSettingsComponent {
+    const fixture = rendre();
+    const buttons = fixture.nativeElement.querySelectorAll(
+      'button',
+    ) as NodeListOf<HTMLButtonElement>;
+    const bouton = Array.from(buttons).find((btn) =>
+      btn.textContent?.includes(fixture.componentInstance.actions[action]),
+    );
+    expect(bouton).toBeTruthy();
+    bouton!.click();
+    return fixture.componentInstance;
+  }
+
+  function sauvegarderAvecReponse(
+    reponse: ReturnType<CookieConsentService['saveConsent']>,
+  ): CookieSettingsComponent {
+    consentServiceStub.saveConsent.and.returnValue(reponse);
+    const fixture = rendre();
+    fixture.componentInstance.savePreferences();
+    fixture.detectChanges();
+    return fixture.componentInstance;
+  }
+
   it('devrait creer le composant', () => {
     const fixture = TestBed.createComponent(CookieSettingsComponent);
     const component = fixture.componentInstance;
@@ -47,17 +69,11 @@ describe('CookieSettingsComponent', () => {
   it('devrait initialiser les preferences depuis le service', () => {
     const fixture = TestBed.createComponent(CookieSettingsComponent);
     expect(consentServiceStub.getPreferences).toHaveBeenCalled();
-    expect(fixture.componentInstance.preferences).toEqual({
-      essential: true,
-      preferences: false,
-      analytics: false,
-      marketing: false,
-    });
+    expect(fixture.componentInstance.preferences).toEqual(buildCookiePreferences());
   });
 
   it('devrait afficher les quatre categories de cookies', () => {
-    const fixture = TestBed.createComponent(CookieSettingsComponent);
-    fixture.detectChanges();
+    const fixture = rendre();
 
     const items = fixture.nativeElement.querySelectorAll('.ck-item') as NodeListOf<HTMLElement>;
     expect(items.length).toBe(4);
@@ -71,10 +87,7 @@ describe('CookieSettingsComponent', () => {
   });
 
   it('devrait rendre la categorie Essentiels cochee et desactivee', () => {
-    const fixture = TestBed.createComponent(CookieSettingsComponent);
-    fixture.detectChanges();
-
-    const firstToggle = fixture.nativeElement.querySelector(
+    const firstToggle = rendre().nativeElement.querySelector(
       ".ck-item input[type='checkbox']",
     ) as HTMLInputElement;
     expect(firstToggle.checked).toBeTrue();
@@ -82,68 +95,37 @@ describe('CookieSettingsComponent', () => {
   });
 
   it('devrait appeler saveConsent au clic sur Enregistrer', () => {
-    const fixture = TestBed.createComponent(CookieSettingsComponent);
-    fixture.detectChanges();
-
-    const buttons = fixture.nativeElement.querySelectorAll(
-      'button',
-    ) as NodeListOf<HTMLButtonElement>;
-    const saveBtn = Array.from(buttons).find((btn) =>
-      btn.textContent?.includes(fixture.componentInstance.actions.save),
-    );
-    expect(saveBtn).toBeTruthy();
-    saveBtn!.click();
+    const component = cliquerSurAction('save');
 
     expect(consentServiceStub.saveConsent).toHaveBeenCalledWith(
-      fixture.componentInstance.preferences,
+      component.preferences,
       'settings',
       'save_preferences',
     );
   });
 
   it('devrait afficher le message de succes apres sauvegarde reussie (httpCode 201)', () => {
-    consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
+    const component = sauvegarderAvecReponse(of({ message: 'ok', httpCode: 201 }));
 
-    const fixture = TestBed.createComponent(CookieSettingsComponent);
-    fixture.detectChanges();
-
-    fixture.componentInstance.savePreferences();
-    fixture.detectChanges();
-
-    expect(fixture.componentInstance.showSaved).toBeTrue();
-    expect(fixture.componentInstance.statusMessage).toBe(fixture.componentInstance.actions.saved);
+    expect(component.showSaved).toBeTrue();
+    expect(component.statusMessage).toBe(component.actions.saved);
   });
 
   it("devrait afficher le message d'erreur si httpCode n'est pas 201", () => {
-    consentServiceStub.saveConsent.and.returnValue(of({ message: 'error', httpCode: 500 }));
+    const component = sauvegarderAvecReponse(of({ message: 'error', httpCode: 500 }));
 
-    const fixture = TestBed.createComponent(CookieSettingsComponent);
-    fixture.detectChanges();
-
-    fixture.componentInstance.savePreferences();
-    fixture.detectChanges();
-
-    expect(fixture.componentInstance.showSaved).toBeFalse();
-    expect(fixture.componentInstance.statusMessage).toBe(fixture.componentInstance.actions.error);
+    expect(component.showSaved).toBeFalse();
+    expect(component.statusMessage).toBe(component.actions.error);
   });
 
   it("devrait afficher le message d'erreur en cas d'erreur observable", () => {
-    consentServiceStub.saveConsent.and.returnValue(throwError(() => new Error('network')));
+    const component = sauvegarderAvecReponse(throwError(() => new Error('network')));
 
-    const fixture = TestBed.createComponent(CookieSettingsComponent);
-    fixture.detectChanges();
-
-    fixture.componentInstance.savePreferences();
-    fixture.detectChanges();
-
-    expect(fixture.componentInstance.statusMessage).toBe(fixture.componentInstance.actions.error);
+    expect(component.statusMessage).toBe(component.actions.error);
   });
 
   it("devrait rendre Mesure d'audience et Marketing desactives (non collectes)", () => {
-    const fixture = TestBed.createComponent(CookieSettingsComponent);
-    fixture.detectChanges();
-
-    const toggles = fixture.nativeElement.querySelectorAll(
+    const toggles = rendre().nativeElement.querySelectorAll(
       ".ck-item input[type='checkbox']",
     ) as NodeListOf<HTMLInputElement>;
     const [, analytics, preferences, marketing] = Array.from(toggles);
@@ -157,66 +139,32 @@ describe('CookieSettingsComponent', () => {
   });
 
   it('devrait tout accepter (catégories réellement activables) via saveConsent (action accept_all)', () => {
-    const fixture = TestBed.createComponent(CookieSettingsComponent);
-    fixture.detectChanges();
+    const component = cliquerSurAction('acceptAll');
+    const toutAccepte = buildCookiePreferences({ preferences: true });
 
-    const buttons = fixture.nativeElement.querySelectorAll(
-      'button',
-    ) as NodeListOf<HTMLButtonElement>;
-    const acceptBtn = Array.from(buttons).find((btn) =>
-      btn.textContent?.includes(fixture.componentInstance.actions.acceptAll),
-    );
-    expect(acceptBtn).toBeTruthy();
-    acceptBtn!.click();
-
-    expect(fixture.componentInstance.preferences).toEqual({
-      essential: true,
-      preferences: true,
-      analytics: false,
-      marketing: false,
-    });
+    expect(component.preferences).toEqual(toutAccepte);
     expect(consentServiceStub.saveConsent).toHaveBeenCalledWith(
-      {
-        essential: true,
-        preferences: true,
-        analytics: false,
-        marketing: false,
-      },
+      toutAccepte,
       'settings',
       'accept_all',
     );
   });
 
   it('devrait appeler withdrawConsent et reinitialiser les preferences', () => {
-    const fixture = TestBed.createComponent(CookieSettingsComponent);
-    const component = fixture.componentInstance;
-    fixture.detectChanges();
+    const component = rendre().componentInstance;
 
-    component.preferences = {
-      essential: true,
-      preferences: true,
-      analytics: true,
-      marketing: false,
-    };
+    component.preferences = buildCookiePreferences({ preferences: true, analytics: true });
 
     component.withdrawConsent();
 
     expect(consentServiceStub.withdrawConsent).toHaveBeenCalled();
-    expect(component.preferences).toEqual({
-      essential: true,
-      preferences: false,
-      analytics: false,
-      marketing: false,
-    });
+    expect(component.preferences).toEqual(buildCookiePreferences());
   });
 
   it('devrait passer isSaving a true pendant la sauvegarde et a false apres', () => {
     consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
 
-    const fixture = TestBed.createComponent(CookieSettingsComponent);
-    fixture.detectChanges();
-
-    const component = fixture.componentInstance;
+    const component = rendre().componentInstance;
     expect(component.isSaving).toBeFalse();
 
     component.savePreferences();

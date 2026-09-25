@@ -6,7 +6,7 @@ import { AsiliCtaBandComponent, type AsiliCtaAction } from '../../shared/section
   standalone: true,
   imports: [AsiliCtaBandComponent],
   template: `
-    <app-asili-cta-band [kicker]="kicker()" [title]="title()" [lead]="lead()" [actions]="actions" />
+    <app-asili-cta-band [contenu]="{ kicker: kicker(), title: title(), lead: lead(), actions }" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,20 +1,16 @@
-import { TestBed } from '@angular/core/testing';
 import { buildClientReport } from '../../../../../testing/factories/audit-request.factory';
+import { monterAvecRouteur } from '../../../../../testing/montage-page';
+import type { ClientReport } from '../../../../core/models/audit-client-report.model';
 import { EngineCoverageMatrixComponent } from './engine-coverage-matrix.component';
 
 describe('EngineCoverageMatrixComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [EngineCoverageMatrixComponent],
-    }).compileComponents();
-  });
+  const rendreLaMatrice = (
+    matrix: ClientReport['googleVsAiMatrix'] = buildClientReport().googleVsAiMatrix,
+  ): HTMLElement =>
+    monterAvecRouteur(EngineCoverageMatrixComponent, { matrix }).nativeElement as HTMLElement;
 
   it('devrait afficher les deux scores Google et IA', () => {
-    const fixture = TestBed.createComponent(EngineCoverageMatrixComponent);
-    fixture.componentInstance.matrix = buildClientReport().googleVsAiMatrix;
-    fixture.detectChanges();
-
-    const text = fixture.nativeElement.textContent as string;
+    const text = rendreLaMatrice().textContent as string;
     expect(text).toContain('72');
     expect(text).toContain('34');
     expect(text).toContain('Visibilité Google');
@@ -22,24 +18,17 @@ describe('EngineCoverageMatrixComponent', () => {
   });
 
   it('devrait afficher les summaries Google et IA', () => {
-    const fixture = TestBed.createComponent(EngineCoverageMatrixComponent);
-    fixture.componentInstance.matrix = {
+    const text = rendreLaMatrice({
       googleVisibility: { score: 80, summary: 'Summary Google ici' },
       aiVisibility: { score: 45, summary: 'Summary IA ici' },
-    };
-    fixture.detectChanges();
+    }).textContent as string;
 
-    const text = fixture.nativeElement.textContent as string;
     expect(text).toContain('Summary Google ici');
     expect(text).toContain('Summary IA ici');
   });
 
   it('devrait rendre exactement deux cards moteur', () => {
-    const fixture = TestBed.createComponent(EngineCoverageMatrixComponent);
-    fixture.componentInstance.matrix = buildClientReport().googleVsAiMatrix;
-    fixture.detectChanges();
-
-    const cards = fixture.nativeElement.querySelectorAll("[data-testid='engine-card']");
+    const cards = rendreLaMatrice().querySelectorAll("[data-testid='engine-card']");
     expect(cards.length).toBe(2);
   });
 });

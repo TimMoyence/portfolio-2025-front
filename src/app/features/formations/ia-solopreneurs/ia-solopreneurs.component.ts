@@ -2,37 +2,16 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   type ComparisonColumn,
   type RichListItem,
-  SlideComponent,
-  SlideComparisonComponent,
-  SlideCtaComponent,
-  SlideDeckComponent,
-  SlideGridComponent,
-  SlideHeroComponent,
-  SlideImageComponent,
-  SlidePollComponent,
-  SlideQuoteComponent,
-  SlideStatsComponent,
   SlideTableComponent,
   type TableColumn,
 } from '../../../shared/slides';
+import { DECK_FORMATION } from '../shared/deck-formation';
 
 @Component({
   selector: 'app-ia-solopreneurs',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    SlideDeckComponent,
-    SlideComponent,
-    SlideHeroComponent,
-    SlideImageComponent,
-    SlideStatsComponent,
-    SlideGridComponent,
-    SlideComparisonComponent,
-    SlideQuoteComponent,
-    SlidePollComponent,
-    SlideCtaComponent,
-    SlideTableComponent,
-  ],
+  imports: [DECK_FORMATION, SlideTableComponent],
   templateUrl: './ia-solopreneurs.component.html',
   styleUrl: './ia-solopreneurs.component.scss',
 })
@@ -42,6 +21,11 @@ export class IaSolopreneursComponent {
     $localize`:@@ia-solo.promesse.bullets.1:Ce qui marche vraiment au quotidien`,
     $localize`:@@ia-solo.promesse.bullets.2:Un exercice pratique, vous repartez avec un résultat`,
   ];
+
+  protected readonly imageScene = {
+    src: 'https://images.pexels.com/photos/10401267/pexels-photo-10401267.jpeg?auto=compress&cs=tinysrgb&w=800',
+    alt: $localize`:@@ia-solo.promesse.imageAlt:Intervenant donnant une présentation dynamique sur scène`,
+  };
 
   protected readonly problemeStats = [
     {

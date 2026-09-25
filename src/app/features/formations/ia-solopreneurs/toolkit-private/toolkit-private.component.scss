@@ -1,5 +1,6 @@
 @use '../../../../styles-shared/breakpoints' as bp;
 @use '../../../../styles-shared/forms' as forms;
+@use '../../../../styles-shared/toolkit';
 
 :host {
   display: block;
@@ -67,16 +68,7 @@
 }
 
 .tkp-head h1 {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 5vw, 56px);
-  line-height: 1.02;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-
-  em {
-    font-style: italic;
-    color: var(--teal-deep);
-  }
+  @include toolkit.titre-toolkit(clamp(36px, 5vw, 56px));
 }
 
 .tkp-head .lead {
@@ -138,8 +130,7 @@
 
 .tkp-td-tool a {
   font-weight: 600;
-  color: var(--teal-deep);
-  text-decoration: underline;
+  @include toolkit.lien-souligne;
 
   &:hover {
     text-decoration: none;
@@ -295,8 +286,7 @@
   color: var(--ink-mute);
 
   a {
-    color: var(--teal-deep);
-    text-decoration: underline;
+    @include toolkit.lien-souligne;
 
     &:hover {
       text-decoration: none;

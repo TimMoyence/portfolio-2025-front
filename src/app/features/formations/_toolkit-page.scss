@@ -1,4 +1,7 @@
+@use '../../styles-shared/cartes';
+@use '../../styles-shared/forms';
 @use '../../styles-shared/lists';
+@use '../../styles-shared/toolkit';
 
 .tk-wrap {
   min-height: 100vh;
@@ -23,27 +26,12 @@
 }
 
 .tk-icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 18px;
-  background: var(--sand);
-  color: var(--teal-deep);
-  display: grid;
-  place-items: center;
+  @include forms.icon-tile(72px, 18px);
   margin: 0 auto 24px;
 }
 
 .tk-card h1 {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 4.5vw, 48px);
-  line-height: 1.02;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-
-  em {
-    font-style: italic;
-    color: var(--teal-deep);
-  }
+  @include toolkit.titre-toolkit(clamp(32px, 4.5vw, 48px));
 }
 
 .tk-card .lead {
@@ -69,14 +57,8 @@
 }
 
 .tk-items .it .ck {
-  width: 22px;
-  height: 22px;
-  flex: none;
-  border-radius: 50%;
-  background: rgba(var(--teal-rgb), 0.14);
+  @include cartes.pastille(22px, rgba(var(--teal-rgb), 0.14));
   color: var(--teal-deep);
-  display: grid;
-  place-items: center;
 }
 
 .tk-form-host {
@@ -162,7 +144,6 @@
   color: var(--ink-mute);
 
   a {
-    color: var(--teal-deep);
-    text-decoration: underline;
+    @include toolkit.lien-souligne;
   }
 }

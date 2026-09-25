@@ -16,12 +16,22 @@ import type { ContactPort } from '../../core/ports/contact.port';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
+import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
+import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, HeroSectionComponent, ContactCtaComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    HeroSectionComponent,
+    ContactCtaComponent,
+    FieldErrorsComponent,
+    HoneypotDirective,
+  ],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

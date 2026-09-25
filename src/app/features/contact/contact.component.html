@@ -22,15 +22,7 @@
       #contactFormRef="ngForm"
       (ngSubmit)="handleContactSubmit(contactFormRef)"
     >
-      <input
-        type="text"
-        name="website"
-        [(ngModel)]="contactForm.website"
-        tabindex="-1"
-        autocomplete="off"
-        aria-hidden="true"
-        class="absolute -left-[10000px] h-px w-px overflow-hidden"
-      />
+      <input appHoneypot name="website" [(ngModel)]="contactForm.website" />
       <input type="hidden" name="formStartedAt" [(ngModel)]="contactForm.formStartedAt" />
       <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
         @for (field of contactFields; track field.key) {
@@ -72,19 +64,11 @@
             </label>
 
             @if (control.invalid && (control.touched || isContactSubmitted)) {
-              <p class="mt-1 text-sm md:text-base text-red-500">
-                @if (control.errors?.['required']) {
-                  <span i18n="auth.error.required@@authErrorRequired"
-                    >Ce champ est obligatoire.</span
-                  >
-                } @else if (control.errors?.['email']) {
-                  <span i18n="auth.error.email@@authErrorEmail"
-                    >Merci d’entrer une adresse email valide.</span
-                  >
-                } @else {
-                  <span i18n="auth.error.generic@@authErrorGeneric">Valeur invalide.</span>
-                }
-              </p>
+              <p
+                appFieldErrors
+                class="mt-1 text-sm md:text-base text-red-500"
+                [errors]="control.errors"
+              ></p>
             }
           </div>
         }
@@ -161,9 +145,7 @@
           contactFormRef.controls['role'].invalid &&
           (contactFormRef.controls['role'].touched || isContactSubmitted)
         ) {
-          <p class="mt-1 text-sm md:text-base text-red-500">
-            <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
-          </p>
+          <ng-container *ngTemplateOutlet="champObligatoire" />
         }
       </div>
 
@@ -220,9 +202,7 @@
         <span class="text-scheme-text" i18n="@@contactFormTerms">J'accepte les conditions</span>
       </label>
       @if (termsCtrl.invalid && (termsCtrl.touched || isContactSubmitted)) {
-        <p class="mt-1 text-sm md:text-base text-red-500">
-          <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
-        </p>
+        <ng-container *ngTemplateOutlet="champObligatoire" />
       }
 
       <div class="grid col-span-1 md:col-span-2 gap-4">
@@ -330,3 +310,9 @@
 </section>
 
 <app-cta-contact [leadParagraphs]="contactSection.leadParagraphs"></app-cta-contact>
+
+<ng-template #champObligatoire>
+  <p class="mt-1 text-sm md:text-base text-red-500">
+    <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
+  </p>
+</ng-template>

@@ -1,4 +1,5 @@
 @use '../../styles-shared/breakpoints' as bp;
+@use '../../styles-shared/cartes';
 @use '../../styles-shared/surfaces' as surfaces;
 
 :host {
@@ -24,18 +25,9 @@
   padding: clamp(28px, 3.5vw, 44px);
   display: flex;
   flex-direction: column;
-  transition:
-    transform 0.5s var(--ease),
-    box-shadow 0.5s var(--ease),
-    border-color 0.4s;
   position: relative;
   overflow: hidden;
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-card);
-    border-color: var(--sand-deep);
-  }
+  @include cartes.carte-soulevee(-6px);
 
   &--bonus {
     border-style: dashed;

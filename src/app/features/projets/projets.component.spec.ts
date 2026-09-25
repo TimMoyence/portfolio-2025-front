@@ -1,46 +1,39 @@
-import type { ComponentFixture } from '@angular/core/testing';
-import { montagePage } from '../../../testing/montage-page';
+import { pageMontee } from '../../../testing/montage-page';
 import { ProjetsComponent } from './projets.component';
 
 describe('ProjetsComponent', () => {
-  const page = montagePage(ProjetsComponent);
-  let component: ProjetsComponent;
-  let fixture: ComponentFixture<ProjetsComponent>;
-
-  beforeEach(() => {
-    fixture = page();
-    component = fixture.componentInstance;
-  });
+  const page = pageMontee(ProjetsComponent);
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(page.composant).toBeTruthy();
   });
 
   it('should render a single hero title (preuves, pas promesses)', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const headings = compiled.querySelectorAll('h1');
+    const headings = page.racine.querySelectorAll('h1');
     expect(headings.length).toBe(1);
     expect(headings[0]?.textContent).toContain('Des preuves');
     expect(headings[0]?.textContent).toContain('promesses');
   });
 
   it('should compose the Asili sections (hero, projects-grid, méthode, bande CTA)', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('app-asili-hero')).not.toBeNull();
-    expect(compiled.querySelector('app-asili-projects-grid')).not.toBeNull();
-    expect(compiled.querySelector('app-asili-method')).not.toBeNull();
-    expect(compiled.querySelector('app-asili-cta-band')).not.toBeNull();
+    for (const section of [
+      'app-asili-hero',
+      'app-asili-projects-grid',
+      'app-asili-method',
+      'app-asili-cta-band',
+    ]) {
+      expect(page.racine.querySelector(section)).withContext(section).not.toBeNull();
+    }
   });
 
   it('should render the ten realisations that support the commercial focus', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const cards = compiled.querySelectorAll('app-asili-projects-grid .proj-grid .proj');
+    const cards = page.racine.querySelectorAll('app-asili-projects-grid .proj-grid .proj');
     expect(cards.length).toBe(10);
-    expect(component['projects'].length).toBe(10);
+    expect(page.composant['projects'].length).toBe(10);
   });
 
   it('should keep the named project inventory visible in the public portfolio', () => {
-    const titles = component['projects'].map((project) => project.title);
+    const titles = page.composant['projects'].map((project) => project.title);
 
     for (const expected of [
       'Fourmizzz Suite',
@@ -59,34 +52,32 @@ describe('ProjetsComponent', () => {
   });
 
   it('should illustrate every realisation, leaving no striped placeholder', () => {
-    const withoutImage = component['projects'].filter((p) => !p.image);
+    const withoutImage = page.composant['projects'].filter((p) => !p.image);
     expect(withoutImage).toEqual([]);
 
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelectorAll('app-asili-projects-grid .placeholder').length).toBe(0);
+    expect(page.racine.querySelectorAll('app-asili-projects-grid .placeholder').length).toBe(0);
   });
 
   it('décrit l illustration de Fourmizzz Suite sous le nom actuel du projet (H5)', () => {
-    const fourmizzz = component['projects'].find((p) => p.title === 'Fourmizzz Suite');
-    const compiled = fixture.nativeElement as HTMLElement;
+    const fourmizzz = page.composant['projects'].find((p) => p.title === 'Fourmizzz Suite');
 
     expect(fourmizzz?.imageAlt).toBe('illustration — Fourmizzz Suite');
-    expect(compiled.querySelector('img[alt="illustration — Fourmizzz Suite"]')).not.toBeNull();
-    expect(compiled.innerHTML).not.toContain('Le Jeu des Fourmis');
+    expect(page.racine.querySelector('img[alt="illustration — Fourmizzz Suite"]')).not.toBeNull();
+    expect(page.racine.innerHTML).not.toContain('Le Jeu des Fourmis');
   });
 
   it('should no longer expose the ZenFirst Vision realisation', () => {
-    const zenfirst = component['projects'].find((p) => p.title.includes('ZenFirst Vision'));
+    const zenfirst = page.composant['projects'].find((p) => p.title.includes('ZenFirst Vision'));
     expect(zenfirst).toBeUndefined();
   });
 
   it('should not link any realisation to the removed case study page', () => {
-    const stale = component['projects'].filter((p) => p.href === '/client-project');
+    const stale = page.composant['projects'].filter((p) => p.href === '/client-project');
     expect(stale).toEqual([]);
   });
 
   it('documente le contexte, la solution, le rôle et le résultat de chaque projet', () => {
-    const projects = component['projects'];
+    const projects = page.composant['projects'];
     expect(
       projects.every((project) => {
         const study = project.caseStudy;
@@ -96,9 +87,8 @@ describe('ProjetsComponent', () => {
   });
 
   it('should render the four-step method banner (le fil rouge)', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const steps = compiled.querySelectorAll('app-asili-method .method-steps .step');
+    const steps = page.racine.querySelectorAll('app-asili-method .method-steps .step');
     expect(steps.length).toBe(4);
-    expect(component['methodSteps'].length).toBe(4);
+    expect(page.composant['methodSteps'].length).toBe(4);
   });
 });

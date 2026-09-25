@@ -37,72 +37,39 @@
   </div>
 </section>
 
-<section class="section-pad">
-  <div class="wrap">
-    <div class="sec-head" appReveal>
-      <div>
-        <span class="kicker">{{ skillsKicker }}</span>
-        <h2 class="h-lg" i18n="@@presentationSkillsHeading">
-          Trois terrains que je maîtrise<br />de bout en bout.
-        </h2>
-      </div>
-    </div>
-    <div class="skills-grid">
-      @for (skill of skills; track skill.title) {
-        <article class="skill" appReveal [appRevealDelay]="skill.revealDelay">
-          <div class="s-ic" aria-hidden="true">
-            @switch (skill.icon) {
-              @case ('code') {
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="m8 6-6 6 6 6M16 6l6 6-6 6"
-                    stroke="currentColor"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              }
-              @case ('ai') {
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.7" />
-                  <path
-                    d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"
-                    stroke="currentColor"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              }
-              @case ('chart') {
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M3 3v18h18"
-                    stroke="currentColor"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="m7 14 3-3 3 3 5-6"
-                    stroke="currentColor"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              }
+<section class="section-pad" appAsiliSectionTete [kicker]="skillsKicker">
+  <h2 class="h-lg" i18n="@@presentationSkillsHeading">
+    Trois terrains que je maîtrise<br />de bout en bout.
+  </h2>
+  <div class="skills-grid">
+    @for (skill of skills; track skill.title) {
+      <article class="skill" appReveal [appRevealDelay]="skill.revealDelay">
+        <div class="s-ic" aria-hidden="true">
+          @let icone = icones[skill.icon];
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            @if (icone.cercle) {
+              <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.7" />
             }
-          </div>
-          <h3>{{ skill.title }}</h3>
-          <p>{{ skill.desc }}</p>
-          <div class="stack">
-            @for (tech of skill.stack; track tech) {
-              <span>{{ tech }}</span>
+            @for (trait of icone.traits; track trait.d) {
+              <path
+                [attr.d]="trait.d"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                [attr.stroke-linejoin]="trait.jointureArrondie ? 'round' : null"
+              />
             }
-          </div>
-        </article>
-      }
-    </div>
+          </svg>
+        </div>
+        <h3>{{ skill.title }}</h3>
+        <p>{{ skill.desc }}</p>
+        <div class="stack">
+          @for (tech of skill.stack; track tech) {
+            <span>{{ tech }}</span>
+          }
+        </div>
+      </article>
+    }
   </div>
 </section>
 
@@ -120,36 +87,29 @@
   </h2>
 </app-asili-ai-method>
 
-<section class="section-pad">
-  <div class="wrap">
-    <div class="sec-head" appReveal>
-      <div>
-        <span class="kicker">{{ timelineKicker }}</span>
-        <h2 class="h-lg" i18n="@@presentationTimelineHeading">
-          Quelques jalons,<br />racontés simplement.
-        </h2>
-      </div>
-      <a class="link-arrow" routerLink="/projets">
-        {{ timelineHeadLink }} <span aria-hidden="true">→</span>
-      </a>
-    </div>
-    <ol class="timeline">
-      @for (item of milestones; track item.title) {
-        <li class="tl-item" appReveal>
-          <div class="tl-year">{{ item.year }}</div>
-          <div>
-            <h3>{{ item.title }}</h3>
-            <p [innerHTML]="item.descHtml"></p>
-            <div class="tl-tags">
-              @for (tag of item.tags; track tag) {
-                <span>{{ tag }}</span>
-              }
-            </div>
+<section class="section-pad" appAsiliSectionTete [kicker]="timelineKicker">
+  <h2 class="h-lg" i18n="@@presentationTimelineHeading">
+    Quelques jalons,<br />racontés simplement.
+  </h2>
+  <a class="link-arrow" routerLink="/projets">
+    {{ timelineHeadLink }} <span aria-hidden="true">→</span>
+  </a>
+  <ol class="timeline">
+    @for (item of milestones; track item.title) {
+      <li class="tl-item" appReveal>
+        <div class="tl-year">{{ item.year }}</div>
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p [innerHTML]="item.descHtml"></p>
+          <div class="tl-tags">
+            @for (tag of item.tags; track tag) {
+              <span>{{ tag }}</span>
+            }
           </div>
-        </li>
-      }
-    </ol>
-  </div>
+        </div>
+      </li>
+    }
+  </ol>
 </section>
 
 <app-asili-closing [contenu]="closing" />

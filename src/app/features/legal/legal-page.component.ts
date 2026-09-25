@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
 export interface LegalTocItem {
@@ -21,3 +22,5 @@ export class LegalPageComponent {
 
   readonly toc = input.required<readonly LegalTocItem[]>();
 }
+
+export const LEGAL_PAGE_IMPORTS = [RouterModule, RevealOnScrollDirective, LegalPageComponent];

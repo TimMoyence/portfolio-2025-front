@@ -1,11 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
-import {
-  AsiliCtaBandComponent,
-  type AsiliCtaAction,
-  AsiliHeroComponent,
-} from '../../shared/sections';
+import { AsiliCtaBandComponent, type AsiliCta, AsiliHeroComponent } from '../../shared/sections';
 import {
   FORMATION_BENEFITS,
   FORMATIONS,
@@ -32,22 +28,21 @@ export class FormationsListComponent {
 
   protected readonly benefits: readonly FormationBenefit[] = FORMATION_BENEFITS;
 
-  protected readonly ctaKicker = $localize`:@@formationsCtaKicker:Tout est gratuit`;
-
-  protected readonly ctaTitle = $localize`:@@formationsCtaTitle:Choisissez une formation et lancez les slides.`;
-
-  protected readonly ctaLead = $localize`:@@formationsCtaLead:Aucune inscription. Votre email n'est demandé que si vous voulez le toolkit PDF.`;
-
-  protected readonly ctaActions: readonly AsiliCtaAction[] = [
-    {
-      libelle: $localize`:@@formationsCtaPrimary:Commencer par l'IA`,
-      lien: '/formations/ia-solopreneurs',
-      variante: 'principale',
-    },
-    {
-      libelle: $localize`:@@formationsCtaSecondary:Poser une question`,
-      lien: '/contact',
-      variante: 'secondaire',
-    },
-  ];
+  protected readonly cta: AsiliCta = {
+    kicker: $localize`:@@formationsCtaKicker:Tout est gratuit`,
+    title: $localize`:@@formationsCtaTitle:Choisissez une formation et lancez les slides.`,
+    lead: $localize`:@@formationsCtaLead:Aucune inscription. Votre email n'est demandé que si vous voulez le toolkit PDF.`,
+    actions: [
+      {
+        libelle: $localize`:@@formationsCtaPrimary:Commencer par l'IA`,
+        lien: '/formations/ia-solopreneurs',
+        variante: 'principale',
+      },
+      {
+        libelle: $localize`:@@formationsCtaSecondary:Poser une question`,
+        lien: '/contact',
+        variante: 'secondaire',
+      },
+    ],
+  };
 }

@@ -12,40 +12,21 @@
 
     <div class="ck-list" appReveal>
       <div class="ck-item">
-        <div class="ck-txt">
-          <h3>{{ categories.essential.title }}</h3>
-          <p>{{ categories.essential.description }}</p>
-          <span class="ck-tag">{{ categories.essential.tag }}</span>
-        </div>
+        <ng-container
+          *ngTemplateOutlet="texteCategorie; context: { $implicit: categories.essential }"
+        />
         <label class="switch">
           <input type="checkbox" checked disabled [attr.aria-label]="toggleAria.essential" />
           <span class="track"></span>
         </label>
       </div>
 
-      <div class="ck-item">
-        <div class="ck-txt">
-          <h3>{{ categories.analytics.title }}</h3>
-          <p>{{ categories.analytics.description }}</p>
-          <span class="ck-tag">{{ categories.analytics.tag }}</span>
-        </div>
-        <label class="switch">
-          <input
-            type="checkbox"
-            [checked]="preferences.analytics"
-            disabled
-            [attr.aria-label]="toggleAria.analytics"
-          />
-          <span class="track"></span>
-        </label>
-      </div>
+      <ng-container *ngTemplateOutlet="categorieFigee; context: contexteFige('analytics')" />
 
       <div class="ck-item">
-        <div class="ck-txt">
-          <h3>{{ categories.preferences.title }}</h3>
-          <p>{{ categories.preferences.description }}</p>
-          <span class="ck-tag">{{ categories.preferences.tag }}</span>
-        </div>
+        <ng-container
+          *ngTemplateOutlet="texteCategorie; context: { $implicit: categories.preferences }"
+        />
         <label class="switch">
           <input
             type="checkbox"
@@ -56,23 +37,26 @@
         </label>
       </div>
 
+      <ng-container *ngTemplateOutlet="categorieFigee; context: contexteFige('marketing')" />
+    </div>
+
+    <ng-template #texteCategorie let-categorie>
+      <div class="ck-txt">
+        <h3>{{ categorie.title }}</h3>
+        <p>{{ categorie.description }}</p>
+        <span class="ck-tag">{{ categorie.tag }}</span>
+      </div>
+    </ng-template>
+
+    <ng-template #categorieFigee let-categorie let-actif="actif" let-aria="aria">
       <div class="ck-item">
-        <div class="ck-txt">
-          <h3>{{ categories.marketing.title }}</h3>
-          <p>{{ categories.marketing.description }}</p>
-          <span class="ck-tag">{{ categories.marketing.tag }}</span>
-        </div>
+        <ng-container *ngTemplateOutlet="texteCategorie; context: { $implicit: categorie }" />
         <label class="switch">
-          <input
-            type="checkbox"
-            [checked]="preferences.marketing"
-            disabled
-            [attr.aria-label]="toggleAria.marketing"
-          />
+          <input type="checkbox" [checked]="actif" disabled [attr.aria-label]="aria" />
           <span class="track"></span>
         </label>
       </div>
-    </div>
+    </ng-template>
 
     <div class="ck-actions">
       <button type="button" class="btn btn-teal" (click)="savePreferences()" [disabled]="isSaving">
