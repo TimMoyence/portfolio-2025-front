@@ -94,6 +94,27 @@ export interface Sync {
 const DELAI_INITIAL_MS = 1000;
 const DELAI_MAX_MS = 30000;
 const SILENCE_MAX_MS = 45000;
+const SILENCE_AU_REVEIL_MS = 20000;
+
+const SIGNAUX_DE_FENETRE = ['online', 'pageshow'] as const;
+const SIGNAUX_DE_DOCUMENT = ['resume', 'visibilitychange'] as const;
+
+function ecouterLeReveil(surReveil: () => void): () => void {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return () => undefined;
+  }
+  const siVisible = (): void => {
+    if (document.visibilityState !== 'hidden') {
+      surReveil();
+    }
+  };
+  SIGNAUX_DE_FENETRE.forEach((signal) => window.addEventListener(signal, siVisible));
+  SIGNAUX_DE_DOCUMENT.forEach((signal) => document.addEventListener(signal, siVisible));
+  return () => {
+    SIGNAUX_DE_FENETRE.forEach((signal) => window.removeEventListener(signal, siVisible));
+    SIGNAUX_DE_DOCUMENT.forEach((signal) => document.removeEventListener(signal, siVisible));
+  };
+}
 
 const ENTETE_JETON = 'x-participant-token';
 const TYPE_FLUX = 'text/event-stream';
@@ -429,6 +450,9 @@ export function createSync(options: SyncOptions): Sync {
   let ferme = false;
   let delai = DELAI_INITIAL_MS;
   let relanceId: ReturnType<typeof setTimeout> | null = null;
+  let dernierSigne = 0;
+  let refusDefinitif = false;
+  let arreterLeReveil: (() => void) | null = null;
 
   const ouvrirFlux = options.ouvrirFlux ?? ouvertureNative(() => tentative?.controleur ?? null);
 
@@ -474,6 +498,8 @@ export function createSync(options: SyncOptions): Sync {
     ferme = true;
     annulerRelance();
     interrompre();
+    arreterLeReveil?.();
+    arreterLeReveil = null;
   };
 
   const distribuer = (evenement: EvenementFlux): void => {
@@ -514,6 +540,7 @@ export function createSync(options: SyncOptions): Sync {
       const morceau = await lecteur.read();
       acheve = morceau.done;
       if (morceau.value) {
+        dernierSigne = Date.now();
         rearmerLaGarde(propre);
         analyseur(decodeur.decode(morceau.value, { stream: true }));
       }
@@ -532,6 +559,7 @@ export function createSync(options: SyncOptions): Sync {
       throw new Error(FLUX_REFUSE);
     }
     delai = DELAI_INITIAL_MS;
+    dernierSigne = Date.now();
     rearmerLaGarde(propre);
     diffuserA(ecoutesStatut, { etat: 'connecte' });
     if (etatCourant) {
@@ -548,6 +576,7 @@ export function createSync(options: SyncOptions): Sync {
       if (!propre.refusee) {
         diffuserA(ecoutesStatut, { etat: 'reconnexion' });
       }
+      refusDefinitif = propre.definitive;
       if (!propre.definitive) {
         planifierRelance();
       }
@@ -570,11 +599,22 @@ export function createSync(options: SyncOptions): Sync {
     void suivre(propre, ouvrirFlux(urlFlux(), entetes()));
   };
 
+  const reveiller = (): void => {
+    if (ferme || refusDefinitif) {
+      return;
+    }
+    if (tentative === null || Date.now() - dernierSigne > SILENCE_AU_REVEIL_MS) {
+      demarrer();
+    }
+  };
+
   const demarrer = (): void => {
     annulerRelance();
     interrompre();
     delai = DELAI_INITIAL_MS;
     ferme = false;
+    refusDefinitif = false;
+    arreterLeReveil ??= ecouterLeReveil(reveiller);
     tenterOuverture();
   };
 
