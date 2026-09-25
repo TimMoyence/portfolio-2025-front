@@ -57,9 +57,13 @@ describe('lireJsonSousDelai', () => {
   it('propage l erreur reseau a l appelant', async () => {
     doubles.appels.and.rejectWith(new TypeError('fetch failed'));
 
-    await expectAsync(
-      lireJsonSousDelai(doubles.dependances.fetch, URL_API, 2_000),
-    ).toBeRejectedWithError(TypeError, 'fetch failed');
+    const erreur: unknown = await lireJsonSousDelai(doubles.dependances.fetch, URL_API, 2_000).then(
+      () => undefined,
+      (rejet: unknown) => rejet,
+    );
+
+    expect(erreur).toBeInstanceOf(TypeError);
+    expect((erreur as Error).message).toBe('fetch failed');
   });
 });
 
