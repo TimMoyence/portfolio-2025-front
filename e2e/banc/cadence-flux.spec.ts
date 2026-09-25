@@ -12,7 +12,9 @@ import {
 } from './contexte';
 import type { EcranDuCours, Poste, Seance } from './contexte';
 
-const FENETRE_MS = 5_000;
+const DELAI_D_OUVERTURE_MS = 10_000;
+
+const DERNIER_BILAN_MS = 2_000;
 
 const POSTES = 4;
 
@@ -28,25 +30,37 @@ interface EvenementRecu {
   readonly data: string;
 }
 
-function collecterLeFlux(page: Page, url: string, jeton: string): Promise<EvenementRecu[]> {
-  return page.evaluate(
-    async ([adresse, autorisation, duree]) => {
+interface FluxOuvert {
+  readonly arret: AbortController;
+  readonly recus: EvenementRecu[];
+  readonly lecture: Promise<void>;
+}
+
+type FenetreDuBanc = Window & { fluxDuBanc?: FluxOuvert };
+
+async function ouvrirLeFlux(page: Page, url: string, jeton: string): Promise<void> {
+  await page.evaluate(
+    async ([adresse, autorisation, delaiDOuverture]) => {
       const arret = new AbortController();
-      setTimeout(() => arret.abort(), Number(duree));
+      const recus: EvenementRecu[] = [];
       const debut = performance.now();
-      const recus: { nom: string; ts: number; data: string }[] = [];
-      try {
+      let signalerLOuverture = (): void => undefined;
+      const ouvert = new Promise<void>((tenir, rejeter) => {
+        signalerLOuverture = tenir;
+        setTimeout(() => rejeter(new Error('flux du pupitre muet')), Number(delaiDOuverture));
+      });
+      const lire = async (): Promise<void> => {
         const reponse = await fetch(adresse, {
           headers: { authorization: `Bearer ${autorisation}` },
           signal: arret.signal,
         });
         const lecteur = reponse.body?.getReader();
-        if (lecteur === undefined) return recus;
+        if (lecteur === undefined) return;
         const decodeur = new TextDecoder();
         let tampon = '';
         for (;;) {
           const { value, done } = await lecteur.read();
-          if (done) break;
+          if (done) return;
           tampon += decodeur.decode(value, { stream: true });
           const blocs = tampon.split('\n\n');
           tampon = blocs.pop() ?? '';
@@ -54,15 +68,28 @@ function collecterLeFlux(page: Page, url: string, jeton: string): Promise<Evenem
             const nom = /^event: (.+)$/m.exec(bloc)?.[1] ?? '';
             const data = /^data: (.+)$/m.exec(bloc)?.[1] ?? '';
             recus.push({ nom, ts: performance.now() - debut, data });
+            signalerLOuverture();
           }
         }
-      } catch {
-        return recus;
-      }
-      return recus;
+      };
+      const lecture = lire().catch((erreur: unknown) => {
+        if (!arret.signal.aborted) throw erreur;
+      });
+      (window as FenetreDuBanc).fluxDuBanc = { arret, recus, lecture };
+      await ouvert;
     },
-    [url, jeton, String(FENETRE_MS)] as const,
+    [url, jeton, String(DELAI_D_OUVERTURE_MS)] as const,
   );
+}
+
+function fermerLeFlux(page: Page): Promise<EvenementRecu[]> {
+  return page.evaluate(async () => {
+    const flux = (window as FenetreDuBanc).fluxDuBanc;
+    if (flux === undefined) return [];
+    flux.arret.abort();
+    await flux.lecture;
+    return flux.recus;
+  });
 }
 
 function apresLInstantaneDOuverture(evenements: readonly EvenementRecu[]): EvenementRecu[] {
@@ -132,15 +159,16 @@ test.describe('Banc — cadence du flux du pupitre', () => {
     await Promise.all([premier.goto('/fr/cours/rejoindre'), second.goto('/fr/cours/rejoindre')]);
 
     const adresse = `${URL_API}/formations/sessions/${seance.sessionId}/presenter-stream`;
-    const collectes = Promise.all([
-      collecterLeFlux(premier, adresse, jeton),
-      collecterLeFlux(second, adresse, jeton),
+    await Promise.all([
+      ouvrirLeFlux(premier, adresse, jeton),
+      ouvrirLeFlux(second, adresse, jeton),
     ]);
 
     const envoyees = await rafaleDeReponses(request, seance, jeton, postes, rafale);
     expect(envoyees).toBe(POSTES * QUESTIONS_PAR_POSTE);
+    await new Promise((tenir) => setTimeout(tenir, DERNIER_BILAN_MS));
 
-    const [gauche, droite] = await collectes;
+    const [gauche, droite] = await Promise.all([fermerLeFlux(premier), fermerLeFlux(second)]);
     await contexte.close();
 
     const resultatsGauche = gauche.filter((evenement) => evenement.nom === 'resultats');
