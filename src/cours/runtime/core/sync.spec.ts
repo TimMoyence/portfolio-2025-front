@@ -627,6 +627,88 @@ describe('sync', () => {
       }
     });
 
+    describe('au reveil du poste', () => {
+      const signaux: readonly (readonly [string, () => void])[] = [
+        ['le reseau revient', () => window.dispatchEvent(new Event('online'))],
+        ['la page est restauree', () => window.dispatchEvent(new Event('pageshow'))],
+        ['l onglet est degele', () => document.dispatchEvent(new Event('resume'))],
+        ['l onglet redevient visible', () => document.dispatchEvent(new Event('visibilitychange'))],
+      ];
+
+      beforeEach(() => {
+        jasmine.clock().mockDate(new Date(2026, 8, 25, 9, 0, 0));
+      });
+
+      for (const [signal, reveiller] of signaux) {
+        it(`relance sans attendre la temporisation quand ${signal}`, async () => {
+          monter();
+          sync.ouvrir();
+          await vider();
+          await flux[0].couper();
+          await laisserPasserLeFlux();
+          jasmine.clock().tick(1000);
+          await laisserPasserLeFlux();
+          expect(flux.length).toBe(2);
+          await flux[1].couper();
+          await laisserPasserLeFlux();
+
+          reveiller();
+          await laisserPasserLeFlux();
+
+          expect(flux.length).toBe(3);
+        });
+      }
+
+      it('rouvre un flux reste muet pendant la veille', async () => {
+        monter();
+        sync.ouvrir();
+        await vider();
+        const premier = flux[0];
+        await premier.envoyer(bloc('etat', ETAT));
+
+        jasmine.clock().mockDate(new Date(2026, 8, 25, 9, 5, 0));
+        window.dispatchEvent(new Event('online'));
+        await vider();
+
+        expect(flux.length).toBe(2);
+      });
+
+      it('laisse en place un flux vivant quand l eleve revient sur l onglet', async () => {
+        monter();
+        sync.ouvrir();
+        await vider();
+        await flux[0].envoyer(bloc('etat', ETAT));
+
+        jasmine.clock().mockDate(new Date(2026, 8, 25, 9, 0, 10));
+        document.dispatchEvent(new Event('visibilitychange'));
+        await vider();
+
+        expect(flux.length).toBe(1);
+      });
+
+      it('ne rouvre rien apres la fin de la seance ni apres une fermeture volontaire', async () => {
+        monter();
+        sync.ouvrir();
+        await vider();
+        await flux[0].envoyer(bloc('fin', { raison: 'cloturee' }));
+        window.dispatchEvent(new Event('online'));
+        await vider();
+
+        const autre = createSync({
+          baseUrl: BASE,
+          sessionId: SESSION,
+          ouvrirFlux: creerOuverture(flux),
+        });
+        autre.ouvrir();
+        await vider();
+        autre.close();
+        window.dispatchEvent(new Event('online'));
+        await vider();
+
+        expect(flux.length).toBe(2);
+      });
+    });
+
     it('n annonce rien et ne relance pas apres une fermeture volontaire', async () => {
       monter();
       suivreLesStatuts();

@@ -263,15 +263,19 @@ async function jouer() {
     await executer('npm', ['run', 'build:banc']);
 
     annoncer('scénarios');
-    await executer('npx', ['playwright', 'test', '--project=banc', '--workers=1'], {
-      env: {
-        BANC_URL_API: URL_API,
-        BANC_URL_FRONT: URL_FRONT,
-        BANC_FORMATEUR_EMAIL: identifiants.email,
-        BANC_FORMATEUR_MOTDEPASSE: identifiants.motDePasse,
-        BANC_JETON_FORMATEUR: jetonFormateur,
+    await executer(
+      'npx',
+      ['playwright', 'test', '--project=banc', '--workers=1', ...process.argv.slice(2)],
+      {
+        env: {
+          BANC_URL_API: URL_API,
+          BANC_URL_FRONT: URL_FRONT,
+          BANC_FORMATEUR_EMAIL: identifiants.email,
+          BANC_FORMATEUR_MOTDEPASSE: identifiants.motDePasse,
+          BANC_JETON_FORMATEUR: jetonFormateur,
+        },
       },
-    });
+    );
   } catch (erreur) {
     if (existsSync(JOURNAL_API)) {
       process.stderr.write(
