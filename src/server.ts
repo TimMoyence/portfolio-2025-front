@@ -45,6 +45,7 @@ const resolveIndexHtml = (locale: string | null): string => {
 };
 
 const app = express();
+app.disable('x-powered-by');
 
 const keepsTrailingSlash = (path: string): boolean => LOCALE_BARE_PATH.test(path);
 

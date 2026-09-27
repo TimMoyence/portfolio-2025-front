@@ -47,11 +47,8 @@ Start here when exploring this area:
 | `FpConcept4` | Class | `src/cours/runtime/blocks/FpConcept4.ts` | 57 |
 | `FpPlot` | Class | `src/cours/runtime/blocks/FpPlot.ts` | 181 |
 | `FpQuote` | Class | `src/cours/runtime/blocks/FpQuote.ts` | 14 |
-| `FpSpaced` | Class | `src/cours/runtime/blocks/FpSpaced.ts` | 72 |
 | `FpStory` | Class | `src/cours/runtime/blocks/FpStory.ts` | 42 |
-| `FpVote` | Class | `src/cours/runtime/blocks/FpVote.ts` | 70 |
 | `FpReglable` | Class | `src/cours/runtime/blocks/reglable.ts` | 71 |
-| `FpVerdicts` | Class | `src/cours/runtime/blocks/verdicts.ts` | 3 |
 | `FpChallenge` | Class | `src/cours/runtime/blocks/FpChallenge.ts` | 74 |
 | `FpEscape` | Class | `src/cours/runtime/blocks/FpEscape.ts` | 89 |
 | `FpPro` | Class | `src/cours/runtime/blocks/FpPro.ts` | 37 |
@@ -60,7 +57,10 @@ Start here when exploring this area:
 | `FpContenu` | Class | `src/cours/runtime/blocks/contenu.ts` | 3 |
 | `FpEnvoi` | Class | `src/cours/runtime/blocks/contenu.ts` | 17 |
 | `FpRedaction` | Class | `src/cours/runtime/blocks/redaction.ts` | 3 |
+| `FpSpaced` | Class | `src/cours/runtime/blocks/FpSpaced.ts` | 72 |
+| `FpVote` | Class | `src/cours/runtime/blocks/FpVote.ts` | 70 |
 | `VerdictsParQuestion` | Class | `src/cours/runtime/blocks/retours.ts` | 90 |
+| `FpVerdicts` | Class | `src/cours/runtime/blocks/verdicts.ts` | 3 |
 | `Evaluation` | Class | `src/cours/runtime/core/formula.ts` | 485 |
 
 ## Execution Flows

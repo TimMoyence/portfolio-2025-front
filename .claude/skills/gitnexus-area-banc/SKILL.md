@@ -1,11 +1,11 @@
 ---
 name: gitnexus-area-banc
-description: "Skill for the Banc area of portfolio-2025-front. 117 symbols across 13 files."
+description: "Skill for the Banc area of portfolio-2025-front. 118 symbols across 13 files."
 ---
 
 # Banc
 
-117 symbols | 13 files | Cohesion: 82%
+118 symbols | 13 files | Cohesion: 87%
 
 ## When to Use
 
@@ -17,8 +17,8 @@ description: "Skill for the Banc area of portfolio-2025-front. 117 symbols acros
 
 | File | Symbols |
 |------|---------|
-| `e2e/banc/interactions.ts` | billetDeSortie, cliquerUneOption, curseurs, defi, envoyerPourUnRetour (+30) |
-| `e2e/banc/contexte.ts` | agirSurLePoste, demarrerLaSeance, entetesDuFormateur, lireLesResultats, objetRenvoye (+28) |
+| `e2e/banc/interactions.ts` | attendreLeVerdict, billetDeSortie, classement, placerLaCarte, cliquerUneOption (+31) |
+| `e2e/banc/contexte.ts` | agirSurLePoste, classer, demarrerLaSeance, entetesDuFormateur, ouvrirUneSeance (+28) |
 | `scripts/banc/jouer.mjs` | annoncer, compose, construireLeBack, executer, executerSql (+9) |
 | `e2e/banc/volume-par-ecran.spec.ts` | ouvrirLaClasse, voteJumele, consigner, surChaquePoste, surveiller (+4) |
 | `scripts/banc/amorcage.mjs` | AmorcageEchoue, amorcerFormateur, connecterLeFormateur, corpsDInscription, inscrireFormateur (+1) |
@@ -32,11 +32,11 @@ description: "Skill for the Banc area of portfolio-2025-front. 117 symbols acros
 
 Start here when exploring this area:
 
-- **`interagirAvecLEcran`** (Function) — `e2e/banc/interactions.ts:309`
+- **`interagirAvecLEcran`** (Function) — `e2e/banc/interactions.ts:330`
 - **`sondeHttp`** (Function) — `scripts/banc/attente.mjs:40`
-- **`agirSurLePoste`** (Function) — `e2e/banc/contexte.ts:162`
-- **`lireLesResultats`** (Function) — `e2e/banc/contexte.ts:150`
-- **`repondreDepuisLePoste`** (Function) — `e2e/banc/contexte.ts:194`
+- **`agirSurLePoste`** (Function) — `e2e/banc/contexte.ts:169`
+- **`repondreDepuisLePoste`** (Function) — `e2e/banc/contexte.ts:201`
+- **`servirLEcran`** (Function) — `e2e/banc/contexte.ts:137`
 
 ## Key Symbols
 
@@ -44,30 +44,30 @@ Start here when exploring this area:
 |--------|------|------|------|
 | `AmorcageEchoue` | Class | `scripts/banc/amorcage.mjs` | 2 |
 | `AttenteEpuisee` | Class | `scripts/banc/attente.mjs` | 0 |
-| `interagirAvecLEcran` | Function | `e2e/banc/interactions.ts` | 309 |
+| `interagirAvecLEcran` | Function | `e2e/banc/interactions.ts` | 330 |
 | `sondeHttp` | Function | `scripts/banc/attente.mjs` | 40 |
-| `agirSurLePoste` | Function | `e2e/banc/contexte.ts` | 162 |
-| `lireLesResultats` | Function | `e2e/banc/contexte.ts` | 150 |
-| `repondreDepuisLePoste` | Function | `e2e/banc/contexte.ts` | 194 |
-| `servirLEcran` | Function | `e2e/banc/contexte.ts` | 130 |
-| `lireDepuisLePoste` | Function | `e2e/banc/contexte.ts` | 231 |
-| `lireLeSujet` | Function | `e2e/banc/contexte.ts` | 242 |
-| `lireMonEtat` | Function | `e2e/banc/contexte.ts` | 223 |
-| `coursReleve` | Function | `e2e/banc/contexte.ts` | 357 |
-| `seanceDemarreeSurLEcran` | Function | `e2e/banc/contexte.ts` | 455 |
-| `seanceLimiteeSurLePremierVote` | Function | `e2e/banc/contexte.ts` | 467 |
-| `seancePartagee` | Function | `e2e/banc/contexte.ts` | 478 |
+| `agirSurLePoste` | Function | `e2e/banc/contexte.ts` | 169 |
+| `repondreDepuisLePoste` | Function | `e2e/banc/contexte.ts` | 201 |
+| `servirLEcran` | Function | `e2e/banc/contexte.ts` | 137 |
+| `coursReleve` | Function | `e2e/banc/contexte.ts` | 364 |
+| `jetonDuFormateur` | Function | `e2e/banc/contexte.ts` | 97 |
+| `seanceDemarreeSurLEcran` | Function | `e2e/banc/contexte.ts` | 462 |
+| `seanceLimiteeSurLePremierVote` | Function | `e2e/banc/contexte.ts` | 474 |
+| `seancePartagee` | Function | `e2e/banc/contexte.ts` | 485 |
 | `amorcerFormateur` | Function | `scripts/banc/amorcage.mjs` | 90 |
 | `corpsDInscription` | Function | `scripts/banc/amorcage.mjs` | 29 |
 | `inscrireFormateur` | Function | `scripts/banc/amorcage.mjs` | 46 |
 | `sqlDePromotion` | Function | `scripts/banc/amorcage.mjs` | 18 |
 | `attendreQue` | Function | `scripts/banc/attente.mjs` | 22 |
+| `passerALaPhase` | Function | `e2e/banc/interactions.ts` | 409 |
+| `environnementDeLApi` | Function | `scripts/banc/configuration.mjs` | 88 |
+| `identifiantsDuFormateur` | Function | `scripts/banc/configuration.mjs` | 41 |
 
 ## Execution Flows
 
 | Flow | Type | Steps |
 |------|------|-------|
-| `InteragirAvecLEcran → AttendreLeVerdict` | cross_community | 5 |
+| `InteragirAvecLEcran → AttendreLeVerdict` | intra_community | 5 |
 | `InteragirAvecLEcran → TaperVite` | intra_community | 4 |
 | `InteragirAvecLEcran → CliquerUneOption` | intra_community | 4 |
 | `InteragirAvecLEcran → TexteRapide` | intra_community | 3 |

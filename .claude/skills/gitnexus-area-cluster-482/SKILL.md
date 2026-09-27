@@ -1,9 +1,9 @@
 ---
-name: gitnexus-area-cluster-487
-description: "Skill for the Cluster_487 area of portfolio-2025-front. 26 symbols across 1 files."
+name: gitnexus-area-cluster-482
+description: "Skill for the Cluster_482 area of portfolio-2025-front. 26 symbols across 1 files."
 ---
 
-# Cluster_487
+# Cluster_482
 
 26 symbols | 1 files | Cohesion: 86%
 
@@ -11,7 +11,7 @@ description: "Skill for the Cluster_487 area of portfolio-2025-front. 26 symbols
 
 - Working with code in `src/`
 - Understanding how appliquer, arrondirMoitieLoinDeZero, comparer work
-- Modifying cluster_487-related functionality
+- Modifying cluster_482-related functionality
 
 ## Key Files
 
@@ -72,6 +72,6 @@ Start here when exploring this area:
 ## How to Explore
 
 1. `context({name: "appliquer"})` — see callers and callees
-2. `query({search_query: "cluster_487"})` — find related execution flows
+2. `query({search_query: "cluster_482"})` — find related execution flows
 3. Read key files listed above for implementation details
 4. `explain({target: "<file or symbol>"})` — persisted taint findings (source→sink data flows), when indexed with `--pdg`
