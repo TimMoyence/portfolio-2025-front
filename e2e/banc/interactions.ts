@@ -70,6 +70,17 @@ async function taperVite(champ: Locator, texte: string, numero: number): Promise
 export async function natureDeLEcran(page: Page): Promise<NatureDEcran> {
   const zone = principal(page);
   await expect(zone).toBeVisible();
+  await expect
+    .poll(
+      () =>
+        zone.evaluate((element) =>
+          [...element.querySelectorAll<HTMLElement>('[data-testid="slide-activity-host"]')].every(
+            (hote) => hote.hidden || hote.firstElementChild !== null,
+          ),
+        ),
+      { timeout: DELAI_DE_RETOUR_MS },
+    )
+    .toBe(true);
   return zone.evaluate(
     (element, briques) => {
       if (element.querySelector('[data-testid="slide-activity-verrouille"]') !== null) {
