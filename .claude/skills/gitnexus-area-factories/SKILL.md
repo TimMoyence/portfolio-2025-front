@@ -1,11 +1,11 @@
 ---
 name: gitnexus-area-factories
-description: "Skill for the Factories area of portfolio-2025-front. 74 symbols across 24 files."
+description: "Skill for the Factories area of portfolio-2025-front. 69 symbols across 24 files."
 ---
 
 # Factories
 
-74 symbols | 24 files | Cohesion: 76%
+69 symbols | 24 files | Cohesion: 77%
 
 ## When to Use
 
@@ -17,16 +17,16 @@ description: "Skill for the Factories area of portfolio-2025-front. 74 symbols a
 
 | File | Symbols |
 |------|---------|
-| `src/testing/factories/cours.factory.ts` | buildCardsortPlan, buildEscapeParcours, buildExitBillet, buildProCas, buildProCasAQuestionsLibres (+18) |
+| `src/testing/factories/cours.factory.ts` | buildCardsortPlan, buildEscapeParcours, buildExitBillet, buildProCas, buildProCasAQuestionsLibres (+15) |
 | `src/testing/factories/visual-slide.factory.ts` | buildRecitVisuel, buildVisualChartSlide, buildVisualImageHeroSlide, buildVisualNestedQuizSlide, buildVisualQuizSlide (+4) |
 | `src/testing/factories/formations.factory.ts` | buildAnnotationFormateur, buildEtatParticipant, buildSpacedQuestionPublique, buildStrategiePublique, buildSyntheseConcept (+3) |
 | `src/testing/factories/lead-magnet.factory.ts` | buildToolkitPageData, createLeadMagnetPortStub, createLeadMagnetPortStubWithError, espionnerLeadMagnetPort |
 | `src/testing/factories/cookie-consent.factory.ts` | createCookieConsentPortStub, createMockAppConfig, buildCookiePreferences, createCookieConsentServiceStub |
-| `src/app/features/cours/etudiant/cours-etudiant.component.spec.ts` | servirUnQcmVisuelEnPremier, servi, sujetDeSeance |
 | `src/app/core/adapters/formations-http.adapter.spec.ts` | appels, ecritures |
 | `src/testing/factories/instantane-b2-01.factory.ts` | buildDonneesParBrique, buildInstantaneDeSubstitution |
 | `src/testing/toolkit-de-formation.ts` | decrireToolkitDeFormation, rendu |
 | `src/testing/factories/presentation.factory.ts` | buildInteractionsResponse, createPresentationPortStub |
+| `src/testing/factories/sync.factory.ts` | buildEtatSession, diffuser |
 
 ## Entry Points
 

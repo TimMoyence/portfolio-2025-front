@@ -1,11 +1,11 @@
 ---
 name: gitnexus-area-session
-description: "Skill for the Session area of portfolio-2025-front. 152 symbols across 26 files."
+description: "Skill for the Session area of portfolio-2025-front. 157 symbols across 28 files."
 ---
 
 # Session
 
-152 symbols | 26 files | Cohesion: 80%
+157 symbols | 28 files | Cohesion: 80%
 
 ## When to Use
 
