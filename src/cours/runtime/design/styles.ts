@@ -86,6 +86,10 @@ export const base = `
   line-height: 1.5;
 }
 
+:where(.fp-root) .fp-ligne-de-calcul {
+  display: block;
+}
+
 :where(.fp-root) img,
 :where(.fp-root) svg,
 :where(.fp-root) video {

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { LignesDeCalculComponent } from '../../lignes-de-calcul/lignes-de-calcul.component';
 import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
 export interface CategorieDuTri {
@@ -29,7 +30,7 @@ interface ZoneDuTri extends CategorieDuTri {
 @Component({
   selector: 'app-slide-sort-review',
   standalone: true,
-  imports: [SlideEnTeteComponent],
+  imports: [SlideEnTeteComponent, LignesDeCalculComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-sort-review.component.html',
   styleUrl: './slide-sort-review.component.scss',

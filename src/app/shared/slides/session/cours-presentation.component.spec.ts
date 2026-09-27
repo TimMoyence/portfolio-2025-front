@@ -237,19 +237,17 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
   );
 
   it('G01 · au poste étudiant, le contenu d une toile réduite garde 0,8 et celui d une toile agrandie s affiche au moins à 0,8', async () => {
-    const recommandation = ecransPublicsB2_01().find(({ id }) =>
-      id.endsWith('A5-08-RECOMMANDATION'),
-    );
-    if (recommandation === undefined) {
-      throw new Error('écran absent du poste étudiant : A5-08-RECOMMANDATION');
+    const jeu = ecransPublicsB2_01().find(({ id }) => id.endsWith(ECRAN_TROP_LONG));
+    if (jeu === undefined) {
+      throw new Error(`écran absent du poste étudiant : ${ECRAN_TROP_LONG}`);
     }
-    const reduite = await monterDansUnCadre(recommandation, 'etudiant', 1350, 700);
+    const reduite = await monterDansUnCadre(jeu, 'etudiant', 1350, 700);
 
     expect(echelleDuContenu(reduite.toile())).toBeCloseTo(ECHELLE_MINIMALE, 3);
     reduite.detruire();
 
     const agrandie = await monterDansUnCadre(
-      recommandation,
+      jeu,
       'etudiant',
       CADRE_ETUDIANT_14_POUCES.largeur,
       CADRE_ETUDIANT_14_POUCES.hauteur,
@@ -262,9 +260,9 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
   for (const mode of ['formateur', 'projection'] as const) {
     it(`G01 · en ${mode}, un écran trop long ne défile jamais : il est mis à l échelle de la toile`, async () => {
       const ecrans = ecransDuPupitreB2_01();
-      const recommandation = ecranDuPupitre('A5-08-RECOMMANDATION');
-      const renvoi = ecrans.find(({ id }) => id === recommandation.renvoi) ?? null;
-      const monte = await monterDansUnCadre(recommandation, mode, 1280, 720, renvoi);
+      const jeu = ecranDuPupitre(ECRAN_TROP_LONG);
+      const renvoi = ecrans.find(({ id }) => id === jeu.renvoi) ?? null;
+      const monte = await monterDansUnCadre(jeu, mode, 1280, 720, renvoi);
 
       expect(monte.hote.classList).not.toContain('cours-presentation--defilante');
       expect(echelleDuContenu(monte.toile())).toBeLessThan(1);
@@ -275,18 +273,18 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
 
   it('G01 · T3 · au poste étudiant, un écran trop long garde une taille lisible et fait défiler la page', async () => {
     const ecrans = ecransPublicsB2_01();
-    const recommandation = ecrans.find(({ id }) => id.endsWith('A5-08-RECOMMANDATION'));
-    if (recommandation === undefined) {
-      throw new Error('écran absent du poste étudiant : A5-08-RECOMMANDATION');
+    const jeu = ecrans.find(({ id }) => id.endsWith(ECRAN_TROP_LONG));
+    if (jeu === undefined) {
+      throw new Error(`écran absent du poste étudiant : ${ECRAN_TROP_LONG}`);
     }
-    const renvoi = ecrans.find(({ id }) => id === recommandation.renvoi) ?? null;
-    const monte = await monterDansUnCadre(recommandation, 'etudiant', 1280, 720, renvoi);
-    const envoyer = monte.brique()?.shadowRoot?.querySelector('[data-testid="envoyer"]');
+    const renvoi = ecrans.find(({ id }) => id === jeu.renvoi) ?? null;
+    const monte = await monterDansUnCadre(jeu, 'etudiant', 1280, 720, renvoi);
+    const valider = monte.brique()?.shadowRoot?.querySelector('[data-testid="valider"]');
 
     expect(monte.hote.classList).toContain('cours-presentation--defilante');
     expect(echelleDuContenu(monte.toile())).toBeGreaterThanOrEqual(ECHELLE_MINIMALE);
     expect(monte.cadre.scrollHeight).toBeGreaterThan(monte.cadre.clientHeight);
-    expect(envoyer).withContext('bouton d envoi de la recommandation').toBeTruthy();
+    expect(valider).withContext('bouton de validation du tri').toBeTruthy();
     expect(elementsHorsDeLaPage(monte)).toEqual([]);
     expect(defileursInternes(monte.toile() as HTMLElement)).toEqual([]);
     monte.detruire();
@@ -405,7 +403,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
   });
 
   it(
-    'R3 · donne à chaque diapositive commentée la part de toile que fixe son cadrage, et la fait remplir son cadre',
+    'R3 · donne à chaque diapositive commentée 60 % de la toile, et la fait remplir son cadre',
     async () => {
       const fautes = await fautesDesEcrans(
         ecransDuPupitreB2_01().filter(({ renvoi }) => renvoi !== undefined),
@@ -420,7 +418,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
           const contenu = miniature
             ?.querySelector('.cours-renvoi__toile app-slide-activity')
             ?.getBoundingClientRect();
-          const part = ecran.cadrageDuRenvoi?.part ?? 0;
+          const part = 60;
           const remplissage =
             cadre === undefined || contenu === undefined
               ? 0
@@ -586,6 +584,8 @@ function elementsHorsToile(monte: EcranCadre): string[] {
 }
 
 const ECHELLE_MINIMALE = 0.8;
+
+const ECRAN_TROP_LONG = 'A2-07-JEU-COMPARABLE';
 
 const CADRE_ETUDIANT_14_POUCES = { largeur: 1480, hauteur: 913 } as const;
 

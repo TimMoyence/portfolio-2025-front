@@ -145,7 +145,7 @@ interface LigneDeCle {
         </button>
       </section>
     }
-    @if (ecran().type === 'fp-recall') {
+    @if (optionsDuRappelDifferees()) {
       <section class="activite-section" data-testid="activite-options-rappel">
         <h3 i18n="@@panneauActiviteOptionsRappelTitre">Options du rappel</h3>
         <button
@@ -345,6 +345,10 @@ export class CoursPanneauActiviteComponent {
         this.corrigeAilleurs())
     );
   });
+
+  protected readonly optionsDuRappelDifferees = computed(
+    () => this.ecran().type === 'fp-recall' && this.ecran().donnees?.['delaiMs'] !== 0,
+  );
 
   private readonly etapesPilotees = computed(
     () => this.ecran().type === 'fp-worked' && this.ecran().donnees?.['pilote'] === true,

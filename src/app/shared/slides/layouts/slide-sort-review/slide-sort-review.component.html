@@ -15,7 +15,10 @@
               [attr.data-carte]="carte.id"
             >
               <p class="slide-sort-review__libelle">{{ carte.label }}</p>
-              <p class="slide-sort-review__justification">{{ carte.justification }}</p>
+              <p
+                class="slide-sort-review__justification"
+                [appLignesDeCalcul]="carte.justification"
+              ></p>
               @if (carte.malPlacee) {
                 <p class="slide-sort-review__signal" i18n="@@slideSortReviewMalPlacee">
                   Mal placée dans votre tri

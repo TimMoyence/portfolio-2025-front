@@ -154,7 +154,10 @@ async function questionnaire(zone: Locator, numero: number): Promise<void> {
 
 async function rappel(zone: Locator, numero: number): Promise<void> {
   const bloc = zone.locator('fp-recall');
-  await taperVite(bloc.locator('[data-testid="rappel"]'), texteRapide(numero, 'Rappel'), numero);
+  const champ = bloc.locator('[data-testid="rappel"]');
+  if ((await champ.count()) > 0) {
+    await taperVite(champ, texteRapide(numero, 'Rappel'), numero);
+  }
   await cliquerUneOption(bloc, numero);
   await attendreLeVerdict(bloc);
 }

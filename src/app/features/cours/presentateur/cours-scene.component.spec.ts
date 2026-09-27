@@ -102,7 +102,7 @@ describe('CoursSceneComponent', () => {
 
   it('E10 · projette en miniature, sans corrigé, l écran auquel renvoie l écran courant', async () => {
     const [vote, rappel] = derouleDeSeance().ecrans;
-    const cadrageDuRenvoi = { part: 70, extrait: { champs: ['situation'] } };
+    const cadrageDuRenvoi = { extrait: { champs: ['situation'] } };
     const fixture = await monterSur([vote, { ...rappel, renvoi: vote.id, cadrageDuRenvoi }]);
 
     diffuserSurLaVue(double, fixture, { ecranCourant: 1 });

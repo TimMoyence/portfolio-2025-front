@@ -16,7 +16,7 @@
             <strong>{{ ligne.cible }}</strong>
           </p>
         }
-        <p class="slide-answer-review__texte">{{ ligne.texte }}</p>
+        <p class="slide-answer-review__texte" [appLignesDeCalcul]="ligne.texte"></p>
         @if (ligne.juste === true) {
           <p
             class="slide-answer-review__signal slide-answer-review__signal--juste"

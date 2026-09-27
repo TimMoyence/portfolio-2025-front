@@ -248,13 +248,14 @@ describe('FpWorked', () => {
       hote.setAttribute('data-cours-role', role);
       hote.etayage = PLEIN - 1;
       const cache = EXEMPLE.etapes[PLEIN - 1].raisonnement;
+      const texteAffiche = (): string => (hote.shadowRoot?.textContent ?? '').replaceAll(' ', ' ');
       expect(JSON.stringify(hote.exemple)).not.toContain(cache);
-      expect(hote.shadowRoot?.innerHTML ?? '').not.toContain(cache);
+      expect(texteAffiche()).not.toContain(cache);
 
       hote.etayage = PLEIN;
 
       expect(JSON.stringify(hote.exemple)).toContain(cache);
-      expect(hote.shadowRoot?.innerHTML ?? '').toContain(cache);
+      expect(texteAffiche()).toContain(cache);
     });
   }
 
