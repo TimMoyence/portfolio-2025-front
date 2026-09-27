@@ -23,7 +23,6 @@ export interface RevelationServie {
 }
 
 export interface CadrageDuRenvoi {
-  readonly part: number;
   readonly extrait?: {
     readonly lignes?: readonly number[];
     readonly champs?: readonly string[];

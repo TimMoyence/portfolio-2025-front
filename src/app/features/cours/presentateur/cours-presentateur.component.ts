@@ -475,73 +475,76 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
           </div>
           @if (ecranCourant(); as ecranAffiche) {
             <div class="presentateur-workspace">
-              <main class="presentateur-stage" aria-labelledby="presentateur-stage-titre">
-                <div class="presentateur-stage__head">
-                  <h3
-                    id="presentateur-stage-titre"
-                    i18n="presentateur.stageTitre|@@presentateurStageTitre"
-                  >
-                    Écran projeté
-                  </h3>
-                  @if (ecranAffiche.interactif) {
-                    <button
-                      type="button"
-                      class="control-btn"
-                      data-testid="presentateur-projeter-resultats"
-                      [attr.aria-pressed]="pilotageDeLEcran().resultatsProjetes === true"
-                      [disabled]="pilotageBloque()"
-                      (click)="basculerLaProjectionDesResultats(ecranAffiche.id)"
+              <div class="presentateur-colonne-scene">
+                <main class="presentateur-stage" aria-labelledby="presentateur-stage-titre">
+                  <div class="presentateur-stage__head">
+                    <h3
+                      id="presentateur-stage-titre"
+                      i18n="presentateur.stageTitre|@@presentateurStageTitre"
                     >
-                      @if (pilotageDeLEcran().resultatsProjetes === true) {
-                        <ng-container i18n="@@presentateurMasquerResultats"
-                          >Retirer les résultats de la projection</ng-container
-                        >
-                      } @else {
-                        <ng-container i18n="@@presentateurProjeterResultats"
-                          >Projeter les résultats</ng-container
-                        >
-                      }
-                    </button>
-                  }
-                </div>
-                <div class="presentateur-stage__body">
-                  <app-cours-presentation
-                    mode="formateur"
-                    [slide]="ecranAffiche"
-                    [resultats]="resultats()"
-                    [direct]="direct()"
-                    [donneesFormateur]="annexeDeLEcran()"
-                    [maitrise]="maitrise()"
-                    [renvoi]="ecranRenvoye()"
-                    [surimpression]="correction"
-                    (evenement)="relayerLeReglage($event)"
-                  />
-                  <ng-template #correction>
-                    <app-cours-bandeau-correction
-                      [corrections]="correctionsDeLEcran()"
-                      [revele]="direct()?.pilotage?.revele === true"
-                    />
-                    <app-cours-resultats-projetes
-                      [ecran]="ecranAffiche"
+                      Écran projeté
+                    </h3>
+                    @if (ecranAffiche.interactif) {
+                      <button
+                        type="button"
+                        class="control-btn"
+                        data-testid="presentateur-projeter-resultats"
+                        [attr.aria-pressed]="pilotageDeLEcran().resultatsProjetes === true"
+                        [disabled]="pilotageBloque()"
+                        (click)="basculerLaProjectionDesResultats(ecranAffiche.id)"
+                      >
+                        @if (pilotageDeLEcran().resultatsProjetes === true) {
+                          <ng-container i18n="@@presentateurMasquerResultats"
+                            >Retirer les résultats de la projection</ng-container
+                          >
+                        } @else {
+                          <ng-container i18n="@@presentateurProjeterResultats"
+                            >Projeter les résultats</ng-container
+                          >
+                        }
+                      </button>
+                    }
+                  </div>
+                  <div class="presentateur-stage__body">
+                    <app-cours-presentation
+                      mode="formateur"
+                      [slide]="ecranAffiche"
                       [resultats]="resultats()"
-                      [sessionId]="sessionId()"
-                      [actif]="pilotageDeLEcran().resultatsProjetes === true"
-                      [revele]="pilotageDeLEcran().revele === true"
+                      [direct]="direct()"
+                      [donneesFormateur]="annexeDeLEcran()"
+                      [maitrise]="maitrise()"
+                      [renvoi]="ecranRenvoye()"
+                      [surimpression]="correction"
+                      (evenement)="relayerLeReglage($event)"
                     />
-                  </ng-template>
-                  @if (maitriseIndisponible()) {
-                    <p
-                      class="muted"
-                      data-testid="presentateur-maitrise-echec"
-                      role="status"
-                      i18n="@@presentateurMaitriseEchec"
-                    >
-                      La carte de maîtrise n’a pas pu être lue : elle sera relue au prochain
-                      résultat.
-                    </p>
-                  }
-                </div>
-              </main>
+                    <ng-template #correction>
+                      <app-cours-bandeau-correction
+                        [corrections]="correctionsDeLEcran()"
+                        [revele]="direct()?.pilotage?.revele === true"
+                      />
+                      <app-cours-resultats-projetes
+                        [ecran]="ecranAffiche"
+                        [resultats]="resultats()"
+                        [sessionId]="sessionId()"
+                        [actif]="pilotageDeLEcran().resultatsProjetes === true"
+                        [revele]="pilotageDeLEcran().revele === true"
+                      />
+                    </ng-template>
+                    @if (maitriseIndisponible()) {
+                      <p
+                        class="muted"
+                        data-testid="presentateur-maitrise-echec"
+                        role="status"
+                        i18n="@@presentateurMaitriseEchec"
+                      >
+                        La carte de maîtrise n’a pas pu être lue : elle sera relue au prochain
+                        résultat.
+                      </p>
+                    }
+                  </div>
+                </main>
+                <app-panneau-participants [sessionId]="sessionId()" />
+              </div>
               <aside
                 class="presentateur-sidebar"
                 aria-label="Informations de séance"
@@ -554,7 +557,6 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                   </section>
                 }
                 <app-panneau-guide [guide]="ecranAffiche.guide" [ecranId]="ecranAffiche.id" />
-                <app-panneau-participants [sessionId]="sessionId()" />
                 <app-cours-panneau-activite
                   [ecran]="ecranAffiche"
                   [resultats]="resultats()"

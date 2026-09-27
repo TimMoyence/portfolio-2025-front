@@ -29,3 +29,7 @@ fe53aeace4a59cf32ccedc4fc1d2a5d94a004f7a:src/app/features/weather/components/hou
 # L'operateur `...overrides` d'une factory de test est signale a tort comme une
 # cle generique : il ne contient aucune valeur secrete.
 26a6bced2a121baf007f54e89abe3602b3808cc2:src/testing/factories/auth.factory.ts:generic-api-key:69
+
+# Skill GitNexus generee : la liste des fonctions de `e2e/fixtures.ts`
+# (installerLaSeanceDeSortie, intercepterApi, ...) est lue comme une cle generique.
+c00b8661927fadb19313ab2c59e135130fbb7437:.claude/skills/gitnexus-area-e2e/SKILL.md:generic-api-key:13

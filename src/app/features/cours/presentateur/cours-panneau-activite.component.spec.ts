@@ -213,6 +213,16 @@ describe('CoursPanneauActiviteComponent', () => {
     expect(lire(monter(buildEcranDeroule()).fixture, 'activite-afficher-options')).toBeNull();
   });
 
+  it('ne propose pas d afficher les options d un rappel qui les montre d emblee', () => {
+    const rappel = buildEcranDeroule({
+      id: 'ecran-rappel',
+      type: 'fp-recall',
+      donnees: { delaiMs: 0 },
+    });
+
+    expect(lire(monter(rappel).fixture, 'activite-options-rappel')).toBeNull();
+  });
+
   it('T7 · ne pilote aucune etape sur l exercice travaille non pilote, corrige a l ecran suivant', () => {
     const exercice = buildEcranDeroule({
       id: 'ecran-exercice',

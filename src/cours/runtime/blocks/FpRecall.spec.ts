@@ -136,6 +136,26 @@ describe('FpRecall', () => {
     expect(optionsDe(hote)[0].disabled).toBeTrue();
   });
 
+  it('sans delai, montre les options d emblee, sans champ, consigne ni compte a rebours', () => {
+    hote.delaiMs = 0;
+    const details = soumissionsDe(hote);
+
+    expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
+    expect(hote.shadowRoot?.querySelector('[data-testid="rappel"]')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="consigne"]')).toBeNull();
+    expect(hote.shadowRoot?.querySelector('[data-testid="compte-a-rebours"]')).toBeNull();
+
+    optionsDe(hote)[0].click();
+    expect(details.length).toBe(1);
+    expect(details[0].rappel).toBe('');
+  });
+
+  it('sans delai, garde une consigne servie explicitement', () => {
+    hote.delaiMs = 0;
+    hote.consigne = 'Choisissez le pourcentage';
+    expect(texteOmbre(hote, 'consigne')).toBe('Choisissez le pourcentage');
+  });
+
   it('annonce le compte a rebours dans une region live', () => {
     const compte = hote.shadowRoot?.querySelector('[data-testid="compte-a-rebours"]');
     expect(compte?.getAttribute('aria-live')).toBe('polite');

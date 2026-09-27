@@ -70,6 +70,17 @@ async function taperVite(champ: Locator, texte: string, numero: number): Promise
 export async function natureDeLEcran(page: Page): Promise<NatureDEcran> {
   const zone = principal(page);
   await expect(zone).toBeVisible();
+  await expect
+    .poll(
+      () =>
+        zone.evaluate((element) =>
+          [...element.querySelectorAll<HTMLElement>('[data-testid="slide-activity-host"]')].every(
+            (hote) => hote.hidden || hote.firstElementChild !== null,
+          ),
+        ),
+      { timeout: DELAI_DE_RETOUR_MS },
+    )
+    .toBe(true);
   return zone.evaluate(
     (element, briques) => {
       if (element.querySelector('[data-testid="slide-activity-verrouille"]') !== null) {
@@ -154,7 +165,10 @@ async function questionnaire(zone: Locator, numero: number): Promise<void> {
 
 async function rappel(zone: Locator, numero: number): Promise<void> {
   const bloc = zone.locator('fp-recall');
-  await taperVite(bloc.locator('[data-testid="rappel"]'), texteRapide(numero, 'Rappel'), numero);
+  const champ = bloc.locator('[data-testid="rappel"]');
+  if ((await champ.count()) > 0) {
+    await taperVite(champ, texteRapide(numero, 'Rappel'), numero);
+  }
   await cliquerUneOption(bloc, numero);
   await attendreLeVerdict(bloc);
 }

@@ -25,6 +25,7 @@ export type CoursPresentationMode = 'etudiant' | 'formateur' | 'projection';
 
 const LARGEUR_DE_TOILE = 1280;
 const HAUTEUR_DE_TOILE = 720;
+const PART_DU_RENVOI_POURCENT = 60;
 const LARGEUR_COMPACTE = 700;
 const ECHELLE_LISIBLE = 0.8;
 const ECHELLE_DU_RENVOI_AVANT_MESURE = 0.46;
@@ -48,7 +49,6 @@ interface Mesure {
             class="cours-toile"
             data-testid="cours-toile"
             [class.cours-toile--renvoi]="renvoi() !== null"
-            [style.--part-du-renvoi]="partDuRenvoi()"
             [style.transform]="transformation()"
             [style.block-size.px]="hauteurDeToile()"
           >
@@ -163,6 +163,9 @@ interface Mesure {
       --fp-echelle-imposee: 1;
       --fp-titre-impose: 1.3rem;
       --fp-marge-carte-imposee: 1rem;
+      --fp-cardsort-zone-min: 130px;
+      --slide-stats-colonne-min: 160px;
+      --slide-stats-gouttiere: 1.5rem;
     }
 
     .cours-toile--renvoi .cours-toile__principal {
@@ -171,7 +174,7 @@ interface Mesure {
 
     .cours-renvoi {
       display: flex;
-      flex: 0 0 var(--part-du-renvoi, 50%);
+      flex: 0 0 ${PART_DU_RENVOI_POURCENT}%;
       min-inline-size: 0;
       flex-direction: column;
       justify-content: center;
@@ -301,11 +304,6 @@ export class CoursPresentationComponent {
   protected readonly renvoiAffiche = computed(() => {
     const renvoi = this.renvoi();
     return renvoi === null ? null : extraireDuRenvoi(renvoi, this.slide()?.cadrageDuRenvoi);
-  });
-
-  protected readonly partDuRenvoi = computed(() => {
-    const part = this.slide()?.cadrageDuRenvoi?.part;
-    return part === undefined ? null : `${part}%`;
   });
 
   protected readonly transformationDuRenvoi = computed(() => {

@@ -65,7 +65,7 @@ describe('extraireDuRenvoi', () => {
   it('rend tel quel un écran renvoyé sans extrait', () => {
     const cible = ecran('B2-01-A1-09-DIAPOSITIVE');
 
-    expect(extraireDuRenvoi(cible, { part: 60 })).toBe(cible);
+    expect(extraireDuRenvoi(cible, {})).toBe(cible);
     expect(extraireDuRenvoi(cible, undefined)).toBe(cible);
   });
 
@@ -73,7 +73,7 @@ describe('extraireDuRenvoi', () => {
     const tableau = ecran('B2-01-A1-04-TABLEAU-DE-BORD');
     const avant = JSON.stringify(tableau);
 
-    extraireDuRenvoi(tableau, { part: 30, extrait: { lignes: [3] } });
+    extraireDuRenvoi(tableau, { extrait: { lignes: [3] } });
 
     expect(JSON.stringify(tableau)).toBe(avant);
   });

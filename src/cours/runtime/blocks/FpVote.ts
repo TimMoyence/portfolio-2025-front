@@ -1,5 +1,6 @@
 import type { MetadonneesBrique, VotePhase } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { lignesDeCalculHtml } from './calculs';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
 import { estObjet, lireBonneOption, lireBonneReponse, VerdictsParQuestion } from './retours';
 import { FpVerdicts } from './verdicts';
@@ -51,7 +52,7 @@ function projeter(valeur: VoteQuestionPublique | null): VoteQuestionPublique | n
 }
 
 function elementDeListe(ligne: string): EscapedHtml {
-  return safeHtml`<li>${escapeHtml(ligne)}</li>`;
+  return safeHtml`<li>${lignesDeCalculHtml(ligne)}</li>`;
 }
 
 function lireRevelation(valeur: unknown): Revelation | null {

@@ -101,16 +101,18 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   }
 
   protected rendreLaQuestion(question: RecallQuestionPublique): EscapedHtml {
-    const saisie = this.presentateur()
-      ? escapeHtml('')
-      : safeHtml`<textarea class="fp-recall__champ" data-testid="rappel" rows="4" aria-label="${escapeHtml(this.texte('rappel-champ'))}">${escapeHtml(this.rappel)}</textarea>`;
+    const ecritAvantLesOptions = this.delaiMs > 0;
+    const saisie =
+      this.presentateur() || !ecritAvantLesOptions
+        ? VIDE
+        : safeHtml`<textarea class="fp-recall__champ" data-testid="rappel" rows="4" aria-label="${escapeHtml(this.texte('rappel-champ'))}">${escapeHtml(this.rappel)}</textarea>`;
     const suivi = this.presentateur() ? escapeHtml('') : this.suiviDeLEnvoi();
     return safeHtml`
       <fieldset class="fp-carte fp-scene fp-recall__billet">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
-        <p class="fp-recall__consigne" data-testid="consigne">${escapeHtml(this.consigneAffichee())}</p>
+        ${this.consigneRendue(ecritAvantLesOptions)}
         ${saisie}
-        ${this.compteur()}
+        ${ecritAvantLesOptions ? this.compteur() : VIDE}
         ${this.optionsVisibles()}
         ${suivi}
         ${this.bonneReponseRevelee((bonne) => bonne)}
@@ -118,8 +120,13 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
     `;
   }
 
-  private consigneAffichee(): string {
-    return this.interneConsigne ?? this.texte('rappel-consigne');
+  private consigneRendue(ecritAvantLesOptions: boolean): EscapedHtml {
+    const consigne =
+      this.interneConsigne ?? (ecritAvantLesOptions ? this.texte('rappel-consigne') : null);
+    if (consigne === null) {
+      return VIDE;
+    }
+    return safeHtml`<p class="fp-recall__consigne" data-testid="consigne">${escapeHtml(consigne)}</p>`;
   }
 
   bind(racine: ShadowRoot): void {

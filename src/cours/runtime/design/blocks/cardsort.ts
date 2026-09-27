@@ -20,7 +20,7 @@ export const cardsort = `
 
 :where(.fp-root) .fp-cardsort__zones {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--fp-cardsort-zone-min, 220px)), 1fr));
   gap: var(--fp-s-3);
   align-items: start;
 }

@@ -1,5 +1,6 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { Battement, SECONDE_MS } from './battement';
+import { lignesDeCalculHtml } from './calculs';
 import { FpProduction } from './production';
 import {
   type ContenuDeBrique,
@@ -334,7 +335,7 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
   }
 
   private justification(attendu: AttenduFormateur): EscapedHtml {
-    return safeHtml`<li class="fp-cardsort__attendu" data-testid="cardsort-justification" data-carte="${escapeHtml(attendu.carteId)}"><strong>${escapeHtml(this.libelleCarte(attendu.carteId))} — ${escapeHtml(this.libelleZone(this.zoneConnue(attendu.categorieId)))}</strong> <span class="fp-cardsort__justification">${escapeHtml(attendu.justification)}</span></li>`;
+    return safeHtml`<li class="fp-cardsort__attendu" data-testid="cardsort-justification" data-carte="${escapeHtml(attendu.carteId)}"><strong>${escapeHtml(this.libelleCarte(attendu.carteId))} — ${escapeHtml(this.libelleZone(this.zoneConnue(attendu.categorieId)))}</strong> <span class="fp-cardsort__justification">${lignesDeCalculHtml(attendu.justification)}</span></li>`;
   }
 
   private place(carte: OptionPublique, zone: OptionPublique, interactif: boolean): EscapedHtml {

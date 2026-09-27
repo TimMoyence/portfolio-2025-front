@@ -811,7 +811,7 @@ describe('CoursPresentateurComponent', () => {
     expect(apercu(fixture)).toBe(ecran);
   });
 
-  it('R5 · presente les notes, le guide de facilitation, les participants, puis l activite, la lecture de la classe et la pedagogie', async () => {
+  it('R5 · presente les notes, le guide de facilitation, puis l activite, la lecture de la classe et la pedagogie', async () => {
     const fixture = await ouvrirLaSeanceSur(
       buildDerouleCours({ ecrans: [buildEcranDeroule({ guide: buildGuideFormateur() })] }),
     );
@@ -821,8 +821,7 @@ describe('CoursPresentateurComponent', () => {
       0;
 
     expect(suit('presentateur-notes', 'presentateur-guide')).toBeTrue();
-    expect(suit('presentateur-guide', 'activite-participants')).toBeTrue();
-    expect(suit('activite-participants', 'presentateur-questions')).toBeTrue();
+    expect(suit('presentateur-guide', 'presentateur-questions')).toBeTrue();
     expect(suit('presentateur-questions', 'panneau-exporter-bilan')).toBeTrue();
   });
 
@@ -893,6 +892,21 @@ describe('CoursPresentateurComponent', () => {
         .withContext(panneau.className)
         .toEqual(['20px', '20px']);
     }
+  });
+
+  it('place les participants sous l ecran projete, hors de la colonne des notes', async () => {
+    const fixture = await ouvrirLaSeance();
+    const racine = fixture.nativeElement as HTMLElement;
+    const participants = racine.querySelector('[data-testid="activite-participants"]');
+    const scene = racine.querySelector('.presentateur-stage');
+
+    expect(participants?.closest('.presentateur-sidebar')).toBeNull();
+    expect(participants?.closest('.presentateur-colonne-scene')).not.toBeNull();
+    expect(
+      scene !== null &&
+        participants !== null &&
+        (scene.compareDocumentPosition(participants) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0,
+    ).toBeTrue();
   });
 
   it('F01 · ajuste le panneau de l ecran projete a son apercu, sans vide autour', async () => {
