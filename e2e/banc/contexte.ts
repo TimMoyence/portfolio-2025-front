@@ -82,8 +82,21 @@ async function ouvrirUneSession(request: APIRequestContext): Promise<string> {
 
 let jetonCourant = process.env['BANC_JETON_FORMATEUR'] ?? '';
 
+const MARGE_AVANT_EXPIRATION_MS = 120_000;
+
+function expireBientot(jeton: string): boolean {
+  const charge = jeton.split('.').at(1);
+  if (charge === undefined) {
+    return true;
+  }
+  const { exp } = JSON.parse(Buffer.from(charge, 'base64url').toString('utf8')) as {
+    exp?: number;
+  };
+  return exp === undefined || exp * 1000 - Date.now() < MARGE_AVANT_EXPIRATION_MS;
+}
+
 export function jetonDuFormateur(request: APIRequestContext): Promise<string> {
-  if (jetonCourant !== '') {
+  if (jetonCourant !== '' && !expireBientot(jetonCourant)) {
     return Promise.resolve(jetonCourant);
   }
   jetonPartage ??= ouvrirUneSession(request).then((jeton) => {
@@ -103,16 +116,10 @@ async function ouvrirUneSeance(
   jeton: string,
   corps: Readonly<Record<string, unknown>> = {},
 ): Promise<Seance> {
-  const demander = (autorisation: string): Promise<import('@playwright/test').APIResponse> =>
-    request.post(`${URL_API}/formations/sessions`, {
-      headers: entetesDuFormateur(autorisation),
-      data: { courseSlug: SLUG_B2, ...corps },
-    });
-  let reponse = await demander(jeton);
-  if (reponse.status() === 401) {
-    jetonCourant = '';
-    reponse = await demander(await jetonDuFormateur(request));
-  }
+  const reponse = await request.post(`${URL_API}/formations/sessions`, {
+    headers: entetesDuFormateur(jeton),
+    data: { courseSlug: SLUG_B2, ...corps },
+  });
   expect(reponse.status(), await reponse.text()).toBe(201);
   return (await reponse.json()) as Seance;
 }

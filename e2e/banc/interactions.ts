@@ -202,14 +202,24 @@ async function classement(zone: Locator, numero: number): Promise<void> {
     .evaluateAll((boutons) => boutons.map((bouton) => bouton.getAttribute('data-carte') ?? ''));
   for (const [rang, carteId] of cartes.entries()) {
     const zoneCible = piles[(numero + rang) % piles.length];
+    const pile = bloc.locator(`[data-testid="pile"][data-zone="${zoneCible}"]`);
     const carte = bloc.locator(`[data-testid="carte"][data-carte="${carteId}"]`);
-    if ((numero + rang) % 2 === 0) {
-      await carte.dragTo(bloc.locator(`[data-testid="pile"][data-zone="${zoneCible}"]`));
-    } else {
-      await carte.click();
-      await bloc.locator('[data-testid="cible"]').selectOption(zoneCible);
-      await bloc.locator('[data-testid="deplacer"]').click();
-    }
+    const enPioche = bloc.locator(`[data-testid="pile"][data-zone=""] [data-carte="${carteId}"]`);
+    const placerLaCarte = async (): Promise<void> => {
+      if ((numero + rang) % 2 === 0) {
+        await carte.dragTo(pile);
+      } else {
+        await carte.click();
+        await bloc.locator('[data-testid="cible"]').selectOption(zoneCible);
+        await bloc.locator('[data-testid="deplacer"]').click();
+      }
+    };
+    await expect(async () => {
+      if ((await enPioche.count()) > 0) {
+        await placerLaCarte();
+      }
+      await expect(pile.locator(`[data-carte="${carteId}"]`)).toHaveCount(1, { timeout: 1_000 });
+    }).toPass({ timeout: DELAI_DE_RETOUR_MS });
   }
   await expect(bloc.locator('[data-testid="progression"]')).toHaveText(
     new RegExp(`${cartes.length}\\s*/\\s*${cartes.length}`),
