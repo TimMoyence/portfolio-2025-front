@@ -129,21 +129,27 @@ describe('app routes', () => {
       expect(route?.loadComponent).toBeUndefined();
     });
 
-    it('fait choisir automatiquement l espace B2 selon le rôle', () => {
-      const route = routeDe('formations/b2-01-traitement-information-chiffree');
+    for (const slug of [
+      'b2-01-traitement-information-chiffree',
+      'b2-02-serie-statistique-une-variable',
+    ]) {
+      it(`fait choisir automatiquement l espace de ${slug} selon le rôle`, () => {
+        const route = routeDe(`formations/${slug}`);
 
-      expect(route?.canActivate).toEqual([coursEntreeGuard]);
-      expect(route?.data?.['coursSlug']).toBe('b2-01-traitement-information-chiffree');
-      expect(route?.data?.['robots']).toBe('noindex, nofollow');
-    });
+        expect(route?.canActivate).toEqual([coursEntreeGuard]);
+        expect(route?.data?.['coursSlug']).toBe(slug);
+        expect(route?.data?.['seoKey']).toBe(`formations-${slug}`);
+        expect(route?.data?.['robots']).toBe('noindex, nofollow');
+      });
 
-    it('L1 · ne charge plus de page de lecture libre pour le B2', () => {
-      const route = routeDe('formations/b2-01-traitement-information-chiffree');
+      it(`L1 · ne charge pas de page de lecture libre pour ${slug}`, () => {
+        const route = routeDe(`formations/${slug}`);
 
-      expect(route?.loadComponent).toBeUndefined();
-      expect(route?.component).toBeUndefined();
-      expect(route?.children).toEqual([]);
-    });
+        expect(route?.loadComponent).toBeUndefined();
+        expect(route?.component).toBeUndefined();
+        expect(route?.children).toEqual([]);
+      });
+    }
 
     async function verifieReserveAUnFormateur(chemin: string, nomComposant: string): Promise<void> {
       const route = routeDe(chemin);

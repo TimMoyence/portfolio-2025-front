@@ -11847,6 +11847,24 @@
         <target>Read, check and explain numerical information: proportions, percentages, changes over time. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
+    <unit id="formations-list.b2-02.title">
+      <notes>
+        <note category="location">src/app/features/formations/formations-list.data.ts:79</note>
+      </notes>
+      <segment>
+        <source>B2-02 — Résumer une série sans la trahir</source>
+        <target>B2-02 — Summarising a data series without betraying it</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-02.description">
+      <notes>
+        <note category="location">src/app/features/formations/formations-list.data.ts:80</note>
+      </notes>
+      <segment>
+        <source>Résumer une série statistique : moyenne, médiane, quartiles, écart-type, boîte à moustaches et classes. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Summarise a statistical series: mean, median, quartiles, standard deviation, box plot and classes. To follow in a guided session, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
     <unit id="formations-list.b2.duration">
       <notes>
         <note category="location">src/app/features/formations/formations-list.data.ts:32</note>

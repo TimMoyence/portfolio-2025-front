@@ -1466,6 +1466,74 @@
       }
     },
     {
+      "id": "formations-b2-02-serie-statistique-une-variable",
+      "path": "/formations/b2-02-serie-statistique-une-variable",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-09-27",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Résumer une série sans la trahir",
+          "path": "/formations/b2-02-serie-statistique-une-variable"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Résumer une série sans la trahir — B2 — Tim Moyence",
+          "description": "Formation B2 interactive pour résumer une série statistique : moyenne, médiane, quartiles, écart-type et boîte à moustaches.",
+          "ogTitle": "Résumer une série sans la trahir — B2",
+          "ogDescription": "Un cours interactif pour choisir le bon résumé d’une série et l’expliquer à un tiers.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Résumer une série sans la trahir",
+            "description": "Formation B2 interactive sur la statistique descriptive à une variable.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b2-02-serie-statistique-une-variable"
+          }
+        },
+        "en": {
+          "title": "Summarise a data series without betraying it — B2 — Tim Moyence",
+          "description": "Interactive B2 course to summarise a statistical series: mean, median, quartiles, standard deviation and box plot.",
+          "ogTitle": "Summarise a data series without betraying it — B2",
+          "ogDescription": "An interactive course to choose the right summary of a series and explain it to a third party.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Summarise a data series without betraying it",
+            "description": "Interactive B2 course on one-variable descriptive statistics.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b2-02-serie-statistique-une-variable"
+          }
+        }
+      }
+    },
+    {
       "id": "formations-ia-solopreneurs-toolkit",
       "path": "/formations/ia-solopreneurs/toolkit",
       "index": true,

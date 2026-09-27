@@ -1,0 +1,35 @@
+{
+  "cours": "b2-02",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours-b2-02-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A2-01",
+      "licence": "domaine public",
+      "attribution": "Gravure de Joseph-Arnold Demannez, 1875 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Adolphe_Qu%C3%A9telet_by_Joseph-Arnold_Demannez.jpg",
+      "fichiers": [
+        {
+          "fichier": "quetelet-1875.webp",
+          "octets": 66974,
+          "sha256": "f41ec29843dd81a9a4d21269559f9e9e64172d21ff89453b537ed9b255c2d6f9"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A4-01",
+      "licence": "domaine public",
+      "attribution": "Graham’s Art Studios, vers 1890 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Sir_Francis_Galton,_circa_1890.jpg",
+      "fichiers": [
+        {
+          "fichier": "galton-1890.webp",
+          "octets": 45564,
+          "sha256": "701ce44d152c4df9821410e026e4eeb59043237fac52f882dd778498ebf7f486"
+        }
+      ]
+    }
+  ]
+}

@@ -7,7 +7,8 @@ import {
 } from '../testing/factories/express.factory';
 import { CHEMIN_DU_COURS_B2, SLUG_DU_COURS_B2 } from '../testing/factories/seo-metadata.factory';
 import { lastmodDeLaPage } from '../testing/sitemap-xml';
-import { COURS_SERVIS_PAR_L_API, lecteurDePublicationsDeCours } from './cours-publication';
+import { COURS_BTS } from '../app/core/config/cours-bts';
+import { lecteurDePublicationsDeCours } from './cours-publication';
 import { routeDuSitemap } from './sitemap-route';
 import { buildBaseUrlFromRequest } from './url-utils';
 
@@ -37,7 +38,7 @@ async function sitemap(appels: typeof fetch, journal: Pick<Console, 'warn'>): Pr
     lireArticles: () => Promise.resolve([]),
     lirePublicationsDeCours: lecteurDePublicationsDeCours({
       apiBaseUrl: API,
-      slugs: COURS_SERVIS_PAR_L_API,
+      slugs: COURS_BTS,
       fetch: appels,
       journal,
     }),

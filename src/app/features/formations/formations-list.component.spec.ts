@@ -2,7 +2,21 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { FormationsListComponent } from './formations-list.component';
 import { FORMATION_BENEFITS, FORMATIONS } from './formations-list.data';
 import { INSTANTANE_B2_01 } from '../../../testing/fixtures/instantane-b2-01';
+import { INSTANTANE_B2_02 } from '../../../testing/fixtures/instantane-b2-02';
 import { montagePage } from '../../../testing/montage-page';
+
+const COURS_EN_SEANCE = [
+  {
+    code: 'B2-01',
+    lien: '/formations/b2-01-traitement-information-chiffree',
+    instantane: INSTANTANE_B2_01,
+  },
+  {
+    code: 'B2-02',
+    lien: '/formations/b2-02-serie-statistique-une-variable',
+    instantane: INSTANTANE_B2_02,
+  },
+];
 
 describe('FormationsListComponent', () => {
   const page = montagePage(FormationsListComponent);
@@ -20,7 +34,7 @@ describe('FormationsListComponent', () => {
 
   it('devrait exposer la liste des formations depuis les donnees statiques', () => {
     expect(component['formations']).toBe(FORMATIONS);
-    expect(component['formations'].length).toBe(5);
+    expect(component['formations'].length).toBe(6);
   });
 
   it('devrait composer les sections Asili (hero, grille, format, bande CTA)', () => {
@@ -93,46 +107,48 @@ describe('FormationsListComponent', () => {
     expect(bonusCard).not.toBeNull();
   });
 
-  it('L1 · ne promet plus de lecture libre du B2-01, seulement la séance accompagnée', () => {
-    const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
-
-    expect(b2?.description).not.toContain('librement');
-    expect(b2?.description).toContain('À suivre en séance accompagnée');
+  it('présente en séance exactement les cours BTS servis par l API', () => {
+    expect(
+      FORMATIONS.filter((formation) => formation.variant === 'live').map((carte) => carte.link),
+    ).toEqual(COURS_EN_SEANCE.map((cours) => cours.lien));
   });
 
-  it('L1 · n annonce aucun nombre d écrans, qui suit le contenu servi', () => {
-    const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
-    const annonces = [b2?.badge, b2?.description, ...(b2?.meta.map((row) => row.value) ?? [])];
+  for (const { code, lien, instantane } of COURS_EN_SEANCE) {
+    describe(`carte du ${code}`, () => {
+      const carte = () => FORMATIONS.find((formation) => formation.link === lien);
 
-    expect(annonces.filter((texte) => /\d écrans/.test(texte ?? ''))).toEqual([]);
-  });
+      it('L1 · ne promet pas de lecture libre, seulement la séance accompagnée', () => {
+        expect(carte()?.variant).toBe('live');
+        expect(carte()?.title).toContain(code);
+        expect(carte()?.description).not.toContain('librement');
+        expect(carte()?.description).toContain('À suivre en séance accompagnée');
+      });
 
-  it('L1 · annonce la durée du cours réellement servi', () => {
-    const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
-    const annonce = b2?.meta.find((row) => /^\d+ h \d+$/.test(row.value))?.value ?? '';
-    const [, heures, minutes] = /^(\d+) h (\d+)$/.exec(annonce) ?? [];
-    const { duree } = INSTANTANE_B2_01.sujet;
+      it('L1 · n annonce aucun nombre d écrans, qui suit le contenu servi', () => {
+        const b2 = carte();
+        const annonces = [b2?.badge, b2?.description, ...(b2?.meta.map((row) => row.value) ?? [])];
 
-    expect(Math.abs(Number(heures) * 60 + Number(minutes) - duree)).toBeLessThan(15);
-  });
+        expect(annonces.filter((texte) => /\d écrans/.test(texte ?? ''))).toEqual([]);
+      });
 
-  it('devrait mener au cours B2-01 public et annoncer le déroulé réellement servi', () => {
-    const b2 = FORMATIONS.find((formation) => formation.variant === 'live');
+      it('L1 · annonce la durée du cours réellement servi', () => {
+        const annonce = carte()?.meta.find((row) => /^\d+ h \d+$/.test(row.value))?.value ?? '';
+        const [, heures, minutes] = /^(\d+) h (\d+)$/.exec(annonce) ?? [];
 
-    expect(b2).toBeDefined();
-    expect(b2?.link).toBe('/formations/b2-01-traitement-information-chiffree');
-    expect(b2?.title).toContain('B2-01');
-    expect(b2?.meta.some((row) => row.value === '3 h 30')).toBeTrue();
+        expect(
+          Math.abs(Number(heures) * 60 + Number(minutes) - instantane.sujet.duree),
+        ).toBeLessThan(15);
+      });
 
-    const compiled = fixture.nativeElement as HTMLElement;
-    const card = compiled.querySelector('.formation.formation--live');
-    expect(card).not.toBeNull();
-    expect(card?.textContent).toContain('3 h 30');
-    expect(card?.textContent).not.toMatch(/\d écrans/);
-    expect(card?.querySelector('a')?.getAttribute('href')).toBe(
-      '/formations/b2-01-traitement-information-chiffree',
-    );
-  });
+      it('mène au cours depuis sa carte rendue', () => {
+        const compiled = fixture.nativeElement as HTMLElement;
+        const lienRendu = compiled.querySelector(`.formation.formation--live a[href="${lien}"]`);
+
+        expect(lienRendu).not.toBeNull();
+        expect(lienRendu?.closest('.formation')?.textContent).not.toMatch(/\d écrans/);
+      });
+    });
+  }
 
   it('devrait rendre les trois benefices du format diapo', () => {
     const compiled = fixture.nativeElement as HTMLElement;

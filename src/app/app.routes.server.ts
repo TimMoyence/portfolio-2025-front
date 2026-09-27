@@ -1,4 +1,5 @@
 import { RenderMode, type ServerRoute } from '@angular/ssr';
+import { cheminDuCoursBts, COURS_BTS } from './core/config/cours-bts';
 
 /**
  * Configuration des routes serveur pour le SSR/SSG Angular.
@@ -32,7 +33,10 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'projets', renderMode: RenderMode.Prerender },
   { path: 'articles', renderMode: RenderMode.Server },
   { path: 'articles/:slug', renderMode: RenderMode.Server },
-  { path: 'formations/b2-01-traitement-information-chiffree', renderMode: RenderMode.Client },
+  ...COURS_BTS.map((slug): ServerRoute => ({
+    path: cheminDuCoursBts(slug),
+    renderMode: RenderMode.Client,
+  })),
 
   { path: '**', renderMode: RenderMode.Prerender },
 ];
