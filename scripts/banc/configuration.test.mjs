@@ -7,6 +7,7 @@ import {
   PORTS,
   environnementDeLApi,
   identifiantsDuFormateur,
+  racineDuBack,
   secretAleatoire,
   secretsTropCourts,
   variablesDeBase,
@@ -98,5 +99,26 @@ test('secretAleatoire rend toujours une chaine hexadecimale de la longueur atten
       assert.match(secret, /^[0-9a-f]+$/);
     }),
     { seed: GRAINE, numRuns: 64 },
+  );
+});
+
+test('racineDuBack prend le dépôt back voisin du front par défaut', () => {
+  assert.equal(
+    racineDuBack({ env: {}, racineFront: '/depots/portfolio-2025-front' }),
+    '/depots/portfolio-2025-back',
+  );
+});
+
+test('racineDuBack suit BANC_RACINE_BACK, relatif au front, pour jouer un worktree du back', () => {
+  assert.equal(
+    racineDuBack({
+      env: { BANC_RACINE_BACK: '../wt-back-b2-02' },
+      racineFront: '/depots/wt-front-b2-02',
+    }),
+    '/depots/wt-back-b2-02',
+  );
+  assert.equal(
+    racineDuBack({ env: { BANC_RACINE_BACK: '' }, racineFront: '/depots/portfolio-2025-front' }),
+    '/depots/portfolio-2025-back',
   );
 });

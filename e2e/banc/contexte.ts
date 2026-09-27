@@ -5,7 +5,9 @@ export const URL_API = process.env['BANC_URL_API'] ?? 'http://127.0.0.1:3010/api
 
 export const URL_FRONT = process.env['BANC_URL_FRONT'] ?? 'http://localhost:4010';
 
-const SLUG_B2 = 'b2-01-traitement-information-chiffree';
+const SLUG_B2 = process.env['BANC_COURS'] || 'b2-01-traitement-information-chiffree';
+
+export const CODE_DU_COURS = SLUG_B2.slice(0, 5).toUpperCase();
 
 export const EN_TETE_JETON = 'x-participant-token';
 

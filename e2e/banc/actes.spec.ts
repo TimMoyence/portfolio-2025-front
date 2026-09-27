@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import {
+  CODE_DU_COURS,
   coursReleve,
   posteDansSonNavigateur,
   seanceDemarreeSurLEcran,
@@ -14,7 +15,7 @@ function rangsDeLActe(ecrans: readonly string[], acte: string): readonly number[
   return ecrans.flatMap((id, rang) => (id.includes(`-${acte}-`) ? [rang] : []));
 }
 
-test.describe('Banc — parcours du B2-01 acte par acte', () => {
+test.describe(`Banc — parcours du ${CODE_DU_COURS} acte par acte`, () => {
   for (const [numero, acte] of ACTES.entries()) {
     test(`le poste suit chaque écran de l’acte ${acte} sans erreur ni refus`, async ({
       browser,

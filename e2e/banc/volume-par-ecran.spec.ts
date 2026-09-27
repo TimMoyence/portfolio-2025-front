@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { Browser, Page, Response } from '@playwright/test';
 import {
+  CODE_DU_COURS,
   URL_API,
   coursReleve,
   identiteDuPoste,
@@ -178,7 +179,7 @@ async function veilleEtReprise(
   );
 }
 
-test.describe('Banc — chaque écran du B2-01 tenu par trente postes simultanés', () => {
+test.describe(`Banc — chaque écran du ${CODE_DU_COURS} tenu par trente postes simultanés`, () => {
   test('bascule, gestes, révélations, veille et reprise sans perte', async ({
     browser,
     page,
