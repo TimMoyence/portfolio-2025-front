@@ -14,8 +14,6 @@ export interface DependancesDuLecteur {
   readonly maintenant?: () => number;
 }
 
-export const COURS_SERVIS_PAR_L_API: readonly string[] = ['b2-01-traitement-information-chiffree'];
-
 const DELAI_MS = 2_000;
 const DUREE_DU_CACHE_MS = 300_000;
 const REPLI = 'repli sur le lastmod de seo-metadata.json';

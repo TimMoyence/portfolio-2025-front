@@ -1,3 +1,4 @@
+import { cheminDuCoursBts, COURS_BTS } from '../app/core/config/cours-bts';
 import type { SeoMetadataFile } from '../app/core/seo/seo-metadata.model';
 import seoMetadata from '../assets/seo/seo-metadata.json';
 import { buildLlmsFullTxt, buildLlmsTxt, buildSitemapXml } from './seo-builders';
@@ -108,32 +109,35 @@ describe('isKnownRoute', () => {
   });
 });
 
-describe('seo-metadata.json — parcours B2 servi par le serveur', () => {
-  const METADONNEES = seoMetadata as unknown as SeoMetadataFile;
-  const CHEMIN_B2 = '/formations/b2-01-traitement-information-chiffree';
+for (const slug of COURS_BTS) {
+  describe(`seo-metadata.json — cours ${slug} servi par le serveur`, () => {
+    const METADONNEES = seoMetadata as unknown as SeoMetadataFile;
+    const CHEMIN_B2 = `/${cheminDuCoursBts(slug)}`;
 
-  it('déclare la page B2 comme une route connue', () => {
-    expect(isKnownRoute(CHEMIN_B2, METADONNEES)).toBeTrue();
+    it('déclare la page du cours comme une route connue', () => {
+      expect(isKnownRoute(CHEMIN_B2, METADONNEES)).toBeTrue();
+    });
+
+    it('L1 · ne pose pas de canonique sur la page du cours, qui mène au poste étudiant', () => {
+      const html = injectSeoHead(EMPTY_HTML, METADONNEES, `/fr${CHEMIN_B2}`, BASE_URL);
+
+      expect(html).not.toContain('rel="canonical"');
+    });
+
+    it('L1 · ne publie pas la page du cours au sitemap statique ni à llms.txt', () => {
+      const sitemap = buildSitemapXml(METADONNEES, BASE_URL);
+      const llms = buildLlmsTxt(METADONNEES, BASE_URL);
+      const llmsComplet = buildLlmsFullTxt(METADONNEES, BASE_URL);
+
+      expect([sitemap, llms, llmsComplet].filter((texte) => texte.includes(CHEMIN_B2))).toEqual([]);
+    });
+
+    it('L1 · n annonce aucun nombre d écrans, qui suit le contenu servi', () => {
+      const page = METADONNEES.pages.find((candidate) => candidate.path === CHEMIN_B2);
+      const textes = JSON.stringify(page?.locales);
+
+      expect(page).toBeDefined();
+      expect(textes).not.toMatch(/\d (?:écrans|screens)/);
+    });
   });
-
-  it('L1 · ne pose plus de canonique sur la page B2 retirée, qui mène au poste étudiant', () => {
-    const html = injectSeoHead(EMPTY_HTML, METADONNEES, `/fr${CHEMIN_B2}`, BASE_URL);
-
-    expect(html).not.toContain('rel="canonical"');
-  });
-
-  it('L1 · ne publie plus la page B2 retirée au sitemap ni à llms.txt', () => {
-    const sitemap = buildSitemapXml(METADONNEES, BASE_URL);
-    const llms = buildLlmsTxt(METADONNEES, BASE_URL);
-    const llmsComplet = buildLlmsFullTxt(METADONNEES, BASE_URL);
-
-    expect([sitemap, llms, llmsComplet].filter((texte) => texte.includes(CHEMIN_B2))).toEqual([]);
-  });
-
-  it('L1 · n annonce aucun nombre d écrans, qui suit le contenu servi', () => {
-    const page = METADONNEES.pages.find((candidate) => candidate.path === CHEMIN_B2);
-    const textes = JSON.stringify(page?.locales);
-
-    expect(textes).not.toMatch(/\d (?:écrans|screens)/);
-  });
-});
+}

@@ -4660,6 +4660,20 @@
           <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="formations-list.b2-02.title" datatype="html">
+        <source>B2-02 — Résumer une série sans la trahir</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formations-list.b2-02.description" datatype="html">
+        <source>Résumer une série statistique : moyenne, médiane, quartiles, écart-type, boîte à moustaches et classes. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="formations-list.b2.duration" datatype="html">
         <source>3 h 30</source>
         <context-group purpose="location">

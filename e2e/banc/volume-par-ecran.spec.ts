@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { Browser, Page, Response } from '@playwright/test';
 import {
+  CODE_DU_COURS,
   URL_API,
   coursReleve,
   identiteDuPoste,
@@ -9,6 +10,7 @@ import {
   ouvrirLePupitre,
   posteDansSonNavigateur,
   rejoindreDansLeNavigateur,
+  surLEcran,
 } from './contexte';
 import type { Seance } from './contexte';
 import {
@@ -101,12 +103,6 @@ class Journal {
   }
 }
 
-function surLEcran(page: Page, ecran: number, total: number, delai: number): Promise<void> {
-  return expect(page.getByTestId('etudiant-progression')).toHaveText(`${ecran + 1} / ${total}`, {
-    timeout: delai,
-  });
-}
-
 async function avancer(pupitre: Page, ecran: number, total: number): Promise<void> {
   await pupitre.getByTestId(ecran > 0 ? 'presentateur-suivant' : 'presentateur-demarrer').click();
   await expect(pupitre.getByTestId('presentateur-ecran')).toHaveText(`${ecran + 1} / ${total}`);
@@ -178,7 +174,7 @@ async function veilleEtReprise(
   );
 }
 
-test.describe('Banc — chaque écran du B2-01 tenu par trente postes simultanés', () => {
+test.describe(`Banc — chaque écran du ${CODE_DU_COURS} tenu par trente postes simultanés`, () => {
   test('bascule, gestes, révélations, veille et reprise sans perte', async ({
     browser,
     page,

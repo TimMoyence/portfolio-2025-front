@@ -7,7 +7,8 @@ import {
 } from '../testing/factories/express.factory';
 import { CHEMIN_DU_COURS_B2, SLUG_DU_COURS_B2 } from '../testing/factories/seo-metadata.factory';
 import { lastmodDeLaPage } from '../testing/sitemap-xml';
-import { COURS_SERVIS_PAR_L_API, lecteurDePublicationsDeCours } from './cours-publication';
+import { COURS_BTS } from '../app/core/config/cours-bts';
+import { lecteurDePublicationsDeCours } from './cours-publication';
 import { routeDuSitemap } from './sitemap-route';
 import { buildBaseUrlFromRequest } from './url-utils';
 
@@ -37,13 +38,25 @@ async function sitemap(appels: typeof fetch, journal: Pick<Console, 'warn'>): Pr
     lireArticles: () => Promise.resolve([]),
     lirePublicationsDeCours: lecteurDePublicationsDeCours({
       apiBaseUrl: API,
-      slugs: COURS_SERVIS_PAR_L_API,
+      slugs: COURS_BTS,
       fetch: appels,
       journal,
     }),
     baseUrlDe: buildBaseUrlFromRequest,
   })(buildRequeteExpress(), reponse.express);
   return reponse.corps ?? '';
+}
+
+function catalogueQuiRepond(publieLe?: string): jasmine.Spy<typeof fetch> {
+  return jasmine
+    .createSpy<typeof fetch>('fetch')
+    .and.callFake(() => Promise.resolve(buildReponseDuCatalogue(publieLe)));
+}
+
+function avertiPourChaqueCours(motif: string): jasmine.ArrayContaining<unknown> {
+  return jasmine.arrayWithExactContents(
+    COURS_BTS.map((slug) => [jasmine.stringContaining(`/formations/${slug} : ${motif}`)]),
+  );
 }
 
 function lastmodDuCours(xml: string): string {
@@ -62,35 +75,29 @@ describe('sitemap du cours servi par l API (H1, intégration)', () => {
   });
 
   it('date la page du cours par publieLe quand l API la publie après le dernier commit front', async () => {
-    const appels = jasmine
-      .createSpy<typeof fetch>('fetch')
-      .and.resolveTo(buildReponseDuCatalogue('2026-12-24T07:30:00.000Z'));
+    const appels = catalogueQuiRepond('2026-12-24T07:30:00.000Z');
 
     const xml = await sitemap(appels, journal);
 
-    expect(appels).toHaveBeenCalledOnceWith(
-      `${API}/formations/catalogue/${SLUG_DU_COURS_B2}`,
-      jasmine.anything(),
+    expect(appels.calls.allArgs().map(([url]) => url)).toEqual(
+      COURS_BTS.map((slug) => `${API}/formations/catalogue/${slug}`),
     );
+    expect(COURS_BTS).toContain(SLUG_DU_COURS_B2);
     expect(lastmodDuCours(xml)).toBe('2026-12-24');
     expect(journal.warn).not.toHaveBeenCalled();
   });
 
   it('garde le lastmod du fichier SEO quand la publication lui est antérieure', async () => {
-    const appels = jasmine
-      .createSpy<typeof fetch>('fetch')
-      .and.resolveTo(buildReponseDuCatalogue('2020-01-01T00:00:00.000Z'));
+    const appels = catalogueQuiRepond('2020-01-01T00:00:00.000Z');
 
     expect(lastmodDuCours(await sitemap(appels, journal))).toBe(lastmodDuCoursDansLeFichier());
   });
 
   it('garde le lastmod du fichier SEO quand le back ne renvoie pas encore publieLe', async () => {
-    const appels = jasmine
-      .createSpy<typeof fetch>('fetch')
-      .and.resolveTo(buildReponseDuCatalogue());
+    const appels = catalogueQuiRepond();
 
     expect(lastmodDuCours(await sitemap(appels, journal))).toBe(lastmodDuCoursDansLeFichier());
-    expect(journal.warn).toHaveBeenCalledOnceWith(jasmine.stringContaining('publieLe'));
+    expect(journal.warn.calls.allArgs()).toEqual(avertiPourChaqueCours('publieLe'));
   });
 
   it('abandonne au bout de deux secondes quand l API ne répond pas, sans casser le sitemap', async () => {
@@ -108,6 +115,6 @@ describe('sitemap du cours servi par l API (H1, intégration)', () => {
 
     expect(Date.now() - depart).toBeGreaterThanOrEqual(DELAI_DU_LECTEUR_MS - 50);
     expect(lastmodDuCours(xml)).toBe(lastmodDuCoursDansLeFichier());
-    expect(journal.warn).toHaveBeenCalledOnceWith(jasmine.stringContaining('injoignable'));
+    expect(journal.warn.calls.allArgs()).toEqual(avertiPourChaqueCours('API injoignable'));
   });
 });

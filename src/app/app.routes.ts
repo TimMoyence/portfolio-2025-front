@@ -1,4 +1,5 @@
 import type { Routes } from '@angular/router';
+import { cheminDuCoursBts, cleSeoDuCoursBts, COURS_BTS } from './core/config/cours-bts';
 import { authGuard } from './core/guards/auth.guard';
 import { coursEntreeGuard } from './core/guards/cours-entree.guard';
 import { roleGuard } from './core/guards/role.guard';
@@ -217,16 +218,16 @@ export const routes: Routes = [
       seoKey: 'formations-ia-solopreneurs',
     },
   },
-  {
-    path: 'formations/b2-01-traitement-information-chiffree',
+  ...COURS_BTS.map((slug) => ({
+    path: cheminDuCoursBts(slug),
     canActivate: [coursEntreeGuard],
     children: [],
     data: {
-      seoKey: 'formations-b2-01-traitement-information-chiffree',
-      coursSlug: 'b2-01-traitement-information-chiffree',
+      seoKey: cleSeoDuCoursBts(slug),
+      coursSlug: slug,
       robots: 'noindex, nofollow',
     },
-  },
+  })),
   {
     path: 'formations/automatiser-avec-ia',
     loadComponent: () =>

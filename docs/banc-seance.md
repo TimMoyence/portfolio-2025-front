@@ -3,14 +3,24 @@
 Les suites Playwright du portail (`e2e/cours-*.spec.ts`) jouent sur des réponses HTTP
 bouchonnées : elles prouvent que le front réagit correctement à un contrat, pas que ce contrat
 est celui du serveur. Le banc comble ce trou. Il lève PostgreSQL, Redis, l'API NestJS et le front
-en rendu serveur, puis joue une séance du cours B2-01 dans de vrais navigateurs, sans aucun
+en rendu serveur, puis joue une séance d'un cours BTS dans de vrais navigateurs, sans aucun
 bouchon : ce qui traverse le réseau est ce que produit le back, sur une base migrée.
 
 ## Lancer le banc
 
 ```bash
 npm run test:banc
+BANC_COURS=b2-02-serie-statistique-une-variable npm run test:banc
+BANC_COURS=b2-02-serie-statistique-une-variable BANC_RACINE_BACK=../wt-back-b2-02 npm run test:banc
 ```
+
+| Variable           | Défaut                                  | Rôle                                                       |
+| ------------------ | --------------------------------------- | ---------------------------------------------------------- |
+| `BANC_COURS`       | `b2-01-traitement-information-chiffree` | slug du cours joué ; les scénarios ne dépendent que de lui |
+| `BANC_RACINE_BACK` | `../portfolio-2025-back`                | dépôt back construit et lancé, relatif au front (worktree) |
+
+Un nouveau cours se joue sans toucher aux scénarios : il suffit qu'il soit servi par le back
+choisi.
 
 Une seule commande. Elle monte tout, joue les scénarios et redescend tout, y compris en cas
 d'échec et sur `Ctrl+C`.

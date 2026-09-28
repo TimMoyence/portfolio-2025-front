@@ -15,6 +15,7 @@ import {
   URL_FRONT,
   environnementDeLApi,
   identifiantsDuFormateur,
+  racineDuBack,
   secretAleatoire,
   secretsTropCourts,
   variablesDeBase,
@@ -22,7 +23,7 @@ import {
 
 const RACINE_FRONT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
-const RACINE_BACK = resolve(RACINE_FRONT, '../portfolio-2025-back');
+const RACINE_BACK = racineDuBack({ env: process.env, racineFront: RACINE_FRONT });
 
 const COMPOSE = resolve(RACINE_FRONT, 'scripts/banc/banc.compose.yaml');
 

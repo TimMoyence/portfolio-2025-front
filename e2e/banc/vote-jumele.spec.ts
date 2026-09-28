@@ -33,8 +33,10 @@ let sansCorrige: EcranRepere;
 async function seanceDuFichier(request: APIRequestContext): Promise<SeanceOuverte> {
   return seancePartagee('vote-jumele', async () => {
     const { votes, recitsSansActivite } = await coursReleve(request);
-    [principale, suivant] = votes;
-    expect(principale.jumelle, 'le premier vote n’a pas de question jumelle').not.toBeNull();
+    const rangDuJumele = votes.findIndex((vote) => vote.jumelle !== null);
+    expect(rangDuJumele, 'aucun vote à question jumelle').toBeGreaterThanOrEqual(0);
+    [principale, suivant] = votes.slice(rangDuJumele);
+    expect(suivant, 'aucun vote après le vote à question jumelle').toBeDefined();
     [sansCorrige] = recitsSansActivite;
     return seanceDemarreeSurLEcran(request, principale.rang);
   });

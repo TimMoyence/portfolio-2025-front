@@ -1,44 +1,20 @@
-import type {
-  CoursContent,
-  DerouleCours,
-  EcranContent,
-  EcranDeroule,
-} from '../../cours/content/types';
-import {
-  type DerouleDuFil,
-  derouleDuFil,
-  type SujetDuFil,
-  sujetDuFil,
-} from '../../app/core/adapters/formations-fil';
+import type { EcranContent, EcranDeroule } from '../../cours/content/types';
 import fichier from './b2-01.instantane.json';
+import {
+  ecransDuPupitreDe,
+  ecransPublicsDe,
+  type InstantaneDuCoursB2,
+  lireInstantaneDuFil,
+} from './instantane-de-cours';
 
-export interface InstantaneDuCoursB2 {
-  readonly graine: number;
-  readonly empreinte: string;
-  readonly sujet: CoursContent;
-  readonly deroule: DerouleCours;
-  readonly catalogue: CoursContent;
-}
+export type { InstantaneDuCoursB2 } from './instantane-de-cours';
 
-interface InstantaneDuFil extends Omit<InstantaneDuCoursB2, 'sujet' | 'deroule' | 'catalogue'> {
-  readonly sujet: SujetDuFil;
-  readonly deroule: DerouleDuFil;
-  readonly catalogue: SujetDuFil;
-}
-
-const DU_FIL = fichier as unknown as InstantaneDuFil;
-
-export const INSTANTANE_B2_01: InstantaneDuCoursB2 = {
-  ...DU_FIL,
-  sujet: sujetDuFil(DU_FIL.sujet),
-  deroule: derouleDuFil(DU_FIL.deroule),
-  catalogue: sujetDuFil(DU_FIL.catalogue),
-};
+export const INSTANTANE_B2_01: InstantaneDuCoursB2 = lireInstantaneDuFil(fichier);
 
 export function ecransPublicsB2_01(): readonly EcranContent[] {
-  return INSTANTANE_B2_01.sujet.ecrans;
+  return ecransPublicsDe(INSTANTANE_B2_01);
 }
 
 export function ecransDuPupitreB2_01(): readonly EcranDeroule[] {
-  return INSTANTANE_B2_01.deroule.ecrans;
+  return ecransDuPupitreDe(INSTANTANE_B2_01);
 }

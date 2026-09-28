@@ -1,4 +1,15 @@
+import { resolve } from 'node:path';
+
 export const PROJET_COMPOSE = 'portfolio2025-banc';
+
+/**
+ * @param {{ env: Record<string, string | undefined>, racineFront: string }} entree
+ * @returns {string}
+ */
+export function racineDuBack({ env, racineFront }) {
+  const declaree = env['BANC_RACINE_BACK'];
+  return resolve(racineFront, declaree || '../portfolio-2025-back');
+}
 
 export const PORTS = Object.freeze({
   base: 55433,

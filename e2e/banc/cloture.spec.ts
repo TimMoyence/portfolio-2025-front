@@ -6,6 +6,7 @@ import {
   optionsDuPoste,
   ouvrirLePupitre,
   posteDansSonNavigateur,
+  surLEcran,
   verdictDuPoste,
 } from './contexte';
 
@@ -36,6 +37,7 @@ test.describe('Banc — clôture et synthèse', () => {
     await avancerLePupitre(page, 0, vote.rang, total);
 
     for (const poste of postes) {
+      await surLEcran(poste, vote.rang, total);
       await expect(optionsDuPoste(poste).first()).toBeVisible();
       await optionsDuPoste(poste).first().click();
       await expect(verdictDuPoste(poste)).toHaveCount(1);
