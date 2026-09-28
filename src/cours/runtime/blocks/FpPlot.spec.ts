@@ -334,6 +334,28 @@ describe('FpPlot', () => {
     expect(texteDe(hote, 'rapport-hauteurs')).toBe('×7');
   });
 
+  it('E13 · n imprime pas l évolution réelle, que la feuille demande de calculer', () => {
+    hote.definition = buildPlotEnBarres();
+    hote.setAttribute('data-papier', '');
+
+    expect(texteDe(hote, 'rapport-hauteurs')).toBe('×7');
+    expect(repere(hote, 'evolution-reelle')).toBeNull();
+    expect(texteDe(hote, 'rapport')).not.toContain('évolution réelle');
+  });
+
+  it('imprime la consigne papier à la place de la consigne de réglage', () => {
+    hote.definition = buildPlotDefinition({
+      description: 'Réglez le taux.',
+      descriptionPapier: 'Lisez la figure.',
+    });
+
+    expect(texteDe(hote, 'description')).toBe('Réglez le taux.');
+
+    hote.setAttribute('data-papier', '');
+
+    expect(texteDe(hote, 'description')).toBe('Lisez la figure.');
+  });
+
   it('E13 · refuse un rapport des hauteurs ou une évolution sans base significative', () => {
     hote.definition = buildPlotEnBarres({
       series: [{ id: 'marge', libelle: 'Marge brute', trait: 'plein', calcul: '290000-3000*x' }],

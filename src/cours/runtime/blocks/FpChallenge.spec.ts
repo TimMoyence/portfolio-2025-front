@@ -104,6 +104,23 @@ describe('FpChallenge', () => {
     expect(hote.shadowRoot?.querySelectorAll('textarea, button').length).toBe(0);
   });
 
+  it('imprime au corrigé papier les stratégies de référence, sans attendre la révélation', () => {
+    hote.corrige = CORRIGE_DU_DEFI;
+    hote.setAttribute('data-papier', '');
+    expect(strategiesDe(hote).length).toBe(0);
+
+    hote.setAttribute('data-cours-role', 'presentateur');
+
+    expect(strategiesDe(hote).map((ligne) => ligne.getAttribute('data-strategie'))).toEqual(
+      CORRIGE_DU_DEFI.strategies.map((strategie) => strategie.id),
+    );
+
+    hote.corrige = { type: 'defi', strategies: buildStrategiesServies() };
+
+    expect(strategiesDe(hote).length).toBe(2);
+    expect(hote.shadowRoot?.querySelector('[data-testid="attente-revelation"]')).toBeNull();
+  });
+
   it('R4 · rappelle le dossier chiffré pour chaque rôle, sans en échapper le contenu', () => {
     hote.probleme = buildChallengeProbleme({
       id: 'D-DEFI-RAPPEL',

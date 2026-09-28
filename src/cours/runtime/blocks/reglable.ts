@@ -162,10 +162,11 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
 
   protected panneauDeReglages(declencheurs: EscapedHtml): EscapedHtml {
     const bloc = escapeHtml(this.bloc);
+    const papier = this.surPapier();
     return safeHtml`
       <fieldset class="fp-${bloc}__reglages">
-        <legend>${escapeHtml(this.texteDuBloc('reglages'))}</legend>
-        ${declencheurs}
+        <legend>${escapeHtml(this.texteDuBloc(papier ? 'reglages-papier' : 'reglages'))}</legend>
+        ${papier ? safeHtml`` : declencheurs}
         <div class="fp-${bloc}__parametres" aria-live="polite">
           ${(this.interne?.parametres ?? []).map((parametre) => this.parametreAffiche(parametre))}
         </div>
@@ -197,7 +198,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
     return safeHtml`
       <div class="fp-${bloc}__parametre" data-testid="parametre" data-cle="${escapeHtml(parametre.cle)}">
         <span class="fp-${bloc}__etiquette">${escapeHtml(parametre.libelle)}</span>
-        ${curseur(prefixe, parametre, valeur, enonce)}
+        ${this.surPapier() ? safeHtml`` : curseur(prefixe, parametre, valeur, enonce)}
         <output class="fp-${bloc}__valeur fp-montant" data-testid="valeur" data-cle="${escapeHtml(parametre.cle)}" aria-label="${escapeHtml(enonce)}">${escapeHtml(this.afficherValeur(valeur))}</output>
       </div>
     `;

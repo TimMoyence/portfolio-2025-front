@@ -13776,6 +13776,12 @@
         <target>Vary the rates and watch the end value.</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeConcept4ReglagesPapier">
+      <segment>
+        <source>Valeurs retenues pour le calcul</source>
+        <target>Values used for the calculation</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimeConcept4Animer">
       <segment>
         <source>Animer le calcul</source>

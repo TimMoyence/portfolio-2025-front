@@ -36,6 +36,7 @@ export interface PlotSerie {
 export interface PlotDefinition extends DefinitionReglable {
   readonly titre?: string;
   readonly description?: string;
+  readonly descriptionPapier?: string;
   readonly source?: string;
   readonly sourceUrl?: string;
   readonly abscisse: PlotAxe;
@@ -154,6 +155,7 @@ function copierDefinition(source: PlotDefinition): PlotDefinition {
     ...copierLeReglable(source),
     titre: source.titre,
     description: source.description,
+    descriptionPapier: source.descriptionPapier,
     source: source.source,
     sourceUrl: source.sourceUrl,
     abscisse: {
@@ -280,7 +282,8 @@ export class FpPlot extends FpReglable<PlotDefinition> {
   }
 
   private description(): EscapedHtml {
-    const description = this.interne?.description;
+    const description =
+      (this.surPapier() ? this.interne?.descriptionPapier : undefined) ?? this.interne?.description;
     if (description === undefined || description.trim().length === 0) {
       return safeHtml``;
     }
@@ -491,11 +494,15 @@ export class FpPlot extends FpReglable<PlotDefinition> {
       premiere.ordonnee > plancher && derniere.ordonnee >= plancher
         ? `×${formater(hauteurs)}`
         : '—';
-    const evolution =
-      premiere.ordonnee === 0
-        ? '—'
-        : EVOLUTION.format((derniere.ordonnee - premiere.ordonnee) / premiere.ordonnee);
-    return safeHtml`<p class="fp-plot__rapport" data-testid="rapport" aria-live="${escapeHtml(vivant ? 'polite' : 'off')}">${escapeHtml(this.texte('plot-rapport-hauteurs'))} ${escapeHtml(this.etiquette(derniere.abscisse))} ${escapeHtml(this.texte('plot-rapport-a'))} ${escapeHtml(this.etiquette(premiere.abscisse))} : <strong class="fp-plot__chiffre-cle" data-testid="rapport-hauteurs">${escapeHtml(rapport)}</strong> — ${escapeHtml(this.texte('plot-evolution-reelle'))} : <strong class="fp-plot__chiffre-cle" data-testid="evolution-reelle">${escapeHtml(evolution)}</strong></p>`;
+    return safeHtml`<p class="fp-plot__rapport" data-testid="rapport" aria-live="${escapeHtml(vivant ? 'polite' : 'off')}">${escapeHtml(this.texte('plot-rapport-hauteurs'))} ${escapeHtml(this.etiquette(derniere.abscisse))} ${escapeHtml(this.texte('plot-rapport-a'))} ${escapeHtml(this.etiquette(premiere.abscisse))} : <strong class="fp-plot__chiffre-cle" data-testid="rapport-hauteurs">${escapeHtml(rapport)}</strong>${this.evolutionReelle(premiere.ordonnee, derniere.ordonnee)}</p>`;
+  }
+
+  private evolutionReelle(depart: number, arrivee: number): EscapedHtml {
+    if (this.surPapier()) {
+      return safeHtml``;
+    }
+    const evolution = depart === 0 ? '—' : EVOLUTION.format((arrivee - depart) / depart);
+    return safeHtml` — ${escapeHtml(this.texte('plot-evolution-reelle'))} : <strong class="fp-plot__chiffre-cle" data-testid="evolution-reelle">${escapeHtml(evolution)}</strong>`;
   }
 
   private enteteAbscisse(abscisse: number): string {

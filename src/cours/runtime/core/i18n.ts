@@ -46,6 +46,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeProReponseVide:Répondez à chaque question avant de valider`,
   'concept4-reglages': () =>
     $localize`:@@coursRuntimeConcept4Reglages:Faites varier les taux et observez l’arrivée.`,
+  'concept4-reglages-papier': () =>
+    $localize`:@@coursRuntimeConcept4ReglagesPapier:Valeurs retenues pour le calcul`,
   'concept4-animer': () => $localize`:@@coursRuntimeConcept4Animer:Animer le calcul`,
   'concept4-prereglages': () =>
     $localize`:@@coursRuntimeConcept4Prereglages:Couples de taux à comparer`,
