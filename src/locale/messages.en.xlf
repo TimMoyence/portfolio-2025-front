@@ -14946,5 +14946,89 @@
         <target> Print or save as PDF </target>
       </segment>
     </unit>
+    <unit id="livretEchec">
+      <segment>
+        <source> Le livret de ce cours n’a pas pu être chargé. Vérifiez la connexion, puis rechargez la page. </source>
+        <target> This course booklet could not be loaded. Check the connection, then reload the page. </target>
+      </segment>
+    </unit>
+    <unit id="livretKicker">
+      <segment>
+        <source>Livret papier</source>
+        <target>Printable booklet</target>
+      </segment>
+    </unit>
+    <unit id="livretVersion">
+      <segment>
+        <source> Version publiée n° <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ lu.version }}"/> </source>
+        <target> Published version <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ lu.version }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="livretVueAria">
+      <segment>
+        <source>Vue du livret</source>
+        <target>Booklet view</target>
+      </segment>
+    </unit>
+    <unit id="livretVueSujet">
+      <segment>
+        <source> Livret étudiant </source>
+        <target> Student booklet </target>
+      </segment>
+    </unit>
+    <unit id="livretVueCorrige">
+      <segment>
+        <source> Corrigé formateur </source>
+        <target> Teacher answer key </target>
+      </segment>
+    </unit>
+    <unit id="livretImprimer">
+      <segment>
+        <source> Imprimer </source>
+        <target> Print </target>
+      </segment>
+    </unit>
+    <unit id="presentateurLivret">
+      <segment>
+        <source> Livret papier </source>
+        <target> Printable booklet </target>
+      </segment>
+    </unit>
+    <unit id="livretGuideADire">
+      <segment>
+        <source>À dire</source>
+        <target>To say</target>
+      </segment>
+    </unit>
+    <unit id="livretGuideQuestion">
+      <segment>
+        <source>Question à poser</source>
+        <target>Question to ask</target>
+      </segment>
+    </unit>
+    <unit id="livretGuideReponse">
+      <segment>
+        <source>Réponse attendue</source>
+        <target>Expected answer</target>
+      </segment>
+    </unit>
+    <unit id="livretGuideCalcul">
+      <segment>
+        <source>Calcul</source>
+        <target>Calculation</target>
+      </segment>
+    </unit>
+    <unit id="livretGuideRelance">
+      <segment>
+        <source>Relance</source>
+        <target>Follow-up prompt</target>
+      </segment>
+    </unit>
+    <unit id="livretGuideTransition">
+      <segment>
+        <source>Transition</source>
+        <target>Moving on</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

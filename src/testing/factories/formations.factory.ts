@@ -13,6 +13,7 @@ import type { SpacedQuestionPublique } from '../../cours/runtime/blocks/donnees-
 import type {
   AnnotationFormateur,
   FormationsPort,
+  LivretDuCours,
   ParticipantDeSeance,
   RapportSeance,
   Rattachement,
@@ -289,10 +290,20 @@ export function buildParticipantDeSeance(
   };
 }
 
+export function buildLivretDuCours(overrides: Partial<LivretDuCours> = {}): LivretDuCours {
+  return {
+    version: 1,
+    sujet: buildCoursContent(),
+    corrige: buildDerouleCours(),
+    ...overrides,
+  };
+}
+
 export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   const port = jasmine.createSpyObj<FormationsPort>('FormationsPort', [
     'ouvrirSeance',
     'lireDeroule',
+    'lireLivret',
     'lireSujet',
     'demarrer',
     'piloter',
@@ -322,6 +333,7 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   ]);
   port.ouvrirSeance.and.returnValue(of({ sessionId: 'seance-1', code: '4821' }));
   port.lireDeroule.and.returnValue(of(buildDerouleCours()));
+  port.lireLivret.and.returnValue(of(buildLivretDuCours()));
   port.lireSujet.and.returnValue(of(buildCoursContent()));
   port.demarrer.and.returnValue(of(undefined));
   port.piloter.and.returnValue(of(undefined));

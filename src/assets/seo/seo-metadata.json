@@ -2193,6 +2193,28 @@
       }
     },
     {
+      "id": "cours-livret",
+      "path": "/cours/presenter/:slug/livret",
+      "index": false,
+      "changefreq": "never",
+      "priority": 0,
+      "lastmod": "2026-09-28",
+      "locales": {
+        "fr": {
+          "title": "Livret papier du cours",
+          "description": "Livret étudiant et corrigé formateur d'un cours, prêts à imprimer pour une séance sur papier.",
+          "ogTitle": "Livret papier du cours",
+          "ogDescription": "Livret étudiant et corrigé formateur prêts à imprimer."
+        },
+        "en": {
+          "title": "Printable course booklet",
+          "description": "Student booklet and teacher answer key for a course, ready to print for a paper session.",
+          "ogTitle": "Printable course booklet",
+          "ogDescription": "Student booklet and teacher answer key, ready to print."
+        }
+      }
+    },
+    {
       "id": "cours-scene",
       "path": "/cours/presenter/:slug/scene/:sessionId",
       "index": false,

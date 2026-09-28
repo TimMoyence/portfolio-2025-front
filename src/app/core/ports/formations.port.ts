@@ -17,6 +17,12 @@ import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donne
 
 export type ValeurReponse = number | string;
 
+export interface LivretDuCours {
+  version: number;
+  sujet: CoursContent;
+  corrige: DerouleCours;
+}
+
 export interface SeanceOuverte {
   sessionId: string;
   code: string;
@@ -318,6 +324,7 @@ export class ReponseLibreRefusee extends Error {
 export interface FormationsPort {
   ouvrirSeance(courseSlug: string, options?: { capacite?: number }): Observable<SeanceOuverte>;
   lireDeroule(sessionId: string): Observable<DerouleCours>;
+  lireLivret(courseSlug: string): Observable<LivretDuCours>;
   lireSujet(sessionId: string, jeton: string): Observable<CoursContent>;
   demarrer(sessionId: string): Observable<void>;
   piloter(sessionId: string, commande: CommandePilotage): Observable<void>;

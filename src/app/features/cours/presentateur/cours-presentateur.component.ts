@@ -96,6 +96,7 @@ const ETAT_ANNONCE: Readonly<Record<StatutSession, EtatSeance>> = {
 };
 
 const FENETRE_SCENE = 'cours-scene';
+const FENETRE_LIVRET = 'cours-livret';
 const ECRAN_DE_RAPPEL = 'fp-spaced';
 
 function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
@@ -451,6 +452,15 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                 i18n="presentateur.pleinEcran|@@presentateurPleinEcran"
               >
                 Projection plein écran
+              </button>
+              <button
+                type="button"
+                class="control-btn"
+                data-testid="presentateur-livret"
+                (click)="ouvrirLeLivret()"
+                i18n="presentateur.livret|@@presentateurLivret"
+              >
+                Livret papier
               </button>
             </nav>
             <div class="screen-progress">
@@ -918,6 +928,14 @@ export class CoursPresentateurComponent {
     }
     const chemin = `/cours/presenter/${encodeURIComponent(this.slug())}/scene/${encodeURIComponent(session)}`;
     window.open(this.location.prepareExternalUrl(chemin), FENETRE_SCENE);
+  }
+
+  protected ouvrirLeLivret(): void {
+    if (!this.navigateur) {
+      return;
+    }
+    const chemin = `/cours/presenter/${encodeURIComponent(this.slug())}/livret`;
+    window.open(this.location.prepareExternalUrl(chemin), FENETRE_LIVRET);
   }
 
   protected demanderLaCloture(): void {
