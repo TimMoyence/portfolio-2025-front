@@ -5,7 +5,13 @@ import { attendreQue, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-mo
 import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
+  INSTANTANE_B2_01,
 } from '../../../../testing/fixtures/instantane-b2-01';
+import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
+import {
+  ecransDuPupitreDe,
+  ecransPublicsDe,
+} from '../../../../testing/fixtures/instantane-de-cours';
 import { chargerLesPolicesDeLApplication } from '../../../../testing/polices';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
@@ -14,6 +20,11 @@ import {
 } from './cours-presentation.component';
 
 const POSTES = ['cours-etudiant', 'cours-presentateur'] as const;
+
+const COURS_MESURES = [
+  { code: 'B2-01', instantane: INSTANTANE_B2_01, ecransAuMoins: 50, renvoisAuMoins: 5 },
+  { code: 'B2-02', instantane: INSTANTANE_B2_02, ecransAuMoins: 30, renvoisAuMoins: 3 },
+] as const;
 
 @Component({
   standalone: true,
@@ -89,10 +100,10 @@ async function monterDansUnCadre(
 
 async function fautesDesEcrans(
   ecrans: readonly EcranContent[],
+  pupitre: readonly EcranContent[],
   monter: (ecran: EcranContent, renvoi: EcranContent | null) => Promise<EcranCadre>,
   constater: (ecran: EcranContent, monte: EcranCadre) => Promise<string | null> | string | null,
 ): Promise<string[]> {
-  const pupitre = ecransDuPupitreB2_01();
   const fautes: string[] = [];
   for (const ecran of ecrans) {
     const monte = await monter(ecran, pupitre.find(({ id }) => id === ecran.renvoi) ?? null);
@@ -182,59 +193,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     }
   }
 
-  for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
-    it(
-      `T2 · T3 · G01 · chaque écran du B2-01 tient sur une toile 1280 × 720 en ${mode}, sans défilement interne ni tassement`,
-      async () => {
-        const ecrans = mode === 'etudiant' ? ecransPublicsB2_01() : ecransDuPupitreB2_01();
-        const fautes = await fautesDesEcrans(
-          ecrans,
-          (ecran, renvoi) => monterDansUnCadre(ecran, mode, 1280, 720, renvoi),
-          (ecran, monte) => {
-            const toile = monte.toile();
-            const horsToile = elementsPerdus(monte);
-            const defileurs = toile === null ? [] : defileursInternes(toile);
-            const echelle = echelleDuContenu(toile);
-            return horsToile.length > 0 || defileurs.length > 0 || echelle < ECHELLE_MINIMALE
-              ? `${ecran.id} ${mode} hors=${horsToile.join(',')} defile=${defileurs.join(',')} echelle=${echelle}`
-              : null;
-          },
-        );
-
-        expect(ecrans.length).withContext('écrans du B2-01').toBeGreaterThan(50);
-        expect(fautes).toEqual([]);
-      },
-      DELAI_DE_MONTAGE_MS,
-    );
-  }
-
-  it(
-    'G01 · sur un portable 14 pouces, chaque écran étudiant du B2-01 tient dans son cadre sans défiler, à une taille lisible',
-    async () => {
-      const fautes = await fautesDesEcrans(
-        ecransPublicsB2_01(),
-        (ecran, renvoi) =>
-          monterDansUnCadre(
-            ecran,
-            'etudiant',
-            CADRE_ETUDIANT_14_POUCES.largeur,
-            CADRE_ETUDIANT_14_POUCES.hauteur,
-            renvoi,
-          ),
-        (ecran, monte) => {
-          const defile = monte.cadre.scrollHeight > monte.cadre.clientHeight + 1;
-          const horsToile = elementsHorsToile(monte);
-          const echelle = echelleAffichee(monte);
-          return defile || horsToile.length > 0 || echelle < ECHELLE_MINIMALE - 0.001
-            ? `${ecran.id} defile=${String(defile)} hors=${horsToile.join(',')} echelle=${echelle.toFixed(3)}`
-            : null;
-        },
-      );
-
-      expect(fautes).toEqual([]);
-    },
-    DELAI_DE_MONTAGE_MS,
-  );
+  COURS_MESURES.forEach(decrireLaTenueDuCours);
 
   it('G01 · au poste étudiant, le contenu d une toile réduite garde 0,8 et celui d une toile agrandie s affiche au moins à 0,8', async () => {
     const jeu = ecransPublicsB2_01().find(({ id }) => id.endsWith(ECRAN_TROP_LONG));
@@ -290,26 +249,33 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     monte.detruire();
   });
 
-  for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
-    it(
-      `T1 · chaque écran à renvoi tient entier dans sa demi-toile en ${mode}, titre compris`,
-      async () => {
-        const aRenvoi = ecransDuPupitreB2_01().filter(({ renvoi }) => renvoi !== undefined);
-        expect(aRenvoi.length).withContext('écrans à renvoi du B2-01').toBeGreaterThan(5);
-        const coupes = await fautesDesEcrans(
-          aRenvoi,
-          (ecran, renvoi) => monterDansUnCadre(ecran, mode, 1280, 720, renvoi),
-          async (ecran, monte) => {
-            await new Promise((suite) => setTimeout(suite, 50));
-            const horsToile = elementsPerdus(monte);
-            return horsToile.length > 0 ? `${ecran.id} (${horsToile.join(',')})` : null;
-          },
-        );
+  for (const { code, instantane, renvoisAuMoins } of COURS_MESURES) {
+    const pupitre = ecransDuPupitreDe(instantane);
 
-        expect(coupes).toEqual([]);
-      },
-      DELAI_DE_MONTAGE_MS,
-    );
+    for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
+      it(
+        `T1 · chaque écran à renvoi du ${code} tient entier dans sa demi-toile en ${mode}, titre compris`,
+        async () => {
+          const aRenvoi = pupitre.filter(({ renvoi }) => renvoi !== undefined);
+          expect(aRenvoi.length)
+            .withContext(`écrans à renvoi du ${code}`)
+            .toBeGreaterThan(renvoisAuMoins);
+          const coupes = await fautesDesEcrans(
+            aRenvoi,
+            pupitre,
+            (ecran, renvoi) => monterDansUnCadre(ecran, mode, 1280, 720, renvoi),
+            async (ecran, monte) => {
+              await new Promise((suite) => setTimeout(suite, 50));
+              const horsToile = elementsPerdus(monte);
+              return horsToile.length > 0 ? `${ecran.id} (${horsToile.join(',')})` : null;
+            },
+          );
+
+          expect(coupes).toEqual([]);
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
   }
 
   for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
@@ -402,37 +368,42 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     monte.detruire();
   });
 
-  it(
-    'R3 · donne à chaque diapositive commentée 60 % de la toile, et la fait remplir son cadre',
-    async () => {
-      const fautes = await fautesDesEcrans(
-        ecransDuPupitreB2_01().filter(({ renvoi }) => renvoi !== undefined),
-        (ecran, renvoi) => monterDansUnCadre(ecran, 'projection', 1280, 720, renvoi),
-        async (ecran, monte) => {
-          await new Promise((suite) => setTimeout(suite, 50));
-          const miniature = monte
-            .toile()
-            ?.querySelector<HTMLElement>('[data-testid="cours-renvoi"]');
-          const colonne = miniature?.getBoundingClientRect();
-          const cadre = miniature?.querySelector('.cours-renvoi__cadre')?.getBoundingClientRect();
-          const contenu = miniature
-            ?.querySelector('.cours-renvoi__toile app-slide-activity')
-            ?.getBoundingClientRect();
-          const part = 60;
-          const remplissage =
-            cadre === undefined || contenu === undefined
-              ? 0
-              : Math.max(contenu.width / cadre.width, contenu.height / cadre.height);
-          return Math.abs((colonne?.width ?? 0) - (1280 * part) / 100) > 1 || remplissage < 0.9
-            ? `${ecran.id} colonne=${colonne?.width} part=${part} remplissage=${remplissage.toFixed(2)}`
-            : null;
-        },
-      );
+  for (const { code, instantane } of COURS_MESURES) {
+    const pupitre = ecransDuPupitreDe(instantane);
 
-      expect(fautes).toEqual([]);
-    },
-    DELAI_DE_MONTAGE_MS,
-  );
+    it(
+      `R3 · donne à chaque diapositive commentée du ${code} 60 % de la toile, et la fait remplir son cadre`,
+      async () => {
+        const fautes = await fautesDesEcrans(
+          pupitre.filter(({ renvoi }) => renvoi !== undefined),
+          pupitre,
+          (ecran, renvoi) => monterDansUnCadre(ecran, 'projection', 1280, 720, renvoi),
+          async (ecran, monte) => {
+            await new Promise((suite) => setTimeout(suite, 50));
+            const miniature = monte
+              .toile()
+              ?.querySelector<HTMLElement>('[data-testid="cours-renvoi"]');
+            const colonne = miniature?.getBoundingClientRect();
+            const cadre = miniature?.querySelector('.cours-renvoi__cadre')?.getBoundingClientRect();
+            const contenu = miniature
+              ?.querySelector('.cours-renvoi__toile app-slide-activity')
+              ?.getBoundingClientRect();
+            const part = 60;
+            const remplissage =
+              cadre === undefined || contenu === undefined
+                ? 0
+                : Math.max(contenu.width / cadre.width, contenu.height / cadre.height);
+            return Math.abs((colonne?.width ?? 0) - (1280 * part) / 100) > 1 || remplissage < 0.9
+              ? `${ecran.id} colonne=${colonne?.width} part=${part} remplissage=${remplissage.toFixed(2)}`
+              : null;
+          },
+        );
+
+        expect(fautes).toEqual([]);
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
+  }
 
   it('R7 · ne montre, à l écran des points, que la ligne du taux de marge du tableau de bord', async () => {
     const ecrans = ecransDuPupitreB2_01();
@@ -538,6 +509,71 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     });
   }
 });
+
+function decrireLaTenueDuCours({
+  code,
+  instantane,
+  ecransAuMoins,
+}: (typeof COURS_MESURES)[number]): void {
+  const pupitre = ecransDuPupitreDe(instantane);
+  const publics = ecransPublicsDe(instantane);
+
+  for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
+    it(
+      `T2 · T3 · G01 · chaque écran du ${code} tient sur une toile 1280 × 720 en ${mode}, sans défilement interne ni tassement`,
+      async () => {
+        const ecrans = mode === 'etudiant' ? publics : pupitre;
+        const fautes = await fautesDesEcrans(
+          ecrans,
+          pupitre,
+          (ecran, renvoi) => monterDansUnCadre(ecran, mode, 1280, 720, renvoi),
+          (ecran, monte) => {
+            const toile = monte.toile();
+            const horsToile = elementsPerdus(monte);
+            const defileurs = toile === null ? [] : defileursInternes(toile);
+            const echelle = echelleDuContenu(toile);
+            return horsToile.length > 0 || defileurs.length > 0 || echelle < ECHELLE_MINIMALE
+              ? `${ecran.id} ${mode} hors=${horsToile.join(',')} defile=${defileurs.join(',')} echelle=${echelle}`
+              : null;
+          },
+        );
+
+        expect(ecrans.length).withContext(`écrans du ${code}`).toBeGreaterThan(ecransAuMoins);
+        expect(fautes).toEqual([]);
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
+  }
+
+  it(
+    `G01 · sur un portable 14 pouces, chaque écran étudiant du ${code} tient dans son cadre sans défiler, à une taille lisible`,
+    async () => {
+      const fautes = await fautesDesEcrans(
+        publics,
+        pupitre,
+        (ecran, renvoi) =>
+          monterDansUnCadre(
+            ecran,
+            'etudiant',
+            CADRE_ETUDIANT_14_POUCES.largeur,
+            CADRE_ETUDIANT_14_POUCES.hauteur,
+            renvoi,
+          ),
+        (ecran, monte) => {
+          const defile = monte.cadre.scrollHeight > monte.cadre.clientHeight + 1;
+          const horsToile = elementsHorsToile(monte);
+          const echelle = echelleAffichee(monte);
+          return defile || horsToile.length > 0 || echelle < ECHELLE_MINIMALE - 0.001
+            ? `${ecran.id} defile=${String(defile)} hors=${horsToile.join(',')} echelle=${echelle.toFixed(3)}`
+            : null;
+        },
+      );
+
+      expect(fautes).toEqual([]);
+    },
+    DELAI_DE_MONTAGE_MS,
+  );
+}
 
 function cartesQuiDebordent(racine: ParentNode): string[] {
   return [...racine.querySelectorAll<HTMLElement>('.slide-grid__card')]
