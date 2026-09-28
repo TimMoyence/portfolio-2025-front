@@ -279,6 +279,49 @@ describe('core/formula', () => {
     });
   });
 
+  describe('fonctions a deux series', () => {
+    const mobiles = {
+      A1: '0',
+      A2: '1',
+      A3: '2',
+      A4: '3',
+      A5: '4',
+      B1: '2,20',
+      B2: '3,64',
+      B3: '5,24',
+      B4: '7,13',
+      B5: '8,66',
+    };
+
+    it('ajuste y en x par les moindres carres et mesure la correlation lineaire', () => {
+      expect(valeurDe({ ...mobiles, D1: '=PENTE(B1:B5;A1:A5)' }, 'D1') ?? 0).toBeCloseTo(1.641, 12);
+      expect(valeurDe({ ...mobiles, D1: '=ORDONNEE.ORIGINE(B1:B5;A1:A5)' }, 'D1') ?? 0).toBeCloseTo(
+        2.092,
+        12,
+      );
+      expect(
+        valeurDe({ ...mobiles, D1: '=ARRONDI(coefficient.correlation(A1:A5;B1:B5);6)' }, 'D1') ?? 0,
+      ).toBeCloseTo(0.999045, 12);
+    });
+
+    it('ecarte une paire des qu un de ses membres est du texte ou vide', () => {
+      const troue = { A1: '0', A2: '1', A3: '2', A4: '3', B1: '1', B2: '3', B3: 'absent', B4: '7' };
+      expect(valeurDe({ ...troue, C1: '=PENTE(B1:B4;A1:A4)' }, 'C1')).toBe(2);
+      expect(valeurDe({ ...troue, C1: '=ORDONNEE.ORIGINE(B1:B4;A1:A4)' }, 'C1')).toBe(1);
+    });
+
+    it('refuse des series de tailles differentes ou hors plage, et une serie constante', () => {
+      expect(erreurDe({ ...mobiles, D1: '=PENTE(B1:B5;A1:A4)' }, 'D1')).toBe('#VALEUR!');
+      expect(erreurDe({ ...mobiles, D1: '=PENTE(B1:B5)' }, 'D1')).toBe('#VALEUR!');
+      expect(refus('=PENTE(3;4)')).toBe('#VALEUR!');
+      expect(erreurDe({ B1: '5', B2: '5', C1: '1', C2: '4', A1: '=PENTE(C1:C2;B1:B2)' })).toBe(
+        '#DIV/0!',
+      );
+      expect(refus('=COEFFICIENT.CORRELATION(B1:B1;C1:C1)')).toBe('#DIV/0!');
+      expect(refus('=LOI.INCONNUE(1)')).toBe('#NOM?');
+    });
+  });
+
   describe('entrees hostiles', () => {
     const HOSTILES: readonly [string, string][] = [
       ['=constructor', '#NOM?'],
