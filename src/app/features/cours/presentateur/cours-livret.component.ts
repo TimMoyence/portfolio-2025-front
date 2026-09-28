@@ -87,15 +87,17 @@ type VueDuLivret = 'sujet' | 'corrige';
                 [donneesFormateur]="page.annexe"
               />
               <aside class="livret__formateur">
-                @if (page.ecran.corriges.length > 0) {
-                  <ul class="livret__reponses" data-testid="livret-reponses">
-                    @for (corrige of page.ecran.corriges; track corrige.questionId) {
+                @if (page.reponses.length > 0) {
+                  <ol class="livret__reponses" data-testid="livret-reponses">
+                    @for (reponse of page.reponses; track reponse.corrige.questionId) {
                       <li>
-                        <span class="livret__question">{{ corrige.questionId }}</span>
-                        {{ corrige.bonneReponse }}
+                        <span class="livret__question"
+                          >{{ reponse.numero }}. {{ reponse.enonce }}</span
+                        >
+                        {{ reponse.corrige.bonneReponse }}
                       </li>
                     }
-                  </ul>
+                  </ol>
                 }
                 @if (page.guide.length > 0) {
                   <dl class="livret__guide" data-testid="livret-guide">

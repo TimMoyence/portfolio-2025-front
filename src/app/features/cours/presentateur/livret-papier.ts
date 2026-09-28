@@ -6,8 +6,10 @@ import type {
   GuideFormateur,
 } from '../../../../cours/content/types';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
+import type { QuestionDuPanneau } from './cours-panneau-question.component';
+import { questionsDuPanneau } from './questions-du-panneau';
 
-const JALON_DE_SEANCE = 'fp-pulse';
+const ECRANS_DE_SEANCE_SEULEMENT: ReadonlySet<string> = new Set(['fp-pulse', 'fp-spaced']);
 
 type CleDuGuide = keyof GuideFormateur;
 
@@ -20,6 +22,7 @@ export interface RubriqueDuGuide {
 export interface PageDuCorrige {
   readonly ecran: EcranDeroule;
   readonly annexe: ReturnType<typeof annexeFormateurDeLEcran>;
+  readonly reponses: readonly QuestionDuPanneau[];
   readonly guide: readonly RubriqueDuGuide[];
 }
 
@@ -42,7 +45,7 @@ const ORDRE_DU_GUIDE: readonly CleDuGuide[] = [
 ];
 
 function aTraiterSurPapier(ecran: EcranContent): boolean {
-  return ecran.type !== JALON_DE_SEANCE;
+  return !ECRANS_DE_SEANCE_SEULEMENT.has(ecran.type);
 }
 
 function rubriquesDuGuide(guide: GuideFormateur | undefined): readonly RubriqueDuGuide[] {
@@ -64,6 +67,7 @@ export function pagesDuCorrige(corrige: DerouleCours): readonly PageDuCorrige[] 
   return corrige.ecrans.filter(aTraiterSurPapier).map((ecran) => ({
     ecran,
     annexe: annexeFormateurDeLEcran(ecran),
+    reponses: questionsDuPanneau(ecran),
     guide: rubriquesDuGuide(ecran.guide),
   }));
 }

@@ -71,26 +71,28 @@ describe('CoursLivretComponent', () => {
     expect(un(fixture, 'livret-version')?.textContent).toContain('1');
   });
 
-  it('met en page pour l’étudiant les 25 écrans du B2-02 à traiter sur papier, sans correction ni jalon de séance', async () => {
+  it('met en page pour l’étudiant les 24 écrans du B2-02 à traiter sur papier, sans correction, jalon ni rappel tiré en séance', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     const ids = tous(fixture, 'livret-ecran').map((page) => page.dataset['ecran']);
 
-    expect(ids.length).toBe(25);
+    expect(ids.length).toBe(24);
     expect(ids).not.toContain('B2-02-A1-07-CORRECTION');
     expect(ids).not.toContain('B2-02-A1-09-JALON');
+    expect(ids).not.toContain('B2-02-A4-04-RAPPEL');
     expect(ids).toContain('B2-02-A2-01-NUAGE-RIVAGE');
     expect(tous(fixture, 'livret-corrige')).toEqual([]);
   });
 
-  it('bascule sur le corrigé des 35 écrans du B2-02, corrections comprises', async () => {
+  it('bascule sur le corrigé des 34 écrans du B2-02, corrections comprises', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     basculerSurLeCorrige(fixture);
 
     const ids = tous(fixture, 'livret-corrige').map((page) => page.dataset['ecran']);
-    expect(ids.length).toBe(35);
+    expect(ids.length).toBe(34);
     expect(ids).toContain('B2-02-A1-07-CORRECTION');
+    expect(ids).not.toContain('B2-02-A4-04-RAPPEL');
     expect(tous(fixture, 'livret-ecran')).toEqual([]);
   });
 
@@ -109,6 +111,21 @@ describe('CoursLivretComponent', () => {
     );
     expect(un(fixture, 'livret-reponses')?.textContent).toContain('1480.24');
     expect(un(fixture, 'livret-guide')?.textContent).toContain('Des milliers d’euros');
+  });
+
+  it('numérote chaque bonne réponse du corrigé par l’énoncé de sa question, sans identifiant technique', async () => {
+    const { fixture } = await monter(of(LIVRET_B2_02));
+
+    basculerSurLeCorrige(fixture);
+
+    const diagnostic = tous(fixture, 'livret-corrige').find(
+      (page) => page.dataset['ecran'] === 'B2-02-A1-01-DIAGNOSTIC',
+    );
+    const reponses = diagnostic?.querySelector('[data-testid="livret-reponses"]')?.textContent;
+    expect(reponses).toContain('1.');
+    expect(reponses).toContain('Cinq clients ont payé leur facture');
+    expect(reponses).toContain('30 jours');
+    expect(reponses).not.toContain('b2-02-a1-diagnostic');
   });
 
   it('imprime la vue affichée', async () => {
