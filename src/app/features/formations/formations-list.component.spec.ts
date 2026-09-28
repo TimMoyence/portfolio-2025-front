@@ -13,7 +13,7 @@ const COURS_EN_SEANCE = [
   },
   {
     code: 'B2-02',
-    lien: '/formations/b2-02-serie-statistique-une-variable',
+    lien: '/formations/b2-02-series-statistiques',
     instantane: INSTANTANE_B2_02,
   },
 ];

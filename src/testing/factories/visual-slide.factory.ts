@@ -26,7 +26,7 @@ export function buildVisualSlide(overrides: Partial<EcranContent> = {}): EcranCo
   };
 }
 
-function buildRecitVisuel(
+export function buildRecitVisuel(
   id: string,
   renderer: string,
   props: PropsVisuelles,

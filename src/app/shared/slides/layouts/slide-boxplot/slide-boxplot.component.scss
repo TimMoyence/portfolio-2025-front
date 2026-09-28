@@ -18,22 +18,11 @@
 }
 
 h2 {
-  max-width: 24ch;
-  margin: 0;
-  color: var(--ink, #0c0902);
-  font-family: var(--font-display, Georgia, serif);
-  font-size: clamp(2rem, 4.6cqi, 4.2rem);
-  font-weight: 400;
-  line-height: 1;
-  text-wrap: balance;
+  @include figure.titre(24ch);
 }
 
 .slide-boxplot__subtitle {
-  max-width: 60ch;
-  margin: 0.8rem 0 0;
-  color: var(--ink-soft, #3c3529);
-  font-size: clamp(1rem, 1.4cqi, 1.15rem);
-  line-height: 1.45;
+  @include figure.sous-titre;
 }
 
 .slide-boxplot__unit {
@@ -41,10 +30,7 @@ h2 {
 }
 
 .slide-boxplot__description {
-  max-width: 72ch;
-  margin: 0;
-  color: var(--ink-soft, #3c3529);
-  line-height: 1.5;
+  @include figure.description;
 }
 
 .slide-boxplot__plot {
@@ -152,32 +138,14 @@ h2 {
 }
 
 .slide-boxplot__tick {
-  position: absolute;
+  @include figure.graduation;
   top: 0.4rem;
   left: var(--x);
-  color: var(--text-muted, var(--slide-text-muted));
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 0.72rem;
-  line-height: 1;
-  white-space: nowrap;
   transform: translateX(-50%);
 }
 
 .slide-boxplot__legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.4rem;
-  margin: 0;
-  padding: 0;
-  color: var(--ink-soft, #3c3529);
-  font-size: 0.8rem;
-  list-style: none;
-}
-
-.slide-boxplot__legend li {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  @include figure.legende;
 }
 
 .slide-boxplot__legend-box,
@@ -201,10 +169,7 @@ h2 {
 }
 
 .slide-boxplot__legend-mean {
-  width: 0.65rem;
-  height: 0.65rem;
-  border: 2px solid var(--ink, #0c0902);
-  transform: rotate(45deg);
+  @include figure.losange;
 }
 
 .slide-boxplot__legend-whisker {

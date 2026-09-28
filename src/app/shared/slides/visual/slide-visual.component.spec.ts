@@ -14,6 +14,7 @@ import {
   TRI_CORRIGE,
   buildVerdictDeQuestion,
   buildVerdictDuTri,
+  buildRecitVisuel,
   buildVisualAnswerReviewSlide,
   buildVisualImageHeroSlide,
   buildVisualQuizSlide,
@@ -287,6 +288,43 @@ describe('SlideVisualComponent', () => {
         'slide-answer-review__explication--erreur',
       );
     });
+  });
+
+  it('rend la trace ecrite et le nuage de points avec leur composant', () => {
+    const rendus = [
+      {
+        renderer: 'lesson',
+        selecteur: 'app-slide-lesson',
+        props: {
+          title: 'Ajuster un nuage',
+          blocks: [{ kind: 'definition', title: 'Point moyen', text: 'G(x̄ ; ȳ)' }],
+        },
+      },
+      {
+        renderer: 'scatter',
+        selecteur: 'app-slide-scatter',
+        props: {
+          title: 'Ventes',
+          xLabel: 'Mois',
+          yLabel: 'k€',
+          xRange: [0, 7],
+          yRange: [550, 900],
+          points: [
+            { x: 1, y: 610 },
+            { x: 2, y: 652 },
+          ],
+          description: 'Deux points.',
+        },
+      },
+    ];
+    for (const { renderer, selecteur, props } of rendus) {
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput('slide', buildRecitVisuel(renderer, renderer, props));
+      fixture.detectChanges();
+      expect((fixture.nativeElement as HTMLElement).querySelector(selecteur))
+        .withContext(renderer)
+        .not.toBeNull();
+    }
   });
 
   it('ne transmet la priorite qu a un hero, sans casser les autres layouts', () => {

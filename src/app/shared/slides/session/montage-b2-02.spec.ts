@@ -1,8 +1,5 @@
 import { DELAI_DE_MONTAGE_MS, monterEcran } from '../../../../testing/briques-montees';
-import {
-  ecransDuPupitreDe,
-  ecransPublicsDe,
-} from '../../../../testing/fixtures/instantane-de-cours';
+import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
 import {
   decrireLeMontageDeLInstantane,
@@ -10,8 +7,8 @@ import {
 } from '../../../../testing/montage-d-instantane';
 
 decrireLeMontageDeLInstantane('B2-02', INSTANTANE_B2_02, {
-  empreinte: 'd3d6c9086b39e7c36c209d49bc7df1f7ad0d7e0127370f17766fd24e250ecd64',
-  ecrans: 62,
+  empreinte: '9bea227adef9219351501b612f4269ffd9d5579d0733c3a6eadca21593f6dae5',
+  ecrans: 38,
   specifiques: () => {
     it('reprend au catalogue les huit écrans publics et verrouille les autres', () => {
       const publics = INSTANTANE_B2_02.catalogue.ecrans.filter(
@@ -21,28 +18,42 @@ decrireLeMontageDeLInstantane('B2-02', INSTANTANE_B2_02, {
       expect(publics.map((ecran) => ecran.id.slice(6, 11))).toEqual([
         'A1-02',
         'A1-04',
-        'A1-05',
-        'A1-07',
-        'A1-09',
+        'A1-06',
         'A2-01',
+        'A2-03',
+        'A3-02',
         'A4-01',
-        'A6-05',
+        'A4-05',
       ]);
-      expect(ecransPublicsDe(INSTANTANE_B2_02).map((ecran) => ecran.id)).toContain(
-        'B2-02-A4-03-BOITE-DELAIS',
-      );
     });
 
     it(
-      'dessine au pupitre les deux boîtes des vingt délais, avec et sans la facture contestée',
+      'dessine au pupitre le nuage des six années d’Atelier Rivage',
       async () => {
         const monte = await monterEcran(
-          ecranNomme(ecransDuPupitreDe(INSTANTANE_B2_02), 'B2-02-A4-03-BOITE-DELAIS'),
+          ecranNomme(ecransDuPupitreDe(INSTANTANE_B2_02), 'B2-02-A2-01-NUAGE-RIVAGE'),
           'presentateur',
         );
 
         expect(monte.erreurs).toEqual([]);
-        expect(monte.element.textContent).toContain('146');
+        expect(monte.element.querySelectorAll('[data-testid="slide-scatter-point"]').length).toBe(
+          6,
+        );
+        monte.detruire();
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
+
+    it(
+      'pose au pupitre la trace écrite du cours sur la droite d’ajustement',
+      async () => {
+        const monte = await monterEcran(
+          ecranNomme(ecransDuPupitreDe(INSTANTANE_B2_02), 'B2-02-A3-02-COURS-DROITE'),
+          'presentateur',
+        );
+
+        expect(monte.erreurs).toEqual([]);
+        expect(monte.element.textContent?.trim().length).toBeGreaterThan(0);
         monte.detruire();
       },
       DELAI_DE_MONTAGE_MS,

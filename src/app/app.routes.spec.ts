@@ -129,10 +129,7 @@ describe('app routes', () => {
       expect(route?.loadComponent).toBeUndefined();
     });
 
-    for (const slug of [
-      'b2-01-traitement-information-chiffree',
-      'b2-02-serie-statistique-une-variable',
-    ]) {
+    for (const slug of ['b2-01-traitement-information-chiffree', 'b2-02-series-statistiques']) {
       it(`fait choisir automatiquement l espace de ${slug} selon le rôle`, () => {
         const route = routeDe(`formations/${slug}`);
 

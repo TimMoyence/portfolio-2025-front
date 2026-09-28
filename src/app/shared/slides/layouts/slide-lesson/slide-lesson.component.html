@@ -1,0 +1,32 @@
+<section class="slide-lesson">
+  <header>
+    <h2>{{ title() }}</h2>
+    @if (subtitle()) {
+      <p class="slide-lesson__subtitle">{{ subtitle() }}</p>
+    }
+  </header>
+
+  <div class="slide-lesson__blocks" [style.--blocs]="blocks().length">
+    @for (bloc of blocks(); track $index) {
+      <article class="slide-lesson__block" [class]="'slide-lesson__block--' + bloc.kind">
+        <p class="slide-lesson__kind" data-testid="slide-lesson-nature">
+          {{ natures[bloc.kind] }}
+        </p>
+        <h3 data-testid="slide-lesson-titre-bloc">{{ bloc.title }}</h3>
+        <p class="slide-lesson__text">{{ bloc.text }}</p>
+        @if (bloc.formula) {
+          <p class="slide-lesson__formula" data-testid="slide-lesson-formule">
+            {{ bloc.formula }}
+          </p>
+        }
+        @if (bloc.steps?.length) {
+          <ol class="slide-lesson__steps" data-testid="slide-lesson-etapes">
+            @for (etape of bloc.steps; track $index) {
+              <li>{{ etape }}</li>
+            }
+          </ol>
+        }
+      </article>
+    }
+  </div>
+</section>

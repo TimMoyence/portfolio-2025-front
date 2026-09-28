@@ -56,12 +56,11 @@ function formationGratuite({
 }
 
 function coursBtsEnSeance(
-  carte: Pick<FormationCard, 'link' | 'title' | 'description'>,
+  carte: Pick<FormationGratuite, 'link' | 'title' | 'description' | 'duree'>,
 ): FormationCard {
   return formationGratuite({
     ...carte,
     badge: $localize`:@@formations-list.b2.badge:BTS CG · Cours interactif`,
-    duree: $localize`:@@formations-list.b2.duration:3 h 30`,
     format: $localize`:@@formations-list.b2.format:Slides + séance accompagnée`,
     avecToolkit: false,
     variant: 'live',
@@ -73,11 +72,13 @@ export const FORMATIONS: readonly FormationCard[] = [
     link: '/formations/b2-01-traitement-information-chiffree',
     title: $localize`:@@formations-list.b2.title:B2-01 — Lire et contrôler l’information chiffrée`,
     description: $localize`:@@formations-list.b2.description:Lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b2.duration:3 h 30`,
   }),
   coursBtsEnSeance({
-    link: '/formations/b2-02-serie-statistique-une-variable',
-    title: $localize`:@@formations-list.b2-02.title:B2-02 — Résumer une série sans la trahir`,
-    description: $localize`:@@formations-list.b2-02.description:Résumer une série statistique : moyenne, médiane, quartiles, écart-type, boîte à moustaches et classes. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    link: '/formations/b2-02-series-statistiques',
+    title: $localize`:@@formations-list.b2-02.title:B2-02 — Séries statistiques : résumer, relier, prévoir`,
+    description: $localize`:@@formations-list.b2-02.description:Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b2-02.duration:3 h 00`,
   }),
   formationGratuite({
     link: '/formations/ia-solopreneurs',
