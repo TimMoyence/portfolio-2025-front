@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import {
   URL_API,
   agirSurLePoste,
+  autreReponseQue,
   identiteDuPoste,
   inscrireUnPoste,
   lireDepuisLePoste,
@@ -27,11 +28,9 @@ test.describe('Banc — éviction en séance (AC-37)', () => {
     page,
     request,
   }) => {
-    const {
-      releve: { votes },
-      seance,
-      jeton,
-    } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
+    const { releve, seance, jeton } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
+    const { votes } = releve;
+    const autre = autreReponseQue(releve, votes[0].activiteId);
 
     const evince = await rejoindreDansLeNavigateur(page, seance, identiteDuPoste(30));
     await expect(optionsDuPoste(page).first()).toBeVisible();
@@ -54,8 +53,8 @@ test.describe('Banc — éviction en séance (AC-37)', () => {
     expect(((await apres.json()) as { code: string }).code).toBe('PARTICIPANT_INTROUVABLE');
 
     const refus = await repondreDepuisLePoste(request, seance, evince, {
-      questionId: votes[1].activiteId,
-      valeur: votes[1].options[0],
+      questionId: autre.questionId,
+      valeur: autre.valeur,
     });
     expect(refus.status()).toBe(404);
 

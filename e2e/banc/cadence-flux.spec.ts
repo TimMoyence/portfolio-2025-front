@@ -10,7 +10,7 @@ import {
   seanceDemarreeSurLEcran,
   servirLEcran,
 } from './contexte';
-import type { EcranDuCours, Poste, Seance } from './contexte';
+import type { Poste, ReponseDuCours, Seance } from './contexte';
 
 const DELAI_D_OUVERTURE_MS = 10_000;
 
@@ -118,7 +118,7 @@ async function rafaleDeReponses(
   seance: Seance,
   jeton: string,
   postes: readonly Poste[],
-  questions: readonly EcranDuCours[],
+  questions: readonly ReponseDuCours[],
 ): Promise<number> {
   let envoyees = 0;
   let servi = -1;
@@ -129,8 +129,8 @@ async function rafaleDeReponses(
     }
     for (const poste of postes) {
       const reponse = await repondreDepuisLePoste(request, seance, poste, {
-        questionId: question.activiteId,
-        valeur: question.options[0],
+        questionId: question.questionId,
+        valeur: question.valeur,
       });
       if (reponse.status() === 201) envoyees += 1;
     }
@@ -144,8 +144,8 @@ test.describe('Banc — cadence du flux du pupitre', () => {
     browser,
     request,
   }) => {
-    const { questions } = await coursReleve(request);
-    const rafale = questions.slice(0, QUESTIONS_PAR_POSTE);
+    const { reponses } = await coursReleve(request);
+    const rafale = reponses.slice(0, QUESTIONS_PAR_POSTE);
     expect(rafale).toHaveLength(QUESTIONS_PAR_POSTE);
     const { seance } = await seanceDemarreeSurLEcran(request, rafale[0].rang);
     const jeton = await jetonDuFormateur(request);

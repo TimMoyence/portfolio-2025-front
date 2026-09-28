@@ -8,19 +8,19 @@ import {
   lireLesResultats,
   optionsDuPoste,
   posteDansSonNavigateur,
+  reponseApres,
   repondreDepuisLePoste,
   seanceLimiteeSurLePremierVote,
   servirLEcran,
   verdictDuPoste,
 } from './contexte';
+import type { ReponseDuCours } from './contexte';
 
 const CAPACITE = 35;
 
 const LIMITE_SUJET_PAR_PARTICIPANT = 180;
 
 const NAVIGATEURS = 3;
-
-const REPONSES_PAR_POSTE = 2;
 
 const PREMIER_RANG = 100;
 
@@ -29,18 +29,28 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
     browser,
     request,
   }) => {
-    const {
-      releve: { votes, total },
-      seance,
-      jeton,
-    } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
+    const { releve, seance, jeton } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
+    const [premierVote] = releve.votes;
+    const tours: readonly ReponseDuCours[] = [
+      {
+        rang: premierVote.rang,
+        id: premierVote.id,
+        questionId: premierVote.activiteId,
+        valeur: premierVote.options[0],
+      },
+      reponseApres(releve, premierVote.rang),
+    ];
 
     const pages: Page[] = [];
     for (let rang = 0; rang < NAVIGATEURS; rang += 1) {
       pages.push(await posteDansSonNavigateur(browser, seance, PREMIER_RANG + rang));
     }
     for (const page of pages) {
-      await expect(optionsDuPoste(page).first()).toBeVisible();
+      await expect(page.getByTestId('etudiant-progression')).toHaveText(
+        `${premierVote.rang + 1} / ${releve.total}`,
+      );
+      await optionsDuPoste(page).first().click();
+      await expect(verdictDuPoste(page)).toHaveCount(1);
     }
 
     const postes = [];
@@ -57,17 +67,17 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
     expect(((await refus.json()) as { code: string }).code).toBe('SEANCE_COMPLETE');
 
     const statuts: number[] = [];
-    for (let tour = 0; tour < REPONSES_PAR_POSTE; tour += 1) {
-      await servirLEcran(request, jeton, seance.sessionId, votes[tour].rang);
+    for (const tour of tours) {
+      await servirLEcran(request, jeton, seance.sessionId, tour.rang);
       for (const poste of postes) {
         const reponse = await repondreDepuisLePoste(request, seance, poste, {
-          questionId: votes[tour].activiteId,
-          valeur: votes[tour].options[0],
+          questionId: tour.questionId,
+          valeur: tour.valeur,
         });
         statuts.push(reponse.status());
       }
     }
-    expect(statuts).toHaveLength((CAPACITE - NAVIGATEURS) * REPONSES_PAR_POSTE);
+    expect(statuts).toHaveLength((CAPACITE - NAVIGATEURS) * tours.length);
     expect(statuts.filter((statut) => statut !== 201)).toEqual([]);
 
     const [bride, voisin] = postes;
@@ -80,15 +90,6 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
     );
     expect(statutsDuBride[LIMITE_SUJET_PAR_PARTICIPANT]).toBe(429);
     expect((await lireLeSujet(request, seance, voisin)).status()).toBe(200);
-
-    const dernierVote = votes[REPONSES_PAR_POSTE - 1];
-    for (const page of pages) {
-      await expect(page.getByTestId('etudiant-progression')).toHaveText(
-        `${dernierVote.rang + 1} / ${total}`,
-      );
-      await optionsDuPoste(page).first().click();
-      await expect(verdictDuPoste(page)).toHaveCount(1);
-    }
 
     const bilan = (await lireLesResultats(request, jeton, seance.sessionId)) as unknown as {
       resultats: { participants: number; questions: readonly { total: number }[] };
