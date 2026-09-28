@@ -2079,6 +2079,1626 @@
       }
     ]
   },
+  "deroule": {
+    "id": "b2-02-series-statistiques",
+    "titre": "Séries statistiques : résumer, relier, prévoir",
+    "niveau": "B2",
+    "duree": 180,
+    "concepts": [
+      "serie-statistique",
+      "moyenne",
+      "mediane",
+      "ecart-type",
+      "dispersion",
+      "choix-du-resume",
+      "nuage-de-points",
+      "correlation",
+      "ajustement-affine",
+      "prevision"
+    ],
+    "ecrans": [
+      {
+        "id": "B2-02-A1-01-DIAGNOSTIC",
+        "type": "fp-recall",
+        "titre": "Diagnostic : le délai du milieu",
+        "duree": 4,
+        "interactif": true,
+        "donnees": {
+          "question": {
+            "id": "b2-02-a1-diagnostic",
+            "enonce": "Cinq clients ont payé leur facture en 35, 20, 140, 25 et 30 jours. Quel délai partage ces cinq clients en deux groupes de même effectif ?",
+            "options": [
+              {
+                "id": "50-jours-c2db9b18",
+                "libelle": "50 jours"
+              },
+              {
+                "id": "140-jours-a69bd467",
+                "libelle": "140 jours"
+              },
+              {
+                "id": "30-jours-4e9241c2",
+                "libelle": "30 jours"
+              }
+            ],
+            "metadonnees": {
+              "concepts": ["mediane"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 4,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          },
+          "delaiMs": 0
+        },
+        "notes": "• Avant de lancer : vérifier au pupitre que tous les postes ont rejoint la séance.\n• Annoncer « seule la participation compte ». Chacun choisit sans calculatrice.\n• Pièges : la moyenne (250 ÷ 5) et la valeur du milieu de la liste non triée (140).\n• Papier : la question est en tête du livret ; vote à main levée.",
+        "diffusion": "seance",
+        "seuil": 0.7,
+        "corriges": [
+          {
+            "questionId": "b2-02-a1-diagnostic",
+            "bonneReponse": "30 jours",
+            "confusions": [
+              {
+                "id": "moyenne-lue-comme-mediane",
+                "libelle": "Croire que la moyenne partage la série en deux moitiés d’effectifs égaux."
+              },
+              {
+                "id": "mediane-sans-tri",
+                "libelle": "Prendre la valeur du milieu de la liste sans avoir trié les valeurs."
+              }
+            ]
+          }
+        ],
+        "questions": [
+          {
+            "id": "b2-02-a1-diagnostic",
+            "enonce": "Cinq clients ont payé leur facture en 35, 20, 140, 25 et 30 jours. Quel délai partage ces cinq clients en deux groupes de même effectif ?",
+            "options": [
+              {
+                "id": "50-jours-c2db9b18",
+                "libelle": "50 jours"
+              },
+              {
+                "id": "140-jours-a69bd467",
+                "libelle": "140 jours"
+              },
+              {
+                "id": "30-jours-4e9241c2",
+                "libelle": "30 jours"
+              }
+            ]
+          }
+        ],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A1-02-ACCROCHE",
+        "type": "fp-story",
+        "titre": "Résumer, relier, prévoir",
+        "duree": 1,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A1-02-ACCROCHE",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A1-02-ACCROCHE",
+              "renderer": "hero",
+              "props": {
+                "title": "Résumer, relier, prévoir",
+                "subtitle": "Atelier Rivage, voilerie de La Rochelle. La banque demande le délai de paiement des clients et sa régularité, puis une prévision du chiffre d’affaires pour dimensionner une facilité de caisse.",
+                "bullets": [
+                  "BTS Comptabilité et gestion · 2e année · deuxième cours de mathématiques",
+                  "Trois notions : résumer une série, relier deux variables, prévoir avec une droite",
+                  "Une mini-situation CCF et sa question tableur"
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["serie-statistique"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 1,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• Rappeler en une phrase B2-01 : Atelier Rivage a décidé, la banque veut maintenant des chiffres.\n• Annoncer le plan : trois notions, chacune en trois temps (réfléchir, comprendre, s’exercer), puis une mini-situation CCF.\n• Annoncer les deux pauses de 15 minutes, après l’acte 1 et après l’acte 3.",
+        "diffusion": "catalogue",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A1-03-MISSION",
+        "type": "fp-pro",
+        "titre": "Votre mission : le dossier de la banque",
+        "duree": 5,
+        "interactif": true,
+        "donnees": {
+          "cas": {
+            "id": "B2-02-A1-03-MISSION",
+            "metier": "Assistant·e de gestion — Atelier Rivage (voilerie artisanale, 14 salariés, La Rochelle)",
+            "situation": "Lundi, 8 h 40. Hélène Garnier, la dirigeante, vous transfère le courriel de la banque : « Pour dimensionner votre facilité de caisse, indiquez-nous le délai de paiement de vos clients professionnels et sa régularité, puis une prévision argumentée de votre chiffre d’affaires 2028. »",
+            "geste": "Avant de calculer quoi que ce soit, répondez par écrit aux trois questions ci-dessous.",
+            "consequence": "Un délai trompeur ou une prévision sans réserve peut conduire la banque à sous-dimensionner la facilité de caisse, et Atelier Rivage à manquer de trésorerie.",
+            "questionsLibres": [
+              {
+                "id": "b2-02-a1-mission:quoi",
+                "question": "Que mesure-t-on exactement, et sur quelles données ?",
+                "placeholder": "Le délai entre…, pour les factures…"
+              },
+              {
+                "id": "b2-02-a1-mission:combien",
+                "question": "Un seul nombre suffit-il à répondre sur les délais ?",
+                "placeholder": "Un délai typique, un écart…"
+              },
+              {
+                "id": "b2-02-a1-mission:verifier",
+                "question": "Que faut-il vérifier avant de prévoir une année future ?",
+                "placeholder": "Une tendance, une limite…"
+              }
+            ],
+            "metadonnees": {
+              "concepts": ["serie-statistique"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 5,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• Lecture à voix haute (90 s), puis 3 min d’écriture individuelle.\n• Au pupitre, lire deux réponses à « Combien de nombres ? » : l’une propose un seul délai, l’autre un délai et un écart.\n• Papier : trois lignes d’écriture dans le livret.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A1-04-FACTURES",
+        "type": "fp-story",
+        "titre": "Les vingt délais de paiement du trimestre",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A1-04-FACTURES",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A1-04-FACTURES",
+              "renderer": "table",
+              "props": {
+                "title": "Les vingt délais de paiement du trimestre",
+                "subtitle": "Factures aux clients professionnels émises au dernier trimestre, toutes encaissées depuis.",
+                "note": "Délai = nombre de jours entre l’émission de la facture et son encaissement. Données fictives Atelier Rivage, créées pour ce cours.",
+                "columns": [
+                  {
+                    "key": "facture",
+                    "label": "Facture"
+                  },
+                  {
+                    "key": "client",
+                    "label": "Type de client"
+                  },
+                  {
+                    "key": "delai",
+                    "label": "Délai de paiement (jours)"
+                  }
+                ],
+                "rows": [
+                  {
+                    "facture": "F101",
+                    "client": "Club nautique",
+                    "delai": "42"
+                  },
+                  {
+                    "facture": "F102",
+                    "client": "Particulier",
+                    "delai": "25"
+                  },
+                  {
+                    "facture": "F103",
+                    "client": "Chantier naval",
+                    "delai": "58"
+                  },
+                  {
+                    "facture": "F104",
+                    "client": "Club nautique",
+                    "delai": "31"
+                  },
+                  {
+                    "facture": "F105",
+                    "client": "Chantier naval (facture contestée)",
+                    "delai": "146"
+                  },
+                  {
+                    "facture": "F106",
+                    "client": "Loueur de bateaux",
+                    "delai": "38"
+                  },
+                  {
+                    "facture": "F107",
+                    "client": "Club nautique",
+                    "delai": "47"
+                  },
+                  {
+                    "facture": "F108",
+                    "client": "Particulier",
+                    "delai": "18"
+                  },
+                  {
+                    "facture": "F109",
+                    "client": "Chantier naval",
+                    "delai": "62"
+                  },
+                  {
+                    "facture": "F110",
+                    "client": "Loueur de bateaux",
+                    "delai": "44"
+                  },
+                  {
+                    "facture": "F111",
+                    "client": "Club nautique",
+                    "delai": "35"
+                  },
+                  {
+                    "facture": "F112",
+                    "client": "Chantier naval",
+                    "delai": "52"
+                  },
+                  {
+                    "facture": "F113",
+                    "client": "Particulier",
+                    "delai": "28"
+                  },
+                  {
+                    "facture": "F114",
+                    "client": "Chantier naval",
+                    "delai": "75"
+                  },
+                  {
+                    "facture": "F115",
+                    "client": "Club nautique",
+                    "delai": "40"
+                  },
+                  {
+                    "facture": "F116",
+                    "client": "Loueur de bateaux",
+                    "delai": "30"
+                  },
+                  {
+                    "facture": "F117",
+                    "client": "Chantier naval",
+                    "delai": "55"
+                  },
+                  {
+                    "facture": "F118",
+                    "client": "Club nautique",
+                    "delai": "34"
+                  },
+                  {
+                    "facture": "F119",
+                    "client": "Loueur de bateaux",
+                    "delai": "50"
+                  },
+                  {
+                    "facture": "F120",
+                    "client": "Club nautique",
+                    "delai": "45"
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["serie-statistique"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• 1 min de lecture silencieuse ; ne rien calculer.\n• Faire repérer la facture F105, contestée par le client, et son délai qui dépasse de loin les autres.",
+        "diffusion": "catalogue",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A1-05-UN-SEUL-NOMBRE",
+        "type": "fp-story",
+        "titre": "Réfléchir : un seul nombre suffit-il ?",
+        "duree": 5,
+        "interactif": true,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A1-05-UN-SEUL-NOMBRE",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A1-05-UN-SEUL-NOMBRE",
+              "renderer": "reflection",
+              "props": {
+                "promptData": {
+                  "id": "b2-02-a1-un-seul-nombre",
+                  "type": "reflection",
+                  "question": "Hélène veut annoncer un seul délai à la banque. Quel nombre choisiriez-vous pour résumer les vingt délais, et que risque-t-il de cacher ?",
+                  "placeholder": "Je choisirais… parce que… Il cache…",
+                  "competency": "Raisonner · choisir un résumé adapté à la série"
+                }
+              }
+            },
+            "metadonnees": {
+              "concepts": ["choix-du-resume"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 5,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "renvoi": "B2-02-A1-04-FACTURES",
+        "notes": "• Temps « réfléchir » de la notion 1 : 3 min d’écriture individuelle, puis lire trois réponses au pupitre.\n• Ne rien trancher : la trace écrite suivante répond.\n• Papier : cadre de réponse du livret.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": {
+          "type": "reflexion",
+          "attendu": "Un centre seul ne suffit pas : la facture contestée de 146 jours tire la moyenne vers le haut, et un centre ne dit rien de la régularité. Il faut un centre choisi en connaissance de cause et une mesure de l’écart.",
+          "suite": "Gardez votre réponse : la trace écrite dit comment choisir le centre et mesurer l’écart."
+        }
+      },
+      {
+        "id": "B2-02-A1-06-COURS-RESUMER",
+        "type": "fp-story",
+        "titre": "Cours : résumer une série par un centre et un écart",
+        "duree": 6,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A1-06-COURS-RESUMER",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A1-06-COURS-RESUMER",
+              "renderer": "lesson",
+              "props": {
+                "title": "Résumer une série par un centre et un écart",
+                "subtitle": "Trace écrite · notion 1",
+                "blocks": [
+                  {
+                    "kind": "definition",
+                    "title": "Deux centres : la moyenne et la médiane",
+                    "text": "La moyenne répartit le total également entre les valeurs. La médiane partage la série triée en deux groupes de même effectif.",
+                    "formula": "x̄ = (x₁ + x₂ + … + xₙ) ÷ n",
+                    "steps": [
+                      "Trier la série dans l’ordre croissant.",
+                      "Effectif impair : la médiane est la valeur du milieu.",
+                      "Effectif pair : la médiane est la demi-somme des deux valeurs du milieu."
+                    ]
+                  },
+                  {
+                    "kind": "definition",
+                    "title": "Mesurer l’écart",
+                    "text": "L’étendue (maximum − minimum) ne regarde que deux valeurs. L’écart-type mesure l’écart moyen des valeurs à la moyenne, dans l’unité de la série ; la variance est son carré, en unité².",
+                    "formula": "σ = √[((x₁ − x̄)² + … + (xₙ − x̄)²) ÷ n]"
+                  },
+                  {
+                    "kind": "property",
+                    "title": "Une valeur extrême",
+                    "text": "Une valeur extrême tire la moyenne et l’écart-type, pas la médiane. Sans pièce qui prouve une erreur, on ne la retire pas : on la garde, on la signale et l’on publie la médiane à côté de la moyenne."
+                  },
+                  {
+                    "kind": "exam",
+                    "title": "Au CCF, au tableur",
+                    "text": "Toute la population est observée : écart-type avec ECARTYPEP, qui divise par n ; ECARTYPE divise par n − 1, pour un échantillon. Toujours donner l’unité.",
+                    "steps": ["=MOYENNE(plage)", "=MEDIANE(plage)", "=ECARTYPEP(plage)"]
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["moyenne", "mediane", "ecart-type", "dispersion"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 6,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• Trace écrite à recopier ou à coller dans le livret : 6 min au plus.\n• Insister sur le tri avant la médiane et sur ECARTYPEP pour une population entière.",
+        "diffusion": "catalogue",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A1-07-EXEMPLE-RESUME",
+        "type": "fp-worked",
+        "titre": "Exemple guidé : huit factures de septembre",
+        "duree": 6,
+        "interactif": true,
+        "donnees": {
+          "exemple": {
+            "id": "b2-02-a1-exemple-resume",
+            "enonce": "En septembre, Atelier Rivage a encaissé huit factures professionnelles en 28, 41, 35, 90, 33, 39, 44 et 30 jours. Hélène veut un délai typique et sa régularité.",
+            "etapes": [
+              {
+                "id": "moyenne",
+                "intitule": "La moyenne",
+                "raisonnement": "Somme des délais : 28 + 41 + 35 + 90 + 33 + 39 + 44 + 30 = 340 jours ; moyenne = 340 ÷ 8 = 42,5 jours.",
+                "invite": "Quelle est la moyenne des huit délais ?"
+              },
+              {
+                "id": "tri",
+                "intitule": "Trier d’abord",
+                "raisonnement": "Série triée : 28 ; 30 ; 33 ; 35 ; 39 ; 41 ; 44 ; 90. Sans tri, les deux valeurs du milieu de la liste seraient 90 et 33, ce qui n’a aucun sens.",
+                "invite": "Rangez les huit délais dans l’ordre croissant."
+              },
+              {
+                "id": "mediane",
+                "intitule": "La médiane d’un effectif pair",
+                "raisonnement": "Huit valeurs : la médiane est la demi-somme des 4e et 5e valeurs triées, (35 + 39) ÷ 2 = 37 jours.",
+                "invite": "Quel délai partage les huit factures en deux groupes de même effectif ?"
+              },
+              {
+                "id": "extreme",
+                "intitule": "L’effet d’une valeur extrême",
+                "raisonnement": "La facture de 90 jours tire la moyenne cinq jours au-dessus de la médiane ; la médiane ne dépend que du rang des valeurs du milieu.",
+                "invite": "Pourquoi la moyenne dépasse-t-elle nettement la médiane ?"
+              },
+              {
+                "id": "ecart-type",
+                "intitule": "L’écart-type",
+                "raisonnement": "Carrés des écarts à 42,5 : 210,25 ; 2,25 ; 56,25 ; 2 256,25 ; 90,25 ; 12,25 ; 2,25 ; 156,25, de somme 2 786. Variance = 2 786 ÷ 8 = 348,25 jours² ; écart-type = √348,25 ≈ 18,66 jours.",
+                "invite": "Quel est l’écart-type des huit délais ?"
+              },
+              {
+                "id": "choix",
+                "intitule": "Choisir le résumé",
+                "raisonnement": "On garde la facture de 90 jours, on la signale, et l’on annonce la médiane (37 jours) avec la moyenne et l’écart-type : la banque voit le délai typique et la régularité.",
+                "invite": "Quel résumé transmettre à Hélène ?"
+              }
+            ],
+            "metadonnees": {
+              "concepts": ["moyenne", "mediane", "ecart-type"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 6,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          },
+          "etayage": 0
+        },
+        "resoluPar": ["B2-02-A1-07-CORRECTION"],
+        "notes": "• Chacun répond sous chaque étape ; la correction vient à l’écran suivant.\n• Papier : réponses sous chaque étape du livret.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A1-07-CORRECTION",
+        "type": "fp-worked",
+        "titre": "Correction : huit factures de septembre",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "exemple": {
+            "id": "b2-02-a1-exemple-resume-corrige",
+            "enonce": "En septembre, Atelier Rivage a encaissé huit factures professionnelles en 28, 41, 35, 90, 33, 39, 44 et 30 jours. Hélène veut un délai typique et sa régularité.",
+            "etapes": [
+              {
+                "id": "moyenne",
+                "intitule": "La moyenne",
+                "raisonnement": "Somme des délais : 28 + 41 + 35 + 90 + 33 + 39 + 44 + 30 = 340 jours ; moyenne = 340 ÷ 8 = 42,5 jours.",
+                "invite": "Quelle est la moyenne des huit délais ?"
+              },
+              {
+                "id": "tri",
+                "intitule": "Trier d’abord",
+                "raisonnement": "Série triée : 28 ; 30 ; 33 ; 35 ; 39 ; 41 ; 44 ; 90. Sans tri, les deux valeurs du milieu de la liste seraient 90 et 33, ce qui n’a aucun sens.",
+                "invite": "Rangez les huit délais dans l’ordre croissant."
+              },
+              {
+                "id": "mediane",
+                "intitule": "La médiane d’un effectif pair",
+                "raisonnement": "Huit valeurs : la médiane est la demi-somme des 4e et 5e valeurs triées, (35 + 39) ÷ 2 = 37 jours.",
+                "invite": "Quel délai partage les huit factures en deux groupes de même effectif ?"
+              },
+              {
+                "id": "extreme",
+                "intitule": "L’effet d’une valeur extrême",
+                "raisonnement": "La facture de 90 jours tire la moyenne cinq jours au-dessus de la médiane ; la médiane ne dépend que du rang des valeurs du milieu.",
+                "invite": "Pourquoi la moyenne dépasse-t-elle nettement la médiane ?"
+              },
+              {
+                "id": "ecart-type",
+                "intitule": "L’écart-type",
+                "raisonnement": "Carrés des écarts à 42,5 : 210,25 ; 2,25 ; 56,25 ; 2 256,25 ; 90,25 ; 12,25 ; 2,25 ; 156,25, de somme 2 786. Variance = 2 786 ÷ 8 = 348,25 jours² ; écart-type = √348,25 ≈ 18,66 jours.",
+                "invite": "Quel est l’écart-type des huit délais ?"
+              },
+              {
+                "id": "choix",
+                "intitule": "Choisir le résumé",
+                "raisonnement": "On garde la facture de 90 jours, on la signale, et l’on annonce la médiane (37 jours) avec la moyenne et l’écart-type : la banque voit le délai typique et la régularité.",
+                "invite": "Quel résumé transmettre à Hélène ?"
+              }
+            ],
+            "metadonnees": {
+              "concepts": ["moyenne", "mediane", "ecart-type"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          },
+          "etayage": 0,
+          "pilote": true,
+          "corrigeDe": "B2-02-A1-07-EXEMPLE-RESUME"
+        },
+        "ecranCorrige": "B2-02-A1-07-EXEMPLE-RESUME",
+        "notes": "• S’arrêter sur le tri (étape 2) et sur l’effet de la facture de 90 jours (étape 4).\n• Transition : « À vous, sur les vingt délais : exercice 1. »",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A1-08-ATELIER-RESUME",
+        "type": "questionnaire",
+        "titre": "Exercice 1 — Le centre et l’écart des vingt délais",
+        "duree": 10,
+        "interactif": true,
+        "donnees": {
+          "intitule": "Exercice 1 — Le centre et l’écart des vingt délais",
+          "consigne": "Calculatrice autorisée. Délais de paiement des vingt factures du trimestre, de F101 à F120 : 42 ; 25 ; 58 ; 31 ; 146 ; 38 ; 47 ; 18 ; 62 ; 44 ; 35 ; 52 ; 28 ; 75 ; 40 ; 30 ; 55 ; 34 ; 50 ; 45 (jours). Les vingt factures forment toute la population étudiée.",
+          "regime": "focus",
+          "ordre": "fixe",
+          "questions": [
+            {
+              "brique": "fp-numeric",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a1-mediane",
+                  "enonce": "Quelle est la médiane des vingt délais de paiement ? Réponse en jours.",
+                  "unite": "jours",
+                  "metadonnees": {
+                    "concepts": ["mediane", "moyenne", "ecart-type", "choix-du-resume"],
+                    "misconceptionsCiblees": [],
+                    "dureeMinutes": 10,
+                    "modalite": "solo",
+                    "regime": "focus"
+                  }
+                }
+              }
+            },
+            {
+              "brique": "fp-numeric",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a1-moyenne",
+                  "enonce": "Quelle est la moyenne des vingt délais de paiement ? Réponse en jours, arrondie au centième.",
+                  "unite": "jours",
+                  "metadonnees": {
+                    "concepts": ["mediane", "moyenne", "ecart-type", "choix-du-resume"],
+                    "misconceptionsCiblees": [],
+                    "dureeMinutes": 10,
+                    "modalite": "solo",
+                    "regime": "focus"
+                  }
+                }
+              }
+            },
+            {
+              "brique": "fp-numeric",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a1-ecart-type",
+                  "enonce": "Quel est l’écart-type des vingt délais ? Réponse en jours, arrondie au dixième.",
+                  "unite": "jours",
+                  "metadonnees": {
+                    "concepts": ["mediane", "moyenne", "ecart-type", "choix-du-resume"],
+                    "misconceptionsCiblees": [],
+                    "dureeMinutes": 10,
+                    "modalite": "solo",
+                    "regime": "focus"
+                  }
+                }
+              }
+            },
+            {
+              "brique": "fp-vote",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a1-resume",
+                  "enonce": "La facture F105 (146 jours) est contestée par le client. Quel résumé des délais envoyer à la banque ?",
+                  "options": [
+                    {
+                      "id": "retirer-f105-et-publier-la-moyenne-des-d-7ddab140",
+                      "libelle": "Retirer F105 et publier la moyenne des dix-neuf autres délais"
+                    },
+                    {
+                      "id": "publier-la-moyenne-seule-arrondie-au-jou-66882be8",
+                      "libelle": "Publier la moyenne seule, arrondie au jour"
+                    },
+                    {
+                      "id": "garder-f105-la-signaler-et-publier-la-me-07ab59f8",
+                      "libelle": "Garder F105, la signaler, et publier la médiane avec la moyenne et l’écart-type"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "renvoi": "B2-02-A1-04-FACTURES",
+        "resoluPar": ["B2-02-A1-08-CORRECTION"],
+        "notes": "• Temps : réflexion 2 min · travail 8 min\n• Réflexion : chacun relit la trace écrite et note la méthode de chaque question, sans calculer.\n• Pièges : le milieu de la liste non triée ; une seule des deux valeurs centrales ; ECARTYPE au lieu de ECARTYPEP ; F105 retirée.\n• Papier : exercice 1 du livret.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [
+          {
+            "questionId": "b2-02-a1-mediane",
+            "bonneReponse": "43",
+            "confusions": [
+              {
+                "id": "mediane-sans-tri",
+                "libelle": "Prendre la valeur du milieu de la liste sans avoir trié les valeurs."
+              },
+              {
+                "id": "mediane-rang-pair",
+                "libelle": "Pour un effectif pair, retenir une seule des deux valeurs centrales au lieu de leur demi-somme."
+              },
+              {
+                "id": "moyenne-lue-comme-mediane",
+                "libelle": "Croire que la moyenne partage la série en deux moitiés d’effectifs égaux."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-a1-moyenne",
+            "bonneReponse": "47,75",
+            "confusions": [
+              {
+                "id": "valeur-extreme-supprimee",
+                "libelle": "Retirer une valeur extrême gênante sans pièce qui prouve qu’elle est une erreur."
+              },
+              {
+                "id": "moyenne-lue-comme-mediane",
+                "libelle": "Croire que la moyenne partage la série en deux moitiés d’effectifs égaux."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-a1-ecart-type",
+            "bonneReponse": "26,2",
+            "confusions": [
+              {
+                "id": "ecart-type-population-echantillon",
+                "libelle": "Confondre l’écart-type de la population (division par n) et l’écart-type estimé sur un échantillon (division par n − 1)."
+              },
+              {
+                "id": "variance-confondue-avec-ecart-type",
+                "libelle": "Donner la variance, exprimée dans le carré de l’unité, comme écart-type."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-a1-resume",
+            "bonneReponse": "Garder F105, la signaler, et publier la médiane avec la moyenne et l’écart-type",
+            "confusions": [
+              {
+                "id": "valeur-extreme-supprimee",
+                "libelle": "Retirer une valeur extrême gênante sans pièce qui prouve qu’elle est une erreur."
+              },
+              {
+                "id": "valeur-extreme-ignoree",
+                "libelle": "Résumer par la moyenne une série tirée par une valeur extrême, sans le signaler."
+              }
+            ]
+          }
+        ],
+        "questions": [
+          {
+            "id": "b2-02-a1-mediane",
+            "enonce": "Quelle est la médiane des vingt délais de paiement ? Réponse en jours.",
+            "options": null
+          },
+          {
+            "id": "b2-02-a1-moyenne",
+            "enonce": "Quelle est la moyenne des vingt délais de paiement ? Réponse en jours, arrondie au centième.",
+            "options": null
+          },
+          {
+            "id": "b2-02-a1-ecart-type",
+            "enonce": "Quel est l’écart-type des vingt délais ? Réponse en jours, arrondie au dixième.",
+            "options": null
+          },
+          {
+            "id": "b2-02-a1-resume",
+            "enonce": "La facture F105 (146 jours) est contestée par le client. Quel résumé des délais envoyer à la banque ?",
+            "options": [
+              {
+                "id": "retirer-f105-et-publier-la-moyenne-des-d-7ddab140",
+                "libelle": "Retirer F105 et publier la moyenne des dix-neuf autres délais"
+              },
+              {
+                "id": "publier-la-moyenne-seule-arrondie-au-jou-66882be8",
+                "libelle": "Publier la moyenne seule, arrondie au jour"
+              },
+              {
+                "id": "garder-f105-la-signaler-et-publier-la-me-07ab59f8",
+                "libelle": "Garder F105, la signaler, et publier la médiane avec la moyenne et l’écart-type"
+              }
+            ]
+          }
+        ],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A1-08-CORRECTION",
+        "type": "fp-story",
+        "titre": "Correction de l’exercice 1",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A1-08-CORRECTION",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A1-08-CORRECTION",
+              "renderer": "answer-review",
+              "props": {
+                "title": "Correction de l’exercice 1",
+                "source": {
+                  "screenId": "B2-02-A1-08-ATELIER-RESUME"
+                },
+                "explications": [
+                  {
+                    "reference": "b2-02-a1-mediane",
+                    "texte": "Série triée : 18 ; 25 ; 28 ; 30 ; 31 ; 34 ; 35 ; 38 ; 40 ; 42 ; 44 ; 45 ; … ; 146. Vingt valeurs : médiane = (10e + 11e) ÷ 2 = (42 + 44) ÷ 2 = 43 jours. Sans tri, le milieu de la liste donne 39,5, un nombre sans signification."
+                  },
+                  {
+                    "reference": "b2-02-a1-moyenne",
+                    "texte": "Somme des délais : 955 jours ; 955 ÷ 20 = 47,75 jours. Sans F105, on trouverait 42,58 : retirer la facture change le résultat sans pièce qui le justifie."
+                  },
+                  {
+                    "reference": "b2-02-a1-ecart-type",
+                    "texte": "ECARTYPEP donne ≈ 26,2 jours : les vingt factures sont toute la population. ECARTYPE (÷ 19) donnerait 26,88 ; la variance, 686,49 jours², n’est pas dans l’unité des délais."
+                  },
+                  {
+                    "reference": "b2-02-a1-resume",
+                    "texte": "La moyenne, tirée par F105, dépasse la médiane de près de cinq jours. On garde F105, on la signale, et l’on donne la médiane avec la moyenne et l’écart-type."
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["mediane", "moyenne", "ecart-type", "choix-du-resume"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "ecranCorrige": "B2-02-A1-08-ATELIER-RESUME",
+        "notes": "• Commencer par la question la moins réussie (score sous chaque correction).\n• Transition : jalon 1, puis pause de 15 minutes.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A1-09-JALON",
+        "type": "fp-pulse",
+        "titre": "Jalon 1 : résumer une série",
+        "duree": 1,
+        "interactif": false,
+        "donnees": {
+          "sondage": {
+            "id": "b2-02-a1-jalon",
+            "invite": "Je sais résumer une série par un centre et un écart, et choisir entre moyenne et médiane.",
+            "metadonnees": {
+              "concepts": ["choix-du-resume"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 1,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• 30 s de vote anonyme.\n• Si plus de 30 % « Perdu » : reprendre la trace écrite A1-06 après la pause.\n• Pause de 15 minutes, hors durée programmée.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A2-01-NUAGE-RIVAGE",
+        "type": "fp-story",
+        "titre": "Six années de chiffre d’affaires d’Atelier Rivage",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A2-01-NUAGE-RIVAGE",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A2-01-NUAGE-RIVAGE",
+              "renderer": "scatter",
+              "props": {
+                "title": "Six années de chiffre d’affaires d’Atelier Rivage",
+                "subtitle": "Rang de l’année en abscisse (1 pour 2020), chiffre d’affaires annuel en milliers d’euros.",
+                "xLabel": "Rang de l’année",
+                "yLabel": "Chiffre d’affaires (k€)",
+                "xRange": [0, 7],
+                "yRange": [550, 900],
+                "points": [
+                  {
+                    "x": 1,
+                    "y": 610,
+                    "label": "2020"
+                  },
+                  {
+                    "x": 2,
+                    "y": 652,
+                    "label": "2021"
+                  },
+                  {
+                    "x": 3,
+                    "y": 694,
+                    "label": "2022"
+                  },
+                  {
+                    "x": 4,
+                    "y": 736,
+                    "label": "2023"
+                  },
+                  {
+                    "x": 5,
+                    "y": 790,
+                    "label": "2024"
+                  },
+                  {
+                    "x": 6,
+                    "y": 826,
+                    "label": "2025"
+                  }
+                ],
+                "reading": "Les six points montent presque en ligne droite : le chiffre d’affaires augmente chaque année.",
+                "source": "Données fictives Atelier Rivage, créées pour ce cours.",
+                "description": "Nuage de six points : en abscisse les rangs 1 à 6, des années 2020 à 2025 ; en ordonnée le chiffre d’affaires, de 610 à 826 milliers d’euros. Les points montent régulièrement, presque alignés."
+              }
+            },
+            "metadonnees": {
+              "concepts": ["nuage-de-points"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• 1 min de lecture : que montre le nuage ?\n• Relance : « Peut-on prolonger cette tendance jusqu’en 2028 ? » Pas de réponse : c’est la suite du cours.",
+        "diffusion": "catalogue",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A2-02-VOTE-CORRELATION",
+        "type": "fp-vote",
+        "titre": "Vote : deux séries qui montent ensemble",
+        "duree": 8,
+        "interactif": true,
+        "donnees": {
+          "question": {
+            "id": "b2-02-a2-glaces",
+            "enonce": "Mois par mois, les ventes de voiles d’Atelier Rivage et celles du glacier voisin montent et descendent ensemble. Que peut-on conclure ?",
+            "options": [
+              {
+                "id": "rien-sur-une-cause-la-saison-fait-varier-7fa82ffd",
+                "libelle": "Rien sur une cause : la saison fait varier les deux ventes"
+              },
+              {
+                "id": "les-voiles-font-vendre-des-glaces-aee8d6d0",
+                "libelle": "Les voiles font vendre des glaces"
+              },
+              {
+                "id": "les-glaces-font-vendre-des-voiles-5efb332f",
+                "libelle": "Les glaces font vendre des voiles"
+              }
+            ]
+          },
+          "questionJumelle": {
+            "id": "b2-02-a2-formation",
+            "enonce": "De 2020 à 2025, les heures de formation des salariés d’Atelier Rivage et son chiffre d’affaires ont augmenté ensemble. Hélène conclut : « la formation fait notre chiffre d’affaires ». Que lui répondre ?",
+            "options": [
+              {
+                "id": "les-deux-series-suivent-le-temps-leur-li-f7571bfd",
+                "libelle": "Les deux séries suivent le temps : leur lien ne prouve pas une cause"
+              },
+              {
+                "id": "elle-a-raison-si-le-lien-entre-les-serie-d6393ec1",
+                "libelle": "Elle a raison si le lien entre les séries est très fort"
+              },
+              {
+                "id": "elle-a-raison-les-deux-series-montent-en-3f4bf2de",
+                "libelle": "Elle a raison : les deux séries montent ensemble"
+              }
+            ]
+          }
+        },
+        "notes": "• Temps « réfléchir » de la notion 2 : vote non noté.\n• Vote 1 individuel ; entre 30 et 70 % de bonnes réponses, débat en binôme puis revote ; sinon, revote directement.\n• Papier : vote à main levée, puis revote après discussion en binôme.",
+        "diffusion": "seance",
+        "seuil": 0.7,
+        "corriges": [
+          {
+            "questionId": "b2-02-a2-glaces",
+            "bonneReponse": "Rien sur une cause : la saison fait varier les deux ventes",
+            "confusions": [
+              {
+                "id": "correlation-prise-pour-causalite",
+                "libelle": "Conclure sur une cause, ou sur l’absence de cause, à partir de deux évolutions simultanées."
+              },
+              {
+                "id": "correlation-prise-pour-causalite",
+                "libelle": "Conclure sur une cause, ou sur l’absence de cause, à partir de deux évolutions simultanées."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-a2-formation",
+            "bonneReponse": "Les deux séries suivent le temps : leur lien ne prouve pas une cause",
+            "confusions": [
+              {
+                "id": "correlation-prise-pour-causalite",
+                "libelle": "Conclure sur une cause, ou sur l’absence de cause, à partir de deux évolutions simultanées."
+              },
+              {
+                "id": "correlation-prise-pour-causalite",
+                "libelle": "Conclure sur une cause, ou sur l’absence de cause, à partir de deux évolutions simultanées."
+              }
+            ]
+          }
+        ],
+        "questions": [
+          {
+            "id": "b2-02-a2-glaces",
+            "enonce": "Mois par mois, les ventes de voiles d’Atelier Rivage et celles du glacier voisin montent et descendent ensemble. Que peut-on conclure ?",
+            "options": [
+              {
+                "id": "rien-sur-une-cause-la-saison-fait-varier-7fa82ffd",
+                "libelle": "Rien sur une cause : la saison fait varier les deux ventes"
+              },
+              {
+                "id": "les-voiles-font-vendre-des-glaces-aee8d6d0",
+                "libelle": "Les voiles font vendre des glaces"
+              },
+              {
+                "id": "les-glaces-font-vendre-des-voiles-5efb332f",
+                "libelle": "Les glaces font vendre des voiles"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-a2-formation",
+            "enonce": "De 2020 à 2025, les heures de formation des salariés d’Atelier Rivage et son chiffre d’affaires ont augmenté ensemble. Hélène conclut : « la formation fait notre chiffre d’affaires ». Que lui répondre ?",
+            "options": [
+              {
+                "id": "les-deux-series-suivent-le-temps-leur-li-f7571bfd",
+                "libelle": "Les deux séries suivent le temps : leur lien ne prouve pas une cause"
+              },
+              {
+                "id": "elle-a-raison-si-le-lien-entre-les-serie-d6393ec1",
+                "libelle": "Elle a raison si le lien entre les séries est très fort"
+              },
+              {
+                "id": "elle-a-raison-les-deux-series-montent-en-3f4bf2de",
+                "libelle": "Elle a raison : les deux séries montent ensemble"
+              }
+            ]
+          }
+        ],
+        "corrigeEcran": {
+          "type": "revelation",
+          "titre": "Deux séries liées ne prouvent pas une cause",
+          "lignes": [
+            "Voiles et glaces : la saison fait varier les deux ventes à la fois.",
+            "Formation et chiffre d’affaires : les deux séries augmentent avec le temps, pour bien d’autres raisons.",
+            "Une corrélation mesure l’alignement de deux séries, pas ce qui cause leurs variations."
+          ]
+        }
+      },
+      {
+        "id": "B2-02-A2-03-COURS-NUAGE",
+        "type": "fp-story",
+        "titre": "Cours : nuage de points, point moyen, corrélation",
+        "duree": 6,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A2-03-COURS-NUAGE",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A2-03-COURS-NUAGE",
+              "renderer": "lesson",
+              "props": {
+                "title": "Nuage de points, point moyen, corrélation",
+                "subtitle": "Trace écrite · notion 2",
+                "blocks": [
+                  {
+                    "kind": "definition",
+                    "title": "Série à deux variables et nuage de points",
+                    "text": "On observe deux caractères x et y aux mêmes dates ou sur les mêmes individus. Chaque couple (xᵢ ; yᵢ) donne un point ; l’ensemble des points forme le nuage."
+                  },
+                  {
+                    "kind": "definition",
+                    "title": "Le point moyen",
+                    "text": "Le point moyen G a pour abscisse la moyenne des xᵢ et pour ordonnée la moyenne des yᵢ. Ce n’est pas le point du milieu du tableau.",
+                    "formula": "G(x̄ ; ȳ)"
+                  },
+                  {
+                    "kind": "property",
+                    "title": "Le coefficient de corrélation linéaire r",
+                    "text": "r est compris entre −1 et 1. Plus |r| est proche de 1, plus les points sont proches d’une droite ; le signe de r dit seulement si cette droite monte ou descend. r n’est pas la pente de la droite.",
+                    "formula": "−1 ≤ r ≤ 1 · =COEFFICIENT.CORRELATION(plage des x;plage des y)"
+                  },
+                  {
+                    "kind": "property",
+                    "title": "Corrélation n’est pas causalité",
+                    "text": "Deux séries peuvent évoluer ensemble parce qu’une troisième variable, la saison ou le temps, les fait varier toutes les deux. Un |r| proche de 1 autorise un ajustement affine, jamais une conclusion sur une cause."
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["nuage-de-points", "correlation"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 6,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• Trace écrite : 6 min au plus.\n• Faire dire la différence entre le point moyen et le point du milieu du tableau.",
+        "diffusion": "catalogue",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A2-04-EXEMPLE-NUAGE",
+        "type": "fp-worked",
+        "titre": "Exemple guidé : publicité et commandes",
+        "duree": 5,
+        "interactif": true,
+        "donnees": {
+          "exemple": {
+            "id": "b2-02-a2-exemple-nuage",
+            "enonce": "Sur quatre mois, Atelier Rivage a dépensé x centaines d’euros de publicité en ligne et reçu y commandes : x = 2 ; 4 ; 6 ; 8 et y = 11 ; 15 ; 20 ; 22.",
+            "etapes": [
+              {
+                "id": "nuage",
+                "intitule": "Placer le nuage",
+                "raisonnement": "Quatre points : (2 ; 11), (4 ; 15), (6 ; 20), (8 ; 22). Ils montent de gauche à droite.",
+                "invite": "Quels sont les quatre points du nuage ?"
+              },
+              {
+                "id": "point-moyen",
+                "intitule": "Le point moyen",
+                "raisonnement": "x̄ = (2 + 4 + 6 + 8) ÷ 4 = 5 ; ȳ = (11 + 15 + 20 + 22) ÷ 4 = 17. G(5 ; 17). Le point du milieu du tableau n’existe pas ici : quatre colonnes.",
+                "invite": "Quelles sont les coordonnées du point moyen G ?"
+              },
+              {
+                "id": "r",
+                "intitule": "Le coefficient de corrélation",
+                "raisonnement": "À la calculatrice ou au tableur : r ≈ 0,988. Il est très proche de 1 : les points sont presque alignés sur une droite qui monte.",
+                "invite": "Que vaut r, arrondi au millième ?"
+              },
+              {
+                "id": "lecture",
+                "intitule": "Lire r",
+                "raisonnement": "r proche de 1 justifie un ajustement affine. r n’est pas la pente : il ne dit pas combien de commandes rapporte une centaine d’euros.",
+                "invite": "Que permet de dire un r aussi proche de 1 ?"
+              },
+              {
+                "id": "prudence",
+                "intitule": "Et la cause ?",
+                "raisonnement": "Les commandes ont pu augmenter avec la saison, en même temps que la publicité. La corrélation seule ne prouve pas que la publicité les a causées.",
+                "invite": "La publicité est-elle la cause des commandes ?"
+              }
+            ],
+            "metadonnees": {
+              "concepts": ["nuage-de-points", "correlation"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 5,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          },
+          "etayage": 0
+        },
+        "resoluPar": ["B2-02-A2-04-CORRECTION"],
+        "notes": "• Chacun répond sous chaque étape ; la correction vient à l’écran suivant.\n• Papier : réponses sous chaque étape du livret.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A2-04-CORRECTION",
+        "type": "fp-worked",
+        "titre": "Correction : publicité et commandes",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "exemple": {
+            "id": "b2-02-a2-exemple-nuage-corrige",
+            "enonce": "Sur quatre mois, Atelier Rivage a dépensé x centaines d’euros de publicité en ligne et reçu y commandes : x = 2 ; 4 ; 6 ; 8 et y = 11 ; 15 ; 20 ; 22.",
+            "etapes": [
+              {
+                "id": "nuage",
+                "intitule": "Placer le nuage",
+                "raisonnement": "Quatre points : (2 ; 11), (4 ; 15), (6 ; 20), (8 ; 22). Ils montent de gauche à droite.",
+                "invite": "Quels sont les quatre points du nuage ?"
+              },
+              {
+                "id": "point-moyen",
+                "intitule": "Le point moyen",
+                "raisonnement": "x̄ = (2 + 4 + 6 + 8) ÷ 4 = 5 ; ȳ = (11 + 15 + 20 + 22) ÷ 4 = 17. G(5 ; 17). Le point du milieu du tableau n’existe pas ici : quatre colonnes.",
+                "invite": "Quelles sont les coordonnées du point moyen G ?"
+              },
+              {
+                "id": "r",
+                "intitule": "Le coefficient de corrélation",
+                "raisonnement": "À la calculatrice ou au tableur : r ≈ 0,988. Il est très proche de 1 : les points sont presque alignés sur une droite qui monte.",
+                "invite": "Que vaut r, arrondi au millième ?"
+              },
+              {
+                "id": "lecture",
+                "intitule": "Lire r",
+                "raisonnement": "r proche de 1 justifie un ajustement affine. r n’est pas la pente : il ne dit pas combien de commandes rapporte une centaine d’euros.",
+                "invite": "Que permet de dire un r aussi proche de 1 ?"
+              },
+              {
+                "id": "prudence",
+                "intitule": "Et la cause ?",
+                "raisonnement": "Les commandes ont pu augmenter avec la saison, en même temps que la publicité. La corrélation seule ne prouve pas que la publicité les a causées.",
+                "invite": "La publicité est-elle la cause des commandes ?"
+              }
+            ],
+            "metadonnees": {
+              "concepts": ["nuage-de-points", "correlation"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          },
+          "etayage": 0,
+          "pilote": true,
+          "corrigeDe": "B2-02-A2-04-EXEMPLE-NUAGE"
+        },
+        "ecranCorrige": "B2-02-A2-04-EXEMPLE-NUAGE",
+        "notes": "• S’arrêter sur le point moyen (étape 2) et sur la prudence (étape 5).\n• Transition : « À vous, sur Atelier Rivage : exercice 2. »",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A2-05-ATELIER-NUAGE",
+        "type": "questionnaire",
+        "titre": "Exercice 2 — Le nuage d’Atelier Rivage",
+        "duree": 9,
+        "interactif": true,
+        "donnees": {
+          "intitule": "Exercice 2 — Le nuage d’Atelier Rivage",
+          "consigne": "Calculatrice autorisée. Chiffre d’affaires d’Atelier Rivage, en milliers d’euros, pour les rangs x = 1 à 6 (années 2020 à 2025) : 610 ; 652 ; 694 ; 736 ; 790 ; 826.",
+          "regime": "focus",
+          "ordre": "fixe",
+          "questions": [
+            {
+              "brique": "fp-numeric",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a2-x-moyen",
+                  "enonce": "Quelle est l’abscisse x̄ du point moyen G ?",
+                  "unite": null,
+                  "metadonnees": {
+                    "concepts": ["nuage-de-points", "correlation"],
+                    "misconceptionsCiblees": [],
+                    "dureeMinutes": 9,
+                    "modalite": "solo",
+                    "regime": "focus"
+                  }
+                }
+              }
+            },
+            {
+              "brique": "fp-numeric",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a2-y-moyen",
+                  "enonce": "Quelle est l’ordonnée ȳ du point moyen G, en milliers d’euros ?",
+                  "unite": "k€",
+                  "metadonnees": {
+                    "concepts": ["nuage-de-points", "correlation"],
+                    "misconceptionsCiblees": [],
+                    "dureeMinutes": 9,
+                    "modalite": "solo",
+                    "regime": "focus"
+                  }
+                }
+              }
+            },
+            {
+              "brique": "fp-numeric",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a2-r",
+                  "enonce": "Quel est le coefficient de corrélation linéaire r entre x et y ? Arrondir au millième.",
+                  "unite": null,
+                  "metadonnees": {
+                    "concepts": ["nuage-de-points", "correlation"],
+                    "misconceptionsCiblees": [],
+                    "dureeMinutes": 9,
+                    "modalite": "solo",
+                    "regime": "focus"
+                  }
+                }
+              }
+            },
+            {
+              "brique": "fp-vote",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a2-lecture-r",
+                  "enonce": "Hélène demande : peut-on résumer la tendance du chiffre d’affaires par une droite ?",
+                  "options": [
+                    {
+                      "id": "oui-r-est-tres-proche-de-1-les-points-so-9279855e",
+                      "libelle": "Oui : r est très proche de 1, les points sont presque alignés"
+                    },
+                    {
+                      "id": "non-r-devrait-etre-egal-a-la-hausse-annu-be331066",
+                      "libelle": "Non : r devrait être égal à la hausse annuelle du chiffre d’affaires"
+                    },
+                    {
+                      "id": "oui-et-r-prouve-que-les-hausses-de-tarif-10142dac",
+                      "libelle": "Oui, et r prouve que les hausses de tarifs causent cette croissance"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "renvoi": "B2-02-A2-01-NUAGE-RIVAGE",
+        "resoluPar": ["B2-02-A2-05-CORRECTION"],
+        "notes": "• Temps : réflexion 2 min · travail 7 min\n• Réflexion : relire la trace écrite et repérer la touche de r sur la calculatrice.\n• Pièges : les sommes au lieu des moyennes ; le point du milieu du tableau ; r lu comme la hausse annuelle.\n• Papier : exercice 2 du livret.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [
+          {
+            "questionId": "b2-02-a2-x-moyen",
+            "bonneReponse": "3,5",
+            "confusions": [
+              {
+                "id": "point-moyen-confondu",
+                "libelle": "Prendre pour point moyen le point du milieu du tableau au lieu du point de coordonnées (x̄ ; ȳ)."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-a2-y-moyen",
+            "bonneReponse": "718",
+            "confusions": [
+              {
+                "id": "point-moyen-confondu",
+                "libelle": "Prendre pour point moyen le point du milieu du tableau au lieu du point de coordonnées (x̄ ; ȳ)."
+              },
+              {
+                "id": "point-moyen-confondu",
+                "libelle": "Prendre pour point moyen le point du milieu du tableau au lieu du point de coordonnées (x̄ ; ȳ)."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-a2-r",
+            "bonneReponse": "0,999",
+            "confusions": [
+              {
+                "id": "correlation-lue-comme-pente",
+                "libelle": "Lire le coefficient de corrélation comme la pente de la droite d’ajustement."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-a2-lecture-r",
+            "bonneReponse": "Oui : r est très proche de 1, les points sont presque alignés",
+            "confusions": [
+              {
+                "id": "correlation-prise-pour-causalite",
+                "libelle": "Conclure sur une cause, ou sur l’absence de cause, à partir de deux évolutions simultanées."
+              },
+              {
+                "id": "correlation-lue-comme-pente",
+                "libelle": "Lire le coefficient de corrélation comme la pente de la droite d’ajustement."
+              }
+            ]
+          }
+        ],
+        "questions": [
+          {
+            "id": "b2-02-a2-x-moyen",
+            "enonce": "Quelle est l’abscisse x̄ du point moyen G ?",
+            "options": null
+          },
+          {
+            "id": "b2-02-a2-y-moyen",
+            "enonce": "Quelle est l’ordonnée ȳ du point moyen G, en milliers d’euros ?",
+            "options": null
+          },
+          {
+            "id": "b2-02-a2-r",
+            "enonce": "Quel est le coefficient de corrélation linéaire r entre x et y ? Arrondir au millième.",
+            "options": null
+          },
+          {
+            "id": "b2-02-a2-lecture-r",
+            "enonce": "Hélène demande : peut-on résumer la tendance du chiffre d’affaires par une droite ?",
+            "options": [
+              {
+                "id": "oui-r-est-tres-proche-de-1-les-points-so-9279855e",
+                "libelle": "Oui : r est très proche de 1, les points sont presque alignés"
+              },
+              {
+                "id": "non-r-devrait-etre-egal-a-la-hausse-annu-be331066",
+                "libelle": "Non : r devrait être égal à la hausse annuelle du chiffre d’affaires"
+              },
+              {
+                "id": "oui-et-r-prouve-que-les-hausses-de-tarif-10142dac",
+                "libelle": "Oui, et r prouve que les hausses de tarifs causent cette croissance"
+              }
+            ]
+          }
+        ],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A2-05-CORRECTION",
+        "type": "fp-story",
+        "titre": "Correction de l’exercice 2",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A2-05-CORRECTION",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A2-05-CORRECTION",
+              "renderer": "answer-review",
+              "props": {
+                "title": "Correction de l’exercice 2",
+                "source": {
+                  "screenId": "B2-02-A2-05-ATELIER-NUAGE"
+                },
+                "explications": [
+                  {
+                    "reference": "b2-02-a2-x-moyen",
+                    "texte": "x̄ = (1 + 2 + 3 + 4 + 5 + 6) ÷ 6 = 21 ÷ 6 = 3,5. La somme 21 n’est pas une coordonnée."
+                  },
+                  {
+                    "reference": "b2-02-a2-y-moyen",
+                    "texte": "ȳ = 4 308 ÷ 6 = 718 k€. La demi-somme des deux valeurs du milieu, 715, n’est pas la moyenne."
+                  },
+                  {
+                    "reference": "b2-02-a2-r",
+                    "texte": "r ≈ 0,999 : les six points sont presque alignés. La hausse annuelle du chiffre d’affaires est la pente de la droite, calculée à l’acte 3 : ce n’est pas r."
+                  },
+                  {
+                    "reference": "b2-02-a2-lecture-r",
+                    "texte": "Un r aussi proche de 1 justifie un ajustement affine. Il ne dit rien de ce qui cause la croissance."
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["nuage-de-points", "correlation"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "ecranCorrige": "B2-02-A2-05-ATELIER-NUAGE",
+        "notes": "• Commencer par la question la moins réussie.\n• Transition : « Vérifions G autrement : les écarts au point moyen. »",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A2-06-ECARTS-POINT-MOYEN",
+        "type": "fp-table-build",
+        "titre": "Exercice 3 — Les écarts au point moyen",
+        "duree": 10,
+        "interactif": true,
+        "donnees": {
+          "plan": {
+            "id": "b2-02-a2-ecarts-point-moyen",
+            "intitule": "Les écarts au point moyen",
+            "consignes": [
+              "Rappel de l’exercice 2 : x̄ = 3,5 et ȳ = 718 k€.",
+              "Pour chaque année, écrivez l’écart du rang à x̄, puis l’écart du chiffre d’affaires à ȳ.",
+              "Comparez les signes des deux écarts sur chaque ligne."
+            ],
+            "echeances": 6,
+            "libellesLignes": ["2020", "2021", "2022", "2023", "2024", "2025"],
+            "parametres": {},
+            "colonnes": [
+              {
+                "cle": "rang",
+                "intitule": "Rang xᵢ",
+                "role": "donnee",
+                "decimales": 0,
+                "valeurs": [1, 2, 3, 4, 5, 6],
+                "totalise": false
+              },
+              {
+                "cle": "ca",
+                "intitule": "Chiffre d’affaires yᵢ (k€)",
+                "role": "donnee",
+                "decimales": 0,
+                "valeurs": [610, 652, 694, 736, 790, 826],
+                "totalise": false
+              },
+              {
+                "cle": "ecartX",
+                "intitule": "xᵢ − x̄",
+                "role": "saisie",
+                "decimales": 1,
+                "totalise": false
+              },
+              {
+                "cle": "ecartY",
+                "intitule": "yᵢ − ȳ (k€)",
+                "role": "saisie",
+                "decimales": 0,
+                "totalise": false
+              }
+            ],
+            "synthese": [],
+            "metadonnees": {
+              "concepts": ["nuage-de-points"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 10,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "resoluPar": ["B2-02-A2-06-CORRECTION"],
+        "notes": "• Temps : réflexion 2 min · travail 8 min\n• Réflexion : prévoir le signe des écarts de la première et de la dernière année.\n• Piège : l’écart au rang du milieu du tableau au lieu de x̄.\n• Contrôle à faire dire : les écarts d’une colonne ont une somme nulle.\n• Papier : tableau du livret.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [
+          {
+            "id": "b2-02-a2-ecarts-point-moyen",
+            "enonce": "Les écarts au point moyen",
+            "options": null
+          }
+        ],
+        "corrigeEcran": {
+          "type": "tableau",
+          "attendus": [
+            {
+              "rang": 0,
+              "cle": "ecartX",
+              "valeur": -2.5
+            },
+            {
+              "rang": 0,
+              "cle": "ecartY",
+              "valeur": -108
+            },
+            {
+              "rang": 1,
+              "cle": "ecartX",
+              "valeur": -1.5
+            },
+            {
+              "rang": 1,
+              "cle": "ecartY",
+              "valeur": -66
+            },
+            {
+              "rang": 2,
+              "cle": "ecartX",
+              "valeur": -0.5
+            },
+            {
+              "rang": 2,
+              "cle": "ecartY",
+              "valeur": -24
+            },
+            {
+              "rang": 3,
+              "cle": "ecartX",
+              "valeur": 0.5
+            },
+            {
+              "rang": 3,
+              "cle": "ecartY",
+              "valeur": 18
+            },
+            {
+              "rang": 4,
+              "cle": "ecartX",
+              "valeur": 1.5
+            },
+            {
+              "rang": 4,
+              "cle": "ecartY",
+              "valeur": 72
+            },
+            {
+              "rang": 5,
+              "cle": "ecartX",
+              "valeur": 2.5
+            },
+            {
+              "rang": 5,
+              "cle": "ecartY",
+              "valeur": 108
+            }
+          ],
+          "tolerance": {
+            "type": "absolue",
+            "valeur": 0.01
+          },
+          "seuilReussite": 0.75
+        }
+      }
+    ],
+    "remediations": {
+      "moyenne-lue-comme-mediane": "B2-02-A1-07-EXEMPLE-RESUME",
+      "mediane-sans-tri": "B2-02-A1-07-EXEMPLE-RESUME",
+      "mediane-rang-pair": "B2-02-A1-07-EXEMPLE-RESUME",
+      "valeur-extreme-ignoree": "B2-02-A1-06-COURS-RESUMER",
+      "valeur-extreme-supprimee": "B2-02-A1-06-COURS-RESUMER",
+      "ecart-type-population-echantillon": "B2-02-A1-06-COURS-RESUMER",
+      "variance-confondue-avec-ecart-type": "B2-02-A1-06-COURS-RESUMER",
+      "etendue-prise-pour-dispersion": "B2-02-A1-06-COURS-RESUMER",
+      "correlation-prise-pour-causalite": "B2-02-A2-03-COURS-NUAGE",
+      "point-moyen-confondu": "B2-02-A2-04-EXEMPLE-NUAGE",
+      "correlation-lue-comme-pente": "B2-02-A2-03-COURS-NUAGE",
+      "correlation-jugee-au-signe": "B2-02-A2-03-COURS-NUAGE",
+      "pente-ordonnee-inversees": "B2-02-A3-03-EXEMPLE-DROITE",
+      "rang-pris-pour-annee": "B2-02-A3-03-EXEMPLE-DROITE",
+      "seuil-mal-arrondi": "B2-02-A3-03-EXEMPLE-DROITE",
+      "extrapolation-sans-reserve": "B2-02-A3-02-COURS-DROITE"
+    }
+  },
   "catalogue": {
     "id": "b2-02-series-statistiques",
     "titre": "Séries statistiques : résumer, relier, prévoir",
