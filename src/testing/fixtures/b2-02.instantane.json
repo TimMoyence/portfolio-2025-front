@@ -2078,5 +2078,854 @@
         }
       }
     ]
+  },
+  "catalogue": {
+    "id": "b2-02-series-statistiques",
+    "titre": "Séries statistiques : résumer, relier, prévoir",
+    "niveau": "B2",
+    "duree": 180,
+    "concepts": [
+      "serie-statistique",
+      "moyenne",
+      "mediane",
+      "ecart-type",
+      "dispersion",
+      "choix-du-resume",
+      "nuage-de-points",
+      "correlation",
+      "ajustement-affine",
+      "prevision"
+    ],
+    "ecrans": [
+      {
+        "id": "B2-02-A1-01-DIAGNOSTIC",
+        "type": "ecran-verrouille",
+        "titre": "Diagnostic : le délai du milieu",
+        "duree": 4,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A1-02-ACCROCHE",
+        "type": "fp-story",
+        "titre": "Résumer, relier, prévoir",
+        "duree": 1,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A1-02-ACCROCHE",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A1-02-ACCROCHE",
+              "renderer": "hero",
+              "props": {
+                "title": "Résumer, relier, prévoir",
+                "subtitle": "Atelier Rivage, voilerie de La Rochelle. La banque demande le délai de paiement des clients et sa régularité, puis une prévision du chiffre d’affaires pour dimensionner une facilité de caisse.",
+                "bullets": [
+                  "BTS Comptabilité et gestion · 2e année · deuxième cours de mathématiques",
+                  "Trois notions : résumer une série, relier deux variables, prévoir avec une droite",
+                  "Une mini-situation CCF et sa question tableur"
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["serie-statistique"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 1,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        }
+      },
+      {
+        "id": "B2-02-A1-03-MISSION",
+        "type": "ecran-verrouille",
+        "titre": "Votre mission : le dossier de la banque",
+        "duree": 5,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A1-04-FACTURES",
+        "type": "fp-story",
+        "titre": "Les vingt délais de paiement du trimestre",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A1-04-FACTURES",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A1-04-FACTURES",
+              "renderer": "table",
+              "props": {
+                "title": "Les vingt délais de paiement du trimestre",
+                "subtitle": "Factures aux clients professionnels émises au dernier trimestre, toutes encaissées depuis.",
+                "note": "Délai = nombre de jours entre l’émission de la facture et son encaissement. Données fictives Atelier Rivage, créées pour ce cours.",
+                "columns": [
+                  {
+                    "key": "facture",
+                    "label": "Facture"
+                  },
+                  {
+                    "key": "client",
+                    "label": "Type de client"
+                  },
+                  {
+                    "key": "delai",
+                    "label": "Délai de paiement (jours)"
+                  }
+                ],
+                "rows": [
+                  {
+                    "facture": "F101",
+                    "client": "Club nautique",
+                    "delai": "42"
+                  },
+                  {
+                    "facture": "F102",
+                    "client": "Particulier",
+                    "delai": "25"
+                  },
+                  {
+                    "facture": "F103",
+                    "client": "Chantier naval",
+                    "delai": "58"
+                  },
+                  {
+                    "facture": "F104",
+                    "client": "Club nautique",
+                    "delai": "31"
+                  },
+                  {
+                    "facture": "F105",
+                    "client": "Chantier naval (facture contestée)",
+                    "delai": "146"
+                  },
+                  {
+                    "facture": "F106",
+                    "client": "Loueur de bateaux",
+                    "delai": "38"
+                  },
+                  {
+                    "facture": "F107",
+                    "client": "Club nautique",
+                    "delai": "47"
+                  },
+                  {
+                    "facture": "F108",
+                    "client": "Particulier",
+                    "delai": "18"
+                  },
+                  {
+                    "facture": "F109",
+                    "client": "Chantier naval",
+                    "delai": "62"
+                  },
+                  {
+                    "facture": "F110",
+                    "client": "Loueur de bateaux",
+                    "delai": "44"
+                  },
+                  {
+                    "facture": "F111",
+                    "client": "Club nautique",
+                    "delai": "35"
+                  },
+                  {
+                    "facture": "F112",
+                    "client": "Chantier naval",
+                    "delai": "52"
+                  },
+                  {
+                    "facture": "F113",
+                    "client": "Particulier",
+                    "delai": "28"
+                  },
+                  {
+                    "facture": "F114",
+                    "client": "Chantier naval",
+                    "delai": "75"
+                  },
+                  {
+                    "facture": "F115",
+                    "client": "Club nautique",
+                    "delai": "40"
+                  },
+                  {
+                    "facture": "F116",
+                    "client": "Loueur de bateaux",
+                    "delai": "30"
+                  },
+                  {
+                    "facture": "F117",
+                    "client": "Chantier naval",
+                    "delai": "55"
+                  },
+                  {
+                    "facture": "F118",
+                    "client": "Club nautique",
+                    "delai": "34"
+                  },
+                  {
+                    "facture": "F119",
+                    "client": "Loueur de bateaux",
+                    "delai": "50"
+                  },
+                  {
+                    "facture": "F120",
+                    "client": "Club nautique",
+                    "delai": "45"
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["serie-statistique"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        }
+      },
+      {
+        "id": "B2-02-A1-05-UN-SEUL-NOMBRE",
+        "type": "ecran-verrouille",
+        "titre": "Réfléchir : un seul nombre suffit-il ?",
+        "duree": 5,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A1-06-COURS-RESUMER",
+        "type": "fp-story",
+        "titre": "Cours : résumer une série par un centre et un écart",
+        "duree": 6,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A1-06-COURS-RESUMER",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A1-06-COURS-RESUMER",
+              "renderer": "lesson",
+              "props": {
+                "title": "Résumer une série par un centre et un écart",
+                "subtitle": "Trace écrite · notion 1",
+                "blocks": [
+                  {
+                    "kind": "definition",
+                    "title": "Deux centres : la moyenne et la médiane",
+                    "text": "La moyenne répartit le total également entre les valeurs. La médiane partage la série triée en deux groupes de même effectif.",
+                    "formula": "x̄ = (x₁ + x₂ + … + xₙ) ÷ n",
+                    "steps": [
+                      "Trier la série dans l’ordre croissant.",
+                      "Effectif impair : la médiane est la valeur du milieu.",
+                      "Effectif pair : la médiane est la demi-somme des deux valeurs du milieu."
+                    ]
+                  },
+                  {
+                    "kind": "definition",
+                    "title": "Mesurer l’écart",
+                    "text": "L’étendue (maximum − minimum) ne regarde que deux valeurs. L’écart-type mesure l’écart moyen des valeurs à la moyenne, dans l’unité de la série ; la variance est son carré, en unité².",
+                    "formula": "σ = √[((x₁ − x̄)² + … + (xₙ − x̄)²) ÷ n]"
+                  },
+                  {
+                    "kind": "property",
+                    "title": "Une valeur extrême",
+                    "text": "Une valeur extrême tire la moyenne et l’écart-type, pas la médiane. Sans pièce qui prouve une erreur, on ne la retire pas : on la garde, on la signale et l’on publie la médiane à côté de la moyenne."
+                  },
+                  {
+                    "kind": "exam",
+                    "title": "Au CCF, au tableur",
+                    "text": "Toute la population est observée : écart-type avec ECARTYPEP, qui divise par n ; ECARTYPE divise par n − 1, pour un échantillon. Toujours donner l’unité.",
+                    "steps": ["=MOYENNE(plage)", "=MEDIANE(plage)", "=ECARTYPEP(plage)"]
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["moyenne", "mediane", "ecart-type", "dispersion"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 6,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        }
+      },
+      {
+        "id": "B2-02-A1-07-EXEMPLE-RESUME",
+        "type": "ecran-verrouille",
+        "titre": "Exemple guidé : huit factures de septembre",
+        "duree": 6,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A1-07-CORRECTION",
+        "type": "ecran-verrouille",
+        "titre": "Correction : huit factures de septembre",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {},
+        "ecranCorrige": "B2-02-A1-07-EXEMPLE-RESUME"
+      },
+      {
+        "id": "B2-02-A1-08-ATELIER-RESUME",
+        "type": "ecran-verrouille",
+        "titre": "Exercice 1 — Le centre et l’écart des vingt délais",
+        "duree": 10,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A1-08-CORRECTION",
+        "type": "ecran-verrouille",
+        "titre": "Correction de l’exercice 1",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {},
+        "ecranCorrige": "B2-02-A1-08-ATELIER-RESUME"
+      },
+      {
+        "id": "B2-02-A1-09-JALON",
+        "type": "ecran-verrouille",
+        "titre": "Jalon 1 : résumer une série",
+        "duree": 1,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A2-01-NUAGE-RIVAGE",
+        "type": "fp-story",
+        "titre": "Six années de chiffre d’affaires d’Atelier Rivage",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A2-01-NUAGE-RIVAGE",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A2-01-NUAGE-RIVAGE",
+              "renderer": "scatter",
+              "props": {
+                "title": "Six années de chiffre d’affaires d’Atelier Rivage",
+                "subtitle": "Rang de l’année en abscisse (1 pour 2020), chiffre d’affaires annuel en milliers d’euros.",
+                "xLabel": "Rang de l’année",
+                "yLabel": "Chiffre d’affaires (k€)",
+                "xRange": [0, 7],
+                "yRange": [550, 900],
+                "points": [
+                  {
+                    "x": 1,
+                    "y": 610,
+                    "label": "2020"
+                  },
+                  {
+                    "x": 2,
+                    "y": 652,
+                    "label": "2021"
+                  },
+                  {
+                    "x": 3,
+                    "y": 694,
+                    "label": "2022"
+                  },
+                  {
+                    "x": 4,
+                    "y": 736,
+                    "label": "2023"
+                  },
+                  {
+                    "x": 5,
+                    "y": 790,
+                    "label": "2024"
+                  },
+                  {
+                    "x": 6,
+                    "y": 826,
+                    "label": "2025"
+                  }
+                ],
+                "reading": "Les six points montent presque en ligne droite : le chiffre d’affaires augmente chaque année.",
+                "source": "Données fictives Atelier Rivage, créées pour ce cours.",
+                "description": "Nuage de six points : en abscisse les rangs 1 à 6, des années 2020 à 2025 ; en ordonnée le chiffre d’affaires, de 610 à 826 milliers d’euros. Les points montent régulièrement, presque alignés."
+              }
+            },
+            "metadonnees": {
+              "concepts": ["nuage-de-points"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        }
+      },
+      {
+        "id": "B2-02-A2-02-VOTE-CORRELATION",
+        "type": "ecran-verrouille",
+        "titre": "Vote : deux séries qui montent ensemble",
+        "duree": 8,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A2-03-COURS-NUAGE",
+        "type": "fp-story",
+        "titre": "Cours : nuage de points, point moyen, corrélation",
+        "duree": 6,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A2-03-COURS-NUAGE",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A2-03-COURS-NUAGE",
+              "renderer": "lesson",
+              "props": {
+                "title": "Nuage de points, point moyen, corrélation",
+                "subtitle": "Trace écrite · notion 2",
+                "blocks": [
+                  {
+                    "kind": "definition",
+                    "title": "Série à deux variables et nuage de points",
+                    "text": "On observe deux caractères x et y aux mêmes dates ou sur les mêmes individus. Chaque couple (xᵢ ; yᵢ) donne un point ; l’ensemble des points forme le nuage."
+                  },
+                  {
+                    "kind": "definition",
+                    "title": "Le point moyen",
+                    "text": "Le point moyen G a pour abscisse la moyenne des xᵢ et pour ordonnée la moyenne des yᵢ. Ce n’est pas le point du milieu du tableau.",
+                    "formula": "G(x̄ ; ȳ)"
+                  },
+                  {
+                    "kind": "property",
+                    "title": "Le coefficient de corrélation linéaire r",
+                    "text": "r est compris entre −1 et 1. Plus |r| est proche de 1, plus les points sont proches d’une droite ; le signe de r dit seulement si cette droite monte ou descend. r n’est pas la pente de la droite.",
+                    "formula": "−1 ≤ r ≤ 1 · =COEFFICIENT.CORRELATION(plage des x;plage des y)"
+                  },
+                  {
+                    "kind": "property",
+                    "title": "Corrélation n’est pas causalité",
+                    "text": "Deux séries peuvent évoluer ensemble parce qu’une troisième variable, la saison ou le temps, les fait varier toutes les deux. Un |r| proche de 1 autorise un ajustement affine, jamais une conclusion sur une cause."
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["nuage-de-points", "correlation"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 6,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        }
+      },
+      {
+        "id": "B2-02-A2-04-EXEMPLE-NUAGE",
+        "type": "ecran-verrouille",
+        "titre": "Exemple guidé : publicité et commandes",
+        "duree": 5,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A2-04-CORRECTION",
+        "type": "ecran-verrouille",
+        "titre": "Correction : publicité et commandes",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {},
+        "ecranCorrige": "B2-02-A2-04-EXEMPLE-NUAGE"
+      },
+      {
+        "id": "B2-02-A2-05-ATELIER-NUAGE",
+        "type": "ecran-verrouille",
+        "titre": "Exercice 2 — Le nuage d’Atelier Rivage",
+        "duree": 9,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A2-05-CORRECTION",
+        "type": "ecran-verrouille",
+        "titre": "Correction de l’exercice 2",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {},
+        "ecranCorrige": "B2-02-A2-05-ATELIER-NUAGE"
+      },
+      {
+        "id": "B2-02-A2-06-ECARTS-POINT-MOYEN",
+        "type": "ecran-verrouille",
+        "titre": "Exercice 3 — Les écarts au point moyen",
+        "duree": 10,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A2-06-CORRECTION",
+        "type": "ecran-verrouille",
+        "titre": "Correction de l’exercice 3",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {},
+        "ecranCorrige": "B2-02-A2-06-ECARTS-POINT-MOYEN"
+      },
+      {
+        "id": "B2-02-A2-07-JALON",
+        "type": "ecran-verrouille",
+        "titre": "Jalon 2 : relier deux variables",
+        "duree": 1,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A3-01-JUSQU-OU",
+        "type": "ecran-verrouille",
+        "titre": "Réfléchir : jusqu’où prolonger une tendance ?",
+        "duree": 5,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A3-02-COURS-DROITE",
+        "type": "fp-story",
+        "titre": "Cours : la droite des moindres carrés et la prévision",
+        "duree": 6,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A3-02-COURS-DROITE",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A3-02-COURS-DROITE",
+              "renderer": "lesson",
+              "props": {
+                "title": "La droite des moindres carrés et la prévision",
+                "subtitle": "Trace écrite · notion 3",
+                "blocks": [
+                  {
+                    "kind": "definition",
+                    "title": "La droite des moindres carrés",
+                    "text": "C’est la droite y = ax + b qui rend minimale la somme des carrés des écarts verticaux entre les points et la droite. Elle passe toujours par le point moyen G.",
+                    "formula": "a = cov(x, y) ÷ V(x) · b = ȳ − a x̄",
+                    "steps": [
+                      "a : =PENTE(plage des y;plage des x)",
+                      "b : =ORDONNEE.ORIGINE(plage des y;plage des x)",
+                      "Contrôle : a x̄ + b redonne ȳ."
+                    ]
+                  },
+                  {
+                    "kind": "method",
+                    "title": "Prévoir avec la droite",
+                    "text": "Remplacer x par le rang de l’année, jamais par l’année elle-même. Entre les rangs observés, on interpole ; au-delà, on extrapole : la prévision suppose que la tendance continue et devient fragile loin des données.",
+                    "formula": "rang = année − année du rang 1 + 1"
+                  },
+                  {
+                    "kind": "method",
+                    "title": "Trouver l’année d’un seuil",
+                    "text": "Résoudre ax + b ≥ seuil, puis prendre le premier rang entier qui convient, c’est-à-dire l’entier supérieur, et le traduire en année."
+                  },
+                  {
+                    "kind": "exam",
+                    "title": "Rédiger au CCF",
+                    "text": "Donner l’équation avec ses arrondis, la valeur de r et sa lecture, la prévision avec son unité, puis la réserve : « si la tendance observée se poursuit »."
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["ajustement-affine", "prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 6,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        }
+      },
+      {
+        "id": "B2-02-A3-03-EXEMPLE-DROITE",
+        "type": "ecran-verrouille",
+        "titre": "Exemple guidé : la droite de la publicité",
+        "duree": 6,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A3-03-CORRECTION",
+        "type": "ecran-verrouille",
+        "titre": "Correction : la droite de la publicité",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {},
+        "ecranCorrige": "B2-02-A3-03-EXEMPLE-DROITE"
+      },
+      {
+        "id": "B2-02-A3-04-ATELIER-DROITE",
+        "type": "ecran-verrouille",
+        "titre": "Exercice 4 — Prévoir le chiffre d’affaires",
+        "duree": 9,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A3-04-CORRECTION",
+        "type": "ecran-verrouille",
+        "titre": "Correction de l’exercice 4",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {},
+        "ecranCorrige": "B2-02-A3-04-ATELIER-DROITE"
+      },
+      {
+        "id": "B2-02-A3-05-DEFI-IA",
+        "type": "ecran-verrouille",
+        "titre": "Exercice 5 — Corriger la prévision d’une IA",
+        "duree": 8,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A3-05-CORRECTION",
+        "type": "ecran-verrouille",
+        "titre": "Correction de l’exercice 5",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {},
+        "ecranCorrige": "B2-02-A3-05-DEFI-IA"
+      },
+      {
+        "id": "B2-02-A3-06-JALON",
+        "type": "ecran-verrouille",
+        "titre": "Jalon 3 : prévoir avec une droite",
+        "duree": 1,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A4-01-SITUATION-FIBRE",
+        "type": "fp-story",
+        "titre": "Mini-situation CCF : la fibre optique en France",
+        "duree": 3,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A4-01-SITUATION-FIBRE",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A4-01-SITUATION-FIBRE",
+              "renderer": "table",
+              "props": {
+                "title": "Mini-situation CCF : la fibre optique en France",
+                "subtitle": "Nombre d’abonnements internet en fibre optique jusqu’à l’abonné en France, en fin d’année, en millions. Le rang x vaut 1 pour 2020.",
+                "note": "Source : Arcep, Observatoire des marchés des communications électroniques en France, résultats des quatrièmes trimestres 2020 à 2024. Données publiques réutilisables.",
+                "columns": [
+                  {
+                    "key": "annee",
+                    "label": "Année"
+                  },
+                  {
+                    "key": "rang",
+                    "label": "Rang x"
+                  },
+                  {
+                    "key": "abonnements",
+                    "label": "Abonnements y (millions)"
+                  }
+                ],
+                "rows": [
+                  {
+                    "annee": "2020",
+                    "rang": "1",
+                    "abonnements": "10,3"
+                  },
+                  {
+                    "annee": "2021",
+                    "rang": "2",
+                    "abonnements": "14,5"
+                  },
+                  {
+                    "annee": "2022",
+                    "rang": "3",
+                    "abonnements": "18,1"
+                  },
+                  {
+                    "annee": "2023",
+                    "rang": "4",
+                    "abonnements": "21,4"
+                  },
+                  {
+                    "annee": "2024",
+                    "rang": "5",
+                    "abonnements": "24,4"
+                  }
+                ],
+                "sourceLink": {
+                  "href": "https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/observatoire-des-marches-des-communications-electroniques-en-france/t4-2024.html",
+                  "label": "Arcep · observatoire du quatrième trimestre 2024"
+                }
+              }
+            },
+            "metadonnees": {
+              "concepts": ["nuage-de-points", "prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 3,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        }
+      },
+      {
+        "id": "B2-02-A4-02-TABLEUR-FIBRE",
+        "type": "ecran-verrouille",
+        "titre": "Question tableur (3 points sur 10) : ajuster la série",
+        "duree": 15,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A4-02-CORRECTION",
+        "type": "ecran-verrouille",
+        "titre": "Correction de la question tableur",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {},
+        "ecranCorrige": "B2-02-A4-02-TABLEUR-FIBRE"
+      },
+      {
+        "id": "B2-02-A4-03-COFFRE-FIBRE",
+        "type": "ecran-verrouille",
+        "titre": "Mini-situation : prévoir et juger la prévision",
+        "duree": 14,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A4-03-CORRECTION",
+        "type": "ecran-verrouille",
+        "titre": "Correction de la mini-situation",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {},
+        "ecranCorrige": "B2-02-A4-03-COFFRE-FIBRE"
+      },
+      {
+        "id": "B2-02-A4-04-RAPPEL",
+        "type": "ecran-verrouille",
+        "titre": "Rappel : de mémoire, sans vos notes",
+        "duree": 6,
+        "interactif": false,
+        "donnees": {}
+      },
+      {
+        "id": "B2-02-A4-05-FICHE-MEMO",
+        "type": "fp-story",
+        "titre": "Fiche mémo : résumer, relier, prévoir",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A4-05-FICHE-MEMO",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A4-05-FICHE-MEMO",
+              "renderer": "grid",
+              "props": {
+                "title": "Fiche mémo : résumer, relier, prévoir",
+                "subtitle": "À garder pour le CCF : chaque carte part d’une question et donne la méthode et son piège.",
+                "items": [
+                  {
+                    "title": "Moyenne",
+                    "description": "Raisonne-t-on sur un total ?",
+                    "back": "Somme des valeurs ÷ effectif. Une valeur extrême la tire."
+                  },
+                  {
+                    "title": "Médiane",
+                    "description": "Cherche-t-on une moitié ?",
+                    "back": "Trier d’abord. Effectif pair : demi-somme des deux valeurs du milieu."
+                  },
+                  {
+                    "title": "Écart-type",
+                    "description": "Les valeurs sont-elles régulières ?",
+                    "back": "Population entière : ECARTYPEP (÷ n). La variance est en unité², l’écart-type dans l’unité."
+                  },
+                  {
+                    "title": "Valeur extrême",
+                    "description": "Une valeur tire la série ?",
+                    "back": "Ne pas la retirer sans pièce ; la signaler, publier la médiane à côté de la moyenne."
+                  },
+                  {
+                    "title": "Point moyen",
+                    "description": "Où passe la droite ?",
+                    "back": "G(x̄ ; ȳ), les deux moyennes, jamais le point du milieu du tableau."
+                  },
+                  {
+                    "title": "Corrélation r",
+                    "description": "Les points sont-ils alignés ?",
+                    "back": "|r| proche de 1 : ajustement affine justifié. r n’est pas la pente et ne prouve aucune cause."
+                  },
+                  {
+                    "title": "Droite des moindres carrés",
+                    "description": "Quelle équation ?",
+                    "back": "a = PENTE(y;x), b = ORDONNEE.ORIGINE(y;x) ; contrôle par G."
+                  },
+                  {
+                    "title": "Prévoir",
+                    "description": "Quelle valeur de x ?",
+                    "back": "Le rang de l’année, jamais l’année. Loin des données : réserve « si la tendance se poursuit »."
+                  },
+                  {
+                    "title": "Seuil",
+                    "description": "En quelle année ?",
+                    "back": "Résoudre ax + b ≥ seuil, prendre l’entier supérieur, le traduire en année."
+                  },
+                  {
+                    "title": "Référentiel du BTS CG",
+                    "description": "Le programme de mathématiques et l’épreuve E3.",
+                    "href": "https://enqdip.sup.adc.education.fr/bts/referentiel/BTS_ComptabiliteGestion.pdf",
+                    "external": true
+                  }
+                ],
+                "imprimable": true
+              }
+            },
+            "metadonnees": {
+              "concepts": [
+                "serie-statistique",
+                "moyenne",
+                "mediane",
+                "ecart-type",
+                "dispersion",
+                "choix-du-resume",
+                "nuage-de-points",
+                "correlation",
+                "ajustement-affine",
+                "prevision"
+              ],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        }
+      },
+      {
+        "id": "B2-02-A4-06-BILLET-DE-SORTIE",
+        "type": "ecran-verrouille",
+        "titre": "Billet de sortie : la phrase pour la banque",
+        "duree": 4,
+        "interactif": false,
+        "donnees": {}
+      }
+    ]
   }
 }
