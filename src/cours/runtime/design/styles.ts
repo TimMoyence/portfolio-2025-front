@@ -167,6 +167,16 @@ export const base = `
   color: var(--fp-texte-fort);
 }
 
+:where(.fp-root) .fp-cases {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.fp-root) .fp-cases li::before {
+  content: '☐ ';
+}
+
 :where(.fp-root) .fp-badge {
   display: inline-flex;
   align-items: center;

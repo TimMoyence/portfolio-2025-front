@@ -77,13 +77,22 @@ function avecSaBanqueDeQuestions(ecran: EcranContent, corrige: DerouleCours): Ec
   return corrige.ecrans.find((candidat) => candidat.id === ecran.id) ?? ecran;
 }
 
-export function pagesDuLivretEtudiant(
+export function feuillesDuLivretEtudiant(
   sujet: CoursContent,
   corrige: DerouleCours,
-): readonly EcranContent[] {
-  return sujet.ecrans
-    .filter((ecran) => ecran.ecranSource === undefined && aTraiterSurPapier(ecran))
-    .map((ecran) => avecSaBanqueDeQuestions(ecran, corrige));
+): readonly (readonly EcranContent[])[] {
+  const feuilles: EcranContent[][] = [[]];
+  for (const ecran of sujet.ecrans) {
+    const courante = feuilles[feuilles.length - 1];
+    if (ecran.ecranSource !== undefined) {
+      if (courante.length > 0) {
+        feuilles.push([]);
+      }
+    } else if (aTraiterSurPapier(ecran)) {
+      courante.push(avecSaBanqueDeQuestions(ecran, corrige));
+    }
+  }
+  return feuilles.filter((feuille) => feuille.length > 0);
 }
 
 export function pagesDuCorrige(corrige: DerouleCours): readonly PageDuCorrige[] {

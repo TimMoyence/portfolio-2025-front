@@ -85,6 +85,32 @@ describe('CoursLivretComponent', () => {
     expect(tous(fixture, 'livret-corrige')).toEqual([]);
   });
 
+  it('découpe le livret étudiant en feuilles distribuées après chaque correction, pour ne pas livrer une réponse d’avance', async () => {
+    const { fixture } = await monter(of(LIVRET_B2_02));
+
+    const feuilles = tous(fixture, 'livret-feuille');
+    const feuilleDe = (ecran: string): number =>
+      feuilles.findIndex((feuille) => feuille.querySelector(`[data-ecran="${ecran}"]`) !== null);
+
+    expect(feuilles.length).toBe(11);
+    expect(tous(fixture, 'livret-ecran').length).toBe(25);
+    expect(
+      feuilles.map((feuille) =>
+        feuille.querySelector('[data-testid="livret-feuille-entete"]')?.textContent?.trim(),
+      ),
+    ).toEqual(feuilles.map((_, rang) => `Feuille ${rang + 1} / 11`));
+    for (const [exercice, suite] of [
+      ['B2-02-A2-05-ATELIER-NUAGE', 'B2-02-A2-06-ECARTS-POINT-MOYEN'],
+      ['B2-02-A3-04-ATELIER-DROITE', 'B2-02-A3-05-DEFI-IA'],
+      ['B2-02-A4-02-TABLEUR-FIBRE', 'B2-02-A4-03-COFFRE-FIBRE'],
+      ['B2-02-A1-08-ATELIER-RESUME', 'B2-02-A4-06-BILLET-DE-SORTIE'],
+      ['B2-02-A3-04-ATELIER-DROITE', 'B2-02-A4-06-BILLET-DE-SORTIE'],
+    ]) {
+      expect(feuilleDe(exercice)).withContext(exercice).toBeGreaterThanOrEqual(0);
+      expect(feuilleDe(exercice)).withContext(suite).toBeLessThan(feuilleDe(suite));
+    }
+  });
+
   it('bascule sur le corrigé des 35 écrans du B2-02, corrections et rappel compris', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 

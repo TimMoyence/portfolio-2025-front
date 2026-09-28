@@ -344,6 +344,15 @@ describe('FpTableBuild', () => {
     expect(repere(hote, 'modalite')).toBeNull();
   });
 
+  it('imprime sur papier le tableau vierge de l etudiant, sans champ ni action', () => {
+    hote.setAttribute('data-papier', '');
+
+    expect(reperes(hote, 'ligne').length).toBe(PLAN.echeances);
+    expect(repere(hote, 'consignes')).not.toBeNull();
+    expect(hote.shadowRoot?.querySelectorAll('input, button').length).toBe(0);
+    expect(repere(hote, 'synthese')).toBeNull();
+  });
+
   it('bati un plan sans echeance sans casser le tableau', () => {
     hote.plan = buildTableBuildPlan({ id: 'b2-01-vide', echeances: 0 });
     expect(reperes(hote, 'ligne')).toEqual([]);

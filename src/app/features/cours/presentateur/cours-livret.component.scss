@@ -39,6 +39,11 @@
   margin: 0;
 }
 
+.livret__feuille {
+  display: grid;
+  gap: 2rem;
+}
+
 .livret__page {
   display: grid;
   gap: 1rem;
@@ -110,6 +115,10 @@
 
   .livret__page:last-child {
     break-after: auto;
+  }
+
+  .livret__feuille + .livret__feuille {
+    break-before: page;
   }
 
   .livret__page app-slide-activity {

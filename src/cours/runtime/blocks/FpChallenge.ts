@@ -132,9 +132,10 @@ export class FpChallenge extends FpEnvoi<ChallengeProblemePublic> {
     if (!probleme) {
       return this.attente();
     }
-    const reponse = this.presentateur()
-      ? safeHtml`<p class="fp-challenge__invite">${escapeHtml(probleme.invite)}</p>`
-      : safeHtml`<label class="fp-challenge__invite" for="${escapeHtml(ID_TENTATIVE)}">${escapeHtml(probleme.invite)}</label>
+    const reponse =
+      this.presentateur() || this.surPapier()
+        ? safeHtml`<p class="fp-challenge__invite">${escapeHtml(probleme.invite)}</p>`
+        : safeHtml`<label class="fp-challenge__invite" for="${escapeHtml(ID_TENTATIVE)}">${escapeHtml(probleme.invite)}</label>
         <textarea class="fp-challenge__champ" id="${escapeHtml(ID_TENTATIVE)}" data-testid="tentative" rows="4" aria-label="${escapeHtml(this.texte('challenge-reponse'))}">${escapeHtml(this.tentative)}</textarea>
         <button type="button" class="fp-challenge__envoyer" data-testid="envoyer">${escapeHtml(this.texte('envoyer'))}</button>
         <p class="fp-challenge__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>

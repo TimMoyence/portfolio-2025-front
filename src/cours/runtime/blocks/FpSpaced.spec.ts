@@ -79,6 +79,23 @@ describe('FpSpaced', () => {
     expect(noeud(hote, 'progression')).toBeNull();
   });
 
+  it('imprime les options de chaque question dans un ordre qui ne trahit pas la bonne reponse', () => {
+    hote.setAttribute('data-papier', '');
+    hote.questions = DUES.map((question) => ({
+      ...question,
+      options: [...question.options].reverse(),
+    }));
+
+    const imprimees = [...(hote.shadowRoot?.querySelectorAll('ul.fp-cases') ?? [])].map((liste) =>
+      [...liste.querySelectorAll('li')].map((option) => option.textContent?.trim()),
+    );
+    expect(imprimees).toEqual(
+      DUES.map((question) =>
+        question.options.map((option) => option.libelle).sort((a, b) => a.localeCompare(b, 'fr')),
+      ),
+    );
+  });
+
   it('pose les questions servies par la seance, une a la fois, dans l ordre recu', () => {
     hote.questions = DUES;
 

@@ -179,7 +179,7 @@ export class FpVote extends FpVerdicts {
     return safeHtml`<div class="fp-carte fp-scene">${questions.map(
       (question) => safeHtml`<fieldset class="fp-vote__options">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
-        <ul>${question.options.map((option) => safeHtml`<li>${escapeHtml(option.libelle)}</li>`)}</ul>
+        <ul class="fp-cases">${question.options.map((option) => safeHtml`<li>${escapeHtml(option.libelle)}</li>`)}</ul>
       </fieldset>`,
     )}</div>`;
   }

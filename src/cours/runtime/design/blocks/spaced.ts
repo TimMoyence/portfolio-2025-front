@@ -133,14 +133,7 @@ export const spaced = `
   display: flex;
   flex-wrap: wrap;
   gap: var(--fp-s-1) var(--fp-s-4);
-  margin: 0;
-  padding: 0;
-  list-style: none;
   color: var(--fp-ink-mute);
-}
-
-:where(.fp-root) .fp-spaced__choix li::before {
-  content: '☐ ';
 }
 
 :where(.fp-root) .fp-spaced__nom {

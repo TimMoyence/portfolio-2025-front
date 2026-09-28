@@ -5,7 +5,7 @@ import type { LivretDuCours } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { chantierApresRendu } from './chantier-apres-rendu';
-import { pagesDuCorrige, pagesDuLivretEtudiant } from './livret-papier';
+import { feuillesDuLivretEtudiant, pagesDuCorrige } from './livret-papier';
 
 type VueDuLivret = 'sujet' | 'corrige';
 
@@ -68,15 +68,26 @@ type VueDuLivret = 'sujet' | 'corrige';
           </div>
         </header>
         @if (vue() === 'sujet') {
-          @for (ecran of pagesEtudiant(); track ecran.id) {
-            <section class="livret__page" data-testid="livret-ecran" [attr.data-ecran]="ecran.id">
-              <app-slide-activity
-                [slide]="ecran"
-                [role]="'etudiant'"
-                [apercu]="true"
-                [papier]="true"
-              />
-            </section>
+          @for (feuille of feuillesEtudiant(); track $index; let rang = $index) {
+            <div class="livret__feuille" data-testid="livret-feuille">
+              <p class="livret__kicker" data-testid="livret-feuille-entete" i18n="@@livretFeuille">
+                Feuille {{ rang + 1 }} / {{ feuillesEtudiant().length }}
+              </p>
+              @for (ecran of feuille; track ecran.id) {
+                <section
+                  class="livret__page"
+                  data-testid="livret-ecran"
+                  [attr.data-ecran]="ecran.id"
+                >
+                  <app-slide-activity
+                    [slide]="ecran"
+                    [role]="'etudiant'"
+                    [apercu]="true"
+                    [papier]="true"
+                  />
+                </section>
+              }
+            </div>
           }
         } @else {
           @for (page of pagesCorrige(); track page.ecran.id) {
@@ -140,9 +151,9 @@ export class CoursLivretComponent {
   readonly echec = signal(false);
   readonly vue = signal<VueDuLivret>('sujet');
 
-  readonly pagesEtudiant = computed(() => {
+  readonly feuillesEtudiant = computed(() => {
     const livret = this.livret();
-    return livret === null ? [] : pagesDuLivretEtudiant(livret.sujet, livret.corrige);
+    return livret === null ? [] : feuillesDuLivretEtudiant(livret.sujet, livret.corrige);
   });
 
   readonly pagesCorrige = computed(() => {

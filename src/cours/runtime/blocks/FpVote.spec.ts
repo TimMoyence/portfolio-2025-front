@@ -106,6 +106,7 @@ describe('FpVote', () => {
     );
     expect(legendes).toEqual([QUESTION.enonce, JUMELLE.enonce]);
     expect(hote.shadowRoot?.textContent).toContain('2 960,49 €');
+    expect(hote.shadowRoot?.querySelectorAll('ul.fp-cases').length).toBe(2);
     expect(options(hote)).toEqual([]);
     expect(marque(hote, 'retour')).toBeNull();
   });

@@ -2011,11 +2011,18 @@
           <context context-type="linenumber">66,67</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="livretFeuille" datatype="html">
+        <source> Feuille <x id="INTERPOLATION" equiv-text="{{ rang + 1 }}"/> / <x id="INTERPOLATION_1" equiv-text="{{ feuillesEtudiant().length }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/presentateur/cours-livret.component.ts</context>
+          <context context-type="linenumber">74,76</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="livretGuideReponse" datatype="html">
         <source>Réponse attendue</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-livret.component.ts</context>
-          <context context-type="linenumber">98,99</context>
+          <context context-type="linenumber">109,110</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/livret-papier.ts</context>

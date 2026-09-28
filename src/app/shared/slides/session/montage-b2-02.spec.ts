@@ -7,7 +7,7 @@ import {
 } from '../../../../testing/montage-d-instantane';
 
 decrireLeMontageDeLInstantane('B2-02', INSTANTANE_B2_02, {
-  empreinte: '9bea227adef9219351501b612f4269ffd9d5579d0733c3a6eadca21593f6dae5',
+  empreinte: 'ba0686f482ee29d6331752dd3ddce2b0c32cc5c72bb5466347e47190c394afec',
   ecrans: 38,
   specifiques: () => {
     it('reprend au catalogue les huit écrans publics et verrouille les autres', () => {

@@ -148,7 +148,9 @@ export class FpSpaced extends FpVerdicts {
     const questions = (this.interne ?? []).map(
       (question) => safeHtml`<li data-question="${escapeHtml(question.questionId)}">
         <p class="fp-spaced__enonce" data-testid="enonce">${escapeHtml(question.enonce)}</p>
-        <ul class="fp-spaced__choix">${question.options.map((option) => safeHtml`<li>${escapeHtml(option.libelle)}</li>`)}</ul>
+        <ul class="fp-spaced__choix fp-cases">${[...question.options]
+          .sort((a, b) => a.libelle.localeCompare(b.libelle, 'fr'))
+          .map((option) => safeHtml`<li>${escapeHtml(option.libelle)}</li>`)}</ul>
       </li>`,
     );
     return safeHtml`<ol class="fp-spaced__imprimees">${questions}</ol>`;

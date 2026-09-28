@@ -14970,6 +14970,12 @@
         <target>Printable booklet</target>
       </segment>
     </unit>
+    <unit id="livretFeuille">
+      <segment>
+        <source> Feuille <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ rang + 1 }}"/> / <ph id="1" equiv="INTERPOLATION_1" type="var" disp="{{ feuillesEtudiant().length }}"/> </source>
+        <target> Sheet <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ rang + 1 }}"/> / <ph id="1" equiv="INTERPOLATION_1" type="var" disp="{{ feuillesEtudiant().length }}"/> </target>
+      </segment>
+    </unit>
     <unit id="livretVersion">
       <segment>
         <source> Version publiée n° <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ lu.version }}"/> </source>

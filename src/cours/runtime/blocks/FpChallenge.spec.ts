@@ -97,6 +97,13 @@ describe('FpChallenge', () => {
     expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')).toBeNull();
   });
 
+  it('imprime sur papier l invite de l etudiant, sans zone de tentative ni envoi', () => {
+    hote.setAttribute('data-papier', '');
+
+    expect(hote.shadowRoot?.querySelector('p.fp-challenge__invite')).not.toBeNull();
+    expect(hote.shadowRoot?.querySelectorAll('textarea, button').length).toBe(0);
+  });
+
   it('R4 · rappelle le dossier chiffré pour chaque rôle, sans en échapper le contenu', () => {
     hote.probleme = buildChallengeProbleme({
       id: 'D-DEFI-RAPPEL',

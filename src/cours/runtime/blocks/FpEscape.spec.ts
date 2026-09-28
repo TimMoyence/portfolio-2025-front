@@ -63,6 +63,10 @@ function libelleDe(hote: FpEscape, nom: string): string {
   return noeud(hote, nom)?.textContent?.trim().replace(/\s+/g, ' ') ?? '';
 }
 
+function enoncesAffiches(hote: FpEscape): (string | undefined)[] {
+  return noeuds(hote, 'enonce').map((enonce) => enonce.textContent?.trim());
+}
+
 function etats(hote: FpEscape): string[] {
   return noeuds(hote, 'enigme').map((element) => element.getAttribute('data-etat') ?? '');
 }
@@ -108,9 +112,7 @@ describe('FpEscape', () => {
   it('imprime sur papier l énoncé de chaque énigme, sans saisie, tentatives, indice ni progression', () => {
     hote.setAttribute('data-papier', '');
 
-    expect(noeuds(hote, 'enonce').map((enonce) => enonce.textContent?.trim())).toEqual(
-      PARCOURS.enigmes.map((enigme) => enigme.enonce),
-    );
+    expect(enoncesAffiches(hote)).toEqual(PARCOURS.enigmes.map((enigme) => enigme.enonce));
     for (const absent of [
       'saisie',
       'repondre',
@@ -265,9 +267,7 @@ describe('FpEscape', () => {
     expect(noeuds(hote, 'enigme').map((enigme) => enigme.getAttribute('data-enigme'))).toEqual(
       PARCOURS.enigmes.map((enigme) => enigme.id),
     );
-    expect(noeuds(hote, 'enonce').map((enonce) => enonce.textContent?.trim())).toEqual(
-      PARCOURS.enigmes.map((enigme) => enigme.enonce),
-    );
+    expect(enoncesAffiches(hote)).toEqual(PARCOURS.enigmes.map((enigme) => enigme.enonce));
     expect(hote.shadowRoot?.querySelectorAll('input, button').length).toBe(0);
     expect(noeud(hote, 'progression')).toBeNull();
     expect(noeud(hote, 'minuteur')).toBeNull();

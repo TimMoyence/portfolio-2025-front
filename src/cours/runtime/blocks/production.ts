@@ -134,7 +134,7 @@ export abstract class FpProductionEtayee<Plan extends PlanEtaye, Attendu> extend
     if (plan === null) {
       return this.attente();
     }
-    return this.presentateur() ? this.scene(plan) : this.atelier(plan);
+    return this.presentateur() || this.surPapier() ? this.scene(plan) : this.atelier(plan);
   }
 
   protected abstract valider(): void;
