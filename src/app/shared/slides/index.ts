@@ -21,6 +21,8 @@ export { SlideCtaComponent } from './layouts/slide-cta/slide-cta.component';
 export { SlideTableComponent, type TableColumn } from './layouts/slide-table/slide-table.component';
 export { SlideChartComponent } from './layouts/slide-chart/slide-chart.component';
 export { SlideBoxplotComponent } from './layouts/slide-boxplot/slide-boxplot.component';
+export { SlideLessonComponent } from './layouts/slide-lesson/slide-lesson.component';
+export { SlideScatterComponent } from './layouts/slide-scatter/slide-scatter.component';
 export { SlideSortReviewComponent } from './layouts/slide-sort-review/slide-sort-review.component';
 export { SlideAnswerReviewComponent } from './layouts/slide-answer-review/slide-answer-review.component';
 

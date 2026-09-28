@@ -1,0 +1,125 @@
+<figure class="slide-scatter">
+  <header>
+    <h2>{{ title() }}</h2>
+    @if (subtitle()) {
+      <p class="slide-scatter__subtitle">{{ subtitle() }}</p>
+    }
+  </header>
+
+  <p
+    class="slide-scatter__description"
+    data-testid="slide-scatter-description"
+    [id]="idDescription"
+  >
+    {{ description() }}
+  </p>
+
+  <div
+    class="slide-scatter__plot"
+    role="img"
+    [attr.aria-label]="title()"
+    [attr.aria-describedby]="idDescription"
+  >
+    <span class="slide-scatter__y-label" aria-hidden="true">{{ yLabel() }}</span>
+    <div class="slide-scatter__y-axis" aria-hidden="true">
+      @for (graduation of graduationsY(); track $index) {
+        <span
+          class="slide-scatter__y-tick"
+          data-testid="slide-scatter-graduation-y"
+          [style.bottom.%]="graduation.position"
+          >{{ graduation.libelle }}</span
+        >
+      }
+    </div>
+    <div class="slide-scatter__area" aria-hidden="true">
+      @if (segment(); as droite) {
+        <svg class="slide-scatter__line" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <line
+            data-testid="slide-scatter-droite"
+            vector-effect="non-scaling-stroke"
+            [attr.x1]="droite.x1"
+            [attr.y1]="droite.y1"
+            [attr.x2]="droite.x2"
+            [attr.y2]="droite.y2"
+          />
+        </svg>
+      }
+      @for (place of places(); track $index) {
+        <span
+          class="slide-scatter__point"
+          data-testid="slide-scatter-point"
+          [style.--x]="place.x + '%'"
+          [style.--y]="place.y + '%'"
+        >
+          @if (place.point.label) {
+            <span class="slide-scatter__point-label">{{ place.point.label }}</span>
+          }
+        </span>
+      }
+      @if (moyen(); as g) {
+        <span
+          class="slide-scatter__mean"
+          data-testid="slide-scatter-moyen"
+          [style.--x]="g.x + '%'"
+          [style.--y]="g.y + '%'"
+          ><span class="slide-scatter__mean-label">G</span></span
+        >
+      }
+    </div>
+    <div class="slide-scatter__x-axis" aria-hidden="true">
+      @for (graduation of graduationsX(); track $index) {
+        <span
+          class="slide-scatter__x-tick"
+          data-testid="slide-scatter-graduation-x"
+          [style.left.%]="graduation.position"
+          >{{ graduation.libelle }}</span
+        >
+      }
+    </div>
+    <span class="slide-scatter__x-label" aria-hidden="true">{{ xLabel() }}</span>
+  </div>
+
+  @if (meanPoint() || line()?.label) {
+    <ul class="slide-scatter__legend" aria-hidden="true">
+      @if (meanPoint()) {
+        <li>
+          <span class="slide-scatter__legend-mean"></span
+          ><ng-container i18n="@@slideScatterLegendePointMoyen">G : point moyen</ng-container>
+        </li>
+      }
+      @if (line()?.label) {
+        <li><span class="slide-scatter__legend-line"></span>{{ line()?.label }}</li>
+      }
+    </ul>
+  }
+
+  @if (reading()) {
+    <p class="slide-scatter__reading">
+      <strong i18n="@@slideScatterLecture">Lecture professionnelle</strong>{{ reading() }}
+    </p>
+  }
+
+  <details class="slide-scatter__data">
+    <summary i18n="@@slideScatterVoirDonnees">Voir les valeurs</summary>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">{{ xLabel() }}</th>
+          <th scope="col">{{ yLabel() }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (place of places(); track $index) {
+          <tr>
+            <td>{{ formater(place.point.x) }}</td>
+            <td>{{ formater(place.point.y) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </details>
+
+  @if (source()) {
+    <p class="slide-scatter__source" i18n="@@slideScatterSource">Source : {{ source() }}</p>
+  }
+</figure>

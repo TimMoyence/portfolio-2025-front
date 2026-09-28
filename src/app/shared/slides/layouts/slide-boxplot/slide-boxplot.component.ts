@@ -1,11 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import {
-  NOMBRE_FRANCAIS,
-  position,
-  valeursGraduees,
-  type Graduation,
-  type Plage,
-} from '../axe-gradue';
+import { NOMBRE_FRANCAIS, graduer, position, type Graduation, type Plage } from '../axe-gradue';
+import { generateurDIdentifiants } from '../identifiant-de-description';
 
 export interface SlideBoxplotSeries {
   readonly label: string;
@@ -26,12 +21,7 @@ interface BoiteTracee {
   readonly moyenne: number | null;
 }
 
-let compteurDeBoites = 0;
-
-function prochainIdentifiantDeDescription(): string {
-  compteurDeBoites += 1;
-  return `slide-boxplot-description-${compteurDeBoites}`;
-}
+const prochainIdentifiantDeDescription = generateurDIdentifiants('slide-boxplot');
 
 @Component({
   selector: 'app-slide-boxplot',
@@ -52,13 +42,7 @@ export class SlideBoxplotComponent {
 
   protected readonly idDescription = prochainIdentifiantDeDescription();
 
-  protected readonly graduations = computed<readonly Graduation[]>(() => {
-    const plage = this.axisRange();
-    return valeursGraduees(plage).map((valeur) => ({
-      libelle: NOMBRE_FRANCAIS.format(valeur),
-      position: position(valeur, plage),
-    }));
-  });
+  protected readonly graduations = computed<readonly Graduation[]>(() => graduer(this.axisRange()));
 
   protected readonly boites = computed<readonly BoiteTracee[]>(() => {
     const plage = this.axisRange();

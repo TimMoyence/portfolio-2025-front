@@ -11852,8 +11852,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:79</note>
       </notes>
       <segment>
-        <source>B2-02 — Résumer une série sans la trahir</source>
-        <target>B2-02 — Summarising a data series without betraying it</target>
+        <source>B2-02 — Séries statistiques : résumer, relier, prévoir</source>
+        <target>B2-02 — Statistical series: summarise, relate, forecast</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-02.description">
@@ -11861,8 +11861,14 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:80</note>
       </notes>
       <segment>
-        <source>Résumer une série statistique : moyenne, médiane, quartiles, écart-type, boîte à moustaches et classes. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
-        <target>Summarise a statistical series: mean, median, quartiles, standard deviation, box plot and classes. To follow in a guided session, with the code your teacher gives you.</target>
+        <source>Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Summarise a series, relate two variables with a scatter plot and a linear fit, then forecast in a spreadsheet, as in the CCF exam. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-02.duration">
+      <segment>
+        <source>3 h 00</source>
+        <target>3 h</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.duration">
@@ -12103,6 +12109,60 @@
       <notes>
         <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:125,127</note>
       </notes>
+      <segment>
+        <source>Source : <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></source>
+        <target>Source: <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></target>
+      </segment>
+    </unit>
+    <unit id="slideLessonDefinition">
+      <segment>
+        <source>Définition</source>
+        <target>Definition</target>
+      </segment>
+    </unit>
+    <unit id="slideLessonPropriete">
+      <segment>
+        <source>Propriété</source>
+        <target>Property</target>
+      </segment>
+    </unit>
+    <unit id="slideLessonMethode">
+      <segment>
+        <source>Méthode</source>
+        <target>Method</target>
+      </segment>
+    </unit>
+    <unit id="slideLessonExemple">
+      <segment>
+        <source>Exemple</source>
+        <target>Example</target>
+      </segment>
+    </unit>
+    <unit id="slideLessonAuCcf">
+      <segment>
+        <source>Au CCF</source>
+        <target>In the CCF exam</target>
+      </segment>
+    </unit>
+    <unit id="slideScatterLegendePointMoyen">
+      <segment>
+        <source>G : point moyen</source>
+        <target>G: mean point</target>
+      </segment>
+    </unit>
+    <unit id="slideScatterLecture">
+      <segment>
+        <source>Lecture professionnelle</source>
+        <target>Professional reading</target>
+      </segment>
+    </unit>
+    <unit id="slideScatterVoirDonnees">
+      <segment>
+        <source>Voir les valeurs</source>
+        <target>Show the values</target>
+      </segment>
+    </unit>
+    <unit id="slideScatterSource">
       <segment>
         <source>Source : <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></source>
         <target>Source: <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></target>

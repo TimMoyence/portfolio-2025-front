@@ -61,3 +61,10 @@ export function valeursGraduees(plage: Plage): readonly number[] {
     arrondir(min + ((max - min) * rang) / intervalles),
   );
 }
+
+export function graduer(plage: Plage): readonly Graduation[] {
+  return valeursGraduees(plage).map((valeur) => ({
+    libelle: NOMBRE_FRANCAIS.format(valeur),
+    position: position(valeur, plage),
+  }));
+}

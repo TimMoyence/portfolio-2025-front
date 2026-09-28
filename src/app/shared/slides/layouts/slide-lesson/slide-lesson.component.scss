@@ -1,0 +1,132 @@
+@use '../../slide-figure' as figure;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.slide-lesson {
+  @include figure.cadre(clamp(1rem, 3cqh, 1.6rem));
+}
+
+h2 {
+  @include figure.titre(28ch);
+}
+
+.slide-lesson__subtitle {
+  @include figure.sous-titre;
+}
+
+.slide-lesson__blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: clamp(0.75rem, 2cqi, 1.25rem);
+}
+
+.slide-lesson__block {
+  --teinte: #277c70;
+  display: grid;
+  align-content: start;
+  gap: 0.55rem;
+  padding: clamp(0.9rem, 2cqi, 1.3rem) clamp(1rem, 2.2cqi, 1.5rem);
+  border: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
+  border-left: 0.3rem solid var(--teinte);
+  border-radius: 0.5rem;
+  background-color: color-mix(in srgb, var(--teinte) 7%, var(--slide-deck-bg, #fffaf2));
+}
+
+.slide-lesson__block--property {
+  --teinte: #3c3529;
+}
+
+.slide-lesson__block--method {
+  --teinte: #8a5e00;
+}
+
+.slide-lesson__block--example {
+  --teinte: #5a6b8c;
+}
+
+.slide-lesson__block--exam {
+  --teinte: #a3342b;
+}
+
+.slide-lesson__kind {
+  margin: 0;
+  color: var(--teinte);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h3 {
+  margin: 0;
+  color: var(--ink, #0c0902);
+  font-size: clamp(1.1rem, 1.9cqi, 1.45rem);
+  line-height: 1.2;
+}
+
+.slide-lesson__text {
+  margin: 0;
+  color: var(--ink-soft, #3c3529);
+  font-size: clamp(0.95rem, 1.35cqi, 1.1rem);
+  line-height: 1.5;
+}
+
+.slide-lesson__formula {
+  justify-self: start;
+  margin: 0.2rem 0;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid rgba(var(--ink-rgb), 0.18);
+  border-radius: 0.35rem;
+  background-color: var(--slide-deck-bg, #fffaf2);
+  color: var(--ink, #0c0902);
+  font-family: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'Times New Roman', serif;
+  font-size: clamp(1.1rem, 1.9cqi, 1.45rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.slide-lesson__steps {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding-left: 1.4rem;
+  color: var(--ink-soft, #3c3529);
+  font-size: clamp(0.92rem, 1.3cqi, 1.05rem);
+  line-height: 1.45;
+
+  li::marker {
+    color: var(--teinte);
+    font-weight: 700;
+  }
+}
+
+@media print {
+  .slide-lesson {
+    min-height: 0;
+    padding: 0;
+  }
+
+  .slide-lesson__block,
+  .slide-lesson__formula {
+    background: none;
+    color: #000;
+    break-inside: avoid;
+  }
+
+  .slide-lesson__block {
+    border-color: #000;
+  }
+
+  .slide-lesson__kind,
+  .slide-lesson__text,
+  .slide-lesson__steps,
+  h2,
+  h3 {
+    color: #000;
+  }
+}
