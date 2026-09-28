@@ -6,6 +6,10 @@
   align-items: center;
   justify-content: center;
   padding: $marge;
+
+  @media print {
+    min-height: 0;
+  }
 }
 
 @mixin titre-projete {
@@ -77,6 +81,10 @@
   flex-direction: column;
   justify-content: center;
   padding: var(--slide-marge-bloc, 4rem) var(--slide-marge-ligne, 2rem);
+
+  @media print {
+    min-height: 0;
+  }
 
   @include titre-projete {
     text-align: center;

@@ -103,3 +103,19 @@
   text-decoration: none;
   @include slide.bouton-souleve(0.2, ease);
 }
+
+@media print {
+  .slide-hero {
+    min-height: 0;
+    background: none;
+  }
+
+  .slide-hero__bg {
+    display: none;
+  }
+
+  .slide-hero__content,
+  .slide-hero__bullets li::before {
+    color: #000;
+  }
+}

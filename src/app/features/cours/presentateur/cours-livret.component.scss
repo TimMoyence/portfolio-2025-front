@@ -60,8 +60,8 @@
 }
 
 .livret__question {
+  display: block;
   font-weight: 600;
-  margin-inline-end: 0.5rem;
 }
 
 .livret__guide {
@@ -94,11 +94,26 @@
   }
 
   .livret__page {
+    padding: 0;
     border: 0;
     break-after: page;
   }
 
   .livret__page:last-child {
     break-after: auto;
+  }
+
+  .livret__page app-slide-activity {
+    display: block;
+    zoom: 0.75;
+    break-inside: avoid;
+  }
+
+  .livret__page ::ng-deep details {
+    display: none;
+  }
+
+  .livret__page ::ng-deep th {
+    color: #000;
   }
 }

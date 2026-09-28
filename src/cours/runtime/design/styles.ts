@@ -272,6 +272,16 @@ export const base = `
 }
 `;
 
+export const impression = `
+@media print {
+  :where(.fp-root) [data-testid='valider'],
+  :where(.fp-root) [data-testid='je-ne-sais-pas'],
+  :where(.fp-root) [data-option='__je_ne_sais_pas__'] {
+    display: none;
+  }
+}
+`;
+
 export const correction = `
 :where(.fp-root) [data-correction='juste'] {
   border-color: var(--fp-juste);

@@ -193,6 +193,7 @@ h2 {
   .slide-scatter__point {
     border-color: #000;
     background-color: #000;
+    print-color-adjust: exact;
   }
 
   .slide-scatter__line line {
