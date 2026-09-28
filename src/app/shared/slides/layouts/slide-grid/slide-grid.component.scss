@@ -149,7 +149,7 @@
   cursor: pointer;
 }
 
-@container (min-height: 0px) {
+@mixin grille-compacte {
   .slide-grid {
     padding: 1.25rem 2rem;
 
@@ -215,6 +215,10 @@
   }
 }
 
+@container (min-height: 0px) {
+  @include grille-compacte;
+}
+
 @container (min-width: 64rem) {
   .slide-grid__grid {
     grid-template-columns: repeat(var(--slide-grid-colonnes), minmax(0, 1fr));
@@ -228,6 +232,8 @@
 }
 
 @media print {
+  @include grille-compacte;
+
   ::ng-deep body[data-impression-fiche] > :not(.impression-fiche) {
     display: none !important;
   }
