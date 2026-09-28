@@ -20,6 +20,9 @@ export const PERMANENT_REDIRECTS: Readonly<Record<string, string>> = {
   '/commonbudgettm': '/fr',
   '/fr/commonbudgettm': '/fr',
   '/en/commonbudgettm': '/en',
+  '/formations/b2-02-serie-statistique-une-variable': '/fr/formations/b2-02-series-statistiques',
+  '/fr/formations/b2-02-serie-statistique-une-variable': '/fr/formations/b2-02-series-statistiques',
+  '/en/formations/b2-02-serie-statistique-une-variable': '/en/formations/b2-02-series-statistiques',
 };
 
 const PERMANENT_SUBTREE_REDIRECTS: Readonly<Record<string, string>> = {

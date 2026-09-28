@@ -1219,7 +1219,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-09-25",
+      "lastmod": "2026-09-28",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1466,12 +1466,12 @@
       }
     },
     {
-      "id": "formations-b2-02-serie-statistique-une-variable",
-      "path": "/formations/b2-02-serie-statistique-une-variable",
+      "id": "formations-b2-02-series-statistiques",
+      "path": "/formations/b2-02-series-statistiques",
       "index": false,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-09-27",
+      "lastmod": "2026-09-28",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1482,21 +1482,21 @@
           "path": "/formations"
         },
         {
-          "name": "Résumer une série sans la trahir",
-          "path": "/formations/b2-02-serie-statistique-une-variable"
+          "name": "Séries statistiques : résumer, relier, prévoir",
+          "path": "/formations/b2-02-series-statistiques"
         }
       ],
       "locales": {
         "fr": {
-          "title": "Résumer une série sans la trahir — B2 — Tim Moyence",
-          "description": "Formation B2 interactive pour résumer une série statistique : moyenne, médiane, quartiles, écart-type et boîte à moustaches.",
-          "ogTitle": "Résumer une série sans la trahir — B2",
-          "ogDescription": "Un cours interactif pour choisir le bon résumé d’une série et l’expliquer à un tiers.",
+          "title": "Séries statistiques : résumer, relier, prévoir — B2 — Tim Moyence",
+          "description": "Formation B2 interactive : résumer une série, relier deux variables par un nuage de points et un ajustement affine, prévoir au tableur.",
+          "ogTitle": "Séries statistiques : résumer, relier, prévoir — B2",
+          "ogDescription": "Un cours interactif pour résumer une série, lire une corrélation et prévoir au tableur, comme en CCF.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
-            "name": "Résumer une série sans la trahir",
-            "description": "Formation B2 interactive sur la statistique descriptive à une variable.",
+            "name": "Séries statistiques : résumer, relier, prévoir",
+            "description": "Formation B2 interactive sur les séries statistiques à une et deux variables.",
             "provider": {
               "@type": "Organization",
               "name": "Asili Design",
@@ -1506,19 +1506,19 @@
             "duration": "PT3H30M",
             "courseMode": "online",
             "inLanguage": "fr",
-            "url": "https://asilidesign.fr/fr/formations/b2-02-serie-statistique-une-variable"
+            "url": "https://asilidesign.fr/fr/formations/b2-02-series-statistiques"
           }
         },
         "en": {
-          "title": "Summarise a data series without betraying it — B2 — Tim Moyence",
-          "description": "Interactive B2 course to summarise a statistical series: mean, median, quartiles, standard deviation and box plot.",
-          "ogTitle": "Summarise a data series without betraying it — B2",
-          "ogDescription": "An interactive course to choose the right summary of a series and explain it to a third party.",
+          "title": "Statistical series: summarise, relate, forecast — B2 — Tim Moyence",
+          "description": "Interactive B2 course: summarise a series, relate two variables with a scatter plot and a linear fit, forecast in a spreadsheet.",
+          "ogTitle": "Statistical series: summarise, relate, forecast — B2",
+          "ogDescription": "An interactive course to summarise a series, read a correlation and forecast in a spreadsheet, as in the CCF exam.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
-            "name": "Summarise a data series without betraying it",
-            "description": "Interactive B2 course on one-variable descriptive statistics.",
+            "name": "Statistical series: summarise, relate, forecast",
+            "description": "Interactive B2 course on one- and two-variable statistical series.",
             "provider": {
               "@type": "Organization",
               "name": "Asili Design",
@@ -1528,7 +1528,7 @@
             "duration": "PT3H30M",
             "courseMode": "online",
             "inLanguage": "en",
-            "url": "https://asilidesign.fr/en/formations/b2-02-serie-statistique-une-variable"
+            "url": "https://asilidesign.fr/en/formations/b2-02-series-statistiques"
           }
         }
       }

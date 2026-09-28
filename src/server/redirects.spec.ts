@@ -86,6 +86,18 @@ describe('redirects', () => {
       expect(resolveRedirect('/en/commonbudgetTM')).toBe('/en');
     });
 
+    it('redirige l ancien slug du cours B2-02 vers le cours v3, locale preservee', () => {
+      expect(resolveRedirect('/formations/b2-02-serie-statistique-une-variable')).toBe(
+        '/fr/formations/b2-02-series-statistiques',
+      );
+      expect(resolveRedirect('/fr/formations/b2-02-serie-statistique-une-variable')).toBe(
+        '/fr/formations/b2-02-series-statistiques',
+      );
+      expect(resolveRedirect('/en/formations/b2-02-serie-statistique-une-variable/')).toBe(
+        '/en/formations/b2-02-series-statistiques',
+      );
+    });
+
     it('ne prend pas pour l atelier un chemin qui en partage seulement le debut', () => {
       expect(resolveRedirect('/ateliers')).toBeNull();
       expect(resolveRedirect('/fr/atelier-ia')).toBeNull();

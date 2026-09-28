@@ -10,8 +10,8 @@ bouchon : ce qui traverse le réseau est ce que produit le back, sur une base mi
 
 ```bash
 npm run test:banc
-BANC_COURS=b2-02-serie-statistique-une-variable npm run test:banc
-BANC_COURS=b2-02-serie-statistique-une-variable BANC_RACINE_BACK=../wt-back-b2-02 npm run test:banc
+BANC_COURS=b2-02-series-statistiques npm run test:banc
+BANC_COURS=b2-02-series-statistiques BANC_RACINE_BACK=../wt-back-b2-02 npm run test:banc
 ```
 
 | Variable           | Défaut                                  | Rôle                                                       |
