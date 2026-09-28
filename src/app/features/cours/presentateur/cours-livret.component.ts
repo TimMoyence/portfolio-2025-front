@@ -70,7 +70,12 @@ type VueDuLivret = 'sujet' | 'corrige';
         @if (vue() === 'sujet') {
           @for (ecran of pagesEtudiant(); track ecran.id) {
             <section class="livret__page" data-testid="livret-ecran" [attr.data-ecran]="ecran.id">
-              <app-slide-activity [slide]="ecran" [role]="'etudiant'" [apercu]="true" />
+              <app-slide-activity
+                [slide]="ecran"
+                [role]="'etudiant'"
+                [apercu]="true"
+                [papier]="true"
+              />
             </section>
           }
         } @else {
@@ -84,9 +89,17 @@ type VueDuLivret = 'sujet' | 'corrige';
                 [slide]="page.ecran"
                 [role]="'presentateur'"
                 [apercu]="true"
+                [papier]="true"
                 [donneesFormateur]="page.annexe"
               />
               <aside class="livret__formateur">
+                @if (page.attendu; as reflexion) {
+                  <div class="livret__attendu" data-testid="livret-attendu">
+                    <p class="livret__question" i18n="@@livretGuideReponse">Réponse attendue</p>
+                    <p>{{ reflexion.attendu }}</p>
+                    <p>{{ reflexion.suite }}</p>
+                  </div>
+                }
                 @if (page.reponses.length > 0) {
                   <ol class="livret__reponses" data-testid="livret-reponses">
                     @for (reponse of page.reponses; track reponse.corrige.questionId) {
@@ -129,7 +142,7 @@ export class CoursLivretComponent {
 
   readonly pagesEtudiant = computed(() => {
     const livret = this.livret();
-    return livret === null ? [] : pagesDuLivretEtudiant(livret.sujet);
+    return livret === null ? [] : pagesDuLivretEtudiant(livret.sujet, livret.corrige);
   });
 
   readonly pagesCorrige = computed(() => {

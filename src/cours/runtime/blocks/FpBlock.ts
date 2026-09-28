@@ -51,7 +51,7 @@ function positionDeSaisie(element: HTMLElement): { debut: number | null; fin: nu
 
 export abstract class FpBlock extends HTMLElement {
   static get observedAttributes(): string[] {
-    return ['data-cours-role', 'data-apercu', 'etat'];
+    return ['data-cours-role', 'data-apercu', 'data-papier', 'etat'];
   }
 
   protected readonly racine: ShadowRoot;
@@ -139,6 +139,10 @@ export abstract class FpBlock extends HTMLElement {
 
   enApercu(): boolean {
     return this.hasAttribute('data-apercu');
+  }
+
+  surPapier(): boolean {
+    return this.hasAttribute('data-papier');
   }
 
   texte(cle: string): string {

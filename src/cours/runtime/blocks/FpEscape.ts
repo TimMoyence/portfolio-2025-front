@@ -164,20 +164,19 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
       return this.attente();
     }
     const corrige = this.solutionnaire !== null;
-    const jeu =
-      this.presentateur() || corrige
+    const projete = this.presentateur() || corrige || this.surPapier();
+    const jeu = projete ? VIDE : safeHtml`${this.progressionAffichee()}${this.minuteur()}`;
+    const retour =
+      this.presentateur() || this.surPapier()
         ? VIDE
-        : safeHtml`${this.progressionAffichee()}${this.minuteur()}`;
-    const retour = this.presentateur()
-      ? VIDE
-      : safeHtml`<p class="fp-escape__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>
+        : safeHtml`<p class="fp-escape__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>
         ${this.annonces()}`;
     return safeHtml`
       <section class="fp-carte fp-scene fp-escape__parcours">
         <p class="fp-enonce fp-escape__intitule" data-testid="intitule">${escapeHtml(parcours.intitule)}</p>
-        <p class="fp-escape__consigne">${escapeHtml(this.texte('escape-consigne'))}</p>
+        <p class="fp-escape__consigne">${escapeHtml(this.texte(this.surPapier() ? 'escape-consigne-papier' : 'escape-consigne'))}</p>
         ${jeu}
-        ${this.presentateur() || corrige ? this.enigmesProjetees(parcours) : this.enigmes()}
+        ${projete ? this.enigmesProjetees(parcours) : this.enigmes()}
         ${this.issue(corrige)}
         ${retour}
       </section>

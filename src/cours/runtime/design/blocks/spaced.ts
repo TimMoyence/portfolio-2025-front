@@ -122,6 +122,27 @@ export const spaced = `
   background: var(--fp-surface);
 }
 
+:where(.fp-root) .fp-spaced__imprimees {
+  display: grid;
+  gap: var(--fp-s-1);
+  margin: 0;
+  padding-inline-start: 1.5em;
+}
+
+:where(.fp-root) .fp-spaced__choix {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fp-s-1) var(--fp-s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--fp-ink-mute);
+}
+
+:where(.fp-root) .fp-spaced__choix li::before {
+  content: '☐ ';
+}
+
 :where(.fp-root) .fp-spaced__nom {
   color: var(--fp-texte-fort);
   font-weight: 600;

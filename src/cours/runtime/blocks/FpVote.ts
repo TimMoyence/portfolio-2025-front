@@ -149,6 +149,9 @@ export class FpVote extends FpVerdicts {
     if (!question) {
       return this.attente();
     }
+    if (this.surPapier() && !this.presentateur()) {
+      return this.questionsImprimees();
+    }
     const neSaitPas = this.presentateur()
       ? VIDE
       : this.bouton(
@@ -167,6 +170,18 @@ export class FpVote extends FpVerdicts {
       ${this.presentateur() ? this.suiviProjete(question) : this.suiviEtudiant(question)}
       ${this.bonneReponseRevelee()}${this.revelationRevelee()}
     </div>`;
+  }
+
+  private questionsImprimees(): EscapedHtml {
+    const questions = [this.principale, this.jumelle].filter(
+      (question): question is VoteQuestionPublique => question !== null,
+    );
+    return safeHtml`<div class="fp-carte fp-scene">${questions.map(
+      (question) => safeHtml`<fieldset class="fp-vote__options">
+        <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
+        <ul>${question.options.map((option) => safeHtml`<li>${escapeHtml(option.libelle)}</li>`)}</ul>
+      </fieldset>`,
+    )}</div>`;
   }
 
   private suiviEtudiant(question: VoteQuestionPublique): EscapedHtml {

@@ -67,6 +67,18 @@ describe('FpSpaced', () => {
     expect(noeuds(hote, 'option')).toEqual([]);
   });
 
+  it('imprime sur papier toutes les questions en tête de feuille, avec leurs options, sans bouton', () => {
+    hote.setAttribute('data-papier', '');
+    hote.questions = DUES;
+
+    expect(noeuds(hote, 'enonce').map((enonce) => enonce.textContent?.trim())).toEqual(
+      DUES.map((question) => question.enonce),
+    );
+    expect(hote.shadowRoot?.textContent).toContain('Oui, du montant de l annuite');
+    expect(noeuds(hote, 'option')).toEqual([]);
+    expect(noeud(hote, 'progression')).toBeNull();
+  });
+
   it('pose les questions servies par la seance, une a la fois, dans l ordre recu', () => {
     hote.questions = DUES;
 

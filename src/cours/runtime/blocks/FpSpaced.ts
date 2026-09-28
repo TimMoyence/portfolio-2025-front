@@ -123,19 +123,35 @@ export class FpSpaced extends FpVerdicts {
   }
 
   render(): EscapedHtml {
-    const corps = this.presentateur()
-      ? this.carteDeMaitrise()
-      : safeHtml`${this.annonces()}
-        ${this.pupitreAvantRevelation()}
-        ${this.bilan()}
-        <p class="fp-spaced__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>`;
     return safeHtml`
       <section class="fp-carte fp-scene fp-spaced__seance">
         ${this.entete()}
         <p class="fp-spaced__consigne">${escapeHtml(this.texte('spaced-consigne'))}</p>
-        ${corps}
+        ${this.corps()}
       </section>
     `;
+  }
+
+  private corps(): EscapedHtml {
+    if (this.presentateur()) {
+      return this.carteDeMaitrise();
+    }
+    return this.surPapier()
+      ? this.questionsImprimees()
+      : safeHtml`${this.annonces()}
+        ${this.pupitreAvantRevelation()}
+        ${this.bilan()}
+        <p class="fp-spaced__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>`;
+  }
+
+  private questionsImprimees(): EscapedHtml {
+    const questions = (this.interne ?? []).map(
+      (question) => safeHtml`<li data-question="${escapeHtml(question.questionId)}">
+        <p class="fp-spaced__enonce" data-testid="enonce">${escapeHtml(question.enonce)}</p>
+        <ul class="fp-spaced__choix">${question.options.map((option) => safeHtml`<li>${escapeHtml(option.libelle)}</li>`)}</ul>
+      </li>`,
+    );
+    return safeHtml`<ol class="fp-spaced__imprimees">${questions}</ol>`;
   }
 
   bind(racine: ShadowRoot): void {

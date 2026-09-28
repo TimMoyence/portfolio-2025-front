@@ -30,6 +30,7 @@ function contexte(overrides: Partial<ContexteDeReinjection> = {}): ContexteDeRei
     donneesFormateur: DONNEES_FORMATEUR,
     maitrise: null,
     dernierEmetteur: false,
+    papier: null,
     ...overrides,
   };
 }
@@ -130,6 +131,16 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
         ).toBeNull();
       });
     }
+
+    it('pose le corrige du formateur sur papier, sans correction pilotee', () => {
+      expect(
+        pose('fp-cardsort', cartes, 'corrige', { role: 'presentateur', papier: { questions: [] } }),
+      ).toBe(DONNEES_FORMATEUR);
+    });
+
+    it('ne pose aucun corrige a l etudiant sur papier', () => {
+      expect(pose('fp-cardsort', cartes, 'corrige', { papier: { questions: [] } })).toBeNull();
+    });
 
     it('ignore la correction servie a l ecran quand le role est presentateur', () => {
       expect(
@@ -319,6 +330,38 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     expect(
       pose('fp-spaced', ['b2-01-rappel'], 'maitrise', { retours, maitrise, role: 'presentateur' }),
     ).toBe(maitrise);
+  });
+
+  it('pose sur papier au rappel toute la banque de l écran, faute de tirage en séance', () => {
+    const papier = {
+      questions: [
+        {
+          id: 'Q-VAN-02',
+          enonce: 'Un projet à VAN négative doit-il être retenu ?',
+          options: [{ id: 'van-a', libelle: 'Non' }],
+        },
+        { id: 'Q-LIBRE', enonce: 'Question sans options', options: null },
+      ],
+    };
+
+    expect(pose('fp-spaced', ['b2-01-rappel'], 'questions', { papier })).toEqual([
+      {
+        questionId: 'Q-VAN-02',
+        concept: '',
+        boite: 1,
+        cours: '',
+        enonce: 'Un projet à VAN négative doit-il être retenu ?',
+        options: [{ id: 'van-a', libelle: 'Non' }],
+      },
+      {
+        questionId: 'Q-LIBRE',
+        concept: '',
+        boite: 1,
+        cours: '',
+        enonce: 'Question sans options',
+        options: [],
+      },
+    ]);
   });
 
   it('T9 · pose au rappel espacé de l étudiant les bonnes réponses révélées de ses questions', () => {

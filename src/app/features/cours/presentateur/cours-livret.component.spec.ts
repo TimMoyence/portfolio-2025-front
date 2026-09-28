@@ -12,6 +12,7 @@ import {
   buildLivretDuCours,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
+import { briqueMontee } from '../../../../testing/briques-montees';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { CoursLivretComponent } from './cours-livret.component';
 
@@ -71,29 +72,111 @@ describe('CoursLivretComponent', () => {
     expect(un(fixture, 'livret-version')?.textContent).toContain('1');
   });
 
-  it('met en page pour l’étudiant les 24 écrans du B2-02 à traiter sur papier, sans correction, jalon ni rappel tiré en séance', async () => {
+  it('met en page pour l’étudiant les 25 écrans du B2-02 à traiter sur papier, rappel compris, sans correction ni jalon', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     const ids = tous(fixture, 'livret-ecran').map((page) => page.dataset['ecran']);
 
-    expect(ids.length).toBe(24);
+    expect(ids.length).toBe(25);
     expect(ids).not.toContain('B2-02-A1-07-CORRECTION');
     expect(ids).not.toContain('B2-02-A1-09-JALON');
-    expect(ids).not.toContain('B2-02-A4-04-RAPPEL');
+    expect(ids).toContain('B2-02-A4-04-RAPPEL');
     expect(ids).toContain('B2-02-A2-01-NUAGE-RIVAGE');
     expect(tous(fixture, 'livret-corrige')).toEqual([]);
   });
 
-  it('bascule sur le corrigé des 34 écrans du B2-02, corrections comprises', async () => {
+  it('bascule sur le corrigé des 35 écrans du B2-02, corrections et rappel compris', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     basculerSurLeCorrige(fixture);
 
     const ids = tous(fixture, 'livret-corrige').map((page) => page.dataset['ecran']);
-    expect(ids.length).toBe(34);
+    expect(ids.length).toBe(35);
     expect(ids).toContain('B2-02-A1-07-CORRECTION');
-    expect(ids).not.toContain('B2-02-A4-04-RAPPEL');
+    expect(ids).toContain('B2-02-A4-04-RAPPEL');
     expect(tous(fixture, 'livret-ecran')).toEqual([]);
+  });
+
+  describe('briques imprimées sur le vrai B2-02', () => {
+    function ombreDe(brique: HTMLElement): string {
+      return brique.shadowRoot?.textContent?.replace(/\s+/g, ' ') ?? '';
+    }
+
+    function briqueDeLaPage(ecran: string, balise: string): string {
+      return `[data-ecran="${ecran}"] ${balise}`;
+    }
+
+    it('imprime au livret les quatre énigmes du coffre, sans champ de saisie', async () => {
+      const { fixture } = await monter(of(LIVRET_B2_02));
+
+      const coffre = await briqueMontee(
+        fixture,
+        briqueDeLaPage('B2-02-A4-03-COFFRE-FIBRE', 'fp-escape'),
+      );
+
+      expect(coffre.shadowRoot?.querySelectorAll('[data-testid="enonce"]').length).toBe(4);
+      expect(coffre.shadowRoot?.querySelector('[data-testid="saisie"]')).toBeNull();
+    });
+
+    it('imprime au livret les deux questions du vote sur la corrélation', async () => {
+      const { fixture } = await monter(of(LIVRET_B2_02));
+
+      const vote = await briqueMontee(
+        fixture,
+        briqueDeLaPage('B2-02-A2-02-VOTE-CORRELATION', 'fp-vote'),
+      );
+
+      expect(vote.shadowRoot?.querySelectorAll('legend').length).toBe(2);
+    });
+
+    it('imprime au livret toute la banque du rappel en tête de feuille', async () => {
+      const { fixture } = await monter(of(LIVRET_B2_02));
+
+      const rappel = await briqueMontee(fixture, briqueDeLaPage('B2-02-A4-04-RAPPEL', 'fp-spaced'));
+
+      expect(rappel.shadowRoot?.querySelectorAll('[data-testid="enonce"]').length).toBe(12);
+    });
+
+    it('imprime au corrigé le raisonnement de l’exemple guidé A1-07', async () => {
+      const { fixture } = await monter(of(LIVRET_B2_02));
+      basculerSurLeCorrige(fixture);
+
+      const exemple = await briqueMontee(
+        fixture,
+        briqueDeLaPage('B2-02-A1-07-EXEMPLE-RESUME', 'fp-worked'),
+      );
+
+      expect(ombreDe(exemple)).toContain('340 ÷ 8 = 42,5');
+      expect(ombreDe(exemple)).toContain('18,66');
+    });
+
+    it('imprime au corrigé les solutions du coffre', async () => {
+      const { fixture } = await monter(of(LIVRET_B2_02));
+      basculerSurLeCorrige(fixture);
+
+      const coffre = await briqueMontee(
+        fixture,
+        briqueDeLaPage('B2-02-A4-03-COFFRE-FIBRE', 'fp-escape'),
+      );
+
+      expect(coffre.shadowRoot?.querySelectorAll('[data-testid="solution"]').length).toBe(4);
+    });
+
+    it('imprime au corrigé la réponse attendue des réflexions A1-05 et A3-01', async () => {
+      const { fixture } = await monter(of(LIVRET_B2_02));
+      basculerSurLeCorrige(fixture);
+
+      for (const ecran of ['B2-02-A1-05-UN-SEUL-NOMBRE', 'B2-02-A3-01-JUSQU-OU']) {
+        const page = tous(fixture, 'livret-corrige').find(
+          (candidate) => candidate.dataset['ecran'] === ecran,
+        );
+        const attendu = INSTANTANE_B2_02.deroule.ecrans.find((e) => e.id === ecran)?.corrigeEcran;
+        expect(attendu?.type).withContext(ecran).toBe('reflexion');
+        expect(page?.querySelector('[data-testid="livret-attendu"]')?.textContent)
+          .withContext(ecran)
+          .toContain(attendu?.type === 'reflexion' ? attendu.attendu : '');
+      }
+    });
   });
 
   it('accompagne chaque écran du corrigé de ses notes, de ses bonnes réponses et du guide formateur', async () => {

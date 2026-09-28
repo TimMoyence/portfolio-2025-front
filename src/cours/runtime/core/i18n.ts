@@ -62,6 +62,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'concept4-etape': () => $localize`:@@coursRuntimeConcept4Etape:Étape`,
   'worked-consigne': () =>
     $localize`:@@coursRuntimeWorkedConsigne:Répondez à la question de chaque étape, puis validez : la correction sera projetée après l’exercice.`,
+  'worked-consigne-papier': () =>
+    $localize`:@@coursRuntimeWorkedConsignePapier:Répondez à la question de chaque étape sur votre copie : la correction viendra après l’exercice.`,
   'worked-correction': () => $localize`:@@coursRuntimeWorkedCorrection:Correction`,
   'bonne-reponse': () => $localize`:@@coursRuntimeBonneReponse:Bonne réponse :`,
   'worked-etape-vide': () =>
@@ -135,6 +137,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeCardsortVide:Aucune carte à trier : le plan ne porte aucune carte`,
   'escape-consigne': () =>
     $localize`:@@coursRuntimeEscapeConsigne:Résolvez une énigme pour ouvrir la suivante : chaque réponse juste livre un fragment du code`,
+  'escape-consigne-papier': () =>
+    $localize`:@@coursRuntimeEscapeConsignePapier:Répondez à chaque question sur votre copie, en rédigeant vos calculs`,
   'escape-progression': () => $localize`:@@coursRuntimeEscapeProgression:Énigmes résolues :`,
   'escape-minuteur': () => $localize`:@@coursRuntimeEscapeMinuteur:Temps passé sur cette énigme :`,
   'escape-minuteur-annonce': () =>

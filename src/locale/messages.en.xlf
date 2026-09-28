@@ -13836,6 +13836,12 @@
         <target>Answer the question at each step, then submit: the answer key will be projected after the exercise.</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeWorkedConsignePapier">
+      <segment>
+        <source>Répondez à la question de chaque étape sur votre copie : la correction viendra après l’exercice.</source>
+        <target>Answer the question at each step on your paper: the answer key will follow the exercise.</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimeWorkedCorrection">
       <segment>
         <source>Correction</source>
@@ -14170,6 +14176,12 @@
       <segment>
         <source>Résolvez une énigme pour ouvrir la suivante : chaque réponse juste livre un fragment du code</source>
         <target>Solve a puzzle to open the next one: each correct answer gives a piece of the code</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeConsignePapier">
+      <segment>
+        <source>Répondez à chaque question sur votre copie, en rédigeant vos calculs</source>
+        <target>Answer each question on your paper, writing out your calculations</target>
       </segment>
     </unit>
     <unit id="coursRuntimeEscapeProgression">

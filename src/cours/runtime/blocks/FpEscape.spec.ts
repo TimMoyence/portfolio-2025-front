@@ -105,6 +105,24 @@ describe('FpEscape', () => {
     expect(libelleDe(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 10');
   });
 
+  it('imprime sur papier l énoncé de chaque énigme, sans saisie, tentatives, indice ni progression', () => {
+    hote.setAttribute('data-papier', '');
+
+    expect(noeuds(hote, 'enonce').map((enonce) => enonce.textContent?.trim())).toEqual(
+      PARCOURS.enigmes.map((enigme) => enigme.enonce),
+    );
+    for (const absent of [
+      'saisie',
+      'repondre',
+      'tentatives-restantes',
+      'demander-indice',
+      'progression',
+      'minuteur',
+    ]) {
+      expect(noeud(hote, absent)).withContext(absent).toBeNull();
+    }
+  });
+
   it('confie la tentative au serveur sans jamais la juger localement', () => {
     const emises = tentativesEmises(hote);
     jasmine.clock().tick(45000);

@@ -97,6 +97,19 @@ describe('FpVote', () => {
     );
   }
 
+  it('imprime sur papier les deux questions du vote et leurs options, sans bouton ni suivi', () => {
+    hote.questionJumelle = JUMELLE;
+    hote.setAttribute('data-papier', '');
+
+    const legendes = [...(hote.shadowRoot?.querySelectorAll('legend') ?? [])].map((element) =>
+      element.textContent?.trim(),
+    );
+    expect(legendes).toEqual([QUESTION.enonce, JUMELLE.enonce]);
+    expect(hote.shadowRoot?.textContent).toContain('2 960,49 €');
+    expect(options(hote)).toEqual([]);
+    expect(marque(hote, 'retour')).toBeNull();
+  });
+
   it('affiche toutes les options et une option je ne sais pas pour l etudiant', () => {
     expect(ordreAffiche(hote).length).toBe(3);
     expect(marque(hote, 'je-ne-sais-pas')).toBeTruthy();

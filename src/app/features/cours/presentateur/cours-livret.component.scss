@@ -83,6 +83,15 @@
   font-style: italic;
 }
 
+.livret__attendu {
+  display: grid;
+  gap: 0.25rem;
+
+  p {
+    margin: 0;
+  }
+}
+
 @media print {
   .livret {
     max-inline-size: none;

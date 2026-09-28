@@ -1,9 +1,11 @@
 import type {
+  EcranDeroule,
   ResultatQuestion,
   RevelationServie,
   Role,
   VotePhase,
 } from '../../../../cours/content/types';
+import type { SpacedQuestionPublique } from '../../../../cours/runtime/blocks/FpSpaced';
 import { estObjet, PROPRIETE_FORMATEUR } from '../../../../cours/runtime/blocks/retours';
 import type { SyntheseConcept } from '../../../core/ports/formations.port';
 import type { DirectEcran, RetourBrique } from './contrat-hote';
@@ -21,6 +23,11 @@ export interface ContexteDeReinjection {
   readonly donneesFormateur: unknown;
   readonly maitrise: readonly SyntheseConcept[] | null;
   readonly dernierEmetteur: boolean;
+  readonly papier: ImpressionDeLEcran | null;
+}
+
+export interface ImpressionDeLEcran {
+  readonly questions: EcranDeroule['questions'];
 }
 
 export type Pose = readonly [propriete: string, valeur: unknown];
@@ -97,7 +104,23 @@ function phaseDuVote(direct: DirectEcran | null): VotePhase | null {
 
 function ecranRevele(contexte: ContexteDeReinjection): boolean {
   const pilotage = contexte.direct?.pilotage;
-  return pilotage?.phase === 'revele' || pilotage?.revele === true || (pilotage?.etayage ?? 0) > 0;
+  return (
+    contexte.papier !== null ||
+    pilotage?.phase === 'revele' ||
+    pilotage?.revele === true ||
+    (pilotage?.etayage ?? 0) > 0
+  );
+}
+
+function rappelImprime(papier: ImpressionDeLEcran): SpacedQuestionPublique[] {
+  return papier.questions.map((question) => ({
+    questionId: question.id,
+    concept: '',
+    boite: 1,
+    cours: '',
+    enonce: question.enonce,
+    options: question.options ?? [],
+  }));
 }
 
 function annexeDeLaRevelation(revelation: RevelationServie): unknown {
@@ -181,7 +204,10 @@ function posesDuRappel(montage: MontageIdentifie, contexte: ContexteDeReinjectio
   if (montage.brique !== 'fp-spaced') {
     return [];
   }
-  const questions = deGenre(contexte.retours, 'rappels').at(-1)?.questions ?? null;
+  const questions =
+    contexte.papier === null
+      ? (deGenre(contexte.retours, 'rappels').at(-1)?.questions ?? null)
+      : rappelImprime(contexte.papier);
   const servies = new Set((questions ?? []).map((question) => question.questionId));
   const annexe: Pose[] =
     contexte.role === 'presentateur' ? [] : [[PROPRIETE_FORMATEUR, annexeVisible(contexte)]];
