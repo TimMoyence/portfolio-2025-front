@@ -51,4 +51,29 @@ test.describe(`Banc — livret papier du ${CODE_DU_COURS} imprimé en A4`, () =>
       expect(mesures.filter(({ hauteur }) => hauteur > HAUTEUR_UTILE_PX)).toEqual([]);
     });
   }
+
+  test('imprime chaque barre et chaque valeur des graphiques, sans attendre l animation', async ({
+    page,
+  }) => {
+    await ouvrirLeLivret(page);
+    await page.getByTestId('livret-vue-sujet').click();
+    await expect(page.getByTestId('livret-ecran').first()).toBeVisible();
+
+    await page.emulateMedia({ media: 'print' });
+    const effaces = await page
+      .locator('.slide-chart__bar, .slide-chart__value, .slide-chart__marqueur--barre')
+      .evaluateAll((elements) =>
+        elements
+          .filter(
+            (element) =>
+              getComputedStyle(element).opacity !== '1' ||
+              (element.classList.contains('slide-chart__bar') &&
+                (getComputedStyle(element).transform !== 'none' ||
+                  getComputedStyle(element).printColorAdjust !== 'exact')),
+          )
+          .map((element) => element.closest('[data-ecran]')?.getAttribute('data-ecran') ?? ''),
+      );
+
+    expect(effaces).toEqual([]);
+  });
 });
