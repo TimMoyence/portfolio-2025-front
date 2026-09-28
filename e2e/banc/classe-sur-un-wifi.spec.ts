@@ -8,6 +8,7 @@ import {
   optionsDuPoste,
   ouvrirLePupitre,
   posteDansSonNavigateur,
+  surLEcran,
   verdictDuPoste,
 } from './contexte';
 
@@ -37,8 +38,13 @@ function surveiller(page: Page, poste: string, incidents: Incident[]): void {
   );
 }
 
-async function toutLeMondeVote(postes: readonly Page[]): Promise<number> {
+async function toutLeMondeVote(
+  postes: readonly Page[],
+  ecran: number,
+  total: number,
+): Promise<number> {
   const debut = Date.now();
+  await Promise.all(postes.map((poste) => surLEcran(poste, ecran, total, DELAI_DE_DIFFUSION_MS)));
   await Promise.all(
     postes.map((poste) =>
       expect(optionsDuPoste(poste).first()).toBeVisible({ timeout: DELAI_DE_DIFFUSION_MS }),
@@ -80,10 +86,10 @@ test.describe('Banc — une classe de trente postes et son formateur sur le mêm
 
     await page.getByTestId('presentateur-demarrer').click();
     await avancerLePupitre(page, 0, premier.rang, total);
-    const premiereDiffusion = await toutLeMondeVote(postes);
+    const premiereDiffusion = await toutLeMondeVote(postes, premier.rang, total);
 
     await avancerLePupitre(page, premier.rang, second.rang, total);
-    const secondeDiffusion = await toutLeMondeVote(postes);
+    const secondeDiffusion = await toutLeMondeVote(postes, second.rang, total);
 
     await cloturerDepuisLePupitre(page, seance, postes);
     await expect(page.getByTestId('synthese-ligne')).toHaveCount(ETUDIANTS);

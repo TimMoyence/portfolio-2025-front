@@ -10,6 +10,7 @@ import {
   ouvrirLePupitre,
   posteDansSonNavigateur,
   rejoindreDansLeNavigateur,
+  surLEcran,
 } from './contexte';
 import type { Seance } from './contexte';
 import {
@@ -100,12 +101,6 @@ class Journal {
     });
     page.on('pageerror', (erreur) => this.consigner(poste, 'pageerror', erreur.message));
   }
-}
-
-function surLEcran(page: Page, ecran: number, total: number, delai: number): Promise<void> {
-  return expect(page.getByTestId('etudiant-progression')).toHaveText(`${ecran + 1} / ${total}`, {
-    timeout: delai,
-  });
 }
 
 async function avancer(pupitre: Page, ecran: number, total: number): Promise<void> {

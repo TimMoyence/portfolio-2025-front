@@ -295,6 +295,13 @@ function questionDuCours(question: QuestionDuSujet): QuestionDuCours {
   };
 }
 
+function seVoteDUnClic(ecran: EcranDuSujet, question: QuestionDuSujet): boolean {
+  return (
+    ecran.type === 'fp-vote' ||
+    (ecran.type === 'questionnaire' && question === questionsDeLEcran(ecran)[0])
+  );
+}
+
 function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
   const questions: EcranDuCours[] = [];
   const votes: EcranDuCours[] = [];
@@ -315,7 +322,7 @@ function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
             : questionDuCours(jumelle),
       };
       questions.push(trouvee);
-      if (ecran.type === 'fp-vote') votes.push(trouvee);
+      if (seVoteDUnClic(ecran, question)) votes.push(trouvee);
     }
     const presentation = ecran.donnees.recit?.presentation;
     const invite = presentation?.props.promptData;
@@ -357,7 +364,10 @@ async function relever(request: APIRequestContext): Promise<ReleveDuCours> {
   const sujet = (await reponse.json()) as { ecrans: readonly EcranDuSujet[] };
   const releve = classer(sujet.ecrans);
   expect(releve.total).toBe(ecrans.length);
-  expect(releve.votes.length, 'aucun vote dans la version publiée').toBeGreaterThan(1);
+  expect(
+    releve.votes.length,
+    'moins de deux écrans à voter d’un clic dans la version publiée',
+  ).toBeGreaterThan(1);
   expect(releve.reflexions.length, 'aucune réflexion dans la version publiée').toBeGreaterThan(1);
   return releve;
 }
@@ -410,6 +420,12 @@ export async function ouvrirLePupitre(page: Page): Promise<Seance> {
   await expect(page).toHaveURL(/seance=/);
   const sessionId = new URL(page.url()).searchParams.get('seance') ?? '';
   return { sessionId, code };
+}
+
+export function surLEcran(page: Page, ecran: number, total: number, delai?: number): Promise<void> {
+  return expect(page.getByTestId('etudiant-progression')).toHaveText(`${ecran + 1} / ${total}`, {
+    timeout: delai,
+  });
 }
 
 export async function avancerLePupitre(
