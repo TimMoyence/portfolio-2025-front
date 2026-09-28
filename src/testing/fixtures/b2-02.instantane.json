@@ -3678,6 +3678,1719 @@
           },
           "seuilReussite": 0.75
         }
+      },
+      {
+        "id": "B2-02-A2-06-CORRECTION",
+        "type": "fp-story",
+        "titre": "Correction de l’exercice 3",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A2-06-CORRECTION",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A2-06-CORRECTION",
+              "renderer": "answer-review",
+              "props": {
+                "title": "Correction de l’exercice 3",
+                "source": {
+                  "screenId": "B2-02-A2-06-ECARTS-POINT-MOYEN"
+                },
+                "explications": [
+                  {
+                    "reference": "b2-02-a2-ecarts-point-moyen",
+                    "texte": "Écarts des rangs : −2,5 ; −1,5 ; −0,5 ; 0,5 ; 1,5 ; 2,5. Écarts du chiffre d’affaires : −108 ; −66 ; −24 ; 18 ; 72 ; 108. Chaque colonne a une somme nulle, et les deux écarts ont toujours le même signe : les points sont en bas à gauche et en haut à droite de G, d’où r positif."
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["nuage-de-points"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "ecranCorrige": "B2-02-A2-06-ECARTS-POINT-MOYEN",
+        "notes": "• Faire lire les signes : négatifs ensemble avant G, positifs ensemble après.\n• Transition : jalon 2.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A2-07-JALON",
+        "type": "fp-pulse",
+        "titre": "Jalon 2 : relier deux variables",
+        "duree": 1,
+        "interactif": false,
+        "donnees": {
+          "sondage": {
+            "id": "b2-02-a2-jalon",
+            "invite": "Je sais placer le point moyen, calculer r et dire ce qu’il ne prouve pas.",
+            "metadonnees": {
+              "concepts": ["correlation"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 1,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• 30 s de vote anonyme.\n• Si plus de 30 % « Perdu » : reprendre la trace écrite A2-03 sur le point moyen.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A3-01-JUSQU-OU",
+        "type": "fp-story",
+        "titre": "Réfléchir : jusqu’où prolonger une tendance ?",
+        "duree": 5,
+        "interactif": true,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A3-01-JUSQU-OU",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A3-01-JUSQU-OU",
+              "renderer": "reflection",
+              "props": {
+                "promptData": {
+                  "id": "b2-02-a3-jusqu-ou",
+                  "type": "reflection",
+                  "question": "La banque veut le chiffre d’affaires de 2028. Quelle droite traceriez-vous dans le nuage d’Atelier Rivage, et jusqu’à quelle année vous fieriez-vous à elle ?",
+                  "placeholder": "Je tracerais… Je m’y fierais jusqu’à… parce que…",
+                  "competency": "Raisonner · juger la portée d’une prévision"
+                }
+              }
+            },
+            "metadonnees": {
+              "concepts": ["prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 5,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "renvoi": "B2-02-A2-01-NUAGE-RIVAGE",
+        "notes": "• Temps « réfléchir » de la notion 3 : 3 min d’écriture, puis lire trois réponses.\n• Papier : cadre de réponse du livret.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": {
+          "type": "reflexion",
+          "attendu": "Une droite qui passe au plus près de tous les points, et donc par le point moyen. Près des données, la prévision est solide ; plus on s’en éloigne, plus elle suppose que la tendance continue.",
+          "suite": "Gardez votre réponse : la trace écrite donne la droite et la règle pour prévoir."
+        }
+      },
+      {
+        "id": "B2-02-A3-02-COURS-DROITE",
+        "type": "fp-story",
+        "titre": "Cours : la droite des moindres carrés et la prévision",
+        "duree": 6,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A3-02-COURS-DROITE",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A3-02-COURS-DROITE",
+              "renderer": "lesson",
+              "props": {
+                "title": "La droite des moindres carrés et la prévision",
+                "subtitle": "Trace écrite · notion 3",
+                "blocks": [
+                  {
+                    "kind": "definition",
+                    "title": "La droite des moindres carrés",
+                    "text": "C’est la droite y = ax + b qui rend minimale la somme des carrés des écarts verticaux entre les points et la droite. Elle passe toujours par le point moyen G.",
+                    "formula": "a = cov(x, y) ÷ V(x) · b = ȳ − a x̄",
+                    "steps": [
+                      "a : =PENTE(plage des y;plage des x)",
+                      "b : =ORDONNEE.ORIGINE(plage des y;plage des x)",
+                      "Contrôle : a x̄ + b redonne ȳ."
+                    ]
+                  },
+                  {
+                    "kind": "method",
+                    "title": "Prévoir avec la droite",
+                    "text": "Remplacer x par le rang de l’année, jamais par l’année elle-même. Entre les rangs observés, on interpole ; au-delà, on extrapole : la prévision suppose que la tendance continue et devient fragile loin des données.",
+                    "formula": "rang = année − année du rang 1 + 1"
+                  },
+                  {
+                    "kind": "method",
+                    "title": "Trouver l’année d’un seuil",
+                    "text": "Résoudre ax + b ≥ seuil, puis prendre le premier rang entier qui convient, c’est-à-dire l’entier supérieur, et le traduire en année."
+                  },
+                  {
+                    "kind": "exam",
+                    "title": "Rédiger au CCF",
+                    "text": "Donner l’équation avec ses arrondis, la valeur de r et sa lecture, la prévision avec son unité, puis la réserve : « si la tendance observée se poursuit »."
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["ajustement-affine", "prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 6,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• Trace écrite : 6 min au plus.\n• Insister : x est le rang de l’année, jamais l’année.",
+        "diffusion": "catalogue",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A3-03-EXEMPLE-DROITE",
+        "type": "fp-worked",
+        "titre": "Exemple guidé : la droite de la publicité",
+        "duree": 6,
+        "interactif": true,
+        "donnees": {
+          "exemple": {
+            "id": "b2-02-a3-exemple-droite",
+            "enonce": "Même série que l’exemple de la notion 2 : publicité x = 2 ; 4 ; 6 ; 8 (centaines d’euros), commandes y = 11 ; 15 ; 20 ; 22. Hélène veut 30 commandes par mois.",
+            "etapes": [
+              {
+                "id": "pente",
+                "intitule": "Le coefficient directeur",
+                "raisonnement": "À la calculatrice ou avec PENTE : a = 1,9. Chaque centaine d’euros de publicité va avec 1,9 commande de plus, en moyenne sur la série.",
+                "invite": "Que vaut a ?"
+              },
+              {
+                "id": "ordonnee",
+                "intitule": "L’ordonnée à l’origine",
+                "raisonnement": "b = ȳ − a x̄ = 17 − 1,9 × 5 = 7,5. Droite : y = 1,9x + 7,5.",
+                "invite": "Que vaut b ?"
+              },
+              {
+                "id": "controle",
+                "intitule": "Contrôler par le point moyen",
+                "raisonnement": "1,9 × 5 + 7,5 = 17 : la droite passe bien par G(5 ; 17).",
+                "invite": "Comment vérifier la droite sans refaire le calcul ?"
+              },
+              {
+                "id": "prevision",
+                "intitule": "Prévoir",
+                "raisonnement": "Pour 1 000 € de publicité, x = 10 : y = 1,9 × 10 + 7,5 = 26,5, soit environ 26 à 27 commandes. x = 10 est hors des données observées : c’est une extrapolation.",
+                "invite": "Combien de commandes prévoir pour 1 000 € de publicité ?"
+              },
+              {
+                "id": "seuil",
+                "intitule": "Le seuil de 30 commandes",
+                "raisonnement": "1,9x + 7,5 ≥ 30 donne x ≥ 22,5 ÷ 1,9 ≈ 11,84. Premier entier : 12, soit 1 200 € de publicité. Arrondir à 11 ne suffirait pas.",
+                "invite": "À partir de quel budget la droite prévoit-elle 30 commandes ?"
+              }
+            ],
+            "metadonnees": {
+              "concepts": ["ajustement-affine", "prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 6,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          },
+          "etayage": 0
+        },
+        "resoluPar": ["B2-02-A3-03-CORRECTION"],
+        "notes": "• Chacun répond sous chaque étape ; la correction vient à l’écran suivant.\n• Papier : réponses sous chaque étape du livret.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A3-03-CORRECTION",
+        "type": "fp-worked",
+        "titre": "Correction : la droite de la publicité",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "exemple": {
+            "id": "b2-02-a3-exemple-droite-corrige",
+            "enonce": "Même série que l’exemple de la notion 2 : publicité x = 2 ; 4 ; 6 ; 8 (centaines d’euros), commandes y = 11 ; 15 ; 20 ; 22. Hélène veut 30 commandes par mois.",
+            "etapes": [
+              {
+                "id": "pente",
+                "intitule": "Le coefficient directeur",
+                "raisonnement": "À la calculatrice ou avec PENTE : a = 1,9. Chaque centaine d’euros de publicité va avec 1,9 commande de plus, en moyenne sur la série.",
+                "invite": "Que vaut a ?"
+              },
+              {
+                "id": "ordonnee",
+                "intitule": "L’ordonnée à l’origine",
+                "raisonnement": "b = ȳ − a x̄ = 17 − 1,9 × 5 = 7,5. Droite : y = 1,9x + 7,5.",
+                "invite": "Que vaut b ?"
+              },
+              {
+                "id": "controle",
+                "intitule": "Contrôler par le point moyen",
+                "raisonnement": "1,9 × 5 + 7,5 = 17 : la droite passe bien par G(5 ; 17).",
+                "invite": "Comment vérifier la droite sans refaire le calcul ?"
+              },
+              {
+                "id": "prevision",
+                "intitule": "Prévoir",
+                "raisonnement": "Pour 1 000 € de publicité, x = 10 : y = 1,9 × 10 + 7,5 = 26,5, soit environ 26 à 27 commandes. x = 10 est hors des données observées : c’est une extrapolation.",
+                "invite": "Combien de commandes prévoir pour 1 000 € de publicité ?"
+              },
+              {
+                "id": "seuil",
+                "intitule": "Le seuil de 30 commandes",
+                "raisonnement": "1,9x + 7,5 ≥ 30 donne x ≥ 22,5 ÷ 1,9 ≈ 11,84. Premier entier : 12, soit 1 200 € de publicité. Arrondir à 11 ne suffirait pas.",
+                "invite": "À partir de quel budget la droite prévoit-elle 30 commandes ?"
+              }
+            ],
+            "metadonnees": {
+              "concepts": ["ajustement-affine", "prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          },
+          "etayage": 0,
+          "pilote": true,
+          "corrigeDe": "B2-02-A3-03-EXEMPLE-DROITE"
+        },
+        "ecranCorrige": "B2-02-A3-03-EXEMPLE-DROITE",
+        "notes": "• S’arrêter sur le contrôle par G (étape 3) et sur l’arrondi du seuil (étape 5).\n• Transition : « À vous, sur Atelier Rivage : exercice 4. »",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A3-04-ATELIER-DROITE",
+        "type": "questionnaire",
+        "titre": "Exercice 4 — Prévoir le chiffre d’affaires",
+        "duree": 9,
+        "interactif": true,
+        "donnees": {
+          "intitule": "Exercice 4 — Prévoir le chiffre d’affaires",
+          "consigne": "Calculatrice autorisée. Chiffre d’affaires d’Atelier Rivage, en milliers d’euros, pour les rangs x = 1 à 6 (années 2020 à 2025) : 610 ; 652 ; 694 ; 736 ; 790 ; 826. Utiliser les coefficients non arrondis pour les prévisions.",
+          "regime": "focus",
+          "ordre": "fixe",
+          "questions": [
+            {
+              "brique": "fp-numeric",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a3-pente",
+                  "enonce": "Quel est le coefficient directeur a de la droite des moindres carrés de y en x ? Arrondir au centième.",
+                  "unite": null,
+                  "metadonnees": {
+                    "concepts": ["ajustement-affine", "prevision"],
+                    "misconceptionsCiblees": [],
+                    "dureeMinutes": 9,
+                    "modalite": "solo",
+                    "regime": "focus"
+                  }
+                }
+              }
+            },
+            {
+              "brique": "fp-numeric",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a3-ordonnee",
+                  "enonce": "Quelle est l’ordonnée à l’origine b de cette droite ? Arrondir au centième.",
+                  "unite": null,
+                  "metadonnees": {
+                    "concepts": ["ajustement-affine", "prevision"],
+                    "misconceptionsCiblees": [],
+                    "dureeMinutes": 9,
+                    "modalite": "solo",
+                    "regime": "focus"
+                  }
+                }
+              }
+            },
+            {
+              "brique": "fp-numeric",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a3-prevision",
+                  "enonce": "Si la tendance se poursuit, quel chiffre d’affaires prévoir pour 2028 ? Réponse en milliers d’euros, arrondie à l’unité.",
+                  "unite": "k€",
+                  "metadonnees": {
+                    "concepts": ["ajustement-affine", "prevision"],
+                    "misconceptionsCiblees": [],
+                    "dureeMinutes": 9,
+                    "modalite": "solo",
+                    "regime": "focus"
+                  }
+                }
+              }
+            },
+            {
+              "brique": "fp-numeric",
+              "donnees": {
+                "question": {
+                  "id": "b2-02-a3-seuil",
+                  "enonce": "Selon ce modèle, en quelle année le chiffre d’affaires dépasserait-il 1 000 k€ pour la première fois ?",
+                  "unite": null,
+                  "metadonnees": {
+                    "concepts": ["ajustement-affine", "prevision"],
+                    "misconceptionsCiblees": [],
+                    "dureeMinutes": 9,
+                    "modalite": "solo",
+                    "regime": "focus"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "renvoi": "B2-02-A2-01-NUAGE-RIVAGE",
+        "resoluPar": ["B2-02-A3-04-CORRECTION"],
+        "notes": "• Temps : réflexion 2 min · travail 7 min\n• Réflexion : écrire le rang de 2028 avant tout calcul.\n• Pièges : séries inversées dans PENTE ; 2028 à la place du rang ; seuil arrondi à l’entier inférieur.\n• Papier : exercice 4 du livret.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [
+          {
+            "questionId": "b2-02-a3-pente",
+            "bonneReponse": "43,89",
+            "confusions": [
+              {
+                "id": "pente-ordonnee-inversees",
+                "libelle": "Inverser les deux séries dans PENTE ou ORDONNEE.ORIGINE, ou prendre la pente pour l’ordonnée à l’origine."
+              },
+              {
+                "id": "pente-ordonnee-inversees",
+                "libelle": "Inverser les deux séries dans PENTE ou ORDONNEE.ORIGINE, ou prendre la pente pour l’ordonnée à l’origine."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-a3-ordonnee",
+            "bonneReponse": "564,4",
+            "confusions": [
+              {
+                "id": "pente-ordonnee-inversees",
+                "libelle": "Inverser les deux séries dans PENTE ou ORDONNEE.ORIGINE, ou prendre la pente pour l’ordonnée à l’origine."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-a3-prevision",
+            "bonneReponse": "959",
+            "confusions": [
+              {
+                "id": "rang-pris-pour-annee",
+                "libelle": "Remplacer x par l’année au lieu de son rang dans l’équation de la droite."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-a3-seuil",
+            "bonneReponse": "2029",
+            "confusions": [
+              {
+                "id": "seuil-mal-arrondi",
+                "libelle": "Arrondir à l’entier inférieur le rang solution d’une inéquation de seuil, au lieu du premier entier qui la vérifie."
+              }
+            ]
+          }
+        ],
+        "questions": [
+          {
+            "id": "b2-02-a3-pente",
+            "enonce": "Quel est le coefficient directeur a de la droite des moindres carrés de y en x ? Arrondir au centième.",
+            "options": null
+          },
+          {
+            "id": "b2-02-a3-ordonnee",
+            "enonce": "Quelle est l’ordonnée à l’origine b de cette droite ? Arrondir au centième.",
+            "options": null
+          },
+          {
+            "id": "b2-02-a3-prevision",
+            "enonce": "Si la tendance se poursuit, quel chiffre d’affaires prévoir pour 2028 ? Réponse en milliers d’euros, arrondie à l’unité.",
+            "options": null
+          },
+          {
+            "id": "b2-02-a3-seuil",
+            "enonce": "Selon ce modèle, en quelle année le chiffre d’affaires dépasserait-il 1 000 k€ pour la première fois ?",
+            "options": null
+          }
+        ],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A3-04-CORRECTION",
+        "type": "fp-story",
+        "titre": "Correction de l’exercice 4",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A3-04-CORRECTION",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A3-04-CORRECTION",
+              "renderer": "answer-review",
+              "props": {
+                "title": "Correction de l’exercice 4",
+                "source": {
+                  "screenId": "B2-02-A3-04-ATELIER-DROITE"
+                },
+                "explications": [
+                  {
+                    "reference": "b2-02-a3-pente",
+                    "texte": "=PENTE(plage des y;plage des x) ≈ 43,89 : le chiffre d’affaires augmente d’environ 43,89 k€ par an. Inverser les deux plages donne 0,02, sans signification ici."
+                  },
+                  {
+                    "reference": "b2-02-a3-ordonnee",
+                    "texte": "b = 718 − 43,885714 × 3,5 = 564,4. Contrôle : la droite passe par G(3,5 ; 718)."
+                  },
+                  {
+                    "reference": "b2-02-a3-prevision",
+                    "texte": "2028 a le rang 9 : y ≈ 43,885714 × 9 + 564,4 ≈ 959 k€, si la tendance se poursuit. Avec x = 2028, on obtient 89 565 k€, absurde."
+                  },
+                  {
+                    "reference": "b2-02-a3-seuil",
+                    "texte": "43,885714x + 564,4 ≥ 1 000 donne x ≥ 9,93. Premier rang entier : 10, soit 2029. Le rang 9 (2028) donne 959 k€, sous le seuil."
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["ajustement-affine", "prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "ecranCorrige": "B2-02-A3-04-ATELIER-DROITE",
+        "notes": "• Commencer par la question la moins réussie.\n• Transition : « Une IA a fait la même prévision, pour 2035. »",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A3-05-DEFI-IA",
+        "type": "fp-challenge",
+        "titre": "Exercice 5 — Corriger la prévision d’une IA",
+        "duree": 8,
+        "interactif": true,
+        "donnees": {
+          "probleme": {
+            "id": "b2-02-a3-defi-ia",
+            "enonce": "Samir a demandé une prévision pour 2035 à un assistant IA. Réponse : « Droite : y = 43,89x + 564,4. En 2035, y = 43,89 × 2035 + 564,4 ≈ 89 881 k€. Comme r est proche de 1, ce sont nos hausses de tarifs qui causent la croissance. »",
+            "invite": "Trouvez les erreurs de l’IA, corrigez la prévision et écrivez la réserve à ajouter.",
+            "strategies": [],
+            "metadonnees": {
+              "concepts": ["prevision", "correlation"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 8,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "renvoi": "B2-02-A2-01-NUAGE-RIVAGE",
+        "resoluPar": ["B2-02-A3-05-CORRECTION"],
+        "notes": "• Temps : réflexion 2 min · travail 6 min\n• Réflexion : relire la trace écrite A3-02 et la règle du rang.\n• Repérer qui trouve le rang, l’extrapolation et la causalité ; faire trouver la piste fausse avant de révéler.\n• Papier : exercice 5 du livret.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": {
+          "type": "defi",
+          "strategies": [
+            {
+              "id": "rang",
+              "libelle": "Remplacer x par le rang de 2035, 16, et non par 2035 : y ≈ 43,89 × 16 + 564,4 ≈ 1 267 k€.",
+              "fausse": false
+            },
+            {
+              "id": "loin",
+              "libelle": "2035 est à dix ans des données : l’extrapolation suppose que la tendance dure, la prévision est très fragile.",
+              "fausse": false
+            },
+            {
+              "id": "causalite",
+              "libelle": "r proche de 1 dit que les points sont alignés, pas ce qui cause la hausse : aucune conclusion sur les tarifs.",
+              "fausse": false
+            },
+            {
+              "id": "controle",
+              "libelle": "Contrôler la droite par le point moyen : 43,89 × 3,5 + 564,4 ≈ 718, l’ordonnée de G.",
+              "fausse": false
+            },
+            {
+              "id": "garder",
+              "libelle": "Garder la réponse : r est proche de 1, donc la prévision est sûre.",
+              "fausse": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "B2-02-A3-05-CORRECTION",
+        "type": "fp-story",
+        "titre": "Correction de l’exercice 5",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A3-05-CORRECTION",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A3-05-CORRECTION",
+              "renderer": "answer-review",
+              "props": {
+                "title": "Correction de l’exercice 5",
+                "source": {
+                  "screenId": "B2-02-A3-05-DEFI-IA"
+                },
+                "explications": [
+                  {
+                    "reference": "rang",
+                    "texte": "L’IA a remplacé x par l’année : avec le rang 16, on prévoit environ 1 267 k€, pas 89 881."
+                  },
+                  {
+                    "reference": "loin",
+                    "texte": "Dix ans au-delà des données, rien ne garantit que la tendance tienne : la prévision doit porter sa réserve."
+                  },
+                  {
+                    "reference": "causalite",
+                    "texte": "Le coefficient de corrélation mesure l’alignement ; il ne prouve aucune cause."
+                  },
+                  {
+                    "reference": "controle",
+                    "texte": "Une droite des moindres carrés passe toujours par G : c’est le contrôle le plus rapide."
+                  },
+                  {
+                    "reference": "garder",
+                    "texte": "Piste fausse : un r proche de 1 dit que le passé est bien résumé, pas que l’avenir le suivra."
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["prevision", "correlation"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "ecranCorrige": "B2-02-A3-05-DEFI-IA",
+        "notes": "• Faire lire deux réserves écrites par la classe.\n• Transition : jalon 3, puis pause de 15 minutes.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A3-06-JALON",
+        "type": "fp-pulse",
+        "titre": "Jalon 3 : prévoir avec une droite",
+        "duree": 1,
+        "interactif": false,
+        "donnees": {
+          "sondage": {
+            "id": "b2-02-a3-jalon",
+            "invite": "Je sais obtenir la droite des moindres carrés, prévoir avec le rang et trouver l’année d’un seuil.",
+            "metadonnees": {
+              "concepts": ["prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 1,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• 30 s de vote anonyme.\n• Pause de 15 minutes, hors durée programmée.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A4-01-SITUATION-FIBRE",
+        "type": "fp-story",
+        "titre": "Mini-situation CCF : la fibre optique en France",
+        "duree": 3,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A4-01-SITUATION-FIBRE",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A4-01-SITUATION-FIBRE",
+              "renderer": "table",
+              "props": {
+                "title": "Mini-situation CCF : la fibre optique en France",
+                "subtitle": "Nombre d’abonnements internet en fibre optique jusqu’à l’abonné en France, en fin d’année, en millions. Le rang x vaut 1 pour 2020.",
+                "note": "Source : Arcep, Observatoire des marchés des communications électroniques en France, résultats des quatrièmes trimestres 2020 à 2024. Données publiques réutilisables.",
+                "columns": [
+                  {
+                    "key": "annee",
+                    "label": "Année"
+                  },
+                  {
+                    "key": "rang",
+                    "label": "Rang x"
+                  },
+                  {
+                    "key": "abonnements",
+                    "label": "Abonnements y (millions)"
+                  }
+                ],
+                "rows": [
+                  {
+                    "annee": "2020",
+                    "rang": "1",
+                    "abonnements": "10,3"
+                  },
+                  {
+                    "annee": "2021",
+                    "rang": "2",
+                    "abonnements": "14,5"
+                  },
+                  {
+                    "annee": "2022",
+                    "rang": "3",
+                    "abonnements": "18,1"
+                  },
+                  {
+                    "annee": "2023",
+                    "rang": "4",
+                    "abonnements": "21,4"
+                  },
+                  {
+                    "annee": "2024",
+                    "rang": "5",
+                    "abonnements": "24,4"
+                  }
+                ],
+                "sourceLink": {
+                  "href": "https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/observatoire-des-marches-des-communications-electroniques-en-france/t4-2024.html",
+                  "label": "Arcep · observatoire du quatrième trimestre 2024"
+                }
+              }
+            },
+            "metadonnees": {
+              "concepts": ["nuage-de-points", "prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 3,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• Conditions du CCF : 25 min, calculatrice, poste individuel ; la question tableur vaut 3 points sur 10.\n• Papier : la situation est en tête de la partie 4 du livret.",
+        "diffusion": "catalogue",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A4-02-TABLEUR-FIBRE",
+        "type": "fp-sheet",
+        "titre": "Question tableur (3 points sur 10) : ajuster la série",
+        "duree": 15,
+        "interactif": true,
+        "donnees": {
+          "plan": {
+            "id": "b2-02-a4-feuille-fibre",
+            "intitule": "Question tableur — Ajuster la série de la fibre",
+            "lignes": 7,
+            "colonnes": 5,
+            "cellules": {
+              "A1": "Rang x",
+              "B1": "Abonnements y (millions)",
+              "C1": "Année",
+              "D1": "Indicateur",
+              "E1": "Valeur",
+              "A2": "1",
+              "B2": "10,3",
+              "C2": "2020",
+              "A3": "2",
+              "B3": "14,5",
+              "C3": "2021",
+              "A4": "3",
+              "B4": "18,1",
+              "C4": "2022",
+              "A5": "4",
+              "B5": "21,4",
+              "C5": "2023",
+              "A6": "5",
+              "B6": "24,4",
+              "C6": "2024",
+              "D2": "Coefficient de corrélation r",
+              "D3": "Coefficient directeur a",
+              "D4": "Ordonnée à l’origine b",
+              "D5": "x̄",
+              "D6": "ȳ",
+              "D7": "Contrôle : la droite passe par G"
+            },
+            "verrouillees": [
+              "A1",
+              "B1",
+              "C1",
+              "D1",
+              "E1",
+              "A2",
+              "B2",
+              "C2",
+              "A3",
+              "B3",
+              "C3",
+              "A4",
+              "B4",
+              "C4",
+              "A5",
+              "B5",
+              "C5",
+              "A6",
+              "B6",
+              "C6",
+              "D2",
+              "D3",
+              "D4",
+              "D5",
+              "D6",
+              "D7"
+            ],
+            "consignes": [
+              "En E2, calculez r avec COEFFICIENT.CORRELATION(A2:A6;B2:B6).",
+              "En E3 et E4, calculez a et b avec PENTE et ORDONNEE.ORIGINE : la plage des y d’abord, celle des x ensuite.",
+              "En E5 et E6, calculez les coordonnées du point moyen G avec MOYENNE.",
+              "En E7, contrôlez : =SI(ARRONDI(E3*E5+E4-E6;6)=0;1;0) doit afficher 1."
+            ],
+            "metadonnees": {
+              "concepts": ["correlation", "ajustement-affine"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 15,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "resoluPar": ["B2-02-A4-02-CORRECTION"],
+        "notes": "• Temps : réflexion 3 min · travail 12 min\n• Réflexion : chacun écrit sur papier les fonctions à utiliser et l’ordre des plages.\n• Erreurs à chercher : plages inversées dans PENTE ; valeurs tapées à la main au lieu de formules.\n• Papier : même question à la calculatrice, formules écrites sur la copie ; en CCF, elle se fait devant l’examinateur.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [
+          {
+            "id": "b2-02-a4-feuille-fibre",
+            "enonce": "Question tableur — Ajuster la série de la fibre",
+            "options": null
+          }
+        ],
+        "corrigeEcran": {
+          "type": "feuille",
+          "attendus": [
+            {
+              "reference": "E2",
+              "formuleReference": "=COEFFICIENT.CORRELATION(A2:A6;B2:B6)",
+              "valeur": 0.997852,
+              "tolerance": {
+                "type": "relative",
+                "valeur": 0.0001
+              },
+              "forme": "references"
+            },
+            {
+              "reference": "E3",
+              "formuleReference": "=PENTE(B2:B6;A2:A6)",
+              "valeur": 3.51,
+              "tolerance": {
+                "type": "relative",
+                "valeur": 0.0001
+              },
+              "forme": "references"
+            },
+            {
+              "reference": "E4",
+              "formuleReference": "=ORDONNEE.ORIGINE(B2:B6;A2:A6)",
+              "valeur": 7.21,
+              "tolerance": {
+                "type": "relative",
+                "valeur": 0.0001
+              },
+              "forme": "references"
+            },
+            {
+              "reference": "E5",
+              "formuleReference": "=MOYENNE(A2:A6)",
+              "valeur": 3,
+              "tolerance": {
+                "type": "relative",
+                "valeur": 0.0001
+              },
+              "forme": "references"
+            },
+            {
+              "reference": "E6",
+              "formuleReference": "=MOYENNE(B2:B6)",
+              "valeur": 17.74,
+              "tolerance": {
+                "type": "relative",
+                "valeur": 0.0001
+              },
+              "forme": "references"
+            },
+            {
+              "reference": "E7",
+              "formuleReference": "=SI(ARRONDI(E3*E5+E4-E6;6)=0;1;0)",
+              "valeur": 1,
+              "tolerance": {
+                "type": "absolue",
+                "valeur": 0
+              },
+              "forme": "references"
+            }
+          ],
+          "seuilReussite": 0.8
+        }
+      },
+      {
+        "id": "B2-02-A4-02-CORRECTION",
+        "type": "fp-story",
+        "titre": "Correction de la question tableur",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A4-02-CORRECTION",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A4-02-CORRECTION",
+              "renderer": "answer-review",
+              "props": {
+                "title": "Correction de la question tableur",
+                "source": {
+                  "screenId": "B2-02-A4-02-TABLEUR-FIBRE"
+                },
+                "explications": [
+                  {
+                    "reference": "E2",
+                    "texte": "=COEFFICIENT.CORRELATION(A2:A6;B2:B6) ≈ 0,998 : les points sont presque alignés, un ajustement affine est justifié."
+                  },
+                  {
+                    "reference": "E3 et E4",
+                    "texte": "=PENTE(B2:B6;A2:A6) = 3,51 et =ORDONNEE.ORIGINE(B2:B6;A2:A6) = 7,21 : y = 3,51x + 7,21. Plages inversées : 0,28, la pente de x en y."
+                  },
+                  {
+                    "reference": "E5 à E7",
+                    "texte": "G(3 ; 17,74) ; 3,51 × 3 + 7,21 = 17,74 : le contrôle affiche 1."
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["correlation", "ajustement-affine"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "ecranCorrige": "B2-02-A4-02-TABLEUR-FIBRE",
+        "notes": "• Projeter la feuille d’un poste volontaire et relire chaque formule.\n• Transition : « Avec cette droite, prévoyez : le coffre de la mini-situation. »",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A4-03-COFFRE-FIBRE",
+        "type": "fp-escape",
+        "titre": "Mini-situation : prévoir et juger la prévision",
+        "duree": 14,
+        "interactif": true,
+        "donnees": {
+          "parcours": {
+            "id": "b2-02-a4-coffre-fibre",
+            "intitule": "Prévoir et juger la prévision : quatre réponses pour ouvrir le coffre",
+            "delaiIndiceMs": 60000,
+            "budgetEnigmeMs": 150000,
+            "tentativesMax": 10,
+            "enigmes": [
+              {
+                "id": "b2-02-a4-e1-prevision",
+                "intitule": "La prévision de fin 2025",
+                "enonce": "Avec la droite y = 3,51x + 7,21, quel nombre d’abonnements à la fibre prévoir pour fin 2025, en millions ? Arrondir au centième.",
+                "indice": "Remplacez x par le rang de l’année, pas par l’année."
+              },
+              {
+                "id": "b2-02-a4-e2-seuil",
+                "intitule": "L’année des 35 millions",
+                "enonce": "Selon ce modèle, en quelle année le nombre d’abonnements dépasserait-il 35 millions pour la première fois ?",
+                "indice": "Résolvez l’inéquation, prenez le premier rang entier, puis traduisez-le en année."
+              },
+              {
+                "id": "b2-02-a4-e3-lointaine",
+                "intitule": "Une prévision lointaine",
+                "enonce": "Quel nombre d’abonnements le modèle prévoit-il pour fin 2030, en millions ? Arrondir au centième.",
+                "indice": "Même méthode que pour la première énigme, avec le rang de la nouvelle année."
+              },
+              {
+                "id": "b2-02-a4-e4-ralentissement",
+                "intitule": "Le modèle face au réel",
+                "enonce": "L’Arcep a publié depuis le chiffre réel : la fibre a gagné 2,7 millions d’abonnements en 2025. De combien de millions la hausse annuelle prévue par le modèle dépasse-t-elle cette hausse observée ? Arrondir au centième.",
+                "indice": "Le modèle ajoute chaque année la même quantité : son coefficient directeur."
+              }
+            ],
+            "metadonnees": {
+              "concepts": ["prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 14,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "resoluPar": ["B2-02-A4-03-CORRECTION"],
+        "notes": "• Temps : réflexion 2 min · travail 12 min\n• Réflexion : écrire les rangs de 2025 et de 2030 avant d’ouvrir le coffre.\n• Indices disponibles après 60 s. À 10 min, projeter l’énigme la moins résolue.\n• Papier : quatre questions rédigées du livret, sans code de coffre.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [
+          {
+            "id": "b2-02-a4-e1-prevision",
+            "enonce": "Avec la droite y = 3,51x + 7,21, quel nombre d’abonnements à la fibre prévoir pour fin 2025, en millions ? Arrondir au centième.",
+            "options": null
+          },
+          {
+            "id": "b2-02-a4-e2-seuil",
+            "enonce": "Selon ce modèle, en quelle année le nombre d’abonnements dépasserait-il 35 millions pour la première fois ?",
+            "options": null
+          },
+          {
+            "id": "b2-02-a4-e3-lointaine",
+            "enonce": "Quel nombre d’abonnements le modèle prévoit-il pour fin 2030, en millions ? Arrondir au centième.",
+            "options": null
+          },
+          {
+            "id": "b2-02-a4-e4-ralentissement",
+            "enonce": "L’Arcep a publié depuis le chiffre réel : la fibre a gagné 2,7 millions d’abonnements en 2025. De combien de millions la hausse annuelle prévue par le modèle dépasse-t-elle cette hausse observée ? Arrondir au centième.",
+            "options": null
+          }
+        ],
+        "corrigeEcran": {
+          "type": "enigmes",
+          "enigmes": [
+            {
+              "enigmeId": "b2-02-a4-e1-prevision",
+              "solution": "28,27",
+              "fragment": "F7"
+            },
+            {
+              "enigmeId": "b2-02-a4-e2-seuil",
+              "solution": "2027",
+              "fragment": "B3"
+            },
+            {
+              "enigmeId": "b2-02-a4-e3-lointaine",
+              "solution": "45,82",
+              "fragment": "R9"
+            },
+            {
+              "enigmeId": "b2-02-a4-e4-ralentissement",
+              "solution": "0,81",
+              "fragment": "E5"
+            }
+          ],
+          "codeFinal": "F7B3R9E5"
+        }
+      },
+      {
+        "id": "B2-02-A4-03-CORRECTION",
+        "type": "fp-story",
+        "titre": "Correction de la mini-situation",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A4-03-CORRECTION",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A4-03-CORRECTION",
+              "renderer": "answer-review",
+              "props": {
+                "title": "Correction de la mini-situation",
+                "source": {
+                  "screenId": "B2-02-A4-03-COFFRE-FIBRE"
+                },
+                "explications": [
+                  {
+                    "reference": "b2-02-a4-e1-prevision",
+                    "texte": "Fin 2025 a le rang 6 : 3,51 × 6 + 7,21 = 28,27 millions. Avec x = 2025, on trouve 7 114,96 millions, absurde."
+                  },
+                  {
+                    "reference": "b2-02-a4-e2-seuil",
+                    "texte": "3,51x + 7,21 ≥ 35 donne x ≥ 7,92. Premier rang entier : 8, soit 2027."
+                  },
+                  {
+                    "reference": "b2-02-a4-e3-lointaine",
+                    "texte": "Fin 2030 a le rang 11 : 3,51 × 11 + 7,21 = 45,82 millions, une extrapolation six ans au-delà des données."
+                  },
+                  {
+                    "reference": "b2-02-a4-e4-ralentissement",
+                    "texte": "Le modèle ajoute 3,51 millions par an ; la fibre en a gagné 2,7 en 2025 : 0,81 de trop. Le réel, 27,1 millions, est 1,17 million sous la prévision : la croissance ralentit, la droite ne le voit pas."
+                  }
+                ]
+              }
+            },
+            "metadonnees": {
+              "concepts": ["prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "ecranCorrige": "B2-02-A4-03-COFFRE-FIBRE",
+        "notes": "• S’attarder sur l’énigme la moins résolue (pupitre).\n• Finir sur la comparaison au réel : c’est la réserve à écrire au CCF.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A4-04-RAPPEL",
+        "type": "fp-spaced",
+        "titre": "Rappel : de mémoire, sans vos notes",
+        "duree": 6,
+        "interactif": true,
+        "donnees": {
+          "rappel": {
+            "id": "b2-02-a4-rappel",
+            "intitule": "Rappel : de mémoire, sans vos notes",
+            "metadonnees": {
+              "concepts": [
+                "serie-statistique",
+                "moyenne",
+                "mediane",
+                "ecart-type",
+                "dispersion",
+                "choix-du-resume",
+                "nuage-de-points",
+                "correlation",
+                "ajustement-affine",
+                "prevision"
+              ],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 6,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• 5 min individuelles, puis projeter la carte de maîtrise.\n• Tous reçoivent les deux questions obligatoires (causalité, rang), en plus de leurs points faibles.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [
+          {
+            "questionId": "b2-02-r-mediane-paire",
+            "bonneReponse": "23, la demi-somme des deux valeurs du milieu",
+            "confusions": [
+              {
+                "id": "mediane-rang-pair",
+                "libelle": "Pour un effectif pair, retenir une seule des deux valeurs centrales au lieu de leur demi-somme."
+              },
+              {
+                "id": "moyenne-lue-comme-mediane",
+                "libelle": "Croire que la moyenne partage la série en deux moitiés d’effectifs égaux."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-r-mediane-tri",
+            "bonneReponse": "5, la valeur du milieu une fois la série triée",
+            "confusions": [
+              {
+                "id": "mediane-sans-tri",
+                "libelle": "Prendre la valeur du milieu de la liste sans avoir trié les valeurs."
+              },
+              {
+                "id": "moyenne-lue-comme-mediane",
+                "libelle": "Croire que la moyenne partage la série en deux moitiés d’effectifs égaux."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-r-extreme",
+            "bonneReponse": "La garder, la signaler et donner la médiane avec la moyenne",
+            "confusions": [
+              {
+                "id": "valeur-extreme-supprimee",
+                "libelle": "Retirer une valeur extrême gênante sans pièce qui prouve qu’elle est une erreur."
+              },
+              {
+                "id": "valeur-extreme-ignoree",
+                "libelle": "Résumer par la moyenne une série tirée par une valeur extrême, sans le signaler."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-r-variance",
+            "bonneReponse": "6 jours, la racine carrée de la variance",
+            "confusions": [
+              {
+                "id": "variance-confondue-avec-ecart-type",
+                "libelle": "Donner la variance, exprimée dans le carré de l’unité, comme écart-type."
+              },
+              {
+                "id": "variance-confondue-avec-ecart-type",
+                "libelle": "Donner la variance, exprimée dans le carré de l’unité, comme écart-type."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-r-population",
+            "bonneReponse": "ECARTYPEP, division par n",
+            "confusions": [
+              {
+                "id": "ecart-type-population-echantillon",
+                "libelle": "Confondre l’écart-type de la population (division par n) et l’écart-type estimé sur un échantillon (division par n − 1)."
+              },
+              {
+                "id": "variance-confondue-avec-ecart-type",
+                "libelle": "Donner la variance, exprimée dans le carré de l’unité, comme écart-type."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-r-etendue",
+            "bonneReponse": "Pas forcément : l’étendue ne regarde que les deux extrêmes",
+            "confusions": [
+              {
+                "id": "etendue-prise-pour-dispersion",
+                "libelle": "Juger la dispersion sur la seule étendue, qui ne dépend que des deux valeurs extrêmes."
+              },
+              {
+                "id": "etendue-prise-pour-dispersion",
+                "libelle": "Juger la dispersion sur la seule étendue, qui ne dépend que des deux valeurs extrêmes."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-r-point-moyen",
+            "bonneReponse": "(2,5 ; 30), les deux moyennes",
+            "confusions": [
+              {
+                "id": "point-moyen-confondu",
+                "libelle": "Prendre pour point moyen le point du milieu du tableau au lieu du point de coordonnées (x̄ ; ȳ)."
+              },
+              {
+                "id": "point-moyen-confondu",
+                "libelle": "Prendre pour point moyen le point du milieu du tableau au lieu du point de coordonnées (x̄ ; ȳ)."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-r-signe",
+            "bonneReponse": "Oui : les points sont proches d’une droite qui descend",
+            "confusions": [
+              {
+                "id": "correlation-jugee-au-signe",
+                "libelle": "Juger la qualité d’un ajustement au signe du coefficient de corrélation au lieu de sa proximité avec 1 ou −1."
+              },
+              {
+                "id": "correlation-lue-comme-pente",
+                "libelle": "Lire le coefficient de corrélation comme la pente de la droite d’ajustement."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-r-pente",
+            "bonneReponse": "12, le coefficient directeur",
+            "confusions": [
+              {
+                "id": "correlation-lue-comme-pente",
+                "libelle": "Lire le coefficient de corrélation comme la pente de la droite d’ajustement."
+              },
+              {
+                "id": "pente-ordonnee-inversees",
+                "libelle": "Inverser les deux séries dans PENTE ou ORDONNEE.ORIGINE, ou prendre la pente pour l’ordonnée à l’origine."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-r-causalite",
+            "bonneReponse": "Rien sur une cause : l’hiver fait varier les deux séries",
+            "confusions": [
+              {
+                "id": "correlation-prise-pour-causalite",
+                "libelle": "Conclure sur une cause, ou sur l’absence de cause, à partir de deux évolutions simultanées."
+              },
+              {
+                "id": "correlation-prise-pour-causalite",
+                "libelle": "Conclure sur une cause, ou sur l’absence de cause, à partir de deux évolutions simultanées."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-r-rang",
+            "bonneReponse": "6, le rang de 2026",
+            "confusions": [
+              {
+                "id": "rang-pris-pour-annee",
+                "libelle": "Remplacer x par l’année au lieu de son rang dans l’équation de la droite."
+              },
+              {
+                "id": "rang-pris-pour-annee",
+                "libelle": "Remplacer x par l’année au lieu de son rang dans l’équation de la droite."
+              }
+            ]
+          },
+          {
+            "questionId": "b2-02-r-seuil",
+            "bonneReponse": "8, l’entier suivant",
+            "confusions": [
+              {
+                "id": "seuil-mal-arrondi",
+                "libelle": "Arrondir à l’entier inférieur le rang solution d’une inéquation de seuil, au lieu du premier entier qui la vérifie."
+              },
+              {
+                "id": "seuil-mal-arrondi",
+                "libelle": "Arrondir à l’entier inférieur le rang solution d’une inéquation de seuil, au lieu du premier entier qui la vérifie."
+              }
+            ]
+          }
+        ],
+        "questions": [
+          {
+            "id": "b2-02-r-mediane-paire",
+            "enonce": "Quelle est la médiane de la série 12, 15, 20, 26, 31, 40 ?",
+            "options": [
+              {
+                "id": "23-la-demi-somme-des-deux-valeurs-du-mil-99c665ba",
+                "libelle": "23, la demi-somme des deux valeurs du milieu"
+              },
+              {
+                "id": "20-la-troisieme-valeur-seule-189b53e4",
+                "libelle": "20, la troisième valeur seule"
+              },
+              {
+                "id": "24-la-moyenne-des-six-valeurs-7e3a24fb",
+                "libelle": "24, la moyenne des six valeurs"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-r-mediane-tri",
+            "enonce": "Quelle est la médiane de la série 9, 2, 7, 4, 5 ?",
+            "options": [
+              {
+                "id": "5-4-la-moyenne-des-cinq-valeurs-dda11de2",
+                "libelle": "5,4, la moyenne des cinq valeurs"
+              },
+              {
+                "id": "5-la-valeur-du-milieu-une-fois-la-serie-e6f9f725",
+                "libelle": "5, la valeur du milieu une fois la série triée"
+              },
+              {
+                "id": "7-la-valeur-du-milieu-de-la-liste-2729519a",
+                "libelle": "7, la valeur du milieu de la liste"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-r-extreme",
+            "enonce": "Une facture contestée étire fortement la série. Que faites-vous ?",
+            "options": [
+              {
+                "id": "la-garder-la-signaler-et-donner-la-media-02c13111",
+                "libelle": "La garder, la signaler et donner la médiane avec la moyenne"
+              },
+              {
+                "id": "donner-la-moyenne-seule-e58259bb",
+                "libelle": "Donner la moyenne seule"
+              },
+              {
+                "id": "la-retirer-sans-le-dire-f40fc056",
+                "libelle": "La retirer sans le dire"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-r-variance",
+            "enonce": "La variance d’une série de délais vaut 36 jours². Quel est son écart-type ?",
+            "options": [
+              {
+                "id": "6-jours-la-racine-carree-de-la-variance-33463d50",
+                "libelle": "6 jours, la racine carrée de la variance"
+              },
+              {
+                "id": "36-jours-la-variance-elle-meme-9552a874",
+                "libelle": "36 jours, la variance elle-même"
+              },
+              {
+                "id": "18-jours-la-moitie-de-la-variance-c61aab10",
+                "libelle": "18 jours, la moitié de la variance"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-r-population",
+            "enonce": "On a relevé les délais de tous les clients de l’année. Quelle fonction d’écart-type utiliser ?",
+            "options": [
+              {
+                "id": "ecartypep-division-par-n-799f2609",
+                "libelle": "ECARTYPEP, division par n"
+              },
+              {
+                "id": "ecartype-division-par-n-moins-1-c4f93574",
+                "libelle": "ECARTYPE, division par n − 1"
+              },
+              {
+                "id": "var-la-variance-5f014c39",
+                "libelle": "VAR, la variance"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-r-etendue",
+            "enonce": "Deux séries ont la même étendue. Ont-elles la même dispersion ?",
+            "options": [
+              {
+                "id": "oui-si-elles-ont-aussi-la-meme-mediane-dead5720",
+                "libelle": "Oui, si elles ont aussi la même médiane"
+              },
+              {
+                "id": "pas-forcement-l-etendue-ne-regarde-que-l-0acf9f62",
+                "libelle": "Pas forcément : l’étendue ne regarde que les deux extrêmes"
+              },
+              {
+                "id": "oui-toujours-501489fa",
+                "libelle": "Oui, toujours"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-r-point-moyen",
+            "enonce": "Rangs 1, 2, 3, 4 et valeurs 10, 20, 30, 60. Quelles sont les coordonnées du point moyen ?",
+            "options": [
+              {
+                "id": "2-5-30-les-deux-moyennes-a11b161c",
+                "libelle": "(2,5 ; 30), les deux moyennes"
+              },
+              {
+                "id": "2-20-le-point-du-milieu-du-tableau-38219b19",
+                "libelle": "(2 ; 20), le point du milieu du tableau"
+              },
+              {
+                "id": "10-120-les-deux-sommes-5a54ef91",
+                "libelle": "(10 ; 120), les deux sommes"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-r-signe",
+            "enonce": "Un coefficient de corrélation vaut −0,96. Un ajustement affine est-il justifié ?",
+            "options": [
+              {
+                "id": "oui-les-points-sont-proches-d-une-droite-3a6eb09c",
+                "libelle": "Oui : les points sont proches d’une droite qui descend"
+              },
+              {
+                "id": "non-r-est-negatif-e5c52dd4",
+                "libelle": "Non : r est négatif"
+              },
+              {
+                "id": "non-la-pente-vaudrait-moins-0-96-0d8cb655",
+                "libelle": "Non : la pente vaudrait −0,96"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-r-pente",
+            "enonce": "r = 0,98 et la droite est y = 12x + 300. Quelle hausse par rang la droite prévoit-elle ?",
+            "options": [
+              {
+                "id": "0-98-le-coefficient-de-correlation-68f6ef57",
+                "libelle": "0,98, le coefficient de corrélation"
+              },
+              {
+                "id": "300-l-ordonnee-a-l-origine-975f0da5",
+                "libelle": "300, l’ordonnée à l’origine"
+              },
+              {
+                "id": "12-le-coefficient-directeur-be82faad",
+                "libelle": "12, le coefficient directeur"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-r-causalite",
+            "enonce": "Les ventes de parapluies et le nombre de rhumes montent ensemble en hiver, avec r = 0,95. Que conclure ?",
+            "options": [
+              {
+                "id": "rien-sur-une-cause-l-hiver-fait-varier-l-f9fb9f9c",
+                "libelle": "Rien sur une cause : l’hiver fait varier les deux séries"
+              },
+              {
+                "id": "les-parapluies-donnent-des-rhumes-32e9dc86",
+                "libelle": "Les parapluies donnent des rhumes"
+              },
+              {
+                "id": "les-rhumes-font-acheter-des-parapluies-178dacb2",
+                "libelle": "Les rhumes font acheter des parapluies"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-r-rang",
+            "enonce": "Droite y = 5x + 40, avec x = 1 pour 2021. Quel x utiliser pour prévoir 2026 ?",
+            "options": [
+              {
+                "id": "5-l-ecart-entre-les-deux-annees-e74a24df",
+                "libelle": "5, l’écart entre les deux années"
+              },
+              {
+                "id": "6-le-rang-de-2026-478bc17a",
+                "libelle": "6, le rang de 2026"
+              },
+              {
+                "id": "2026-l-annee-elle-meme-ed0eb653",
+                "libelle": "2026, l’année elle-même"
+              }
+            ]
+          },
+          {
+            "id": "b2-02-r-seuil",
+            "enonce": "L’inéquation d’un seuil donne x ≥ 7,2. Quel est le premier rang où le seuil est atteint ?",
+            "options": [
+              {
+                "id": "7-2-sans-arrondir-52022c27",
+                "libelle": "7,2, sans arrondir"
+              },
+              {
+                "id": "7-l-arrondi-a-l-entier-inferieur-7175211d",
+                "libelle": "7, l’arrondi à l’entier inférieur"
+              },
+              {
+                "id": "8-l-entier-suivant-b4205cc5",
+                "libelle": "8, l’entier suivant"
+              }
+            ]
+          }
+        ],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A4-05-FICHE-MEMO",
+        "type": "fp-story",
+        "titre": "Fiche mémo : résumer, relier, prévoir",
+        "duree": 2,
+        "interactif": false,
+        "donnees": {
+          "recit": {
+            "id": "B2-02-A4-05-FICHE-MEMO",
+            "presentation": {
+              "version": 2,
+              "screenId": "B2-02-A4-05-FICHE-MEMO",
+              "renderer": "grid",
+              "props": {
+                "title": "Fiche mémo : résumer, relier, prévoir",
+                "subtitle": "À garder pour le CCF : chaque carte part d’une question et donne la méthode et son piège.",
+                "items": [
+                  {
+                    "title": "Moyenne",
+                    "description": "Raisonne-t-on sur un total ?",
+                    "back": "Somme des valeurs ÷ effectif. Une valeur extrême la tire."
+                  },
+                  {
+                    "title": "Médiane",
+                    "description": "Cherche-t-on une moitié ?",
+                    "back": "Trier d’abord. Effectif pair : demi-somme des deux valeurs du milieu."
+                  },
+                  {
+                    "title": "Écart-type",
+                    "description": "Les valeurs sont-elles régulières ?",
+                    "back": "Population entière : ECARTYPEP (÷ n). La variance est en unité², l’écart-type dans l’unité."
+                  },
+                  {
+                    "title": "Valeur extrême",
+                    "description": "Une valeur tire la série ?",
+                    "back": "Ne pas la retirer sans pièce ; la signaler, publier la médiane à côté de la moyenne."
+                  },
+                  {
+                    "title": "Point moyen",
+                    "description": "Où passe la droite ?",
+                    "back": "G(x̄ ; ȳ), les deux moyennes, jamais le point du milieu du tableau."
+                  },
+                  {
+                    "title": "Corrélation r",
+                    "description": "Les points sont-ils alignés ?",
+                    "back": "|r| proche de 1 : ajustement affine justifié. r n’est pas la pente et ne prouve aucune cause."
+                  },
+                  {
+                    "title": "Droite des moindres carrés",
+                    "description": "Quelle équation ?",
+                    "back": "a = PENTE(y;x), b = ORDONNEE.ORIGINE(y;x) ; contrôle par G."
+                  },
+                  {
+                    "title": "Prévoir",
+                    "description": "Quelle valeur de x ?",
+                    "back": "Le rang de l’année, jamais l’année. Loin des données : réserve « si la tendance se poursuit »."
+                  },
+                  {
+                    "title": "Seuil",
+                    "description": "En quelle année ?",
+                    "back": "Résoudre ax + b ≥ seuil, prendre l’entier supérieur, le traduire en année."
+                  },
+                  {
+                    "title": "Référentiel du BTS CG",
+                    "description": "Le programme de mathématiques et l’épreuve E3.",
+                    "href": "https://enqdip.sup.adc.education.fr/bts/referentiel/BTS_ComptabiliteGestion.pdf",
+                    "external": true
+                  }
+                ],
+                "imprimable": true
+              }
+            },
+            "metadonnees": {
+              "concepts": [
+                "serie-statistique",
+                "moyenne",
+                "mediane",
+                "ecart-type",
+                "dispersion",
+                "choix-du-resume",
+                "nuage-de-points",
+                "correlation",
+                "ajustement-affine",
+                "prevision"
+              ],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 2,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• 90 s de lecture ; la fiche s’imprime pour le classeur de CCF.",
+        "diffusion": "catalogue",
+        "seuil": null,
+        "corriges": [],
+        "questions": [],
+        "corrigeEcran": null
+      },
+      {
+        "id": "B2-02-A4-06-BILLET-DE-SORTIE",
+        "type": "fp-exit",
+        "titre": "Billet de sortie : la phrase pour la banque",
+        "duree": 4,
+        "interactif": true,
+        "donnees": {
+          "billet": {
+            "id": "b2-02-a4-billet",
+            "question": "La banque lira une seule phrase. Laquelle peut partir telle quelle ?",
+            "invite": "Quelle réserve la phrase juste contient-elle, et pourquoi est-elle nécessaire ?",
+            "options": [
+              {
+                "id": "nos-clients-paient-en-moyenne-a-48-jours-fe436567",
+                "libelle": "Nos clients paient en moyenne à 48 jours ; si la tendance se poursuit, notre chiffre d’affaires 2028 serait d’environ 959 k€."
+              },
+              {
+                "id": "la-moitie-de-nos-factures-est-encaissee-df866776",
+                "libelle": "La moitié de nos factures est encaissée en 43 jours au plus ; notre chiffre d’affaires 2028 sera de 959 k€."
+              },
+              {
+                "id": "nos-delais-sont-reguliers-et-r-proche-de-5c574b23",
+                "libelle": "Nos délais sont réguliers, et r proche de 1 prouve que notre croissance va continuer."
+              },
+              {
+                "id": "la-moitie-de-nos-factures-est-encaissee-d4f39369",
+                "libelle": "La moitié de nos factures est encaissée en 43 jours au plus ; si la tendance de 2020 à 2025 se poursuit, notre chiffre d’affaires 2028 serait d’environ 959 k€."
+              }
+            ],
+            "metadonnees": {
+              "concepts": ["choix-du-resume", "prevision"],
+              "misconceptionsCiblees": [],
+              "dureeMinutes": 4,
+              "modalite": "solo",
+              "regime": "ouvert"
+            }
+          }
+        },
+        "notes": "• 4 min ; clore la séance quand le compteur de billets est complet.\n• Pièges : la prévision sans réserve, la moyenne tirée par F105, la causalité.",
+        "diffusion": "seance",
+        "seuil": null,
+        "corriges": [
+          {
+            "questionId": "b2-02-a4-billet",
+            "bonneReponse": "La moitié de nos factures est encaissée en 43 jours au plus ; si la tendance de 2020 à 2025 se poursuit, notre chiffre d’affaires 2028 serait d’environ 959 k€.",
+            "confusions": [
+              {
+                "id": "extrapolation-sans-reserve",
+                "libelle": "Prolonger une tendance loin des données observées sans signaler la limite de la prévision."
+              },
+              {
+                "id": "valeur-extreme-ignoree",
+                "libelle": "Résumer par la moyenne une série tirée par une valeur extrême, sans le signaler."
+              },
+              {
+                "id": "correlation-prise-pour-causalite",
+                "libelle": "Conclure sur une cause, ou sur l’absence de cause, à partir de deux évolutions simultanées."
+              }
+            ]
+          }
+        ],
+        "questions": [
+          {
+            "id": "b2-02-a4-billet",
+            "enonce": "La banque lira une seule phrase. Laquelle peut partir telle quelle ?",
+            "options": [
+              {
+                "id": "nos-clients-paient-en-moyenne-a-48-jours-fe436567",
+                "libelle": "Nos clients paient en moyenne à 48 jours ; si la tendance se poursuit, notre chiffre d’affaires 2028 serait d’environ 959 k€."
+              },
+              {
+                "id": "la-moitie-de-nos-factures-est-encaissee-df866776",
+                "libelle": "La moitié de nos factures est encaissée en 43 jours au plus ; notre chiffre d’affaires 2028 sera de 959 k€."
+              },
+              {
+                "id": "nos-delais-sont-reguliers-et-r-proche-de-5c574b23",
+                "libelle": "Nos délais sont réguliers, et r proche de 1 prouve que notre croissance va continuer."
+              },
+              {
+                "id": "la-moitie-de-nos-factures-est-encaissee-d4f39369",
+                "libelle": "La moitié de nos factures est encaissée en 43 jours au plus ; si la tendance de 2020 à 2025 se poursuit, notre chiffre d’affaires 2028 serait d’environ 959 k€."
+              }
+            ]
+          }
+        ],
+        "corrigeEcran": null
       }
     ],
     "remediations": {
