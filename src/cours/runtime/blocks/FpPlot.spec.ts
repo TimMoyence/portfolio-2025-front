@@ -106,6 +106,14 @@ describe('FpPlot', () => {
     },
   });
 
+  it('imprime sur papier la figure et son tableau de donnees deplie, sans reglage ni bouton', () => {
+    hote.setAttribute('data-papier', '');
+
+    expect(hote.shadowRoot?.querySelector('svg')).not.toBeNull();
+    expect(hote.shadowRoot?.querySelectorAll('button, input, details, summary').length).toBe(0);
+    expect(reperes(hote, 'ligne').length).toBe(DEFINITION.series.length);
+  });
+
   it('trace une polyligne par serie en svg produit par la brique sans bibliotheque', () => {
     expect(repere(hote, 'graphique')).toBeInstanceOf(SVGSVGElement);
     expect(reperes(hote, 'trace').length).toBe(DEFINITION.series.length);
@@ -386,6 +394,16 @@ describe('FpPlot', () => {
       expect(rapportDe('reglable')).toBe('×7');
       expect(vue('reference')?.querySelector('[data-testid="vue"]')?.textContent).toContain(
         'Axe de Samir',
+      );
+    });
+
+    it('imprime sur papier la référence face à l autre préréglage, au lieu d un réglage par défaut', () => {
+      hote.setAttribute('data-papier', '');
+
+      expect(rapportDe('reference')).toBe('×7');
+      expect(rapportDe('reglable')).not.toBe('×7');
+      expect(vue('reglable')?.querySelector('[data-testid="vue"]')?.textContent).toContain(
+        'Axe à zéro',
       );
     });
 

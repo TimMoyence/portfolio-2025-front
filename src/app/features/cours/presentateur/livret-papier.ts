@@ -13,6 +13,15 @@ const ECRANS_DE_SEANCE_SEULEMENT: ReadonlySet<string> = new Set(['fp-pulse']);
 
 const QUESTIONS_TIREES_EN_SEANCE: ReadonlySet<string> = new Set(['fp-spaced']);
 
+const CORRIGES_DONNES_A_LA_SUITE: ReadonlySet<string> = new Set(['reflexion', 'revelation']);
+
+const ECRANS_SANS_INTITULE: ReadonlySet<string> = new Set(['fp-table-build', 'fp-challenge']);
+
+export interface PageDuLivretEtudiant {
+  readonly ecran: EcranContent;
+  readonly titre: string | null;
+}
+
 type CleDuGuide = keyof GuideFormateur;
 
 export interface RubriqueDuGuide {
@@ -77,19 +86,34 @@ function avecSaBanqueDeQuestions(ecran: EcranContent, corrige: DerouleCours): Ec
   return corrige.ecrans.find((candidat) => candidat.id === ecran.id) ?? ecran;
 }
 
+function reponseDonneeALaSuite(ecran: EcranContent, corrige: DerouleCours): boolean {
+  if (QUESTIONS_TIREES_EN_SEANCE.has(ecran.type)) {
+    return true;
+  }
+  const type = corrige.ecrans.find((candidat) => candidat.id === ecran.id)?.corrigeEcran?.type;
+  return type !== undefined && CORRIGES_DONNES_A_LA_SUITE.has(type);
+}
+
+function pageDuLivretEtudiant(ecran: EcranContent, corrige: DerouleCours): PageDuLivretEtudiant {
+  return {
+    ecran: avecSaBanqueDeQuestions(ecran, corrige),
+    titre: ECRANS_SANS_INTITULE.has(ecran.type) ? (ecran.titre ?? null) : null,
+  };
+}
+
 export function feuillesDuLivretEtudiant(
   sujet: CoursContent,
   corrige: DerouleCours,
-): readonly (readonly EcranContent[])[] {
-  const feuilles: EcranContent[][] = [[]];
+): readonly (readonly PageDuLivretEtudiant[])[] {
+  const feuilles: PageDuLivretEtudiant[][] = [[]];
   for (const ecran of sujet.ecrans) {
-    const courante = feuilles[feuilles.length - 1];
     if (ecran.ecranSource !== undefined) {
-      if (courante.length > 0) {
+      feuilles.push([]);
+    } else if (aTraiterSurPapier(ecran)) {
+      feuilles[feuilles.length - 1].push(pageDuLivretEtudiant(ecran, corrige));
+      if (reponseDonneeALaSuite(ecran, corrige)) {
         feuilles.push([]);
       }
-    } else if (aTraiterSurPapier(ecran)) {
-      courante.push(avecSaBanqueDeQuestions(ecran, corrige));
     }
   }
   return feuilles.filter((feuille) => feuille.length > 0);

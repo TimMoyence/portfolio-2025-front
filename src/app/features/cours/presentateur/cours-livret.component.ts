@@ -73,14 +73,17 @@ type VueDuLivret = 'sujet' | 'corrige';
               <p class="livret__kicker" data-testid="livret-feuille-entete" i18n="@@livretFeuille">
                 Feuille {{ rang + 1 }} / {{ feuillesEtudiant().length }}
               </p>
-              @for (ecran of feuille; track ecran.id) {
+              @for (page of feuille; track page.ecran.id) {
                 <section
                   class="livret__page"
                   data-testid="livret-ecran"
-                  [attr.data-ecran]="ecran.id"
+                  [attr.data-ecran]="page.ecran.id"
                 >
+                  @if (page.titre; as titre) {
+                    <h2 class="livret__titre" data-testid="livret-titre-ecran">{{ titre }}</h2>
+                  }
                   <app-slide-activity
-                    [slide]="ecran"
+                    [slide]="page.ecran"
                     [role]="'etudiant'"
                     [apercu]="true"
                     [papier]="true"

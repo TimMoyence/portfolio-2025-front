@@ -118,6 +118,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeSheetVide:Aucune cellule à remplir : le plan ne porte aucune ligne`,
   'cardsort-consigne': () =>
     $localize`:@@coursRuntimeCardsortConsigne:Glissez chaque carte dans sa catégorie. Au clavier : choisissez la carte, puis la catégorie, puis « Déplacer la carte ».`,
+  'cardsort-consigne-papier': () =>
+    $localize`:@@coursRuntimeCardsortConsignePapier:Pour chaque carte, cochez la catégorie qui lui correspond ; justifiez sur votre copie les cas qui vous font hésiter.`,
   'cardsort-pioche': () => $localize`:@@coursRuntimeCardsortPioche:Cartes à trier`,
   'cardsort-destination': () =>
     $localize`:@@coursRuntimeCardsortDestination:Catégorie de destination`,

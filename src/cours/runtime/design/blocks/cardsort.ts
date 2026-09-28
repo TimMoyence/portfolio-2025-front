@@ -217,4 +217,20 @@ export const cardsort = `
 :where(.fp-root) .fp-cardsort__justification {
   color: var(--fp-ink-mute);
 }
+
+:where(.fp-root) .fp-cardsort__grille {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+:where(.fp-root) .fp-cardsort__grille th,
+:where(.fp-root) .fp-cardsort__grille td {
+  padding: var(--fp-s-1) var(--fp-s-2);
+  border: 1px solid var(--fp-line);
+  text-align: start;
+}
+
+:where(.fp-root) .fp-cardsort__case {
+  text-align: center;
+}
 `;

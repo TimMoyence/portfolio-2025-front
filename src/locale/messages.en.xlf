@@ -14100,6 +14100,12 @@
         <target>Drag each card into its category. With the keyboard: choose the card, then the category, then “Move the card”.</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeCardsortConsignePapier">
+      <segment>
+        <source>Pour chaque carte, cochez la catégorie qui lui correspond ; justifiez sur votre copie les cas qui vous font hésiter.</source>
+        <target>For each card, tick the matching category; justify on your answer sheet the cases you hesitate over.</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimeCardsortPioche">
       <segment>
         <source>Cartes à trier</source>

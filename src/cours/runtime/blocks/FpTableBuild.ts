@@ -30,6 +30,7 @@ export interface TableSynthese {
 export interface TableBuildPlanPublic extends PlanEtaye {
   readonly consignes: readonly string[];
   readonly echeances: number;
+  readonly intituleDesLignes?: string;
   readonly libellesLignes: readonly string[];
   readonly parametres: Readonly<Record<string, number>>;
   readonly colonnes: readonly TableColonne[];
@@ -105,6 +106,9 @@ function copierPlan(source: TableBuildPlanPublic): TableBuildPlanPublic {
     ...copierLEnonce(source),
     consignes: [...source.consignes],
     echeances: Number.isFinite(source.echeances) ? Math.max(0, Math.trunc(source.echeances)) : 0,
+    ...(typeof source.intituleDesLignes === 'string'
+      ? { intituleDesLignes: source.intituleDesLignes }
+      : {}),
     libellesLignes: [...source.libellesLignes],
     parametres: nombresFinis(source.parametres),
     colonnes: source.colonnes.map(copierColonne),
@@ -344,7 +348,8 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
   }
 
   private enteteRang(): EscapedHtml {
-    return safeHtml`<th class="fp-table-build__entete" scope="col">${escapeHtml(this.texte('table-build-echeance'))}</th>`;
+    const intitule = this.interne?.intituleDesLignes ?? this.texte('table-build-echeance');
+    return safeHtml`<th class="fp-table-build__entete" scope="col" data-testid="entete-rang">${escapeHtml(intitule)}</th>`;
   }
 
   private mentionDeRole(colonne: TableColonne): EscapedHtml {

@@ -92,14 +92,18 @@ describe('CoursLivretComponent', () => {
     const feuilleDe = (ecran: string): number =>
       feuilles.findIndex((feuille) => feuille.querySelector(`[data-ecran="${ecran}"]`) !== null);
 
-    expect(feuilles.length).toBe(11);
+    expect(feuilles.length).toBe(15);
     expect(tous(fixture, 'livret-ecran').length).toBe(25);
     expect(
       feuilles.map((feuille) =>
         feuille.querySelector('[data-testid="livret-feuille-entete"]')?.textContent?.trim(),
       ),
-    ).toEqual(feuilles.map((_, rang) => `Feuille ${rang + 1} / 11`));
+    ).toEqual(feuilles.map((_, rang) => `Feuille ${rang + 1} / 15`));
     for (const [exercice, suite] of [
+      ['B2-02-A1-05-UN-SEUL-NOMBRE', 'B2-02-A1-06-COURS-RESUMER'],
+      ['B2-02-A2-02-VOTE-CORRELATION', 'B2-02-A2-03-COURS-NUAGE'],
+      ['B2-02-A3-01-JUSQU-OU', 'B2-02-A3-02-COURS-DROITE'],
+      ['B2-02-A4-04-RAPPEL', 'B2-02-A4-05-FICHE-MEMO'],
       ['B2-02-A2-05-ATELIER-NUAGE', 'B2-02-A2-06-ECARTS-POINT-MOYEN'],
       ['B2-02-A3-04-ATELIER-DROITE', 'B2-02-A3-05-DEFI-IA'],
       ['B2-02-A4-02-TABLEUR-FIBRE', 'B2-02-A4-03-COFFRE-FIBRE'],
@@ -109,6 +113,17 @@ describe('CoursLivretComponent', () => {
       expect(feuilleDe(exercice)).withContext(exercice).toBeGreaterThanOrEqual(0);
       expect(feuilleDe(exercice)).withContext(suite).toBeLessThan(feuilleDe(suite));
     }
+  });
+
+  it('titre au livret étudiant les exercices dont la brique n’imprime pas d’intitulé', async () => {
+    const { fixture } = await monter(of(LIVRET_B2_02));
+
+    const titres = tous(fixture, 'livret-titre-ecran').map((titre) => titre.textContent?.trim());
+
+    expect(titres).toEqual([
+      'Exercice 3 — Les écarts au point moyen',
+      'Exercice 5 — Corriger la prévision d’une IA',
+    ]);
   });
 
   it('bascule sur le corrigé des 35 écrans du B2-02, corrections et rappel compris', async () => {
