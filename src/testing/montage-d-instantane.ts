@@ -28,7 +28,7 @@ export function ecranNomme<T extends EcranContent>(ecrans: readonly T[], id: str
   return ecran;
 }
 
-export function clesDe(valeur: unknown): readonly string[] {
+function clesDe(valeur: unknown): readonly string[] {
   return recolterDansLArbre(valeur, (cle, contenu, descendre) => [cle, ...descendre(contenu)]);
 }
 
