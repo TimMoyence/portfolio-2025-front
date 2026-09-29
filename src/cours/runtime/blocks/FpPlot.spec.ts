@@ -334,6 +334,16 @@ describe('FpPlot', () => {
     expect(texteDe(hote, 'rapport-hauteurs')).toBe('×7');
   });
 
+  it('E13 · intitule la colonne des séries selon la forme du graphique', () => {
+    const premierEntete = (): string =>
+      hote.shadowRoot?.querySelector('thead th')?.textContent?.trim() ?? '';
+    expect(premierEntete()).toBe('Courbe');
+
+    hote.definition = buildPlotEnBarres();
+
+    expect(premierEntete()).toBe('Série');
+  });
+
   it('E13 · n imprime pas l évolution réelle, que la feuille demande de calculer', () => {
     hote.definition = buildPlotEnBarres();
     hote.setAttribute('data-papier', '');
@@ -346,14 +356,14 @@ describe('FpPlot', () => {
   it('imprime la consigne papier à la place de la consigne de réglage', () => {
     hote.definition = buildPlotDefinition({
       description: 'Réglez le taux.',
-      descriptionPapier: 'Lisez la figure.',
+      descriptionPapier: 'Lisez la figure à partir de 0 €.',
     });
 
     expect(texteDe(hote, 'description')).toBe('Réglez le taux.');
 
     hote.setAttribute('data-papier', '');
 
-    expect(texteDe(hote, 'description')).toBe('Lisez la figure.');
+    expect(texteDe(hote, 'description')).toBe('Lisez la figure à partir de 0 €.');
   });
 
   it('E13 · refuse un rapport des hauteurs ou une évolution sans base significative', () => {

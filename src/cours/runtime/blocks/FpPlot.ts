@@ -1,5 +1,6 @@
 import { evaluerExpression } from '../core/formula';
 import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
+import { lierLesNombres } from '../core/typographie';
 import { type Reglages, borner } from './animation';
 import {
   type DefinitionReglable,
@@ -287,7 +288,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
     if (description === undefined || description.trim().length === 0) {
       return safeHtml``;
     }
-    return safeHtml`<p class="fp-plot__description" data-testid="description">${escapeHtml(description)}</p>`;
+    return safeHtml`<p class="fp-plot__description" data-testid="description">${escapeHtml(lierLesNombres(description))}</p>`;
   }
 
   private tracees(valeurs: Valeurs): SerieTracee[] {
@@ -540,7 +541,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
           <caption class="fp-plot__intitule">${escapeHtml(this.texte('plot-tableau'))}</caption>
           <thead>
             <tr>
-              <th scope="col">${escapeHtml(this.texte('plot-serie'))}</th>
+              <th scope="col">${escapeHtml(this.texte(this.enBarres() ? 'plot-serie-barres' : 'plot-serie'))}</th>
               <th scope="col">${escapeHtml(this.enteteAbscisse(plancherDe(axe)))}</th>
               <th scope="col">${escapeHtml(this.enteteAbscisse(plafondDe(axe)))}</th>
             </tr>

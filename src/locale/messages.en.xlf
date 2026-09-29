@@ -13920,6 +13920,12 @@
         <target>Curve</target>
       </segment>
     </unit>
+    <unit id="coursRuntimePlotSerieBarres">
+      <segment>
+        <source>Série</source>
+        <target>Series</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimePlotEcart">
       <segment>
         <source>Écart entre les deux courbes :</source>

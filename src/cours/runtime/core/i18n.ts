@@ -78,6 +78,7 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'plot-trait-tirets': () => $localize`:@@coursRuntimePlotTraitTirets:trait en pointillés`,
   'plot-tableau': () => $localize`:@@coursRuntimePlotTableau:Valeurs aux deux extrémités`,
   'plot-serie': () => $localize`:@@coursRuntimePlotSerie:Courbe`,
+  'plot-serie-barres': () => $localize`:@@coursRuntimePlotSerieBarres:Série`,
   'plot-ecart': () => $localize`:@@coursRuntimePlotEcart:Écart entre les deux courbes :`,
   'plot-aucune-serie': () =>
     $localize`:@@coursRuntimePlotAucuneSerie:Aucune courbe à tracer : la définition ne porte aucune série`,
