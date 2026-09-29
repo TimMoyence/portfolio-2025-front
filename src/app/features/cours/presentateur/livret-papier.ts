@@ -36,6 +36,7 @@ export interface PageDuCorrige {
   readonly reponses: readonly QuestionDuPanneau[];
   readonly guide: readonly RubriqueDuGuide[];
   readonly attendu: ReponseAttendue | null;
+  readonly repeteLaSource: boolean;
 }
 
 export interface ReponseAttendue {
@@ -119,6 +120,11 @@ export function feuillesDuLivretEtudiant(
   return feuilles.filter((feuille) => feuille.length > 0);
 }
 
+function repeteLaSource(ecran: EcranDeroule, corrige: DerouleCours): boolean {
+  const source = corrige.ecrans.find((candidat) => candidat.id === ecran.ecranSource);
+  return source !== undefined && source.type === ecran.type;
+}
+
 export function pagesDuCorrige(corrige: DerouleCours): readonly PageDuCorrige[] {
   return corrige.ecrans.filter(aTraiterSurPapier).map((ecran) => ({
     ecran,
@@ -126,5 +132,6 @@ export function pagesDuCorrige(corrige: DerouleCours): readonly PageDuCorrige[] 
     reponses: questionsDuPanneau(ecran),
     guide: rubriquesDuGuide(ecran.guide),
     attendu: reponseAttendue(ecran),
+    repeteLaSource: repeteLaSource(ecran, corrige),
   }));
 }

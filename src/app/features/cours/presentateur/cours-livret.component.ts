@@ -99,13 +99,19 @@ type VueDuLivret = 'sujet' | 'corrige';
               data-testid="livret-corrige"
               [attr.data-ecran]="page.ecran.id"
             >
-              <app-slide-activity
-                [slide]="page.ecran"
-                [role]="'presentateur'"
-                [apercu]="true"
-                [papier]="true"
-                [donneesFormateur]="page.annexe"
-              />
+              @if (page.repeteLaSource) {
+                <h2 class="livret__titre" data-testid="livret-titre-correction">
+                  {{ page.ecran.titre }}
+                </h2>
+              } @else {
+                <app-slide-activity
+                  [slide]="page.ecran"
+                  [role]="'presentateur'"
+                  [apercu]="true"
+                  [papier]="true"
+                  [donneesFormateur]="page.annexe"
+                />
+              }
               <aside class="livret__formateur">
                 @if (page.attendu; as reflexion) {
                   <div class="livret__attendu" data-testid="livret-attendu">

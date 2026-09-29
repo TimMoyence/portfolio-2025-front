@@ -138,6 +138,32 @@ describe('CoursLivretComponent', () => {
     expect(tous(fixture, 'livret-ecran')).toEqual([]);
   });
 
+  it('n imprime pas deux fois un exemple guidé dont la correction reprend la même brique', async () => {
+    const { fixture } = await monter(of(LIVRET_B2_02));
+
+    basculerSurLeCorrige(fixture);
+
+    const dansLaPage = (ecran: string, selecteur: string): Element | null =>
+      (fixture.nativeElement as HTMLElement).querySelector(
+        `[data-testid="livret-corrige"][data-ecran="${ecran}"] ${selecteur}`,
+      );
+    for (const [exemple, correction] of [
+      ['B2-02-A1-07-EXEMPLE-RESUME', 'B2-02-A1-07-CORRECTION'],
+      ['B2-02-A2-04-EXEMPLE-NUAGE', 'B2-02-A2-04-CORRECTION'],
+      ['B2-02-A3-03-EXEMPLE-DROITE', 'B2-02-A3-03-CORRECTION'],
+    ]) {
+      expect(dansLaPage(exemple, 'app-slide-activity')).withContext(exemple).not.toBeNull();
+      expect(dansLaPage(correction, 'app-slide-activity')).withContext(correction).toBeNull();
+      expect(dansLaPage(correction, '[data-testid="livret-titre-correction"]')?.textContent)
+        .withContext(correction)
+        .toContain('Correction');
+      expect(dansLaPage(correction, '[data-testid="livret-notes"]'))
+        .withContext(correction)
+        .not.toBeNull();
+    }
+    expect(dansLaPage('B2-02-A1-08-CORRECTION', 'app-slide-activity')).not.toBeNull();
+  });
+
   describe('briques imprimées sur le vrai B2-02', () => {
     function ombreDe(brique: HTMLElement): string {
       return brique.shadowRoot?.textContent?.replace(/\s+/g, ' ') ?? '';
