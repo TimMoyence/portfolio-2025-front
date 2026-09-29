@@ -80,6 +80,12 @@ export const FORMATIONS: readonly FormationCard[] = [
     description: $localize`:@@formations-list.b2-02.description:Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
     duree: $localize`:@@formations-list.b2-02.duration:3 h 00`,
   }),
+  coursBtsEnSeance({
+    link: '/formations/b2-03-logique',
+    title: $localize`:@@formations-list.b2-03.title:B2-03 — Logique : écrire et contrôler une règle`,
+    description: $localize`:@@formations-list.b2-03.description:Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b2-03.duration:3 h 00`,
+  }),
   formationGratuite({
     link: '/formations/ia-solopreneurs',
     badge: $localize`:@@formations-list.ia-solo.badge:Gratuit · 17 slides`,

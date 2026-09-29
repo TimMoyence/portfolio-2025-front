@@ -34,17 +34,17 @@ test.describe('Banc — écran non servi', () => {
     await servirLEcran(request, jeton, seance.sessionId, reflexions[0].rang);
   });
 
-  test('toute réflexion au-delà de l’écran servi est refusée par le serveur', async ({
-    request,
-  }) => {
-    const { seance } = await seanceDuFichier(request);
+  test('toute réflexion hors de l’écran servi est refusée par le serveur', async ({ request }) => {
+    const { seance, jeton } = await seanceDuFichier(request);
     const poste = await inscrireUnPoste(request, seance, 3);
 
     const servie = await envoyerUneReponseLibre(request, seance, poste, reflexions[0]);
     expect(servie.status(), await servie.text()).toBe(201);
 
-    for (const ecran of reflexions.slice(1)) {
-      const refus = await envoyerUneReponseLibre(request, seance, poste, ecran);
+    await servirLEcran(request, jeton, seance.sessionId, 0);
+    const retardataire = await inscrireUnPoste(request, seance, 8);
+    for (const ecran of reflexions) {
+      const refus = await envoyerUneReponseLibre(request, seance, retardataire, ecran);
       expect(refus.status(), `${ecran.id} devrait être refusé`).toBe(404);
       const corps = (await refus.json()) as { code: string; detail: string };
       expect(corps.code).toBe('ECRAN_NON_SERVI');

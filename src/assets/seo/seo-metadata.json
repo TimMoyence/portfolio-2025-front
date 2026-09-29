@@ -1219,7 +1219,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-09-28",
+      "lastmod": "2026-09-29",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1529,6 +1529,74 @@
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-02-series-statistiques"
+          }
+        }
+      }
+    },
+    {
+      "id": "formations-b2-03-logique",
+      "path": "/formations/b2-03-logique",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-09-29",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Logique : écrire et contrôler une règle",
+          "path": "/formations/b2-03-logique"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Logique : écrire et contrôler une règle — B2 — Tim Moyence",
+          "description": "Formation B2 interactive : traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan et la contrôler au tableur.",
+          "ogTitle": "Logique : écrire et contrôler une règle — B2",
+          "ogDescription": "Un cours interactif pour écrire une règle, la nier, dire « tous » ou « au moins un » et la contrôler au tableur, comme en CCF.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Logique : écrire et contrôler une règle",
+            "description": "Formation B2 interactive sur le calcul propositionnel et les quantificateurs appliqués au contrôle de gestion.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b2-03-logique"
+          }
+        },
+        "en": {
+          "title": "Logic: write and check a rule — B2 — Tim Moyence",
+          "description": "Interactive B2 course: express a business rule with and, or, not, if… then, negate it with De Morgan’s laws and check it in a spreadsheet.",
+          "ogTitle": "Logic: write and check a rule — B2",
+          "ogDescription": "An interactive course to write a rule, negate it, say “all” or “at least one” and check it in a spreadsheet, as in the CCF exam.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Logic: write and check a rule",
+            "description": "Interactive B2 course on propositional logic and quantifiers applied to business controls.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b2-03-logique"
           }
         }
       }

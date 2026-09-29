@@ -21,9 +21,12 @@ function nomDe(colonne: number, ligne: number): string {
 }
 
 function estRecevable(resultat: ResultatFormule): boolean {
-  return resultat.erreur === null
-    ? typeof resultat.valeur === 'number' && Number.isFinite(resultat.valeur)
-    : resultat.valeur === null && CODES.includes(resultat.erreur);
+  if (resultat.erreur !== null) {
+    return resultat.valeur === null && CODES.includes(resultat.erreur);
+  }
+  return typeof resultat.valeur === 'number'
+    ? Number.isFinite(resultat.valeur)
+    : typeof resultat.valeur === 'string' || typeof resultat.valeur === 'boolean';
 }
 
 function tousRecevables(resultats: ReadonlyMap<string, ResultatFormule>): boolean {
@@ -59,7 +62,14 @@ const formuleGeneree = fc.oneof(
 );
 
 const contenuGenere = fc.oneof(
-  fc.constantFrom('', '   ', 'Canal', 'Total'),
+  fc.constantFrom('', '   ', 'Canal', 'Total', 'Vrai'),
+  fc.constantFrom(
+    '=ET(A1>0;B2)',
+    '=OU(A1:B8)',
+    '=NON(C3)',
+    '=NB.SI(A1:C8;">0")',
+    '=SI(A1="Canal";"oui";FAUX)',
+  ),
   nombreDeCellule.map((valeur) => String(valeur).replace('.', ',')),
   formuleGeneree,
 );
@@ -130,10 +140,10 @@ describe('simulation : la somme ne depend ni du decoupage ni de l ordre', () => 
           cellules['B2'] = `=SOMME(A1:A${rupture})+SOMME(A${rupture + 1}:A${hauteur})`;
           cellules['B3'] = `=SOMME(A${hauteur}:A1)`;
           const resultats = evaluerFeuille({ lignes: hauteur + 4, colonnes: 3, cellules });
-          const total = resultats.get('B1')?.valeur ?? Number.NaN;
+          const total = Number(resultats.get('B1')?.valeur ?? Number.NaN);
 
-          expect(resultats.get('B2')?.valeur).toBeCloseTo(total, DECIMALES);
-          expect(resultats.get('B3')?.valeur).toBeCloseTo(total, DECIMALES);
+          expect(Number(resultats.get('B2')?.valeur)).toBeCloseTo(total, DECIMALES);
+          expect(Number(resultats.get('B3')?.valeur)).toBeCloseTo(total, DECIMALES);
         },
       ),
     );

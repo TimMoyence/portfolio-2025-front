@@ -2,7 +2,11 @@ import { RenderMode } from '@angular/ssr';
 import { serverRoutes } from './app.routes.server';
 
 describe('serverRoutes', () => {
-  for (const slug of ['b2-01-traitement-information-chiffree', 'b2-02-series-statistiques']) {
+  for (const slug of [
+    'b2-01-traitement-information-chiffree',
+    'b2-02-series-statistiques',
+    'b2-03-logique',
+  ]) {
     it(`laisse le client choisir l espace de ${slug} selon le rôle de la session`, () => {
       const route = serverRoutes.find((candidate) => candidate.path === `formations/${slug}`);
 

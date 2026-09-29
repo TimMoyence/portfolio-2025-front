@@ -59,6 +59,7 @@ export async function attesterLeMontage(ecran: EcranContent, role: Role): Promis
 export interface AttenduDeLInstantane {
   readonly empreinte: string;
   readonly ecrans: number;
+  readonly publicsAuCatalogue?: readonly string[];
   readonly specifiques?: () => void;
 }
 
@@ -71,6 +72,17 @@ export function decrireLeMontageDeLInstantane(
     beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
     attendu.specifiques?.();
+
+    const publicsAuCatalogue = attendu.publicsAuCatalogue;
+    if (publicsAuCatalogue !== undefined) {
+      it(`reprend au catalogue les ${publicsAuCatalogue.length} écrans publics et verrouille les autres`, () => {
+        const publics = instantane.catalogue.ecrans.filter(
+          (ecran) => ecran.type !== 'ecran-verrouille',
+        );
+
+        expect(publics.map((ecran) => ecran.id.slice(6))).toEqual([...publicsAuCatalogue]);
+      });
+    }
 
     it('porte l empreinte et le nombre d écrans publiés par le back', () => {
       expect(instantane.empreinte).toBe(attendu.empreinte);

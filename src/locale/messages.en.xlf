@@ -11871,6 +11871,30 @@
         <target>3 h</target>
       </segment>
     </unit>
+    <unit id="formations-list.b2-03.title">
+      <notes>
+        <note category="location">src/app/features/formations/formations-list.data.ts:85</note>
+      </notes>
+      <segment>
+        <source>B2-03 — Logique : écrire et contrôler une règle</source>
+        <target>B2-03 — Logic: write and check a rule</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-03.description">
+      <notes>
+        <note category="location">src/app/features/formations/formations-list.data.ts:86</note>
+      </notes>
+      <segment>
+        <source>Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Express a business rule with and, or, not, if… then, negate it with De Morgan’s laws, say “all” or “at least one”, then check it in a spreadsheet, as in the CCF exam. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-03.duration">
+      <segment>
+        <source>3 h 00</source>
+        <target>3 h</target>
+      </segment>
+    </unit>
     <unit id="formations-list.b2.duration">
       <notes>
         <note category="location">src/app/features/formations/formations-list.data.ts:32</note>
@@ -14038,6 +14062,24 @@
       <segment>
         <source>Cellules saisies :</source>
         <target>Cells entered:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildVrai">
+      <segment>
+        <source>V</source>
+        <target>T</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildFaux">
+      <segment>
+        <source>F</source>
+        <target>F</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeTableBuildAEntourer">
+      <segment>
+        <source>V / F</source>
+        <target>T / F</target>
       </segment>
     </unit>
     <unit id="coursRuntimeTableBuildVide">

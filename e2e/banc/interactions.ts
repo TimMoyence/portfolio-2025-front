@@ -281,6 +281,10 @@ async function tableau(zone: Locator, numero: number): Promise<void> {
     numero,
     (rang) => String(100 + rang),
   );
+  const choix = bloc.locator('select[data-testid="cellule"][data-role="saisie"]');
+  for (const [rang, caseDeVerite] of (await choix.all()).entries()) {
+    await caseDeVerite.selectOption(String((rang + numero) % 2));
+  }
   await validerPourUnVerdict(bloc);
 }
 

@@ -1,8 +1,19 @@
 export type CodeErreur = '#REF!' | '#DIV/0!' | '#NOM?' | '#VALEUR!';
 
+export type ValeurFormule = number | string | boolean;
+
 export interface ResultatFormule {
-  readonly valeur: number | null;
+  readonly valeur: ValeurFormule | null;
   readonly erreur: CodeErreur | null;
+}
+
+export interface ResultatNumerique extends ResultatFormule {
+  readonly valeur: number | null;
+}
+
+interface Echec extends ResultatNumerique {
+  readonly valeur: null;
+  readonly erreur: CodeErreur;
 }
 
 export interface Feuille {
@@ -35,6 +46,7 @@ interface Reference {
 
 type GenreJeton =
   | 'nombre'
+  | 'chaine'
   | 'reference'
   | 'nom'
   | 'operateur'
@@ -50,27 +62,40 @@ interface Jeton {
 }
 
 type Noeud =
-  | { readonly genre: 'litteral'; readonly valeur: number }
+  | { readonly genre: 'litteral'; readonly valeur: ValeurFormule }
   | { readonly genre: 'cellule'; readonly reference: Reference }
-  | { readonly genre: 'plage'; readonly debut: Reference; readonly fin: Reference }
+  | {
+      readonly genre: 'plage';
+      readonly debut: Reference;
+      readonly fin: Reference;
+    }
   | { readonly genre: 'variable'; readonly nom: string }
-  | { readonly genre: 'unaire'; readonly signe: number; readonly operande: Noeud }
+  | {
+      readonly genre: 'unaire';
+      readonly signe: number;
+      readonly operande: Noeud;
+    }
   | {
       readonly genre: 'binaire';
       readonly operateur: string;
       readonly gauche: Noeud;
       readonly droite: Noeud;
     }
-  | { readonly genre: 'appel'; readonly nom: string; readonly arguments: readonly Noeud[] };
+  | {
+      readonly genre: 'appel';
+      readonly nom: string;
+      readonly arguments: readonly Noeud[];
+    };
 
 type Contenu =
   | { readonly genre: 'vide' }
   | { readonly genre: 'nombre'; readonly valeur: number }
-  | { readonly genre: 'texte' }
+  | { readonly genre: 'texte'; readonly valeur: string }
+  | { readonly genre: 'logique'; readonly valeur: boolean }
   | { readonly genre: 'formule'; readonly source: string };
 
-const TEXTE_IGNORE: ReadonlySet<Contenu['genre']> = new Set(['texte']);
-const TEXTE_ET_VIDES_IGNORES: ReadonlySet<Contenu['genre']> = new Set(['texte', 'vide']);
+const TEXTE_IGNORE: ReadonlySet<Contenu['genre']> = new Set(['texte', 'logique']);
+const TEXTE_ET_VIDES_IGNORES: ReadonlySet<Contenu['genre']> = new Set(['texte', 'logique', 'vide']);
 
 class ErreurFormule extends Error {
   constructor(readonly code: CodeErreur) {
@@ -82,10 +107,17 @@ const OPTIONS_PAR_DEFAUT: OptionsEvaluation = { budgetNoeuds: 20_000 };
 const MARQUE = '=';
 const MOTIF_NOMBRE = /^(?:\d+(?:[.,]\d*)?|[.,]\d+)/;
 const MOTIF_REFERENCE = /^(\$?)([A-Za-z]{1,3})(\$?)(\d{1,7})(?![A-Za-z\d])/;
-const MOTIF_NOM = /^[A-Za-z]+(?:(?:\.[A-Za-z]+)+(?=\())?/;
+const MOTIF_NOM = /^\p{L}+(?:(?:\.\p{L}+)+(?=\())?/u;
 const MOTIF_ESPACE = /^\s+/;
 const MOTIF_NOMBRE_SAISI = /^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/;
 const COMPARAISONS = ['<=', '>=', '<>', '<', '>', '='] as const;
+const EGALITES: ReadonlySet<string> = new Set(['=', '<>']);
+const GUILLEMET = '"';
+const GUILLEMET_DOUBLE = '""';
+const CONSTANTES_LOGIQUES: ReadonlyMap<string, boolean> = new Map([
+  ['VRAI', true],
+  ['FAUX', false],
+]);
 const OPERATEURS: ReadonlySet<string> = new Set(['+', '-', '*', '/', '^']);
 const ADDITIFS: ReadonlySet<string> = new Set(['+', '-']);
 const MULTIPLICATIFS: ReadonlySet<string> = new Set(['*', '/']);
@@ -107,6 +139,9 @@ const FONCTIONS_STATISTIQUES: ReadonlySet<string> = new Set([
   'ECARTYPE',
 ]);
 const NOM_CONDITION = 'SI';
+const NOM_NEGATION = 'NON';
+const NOM_COMPTE_SI = 'NB.SI';
+const FONCTIONS_LOGIQUES: ReadonlySet<string> = new Set([NOM_CONDITION, NOM_NEGATION, 'ET', 'OU']);
 const NOM_QUARTILE = 'QUARTILE';
 const NOM_PENTE = 'PENTE';
 const NOM_CORRELATION = 'COEFFICIENT.CORRELATION';
@@ -120,17 +155,23 @@ const ALPHABET = 26;
 const CODE_A = 'A'.charCodeAt(0);
 const PRECISION_DECIMALE = 15;
 const DECIMALES_EXPRESSION = 6;
+const ERREUR_VALEUR: CodeErreur = '#VALEUR!';
+const ERREUR_REFERENCE: CodeErreur = '#REF!';
+const ERREUR_DIVISION: CodeErreur = '#DIV/0!';
+const ERREUR_NOM: CodeErreur = '#NOM?';
 
 const REFUS: Readonly<Record<CodeErreur, ErreurFormule>> = {
-  '#REF!': new ErreurFormule('#REF!'),
-  '#DIV/0!': new ErreurFormule('#DIV/0!'),
-  '#NOM?': new ErreurFormule('#NOM?'),
-  '#VALEUR!': new ErreurFormule('#VALEUR!'),
+  '#REF!': new ErreurFormule(ERREUR_REFERENCE),
+  '#DIV/0!': new ErreurFormule(ERREUR_DIVISION),
+  '#NOM?': new ErreurFormule(ERREUR_NOM),
+  '#VALEUR!': new ErreurFormule(ERREUR_VALEUR),
 };
 
 function refuser(code: CodeErreur): never {
   throw REFUS[code];
 }
+
+const REFUS_CIRCULAIRE = new ErreurFormule(ERREUR_REFERENCE);
 
 export function lettreColonne(colonne: number): string {
   let reste = colonne;
@@ -156,7 +197,7 @@ function indexColonne(lettres: string): number {
 function lireReference(texte: string): Reference {
   const trouve = MOTIF_REFERENCE.exec(texte);
   if (trouve === null || trouve[0] !== texte) {
-    refuser('#VALEUR!');
+    refuser(ERREUR_VALEUR);
   }
   return {
     ligne: Number(trouve[4]) - 1,
@@ -179,7 +220,28 @@ function lireNombre(brut: string): number {
   return MOTIF_NOMBRE_SAISI.test(compact) ? Number(compact) : Number.NaN;
 }
 
+function texteDuJetonChaine(reste: string): string {
+  let rang = GUILLEMET.length;
+  while (rang < reste.length) {
+    if (reste.startsWith(GUILLEMET_DOUBLE, rang)) {
+      rang += GUILLEMET_DOUBLE.length;
+    } else if (reste.startsWith(GUILLEMET, rang)) {
+      return reste.slice(0, rang + GUILLEMET.length);
+    } else {
+      rang += 1;
+    }
+  }
+  return refuser(ERREUR_VALEUR);
+}
+
+function contenuDeChaine(texte: string): string {
+  return texte.slice(GUILLEMET.length, -GUILLEMET.length).replaceAll(GUILLEMET_DOUBLE, GUILLEMET);
+}
+
 function jetonSuivant(reste: string): Jeton {
+  if (reste.startsWith(GUILLEMET)) {
+    return { genre: 'chaine', texte: texteDuJetonChaine(reste) };
+  }
   const nombre = MOTIF_NOMBRE.exec(reste);
   if (nombre !== null) {
     return { genre: 'nombre', texte: nombre[0] };
@@ -196,20 +258,20 @@ function jetonSuivant(reste: string): Jeton {
   if (comparaison !== undefined) {
     return { genre: 'comparaison', texte: comparaison };
   }
-  const premier = reste[0];
+  const premier = reste.charAt(0);
   if (OPERATEURS.has(premier)) {
     return { genre: 'operateur', texte: premier };
   }
   const ponctuation = PONCTUATION[premier];
   if (ponctuation === undefined) {
-    refuser('#VALEUR!');
+    refuser(ERREUR_VALEUR);
   }
   return { genre: ponctuation, texte: premier };
 }
 
 function decouper(source: string): Jeton[] {
   if (source.length > LONGUEUR_MAX_FORMULE) {
-    refuser('#VALEUR!');
+    refuser(ERREUR_VALEUR);
   }
   const jetons: Jeton[] = [];
   let reste = source;
@@ -235,7 +297,7 @@ class Analyseur {
   analyser(): Noeud {
     const racine = this.comparaison();
     if (this.position !== this.jetons.length) {
-      refuser('#VALEUR!');
+      refuser(ERREUR_VALEUR);
     }
     return racine;
   }
@@ -247,7 +309,7 @@ class Analyseur {
   private avancer(): Jeton {
     const jeton = this.courant();
     if (jeton === null) {
-      refuser('#VALEUR!');
+      refuser(ERREUR_VALEUR);
     }
     this.position += 1;
     return jeton;
@@ -255,14 +317,14 @@ class Analyseur {
 
   private consommer(genre: GenreJeton): void {
     if (this.avancer().genre !== genre) {
-      refuser('#VALEUR!');
+      refuser(ERREUR_VALEUR);
     }
   }
 
   private descendre<T>(niveau: () => T): T {
     this.profondeur += 1;
     if (this.profondeur > PROFONDEUR_MAX) {
-      refuser('#VALEUR!');
+      refuser(ERREUR_VALEUR);
     }
     const resultat = niveau();
     this.profondeur -= 1;
@@ -276,7 +338,12 @@ class Analyseur {
       return gauche;
     }
     this.position += 1;
-    return { genre: 'binaire', operateur: jeton.texte, gauche, droite: this.somme() };
+    return {
+      genre: 'binaire',
+      operateur: jeton.texte,
+      gauche,
+      droite: this.somme(),
+    };
   }
 
   private somme(): Noeud {
@@ -296,7 +363,12 @@ class Analyseur {
     let jeton = this.courant();
     while (jeton !== null && jeton.genre === 'operateur' && signes.has(jeton.texte)) {
       this.position += 1;
-      gauche = { genre: 'binaire', operateur: jeton.texte, gauche, droite: niveau() };
+      gauche = {
+        genre: 'binaire',
+        operateur: jeton.texte,
+        gauche,
+        droite: niveau(),
+      };
       jeton = this.courant();
     }
     return gauche;
@@ -306,7 +378,7 @@ class Analyseur {
     const jeton = this.courant();
     if (jeton !== null && jeton.genre === 'operateur' && ADDITIFS.has(jeton.texte)) {
       this.position += 1;
-      return this.descendre(() => ({
+      return this.descendre<Noeud>(() => ({
         genre: 'unaire',
         signe: jeton.texte === '-' ? -1 : 1,
         operande: this.unaire(),
@@ -318,10 +390,16 @@ class Analyseur {
   private primaire(): Noeud {
     const jeton = this.avancer();
     if (jeton.genre === 'nombre') {
-      return { genre: 'litteral', valeur: Number(jeton.texte.replace(',', '.')) };
+      return {
+        genre: 'litteral',
+        valeur: Number(jeton.texte.replace(',', '.')),
+      };
+    }
+    if (jeton.genre === 'chaine') {
+      return { genre: 'litteral', valeur: contenuDeChaine(jeton.texte) };
     }
     if (jeton.genre === 'ouvrante') {
-      return this.descendre(() => {
+      return this.descendre<Noeud>(() => {
         const interne = this.comparaison();
         this.consommer('fermante');
         return interne;
@@ -331,11 +409,19 @@ class Analyseur {
       return this.celluleOuPlage(jeton);
     }
     if (jeton.genre === 'nom') {
-      return this.courant()?.genre === 'ouvrante'
-        ? this.descendre(() => this.appel(jeton.texte))
-        : { genre: 'variable', nom: jeton.texte };
+      return this.nomme(jeton.texte);
     }
-    return refuser('#VALEUR!');
+    return refuser(ERREUR_VALEUR);
+  }
+
+  private nomme(nom: string): Noeud {
+    if (this.courant()?.genre === 'ouvrante') {
+      return this.descendre<Noeud>(() => this.appel(nom));
+    }
+    const constante = CONSTANTES_LOGIQUES.get(nom.toUpperCase());
+    return constante === undefined
+      ? { genre: 'variable', nom }
+      : { genre: 'litteral', valeur: constante };
   }
 
   private celluleOuPlage(jeton: Jeton): Noeud {
@@ -346,7 +432,7 @@ class Analyseur {
     this.position += 1;
     const fin = this.avancer();
     if (fin.genre !== 'reference') {
-      refuser('#VALEUR!');
+      refuser(ERREUR_VALEUR);
     }
     return { genre: 'plage', debut, fin: lireReference(fin.texte) };
   }
@@ -385,8 +471,101 @@ function lireContenu(brut: string): Contenu {
   if (source !== null) {
     return { genre: 'formule', source };
   }
+  const saisie = lireSaisie(brut);
+  if (typeof saisie === 'number') {
+    return { genre: 'nombre', valeur: saisie };
+  }
+  return typeof saisie === 'boolean'
+    ? { genre: 'logique', valeur: saisie }
+    : { genre: 'texte', valeur: saisie };
+}
+
+function lireSaisie(brut: string): ValeurFormule {
   const nombre = lireNombre(brut);
-  return Number.isNaN(nombre) ? { genre: 'texte' } : { genre: 'nombre', valeur: nombre };
+  return Number.isNaN(nombre)
+    ? (CONSTANTES_LOGIQUES.get(brut.trim().toUpperCase()) ?? brut)
+    : nombre;
+}
+
+function versNombre(valeur: ValeurFormule): number {
+  if (typeof valeur === 'number') {
+    return valeur;
+  }
+  if (typeof valeur === 'boolean') {
+    return Number(valeur);
+  }
+  const nombre = lireNombre(valeur);
+  return Number.isNaN(nombre) ? refuser(ERREUR_VALEUR) : nombre;
+}
+
+function versLogique(valeur: ValeurFormule): boolean {
+  if (typeof valeur === 'string') {
+    return refuser(ERREUR_VALEUR);
+  }
+  return typeof valeur === 'boolean' ? valeur : valeur !== 0;
+}
+
+const RANG_DU_TYPE: Readonly<Record<string, number>> = {
+  number: 0,
+  string: 1,
+  boolean: 2,
+};
+
+function ordreDeMemeType(gauche: ValeurFormule, droite: ValeurFormule): number {
+  const [premier, second] =
+    typeof gauche === 'string' && typeof droite === 'string'
+      ? [gauche.toUpperCase(), droite.toUpperCase()]
+      : [Number(gauche), Number(droite)];
+  if (premier === second) {
+    return 0;
+  }
+  return premier < second ? -1 : 1;
+}
+
+function ordre(gauche: ValeurFormule, droite: ValeurFormule): number {
+  const ecart = RANG_DU_TYPE[typeof gauche] - RANG_DU_TYPE[typeof droite];
+  return ecart === 0 ? ordreDeMemeType(gauche, droite) : Math.sign(ecart);
+}
+
+function selonOrdre(operateur: string, rang: number): boolean {
+  switch (operateur) {
+    case '=':
+      return rang === 0;
+    case '<>':
+      return rang !== 0;
+    case '<':
+      return rang < 0;
+    case '<=':
+      return rang <= 0;
+    case '>':
+      return rang > 0;
+    default:
+      return rang >= 0;
+  }
+}
+
+interface Critere {
+  readonly operateur: string;
+  readonly valeur: ValeurFormule;
+}
+
+function lireCritere(valeur: ValeurFormule): Critere {
+  if (typeof valeur !== 'string') {
+    return { operateur: '=', valeur };
+  }
+  const signe = COMPARAISONS.find((candidat) => valeur.startsWith(candidat));
+  const reste = signe === undefined ? valeur : valeur.slice(signe.length);
+  return {
+    operateur: signe ?? '=',
+    valeur: reste.length === 0 ? reste : lireSaisie(reste),
+  };
+}
+
+function satisfait(critere: Critere, valeur: ValeurFormule): boolean {
+  if (typeof valeur !== typeof critere.valeur && !EGALITES.has(critere.operateur)) {
+    return false;
+  }
+  return selonOrdre(critere.operateur, ordre(valeur, critere.valeur));
 }
 
 function sansZeroNegatif(valeur: number): number {
@@ -400,17 +579,6 @@ function arrondirMoitieLoinDeZero(valeur: number, decimales: number): number {
   return sansZeroNegatif(Number(arrondi.toPrecision(PRECISION_DECIMALE)));
 }
 
-function comparer(operateur: string, gauche: number, droite: number): number {
-  const vrai =
-    (operateur === '=' && gauche === droite) ||
-    (operateur === '<>' && gauche !== droite) ||
-    (operateur === '<' && gauche < droite) ||
-    (operateur === '<=' && gauche <= droite) ||
-    (operateur === '>' && gauche > droite) ||
-    (operateur === '>=' && gauche >= droite);
-  return vrai ? 1 : 0;
-}
-
 function appliquer(operateur: string, gauche: number, droite: number): number {
   if (operateur === '+') {
     return gauche + droite;
@@ -422,17 +590,14 @@ function appliquer(operateur: string, gauche: number, droite: number): number {
     return gauche * droite;
   }
   if (operateur === '/') {
-    return droite === 0 ? refuser('#DIV/0!') : gauche / droite;
+    return droite === 0 ? refuser(ERREUR_DIVISION) : gauche / droite;
   }
-  if (operateur === '^') {
-    return gauche ** droite;
-  }
-  return comparer(operateur, gauche, droite);
+  return gauche ** droite;
 }
 
 function quantile(valeurs: readonly number[], part: number): number {
   if (valeurs.length === 0) {
-    refuser('#VALEUR!');
+    refuser(ERREUR_VALEUR);
   }
   const triees = [...valeurs].sort((gauche, droite) => gauche - droite);
   const position = (triees.length - 1) * part;
@@ -444,7 +609,7 @@ function quantile(valeurs: readonly number[], part: number): number {
 function ecartType(valeurs: readonly number[], degresPerdus: number): number {
   const diviseur = valeurs.length - degresPerdus;
   if (diviseur <= 0) {
-    refuser('#DIV/0!');
+    refuser(ERREUR_DIVISION);
   }
   const moyenne = valeurs.reduce((cumul, valeur) => cumul + valeur, 0) / valeurs.length;
   const carres = valeurs.reduce((cumul, valeur) => cumul + (valeur - moyenne) ** 2, 0);
@@ -470,7 +635,7 @@ function statistique(nom: string, valeurs: readonly number[]): number {
 
 function deuxSeries(nom: string, paires: readonly (readonly [number, number])[]): number {
   if (paires.length < 2) {
-    return refuser('#DIV/0!');
+    return refuser(ERREUR_DIVISION);
   }
   const moyenne = (rang: 0 | 1): number =>
     paires.reduce((cumul, paire) => cumul + paire[rang], 0) / paires.length;
@@ -485,21 +650,38 @@ function deuxSeries(nom: string, paires: readonly (readonly [number, number])[])
   }
   if (nom === NOM_CORRELATION) {
     const denominateur = Math.sqrt(carresGauche * carresDroite);
-    return denominateur === 0 ? refuser('#DIV/0!') : produits / denominateur;
+    return denominateur === 0 ? refuser(ERREUR_DIVISION) : produits / denominateur;
   }
   if (carresDroite === 0) {
-    return refuser('#DIV/0!');
+    return refuser(ERREUR_DIVISION);
   }
   const pente = produits / carresDroite;
   return nom === NOM_PENTE ? pente : moyenneGauche - pente * moyenneDroite;
 }
 
 function fini(valeur: number): number {
-  return Number.isFinite(valeur) ? sansZeroNegatif(valeur) : refuser('#VALEUR!');
+  return Number.isFinite(valeur) ? sansZeroNegatif(valeur) : refuser(ERREUR_VALEUR);
 }
 
-function echec(cause: unknown): ResultatFormule {
-  return { valeur: null, erreur: cause instanceof ErreurFormule ? cause.code : '#VALEUR!' };
+function stabiliser(valeur: ValeurFormule): ValeurFormule {
+  return typeof valeur === 'number' ? fini(valeur) : valeur;
+}
+
+function valeurSaisie(contenu: Exclude<Contenu, { readonly genre: 'formule' }>): ValeurFormule {
+  return contenu.genre === 'vide' ? 0 : contenu.valeur;
+}
+
+const CELLULE_VIDE_COMPTEE: ResultatFormule = { valeur: '', erreur: null };
+
+function plageHorsFonction(): ValeurFormule {
+  return refuser(ERREUR_VALEUR);
+}
+
+function echec(cause: unknown): Echec {
+  return {
+    valeur: null,
+    erreur: cause instanceof ErreurFormule ? cause.code : ERREUR_VALEUR,
+  };
 }
 
 function estEntierPositif(valeur: number): boolean {
@@ -522,6 +704,7 @@ class Evaluation {
   private readonly memoire = new Map<string, ResultatFormule>();
   private readonly arbres = new Map<string, Noeud>();
   private readonly enCours = new Set<string>();
+  private readonly circulaires = new Set<string>();
 
   constructor(
     private readonly feuille: Feuille | null,
@@ -549,7 +732,7 @@ class Evaluation {
       return connu;
     }
     if (this.enCours.has(nom)) {
-      return { valeur: null, erreur: '#REF!' };
+      return { valeur: null, erreur: ERREUR_REFERENCE };
     }
     this.enCours.add(nom);
     let resultat: ResultatFormule;
@@ -558,6 +741,9 @@ class Evaluation {
       resultat = { valeur: this.valeurDuContenu(nom), erreur: null };
     } catch (cause) {
       resultat = echec(cause);
+      if (cause === REFUS_CIRCULAIRE) {
+        this.circulaires.add(nom);
+      }
     }
     this.enCours.delete(nom);
     this.memoire.set(nom, resultat);
@@ -565,28 +751,21 @@ class Evaluation {
   }
 
   expression(noeud: Noeud): number {
-    return fini(this.calculer(noeud));
+    return fini(this.nombre(noeud));
   }
 
   private depenser(): void {
     this.restant -= 1;
     if (this.restant < 0) {
-      refuser('#VALEUR!');
+      refuser(ERREUR_VALEUR);
     }
   }
 
-  private valeurDuContenu(nom: string): number {
+  private valeurDuContenu(nom: string): ValeurFormule {
     const contenu = lireContenu(this.contenus.get(nom) ?? '');
-    if (contenu.genre === 'vide') {
-      return 0;
-    }
-    if (contenu.genre === 'nombre') {
-      return contenu.valeur;
-    }
-    if (contenu.genre === 'texte') {
-      return refuser('#VALEUR!');
-    }
-    return fini(this.calculer(this.arbreDe(contenu.source)));
+    return contenu.genre === 'formule'
+      ? stabiliser(this.calculer(this.arbreDe(contenu.source)))
+      : valeurSaisie(contenu);
   }
 
   private arbreDe(source: string): Noeud {
@@ -608,26 +787,37 @@ class Evaluation {
       reference.ligne >= feuille.lignes ||
       reference.colonne >= feuille.colonnes
     ) {
-      return refuser('#REF!');
+      return refuser(ERREUR_REFERENCE);
     }
     return nomCellule(reference.ligne, reference.colonne);
   }
 
-  private valeurCellule(reference: Reference): number {
-    const resultat = this.resultatDe(this.exigerDansLaGrille(reference));
-    return resultat.erreur === null && resultat.valeur !== null
-      ? resultat.valeur
-      : refuser(resultat.erreur ?? '#VALEUR!');
+  private valeurCellule(reference: Reference): ValeurFormule {
+    return this.valeurNommee(this.exigerDansLaGrille(reference));
   }
 
-  private cellulesDeLaPlage(
-    noeud: Extract<Noeud, { genre: 'plage' }>,
-    ignorees: ReadonlySet<Contenu['genre']>,
-  ): (number | null)[] {
+  private valeurNommee(nom: string): ValeurFormule {
+    const resultat = this.resultatDe(nom);
+    this.exigerHorsCycle(nom);
+    return resultat.erreur === null && resultat.valeur !== null
+      ? resultat.valeur
+      : refuser(resultat.erreur ?? ERREUR_VALEUR);
+  }
+
+  private exigerHorsCycle(nom: string): void {
+    if (this.enCours.has(nom) || this.circulaires.has(nom)) {
+      throw REFUS_CIRCULAIRE;
+    }
+  }
+
+  private genreDe(nom: string): Contenu['genre'] {
+    return lireContenu(this.contenus.get(nom) ?? '').genre;
+  }
+
+  private *nomsDeLaPlage(noeud: Extract<Noeud, { genre: 'plage' }>): Generator<string> {
     const { debut, fin } = noeud;
     this.exigerDansLaGrille(debut);
     this.exigerDansLaGrille(fin);
-    const valeurs: (number | null)[] = [];
     for (
       let ligne = Math.min(debut.ligne, fin.ligne);
       ligne <= Math.max(debut.ligne, fin.ligne);
@@ -639,35 +829,101 @@ class Evaluation {
         colonne += 1
       ) {
         this.depenser();
-        const nom = nomCellule(ligne, colonne);
-        valeurs.push(
-          ignorees.has(lireContenu(this.contenus.get(nom) ?? '').genre)
-            ? null
-            : this.valeurCellule({ ligne, colonne, ligneFixe: false, colonneFixe: false }),
-        );
+        yield nomCellule(ligne, colonne);
       }
     }
-    return valeurs;
+  }
+
+  private cellulesDeLaPlage(
+    noeud: Extract<Noeud, { genre: 'plage' }>,
+    ignorees: ReadonlySet<Contenu['genre']>,
+  ): (ValeurFormule | null)[] {
+    return Array.from(this.nomsDeLaPlage(noeud), (nom) =>
+      ignorees.has(this.genreDe(nom)) ? null : this.valeurNommee(nom),
+    );
+  }
+
+  private nombresDeLaPlage(
+    noeud: Extract<Noeud, { genre: 'plage' }>,
+    ignorees: ReadonlySet<Contenu['genre']>,
+  ): (number | null)[] {
+    return this.cellulesDeLaPlage(noeud, ignorees).map((valeur) =>
+      typeof valeur === 'number' ? valeur : null,
+    );
   }
 
   private valeursDeLaPlage(
     noeud: Extract<Noeud, { genre: 'plage' }>,
     ignorees: ReadonlySet<Contenu['genre']> = TEXTE_IGNORE,
   ): number[] {
-    return this.cellulesDeLaPlage(noeud, ignorees).filter(
+    return this.nombresDeLaPlage(noeud, ignorees).filter(
       (valeur): valeur is number => valeur !== null,
     );
+  }
+
+  private nombre(noeud: Noeud): number {
+    return versNombre(this.calculer(noeud));
+  }
+
+  private logique(noeud: Noeud): boolean {
+    return versLogique(this.calculer(noeud));
+  }
+
+  private logiquesDe(argument: Noeud): boolean[] {
+    if (argument.genre !== 'plage') {
+      return [this.logique(argument)];
+    }
+    return this.cellulesDeLaPlage(argument, TEXTE_ET_VIDES_IGNORES)
+      .filter((valeur): valeur is number | boolean => valeur !== null && typeof valeur !== 'string')
+      .map(versLogique);
+  }
+
+  private connecter(nom: string, parametres: readonly Noeud[]): boolean {
+    const valeurs = parametres.flatMap((argument) => this.logiquesDe(argument));
+    if (valeurs.length === 0) {
+      return refuser(ERREUR_VALEUR);
+    }
+    return nom === 'ET' ? valeurs.every(Boolean) : valeurs.some(Boolean);
+  }
+
+  private nier(parametres: readonly Noeud[]): boolean {
+    return parametres.length === 1 ? !this.logique(parametres[0]) : refuser(ERREUR_VALEUR);
+  }
+
+  private resultatCompte(nom: string): ResultatFormule {
+    if (this.genreDe(nom) === 'vide') {
+      return CELLULE_VIDE_COMPTEE;
+    }
+    const resultat = this.resultatDe(nom);
+    this.exigerHorsCycle(nom);
+    return resultat;
+  }
+
+  private compterSi(parametres: readonly Noeud[]): number {
+    const [plage, argument] = parametres;
+    if (parametres.length !== 2 || plage.genre !== 'plage') {
+      return refuser(ERREUR_VALEUR);
+    }
+    const critere = lireCritere(this.calculer(argument));
+    let compte = 0;
+    for (const nom of this.nomsDeLaPlage(plage)) {
+      const { valeur, erreur } = this.resultatCompte(nom);
+      if (erreur === null && valeur !== null && satisfait(critere, valeur)) {
+        compte += 1;
+      }
+    }
+    return compte;
   }
 
   private bivariee(nom: string, parametres: readonly Noeud[]): number {
     const [premiere, seconde] = parametres;
     if (parametres.length !== 2 || premiere.genre !== 'plage' || seconde.genre !== 'plage') {
-      return refuser('#VALEUR!');
+      return refuser(ERREUR_VALEUR);
     }
-    const gauche = this.cellulesDeLaPlage(premiere, TEXTE_ET_VIDES_IGNORES);
-    const droite = this.cellulesDeLaPlage(seconde, TEXTE_ET_VIDES_IGNORES);
+    const gauche = this.nombresDeLaPlage(premiere, TEXTE_ET_VIDES_IGNORES);
+    const droite = this.nombresDeLaPlage(seconde, TEXTE_ET_VIDES_IGNORES);
     if (gauche.length !== droite.length) {
-      return refuser('#VALEUR!');
+      return refuser(ERREUR_VALEUR);
     }
     const paires: [number, number][] = [];
     gauche.forEach((valeur, rang) => {
@@ -680,37 +936,36 @@ class Evaluation {
   }
 
   private etendre(noeud: Noeud): number[] {
-    return noeud.genre === 'plage' ? this.valeursDeLaPlage(noeud) : [this.calculer(noeud)];
+    return noeud.genre === 'plage' ? this.valeursDeLaPlage(noeud) : [this.nombre(noeud)];
   }
 
   private serie(parametres: readonly Noeud[]): number[] {
     return parametres.flatMap((argument) =>
       argument.genre === 'plage'
         ? this.valeursDeLaPlage(argument, TEXTE_ET_VIDES_IGNORES)
-        : [this.calculer(argument)],
+        : [this.nombre(argument)],
     );
   }
 
   private quartile(parametres: readonly Noeud[]): number {
     if (parametres.length !== 2) {
-      refuser('#VALEUR!');
+      refuser(ERREUR_VALEUR);
     }
-    const rang = Math.trunc(this.calculer(parametres[1]));
+    const rang = Math.trunc(this.nombre(parametres[1]));
     if (rang < 0 || rang > RANG_MAX_QUARTILE) {
-      refuser('#VALEUR!');
+      refuser(ERREUR_VALEUR);
     }
     return quantile(this.serie([parametres[0]]), rang / RANG_MAX_QUARTILE);
   }
 
-  private condition(parametres: readonly Noeud[]): number {
+  private condition(parametres: readonly Noeud[]): ValeurFormule {
     if (parametres.length !== 2 && parametres.length !== 3) {
-      refuser('#VALEUR!');
+      refuser(ERREUR_VALEUR);
     }
-    const testee = this.calculer(parametres[0]);
-    if (testee !== 0) {
+    if (this.logique(parametres[0])) {
       return this.calculer(parametres[1]);
     }
-    return parametres.length === 3 ? this.calculer(parametres[2]) : 0;
+    return parametres.length === 3 ? this.calculer(parametres[2]) : false;
   }
 
   private agreger(nom: string, parametres: readonly Noeud[]): number {
@@ -719,20 +974,36 @@ class Evaluation {
     if (nom === 'SOMME') {
       return somme;
     }
-    return valeurs.length === 0 ? refuser('#DIV/0!') : somme / valeurs.length;
+    return valeurs.length === 0 ? refuser(ERREUR_DIVISION) : somme / valeurs.length;
   }
 
   private binaireNommee(nom: string, parametres: readonly Noeud[]): number {
     if (parametres.length !== 2) {
-      refuser('#VALEUR!');
+      refuser(ERREUR_VALEUR);
     }
-    const [premier, second] = parametres.map((argument) => this.calculer(argument));
+    const [premier, second] = parametres.map((argument) => this.nombre(argument));
     return nom === 'ARRONDI' ? arrondirMoitieLoinDeZero(premier, second) : premier ** second;
   }
 
-  private appeler(noeud: Extract<Noeud, { genre: 'appel' }>): number {
-    if (noeud.nom === NOM_CONDITION) {
-      return this.condition(noeud.arguments);
+  private appeler(noeud: Extract<Noeud, { genre: 'appel' }>): ValeurFormule {
+    return FONCTIONS_LOGIQUES.has(noeud.nom)
+      ? this.appelerLogique(noeud)
+      : this.appelerNumerique(noeud);
+  }
+
+  private appelerLogique(noeud: Extract<Noeud, { genre: 'appel' }>): ValeurFormule {
+    return noeud.nom === NOM_CONDITION
+      ? this.condition(noeud.arguments)
+      : this.logiqueNommee(noeud.nom, noeud.arguments);
+  }
+
+  private logiqueNommee(nom: string, parametres: readonly Noeud[]): boolean {
+    return nom === NOM_NEGATION ? this.nier(parametres) : this.connecter(nom, parametres);
+  }
+
+  private appelerNumerique(noeud: Extract<Noeud, { genre: 'appel' }>): number {
+    if (noeud.nom === NOM_COMPTE_SI) {
+      return this.compterSi(noeud.arguments);
     }
     if (FONCTIONS_MULTIPLES.has(noeud.nom)) {
       return this.agreger(noeud.nom, noeud.arguments);
@@ -749,26 +1020,40 @@ class Evaluation {
     if (FONCTIONS_BIVARIEES.has(noeud.nom)) {
       return this.bivariee(noeud.nom, noeud.arguments);
     }
-    return refuser('#NOM?');
+    return refuser(ERREUR_NOM);
   }
 
-  private calculer(noeud: Noeud): number {
+  private variable(nom: string): ValeurFormule {
+    return Object.hasOwn(this.variables, nom) ? this.variables[nom] : refuser(ERREUR_NOM);
+  }
+
+  private signer(noeud: Extract<Noeud, { genre: 'unaire' }>): ValeurFormule {
+    return noeud.signe * this.nombre(noeud.operande);
+  }
+
+  private binaire(noeud: Extract<Noeud, { genre: 'binaire' }>): ValeurFormule {
+    const gauche = this.calculer(noeud.gauche);
+    const droite = this.calculer(noeud.droite);
+    return OPERATEURS.has(noeud.operateur)
+      ? appliquer(noeud.operateur, versNombre(gauche), versNombre(droite))
+      : selonOrdre(noeud.operateur, ordre(gauche, droite));
+  }
+
+  private calculer(noeud: Noeud): ValeurFormule {
     this.depenser();
     switch (noeud.genre) {
       case 'litteral':
         return noeud.valeur;
       case 'variable':
-        return Object.hasOwn(this.variables, noeud.nom)
-          ? this.variables[noeud.nom]
-          : refuser('#NOM?');
+        return this.variable(noeud.nom);
       case 'cellule':
         return this.valeurCellule(noeud.reference);
       case 'plage':
-        return refuser('#VALEUR!');
+        return plageHorsFonction();
       case 'unaire':
-        return noeud.signe * this.calculer(noeud.operande);
+        return this.signer(noeud);
       case 'binaire':
-        return appliquer(noeud.operateur, this.calculer(noeud.gauche), this.calculer(noeud.droite));
+        return this.binaire(noeud);
       case 'appel':
         return this.appeler(noeud);
     }
@@ -804,7 +1089,7 @@ export function evaluerCellule(
     reference.ligne >= feuille.lignes ||
     reference.colonne >= feuille.colonnes
   ) {
-    return { valeur: null, erreur: '#REF!' };
+    return { valeur: null, erreur: ERREUR_REFERENCE };
   }
   return new Evaluation(feuille, {}, options).resultatDe(
     nomCellule(reference.ligne, reference.colonne),
@@ -815,7 +1100,7 @@ export function evaluerExpression(
   expression: string,
   variables: Readonly<Record<string, number>>,
   options: OptionsEvaluation = OPTIONS_PAR_DEFAUT,
-): ResultatFormule {
+): ResultatNumerique {
   try {
     const source = sourceDeFormule(expression) ?? expression;
     const valeur = new Evaluation(null, variables, options).expression(analyser(source));
@@ -896,11 +1181,24 @@ function decalerJeton(jeton: Jeton, decalageLigne: number, decalageColonne: numb
   });
 }
 
+const AFFICHAGE_LOGIQUE = { true: 'VRAI', false: 'FAUX' } as const;
+
+function formaterValeur(valeur: ValeurFormule): string {
+  switch (typeof valeur) {
+    case 'number':
+      return String(Number(valeur.toFixed(DECIMALES_EXPRESSION))).replace('.', ',');
+    case 'boolean':
+      return AFFICHAGE_LOGIQUE[`${valeur}`];
+    default:
+      return valeur;
+  }
+}
+
 export function formaterResultat(resultat: ResultatFormule): string {
   if (resultat.erreur !== null || resultat.valeur === null) {
     return resultat.erreur ?? '#VALEUR!';
   }
-  return String(Number(resultat.valeur.toFixed(DECIMALES_EXPRESSION))).replace('.', ',');
+  return formaterValeur(resultat.valeur);
 }
 
 const MOTIF_CLE_GABARIT = /\{([^{}]+)\}/g;

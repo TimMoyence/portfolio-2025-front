@@ -7,6 +7,7 @@ import {
 } from '../../../testing/banc-de-brique';
 import {
   buildTableBuildPlan,
+  buildTableDeVeritePlan,
   buildVerdictDeProduction,
 } from '../../../testing/factories/cours.factory';
 import { FpTableBuild } from './FpTableBuild';
@@ -96,6 +97,16 @@ function recevoirLeVerdictPartiel(hote: FpTableBuild): void {
   toutSaisir(hote);
   cliquer(hote, 'valider');
   hote.verdict = VERDICT_PARTIEL;
+}
+
+function projeterAuPresentateur(
+  hote: FpTableBuild,
+  attendus: readonly { rang: number; cle: string; valeur: number }[],
+  etayage: number,
+): void {
+  hote.setAttribute('data-cours-role', 'presentateur');
+  hote.corrige = { type: 'tableau', attendus: [...attendus] };
+  hote.etayage = etayage;
 }
 
 function envois(hote: FpTableBuild): Record<string, unknown>[] {
@@ -304,15 +315,14 @@ describe('FpTableBuild', () => {
   });
 
   it('F27 · ne laisse deviner au niveau 1 ni les prix ni les indices par les colonnes deduites', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.corrige = {
-      type: 'tableau',
-      attendus: [
+    projeterAuPresentateur(
+      hote,
+      [
         { rang: 0, cle: 'prix', valeur: 21.6 },
         { rang: 0, cle: 'indice', valeur: 108 },
       ],
-    };
-    hote.etayage = 1;
+      1,
+    );
 
     expect(colonneCorrigee(hote, 'coef')[0]).toBe(COEFFICIENTS_DEDUITS[0]);
     expect(colonneCorrigee(hote, 'indice')[0]).toBe('—');
@@ -375,6 +385,95 @@ describe('FpTableBuild', () => {
     });
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
     expect(hote.shadowRoot?.querySelector('caption')?.textContent?.trim()).toBe(CHARGE_XSS);
+  });
+
+  describe('table de verite (colonnes booleennes)', () => {
+    function choisir(rang: number, cle: string, valeur: '1' | '0'): void {
+      const choix = hote.shadowRoot?.querySelector<HTMLSelectElement>(
+        `select[data-rang="${rang}"][data-cle="${cle}"]`,
+      );
+      if (!(choix instanceof HTMLSelectElement)) {
+        throw new Error(`aucun choix V/F ${cle} a la ligne ${rang}`);
+      }
+      choix.value = valeur;
+      choix.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    function toutChoisir(): void {
+      ['1', '0', '0', '0'].forEach((v, rang) => choisir(rang, 'pEtQ', v as '1' | '0'));
+      ['1', '1', '1', '0'].forEach((v, rang) => choisir(rang, 'pOuQ', v as '1' | '0'));
+    }
+
+    beforeEach(() => {
+      hote.plan = buildTableDeVeritePlan();
+    });
+
+    it('affiche V et F, jamais 1 ou 0, et propose un choix V/F dans chaque case a saisir', () => {
+      expect(colonneAffichee(hote, 'p')).toEqual(['V', 'V', 'F', 'F']);
+      expect(colonneAffichee(hote, 'q')).toEqual(['V', 'F', 'V', 'F']);
+      const choix = [...(hote.shadowRoot?.querySelectorAll('select') ?? [])];
+      expect(choix.length).toBe(8);
+      expect([...choix[0].options].map((option) => option.textContent?.trim())).toEqual([
+        '—',
+        'V',
+        'F',
+      ]);
+      expect(hote.shadowRoot?.querySelectorAll('input[data-role="saisie"]').length).toBe(0);
+      expect(repere(hote, 'totaux')).toBeNull();
+    });
+
+    it('envoie 1 pour V et 0 pour F', () => {
+      const recus = envois(hote);
+      toutChoisir();
+      cliquer(hote, 'valider');
+
+      expect(recus).toHaveSize(1);
+      expect(recus[0]).toEqual(
+        jasmine.objectContaining({
+          planId: 'b2-03-a1-table-et-ou',
+          saisies: [
+            { rang: 0, cle: 'pEtQ', valeur: 1 },
+            { rang: 0, cle: 'pOuQ', valeur: 1 },
+            { rang: 1, cle: 'pEtQ', valeur: 0 },
+            { rang: 1, cle: 'pOuQ', valeur: 1 },
+            { rang: 2, cle: 'pEtQ', valeur: 0 },
+            { rang: 2, cle: 'pOuQ', valeur: 1 },
+            { rang: 3, cle: 'pEtQ', valeur: 0 },
+            { rang: 3, cle: 'pOuQ', valeur: 0 },
+          ],
+        }),
+      );
+    });
+
+    it('refuse l envoi tant qu une case reste sans V ni F', () => {
+      const recus = envois(hote);
+      choisir(0, 'pEtQ', '1');
+      cliquer(hote, 'valider');
+
+      expect(recus).toEqual([]);
+      expect(texteDe(hote, 'retour')).toBe('Complétez chaque cellule à saisir avant de valider');
+    });
+
+    it('projette le corrige en V et F au niveau 2', () => {
+      projeterAuPresentateur(
+        hote,
+        [
+          { rang: 0, cle: 'pOuQ', valeur: 1 },
+          { rang: 3, cle: 'pOuQ', valeur: 0 },
+        ],
+        2,
+      );
+
+      expect(colonneCorrigee(hote, 'pOuQ')).toEqual(['V', '—', '—', 'F']);
+    });
+
+    it('imprime sur papier « V / F » a entourer dans chaque case a saisir', () => {
+      hote.setAttribute('data-papier', '');
+
+      expect(colonneAffichee(hote, 'pEtQ')).toEqual(['V / F', 'V / F', 'V / F', 'V / F']);
+      expect(colonneAffichee(hote, 'p')).toEqual(['V', 'V', 'F', 'F']);
+      expect(hote.shadowRoot?.querySelectorAll('select, input, button').length).toBe(0);
+    });
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {

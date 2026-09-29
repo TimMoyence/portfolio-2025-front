@@ -10,7 +10,7 @@ import {
 } from './vecteurs-formule';
 
 const EMPREINTE_PARTAGEE_AVEC_LE_BACK =
-  '6899229e7a8d56ea8184a6eb9542d7147fde4060d8c15697a96d640ed5d15285';
+  '110417683ed4df02db51af9ac34042105fb529e045cb3df2b0df8bdcec0e850e';
 
 const FICHIER = fichierBrut as FichierVecteursFormule;
 
