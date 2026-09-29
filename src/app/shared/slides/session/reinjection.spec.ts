@@ -31,6 +31,7 @@ function contexte(overrides: Partial<ContexteDeReinjection> = {}): ContexteDeRei
     maitrise: null,
     dernierEmetteur: false,
     papier: null,
+    explications: [],
     ...overrides,
   };
 }
@@ -449,6 +450,47 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
       ).toBe(2);
     });
   }
+
+  describe('correction sur place : chaque question se corrige sur l écran de l exercice', () => {
+    const PREMIERE = { reference: 'Q-VA-07', texte: '1 200 × 1,05 = 1 260 €.' };
+    const REPONSES = {
+      type: 'reponses',
+      reponses: {
+        'Q-VA-07': { cible: '1260', optionId: null },
+        'Q-VA-08': { cible: '5 %', optionId: 'b' },
+      },
+    };
+    const PUPITRE = {
+      role: 'presentateur' as const,
+      donneesFormateur: REPONSES,
+      direct: direct({ pilotage: { explicationsDevoilees: 1 } }),
+    };
+
+    it('S-02 · clôt la question corrigée et lui pose son explication, sans toucher la suivante', () => {
+      expect(pose('fp-numeric', ['Q-VA-07'], 'cloture', { explications: [PREMIERE] })).toBeTrue();
+      expect(pose('fp-numeric', ['Q-VA-07'], 'explications', { explications: [PREMIERE] })).toEqual(
+        [PREMIERE],
+      );
+      expect(pose('fp-vote', ['Q-VA-08'], 'cloture', {})).toBeFalse();
+      expect(pose('fp-vote', ['Q-VA-08'], 'explications', {})).toEqual([]);
+    });
+
+    it('S-02 · donne au pupitre la bonne réponse de la seule question corrigée', () => {
+      expect(
+        pose('fp-numeric', ['Q-VA-07'], 'corrige', { ...PUPITRE, explications: [PREMIERE] }),
+      ).toEqual({ type: 'cible', cible: '1260', optionId: null });
+      expect(pose('fp-vote', ['Q-VA-08'], 'corrige', PUPITRE)).toBeNull();
+    });
+  });
+
+  it('S-01 · garde figée chez l étudiant l étape déjà corrigée, même quand le formateur la masque', () => {
+    const masquee = direct({ pilotage: { etayage: 0, etayageAtteint: 2 } });
+
+    expect(pose('fp-worked', ['E-CAP-01'], 'etayage', { direct: masquee })).toBe(2);
+    expect(
+      pose('fp-worked', ['E-CAP-01'], 'etayage', { direct: masquee, role: 'presentateur' }),
+    ).toBe(0);
+  });
 
   it('RET-23 · pose zero correction sur l exemple guide tant que le formateur n a rien revele', () => {
     expect(pose('fp-worked', ['E-CAP-01'], 'etayage', { direct: direct({ pilotage: {} }) })).toBe(

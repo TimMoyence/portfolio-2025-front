@@ -107,8 +107,9 @@ export function buildAnswerReviewProps(overrides: PropsVisuelles = {}): PropsVis
 export function buildVisualAnswerReviewSlide(
   overrides: Partial<EcranContent> = {},
   id = 'B2-01-A2-03-CORRECTION-1',
+  props: PropsVisuelles = buildAnswerReviewProps(),
 ): EcranContent {
-  return buildRecitVisuel(id, 'answer-review', buildAnswerReviewProps(), {
+  return buildRecitVisuel(id, 'answer-review', props, {
     ecranSource: ATELIER_CORRIGE.screenId,
     ...overrides,
   });

@@ -242,6 +242,36 @@ interface LigneDeCle {
         </div>
       </section>
     }
+    @if (questionsACorriger() > 0) {
+      <section class="activite-section" data-testid="activite-questions">
+        <h3 i18n="@@panneauActiviteCorrectionExerciceTitre">Correction de l’exercice</h3>
+        <p data-testid="activite-questions-niveau">
+          {{ questionsCorrigees() }} / {{ questionsACorriger() }}
+        </p>
+        <div class="activite-commandes">
+          <button
+            type="button"
+            class="control-btn"
+            data-testid="activite-question-suivante"
+            [disabled]="pilotageBloque() || questionsCorrigees() >= questionsACorriger()"
+            (click)="corrigerJusquA(questionsCorrigees() + 1)"
+            i18n="@@panneauActiviteCorrectionQuestionSuivante"
+          >
+            Corriger une question de plus
+          </button>
+          <button
+            type="button"
+            class="control-btn"
+            data-testid="activite-questions-toutes"
+            [disabled]="pilotageBloque() || pilotage().revele === true"
+            (click)="reveler()"
+            i18n="@@panneauActiviteCorrectionToutes"
+          >
+            Tout corriger
+          </button>
+        </div>
+      </section>
+    }
     @if (production(); as resultat) {
       <section class="activite-section" data-testid="activite-production">
         <h3 i18n="@@panneauActiviteProductionTitre">Productions reçues</h3>
@@ -337,7 +367,8 @@ export class CoursPanneauActiviteComponent {
     return (
       !REVELATIONS_DEDIEES.has(ecran.type) &&
       !this.phaseVisible() &&
-      !this.etapesPilotees() &&
+      ecran.type !== 'fp-worked' &&
+      this.questionsACorriger() === 0 &&
       ecran.corriges.length === 0 &&
       (ecran.questions.length > 0 ||
         REVELATIONS_SANS_QUESTION.has(ecran.type) ||
@@ -350,8 +381,14 @@ export class CoursPanneauActiviteComponent {
     () => this.ecran().type === 'fp-recall' && this.ecran().donnees?.['delaiMs'] !== 0,
   );
 
-  private readonly etapesPilotees = computed(
-    () => this.ecran().type === 'fp-worked' && this.ecran().donnees?.['pilote'] === true,
+  protected readonly questionsACorriger = computed(() =>
+    this.ecran().type === 'questionnaire' ? (this.ecran().explications?.length ?? 0) : 0,
+  );
+
+  protected readonly questionsCorrigees = computed(() =>
+    this.pilotage().revele === true
+      ? this.questionsACorriger()
+      : (this.pilotage().explicationsDevoilees ?? 0),
   );
 
   protected readonly phaseCourante = computed<VotePhase>(() => this.pilotage().phase ?? 'vote');
@@ -364,7 +401,7 @@ export class CoursPanneauActiviteComponent {
 
   protected readonly etapes = computed(() => {
     const etapes = objet(this.ecran().donnees?.['exemple'])?.['etapes'];
-    return this.etapesPilotees() && Array.isArray(etapes) ? etapes.length : 0;
+    return this.ecran().type === 'fp-worked' && Array.isArray(etapes) ? etapes.length : 0;
   });
 
   protected readonly etayage = computed(() => this.pilotage().etayage ?? 0);
@@ -409,6 +446,10 @@ export class CoursPanneauActiviteComponent {
 
   protected ouvrirLaCorrection(): void {
     this.commande.emit({ screenId: this.ecran().id, revele: true, etayage: 1 });
+  }
+
+  protected corrigerJusquA(explicationsDevoilees: number): void {
+    this.commande.emit({ screenId: this.ecran().id, explicationsDevoilees });
   }
 
   protected afficherLesOptions(): void {

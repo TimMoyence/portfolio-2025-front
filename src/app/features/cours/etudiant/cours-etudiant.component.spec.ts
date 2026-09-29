@@ -653,6 +653,30 @@ describe('CoursEtudiantComponent', () => {
     expect(fixture.componentInstance.sujet()?.ecrans[0]).toBe(revelee);
   });
 
+  it('S-02 · relit le sujet à chaque question que le formateur corrige sur place', async () => {
+    const explication = (reference: string) => ({ reference, texte: `Corrigé de ${reference}.` });
+    const exercice: EcranContent = { ...sujet.ecrans[0], revelation: undefined };
+    const premiere = {
+      ...exercice,
+      revelation: buildRevelationServie({ explications: [explication('q1')] }),
+    };
+    const seconde = {
+      ...exercice,
+      revelation: buildRevelationServie({ explications: [explication('q1'), explication('q2')] }),
+    };
+    const avec = (ecran: EcranContent) =>
+      of({ ...sujet, ecrans: [ecran, ...sujet.ecrans.slice(1)] });
+    port.lireSujet.and.returnValues(avec(exercice), avec(premiere), avec(seconde));
+    const fixture = await suivreLaSeanceJusquA(0);
+
+    await piloterSurLEcran(fixture, 0, exercice.id, { explicationsDevoilees: 1 });
+    expect(fixture.componentInstance.sujet()?.ecrans[0]).toBe(premiere);
+    await piloterSurLEcran(fixture, 0, exercice.id, { explicationsDevoilees: 2 });
+
+    expect(port.lireSujet).toHaveBeenCalledTimes(3);
+    expect(fixture.componentInstance.sujet()?.ecrans[0]).toBe(seconde);
+  });
+
   it('ne relit le sujet qu une fois quand le formateur sert et revele dans le meme etat', async () => {
     const { source, correction, sujetInitial, sujetRelu } = correctionVerrouillee();
     port.lireSujet.and.returnValues(of(sujetInitial), of(sujetRelu), of(sujetRelu));

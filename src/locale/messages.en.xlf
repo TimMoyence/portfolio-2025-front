@@ -14742,6 +14742,18 @@
         <target> Reveal one more step </target>
       </segment>
     </unit>
+    <unit id="panneauActiviteCorrectionQuestionSuivante">
+      <segment>
+        <source> Corriger une question de plus </source>
+        <target> Correct one more question </target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteCorrectionToutes">
+      <segment>
+        <source> Tout corriger </source>
+        <target> Correct everything </target>
+      </segment>
+    </unit>
     <unit id="panneauActiviteProductionTitre">
       <segment>
         <source>Productions reçues</source>

@@ -16,7 +16,7 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import type { CorrigeEcranPresentateur } from '../../../../cours/content/types';
+import type { CorrigeEcranPresentateur, ExplicationServie } from '../../../../cours/content/types';
 import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import { texte } from '../../../../cours/runtime/core/i18n';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
@@ -234,6 +234,18 @@ export class SlideActivityComponent {
       questions: 'questions' in slide && Array.isArray(slide.questions) ? slide.questions : [],
     };
   });
+  private readonly explicationsRevelees = computed<readonly ExplicationServie[]>(() => {
+    const slide = this.slide();
+    if (this.role() !== 'presentateur') {
+      return slide.revelation?.explications ?? [];
+    }
+    const toutes: readonly ExplicationServie[] =
+      'explications' in slide && Array.isArray(slide.explications) ? slide.explications : [];
+    const pilotage = this.direct()?.pilotage;
+    return this.papier() || pilotage?.revele === true
+      ? toutes
+      : toutes.slice(0, pilotage?.explicationsDevoilees ?? 0);
+  });
   protected readonly verrouille = computed(() => this.slide().type === ECRAN_VERROUILLE);
   protected readonly entete = computed(() => enteteDeQuestionnaire(this.slide()));
   protected readonly libelleVerrouille = texte('ecran-verrouille');
@@ -423,6 +435,8 @@ export class SlideActivityComponent {
       return;
     }
     const retours = this.retours().get(this.slide().id) ?? [];
+    const explications = this.explicationsRevelees();
+    const parQuestion = this.entete() !== null;
     try {
       for (const actif of this.montes) {
         const poses = posesDeReinjection(actif, {
@@ -434,6 +448,9 @@ export class SlideActivityComponent {
           maitrise: this.maitrise(),
           dernierEmetteur: actif.element === this.dernierEmetteur,
           papier: this.impression(),
+          explications: parQuestion
+            ? explications.filter(({ reference }) => actif.identifiants.includes(reference))
+            : explications,
         });
         for (const [propriete, valeur] of poses) {
           this.poser(actif.element, propriete, valeur);

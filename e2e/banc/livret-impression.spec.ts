@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { CODE_DU_COURS, ouvrirLeLivret } from './contexte';
 
 const PX_PAR_MM = 96 / 25.4;
@@ -16,16 +17,44 @@ const VUES = [
   { vue: 'corrige', pages: 'livret-corrige' },
 ] as const;
 
+function pagesTassees(flux: readonly (readonly number[])[]): number {
+  return flux.reduce((total, hauteurs) => {
+    let pages = 1;
+    let remplie = 0;
+    for (const hauteur of hauteurs) {
+      const suite = remplie + hauteur;
+      if (suite > HAUTEUR_UTILE_PX && remplie > 0) {
+        pages += 1;
+        remplie = hauteur;
+      } else {
+        remplie = suite;
+      }
+    }
+    return total + pages;
+  }, 0);
+}
+
+function pagesDuPdf(pdf: Buffer): number {
+  return pdf.toString('latin1').match(/\/Type\s*\/Page(?!\w)/g)?.length ?? 0;
+}
+
+async function vueImprimee(
+  page: Page,
+  { vue, pages }: { readonly vue: string; readonly pages: string } = VUES[0],
+): Promise<Locator> {
+  await ouvrirLeLivret(page);
+  await page.getByTestId(`livret-vue-${vue}`).click();
+  const ecrans = page.getByTestId(pages);
+  await expect(ecrans.first()).toBeVisible();
+  await page.setViewportSize({ width: LARGEUR_UTILE_PX, height: HAUTEUR_UTILE_PX });
+  await page.emulateMedia({ media: 'print' });
+  return ecrans;
+}
+
 test.describe(`Banc — livret papier du ${CODE_DU_COURS} imprimé en A4`, () => {
   for (const { vue, pages } of VUES) {
     test(`aucun écran du ${vue} n’est coupé entre deux pages A4`, async ({ page }, testInfo) => {
-      await ouvrirLeLivret(page);
-      await page.getByTestId(`livret-vue-${vue}`).click();
-      const ecrans = page.getByTestId(pages);
-      await expect(ecrans.first()).toBeVisible();
-
-      await page.setViewportSize({ width: LARGEUR_UTILE_PX, height: HAUTEUR_UTILE_PX });
-      await page.emulateMedia({ media: 'print' });
+      const ecrans = await vueImprimee(page, { vue, pages });
       const mesures = await ecrans.evaluateAll((sections) =>
         sections.map((section) => ({
           ecran: section.getAttribute('data-ecran') ?? '',
@@ -52,14 +81,40 @@ test.describe(`Banc — livret papier du ${CODE_DU_COURS} imprimé en A4`, () =>
     });
   }
 
+  test('tasse plusieurs écrans par page A4, chaque feuille repartant sur une page neuve', async ({
+    page,
+  }) => {
+    const ecrans = await vueImprimee(page);
+    const flux = await page.getByTestId('livret-feuille').evaluateAll((feuilles) =>
+      feuilles.map((feuille, rang) => {
+        const entete = document.querySelector('.livret__entete');
+        let bas =
+          rang === 0 && entete !== null
+            ? entete.getBoundingClientRect().top
+            : feuille.getBoundingClientRect().top;
+        return [...feuille.children].map((enfant) => {
+          const { bottom } = enfant.getBoundingClientRect();
+          const hauteur = Math.ceil(bottom - bas);
+          bas = bottom;
+          return hauteur;
+        });
+      }),
+    );
+    const pdf = await page.pdf({
+      format: 'A4',
+      printBackground: false,
+      preferCSSPageSize: true,
+    });
+
+    expect(pagesTassees(flux)).toBeLessThan(await ecrans.count());
+    expect(pagesDuPdf(pdf)).toBeGreaterThanOrEqual(flux.length);
+    expect(pagesDuPdf(pdf)).toBeLessThanOrEqual(pagesTassees(flux));
+  });
+
   test('imprime chaque barre et chaque valeur des graphiques, sans attendre l animation', async ({
     page,
   }) => {
-    await ouvrirLeLivret(page);
-    await page.getByTestId('livret-vue-sujet').click();
-    await expect(page.getByTestId('livret-ecran').first()).toBeVisible();
-
-    await page.emulateMedia({ media: 'print' });
+    await vueImprimee(page);
     const effaces = await page
       .locator('.slide-chart__bar, .slide-chart__value, .slide-chart__marqueur--barre')
       .evaluateAll((elements) =>

@@ -11,7 +11,7 @@ import type {
   PilotageEcran,
   ResultatsSeance,
 } from '../../../../cours/content/types';
-import type { StatutFlux } from '../../../../cours/runtime/core/sync';
+import type { EtatSession, StatutFlux } from '../../../../cours/runtime/core/sync';
 import {
   attendreAucunEnTeteSansSession,
   buildEcranDeVoteCorrige,
@@ -1003,22 +1003,21 @@ describe('CoursPresentateurComponent', () => {
     expect(texte(fixture, 'presentateur-ecran')).toBe('4 / 4');
   });
 
-  it('G07 · ne propose la révélation d un écran à réponses libres du B2-01 que si un écran le corrige', async () => {
+  it('G07 · S-01 · S-02 · corrige sur leur propre écran les exercices du B2-01, et rien sur la mission', async () => {
     const ecrans = ecransDuPupitreB2_01();
     const rang = (id: string): number => ecrans.findIndex((ecran) => ecran.id === id);
     port.lireDeroule.and.returnValue(of(buildDerouleCours({ ecrans })));
     const fixture = await ouvrirLaSeance();
+    const commandesSur = (id: string, etat: Partial<EtatSession> = {}) => {
+      diffuserSurLaVue(double, fixture, { ...etat, ecranCourant: rang(id) });
+      return ['activite-reveler-correction', 'activite-etayage', 'activite-questions'].filter(
+        (marque) => lire(fixture, marque) !== null,
+      );
+    };
 
-    diffuserSurLaVue(double, fixture, {
-      etat: 'en_cours',
-      ecranCourant: rang('B2-01-A1-03-MISSION'),
-    });
-    const mission = lire(fixture, 'activite-reveler-correction');
-    diffuserSurLaVue(double, fixture, { ecranCourant: rang('B2-01-A2-06-POINTS') });
-    const exercice = lire(fixture, 'activite-reveler-correction');
-
-    expect(mission).toBeNull();
-    expect(exercice).not.toBeNull();
+    expect(commandesSur('B2-01-A1-03-MISSION', { etat: 'en_cours' })).toEqual([]);
+    expect(commandesSur('B2-01-A2-06-POINTS')).toEqual(['activite-etayage']);
+    expect(commandesSur('B2-01-A2-03-ATELIER-1')).toEqual(['activite-questions']);
   });
 
   it('ouvre le rythme libre de l ecran courant au dernier ecran, puis reprend la main', async () => {

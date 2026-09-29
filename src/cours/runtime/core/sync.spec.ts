@@ -391,6 +391,8 @@ describe('sync', () => {
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A3-01': { phase: 'fin' } } }),
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A3-06': { etayage: -1 } } }),
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A5-08': { revele: 'oui' } } }),
+        bloc('etat', { ...ETAT, pilotage: { 'B2-01-A2-03': { explicationsDevoilees: 1.5 } } }),
+        bloc('etat', { ...ETAT, pilotage: { 'B2-01-A2-06': { etayageAtteint: -2 } } }),
         bloc('etat', ETAT),
       ]);
 

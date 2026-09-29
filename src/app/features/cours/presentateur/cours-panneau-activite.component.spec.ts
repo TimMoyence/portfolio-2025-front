@@ -223,14 +223,64 @@ describe('CoursPanneauActiviteComponent', () => {
     expect(lire(monter(rappel).fixture, 'activite-options-rappel')).toBeNull();
   });
 
-  it('T7 · ne pilote aucune etape sur l exercice travaille non pilote, corrige a l ecran suivant', () => {
+  it('S-01 · corrige étape par étape sur son propre écran l exercice travaillé que rédigent les étudiants', () => {
+    const exemple = buildWorkedExemple();
     const exercice = buildEcranDeroule({
       id: 'ecran-exercice',
       type: 'fp-worked',
-      donnees: { exemple: buildWorkedExemple(), etayage: 0 },
+      donnees: { exemple, etayage: 0 },
+    });
+    const { fixture, commandes } = monter(exercice);
+
+    expect(texte(fixture, 'activite-etayage-niveau')).toBe(`0 / ${exemple.etapes.length}`);
+    expect(lire(fixture, 'activite-reveler-correction')).toBeNull();
+    cliquer(fixture, 'activite-etayage-plus');
+
+    expect(commandes).toEqual([{ screenId: 'ecran-exercice', etayage: 1 }]);
+  });
+
+  const questionnaireDeLAtelier = (
+    ecran: Pick<EcranDeroule, 'questions'> & Partial<EcranDeroule>,
+  ): EcranDeroule =>
+    buildEcranDeroule({
+      id: 'ecran-atelier',
+      type: 'questionnaire',
+      donnees: {},
+      corriges: [],
+      ...ecran,
     });
 
-    expect(lire(monter(exercice).fixture, 'activite-etayage')).toBeNull();
+  it('S-02 · corrige le questionnaire question par question, ou tout d un coup', () => {
+    const questionnaire = questionnaireDeLAtelier({
+      questions: [
+        { id: 'q-taux', enonce: 'Quel taux ?', options: null },
+        { id: 'q-points', enonce: 'Combien de points ?', options: null },
+      ],
+      explications: [
+        { reference: 'q-taux', texte: '12 ÷ 48 = 25 %.' },
+        { reference: 'q-points', texte: '25 − 20 = 5 points.' },
+      ],
+    });
+    const { fixture, commandes } = monter(questionnaire, {
+      pilotage: { explicationsDevoilees: 1 },
+    });
+    const bouton = (marque: string): HTMLButtonElement =>
+      cibleMarque(fixture, marque, 'le panneau') as HTMLButtonElement;
+
+    expect(lire(fixture, 'activite-reveler-correction')).toBeNull();
+    expect(texte(fixture, 'activite-questions-niveau')).toBe('1 / 2');
+    cliquer(fixture, 'activite-question-suivante');
+    cliquer(fixture, 'activite-questions-toutes');
+
+    fixture.componentRef.setInput('pilotage', { explicationsDevoilees: 2, revele: true });
+    fixture.detectChanges();
+    expect(texte(fixture, 'activite-questions-niveau')).toBe('2 / 2');
+    expect(bouton('activite-question-suivante').disabled).toBeTrue();
+    expect(bouton('activite-questions-toutes').disabled).toBeTrue();
+    expect(commandes).toEqual([
+      { screenId: 'ecran-atelier', explicationsDevoilees: 2 },
+      { screenId: 'ecran-atelier', revele: true },
+    ]);
   });
 
   it('RET-23 · part de zero correction revelee quel que soit l etayage prevu par le cours', () => {
@@ -252,11 +302,7 @@ describe('CoursPanneauActiviteComponent', () => {
   });
 
   it('RET-32 · revele une seule fois la correction d un questionnaire', () => {
-    const questionnaire = buildEcranDeroule({
-      id: 'ecran-atelier',
-      type: 'questionnaire',
-      donnees: {},
-      corriges: [],
+    const questionnaire = questionnaireDeLAtelier({
       questions: [{ id: 'q-atelier', enonce: 'Quel taux ?', options: null }],
     });
     const monte = monter(questionnaire);

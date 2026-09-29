@@ -15,11 +15,17 @@ export interface QuestionRevelee {
   readonly optionId: string | null;
 }
 
+export interface ExplicationServie {
+  readonly reference: string;
+  readonly texte: string;
+}
+
 export interface RevelationServie {
   readonly ecranId: string;
   readonly questions: readonly QuestionRevelee[];
   readonly annexe: CorrigeEcranPresentateur | null;
   readonly reflexion: { readonly attendu: string; readonly suite: string | null } | null;
+  readonly explications?: readonly ExplicationServie[];
 }
 
 export interface CadrageDuRenvoi {
@@ -56,6 +62,7 @@ export interface PilotageEcran {
   readonly revele?: boolean;
   readonly etayage?: number;
   readonly etayageAtteint?: number;
+  readonly explicationsDevoilees?: number;
   readonly reglages?: Readonly<Record<string, number>>;
   readonly resultatsProjetes?: boolean;
   readonly optionsAffichees?: boolean;
@@ -257,6 +264,7 @@ export interface EcranDeroule extends EcranContent {
   }[];
   readonly corrigeEcran: CorrigeEcranPresentateur | null;
   readonly guide?: GuideFormateur;
+  readonly explications?: readonly ExplicationServie[];
 }
 
 export interface EtatParticipant {

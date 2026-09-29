@@ -153,6 +153,32 @@ describe('FpBlock', () => {
     expect(racine?.querySelector('[data-testid="deja-repondu"]')).toBeNull();
   });
 
+  it('S-02 · affiche sous la brique les explications de correction révélées, et rien sans elles', () => {
+    const racine = hote.shadowRoot;
+    expect(racine?.querySelector('[data-testid="explications"]')).toBeNull();
+
+    hote.explications = [
+      { reference: 'e1', texte: '140 400 ÷ 600 000 = 23,4 %.' },
+      { reference: 'e2', texte: '23,4 − 26,2 = −2,8 points.' },
+    ];
+
+    expect(
+      [...(racine?.querySelectorAll('[data-testid="explication"]') ?? [])].map((explication) => [
+        explication.getAttribute('data-cle'),
+        explication.textContent,
+      ]),
+    ).toEqual([
+      ['e1', '140 400 ÷ 600 000 = 23,4 %.'],
+      ['e2', '23,4 − 26,2 = −2,8 points.'],
+    ]);
+    expect(racine?.querySelector('[data-testid="explications"]')?.textContent).toContain(
+      'Correction',
+    );
+
+    hote.explications = [];
+    expect(racine?.querySelector('[data-testid="explications"]')).toBeNull();
+  });
+
   it('rend le foyer et la selection au champ saisi quand un rafraichissement le remplace', () => {
     const champ = hote.shadowRoot?.querySelector<HTMLInputElement>('[data-testid="champ"]');
     champ?.focus();

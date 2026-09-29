@@ -164,7 +164,9 @@ function estPilotageEcran(valeur: unknown): boolean {
     estDictionnaire(valeur) &&
     absentOu(valeur['phase'], (phase) => estMembre(PHASES_VALIDES, phase)) &&
     absentOu(valeur['revele'], (revele) => typeof revele === 'boolean') &&
-    absentOu(valeur['etayage'], estEntierPositif)
+    absentOu(valeur['etayage'], estEntierPositif) &&
+    absentOu(valeur['etayageAtteint'], estEntierPositif) &&
+    absentOu(valeur['explicationsDevoilees'], estEntierPositif)
   );
 }
 

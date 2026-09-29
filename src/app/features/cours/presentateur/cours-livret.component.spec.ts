@@ -72,20 +72,19 @@ describe('CoursLivretComponent', () => {
     expect(un(fixture, 'livret-version')?.textContent).toContain('1');
   });
 
-  it('met en page pour l’étudiant les 25 écrans du B2-02 à traiter sur papier, rappel compris, sans correction ni jalon', async () => {
+  it('met en page pour l’étudiant les 28 écrans du B2-02 à traiter sur papier, rappel compris, sans jalon', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     const ids = tous(fixture, 'livret-ecran').map((page) => page.dataset['ecran']);
 
-    expect(ids.length).toBe(25);
-    expect(ids).not.toContain('B2-02-A1-07-CORRECTION');
+    expect(ids.length).toBe(28);
     expect(ids).not.toContain('B2-02-A1-09-JALON');
     expect(ids).toContain('B2-02-A4-04-RAPPEL');
     expect(ids).toContain('B2-02-A2-01-NUAGE-RIVAGE');
     expect(tous(fixture, 'livret-corrige')).toEqual([]);
   });
 
-  it('découpe le livret étudiant en feuilles distribuées après chaque correction, pour ne pas livrer une réponse d’avance', async () => {
+  it('découpe le livret étudiant en feuilles distribuées après chaque correction sur place, pour ne pas livrer une réponse d’avance', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     const feuilles = tous(fixture, 'livret-feuille');
@@ -93,7 +92,7 @@ describe('CoursLivretComponent', () => {
       feuilles.findIndex((feuille) => feuille.querySelector(`[data-ecran="${ecran}"]`) !== null);
 
     expect(feuilles.length).toBe(15);
-    expect(tous(fixture, 'livret-ecran').length).toBe(25);
+    expect(tous(fixture, 'livret-ecran').length).toBe(28);
     expect(
       feuilles.map((feuille) =>
         feuille.querySelector('[data-testid="livret-feuille-entete"]')?.textContent?.trim(),
@@ -101,6 +100,8 @@ describe('CoursLivretComponent', () => {
     ).toEqual(feuilles.map((_, rang) => `Feuille ${rang + 1} / 15`));
     for (const [exercice, suite] of [
       ['B2-02-A1-05-UN-SEUL-NOMBRE', 'B2-02-A1-06-COURS-RESUMER'],
+      ['B2-02-A1-07-EXEMPLE-RESUME', 'B2-02-A1-08-ATELIER-RESUME'],
+      ['B2-02-A1-08-ATELIER-RESUME', 'B2-02-A2-01-NUAGE-RIVAGE'],
       ['B2-02-A2-02-VOTE-CORRELATION', 'B2-02-A2-03-COURS-NUAGE'],
       ['B2-02-A3-01-JUSQU-OU', 'B2-02-A3-02-COURS-DROITE'],
       ['B2-02-A4-04-RAPPEL', 'B2-02-A4-05-FICHE-MEMO'],
@@ -126,42 +127,34 @@ describe('CoursLivretComponent', () => {
     ]);
   });
 
-  it('bascule sur le corrigé des 35 écrans du B2-02, corrections et rappel compris', async () => {
+  it('bascule sur le corrigé des 28 écrans du B2-02, rappel compris', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     basculerSurLeCorrige(fixture);
 
     const ids = tous(fixture, 'livret-corrige').map((page) => page.dataset['ecran']);
-    expect(ids.length).toBe(35);
-    expect(ids).toContain('B2-02-A1-07-CORRECTION');
+    expect(ids.length).toBe(28);
     expect(ids).toContain('B2-02-A4-04-RAPPEL');
     expect(tous(fixture, 'livret-ecran')).toEqual([]);
   });
 
-  it('n imprime pas deux fois un exemple guidé dont la correction reprend la même brique', async () => {
+  it('S-05 · imprime au corrigé chaque question de l exercice suivie de son explication', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
-
     basculerSurLeCorrige(fixture);
+    const atelier = INSTANTANE_B2_02.deroule.ecrans.find(
+      ({ id }) => id === 'B2-02-A1-08-ATELIER-RESUME',
+    );
+    const [premiere] = atelier?.explications ?? [];
 
-    const dansLaPage = (ecran: string, selecteur: string): Element | null =>
-      (fixture.nativeElement as HTMLElement).querySelector(
-        `[data-testid="livret-corrige"][data-ecran="${ecran}"] ${selecteur}`,
-      );
-    for (const [exemple, correction] of [
-      ['B2-02-A1-07-EXEMPLE-RESUME', 'B2-02-A1-07-CORRECTION'],
-      ['B2-02-A2-04-EXEMPLE-NUAGE', 'B2-02-A2-04-CORRECTION'],
-      ['B2-02-A3-03-EXEMPLE-DROITE', 'B2-02-A3-03-CORRECTION'],
-    ]) {
-      expect(dansLaPage(exemple, 'app-slide-activity')).withContext(exemple).not.toBeNull();
-      expect(dansLaPage(correction, 'app-slide-activity')).withContext(correction).toBeNull();
-      expect(dansLaPage(correction, '[data-testid="livret-titre-correction"]')?.textContent)
-        .withContext(correction)
-        .toContain('Correction');
-      expect(dansLaPage(correction, '[data-testid="livret-notes"]'))
-        .withContext(correction)
-        .not.toBeNull();
-    }
-    expect(dansLaPage('B2-02-A1-08-CORRECTION', 'app-slide-activity')).not.toBeNull();
+    const brique = await briqueMontee(
+      fixture,
+      '[data-testid="livret-corrige"][data-ecran="B2-02-A1-08-ATELIER-RESUME"] [data-testid="slide-activity-host"] > *',
+    );
+
+    expect(premiere).toBeDefined();
+    expect(brique.shadowRoot?.querySelector('[data-testid="explication"]')?.textContent).toBe(
+      premiere?.texte,
+    );
   });
 
   describe('briques imprimées sur le vrai B2-02', () => {

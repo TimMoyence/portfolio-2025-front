@@ -66,12 +66,27 @@ function monter(entrees: Readonly<Record<string, unknown>>): Fixture {
 
 const brique = briqueMontee;
 
+async function briquesDuQuestionnaire(fixture: Fixture) {
+  return { vote: await brique(fixture, 'fp-vote'), numerique: await brique(fixture, 'fp-numeric') };
+}
+
 async function questionnaireDuPosteEtudiant() {
   const ecran = buildEcranQuestionnaire();
   const fixture = monter({ slide: ecran, role: 'etudiant', sessionId: 'seance-1' });
-  const vote = await brique(fixture, 'fp-vote');
-  const numerique = await brique(fixture, 'fp-numeric');
-  return { ecran, fixture, vote, numerique };
+  return { ecran, fixture, ...(await briquesDuQuestionnaire(fixture)) };
+}
+
+const CIBLE_VA_07 = { questionId: 'Q-VA-07', cible: '1 480,24', optionId: null };
+
+function revelerAuPoste(
+  { ecran, fixture }: Awaited<ReturnType<typeof questionnaireDuPosteEtudiant>>,
+  revelation: Parameters<typeof buildRevelationServie>[0],
+): void {
+  fixture.componentRef.setInput('slide', {
+    ...ecran,
+    revelation: buildRevelationServie({ ecranId: ecran.id, ...revelation }),
+  });
+  fixture.detectChanges();
 }
 
 function directRevele(revele: boolean) {
@@ -288,8 +303,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
       direct: direct(false),
       donneesFormateur: reponses,
     });
-    const vote = await brique(fixture, 'fp-vote');
-    const numerique = await brique(fixture, 'fp-numeric');
+    const { vote, numerique } = await briquesDuQuestionnaire(fixture);
 
     expect(dans(vote, 'bonne-reponse')).toBeNull();
     expect(dans(numerique, 'bonne-reponse')).toBeNull();
@@ -299,20 +313,13 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
   });
 
   it('RET-32 · montre a l etudiant la bonne reponse servie avec l ecran, comme au presentateur', async () => {
-    const { ecran, fixture, vote, numerique } = await questionnaireDuPosteEtudiant();
+    const poste = await questionnaireDuPosteEtudiant();
+    const { fixture, vote, numerique } = poste;
 
     expect(dans(vote, 'bonne-reponse')).toBeNull();
-    fixture.componentRef.setInput('slide', {
-      ...ecran,
-      revelation: buildRevelationServie({
-        ecranId: ecran.id,
-        questions: [
-          { questionId: 'Q-VA-07', cible: '1 480,24', optionId: null },
-          { questionId: 'Q-CAP-03', cible: '1 480,24 €', optionId: 'b' },
-        ],
-      }),
+    revelerAuPoste(poste, {
+      questions: [CIBLE_VA_07, { questionId: 'Q-CAP-03', cible: '1 480,24 €', optionId: 'b' }],
     });
-    fixture.detectChanges();
     await attendreQue(fixture, () => dans(vote, 'bonne-reponse') !== null, 'la correction');
 
     expect(await brique(fixture, 'fp-vote')).toBe(vote);
@@ -343,6 +350,47 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     expect(vote.shadowRoot?.querySelector('[data-correction]')).toBeNull();
   });
 
+  it('S-02 · corrige sur place la seule question révélée : son explication, sa bonne réponse, son champ fermé', async () => {
+    const poste = await questionnaireDuPosteEtudiant();
+    const { fixture, vote, numerique } = poste;
+
+    revelerAuPoste(poste, {
+      questions: [CIBLE_VA_07],
+      explications: [{ reference: 'Q-VA-07', texte: '1 000 × 1,04^10 ≈ 1 480,24 €.' }],
+    });
+    await attendreQue(fixture, () => dans(numerique, 'explication') !== null, 'l explication');
+
+    expect(dans(numerique, 'explication')?.textContent).toBe('1 000 × 1,04^10 ≈ 1 480,24 €.');
+    expect(dans(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
+    expect((dans(numerique, 'champ') as HTMLInputElement).disabled).toBeTrue();
+    expect(dans(vote, 'explications')).toBeNull();
+    expect(
+      [...(vote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-option]') ?? [])].some(
+        (option) => !option.disabled,
+      ),
+    ).toBeTrue();
+  });
+
+  it('S-02 · projette au pupitre les explications au rythme des questions corrigées', async () => {
+    const fixture = monter({
+      slide: {
+        ...buildEcranQuestionnaire(),
+        explications: [
+          { reference: 'Q-CAP-03', texte: 'Capitaliser, c’est réinvestir les intérêts.' },
+          { reference: 'Q-VA-07', texte: '1 000 × 1,04^10 ≈ 1 480,24 €.' },
+        ],
+      },
+      role: 'presentateur',
+      direct: { pilotage: { explicationsDevoilees: 1 }, resultats: null, comptesJalon: null },
+    });
+    const { vote, numerique } = await briquesDuQuestionnaire(fixture);
+
+    expect(dans(vote, 'explication')?.textContent).toBe(
+      'Capitaliser, c’est réinvestir les intérêts.',
+    );
+    expect(dans(numerique, 'explications')).toBeNull();
+  });
+
   it('RET-32 · ferme aux reponses le poste etudiant une fois la correction du questionnaire revelee', async () => {
     const direct = directRevele;
     const fixture = monter({
@@ -351,8 +399,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
       sessionId: 'seance-1',
       direct: direct(false),
     });
-    const vote = await brique(fixture, 'fp-vote');
-    const numerique = await brique(fixture, 'fp-numeric');
+    const { vote, numerique } = await briquesDuQuestionnaire(fixture);
     const options = (): HTMLButtonElement[] => [
       ...(vote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-option]') ?? []),
     ];

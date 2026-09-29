@@ -102,33 +102,60 @@
   }
 }
 
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
 @media print {
-  .livret {
+  .livret,
+  .livret__feuille {
+    display: block;
     max-inline-size: none;
     padding: 0;
+  }
+
+  .livret__entete {
+    gap: 1mm;
+    margin-block-end: 4mm;
   }
 
   .livret__actions {
     display: none;
   }
 
-  .livret__page {
-    padding: 0;
-    border: 0;
-    break-after: page;
-  }
-
-  .livret__page:last-child {
-    break-after: auto;
-  }
-
   .livret__feuille + .livret__feuille {
     break-before: page;
   }
 
+  .livret__page {
+    gap: 2mm;
+    padding: 4mm 0 0;
+    border: 0;
+    border-block-start: 0.5pt solid #999;
+  }
+
+  .livret__kicker + .livret__page,
+  .livret__entete + .livret__page {
+    padding-block-start: 0;
+    border-block-start: 0;
+  }
+
+  .livret__page + .livret__page {
+    margin-block-start: 4mm;
+  }
+
+  .livret__titre {
+    break-after: avoid;
+  }
+
+  .livret__feuille > .livret__page {
+    break-inside: avoid;
+  }
+
   .livret__page app-slide-activity {
     display: block;
-    zoom: 0.75;
+    zoom: 0.65;
     break-inside: avoid;
   }
 

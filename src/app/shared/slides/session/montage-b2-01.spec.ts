@@ -20,8 +20,8 @@ import { SlideActivityComponent } from './slide-activity.component';
 const SUBSTITUTION = buildInstantaneDeSubstitution();
 
 decrireLeMontageDeLInstantane('B2-01', INSTANTANE_B2_01, {
-  empreinte: '29ea9aca64a4c5e4631e8fd17ccf68806e9e360e5cf476bed39d151a071d3b37',
-  ecrans: 74,
+  empreinte: '37d3fa26a97299dcc85865240ad0b3a99395b51b8a5c0d096400da26f86b387e',
+  ecrans: 59,
   specifiques: () => {
     it(
       'garde la diapositive de Samir réglable au pupitre et la consigne courte de l atelier',
