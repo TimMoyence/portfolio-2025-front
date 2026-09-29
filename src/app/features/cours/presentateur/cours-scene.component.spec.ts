@@ -4,6 +4,7 @@ import { Subject, of, throwError } from 'rxjs';
 import type {
   ConfusionComptee,
   DerouleCours,
+  EcranDeroule,
   ResultatsSeance,
 } from '../../../../cours/content/types';
 import type { EtatSession } from '../../../../cours/runtime/core/sync';
@@ -60,6 +61,19 @@ function derouleDeSeance(): DerouleCours {
       }),
       buildEcranDeroule({ id: 'ecran-rappel', notes: '', seuil: null, corriges: [] }),
     ],
+  });
+}
+
+function ecranDAtelier(surcharges: Partial<EcranDeroule> = {}): EcranDeroule {
+  return buildEcranDeroule({
+    id: 'ecran-atelier',
+    type: 'questionnaire',
+    donnees: {
+      questions: [{ brique: 'fp-vote', donnees: { question: buildVoteQuestion() } }],
+    },
+    corriges: [{ questionId: 'Q-CAP-03', bonneReponse: 'b', confusions: [] }],
+    corrigeEcran: null,
+    ...surcharges,
   });
 }
 
@@ -319,29 +333,35 @@ describe('CoursSceneComponent', () => {
   });
 
   it('RET-32 · confie a la projection les bonnes reponses d un questionnaire', async () => {
-    port.lireDeroule.and.returnValue(
-      of(
-        buildDerouleCours({
-          ecrans: [
-            buildEcranDeroule({
-              id: 'ecran-atelier',
-              type: 'questionnaire',
-              donnees: {
-                questions: [{ brique: 'fp-vote', donnees: { question: buildVoteQuestion() } }],
-              },
-              corriges: [{ questionId: 'Q-CAP-03', bonneReponse: 'b', confusions: [] }],
-              corrigeEcran: null,
-            }),
-          ],
-        }),
-      ),
-    );
-    const fixture = await monterEtStabiliser();
+    const fixture = await monterSur([ecranDAtelier()]);
 
     expect(apercu(fixture)?.donneesFormateur()).toEqual({
       type: 'reponses',
       reponses: { 'Q-CAP-03': jasmine.objectContaining({ cible: 'b' }) },
     });
+  });
+
+  it('S-02 · projette les explications des questions corrigées sur place, au rythme du pupitre', async () => {
+    const fixture = await monterSur([
+      ecranDAtelier({
+        explications: [{ reference: 'Q-CAP-03', texte: 'Capitaliser, c’est réinvestir.' }],
+      }),
+    ]);
+    const vote = await briqueMontee(fixture, 'fp-vote');
+    const explication = (): string | null | undefined =>
+      vote.shadowRoot?.querySelector('[data-testid="explication"]')?.textContent;
+
+    diffuserSurLaVue(double, fixture, { ecranCourant: 0 });
+
+    expect(explication()).toBeUndefined();
+
+    diffuserSurLaVue(double, fixture, {
+      ecranCourant: 0,
+      pilotage: { 'ecran-atelier': { explicationsDevoilees: 1 } },
+    });
+    await attendreQue(fixture, () => explication() !== undefined, 'l explication projetée');
+
+    expect(explication()).toBe('Capitaliser, c’est réinvestir.');
   });
 
   it('ferme le flux a la destruction de la scene', async () => {
