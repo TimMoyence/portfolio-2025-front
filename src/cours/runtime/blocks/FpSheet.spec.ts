@@ -295,6 +295,22 @@ describe('FpSheet', () => {
     expect(texteDe(hote, 'attendu')).toBe('D3 =C3*(1+$B$1) 64,8');
   });
 
+  it('sert au niveau 2 une valeur attendue texte ou logique, comme le tableur l affiche', () => {
+    hote.corrige = {
+      type: 'feuille',
+      attendus: [
+        { reference: 'D3', formuleReference: '=SI(C3>60;"Relancer";"")', valeur: 'Relancer' },
+        { reference: 'D4', formuleReference: '=C4>60', valeur: false },
+      ],
+    };
+    hote.etayage = 2;
+
+    expect(reperes(hote, 'attendu').map((attendu) => attendu.textContent?.trim())).toEqual([
+      'D3 =SI(C3>60;"Relancer";"") Relancer',
+      'D4 =C4>60 FAUX',
+    ]);
+  });
+
   it('RET-31 · projette les formules de correction au niveau 1 puis les valeurs au niveau 2', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.corrige = ATTENDUS_FORMATEUR;

@@ -8,7 +8,13 @@ import {
 } from './retours';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 
-type TypeDeChamp = 'string' | 'number';
+type TypeDeChamp = 'string' | 'number' | 'valeur';
+
+const GENRES_DE_VALEUR: ReadonlySet<string> = new Set(['number', 'string', 'boolean']);
+
+function estDuType(champ: unknown, genre: TypeDeChamp): boolean {
+  return genre === 'valeur' ? GENRES_DE_VALEUR.has(typeof champ) : typeof champ === genre;
+}
 
 const VIDE = escapeHtml('');
 const DESACTIVE = safeHtml`disabled`;
@@ -29,7 +35,7 @@ function lireAttendusDuCorrige<Attendu>(
   const exigences: readonly [string, TypeDeChamp][] = Object.entries(champs);
   return attendus.filter(
     (attendu): attendu is Attendu =>
-      estObjet(attendu) && exigences.every(([champ, genre]) => typeof attendu[champ] === genre),
+      estObjet(attendu) && exigences.every(([champ, genre]) => estDuType(attendu[champ], genre)),
   );
 }
 

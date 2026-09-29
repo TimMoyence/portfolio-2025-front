@@ -1,5 +1,6 @@
 import {
   type Feuille,
+  type ValeurFormule,
   LONGUEUR_MAX_FORMULE,
   PROFONDEUR_MAX,
   decalerFormule,
@@ -37,8 +38,13 @@ function feuille(cellules: Readonly<Record<string, string>>): Feuille {
   return { ...GRILLE, cellules };
 }
 
-function valeurDe(cellules: Readonly<Record<string, string>>, nom = 'A1'): number | null {
+function resultatDe(cellules: Readonly<Record<string, string>>, nom = 'A1'): ValeurFormule | null {
   return evaluerCellule(feuille(cellules), nom).valeur;
+}
+
+function valeurDe(cellules: Readonly<Record<string, string>>, nom = 'A1'): number | null {
+  const valeur = resultatDe(cellules, nom);
+  return typeof valeur === 'number' ? valeur : null;
 }
 
 function erreurDe(cellules: Readonly<Record<string, string>>, nom = 'A1'): string | null {
@@ -330,7 +336,7 @@ describe('core/formula', () => {
       ['=fetch(1)', '#NOM?'],
       ['=require(1)', '#NOM?'],
       ['=__proto__', '#VALEUR!'],
-      ['=eval("2+2")', '#VALEUR!'],
+      ['=eval("2+2")', '#NOM?'],
       ['=this.constructor', '#VALEUR!'],
       ['=window[0]', '#VALEUR!'],
       ['=1;globalThis', '#VALEUR!'],
@@ -389,9 +395,9 @@ describe('core/formula', () => {
   });
 
   describe('compatibilite tableur', () => {
-    it('accepte SI a deux arguments et rend 0 quand la condition est fausse', () => {
+    it('accepte SI a deux arguments et rend FAUX quand la condition est fausse', () => {
       expect(calcul('=SI(1>0;7)')).toBe(7);
-      expect(calcul('=SI(1<0;7)')).toBe(0);
+      expect(resultatDe({ A1: '=SI(1<0;7)' })).toBeFalse();
       expect(refus('=SI(1)')).toBe('#VALEUR!');
       expect(refus('=SI(1;2;3;4)')).toBe('#VALEUR!');
     });
@@ -498,6 +504,47 @@ describe('core/formula', () => {
       expect(formaterResultat({ valeur: 1234.5, erreur: null })).toBe('1234,5');
       expect(formaterResultat({ valeur: 12, erreur: null })).toBe('12');
       expect(formaterResultat({ valeur: null, erreur: '#DIV/0!' })).toBe('#DIV/0!');
+    });
+
+    it('affiche un texte tel quel et une valeur logique en VRAI ou FAUX', () => {
+      expect(formaterResultat({ valeur: 'Relancer', erreur: null })).toBe('Relancer');
+      expect(formaterResultat({ valeur: '', erreur: null })).toBe('');
+      expect(formaterResultat({ valeur: true, erreur: null })).toBe('VRAI');
+      expect(formaterResultat({ valeur: false, erreur: null })).toBe('FAUX');
+    });
+  });
+
+  describe('texte et logique', () => {
+    const FACTURES = {
+      A1: '72',
+      B1: 'Impayée',
+      A2: '60',
+      B2: 'Impayée',
+      C1: '=SI(ET(B1="impayée";A1>60);"Relancer";"")',
+      C2: '=SI(ET(B2="impayée";A2>60);"Relancer";"")',
+      D1: '=NB.SI(C1:C2;"Relancer")',
+      D2: '=SI(OU(A1>=5000;B1<>"Payée");"Visa";"")',
+      D3: '=NON(A1>60)',
+    };
+
+    it('ecrit la regle de relance et compte les factures a relancer', () => {
+      expect(resultatDe(FACTURES, 'B1')).toBe('Impayée');
+      expect(resultatDe(FACTURES, 'C1')).toBe('Relancer');
+      expect(resultatDe(FACTURES, 'C2')).toBe('');
+      expect(resultatDe(FACTURES, 'D1')).toBe(1);
+      expect(resultatDe(FACTURES, 'D2')).toBe('Visa');
+      expect(resultatDe(FACTURES, 'D3')).toBeFalse();
+    });
+
+    it('lit VRAI et FAUX saisis ou ecrits en formule, sans tenir compte de la casse', () => {
+      expect(resultatDe({ A1: 'Vrai' })).toBeTrue();
+      expect(resultatDe({ A1: '=faux' })).toBeFalse();
+      expect(resultatDe({ A1: '=2>1' })).toBeTrue();
+    });
+
+    it('garde un resultat numerique pour une expression de colonne deduite', () => {
+      expect(evaluerExpression('ET(2>1;VRAI)+(3<=2)', {})).toEqual({ valeur: 1, erreur: null });
+      expect(evaluerExpression('"a"', {}).erreur).toBe('#VALEUR!');
     });
   });
 

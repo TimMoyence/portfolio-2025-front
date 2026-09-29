@@ -1,6 +1,7 @@
 import {
   type Feuille,
   type ResultatFormule,
+  type ValeurFormule,
   decalerFormule,
   evaluerFeuille,
   formaterResultat,
@@ -20,7 +21,7 @@ export interface SheetPlanPublic extends PlanEtaye {
 interface AttenduDeFeuille {
   readonly reference: string;
   readonly formuleReference: string;
-  readonly valeur: number;
+  readonly valeur: ValeurFormule;
 }
 
 type Foyer = 'cellule' | 'barre' | null;
@@ -84,7 +85,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   protected readonly bloc = 'sheet';
   protected readonly lectureDuCorrige = {
     type: 'feuille',
-    champs: { reference: 'string', formuleReference: 'string', valeur: 'number' },
+    champs: { reference: 'string', formuleReference: 'string', valeur: 'valeur' },
   } as const;
   private contenus: Record<string, string> = {};
   private selection = CELLULE_INITIALE;

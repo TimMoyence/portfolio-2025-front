@@ -1,4 +1,5 @@
 import type { ProgressionDesEnigmes } from '../runtime/blocks/retours';
+import type { ValeurFormule } from '../runtime/core/formula';
 
 export type Role = 'presentateur' | 'etudiant';
 
@@ -199,7 +200,7 @@ export type CorrigeEcranPresentateur =
       readonly attendus: readonly {
         readonly reference: string;
         readonly formuleReference: string;
-        readonly valeur: number;
+        readonly valeur: ValeurFormule;
         readonly tolerance: Tolerance;
         readonly forme: FormeFormule;
       }[];
