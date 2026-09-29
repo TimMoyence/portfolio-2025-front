@@ -47,11 +47,17 @@ export interface EcranDuCours extends QuestionDuCours, EcranRepere {
   readonly jumelle: QuestionDuCours | null;
 }
 
+export interface ReponseDuCours extends EcranRepere {
+  readonly questionId: string;
+  readonly valeur: string | number;
+}
+
 export interface ReleveDuCours {
   readonly total: number;
   readonly ecrans: readonly string[];
   readonly questions: readonly EcranDuCours[];
   readonly votes: readonly EcranDuCours[];
+  readonly reponses: readonly ReponseDuCours[];
   readonly reflexions: readonly EcranDuCours[];
   readonly recitsSansActivite: readonly EcranRepere[];
 }
@@ -295,6 +301,35 @@ function questionDuCours(question: QuestionDuSujet): QuestionDuCours {
   };
 }
 
+const VALEUR_NUMERIQUE_DU_BANC = 0;
+
+const ECRANS_REPONDUS_PAR_L_API = new Set(['fp-vote', 'questionnaire']);
+
+function reponseDuCours(
+  rang: number,
+  ecran: EcranDuSujet,
+  question: QuestionDuSujet,
+): ReponseDuCours {
+  return {
+    rang,
+    id: ecran.id,
+    questionId: question.id,
+    valeur: question.options?.[0]?.id ?? VALEUR_NUMERIQUE_DU_BANC,
+  };
+}
+
+export function autreReponseQue(releve: ReleveDuCours, questionId: string): ReponseDuCours {
+  const autre = releve.reponses.find((reponse) => reponse.questionId !== questionId);
+  expect(autre, `aucune autre question que ${questionId} à répondre`).toBeDefined();
+  return autre as ReponseDuCours;
+}
+
+export function reponseApres(releve: ReleveDuCours, rang: number): ReponseDuCours {
+  const suivante = releve.reponses.find((reponse) => reponse.rang > rang);
+  expect(suivante, `aucune question à répondre après l’écran ${rang}`).toBeDefined();
+  return suivante as ReponseDuCours;
+}
+
 function seVoteDUnClic(ecran: EcranDuSujet, question: QuestionDuSujet): boolean {
   return (
     ecran.type === 'fp-vote' ||
@@ -305,11 +340,15 @@ function seVoteDUnClic(ecran: EcranDuSujet, question: QuestionDuSujet): boolean 
 function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
   const questions: EcranDuCours[] = [];
   const votes: EcranDuCours[] = [];
+  const reponses: ReponseDuCours[] = [];
   const reflexions: EcranDuCours[] = [];
   const recitsSansActivite: EcranRepere[] = [];
   ecrans.forEach((ecran, rang) => {
     const jumelle = ecran.donnees.questionJumelle;
     for (const question of questionsDeLEcran(ecran)) {
+      if (ECRANS_REPONDUS_PAR_L_API.has(ecran.type)) {
+        reponses.push(reponseDuCours(rang, ecran, question));
+      }
       const posee = questionDuCours(question);
       if (posee.options.length === 0) continue;
       const trouvee = {
@@ -343,6 +382,7 @@ function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
     ecrans: ecrans.map((ecran) => ecran.id),
     questions,
     votes,
+    reponses,
     reflexions,
     recitsSansActivite,
   };
@@ -366,7 +406,11 @@ async function relever(request: APIRequestContext): Promise<ReleveDuCours> {
   expect(releve.total).toBe(ecrans.length);
   expect(
     releve.votes.length,
-    'moins de deux écrans à voter d’un clic dans la version publiée',
+    'aucun écran à voter d’un clic dans la version publiée',
+  ).toBeGreaterThan(0);
+  expect(
+    releve.reponses.length,
+    'moins de deux questions à répondre dans la version publiée',
   ).toBeGreaterThan(1);
   expect(releve.reflexions.length, 'aucune réflexion dans la version publiée').toBeGreaterThan(1);
   return releve;
@@ -409,6 +453,11 @@ async function connecterLeFormateur(page: Page): Promise<void> {
   await page.locator('#auth-tab-log-in #login-password').fill(IDENTIFIANTS_FORMATEUR.motDePasse);
   await page.locator('#auth-tab-log-in button[type="submit"]').click();
   await expect(page).toHaveURL(/\/(fr\/)?$/);
+}
+
+export async function ouvrirLeLivret(page: Page): Promise<void> {
+  await connecterLeFormateur(page);
+  await page.goto(`/fr/cours/presenter/${SLUG_B2}/livret`);
 }
 
 export async function ouvrirLePupitre(page: Page): Promise<Seance> {

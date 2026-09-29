@@ -120,3 +120,9 @@ ol.slide-quiz__options {
   color: #b3261e;
   font-style: italic;
 }
+
+@media print {
+  .slide-quiz__apercu {
+    display: none;
+  }
+}

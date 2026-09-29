@@ -15,6 +15,7 @@ import type {
   FormationsPort,
   IncidentEtudiant,
   InscriptionParticipant,
+  LivretDuCours,
   MotifRefusRattachement,
   MotifRefusReponse,
   MotifRefusReponseLibre,
@@ -45,7 +46,14 @@ import {
   SujetRefuse,
 } from '../ports/formations.port';
 import { getApiBaseUrl } from '../http/api-config';
-import { type DerouleDuFil, derouleDuFil, type SujetDuFil, sujetDuFil } from './formations-fil';
+import {
+  type DerouleDuFil,
+  derouleDuFil,
+  type LivretDuFil,
+  livretDuFil,
+  type SujetDuFil,
+  sujetDuFil,
+} from './formations-fil';
 import { ENTETE_JETON_PARTICIPANT } from '../http/jeton-participant';
 
 const MOTIFS_DE_REFUS_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusReponseLibre>> = {
@@ -188,6 +196,12 @@ export class FormationsHttpAdapter implements FormationsPort {
     return this.http
       .get<DerouleDuFil>(`${this.urlSeance(sessionId)}/deroule`)
       .pipe(map(derouleDuFil));
+  }
+
+  lireLivret(courseSlug: string): Observable<LivretDuCours> {
+    return this.http
+      .get<LivretDuFil>(`${this.baseUrl}/livrets/${encodeURIComponent(courseSlug)}`)
+      .pipe(map(livretDuFil));
   }
 
   lireSujet(sessionId: string, jeton: string): Observable<CoursContent> {

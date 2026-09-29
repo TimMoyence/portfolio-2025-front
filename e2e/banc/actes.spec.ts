@@ -7,15 +7,34 @@ import {
   servirLEcran,
 } from './contexte';
 
-const ACTES = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'] as const;
+const ACTES_PAR_COURS: Readonly<Record<string, readonly string[]>> = {
+  'B2-01': ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
+  'B2-02': ['A1', 'A2', 'A3', 'A4'],
+};
+
+const ACTES = ACTES_PAR_COURS[CODE_DU_COURS];
+
+if (ACTES === undefined) {
+  throw new Error(`actes du ${CODE_DU_COURS} absents du banc`);
+}
 
 const PREMIER_RANG = 60;
 
+function acteDeLEcran(id: string): string | undefined {
+  return /-(A\d+)-/.exec(id)?.[1];
+}
+
 function rangsDeLActe(ecrans: readonly string[], acte: string): readonly number[] {
-  return ecrans.flatMap((id, rang) => (id.includes(`-${acte}-`) ? [rang] : []));
+  return ecrans.flatMap((id, rang) => (acteDeLEcran(id) === acte ? [rang] : []));
 }
 
 test.describe(`Banc — parcours du ${CODE_DU_COURS} acte par acte`, () => {
+  test('chaque écran publié appartient à un acte parcouru par le banc', async ({ request }) => {
+    const { ecrans } = await coursReleve(request);
+    const horsActes = ecrans.filter((id) => !ACTES.includes(acteDeLEcran(id) ?? ''));
+    expect(horsActes).toEqual([]);
+  });
+
   for (const [numero, acte] of ACTES.entries()) {
     test(`le poste suit chaque écran de l’acte ${acte} sans erreur ni refus`, async ({
       browser,

@@ -282,6 +282,19 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'cours/presenter/:slug/livret',
+    canActivate: [authGuard, roleGuard('teacher')],
+    loadComponent: () =>
+      import('./features/cours/presentateur/cours-livret.component').then(
+        (m) => m.CoursLivretComponent,
+      ),
+    data: {
+      seoKey: 'cours-livret',
+      robots: 'noindex, nofollow',
+      coquille: false,
+    },
+  },
+  {
     path: 'cours/presenter/:slug/scene/:sessionId',
     canActivate: [authGuard, roleGuard('teacher')],
     loadComponent: () =>

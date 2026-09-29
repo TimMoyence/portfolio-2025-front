@@ -251,6 +251,19 @@ describe('FpExit', () => {
     expect(hote.shadowRoot?.querySelector('[data-testid="jauge"]')).toBeNull();
   });
 
+  it('imprime sur papier les options a cocher et l invite de l etudiant, sans champ, envoi ni jauge', () => {
+    hote.setAttribute('data-papier', '');
+
+    expect(
+      [...(hote.shadowRoot?.querySelectorAll('li[data-testid="option"]') ?? [])].map((option) =>
+        option.textContent?.trim(),
+      ),
+    ).toEqual(BILLET.options.map((option) => option.libelle));
+    expect(texteOmbre(hote, 'invite')).toBe(BILLET.invite);
+    expect(hote.shadowRoot?.querySelectorAll('textarea, button').length).toBe(0);
+    expect(hote.shadowRoot?.querySelector('[data-testid="jauge"]')).toBeNull();
+  });
+
   it('n emet rien ni ne memorise de brouillon depuis le poste presentateur', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     const details = soumissionsDe(hote);

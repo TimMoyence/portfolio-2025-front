@@ -108,6 +108,21 @@ describe('FpWorked', () => {
     expect(reperes(hote, 'saisie').length).toBe(PLEIN);
   }
 
+  it('imprime sur papier le raisonnement de chaque étape au corrigé, sans attendre l étayage', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.setAttribute('data-papier', '');
+
+    expect(montrees(hote)).toEqual(ETAPES);
+  });
+
+  it('imprime sur papier les étapes de l étudiant sans bouton valider', () => {
+    hote.setAttribute('data-papier', '');
+
+    expect(reperes(hote, 'saisie').length).toBe(PLEIN);
+    expect(reperes(hote, 'valider')).toEqual([]);
+    expect(montrees(hote)).toEqual([]);
+  });
+
   it('RET-25 · ne montre aucune correction a la premiere presentation', () => {
     attendreAucuneEtapePreRemplie();
   });

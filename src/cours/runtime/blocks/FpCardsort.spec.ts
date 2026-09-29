@@ -137,6 +137,25 @@ describe('FpCardsort', () => {
     expect(TOUS_LES_IDS.every((id) => zoneDe(hote, id) === PIOCHE)).toBe(true);
   });
 
+  it('imprime sur papier une grille carte par categorie a cocher, sans liste, bouton ni compteur', () => {
+    hote.setAttribute('data-papier', '');
+
+    const grille = hote.shadowRoot?.querySelector('table.fp-cardsort__grille');
+    expect(
+      [...(grille?.querySelectorAll('thead th[scope="col"]') ?? [])]
+        .slice(1)
+        .map((th) => th.textContent?.trim()),
+    ).toEqual(PLAN.categories.map((categorie) => categorie.libelle));
+    expect(
+      [...(grille?.querySelectorAll('tbody th[scope="row"]') ?? [])].map((th) =>
+        th.textContent?.trim(),
+      ),
+    ).toEqual(PLAN.cartes.map((carteDuPlan) => carteDuPlan.libelle));
+    expect(hote.shadowRoot?.querySelectorAll('button, select').length).toBe(0);
+    expect(noeud(hote, 'progression')).toBeNull();
+    expect(libelleDe(hote, 'consigne-papier')).toContain('copie');
+  });
+
   it('garde l ordre des cartes servi par le serveur, sans melange local', () => {
     expect(ordreAffiche(hote)).toEqual(TOUS_LES_IDS);
   });

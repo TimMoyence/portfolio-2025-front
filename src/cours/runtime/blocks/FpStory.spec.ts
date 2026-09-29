@@ -117,6 +117,16 @@ describe('FpStory', () => {
     expect(video?.textContent).toContain('CC BY-SA 4.0');
   });
 
+  it('imprime sur papier la transcription depliee de la video, sans lecteur', () => {
+    hote.recit = { ...RECIT, video: VIDEO };
+    hote.setAttribute('data-papier', '');
+
+    const video = marque(hote, 'video');
+    expect(video?.querySelector('video, details, summary')).toBeNull();
+    expect(marque(hote, 'transcription')?.textContent).toBe(VIDEO.transcript);
+    expect(video?.textContent).toContain(VIDEO.titre);
+  });
+
   it('donne la grande typographie au titre pour le presentateur comme pour l etudiant', () => {
     attendreLaMemeTypographieAuPresentateur(hote, () => marque(hote, 'titre'));
   });

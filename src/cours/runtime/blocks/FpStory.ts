@@ -123,24 +123,30 @@ export class FpStory extends FpBlock {
     return safeHtml`<track data-testid="sous-titres" kind="captions" srclang="${escapeHtml(sousTitres.srclang)}" label="${escapeHtml(libelle)}" src="${escapeUrl(sousTitres.src)}" default />`;
   }
 
-  private video(recit: StoryRecit): EscapedHtml {
-    const video = recit.video;
-    if (video === undefined) {
-      return VIDE;
-    }
+  private lecteur(video: StoryVideo, transcription: EscapedHtml): EscapedHtml {
     const affiche =
       video.poster === undefined ? VIDE : safeHtml` poster="${escapeUrl(video.poster)}"`;
     return safeHtml`
-      <figure class="fp-story__video" data-testid="video">
-        <figcaption class="fp-story__video-titre">${escapeHtml(video.titre)}</figcaption>
         <video controls preload="${escapeHtml(video.preload ?? 'none')}" playsinline${affiche}>
           <source src="${escapeUrl(this.sourceDeLaVideo(video))}" type="${escapeHtml(video.type)}" />
           ${this.piste(video)}
         </video>
         <details class="fp-story__transcription">
           <summary>${escapeHtml(this.texte('video-transcription'))}</summary>
-          <p data-testid="transcription">${escapeHtml(video.transcript)}</p>
-        </details>
+          ${transcription}
+        </details>`;
+  }
+
+  private video(recit: StoryRecit): EscapedHtml {
+    const video = recit.video;
+    if (video === undefined) {
+      return VIDE;
+    }
+    const transcription = safeHtml`<p data-testid="transcription">${escapeHtml(video.transcript)}</p>`;
+    return safeHtml`
+      <figure class="fp-story__video" data-testid="video">
+        <figcaption class="fp-story__video-titre">${escapeHtml(video.titre)}</figcaption>
+        ${this.surPapier() ? transcription : this.lecteur(video, transcription)}
         <p class="fp-story__licence"><a href="${escapeUrl(video.source)}" target="_blank" rel="noreferrer">${escapeHtml(this.texte('story-source-media'))}</a> · ${escapeHtml(video.licence)}</p>
       </figure>
     `;

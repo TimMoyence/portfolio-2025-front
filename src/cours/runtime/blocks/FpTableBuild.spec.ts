@@ -113,6 +113,14 @@ describe('FpTableBuild', () => {
     },
   });
 
+  it('intitule la colonne des lignes par le plan, et par defaut « Révision »', () => {
+    expect(texteDe(hote, 'entete-rang')).toBe('Révision');
+
+    hote.plan = buildTableBuildPlan({ intituleDesLignes: 'Année' });
+
+    expect(texteDe(hote, 'entete-rang')).toBe('Année');
+  });
+
   it('pose un tableau a entetes portees, une ligne par revision nommee', () => {
     expect(hote.shadowRoot?.querySelector('caption')?.textContent?.trim()).toBe(PLAN.intitule);
     expect(reperes(hote, 'entete').map((th) => th.textContent?.trim())).toEqual([
@@ -342,6 +350,15 @@ describe('FpTableBuild', () => {
     expect(repere(hote, 'valider')).toBeNull();
     expect(repere(hote, 'synthese')).toBeNull();
     expect(repere(hote, 'modalite')).toBeNull();
+  });
+
+  it('imprime sur papier le tableau vierge de l etudiant, sans champ ni action', () => {
+    hote.setAttribute('data-papier', '');
+
+    expect(reperes(hote, 'ligne').length).toBe(PLAN.echeances);
+    expect(repere(hote, 'consignes')).not.toBeNull();
+    expect(hote.shadowRoot?.querySelectorAll('input, button').length).toBe(0);
+    expect(repere(hote, 'synthese')).toBeNull();
   });
 
   it('bati un plan sans echeance sans casser le tableau', () => {

@@ -13776,6 +13776,12 @@
         <target>Vary the rates and watch the end value.</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeConcept4ReglagesPapier">
+      <segment>
+        <source>Valeurs retenues pour le calcul</source>
+        <target>Values used for the calculation</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimeConcept4Animer">
       <segment>
         <source>Animer le calcul</source>
@@ -13834,6 +13840,12 @@
       <segment>
         <source>Répondez à la question de chaque étape, puis validez : la correction sera projetée après l’exercice.</source>
         <target>Answer the question at each step, then submit: the answer key will be projected after the exercise.</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeWorkedConsignePapier">
+      <segment>
+        <source>Répondez à la question de chaque étape sur votre copie : la correction viendra après l’exercice.</source>
+        <target>Answer the question at each step on your paper: the answer key will follow the exercise.</target>
       </segment>
     </unit>
     <unit id="coursRuntimeWorkedCorrection">
@@ -14094,6 +14106,12 @@
         <target>Drag each card into its category. With the keyboard: choose the card, then the category, then “Move the card”.</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeCardsortConsignePapier">
+      <segment>
+        <source>Pour chaque carte, cochez la catégorie qui lui correspond ; justifiez sur votre copie les cas qui vous font hésiter.</source>
+        <target>For each card, tick the matching category; justify on your answer sheet the cases you hesitate over.</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimeCardsortPioche">
       <segment>
         <source>Cartes à trier</source>
@@ -14170,6 +14188,12 @@
       <segment>
         <source>Résolvez une énigme pour ouvrir la suivante : chaque réponse juste livre un fragment du code</source>
         <target>Solve a puzzle to open the next one: each correct answer gives a piece of the code</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeConsignePapier">
+      <segment>
+        <source>Répondez à chaque question sur votre copie, en rédigeant vos calculs</source>
+        <target>Answer each question on your paper, writing out your calculations</target>
       </segment>
     </unit>
     <unit id="coursRuntimeEscapeProgression">
@@ -14944,6 +14968,96 @@
       <segment>
         <source> Imprimer ou enregistrer en PDF </source>
         <target> Print or save as PDF </target>
+      </segment>
+    </unit>
+    <unit id="livretEchec">
+      <segment>
+        <source> Le livret de ce cours n’a pas pu être chargé. Vérifiez la connexion, puis rechargez la page. </source>
+        <target> This course booklet could not be loaded. Check the connection, then reload the page. </target>
+      </segment>
+    </unit>
+    <unit id="livretKicker">
+      <segment>
+        <source>Livret papier</source>
+        <target>Printable booklet</target>
+      </segment>
+    </unit>
+    <unit id="livretFeuille">
+      <segment>
+        <source> Feuille <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ rang + 1 }}"/> / <ph id="1" equiv="INTERPOLATION_1" type="var" disp="{{ feuillesEtudiant().length }}"/> </source>
+        <target> Sheet <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ rang + 1 }}"/> / <ph id="1" equiv="INTERPOLATION_1" type="var" disp="{{ feuillesEtudiant().length }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="livretVersion">
+      <segment>
+        <source> Version publiée n° <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ lu.version }}"/> </source>
+        <target> Published version <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ lu.version }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="livretVueAria">
+      <segment>
+        <source>Vue du livret</source>
+        <target>Booklet view</target>
+      </segment>
+    </unit>
+    <unit id="livretVueSujet">
+      <segment>
+        <source> Livret étudiant </source>
+        <target> Student booklet </target>
+      </segment>
+    </unit>
+    <unit id="livretVueCorrige">
+      <segment>
+        <source> Corrigé formateur </source>
+        <target> Teacher answer key </target>
+      </segment>
+    </unit>
+    <unit id="livretImprimer">
+      <segment>
+        <source> Imprimer </source>
+        <target> Print </target>
+      </segment>
+    </unit>
+    <unit id="presentateurLivret">
+      <segment>
+        <source> Livret papier </source>
+        <target> Printable booklet </target>
+      </segment>
+    </unit>
+    <unit id="livretGuideADire">
+      <segment>
+        <source>À dire</source>
+        <target>To say</target>
+      </segment>
+    </unit>
+    <unit id="livretGuideQuestion">
+      <segment>
+        <source>Question à poser</source>
+        <target>Question to ask</target>
+      </segment>
+    </unit>
+    <unit id="livretGuideReponse">
+      <segment>
+        <source>Réponse attendue</source>
+        <target>Expected answer</target>
+      </segment>
+    </unit>
+    <unit id="livretGuideCalcul">
+      <segment>
+        <source>Calcul</source>
+        <target>Calculation</target>
+      </segment>
+    </unit>
+    <unit id="livretGuideRelance">
+      <segment>
+        <source>Relance</source>
+        <target>Follow-up prompt</target>
+      </segment>
+    </unit>
+    <unit id="livretGuideTransition">
+      <segment>
+        <source>Transition</source>
+        <target>Moving on</target>
       </segment>
     </unit>
   </file>

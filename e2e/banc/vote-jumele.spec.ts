@@ -8,13 +8,14 @@ import {
   optionsDuPoste,
   phaseDuPoste,
   posteDansSonNavigateur,
+  reponseApres,
   repondreDepuisLePoste,
   seanceDemarreeSurLEcran,
   seancePartagee,
   servirLEcran,
   verdictDuPoste,
 } from './contexte';
-import type { EcranDuCours, EcranRepere, SeanceOuverte } from './contexte';
+import type { EcranDuCours, EcranRepere, ReponseDuCours, SeanceOuverte } from './contexte';
 
 const PHASES = ['vote', 'discussion', 'revote', 'revele'] as const;
 
@@ -26,17 +27,18 @@ interface QuestionDesResultats {
 
 let principale: EcranDuCours;
 
-let suivant: EcranDuCours;
+let suivant: ReponseDuCours;
 
 let sansCorrige: EcranRepere;
 
 async function seanceDuFichier(request: APIRequestContext): Promise<SeanceOuverte> {
   return seancePartagee('vote-jumele', async () => {
-    const { votes, recitsSansActivite } = await coursReleve(request);
-    const rangDuJumele = votes.findIndex((vote) => vote.jumelle !== null);
-    expect(rangDuJumele, 'aucun vote à question jumelle').toBeGreaterThanOrEqual(0);
-    [principale, suivant] = votes.slice(rangDuJumele);
-    expect(suivant, 'aucun vote après le vote à question jumelle').toBeDefined();
+    const releve = await coursReleve(request);
+    const { votes, recitsSansActivite } = releve;
+    const jumele = votes.find((vote) => vote.jumelle !== null);
+    expect(jumele, 'aucun vote à question jumelle').toBeDefined();
+    principale = jumele as EcranDuCours;
+    suivant = reponseApres(releve, principale.rang);
     [sansCorrige] = recitsSansActivite;
     return seanceDemarreeSurLEcran(request, principale.rang);
   });
@@ -135,8 +137,8 @@ test.describe('Banc — vote à question jumelle', () => {
     const poste = await inscrireUnPoste(request, seance, 13);
 
     const avant = await repondreDepuisLePoste(request, seance, poste, {
-      questionId: suivant.activiteId,
-      valeur: suivant.options[0],
+      questionId: suivant.questionId,
+      valeur: suivant.valeur,
     });
 
     expect(avant.status(), await avant.text()).toBe(404);

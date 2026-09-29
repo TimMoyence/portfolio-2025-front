@@ -35,7 +35,12 @@ import {
   PROPRIETES_PAR_BRIQUE,
   type ReponsesDuQuestionnaire,
 } from './lecture-ecran';
-import { memeValeur, type MontageIdentifie, posesDeReinjection } from './reinjection';
+import {
+  type ImpressionDeLEcran,
+  memeValeur,
+  type MontageIdentifie,
+  posesDeReinjection,
+} from './reinjection';
 
 type DonneesFormateur = CorrigeEcranPresentateur | ReponsesDuQuestionnaire | null;
 
@@ -206,6 +211,7 @@ export class SlideActivityComponent {
   readonly maitrise = input<readonly SyntheseConcept[] | null>(null);
   readonly brouillons = input<Brouillons | null>(null);
   readonly apercu = input(false);
+  readonly papier = input(false);
   readonly prioritaire = input(false);
   readonly evenement = output<EvenementBrique>();
 
@@ -218,6 +224,15 @@ export class SlideActivityComponent {
     return this.direct()?.pilotage.revele === true && donnees?.type === 'reflexion'
       ? { attendu: donnees.attendu, suite: donnees.suite }
       : null;
+  });
+  private readonly impression = computed<ImpressionDeLEcran | null>(() => {
+    if (!this.papier()) {
+      return null;
+    }
+    const slide = this.slide();
+    return {
+      questions: 'questions' in slide && Array.isArray(slide.questions) ? slide.questions : [],
+    };
   });
   protected readonly verrouille = computed(() => this.slide().type === ECRAN_VERROUILLE);
   protected readonly entete = computed(() => enteteDeQuestionnaire(this.slide()));
@@ -241,7 +256,10 @@ export class SlideActivityComponent {
     inject(DestroyRef).onDestroy(() => {
       this.destroyed = true;
     });
-    effect(() => this.scheduleMount(this.slide(), this.role(), this.apercu()));
+    effect(() => {
+      this.papier();
+      this.scheduleMount(this.slide(), this.role(), this.apercu());
+    });
     effect(() => {
       this.retours();
       this.direct();
@@ -337,7 +355,7 @@ export class SlideActivityComponent {
       this.error.set(false);
       return;
     }
-    const cle = `${slide.id}|${role}|${String(apercu)}|${plan.map((montage) => montage.brique).join(',')}`;
+    const cle = `${slide.id}|${role}|${String(apercu)}|${String(this.papier())}|${plan.map((montage) => montage.brique).join(',')}`;
     try {
       if (cle === this.cleDeMontage && this.montes.length === plan.length) {
         this.montes = this.montes.map((actif, rang) => this.mettreAJour(actif, plan[rang]));
@@ -359,6 +377,9 @@ export class SlideActivityComponent {
     this.renderer.setAttribute(element, 'data-cours-role', role);
     if (apercu) {
       this.renderer.setAttribute(element, 'data-apercu', '');
+    }
+    if (this.papier()) {
+      this.renderer.setAttribute(element, 'data-papier', '');
     }
     this.poserLesDonnees(element, montage.brique, montage.donnees);
     const actif: MontageActif = {
@@ -412,6 +433,7 @@ export class SlideActivityComponent {
           donneesFormateur: this.donneesFormateur(),
           maitrise: this.maitrise(),
           dernierEmetteur: actif.element === this.dernierEmetteur,
+          papier: this.impression(),
         });
         for (const [propriete, valeur] of poses) {
           this.poser(actif.element, propriete, valeur);

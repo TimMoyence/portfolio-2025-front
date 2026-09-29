@@ -225,6 +225,40 @@ describe('FormationsHttpAdapter', () => {
     expect(recus[0].ecrans[0]).toEqual({ ...premier, ecranSource: 'ecran-source' });
   });
 
+  it('lireLivret GETe le livret du cours et traduit le sujet et le corrige servis par le fil', () => {
+    const sujet = buildCoursContent();
+    const corrige = buildDerouleCours();
+    const [premier, ...reste] = corrige.ecrans;
+
+    const recus = lus(
+      adapter.lireLivret('b2-02-series-statistiques'),
+      `${environment.apiBaseUrl}/formations/livrets/b2-02-series-statistiques`,
+      {
+        version: 3,
+        sujet,
+        corrige: { ...corrige, ecrans: [{ ...premier, ecranCorrige: 'ecran-source' }, ...reste] },
+      },
+    );
+
+    expect(recus).toEqual([
+      {
+        version: 3,
+        sujet,
+        corrige: { ...corrige, ecrans: [{ ...premier, ecranSource: 'ecran-source' }, ...reste] },
+      },
+    ]);
+  });
+
+  it('lireLivret encode le slug dans l adresse', () => {
+    const recus = lus(
+      adapter.lireLivret('a/b'),
+      `${environment.apiBaseUrl}/formations/livrets/a%2Fb`,
+      { version: 1, sujet: buildCoursContent(), corrige: buildDerouleCours() },
+    );
+
+    expect(recus.length).toBe(1);
+  });
+
   const refusDeSujet = [
     { statut: 409, statusText: 'Conflict', motif: 'cours-modifie' },
     { statut: 500, statusText: 'Server Error', motif: 'sujet-indisponible' },

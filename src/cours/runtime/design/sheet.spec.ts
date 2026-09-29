@@ -57,6 +57,26 @@ describe('adoptCoursStyles', () => {
     ).toMatch(/^\d+(\.\d+)?$/);
   });
 
+  it('masque à l’impression la validation et le « je ne sais pas », sans objet sur papier', () => {
+    adoptCoursStyles(racine);
+    const impression = Array.from(racine.adoptedStyleSheets[0].cssRules).filter(
+      (regle): regle is CSSMediaRule =>
+        regle instanceof CSSMediaRule && regle.conditionText === 'print',
+    );
+    const masques = impression
+      .flatMap((regle) => Array.from(regle.cssRules))
+      .filter(
+        (regle): regle is CSSStyleRule =>
+          regle instanceof CSSStyleRule && regle.style.display === 'none',
+      )
+      .map((regle) => regle.selectorText)
+      .join(' ');
+
+    expect(masques).toContain(`[data-testid="valider"]`);
+    expect(masques).toContain(`[data-testid="je-ne-sais-pas"]`);
+    expect(masques).toContain(`[data-option="__je_ne_sais_pas__"]`);
+  });
+
   it('n adopte rien et ne leve pas quand CSSStyleSheet est indisponible (SSR)', () => {
     const contexte = globalThis as unknown as { CSSStyleSheet?: typeof CSSStyleSheet };
     const original = contexte.CSSStyleSheet;

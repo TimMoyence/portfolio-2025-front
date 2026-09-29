@@ -5,6 +5,7 @@ import type {
   EcranContent,
   RevelationServie,
 } from '../../../cours/content/types';
+import type { LivretDuCours } from '../ports/formations.port';
 
 interface QuestionCorrigeeDuFil {
   readonly questionId: string;
@@ -60,4 +61,18 @@ export function sujetDuFil(sujet: SujetDuFil): CoursContent {
 
 export function derouleDuFil(deroule: DerouleDuFil): DerouleCours {
   return { ...deroule, ecrans: deroule.ecrans.map(ecranDuFil) };
+}
+
+export interface LivretDuFil {
+  readonly version: number;
+  readonly sujet: SujetDuFil;
+  readonly corrige: DerouleDuFil;
+}
+
+export function livretDuFil(livret: LivretDuFil): LivretDuCours {
+  return {
+    version: livret.version,
+    sujet: sujetDuFil(livret.sujet),
+    corrige: derouleDuFil(livret.corrige),
+  };
 }

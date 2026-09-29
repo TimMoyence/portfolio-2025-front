@@ -46,6 +46,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeProReponseVide:Répondez à chaque question avant de valider`,
   'concept4-reglages': () =>
     $localize`:@@coursRuntimeConcept4Reglages:Faites varier les taux et observez l’arrivée.`,
+  'concept4-reglages-papier': () =>
+    $localize`:@@coursRuntimeConcept4ReglagesPapier:Valeurs retenues pour le calcul`,
   'concept4-animer': () => $localize`:@@coursRuntimeConcept4Animer:Animer le calcul`,
   'concept4-prereglages': () =>
     $localize`:@@coursRuntimeConcept4Prereglages:Couples de taux à comparer`,
@@ -62,6 +64,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'concept4-etape': () => $localize`:@@coursRuntimeConcept4Etape:Étape`,
   'worked-consigne': () =>
     $localize`:@@coursRuntimeWorkedConsigne:Répondez à la question de chaque étape, puis validez : la correction sera projetée après l’exercice.`,
+  'worked-consigne-papier': () =>
+    $localize`:@@coursRuntimeWorkedConsignePapier:Répondez à la question de chaque étape sur votre copie : la correction viendra après l’exercice.`,
   'worked-correction': () => $localize`:@@coursRuntimeWorkedCorrection:Correction`,
   'bonne-reponse': () => $localize`:@@coursRuntimeBonneReponse:Bonne réponse :`,
   'worked-etape-vide': () =>
@@ -116,6 +120,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeSheetVide:Aucune cellule à remplir : le plan ne porte aucune ligne`,
   'cardsort-consigne': () =>
     $localize`:@@coursRuntimeCardsortConsigne:Glissez chaque carte dans sa catégorie. Au clavier : choisissez la carte, puis la catégorie, puis « Déplacer la carte ».`,
+  'cardsort-consigne-papier': () =>
+    $localize`:@@coursRuntimeCardsortConsignePapier:Pour chaque carte, cochez la catégorie qui lui correspond ; justifiez sur votre copie les cas qui vous font hésiter.`,
   'cardsort-pioche': () => $localize`:@@coursRuntimeCardsortPioche:Cartes à trier`,
   'cardsort-destination': () =>
     $localize`:@@coursRuntimeCardsortDestination:Catégorie de destination`,
@@ -135,6 +141,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeCardsortVide:Aucune carte à trier : le plan ne porte aucune carte`,
   'escape-consigne': () =>
     $localize`:@@coursRuntimeEscapeConsigne:Résolvez une énigme pour ouvrir la suivante : chaque réponse juste livre un fragment du code`,
+  'escape-consigne-papier': () =>
+    $localize`:@@coursRuntimeEscapeConsignePapier:Répondez à chaque question sur votre copie, en rédigeant vos calculs`,
   'escape-progression': () => $localize`:@@coursRuntimeEscapeProgression:Énigmes résolues :`,
   'escape-minuteur': () => $localize`:@@coursRuntimeEscapeMinuteur:Temps passé sur cette énigme :`,
   'escape-minuteur-annonce': () =>

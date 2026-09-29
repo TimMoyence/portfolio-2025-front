@@ -81,12 +81,18 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
     return safeHtml`
       <section class="fp-carte fp-scene fp-worked__exemple">
         <p class="fp-enonce fp-worked__enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
-        <p class="fp-worked__consigne">${escapeHtml(this.texte('worked-consigne'))}</p>
+        <p class="fp-worked__consigne">${escapeHtml(this.texte(this.surPapier() ? 'worked-consigne-papier' : 'worked-consigne'))}</p>
         <ol class="fp-worked__etapes">${exemple.etapes.map((etape, rang) => this.etape(etape, rang))}</ol>
-        <button type="button" class="fp-worked__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
-        <p class="fp-worked__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
-        ${this.annonces()}
+        ${this.surPapier() ? safeHtml`` : this.envoi()}
       </section>
+    `;
+  }
+
+  private envoi(): EscapedHtml {
+    return safeHtml`
+      <button type="button" class="fp-worked__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
+      <p class="fp-worked__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
+      ${this.annonces()}
     `;
   }
 
@@ -128,8 +134,12 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
     return Math.min(Math.max(Math.trunc(valeur), 0), this.total());
   }
 
+  private montree(rang: number): boolean {
+    return rang < this.montrees || (this.surPapier() && this.presentateur());
+  }
+
   private projeterEtape(etape: WorkedEtape, rang: number): WorkedEtape {
-    if (rang < this.montrees) {
+    if (this.montree(rang)) {
       return copierEtape(etape);
     }
     return { ...copierEtape(etape), raisonnement: '' };
@@ -140,7 +150,7 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
     rang: number,
     corps: (resolue: boolean) => EscapedHtml,
   ): EscapedHtml {
-    const resolue = rang < this.montrees;
+    const resolue = this.montree(rang);
     return safeHtml`
       <li class="fp-worked__etape" data-testid="etape" data-etape="${escapeHtml(etape.id)}" data-resolue="${escapeHtml(String(resolue))}">
         <p class="fp-worked__intitule">${escapeHtml(etape.intitule)}</p>

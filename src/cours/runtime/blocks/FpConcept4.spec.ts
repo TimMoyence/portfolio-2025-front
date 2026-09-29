@@ -238,6 +238,20 @@ describe('FpConcept4', () => {
     expect(boutonsDePrereglage(hote)).toEqual([]);
   });
 
+  it('imprime sur papier les valeurs retenues en clair, sans bouton ni curseur', () => {
+    hote.definition = MACHINE;
+    hote.setAttribute('data-papier', '');
+
+    expect(tous(hote, 'button, input')).toEqual([]);
+    expect(
+      tous(hote, '[data-testid="valeur"]').map((valeur) => valeur.textContent?.trim()),
+    ).toEqual(['100', '10', '-10']);
+    expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(
+      'Valeurs retenues pour le calcul',
+    );
+    expect(resultatsDuTableau(hote)).toEqual(['100', '110', '99']);
+  });
+
   it('ramene un defaut hors bornes dans les bornes au lieu de l ignorer', () => {
     hote.definition = avecDefaut('n', 99);
     expect(hote.valeurs['n']).toBe(30);

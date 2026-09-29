@@ -1,11 +1,11 @@
 import { toutesLesFeuilles } from './blocks';
-import { base, correction, tokens } from './styles';
+import { base, correction, impression, tokens } from './styles';
 
 let feuille: CSSStyleSheet | null = null;
 
 function construire(): CSSStyleSheet {
   const construite = new CSSStyleSheet();
-  construite.replaceSync([tokens, base, ...toutesLesFeuilles(), correction].join('\n'));
+  construite.replaceSync([tokens, base, ...toutesLesFeuilles(), correction, impression].join('\n'));
   return construite;
 }
 

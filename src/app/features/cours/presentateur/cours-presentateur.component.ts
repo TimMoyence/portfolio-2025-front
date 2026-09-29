@@ -39,7 +39,7 @@ import type {
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
-import { enoncesDuDeroule, questionsDeLEcran } from '../../../shared/slides/session/lecture-ecran';
+import { enoncesDuDeroule } from '../../../shared/slides/session/lecture-ecran';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
@@ -50,6 +50,7 @@ import { CoursPanneauQuestionComponent } from './cours-panneau-question.componen
 import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
 import { PanneauGuideComponent } from './panneau-pedagogique/panneau-guide.component';
 import { PanneauParticipantsComponent } from './panneau-pedagogique/panneau-participants.component';
+import { questionsDuPanneau } from './questions-du-panneau';
 import { phraseDeNotation } from './regle-de-notation';
 import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
 import { correctionsAffichees } from './corrections-affichees';
@@ -96,21 +97,8 @@ const ETAT_ANNONCE: Readonly<Record<StatutSession, EtatSeance>> = {
 };
 
 const FENETRE_SCENE = 'cours-scene';
+const FENETRE_LIVRET = 'cours-livret';
 const ECRAN_DE_RAPPEL = 'fp-spaced';
-
-function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
-  const apercu = questionsDeLEcran(ecran);
-  let horsApercu = apercu.length;
-  const questions = ecran.corriges.map((corrige) => {
-    const position = apercu.findIndex((question) => question.id === corrige.questionId);
-    if (position !== -1) {
-      return { numero: position + 1, enonce: apercu[position].enonce, corrige };
-    }
-    horsApercu += 1;
-    return { numero: horsApercu, enonce: '', corrige };
-  });
-  return questions.sort((gauche, droite) => gauche.numero - droite.numero);
-}
 
 @Component({
   selector: 'app-cours-presentateur',
@@ -451,6 +439,15 @@ function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
                 i18n="presentateur.pleinEcran|@@presentateurPleinEcran"
               >
                 Projection plein écran
+              </button>
+              <button
+                type="button"
+                class="control-btn"
+                data-testid="presentateur-livret"
+                (click)="ouvrirLeLivret()"
+                i18n="presentateur.livret|@@presentateurLivret"
+              >
+                Livret papier
               </button>
             </nav>
             <div class="screen-progress">
@@ -918,6 +915,14 @@ export class CoursPresentateurComponent {
     }
     const chemin = `/cours/presenter/${encodeURIComponent(this.slug())}/scene/${encodeURIComponent(session)}`;
     window.open(this.location.prepareExternalUrl(chemin), FENETRE_SCENE);
+  }
+
+  protected ouvrirLeLivret(): void {
+    if (!this.navigateur) {
+      return;
+    }
+    const chemin = `/cours/presenter/${encodeURIComponent(this.slug())}/livret`;
+    window.open(this.location.prepareExternalUrl(chemin), FENETRE_LIVRET);
   }
 
   protected demanderLaCloture(): void {

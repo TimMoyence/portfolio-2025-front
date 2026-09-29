@@ -199,11 +199,16 @@ describe('app routes', () => {
       );
     });
 
-    it('sort de la coquille du site le poste etudiant et la scene, et eux seuls', () => {
+    it('reserve le livret papier a un formateur authentifie', async () => {
+      await verifieReserveAUnFormateur('cours/presenter/:slug/livret', 'CoursLivretComponent');
+    });
+
+    it('sort de la coquille du site le poste etudiant, la scene et le livret, et eux seuls', () => {
       const sansCoquille = routes.filter((route) => route.data?.['coquille'] === false);
 
       expect(sansCoquille.map((route) => route.path)).toEqual([
         'cours/rejoindre',
+        'cours/presenter/:slug/livret',
         'cours/presenter/:slug/scene/:sessionId',
       ]);
     });

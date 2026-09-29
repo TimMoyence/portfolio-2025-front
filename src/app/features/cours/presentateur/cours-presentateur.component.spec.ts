@@ -193,6 +193,18 @@ describe('CoursPresentateurComponent', () => {
 
   afterEach(demonterLeBancDuPupitre);
 
+  it('ouvre dans une fenêtre à part le livret papier du cours, sans quitter la séance', async () => {
+    const fenetre = spyOn(window, 'open').and.returnValue(null);
+    const fixture = await ouvrirLaSeance();
+
+    bouton(fixture, 'presentateur-livret').click();
+
+    expect(fenetre).toHaveBeenCalledOnceWith(
+      `${BASE_DE_L_APPLICATION}cours/presenter/${SLUG}/livret`,
+      'cours-livret',
+    );
+  });
+
   it('propose une seule commande pour ouvrir la projection', async () => {
     const fixture = await ouvrirLaSeance();
 

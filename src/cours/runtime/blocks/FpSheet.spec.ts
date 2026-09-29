@@ -419,6 +419,15 @@ describe('FpSheet', () => {
     );
   });
 
+  it('imprime sur papier la grille entiere de l etudiant, sans champ, barre ni action', () => {
+    hote.setAttribute('data-papier', '');
+
+    expect(hote.shadowRoot?.querySelectorAll('input, button').length).toBe(0);
+    expect(repere(hote, 'barre')).toBeNull();
+    expect(reperes(hote, 'cellule').length).toBe(PLAN.lignes * PLAN.colonnes);
+    expect(texteDe(hote, 'consignes')).not.toBe('');
+  });
+
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
     hote.corrige = ATTENDUS_FORMATEUR;
     saisir(hote, 'C3', '=A3/0');

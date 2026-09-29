@@ -434,13 +434,26 @@ h2 {
   }
 }
 
+$elements-animes: '.slide-chart__bar, .slide-chart__value, .slide-chart__point-value, .slide-chart__line, .slide-chart__point, .slide-chart__marqueur--barre';
+
 @media (prefers-reduced-motion: reduce) {
-  .slide-chart__bar,
-  .slide-chart__value,
-  .slide-chart__point-value,
-  .slide-chart__line,
-  .slide-chart__point,
-  .slide-chart__marqueur--barre {
+  #{$elements-animes} {
     transition: none;
+  }
+}
+
+@media print {
+  #{$elements-animes} {
+    opacity: 1;
+    transition: none;
+  }
+
+  .slide-chart__bar {
+    transform: none;
+  }
+
+  .slide-chart__bar,
+  .slide-chart__marqueur {
+    print-color-adjust: exact;
   }
 }

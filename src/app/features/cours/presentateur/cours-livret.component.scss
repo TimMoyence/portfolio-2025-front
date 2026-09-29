@@ -1,0 +1,142 @@
+:host {
+  display: block;
+}
+
+.livret {
+  display: grid;
+  gap: 2rem;
+  max-inline-size: 64rem;
+  margin-inline: auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.livret__entete {
+  display: grid;
+  gap: 0.5rem;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.livret__kicker,
+.livret__version {
+  margin: 0;
+}
+
+.livret__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  [aria-pressed='true'] {
+    outline: 2px solid var(--teal-deep, #277c70);
+    outline-offset: 2px;
+  }
+}
+
+.livret__echec {
+  margin: 0;
+}
+
+.livret__feuille {
+  display: grid;
+  gap: 2rem;
+}
+
+.livret__page {
+  display: grid;
+  gap: 1rem;
+  padding-block-end: 2rem;
+  border-block-end: 1px solid rgba(39, 124, 112, 0.25);
+}
+
+.livret__titre {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.livret__formateur {
+  display: grid;
+  gap: 0.75rem;
+  line-height: 1.45;
+}
+
+.livret__reponses {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding-inline-start: 1.25rem;
+}
+
+.livret__question {
+  display: block;
+  font-weight: 600;
+}
+
+.livret__guide {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+
+  dt {
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.livret__notes {
+  margin: 0;
+  font-style: italic;
+}
+
+.livret__attendu {
+  display: grid;
+  gap: 0.25rem;
+
+  p {
+    margin: 0;
+  }
+}
+
+@media print {
+  .livret {
+    max-inline-size: none;
+    padding: 0;
+  }
+
+  .livret__actions {
+    display: none;
+  }
+
+  .livret__page {
+    padding: 0;
+    border: 0;
+    break-after: page;
+  }
+
+  .livret__page:last-child {
+    break-after: auto;
+  }
+
+  .livret__feuille + .livret__feuille {
+    break-before: page;
+  }
+
+  .livret__page app-slide-activity {
+    display: block;
+    zoom: 0.75;
+    break-inside: avoid;
+  }
+
+  .livret__page ::ng-deep details {
+    display: none;
+  }
+
+  .livret__page ::ng-deep th {
+    color: #000;
+  }
+}

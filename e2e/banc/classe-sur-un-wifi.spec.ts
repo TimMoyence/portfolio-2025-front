@@ -38,22 +38,31 @@ function surveiller(page: Page, poste: string, incidents: Incident[]): void {
   );
 }
 
-async function toutLeMondeVote(
+type AttenteDuPoste = 'ecran' | 'options';
+
+async function toutLeMondeSuit(
   postes: readonly Page[],
   ecran: number,
   total: number,
+  attente: AttenteDuPoste,
 ): Promise<number> {
   const debut = Date.now();
-  await Promise.all(postes.map((poste) => surLEcran(poste, ecran, total, DELAI_DE_DIFFUSION_MS)));
   await Promise.all(
-    postes.map((poste) =>
-      expect(optionsDuPoste(poste).first()).toBeVisible({ timeout: DELAI_DE_DIFFUSION_MS }),
-    ),
+    postes.map(async (poste) => {
+      await surLEcran(poste, ecran, total, DELAI_DE_DIFFUSION_MS);
+      if (attente === 'options') {
+        await expect(optionsDuPoste(poste).first()).toBeVisible({
+          timeout: DELAI_DE_DIFFUSION_MS,
+        });
+      }
+    }),
   );
-  const diffusion = Date.now() - debut;
+  return Date.now() - debut;
+}
+
+async function toutLeMondeVote(postes: readonly Page[]): Promise<void> {
   await Promise.all(postes.map((poste) => optionsDuPoste(poste).first().click()));
   await Promise.all(postes.map((poste) => expect(verdictDuPoste(poste)).toHaveCount(1)));
-  return diffusion;
 }
 
 test.describe('Banc — une classe de trente postes et son formateur sur le même wifi', () => {
@@ -66,7 +75,9 @@ test.describe('Banc — une classe de trente postes et son formateur sur le mêm
     const incidents: Incident[] = [];
     surveiller(page, 'formateur', incidents);
     const { votes, total } = await coursReleve(request);
-    const [premier, second] = votes;
+    const [premier] = votes;
+    const suivant = premier.rang + 1;
+    expect(suivant).toBeLessThan(total);
 
     const seance = await ouvrirLePupitre(page);
 
@@ -86,10 +97,11 @@ test.describe('Banc — une classe de trente postes et son formateur sur le mêm
 
     await page.getByTestId('presentateur-demarrer').click();
     await avancerLePupitre(page, 0, premier.rang, total);
-    const premiereDiffusion = await toutLeMondeVote(postes, premier.rang, total);
+    const premiereDiffusion = await toutLeMondeSuit(postes, premier.rang, total, 'options');
+    await toutLeMondeVote(postes);
 
-    await avancerLePupitre(page, premier.rang, second.rang, total);
-    const secondeDiffusion = await toutLeMondeVote(postes, second.rang, total);
+    await avancerLePupitre(page, premier.rang, suivant, total);
+    const secondeDiffusion = await toutLeMondeSuit(postes, suivant, total, 'ecran');
 
     await cloturerDepuisLePupitre(page, seance, postes);
     await expect(page.getByTestId('synthese-ligne')).toHaveCount(ETUDIANTS);

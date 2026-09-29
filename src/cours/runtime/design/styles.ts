@@ -167,6 +167,16 @@ export const base = `
   color: var(--fp-texte-fort);
 }
 
+:where(.fp-root) .fp-cases {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.fp-root) .fp-cases li::before {
+  content: '☐ ';
+}
+
 :where(.fp-root) .fp-badge {
   display: inline-flex;
   align-items: center;
@@ -269,6 +279,16 @@ export const base = `
 :where(.fp-root) .fp-bouton-neutre:disabled {
   cursor: default;
   opacity: 0.6;
+}
+`;
+
+export const impression = `
+@media print {
+  :where(.fp-root) [data-testid='valider'],
+  :where(.fp-root) [data-testid='je-ne-sais-pas'],
+  :where(.fp-root) [data-option='__je_ne_sais_pas__'] {
+    display: none;
+  }
 }
 `;
 

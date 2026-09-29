@@ -99,6 +99,9 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
     if (plan === null) {
       return this.attente();
     }
+    if (this.surPapier() && !this.presentateur()) {
+      return this.grilleImprimee(plan);
+    }
     return safeHtml`
       <section class="fp-carte fp-scene fp-cardsort__atelier">
         <p class="fp-enonce fp-cardsort__intitule">${escapeHtml(plan.intitule)}</p>
@@ -107,6 +110,26 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
         ${this.plateau(!this.presentateur())}
         ${this.presentateur() ? VIDE : this.commandes(plan)}
         ${this.correction()}
+      </section>
+    `;
+  }
+
+  private grilleImprimee(plan: CardsortPlanPublic): EscapedHtml {
+    const cases = plan.categories.map(() => safeHtml`<td class="fp-cardsort__case">☐</td>`);
+    const lignes = plan.cartes.map(
+      (carte) => safeHtml`<tr><th scope="row">${escapeHtml(carte.libelle)}</th>${cases}</tr>`,
+    );
+    const entetes = plan.categories.map(
+      (categorie) => safeHtml`<th scope="col">${escapeHtml(categorie.libelle)}</th>`,
+    );
+    return safeHtml`
+      <section class="fp-carte fp-scene fp-cardsort__atelier">
+        <p class="fp-enonce fp-cardsort__intitule">${escapeHtml(plan.intitule)}</p>
+        <p class="fp-cardsort__consigne" data-testid="consigne-papier">${escapeHtml(this.texte('cardsort-consigne-papier'))}</p>
+        <table class="fp-cardsort__grille">
+          <thead><tr><th scope="col"></th>${entetes}</tr></thead>
+          <tbody>${lignes}</tbody>
+        </table>
       </section>
     `;
   }

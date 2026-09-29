@@ -10,6 +10,14 @@ describe('serverRoutes', () => {
     });
   }
 
+  it('rend le livret papier côté client, où la session du formateur est restaurée', () => {
+    const route = serverRoutes.find(
+      (candidate) => candidate.path === 'cours/presenter/:slug/livret',
+    );
+
+    expect(route?.renderMode).toBe(RenderMode.Client);
+  });
+
   it('garde le rendu par défaut en dernier', () => {
     expect(serverRoutes.at(-1)?.path).toBe('**');
   });

@@ -132,9 +132,10 @@ export class FpChallenge extends FpEnvoi<ChallengeProblemePublic> {
     if (!probleme) {
       return this.attente();
     }
-    const reponse = this.presentateur()
-      ? safeHtml`<p class="fp-challenge__invite">${escapeHtml(probleme.invite)}</p>`
-      : safeHtml`<label class="fp-challenge__invite" for="${escapeHtml(ID_TENTATIVE)}">${escapeHtml(probleme.invite)}</label>
+    const reponse =
+      this.presentateur() || this.surPapier()
+        ? safeHtml`<p class="fp-challenge__invite">${escapeHtml(probleme.invite)}</p>`
+        : safeHtml`<label class="fp-challenge__invite" for="${escapeHtml(ID_TENTATIVE)}">${escapeHtml(probleme.invite)}</label>
         <textarea class="fp-challenge__champ" id="${escapeHtml(ID_TENTATIVE)}" data-testid="tentative" rows="4" aria-label="${escapeHtml(this.texte('challenge-reponse'))}">${escapeHtml(this.tentative)}</textarea>
         <button type="button" class="fp-challenge__envoyer" data-testid="envoyer">${escapeHtml(this.texte('envoyer'))}</button>
         <p class="fp-challenge__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
@@ -151,7 +152,7 @@ export class FpChallenge extends FpEnvoi<ChallengeProblemePublic> {
 
   private correction(): EscapedHtml {
     const connues = this.formateur.length > 0 ? this.formateur : this.servies;
-    if (this.interneRevele) {
+    if (this.interneRevele || (this.presentateur() && this.surPapier())) {
       return this.liste(connues, true);
     }
     return this.presentateur() ? VIDE : this.liste(this.servies, false);
@@ -192,7 +193,9 @@ export class FpChallenge extends FpEnvoi<ChallengeProblemePublic> {
         safeHtml`<li class="fp-challenge__strategie" data-testid="strategie" data-strategie="${escapeHtml(strategie.id)}"><span class="fp-challenge__libelle">${escapeHtml(strategie.libelle)}</span>${this.marque(strategie)}</li>`,
     );
     const attente =
-      strategies.some((strategie) => strategie.fausse !== undefined) || this.interneRevele
+      strategies.some((strategie) => strategie.fausse !== undefined) ||
+      this.interneRevele ||
+      this.surPapier()
         ? VIDE
         : safeHtml`<p class="fp-challenge__attente" data-testid="attente-revelation">${escapeHtml(this.texte('challenge-attente-revelation'))}</p>`;
     return safeHtml`<details class="fp-challenge__revelation" data-testid="revelation" ${ouverte ? OUVERT : VIDE}><summary class="fp-challenge__titre">${escapeHtml(this.texte(ouverte ? 'challenge-strategies' : 'challenge-reveler'))}</summary><ul class="fp-challenge__strategies">${lignes}</ul>${attente}</details>`;

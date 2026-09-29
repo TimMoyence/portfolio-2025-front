@@ -49,9 +49,14 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
   }
 
   protected rendreLaQuestion(billet: ExitBilletPublic): EscapedHtml {
-    const redaction = this.presentateur()
-      ? safeHtml`<p class="fp-exit__invite" data-testid="invite">${escapeHtml(billet.invite)}</p>`
-      : safeHtml`<label class="fp-exit__invite" for="${escapeHtml(ID_TEXTE_LIBRE)}">${escapeHtml(billet.invite)}</label>
+    const imprime = this.surPapier() && !this.presentateur();
+    const choix = imprime
+      ? safeHtml`<ul class="fp-cases">${this.casesAImprimer(billet.options)}</ul>`
+      : safeHtml`<div class="fp-exit__choix">${this.boutonsOption(billet.options)}</div>`;
+    const redaction =
+      this.presentateur() || imprime
+        ? safeHtml`<p class="fp-exit__invite" data-testid="invite">${escapeHtml(billet.invite)}</p>`
+        : safeHtml`<label class="fp-exit__invite" for="${escapeHtml(ID_TEXTE_LIBRE)}">${escapeHtml(billet.invite)}</label>
         <textarea class="fp-exit__champ" id="${escapeHtml(ID_TEXTE_LIBRE)}" data-testid="texte-libre" rows="3">${escapeHtml(this.texteLibre)}</textarea>
         <p class="fp-exit__jauge" data-testid="jauge">${this.texteLibre.length} / ${LIMITE_TEXTE_LIBRE}</p>
         <button type="button" class="fp-exit__envoyer" data-testid="envoyer">${escapeHtml(this.texte('envoyer'))}</button>
@@ -62,7 +67,7 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
     return safeHtml`
       <fieldset class="fp-carte fp-scene fp-exit__billet">
         <legend class="fp-enonce">${escapeHtml(billet.question)}</legend>
-        <div class="fp-exit__choix">${this.boutonsOption(billet.options)}</div>
+        ${choix}
         ${redaction}
       </fieldset>
     `;
@@ -103,6 +108,12 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
       texteLibre: this.texteLibre,
       choix: this.choix,
     });
+  }
+
+  private casesAImprimer(options: readonly OptionPublique[]): readonly EscapedHtml[] {
+    return options.map(
+      (option) => safeHtml`<li data-testid="option">${escapeHtml(option.libelle)}</li>`,
+    );
   }
 
   private boutonsOption(options: readonly OptionPublique[]): readonly EscapedHtml[] {
