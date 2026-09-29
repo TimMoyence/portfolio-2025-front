@@ -12,7 +12,7 @@ const TEXTES_AU_PUPITRE = [
 ] as const;
 
 decrireLeMontageDeLInstantane('B2-03', INSTANTANE_B2_03, {
-  empreinte: '1438d9a9b71b968731909478445cb1a1697a7558707c706b02e8ff8386b19380',
+  empreinte: 'e2a2ca9ce31a1a83378c39d066a6f02c5d3f1ee5da3b573484cae0fe2affb7c8',
   ecrans: 32,
   publicsAuCatalogue: [
     'A1-02-ACCROCHE',
