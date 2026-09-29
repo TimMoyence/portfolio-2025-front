@@ -7,23 +7,26 @@ import {
 } from '../../../../testing/montage-d-instantane';
 
 decrireLeMontageDeLInstantane('B2-02', INSTANTANE_B2_02, {
-  empreinte: '3924c3b2e91e8b7cc7b0b21b42f69e983527f4ba09aeba70ceb3bf1ad0707fdd',
-  ecrans: 38,
+  empreinte: '43ac680e735fe4971f9952891de3c271586f3c96055c9c72f3068d0c2501c03d',
+  ecrans: 31,
   specifiques: () => {
-    it('reprend au catalogue les huit écrans publics et verrouille les autres', () => {
+    it('reprend au catalogue les onze écrans publics, deux par notion, et verrouille les autres', () => {
       const publics = INSTANTANE_B2_02.catalogue.ecrans.filter(
         (ecran) => ecran.type !== 'ecran-verrouille',
       );
 
-      expect(publics.map((ecran) => ecran.id.slice(6, 11))).toEqual([
-        'A1-02',
-        'A1-04',
-        'A1-06',
-        'A2-01',
-        'A2-03',
-        'A3-02',
-        'A4-01',
-        'A4-05',
+      expect(publics.map((ecran) => ecran.id.slice(6))).toEqual([
+        'A1-02-ACCROCHE',
+        'A1-04-FACTURES',
+        'A1-06-COURS-RESUMER',
+        'A1-06-COURS-ECART',
+        'A2-01-NUAGE-RIVAGE',
+        'A2-03-COURS-NUAGE',
+        'A2-03-COURS-CORRELATION',
+        'A3-02-COURS-DROITE',
+        'A3-02-COURS-PREVOIR',
+        'A4-01-SITUATION-FIBRE',
+        'A4-05-FICHE-MEMO',
       ]);
     });
 

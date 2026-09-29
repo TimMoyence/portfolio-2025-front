@@ -6,12 +6,12 @@ import {
   buildResultatQuestion,
   buildResultatsSeance,
 } from '../../../../testing/factories/formations.factory';
-import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { poserLesEntrees } from '../../../../testing/montage-page';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
   ATELIER_CORRIGE,
   TRI_CORRIGE,
+  buildAnswerReviewProps,
   buildVerdictDeQuestion,
   buildVerdictDuTri,
   buildRecitVisuel,
@@ -257,8 +257,18 @@ describe('SlideVisualComponent', () => {
       expect(ligne(element, PART)?.querySelector('.slide-answer-review__reussite')).toBeNull();
     });
 
-    it('T6 · colore en vert et rouge chaque énigme du coffre sur sa correction du B2-01', () => {
-      const correction = ecransDuPupitreB2_01().find(({ id }) => id === 'B2-01-A6-02-CORRECTION');
+    it('T6 · colore en vert et rouge chaque énigme d un coffre corrigé sur un écran suivant', () => {
+      const correction = buildVisualAnswerReviewSlide(
+        { ecranSource: 'B2-01-A6-02-COFFRE' },
+        'ecran-correction-du-coffre',
+        buildAnswerReviewProps({
+          source: { screenId: 'B2-01-A6-02-COFFRE' },
+          explications: [
+            { reference: 'b2-01-a6-e1-mix', texte: 'Mix : 60 % × 12 + 40 % × 20.' },
+            { reference: 'b2-01-a6-e2-points', texte: 'Points : la moyenne pondérée.' },
+          ],
+        }),
+      );
       const fixture = TestBed.createComponent(SlideVisualComponent);
       fixture.componentRef.setInput('slide', correction);
       fixture.componentRef.setInput('role', 'etudiant');

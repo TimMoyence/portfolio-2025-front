@@ -15,6 +15,8 @@ const QUESTIONS_TIREES_EN_SEANCE: ReadonlySet<string> = new Set(['fp-spaced']);
 
 const CORRIGES_DONNES_A_LA_SUITE: ReadonlySet<string> = new Set(['reflexion', 'revelation']);
 
+const CORRIGES_SUR_PLACE: ReadonlySet<string> = new Set(['fp-worked']);
+
 const ECRANS_SANS_INTITULE: ReadonlySet<string> = new Set(['fp-table-build', 'fp-challenge']);
 
 export interface PageDuLivretEtudiant {
@@ -88,11 +90,15 @@ function avecSaBanqueDeQuestions(ecran: EcranContent, corrige: DerouleCours): Ec
 }
 
 function reponseDonneeALaSuite(ecran: EcranContent, corrige: DerouleCours): boolean {
-  if (QUESTIONS_TIREES_EN_SEANCE.has(ecran.type)) {
+  if (QUESTIONS_TIREES_EN_SEANCE.has(ecran.type) || CORRIGES_SUR_PLACE.has(ecran.type)) {
     return true;
   }
-  const type = corrige.ecrans.find((candidat) => candidat.id === ecran.id)?.corrigeEcran?.type;
-  return type !== undefined && CORRIGES_DONNES_A_LA_SUITE.has(type);
+  const deroule = corrige.ecrans.find((candidat) => candidat.id === ecran.id);
+  const type = deroule?.corrigeEcran?.type;
+  return (
+    (deroule?.explications?.length ?? 0) > 0 ||
+    (type !== undefined && CORRIGES_DONNES_A_LA_SUITE.has(type))
+  );
 }
 
 function pageDuLivretEtudiant(ecran: EcranContent, corrige: DerouleCours): PageDuLivretEtudiant {
