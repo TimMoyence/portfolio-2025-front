@@ -50,6 +50,24 @@ describe('SlideTableComponent', () => {
     expect(heading?.textContent).toContain('Outils IA');
   });
 
+  it('resserre les lignes au-dela de dix pour tenir dans la toile', () => {
+    const fixture = TestBed.createComponent(SlideTableComponent);
+    fixture.componentRef.setInput('columns', [{ key: 'numero', label: 'Facture' }]);
+    fixture.componentRef.setInput(
+      'rows',
+      Array.from({ length: 11 }, (_, rang) => ({ numero: `F${rang}` })),
+    );
+    fixture.detectChanges();
+    const table = fixture.nativeElement.querySelector('.slide-table') as HTMLElement;
+
+    expect(table.classList).toContain('slide-table--dense');
+
+    fixture.componentRef.setInput('rows', [{ numero: 'F1' }]);
+    fixture.detectChanges();
+
+    expect(table.classList).not.toContain('slide-table--dense');
+  });
+
   it('retourne chaine vide pour cle absente', () => {
     const fixture = TestBed.createComponent(SlideTableComponent);
     const columns: TableColumn[] = [

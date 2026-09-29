@@ -70,7 +70,8 @@ export const tableBuild = `
   text-align: right;
 }
 
-:where(.fp-root) .fp-table-build__champ {
+:where(.fp-root) .fp-table-build__champ,
+:where(.fp-root) .fp-table-build__choix {
   width: 100%;
   min-width: calc(6rem * var(--fp-echelle));
   padding: var(--fp-s-1) var(--fp-s-2);
@@ -83,7 +84,13 @@ export const tableBuild = `
   text-align: right;
 }
 
-:where(.fp-root) .fp-table-build__champ:focus-visible {
+:where(.fp-root) .fp-table-build__choix {
+  min-width: calc(4rem * var(--fp-echelle));
+  text-align: center;
+}
+
+:where(.fp-root) .fp-table-build__champ:focus-visible,
+:where(.fp-root) .fp-table-build__choix:focus-visible {
   outline: 2px solid var(--fp-teal);
   outline-offset: 2px;
 }
@@ -95,7 +102,8 @@ export const tableBuild = `
   font-weight: 600;
 }
 
-:where(.fp-root) .fp-table-build__champ:disabled {
+:where(.fp-root) .fp-table-build__champ:disabled,
+:where(.fp-root) .fp-table-build__choix:disabled {
   background: var(--fp-en-attente-fond);
   color: var(--fp-en-attente);
 }

@@ -3,6 +3,7 @@ import { FormationsListComponent } from './formations-list.component';
 import { FORMATION_BENEFITS, FORMATIONS } from './formations-list.data';
 import { INSTANTANE_B2_01 } from '../../../testing/fixtures/instantane-b2-01';
 import { INSTANTANE_B2_02 } from '../../../testing/fixtures/instantane-b2-02';
+import { INSTANTANE_B2_03 } from '../../../testing/fixtures/instantane-b2-03';
 import { montagePage } from '../../../testing/montage-page';
 
 const COURS_EN_SEANCE = [
@@ -15,6 +16,11 @@ const COURS_EN_SEANCE = [
     code: 'B2-02',
     lien: '/formations/b2-02-series-statistiques',
     instantane: INSTANTANE_B2_02,
+  },
+  {
+    code: 'B2-03',
+    lien: '/formations/b2-03-logique',
+    instantane: INSTANTANE_B2_03,
   },
 ];
 
@@ -34,7 +40,7 @@ describe('FormationsListComponent', () => {
 
   it('devrait exposer la liste des formations depuis les donnees statiques', () => {
     expect(component['formations']).toBe(FORMATIONS);
-    expect(component['formations'].length).toBe(6);
+    expect(component['formations'].length).toBe(7);
   });
 
   it('devrait composer les sections Asili (hero, grille, format, bande CTA)', () => {

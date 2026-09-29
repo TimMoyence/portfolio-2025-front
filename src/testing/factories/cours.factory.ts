@@ -464,6 +464,45 @@ export function buildTableBuildPlan(
   };
 }
 
+function colonneDeVerite(
+  cle: string,
+  intitule: string,
+  valeurs?: readonly number[],
+): TableBuildPlanPublic['colonnes'][number] {
+  return {
+    cle,
+    intitule,
+    role: valeurs === undefined ? 'saisie' : 'donnee',
+    format: 'booleen',
+    ...(valeurs === undefined ? {} : { valeurs }),
+    decimales: 0,
+    totalise: false,
+  };
+}
+
+export function buildTableDeVeritePlan(
+  overrides: Partial<TableBuildPlanPublic> = {},
+): TableBuildPlanPublic {
+  return buildTableBuildPlan({
+    id: 'b2-03-a1-table-et-ou',
+    intitule: 'Table de vérité de « P et Q » et de « P ou Q »',
+    consignes: ['Choisissez V ou F dans chaque case.'],
+    echeances: 4,
+    intituleDesLignes: 'Cas',
+    libellesLignes: ['1', '2', '3', '4'],
+    parametres: {},
+    colonnes: [
+      colonneDeVerite('p', 'P', [1, 1, 0, 0]),
+      colonneDeVerite('q', 'Q', [1, 0, 1, 0]),
+      colonneDeVerite('pEtQ', 'P ∧ Q'),
+      colonneDeVerite('pOuQ', 'P ∨ Q'),
+    ],
+    synthese: [],
+    metadonnees: metadonnees({ concepts: ['connecteur'], dureeMinutes: 7, regime: 'focus' }),
+    ...overrides,
+  });
+}
+
 export function buildCardsortPlan(overrides: Partial<CardsortPlanPublic> = {}): CardsortPlanPublic {
   return {
     id: 'K-CHARGES-01',

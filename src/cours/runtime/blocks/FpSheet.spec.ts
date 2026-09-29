@@ -117,6 +117,14 @@ describe('FpSheet', () => {
     expect(racine?.querySelector('[role="grid"]')).toBeNull();
   });
 
+  it('resserre la grille au-dela de dix lignes pour tenir dans la toile', () => {
+    expect(repere(hote, 'tableau')?.classList).not.toContain('fp-sheet__tableau--dense');
+
+    hote.plan = buildSheetPlan({ lignes: 11 });
+
+    expect(repere(hote, 'tableau')?.classList).toContain('fp-sheet__tableau--dense');
+  });
+
   it('enonce les consignes numerotees du plan', () => {
     expect(reperes(hote, 'consignes')[0]?.querySelectorAll('li').length).toBe(2);
     expect(texteDe(hote, 'consignes')).toContain('En C3, calculez le montant HT.');

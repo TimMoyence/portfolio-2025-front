@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
+
+const LIGNES_AVANT_RESSERREMENT = 10;
 
 export interface TableColumn {
   key: string;
@@ -22,6 +24,7 @@ export class SlideTableComponent {
   readonly note = input<string>('');
   readonly columns = input.required<TableColumn[]>();
   readonly rows = input.required<TableRow[]>();
+  protected readonly dense = computed(() => this.rows().length > LIGNES_AVANT_RESSERREMENT);
 
   protected cellValue(row: TableRow, key: string): string {
     return row[key] ?? '';

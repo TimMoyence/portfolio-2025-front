@@ -12,6 +12,7 @@ export interface TableColonne {
   readonly cle: string;
   readonly intitule: string;
   readonly role: RoleColonne;
+  readonly format?: 'nombre' | 'booleen';
   readonly decimales: number;
   readonly valeurs?: readonly number[];
   readonly formule?: string;
@@ -55,6 +56,7 @@ const STYLE_CELLULE = 'fp-table-build__cellule fp-montant';
 const STYLE_RANG = 'fp-table-build__rang';
 const VIDE = escapeHtml('');
 const LECTURE_SEULE = safeHtml`readonly`;
+const SELECTIONNEE = safeHtml`selected`;
 const DECIMALES_MAX = 6;
 const COLONNE_DES_COEFFICIENTS = 'coef';
 const ROLES: readonly RoleColonne[] = ['donnee', 'saisie', 'deduite'];
@@ -87,17 +89,22 @@ function nombresFinis(source: Readonly<Record<string, number>>): Record<string, 
   return Object.fromEntries(Object.entries(source).filter(([, valeur]) => Number.isFinite(valeur)));
 }
 
+function estBooleenne(colonne: TableColonne): boolean {
+  return colonne.format === 'booleen';
+}
+
 function copierColonne(colonne: TableColonne): TableColonne {
   return {
     cle: colonne.cle,
     intitule: colonne.intitule,
     role: ROLES.find((role) => role === colonne.role) ?? 'deduite',
+    ...(estBooleenne(colonne) ? { format: 'booleen' } : {}),
     decimales: bornerDecimales(colonne.decimales),
     ...(colonne.valeurs === undefined ? {} : { valeurs: [...colonne.valeurs] }),
     ...(colonne.formule === undefined ? {} : { formule: colonne.formule }),
     ...(colonne.formuleInitiale === undefined ? {} : { formuleInitiale: colonne.formuleInitiale }),
     ...(colonne.soldeDe === undefined ? {} : { soldeDe: colonne.soldeDe }),
-    totalise: colonne.totalise === true,
+    totalise: colonne.totalise === true && !estBooleenne(colonne),
   };
 }
 
@@ -182,7 +189,9 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
   }
 
   protected brancherLAtelier(racine: ShadowRoot): void {
-    for (const champ of racine.querySelectorAll<HTMLInputElement>('[data-role="saisie"]')) {
+    for (const champ of racine.querySelectorAll<HTMLInputElement | HTMLSelectElement>(
+      '[data-role="saisie"]',
+    )) {
       this.brancher(champ);
     }
   }
@@ -215,13 +224,15 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     return this.correction === 0 && this.detailDeLaCellule(Number(rang), colonne)?.juste === false;
   }
 
-  private brancher(champ: HTMLInputElement): void {
+  private brancher(champ: HTMLInputElement | HTMLSelectElement): void {
     const cle = `${champ.dataset['rang']}:${champ.dataset['cle']}`;
     champ.disabled = !this.accessible(cle);
     champ.addEventListener('input', () => this.noter(cle, champ.value));
     if (cle === this.suivie && this.accessible(cle)) {
       champ.focus();
-      champ.setSelectionRange(champ.value.length, champ.value.length);
+      if (champ instanceof HTMLInputElement) {
+        champ.setSelectionRange(champ.value.length, champ.value.length);
+      }
     }
   }
 
@@ -400,11 +411,37 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
   }
 
   private valeurAffichee(colonne: TableColonne, ligne: LigneBatie): string {
-    return formater(ligne.valeurs[colonne.cle] ?? Number.NaN, colonne.decimales);
+    const valeur = ligne.valeurs[colonne.cle] ?? Number.NaN;
+    return estBooleenne(colonne)
+      ? this.valeurDeVerite(colonne, valeur)
+      : formater(valeur, colonne.decimales);
+  }
+
+  private valeurDeVerite(colonne: TableColonne, valeur: number): string {
+    if (valeur === 1 || valeur === 0) {
+      return this.texte(valeur === 1 ? 'table-build-vrai' : 'table-build-faux');
+    }
+    return this.surPapier() && colonne.role === 'saisie'
+      ? this.texte('table-build-a-entourer')
+      : TIRET;
+  }
+
+  private choixDeVerite(colonne: TableColonne, ligne: LigneBatie, enonce: string): EscapedHtml {
+    const choisie = this.tapees[`${ligne.rang}:${colonne.cle}`] ?? '';
+    const option = (valeur: string, libelle: string): EscapedHtml =>
+      safeHtml`<option value="${escapeHtml(valeur)}" ${valeur === choisie ? SELECTIONNEE : VIDE}>${escapeHtml(libelle)}</option>`;
+    return safeHtml`<select class="fp-table-build__choix" data-testid="cellule" data-role="saisie" data-rang="${ligne.rang}" data-cle="${escapeHtml(colonne.cle)}" aria-label="${escapeHtml(enonce)}">${option('', TIRET)}${option('1', this.texte('table-build-vrai'))}${option('0', this.texte('table-build-faux'))}</select>`;
   }
 
   private champ(colonne: TableColonne, ligne: LigneBatie): EscapedHtml {
     const saisie = colonne.role === 'saisie';
+    if (saisie && estBooleenne(colonne)) {
+      return this.choixDeVerite(
+        colonne,
+        ligne,
+        `${colonne.intitule} — ${this.libelleDeLigne(ligne.rang)}`,
+      );
+    }
     const affichee = saisie
       ? (this.tapees[`${ligne.rang}:${colonne.cle}`] ?? '')
       : this.valeurAffichee(colonne, ligne);

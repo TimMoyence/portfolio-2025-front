@@ -112,6 +112,13 @@ export const sheet = `
   text-align: right;
 }
 
+:where(.fp-root) .fp-sheet__tableau--dense .fp-sheet__champ,
+:where(.fp-root) .fp-sheet__tableau--dense .fp-sheet__rang,
+:where(.fp-root) .fp-sheet__tableau--dense .fp-sheet__entete {
+  padding-block: 0;
+  line-height: 1.25;
+}
+
 :where(.fp-root) .fp-sheet__champ:focus-visible {
   outline: 2px solid var(--fp-teal);
   outline-offset: -2px;

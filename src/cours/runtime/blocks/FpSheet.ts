@@ -41,6 +41,8 @@ const LECTURE_SEULE = safeHtml`readonly`;
 const DESACTIVE = safeHtml`disabled`;
 const SIGNE_ERREUR = '⚠';
 const LIMITE_GRILLE = 40;
+const LIGNES_AVANT_RESSERREMENT = 10;
+const TABLEAU_RESSERRE = safeHtml` fp-sheet__tableau--dense`;
 const LONGUEUR_MAX_CELLULE = 200;
 
 function borner(brut: number): number {
@@ -339,7 +341,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   private tableau(interactif: boolean): EscapedHtml {
     const lignes = [...Array(this.interne?.lignes ?? 0).keys()];
     return safeHtml`
-      <table class="fp-sheet__tableau" data-testid="tableau">
+      <table class="fp-sheet__tableau${lignes.length > LIGNES_AVANT_RESSERREMENT ? TABLEAU_RESSERRE : VIDE}" data-testid="tableau">
         <caption class="fp-sheet__intitule">${escapeHtml(this.interne?.intitule ?? '')}</caption>
         <thead><tr>${this.coin()}${this.enteteColonnes()}</tr></thead>
         <tbody>${lignes.map((ligne) => this.ligne(ligne, interactif))}</tbody>

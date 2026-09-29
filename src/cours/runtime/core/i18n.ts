@@ -102,6 +102,9 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeTableBuildCelluleVide:Complétez chaque cellule à saisir avant de valider`,
   'table-build-progression': () =>
     $localize`:@@coursRuntimeTableBuildProgression:Cellules saisies :`,
+  'table-build-vrai': () => $localize`:@@coursRuntimeTableBuildVrai:V`,
+  'table-build-faux': () => $localize`:@@coursRuntimeTableBuildFaux:F`,
+  'table-build-a-entourer': () => $localize`:@@coursRuntimeTableBuildAEntourer:V / F`,
   'table-build-vide': () =>
     $localize`:@@coursRuntimeTableBuildVide:Aucune ligne à bâtir : le plan ne porte aucune échéance`,
   'sheet-consigne': () =>

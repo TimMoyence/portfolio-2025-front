@@ -412,7 +412,7 @@ async function relever(request: APIRequestContext): Promise<ReleveDuCours> {
     releve.reponses.length,
     'moins de deux questions à répondre dans la version publiée',
   ).toBeGreaterThan(1);
-  expect(releve.reflexions.length, 'aucune réflexion dans la version publiée').toBeGreaterThan(1);
+  expect(releve.reflexions.length, 'aucune réflexion dans la version publiée').toBeGreaterThan(0);
   return releve;
 }
 

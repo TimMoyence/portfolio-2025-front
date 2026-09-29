@@ -163,6 +163,7 @@
     "auditIdLabel": "placeholder",
     "coursRuntimeSpacedProgression": "emprunt",
     "coursRuntimeDureeMinutes": "emprunt",
-    "panneauActiviteParticipantsTitre": "emprunt"
+    "panneauActiviteParticipantsTitre": "emprunt",
+    "coursRuntimeTableBuildFaux": "emprunt"
   }
 }
