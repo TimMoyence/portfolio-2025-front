@@ -1,4 +1,4 @@
-import type { Role } from '../../content/types';
+import type { ExplicationServie, Role } from '../../content/types';
 import { adoptCoursStyles } from '../design/sheet';
 import { texte as traduire } from '../core/i18n';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
@@ -61,6 +61,7 @@ export abstract class FpBlock extends HTMLElement {
   private interneDejaRepondu = false;
   private interneCloture = false;
   private interneErreur: string | null = null;
+  private interneExplications: readonly ExplicationServie[] = [];
   private brouillonRepris = false;
 
   constructor() {
@@ -87,6 +88,15 @@ export abstract class FpBlock extends HTMLElement {
 
   get cloture(): boolean {
     return this.interneCloture && !this.enApercu();
+  }
+
+  set explications(valeur: readonly ExplicationServie[] | null | undefined) {
+    this.interneExplications = Array.isArray(valeur) ? valeur : [];
+    this.refreshSiConnecte();
+  }
+
+  get explications(): readonly ExplicationServie[] {
+    return this.interneExplications;
   }
 
   set erreur(valeur: string | null) {
@@ -171,7 +181,7 @@ export abstract class FpBlock extends HTMLElement {
 
   refresh(): void {
     const foyer = this.reperer(this.racine.activeElement);
-    this.racine.innerHTML = safeHtml`<div class="fp-root" data-role="${escapeHtml(this.roleActuel())}">${this.render()}</div>`;
+    this.racine.innerHTML = safeHtml`<div class="fp-root" data-role="${escapeHtml(this.roleActuel())}">${this.render()}${this.explicationsRevelees()}</div>`;
     this.bind(this.racine);
     if (foyer !== null && this.racine.activeElement === null) {
       this.restaurer(foyer);
@@ -234,6 +244,17 @@ export abstract class FpBlock extends HTMLElement {
         ? safeHtml`<p class="fp-annonce" role="status" data-testid="reponses-closes">${escapeHtml(this.texte('reponses-closes'))}</p>`
         : VIDE;
     return safeHtml`${erreur}${deja}${brouillon}${close}`;
+  }
+
+  private explicationsRevelees(): EscapedHtml {
+    if (this.interneExplications.length === 0) {
+      return VIDE;
+    }
+    const lignes = this.interneExplications.map(
+      ({ reference, texte }) =>
+        safeHtml`<li data-testid="explication" data-cle="${escapeHtml(reference)}">${escapeHtml(texte)}</li>`,
+    );
+    return safeHtml`<section class="fp-encadre fp-explications" data-testid="explications"><p class="fp-explications__titre">${escapeHtml(this.texte('worked-correction'))}</p><ul>${lignes}</ul></section>`;
   }
 
   protected etatDuDetail(detail: DetailDeVerdict): EscapedHtml {

@@ -18,6 +18,7 @@ interface CorrectionDuFil {
   readonly questions: readonly QuestionCorrigeeDuFil[];
   readonly corrige: CorrigeEcranPresentateur | null;
   readonly reflexion: RevelationServie['reflexion'];
+  readonly explications?: NonNullable<RevelationServie['explications']>;
 }
 
 type EcranDuFil<E extends EcranContent> = Omit<E, 'ecranSource' | 'revelation'> & {
@@ -43,6 +44,7 @@ function revelationDuFil(correction: CorrectionDuFil): RevelationServie {
     })),
     annexe: correction.corrige,
     reflexion: correction.reflexion,
+    ...(correction.explications === undefined ? {} : { explications: correction.explications }),
   };
 }
 

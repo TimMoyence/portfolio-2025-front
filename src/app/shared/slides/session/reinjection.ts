@@ -1,5 +1,6 @@
 import type {
   EcranDeroule,
+  ExplicationServie,
   ResultatQuestion,
   RevelationServie,
   Role,
@@ -24,6 +25,7 @@ export interface ContexteDeReinjection {
   readonly maitrise: readonly SyntheseConcept[] | null;
   readonly dernierEmetteur: boolean;
   readonly papier: ImpressionDeLEcran | null;
+  readonly explications: readonly ExplicationServie[];
 }
 
 export interface ImpressionDeLEcran {
@@ -139,9 +141,13 @@ function annexeDeLaRevelation(revelation: RevelationServie): unknown {
   return reponses;
 }
 
+function expliqueSurPlace(contexte: ContexteDeReinjection): boolean {
+  return contexte.explications.length > 0;
+}
+
 function annexeVisible(contexte: ContexteDeReinjection): unknown {
   if (contexte.role === 'presentateur') {
-    return ecranRevele(contexte) ? contexte.donneesFormateur : null;
+    return ecranRevele(contexte) || expliqueSurPlace(contexte) ? contexte.donneesFormateur : null;
   }
   return contexte.revelation === null ? null : annexeDeLaRevelation(contexte.revelation);
 }
@@ -236,6 +242,14 @@ function posesDuCoffre(montage: MontageIdentifie, contexte: ContexteDeReinjectio
   ];
 }
 
+function etapesDevoilees(contexte: ContexteDeReinjection): number {
+  const pilotage = contexte.direct?.pilotage;
+  const affichees = pilotage?.etayage ?? 0;
+  return contexte.role === 'presentateur'
+    ? affichees
+    : Math.max(affichees, pilotage?.etayageAtteint ?? 0);
+}
+
 function posesDuPilotage(montage: MontageIdentifie, contexte: ContexteDeReinjection): Pose[] {
   const pilotage = contexte.direct?.pilotage;
   switch (montage.brique) {
@@ -250,6 +264,7 @@ function posesDuPilotage(montage: MontageIdentifie, contexte: ContexteDeReinject
         ['revele', pilotage?.revele === true],
       ];
     case 'fp-worked':
+      return [['etayage', etapesDevoilees(contexte)]];
     case 'fp-sheet':
     case 'fp-table-build':
       return [['etayage', pilotage?.etayage ?? 0]];
@@ -274,13 +289,14 @@ function posesCommunes(montage: MontageIdentifie, contexte: ContexteDeReinjectio
     ? [[PROPRIETE_FORMATEUR, annexeDuMontage(montage, annexeVisible(contexte), contexte.direct)]]
     : [];
   const cloture: Pose[] = QUESTIONS_REVELABLES.has(montage.brique)
-    ? [['cloture', contexte.direct?.pilotage.revele === true]]
+    ? [['cloture', contexte.direct?.pilotage.revele === true || expliqueSurPlace(contexte)]]
     : [];
   return [
     ['dejaRepondu', dejaRepondu],
     ['erreur', refus?.message ?? null],
     ...cloture,
     ...formateur,
+    ['explications', contexte.explications],
   ];
 }
 

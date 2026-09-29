@@ -216,8 +216,14 @@ function sourceRevelee(ecran: EcranContent, pilotage: PilotageEcran | undefined)
   return (
     pilotage?.revele === true ||
     pilotage?.phase === 'revele' ||
+    (pilotage?.explicationsDevoilees ?? 0) > 0 ||
     Math.max(pilotage?.etayageAtteint ?? 0, etayageRevelateur) > 0
   );
+}
+
+function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | undefined): boolean {
+  const servies = ecran.revelation?.explications?.length;
+  return servies !== undefined && (pilotage?.explicationsDevoilees ?? 0) > servies;
 }
 
 @Component({
@@ -1069,6 +1075,9 @@ export class CoursEtudiantComponent {
       }
       if (ecran.revelation === undefined && sourceRevelee(ecran, courant)) {
         return [`source:${ecran.id}`];
+      }
+      if (explicationsEnRetard(ecran, courant)) {
+        return [`explications:${ecran.id}:${courant?.explicationsDevoilees ?? 0}`];
       }
       return [];
     });

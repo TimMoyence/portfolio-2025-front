@@ -197,6 +197,23 @@ export const base = `
   background: var(--fp-ivory);
 }
 
+:where(.fp-root) .fp-explications {
+  display: grid;
+  gap: var(--fp-s-1);
+  margin-top: var(--fp-s-2);
+  border-left-color: var(--fp-confirme);
+}
+
+:where(.fp-root) .fp-explications__titre {
+  margin: 0;
+  font-weight: 700;
+}
+
+:where(.fp-root) .fp-explications ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
 :where(.fp-root) [data-etat='confirme'] {
   color: var(--fp-confirme);
   background: var(--fp-confirme-fond);

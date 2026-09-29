@@ -21,7 +21,7 @@ import {
 import type { ProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { buildProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { bancAdaptateurHttp } from '../../../testing/http-attendu';
-import type { CoursContent } from '../../../cours/content/types';
+import type { CoursContent, EcranContent } from '../../../cours/content/types';
 import type {
   AnnotationFormateur,
   InscriptionParticipant,
@@ -178,26 +178,26 @@ describe('FormationsHttpAdapter', () => {
     expect(recus).toEqual([sujet]);
   });
 
-  it('lireSujet traduit l ecran source et la revelation servis par le fil', () => {
+  function sujetDontLePremierEcranPorte(fil: (premier: EcranContent) => Record<string, unknown>) {
     const base = buildCoursContent();
     const [premier, ...reste] = base.ecrans;
-
     const recus = lus(adapter.lireSujet(SESSION_ID, JETON), `${URL_SEANCE}/sujet`, {
       ...base,
-      ecrans: [
-        {
-          ...premier,
-          ecranCorrige: 'ecran-source',
-          correction: {
-            ecranId: premier.id,
-            questions: [{ questionId: 'Q-CAP-03', bonneReponse: '1 480,24 €', optionId: 'b' }],
-            corrige: null,
-            reflexion: null,
-          },
-        },
-        ...reste,
-      ],
+      ecrans: [{ ...premier, ...fil(premier) }, ...reste],
     });
+    return { premier, reste, recus };
+  }
+
+  it('lireSujet traduit l ecran source et la revelation servis par le fil', () => {
+    const { premier, reste, recus } = sujetDontLePremierEcranPorte(({ id }) => ({
+      ecranCorrige: 'ecran-source',
+      correction: {
+        ecranId: id,
+        questions: [{ questionId: 'Q-CAP-03', bonneReponse: '1 480,24 €', optionId: 'b' }],
+        corrige: null,
+        reflexion: null,
+      },
+    }));
 
     expect(recus[0].ecrans[0]).toEqual({
       ...premier,
@@ -211,6 +211,16 @@ describe('FormationsHttpAdapter', () => {
     });
     expect(Object.keys(recus[0].ecrans[0])).not.toContain('correction');
     expect(recus[0].ecrans.slice(1)).toEqual(reste);
+  });
+
+  it('S-02 · lireSujet garde dans la revelation les explications corrigees sur place', () => {
+    const explications = [{ reference: 'Q-CAP-03', texte: 'Réinvestir les intérêts.' }];
+
+    const { recus } = sujetDontLePremierEcranPorte(({ id }) => ({
+      correction: { ecranId: id, questions: [], corrige: null, reflexion: null, explications },
+    }));
+
+    expect(recus[0].ecrans[0].revelation?.explications).toEqual(explications);
   });
 
   it('lireDeroule traduit l ecran source servi par le fil', () => {
