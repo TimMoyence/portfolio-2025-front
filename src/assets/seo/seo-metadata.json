@@ -1670,6 +1670,74 @@
       }
     },
     {
+      "id": "formations-b2-05-mathematiques-financieres",
+      "path": "/formations/b2-05-mathematiques-financieres",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-09-30",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Mathématiques financières : placer, emprunter",
+          "path": "/formations/b2-05-mathematiques-financieres"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Mathématiques financières : placer, emprunter — B2 — Tim Moyence",
+          "description": "Formation B2 interactive : valeur acquise, valeur actuelle, suites d’annuités, tableau d’amortissement et coût du crédit, avec VPM au tableur.",
+          "ogTitle": "Mathématiques financières : placer, emprunter — B2",
+          "ogDescription": "Un cours interactif pour chiffrer un placement, une épargne régulière et un emprunt, puis construire son tableau d’amortissement au tableur, comme en CCF.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Mathématiques financières : placer, emprunter",
+            "description": "Formation B2 interactive sur les intérêts composés, les suites d’annuités et les emprunts appliqués au financement d’une entreprise.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b2-05-mathematiques-financieres"
+          }
+        },
+        "en": {
+          "title": "Financial mathematics: invest, borrow — B2 — Tim Moyence",
+          "description": "Interactive B2 course: future value, present value, series of payments, loan amortisation schedule and cost of credit, with PMT in a spreadsheet.",
+          "ogTitle": "Financial mathematics: invest, borrow — B2",
+          "ogDescription": "An interactive course to price an investment, regular savings and a loan, then build its amortisation schedule in a spreadsheet, as in the CCF exam.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Financial mathematics: invest, borrow",
+            "description": "Interactive B2 course on compound interest, series of payments and loans applied to financing a business.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b2-05-mathematiques-financieres"
+          }
+        }
+      }
+    },
+    {
       "id": "formations-ia-solopreneurs-toolkit",
       "path": "/formations/ia-solopreneurs/toolkit",
       "index": true,

@@ -401,6 +401,31 @@ describe('FpSheet', () => {
     expect(rang?.getClientRects().length).toBe(1);
   });
 
+  it('QF-27 · a la projection sur une toile etroite, replie un long intitule de colonne entre ses mots sans jamais couper un nombre', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.style.cssText = 'display:block;width:900px;';
+    hote.plan = buildSheetPlan({
+      id: 'K-TABLEUR-INTITULES',
+      colonnes: 6,
+      cellules: {
+        ...PLAN.cellules,
+        A1: 'Capital dû en début d’année de l’emprunt (€)',
+        B1: 'Capital dû en fin d’année de l’emprunt (€)',
+        C1: 'Intérêts de l’année sur le capital dû (€)',
+        D1: 'Amortissement du capital de l’année (€)',
+        E1: 'Coût total du crédit sur la durée (€)',
+        F1: 'Annuité constante de l’emprunt (€)',
+        A2: '32000',
+      },
+      verrouillees: [...PLAN.verrouillees, 'A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'A2'],
+    });
+    const tableau = repere(hote, 'tableau');
+    const nombre = hote.shadowRoot?.querySelector('[data-testid="cellule"][data-nom="A2"]');
+
+    expect(tableau?.scrollWidth).toBeLessThanOrEqual((tableau?.clientWidth ?? 0) + 1);
+    expect(nombre?.getClientRects().length).toBe(1);
+  });
+
   it('RET-31 · laisse reprendre les seules cases fausses apres verdict', () => {
     recevoirLeVerdict(hote);
     const brouillons = detailsEmis(hote, 'fp-brouillon');

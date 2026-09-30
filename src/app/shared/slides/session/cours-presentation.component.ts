@@ -66,7 +66,7 @@ function aUnDefileurRogne(contenu: HTMLElement): boolean {
       return false;
     }
     const { overflowX } = getComputedStyle(element);
-    return overflowX === 'auto' || overflowX === 'scroll';
+    return (overflowX === 'auto' || overflowX === 'scroll') && element.checkVisibility();
   });
 }
 
@@ -530,12 +530,13 @@ export class CoursPresentationComponent {
       const etudiant = this.mode() === 'etudiant';
       const seuil = etudiant ? this.reductionLisible() : ECHELLE_LISIBLE;
       const illisible = reduction !== null && reduction < seuil;
-      if (this.renvoi() === null || !(illisible || this.contenuRogne().rogne)) {
+      const { rogne } = this.contenuRogne();
+      if (this.renvoi() === null || !(illisible || rogne)) {
         return;
       }
       if (!untracked(this.renvoiReduit)) {
         this.renvoiReduit.set(true);
-      } else if (!etudiant) {
+      } else if (!etudiant || rogne) {
         this.renvoiMasque.set(true);
       }
     });
@@ -589,7 +590,7 @@ export class CoursPresentationComponent {
       this.mesureDuRenvoi.set({
         largeur: element.offsetWidth,
         hauteur: element.offsetHeight,
-        deborde: element.scrollWidth > element.clientWidth + 1,
+        deborde: element.scrollWidth > element.clientWidth + 1 || aUnDefileurRogne(element),
       }),
     );
     effect(() => {
@@ -616,7 +617,7 @@ export class CoursPresentationComponent {
     this.elargissementMesure.set(Number.parseFloat(contenu.style.inlineSize || '100') / 100);
     this.hauteurDuContenu.set(contenu.offsetHeight);
     this.contenuRogne.set({
-      rogne: untracked(this.mode) !== 'etudiant' && aUnDefileurRogne(contenu),
+      rogne: !untracked(this.compacte) && aUnDefileurRogne(contenu),
     });
     this.hauteurNaturelle.set(
       diapositive instanceof HTMLElement ? diapositive.offsetHeight : contenu.offsetHeight,

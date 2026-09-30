@@ -11913,6 +11913,24 @@
         <target>3 h</target>
       </segment>
     </unit>
+    <unit id="formations-list.b2-05.title">
+      <segment>
+        <source>B2-05 — Mathématiques financières : placer, emprunter</source>
+        <target>B2-05 — Financial mathematics: invest, borrow</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-05.description">
+      <segment>
+        <source>Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Compute a future value and a present value, price a series of payments, build a loan amortisation schedule and its cost, with PMT in a spreadsheet, as in the CCF exam. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-05.duration">
+      <segment>
+        <source>3 h 00</source>
+        <target>3 h</target>
+      </segment>
+    </unit>
     <unit id="formations-list.b2.duration">
       <notes>
         <note category="location">src/app/features/formations/formations-list.data.ts:32</note>
