@@ -10,6 +10,7 @@ import {
 import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
 import { INSTANTANE_B2_03 } from '../../../../testing/fixtures/instantane-b2-03';
 import { INSTANTANE_B2_04 } from '../../../../testing/fixtures/instantane-b2-04';
+import { INSTANTANE_B2_05 } from '../../../../testing/fixtures/instantane-b2-05';
 import {
   ecransDuPupitreDe,
   ecransPublicsDe,
@@ -29,6 +30,7 @@ const COURS_MESURES = [
   { code: 'B2-02', instantane: INSTANTANE_B2_02, ecransAuMoins: 30, renvoisAuMoins: 3 },
   { code: 'B2-03', instantane: INSTANTANE_B2_03, ecransAuMoins: 30, renvoisAuMoins: 4 },
   { code: 'B2-04', instantane: INSTANTANE_B2_04, ecransAuMoins: 30, renvoisAuMoins: 4 },
+  { code: 'B2-05', instantane: INSTANTANE_B2_05, ecransAuMoins: 30, renvoisAuMoins: 4 },
 ] as const;
 
 @Component({
@@ -311,12 +313,15 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
         await stabiliser(monte, 2);
         const commentee = monte.hote.querySelector('[data-testid="cours-renvoi"]');
         const elargi = monte.hote.classList.contains('cours-presentation--renvoi-reduit');
-        if (elargi) {
+        const masque = monte.hote.classList.contains('cours-presentation--renvoi-masque');
+        if (masque) {
+          expect(commentee).withContext(ecran.id).toBeNull();
+        } else if (elargi) {
           expect(commentee?.getBoundingClientRect().width)
             .withContext(ecran.id)
             .toBeCloseTo(monte.cadre.clientWidth * 0.4, 0);
         }
-        if (defilante(monte)) {
+        if (defilante(monte) && !masque) {
           monte.cadre.scrollTop = monte.cadre.scrollHeight;
           await monte.rafraichir();
           const ecart =
@@ -327,7 +332,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
           expect(Math.abs(ecart)).withContext(ecran.id).toBeLessThanOrEqual(2);
         }
         releves.push(
-          `${ecran.id} ${elargi ? 'élargi' : 'plein'}${defilante(monte) ? ' défilant' : ''}`,
+          `${ecran.id} ${masque ? 'masqué, ' : ''}${elargi ? 'élargi' : 'plein'}${defilante(monte) ? ' défilant' : ''}`,
         );
         monte.detruire();
       }
@@ -658,11 +663,25 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     it(
       `QF-27 · ne rogne en largeur aucun écran à renvoi du ${code} projeté : pas de défilement horizontal à la projection`,
       async () => {
-        const rognes = await constaterLesProjectionsARenvoi(pupitre, (ecran, monte) => {
-          const contenu = monte.hote.querySelector('[data-testid="cours-contenu"]');
-          const defileurs = contenu === null ? [] : defileursRognes(contenu);
-          return defileurs.length > 0 ? `${ecran.id} (${defileurs.join(',')})` : null;
-        });
+        const rognes = await constaterLesProjectionsARenvoi(pupitre, ecranRogneEnLargeur);
+
+        expect(rognes).toEqual([]);
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
+
+    it(
+      `QF-28 · au poste étudiant, ne rogne en largeur ni un écran à renvoi du ${code} ni sa diapositive commentée`,
+      async () => {
+        const rognes = await fautesDesEcrans(
+          ecransPublicsDe(instantane).filter(({ renvoi }) => renvoi !== undefined),
+          pupitre,
+          (ecran, renvoi) => monterDansUnCadre(ecran, 'etudiant', 1280, 720, renvoi),
+          async (ecran, monte) => {
+            await stabiliser(monte, 6);
+            return ecranRogneEnLargeur(ecran, monte);
+          },
+        );
 
         expect(rognes).toEqual([]);
       },
@@ -979,7 +998,9 @@ function defileursQuiDebordent(racine: ParentNode, axe: 'x' | 'y'): string[] {
         axe === 'x'
           ? element.scrollWidth > element.clientWidth + 1
           : element.scrollHeight > element.clientHeight + 1;
-      return (defilement === 'auto' || defilement === 'scroll') && deborde;
+      return (
+        (defilement === 'auto' || defilement === 'scroll') && deborde && element.checkVisibility()
+      );
     })
     .map((element) => `${element.tagName.toLowerCase()}.${element.className}`);
 }
@@ -990,6 +1011,14 @@ function defileursInternes(racine: ParentNode): string[] {
 
 function defileursRognes(racine: ParentNode): string[] {
   return defileursQuiDebordent(racine, 'x');
+}
+
+function ecranRogneEnLargeur(ecran: EcranContent, monte: EcranCadre): string | null {
+  const defileurs = [
+    monte.hote.querySelector('[data-testid="cours-contenu"]'),
+    monte.hote.querySelector('.cours-renvoi__toile'),
+  ].flatMap((zone) => (zone === null ? [] : defileursRognes(zone)));
+  return defileurs.length > 0 ? `${ecran.id} (${defileurs.join(',')})` : null;
 }
 
 describe('CoursPresentationComponent au poste étudiant', () => {
