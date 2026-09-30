@@ -13664,8 +13664,8 @@
     </unit>
     <unit id="coursRuntimeRevoter">
       <segment>
-        <source>Voter à nouveau</source>
-        <target>Vote again</target>
+        <source>Deuxième question : votez seul·e</source>
+        <target>Second question: vote on your own</target>
       </segment>
     </unit>
     <unit id="coursRuntimeEnvoyer">
@@ -14534,14 +14534,14 @@
     </unit>
     <unit id="coursRuntimeVotePremier">
       <segment>
-        <source>Premier vote</source>
-        <target>First vote</target>
+        <source>Première question</source>
+        <target>First question</target>
       </segment>
     </unit>
     <unit id="coursRuntimeVoteSecond">
       <segment>
-        <source>Second vote, après discussion</source>
-        <target>Second vote, after discussion</target>
+        <source>Deuxième question, après discussion</source>
+        <target>Second question, after discussion</target>
       </segment>
     </unit>
     <unit id="coursRuntimeReponsesCloses">
@@ -14708,8 +14708,8 @@
     </unit>
     <unit id="panneauActivitePhaseRevote">
       <segment>
-        <source>Vote sur le cas jumeau</source>
-        <target>Vote on the twin case</target>
+        <source>Deuxième question</source>
+        <target>Second question</target>
       </segment>
     </unit>
     <unit id="panneauActivitePhaseRevele">
