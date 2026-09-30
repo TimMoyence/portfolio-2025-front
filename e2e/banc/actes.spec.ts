@@ -11,6 +11,7 @@ const ACTES_PAR_COURS: Readonly<Record<string, readonly string[]>> = {
   'B2-01': ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
   'B2-02': ['A1', 'A2', 'A3', 'A4'],
   'B2-03': ['A1', 'A2', 'A3', 'A4'],
+  'B2-04': ['A1', 'A2', 'A3', 'A4'],
 };
 
 const ACTES = ACTES_PAR_COURS[CODE_DU_COURS];

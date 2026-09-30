@@ -1602,6 +1602,74 @@
       }
     },
     {
+      "id": "formations-b2-04-suites",
+      "path": "/formations/b2-04-suites",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-09-30",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Suites : modéliser une évolution régulière",
+          "path": "/formations/b2-04-suites"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Suites : modéliser une évolution régulière — B2 — Tim Moyence",
+          "description": "Formation B2 interactive : modéliser une évolution par une suite arithmétique ou géométrique, trouver un rang de seuil et cumuler des termes au tableur.",
+          "ogTitle": "Suites : modéliser une évolution régulière — B2",
+          "ogDescription": "Un cours interactif pour comparer deux hypothèses de croissance, trouver quand un seuil est franchi et cumuler des termes au tableur, comme en CCF.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Suites : modéliser une évolution régulière",
+            "description": "Formation B2 interactive sur les suites arithmétiques et géométriques appliquées aux prévisions de gestion.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b2-04-suites"
+          }
+        },
+        "en": {
+          "title": "Sequences: model a steady change — B2 — Tim Moyence",
+          "description": "Interactive B2 course: model a change with an arithmetic or geometric sequence, find the rank where a threshold is crossed and sum terms in a spreadsheet.",
+          "ogTitle": "Sequences: model a steady change — B2",
+          "ogDescription": "An interactive course to compare two growth assumptions, find when a threshold is crossed and sum terms in a spreadsheet, as in the CCF exam.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Sequences: model a steady change",
+            "description": "Interactive B2 course on arithmetic and geometric sequences applied to business forecasts.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b2-04-suites"
+          }
+        }
+      }
+    },
+    {
       "id": "formations-ia-solopreneurs-toolkit",
       "path": "/formations/ia-solopreneurs/toolkit",
       "index": true,

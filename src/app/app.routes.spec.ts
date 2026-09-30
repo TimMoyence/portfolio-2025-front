@@ -133,6 +133,7 @@ describe('app routes', () => {
       'b2-01-traitement-information-chiffree',
       'b2-02-series-statistiques',
       'b2-03-logique',
+      'b2-04-suites',
     ]) {
       it(`fait choisir automatiquement l espace de ${slug} selon le rôle`, () => {
         const route = routeDe(`formations/${slug}`);

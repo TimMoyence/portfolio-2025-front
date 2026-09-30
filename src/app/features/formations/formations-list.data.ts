@@ -86,6 +86,12 @@ export const FORMATIONS: readonly FormationCard[] = [
     description: $localize`:@@formations-list.b2-03.description:Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
     duree: $localize`:@@formations-list.b2-03.duration:3 h 00`,
   }),
+  coursBtsEnSeance({
+    link: '/formations/b2-04-suites',
+    title: $localize`:@@formations-list.b2-04.title:B2-04 — Suites : modéliser une évolution régulière`,
+    description: $localize`:@@formations-list.b2-04.description:Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b2-04.duration:3 h 00`,
+  }),
   formationGratuite({
     link: '/formations/ia-solopreneurs',
     badge: $localize`:@@formations-list.ia-solo.badge:Gratuit · 17 slides`,

@@ -11895,6 +11895,24 @@
         <target>3 h</target>
       </segment>
     </unit>
+    <unit id="formations-list.b2-04.title">
+      <segment>
+        <source>B2-04 — Suites : modéliser une évolution régulière</source>
+        <target>B2-04 — Sequences: model a steady change</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-04.description">
+      <segment>
+        <source>Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Model a change with an arithmetic or geometric sequence, compare two growth assumptions, find the rank where a threshold is crossed and sum terms in a spreadsheet, as in the CCF exam. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-04.duration">
+      <segment>
+        <source>3 h 00</source>
+        <target>3 h</target>
+      </segment>
+    </unit>
     <unit id="formations-list.b2.duration">
       <notes>
         <note category="location">src/app/features/formations/formations-list.data.ts:32</note>
