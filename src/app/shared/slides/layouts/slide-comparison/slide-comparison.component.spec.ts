@@ -95,6 +95,27 @@ describe('SlideComparisonComponent', () => {
     expect(grid.style.getPropertyValue('--cols')).toBe('3');
   });
 
+  it('resserre trois colonnes accompagnées d un sous-titre ou d une note pour tenir dans la toile', () => {
+    const fixture = TestBed.createComponent(SlideComparisonComponent);
+    fixture.componentRef.setInput('columns', new HostThreeComponent().columns);
+    fixture.componentRef.setInput('note', 'Les fiches sont dans le classeur.');
+    fixture.detectChanges();
+    const racine = fixture.nativeElement.querySelector('.slide-comparison') as HTMLElement;
+
+    expect(racine.classList).toContain('slide-comparison--dense');
+
+    fixture.componentRef.setInput('note', '');
+    fixture.detectChanges();
+
+    expect(racine.classList).not.toContain('slide-comparison--dense');
+
+    fixture.componentRef.setInput('subtitle', 'Trois acquis');
+    fixture.componentRef.setInput('columns', new HostComponent().columns);
+    fixture.detectChanges();
+
+    expect(racine.classList).not.toContain('slide-comparison--dense');
+  });
+
   it('rend les items de chaque colonne', () => {
     const fixture = TestBed.createComponent(HostThreeComponent);
     fixture.detectChanges();

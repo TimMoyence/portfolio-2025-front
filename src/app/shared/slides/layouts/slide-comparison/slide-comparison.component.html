@@ -1,5 +1,6 @@
 <div
   class="slide-comparison"
+  [class.slide-comparison--dense]="dense()"
   [appSlideEnTete]="{ bloc: 'slide-comparison', titre: title(), sousTitre: subtitle() }"
 >
   <div class="slide-comparison__grid" [style.--cols]="columns().length">

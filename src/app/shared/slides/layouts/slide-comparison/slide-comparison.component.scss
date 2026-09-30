@@ -33,6 +33,35 @@
   font-weight: 600;
 }
 
+.slide-comparison--dense {
+  @include slide.section-resserree;
+
+  ::ng-deep > .slide-comparison__subtitle {
+    margin: -0.5rem auto 1.25rem;
+  }
+
+  .slide-comparison__grid {
+    gap: 1rem;
+  }
+
+  .slide-comparison__note {
+    margin-top: 1rem;
+  }
+
+  .slide-comparison__column {
+    padding: 1.25rem 1.5rem;
+
+    h3 {
+      margin-bottom: 0.5rem;
+    }
+
+    ul li {
+      padding: 0.45rem 0;
+      line-height: 1.4;
+    }
+  }
+}
+
 .slide-comparison__column {
   padding: 2rem;
   border-radius: 1rem;

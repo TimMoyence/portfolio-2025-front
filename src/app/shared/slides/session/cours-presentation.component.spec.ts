@@ -9,6 +9,7 @@ import {
 } from '../../../../testing/fixtures/instantane-b2-01';
 import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
 import { INSTANTANE_B2_03 } from '../../../../testing/fixtures/instantane-b2-03';
+import { INSTANTANE_B2_04 } from '../../../../testing/fixtures/instantane-b2-04';
 import {
   ecransDuPupitreDe,
   ecransPublicsDe,
@@ -26,6 +27,7 @@ const COURS_MESURES = [
   { code: 'B2-01', instantane: INSTANTANE_B2_01, ecransAuMoins: 50, renvoisAuMoins: 5 },
   { code: 'B2-02', instantane: INSTANTANE_B2_02, ecransAuMoins: 30, renvoisAuMoins: 3 },
   { code: 'B2-03', instantane: INSTANTANE_B2_03, ecransAuMoins: 30, renvoisAuMoins: 4 },
+  { code: 'B2-04', instantane: INSTANTANE_B2_04, ecransAuMoins: 30, renvoisAuMoins: 4 },
 ] as const;
 
 @Component({

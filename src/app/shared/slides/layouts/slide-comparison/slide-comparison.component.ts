@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
+
+const COLONNES_AVANT_RESSERREMENT = 3;
 
 type ComparisonTone = 'danger' | 'success' | 'info' | 'warning' | 'neutral';
 
@@ -22,4 +24,10 @@ export class SlideComparisonComponent {
   readonly subtitle = input<string>('');
   readonly note = input<string>('');
   readonly columns = input.required<ComparisonColumn[]>();
+
+  protected readonly dense = computed(
+    () =>
+      this.columns().length >= COLONNES_AVANT_RESSERREMENT &&
+      (this.subtitle() !== '' || this.note() !== ''),
+  );
 }

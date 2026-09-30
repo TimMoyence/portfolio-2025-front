@@ -28,6 +28,10 @@ export function ecranNomme<T extends EcranContent>(ecrans: readonly T[], id: str
   return ecran;
 }
 
+export function texteServiAuPosteEtudiant(instantane: InstantaneDuCoursB2, id: string): string {
+  return JSON.stringify(ecranNomme(ecransPublicsDe(instantane), id));
+}
+
 function clesDe(valeur: unknown): readonly string[] {
   return recolterDansLArbre(valeur, (cle, contenu, descendre) => [cle, ...descendre(contenu)]);
 }
@@ -60,7 +64,68 @@ export interface AttenduDeLInstantane {
   readonly empreinte: string;
   readonly ecrans: number;
   readonly publicsAuCatalogue?: readonly string[];
+  readonly textesAuPupitre?: readonly TextesAttendus[];
+  readonly saisiesDuPosteEtudiant?: readonly SaisiesAttendues[];
   readonly specifiques?: () => void;
+}
+
+export interface TextesAttendus {
+  readonly ecran: string;
+  readonly textes: readonly string[];
+}
+
+export interface SaisiesAttendues extends TextesAttendus {
+  readonly selecteur: string;
+}
+
+function decrireLesTextesAuPupitre(
+  instantane: InstantaneDuCoursB2,
+  attendus: readonly TextesAttendus[],
+): void {
+  for (const { ecran, textes } of attendus) {
+    it(
+      `affiche au pupitre ${ecran} avec ${textes.join(', ')}`,
+      async () => {
+        const monte = await monterEcran(
+          ecranNomme(ecransDuPupitreDe(instantane), ecran),
+          'presentateur',
+        );
+
+        expect(monte.erreurs).toEqual([]);
+        for (const texte of textes) {
+          expect(monte.element.textContent).toContain(texte);
+        }
+        monte.detruire();
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
+  }
+}
+
+function decrireLesSaisiesDuPosteEtudiant(
+  instantane: InstantaneDuCoursB2,
+  attendues: readonly SaisiesAttendues[],
+): void {
+  for (const { ecran, selecteur, textes } of attendues) {
+    it(
+      `monte ${ecran} au poste étudiant avec ses saisies ${selecteur}`,
+      async () => {
+        const monte = await monterEcran(
+          ecranNomme(ecransDuPupitreDe(instantane), ecran),
+          'etudiant',
+        );
+        const racine = monte.montees()[0].shadowRoot;
+
+        expect(monte.erreurs).toEqual([]);
+        for (const texte of textes) {
+          expect(racine?.textContent).toContain(texte);
+        }
+        expect(racine?.querySelectorAll(selecteur).length).toBeGreaterThan(0);
+        monte.detruire();
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
+  }
 }
 
 export function decrireLeMontageDeLInstantane(
@@ -72,6 +137,8 @@ export function decrireLeMontageDeLInstantane(
     beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
     attendu.specifiques?.();
+    decrireLesTextesAuPupitre(instantane, attendu.textesAuPupitre ?? []);
+    decrireLesSaisiesDuPosteEtudiant(instantane, attendu.saisiesDuPosteEtudiant ?? []);
 
     const publicsAuCatalogue = attendu.publicsAuCatalogue;
     if (publicsAuCatalogue !== undefined) {
