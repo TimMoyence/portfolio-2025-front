@@ -314,7 +314,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
         if (elargi) {
           expect(commentee?.getBoundingClientRect().width)
             .withContext(ecran.id)
-            .toBeCloseTo(1280 * 0.4, 0);
+            .toBeCloseTo(monte.cadre.clientWidth * 0.4, 0);
         }
         if (defilante(monte)) {
           monte.cadre.scrollTop = monte.cadre.scrollHeight;
