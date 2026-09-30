@@ -44,6 +44,18 @@ interface DetailTentative {
   dureeMs: number;
 }
 
+const DEUX_FRAGMENTS = [
+  { enigmeId: 'seuil', fragment: 'TR' },
+  { enigmeId: 'marge', fragment: 'ES' },
+] as const;
+
+function deuxEnigmesResolues(): ReturnType<typeof buildProgressionDesEnigmes> {
+  return buildProgressionDesEnigmes({
+    resolues: [...DEUX_FRAGMENTS],
+    tentativesRestantes: { seuil: 8, marge: 7, tva: 0 },
+  });
+}
+
 function sansAccent(texte: string): string {
   return texte
     .normalize('NFD')
@@ -192,14 +204,17 @@ describe('FpEscape', () => {
   });
 
   it('reconstitue le code a partir des seuls fragments servis', () => {
-    hote.progression = buildProgressionDesEnigmes({
-      resolues: [
-        { enigmeId: 'seuil', fragment: 'TR' },
-        { enigmeId: 'marge', fragment: 'ES' },
-      ],
-      tentativesRestantes: { seuil: 8, marge: 7, tva: 0 },
-    });
+    hote.progression = deuxEnigmesResolues();
     expect(libelleDe(hote, 'code')).toBe('Code final : TRES·');
+  });
+
+  it('retire le minuteur une fois le parcours achevé', () => {
+    expect(noeud(hote, 'minuteur')).not.toBeNull();
+
+    hote.progression = deuxEnigmesResolues();
+
+    expect(noeud(hote, 'minuteur')).toBeNull();
+    expect(noeud(hote, 'progression')).not.toBeNull();
   });
 
   it('libere la saisie quand l envoi echoue', () => {
@@ -278,11 +293,7 @@ describe('FpEscape', () => {
   it('ne projette pas au presentateur le code reconstitue par un poste', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.progression = buildProgressionDesEnigmes({
-      resolues: [
-        { enigmeId: 'seuil', fragment: 'TR' },
-        { enigmeId: 'marge', fragment: 'ES' },
-        { enigmeId: 'tva', fragment: 'OR' },
-      ],
+      resolues: [...DEUX_FRAGMENTS, { enigmeId: 'tva', fragment: 'OR' }],
     });
     expect(noeud(hote, 'code')).toBeNull();
     expect(noeuds(hote, 'fragment')).toEqual([]);

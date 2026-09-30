@@ -67,6 +67,14 @@ export abstract class FpEnvoi<Contenu extends { readonly id: string }> extends F
     bouton.disabled = cibles.verrouille;
     champ.addEventListener('input', () => reactions.saisir(champ.value));
     bouton.addEventListener('click', () => reactions.envoyer(champ.value));
+    if (champ instanceof HTMLInputElement) {
+      champ.addEventListener('keydown', (evenement) => {
+        if (evenement.key === 'Enter') {
+          evenement.preventDefault();
+          reactions.envoyer(champ.value);
+        }
+      });
+    }
     return true;
   }
 

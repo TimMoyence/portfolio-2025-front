@@ -220,6 +220,7 @@ export interface RapportSeance {
   fermeeLe: string;
   participants: readonly ParticipantRapporte[];
   conceptsFragiles: readonly string[];
+  libellesDesConcepts?: Readonly<Record<string, string>>;
   resultats: ResultatsSeance;
   statistiques?: StatistiquesSeance;
   notation?: RegleNotation;

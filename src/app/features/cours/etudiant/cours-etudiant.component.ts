@@ -281,9 +281,11 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
             @if (sujet(); as cours) {
               <header class="student-session__head">
                 <h2 data-testid="etudiant-titre">{{ cours.titre }}</h2>
-                <p class="student-progress" data-testid="etudiant-progression">
-                  {{ indexEcran() + 1 }} / {{ cours.ecrans.length }}
-                </p>
+                @if (!terminee()) {
+                  <p class="student-progress" data-testid="etudiant-progression">
+                    {{ indexEcran() + 1 }} / {{ cours.ecrans.length }}
+                  </p>
+                }
                 <button
                   type="button"
                   class="btn btn-ghost student-session__plein-ecran"
@@ -316,7 +318,12 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
                 séance.
               </p>
             } @else if (terminee()) {
-              <p data-testid="etudiant-fin" role="status" i18n="cours.fin|@@coursFin">
+              <p
+                class="student-session__fin"
+                data-testid="etudiant-fin"
+                role="status"
+                i18n="cours.fin|@@coursFin"
+              >
                 La séance est terminée. Merci de votre participation.
               </p>
             } @else {

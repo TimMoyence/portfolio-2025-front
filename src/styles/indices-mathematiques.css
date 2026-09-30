@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'Indices Serif';
+  unicode-range: U+2070-2071, U+2074-208E, U+2090-209C;
+  src: url('../../node_modules/@fontsource/noto-serif/files/noto-serif-math-400-normal.woff2')
+    format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Indices Serif';
+  unicode-range: U+02B3, U+1D49;
+  src: url('../../node_modules/@fontsource/noto-serif/files/noto-serif-latin-ext-400-normal.woff2')
+    format('woff2');
+  font-display: swap;
+}

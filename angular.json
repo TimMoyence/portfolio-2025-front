@@ -50,6 +50,7 @@
               "node_modules/@fontsource/hanken-grotesk/700.css",
               "node_modules/@fontsource/geist-mono/400.css",
               "node_modules/@fontsource/geist-mono/500.css",
+              "src/styles/indices-mathematiques.css",
               "src/styles.scss"
             ],
             "scripts": [],
@@ -165,6 +166,7 @@
               "node_modules/@fontsource/hanken-grotesk/700.css",
               "node_modules/@fontsource/geist-mono/400.css",
               "node_modules/@fontsource/geist-mono/500.css",
+              "src/styles/indices-mathematiques.css",
               "src/styles.scss"
             ],
             "scripts": []

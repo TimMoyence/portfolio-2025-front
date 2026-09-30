@@ -136,7 +136,7 @@ async function ouvrirLaClasse(browser: Browser, seance: Seance, journal: Journal
 
 async function voteJumele(pupitre: Page, postes: readonly Page[], journal: Journal) {
   await passerALaPhase(pupitre, 'Discussion entre voisins');
-  await passerALaPhase(pupitre, 'Vote sur le cas jumeau');
+  await passerALaPhase(pupitre, 'Deuxième question');
   await journal.surChaquePoste(postes, 'second vote', (page, numero) =>
     interagirAvecLEcran(page, 'fp-vote', numero + 1),
   );

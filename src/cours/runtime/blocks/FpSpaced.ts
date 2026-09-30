@@ -215,7 +215,7 @@ export class FpSpaced extends FpVerdicts {
       return safeHtml`<p class="fp-spaced__attente" data-testid="attente">${escapeHtml(this.texte('chargement'))}</p>`;
     }
     if (this.total() > 0) {
-      return safeHtml`<p class="fp-spaced__termine" data-testid="termine">${escapeHtml(this.texte('spaced-termine'))}</p>`;
+      return safeHtml`<p class="fp-spaced__termine" role="status" data-testid="termine">${escapeHtml(this.texte('spaced-termine'))}</p>`;
     }
     return safeHtml`<p class="fp-spaced__vide" data-testid="vide">${escapeHtml(this.texte('spaced-vide'))}</p>`;
   }
@@ -298,8 +298,7 @@ export class FpSpaced extends FpVerdicts {
       optionId,
       dureeMs: this.depuisAffichage(),
     });
-    this.message =
-      this.questionCourante() === null ? this.texte('spaced-termine') : this.messageApresEnvoi();
+    this.message = this.questionCourante() === null ? '' : this.messageApresEnvoi();
     this.suivreAffichage(this.cleAffichage());
     this.refresh();
   }

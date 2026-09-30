@@ -62,4 +62,10 @@ describe('FooterComponent', () => {
       'Bordeaux',
     );
   });
+
+  it('sépare le code postal de la ville dans l adresse affichée', () => {
+    const adresse = pied.racine.querySelector('[itemprop="address"][itemscope]');
+
+    expect(adresse?.textContent).toMatch(/33100\s+Bordeaux/);
+  });
 });

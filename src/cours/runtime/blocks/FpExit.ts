@@ -58,7 +58,7 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
         ? safeHtml`<p class="fp-exit__invite" data-testid="invite">${escapeHtml(billet.invite)}</p>`
         : safeHtml`<label class="fp-exit__invite" for="${escapeHtml(ID_TEXTE_LIBRE)}">${escapeHtml(billet.invite)}</label>
         <textarea class="fp-exit__champ" id="${escapeHtml(ID_TEXTE_LIBRE)}" data-testid="texte-libre" rows="3">${escapeHtml(this.texteLibre)}</textarea>
-        <p class="fp-exit__jauge" data-testid="jauge">${this.texteLibre.length} / ${LIMITE_TEXTE_LIBRE}</p>
+        <p class="fp-exit__jauge" data-testid="jauge">${escapeHtml(this.jauge())}</p>
         <button type="button" class="fp-exit__envoyer" data-testid="envoyer">${escapeHtml(this.texte('envoyer'))}</button>
         <p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
         ${this.recapitulatif()}
@@ -85,6 +85,10 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
         saisir: (texte) => {
           this.texteLibre = texte;
           this.memoriser();
+          const jauge = racine.querySelector('[data-testid="jauge"]');
+          if (jauge !== null) {
+            jauge.textContent = this.jauge();
+          }
         },
         envoyer: (texte) => this.envoyer(texte),
       },
@@ -101,6 +105,10 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
   protected effacerLaSaisie(): void {
     this.texteLibre = '';
     this.choix = null;
+  }
+
+  private jauge(): string {
+    return `${this.texteLibre.length} / ${LIMITE_TEXTE_LIBRE}`;
   }
 
   private memoriser(): void {

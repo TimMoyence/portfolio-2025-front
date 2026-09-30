@@ -160,6 +160,22 @@ describe('FpNumeric', () => {
     expect(retourDe(hote)).toBe('Réponse enregistrée');
   });
 
+  it('valide la saisie à la touche Entrée, comme le bouton', () => {
+    const details = detailsEmis(hote);
+    const champ = champDe(hote);
+    if (champ === null) {
+      throw new Error('champ absent');
+    }
+    champ.value = SAISIE_VALIDE;
+    champ.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+    expect(details.length).toBe(0);
+
+    champ.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true }));
+
+    expect(details.map((detail) => detail.valeur)).toEqual([12.5]);
+    expect(champDe(hote)?.disabled).toBe(true);
+  });
+
   it('n emet qu une seule reponse par question', () => {
     const details = detailsEmis(hote);
     saisir(hote, SAISIE_VALIDE);

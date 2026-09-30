@@ -523,7 +523,7 @@
 
 .cours-presentateur [data-testid='presentateur-question'] dl {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: max-content minmax(0, 1fr);
   gap: 6px 12px;
   margin: 0;
   padding-top: var(--s-2);
@@ -541,6 +541,7 @@
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .cours-presentateur [data-testid='presentateur-question'] ul {
@@ -923,6 +924,26 @@
   background: var(--ivory);
 }
 
+.cours-synthese [data-testid='synthese-confusion-libelle'],
+.cours-synthese [data-testid='synthese-fragile-concept'] {
+  flex: 1;
+}
+
+.cours-synthese [data-testid='synthese-question-libelle'] {
+  display: block;
+  font-weight: 600;
+}
+
+.cours-synthese [data-testid='synthese-question-id'] {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 900px) {
   .join-panel {
     grid-template-columns: 1fr;
@@ -1201,6 +1222,20 @@
 .student-status {
   margin: 0;
   padding: 0.5rem 0.75rem;
+}
+
+.student-session > .student-session__fin {
+  display: grid;
+  flex: 1 1 auto;
+  place-content: center;
+  margin: 0;
+  padding: 1.5rem;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  line-height: 1.2;
+  text-align: center;
+  text-wrap: balance;
 }
 
 @media (max-width: 900px) {

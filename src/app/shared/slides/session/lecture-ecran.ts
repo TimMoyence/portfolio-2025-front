@@ -189,7 +189,7 @@ export function identifiantsDesQuestions(ecran: EcranContent): readonly string[]
 export function enoncesDuDeroule(deroule: DerouleCours): ReadonlyMap<string, string> {
   return new Map(
     deroule.ecrans
-      .flatMap((ecran) => questionsDeLEcran(ecran))
+      .flatMap((ecran) => [...ecran.questions, ...questionsDeLEcran(ecran)])
       .filter((question) => question.enonce !== '')
       .map((question) => [question.id, question.enonce]),
   );
@@ -235,7 +235,7 @@ export function enoncesDesActivites(ecran: EcranContent): ReadonlyMap<string, st
     case 'fp-recall':
       return new Map(activitesDuRappel(donnees));
     case 'fp-exit':
-      return new Map(entreesPortees(donnees['billet'], 'question'));
+      return new Map(entreesPortees(donnees['billet'], 'invite'));
     case 'fp-story': {
       const presentation = presentationDe(ecran);
       return presentation?.renderer === 'reflection'

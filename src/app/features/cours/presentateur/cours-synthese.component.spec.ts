@@ -56,7 +56,7 @@ function etudiant(
     prenom,
     nom: 'Durand',
     email: `${prenom.toLowerCase()}@example.com`,
-    completion: reponses.length,
+    completion: reponses.length / 4,
     note,
     sousSeuil,
     reponses,
@@ -150,6 +150,26 @@ describe('CoursSyntheseComponent', () => {
       'actualisation',
     ]);
     expect(textes(fixture, 'synthese-fragile-effectif')).toEqual(['2', '1']);
+  });
+
+  it('nomme un concept fragile par son libellé quand le rapport le sert', async () => {
+    const fixture = await monter({
+      ...rapportDe([MALIK, NORA, CHLOE]),
+      libellesDesConcepts: { 'interets-composes': 'Intérêts composés' },
+    });
+
+    expect(textes(fixture, 'synthese-fragile-concept')).toEqual([
+      'Intérêts composés',
+      'actualisation',
+    ]);
+  });
+
+  it('exprime l avancement en pourcentage des questions notées', async () => {
+    const fixture = await monter(rapportDe([MALIK, NORA]));
+
+    expect(textes(fixture, 'synthese-avancement').map((texte) => texte.replace(/\s/g, ''))).toEqual(
+      ['50%', '25%'],
+    );
   });
 
   it('additionne les confusions au travers des questions et les trie par nombre decroissant', async () => {

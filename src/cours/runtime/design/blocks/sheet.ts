@@ -100,7 +100,27 @@ export const sheet = `
   border: 1px solid var(--fp-bordure);
 }
 
+:where(.fp-root) .fp-sheet__cellule:not(.fp-sheet__cellule--saisie) {
+  padding: var(--fp-s-1) var(--fp-s-2);
+  color: var(--fp-texte-fort);
+  font-family: var(--fp-font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+:where(.fp-root) .fp-sheet__correction {
+  display: grid;
+  justify-items: end;
+}
+
+:where(.fp-root) .fp-sheet__cellule--saisie {
+  width: calc((var(--fp-sheet-largeur, 8) + 1) * 0.6 * var(--fp-corps) + 2 * var(--fp-s-2));
+}
+
 :where(.fp-root) .fp-sheet__champ {
+  display: block;
+  box-sizing: border-box;
   width: 100%;
   min-width: calc(6rem * var(--fp-echelle));
   padding: var(--fp-s-1) var(--fp-s-2);

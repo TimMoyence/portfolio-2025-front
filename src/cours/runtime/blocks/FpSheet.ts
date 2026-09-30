@@ -44,6 +44,20 @@ const LIMITE_GRILLE = 40;
 const LIGNES_AVANT_RESSERREMENT = 10;
 const TABLEAU_RESSERRE = safeHtml` fp-sheet__tableau--dense`;
 const LONGUEUR_MAX_CELLULE = 200;
+const LARGEUR_MIN_DE_COLONNE_CH = 8;
+const LARGEUR_MAX_DE_COLONNE_CH = 24;
+const DECIMALES_D_UN_MONTANT = 2;
+const DECIMALES_D_UN_TAUX = 4;
+
+function arrondirUnNombre(valeur: number): number {
+  return Number(
+    valeur.toFixed(Math.abs(valeur) < 1 ? DECIMALES_D_UN_TAUX : DECIMALES_D_UN_MONTANT),
+  );
+}
+
+function arrondirLAttendu(valeur: ValeurFormule): ValeurFormule {
+  return typeof valeur === 'number' ? arrondirUnNombre(valeur) : valeur;
+}
 
 function borner(brut: number): number {
   return Number.isFinite(brut) ? Math.min(LIMITE_GRILLE, Math.max(0, Math.trunc(brut))) : 0;
@@ -367,21 +381,40 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private ligne(ligne: number, interactif: boolean): EscapedHtml {
-    const colonnes = [...Array(this.interne?.colonnes ?? 0).keys()];
+    const largeurs = this.largeursDesColonnes();
     return safeHtml`
       <tr class="fp-sheet__ligne" data-testid="ligne">
         <th class="fp-sheet__rang" scope="row" id="${escapeHtml(PREFIXE_LIGNE + (ligne + 1))}">${ligne + 1}</th>
-        ${colonnes.map((colonne) => this.cellule(ligne, colonne, interactif))}
+        ${largeurs.map((largeur, colonne) => this.cellule(ligne, colonne, interactif, largeur))}
       </tr>
     `;
   }
 
-  private cellule(ligne: number, colonne: number, interactif: boolean): EscapedHtml {
+  private largeursDesColonnes(): number[] {
+    const lignes = [...Array(this.interne?.lignes ?? 0).keys()];
+    return [...Array(this.interne?.colonnes ?? 0).keys()].map((colonne) => {
+      const libelles = lignes
+        .map((ligne) => this.interne?.cellules[nomCellule(ligne, colonne)] ?? '')
+        .filter((libelle) => !libelle.trimStart().startsWith('='));
+      return Math.min(
+        LARGEUR_MAX_DE_COLONNE_CH,
+        Math.max(LARGEUR_MIN_DE_COLONNE_CH, ...libelles.map((libelle) => [...libelle].length)),
+      );
+    });
+  }
+
+  private cellule(
+    ligne: number,
+    colonne: number,
+    interactif: boolean,
+    largeur: number,
+  ): EscapedHtml {
     const nom = nomCellule(ligne, colonne);
     const portes = `${PREFIXE_COLONNE}${lettreColonne(colonne)} ${PREFIXE_LIGNE}${ligne + 1}`;
-    const contenu = interactif ? this.champ(nom) : this.lecture(nom);
-    const etat = interactif ? this.etatDeLaCellule(nom) : VIDE;
-    return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}" headers="${escapeHtml(portes)}" ${etat}>${contenu}</td>`;
+    if (!interactif) {
+      return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}" headers="${escapeHtml(portes)}">${this.lecture(nom)}</td>`;
+    }
+    return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)} ${escapeHtml(STYLE_CELLULE)}--saisie" headers="${escapeHtml(portes)}" style="--fp-sheet-largeur: ${largeur}" ${this.etatDeLaCellule(nom)}>${this.champ(nom)}</td>`;
   }
 
   private etatDeLaCellule(nom: string): EscapedHtml {
@@ -397,13 +430,15 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   private lecture(nom: string): EscapedHtml {
     const attendu = this.attendus.find((candidat) => candidat.reference === nom);
     if (attendu !== undefined && this.correction >= 1) {
-      const valeur =
-        this.correction >= 2
-          ? safeHtml` <span class="fp-montant">${escapeHtml(formaterResultat({ valeur: attendu.valeur, erreur: null }))}</span>`
-          : VIDE;
-      return safeHtml`<span class="fp-sheet__correction" data-testid="correction-feuille" data-nom="${escapeHtml(nom)}"><code>${escapeHtml(attendu.formuleReference)}</code>${valeur}</span>`;
+      return safeHtml`<span class="fp-sheet__correction" data-testid="correction-feuille" data-nom="${escapeHtml(nom)}"><code>${escapeHtml(attendu.formuleReference)}</code>${this.valeurAttendue(attendu)}</span>`;
     }
     return safeHtml`<span data-testid="cellule" data-nom="${escapeHtml(nom)}">${escapeHtml(this.affichage(nom, false))}</span>`;
+  }
+
+  private valeurAttendue(attendu: AttenduDeFeuille): EscapedHtml {
+    return this.correction >= 2
+      ? safeHtml` <span class="fp-montant">${escapeHtml(formaterResultat({ valeur: arrondirLAttendu(attendu.valeur), erreur: null }))}</span>`
+      : VIDE;
   }
 
   private champ(nom: string): EscapedHtml {
@@ -431,13 +466,9 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     if (this.attendus.length === 0 || this.correction < 1) {
       return VIDE;
     }
-    const valeur = (attendu: AttenduDeFeuille): EscapedHtml =>
-      this.correction >= 2
-        ? safeHtml` <span class="fp-montant">${escapeHtml(formaterResultat({ valeur: attendu.valeur, erreur: null }))}</span>`
-        : VIDE;
     const lignes = this.attendus.map(
       (attendu) =>
-        safeHtml`<li class="fp-sheet__attendu" data-testid="attendu" data-nom="${escapeHtml(attendu.reference)}"><strong>${escapeHtml(attendu.reference)}</strong> <code>${escapeHtml(attendu.formuleReference)}</code>${valeur(attendu)}</li>`,
+        safeHtml`<li class="fp-sheet__attendu" data-testid="attendu" data-nom="${escapeHtml(attendu.reference)}"><strong>${escapeHtml(attendu.reference)}</strong> <code>${escapeHtml(attendu.formuleReference)}</code>${this.valeurAttendue(attendu)}</li>`,
     );
     return safeHtml`<ul class="fp-sheet__attendus" data-testid="attendus">${lignes}</ul>`;
   }

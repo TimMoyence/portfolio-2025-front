@@ -29,9 +29,9 @@ export const tokens = `
   --fp-juste: #2e7d4f;
   --fp-juste-fond: #e7f4ec;
 
-  --fp-font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
-  --fp-font-sans: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
-  --fp-font-mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+  --fp-font-display: 'Instrument Serif', 'Indices Serif', Georgia, 'Times New Roman', serif;
+  --fp-font-sans: 'Hanken Grotesk', system-ui, -apple-system, 'Indices Serif', sans-serif;
+  --fp-font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Indices Serif', monospace;
 
   --fp-densite: var(--fp-densite-imposee, 1);
   --fp-s-1: calc(0.375rem * var(--fp-densite));
@@ -310,6 +310,14 @@ export const impression = `
 `;
 
 export const correction = `
+:where(.fp-root) [data-option][aria-pressed='true'] {
+  border-color: var(--fp-teal-deep);
+  box-shadow: inset 0 0 0 1px var(--fp-teal-deep);
+  background: var(--fp-confirme-fond);
+  color: var(--fp-texte-fort);
+  font-weight: 600;
+}
+
 :where(.fp-root) [data-correction='juste'] {
   border-color: var(--fp-juste);
   box-shadow: inset 0 0 0 2px var(--fp-juste);

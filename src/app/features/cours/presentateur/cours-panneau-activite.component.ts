@@ -29,7 +29,7 @@ const REVELATIONS_SANS_QUESTION: ReadonlySet<string> = new Set(['fp-cardsort', '
 const LIBELLES_DE_PHASE: Readonly<Record<VotePhase, string>> = {
   vote: $localize`:@@panneauActivitePhaseVote:Vote individuel`,
   discussion: $localize`:@@panneauActivitePhaseDiscussion:Discussion entre voisins`,
-  revote: $localize`:@@panneauActivitePhaseRevote:Vote sur le cas jumeau`,
+  revote: $localize`:@@panneauActivitePhaseRevote:Deuxième question`,
   revele: $localize`:@@panneauActivitePhaseRevele:Révélation`,
 };
 

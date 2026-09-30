@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
@@ -15,6 +15,7 @@ interface LigneClassement {
 
 interface ConceptCompte {
   concept: string;
+  libelle: string;
   effectif: number;
 }
 
@@ -81,7 +82,7 @@ function confusionsFrequentesDe(
 @Component({
   selector: 'app-cours-synthese',
   standalone: true,
-  imports: [],
+  imports: [PercentPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="cours-synthese">
@@ -116,7 +117,9 @@ function confusionsFrequentesDe(
                 } @else {
                   <td data-testid="synthese-score">{{ ligne.participant.note }}</td>
                 }
-                <td>{{ ligne.participant.completion }}</td>
+                <td data-testid="synthese-avancement">
+                  {{ ligne.participant.completion | percent }}
+                </td>
               </tr>
             }
           </tbody>
@@ -176,7 +179,7 @@ function confusionsFrequentesDe(
           <ul data-testid="synthese-fragiles">
             @for (fragile of fragiles(); track fragile.concept) {
               <li data-testid="synthese-fragile">
-                <span data-testid="synthese-fragile-concept">{{ fragile.concept }}</span>
+                <span data-testid="synthese-fragile-concept">{{ fragile.libelle }}</span>
                 <span data-testid="synthese-fragile-effectif">{{ fragile.effectif }}</span>
                 <span i18n="synthese.sousSeuil|@@syntheseSousSeuil">étudiants sous le seuil</span>
               </li>
@@ -230,7 +233,11 @@ export class CoursSyntheseComponent {
       return [];
     }
     return rapport.conceptsFragiles
-      .map((concept) => ({ concept, effectif: this.compterLesFreins(rapport, concept) }))
+      .map((concept) => ({
+        concept,
+        libelle: rapport.libellesDesConcepts?.[concept] ?? concept,
+        effectif: this.compterLesFreins(rapport, concept),
+      }))
       .sort((gauche, droite) => droite.effectif - gauche.effectif);
   });
 

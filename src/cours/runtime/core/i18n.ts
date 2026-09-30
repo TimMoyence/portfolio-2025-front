@@ -10,7 +10,7 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   confirme: () => $localize`:@@coursRuntimeConfirme:C’est juste`,
   'discussion-en-cours': () =>
     $localize`:@@coursRuntimeDiscussionEnCours:Discutez avec votre voisin`,
-  revoter: () => $localize`:@@coursRuntimeRevoter:Voter à nouveau`,
+  revoter: () => $localize`:@@coursRuntimeRevoter:Deuxième question : votez seul·e`,
   envoyer: () => $localize`:@@coursRuntimeEnvoyer:Envoyer`,
   'rappel-consigne': () =>
     $localize`:@@coursRuntimeRappelConsigne:Écrivez votre calcul avant de voir les propositions.`,
@@ -208,8 +208,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeChallengeAttenteRevelation:Les pistes fausses seront signalées à la révélation`,
   'vote-phase-vote': () => $localize`:@@coursRuntimeVotePhaseVote:Votez seul·e, sans en parler`,
   'vote-phase-revele': () => $localize`:@@coursRuntimeVotePhaseRevele:Réponse révélée`,
-  'vote-premier': () => $localize`:@@coursRuntimeVotePremier:Premier vote`,
-  'vote-second': () => $localize`:@@coursRuntimeVoteSecond:Second vote, après discussion`,
+  'vote-premier': () => $localize`:@@coursRuntimeVotePremier:Première question`,
+  'vote-second': () => $localize`:@@coursRuntimeVoteSecond:Deuxième question, après discussion`,
   'vote-phase-fermee': () =>
     $localize`:@@coursRuntimeVotePhaseFermee:Le vote est fermé pour cette question`,
   'reponses-closes': () =>
