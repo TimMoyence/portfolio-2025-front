@@ -165,7 +165,8 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     }
     const corrige = this.solutionnaire !== null;
     const projete = this.presentateur() || corrige || this.surPapier();
-    const jeu = projete ? VIDE : safeHtml`${this.progressionAffichee()}${this.minuteur()}`;
+    const minuteur = this.acheve() ? VIDE : this.minuteur();
+    const jeu = projete ? VIDE : safeHtml`${this.progressionAffichee()}${minuteur}`;
     const retour =
       this.presentateur() || this.surPapier()
         ? VIDE

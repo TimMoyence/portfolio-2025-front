@@ -27,12 +27,6 @@ export const exit = `
   cursor: pointer;
 }
 
-:where(.fp-root) .fp-exit__option[aria-pressed='true'] {
-  border-color: var(--fp-teal-deep);
-  background: var(--fp-confirme-fond);
-  font-weight: 600;
-}
-
 :where(.fp-root) .fp-exit__option:focus-visible {
   outline: 2px solid var(--fp-teal);
   outline-offset: 2px;

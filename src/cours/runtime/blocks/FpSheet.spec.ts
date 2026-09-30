@@ -125,6 +125,43 @@ describe('FpSheet', () => {
     expect(repere(hote, 'tableau')?.classList).toContain('fp-sheet__tableau--dense');
   });
 
+  it('resserre aussi les cellules lues a la projection au-dela de dix lignes', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.plan = buildSheetPlan({ lignes: 11 });
+    const lues = [...(hote.shadowRoot?.querySelectorAll('td.fp-sheet__cellule') ?? [])];
+
+    expect(lues.length).toBeGreaterThan(0);
+    expect(
+      lues.every((lue) => Number.parseFloat(getComputedStyle(lue).paddingBlockStart) === 0),
+    ).toBeTrue();
+  });
+
+  function poserLaFeuilleAvecCumulSur(largeur: number): void {
+    hote.style.cssText = `display:block;width:${String(largeur)}px;`;
+    hote.plan = buildSheetPlan({
+      colonnes: 5,
+      cellules: { ...PLAN.cellules, E1: 'Cumul 2025-2030 (k€)' },
+      verrouillees: [...PLAN.verrouillees, 'E1'],
+    });
+  }
+
+  it('QF-6 · sur une toile assez large, donne à chaque colonne la largeur de son plus long libellé', () => {
+    poserLaFeuilleAvecCumulSur(1216);
+
+    for (const nom of ['A1', 'B2', 'C2', 'E1']) {
+      const champ = cellule(hote, nom);
+      expect(champ.scrollWidth).withContext(nom).toBeLessThanOrEqual(champ.clientWidth);
+    }
+    expect(cellule(hote, 'E3').clientWidth).toBeGreaterThan(cellule(hote, 'C3').clientWidth);
+  });
+
+  it('QF-6 · sur une toile étroite, resserre les colonnes plutôt que de faire défiler la grille', () => {
+    poserLaFeuilleAvecCumulSur(700);
+    const tableau = repere(hote, 'tableau');
+
+    expect(tableau?.scrollWidth).toBeLessThanOrEqual((tableau?.clientWidth ?? 0) + 1);
+  });
+
   it('enonce les consignes numerotees du plan', () => {
     expect(reperes(hote, 'consignes')[0]?.querySelectorAll('li').length).toBe(2);
     expect(texteDe(hote, 'consignes')).toContain('En C3, calculez le montant HT.');
@@ -303,20 +340,21 @@ describe('FpSheet', () => {
     expect(texteDe(hote, 'attendu')).toBe('D3 =C3*(1+$B$1) 64,8');
   });
 
+  function attendusAuNiveau2(
+    attendus: { reference: string; formuleReference: string; valeur: number | string | boolean }[],
+  ): (string | undefined)[] {
+    hote.corrige = { type: 'feuille', attendus };
+    hote.etayage = 2;
+    return reperes(hote, 'attendu').map((attendu) => attendu.textContent?.trim());
+  }
+
   it('sert au niveau 2 une valeur attendue texte ou logique, comme le tableur l affiche', () => {
-    hote.corrige = {
-      type: 'feuille',
-      attendus: [
+    expect(
+      attendusAuNiveau2([
         { reference: 'D3', formuleReference: '=SI(C3>60;"Relancer";"")', valeur: 'Relancer' },
         { reference: 'D4', formuleReference: '=C4>60', valeur: false },
-      ],
-    };
-    hote.etayage = 2;
-
-    expect(reperes(hote, 'attendu').map((attendu) => attendu.textContent?.trim())).toEqual([
-      'D3 =SI(C3>60;"Relancer";"") Relancer',
-      'D4 =C4>60 FAUX',
-    ]);
+      ]),
+    ).toEqual(['D3 =SI(C3>60;"Relancer";"") Relancer', 'D4 =C4>60 FAUX']);
   });
 
   it('RET-31 · projette les formules de correction au niveau 1 puis les valeurs au niveau 2', () => {
@@ -335,6 +373,32 @@ describe('FpSheet', () => {
       '[data-testid="correction-feuille"][data-nom="D3"]',
     );
     expect(valeur?.textContent?.trim()).toBe('=C3*(1+$B$1) 64,8');
+  });
+
+  it('QF-18 · arrondit au centieme la valeur attendue d un montant, et garde quatre decimales a un taux', () => {
+    expect(
+      attendusAuNiveau2([
+        { reference: 'D3', formuleReference: '=D2*(1+$G$2)', valeur: 1042.805969 },
+        { reference: 'D4', formuleReference: '=D3/D2-1', valeur: 0.0600004 },
+      ]),
+    ).toEqual(['D3 =D2*(1+$G$2) 1042,81', 'D4 =D3/D2-1 0,06']);
+  });
+
+  it('QF-18 · a la projection, separe les cellules lues par une marge et garde chaque libelle sur une ligne', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.style.cssText = 'display:block;width:1216px;';
+    hote.plan = buildSheetPlan({
+      cellules: { ...PLAN.cellules, A1: 'Année', B1: 'Rang n' },
+      verrouillees: [...PLAN.verrouillees, 'A1', 'B1'],
+    });
+    const lues = [...(hote.shadowRoot?.querySelectorAll('td.fp-sheet__cellule') ?? [])];
+    const rang = hote.shadowRoot?.querySelector('[data-testid="cellule"][data-nom="B1"]');
+
+    expect(lues.length).toBeGreaterThan(0);
+    expect(
+      lues.every((lue) => Number.parseFloat(getComputedStyle(lue).paddingInlineStart) >= 4),
+    ).toBeTrue();
+    expect(rang?.getClientRects().length).toBe(1);
   });
 
   it('RET-31 · laisse reprendre les seules cases fausses apres verdict', () => {

@@ -49,11 +49,11 @@ module.exports = {
         'night-3': 'var(--night-3)',
       },
       fontFamily: {
-        display: ['"Instrument Serif"', 'Georgia', 'serif'],
-        heading: ['"Instrument Serif"', 'Georgia', 'serif'],
-        sans: ['"Hanken Grotesk"', 'system-ui', 'sans-serif'],
-        body: ['"Hanken Grotesk"', 'system-ui', 'sans-serif'],
-        mono: ['"Geist Mono"', 'ui-monospace', 'monospace'],
+        display: ['"Instrument Serif"', '"Indices Serif"', 'Georgia', 'serif'],
+        heading: ['"Instrument Serif"', '"Indices Serif"', 'Georgia', 'serif'],
+        sans: ['"Hanken Grotesk"', 'system-ui', '"Indices Serif"', 'sans-serif'],
+        body: ['"Hanken Grotesk"', 'system-ui', '"Indices Serif"', 'sans-serif'],
+        mono: ['"Geist Mono"', 'ui-monospace', '"Indices Serif"', 'monospace'],
       },
       fontSize: {
         h1: ['3rem', { lineHeight: '1.15', letterSpacing: '-0.045em' }],

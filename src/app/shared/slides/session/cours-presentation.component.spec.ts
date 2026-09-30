@@ -16,6 +16,7 @@ import {
 } from '../../../../testing/fixtures/instantane-de-cours';
 import { chargerLesPolicesDeLApplication } from '../../../../testing/polices';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
+import type { DirectEcran } from './contrat-hote';
 import {
   CoursPresentationComponent,
   type CoursPresentationMode,
@@ -35,7 +36,9 @@ const COURS_MESURES = [
   imports: [CoursPresentationComponent],
   template: `
     <app-cours-presentation mode="projection" [slide]="slide()" [surimpression]="calque" />
-    <ng-template #calque><p data-testid="surimpression">45,5</p></ng-template>
+    <ng-template #calque
+      ><p data-testid="surimpression" style="margin: 0; block-size: 15rem">45,5</p></ng-template
+    >
   `,
 })
 class HoteAvecSurimpressionComponent {
@@ -47,6 +50,7 @@ interface EcranCadre {
   readonly hote: HTMLElement;
   readonly toile: () => HTMLElement | null;
   readonly brique: () => HTMLElement | null;
+  readonly rafraichir: () => Promise<void>;
   readonly detruire: () => void;
 }
 
@@ -64,6 +68,7 @@ async function monterDansUnCadre(
   largeur: number,
   hauteur: number,
   renvoi: EcranContent | null = null,
+  direct: DirectEcran | null = null,
 ): Promise<EcranCadre> {
   const cadre = document.createElement('div');
   cadre.style.cssText = `position:fixed;top:0;left:0;width:${largeur}px;height:${hauteur}px;display:flex;overflow:auto;`;
@@ -75,6 +80,7 @@ async function monterDansUnCadre(
   if (renvoi !== null) {
     fixture.componentRef.setInput('renvoi', renvoi);
   }
+  fixture.componentRef.setInput('direct', direct);
   const racine = fixture.nativeElement as HTMLElement;
   const toile = (): HTMLElement | null =>
     racine.querySelector<HTMLElement>('[data-testid="cours-toile"]');
@@ -95,11 +101,53 @@ async function monterDansUnCadre(
     hote: racine,
     toile,
     brique,
+    rafraichir: async () => {
+      await new Promise((suite) => setTimeout(suite, 50));
+      fixture.detectChanges();
+    },
     detruire: () => {
       fixture.destroy();
       cadre.remove();
     },
   };
+}
+
+const PILOTAGE_REVELE: DirectEcran = {
+  pilotage: { revele: true, explicationsDevoilees: 20, etayage: 20 },
+  resultats: null,
+  comptesJalon: null,
+};
+
+async function stabiliser(monte: EcranCadre, passes: number): Promise<void> {
+  for (let passe = 0; passe < passes; passe += 1) {
+    await monte.rafraichir();
+  }
+}
+
+function ecransARenvoiDesCours(
+  ecransDe: (instantane: (typeof COURS_MESURES)[number]['instantane']) => readonly EcranContent[],
+): { readonly ecran: EcranContent; readonly renvoi: EcranContent | null }[] {
+  return COURS_MESURES.flatMap(({ instantane }) => {
+    const pupitre = ecransDuPupitreDe(instantane);
+    return ecransDe(instantane)
+      .filter(({ renvoi }) => renvoi !== undefined)
+      .map((ecran) => ({ ecran, renvoi: pupitre.find(({ id }) => id === ecran.renvoi) ?? null }));
+  });
+}
+
+function constaterLesProjectionsARenvoi(
+  pupitre: readonly EcranContent[],
+  constater: (ecran: EcranContent, monte: EcranCadre) => string | null,
+): Promise<string[]> {
+  return fautesDesEcrans(
+    pupitre.filter(({ renvoi }) => renvoi !== undefined),
+    pupitre,
+    (ecran, renvoi) => monterDansUnCadre(ecran, 'projection', 1280, 720, renvoi),
+    async (ecran, monte) => {
+      await stabiliser(monte, 6);
+      return constater(ecran, monte);
+    },
+  );
 }
 
 async function fautesDesEcrans(
@@ -127,6 +175,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     expect(await chargerLesPolicesDeLApplication()).toEqual([
       'Geist Mono',
       'Hanken Grotesk',
+      'Indices Serif',
       'Instrument Serif',
     ]);
   });
@@ -253,12 +302,181 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     monte.detruire();
   });
 
+  it(
+    'QF-5 · un écran à renvoi trop réduit élargit sa colonne, et sa diapositive commentée suit le défilement s il reste trop long',
+    async () => {
+      const releves: string[] = [];
+      for (const { ecran, renvoi } of ecransARenvoiDesCours(ecransPublicsDe)) {
+        const monte = await monterDansUnCadre(ecran, 'etudiant', 1280, 720, renvoi);
+        await stabiliser(monte, 2);
+        const commentee = monte.hote.querySelector('[data-testid="cours-renvoi"]');
+        const elargi = monte.hote.classList.contains('cours-presentation--renvoi-reduit');
+        if (elargi) {
+          expect(commentee?.getBoundingClientRect().width)
+            .withContext(ecran.id)
+            .toBeCloseTo(monte.cadre.clientWidth * 0.4, 0);
+        }
+        if (defilante(monte)) {
+          monte.cadre.scrollTop = monte.cadre.scrollHeight;
+          await monte.rafraichir();
+          const ecart =
+            (commentee?.getBoundingClientRect().top ?? Number.NaN) -
+            monte.cadre.getBoundingClientRect().top;
+          expect(elargi).withContext(ecran.id).toBeTrue();
+          expect(monte.cadre.scrollTop).withContext(ecran.id).toBeGreaterThan(0);
+          expect(Math.abs(ecart)).withContext(ecran.id).toBeLessThanOrEqual(2);
+        }
+        releves.push(
+          `${ecran.id} ${elargi ? 'élargi' : 'plein'}${defilante(monte) ? ' défilant' : ''}`,
+        );
+        monte.detruire();
+      }
+
+      expect(releves.filter((releve) => releve.includes('élargi')).length)
+        .withContext(releves.join(' | '))
+        .toBeGreaterThan(0);
+      expect(releves.filter((releve) => releve.includes('défilant')).length)
+        .withContext(releves.join(' | '))
+        .toBeGreaterThan(0);
+    },
+    DELAI_DE_MONTAGE_MS,
+  );
+
+  it('QF-19 · en projection, le titre d un graphique tient sur une ligne et laisse sa hauteur au tracé', async () => {
+    const graphique = ecransDuPupitreDe(INSTANTANE_B2_04).find(({ id }) =>
+      id.endsWith('A3-01-GRAPHIQUE'),
+    );
+    if (graphique === undefined) {
+      throw new Error('écran absent du pupitre : A3-01-GRAPHIQUE');
+    }
+    const monte = await monterDansUnCadre(graphique, 'projection', 1280, 720);
+    await monte.rafraichir();
+    const titre = monte.hote.querySelector<HTMLElement>('.slide-chart h2');
+    const trace = monte.hote.querySelector<HTMLElement>('[data-testid="slide-chart-zone"]');
+    const interligne = Number.parseFloat(getComputedStyle(titre as HTMLElement).fontSize) * 1.5;
+
+    expect(titre?.offsetHeight).toBeLessThan(interligne);
+    expect(trace?.offsetHeight).toBeGreaterThanOrEqual(200);
+    monte.detruire();
+  });
+
+  it(
+    'QF-15 · en projection, un écran encore illisible une fois sa colonne élargie retire la diapositive commentée et reprend toute la toile',
+    async () => {
+      const releves: string[] = [];
+      for (const { ecran, renvoi } of ecransARenvoiDesCours(ecransDuPupitreDe)) {
+        const monte = await monterDansUnCadre(
+          ecran,
+          'projection',
+          1280,
+          720,
+          renvoi,
+          PILOTAGE_REVELE,
+        );
+        await stabiliser(monte, 2);
+        const masque = monte.hote.classList.contains('cours-presentation--renvoi-masque');
+        const commentee = monte.hote.querySelector('[data-testid="cours-renvoi"]');
+        if (masque) {
+          expect(commentee).withContext(ecran.id).toBeNull();
+          expect(monte.toile()?.classList)
+            .withContext(ecran.id)
+            .not.toContain('cours-toile--renvoi');
+        } else {
+          expect(commentee).withContext(ecran.id).not.toBeNull();
+          expect(echelleDuContenu(monte.toile()))
+            .withContext(ecran.id)
+            .toBeGreaterThanOrEqual(ECHELLE_MINIMALE - 0.001);
+        }
+        releves.push(`${ecran.id} ${masque ? 'masqué' : 'gardé'}`);
+        monte.detruire();
+      }
+
+      expect(releves.filter((releve) => releve.endsWith('masqué')).length)
+        .withContext(releves.join(' | '))
+        .toBeGreaterThan(0);
+      expect(releves.filter((releve) => releve.endsWith('gardé')).length)
+        .withContext(releves.join(' | '))
+        .toBeGreaterThan(0);
+    },
+    DELAI_DE_MONTAGE_MS,
+  );
+
+  it(
+    'QF-22 · en projection, un questionnaire révélé s étale sur toute la largeur de la toile au lieu de rétrécir au centre',
+    async () => {
+      const pupitre = ecransDuPupitreDe(INSTANTANE_B2_04);
+      const etales: string[] = [];
+      for (const suffixe of [
+        'A1-10-ATELIER-ARITHMETIQUE',
+        'A2-05-ATELIER-GEOMETRIQUE',
+        'A3-07-ATELIER-SEUIL',
+      ]) {
+        const ecran = pupitre.find(({ id }) => id.endsWith(suffixe));
+        if (ecran === undefined) {
+          throw new Error(`écran absent du pupitre : ${suffixe}`);
+        }
+        const renvoi = pupitre.find(({ id }) => id === ecran.renvoi) ?? null;
+        const monte = await monterDansUnCadre(
+          ecran,
+          'projection',
+          1280,
+          720,
+          renvoi,
+          PILOTAGE_REVELE,
+        );
+        await stabiliser(monte, 8);
+        const contenu = monte.hote.querySelector<HTMLElement>('[data-testid="cours-contenu"]');
+        const masque = monte.hote.classList.contains('cours-presentation--renvoi-masque');
+
+        if (masque) {
+          etales.push(suffixe);
+          expect(contenu?.getBoundingClientRect().width)
+            .withContext(`largeur affichée de ${suffixe}`)
+            .toBeGreaterThanOrEqual(1100);
+        }
+        expect(echelleDuContenu(monte.toile()))
+          .withContext(`échelle de ${suffixe}`)
+          .toBeGreaterThanOrEqual(ECHELLE_MINIMALE - 0.06);
+        expect(elementsHorsToile(monte)).withContext(suffixe).toEqual([]);
+        monte.detruire();
+      }
+
+      expect(etales.length).toBeGreaterThan(0);
+    },
+    DELAI_DE_MONTAGE_MS,
+  );
+
+  it(
+    'QF-24 · en projection, un écran n est étalé que s il remplit ensuite la hauteur de la toile',
+    async () => {
+      const pupitre = ecransDuPupitreDe(INSTANTANE_B2_04);
+      const etalesSansBesoin = await fautesDesEcrans(
+        pupitre,
+        pupitre,
+        (ecran) => monterDansUnCadre(ecran, 'projection', 1280, 720, null, PILOTAGE_REVELE),
+        async (ecran, monte) => {
+          await stabiliser(monte, 8);
+          const contenu = monte.hote.querySelector<HTMLElement>('[data-testid="cours-contenu"]');
+          const diapositive = contenu?.querySelector<HTMLElement>('app-slide');
+          const etale = (contenu?.style.inlineSize ?? '') !== '';
+          const hauteur = diapositive?.getBoundingClientRect().height ?? 0;
+          return etale && hauteur < 720 * 0.55
+            ? `${ecran.id} (${String(Math.round(hauteur))})`
+            : null;
+        },
+      );
+
+      expect(etalesSansBesoin).toEqual([]);
+    },
+    DELAI_DE_MONTAGE_MS,
+  );
+
   for (const { code, instantane, renvoisAuMoins } of COURS_MESURES) {
     const pupitre = ecransDuPupitreDe(instantane);
 
     for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
       it(
-        `T1 · chaque écran à renvoi du ${code} tient entier dans sa demi-toile en ${mode}, titre compris`,
+        `T1 ·chaque écran à renvoi du ${code} tient entier dans sa demi-toile en ${mode}, titre compris`,
         async () => {
           const aRenvoi = pupitre.filter(({ renvoi }) => renvoi !== undefined);
           expect(aRenvoi.length)
@@ -316,6 +534,43 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     fixture.destroy();
   });
 
+  it('QF-23 · réserve au contenu la place que prend la surimpression, sans la laisser le recouvrir', async () => {
+    const cadre = document.createElement('div');
+    cadre.style.cssText = 'position:fixed;top:0;left:0;width:1280px;height:720px;display:flex;';
+    document.body.appendChild(cadre);
+    const fixture = TestBed.createComponent(HoteAvecSurimpressionComponent);
+    const racine = fixture.nativeElement as HTMLElement;
+    racine.style.cssText = 'flex:1;block-size:100%;';
+    cadre.appendChild(racine);
+    fixture.componentRef.setInput('slide', ecranDuPupitre('A2-03-ATELIER-1'));
+    await attendreQue(
+      fixture,
+      () => racine.querySelector('app-slide-activity *') !== null,
+      'l écran sous sa surimpression',
+    );
+    await chargerLesPolicesDeLApplication();
+    for (let tour = 0; tour < 4; tour += 1) {
+      await new Promise((suite) => setTimeout(suite, 50));
+      fixture.detectChanges();
+    }
+
+    const bord = (selecteur: string): DOMRect | undefined =>
+      racine.querySelector<HTMLElement>(selecteur)?.getBoundingClientRect();
+    const surimpression = bord('[data-testid="surimpression"]');
+    const toile = bord('[data-testid="cours-toile"]');
+
+    expect(surimpression?.height).toBeGreaterThan(200);
+    expect(bord('.cours-toile__principal')?.bottom).toBeLessThanOrEqual(
+      (surimpression?.top ?? 0) + 1,
+    );
+    expect(bord('[data-testid="cours-contenu"]')?.bottom).toBeLessThanOrEqual(
+      (surimpression?.top ?? 0) + 1,
+    );
+    expect(surimpression?.bottom).toBeLessThanOrEqual((toile?.bottom ?? 0) + 1);
+    fixture.destroy();
+    cadre.remove();
+  });
+
   it('G1 · garde la même taille logique de titre quelle que soit la largeur du cadre', async () => {
     const tailleDuTitre = async (largeur: number): Promise<string | undefined> => {
       const monte = await monterDansUnCadre(
@@ -363,7 +618,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
       cadreMiniature.top < audit.bottom &&
       audit.top < cadreMiniature.bottom;
 
-    expect(miniature?.textContent).toContain('Marge brute : une croissance continue');
+    expect(miniature?.textContent).toMatch(/Marge brute\s: une croissance continue/);
     expect(cadreMiniature?.width).toBeCloseTo(1280 * 0.6, 0);
     expect(toileDuRenvoi?.width).toBeLessThanOrEqual((cadreDuRenvoi?.width ?? 0) + 1);
     expect(toileDuRenvoi?.height).toBeLessThanOrEqual((cadreDuRenvoi?.height ?? 0) + 1);
@@ -372,36 +627,74 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     monte.detruire();
   });
 
+  it(
+    'QF-26 · met la diapositive commentée à la taille de son cadre en portrait, sans la rogner',
+    async () => {
+      const pupitre = ecransDuPupitreDe(INSTANTANE_B2_04);
+      const releves = await constaterLesProjectionsARenvoi(pupitre, (ecran, monte) => {
+        const toile = monte.hote.querySelector<HTMLElement>('.cours-renvoi__toile');
+        const contenu = toile?.querySelector<HTMLElement>('app-slide-activity');
+        if (!toile || !contenu) {
+          return `${ecran.id} sans diapositive commentée`;
+        }
+        const echelle = toile.getBoundingClientRect().width / toile.offsetWidth;
+        const rogne =
+          contenu.scrollWidth > contenu.clientWidth + 1 ||
+          contenu.offsetHeight > toile.clientHeight + 1;
+        return `${ecran.renvoi ?? ''}:${echelle >= 0.8 ? 'lisible' : echelle.toFixed(2)}:${rogne ? 'rogne' : 'entier'}`;
+      });
+
+      expect(releves.filter((releve) => releve.endsWith(':rogne'))).toEqual([]);
+      expect(releves.filter((releve) => releve.includes('HISTORIQUE'))).toEqual(
+        Array.from({ length: 3 }, () => 'B2-04-A1-05-HISTORIQUE:lisible:entier'),
+      );
+    },
+    DELAI_DE_MONTAGE_MS,
+  );
+
   for (const { code, instantane } of COURS_MESURES) {
     const pupitre = ecransDuPupitreDe(instantane);
 
     it(
+      `QF-27 · ne rogne en largeur aucun écran à renvoi du ${code} projeté : pas de défilement horizontal à la projection`,
+      async () => {
+        const rognes = await constaterLesProjectionsARenvoi(pupitre, (ecran, monte) => {
+          const contenu = monte.hote.querySelector('[data-testid="cours-contenu"]');
+          const defileurs = contenu === null ? [] : defileursRognes(contenu);
+          return defileurs.length > 0 ? `${ecran.id} (${defileurs.join(',')})` : null;
+        });
+
+        expect(rognes).toEqual([]);
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
+
+    it(
       `R3 · donne à chaque diapositive commentée du ${code} 60 % de la toile, et la fait remplir son cadre`,
       async () => {
-        const fautes = await fautesDesEcrans(
-          pupitre.filter(({ renvoi }) => renvoi !== undefined),
-          pupitre,
-          (ecran, renvoi) => monterDansUnCadre(ecran, 'projection', 1280, 720, renvoi),
-          async (ecran, monte) => {
-            await new Promise((suite) => setTimeout(suite, 50));
-            const miniature = monte
-              .toile()
-              ?.querySelector<HTMLElement>('[data-testid="cours-renvoi"]');
-            const colonne = miniature?.getBoundingClientRect();
-            const cadre = miniature?.querySelector('.cours-renvoi__cadre')?.getBoundingClientRect();
-            const contenu = miniature
-              ?.querySelector('.cours-renvoi__toile app-slide-activity')
-              ?.getBoundingClientRect();
-            const part = 60;
-            const remplissage =
-              cadre === undefined || contenu === undefined
-                ? 0
-                : Math.max(contenu.width / cadre.width, contenu.height / cadre.height);
-            return Math.abs((colonne?.width ?? 0) - (1280 * part) / 100) > 1 || remplissage < 0.9
-              ? `${ecran.id} colonne=${colonne?.width} part=${part} remplissage=${remplissage.toFixed(2)}`
-              : null;
-          },
-        );
+        const fautes = await constaterLesProjectionsARenvoi(pupitre, (ecran, monte) => {
+          if (monte.hote.classList.contains('cours-presentation--renvoi-masque')) {
+            return null;
+          }
+          const miniature = monte
+            .toile()
+            ?.querySelector<HTMLElement>('[data-testid="cours-renvoi"]');
+          const colonne = miniature?.getBoundingClientRect();
+          const cadre = miniature?.querySelector('.cours-renvoi__cadre')?.getBoundingClientRect();
+          const contenu = miniature
+            ?.querySelector('.cours-renvoi__toile app-slide-activity')
+            ?.getBoundingClientRect();
+          const part = monte.hote.classList.contains('cours-presentation--renvoi-reduit') ? 40 : 60;
+          const remplissage =
+            cadre === undefined || contenu === undefined
+              ? 0
+              : Math.max(contenu.width / cadre.width, contenu.height / cadre.height);
+          return Math.abs((colonne?.width ?? 0) - (1280 * part) / 100) > 1 ||
+            remplissage < 0.9 ||
+            remplissage > 1.01
+            ? `${ecran.id} colonne=${colonne?.width} part=${part} remplissage=${remplissage.toFixed(2)}`
+            : null;
+        });
 
         expect(fautes).toEqual([]);
       },
@@ -677,16 +970,26 @@ function elementsDe(racine: ParentNode): HTMLElement[] {
   ]);
 }
 
-function defileursInternes(racine: ParentNode): string[] {
+function defileursQuiDebordent(racine: ParentNode, axe: 'x' | 'y'): string[] {
   return elementsDe(racine)
     .filter((element) => {
-      const { overflowY } = getComputedStyle(element);
-      return (
-        (overflowY === 'auto' || overflowY === 'scroll') &&
-        element.scrollHeight > element.clientHeight + 1
-      );
+      const style = getComputedStyle(element);
+      const defilement = axe === 'x' ? style.overflowX : style.overflowY;
+      const deborde =
+        axe === 'x'
+          ? element.scrollWidth > element.clientWidth + 1
+          : element.scrollHeight > element.clientHeight + 1;
+      return (defilement === 'auto' || defilement === 'scroll') && deborde;
     })
     .map((element) => `${element.tagName.toLowerCase()}.${element.className}`);
+}
+
+function defileursInternes(racine: ParentNode): string[] {
+  return defileursQuiDebordent(racine, 'y');
+}
+
+function defileursRognes(racine: ParentNode): string[] {
+  return defileursQuiDebordent(racine, 'x');
 }
 
 describe('CoursPresentationComponent au poste étudiant', () => {
@@ -713,17 +1016,35 @@ describe('CoursPresentationComponent au poste étudiant', () => {
     return { fixture, racine };
   }
 
-  it('R5 · COFFRE : la page défile, aucun bloc ne défile en interne', async () => {
-    const { fixture, racine } = await monterAuPosteEtudiant(
+  const monterLeCoffreSurUnTelephone = (): ReturnType<typeof monterAuPosteEtudiant> =>
+    monterAuPosteEtudiant(
       'A6-02-COFFRE',
       390,
       (element) =>
         element.querySelector('app-slide-activity [data-cours-role]')?.shadowRoot?.firstChild !=
         null,
     );
+
+  it('R5 · COFFRE : la page défile, aucun bloc ne défile en interne', async () => {
+    const { fixture, racine } = await monterLeCoffreSurUnTelephone();
     await new Promise((suite) => setTimeout(suite, 50));
 
     expect(defileursInternes(racine)).toEqual([]);
+    fixture.destroy();
+  });
+
+  it('QF-13 · sur un téléphone, la colonne de l écran prend la hauteur de son contenu au lieu de le rogner', async () => {
+    const { fixture, racine } = await monterLeCoffreSurUnTelephone();
+    await attendreQue(
+      fixture,
+      () => racine.classList.contains('cours-presentation--compacte'),
+      'le passage en disposition compacte',
+    );
+    const principal = racine.querySelector<HTMLElement>('.cours-toile__principal');
+    const contenu = racine.querySelector<HTMLElement>('[data-testid="cours-contenu"]');
+
+    expect(contenu?.offsetHeight).toBeGreaterThan(100);
+    expect(principal?.clientHeight).toBeGreaterThanOrEqual(contenu?.offsetHeight ?? Infinity);
     fixture.destroy();
   });
 

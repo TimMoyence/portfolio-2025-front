@@ -1223,6 +1223,7 @@ describe('CoursEtudiantComponent', () => {
     expect(lire(fixture, 'etudiant-fin')).toBeTruthy();
     expect(fixture.debugElement.query(By.directive(SlideActivityComponent))).toBeNull();
     expect(lire(fixture, 'etudiant-suivant')).toBeNull();
+    expect(lire(fixture, 'etudiant-progression')).toBeNull();
   });
 
   describe('reprise apres rechargement (§ 9.8)', () => {

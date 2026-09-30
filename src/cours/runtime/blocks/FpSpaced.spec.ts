@@ -189,6 +189,7 @@ describe('FpSpaced', () => {
       repondre(hote, 0);
     }
     expect(libelleDe(hote, 'termine')).toBe('Révision terminée : vos réponses sont parties');
+    expect(libelleDe(hote, 'annonce')).toBe('');
   });
 
   it('dit qu il n y a rien a revoir quand la liste servie est vide', () => {

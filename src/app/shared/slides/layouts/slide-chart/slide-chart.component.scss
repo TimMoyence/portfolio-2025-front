@@ -419,11 +419,16 @@ h2 {
   }
 
   h2 {
+    max-width: none;
     font-size: 2.75rem;
   }
 
   .slide-chart__context {
     margin-top: 0.5rem;
+  }
+
+  .slide-chart__description {
+    max-width: none;
   }
 
   .slide-chart__plot {

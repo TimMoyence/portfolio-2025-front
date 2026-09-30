@@ -188,7 +188,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
       : options;
     const boutons = proposees.map(
       (option) =>
-        safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}"${this.marqueDeCorrection(option.id)} ${this.presentateur() ? DESACTIVE : VIDE}>${escapeHtml(option.libelle)}</button>`,
+        safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}" aria-pressed="${escapeHtml(String(option.id === this.choisie))}"${this.marqueDeCorrection(option.id)} ${this.presentateur() ? DESACTIVE : VIDE}>${escapeHtml(option.libelle)}</button>`,
     );
     return safeHtml`<div class="fp-recall__options" data-testid="options">${boutons}</div>`;
   }

@@ -11,7 +11,8 @@ export function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPann
       return { numero: position + 1, enonce: apercu[position].enonce, corrige };
     }
     horsApercu += 1;
-    return { numero: horsApercu, enonce: '', corrige };
+    const servie = ecran.questions.find((question) => question.id === corrige.questionId);
+    return { numero: horsApercu, enonce: servie?.enonce ?? '', corrige };
   });
   return questions.sort((gauche, droite) => gauche.numero - droite.numero);
 }

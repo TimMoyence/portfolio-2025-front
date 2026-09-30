@@ -132,6 +132,13 @@ describe('FpTableBuild', () => {
     expect(texteDe(hote, 'entete-rang')).toBe('Année');
   });
 
+  it('QF-21 · ecrit le libelle d une ligne dans la police de texte, pas en chasse fixe', () => {
+    const rang = hote.shadowRoot?.querySelector('.fp-table-build__rang');
+
+    expect(rang).not.toBeNull();
+    expect(getComputedStyle(rang as Element).fontFamily).not.toContain('Mono');
+  });
+
   it('pose un tableau a entetes portees, une ligne par revision nommee', () => {
     expect(hote.shadowRoot?.querySelector('caption')?.textContent?.trim()).toBe(PLAN.intitule);
     expect(reperes(hote, 'entete').map((th) => th.textContent?.trim())).toEqual([

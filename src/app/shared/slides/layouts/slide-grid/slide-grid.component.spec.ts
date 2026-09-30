@@ -114,6 +114,24 @@ describe('SlideGridComponent', () => {
     );
   });
 
+  it('QF-20 · dans une fiche de cartes retournables, centre la carte de lien comme ses voisines', () => {
+    const fixture = TestBed.createComponent(SlideGridComponent);
+    fixture.componentRef.setInput('items', [
+      { title: 'Mesure', description: 'Quel indicateur ?', back: VERSO_LONG },
+      { title: 'Référentiel', description: 'Le programme.', href: 'https://example.org' },
+    ]);
+    fixture.detectChanges();
+    const racine = fixture.nativeElement as HTMLElement;
+    document.body.appendChild(racine);
+    const lien = racine.querySelector<HTMLElement>('a.slide-grid__card');
+    const style = lien === null ? null : getComputedStyle(lien);
+
+    expect(style?.textAlign).toBe('center');
+    expect(style?.alignItems).toBe('center');
+    expect(style?.justifyContent).toBe('center');
+    racine.remove();
+  });
+
   it('ne propose l impression que pour une fiche imprimable', () => {
     expect(monter().querySelector('[data-testid="slide-grid-imprimer"]')).toBeNull();
     expect(

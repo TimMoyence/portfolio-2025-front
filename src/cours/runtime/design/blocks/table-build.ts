@@ -58,7 +58,8 @@ export const tableBuild = `
   padding: var(--fp-s-1) var(--fp-s-2);
   border-bottom: 1px solid var(--fp-bordure);
   color: var(--fp-texte-fort);
-  font-family: var(--fp-font-mono);
+  font-family: var(--fp-font-sans);
+  font-variant-numeric: tabular-nums;
   font-weight: 700;
   text-align: left;
   white-space: nowrap;

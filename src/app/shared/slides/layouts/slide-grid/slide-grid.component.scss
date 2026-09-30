@@ -79,6 +79,12 @@
   }
 }
 
+.slide-grid__grid:has(.slide-grid__card--flip) .slide-grid__card:not(.slide-grid__card--flip) {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .slide-grid__face {
   display: flex;
   grid-area: 1 / 1;

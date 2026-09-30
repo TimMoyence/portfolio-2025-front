@@ -175,6 +175,12 @@ describe('FpExit', () => {
     expect(texteOmbre(hote, 'jauge')).toBe(`${TEXTE_COURT.length} / ${LIMITE}`);
   });
 
+  it('suit la longueur à chaque frappe, sans attendre un autre geste', () => {
+    ecrire(hote, TEXTE_COURT);
+    expect(texteOmbre(hote, 'jauge')).toBe(`${TEXTE_COURT.length} / ${LIMITE}`);
+    expect(champLibre(hote).value).toBe(TEXTE_COURT);
+  });
+
   it('ne garde que les champs publics des options, meme pour le poste presentateur', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.billet = {

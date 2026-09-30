@@ -216,6 +216,15 @@ describe('FpRecall', () => {
     expect(optionsDe(hote).every((option) => option.disabled)).toBe(true);
   });
 
+  it('marque l option choisie, et elle seule, une fois la réponse envoyée', () => {
+    jasmine.clock().tick(DELAI_DEFAUT_MS);
+    optionsDe(hote)[1].click();
+
+    expect(optionsDe(hote).map((option) => option.getAttribute('aria-pressed'))).toEqual(
+      optionsDe(hote).map((_, rang) => String(rang === 1)),
+    );
+  });
+
   it('garde l ordre servi, deja melange par le serveur, et termine par je ne sais pas', () => {
     hote.setAttribute('seed', '4242');
     jasmine.clock().tick(DELAI_DEFAUT_MS);

@@ -21,14 +21,16 @@ import type { CorrectionAffichee } from './corrections-affichees';
     }
   `,
   styles: `
+    :host {
+      display: block;
+    }
+
     .cours-correction {
-      position: absolute;
-      inset-inline: 1.5rem;
-      inset-block-end: 1.5rem;
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
       gap: 0.5rem;
-      max-block-size: 60%;
+      margin: 0 1.5rem 1.5rem;
+      max-block-size: 27rem;
       box-sizing: border-box;
       padding: 1rem 1.25rem;
       border-inline-start: 0.375rem solid var(--success, #2f7d4f);
@@ -52,21 +54,25 @@ import type { CorrectionAffichee } from './corrections-affichees';
 
     .cours-correction__ligne {
       display: flex;
-      gap: 1rem;
+      flex-wrap: wrap;
+      gap: 0.125rem 1rem;
       justify-content: space-between;
       align-items: baseline;
+      min-inline-size: 0;
     }
 
     .cours-correction__ligne dt {
       font-size: 1rem;
+      line-height: 1.3;
     }
 
     .cours-correction__ligne dd {
       margin: 0;
       font-weight: 700;
       font-size: 1.25rem;
+      line-height: 1.25;
       font-variant-numeric: tabular-nums;
-      white-space: nowrap;
+      overflow-wrap: anywhere;
     }
   `,
 })

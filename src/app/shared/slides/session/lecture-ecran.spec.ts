@@ -44,7 +44,7 @@ describe('enonces des activites libres du cours B2-01', () => {
     const enonces = enoncesDesActivites(ecran('A1-03-MISSION'));
 
     expect(enonces.size).toBe(3);
-    expect(enonces.get('b2-01-a1-mission:mesure')).toBe('Que mesure chaque chiffre ?');
+    expect(enonces.get('b2-01-a1-mission:mesure')).toMatch(/^Que mesure chaque chiffre\s\?$/);
   });
 
   it('lit la question d un ecran de reflexion', () => {
@@ -69,10 +69,10 @@ describe('enonces des activites libres du cours B2-01', () => {
     }
   });
 
-  it('lit la question du billet de sortie', () => {
+  it('nomme la réponse libre du billet de sortie par son invite, pas par la question à choix', () => {
     const enonces = enoncesDesActivites(ecran('BILLET-DE-SORTIE'));
 
-    expect(enonces.get('b2-01-a6-billet')).toContain('Le comité ne retiendra');
+    expect(enonces.get('b2-01-a6-billet')).toContain('Quels deux chiffres du dossier');
   });
 
   it('ne trouve aucune activite libre sur un ecran de vote', () => {
@@ -168,6 +168,24 @@ describe('lecture de l ecran', () => {
     expect([...enoncesDuDeroule(deroule)]).toEqual([
       ['b2-s03-prediction', 'Quelle échelle ?'],
       [buildVoteQuestion().id, buildVoteQuestion().enonce],
+    ]);
+  });
+
+  it('nomme aussi les questions que seul le déroulé sert, comme celles du rappel', () => {
+    const deroule = buildDerouleCours({
+      ecrans: [
+        buildEcranDeroule({
+          type: 'fp-spaced',
+          donnees: { rappel: { id: 'rappel' } },
+          questions: [
+            { id: 'r-nature', enonce: 'Quelle est la nature de la suite ?', options: [] },
+          ],
+        }),
+      ],
+    });
+
+    expect([...enoncesDuDeroule(deroule)]).toEqual([
+      ['r-nature', 'Quelle est la nature de la suite ?'],
     ]);
   });
 });

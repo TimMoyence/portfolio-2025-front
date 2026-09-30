@@ -57,6 +57,24 @@ describe('adoptCoursStyles', () => {
     ).toMatch(/^\d+(\.\d+)?$/);
   });
 
+  it('distingue l’option choisie des autres, même désactivée', () => {
+    adoptCoursStyles(racine);
+    racine.innerHTML = `<div class="fp-root">
+      <button class="fp-vote__option" data-option="a" aria-pressed="true" disabled>A</button>
+      <button class="fp-vote__option" data-option="b" aria-pressed="false" disabled>B</button>
+      <button class="fp-recall__option" data-option="c" aria-pressed="true" disabled>C</button>
+      <button class="fp-recall__option" data-option="d" aria-pressed="false" disabled>D</button>
+    </div>`;
+    const fond = (option: string): string => {
+      const bouton = racine.querySelector(`[data-option="${option}"]`);
+      return bouton === null ? '' : getComputedStyle(bouton).backgroundColor;
+    };
+
+    expect(fond('a')).not.toBe(fond('b'));
+    expect(fond('c')).not.toBe(fond('d'));
+    expect(fond('a')).toBe(fond('c'));
+  });
+
   it('masque à l’impression la validation et le « je ne sais pas », sans objet sur papier', () => {
     adoptCoursStyles(racine);
     const impression = Array.from(racine.adoptedStyleSheets[0].cssRules).filter(

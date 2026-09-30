@@ -374,11 +374,15 @@ describe('FpVote', () => {
       expect(marque(hote, 'bonne-reponse')).toBeNull();
     });
 
-    it('RET-20 · projette cote a cote les deux votes une fois la reponse revelee', () => {
+    function projeterLesDeuxVotesReveles(): void {
       presenter();
       hote.resultatsPremierVote = RESULTATS;
       hote.resultats = { total: 10, parOption: { 'j-a': 2, 'j-b': 8 } };
       hote.phase = 'revele';
+    }
+
+    it('RET-20 · projette cote a cote les deux votes une fois la reponse revelee', () => {
+      projeterLesDeuxVotesReveles();
 
       const histogrammes = [
         ...(hote.shadowRoot?.querySelectorAll('[data-testid="histogramme"]') ?? []),
@@ -389,6 +393,42 @@ describe('FpVote', () => {
       ]);
       expect(histogrammes[0].textContent).toContain('58%');
       expect(histogrammes[1].textContent).toContain('80%');
+    });
+
+    it('QF-14 · le titre d un vote occupe sa propre ligne : chaque barre garde son libelle, sa piste et son pourcentage alignes', () => {
+      hote.style.cssText = 'display:block;width:900px;';
+      projeterLesDeuxVotesReveles();
+
+      const desalignees = [...(hote.shadowRoot?.querySelectorAll('[data-testid="barre"]') ?? [])]
+        .map((barre) => [...barre.children].map((cellule) => cellule.getBoundingClientRect()))
+        .filter(
+          ([libelle, piste, pourcentage]) =>
+            !(libelle.right <= piste.left && piste.right <= pourcentage.left) ||
+            piste.top >= libelle.bottom ||
+            piste.bottom <= libelle.top,
+        );
+
+      expect(
+        hote.shadowRoot?.querySelectorAll('.fp-vote__histogramme > .fp-vote__titre').length,
+      ).toBe(2);
+      expect(desalignees.length).toBe(0);
+    });
+
+    it('QF-16 · dans une carte etroite, chaque barre passe sous son libelle quelle que soit la largeur de la toile', () => {
+      presenter();
+      hote.style.cssText = 'display:block;width:280px;';
+      hote.resultats = { total: 10, parOption: { 'j-a': 2, 'j-b': 8 } };
+      hote.phase = 'revele';
+
+      const barres = [...(hote.shadowRoot?.querySelectorAll('[data-testid="barre"]') ?? [])].map(
+        (barre) => [...barre.children].map((cellule) => cellule.getBoundingClientRect()),
+      );
+
+      expect(barres.length).toBeGreaterThan(0);
+      for (const [libelle, piste] of barres) {
+        expect(piste.top).toBeGreaterThanOrEqual(libelle.bottom - 1);
+        expect(piste.width).toBeGreaterThan(200);
+      }
     });
 
     for (const role of ['etudiant', 'presentateur'] as const) {

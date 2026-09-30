@@ -38,14 +38,16 @@ export const vote = `
 
 :where(.fp-root) .fp-vote__histogramme {
   display: grid;
-  grid-template-columns: minmax(6ch, 26%) minmax(0, 1fr) auto;
-  align-items: center;
   gap: var(--fp-s-2);
   width: 100%;
+  container-type: inline-size;
 }
 
 :where(.fp-root) .fp-vote__barre {
-  display: contents;
+  display: grid;
+  grid-template-columns: minmax(6ch, 26%) minmax(0, 1fr) 5ch;
+  align-items: center;
+  gap: var(--fp-s-2);
 }
 
 :where(.fp-root) .fp-vote__barre__libelle {
@@ -74,22 +76,21 @@ export const vote = `
   font-variant-numeric: tabular-nums;
   font-weight: 600;
   color: var(--fp-texte-fort);
+  text-align: right;
 }
 
-@container (max-width: 32.5rem) {
-  :where(.fp-root) .fp-vote__histogramme {
-    grid-template-columns: minmax(0, 1fr);
+@container (max-width: 28rem) {
+  :where(.fp-root) .fp-vote__barre {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--fp-s-1) var(--fp-s-2);
   }
 
-  :where(.fp-root) .fp-vote__barre {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: var(--fp-s-2);
+  :where(.fp-root) .fp-vote__barre__pourcentage {
+    grid-area: 1 / 2;
   }
 
   :where(.fp-root) .fp-vote__barre__piste {
-    grid-column: 1 / -1;
+    grid-area: 2 / 1 / auto / -1;
   }
 }
 
