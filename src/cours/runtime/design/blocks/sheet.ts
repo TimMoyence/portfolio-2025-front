@@ -109,6 +109,12 @@ export const sheet = `
   white-space: nowrap;
 }
 
+:where(.fp-root) .fp-sheet__cellule.fp-sheet__cellule--intitule {
+  font-family: var(--fp-font-sans);
+  text-align: left;
+  white-space: normal;
+}
+
 :where(.fp-root) .fp-sheet__correction {
   display: grid;
   justify-items: end;

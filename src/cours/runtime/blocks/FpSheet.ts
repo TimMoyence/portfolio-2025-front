@@ -10,6 +10,7 @@ import {
 } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
+import { lireNombreSaisi } from './saisie-numerique';
 
 export interface SheetPlanPublic extends PlanEtaye {
   readonly lignes: number;
@@ -412,9 +413,17 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     const nom = nomCellule(ligne, colonne);
     const portes = `${PREFIXE_COLONNE}${lettreColonne(colonne)} ${PREFIXE_LIGNE}${ligne + 1}`;
     if (!interactif) {
-      return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}" headers="${escapeHtml(portes)}">${this.lecture(nom)}</td>`;
+      const nature = this.estUnIntituleDeColonne(ligne, nom)
+        ? safeHtml` ${escapeHtml(STYLE_CELLULE)}--intitule`
+        : VIDE;
+      return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}${nature}" headers="${escapeHtml(portes)}">${this.lecture(nom)}</td>`;
     }
     return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)} ${escapeHtml(STYLE_CELLULE)}--saisie" headers="${escapeHtml(portes)}" style="--fp-sheet-largeur: ${largeur}" ${this.etatDeLaCellule(nom)}>${this.champ(nom)}</td>`;
+  }
+
+  private estUnIntituleDeColonne(ligne: number, nom: string): boolean {
+    const brut = this.brut(nom).trim();
+    return ligne === 0 && brut !== '' && !brut.startsWith('=') && lireNombreSaisi(brut) === null;
   }
 
   private etatDeLaCellule(nom: string): EscapedHtml {
