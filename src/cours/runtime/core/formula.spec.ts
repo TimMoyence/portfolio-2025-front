@@ -514,6 +514,38 @@ describe('core/formula', () => {
     });
   });
 
+  describe('VPM', () => {
+    it('rend l’annuité constante d’un emprunt, négative pour un capital reçu', () => {
+      const cellules = { A1: '0,035', A2: '4', A3: '32000' };
+
+      expect(valeurDe({ ...cellules, B1: '=VPM(A1;A2;-A3)' }, 'B1')).toBeCloseTo(8712.036464, 6);
+      expect(valeurDe({ ...cellules, B1: '=VPM(A1;A2;A3)' }, 'B1')).toBeCloseTo(-8712.036464, 6);
+      expect(calcul('=ARRONDI(VPM(0,04;5;-60000);2)')).toBeCloseTo(13477.63, 6);
+    });
+
+    it('tient compte d’une valeur future et d’un versement en début de période', () => {
+      expect(evaluerExpression('VPM(0,03;5;0;-31854,81486)', {})).toEqual({
+        valeur: 6000,
+        erreur: null,
+      });
+      expect(evaluerExpression('VPM(0,04;5;-60000;0;1)', {})).toEqual({
+        valeur: 12959.256548,
+        erreur: null,
+      });
+    });
+
+    it('partage le capital en parts égales quand le taux est nul', () => {
+      expect(calcul('=VPM(0;4;-1000;-200)')).toBe(300);
+    });
+
+    it('refuse un nombre de périodes nul par #DIV/0! et un mauvais nombre d’arguments par #VALEUR!', () => {
+      expect(refus('=VPM(0,04;0;-1000)')).toBe('#DIV/0!');
+      expect(refus('=VPM(0;0;-1000)')).toBe('#DIV/0!');
+      expect(refus('=VPM(0,04;5)')).toBe('#VALEUR!');
+      expect(refus('=VPM(0,04;5;-1000;0;0;1)')).toBe('#VALEUR!');
+    });
+  });
+
   describe('texte et logique', () => {
     const FACTURES = {
       A1: '72',
