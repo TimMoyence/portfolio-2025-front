@@ -125,6 +125,17 @@ describe('FpSheet', () => {
     expect(repere(hote, 'tableau')?.classList).toContain('fp-sheet__tableau--dense');
   });
 
+  it('resserre aussi les cellules lues a la projection au-dela de dix lignes', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.plan = buildSheetPlan({ lignes: 11 });
+    const lues = [...(hote.shadowRoot?.querySelectorAll('td.fp-sheet__cellule') ?? [])];
+
+    expect(lues.length).toBeGreaterThan(0);
+    expect(
+      lues.every((lue) => Number.parseFloat(getComputedStyle(lue).paddingBlockStart) === 0),
+    ).toBeTrue();
+  });
+
   function poserLaFeuilleAvecCumulSur(largeur: number): void {
     hote.style.cssText = `display:block;width:${String(largeur)}px;`;
     hote.plan = buildSheetPlan({

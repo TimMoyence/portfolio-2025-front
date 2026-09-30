@@ -133,6 +133,7 @@ export const sheet = `
 }
 
 :where(.fp-root) .fp-sheet__tableau--dense .fp-sheet__champ,
+:where(.fp-root) .fp-sheet__tableau--dense .fp-sheet__cellule:not(.fp-sheet__cellule--saisie),
 :where(.fp-root) .fp-sheet__tableau--dense .fp-sheet__rang,
 :where(.fp-root) .fp-sheet__tableau--dense .fp-sheet__entete {
   padding-block: 0;
