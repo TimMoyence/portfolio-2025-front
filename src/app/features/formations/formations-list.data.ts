@@ -92,6 +92,12 @@ export const FORMATIONS: readonly FormationCard[] = [
     description: $localize`:@@formations-list.b2-04.description:Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
     duree: $localize`:@@formations-list.b2-04.duration:3 h 00`,
   }),
+  coursBtsEnSeance({
+    link: '/formations/b2-05-mathematiques-financieres',
+    title: $localize`:@@formations-list.b2-05.title:B2-05 — Mathématiques financières : placer, emprunter`,
+    description: $localize`:@@formations-list.b2-05.description:Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b2-05.duration:3 h 00`,
+  }),
   formationGratuite({
     link: '/formations/ia-solopreneurs',
     badge: $localize`:@@formations-list.ia-solo.badge:Gratuit · 17 slides`,
