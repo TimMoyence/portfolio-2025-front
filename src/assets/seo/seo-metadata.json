@@ -1738,6 +1738,74 @@
       }
     },
     {
+      "id": "formations-b2-06-exponentielle-logarithme",
+      "path": "/formations/b2-06-exponentielle-logarithme",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-10-01",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Exponentielle et logarithme : croître, viser, ajuster",
+          "path": "/formations/b2-06-exponentielle-logarithme"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Exponentielle et logarithme : croître, viser, ajuster — B2 — Tim Moyence",
+          "description": "Formation B2 interactive : modèles exponentiels et leur taux, seuils par le logarithme népérien, ajustement par z = ln y, avec EXP et LN au tableur.",
+          "ogTitle": "Exponentielle et logarithme : croître, viser, ajuster — B2",
+          "ogDescription": "Un cours interactif pour prévoir une croissance, trouver le moment où un seuil est franchi et ajuster une demande par un modèle exponentiel au tableur, comme en CCF.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Exponentielle et logarithme : croître, viser, ajuster",
+            "description": "Formation B2 interactive sur la fonction exponentielle, le logarithme népérien et l’ajustement exponentiel appliqués aux ventes et aux prix d’une entreprise.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b2-06-exponentielle-logarithme"
+          }
+        },
+        "en": {
+          "title": "Exponential and logarithm: grow, target, fit — B2 — Tim Moyence",
+          "description": "Interactive B2 course: exponential models and their rate, thresholds with the natural logarithm, fitting with z = ln y, using EXP and LN in a spreadsheet.",
+          "ogTitle": "Exponential and logarithm: grow, target, fit — B2",
+          "ogDescription": "An interactive course to forecast growth, find when a threshold is crossed and fit demand with an exponential model in a spreadsheet, as in the CCF exam.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Exponential and logarithm: grow, target, fit",
+            "description": "Interactive B2 course on the exponential function, the natural logarithm and exponential fitting applied to a business’s sales and prices.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b2-06-exponentielle-logarithme"
+          }
+        }
+      }
+    },
+    {
       "id": "formations-ia-solopreneurs-toolkit",
       "path": "/formations/ia-solopreneurs/toolkit",
       "index": true,

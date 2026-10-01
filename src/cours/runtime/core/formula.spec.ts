@@ -546,6 +546,37 @@ describe('core/formula', () => {
     });
   });
 
+  describe('EXP et LN', () => {
+    it('calcule l’exponentielle et le logarithme népérien d’une cellule', () => {
+      const cellules = { A1: '5', B1: '=400*EXP(0,06*A1)' };
+
+      expect(valeurDe(cellules, 'B1')).toBeCloseTo(539.943523, 6);
+      expect(valeurDe({ ...cellules, C1: '=LN(B1/400)/0,06' }, 'C1')).toBeCloseTo(5, 9);
+      expect(calcul('=EXP(1)')).toBeCloseTo(Math.E, 12);
+      expect(calcul('=LN(2)')).toBeCloseTo(Math.LN2, 12);
+    });
+
+    it('rend e⁰ = 1, ln 1 = 0 et ramène ln(eˣ) à x', () => {
+      expect(evaluerExpression('EXP(0)', {})).toEqual({ valeur: 1, erreur: null });
+      expect(evaluerExpression('LN(1)', {})).toEqual({ valeur: 0, erreur: null });
+      expect(evaluerExpression('LN(EXP(2,5))', {})).toEqual({ valeur: 2.5, erreur: null });
+      expect(evaluerExpression('LN(2,5)/0,06', {})).toEqual({ valeur: 15.271512, erreur: null });
+    });
+
+    it('refuse par #VALEUR! le logarithme d’un nombre négatif ou nul, une exponentielle infinie et un mauvais nombre d’arguments', () => {
+      for (const formule of [
+        '=LN(0)',
+        '=LN(-1)',
+        '=EXP(LN(0))',
+        '=EXP(1000)',
+        '=EXP()',
+        '=LN(2;3)',
+      ]) {
+        expect(refus(formule)).withContext(formule).toBe('#VALEUR!');
+      }
+    });
+  });
+
   describe('texte et logique', () => {
     const FACTURES = {
       A1: '72',
