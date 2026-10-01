@@ -98,6 +98,12 @@ export const FORMATIONS: readonly FormationCard[] = [
     description: $localize`:@@formations-list.b2-05.description:Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
     duree: $localize`:@@formations-list.b2-05.duration:3 h 00`,
   }),
+  coursBtsEnSeance({
+    link: '/formations/b2-06-exponentielle-logarithme',
+    title: $localize`:@@formations-list.b2-06.title:B2-06 — Exponentielle et logarithme : croître, viser, ajuster`,
+    description: $localize`:@@formations-list.b2-06.description:Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b2-06.duration:3 h 00`,
+  }),
   formationGratuite({
     link: '/formations/ia-solopreneurs',
     badge: $localize`:@@formations-list.ia-solo.badge:Gratuit · 17 slides`,

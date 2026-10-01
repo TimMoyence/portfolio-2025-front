@@ -135,6 +135,7 @@ describe('app routes', () => {
       'b2-03-logique',
       'b2-04-suites',
       'b2-05-mathematiques-financieres',
+      'b2-06-exponentielle-logarithme',
     ]) {
       it(`fait choisir automatiquement l espace de ${slug} selon le rôle`, () => {
         const route = routeDe(`formations/${slug}`);

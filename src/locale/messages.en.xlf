@@ -11931,6 +11931,24 @@
         <target>3 h</target>
       </segment>
     </unit>
+    <unit id="formations-list.b2-06.title">
+      <segment>
+        <source>B2-06 — Exponentielle et logarithme : croître, viser, ajuster</source>
+        <target>B2-06 — Exponential and logarithm: grow, target, fit</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-06.description">
+      <segment>
+        <source>Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Compute with an exponential model and its rate, find a threshold with the natural logarithm, fit a series with z = ln y and forecast with EXP and LN in a spreadsheet, as in the CCF exam. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-06.duration">
+      <segment>
+        <source>3 h 00</source>
+        <target>3 h</target>
+      </segment>
+    </unit>
     <unit id="formations-list.b2.duration">
       <notes>
         <note category="location">src/app/features/formations/formations-list.data.ts:32</note>

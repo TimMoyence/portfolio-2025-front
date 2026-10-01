@@ -6,6 +6,7 @@ import { INSTANTANE_B2_02 } from '../../../testing/fixtures/instantane-b2-02';
 import { INSTANTANE_B2_03 } from '../../../testing/fixtures/instantane-b2-03';
 import { INSTANTANE_B2_04 } from '../../../testing/fixtures/instantane-b2-04';
 import { INSTANTANE_B2_05 } from '../../../testing/fixtures/instantane-b2-05';
+import { INSTANTANE_B2_06 } from '../../../testing/fixtures/instantane-b2-06';
 import { montagePage } from '../../../testing/montage-page';
 
 const COURS_EN_SEANCE = [
@@ -34,6 +35,11 @@ const COURS_EN_SEANCE = [
     lien: '/formations/b2-05-mathematiques-financieres',
     instantane: INSTANTANE_B2_05,
   },
+  {
+    code: 'B2-06',
+    lien: '/formations/b2-06-exponentielle-logarithme',
+    instantane: INSTANTANE_B2_06,
+  },
 ];
 
 describe('FormationsListComponent', () => {
@@ -52,7 +58,7 @@ describe('FormationsListComponent', () => {
 
   it('devrait exposer la liste des formations depuis les donnees statiques', () => {
     expect(component['formations']).toBe(FORMATIONS);
-    expect(component['formations'].length).toBe(9);
+    expect(component['formations'].length).toBe(10);
   });
 
   it('devrait composer les sections Asili (hero, grille, format, bande CTA)', () => {
