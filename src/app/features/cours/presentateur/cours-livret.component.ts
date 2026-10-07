@@ -30,6 +30,22 @@ type VueDuLivret = 'sujet' | 'corrige';
           <p class="livret__version" data-testid="livret-version" i18n="@@livretVersion">
             Version publiée n° {{ lu.version }}
           </p>
+          @if (vue() === 'sujet') {
+            @if (feuillesEtudiant().length === 1) {
+              <p
+                class="livret__annonce"
+                data-testid="livret-annonce"
+                i18n="@@livretAnnonceFicheUnique"
+              >
+                1 fiche · elle peut occuper plusieurs pages
+              </p>
+            } @else {
+              <p class="livret__annonce" data-testid="livret-annonce" i18n="@@livretAnnonceFiches">
+                {{ feuillesEtudiant().length }} fiches · chacune commence sur une nouvelle page, les
+                plus longues en occupent plusieurs
+              </p>
+            }
+          }
           <div
             class="livret__actions"
             role="group"
@@ -70,8 +86,8 @@ type VueDuLivret = 'sujet' | 'corrige';
         @if (vue() === 'sujet') {
           @for (feuille of feuillesEtudiant(); track $index; let rang = $index) {
             <div class="livret__feuille" data-testid="livret-feuille">
-              <p class="livret__kicker" data-testid="livret-feuille-entete" i18n="@@livretFeuille">
-                Feuille {{ rang + 1 }} / {{ feuillesEtudiant().length }}
+              <p class="livret__kicker" data-testid="livret-feuille-entete" i18n="@@livretFiche">
+                Fiche {{ rang + 1 }} / {{ feuillesEtudiant().length }}
               </p>
               @for (page of feuille; track page.ecran.id) {
                 <section
@@ -96,6 +112,7 @@ type VueDuLivret = 'sujet' | 'corrige';
           @for (page of pagesCorrige(); track page.ecran.id) {
             <section
               class="livret__page"
+              [class.livret__page--scindable]="!page.repeteLaSource"
               data-testid="livret-corrige"
               [attr.data-ecran]="page.ecran.id"
             >

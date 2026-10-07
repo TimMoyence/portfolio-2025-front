@@ -62,7 +62,7 @@ export const story = `
 :where(.fp-root) .fp-story__visuel img {
   display: block;
   width: 100%;
-  max-height: min(38cqh, 22rem);
+  max-height: min(calc(var(--fp-hauteur-de-toile) * 0.38), 22rem);
   margin: 0;
   object-fit: cover;
 }
@@ -93,7 +93,7 @@ export const story = `
 
 :where(.fp-root) .fp-story__video video {
   width: 100%;
-  min-height: min(42cqh, 24rem);
+  min-height: min(calc(var(--fp-hauteur-de-toile) * 0.42), 24rem);
   background: #050505;
   object-fit: contain;
 }
@@ -111,7 +111,7 @@ export const story = `
 :where(.fp-root) .fp-story__video video {
   width: min(100%, 53.75rem);
   min-height: 0;
-  max-height: min(60cqh, 26rem);
+  max-height: min(calc(var(--fp-hauteur-de-toile) * 0.6), 26rem);
   margin-inline: auto;
 }
 

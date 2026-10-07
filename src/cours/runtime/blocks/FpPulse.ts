@@ -92,11 +92,13 @@ export class FpPulse extends FpContenu<PulseSondage> {
       ? this.suiviProjete()
       : safeHtml`<p class="fp-pulse__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.retour())}</p>${this.annonces()}`;
     return safeHtml`
-      <fieldset class="fp-carte fp-scene fp-pulse__panneau">
+      <fieldset class="fp-carte fp-pulse__panneau">
         <legend class="fp-enonce">${escapeHtml(sondage.invite)}</legend>
-        <p class="fp-pulse__anonymat" data-testid="anonymat">${escapeHtml(this.texte('pulse-anonymat'))}</p>
-        <div class="fp-pulse__choix">${ETATS.map((etat) => this.bouton(etat, inerte))}</div>
-        ${suivi}
+        <div class="fp-pulse__corps">
+          <p class="fp-pulse__anonymat" data-testid="anonymat">${escapeHtml(this.texte('pulse-anonymat'))}</p>
+          <div class="fp-pulse__choix">${ETATS.map((etat) => this.bouton(etat, inerte))}</div>
+          ${suivi}
+        </div>
       </fieldset>
     `;
   }

@@ -1,3 +1,5 @@
+@use 'slide-toile' as toile;
+
 @mixin cadre-centre($marge) {
   width: 100%;
   min-height: 100cqh;
@@ -94,7 +96,8 @@
 }
 
 @mixin section-resserree {
-  padding-block: clamp(1.5rem, 4cqh, 2.5rem) clamp(1rem, 3cqh, 2rem);
+  padding-block: clamp(1.5rem, toile.part-de-hauteur(0.04), 2.5rem)
+    clamp(1rem, toile.part-de-hauteur(0.03), 2rem);
 
   @include titre-projete {
     margin-bottom: 1.25rem;

@@ -17,6 +17,7 @@ import {
   buildRecitVisuel,
   buildVisualAnswerReviewSlide,
   buildVisualImageHeroSlide,
+  buildVisualImageSlide,
   buildVisualQuizSlide,
   buildVisualSlide,
   buildVisualSortCorrectionSlide,
@@ -86,6 +87,34 @@ describe('SlideVisualComponent', () => {
     const img = (fixture.nativeElement as HTMLElement).querySelector('.slide-hero__bg img');
     expect(img?.getAttribute('loading')).toBe('lazy');
   });
+
+  for (const renderer of ['image-left', 'image-right'] as const) {
+    it(`${renderer} · charge sans différer toutes les images de l écran prioritaire`, () => {
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput('slide', buildVisualImageSlide(renderer));
+      fixture.componentRef.setInput('prioritaire', true);
+      fixture.detectChanges();
+
+      const images = [...(fixture.nativeElement as HTMLElement).querySelectorAll('img')];
+      expect(images.length).toBe(2);
+      expect(images.map((img) => img.getAttribute('loading'))).toEqual(['eager', 'eager']);
+      expect(
+        (fixture.nativeElement as HTMLElement)
+          .querySelector('.slide-image__media img')
+          ?.getAttribute('fetchpriority'),
+      ).toBe('high');
+    });
+
+    it(`${renderer} · diffère les images d un écran qui n est pas prioritaire`, () => {
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput('slide', buildVisualImageSlide(renderer));
+      fixture.detectChanges();
+
+      const images = [...(fixture.nativeElement as HTMLElement).querySelectorAll('img')];
+      expect(images.map((img) => img.getAttribute('loading'))).toEqual(['lazy', 'lazy']);
+      expect(images.some((img) => img.hasAttribute('fetchpriority'))).toBeFalse();
+    });
+  }
 
   describe('correction du tri', () => {
     function monter(retours: ReadonlyMap<string, RetourBrique[]> = new Map()): HTMLElement {

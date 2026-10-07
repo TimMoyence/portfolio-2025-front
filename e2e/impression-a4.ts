@@ -1,0 +1,23 @@
+const PX_PAR_MM = 96 / 25.4;
+
+const PT_PAR_PX = 72 / 96;
+
+export const MARGE_PX = 45;
+
+const A4_PX = { largeur: 210 * PX_PAR_MM, hauteur: 297 * PX_PAR_MM } as const;
+
+const LARGEUR_UTILE_EXACTE_PX = A4_PX.largeur - 2 * MARGE_PX;
+
+const HAUTEUR_UTILE_EXACTE_PX = A4_PX.hauteur - 2 * MARGE_PX;
+
+export const LARGEUR_UTILE_PX = Math.floor(LARGEUR_UTILE_EXACTE_PX);
+
+export const HAUTEUR_UTILE_PX = Math.floor(HAUTEUR_UTILE_EXACTE_PX);
+
+export const LARGEUR_MAXIMALE_REDUITE_PAR_WEBKIT_PX = 2 * LARGEUR_UTILE_EXACTE_PX * PT_PAR_PX;
+
+export const LARGEUR_IMPRIMEE_PX = Math.round(275.28 * PX_PAR_MM);
+
+export function hauteurDePageA(largeurDeMiseEnPage: number): number {
+  return Math.floor((HAUTEUR_UTILE_EXACTE_PX / LARGEUR_UTILE_EXACTE_PX) * largeurDeMiseEnPage);
+}

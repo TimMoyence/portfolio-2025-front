@@ -10,12 +10,16 @@ export const plot = `
 }
 
 :where(.fp-root) .fp-plot__reglages {
-  display: grid;
-  gap: var(--fp-s-3);
   width: 100%;
 }
 
+:where(.fp-root) .fp-plot__corps {
+  display: grid;
+  gap: var(--fp-s-3);
+}
+
 :where(.fp-root) .fp-plot__reglages > legend {
+  margin-bottom: var(--fp-s-3);
   padding-bottom: var(--fp-s-2);
   color: var(--fp-texte-fort);
   font-size: calc(1.1rem * var(--fp-echelle));
@@ -86,7 +90,7 @@ export const plot = `
 
 :where(.fp-root) .fp-plot__graphique {
   width: 100%;
-  min-height: min(36cqh, 22rem);
+  min-height: min(calc(var(--fp-hauteur-de-toile) * 0.36), 22rem);
   height: auto;
   border: 1px solid var(--fp-bordure);
   border-radius: var(--fp-r);
@@ -104,15 +108,19 @@ export const plot = `
     gap: var(--fp-s-2);
   }
 
-  :where(.fp-root) .fp-plot__reglages {
+  :where(.fp-root) .fp-plot__corps {
     grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
     gap: var(--fp-s-2) var(--fp-s-3);
   }
 
+  :where(.fp-root) .fp-plot__reglages > legend {
+    margin-bottom: var(--fp-s-2);
+  }
+
   :where(.fp-root) .fp-plot__graphique {
     min-height: 0;
-    max-height: 25cqh;
+    max-height: calc(var(--fp-hauteur-de-toile) * 0.25);
   }
 }
 

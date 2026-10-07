@@ -62,6 +62,21 @@ describe('SlideMethodPathComponent', () => {
     expect(element.querySelector('[aria-current="step"]')?.textContent).toContain('Lire');
   });
 
+  it('prépare pour le papier chaque étape avec sa preuve et son résultat', () => {
+    const fixture = monter(false);
+
+    const fiches = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll('.slide-method-path__fiche'),
+    ].map((fiche) => fiche.textContent ?? '');
+
+    expect(fiches.length).toBe(ETAPES.length);
+    ETAPES.forEach(({ title, question, proof, result }, rang) => {
+      for (const texte of [title, question, proof, result]) {
+        expect(fiches[rang]).toContain(texte);
+      }
+    });
+  });
+
   it('montre l étape choisie au clic', () => {
     const fixture = monter(false);
 

@@ -108,7 +108,7 @@ interface ReponseVisuelle {
         [jeton]="jeton()"
         [role]="role()"
         [resultats]="resultats()"
-        [prioritaire]="prioritaire()"
+        [prioritaire]="prioritaire() || papier()"
         [retours]="retours()"
         [debrief]="debrief()"
         (reponse)="relayerVisuel($event)"

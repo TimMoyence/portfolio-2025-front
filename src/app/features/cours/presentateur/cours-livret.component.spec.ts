@@ -14,6 +14,7 @@ import {
 } from '../../../../testing/factories/formations.factory';
 import { briqueMontee } from '../../../../testing/briques-montees';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
+import { textes } from '../../../../testing/textes-dom';
 import { CoursLivretComponent } from './cours-livret.component';
 
 type Fixture = ComponentFixture<CoursLivretComponent>;
@@ -58,6 +59,10 @@ function un(fixture: Fixture, testId: string): HTMLElement | null {
   );
 }
 
+function annonce(fixture: Fixture): (string | undefined)[] {
+  return textes(fixture.nativeElement as HTMLElement, '[data-testid="livret-annonce"]');
+}
+
 function basculerSurLeCorrige(fixture: Fixture): void {
   un(fixture, 'livret-vue-corrige')?.click();
   fixture.detectChanges();
@@ -97,7 +102,7 @@ describe('CoursLivretComponent', () => {
       feuilles.map((feuille) =>
         feuille.querySelector('[data-testid="livret-feuille-entete"]')?.textContent?.trim(),
       ),
-    ).toEqual(feuilles.map((_, rang) => `Feuille ${rang + 1} / 15`));
+    ).toEqual(feuilles.map((_, rang) => `Fiche ${rang + 1} / 15`));
     for (const [exercice, suite] of [
       ['B2-02-A1-05-UN-SEUL-NOMBRE', 'B2-02-A1-06-COURS-RESUMER'],
       ['B2-02-A1-07-EXEMPLE-RESUME', 'B2-02-A1-08-ATELIER-RESUME'],
@@ -114,6 +119,25 @@ describe('CoursLivretComponent', () => {
       expect(feuilleDe(exercice)).withContext(exercice).toBeGreaterThanOrEqual(0);
       expect(feuilleDe(exercice)).withContext(suite).toBeLessThan(feuilleDe(suite));
     }
+  });
+
+  it('annonce les fiches à distribuer sans les confondre avec des pages imprimées', async () => {
+    const { fixture } = await monter(of(LIVRET_B2_02));
+
+    expect(annonce(fixture)).toEqual([
+      '15 fiches · chacune commence sur une nouvelle page, les plus longues en occupent plusieurs',
+    ]);
+
+    basculerSurLeCorrige(fixture);
+
+    expect(annonce(fixture)).toEqual([]);
+  });
+
+  it('accorde l’annonce d’un livret d’une seule fiche', async () => {
+    const { fixture } = await monter(of(buildLivretDuCours()));
+
+    expect(tous(fixture, 'livret-feuille').length).toBe(1);
+    expect(annonce(fixture)).toEqual(['1 fiche · elle peut occuper plusieurs pages']);
   });
 
   it('titre au livret étudiant les exercices dont la brique n’imprime pas d’intitulé', async () => {

@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -20,7 +21,7 @@ export interface SlideMethodStep {
 @Component({
   selector: 'app-slide-method-path',
   standalone: true,
-  imports: [SlideEnTeteComponent],
+  imports: [NgTemplateOutlet, SlideEnTeteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-method-path.component.html',
   styleUrl: './slide-method-path.component.scss',

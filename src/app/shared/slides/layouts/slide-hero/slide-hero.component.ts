@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ImagePrioritaireDirective } from '../image-prioritaire.directive';
 
 @Component({
   selector: 'app-slide-hero',
   standalone: true,
+  imports: [ImagePrioritaireDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-hero.component.html',
   styleUrl: './slide-hero.component.scss',

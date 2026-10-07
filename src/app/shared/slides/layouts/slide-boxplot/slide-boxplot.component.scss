@@ -1,4 +1,5 @@
 @use '../../slide-figure' as figure;
+@use '../../slide-toile' as toile;
 
 :host {
   display: block;
@@ -36,7 +37,7 @@ h2 {
 .slide-boxplot__plot {
   --libelle: clamp(3.5rem, 9cqi, 6rem);
   display: grid;
-  gap: clamp(1rem, 3cqh, 1.8rem);
+  gap: clamp(1rem, toile.part-de-hauteur(0.03), 1.8rem);
   padding: 1.6rem 0 0.4rem;
   border-block: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
 }
@@ -56,7 +57,7 @@ h2 {
 
 .slide-boxplot__track {
   position: relative;
-  height: clamp(2.4rem, 7cqh, 3.4rem);
+  height: clamp(2.4rem, toile.part-de-hauteur(0.07), 3.4rem);
 }
 
 .tone-teal {

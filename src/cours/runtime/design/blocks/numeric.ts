@@ -1,11 +1,12 @@
 export const numeric = `
-:where(.fp-root) .fp-numeric__numerique {
+:where(.fp-root) .fp-numeric__corps {
   display: grid;
   justify-items: start;
   gap: var(--fp-s-3);
 }
 
 :where(.fp-root) .fp-numeric__numerique > legend {
+  margin-bottom: var(--fp-s-3);
   padding-bottom: var(--fp-s-2);
   color: var(--fp-texte-fort);
   font-size: calc(1.25rem * var(--fp-echelle));
@@ -14,13 +15,15 @@ export const numeric = `
 
 :where(.fp-root) .fp-numeric__saisie {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: var(--fp-s-2);
   width: 100%;
 }
 
 :where(.fp-root) .fp-numeric__champ {
-  flex: 1 1 auto;
+  flex: 1 1 10rem;
+  inline-size: 10rem;
   min-width: 0;
   padding: var(--fp-s-3) var(--fp-s-4);
   border: 1px solid var(--fp-bordure);
@@ -80,10 +83,6 @@ export const numeric = `
 }
 
 @container (max-width: 32.5rem) {
-  :where(.fp-root) .fp-numeric__saisie {
-    flex-wrap: wrap;
-  }
-
   :where(.fp-root) .fp-numeric__valider {
     justify-self: stretch;
     text-align: center;

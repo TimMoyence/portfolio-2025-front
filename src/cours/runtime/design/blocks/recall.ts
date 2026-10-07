@@ -1,11 +1,12 @@
 export const recall = `
-:where(.fp-root) .fp-recall__billet {
+:where(.fp-root) .fp-recall__corps {
   display: grid;
   justify-items: stretch;
   gap: var(--fp-s-3);
 }
 
 :where(.fp-root) .fp-recall__billet > legend {
+  margin-bottom: var(--fp-s-3);
   padding-bottom: var(--fp-s-2);
   color: var(--fp-texte-fort);
   font-size: calc(1.25rem * var(--fp-echelle));

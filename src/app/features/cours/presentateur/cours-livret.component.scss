@@ -1,3 +1,10 @@
+@use 'sass:math';
+
+$marge-de-page: 45px;
+$largeur-imprimee: 275.28mm;
+$gouttiere-imprimee: 2px;
+$hauteur-de-toile-imprimee: math.div($largeur-imprimee * 9, 16);
+
 :host {
   display: block;
 }
@@ -20,7 +27,8 @@
 }
 
 .livret__kicker,
-.livret__version {
+.livret__version,
+.livret__annonce {
   margin: 0;
 }
 
@@ -104,15 +112,27 @@
 
 @page {
   size: A4;
-  margin: 12mm;
+  margin: $marge-de-page;
 }
 
 @media print {
-  .livret,
+  .livret {
+    --slide-hauteur-de-toile: #{$hauteur-de-toile-imprimee};
+    --fp-hauteur-de-toile-imposee: #{$hauteur-de-toile-imprimee};
+    --slide-marge-bloc: 0;
+    --slide-marge-ligne: 0;
+    --fp-densite-imposee: 0.75;
+    display: block;
+    inline-size: $largeur-imprimee;
+    max-inline-size: none;
+    padding: 0 $gouttiere-imprimee;
+    container-type: inline-size;
+    orphans: 1;
+    widows: 1;
+  }
+
   .livret__feuille {
     display: block;
-    max-inline-size: none;
-    padding: 0;
   }
 
   .livret__entete {
@@ -145,18 +165,27 @@
     margin-block-start: 4mm;
   }
 
-  .livret__titre {
-    break-after: avoid;
+  .livret__page,
+  .livret__page--scindable > app-slide-activity,
+  .livret__page--scindable > .livret__formateur > * {
+    display: inline-grid;
+    grid-template-columns: minmax(0, 1fr);
+    inline-size: 100%;
+    vertical-align: top;
+    overflow: clip;
   }
 
-  .livret__feuille > .livret__page {
-    break-inside: avoid;
-  }
-
-  .livret__page app-slide-activity {
+  .livret__page--scindable,
+  .livret__page--scindable > .livret__formateur {
     display: block;
-    zoom: 0.65;
-    break-inside: avoid;
+  }
+
+  .livret__page--scindable > * + * {
+    margin-block-start: 2mm;
+  }
+
+  .livret__page--scindable > .livret__formateur > * + * {
+    margin-block-start: 0.75rem;
   }
 
   .livret__page ::ng-deep details {

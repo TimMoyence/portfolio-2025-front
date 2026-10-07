@@ -1,11 +1,12 @@
 export const challenge = `
-:where(.fp-root) .fp-challenge__probleme {
+:where(.fp-root) .fp-challenge__corps {
   display: grid;
   justify-items: stretch;
   gap: var(--fp-s-3);
 }
 
 :where(.fp-root) .fp-challenge__probleme > legend {
+  margin-bottom: var(--fp-s-3);
   padding-bottom: var(--fp-s-2);
   color: var(--fp-texte-fort);
   font-family: var(--fp-font-display);

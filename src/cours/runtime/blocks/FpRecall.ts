@@ -108,14 +108,16 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
         : safeHtml`<textarea class="fp-recall__champ" data-testid="rappel" rows="4" aria-label="${escapeHtml(this.texte('rappel-champ'))}">${escapeHtml(this.rappel)}</textarea>`;
     const suivi = this.presentateur() ? escapeHtml('') : this.suiviDeLEnvoi();
     return safeHtml`
-      <fieldset class="fp-carte fp-scene fp-recall__billet">
+      <fieldset class="fp-carte fp-recall__billet">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
-        ${this.consigneRendue(ecritAvantLesOptions)}
-        ${saisie}
-        ${ecritAvantLesOptions ? this.compteur() : VIDE}
-        ${this.optionsVisibles()}
-        ${suivi}
-        ${this.bonneReponseRevelee((bonne) => bonne)}
+        <div class="fp-recall__corps">
+          ${this.consigneRendue(ecritAvantLesOptions)}
+          ${saisie}
+          ${ecritAvantLesOptions ? this.compteur() : VIDE}
+          ${this.optionsVisibles()}
+          ${suivi}
+          ${this.bonneReponseRevelee((bonne) => bonne)}
+        </div>
       </fieldset>
     `;
   }
