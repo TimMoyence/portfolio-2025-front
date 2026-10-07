@@ -193,7 +193,7 @@ describe('CoursPresentateurComponent', () => {
 
   afterEach(demonterLeBancDuPupitre);
 
-  it('ouvre dans une fenêtre à part le livret papier du cours, sans quitter la séance', async () => {
+  it('ouvre le livret papier dans un onglet détaché du pupitre, sans quitter la séance', async () => {
     const fenetre = spyOn(window, 'open').and.returnValue(null);
     const fixture = await ouvrirLaSeance();
 
@@ -201,7 +201,8 @@ describe('CoursPresentateurComponent', () => {
 
     expect(fenetre).toHaveBeenCalledOnceWith(
       `${BASE_DE_L_APPLICATION}cours/presenter/${SLUG}/livret`,
-      'cours-livret',
+      '_blank',
+      'noopener',
     );
   });
 

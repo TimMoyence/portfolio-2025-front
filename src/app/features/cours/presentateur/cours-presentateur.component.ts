@@ -97,7 +97,6 @@ const ETAT_ANNONCE: Readonly<Record<StatutSession, EtatSeance>> = {
 };
 
 const FENETRE_SCENE = 'cours-scene';
-const FENETRE_LIVRET = 'cours-livret';
 const ECRAN_DE_RAPPEL = 'fp-spaced';
 
 @Component({
@@ -922,7 +921,7 @@ export class CoursPresentateurComponent {
       return;
     }
     const chemin = `/cours/presenter/${encodeURIComponent(this.slug())}/livret`;
-    window.open(this.location.prepareExternalUrl(chemin), FENETRE_LIVRET);
+    window.open(this.location.prepareExternalUrl(chemin), '_blank', 'noopener');
   }
 
   protected demanderLaCloture(): void {

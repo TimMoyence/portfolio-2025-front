@@ -27,6 +27,22 @@ Les causes relevées, moteur par moteur :
   (45,35 px), une page contient 1525 px de mise en page sous Chrome contre 1527 sous Safari, et
   une fiche de 1525,3 px tenait sur une page dans l'un et deux dans l'autre.
 
+Une fois ces règles en production, un export Safari du B2-02 lancé depuis le pupitre sortait
+encore blanc : une seule page, ou tout blanc à partir de la page 13. Le livret ne dépendait
+d'aucune de ces règles : il partageait le processus WebContent du pupitre.
+
+- Le pupitre ouvrait le livret par `window.open` dans une fenêtre nommée : WebKit charge une
+  fenêtre ouverte par une page dans le processus de son ouvreur, et `noopener` n'y change rien
+  pour une page du même site (`preferredProcessFromOpener`).
+- `window.print()` bloque le processus de la page tant que le panneau d'impression est ouvert,
+  donc aussi le pupitre resté en arrière-plan.
+- Safari met fin à une page qui ne répond plus depuis environ 3 s et n'est pas visible
+  (« Unresponsive page is being terminated since it's not visible ») : en tuant le pupitre, il
+  tuait le processus du livret pendant que le panneau préparait le PDF.
+- Seule une réponse `Cross-Origin-Opener-Policy: same-origin` sur le livret, que le pupitre ne
+  porte pas, fait passer le livret dans un autre groupe de navigation, donc dans un autre
+  processus.
+
 Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
 
 - le fond crème de la page et les aplats beiges des briques s'imprimaient dès que l'option
@@ -87,6 +103,10 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
   de la précédente : en flux continu, une même feuille porterait la fin d'un exercice et le
   début de la fiche suivante, souvent la trace écrite qui y répond. Le flux continu a été
   mesuré à 95 pages de sujets au lieu de 138 sur les six cours, et écarté pour cette raison.
+- Le livret s'imprime hors du processus du pupitre : le pupitre l'ouvre dans un nouvel onglet
+  (`_blank`, `noopener`), et sa route serveur (`app.routes.server.ts`) déclare
+  `Cross-Origin-Opener-Policy: same-origin`, que `server.ts` pose sur la réponse. Le livret n'a
+  plus d'`opener` ni de nom : chaque clic sur « Livret papier » ouvre un nouvel onglet.
 
 ## Consequences
 
@@ -95,11 +115,17 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
   flottantes, hauteurs identiques d'une fenêtre à l'autre, fond blanc, gouttière, réglages de
   la projection, cartes de cours sur une rangée, aucun élément hors de son écran, parcours de
   méthode imprimé en entier et indépendant de son minuteur.
-- Avant ce correctif, WebKit livrait par intermittence un corrigé du B2-01 aux 39 pages
-  toutes blanches quand la fenêtre faisait 760 px ou moins (4 exports sur 17) : l'impression
-  durait 150 ms au lieu d'une seconde, sans dessiner aucune page. Le défaut ne s'est plus
-  reproduit en 20 exports, sans que le lien avec le parcours de méthode soit démontré ; un
-  export blanc se refait.
+- `src/server/routes-client.spec.ts` vérifie que chaque route qui déclare des en-têtes les
+  reçoit et que le pupitre et la projection n'en reçoivent pas ; `e2e/entetes-ssr.spec.ts`
+  vérifie l'en-tête sur la réponse du serveur SSR construit.
+- Un harnais WebKit (WKWebView sur le build de production, API simulée) suit le chemin du
+  formateur : pupitre, « Livret papier », « Imprimer », enregistrement du PDF, en appliquant la
+  règle de Safari aux pages cachées qui ne répondent plus. Sur le build d'avant le correctif,
+  livret et pupitre partagent un processus, tué 3 s après l'ouverture du panneau, et aucun PDF
+  ne sort. Après, les douze livrets (sujet et corrigé des six cours) sortent en A4 sans page
+  blanche, chaque écran présent dans l'ordre, avec le nombre de pages que donne un remplissage
+  glouton de leurs blocs insécables dans l'ordre : aucun livret ne peut en compter moins sans
+  couper un bloc ou faire partager une page à deux fiches.
 - `e2e/banc/livret-impression.spec.ts` vérifie qu'aucun écran ne dépasse une page A4 et que
   les écrans se tassent à plusieurs par page.
 - Le nombre de pages reste décidé par le moteur : un texte qui ne se coupe pas aux mêmes mots
