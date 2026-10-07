@@ -4,6 +4,7 @@ import { expect, test } from '@playwright/test';
 const DOSSIERS_DES_COURS: readonly { readonly cours: string; readonly version: string }[] = [
   { cours: 'b2-01', version: 'v3' },
   { cours: 'b2-02', version: 'v1' },
+  { cours: 'b2-02', version: 'v2' },
 ];
 const PREFIXES_DE_LOCALE = ['/fr', '/en'];
 const TYPES_ATTENDUS: Readonly<Record<string, string>> = {
@@ -69,7 +70,7 @@ for (const { cours, version } of DOSSIERS_DES_COURS) {
   const prefixeServi = `/assets/cours/${cours}/${version}`;
   const medias = fichiersDuCatalogue(`src${prefixeServi}`);
 
-  test.describe(`medias du cours ${cours.toUpperCase()} servis par le build (V3-L5)`, () => {
+  test.describe(`medias du cours ${cours.toUpperCase()} ${version} servis par le build (V3-L5)`, () => {
     test.skip(
       baseSsr === '',
       'hors porte : SSR_BASE_URL absente. La porte la fournit (npm run test:e2e:portail).',

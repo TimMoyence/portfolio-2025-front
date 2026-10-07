@@ -77,13 +77,16 @@ describe('CoursLivretComponent', () => {
     expect(un(fixture, 'livret-version')?.textContent).toContain('1');
   });
 
-  it('met en page pour l’étudiant les 28 écrans du B2-02 à traiter sur papier, rappel compris, sans jalon', async () => {
+  it('met en page pour l’étudiant les 34 écrans du B2-02 à traiter sur papier, rappel et illustrations compris, sans jalon', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     const ids = tous(fixture, 'livret-ecran').map((page) => page.dataset['ecran']);
 
-    expect(ids.length).toBe(28);
+    expect(ids.length).toBe(34);
     expect(ids).not.toContain('B2-02-A1-09-JALON');
+    expect(ids.indexOf('B2-02-A1-06-ILLUSTRATION-RESUMER')).toBe(
+      ids.indexOf('B2-02-A1-06-COURS-RESUMER') + 1,
+    );
     expect(ids).toContain('B2-02-A4-04-RAPPEL');
     expect(ids).toContain('B2-02-A2-01-NUAGE-RIVAGE');
     expect(tous(fixture, 'livret-corrige')).toEqual([]);
@@ -97,7 +100,7 @@ describe('CoursLivretComponent', () => {
       feuilles.findIndex((feuille) => feuille.querySelector(`[data-ecran="${ecran}"]`) !== null);
 
     expect(feuilles.length).toBe(15);
-    expect(tous(fixture, 'livret-ecran').length).toBe(28);
+    expect(tous(fixture, 'livret-ecran').length).toBe(34);
     expect(
       feuilles.map((feuille) =>
         feuille.querySelector('[data-testid="livret-feuille-entete"]')?.textContent?.trim(),
@@ -151,13 +154,13 @@ describe('CoursLivretComponent', () => {
     ]);
   });
 
-  it('bascule sur le corrigé des 28 écrans du B2-02, rappel compris', async () => {
+  it('bascule sur le corrigé des 34 écrans du B2-02, rappel et illustrations compris', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     basculerSurLeCorrige(fixture);
 
     const ids = tous(fixture, 'livret-corrige').map((page) => page.dataset['ecran']);
-    expect(ids.length).toBe(28);
+    expect(ids.length).toBe(34);
     expect(ids).toContain('B2-02-A4-04-RAPPEL');
     expect(tous(fixture, 'livret-ecran')).toEqual([]);
   });

@@ -1,0 +1,91 @@
+{
+  "cours": "b2-02",
+  "version": 2,
+  "source": "portfolio-2025-back/docs/cours-b2-02-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-06",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Pour débuter : cinq factures · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "cinq-factures.webp",
+          "octets": 114744,
+          "sha256": "228fc82468101d638d0b887c1e076fe11f5df7a76e0e06fd5148b9873b60d69b"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-06",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Deux clients, même moyenne · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "deux-clients-meme-moyenne.webp",
+          "octets": 126794,
+          "sha256": "2b9160246340292a2279572b6ac5d61ba9bc9adeb6e855274c31ab292ddf3b85"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Une boutique, trois années · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "boutique-nuage-point-moyen.webp",
+          "octets": 114592,
+          "sha256": "b91ff2e514fcc94e85172ce580b5f3ca64632b5b28e4ccf97d09e17015687832"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "r de la boutique, à la main · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "boutique-coefficient-r.webp",
+          "octets": 105590,
+          "sha256": "a1842a36ee06bdf80d30c6b55ef77cc5038e6c67cfccbc74733e9a80641fe2f5"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A3-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La droite de la boutique · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "boutique-droite-moindres-carres.webp",
+          "octets": 105412,
+          "sha256": "6ba7565f253778aec18b0fd9b753ca38dae4984e3c88019628b489d656e2e184"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "ecran": "A3-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La boutique en 2026, puis le seuil de 18 · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "boutique-prevision-seuil.webp",
+          "octets": 110158,
+          "sha256": "bec9e9e71b424936694ac4177a47fb9954aecf567f672466bf9a58ab6d6420cf"
+        }
+      ]
+    }
+  ]
+}
