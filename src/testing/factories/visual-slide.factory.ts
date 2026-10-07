@@ -63,6 +63,15 @@ export function buildVisualImageSlide(
   });
 }
 
+export function buildVisualIllustrationSlide(
+  id = 'B2-02-A1-06-ILLUSTRATION-RESUMER',
+): EcranContent {
+  return buildRecitVisuel(id, 'illustration', {
+    image: '/assets/cours/b2-02/v2/cinq-factures.webp',
+    imageAlt: 'Schéma des cinq factures : moyenne 20 jours, médiane 12 jours',
+  });
+}
+
 export const TRI_CORRIGE = { screenId: 'B2-01-A1-05-ANATOMIE', sortId: 'b2-01-a1-anatomie' };
 
 export function buildSortCorrectionProps(overrides: PropsVisuelles = {}): PropsVisuelles {

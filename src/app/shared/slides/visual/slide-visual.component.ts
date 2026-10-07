@@ -16,6 +16,7 @@ import {
   SlideGridComponent,
   SlideGuideComponent,
   SlideHeroComponent,
+  SlideIllustrationComponent,
   SlideImageComponent,
   SlideLessonComponent,
   SlideMethodPathComponent,
@@ -52,6 +53,7 @@ const layouts: Readonly<Record<string, Type<unknown>>> = {
   table: SlideTableComponent,
   'image-left': SlideImageComponent,
   'image-right': SlideImageComponent,
+  illustration: SlideIllustrationComponent,
   cta: SlideCtaComponent,
   guide: SlideGuideComponent,
   'sort-review': SlideSortReviewComponent,
@@ -64,6 +66,7 @@ const RENDUS_A_IMAGE_PRIORISABLE: ReadonlySet<string> = new Set([
   'hero',
   'image-left',
   'image-right',
+  'illustration',
 ]);
 
 function cartesDuTri(

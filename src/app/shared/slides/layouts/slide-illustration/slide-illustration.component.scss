@@ -1,0 +1,16 @@
+@use '../../slide-figure' as figure;
+
+$marge-bloc: var(--slide-marge-bloc, clamp(4rem, 8cqi, 7rem));
+
+.slide-illustration {
+  @include figure.cadre(0);
+  justify-items: center;
+
+  img {
+    display: block;
+    max-width: 100%;
+    max-height: calc(var(--slide-hauteur-de-toile, 100cqh) - 2 * #{$marge-bloc});
+    border-radius: 1rem;
+    object-fit: contain;
+  }
+}
