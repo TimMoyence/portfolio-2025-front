@@ -11,7 +11,7 @@ import { documentCacheControlFor } from './server/document-cache';
 import { COURS_BTS } from './app/core/config/cours-bts';
 import { lecteurDePublicationsDeCours } from './server/cours-publication';
 import { loadCsrShell } from './server/csr-shell';
-import { isClientOnlyRoute } from './server/routes-client';
+import { entetesDeLaRoute, isClientOnlyRoute } from './server/routes-client';
 import { registerPermanentRedirects } from './server/redirects';
 import { lecteurDArticlesDuSitemap } from './server/article-sitemap';
 import { buildLlmsFullTxt, buildLlmsTxt, buildRobotsTxt } from './server/seo-builders';
@@ -66,12 +66,15 @@ app.use((req, res, next) => {
   next();
 });
 
+const poserLesEntetes = (res: Response, entetes: Readonly<Record<string, string>>): void => {
+  for (const [nom, valeur] of Object.entries(entetes)) {
+    res.setHeader(nom, valeur);
+  }
+};
+
 app.use((req, res, next) => {
   const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
-  const headers = buildSecurityHeaders({ isHttps });
-  for (const [name, value] of Object.entries(headers)) {
-    res.setHeader(name, value);
-  }
+  poserLesEntetes(res, buildSecurityHeaders({ isHttps }));
   next();
 });
 
@@ -299,9 +302,10 @@ const renderWithSsr = (
 app.get('**', (req, res, next) => {
   const urlLocale = localeOf(req.originalUrl);
   const baseHref = urlLocale ? `/${urlLocale}` : '/';
+  const routePath = routePathOf(req.originalUrl);
+  poserLesEntetes(res, entetesDeLaRoute(routePath));
 
   if (urlLocale) {
-    const routePath = routePathOf(req.originalUrl);
     const prerendered = prerenderedFileOf(urlLocale, routePath);
     if (prerendered) {
       sendPrerendered(req, res, { urlLocale, routePath, file: prerendered });

@@ -1,6 +1,6 @@
 import { RenderMode } from '@angular/ssr';
 import { serverRoutes } from '../app/app.routes.server';
-import { isClientOnlyRoute } from './routes-client';
+import { entetesDeLaRoute, isClientOnlyRoute } from './routes-client';
 
 function cheminConcret(motif: string): string {
   return `/${motif.replace(/:[A-Za-z]+/g, 'valeur-1').replace(/\*\*$/, 'sous/chemin')}`;
@@ -37,5 +37,29 @@ describe('isClientOnlyRoute', () => {
     expect(
       isClientOnlyRoute('/formations/b2-01-traitement-information-chiffree/toolkit'),
     ).toBeFalse();
+  });
+});
+
+describe('entetesDeLaRoute', () => {
+  it('sert le livret papier hors du groupe de navigation du pupitre, que son impression ne fige pas', () => {
+    expect(entetesDeLaRoute('/cours/presenter/b2-02-series-statistiques/livret')).toEqual({
+      'Cross-Origin-Opener-Policy': 'same-origin',
+    });
+  });
+
+  it('laisse le pupitre sans politique d ouverture, pour que le livret qu il ouvre s en sépare', () => {
+    expect(entetesDeLaRoute('/cours/presenter/b2-02-series-statistiques')).toEqual({});
+    expect(entetesDeLaRoute('/cours/presenter/b2-02-series-statistiques/scene/seance-1')).toEqual(
+      {},
+    );
+  });
+
+  it('pose les en-têtes que chaque route serveur déclare', () => {
+    const declarees = serverRoutes.filter((route) => route.headers !== undefined);
+
+    expect(declarees.length).toBeGreaterThan(0);
+    for (const route of declarees) {
+      expect(entetesDeLaRoute(cheminConcret(route.path))).toEqual(route.headers ?? {});
+    }
   });
 });
