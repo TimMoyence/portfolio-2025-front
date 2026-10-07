@@ -166,9 +166,11 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
     return safeHtml`
       <fieldset class="fp-${bloc}__reglages">
         <legend>${escapeHtml(this.texteDuBloc(papier ? 'reglages-papier' : 'reglages'))}</legend>
-        ${papier ? safeHtml`` : declencheurs}
-        <div class="fp-${bloc}__parametres" aria-live="polite">
-          ${(this.interne?.parametres ?? []).map((parametre) => this.parametreAffiche(parametre))}
+        <div class="fp-${bloc}__corps">
+          ${papier ? safeHtml`` : declencheurs}
+          <div class="fp-${bloc}__parametres" aria-live="polite">
+            ${(this.interne?.parametres ?? []).map((parametre) => this.parametreAffiche(parametre))}
+          </div>
         </div>
       </fieldset>
     `;

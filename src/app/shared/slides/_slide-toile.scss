@@ -1,0 +1,15 @@
+@function part-de-hauteur($part) {
+  @return calc(var(--slide-hauteur-de-toile, 100cqh) * $part);
+}
+
+@mixin large-ou-imprimee($largeur-min) {
+  @media print, (min-width: $largeur-min) {
+    @content;
+  }
+}
+
+@mixin etroite-a-l-ecran($largeur-max) {
+  @media screen and (max-width: $largeur-max) {
+    @content;
+  }
+}

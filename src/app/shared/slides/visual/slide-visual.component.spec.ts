@@ -16,7 +16,9 @@ import {
   buildVerdictDuTri,
   buildRecitVisuel,
   buildVisualAnswerReviewSlide,
+  buildVisualIllustrationSlide,
   buildVisualImageHeroSlide,
+  buildVisualImageSlide,
   buildVisualQuizSlide,
   buildVisualSlide,
   buildVisualSortCorrectionSlide,
@@ -85,6 +87,69 @@ describe('SlideVisualComponent', () => {
 
     const img = (fixture.nativeElement as HTMLElement).querySelector('.slide-hero__bg img');
     expect(img?.getAttribute('loading')).toBe('lazy');
+  });
+
+  for (const renderer of ['image-left', 'image-right'] as const) {
+    it(`${renderer} · charge sans différer toutes les images de l écran prioritaire`, () => {
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput('slide', buildVisualImageSlide(renderer));
+      fixture.componentRef.setInput('prioritaire', true);
+      fixture.detectChanges();
+
+      const images = [...(fixture.nativeElement as HTMLElement).querySelectorAll('img')];
+      expect(images.length).toBe(2);
+      expect(images.map((img) => img.getAttribute('loading'))).toEqual(['eager', 'eager']);
+      expect(
+        (fixture.nativeElement as HTMLElement)
+          .querySelector('.slide-image__media img')
+          ?.getAttribute('fetchpriority'),
+      ).toBe('high');
+    });
+
+    it(`${renderer} · diffère les images d un écran qui n est pas prioritaire`, () => {
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput('slide', buildVisualImageSlide(renderer));
+      fixture.detectChanges();
+
+      const images = [...(fixture.nativeElement as HTMLElement).querySelectorAll('img')];
+      expect(images.map((img) => img.getAttribute('loading'))).toEqual(['lazy', 'lazy']);
+      expect(images.some((img) => img.hasAttribute('fetchpriority'))).toBeFalse();
+    });
+  }
+
+  describe('illustration', () => {
+    const ecranMonte = (prioritaire: boolean): HTMLElement => {
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput('slide', buildVisualIllustrationSlide());
+      fixture.componentRef.setInput('prioritaire', prioritaire);
+      fixture.detectChanges();
+      return fixture.nativeElement as HTMLElement;
+    };
+    const imageDe = (prioritaire: boolean): HTMLImageElement | null =>
+      ecranMonte(prioritaire).querySelector('app-slide-illustration img');
+
+    it('ne montre que l image du cours, avec son texte alternatif', () => {
+      const ecran = ecranMonte(false);
+      const image = ecran.querySelector('app-slide-illustration img');
+
+      expect(image?.getAttribute('src')).toBe('/assets/cours/b2-02/v2/cinq-factures.webp');
+      expect(image?.getAttribute('alt')).toContain('médiane 12 jours');
+      expect(ecran.querySelector('h1, h2, h3, p')).toBeNull();
+    });
+
+    it('charge l image sans différer sur l écran prioritaire', () => {
+      const image = imageDe(true);
+
+      expect(image?.getAttribute('loading')).toBe('eager');
+      expect(image?.getAttribute('fetchpriority')).toBe('high');
+    });
+
+    it('diffère l image d un écran qui n est pas prioritaire', () => {
+      const image = imageDe(false);
+
+      expect(image?.getAttribute('loading')).toBe('lazy');
+      expect(image?.hasAttribute('fetchpriority')).toBeFalse();
+    });
   });
 
   describe('correction du tri', () => {

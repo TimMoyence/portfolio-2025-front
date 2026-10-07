@@ -1,4 +1,5 @@
 @use '../../slide-section' as slide;
+@use '../../slide-toile' as toile;
 
 .slide-image {
   display: grid;
@@ -10,9 +11,13 @@
   padding: 2rem;
   color: var(--text, #0c0902);
 
-  @media (min-width: 768px) {
+  @include toile.large-ou-imprimee(768px) {
     grid-template-columns: 1fr 1fr;
     padding: 4rem;
+  }
+
+  @media print {
+    min-height: 0;
   }
 }
 

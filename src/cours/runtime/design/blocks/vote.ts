@@ -95,14 +95,17 @@ export const vote = `
 }
 
 :where(.fp-root) .fp-vote__options {
-  display: grid;
-  gap: var(--fp-s-2);
   min-width: 0;
   border: 0;
 }
 
+:where(.fp-root) .fp-vote__corps {
+  display: grid;
+  gap: var(--fp-s-2);
+}
+
 :where(.fp-root) .fp-vote__options > legend {
-  margin-bottom: var(--fp-s-3);
+  margin-bottom: calc(var(--fp-s-3) + var(--fp-s-2));
 }
 
 :where(.fp-root) .fp-vote__phase {

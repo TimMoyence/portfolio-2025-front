@@ -8,6 +8,10 @@
   padding: var(--slide-marge-bloc, clamp(4rem, 8cqi, 7rem))
     var(--slide-marge-ligne, clamp(1.25rem, 6cqi, 7rem));
   box-sizing: border-box;
+
+  @media print {
+    min-height: 0;
+  }
 }
 
 @mixin titre($largeur) {

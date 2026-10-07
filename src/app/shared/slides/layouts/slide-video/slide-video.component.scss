@@ -1,4 +1,5 @@
 @use '../../slide-section' as slide;
+@use '../../slide-toile' as toile;
 
 .slide-video {
   @include slide.cadre-centre(2rem);
@@ -8,7 +9,7 @@
 .slide-video__media {
   width: 100%;
   max-width: 860px;
-  max-height: min(58cqh, 520px);
+  max-height: min(toile.part-de-hauteur(0.58), 520px);
   aspect-ratio: 16 / 9;
   border-radius: 1rem;
   overflow: hidden;

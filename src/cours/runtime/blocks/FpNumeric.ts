@@ -52,11 +52,18 @@ export class FpNumeric extends FpReponse<NumericQuestionPublique> {
         </div>
         <button type="button" class="fp-numeric__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
         ${this.suiviDeLEnvoi()}`;
+    const revelee = this.bonneReponseRevelee((bonne) => bonne.replace('.', ','));
+    const corps =
+      saisie === '' && revelee === ''
+        ? escapeHtml('')
+        : safeHtml`<div class="fp-numeric__corps">
+          ${saisie}
+          ${revelee}
+        </div>`;
     return safeHtml`
-      <fieldset class="fp-carte fp-scene fp-numeric__numerique">
+      <fieldset class="fp-carte fp-numeric__numerique">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
-        ${saisie}
-        ${this.bonneReponseRevelee((bonne) => bonne.replace('.', ','))}
+        ${corps}
       </fieldset>
     `;
   }

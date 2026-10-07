@@ -104,6 +104,15 @@
       ),
       linear-gradient(180deg, rgba(255, 250, 242, 0.22), rgba(255, 250, 242, 0.34));
   }
+  @media print {
+    html {
+      background: #fff;
+    }
+
+    body::before {
+      display: none;
+    }
+  }
 }
 
 @include bp.mobile {

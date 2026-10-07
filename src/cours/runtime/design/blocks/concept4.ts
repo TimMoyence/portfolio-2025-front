@@ -5,12 +5,16 @@ export const concept4 = `
 }
 
 :where(.fp-root) .fp-concept4__reglages {
-  display: grid;
-  gap: var(--fp-s-3);
   width: 100%;
 }
 
+:where(.fp-root) .fp-concept4__corps {
+  display: grid;
+  gap: var(--fp-s-3);
+}
+
 :where(.fp-root) .fp-concept4__reglages > legend {
+  margin-bottom: var(--fp-s-3);
   padding-bottom: var(--fp-s-2);
   color: var(--fp-texte-fort);
   font-size: calc(1.1rem * var(--fp-echelle));

@@ -7,6 +7,7 @@ export {
   SlideImageComponent,
   type RichListItem,
 } from './layouts/slide-image/slide-image.component';
+export { SlideIllustrationComponent } from './layouts/slide-illustration/slide-illustration.component';
 export { SlideVideoComponent } from './layouts/slide-video/slide-video.component';
 export { SlideStatsComponent } from './layouts/slide-stats/slide-stats.component';
 export { SlideQuoteComponent } from './layouts/slide-quote/slide-quote.component';

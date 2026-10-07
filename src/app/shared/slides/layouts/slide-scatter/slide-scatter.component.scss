@@ -1,4 +1,5 @@
 @use '../../slide-figure' as figure;
+@use '../../slide-toile' as toile;
 
 :host {
   display: block;
@@ -26,7 +27,7 @@ h2 {
   --graduations-y: clamp(2.8rem, 6cqi, 3.8rem);
   display: grid;
   grid-template-columns: var(--graduations-y) minmax(0, 1fr);
-  grid-template-rows: auto clamp(13rem, 42cqh, 24rem) 1.6rem auto;
+  grid-template-rows: auto clamp(13rem, toile.part-de-hauteur(0.42), 24rem) 1.6rem auto;
   column-gap: 0.6rem;
   padding: 0.4rem 1rem 0.4rem 0;
 }

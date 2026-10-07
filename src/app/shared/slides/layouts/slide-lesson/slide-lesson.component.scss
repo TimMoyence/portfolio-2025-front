@@ -1,4 +1,5 @@
 @use '../../slide-figure' as figure;
+@use '../../slide-toile' as toile;
 
 :host {
   display: block;
@@ -6,7 +7,7 @@
 }
 
 .slide-lesson {
-  @include figure.cadre(clamp(1rem, 3cqh, 1.6rem));
+  @include figure.cadre(clamp(1rem, toile.part-de-hauteur(0.03), 1.6rem));
 }
 
 h2 {
@@ -109,6 +110,14 @@ h3 {
   .slide-lesson {
     min-height: 0;
     padding: 0;
+  }
+
+  h2 {
+    max-width: none;
+  }
+
+  .slide-lesson__blocks {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
   }
 
   .slide-lesson__block,

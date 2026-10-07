@@ -251,4 +251,21 @@ export const sheet = `
   color: var(--fp-texte-fort);
   font-variant-numeric: tabular-nums;
 }
+
+@media print {
+  :where(.fp-root) .fp-sheet__tableau {
+    display: table;
+    overflow: visible;
+  }
+
+  :where(.fp-root) .fp-sheet__entete,
+  :where(.fp-root) .fp-sheet__rang,
+  :where(.fp-root) .fp-sheet__cellule:not(.fp-sheet__cellule--saisie) {
+    padding-inline: var(--fp-s-1);
+  }
+
+  :where(.fp-root) .fp-sheet__cellule:not(.fp-sheet__cellule--saisie) {
+    white-space: normal;
+  }
+}
 `;

@@ -7,6 +7,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { ImagePrioritaireDirective } from '../image-prioritaire.directive';
 import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
 export interface RichListItem {
@@ -19,7 +20,7 @@ export interface RichListItem {
 @Component({
   selector: 'app-slide-image-left, app-slide-image-right',
   standalone: true,
-  imports: [NgTemplateOutlet, SlideEnTeteComponent],
+  imports: [NgTemplateOutlet, ImagePrioritaireDirective, SlideEnTeteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-image.component.html',
   styleUrl: './slide-image.component.scss',
@@ -34,6 +35,9 @@ export class SlideImageComponent {
   readonly richItems = input<RichListItem[]>([]);
   readonly accent = input<string>('default');
   readonly reverse = input<boolean>(false);
+  readonly priority = input(false);
+
+  protected readonly chargement = computed(() => (this.priority() ? 'eager' : 'lazy'));
 
   private readonly tagName = inject(ElementRef).nativeElement.tagName.toLowerCase();
   protected readonly isReverse = computed(

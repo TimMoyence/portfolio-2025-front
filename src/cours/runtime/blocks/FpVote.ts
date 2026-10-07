@@ -164,8 +164,10 @@ export class FpVote extends FpVerdicts {
       ${this.annoncePhase()}
       <fieldset class="fp-vote__options">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
-        ${question.options.map((option) => this.bouton(question, option.id, option.libelle, 'fp-vote__option'))}
-        ${neSaitPas}
+        <div class="fp-vote__corps">
+          ${question.options.map((option) => this.bouton(question, option.id, option.libelle, 'fp-vote__option'))}
+          ${neSaitPas}
+        </div>
       </fieldset>
       ${this.presentateur() ? this.suiviProjete(question) : this.suiviEtudiant(question)}
       ${this.bonneReponseRevelee()}${this.revelationRevelee()}

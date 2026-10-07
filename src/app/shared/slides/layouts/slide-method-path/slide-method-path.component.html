@@ -35,19 +35,32 @@
         <p class="slide-method-path__detail-kicker" i18n="@@slideMethodPathProgression">
           Étape {{ currentIndex() + 1 }} sur {{ steps().length }}
         </p>
-        <h3>{{ step.title }}</h3>
-        <p class="slide-method-path__question">{{ step.question }}</p>
-        <dl>
-          <div>
-            <dt i18n="@@slideMethodPathAVerifier">À vérifier</dt>
-            <dd>{{ step.proof }}</dd>
-          </div>
-          <div>
-            <dt i18n="@@slideMethodPathARetenir">À retenir</dt>
-            <dd>{{ step.result }}</dd>
-          </div>
-        </dl>
+        <ng-container *ngTemplateOutlet="detailDeLEtape; context: { $implicit: step }" />
       </article>
     }
   </div>
+
+  <ol class="slide-method-path__imprime">
+    @for (step of steps(); track step.id; let index = $index) {
+      <li class="slide-method-path__fiche">
+        <span class="slide-method-path__number">{{ index + 1 }}</span>
+        <ng-container *ngTemplateOutlet="detailDeLEtape; context: { $implicit: step }" />
+      </li>
+    }
+  </ol>
 </section>
+
+<ng-template #detailDeLEtape let-step>
+  <h3>{{ step.title }}</h3>
+  <p class="slide-method-path__question">{{ step.question }}</p>
+  <dl>
+    <div>
+      <dt i18n="@@slideMethodPathAVerifier">À vérifier</dt>
+      <dd>{{ step.proof }}</dd>
+    </div>
+    <div>
+      <dt i18n="@@slideMethodPathARetenir">À retenir</dt>
+      <dd>{{ step.result }}</dd>
+    </div>
+  </dl>
+</ng-template>

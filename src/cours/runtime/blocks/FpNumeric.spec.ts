@@ -284,6 +284,48 @@ describe('FpNumeric', () => {
     expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')).toBeNull();
   });
 
+  it('laisse l enonce seul dans sa carte au presentateur tant que rien n est revele, sans corps vide sous la legende', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    const enfants = () =>
+      [...(hote.shadowRoot?.querySelector('fieldset')?.children ?? [])].map((enfant) =>
+        enfant.tagName.toLowerCase(),
+      );
+
+    expect(enfants()).toEqual(['legend']);
+    expect(getComputedStyle(hote.shadowRoot?.querySelector('legend') as Element).marginBottom).toBe(
+      '0px',
+    );
+
+    hote.corrige = CORRIGE;
+
+    expect(enfants()).toEqual(['legend', 'div']);
+  });
+
+  for (const { largeur, uniteALaLigne } of [
+    { largeur: '260px', uniteALaLigne: true },
+    { largeur: '600px', uniteALaLigne: false },
+  ]) {
+    it(`garde le champ et son unite dans une carte de ${largeur}, l unite ne passant a la ligne que faute de place`, () => {
+      hote.style.display = 'block';
+      hote.style.width = largeur;
+      hote.question = buildNumericQuestion({ unite: 'jours' });
+      const fieldset = hote.shadowRoot?.querySelector('fieldset') as HTMLElement;
+      const style = getComputedStyle(fieldset);
+      const bordInterieur =
+        fieldset.getBoundingClientRect().right -
+        parseFloat(style.borderRightWidth) -
+        parseFloat(style.paddingRight);
+      const champ = champDe(hote)?.getBoundingClientRect();
+      const unite = hote.shadowRoot
+        ?.querySelector('[data-testid="unite"]')
+        ?.getBoundingClientRect();
+
+      expect(champ?.right).toBeLessThanOrEqual(bordInterieur + 0.5);
+      expect(unite?.right).toBeLessThanOrEqual(bordInterieur + 0.5);
+      expect((unite?.top ?? NaN) >= (champ?.bottom ?? NaN)).toBe(uniteALaLigne);
+    });
+  }
+
   it('attend la question sous le meme libelle pour les deux roles', () => {
     for (const role of ROLES_DE_MONTAGE) {
       const vide = document.createElement('fp-numeric') as FpNumeric;

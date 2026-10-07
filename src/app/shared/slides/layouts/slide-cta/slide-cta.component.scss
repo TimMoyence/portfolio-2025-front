@@ -9,6 +9,10 @@
   padding: 4rem 2rem;
   background: linear-gradient(135deg, var(--accent, #4fb3a2), var(--accent-dark, var(--teal-dark)));
   color: white;
+
+  @media print {
+    min-height: 0;
+  }
 }
 
 .slide-cta__content {

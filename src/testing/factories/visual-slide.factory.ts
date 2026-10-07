@@ -44,6 +44,34 @@ export function buildVisualImageHeroSlide(id = 'B2-01-S01-ACCROCHE'): EcranConte
   });
 }
 
+export function buildVisualImageSlide(
+  renderer: 'image-left' | 'image-right' = 'image-left',
+  id = 'B2-01-A5-01-NIGHTINGALE',
+): EcranContent {
+  return buildRecitVisuel(id, renderer, {
+    title: '1858 : Florence Nightingale fait décider par les données',
+    paragraphs: ['Un secteur par mois de la guerre de Crimée.'],
+    image: `https://images.example/${id}.webp`,
+    imageAlt: 'Diagramme polaire de Florence Nightingale',
+    richItems: [
+      {
+        title: 'Royal Statistical Society',
+        description: 'Première femme élue membre.',
+        logo: 'https://images.example/rss.webp',
+      },
+    ],
+  });
+}
+
+export function buildVisualIllustrationSlide(
+  id = 'B2-02-A1-06-ILLUSTRATION-RESUMER',
+): EcranContent {
+  return buildRecitVisuel(id, 'illustration', {
+    image: '/assets/cours/b2-02/v2/cinq-factures.webp',
+    imageAlt: 'Schéma des cinq factures : moyenne 20 jours, médiane 12 jours',
+  });
+}
+
 export const TRI_CORRIGE = { screenId: 'B2-01-A1-05-ANATOMIE', sortId: 'b2-01-a1-anatomie' };
 
 export function buildSortCorrectionProps(overrides: PropsVisuelles = {}): PropsVisuelles {

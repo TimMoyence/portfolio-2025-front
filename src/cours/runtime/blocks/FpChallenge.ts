@@ -141,11 +141,13 @@ export class FpChallenge extends FpEnvoi<ChallengeProblemePublic> {
         <p class="fp-challenge__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
         ${this.annonces()}`;
     return safeHtml`
-      <fieldset class="fp-carte fp-scene fp-challenge__probleme">
+      <fieldset class="fp-carte fp-challenge__probleme">
         <legend class="fp-enonce">${escapeHtml(probleme.enonce)}</legend>
-        ${dossier(probleme)}
-        ${reponse}
-        ${this.correction()}
+        <div class="fp-challenge__corps">
+          ${dossier(probleme)}
+          ${reponse}
+          ${this.correction()}
+        </div>
       </fieldset>
     `;
   }

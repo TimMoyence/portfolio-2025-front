@@ -1,3 +1,5 @@
+@use '../../slide-toile' as toile;
+
 .slide-guide {
   width: min(100%, 76rem);
   min-height: 100cqh;
@@ -9,6 +11,10 @@
     var(--slide-marge-ligne, clamp(1.25rem, 6cqi, 7rem));
   margin: 0 auto;
   box-sizing: border-box;
+
+  @media print {
+    min-height: 0;
+  }
 }
 
 .slide-guide__header {
@@ -130,7 +136,7 @@
   }
 }
 
-@media (max-width: 700px) {
+@include toile.etroite-a-l-ecran(700px) {
   .slide-guide__body,
   .slide-guide__footer {
     grid-template-columns: 1fr;

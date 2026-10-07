@@ -65,10 +65,12 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
         ${this.verdictDeReponse(this.interneVerdict)}
         ${this.annonces()}`;
     return safeHtml`
-      <fieldset class="fp-carte fp-scene fp-exit__billet">
+      <fieldset class="fp-carte fp-exit__billet">
         <legend class="fp-enonce">${escapeHtml(billet.question)}</legend>
-        ${choix}
-        ${redaction}
+        <div class="fp-exit__corps">
+          ${choix}
+          ${redaction}
+        </div>
       </fieldset>
     `;
   }

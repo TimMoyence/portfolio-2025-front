@@ -16,6 +16,7 @@ import {
   SlideGridComponent,
   SlideGuideComponent,
   SlideHeroComponent,
+  SlideIllustrationComponent,
   SlideImageComponent,
   SlideLessonComponent,
   SlideMethodPathComponent,
@@ -52,6 +53,7 @@ const layouts: Readonly<Record<string, Type<unknown>>> = {
   table: SlideTableComponent,
   'image-left': SlideImageComponent,
   'image-right': SlideImageComponent,
+  illustration: SlideIllustrationComponent,
   cta: SlideCtaComponent,
   guide: SlideGuideComponent,
   'sort-review': SlideSortReviewComponent,
@@ -59,6 +61,13 @@ const layouts: Readonly<Record<string, Type<unknown>>> = {
 };
 
 const RENDUS_DE_REVELATION: ReadonlySet<string> = new Set(['sort-review', 'answer-review']);
+
+const RENDUS_A_IMAGE_PRIORISABLE: ReadonlySet<string> = new Set([
+  'hero',
+  'image-left',
+  'image-right',
+  'illustration',
+]);
 
 function cartesDuTri(
   source: Readonly<Record<string, unknown>> | null,
@@ -251,7 +260,9 @@ export class SlideVisualComponent {
       ...reviewInputs,
       ...answerInputs,
       ...(renderer === 'image-right' ? { reverse: true } : {}),
-      ...(renderer === 'hero' && this.prioritaire() ? { priority: true } : {}),
+      ...(RENDUS_A_IMAGE_PRIORISABLE.has(renderer ?? '') && this.prioritaire()
+        ? { priority: true }
+        : {}),
     };
   });
   protected readonly quizData = computed(() => commeQuiz(quizPrincipal(this.presentation())));

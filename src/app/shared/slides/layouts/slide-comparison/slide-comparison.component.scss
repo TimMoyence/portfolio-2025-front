@@ -1,4 +1,5 @@
 @use '../../slide-section' as slide;
+@use '../../slide-toile' as toile;
 
 .slide-comparison {
   @include slide.section;
@@ -12,7 +13,7 @@
   margin: 0 auto;
   width: 100%;
 
-  @media (min-width: 768px) {
+  @include toile.large-ou-imprimee(768px) {
     grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
   }
 }

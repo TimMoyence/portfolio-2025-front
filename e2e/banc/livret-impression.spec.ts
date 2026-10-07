@@ -1,29 +1,20 @@
 import { expect, test } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
+import { HAUTEUR_UTILE_PX, hauteurDePageA, LARGEUR_UTILE_PX, MARGE_PX } from '../impression-a4';
 import { CODE_DU_COURS, ouvrirLeLivret } from './contexte';
-
-const PX_PAR_MM = 96 / 25.4;
-
-const MARGE_MM = 12;
-
-const A4_MM = { largeur: 210, hauteur: 297 } as const;
-
-const LARGEUR_UTILE_PX = Math.floor((A4_MM.largeur - 2 * MARGE_MM) * PX_PAR_MM);
-
-const HAUTEUR_UTILE_PX = Math.floor((A4_MM.hauteur - 2 * MARGE_MM) * PX_PAR_MM);
 
 const VUES = [
   { vue: 'sujet', pages: 'livret-ecran' },
   { vue: 'corrige', pages: 'livret-corrige' },
 ] as const;
 
-function pagesTassees(flux: readonly (readonly number[])[]): number {
+function pagesTassees(flux: readonly (readonly number[])[], hauteurDePage: number): number {
   return flux.reduce((total, hauteurs) => {
     let pages = 1;
     let remplie = 0;
     for (const hauteur of hauteurs) {
       const suite = remplie + hauteur;
-      if (suite > HAUTEUR_UTILE_PX && remplie > 0) {
+      if (suite > hauteurDePage && remplie > 0) {
         pages += 1;
         remplie = hauteur;
       } else {
@@ -51,10 +42,18 @@ async function vueImprimee(
   return ecrans;
 }
 
+async function hauteurDePageImprimee(page: Page): Promise<number> {
+  const largeur = await page
+    .locator('.livret')
+    .evaluate((livret) => livret.getBoundingClientRect().width);
+  return hauteurDePageA(largeur);
+}
+
 test.describe(`Banc — livret papier du ${CODE_DU_COURS} imprimé en A4`, () => {
   for (const { vue, pages } of VUES) {
     test(`aucun écran du ${vue} n’est coupé entre deux pages A4`, async ({ page }, testInfo) => {
       const ecrans = await vueImprimee(page, { vue, pages });
+      const hauteurDePage = await hauteurDePageImprimee(page);
       const mesures = await ecrans.evaluateAll((sections) =>
         sections.map((section) => ({
           ecran: section.getAttribute('data-ecran') ?? '',
@@ -68,16 +67,17 @@ test.describe(`Banc — livret papier du ${CODE_DU_COURS} imprimé en A4`, () =>
         format: 'A4',
         printBackground: false,
         margin: {
-          top: `${MARGE_MM}mm`,
-          bottom: `${MARGE_MM}mm`,
-          left: `${MARGE_MM}mm`,
-          right: `${MARGE_MM}mm`,
+          top: `${MARGE_PX}px`,
+          bottom: `${MARGE_PX}px`,
+          left: `${MARGE_PX}px`,
+          right: `${MARGE_PX}px`,
         },
       });
       await testInfo.attach(`livret-${vue}.pdf`, { body: pdf, contentType: 'application/pdf' });
 
       expect(mesures.length).toBeGreaterThan(0);
-      expect(mesures.filter(({ hauteur }) => hauteur > HAUTEUR_UTILE_PX)).toEqual([]);
+      expect(hauteurDePage).toBeGreaterThan(HAUTEUR_UTILE_PX);
+      expect(mesures.filter(({ hauteur }) => hauteur > hauteurDePage)).toEqual([]);
     });
   }
 
@@ -85,6 +85,7 @@ test.describe(`Banc — livret papier du ${CODE_DU_COURS} imprimé en A4`, () =>
     page,
   }) => {
     const ecrans = await vueImprimee(page);
+    const hauteurDePage = await hauteurDePageImprimee(page);
     const flux = await page.getByTestId('livret-feuille').evaluateAll((feuilles) =>
       feuilles.map((feuille, rang) => {
         const entete = document.querySelector('.livret__entete');
@@ -106,9 +107,9 @@ test.describe(`Banc — livret papier du ${CODE_DU_COURS} imprimé en A4`, () =>
       preferCSSPageSize: true,
     });
 
-    expect(pagesTassees(flux)).toBeLessThan(await ecrans.count());
+    expect(pagesTassees(flux, hauteurDePage)).toBeLessThan(await ecrans.count());
     expect(pagesDuPdf(pdf)).toBeGreaterThanOrEqual(flux.length);
-    expect(pagesDuPdf(pdf)).toBeLessThanOrEqual(pagesTassees(flux));
+    expect(pagesDuPdf(pdf)).toBeLessThanOrEqual(pagesTassees(flux, hauteurDePage));
   });
 
   test('imprime chaque barre et chaque valeur des graphiques, sans attendre l animation', async ({

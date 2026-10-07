@@ -53,6 +53,7 @@ export const tokens = `
   --fp-corps: calc(1rem * var(--fp-echelle));
   --fp-titre: var(--fp-titre-impose, calc(2rem * var(--fp-echelle)));
   --fp-marge-carte: var(--fp-marge-carte-imposee, var(--fp-s-4));
+  --fp-hauteur-de-toile: var(--fp-hauteur-de-toile-imposee, 100cqh);
 
   --fp-fond: var(--fp-cream);
   --fp-surface: #ffffff;
@@ -112,13 +113,21 @@ export const base = `
 }
 
 :where(.fp-root) fieldset {
+  display: flow-root;
   min-inline-size: 0;
 }
 
 :where(.fp-root) fieldset > legend {
   float: left;
-  grid-column: 1 / -1;
   inline-size: 100%;
+}
+
+:where(.fp-root) fieldset > legend + * {
+  clear: both;
+}
+
+:where(.fp-root) fieldset > legend:last-child {
+  margin-block-end: 0;
 }
 
 :where(.fp-root) {
@@ -301,6 +310,16 @@ export const base = `
 
 export const impression = `
 @media print {
+  :where(.fp-root) {
+    --fp-cream: #ffffff;
+    --fp-ivory: #ffffff;
+    --fp-a-revoir-fond: #ffffff;
+  }
+
+  :where(.fp-root) .fp-carte {
+    box-shadow: none;
+  }
+
   :where(.fp-root) [data-testid='valider'],
   :where(.fp-root) [data-testid='je-ne-sais-pas'],
   :where(.fp-root) [data-option='__je_ne_sais_pas__'] {

@@ -1,4 +1,5 @@
 @use '../../slide-section' as slide;
+@use '../../slide-toile' as toile;
 
 .slide-method-path {
   @include slide.section;
@@ -132,18 +133,18 @@
   line-height: 1.35;
 }
 
-.slide-method-path__detail dl {
+:is(.slide-method-path__detail, .slide-method-path__fiche) dl {
   display: grid;
   gap: 1rem;
   margin: 0;
 }
 
-.slide-method-path__detail dl div {
+:is(.slide-method-path__detail, .slide-method-path__fiche) dl div {
   padding-block-start: 0.8rem;
   border-block-start: 1px solid var(--border, rgba(var(--ink-rgb), 0.12));
 }
 
-.slide-method-path__detail dt {
+:is(.slide-method-path__detail, .slide-method-path__fiche) dt {
   color: var(--text-muted, var(--slide-text-muted));
   font-size: 0.78rem;
   font-weight: 700;
@@ -151,10 +152,14 @@
   text-transform: uppercase;
 }
 
-.slide-method-path__detail dd {
+:is(.slide-method-path__detail, .slide-method-path__fiche) dd {
   margin: 0.25rem 0 0;
   font-size: 1rem;
   line-height: 1.5;
+}
+
+.slide-method-path__imprime {
+  display: none;
 }
 
 @keyframes method-detail-in {
@@ -168,7 +173,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@include toile.etroite-a-l-ecran(767px) {
   .slide-method-path__layout {
     grid-template-columns: 1fr;
   }
@@ -206,5 +211,53 @@
   .slide-method-path__step {
     animation: none;
     transition: none;
+  }
+}
+
+@media print {
+  .slide-method-path__layout {
+    display: none;
+  }
+
+  .slide-method-path__imprime {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .slide-method-path__fiche {
+    display: grid;
+    grid-template-columns: 2.2rem minmax(0, 1fr);
+    gap: 0.5rem 0.8rem;
+    align-content: start;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
+    border-radius: 1rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    .slide-method-path__question,
+    dl {
+      grid-column: 1 / -1;
+    }
+
+    .slide-method-path__question {
+      margin: 0;
+    }
+
+    dl {
+      gap: 0.5rem;
+    }
+
+    dl div {
+      padding-block-start: 0.5rem;
+    }
   }
 }

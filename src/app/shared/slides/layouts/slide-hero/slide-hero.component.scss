@@ -13,6 +13,10 @@
     --slide-hero-bg,
     linear-gradient(135deg, var(--accent-dark, #1c5a50), var(--accent, #4fb3a2))
   );
+
+  @media print {
+    min-height: 0;
+  }
 }
 
 .slide-hero__bg {

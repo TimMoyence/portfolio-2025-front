@@ -18,6 +18,8 @@ import {
 import {
   TRI_CORRIGE,
   buildVerdictDuTri,
+  buildVisualImageHeroSlide,
+  buildVisualImageSlide,
   buildVisualQuizSlide,
   buildVisualSlide,
   buildVisualSortCorrectionSlide,
@@ -146,6 +148,16 @@ describe('SlideActivityComponent : deck visuel B2', () => {
     );
     expect([...erreurs].map((carte) => carte.dataset['carte'])).toEqual(['inflation']);
   });
+
+  for (const slide of [buildVisualImageHeroSlide(), buildVisualImageSlide()]) {
+    it(`imprime au papier les images de l écran ${slide.id} sans les différer, Safari n imprimant pas une image différée`, () => {
+      const fixture = monter({ slide, role: 'etudiant', apercu: true, papier: true });
+
+      const images = [...(fixture.nativeElement as HTMLElement).querySelectorAll('img')];
+      expect(images.length).toBeGreaterThan(0);
+      expect(images.every((img) => img.getAttribute('loading') === 'eager')).toBeTrue();
+    });
+  }
 
   it('utilise le même renderer visuel que le catalogue pour l’étudiant', () => {
     const fixture = monter({ slide: buildVisualSlide(), role: 'etudiant' });

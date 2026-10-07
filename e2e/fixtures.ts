@@ -23,6 +23,11 @@ export const MOCK_SESSION = {
   user: MOCK_USER,
 };
 
+export const SESSION_FORMATEUR = {
+  ...MOCK_SESSION,
+  user: { ...MOCK_USER, roles: ['teacher'] },
+};
+
 export const B2_SLUG = 'b2-01-traitement-information-chiffree';
 
 interface EcranCatalogue {
