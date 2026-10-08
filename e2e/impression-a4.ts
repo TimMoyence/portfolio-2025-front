@@ -39,11 +39,17 @@ export function hauteursDesEcrans(sections: Locator): Promise<HauteurDEcran[]> {
             ),
           ]
         : [section];
+      const hauteurAvecSesMarges = (bloc: Element): number => {
+        const { marginBlockStart, marginBlockEnd } = getComputedStyle(bloc);
+        return (
+          bloc.getBoundingClientRect().height +
+          parseFloat(marginBlockStart) +
+          parseFloat(marginBlockEnd)
+        );
+      };
       return {
         ecran: section.getAttribute('data-ecran') ?? '',
-        hauteur: Math.ceil(
-          Math.max(...blocsInsecables.map((bloc) => bloc.getBoundingClientRect().height)),
-        ),
+        hauteur: Math.ceil(Math.max(...blocsInsecables.map(hauteurAvecSesMarges))),
       };
     }),
   );
