@@ -384,6 +384,38 @@ describe('CoursSyntheseComponent', () => {
       ]);
     });
 
+    it('nomme le billet de sortie noté par sa question, et sa réponse libre par son invite, sous le même identifiant', async () => {
+      const BILLET = 'b3-01-a3-billet';
+      const QUESTION_DU_BILLET =
+        'Une ligne porte une date_livraison antérieure à sa date_commande. La corrige-t-on automatiquement ?';
+      const INVITE_DU_BILLET =
+        'En une phrase : qu’est-ce qui reste flou pour vous après cette séance ?';
+      const CLEMENT = {
+        ...etudiant('Clement', 11, false, [
+          { ...reponse('qualite-des-donnees', 'non-on-la-signale'), questionId: BILLET },
+        ]),
+        reponsesLibres: [
+          {
+            screenId: 'B3-01-A3-13-BILLET-DE-SORTIE',
+            activityId: BILLET,
+            reponse: 'Le modèle de données.',
+          },
+        ],
+      };
+
+      const fixture = await monter(
+        rapportDe([CLEMENT], resultatsDe(1, [{ questionId: BILLET }])),
+        of(INSTANTANE_B3_01.deroule),
+      );
+
+      expect(textes(fixture, 'synthese-question-libelle')).toEqual([QUESTION_DU_BILLET]);
+      expect(textes(fixture, 'synthese-libre-question')).toEqual([INVITE_DU_BILLET]);
+      expect(fixture.componentInstance.exporterCsv().split('\n').slice(1)).toEqual([
+        `Clement;Durand;clement@example.com;${BILLET};${QUESTION_DU_BILLET};qualite-des-donnees;non-on-la-signale;4200`,
+        `Clement;Durand;clement@example.com;${BILLET};${INVITE_DU_BILLET};;Le modèle de données.;`,
+      ]);
+    });
+
     it('nomme une règle par son activité quand le déroulé ne peut pas être lu', async () => {
       const fixture = await monter(
         rapportDe([BASILE]),

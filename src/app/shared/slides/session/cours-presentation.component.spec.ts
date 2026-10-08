@@ -1193,11 +1193,16 @@ describe('CoursPresentationComponent : pièce jointe d un écran', () => {
   }
 
   for (const [cas, fichier] of [
-    ['servi par une autre origine', 'https://exemple.test/assets/cours/b3-01/piege.0c1d2e3f.xlsx'],
-    ['servi par une origine implicite', '//exemple.test/assets/cours/b3-01/piege.0c1d2e3f.xlsx'],
     ['qui remonte d un dossier', '/assets/cours/b3-01/../secret.0c1d2e3f.xlsx'],
     ['rangé dans un sous-dossier', '/assets/cours/b3-01/reprises/piege.0c1d2e3f.xlsx'],
+    ['servi par une autre origine', 'https://exemple.test/assets/cours/b3-01/piege.0c1d2e3f.xlsx'],
+    ['servi par une origine implicite', '//exemple.test/assets/cours/b3-01/piege.0c1d2e3f.xlsx'],
+    ['relatif', 'assets/cours/b3-01/piege.0c1d2e3f.xlsx'],
+    ['hors des assets des cours', '/assets/images/b3-01/piege.0c1d2e3f.xlsx'],
+    ['encodé', '/assets/cours/b3-01/%2e%2e%2fsecret.0c1d2e3f.xlsx'],
     ['exécutable', '/assets/cours/b3-01/piege.0c1d2e3f.exe'],
+    ['à macros', '/assets/cours/b3-01/piege.0c1d2e3f.xlsm'],
+    ['à l empreinte tronquée', '/assets/cours/b3-01/piege.3f9a.xlsx'],
     [
       'sans empreinte, qu un cache servirait encore après une correction',
       '/assets/cours/b3-01/B3-01_export_ventes.xlsx',
