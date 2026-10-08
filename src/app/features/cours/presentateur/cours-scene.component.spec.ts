@@ -129,6 +129,26 @@ describe('CoursSceneComponent', () => {
     expect(presentation.slide()?.cadrageDuRenvoi).toEqual(cadrageDuRenvoi);
   });
 
+  it('V5 · projette la pièce jointe de l écran courant comme une mention, sans lien', async () => {
+    const [vote] = derouleDeSeance().ecrans;
+    const pieceJointe = {
+      libelle: 'Classeur de reprise de l’acte 2',
+      fichier: '/assets/cours/b3-01/B3-01_reprise_acte_2.e63154db.xlsx',
+    };
+    const fixture = await monterSur([{ ...vote, pieceJointe }]);
+
+    diffuserSurLaVue(double, fixture, { ecranCourant: 0 });
+    const presentation = fixture.debugElement.query(By.directive(CoursPresentationComponent))
+      .componentInstance as CoursPresentationComponent;
+    const racine = fixture.nativeElement as HTMLElement;
+
+    expect({
+      pieceJointe: presentation.slide()?.pieceJointe,
+      mention: racine.querySelector('[data-testid="cours-piece-jointe"]')?.tagName,
+      liens: racine.querySelectorAll('a[download]').length,
+    }).toEqual({ pieceJointe, mention: 'P', liens: 0 });
+  });
+
   it('R4 · ne projette sur un écran qui renvoie à la mission aucune réponse donnée à la mission', async () => {
     const mission = buildEcranDeMission();
     const question = buildEcranDeroule({

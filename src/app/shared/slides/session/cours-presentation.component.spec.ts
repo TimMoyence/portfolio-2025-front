@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
-import type { EcranContent } from '../../../../cours/content/types';
+import type { EcranContent, PieceJointe } from '../../../../cours/content/types';
 import { attendreQue, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
 import {
   ecransDuPupitreB2_01,
@@ -62,6 +62,17 @@ function ecranDuPupitre(suffixe: string): EcranContent {
   const ecran = ecransDuPupitreB2_01().find(({ id }) => id.endsWith(suffixe));
   if (ecran === undefined) {
     throw new Error(`écran absent du pupitre : ${suffixe}`);
+  }
+  return ecran;
+}
+
+function ecranB2_01Du(mode: CoursPresentationMode, suffixe: string): EcranContent {
+  if (mode !== 'etudiant') {
+    return ecranDuPupitre(suffixe);
+  }
+  const ecran = ecransPublicsB2_01().find(({ id }) => id.endsWith(suffixe));
+  if (ecran === undefined) {
+    throw new Error(`écran absent du poste étudiant : ${suffixe}`);
   }
   return ecran;
 }
@@ -229,13 +240,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
   ] as const) {
     for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
       it(`${reference} · ${suffixe} tient dans la toile sans défilement en ${mode}`, async () => {
-        const ecran =
-          mode === 'etudiant'
-            ? ecransPublicsB2_01().find(({ id }) => id.endsWith(suffixe))
-            : ecranDuPupitre(suffixe);
-        if (ecran === undefined) {
-          throw new Error(`écran absent du poste étudiant : ${suffixe}`);
-        }
+        const ecran = ecranB2_01Du(mode, suffixe);
         const renvoi = ecransDuPupitreB2_01().find(({ id }) => id === ecran.renvoi) ?? null;
         const monte = await monterDansUnCadre(ecran, mode, 1280, 720, renvoi);
         const toile = monte.toile();
@@ -1097,6 +1102,101 @@ describe('CoursPresentationComponent au poste étudiant', () => {
       fixture.destroy();
     });
   }
+});
+
+const PIECE_JOINTE: PieceJointe = {
+  libelle: 'Export des ventes Norvane (classeur Excel)',
+  fichier: '/assets/cours/b3-01/B3-01_export_ventes.xlsx',
+};
+
+const MODES = ['etudiant', 'formateur', 'projection'] as const;
+
+function ecranDuMode(mode: CoursPresentationMode, pieceJointe?: PieceJointe): EcranContent {
+  const ecran = ecranB2_01Du(mode, 'A1-09-DIAPOSITIVE');
+  return pieceJointe === undefined ? ecran : { ...ecran, pieceJointe };
+}
+
+function pieceJointeAffichee(monte: EcranCadre): HTMLElement | null {
+  return monte.hote.querySelector<HTMLElement>('[data-testid="cours-piece-jointe"]');
+}
+
+function texteDe(element: Element | null): string | undefined {
+  return element?.textContent?.replace(/\s+/g, ' ').trim();
+}
+
+describe('CoursPresentationComponent : pièce jointe d un écran', () => {
+  beforeEach(() => setupTestBed({ imports: [CoursPresentationComponent] }));
+
+  for (const mode of ['etudiant', 'formateur'] as const) {
+    it(`V5 · en ${mode}, propose le fichier de l écran en téléchargement`, async () => {
+      const monte = await monterDansUnCadre(ecranDuMode(mode, PIECE_JOINTE), mode, 1280, 720);
+      const lien = pieceJointeAffichee(monte);
+
+      expect({
+        balise: lien?.tagName,
+        href: lien?.getAttribute('href'),
+        telechargement: lien?.hasAttribute('download'),
+        texte: texteDe(lien),
+      }).toEqual({
+        balise: 'A',
+        href: PIECE_JOINTE.fichier,
+        telechargement: true,
+        texte: `Télécharger ${PIECE_JOINTE.libelle}`,
+      });
+      monte.detruire();
+    });
+  }
+
+  it('V5 · en projection, annonce le fichier sur les postes, sans lien', async () => {
+    const monte = await monterDansUnCadre(
+      ecranDuMode('projection', PIECE_JOINTE),
+      'projection',
+      1280,
+      720,
+    );
+    const mention = pieceJointeAffichee(monte);
+
+    expect({
+      balise: mention?.tagName,
+      liens: monte.hote.querySelectorAll('a[download]').length,
+      texte: texteDe(mention),
+    }).toEqual({
+      balise: 'P',
+      liens: 0,
+      texte: `Sur votre poste : ${PIECE_JOINTE.libelle}`,
+    });
+    monte.detruire();
+  });
+
+  for (const mode of MODES) {
+    it(`V5 · en ${mode}, n affiche aucune pièce jointe sur un écran qui n en a pas`, async () => {
+      const monte = await monterDansUnCadre(ecranDuMode(mode), mode, 1280, 720);
+
+      expect(pieceJointeAffichee(monte)).toBeNull();
+      monte.detruire();
+    });
+
+    it(`V5 · en ${mode}, l écran et sa pièce jointe tiennent dans la toile`, async () => {
+      const monte = await monterDansUnCadre(ecranDuMode(mode, PIECE_JOINTE), mode, 1280, 720);
+      await stabiliser(monte, 4);
+
+      expect(pieceJointeAffichee(monte)).not.toBeNull();
+      expect(elementsPerdus(monte)).withContext('éléments coupés').toEqual([]);
+      monte.detruire();
+    });
+  }
+
+  it('V5 · ne propose aucun fichier servi hors des classeurs de cours', async () => {
+    const monte = await monterDansUnCadre(
+      ecranDuMode('etudiant', { libelle: 'Classeur', fichier: 'https://exemple.test/piege.xlsx' }),
+      'etudiant',
+      1280,
+      720,
+    );
+
+    expect(pieceJointeAffichee(monte)).toBeNull();
+    monte.detruire();
+  });
 });
 
 function monterDansLePoste(poste: string): { chrome: HTMLElement; slide: HTMLElement } {

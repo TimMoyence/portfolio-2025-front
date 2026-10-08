@@ -45,6 +45,7 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
     interactif: ecran.interactif,
     donnees: ecran.donnees,
     ...(ecran.cadrageDuRenvoi === undefined ? {} : { cadrageDuRenvoi: ecran.cadrageDuRenvoi }),
+    ...(ecran.pieceJointe === undefined ? {} : { pieceJointe: ecran.pieceJointe }),
     ...(ecran.explications === undefined ? {} : { explications: ecran.explications }),
   };
 }

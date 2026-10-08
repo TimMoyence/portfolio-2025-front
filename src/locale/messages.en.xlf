@@ -10227,6 +10227,24 @@
         <target>Email address</target>
       </segment>
     </unit>
+    <unit id="coursPieceJointeSurLePoste">
+      <notes>
+        <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:118,119</note>
+      </notes>
+      <segment>
+        <source>Sur votre poste :</source>
+        <target>On your device:</target>
+      </segment>
+    </unit>
+    <unit id="coursPieceJointeTelecharger">
+      <notes>
+        <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:128,129</note>
+      </notes>
+      <segment>
+        <source>Télécharger</source>
+        <target>Download</target>
+      </segment>
+    </unit>
     <unit id="coursRenvoiLegende">
       <notes>
         <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:72,74</note>
