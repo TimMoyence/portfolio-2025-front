@@ -4,6 +4,7 @@ import type { Page } from '@playwright/test';
 import { intercepterApi, servirJson, servirSansContenu, SESSION_FORMATEUR } from './fixtures';
 import {
   hauteurDePageA,
+  hauteursDesEcrans,
   LARGEUR_IMPRIMEE_PX,
   LARGEUR_MAXIMALE_REDUITE_PAR_WEBKIT_PX,
   LARGEUR_UTILE_PX,
@@ -467,15 +468,7 @@ test.describe('livret papier imprimé', () => {
         await imprimerEnFenetreLarge(page, cours, vue);
         const { largeur } = await miseEnPageStable(page);
         const hauteurDePage = hauteurDePageA(largeur);
-        const ecrans = await page.locator('.livret [data-ecran]').evaluateAll((sections) =>
-          sections.map((section) => ({
-            ecran: section.getAttribute('data-ecran') ?? '',
-            hauteur: Math.ceil(
-              (section.querySelector('app-slide-activity') ?? section).getBoundingClientRect()
-                .height,
-            ),
-          })),
-        );
+        const ecrans = await hauteursDesEcrans(page.locator('.livret [data-ecran]'));
 
         expect(ecrans.length).toBeGreaterThan(0);
         expect(ecrans.filter(({ hauteur }) => hauteur > hauteurDePage)).toEqual([]);

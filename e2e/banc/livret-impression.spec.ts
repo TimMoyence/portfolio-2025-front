@@ -1,6 +1,12 @@
 import { expect, test } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
-import { HAUTEUR_UTILE_PX, hauteurDePageA, LARGEUR_UTILE_PX, MARGE_PX } from '../impression-a4';
+import {
+  HAUTEUR_UTILE_PX,
+  hauteurDePageA,
+  hauteursDesEcrans,
+  LARGEUR_UTILE_PX,
+  MARGE_PX,
+} from '../impression-a4';
 import { CODE_DU_COURS, ouvrirLeLivret } from './contexte';
 
 const VUES = [
@@ -54,14 +60,7 @@ test.describe(`Banc — livret papier du ${CODE_DU_COURS} imprimé en A4`, () =>
     test(`aucun écran du ${vue} n’est coupé entre deux pages A4`, async ({ page }, testInfo) => {
       const ecrans = await vueImprimee(page, { vue, pages });
       const hauteurDePage = await hauteurDePageImprimee(page);
-      const mesures = await ecrans.evaluateAll((sections) =>
-        sections.map((section) => ({
-          ecran: section.getAttribute('data-ecran') ?? '',
-          hauteur: Math.ceil(
-            (section.querySelector('app-slide-activity') ?? section).getBoundingClientRect().height,
-          ),
-        })),
-      );
+      const mesures = await hauteursDesEcrans(ecrans);
       const pdf = await page.pdf({
         path: testInfo.outputPath(`livret-${vue}.pdf`),
         format: 'A4',

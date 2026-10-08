@@ -1,3 +1,5 @@
+import type { Locator } from '@playwright/test';
+
 const PX_PAR_MM = 96 / 25.4;
 
 const PT_PAR_PX = 72 / 96;
@@ -20,4 +22,20 @@ export const LARGEUR_IMPRIMEE_PX = Math.round(275.28 * PX_PAR_MM);
 
 export function hauteurDePageA(largeurDeMiseEnPage: number): number {
   return Math.floor((HAUTEUR_UTILE_EXACTE_PX / LARGEUR_UTILE_EXACTE_PX) * largeurDeMiseEnPage);
+}
+
+interface HauteurDEcran {
+  readonly ecran: string;
+  readonly hauteur: number;
+}
+
+export function hauteursDesEcrans(sections: Locator): Promise<HauteurDEcran[]> {
+  return sections.evaluateAll((elements) =>
+    elements.map((section) => ({
+      ecran: section.getAttribute('data-ecran') ?? '',
+      hauteur: Math.ceil(
+        (section.querySelector('app-slide-activity') ?? section).getBoundingClientRect().height,
+      ),
+    })),
+  );
 }
