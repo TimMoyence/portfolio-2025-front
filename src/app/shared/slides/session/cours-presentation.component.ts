@@ -43,7 +43,7 @@ const ESSAIS_D_ELARGISSEMENT = 6;
 const REMPLISSAGE_MINIMAL = 0.6;
 const PRECISION_D_ELARGISSEMENT = 0.001;
 const FICHIER_DE_PIECE_JOINTE =
-  /^\/assets\/cours\/[a-z0-9-]+\/[A-Za-z0-9_-]+(\.[0-9a-f]{8})?\.(xlsx|csv|pdf)$/;
+  /^\/assets\/cours\/[a-z0-9-]+\/[A-Za-z0-9_-]+\.[0-9a-f]{8}\.(xlsx|csv|pdf)$/;
 
 interface Mesure {
   readonly largeur: number;

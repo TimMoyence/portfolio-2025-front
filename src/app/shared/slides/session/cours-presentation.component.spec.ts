@@ -1112,7 +1112,7 @@ describe('CoursPresentationComponent au poste étudiant', () => {
 
 const PIECE_JOINTE: PieceJointe = {
   libelle: 'Export des ventes Norvane (classeur Excel)',
-  fichier: '/assets/cours/b3-01/B3-01_export_ventes.xlsx',
+  fichier: '/assets/cours/b3-01/B3-01_export_ventes.0e0f6342.xlsx',
 };
 
 const MODES = ['etudiant', 'formateur', 'projection'] as const;
@@ -1192,17 +1192,25 @@ describe('CoursPresentationComponent : pièce jointe d un écran', () => {
     });
   }
 
-  it('V5 · ne propose aucun fichier servi hors des classeurs de cours', async () => {
-    const monte = await monterDansUnCadre(
-      ecranDuMode('etudiant', { libelle: 'Classeur', fichier: 'https://exemple.test/piege.xlsx' }),
-      'etudiant',
-      1280,
-      720,
-    );
+  for (const [cas, fichier] of [
+    ['servi hors des classeurs de cours', 'https://exemple.test/piege.xlsx'],
+    [
+      'sans empreinte, qu un cache servirait encore après une correction',
+      '/assets/cours/b3-01/B3-01_export_ventes.xlsx',
+    ],
+  ]) {
+    it(`V5 · ne propose aucun fichier ${cas}`, async () => {
+      const monte = await monterDansUnCadre(
+        ecranDuMode('etudiant', { libelle: 'Classeur', fichier }),
+        'etudiant',
+        1280,
+        720,
+      );
 
-    expect(pieceJointeAffichee(monte)).toBeNull();
-    monte.detruire();
-  });
+      expect(pieceJointeAffichee(monte)).toBeNull();
+      monte.detruire();
+    });
+  }
 });
 
 function monterDansLePoste(poste: string): { chrome: HTMLElement; slide: HTMLElement } {

@@ -6,7 +6,8 @@ import test from 'node:test';
 import { cheminDuDepot, lireTexte } from './lib/depot.mjs';
 
 const DOSSIER_DES_COURS = cheminDuDepot('src/assets/cours');
-const MANIFESTE = 'classeurs.manifest.json';
+const DOSSIER_DES_FIXTURES = cheminDuDepot('src/testing/fixtures');
+const SUFFIXE_DU_MANIFESTE = '.classeurs.manifest.json';
 const PREFIXE_PUBLIC = '/assets/cours';
 
 const POURQUOI =
@@ -15,19 +16,34 @@ const POURQUOI =
 const empreinteDe = (chemin) => createHash('sha256').update(readFileSync(chemin)).digest('hex');
 
 const coursAClasseurs = () =>
-  readdirSync(DOSSIER_DES_COURS).filter((cours) =>
-    existsSync(join(DOSSIER_DES_COURS, cours, MANIFESTE)),
-  );
+  readdirSync(DOSSIER_DES_FIXTURES)
+    .filter((fichier) => fichier.endsWith(SUFFIXE_DU_MANIFESTE))
+    .map((fichier) => fichier.slice(0, -SUFFIXE_DU_MANIFESTE.length));
 
-const manifesteDe = (cours) => JSON.parse(lireTexte(join(DOSSIER_DES_COURS, cours, MANIFESTE)));
+const manifesteDe = (cours) =>
+  JSON.parse(lireTexte(join(DOSSIER_DES_FIXTURES, `${cours}${SUFFIXE_DU_MANIFESTE}`)));
 
 const instantaneDe = (cours) =>
-  JSON.parse(lireTexte(cheminDuDepot(`src/testing/fixtures/${cours}.instantane.json`)));
+  JSON.parse(lireTexte(join(DOSSIER_DES_FIXTURES, `${cours}.instantane.json`)));
 
-test('le B3-01 sert ses classeurs avec leur manifeste', () => {
+const fichiersSous = (dossier) =>
+  readdirSync(dossier, { recursive: true, withFileTypes: true })
+    .filter((entree) => entree.isFile())
+    .map((entree) => entree.name);
+
+test('le B3-01 garde le manifeste de ses classeurs parmi les fixtures de test', () => {
   assert.ok(
     coursAClasseurs().includes('b3-01'),
-    `src/assets/cours/b3-01/${MANIFESTE} absent : la garde ne garde rien.`,
+    `src/testing/fixtures/b3-01${SUFFIXE_DU_MANIFESTE} absent : la garde ne garde rien.`,
+  );
+});
+
+test('ne sert aucun manifeste de classeurs, qui nommerait les reprises réservées à la séance', () => {
+  assert.deepEqual(
+    fichiersSous(DOSSIER_DES_COURS).filter((fichier) =>
+      fichier.endsWith('classeurs.manifest.json'),
+    ),
+    [],
   );
 });
 
@@ -42,11 +58,15 @@ for (const cours of coursAClasseurs()) {
 
   test(`${cours} : aucun fichier servi hors du manifeste`, () => {
     const declares = manifesteDe(cours).classeurs.map(({ fichier }) => fichier);
-    const servis = readdirSync(join(DOSSIER_DES_COURS, cours)).filter(
-      (fichier) => fichier !== MANIFESTE,
-    );
+    const servis = readdirSync(join(DOSSIER_DES_COURS, cours));
 
     assert.deepEqual([...servis].sort(), [...declares].sort());
+  });
+
+  test(`${cours} : chaque classeur servi porte son empreinte dans son nom`, () => {
+    for (const { fichier } of manifesteDe(cours).classeurs) {
+      assert.match(fichier, /^[A-Za-z0-9_-]+\.[0-9a-f]{8}\.(xlsx|csv|pdf)$/);
+    }
   });
 
   test(`${cours} : chaque pièce jointe de l instantané pointe un classeur du manifeste`, () => {
