@@ -32,6 +32,8 @@ const NOMBRE_CONFUSIONS_FREQUENTES = 5;
 
 const SEPARATEUR = ';';
 
+const BOM_UTF8 = '﻿';
+
 const ENTETE: readonly string[] = [
   'prenom',
   'nom',
@@ -336,7 +338,7 @@ export class CoursSyntheseComponent {
   protected telecharger(): void {
     telechargerFichier(
       this.document,
-      this.exporterCsv(),
+      `${BOM_UTF8}${this.exporterCsv()}`,
       `seance-${this.sessionId()}.csv`,
       'text/csv;charset=utf-8',
     );

@@ -35,7 +35,7 @@ async function comptesDesColonnes(
 }
 
 decrireLeMontageDeLInstantane('B3-01', INSTANTANE_B3_01, {
-  empreinte: 'cf6b691c474d186b4af90703e5214d443536a47204f7e11f59cf8e855c04e60d',
+  empreinte: '356c5298a7cbc0da8b8458a4268ae1aa938a1fea78ab20fb20fc5c8e2708a0f5',
   ecrans: 40,
   publicsAuCatalogue: [
     'A1-02-COURRIEL',

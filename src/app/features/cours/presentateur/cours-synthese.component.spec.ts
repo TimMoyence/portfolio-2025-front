@@ -416,6 +416,20 @@ describe('CoursSyntheseComponent', () => {
       ]);
     });
 
+    it('neutralise une réponse libre qu Excel lirait comme une formule, sans couper sa ligne', async () => {
+      const PIEGEE = '=HYPERLINK("http://evil.example";"x")\nseconde ligne';
+      const fixture = await monterLeB301([
+        { ...etudiant('Ana', 14, false, []), reponsesLibres: [libre(REGLE_COMPRENDRE, PIEGEE)] },
+      ]);
+
+      expect(fixture.componentInstance.exporterCsv()).toBe(
+        [
+          'prenom;nom;adresse;question;enonce;concept;valeur;duree_ms',
+          `Ana;Durand;ana@example.com;${REGLE_COMPRENDRE};${QUESTION_COMPRENDRE};;"'=HYPERLINK(""http://evil.example"";""x"")\nseconde ligne";`,
+        ].join('\n'),
+      );
+    });
+
     it('nomme une règle par son activité quand le déroulé ne peut pas être lu', async () => {
       const fixture = await monter(
         rapportDe([BASILE]),
@@ -466,6 +480,23 @@ describe('CoursSyntheseComponent', () => {
 
   it('neutralise un moins qui n est pas un nombre valide', async () => {
     expect(await csvDAna('-=1+1')).toContain("'-=1+1");
+  });
+
+  it('ouvre le CSV téléchargé par le BOM UTF-8, pour qu Excel en lise les accents', async () => {
+    const creation = spyOn(URL, 'createObjectURL').and.returnValue('blob:synthese');
+    spyOn(URL, 'revokeObjectURL');
+    spyOn(HTMLAnchorElement.prototype, 'click');
+    const fixture = await monter(rapportDe([MALIK]));
+
+    (fixture.nativeElement as HTMLElement)
+      .querySelector<HTMLButtonElement>("[data-testid='synthese-export']")
+      ?.click();
+    const octets = new Uint8Array(
+      await (creation.calls.mostRecent().args[0] as Blob).arrayBuffer(),
+    );
+
+    expect([...octets.slice(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
+    expect(new TextDecoder().decode(octets.slice(3))).toBe(fixture.componentInstance.exporterCsv());
   });
 
   it('une seance sans participant affiche un message plutot qu un tableau vide', async () => {
