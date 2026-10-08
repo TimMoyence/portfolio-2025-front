@@ -6,7 +6,7 @@
         <source>Ce code de séance n&apos;existe pas : vérifiez les caractères dictés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">238</context>
+          <context context-type="linenumber">245</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusCodeInconnu</note>
       </trans-unit>
@@ -14,7 +14,7 @@
         <source>Cette séance a atteint sa capacité : demandez à votre formateur de libérer une place.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">239</context>
+          <context context-type="linenumber">246</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusSeanceComplete</note>
       </trans-unit>
@@ -22,7 +22,7 @@
         <source>Cette séance est terminée : elle n’accepte plus de nouveau participant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">247</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusSeanceTerminee</note>
       </trans-unit>
@@ -30,7 +30,7 @@
         <source>Votre place est déjà ouverte sur un autre appareil : demandez au formateur de libérer votre poste.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">241</context>
+          <context context-type="linenumber">248</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusPlaceDejaPrise</note>
       </trans-unit>
@@ -38,7 +38,7 @@
         <source>Le formateur vous a retiré de cette séance : adressez-vous à lui pour être réadmis.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">242</context>
+          <context context-type="linenumber">249</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusParticipantEvince</note>
       </trans-unit>
@@ -46,7 +46,7 @@
         <source>Le rattachement à la séance a échoué.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">243</context>
+          <context context-type="linenumber">250</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusRattachementImpossible</note>
       </trans-unit>
@@ -54,7 +54,7 @@
         <source>Le cours a changé depuis l’ouverture de la séance : prévenez votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">259</context>
+          <context context-type="linenumber">266</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusCoursModifie</note>
       </trans-unit>
@@ -62,7 +62,7 @@
         <source>Le sujet de la séance n’a pas pu être chargé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">260</context>
+          <context context-type="linenumber">267</context>
         </context-group>
         <note priority="1" from="meaning">cours.refusSujetIndisponible</note>
       </trans-unit>
@@ -70,7 +70,7 @@
         <source>Votre réponse n’a pas pu partir : ce poste la renverra dès que le serveur répondra.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">288</context>
+          <context context-type="linenumber">295</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseReseau</note>
       </trans-unit>
@@ -78,7 +78,7 @@
         <source>Votre réponse à cette question était déjà enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">289</context>
+          <context context-type="linenumber">296</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseDejaRepondue</note>
       </trans-unit>
@@ -86,7 +86,7 @@
         <source>La séance n’a pas encore démarré : votre réponse n’a pas été enregistrée. Attendez le signal de votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">290</context>
+          <context context-type="linenumber">297</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseSeanceNonDemarree</note>
       </trans-unit>
@@ -94,7 +94,7 @@
         <source>La séance est terminée : votre réponse n’a pas été enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">291</context>
+          <context context-type="linenumber">298</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseSeanceTerminee</note>
       </trans-unit>
@@ -102,7 +102,7 @@
         <source>Cet écran n’est pas encore ouvert</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">292</context>
+          <context context-type="linenumber">299</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseEcranNonServi</note>
       </trans-unit>
@@ -110,7 +110,7 @@
         <source>Le vote est fermé pour cette question</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">293</context>
+          <context context-type="linenumber">300</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponsePhaseFermee</note>
       </trans-unit>
@@ -118,7 +118,7 @@
         <source>Verrouillée : l’énigme précédente l’ouvrira</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">294</context>
+          <context context-type="linenumber">301</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseEnigmeVerrouillee</note>
       </trans-unit>
@@ -126,7 +126,7 @@
         <source>Tentatives épuisées : l’énigme suivante s’ouvre, sans fragment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">295</context>
+          <context context-type="linenumber">302</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseTentativesEpuisees</note>
       </trans-unit>
@@ -134,7 +134,7 @@
         <source>Production déjà envoyée trois fois : votre dernière version reste enregistrée jusqu’à la correction.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">296</context>
+          <context context-type="linenumber">303</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseReprisesEpuisees</note>
       </trans-unit>
@@ -142,7 +142,7 @@
         <source>Saisissez au moins une valeur ou choisissez « Je ne sais pas »</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">297</context>
+          <context context-type="linenumber">304</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseProductionVide</note>
       </trans-unit>
@@ -150,7 +150,7 @@
         <source>Votre formateur a retiré ce poste de la séance : votre réponse n’a pas été enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">298</context>
+          <context context-type="linenumber">305</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseEvince</note>
       </trans-unit>
@@ -158,7 +158,7 @@
         <source>Votre réponse n’a pas été acceptée par le serveur : prévenez votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ports/formations.port.ts</context>
-          <context context-type="linenumber">299</context>
+          <context context-type="linenumber">306</context>
         </context-group>
         <note priority="1" from="meaning">cours.reponseRefusee</note>
       </trans-unit>
@@ -2996,7 +2996,7 @@
         <source>Après la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">89,90</context>
+          <context context-type="linenumber">99,100</context>
         </context-group>
         <note priority="1" from="meaning">synthese.kicker</note>
       </trans-unit>
@@ -3004,7 +3004,7 @@
         <source>Synthèse de la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">90,92</context>
+          <context context-type="linenumber">100,102</context>
         </context-group>
         <note priority="1" from="meaning">synthese.titre</note>
       </trans-unit>
@@ -3012,7 +3012,7 @@
         <source> Aucun participant n&apos;a rejoint cette séance : il n&apos;y a rien à analyser. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">93,96</context>
+          <context context-type="linenumber">103,106</context>
         </context-group>
         <note priority="1" from="meaning">synthese.vide</note>
       </trans-unit>
@@ -3020,7 +3020,7 @@
         <source>Étudiant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">99,100</context>
+          <context context-type="linenumber">109,110</context>
         </context-group>
         <note priority="1" from="meaning">synthese.etudiant</note>
       </trans-unit>
@@ -3028,7 +3028,7 @@
         <source>Score</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">100,101</context>
+          <context context-type="linenumber">110,111</context>
         </context-group>
         <note priority="1" from="meaning">synthese.score</note>
       </trans-unit>
@@ -3036,7 +3036,7 @@
         <source>Avancement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">101,104</context>
+          <context context-type="linenumber">111,114</context>
         </context-group>
         <note priority="1" from="meaning">synthese.avancement</note>
       </trans-unit>
@@ -3044,7 +3044,7 @@
         <source> N&apos;a répondu à aucune question </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">115,117</context>
+          <context context-type="linenumber">125,127</context>
         </context-group>
         <note priority="1" from="meaning">synthese.sansReponse</note>
       </trans-unit>
@@ -3052,7 +3052,7 @@
         <source>Résultats par question</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">128,130</context>
+          <context context-type="linenumber">138,140</context>
         </context-group>
         <note priority="1" from="meaning">synthese.questionsTitre</note>
       </trans-unit>
@@ -3060,7 +3060,7 @@
         <source> Bonnes réponses, total et « je ne sais pas » pour chaque question de la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">131,134</context>
+          <context context-type="linenumber">141,144</context>
         </context-group>
         <note priority="1" from="meaning">synthese.questionsLegende</note>
       </trans-unit>
@@ -3068,7 +3068,7 @@
         <source> Question </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">136,138</context>
+          <context context-type="linenumber">146,148</context>
         </context-group>
         <note priority="1" from="meaning">synthese.questionColonne</note>
       </trans-unit>
@@ -3076,7 +3076,7 @@
         <source> Bonnes réponses </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">139,141</context>
+          <context context-type="linenumber">149,151</context>
         </context-group>
         <note priority="1" from="meaning">synthese.correctesColonne</note>
       </trans-unit>
@@ -3084,7 +3084,7 @@
         <source>Total</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">141,142</context>
+          <context context-type="linenumber">151,152</context>
         </context-group>
         <note priority="1" from="meaning">synthese.totalColonne</note>
       </trans-unit>
@@ -3092,7 +3092,7 @@
         <source> Je ne sais pas </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">143,146</context>
+          <context context-type="linenumber">153,156</context>
         </context-group>
         <note priority="1" from="meaning">synthese.neSaitPasColonne</note>
       </trans-unit>
@@ -3100,7 +3100,7 @@
         <source> Confusions fréquentes de la classe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">166,168</context>
+          <context context-type="linenumber">176,178</context>
         </context-group>
         <note priority="1" from="meaning">synthese.confusionsTitre</note>
       </trans-unit>
@@ -3108,7 +3108,7 @@
         <source>Ce qui a le plus accroché</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">178,179</context>
+          <context context-type="linenumber">188,189</context>
         </context-group>
         <note priority="1" from="meaning">synthese.fragiles</note>
       </trans-unit>
@@ -3116,15 +3116,23 @@
         <source>étudiants sous le seuil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">184,187</context>
+          <context context-type="linenumber">194,197</context>
         </context-group>
         <note priority="1" from="meaning">synthese.sousSeuil</note>
+      </trans-unit>
+      <trans-unit id="syntheseLibresTitre" datatype="html">
+        <source>Réponses libres des étudiants</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
+          <context context-type="linenumber">201,202</context>
+        </context-group>
+        <note priority="1" from="meaning">synthese.libresTitre</note>
       </trans-unit>
       <trans-unit id="syntheseExport" datatype="html">
         <source> Exporter les réponses en CSV </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">196,199</context>
+          <context context-type="linenumber">226,229</context>
         </context-group>
         <note priority="1" from="meaning">synthese.export</note>
       </trans-unit>
@@ -3132,7 +3140,7 @@
         <source> La synthèse n&apos;a pas pu être lue. Rechargez la page, puis réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">201,205</context>
+          <context context-type="linenumber">231,235</context>
         </context-group>
         <note priority="1" from="meaning">synthese.echec</note>
       </trans-unit>
@@ -4799,364 +4807,364 @@
         <source>Bachelor 3 · Cours interactif</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2.title" datatype="html">
         <source>B2-01 — Lire et contrôler l’information chiffrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2.description" datatype="html">
         <source>Lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2.duration" datatype="html">
         <source>3 h 30</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-02.title" datatype="html">
         <source>B2-02 — Séries statistiques : résumer, relier, prévoir</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-02.description" datatype="html">
         <source>Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-02.duration" datatype="html">
         <source>3 h 00</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-03.title" datatype="html">
         <source>B2-03 — Logique : écrire et contrôler une règle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">93</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-03.description" datatype="html">
         <source>Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-03.duration" datatype="html">
         <source>3 h 00</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-04.title" datatype="html">
         <source>B2-04 — Suites : modéliser une évolution régulière</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-04.description" datatype="html">
         <source>Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-04.duration" datatype="html">
         <source>3 h 00</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">101</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-05.title" datatype="html">
         <source>B2-05 — Mathématiques financières : placer, emprunter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">105</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-05.description" datatype="html">
         <source>Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">106</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-05.duration" datatype="html">
         <source>3 h 00</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-06.title" datatype="html">
         <source>B2-06 — Exponentielle et logarithme : croître, viser, ajuster</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-06.description" datatype="html">
         <source>Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">112</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-06.duration" datatype="html">
         <source>3 h 00</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b3-01.title" datatype="html">
         <source>B3-01 — Expert Data : de la donnée brute à la décision</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b3-01.description" datatype="html">
         <source>Nettoyer un export de ventes dans Excel, le croiser avec ses référentiels, le résumer par un tableau croisé dynamique, puis bâtir un tableau de bord et une recommandation pour un comité de direction. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">118</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b3-01.duration" datatype="html">
         <source>3 h 00</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.ia-solo.badge" datatype="html">
         <source>Gratuit · 17 slides</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.ia-solo.title" datatype="html">
         <source>L&apos;IA au service des solopreneurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.ia-solo.description" datatype="html">
         <source>16 outils IA triés, un cas pratique en live : on trie le bullshit du vraiment utile. De quoi repartir avec une boîte à outils claire, pas une liste de hype.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.ia-solo.duration" datatype="html">
         <source>30 min · 17 slides</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">126</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.ia-solo.format" datatype="html">
         <source>Slides + quiz</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.auto-ia.badge" datatype="html">
         <source>Gratuit · 13 slides</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.auto-ia.title" datatype="html">
         <source>Automatiser avec l&apos;IA — 5 workflows pour non-tech</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.auto-ia.description" datatype="html">
         <source>5 workflows testés sans coder — devis, emails, réseaux, factures, veille — pour récupérer environ 2h par jour. Concrets, reproductibles, applicables tout de suite.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">135</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.auto-ia.duration" datatype="html">
         <source>25 min · 13 slides</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.auto-ia.format" datatype="html">
         <source>Slides + sondages</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.audit-seo.badge" datatype="html">
         <source>Gratuit · 14 slides</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">143</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.audit-seo.title" datatype="html">
         <source>Audit SEO DIY — 7 points en 20 minutes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.audit-seo.description" datatype="html">
         <source>7 checks SEO concrets avec 5 outils gratuits, pour savoir si Google trouve votre site — et corriger vous-même ce qui coince.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">145</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.audit-seo.duration" datatype="html">
         <source>20 min · 14 slides</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">146</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.audit-seo.format" datatype="html">
         <source>Slides + checklist</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.toolkit.badge" datatype="html">
         <source>Bonus</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">153</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.toolkit.title" datatype="html">
         <source>Le toolkit à emporter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">154</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.toolkit.description" datatype="html">
         <source>Chaque formation s&apos;accompagne d&apos;un toolkit PDF : modèles de prompts, checklists, workflows prêts à l&apos;emploi. Votre email sert uniquement à vous l&apos;envoyer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">155</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.toolkit.meta.content" datatype="html">
         <source>Contenu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">158</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.toolkit.meta.content.value" datatype="html">
         <source>PDF + modèles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">159</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.toolkit.meta.access" datatype="html">
         <source>Accès</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">162</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.toolkit.meta.access.value" datatype="html">
         <source>Email uniquement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">163</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.price.offered" datatype="html">
         <source>Offert</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">166</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.cta.toolkit" datatype="html">
         <source>Recevoir le toolkit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">167</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.benefit.interactive.title" datatype="html">
         <source>Interactif</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.benefit.interactive.desc" datatype="html">
         <source>Des quiz et des sondages ponctuent chaque formation : on participe au lieu de subir.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">176</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.benefit.screen.title" datatype="html">
         <source>En ligne ou projeté</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">180</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.benefit.screen.desc" datatype="html">
         <source>À consulter tranquillement chez soi, ou à projeter en présentation devant une équipe.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.benefit.toolkit.title" datatype="html">
         <source>Un toolkit à emporter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.benefit.toolkit.desc" datatype="html">
         <source>Chaque session se termine par un PDF actionnable, pour passer de l&apos;écoute à la pratique.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">186</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ia-solo.accroche.title" datatype="html">

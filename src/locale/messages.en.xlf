@@ -10902,6 +10902,16 @@
         <target>students below threshold</target>
       </segment>
     </unit>
+    <unit id="syntheseLibresTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:201,202</note>
+        <note category="meaning">synthese.libresTitre</note>
+      </notes>
+      <segment>
+        <source>Réponses libres des étudiants</source>
+        <target>Students' free-text answers</target>
+      </segment>
+    </unit>
     <unit id="syntheseExport">
       <notes>
         <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:185,188</note>

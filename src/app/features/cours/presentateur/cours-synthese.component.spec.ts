@@ -5,6 +5,7 @@ import { of, throwError } from 'rxjs';
 import type {
   ParticipantRapporte,
   RapportSeance,
+  ReponseLibreRapportee,
   ReponseRapportee,
 } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
@@ -26,6 +27,7 @@ import {
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
+import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantane-b3-01';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { CoursSyntheseComponent } from './cours-synthese.component';
 
@@ -325,6 +327,79 @@ describe('CoursSyntheseComponent', () => {
     expect(lignes[1]).toBe(
       'Malik;Durand;malik@example.com;Q-interets-composes;;interets-composes;1400;4200',
     );
+  });
+
+  describe('règles du cahier écrites en réponse libre (V6)', () => {
+    const REGLE_COMPRENDRE = 'b3-01-a1-regles:regle-comprendre';
+    const REGLE_NETTOYER = 'b3-01-a1-regles:regle-nettoyer';
+    const QUESTION_COMPRENDRE = 'Niveau 1 · Comprendre : votre règle pour relier deux tables.';
+    const QUESTION_NETTOYER =
+      'Niveau 2 · Nettoyer : votre règle pour une donnée fausse ou douteuse.';
+
+    function libre(activityId: string, texte: string): ReponseLibreRapportee {
+      return { screenId: 'B3-01-A1-15-REGLES-ACTE-1', activityId, reponse: texte };
+    }
+
+    const ANA = {
+      ...etudiant('Ana', 14, false, [reponse('cle-et-relation', '660')]),
+      reponsesLibres: [
+        libre(REGLE_COMPRENDRE, 'Je relie par client_id, jamais par le nom.'),
+        libre(REGLE_NETTOYER, 'Je signale tout doublon sans le supprimer.'),
+      ],
+    };
+    const BASILE = {
+      ...etudiant('Basile', 0, false, []),
+      reponsesLibres: [libre(REGLE_COMPRENDRE, 'Je lis Clients avant l export.')],
+    };
+
+    function monterLeB301(participants: readonly ParticipantRapporte[]): Promise<Fixture> {
+      return monter(rapportDe(participants), of(INSTANTANE_B3_01.deroule));
+    }
+
+    it('exporte sous chaque étudiant ses règles, nommées par la question du déroulé servi', async () => {
+      const fixture = await monterLeB301([ANA, BASILE]);
+
+      expect(fixture.componentInstance.exporterCsv().split('\n')).toEqual([
+        'prenom;nom;adresse;question;enonce;concept;valeur;duree_ms',
+        'Ana;Durand;ana@example.com;Q-cle-et-relation;;cle-et-relation;660;4200',
+        `Ana;Durand;ana@example.com;${REGLE_COMPRENDRE};${QUESTION_COMPRENDRE};;Je relie par client_id, jamais par le nom.;`,
+        `Ana;Durand;ana@example.com;${REGLE_NETTOYER};${QUESTION_NETTOYER};;Je signale tout doublon sans le supprimer.;`,
+        `Basile;Durand;basile@example.com;${REGLE_COMPRENDRE};${QUESTION_COMPRENDRE};;Je lis Clients avant l export.;`,
+      ]);
+    });
+
+    it('affiche les règles de chaque étudiant sous son nom, chacune avec sa question', async () => {
+      const fixture = await monterLeB301([ANA, BASILE]);
+
+      expect(textes(fixture, 'synthese-libres-etudiant')).toEqual(['Ana Durand', 'Basile Durand']);
+      expect(textes(fixture, 'synthese-libre-question')).toEqual([
+        QUESTION_COMPRENDRE,
+        QUESTION_NETTOYER,
+        QUESTION_COMPRENDRE,
+      ]);
+      expect(textes(fixture, 'synthese-libre-reponse')).toEqual([
+        'Je relie par client_id, jamais par le nom.',
+        'Je signale tout doublon sans le supprimer.',
+        'Je lis Clients avant l export.',
+      ]);
+    });
+
+    it('nomme une règle par son activité quand le déroulé ne peut pas être lu', async () => {
+      const fixture = await monter(
+        rapportDe([BASILE]),
+        throwError(() => new Error('reseau coupe')),
+      );
+
+      expect(textes(fixture, 'synthese-libre-question')).toEqual([REGLE_COMPRENDRE]);
+    });
+
+    it('n affiche aucune section de règles quand le rapport n en porte pas', async () => {
+      const fixture = await monter(rapportDe([MALIK, NORA]));
+
+      expect(
+        (fixture.nativeElement as HTMLElement).querySelector("[data-testid='synthese-libres']"),
+      ).toBeNull();
+    });
   });
 
   async function csvDAna(valeur: string, nom?: string): Promise<string> {

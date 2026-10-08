@@ -3,8 +3,11 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 import { firstValueFrom } from 'rxjs';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import type { ResultatQuestion } from '../../../../cours/content/types';
-import { enoncesDuDeroule } from '../../../shared/slides/session/lecture-ecran';
+import type { DerouleCours, ResultatQuestion } from '../../../../cours/content/types';
+import {
+  enoncesDesActivites,
+  enoncesDuDeroule,
+} from '../../../shared/slides/session/lecture-ecran';
 import { telechargerFichier } from '../../../shared/utils/telechargement.utils';
 import { chantierApresRendu } from './chantier-apres-rendu';
 
@@ -77,6 +80,13 @@ function confusionsFrequentesDe(
   return [...totaux.values()]
     .sort((gauche, droite) => droite.nombre - gauche.nombre || (gauche.id < droite.id ? -1 : 1))
     .slice(0, NOMBRE_CONFUSIONS_FREQUENTES);
+}
+
+function enoncesDesQuestionsEtDesActivites(deroule: DerouleCours): ReadonlyMap<string, string> {
+  return new Map([
+    ...enoncesDuDeroule(deroule),
+    ...deroule.ecrans.flatMap((ecran) => [...enoncesDesActivites(ecran)]),
+  ]);
 }
 
 @Component({
@@ -186,6 +196,26 @@ function confusionsFrequentesDe(
             }
           </ul>
         </section>
+        @if (auteursDeReponsesLibres().length > 0) {
+          <section data-testid="synthese-libres">
+            <h3 i18n="synthese.libresTitre|@@syntheseLibresTitre">Réponses libres des étudiants</h3>
+            @for (participant of auteursDeReponsesLibres(); track participant.email) {
+              <article>
+                <h4 data-testid="synthese-libres-etudiant">
+                  {{ participant.prenom }} {{ participant.nom }}
+                </h4>
+                <dl>
+                  @for (libre of participant.reponsesLibres ?? []; track $index) {
+                    <dt data-testid="synthese-libre-question">
+                      {{ enonces().get(libre.activityId) ?? libre.activityId }}
+                    </dt>
+                    <dd data-testid="synthese-libre-reponse">{{ libre.reponse }}</dd>
+                  }
+                </dl>
+              </article>
+            }
+          </section>
+        }
         <button
           type="button"
           class="btn btn-teal"
@@ -249,6 +279,12 @@ export class CoursSyntheseComponent {
     confusionsFrequentesDe(this.questions()),
   );
 
+  readonly auteursDeReponsesLibres = computed<readonly ParticipantRapporte[]>(() =>
+    (this.rapport()?.participants ?? []).filter(
+      (participant) => (participant.reponsesLibres ?? []).length > 0,
+    ),
+  );
+
   private readonly port = inject(FORMATIONS_PORT);
   private readonly document = inject(DOCUMENT);
 
@@ -261,8 +297,8 @@ export class CoursSyntheseComponent {
   exporterCsv(): string {
     const participants = this.rapport()?.participants ?? [];
     const enonces = this.enonces();
-    const lignes = participants.flatMap((participant) =>
-      participant.reponses.map((reponse) =>
+    const lignes = participants.flatMap((participant) => [
+      ...participant.reponses.map((reponse) =>
         ligneCsv([
           participant.prenom,
           participant.nom,
@@ -274,7 +310,19 @@ export class CoursSyntheseComponent {
           String(reponse.dureeMs),
         ]),
       ),
-    );
+      ...(participant.reponsesLibres ?? []).map((libre) =>
+        ligneCsv([
+          participant.prenom,
+          participant.nom,
+          participant.email,
+          libre.activityId,
+          enonces.get(libre.activityId) ?? '',
+          '',
+          libre.reponse,
+          '',
+        ]),
+      ),
+    ]);
     return [ENTETE.join(SEPARATEUR), ...lignes].join('\n');
   }
 
@@ -310,7 +358,7 @@ export class CoursSyntheseComponent {
   private async lireLesEnonces(): Promise<void> {
     try {
       const deroule = await firstValueFrom(this.port.lireDeroule(this.sessionId()));
-      this.enonces.set(enoncesDuDeroule(deroule));
+      this.enonces.set(enoncesDesQuestionsEtDesActivites(deroule));
     } catch {
       this.enonces.set(new Map());
     }
