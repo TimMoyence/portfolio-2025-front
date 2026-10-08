@@ -20,6 +20,11 @@ const NATURES_LIBRES: readonly NatureLibre[] = ['reflection', 'fp-pro'];
 
 const POSTE_HORS_LIGNE: Readonly<Record<NatureLibre, number>> = { reflection: 4, 'fp-pro': 9 };
 
+const SAISIE_LIBRE: Readonly<Record<NatureLibre, string>> = {
+  reflection: 'app-slide-reflection textarea',
+  'fp-pro': 'fp-pro [data-testid="valider"]',
+};
+
 let reponsesLibres: readonly ReponseLibreDuCours[];
 
 let rappelsEspaces = 0;
@@ -137,6 +142,7 @@ test.describe('Banc — écran non servi', () => {
       const { rang } = libre as ReponseLibreDuCours;
       await servirLEcran(request, jeton, seance.sessionId, rang);
       await rejoindreDansLeNavigateur(page, seance, identiteDuPoste(POSTE_HORS_LIGNE[nature]));
+      await expect(page.getByTestId('cours-contenu').locator(SAISIE_LIBRE[nature])).toBeVisible();
 
       await page.context().setOffline(true);
       await ecrireHorsLigne(page, nature);
