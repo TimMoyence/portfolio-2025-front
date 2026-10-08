@@ -1112,7 +1112,7 @@ describe('CoursPresentationComponent au poste étudiant', () => {
 
 const PIECE_JOINTE: PieceJointe = {
   libelle: 'Export des ventes Norvane (classeur Excel)',
-  fichier: '/assets/cours/b3-01/B3-01_export_ventes.0e0f6342.xlsx',
+  fichier: '/assets/cours/b3-01/B3-01_export_ventes.ab0980c3.xlsx',
 };
 
 const MODES = ['etudiant', 'formateur', 'projection'] as const;

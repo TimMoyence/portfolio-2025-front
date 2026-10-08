@@ -63,9 +63,13 @@ for (const cours of coursAClasseurs()) {
     assert.deepEqual([...servis].sort(), [...declares].sort());
   });
 
-  test(`${cours} : chaque classeur servi porte son empreinte dans son nom`, () => {
-    for (const { fichier } of manifesteDe(cours).classeurs) {
+  test(`${cours} : chaque classeur servi porte dans son nom le début de son empreinte`, () => {
+    for (const { fichier, empreinte } of manifesteDe(cours).classeurs) {
       assert.match(fichier, /^[A-Za-z0-9_-]+\.[0-9a-f]{8}\.(xlsx|csv|pdf)$/);
+      assert.ok(
+        fichier.includes(`.${empreinte.slice(0, 8)}.`),
+        `${cours}/${fichier} ne porte pas le début de son empreinte ${empreinte.slice(0, 8)} : un classeur corrigé garderait le nom de l ancien.`,
+      );
     }
   });
 

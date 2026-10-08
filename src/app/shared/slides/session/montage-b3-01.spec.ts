@@ -35,7 +35,7 @@ async function comptesDesColonnes(
 }
 
 decrireLeMontageDeLInstantane('B3-01', INSTANTANE_B3_01, {
-  empreinte: '24cf90175794847099cc7adf09aead3fac23fdc9b490fed0843b559f0298f3f1',
+  empreinte: '5c6ee9661b8f4946dec345be929617e7a8bbd7a645809b2d7d44d90ec7fe3e7e',
   ecrans: 40,
   publicsAuCatalogue: [
     'A1-02-COURRIEL',
@@ -93,7 +93,7 @@ decrireLeMontageDeLInstantane('B3-01', INSTANTANE_B3_01, {
       const courriel = texteServiAuPosteEtudiant(INSTANTANE_B3_01, 'B3-01-A1-02-COURRIEL');
 
       expect(courriel).toContain('Nadia Ferrand');
-      expect(courriel).toContain('/assets/cours/b3-01/B3-01_export_ventes.0e0f6342.xlsx');
+      expect(courriel).toContain('/assets/cours/b3-01/B3-01_export_ventes.ab0980c3.xlsx');
     });
   },
 });
