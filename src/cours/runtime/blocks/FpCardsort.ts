@@ -28,6 +28,7 @@ const PIOCHE = '';
 const VIDE = escapeHtml('');
 const DESACTIVE = safeHtml`disabled`;
 const RETENU = safeHtml`selected`;
+const ATTENDUS_SUR_PAPIER = safeHtml` fp-cardsort__attendus--papier`;
 const TOUCHES_ACTION: readonly string[] = ['Enter', ' '];
 const MS_PAR_MINUTE = 60_000;
 
@@ -304,9 +305,16 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
 
   private plateau(interactif: boolean): EscapedHtml {
     return safeHtml`
-      <div class="fp-cardsort__zones">${this.zones().map((zone) => this.zone(zone, interactif))}</div>
+      <div class="fp-cardsort__zones">${this.zonesImprimables().map((zone) => this.zone(zone, interactif))}</div>
       ${(this.interne?.cartes.length ?? 0) === 0 ? this.plateauVide() : VIDE}
     `;
+  }
+
+  private zonesImprimables(): readonly OptionPublique[] {
+    const piocheVide = this.cartesDe(PIOCHE).length === 0;
+    return this.surPapier() && piocheVide
+      ? this.zones().filter((zone) => zone.id !== PIOCHE)
+      : this.zones();
   }
 
   private plateauVide(): EscapedHtml {
@@ -352,7 +360,7 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
     return safeHtml`
       <section class="fp-cardsort__zone" data-testid="cardsort-correction">
         <h3 class="fp-cardsort__titre">${escapeHtml(this.texte('cardsort-correction'))}</h3>
-        <ul class="fp-cardsort__attendus">${this.attendus.map((attendu) => this.justification(attendu))}</ul>
+        <ul class="fp-cardsort__attendus${this.surPapier() ? ATTENDUS_SUR_PAPIER : VIDE}">${this.attendus.map((attendu) => this.justification(attendu))}</ul>
       </section>
     `;
   }

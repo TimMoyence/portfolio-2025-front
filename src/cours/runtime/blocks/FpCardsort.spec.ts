@@ -413,6 +413,48 @@ describe('FpCardsort', () => {
     }
   });
 
+  it('imprime sur papier la correction du classement sur deux colonnes, chaque justification d un seul tenant', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.setAttribute('data-papier', '');
+    hote.corrige = ATTENDUS_FORMATEUR;
+
+    const liste = noeud(hote, 'cardsort-correction')?.querySelector('ul') as Element;
+    expect(getComputedStyle(liste).columnCount).toBe('2');
+    expect(getComputedStyle(noeud(hote, 'cardsort-justification') as Element).breakInside).toBe(
+      'avoid',
+    );
+  });
+
+  it('garde a l ecran la correction du classement sur une seule colonne', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.corrige = ATTENDUS_FORMATEUR;
+
+    const liste = noeud(hote, 'cardsort-correction')?.querySelector('ul') as Element;
+    expect(getComputedStyle(liste).columnCount).toBe('auto');
+  });
+
+  it('n imprime pas sur papier la pioche videe par le corrige, que l ecran garde', () => {
+    const toutRange = {
+      type: 'classement',
+      attendus: TOUS_LES_IDS.map((carteId) => ({
+        carteId,
+        categorieId: FIXE,
+        justification: 'Ne suit pas le volume',
+      })),
+    };
+    const titres = (): string[] => noeuds(hote, 'zone').map((zone) => titreDeZone(hote, zone));
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.corrige = toutRange;
+    expect(titres()).toEqual(['Cartes à trier', 'Charges fixes', 'Charges variables']);
+
+    hote.setAttribute('data-papier', '');
+    hote.corrige = toutRange;
+    expect(titres()).toEqual(['Charges fixes', 'Charges variables']);
+
+    hote.corrige = ATTENDUS_FORMATEUR;
+    expect(titres()).toEqual(['Cartes à trier', 'Charges fixes', 'Charges variables']);
+  });
+
   it('R1 · laisse les justifications a l ecran de correction qui suit, sans perdre la coloration', () => {
     deplacerAuClavier(hote, LOYER, FIXE);
     hote.resoluAilleurs = true;

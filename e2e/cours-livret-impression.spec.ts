@@ -3,12 +3,13 @@ import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { intercepterApi, servirJson, servirSansContenu, SESSION_FORMATEUR } from './fixtures';
 import {
+  hauteurDePageA,
   LARGEUR_IMPRIMEE_PX,
   LARGEUR_MAXIMALE_REDUITE_PAR_WEBKIT_PX,
   LARGEUR_UTILE_PX,
 } from './impression-a4';
 
-const COURS = ['b2-01', 'b2-02', 'b2-03', 'b2-04', 'b2-05', 'b2-06'] as const;
+const COURS = ['b2-01', 'b2-02', 'b2-03', 'b2-04', 'b2-05', 'b2-06', 'b3-01'] as const;
 
 type Cours = (typeof COURS)[number];
 
@@ -460,6 +461,26 @@ test.describe('livret papier imprimé', () => {
 
   for (const cours of COURS) {
     for (const vue of ['sujet', 'corrige'] as const) {
+      test(`${cours} · aucun écran du ${vue} ne dépasse une page A4, qui le trancherait au milieu d’une ligne`, async ({
+        page,
+      }) => {
+        await imprimerEnFenetreLarge(page, cours, vue);
+        const { largeur } = await miseEnPageStable(page);
+        const hauteurDePage = hauteurDePageA(largeur);
+        const ecrans = await page.locator('.livret [data-ecran]').evaluateAll((sections) =>
+          sections.map((section) => ({
+            ecran: section.getAttribute('data-ecran') ?? '',
+            hauteur: Math.ceil(
+              (section.querySelector('app-slide-activity') ?? section).getBoundingClientRect()
+                .height,
+            ),
+          })),
+        );
+
+        expect(ecrans.length).toBeGreaterThan(0);
+        expect(ecrans.filter(({ hauteur }) => hauteur > hauteurDePage)).toEqual([]);
+      });
+
       test(`${cours} · le ${vue} se met en page à l’identique quelle que soit la fenêtre`, async ({
         page,
       }) => {
