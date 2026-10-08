@@ -1112,7 +1112,7 @@ describe('CoursPresentationComponent au poste étudiant', () => {
 
 const PIECE_JOINTE: PieceJointe = {
   libelle: 'Export des ventes Norvane (classeur Excel)',
-  fichier: '/assets/cours/b3-01/B3-01_export_ventes.ab0980c3.xlsx',
+  fichier: '/assets/cours/b3-01/B3-01_export_ventes.d4f2ceab.xlsx',
 };
 
 const MODES = ['etudiant', 'formateur', 'projection'] as const;
@@ -1193,7 +1193,11 @@ describe('CoursPresentationComponent : pièce jointe d un écran', () => {
   }
 
   for (const [cas, fichier] of [
-    ['servi hors des classeurs de cours', 'https://exemple.test/piege.xlsx'],
+    ['servi par une autre origine', 'https://exemple.test/assets/cours/b3-01/piege.0c1d2e3f.xlsx'],
+    ['servi par une origine implicite', '//exemple.test/assets/cours/b3-01/piege.0c1d2e3f.xlsx'],
+    ['qui remonte d un dossier', '/assets/cours/b3-01/../secret.0c1d2e3f.xlsx'],
+    ['rangé dans un sous-dossier', '/assets/cours/b3-01/reprises/piege.0c1d2e3f.xlsx'],
+    ['exécutable', '/assets/cours/b3-01/piege.0c1d2e3f.exe'],
     [
       'sans empreinte, qu un cache servirait encore après une correction',
       '/assets/cours/b3-01/B3-01_export_ventes.xlsx',
