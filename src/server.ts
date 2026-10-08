@@ -8,7 +8,7 @@ import bootstrap from './main.server';
 import type { SeoMetadataFile } from './app/core/seo/seo-metadata.model';
 import { HTTP_RESPONSE_STATUS } from './app/core/ssr/http-response-status';
 import { documentCacheControlFor } from './server/document-cache';
-import { COURS_BTS } from './app/core/config/cours-bts';
+import { COURS_EN_SEANCE } from './app/core/config/cours-en-seance';
 import { lecteurDePublicationsDeCours } from './server/cours-publication';
 import { loadCsrShell } from './server/csr-shell';
 import { entetesDeLaRoute, isClientOnlyRoute } from './server/routes-client';
@@ -115,7 +115,7 @@ const loadArticleSitemap = lecteurDArticlesDuSitemap({
 
 const loadCoursPublications = lecteurDePublicationsDeCours({
   apiBaseUrl: process.env['PORTFOLIO_ARTICLE_API_URL'],
-  slugs: COURS_BTS,
+  slugs: COURS_EN_SEANCE,
   fetch: (url, init) => fetch(url, init),
   journal: console,
 });

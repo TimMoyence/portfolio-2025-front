@@ -1,5 +1,5 @@
 import { RenderMode, type ServerRoute } from '@angular/ssr';
-import { cheminDuCoursBts, COURS_BTS } from './core/config/cours-bts';
+import { cheminDuCoursEnSeance, COURS_EN_SEANCE } from './core/config/cours-en-seance';
 
 /**
  * Configuration des routes serveur pour le SSR/SSG Angular.
@@ -42,8 +42,8 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'projets', renderMode: RenderMode.Prerender },
   { path: 'articles', renderMode: RenderMode.Server },
   { path: 'articles/:slug', renderMode: RenderMode.Server },
-  ...COURS_BTS.map((slug): ServerRoute => ({
-    path: cheminDuCoursBts(slug),
+  ...COURS_EN_SEANCE.map((slug): ServerRoute => ({
+    path: cheminDuCoursEnSeance(slug),
     renderMode: RenderMode.Client,
   })),
 

@@ -7,7 +7,7 @@ import {
 } from '../testing/factories/express.factory';
 import { CHEMIN_DU_COURS_B2, SLUG_DU_COURS_B2 } from '../testing/factories/seo-metadata.factory';
 import { lastmodDeLaPage } from '../testing/sitemap-xml';
-import { COURS_BTS } from '../app/core/config/cours-bts';
+import { COURS_EN_SEANCE } from '../app/core/config/cours-en-seance';
 import { lecteurDePublicationsDeCours } from './cours-publication';
 import { routeDuSitemap } from './sitemap-route';
 import { buildBaseUrlFromRequest } from './url-utils';
@@ -38,7 +38,7 @@ async function sitemap(appels: typeof fetch, journal: Pick<Console, 'warn'>): Pr
     lireArticles: () => Promise.resolve([]),
     lirePublicationsDeCours: lecteurDePublicationsDeCours({
       apiBaseUrl: API,
-      slugs: COURS_BTS,
+      slugs: COURS_EN_SEANCE,
       fetch: appels,
       journal,
     }),
@@ -55,7 +55,7 @@ function catalogueQuiRepond(publieLe?: string): jasmine.Spy<typeof fetch> {
 
 function avertiPourChaqueCours(motif: string): jasmine.ArrayContaining<unknown> {
   return jasmine.arrayWithExactContents(
-    COURS_BTS.map((slug) => [jasmine.stringContaining(`/formations/${slug} : ${motif}`)]),
+    COURS_EN_SEANCE.map((slug) => [jasmine.stringContaining(`/formations/${slug} : ${motif}`)]),
   );
 }
 
@@ -80,9 +80,9 @@ describe('sitemap du cours servi par l API (H1, intégration)', () => {
     const xml = await sitemap(appels, journal);
 
     expect(appels.calls.allArgs().map(([url]) => url)).toEqual(
-      COURS_BTS.map((slug) => `${API}/formations/catalogue/${slug}`),
+      COURS_EN_SEANCE.map((slug) => `${API}/formations/catalogue/${slug}`),
     );
-    expect(COURS_BTS).toContain(SLUG_DU_COURS_B2);
+    expect(COURS_EN_SEANCE).toContain(SLUG_DU_COURS_B2);
     expect(lastmodDuCours(xml)).toBe('2026-12-24');
     expect(journal.warn).not.toHaveBeenCalled();
   });
