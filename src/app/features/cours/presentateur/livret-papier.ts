@@ -24,6 +24,11 @@ export interface PageDuLivretEtudiant {
   readonly titre: string | null;
 }
 
+export interface FicheDuLivretEtudiant {
+  readonly pages: readonly PageDuLivretEtudiant[];
+  readonly aLaSuite: boolean;
+}
+
 type CleDuGuide = keyof GuideFormateur;
 
 export interface RubriqueDuGuide {
@@ -89,15 +94,28 @@ function avecSaBanqueDeQuestions(ecran: EcranContent, corrige: DerouleCours): Ec
   return corrige.ecrans.find((candidat) => candidat.id === ecran.id) ?? ecran;
 }
 
+function corrigeDonneALaSuite(deroule: EcranDeroule | undefined): boolean {
+  const type = deroule?.corrigeEcran?.type;
+  return type !== undefined && CORRIGES_DONNES_A_LA_SUITE.has(type);
+}
+
 function reponseDonneeALaSuite(ecran: EcranContent, corrige: DerouleCours): boolean {
   if (QUESTIONS_TIREES_EN_SEANCE.has(ecran.type) || CORRIGES_SUR_PLACE.has(ecran.type)) {
     return true;
   }
   const deroule = corrige.ecrans.find((candidat) => candidat.id === ecran.id);
-  const type = deroule?.corrigeEcran?.type;
+  return (deroule?.explications?.length ?? 0) > 0 || corrigeDonneALaSuite(deroule);
+}
+
+function seClotSurUnCorrigeSurPlace(fiche: readonly PageDuLivretEtudiant[]): boolean {
+  return CORRIGES_SUR_PLACE.has(fiche[fiche.length - 1].ecran.type);
+}
+
+function ouvreUneNotion(fiche: readonly PageDuLivretEtudiant[], corrige: DerouleCours): boolean {
+  const [seule] = fiche;
   return (
-    (deroule?.explications?.length ?? 0) > 0 ||
-    (type !== undefined && CORRIGES_DONNES_A_LA_SUITE.has(type))
+    fiche.length === 1 &&
+    corrigeDonneALaSuite(corrige.ecrans.find((candidat) => candidat.id === seule.ecran.id))
   );
 }
 
@@ -111,7 +129,7 @@ function pageDuLivretEtudiant(ecran: EcranContent, corrige: DerouleCours): PageD
 export function feuillesDuLivretEtudiant(
   sujet: CoursContent,
   corrige: DerouleCours,
-): readonly (readonly PageDuLivretEtudiant[])[] {
+): readonly FicheDuLivretEtudiant[] {
   const feuilles: PageDuLivretEtudiant[][] = [[]];
   for (const ecran of sujet.ecrans) {
     if (ecran.ecranSource !== undefined) {
@@ -123,7 +141,12 @@ export function feuillesDuLivretEtudiant(
       }
     }
   }
-  return feuilles.filter((feuille) => feuille.length > 0);
+  const fiches = feuilles.filter((feuille) => feuille.length > 0);
+  return fiches.map((pages, rang) => ({
+    pages,
+    aLaSuite:
+      rang > 0 && (seClotSurUnCorrigeSurPlace(fiches[rang - 1]) || ouvreUneNotion(pages, corrige)),
+  }));
 }
 
 function repeteLaSource(ecran: EcranDeroule, corrige: DerouleCours): boolean {

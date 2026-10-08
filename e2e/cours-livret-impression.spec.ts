@@ -314,6 +314,38 @@ test.describe('livret papier imprimé', () => {
     expect(rangees.filter((nombre) => nombre !== 1)).toEqual([]);
   });
 
+  test('une fiche repart sur une page neuve, sauf l’exercice qui suit son exemple guidé et la question seule qui ouvre une notion', async ({
+    page,
+  }) => {
+    await imprimerEnFenetreLarge(page, 'b2-02', 'sujet');
+
+    const pagesNeuves = await page
+      .getByTestId('livret-feuille')
+      .evaluateAll((feuilles) =>
+        feuilles.flatMap((feuille, rang) =>
+          getComputedStyle(feuille).breakBefore === 'page' ? [rang + 1] : [],
+        ),
+      );
+
+    expect(pagesNeuves).toEqual([2, 4, 5, 7, 9, 11, 12, 13, 14, 15]);
+  });
+
+  test('une fiche n’imprime que des blocs d’un seul tenant, son en-tête ne restant jamais seul en bas d’une page', async ({
+    page,
+  }) => {
+    await imprimerEnFenetreLarge(page, 'b2-02', 'sujet');
+
+    const lignesSeules = await page
+      .locator('.livret__feuille > *')
+      .evaluateAll((enfants) =>
+        enfants
+          .filter((enfant) => !getComputedStyle(enfant).display.startsWith('inline-'))
+          .map((enfant) => `${enfant.tagName.toLowerCase()}.${enfant.className}`),
+      );
+
+    expect(lignesSeules).toEqual([]);
+  });
+
   test('le livret imprimé reprend la densité des briques et les marges de cadre de la projection', async ({
     page,
   }) => {

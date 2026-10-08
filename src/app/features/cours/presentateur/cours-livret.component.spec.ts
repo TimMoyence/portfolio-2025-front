@@ -21,6 +21,8 @@ type Fixture = ComponentFixture<CoursLivretComponent>;
 
 const SLUG = 'b2-02-series-statistiques';
 
+const FICHE_A_LA_SUITE = 'livret__feuille--a-la-suite';
+
 const LIVRET_B2_02: LivretDuCours = {
   version: 1,
   sujet: INSTANTANE_B2_02.sujet,
@@ -124,11 +126,58 @@ describe('CoursLivretComponent', () => {
     }
   });
 
+  it('imprime à la suite de la précédente l’exercice qui suit son exemple guidé et la question seule qui ouvre une notion', async () => {
+    const { fixture } = await monter(of(LIVRET_B2_02));
+
+    const fichesALaSuite = tous(fixture, 'livret-feuille').flatMap((feuille, rang) =>
+      feuille.classList.contains(FICHE_A_LA_SUITE) ? [rang + 1] : [],
+    );
+
+    expect(fichesALaSuite).toEqual([3, 6, 8, 10]);
+  });
+
+  it('fait repartir sur une page neuve toute fiche qui dévoilerait la réponse de la précédente', async () => {
+    const { fixture } = await monter(of(LIVRET_B2_02));
+    const ficheDe = (ecran: string): HTMLElement | undefined =>
+      tous(fixture, 'livret-feuille').find(
+        (feuille) => feuille.querySelector(`[data-ecran="${ecran}"]`) !== null,
+      );
+
+    for (const [ecran, raison] of [
+      ['B2-02-A1-06-COURS-RESUMER', 'répond à la réflexion A1-05'],
+      ['B2-02-A2-03-COURS-NUAGE', 'révèle la réponse du vote A2-02'],
+      ['B2-02-A2-06-ECARTS-POINT-MOYEN', 'rappelle les résultats de l’exercice 2'],
+      ['B2-02-A3-02-COURS-DROITE', 'répond à la réflexion A3-01'],
+      ['B2-02-A3-05-DEFI-IA', 'cite la droite que l’exercice 4 demande de trouver'],
+      ['B2-02-A4-05-FICHE-MEMO', 'résume les réponses du rappel'],
+    ]) {
+      expect(ficheDe(ecran)?.classList.contains(FICHE_A_LA_SUITE))
+        .withContext(`${ecran} ${raison}`)
+        .toBeFalse();
+    }
+  });
+
+  it('imprime l’en-tête de chaque fiche dans son premier écran, pour qu’il ne reste jamais seul en bas d’une page', async () => {
+    const { fixture } = await monter(of(LIVRET_B2_02));
+
+    const entetes = tous(fixture, 'livret-feuille').map((feuille) =>
+      feuille
+        .querySelector('[data-testid="livret-feuille-entete"]')
+        ?.closest('[data-testid="livret-ecran"]'),
+    );
+
+    expect(entetes).toEqual(
+      tous(fixture, 'livret-feuille').map((feuille) =>
+        feuille.querySelector('[data-testid="livret-ecran"]'),
+      ),
+    );
+  });
+
   it('annonce les fiches à distribuer sans les confondre avec des pages imprimées', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     expect(annonce(fixture)).toEqual([
-      '15 fiches · chacune commence sur une nouvelle page, les plus longues en occupent plusieurs',
+      '15 fiches · chacune commence sur une nouvelle page, sauf l’exercice qui suit un exemple guidé et la question qui ouvre une notion ; les plus longues en occupent plusieurs',
     ]);
 
     basculerSurLeCorrige(fixture);

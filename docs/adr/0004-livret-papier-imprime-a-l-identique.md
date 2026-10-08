@@ -98,11 +98,24 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
   cours imprime ses cartes sur une seule rangée.
 - Ce qu'un gabarit révèle à l'écran étape par étape s'imprime en entier : le parcours de
   méthode imprime une fiche par étape, preuve et résultat compris, et masque sa navigation.
-- L'en-tête annonce des fiches, chacune commençant sur une nouvelle page, et non un nombre de
-  pages que le navigateur décide seul. Chaque fiche se distribue après la correction sur place
-  de la précédente : en flux continu, une même feuille porterait la fin d'un exercice et le
-  début de la fiche suivante, souvent la trace écrite qui y répond. Le flux continu a été
-  mesuré à 95 pages de sujets au lieu de 138 sur les six cours, et écarté pour cette raison.
+- L'en-tête annonce des fiches, et non un nombre de pages que le navigateur décide seul. Chaque
+  fiche se distribue après la correction sur place de la précédente : en flux continu, une même
+  feuille porterait la fin d'un exercice et le début de la fiche suivante, souvent la trace
+  écrite qui y répond. Le flux continu a été mesuré à 95 pages de sujets au lieu de 138 sur les
+  six cours, et écarté pour cette raison.
+- Une fiche commence sur une nouvelle page, sauf dans deux cas où partager la page ne dévoile
+  aucune réponse :
+  - elle suit une fiche close par un exemple guidé, corrigé sur place : la fiche précédente n'a
+    plus rien à cacher ;
+  - elle se réduit à un écran dont le corrigé est donné à la suite (`reflexion`,
+    `revelation`) : la question qui ouvre une notion ne répond pas à la fiche qui la précède.
+
+  Un exercice qui suit un exercice, et le cours qui suit une question, gardent leur nouvelle
+  page : au B2-02, l'Exercice 3 rappelle les résultats de l'Exercice 2 (« a = 3,8 et
+  y = 716 k€ »), l'Exercice 5 donne la droite de l'Exercice 4 (« y = 43,89x + 564,4 »), et la
+  trace écrite d'un cours répond à la question qui l'ouvre. L'en-tête « Fiche N / M » est
+  imprimé dans le premier écran de sa fiche, pour ne jamais rester seul en bas d'une page.
+
 - Le livret s'imprime hors du processus du pupitre : le pupitre l'ouvre dans un nouvel onglet
   (`_blank`, `noopener`), et sa route serveur (`app.routes.server.ts`) déclare
   `Cross-Origin-Opener-Policy: same-origin`, que `server.ts` pose sur la réponse. Le livret n'a
@@ -125,9 +138,15 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
   ne sort. Après, les douze livrets (sujet et corrigé des six cours) sortent en A4 sans page
   blanche, chaque écran présent dans l'ordre, avec le nombre de pages que donne un remplissage
   glouton de leurs blocs insécables dans l'ordre : aucun livret ne peut en compter moins sans
-  couper un bloc ou faire partager une page à deux fiches.
-- `e2e/banc/livret-impression.spec.ts` vérifie qu'aucun écran ne dépasse une page A4 et que
-  les écrans se tassent à plusieurs par page.
+  couper un bloc ou faire partager une page à deux fiches que la règle sépare.
+- Imprimer à la suite les fiches qui le peuvent fait passer les six sujets de 141 à 122 pages
+  au harnais WebKit (B2-02 : 23 à 19), sans changer les corrigés.
+- `cours-livret.component.spec.ts` fixe les fiches imprimées à la suite du B2-02 et vérifie
+  qu'aucune fiche qui dévoilerait une réponse ne l'est ; `e2e/cours-livret-impression.spec.ts`
+  vérifie que seules les autres fiches reçoivent un saut de page.
+- `e2e/banc/livret-impression.spec.ts` vérifie qu'aucun écran ne dépasse une page A4, que les
+  écrans se tassent à plusieurs par page, le PDF ne comptant pas plus de pages qu'un tassement
+  où chaque fiche imprimée à la suite continue la page de la précédente.
 - Le nombre de pages reste décidé par le moteur : un texte qui ne se coupe pas aux mêmes mots
   dans les deux navigateurs peut encore faire changer une page. C'est le cas d'un tableau dont
   la largeur naturelle dépasse d'une fraction de pixel la place disponible : ses colonnes
