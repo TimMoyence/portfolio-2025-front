@@ -31,11 +31,28 @@ interface HauteurDEcran {
 
 export function hauteursDesEcrans(sections: Locator): Promise<HauteurDEcran[]> {
   return sections.evaluateAll((elements) =>
-    elements.map((section) => ({
-      ecran: section.getAttribute('data-ecran') ?? '',
-      hauteur: Math.ceil(
-        (section.querySelector('app-slide-activity') ?? section).getBoundingClientRect().height,
-      ),
-    })),
+    elements.map((section) => {
+      const blocsInsecables = section.classList.contains('livret__page--scindable')
+        ? [
+            ...section.querySelectorAll(
+              ':scope > app-slide-activity, :scope > .livret__formateur > *',
+            ),
+          ]
+        : [section];
+      return {
+        ecran: section.getAttribute('data-ecran') ?? '',
+        hauteur: Math.ceil(
+          Math.max(...blocsInsecables.map((bloc) => bloc.getBoundingClientRect().height)),
+        ),
+      };
+    }),
   );
+}
+
+export function lesPlusHautes(ecrans: readonly HauteurDEcran[], nombre = 3): string {
+  return [...ecrans]
+    .sort((a, b) => b.hauteur - a.hauteur)
+    .slice(0, nombre)
+    .map(({ ecran, hauteur }) => `${ecran} ${hauteur} px`)
+    .join(', ');
 }

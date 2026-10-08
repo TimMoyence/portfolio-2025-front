@@ -8,6 +8,7 @@ import {
   LARGEUR_IMPRIMEE_PX,
   LARGEUR_MAXIMALE_REDUITE_PAR_WEBKIT_PX,
   LARGEUR_UTILE_PX,
+  lesPlusHautes,
 } from './impression-a4';
 
 const COURS = ['b2-01', 'b2-02', 'b2-03', 'b2-04', 'b2-05', 'b2-06', 'b3-01'] as const;
@@ -469,6 +470,10 @@ test.describe('livret papier imprimé', () => {
         const { largeur } = await miseEnPageStable(page);
         const hauteurDePage = hauteurDePageA(largeur);
         const ecrans = await hauteursDesEcrans(page.locator('.livret [data-ecran]'));
+        test.info().annotations.push({
+          type: 'hauteurs',
+          description: `page ${hauteurDePage} px ; ${lesPlusHautes(ecrans)}`,
+        });
 
         expect(ecrans.length).toBeGreaterThan(0);
         expect(ecrans.filter(({ hauteur }) => hauteur > hauteurDePage)).toEqual([]);
