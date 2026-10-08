@@ -12,6 +12,7 @@ import { INSTANTANE_B2_03 } from '../../../../testing/fixtures/instantane-b2-03'
 import { INSTANTANE_B2_04 } from '../../../../testing/fixtures/instantane-b2-04';
 import { INSTANTANE_B2_05 } from '../../../../testing/fixtures/instantane-b2-05';
 import { INSTANTANE_B2_06 } from '../../../../testing/fixtures/instantane-b2-06';
+import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantane-b3-01';
 import {
   ecransDuPupitreDe,
   ecransPublicsDe,
@@ -26,13 +27,18 @@ import {
 
 const POSTES = ['cours-etudiant', 'cours-presentateur'] as const;
 
-const COURS_MESURES = [
+const COURS_A_RENVOIS = [
   { code: 'B2-01', instantane: INSTANTANE_B2_01, ecransAuMoins: 50, renvoisAuMoins: 5 },
   { code: 'B2-02', instantane: INSTANTANE_B2_02, ecransAuMoins: 30, renvoisAuMoins: 3 },
   { code: 'B2-03', instantane: INSTANTANE_B2_03, ecransAuMoins: 30, renvoisAuMoins: 4 },
   { code: 'B2-04', instantane: INSTANTANE_B2_04, ecransAuMoins: 30, renvoisAuMoins: 4 },
   { code: 'B2-05', instantane: INSTANTANE_B2_05, ecransAuMoins: 30, renvoisAuMoins: 4 },
   { code: 'B2-06', instantane: INSTANTANE_B2_06, ecransAuMoins: 30, renvoisAuMoins: 4 },
+] as const;
+
+const COURS_MESURES = [
+  ...COURS_A_RENVOIS,
+  { code: 'B3-01', instantane: INSTANTANE_B3_01, ecransAuMoins: 38 },
 ] as const;
 
 @Component({
@@ -483,7 +489,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     DELAI_DE_MONTAGE_MS,
   );
 
-  for (const { code, instantane, renvoisAuMoins } of COURS_MESURES) {
+  for (const { code, instantane, renvoisAuMoins } of COURS_A_RENVOIS) {
     const pupitre = ecransDuPupitreDe(instantane);
 
     for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
@@ -664,7 +670,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     DELAI_DE_MONTAGE_MS,
   );
 
-  for (const { code, instantane } of COURS_MESURES) {
+  for (const { code, instantane } of COURS_A_RENVOIS) {
     const pupitre = ecransDuPupitreDe(instantane);
 
     it(

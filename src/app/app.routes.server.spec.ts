@@ -9,6 +9,7 @@ describe('serverRoutes', () => {
     'b2-04-suites',
     'b2-05-mathematiques-financieres',
     'b2-06-exponentielle-logarithme',
+    'b3-01-donnee-brute-decision',
   ]) {
     it(`laisse le client choisir l espace de ${slug} selon le rôle de la session`, () => {
       const route = serverRoutes.find((candidate) => candidate.path === `formations/${slug}`);

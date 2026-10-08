@@ -7,6 +7,7 @@ import { INSTANTANE_B2_03 } from '../../../testing/fixtures/instantane-b2-03';
 import { INSTANTANE_B2_04 } from '../../../testing/fixtures/instantane-b2-04';
 import { INSTANTANE_B2_05 } from '../../../testing/fixtures/instantane-b2-05';
 import { INSTANTANE_B2_06 } from '../../../testing/fixtures/instantane-b2-06';
+import { INSTANTANE_B3_01 } from '../../../testing/fixtures/instantane-b3-01';
 import { montagePage } from '../../../testing/montage-page';
 
 const COURS_EN_SEANCE = [
@@ -40,7 +41,15 @@ const COURS_EN_SEANCE = [
     lien: '/formations/b2-06-exponentielle-logarithme',
     instantane: INSTANTANE_B2_06,
   },
+  {
+    code: 'B3-01',
+    lien: '/formations/b3-01-donnee-brute-decision',
+    instantane: INSTANTANE_B3_01,
+  },
 ];
+
+const BADGE_BTS = 'BTS CG · Cours interactif';
+const BADGE_BACHELOR = 'Bachelor 3 · Cours interactif';
 
 describe('FormationsListComponent', () => {
   const page = montagePage(FormationsListComponent);
@@ -58,7 +67,7 @@ describe('FormationsListComponent', () => {
 
   it('devrait exposer la liste des formations depuis les donnees statiques', () => {
     expect(component['formations']).toBe(FORMATIONS);
-    expect(component['formations'].length).toBe(10);
+    expect(component['formations'].length).toBe(11);
   });
 
   it('devrait composer les sections Asili (hero, grille, format, bande CTA)', () => {
@@ -131,10 +140,21 @@ describe('FormationsListComponent', () => {
     expect(bonusCard).not.toBeNull();
   });
 
-  it('présente en séance exactement les cours BTS servis par l API', () => {
+  it('présente en séance exactement les cours du BTS et du Bachelor servis par l API', () => {
     expect(
       FORMATIONS.filter((formation) => formation.variant === 'live').map((carte) => carte.link),
     ).toEqual(COURS_EN_SEANCE.map((cours) => cours.lien));
+  });
+
+  it('badge chaque cours en séance du diplôme qu il prépare', () => {
+    expect(
+      COURS_EN_SEANCE.map(({ code, lien }) => [
+        code,
+        FORMATIONS.find((formation) => formation.link === lien)?.badge,
+      ]),
+    ).toEqual(
+      COURS_EN_SEANCE.map(({ code }) => [code, code.startsWith('B3') ? BADGE_BACHELOR : BADGE_BTS]),
+    );
   });
 
   for (const { code, lien, instantane } of COURS_EN_SEANCE) {

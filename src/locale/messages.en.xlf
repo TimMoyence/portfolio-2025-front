@@ -11967,6 +11967,30 @@
         <target>3 h</target>
       </segment>
     </unit>
+    <unit id="formations-list.b3.badge">
+      <segment>
+        <source>Bachelor 3 · Cours interactif</source>
+        <target>Bachelor 3 · Interactive course</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-01.title">
+      <segment>
+        <source>B3-01 — Expert Data : de la donnée brute à la décision</source>
+        <target>B3-01 — Data expert: from raw data to decision</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-01.description">
+      <segment>
+        <source>Nettoyer un export de ventes dans Excel, le croiser avec ses référentiels, le résumer par un tableau croisé dynamique, puis bâtir un tableau de bord et une recommandation pour un comité de direction. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Clean a sales export in Excel, join it with its reference tables, summarise it with a PivotTable, then build a dashboard and a recommendation for an executive committee. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-01.duration">
+      <segment>
+        <source>3 h 00</source>
+        <target>3 h</target>
+      </segment>
+    </unit>
     <unit id="formations-list.b2.duration">
       <notes>
         <note category="location">src/app/features/formations/formations-list.data.ts:32</note>

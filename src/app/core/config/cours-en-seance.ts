@@ -5,6 +5,7 @@ export const COURS_EN_SEANCE: readonly string[] = [
   'b2-04-suites',
   'b2-05-mathematiques-financieres',
   'b2-06-exponentielle-logarithme',
+  'b3-01-donnee-brute-decision',
 ];
 
 export function cheminDuCoursEnSeance(slug: string): string {
