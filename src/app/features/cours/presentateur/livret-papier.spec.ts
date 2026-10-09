@@ -201,29 +201,31 @@ function fichesAvantElleSurSaPage(
   return fiches.slice(debut, rang);
 }
 
+function citationsDeLEcran(
+  fiche: FicheDuLivretEtudiant,
+  ecran: EcranContent,
+  deroule: EcranDeroule | undefined,
+): readonly string[] {
+  const texte = texteAVerifier(fiche);
+  const nombresImprimes = tousLesNombresDe(texte);
+  return [
+    ...reponsesDe(deroule).filter((reponse) => cite(texte, reponse)),
+    ...nombresACalculer(ecran, deroule).filter((nombre) => nombresImprimes.has(nombre)),
+  ].map((reponse) => `${fiche.pages[0].ecran.id} cite « ${normaliser(reponse)} » de ${ecran.id}`);
+}
+
 function citationsDesFichesALaSuite(
   fiches: readonly FicheDuLivretEtudiant[],
   deroule: DerouleCours,
 ): readonly string[] {
   const corrige = new Map(deroule.ecrans.map((ecran) => [ecran.id, ecran]));
-  const citations = fiches.flatMap((fiche, rang) => {
-    if (!fiche.aLaSuite) {
-      return [];
-    }
-    const texte = texteAVerifier(fiche);
-    const nombresImprimes = tousLesNombresDe(texte);
-    return fichesAvantElleSurSaPage(fiches, rang).flatMap(({ pages }) =>
-      pages.flatMap(({ ecran }) => {
-        const deroule = corrige.get(ecran.id);
-        return [
-          ...reponsesDe(deroule).filter((reponse) => cite(texte, reponse)),
-          ...nombresACalculer(ecran, deroule).filter((nombre) => nombresImprimes.has(nombre)),
-        ].map(
-          (reponse) => `${fiche.pages[0].ecran.id} cite « ${normaliser(reponse)} » de ${ecran.id}`,
-        );
-      }),
-    );
-  });
+  const citations = fiches.flatMap((fiche, rang) =>
+    fiche.aLaSuite
+      ? fichesAvantElleSurSaPage(fiches, rang).flatMap(({ pages }) =>
+          pages.flatMap(({ ecran }) => citationsDeLEcran(fiche, ecran, corrige.get(ecran.id))),
+        )
+      : [],
+  );
   return [...new Set(citations)];
 }
 
