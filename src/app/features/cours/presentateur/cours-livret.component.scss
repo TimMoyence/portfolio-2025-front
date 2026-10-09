@@ -144,7 +144,7 @@ $hauteur-de-toile-imprimee: math.div($largeur-imprimee * 9, 16);
     display: none;
   }
 
-  .livret__feuille + .livret__feuille {
+  .livret__feuille + .livret__feuille:not(.livret__feuille--a-la-suite) {
     break-before: page;
   }
 
@@ -155,13 +155,14 @@ $hauteur-de-toile-imprimee: math.div($largeur-imprimee * 9, 16);
     border-block-start: 0.5pt solid #999;
   }
 
-  .livret__kicker + .livret__page,
+  .livret__feuille:not(.livret__feuille--a-la-suite) > .livret__page:first-child,
   .livret__entete + .livret__page {
     padding-block-start: 0;
     border-block-start: 0;
   }
 
-  .livret__page + .livret__page {
+  .livret__page + .livret__page,
+  .livret__feuille--a-la-suite > .livret__page:first-child {
     margin-block-start: 4mm;
   }
 

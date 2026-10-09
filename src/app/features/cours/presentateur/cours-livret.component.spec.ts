@@ -21,6 +21,8 @@ type Fixture = ComponentFixture<CoursLivretComponent>;
 
 const SLUG = 'b2-02-series-statistiques';
 
+const FICHE_A_LA_SUITE = 'livret__feuille--a-la-suite';
+
 const LIVRET_B2_02: LivretDuCours = {
   version: 1,
   sujet: INSTANTANE_B2_02.sujet,
@@ -124,11 +126,75 @@ describe('CoursLivretComponent', () => {
     }
   });
 
+  const fichesALaSuiteDe = async (livret: LivretDuCours): Promise<readonly number[]> => {
+    const { fixture } = await monter(of(livret));
+    return tous(fixture, 'livret-feuille').flatMap((feuille, rang) =>
+      feuille.classList.contains(FICHE_A_LA_SUITE) ? [rang + 1] : [],
+    );
+  };
+
+  const avecLEtayageDeLAuteur = (livret: LivretDuCours): LivretDuCours => ({
+    ...livret,
+    sujet: {
+      ...livret.sujet,
+      ecrans: livret.sujet.ecrans.map((ecran) =>
+        ecran.id === 'B2-02-A1-07-EXEMPLE-RESUME'
+          ? { ...ecran, donnees: { ...ecran.donnees, etayage: 6 } }
+          : ecran,
+      ),
+    },
+  });
+
+  it('imprime à la suite la question seule qui ouvre une notion, mais pas l’exercice qui suit un exemple guidé à compléter sur la copie', async () => {
+    expect(await fichesALaSuiteDe(LIVRET_B2_02)).toEqual([8]);
+  });
+
+  it('imprime sur une page neuve l’exercice qui suit un exemple guidé, même quand son auteur en montre toutes les étapes', async () => {
+    expect(await fichesALaSuiteDe(avecLEtayageDeLAuteur(LIVRET_B2_02))).toEqual([8]);
+  });
+
+  it('fait repartir sur une page neuve toute fiche qui dévoilerait la réponse de la précédente', async () => {
+    const { fixture } = await monter(of(LIVRET_B2_02));
+    const ficheDe = (ecran: string): HTMLElement | undefined =>
+      tous(fixture, 'livret-feuille').find(
+        (feuille) => feuille.querySelector(`[data-ecran="${ecran}"]`) !== null,
+      );
+
+    for (const [ecran, raison] of [
+      ['B2-02-A1-06-COURS-RESUMER', 'répond à la réflexion A1-05'],
+      ['B2-02-A2-03-COURS-NUAGE', 'révèle la réponse du vote A2-02'],
+      ['B2-02-A2-06-ECARTS-POINT-MOYEN', 'rappelle les résultats de l’exercice 2'],
+      ['B2-02-A3-02-COURS-DROITE', 'répond à la réflexion A3-01'],
+      ['B2-02-A3-05-DEFI-IA', 'cite la droite que l’exercice 4 demande de trouver'],
+      ['B2-02-A4-05-FICHE-MEMO', 'résume les réponses du rappel'],
+    ]) {
+      expect(ficheDe(ecran)?.classList.contains(FICHE_A_LA_SUITE))
+        .withContext(`${ecran} ${raison}`)
+        .toBeFalse();
+    }
+  });
+
+  it('imprime l’en-tête de chaque fiche dans son premier écran, pour qu’il ne reste jamais seul en bas d’une page', async () => {
+    const { fixture } = await monter(of(LIVRET_B2_02));
+
+    const entetes = tous(fixture, 'livret-feuille').map((feuille) =>
+      feuille
+        .querySelector('[data-testid="livret-feuille-entete"]')
+        ?.closest('[data-testid="livret-ecran"]'),
+    );
+
+    expect(entetes).toEqual(
+      tous(fixture, 'livret-feuille').map((feuille) =>
+        feuille.querySelector('[data-testid="livret-ecran"]'),
+      ),
+    );
+  });
+
   it('annonce les fiches à distribuer sans les confondre avec des pages imprimées', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     expect(annonce(fixture)).toEqual([
-      '15 fiches · chacune commence sur une nouvelle page, les plus longues en occupent plusieurs',
+      '15 fiches · chacune commence sur une nouvelle page, sauf la question qui ouvre une notion quand sa page ne porte aucun exemple guidé et qu’elle n’en reprend aucune réponse ; les plus longues en occupent plusieurs',
     ]);
 
     basculerSurLeCorrige(fixture);

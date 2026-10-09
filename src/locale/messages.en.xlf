@@ -15195,8 +15195,8 @@
     </unit>
     <unit id="livretAnnonceFiches">
       <segment>
-        <source> <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ feuillesEtudiant().length }}"/> fiches · chacune commence sur une nouvelle page, les plus longues en occupent plusieurs </source>
-        <target> <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ feuillesEtudiant().length }}"/> worksheets · each starts on a new page, the longer ones span several </target>
+        <source> <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ feuillesEtudiant().length }}"/> fiches · chacune commence sur une nouvelle page, sauf la question qui ouvre une notion quand sa page ne porte aucun exemple guidé et qu’elle n’en reprend aucune réponse ; les plus longues en occupent plusieurs </source>
+        <target> <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ feuillesEtudiant().length }}"/> worksheets · each starts on a new page, except a question opening a topic when its page holds no worked example and it repeats none of that page’s answers; the longer ones span several </target>
       </segment>
     </unit>
     <unit id="livretVueAria">

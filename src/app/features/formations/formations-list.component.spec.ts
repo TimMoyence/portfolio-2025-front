@@ -1,52 +1,14 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { FormationsListComponent } from './formations-list.component';
 import { FORMATION_BENEFITS, FORMATIONS } from './formations-list.data';
-import { INSTANTANE_B2_01 } from '../../../testing/fixtures/instantane-b2-01';
-import { INSTANTANE_B2_02 } from '../../../testing/fixtures/instantane-b2-02';
-import { INSTANTANE_B2_03 } from '../../../testing/fixtures/instantane-b2-03';
-import { INSTANTANE_B2_04 } from '../../../testing/fixtures/instantane-b2-04';
-import { INSTANTANE_B2_05 } from '../../../testing/fixtures/instantane-b2-05';
-import { INSTANTANE_B2_06 } from '../../../testing/fixtures/instantane-b2-06';
-import { INSTANTANE_B3_01 } from '../../../testing/fixtures/instantane-b3-01';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../testing/fixtures/instantanes-des-cours';
 import { montagePage } from '../../../testing/montage-page';
 
-const COURS_EN_SEANCE = [
-  {
-    code: 'B2-01',
-    lien: '/formations/b2-01-traitement-information-chiffree',
-    instantane: INSTANTANE_B2_01,
-  },
-  {
-    code: 'B2-02',
-    lien: '/formations/b2-02-series-statistiques',
-    instantane: INSTANTANE_B2_02,
-  },
-  {
-    code: 'B2-03',
-    lien: '/formations/b2-03-logique',
-    instantane: INSTANTANE_B2_03,
-  },
-  {
-    code: 'B2-04',
-    lien: '/formations/b2-04-suites',
-    instantane: INSTANTANE_B2_04,
-  },
-  {
-    code: 'B2-05',
-    lien: '/formations/b2-05-mathematiques-financieres',
-    instantane: INSTANTANE_B2_05,
-  },
-  {
-    code: 'B2-06',
-    lien: '/formations/b2-06-exponentielle-logarithme',
-    instantane: INSTANTANE_B2_06,
-  },
-  {
-    code: 'B3-01',
-    lien: '/formations/b3-01-donnee-brute-decision',
-    instantane: INSTANTANE_B3_01,
-  },
-];
+const COURS_EN_SEANCE = INSTANTANES_DES_COURS_SERVIS.map(([code, instantane]) => ({
+  code,
+  lien: `/formations/${instantane.sujet.id}`,
+  instantane,
+}));
 
 const BADGE_BTS = 'BTS CG · Cours interactif';
 const BADGE_BACHELOR = 'Bachelor 3 · Cours interactif';

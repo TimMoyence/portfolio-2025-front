@@ -98,11 +98,32 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
   cours imprime ses cartes sur une seule rangée.
 - Ce qu'un gabarit révèle à l'écran étape par étape s'imprime en entier : le parcours de
   méthode imprime une fiche par étape, preuve et résultat compris, et masque sa navigation.
-- L'en-tête annonce des fiches, chacune commençant sur une nouvelle page, et non un nombre de
-  pages que le navigateur décide seul. Chaque fiche se distribue après la correction sur place
-  de la précédente : en flux continu, une même feuille porterait la fin d'un exercice et le
-  début de la fiche suivante, souvent la trace écrite qui y répond. Le flux continu a été
-  mesuré à 95 pages de sujets au lieu de 138 sur les six cours, et écarté pour cette raison.
+- L'en-tête annonce des fiches, et non un nombre de pages que le navigateur décide seul. Chaque
+  fiche se distribue après la correction sur place de la précédente : en flux continu, une même
+  feuille porterait la fin d'un exercice et le début de la fiche suivante, souvent la trace
+  écrite qui y répond. Le flux continu a été mesuré à 95 pages de sujets au lieu de 138 sur les
+  six cours, et écarté pour cette raison.
+- Une fiche commence sur une nouvelle page, sauf la question qui ouvre une notion : une fiche
+  réduite à un écran dont le corrigé est donné à la suite (`reflexion`, `revelation`). Elle
+  s'imprime à la suite de la précédente à deux conditions :
+  - aucun exemple guidé de sa page : un exemple guidé n'est corrigé sur place qu'en séance, et
+    le livret en masque toutes les étapes, l'étayage n'étant posé que par le pilotage de la
+    séance (`reinjection.ts`). Au B2-01, le vote du paradoxe (A5-02) annonce « le taux global
+    passe de 27,6 % à 25,3 % », les deux résultats que l'exemple A5-03 fait calculer ;
+  - elle n'imprime aucune suite de quatre mots d'une réponse rédigée de sa page : bonne
+    réponse, explication ou champ de réponse du corrigé, les confusions n'étant pas des
+    réponses. Au B2-03, le vote A3-01 propose « une seule facture hors
+    de France sans numéro de TVA », la traduction que l'explication de l'Exercice 5 donne de
+    `ET(B2<>"France";C2="Non")` (« hors de France ∧ sans numéro »). Une reprise de moins de
+    quatre mots n'est pas détectée ; une reprise de quatre mots ou plus, même fortuite, ne
+    coûte qu'un saut de page.
+
+  Toute autre fiche porte une réponse que la séance corrige avant de distribuer la suivante :
+  au B2-02, l'Exercice 3 rappelle les résultats de l'Exercice 2 (« a = 3,8 et y = 716 k€ »),
+  l'Exercice 5 donne la droite de l'Exercice 4 (« y = 43,89x + 564,4 »), et la trace écrite
+  d'un cours répond à la question qui l'ouvre. L'en-tête « Fiche N / M » est imprimé dans le
+  premier écran de sa fiche, pour ne jamais rester seul en bas d'une page.
+
 - Le livret s'imprime hors du processus du pupitre : le pupitre l'ouvre dans un nouvel onglet
   (`_blank`, `noopener`), et sa route serveur (`app.routes.server.ts`) déclare
   `Cross-Origin-Opener-Policy: same-origin`, que `server.ts` pose sur la réponse. Le livret n'a
@@ -125,9 +146,20 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
   ne sort. Après, les douze livrets (sujet et corrigé des six cours) sortent en A4 sans page
   blanche, chaque écran présent dans l'ordre, avec le nombre de pages que donne un remplissage
   glouton de leurs blocs insécables dans l'ordre : aucun livret ne peut en compter moins sans
-  couper un bloc ou faire partager une page à deux fiches.
-- `e2e/banc/livret-impression.spec.ts` vérifie qu'aucun écran ne dépasse une page A4 et que
-  les écrans se tassent à plusieurs par page.
+  couper un bloc ou faire partager une page à deux fiches que la règle sépare.
+- Sur les sept cours servis, dix questions s'impriment à la suite de la précédente : chacune
+  épargne au plus une page, sans changer les corrigés.
+- `cours-livret.component.spec.ts` fixe les fiches imprimées à la suite du B2-02 et vérifie
+  qu'aucune fiche qui dévoilerait une réponse ne l'est, ni l'exercice qui suit un exemple
+  guidé, quel que soit l'étayage de son auteur ; `livret-papier.spec.ts` vérifie, sur chaque
+  cours servi, qu'aucune fiche imprimée à la suite ne cite une réponse d'une fiche de sa page
+  (bonne réponse, corrigé, formule, arrondi, pourcentage, explication, nombre qu'une étape
+  fait calculer), seuls des extraits exacts et justifiés étant admis ;
+  `e2e/cours-livret-impression.spec.ts` vérifie que seules les autres fiches reçoivent un saut
+  de page.
+- `e2e/banc/livret-impression.spec.ts` vérifie qu'aucun écran ne dépasse une page A4, que les
+  écrans se tassent à plusieurs par page, le PDF ne comptant pas plus de pages qu'un tassement
+  où chaque fiche imprimée à la suite continue la page de la précédente.
 - Le nombre de pages reste décidé par le moteur : un texte qui ne se coupe pas aux mêmes mots
   dans les deux navigateurs peut encore faire changer une page. C'est le cas d'un tableau dont
   la largeur naturelle dépasse d'une fraction de pixel la place disponible : ses colonnes

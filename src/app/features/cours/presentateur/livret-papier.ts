@@ -1,4 +1,5 @@
 import type {
+  CorrigeEcranPresentateur,
   CoursContent,
   DerouleCours,
   EcranContent,
@@ -19,9 +20,18 @@ const CORRIGES_SUR_PLACE: ReadonlySet<string> = new Set(['fp-worked']);
 
 const ECRANS_SANS_INTITULE: ReadonlySet<string> = new Set(['fp-table-build', 'fp-challenge']);
 
+const CHAMPS_NON_IMPRIMES: ReadonlySet<string> = new Set(['id', 'type', 'screenId', 'metadonnees']);
+
+const MOTS_D_UNE_REPRISE = 4;
+
 export interface PageDuLivretEtudiant {
   readonly ecran: EcranContent;
   readonly titre: string | null;
+}
+
+export interface FicheDuLivretEtudiant {
+  readonly pages: readonly PageDuLivretEtudiant[];
+  readonly aLaSuite: boolean;
 }
 
 type CleDuGuide = keyof GuideFormateur;
@@ -89,16 +99,107 @@ function avecSaBanqueDeQuestions(ecran: EcranContent, corrige: DerouleCours): Ec
   return corrige.ecrans.find((candidat) => candidat.id === ecran.id) ?? ecran;
 }
 
+function corrigeDonneALaSuite(deroule: EcranDeroule | undefined): boolean {
+  const type = deroule?.corrigeEcran?.type;
+  return type !== undefined && CORRIGES_DONNES_A_LA_SUITE.has(type);
+}
+
 function reponseDonneeALaSuite(ecran: EcranContent, corrige: DerouleCours): boolean {
   if (QUESTIONS_TIREES_EN_SEANCE.has(ecran.type) || CORRIGES_SUR_PLACE.has(ecran.type)) {
     return true;
   }
   const deroule = corrige.ecrans.find((candidat) => candidat.id === ecran.id);
-  const type = deroule?.corrigeEcran?.type;
+  return (deroule?.explications?.length ?? 0) > 0 || corrigeDonneALaSuite(deroule);
+}
+
+function ouvreUneNotion(fiche: readonly PageDuLivretEtudiant[], corrige: DerouleCours): boolean {
+  const [seule] = fiche;
   return (
-    (deroule?.explications?.length ?? 0) > 0 ||
-    (type !== undefined && CORRIGES_DONNES_A_LA_SUITE.has(type))
+    fiche.length === 1 &&
+    corrigeDonneALaSuite(corrige.ecrans.find((candidat) => candidat.id === seule.ecran.id))
   );
+}
+
+function estUnExempleGuide({ ecran }: PageDuLivretEtudiant): boolean {
+  return CORRIGES_SUR_PLACE.has(ecran.type);
+}
+
+function textesDe(valeur: unknown, champ = ''): readonly string[] {
+  if (CHAMPS_NON_IMPRIMES.has(champ)) {
+    return [];
+  }
+  if (typeof valeur === 'string') {
+    return [valeur];
+  }
+  if (Array.isArray(valeur)) {
+    return valeur.flatMap((element: unknown) => textesDe(element, champ));
+  }
+  return typeof valeur === 'object' && valeur !== null
+    ? Object.entries(valeur).flatMap(([cle, contenu]) => textesDe(contenu, cle))
+    : [];
+}
+
+function textesImprimes({ ecran, titre }: PageDuLivretEtudiant): readonly string[] {
+  return [...(titre === null ? [] : [titre]), ...textesDe(ecran.donnees)];
+}
+
+function redactionsDuCorrige(corrige: CorrigeEcranPresentateur | null): readonly string[] {
+  if (corrige === null) {
+    return [];
+  }
+  switch (corrige.type) {
+    case 'reflexion':
+      return [corrige.attendu, corrige.suite];
+    case 'revelation':
+      return [corrige.titre, ...corrige.lignes];
+    case 'feuille':
+      return corrige.attendus.map(({ formuleReference }) => formuleReference);
+    case 'classement':
+      return corrige.attendus.map(({ justification }) => justification);
+    case 'enigmes':
+      return corrige.enigmes.map(({ solution }) => solution);
+    case 'defi':
+      return corrige.strategies.filter(({ fausse }) => !fausse).map(({ libelle }) => libelle);
+    case 'tableau':
+      return [];
+  }
+}
+
+function suitesDeMots(texte: string): readonly string[] {
+  const mots =
+    texte
+      .normalize('NFKC')
+      .toLowerCase()
+      .match(/[\p{L}\p{N}]+/gu) ?? [];
+  return mots
+    .slice(MOTS_D_UNE_REPRISE - 1)
+    .map((_, rang) => mots.slice(rang, rang + MOTS_D_UNE_REPRISE).join(' '));
+}
+
+function redactionsDesReponses(
+  page: PageDuLivretEtudiant,
+  corrige: DerouleCours,
+): readonly string[] {
+  const deroule = corrige.ecrans.find((candidat) => candidat.id === page.ecran.id);
+  return deroule === undefined
+    ? []
+    : [
+        ...(deroule.explications ?? []).map(({ texte }) => texte),
+        ...deroule.corriges.map(({ bonneReponse }) => bonneReponse),
+        ...redactionsDuCorrige(deroule.corrigeEcran),
+      ];
+}
+
+function reprendUneReponse(
+  fiche: readonly PageDuLivretEtudiant[],
+  pageImprimee: readonly PageDuLivretEtudiant[],
+  corrige: DerouleCours,
+): boolean {
+  const suites = new Set(fiche.flatMap(textesImprimes).flatMap(suitesDeMots));
+  return pageImprimee
+    .flatMap((page) => redactionsDesReponses(page, corrige))
+    .flatMap(suitesDeMots)
+    .some((suite) => suites.has(suite));
 }
 
 function pageDuLivretEtudiant(ecran: EcranContent, corrige: DerouleCours): PageDuLivretEtudiant {
@@ -111,7 +212,7 @@ function pageDuLivretEtudiant(ecran: EcranContent, corrige: DerouleCours): PageD
 export function feuillesDuLivretEtudiant(
   sujet: CoursContent,
   corrige: DerouleCours,
-): readonly (readonly PageDuLivretEtudiant[])[] {
+): readonly FicheDuLivretEtudiant[] {
   const feuilles: PageDuLivretEtudiant[][] = [[]];
   for (const ecran of sujet.ecrans) {
     if (ecran.ecranSource !== undefined) {
@@ -123,7 +224,19 @@ export function feuillesDuLivretEtudiant(
       }
     }
   }
-  return feuilles.filter((feuille) => feuille.length > 0);
+  const fiches = feuilles.filter((feuille) => feuille.length > 0);
+  const livret: FicheDuLivretEtudiant[] = [];
+  let pageImprimee: readonly PageDuLivretEtudiant[] = [];
+  for (const [rang, pages] of fiches.entries()) {
+    const aLaSuite: boolean =
+      rang > 0 &&
+      ouvreUneNotion(pages, corrige) &&
+      !pageImprimee.some(estUnExempleGuide) &&
+      !reprendUneReponse(pages, pageImprimee, corrige);
+    pageImprimee = aLaSuite ? [...pageImprimee, ...pages] : pages;
+    livret.push({ pages, aLaSuite });
+  }
+  return livret;
 }
 
 function repeteLaSource(ecran: EcranDeroule, corrige: DerouleCours): boolean {

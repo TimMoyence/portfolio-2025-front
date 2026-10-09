@@ -14,10 +14,19 @@ const VUES = [
   { vue: 'corrige', pages: 'livret-corrige' },
 ] as const;
 
-function pagesTassees(flux: readonly (readonly number[])[], hauteurDePage: number): number {
-  return flux.reduce((total, hauteurs) => {
-    let pages = 1;
-    let remplie = 0;
+interface FicheMesuree {
+  readonly hauteurs: readonly number[];
+  readonly aLaSuite: boolean;
+}
+
+function pagesTassees(flux: readonly FicheMesuree[], hauteurDePage: number): number {
+  let pages = 0;
+  let remplie = 0;
+  for (const { hauteurs, aLaSuite } of flux) {
+    if (!aLaSuite || pages === 0) {
+      pages += 1;
+      remplie = 0;
+    }
     for (const hauteur of hauteurs) {
       const suite = remplie + hauteur;
       if (suite > hauteurDePage && remplie > 0) {
@@ -27,8 +36,8 @@ function pagesTassees(flux: readonly (readonly number[])[], hauteurDePage: numbe
         remplie = suite;
       }
     }
-    return total + pages;
-  }, 0);
+  }
+  return pages;
 }
 
 function pagesDuPdf(pdf: Buffer): number {
@@ -80,7 +89,7 @@ test.describe(`Banc — livret papier du ${CODE_DU_COURS} imprimé en A4`, () =>
     });
   }
 
-  test('tasse plusieurs écrans par page A4, chaque feuille repartant sur une page neuve', async ({
+  test('tasse plusieurs écrans par page A4, chaque fiche repartant sur une page neuve sauf celles imprimées à la suite', async ({
     page,
   }) => {
     const ecrans = await vueImprimee(page);
@@ -92,12 +101,15 @@ test.describe(`Banc — livret papier du ${CODE_DU_COURS} imprimé en A4`, () =>
           rang === 0 && entete !== null
             ? entete.getBoundingClientRect().top
             : feuille.getBoundingClientRect().top;
-        return [...feuille.children].map((enfant) => {
-          const { bottom } = enfant.getBoundingClientRect();
-          const hauteur = Math.ceil(bottom - bas);
-          bas = bottom;
-          return hauteur;
-        });
+        return {
+          aLaSuite: feuille.classList.contains('livret__feuille--a-la-suite'),
+          hauteurs: [...feuille.children].map((enfant) => {
+            const { bottom } = enfant.getBoundingClientRect();
+            const hauteur = Math.ceil(bottom - bas);
+            bas = bottom;
+            return hauteur;
+          }),
+        };
       }),
     );
     const pdf = await page.pdf({
@@ -107,7 +119,7 @@ test.describe(`Banc — livret papier du ${CODE_DU_COURS} imprimé en A4`, () =>
     });
 
     expect(pagesTassees(flux, hauteurDePage)).toBeLessThan(await ecrans.count());
-    expect(pagesDuPdf(pdf)).toBeGreaterThanOrEqual(flux.length);
+    expect(pagesDuPdf(pdf)).toBeGreaterThanOrEqual(flux.filter(({ aLaSuite }) => !aLaSuite).length);
     expect(pagesDuPdf(pdf)).toBeLessThanOrEqual(pagesTassees(flux, hauteurDePage));
   });
 

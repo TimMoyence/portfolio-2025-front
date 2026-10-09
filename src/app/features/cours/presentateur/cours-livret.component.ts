@@ -41,8 +41,9 @@ type VueDuLivret = 'sujet' | 'corrige';
               </p>
             } @else {
               <p class="livret__annonce" data-testid="livret-annonce" i18n="@@livretAnnonceFiches">
-                {{ feuillesEtudiant().length }} fiches · chacune commence sur une nouvelle page, les
-                plus longues en occupent plusieurs
+                {{ feuillesEtudiant().length }} fiches · chacune commence sur une nouvelle page,
+                sauf la question qui ouvre une notion quand sa page ne porte aucun exemple guidé et
+                qu’elle n’en reprend aucune réponse ; les plus longues en occupent plusieurs
               </p>
             }
           }
@@ -85,16 +86,26 @@ type VueDuLivret = 'sujet' | 'corrige';
         </header>
         @if (vue() === 'sujet') {
           @for (feuille of feuillesEtudiant(); track $index; let rang = $index) {
-            <div class="livret__feuille" data-testid="livret-feuille">
-              <p class="livret__kicker" data-testid="livret-feuille-entete" i18n="@@livretFiche">
-                Fiche {{ rang + 1 }} / {{ feuillesEtudiant().length }}
-              </p>
-              @for (page of feuille; track page.ecran.id) {
+            <div
+              class="livret__feuille"
+              [class.livret__feuille--a-la-suite]="feuille.aLaSuite"
+              data-testid="livret-feuille"
+            >
+              @for (page of feuille.pages; track page.ecran.id; let premiere = $first) {
                 <section
                   class="livret__page"
                   data-testid="livret-ecran"
                   [attr.data-ecran]="page.ecran.id"
                 >
+                  @if (premiere) {
+                    <p
+                      class="livret__kicker"
+                      data-testid="livret-feuille-entete"
+                      i18n="@@livretFiche"
+                    >
+                      Fiche {{ rang + 1 }} / {{ feuillesEtudiant().length }}
+                    </p>
+                  }
                   @if (page.titre; as titre) {
                     <h2 class="livret__titre" data-testid="livret-titre-ecran">{{ titre }}</h2>
                   }
