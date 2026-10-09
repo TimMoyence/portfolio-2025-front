@@ -305,7 +305,7 @@ function sansReponse(jeu: EcranDeroule): EcranDeroule {
   return { ...jeu, corriges: [], explications: [], corrigeEcran: null };
 }
 
-const REPONSES_REDIGEES: readonly (readonly [string, Partial<EcranDeroule>])[] = [
+const SOURCES_DE_REPONSE: readonly (readonly [string, Partial<EcranDeroule>])[] = [
   [
     'une bonne réponse',
     { corriges: [{ questionId: 'jeu-comparable', bonneReponse: REPRISE, confusions: [] }] },
@@ -515,7 +515,7 @@ describe('livret papier des cours servis', () => {
     ).toBeTrue();
   });
 
-  for (const [source, reponse] of REPONSES_REDIGEES) {
+  for (const [source, reponse] of SOURCES_DE_REPONSE) {
     it(`renvoie sur une page neuve la question qui reprend ${source} de sa page`, () => {
       expect(
         voteDuB2_01ALaSuite(avecLEnonce('même périmètre, même unité'), (jeu) => ({
