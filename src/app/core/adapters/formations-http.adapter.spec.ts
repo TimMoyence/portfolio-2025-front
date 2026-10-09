@@ -41,6 +41,7 @@ import type {
 } from '../ports/formations.port';
 import {
   FORMATIONS_PORT,
+  PieceJointeRefusee,
   RattachementRefuse,
   ReponseLibreRefusee,
   ReponseRefusee,
@@ -231,6 +232,51 @@ describe('FormationsHttpAdapter', () => {
 
       expect(erreurs).toEqual([jasmine.any(Error)]);
     });
+
+    const refusAuPoste = (
+      repondre: (requete: TestRequest) => void,
+    ): Promise<PieceJointeRefusee> => {
+      const refus = new Promise<PieceJointeRefusee>((rendre, echouer) => {
+        adapter.telechargerPieceJointe(SESSION_ID, JETON, ECRAN_ID).subscribe({
+          error: (erreur: unknown) =>
+            erreur instanceof PieceJointeRefusee ? rendre(erreur) : echouer(erreur),
+        });
+      });
+      repondre(attendre(`${URL_SEANCE}/pieces-jointes/${ECRAN_ID}`, 'GET'));
+      return refus;
+    };
+
+    const probleme = (corps: ProblemeHttp) => (requete: TestRequest) => {
+      requete.flush(new Blob([JSON.stringify(corps)], { type: 'application/problem+json' }), {
+        status: corps.status,
+        statusText: corps.title,
+      });
+    };
+
+    for (const { cas, repondre, motif, statut } of [
+      {
+        cas: 'la reprise retenue tant que ses activités ne sont pas corrigées',
+        repondre: probleme(buildProblemeHttp({ code: 'PIECE_JOINTE_RETENUE' })),
+        motif: 'retenue',
+        statut: 409,
+      },
+      {
+        cas: 'un écran pas encore servi comme une pièce indisponible',
+        repondre: probleme(buildProblemeHttp({ status: 404, code: 'ECRAN_NON_SERVI' })),
+        motif: 'indisponible',
+        statut: 404,
+      },
+      {
+        cas: 'une coupure du réseau comme une pièce indisponible',
+        repondre: (requete: TestRequest) => requete.error(new ProgressEvent('error')),
+        motif: 'indisponible',
+        statut: 0,
+      },
+    ]) {
+      it(`signale au poste ${cas}`, async () => {
+        attendreLeRefus(await refusAuPoste(repondre), motif, statut);
+      });
+    }
   });
 
   function sujetDontLePremierEcranPorte(fil: (premier: EcranContent) => Record<string, unknown>) {

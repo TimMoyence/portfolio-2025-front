@@ -20,6 +20,7 @@ import type { Observable } from 'rxjs';
 import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import type { FichierTelecharge, SyntheseConcept } from '../../../core/ports/formations.port';
+import { PieceJointeRefusee } from '../../../core/ports/formations.port';
 import { telechargerFichier } from '../../utils/telechargement.utils';
 import type { DirectEcran, EvenementBrique, RetourBrique } from './contrat-hote';
 import { extraireDuRenvoi } from './extrait-du-renvoi';
@@ -30,7 +31,7 @@ export type CoursPresentationMode = 'etudiant' | 'formateur' | 'projection';
 
 export type TelechargementDePieceJointe = (ecranId: string) => Observable<FichierTelecharge>;
 
-type EtatDuTelechargement = 'pret' | 'en-cours' | 'echec';
+type EtatDuTelechargement = 'pret' | 'en-cours' | 'echec' | 'retenue';
 
 interface PieceJointeAffichee {
   readonly libelle: string;
@@ -168,6 +169,17 @@ function aUnDefileurRogne(contenu: HTMLElement): boolean {
                             }
                           </p>
                         }
+                        @if (etatDuTelechargement() === 'retenue') {
+                          <p
+                            class="cours-piece-jointe-retenue"
+                            role="status"
+                            data-testid="cours-piece-jointe-retenue"
+                            i18n="@@coursPieceJointeRetenue"
+                          >
+                            Classeur pas encore disponible : il s’ouvrira quand votre formateur aura
+                            révélé les activités qu’il reprend.
+                          </p>
+                        }
                       }
                     }
                   </app-slide>
@@ -298,11 +310,15 @@ function aUnDefileurRogne(contenu: HTMLElement): boolean {
       opacity: 0.6;
     }
 
-    .cours-piece-jointe-echec {
+    .cours-piece-jointe-echec,
+    .cours-piece-jointe-retenue {
       margin: 0.5rem 0 0;
-      color: var(--fp-erreur, #9b2c1f);
       font-size: 0.95rem;
       line-height: 1.3;
+    }
+
+    .cours-piece-jointe-echec {
+      color: var(--fp-erreur, #9b2c1f);
     }
 
     .cours-piece-jointe--lien {
@@ -530,7 +546,10 @@ export class CoursPresentationComponent {
         telechargerFichier(this.document, contenu, nom, contenu.type);
         signaler('pret');
       },
-      error: () => signaler('echec'),
+      error: (erreur: unknown) =>
+        signaler(
+          erreur instanceof PieceJointeRefusee && erreur.motif === 'retenue' ? 'retenue' : 'echec',
+        ),
     });
   }
 

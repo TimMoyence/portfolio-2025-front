@@ -22,6 +22,7 @@ import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { DirectEcran } from './contrat-hote';
 import { of, Subject, throwError } from 'rxjs';
 import type { FichierTelecharge } from '../../../core/ports/formations.port';
+import { PieceJointeRefusee } from '../../../core/ports/formations.port';
 import { buildFichierTelecharge } from '../../../../testing/factories/formations.factory';
 import {
   CoursPresentationComponent,
@@ -1288,6 +1289,32 @@ describe('CoursPresentationComponent : pièce jointe d un écran', () => {
         monte.detruire();
       });
     }
+
+    it('V5 · au poste, annonce une reprise retenue jusqu à la correction de ses activités, sans échec', async () => {
+      const telechargement = jasmine
+        .createSpy<TelechargementDePieceJointe>('telechargement')
+        .and.returnValue(throwError(() => new PieceJointeRefusee('retenue', 409)));
+      const monte = await monterLaPieceReservee('etudiant', telechargement);
+      const bouton = pieceJointeAffichee(monte) as HTMLButtonElement;
+
+      bouton.click();
+      await monte.rafraichir();
+      const annonce = monte.hote.querySelector('[data-testid="cours-piece-jointe-retenue"]');
+
+      expect({
+        annonce: texteDe(annonce),
+        role: annonce?.getAttribute('role'),
+        echec: alerteDEchec(monte),
+        desactive: bouton.disabled,
+      }).toEqual({
+        annonce:
+          'Classeur pas encore disponible : il s’ouvrira quand votre formateur aura révélé les activités qu’il reprend.',
+        role: 'status',
+        echec: null,
+        desactive: false,
+      });
+      monte.detruire();
+    });
 
     const cliquerAuPoste = async (
       enRoute: Subject<FichierTelecharge>,

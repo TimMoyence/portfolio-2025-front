@@ -334,6 +334,18 @@ export interface FichierTelecharge {
   readonly contenu: Blob;
 }
 
+export type MotifRefusPieceJointe = 'retenue' | 'indisponible';
+
+export class PieceJointeRefusee extends Error {
+  constructor(
+    readonly motif: MotifRefusPieceJointe,
+    readonly statut: number,
+  ) {
+    super(`Pièce jointe refusée : ${motif} (statut ${statut})`);
+    this.name = 'PieceJointeRefusee';
+  }
+}
+
 export interface FormationsPort {
   ouvrirSeance(courseSlug: string, options?: { capacite?: number }): Observable<SeanceOuverte>;
   lireDeroule(sessionId: string): Observable<DerouleCours>;

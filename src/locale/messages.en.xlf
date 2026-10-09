@@ -10254,6 +10254,15 @@
         <target> Download failed: try again. </target>
       </segment>
     </unit>
+    <unit id="coursPieceJointeRetenue">
+      <notes>
+        <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:179,180</note>
+      </notes>
+      <segment>
+        <source> Classeur pas encore disponible : il s’ouvrira quand votre formateur aura révélé les activités qu’il reprend. </source>
+        <target> Workbook not available yet: it will open once your instructor has revealed the activities it builds on. </target>
+      </segment>
+    </unit>
     <unit id="coursPieceJointeEchec">
       <notes>
         <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:165,166</note>
