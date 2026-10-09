@@ -1,25 +1,10 @@
 import type { CorrigeEcranPresentateur, EcranDeroule } from '../../../../cours/content/types';
 import type { ValeurFormule } from '../../../../cours/runtime/core/formula';
 import { type Recolte, recolterDansLArbre } from '../../../../testing/arbre-json';
-import { INSTANTANE_B2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
-import { INSTANTANE_B2_03 } from '../../../../testing/fixtures/instantane-b2-03';
-import { INSTANTANE_B2_04 } from '../../../../testing/fixtures/instantane-b2-04';
-import { INSTANTANE_B2_05 } from '../../../../testing/fixtures/instantane-b2-05';
-import { INSTANTANE_B2_06 } from '../../../../testing/fixtures/instantane-b2-06';
-import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantane-b3-01';
 import type { InstantaneDuCoursB2 } from '../../../../testing/fixtures/instantane-de-cours';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import { type FicheDuLivretEtudiant, feuillesDuLivretEtudiant } from './livret-papier';
-
-const COURS_SERVIS: readonly (readonly [string, InstantaneDuCoursB2])[] = [
-  ['B2-01', INSTANTANE_B2_01],
-  ['B2-02', INSTANTANE_B2_02],
-  ['B2-03', INSTANTANE_B2_03],
-  ['B2-04', INSTANTANE_B2_04],
-  ['B2-05', INSTANTANE_B2_05],
-  ['B2-06', INSTANTANE_B2_06],
-  ['B3-01', INSTANTANE_B3_01],
-];
 
 const CITATIONS_ADMISES: Readonly<Partial<Record<string, Readonly<Record<string, string>>>>> = {
   'B2-03': {
@@ -111,7 +96,7 @@ function citationsDesFichesALaSuite(instantane: InstantaneDuCoursB2): readonly s
 }
 
 describe('livret papier des cours servis', () => {
-  for (const [cours, instantane] of COURS_SERVIS) {
+  for (const [cours, instantane] of INSTANTANES_DES_COURS_SERVIS) {
     it(`${cours} · imprime au moins une fiche à la suite de la précédente`, () => {
       const fiches = feuillesDuLivretEtudiant(instantane.sujet, instantane.deroule);
 
