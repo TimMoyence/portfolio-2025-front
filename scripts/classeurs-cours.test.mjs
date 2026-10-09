@@ -30,11 +30,6 @@ const manifesteDe = (cours) =>
 const instantaneDe = (cours) =>
   JSON.parse(lireTexte(join(DOSSIER_DES_FIXTURES, `${cours}.instantane.json`)));
 
-const fichiersSous = (dossier) =>
-  readdirSync(dossier, { recursive: true, withFileTypes: true })
-    .filter((entree) => entree.isFile())
-    .map((entree) => entree.name);
-
 const ecransAPieceJointe = (cours) =>
   instantaneDe(cours).deroule.ecrans.filter((ecran) => ecran.pieceJointe !== undefined);
 
@@ -52,15 +47,15 @@ const racinesDesAssetsPublies = () => {
   ];
 };
 
-const empreintesDesAssets = () =>
+const fichiersPublies = () =>
   racinesDesAssetsPublies()
     .filter((racine) => existsSync(racine))
     .flatMap((racine) => readdirSync(racine, { recursive: true, withFileTypes: true }))
     .filter((entree) => entree.isFile())
-    .map((entree) => {
-      const chemin = join(entree.parentPath, entree.name);
-      return { chemin, empreinte: empreinteDe(chemin) };
-    });
+    .map((entree) => ({ chemin: join(entree.parentPath, entree.name) }));
+
+const empreintesDesAssets = () =>
+  fichiersPublies().map(({ chemin }) => ({ chemin, empreinte: empreinteDe(chemin) }));
 
 const servisDe = (cours) => readdirSync(join(DOSSIER_DES_COURS, cours));
 
@@ -82,9 +77,9 @@ test('fouille chaque dossier qu angular.json publie, src/assets et public compri
 
 test('ne sert aucun manifeste de classeurs, qui nommerait les reprises réservées à la séance', () => {
   assert.deepEqual(
-    fichiersSous(DOSSIER_DES_COURS).filter((fichier) =>
-      fichier.endsWith('classeurs.manifest.json'),
-    ),
+    fichiersPublies()
+      .filter(({ chemin }) => chemin.endsWith('classeurs.manifest.json'))
+      .map(({ chemin }) => chemin),
     [],
   );
 });
