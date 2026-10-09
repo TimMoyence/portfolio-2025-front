@@ -1991,7 +1991,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="livretAnnonceFiches" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ feuillesEtudiant().length }}"/> fiches · chacune commence sur une nouvelle page, sauf l’exercice qui suit un exemple guidé et la question qui ouvre une notion ; les plus longues en occupent plusieurs </source>
+        <source> <x id="INTERPOLATION" equiv-text="{{ feuillesEtudiant().length }}"/> fiches · chacune commence sur une nouvelle page, sauf la question qui ouvre une notion, et la fiche qui suit un exemple guidé quand rien n’est encore à corriger sur sa page ; les plus longues en occupent plusieurs </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-livret.component.ts</context>
           <context context-type="linenumber">44,46</context>

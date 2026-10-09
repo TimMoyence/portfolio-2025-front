@@ -105,10 +105,11 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
   six cours, et écarté pour cette raison.
 - Une fiche commence sur une nouvelle page, sauf dans deux cas où partager la page ne dévoile
   aucune réponse :
-  - elle suit une fiche close par un exemple guidé, corrigé sur place : la fiche précédente n'a
-    plus rien à cacher ;
+  - elle suit une fiche close par un exemple guidé, corrigé sur place, et rien n'est encore à
+    corriger sur sa page : aucun écran de la page n'a de corrigé, de bonne réponse ni
+    d'explication, et la fiche précédente n'a plus rien à cacher ;
   - elle se réduit à un écran dont le corrigé est donné à la suite (`reflexion`,
-    `revelation`) : la question qui ouvre une notion ne répond pas à la fiche qui la précède.
+    `revelation`) : la question qui ouvre une notion ne répond pas aux fiches qui la précèdent.
 
   Un exercice qui suit un exercice, et le cours qui suit une question, gardent leur nouvelle
   page : au B2-02, l'Exercice 3 rappelle les résultats de l'Exercice 2 (« a = 3,8 et
@@ -142,8 +143,12 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
 - Imprimer à la suite les fiches qui le peuvent fait passer les six sujets de 141 à 122 pages
   au harnais WebKit (B2-02 : 23 à 19), sans changer les corrigés.
 - `cours-livret.component.spec.ts` fixe les fiches imprimées à la suite du B2-02 et vérifie
-  qu'aucune fiche qui dévoilerait une réponse ne l'est ; `e2e/cours-livret-impression.spec.ts`
-  vérifie que seules les autres fiches reçoivent un saut de page.
+  qu'aucune fiche qui dévoilerait une réponse ne l'est, ni celle qui suit un exemple guidé sur
+  une page portant déjà une réponse ; `livret-papier.spec.ts` vérifie, sur chaque cours servi,
+  qu'aucune fiche imprimée à la suite ne cite une réponse d'une fiche de sa page (bonne réponse,
+  corrigé, formule, arrondi, pourcentage, explication), seuls des extraits exacts et justifiés
+  étant admis ; `e2e/cours-livret-impression.spec.ts` vérifie que seules les autres fiches
+  reçoivent un saut de page.
 - `e2e/banc/livret-impression.spec.ts` vérifie qu'aucun écran ne dépasse une page A4, que les
   écrans se tassent à plusieurs par page, le PDF ne comptant pas plus de pages qu'un tassement
   où chaque fiche imprimée à la suite continue la page de la précédente.

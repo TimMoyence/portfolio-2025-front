@@ -5,18 +5,13 @@ import { attendreQue, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-mo
 import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
-  INSTANTANE_B2_01,
 } from '../../../../testing/fixtures/instantane-b2-01';
-import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
-import { INSTANTANE_B2_03 } from '../../../../testing/fixtures/instantane-b2-03';
 import { INSTANTANE_B2_04 } from '../../../../testing/fixtures/instantane-b2-04';
-import { INSTANTANE_B2_05 } from '../../../../testing/fixtures/instantane-b2-05';
-import { INSTANTANE_B2_06 } from '../../../../testing/fixtures/instantane-b2-06';
-import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantane-b3-01';
 import {
   ecransDuPupitreDe,
   ecransPublicsDe,
 } from '../../../../testing/fixtures/instantane-de-cours';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import { chargerLesPolicesDeLApplication } from '../../../../testing/polices';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { DirectEcran } from './contrat-hote';
@@ -32,19 +27,29 @@ import {
 
 const POSTES = ['cours-etudiant', 'cours-presentateur'] as const;
 
-const COURS_A_RENVOIS = [
-  { code: 'B2-01', instantane: INSTANTANE_B2_01, ecransAuMoins: 50, renvoisAuMoins: 5 },
-  { code: 'B2-02', instantane: INSTANTANE_B2_02, ecransAuMoins: 30, renvoisAuMoins: 3 },
-  { code: 'B2-03', instantane: INSTANTANE_B2_03, ecransAuMoins: 30, renvoisAuMoins: 4 },
-  { code: 'B2-04', instantane: INSTANTANE_B2_04, ecransAuMoins: 30, renvoisAuMoins: 4 },
-  { code: 'B2-05', instantane: INSTANTANE_B2_05, ecransAuMoins: 30, renvoisAuMoins: 4 },
-  { code: 'B2-06', instantane: INSTANTANE_B2_06, ecransAuMoins: 30, renvoisAuMoins: 4 },
-] as const;
+const SEUILS_DES_COURS: Readonly<
+  Partial<Record<string, { readonly ecransAuMoins: number; readonly renvoisAuMoins?: number }>>
+> = {
+  'B2-01': { ecransAuMoins: 50, renvoisAuMoins: 5 },
+  'B2-02': { ecransAuMoins: 30, renvoisAuMoins: 3 },
+  'B2-03': { ecransAuMoins: 30, renvoisAuMoins: 4 },
+  'B2-04': { ecransAuMoins: 30, renvoisAuMoins: 4 },
+  'B2-05': { ecransAuMoins: 30, renvoisAuMoins: 4 },
+  'B2-06': { ecransAuMoins: 30, renvoisAuMoins: 4 },
+  'B3-01': { ecransAuMoins: 38 },
+};
 
-const COURS_MESURES = [
-  ...COURS_A_RENVOIS,
-  { code: 'B3-01', instantane: INSTANTANE_B3_01, ecransAuMoins: 38 },
-] as const;
+const COURS_MESURES = INSTANTANES_DES_COURS_SERVIS.map(([code, instantane]) => {
+  const seuils = SEUILS_DES_COURS[code];
+  if (seuils === undefined) {
+    throw new Error(`Seuils de tenue absents pour le cours servi ${code}`);
+  }
+  return { code, instantane, ...seuils };
+});
+
+const COURS_A_RENVOIS = COURS_MESURES.flatMap(({ renvoisAuMoins, ...cours }) =>
+  renvoisAuMoins === undefined ? [] : [{ ...cours, renvoisAuMoins }],
+);
 
 @Component({
   standalone: true,

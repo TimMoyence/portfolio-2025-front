@@ -119,6 +119,16 @@ function ouvreUneNotion(fiche: readonly PageDuLivretEtudiant[], corrige: Deroule
   );
 }
 
+function porteUneReponse({ ecran }: PageDuLivretEtudiant, corrige: DerouleCours): boolean {
+  const deroule = corrige.ecrans.find((candidat) => candidat.id === ecran.id);
+  return (
+    deroule !== undefined &&
+    (deroule.corriges.length > 0 ||
+      deroule.corrigeEcran !== null ||
+      (deroule.explications?.length ?? 0) > 0)
+  );
+}
+
 function pageDuLivretEtudiant(ecran: EcranContent, corrige: DerouleCours): PageDuLivretEtudiant {
   return {
     ecran: avecSaBanqueDeQuestions(ecran, corrige),
@@ -142,11 +152,18 @@ export function feuillesDuLivretEtudiant(
     }
   }
   const fiches = feuilles.filter((feuille) => feuille.length > 0);
-  return fiches.map((pages, rang) => ({
-    pages,
-    aLaSuite:
-      rang > 0 && (seClotSurUnCorrigeSurPlace(fiches[rang - 1]) || ouvreUneNotion(pages, corrige)),
-  }));
+  const livret: FicheDuLivretEtudiant[] = [];
+  let pageACorriger = false;
+  for (const [rang, pages] of fiches.entries()) {
+    const aLaSuite: boolean =
+      rang > 0 &&
+      (ouvreUneNotion(pages, corrige) ||
+        (!pageACorriger && seClotSurUnCorrigeSurPlace(fiches[rang - 1])));
+    pageACorriger =
+      (aLaSuite && pageACorriger) || pages.some((page) => porteUneReponse(page, corrige));
+    livret.push({ pages, aLaSuite });
+  }
+  return livret;
 }
 
 function repeteLaSource(ecran: EcranDeroule, corrige: DerouleCours): boolean {
