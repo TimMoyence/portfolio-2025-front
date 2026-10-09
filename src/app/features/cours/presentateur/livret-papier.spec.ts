@@ -299,6 +299,83 @@ function avecLEnonce(ajout: string): (ecran: EcranContent) => EcranContent {
   };
 }
 
+const REPRISE = 'même mois, même périmètre, même unité';
+
+function sansReponse(jeu: EcranDeroule): EcranDeroule {
+  return { ...jeu, corriges: [], explications: [], corrigeEcran: null };
+}
+
+const REPONSES_REDIGEES: readonly (readonly [string, Partial<EcranDeroule>])[] = [
+  [
+    'une bonne réponse',
+    { corriges: [{ questionId: 'jeu-comparable', bonneReponse: REPRISE, confusions: [] }] },
+  ],
+  ['une explication', { explications: [{ reference: 'jeu-comparable', texte: REPRISE }] }],
+  [
+    'l attendu d une réflexion',
+    { corrigeEcran: { type: 'reflexion', attendu: REPRISE, suite: '' } },
+  ],
+  [
+    'la suite d une réflexion',
+    { corrigeEcran: { type: 'reflexion', attendu: '', suite: REPRISE } },
+  ],
+  [
+    'le titre d une révélation',
+    { corrigeEcran: { type: 'revelation', titre: REPRISE, lignes: [] } },
+  ],
+  [
+    'une ligne de révélation',
+    { corrigeEcran: { type: 'revelation', titre: '', lignes: [REPRISE] } },
+  ],
+  [
+    'une formule de référence',
+    {
+      corrigeEcran: {
+        type: 'feuille',
+        attendus: [
+          {
+            reference: 'A1',
+            formuleReference: REPRISE,
+            valeur: 0,
+            tolerance: { type: 'absolue', valeur: 0 },
+            forme: 'references',
+          },
+        ],
+        seuilReussite: 1,
+      },
+    },
+  ],
+  [
+    'une justification de classement',
+    {
+      corrigeEcran: {
+        type: 'classement',
+        attendus: [{ carteId: 'carte', categorieId: 'categorie', justification: REPRISE }],
+        seuilReussite: 1,
+      },
+    },
+  ],
+  [
+    'une solution d énigme',
+    {
+      corrigeEcran: {
+        type: 'enigmes',
+        enigmes: [{ enigmeId: 'enigme', solution: REPRISE, fragment: 'AB' }],
+        codeFinal: 'AB',
+      },
+    },
+  ],
+  [
+    'une stratégie juste',
+    {
+      corrigeEcran: {
+        type: 'defi',
+        strategies: [{ id: 'strategie', libelle: REPRISE, fausse: false }],
+      },
+    },
+  ],
+];
+
 describe('livret papier des cours servis', () => {
   for (const [cours, instantane] of INSTANTANES_DES_COURS_SERVIS) {
     const fiches = feuillesDuLivretEtudiant(instantane.sujet, instantane.deroule);
@@ -420,12 +497,7 @@ describe('livret papier des cours servis', () => {
   });
 
   it('ne compte comme reprise ni le titre que le livret n imprime pas, ni une confusion du corrigé', () => {
-    expect(
-      voteDuB2_01ALaSuite((ecran) => ({
-        ...ecran,
-        titre: 'même mois, même périmètre, même unité',
-      })),
-    ).toBeTrue();
+    expect(voteDuB2_01ALaSuite((ecran) => ({ ...ecran, titre: REPRISE }))).toBeTrue();
     expect(
       voteDuB2_01ALaSuite(
         (ecran) => ecran,
@@ -441,6 +513,36 @@ describe('livret papier des cours servis', () => {
         }),
       ),
     ).toBeTrue();
+  });
+
+  for (const [source, reponse] of REPONSES_REDIGEES) {
+    it(`renvoie sur une page neuve la question qui reprend ${source} de sa page`, () => {
+      expect(
+        voteDuB2_01ALaSuite(avecLEnonce('même périmètre, même unité'), (jeu) => ({
+          ...sansReponse(jeu),
+          ...reponse,
+        })),
+      ).toBeFalse();
+    });
+  }
+
+  it('garde à la suite la question qui ne reprend qu une stratégie fausse', () => {
+    expect(voteDuB2_01ALaSuite(avecLEnonce('même périmètre, même unité'), sansReponse)).toBeTrue();
+    expect(
+      voteDuB2_01ALaSuite(avecLEnonce('même périmètre, même unité'), (jeu) => ({
+        ...sansReponse(jeu),
+        corrigeEcran: {
+          type: 'defi',
+          strategies: [{ id: 'strategie', libelle: REPRISE, fausse: true }],
+        },
+      })),
+    ).toBeTrue();
+  });
+
+  it('lit le titre que le livret imprime sur un écran sans intitulé', () => {
+    expect(
+      voteDuB2_01ALaSuite((ecran) => ({ ...ecran, type: 'fp-challenge', titre: REPRISE })),
+    ).toBeFalse();
   });
 
   it('repère un nombre à calculer que la fiche à la suite imprime sans ses décimales', () => {
