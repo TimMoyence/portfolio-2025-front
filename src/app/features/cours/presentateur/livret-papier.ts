@@ -1,4 +1,5 @@
 import type {
+  CorrigeEcranPresentateur,
   CoursContent,
   DerouleCours,
   EcranContent,
@@ -19,7 +20,7 @@ const CORRIGES_SUR_PLACE: ReadonlySet<string> = new Set(['fp-worked']);
 
 const ECRANS_SANS_INTITULE: ReadonlySet<string> = new Set(['fp-table-build', 'fp-challenge']);
 
-const CHAMPS_SANS_TEXTE: ReadonlySet<string> = new Set(['id', 'type']);
+const CHAMPS_NON_IMPRIMES: ReadonlySet<string> = new Set(['id', 'type', 'screenId', 'metadonnees']);
 
 const MOTS_D_UNE_REPRISE = 4;
 
@@ -124,8 +125,11 @@ function estUnExempleGuide({ ecran }: PageDuLivretEtudiant): boolean {
 }
 
 function textesDe(valeur: unknown, champ = ''): readonly string[] {
+  if (CHAMPS_NON_IMPRIMES.has(champ)) {
+    return [];
+  }
   if (typeof valeur === 'string') {
-    return CHAMPS_SANS_TEXTE.has(champ) ? [] : [valeur];
+    return [valeur];
   }
   if (Array.isArray(valeur)) {
     return valeur.flatMap((element: unknown) => textesDe(element, champ));
@@ -133,6 +137,32 @@ function textesDe(valeur: unknown, champ = ''): readonly string[] {
   return typeof valeur === 'object' && valeur !== null
     ? Object.entries(valeur).flatMap(([cle, contenu]) => textesDe(contenu, cle))
     : [];
+}
+
+function textesImprimes({ ecran, titre }: PageDuLivretEtudiant): readonly string[] {
+  return [...(titre === null ? [] : [titre]), ...textesDe(ecran.donnees)];
+}
+
+function redactionsDuCorrige(corrige: CorrigeEcranPresentateur | null): readonly string[] {
+  if (corrige === null) {
+    return [];
+  }
+  switch (corrige.type) {
+    case 'reflexion':
+      return [corrige.attendu, corrige.suite];
+    case 'revelation':
+      return [corrige.titre, ...corrige.lignes];
+    case 'feuille':
+      return corrige.attendus.map(({ formuleReference }) => formuleReference);
+    case 'classement':
+      return corrige.attendus.map(({ justification }) => justification);
+    case 'enigmes':
+      return corrige.enigmes.map(({ solution }) => solution);
+    case 'defi':
+      return corrige.strategies.filter(({ fausse }) => !fausse).map(({ libelle }) => libelle);
+    case 'tableau':
+      return [];
+  }
 }
 
 function suitesDeMots(texte: string): readonly string[] {
@@ -153,7 +183,11 @@ function redactionsDesReponses(
   const deroule = corrige.ecrans.find((candidat) => candidat.id === page.ecran.id);
   return deroule === undefined
     ? []
-    : textesDe([deroule.corriges, deroule.explications ?? [], deroule.corrigeEcran]);
+    : [
+        ...(deroule.explications ?? []).map(({ texte }) => texte),
+        ...deroule.corriges.map(({ bonneReponse }) => bonneReponse),
+        ...redactionsDuCorrige(deroule.corrigeEcran),
+      ];
 }
 
 function reprendUneReponse(
@@ -161,7 +195,7 @@ function reprendUneReponse(
   pageImprimee: readonly PageDuLivretEtudiant[],
   corrige: DerouleCours,
 ): boolean {
-  const suites = new Set(textesDe(fiche.map(({ ecran }) => ecran)).flatMap(suitesDeMots));
+  const suites = new Set(fiche.flatMap(textesImprimes).flatMap(suitesDeMots));
   return pageImprimee
     .flatMap((page) => redactionsDesReponses(page, corrige))
     .flatMap(suitesDeMots)

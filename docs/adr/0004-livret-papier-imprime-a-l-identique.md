@@ -110,8 +110,9 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
     le livret en masque toutes les étapes, l'étayage n'étant posé que par le pilotage de la
     séance (`reinjection.ts`). Au B2-01, le vote du paradoxe (A5-02) annonce « le taux global
     passe de 27,6 % à 25,3 % », les deux résultats que l'exemple A5-03 fait calculer ;
-  - elle ne reprend aucune suite de quatre mots d'une réponse rédigée de sa page : bonne
-    réponse, explication ou corrigé. Au B2-03, le vote A3-01 propose « une seule facture hors
+  - elle n'imprime aucune suite de quatre mots d'une réponse rédigée de sa page : bonne
+    réponse, explication ou champ de réponse du corrigé, les confusions n'étant pas des
+    réponses. Au B2-03, le vote A3-01 propose « une seule facture hors
     de France sans numéro de TVA », la traduction que l'explication de l'Exercice 5 donne de
     `ET(B2<>"France";C2="Non")` (« hors de France ∧ sans numéro »). Une reprise de moins de
     quatre mots n'est pas détectée ; une reprise de quatre mots ou plus, même fortuite, ne

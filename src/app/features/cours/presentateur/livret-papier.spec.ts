@@ -140,12 +140,16 @@ function sortDuChiffreSeul(nombre: string): boolean {
   return nombre.includes(',') || nombre.replaceAll(' ', '').length > 1;
 }
 
+function nombresEcrits(texte: string): readonly string[] {
+  return Array.from(normaliser(texte).matchAll(NOMBRE), ([nombre]) => nombre);
+}
+
 function nombresDe(texte: string): ReadonlySet<string> {
-  return new Set(
-    Array.from(normaliser(texte).matchAll(NOMBRE), ([nombre]) => nombre)
-      .filter(sortDuChiffreSeul)
-      .map(sansZeroFinal),
-  );
+  return new Set(nombresEcrits(texte).filter(sortDuChiffreSeul).map(sansZeroFinal));
+}
+
+function tousLesNombresDe(texte: string): ReadonlySet<string> {
+  return new Set(nombresEcrits(texte).map(sansZeroFinal));
 }
 
 function reponsesRedigees(ecran: EcranDeroule | undefined): readonly string[] {
@@ -207,7 +211,7 @@ function citationsDesFichesALaSuite(
       return [];
     }
     const texte = texteAVerifier(fiche);
-    const nombresImprimes = nombresDe(texte);
+    const nombresImprimes = tousLesNombresDe(texte);
     return fichesAvantElleSurSaPage(fiches, rang).flatMap(({ pages }) =>
       pages.flatMap(({ ecran }) => {
         const deroule = corrige.get(ecran.id);
@@ -258,6 +262,41 @@ function exempleEtSonVoteSurUneMemePage(etayage?: number): readonly FicheDuLivre
     },
     { ...fiche('B2-01-A5-02-VOTE-PARADOXE'), aLaSuite: true },
   ];
+}
+
+const VOTE_DU_B2_01 = 'B2-01-A3-01-VOTE-HAUSSE-BAISSE';
+
+const JEU_DU_B2_01 = 'B2-01-A2-07-JEU-COMPARABLE';
+
+function voteDuB2_01ALaSuite(
+  vote: (ecran: EcranContent) => EcranContent,
+  jeu: (ecran: EcranDeroule) => EcranDeroule = (ecran) => ecran,
+): boolean {
+  const { sujet, deroule } = INSTANTANE_B2_01;
+  const fiches = feuillesDuLivretEtudiant(
+    {
+      ...sujet,
+      ecrans: sujet.ecrans.map((ecran) => (ecran.id === VOTE_DU_B2_01 ? vote(ecran) : ecran)),
+    },
+    {
+      ...deroule,
+      ecrans: deroule.ecrans.map((ecran) => (ecran.id === JEU_DU_B2_01 ? jeu(ecran) : ecran)),
+    },
+  );
+  return ficheDe(fiches)(VOTE_DU_B2_01).aLaSuite;
+}
+
+function avecLEnonce(ajout: string): (ecran: EcranContent) => EcranContent {
+  return (ecran) => {
+    const question = objet(ecran.donnees?.['question']);
+    return {
+      ...ecran,
+      donnees: {
+        ...ecran.donnees,
+        question: { ...question, enonce: `${String(question?.['enonce'])} ${ajout}` },
+      },
+    };
+  };
 }
 
 describe('livret papier des cours servis', () => {
@@ -375,17 +414,54 @@ describe('livret papier des cours servis', () => {
     expect(fiche('B2-03-A2-01-CONTRAIRE').aLaSuite).toBeTrue();
   });
 
-  it('ne compte une reprise qu à partir de quatre mots de suite d une réponse rédigée', () => {
-    const aLaSuite = (citation: string): boolean =>
-      ficheDe(
-        feuillesDuLivretEtudiant(
-          sujetOuLaQuestionCite('B2-02-A3-01-JUSQU-OU', citation),
-          INSTANTANE_B2_02.deroule,
-        ),
-      )('B2-02-A3-01-JUSQU-OU').aLaSuite;
+  it('ne compte une reprise qu à partir de quatre mots de suite que l énoncé imprime', () => {
+    expect(voteDuB2_01ALaSuite(avecLEnonce('même périmètre, même'))).toBeTrue();
+    expect(voteDuB2_01ALaSuite(avecLEnonce('même périmètre, même unité'))).toBeFalse();
+  });
 
-    expect(aLaSuite('colonne a une')).toBeTrue();
-    expect(aLaSuite('colonne a une somme')).toBeFalse();
+  it('ne compte comme reprise ni le titre que le livret n imprime pas, ni une confusion du corrigé', () => {
+    expect(
+      voteDuB2_01ALaSuite((ecran) => ({
+        ...ecran,
+        titre: 'même mois, même périmètre, même unité',
+      })),
+    ).toBeTrue();
+    expect(
+      voteDuB2_01ALaSuite(
+        (ecran) => ecran,
+        (jeu) => ({
+          ...jeu,
+          corriges: [
+            {
+              questionId: 'jeu-comparable',
+              bonneReponse: 'non comparable',
+              confusions: [{ id: 'meme-prix', libelle: 'Identique au prix de départ' }],
+            },
+          ],
+        }),
+      ),
+    ).toBeTrue();
+  });
+
+  it('repère un nombre à calculer que la fiche à la suite imprime sans ses décimales', () => {
+    const fiche = ficheDe(
+      feuillesDuLivretEtudiant(INSTANTANE_B2_01.sujet, INSTANTANE_B2_01.deroule),
+    );
+    const vote = fiche('B2-01-A5-02-VOTE-PARADOXE');
+    const page = [
+      fiche('B2-01-A3-06-INDICE-ET-TAUX-MOYEN'),
+      {
+        aLaSuite: true,
+        pages: vote.pages.map((page) => ({
+          ...page,
+          ecran: { ...page.ecran, titre: '+6 % par an' },
+        })),
+      },
+    ];
+
+    expect(citationsDesFichesALaSuite(page, INSTANTANE_B2_01.deroule)).toContain(
+      'B2-01-A5-02-VOTE-PARADOXE cite « 6 » de B2-01-A3-06-INDICE-ET-TAUX-MOYEN',
+    );
   });
 
   it('cherche une réponse sous sa formule, son arrondi, son pourcentage et sa valeur logique', () => {
