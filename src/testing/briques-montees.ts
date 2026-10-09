@@ -1,9 +1,14 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import type { EcranContent, Role } from '../cours/content/types';
+import type { CorrigeEcranPresentateur, EcranContent, Role } from '../cours/content/types';
+import type { DirectEcran } from '../app/shared/slides/session/contrat-hote';
 import { SlideActivityComponent } from '../app/shared/slides/session/slide-activity.component';
 import { aUnePresentation } from '../app/shared/slides/visual/presentation-v2';
-import { ECRAN_VERROUILLE, planDeMontage } from '../app/shared/slides/session/lecture-ecran';
+import {
+  ECRAN_VERROUILLE,
+  planDeMontage,
+  type ReponsesDuQuestionnaire,
+} from '../app/shared/slides/session/lecture-ecran';
 
 const ESSAIS = 200;
 const PAUSE_MS = 5;
@@ -58,13 +63,26 @@ export interface EcranMonte {
   readonly detruire: () => void;
 }
 
-export async function monterEcran(ecran: EcranContent, role: Role): Promise<EcranMonte> {
+export interface RevelationDuPupitre {
+  readonly donneesFormateur: CorrigeEcranPresentateur | ReponsesDuQuestionnaire | null;
+  readonly direct: DirectEcran;
+}
+
+export async function monterEcran(
+  ecran: EcranContent,
+  role: Role,
+  revelation: RevelationDuPupitre | null = null,
+): Promise<EcranMonte> {
   const erreurs: Event[] = [];
   const fixture = TestBed.createComponent(SlideActivityComponent);
   const element = fixture.nativeElement as HTMLElement;
   element.addEventListener('fp-block-error', (evenement) => erreurs.push(evenement));
   fixture.componentRef.setInput('slide', ecran);
   fixture.componentRef.setInput('role', role);
+  if (revelation !== null) {
+    fixture.componentRef.setInput('donneesFormateur', revelation.donneesFormateur);
+    fixture.componentRef.setInput('direct', revelation.direct);
+  }
   const montees = (): Element[] =>
     [...element.querySelectorAll('[data-testid="slide-activity-host"] > *')].filter(
       (brique) => (brique.shadowRoot?.childElementCount ?? 0) > 0,

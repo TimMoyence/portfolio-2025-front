@@ -3,8 +3,11 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 import { firstValueFrom } from 'rxjs';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import type { ResultatQuestion } from '../../../../cours/content/types';
-import { enoncesDuDeroule } from '../../../shared/slides/session/lecture-ecran';
+import type { DerouleCours, ResultatQuestion } from '../../../../cours/content/types';
+import {
+  enoncesDesActivites,
+  enoncesDuDeroule,
+} from '../../../shared/slides/session/lecture-ecran';
 import { telechargerFichier } from '../../../shared/utils/telechargement.utils';
 import { chantierApresRendu } from './chantier-apres-rendu';
 
@@ -28,6 +31,8 @@ interface ConfusionFrequente {
 const NOMBRE_CONFUSIONS_FREQUENTES = 5;
 
 const SEPARATEUR = ';';
+
+const BOM_UTF8 = '﻿';
 
 const ENTETE: readonly string[] = [
   'prenom',
@@ -77,6 +82,20 @@ function confusionsFrequentesDe(
   return [...totaux.values()]
     .sort((gauche, droite) => droite.nombre - gauche.nombre || (gauche.id < droite.id ? -1 : 1))
     .slice(0, NOMBRE_CONFUSIONS_FREQUENTES);
+}
+
+interface EnoncesDeLaSeance {
+  readonly questions: ReadonlyMap<string, string>;
+  readonly activites: ReadonlyMap<string, string>;
+}
+
+const AUCUN_ENONCE: EnoncesDeLaSeance = { questions: new Map(), activites: new Map() };
+
+function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
+  return {
+    questions: enoncesDuDeroule(deroule),
+    activites: new Map(deroule.ecrans.flatMap((ecran) => [...enoncesDesActivites(ecran)])),
+  };
 }
 
 @Component({
@@ -148,7 +167,7 @@ function confusionsFrequentesDe(
               @for (question of questions(); track question.questionId) {
                 <tr data-testid="synthese-question-ligne">
                   <th scope="row">
-                    @if (enonces().get(question.questionId); as enonce) {
+                    @if (enonces().questions.get(question.questionId); as enonce) {
                       <span data-testid="synthese-question-libelle">{{ enonce }}</span>
                     }
                     <small data-testid="synthese-question-id">{{ question.questionId }}</small>
@@ -186,6 +205,26 @@ function confusionsFrequentesDe(
             }
           </ul>
         </section>
+        @if (auteursDeReponsesLibres().length > 0) {
+          <section data-testid="synthese-libres">
+            <h3 i18n="synthese.libresTitre|@@syntheseLibresTitre">Réponses libres des étudiants</h3>
+            @for (participant of auteursDeReponsesLibres(); track participant.email) {
+              <article>
+                <h4 data-testid="synthese-libres-etudiant">
+                  {{ participant.prenom }} {{ participant.nom }}
+                </h4>
+                <dl>
+                  @for (libre of participant.reponsesLibres ?? []; track $index) {
+                    <dt data-testid="synthese-libre-question">
+                      {{ enonces().activites.get(libre.activityId) ?? libre.activityId }}
+                    </dt>
+                    <dd data-testid="synthese-libre-reponse">{{ libre.reponse }}</dd>
+                  }
+                </dl>
+              </article>
+            }
+          </section>
+        }
         <button
           type="button"
           class="btn btn-teal"
@@ -209,7 +248,7 @@ export class CoursSyntheseComponent {
 
   readonly rapport = signal<RapportSeance | null>(null);
   readonly echec = signal(false);
-  readonly enonces = signal<ReadonlyMap<string, string>>(new Map());
+  readonly enonces = signal<EnoncesDeLaSeance>(AUCUN_ENONCE);
 
   readonly vide = computed(() => this.rapport()?.participants.length === 0);
 
@@ -249,6 +288,12 @@ export class CoursSyntheseComponent {
     confusionsFrequentesDe(this.questions()),
   );
 
+  readonly auteursDeReponsesLibres = computed<readonly ParticipantRapporte[]>(() =>
+    (this.rapport()?.participants ?? []).filter(
+      (participant) => (participant.reponsesLibres ?? []).length > 0,
+    ),
+  );
+
   private readonly port = inject(FORMATIONS_PORT);
   private readonly document = inject(DOCUMENT);
 
@@ -261,27 +306,39 @@ export class CoursSyntheseComponent {
   exporterCsv(): string {
     const participants = this.rapport()?.participants ?? [];
     const enonces = this.enonces();
-    const lignes = participants.flatMap((participant) =>
-      participant.reponses.map((reponse) =>
+    const lignes = participants.flatMap((participant) => [
+      ...participant.reponses.map((reponse) =>
         ligneCsv([
           participant.prenom,
           participant.nom,
           participant.email,
           reponse.questionId,
-          enonces.get(reponse.questionId) ?? '',
+          enonces.questions.get(reponse.questionId) ?? '',
           reponse.concept,
           reponse.valeur,
           String(reponse.dureeMs),
         ]),
       ),
-    );
+      ...(participant.reponsesLibres ?? []).map((libre) =>
+        ligneCsv([
+          participant.prenom,
+          participant.nom,
+          participant.email,
+          libre.activityId,
+          enonces.activites.get(libre.activityId) ?? '',
+          '',
+          libre.reponse,
+          '',
+        ]),
+      ),
+    ]);
     return [ENTETE.join(SEPARATEUR), ...lignes].join('\n');
   }
 
   protected telecharger(): void {
     telechargerFichier(
       this.document,
-      this.exporterCsv(),
+      `${BOM_UTF8}${this.exporterCsv()}`,
       `seance-${this.sessionId()}.csv`,
       'text/csv;charset=utf-8',
     );
@@ -310,9 +367,9 @@ export class CoursSyntheseComponent {
   private async lireLesEnonces(): Promise<void> {
     try {
       const deroule = await firstValueFrom(this.port.lireDeroule(this.sessionId()));
-      this.enonces.set(enoncesDuDeroule(deroule));
+      this.enonces.set(enoncesDeLaSeance(deroule));
     } catch {
-      this.enonces.set(new Map());
+      this.enonces.set(AUCUN_ENONCE);
     }
   }
 }

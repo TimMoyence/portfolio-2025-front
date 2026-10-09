@@ -36,6 +36,11 @@ export interface CadrageDuRenvoi {
   };
 }
 
+export interface PieceJointe {
+  readonly libelle: string;
+  readonly fichier: string;
+}
+
 export interface EcranContent {
   id: string;
   type: string;
@@ -45,6 +50,7 @@ export interface EcranContent {
   donnees?: Record<string, unknown>;
   renvoi?: string;
   cadrageDuRenvoi?: CadrageDuRenvoi;
+  pieceJointe?: PieceJointe;
   ecranSource?: string;
   resoluPar?: readonly string[];
   revelation?: RevelationServie;

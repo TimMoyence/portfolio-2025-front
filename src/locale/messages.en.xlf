@@ -10227,6 +10227,24 @@
         <target>Email address</target>
       </segment>
     </unit>
+    <unit id="coursPieceJointeSurLePoste">
+      <notes>
+        <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:118,119</note>
+      </notes>
+      <segment>
+        <source>Sur votre poste :</source>
+        <target>On your device:</target>
+      </segment>
+    </unit>
+    <unit id="coursPieceJointeTelecharger">
+      <notes>
+        <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:128,129</note>
+      </notes>
+      <segment>
+        <source>Télécharger</source>
+        <target>Download</target>
+      </segment>
+    </unit>
     <unit id="coursRenvoiLegende">
       <notes>
         <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:72,74</note>
@@ -10882,6 +10900,16 @@
       <segment>
         <source>étudiants sous le seuil</source>
         <target>students below threshold</target>
+      </segment>
+    </unit>
+    <unit id="syntheseLibresTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:201,202</note>
+        <note category="meaning">synthese.libresTitre</note>
+      </notes>
+      <segment>
+        <source>Réponses libres des étudiants</source>
+        <target>Students' free-text answers</target>
       </segment>
     </unit>
     <unit id="syntheseExport">
@@ -11944,6 +11972,30 @@
       </segment>
     </unit>
     <unit id="formations-list.b2-06.duration">
+      <segment>
+        <source>3 h 00</source>
+        <target>3 h</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3.badge">
+      <segment>
+        <source>Bachelor 3 · Cours interactif</source>
+        <target>Bachelor 3 · Interactive course</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-01.title">
+      <segment>
+        <source>B3-01 — Expert Data : de la donnée brute à la décision</source>
+        <target>B3-01 — Data expert: from raw data to decision</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-01.description">
+      <segment>
+        <source>Nettoyer un export de ventes dans Excel, le croiser avec ses référentiels, le résumer par un tableau croisé dynamique, puis bâtir un tableau de bord et une recommandation pour un comité de direction. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Clean a sales export in Excel, join it with its reference tables, summarise it with a PivotTable, then build a dashboard and a recommendation for an executive committee. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-01.duration">
       <segment>
         <source>3 h 00</source>
         <target>3 h</target>

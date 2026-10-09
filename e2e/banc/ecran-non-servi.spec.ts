@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
-import type { APIRequestContext } from '@playwright/test';
+import type { APIRequestContext, Page } from '@playwright/test';
 import {
+  CODE_DU_COURS,
   coursReleve,
   envoyerUneReponseLibre,
   identiteDuPoste,
@@ -11,39 +12,73 @@ import {
   seancePartagee,
   servirLEcran,
 } from './contexte';
-import type { EcranDuCours, SeanceOuverte } from './contexte';
+import type { NatureLibre, ReponseLibreDuCours, SeanceOuverte } from './contexte';
 
-const TEXTE_DE_REFLEXION = 'Mesure, unité, période et source avant toute conclusion.';
+const TEXTE_LIBRE = 'Mesure, unité, période et source avant toute conclusion.';
 
-let reflexions: readonly EcranDuCours[];
+const NATURES_LIBRES: readonly NatureLibre[] = ['reflection', 'fp-pro'];
+
+const POSTE_HORS_LIGNE: Readonly<Record<NatureLibre, number>> = { reflection: 4, 'fp-pro': 9 };
+
+const SAISIE_LIBRE: Readonly<Record<NatureLibre, string>> = {
+  reflection: 'app-slide-reflection textarea',
+  'fp-pro': 'fp-pro [data-testid="valider"]',
+};
+
+let reponsesLibres: readonly ReponseLibreDuCours[];
+
+let rappelsEspaces = 0;
 
 let ecransDuCours = 0;
 
 async function seanceDuFichier(request: APIRequestContext): Promise<SeanceOuverte> {
   return seancePartagee('ecran-non-servi', async () => {
     const releve = await coursReleve(request);
-    reflexions = releve.reflexions;
+    reponsesLibres = releve.reponsesLibres;
+    rappelsEspaces = releve.rappelsEspaces.length;
     ecransDuCours = releve.total;
-    return seanceDemarreeSurLEcran(request, reflexions[0].rang);
+    return seanceDemarreeSurLEcran(request, reponsesLibres[0].rang);
   });
+}
+
+async function ecrireHorsLigne(page: Page, nature: NatureLibre): Promise<void> {
+  const contenu = page.getByTestId('cours-contenu');
+  if (nature === 'reflection') {
+    const reflexion = contenu.locator('app-slide-reflection');
+    await reflexion.locator('textarea').fill(TEXTE_LIBRE);
+    await reflexion.getByRole('button', { name: 'Garder cette réflexion' }).click();
+    await expect(page.getByTestId('slide-reflection-etat')).toHaveAttribute(
+      'data-etat',
+      'attente_reseau',
+    );
+    return;
+  }
+  const pro = contenu.locator('fp-pro');
+  const champs = pro.locator('textarea[data-question]');
+  for (let rang = 0; rang < (await champs.count()); rang += 1) {
+    await champs.nth(rang).fill(TEXTE_LIBRE);
+  }
+  await pro.locator('[data-testid="valider"]').click();
 }
 
 test.describe('Banc — écran non servi', () => {
   test.beforeEach(async ({ request }) => {
     const { seance, jeton } = await seanceDuFichier(request);
-    await servirLEcran(request, jeton, seance.sessionId, reflexions[0].rang);
+    await servirLEcran(request, jeton, seance.sessionId, reponsesLibres[0].rang);
   });
 
-  test('toute réflexion hors de l’écran servi est refusée par le serveur', async ({ request }) => {
+  test('toute réponse libre hors de l’écran servi est refusée par le serveur', async ({
+    request,
+  }) => {
     const { seance, jeton } = await seanceDuFichier(request);
     const poste = await inscrireUnPoste(request, seance, 3);
 
-    const servie = await envoyerUneReponseLibre(request, seance, poste, reflexions[0]);
+    const servie = await envoyerUneReponseLibre(request, seance, poste, reponsesLibres[0]);
     expect(servie.status(), await servie.text()).toBe(201);
 
     await servirLEcran(request, jeton, seance.sessionId, 0);
     const retardataire = await inscrireUnPoste(request, seance, 8);
-    for (const ecran of reflexions) {
+    for (const ecran of reponsesLibres) {
       const refus = await envoyerUneReponseLibre(request, seance, retardataire, ecran);
       expect(refus.status(), `${ecran.id} devrait être refusé`).toBe(404);
       const corps = (await refus.json()) as { code: string; detail: string };
@@ -56,6 +91,7 @@ test.describe('Banc — écran non servi', () => {
     request,
   }) => {
     const { seance } = await seanceDuFichier(request);
+    test.skip(rappelsEspaces === 0, `le ${CODE_DU_COURS} ne pose aucun rappel espacé`);
     const poste = await inscrireUnPoste(request, seance, 5);
 
     const reponse = await lireDepuisLePoste(request, seance, poste, 'rappels');
@@ -68,6 +104,7 @@ test.describe('Banc — écran non servi', () => {
     request,
   }) => {
     const { seance, jeton } = await seanceDuFichier(request);
+    test.skip(rappelsEspaces === 0, `le ${CODE_DU_COURS} ne pose aucun rappel espacé`);
     const poste = await inscrireUnPoste(request, seance, 7);
     await servirLEcran(request, jeton, seance.sessionId, ecransDuCours - 1);
 
@@ -89,35 +126,38 @@ test.describe('Banc — écran non servi', () => {
     await rejoindreDansLeNavigateur(page, seance, identiteDuPoste(6));
 
     await expect(page.getByTestId('etudiant-progression')).toHaveText(
-      `${reflexions[0].rang + 1} / ${ecransDuCours}`,
+      `${reponsesLibres[0].rang + 1} / ${ecransDuCours}`,
     );
     await expect(page.getByTestId('etudiant-suivant')).toHaveCount(0);
   });
 
-  test('le poste garde la réflexion et affiche le refus au retour du réseau', async ({
-    page,
-    request,
-  }) => {
-    const { seance, jeton } = await seanceDuFichier(request);
+  for (const nature of NATURES_LIBRES) {
+    test(`le poste garde la réponse libre ${nature} et affiche le refus au retour du réseau`, async ({
+      page,
+      request,
+    }) => {
+      const { seance, jeton } = await seanceDuFichier(request);
+      const libre = reponsesLibres.find((candidate) => candidate.nature === nature);
+      test.skip(libre === undefined, `le ${CODE_DU_COURS} ne pose aucune réponse libre ${nature}`);
+      const { rang } = libre as ReponseLibreDuCours;
+      await servirLEcran(request, jeton, seance.sessionId, rang);
+      await rejoindreDansLeNavigateur(page, seance, identiteDuPoste(POSTE_HORS_LIGNE[nature]));
+      await expect(page.getByTestId('cours-contenu').locator(SAISIE_LIBRE[nature])).toBeVisible();
 
-    await rejoindreDansLeNavigateur(page, seance, identiteDuPoste(4));
-    const reflexion = page.locator('app-slide-reflection');
-    await expect(reflexion).toBeVisible();
+      await page.context().setOffline(true);
+      await ecrireHorsLigne(page, nature);
+      await expect(page.getByTestId('etudiant-reflexion-en-attente')).toHaveAttribute(
+        'data-etat',
+        'attente_reseau',
+      );
 
-    await page.context().setOffline(true);
-    await reflexion.locator('textarea').fill(TEXTE_DE_REFLEXION);
-    await reflexion.getByRole('button', { name: 'Garder cette réflexion' }).click();
-    await expect(page.getByTestId('slide-reflection-etat')).toHaveAttribute(
-      'data-etat',
-      'attente_reseau',
-    );
+      await servirLEcran(request, jeton, seance.sessionId, 0);
+      await page.context().setOffline(false);
 
-    await servirLEcran(request, jeton, seance.sessionId, 0);
-    await page.context().setOffline(false);
-
-    await expect(page.getByTestId('etudiant-reflexion-en-attente')).toHaveAttribute(
-      'data-etat',
-      'ecran_non_servi',
-    );
-  });
+      await expect(page.getByTestId('etudiant-reflexion-en-attente')).toHaveAttribute(
+        'data-etat',
+        'ecran_non_servi',
+      );
+    });
+  }
 });

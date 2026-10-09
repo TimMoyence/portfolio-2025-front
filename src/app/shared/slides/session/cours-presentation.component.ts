@@ -42,6 +42,8 @@ const GAIN_D_ELARGISSEMENT_UTILE = 0.05;
 const ESSAIS_D_ELARGISSEMENT = 6;
 const REMPLISSAGE_MINIMAL = 0.6;
 const PRECISION_D_ELARGISSEMENT = 0.001;
+const FICHIER_DE_PIECE_JOINTE =
+  /^\/assets\/cours\/[a-z0-9-]+\/[A-Za-z0-9_-]+\.[0-9a-f]{8}\.(xlsx|csv|pdf)$/;
 
 interface Mesure {
   readonly largeur: number;
@@ -110,6 +112,24 @@ function aUnDefileurRogne(contenu: HTMLElement): boolean {
                       [brouillons]="brouillons()"
                       (evenement)="evenement.emit($event)"
                     />
+                    @if (pieceJointe(); as piece) {
+                      @if (mode() === 'projection') {
+                        <p class="cours-piece-jointe" data-testid="cours-piece-jointe">
+                          <span i18n="@@coursPieceJointeSurLePoste">Sur votre poste :</span>
+                          {{ piece.libelle }}
+                        </p>
+                      } @else {
+                        <a
+                          class="cours-piece-jointe cours-piece-jointe--lien"
+                          data-testid="cours-piece-jointe"
+                          [href]="piece.fichier"
+                          download
+                        >
+                          <span i18n="@@coursPieceJointeTelecharger">Télécharger</span>
+                          {{ piece.libelle }}
+                        </a>
+                      }
+                    }
                   </app-slide>
                 </div>
               </div>
@@ -217,6 +237,37 @@ function aUnDefileurRogne(contenu: HTMLElement): boolean {
       justify-content: safe center;
       min-block-size: 100%;
       transform-origin: 50% 0;
+    }
+
+    .cours-piece-jointe {
+      display: inline-block;
+      margin: 1rem 0 0;
+      padding: 0.6rem 1.1rem;
+      border: 1px solid rgba(12, 9, 2, 0.16);
+      border-radius: 0.5rem;
+      color: var(--ink, #0c0902);
+      background: var(--paper, #ffffff);
+      font-size: 1rem;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .cours-piece-jointe--lien {
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .cours-piece-jointe--lien:hover,
+    .cours-piece-jointe--lien:focus-visible {
+      border-color: var(--ink, #0c0902);
+    }
+
+    .cours-piece-jointe span {
+      font-weight: 600;
+    }
+
+    .cours-piece-jointe--lien span {
+      text-decoration: underline;
     }
 
     .cours-toile--renvoi .cours-toile__contenu {
@@ -387,6 +438,13 @@ export class CoursPresentationComponent {
   private essaisRestants = ESSAIS_D_ELARGISSEMENT;
   private readonly echellesEssayees = new Map<number, number>();
   private readonly ecranAffiche = computed(() => this.slide()?.id ?? null);
+
+  protected readonly pieceJointe = computed(() => {
+    const pieceJointe = this.slide()?.pieceJointe;
+    return pieceJointe !== undefined && FICHIER_DE_PIECE_JOINTE.test(pieceJointe.fichier)
+      ? pieceJointe
+      : null;
+  });
 
   protected readonly renvoiAffiche = computed(() => {
     const renvoi = this.renvoi();

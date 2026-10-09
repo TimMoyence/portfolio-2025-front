@@ -5,6 +5,7 @@ import { of, throwError } from 'rxjs';
 import type {
   ParticipantRapporte,
   RapportSeance,
+  ReponseLibreRapportee,
   ReponseRapportee,
 } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
@@ -26,6 +27,7 @@ import {
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
+import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantane-b3-01';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { CoursSyntheseComponent } from './cours-synthese.component';
 
@@ -327,6 +329,125 @@ describe('CoursSyntheseComponent', () => {
     );
   });
 
+  describe('règles du cahier écrites en réponse libre (V6)', () => {
+    const REGLE_COMPRENDRE = 'b3-01-a1-regles:regle-comprendre';
+    const REGLE_NETTOYER = 'b3-01-a1-regles:regle-nettoyer';
+    const QUESTION_COMPRENDRE = 'Niveau 1 · Comprendre : votre règle pour relier deux tables.';
+    const QUESTION_NETTOYER =
+      'Niveau 2 · Nettoyer : votre règle pour une donnée fausse ou douteuse.';
+
+    function libre(activityId: string, texte: string): ReponseLibreRapportee {
+      return { screenId: 'B3-01-A1-15-REGLES-ACTE-1', activityId, reponse: texte };
+    }
+
+    const ANA = {
+      ...etudiant('Ana', 14, false, [reponse('cle-et-relation', '660')]),
+      reponsesLibres: [
+        libre(REGLE_COMPRENDRE, 'Je relie par client_id, jamais par le nom.'),
+        libre(REGLE_NETTOYER, 'Je signale tout doublon sans le supprimer.'),
+      ],
+    };
+    const BASILE = {
+      ...etudiant('Basile', 0, false, []),
+      reponsesLibres: [libre(REGLE_COMPRENDRE, 'Je lis Clients avant l export.')],
+    };
+
+    function monterLeB301(participants: readonly ParticipantRapporte[]): Promise<Fixture> {
+      return monter(rapportDe(participants), of(INSTANTANE_B3_01.deroule));
+    }
+
+    it('exporte sous chaque étudiant ses règles, nommées par la question du déroulé servi', async () => {
+      const fixture = await monterLeB301([ANA, BASILE]);
+
+      expect(fixture.componentInstance.exporterCsv().split('\n')).toEqual([
+        'prenom;nom;adresse;question;enonce;concept;valeur;duree_ms',
+        'Ana;Durand;ana@example.com;Q-cle-et-relation;;cle-et-relation;660;4200',
+        `Ana;Durand;ana@example.com;${REGLE_COMPRENDRE};${QUESTION_COMPRENDRE};;Je relie par client_id, jamais par le nom.;`,
+        `Ana;Durand;ana@example.com;${REGLE_NETTOYER};${QUESTION_NETTOYER};;Je signale tout doublon sans le supprimer.;`,
+        `Basile;Durand;basile@example.com;${REGLE_COMPRENDRE};${QUESTION_COMPRENDRE};;Je lis Clients avant l export.;`,
+      ]);
+    });
+
+    it('affiche les règles de chaque étudiant sous son nom, chacune avec sa question', async () => {
+      const fixture = await monterLeB301([ANA, BASILE]);
+
+      expect(textes(fixture, 'synthese-libres-etudiant')).toEqual(['Ana Durand', 'Basile Durand']);
+      expect(textes(fixture, 'synthese-libre-question')).toEqual([
+        QUESTION_COMPRENDRE,
+        QUESTION_NETTOYER,
+        QUESTION_COMPRENDRE,
+      ]);
+      expect(textes(fixture, 'synthese-libre-reponse')).toEqual([
+        'Je relie par client_id, jamais par le nom.',
+        'Je signale tout doublon sans le supprimer.',
+        'Je lis Clients avant l export.',
+      ]);
+    });
+
+    it('nomme le billet de sortie noté par sa question, et sa réponse libre par son invite, sous le même identifiant', async () => {
+      const BILLET = 'b3-01-a3-billet';
+      const QUESTION_DU_BILLET =
+        'Une ligne porte une date_livraison antérieure à sa date_commande. La corrige-t-on automatiquement ?';
+      const INVITE_DU_BILLET =
+        'En une phrase : qu’est-ce qui reste flou pour vous après cette séance ?';
+      const CLEMENT = {
+        ...etudiant('Clement', 11, false, [
+          { ...reponse('qualite-des-donnees', 'non-on-la-signale'), questionId: BILLET },
+        ]),
+        reponsesLibres: [
+          {
+            screenId: 'B3-01-A3-13-BILLET-DE-SORTIE',
+            activityId: BILLET,
+            reponse: 'Le modèle de données.',
+          },
+        ],
+      };
+
+      const fixture = await monter(
+        rapportDe([CLEMENT], resultatsDe(1, [{ questionId: BILLET }])),
+        of(INSTANTANE_B3_01.deroule),
+      );
+
+      expect(textes(fixture, 'synthese-question-libelle')).toEqual([QUESTION_DU_BILLET]);
+      expect(textes(fixture, 'synthese-libre-question')).toEqual([INVITE_DU_BILLET]);
+      expect(fixture.componentInstance.exporterCsv().split('\n').slice(1)).toEqual([
+        `Clement;Durand;clement@example.com;${BILLET};${QUESTION_DU_BILLET};qualite-des-donnees;non-on-la-signale;4200`,
+        `Clement;Durand;clement@example.com;${BILLET};${INVITE_DU_BILLET};;Le modèle de données.;`,
+      ]);
+    });
+
+    it('neutralise une réponse libre qu Excel lirait comme une formule, sans couper sa ligne', async () => {
+      const PIEGEE = '=HYPERLINK("http://evil.example";"x")\nseconde ligne';
+      const fixture = await monterLeB301([
+        { ...etudiant('Ana', 14, false, []), reponsesLibres: [libre(REGLE_COMPRENDRE, PIEGEE)] },
+      ]);
+
+      expect(fixture.componentInstance.exporterCsv()).toBe(
+        [
+          'prenom;nom;adresse;question;enonce;concept;valeur;duree_ms',
+          `Ana;Durand;ana@example.com;${REGLE_COMPRENDRE};${QUESTION_COMPRENDRE};;"'=HYPERLINK(""http://evil.example"";""x"")\nseconde ligne";`,
+        ].join('\n'),
+      );
+    });
+
+    it('nomme une règle par son activité quand le déroulé ne peut pas être lu', async () => {
+      const fixture = await monter(
+        rapportDe([BASILE]),
+        throwError(() => new Error('reseau coupe')),
+      );
+
+      expect(textes(fixture, 'synthese-libre-question')).toEqual([REGLE_COMPRENDRE]);
+    });
+
+    it('n affiche aucune section de règles quand le rapport n en porte pas', async () => {
+      const fixture = await monter(rapportDe([MALIK, NORA]));
+
+      expect(
+        (fixture.nativeElement as HTMLElement).querySelector("[data-testid='synthese-libres']"),
+      ).toBeNull();
+    });
+  });
+
   async function csvDAna(valeur: string, nom?: string): Promise<string> {
     const ana = etudiant('Ana', 9, true, [reponse('actualisation', valeur)]);
     const fixture = await monter(rapportDe([nom === undefined ? ana : { ...ana, nom }]));
@@ -359,6 +480,23 @@ describe('CoursSyntheseComponent', () => {
 
   it('neutralise un moins qui n est pas un nombre valide', async () => {
     expect(await csvDAna('-=1+1')).toContain("'-=1+1");
+  });
+
+  it('ouvre le CSV téléchargé par le BOM UTF-8, pour qu Excel en lise les accents', async () => {
+    const creation = spyOn(URL, 'createObjectURL').and.returnValue('blob:synthese');
+    spyOn(URL, 'revokeObjectURL');
+    spyOn(HTMLAnchorElement.prototype, 'click');
+    const fixture = await monter(rapportDe([MALIK]));
+
+    (fixture.nativeElement as HTMLElement)
+      .querySelector<HTMLButtonElement>("[data-testid='synthese-export']")
+      ?.click();
+    const octets = new Uint8Array(
+      await (creation.calls.mostRecent().args[0] as Blob).arrayBuffer(),
+    );
+
+    expect([...octets.slice(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
+    expect(new TextDecoder().decode(octets.slice(3))).toBe(fixture.componentInstance.exporterCsv());
   });
 
   it('une seance sans participant affiche un message plutot qu un tableau vide', async () => {

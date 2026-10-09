@@ -1806,6 +1806,74 @@
       }
     },
     {
+      "id": "formations-b3-01-donnee-brute-decision",
+      "path": "/formations/b3-01-donnee-brute-decision",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-10-08",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Expert Data : de la donnée brute à la décision",
+          "path": "/formations/b3-01-donnee-brute-decision"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Expert Data : de la donnée brute à la décision — Bachelor 3 — Tim Moyence",
+          "description": "Cours interactif de Bachelor 3 : nettoyer un export de ventes dans Excel, le croiser avec ses référentiels, le résumer par un tableau croisé dynamique et en tirer un tableau de bord.",
+          "ogTitle": "Expert Data : de la donnée brute à la décision — Bachelor 3",
+          "ogDescription": "Un cours interactif pour passer d’un export de ventes brut à une recommandation présentée au comité de direction, avec Excel et Microsoft 365.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Expert Data : de la donnée brute à la décision",
+            "description": "Cours interactif de Bachelor 3 sur la qualité des données, la recherche et l’agrégation, le tableau croisé dynamique et le tableau de bord dans Excel, appliqués au réseau commercial d’une entreprise.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b3-01-donnee-brute-decision"
+          }
+        },
+        "en": {
+          "title": "Data expert: from raw data to decision — Bachelor 3 — Tim Moyence",
+          "description": "Interactive Bachelor 3 course: clean a sales export in Excel, join it with its reference tables, summarise it with a PivotTable and build a dashboard from it.",
+          "ogTitle": "Data expert: from raw data to decision — Bachelor 3",
+          "ogDescription": "An interactive course to go from a raw sales export to a recommendation presented to the executive committee, with Excel and Microsoft 365.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Data expert: from raw data to decision",
+            "description": "Interactive Bachelor 3 course on data quality, lookup and aggregation, PivotTables and dashboards in Excel, applied to a company’s sales network.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b3-01-donnee-brute-decision"
+          }
+        }
+      }
+    },
+    {
       "id": "formations-ia-solopreneurs-toolkit",
       "path": "/formations/ia-solopreneurs/toolkit",
       "index": true,

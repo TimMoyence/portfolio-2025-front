@@ -8,8 +8,8 @@ test.describe('Banc — XSS au pupitre', () => {
     page,
     request,
   }) => {
-    const { reflexions, total } = await coursReleve(request);
-    const reflexion = reflexions[0];
+    const { reponsesLibres, total } = await coursReleve(request);
+    const libre = reponsesLibres[0];
     const dialogues: string[] = [];
     page.on('dialog', async (dialogue) => {
       dialogues.push(dialogue.message());
@@ -23,20 +23,18 @@ test.describe('Banc — XSS au pupitre', () => {
     const { jeton } = (await inscription.json()) as { jeton: string };
 
     await page.getByTestId('presentateur-demarrer').click();
-    for (let saut = 0; saut < reflexion.rang; saut += 1) {
+    for (let saut = 0; saut < libre.rang; saut += 1) {
       await page.getByTestId('presentateur-suivant').click();
     }
-    await expect(page.getByTestId('presentateur-ecran')).toHaveText(
-      `${reflexion.rang + 1} / ${total}`,
-    );
+    await expect(page.getByTestId('presentateur-ecran')).toHaveText(`${libre.rang + 1} / ${total}`);
     const envoyer = async (): Promise<number> => {
       const envoi = await request.post(
         `${URL_API}/formations/sessions/${seance.sessionId}/free-responses`,
         {
           headers: { [EN_TETE_JETON]: jeton },
           data: {
-            screenId: reflexion.id,
-            activityId: reflexion.activiteId,
+            screenId: libre.id,
+            activityId: libre.activiteId,
             response: PIEGE,
             dureeMs: 4000,
           },

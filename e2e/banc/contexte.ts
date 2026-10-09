@@ -52,13 +52,20 @@ export interface ReponseDuCours extends EcranRepere {
   readonly valeur: string | number;
 }
 
+export type NatureLibre = 'reflection' | 'fp-pro';
+
+export interface ReponseLibreDuCours extends EcranDuCours {
+  readonly nature: NatureLibre;
+}
+
 export interface ReleveDuCours {
   readonly total: number;
   readonly ecrans: readonly string[];
   readonly questions: readonly EcranDuCours[];
   readonly votes: readonly EcranDuCours[];
   readonly reponses: readonly ReponseDuCours[];
-  readonly reflexions: readonly EcranDuCours[];
+  readonly reponsesLibres: readonly ReponseLibreDuCours[];
+  readonly rappelsEspaces: readonly EcranRepere[];
   readonly recitsSansActivite: readonly EcranRepere[];
 }
 
@@ -283,6 +290,7 @@ interface EcranDuSujet {
         readonly props: { readonly promptData?: { readonly id: string } };
       };
     };
+    readonly cas?: { readonly questionsLibres?: readonly { readonly id: string }[] };
   };
 }
 
@@ -337,13 +345,31 @@ function seVoteDUnClic(ecran: EcranDuSujet, question: QuestionDuSujet): boolean 
   );
 }
 
+function reponseLibre(
+  rang: number,
+  ecran: EcranDuSujet,
+  activiteId: string,
+  nature: NatureLibre,
+): ReponseLibreDuCours {
+  return { rang, id: ecran.id, activiteId, options: [], jumelle: null, nature };
+}
+
+function questionsLibresDuCas(rang: number, ecran: EcranDuSujet): ReponseLibreDuCours[] {
+  if (ecran.type !== 'fp-pro') return [];
+  return (ecran.donnees.cas?.questionsLibres ?? []).map((libre) =>
+    reponseLibre(rang, ecran, libre.id, 'fp-pro'),
+  );
+}
+
 function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
   const questions: EcranDuCours[] = [];
   const votes: EcranDuCours[] = [];
   const reponses: ReponseDuCours[] = [];
-  const reflexions: EcranDuCours[] = [];
+  const reponsesLibres: ReponseLibreDuCours[] = [];
   const recitsSansActivite: EcranRepere[] = [];
+  const rappelsEspaces: EcranRepere[] = [];
   ecrans.forEach((ecran, rang) => {
+    if (ecran.type === 'fp-spaced') rappelsEspaces.push({ rang, id: ecran.id });
     const jumelle = ecran.donnees.questionJumelle;
     for (const question of questionsDeLEcran(ecran)) {
       if (ECRANS_REPONDUS_PAR_L_API.has(ecran.type)) {
@@ -366,16 +392,11 @@ function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
     const presentation = ecran.donnees.recit?.presentation;
     const invite = presentation?.props.promptData;
     if (presentation?.renderer === 'reflection' && invite !== undefined) {
-      reflexions.push({
-        rang,
-        id: ecran.id,
-        activiteId: invite.id,
-        options: [],
-        jumelle: null,
-      });
+      reponsesLibres.push(reponseLibre(rang, ecran, invite.id, 'reflection'));
     } else if (ecran.type === 'fp-story' && questionsDeLEcran(ecran).length === 0) {
       recitsSansActivite.push({ rang, id: ecran.id });
     }
+    reponsesLibres.push(...questionsLibresDuCas(rang, ecran));
   });
   return {
     total: ecrans.length,
@@ -383,7 +404,8 @@ function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
     questions,
     votes,
     reponses,
-    reflexions,
+    reponsesLibres,
+    rappelsEspaces,
     recitsSansActivite,
   };
 }
@@ -412,7 +434,10 @@ async function relever(request: APIRequestContext): Promise<ReleveDuCours> {
     releve.reponses.length,
     'moins de deux questions à répondre dans la version publiée',
   ).toBeGreaterThan(1);
-  expect(releve.reflexions.length, 'aucune réflexion dans la version publiée').toBeGreaterThan(0);
+  expect(
+    releve.reponsesLibres.length,
+    'aucune réponse libre dans la version publiée',
+  ).toBeGreaterThan(0);
   return releve;
 }
 

@@ -55,16 +55,24 @@ function formationGratuite({
   };
 }
 
-function coursBtsEnSeance(
-  carte: Pick<FormationGratuite, 'link' | 'title' | 'description' | 'duree'>,
-): FormationCard {
+type CarteDeCoursEnSeance = Pick<FormationGratuite, 'link' | 'title' | 'description' | 'duree'>;
+
+function coursEnSeance(carte: CarteDeCoursEnSeance, badge: string): FormationCard {
   return formationGratuite({
     ...carte,
-    badge: $localize`:@@formations-list.b2.badge:BTS CG · Cours interactif`,
+    badge,
     format: $localize`:@@formations-list.b2.format:Slides + séance accompagnée`,
     avecToolkit: false,
     variant: 'live',
   });
+}
+
+function coursBtsEnSeance(carte: CarteDeCoursEnSeance): FormationCard {
+  return coursEnSeance(carte, $localize`:@@formations-list.b2.badge:BTS CG · Cours interactif`);
+}
+
+function coursBachelorEnSeance(carte: CarteDeCoursEnSeance): FormationCard {
+  return coursEnSeance(carte, $localize`:@@formations-list.b3.badge:Bachelor 3 · Cours interactif`);
 }
 
 export const FORMATIONS: readonly FormationCard[] = [
@@ -103,6 +111,12 @@ export const FORMATIONS: readonly FormationCard[] = [
     title: $localize`:@@formations-list.b2-06.title:B2-06 — Exponentielle et logarithme : croître, viser, ajuster`,
     description: $localize`:@@formations-list.b2-06.description:Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
     duree: $localize`:@@formations-list.b2-06.duration:3 h 00`,
+  }),
+  coursBachelorEnSeance({
+    link: '/formations/b3-01-donnee-brute-decision',
+    title: $localize`:@@formations-list.b3-01.title:B3-01 — Expert Data : de la donnée brute à la décision`,
+    description: $localize`:@@formations-list.b3-01.description:Nettoyer un export de ventes dans Excel, le croiser avec ses référentiels, le résumer par un tableau croisé dynamique, puis bâtir un tableau de bord et une recommandation pour un comité de direction. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b3-01.duration:3 h 00`,
   }),
   formationGratuite({
     link: '/formations/ia-solopreneurs',

@@ -202,6 +202,12 @@ export interface ReponseRapportee {
   dureeMs: number;
 }
 
+export interface ReponseLibreRapportee {
+  screenId: string;
+  activityId: string;
+  reponse: string;
+}
+
 export interface ParticipantRapporte {
   prenom: string;
   nom: string;
@@ -210,6 +216,7 @@ export interface ParticipantRapporte {
   note: number;
   sousSeuil: boolean;
   reponses: readonly ReponseRapportee[];
+  reponsesLibres?: readonly ReponseLibreRapportee[];
   incidents: number;
 }
 

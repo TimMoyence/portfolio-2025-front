@@ -34,15 +34,15 @@ interface EtatDuPoste {
 }
 
 let vote: EcranDuCours;
-let reflexion: EcranDuCours;
+let reponseLibre: EcranDuCours;
 
 async function seanceDuFichier(request: APIRequestContext): Promise<SeanceOuverte> {
   return seancePartagee('reprise', async () => {
-    const { votes, reflexions } = await coursReleve(request);
+    const { votes, reponsesLibres } = await coursReleve(request);
     vote = votes[0];
-    const suivante = reflexions.find((ecran) => ecran.rang > vote.rang);
-    expect(suivante, 'aucune réflexion après le premier vote').toBeDefined();
-    reflexion = suivante!;
+    const suivante = reponsesLibres.find((ecran) => ecran.rang > vote.rang);
+    expect(suivante, 'aucune réponse libre après le premier vote').toBeDefined();
+    reponseLibre = suivante!;
     return seanceDemarreeSurLEcran(request, vote.rang);
   });
 }
@@ -98,8 +98,8 @@ test.describe('Banc — reprise après rechargement', () => {
     });
     expect(repondue.status(), await repondue.text()).toBe(201);
 
-    await servirLEcran(request, jeton, seance.sessionId, reflexion.rang);
-    const libre = await envoyerUneReponseLibre(request, seance, poste, reflexion);
+    await servirLEcran(request, jeton, seance.sessionId, reponseLibre.rang);
+    const libre = await envoyerUneReponseLibre(request, seance, poste, reponseLibre);
     expect(libre.status(), await libre.text()).toBe(201);
     await servirLEcran(request, jeton, seance.sessionId, vote.rang);
 
@@ -109,7 +109,7 @@ test.describe('Banc — reprise après rechargement', () => {
       expect.objectContaining({ questionId: vote.activiteId, valeur: vote.options[0] }),
     ]);
     expect(etat.reponsesLibres).toEqual([
-      { activityId: reflexion.activiteId, response: REPONSE_LIBRE_ATTENDUE },
+      { activityId: reponseLibre.activiteId, response: REPONSE_LIBRE_ATTENDUE },
     ]);
     for (const famille of FAMILLES_SANS_PRODUCTION_DU_POSTE) {
       expect(etat[famille], `famille ${famille}`).toEqual([]);

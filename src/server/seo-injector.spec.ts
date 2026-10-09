@@ -1,4 +1,4 @@
-import { cheminDuCoursBts, COURS_BTS } from '../app/core/config/cours-bts';
+import { cheminDuCoursEnSeance, COURS_EN_SEANCE } from '../app/core/config/cours-en-seance';
 import type { SeoMetadataFile } from '../app/core/seo/seo-metadata.model';
 import seoMetadata from '../assets/seo/seo-metadata.json';
 import { buildLlmsFullTxt, buildLlmsTxt, buildSitemapXml } from './seo-builders';
@@ -109,10 +109,10 @@ describe('isKnownRoute', () => {
   });
 });
 
-for (const slug of COURS_BTS) {
+for (const slug of COURS_EN_SEANCE) {
   describe(`seo-metadata.json — cours ${slug} servi par le serveur`, () => {
     const METADONNEES = seoMetadata as unknown as SeoMetadataFile;
-    const CHEMIN_B2 = `/${cheminDuCoursBts(slug)}`;
+    const CHEMIN_B2 = `/${cheminDuCoursEnSeance(slug)}`;
 
     it('déclare la page du cours comme une route connue', () => {
       expect(isKnownRoute(CHEMIN_B2, METADONNEES)).toBeTrue();

@@ -210,8 +210,19 @@ export const cardsort = `
   padding-left: var(--fp-s-3);
 }
 
+:where(.fp-root) .fp-cardsort__attendus--papier {
+  display: block;
+  columns: 2;
+  column-gap: var(--fp-s-4);
+}
+
 :where(.fp-root) .fp-cardsort__attendu {
   color: var(--fp-texte-fort);
+}
+
+:where(.fp-root) .fp-cardsort__attendus--papier .fp-cardsort__attendu {
+  break-inside: avoid;
+  margin-bottom: var(--fp-s-1);
 }
 
 :where(.fp-root) .fp-cardsort__justification {

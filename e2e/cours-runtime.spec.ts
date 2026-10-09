@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { COURS_BTS } from '../src/app/core/config/cours-bts';
+import { COURS_EN_SEANCE } from '../src/app/core/config/cours-en-seance';
 
 test.describe('Parcours public des formations', () => {
   test('l ancienne demonstration technique redirige vers le catalogue', async ({ page }) => {
@@ -11,7 +11,7 @@ test.describe('Parcours public des formations', () => {
     await expect(page.getByText('Chargement du cours…')).toHaveCount(0);
   });
 
-  for (const slug of COURS_BTS) {
+  for (const slug of COURS_EN_SEANCE) {
     const code = slug.slice(0, 5).toUpperCase();
 
     test(`L1 · le ${code} mène un visiteur au poste étudiant, sans lecture libre`, async ({
@@ -39,7 +39,7 @@ test.describe('Parcours public des formations', () => {
     const largeurDocument = await page.evaluate(() => document.documentElement.scrollWidth);
     expect(largeurDocument).toBeLessThanOrEqual(390);
     const cartes = page.locator('.formation--live');
-    await expect(cartes).toHaveCount(COURS_BTS.length);
+    await expect(cartes).toHaveCount(COURS_EN_SEANCE.length);
     for (const carte of await cartes.all()) {
       await expect(carte).toBeVisible();
     }
