@@ -10,6 +10,7 @@ import { type Recolte, recolterDansLArbre } from '../../../../testing/arbre-json
 import { objet } from '../../../shared/slides/visual/presentation-v2';
 import { INSTANTANE_B2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
+import { INSTANTANE_B2_03 } from '../../../../testing/fixtures/instantane-b2-03';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import { type FicheDuLivretEtudiant, feuillesDuLivretEtudiant } from './livret-papier';
 
@@ -82,8 +83,16 @@ function reponsesDe(ecran: EcranDeroule | undefined): readonly string[] {
   ];
 }
 
+const EXPOSANTS_ET_INDICES = /[²³¹⁰-₟]/gu;
+
 function normaliser(texte: string): string {
-  return texte.normalize('NFKC').replaceAll('−', '-').replace(/\s+/gu, ' ').trim().toLowerCase();
+  return texte
+    .replaceAll(EXPOSANTS_ET_INDICES, ' ')
+    .normalize('NFKC')
+    .replaceAll('−', '-')
+    .replace(/\s+/gu, ' ')
+    .trim()
+    .toLowerCase();
 }
 
 const texteDuChamp: Recolte = (cle, contenu, descendre) => {
@@ -101,11 +110,10 @@ const texteDuChamp: Recolte = (cle, contenu, descendre) => {
 
 function raisonnementsCachesAuLivret(ecran: EcranContent): readonly string[] {
   const etapes = objet(ecran.donnees?.['exemple'])?.['etapes'];
-  const etayage = ecran.donnees?.['etayage'];
   if (ecran.type !== 'fp-worked' || !Array.isArray(etapes)) {
     return [];
   }
-  return etapes.slice(typeof etayage === 'number' ? etayage : 0).flatMap((etape: unknown) => {
+  return etapes.flatMap((etape: unknown) => {
     const raisonnement = objet(etape)?.['raisonnement'];
     return typeof raisonnement === 'string' ? [raisonnement] : [];
   });
@@ -134,9 +142,9 @@ function sortDuChiffreSeul(nombre: string): boolean {
 
 function nombresDe(texte: string): ReadonlySet<string> {
   return new Set(
-    [...normaliser(texte).matchAll(NOMBRE)]
-      .map(([nombre]) => sansZeroFinal(nombre))
-      .filter(sortDuChiffreSeul),
+    Array.from(normaliser(texte).matchAll(NOMBRE), ([nombre]) => nombre)
+      .filter(sortDuChiffreSeul)
+      .map(sansZeroFinal),
   );
 }
 
@@ -320,23 +328,64 @@ describe('livret papier des cours servis', () => {
     expect(fiche('B2-01-A5-02-VOTE-PARADOXE').aLaSuite).toBeFalse();
   });
 
-  it('repère le résultat qu un exemple guidé fait calculer sur la copie, zéro final compris', () => {
-    expect(
-      citationsDesFichesALaSuite(exempleEtSonVoteSurUneMemePage(), INSTANTANE_B2_01.deroule),
-    ).toEqual(
-      jasmine.arrayContaining([
-        'B2-01-A5-02-VOTE-PARADOXE cite « 27,6 » de B2-01-A5-03-MOYENNE-PONDEREE',
-        'B2-01-A5-02-VOTE-PARADOXE cite « 25,3 » de B2-01-A5-03-MOYENNE-PONDEREE',
-      ]),
-    );
+  it('repère le résultat qu un exemple guidé fait calculer sur la copie, zéro final compris, quel que soit son étayage', () => {
+    for (const etayage of [undefined, 6]) {
+      expect(
+        citationsDesFichesALaSuite(
+          exempleEtSonVoteSurUneMemePage(etayage),
+          INSTANTANE_B2_01.deroule,
+        ),
+      )
+        .withContext(`étayage ${String(etayage)}`)
+        .toEqual(
+          jasmine.arrayContaining([
+            'B2-01-A5-02-VOTE-PARADOXE cite « 27,6 » de B2-01-A5-03-MOYENNE-PONDEREE',
+            'B2-01-A5-02-VOTE-PARADOXE cite « 25,3 » de B2-01-A5-03-MOYENNE-PONDEREE',
+          ]),
+        );
+    }
   });
 
-  it('ne compte pas comme réponse les données que l énoncé imprime, ni les étapes que le livret montre', () => {
-    const citations = (etayage?: number): readonly string[] =>
-      citationsDesFichesALaSuite(exempleEtSonVoteSurUneMemePage(etayage), INSTANTANE_B2_01.deroule);
+  it('ne compte pas comme réponse les données que l énoncé imprime', () => {
+    const citations = citationsDesFichesALaSuite(
+      exempleEtSonVoteSurUneMemePage(),
+      INSTANTANE_B2_01.deroule,
+    );
 
-    expect(citations().some((citation) => /« (36|28|16) »/u.test(citation))).toBeFalse();
-    expect(citations(6)).toEqual([]);
+    expect(citations.some((citation) => /« (36|28|16) »/u.test(citation))).toBeFalse();
+  });
+
+  it('ne colle pas au nombre l exposant qui le suit', () => {
+    const nombres = nombresDe('8 000 × 1,02⁵');
+
+    expect(nombres.has('1,02')).toBeTrue();
+    expect(nombres.has('1,025')).toBeFalse();
+  });
+
+  it('retient un nombre écrit avec des décimales nulles, même réduit à un chiffre', () => {
+    expect(nombresDe('+6,00 % par an').has('6')).toBeTrue();
+  });
+
+  it('imprime sur une page neuve la question qui reprend une réponse rédigée de sa page', () => {
+    const fiche = ficheDe(
+      feuillesDuLivretEtudiant(INSTANTANE_B2_03.sujet, INSTANTANE_B2_03.deroule),
+    );
+
+    expect(fiche('B2-03-A3-01-VOTE-TOUTES').aLaSuite).toBeFalse();
+    expect(fiche('B2-03-A2-01-CONTRAIRE').aLaSuite).toBeTrue();
+  });
+
+  it('ne compte une reprise qu à partir de quatre mots de suite d une réponse rédigée', () => {
+    const aLaSuite = (citation: string): boolean =>
+      ficheDe(
+        feuillesDuLivretEtudiant(
+          sujetOuLaQuestionCite('B2-02-A3-01-JUSQU-OU', citation),
+          INSTANTANE_B2_02.deroule,
+        ),
+      )('B2-02-A3-01-JUSQU-OU').aLaSuite;
+
+    expect(aLaSuite('colonne a une')).toBeTrue();
+    expect(aLaSuite('colonne a une somme')).toBeFalse();
   });
 
   it('cherche une réponse sous sa formule, son arrondi, son pourcentage et sa valeur logique', () => {

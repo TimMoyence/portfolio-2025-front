@@ -133,7 +133,7 @@ describe('CoursLivretComponent', () => {
     );
   };
 
-  const avecLExempleImprimeEnEntier = (livret: LivretDuCours): LivretDuCours => ({
+  const avecLEtayageDeLAuteur = (livret: LivretDuCours): LivretDuCours => ({
     ...livret,
     sujet: {
       ...livret.sujet,
@@ -149,27 +149,8 @@ describe('CoursLivretComponent', () => {
     expect(await fichesALaSuiteDe(LIVRET_B2_02)).toEqual([8]);
   });
 
-  it('imprime à la suite l’exercice qui suit un exemple guidé dont le livret montre toutes les étapes', async () => {
-    expect(await fichesALaSuiteDe(avecLExempleImprimeEnEntier(LIVRET_B2_02))).toEqual([3, 8]);
-  });
-
-  it('garde sur une page neuve la fiche qui suit un exemple guidé quand sa page porte déjà une réponse à corriger', async () => {
-    const avecUneQuestionAvantLExemple: LivretDuCours = {
-      ...avecLExempleImprimeEnEntier(LIVRET_B2_02),
-      corrige: {
-        ...LIVRET_B2_02.corrige,
-        ecrans: LIVRET_B2_02.corrige.ecrans.map((ecran) =>
-          ecran.id === 'B2-02-A1-06-COURS-ECART'
-            ? {
-                ...ecran,
-                corriges: [{ questionId: 'ecart-moyen', bonneReponse: '12', confusions: [] }],
-              }
-            : ecran,
-        ),
-      },
-    };
-
-    expect(await fichesALaSuiteDe(avecUneQuestionAvantLExemple)).toEqual([8]);
+  it('imprime sur une page neuve l’exercice qui suit un exemple guidé, même quand son auteur en montre toutes les étapes', async () => {
+    expect(await fichesALaSuiteDe(avecLEtayageDeLAuteur(LIVRET_B2_02))).toEqual([8]);
   });
 
   it('fait repartir sur une page neuve toute fiche qui dévoilerait la réponse de la précédente', async () => {
@@ -213,7 +194,7 @@ describe('CoursLivretComponent', () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     expect(annonce(fixture)).toEqual([
-      '15 fiches · chacune commence sur une nouvelle page, sauf la question qui ouvre une notion quand aucun exemple guidé de sa page n’attend de réponse sur la copie, et la fiche qui suit un exemple guidé imprimé en entier quand rien n’est encore à corriger sur sa page ; les plus longues en occupent plusieurs',
+      '15 fiches · chacune commence sur une nouvelle page, sauf la question qui ouvre une notion quand sa page ne porte aucun exemple guidé et qu’elle n’en reprend aucune réponse ; les plus longues en occupent plusieurs',
     ]);
 
     basculerSurLeCorrige(fixture);
