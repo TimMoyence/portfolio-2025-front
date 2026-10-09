@@ -133,8 +133,8 @@ describe('CoursSceneComponent', () => {
     const [vote] = derouleDeSeance().ecrans;
     const pieceJointe = {
       libelle: 'Classeur de reprise de l’acte 2',
-      fichier: '/assets/cours/b3-01/B3-01_reprise_acte_2.67aba78a.xlsx',
-    };
+      reservee: true,
+    } as const;
     const fixture = await monterSur([{ ...vote, pieceJointe }]);
 
     diffuserSurLaVue(double, fixture, { ecranCourant: 0 });

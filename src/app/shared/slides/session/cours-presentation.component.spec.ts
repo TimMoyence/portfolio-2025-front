@@ -20,9 +20,12 @@ import {
 import { chargerLesPolicesDeLApplication } from '../../../../testing/polices';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { DirectEcran } from './contrat-hote';
+import { of, throwError } from 'rxjs';
+import { buildFichierTelecharge } from '../../../../testing/factories/formations.factory';
 import {
   CoursPresentationComponent,
   type CoursPresentationMode,
+  type TelechargementDePieceJointe,
 } from './cours-presentation.component';
 
 const POSTES = ['cours-etudiant', 'cours-presentateur'] as const;
@@ -90,6 +93,7 @@ async function monterDansUnCadre(
   hauteur: number,
   renvoi: EcranContent | null = null,
   direct: DirectEcran | null = null,
+  telechargement: TelechargementDePieceJointe | null = null,
 ): Promise<EcranCadre> {
   const cadre = document.createElement('div');
   cadre.style.cssText = `position:fixed;top:0;left:0;width:${largeur}px;height:${hauteur}px;display:flex;overflow:auto;`;
@@ -102,6 +106,7 @@ async function monterDansUnCadre(
     fixture.componentRef.setInput('renvoi', renvoi);
   }
   fixture.componentRef.setInput('direct', direct);
+  fixture.componentRef.setInput('telechargement', telechargement);
   const racine = fixture.nativeElement as HTMLElement;
   const toile = (): HTMLElement | null =>
     racine.querySelector<HTMLElement>('[data-testid="cours-toile"]');
@@ -1126,6 +1131,14 @@ function pieceJointeAffichee(monte: EcranCadre): HTMLElement | null {
   return monte.hote.querySelector<HTMLElement>('[data-testid="cours-piece-jointe"]');
 }
 
+async function verifierQueToutTient(monte: EcranCadre, temoin: string): Promise<void> {
+  await stabiliser(monte, 4);
+
+  expect(monte.hote.querySelector(temoin)).not.toBeNull();
+  expect(elementsPerdus(monte)).withContext('éléments coupés').toEqual([]);
+  monte.detruire();
+}
+
 function texteDe(element: Element | null): string | undefined {
   return element?.textContent?.replace(/\s+/g, ' ').trim();
 }
@@ -1174,6 +1187,113 @@ describe('CoursPresentationComponent : pièce jointe d un écran', () => {
     monte.detruire();
   });
 
+  describe('réservée à la séance', () => {
+    const PIECE_RESERVEE: PieceJointe = {
+      libelle: 'Classeur de reprise de l’acte 2',
+      reservee: true,
+    };
+    const CLASSEUR = buildFichierTelecharge();
+
+    const monterLaPieceReservee = (
+      mode: CoursPresentationMode,
+      telechargement: TelechargementDePieceJointe | null,
+    ): Promise<EcranCadre> =>
+      monterDansUnCadre(
+        ecranDuMode(mode, PIECE_RESERVEE),
+        mode,
+        1280,
+        720,
+        null,
+        null,
+        telechargement,
+      );
+
+    for (const mode of ['etudiant', 'formateur'] as const) {
+      it(`V5 · en ${mode}, télécharge par l API le classeur de l écran sous le nom servi`, async () => {
+        const telechargement = jasmine
+          .createSpy<TelechargementDePieceJointe>('telechargement')
+          .and.returnValue(of(CLASSEUR));
+        const creation = spyOn(URL, 'createObjectURL').and.returnValue('blob:reprise');
+        const clic = spyOn(HTMLAnchorElement.prototype, 'click');
+        const monte = await monterLaPieceReservee(mode, telechargement);
+        const bouton = pieceJointeAffichee(monte);
+
+        bouton?.click();
+
+        expect({
+          balise: bouton?.tagName,
+          texte: texteDe(bouton),
+          ecran: telechargement.calls.mostRecent().args,
+          contenu: creation.calls.mostRecent().args[0],
+          nom: (clic.calls.mostRecent().object as HTMLAnchorElement).download,
+        }).toEqual({
+          balise: 'BUTTON',
+          texte: `Télécharger ${PIECE_RESERVEE.libelle}`,
+          ecran: [ecranDuMode(mode).id],
+          contenu: jasmine.any(Blob),
+          nom: CLASSEUR.nom,
+        });
+        monte.detruire();
+      });
+    }
+
+    it('V5 · signale au poste un téléchargement refusé, et laisse réessayer', async () => {
+      const telechargement = jasmine
+        .createSpy<TelechargementDePieceJointe>('telechargement')
+        .and.returnValue(throwError(() => new Error('404')));
+      const monte = await monterLaPieceReservee('etudiant', telechargement);
+      const bouton = pieceJointeAffichee(monte) as HTMLButtonElement;
+
+      bouton.click();
+      await monte.rafraichir();
+
+      expect({
+        alerte: texteDe(monte.hote.querySelector('[data-testid="cours-piece-jointe-echec"]')),
+        role: monte.hote
+          .querySelector('[data-testid="cours-piece-jointe-echec"]')
+          ?.getAttribute('role'),
+        desactive: bouton.disabled,
+      }).toEqual({
+        alerte: 'Téléchargement impossible : réessayez, ou demandez le classeur au formateur.',
+        role: 'alert',
+        desactive: false,
+      });
+      monte.detruire();
+    });
+
+    it('V5 · en projection, annonce la pièce réservée sur les postes, sans bouton', async () => {
+      const monte = await monterLaPieceReservee('projection', null);
+      const mention = pieceJointeAffichee(monte);
+
+      expect({
+        balise: mention?.tagName,
+        boutons: monte.hote.querySelectorAll('button.cours-piece-jointe').length,
+        texte: texteDe(mention),
+      }).toEqual({
+        balise: 'P',
+        boutons: 0,
+        texte: `Sur votre poste : ${PIECE_RESERVEE.libelle}`,
+      });
+      monte.detruire();
+    });
+
+    it('V5 · sans moyen de la télécharger, ne propose pas la pièce réservée', async () => {
+      const monte = await monterLaPieceReservee('etudiant', null);
+
+      expect(pieceJointeAffichee(monte)).toBeNull();
+      monte.detruire();
+    });
+
+    it('V5 · l écran, son bouton et l alerte d échec tiennent dans la toile', async () => {
+      const monte = await monterLaPieceReservee('etudiant', () =>
+        throwError(() => new Error('404')),
+      );
+      pieceJointeAffichee(monte)?.click();
+
+      await verifierQueToutTient(monte, '[data-testid="cours-piece-jointe-echec"]');
+    });
+  });
+
   for (const mode of MODES) {
     it(`V5 · en ${mode}, n affiche aucune pièce jointe sur un écran qui n en a pas`, async () => {
       const monte = await monterDansUnCadre(ecranDuMode(mode), mode, 1280, 720);
@@ -1184,11 +1304,8 @@ describe('CoursPresentationComponent : pièce jointe d un écran', () => {
 
     it(`V5 · en ${mode}, l écran et sa pièce jointe tiennent dans la toile`, async () => {
       const monte = await monterDansUnCadre(ecranDuMode(mode, PIECE_JOINTE), mode, 1280, 720);
-      await stabiliser(monte, 4);
 
-      expect(pieceJointeAffichee(monte)).not.toBeNull();
-      expect(elementsPerdus(monte)).withContext('éléments coupés').toEqual([]);
-      monte.detruire();
+      await verifierQueToutTient(monte, '[data-testid="cours-piece-jointe"]');
     });
   }
 

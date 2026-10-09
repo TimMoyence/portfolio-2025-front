@@ -4,11 +4,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   ElementRef,
   inject,
   Injector,
   input,
+  linkedSignal,
   output,
   PLATFORM_ID,
   signal,
@@ -16,15 +18,27 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import type { Observable } from 'rxjs';
 import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
-import type { SyntheseConcept } from '../../../core/ports/formations.port';
+import type { FichierTelecharge, SyntheseConcept } from '../../../core/ports/formations.port';
+import { telechargerFichier } from '../../utils/telechargement.utils';
 import type { DirectEcran, EvenementBrique, RetourBrique } from './contrat-hote';
 import { extraireDuRenvoi } from './extrait-du-renvoi';
 import { SlideActivityComponent } from './slide-activity.component';
 import { SlideComponent } from '../deck/slide.component';
 
 export type CoursPresentationMode = 'etudiant' | 'formateur' | 'projection';
+
+export type TelechargementDePieceJointe = (ecranId: string) => Observable<FichierTelecharge>;
+
+type EtatDuTelechargement = 'pret' | 'en-cours' | 'echec';
+
+interface PieceJointeAffichee {
+  readonly libelle: string;
+  readonly fichier: string | null;
+}
 
 const LARGEUR_DE_TOILE = 1280;
 const HAUTEUR_DE_TOILE = 720;
@@ -118,7 +132,7 @@ function aUnDefileurRogne(contenu: HTMLElement): boolean {
                           <span i18n="@@coursPieceJointeSurLePoste">Sur votre poste :</span>
                           {{ piece.libelle }}
                         </p>
-                      } @else {
+                      } @else if (piece.fichier !== null) {
                         <a
                           class="cours-piece-jointe cours-piece-jointe--lien"
                           data-testid="cours-piece-jointe"
@@ -128,6 +142,28 @@ function aUnDefileurRogne(contenu: HTMLElement): boolean {
                           <span i18n="@@coursPieceJointeTelecharger">Télécharger</span>
                           {{ piece.libelle }}
                         </a>
+                      } @else {
+                        <button
+                          type="button"
+                          class="cours-piece-jointe cours-piece-jointe--lien"
+                          data-testid="cours-piece-jointe"
+                          [disabled]="etatDuTelechargement() === 'en-cours'"
+                          (click)="telechargerLaPieceReservee()"
+                        >
+                          <span i18n="@@coursPieceJointeTelecharger">Télécharger</span>
+                          {{ piece.libelle }}
+                        </button>
+                        @if (etatDuTelechargement() === 'echec') {
+                          <p
+                            class="cours-piece-jointe-echec"
+                            role="alert"
+                            data-testid="cours-piece-jointe-echec"
+                            i18n="@@coursPieceJointeEchec"
+                          >
+                            Téléchargement impossible : réessayez, ou demandez le classeur au
+                            formateur.
+                          </p>
+                        }
                       }
                     }
                   </app-slide>
@@ -247,9 +283,22 @@ function aUnDefileurRogne(contenu: HTMLElement): boolean {
       border-radius: 0.5rem;
       color: var(--ink, #0c0902);
       background: var(--paper, #ffffff);
+      font-family: inherit;
       font-size: 1rem;
       line-height: 1.3;
       text-align: center;
+    }
+
+    .cours-piece-jointe:disabled {
+      cursor: progress;
+      opacity: 0.6;
+    }
+
+    .cours-piece-jointe-echec {
+      margin: 0.5rem 0 0;
+      color: var(--fp-erreur, #9b2c1f);
+      font-size: 0.95rem;
+      line-height: 1.3;
     }
 
     .cours-piece-jointe--lien {
@@ -411,6 +460,7 @@ export class CoursPresentationComponent {
   readonly brouillons = input<Brouillons | null>(null);
   readonly renvoi = input<EcranContent | null>(null);
   readonly surimpression = input<TemplateRef<unknown> | null>(null);
+  readonly telechargement = input<TelechargementDePieceJointe | null>(null);
   readonly evenement = output<EvenementBrique>();
 
   private readonly cadreObserve = viewChild<ElementRef<HTMLElement>>('cadre');
@@ -422,6 +472,7 @@ export class CoursPresentationComponent {
   private readonly navigateur = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly document = inject(DOCUMENT);
   private readonly injecteur = inject(Injector);
+  private readonly destruction = inject(DestroyRef);
   private readonly cadre = signal<Mesure | null>(null);
   private readonly place = signal<number | null>(null);
   private readonly hauteurDuContenu = signal<number | null>(null);
@@ -439,12 +490,46 @@ export class CoursPresentationComponent {
   private readonly echellesEssayees = new Map<number, number>();
   private readonly ecranAffiche = computed(() => this.slide()?.id ?? null);
 
-  protected readonly pieceJointe = computed(() => {
+  protected readonly pieceJointe = computed((): PieceJointeAffichee | null => {
     const pieceJointe = this.slide()?.pieceJointe;
-    return pieceJointe !== undefined && FICHIER_DE_PIECE_JOINTE.test(pieceJointe.fichier)
-      ? pieceJointe
-      : null;
+    if (pieceJointe === undefined) {
+      return null;
+    }
+    if ('reservee' in pieceJointe) {
+      return this.mode() === 'projection' || this.telechargement() !== null
+        ? { libelle: pieceJointe.libelle, fichier: null }
+        : null;
+    }
+    return FICHIER_DE_PIECE_JOINTE.test(pieceJointe.fichier) ? pieceJointe : null;
   });
+
+  protected readonly etatDuTelechargement = linkedSignal<string | null, EtatDuTelechargement>({
+    source: this.ecranAffiche,
+    computation: () => 'pret',
+  });
+
+  protected telechargerLaPieceReservee(): void {
+    const telecharger = this.telechargement();
+    const ecranId = this.ecranAffiche();
+    if (telecharger === null || ecranId === null) {
+      return;
+    }
+    const signaler = (etat: EtatDuTelechargement): void => {
+      if (this.ecranAffiche() === ecranId) {
+        this.etatDuTelechargement.set(etat);
+      }
+    };
+    signaler('en-cours');
+    telecharger(ecranId)
+      .pipe(takeUntilDestroyed(this.destruction))
+      .subscribe({
+        next: ({ nom, contenu }) => {
+          telechargerFichier(this.document, contenu, nom, contenu.type);
+          signaler('pret');
+        },
+        error: () => signaler('echec'),
+      });
+  }
 
   protected readonly renvoiAffiche = computed(() => {
     const renvoi = this.renvoi();

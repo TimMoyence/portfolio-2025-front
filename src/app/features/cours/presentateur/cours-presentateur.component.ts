@@ -40,7 +40,10 @@ import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import { enoncesDuDeroule } from '../../../shared/slides/session/lecture-ecran';
-import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
+import {
+  CoursPresentationComponent,
+  type TelechargementDePieceJointe,
+} from '../../../shared/slides/session/cours-presentation.component';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
 import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
@@ -511,6 +514,7 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
                       [maitrise]="maitrise()"
                       [renvoi]="ecranRenvoye()"
                       [surimpression]="correction"
+                      [telechargement]="telechargement()"
                       (evenement)="relayerLeReglage($event)"
                     />
                     <ng-template #correction>
@@ -786,6 +790,13 @@ export class CoursPresentateurComponent {
   readonly direct = computed<DirectEcran | null>(() =>
     directDeLEcranCourant(this.ecranCourant(), this.pilotage(), this.resultats(), 0),
   );
+
+  protected readonly telechargement = computed((): TelechargementDePieceJointe | null => {
+    const sessionId = this.sessionId();
+    return sessionId === null
+      ? null
+      : (ecranId) => this.port.telechargerPieceJointeDuDeroule(sessionId, ecranId);
+  });
 
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);

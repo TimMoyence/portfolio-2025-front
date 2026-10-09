@@ -1,3 +1,4 @@
+import type { HttpResponse } from '@angular/common/http';
 import { HttpErrorResponse, HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
@@ -12,6 +13,7 @@ import type {
 import type {
   CommandePilotage,
   AnnotationFormateur,
+  FichierTelecharge,
   FormationsPort,
   IncidentEtudiant,
   InscriptionParticipant,
@@ -196,6 +198,26 @@ export class FormationsHttpAdapter implements FormationsPort {
     return this.http
       .get<DerouleDuFil>(`${this.urlSeance(sessionId)}/deroule`)
       .pipe(map(derouleDuFil));
+  }
+
+  telechargerPieceJointeDuDeroule(
+    sessionId: string,
+    ecranId: string,
+  ): Observable<FichierTelecharge> {
+    return this.telecharger(
+      `${this.urlSeance(sessionId)}/deroule/pieces-jointes/${encodeURIComponent(ecranId)}`,
+    );
+  }
+
+  telechargerPieceJointe(
+    sessionId: string,
+    jeton: string,
+    ecranId: string,
+  ): Observable<FichierTelecharge> {
+    return this.telecharger(
+      `${this.urlSeance(sessionId)}/pieces-jointes/${encodeURIComponent(ecranId)}`,
+      entetes(jeton),
+    );
   }
 
   lireLivret(courseSlug: string): Observable<LivretDuCours> {
@@ -432,6 +454,22 @@ export class FormationsHttpAdapter implements FormationsPort {
   private urlSeance(sessionId: string): string {
     return `${this.baseUrl}/sessions/${encodeURIComponent(sessionId)}`;
   }
+
+  private telecharger(url: string, headers?: HttpHeaders): Observable<FichierTelecharge> {
+    return this.http
+      .get(url, { headers, observe: 'response', responseType: 'blob' })
+      .pipe(map(fichierTelecharge));
+  }
+}
+
+const NOM_DU_FICHIER_SERVI = /filename="([^"]+)"/;
+
+function fichierTelecharge(reponse: HttpResponse<Blob>): FichierTelecharge {
+  const nom = NOM_DU_FICHIER_SERVI.exec(reponse.headers.get('Content-Disposition') ?? '')?.[1];
+  if (nom === undefined || reponse.body === null) {
+    throw new Error(`Pièce jointe servie sans nom de fichier : ${reponse.url ?? ''}`);
+  }
+  return { nom, contenu: reponse.body };
 }
 
 function entetes(jeton: string): HttpHeaders {

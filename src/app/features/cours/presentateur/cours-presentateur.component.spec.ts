@@ -53,6 +53,7 @@ import {
 } from '../../../../testing/vue-de-seance';
 import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formations.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
+import { demanderLaPieceJointe } from '../../../../testing/piece-jointe-demandee';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { CoursPresentateurComponent } from './cours-presentateur.component';
 
@@ -192,6 +193,15 @@ describe('CoursPresentateurComponent', () => {
   });
 
   afterEach(demonterLeBancDuPupitre);
+
+  it('V5 · télécharge la pièce réservée d un écran par le déroulé de sa séance', async () => {
+    demanderLaPieceJointe(await ouvrirLaSeance(), 'B3-01-A2-01-VOTE-FAMILLE');
+
+    expect(port.telechargerPieceJointeDuDeroule).toHaveBeenCalledOnceWith(
+      SESSION,
+      'B3-01-A2-01-VOTE-FAMILLE',
+    );
+  });
 
   it('ouvre le livret papier dans un onglet détaché du pupitre, sans quitter la séance', async () => {
     const fenetre = spyOn(window, 'open').and.returnValue(null);

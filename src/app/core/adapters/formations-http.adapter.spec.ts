@@ -24,6 +24,7 @@ import { bancAdaptateurHttp } from '../../../testing/http-attendu';
 import type { CoursContent, EcranContent } from '../../../cours/content/types';
 import type {
   AnnotationFormateur,
+  FichierTelecharge,
   InscriptionParticipant,
   MotifRefusRattachement,
   MotifRefusReponse,
@@ -176,6 +177,53 @@ describe('FormationsHttpAdapter', () => {
     req.flush(sujet);
 
     expect(recus).toEqual([sujet]);
+  });
+
+  describe('pièce jointe réservée à la séance', () => {
+    const ECRAN_ID = 'B3-01-A2-01-VOTE-FAMILLE';
+    const CLASSEUR = new Blob(['PK'], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const NOM_SERVI = { 'Content-Disposition': 'attachment; filename="B3-01_reprise_acte_2.xlsx"' };
+    const FICHIER: FichierTelecharge = { nom: 'B3-01_reprise_acte_2.xlsx', contenu: CLASSEUR };
+
+    const telecharge = (appel: Observable<FichierTelecharge>, url: string) => {
+      const recus: FichierTelecharge[] = [];
+      appel.subscribe((fichier) => recus.push(fichier));
+      const req = attendre(url, 'GET');
+      const { headers, responseType } = req.request;
+      req.flush(CLASSEUR, { headers: NOM_SERVI });
+      return { recus, jeton: headers.get(ENTETE_JETON), reponse: responseType };
+    };
+
+    it('telechargerPieceJointe GETe le classeur de l écran avec l en-tete de participant', () => {
+      expect(
+        telecharge(
+          adapter.telechargerPieceJointe(SESSION_ID, JETON, ECRAN_ID),
+          `${URL_SEANCE}/pieces-jointes/${ECRAN_ID}`,
+        ),
+      ).toEqual({ recus: [FICHIER], jeton: JETON, reponse: 'blob' });
+    });
+
+    it('telechargerPieceJointeDuDeroule GETe le classeur depuis le deroule, sans jeton de participant', () => {
+      expect(
+        telecharge(
+          adapter.telechargerPieceJointeDuDeroule(SESSION_ID, ECRAN_ID),
+          `${URL_SEANCE}/deroule/pieces-jointes/${ECRAN_ID}`,
+        ),
+      ).toEqual({ recus: [FICHIER], jeton: null, reponse: 'blob' });
+    });
+
+    it('échoue sur un classeur servi sans nom de fichier, plutôt que d en inventer un', () => {
+      const erreurs: unknown[] = [];
+
+      adapter
+        .telechargerPieceJointe(SESSION_ID, JETON, ECRAN_ID)
+        .subscribe({ error: (erreur: unknown) => erreurs.push(erreur) });
+      attendre(`${URL_SEANCE}/pieces-jointes/${ECRAN_ID}`, 'GET').flush(CLASSEUR);
+
+      expect(erreurs).toEqual([jasmine.any(Error)]);
+    });
   });
 
   function sujetDontLePremierEcranPorte(fil: (premier: EcranContent) => Record<string, unknown>) {

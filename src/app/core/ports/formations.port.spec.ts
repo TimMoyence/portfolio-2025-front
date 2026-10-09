@@ -21,8 +21,10 @@ import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donne
 const METHODES_DU_PORT = {
   ouvrirSeance: true,
   lireDeroule: true,
+  telechargerPieceJointeDuDeroule: true,
   lireLivret: true,
   lireSujet: true,
+  telechargerPieceJointe: true,
   demarrer: true,
   piloter: true,
   cloturer: true,
