@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import test from 'node:test';
 import { cheminDuDepot, lireTexte } from './lib/depot.mjs';
@@ -40,8 +40,22 @@ const ecransAPieceJointe = (cours) =>
 
 const piecesJointesDe = (cours) => ecransAPieceJointe(cours).map((ecran) => ecran.pieceJointe);
 
+const racinesDesAssetsPublies = () => {
+  const { projects } = JSON.parse(lireTexte(cheminDuDepot('angular.json')));
+  const entrees = Object.values(projects).flatMap((projet) =>
+    Object.values(projet.architect ?? {}).flatMap((cible) => cible.options?.assets ?? []),
+  );
+  return [
+    ...new Set(
+      entrees.map((asset) => cheminDuDepot(typeof asset === 'string' ? asset : asset.input)),
+    ),
+  ];
+};
+
 const empreintesDesAssets = () =>
-  readdirSync(DOSSIER_DES_ASSETS, { recursive: true, withFileTypes: true })
+  racinesDesAssetsPublies()
+    .filter((racine) => existsSync(racine))
+    .flatMap((racine) => readdirSync(racine, { recursive: true, withFileTypes: true }))
     .filter((entree) => entree.isFile())
     .map((entree) => {
       const chemin = join(entree.parentPath, entree.name);
@@ -54,6 +68,15 @@ test('le B3-01 garde le manifeste de ses classeurs parmi les fixtures de test', 
   assert.ok(
     coursAClasseurs().includes('b3-01'),
     `src/testing/fixtures/b3-01${SUFFIXE_DU_MANIFESTE} absent : la garde ne garde rien.`,
+  );
+});
+
+test('fouille chaque dossier qu angular.json publie, src/assets et public compris', () => {
+  assert.deepEqual(
+    [DOSSIER_DES_ASSETS, cheminDuDepot('public')].filter(
+      (racine) => !racinesDesAssetsPublies().includes(racine),
+    ),
+    [],
   );
 });
 

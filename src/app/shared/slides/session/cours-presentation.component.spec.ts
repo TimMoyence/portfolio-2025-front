@@ -1253,18 +1253,30 @@ describe('CoursPresentationComponent : pièce jointe d un écran', () => {
     const alerteDEchec = (monte: EcranCadre): HTMLElement | null =>
       monte.hote.querySelector<HTMLElement>('[data-testid="cours-piece-jointe-echec"]');
 
+    const monterUnRefusPuisLeClasseur = async (mode: CoursPresentationMode, refus: Error) => {
+      const telechargement = jasmine
+        .createSpy<TelechargementDePieceJointe>('telechargement')
+        .and.returnValues(
+          throwError(() => refus),
+          of(CLASSEUR),
+        );
+      spyOn(URL, 'createObjectURL').and.returnValue('blob:reprise');
+      const clic = spyOn(HTMLAnchorElement.prototype, 'click');
+      const monte = await monterLaPieceReservee(mode, telechargement);
+      return {
+        telechargement,
+        clic,
+        monte,
+        bouton: pieceJointeAffichee(monte) as HTMLButtonElement,
+      };
+    };
+
     for (const mode of ['etudiant', 'formateur'] as const) {
       it(`V5 · en ${mode}, signale un téléchargement refusé, puis réessaie au clic suivant`, async () => {
-        const telechargement = jasmine
-          .createSpy<TelechargementDePieceJointe>('telechargement')
-          .and.returnValues(
-            throwError(() => new Error('404')),
-            of(CLASSEUR),
-          );
-        spyOn(URL, 'createObjectURL').and.returnValue('blob:reprise');
-        const clic = spyOn(HTMLAnchorElement.prototype, 'click');
-        const monte = await monterLaPieceReservee(mode, telechargement);
-        const bouton = pieceJointeAffichee(monte) as HTMLButtonElement;
+        const { telechargement, clic, monte, bouton } = await monterUnRefusPuisLeClasseur(
+          mode,
+          new Error('404'),
+        );
 
         bouton.click();
         await monte.rafraichir();
@@ -1290,28 +1302,35 @@ describe('CoursPresentationComponent : pièce jointe d un écran', () => {
       });
     }
 
-    it('V5 · au poste, annonce une reprise retenue jusqu à la correction de ses activités, sans échec', async () => {
-      const telechargement = jasmine
-        .createSpy<TelechargementDePieceJointe>('telechargement')
-        .and.returnValue(throwError(() => new PieceJointeRefusee('retenue', 409)));
-      const monte = await monterLaPieceReservee('etudiant', telechargement);
-      const bouton = pieceJointeAffichee(monte) as HTMLButtonElement;
+    it('V5 · au poste, invite à réessayer une reprise retenue, sans échec, et l efface au téléchargement suivant', async () => {
+      const { clic, monte, bouton } = await monterUnRefusPuisLeClasseur(
+        'etudiant',
+        new PieceJointeRefusee('retenue', 409),
+      );
+      const annonceDeRetenue = (): Element | null =>
+        monte.hote.querySelector('[data-testid="cours-piece-jointe-retenue"]');
 
       bouton.click();
       await monte.rafraichir();
-      const annonce = monte.hote.querySelector('[data-testid="cours-piece-jointe-retenue"]');
-
-      expect({
-        annonce: texteDe(annonce),
-        role: annonce?.getAttribute('role'),
+      const retenue = {
+        annonce: texteDe(annonceDeRetenue()),
+        role: annonceDeRetenue()?.getAttribute('role'),
         echec: alerteDEchec(monte),
         desactive: bouton.disabled,
-      }).toEqual({
+      };
+      bouton.click();
+      await monte.rafraichir();
+
+      expect(retenue).toEqual({
         annonce:
-          'Classeur pas encore disponible : il s’ouvrira quand votre formateur aura révélé les activités qu’il reprend.',
+          'Classeur pas encore disponible : réessayez quand votre formateur aura révélé les activités qu’il reprend.',
         role: 'status',
         echec: null,
         desactive: false,
+      });
+      expect({ annonce: annonceDeRetenue(), telecharges: clic.calls.count() }).toEqual({
+        annonce: null,
+        telecharges: 1,
       });
       monte.detruire();
     });

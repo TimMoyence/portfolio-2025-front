@@ -133,9 +133,17 @@ function codeDuCorps(corps: unknown): string | null {
   return typeof code === 'string' ? code : null;
 }
 
+function jsonLisible(texte: string): unknown {
+  try {
+    return JSON.parse(texte);
+  } catch {
+    return null;
+  }
+}
+
 async function corpsDuFichierRefuse(corps: unknown): Promise<unknown> {
   return corps instanceof Blob && corps.type.includes('json')
-    ? JSON.parse(await corps.text())
+    ? jsonLisible(await corps.text())
     : corps;
 }
 

@@ -176,7 +176,7 @@ function aUnDefileurRogne(contenu: HTMLElement): boolean {
                             data-testid="cours-piece-jointe-retenue"
                             i18n="@@coursPieceJointeRetenue"
                           >
-                            Classeur pas encore disponible : il s’ouvrira quand votre formateur aura
+                            Classeur pas encore disponible : réessayez quand votre formateur aura
                             révélé les activités qu’il reprend.
                           </p>
                         }

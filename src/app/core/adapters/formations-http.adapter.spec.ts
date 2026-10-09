@@ -267,6 +267,16 @@ describe('FormationsHttpAdapter', () => {
         statut: 404,
       },
       {
+        cas: 'un refus au corps JSON illisible comme une pièce indisponible, statut compris',
+        repondre: (requete: TestRequest) =>
+          requete.flush(new Blob([''], { type: 'application/json' }), {
+            status: 502,
+            statusText: 'Bad Gateway',
+          }),
+        motif: 'indisponible',
+        statut: 502,
+      },
+      {
         cas: 'une coupure du réseau comme une pièce indisponible',
         repondre: (requete: TestRequest) => requete.error(new ProgressEvent('error')),
         motif: 'indisponible',
