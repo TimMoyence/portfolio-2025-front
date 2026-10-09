@@ -1,6 +1,6 @@
 export function telechargerFichier(
   document: Document,
-  contenu: string,
+  contenu: BlobPart,
   nomDuFichier: string,
   typeMime: string,
 ): void {

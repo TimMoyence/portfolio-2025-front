@@ -53,6 +53,7 @@ import {
 } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX } from '../cours-flux.token';
 import type { EvenementBrique, RetourBrique } from '../../../shared/slides/session/contrat-hote';
+import { demanderLaPieceJointe } from '../../../../testing/piece-jointe-demandee';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { CoursEtudiantComponent } from './cours-etudiant.component';
 
@@ -387,6 +388,16 @@ describe('CoursEtudiantComponent', () => {
     } finally {
       jasmine.clock().uninstall();
     }
+  });
+
+  it('V5 · télécharge la pièce réservée d un écran avec le jeton du poste', async () => {
+    demanderLaPieceJointe(await rattacherALaSeanceEnCours(), 'B3-01-A2-01-VOTE-FAMILLE');
+
+    expect(port.telechargerPieceJointe).toHaveBeenCalledOnceWith(
+      SESSION,
+      JETON,
+      'B3-01-A2-01-VOTE-FAMILLE',
+    );
   });
 
   it('lit le sujet avec le jeton du rattachement et n ouvre la seance qu a son arrivee', async () => {

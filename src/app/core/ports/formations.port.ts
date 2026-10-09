@@ -329,11 +329,37 @@ export class ReponseLibreRefusee extends Error {
   }
 }
 
+export interface FichierTelecharge {
+  readonly nom: string;
+  readonly contenu: Blob;
+}
+
+export type MotifRefusPieceJointe = 'retenue' | 'indisponible';
+
+export class PieceJointeRefusee extends Error {
+  constructor(
+    readonly motif: MotifRefusPieceJointe,
+    readonly statut: number,
+  ) {
+    super(`Pièce jointe refusée : ${motif} (statut ${statut})`);
+    this.name = 'PieceJointeRefusee';
+  }
+}
+
 export interface FormationsPort {
   ouvrirSeance(courseSlug: string, options?: { capacite?: number }): Observable<SeanceOuverte>;
   lireDeroule(sessionId: string): Observable<DerouleCours>;
+  telechargerPieceJointeDuDeroule(
+    sessionId: string,
+    ecranId: string,
+  ): Observable<FichierTelecharge>;
   lireLivret(courseSlug: string): Observable<LivretDuCours>;
   lireSujet(sessionId: string, jeton: string): Observable<CoursContent>;
+  telechargerPieceJointe(
+    sessionId: string,
+    jeton: string,
+    ecranId: string,
+  ): Observable<FichierTelecharge>;
   demarrer(sessionId: string): Observable<void>;
   piloter(sessionId: string, commande: CommandePilotage): Observable<void>;
   cloturer(sessionId: string): Observable<void>;

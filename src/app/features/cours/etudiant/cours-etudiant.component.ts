@@ -84,7 +84,10 @@ import {
 } from '../../../shared/slides/session/lecture-ecran';
 import type { EtatEnvoiLibre } from '../../../shared/slides/session/reponses-libres.service';
 import { ReponsesLibresService } from '../../../shared/slides/session/reponses-libres.service';
-import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
+import {
+  CoursPresentationComponent,
+  type TelechargementDePieceJointe,
+} from '../../../shared/slides/session/cours-presentation.component';
 import { aUnePresentation, objet } from '../../../shared/slides/visual/presentation-v2';
 import { CREATEUR_FLUX } from '../cours-flux.token';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
@@ -388,6 +391,7 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
                         [retours]="retours()"
                         [direct]="direct()"
                         [brouillons]="brouillons()"
+                        [telechargement]="telechargement()"
                         (evenement)="surEvenement($event)"
                       />
                     </div>
@@ -715,6 +719,13 @@ export class CoursEtudiantComponent {
   private readonly seanceOuverte = signal<Pick<Rattachement, 'sessionId' | 'jeton'> | null>(null);
   protected readonly sessionId = computed(() => this.seanceOuverte()?.sessionId ?? null);
   protected readonly jeton = computed(() => this.seanceOuverte()?.jeton ?? '');
+  protected readonly telechargement = computed((): TelechargementDePieceJointe | null => {
+    const sessionId = this.sessionId();
+    const jeton = this.jeton();
+    return sessionId === null
+      ? null
+      : (ecranId) => this.port.telechargerPieceJointe(sessionId, jeton, ecranId);
+  });
 
   private identite: Identity | null = null;
   private rattachement: Rattachement | null = null;

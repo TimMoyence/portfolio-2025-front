@@ -7,6 +7,7 @@ import {
   buildCoursContent,
   buildDerouleCours,
   buildEtatParticipant,
+  buildFichierTelecharge,
   buildParticipantDeSeance,
   buildRapportSeance,
   buildRegleNotation,
@@ -24,6 +25,7 @@ import { bancAdaptateurHttp } from '../../../testing/http-attendu';
 import type { CoursContent, EcranContent } from '../../../cours/content/types';
 import type {
   AnnotationFormateur,
+  FichierTelecharge,
   InscriptionParticipant,
   MotifRefusRattachement,
   MotifRefusReponse,
@@ -39,6 +41,7 @@ import type {
 } from '../ports/formations.port';
 import {
   FORMATIONS_PORT,
+  PieceJointeRefusee,
   RattachementRefuse,
   ReponseLibreRefusee,
   ReponseRefusee,
@@ -176,6 +179,114 @@ describe('FormationsHttpAdapter', () => {
     req.flush(sujet);
 
     expect(recus).toEqual([sujet]);
+  });
+
+  describe('pièce jointe réservée à la séance', () => {
+    const ECRAN_ID = 'B3-01-A2-01-VOTE-FAMILLE';
+    const FICHIER = buildFichierTelecharge();
+    const NOM_SERVI = { 'Content-Disposition': `attachment; filename="${FICHIER.nom}"` };
+
+    const telecharge = (appel: Observable<FichierTelecharge>, url: string) => {
+      const recus: FichierTelecharge[] = [];
+      appel.subscribe((fichier) => recus.push(fichier));
+      const req = attendre(url, 'GET');
+      const { headers, responseType } = req.request;
+      req.flush(FICHIER.contenu, { headers: NOM_SERVI });
+      return { recus, jeton: headers.get(ENTETE_JETON), reponse: responseType };
+    };
+
+    it('encode l identifiant d écran dans le chemin de la pièce jointe', () => {
+      expect(
+        telecharge(
+          adapter.telechargerPieceJointe(SESSION_ID, JETON, 'A2/../01 ?x'),
+          `${URL_SEANCE}/pieces-jointes/A2%2F..%2F01%20%3Fx`,
+        ).recus,
+      ).toEqual([FICHIER]);
+    });
+
+    it('telechargerPieceJointe GETe le classeur de l écran avec l en-tete de participant', () => {
+      expect(
+        telecharge(
+          adapter.telechargerPieceJointe(SESSION_ID, JETON, ECRAN_ID),
+          `${URL_SEANCE}/pieces-jointes/${ECRAN_ID}`,
+        ),
+      ).toEqual({ recus: [FICHIER], jeton: JETON, reponse: 'blob' });
+    });
+
+    it('telechargerPieceJointeDuDeroule GETe le classeur depuis le deroule, sans jeton de participant', () => {
+      expect(
+        telecharge(
+          adapter.telechargerPieceJointeDuDeroule(SESSION_ID, ECRAN_ID),
+          `${URL_SEANCE}/deroule/pieces-jointes/${ECRAN_ID}`,
+        ),
+      ).toEqual({ recus: [FICHIER], jeton: null, reponse: 'blob' });
+    });
+
+    it('échoue sur un classeur servi sans nom de fichier, plutôt que d en inventer un', () => {
+      const erreurs: unknown[] = [];
+
+      adapter
+        .telechargerPieceJointe(SESSION_ID, JETON, ECRAN_ID)
+        .subscribe({ error: (erreur: unknown) => erreurs.push(erreur) });
+      attendre(`${URL_SEANCE}/pieces-jointes/${ECRAN_ID}`, 'GET').flush(FICHIER.contenu);
+
+      expect(erreurs).toEqual([jasmine.any(Error)]);
+    });
+
+    const refusAuPoste = (
+      repondre: (requete: TestRequest) => void,
+    ): Promise<PieceJointeRefusee> => {
+      const refus = new Promise<PieceJointeRefusee>((rendre, echouer) => {
+        adapter.telechargerPieceJointe(SESSION_ID, JETON, ECRAN_ID).subscribe({
+          error: (erreur: unknown) =>
+            erreur instanceof PieceJointeRefusee ? rendre(erreur) : echouer(erreur),
+        });
+      });
+      repondre(attendre(`${URL_SEANCE}/pieces-jointes/${ECRAN_ID}`, 'GET'));
+      return refus;
+    };
+
+    const probleme = (corps: ProblemeHttp) => (requete: TestRequest) => {
+      requete.flush(new Blob([JSON.stringify(corps)], { type: 'application/problem+json' }), {
+        status: corps.status,
+        statusText: corps.title,
+      });
+    };
+
+    for (const { cas, repondre, motif, statut } of [
+      {
+        cas: 'la reprise retenue tant que ses activités ne sont pas corrigées',
+        repondre: probleme(buildProblemeHttp({ code: 'PIECE_JOINTE_RETENUE' })),
+        motif: 'retenue',
+        statut: 409,
+      },
+      {
+        cas: 'un écran pas encore servi comme une pièce indisponible',
+        repondre: probleme(buildProblemeHttp({ status: 404, code: 'ECRAN_NON_SERVI' })),
+        motif: 'indisponible',
+        statut: 404,
+      },
+      {
+        cas: 'un refus au corps JSON illisible comme une pièce indisponible, statut compris',
+        repondre: (requete: TestRequest) =>
+          requete.flush(new Blob([''], { type: 'application/json' }), {
+            status: 502,
+            statusText: 'Bad Gateway',
+          }),
+        motif: 'indisponible',
+        statut: 502,
+      },
+      {
+        cas: 'une coupure du réseau comme une pièce indisponible',
+        repondre: (requete: TestRequest) => requete.error(new ProgressEvent('error')),
+        motif: 'indisponible',
+        statut: 0,
+      },
+    ]) {
+      it(`signale au poste ${cas}`, async () => {
+        attendreLeRefus(await refusAuPoste(repondre), motif, statut);
+      });
+    }
   });
 
   function sujetDontLePremierEcranPorte(fil: (premier: EcranContent) => Record<string, unknown>) {

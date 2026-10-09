@@ -1,8 +1,9 @@
+import type { HttpResponse } from '@angular/common/http';
 import { HttpErrorResponse, HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
-import { throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { from, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import type {
   CoursContent,
   DerouleCours,
@@ -12,6 +13,7 @@ import type {
 import type {
   CommandePilotage,
   AnnotationFormateur,
+  FichierTelecharge,
   FormationsPort,
   IncidentEtudiant,
   InscriptionParticipant,
@@ -40,6 +42,7 @@ import type {
   VerdictTentative,
 } from '../ports/formations.port';
 import {
+  PieceJointeRefusee,
   RattachementRefuse,
   ReponseLibreRefusee,
   ReponseRefusee,
@@ -119,12 +122,40 @@ function refuserSujet(erreur: unknown): SujetRefuse {
 }
 
 function codeDuProbleme(erreur: HttpErrorResponse): string | null {
-  const corps: unknown = erreur.error;
+  return codeDuCorps(erreur.error);
+}
+
+function codeDuCorps(corps: unknown): string | null {
   if (typeof corps !== 'object' || corps === null) {
     return null;
   }
   const code = (corps as Record<string, unknown>)['code'];
   return typeof code === 'string' ? code : null;
+}
+
+function jsonLisible(texte: string): unknown {
+  try {
+    return JSON.parse(texte);
+  } catch {
+    return null;
+  }
+}
+
+async function corpsDuFichierRefuse(corps: unknown): Promise<unknown> {
+  return corps instanceof Blob && corps.type.includes('json')
+    ? jsonLisible(await corps.text())
+    : corps;
+}
+
+async function refuserPieceJointe(erreur: unknown): Promise<PieceJointeRefusee> {
+  if (!(erreur instanceof HttpErrorResponse)) {
+    return new PieceJointeRefusee('indisponible', 0);
+  }
+  const code = codeDuCorps(await corpsDuFichierRefuse(erreur.error));
+  return new PieceJointeRefusee(
+    code === 'PIECE_JOINTE_RETENUE' ? 'retenue' : 'indisponible',
+    erreur.status,
+  );
 }
 
 function motifDeRefusSelonCode<M extends string>(
@@ -196,6 +227,26 @@ export class FormationsHttpAdapter implements FormationsPort {
     return this.http
       .get<DerouleDuFil>(`${this.urlSeance(sessionId)}/deroule`)
       .pipe(map(derouleDuFil));
+  }
+
+  telechargerPieceJointeDuDeroule(
+    sessionId: string,
+    ecranId: string,
+  ): Observable<FichierTelecharge> {
+    return this.telecharger(
+      `${this.urlSeance(sessionId)}/deroule/pieces-jointes/${encodeURIComponent(ecranId)}`,
+    );
+  }
+
+  telechargerPieceJointe(
+    sessionId: string,
+    jeton: string,
+    ecranId: string,
+  ): Observable<FichierTelecharge> {
+    return this.telecharger(
+      `${this.urlSeance(sessionId)}/pieces-jointes/${encodeURIComponent(ecranId)}`,
+      entetes(jeton),
+    );
   }
 
   lireLivret(courseSlug: string): Observable<LivretDuCours> {
@@ -432,6 +483,25 @@ export class FormationsHttpAdapter implements FormationsPort {
   private urlSeance(sessionId: string): string {
     return `${this.baseUrl}/sessions/${encodeURIComponent(sessionId)}`;
   }
+
+  private telecharger(url: string, headers?: HttpHeaders): Observable<FichierTelecharge> {
+    return this.http.get(url, { headers, observe: 'response', responseType: 'blob' }).pipe(
+      catchError((erreur: unknown) =>
+        from(refuserPieceJointe(erreur)).pipe(mergeMap((refus) => throwError(() => refus))),
+      ),
+      map(fichierTelecharge),
+    );
+  }
+}
+
+const NOM_DU_FICHIER_SERVI = /filename="([^"]+)"/;
+
+function fichierTelecharge(reponse: HttpResponse<Blob>): FichierTelecharge {
+  const nom = NOM_DU_FICHIER_SERVI.exec(reponse.headers.get('Content-Disposition') ?? '')?.[1];
+  if (nom === undefined || reponse.body === null) {
+    throw new Error(`Pièce jointe servie sans nom de fichier : ${reponse.url ?? ''}`);
+  }
+  return { nom, contenu: reponse.body };
 }
 
 function entetes(jeton: string): HttpHeaders {

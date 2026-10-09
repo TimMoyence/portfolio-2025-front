@@ -5,13 +5,17 @@ import { join } from 'node:path';
 import test from 'node:test';
 import { cheminDuDepot, lireTexte } from './lib/depot.mjs';
 
+const DOSSIER_DES_ASSETS = cheminDuDepot('src/assets');
 const DOSSIER_DES_COURS = cheminDuDepot('src/assets/cours');
 const DOSSIER_DES_FIXTURES = cheminDuDepot('src/testing/fixtures');
 const SUFFIXE_DU_MANIFESTE = '.classeurs.manifest.json';
 const PREFIXE_PUBLIC = '/assets/cours';
 
 const POURQUOI =
-  'les classeurs servis aux étudiants sont écrits et vérifiés par le back (test/fixtures/formations) ; la copie du front doit rester identique octet pour octet, sinon les valeurs corrigées en séance ne correspondent plus au fichier ouvert.';
+  'les classeurs sont écrits et vérifiés par le back (src/modules/formations/infrastructure/classeurs) ; la copie du front doit rester identique octet pour octet, sinon les valeurs corrigées en séance ne correspondent plus au fichier ouvert.';
+
+const RESERVEE_A_LA_SEANCE =
+  'un classeur réservé à la séance ne doit pas être un asset public : le back ne le sert qu à un poste dont l écran est déjà projeté.';
 
 const empreinteDe = (chemin) => createHash('sha256').update(readFileSync(chemin)).digest('hex');
 
@@ -26,10 +30,34 @@ const manifesteDe = (cours) =>
 const instantaneDe = (cours) =>
   JSON.parse(lireTexte(join(DOSSIER_DES_FIXTURES, `${cours}.instantane.json`)));
 
-const fichiersSous = (dossier) =>
-  readdirSync(dossier, { recursive: true, withFileTypes: true })
+const ecransAPieceJointe = (cours) =>
+  instantaneDe(cours).deroule.ecrans.filter((ecran) => ecran.pieceJointe !== undefined);
+
+const piecesJointesDe = (cours) => ecransAPieceJointe(cours).map((ecran) => ecran.pieceJointe);
+
+const racinesDesAssetsPublies = () => {
+  const { projects } = JSON.parse(lireTexte(cheminDuDepot('angular.json')));
+  const entrees = Object.values(projects).flatMap((projet) =>
+    Object.values(projet.architect ?? {}).flatMap((cible) => cible.options?.assets ?? []),
+  );
+  return [
+    ...new Set(
+      entrees.map((asset) => cheminDuDepot(typeof asset === 'string' ? asset : asset.input)),
+    ),
+  ];
+};
+
+const fichiersPublies = () =>
+  racinesDesAssetsPublies()
+    .filter((racine) => existsSync(racine))
+    .flatMap((racine) => readdirSync(racine, { recursive: true, withFileTypes: true }))
     .filter((entree) => entree.isFile())
-    .map((entree) => entree.name);
+    .map((entree) => ({ chemin: join(entree.parentPath, entree.name) }));
+
+const empreintesDesAssets = () =>
+  fichiersPublies().map(({ chemin }) => ({ chemin, empreinte: empreinteDe(chemin) }));
+
+const servisDe = (cours) => readdirSync(join(DOSSIER_DES_COURS, cours));
 
 test('le B3-01 garde le manifeste de ses classeurs parmi les fixtures de test', () => {
   assert.ok(
@@ -38,32 +66,92 @@ test('le B3-01 garde le manifeste de ses classeurs parmi les fixtures de test', 
   );
 });
 
-test('ne sert aucun manifeste de classeurs, qui nommerait les reprises réservées à la séance', () => {
+test('fouille chaque dossier qu angular.json publie, src/assets et public compris', () => {
   assert.deepEqual(
-    fichiersSous(DOSSIER_DES_COURS).filter((fichier) =>
-      fichier.endsWith('classeurs.manifest.json'),
+    [DOSSIER_DES_ASSETS, cheminDuDepot('public')].filter(
+      (racine) => !racinesDesAssetsPublies().includes(racine),
     ),
     [],
   );
 });
 
+test('ne sert aucun manifeste de classeurs, qui nommerait les reprises réservées à la séance', () => {
+  assert.deepEqual(
+    fichiersPublies()
+      .filter(({ chemin }) => chemin.endsWith('classeurs.manifest.json'))
+      .map(({ chemin }) => chemin),
+    [],
+  );
+});
+
 for (const cours of coursAClasseurs()) {
-  test(`${cours} : chaque classeur du manifeste est servi avec l empreinte du back`, () => {
-    for (const { fichier, empreinte } of manifesteDe(cours).classeurs) {
-      const chemin = join(DOSSIER_DES_COURS, cours, fichier);
-      assert.ok(existsSync(chemin), `${cours}/${fichier} absent. ${POURQUOI}`);
-      assert.equal(empreinteDe(chemin), empreinte, `${cours}/${fichier} diffère. ${POURQUOI}`);
+  test(`${cours} : chaque classeur servi figure au manifeste avec l empreinte du back`, () => {
+    const empreintes = new Map(
+      manifesteDe(cours).classeurs.map(({ fichier, empreinte }) => [fichier, empreinte]),
+    );
+
+    for (const fichier of servisDe(cours)) {
+      assert.ok(empreintes.has(fichier), `${cours}/${fichier} hors du manifeste. ${POURQUOI}`);
+      assert.equal(
+        empreinteDe(join(DOSSIER_DES_COURS, cours, fichier)),
+        empreintes.get(fichier),
+        `${cours}/${fichier} diffère. ${POURQUOI}`,
+      );
     }
   });
 
-  test(`${cours} : aucun fichier servi hors du manifeste`, () => {
-    const declares = manifesteDe(cours).classeurs.map(({ fichier }) => fichier);
-    const servis = readdirSync(join(DOSSIER_DES_COURS, cours));
+  test(`${cours} : le front ne sert que les pièces jointes publiques de l instantané`, () => {
+    const publiques = piecesJointesDe(cours)
+      .filter((piece) => piece.reservee !== true)
+      .map((piece) => piece.fichier);
+    const servis = servisDe(cours).map((fichier) => `${PREFIXE_PUBLIC}/${cours}/${fichier}`);
 
-    assert.deepEqual([...servis].sort(), [...declares].sort());
+    assert.ok(publiques.length > 0, `aucune pièce jointe publique dans l instantané du ${cours}`);
+    assert.deepEqual([...servis].sort(), [...new Set(publiques)].sort(), RESERVEE_A_LA_SEANCE);
   });
 
-  test(`${cours} : chaque classeur servi porte dans son nom le début de son empreinte`, () => {
+  test(`${cours} : seul un écran du catalogue porte une pièce jointe publique`, () => {
+    const publiquesEnSeance = ecransAPieceJointe(cours)
+      .filter((ecran) => ecran.diffusion !== 'catalogue' && ecran.pieceJointe.reservee !== true)
+      .map((ecran) => ecran.id);
+
+    assert.deepEqual(publiquesEnSeance, [], RESERVEE_A_LA_SEANCE);
+  });
+
+  test(`${cours} : aucun asset ne copie un classeur réservé, sous quelque nom ou dossier que ce soit`, () => {
+    const publics = new Set(
+      piecesJointesDe(cours)
+        .filter((piece) => piece.reservee !== true)
+        .map((piece) => piece.fichier.split('/').at(-1)),
+    );
+    const reserves = new Set(
+      manifesteDe(cours)
+        .classeurs.filter(({ fichier }) => !publics.has(fichier))
+        .map(({ empreinte }) => empreinte),
+    );
+
+    assert.ok(reserves.size > 0, `aucun classeur réservé au manifeste du ${cours}`);
+    assert.deepEqual(
+      empreintesDesAssets()
+        .filter(({ empreinte }) => reserves.has(empreinte))
+        .map(({ chemin }) => chemin),
+      [],
+      RESERVEE_A_LA_SEANCE,
+    );
+  });
+
+  test(`${cours} : l instantané sert chaque pièce réservée sans nommer son classeur`, () => {
+    const reservees = piecesJointesDe(cours).filter((piece) => piece.reservee === true);
+
+    assert.ok(reservees.length > 0, `aucune pièce réservée dans l instantané du ${cours}`);
+    assert.deepEqual(
+      reservees.filter((piece) => Object.keys(piece).sort().join() !== 'libelle,reservee'),
+      [],
+      RESERVEE_A_LA_SEANCE,
+    );
+  });
+
+  test(`${cours} : chaque classeur du manifeste porte dans son nom le début de son empreinte`, () => {
     for (const { fichier, empreinte } of manifesteDe(cours).classeurs) {
       assert.match(fichier, /^[A-Za-z0-9_-]+\.[0-9a-f]{8}\.(xlsx|csv|pdf)$/);
       assert.ok(
@@ -71,21 +159,5 @@ for (const cours of coursAClasseurs()) {
         `${cours}/${fichier} ne porte pas le début de son empreinte ${empreinte.slice(0, 8)} : un classeur corrigé garderait le nom de l ancien.`,
       );
     }
-  });
-
-  test(`${cours} : chaque pièce jointe de l instantané pointe un classeur du manifeste`, () => {
-    const declares = manifesteDe(cours).classeurs.map(
-      ({ fichier }) => `${PREFIXE_PUBLIC}/${cours}/${fichier}`,
-    );
-    const pieces = instantaneDe(cours)
-      .deroule.ecrans.filter((ecran) => ecran.pieceJointe !== undefined)
-      .map((ecran) => ecran.pieceJointe.fichier);
-
-    assert.ok(pieces.length > 0, `aucune pièce jointe dans l instantané du ${cours}`);
-    assert.deepEqual(
-      pieces.filter((fichier) => !declares.includes(fichier)),
-      [],
-      `pièce jointe hors du manifeste du ${cours}`,
-    );
   });
 }

@@ -12,6 +12,7 @@ import type {
 import type { SpacedQuestionPublique } from '../../cours/runtime/blocks/donnees-publiques';
 import type {
   AnnotationFormateur,
+  FichierTelecharge,
   FormationsPort,
   LivretDuCours,
   ParticipantDeSeance,
@@ -299,12 +300,26 @@ export function buildLivretDuCours(overrides: Partial<LivretDuCours> = {}): Livr
   };
 }
 
+export function buildFichierTelecharge(
+  overrides: Partial<FichierTelecharge> = {},
+): FichierTelecharge {
+  return {
+    nom: 'B3-01_reprise_acte_2.xlsx',
+    contenu: new Blob(['PK'], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    }),
+    ...overrides,
+  };
+}
+
 export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   const port = jasmine.createSpyObj<FormationsPort>('FormationsPort', [
     'ouvrirSeance',
     'lireDeroule',
+    'telechargerPieceJointeDuDeroule',
     'lireLivret',
     'lireSujet',
+    'telechargerPieceJointe',
     'demarrer',
     'piloter',
     'cloturer',
@@ -335,6 +350,8 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   port.lireDeroule.and.returnValue(of(buildDerouleCours()));
   port.lireLivret.and.returnValue(of(buildLivretDuCours()));
   port.lireSujet.and.returnValue(of(buildCoursContent()));
+  port.telechargerPieceJointe.and.returnValue(of(buildFichierTelecharge()));
+  port.telechargerPieceJointeDuDeroule.and.returnValue(of(buildFichierTelecharge()));
   port.demarrer.and.returnValue(of(undefined));
   port.piloter.and.returnValue(of(undefined));
   port.cloturer.and.returnValue(of(undefined));

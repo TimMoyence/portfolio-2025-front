@@ -36,10 +36,17 @@ export interface CadrageDuRenvoi {
   };
 }
 
-export interface PieceJointe {
+interface PieceJointePublique {
   readonly libelle: string;
   readonly fichier: string;
 }
+
+interface PieceJointeReservee {
+  readonly libelle: string;
+  readonly reservee: true;
+}
+
+export type PieceJointe = PieceJointePublique | PieceJointeReservee;
 
 export interface EcranContent {
   id: string;
