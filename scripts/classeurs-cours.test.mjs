@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import test from 'node:test';
 import { cheminDuDepot, lireTexte } from './lib/depot.mjs';
 
+const DOSSIER_DES_ASSETS = cheminDuDepot('src/assets');
 const DOSSIER_DES_COURS = cheminDuDepot('src/assets/cours');
 const DOSSIER_DES_FIXTURES = cheminDuDepot('src/testing/fixtures');
 const SUFFIXE_DU_MANIFESTE = '.classeurs.manifest.json';
@@ -34,10 +35,18 @@ const fichiersSous = (dossier) =>
     .filter((entree) => entree.isFile())
     .map((entree) => entree.name);
 
-const piecesJointesDe = (cours) =>
-  instantaneDe(cours).deroule.ecrans.flatMap((ecran) =>
-    ecran.pieceJointe === undefined ? [] : [ecran.pieceJointe],
-  );
+const ecransAPieceJointe = (cours) =>
+  instantaneDe(cours).deroule.ecrans.filter((ecran) => ecran.pieceJointe !== undefined);
+
+const piecesJointesDe = (cours) => ecransAPieceJointe(cours).map((ecran) => ecran.pieceJointe);
+
+const empreintesDesAssets = () =>
+  readdirSync(DOSSIER_DES_ASSETS, { recursive: true, withFileTypes: true })
+    .filter((entree) => entree.isFile())
+    .map((entree) => {
+      const chemin = join(entree.parentPath, entree.name);
+      return { chemin, empreinte: empreinteDe(chemin) };
+    });
 
 const servisDe = (cours) => readdirSync(join(DOSSIER_DES_COURS, cours));
 
@@ -81,6 +90,36 @@ for (const cours of coursAClasseurs()) {
 
     assert.ok(publiques.length > 0, `aucune pièce jointe publique dans l instantané du ${cours}`);
     assert.deepEqual([...servis].sort(), [...new Set(publiques)].sort(), RESERVEE_A_LA_SEANCE);
+  });
+
+  test(`${cours} : seul un écran du catalogue porte une pièce jointe publique`, () => {
+    const publiquesEnSeance = ecransAPieceJointe(cours)
+      .filter((ecran) => ecran.diffusion !== 'catalogue' && ecran.pieceJointe.reservee !== true)
+      .map((ecran) => ecran.id);
+
+    assert.deepEqual(publiquesEnSeance, [], RESERVEE_A_LA_SEANCE);
+  });
+
+  test(`${cours} : aucun asset ne copie un classeur réservé, sous quelque nom ou dossier que ce soit`, () => {
+    const publics = new Set(
+      piecesJointesDe(cours)
+        .filter((piece) => piece.reservee !== true)
+        .map((piece) => piece.fichier.split('/').at(-1)),
+    );
+    const reserves = new Set(
+      manifesteDe(cours)
+        .classeurs.filter(({ fichier }) => !publics.has(fichier))
+        .map(({ empreinte }) => empreinte),
+    );
+
+    assert.ok(reserves.size > 0, `aucun classeur réservé au manifeste du ${cours}`);
+    assert.deepEqual(
+      empreintesDesAssets()
+        .filter(({ empreinte }) => reserves.has(empreinte))
+        .map(({ chemin }) => chemin),
+      [],
+      RESERVEE_A_LA_SEANCE,
+    );
   });
 
   test(`${cours} : l instantané sert chaque pièce réservée sans nommer son classeur`, () => {

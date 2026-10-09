@@ -20,7 +20,8 @@ import {
 import { chargerLesPolicesDeLApplication } from '../../../../testing/polices';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { DirectEcran } from './contrat-hote';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
+import type { FichierTelecharge } from '../../../core/ports/formations.port';
 import { buildFichierTelecharge } from '../../../../testing/factories/formations.factory';
 import {
   CoursPresentationComponent,
@@ -64,6 +65,7 @@ interface EcranCadre {
   readonly toile: () => HTMLElement | null;
   readonly brique: () => HTMLElement | null;
   readonly rafraichir: () => Promise<void>;
+  readonly afficher: (ecran: EcranContent) => Promise<void>;
   readonly detruire: () => void;
 }
 
@@ -122,14 +124,19 @@ async function monterDansUnCadre(
   await chargerLesPolicesDeLApplication();
   await new Promise((suite) => setTimeout(suite, 50));
   fixture.detectChanges();
+  const rafraichir = async (): Promise<void> => {
+    await new Promise((suite) => setTimeout(suite, 50));
+    fixture.detectChanges();
+  };
   return {
     cadre,
     hote: racine,
     toile,
     brique,
-    rafraichir: async () => {
-      await new Promise((suite) => setTimeout(suite, 50));
-      fixture.detectChanges();
+    rafraichir,
+    afficher: async (suivant) => {
+      fixture.componentRef.setInput('slide', suivant);
+      await rafraichir();
     },
     detruire: () => {
       fixture.destroy();
@@ -1237,26 +1244,127 @@ describe('CoursPresentationComponent : pièce jointe d un écran', () => {
       });
     }
 
-    it('V5 · signale au poste un téléchargement refusé, et laisse réessayer', async () => {
-      const telechargement = jasmine
-        .createSpy<TelechargementDePieceJointe>('telechargement')
-        .and.returnValue(throwError(() => new Error('404')));
-      const monte = await monterLaPieceReservee('etudiant', telechargement);
+    const ALERTES_D_ECHEC = {
+      etudiant: 'Téléchargement impossible : réessayez, ou demandez le classeur au formateur.',
+      formateur: 'Téléchargement impossible : réessayez.',
+    } as const;
+
+    const alerteDEchec = (monte: EcranCadre): HTMLElement | null =>
+      monte.hote.querySelector<HTMLElement>('[data-testid="cours-piece-jointe-echec"]');
+
+    for (const mode of ['etudiant', 'formateur'] as const) {
+      it(`V5 · en ${mode}, signale un téléchargement refusé, puis réessaie au clic suivant`, async () => {
+        const telechargement = jasmine
+          .createSpy<TelechargementDePieceJointe>('telechargement')
+          .and.returnValues(
+            throwError(() => new Error('404')),
+            of(CLASSEUR),
+          );
+        spyOn(URL, 'createObjectURL').and.returnValue('blob:reprise');
+        const clic = spyOn(HTMLAnchorElement.prototype, 'click');
+        const monte = await monterLaPieceReservee(mode, telechargement);
+        const bouton = pieceJointeAffichee(monte) as HTMLButtonElement;
+
+        bouton.click();
+        await monte.rafraichir();
+        const apresLEchec = {
+          alerte: texteDe(alerteDEchec(monte)),
+          role: alerteDEchec(monte)?.getAttribute('role'),
+          desactive: bouton.disabled,
+        };
+        bouton.click();
+        await monte.rafraichir();
+
+        expect(apresLEchec).toEqual({
+          alerte: ALERTES_D_ECHEC[mode],
+          role: 'alert',
+          desactive: false,
+        });
+        expect({
+          appels: telechargement.calls.count(),
+          telecharges: clic.calls.count(),
+          alerte: alerteDEchec(monte),
+        }).toEqual({ appels: 2, telecharges: 1, alerte: null });
+        monte.detruire();
+      });
+    }
+
+    const cliquerAuPoste = async (
+      enRoute: Subject<FichierTelecharge>,
+    ): Promise<{ readonly premier: EcranContent; readonly monte: EcranCadre }> => {
+      const premier = ecranDuMode('etudiant', PIECE_RESERVEE);
+      const monte = await monterLaPieceReservee('etudiant', () => enRoute);
+      pieceJointeAffichee(monte)?.click();
+      return { premier, monte };
+    };
+
+    it('V5 · désactive le bouton tant que le classeur est en route', async () => {
+      const enRoute = new Subject<FichierTelecharge>();
+      spyOn(URL, 'createObjectURL').and.returnValue('blob:reprise');
+      spyOn(HTMLAnchorElement.prototype, 'click');
+      const monte = await monterLaPieceReservee('etudiant', () => enRoute);
       const bouton = pieceJointeAffichee(monte) as HTMLButtonElement;
 
       bouton.click();
       await monte.rafraichir();
+      const pendantLEnvoi = bouton.disabled;
+      enRoute.next(CLASSEUR);
+      enRoute.complete();
+      await monte.rafraichir();
+
+      expect({ pendantLEnvoi, apres: bouton.disabled }).toEqual({
+        pendantLEnvoi: true,
+        apres: false,
+      });
+      monte.detruire();
+    });
+
+    it('V5 · un écran suivant repart d un bouton libre, et le classeur parti avant arrive quand même', async () => {
+      const enRoute = new Subject<FichierTelecharge>();
+      spyOn(URL, 'createObjectURL').and.returnValue('blob:reprise');
+      const clic = spyOn(HTMLAnchorElement.prototype, 'click');
+      const { premier, monte } = await cliquerAuPoste(enRoute);
+
+      await monte.rafraichir();
+      await monte.afficher({ ...premier, id: `${premier.id}-SUIVANT` });
+      const surLeSuivant = (pieceJointeAffichee(monte) as HTMLButtonElement).disabled;
+      enRoute.next(CLASSEUR);
+      enRoute.complete();
+      await monte.rafraichir();
 
       expect({
-        alerte: texteDe(monte.hote.querySelector('[data-testid="cours-piece-jointe-echec"]')),
-        role: monte.hote
-          .querySelector('[data-testid="cours-piece-jointe-echec"]')
-          ?.getAttribute('role'),
-        desactive: bouton.disabled,
-      }).toEqual({
-        alerte: 'Téléchargement impossible : réessayez, ou demandez le classeur au formateur.',
-        role: 'alert',
-        desactive: false,
+        surLeSuivant,
+        telecharge: (clic.calls.mostRecent().object as HTMLAnchorElement).download,
+      }).toEqual({ surLeSuivant: false, telecharge: CLASSEUR.nom });
+      monte.detruire();
+    });
+
+    it('V5 · le classeur demandé arrive même si le poste a démonté la présentation', async () => {
+      const enRoute = new Subject<FichierTelecharge>();
+      spyOn(URL, 'createObjectURL').and.returnValue('blob:reprise');
+      const clic = spyOn(HTMLAnchorElement.prototype, 'click');
+      const { monte } = await cliquerAuPoste(enRoute);
+
+      monte.detruire();
+      enRoute.next(CLASSEUR);
+      enRoute.complete();
+
+      expect((clic.calls.mostRecent().object as HTMLAnchorElement).download).toBe(CLASSEUR.nom);
+    });
+
+    it('V5 · garde l échec de l écran quitté, et le montre au retour', async () => {
+      const enRoute = new Subject<FichierTelecharge>();
+      const { premier, monte } = await cliquerAuPoste(enRoute);
+
+      await monte.afficher({ ...premier, id: `${premier.id}-SUIVANT` });
+      enRoute.error(new Error('404'));
+      await monte.rafraichir();
+      const surLeSuivant = alerteDEchec(monte);
+      await monte.afficher(premier);
+
+      expect({ surLeSuivant, auRetour: texteDe(alerteDEchec(monte)) }).toEqual({
+        surLeSuivant: null,
+        auRetour: ALERTES_D_ECHEC.etudiant,
       });
       monte.detruire();
     });

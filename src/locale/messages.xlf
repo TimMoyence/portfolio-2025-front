@@ -12437,32 +12437,39 @@
         <source>Sur votre poste :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/session/cours-presentation.component.ts</context>
-          <context context-type="linenumber">132,133</context>
+          <context context-type="linenumber">129,130</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursPieceJointeTelecharger" datatype="html">
         <source>Télécharger</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/session/cours-presentation.component.ts</context>
-          <context context-type="linenumber">142,143</context>
+          <context context-type="linenumber">139,140</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/session/cours-presentation.component.ts</context>
-          <context context-type="linenumber">153,154</context>
+          <context context-type="linenumber">150,151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="coursPieceJointeEchecPupitre" datatype="html">
+        <source> Téléchargement impossible : réessayez. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/slides/session/cours-presentation.component.ts</context>
+          <context context-type="linenumber">161,162</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursPieceJointeEchec" datatype="html">
         <source> Téléchargement impossible : réessayez, ou demandez le classeur au formateur. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/session/cours-presentation.component.ts</context>
-          <context context-type="linenumber">163,164</context>
+          <context context-type="linenumber">165,166</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursRenvoiLegende" datatype="html">
         <source> Diapositive commentée </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/session/cours-presentation.component.ts</context>
-          <context context-type="linenumber">179,180</context>
+          <context context-type="linenumber">183,184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="coursEcranInconnu" datatype="html">

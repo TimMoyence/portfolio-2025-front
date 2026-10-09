@@ -7,6 +7,7 @@ import {
   buildCoursContent,
   buildDerouleCours,
   buildEtatParticipant,
+  buildFichierTelecharge,
   buildParticipantDeSeance,
   buildRapportSeance,
   buildRegleNotation,
@@ -181,20 +182,26 @@ describe('FormationsHttpAdapter', () => {
 
   describe('pièce jointe réservée à la séance', () => {
     const ECRAN_ID = 'B3-01-A2-01-VOTE-FAMILLE';
-    const CLASSEUR = new Blob(['PK'], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    const NOM_SERVI = { 'Content-Disposition': 'attachment; filename="B3-01_reprise_acte_2.xlsx"' };
-    const FICHIER: FichierTelecharge = { nom: 'B3-01_reprise_acte_2.xlsx', contenu: CLASSEUR };
+    const FICHIER = buildFichierTelecharge();
+    const NOM_SERVI = { 'Content-Disposition': `attachment; filename="${FICHIER.nom}"` };
 
     const telecharge = (appel: Observable<FichierTelecharge>, url: string) => {
       const recus: FichierTelecharge[] = [];
       appel.subscribe((fichier) => recus.push(fichier));
       const req = attendre(url, 'GET');
       const { headers, responseType } = req.request;
-      req.flush(CLASSEUR, { headers: NOM_SERVI });
+      req.flush(FICHIER.contenu, { headers: NOM_SERVI });
       return { recus, jeton: headers.get(ENTETE_JETON), reponse: responseType };
     };
+
+    it('encode l identifiant d écran dans le chemin de la pièce jointe', () => {
+      expect(
+        telecharge(
+          adapter.telechargerPieceJointe(SESSION_ID, JETON, 'A2/../01 ?x'),
+          `${URL_SEANCE}/pieces-jointes/A2%2F..%2F01%20%3Fx`,
+        ).recus,
+      ).toEqual([FICHIER]);
+    });
 
     it('telechargerPieceJointe GETe le classeur de l écran avec l en-tete de participant', () => {
       expect(
@@ -220,7 +227,7 @@ describe('FormationsHttpAdapter', () => {
       adapter
         .telechargerPieceJointe(SESSION_ID, JETON, ECRAN_ID)
         .subscribe({ error: (erreur: unknown) => erreurs.push(erreur) });
-      attendre(`${URL_SEANCE}/pieces-jointes/${ECRAN_ID}`, 'GET').flush(CLASSEUR);
+      attendre(`${URL_SEANCE}/pieces-jointes/${ECRAN_ID}`, 'GET').flush(FICHIER.contenu);
 
       expect(erreurs).toEqual([jasmine.any(Error)]);
     });

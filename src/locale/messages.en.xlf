@@ -10245,9 +10245,18 @@
         <target>Download</target>
       </segment>
     </unit>
+    <unit id="coursPieceJointeEchecPupitre">
+      <notes>
+        <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:161,162</note>
+      </notes>
+      <segment>
+        <source> Téléchargement impossible : réessayez. </source>
+        <target> Download failed: try again. </target>
+      </segment>
+    </unit>
     <unit id="coursPieceJointeEchec">
       <notes>
-        <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:163,164</note>
+        <note category="location">src/app/shared/slides/session/cours-presentation.component.ts:165,166</note>
       </notes>
       <segment>
         <source> Téléchargement impossible : réessayez, ou demandez le classeur au formateur. </source>

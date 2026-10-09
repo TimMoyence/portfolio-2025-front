@@ -4,13 +4,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   effect,
   ElementRef,
   inject,
   Injector,
   input,
-  linkedSignal,
   output,
   PLATFORM_ID,
   signal,
@@ -18,7 +16,6 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { Observable } from 'rxjs';
 import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
@@ -158,10 +155,17 @@ function aUnDefileurRogne(contenu: HTMLElement): boolean {
                             class="cours-piece-jointe-echec"
                             role="alert"
                             data-testid="cours-piece-jointe-echec"
-                            i18n="@@coursPieceJointeEchec"
                           >
-                            Téléchargement impossible : réessayez, ou demandez le classeur au
-                            formateur.
+                            @if (mode() === 'formateur') {
+                              <ng-container i18n="@@coursPieceJointeEchecPupitre">
+                                Téléchargement impossible : réessayez.
+                              </ng-container>
+                            } @else {
+                              <ng-container i18n="@@coursPieceJointeEchec">
+                                Téléchargement impossible : réessayez, ou demandez le classeur au
+                                formateur.
+                              </ng-container>
+                            }
                           </p>
                         }
                       }
@@ -472,7 +476,6 @@ export class CoursPresentationComponent {
   private readonly navigateur = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly document = inject(DOCUMENT);
   private readonly injecteur = inject(Injector);
-  private readonly destruction = inject(DestroyRef);
   private readonly cadre = signal<Mesure | null>(null);
   private readonly place = signal<number | null>(null);
   private readonly hauteurDuContenu = signal<number | null>(null);
@@ -503,9 +506,13 @@ export class CoursPresentationComponent {
     return FICHIER_DE_PIECE_JOINTE.test(pieceJointe.fichier) ? pieceJointe : null;
   });
 
-  protected readonly etatDuTelechargement = linkedSignal<string | null, EtatDuTelechargement>({
-    source: this.ecranAffiche,
-    computation: () => 'pret',
+  private readonly telechargementsParEcran = signal<ReadonlyMap<string, EtatDuTelechargement>>(
+    new Map(),
+  );
+
+  protected readonly etatDuTelechargement = computed((): EtatDuTelechargement => {
+    const ecranId = this.ecranAffiche();
+    return (ecranId === null ? undefined : this.telechargementsParEcran().get(ecranId)) ?? 'pret';
   });
 
   protected telechargerLaPieceReservee(): void {
@@ -515,20 +522,16 @@ export class CoursPresentationComponent {
       return;
     }
     const signaler = (etat: EtatDuTelechargement): void => {
-      if (this.ecranAffiche() === ecranId) {
-        this.etatDuTelechargement.set(etat);
-      }
+      this.telechargementsParEcran.update((etats) => new Map(etats).set(ecranId, etat));
     };
     signaler('en-cours');
-    telecharger(ecranId)
-      .pipe(takeUntilDestroyed(this.destruction))
-      .subscribe({
-        next: ({ nom, contenu }) => {
-          telechargerFichier(this.document, contenu, nom, contenu.type);
-          signaler('pret');
-        },
-        error: () => signaler('echec'),
-      });
+    telecharger(ecranId).subscribe({
+      next: ({ nom, contenu }) => {
+        telechargerFichier(this.document, contenu, nom, contenu.type);
+        signaler('pret');
+      },
+      error: () => signaler('echec'),
+    });
   }
 
   protected readonly renvoiAffiche = computed(() => {
