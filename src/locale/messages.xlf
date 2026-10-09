@@ -1991,56 +1991,56 @@
         </context-group>
       </trans-unit>
       <trans-unit id="livretAnnonceFiches" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ feuillesEtudiant().length }}"/> fiches · chacune commence sur une nouvelle page, sauf la question qui ouvre une notion, et la fiche qui suit un exemple guidé quand rien n’est encore à corriger sur sa page ; les plus longues en occupent plusieurs </source>
+        <source> <x id="INTERPOLATION" equiv-text="{{ feuillesEtudiant().length }}"/> fiches · chacune commence sur une nouvelle page, sauf la question qui ouvre une notion quand aucun exemple guidé de sa page n’attend de réponse sur la copie, et la fiche qui suit un exemple guidé imprimé en entier quand rien n’est encore à corriger sur sa page ; les plus longues en occupent plusieurs </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-livret.component.ts</context>
-          <context context-type="linenumber">44,46</context>
+          <context context-type="linenumber">44,47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="livretVueAria" datatype="html">
         <source>Vue du livret</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-livret.component.ts</context>
-          <context context-type="linenumber">53,54</context>
+          <context context-type="linenumber">55,56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="livretVueSujet" datatype="html">
         <source> Livret étudiant </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-livret.component.ts</context>
-          <context context-type="linenumber">64,65</context>
+          <context context-type="linenumber">66,67</context>
         </context-group>
       </trans-unit>
       <trans-unit id="livretVueCorrige" datatype="html">
         <source> Corrigé formateur </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-livret.component.ts</context>
-          <context context-type="linenumber">74,75</context>
+          <context context-type="linenumber">76,77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="livretImprimer" datatype="html">
         <source> Imprimer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-livret.component.ts</context>
-          <context context-type="linenumber">83,84</context>
+          <context context-type="linenumber">85,86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="livretFiche" datatype="html">
         <source> Fiche <x id="INTERPOLATION" equiv-text="{{ rang + 1 }}"/> / <x id="INTERPOLATION_1" equiv-text="{{ feuillesEtudiant().length }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-livret.component.ts</context>
-          <context context-type="linenumber">106,107</context>
+          <context context-type="linenumber">108,109</context>
         </context-group>
       </trans-unit>
       <trans-unit id="livretGuideReponse" datatype="html">
         <source>Réponse attendue</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-livret.component.ts</context>
-          <context context-type="linenumber">146,147</context>
+          <context context-type="linenumber">148,149</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/livret-papier.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauActivitePhaseVote" datatype="html">
@@ -3148,35 +3148,35 @@
         <source>À dire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/livret-papier.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="livretGuideQuestion" datatype="html">
         <source>Question à poser</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/livret-papier.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="livretGuideCalcul" datatype="html">
         <source>Calcul</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/livret-papier.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="livretGuideRelance" datatype="html">
         <source>Relance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/livret-papier.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="livretGuideTransition" datatype="html">
         <source>Transition</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/livret-papier.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
       <trans-unit id="panneauAnnotationTitre" datatype="html">

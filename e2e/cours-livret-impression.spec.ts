@@ -314,7 +314,7 @@ test.describe('livret papier imprimé', () => {
     expect(rangees.filter((nombre) => nombre !== 1)).toEqual([]);
   });
 
-  test('une fiche repart sur une page neuve, sauf l’exercice qui suit son exemple guidé et la question seule qui ouvre une notion', async ({
+  test('une fiche repart sur une page neuve, sauf la question seule qui ouvre une notion après un exercice', async ({
     page,
   }) => {
     await imprimerEnFenetreLarge(page, 'b2-02', 'sujet');
@@ -327,7 +327,7 @@ test.describe('livret papier imprimé', () => {
         ),
       );
 
-    expect(pagesNeuves).toEqual([2, 4, 5, 7, 9, 11, 12, 13, 14, 15]);
+    expect(pagesNeuves).toEqual([2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15]);
   });
 
   test('une fiche n’imprime que des blocs d’un seul tenant, son en-tête ne restant jamais seul en bas d’une page', async ({

@@ -5,6 +5,7 @@ import type {
   EcranDeroule,
   GuideFormateur,
 } from '../../../../cours/content/types';
+import { objet } from '../../../shared/slides/visual/presentation-v2';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { questionsDuPanneau } from './questions-du-panneau';
@@ -119,13 +120,24 @@ function ouvreUneNotion(fiche: readonly PageDuLivretEtudiant[], corrige: Deroule
   );
 }
 
-function porteUneReponse({ ecran }: PageDuLivretEtudiant, corrige: DerouleCours): boolean {
-  const deroule = corrige.ecrans.find((candidat) => candidat.id === ecran.id);
+function attendDesEtapesSurLaCopie({ ecran }: PageDuLivretEtudiant): boolean {
+  const etapes = objet(ecran.donnees?.['exemple'])?.['etapes'];
+  const etayage = ecran.donnees?.['etayage'];
   return (
-    deroule !== undefined &&
-    (deroule.corriges.length > 0 ||
-      deroule.corrigeEcran !== null ||
-      (deroule.explications?.length ?? 0) > 0)
+    CORRIGES_SUR_PLACE.has(ecran.type) &&
+    Array.isArray(etapes) &&
+    (typeof etayage === 'number' ? etayage : 0) < etapes.length
+  );
+}
+
+function porteUneReponse(page: PageDuLivretEtudiant, corrige: DerouleCours): boolean {
+  const deroule = corrige.ecrans.find((candidat) => candidat.id === page.ecran.id);
+  return (
+    attendDesEtapesSurLaCopie(page) ||
+    (deroule !== undefined &&
+      (deroule.corriges.length > 0 ||
+        deroule.corrigeEcran !== null ||
+        (deroule.explications?.length ?? 0) > 0))
   );
 }
 
@@ -153,14 +165,14 @@ export function feuillesDuLivretEtudiant(
   }
   const fiches = feuilles.filter((feuille) => feuille.length > 0);
   const livret: FicheDuLivretEtudiant[] = [];
-  let pageACorriger = false;
+  let pageImprimee: readonly PageDuLivretEtudiant[] = [];
   for (const [rang, pages] of fiches.entries()) {
     const aLaSuite: boolean =
       rang > 0 &&
-      (ouvreUneNotion(pages, corrige) ||
-        (!pageACorriger && seClotSurUnCorrigeSurPlace(fiches[rang - 1])));
-    pageACorriger =
-      (aLaSuite && pageACorriger) || pages.some((page) => porteUneReponse(page, corrige));
+      ((ouvreUneNotion(pages, corrige) && !pageImprimee.some(attendDesEtapesSurLaCopie)) ||
+        (seClotSurUnCorrigeSurPlace(fiches[rang - 1]) &&
+          !pageImprimee.some((page) => porteUneReponse(page, corrige))));
+    pageImprimee = aLaSuite ? [...pageImprimee, ...pages] : pages;
     livret.push({ pages, aLaSuite });
   }
   return livret;

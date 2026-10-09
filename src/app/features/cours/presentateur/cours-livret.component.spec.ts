@@ -133,13 +133,29 @@ describe('CoursLivretComponent', () => {
     );
   };
 
-  it('imprime à la suite de la précédente l’exercice qui suit son exemple guidé et la question seule qui ouvre une notion', async () => {
-    expect(await fichesALaSuiteDe(LIVRET_B2_02)).toEqual([3, 6, 8, 10]);
+  const avecLExempleImprimeEnEntier = (livret: LivretDuCours): LivretDuCours => ({
+    ...livret,
+    sujet: {
+      ...livret.sujet,
+      ecrans: livret.sujet.ecrans.map((ecran) =>
+        ecran.id === 'B2-02-A1-07-EXEMPLE-RESUME'
+          ? { ...ecran, donnees: { ...ecran.donnees, etayage: 6 } }
+          : ecran,
+      ),
+    },
+  });
+
+  it('imprime à la suite la question seule qui ouvre une notion, mais pas l’exercice qui suit un exemple guidé à compléter sur la copie', async () => {
+    expect(await fichesALaSuiteDe(LIVRET_B2_02)).toEqual([8]);
+  });
+
+  it('imprime à la suite l’exercice qui suit un exemple guidé dont le livret montre toutes les étapes', async () => {
+    expect(await fichesALaSuiteDe(avecLExempleImprimeEnEntier(LIVRET_B2_02))).toEqual([3, 8]);
   });
 
   it('garde sur une page neuve la fiche qui suit un exemple guidé quand sa page porte déjà une réponse à corriger', async () => {
     const avecUneQuestionAvantLExemple: LivretDuCours = {
-      ...LIVRET_B2_02,
+      ...avecLExempleImprimeEnEntier(LIVRET_B2_02),
       corrige: {
         ...LIVRET_B2_02.corrige,
         ecrans: LIVRET_B2_02.corrige.ecrans.map((ecran) =>
@@ -153,7 +169,7 @@ describe('CoursLivretComponent', () => {
       },
     };
 
-    expect(await fichesALaSuiteDe(avecUneQuestionAvantLExemple)).toEqual([6, 8, 10]);
+    expect(await fichesALaSuiteDe(avecUneQuestionAvantLExemple)).toEqual([8]);
   });
 
   it('fait repartir sur une page neuve toute fiche qui dévoilerait la réponse de la précédente', async () => {
@@ -197,7 +213,7 @@ describe('CoursLivretComponent', () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     expect(annonce(fixture)).toEqual([
-      '15 fiches · chacune commence sur une nouvelle page, sauf la question qui ouvre une notion, et la fiche qui suit un exemple guidé quand rien n’est encore à corriger sur sa page ; les plus longues en occupent plusieurs',
+      '15 fiches · chacune commence sur une nouvelle page, sauf la question qui ouvre une notion quand aucun exemple guidé de sa page n’attend de réponse sur la copie, et la fiche qui suit un exemple guidé imprimé en entier quand rien n’est encore à corriger sur sa page ; les plus longues en occupent plusieurs',
     ]);
 
     basculerSurLeCorrige(fixture);

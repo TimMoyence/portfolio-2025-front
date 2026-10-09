@@ -42,8 +42,10 @@ type VueDuLivret = 'sujet' | 'corrige';
             } @else {
               <p class="livret__annonce" data-testid="livret-annonce" i18n="@@livretAnnonceFiches">
                 {{ feuillesEtudiant().length }} fiches · chacune commence sur une nouvelle page,
-                sauf la question qui ouvre une notion, et la fiche qui suit un exemple guidé quand
-                rien n’est encore à corriger sur sa page ; les plus longues en occupent plusieurs
+                sauf la question qui ouvre une notion quand aucun exemple guidé de sa page n’attend
+                de réponse sur la copie, et la fiche qui suit un exemple guidé imprimé en entier
+                quand rien n’est encore à corriger sur sa page ; les plus longues en occupent
+                plusieurs
               </p>
             }
           }

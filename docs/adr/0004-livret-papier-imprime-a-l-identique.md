@@ -105,11 +105,20 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
   six cours, et écarté pour cette raison.
 - Une fiche commence sur une nouvelle page, sauf dans deux cas où partager la page ne dévoile
   aucune réponse :
-  - elle suit une fiche close par un exemple guidé, corrigé sur place, et rien n'est encore à
-    corriger sur sa page : aucun écran de la page n'a de corrigé, de bonne réponse ni
-    d'explication, et la fiche précédente n'a plus rien à cacher ;
+  - elle suit une fiche close par un exemple guidé que le livret imprime en entier, et rien
+    n'est encore à corriger sur sa page : aucun écran de la page n'a de corrigé, de bonne
+    réponse, d'explication ni d'étape à compléter sur la copie ;
   - elle se réduit à un écran dont le corrigé est donné à la suite (`reflexion`,
-    `revelation`) : la question qui ouvre une notion ne répond pas aux fiches qui la précèdent.
+    `revelation`), et aucun exemple guidé de sa page n'attend de réponse sur la copie : la
+    question qui ouvre une notion ne répond pas aux exercices qui la précèdent, mais elle
+    reprend souvent les résultats de l'exemple guidé qui la prépare.
+
+  Un exemple guidé n'est corrigé sur place qu'en séance. Sur le livret, l'élève répond sur sa
+  copie à chaque étape que l'étayage (`etayage`, 0 par défaut) ne montre pas, et la correction
+  vient après l'exercice. Au B2-01, le vote du paradoxe (A5-02) annonce « le taux global passe
+  de 27,6 % à 25,3 % », les deux résultats que l'exemple A5-03 fait calculer. Les sept cours
+  servis laissent tous leurs exemples guidés à compléter : seule la question qui ouvre une
+  notion y est imprimée à la suite.
 
   Un exercice qui suit un exercice, et le cours qui suit une question, gardent leur nouvelle
   page : au B2-02, l'Exercice 3 rappelle les résultats de l'Exercice 2 (« a = 3,8 et
