@@ -16,6 +16,7 @@ import {
   output,
   viewChild,
 } from '@angular/core';
+import { bornerEntre } from '../../../../cours/runtime/core/valeurs';
 import { FullscreenAdapter } from './fullscreen.adapter';
 import { SlideComponent } from './slide.component';
 import { SlideDeckService, type SlideDeckMode } from './slide-deck.service';
@@ -318,7 +319,7 @@ export class SlideDeckComponent implements AfterViewInit {
   ): void {
     const currentId = this.service.current();
     const idx = currentId ? sections.findIndex((s) => s.id === currentId) : 0;
-    const targetIdx = Math.max(0, Math.min(sections.length - 1, idx + direction));
+    const targetIdx = bornerEntre(idx + direction, 0, sections.length - 1);
     const target = sections[targetIdx];
     if (target) {
       root.scrollTo({ top: target.offsetTop, behavior: 'smooth' });

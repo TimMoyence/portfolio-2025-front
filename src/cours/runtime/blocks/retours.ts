@@ -1,3 +1,5 @@
+import { estObjet } from '../core/valeurs';
+
 export interface VerdictDeReponse {
   readonly questionId: string;
   readonly correcte: boolean;
@@ -48,10 +50,6 @@ export interface ConceptMaitrise {
 
 export const PROPRIETE_FORMATEUR = 'corrige';
 
-export function estObjet(valeur: unknown): valeur is Readonly<Record<string, unknown>> {
-  return typeof valeur === 'object' && valeur !== null && !Array.isArray(valeur);
-}
-
 export function lireTextes(valeur: unknown): Readonly<Record<string, string>> {
   if (!estObjet(valeur)) {
     return {};
@@ -63,20 +61,20 @@ export function lireTextes(valeur: unknown): Readonly<Record<string, string>> {
   );
 }
 
-export function lireBonneReponse(valeur: unknown): string | null {
+function texteDeLaCible(valeur: unknown, champ: 'cible' | 'optionId'): string | null {
   if (!estObjet(valeur) || valeur['type'] !== 'cible') {
     return null;
   }
-  const bonneReponse = valeur['cible'];
-  return typeof bonneReponse === 'string' ? bonneReponse : null;
+  const texte = valeur[champ];
+  return typeof texte === 'string' ? texte : null;
+}
+
+export function lireBonneReponse(valeur: unknown): string | null {
+  return texteDeLaCible(valeur, 'cible');
 }
 
 export function lireBonneOption(valeur: unknown): string | null {
-  if (!estObjet(valeur) || valeur['type'] !== 'cible') {
-    return null;
-  }
-  const option = valeur['optionId'];
-  return typeof option === 'string' ? option : null;
+  return texteDeLaCible(valeur, 'optionId');
 }
 
 export function estVerdictDeReponse(valeur: unknown): valeur is VerdictDeReponse {

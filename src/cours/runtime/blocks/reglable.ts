@@ -1,4 +1,5 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { fini } from '../core/valeurs';
 import {
   type Reglages,
   borner,
@@ -7,7 +8,13 @@ import {
   poserEtape,
   suiteVersLeMaximum,
 } from './animation';
-import { type ParametreReglable, brancherCurseurs, curseur } from './curseurs';
+import {
+  type ParametreReglable,
+  brancherCurseurs,
+  curseur,
+  plafondDe,
+  plancherDe,
+} from './curseurs';
 import { FpBlock } from './FpBlock';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 
@@ -22,25 +29,12 @@ export interface DefinitionReglable extends ContenuDeBrique {
   readonly animation?: readonly Reglages[];
 }
 
-export function fini(valeur: number, repli: number): number {
-  return Number.isFinite(valeur) ? valeur : repli;
-}
-
 export function arrondi(valeur: number): number {
   return Math.round(valeur * 100) / 100;
 }
 
 export function formater(valeur: number): string {
   return Number.isFinite(valeur) ? String(arrondi(valeur)).replace('.', ',') : '—';
-}
-
-export function plancherDe(bornes: { readonly min: number; readonly max: number }): number {
-  return fini(bornes.min, 0);
-}
-
-export function plafondDe(bornes: { readonly min: number; readonly max: number }): number {
-  const bas = plancherDe(bornes);
-  return Math.max(fini(bornes.max, bas), bas);
 }
 
 function copierParametres(source: readonly ParametreReglable[]): ParametreReglable[] {

@@ -1,15 +1,15 @@
 import { evaluerExpression, remplirGabarit } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { fini } from '../core/valeurs';
 import { type Reglages } from './animation';
+import { plafondDe, plancherDe } from './curseurs';
+import { echelle, jalons } from './echelle';
 import {
   type DefinitionReglable,
   FpReglable,
   arrondi,
   copierLeReglable,
-  fini,
   formater,
-  plafondDe,
-  plancherDe,
 } from './reglable';
 
 export interface Concept4Definition extends DefinitionReglable {
@@ -215,13 +215,14 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     const plancher = Math.min(...ordonnees);
     const plafond = Math.max(...ordonnees);
     const marge = (plafond - plancher || Math.abs(plafond) || 1) * 0.1;
-    const versX = (rang: number): number =>
-      MARGE + (rang / (ordonnees.length - 1)) * (LARGEUR - 2 * MARGE);
-    const versY = (ordonnee: number): number =>
-      HAUTEUR -
-      MARGE -
-      ((ordonnee - (plancher - marge)) / (plafond - plancher + 2 * marge)) * (HAUTEUR - 2 * MARGE);
     const derniere = ordonnees.length - 1;
+    const versX = echelle(0, derniere, MARGE, LARGEUR - 2 * MARGE);
+    const versY = echelle(
+      plancher - marge,
+      plafond - plancher + 2 * marge,
+      HAUTEUR - MARGE,
+      -(HAUTEUR - 2 * MARGE),
+    );
     return {
       points: ordonnees
         .map((ordonnee, rang) => `${arrondi(versX(rang))},${arrondi(versY(ordonnee))}`)
@@ -235,19 +236,14 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
   private trace(parametre: Concept4Parametre, valeurs: Valeurs): Trace {
     const depart = plancherDe(parametre);
     const arrivee = plafondDe(parametre);
-    const abscisses = Array.from(
-      { length: POINTS_COURBE + 1 },
-      (_, rang) => depart + ((arrivee - depart) * rang) / POINTS_COURBE,
-    );
+    const abscisses = jalons(depart, arrivee, POINTS_COURBE);
     const ordonnees = abscisses.map((abscisse) =>
       fini(this.resultat({ ...valeurs, [parametre.cle]: abscisse }), 0),
     );
     const plancher = Math.min(...ordonnees);
     const plafond = Math.max(...ordonnees);
-    const versX = (abscisse: number): number =>
-      MARGE + ((abscisse - depart) / (arrivee - depart || 1)) * (LARGEUR - 2 * MARGE);
-    const versY = (ordonnee: number): number =>
-      HAUTEUR - MARGE - ((ordonnee - plancher) / (plafond - plancher || 1)) * (HAUTEUR - 2 * MARGE);
+    const versX = echelle(depart, arrivee - depart, MARGE, LARGEUR - 2 * MARGE);
+    const versY = echelle(plancher, plafond - plancher, HAUTEUR - MARGE, -(HAUTEUR - 2 * MARGE));
     return {
       points: abscisses
         .map((abscisse, rang) => `${arrondi(versX(abscisse))},${arrondi(versY(ordonnees[rang]))}`)
@@ -310,11 +306,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     const depart = plancherDe(parametre);
     const arrivee = plafondDe(parametre);
     const courante = this.valeurDe(parametre, valeurs);
-    const jalons = Array.from(
-      { length: INTERVALLES_TABLEAU + 1 },
-      (_, rang) => depart + ((arrivee - depart) * rang) / INTERVALLES_TABLEAU,
-    );
-    return [...new Set([...jalons, courante])]
+    return [...new Set([...jalons(depart, arrivee, INTERVALLES_TABLEAU), courante])]
       .sort((gauche, droite) => gauche - droite)
       .map((valeur) => ({
         valeur,

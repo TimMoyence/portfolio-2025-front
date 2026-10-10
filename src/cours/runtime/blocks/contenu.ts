@@ -1,5 +1,20 @@
 import { FpBlock } from './FpBlock';
-import { estObjet } from './retours';
+import { estObjet } from '../core/valeurs';
+
+interface CiblesDeSaisie {
+  readonly champ: string;
+  readonly bouton: string;
+}
+
+interface ReactionsDeSaisie {
+  readonly saisir: (valeur: string) => void;
+  readonly envoyer: (valeur: string) => void;
+}
+
+interface SaisieBranchee {
+  readonly champ: HTMLInputElement | HTMLTextAreaElement;
+  readonly bouton: HTMLButtonElement;
+}
 
 export abstract class FpContenu<Contenu extends { readonly id: string }> extends FpBlock {
   protected interne: Contenu | null = null;
@@ -12,6 +27,31 @@ export abstract class FpContenu<Contenu extends { readonly id: string }> extends
     if (change) {
       this.repartirDeZero();
     }
+  }
+
+  protected brancherLeChamp(
+    racine: ShadowRoot,
+    cibles: CiblesDeSaisie,
+    reactions: ReactionsDeSaisie,
+  ): SaisieBranchee | null {
+    const champ = racine.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+      `[data-testid="${cibles.champ}"]`,
+    );
+    const bouton = racine.querySelector<HTMLButtonElement>(`[data-testid="${cibles.bouton}"]`);
+    if (champ === null || bouton === null) {
+      return null;
+    }
+    champ.addEventListener('input', () => reactions.saisir(champ.value));
+    bouton.addEventListener('click', () => reactions.envoyer(champ.value));
+    if (champ instanceof HTMLInputElement) {
+      champ.addEventListener('keydown', (evenement) => {
+        if (evenement.key === 'Enter') {
+          evenement.preventDefault();
+          reactions.envoyer(champ.value);
+        }
+      });
+    }
+    return { champ, bouton };
   }
 }
 
@@ -50,31 +90,15 @@ export abstract class FpEnvoi<Contenu extends { readonly id: string }> extends F
 
   protected brancherLaSaisie(
     racine: ShadowRoot,
-    cibles: { readonly champ: string; readonly bouton: string; readonly verrouille: boolean },
-    reactions: {
-      readonly saisir: (valeur: string) => void;
-      readonly envoyer: (valeur: string) => void;
-    },
+    cibles: CiblesDeSaisie & { readonly verrouille: boolean },
+    reactions: ReactionsDeSaisie,
   ): boolean {
-    const champ = racine.querySelector<HTMLInputElement | HTMLTextAreaElement>(
-      `[data-testid="${cibles.champ}"]`,
-    );
-    const bouton = racine.querySelector<HTMLButtonElement>(`[data-testid="${cibles.bouton}"]`);
-    if (champ === null || bouton === null) {
+    const saisie = this.brancherLeChamp(racine, cibles, reactions);
+    if (saisie === null) {
       return false;
     }
-    champ.disabled = cibles.verrouille;
-    bouton.disabled = cibles.verrouille;
-    champ.addEventListener('input', () => reactions.saisir(champ.value));
-    bouton.addEventListener('click', () => reactions.envoyer(champ.value));
-    if (champ instanceof HTMLInputElement) {
-      champ.addEventListener('keydown', (evenement) => {
-        if (evenement.key === 'Enter') {
-          evenement.preventDefault();
-          reactions.envoyer(champ.value);
-        }
-      });
-    }
+    saisie.champ.disabled = cibles.verrouille;
+    saisie.bouton.disabled = cibles.verrouille;
     return true;
   }
 

@@ -1,6 +1,7 @@
 import { PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import type {
+  Decompte,
   EcranDeroule,
   PilotageEcran,
   ProgressionEnigme,
@@ -33,10 +34,8 @@ const LIBELLES_DE_PHASE: Readonly<Record<VotePhase, string>> = {
   revele: $localize`:@@panneauActivitePhaseRevele:Révélation`,
 };
 
-interface LigneDeCle {
+interface LigneDeCle extends Decompte {
   readonly cle: string;
-  readonly justes: number;
-  readonly total: number;
 }
 
 @Component({

@@ -142,10 +142,15 @@ export interface ResultatQuestion {
   readonly confusions: readonly ConfusionComptee[];
   readonly parOption: Readonly<Record<string, number>> | null;
   readonly scoreMoyen: number | null;
-  readonly parCle: Readonly<
-    Record<string, { readonly total: number; readonly justes: number }>
-  > | null;
+  readonly parCle: DecomptesParCle | null;
 }
+
+export interface Decompte {
+  readonly justes: number;
+  readonly total: number;
+}
+
+export type DecomptesParCle = Readonly<Record<string, Decompte>>;
 
 export interface ResultatsSeance {
   readonly participants: number;

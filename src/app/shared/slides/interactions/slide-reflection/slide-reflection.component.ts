@@ -74,14 +74,9 @@ export class SlideReflectionComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const sessionId = this.sessionId();
-      if (this.mode() !== 'seance' || sessionId === null) {
-        return;
-      }
-      const cle = cleDeReponseLibre(sessionId, this.screenId(), this.activiteCourante());
-      const etat = this.reponsesLibres.etatsDesEnvois().get(cle);
-      if (etat !== undefined) {
-        this.saveState.set(etatAffiche(etat));
+      const sessionId = this.seanceCourante();
+      if (sessionId !== null) {
+        this.afficherLEtat(this.reponsesLibres.etatsDesEnvois().get(this.cleCourante(sessionId)));
       }
     });
   }
@@ -96,9 +91,9 @@ export class SlideReflectionComponent implements OnInit {
   }
 
   protected async save(): Promise<void> {
-    const sessionId = this.sessionId();
+    const sessionId = this.seanceCourante();
     const response = this.value().trim();
-    if (response === '' || this.mode() !== 'seance' || sessionId === null) {
+    if (response === '' || sessionId === null) {
       return;
     }
     this.saveState.set('envoi');
@@ -112,17 +107,28 @@ export class SlideReflectionComponent implements OnInit {
   }
 
   private readonly reprendre = async (): Promise<void> => {
-    const sessionId = this.sessionId();
-    if (this.mode() !== 'seance' || sessionId === null) return;
-    const cleCourante = cleDeReponseLibre(sessionId, this.screenId(), this.activiteCourante());
-    const etat = (await this.reponsesLibres.reprendre(sessionId, this.jeton())).get(cleCourante);
-    if (etat !== undefined) {
-      this.saveState.set(etatAffiche(etat));
-    }
+    const sessionId = this.seanceCourante();
+    if (sessionId === null) return;
+    const cle = this.cleCourante(sessionId);
+    this.afficherLEtat((await this.reponsesLibres.reprendre(sessionId, this.jeton())).get(cle));
   };
+
+  private seanceCourante(): string | null {
+    return this.mode() === 'seance' ? this.sessionId() : null;
+  }
 
   private activiteCourante(): string {
     return this.activeReflection()?.id ?? this.interactionId();
+  }
+
+  private cleCourante(sessionId: string): string {
+    return cleDeReponseLibre(sessionId, this.screenId(), this.activiteCourante());
+  }
+
+  private afficherLEtat(etat: EtatEnvoiLibre | undefined): void {
+    if (etat !== undefined) {
+      this.saveState.set(etatAffiche(etat));
+    }
   }
 
   protected onInput(text: string): void {

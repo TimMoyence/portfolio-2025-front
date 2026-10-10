@@ -1,5 +1,6 @@
 import { evaluerExpression } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { entierBorne } from '../core/valeurs';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
 import { type DetailDeVerdict } from './retours';
 import { lireNombreSaisi } from './saisie-numerique';
@@ -70,9 +71,7 @@ function lireMontant(brut: string): number {
 }
 
 function bornerDecimales(decimales: number): number {
-  return Number.isFinite(decimales)
-    ? Math.min(Math.max(Math.trunc(decimales), 0), DECIMALES_MAX)
-    : 2;
+  return entierBorne(decimales, 0, DECIMALES_MAX, 2);
 }
 
 function formater(valeur: number, decimales: number): string {

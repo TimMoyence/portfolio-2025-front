@@ -1,4 +1,5 @@
 export const SECONDE_MS = 1000;
+export const MINUTE_MS = 60 * SECONDE_MS;
 
 export class Battement {
   private minuteur: ReturnType<typeof setInterval> | null = null;

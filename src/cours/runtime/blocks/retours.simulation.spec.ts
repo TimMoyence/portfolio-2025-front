@@ -1,5 +1,6 @@
 import * as fc from 'fast-check';
-import { estObjet, estVerdictDeProduction, estVerdictDeReponse } from './retours';
+import { estObjet } from '../core/valeurs';
+import { estVerdictDeProduction, estVerdictDeReponse } from './retours';
 
 const GRAINE = 20260920;
 const TOURS = 500;

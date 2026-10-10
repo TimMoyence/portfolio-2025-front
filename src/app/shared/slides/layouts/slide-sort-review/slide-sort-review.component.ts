@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { LignesDeCalculComponent } from '../../lignes-de-calcul/lignes-de-calcul.component';
 import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
+import type { Decompte, DecomptesParCle } from '../../../../../cours/content/types';
 
 export interface CategorieDuTri {
   readonly id: string;
@@ -14,16 +15,11 @@ export interface CarteDuTri {
   readonly justification: string;
 }
 
-export interface CompteDeCarte {
-  readonly justes: number;
-  readonly total: number;
-}
-
 interface ZoneDuTri extends CategorieDuTri {
   readonly cartes: readonly (CarteDuTri & {
     readonly malPlacee: boolean;
     readonly bienPlacee: boolean;
-    readonly compte: CompteDeCarte | null;
+    readonly compte: Decompte | null;
   })[];
 }
 
@@ -42,7 +38,7 @@ export class SlideSortReviewComponent {
   readonly cards = input.required<readonly CarteDuTri[]>();
   readonly misplaced = input<readonly string[]>([]);
   readonly wellPlaced = input<readonly string[]>([]);
-  readonly comptes = input<Readonly<Record<string, CompteDeCarte>>>({});
+  readonly comptes = input<DecomptesParCle>({});
 
   protected readonly zones = computed<readonly ZoneDuTri[]>(() => {
     const malPlacees = new Set(this.misplaced());

@@ -1,12 +1,9 @@
 import type { CadrageDuRenvoi, EcranContent } from '../../../../cours/content/types';
+import { estObjet } from '../../../../cours/runtime/core/valeurs';
 
 type Objet = Readonly<Record<string, unknown>>;
 
 const CHAMPS_DU_CAS = ['metier', 'situation', 'geste'] as const;
-
-function estObjet(valeur: unknown): valeur is Objet {
-  return typeof valeur === 'object' && valeur !== null && !Array.isArray(valeur);
-}
 
 function sans(objet: Objet, cles: readonly string[]): Objet {
   return Object.fromEntries(Object.entries(objet).filter(([cle]) => !cles.includes(cle)));

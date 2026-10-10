@@ -1,4 +1,5 @@
 import type { EcranContent } from '../../../../cours/content/types';
+import { estObjet } from '../../../../cours/runtime/core/valeurs';
 
 export type Donnees = Readonly<Record<string, unknown>>;
 
@@ -10,9 +11,7 @@ interface PresentationV2 {
 }
 
 export function objet(value: unknown): Donnees | null {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
-    ? (value as Donnees)
-    : null;
+  return estObjet(value) ? value : null;
 }
 
 export function aUnePresentation(slide: EcranContent): boolean {
