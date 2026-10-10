@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import type { Observable } from 'rxjs';
 import { of, throwError } from 'rxjs';
 import type {
+  FichierTelecharge,
   ParticipantRapporte,
   RapportSeance,
   ReponseLibreRapportee,
@@ -22,6 +23,7 @@ import {
 import {
   buildDerouleCours,
   buildEcranDeroule,
+  buildFichierTelecharge,
   buildResultatQuestion,
   buildResultatsSeance,
   createFormationsPortStub,
@@ -99,10 +101,12 @@ function textes(fixture: Fixture, nom: string): readonly string[] {
 async function monter(
   rapport: RapportSeance,
   deroule: Observable<DerouleCours> = of(buildDerouleCours()),
+  csv: Observable<FichierTelecharge> = of(buildFichierTelecharge()),
 ): Promise<Fixture> {
   const port = createFormationsPortStub();
   port.lireResultats.and.returnValue(of(rapport));
   port.lireDeroule.and.returnValue(deroule);
+  port.telechargerRapportCsv.and.returnValue(csv);
   setupTestBed({
     imports: [CoursSyntheseComponent],
     providers: [{ provide: FORMATIONS_PORT, useValue: port }],
@@ -280,7 +284,7 @@ describe('CoursSyntheseComponent', () => {
       expect(textes(fixture, 'synthese-question-id')).toEqual(['Q-1', 'Q-2']);
     });
 
-    it('nomme par son enonce, a l ecran et dans le CSV, le QCM d un ecran servi en presentation v2', async () => {
+    it('nomme par son enonce le QCM d un ecran servi en presentation v2', async () => {
       const participant = etudiant('Ana', 9, false, [
         { ...reponse('echelle', 'o2'), questionId: 'b2-s03-prediction' },
       ]);
@@ -290,9 +294,6 @@ describe('CoursSyntheseComponent', () => {
       );
 
       expect(textes(fixture, 'synthese-question-libelle')).toEqual(['Quelle échelle ?']);
-      expect(fixture.componentInstance.exporterCsv().split('\n')[1]).toBe(
-        'Ana;Durand;ana@example.com;b2-s03-prediction;Quelle échelle ?;echelle;o2;4200',
-      );
     });
 
     it('nomme la question par son identifiant quand le deroule ne peut pas etre lu', async () => {
@@ -315,18 +316,6 @@ describe('CoursSyntheseComponent', () => {
     expect(marques[0]).toContain('aucune question');
     expect(textes(fixture, 'synthese-score')).toEqual(['4']);
     expect(textes(fixture, 'synthese-nom')).toEqual(['Malik Durand', 'Theo Durand']);
-  });
-
-  it('exporte une ligne d entete puis une ligne par reponse', async () => {
-    const fixture = await monter(rapportDe([MALIK, NORA, CHLOE, THEO]));
-
-    const lignes = fixture.componentInstance.exporterCsv().split('\n');
-
-    expect(lignes[0]).toBe('prenom;nom;adresse;question;enonce;concept;valeur;duree_ms');
-    expect(lignes.length).toBe(5);
-    expect(lignes[1]).toBe(
-      'Malik;Durand;malik@example.com;Q-interets-composes;;interets-composes;1400;4200',
-    );
   });
 
   describe('règles du cahier écrites en réponse libre (V6)', () => {
@@ -355,18 +344,6 @@ describe('CoursSyntheseComponent', () => {
     function monterLeB301(participants: readonly ParticipantRapporte[]): Promise<Fixture> {
       return monter(rapportDe(participants), of(INSTANTANE_B3_01.deroule));
     }
-
-    it('exporte sous chaque étudiant ses règles, nommées par la question du déroulé servi', async () => {
-      const fixture = await monterLeB301([ANA, BASILE]);
-
-      expect(fixture.componentInstance.exporterCsv().split('\n')).toEqual([
-        'prenom;nom;adresse;question;enonce;concept;valeur;duree_ms',
-        'Ana;Durand;ana@example.com;Q-cle-et-relation;;cle-et-relation;660;4200',
-        `Ana;Durand;ana@example.com;${REGLE_COMPRENDRE};${QUESTION_COMPRENDRE};;Je relie par client_id, jamais par le nom.;`,
-        `Ana;Durand;ana@example.com;${REGLE_NETTOYER};${QUESTION_NETTOYER};;Je signale tout doublon sans le supprimer.;`,
-        `Basile;Durand;basile@example.com;${REGLE_COMPRENDRE};${QUESTION_COMPRENDRE};;Je lis Clients avant l export.;`,
-      ]);
-    });
 
     it('affiche les règles de chaque étudiant sous son nom, chacune avec sa question', async () => {
       const fixture = await monterLeB301([ANA, BASILE]);
@@ -410,24 +387,6 @@ describe('CoursSyntheseComponent', () => {
 
       expect(textes(fixture, 'synthese-question-libelle')).toEqual([QUESTION_DU_BILLET]);
       expect(textes(fixture, 'synthese-libre-question')).toEqual([INVITE_DU_BILLET]);
-      expect(fixture.componentInstance.exporterCsv().split('\n').slice(1)).toEqual([
-        `Clement;Durand;clement@example.com;${BILLET};${QUESTION_DU_BILLET};qualite-des-donnees;non-on-la-signale;4200`,
-        `Clement;Durand;clement@example.com;${BILLET};${INVITE_DU_BILLET};;Le modèle de données.;`,
-      ]);
-    });
-
-    it('neutralise une réponse libre qu Excel lirait comme une formule, sans couper sa ligne', async () => {
-      const PIEGEE = '=HYPERLINK("http://evil.example";"x")\nseconde ligne';
-      const fixture = await monterLeB301([
-        { ...etudiant('Ana', 14, false, []), reponsesLibres: [libre(REGLE_COMPRENDRE, PIEGEE)] },
-      ]);
-
-      expect(fixture.componentInstance.exporterCsv()).toBe(
-        [
-          'prenom;nom;adresse;question;enonce;concept;valeur;duree_ms',
-          `Ana;Durand;ana@example.com;${REGLE_COMPRENDRE};${QUESTION_COMPRENDRE};;"'=HYPERLINK(""http://evil.example"";""x"")\nseconde ligne";`,
-        ].join('\n'),
-      );
     });
 
     it('nomme une règle par son activité quand le déroulé ne peut pas être lu', async () => {
@@ -448,55 +407,47 @@ describe('CoursSyntheseComponent', () => {
     });
   });
 
-  async function csvDAna(valeur: string, nom?: string): Promise<string> {
-    const ana = etudiant('Ana', 9, true, [reponse('actualisation', valeur)]);
-    const fixture = await monter(rapportDe([nom === undefined ? ana : { ...ana, nom }]));
-    return fixture.componentInstance.exporterCsv();
-  }
-
-  it('protege les champs qui portent un point-virgule ou un retour a la ligne', async () => {
-    const csv = await csvDAna('premiere ligne\nseconde ligne', 'Dupont;Martin');
-
-    const lignes = csv.split('\n');
-
-    expect(lignes[1]).toContain('"Dupont;Martin"');
-    expect(lignes[1]).toContain('"premiere ligne');
-    expect(csv).toContain('"premiere ligne\nseconde ligne";4200');
-  });
-
-  it('neutralise un champ qu Excel interpreterait comme une formule', async () => {
-    const csv = await csvDAna('+1+1', '=HYPERLINK("http://evil.example","Cliquez ici")');
-
-    expect(csv).toContain("'=HYPERLINK");
-    expect(csv).toContain("'+1+1");
-  });
-
-  it('laisse un montant negatif intact et sommable', async () => {
-    const csv = await csvDAna('-1500');
-
-    expect(csv).toContain('-1500');
-    expect(csv).not.toContain("'-1500");
-  });
-
-  it('neutralise un moins qui n est pas un nombre valide', async () => {
-    expect(await csvDAna('-=1+1')).toContain("'-=1+1");
-  });
-
-  it('ouvre le CSV téléchargé par le BOM UTF-8, pour qu Excel en lise les accents', async () => {
-    const creation = spyOn(URL, 'createObjectURL').and.returnValue('blob:synthese');
-    spyOn(URL, 'revokeObjectURL');
-    spyOn(HTMLAnchorElement.prototype, 'click');
-    const fixture = await monter(rapportDe([MALIK]));
-
+  function exporter(fixture: Fixture): void {
     (fixture.nativeElement as HTMLElement)
       .querySelector<HTMLButtonElement>("[data-testid='synthese-export']")
       ?.click();
-    const octets = new Uint8Array(
-      await (creation.calls.mostRecent().args[0] as Blob).arrayBuffer(),
+    fixture.detectChanges();
+  }
+
+  it('télécharge le CSV que le serveur produit pour la séance, sous le nom qu il lui donne', async () => {
+    const creation = spyOn(URL, 'createObjectURL').and.returnValue('blob:synthese');
+    spyOn(URL, 'revokeObjectURL');
+    const clic = spyOn(HTMLAnchorElement.prototype, 'click');
+    const csv = buildFichierTelecharge({
+      nom: 'session-4821.csv',
+      contenu: new Blob(['﻿prénom;nom'], { type: 'text/csv; charset=utf-8' }),
+    });
+    const fixture = await monter(rapportDe([MALIK]), of(buildDerouleCours()), of(csv));
+
+    exporter(fixture);
+    const telecharge = creation.calls.mostRecent().args[0] as Blob;
+
+    expect({
+      nom: (clic.calls.mostRecent().object as HTMLAnchorElement).download,
+      type: telecharge.type,
+      texte: await telecharge.text(),
+    }).toEqual({
+      nom: 'session-4821.csv',
+      type: csv.contenu.type,
+      texte: await csv.contenu.text(),
+    });
+  });
+
+  it('signale un export CSV en échec', async () => {
+    const fixture = await monter(
+      rapportDe([MALIK]),
+      of(buildDerouleCours()),
+      throwError(() => new Error('500')),
     );
 
-    expect([...octets.slice(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
-    expect(new TextDecoder().decode(octets.slice(3))).toBe(fixture.componentInstance.exporterCsv());
+    exporter(fixture);
+
+    expect(textes(fixture, 'synthese-export-echec').length).toBe(1);
   });
 
   it('une seance sans participant affiche un message plutot qu un tableau vide', async () => {

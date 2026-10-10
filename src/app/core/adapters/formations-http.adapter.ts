@@ -277,6 +277,10 @@ export class FormationsHttpAdapter implements FormationsPort {
     return this.http.get<RapportSeance>(`${this.urlSeance(sessionId)}/report`);
   }
 
+  telechargerRapportCsv(sessionId: string): Observable<FichierTelecharge> {
+    return this.telecharger(`${this.urlSeance(sessionId)}/report.csv`);
+  }
+
   lireAnnotations(sessionId: string): Observable<{ annotations: readonly AnnotationFormateur[] }> {
     return this.http.get<{ annotations: readonly AnnotationFormateur[] }>(
       `${this.urlSeance(sessionId)}/annotations`,

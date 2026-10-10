@@ -30,6 +30,7 @@ const METHODES_DU_PORT = {
   cloturer: true,
   lireResultats: true,
   exporterBilan: true,
+  telechargerRapportCsv: true,
   lireAnnotations: true,
   enregistrerAnnotation: true,
   lireReponsesLibres: true,

@@ -10949,6 +10949,16 @@
         <target> Export answers as CSV </target>
       </segment>
     </unit>
+    <unit id="syntheseExportEchec">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:200,207</note>
+        <note category="meaning">synthese.exportEchec</note>
+      </notes>
+      <segment>
+        <source> Le CSV n’a pas pu être exporté. Réessayez. </source>
+        <target> The CSV could not be exported. Try again. </target>
+      </segment>
+    </unit>
     <unit id="syntheseEchec">
       <notes>
         <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:190,195</note>
