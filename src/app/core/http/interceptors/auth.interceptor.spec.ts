@@ -9,7 +9,7 @@ import { AuthStateService } from '../../../core/services/auth-state.service';
 import { environment } from '../../../../environments/environment';
 import { buildAuthSession, createAuthPortStub } from '../../../../testing/factories/auth.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
-import { ENTETE_JETON_PARTICIPANT } from '../jeton-participant';
+import { ENTETE_JETON_PARTICIPANT } from '../../../../cours/runtime/core/jeton-participant';
 import { authInterceptor } from './auth.interceptor';
 
 describe('authInterceptor', () => {

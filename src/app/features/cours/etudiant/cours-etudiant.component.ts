@@ -40,11 +40,13 @@ import {
 } from '../../../../cours/runtime/core/queue';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import { creerBrouillons, purgerLesAutresBrouillons } from '../../../../cours/runtime/core/storage';
-import type {
-  EtatSession,
-  RaisonDeFin,
-  StatutSession,
-  Sync,
+import {
+  refusDuFlux,
+  type EtatSession,
+  type RaisonDeFin,
+  type RefusDuFlux,
+  type StatutSession,
+  type Sync,
 } from '../../../../cours/runtime/core/sync';
 import { getApiBaseUrl } from '../../../core/http/api-config';
 import type {
@@ -108,10 +110,6 @@ interface RefusDeReponse {
   readonly message: string;
 }
 
-interface RefusDuFlux {
-  readonly statut: number;
-}
-
 interface Envoi {
   readonly nature: NatureEnvoi;
   readonly questionId: string;
@@ -132,8 +130,6 @@ interface VerdictAffiche extends VerdictRecu {
 }
 
 const REGIMES_VERROU: readonly RegimeVerrou[] = ['ouvert', 'focus', 'examen'];
-
-const STATUTS_SANS_RETOUR: readonly number[] = [401, 403];
 
 const SLUG_DE_COURS = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -649,10 +645,7 @@ export class CoursEtudiantComponent {
     return null;
   });
 
-  readonly accesPerdu = computed<boolean>(() => {
-    const refus = this.refusDuFlux();
-    return refus !== null && STATUTS_SANS_RETOUR.includes(refus.statut);
-  });
+  readonly accesPerdu = computed<boolean>(() => this.refusDuFlux()?.motif === 'session');
 
   readonly ecranCourant = computed<EcranContent | null>(() => {
     const ecran = this.sujet()?.ecrans[this.indexEcran()];
@@ -916,7 +909,7 @@ export class CoursEtudiantComponent {
     });
     flux.onState((etat) => this.suivreLeFlux(deck, etat));
     flux.onStatut((statut) => {
-      this.refusDuFlux.set(statut.etat === 'refuse' ? { statut: statut.statut } : null);
+      this.refusDuFlux.set(refusDuFlux(statut));
     });
     flux.onFin((raison) => this.finirSelon(raison));
     flux.ouvrir();
