@@ -1,5 +1,12 @@
-import { lireJsonSousDelai, messageDErreur } from './lecture-api';
+import {
+  DELAI_DE_LECTURE_MS,
+  garderEnCache,
+  lireJsonSousDelai,
+  messageDErreur,
+} from './lecture-api';
+import { cheminDuCoursEnSeance } from '../app/core/config/cours-en-seance';
 import { trimTrailingSlashes } from '../app/core/utils/barres';
+import { estObjet } from '../cours/runtime/core/valeurs';
 
 export interface PublicationDeCours {
   readonly chemin: string;
@@ -14,19 +21,14 @@ export interface DependancesDuLecteur {
   readonly maintenant?: () => number;
 }
 
-const DELAI_MS = 2_000;
-const DUREE_DU_CACHE_MS = 300_000;
 const REPLI = 'repli sur le lastmod de seo-metadata.json';
 
 function cheminDuCours(slug: string): string {
-  return `/formations/${slug}`;
+  return `/${cheminDuCoursEnSeance(slug)}`;
 }
 
 function dateDePublication(corps: unknown): string | null {
-  const publieLe =
-    typeof corps === 'object' && corps !== null
-      ? (corps as Readonly<Record<string, unknown>>)['publieLe']
-      : undefined;
+  const publieLe = estObjet(corps) ? corps['publieLe'] : undefined;
   return typeof publieLe === 'string' && !Number.isNaN(Date.parse(publieLe)) ? publieLe : null;
 }
 
@@ -40,7 +42,7 @@ async function lirePublication(
     const lecture = await lireJsonSousDelai(
       dependances.fetch,
       `${apiBaseUrl}/formations/catalogue/${slug}`,
-      DELAI_MS,
+      DELAI_DE_LECTURE_MS,
     );
     if (!lecture.ok) {
       dependances.journal.warn(
@@ -67,32 +69,20 @@ async function lirePublication(
 export function lecteurDePublicationsDeCours(
   dependances: DependancesDuLecteur,
 ): () => Promise<readonly PublicationDeCours[]> {
-  const maintenant = dependances.maintenant ?? Date.now;
-  let cache: { readonly expireA: number; readonly publications: readonly PublicationDeCours[] } = {
-    expireA: Number.NEGATIVE_INFINITY,
-    publications: [],
-  };
-
-  const lire = async (): Promise<readonly PublicationDeCours[]> => {
-    const apiBaseUrl = trimTrailingSlashes(dependances.apiBaseUrl ?? '');
-    if (!apiBaseUrl) {
-      dependances.journal.warn(
-        `[sitemap] PORTFOLIO_ARTICLE_API_URL absente : aucune date de publication lue pour ${dependances.slugs.map(cheminDuCours).join(', ')}, ${REPLI}`,
+  return garderEnCache(
+    dependances.maintenant ?? Date.now,
+    async (): Promise<readonly PublicationDeCours[]> => {
+      const apiBaseUrl = trimTrailingSlashes(dependances.apiBaseUrl ?? '');
+      if (!apiBaseUrl) {
+        dependances.journal.warn(
+          `[sitemap] PORTFOLIO_ARTICLE_API_URL absente : aucune date de publication lue pour ${dependances.slugs.map(cheminDuCours).join(', ')}, ${REPLI}`,
+        );
+        return [];
+      }
+      const lues = await Promise.all(
+        dependances.slugs.map((slug) => lirePublication(slug, apiBaseUrl, dependances)),
       );
-      return [];
-    }
-    const lues = await Promise.all(
-      dependances.slugs.map((slug) => lirePublication(slug, apiBaseUrl, dependances)),
-    );
-    return lues.filter((publication): publication is PublicationDeCours => publication !== null);
-  };
-
-  return async () => {
-    if (cache.expireA > maintenant()) {
-      return cache.publications;
-    }
-    const publications = await lire();
-    cache = { expireA: maintenant() + DUREE_DU_CACHE_MS, publications };
-    return publications;
-  };
+      return lues.filter((publication): publication is PublicationDeCours => publication !== null);
+    },
+  );
 }

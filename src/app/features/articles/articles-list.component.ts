@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import type { ArticleSummary } from '../../core/models/article.model';
+import type { ArticleListResponse, ArticleSummary } from '../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../core/adapters/article-http.adapter';
 import { AsiliHeroComponent } from '../../shared/sections';
 import { ArticlesCtaComponent } from './articles-cta.component';
@@ -36,8 +36,7 @@ export class ArticlesListComponent {
   constructor() {
     this.api.list(this.locale, ARTICLES_PAGE_SIZE).subscribe({
       next: (response) => {
-        this.articles.push(...response.items);
-        this.nextCursor = response.next_cursor;
+        this.ajouterLaPage(response);
         this.isLoading = false;
         this.cdr.markForCheck();
       },
@@ -55,8 +54,7 @@ export class ArticlesListComponent {
     this.hasLoadMoreError = false;
     this.api.list(this.locale, ARTICLES_PAGE_SIZE, this.nextCursor).subscribe({
       next: (response) => {
-        this.articles.push(...response.items);
-        this.nextCursor = response.next_cursor;
+        this.ajouterLaPage(response);
         this.isLoadingMore = false;
         this.cdr.markForCheck();
       },
@@ -66,5 +64,10 @@ export class ArticlesListComponent {
         this.cdr.markForCheck();
       },
     });
+  }
+
+  private ajouterLaPage(page: ArticleListResponse): void {
+    this.articles.push(...page.items);
+    this.nextCursor = page.next_cursor;
   }
 }

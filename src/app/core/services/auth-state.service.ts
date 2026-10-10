@@ -4,6 +4,7 @@ import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@a
 import { computed, signal } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { finalize, firstValueFrom, timeout } from 'rxjs';
+import { bornerEntre } from '../../../cours/runtime/core/valeurs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
 import { VERROU_INTER_ONGLETS } from './verrou-inter-onglets';
@@ -30,7 +31,7 @@ function throttledRetryDelayMs(error: unknown): number {
   const retryAfterS =
     error instanceof HttpErrorResponse ? Number(error.headers.get('Retry-After')) : 0;
   const requestedMs = Number.isFinite(retryAfterS) ? retryAfterS * 1000 : 0;
-  return Math.min(Math.max(requestedMs, THROTTLED_RETRY_MIN_MS), THROTTLED_RETRY_MAX_MS);
+  return bornerEntre(requestedMs, THROTTLED_RETRY_MIN_MS, THROTTLED_RETRY_MAX_MS);
 }
 
 function isTransientFailure(status: number | null): boolean {
