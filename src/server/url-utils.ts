@@ -1,37 +1,12 @@
 import type express from 'express';
+import { LOCALES_DU_SITE } from '../app/core/config/locales';
+import { buildLocalizedPath, normalizePath, routeSansLocale } from '../app/core/seo/chemins';
 
-const SUPPORTED_LOCALES = ['fr', 'en'] as const;
-const LOCALE_PATTERN = SUPPORTED_LOCALES.join('|');
-
-export const LOCALE_BARE_PATH = new RegExp(`^\\/(${LOCALE_PATTERN})\\/$`);
-
-export const LOCALE_PREFIX_RE = new RegExp(`^\\/(${LOCALE_PATTERN})(?=\\/|$)`);
-
-export const STRIP_LOCALE_RE = new RegExp(`^\\/(${LOCALE_PATTERN})\\/?`);
-
-export const trimTrailingSlashes = (value: string): string => {
-  let end = value.length;
-  while (end > 0 && value[end - 1] === '/') end -= 1;
-  return value.slice(0, end);
-};
-
-const trimLeadingSlashes = (value: string): string => {
-  let start = 0;
-  while (start < value.length && value[start] === '/') start += 1;
-  return value.slice(start);
-};
-
-export const normalizePath = (path: string): string => {
-  const clean = path.split('?')[0].split('#')[0];
-  const trimmed = trimTrailingSlashes(trimLeadingSlashes(clean));
-  return trimmed ? `/${trimmed}` : '/';
-};
-
-export const buildLocalizedPath = (locale: string, path: string): string => {
-  const normalized = normalizePath(path);
-  if (!locale) return normalized;
-  if (normalized === '/') return `/${locale}/`;
-  return normalizePath(`/${locale}${normalized}`);
+export const cheminCanonique = (path: string): string => {
+  const replie = path.replace(/\/{2,}/g, '/');
+  const { locale, route } = routeSansLocale(replie, LOCALES_DU_SITE);
+  if (locale !== undefined && route === '/') return buildLocalizedPath(locale, route);
+  return normalizePath(replie);
 };
 
 export const ALLOWED_HOSTS = [
@@ -45,10 +20,11 @@ export const ALLOWED_HOSTS = [
 
 const ALLOWED_HOSTS_SET = new Set<string>(ALLOWED_HOSTS.map((h) => h.toLowerCase()));
 
+const HOTE_ET_PORT = /^([^:]+)(?::\d{1,5})?$/;
+
 const isAllowedHost = (host: string | undefined): host is string => {
-  if (!host) return false;
-  const bareHost = host.split(':')[0].trim().toLowerCase();
-  return ALLOWED_HOSTS_SET.has(bareHost);
+  const bareHost = HOTE_ET_PORT.exec(host ?? '')?.[1];
+  return bareHost !== undefined && ALLOWED_HOSTS_SET.has(bareHost.toLowerCase());
 };
 
 const firstAllowedHost = (...candidates: (string | undefined)[]): string | undefined =>

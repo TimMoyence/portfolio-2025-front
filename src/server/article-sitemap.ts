@@ -1,6 +1,7 @@
 import { lireJsonSousDelai, messageDErreur } from './lecture-api';
 import type { DynamicArticleSitemapEntry } from './seo-builders';
-import { trimTrailingSlashes } from './url-utils';
+import { LOCALES_DU_SITE } from '../app/core/config/locales';
+import { trimTrailingSlashes } from '../app/core/utils/barres';
 
 export interface DependancesDuLecteurDArticles {
   readonly apiBaseUrl: string | undefined;
@@ -11,7 +12,6 @@ export interface DependancesDuLecteurDArticles {
 
 const LIMITE_PAR_PAGE = 24;
 export const PAGES_MAX_PAR_LOCALE = 50;
-const LOCALES = ['fr', 'en'] as const;
 const DELAI_MS = 2_000;
 const DUREE_DU_CACHE_MS = 300_000;
 
@@ -98,7 +98,7 @@ export function lecteurDArticlesDuSitemap(
     if (cache.expireA > maintenant()) return cache.entrees;
     const apiBaseUrl = trimTrailingSlashes(dependances.apiBaseUrl);
     const parLocale = await Promise.all(
-      LOCALES.map((locale) => lireLocale(apiBaseUrl, locale, dependances)),
+      LOCALES_DU_SITE.map((locale) => lireLocale(apiBaseUrl, locale, dependances)),
     );
     cache = { expireA: maintenant() + DUREE_DU_CACHE_MS, entrees: parLocale.flat() };
     return cache.entrees;

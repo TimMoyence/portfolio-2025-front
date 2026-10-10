@@ -171,6 +171,47 @@ describe('SeoManagerComponent', () => {
     expect(naviguer('/fr/test').ogImage).toBe('https://example.com/assets/images/og.webp');
   });
 
+  describe('accueil, aligne sur le canonical rendu par le serveur', () => {
+    for (const url of ['/', '/home', '/fr', '/fr/', '/fr/home']) {
+      it(`canonise ${url} en /fr/ et annonce /fr/ et /en/`, () => {
+        routerStub.url = url;
+
+        const call = naviguer(url);
+
+        expect(call.canonicalUrl).toBe('https://example.com/fr/');
+        expect(call.hreflangs).toEqual({
+          fr: 'https://example.com/fr/',
+          en: 'https://example.com/en/',
+          'x-default': 'https://example.com/fr/',
+        });
+      });
+    }
+
+    it('garde la locale portee par le chemin', () => {
+      routerStub.url = '/en/';
+
+      expect(naviguer('/en/').canonicalUrl).toBe('https://example.com/en/');
+    });
+
+    it('canonise dans la locale du build quand router.url ne porte pas de locale, comme en prod', () => {
+      seoRegistrySpy.getLocaleId.and.returnValue('en');
+      routerStub.url = '/';
+
+      const accueil = naviguer('/');
+
+      expect(accueil.canonicalUrl).toBe('https://example.com/en/');
+      expect(accueil.hreflangs).toEqual({
+        fr: 'https://example.com/fr/',
+        en: 'https://example.com/en/',
+        'x-default': 'https://example.com/fr/',
+      });
+
+      routerStub.url = '/contact?utm=x';
+
+      expect(naviguer('/contact?utm=x').canonicalUrl).toBe('https://example.com/en/contact');
+    });
+  });
+
   describe('normalisation des slashes', () => {
     it('retire les slashes de tete et de queue du chemin', () => {
       routerStub.url = '//fr//test//';

@@ -1,14 +1,5 @@
 import type express from 'express';
-import {
-  ALLOWED_HOSTS,
-  LOCALE_BARE_PATH,
-  LOCALE_PREFIX_RE,
-  STRIP_LOCALE_RE,
-  buildBaseUrlFromRequest,
-  buildLocalizedPath,
-  normalizePath,
-  trimTrailingSlashes,
-} from './url-utils';
+import { ALLOWED_HOSTS, buildBaseUrlFromRequest, cheminCanonique } from './url-utils';
 
 const stubRequest = (opts: {
   headers?: Record<string, string>;
@@ -27,91 +18,27 @@ const stubRequest = (opts: {
 };
 
 describe('url-utils', () => {
-  describe('normalizePath', () => {
-    it('retire le trailing slash des chemins non racines', () => {
-      expect(normalizePath('/contact/')).toBe('/contact');
+  describe('cheminCanonique', () => {
+    it('garde un chemin deja canonique', () => {
+      expect(cheminCanonique('/')).toBe('/');
+      expect(cheminCanonique('/fr/')).toBe('/fr/');
+      expect(cheminCanonique('/fr/contact')).toBe('/fr/contact');
+      expect(cheminCanonique('/frais')).toBe('/frais');
     });
 
-    it('garde la racine telle quelle', () => {
-      expect(normalizePath('/')).toBe('/');
+    it('ajoute le slash final a la racine d une locale, comme le canonical', () => {
+      expect(cheminCanonique('/fr')).toBe('/fr/');
+      expect(cheminCanonique('/en')).toBe('/en/');
     });
 
-    it('supprime les query et fragment', () => {
-      expect(normalizePath('/fr/presentation?utm=x#section')).toBe('/fr/presentation');
+    it('retire le slash final des sous-pages', () => {
+      expect(cheminCanonique('/fr/contact/')).toBe('/fr/contact');
+      expect(cheminCanonique('/home/')).toBe('/home');
     });
 
-    it('replie les slashs de bordure multiples', () => {
-      expect(normalizePath('///contact///')).toBe('/contact');
-      expect(normalizePath('//')).toBe('/');
-      expect(normalizePath('/'.repeat(2048))).toBe('/');
-      expect(normalizePath(`${'/'.repeat(2048)}contact`)).toBe('/contact');
-    });
-
-    it('preserve les slashs internes', () => {
-      expect(normalizePath('/fr/atelier//meteo/')).toBe('/fr/atelier//meteo');
-    });
-
-    it('accepte un chemin sans slash initial', () => {
-      expect(normalizePath('contact')).toBe('/contact');
-      expect(normalizePath('')).toBe('/');
-    });
-  });
-
-  describe('trimTrailingSlashes', () => {
-    it('ne retire que les slashs finaux', () => {
-      expect(trimTrailingSlashes('/fr/contact///')).toBe('/fr/contact');
-      expect(trimTrailingSlashes('///')).toBe('');
-      expect(trimTrailingSlashes('/fr/contact')).toBe('/fr/contact');
-      expect(trimTrailingSlashes('')).toBe('');
-    });
-  });
-
-  describe('buildLocalizedPath', () => {
-    it('emet la racine locale AVEC trailing slash (alignement nginx)', () => {
-      expect(buildLocalizedPath('fr', '/')).toBe('/fr/');
-      expect(buildLocalizedPath('en', '/')).toBe('/en/');
-    });
-
-    it('emet les sous-pages SANS trailing slash (alignement middleware Express)', () => {
-      expect(buildLocalizedPath('fr', '/contact')).toBe('/fr/contact');
-      expect(buildLocalizedPath('fr', '/atelier/meteo')).toBe('/fr/atelier/meteo');
-    });
-
-    it('normalise les inputs avec trailing slash', () => {
-      expect(buildLocalizedPath('fr', '/contact/')).toBe('/fr/contact');
-    });
-
-    it('retourne le chemin non-localise si locale vide', () => {
-      expect(buildLocalizedPath('', '/contact')).toBe('/contact');
-      expect(buildLocalizedPath('', '/')).toBe('/');
-    });
-  });
-
-  describe('LOCALE_BARE_PATH', () => {
-    it('matche uniquement les chemins locale-seul avec slash final', () => {
-      expect(LOCALE_BARE_PATH.test('/fr/')).toBeTrue();
-      expect(LOCALE_BARE_PATH.test('/en/')).toBeTrue();
-      expect(LOCALE_BARE_PATH.test('/fr')).toBeFalse();
-      expect(LOCALE_BARE_PATH.test('/fr/contact')).toBeFalse();
-    });
-  });
-
-  describe('LOCALE_PREFIX_RE', () => {
-    it('extrait le prefixe locale en debut de chemin', () => {
-      expect(LOCALE_PREFIX_RE.exec('/fr/contact')?.[1]).toBe('fr');
-      expect(LOCALE_PREFIX_RE.exec('/en')?.[1]).toBe('en');
-    });
-
-    it('ignore les chemins sans prefixe locale reconnu', () => {
-      expect(LOCALE_PREFIX_RE.exec('/contact')).toBeNull();
-      expect(LOCALE_PREFIX_RE.exec('/de/contact')).toBeNull();
-    });
-  });
-
-  describe('STRIP_LOCALE_RE', () => {
-    it('supprime le prefixe locale', () => {
-      expect('/fr/contact'.replace(STRIP_LOCALE_RE, '')).toBe('contact');
-      expect('/en/'.replace(STRIP_LOCALE_RE, '')).toBe('');
+    it('replie les slashs multiples', () => {
+      expect(cheminCanonique('//fr//contact//')).toBe('/fr/contact');
+      expect(cheminCanonique('/fr//')).toBe('/fr/');
     });
   });
 
@@ -184,6 +111,14 @@ describe('url-utils', () => {
         protocol: 'https',
       });
       expect(buildBaseUrlFromRequest(req)).toBe('https://ASILIDESIGN.FR:8080');
+    });
+
+    it('IGNORE un x-forwarded-host allowliste suivi d autre chose qu un port (anti-poisoning)', () => {
+      const req = stubRequest({
+        headers: { 'x-forwarded-host': 'asilidesign.fr:/"><img src=x onerror=alert(1)>' },
+        host: 'asilidesign.fr',
+      });
+      expect(buildBaseUrlFromRequest(req)).toBe('https://asilidesign.fr');
     });
 
     it('expose la liste partagee des hotes autorises', () => {

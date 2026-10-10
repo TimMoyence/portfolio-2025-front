@@ -15,6 +15,11 @@ describe('localeDesArticles', () => {
   it('sert le francais par defaut', () => {
     expect(localeDesArticles('fr', '/articles')).toBe('fr');
   });
+
+  it('ne prend pas pour le prefixe /en un segment qui commence par en', () => {
+    expect(localeDesArticles('fr', '/enquete')).toBe('fr');
+    expect(localeDesArticles('fr', '/en')).toBe('en');
+  });
 });
 
 describe('injecterLocaleDesArticles', () => {

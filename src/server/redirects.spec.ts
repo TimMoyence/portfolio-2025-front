@@ -65,10 +65,10 @@ describe('redirects', () => {
       expect(resolveRedirect('/en/client-project')).toBe('/en/projets');
     });
 
-    it('redirige /home vers la racine localisee', () => {
-      expect(resolveRedirect('/home')).toBe('/fr');
-      expect(resolveRedirect('/fr/home')).toBe('/fr');
-      expect(resolveRedirect('/en/home')).toBe('/en');
+    it('redirige /home vers la racine localisee canonique, slash final compris', () => {
+      expect(resolveRedirect('/home')).toBe('/fr/');
+      expect(resolveRedirect('/fr/home')).toBe('/fr/');
+      expect(resolveRedirect('/en/home')).toBe('/en/');
     });
 
     it("redirige l'atelier retire et chacune de ses sous-pages vers /projets, locale preservee", () => {
@@ -81,9 +81,9 @@ describe('redirects', () => {
     });
 
     it('redirige le module budget retire vers la racine localisee', () => {
-      expect(resolveRedirect('/commonbudgetTM')).toBe('/fr');
-      expect(resolveRedirect('/fr/commonbudgetTM')).toBe('/fr');
-      expect(resolveRedirect('/en/commonbudgetTM')).toBe('/en');
+      expect(resolveRedirect('/commonbudgetTM')).toBe('/fr/');
+      expect(resolveRedirect('/fr/commonbudgetTM')).toBe('/fr/');
+      expect(resolveRedirect('/en/commonbudgetTM')).toBe('/en/');
     });
 
     it('redirige l ancien slug du cours B2-02 vers le cours v3, locale preservee', () => {
@@ -115,8 +115,8 @@ describe('redirects', () => {
     it('reproduit le matching Express : insensible a la casse et au slash final', () => {
       expect(resolveRedirect('/CLIENT-PROJECT')).toBe('/fr/projets');
       expect(resolveRedirect('/FR/Client-Project')).toBe('/fr/projets');
-      expect(resolveRedirect('/home/')).toBe('/fr');
-      expect(resolveRedirect('/en/home/')).toBe('/en');
+      expect(resolveRedirect('/home/')).toBe('/fr/');
+      expect(resolveRedirect('/en/home/')).toBe('/en/');
     });
 
     it('expose la liste des chemins sources alignee sur la table', () => {

@@ -10,7 +10,9 @@ import {
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import type { Subscription } from 'rxjs';
+import { LOCALES_DU_SITE } from '../../core/config/locales';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
+import { routeSansLocale } from '../../core/seo/chemins';
 import {
   type AuditContactMethod,
   type AuditRequestPayload,
@@ -229,9 +231,9 @@ export class GrowthAuditComponent implements OnDestroy {
       return 'fr';
     }
 
-    const localeMatch = /\/(fr|en)(?=\/|$)/.exec(window.location.pathname.toLowerCase());
+    const { locale } = routeSansLocale(window.location.pathname.toLowerCase(), LOCALES_DU_SITE);
 
-    return localeMatch?.[1] === 'en' ? 'en' : 'fr';
+    return locale === 'en' ? 'en' : 'fr';
   }
 
   onContactMethodToggle(event: Event): void {

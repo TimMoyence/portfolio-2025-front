@@ -1,5 +1,5 @@
 import { lireJsonSousDelai, messageDErreur } from './lecture-api';
-import { trimTrailingSlashes } from './url-utils';
+import { trimTrailingSlashes } from '../app/core/utils/barres';
 
 export interface PublicationDeCours {
   readonly chemin: string;

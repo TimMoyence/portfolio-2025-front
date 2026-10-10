@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { APP_CONFIG } from '../../core/config/app-config.token';
 import type { PublishedArticle } from '../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../core/adapters/article-http.adapter';
+import { buildLocalizedPath, urlAbsolue } from '../../core/seo/chemins';
 import { SeoService } from '../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../core/ssr/http-response-status';
 import { ArticlesCtaComponent } from './articles-cta.component';
@@ -47,12 +48,16 @@ export class ArticleDetailComponent {
         this.article = article;
         this.renderedContent = renderArticleMarkdown(article.content_markdown);
         this.isLoading = false;
+        const canonicalUrl = urlAbsolue(
+          this.config.baseUrl,
+          buildLocalizedPath(this.locale, article.seo.canonical_path),
+        );
         this.seo.updateSeoMetadata({
           title: `${article.title} — Asili Design`,
           description: article.seo.description,
           keywords: article.seo.keywords,
-          canonicalUrl: `${this.config.baseUrl}/${this.locale}${article.seo.canonical_path}`,
-          ogUrl: `${this.config.baseUrl}/${this.locale}${article.seo.canonical_path}`,
+          canonicalUrl,
+          ogUrl: canonicalUrl,
           ogType: 'article',
           jsonLd: {
             '@context': 'https://schema.org',
@@ -61,7 +66,7 @@ export class ArticleDetailComponent {
             description: article.seo.description,
             datePublished: article.published_at,
             dateModified: article.updated_at,
-            mainEntityOfPage: `${this.config.baseUrl}/${this.locale}${article.seo.canonical_path}`,
+            mainEntityOfPage: canonicalUrl,
             author: { '@type': 'Person', name: 'Tim Moyence' },
             publisher: { '@type': 'Organization', name: 'Asili Design' },
           },
