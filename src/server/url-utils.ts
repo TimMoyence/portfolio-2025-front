@@ -20,10 +20,11 @@ export const ALLOWED_HOSTS = [
 
 const ALLOWED_HOSTS_SET = new Set<string>(ALLOWED_HOSTS.map((h) => h.toLowerCase()));
 
+const HOTE_ET_PORT = /^([^:]+)(?::\d{1,5})?$/;
+
 const isAllowedHost = (host: string | undefined): host is string => {
-  if (!host) return false;
-  const bareHost = host.split(':')[0].trim().toLowerCase();
-  return ALLOWED_HOSTS_SET.has(bareHost);
+  const bareHost = HOTE_ET_PORT.exec(host ?? '')?.[1];
+  return bareHost !== undefined && ALLOWED_HOSTS_SET.has(bareHost.toLowerCase());
 };
 
 const firstAllowedHost = (...candidates: (string | undefined)[]): string | undefined =>

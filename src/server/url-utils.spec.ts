@@ -113,6 +113,14 @@ describe('url-utils', () => {
       expect(buildBaseUrlFromRequest(req)).toBe('https://ASILIDESIGN.FR:8080');
     });
 
+    it('IGNORE un x-forwarded-host allowliste suivi d autre chose qu un port (anti-poisoning)', () => {
+      const req = stubRequest({
+        headers: { 'x-forwarded-host': 'asilidesign.fr:/"><img src=x onerror=alert(1)>' },
+        host: 'asilidesign.fr',
+      });
+      expect(buildBaseUrlFromRequest(req)).toBe('https://asilidesign.fr');
+    });
+
     it('expose la liste partagee des hotes autorises', () => {
       expect(ALLOWED_HOSTS).toContain('asilidesign.fr');
       expect(ALLOWED_HOSTS).toContain('www.asilidesign.fr');
