@@ -1,6 +1,7 @@
 import type { SeoMetadataFile, SeoPageEntry } from '../app/core/seo/seo-metadata.model';
 import { LOCALES_DU_SITE } from '../app/core/config/locales';
 import { routeSansLocale, urlLocalisee } from '../app/core/seo/chemins';
+import { serialiserJsonLd } from '../app/core/seo/json-ld';
 import {
   cheminPublicDeLaPage,
   estIndexable,
@@ -63,14 +64,8 @@ const routeDeLURL = (
   return { locale: locale ?? localeParDefaut(metadata), route };
 };
 
-const toJsonLdScript = (data: Record<string, unknown>): string => {
-  // Tous les `<` sont echappes, pas seulement `</script>` : apres un `<!--<script`,
-  // l'etat « script data double escaped » du tokenizer HTML empeche le `</script>`
-  // suivant de fermer le bloc (mXSS).
-  // https://html.spec.whatwg.org/multipage/parsing.html#script-data-double-escaped-state
-  const json = JSON.stringify(data).replace(/</g, '\\u003c');
-  return `<script type="application/ld+json">${json}</script>`;
-};
+const toJsonLdScript = (data: Record<string, unknown>): string =>
+  `<script type="application/ld+json">${serialiserJsonLd(data)}</script>`;
 
 const globalBlocks = (metadata: SeoMetadataFile, route: string): Record<string, unknown>[] => {
   const global = metadata.global;
