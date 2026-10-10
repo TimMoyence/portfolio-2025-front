@@ -24,11 +24,12 @@ import type {
   ResultatQuestion,
   ResultatsSeance,
 } from '../../../../cours/content/types';
-import type {
-  EtatSession,
-  StatutFlux,
-  StatutSession,
-  Sync,
+import {
+  refusDuFlux,
+  type EtatSession,
+  type StatutFlux,
+  type StatutSession,
+  type Sync,
 } from '../../../../cours/runtime/core/sync';
 import type {
   CommandePilotage,
@@ -71,20 +72,6 @@ function resultatsDuRapport(rapport: RapportSeance): ResultatsSeance {
 }
 
 type Chargement = 'repos' | 'chargement' | 'succes' | 'echec';
-
-type MotifDuRefus = 'session' | 'saturation' | 'autre';
-
-interface RefusDuFlux {
-  readonly statut: number;
-  readonly motif: MotifDuRefus;
-}
-
-function motifDuRefus(statut: number): MotifDuRefus {
-  if (statut === 401 || statut === 403) {
-    return 'session';
-  }
-  return statut === 429 ? 'saturation' : 'autre';
-}
 
 const RANG_DE_L_ETAT: Readonly<Record<EtatSeance, number>> = {
   fermee: 0,
@@ -729,12 +716,7 @@ export class CoursPresentateurComponent {
 
   readonly etatDuFlux = computed(() => this.suiviDuFlux()?.etat ?? 'connexion');
 
-  readonly refusDuFlux = computed<RefusDuFlux | null>(() => {
-    const suivi = this.suiviDuFlux();
-    return suivi?.etat === 'refuse'
-      ? { statut: suivi.statut, motif: motifDuRefus(suivi.statut) }
-      : null;
-  });
+  readonly refusDuFlux = computed(() => refusDuFlux(this.suiviDuFlux()));
 
   readonly participants = computed(() => this.resultats()?.participants ?? 0);
 

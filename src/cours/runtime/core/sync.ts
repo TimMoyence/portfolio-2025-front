@@ -11,6 +11,7 @@ import type {
   TypeQuestion,
   VotePhase,
 } from '../../content/types';
+import { ENTETE_JETON_PARTICIPANT } from './jeton-participant';
 
 export type StatutSession = 'attente' | 'en_cours' | 'terminee';
 
@@ -116,7 +117,6 @@ function ecouterLeReveil(surReveil: () => void): () => void {
   };
 }
 
-const ENTETE_JETON = 'x-participant-token';
 const TYPE_FLUX = 'text/event-stream';
 const EVENEMENT_FIN = 'fin';
 const EVENEMENT_RESULTATS = 'resultats';
@@ -396,6 +396,27 @@ function diffuserA<T>(ecoutes: ReadonlySet<(valeur: T) => void>, valeur: T): voi
 }
 
 const REFUS_SANS_RELANCE: readonly number[] = [401, 403];
+const STATUT_SATURATION = 429;
+
+export type MotifDuRefus = 'session' | 'saturation' | 'autre';
+
+export interface RefusDuFlux {
+  readonly statut: number;
+  readonly motif: MotifDuRefus;
+}
+
+function motifDuRefus(statut: number): MotifDuRefus {
+  if (REFUS_SANS_RELANCE.includes(statut)) {
+    return 'session';
+  }
+  return statut === STATUT_SATURATION ? 'saturation' : 'autre';
+}
+
+export function refusDuFlux(statut: StatutFlux | null): RefusDuFlux | null {
+  return statut?.etat === 'refuse'
+    ? { statut: statut.statut, motif: motifDuRefus(statut.statut) }
+    : null;
+}
 
 interface Tentative {
   readonly controleur: AbortController;
@@ -448,7 +469,7 @@ export function createSync(options: SyncOptions): Sync {
   const entetes = (): Record<string, string> => {
     const valeurs: Record<string, string> = { accept: TYPE_FLUX };
     if (options.jeton !== undefined && options.jeton !== '') {
-      valeurs[ENTETE_JETON] = options.jeton;
+      valeurs[ENTETE_JETON_PARTICIPANT] = options.jeton;
     }
     return { ...valeurs, ...options.entetes?.() };
   };
@@ -540,7 +561,7 @@ export function createSync(options: SyncOptions): Sync {
     }
     if (!reponse.ok) {
       propre.refusee = true;
-      propre.definitive = REFUS_SANS_RELANCE.includes(reponse.status);
+      propre.definitive = motifDuRefus(reponse.status) === 'session';
       diffuserA(ecoutesStatut, { etat: 'refuse', statut: reponse.status });
       throw new Error(FLUX_REFUSE);
     }
