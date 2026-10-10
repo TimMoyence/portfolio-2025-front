@@ -1,3 +1,5 @@
+import { abonner, diffuserA } from './ecoutes';
+
 export type LockRegime = 'ouvert' | 'focus' | 'examen';
 
 export type IncidentType =
@@ -66,9 +68,7 @@ export function createLock(regime: LockRegime, options: LockOptions = {}): Lock 
     if (journal.length > CAPACITE_JOURNAL_MAX) {
       journal.shift();
     }
-    for (const ecoute of ecoutes) {
-      ecoute(incident);
-    }
+    diffuserA(ecoutes, incident);
   };
 
   const surVisibilite = (): void => {
@@ -138,10 +138,7 @@ export function createLock(regime: LockRegime, options: LockOptions = {}): Lock 
       return [...journal];
     },
     onIncident(listener: IncidentListener): () => void {
-      ecoutes.add(listener);
-      return () => {
-        ecoutes.delete(listener);
-      };
+      return abonner(ecoutes, listener);
     },
     recordAnswerDuration(dureeMs: number): void {
       if (!estArme || regime !== 'examen') {

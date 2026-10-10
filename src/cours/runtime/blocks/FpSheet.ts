@@ -1,5 +1,6 @@
 import {
   type Feuille,
+  LONGUEUR_MAX_FORMULE,
   type ResultatFormule,
   type ValeurFormule,
   decalerFormule,
@@ -9,6 +10,7 @@ import {
   nomCellule,
 } from '../core/formula';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { entierBorne } from '../core/valeurs';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
 import { lireNombreSaisi } from './saisie-numerique';
 
@@ -44,7 +46,6 @@ const SIGNE_ERREUR = '⚠';
 const LIMITE_GRILLE = 40;
 const LIGNES_AVANT_RESSERREMENT = 10;
 const TABLEAU_RESSERRE = safeHtml` fp-sheet__tableau--dense`;
-const LONGUEUR_MAX_CELLULE = 200;
 const LARGEUR_MIN_DE_COLONNE_CH = 8;
 const LARGEUR_MAX_DE_COLONNE_CH = 24;
 const DECIMALES_D_UN_MONTANT = 2;
@@ -61,7 +62,7 @@ function arrondirLAttendu(valeur: ValeurFormule): ValeurFormule {
 }
 
 function borner(brut: number): number {
-  return Number.isFinite(brut) ? Math.min(LIMITE_GRILLE, Math.max(0, Math.trunc(brut))) : 0;
+  return entierBorne(brut, 0, LIMITE_GRILLE, 0);
 }
 
 function nomsDeLaGrille(lignes: number, colonnes: number): ReadonlySet<string> {
@@ -284,7 +285,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     if (!this.modifiable(nom)) {
       return;
     }
-    this.contenus = { ...this.contenus, [nom]: contenu.slice(0, LONGUEUR_MAX_CELLULE) };
+    this.contenus = { ...this.contenus, [nom]: contenu.slice(0, LONGUEUR_MAX_FORMULE) };
     this.selection = nom;
     this.foyer = source;
     this.message = '';
@@ -348,7 +349,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     return safeHtml`
       <p class="fp-sheet__barre">
         <label class="fp-sheet__reference" for="fp-sheet-barre" data-testid="reference">${escapeHtml(this.selection)}</label>
-        <input class="fp-sheet__saisie" id="fp-sheet-barre" data-testid="barre" type="text" autocomplete="off" spellcheck="false" maxlength="${LONGUEUR_MAX_CELLULE}" value="${escapeHtml(this.brut(this.selection))}">
+        <input class="fp-sheet__saisie" id="fp-sheet-barre" data-testid="barre" type="text" autocomplete="off" spellcheck="false" maxlength="${LONGUEUR_MAX_FORMULE}" value="${escapeHtml(this.brut(this.selection))}">
       </p>
     `;
   }
@@ -460,7 +461,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
         : safeHtml`aria-invalid="true" data-erreur="${escapeHtml(code)}" title="${escapeHtml(alerte)}"`;
     const enonce = `${this.texte('sheet-cellule')} ${nom}`;
     const bloquee = !this.modifiable(nom);
-    return safeHtml`<input class="fp-sheet__champ fp-montant" data-testid="cellule" data-role="cellule" data-nom="${escapeHtml(nom)}" type="text" autocomplete="off" spellcheck="false" maxlength="${LONGUEUR_MAX_CELLULE}" aria-label="${escapeHtml(enonce)}" value="${escapeHtml(this.affichage(nom, true))}" ${marque} ${bloquee ? LECTURE_SEULE : VIDE}>`;
+    return safeHtml`<input class="fp-sheet__champ fp-montant" data-testid="cellule" data-role="cellule" data-nom="${escapeHtml(nom)}" type="text" autocomplete="off" spellcheck="false" maxlength="${LONGUEUR_MAX_FORMULE}" aria-label="${escapeHtml(enonce)}" value="${escapeHtml(this.affichage(nom, true))}" ${marque} ${bloquee ? LECTURE_SEULE : VIDE}>`;
   }
 
   private bilanErreurs(): EscapedHtml {

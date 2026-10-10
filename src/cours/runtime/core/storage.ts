@@ -1,3 +1,5 @@
+import { jsonOuNull } from './valeurs';
+
 const PREFIXE = 'fp.';
 const DELAI_BROUILLON_MS = 1000;
 const MOTIF_CLE_BROUILLON = /^fp\.[^.]+\.[^.]+\.fp-[a-z0-9-]+\..+$/;
@@ -10,13 +12,17 @@ function stockageLocal(): Storage | null {
   }
 }
 
-export function readJson<T>(cle: string): T | null {
+function lireLaCle(cle: string): string | null {
   try {
-    const brut = stockageLocal()?.getItem(cle);
-    return brut ? (JSON.parse(brut) as T) : null;
+    return stockageLocal()?.getItem(cle) ?? null;
   } catch {
     return null;
   }
+}
+
+export function readJson<T>(cle: string): T | null {
+  const brut = lireLaCle(cle);
+  return brut ? (jsonOuNull(brut) as T | null) : null;
 }
 
 export function writeJson(cle: string, valeur: unknown): boolean {

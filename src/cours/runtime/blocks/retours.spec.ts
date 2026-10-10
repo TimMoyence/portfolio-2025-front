@@ -1,5 +1,4 @@
 import {
-  estObjet,
   estVerdictDeProduction,
   estVerdictDeReponse,
   lireTextes,
@@ -25,21 +24,6 @@ const VERDICT_REPONSE = { questionId: 'Q', correcte: true, libelleConfusion: nul
 const DETAIL = { cle: 'E3', juste: false, libelleConfusion: 'Base oubliée' };
 
 const VERDICT_PRODUCTION = { questionId: 'Q', correcte: false, score: 0.5, details: [DETAIL] };
-
-describe('estObjet', () => {
-  it('reconnaît un objet simple', () => {
-    expect(estObjet({})).toBeTrue();
-    expect(estObjet({ a: 1 })).toBeTrue();
-  });
-
-  it('refuse null, un tableau et les valeurs primitives', () => {
-    for (const valeur of [null, undefined, [], [1], 'texte', 0, false]) {
-      expect(estObjet(valeur))
-        .withContext(JSON.stringify(valeur) ?? 'undefined')
-        .toBeFalse();
-    }
-  });
-});
 
 describe('estVerdictDeReponse', () => {
   it('accepte un verdict complet, avec ou sans libellé de confusion', () => {

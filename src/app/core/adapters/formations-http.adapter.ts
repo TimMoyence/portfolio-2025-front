@@ -48,7 +48,7 @@ import {
   ReponseRefusee,
   SujetRefuse,
 } from '../ports/formations.port';
-import { getApiBaseUrl } from '../http/api-config';
+import { getApiFormationsUrl } from '../http/api-config';
 import {
   type DerouleDuFil,
   derouleDuFil,
@@ -58,6 +58,7 @@ import {
   sujetDuFil,
 } from './formations-fil';
 import { ENTETE_JETON_PARTICIPANT } from '../../../cours/runtime/core/jeton-participant';
+import { jsonOuNull } from '../../../cours/runtime/core/valeurs';
 
 const MOTIFS_DE_REFUS_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusReponseLibre>> = {
   SEANCE_NON_DEMARREE: 'seance-non-demarree',
@@ -133,17 +134,9 @@ function codeDuCorps(corps: unknown): string | null {
   return typeof code === 'string' ? code : null;
 }
 
-function jsonLisible(texte: string): unknown {
-  try {
-    return JSON.parse(texte);
-  } catch {
-    return null;
-  }
-}
-
 async function corpsDuFichierRefuse(corps: unknown): Promise<unknown> {
   return corps instanceof Blob && corps.type.includes('json')
-    ? jsonLisible(await corps.text())
+    ? jsonOuNull(await corps.text())
     : corps;
 }
 
@@ -213,7 +206,7 @@ function completerNotation(rapport: RapportSeance): RapportSeance {
 
 @Injectable()
 export class FormationsHttpAdapter implements FormationsPort {
-  private readonly baseUrl = `${getApiBaseUrl()}/formations`;
+  private readonly baseUrl = getApiFormationsUrl();
 
   constructor(private readonly http: HttpClient) {}
 

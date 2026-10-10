@@ -2,7 +2,8 @@ import type { MetadonneesBrique, VotePhase } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { lignesDeCalculHtml } from './calculs';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import { estObjet, lireBonneOption, lireBonneReponse, VerdictsParQuestion } from './retours';
+import { estObjet } from '../core/valeurs';
+import { lireBonneOption, lireBonneReponse, VerdictsParQuestion } from './retours';
 import { FpVerdicts } from './verdicts';
 
 export interface VoteQuestionPublique {

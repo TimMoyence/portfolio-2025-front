@@ -1,6 +1,7 @@
 import { evaluerExpression } from '../core/formula';
 import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
 import { lierLesNombres } from '../core/typographie';
+import { bornerEntre } from '../core/valeurs';
 import { type Reglages, borner } from './animation';
 import {
   type DefinitionReglable,
@@ -8,9 +9,9 @@ import {
   arrondi,
   copierLeReglable,
   formater,
-  plafondDe,
-  plancherDe,
 } from './reglable';
+import { plafondDe, plancherDe } from './curseurs';
+import { echelle, jalons } from './echelle';
 
 export type TraitSerie = 'plein' | 'tirets';
 
@@ -125,21 +126,17 @@ function entiers(depart: number, arrivee: number): number[] {
   );
 }
 
-function jalons(depart: number, arrivee: number, intervalles: number): number[] {
-  return Array.from(
-    { length: intervalles + 1 },
-    (_, rang) => depart + ((arrivee - depart) * rang) / intervalles,
-  );
-}
-
 function versX(cadre: Cadre, abscisse: number): number {
-  const etendue = cadre.arrivee - cadre.depart || 1;
-  return MARGE_GAUCHE + ((abscisse - cadre.depart) / etendue) * LARGEUR_TRACE;
+  return echelle(cadre.depart, cadre.arrivee - cadre.depart, MARGE_GAUCHE, LARGEUR_TRACE)(abscisse);
 }
 
 function versY(cadre: Cadre, ordonnee: number): number {
-  const etendue = cadre.plafond - cadre.plancher || 1;
-  return LIGNE_BASSE - ((ordonnee - cadre.plancher) / etendue) * HAUTEUR_TRACE;
+  return echelle(
+    cadre.plancher,
+    cadre.plafond - cadre.plancher,
+    LIGNE_BASSE,
+    -HAUTEUR_TRACE,
+  )(ordonnee);
 }
 
 function copierSerie(serie: PlotSerie): PlotSerie {
@@ -434,7 +431,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
     const echantillons = tracees[0]?.echantillons ?? [];
     const largeur = (LARGEUR_TRACE / Math.max(echantillons.length, 1)) * PART_DE_BARRE;
     return echantillons.map((point, rang) => {
-      const sommet = Math.min(Math.max(versY(cadre, point.ordonnee), MARGE_HAUT), LIGNE_BASSE);
+      const sommet = bornerEntre(versY(cadre, point.ordonnee), MARGE_HAUT, LIGNE_BASSE);
       const centre = centreDeBarre(rang, echantillons.length);
       return safeHtml`<g><rect class="fp-plot__barre" data-testid="barre" x="${arrondi(centre - largeur / 2)}" y="${arrondi(sommet)}" width="${arrondi(largeur)}" height="${arrondi(LIGNE_BASSE - sommet)}"></rect><text class="fp-plot__montant-barre" data-testid="montant-barre" text-anchor="middle" x="${arrondi(centre)}" y="${arrondi(Math.max(sommet - DECALAGE_Y, DECALAGE_X))}">${escapeHtml(this.chiffre(point.ordonnee))}</text></g>`;
     });

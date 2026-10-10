@@ -46,6 +46,7 @@ import {
   type TelechargementDePieceJointe,
 } from '../../../shared/slides/session/cours-presentation.component';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
+import { chantierApresRendu } from './chantier-apres-rendu';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
 import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
 import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
@@ -794,7 +795,10 @@ export class CoursPresentateurComponent {
   private notationEnVol = false;
   private maitriseEnVol = false;
   private detruit = false;
-  private chantier: Promise<void> = Promise.resolve();
+  private chantier: Promise<void> = chantierApresRendu(() => {
+    const seance = this.seance();
+    return seance === undefined ? this.ouvrirLaSeance() : this.reprendreLaSeance(seance);
+  });
 
   constructor() {
     const aLaDestruction = inject(DestroyRef);
@@ -811,10 +815,6 @@ export class CoursPresentateurComponent {
       window.addEventListener('beforeunload', avantDeQuitter);
       aLaDestruction.onDestroy(() => window.removeEventListener('beforeunload', avantDeQuitter));
     }
-    afterNextRender(() => {
-      const seance = this.seance();
-      this.chantier = seance === undefined ? this.ouvrirLaSeance() : this.reprendreLaSeance(seance);
-    });
   }
 
   quandStabilise(): Promise<void> {
