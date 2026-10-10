@@ -236,7 +236,6 @@ const sendPrerendered = (
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Content-Language', urlLocale);
   res.setHeader('Cache-Control', documentCacheControlFor(res.statusCode));
-  res.setHeader('X-Content-Type-Options', 'nosniff');
   res.send(html);
 };
 
@@ -248,7 +247,6 @@ const sendCsrShell = (res: Response, input: { urlLocale: string; baseHref: strin
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Content-Language', urlLocale);
   res.setHeader('Cache-Control', 'private, no-store');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Robots-Tag', 'noindex, nofollow');
   res.send(withBase);
   return true;
@@ -293,7 +291,6 @@ const renderWithSsr = (
       }
       res.setHeader('Content-Language', urlLocale ?? metadata?.site.defaultLocale ?? 'fr');
       res.setHeader('Cache-Control', documentCacheControlFor(status));
-      res.setHeader('X-Content-Type-Options', 'nosniff');
       res.send(html);
     })
     .catch((err) => next(err));
