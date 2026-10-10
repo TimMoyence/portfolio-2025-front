@@ -1,4 +1,4 @@
-import { evaluerExpression } from '../core/formula';
+import { evaluerExpression } from 'portfolio-2025-partage/formule';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { entierBorne } from '../core/valeurs';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';

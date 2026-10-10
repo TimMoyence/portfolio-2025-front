@@ -1,4 +1,4 @@
-import { evaluerExpression, remplirGabarit } from '../core/formula';
+import { evaluerExpression, remplirGabarit } from 'portfolio-2025-partage/formule';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { fini } from '../core/valeurs';
 import { type Reglages } from './animation';

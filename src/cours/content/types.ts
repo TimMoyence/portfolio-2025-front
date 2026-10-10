@@ -1,5 +1,5 @@
 import type { ProgressionDesEnigmes } from '../runtime/blocks/retours';
-import type { ValeurFormule } from '../runtime/core/formula';
+import type { ValeurFormule } from 'portfolio-2025-partage/formule';
 
 export type Role = 'presentateur' | 'etudiant';
 
