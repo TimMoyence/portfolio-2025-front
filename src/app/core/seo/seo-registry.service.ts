@@ -3,7 +3,7 @@ import type { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import seoMetadata from '../../../assets/seo/seo-metadata.json';
 import { routeSansLocale } from './chemins';
-import { pageSeoDeLaRoute } from './pages-seo';
+import { estIndexable, localeParDefaut, pageSeoDeLaRoute } from './pages-seo';
 import type { SeoConfig } from './seo.interface';
 import type { SeoMetadataFile, SeoPageEntry } from './seo-metadata.model';
 
@@ -39,7 +39,7 @@ export class SeoRegistryService {
   }
 
   getDefaultLocale(): string {
-    return this.data.site.defaultLocale;
+    return localeParDefaut(this.data);
   }
 
   getSeoByKey(key: string): Observable<SeoResolvedConfig | null> {
@@ -73,17 +73,15 @@ export class SeoRegistryService {
 
     return {
       seo,
-      index: page.index !== false,
+      index: estIndexable(page),
       page,
     };
   }
 
   private resolveLocaleKey(page: SeoPageEntry): string {
-    const locales = [
-      this.localeId,
-      this.localeId.split('-')[0],
-      this.data.site.defaultLocale,
-    ].filter(Boolean);
+    const locales = [this.localeId, this.localeId.split('-')[0], this.getDefaultLocale()].filter(
+      Boolean,
+    );
 
     for (const locale of locales) {
       if (page.locales[locale]) {
@@ -92,6 +90,6 @@ export class SeoRegistryService {
     }
 
     const fallback = Object.keys(page.locales)[0];
-    return fallback ?? this.data.site.defaultLocale;
+    return fallback ?? this.getDefaultLocale();
   }
 }

@@ -21,6 +21,7 @@ import { routeDuSitemap } from './server/sitemap-route';
 import { ALLOWED_HOSTS, buildBaseUrlFromRequest, cheminCanonique } from './server/url-utils';
 import { LOCALES_DU_SITE } from './app/core/config/locales';
 import { routeSansLocale } from './app/core/seo/chemins';
+import { localeParDefaut } from './app/core/seo/pages-seo';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 
@@ -248,7 +249,7 @@ const renderWithSsr = (
         const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
         html = injectSeoHead(html, metadata, originalUrl, baseUrl);
       }
-      res.setHeader('Content-Language', urlLocale ?? metadata?.site.defaultLocale ?? 'fr');
+      res.setHeader('Content-Language', urlLocale ?? localeParDefaut(metadata));
       res.setHeader('Cache-Control', documentCacheControlFor(status));
       res.send(html);
     })

@@ -1,7 +1,18 @@
-import type { SeoMetadataFile, SeoPageEntry } from '../app/core/seo/seo-metadata.model';
+import type {
+  SeoLocaleMeta,
+  SeoMetadataFile,
+  SeoPageEntry,
+} from '../app/core/seo/seo-metadata.model';
 import type { PublicationDeCours } from './cours-publication';
-import { buildLocalizedPath, normalizePath, urlAbsolue } from '../app/core/seo/chemins';
-import { cheminPublicDeLaPage, estPageDAccueil } from '../app/core/seo/pages-seo';
+import { buildLocalizedPath, normalizePath, urlLocalisee } from '../app/core/seo/chemins';
+import {
+  cheminPublicDeLaPage,
+  estIndexable,
+  estPageDAccueil,
+  localeParDefaut,
+  pagesIndexables,
+} from '../app/core/seo/pages-seo';
+import { escapeHtml } from '../cours/runtime/core/html';
 
 const AI_USER_AGENTS: ReadonlyArray<string> = [
   'GPTBot',
@@ -12,14 +23,6 @@ const AI_USER_AGENTS: ReadonlyArray<string> = [
   'Google-Extended',
   'CCBot',
 ];
-
-const escapeXml = (value: string): string =>
-  value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
 
 type SitemapContext = {
   activeLocales: string[];
@@ -33,22 +36,22 @@ export interface DynamicArticleSitemapEntry {
   lastmod?: string;
 }
 
-const localizedHref = (locale: string, pagePath: string, baseUrl: string): string =>
-  urlAbsolue(baseUrl, buildLocalizedPath(locale, pagePath));
-
 const alternateLink = (hreflang: string, href: string): string =>
-  `    <xhtml:link rel="alternate" hreflang="${escapeXml(hreflang)}" href="${escapeXml(href)}" />`;
+  `    <xhtml:link rel="alternate" hreflang="${escapeHtml(hreflang)}" href="${escapeHtml(href)}" />`;
 
 const alternatesMarkupOf = (pagePath: string, ctx: SitemapContext): string => {
   const { activeLocales, defaultLocale, baseUrl } = ctx;
   const links = activeLocales.map((locale) =>
-    alternateLink(locale || defaultLocale, localizedHref(locale, pagePath, baseUrl)),
+    alternateLink(locale || defaultLocale, urlLocalisee(baseUrl, locale, pagePath)),
   );
   if (defaultLocale) {
-    links.push(alternateLink('x-default', localizedHref(defaultLocale, pagePath, baseUrl)));
+    links.push(alternateLink('x-default', urlLocalisee(baseUrl, defaultLocale, pagePath)));
   }
   return links.length ? `\n${links.join('\n')}\n` : '';
 };
+
+const metaPrincipale = (page: SeoPageEntry, locale: string): SeoLocaleMeta | undefined =>
+  page.locales?.[locale] ?? Object.values(page.locales ?? {})[0];
 
 const indentedTag = (name: string, value: string | undefined): string =>
   value ? `    <${name}>${value}</${name}>` : '';
@@ -84,7 +87,7 @@ const urlEntryOf = (
 ): string =>
   [
     '  <url>',
-    `    <loc>${escapeXml(loc)}</loc>`,
+    `    <loc>${escapeHtml(loc)}</loc>`,
     alternatesMarkup ? alternatesMarkup.trimEnd() : '',
     indentedTag('lastmod', lastmod),
     indentedTag('changefreq', page.changefreq),
@@ -97,7 +100,7 @@ const urlEntryOf = (
 const dynamicArticleEntryOf = (article: DynamicArticleSitemapEntry, baseUrl: string): string =>
   [
     '  <url>',
-    `    <loc>${escapeXml(localizedHref(article.locale, '/articles/' + article.slug, baseUrl))}</loc>`,
+    `    <loc>${escapeHtml(urlLocalisee(baseUrl, article.locale, '/articles/' + article.slug))}</loc>`,
     indentedTag('lastmod', jourDeLastmod(article.lastmod)),
     '    <changefreq>daily</changefreq>',
     '    <priority>0.6</priority>',
@@ -116,20 +119,18 @@ export const buildSitemapXml = (
   const activeLocales = locales.length > 0 ? locales : [''];
   const ctx: SitemapContext = {
     activeLocales,
-    defaultLocale: metadata.site.defaultLocale ?? activeLocales[0],
+    defaultLocale: localeParDefaut(metadata),
     baseUrl,
   };
 
-  const urlEntries = metadata.pages
-    .filter((page) => page.index !== false)
-    .flatMap((page) => {
-      const pagePath = cheminPublicDeLaPage(page);
-      const alternatesMarkup = alternatesMarkupOf(pagePath, ctx);
-      const lastmod = lastmodOf(page, publicationsDeCours);
-      return activeLocales.map((locale) =>
-        urlEntryOf(page, localizedHref(locale, pagePath, baseUrl), alternatesMarkup, lastmod),
-      );
-    });
+  const urlEntries = pagesIndexables(metadata).flatMap((page) => {
+    const pagePath = cheminPublicDeLaPage(page);
+    const alternatesMarkup = alternatesMarkupOf(pagePath, ctx);
+    const lastmod = lastmodOf(page, publicationsDeCours);
+    return activeLocales.map((locale) =>
+      urlEntryOf(page, urlLocalisee(baseUrl, locale, pagePath), alternatesMarkup, lastmod),
+    );
+  });
 
   const dynamicEntries = dynamicArticles
     .filter(
@@ -150,13 +151,13 @@ export const buildSitemapXml = (
 
 /** Format defini par le standard https://llmstxt.org/. */
 export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
-  const defaultLocale = metadata.site.defaultLocale ?? 'fr';
-  const indexablePages = metadata.pages.filter((page) => page.index !== false);
+  const defaultLocale = localeParDefaut(metadata);
+  const indexablePages = pagesIndexables(metadata);
 
   const resolveLocaleMeta = (
     page: (typeof metadata.pages)[number],
   ): { title: string; description: string } => {
-    const meta = page.locales?.[defaultLocale] ?? Object.values(page.locales ?? {})[0];
+    const meta = metaPrincipale(page, defaultLocale);
     return {
       title: meta?.title ?? page.id,
       description: meta?.description ?? '',
@@ -164,7 +165,7 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
   };
 
   const buildLink = (page: (typeof metadata.pages)[number]): string => {
-    const href = localizedHref(defaultLocale, cheminPublicDeLaPage(page), baseUrl);
+    const href = urlLocalisee(baseUrl, defaultLocale, cheminPublicDeLaPage(page));
     const { title, description } = resolveLocaleMeta(page);
     const desc = description ? `: ${description}` : '';
     return `- [${title}](${href})${desc}`;
@@ -217,7 +218,7 @@ export const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): stri
   const disallowPaths = new Set<string>();
 
   for (const page of metadata.pages) {
-    if (page.index !== false) continue;
+    if (estIndexable(page)) continue;
 
     if (page.path.includes(':')) continue;
 
@@ -258,8 +259,8 @@ export const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): stri
 };
 
 export const buildLlmsFullTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
-  const defaultLocale = metadata.site.defaultLocale ?? 'fr';
-  const indexablePages = metadata.pages.filter((page) => page.index !== false);
+  const defaultLocale = localeParDefaut(metadata);
+  const indexablePages = pagesIndexables(metadata);
 
   const lines: string[] = [];
   const site = metadata.global?.localBusiness as
@@ -272,9 +273,9 @@ export const buildLlmsFullTxt = (metadata: SeoMetadataFile, baseUrl: string): st
   lines.push('');
 
   for (const page of indexablePages) {
-    const meta = page.locales[defaultLocale] ?? Object.values(page.locales ?? {})[0];
+    const meta = metaPrincipale(page, defaultLocale);
     if (!meta) continue;
-    const href = localizedHref(defaultLocale, cheminPublicDeLaPage(page), baseUrl);
+    const href = urlLocalisee(baseUrl, defaultLocale, cheminPublicDeLaPage(page));
 
     lines.push(`## ${meta.title}`);
     lines.push('');

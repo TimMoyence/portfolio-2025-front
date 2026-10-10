@@ -35,3 +35,6 @@ export const cheminEnLocale = (
 
 export const urlAbsolue = (base: string, chemin: string): string =>
   `${trimTrailingSlashes(base)}/${trimLeadingSlashes(chemin)}`;
+
+export const urlLocalisee = (base: string, locale: string, chemin: string): string =>
+  urlAbsolue(base, buildLocalizedPath(locale, chemin));

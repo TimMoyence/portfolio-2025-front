@@ -1,7 +1,12 @@
 import type { SeoMetadataFile, SeoPageEntry } from '../app/core/seo/seo-metadata.model';
 import { LOCALES_DU_SITE } from '../app/core/config/locales';
-import { buildLocalizedPath, routeSansLocale, urlAbsolue } from '../app/core/seo/chemins';
-import { cheminPublicDeLaPage, pageSeoDeLaRoute } from '../app/core/seo/pages-seo';
+import { routeSansLocale, urlLocalisee } from '../app/core/seo/chemins';
+import {
+  cheminPublicDeLaPage,
+  estIndexable,
+  localeParDefaut,
+  pageSeoDeLaRoute,
+} from '../app/core/seo/pages-seo';
 
 const FRESHNESS_ENABLED_TYPES = new Set([
   'WebPage',
@@ -55,7 +60,7 @@ const routeDeLURL = (
   originalUrl: string,
 ): { locale: string; route: string } => {
   const { locale, route } = routeSansLocale(originalUrl, LOCALES_DU_SITE);
-  return { locale: locale ?? metadata.site.defaultLocale, route };
+  return { locale: locale ?? localeParDefaut(metadata), route };
 };
 
 const toJsonLdScript = (data: Record<string, unknown>): string => {
@@ -103,7 +108,7 @@ const breadcrumbBlocks = (
         '@type': 'ListItem',
         position: i + 1,
         name: entry.name,
-        item: urlAbsolue(baseUrl, buildLocalizedPath(locale, entry.path)),
+        item: urlLocalisee(baseUrl, locale, entry.path),
       })),
     },
   ];
@@ -115,7 +120,7 @@ const buildJsonLdScripts = (metadata: SeoMetadataFile, originalUrl: string): str
 
   const blocks = [...globalBlocks(metadata, route)];
   if (page) {
-    for (const block of pageBlocks(page, locale, metadata.site.defaultLocale)) {
+    for (const block of pageBlocks(page, locale, localeParDefaut(metadata))) {
       blocks.push(enrichJsonLdBlock(block, page));
     }
     blocks.push(...breadcrumbBlocks(page, metadata, locale));
@@ -130,15 +135,14 @@ const buildSeoLinkTags = (
   baseUrl: string,
 ): string => {
   const locales = metadata.site.locales ?? [];
-  const defaultLocale = metadata.site.defaultLocale ?? locales[0] ?? 'fr';
+  const defaultLocale = localeParDefaut(metadata);
 
   const { locale: currentLocale, route } = routeDeLURL(metadata, originalUrl);
   const page = pageSeoDeLaRoute(metadata, route);
-  if (!page || page.index === false) return '';
+  if (!page || !estIndexable(page)) return '';
 
   const pagePath = cheminPublicDeLaPage(page);
-  const hrefFor = (locale: string): string =>
-    urlAbsolue(baseUrl, buildLocalizedPath(locale, pagePath));
+  const hrefFor = (locale: string): string => urlLocalisee(baseUrl, locale, pagePath);
 
   return [
     `<link rel="canonical" href="${hrefFor(currentLocale)}" />`,
@@ -160,7 +164,7 @@ const buildArticleFeedLink = (
   originalUrl: string,
   baseUrl: string,
 ): string => {
-  const defaultLocale = metadata.site.defaultLocale ?? 'fr';
+  const defaultLocale = localeParDefaut(metadata);
   const prefixed = routeDeLURL(metadata, originalUrl).locale;
   const locale = prefixed in ARTICLE_FEED_TITLES ? prefixed : defaultLocale;
   const href = new URL(ARTICLE_FEED_PATH, baseUrl);

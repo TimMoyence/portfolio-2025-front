@@ -10,6 +10,7 @@ import {
   estAliasDAccueil,
   routeSansLocale,
   urlAbsolue,
+  urlLocalisee,
 } from '../../core/seo/chemins';
 import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-registry.service';
 import type { SeoConfig } from '../../core/seo/seo.interface';
@@ -125,17 +126,15 @@ export class SeoManagerComponent {
   }
 
   private buildHreflangs(baseUrl: string, relativePath: string): Record<string, string> {
-    const pathFor = (locale: string): string => buildLocalizedPath(locale, relativePath);
-
     const locales = this.seoRegistry.getLocales();
     const hreflangs: Record<string, string> = {};
     for (const locale of locales) {
-      hreflangs[locale] = urlAbsolue(baseUrl, pathFor(locale));
+      hreflangs[locale] = urlLocalisee(baseUrl, locale, relativePath);
     }
 
     const defaultLocale = this.seoRegistry.getDefaultLocale();
     if (defaultLocale && locales.includes(defaultLocale)) {
-      hreflangs['x-default'] = urlAbsolue(baseUrl, pathFor(defaultLocale));
+      hreflangs['x-default'] = urlLocalisee(baseUrl, defaultLocale, relativePath);
     }
     return hreflangs;
   }
