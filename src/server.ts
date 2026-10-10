@@ -85,13 +85,8 @@ const loadSeoMetadata = (): SeoMetadataFile | null => {
 
   for (const candidate of SEO_METADATA_CANDIDATES) {
     if (!fs.existsSync(candidate)) continue;
-    try {
-      const raw = fs.readFileSync(candidate, 'utf-8');
-      cachedSeoMetadata = JSON.parse(raw) as SeoMetadataFile;
-      return cachedSeoMetadata;
-    } catch {
-      // Ignore invalid metadata and fall back to the next candidate.
-    }
+    cachedSeoMetadata = JSON.parse(fs.readFileSync(candidate, 'utf-8')) as SeoMetadataFile;
+    return cachedSeoMetadata;
   }
 
   return null;
