@@ -1,14 +1,4 @@
-export const trimTrailingSlashes = (value: string): string => {
-  let end = value.length;
-  while (end > 0 && value[end - 1] === '/') end -= 1;
-  return value.slice(0, end);
-};
-
-const trimLeadingSlashes = (value: string): string => {
-  let start = 0;
-  while (start < value.length && value[start] === '/') start += 1;
-  return value.slice(start);
-};
+import { trimLeadingSlashes, trimTrailingSlashes } from '../utils/barres';
 
 export const normalizePath = (path: string): string => {
   const clean = path.split('?')[0].split('#')[0];
@@ -31,8 +21,17 @@ export interface RouteLocalisee {
 }
 
 export const routeSansLocale = (chemin: string, locales: readonly string[]): RouteLocalisee => {
-  const segments = normalizePath(chemin).split('/').filter(Boolean);
-  const locale =
-    segments[0] !== undefined && locales.includes(segments[0]) ? segments.shift() : undefined;
-  return { locale, route: `/${segments.join('/')}` };
+  const normalise = normalizePath(chemin);
+  const premier = normalise.split('/')[1];
+  if (!locales.includes(premier)) return { locale: undefined, route: normalise };
+  return { locale: premier, route: normalizePath(normalise.slice(premier.length + 1)) };
 };
+
+export const cheminEnLocale = (
+  chemin: string,
+  locale: string,
+  locales: readonly string[],
+): string => buildLocalizedPath(locale, routeSansLocale(chemin, locales).route);
+
+export const urlAbsolue = (base: string, chemin: string): string =>
+  `${trimTrailingSlashes(base)}/${trimLeadingSlashes(chemin)}`;

@@ -1,6 +1,7 @@
 import type { SeoMetadataFile, SeoPageEntry } from '../app/core/seo/seo-metadata.model';
-import { buildLocalizedPath, normalizePath } from '../app/core/seo/chemins';
-import { LOCALE_PREFIX_RE, STRIP_LOCALE_RE } from './url-utils';
+import { LOCALES_DU_SITE } from '../app/core/config/locales';
+import { buildLocalizedPath, routeSansLocale, urlAbsolue } from '../app/core/seo/chemins';
+import { cheminPublicDeLaPage, pageSeoDeLaRoute } from '../app/core/seo/pages-seo';
 
 const FRESHNESS_ENABLED_TYPES = new Set([
   'WebPage',
@@ -49,15 +50,13 @@ const enrichJsonLdBlock = (
   return enriched;
 };
 
-const routeOf = (originalUrl: string): string => {
-  const routePath = originalUrl.replace(STRIP_LOCALE_RE, '').split('?')[0].split('#')[0];
-  return routePath ? `/${routePath}` : '/';
+const routeDeLURL = (
+  metadata: SeoMetadataFile,
+  originalUrl: string,
+): { locale: string; route: string } => {
+  const { locale, route } = routeSansLocale(originalUrl, LOCALES_DU_SITE);
+  return { locale: locale ?? metadata.site.defaultLocale, route };
 };
-
-const findPage = (metadata: SeoMetadataFile, route: string): SeoPageEntry | undefined =>
-  metadata.pages.find(
-    (p) => normalizePath(p.path) === normalizePath(route) || (route === '/' && p.id === 'home'),
-  );
 
 const toJsonLdScript = (data: Record<string, unknown>): string => {
   // Tous les `<` sont echappes, pas seulement `</script>` : apres un `<!--<script`,
@@ -104,16 +103,15 @@ const breadcrumbBlocks = (
         '@type': 'ListItem',
         position: i + 1,
         name: entry.name,
-        item: `${baseUrl}/${locale}${entry.path === '/' ? '' : entry.path}`,
+        item: urlAbsolue(baseUrl, buildLocalizedPath(locale, entry.path)),
       })),
     },
   ];
 };
 
 const buildJsonLdScripts = (metadata: SeoMetadataFile, originalUrl: string): string => {
-  const locale = LOCALE_PREFIX_RE.exec(originalUrl)?.[1] ?? metadata.site.defaultLocale;
-  const route = routeOf(originalUrl);
-  const page = findPage(metadata, route);
+  const { locale, route } = routeDeLURL(metadata, originalUrl);
+  const page = pageSeoDeLaRoute(metadata, route);
 
   const blocks = [...globalBlocks(metadata, route)];
   if (page) {
@@ -134,13 +132,13 @@ const buildSeoLinkTags = (
   const locales = metadata.site.locales ?? [];
   const defaultLocale = metadata.site.defaultLocale ?? locales[0] ?? 'fr';
 
-  const page = findPage(metadata, routeOf(originalUrl));
+  const { locale: currentLocale, route } = routeDeLURL(metadata, originalUrl);
+  const page = pageSeoDeLaRoute(metadata, route);
   if (!page || page.index === false) return '';
 
-  const pagePath = page.id === 'home' ? '/' : page.path;
-  const currentLocale = LOCALE_PREFIX_RE.exec(originalUrl)?.[1] ?? defaultLocale;
+  const pagePath = cheminPublicDeLaPage(page);
   const hrefFor = (locale: string): string =>
-    new URL(buildLocalizedPath(locale, pagePath), baseUrl).toString();
+    urlAbsolue(baseUrl, buildLocalizedPath(locale, pagePath));
 
   return [
     `<link rel="canonical" href="${hrefFor(currentLocale)}" />`,
@@ -163,17 +161,15 @@ const buildArticleFeedLink = (
   baseUrl: string,
 ): string => {
   const defaultLocale = metadata.site.defaultLocale ?? 'fr';
-  const prefixed = LOCALE_PREFIX_RE.exec(originalUrl)?.[1] ?? defaultLocale;
+  const prefixed = routeDeLURL(metadata, originalUrl).locale;
   const locale = prefixed in ARTICLE_FEED_TITLES ? prefixed : defaultLocale;
   const href = new URL(ARTICLE_FEED_PATH, baseUrl);
   href.searchParams.set('locale', locale);
   return `<link rel="alternate" type="application/rss+xml" title="${ARTICLE_FEED_TITLES[locale] ?? ARTICLE_FEED_TITLES['fr']}" href="${href.toString()}" />`;
 };
 
-export const isKnownRoute = (routePath: string, metadata: SeoMetadataFile): boolean => {
-  const normalized = routePath === '' ? '/' : routePath;
-  return metadata.pages.some((page) => page.path === normalized);
-};
+export const isKnownRoute = (routePath: string, metadata: SeoMetadataFile): boolean =>
+  pageSeoDeLaRoute(metadata, routePath) !== undefined;
 
 export const injectSeoHead = (
   html: string,

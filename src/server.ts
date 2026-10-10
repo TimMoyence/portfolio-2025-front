@@ -18,14 +18,9 @@ import { buildLlmsFullTxt, buildLlmsTxt, buildRobotsTxt } from './server/seo-bui
 import { buildSecurityHeaders } from './server/security-headers';
 import { injectSeoHead, isKnownRoute } from './server/seo-injector';
 import { routeDuSitemap } from './server/sitemap-route';
-import {
-  ALLOWED_HOSTS,
-  LOCALE_BARE_PATH,
-  LOCALE_PREFIX_RE,
-  STRIP_LOCALE_RE,
-  buildBaseUrlFromRequest,
-} from './server/url-utils';
-import { trimTrailingSlashes } from './app/core/seo/chemins';
+import { ALLOWED_HOSTS, buildBaseUrlFromRequest, cheminCanonique } from './server/url-utils';
+import { LOCALES_DU_SITE } from './app/core/config/locales';
+import { routeSansLocale } from './app/core/seo/chemins';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 
@@ -48,24 +43,6 @@ const resolveIndexHtml = (locale: string | null): string => {
 const app = express();
 app.disable('x-powered-by');
 
-const keepsTrailingSlash = (path: string): boolean => LOCALE_BARE_PATH.test(path);
-
-app.use((req, res, next) => {
-  const original = req.path;
-  let normalized = original.replace(/\/{2,}/g, '/');
-  if (normalized.length > 1 && normalized.endsWith('/') && !keepsTrailingSlash(normalized)) {
-    normalized = trimTrailingSlashes(normalized);
-  }
-  if (normalized !== original) {
-    const query = req.originalUrl.includes('?')
-      ? req.originalUrl.slice(req.originalUrl.indexOf('?'))
-      : '';
-    res.redirect(301, normalized + query);
-    return;
-  }
-  next();
-});
-
 const poserLesEntetes = (res: Response, entetes: Readonly<Record<string, string>>): void => {
   for (const [nom, valeur] of Object.entries(entetes)) {
     res.setHeader(nom, valeur);
@@ -75,6 +52,18 @@ const poserLesEntetes = (res: Response, entetes: Readonly<Record<string, string>
 app.use((req, res, next) => {
   const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
   poserLesEntetes(res, buildSecurityHeaders({ isHttps }));
+  next();
+});
+
+app.use((req, res, next) => {
+  const canonique = cheminCanonique(req.path);
+  if (canonique !== req.path) {
+    const query = req.originalUrl.includes('?')
+      ? req.originalUrl.slice(req.originalUrl.indexOf('?'))
+      : '';
+    res.redirect(301, canonique + query);
+    return;
+  }
   next();
 });
 
@@ -170,50 +159,20 @@ app.get('/BingSiteAuth.xml', (_req, res) => {
     );
 });
 
-app.use(
-  '/fr',
-  express.static(resolve(browserDistFolder, 'fr'), {
-    maxAge: '1y',
-    index: false,
-    redirect: false,
-  }),
-);
-app.use(
-  '/en',
-  express.static(resolve(browserDistFolder, 'en'), {
-    maxAge: '1y',
-    index: false,
-    redirect: false,
-  }),
-);
+const OPTIONS_STATIQUES = { maxAge: '1y', index: false, redirect: false } as const;
 
-app.use(
-  '/assets',
-  express.static(resolve(browserDistFolder, 'fr/assets'), {
-    maxAge: '1y',
-    index: false,
-    redirect: false,
-  }),
-);
+for (const locale of LOCALES_DU_SITE) {
+  app.use(`/${locale}`, express.static(resolve(browserDistFolder, locale), OPTIONS_STATIQUES));
+}
+
+app.use('/assets', express.static(resolve(browserDistFolder, 'fr/assets'), OPTIONS_STATIQUES));
 
 registerPermanentRedirects(app);
 
-app.use(
-  express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: false,
-    redirect: false,
-  }),
-);
+app.use(express.static(browserDistFolder, OPTIONS_STATIQUES));
 
-const localeOf = (originalUrl: string): string | null =>
-  LOCALE_PREFIX_RE.exec(originalUrl)?.[1] ?? null;
-
-const routePathOf = (originalUrl: string): string =>
-  originalUrl.replace(STRIP_LOCALE_RE, '').split('?')[0].split('#')[0];
-
-const prerenderedFileOf = (urlLocale: string, routePath: string): string | null => {
-  const candidate = resolve(browserDistFolder, urlLocale, routePath || '.', 'index.html');
+const prerenderedFileOf = (urlLocale: string, route: string): string | null => {
+  const candidate = resolve(browserDistFolder, urlLocale, route.slice(1) || '.', 'index.html');
   if (!candidate.startsWith(browserDistFolder)) return null;
   return fs.existsSync(candidate) ? candidate : null;
 };
@@ -221,15 +180,15 @@ const prerenderedFileOf = (urlLocale: string, routePath: string): string | null 
 const sendPrerendered = (
   req: Request,
   res: Response,
-  input: { urlLocale: string; routePath: string; file: string },
+  input: { urlLocale: string; route: string; file: string },
 ): void => {
-  const { urlLocale, routePath, file } = input;
+  const { urlLocale, route, file } = input;
   const metadata = loadSeoMetadata();
   let html = fs.readFileSync(file, 'utf-8');
   if (metadata) {
     const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
     html = injectSeoHead(html, metadata, req.originalUrl, baseUrl);
-    if (!isKnownRoute(routePath === '' ? '/' : `/${routePath}`, metadata)) {
+    if (!isKnownRoute(route, metadata)) {
       res.status(404);
     }
   }
@@ -297,18 +256,18 @@ const renderWithSsr = (
 };
 
 app.get('**', (req, res, next) => {
-  const urlLocale = localeOf(req.originalUrl);
+  const { locale, route } = routeSansLocale(req.originalUrl, LOCALES_DU_SITE);
+  const urlLocale = locale ?? null;
   const baseHref = urlLocale ? `/${urlLocale}` : '/';
-  const routePath = routePathOf(req.originalUrl);
-  poserLesEntetes(res, entetesDeLaRoute(routePath));
+  poserLesEntetes(res, entetesDeLaRoute(route));
 
   if (urlLocale) {
-    const prerendered = prerenderedFileOf(urlLocale, routePath);
+    const prerendered = prerenderedFileOf(urlLocale, route);
     if (prerendered) {
-      sendPrerendered(req, res, { urlLocale, routePath, file: prerendered });
+      sendPrerendered(req, res, { urlLocale, route, file: prerendered });
       return;
     }
-    if (isClientOnlyRoute(routePath) && sendCsrShell(res, { urlLocale, baseHref })) {
+    if (isClientOnlyRoute(route) && sendCsrShell(res, { urlLocale, baseHref })) {
       return;
     }
   }

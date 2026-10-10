@@ -1,11 +1,5 @@
 import type express from 'express';
-import {
-  ALLOWED_HOSTS,
-  LOCALE_BARE_PATH,
-  LOCALE_PREFIX_RE,
-  STRIP_LOCALE_RE,
-  buildBaseUrlFromRequest,
-} from './url-utils';
+import { ALLOWED_HOSTS, buildBaseUrlFromRequest, cheminCanonique } from './url-utils';
 
 const stubRequest = (opts: {
   headers?: Record<string, string>;
@@ -24,31 +18,27 @@ const stubRequest = (opts: {
 };
 
 describe('url-utils', () => {
-  describe('LOCALE_BARE_PATH', () => {
-    it('matche uniquement les chemins locale-seul avec slash final', () => {
-      expect(LOCALE_BARE_PATH.test('/fr/')).toBeTrue();
-      expect(LOCALE_BARE_PATH.test('/en/')).toBeTrue();
-      expect(LOCALE_BARE_PATH.test('/fr')).toBeFalse();
-      expect(LOCALE_BARE_PATH.test('/fr/contact')).toBeFalse();
-    });
-  });
-
-  describe('LOCALE_PREFIX_RE', () => {
-    it('extrait le prefixe locale en debut de chemin', () => {
-      expect(LOCALE_PREFIX_RE.exec('/fr/contact')?.[1]).toBe('fr');
-      expect(LOCALE_PREFIX_RE.exec('/en')?.[1]).toBe('en');
+  describe('cheminCanonique', () => {
+    it('garde un chemin deja canonique', () => {
+      expect(cheminCanonique('/')).toBe('/');
+      expect(cheminCanonique('/fr/')).toBe('/fr/');
+      expect(cheminCanonique('/fr/contact')).toBe('/fr/contact');
+      expect(cheminCanonique('/frais')).toBe('/frais');
     });
 
-    it('ignore les chemins sans prefixe locale reconnu', () => {
-      expect(LOCALE_PREFIX_RE.exec('/contact')).toBeNull();
-      expect(LOCALE_PREFIX_RE.exec('/de/contact')).toBeNull();
+    it('ajoute le slash final a la racine d une locale, comme le canonical', () => {
+      expect(cheminCanonique('/fr')).toBe('/fr/');
+      expect(cheminCanonique('/en')).toBe('/en/');
     });
-  });
 
-  describe('STRIP_LOCALE_RE', () => {
-    it('supprime le prefixe locale', () => {
-      expect('/fr/contact'.replace(STRIP_LOCALE_RE, '')).toBe('contact');
-      expect('/en/'.replace(STRIP_LOCALE_RE, '')).toBe('');
+    it('retire le slash final des sous-pages', () => {
+      expect(cheminCanonique('/fr/contact/')).toBe('/fr/contact');
+      expect(cheminCanonique('/home/')).toBe('/home');
+    });
+
+    it('replie les slashs multiples', () => {
+      expect(cheminCanonique('//fr//contact//')).toBe('/fr/contact');
+      expect(cheminCanonique('/fr//')).toBe('/fr/');
     });
   });
 

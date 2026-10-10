@@ -1,13 +1,13 @@
 import type express from 'express';
+import { LOCALES_DU_SITE } from '../app/core/config/locales';
+import { buildLocalizedPath, normalizePath, routeSansLocale } from '../app/core/seo/chemins';
 
-const SUPPORTED_LOCALES = ['fr', 'en'] as const;
-const LOCALE_PATTERN = SUPPORTED_LOCALES.join('|');
-
-export const LOCALE_BARE_PATH = new RegExp(`^\\/(${LOCALE_PATTERN})\\/$`);
-
-export const LOCALE_PREFIX_RE = new RegExp(`^\\/(${LOCALE_PATTERN})(?=\\/|$)`);
-
-export const STRIP_LOCALE_RE = new RegExp(`^\\/(${LOCALE_PATTERN})\\/?`);
+export const cheminCanonique = (path: string): string => {
+  const replie = path.replace(/\/{2,}/g, '/');
+  const { locale, route } = routeSansLocale(replie, LOCALES_DU_SITE);
+  if (locale !== undefined && route === '/') return buildLocalizedPath(locale, route);
+  return normalizePath(replie);
+};
 
 export const ALLOWED_HOSTS = [
   'asilidesign.fr',

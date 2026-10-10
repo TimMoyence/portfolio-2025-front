@@ -1,9 +1,10 @@
 import {
   buildLocalizedPath,
+  cheminEnLocale,
   estAliasDAccueil,
   normalizePath,
   routeSansLocale,
-  trimTrailingSlashes,
+  urlAbsolue,
 } from './chemins';
 
 describe('chemins', () => {
@@ -34,15 +35,6 @@ describe('chemins', () => {
     it('accepte un chemin sans slash initial', () => {
       expect(normalizePath('contact')).toBe('/contact');
       expect(normalizePath('')).toBe('/');
-    });
-  });
-
-  describe('trimTrailingSlashes', () => {
-    it('ne retire que les slashs finaux', () => {
-      expect(trimTrailingSlashes('/fr/contact///')).toBe('/fr/contact');
-      expect(trimTrailingSlashes('///')).toBe('');
-      expect(trimTrailingSlashes('/fr/contact')).toBe('/fr/contact');
-      expect(trimTrailingSlashes('')).toBe('');
     });
   });
 
@@ -90,8 +82,40 @@ describe('chemins', () => {
       expect(routeSansLocale('', LOCALES)).toEqual({ locale: undefined, route: '/' });
     });
 
-    it('replie les slashs internes', () => {
-      expect(routeSansLocale('//fr//test//', LOCALES).route).toBe('/test');
+    it('garde les slashs internes, comme normalizePath', () => {
+      expect(routeSansLocale('/fr/a//b', LOCALES).route).toBe('/a//b');
+      expect(routeSansLocale('//fr//test//', LOCALES)).toEqual({ locale: 'fr', route: '/test' });
+    });
+
+    it('ne prend pas pour une locale un segment qui ne fait que la prefixer', () => {
+      expect(routeSansLocale('/frais', LOCALES)).toEqual({ locale: undefined, route: '/frais' });
+    });
+  });
+
+  describe('cheminEnLocale', () => {
+    const LOCALES = ['fr', 'en'];
+
+    it('transpose une page dans l autre locale', () => {
+      expect(cheminEnLocale('/fr/contact', 'en', LOCALES)).toBe('/en/contact');
+      expect(cheminEnLocale('/contact', 'en', LOCALES)).toBe('/en/contact');
+    });
+
+    it('transpose l accueil vers la racine canonique de la locale', () => {
+      expect(cheminEnLocale('/fr/', 'en', LOCALES)).toBe('/en/');
+      expect(cheminEnLocale('/fr', 'en', LOCALES)).toBe('/en/');
+    });
+  });
+
+  describe('urlAbsolue', () => {
+    it('place le chemin sous la base, sans double slash', () => {
+      expect(urlAbsolue('https://asilidesign.fr/', '/fr/')).toBe('https://asilidesign.fr/fr/');
+      expect(urlAbsolue('https://asilidesign.fr', 'fr/contact')).toBe(
+        'https://asilidesign.fr/fr/contact',
+      );
+    });
+
+    it('garde le chemin d une base qui en porte un', () => {
+      expect(urlAbsolue('https://example.com/site/', '/fr/')).toBe('https://example.com/site/fr/');
     });
   });
 

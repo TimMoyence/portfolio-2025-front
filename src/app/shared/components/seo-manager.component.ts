@@ -9,7 +9,7 @@ import {
   buildLocalizedPath,
   estAliasDAccueil,
   routeSansLocale,
-  trimTrailingSlashes,
+  urlAbsolue,
 } from '../../core/seo/chemins';
 import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-registry.service';
 import type { SeoConfig } from '../../core/seo/seo.interface';
@@ -45,7 +45,7 @@ export class SeoManagerComponent {
         filter((route) => route.outlet === 'primary'),
         mergeMap((route) => route.data),
         switchMap((data) => {
-          const currentUrl = this.getCleanUrl(this.router.url);
+          const currentUrl = this.router.url;
           const seoKey = data['seoKey'];
 
           if (seoKey) {
@@ -111,7 +111,7 @@ export class SeoManagerComponent {
     const canonicalState = this.resolveCanonicalState(currentUrl);
     return {
       baseUrl,
-      canonicalUrl: this.buildAbsoluteUrl(baseUrl, canonicalState.canonicalPath),
+      canonicalUrl: urlAbsolue(baseUrl, canonicalState.canonicalPath),
       hreflangs: this.buildHreflangs(baseUrl, canonicalState.relativePath),
     };
   }
@@ -130,12 +130,12 @@ export class SeoManagerComponent {
     const locales = this.seoRegistry.getLocales();
     const hreflangs: Record<string, string> = {};
     for (const locale of locales) {
-      hreflangs[locale] = this.buildAbsoluteUrl(baseUrl, pathFor(locale));
+      hreflangs[locale] = urlAbsolue(baseUrl, pathFor(locale));
     }
 
     const defaultLocale = this.seoRegistry.getDefaultLocale();
     if (defaultLocale && locales.includes(defaultLocale)) {
-      hreflangs['x-default'] = this.buildAbsoluteUrl(baseUrl, pathFor(defaultLocale));
+      hreflangs['x-default'] = urlAbsolue(baseUrl, pathFor(defaultLocale));
     }
     return hreflangs;
   }
@@ -169,10 +169,6 @@ export class SeoManagerComponent {
     return this.appConfig.baseUrl || this.seoRegistry.getBaseUrl() || 'https://asilidesign.fr';
   }
 
-  private getCleanUrl(url: string): string {
-    return url.split('?')[0].split('#')[0];
-  }
-
   private resolveCanonicalState(currentUrl: string): {
     canonicalPath: string;
     relativePath: string;
@@ -185,17 +181,11 @@ export class SeoManagerComponent {
     };
   }
 
-  private buildAbsoluteUrl(baseUrl: string, path: string): string {
-    const trimmedBase = trimTrailingSlashes(baseUrl);
-    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-    return `${trimmedBase}${normalizedPath}`;
-  }
-
   private resolveAbsoluteUrl(baseUrl: string, value?: string): string | undefined {
     if (!value) return undefined;
     if (value.startsWith('http://') || value.startsWith('https://')) {
       return value;
     }
-    return this.buildAbsoluteUrl(baseUrl, value);
+    return urlAbsolue(baseUrl, value);
   }
 }

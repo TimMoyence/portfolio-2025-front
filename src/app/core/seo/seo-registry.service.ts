@@ -2,7 +2,8 @@ import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import seoMetadata from '../../../assets/seo/seo-metadata.json';
-import { estAliasDAccueil, normalizePath, routeSansLocale } from './chemins';
+import { routeSansLocale } from './chemins';
+import { pageSeoDeLaRoute } from './pages-seo';
 import type { SeoConfig } from './seo.interface';
 import type { SeoMetadataFile, SeoPageEntry } from './seo-metadata.model';
 
@@ -47,8 +48,8 @@ export class SeoRegistryService {
   }
 
   getSeoByPath(rawPath: string): Observable<SeoResolvedConfig | null> {
-    const normalizedPath = this.normalizeRequestPath(rawPath);
-    const page = this.data.pages.find((entry) => normalizePath(entry.path) === normalizedPath);
+    const { route } = routeSansLocale(rawPath, this.data.site.locales ?? []);
+    const page = pageSeoDeLaRoute(this.data, route);
     return of(page ? this.buildResolved(page) : null);
   }
 
@@ -92,10 +93,5 @@ export class SeoRegistryService {
 
     const fallback = Object.keys(page.locales)[0];
     return fallback ?? this.data.site.defaultLocale;
-  }
-
-  private normalizeRequestPath(rawPath: string): string {
-    const { route } = routeSansLocale(rawPath, this.data.site.locales ?? []);
-    return estAliasDAccueil(route) ? normalizePath(this.data.site.homePath ?? '/') : route;
   }
 }

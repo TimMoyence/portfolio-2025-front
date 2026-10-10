@@ -1,6 +1,7 @@
 import { cheminDuCoursEnSeance, COURS_EN_SEANCE } from '../app/core/config/cours-en-seance';
 import type { SeoMetadataFile } from '../app/core/seo/seo-metadata.model';
 import seoMetadata from '../assets/seo/seo-metadata.json';
+import { buildPageSeoFr, buildSeoMetadata } from '../testing/factories/seo-metadata.factory';
 import { buildLlmsFullTxt, buildLlmsTxt, buildSitemapXml } from './seo-builders';
 import { injectSeoHead, isKnownRoute } from './seo-injector';
 
@@ -92,6 +93,60 @@ describe('injectSeoHead — flux RSS des articles', () => {
     const twice = injectSeoHead(once, metadata, '/fr/', BASE_URL);
 
     expect(twice.match(/application\/rss\+xml/g)?.length).toBe(1);
+  });
+});
+
+describe('injectSeoHead — fil d Ariane et locale', () => {
+  const pages = [
+    buildPageSeoFr('home', '/'),
+    buildPageSeoFr(
+      'contact',
+      '/contact',
+      {},
+      {
+        breadcrumb: [
+          { name: 'Accueil', path: '/' },
+          { name: 'Contact', path: '/contact' },
+        ],
+      },
+    ),
+  ];
+  const metadata = buildSeoMetadata(pages);
+
+  const itemsDuFil = (html: string): unknown[] => {
+    const blocs = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+      .map(([, json]) => JSON.parse(json) as { '@type'?: string; itemListElement?: unknown[] })
+      .filter((bloc) => bloc['@type'] === 'BreadcrumbList');
+    return (blocs[0]?.itemListElement ?? []).map((item) => (item as { item: string }).item);
+  };
+
+  it('pointe l accueil du fil d Ariane sur la racine canonique /fr/', () => {
+    const html = injectSeoHead(EMPTY_HTML, metadata, '/fr/contact', BASE_URL);
+
+    expect(itemsDuFil(html)).toEqual([
+      'https://asilidesign.fr/fr/',
+      'https://asilidesign.fr/fr/contact',
+    ]);
+  });
+
+  it('suit la locale de l URL dans le fil d Ariane', () => {
+    const html = injectSeoHead(EMPTY_HTML, metadata, '/en/contact?utm=x', BASE_URL);
+
+    expect(itemsDuFil(html)).toEqual([
+      'https://asilidesign.fr/en/',
+      'https://asilidesign.fr/en/contact',
+    ]);
+  });
+
+  it('ne prend pas /frais pour une page de la locale fr', () => {
+    const html = injectSeoHead(
+      EMPTY_HTML,
+      buildSeoMetadata([...pages, buildPageSeoFr('ais', '/ais')]),
+      '/frais',
+      BASE_URL,
+    );
+
+    expect(html).not.toContain('rel="canonical"');
   });
 });
 

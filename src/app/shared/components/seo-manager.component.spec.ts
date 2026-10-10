@@ -192,6 +192,24 @@ describe('SeoManagerComponent', () => {
 
       expect(naviguer('/en/').canonicalUrl).toBe('https://example.com/en/');
     });
+
+    it('canonise dans la locale du build quand router.url ne porte pas de locale, comme en prod', () => {
+      seoRegistrySpy.getLocaleId.and.returnValue('en');
+      routerStub.url = '/';
+
+      const accueil = naviguer('/');
+
+      expect(accueil.canonicalUrl).toBe('https://example.com/en/');
+      expect(accueil.hreflangs).toEqual({
+        fr: 'https://example.com/fr/',
+        en: 'https://example.com/en/',
+        'x-default': 'https://example.com/fr/',
+      });
+
+      routerStub.url = '/contact?utm=x';
+
+      expect(naviguer('/contact?utm=x').canonicalUrl).toBe('https://example.com/en/contact');
+    });
   });
 
   describe('normalisation des slashes', () => {

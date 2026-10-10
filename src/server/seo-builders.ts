@@ -1,6 +1,7 @@
 import type { SeoMetadataFile, SeoPageEntry } from '../app/core/seo/seo-metadata.model';
 import type { PublicationDeCours } from './cours-publication';
-import { buildLocalizedPath, normalizePath } from '../app/core/seo/chemins';
+import { buildLocalizedPath, normalizePath, urlAbsolue } from '../app/core/seo/chemins';
+import { cheminPublicDeLaPage, estPageDAccueil } from '../app/core/seo/pages-seo';
 
 const AI_USER_AGENTS: ReadonlyArray<string> = [
   'GPTBot',
@@ -33,7 +34,7 @@ export interface DynamicArticleSitemapEntry {
 }
 
 const localizedHref = (locale: string, pagePath: string, baseUrl: string): string =>
-  new URL(buildLocalizedPath(locale, pagePath), baseUrl).toString();
+  urlAbsolue(baseUrl, buildLocalizedPath(locale, pagePath));
 
 const alternateLink = (hreflang: string, href: string): string =>
   `    <xhtml:link rel="alternate" hreflang="${escapeXml(hreflang)}" href="${escapeXml(href)}" />`;
@@ -122,7 +123,7 @@ export const buildSitemapXml = (
   const urlEntries = metadata.pages
     .filter((page) => page.index !== false)
     .flatMap((page) => {
-      const pagePath = page.id === 'home' ? '/' : page.path;
+      const pagePath = cheminPublicDeLaPage(page);
       const alternatesMarkup = alternatesMarkupOf(pagePath, ctx);
       const lastmod = lastmodOf(page, publicationsDeCours);
       return activeLocales.map((locale) =>
@@ -163,8 +164,7 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
   };
 
   const buildLink = (page: (typeof metadata.pages)[number]): string => {
-    const path = page.id === 'home' ? '/' : page.path;
-    const href = new URL(buildLocalizedPath(defaultLocale, path), baseUrl).toString();
+    const href = localizedHref(defaultLocale, cheminPublicDeLaPage(page), baseUrl);
     const { title, description } = resolveLocaleMeta(page);
     const desc = description ? `: ${description}` : '';
     return `- [${title}](${href})${desc}`;
@@ -193,7 +193,7 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
     return [`## ${title}`, '', ...pages.map(buildLink), ''];
   };
 
-  const homeMeta = indexablePages.find((p) => p.id === 'home');
+  const homeMeta = indexablePages.find(estPageDAccueil);
   const homeTagline = homeMeta ? resolveLocaleMeta(homeMeta).description : '';
   const heading = founderName ? `${siteName} — ${founderName}` : siteName;
   const tagline = homeTagline || siteDescription;
@@ -274,8 +274,7 @@ export const buildLlmsFullTxt = (metadata: SeoMetadataFile, baseUrl: string): st
   for (const page of indexablePages) {
     const meta = page.locales[defaultLocale] ?? Object.values(page.locales ?? {})[0];
     if (!meta) continue;
-    const path = page.id === 'home' ? '/' : page.path;
-    const href = new URL(buildLocalizedPath(defaultLocale, path), baseUrl).toString();
+    const href = localizedHref(defaultLocale, cheminPublicDeLaPage(page), baseUrl);
 
     lines.push(`## ${meta.title}`);
     lines.push('');
