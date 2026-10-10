@@ -1,5 +1,6 @@
 import type { CreateurFlux } from '../../app/features/cours/cours-flux.token';
 import type { ResultatsSeance } from '../../cours/content/types';
+import { abonner, diffuserA, type Ecoute } from '../../cours/runtime/core/ecoutes';
 import type {
   EtatSession,
   RaisonDeFin,
@@ -30,31 +31,11 @@ function buildEtatSession(overrides: Partial<EtatSession>): EtatSession {
   };
 }
 
-interface Auditoire<T> {
-  readonly ecouter: (ecoute: (valeur: T) => void) => () => void;
-  readonly diffuser: (valeur: T) => void;
-}
-
-function auditoire<T>(): Auditoire<T> {
-  const ecoutes: ((valeur: T) => void)[] = [];
-  return {
-    ecouter: (ecoute) => {
-      ecoutes.push(ecoute);
-      return () => undefined;
-    },
-    diffuser: (valeur) => {
-      for (const ecoute of ecoutes) {
-        ecoute(valeur);
-      }
-    },
-  };
-}
-
 export function createFluxDouble(): FluxDouble {
-  const etats = auditoire<EtatSession>();
-  const resultats = auditoire<ResultatsDuFlux>();
-  const statuts = auditoire<StatutFlux>();
-  const fins = auditoire<RaisonDeFin | null>();
+  const etats = new Set<Ecoute<EtatSession>>();
+  const resultats = new Set<Ecoute<ResultatsDuFlux>>();
+  const statuts = new Set<Ecoute<StatutFlux>>();
+  const fins = new Set<Ecoute<RaisonDeFin | null>>();
   const flux = jasmine.createSpyObj<Sync>('Sync', [
     'ouvrir',
     'onState',
@@ -63,17 +44,17 @@ export function createFluxDouble(): FluxDouble {
     'onFin',
     'close',
   ]);
-  flux.onState.and.callFake(etats.ecouter);
-  flux.onResultats.and.callFake(resultats.ecouter);
-  flux.onStatut.and.callFake(statuts.ecouter);
-  flux.onFin.and.callFake(fins.ecouter);
+  flux.onState.and.callFake((ecoute) => abonner(etats, ecoute));
+  flux.onResultats.and.callFake((ecoute) => abonner(resultats, ecoute));
+  flux.onStatut.and.callFake((ecoute) => abonner(statuts, ecoute));
+  flux.onFin.and.callFake((ecoute) => abonner(fins, ecoute));
   return {
     fabrique: jasmine.createSpy<CreateurFlux>('creerFlux').and.returnValue(flux),
     flux,
-    diffuser: (etat) => etats.diffuser(buildEtatSession(etat)),
+    diffuser: (etat) => diffuserA(etats, buildEtatSession(etat)),
     diffuserResultats: (partiels) =>
-      resultats.diffuser({ jalons: {}, enigmes: [], bareme: null, ...partiels }),
-    diffuserStatut: statuts.diffuser,
-    diffuserFin: fins.diffuser,
+      diffuserA(resultats, { jalons: {}, enigmes: [], bareme: null, ...partiels }),
+    diffuserStatut: (statut) => diffuserA(statuts, statut),
+    diffuserFin: (raison) => diffuserA(fins, raison),
   };
 }

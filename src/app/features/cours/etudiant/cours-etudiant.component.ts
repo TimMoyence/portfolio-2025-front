@@ -178,10 +178,7 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
 }
 
 function regimeDuContenu(contenu: unknown): RegimeVerrou | null {
-  if (typeof contenu !== 'object' || contenu === null) {
-    return null;
-  }
-  const regime = (contenu as Record<string, unknown>)['regime'];
+  const regime = estObjet(contenu) ? contenu['regime'] : undefined;
   return typeof regime === 'string' && REGIMES_VERROU.includes(regime as RegimeVerrou)
     ? (regime as RegimeVerrou)
     : null;
