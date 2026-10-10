@@ -47,6 +47,7 @@ import {
   type StatutSession,
   type Sync,
 } from '../../../../cours/runtime/core/sync';
+import { estObjet } from '../../../../cours/runtime/core/valeurs';
 import { getApiFormationsUrl } from '../../../core/http/api-config';
 import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
 import type {
@@ -196,8 +197,8 @@ function regimeDeLEcran(ecran: EcranContent): RegimeVerrou {
     if (indirect !== null) {
       return indirect;
     }
-    if (typeof donnees === 'object' && donnees !== null) {
-      const metadonnees = regimeDuContenu((donnees as Record<string, unknown>)['metadonnees']);
+    if (estObjet(donnees)) {
+      const metadonnees = regimeDuContenu(donnees['metadonnees']);
       if (metadonnees !== null) {
         return metadonnees;
       }

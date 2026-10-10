@@ -42,6 +42,7 @@ describe('valeurs', () => {
       expect(bornerEntre(5, 0, 10)).toBe(5);
       expect(bornerEntre(-3, 0, 10)).toBe(0);
       expect(bornerEntre(12, 0, 10)).toBe(10);
+      expect(Object.is(bornerEntre(-0, 0, 10), 0)).toBeTrue();
     });
 
     it('donne le dernier mot au minimum quand les bornes se croisent', () => {

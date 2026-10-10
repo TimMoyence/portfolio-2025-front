@@ -265,7 +265,7 @@ export class SlideDeckComponent implements AfterViewInit {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    if (document.fullscreenElement === null && this.service.mode() === 'fullscreen') {
+    if (!this.fullscreen.isFullscreen() && this.service.mode() === 'fullscreen') {
       this.service.setMode('scroll');
     }
   }

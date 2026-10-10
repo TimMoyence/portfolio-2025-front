@@ -58,7 +58,7 @@ import {
   sujetDuFil,
 } from './formations-fil';
 import { ENTETE_JETON_PARTICIPANT } from '../../../cours/runtime/core/jeton-participant';
-import { jsonOuNull } from '../../../cours/runtime/core/valeurs';
+import { estObjet, jsonOuNull } from '../../../cours/runtime/core/valeurs';
 
 const MOTIFS_DE_REFUS_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusReponseLibre>> = {
   SEANCE_NON_DEMARREE: 'seance-non-demarree',
@@ -127,10 +127,7 @@ function codeDuProbleme(erreur: HttpErrorResponse): string | null {
 }
 
 function codeDuCorps(corps: unknown): string | null {
-  if (typeof corps !== 'object' || corps === null) {
-    return null;
-  }
-  const code = (corps as Record<string, unknown>)['code'];
+  const code = estObjet(corps) ? corps['code'] : undefined;
   return typeof code === 'string' ? code : null;
 }
 
