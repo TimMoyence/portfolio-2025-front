@@ -1,6 +1,6 @@
 import { lireJsonSousDelai, messageDErreur } from './lecture-api';
 import type { DynamicArticleSitemapEntry } from './seo-builders';
-import { trimTrailingSlashes } from './url-utils';
+import { trimTrailingSlashes } from '../app/core/seo/chemins';
 
 export interface DependancesDuLecteurDArticles {
   readonly apiBaseUrl: string | undefined;

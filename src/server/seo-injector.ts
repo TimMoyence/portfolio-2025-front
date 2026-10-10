@@ -1,5 +1,6 @@
 import type { SeoMetadataFile, SeoPageEntry } from '../app/core/seo/seo-metadata.model';
-import { LOCALE_PREFIX_RE, STRIP_LOCALE_RE, buildLocalizedPath, normalizePath } from './url-utils';
+import { buildLocalizedPath, normalizePath } from '../app/core/seo/chemins';
+import { LOCALE_PREFIX_RE, STRIP_LOCALE_RE } from './url-utils';
 
 const FRESHNESS_ENABLED_TYPES = new Set([
   'WebPage',

@@ -1,6 +1,6 @@
 import type { SeoMetadataFile, SeoPageEntry } from '../app/core/seo/seo-metadata.model';
 import type { PublicationDeCours } from './cours-publication';
-import { buildLocalizedPath, normalizePath } from './url-utils';
+import { buildLocalizedPath, normalizePath } from '../app/core/seo/chemins';
 
 const AI_USER_AGENTS: ReadonlyArray<string> = [
   'GPTBot',

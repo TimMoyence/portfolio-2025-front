@@ -9,31 +9,6 @@ export const LOCALE_PREFIX_RE = new RegExp(`^\\/(${LOCALE_PATTERN})(?=\\/|$)`);
 
 export const STRIP_LOCALE_RE = new RegExp(`^\\/(${LOCALE_PATTERN})\\/?`);
 
-export const trimTrailingSlashes = (value: string): string => {
-  let end = value.length;
-  while (end > 0 && value[end - 1] === '/') end -= 1;
-  return value.slice(0, end);
-};
-
-const trimLeadingSlashes = (value: string): string => {
-  let start = 0;
-  while (start < value.length && value[start] === '/') start += 1;
-  return value.slice(start);
-};
-
-export const normalizePath = (path: string): string => {
-  const clean = path.split('?')[0].split('#')[0];
-  const trimmed = trimTrailingSlashes(trimLeadingSlashes(clean));
-  return trimmed ? `/${trimmed}` : '/';
-};
-
-export const buildLocalizedPath = (locale: string, path: string): string => {
-  const normalized = normalizePath(path);
-  if (!locale) return normalized;
-  if (normalized === '/') return `/${locale}/`;
-  return normalizePath(`/${locale}${normalized}`);
-};
-
 export const ALLOWED_HOSTS = [
   'asilidesign.fr',
   'www.asilidesign.fr',

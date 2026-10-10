@@ -5,25 +5,15 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { filter, map, mergeMap, switchMap } from 'rxjs/operators';
 import { APP_CONFIG } from '../../core/config/app-config.token';
+import {
+  buildLocalizedPath,
+  estAliasDAccueil,
+  routeSansLocale,
+  trimTrailingSlashes,
+} from '../../core/seo/chemins';
 import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-registry.service';
 import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';
-
-function trimLeadingSlashes(value: string): string {
-  let start = 0;
-  while (start < value.length && value[start] === '/') {
-    start += 1;
-  }
-  return value.slice(start);
-}
-
-function trimTrailingSlashes(value: string): string {
-  let end = value.length;
-  while (end > 0 && value[end - 1] === '/') {
-    end -= 1;
-  }
-  return value.slice(0, end);
-}
 
 @Component({
   selector: 'app-seo-manager',
@@ -135,8 +125,7 @@ export class SeoManagerComponent {
   }
 
   private buildHreflangs(baseUrl: string, relativePath: string): Record<string, string> {
-    const pathFor = (locale: string): string =>
-      relativePath === '/' ? `/${locale}` : `/${locale}${relativePath}`;
+    const pathFor = (locale: string): string => buildLocalizedPath(locale, relativePath);
 
     const locales = this.seoRegistry.getLocales();
     const hreflangs: Record<string, string> = {};
@@ -184,60 +173,16 @@ export class SeoManagerComponent {
     return url.split('?')[0].split('#')[0];
   }
 
-  private normalizePath(path: string): string {
-    const clean = this.getCleanUrl(path);
-    const trimmed = trimTrailingSlashes(trimLeadingSlashes(clean));
-    return trimmed ? `/${trimmed}` : '/';
-  }
-
   private resolveCanonicalState(currentUrl: string): {
     canonicalPath: string;
     relativePath: string;
   } {
-    const normalized = this.normalizePath(currentUrl);
-    const locales = this.seoRegistry.getLocales();
-    const activeLocale = this.seoRegistry.getLocaleId();
-    const matchedLocale = locales.find(
-      (locale) => normalized === `/${locale}` || normalized.startsWith(`/${locale}/`),
-    );
-
-    if (matchedLocale) {
-      const relativePath = this.normalizeRelativePath(normalized, matchedLocale);
-      if (this.isHomeAlias(relativePath)) {
-        return {
-          canonicalPath: `/${matchedLocale}`,
-          relativePath: '/',
-        };
-      }
-      return {
-        canonicalPath:
-          relativePath === '/' ? `/${matchedLocale}` : `/${matchedLocale}${relativePath}`,
-        relativePath,
-      };
-    }
-
-    if (this.isHomeAlias(normalized)) {
-      return {
-        canonicalPath: `/${activeLocale}`,
-        relativePath: '/',
-      };
-    }
-
+    const { locale, route } = routeSansLocale(currentUrl, this.seoRegistry.getLocales());
+    const relativePath = estAliasDAccueil(route) ? '/' : route;
     return {
-      canonicalPath: normalized === '/' ? `/${activeLocale}` : `/${activeLocale}${normalized}`,
-      relativePath: normalized === '/' ? '/' : normalized,
+      canonicalPath: buildLocalizedPath(locale ?? this.seoRegistry.getLocaleId(), relativePath),
+      relativePath,
     };
-  }
-
-  private normalizeRelativePath(path: string, locale: string): string {
-    const localePrefix = `/${locale}`;
-    if (path === localePrefix) return '/';
-    const suffix = path.slice(localePrefix.length);
-    return suffix ? this.normalizePath(suffix) : '/';
-  }
-
-  private isHomeAlias(path: string): boolean {
-    return path === '/' || path === '/home';
   }
 
   private buildAbsoluteUrl(baseUrl: string, path: string): string {

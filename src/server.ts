@@ -24,8 +24,8 @@ import {
   LOCALE_PREFIX_RE,
   STRIP_LOCALE_RE,
   buildBaseUrlFromRequest,
-  trimTrailingSlashes,
 } from './server/url-utils';
+import { trimTrailingSlashes } from './app/core/seo/chemins';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 

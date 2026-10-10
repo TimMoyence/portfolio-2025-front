@@ -2,6 +2,7 @@ import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import seoMetadata from '../../../assets/seo/seo-metadata.json';
+import { estAliasDAccueil, normalizePath, routeSansLocale } from './chemins';
 import type { SeoConfig } from './seo.interface';
 import type { SeoMetadataFile, SeoPageEntry } from './seo-metadata.model';
 
@@ -47,9 +48,7 @@ export class SeoRegistryService {
 
   getSeoByPath(rawPath: string): Observable<SeoResolvedConfig | null> {
     const normalizedPath = this.normalizeRequestPath(rawPath);
-    const page = this.data.pages.find(
-      (entry) => this.normalizePagePath(entry.path) === normalizedPath,
-    );
+    const page = this.data.pages.find((entry) => normalizePath(entry.path) === normalizedPath);
     return of(page ? this.buildResolved(page) : null);
   }
 
@@ -96,42 +95,7 @@ export class SeoRegistryService {
   }
 
   private normalizeRequestPath(rawPath: string): string {
-    const clean = rawPath.split('?')[0].split('#')[0];
-    const trimmed = this.trimSlashes(clean);
-    const withoutLocale = this.stripLocalePrefix(trimmed);
-    const normalized = withoutLocale ? `/${withoutLocale}` : '/';
-
-    if (normalized === '/' || normalized === '/home') {
-      return this.normalizePagePath(this.data.site.homePath ?? '/');
-    }
-
-    return normalized;
-  }
-
-  private normalizePagePath(path: string): string {
-    const clean = path.split('?')[0].split('#')[0];
-    const trimmed = this.trimSlashes(clean);
-    return trimmed ? `/${trimmed}` : '/';
-  }
-
-  private trimSlashes(path: string): string {
-    let start = 0;
-    let end = path.length;
-    while (start < end && path[start] === '/') start += 1;
-    while (end > start && path[end - 1] === '/') end -= 1;
-    return path.slice(start, end);
-  }
-
-  private stripLocalePrefix(path: string): string {
-    if (!path) return '';
-
-    const locales = this.data.site.locales ?? [];
-    const segments = path.split('/').filter(Boolean);
-
-    if (segments.length && locales.includes(segments[0])) {
-      segments.shift();
-    }
-
-    return segments.join('/');
+    const { route } = routeSansLocale(rawPath, this.data.site.locales ?? []);
+    return estAliasDAccueil(route) ? normalizePath(this.data.site.homePath ?? '/') : route;
   }
 }

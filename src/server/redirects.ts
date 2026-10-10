@@ -1,5 +1,5 @@
 import type express from 'express';
-import { trimTrailingSlashes } from './url-utils';
+import { trimTrailingSlashes } from '../app/core/seo/chemins';
 
 /**
  * Table des redirections HTTP permanentes (301) servies par le serveur Express.

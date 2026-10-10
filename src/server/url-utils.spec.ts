@@ -5,9 +5,6 @@ import {
   LOCALE_PREFIX_RE,
   STRIP_LOCALE_RE,
   buildBaseUrlFromRequest,
-  buildLocalizedPath,
-  normalizePath,
-  trimTrailingSlashes,
 } from './url-utils';
 
 const stubRequest = (opts: {
@@ -27,66 +24,6 @@ const stubRequest = (opts: {
 };
 
 describe('url-utils', () => {
-  describe('normalizePath', () => {
-    it('retire le trailing slash des chemins non racines', () => {
-      expect(normalizePath('/contact/')).toBe('/contact');
-    });
-
-    it('garde la racine telle quelle', () => {
-      expect(normalizePath('/')).toBe('/');
-    });
-
-    it('supprime les query et fragment', () => {
-      expect(normalizePath('/fr/presentation?utm=x#section')).toBe('/fr/presentation');
-    });
-
-    it('replie les slashs de bordure multiples', () => {
-      expect(normalizePath('///contact///')).toBe('/contact');
-      expect(normalizePath('//')).toBe('/');
-      expect(normalizePath('/'.repeat(2048))).toBe('/');
-      expect(normalizePath(`${'/'.repeat(2048)}contact`)).toBe('/contact');
-    });
-
-    it('preserve les slashs internes', () => {
-      expect(normalizePath('/fr/atelier//meteo/')).toBe('/fr/atelier//meteo');
-    });
-
-    it('accepte un chemin sans slash initial', () => {
-      expect(normalizePath('contact')).toBe('/contact');
-      expect(normalizePath('')).toBe('/');
-    });
-  });
-
-  describe('trimTrailingSlashes', () => {
-    it('ne retire que les slashs finaux', () => {
-      expect(trimTrailingSlashes('/fr/contact///')).toBe('/fr/contact');
-      expect(trimTrailingSlashes('///')).toBe('');
-      expect(trimTrailingSlashes('/fr/contact')).toBe('/fr/contact');
-      expect(trimTrailingSlashes('')).toBe('');
-    });
-  });
-
-  describe('buildLocalizedPath', () => {
-    it('emet la racine locale AVEC trailing slash (alignement nginx)', () => {
-      expect(buildLocalizedPath('fr', '/')).toBe('/fr/');
-      expect(buildLocalizedPath('en', '/')).toBe('/en/');
-    });
-
-    it('emet les sous-pages SANS trailing slash (alignement middleware Express)', () => {
-      expect(buildLocalizedPath('fr', '/contact')).toBe('/fr/contact');
-      expect(buildLocalizedPath('fr', '/atelier/meteo')).toBe('/fr/atelier/meteo');
-    });
-
-    it('normalise les inputs avec trailing slash', () => {
-      expect(buildLocalizedPath('fr', '/contact/')).toBe('/fr/contact');
-    });
-
-    it('retourne le chemin non-localise si locale vide', () => {
-      expect(buildLocalizedPath('', '/contact')).toBe('/contact');
-      expect(buildLocalizedPath('', '/')).toBe('/');
-    });
-  });
-
   describe('LOCALE_BARE_PATH', () => {
     it('matche uniquement les chemins locale-seul avec slash final', () => {
       expect(LOCALE_BARE_PATH.test('/fr/')).toBeTrue();
