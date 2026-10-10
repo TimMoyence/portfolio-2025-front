@@ -1,7 +1,8 @@
-import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { extname, join, relative, resolve, sep } from 'node:path';
+import { readFileSync, statSync } from 'node:fs';
+import { extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { listerFichiers } from '../../lib/arborescence.mjs';
 import { PORTE } from '../porte.mjs';
 
 export const ID_BUNDLE = 'corrige-dans-le-bundle';
@@ -70,27 +71,6 @@ function fuitesDans(contenu) {
 
 /**
  * @param {string} racine
- * @returns {string[]}
- */
-function fichiersInspectables(racine) {
-  const restants = [racine];
-  const trouves = [];
-  while (restants.length > 0) {
-    const dossier = restants.pop();
-    for (const entree of readdirSync(dossier, { withFileTypes: true })) {
-      const chemin = join(dossier, entree.name);
-      if (entree.isDirectory()) {
-        restants.push(chemin);
-      } else if (entree.isFile() && INSPECTEES.has(extname(entree.name).toLowerCase())) {
-        trouves.push(chemin);
-      }
-    }
-  }
-  return trouves.sort();
-}
-
-/**
- * @param {string} racine
  * @returns {boolean}
  */
 function estDossier(racine) {
@@ -114,19 +94,18 @@ export function inspecterSortie(racine) {
   if (!estDossier(racine)) {
     return { racine, existe: false, fichiers: 0, octets: 0, fuites: [] };
   }
-  const chemins = fichiersInspectables(racine);
+  const fichiers = listerFichiers(racine, (nom) => INSPECTEES.has(extname(nom).toLowerCase()));
   /** @type {FuiteDeCorrige[]} */
   const fuites = [];
   let octets = 0;
-  for (const chemin of chemins) {
-    const brut = readFileSync(chemin);
+  for (const fichier of fichiers) {
+    const brut = readFileSync(join(racine, fichier));
     octets += brut.length;
-    const fichier = relative(racine, chemin).split(sep).join('/');
     for (const fuite of fuitesDans(brut.toString('utf8'))) {
       fuites.push({ fichier, position: fuite.position, extrait: fuite.extrait });
     }
   }
-  return { racine, existe: true, fichiers: chemins.length, octets, fuites };
+  return { racine, existe: true, fichiers: fichiers.length, octets, fuites };
 }
 
 /**
