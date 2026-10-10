@@ -3,7 +3,7 @@ import {
   reponseJson,
   type DoublesDeLecteur,
 } from '../testing/lecteur-http-simule';
-import { lireJsonSousDelai, messageDErreur } from './lecture-api';
+import { garderEnCache, lireJsonSousDelai, messageDErreur } from './lecture-api';
 
 const URL_API = 'https://asilidesign.fr/api/v1/portfolio25/articles';
 
@@ -64,6 +64,26 @@ describe('lireJsonSousDelai', () => {
 
     expect(erreur).toBeInstanceOf(TypeError);
     expect((erreur as Error).message).toBe('fetch failed');
+  });
+});
+
+describe('garderEnCache', () => {
+  it('relit la source seulement une fois les cinq minutes du cache ecoulees', async () => {
+    let instant = 0;
+    let lectures = 0;
+    const lire = garderEnCache(
+      () => instant,
+      async () => {
+        lectures += 1;
+        return lectures;
+      },
+    );
+
+    expect(await lire()).toBe(1);
+    instant = 299_999;
+    expect(await lire()).toBe(1);
+    instant = 300_000;
+    expect(await lire()).toBe(2);
   });
 });
 

@@ -1,4 +1,4 @@
-import type { ContactMethod } from '../models/contact.model';
+import type { ContactMethod } from '../models/contact-method.model';
 
 export const CONTACT_METHODS: readonly ContactMethod[] = [
   {

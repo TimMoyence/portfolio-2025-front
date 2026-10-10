@@ -26,6 +26,8 @@ test.describe('les routes de séance sont servies en coquille client', () => {
       expect(reponse.status()).toBe(200);
       expect(reponse.headers()['x-robots-tag']).toBe('noindex, nofollow');
       expect(reponse.headers()['cache-control']).toBe('private, no-store');
+      expect(reponse.headers()['content-type']).toBe('text/html; charset=utf-8');
+      expect(reponse.headers()['content-language']).toBe('fr');
       expect(html).not.toContain('<form');
       expect(html).toContain('<app-root');
     });
@@ -35,6 +37,8 @@ test.describe('les routes de séance sont servies en coquille client', () => {
     const reponse = await request.get(`${baseSsr}/fr/articles`);
 
     expect(reponse.headers()['x-robots-tag']).toBeUndefined();
+    expect(reponse.headers()['content-type']).toBe('text/html; charset=utf-8');
+    expect(reponse.headers()['content-language']).toBe('fr');
     expect(await reponse.text()).toContain('ng-server-context');
   });
 });
