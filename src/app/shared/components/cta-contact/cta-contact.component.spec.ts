@@ -1,5 +1,5 @@
 import { pageMontee } from '../../../../testing/montage-page';
-import type { ContactMethod } from '../../models/contact.model';
+import type { ContactMethod } from '../../models/contact-method.model';
 import { ContactCtaComponent } from './cta-contact.component';
 
 describe('ContactCtaComponent', () => {

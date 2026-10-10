@@ -21,6 +21,7 @@ import { routeDuSitemap } from './server/sitemap-route';
 import { ALLOWED_HOSTS, buildBaseUrlFromRequest, cheminCanonique } from './server/url-utils';
 import { LOCALES_DU_SITE } from './app/core/config/locales';
 import { routeSansLocale } from './app/core/seo/chemins';
+import { localeParDefaut } from './app/core/seo/pages-seo';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 
@@ -159,23 +160,47 @@ app.get('/BingSiteAuth.xml', (_req, res) => {
     );
 });
 
-const OPTIONS_STATIQUES = { maxAge: '1y', index: false, redirect: false } as const;
+const servirLeDossier = (dossier: string) =>
+  express.static(resolve(browserDistFolder, dossier), {
+    maxAge: '1y',
+    index: false,
+    redirect: false,
+  });
 
 for (const locale of LOCALES_DU_SITE) {
-  app.use(`/${locale}`, express.static(resolve(browserDistFolder, locale), OPTIONS_STATIQUES));
+  app.use(`/${locale}`, servirLeDossier(locale));
 }
 
-app.use('/assets', express.static(resolve(browserDistFolder, 'fr/assets'), OPTIONS_STATIQUES));
+app.use('/assets', servirLeDossier('fr/assets'));
 
 registerPermanentRedirects(app);
 
-app.use(express.static(browserDistFolder, OPTIONS_STATIQUES));
+app.use(servirLeDossier('.'));
 
 const prerenderedFileOf = (urlLocale: string, route: string): string | null => {
   const candidate = resolve(browserDistFolder, urlLocale, route.slice(1) || '.', 'index.html');
   if (!candidate.startsWith(browserDistFolder)) return null;
   return fs.existsSync(candidate) ? candidate : null;
 };
+
+const envoyerLeDocument = (
+  res: Response,
+  html: string,
+  entetes: Readonly<Record<string, string>>,
+): void => {
+  poserLesEntetes(res, { 'Content-Type': 'text/html; charset=utf-8', ...entetes });
+  res.send(html);
+};
+
+const avecLeSeo = (req: Request, html: string, metadata: SeoMetadataFile | null): string =>
+  metadata
+    ? injectSeoHead(
+        html,
+        metadata,
+        req.originalUrl,
+        buildBaseUrlFromRequest(req, metadata.site.baseUrl),
+      )
+    : html;
 
 const sendPrerendered = (
   req: Request,
@@ -184,18 +209,13 @@ const sendPrerendered = (
 ): void => {
   const { urlLocale, route, file } = input;
   const metadata = loadSeoMetadata();
-  let html = fs.readFileSync(file, 'utf-8');
-  if (metadata) {
-    const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
-    html = injectSeoHead(html, metadata, req.originalUrl, baseUrl);
-    if (!isKnownRoute(route, metadata)) {
-      res.status(404);
-    }
+  if (metadata && !isKnownRoute(route, metadata)) {
+    res.status(404);
   }
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.setHeader('Content-Language', urlLocale);
-  res.setHeader('Cache-Control', documentCacheControlFor(res.statusCode));
-  res.send(html);
+  envoyerLeDocument(res, avecLeSeo(req, fs.readFileSync(file, 'utf-8'), metadata), {
+    'Content-Language': urlLocale,
+    'Cache-Control': documentCacheControlFor(res.statusCode),
+  });
 };
 
 const sendCsrShell = (res: Response, input: { urlLocale: string; baseHref: string }): boolean => {
@@ -203,11 +223,11 @@ const sendCsrShell = (res: Response, input: { urlLocale: string; baseHref: strin
   const shell = loadCsrShell(urlLocale, browserDistFolder);
   if (!shell) return false;
   const withBase = shell.replace(/<base\s+href="[^"]*"\s*\/?>/, `<base href="${baseHref}/" />`);
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.setHeader('Content-Language', urlLocale);
-  res.setHeader('Cache-Control', 'private, no-store');
-  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
-  res.send(withBase);
+  envoyerLeDocument(res, withBase, {
+    'Content-Language': urlLocale,
+    'Cache-Control': 'private, no-store',
+    'X-Robots-Tag': 'noindex, nofollow',
+  });
   return true;
 };
 
@@ -243,14 +263,10 @@ const renderWithSsr = (
     .then((rendered) => {
       res.status(status);
       const metadata = loadSeoMetadata();
-      let html = rendered;
-      if (metadata) {
-        const baseUrl = buildBaseUrlFromRequest(req, metadata.site.baseUrl);
-        html = injectSeoHead(html, metadata, originalUrl, baseUrl);
-      }
-      res.setHeader('Content-Language', urlLocale ?? metadata?.site.defaultLocale ?? 'fr');
-      res.setHeader('Cache-Control', documentCacheControlFor(status));
-      res.send(html);
+      envoyerLeDocument(res, avecLeSeo(req, rendered, metadata), {
+        'Content-Language': urlLocale ?? localeParDefaut(metadata),
+        'Cache-Control': documentCacheControlFor(status),
+      });
     })
     .catch((err) => next(err));
 };

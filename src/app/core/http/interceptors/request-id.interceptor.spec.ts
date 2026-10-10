@@ -1,6 +1,7 @@
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { bancAdaptateurHttp } from '../../../../testing/http-attendu';
+import { MOTIF_UUID_V4, sansRandomUuid } from '../../../../testing/sans-random-uuid';
 import { requestIdInterceptor } from './request-id.interceptor';
 
 describe('requestIdInterceptor', () => {
@@ -19,6 +20,14 @@ describe('requestIdInterceptor', () => {
     const requestId = req.request.headers.get('X-Request-Id');
     expect(requestId).toBeTruthy();
     expect(requestId!.length).toBeGreaterThan(0);
+    req.flush({});
+  });
+
+  it('devrait porter un UUID v4, meme sans crypto.randomUUID', () => {
+    sansRandomUuid(() => banc.adapter.get('/api/test').subscribe());
+
+    const req = banc.httpMock.expectOne('/api/test');
+    expect(req.request.headers.get('X-Request-Id')).toMatch(MOTIF_UUID_V4);
     req.flush({});
   });
 

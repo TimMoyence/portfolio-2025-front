@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HTTP_RESPONSE_STATUS } from '../../core/ssr/http-response-status';
-import { clamp } from '../../shared/utils/math.utils';
+import { prefereMouvementReduit } from '../../../cours/runtime/core/mouvement';
+import { bornerEntre } from '../../../cours/runtime/core/valeurs';
 
 @Component({
   selector: 'app-not-found',
@@ -156,9 +157,7 @@ export class NotFoundComponent {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    const prefersReduced =
-      typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) {
+    if (prefereMouvementReduit()) {
       return;
     }
     this.enableCursorFollow();
@@ -176,8 +175,8 @@ export class NotFoundComponent {
       const dx = (event.clientX - cx) / 14;
       const dy = (event.clientY - cy) / 14;
       const max = 16;
-      const clampedX = clamp(dx, -max, max);
-      const clampedY = clamp(dy, -max, max);
+      const clampedX = bornerEntre(dx, -max, max);
+      const clampedY = bornerEntre(dy, -max, max);
       el.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
     };
     const onLeave = (): void => {

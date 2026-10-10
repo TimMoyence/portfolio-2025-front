@@ -1,11 +1,8 @@
+import type { Decompte } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpEnvoi } from './contenu';
-import {
-  type DetailDeVerdict,
-  estObjet,
-  estVerdictDeProduction,
-  type VerdictDeProduction,
-} from './retours';
+import { estObjet } from '../core/valeurs';
+import { type DetailDeVerdict, estVerdictDeProduction, type VerdictDeProduction } from './retours';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 
 type TypeDeChamp = 'string' | 'number' | 'valeur';
@@ -170,10 +167,7 @@ export abstract class FpProductionEtayee<Plan extends PlanEtaye, Attendu> extend
     `;
   }
 
-  protected suiviDeProduction(
-    decompte: { readonly justes: number; readonly total: number },
-    correctionServie: EscapedHtml,
-  ): EscapedHtml {
+  protected suiviDeProduction(decompte: Decompte, correctionServie: EscapedHtml): EscapedHtml {
     const cleDuDecompte = `${this.bloc}-verdict`;
     return safeHtml`
       <p class="fp-${escapeHtml(this.bloc)}__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>

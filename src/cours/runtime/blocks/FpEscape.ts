@@ -1,7 +1,9 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { estObjet } from '../core/valeurs';
+import { MINUTE_MS, SECONDE_MS } from './battement';
 import { FpContenu } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
-import { estObjet, type ProgressionDesEnigmes, type VerdictDeTentative } from './retours';
+import type { ProgressionDesEnigmes, VerdictDeTentative } from './retours';
 
 export interface EscapeEnigmePublique {
   readonly id: string;
@@ -33,8 +35,6 @@ type EtatEnigme = 'resolue' | 'epuisee' | 'ouverte' | 'verrouillee';
 
 const VIDE = escapeHtml('');
 const DESACTIVE = safeHtml`disabled`;
-const MS_PAR_MINUTE = 60000;
-const MS_PAR_SECONDE = 1000;
 const TENTATIVES_PAR_DEFAUT = 10;
 const LONGUEUR_MAX_REPONSE = 40;
 
@@ -188,22 +188,17 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     if (!this.suivreEtSaisir(this.cleAffichage())) {
       return;
     }
-    const champ = racine.querySelector<HTMLInputElement>('[data-testid="saisie"]');
-    if (champ !== null) {
-      champ.addEventListener('input', () => {
-        this.saisie = champ.value;
-        this.signalerBrouillon(this.interne?.id ?? '', { saisie: champ.value });
-      });
-      champ.addEventListener('keydown', (evenement) => {
-        if (evenement.key === 'Enter') {
-          evenement.preventDefault();
-          this.repondre();
-        }
-      });
-    }
-    racine
-      .querySelector('[data-testid="repondre"]')
-      ?.addEventListener('click', () => this.repondre());
+    this.brancherLeChamp(
+      racine,
+      { champ: 'saisie', bouton: 'repondre' },
+      {
+        saisir: (saisie) => {
+          this.saisie = saisie;
+          this.signalerBrouillon(this.interne?.id ?? '', { saisie });
+        },
+        envoyer: () => this.repondre(),
+      },
+    );
     racine
       .querySelector('[data-testid="demander-indice"]')
       ?.addEventListener('click', () => this.demanderIndice());
@@ -294,7 +289,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     const echu = budget > 0 && ecoule >= budget;
     return safeHtml`
       <p class="fp-escape__minuteur" data-testid="minuteur" data-echu="${escapeHtml(echu)}">
-        ${escapeHtml(this.texte('escape-minuteur'))} ${Math.floor(ecoule / MS_PAR_MINUTE)} / ${Math.round(budget / MS_PAR_MINUTE)} ${escapeHtml(this.texte('escape-minuteur-annonce'))}
+        ${escapeHtml(this.texte('escape-minuteur'))} ${Math.floor(ecoule / MINUTE_MS)} / ${Math.round(budget / MINUTE_MS)} ${escapeHtml(this.texte('escape-minuteur-annonce'))}
         ${echu ? this.echeance() : VIDE}
       </p>
     `;
@@ -412,7 +407,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
   private demanderIndice(): void {
     const reste = (this.interne?.delaiIndiceMs ?? 0) - this.depuisAffichage();
     if (reste > 0) {
-      this.message = `${this.texte('escape-indice-attente')} ${Math.ceil(reste / MS_PAR_SECONDE)} ${this.texte('escape-secondes')}`;
+      this.message = `${this.texte('escape-indice-attente')} ${Math.ceil(reste / SECONDE_MS)} ${this.texte('escape-secondes')}`;
       this.refresh();
       return;
     }

@@ -4,6 +4,7 @@ import type { FluxFactice } from '../../../testing/flux-sse';
 import { bloc, creerOuverture, laisserPasserLeFlux, vider } from '../../../testing/flux-sse';
 import {
   createSync,
+  refusDuFlux,
   type CheminFlux,
   type EtatSession,
   type RaisonDeFin,
@@ -711,5 +712,25 @@ describe('sync', () => {
       expect(statuts).toEqual([{ etat: 'connecte' }]);
       expect(flux.length).toBe(1);
     });
+  });
+});
+
+describe('refusDuFlux', () => {
+  const refus = (statut: number): StatutFlux => ({ etat: 'refuse', statut });
+
+  it('classe 401 et 403 comme une session perdue, sans relance', () => {
+    expect(refusDuFlux(refus(401))).toEqual({ statut: 401, motif: 'session' });
+    expect(refusDuFlux(refus(403))).toEqual({ statut: 403, motif: 'session' });
+  });
+
+  it('classe 429 comme une saturation et tout autre refus comme autre', () => {
+    expect(refusDuFlux(refus(429))).toEqual({ statut: 429, motif: 'saturation' });
+    expect(refusDuFlux(refus(503))).toEqual({ statut: 503, motif: 'autre' });
+  });
+
+  it('ne rend aucun refus pour un flux connecte, en reconnexion ou inconnu', () => {
+    expect(refusDuFlux({ etat: 'connecte' })).toBeNull();
+    expect(refusDuFlux({ etat: 'reconnexion' })).toBeNull();
+    expect(refusDuFlux(null)).toBeNull();
   });
 });

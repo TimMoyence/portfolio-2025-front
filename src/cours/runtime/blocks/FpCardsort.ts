@@ -1,5 +1,5 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { Battement, SECONDE_MS } from './battement';
+import { Battement, MINUTE_MS, SECONDE_MS } from './battement';
 import { lignesDeCalculHtml } from './calculs';
 import { FpProduction } from './production';
 import {
@@ -30,7 +30,6 @@ const DESACTIVE = safeHtml`disabled`;
 const RETENU = safeHtml`selected`;
 const ATTENDUS_SUR_PAPIER = safeHtml` fp-cardsort__attendus--papier`;
 const TOUCHES_ACTION: readonly string[] = ['Enter', ' '];
-const MS_PAR_MINUTE = 60_000;
 
 function copierPlan(source: CardsortPlanPublic): CardsortPlanPublic {
   const duree = source.dureeJeuMs;
@@ -47,7 +46,7 @@ function copierPlan(source: CardsortPlanPublic): CardsortPlanPublic {
 
 function formaterChrono(restantMs: number): string {
   const secondes = Math.ceil(restantMs / SECONDE_MS);
-  const minutes = Math.floor((secondes * SECONDE_MS) / MS_PAR_MINUTE);
+  const minutes = Math.floor((secondes * SECONDE_MS) / MINUTE_MS);
   return `${minutes}:${String(secondes % 60).padStart(2, '0')}`;
 }
 

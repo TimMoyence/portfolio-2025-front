@@ -1,7 +1,13 @@
-import { lireJsonSousDelai, messageDErreur } from './lecture-api';
+import {
+  DELAI_DE_LECTURE_MS,
+  garderEnCache,
+  lireJsonSousDelai,
+  messageDErreur,
+} from './lecture-api';
 import type { DynamicArticleSitemapEntry } from './seo-builders';
 import { LOCALES_DU_SITE } from '../app/core/config/locales';
 import { trimTrailingSlashes } from '../app/core/utils/barres';
+import { estObjet } from '../cours/runtime/core/valeurs';
 
 export interface DependancesDuLecteurDArticles {
   readonly apiBaseUrl: string | undefined;
@@ -12,8 +18,6 @@ export interface DependancesDuLecteurDArticles {
 
 const LIMITE_PAR_PAGE = 24;
 export const PAGES_MAX_PAR_LOCALE = 50;
-const DELAI_MS = 2_000;
-const DUREE_DU_CACHE_MS = 300_000;
 
 interface PageDArticles {
   readonly entrees: DynamicArticleSitemapEntry[];
@@ -23,8 +27,8 @@ interface PageDArticles {
 function entreesDe(locale: string, items: unknown): DynamicArticleSitemapEntry[] {
   if (!Array.isArray(items)) return [];
   return items.flatMap((item: unknown) => {
-    if (typeof item !== 'object' || item === null) return [];
-    const champs = item as Readonly<Record<string, unknown>>;
+    if (!estObjet(item)) return [];
+    const champs = item;
     if (typeof champs['slug'] !== 'string') return [];
     return [
       {
@@ -42,7 +46,7 @@ async function lirePage(
   dependances: DependancesDuLecteurDArticles,
 ): Promise<PageDArticles | null> {
   try {
-    const lecture = await lireJsonSousDelai(dependances.fetch, url, DELAI_MS);
+    const lecture = await lireJsonSousDelai(dependances.fetch, url, DELAI_DE_LECTURE_MS);
     if (!lecture.ok) {
       dependances.journal.warn(`[sitemap] articles ${locale} : l'API a répondu ${lecture.statut}`);
       return null;
@@ -86,21 +90,12 @@ async function lireLocale(
 export function lecteurDArticlesDuSitemap(
   dependances: DependancesDuLecteurDArticles,
 ): () => Promise<readonly DynamicArticleSitemapEntry[]> {
-  const maintenant = dependances.maintenant ?? Date.now;
-  let cache: { readonly expireA: number; readonly entrees: readonly DynamicArticleSitemapEntry[] } =
-    {
-      expireA: Number.NEGATIVE_INFINITY,
-      entrees: [],
-    };
-
-  return async () => {
+  return garderEnCache(dependances.maintenant ?? Date.now, async () => {
     if (!dependances.apiBaseUrl) return [];
-    if (cache.expireA > maintenant()) return cache.entrees;
     const apiBaseUrl = trimTrailingSlashes(dependances.apiBaseUrl);
     const parLocale = await Promise.all(
       LOCALES_DU_SITE.map((locale) => lireLocale(apiBaseUrl, locale, dependances)),
     );
-    cache = { expireA: maintenant() + DUREE_DU_CACHE_MS, entrees: parLocale.flat() };
-    return cache.entrees;
-  };
+    return parLocale.flat();
+  });
 }

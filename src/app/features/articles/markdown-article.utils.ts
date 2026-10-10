@@ -1,14 +1,7 @@
+import { escapeHtml } from '../../../cours/runtime/core/html';
+
 const TOKEN_PREFIX = 'MBTOKEN';
 const TOKEN_SUFFIX = 'X';
-
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
-}
 
 function renderInlineMarkdown(source: string): string {
   const tokens: string[] = [];

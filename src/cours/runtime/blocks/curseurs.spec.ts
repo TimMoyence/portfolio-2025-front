@@ -1,4 +1,4 @@
-import { brancherCurseurs, curseur } from './curseurs';
+import { brancherCurseurs, curseur, plafondDe, plancherDe } from './curseurs';
 
 const PARAMETRE = {
   cle: 'taux',
@@ -96,5 +96,23 @@ describe('brancherCurseurs', () => {
     saisir(racine, '[data-cle="taux"]', '4');
 
     expect(changements).toEqual([]);
+  });
+});
+
+describe('bornes de reglage', () => {
+  it('prend les bornes declarees quand elles sont finies et ordonnees', () => {
+    expect(plancherDe(PARAMETRE)).toBe(0);
+    expect(plafondDe(PARAMETRE)).toBe(100);
+  });
+
+  it('replie un plancher non fini sur zero et un plafond non fini sur le plancher', () => {
+    const bornes = { min: Number.NaN, max: Infinity };
+
+    expect(plancherDe(bornes)).toBe(0);
+    expect(plafondDe(bornes)).toBe(0);
+  });
+
+  it('ne laisse jamais le plafond passer sous le plancher', () => {
+    expect(plafondDe({ min: 10, max: 4 })).toBe(10);
   });
 });

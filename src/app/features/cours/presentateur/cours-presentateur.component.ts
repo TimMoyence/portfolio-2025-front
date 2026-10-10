@@ -24,11 +24,12 @@ import type {
   ResultatQuestion,
   ResultatsSeance,
 } from '../../../../cours/content/types';
-import type {
-  EtatSession,
-  StatutFlux,
-  StatutSession,
-  Sync,
+import {
+  refusDuFlux,
+  type EtatSession,
+  type StatutFlux,
+  type StatutSession,
+  type Sync,
 } from '../../../../cours/runtime/core/sync';
 import type {
   CommandePilotage,
@@ -45,6 +46,7 @@ import {
   type TelechargementDePieceJointe,
 } from '../../../shared/slides/session/cours-presentation.component';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
+import { chantierApresRendu } from './chantier-apres-rendu';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
 import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
 import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
@@ -71,20 +73,6 @@ function resultatsDuRapport(rapport: RapportSeance): ResultatsSeance {
 }
 
 type Chargement = 'repos' | 'chargement' | 'succes' | 'echec';
-
-type MotifDuRefus = 'session' | 'saturation' | 'autre';
-
-interface RefusDuFlux {
-  readonly statut: number;
-  readonly motif: MotifDuRefus;
-}
-
-function motifDuRefus(statut: number): MotifDuRefus {
-  if (statut === 401 || statut === 403) {
-    return 'session';
-  }
-  return statut === 429 ? 'saturation' : 'autre';
-}
 
 const RANG_DE_L_ETAT: Readonly<Record<EtatSeance, number>> = {
   fermee: 0,
@@ -729,12 +717,7 @@ export class CoursPresentateurComponent {
 
   readonly etatDuFlux = computed(() => this.suiviDuFlux()?.etat ?? 'connexion');
 
-  readonly refusDuFlux = computed<RefusDuFlux | null>(() => {
-    const suivi = this.suiviDuFlux();
-    return suivi?.etat === 'refuse'
-      ? { statut: suivi.statut, motif: motifDuRefus(suivi.statut) }
-      : null;
-  });
+  readonly refusDuFlux = computed(() => refusDuFlux(this.suiviDuFlux()));
 
   readonly participants = computed(() => this.resultats()?.participants ?? 0);
 
@@ -812,7 +795,10 @@ export class CoursPresentateurComponent {
   private notationEnVol = false;
   private maitriseEnVol = false;
   private detruit = false;
-  private chantier: Promise<void> = Promise.resolve();
+  private chantier: Promise<void> = chantierApresRendu(() => {
+    const seance = this.seance();
+    return seance === undefined ? this.ouvrirLaSeance() : this.reprendreLaSeance(seance);
+  });
 
   constructor() {
     const aLaDestruction = inject(DestroyRef);
@@ -829,10 +815,6 @@ export class CoursPresentateurComponent {
       window.addEventListener('beforeunload', avantDeQuitter);
       aLaDestruction.onDestroy(() => window.removeEventListener('beforeunload', avantDeQuitter));
     }
-    afterNextRender(() => {
-      const seance = this.seance();
-      this.chantier = seance === undefined ? this.ouvrirLaSeance() : this.reprendreLaSeance(seance);
-    });
   }
 
   quandStabilise(): Promise<void> {

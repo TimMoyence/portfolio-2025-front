@@ -1,5 +1,7 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join, posix } from 'node:path';
+
+import { listerFichiers } from './lib/arborescence.mjs';
 
 export const GATE = 'guard-cours-runtime';
 
@@ -62,16 +64,9 @@ const POURQUOI = {
  * @returns {string[]}
  */
 export function collecterFichiers(depot, racine) {
-  if (!existsSync(join(depot, racine))) {
-    return [];
-  }
-  return readdirSync(join(depot, racine)).flatMap((entree) => {
-    const relatif = `${racine}/${entree}`;
-    if (statSync(join(depot, relatif)).isDirectory()) {
-      return collecterFichiers(depot, relatif);
-    }
-    return EXTENSIONS.some((extension) => entree.endsWith(extension)) ? [relatif] : [];
-  });
+  return listerFichiers(join(depot, racine), (nom) =>
+    EXTENSIONS.some((extension) => nom.endsWith(extension)),
+  ).map((relatif) => `${racine}/${relatif}`);
 }
 
 /**

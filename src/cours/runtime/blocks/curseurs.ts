@@ -1,4 +1,5 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { fini } from '../core/valeurs';
 
 export interface ParametreReglable {
   readonly cle: string;
@@ -7,6 +8,15 @@ export interface ParametreReglable {
   readonly max: number;
   readonly pas: number;
   readonly defaut: number;
+}
+
+export function plancherDe(bornes: { readonly min: number; readonly max: number }): number {
+  return fini(bornes.min, 0);
+}
+
+export function plafondDe(bornes: { readonly min: number; readonly max: number }): number {
+  const bas = plancherDe(bornes);
+  return Math.max(fini(bornes.max, bas), bas);
 }
 
 export function curseur(

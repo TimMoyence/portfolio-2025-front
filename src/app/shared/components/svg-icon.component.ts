@@ -15,6 +15,14 @@ import type { SafeHtml } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
 
+const ATTRIBUTS_DE_LIEN: ReadonlySet<string> = new Set(['href', 'xlink:href']);
+
+function estUnLienJavascript(attr: Attr): boolean {
+  return (
+    ATTRIBUTS_DE_LIEN.has(attr.name) && attr.value.trim().toLowerCase().startsWith('javascript:')
+  );
+}
+
 @Component({
   selector: 'app-svg-icon',
   standalone: true,
@@ -118,20 +126,9 @@ export class SvgIconComponent implements OnChanges {
       root.querySelectorAll(tag).forEach((el) => el.remove());
     }
 
-    const allElements = root.querySelectorAll('*');
-    const eventHandlerPattern = /^on/i;
-    allElements.forEach((el) => {
+    root.querySelectorAll('*').forEach((el) => {
       for (const attr of Array.from(el.attributes)) {
-        if (eventHandlerPattern.test(attr.name)) {
-          el.removeAttribute(attr.name);
-        }
-        if (attr.name === 'href' && attr.value.trim().toLowerCase().startsWith('javascript:')) {
-          el.removeAttribute(attr.name);
-        }
-        if (
-          attr.name === 'xlink:href' &&
-          attr.value.trim().toLowerCase().startsWith('javascript:')
-        ) {
+        if (/^on/i.test(attr.name) || estUnLienJavascript(attr)) {
           el.removeAttribute(attr.name);
         }
       }
@@ -158,21 +155,14 @@ export class SvgIconComponent implements OnChanges {
 
       svgElement.setAttribute('fill', targetFill);
 
-      const elementsWithFill = svgElement.querySelectorAll('[fill]');
-      elementsWithFill.forEach((el) => {
-        const value = el.getAttribute('fill');
-        if (value && value !== 'none') {
-          el.setAttribute('fill', targetFill);
-        }
-      });
-
-      const elementsWithStroke = svgElement.querySelectorAll('[stroke]');
-      elementsWithStroke.forEach((el) => {
-        const value = el.getAttribute('stroke');
-        if (value && value !== 'none') {
-          el.setAttribute('stroke', targetFill);
-        }
-      });
+      for (const attribut of ['fill', 'stroke']) {
+        svgElement.querySelectorAll(`[${attribut}]`).forEach((el) => {
+          const value = el.getAttribute(attribut);
+          if (value && value !== 'none') {
+            el.setAttribute(attribut, targetFill);
+          }
+        });
+      }
     }
 
     if (!svgElement.getAttribute('viewBox')) {

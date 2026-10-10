@@ -1,7 +1,8 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpEnvoi } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
-import { estObjet, type StrategieServie } from './retours';
+import { estObjet } from '../core/valeurs';
+import type { StrategieServie } from './retours';
 
 export interface LigneDuDossier {
   readonly libelle: string;

@@ -1,3 +1,5 @@
+import { bornerEntre } from '../../../../cours/runtime/core/valeurs';
+
 export type Plage = readonly [number, number];
 
 export interface Graduation {
@@ -24,7 +26,7 @@ function estEntier(valeur: number): boolean {
 
 export function position(valeur: number, [min, max]: Plage): number {
   const part = ((valeur - min) / Math.max(max - min, Number.EPSILON)) * 100;
-  return arrondir(Math.min(Math.max(part, 0), 100));
+  return arrondir(bornerEntre(part, 0, 100));
 }
 
 function pasRond([min, max]: Plage): number | null {

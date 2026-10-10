@@ -1,12 +1,15 @@
-import type { EtatParticipant, ResultatsSeance } from '../../../cours/content/types';
-import type { ReussiteDeLaClasse } from '../../shared/slides/layouts/slide-answer-review/slide-answer-review.component';
+import type {
+  DecomptesParCle,
+  EtatParticipant,
+  ResultatsSeance,
+} from '../../../cours/content/types';
 import type { RetourBrique } from '../../shared/slides/session/contrat-hote';
 import type {
   MotifRefusReponse,
   VerdictProduction,
   VerdictReponse,
   VerdictTentative,
-} from './formations.port';
+} from '../ports/formations.port';
 
 type RetoursParEcran = ReadonlyMap<string, readonly RetourBrique[]>;
 
@@ -53,19 +56,16 @@ function retoursDesReponses(etat: EtatParticipant): { id: string; retours: Retou
     id: reponse.questionId,
     retours: [
       reponse.details === null
-        ? {
-            kind: 'verdict-reponse',
-            questionId: reponse.questionId,
-            correcte: reponse.correcte,
+        ? retourDeReponse(reponse.questionId, {
+            reussite: reponse.correcte,
             libelleConfusion: reponse.libelleConfusion,
-          }
-        : {
-            kind: 'verdict-production',
-            questionId: reponse.questionId,
+          })
+        : retourDeProduction(reponse.questionId, {
             correcte: reponse.correcte,
             score: reponse.score ?? 0,
             details: reponse.details,
-          },
+            libelleConfusion: reponse.libelleConfusion,
+          }),
       { kind: 'deja-repondu', questionId: reponse.questionId },
     ],
   }));
@@ -140,7 +140,7 @@ export function verdictsDeLEcran(
 export function reussitesDeLEcran(
   resultats: ResultatsSeance | null,
   ecranId: string | null,
-): Readonly<Record<string, ReussiteDeLaClasse>> {
+): DecomptesParCle {
   return Object.fromEntries(
     (resultats?.questions ?? [])
       .filter((question) => question.ecranId === ecranId && question.total > 0)

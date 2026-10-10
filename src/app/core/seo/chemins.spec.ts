@@ -5,6 +5,7 @@ import {
   normalizePath,
   routeSansLocale,
   urlAbsolue,
+  urlLocalisee,
 } from './chemins';
 
 describe('chemins', () => {
@@ -116,6 +117,15 @@ describe('chemins', () => {
 
     it('garde le chemin d une base qui en porte un', () => {
       expect(urlAbsolue('https://example.com/site/', '/fr/')).toBe('https://example.com/site/fr/');
+    });
+  });
+
+  describe('urlLocalisee', () => {
+    it('place le chemin localise sous la base', () => {
+      expect(urlLocalisee('https://asilidesign.fr/', 'en', '/contact/')).toBe(
+        'https://asilidesign.fr/en/contact',
+      );
+      expect(urlLocalisee('https://asilidesign.fr', 'fr', '/')).toBe('https://asilidesign.fr/fr/');
     });
   });
 

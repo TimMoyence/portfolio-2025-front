@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { APP_CONFIG } from '../../config/app-config.token';
 import { AuthStateService } from '../../services/auth-state.service';
-import { ENTETE_JETON_PARTICIPANT } from '../jeton-participant';
+import { ENTETE_JETON_PARTICIPANT } from '../../../../cours/runtime/core/jeton-participant';
 
 const LOGIN_URL = '/login';
 const REFRESH_PATH = '/auth/refresh';
