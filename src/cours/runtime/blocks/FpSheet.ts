@@ -4,6 +4,7 @@ import {
   type ResultatFormule,
   type ValeurFormule,
   decalerFormule,
+  estUneFormule,
   evaluerFeuille,
   formaterResultat,
   lettreColonne,
@@ -333,7 +334,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
 
   private affichage(nom: string, interactif: boolean): string {
     const brut = this.brut(nom);
-    if ((interactif && nom === this.selection) || !brut.trimStart().startsWith('=')) {
+    if ((interactif && nom === this.selection) || !estUneFormule(brut)) {
       return brut;
     }
     return formaterResultat(this.resultat(nom));
@@ -341,7 +342,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
 
   private cellulesEnErreur(): string[] {
     return Object.keys(this.contenus).filter(
-      (nom) => this.brut(nom).trimStart().startsWith('=') && this.resultat(nom).erreur !== null,
+      (nom) => estUneFormule(this.brut(nom)) && this.resultat(nom).erreur !== null,
     );
   }
 
@@ -397,7 +398,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     return [...Array(this.interne?.colonnes ?? 0).keys()].map((colonne) => {
       const libelles = lignes
         .map((ligne) => this.interne?.cellules[nomCellule(ligne, colonne)] ?? '')
-        .filter((libelle) => !libelle.trimStart().startsWith('='));
+        .filter((libelle) => !estUneFormule(libelle));
       return Math.min(
         LARGEUR_MAX_DE_COLONNE_CH,
         Math.max(LARGEUR_MIN_DE_COLONNE_CH, ...libelles.map((libelle) => [...libelle].length)),
@@ -424,7 +425,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
 
   private estUnIntituleDeColonne(ligne: number, nom: string): boolean {
     const brut = this.brut(nom).trim();
-    return ligne === 0 && brut !== '' && !brut.startsWith('=') && lireNombreSaisi(brut) === null;
+    return ligne === 0 && brut !== '' && !estUneFormule(brut) && lireNombreSaisi(brut) === null;
   }
 
   private etatDeLaCellule(nom: string): EscapedHtml {
@@ -452,7 +453,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private champ(nom: string): EscapedHtml {
-    const formule = this.brut(nom).trimStart().startsWith('=');
+    const formule = estUneFormule(this.brut(nom));
     const code = formule ? this.resultat(nom).erreur : null;
     const alerte = `${SIGNE_ERREUR} ${this.texte('sheet-cellule-fautive')}`;
     const marque =

@@ -4,6 +4,7 @@ import {
   LONGUEUR_MAX_FORMULE,
   PROFONDEUR_MAX,
   decalerFormule,
+  estUneFormule,
   evaluerCellule,
   evaluerExpression,
   evaluerFeuille,
@@ -462,6 +463,18 @@ describe('core/formula', () => {
       expect([...resultats.keys()]).toEqual(['A1', 'B1', 'A2']);
       expect(resultats.get('B1')).toEqual({ valeur: 8, erreur: null });
       expect(resultats.get('A2')).toEqual({ valeur: null, erreur: '#DIV/0!' });
+    });
+  });
+
+  describe('estUneFormule', () => {
+    it('reconnait la marque apres des blancs de tete et rien d autre', () => {
+      expect(['=A1', '  =A1*2', '\t=1'].map(estUneFormule)).toEqual([true, true, true]);
+      expect(['', '12', 'A1=B1', ' 1 200'].map(estUneFormule)).toEqual([
+        false,
+        false,
+        false,
+        false,
+      ]);
     });
   });
 

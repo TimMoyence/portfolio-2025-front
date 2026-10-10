@@ -468,6 +468,10 @@ function sourceDeFormule(brut: string): string | null {
   return debut.startsWith(MARQUE) ? debut.slice(MARQUE.length) : null;
 }
 
+export function estUneFormule(brut: string): boolean {
+  return sourceDeFormule(brut) !== null;
+}
+
 function lireContenu(brut: string): Contenu {
   if (brut.trim().length === 0) {
     return { genre: 'vide' };
