@@ -10,6 +10,7 @@ import {
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import type { Subscription } from 'rxjs';
+import { estObjet } from '../../../cours/runtime/core/valeurs';
 import { LOCALES_DU_SITE } from '../../core/config/locales';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
 import { routeSansLocale } from '../../core/seo/chemins';
@@ -33,7 +34,6 @@ import { AuditClientReportSectionComponent } from './components/audit-client-rep
 import {
   type AuditSectionBadge,
   buildSectionBadges,
-  extractRecord,
   extractString,
   extractStringArray,
   formatPhaseLabel,
@@ -459,9 +459,8 @@ export class GrowthAuditComponent implements OnDestroy {
     this.streamSub = undefined;
   }
 
-  private applyProgressDetails(details?: Record<string, unknown>): void {
-    const payload = extractRecord(details);
-    if (!payload) {
+  private applyProgressDetails(payload?: Record<string, unknown>): void {
+    if (!estObjet(payload)) {
       this.resetAuditTimeline();
       return;
     }
@@ -473,13 +472,13 @@ export class GrowthAuditComponent implements OnDestroy {
     this.auditIaSubTask = formatSubTaskLabel(extractString(payload['iaSubTask']));
     this.auditRecentCompletedUrls = extractStringArray(payload['recentCompletedUrls']).slice(-5);
 
-    const statuses = extractRecord(payload['sectionStatuses']) ?? {};
+    const statutsRecus = payload['sectionStatuses'];
     const section = extractString(payload['section']);
     const sectionStatus = extractString(payload['sectionStatus']);
-    if (section && sectionStatus) {
-      statuses[section] = sectionStatus;
-    }
-    this.auditSectionBadges = buildSectionBadges(statuses);
+    this.auditSectionBadges = buildSectionBadges({
+      ...(estObjet(statutsRecus) ? statutsRecus : {}),
+      ...(section && sectionStatus ? { [section]: sectionStatus } : {}),
+    });
   }
 
   sectionBadgeClass(status: string): string {

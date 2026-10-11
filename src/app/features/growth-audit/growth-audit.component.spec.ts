@@ -97,6 +97,26 @@ describe('GrowthAuditComponent', () => {
     expect(content).toContain('Priorités: started');
   });
 
+  it('affiche la section annoncée par l évènement sans altérer les statuts reçus', () => {
+    const statutsRecus = { summary: 'completed' };
+    const { root } = soumettreEtDiffuser(
+      buildAuditProgressEvent({
+        auditId: 'audit-3',
+        progress: 80,
+        step: 'Recap IA des pages',
+        details: {
+          sectionStatuses: statutsRecus,
+          section: 'prioritySection',
+          sectionStatus: 'started',
+        },
+      }),
+      'audit-3',
+    );
+
+    expect(root.textContent).toContain('Priorités: started');
+    expect(statutsRecus).toEqual({ summary: 'completed' });
+  });
+
   it('keeps backward compatibility when progress details only expose done/total', () => {
     const { component } = soumettreEtDiffuser(
       buildAuditProgressEvent({
