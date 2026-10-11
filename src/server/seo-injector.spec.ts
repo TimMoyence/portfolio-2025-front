@@ -12,17 +12,10 @@ const buildMetadata = (
   localBusiness: Record<string, unknown>,
   overrides: Partial<SeoMetadataFile> = {},
 ): SeoMetadataFile =>
-  ({
-    site: {
-      baseUrl: BASE_URL,
-      defaultLocale: 'fr',
-      locales: ['fr', 'en'],
-      homePath: '/',
-    },
-    global: { localBusiness, siteNavigation: undefined },
-    pages: [],
+  buildSeoMetadata([], {
+    global: { localBusiness, siteNavigation: { '@type': 'SiteNavigationElement' } },
     ...overrides,
-  }) as unknown as SeoMetadataFile;
+  });
 
 const extractFirstJsonLd = (html: string): string => {
   const match = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(html);
