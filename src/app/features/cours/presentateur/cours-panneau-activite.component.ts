@@ -1,5 +1,6 @@
 import { PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { PHASES_DE_VOTE } from 'portfolio-2025-partage/contrats';
 import type {
   Decompte,
   EcranDeroule,
@@ -18,7 +19,6 @@ export type CommandeDEcran = { readonly screenId: string } & PilotageEcran;
 export type ResultatsDuPupitre = ResultatsSeance &
   Partial<Pick<ResultatsDuFlux, 'jalons' | 'enigmes' | 'bareme'>>;
 
-const PHASES: readonly VotePhase[] = ['vote', 'discussion', 'revote', 'revele'];
 const PRODUCTIONS: ReadonlySet<string> = new Set(['fp-sheet', 'fp-table-build', 'fp-cardsort']);
 const REVELATIONS_DEDIEES: ReadonlySet<string> = new Set([
   'fp-challenge',
@@ -395,7 +395,7 @@ export class CoursPanneauActiviteComponent {
   protected readonly libellePhase = computed(() => LIBELLES_DE_PHASE[this.phaseCourante()]);
 
   protected readonly phaseSuivante = computed<VotePhase | null>(
-    () => PHASES[PHASES.indexOf(this.phaseCourante()) + 1] ?? null,
+    () => PHASES_DE_VOTE[PHASES_DE_VOTE.indexOf(this.phaseCourante()) + 1] ?? null,
   );
 
   protected readonly etapes = computed(() => {

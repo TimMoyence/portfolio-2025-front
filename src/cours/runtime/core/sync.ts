@@ -8,9 +8,8 @@ import type {
   ResultatQuestion,
   ResultatsSeance,
   ResumeBareme,
-  TypeQuestion,
-  VotePhase,
 } from '../../content/types';
+import { PACING_MODES, PHASES_DE_VOTE, TYPES_QUESTION } from 'portfolio-2025-partage/contrats';
 import { abonner, diffuserA } from './ecoutes';
 import { ENTETE_JETON_PARTICIPANT } from './jeton-participant';
 import { estEntierPositif, estObjet, jsonOuNull } from './valeurs';
@@ -126,16 +125,6 @@ const CHEMIN_PAR_DEFAUT: CheminFlux = 'stream';
 const FLUX_REFUSE = "Le serveur a refusé l'ouverture du flux de séance";
 
 const STATUTS_VALIDES: readonly StatutSession[] = ['attente', 'en_cours', 'terminee'];
-const MODES_RYTHME_VALIDES: readonly PacingMode[] = ['pilote', 'libre'];
-const PHASES_VALIDES: readonly VotePhase[] = ['vote', 'discussion', 'revote', 'revele'];
-const TYPES_QUESTION_VALIDES: readonly TypeQuestion[] = [
-  'numeric',
-  'vote',
-  'feuille',
-  'tableau',
-  'classement',
-  'enigme',
-];
 
 function estMembre<T extends string>(valeurs: readonly T[], valeur: unknown): valeur is T {
   return typeof valeur === 'string' && (valeurs as readonly string[]).includes(valeur);
@@ -156,7 +145,7 @@ function estNombre(valeur: unknown): boolean {
 function estPilotageEcran(valeur: unknown): boolean {
   return (
     estObjet(valeur) &&
-    absentOu(valeur['phase'], (phase) => estMembre(PHASES_VALIDES, phase)) &&
+    absentOu(valeur['phase'], (phase) => estMembre(PHASES_DE_VOTE, phase)) &&
     absentOu(valeur['revele'], (revele) => typeof revele === 'boolean') &&
     absentOu(valeur['etayage'], estEntierPositif) &&
     absentOu(valeur['etayageAtteint'], estEntierPositif) &&
@@ -189,7 +178,7 @@ function estEtatSession(valeur: unknown): valeur is EtatRecu {
   return (
     estObjet(valeur) &&
     estMembre(STATUTS_VALIDES, valeur['etat']) &&
-    estMembre(MODES_RYTHME_VALIDES, valeur['modeRythme']) &&
+    estMembre(PACING_MODES, valeur['modeRythme']) &&
     estNombre(valeur['ecranCourant']) &&
     estNombre(valeur['participants']) &&
     nulOu(valeur['intervalleLibre'], estFreeRange) &&
@@ -214,7 +203,7 @@ function estConfusionComptee(valeur: unknown): valeur is ConfusionComptee {
 function aDesChampsV3Valides(candidat: Record<string, unknown>): boolean {
   return (
     absentOu(candidat['ecranId'], (ecranId) => typeof ecranId === 'string') &&
-    absentOu(candidat['type'], (type) => estMembre(TYPES_QUESTION_VALIDES, type)) &&
+    absentOu(candidat['type'], (type) => estMembre(TYPES_QUESTION, type)) &&
     absentOu(candidat['noteCompte'], (noteCompte) => typeof noteCompte === 'boolean') &&
     absentOu(candidat['parOption'], (parOption) => nulOu(parOption, estComptesParOption)) &&
     absentOu(candidat['scoreMoyen'], (scoreMoyen) => nulOu(scoreMoyen, estNombre)) &&
