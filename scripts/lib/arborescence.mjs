@@ -1,4 +1,4 @@
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 /**
@@ -10,14 +10,13 @@ export function listerFichiers(racine, retenir) {
   if (!existsSync(racine)) {
     return [];
   }
-  return readdirSync(racine, { withFileTypes: true })
-    .flatMap((entree) => {
+  return readdirSync(racine)
+    .flatMap((nom) => {
+      const entree = statSync(join(racine, nom));
       if (entree.isDirectory()) {
-        return listerFichiers(join(racine, entree.name), retenir).map(
-          (relatif) => `${entree.name}/${relatif}`,
-        );
+        return listerFichiers(join(racine, nom), retenir).map((relatif) => `${nom}/${relatif}`);
       }
-      return entree.isFile() && retenir(entree.name) ? [entree.name] : [];
+      return entree.isFile() && retenir(nom) ? [nom] : [];
     })
     .sort();
 }

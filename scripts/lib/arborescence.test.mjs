@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { symlinkSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
@@ -21,6 +22,18 @@ test('liste en ordre les fichiers retenus de toute l arborescence, en chemins re
       );
     },
   );
+});
+
+test('suit les liens symboliques vers un dossier ou un fichier', () => {
+  avecDossierPlante('arborescence-', { 'a/vrai.ts': '' }, (racine) => {
+    symlinkSync(join(racine, 'a'), join(racine, 'lien'));
+    symlinkSync(join(racine, 'a/vrai.ts'), join(racine, 'raccourci.ts'));
+
+    assert.deepEqual(
+      listerFichiers(racine, () => true),
+      ['a/vrai.ts', 'lien/vrai.ts', 'raccourci.ts'],
+    );
+  });
 });
 
 test('rend une liste vide pour une racine absente', () => {
