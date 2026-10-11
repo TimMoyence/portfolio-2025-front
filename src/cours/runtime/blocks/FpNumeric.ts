@@ -1,8 +1,8 @@
+import { lireNombreSaisi } from 'portfolio-2025-partage/formule';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpReponse } from './reponse';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { lireBonneReponse } from './retours';
-import { lireNombreSaisi } from './saisie-numerique';
 
 export interface NumericQuestionPublique extends ContenuDeBrique {
   readonly enonce: string;

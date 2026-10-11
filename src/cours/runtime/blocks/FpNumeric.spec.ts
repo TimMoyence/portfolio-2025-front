@@ -137,7 +137,7 @@ describe('FpNumeric', () => {
     });
   }
 
-  const SAISIES_REFUSEES = ['douze', '', '12,5,6', '1 480 euros'];
+  const SAISIES_REFUSEES = ['douze', '', '12,5,6', '1 480 euros', '12 %', '12 €'];
 
   for (const frappe of SAISIES_REFUSEES) {
     it(`n emet rien pour la saisie non numerique « ${frappe} »`, () => {

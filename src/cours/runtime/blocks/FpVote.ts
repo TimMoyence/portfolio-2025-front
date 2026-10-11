@@ -1,3 +1,4 @@
+import { PHASES_DE_VOTE } from 'portfolio-2025-partage/contrats';
 import type { MetadonneesBrique, VotePhase } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { lignesDeCalculHtml } from './calculs';
@@ -24,7 +25,6 @@ interface Revelation {
 }
 
 const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
-const PHASES: readonly VotePhase[] = ['vote', 'discussion', 'revote', 'revele'];
 const VIDE = escapeHtml('');
 
 const TITRES_DES_VOTES: Readonly<Record<'premier' | 'second', string>> = {
@@ -103,7 +103,7 @@ export class FpVote extends FpVerdicts {
   }
 
   set phase(valeur: VotePhase | null | undefined) {
-    this.internePhase = PHASES.find((phase) => phase === valeur) ?? null;
+    this.internePhase = PHASES_DE_VOTE.find((phase) => phase === valeur) ?? null;
     this.refreshSiConnecte();
   }
 

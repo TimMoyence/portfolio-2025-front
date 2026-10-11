@@ -8,12 +8,12 @@ import {
   evaluerFeuille,
   formaterResultat,
   lettreColonne,
+  lireNombreSaisi,
   nomCellule,
 } from 'portfolio-2025-partage/formule';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { bornerEntre, entierBorne } from '../core/valeurs';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
-import { lireNombreSaisi } from './saisie-numerique';
 
 export interface SheetPlanPublic extends PlanEtaye {
   readonly lignes: number;

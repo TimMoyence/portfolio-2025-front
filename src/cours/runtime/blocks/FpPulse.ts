@@ -1,3 +1,4 @@
+import { ETATS_PULSE } from 'portfolio-2025-partage/contrats';
 import type { EtatPulse } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpContenu } from './contenu';
@@ -15,7 +16,6 @@ export interface PulseSondage extends ContenuDeBrique {
   readonly invite: string;
 }
 
-const ETATS: readonly EtatPulse[] = ['perdu', 'ca-va', 'clair'];
 const SEUIL_DE_PROJECTION = 5;
 const VIDE = escapeHtml('');
 const DESACTIVE = safeHtml`disabled`;
@@ -42,7 +42,7 @@ function projeterComptes(source: PulseComptes): Required<PulseComptes> {
 }
 
 function lireEtat(valeur: unknown): EtatPulse | null {
-  return ETATS.find((etat) => etat === valeur) ?? null;
+  return ETATS_PULSE.find((etat) => etat === valeur) ?? null;
 }
 
 function copierSondage(source: PulseSondage): PulseSondage {
@@ -96,7 +96,7 @@ export class FpPulse extends FpContenu<PulseSondage> {
         <legend class="fp-enonce">${escapeHtml(sondage.invite)}</legend>
         <div class="fp-pulse__corps">
           <p class="fp-pulse__anonymat" data-testid="anonymat">${escapeHtml(this.texte('pulse-anonymat'))}</p>
-          <div class="fp-pulse__choix">${ETATS.map((etat) => this.bouton(etat, inerte))}</div>
+          <div class="fp-pulse__choix">${ETATS_PULSE.map((etat) => this.bouton(etat, inerte))}</div>
           ${suivi}
         </div>
       </fieldset>
@@ -149,7 +149,7 @@ export class FpPulse extends FpContenu<PulseSondage> {
 
   private agregat(comptes: Required<PulseComptes>): EscapedHtml {
     return safeHtml`
-      <ul class="fp-pulse__agregat" data-testid="agregat">${ETATS.map((etat) => this.ligne(comptes, etat))}</ul>
+      <ul class="fp-pulse__agregat" data-testid="agregat">${ETATS_PULSE.map((etat) => this.ligne(comptes, etat))}</ul>
       <p class="fp-pulse__total" data-testid="total">${escapeHtml(this.texte('pulse-total'))} ${comptes.total}</p>
     `;
   }

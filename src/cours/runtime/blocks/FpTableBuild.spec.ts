@@ -173,6 +173,10 @@ describe('FpTableBuild', () => {
   it('marque d un tiret une deduction impossible sans casser la ligne', () => {
     saisir(hote, 0, 'prix', 'douze euros');
     expect(cellule(hote, 0, 'coef').value).toBe('—');
+    saisir(hote, 0, 'prix', '12 €');
+    expect(cellule(hote, 0, 'coef').value).toBe('—');
+    saisir(hote, 0, 'prix', '12 %');
+    expect(cellule(hote, 0, 'coef').value).toBe('—');
     saisir(hote, 0, 'prix', '1 080,00');
     expect(cellule(hote, 0, 'coef').value).toBe('54,0000');
   });

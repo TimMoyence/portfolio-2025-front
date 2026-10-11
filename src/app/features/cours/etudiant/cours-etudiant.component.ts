@@ -9,6 +9,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom, map } from 'rxjs';
+import { REGIMES_DE_VERROU } from 'portfolio-2025-partage/contrats';
 import type {
   CoursContent,
   EcranContent,
@@ -127,8 +128,6 @@ interface VerdictAffiche extends VerdictRecu {
   readonly rang: number;
 }
 
-const REGIMES_VERROU: readonly RegimeVerrou[] = ['ouvert', 'focus', 'examen'];
-
 const SLUG_DE_COURS = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const ETATS_LIBRES_EN_ATTENTE: readonly EtatEnvoiLibre[] = ['attente_reseau', 'ecran_non_servi'];
@@ -176,7 +175,7 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
 
 function regimeDuContenu(contenu: unknown): RegimeVerrou | null {
   const regime = estObjet(contenu) ? contenu['regime'] : undefined;
-  return typeof regime === 'string' && REGIMES_VERROU.includes(regime as RegimeVerrou)
+  return typeof regime === 'string' && REGIMES_DE_VERROU.includes(regime as RegimeVerrou)
     ? (regime as RegimeVerrou)
     : null;
 }

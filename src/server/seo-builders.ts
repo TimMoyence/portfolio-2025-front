@@ -1,3 +1,4 @@
+import { escapeHtml } from 'portfolio-2025-partage/html';
 import type {
   SeoLocaleMeta,
   SeoMetadataFile,
@@ -12,7 +13,6 @@ import {
   localeParDefaut,
   pagesIndexables,
 } from '../app/core/seo/pages-seo';
-import { escapeHtml } from '../cours/runtime/core/html';
 
 const AI_USER_AGENTS: ReadonlyArray<string> = [
   'GPTBot',

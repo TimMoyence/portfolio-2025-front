@@ -1133,10 +1133,12 @@ describe('FormationsHttpAdapter', () => {
 
     describe('regle de notation servie par un serveur v2', () => {
       const RAPPORT_V2 = (): object => {
-        const notation: Partial<RegleNotation> = { ...buildRegleNotation() };
-        delete notation.typesNotables;
-        delete notation.productionCompteSi;
-        delete notation.statistiquesSurQuestionsNotees;
+        const notation: Partial<Record<keyof RegleNotation, unknown>> = {
+          ...buildRegleNotation(),
+        };
+        delete notation['typesNotables'];
+        delete notation['productionCompteSi'];
+        delete notation['statistiquesSurQuestionsNotees'];
         return { ...buildRapportSeance(), notation };
       };
 

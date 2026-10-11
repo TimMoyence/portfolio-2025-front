@@ -1,14 +1,44 @@
 import type { ProgressionDesEnigmes } from '../runtime/blocks/retours';
+import {
+  MODALITES,
+  REGIMES_DE_VERROU,
+  type Diffusion,
+  type EtatPulse,
+  type FormeFormule,
+  type MetadonneesBrique,
+  type ResultatsSeance as ResultatsSeanceServis,
+  type StatistiquesSeance,
+  type Tolerance,
+  type ValeurProduction,
+  type VotePhase,
+} from 'portfolio-2025-partage/contrats';
 import type { ValeurFormule } from 'portfolio-2025-partage/formule';
 
+export type {
+  ComptesJalon,
+  ConfusionComptee,
+  Decompte,
+  DecomptesParCle,
+  Diffusion,
+  EtatPulse,
+  FormeFormule,
+  FreeRange,
+  MetadonneesBrique,
+  Modalite,
+  PacingMode,
+  ProgressionEnigme,
+  RegimeVerrou,
+  ResultatQuestion,
+  ResultatsEnDirect,
+  StatistiquesSeance,
+  Tolerance,
+  TypeQuestion,
+  ValeurProduction,
+  VotePhase,
+} from 'portfolio-2025-partage/contrats';
+export type { ResumeBareme } from 'portfolio-2025-partage/contrats';
+
 export type Role = 'presentateur' | 'etudiant';
-
-export type PacingMode = 'pilote' | 'libre';
-
-export interface FreeRange {
-  premier: number;
-  dernier: number;
-}
 
 export interface QuestionRevelee {
   readonly questionId: string;
@@ -63,14 +93,6 @@ export interface EcranContent {
   revelation?: RevelationServie;
 }
 
-export type Diffusion = 'catalogue' | 'seance';
-
-export type TypeQuestion = 'numeric' | 'vote' | 'feuille' | 'tableau' | 'classement' | 'enigme';
-
-export type VotePhase = 'vote' | 'discussion' | 'revote' | 'revele';
-
-export type EtatPulse = 'perdu' | 'ca-va' | 'clair';
-
 export interface PilotageEcran {
   readonly phase?: VotePhase;
   readonly revele?: boolean;
@@ -81,35 +103,6 @@ export interface PilotageEcran {
   readonly resultatsProjetes?: boolean;
   readonly optionsAffichees?: boolean;
 }
-
-export interface Tolerance {
-  readonly type: 'relative' | 'absolue' | 'decimales';
-  readonly valeur: number;
-}
-
-export type FormeFormule = 'references' | { readonly memeQue: string };
-
-export type ValeurProduction =
-  | {
-      readonly type: 'feuille';
-      readonly cellules: Readonly<Record<string, string>>;
-    }
-  | {
-      readonly type: 'tableau';
-      readonly saisies: readonly {
-        readonly rang: number;
-        readonly cle: string;
-        readonly valeur: number;
-      }[];
-    }
-  | {
-      readonly type: 'classement';
-      readonly classement: Readonly<Record<string, string>>;
-    }
-  | {
-      readonly type: 'feuille' | 'tableau' | 'classement';
-      readonly neSaitPas: true;
-    };
 
 export interface CoursContent {
   id: string;
@@ -125,46 +118,8 @@ export interface CoursCatalogue extends CoursContent {
   readonly publieLe: string;
 }
 
-export interface ConfusionComptee {
-  readonly id: string;
-  readonly libelle: string;
-  readonly nombre: number;
-}
-
-export interface ResultatQuestion {
-  readonly questionId: string;
-  readonly ecranId: string;
-  readonly type: TypeQuestion;
-  readonly noteCompte: boolean;
-  readonly total: number;
-  readonly correctes: number;
-  readonly neSaitPas: number;
-  readonly confusions: readonly ConfusionComptee[];
-  readonly parOption: Readonly<Record<string, number>> | null;
-  readonly scoreMoyen: number | null;
-  readonly parCle: DecomptesParCle | null;
-}
-
-export interface Decompte {
-  readonly justes: number;
-  readonly total: number;
-}
-
-export type DecomptesParCle = Readonly<Record<string, Decompte>>;
-
-export interface ResultatsSeance {
-  readonly participants: number;
-  readonly questions: readonly ResultatQuestion[];
+export interface ResultatsSeance extends ResultatsSeanceServis {
   readonly statistiques?: StatistiquesSeance;
-}
-
-export interface StatistiquesSeance {
-  readonly moyenne: number;
-  readonly mediane: number;
-  readonly dispersion: number;
-  readonly tauxParticipation: number;
-  readonly tauxReussite: number;
-  readonly questionsProblemes: readonly string[];
 }
 
 export interface CorrigePresentateur {
@@ -180,36 +135,6 @@ export interface GuideFormateur {
   readonly calcul?: string;
   readonly relance?: string;
   readonly transition?: string;
-}
-
-export interface ComptesJalon {
-  readonly perdu: number;
-  readonly 'ca-va': number;
-  readonly clair: number;
-  readonly total: number;
-}
-
-export interface ProgressionEnigme {
-  readonly parcoursId: string;
-  readonly enigmeId: string;
-  readonly ouvertes: number;
-  readonly resolues: number;
-  readonly tentativesMoyennes: number;
-  readonly epuisees: number;
-}
-
-export interface ResumeBareme {
-  readonly questionsNotees: number;
-  readonly parType: Readonly<
-    Record<TypeQuestion, { readonly notees: number; readonly nonNotees: number }>
-  >;
-}
-
-export interface ResultatsEnDirect extends ResultatsSeance {
-  readonly statistiques: StatistiquesSeance;
-  readonly jalons: Readonly<Record<string, ComptesJalon>>;
-  readonly enigmes: readonly ProgressionEnigme[];
-  readonly bareme: ResumeBareme;
 }
 
 export type CorrigeEcranPresentateur =
@@ -325,21 +250,6 @@ export interface DerouleCours extends Omit<CoursContent, 'ecrans'> {
   readonly remediations: Readonly<Record<string, string>>;
 }
 
-export type Modalite = 'solo' | 'binome' | 'groupe' | 'classe';
-
-export type RegimeVerrou = 'ouvert' | 'focus' | 'examen';
-
-export interface MetadonneesBrique {
-  readonly concepts: readonly string[];
-  readonly misconceptionsCiblees: readonly string[];
-  readonly dureeMinutes: number;
-  readonly modalite: Modalite;
-  readonly regime: RegimeVerrou;
-}
-
-const MODALITES: readonly Modalite[] = ['solo', 'binome', 'groupe', 'classe'];
-const REGIMES: readonly RegimeVerrou[] = ['ouvert', 'focus', 'examen'];
-
 export function creerMetadonneesBrique(entree: MetadonneesBrique): MetadonneesBrique {
   if (entree.concepts.length === 0) {
     throw new Error('Une brique doit cibler au moins un concept');
@@ -350,7 +260,7 @@ export function creerMetadonneesBrique(entree: MetadonneesBrique): MetadonneesBr
   if (!MODALITES.includes(entree.modalite)) {
     throw new Error('Modalité inconnue');
   }
-  if (!REGIMES.includes(entree.regime)) {
+  if (!REGIMES_DE_VERROU.includes(entree.regime)) {
     throw new Error('Régime de verrou inconnu');
   }
   return entree;
