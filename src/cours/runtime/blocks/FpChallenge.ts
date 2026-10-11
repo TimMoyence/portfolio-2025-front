@@ -1,13 +1,9 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpEnvoi } from './contenu';
+import { dossierDeRappel, type LigneDuDossier, lireRappel } from './dossier';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { estObjet } from '../core/valeurs';
 import type { StrategieServie } from './retours';
-
-export interface LigneDuDossier {
-  readonly libelle: string;
-  readonly valeur: string;
-}
 
 export interface ChallengeProblemePublic extends ContenuDeBrique {
   readonly enonce: string;
@@ -38,29 +34,6 @@ function lireStrategies(valeur: unknown): readonly StrategieServie[] {
   return Array.isArray(valeur)
     ? valeur.map(lireStrategie).filter((strategie) => strategie !== null)
     : [];
-}
-
-function lireRappel(valeur: unknown): readonly LigneDuDossier[] {
-  return Array.isArray(valeur)
-    ? valeur.filter(
-        (ligne): ligne is LigneDuDossier =>
-          estObjet(ligne) &&
-          typeof ligne['libelle'] === 'string' &&
-          typeof ligne['valeur'] === 'string',
-      )
-    : [];
-}
-
-function dossier(probleme: ChallengeProblemePublic): EscapedHtml {
-  const rappel = probleme.rappel ?? [];
-  if (rappel.length === 0) {
-    return VIDE;
-  }
-  const lignes = rappel.map(
-    (ligne) =>
-      safeHtml`<div class="fp-challenge__ligne"><dt>${escapeHtml(ligne.libelle)}</dt><dd>${escapeHtml(ligne.valeur)}</dd></div>`,
-  );
-  return safeHtml`<dl class="fp-challenge__rappel" data-testid="rappel">${lignes}</dl>`;
 }
 
 function copierProbleme(source: ChallengeProblemePublic): ChallengeProblemePublic {
@@ -145,7 +118,7 @@ export class FpChallenge extends FpEnvoi<ChallengeProblemePublic> {
       <fieldset class="fp-carte fp-challenge__probleme">
         <legend class="fp-enonce">${escapeHtml(probleme.enonce)}</legend>
         <div class="fp-challenge__corps">
-          ${dossier(probleme)}
+          ${dossierDeRappel(probleme.rappel)}
           ${reponse}
           ${this.correction()}
         </div>

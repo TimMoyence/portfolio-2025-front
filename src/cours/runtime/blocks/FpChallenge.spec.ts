@@ -1,6 +1,7 @@
 import {
   detailsEmis,
   installerBrique,
+  lignesDuRappel,
   noeudOmbre,
   texteOmbre,
 } from '../../../testing/banc-de-brique';
@@ -132,13 +133,8 @@ describe('FpChallenge', () => {
 
     for (const role of ROLES_DE_MONTAGE) {
       hote.setAttribute('data-cours-role', role);
-      const lignes = [
-        ...(hote.shadowRoot?.querySelectorAll(
-          '[data-testid="rappel"] dt, [data-testid="rappel"] dd',
-        ) ?? []),
-      ].map((ligne) => ligne.textContent?.trim());
 
-      expect(lignes)
+      expect(lignesDuRappel(hote))
         .withContext(`role ${role}`)
         .toEqual(['Marge brute', '289 800 € → 291 000 €', CHARGE_XSS, '34 % → 45,5 %']);
       expect(hote.shadowRoot?.querySelector('img')).withContext(`role ${role}`).toBeNull();

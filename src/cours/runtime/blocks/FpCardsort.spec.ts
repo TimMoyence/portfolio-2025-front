@@ -22,6 +22,13 @@ const ATTENDUS_FORMATEUR = {
     { carteId: LOYER, categorieId: FIXE, justification: 'Le loyer ne suit pas le volume' },
   ],
 };
+const ATTENDUS_DES_DEUX_CARTES = {
+  type: 'classement',
+  attendus: [
+    ...ATTENDUS_FORMATEUR.attendus,
+    { carteId: MATIERES, categorieId: VARIABLE, justification: 'Suit le volume produit' },
+  ],
+};
 const DEBUT = new Date('2026-09-14T09:00:00.000Z');
 
 function noeud(hote: FpCardsort, nom: string): Element | null {
@@ -385,13 +392,7 @@ describe('FpCardsort', () => {
   it('T6 · laisse l etudiant a son classement, colore en vert et rouge d apres le corrige', () => {
     deplacerAuClavier(hote, LOYER, FIXE);
     deplacerAuClavier(hote, MATIERES, FIXE);
-    hote.corrige = {
-      type: 'classement',
-      attendus: [
-        ...ATTENDUS_FORMATEUR.attendus,
-        { carteId: MATIERES, categorieId: VARIABLE, justification: 'Suit le volume produit' },
-      ],
-    };
+    hote.corrige = ATTENDUS_DES_DEUX_CARTES;
 
     expect(zoneDe(hote, LOYER)).toBe(FIXE);
     expect(zoneDe(hote, MATIERES)).toBe(FIXE);
@@ -425,12 +426,44 @@ describe('FpCardsort', () => {
     );
   });
 
-  it('garde a l ecran la correction du classement sur une seule colonne', () => {
+  it('R-03 · met a l ecran la correction du classement sur deux colonnes d une toile large, sur une seule d un poste etroit', () => {
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.corrige = ATTENDUS_DES_DEUX_CARTES;
+    const positions = (): DOMRect[] =>
+      noeuds(hote, 'cardsort-justification').map((ligne) => ligne.getBoundingClientRect());
+
+    hote.style.cssText = 'display:block;width:1216px;';
+    const [premiereLarge, secondeLarge] = positions();
+    expect(secondeLarge.left).toBeGreaterThanOrEqual(premiereLarge.right);
+    expect(secondeLarge.top).toBeCloseTo(premiereLarge.top, 0);
+
+    hote.style.cssText = 'display:block;width:360px;';
+    const [premiereEtroite, secondeEtroite] = positions();
+    expect(secondeEtroite.top).toBeGreaterThanOrEqual(premiereEtroite.bottom);
+    expect(secondeEtroite.left).toBeCloseTo(premiereEtroite.left, 0);
+  });
+
+  it('R-03 · partage toute la largeur d une toile large entre les zones de classement, sous la pioche', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.corrige = ATTENDUS_FORMATEUR;
+    const cadre = (): DOMRect =>
+      hote.shadowRoot?.querySelector('.fp-cardsort__zones')?.getBoundingClientRect() ??
+      new DOMRect();
+    const categories = (): DOMRect[] =>
+      noeuds(hote, 'zone')
+        .filter((zone) => zone.getAttribute('data-pioche') === 'false')
+        .map((zone) => zone.getBoundingClientRect());
 
-    const liste = noeud(hote, 'cardsort-correction')?.querySelector('ul') as Element;
-    expect(getComputedStyle(liste).columnCount).toBe('auto');
+    hote.style.cssText = 'display:block;width:1216px;';
+    const [fixes, variables] = categories();
+    expect(fixes.left).toBeCloseTo(cadre().left, 0);
+    expect(variables.right).toBeCloseTo(cadre().right, 0);
+    expect(variables.top).toBeCloseTo(fixes.top, 0);
+
+    hote.style.cssText = 'display:block;width:360px;';
+    const [fixesEtroites, variablesEtroites] = categories();
+    expect(variablesEtroites.top).toBeGreaterThanOrEqual(fixesEtroites.bottom);
+    expect(variablesEtroites.right).toBeCloseTo(cadre().right, 0);
   });
 
   it('n imprime pas sur papier la pioche videe par le corrige, que l ecran garde', () => {

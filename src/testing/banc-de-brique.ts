@@ -140,3 +140,10 @@ export function roleAffiche(hote: HTMLElement): string | null | undefined {
 export function texteOmbre(hote: HTMLElement, repere: string): string {
   return noeudOmbre(hote, repere)?.textContent?.trim() ?? '';
 }
+
+export function lignesDuRappel(hote: HTMLElement): (string | undefined)[] {
+  return [
+    ...(hote.shadowRoot?.querySelectorAll('[data-testid="rappel"] dt, [data-testid="rappel"] dd') ??
+      []),
+  ].map((ligne) => ligne.textContent?.trim());
+}

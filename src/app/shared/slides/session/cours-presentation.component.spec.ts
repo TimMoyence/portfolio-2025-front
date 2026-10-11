@@ -7,6 +7,7 @@ import {
   ecransPublicsB2_01,
 } from '../../../../testing/fixtures/instantane-b2-01';
 import { INSTANTANE_B2_04 } from '../../../../testing/fixtures/instantane-b2-04';
+import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantane-b3-01';
 import {
   ecransDuPupitreDe,
   ecransPublicsDe,
@@ -161,6 +162,20 @@ async function stabiliser(monte: EcranCadre, passes: number): Promise<void> {
   for (let passe = 0; passe < passes; passe += 1) {
     await monte.rafraichir();
   }
+}
+
+async function monterReveleEnProjection(
+  pupitre: readonly EcranContent[],
+  suffixe: string,
+): Promise<EcranCadre> {
+  const ecran = pupitre.find(({ id }) => id.endsWith(suffixe));
+  if (ecran === undefined) {
+    throw new Error(`écran absent du pupitre : ${suffixe}`);
+  }
+  const renvoi = pupitre.find(({ id }) => id === ecran.renvoi) ?? null;
+  const monte = await monterDansUnCadre(ecran, 'projection', 1280, 720, renvoi, PILOTAGE_REVELE);
+  await stabiliser(monte, 8);
+  return monte;
 }
 
 function ecransARenvoiDesCours(
@@ -447,20 +462,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
         'A2-05-ATELIER-GEOMETRIQUE',
         'A3-07-ATELIER-SEUIL',
       ]) {
-        const ecran = pupitre.find(({ id }) => id.endsWith(suffixe));
-        if (ecran === undefined) {
-          throw new Error(`écran absent du pupitre : ${suffixe}`);
-        }
-        const renvoi = pupitre.find(({ id }) => id === ecran.renvoi) ?? null;
-        const monte = await monterDansUnCadre(
-          ecran,
-          'projection',
-          1280,
-          720,
-          renvoi,
-          PILOTAGE_REVELE,
-        );
-        await stabiliser(monte, 8);
+        const monte = await monterReveleEnProjection(pupitre, suffixe);
         const contenu = monte.hote.querySelector<HTMLElement>('[data-testid="cours-contenu"]');
         const masque = monte.hote.classList.contains('cours-presentation--renvoi-masque');
 
@@ -503,6 +505,23 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
       );
 
       expect(etalesSansBesoin).toEqual([]);
+    },
+    DELAI_DE_MONTAGE_MS,
+  );
+
+  it(
+    'R-03 · en projection, une activité corrigée trop haute s étale sur toute la largeur de la toile au lieu de rester plafonnée au centre',
+    async () => {
+      const monte = await monterReveleEnProjection(
+        ecransDuPupitreDe(INSTANTANE_B3_01),
+        'A1-13-TRI-ANOMALIES',
+      );
+      const blocs = monte.hote.querySelector<HTMLElement>('.slide-activity__blocks');
+
+      expect(blocs?.getBoundingClientRect().width).toBeGreaterThanOrEqual(1100);
+      expect(echelleDuContenu(monte.toile())).toBeGreaterThan(0.55);
+      expect(elementsHorsToile(monte)).toEqual([]);
+      monte.detruire();
     },
     DELAI_DE_MONTAGE_MS,
   );

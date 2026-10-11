@@ -352,6 +352,15 @@ describe('CoursSceneComponent', () => {
     );
   });
 
+  it('R-03 · étend la toile à toute la largeur d un grand écran de projection, sans plafond', async () => {
+    const fixture = await monterEtStabiliser();
+    const hote = fixture.nativeElement as HTMLElement;
+    hote.style.inlineSize = '1920px';
+    const toile = hote.querySelector<HTMLElement>('[data-testid="scene-canvas"]');
+
+    expect(toile?.getBoundingClientRect().width).toBe(1920);
+  });
+
   it('RET-32 · confie a la projection les bonnes reponses d un questionnaire', async () => {
     const fixture = await monterSur([ecranDAtelier()]);
 
