@@ -1,4 +1,5 @@
-import type { EtatPulse, ValeurProduction } from '../../../../cours/content/types';
+import { ETATS_PULSE } from 'portfolio-2025-partage/contrats';
+import type { ValeurProduction } from '../../../../cours/content/types';
 import { lireTextes } from '../../../../cours/runtime/blocks/retours';
 import { estEntierPositif, estObjet } from '../../../../cours/runtime/core/valeurs';
 import type { EvenementBrique } from './contrat-hote';
@@ -7,8 +8,6 @@ import { objet } from '../visual/presentation-v2';
 type Detail = Readonly<Record<string, unknown>>;
 
 type TypeDeProduction = 'feuille' | 'tableau' | 'classement';
-
-const ETATS_PULSE: readonly EtatPulse[] = ['perdu', 'ca-va', 'clair'];
 
 const PRODUCTIONS: Readonly<Record<string, { type: TypeDeProduction; champ: string }>> = {
   'fp-sheet-submit': { type: 'feuille', champ: 'cellules' },

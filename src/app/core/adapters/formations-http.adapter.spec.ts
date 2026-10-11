@@ -34,7 +34,6 @@ import type {
   QuestionsDues,
   RapportSeance,
   Rattachement,
-  RegleNotation,
   ReponseLibreFormateur,
   SeanceOuverte,
   VerdictReponse,
@@ -1133,10 +1132,10 @@ describe('FormationsHttpAdapter', () => {
 
     describe('regle de notation servie par un serveur v2', () => {
       const RAPPORT_V2 = (): object => {
-        const notation: Partial<RegleNotation> = { ...buildRegleNotation() };
-        delete notation.typesNotables;
-        delete notation.productionCompteSi;
-        delete notation.statistiquesSurQuestionsNotees;
+        const notation: Record<string, unknown> = { ...buildRegleNotation() };
+        delete notation['typesNotables'];
+        delete notation['productionCompteSi'];
+        delete notation['statistiquesSurQuestionsNotees'];
         return { ...buildRapportSeance(), notation };
       };
 

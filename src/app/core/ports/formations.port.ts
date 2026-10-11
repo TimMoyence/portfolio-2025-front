@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import type { RegleDeNotation } from 'portfolio-2025-partage/contrats';
 import type { Observable } from 'rxjs';
 import type {
   CoursContent,
@@ -10,7 +11,6 @@ import type {
   PilotageEcran,
   ResultatsSeance,
   StatistiquesSeance,
-  TypeQuestion,
   ValeurProduction,
 } from '../../../cours/content/types';
 import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donnees-publiques';
@@ -160,20 +160,7 @@ export interface ParticipantDeSeance {
   evince: boolean;
 }
 
-export interface RegleNotation {
-  noteMax: number;
-  base: 'participation-relative-cohorte';
-  partCohorteReference: number;
-  ratioSeuilValidation: number;
-  neSaitPasCompteCommeReponse: boolean;
-  pointsNonReponse: number;
-  reponsesLibresNotees: boolean;
-  seuilQuestionProbleme: number;
-  decimalesStatistiques: number;
-  typesNotables: readonly TypeQuestion[];
-  productionCompteSi: 'au-moins-une-saisie';
-  statistiquesSurQuestionsNotees: boolean;
-}
+export type RegleNotation = RegleDeNotation;
 
 export interface VerdictReponse {
   reussite: boolean;
