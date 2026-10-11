@@ -1,4 +1,5 @@
 import { buildVisualCourse } from '../testing/factories/formation-catalogue.factory';
+import { createJournalSpy, type JournalEspion } from '../testing/factories/journal.factory';
 import { reponseJson } from '../testing/lecteur-http-simule';
 import { lecteurDePublicationsDeCours } from './cours-publication';
 
@@ -16,7 +17,7 @@ function coursPublie(champs: Readonly<Record<string, unknown>>): Record<string, 
 
 describe('lecteurDePublicationsDeCours (H1)', () => {
   let appels: jasmine.Spy<typeof fetch>;
-  let journal: jasmine.SpyObj<Pick<Console, 'warn'>>;
+  let journal: JournalEspion;
   let maintenant: number;
 
   function lecteur(apiBaseUrl: string | undefined) {
@@ -31,7 +32,7 @@ describe('lecteurDePublicationsDeCours (H1)', () => {
 
   beforeEach(() => {
     appels = jasmine.createSpy<typeof fetch>('fetch');
-    journal = jasmine.createSpyObj<Pick<Console, 'warn'>>('journal', ['warn']);
+    journal = createJournalSpy();
     maintenant = Date.UTC(2026, 9, 2);
   });
 

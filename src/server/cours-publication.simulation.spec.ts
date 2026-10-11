@@ -1,6 +1,7 @@
 import { melangeur } from '../testing/melangeur';
 import { lastmodDeLaPage } from '../testing/sitemap-xml';
 import { buildReponseDuCatalogue } from '../testing/factories/formation-catalogue.factory';
+import { createJournalSpy } from '../testing/factories/journal.factory';
 import {
   buildPageDuCoursB2,
   buildSeoMetadata,
@@ -78,7 +79,7 @@ describe('lastmod du cours servi par l API (H1, simulation)', () => {
       const publieLe = new Date(
         Date.UTC(2026, 8, 19) + decalageJours * 86_400_000 + Math.floor(hasard() * 86_400_000),
       ).toISOString();
-      const journal = jasmine.createSpyObj<Pick<Console, 'warn'>>('journal', ['warn']);
+      const journal = createJournalSpy();
       const appels = jasmine
         .createSpy<typeof fetch>('fetch')
         .and.callFake(() => scenario.repond(publieLe));
@@ -109,7 +110,7 @@ describe('lastmod du cours servi par l API (H1, simulation)', () => {
 
   it(`n interroge l API qu une fois par fenêtre de cinq minutes sur ${LECTURES_EN_CACHE} lectures`, async () => {
     const hasard = melangeur(GRAINE + 1);
-    const journal = jasmine.createSpyObj<Pick<Console, 'warn'>>('journal', ['warn']);
+    const journal = createJournalSpy();
     const appels = jasmine
       .createSpy<typeof fetch>('fetch')
       .and.callFake(() => Promise.resolve(buildReponseDuCatalogue('2026-10-02T08:15:00.000Z')));
