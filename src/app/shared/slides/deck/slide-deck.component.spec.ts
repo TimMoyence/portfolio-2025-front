@@ -1,4 +1,4 @@
-import { Component, PLATFORM_ID, type Type } from '@angular/core';
+import { Component, ErrorHandler, PLATFORM_ID, type Type } from '@angular/core';
 import { clearTranslations, loadTranslations } from '@angular/localize';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SlideComponent } from './slide.component';
@@ -139,11 +139,14 @@ describe('SlideDeckComponent', () => {
   for (const activeIndex of [3, -1, 1.5, Number.NaN]) {
     it(`ignore un index swiper hors des slides (${activeIndex})`, () => {
       const service = passerEnPleinEcran();
+      annoncerLaSlideSwiper(1);
       const avant = service.current();
+      const erreurs = spyOn(TestBed.inject(ErrorHandler), 'handleError');
 
       annoncerLaSlideSwiper(activeIndex);
 
       expect(service.current()).toBe(avant);
+      expect(erreurs).not.toHaveBeenCalled();
     });
   }
 
