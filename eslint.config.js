@@ -15,7 +15,7 @@ const SANS_CAST_VERS_ESCAPED_HTML = {
 
 const COEUR_SANS_CHEMIN_VERS_SHARED_NI_FEATURES = [
   {
-    selector: 'ImportExpression > Literal[value=/(^|\\/)(shared|features)\\//]',
+    selector: 'ImportExpression > Literal[value=/(^|\\/)(shared|features)(\\/|$)/]',
     message: COEUR_SANS_SHARED_NI_FEATURES,
   },
   {
@@ -23,7 +23,7 @@ const COEUR_SANS_CHEMIN_VERS_SHARED_NI_FEATURES = [
     message: `${COEUR_SANS_SHARED_NI_FEATURES} Un import() du core prend un chemin littéral, que cette règle peut lire.`,
   },
   {
-    selector: 'TSImportType Literal[value=/(^|\\/)(shared|features)\\//]',
+    selector: 'TSImportType Literal[value=/(^|\\/)(shared|features)(\\/|$)/]',
     message: COEUR_SANS_SHARED_NI_FEATURES,
   },
 ];
@@ -86,7 +86,7 @@ module.exports = tseslint.config(
         {
           patterns: [
             {
-              regex: '(^|/)(shared|features)/',
+              regex: '(^|/)(shared|features)(/|$)',
               message: COEUR_SANS_SHARED_NI_FEATURES,
             },
           ],
