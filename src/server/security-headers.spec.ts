@@ -12,6 +12,10 @@ describe('security-headers', () => {
       expect(headers['Referrer-Policy']).toBe('strict-origin-when-cross-origin');
     });
 
+    it('interdit au navigateur de deviner le type de toute reponse', () => {
+      expect(buildSecurityHeaders({ isHttps: false })['X-Content-Type-Options']).toBe('nosniff');
+    });
+
     it('pose une Permissions-Policy restrictive', () => {
       const headers = buildSecurityHeaders({ isHttps: false });
       expect(headers['Permissions-Policy']).toBe('camera=(), microphone=(), geolocation=(self)');

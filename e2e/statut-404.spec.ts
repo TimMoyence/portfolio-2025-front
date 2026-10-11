@@ -15,12 +15,18 @@ test.describe('une page introuvable répond un vrai 404', () => {
 
       expect(reponse.status()).toBe(404);
       expect(reponse.headers()['cache-control']).toBe('public, max-age=300, s-maxage=300');
+      expect(reponse.headers()['content-type']).toBe('text/html; charset=utf-8');
+      expect(reponse.headers()['content-language']).toBe(chemin.slice(1, 3));
       expect(html).toContain('data-testid="not-found-title"');
       expect(html).toMatch(/<meta name="robots" content="noindex, nofollow"/);
     });
   }
 
   test('une page existante reste en 200', async ({ request }) => {
-    expect((await request.get(`${baseSsr}/fr/projets`)).status()).toBe(200);
+    const reponse = await request.get(`${baseSsr}/fr/projets`);
+
+    expect(reponse.status()).toBe(200);
+    expect(reponse.headers()['content-type']).toBe('text/html; charset=utf-8');
+    expect(reponse.headers()['content-language']).toBe('fr');
   });
 });

@@ -2,6 +2,7 @@ import type { ClientReport } from '../../app/core/models/audit-client-report.mod
 import type {
   AuditCompletedEvent,
   AuditCreateResponse,
+  AuditFailedEvent,
   AuditProgressEvent,
   AuditStreamEvent,
   AuditSummaryResponse,
@@ -68,6 +69,21 @@ export function buildAuditCompletedEvent(
       keyChecks: {},
       quickWins: [],
       pillarScores: {},
+      updatedAt: '2026-04-15T09:00:00.000Z',
+      ...overrides,
+    },
+  };
+}
+
+export function buildAuditFailedEvent(overrides?: Partial<AuditFailedEvent>): AuditStreamEvent {
+  return {
+    type: 'failed',
+    data: {
+      auditId: 'audit-1',
+      status: 'FAILED',
+      progress: 40,
+      done: true,
+      error: 'Analyse interrompue',
       updatedAt: '2026-04-15T09:00:00.000Z',
       ...overrides,
     },

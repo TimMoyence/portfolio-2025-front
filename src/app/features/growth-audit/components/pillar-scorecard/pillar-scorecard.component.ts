@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import type { StatutScore } from 'portfolio-2025-partage/score';
 import type { ClientReport } from '../../../../core/models/audit-client-report.model';
 
 @Component({
@@ -27,11 +28,11 @@ export class PillarScorecardComponent {
     return PillarScorecardComponent.PILLAR_LABELS[pillar] ?? pillar;
   }
 
-  statusClass(status: 'critical' | 'warning' | 'ok'): string {
+  statusClass(status: StatutScore): string {
     return `pillar-card__status pillar-card__status--${status}`;
   }
 
-  statusLabel(status: 'critical' | 'warning' | 'ok'): string {
+  statusLabel(status: StatutScore): string {
     switch (status) {
       case 'critical':
         return $localize`:@@auditPillarStatusCritical:Critique`;

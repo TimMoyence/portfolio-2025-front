@@ -3136,6 +3136,14 @@
         </context-group>
         <note priority="1" from="meaning">synthese.export</note>
       </trans-unit>
+      <trans-unit id="syntheseExportEchec" datatype="html">
+        <source> Le CSV n’a pas pu être exporté. Réessayez. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
+          <context context-type="linenumber">200,207</context>
+        </context-group>
+        <note priority="1" from="meaning">synthese.exportEchec</note>
+      </trans-unit>
       <trans-unit id="syntheseEchec" datatype="html">
         <source> La synthèse n&apos;a pas pu être lue. Rechargez la page, puis réessayez. </source>
         <context-group purpose="location">

@@ -3,11 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 import { getApiBaseUrl } from '../http/api-config';
+import { jsonOuNull } from '../../../cours/runtime/core/valeurs';
 import type {
-  AuditCompletedEvent,
-  AuditFailedEvent,
   AuditCreateResponse,
-  AuditProgressEvent,
   AuditRequestPayload,
   AuditStreamEvent,
   AuditSummaryResponse,
@@ -43,61 +41,26 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
       const streamUrl = `${this.baseUrl}/audits/${encodeURIComponent(auditId)}/stream`;
       const source = new EventSource(streamUrl);
 
-      const parsePayload = (raw: MessageEvent): unknown => {
-        try {
-          return JSON.parse(raw.data);
-        } catch {
-          return null;
+      const relayer = (type: AuditStreamEvent['type'], event: MessageEvent): boolean => {
+        const data = jsonOuNull(event.data);
+        if (data) {
+          subscriber.next({ type, data } as AuditStreamEvent);
         }
+        return Boolean(data);
       };
 
-      const onProgress = (event: Event) => {
-        const payload = parsePayload(event as MessageEvent);
-        if (!payload) return;
-        subscriber.next({
-          type: 'progress',
-          data: payload as AuditProgressEvent,
-        });
-      };
-
-      const onCompleted = (event: Event) => {
-        const payload = parsePayload(event as MessageEvent);
-        if (!payload) return;
-        subscriber.next({
-          type: 'completed',
-          data: payload as AuditCompletedEvent,
-        });
-        source.close();
-        subscriber.complete();
-      };
-
-      const onFailed = (event: Event) => {
-        const payload = parsePayload(event as MessageEvent);
-        if (payload) {
-          subscriber.next({
-            type: 'failed',
-            data: payload as AuditFailedEvent,
-          });
+      source.addEventListener('progress', (event) => relayer('progress', event));
+      source.addEventListener('heartbeat', (event) => relayer('heartbeat', event));
+      source.addEventListener('completed', (event) => {
+        if (relayer('completed', event)) {
+          subscriber.complete();
         }
-        source.close();
+      });
+      source.addEventListener('failed', (event) => {
+        relayer('failed', event);
         subscriber.complete();
-      };
-
-      const onHeartbeat = (event: Event) => {
-        const payload = parsePayload(event as MessageEvent);
-        if (!payload) return;
-        subscriber.next({
-          type: 'heartbeat',
-          data: payload as { ts: string },
-        });
-      };
-
-      source.addEventListener('progress', onProgress);
-      source.addEventListener('completed', onCompleted);
-      source.addEventListener('failed', onFailed);
-      source.addEventListener('heartbeat', onHeartbeat);
+      });
       source.onerror = () => {
-        source.close();
         subscriber.error(new Error('Audit stream disconnected'));
       };
 

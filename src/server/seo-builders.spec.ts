@@ -116,6 +116,12 @@ describe('buildSitemapXml', () => {
     expect(xml).not.toContain('<lastmod>');
   });
 
+  it('echappe le chemin d une page comme tout fragment HTML du site', () => {
+    const xml = buildSitemapXml(pageSeule('offre', "/l'offre-&-<vous>", true), BASE_URL);
+
+    expect(xml).toContain('<loc>https://asilidesign.fr/fr/l&#39;offre-&amp;-&lt;vous&gt;</loc>');
+  });
+
   it('normalise en jour un lastmod d article servi en horodatage complet', () => {
     expect(sitemapDArticle('2026-09-09T14:32:07.000Z')).toContain('<lastmod>2026-09-09</lastmod>');
   });

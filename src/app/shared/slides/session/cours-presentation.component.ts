@@ -19,6 +19,7 @@ import {
 import type { Observable } from 'rxjs';
 import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
+import { bornerEntre } from '../../../../cours/runtime/core/valeurs';
 import type { FichierTelecharge, SyntheseConcept } from '../../../core/ports/formations.port';
 import { PieceJointeRefusee } from '../../../core/ports/formations.port';
 import { telechargerFichier } from '../../utils/telechargement.utils';
@@ -809,7 +810,7 @@ export class CoursPresentationComponent {
     }
     this.echellesEssayees.set(elargissement, Math.min(1 / elargissement, parLaHauteur));
     const equilibre = Math.round(Math.sqrt(elargissement / parLaHauteur) * 100) / 100;
-    const vise = Math.max(1, Math.min(ELARGISSEMENT_MAXIMAL, equilibre));
+    const vise = bornerEntre(equilibre, 1, ELARGISSEMENT_MAXIMAL);
     const dejaEssaye = [...this.echellesEssayees.keys()].some(
       (essai) => Math.abs(essai - vise) <= GAIN_D_ELARGISSEMENT_UTILE,
     );

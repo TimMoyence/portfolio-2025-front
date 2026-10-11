@@ -10,7 +10,9 @@ import {
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import type { Subscription } from 'rxjs';
+import { LOCALES_DU_SITE } from '../../core/config/locales';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
+import { routeSansLocale } from '../../core/seo/chemins';
 import {
   type AuditContactMethod,
   type AuditRequestPayload,
@@ -45,6 +47,16 @@ import {
 interface AuditPillar {
   title: string;
   description: string;
+}
+
+function formulaireVierge(): AuditRequestPayload {
+  return {
+    website: '',
+    formStartedAt: Date.now(),
+    websiteName: '',
+    contactMethod: 'EMAIL',
+    contactValue: '',
+  };
 }
 
 @Component({
@@ -191,13 +203,10 @@ export class GrowthAuditComponent implements OnDestroy {
     rgpdError: $localize`:audit.form.rgpdError@@auditFormRgpdError:Votre consentement RGPD est obligatoire pour lancer l'audit.`,
   };
 
-  auditFormState: AuditRequestPayload = {
-    website: '',
-    formStartedAt: Date.now(),
-    websiteName: '',
-    contactMethod: 'EMAIL' as AuditContactMethod,
-    contactValue: '',
-  };
+  auditFormState: AuditRequestPayload = formulaireVierge();
+
+  private readonly etapeTerminee = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Audit terminé`;
+  private readonly echecDeLAudit = $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
 
   rgpdConsent = false;
 
@@ -229,9 +238,9 @@ export class GrowthAuditComponent implements OnDestroy {
       return 'fr';
     }
 
-    const localeMatch = /\/(fr|en)(?=\/|$)/.exec(window.location.pathname.toLowerCase());
+    const { locale } = routeSansLocale(window.location.pathname.toLowerCase(), LOCALES_DU_SITE);
 
-    return localeMatch?.[1] === 'en' ? 'en' : 'fr';
+    return locale === 'en' ? 'en' : 'fr';
   }
 
   onContactMethodToggle(event: Event): void {
@@ -310,13 +319,7 @@ export class GrowthAuditComponent implements OnDestroy {
       onComplete: () => {
         this.isSubmitting = false;
         this.isSubmitted = false;
-        this.auditFormState = {
-          website: '',
-          formStartedAt: Date.now(),
-          websiteName: '',
-          contactMethod: 'EMAIL',
-          contactValue: '',
-        };
+        this.auditFormState = formulaireVierge();
         this.rgpdConsent = false;
         form.resetForm(this.auditFormState);
       },
@@ -376,10 +379,7 @@ export class GrowthAuditComponent implements OnDestroy {
     }
 
     if (event.type === 'completed') {
-      this.auditProgress = event.data.progress ?? 100;
-      this.auditStep = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Audit terminé`;
-      this.resetAuditTimeline();
-      this.isAuditRunning = false;
+      this.terminerLAudit(event.data.progress ?? 100);
       this.auditSummary = {
         auditId: event.data.auditId,
         ready: true,
@@ -399,16 +399,11 @@ export class GrowthAuditComponent implements OnDestroy {
       return;
     }
 
-    this.isAuditRunning = false;
-    this.resetAuditTimeline();
-    this.errorMessage =
-      event.data.error ||
-      $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
+    this.arreterLAudit(event.data.error || this.echecDeLAudit);
     this.trackAuditEvent('audit_failed', {
       auditId: event.data.auditId,
       reason: event.data.error ?? 'unknown',
     });
-    this.cdr.markForCheck();
   }
 
   private recoverFromSummary(auditId: string): void {
@@ -416,20 +411,14 @@ export class GrowthAuditComponent implements OnDestroy {
       next: (summary) => {
         if (summary.ready || summary.status === 'COMPLETED') {
           this.auditSummary = summary;
-          this.auditProgress = summary.progress;
-          this.auditStep = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Audit terminé`;
-          this.resetAuditTimeline();
-          this.isAuditRunning = false;
+          this.terminerLAudit(summary.progress);
           this.errorMessage = undefined;
           this.cdr.markForCheck();
           return;
         }
 
         if (summary.status === 'FAILED') {
-          this.isAuditRunning = false;
-          this.resetAuditTimeline();
-          this.errorMessage = $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
-          this.cdr.markForCheck();
+          this.arreterLAudit(this.echecDeLAudit);
           return;
         }
 
@@ -439,18 +428,30 @@ export class GrowthAuditComponent implements OnDestroy {
           return;
         }
 
-        this.isAuditRunning = false;
-        this.resetAuditTimeline();
-        this.errorMessage = $localize`:growthAudit.error.connectionLost|Connection lost during audit@@auditErrorConnectionLost:Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.`;
-        this.cdr.markForCheck();
+        this.arreterLAudit(
+          $localize`:growthAudit.error.connectionLost|Connection lost during audit@@auditErrorConnectionLost:Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.`,
+        );
       },
       error: () => {
-        this.isAuditRunning = false;
-        this.resetAuditTimeline();
-        this.errorMessage = $localize`:growthAudit.error.summaryFetch|Summary fetch error@@auditErrorSummaryFetch:Impossible de récupérer le résumé de l'audit pour le moment.`;
-        this.cdr.markForCheck();
+        this.arreterLAudit(
+          $localize`:growthAudit.error.summaryFetch|Summary fetch error@@auditErrorSummaryFetch:Impossible de récupérer le résumé de l'audit pour le moment.`,
+        );
       },
     });
+  }
+
+  private terminerLAudit(progression: number): void {
+    this.auditProgress = progression;
+    this.auditStep = this.etapeTerminee;
+    this.resetAuditTimeline();
+    this.isAuditRunning = false;
+  }
+
+  private arreterLAudit(message: string): void {
+    this.isAuditRunning = false;
+    this.resetAuditTimeline();
+    this.errorMessage = message;
+    this.cdr.markForCheck();
   }
 
   private stopStream(): void {

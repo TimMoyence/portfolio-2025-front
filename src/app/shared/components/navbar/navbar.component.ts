@@ -14,6 +14,8 @@ import {
   inject,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { LOCALES_DU_SITE } from '../../../core/config/locales';
+import { cheminEnLocale } from '../../../core/seo/chemins';
 import { BreakpointService } from '../../../core/services/breakpoint.service';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import type { DropdownSection, NavLink } from '../../models/navbar.model';
@@ -157,9 +159,7 @@ export class NavbarComponent {
   getAlternateLocaleUrl(): string {
     if (!isPlatformBrowser(this.platformId)) return '#';
     const targetLocale = this.currentLocale.startsWith('fr') ? 'en' : 'fr';
-    const currentPath = window.location.pathname;
-    const pathWithoutLocale = currentPath.replace(/^\/(fr|en)/, '');
-    return `/${targetLocale}${pathWithoutLocale || ''}`;
+    return cheminEnLocale(window.location.pathname, targetLocale, LOCALES_DU_SITE);
   }
 
   getAlternateLocaleLabel(): string {

@@ -22,6 +22,7 @@ import type {
 } from '../../../../cours/runtime/core/sync';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
+import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
 import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
@@ -261,10 +262,10 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
               type="button"
               class="scene-fullscreen"
               data-testid="scene-plein-ecran"
-              (click)="basculerPleinEcran()"
-              [attr.aria-pressed]="pleinEcran()"
+              (click)="pleinEcran.basculer()"
+              [attr.aria-pressed]="pleinEcran.actif()"
             >
-              @if (pleinEcran()) {
+              @if (pleinEcran.actif()) {
                 <ng-container i18n="scene.quitterPleinEcran|@@sceneQuitterPleinEcran"
                   >Quitter le plein écran</ng-container
                 >
@@ -345,7 +346,7 @@ export class CoursSceneComponent {
   readonly suiviDuFlux = signal<StatutFlux | null>(null);
   readonly resultats = signal<ResultatsDuFlux | null>(null);
   readonly pilotage = signal<Readonly<Record<string, PilotageEcran>>>({});
-  readonly pleinEcran = signal(false);
+  protected readonly pleinEcran = pleinEcranDeLaPage();
 
   protected readonly titreParDefaut = $localize`:scene.titreParDefaut|@@sceneTitreParDefaut:Cours en direct`;
 
@@ -411,22 +412,6 @@ export class CoursSceneComponent {
 
   quandStabilise(): Promise<void> {
     return this.chantier;
-  }
-
-  protected async basculerPleinEcran(): Promise<void> {
-    if (typeof document === 'undefined') {
-      return;
-    }
-    try {
-      if (document.fullscreenElement !== null) {
-        await document.exitFullscreen();
-      } else if (typeof document.documentElement.requestFullscreen === 'function') {
-        await document.documentElement.requestFullscreen();
-      }
-      this.pleinEcran.set(document.fullscreenElement !== null);
-    } catch {
-      this.pleinEcran.set(false);
-    }
   }
 
   private async lireLeDeroule(): Promise<void> {

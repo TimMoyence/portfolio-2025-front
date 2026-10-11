@@ -17,6 +17,30 @@ test.describe('le serveur SSR ne révèle pas sa pile', () => {
   }
 });
 
+test.describe('le serveur SSR interdit le reniflage de type sur toute réponse', () => {
+  test.skip(
+    baseSsr === '',
+    'hors porte : SSR_BASE_URL absente. La porte la fournit (npm run test:e2e:portail).',
+  );
+
+  for (const chemin of [
+    '/fr/',
+    '/fr/page-inexistante',
+    '/fr/contact/',
+    '/home',
+    '/robots.txt',
+    '/sitemap.xml',
+    '/llms.txt',
+    '/fr/assets/favicon/site.webmanifest',
+  ]) {
+    test(`${chemin} porte X-Content-Type-Options: nosniff`, async ({ request }) => {
+      const reponse = await request.get(`${baseSsr}${chemin}`, { maxRedirects: 0 });
+
+      expect(reponse.headers()['x-content-type-options']).toBe('nosniff');
+    });
+  }
+});
+
 test.describe('le livret papier s’imprime hors du processus du pupitre', () => {
   test.skip(
     baseSsr === '',

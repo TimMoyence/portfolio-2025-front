@@ -1,3 +1,4 @@
+import { MOTIF_UUID_V4 } from '../../../testing/sans-random-uuid';
 import { sansStockageLocal, saturationDuStockage } from '../../../testing/sans-stockage';
 import {
   clearIdentity,
@@ -35,9 +36,7 @@ describe('identity', () => {
 
   it('produit une cle au format uuid v4', () => {
     const enregistrement = saveIdentity(THEO);
-    expect(enregistrement.identite.studentKey).toMatch(
-      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
-    );
+    expect(enregistrement.identite.studentKey).toMatch(MOTIF_UUID_V4);
     expect(enregistrement.persistee).toBe(true);
   });
 

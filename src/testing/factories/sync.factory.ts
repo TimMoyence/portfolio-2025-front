@@ -1,15 +1,12 @@
 import type { CreateurFlux } from '../../app/features/cours/cours-flux.token';
 import type { ResultatsSeance } from '../../cours/content/types';
+import { abonner, diffuserA, type Ecoute } from '../../cours/runtime/core/ecoutes';
 import type {
   EtatSession,
-  FinListener,
   RaisonDeFin,
   ResultatsDuFlux,
-  ResultatsListener,
   StatutFlux,
-  StatutListener,
   Sync,
-  SyncListener,
 } from '../../cours/runtime/core/sync';
 
 export interface FluxDouble {
@@ -34,18 +31,11 @@ function buildEtatSession(overrides: Partial<EtatSession>): EtatSession {
   };
 }
 
-function ecouter<T>(ecoutes: T[]): (ecoute: T) => () => void {
-  return (ecoute) => {
-    ecoutes.push(ecoute);
-    return () => undefined;
-  };
-}
-
 export function createFluxDouble(): FluxDouble {
-  const ecoutes: SyncListener[] = [];
-  const ecoutesResultats: ResultatsListener[] = [];
-  const ecoutesStatut: StatutListener[] = [];
-  const ecoutesFin: FinListener[] = [];
+  const etats = new Set<Ecoute<EtatSession>>();
+  const resultats = new Set<Ecoute<ResultatsDuFlux>>();
+  const statuts = new Set<Ecoute<StatutFlux>>();
+  const fins = new Set<Ecoute<RaisonDeFin | null>>();
   const flux = jasmine.createSpyObj<Sync>('Sync', [
     'ouvrir',
     'onState',
@@ -54,34 +44,17 @@ export function createFluxDouble(): FluxDouble {
     'onFin',
     'close',
   ]);
-  flux.onState.and.callFake(ecouter(ecoutes));
-  flux.onResultats.and.callFake(ecouter(ecoutesResultats));
-  flux.onStatut.and.callFake(ecouter(ecoutesStatut));
-  flux.onFin.and.callFake(ecouter(ecoutesFin));
+  flux.onState.and.callFake((ecoute) => abonner(etats, ecoute));
+  flux.onResultats.and.callFake((ecoute) => abonner(resultats, ecoute));
+  flux.onStatut.and.callFake((ecoute) => abonner(statuts, ecoute));
+  flux.onFin.and.callFake((ecoute) => abonner(fins, ecoute));
   return {
     fabrique: jasmine.createSpy<CreateurFlux>('creerFlux').and.returnValue(flux),
     flux,
-    diffuser: (etat) => {
-      const complet = buildEtatSession(etat);
-      for (const ecoute of ecoutes) {
-        ecoute(complet);
-      }
-    },
-    diffuserResultats: (resultats) => {
-      const complets: ResultatsDuFlux = { jalons: {}, enigmes: [], bareme: null, ...resultats };
-      for (const ecoute of ecoutesResultats) {
-        ecoute(complets);
-      }
-    },
-    diffuserStatut: (statut) => {
-      for (const ecoute of ecoutesStatut) {
-        ecoute(statut);
-      }
-    },
-    diffuserFin: (raison) => {
-      for (const ecoute of ecoutesFin) {
-        ecoute(raison);
-      }
-    },
+    diffuser: (etat) => diffuserA(etats, buildEtatSession(etat)),
+    diffuserResultats: (partiels) =>
+      diffuserA(resultats, { jalons: {}, enigmes: [], bareme: null, ...partiels }),
+    diffuserStatut: (statut) => diffuserA(statuts, statut),
+    diffuserFin: (raison) => diffuserA(fins, raison),
   };
 }

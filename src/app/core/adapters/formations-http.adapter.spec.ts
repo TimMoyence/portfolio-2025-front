@@ -222,6 +222,12 @@ describe('FormationsHttpAdapter', () => {
       ).toEqual({ recus: [FICHIER], jeton: null, reponse: 'blob' });
     });
 
+    it('telechargerRapportCsv GETe le csv de la séance tel que le serveur le produit', () => {
+      expect(
+        telecharge(adapter.telechargerRapportCsv(SESSION_ID), `${URL_SEANCE}/report.csv`),
+      ).toEqual({ recus: [FICHIER], jeton: null, reponse: 'blob' });
+    });
+
     it('échoue sur un classeur servi sans nom de fichier, plutôt que d en inventer un', () => {
       const erreurs: unknown[] = [];
 

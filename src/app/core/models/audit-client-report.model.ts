@@ -1,3 +1,5 @@
+import type { StatutScore } from 'portfolio-2025-partage/score';
+
 /**
  * Miroir du type backend `ClientReportSynthesis`
  * (cf. `portfolio-2025-back/src/modules/audit-requests/domain/AuditReportTiers.ts`).
@@ -31,7 +33,7 @@ interface ClientReportPillar {
   readonly pillar: string;
   readonly score: number;
   readonly target: number;
-  readonly status: 'critical' | 'warning' | 'ok';
+  readonly status: StatutScore;
 }
 
 interface ClientReportQuickWin {

@@ -11,7 +11,7 @@ import {
   relacherCurseur,
 } from '../../../testing/reglages-briques';
 import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
-import { evaluerExpression, remplirGabarit } from '../core/formula';
+import { evaluerExpression, remplirGabarit } from 'portfolio-2025-partage/formule';
 import { type Concept4Definition, FpConcept4 } from './FpConcept4';
 
 const REGLAGE = 'fp-concept4-reglage';

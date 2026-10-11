@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { serialiserJsonLd } from './json-ld';
 import type { SeoConfig } from './seo.interface';
 
 const OG_LOCALE_MAP: Record<string, string> = {
@@ -156,7 +157,7 @@ export class SeoService {
     for (const block of blocks) {
       const script = this.document.createElement('script');
       script.type = 'application/ld+json';
-      script.textContent = JSON.stringify(block);
+      script.textContent = serialiserJsonLd(block);
       this.document.head.appendChild(script);
     }
   }

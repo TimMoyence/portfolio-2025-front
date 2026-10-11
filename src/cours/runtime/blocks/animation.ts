@@ -1,4 +1,6 @@
-import type { ParametreReglable } from './curseurs';
+import { bornerEntre, fini } from '../core/valeurs';
+import { prefereMouvementReduit } from '../core/mouvement';
+import { type ParametreReglable, plafondDe, plancherDe } from './curseurs';
 
 export type Reglages = Readonly<Record<string, number>>;
 
@@ -7,9 +9,8 @@ const CHANGEMENTS_PAR_DEFAUT = 6;
 const PRECISION = 1e9;
 
 export function borner(parametre: ParametreReglable, valeur: number): number {
-  const bas = Number.isFinite(parametre.min) ? parametre.min : 0;
-  const haut = Math.max(Number.isFinite(parametre.max) ? parametre.max : bas, bas);
-  return Math.min(Math.max(Number.isFinite(valeur) ? valeur : bas, bas), haut);
+  const bas = plancherDe(parametre);
+  return bornerEntre(fini(valeur, bas), bas, plafondDe(parametre));
 }
 
 export function caler(parametre: ParametreReglable, valeur: number): number {
@@ -74,10 +75,6 @@ export function suiteVersLeMaximum(
     }
   }
   return suite;
-}
-
-function prefereMouvementReduit(): boolean {
-  return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 export function jouerSuite(

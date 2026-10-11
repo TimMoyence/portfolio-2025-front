@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -40,13 +39,17 @@ import {
 } from '../../../../cours/runtime/core/queue';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import { creerBrouillons, purgerLesAutresBrouillons } from '../../../../cours/runtime/core/storage';
-import type {
-  EtatSession,
-  RaisonDeFin,
-  StatutSession,
-  Sync,
+import {
+  refusDuFlux,
+  type EtatSession,
+  type RaisonDeFin,
+  type RefusDuFlux,
+  type StatutSession,
+  type Sync,
 } from '../../../../cours/runtime/core/sync';
-import { getApiBaseUrl } from '../../../core/http/api-config';
+import { estObjet } from '../../../../cours/runtime/core/valeurs';
+import { getApiFormationsUrl } from '../../../core/http/api-config';
+import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
 import type {
   IncidentEtudiant,
   MotifRefusRattachement,
@@ -71,7 +74,7 @@ import {
   retourDeReponse,
   retourDeTentative,
   retoursDeLEtat,
-} from '../../../core/ports/retours-brique';
+} from '../../../core/adapters/retours-brique';
 import type {
   DirectEcran,
   EvenementBrique,
@@ -108,10 +111,6 @@ interface RefusDeReponse {
   readonly message: string;
 }
 
-interface RefusDuFlux {
-  readonly statut: number;
-}
-
 interface Envoi {
   readonly nature: NatureEnvoi;
   readonly questionId: string;
@@ -132,8 +131,6 @@ interface VerdictAffiche extends VerdictRecu {
 }
 
 const REGIMES_VERROU: readonly RegimeVerrou[] = ['ouvert', 'focus', 'examen'];
-
-const STATUTS_SANS_RETOUR: readonly number[] = [401, 403];
 
 const SLUG_DE_COURS = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -181,10 +178,7 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
 }
 
 function regimeDuContenu(contenu: unknown): RegimeVerrou | null {
-  if (typeof contenu !== 'object' || contenu === null) {
-    return null;
-  }
-  const regime = (contenu as Record<string, unknown>)['regime'];
+  const regime = estObjet(contenu) ? contenu['regime'] : undefined;
   return typeof regime === 'string' && REGIMES_VERROU.includes(regime as RegimeVerrou)
     ? (regime as RegimeVerrou)
     : null;
@@ -200,8 +194,8 @@ function regimeDeLEcran(ecran: EcranContent): RegimeVerrou {
     if (indirect !== null) {
       return indirect;
     }
-    if (typeof donnees === 'object' && donnees !== null) {
-      const metadonnees = regimeDuContenu((donnees as Record<string, unknown>)['metadonnees']);
+    if (estObjet(donnees)) {
+      const metadonnees = regimeDuContenu(donnees['metadonnees']);
       if (metadonnees !== null) {
         return metadonnees;
       }
@@ -293,10 +287,10 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
                   type="button"
                   class="btn btn-ghost student-session__plein-ecran"
                   data-testid="etudiant-plein-ecran"
-                  [attr.aria-pressed]="pleinEcran()"
-                  (click)="basculerPleinEcran()"
+                  [attr.aria-pressed]="pleinEcran.actif()"
+                  (click)="pleinEcran.basculer()"
                 >
-                  @if (pleinEcran()) {
+                  @if (pleinEcran.actif()) {
                     <span i18n="cours.quitterPleinEcran|@@coursQuitterPleinEcran"
                       >Quitter le plein écran</span
                     >
@@ -634,7 +628,7 @@ export class CoursEtudiantComponent {
   readonly chargementEcran = signal(false);
   readonly retours = signal<ReadonlyMap<string, readonly RetourBrique[]>>(new Map());
   readonly repriseIndisponible = signal(false);
-  readonly pleinEcran = signal(false);
+  protected readonly pleinEcran = pleinEcranDeLaPage();
 
   readonly reflexionEnAttente = computed<EtatEnvoiLibre | null>(() => {
     const sessionId = this.sessionId();
@@ -649,10 +643,7 @@ export class CoursEtudiantComponent {
     return null;
   });
 
-  readonly accesPerdu = computed<boolean>(() => {
-    const refus = this.refusDuFlux();
-    return refus !== null && STATUTS_SANS_RETOUR.includes(refus.statut);
-  });
+  readonly accesPerdu = computed<boolean>(() => this.refusDuFlux()?.motif === 'session');
 
   readonly ecranCourant = computed<EcranContent | null>(() => {
     const ecran = this.sujet()?.ecrans[this.indexEcran()];
@@ -700,7 +691,6 @@ export class CoursEtudiantComponent {
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFlux = inject(CREATEUR_FLUX);
   private readonly reponsesLibres = inject(ReponsesLibresService);
-  private readonly document = inject(DOCUMENT);
   private readonly coursVise = toSignal(
     inject(ActivatedRoute).queryParamMap.pipe(map((parametres) => parametres.get('cours'))),
     { initialValue: null },
@@ -709,7 +699,7 @@ export class CoursEtudiantComponent {
     const slug = this.coursVise();
     return slug !== null && SLUG_DE_COURS.test(slug) ? `/cours/presenter/${slug}` : null;
   });
-  private readonly baseUrl = `${getApiBaseUrl()}/formations`;
+  private readonly baseUrl = getApiFormationsUrl();
   private readonly enLigne = signal(typeof navigator === 'undefined' || navigator.onLine);
   private readonly incidents: IncidentEtudiant[] = [];
   private readonly debutFormulaire = Date.now();
@@ -749,15 +739,11 @@ export class CoursEtudiantComponent {
         this.chantier = this.reprendreLesEnvois();
       };
       const surPerte = (): void => this.enLigne.set(false);
-      const surPleinEcran = (): void =>
-        this.pleinEcran.set(this.document.fullscreenElement !== null);
       fenetre.addEventListener('online', surRetour);
       fenetre.addEventListener('offline', surPerte);
-      this.document.addEventListener('fullscreenchange', surPleinEcran);
       aLaDestruction.onDestroy(() => {
         fenetre.removeEventListener('online', surRetour);
         fenetre.removeEventListener('offline', surPerte);
-        this.document.removeEventListener('fullscreenchange', surPleinEcran);
       });
     }
     aLaDestruction.onDestroy(() => {
@@ -779,14 +765,6 @@ export class CoursEtudiantComponent {
 
   protected surEvenement(evenement: EvenementBrique): void {
     this.chantier = this.traiterEvenement(evenement);
-  }
-
-  protected basculerPleinEcran(): void {
-    const page = this.document;
-    const bascule = page.fullscreenElement
-      ? page.exitFullscreen?.()
-      : page.documentElement.requestFullscreen?.();
-    bascule?.catch(() => this.pleinEcran.set(page.fullscreenElement !== null));
   }
 
   protected avancer(): void {
@@ -916,7 +894,7 @@ export class CoursEtudiantComponent {
     });
     flux.onState((etat) => this.suivreLeFlux(deck, etat));
     flux.onStatut((statut) => {
-      this.refusDuFlux.set(statut.etat === 'refuse' ? { statut: statut.statut } : null);
+      this.refusDuFlux.set(refusDuFlux(statut));
     });
     flux.onFin((raison) => this.finirSelon(raison));
     flux.ouvrir();
@@ -1034,19 +1012,17 @@ export class CoursEtudiantComponent {
     }
   }
 
-  private async chargerLesRappels(screenId: string): Promise<void> {
-    const sessionId = this.sessionId();
-    if (sessionId === null) {
-      return;
-    }
-    this.rappelsDemandes = true;
-    try {
-      const { questions } = await firstValueFrom(this.port.lireRappels(sessionId, this.jeton()));
-      this.ajouter(screenId, [{ kind: 'rappels', questions }]);
-    } catch (erreur) {
-      this.rappelsDemandes = false;
-      this.ajouter(screenId, [retourDeRefus(refusDe(erreur).motif, texte('spaced-erreur'))]);
-    }
+  private chargerLesRappels(screenId: string): Promise<void> {
+    return this.pourLaSeance(async (sessionId, jeton) => {
+      this.rappelsDemandes = true;
+      try {
+        const { questions } = await firstValueFrom(this.port.lireRappels(sessionId, jeton));
+        this.ajouter(screenId, [{ kind: 'rappels', questions }]);
+      } catch (erreur) {
+        this.rappelsDemandes = false;
+        this.ajouter(screenId, [retourDeRefus(refusDe(erreur).motif, texte('spaced-erreur'))]);
+      }
+    });
   }
 
   private suivreLeFlux(deck: Deck, etat: EtatSession): void {
@@ -1259,19 +1235,17 @@ export class CoursEtudiantComponent {
     }
   }
 
-  private async envoyerOuMettreEnFile(envoi: Envoi, screenId: string): Promise<void> {
-    const sessionId = this.sessionId();
-    if (sessionId === null) {
-      return;
-    }
-    if (
-      !this.enLigne() ||
-      (await this.transmettre(sessionId, envoi, screenId, false)) === 'en-panne'
-    ) {
-      this.mettreEnFile(envoi);
-      return;
-    }
-    await this.viderLaFile();
+  private envoyerOuMettreEnFile(envoi: Envoi, screenId: string): Promise<void> {
+    return this.pourLaSeance(async (sessionId) => {
+      if (
+        !this.enLigne() ||
+        (await this.transmettre(sessionId, envoi, screenId, false)) === 'en-panne'
+      ) {
+        this.mettreEnFile(envoi);
+        return;
+      }
+      await this.viderLaFile();
+    });
   }
 
   private async transmettre(
@@ -1433,11 +1407,8 @@ export class CoursEtudiantComponent {
   }
 
   private async reprendreLesEnvois(): Promise<void> {
-    const sessionId = this.sessionId();
     await this.viderLaFile();
-    if (sessionId !== null) {
-      await this.reponsesLibres.reprendre(sessionId, this.jeton());
-    }
+    await this.reprendreLesReponsesLibres();
   }
 
   private async viderLaFile(): Promise<void> {

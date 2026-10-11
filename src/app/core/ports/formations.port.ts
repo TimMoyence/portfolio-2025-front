@@ -365,6 +365,7 @@ export interface FormationsPort {
   cloturer(sessionId: string): Observable<void>;
   lireResultats(sessionId: string): Observable<RapportSeance>;
   exporterBilan(sessionId: string): Observable<RapportSeance>;
+  telechargerRapportCsv(sessionId: string): Observable<FichierTelecharge>;
   lireAnnotations(sessionId: string): Observable<{ annotations: readonly AnnotationFormateur[] }>;
   enregistrerAnnotation(
     sessionId: string,

@@ -7,8 +7,13 @@ const REDIRECTIONS_PERMANENTES: ReadonlyArray<readonly [string, string]> = [
   ['/fr/atelier', '/fr/projets'],
   ['/fr/atelier/meteo/app', '/fr/projets'],
   ['/en/atelier/sebastian/app/badges', '/en/projets'],
-  ['/fr/commonbudgetTM', '/fr'],
-  ['/en/commonbudgetTM', '/en'],
+  ['/fr/commonbudgetTM', '/fr/'],
+  ['/en/commonbudgetTM', '/en/'],
+  ['/home', '/fr/'],
+  ['/fr/home', '/fr/'],
+  ['/fr', '/fr/'],
+  ['/en', '/en/'],
+  ['/fr/contact/', '/fr/contact'],
 ];
 
 test.describe('les pages retirées répondent un vrai 301', () => {

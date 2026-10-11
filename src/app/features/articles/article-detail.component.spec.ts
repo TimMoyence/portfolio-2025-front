@@ -1,8 +1,10 @@
 import { HttpTestingController } from '@angular/common/http/testing';
+import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { setupTestBed } from '../../../testing/setup-test-bed';
+import { SeoService } from '../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../core/ssr/http-response-status';
 import { ArticleDetailComponent } from './article-detail.component';
 
@@ -88,5 +90,50 @@ describe('ArticleDetailComponent — statut HTTP rendu côté serveur', () => {
     });
 
     expect(statuses).toEqual([]);
+  });
+});
+
+describe('ArticleDetailComponent — URL canonique', () => {
+  it('construit le canonical comme le reste du site, base terminee par un slash comprise', () => {
+    setupTestBed({
+      router: true,
+      appConfig: { baseUrl: 'https://example.com/' },
+      imports: [ArticleDetailComponent],
+      providers: [
+        { provide: LOCALE_ID, useValue: 'fr' },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { paramMap: convertToParamMap({ slug: 'veille' }) } },
+        },
+      ],
+    });
+    const seo = TestBed.inject(SeoService);
+    const miseAJour = spyOn(seo, 'updateSeoMetadata');
+    const httpMock = TestBed.inject(HttpTestingController);
+    TestBed.createComponent(ArticleDetailComponent).detectChanges();
+
+    httpMock
+      .expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/veille`)
+      .flush({
+        article_id: 'veille-fr',
+        slug: 'veille',
+        locale: 'fr',
+        title: 'Veille IA',
+        excerpt: 'x',
+        tags: [],
+        published_at: '2026-09-23T04:15:00.000Z',
+        updated_at: '2026-09-23T04:15:00.000Z',
+        seo: { description: 'x', canonical_path: '/articles/veille/' },
+        content_markdown: '# Veille',
+        reading_time_minutes: 1,
+        sections: [],
+        sources: [],
+        provenance: {},
+      });
+
+    const config = miseAJour.calls.mostRecent().args[0];
+    expect(config.canonicalUrl).toBe('https://example.com/fr/articles/veille');
+    expect(config.ogUrl).toBe('https://example.com/fr/articles/veille');
+    httpMock.verify();
   });
 });

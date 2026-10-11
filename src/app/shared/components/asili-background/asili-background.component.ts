@@ -9,6 +9,8 @@ import {
   inject,
   viewChild,
 } from '@angular/core';
+import { REQUETE_MOUVEMENT_REDUIT } from '../../../../cours/runtime/core/mouvement';
+import { bornerEntre } from '../../../../cours/runtime/core/valeurs';
 
 interface FieldNode {
   x: number;
@@ -89,7 +91,7 @@ export class AsiliBackgroundComponent implements AfterViewInit {
       return;
     }
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const motionQuery = window.matchMedia(REQUETE_MOUVEMENT_REDUIT);
     this.reduce = motionQuery.matches;
     this.readColors();
     this.resize();
@@ -214,7 +216,7 @@ export class AsiliBackgroundComponent implements AfterViewInit {
   private buildNodes(): void {
     this.nodes.length = 0;
     const cap = this.w < 768 ? 46 : 80;
-    const count = Math.round(Math.min(cap, Math.max(18, (this.w * this.h) / 22000)));
+    const count = Math.round(bornerEntre((this.w * this.h) / 22000, 18, cap));
     for (let i = 0; i < count; i++) {
       this.nodes.push({
         x: this.randomUnit() * this.w,
