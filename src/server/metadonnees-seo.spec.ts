@@ -21,6 +21,7 @@ describe('lecteurDeMetadonneesSeo', () => {
     ['un JSON qui n est pas un objet de métadonnées', '[]'],
     ['des métadonnées sans site', '{"pages":[]}'],
     ['des métadonnées sans pages', '{"site":{}}'],
+    ['une page qui n est pas un objet', '{"site":{},"pages":[null]}'],
   ]) {
     it(`passe au candidat suivant après ${cas}, et le signale`, () => {
       const { lire, journal } = lecteur({ [FR]: contenu, [EN]: VALIDE });
