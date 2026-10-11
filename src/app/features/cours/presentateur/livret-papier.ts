@@ -6,6 +6,7 @@ import type {
   EcranDeroule,
   GuideFormateur,
 } from '../../../../cours/content/types';
+import { estObjet } from '../../../../cours/runtime/core/valeurs';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { questionsDuPanneau } from './questions-du-panneau';
@@ -134,7 +135,7 @@ function textesDe(valeur: unknown, champ = ''): readonly string[] {
   if (Array.isArray(valeur)) {
     return valeur.flatMap((element: unknown) => textesDe(element, champ));
   }
-  return typeof valeur === 'object' && valeur !== null
+  return estObjet(valeur)
     ? Object.entries(valeur).flatMap(([cle, contenu]) => textesDe(contenu, cle))
     : [];
 }

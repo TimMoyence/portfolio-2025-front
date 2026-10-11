@@ -111,7 +111,7 @@ function copierPlan(source: TableBuildPlanPublic): TableBuildPlanPublic {
   return {
     ...copierLEnonce(source),
     consignes: [...source.consignes],
-    echeances: Number.isFinite(source.echeances) ? Math.max(0, Math.trunc(source.echeances)) : 0,
+    echeances: entierBorne(source.echeances, 0, Number.POSITIVE_INFINITY, 0),
     ...(typeof source.intituleDesLignes === 'string'
       ? { intituleDesLignes: source.intituleDesLignes }
       : {}),

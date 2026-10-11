@@ -1,5 +1,6 @@
 import type { CoursContent, FreeRange, PacingMode, Role } from '../../content/types';
 import { abonner, diffuserA } from './ecoutes';
+import { estEntierPositif } from './valeurs';
 
 export interface DeckOptions {
   role?: Role;
@@ -35,7 +36,7 @@ export function createDeck(cours: CoursContent, options: DeckOptions = {}): Deck
   };
 
   const dansLesBornes = (index: number): boolean =>
-    Number.isInteger(index) && index >= 0 && index < cours.ecrans.length;
+    estEntierPositif(index) && index < cours.ecrans.length;
 
   const canNavigate = (index: number): boolean => {
     if (!dansLesBornes(index)) {

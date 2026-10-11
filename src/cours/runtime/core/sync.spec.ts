@@ -389,6 +389,7 @@ describe('sync', () => {
     it('ignore un etat dont la revision ou le pilotage est malforme', async () => {
       const recus = await collecter([
         bloc('etat', { ...ETAT, revision: 'sept' }),
+        bloc('etat', { ...ETAT, revision: 2 ** 53 }),
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A3-01': { phase: 'fin' } } }),
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A3-06': { etayage: -1 } } }),
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A5-08': { revele: 'oui' } } }),
