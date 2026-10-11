@@ -4,6 +4,9 @@ const angular = require('angular-eslint');
 const sonarjs = require('eslint-plugin-sonarjs');
 const globals = require('globals');
 
+const COEUR_SANS_SHARED_NI_FEATURES =
+  'Le core ne dépend ni de shared ni de features : le contrat vit dans core/ports.';
+
 module.exports = tseslint.config(
   {
     ignores: [
@@ -70,10 +73,16 @@ module.exports = tseslint.config(
           patterns: [
             {
               regex: '(^|/)(shared|features)/',
-              message:
-                'Le core ne dépend ni de shared ni de features : le contrat vit dans core/ports.',
+              message: COEUR_SANS_SHARED_NI_FEATURES,
             },
           ],
+        },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ImportExpression > Literal[value=/(^|\\/)(shared|features)\\//]',
+          message: COEUR_SANS_SHARED_NI_FEATURES,
         },
       ],
     },
