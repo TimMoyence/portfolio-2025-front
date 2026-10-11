@@ -5,7 +5,8 @@ import {
   copierLeSocle,
   projeterOptions,
 } from './projection';
-import { type ConceptMaitrise, estObjet } from './retours';
+import { estObjet } from '../core/valeurs';
+import type { ConceptMaitrise } from './retours';
 import { FpVerdicts } from './verdicts';
 
 export interface SpacedRappel extends ContenuDeBrique {

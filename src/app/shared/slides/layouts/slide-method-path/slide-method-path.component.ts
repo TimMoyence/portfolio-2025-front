@@ -8,6 +8,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { prefereMouvementReduit } from '../../../../../cours/runtime/core/mouvement';
 import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
 export interface SlideMethodStep {
@@ -39,8 +40,7 @@ export class SlideMethodPathComponent {
 
   constructor() {
     afterNextRender(() => {
-      const mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!this.autoplay() || this.steps().length < 2 || mouvementReduit) {
+      if (!this.autoplay() || this.steps().length < 2 || prefereMouvementReduit()) {
         return;
       }
       const timer = window.setInterval(() => {

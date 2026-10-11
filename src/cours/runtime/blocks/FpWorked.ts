@@ -1,4 +1,5 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { entierBorne } from '../core/valeurs';
 import { lignesDeCalculHtml } from './calculs';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { FpRedaction } from './redaction';
@@ -128,10 +129,7 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
   }
 
   private borner(valeur: number): number {
-    if (!Number.isFinite(valeur)) {
-      return this.montrees;
-    }
-    return Math.min(Math.max(Math.trunc(valeur), 0), this.total());
+    return entierBorne(valeur, 0, this.total(), this.montrees);
   }
 
   private montree(rang: number): boolean {

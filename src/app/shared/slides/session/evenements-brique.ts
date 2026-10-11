@@ -1,4 +1,6 @@
 import type { EtatPulse, ValeurProduction } from '../../../../cours/content/types';
+import { lireTextes } from '../../../../cours/runtime/blocks/retours';
+import { estEntierPositif, estObjet } from '../../../../cours/runtime/core/valeurs';
 import type { EvenementBrique } from './contrat-hote';
 import { objet } from '../visual/presentation-v2';
 
@@ -42,7 +44,7 @@ function identifiant(valeur: unknown): valeur is string {
 
 function duree(detail: Detail): number | null {
   const dureeMs = detail['dureeMs'];
-  return typeof dureeMs === 'number' && Number.isInteger(dureeMs) && dureeMs >= 0 ? dureeMs : null;
+  return estEntierPositif(dureeMs) ? dureeMs : null;
 }
 
 function estValeurDeReponse(valeur: unknown): valeur is number | string {
@@ -99,15 +101,10 @@ function valeurDeProduction(
     );
     return valides.length > 0 ? { type, saisies: valides } : null;
   }
-  const dictionnaire = objet(contenu);
-  if (dictionnaire === null) {
+  if (!estObjet(contenu)) {
     return null;
   }
-  const textes = Object.fromEntries(
-    Object.entries(dictionnaire).filter(
-      (entree): entree is [string, string] => typeof entree[1] === 'string',
-    ),
-  );
+  const textes = lireTextes(contenu);
   return type === 'feuille' ? { type, cellules: textes } : { type, classement: textes };
 }
 

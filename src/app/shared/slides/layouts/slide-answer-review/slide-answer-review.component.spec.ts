@@ -3,18 +3,16 @@ import {
   ATELIER_CORRIGE,
   buildAnswerReviewProps,
 } from '../../../../../testing/factories/visual-slide.factory';
+import type { DecomptesParCle } from '../../../../../cours/content/types';
 import { setupTestBed } from '../../../../../testing/setup-test-bed';
-import {
-  SlideAnswerReviewComponent,
-  type ReussiteDeLaClasse,
-} from './slide-answer-review.component';
+import { SlideAnswerReviewComponent } from './slide-answer-review.component';
 
 const [EVOLUTION, PART] = ATELIER_CORRIGE.questions;
 
 interface Retours {
   readonly verdicts?: Readonly<Record<string, boolean>>;
   readonly cibles?: Readonly<Record<string, string>>;
-  readonly reussites?: Readonly<Record<string, ReussiteDeLaClasse>>;
+  readonly reussites?: DecomptesParCle;
 }
 
 function monter(retours: Retours = {}): HTMLElement {

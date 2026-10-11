@@ -325,6 +325,7 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
     'cloturer',
     'lireResultats',
     'exporterBilan',
+    'telechargerRapportCsv',
     'lireAnnotations',
     'enregistrerAnnotation',
     'lireReponsesLibres',
@@ -357,6 +358,7 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   port.cloturer.and.returnValue(of(undefined));
   port.lireResultats.and.returnValue(of(buildRapportSeance()));
   port.exporterBilan.and.returnValue(of(buildRapportSeance()));
+  port.telechargerRapportCsv.and.returnValue(of(buildFichierTelecharge()));
   port.lireAnnotations.and.returnValue(of({ annotations: [] }));
   port.enregistrerAnnotation.and.callFake((sessionId, annotation) =>
     of(buildAnnotationFormateur({ sessionId, ...annotation })),

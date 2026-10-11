@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import type { NgForm } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import type { AuditStreamEvent } from '../../core/models/audit-request.model';
 import { AUDIT_REQUEST_PORT } from '../../core/ports/audit-request.port';
 import { GrowthAuditComponent } from './growth-audit.component';
 import {
   buildAuditCompletedEvent,
   buildAuditCreateResponse,
+  buildAuditFailedEvent,
   buildAuditProgressEvent,
   buildAuditSummaryResponse,
   buildAuditStreamHeartbeat,
@@ -176,6 +177,91 @@ describe('GrowthAuditComponent', () => {
       'Visibilité IA',
       'Citabilité',
     ]);
+  });
+
+  describe('fin et interruption de l audit', () => {
+    function soumettreSansFlux(): GrowthAuditComponent {
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      auditServiceMock.stream.and.returnValue(throwError(() => new Error('flux coupe')));
+      remplirEtSoumettre(fixture.componentInstance, true);
+      return fixture.componentInstance;
+    }
+
+    it('vide le formulaire une fois la demande envoyee', () => {
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      const form = buildValidForm();
+      fixture.componentInstance.auditFormState = {
+        websiteName: 'https://example.com',
+        contactMethod: 'PHONE',
+        contactValue: '0698503282',
+      };
+      fixture.componentInstance.rgpdConsent = true;
+
+      fixture.componentInstance.submit(form);
+
+      const vierge = fixture.componentInstance.auditFormState;
+      expect(vierge).toEqual({
+        website: '',
+        formStartedAt: jasmine.any(Number),
+        websiteName: '',
+        contactMethod: 'EMAIL',
+        contactValue: '',
+      });
+      expect(fixture.componentInstance.rgpdConsent).toBeFalse();
+      expect(form.resetForm).toHaveBeenCalledWith(vierge);
+    });
+
+    it('affiche l erreur d un audit echoue et efface la chronologie', () => {
+      const { component } = soumettreEtDiffuser(
+        buildAuditFailedEvent({ error: 'Site injoignable' }),
+        'audit-5',
+      );
+
+      expect(component.isAuditRunning).toBeFalse();
+      expect(component.errorMessage).toBe('Site injoignable');
+      expect(component.auditSectionBadges).toEqual([]);
+    });
+
+    it('reprend un audit termine depuis le resume quand le flux tombe', () => {
+      auditServiceMock.getSummary.and.returnValue(
+        of(buildAuditSummaryResponse({ ready: true, status: 'COMPLETED', progress: 100 })),
+      );
+
+      const component = soumettreSansFlux();
+
+      expect(component.auditProgress).toBe(100);
+      expect(component.auditStep).toBe('Audit terminé');
+      expect(component.isAuditRunning).toBeFalse();
+      expect(component.errorMessage).toBeUndefined();
+    });
+
+    it('signale l echec lu dans le resume quand le flux tombe', () => {
+      auditServiceMock.getSummary.and.returnValue(
+        of(buildAuditSummaryResponse({ status: 'FAILED' })),
+      );
+
+      const component = soumettreSansFlux();
+
+      expect(component.isAuditRunning).toBeFalse();
+      expect(component.errorMessage).toBe("L'audit a échoué.");
+    });
+
+    it('rouvre le flux trois fois avant de declarer la connexion perdue', () => {
+      const component = soumettreSansFlux();
+
+      expect(auditServiceMock.stream).toHaveBeenCalledTimes(4);
+      expect(component.isAuditRunning).toBeFalse();
+      expect(component.errorMessage).toContain('Connexion interrompue pendant l');
+    });
+
+    it('signale un resume illisible quand le flux tombe', () => {
+      auditServiceMock.getSummary.and.returnValue(throwError(() => new Error('503')));
+
+      const component = soumettreSansFlux();
+
+      expect(component.isAuditRunning).toBeFalse();
+      expect(component.errorMessage).toContain('Impossible de récupérer le résumé');
+    });
   });
 
   describe('P0.4 — consentement RGPD obligatoire', () => {

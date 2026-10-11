@@ -9,6 +9,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { prefereMouvementReduit } from '../../../../../cours/runtime/core/mouvement';
 import {
   INTERVALLES_VISES,
   NOMBRE_FRANCAIS,
@@ -235,10 +236,7 @@ export class SlideChartComponent {
   protected play(): void {
     this.stop();
     const lastStep = Math.max(0, this.labels().length - 1);
-    if (
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    ) {
+    if (prefereMouvementReduit()) {
       this.step.set(lastStep);
       return;
     }

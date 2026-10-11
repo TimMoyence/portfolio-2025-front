@@ -7,7 +7,12 @@ import {
   output,
   type Type,
 } from '@angular/core';
-import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
+import type {
+  DecomptesParCle,
+  EcranContent,
+  ResultatsSeance,
+  Role,
+} from '../../../../cours/content/types';
 import {
   SlideBoxplotComponent,
   SlideChartComponent,
@@ -32,8 +37,7 @@ import type { QuizInteraction } from '../interactions/slide-quiz/slide-quiz.comp
 import { SlideQuizComponent } from '../interactions/slide-quiz/slide-quiz.component';
 import type { ModeInteraction } from '../interactions/mode-interaction';
 import type { DebriefDeReflexion } from '../interactions/slide-reflection/slide-reflection.component';
-import { reussitesDeLEcran, verdictsDeLEcran } from '../../../core/ports/retours-brique';
-import type { CompteDeCarte } from '../layouts/slide-sort-review/slide-sort-review.component';
+import { reussitesDeLEcran, verdictsDeLEcran } from '../../../core/adapters/retours-brique';
 import type { RetourBrique } from '../session/contrat-hote';
 import { objet, presentationDe, quizImbrique, quizPrincipal } from './presentation-v2';
 
@@ -89,7 +93,7 @@ function cartesDuTri(
 function comptesDuTri(
   source: Readonly<Record<string, unknown>> | null,
   resultats: ResultatsSeance | null,
-): Readonly<Record<string, CompteDeCarte>> {
+): DecomptesParCle {
   const question = (resultats?.questions ?? []).find(
     (candidate) =>
       candidate.ecranId === source?.['screenId'] && candidate.questionId === source?.['sortId'],

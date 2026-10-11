@@ -1,4 +1,5 @@
 import type { CoursContent, FreeRange, PacingMode, Role } from '../../content/types';
+import { abonner, diffuserA } from './ecoutes';
 
 export interface DeckOptions {
   role?: Role;
@@ -30,9 +31,7 @@ export function createDeck(cours: CoursContent, options: DeckOptions = {}): Deck
   let etat: DeckState = { ecranCourant: 0, modeRythme: 'pilote', intervalleLibre: null };
 
   const notifier = (): void => {
-    for (const ecoute of ecoutes) {
-      ecoute({ ...etat });
-    }
+    diffuserA(ecoutes, { ...etat });
   };
 
   const dansLesBornes = (index: number): boolean =>
@@ -83,10 +82,7 @@ export function createDeck(cours: CoursContent, options: DeckOptions = {}): Deck
       notifier();
     },
     subscribe(listener) {
-      ecoutes.add(listener);
-      return () => {
-        ecoutes.delete(listener);
-      };
+      return abonner(ecoutes, listener);
     },
   };
 }

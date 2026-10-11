@@ -38,6 +38,15 @@ export class FullscreenAdapter {
     }
   }
 
+  async basculer(element: HTMLElement): Promise<boolean> {
+    if (this.isFullscreen()) {
+      await this.exit();
+    } else {
+      await this.enter(element);
+    }
+    return this.isFullscreen();
+  }
+
   isFullscreen(): boolean {
     if (!this.isBrowser()) {
       return false;

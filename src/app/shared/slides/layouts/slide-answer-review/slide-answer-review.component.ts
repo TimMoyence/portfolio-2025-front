@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import type { Decompte, DecomptesParCle } from '../../../../../cours/content/types';
 import { LignesDeCalculComponent } from '../../lignes-de-calcul/lignes-de-calcul.component';
 import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
@@ -7,15 +8,10 @@ export interface ExplicationRevelee {
   readonly texte: string;
 }
 
-export interface ReussiteDeLaClasse {
-  readonly justes: number;
-  readonly total: number;
-}
-
 interface LigneRevelee extends ExplicationRevelee {
   readonly cible: string | null;
   readonly juste: boolean | null;
-  readonly reussite: ReussiteDeLaClasse | null;
+  readonly reussite: Decompte | null;
 }
 
 @Component({
@@ -32,7 +28,7 @@ export class SlideAnswerReviewComponent {
   readonly explications = input.required<readonly ExplicationRevelee[]>();
   readonly verdicts = input<Readonly<Record<string, boolean>>>({});
   readonly cibles = input<Readonly<Record<string, string>>>({});
-  readonly reussites = input<Readonly<Record<string, ReussiteDeLaClasse>>>({});
+  readonly reussites = input<DecomptesParCle>({});
 
   protected readonly lignes = computed<readonly LigneRevelee[]>(() => {
     const verdicts = this.verdicts();

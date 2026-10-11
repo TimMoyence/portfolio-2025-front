@@ -11,6 +11,9 @@ import type {
   TypeQuestion,
   VotePhase,
 } from '../../content/types';
+import { abonner, diffuserA } from './ecoutes';
+import { ENTETE_JETON_PARTICIPANT } from './jeton-participant';
+import { estEntierPositif, estObjet, jsonOuNull } from './valeurs';
 
 export type StatutSession = 'attente' | 'en_cours' | 'terminee';
 
@@ -116,7 +119,6 @@ function ecouterLeReveil(surReveil: () => void): () => void {
   };
 }
 
-const ENTETE_JETON = 'x-participant-token';
 const TYPE_FLUX = 'text/event-stream';
 const EVENEMENT_FIN = 'fin';
 const EVENEMENT_RESULTATS = 'resultats';
@@ -139,10 +141,6 @@ function estMembre<T extends string>(valeurs: readonly T[], valeur: unknown): va
   return typeof valeur === 'string' && (valeurs as readonly string[]).includes(valeur);
 }
 
-function estDictionnaire(valeur: unknown): valeur is Record<string, unknown> {
-  return typeof valeur === 'object' && valeur !== null && !Array.isArray(valeur);
-}
-
 function absentOu(valeur: unknown, estValide: (valeur: unknown) => boolean): boolean {
   return valeur === undefined || estValide(valeur);
 }
@@ -155,13 +153,9 @@ function estNombre(valeur: unknown): boolean {
   return typeof valeur === 'number';
 }
 
-function estEntierPositif(valeur: unknown): boolean {
-  return typeof valeur === 'number' && Number.isInteger(valeur) && valeur >= 0;
-}
-
 function estPilotageEcran(valeur: unknown): boolean {
   return (
-    estDictionnaire(valeur) &&
+    estObjet(valeur) &&
     absentOu(valeur['phase'], (phase) => estMembre(PHASES_VALIDES, phase)) &&
     absentOu(valeur['revele'], (revele) => typeof revele === 'boolean') &&
     absentOu(valeur['etayage'], estEntierPositif) &&
@@ -171,30 +165,29 @@ function estPilotageEcran(valeur: unknown): boolean {
 }
 
 function estPilotage(valeur: unknown): boolean {
-  return estDictionnaire(valeur) && Object.values(valeur).every(estPilotageEcran);
+  return estObjet(valeur) && Object.values(valeur).every(estPilotageEcran);
 }
 
 function estComptesParCle(valeur: unknown): boolean {
   return (
-    estDictionnaire(valeur) &&
+    estObjet(valeur) &&
     Object.values(valeur).every(
-      (compte) =>
-        estDictionnaire(compte) && estNombre(compte['total']) && estNombre(compte['justes']),
+      (compte) => estObjet(compte) && estNombre(compte['total']) && estNombre(compte['justes']),
     )
   );
 }
 
 function estComptesParOption(valeur: unknown): boolean {
-  return estDictionnaire(valeur) && Object.values(valeur).every(estNombre);
+  return estObjet(valeur) && Object.values(valeur).every(estNombre);
 }
 
 function estFreeRange(valeur: unknown): valeur is FreeRange {
-  return estDictionnaire(valeur) && estNombre(valeur['premier']) && estNombre(valeur['dernier']);
+  return estObjet(valeur) && estNombre(valeur['premier']) && estNombre(valeur['dernier']);
 }
 
 function estEtatSession(valeur: unknown): valeur is EtatRecu {
   return (
-    estDictionnaire(valeur) &&
+    estObjet(valeur) &&
     estMembre(STATUTS_VALIDES, valeur['etat']) &&
     estMembre(MODES_RYTHME_VALIDES, valeur['modeRythme']) &&
     estNombre(valeur['ecranCourant']) &&
@@ -211,7 +204,7 @@ function completerEtat(recu: EtatRecu): EtatSession {
 
 function estConfusionComptee(valeur: unknown): valeur is ConfusionComptee {
   return (
-    estDictionnaire(valeur) &&
+    estObjet(valeur) &&
     typeof valeur['id'] === 'string' &&
     typeof valeur['libelle'] === 'string' &&
     estNombre(valeur['nombre'])
@@ -231,7 +224,7 @@ function aDesChampsV3Valides(candidat: Record<string, unknown>): boolean {
 
 function estResultatQuestion(valeur: unknown): valeur is ResultatRecu {
   return (
-    estDictionnaire(valeur) &&
+    estObjet(valeur) &&
     typeof valeur['questionId'] === 'string' &&
     estNombre(valeur['total']) &&
     estNombre(valeur['correctes']) &&
@@ -244,7 +237,7 @@ function estResultatQuestion(valeur: unknown): valeur is ResultatRecu {
 
 function estComptesJalon(valeur: unknown): valeur is ComptesJalon {
   return (
-    estDictionnaire(valeur) &&
+    estObjet(valeur) &&
     estNombre(valeur['perdu']) &&
     estNombre(valeur['ca-va']) &&
     estNombre(valeur['clair']) &&
@@ -254,7 +247,7 @@ function estComptesJalon(valeur: unknown): valeur is ComptesJalon {
 
 function estProgressionEnigme(valeur: unknown): valeur is ProgressionEnigme {
   return (
-    estDictionnaire(valeur) &&
+    estObjet(valeur) &&
     typeof valeur['parcoursId'] === 'string' &&
     typeof valeur['enigmeId'] === 'string' &&
     ['ouvertes', 'resolues', 'tentativesMoyennes', 'epuisees'].every((cle) =>
@@ -264,18 +257,14 @@ function estProgressionEnigme(valeur: unknown): valeur is ProgressionEnigme {
 }
 
 function estResumeBareme(valeur: unknown): valeur is ResumeBareme {
-  return (
-    estDictionnaire(valeur) &&
-    estNombre(valeur['questionsNotees']) &&
-    estDictionnaire(valeur['parType'])
-  );
+  return estObjet(valeur) && estNombre(valeur['questionsNotees']) && estObjet(valeur['parType']);
 }
 
 function aDesChampsEnDirectValides(candidat: Record<string, unknown>): boolean {
   return (
     absentOu(
       candidat['jalons'],
-      (jalons) => estDictionnaire(jalons) && Object.values(jalons).every(estComptesJalon),
+      (jalons) => estObjet(jalons) && Object.values(jalons).every(estComptesJalon),
     ) &&
     absentOu(
       candidat['enigmes'],
@@ -287,7 +276,7 @@ function aDesChampsEnDirectValides(candidat: Record<string, unknown>): boolean {
 
 function estResultatsSeance(valeur: unknown): valeur is ResultatsRecus {
   return (
-    estDictionnaire(valeur) &&
+    estObjet(valeur) &&
     estNombre(valeur['participants']) &&
     Array.isArray(valeur['questions']) &&
     valeur['questions'].every(estResultatQuestion) &&
@@ -317,17 +306,9 @@ const RAISONS_DE_FIN: readonly RaisonDeFin[] = [
 ];
 
 function lireRaisonDeFin(donnees: string): RaisonDeFin | null {
-  const charge = analyser(donnees);
-  const raison = estDictionnaire(charge) ? charge['raison'] : null;
+  const charge = jsonOuNull(donnees);
+  const raison = estObjet(charge) ? charge['raison'] : null;
   return estMembre(RAISONS_DE_FIN, raison) ? raison : null;
-}
-
-function analyser(brut: string): unknown {
-  try {
-    return JSON.parse(brut);
-  } catch {
-    return null;
-  }
 }
 
 export interface EvenementFlux {
@@ -389,13 +370,28 @@ function ouvertureNative(courant: () => AbortController | null): OuvertureFlux |
   return (url, entetes) => fetch(url, { headers: entetes, signal: courant()?.signal ?? null });
 }
 
-function diffuserA<T>(ecoutes: ReadonlySet<(valeur: T) => void>, valeur: T): void {
-  for (const ecoute of ecoutes) {
-    ecoute(valeur);
-  }
+const REFUS_SANS_RELANCE: readonly number[] = [401, 403];
+const STATUT_SATURATION = 429;
+
+export type MotifDuRefus = 'session' | 'saturation' | 'autre';
+
+export interface RefusDuFlux {
+  readonly statut: number;
+  readonly motif: MotifDuRefus;
 }
 
-const REFUS_SANS_RELANCE: readonly number[] = [401, 403];
+function motifDuRefus(statut: number): MotifDuRefus {
+  if (REFUS_SANS_RELANCE.includes(statut)) {
+    return 'session';
+  }
+  return statut === STATUT_SATURATION ? 'saturation' : 'autre';
+}
+
+export function refusDuFlux(statut: StatutFlux | null): RefusDuFlux | null {
+  return statut?.etat === 'refuse'
+    ? { statut: statut.statut, motif: motifDuRefus(statut.statut) }
+    : null;
+}
 
 interface Tentative {
   readonly controleur: AbortController;
@@ -448,7 +444,7 @@ export function createSync(options: SyncOptions): Sync {
   const entetes = (): Record<string, string> => {
     const valeurs: Record<string, string> = { accept: TYPE_FLUX };
     if (options.jeton !== undefined && options.jeton !== '') {
-      valeurs[ENTETE_JETON] = options.jeton;
+      valeurs[ENTETE_JETON_PARTICIPANT] = options.jeton;
     }
     return { ...valeurs, ...options.entetes?.() };
   };
@@ -498,13 +494,13 @@ export function createSync(options: SyncOptions): Sync {
       return;
     }
     if (evenement.nom === EVENEMENT_RESULTATS) {
-      const resultats = analyser(evenement.donnees);
+      const resultats = jsonOuNull(evenement.donnees);
       if (estResultatsSeance(resultats)) {
         diffuserA(ecoutesResultats, completerResultats(resultats));
       }
       return;
     }
-    const charge = analyser(evenement.donnees);
+    const charge = jsonOuNull(evenement.donnees);
     if (!estEtatSession(charge)) {
       return;
     }
@@ -540,7 +536,7 @@ export function createSync(options: SyncOptions): Sync {
     }
     if (!reponse.ok) {
       propre.refusee = true;
-      propre.definitive = REFUS_SANS_RELANCE.includes(reponse.status);
+      propre.definitive = motifDuRefus(reponse.status) === 'session';
       diffuserA(ecoutesStatut, { etat: 'refuse', statut: reponse.status });
       throw new Error(FLUX_REFUSE);
     }
@@ -609,28 +605,16 @@ export function createSync(options: SyncOptions): Sync {
       demarrer();
     },
     onState(listener) {
-      ecoutes.add(listener);
-      return () => {
-        ecoutes.delete(listener);
-      };
+      return abonner(ecoutes, listener);
     },
     onResultats(listener) {
-      ecoutesResultats.add(listener);
-      return () => {
-        ecoutesResultats.delete(listener);
-      };
+      return abonner(ecoutesResultats, listener);
     },
     onStatut(listener) {
-      ecoutesStatut.add(listener);
-      return () => {
-        ecoutesStatut.delete(listener);
-      };
+      return abonner(ecoutesStatut, listener);
     },
     onFin(listener) {
-      ecoutesFin.add(listener);
-      return () => {
-        ecoutesFin.delete(listener);
-      };
+      return abonner(ecoutesFin, listener);
     },
     close() {
       terminer();

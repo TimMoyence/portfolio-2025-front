@@ -27,6 +27,20 @@ describe('EngineCoverageMatrixComponent', () => {
     expect(text).toContain('Summary IA ici');
   });
 
+  it('devrait colorer les scores selon les seuils du back (80 et 55)', () => {
+    const barres = rendreLaMatrice({
+      googleVisibility: { score: 79, summary: 'Google' },
+      aiVisibility: { score: 54, summary: 'IA' },
+    }).querySelectorAll('.engine-card__bar-fill');
+
+    expect(
+      Array.from(barres, (barre) => barre.classList.contains('engine-card__score--warning')),
+    ).toEqual([true, false]);
+    expect(
+      Array.from(barres, (barre) => barre.classList.contains('engine-card__score--critical')),
+    ).toEqual([false, true]);
+  });
+
   it('devrait rendre exactement deux cards moteur', () => {
     const cards = rendreLaMatrice().querySelectorAll("[data-testid='engine-card']");
     expect(cards.length).toBe(2);

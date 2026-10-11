@@ -5,3 +5,7 @@ export function getApiBaseUrl(): string {
   const config = inject(APP_CONFIG);
   return config.apiBaseUrl;
 }
+
+export function getApiFormationsUrl(): string {
+  return `${getApiBaseUrl()}/formations`;
+}

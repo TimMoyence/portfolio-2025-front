@@ -2,7 +2,7 @@ import type { EtatPulse } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpContenu } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
-import { estObjet } from './retours';
+import { estObjet } from '../core/valeurs';
 
 export interface PulseComptes {
   readonly perdu: number;

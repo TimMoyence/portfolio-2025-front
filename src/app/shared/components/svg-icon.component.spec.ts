@@ -109,6 +109,38 @@ describe('SvgIconComponent', () => {
       expect(content).toContain('currentColor');
     });
 
+    it('recolore aussi les traits sans toucher aux valeurs none', () => {
+      loadIcon('stroke-icon');
+
+      httpMock
+        .expectOne('assets/icons/stroke-icon.svg')
+        .flush(
+          '<svg xmlns="http://www.w3.org/2000/svg"><path stroke="#f00" fill="none"/><path stroke="none"/></svg>',
+        );
+
+      const content = component.svgContent?.toString() ?? '';
+      expect(content).toContain('<path stroke="currentColor" fill="none"');
+      expect(content).toContain('<path stroke="none"');
+    });
+
+    it('retire les liens javascript: en href comme en xlink:href et garde les autres', () => {
+      loadIcon('link-icon');
+
+      httpMock
+        .expectOne('assets/icons/link-icon.svg')
+        .flush(
+          '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
+            '<a href=" JavaScript:alert(1)" id="a1"/><a xlink:href="javascript:alert(2)" id="a2"/>' +
+            '<a href="#ancre" id="a3"/></svg>',
+        );
+
+      const content = component.svgContent?.toString() ?? '';
+      expect(content).not.toMatch(/javascript/i);
+      expect(content).toContain('<a id="a1"');
+      expect(content).toContain('<a id="a2"');
+      expect(content).toContain('<a href="#ancre" id="a3"');
+    });
+
     it('devrait appliquer les dimensions en rem', () => {
       component.name = 'size-icon';
       component.size = 2;

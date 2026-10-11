@@ -30,41 +30,6 @@ interface ConfusionFrequente {
 
 const NOMBRE_CONFUSIONS_FREQUENTES = 5;
 
-const SEPARATEUR = ';';
-
-const BOM_UTF8 = '﻿';
-
-const ENTETE: readonly string[] = [
-  'prenom',
-  'nom',
-  'adresse',
-  'question',
-  'enonce',
-  'concept',
-  'valeur',
-  'duree_ms',
-];
-
-const CARACTERES_A_PROTEGER = /[;"\n\r]/;
-const CARACTERES_FORMULE = /^[=+@\t\r]/;
-const NOMBRE_NEGATIF_VALIDE = /^-\d+([.,]\d+)?$/;
-
-function neutraliser(champ: string): string {
-  if (CARACTERES_FORMULE.test(champ)) {
-    return `'${champ}`;
-  }
-  return champ.startsWith('-') && !NOMBRE_NEGATIF_VALIDE.test(champ) ? `'${champ}` : champ;
-}
-
-function echapper(champ: string): string {
-  const sain = neutraliser(champ);
-  return CARACTERES_A_PROTEGER.test(sain) ? `"${sain.replaceAll('"', '""')}"` : sain;
-}
-
-function ligneCsv(champs: readonly string[]): string {
-  return champs.map(echapper).join(SEPARATEUR);
-}
-
 function confusionsFrequentesDe(
   questions: readonly ResultatQuestion[],
 ): readonly ConfusionFrequente[] {
@@ -234,6 +199,15 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
         >
           Exporter les réponses en CSV
         </button>
+        @if (echecExport()) {
+          <p
+            data-testid="synthese-export-echec"
+            role="alert"
+            i18n="synthese.exportEchec|@@syntheseExportEchec"
+          >
+            Le CSV n’a pas pu être exporté. Réessayez.
+          </p>
+        }
       }
       @if (echec()) {
         <p data-testid="synthese-echec" role="alert" i18n="synthese.echec|@@syntheseEchec">
@@ -248,6 +222,7 @@ export class CoursSyntheseComponent {
 
   readonly rapport = signal<RapportSeance | null>(null);
   readonly echec = signal(false);
+  readonly echecExport = signal(false);
   readonly enonces = signal<EnoncesDeLaSeance>(AUCUN_ENONCE);
 
   readonly vide = computed(() => this.rapport()?.participants.length === 0);
@@ -303,45 +278,12 @@ export class CoursSyntheseComponent {
     return this.chantier;
   }
 
-  exporterCsv(): string {
-    const participants = this.rapport()?.participants ?? [];
-    const enonces = this.enonces();
-    const lignes = participants.flatMap((participant) => [
-      ...participant.reponses.map((reponse) =>
-        ligneCsv([
-          participant.prenom,
-          participant.nom,
-          participant.email,
-          reponse.questionId,
-          enonces.questions.get(reponse.questionId) ?? '',
-          reponse.concept,
-          reponse.valeur,
-          String(reponse.dureeMs),
-        ]),
-      ),
-      ...(participant.reponsesLibres ?? []).map((libre) =>
-        ligneCsv([
-          participant.prenom,
-          participant.nom,
-          participant.email,
-          libre.activityId,
-          enonces.activites.get(libre.activityId) ?? '',
-          '',
-          libre.reponse,
-          '',
-        ]),
-      ),
-    ]);
-    return [ENTETE.join(SEPARATEUR), ...lignes].join('\n');
-  }
-
   protected telecharger(): void {
-    telechargerFichier(
-      this.document,
-      `${BOM_UTF8}${this.exporterCsv()}`,
-      `seance-${this.sessionId()}.csv`,
-      'text/csv;charset=utf-8',
-    );
+    this.echecExport.set(false);
+    this.port.telechargerRapportCsv(this.sessionId()).subscribe({
+      next: ({ nom, contenu }) => telechargerFichier(this.document, contenu, nom, contenu.type),
+      error: () => this.echecExport.set(true),
+    });
   }
 
   private compterLesFreins(rapport: RapportSeance, concept: string): number {

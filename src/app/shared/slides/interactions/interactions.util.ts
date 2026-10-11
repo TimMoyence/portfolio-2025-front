@@ -2,6 +2,7 @@ import type { DestroyRef, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { of, type Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { estObjet } from '../../../../cours/runtime/core/valeurs';
 import type { PresentationPort } from '../../../core/ports/presentation.port';
 
 export interface ChargementInteraction<T> {
@@ -69,27 +70,24 @@ function normaliseInteractions(value: unknown): FlatInteraction[] {
   if (Array.isArray(value)) {
     return fromFlatList(value);
   }
-  if (!isRecord(value)) {
+  if (!estObjet(value)) {
     return [];
   }
   const interactions = value['interactions'];
-  return isRecord(interactions) ? fromGroupedBySlide(interactions) : [];
+  return estObjet(interactions) ? fromGroupedBySlide(interactions) : [];
+}
+
+function versInteraction(slideId: string, item: Record<string, unknown>): FlatInteraction {
+  return { slideId, type: stringField(item, 'type'), ...item } as FlatInteraction;
 }
 
 function fromFlatList(items: readonly unknown[]): FlatInteraction[] {
-  return items.filter(isRecord).map(
-    (item) =>
-      ({
-        slideId: flatSlideIdOf(item),
-        type: stringField(item, 'type'),
-        ...item,
-      }) as FlatInteraction,
-  );
+  return items.filter(estObjet).map((item) => versInteraction(flatSlideIdOf(item), item));
 }
 
 function fromGroupedBySlide(interactions: Record<string, unknown>): FlatInteraction[] {
   return Object.entries(interactions).flatMap(([slideId, slideInteractions]) =>
-    isRecord(slideInteractions) ? fromSlideBuckets(slideId, slideInteractions) : [],
+    estObjet(slideInteractions) ? fromSlideBuckets(slideId, slideInteractions) : [],
   );
 }
 
@@ -102,14 +100,7 @@ function fromSlideBuckets(
     if (!Array.isArray(list)) {
       return [];
     }
-    return list.filter(isRecord).map(
-      (item) =>
-        ({
-          slideId,
-          type: stringField(item, 'type'),
-          ...item,
-        }) as FlatInteraction,
-    );
+    return list.filter(estObjet).map((item) => versInteraction(slideId, item));
   });
 }
 
@@ -123,8 +114,4 @@ function flatSlideIdOf(item: Record<string, unknown>): string {
 function stringField(item: Record<string, unknown>, key: string): string {
   const value = item[key];
   return typeof value === 'string' ? value : '';
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
