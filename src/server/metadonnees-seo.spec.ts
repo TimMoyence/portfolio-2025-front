@@ -1,3 +1,4 @@
+import { createJournalSpy } from '../testing/factories/journal.factory';
 import { buildSeoMetadata } from '../testing/factories/seo-metadata.factory';
 import { lecteurDeMetadonneesSeo } from './metadonnees-seo';
 
@@ -9,7 +10,7 @@ function lecteur(fichiers: Record<string, string | null>) {
   const lireFichier = jasmine
     .createSpy('lireFichier')
     .and.callFake((chemin: string) => fichiers[chemin] ?? null);
-  const journal = jasmine.createSpyObj<Pick<Console, 'warn'>>('journal', ['warn']);
+  const journal = createJournalSpy();
   const lire = lecteurDeMetadonneesSeo({ candidats: [FR, EN], lireFichier, journal });
   return { lire, lireFichier, journal };
 }
@@ -17,6 +18,13 @@ function lecteur(fichiers: Record<string, string | null>) {
 describe('lecteurDeMetadonneesSeo', () => {
   it('passe au candidat suivant quand le premier est illisible, et le signale', () => {
     const { lire, journal } = lecteur({ [FR]: '{ tronqué', [EN]: VALIDE });
+
+    expect(lire()).toEqual(buildSeoMetadata([]));
+    expect(journal.warn).toHaveBeenCalledOnceWith(jasmine.stringContaining(FR));
+  });
+
+  it('écarte un JSON valide qui n est pas un objet de métadonnées', () => {
+    const { lire, journal } = lecteur({ [FR]: '[]', [EN]: VALIDE });
 
     expect(lire()).toEqual(buildSeoMetadata([]));
     expect(journal.warn).toHaveBeenCalledOnceWith(jasmine.stringContaining(FR));
