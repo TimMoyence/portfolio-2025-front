@@ -1,6 +1,7 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { entierBorne } from '../core/valeurs';
 import { lignesDeCalculHtml } from './calculs';
+import { dossierDeRappel, type LigneDuDossier, lireRappel } from './dossier';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { FpRedaction } from './redaction';
 
@@ -13,6 +14,7 @@ export interface WorkedEtape {
 
 export interface WorkedExemple extends ContenuDeBrique {
   readonly enonce: string;
+  readonly rappel?: readonly LigneDuDossier[];
   readonly etapes: readonly WorkedEtape[];
 }
 
@@ -25,10 +27,15 @@ function copierEtape(etape: WorkedEtape): WorkedEtape {
   };
 }
 
+function copierRappel(source: WorkedExemple): Pick<WorkedExemple, 'rappel'> {
+  return source.rappel === undefined ? {} : { rappel: lireRappel(source.rappel) };
+}
+
 function copierExemple(source: WorkedExemple): WorkedExemple {
   return {
     ...copierLeSocle(source),
     enonce: source.enonce,
+    ...copierRappel(source),
     etapes: source.etapes.map(copierEtape),
   };
 }
@@ -51,6 +58,7 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
     return {
       ...copierLeSocle(source),
       enonce: source.enonce,
+      ...copierRappel(source),
       etapes: source.etapes.map((etape, rang) => this.projeterEtape(etape, rang)),
     };
   }
@@ -82,6 +90,7 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
     return safeHtml`
       <section class="fp-carte fp-scene fp-worked__exemple">
         <p class="fp-enonce fp-worked__enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
+        ${dossierDeRappel(exemple.rappel)}
         <p class="fp-worked__consigne">${escapeHtml(this.texte(this.surPapier() ? 'worked-consigne-papier' : 'worked-consigne'))}</p>
         <ol class="fp-worked__etapes">${exemple.etapes.map((etape, rang) => this.etape(etape, rang))}</ol>
         ${this.surPapier() ? safeHtml`` : this.envoi()}
@@ -119,6 +128,7 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
     return safeHtml`
       <section class="fp-carte fp-scene fp-worked__exemple" data-pilote="${escapeHtml(String(this.estPilote))}">
         <p class="fp-enonce fp-worked__enonce" data-testid="enonce">${escapeHtml(exemple.enonce)}</p>
+        ${dossierDeRappel(exemple.rappel)}
         <ol class="fp-worked__etapes">${exemple.etapes.map((etape, rang) => this.etapeProjetee(etape, rang))}</ol>
       </section>
     `;

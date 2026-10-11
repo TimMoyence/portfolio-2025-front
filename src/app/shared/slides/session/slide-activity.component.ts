@@ -146,7 +146,8 @@ interface ReponseVisuelle {
     .slide-activity__blocks {
       display: grid;
       gap: 1rem;
-      width: min(100%, 72rem);
+      width: 100%;
+      max-width: var(--slide-activity-largeur-max, 72rem);
       margin-inline: auto;
     }
 

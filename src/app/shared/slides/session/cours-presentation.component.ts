@@ -288,6 +288,7 @@ function aUnDefileurRogne(contenu: HTMLElement): boolean {
     .cours-toile__contenu {
       --slide-marge-bloc: 0;
       --slide-marge-ligne: 0;
+      --slide-activity-largeur-max: none;
       --fp-densite-imposee: 0.75;
       display: flex;
       flex-direction: column;

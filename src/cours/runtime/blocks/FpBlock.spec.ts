@@ -179,6 +179,45 @@ describe('FpBlock', () => {
     expect(racine?.querySelector('[data-testid="explications"]')).toBeNull();
   });
 
+  it('R-02 · passe a la ligne une formule insecable des explications plutot que de deborder de l encadre', () => {
+    hote.style.cssText = 'display:block;width:260px;';
+    hote.explications = [
+      {
+        reference: 'e1',
+        texte: 'Délai en jours ouvrés : =NB.JOURS.OUVRES(date_commande;date_livraison), recopiée.',
+      },
+    ];
+
+    const encadre = hote.shadowRoot?.querySelector<HTMLElement>('[data-testid="explications"]');
+    expect(encadre?.scrollWidth).toBeLessThanOrEqual(encadre?.clientWidth ?? 0);
+  });
+
+  it('R-03 · range plusieurs explications sur deux colonnes d une toile large, dans l ordre de lecture, une seule pleine largeur', () => {
+    const lignes = (): DOMRect[] =>
+      [...(hote.shadowRoot?.querySelectorAll('[data-testid="explication"]') ?? [])].map((ligne) =>
+        ligne.getBoundingClientRect(),
+      );
+    hote.style.cssText = 'display:block;width:1216px;';
+    hote.explications = [{ reference: 'e1', texte: 'Ville mal écrite : on corrige par formule.' }];
+    const [seule] = lignes();
+
+    hote.explications = [
+      { reference: 'e1', texte: 'Ville mal écrite : on corrige par formule.' },
+      { reference: 'e2', texte: 'Produit inconnu : on signale et on demande.' },
+      { reference: 'e3', texte: 'Case vide : une donnée douteuse ne se corrige jamais seule.' },
+    ];
+    const [premiere, seconde, troisieme] = lignes();
+
+    expect(seconde.left).toBeGreaterThanOrEqual(premiere.right);
+    expect(seconde.top).toBeCloseTo(premiere.top, 0);
+    expect(troisieme.top).toBeGreaterThanOrEqual(premiere.bottom);
+    expect(seule.width).toBeGreaterThan(premiere.width * 1.5);
+
+    hote.style.cssText = 'display:block;width:360px;';
+    const [etroite, suivante] = lignes();
+    expect(suivante.top).toBeGreaterThanOrEqual(etroite.bottom);
+  });
+
   it('rend le foyer et la selection au champ saisi quand un rafraichissement le remplace', () => {
     const champ = hote.shadowRoot?.querySelector<HTMLInputElement>('[data-testid="champ"]');
     champ?.focus();

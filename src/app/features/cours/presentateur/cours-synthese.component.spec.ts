@@ -318,46 +318,57 @@ describe('CoursSyntheseComponent', () => {
     expect(textes(fixture, 'synthese-nom')).toEqual(['Malik Durand', 'Theo Durand']);
   });
 
-  describe('règles du cahier écrites en réponse libre (V6)', () => {
-    const REGLE_COMPRENDRE = 'b3-01-a1-regles:regle-comprendre';
-    const REGLE_NETTOYER = 'b3-01-a1-regles:regle-nettoyer';
-    const QUESTION_COMPRENDRE = 'Niveau 1 · Comprendre : votre règle pour relier deux tables.';
-    const QUESTION_NETTOYER =
-      'Niveau 2 · Nettoyer : votre règle pour une donnée fausse ou douteuse.';
+  describe('règles du cahier et ce qui reste flou, écrits en réponse libre (V6)', () => {
+    const REGLE_VISUALISER = 'b3-01-a3-regles:regle-visualiser';
+    const REGLE_DECIDER = 'b3-01-a3-regles:regle-decider';
+    const FLOU = 'b3-01-a3-flou:ce-qui-reste-flou';
+    const QUESTION_FLOU = 'En une phrase : qu’est-ce qui reste flou pour vous après cette séance ?';
+    const QUESTION_VISUALISER =
+      'Niveau 5 · Visualiser : votre règle avant de choisir un graphique.';
+    const QUESTION_DECIDER = 'Niveau 6 · Décider : votre règle pour écrire une recommandation.';
 
-    function libre(activityId: string, texte: string): ReponseLibreRapportee {
-      return { screenId: 'B3-01-A1-15-REGLES-ACTE-1', activityId, reponse: texte };
+    function libre(
+      activityId: string,
+      texte: string,
+      screenId = 'B3-01-A3-12-CAHIER-DE-REGLES',
+    ): ReponseLibreRapportee {
+      return { screenId, activityId, reponse: texte };
     }
 
     const ANA = {
       ...etudiant('Ana', 14, false, [reponse('cle-et-relation', '660')]),
       reponsesLibres: [
-        libre(REGLE_COMPRENDRE, 'Je relie par client_id, jamais par le nom.'),
-        libre(REGLE_NETTOYER, 'Je signale tout doublon sans le supprimer.'),
+        libre(REGLE_VISUALISER, 'Je pose la question avant le graphique.'),
+        libre(REGLE_DECIDER, 'Je chiffre le constat avant l action.'),
       ],
     };
     const BASILE = {
       ...etudiant('Basile', 0, false, []),
-      reponsesLibres: [libre(REGLE_COMPRENDRE, 'Je lis Clients avant l export.')],
+      reponsesLibres: [
+        libre(REGLE_VISUALISER, 'Je lis l axe avant la barre.'),
+        libre(FLOU, 'Le modèle de données.', 'B3-01-A3-13-CE-QUI-RESTE-FLOU'),
+      ],
     };
 
     function monterLeB301(participants: readonly ParticipantRapporte[]): Promise<Fixture> {
       return monter(rapportDe(participants), of(INSTANTANE_B3_01.deroule));
     }
 
-    it('affiche les règles de chaque étudiant sous son nom, chacune avec sa question', async () => {
+    it('affiche les réponses libres de chaque étudiant sous son nom, chacune avec sa question', async () => {
       const fixture = await monterLeB301([ANA, BASILE]);
 
       expect(textes(fixture, 'synthese-libres-etudiant')).toEqual(['Ana Durand', 'Basile Durand']);
       expect(textes(fixture, 'synthese-libre-question')).toEqual([
-        QUESTION_COMPRENDRE,
-        QUESTION_NETTOYER,
-        QUESTION_COMPRENDRE,
+        QUESTION_VISUALISER,
+        QUESTION_DECIDER,
+        QUESTION_VISUALISER,
+        QUESTION_FLOU,
       ]);
       expect(textes(fixture, 'synthese-libre-reponse')).toEqual([
-        'Je relie par client_id, jamais par le nom.',
-        'Je signale tout doublon sans le supprimer.',
-        'Je lis Clients avant l export.',
+        'Je pose la question avant le graphique.',
+        'Je chiffre le constat avant l action.',
+        'Je lis l axe avant la barre.',
+        'Le modèle de données.',
       ]);
     });
 
@@ -365,17 +376,16 @@ describe('CoursSyntheseComponent', () => {
       const BILLET = 'b3-01-a3-billet';
       const QUESTION_DU_BILLET =
         'Une ligne porte une date_livraison antérieure à sa date_commande. La corrige-t-on automatiquement ?';
-      const INVITE_DU_BILLET =
-        'En une phrase : qu’est-ce qui reste flou pour vous après cette séance ?';
+      const INVITE_DU_BILLET = 'En une phrase : pourquoi ce choix ?';
       const CLEMENT = {
         ...etudiant('Clement', 11, false, [
           { ...reponse('qualite-des-donnees', 'non-on-la-signale'), questionId: BILLET },
         ]),
         reponsesLibres: [
           {
-            screenId: 'B3-01-A3-13-BILLET-DE-SORTIE',
+            screenId: 'B3-01-A3-14-BILLET-DE-SORTIE',
             activityId: BILLET,
-            reponse: 'Le modèle de données.',
+            reponse: 'Une date incohérente se signale.',
           },
         ],
       };
@@ -395,7 +405,7 @@ describe('CoursSyntheseComponent', () => {
         throwError(() => new Error('reseau coupe')),
       );
 
-      expect(textes(fixture, 'synthese-libre-question')).toEqual([REGLE_COMPRENDRE]);
+      expect(textes(fixture, 'synthese-libre-question')).toEqual([REGLE_VISUALISER, FLOU]);
     });
 
     it('n affiche aucune section de règles quand le rapport n en porte pas', async () => {

@@ -154,7 +154,7 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
     }
 
     .scene-canvas {
-      inline-size: min(100%, 96rem);
+      inline-size: 100%;
       min-block-size: 100%;
       block-size: 100%;
       box-sizing: border-box;

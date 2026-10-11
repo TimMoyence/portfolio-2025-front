@@ -211,6 +211,7 @@ export const base = `
   gap: var(--fp-s-1);
   margin-top: var(--fp-s-2);
   border-left-color: var(--fp-confirme);
+  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-explications__titre {
@@ -221,6 +222,42 @@ export const base = `
 :where(.fp-root) .fp-explications ul {
   margin: 0;
   padding-left: 1.2em;
+}
+
+:where(.fp-root) .fp-explications ul:has(> li + li) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(min(100%, 22rem), 40%), 1fr));
+  gap: var(--fp-s-1) var(--fp-s-4);
+}
+
+:where(.fp-root) .fp-dossier {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--fp-s-2);
+  margin: 0;
+  padding: var(--fp-s-3);
+  border: 1px solid var(--fp-bordure);
+  border-radius: var(--fp-r);
+  background: var(--fp-surface);
+  overflow-wrap: anywhere;
+}
+
+:where(.fp-root) .fp-dossier__ligne {
+  display: grid;
+  gap: calc(var(--fp-s-1) / 2);
+}
+
+:where(.fp-root) .fp-dossier__ligne dt {
+  color: var(--fp-ink-mute);
+  font-size: calc(0.85rem * var(--fp-echelle));
+  font-weight: 600;
+}
+
+:where(.fp-root) .fp-dossier__ligne dd {
+  margin: 0;
+  color: var(--fp-texte-fort);
+  font-size: var(--fp-corps);
+  font-variant-numeric: tabular-nums;
 }
 
 :where(.fp-root) [data-etat='confirme'] {

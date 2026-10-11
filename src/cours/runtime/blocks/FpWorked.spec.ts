@@ -1,6 +1,11 @@
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
-import { creerBrique, detailsEmis, installerBrique } from '../../../testing/banc-de-brique';
+import {
+  creerBrique,
+  detailsEmis,
+  installerBrique,
+  lignesDuRappel,
+} from '../../../testing/banc-de-brique';
 import { buildWorkedExemple } from '../../../testing/factories/cours.factory';
 import { FpWorked } from './FpWorked';
 
@@ -367,6 +372,51 @@ describe('FpWorked', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
 
     expect(etapes()).toBe(etudiant);
+  });
+
+  it('R-04 · rappelle au-dessus des etapes les fonctions a employer, pour chaque role et en correction, sans en echapper le contenu', () => {
+    hote.exemple = buildWorkedExemple({
+      rappel: [
+        { libelle: 'SUPPRESPACE(texte)', valeur: 'retire les espaces en trop' },
+        { libelle: CHARGE_XSS, valeur: 'CNUM(texte) convertit en nombre' },
+      ],
+    });
+    const attendues = [
+      'SUPPRESPACE(texte)',
+      'retire les espaces en trop',
+      CHARGE_XSS,
+      'CNUM(texte) convertit en nombre',
+    ];
+
+    for (const pilote of [false, true]) {
+      hote.pilote = pilote;
+      for (const role of ROLES_DE_MONTAGE) {
+        hote.setAttribute('data-cours-role', role);
+        const rappel = hote.shadowRoot?.querySelector('[data-testid="rappel"]');
+        const contexte = `role ${role}, pilote ${String(pilote)}`;
+
+        expect(lignesDuRappel(hote)).withContext(contexte).toEqual(attendues);
+        expect(
+          (rappel?.compareDocumentPosition(reperes(hote, 'etape')[0]) ?? 0) &
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        )
+          .withContext(contexte)
+          .toBeTruthy();
+        expect(hote.shadowRoot?.querySelector('img')).withContext(contexte).toBeNull();
+      }
+    }
+    expect(hote.exemple?.rappel).toEqual([
+      { libelle: 'SUPPRESPACE(texte)', valeur: 'retire les espaces en trop' },
+      { libelle: CHARGE_XSS, valeur: 'CNUM(texte) convertit en nombre' },
+    ]);
+    expect(classesOrphelines(hote, 'worked')).toEqual([]);
+  });
+
+  it('R-04 · ne montre aucun rappel a un exemple qui n en porte pas', () => {
+    for (const role of ROLES_DE_MONTAGE) {
+      hote.setAttribute('data-cours-role', role);
+      expect(reperes(hote, 'rappel')).withContext(role).toEqual([]);
+    }
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {

@@ -19,14 +19,16 @@ export const cardsort = `
 }
 
 :where(.fp-root) .fp-cardsort__zones {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--fp-cardsort-zone-min, 220px)), 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--fp-s-3);
-  align-items: start;
+  align-items: flex-start;
 }
 
 :where(.fp-root) .fp-cardsort__zone {
   display: grid;
+  flex: 1 1 var(--fp-cardsort-zone-min, 220px);
+  min-width: 0;
   gap: var(--fp-s-2);
   padding: var(--fp-s-2);
   border: 1px dashed var(--fp-bordure);
@@ -35,7 +37,7 @@ export const cardsort = `
 }
 
 :where(.fp-root) .fp-cardsort__zone[data-pioche='true'] {
-  grid-column: 1 / -1;
+  flex-basis: 100%;
 }
 
 :where(.fp-root) .fp-cardsort__zone[data-pioche='true'] .fp-cardsort__pile {
@@ -204,25 +206,20 @@ export const cardsort = `
 }
 
 :where(.fp-root) .fp-cardsort__attendus {
-  display: grid;
-  gap: var(--fp-s-1);
   margin: 0;
   padding-left: var(--fp-s-3);
-}
-
-:where(.fp-root) .fp-cardsort__attendus--papier {
-  display: block;
-  columns: 2;
+  columns: 20rem 2;
   column-gap: var(--fp-s-4);
 }
 
-:where(.fp-root) .fp-cardsort__attendu {
-  color: var(--fp-texte-fort);
+:where(.fp-root) .fp-cardsort__attendus--papier {
+  columns: 2;
 }
 
-:where(.fp-root) .fp-cardsort__attendus--papier .fp-cardsort__attendu {
+:where(.fp-root) .fp-cardsort__attendu {
   break-inside: avoid;
   margin-bottom: var(--fp-s-1);
+  color: var(--fp-texte-fort);
 }
 
 :where(.fp-root) .fp-cardsort__justification {
