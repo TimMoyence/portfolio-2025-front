@@ -123,11 +123,16 @@ export class FpStory extends FpBlock {
     return safeHtml`<track data-testid="sous-titres" kind="captions" srclang="${escapeHtml(sousTitres.srclang)}" label="${escapeHtml(libelle)}" src="${escapeUrl(sousTitres.src)}" default />`;
   }
 
+  private ouvertureDuLecteur(video: StoryVideo): EscapedHtml {
+    const prechargement = escapeHtml(video.preload ?? 'none');
+    return video.poster === undefined
+      ? safeHtml`<video controls preload="${prechargement}" playsinline>`
+      : safeHtml`<video controls preload="${prechargement}" playsinline poster="${escapeUrl(video.poster)}">`;
+  }
+
   private lecteur(video: StoryVideo, transcription: EscapedHtml): EscapedHtml {
-    const affiche =
-      video.poster === undefined ? VIDE : safeHtml` poster="${escapeUrl(video.poster)}"`;
     return safeHtml`
-        <video controls preload="${escapeHtml(video.preload ?? 'none')}" playsinline${affiche}>
+        ${this.ouvertureDuLecteur(video)}
           <source src="${escapeUrl(this.sourceDeLaVideo(video))}" type="${escapeHtml(video.type)}" />
           ${this.piste(video)}
         </video>

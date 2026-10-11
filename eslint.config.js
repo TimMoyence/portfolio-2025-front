@@ -106,12 +106,6 @@ module.exports = tseslint.config(
     },
   },
   {
-    files: ['src/cours/runtime/core/html.ts'],
-    rules: {
-      'no-restricted-syntax': 'off',
-    },
-  },
-  {
     files: ['src/**/*.html'],
     extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
   },
