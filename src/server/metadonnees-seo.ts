@@ -10,8 +10,8 @@ export interface SourcesDesMetadonneesSeo {
 
 function metadonneesDe(contenu: string): SeoMetadataFile {
   const json: unknown = JSON.parse(contenu);
-  if (!estObjet(json) || !estObjet(json['site'])) {
-    throw new TypeError('objet attendu avec un champ site');
+  if (!estObjet(json) || !estObjet(json['site']) || !Array.isArray(json['pages'])) {
+    throw new TypeError('objet attendu avec un champ site et une liste pages');
   }
   return json as unknown as SeoMetadataFile;
 }
