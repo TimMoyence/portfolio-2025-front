@@ -3,9 +3,9 @@ import type {
   EtatParticipant,
   ResultatsSeance,
 } from '../../../cours/content/types';
-import type { RetourBrique } from '../../shared/slides/session/contrat-hote';
 import type {
   MotifRefusReponse,
+  RetourBrique,
   VerdictProduction,
   VerdictReponse,
   VerdictTentative,

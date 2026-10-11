@@ -1,4 +1,4 @@
-import type { RetourBrique } from '../../app/shared/slides/session/contrat-hote';
+import type { RetourBrique } from '../../app/core/ports/formations.port';
 import type { EcranContent } from '../../cours/content/types';
 
 type PropsVisuelles = Readonly<Record<string, unknown>>;

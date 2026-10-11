@@ -23,7 +23,7 @@ import {
   buildVisualSlide,
   buildVisualSortCorrectionSlide,
 } from '../../../../testing/factories/visual-slide.factory';
-import type { RetourBrique } from '../session/contrat-hote';
+import type { RetourBrique } from '../../../core/ports/formations.port';
 import { SlideVisualComponent } from './slide-visual.component';
 
 describe('SlideVisualComponent', () => {

@@ -43,6 +43,7 @@ import {
 import type {
   FormationsPort,
   MotifRefusRattachement,
+  RetourBrique,
   VerdictReponse,
 } from '../../../core/ports/formations.port';
 import {
@@ -52,7 +53,7 @@ import {
   SujetRefuse,
 } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX } from '../cours-flux.token';
-import type { EvenementBrique, RetourBrique } from '../../../shared/slides/session/contrat-hote';
+import type { EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import { demanderLaPieceJointe } from '../../../../testing/piece-jointe-demandee';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { CoursEtudiantComponent } from './cours-etudiant.component';

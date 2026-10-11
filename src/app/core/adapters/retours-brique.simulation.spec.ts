@@ -1,6 +1,6 @@
 import * as fc from 'fast-check';
 import type { EtatParticipant } from '../../../cours/content/types';
-import type { RetourBrique } from '../../shared/slides/session/contrat-hote';
+import type { RetourBrique } from '../ports/formations.port';
 import { buildEtatParticipant } from '../../../testing/factories/formations.factory';
 import { verifierLaPropriete } from '../../../testing/proprietes';
 import { ajouterRetours, retirerLesRefus, retoursDeLEtat } from './retours-brique';

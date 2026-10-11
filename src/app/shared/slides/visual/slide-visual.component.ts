@@ -38,7 +38,7 @@ import { SlideQuizComponent } from '../interactions/slide-quiz/slide-quiz.compon
 import type { ModeInteraction } from '../interactions/mode-interaction';
 import type { DebriefDeReflexion } from '../interactions/slide-reflection/slide-reflection.component';
 import { reussitesDeLEcran, verdictsDeLEcran } from '../../../core/adapters/retours-brique';
-import type { RetourBrique } from '../session/contrat-hote';
+import type { RetourBrique } from '../../../core/ports/formations.port';
 import { objet, presentationDe, quizImbrique, quizPrincipal } from './presentation-v2';
 
 const layouts: Readonly<Record<string, Type<unknown>>> = {

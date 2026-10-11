@@ -56,12 +56,13 @@ import type {
   CommandePilotage,
   MotifRefusReponse,
   RegleNotation,
+  RetourBrique,
   StrategiePublique,
   SyntheseConcept,
   VerdictProduction,
   VerdictTentative,
 } from '../../../core/ports/formations.port';
-import type { DirectEcran, EtatPulse, EvenementBrique, RetourBrique } from './contrat-hote';
+import type { DirectEcran, EtatPulse, EvenementBrique } from './contrat-hote';
 import { ECRAN_VERROUILLE, PROPRIETES_PAR_BRIQUE } from './lecture-ecran';
 
 const METADONNEES: MetadonneesBrique = buildPulseSondage().metadonnees;

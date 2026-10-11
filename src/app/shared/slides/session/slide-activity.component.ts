@@ -20,11 +20,12 @@ import type { CorrigeEcranPresentateur, ExplicationServie } from '../../../../co
 import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import { texte } from '../../../../cours/runtime/core/i18n';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
-import type { SyntheseConcept } from '../../../core/ports/formations.port';
+import { estObjet } from '../../../../cours/runtime/core/valeurs';
+import type { RetourBrique, SyntheseConcept } from '../../../core/ports/formations.port';
 import type { DebriefDeReflexion } from '../interactions/slide-reflection/slide-reflection.component';
 import { aUnePresentation } from '../visual/presentation-v2';
 import { SlideVisualComponent } from '../visual/slide-visual.component';
-import type { DirectEcran, EvenementBrique, RetourBrique } from './contrat-hote';
+import type { DirectEcran, EvenementBrique } from './contrat-hote';
 import { evenementsDe } from './evenements-brique';
 import {
   ECRAN_VERROUILLE,
@@ -319,7 +320,7 @@ export class SlideActivityComponent {
       return;
     }
     const detail: unknown = event.detail;
-    if (typeof detail === 'object' && detail !== null && 'id' in detail && 'valeur' in detail) {
+    if (estObjet(detail) && 'valeur' in detail) {
       const { id, valeur } = detail;
       if (typeof id === 'string' && id !== '') {
         brouillons.ecrire(cible.localName, id, valeur);

@@ -62,6 +62,23 @@ module.exports = tseslint.config(
     },
   },
   {
+    files: ['src/app/core/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '(^|/)(shared|features)/',
+              message:
+                'Le core ne dépend ni de shared ni de features : le contrat vit dans core/ports.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['src/cours/runtime/core/html.ts'],
     rules: {
       'no-restricted-syntax': 'off',

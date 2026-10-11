@@ -20,10 +20,14 @@ import type { Observable } from 'rxjs';
 import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import { bornerEntre } from '../../../../cours/runtime/core/valeurs';
-import type { FichierTelecharge, SyntheseConcept } from '../../../core/ports/formations.port';
+import type {
+  FichierTelecharge,
+  RetourBrique,
+  SyntheseConcept,
+} from '../../../core/ports/formations.port';
 import { PieceJointeRefusee } from '../../../core/ports/formations.port';
 import { telechargerFichier } from '../../utils/telechargement.utils';
-import type { DirectEcran, EvenementBrique, RetourBrique } from './contrat-hote';
+import type { DirectEcran, EvenementBrique } from './contrat-hote';
 import { extraireDuRenvoi } from './extrait-du-renvoi';
 import { SlideActivityComponent } from './slide-activity.component';
 import { SlideComponent } from '../deck/slide.component';
