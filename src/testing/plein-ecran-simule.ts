@@ -1,10 +1,10 @@
 export interface PleinEcranSimule {
-  activer(element: Element | null): void;
+  activer(element: Element | null | undefined): void;
   restaurer(): void;
 }
 
 export function simulerLePleinEcran(): PleinEcranSimule {
-  let actif: Element | null = null;
+  let actif: Element | null | undefined = null;
   Object.defineProperty(document, 'fullscreenElement', { configurable: true, get: () => actif });
   return {
     activer: (element) => {

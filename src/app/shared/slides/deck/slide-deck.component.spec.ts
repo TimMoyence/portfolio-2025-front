@@ -6,6 +6,7 @@ import { SlideDeckComponent } from './slide-deck.component';
 import { SlideDeckService } from './slide-deck.service';
 import { FullscreenAdapter } from './fullscreen.adapter';
 import { buildSlideDeckConfig } from '../../../../testing/factories/slide-deck.factory';
+import { simulerLePleinEcran } from '../../../../testing/plein-ecran-simule';
 import { SLIDE_DECK_CONFIG } from './slide-deck.tokens';
 
 @Component({
@@ -137,12 +138,10 @@ describe('SlideDeckComponent', () => {
 
   it('repasse en mode scroll quand fullscreenchange retourne au document normal', () => {
     const service = passerEnPleinEcran();
-    Object.defineProperty(document, 'fullscreenElement', {
-      configurable: true,
-      get: () => null,
-    });
+    const ecran = simulerLePleinEcran();
     document.dispatchEvent(new Event('fullscreenchange'));
     fixture.detectChanges();
+    ecran.restaurer();
     expect(service.mode()).toBe('scroll');
   });
 });

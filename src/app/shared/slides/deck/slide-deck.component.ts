@@ -16,7 +16,7 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import { bornerEntre } from '../../../../cours/runtime/core/valeurs';
+import { bornerEntre, estEntierPositif } from '../../../../cours/runtime/core/valeurs';
 import { FullscreenAdapter } from './fullscreen.adapter';
 import { SlideComponent } from './slide.component';
 import { SlideDeckService, type SlideDeckMode } from './slide-deck.service';
@@ -230,12 +230,8 @@ export class SlideDeckComponent implements AfterViewInit {
   protected synchroniserDepuisSwiper(event: Event): void {
     const detail = (event as CustomEvent<readonly [{ readonly activeIndex?: unknown }]>).detail;
     const index = detail?.[0]?.activeIndex;
-    if (typeof index !== 'number' || !Number.isInteger(index)) {
-      return;
-    }
-
     const slides = this.visibleSlides();
-    if (index < 0 || index >= slides.length) {
+    if (!estEntierPositif(index) || index >= slides.length) {
       return;
     }
     const slide = slides[index];
@@ -260,7 +256,6 @@ export class SlideDeckComponent implements AfterViewInit {
   }
 
   @HostListener('document:fullscreenchange')
-  @HostListener('document:webkitfullscreenchange')
   protected onFullscreenChange(): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
