@@ -136,12 +136,28 @@ describe('SlideDeckComponent', () => {
     expect(progress.textContent?.trim()).toBe('2 / 3');
   });
 
+  for (const activeIndex of [3, -1, 1.5, Number.NaN]) {
+    it(`ignore un index swiper hors des slides (${activeIndex})`, () => {
+      const service = passerEnPleinEcran();
+      const avant = service.current();
+
+      const swiper = deckEl.querySelector('swiper-container') as HTMLElement;
+      swiper.dispatchEvent(new CustomEvent('swiperslidechange', { detail: [{ activeIndex }] }));
+      fixture.detectChanges();
+
+      expect(service.current()).toBe(avant);
+    });
+  }
+
   it('repasse en mode scroll quand fullscreenchange retourne au document normal', () => {
     const service = passerEnPleinEcran();
     const ecran = simulerLePleinEcran();
-    document.dispatchEvent(new Event('fullscreenchange'));
-    fixture.detectChanges();
-    ecran.restaurer();
+    try {
+      document.dispatchEvent(new Event('fullscreenchange'));
+      fixture.detectChanges();
+    } finally {
+      ecran.restaurer();
+    }
     expect(service.mode()).toBe('scroll');
   });
 });
