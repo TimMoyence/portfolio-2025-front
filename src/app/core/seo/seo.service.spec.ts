@@ -364,6 +364,16 @@ describe('SeoService', () => {
         expect(scriptEl!['textContent']).toBe(JSON.stringify(jsonLdData));
       });
 
+      it('echappe chaque < du JSON-LD pour que le rendu serveur ne ferme jamais le script', () => {
+        const jsonLd = { '@type': 'Article', headline: '</script><!--<script>' };
+
+        service.updateSeoMetadata({ title: 'Test', description: 'Desc', jsonLd });
+
+        const texte = scriptJsonLdAjoute()!['textContent'] as string;
+        expect(texte).not.toContain('<');
+        expect(JSON.parse(texte)).toEqual(jsonLd);
+      });
+
       it('ne devrait pas injecter de script JSON-LD si jsonLd est absent', () => {
         service.updateSeoMetadata({
           title: 'Test',

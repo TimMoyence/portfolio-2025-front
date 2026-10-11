@@ -5,7 +5,7 @@ import type {
   EcranContent,
   EcranDeroule,
 } from '../../../../cours/content/types';
-import type { ValeurFormule } from '../../../../cours/runtime/core/formula';
+import type { ValeurFormule } from 'portfolio-2025-partage/formule';
 import { type Recolte, recolterDansLArbre } from '../../../../testing/arbre-json';
 import { objet } from '../../../shared/slides/visual/presentation-v2';
 import { INSTANTANE_B2_01 } from '../../../../testing/fixtures/instantane-b2-01';

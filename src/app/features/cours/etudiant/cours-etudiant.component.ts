@@ -47,6 +47,7 @@ import {
   type StatutSession,
   type Sync,
 } from '../../../../cours/runtime/core/sync';
+import { estObjet } from '../../../../cours/runtime/core/valeurs';
 import { getApiFormationsUrl } from '../../../core/http/api-config';
 import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
 import type {
@@ -177,10 +178,7 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
 }
 
 function regimeDuContenu(contenu: unknown): RegimeVerrou | null {
-  if (typeof contenu !== 'object' || contenu === null) {
-    return null;
-  }
-  const regime = (contenu as Record<string, unknown>)['regime'];
+  const regime = estObjet(contenu) ? contenu['regime'] : undefined;
   return typeof regime === 'string' && REGIMES_VERROU.includes(regime as RegimeVerrou)
     ? (regime as RegimeVerrou)
     : null;
@@ -196,8 +194,8 @@ function regimeDeLEcran(ecran: EcranContent): RegimeVerrou {
     if (indirect !== null) {
       return indirect;
     }
-    if (typeof donnees === 'object' && donnees !== null) {
-      const metadonnees = regimeDuContenu((donnees as Record<string, unknown>)['metadonnees']);
+    if (estObjet(donnees)) {
+      const metadonnees = regimeDuContenu(donnees['metadonnees']);
       if (metadonnees !== null) {
         return metadonnees;
       }

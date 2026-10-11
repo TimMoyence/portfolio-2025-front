@@ -1,6 +1,6 @@
 import type { EtatPulse, ValeurProduction } from '../../../../cours/content/types';
 import { lireTextes } from '../../../../cours/runtime/blocks/retours';
-import { estObjet } from '../../../../cours/runtime/core/valeurs';
+import { estEntierPositif, estObjet } from '../../../../cours/runtime/core/valeurs';
 import type { EvenementBrique } from './contrat-hote';
 import { objet } from '../visual/presentation-v2';
 
@@ -44,7 +44,7 @@ function identifiant(valeur: unknown): valeur is string {
 
 function duree(detail: Detail): number | null {
   const dureeMs = detail['dureeMs'];
-  return typeof dureeMs === 'number' && Number.isInteger(dureeMs) && dureeMs >= 0 ? dureeMs : null;
+  return estEntierPositif(dureeMs) ? dureeMs : null;
 }
 
 function estValeurDeReponse(valeur: unknown): valeur is number | string {

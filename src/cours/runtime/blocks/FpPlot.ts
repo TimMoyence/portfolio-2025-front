@@ -1,4 +1,4 @@
-import { evaluerExpression } from '../core/formula';
+import { evaluerExpression } from 'portfolio-2025-partage/formule';
 import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
 import { lierLesNombres } from '../core/typographie';
 import { bornerEntre } from '../core/valeurs';
