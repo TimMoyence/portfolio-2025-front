@@ -9,8 +9,8 @@ import type {
 import type { SpacedQuestionPublique } from '../../../../cours/runtime/blocks/FpSpaced';
 import { PROPRIETE_FORMATEUR } from '../../../../cours/runtime/blocks/retours';
 import { estObjet } from '../../../../cours/runtime/core/valeurs';
-import type { SyntheseConcept } from '../../../core/ports/formations.port';
-import type { DirectEcran, RetourBrique } from './contrat-hote';
+import type { RetourBrique, SyntheseConcept } from '../../../core/ports/formations.port';
+import type { DirectEcran } from './contrat-hote';
 import type { Montage, ReponsesDuQuestionnaire } from './lecture-ecran';
 
 export interface MontageIdentifie extends Montage {

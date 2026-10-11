@@ -48,7 +48,6 @@ export function buildSeoMetadata(
       baseUrl: 'https://asilidesign.fr',
       defaultLocale: 'fr',
       locales: ['fr', 'en'],
-      homePath: '/',
     },
     pages,
     ...overrides,

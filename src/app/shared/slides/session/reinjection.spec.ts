@@ -7,7 +7,8 @@ import {
   buildSyntheseConcept,
 } from '../../../../testing/factories/formations.factory';
 import type { CorrigeEcranPresentateur } from '../../../../cours/content/types';
-import type { DirectEcran, RetourBrique } from './contrat-hote';
+import type { RetourBrique } from '../../../core/ports/formations.port';
+import type { DirectEcran } from './contrat-hote';
 import {
   type ContexteDeReinjection,
   memeValeur,

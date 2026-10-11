@@ -1,3 +1,5 @@
+import { createJournalSpy, type JournalEspion } from './factories/journal.factory';
+
 export function reponseJson(corps: unknown, status = 200): Response {
   return new Response(JSON.stringify(corps), {
     status,
@@ -7,7 +9,7 @@ export function reponseJson(corps: unknown, status = 200): Response {
 
 export interface DoublesDeLecteur {
   readonly appels: jasmine.Spy<typeof fetch>;
-  readonly journal: jasmine.SpyObj<Pick<Console, 'warn'>>;
+  readonly journal: JournalEspion;
   readonly horloge: { maintenant: number };
   readonly dependances: {
     readonly fetch: typeof fetch;
@@ -18,7 +20,7 @@ export interface DoublesDeLecteur {
 
 export function doublesDeLecteur(instant: number): DoublesDeLecteur {
   const appels = jasmine.createSpy<typeof fetch>('fetch');
-  const journal = jasmine.createSpyObj<Pick<Console, 'warn'>>('journal', ['warn']);
+  const journal = createJournalSpy();
   const horloge = { maintenant: instant };
   return {
     appels,

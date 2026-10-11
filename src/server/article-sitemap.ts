@@ -51,7 +51,7 @@ async function lirePage(
       dependances.journal.warn(`[sitemap] articles ${locale} : l'API a répondu ${lecture.statut}`);
       return null;
     }
-    const corps = lecture.corps as Readonly<Record<string, unknown>> | null;
+    const corps = estObjet(lecture.corps) ? lecture.corps : null;
     const suivant = corps?.['next_cursor'];
     return {
       entrees: entreesDe(locale, corps?.['items']),

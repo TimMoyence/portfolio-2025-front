@@ -384,6 +384,18 @@ describe('FpTableBuild', () => {
     expect(texteDe(hote, 'vide')).toContain('Aucune ligne à bâtir');
   });
 
+  for (const [echeances, lignes] of [
+    [2.9, 2],
+    [-3, 0],
+    [Number.NaN, 0],
+    [Number.POSITIVE_INFINITY, 0],
+  ] as const) {
+    it(`bati ${String(lignes)} ligne(s) pour ${String(echeances)} echeances`, () => {
+      hote.plan = buildTableBuildPlan({ id: 'b2-01-bornes', echeances });
+      expect(reperes(hote, 'ligne').length).toBe(lignes);
+    });
+  }
+
   it('echappe le html injecte dans l intitule et les libelles de ligne', () => {
     hote.plan = buildTableBuildPlan({
       id: 'b2-01-xss',

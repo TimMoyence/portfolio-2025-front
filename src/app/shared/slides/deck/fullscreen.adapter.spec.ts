@@ -6,11 +6,16 @@ import { FullscreenAdapter } from './fullscreen.adapter';
 
 describe('FullscreenAdapter', () => {
   describe('en environnement browser', () => {
+    let ecran: PleinEcranSimule;
+
     beforeEach(() => {
       TestBed.configureTestingModule({
         providers: [FullscreenAdapter, { provide: PLATFORM_ID, useValue: 'browser' }],
       });
+      ecran = simulerLePleinEcran();
     });
+
+    afterEach(() => ecran.restaurer());
 
     it("appelle requestFullscreen sur l'élément fourni", async () => {
       const adapter = TestBed.inject(FullscreenAdapter);
@@ -29,23 +34,22 @@ describe('FullscreenAdapter', () => {
     it('appelle document.exitFullscreen quand sorti', async () => {
       const adapter = TestBed.inject(FullscreenAdapter);
       const spy = spyOn(document, 'exitFullscreen').and.resolveTo();
-      Object.defineProperty(document, 'fullscreenElement', {
-        configurable: true,
-        get: () => document.body,
-      });
+      ecran.activer(document.body);
       await adapter.exit();
       expect(spy).toHaveBeenCalled();
     });
 
+    it('se tient hors plein ecran quand le navigateur n expose pas fullscreenElement', async () => {
+      const adapter = TestBed.inject(FullscreenAdapter);
+      const spy = spyOn(document, 'exitFullscreen').and.resolveTo();
+      ecran.activer(undefined);
+
+      expect(adapter.isFullscreen()).toBeFalse();
+      await adapter.exit();
+      expect(spy).not.toHaveBeenCalled();
+    });
+
     describe('basculer', () => {
-      let ecran: PleinEcranSimule;
-
-      beforeEach(() => {
-        ecran = simulerLePleinEcran();
-      });
-
-      afterEach(() => ecran.restaurer());
-
       it("passe l'element en plein ecran et rend l'etat obtenu", async () => {
         const adapter = TestBed.inject(FullscreenAdapter);
         const el = document.createElement('div');

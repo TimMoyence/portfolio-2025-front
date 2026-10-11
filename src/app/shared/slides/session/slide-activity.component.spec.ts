@@ -31,7 +31,8 @@ import {
 import { choisirLOptionDuQuiz } from '../../../../testing/hote-d-interaction';
 import { poserLesEntrees } from '../../../../testing/montage-page';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
-import type { EvenementBrique, RetourBrique } from './contrat-hote';
+import type { RetourBrique } from '../../../core/ports/formations.port';
+import type { EvenementBrique } from './contrat-hote';
 import { EVENEMENTS_DES_BRIQUES } from './evenements-brique';
 import { SlideActivityComponent } from './slide-activity.component';
 

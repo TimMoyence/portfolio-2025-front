@@ -28,7 +28,7 @@ export class FullscreenAdapter {
     if (!this.isBrowser()) {
       return;
     }
-    if (!document.fullscreenElement) {
+    if (!this.isFullscreen()) {
       return;
     }
     try {
@@ -51,7 +51,7 @@ export class FullscreenAdapter {
     if (!this.isBrowser()) {
       return false;
     }
-    return document.fullscreenElement !== null;
+    return Boolean(document.fullscreenElement);
   }
 
   async loadSwiperElement(): Promise<void> {

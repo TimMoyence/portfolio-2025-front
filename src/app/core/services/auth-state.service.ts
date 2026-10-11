@@ -4,7 +4,7 @@ import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@a
 import { computed, signal } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { finalize, firstValueFrom, timeout } from 'rxjs';
-import { bornerEntre } from '../../../cours/runtime/core/valeurs';
+import { bornerEntre, estObjet } from '../../../cours/runtime/core/valeurs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
 import { VERROU_INTER_ONGLETS } from './verrou-inter-onglets';
@@ -20,10 +20,7 @@ const THROTTLED_RETRY_MAX_MS = 60 * 60_000;
 const ME_TIMEOUT_MS = 10_000;
 
 function httpStatusOf(error: unknown): number | null {
-  if (typeof error !== 'object' || error === null) {
-    return null;
-  }
-  const status = (error as { status?: unknown }).status;
+  const status = estObjet(error) ? error['status'] : undefined;
   return typeof status === 'number' ? status : null;
 }
 

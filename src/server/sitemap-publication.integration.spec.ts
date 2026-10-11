@@ -5,6 +5,7 @@ import {
   buildRequeteExpress,
   createReponseExpressStub,
 } from '../testing/factories/express.factory';
+import { createJournalSpy, type JournalEspion } from '../testing/factories/journal.factory';
 import { CHEMIN_DU_COURS_B2, SLUG_DU_COURS_B2 } from '../testing/factories/seo-metadata.factory';
 import { lastmodDeLaPage } from '../testing/sitemap-xml';
 import { COURS_EN_SEANCE } from '../app/core/config/cours-en-seance';
@@ -68,10 +69,10 @@ function lastmodDuCours(xml: string): string {
 }
 
 describe('sitemap du cours servi par l API (H1, intégration)', () => {
-  let journal: jasmine.SpyObj<Pick<Console, 'warn'>>;
+  let journal: JournalEspion;
 
   beforeEach(() => {
-    journal = jasmine.createSpyObj<Pick<Console, 'warn'>>('journal', ['warn']);
+    journal = createJournalSpy();
   });
 
   it('date la page du cours par publieLe quand l API la publie après le dernier commit front', async () => {

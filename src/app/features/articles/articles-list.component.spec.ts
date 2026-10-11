@@ -2,21 +2,17 @@ import { HttpTestingController, type TestRequest } from '@angular/common/http/te
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
+import { buildArticleSummary } from '../../../testing/factories/article.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { ArticleSummary } from '../../core/models/article.model';
 import { ArticlesListComponent } from './articles-list.component';
 
-const summary = (day: number): ArticleSummary => ({
-  article_id: `morning-brief-2026-09-${day}-fr`,
-  slug: `morning-brief-2026-09-${day}`,
-  locale: 'fr',
-  title: `Veille IA du ${day} septembre`,
-  excerpt: 'Les faits IA du jour.',
-  tags: [],
-  published_at: `2026-09-${day}T04:15:00.000Z`,
-  updated_at: `2026-09-${day}T04:15:00.000Z`,
-  seo: { description: 'Les faits IA du jour.', canonical_path: `/articles/morning-brief-${day}` },
-});
+const summary = (day: number): ArticleSummary =>
+  buildArticleSummary({
+    slug: `morning-brief-2026-09-${day}`,
+    title: `Veille IA du ${day} septembre`,
+    published_at: `2026-09-${day}T04:15:00.000Z`,
+  });
 
 describe('ArticlesListComponent — pagination', () => {
   let fixture: ComponentFixture<ArticlesListComponent>;

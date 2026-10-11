@@ -1,4 +1,4 @@
-import type { RetourBrique } from '../../shared/slides/session/contrat-hote';
+import type { RetourBrique } from '../ports/formations.port';
 import {
   buildEtatParticipant,
   buildResultatQuestion,

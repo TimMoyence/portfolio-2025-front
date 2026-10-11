@@ -1,4 +1,4 @@
-import { Component, PLATFORM_ID, type Type } from '@angular/core';
+import { Component, ErrorHandler, PLATFORM_ID, type Type } from '@angular/core';
 import { clearTranslations, loadTranslations } from '@angular/localize';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SlideComponent } from './slide.component';
@@ -6,6 +6,7 @@ import { SlideDeckComponent } from './slide-deck.component';
 import { SlideDeckService } from './slide-deck.service';
 import { FullscreenAdapter } from './fullscreen.adapter';
 import { buildSlideDeckConfig } from '../../../../testing/factories/slide-deck.factory';
+import { simulerLePleinEcran } from '../../../../testing/plein-ecran-simule';
 import { SLIDE_DECK_CONFIG } from './slide-deck.tokens';
 
 @Component({
@@ -119,30 +120,45 @@ describe('SlideDeckComponent', () => {
     expect(directSlides.length).toBe(3);
   });
 
+  function annoncerLaSlideSwiper(activeIndex: number): void {
+    const swiper = deckEl.querySelector('swiper-container') as HTMLElement;
+    swiper.dispatchEvent(new CustomEvent('swiperslidechange', { detail: [{ activeIndex }] }));
+    fixture.detectChanges();
+  }
+
   it('synchronise le compteur avec la slide active de swiper', () => {
     const service = passerEnPleinEcran();
 
-    const swiper = deckEl.querySelector('swiper-container') as HTMLElement;
-    swiper.dispatchEvent(
-      new CustomEvent('swiperslidechange', {
-        detail: [{ activeIndex: 1 }],
-      }),
-    );
-    fixture.detectChanges();
+    annoncerLaSlideSwiper(1);
 
     expect(service.current()).toBe('why');
     const progress = deckEl.querySelector('.slide-deck-progress span') as HTMLElement;
     expect(progress.textContent?.trim()).toBe('2 / 3');
   });
 
+  for (const activeIndex of [3, -1, 1.5, Number.NaN]) {
+    it(`ignore un index swiper hors des slides (${activeIndex})`, () => {
+      const service = passerEnPleinEcran();
+      annoncerLaSlideSwiper(1);
+      const avant = service.current();
+      const erreurs = spyOn(TestBed.inject(ErrorHandler), 'handleError');
+
+      annoncerLaSlideSwiper(activeIndex);
+
+      expect(service.current()).toBe(avant);
+      expect(erreurs).not.toHaveBeenCalled();
+    });
+  }
+
   it('repasse en mode scroll quand fullscreenchange retourne au document normal', () => {
     const service = passerEnPleinEcran();
-    Object.defineProperty(document, 'fullscreenElement', {
-      configurable: true,
-      get: () => null,
-    });
-    document.dispatchEvent(new Event('fullscreenchange'));
-    fixture.detectChanges();
+    const ecran = simulerLePleinEcran();
+    try {
+      document.dispatchEvent(new Event('fullscreenchange'));
+      fixture.detectChanges();
+    } finally {
+      ecran.restaurer();
+    }
     expect(service.mode()).toBe('scroll');
   });
 });

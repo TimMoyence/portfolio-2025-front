@@ -2,8 +2,7 @@
   "site": {
     "baseUrl": "https://asilidesign.fr",
     "defaultLocale": "fr",
-    "locales": ["fr", "en"],
-    "homePath": "/"
+    "locales": ["fr", "en"]
   },
   "defaults": {
     "keywords": [

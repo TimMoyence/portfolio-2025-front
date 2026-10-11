@@ -3,6 +3,7 @@ import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { buildPublishedArticle } from '../../../testing/factories/article.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { SeoService } from '../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../core/ssr/http-response-status';
@@ -69,25 +70,9 @@ describe('ArticleDetailComponent — statut HTTP rendu côté serveur', () => {
   it('laisse le statut par défaut quand l article existe', () => {
     render('morning-brief-2026-09-23');
 
-    articleRequest('morning-brief-2026-09-23').flush({
-      article_id: 'morning-brief-2026-09-23-fr',
-      slug: 'morning-brief-2026-09-23',
-      locale: 'fr',
-      title: 'Veille IA',
-      excerpt: 'Les faits IA du jour.',
-      tags: [],
-      published_at: '2026-09-23T04:15:00.000Z',
-      updated_at: '2026-09-23T04:15:00.000Z',
-      seo: {
-        description: 'Les faits IA du jour, sourcés.',
-        canonical_path: '/articles/morning-brief-2026-09-23',
-      },
-      content_markdown: '# Veille',
-      reading_time_minutes: 5,
-      sections: [],
-      sources: [],
-      provenance: {},
-    });
+    articleRequest('morning-brief-2026-09-23').flush(
+      buildPublishedArticle({ slug: 'morning-brief-2026-09-23' }),
+    );
 
     expect(statuses).toEqual([]);
   });
@@ -114,22 +99,12 @@ describe('ArticleDetailComponent — URL canonique', () => {
 
     httpMock
       .expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/veille`)
-      .flush({
-        article_id: 'veille-fr',
-        slug: 'veille',
-        locale: 'fr',
-        title: 'Veille IA',
-        excerpt: 'x',
-        tags: [],
-        published_at: '2026-09-23T04:15:00.000Z',
-        updated_at: '2026-09-23T04:15:00.000Z',
-        seo: { description: 'x', canonical_path: '/articles/veille/' },
-        content_markdown: '# Veille',
-        reading_time_minutes: 1,
-        sections: [],
-        sources: [],
-        provenance: {},
-      });
+      .flush(
+        buildPublishedArticle({
+          slug: 'veille',
+          seo: { description: 'x', canonical_path: '/articles/veille/' },
+        }),
+      );
 
     const config = miseAJour.calls.mostRecent().args[0];
     expect(config.canonicalUrl).toBe('https://example.com/fr/articles/veille');

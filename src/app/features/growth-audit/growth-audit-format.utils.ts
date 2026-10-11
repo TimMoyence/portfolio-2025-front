@@ -69,13 +69,6 @@ export function sectionBadgeClass(status: string): string {
   }
 }
 
-export function extractRecord(value: unknown): Record<string, unknown> | null {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return null;
-  }
-  return value as Record<string, unknown>;
-}
-
 export function extractString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : '';
 }

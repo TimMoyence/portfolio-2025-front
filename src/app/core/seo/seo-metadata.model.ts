@@ -42,7 +42,6 @@ interface SeoMetadataSite {
   baseUrl?: string;
   defaultLocale: string;
   locales: string[];
-  homePath?: string;
 }
 
 interface SeoMetadataGlobal {

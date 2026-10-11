@@ -57,6 +57,7 @@ import type {
   MotifRefusSujet,
   Rattachement,
   ReponseEtudiant,
+  RetourBrique,
   ValeurReponse,
   VerdictReponse,
 } from '../../../core/ports/formations.port';
@@ -75,11 +76,7 @@ import {
   retourDeTentative,
   retoursDeLEtat,
 } from '../../../core/adapters/retours-brique';
-import type {
-  DirectEcran,
-  EvenementBrique,
-  RetourBrique,
-} from '../../../shared/slides/session/contrat-hote';
+import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import {
   ecranDuRappel,
   ecransDesIdentifiants,

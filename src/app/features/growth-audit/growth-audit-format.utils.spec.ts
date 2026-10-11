@@ -1,6 +1,5 @@
 import {
   buildSectionBadges,
-  extractRecord,
   extractString,
   extractStringArray,
   formatPhaseLabel,
@@ -112,20 +111,6 @@ describe('growth-audit-format.utils', () => {
 
     it('devrait retourner les classes par defaut', () => {
       expect(sectionBadgeClass('other')).toContain('bg-slate-100');
-    });
-  });
-
-  describe('extractRecord', () => {
-    it('devrait retourner null pour une valeur non-objet', () => {
-      expect(extractRecord(null)).toBeNull();
-      expect(extractRecord(undefined)).toBeNull();
-      expect(extractRecord('text')).toBeNull();
-      expect(extractRecord([1, 2])).toBeNull();
-    });
-
-    it('devrait retourner le record pour un objet valide', () => {
-      const obj = { key: 'value' };
-      expect(extractRecord(obj)).toEqual({ key: 'value' });
     });
   });
 

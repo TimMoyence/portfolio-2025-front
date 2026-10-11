@@ -11,6 +11,7 @@ import { documentCacheControlFor } from './server/document-cache';
 import { COURS_EN_SEANCE } from './app/core/config/cours-en-seance';
 import { lecteurDePublicationsDeCours } from './server/cours-publication';
 import { loadCsrShell } from './server/csr-shell';
+import { lecteurDeMetadonneesSeo } from './server/metadonnees-seo';
 import { entetesDeLaRoute, isClientOnlyRoute } from './server/routes-client';
 import { registerPermanentRedirects } from './server/redirects';
 import { lecteurDArticlesDuSitemap } from './server/article-sitemap';
@@ -78,19 +79,11 @@ const SEO_METADATA_CANDIDATES = [
   resolve(process.cwd(), 'src/assets/seo/seo-metadata.json'),
 ];
 
-let cachedSeoMetadata: SeoMetadataFile | null = null;
-
-const loadSeoMetadata = (): SeoMetadataFile | null => {
-  if (cachedSeoMetadata) return cachedSeoMetadata;
-
-  for (const candidate of SEO_METADATA_CANDIDATES) {
-    if (!fs.existsSync(candidate)) continue;
-    cachedSeoMetadata = JSON.parse(fs.readFileSync(candidate, 'utf-8')) as SeoMetadataFile;
-    return cachedSeoMetadata;
-  }
-
-  return null;
-};
+const loadSeoMetadata = lecteurDeMetadonneesSeo({
+  candidats: SEO_METADATA_CANDIDATES,
+  lireFichier: (candidat) => (fs.existsSync(candidat) ? fs.readFileSync(candidat, 'utf-8') : null),
+  journal: console,
+});
 
 const loadArticleSitemap = lecteurDArticlesDuSitemap({
   apiBaseUrl: process.env['PORTFOLIO_ARTICLE_API_URL'],

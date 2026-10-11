@@ -11,7 +11,7 @@ import {
   nomCellule,
 } from 'portfolio-2025-partage/formule';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { entierBorne } from '../core/valeurs';
+import { bornerEntre, entierBorne } from '../core/valeurs';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
 import { lireNombreSaisi } from './saisie-numerique';
 
@@ -399,9 +399,10 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
       const libelles = lignes
         .map((ligne) => this.interne?.cellules[nomCellule(ligne, colonne)] ?? '')
         .filter((libelle) => !estUneFormule(libelle));
-      return Math.min(
+      return bornerEntre(
+        Math.max(...libelles.map((libelle) => [...libelle].length)),
+        LARGEUR_MIN_DE_COLONNE_CH,
         LARGEUR_MAX_DE_COLONNE_CH,
-        Math.max(LARGEUR_MIN_DE_COLONNE_CH, ...libelles.map((libelle) => [...libelle].length)),
       );
     });
   }
