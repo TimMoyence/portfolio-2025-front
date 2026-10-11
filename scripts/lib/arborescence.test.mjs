@@ -36,6 +36,28 @@ test('suit les liens symboliques vers un dossier ou un fichier', () => {
   });
 });
 
+test('ignore un lien pendant au lieu de lever', () => {
+  avecDossierPlante('arborescence-', { 'vrai.ts': '' }, (racine) => {
+    symlinkSync(join(racine, 'disparu.ts'), join(racine, '.#vrai.ts'));
+
+    assert.deepEqual(
+      listerFichiers(racine, () => true),
+      ['vrai.ts'],
+    );
+  });
+});
+
+test('ne redescend pas dans un dossier ancêtre atteint par un lien', () => {
+  avecDossierPlante('arborescence-', { 'a/vrai.ts': '' }, (racine) => {
+    symlinkSync(racine, join(racine, 'a/boucle'));
+
+    assert.deepEqual(
+      listerFichiers(racine, () => true),
+      ['a/vrai.ts'],
+    );
+  });
+});
+
 test('rend une liste vide pour une racine absente', () => {
   avecDossierPlante('arborescence-', {}, (racine) => {
     assert.deepEqual(
