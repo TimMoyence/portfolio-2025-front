@@ -16,19 +16,17 @@ function lecteur(fichiers: Record<string, string | null>) {
 }
 
 describe('lecteurDeMetadonneesSeo', () => {
-  it('passe au candidat suivant quand le premier est illisible, et le signale', () => {
-    const { lire, journal } = lecteur({ [FR]: '{ tronqué', [EN]: VALIDE });
+  for (const [cas, contenu] of [
+    ['un JSON illisible', '{ tronqué'],
+    ['un JSON qui n est pas un objet de métadonnées', '[]'],
+  ]) {
+    it(`passe au candidat suivant après ${cas}, et le signale`, () => {
+      const { lire, journal } = lecteur({ [FR]: contenu, [EN]: VALIDE });
 
-    expect(lire()).toEqual(buildSeoMetadata([]));
-    expect(journal.warn).toHaveBeenCalledOnceWith(jasmine.stringContaining(FR));
-  });
-
-  it('écarte un JSON valide qui n est pas un objet de métadonnées', () => {
-    const { lire, journal } = lecteur({ [FR]: '[]', [EN]: VALIDE });
-
-    expect(lire()).toEqual(buildSeoMetadata([]));
-    expect(journal.warn).toHaveBeenCalledOnceWith(jasmine.stringContaining(FR));
-  });
+      expect(lire()).toEqual(buildSeoMetadata([]));
+      expect(journal.warn).toHaveBeenCalledOnceWith(jasmine.stringContaining(FR));
+    });
+  }
 
   it('mémorise l absence de métadonnées sans relire les candidats', () => {
     const { lire, lireFichier } = lecteur({ [FR]: '{', [EN]: null });

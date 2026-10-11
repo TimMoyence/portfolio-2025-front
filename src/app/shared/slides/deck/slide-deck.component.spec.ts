@@ -120,16 +120,16 @@ describe('SlideDeckComponent', () => {
     expect(directSlides.length).toBe(3);
   });
 
+  function annoncerLaSlideSwiper(activeIndex: number): void {
+    const swiper = deckEl.querySelector('swiper-container') as HTMLElement;
+    swiper.dispatchEvent(new CustomEvent('swiperslidechange', { detail: [{ activeIndex }] }));
+    fixture.detectChanges();
+  }
+
   it('synchronise le compteur avec la slide active de swiper', () => {
     const service = passerEnPleinEcran();
 
-    const swiper = deckEl.querySelector('swiper-container') as HTMLElement;
-    swiper.dispatchEvent(
-      new CustomEvent('swiperslidechange', {
-        detail: [{ activeIndex: 1 }],
-      }),
-    );
-    fixture.detectChanges();
+    annoncerLaSlideSwiper(1);
 
     expect(service.current()).toBe('why');
     const progress = deckEl.querySelector('.slide-deck-progress span') as HTMLElement;
@@ -141,9 +141,7 @@ describe('SlideDeckComponent', () => {
       const service = passerEnPleinEcran();
       const avant = service.current();
 
-      const swiper = deckEl.querySelector('swiper-container') as HTMLElement;
-      swiper.dispatchEvent(new CustomEvent('swiperslidechange', { detail: [{ activeIndex }] }));
-      fixture.detectChanges();
+      annoncerLaSlideSwiper(activeIndex);
 
       expect(service.current()).toBe(avant);
     });
