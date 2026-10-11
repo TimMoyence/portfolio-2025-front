@@ -7,6 +7,27 @@ const globals = require('globals');
 const COEUR_SANS_SHARED_NI_FEATURES =
   'Le core ne dépend ni de shared ni de features : le contrat vit dans core/ports.';
 
+const SANS_CAST_VERS_ESCAPED_HTML = {
+  selector: 'TSAsExpression > TSTypeReference > Identifier[name="EscapedHtml"]',
+  message:
+    "Interdit : un cast vers EscapedHtml contourne le typage qui impose l'echappement. Passez par escapeHtml, safeHtml ou escapeUrl. Une XSS est deja passee par ce chemin dans FpExit.",
+};
+
+const COEUR_SANS_CHEMIN_VERS_SHARED_NI_FEATURES = [
+  {
+    selector: 'ImportExpression > Literal[value=/(^|\\/)(shared|features)\\//]',
+    message: COEUR_SANS_SHARED_NI_FEATURES,
+  },
+  {
+    selector: 'ImportExpression[source.type!="Literal"]',
+    message: `${COEUR_SANS_SHARED_NI_FEATURES} Un import() du core prend un chemin littéral, que cette règle peut lire.`,
+  },
+  {
+    selector: 'TSImportType Literal[value=/(^|\\/)(shared|features)\\//]',
+    message: COEUR_SANS_SHARED_NI_FEATURES,
+  },
+];
+
 module.exports = tseslint.config(
   {
     ignores: [
@@ -54,14 +75,7 @@ module.exports = tseslint.config(
   {
     files: ['src/cours/**/*.ts', 'src/app/**/cours*/**/*.ts'],
     rules: {
-      'no-restricted-syntax': [
-        'error',
-        {
-          selector: 'TSAsExpression > TSTypeReference > Identifier[name="EscapedHtml"]',
-          message:
-            "Interdit : un cast vers EscapedHtml contourne le typage qui impose l'echappement. Passez par escapeHtml, safeHtml ou escapeUrl. Une XSS est deja passee par ce chemin dans FpExit.",
-        },
-      ],
+      'no-restricted-syntax': ['error', SANS_CAST_VERS_ESCAPED_HTML],
     },
   },
   {
@@ -78,12 +92,16 @@ module.exports = tseslint.config(
           ],
         },
       ],
+      'no-restricted-syntax': ['error', ...COEUR_SANS_CHEMIN_VERS_SHARED_NI_FEATURES],
+    },
+  },
+  {
+    files: ['src/app/core/**/cours*/**/*.ts'],
+    rules: {
       'no-restricted-syntax': [
         'error',
-        {
-          selector: 'ImportExpression > Literal[value=/(^|\\/)(shared|features)\\//]',
-          message: COEUR_SANS_SHARED_NI_FEATURES,
-        },
+        SANS_CAST_VERS_ESCAPED_HTML,
+        ...COEUR_SANS_CHEMIN_VERS_SHARED_NI_FEATURES,
       ],
     },
   },
