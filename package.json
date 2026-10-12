@@ -34,7 +34,7 @@
     "test:e2e:ui": "npx playwright test --project=chromium --ui",
     "build:banc": "ng build --configuration banc",
     "test:banc": "node scripts/banc/jouer.mjs",
-    "banc:nettoyer": "docker compose -p portfolio2025-banc -f scripts/banc/banc.compose.yaml down -v --remove-orphans",
+    "banc:nettoyer": "node scripts/banc/jouer.mjs --nettoyer",
     "lighthouse": "lhci autorun",
     "lighthouse:collect": "lhci collect",
     "lighthouse:assert": "lhci assert",

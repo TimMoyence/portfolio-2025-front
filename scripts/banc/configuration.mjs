@@ -11,6 +11,15 @@ export function racineDuBack({ env, racineFront }) {
   return resolve(racineFront, declaree || '../portfolio-2025-back');
 }
 
+/**
+ * La base du banc étend celle du back joué : `banc.compose.yaml` lit ce chemin absolu.
+ * @param {string} racineBack
+ * @returns {{ BANC_COMPOSE_DU_BACK: string }}
+ */
+export function environnementDuCompose(racineBack) {
+  return { BANC_COMPOSE_DU_BACK: resolve(racineBack, 'test/db-integration.compose.yaml') };
+}
+
 export const PORTS = Object.freeze({
   base: 55433,
   redis: 63790,

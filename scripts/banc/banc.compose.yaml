@@ -1,7 +1,7 @@
 services:
   banc-db:
     extends:
-      file: ../../../portfolio-2025-back/test/db-integration.compose.yaml
+      file: ${BANC_COMPOSE_DU_BACK:-../../../portfolio-2025-back/test/db-integration.compose.yaml}
       service: db-integration
     environment:
       POSTGRES_DB: portfolio_2025_banc
