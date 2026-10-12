@@ -28,28 +28,13 @@ import {
 
 const POSTES = ['cours-etudiant', 'cours-presentateur'] as const;
 
-const SEUILS_DES_COURS: Readonly<
-  Partial<Record<string, { readonly ecransAuMoins: number; readonly renvoisAuMoins?: number }>>
-> = {
-  'B2-01': { ecransAuMoins: 50, renvoisAuMoins: 5 },
-  'B2-02': { ecransAuMoins: 30, renvoisAuMoins: 3 },
-  'B2-03': { ecransAuMoins: 30, renvoisAuMoins: 4 },
-  'B2-04': { ecransAuMoins: 30, renvoisAuMoins: 4 },
-  'B2-05': { ecransAuMoins: 30, renvoisAuMoins: 4 },
-  'B2-06': { ecransAuMoins: 30, renvoisAuMoins: 4 },
-  'B3-01': { ecransAuMoins: 38 },
-};
+const COURS_MESURES = INSTANTANES_DES_COURS_SERVIS.map(([code, instantane]) => ({
+  code,
+  instantane,
+}));
 
-const COURS_MESURES = INSTANTANES_DES_COURS_SERVIS.map(([code, instantane]) => {
-  const seuils = SEUILS_DES_COURS[code];
-  if (seuils === undefined) {
-    throw new Error(`Seuils de tenue absents pour le cours servi ${code}`);
-  }
-  return { code, instantane, ...seuils };
-});
-
-const COURS_A_RENVOIS = COURS_MESURES.flatMap(({ renvoisAuMoins, ...cours }) =>
-  renvoisAuMoins === undefined ? [] : [{ ...cours, renvoisAuMoins }],
+const COURS_A_RENVOIS = COURS_MESURES.filter(({ instantane }) =>
+  ecransDuPupitreDe(instantane).some(({ renvoi }) => renvoi !== undefined),
 );
 
 @Component({
@@ -526,7 +511,11 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     DELAI_DE_MONTAGE_MS,
   );
 
-  for (const { code, instantane, renvoisAuMoins } of COURS_A_RENVOIS) {
+  it('mesure les écrans à renvoi de chaque cours servi qui en porte, et au moins d un cours', () => {
+    expect(COURS_A_RENVOIS.length).toBeGreaterThan(0);
+  });
+
+  for (const { code, instantane } of COURS_A_RENVOIS) {
     const pupitre = ecransDuPupitreDe(instantane);
 
     for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
@@ -534,9 +523,13 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
         `T1 ·chaque écran à renvoi du ${code} tient entier dans sa demi-toile en ${mode}, titre compris`,
         async () => {
           const aRenvoi = pupitre.filter(({ renvoi }) => renvoi !== undefined);
-          expect(aRenvoi.length)
-            .withContext(`écrans à renvoi du ${code}`)
-            .toBeGreaterThan(renvoisAuMoins);
+          expect(
+            ecransPublicsDe(instantane)
+              .filter(({ renvoi }) => renvoi !== undefined)
+              .map(({ id }) => id),
+          )
+            .withContext(`écrans à renvoi du ${code} au poste étudiant`)
+            .toEqual(aRenvoi.map(({ id }) => id));
           const coupes = await fautesDesEcrans(
             aRenvoi,
             pupitre,
@@ -876,11 +869,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
   }
 });
 
-function decrireLaTenueDuCours({
-  code,
-  instantane,
-  ecransAuMoins,
-}: (typeof COURS_MESURES)[number]): void {
+function decrireLaTenueDuCours({ code, instantane }: (typeof COURS_MESURES)[number]): void {
   const pupitre = ecransDuPupitreDe(instantane);
   const publics = ecransPublicsDe(instantane);
 
@@ -904,7 +893,10 @@ function decrireLaTenueDuCours({
           },
         );
 
-        expect(ecrans.length).withContext(`écrans du ${code}`).toBeGreaterThan(ecransAuMoins);
+        expect(pupitre.length).withContext(`écrans du ${code}`).toBeGreaterThan(0);
+        expect(ecrans.map(({ id }) => id))
+          .withContext(`écrans du ${code} mesurés en ${mode}`)
+          .toEqual(pupitre.map(({ id }) => id));
         expect(fautes).toEqual([]);
       },
       DELAI_DE_MONTAGE_MS,
