@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
@@ -129,6 +129,17 @@ test('racineDuBack suit BANC_RACINE_BACK, relatif au front, pour jouer un worktr
   assert.equal(
     racineDuBack({ env: { BANC_RACINE_BACK: '' }, racineFront: '/depots/portfolio-2025-front' }),
     '/depots/portfolio-2025-back',
+  );
+});
+
+test("aucun script du package.json n'appelle le compose du banc hors de jouer.mjs", () => {
+  const { scripts } = JSON.parse(
+    readFileSync(fileURLToPath(new URL('../../package.json', import.meta.url)), 'utf8'),
+  );
+
+  assert.deepEqual(
+    Object.entries(scripts).filter(([, commande]) => commande.includes('banc.compose.yaml')),
+    [],
   );
 });
 

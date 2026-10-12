@@ -306,7 +306,9 @@ const interrompre = () => {
 process.on('SIGINT', interrompre);
 process.on('SIGTERM', interrompre);
 
-jouer().catch((erreur) => {
+const action = process.argv[2] === '--nettoyer' ? redescendre : jouer;
+
+action().catch((erreur) => {
   process.stderr.write(`\n${erreur instanceof Error ? erreur.message : String(erreur)}\n`);
   process.exitCode = 1;
 });
