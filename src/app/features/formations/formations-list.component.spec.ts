@@ -137,13 +137,13 @@ describe('FormationsListComponent', () => {
         expect(annonces.filter((texte) => /\d écrans/.test(texte ?? ''))).toEqual([]);
       });
 
-      it('L1 · annonce la durée du cours réellement servi', () => {
+      it('L1 · annonce la durée du cours réellement servi, arrondie aux cinq minutes', () => {
         const annonce = carte()?.meta.find((row) => /^\d+ h \d+$/.test(row.value))?.value ?? '';
         const [, heures, minutes] = /^(\d+) h (\d+)$/.exec(annonce) ?? [];
 
-        expect(
-          Math.abs(Number(heures) * 60 + Number(minutes) - instantane.sujet.duree),
-        ).toBeLessThan(15);
+        expect(Number(heures) * 60 + Number(minutes)).toBe(
+          Math.round(instantane.sujet.duree / 5) * 5,
+        );
       });
 
       it('mène au cours depuis sa carte rendue', () => {
