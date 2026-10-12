@@ -1,11 +1,18 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 import fc from 'fast-check';
 
 import {
   BASE_DU_BANC,
   PORTS,
+  PROJET_COMPOSE,
   environnementDeLApi,
+  environnementDuCompose,
   identifiantsDuFormateur,
   racineDuBack,
   secretAleatoire,
@@ -14,6 +21,8 @@ import {
 } from './configuration.mjs';
 
 const GRAINE = 20260920;
+
+const COMPOSE_DU_BANC = fileURLToPath(new URL('./banc.compose.yaml', import.meta.url));
 
 const SECRETS = {
   jwt: 'a'.repeat(48),
@@ -120,5 +129,31 @@ test('racineDuBack suit BANC_RACINE_BACK, relatif au front, pour jouer un worktr
   assert.equal(
     racineDuBack({ env: { BANC_RACINE_BACK: '' }, racineFront: '/depots/portfolio-2025-front' }),
     '/depots/portfolio-2025-back',
+  );
+});
+
+test('la base du banc étend celle du back que désigne BANC_RACINE_BACK, worktree compris', () => {
+  const back = mkdtempSync(join(tmpdir(), 'banc-back-'));
+  mkdirSync(join(back, 'test'));
+  writeFileSync(
+    join(back, 'test/db-integration.compose.yaml'),
+    'services:\n  db-integration:\n    image: postgres:16-temoin-du-worktree\n',
+  );
+  const compose = spawnSync(
+    // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
+    'docker',
+    ['compose', '-p', PROJET_COMPOSE, '-f', COMPOSE_DU_BANC, 'config', '--format', 'json'],
+    { encoding: 'utf8', env: { ...process.env, ...environnementDuCompose(back) } },
+  );
+  rmSync(back, { recursive: true, force: true });
+
+  assert.deepEqual(
+    {
+      statut: compose.status,
+      erreur: compose.stderr.trim(),
+      image:
+        compose.status === 0 ? JSON.parse(compose.stdout).services['banc-db'].image : undefined,
+    },
+    { statut: 0, erreur: '', image: 'postgres:16-temoin-du-worktree' },
   );
 });

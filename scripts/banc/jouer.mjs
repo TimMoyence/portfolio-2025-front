@@ -14,6 +14,7 @@ import {
   URL_API,
   URL_FRONT,
   environnementDeLApi,
+  environnementDuCompose,
   identifiantsDuFormateur,
   racineDuBack,
   secretAleatoire,
@@ -106,7 +107,9 @@ function executer(commande, args, options = {}) {
  * @returns {Promise<void>}
  */
 function compose(args) {
-  return executer('docker', ['compose', '-p', PROJET_COMPOSE, '-f', COMPOSE, ...args]);
+  return executer('docker', ['compose', '-p', PROJET_COMPOSE, '-f', COMPOSE, ...args], {
+    env: environnementDuCompose(RACINE_BACK),
+  });
 }
 
 /**

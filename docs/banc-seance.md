@@ -28,7 +28,8 @@ d'échec et sur `Ctrl+C`.
 Prérequis :
 
 - Docker en marche ;
-- le dépôt back cloné **à côté** du front (`../portfolio-2025-back`), avec ses dépendances
+- le dépôt back cloné **à côté** du front (`../portfolio-2025-back`), ou désigné par
+  `BANC_RACINE_BACK`, avec ses dépendances
   installées (`pnpm install`) — le back est en pnpm, le front en npm, et cette frontière ne
   bouge pas ;
 - les ports 3010, 4010, 55433 et 63790 libres.
@@ -38,7 +39,7 @@ Prérequis :
 | Étape              | Détail                                                                                             |
 | ------------------ | -------------------------------------------------------------------------------------------------- |
 | Base et cache      | `docker compose -p portfolio2025-banc` sur `scripts/banc/banc.compose.yaml`                        |
-| Construction back  | `pnpm build` dans `../portfolio-2025-back`                                                         |
+| Construction back  | `pnpm build` dans `BANC_RACINE_BACK` (`../portfolio-2025-back` par défaut)                         |
 | Migrations         | toutes les migrations TypeORM appliquées à la base `portfolio_2025_banc`                           |
 | API                | `node dist/main.js`, port 3010, journal dans `test-results/banc/api.log`                           |
 | Compte formateur   | inscription par l'API réelle, rôle `teacher` accordé en SQL, connexion pour le jeton du banc       |
@@ -46,8 +47,9 @@ Prérequis :
 | Scénarios          | `playwright test --project=banc --workers=1`, le serveur SSR étant démarré par Playwright sur 4010 |
 | Démontage          | arrêt des groupes de processus enfants, puis `docker compose down -v --remove-orphans`             |
 
-`scripts/banc/banc.compose.yaml` étend le service Postgres du back
-(`../portfolio-2025-back/test/db-integration.compose.yaml`) au lieu d'en déclarer un second :
+`scripts/banc/banc.compose.yaml` étend le service Postgres du back joué
+(`test/db-integration.compose.yaml` sous `BANC_RACINE_BACK`, que `jouer.mjs` lui passe en
+chemin absolu par `BANC_COMPOSE_DU_BACK`) au lieu d'en déclarer un second :
 seuls le port, le nom de base et la sonde de santé sont surchargés, et un Redis est ajouté pour
 que les plafonds de flux SSE soient tenus comme en production.
 
