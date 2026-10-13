@@ -121,7 +121,6 @@ export function environnementDeLApi({ secrets, ports = PORTS, base = BASE_DU_BAN
     GOOGLE_CLIENT_ID: 'banc.apps.googleusercontent.com',
     PASSWORD_RESET_URL_BASE: `http://localhost:${ports.front}/reset-password`,
     FORMATION_TEACHER_NOTIFICATION_TO: 'banc@example.test',
-    FORMATION_REVIEW_BASE_URL: `http://localhost:${ports.front}/cours/revision`,
     FORMATION_REVIEW_TOKEN_SECRET: secrets.revision,
     FORMATIONS_PULSE_SECRET: secrets.jalon,
     REDIS_URL: `redis://127.0.0.1:${ports.redis}`,

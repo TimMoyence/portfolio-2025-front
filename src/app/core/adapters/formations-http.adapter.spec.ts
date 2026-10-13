@@ -31,7 +31,6 @@ import type {
   MotifRefusReponse,
   MotifRefusReponseLibre,
   ParticipantDeSeance,
-  QuestionsDues,
   RapportSeance,
   Rattachement,
   RegleNotation,
@@ -843,21 +842,6 @@ describe('FormationsHttpAdapter', () => {
     expect(req.request.headers.get(ENTETE_JETON)).toBe(JETON);
     expect(req.request.body).toEqual({ incidents });
     req.flush(null);
-  });
-
-  it('lireQuestionsDues GETe les questions sur due-questions avec l en-tete de participant', () => {
-    const dues: QuestionsDues = {
-      questions: [{ questionId: 'Q-CAP-03', concept: 'capitalisation', boite: 2 }],
-    };
-    const recus: QuestionsDues[] = [];
-
-    adapter.lireQuestionsDues(SESSION_ID, JETON).subscribe((valeur) => recus.push(valeur));
-
-    const req = attendre(`${URL_SEANCE}/due-questions`, 'GET');
-    expect(req.request.headers.get(ENTETE_JETON)).toBe(JETON);
-    req.flush(dues);
-
-    expect(recus).toEqual([dues]);
   });
 
   describe('routes du contrat V3 (§ 9.5 et § 9.8)', () => {

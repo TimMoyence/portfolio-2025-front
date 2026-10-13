@@ -23,7 +23,6 @@ import type {
   MotifRefusReponseLibre,
   ParticipantDeSeance,
   ProductionEtudiante,
-  QuestionsDues,
   RappelsDus,
   RapportSeance,
   Rattachement,
@@ -360,12 +359,6 @@ export class FormationsHttpAdapter implements FormationsPort {
       { incidents },
       { headers: entetes(jeton) },
     );
-  }
-
-  lireQuestionsDues(sessionId: string, jeton: string): Observable<QuestionsDues> {
-    return this.http.get<QuestionsDues>(`${this.urlSeance(sessionId)}/due-questions`, {
-      headers: entetes(jeton),
-    });
   }
 
   envoyerProduction(
