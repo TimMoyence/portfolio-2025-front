@@ -173,18 +173,6 @@ export interface IncidentEtudiant {
   horodatage: string;
 }
 
-export type BoiteRevision = 1 | 2 | 3;
-
-export interface QuestionDue {
-  questionId: string;
-  concept: string;
-  boite: BoiteRevision;
-}
-
-export interface QuestionsDues {
-  questions: readonly QuestionDue[];
-}
-
 export interface ReponseRapportee {
   questionId: string;
   concept: string;
@@ -415,7 +403,6 @@ export interface FormationsPort {
     jeton: string,
     incidents: readonly IncidentEtudiant[],
   ): Observable<void>;
-  lireQuestionsDues(sessionId: string, jeton: string): Observable<QuestionsDues>;
   envoyerProduction(
     sessionId: string,
     jeton: string,

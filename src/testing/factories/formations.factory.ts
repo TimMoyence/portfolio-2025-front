@@ -334,7 +334,6 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
     'repondre',
     'enregistrerReponseLibre',
     'signalerIncidents',
-    'lireQuestionsDues',
     'envoyerProduction',
     'tenterEnigme',
     'declarerJalon',
@@ -369,7 +368,6 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   port.repondre.and.returnValue(of({ reussite: true, libelleConfusion: null }));
   port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
   port.signalerIncidents.and.returnValue(of(undefined));
-  port.lireQuestionsDues.and.returnValue(of({ questions: [] }));
   port.envoyerProduction.and.returnValue(of(buildVerdictProduction()));
   port.tenterEnigme.and.returnValue(of(buildVerdictTentative()));
   port.declarerJalon.and.returnValue(of(undefined));

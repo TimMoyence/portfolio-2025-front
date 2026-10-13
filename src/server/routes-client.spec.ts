@@ -54,6 +54,20 @@ describe('entetesDeLaRoute', () => {
     );
   });
 
+  it('sert chaque page ouverte par un lien a jeton sans referent, pour que son URL ne parte ni vers l API ni vers un tiers', () => {
+    for (const page of [
+      '/verify-email',
+      '/reset-password',
+      '/formations/ia-solopreneurs/toolkit/6f0e3c1a-9b2d-4c8e-a1f7-3d5b9e2c4a10',
+    ]) {
+      expect(entetesDeLaRoute(page)['Referrer-Policy']).withContext(page).toBe('no-referrer');
+    }
+  });
+
+  it('laisse la page publique du toolkit, sans jeton, sous la politique de referent du site', () => {
+    expect(entetesDeLaRoute('/formations/ia-solopreneurs/toolkit')).toEqual({});
+  });
+
   it('pose les en-têtes que chaque route serveur déclare', () => {
     const declarees = serverRoutes.filter((route) => route.headers !== undefined);
 

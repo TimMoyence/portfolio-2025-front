@@ -39,7 +39,6 @@ const METHODES_DU_PORT = {
   repondre: true,
   enregistrerReponseLibre: true,
   signalerIncidents: true,
-  lireQuestionsDues: true,
   envoyerProduction: true,
   tenterEnigme: true,
   declarerJalon: true,
