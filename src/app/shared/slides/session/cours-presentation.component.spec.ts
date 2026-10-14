@@ -15,6 +15,7 @@ import {
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import { chargerLesPolicesDeLApplication } from '../../../../testing/polices';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
+import { annexeFormateurDeLEcran } from '../../../features/cours/presentateur/annexe-formateur';
 import type { DirectEcran } from './contrat-hote';
 import { of, Subject, throwError } from 'rxjs';
 import type { FichierTelecharge } from '../../../core/ports/formations.port';
@@ -35,6 +36,23 @@ const COURS_MESURES = INSTANTANES_DES_COURS_SERVIS.map(([code, instantane]) => (
 
 const COURS_A_RENVOIS = COURS_MESURES.filter(({ instantane }) =>
   ecransDuPupitreDe(instantane).some(({ renvoi }) => renvoi !== undefined),
+);
+
+const ECRANS_DU_PUPITRE = new Map(
+  COURS_MESURES.flatMap(({ instantane }) =>
+    ecransDuPupitreDe(instantane).map((ecran) => [ecran.id, ecran] as const),
+  ),
+);
+
+const TABLEURS_DES_COURS = COURS_MESURES.flatMap(({ instantane }) => {
+  const pupitre = ecransDuPupitreDe(instantane);
+  return pupitre
+    .filter(({ type }) => type === 'fp-sheet')
+    .map((ecran) => ({ ecran, renvoi: pupitre.find(({ id }) => id === ecran.renvoi) ?? null }));
+});
+
+const TABLEURS_PROJETES = TABLEURS_DES_COURS.flatMap((tableur) =>
+  (['projection', 'formateur'] as const).map((mode) => ({ ...tableur, mode })),
 );
 
 @Component({
@@ -101,6 +119,10 @@ async function monterDansUnCadre(
   }
   fixture.componentRef.setInput('direct', direct);
   fixture.componentRef.setInput('telechargement', telechargement);
+  const deroule = ECRANS_DU_PUPITRE.get(ecran.id);
+  if (mode !== 'etudiant' && deroule !== undefined) {
+    fixture.componentRef.setInput('donneesFormateur', annexeFormateurDeLEcran(deroule));
+  }
   const racine = fixture.nativeElement as HTMLElement;
   const toile = (): HTMLElement | null =>
     racine.querySelector<HTMLElement>('[data-testid="cours-toile"]');
@@ -510,6 +532,33 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     },
     DELAI_DE_MONTAGE_MS,
   );
+
+  it('QA-08 · mesure les tableurs de tous les cours servis', () => {
+    expect(TABLEURS_DES_COURS.length).toBeGreaterThan(0);
+  });
+
+  for (const { ecran, renvoi, mode } of TABLEURS_PROJETES) {
+    it(
+      `QA-08 · ${ecran.id} en ${mode}, formules affichées, tient dans la toile en largeur comme en hauteur, sans défileur horizontal`,
+      async () => {
+        const monte = await monterDansUnCadre(ecran, mode, 1280, 720, renvoi, PILOTAGE_REVELE);
+        await stabiliser(monte, 8);
+
+        expect(
+          elementsDe(monte.hote).filter((element) =>
+            element.matches('[data-testid="correction-feuille"] code'),
+          ).length,
+        )
+          .withContext('formules affichées')
+          .toBeGreaterThan(0);
+        expect(ecranRogneEnLargeur(ecran, monte)).toBeNull();
+        expect(elementsHorsToileEnLargeur(monte)).toEqual([]);
+        expect(elementsHorsToile(monte)).toEqual([]);
+        monte.detruire();
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
+  }
 
   it('mesure les écrans à renvoi de chaque cours servi qui en porte, et au moins d un cours', () => {
     expect(COURS_A_RENVOIS.length).toBeGreaterThan(0);
@@ -956,25 +1005,48 @@ function cartesQuiDebordent(racine: ParentNode): string[] {
     .map((carte) => carte.querySelector('h3, strong')?.textContent?.trim() ?? '?');
 }
 
-function elementsHorsToile(monte: EcranCadre): string[] {
+function elementsDebordantLaToile(
+  monte: EcranCadre,
+  deborde: (element: HTMLElement, bloc: DOMRect, toile: DOMRect) => boolean,
+): HTMLElement[] | null {
   const toile = monte.toile()?.getBoundingClientRect();
   const contenu = monte.toile()?.querySelector('[data-testid="cours-contenu"]');
   if (toile === undefined || contenu === null || contenu === undefined) {
-    return ['toile absente'];
+    return null;
   }
-  return elementsDe(contenu)
-    .filter((element) => {
-      const bloc = element.getBoundingClientRect();
-      const replie = element.parentElement?.closest('details:not([open])');
-      const resume = element.tagName === 'SUMMARY' && element.parentElement === replie;
-      return (
-        bloc.height > 0 &&
-        (replie === null || replie === undefined || resume) &&
-        getComputedStyle(element).visibility === 'visible' &&
-        (bloc.top < toile.top - 1 || bloc.bottom > toile.bottom + 1)
-      );
-    })
-    .map(({ tagName }) => tagName);
+  return elementsDe(contenu).filter((element) =>
+    deborde(element, element.getBoundingClientRect(), toile),
+  );
+}
+
+function elementsHorsToile(monte: EcranCadre): string[] {
+  const horsToile = elementsDebordantLaToile(monte, (element, bloc, toile) => {
+    const replie = element.parentElement?.closest('details:not([open])');
+    const resume = element.tagName === 'SUMMARY' && element.parentElement === replie;
+    return (
+      bloc.height > 0 &&
+      (replie === null || replie === undefined || resume) &&
+      getComputedStyle(element).visibility === 'visible' &&
+      (bloc.top < toile.top - 1 || bloc.bottom > toile.bottom + 1)
+    );
+  });
+  return horsToile?.map(({ tagName }) => tagName) ?? ['toile absente'];
+}
+
+function elementsHorsToileEnLargeur(monte: EcranCadre): string[] {
+  const horsToile = elementsDebordantLaToile(
+    monte,
+    (element, bloc, toile) =>
+      bloc.width > 0 &&
+      element.checkVisibility() &&
+      (bloc.left < toile.left - 1 || bloc.right > toile.right + 1),
+  );
+  return (
+    horsToile?.map(
+      (element) =>
+        `${element.tagName.toLowerCase()}:${element.textContent?.trim().slice(0, 20) ?? ''}`,
+    ) ?? ['toile absente']
+  );
 }
 
 const ECHELLE_MINIMALE = 0.8;

@@ -20,7 +20,7 @@ import { SlideActivityComponent } from './slide-activity.component';
 const SUBSTITUTION = buildInstantaneDeSubstitution();
 
 decrireLeMontageDeLInstantane('B2-01', INSTANTANE_B2_01, {
-  empreinte: 'ff304a0c460920be83586af1f6883f76760a2371a4a14b083f4faa649178e31d',
+  empreinte: 'b60df371951282a9a006c76da8cc50ee6a73cdb481038ed9a72955413cbed022',
   ecrans: 59,
   specifiques: () => {
     it(
