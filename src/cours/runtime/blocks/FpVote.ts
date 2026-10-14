@@ -4,7 +4,12 @@ import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { lignesDeCalculHtml } from './calculs';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
 import { estObjet } from '../core/valeurs';
-import { lireBonneOption, lireBonneReponse, VerdictsParQuestion } from './retours';
+import {
+  bonneReponseRevelee,
+  lireBonneOption,
+  lireBonneReponse,
+  VerdictsParQuestion,
+} from './retours';
 import { FpVerdicts } from './verdicts';
 
 export interface VoteQuestionPublique {
@@ -171,7 +176,7 @@ export class FpVote extends FpVerdicts {
         </div>
       </fieldset>
       ${this.presentateur() ? this.suiviProjete(question) : this.suiviEtudiant(question)}
-      ${this.bonneReponseRevelee()}${this.revelationRevelee()}
+      ${bonneReponseRevelee(this.texte('bonne-reponse'), this.bonneReponse)}${this.revelationRevelee()}
     </div>`;
   }
 
@@ -281,13 +286,6 @@ export class FpVote extends FpVerdicts {
       return VIDE;
     }
     return safeHtml`<p class="fp-vote__decompte" data-testid="decompte">${escapeHtml(this.texte('pulse-total'))} ${this.interneResultats.total}</p>`;
-  }
-
-  private bonneReponseRevelee(): EscapedHtml {
-    if (this.bonneReponse === null) {
-      return VIDE;
-    }
-    return safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(this.bonneReponse)}</p>`;
   }
 
   private revelationRevelee(): EscapedHtml {

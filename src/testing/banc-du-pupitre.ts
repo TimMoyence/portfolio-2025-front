@@ -90,7 +90,7 @@ export function buildEcranDeVoteCorrige(
     corriges: [
       {
         questionId: 'Q-CAP-03',
-        bonneReponse: '1480.24',
+        bonneReponse: '1 480,24',
         confusions: confusions.map(({ id, libelle }) => ({ id, libelle })),
       },
     ],

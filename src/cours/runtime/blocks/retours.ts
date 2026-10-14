@@ -1,3 +1,4 @@
+import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { estObjet } from '../core/valeurs';
 
 export interface VerdictDeReponse {
@@ -76,6 +77,12 @@ export function lireBonneReponse(valeur: unknown): string | null {
 
 export function lireBonneOption(valeur: unknown): string | null {
   return texteDeLaCible(valeur, 'optionId');
+}
+
+export function bonneReponseRevelee(libelle: string, bonneReponse: string | null): EscapedHtml {
+  return bonneReponse === null
+    ? escapeHtml('')
+    : safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(libelle)} ${escapeHtml(bonneReponse)}</p>`;
 }
 
 export function estVerdictDeReponse(valeur: unknown): valeur is VerdictDeReponse {

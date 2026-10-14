@@ -38,11 +38,4 @@ export abstract class FpReponse<
         ${this.verdictDeReponse(this.interneVerdict)}
         ${this.annonces()}`;
   }
-
-  protected bonneReponseRevelee(formater: (bonne: string) => string): EscapedHtml {
-    if (this.bonneReponse === null) {
-      return escapeHtml('');
-    }
-    return safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(formater(this.bonneReponse))}</p>`;
-  }
 }

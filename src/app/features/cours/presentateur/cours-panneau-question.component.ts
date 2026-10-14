@@ -6,7 +6,6 @@ import type {
   DerouleCours,
   ResultatQuestion,
 } from '../../../../cours/content/types';
-import { enFrancais } from './corrections-affichees';
 
 export interface QuestionDuPanneau {
   readonly numero: number;
@@ -63,7 +62,7 @@ function lirePanneau(
   const sousLeSeuil = seuil !== null && resultat.total > 0 && part < seuil;
   return {
     questionId: corrige.questionId,
-    bonneReponse: enFrancais(corrige.bonneReponse),
+    bonneReponse: corrige.bonneReponse,
     total: resultat.total,
     part,
     neSaitPas: resultat.neSaitPas,

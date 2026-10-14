@@ -481,7 +481,7 @@ describe('CoursPresentateurComponent', () => {
                 ],
               },
               corriges: [
-                { questionId: 'Q-VA-07', bonneReponse: '1480.24', confusions: [] },
+                { questionId: 'Q-VA-07', bonneReponse: '1 480,24', confusions: [] },
                 { questionId: 'Q-CAP-03', bonneReponse: 'b', confusions: [] },
               ],
             }),

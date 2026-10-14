@@ -345,7 +345,7 @@ describe('CoursLivretComponent', () => {
     expect(un(fixture, 'livret-notes')?.textContent).toContain(
       'Rappeler la formule de capitalisation',
     );
-    expect(un(fixture, 'livret-reponses')?.textContent).toContain('1480.24');
+    expect(un(fixture, 'livret-reponses')?.textContent).toContain('1 480,24');
     expect(un(fixture, 'livret-guide')?.textContent).toContain('Des milliers d’euros');
   });
 

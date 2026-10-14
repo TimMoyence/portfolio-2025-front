@@ -248,12 +248,12 @@ describe('FpNumeric', () => {
     }
   });
 
-  it('revele la bonne reponse au presentateur comme a l etudiant quand le corrige est pose', () => {
+  it('D-07 · revele au presentateur comme a l etudiant la cible telle que le back la sert, sans la reecrire', () => {
     hote.corrige = CORRIGE;
     for (const role of ROLES_DE_MONTAGE) {
       hote.setAttribute('data-cours-role', role);
       const bonneReponse = hote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]');
-      expect(bonneReponse?.textContent).withContext(role).toContain('1480,24');
+      expect(bonneReponse?.textContent).withContext(role).toContain(VALEUR_ATTENDUE);
       expect(bonneReponse?.getAttribute('data-etat')).withContext(role).toBe('confirme');
     }
   });
