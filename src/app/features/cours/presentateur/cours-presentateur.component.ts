@@ -57,6 +57,7 @@ import { PanneauGuideComponent } from './panneau-pedagogique/panneau-guide.compo
 import { PanneauParticipantsComponent } from './panneau-pedagogique/panneau-participants.component';
 import { questionsDuPanneau } from './questions-du-panneau';
 import { phraseDeNotation } from './regle-de-notation';
+import { NOMBRE_FRANCAIS } from '../../../shared/slides/layouts/axe-gradue';
 import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
 import { correctionsAffichees } from './corrections-affichees';
 import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
@@ -230,7 +231,7 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
             <span i18n="presentateur.participantsEnDirect|@@presentateurParticipantsEnDirect"
               >connectés à cette séance</span
             >
-            @if (resultats()?.statistiques; as statistiques) {
+            @if (statistiquesEcrites(); as statistiques) {
               <dl class="join-panel__stats" data-testid="presentateur-statistiques">
                 <div>
                   <dt i18n="@@presentateurStatMoyenne">Moyenne</dt>
@@ -603,6 +604,7 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
                   [ecran]="ecranAffiche"
                   [renvoi]="ecranRenvoye()"
                   [resultats]="resultatsDesQuestions()"
+                  [enigmes]="resultats()?.enigmes ?? []"
                   [participants]="participants()"
                   [sessionId]="sessionId()"
                 />
@@ -758,6 +760,18 @@ export class CoursPresentateurComponent {
     return (this.resultats()?.statistiques?.questionsProblemes ?? []).map(
       (questionId) => enonces.get(questionId) ?? questionId,
     );
+  });
+
+  readonly statistiquesEcrites = computed(() => {
+    const statistiques = this.resultats()?.statistiques;
+    return statistiques === undefined
+      ? null
+      : {
+          ...statistiques,
+          moyenne: NOMBRE_FRANCAIS.format(statistiques.moyenne),
+          mediane: NOMBRE_FRANCAIS.format(statistiques.mediane),
+          dispersion: NOMBRE_FRANCAIS.format(statistiques.dispersion),
+        };
   });
 
   readonly regleDeNotation = computed(() => {

@@ -10,8 +10,15 @@ import type {
   ResultatsSeance,
   VotePhase,
 } from '../../../../cours/content/types';
+import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
+import { colonnesACorriger } from '../../../../cours/runtime/blocks/FpTableBuild';
 import type { ResultatsDuFlux } from '../../../../cours/runtime/core/sync';
-import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
+import { NOMBRE_FRANCAIS } from '../../../shared/slides/layouts/axe-gradue';
+import {
+  identifiantsDuMontage,
+  libellesDesElements,
+  planDeMontage,
+} from '../../../shared/slides/session/lecture-ecran';
 import { objet } from '../../../shared/slides/visual/presentation-v2';
 
 export type CommandeDEcran = { readonly screenId: string } & PilotageEcran;
@@ -27,6 +34,13 @@ const REVELATIONS_DEDIEES: ReadonlySet<string> = new Set([
 ]);
 const REVELATIONS_SANS_QUESTION: ReadonlySet<string> = new Set(['fp-cardsort', 'fp-escape']);
 
+function colonnesACorrigerDe(ecran: EcranDeroule): readonly string[] {
+  const plan = ecran.type === 'fp-table-build' ? objet(ecran.donnees?.['plan']) : null;
+  return plan === null
+    ? []
+    : colonnesACorriger(plan as unknown as TableBuildPlanPublic).map(({ intitule }) => intitule);
+}
+
 const LIBELLES_DE_PHASE: Readonly<Record<VotePhase, string>> = {
   vote: $localize`:@@panneauActivitePhaseVote:Vote individuel`,
   discussion: $localize`:@@panneauActivitePhaseDiscussion:Discussion entre voisins`,
@@ -36,6 +50,12 @@ const LIBELLES_DE_PHASE: Readonly<Record<VotePhase, string>> = {
 
 interface LigneDeCle extends Decompte {
   readonly cle: string;
+  readonly libelle: string;
+}
+
+interface LigneDEnigme extends ProgressionEnigme {
+  readonly intitule: string;
+  readonly tentatives: string;
 }
 
 @Component({
@@ -84,12 +104,12 @@ interface LigneDeCle extends Decompte {
     }
   `,
   template: `
-    @if (phaseVisible()) {
+    @if (phaseCourante(); as courante) {
       <section class="activite-section" data-testid="activite-phase">
         <h3 i18n="@@panneauActivitePhaseTitre">Instruction par les pairs</h3>
         <p>
           <span i18n="@@panneauActivitePhaseCourante">Phase en cours :</span>
-          <strong data-testid="activite-phase-courante">{{ libellePhase() }}</strong>
+          <strong data-testid="activite-phase-courante">{{ libelleDe(courante) }}</strong>
         </p>
         @if (phaseSuivante(); as suivante) {
           <button
@@ -189,28 +209,24 @@ interface LigneDeCle extends Decompte {
     @if (ecran().type === 'fp-table-build') {
       <section class="activite-section" data-testid="activite-correction-tableau">
         <h3 i18n="@@panneauActiviteCorrectionTableauTitre">Correction du tableau</h3>
-        <div class="activite-commandes">
-          <button
-            type="button"
-            class="control-btn"
-            data-testid="activite-tableau-coefficients"
-            [disabled]="pilotageBloque() || etayage() >= 1"
-            (click)="ouvrirLaCorrection()"
-            i18n="@@panneauActiviteTableauCoefficients"
-          >
-            Afficher les coefficients
-          </button>
-          <button
-            type="button"
-            class="control-btn"
-            data-testid="activite-tableau-valeurs"
-            [disabled]="pilotageBloque() || etayage() !== 1"
-            (click)="etayer(2)"
-            i18n="@@panneauActiviteTableauValeurs"
-          >
-            Afficher les prix et les indices
-          </button>
-        </div>
+        @if (colonneSuivante(); as colonne) {
+          <div class="activite-commandes">
+            <button
+              type="button"
+              class="control-btn"
+              data-testid="activite-tableau-colonne-suivante"
+              [disabled]="pilotageBloque()"
+              (click)="corrigerLaColonneSuivante()"
+              i18n="@@panneauActiviteTableauColonneSuivante"
+            >
+              Corriger : {{ colonne }}
+            </button>
+          </div>
+        } @else {
+          <p data-testid="activite-tableau-corrige" i18n="@@panneauActiviteTableauCorrige">
+            Toutes les colonnes sont corrigées.
+          </p>
+        }
       </section>
     }
     @if (etapes() > 0) {
@@ -296,7 +312,7 @@ interface LigneDeCle extends Decompte {
             <tbody>
               @for (ligne of lignesDeCle(); track ligne.cle) {
                 <tr data-testid="activite-production-cle" [attr.data-cle]="ligne.cle">
-                  <th scope="row">{{ ligne.cle }}</th>
+                  <th scope="row">{{ ligne.libelle }}</th>
                   <td>{{ ligne.justes }} / {{ ligne.total }}</td>
                 </tr>
               }
@@ -321,11 +337,11 @@ interface LigneDeCle extends Decompte {
           <tbody>
             @for (enigme of enigmes(); track enigme.enigmeId) {
               <tr data-testid="activite-enigme" [attr.data-enigme]="enigme.enigmeId">
-                <th scope="row">{{ enigme.enigmeId }}</th>
+                <th scope="row">{{ enigme.intitule }}</th>
                 <td>{{ enigme.ouvertes }}</td>
                 <td>{{ enigme.resolues }}</td>
                 <td>{{ enigme.epuisees }}</td>
-                <td>{{ enigme.tentativesMoyennes }}</td>
+                <td>{{ enigme.tentatives }}</td>
               </tr>
             }
           </tbody>
@@ -390,13 +406,16 @@ export class CoursPanneauActiviteComponent {
       : (this.pilotage().explicationsDevoilees ?? 0),
   );
 
-  protected readonly phaseCourante = computed<VotePhase>(() => this.pilotage().phase ?? 'vote');
-
-  protected readonly libellePhase = computed(() => LIBELLES_DE_PHASE[this.phaseCourante()]);
-
-  protected readonly phaseSuivante = computed<VotePhase | null>(
-    () => PHASES_DE_VOTE[PHASES_DE_VOTE.indexOf(this.phaseCourante()) + 1] ?? null,
+  protected readonly phaseCourante = computed<VotePhase | null>(() =>
+    this.phaseVisible() ? (this.pilotage().phase ?? null) : null,
   );
+
+  protected readonly phaseSuivante = computed<VotePhase | null>(() => {
+    const courante = this.phaseCourante();
+    return courante === null
+      ? null
+      : (PHASES_DE_VOTE[PHASES_DE_VOTE.indexOf(courante) + 1] ?? null);
+  });
 
   protected readonly etapes = computed(() => {
     const etapes = objet(this.ecran().donnees?.['exemple'])?.['etapes'];
@@ -404,6 +423,9 @@ export class CoursPanneauActiviteComponent {
   });
 
   protected readonly etayage = computed(() => this.pilotage().etayage ?? 0);
+  protected readonly colonneSuivante = computed(
+    () => colonnesACorrigerDe(this.ecran())[this.etayage()] ?? null,
+  );
 
   protected readonly production = computed<ResultatQuestion | null>(() => {
     if (!PRODUCTIONS.has(this.ecran().type)) {
@@ -413,17 +435,26 @@ export class CoursPanneauActiviteComponent {
     return this.resultatDe(identifiant ?? '');
   });
 
+  private readonly libelles = computed(() => libellesDesElements(this.ecran()));
+
   protected readonly lignesDeCle = computed<readonly LigneDeCle[]>(() =>
     Object.entries(this.production()?.parCle ?? {}).map(([cle, compte]) => ({
       cle,
+      libelle: this.libelles().get(cle) ?? cle,
       justes: compte.justes,
       total: compte.total,
     })),
   );
 
-  protected readonly enigmes = computed<readonly ProgressionEnigme[]>(() => {
+  protected readonly enigmes = computed<readonly LigneDEnigme[]>(() => {
     const [parcoursId] = this.identifiants();
-    return (this.resultats()?.enigmes ?? []).filter((enigme) => enigme.parcoursId === parcoursId);
+    return (this.resultats()?.enigmes ?? [])
+      .filter((enigme) => enigme.parcoursId === parcoursId)
+      .map((enigme) => ({
+        ...enigme,
+        intitule: this.libelles().get(enigme.enigmeId) ?? enigme.enigmeId,
+        tentatives: NOMBRE_FRANCAIS.format(enigme.tentativesMoyennes),
+      }));
   });
 
   protected readonly billetsRecus = computed(() => {
@@ -457,6 +488,14 @@ export class CoursPanneauActiviteComponent {
 
   protected etayer(etayage: number): void {
     this.commande.emit({ screenId: this.ecran().id, etayage });
+  }
+
+  protected corrigerLaColonneSuivante(): void {
+    if (this.etayage() === 0) {
+      this.ouvrirLaCorrection();
+    } else {
+      this.etayer(this.etayage() + 1);
+    }
   }
 
   private resultatDe(questionId: string): ResultatQuestion | null {

@@ -2,7 +2,9 @@ import { classesEmises, classesOrphelines } from '../../../testing/classes-briqu
 import {
   attendreLEnvoiVideRefuse,
   attendreLeRenvoiEpuise,
+  creerBrique,
   detailsEmis,
+  enregistrerBrique,
   installerBrique,
 } from '../../../testing/banc-de-brique';
 import {
@@ -10,7 +12,9 @@ import {
   buildTableDeVeritePlan,
   buildVerdictDeProduction,
 } from '../../../testing/factories/cours.factory';
-import { FpTableBuild } from './FpTableBuild';
+import { ecransDuPupitreDe, ecransPublicsDe } from '../../../testing/fixtures/instantane-de-cours';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../testing/fixtures/instantanes-des-cours';
+import { FpTableBuild, type TableBuildPlanPublic } from './FpTableBuild';
 
 const PLAN = buildTableBuildPlan();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
@@ -299,7 +303,7 @@ describe('FpTableBuild', () => {
     attendreAucunTableauCorrige();
   });
 
-  it('RET-31 · projette le tableau corrige, saisies masquees au niveau 1 puis revelees au niveau 2', () => {
+  it('RET-31 · projette le tableau corrige, sa premiere colonne a corriger des le niveau 1', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.corrige = ATTENDUS_FORMATEUR;
     hote.etayage = 1;
@@ -310,10 +314,8 @@ describe('FpTableBuild', () => {
       `Correction — ${PLAN.intitule}`,
     );
     expect(repere(hote, 'tableau')).toBeNull();
-    expect(colonneCorrigee(hote, 'prix')).toEqual(['—', '—', '—', '—']);
-
-    hote.etayage = 2;
     expect(colonneCorrigee(hote, 'prix')).toEqual(['21,60', '—', '—', '—']);
+    expect(colonneCorrigee(hote, 'indice')).toEqual(['—', '—', '—', '—']);
   });
 
   it('n additionne pas les taux successifs quand la synthese les resume deja', () => {
@@ -325,7 +327,7 @@ describe('FpTableBuild', () => {
     expect(repere(hote, 'totaux')).not.toBeNull();
   });
 
-  it('F27 · ne laisse deviner au niveau 1 ni les prix ni les indices par les colonnes deduites', () => {
+  it('F27 · corrige une colonne non donnee par niveau, sans laisser deviner les suivantes', () => {
     projeterAuPresentateur(
       hote,
       [
@@ -334,14 +336,21 @@ describe('FpTableBuild', () => {
       ],
       1,
     );
+    const premieres = (): (string | undefined)[] =>
+      ['prix', 'coef', 'indice', 'evolution'].map((cle) => colonneCorrigee(hote, cle)[0]);
 
-    expect(colonneCorrigee(hote, 'coef')[0]).toBe(COEFFICIENTS_DEDUITS[0]);
-    expect(colonneCorrigee(hote, 'indice')[0]).toBe('—');
-    expect(colonneCorrigee(hote, 'evolution')[0]).toBe('—');
-
+    expect(premieres()).toEqual(['21,60', '—', '—', '—']);
     hote.etayage = 2;
-    expect(colonneCorrigee(hote, 'indice')[0]).toBe('108,00');
-    expect(colonneCorrigee(hote, 'evolution')[0]).toBe(EVOLUTIONS_DEDUITES[0]);
+    expect(premieres()).toEqual(['21,60', COEFFICIENTS_DEDUITS[0], '—', '—']);
+    hote.etayage = 3;
+    expect(premieres()).toEqual(['21,60', COEFFICIENTS_DEDUITS[0], '108,00', '—']);
+    hote.etayage = 4;
+    expect(premieres()).toEqual([
+      '21,60',
+      COEFFICIENTS_DEDUITS[0],
+      '108,00',
+      EVOLUTIONS_DEDUITES[0],
+    ]);
   });
 
   it('RET-31 · sert a l etudiant le meme tableau corrige sous sa grille de saisie', () => {
@@ -506,4 +515,82 @@ describe('FpTableBuild', () => {
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
     expect(classesOrphelines(hote, 'table-build')).toEqual([]);
   });
+});
+
+describe('FpTableBuild sur les tables des cours servis', () => {
+  const TABLES_SERVIES = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
+    ecransPublicsDe(instantane)
+      .filter((ecran) => ecran.type === 'fp-table-build')
+      .map((ecran) => ({ id: ecran.id, plan: ecran.donnees?.['plan'] as TableBuildPlanPublic })),
+  );
+  const seDeduit = (plan: TableBuildPlanPublic): boolean =>
+    plan.colonnes.some((colonne) => colonne.role === 'deduite');
+
+  beforeAll(() => enregistrerBrique('fp-table-build', FpTableBuild));
+
+  it('sert des tables avec et sans colonne déduite', () => {
+    expect(TABLES_SERVIES.filter(({ plan }) => seDeduit(plan)).length).toBeGreaterThan(0);
+    expect(TABLES_SERVIES.filter(({ plan }) => !seDeduit(plan)).length).toBeGreaterThan(0);
+  });
+
+  const TABLES_CORRIGEES = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
+    ecransDuPupitreDe(instantane)
+      .filter((ecran) => ecran.type === 'fp-table-build')
+      .map((ecran) => ({
+        id: ecran.id,
+        plan: ecran.donnees?.['plan'] as TableBuildPlanPublic,
+        attendus: ecran.corrigeEcran?.type === 'tableau' ? [...ecran.corrigeEcran.attendus] : [],
+      })),
+  );
+
+  it('corrige chaque table servie par ses attendus', () => {
+    expect(TABLES_CORRIGEES.length).toBe(TABLES_SERVIES.length);
+    for (const { id, attendus } of TABLES_CORRIGEES) {
+      expect(attendus.length).withContext(id).toBeGreaterThan(0);
+    }
+  });
+
+  for (const { id, plan, attendus } of TABLES_CORRIGEES) {
+    it(`${id} : chaque niveau corrige la colonne non donnee suivante, le solde a la derniere`, () => {
+      const aCorriger = plan.colonnes.filter(({ role }) => role !== 'donnee').map(({ cle }) => cle);
+      const aSolde = plan.colonnes.some(({ soldeDe }) => soldeDe !== undefined);
+      const table = creerBrique<FpTableBuild>('fp-table-build', (brique) => {
+        brique.plan = plan;
+      });
+      projeterAuPresentateur(table, attendus, aCorriger.length);
+      const completes = aCorriger.map((cle) => colonneCorrigee(table, cle));
+
+      completes.forEach((colonne, rang) =>
+        expect(colonne.some((valeur) => valeur !== '—'))
+          .withContext(aCorriger[rang])
+          .toBeTrue(),
+      );
+      for (let niveau = 1; niveau <= aCorriger.length; niveau += 1) {
+        table.etayage = niveau;
+        aCorriger.forEach((cle, rang) =>
+          expect(colonneCorrigee(table, cle))
+            .withContext(`${cle} au niveau ${String(niveau)}`)
+            .toEqual(rang < niveau ? completes[rang] : completes[rang].map(() => '—')),
+        );
+        expect(repere(table, 'solde') !== null)
+          .withContext(`solde au niveau ${String(niveau)}`)
+          .toBe(aSolde && niveau === aCorriger.length);
+      }
+      table.remove();
+    });
+  }
+
+  for (const { id, plan } of TABLES_SERVIES) {
+    it(`${id} : ne dit « les autres colonnes se calculent seules » que si une colonne se déduit`, () => {
+      const table = creerBrique<FpTableBuild>('fp-table-build', (brique) => {
+        brique.plan = plan;
+      });
+      const consigne =
+        table.shadowRoot?.querySelector('.fp-table-build__consigne')?.textContent ?? '';
+
+      expect(consigne).toContain('Remplissez les cellules à saisir ligne par ligne');
+      expect(consigne.includes('se calculent seules')).toBe(seDeduit(plan));
+      table.remove();
+    });
+  }
 });

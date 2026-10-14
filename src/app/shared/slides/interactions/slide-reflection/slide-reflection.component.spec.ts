@@ -19,10 +19,34 @@ import {
   saveIdentity,
 } from '../../../../../cours/runtime/core/identity';
 import { enqueueFreeResponse, pendingFreeResponses } from './free-response.queue';
+import { ecransPublicsDe } from '../../../../../testing/fixtures/instantane-de-cours';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../../testing/fixtures/instantanes-des-cours';
 import { ReponsesLibresService } from '../../session/reponses-libres.service';
+import { presentationDe } from '../../visual/presentation-v2';
+import type { ReflectionInteraction } from './slide-reflection.component';
 import { SlideReflectionComponent } from './slide-reflection.component';
 
 const cleEtudiante = (): string => readIdentity()?.studentKey ?? '';
+
+interface ReflexionServie {
+  readonly screenId: string;
+  readonly promptData: ReflectionInteraction;
+}
+
+const REFLEXIONS_SERVIES: readonly ReflexionServie[] = INSTANTANES_DES_COURS_SERVIS.flatMap(
+  ([, instantane]) =>
+    ecransPublicsDe(instantane).flatMap((ecran) => {
+      const presentation = presentationDe(ecran);
+      return presentation?.renderer === 'reflection'
+        ? [
+            {
+              screenId: ecran.id,
+              promptData: presentation.props['promptData'] as ReflectionInteraction,
+            },
+          ]
+        : [];
+    }),
+);
 
 @Component({
   standalone: true,
@@ -70,14 +94,18 @@ describe('SlideReflectionComponent', () => {
   function monterEnSeance(
     mode: ModeInteraction,
     sessionId: string | null,
+    reflexion: ReflexionServie = {
+      screenId: 'ecran-1',
+      promptData: {
+        id: 'reflexion-1',
+        type: 'reflection',
+        question: 'Pourquoi comparer les bases ?',
+      },
+    },
   ): ComponentFixture<SlideReflectionComponent> {
     const fixture = TestBed.createComponent(SlideReflectionComponent);
-    fixture.componentRef.setInput('promptData', {
-      id: 'reflexion-1',
-      type: 'reflection',
-      question: 'Pourquoi comparer les bases ?',
-    });
-    fixture.componentRef.setInput('screenId', 'ecran-1');
+    fixture.componentRef.setInput('promptData', reflexion.promptData);
+    fixture.componentRef.setInput('screenId', reflexion.screenId);
     fixture.componentRef.setInput('sessionId', sessionId);
     fixture.componentRef.setInput('jeton', 'jeton-1');
     fixture.componentRef.setInput('mode', mode);
@@ -163,6 +191,92 @@ describe('SlideReflectionComponent', () => {
       await jusqua(fixture, () => etat(fixture) === 'enregistre');
 
       expect(racine(fixture).textContent).toContain('Réflexion enregistrée');
+    });
+
+    function zone(fixture: ComponentFixture<unknown>): HTMLTextAreaElement | null {
+      return racine(fixture).querySelector('textarea');
+    }
+
+    function attendreFigee(fixture: ComponentFixture<unknown>, texte: string): void {
+      expect(zone(fixture)?.value).toBe(texte);
+      expect(zone(fixture)?.readOnly).toBeTrue();
+      expect(racine(fixture).querySelector('.slide-reflection__save')).toBeNull();
+    }
+
+    it('garde la réflexion enregistrée affichée en lecture seule, sans bouton', async () => {
+      const fixture = monterEnSeance('seance', `seance-figee-${Date.now()}`);
+
+      garder(fixture, '  Comparer les bases.  ');
+      await jusqua(fixture, () => etat(fixture) === 'enregistre');
+
+      attendreFigee(fixture, 'Comparer les bases.');
+    });
+
+    it('retrouve la réflexion gardée, figée, après un retour sur l écran', async () => {
+      const sessionId = `seance-retour-${Date.now()}`;
+      const premiere = monterEnSeance('seance', sessionId);
+      garder(premiere, 'Comparer les bases.');
+      await jusqua(premiere, () => etat(premiere) === 'enregistre');
+      premiere.destroy();
+
+      const retour = monterEnSeance('seance', sessionId);
+
+      attendreFigee(retour, 'Comparer les bases.');
+    });
+
+    it('retrouve la réflexion gardée, figée, après un rechargement, depuis l état servi', () => {
+      const sessionId = `seance-rechargee-${Date.now()}`;
+      TestBed.inject(ReponsesLibresService).restaurer(sessionId, [
+        { activityId: 'reflexion-1', response: 'Gardée avant le rechargement.' },
+      ]);
+
+      const fixture = monterEnSeance('seance', sessionId);
+
+      attendreFigee(fixture, 'Gardée avant le rechargement.');
+    });
+
+    it('hors ligne, fige aussi la réflexion gardée en file', async () => {
+      formations.enregistrerReponseLibre.and.returnValue(
+        throwError(() => new ReponseLibreRefusee('reseau', 0)),
+      );
+      const fixture = monterEnSeance('seance', `seance-figee-hors-ligne-${Date.now()}`);
+
+      garder(fixture, 'Envoyée plus tard.');
+      await jusqua(fixture, () => etat(fixture) === 'attente_reseau');
+
+      attendreFigee(fixture, 'Envoyée plus tard.');
+    });
+
+    describe('sur les réflexions des cours servis', () => {
+      it('trouve des réflexions dans les cours servis', () => {
+        expect(REFLEXIONS_SERVIES.length).toBeGreaterThan(0);
+      });
+
+      for (const reflexion of REFLEXIONS_SERVIES) {
+        it(`${reflexion.screenId} : fige la réflexion gardée et la rend après un retour sur l écran`, async () => {
+          const sessionId = `seance-${reflexion.screenId}-${Date.now()}`;
+          const premiere = monterEnSeance('seance', sessionId, reflexion);
+          garder(premiere, 'Ma réflexion.');
+          await jusqua(premiere, () => etat(premiere) === 'enregistre');
+
+          attendreFigee(premiere, 'Ma réflexion.');
+          premiere.destroy();
+          attendreFigee(monterEnSeance('seance', sessionId, reflexion), 'Ma réflexion.');
+        });
+      }
+    });
+
+    it('laisse la réflexion modifiable et le bouton présent après un échec d enregistrement', async () => {
+      formations.enregistrerReponseLibre.and.returnValue(
+        throwError(() => new ReponseLibreRefusee('refusee', 400)),
+      );
+      const fixture = monterEnSeance('seance', `seance-echec-${Date.now()}`);
+
+      garder(fixture, 'À renvoyer.');
+      await jusqua(fixture, () => etat(fixture) === 'echec');
+
+      expect(zone(fixture)?.readOnly).toBeFalse();
+      expect(racine(fixture).querySelector('.slide-reflection__save')).not.toBeNull();
     });
 
     async function garderMalgreLeRefus(

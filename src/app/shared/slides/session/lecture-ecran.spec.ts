@@ -16,6 +16,8 @@ import {
   buildVisualSlide,
 } from '../../../../testing/factories/visual-slide.factory';
 import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
+import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import {
   ECRAN_VERROUILLE,
   ecranDuRappel,
@@ -80,6 +82,28 @@ describe('enonces des activites libres du cours B2-01', () => {
 
     expect(vote === undefined ? null : enoncesDesActivites(vote).size).toBe(0);
   });
+});
+
+describe('enonces des defis de tous les cours servis', () => {
+  const DEFIS = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
+    ecransDuPupitreDe(instantane).filter(({ type }) => type === 'fp-challenge'),
+  );
+
+  it('sert des défis dans les cours servis', () => {
+    expect(DEFIS.length).toBeGreaterThan(0);
+  });
+
+  for (const defi of DEFIS) {
+    it(`${defi.id} : nomme la tentative du défi par l invite de son problème`, () => {
+      const probleme = defi.donnees?.['probleme'] as {
+        readonly id: string;
+        readonly invite: string;
+      };
+
+      expect(probleme.invite.trim()).not.toBe('');
+      expect([...enoncesDesActivites(defi)]).toEqual([[probleme.id, probleme.invite]]);
+    });
+  }
 });
 
 describe('lecture de l ecran', () => {

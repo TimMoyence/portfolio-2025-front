@@ -1,4 +1,10 @@
 import type { CoursContent, DerouleCours, EcranContent } from '../../../../cours/content/types';
+import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
+import {
+  cleDeCellule,
+  enonceDeCellule,
+  saisiesDuPlan,
+} from '../../../../cours/runtime/blocks/FpTableBuild';
 import type { Donnees } from '../visual/presentation-v2';
 import {
   aUnePresentation,
@@ -236,12 +242,42 @@ export function enoncesDesActivites(ecran: EcranContent): ReadonlyMap<string, st
       return new Map(activitesDuRappel(donnees));
     case 'fp-exit':
       return new Map(entreesPortees(donnees['billet'], 'invite'));
+    case 'fp-challenge':
+      return new Map(entreesPortees(donnees['probleme'], 'invite'));
     case 'fp-story': {
       const presentation = presentationDe(ecran);
       return presentation?.renderer === 'reflection'
         ? new Map(entreesPortees(presentation.props['promptData'], 'question'))
         : new Map();
     }
+    default:
+      return new Map();
+  }
+}
+
+function cellulesDuTableau(plan: Donnees | null): readonly (readonly [string, string])[] {
+  if (plan === null) {
+    return [];
+  }
+  const tableau = plan as unknown as TableBuildPlanPublic;
+  return saisiesDuPlan(tableau).map(
+    ({ rang, colonne }) =>
+      [
+        cleDeCellule(rang, colonne.cle),
+        enonceDeCellule(tableau.libellesLignes, rang, colonne.intitule),
+      ] as const,
+  );
+}
+
+export function libellesDesElements(ecran: EcranContent): ReadonlyMap<string, string> {
+  const donnees = ecran.donnees ?? {};
+  switch (ecran.type) {
+    case 'fp-cardsort':
+      return new Map(entreesPortees(objet(donnees['plan'])?.['cartes'], 'libelle'));
+    case 'fp-escape':
+      return new Map(entreesPortees(objet(donnees['parcours'])?.['enigmes'], 'intitule'));
+    case 'fp-table-build':
+      return new Map(cellulesDuTableau(objet(donnees['plan'])));
     default:
       return new Map();
   }

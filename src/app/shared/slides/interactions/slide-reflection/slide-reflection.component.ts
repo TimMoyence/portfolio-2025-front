@@ -66,6 +66,15 @@ export class SlideReflectionComponent implements OnInit {
   protected readonly error = signal<boolean>(false);
   protected readonly value = signal<string>('');
   protected readonly saveState = signal<EtatEnvoi>('repos');
+  protected readonly garde = computed(() => {
+    const sessionId = this.seanceCourante();
+    return sessionId === null
+      ? null
+      : this.reponsesLibres.texteGarde(sessionId, this.activiteCourante());
+  });
+  protected readonly etatVisible = computed<EtatEnvoi>(() =>
+    this.saveState() === 'repos' && this.garde() !== null ? 'enregistre' : this.saveState(),
+  );
 
   private readonly port = inject(PRESENTATION_PORT, { optional: true });
   private readonly reponsesLibres = inject(ReponsesLibresService);

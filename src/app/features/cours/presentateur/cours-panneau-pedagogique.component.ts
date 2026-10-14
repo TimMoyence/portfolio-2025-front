@@ -22,7 +22,12 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import type { EcranContent, EcranDeroule, ResultatQuestion } from '../../../../cours/content/types';
+import type {
+  EcranContent,
+  EcranDeroule,
+  ProgressionEnigme,
+  ResultatQuestion,
+} from '../../../../cours/content/types';
 import type {
   AnnotationFormateur,
   ReponseLibreFormateur,
@@ -122,8 +127,10 @@ function fusionnerLesAnnotations(
         </p>
       }
       <app-panneau-lecture-classe
-        [questionIds]="questionIds()"
+        [ecran]="ecran()"
         [resultats]="resultats()"
+        [enigmes]="enigmes()"
+        [reponsesLibres]="reponsesLibres()"
         [participants]="participants()"
       />
       <app-panneau-reponses-libres
@@ -144,6 +151,7 @@ function fusionnerLesAnnotations(
 export class CoursPanneauPedagogiqueComponent {
   readonly ecran = input.required<EcranDeroule>();
   readonly resultats = input.required<readonly ResultatQuestion[]>();
+  readonly enigmes = input<readonly ProgressionEnigme[]>([]);
   readonly participants = input.required<number>();
   readonly sessionId = input.required<string | null>();
   readonly renvoi = input<EcranContent | null>(null);
@@ -161,10 +169,6 @@ export class CoursPanneauPedagogiqueComponent {
       ...(renvoi === null ? [] : enoncesDesActivites(renvoi)),
     ]);
   });
-
-  protected readonly questionIds = computed(() =>
-    this.ecran().corriges.map((corrige) => corrige.questionId),
-  );
 
   private readonly port = inject(FORMATIONS_PORT);
   private readonly document = inject(DOCUMENT);

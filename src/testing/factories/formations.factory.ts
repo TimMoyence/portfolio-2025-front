@@ -4,6 +4,7 @@ import type {
   EcranDeroule,
   EtatParticipant,
   GuideFormateur,
+  ProgressionEnigme,
   ResultatQuestion,
   ResultatsSeance,
   ResumeBareme,
@@ -47,6 +48,20 @@ export function buildResultatQuestion(overrides: Partial<ResultatQuestion> = {})
     parOption: null,
     scoreMoyen: null,
     parCle: null,
+    ...overrides,
+  };
+}
+
+export function buildProgressionEnigme(
+  overrides: Partial<ProgressionEnigme> = {},
+): ProgressionEnigme {
+  return {
+    parcoursId: 'K-EVASION-01',
+    enigmeId: 'seuil',
+    ouvertes: 2,
+    resolues: 1,
+    tentativesMoyennes: 1.5,
+    epuisees: 0,
     ...overrides,
   };
 }
