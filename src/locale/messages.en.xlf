@@ -11804,6 +11804,18 @@
         <target>Success rate</target>
       </segment>
     </unit>
+    <unit id="panneauLectureQuestion">
+      <segment>
+        <source>Question</source>
+        <target>Question</target>
+      </segment>
+    </unit>
+    <unit id="panneauLectureRang">
+      <segment>
+        <source>Q<ph id="0" equiv="INTERPOLATION" type="var" disp="{{ $index + 1 }}"/></source>
+        <target>Q<ph id="0" equiv="INTERPOLATION" type="var" disp="{{ $index + 1 }}"/></target>
+      </segment>
+    </unit>
     <unit id="panneauLectureReponses">
       <notes>
         <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-lecture-classe.component.ts:59,60</note>
@@ -14165,6 +14177,12 @@
         <target>Fill in the input cells row by row; the other columns are calculated automatically.</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeTableBuildConsigneSaisie">
+      <segment>
+        <source>Remplissez les cellules à saisir ligne par ligne.</source>
+        <target>Fill in the input cells row by row.</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimeTableBuildEcheance">
       <segment>
         <source>Révision</source>
@@ -14585,6 +14603,12 @@
         <target>Score:</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeVerdictNeSaitPas">
+      <segment>
+        <source>Vous avez répondu « Je ne sais pas ».</source>
+        <target>You answered “I don’t know”.</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimeSheetVerdict">
       <segment>
         <source>Cellules justes :</source>
@@ -14897,16 +14921,16 @@
         <target>Table answer key</target>
       </segment>
     </unit>
-    <unit id="panneauActiviteTableauCoefficients">
+    <unit id="panneauActiviteTableauColonneSuivante">
       <segment>
-        <source> Afficher les coefficients </source>
-        <target> Show the coefficients </target>
+        <source> Corriger : <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ colonne }}"/> </source>
+        <target> Correct: <ph id="0" equiv="INTERPOLATION" type="var" disp="{{ colonne }}"/> </target>
       </segment>
     </unit>
-    <unit id="panneauActiviteTableauValeurs">
+    <unit id="panneauActiviteTableauCorrige">
       <segment>
-        <source> Afficher les prix et les indices </source>
-        <target> Show the prices and indices </target>
+        <source> Toutes les colonnes sont corrigées. </source>
+        <target> Every column is corrected. </target>
       </segment>
     </unit>
     <unit id="panneauActiviteCorrectionExerciceTitre">

@@ -164,6 +164,8 @@
     "coursRuntimeSpacedProgression": "emprunt",
     "coursRuntimeDureeMinutes": "emprunt",
     "panneauActiviteParticipantsTitre": "emprunt",
-    "coursRuntimeTableBuildFaux": "emprunt"
+    "coursRuntimeTableBuildFaux": "emprunt",
+    "panneauLectureQuestion": "emprunt",
+    "panneauLectureRang": "placeholder"
   }
 }
