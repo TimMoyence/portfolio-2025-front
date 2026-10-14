@@ -6,13 +6,12 @@ import {
   inscrireUnPoste,
   lireLeSujet,
   lireLesResultats,
-  optionsDuPoste,
   posteDansSonNavigateur,
   reponseApres,
   repondreDepuisLePoste,
   seanceLimiteeSurLePremierVote,
   servirLEcran,
-  verdictDuPoste,
+  voterDepuisLePoste,
 } from './contexte';
 import type { ReponseDuCours } from './contexte';
 
@@ -29,16 +28,15 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
     browser,
     request,
   }) => {
-    const { releve, seance, jeton } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
-    const [premierVote] = releve.votes;
+    const { releve, vote, seance, jeton } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
     const tours: readonly ReponseDuCours[] = [
       {
-        rang: premierVote.rang,
-        id: premierVote.id,
-        questionId: premierVote.activiteId,
-        valeur: premierVote.options[0],
+        rang: vote.rang,
+        id: vote.id,
+        questionId: vote.activiteId,
+        valeur: vote.options[0],
       },
-      reponseApres(releve, premierVote.rang),
+      reponseApres(releve, vote.rang),
     ];
 
     const pages: Page[] = [];
@@ -47,10 +45,9 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
     }
     for (const page of pages) {
       await expect(page.getByTestId('etudiant-progression')).toHaveText(
-        `${premierVote.rang + 1} / ${releve.total}`,
+        `${vote.rang + 1} / ${releve.total}`,
       );
-      await optionsDuPoste(page).first().click();
-      await expect(verdictDuPoste(page)).toHaveCount(1);
+      await voterDepuisLePoste(page, vote);
     }
 
     const postes = [];

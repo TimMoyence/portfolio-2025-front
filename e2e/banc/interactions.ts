@@ -425,8 +425,7 @@ export async function revelerDepuisLePupitre(pupitre: Page): Promise<Revelation>
     await cliquerDesQuActif(pupitre, 'activite-feuille-reponses');
     return 'feuille';
   }
-  if (await cliquerSiActif(pupitre, 'activite-tableau-coefficients')) {
-    await cliquerDesQuActif(pupitre, 'activite-tableau-valeurs');
+  if (await corrigerChaqueColonne(pupitre)) {
     return 'tableau';
   }
   if (await cliquerSiActif(pupitre, 'activite-reveler')) {
@@ -446,6 +445,22 @@ async function cliquerDesQuActif(pupitre: Page, testId: string): Promise<void> {
   await expect(bouton).toBeEnabled();
   await bouton.click();
   await expect(bouton).toBeDisabled();
+}
+
+async function corrigerChaqueColonne(pupitre: Page): Promise<boolean> {
+  const suivante = pupitre.getByTestId('activite-tableau-colonne-suivante');
+  if ((await suivante.count()) === 0) {
+    return false;
+  }
+  while ((await suivante.count()) > 0) {
+    const corrigee = await suivante.textContent();
+    await suivante.click();
+    await expect
+      .poll(async () => (await suivante.allTextContents()).at(0) ?? null)
+      .not.toBe(corrigee);
+  }
+  await expect(pupitre.getByTestId('activite-tableau-corrige')).toBeVisible();
+  return true;
 }
 
 async function corrigerChaqueEtape(pupitre: Page): Promise<boolean> {

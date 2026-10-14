@@ -13,7 +13,10 @@ import type {
 
 type RetoursParEcran = ReadonlyMap<string, readonly RetourBrique[]>;
 
-export function retourDeReponse(questionId: string, verdict: VerdictReponse): RetourBrique {
+export function retourDeReponse(questionId: string, verdict: VerdictReponse): RetourBrique | null {
+  if (verdict.reussite === null) {
+    return null;
+  }
   return {
     kind: 'verdict-reponse',
     questionId,
@@ -22,13 +25,19 @@ export function retourDeReponse(questionId: string, verdict: VerdictReponse): Re
   };
 }
 
-export function retourDeProduction(questionId: string, verdict: VerdictProduction): RetourBrique {
+export function retourDeProduction(
+  questionId: string,
+  verdict: VerdictProduction,
+  envoyee: EtatParticipant['reponses'][number]['valeur'],
+): RetourBrique {
+  const neSaitPas = typeof envoyee === 'object' && 'neSaitPas' in envoyee;
   return {
     kind: 'verdict-production',
     questionId,
     correcte: verdict.correcte,
     score: verdict.score,
-    details: verdict.details,
+    details: neSaitPas ? [] : verdict.details,
+    neSaitPas,
   };
 }
 
@@ -51,23 +60,28 @@ export function retourDeRefus(motif: MotifRefusReponse, message: string): Retour
   return { kind: 'refus', motif, message };
 }
 
+function verdictRepris(reponse: EtatParticipant['reponses'][number]): readonly RetourBrique[] {
+  const { questionId, correcte, details, libelleConfusion } = reponse;
+  if (details === null) {
+    const retour = retourDeReponse(questionId, { reussite: correcte, libelleConfusion });
+    return retour === null ? [] : [retour];
+  }
+  if (correcte === null) {
+    return [];
+  }
+  return [
+    retourDeProduction(
+      questionId,
+      { correcte, score: reponse.score ?? 0, details, libelleConfusion },
+      reponse.valeur,
+    ),
+  ];
+}
+
 function retoursDesReponses(etat: EtatParticipant): { id: string; retours: RetourBrique[] }[] {
   return etat.reponses.map((reponse) => ({
     id: reponse.questionId,
-    retours: [
-      reponse.details === null
-        ? retourDeReponse(reponse.questionId, {
-            reussite: reponse.correcte,
-            libelleConfusion: reponse.libelleConfusion,
-          })
-        : retourDeProduction(reponse.questionId, {
-            correcte: reponse.correcte,
-            score: reponse.score ?? 0,
-            details: reponse.details,
-            libelleConfusion: reponse.libelleConfusion,
-          }),
-      { kind: 'deja-repondu', questionId: reponse.questionId },
-    ],
+    retours: [...verdictRepris(reponse), { kind: 'deja-repondu', questionId: reponse.questionId }],
   }));
 }
 
@@ -146,6 +160,30 @@ export function reussitesDeLEcran(
       .filter((question) => question.ecranId === ecranId && question.total > 0)
       .map(({ questionId, correctes, total }) => [questionId, { justes: correctes, total }]),
   );
+}
+
+export function questionsAuVerdictRetenu(etat: EtatParticipant): readonly string[] {
+  return etat.reponses
+    .filter(({ correcte }) => correcte === null)
+    .map(({ questionId }) => questionId);
+}
+
+export function verdictsServis(
+  etat: EtatParticipant,
+  retenues: ReadonlySet<string>,
+  ecranDe: (identifiant: string) => string | null,
+): { readonly servies: readonly string[]; readonly retours: RetoursParEcran } {
+  const reponses = etat.reponses.filter(
+    ({ questionId, correcte }) => correcte !== null && retenues.has(questionId),
+  );
+  let retours: RetoursParEcran = new Map();
+  for (const reponse of reponses) {
+    const screenId = ecranDe(reponse.questionId);
+    if (screenId !== null) {
+      retours = ajouterRetours(retours, screenId, verdictRepris(reponse));
+    }
+  }
+  return { servies: reponses.map(({ questionId }) => questionId), retours };
 }
 
 export function retoursDeLEtat(

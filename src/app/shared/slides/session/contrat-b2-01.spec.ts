@@ -440,6 +440,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
           correcte: false,
           score: 13 / 17,
           details: [{ cle: 'E3', juste: false, libelleConfusion: null }],
+          neSaitPas: false,
         },
         {
           kind: 'tentative',

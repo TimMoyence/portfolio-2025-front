@@ -34,8 +34,8 @@ let sansCorrige: EcranRepere;
 async function seanceDuFichier(request: APIRequestContext): Promise<SeanceOuverte> {
   return seancePartagee('vote-jumele', async () => {
     const releve = await coursReleve(request);
-    const { votes, recitsSansActivite } = releve;
-    const jumele = votes.find((vote) => vote.jumelle !== null);
+    const { votesJumeles, recitsSansActivite } = releve;
+    const [jumele] = votesJumeles;
     expect(jumele, 'aucun vote à question jumelle').toBeDefined();
     principale = jumele as EcranDuCours;
     suivant = reponseApres(releve, principale.rang);
@@ -44,8 +44,12 @@ async function seanceDuFichier(request: APIRequestContext): Promise<SeanceOuvert
   });
 }
 
-function voterDans(page: Page, option: number): Promise<void> {
-  return optionsDuPoste(page).nth(option).click();
+async function voterDans(page: Page, option: number): Promise<{ correcte: boolean | null }> {
+  const envoi = page.waitForResponse(
+    (reponse) => reponse.url().endsWith('/answers') && reponse.request().method() === 'POST',
+  );
+  await optionsDuPoste(page).nth(option).click();
+  return (await (await envoi).json()) as { correcte: boolean | null };
 }
 
 function optionsAffichees(page: Page): Promise<string[]> {
@@ -81,9 +85,10 @@ test.describe('Banc — vote à question jumelle', () => {
     const premier = await posteDansSonNavigateur(browser, seance, 11);
     const second = await posteDansSonNavigateur(browser, seance, 12);
 
-    await Promise.all([voterDans(premier, 0), voterDans(second, 1)]);
-    await expect(verdictDuPoste(premier)).toHaveCount(1);
-    await expect(verdictDuPoste(second)).toHaveCount(1);
+    const votes = await Promise.all([voterDans(premier, 0), voterDans(second, 1)]);
+    expect(votes.map(({ correcte }) => correcte)).toEqual([null, null]);
+    await expect(verdictDuPoste(premier)).toHaveCount(0);
+    await expect(verdictDuPoste(second)).toHaveCount(0);
 
     const resultats = (await lireLesResultats(request, jeton, seance.sessionId)) as unknown as {
       resultats: { questions: readonly QuestionDesResultats[] };
@@ -120,8 +125,9 @@ test.describe('Banc — vote à question jumelle', () => {
       }
       if (phase === 'revote') {
         expect(await optionsAffichees(poste)).toEqual(expect.arrayContaining([...jumelle.options]));
-        await voterDans(poste, 0);
+        expect((await voterDans(poste, 0)).correcte).toBeNull();
         await expect(optionsDuPoste(poste).first()).toBeDisabled();
+        await expect(verdictDuPoste(poste)).toHaveCount(0);
       }
     }
 

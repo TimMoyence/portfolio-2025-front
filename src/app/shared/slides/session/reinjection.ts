@@ -101,8 +101,7 @@ function resultatsDuPremierVote(
 }
 
 function phaseDuVote(direct: DirectEcran | null): VotePhase | null {
-  const pilotage = direct?.pilotage;
-  return pilotage?.phase ?? (pilotage?.revele === true ? 'revele' : null);
+  return direct?.pilotage.phase ?? null;
 }
 
 function ecranRevele(contexte: ContexteDeReinjection): boolean {

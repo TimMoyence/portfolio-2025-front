@@ -6,8 +6,9 @@ import {
   optionsDuPoste,
   ouvrirLePupitre,
   posteDansSonNavigateur,
+  premierVote,
   surLEcran,
-  verdictDuPoste,
+  voterDepuisLePoste,
 } from './contexte';
 
 const POSTES = 3;
@@ -20,8 +21,9 @@ test.describe('Banc — clôture et synthèse', () => {
     page,
     request,
   }) => {
-    const { votes, total } = await coursReleve(request);
-    const vote = votes[0];
+    const releve = await coursReleve(request);
+    const { total } = releve;
+    const vote = premierVote(releve);
     const seance = await ouvrirLePupitre(page);
     expect(seance.sessionId).not.toBe('');
 
@@ -39,8 +41,7 @@ test.describe('Banc — clôture et synthèse', () => {
     for (const poste of postes) {
       await surLEcran(poste, vote.rang, total);
       await expect(optionsDuPoste(poste).first()).toBeVisible();
-      await optionsDuPoste(poste).first().click();
-      await expect(verdictDuPoste(poste)).toHaveCount(1);
+      await voterDepuisLePoste(poste, vote);
     }
     await expect(page.getByTestId('presentateur-participants-nombre')).toHaveText(String(POSTES));
 

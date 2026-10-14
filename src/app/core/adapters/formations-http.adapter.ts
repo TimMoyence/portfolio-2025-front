@@ -97,7 +97,7 @@ const NOTATION_ABSENTE_D_UN_SERVEUR_V2: Pick<
 };
 
 interface VerdictBrut {
-  correcte: boolean;
+  correcte: boolean | null;
   misconception?: string | null;
   libelleConfusion?: string | null;
 }

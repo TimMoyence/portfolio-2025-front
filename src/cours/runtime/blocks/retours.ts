@@ -17,6 +17,7 @@ export interface VerdictDeProduction {
   readonly correcte: boolean;
   readonly score: number;
   readonly details: readonly DetailDeVerdict[];
+  readonly neSaitPas: boolean;
 }
 
 export interface VerdictDeTentative {
@@ -127,6 +128,7 @@ export function estVerdictDeProduction(valeur: unknown): valeur is VerdictDeProd
     typeof valeur['correcte'] === 'boolean' &&
     typeof valeur['score'] === 'number' &&
     Array.isArray(valeur['details']) &&
-    valeur['details'].every(estDetail)
+    valeur['details'].every(estDetail) &&
+    typeof valeur['neSaitPas'] === 'boolean'
   );
 }

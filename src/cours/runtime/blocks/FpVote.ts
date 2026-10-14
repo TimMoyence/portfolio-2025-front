@@ -189,8 +189,7 @@ export class FpVote extends FpVerdicts {
 
   private suiviEtudiant(question: VoteQuestionPublique): EscapedHtml {
     const retour = this.choix.has(question.id) ? this.messageApresEnvoi() : '';
-    const verdict = this.verdictVisible() ? this.recus.de(question.id) : null;
-    return safeHtml`<p aria-live="polite" data-testid="retour">${escapeHtml(retour)}</p>${this.verdictDeReponse(verdict)}${this.annonces()}`;
+    return safeHtml`<p aria-live="polite" data-testid="retour">${escapeHtml(retour)}</p>${this.verdictDeReponse(this.recus.de(question.id))}${this.annonces()}`;
   }
 
   private suiviProjete(question: VoteQuestionPublique): EscapedHtml {
@@ -201,7 +200,7 @@ export class FpVote extends FpVerdicts {
       return this.decompte();
     }
     const comparaison =
-      this.jumelle !== null && this.principale !== null && this.premierVote !== null
+      question === this.jumelle && this.principale !== null && this.premierVote !== null
         ? safeHtml`${this.histogramme(this.principale, this.premierVote, 'premier')}${this.histogramme(question, this.interneResultats, 'second')}`
         : this.histogramme(question, this.interneResultats);
     return safeHtml`${comparaison}${this.decompte()}`;
@@ -220,10 +219,6 @@ export class FpVote extends FpVerdicts {
 
   private surDeuxTemps(): boolean {
     return this.jumelle !== null && this.internePhase !== null;
-  }
-
-  private verdictVisible(): boolean {
-    return !this.surDeuxTemps() || this.internePhase === 'revele';
   }
 
   private ouverte(): boolean {

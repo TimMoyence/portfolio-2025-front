@@ -660,6 +660,7 @@ export function buildVerdictDeProduction(
       { cle: 'C3', juste: true, libelleConfusion: null },
       { cle: 'D3', juste: false, libelleConfusion: 'Référence relative non figée' },
     ],
+    neSaitPas: false,
     ...overrides,
   };
 }

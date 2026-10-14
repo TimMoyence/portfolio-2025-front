@@ -92,6 +92,19 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     });
   });
 
+  it('QA-01 · pose sur le vote la phase que le serveur sert, sans en deduire une de la revelation ni en supposer une', () => {
+    const identifiants = ['Q-CAP-03', 'Q-CAP-03-bis'];
+    const phaseServie = (pilotage: DirectEcran['pilotage'] | null): unknown =>
+      pose('fp-vote', identifiants, 'phase', {
+        direct: pilotage === null ? null : direct({ pilotage }),
+      });
+
+    expect(phaseServie({ phase: 'vote', revele: true })).toBe('vote');
+    expect(phaseServie({ revele: true })).toBeNull();
+    expect(phaseServie({})).toBeNull();
+    expect(phaseServie(null)).toBeNull();
+  });
+
   it('RET-20 · pose sur le vote jumele les resultats du premier vote, quelle que soit la phase', () => {
     const revele = voteJumele({ phase: 'revele' }, { parOption: { b: 20 } });
     expect(

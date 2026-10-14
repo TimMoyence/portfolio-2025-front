@@ -24,6 +24,7 @@ const verdictDeProductionValide = fc.record({
   correcte: fc.boolean(),
   score: fc.double({ noNaN: true }),
   details: fc.array(detailValide, { maxLength: 5 }),
+  neSaitPas: fc.boolean(),
 });
 
 describe('simulation : gardes de type sur les verdicts venus du serveur', () => {
@@ -77,7 +78,7 @@ describe('simulation : gardes de type sur les verdicts venus du serveur', () => 
     fc.assert(
       fc.property(
         verdictDeProductionValide,
-        fc.constantFrom('questionId', 'correcte', 'score', 'details'),
+        fc.constantFrom('questionId', 'correcte', 'score', 'details', 'neSaitPas'),
         (verdict, champ) => {
           const ampute: Record<string, unknown> = { ...verdict };
           delete ampute[champ];
