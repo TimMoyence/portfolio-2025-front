@@ -29,6 +29,7 @@ import {
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
+import { INSTANTANE_B2_03 } from '../../../../testing/fixtures/instantane-b2-03';
 import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantane-b3-01';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { CoursSyntheseComponent } from './cours-synthese.component';
@@ -146,6 +147,14 @@ describe('CoursSyntheseComponent', () => {
       'Chloe Durand',
     ]);
     expect(textes(fixture, 'synthese-score')).toEqual(['4', '6', '12']);
+  });
+
+  it('écrit la note sur 20 à la française, avec une virgule', async () => {
+    const QA = etudiant('Qa', 18.9, false, [reponse('actualisation', '905')]);
+
+    const fixture = await monter(rapportDe([QA]));
+
+    expect(textes(fixture, 'synthese-score')).toEqual(['18,9']);
   });
 
   it('affiche les concepts fragiles avec leur effectif, du plus lourd au plus leger', async () => {
@@ -415,6 +424,25 @@ describe('CoursSyntheseComponent', () => {
         (fixture.nativeElement as HTMLElement).querySelector("[data-testid='synthese-libres']"),
       ).toBeNull();
     });
+  });
+
+  it('titre la tentative au défi IA du B2-03 par l invite de son problème, jamais par son identifiant', async () => {
+    const LEA = {
+      ...etudiant('Lea', 10, false, []),
+      reponsesLibres: [
+        {
+          screenId: 'B2-03-A3-06-DEFI-IA',
+          activityId: 'b2-03-a3-defi-ia',
+          reponse: 'La marge se calcule sur le prix de vente.',
+        },
+      ],
+    };
+
+    const fixture = await monter(rapportDe([LEA]), of(INSTANTANE_B2_03.deroule));
+
+    expect(textes(fixture, 'synthese-libre-question')).toEqual([
+      'Trouvez les erreurs de l’IA, corrigez chacune et dites comment la vérifier dans le fichier.',
+    ]);
   });
 
   function exporter(fixture: Fixture): void {

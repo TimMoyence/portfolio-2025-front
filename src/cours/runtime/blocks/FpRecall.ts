@@ -7,7 +7,7 @@ import {
   copierLeSocle,
   projeterOptions,
 } from './projection';
-import { lireBonneOption, lireBonneReponse } from './retours';
+import { bonneReponseRevelee, lireBonneOption, lireBonneReponse } from './retours';
 
 export interface RecallQuestionPublique extends ContenuDeBrique {
   readonly enonce: string;
@@ -116,7 +116,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
           ${ecritAvantLesOptions ? this.compteur() : VIDE}
           ${this.optionsVisibles()}
           ${suivi}
-          ${this.bonneReponseRevelee((bonne) => bonne)}
+          ${bonneReponseRevelee(this.texte('bonne-reponse'), this.bonneReponse)}
         </div>
       </fieldset>
     `;

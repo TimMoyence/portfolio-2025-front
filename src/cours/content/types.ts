@@ -218,7 +218,7 @@ export interface EtatParticipant {
   readonly reponses: readonly {
     readonly questionId: string;
     readonly valeur: number | string | ValeurProduction;
-    readonly correcte: boolean;
+    readonly correcte: boolean | null;
     readonly score: number | null;
     readonly details:
       | readonly {

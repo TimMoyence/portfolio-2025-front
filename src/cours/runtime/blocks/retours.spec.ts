@@ -23,7 +23,13 @@ const VERDICT_REPONSE = { questionId: 'Q', correcte: true, libelleConfusion: nul
 
 const DETAIL = { cle: 'E3', juste: false, libelleConfusion: 'Base oubliée' };
 
-const VERDICT_PRODUCTION = { questionId: 'Q', correcte: false, score: 0.5, details: [DETAIL] };
+const VERDICT_PRODUCTION = {
+  questionId: 'Q',
+  correcte: false,
+  score: 0.5,
+  details: [DETAIL],
+  neSaitPas: false,
+};
 
 describe('estVerdictDeReponse', () => {
   it('accepte un verdict complet, avec ou sans libellé de confusion', () => {
@@ -68,6 +74,8 @@ describe('estVerdictDeProduction', () => {
       { ...VERDICT_PRODUCTION, details: [{ cle: 'E3', juste: 'non', libelleConfusion: null }] },
       { ...VERDICT_PRODUCTION, details: [{ cle: 'E3', juste: false }] },
       { ...VERDICT_PRODUCTION, details: [DETAIL, null] },
+      { ...VERDICT_PRODUCTION, neSaitPas: 'oui' },
+      { ...VERDICT_PRODUCTION, neSaitPas: undefined },
       { ...VERDICT_PRODUCTION, score: '0.5' },
       { ...VERDICT_PRODUCTION, questionId: null },
     ];

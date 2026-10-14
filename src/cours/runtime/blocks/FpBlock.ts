@@ -282,6 +282,9 @@ export abstract class FpBlock extends HTMLElement {
     if (verdict === null) {
       return VIDE;
     }
+    if (verdict.neSaitPas) {
+      return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict"><strong>${escapeHtml(this.texte('verdict-ne-sait-pas'))}</strong></p>`;
+    }
     const pourcentage = Math.round(verdict.score * 100);
     return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict" data-etat="${escapeHtml(verdict.correcte ? 'confirme' : 'a-revoir')}"><strong>${escapeHtml(this.texte(verdict.correcte ? 'verdict-juste' : 'verdict-a-revoir'))}</strong> <span data-testid="decompte">${escapeHtml(this.texte(cleDuDecompte))} ${justes}/${total}</span> <span data-testid="score">${escapeHtml(this.texte('verdict-score'))} ${pourcentage} %</span></p>`;
   }

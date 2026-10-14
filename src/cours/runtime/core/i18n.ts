@@ -92,6 +92,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'plot-evolution-reelle': () => $localize`:@@coursRuntimePlotEvolutionReelle:évolution réelle`,
   'table-build-consigne': () =>
     $localize`:@@coursRuntimeTableBuildConsigne:Remplissez les cellules à saisir ligne par ligne ; les autres colonnes se calculent seules.`,
+  'table-build-consigne-saisie': () =>
+    $localize`:@@coursRuntimeTableBuildConsigneSaisie:Remplissez les cellules à saisir ligne par ligne.`,
   'table-build-echeance': () => $localize`:@@coursRuntimeTableBuildEcheance:Révision`,
   'table-build-a-saisir': () => $localize`:@@coursRuntimeTableBuildASaisir:à saisir`,
   'table-build-deduite': () => $localize`:@@coursRuntimeTableBuildDeduite:déduite`,
@@ -191,6 +193,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'verdict-juste': () => $localize`:@@coursRuntimeVerdictJuste:Juste`,
   'verdict-a-revoir': () => $localize`:@@coursRuntimeVerdictARevoir:À revoir`,
   'verdict-score': () => $localize`:@@coursRuntimeVerdictScore:Score :`,
+  'verdict-ne-sait-pas': () =>
+    $localize`:@@coursRuntimeVerdictNeSaitPas:Vous avez répondu « Je ne sais pas ».`,
   'sheet-verdict': () => $localize`:@@coursRuntimeSheetVerdict:Cellules justes :`,
   'cardsort-verdict': () => $localize`:@@coursRuntimeCardsortVerdict:Cartes bien placées :`,
   'cardsort-correction': () =>

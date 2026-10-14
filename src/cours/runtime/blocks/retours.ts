@@ -1,3 +1,4 @@
+import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { estObjet } from '../core/valeurs';
 
 export interface VerdictDeReponse {
@@ -17,6 +18,7 @@ export interface VerdictDeProduction {
   readonly correcte: boolean;
   readonly score: number;
   readonly details: readonly DetailDeVerdict[];
+  readonly neSaitPas: boolean;
 }
 
 export interface VerdictDeTentative {
@@ -77,6 +79,12 @@ export function lireBonneOption(valeur: unknown): string | null {
   return texteDeLaCible(valeur, 'optionId');
 }
 
+export function bonneReponseRevelee(libelle: string, bonneReponse: string | null): EscapedHtml {
+  return bonneReponse === null
+    ? escapeHtml('')
+    : safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(libelle)} ${escapeHtml(bonneReponse)}</p>`;
+}
+
 export function estVerdictDeReponse(valeur: unknown): valeur is VerdictDeReponse {
   return (
     estObjet(valeur) &&
@@ -127,6 +135,7 @@ export function estVerdictDeProduction(valeur: unknown): valeur is VerdictDeProd
     typeof valeur['correcte'] === 'boolean' &&
     typeof valeur['score'] === 'number' &&
     Array.isArray(valeur['details']) &&
-    valeur['details'].every(estDetail)
+    valeur['details'].every(estDetail) &&
+    typeof valeur['neSaitPas'] === 'boolean'
   );
 }

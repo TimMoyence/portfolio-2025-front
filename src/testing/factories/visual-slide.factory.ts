@@ -162,6 +162,7 @@ export function buildVerdictDuTri(
     correcte: details.every((detail) => detail.juste),
     score: details.filter((detail) => detail.juste).length,
     details,
+    neSaitPas: false,
   };
 }
 

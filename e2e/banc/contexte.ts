@@ -63,6 +63,7 @@ export interface ReleveDuCours {
   readonly ecrans: readonly string[];
   readonly questions: readonly EcranDuCours[];
   readonly votes: readonly EcranDuCours[];
+  readonly votesJumeles: readonly EcranDuCours[];
   readonly reponses: readonly ReponseDuCours[];
   readonly reponsesLibres: readonly ReponseLibreDuCours[];
   readonly rappelsEspaces: readonly EcranRepere[];
@@ -361,33 +362,45 @@ function questionsLibresDuCas(rang: number, ecran: EcranDuSujet): ReponseLibreDu
   );
 }
 
+function questionAOptions(
+  rang: number,
+  ecran: EcranDuSujet,
+  question: QuestionDuSujet,
+): EcranDuCours | null {
+  const posee = questionDuCours(question);
+  if (posee.options.length === 0) return null;
+  const jumelle = ecran.donnees.questionJumelle;
+  return {
+    rang,
+    id: ecran.id,
+    ...posee,
+    jumelle:
+      jumelle === undefined || question !== ecran.donnees.question
+        ? null
+        : questionDuCours(jumelle),
+  };
+}
+
 function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
   const questions: EcranDuCours[] = [];
   const votes: EcranDuCours[] = [];
+  const votesJumeles: EcranDuCours[] = [];
   const reponses: ReponseDuCours[] = [];
   const reponsesLibres: ReponseLibreDuCours[] = [];
   const recitsSansActivite: EcranRepere[] = [];
   const rappelsEspaces: EcranRepere[] = [];
   ecrans.forEach((ecran, rang) => {
     if (ecran.type === 'fp-spaced') rappelsEspaces.push({ rang, id: ecran.id });
-    const jumelle = ecran.donnees.questionJumelle;
     for (const question of questionsDeLEcran(ecran)) {
       if (ECRANS_REPONDUS_PAR_L_API.has(ecran.type)) {
         reponses.push(reponseDuCours(rang, ecran, question));
       }
-      const posee = questionDuCours(question);
-      if (posee.options.length === 0) continue;
-      const trouvee = {
-        rang,
-        id: ecran.id,
-        ...posee,
-        jumelle:
-          jumelle === undefined || question !== ecran.donnees.question
-            ? null
-            : questionDuCours(jumelle),
-      };
+      const trouvee = questionAOptions(rang, ecran, question);
+      if (trouvee === null) continue;
       questions.push(trouvee);
-      if (seVoteDUnClic(ecran, question)) votes.push(trouvee);
+      if (seVoteDUnClic(ecran, question)) {
+        (trouvee.jumelle === null ? votes : votesJumeles).push(trouvee);
+      }
     }
     const presentation = ecran.donnees.recit?.presentation;
     const invite = presentation?.props.promptData;
@@ -403,6 +416,7 @@ function classer(ecrans: readonly EcranDuSujet[]): ReleveDuCours {
     ecrans: ecrans.map((ecran) => ecran.id),
     questions,
     votes,
+    votesJumeles,
     reponses,
     reponsesLibres,
     rappelsEspaces,
@@ -427,7 +441,7 @@ async function relever(request: APIRequestContext): Promise<ReleveDuCours> {
   const releve = classer(sujet.ecrans);
   expect(releve.total).toBe(ecrans.length);
   expect(
-    releve.votes.length,
+    releve.votes.length + releve.votesJumeles.length,
     'aucun écran à voter d’un clic dans la version publiée',
   ).toBeGreaterThan(0);
   expect(
@@ -448,6 +462,10 @@ export function coursReleve(request: APIRequestContext): Promise<ReleveDuCours> 
   return releveDuCours;
 }
 
+export function premierVote(releve: ReleveDuCours): EcranDuCours {
+  return releve.votes.at(0) ?? releve.votesJumeles[0];
+}
+
 export async function posteDansSonNavigateur(
   browser: import('@playwright/test').Browser,
   seance: Seance,
@@ -465,6 +483,22 @@ export function optionsDuPoste(page: Page): import('@playwright/test').Locator {
 
 export function verdictDuPoste(page: Page): import('@playwright/test').Locator {
   return page.locator('[data-testid="slide-activity-host"] [data-testid="verdict"]');
+}
+
+export async function voterDepuisLePoste(page: Page, vote: EcranDuCours): Promise<void> {
+  const envoi = page.waitForResponse(
+    (reponse) => reponse.url().endsWith('/answers') && reponse.request().method() === 'POST',
+  );
+  await optionsDuPoste(page).first().click();
+  expect((await envoi).status()).toBe(201);
+  if (vote.jumelle === null) {
+    await expect(verdictDuPoste(page)).toHaveAttribute('data-etat', /confirme|a-revoir/);
+    return;
+  }
+  await expect(
+    page.locator('[data-testid="slide-activity-host"] [data-testid="retour"]'),
+  ).not.toBeEmpty();
+  await expect(verdictDuPoste(page)).toHaveCount(0);
 }
 
 export function phaseDuPoste(page: Page): import('@playwright/test').Locator {
@@ -567,10 +601,11 @@ export async function seanceDemarreeSurLEcran(
 export async function seanceLimiteeSurLePremierVote(
   request: APIRequestContext,
   capacite: number,
-): Promise<SeanceOuverte & { readonly releve: ReleveDuCours }> {
+): Promise<SeanceOuverte & { readonly releve: ReleveDuCours; readonly vote: EcranDuCours }> {
   const releve = await coursReleve(request);
-  const ouverte = await seanceDemarreeSurLEcran(request, releve.votes[0].rang, { capacite });
-  return { ...ouverte, releve };
+  const vote = premierVote(releve);
+  const ouverte = await seanceDemarreeSurLEcran(request, vote.rang, { capacite });
+  return { ...ouverte, releve, vote };
 }
 
 const partagees = new Map<string, Promise<SeanceOuverte>>();

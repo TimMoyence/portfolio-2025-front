@@ -481,7 +481,7 @@ describe('CoursPresentateurComponent', () => {
                 ],
               },
               corriges: [
-                { questionId: 'Q-VA-07', bonneReponse: '1480.24', confusions: [] },
+                { questionId: 'Q-VA-07', bonneReponse: '1 480,24', confusions: [] },
                 { questionId: 'Q-CAP-03', bonneReponse: 'b', confusions: [] },
               ],
             }),
@@ -581,7 +581,10 @@ describe('CoursPresentateurComponent', () => {
       expect(statistiques).toContain('Participation');
       expect(statistiques).toMatch(/75\s?%/);
       expect(statistiques).toContain('Dispersion');
-      expect(statistiques).toContain('3.25');
+      expect(statistiques).toContain('12,5');
+      expect(statistiques).toContain('3,25');
+      expect(statistiques).not.toContain('12.5');
+      expect(statistiques).not.toContain('3.25');
       expect(statistiques).toContain(buildVoteQuestion().enonce);
       expect(statistiques).not.toContain('Q-CAP-03');
       expect(texte(fixture, 'presentateur-notation-tooltip')).toContain('Note /20 relative aux');
@@ -1234,8 +1237,9 @@ describe('CoursPresentateurComponent', () => {
       });
     });
 
-    it('pilote la phase du vote depuis le panneau d activite', async () => {
+    it('pilote la phase du vote servie depuis le panneau d activite', async () => {
       const fixture = await ouvrirSurLEcran(buildEcranDeVoteJumele());
+      diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase: 'vote' } } });
 
       await cliquer(fixture, 'activite-phase-suivante');
 

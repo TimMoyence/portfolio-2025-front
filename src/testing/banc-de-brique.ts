@@ -85,7 +85,7 @@ export function cliquerOmbre(hote: HTMLElement, repere: string): void {
   noeudOmbre(hote, repere)?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 }
 
-function libelleOmbre(hote: HTMLElement, repere: string): string {
+export function libelleOmbre(hote: HTMLElement, repere: string): string {
   return noeudOmbre(hote, repere)?.textContent?.trim().replace(/\s+/g, ' ') ?? '';
 }
 

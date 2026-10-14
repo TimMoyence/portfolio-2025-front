@@ -13,6 +13,7 @@ import { REGIMES_DE_VERROU } from 'portfolio-2025-partage/contrats';
 import type {
   CoursContent,
   EcranContent,
+  EtatParticipant,
   EtatPulse,
   PacingMode,
   PilotageEcran,
@@ -70,12 +71,14 @@ import {
 } from '../../../core/ports/formations.port';
 import {
   ajouterRetours,
+  questionsAuVerdictRetenu,
   retirerLesRefus,
   retourDeProduction,
   retourDeRefus,
   retourDeReponse,
   retourDeTentative,
   retoursDeLEtat,
+  verdictsServis,
 } from '../../../core/adapters/retours-brique';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import {
@@ -83,6 +86,7 @@ import {
   ecransDesIdentifiants,
   identifiantsDesQuestions,
 } from '../../../shared/slides/session/lecture-ecran';
+import { memeValeur } from '../../../shared/slides/session/reinjection';
 import type { EtatEnvoiLibre } from '../../../shared/slides/session/reponses-libres.service';
 import { ReponsesLibresService } from '../../../shared/slides/session/reponses-libres.service';
 import {
@@ -121,6 +125,11 @@ type IssueDeLEnvoi = 'transmise' | 'en-panne';
 interface VerdictRecu {
   readonly reussite: boolean;
   readonly etiquette: string | null;
+}
+
+interface VerdictRetenu {
+  readonly screenId: string;
+  readonly pilotage: PilotageEcran | undefined;
 }
 
 interface VerdictAffiche extends VerdictRecu {
@@ -701,6 +710,7 @@ export class CoursEtudiantComponent {
   private readonly debutFormulaire = Date.now();
   private readonly defisReveles = new Set<string>();
   private readonly relectures = new Set<string>();
+  private readonly verdictsRetenus = new Map<string, VerdictRetenu>();
 
   private readonly seanceOuverte = signal<Pick<Rattachement, 'sessionId' | 'jeton'> | null>(null);
   protected readonly sessionId = computed(() => this.seanceOuverte()?.sessionId ?? null);
@@ -1041,6 +1051,7 @@ export class CoursEtudiantComponent {
       this.reprendreLesReponsesLibres(),
       this.relireLesStrategiesRevelees(),
       this.relireLesRevelations(),
+      this.relireLesVerdictsRetenus(),
     ]).then(() => undefined);
   }
 
@@ -1177,8 +1188,10 @@ export class CoursEtudiantComponent {
       return;
     }
     try {
+      const vu = this.pilotage();
       const etat = await firstValueFrom(this.port.lireMonEtat(sessionId, this.jeton()));
       this.repriseIndisponible.set(false);
+      this.reponsesLibres.restaurer(sessionId, etat.reponsesLibres);
       const rappels = new Set(etat.rappels.questionIds);
       const ecranDesRappels = ecranDuRappel(sujet);
       const retrouves = retoursDeLEtat(etat, (identifiant) =>
@@ -1186,6 +1199,9 @@ export class CoursEtudiantComponent {
       );
       for (const [screenId, retours] of retrouves) {
         this.ajouter(screenId, retours);
+      }
+      for (const questionId of questionsAuVerdictRetenu(etat)) {
+        this.retenirLeVerdict(questionId, vu);
       }
       await Promise.all(
         etat.defis.map((defi) => {
@@ -1277,7 +1293,7 @@ export class CoursEtudiantComponent {
           dureeMs: envoi.dureeMs,
         }),
       );
-      return retourDeProduction(envoi.questionId, verdict);
+      return retourDeProduction(envoi.questionId, verdict, envoi.valeur as ValeurProduction);
     }
     if (envoi.nature === 'jalon') {
       await firstValueFrom(
@@ -1290,8 +1306,9 @@ export class CoursEtudiantComponent {
       valeur: envoi.valeur as ValeurReponse,
       dureeMs: envoi.dureeMs,
     };
+    const vu = this.pilotage();
     const verdict = await firstValueFrom(this.port.repondre(sessionId, jeton, reponse));
-    this.afficherVerdict(envoi.questionId, verdict);
+    this.afficherVerdict(envoi.questionId, verdict, vu);
     return retourDeReponse(envoi.questionId, verdict);
   }
 
@@ -1374,10 +1391,66 @@ export class CoursEtudiantComponent {
     );
   }
 
-  private afficherVerdict(questionId: string, recu: VerdictReponse): void {
+  private afficherVerdict(
+    questionId: string,
+    { reussite, libelleConfusion }: VerdictReponse,
+    vu: Readonly<Record<string, PilotageEcran>>,
+  ): void {
+    if (reussite === null) {
+      this.retenirLeVerdict(questionId, vu);
+      return;
+    }
     const verdicts = new Map(this.verdicts());
-    verdicts.set(questionId, { reussite: recu.reussite, etiquette: recu.libelleConfusion });
+    verdicts.set(questionId, { reussite, etiquette: libelleConfusion });
     this.verdicts.set(verdicts);
+  }
+
+  private retenirLeVerdict(questionId: string, vu: Readonly<Record<string, PilotageEcran>>): void {
+    const screenId = this.ecranDe(questionId);
+    if (screenId === null) {
+      return;
+    }
+    this.verdictsRetenus.set(questionId, { screenId, pilotage: vu[screenId] });
+    if (!memeValeur(this.pilotage()[screenId], vu[screenId])) {
+      this.chantier = this.chantier.then(() => this.relireLesVerdictsRetenus());
+    }
+  }
+
+  private async relireLesVerdictsRetenus(): Promise<void> {
+    const pilotage = this.pilotage();
+    const pilotes = [...this.verdictsRetenus].filter(
+      ([, retenu]) => !memeValeur(pilotage[retenu.screenId], retenu.pilotage),
+    );
+    if (pilotes.length === 0) {
+      return;
+    }
+    for (const [questionId, retenu] of pilotes) {
+      this.verdictsRetenus.set(questionId, { ...retenu, pilotage: pilotage[retenu.screenId] });
+    }
+    await this.pourLaSeance(async (sessionId, jeton) => {
+      try {
+        const etat = await firstValueFrom(this.port.lireMonEtat(sessionId, jeton));
+        this.poserLesVerdictsServis(etat);
+      } catch {
+        for (const [questionId, retenu] of pilotes) {
+          this.verdictsRetenus.set(questionId, retenu);
+        }
+      }
+    });
+  }
+
+  private poserLesVerdictsServis(etat: EtatParticipant): void {
+    const { servies, retours } = verdictsServis(
+      etat,
+      new Set(this.verdictsRetenus.keys()),
+      (identifiant) => this.ecranDe(identifiant),
+    );
+    for (const questionId of servies) {
+      this.verdictsRetenus.delete(questionId);
+    }
+    for (const [screenId, lot] of retours) {
+      this.ajouter(screenId, lot);
+    }
   }
 
   private mettreEnFile(envoi: Envoi): void {

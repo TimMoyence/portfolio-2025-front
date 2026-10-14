@@ -79,14 +79,17 @@ function elementsDe(racine: ParentNode): readonly Element[] {
   ]);
 }
 
-function aUnDefileurRogne(contenu: HTMLElement): boolean {
-  return elementsDe(contenu).some((element) => {
+function debordementEnLargeur(contenu: HTMLElement): number {
+  return elementsDe(contenu).reduce((exces, element) => {
     if (element.scrollWidth <= element.clientWidth + 1) {
-      return false;
+      return exces;
     }
     const { overflowX } = getComputedStyle(element);
-    return (overflowX === 'auto' || overflowX === 'scroll') && element.checkVisibility();
-  });
+    const defileur = (overflowX === 'auto' || overflowX === 'scroll') && element.checkVisibility();
+    return defileur
+      ? Math.max(exces, element.scrollWidth / Math.max(1, element.clientWidth))
+      : exces;
+  }, 1);
 }
 
 @Component({
@@ -510,8 +513,9 @@ export class CoursPresentationComponent {
   private readonly elargissement = signal(1);
   private readonly elargissementMesure = signal(1);
   private readonly hauteurNaturelle = signal<number | null>(null);
-  private readonly contenuRogne = signal({ rogne: false });
+  private readonly debordementDuContenu = signal({ enLargeur: 1 });
   private essaisRestants = ESSAIS_D_ELARGISSEMENT;
+  private largeurExigee = 1;
   private readonly echellesEssayees = new Map<number, number>();
   private readonly ecranAffiche = computed(() => this.slide()?.id ?? null);
 
@@ -689,6 +693,7 @@ export class CoursPresentationComponent {
         this.elargissement.set(1);
         this.elargissementDuRenvoi.set(1);
         this.essaisRestants = ESSAIS_D_ELARGISSEMENT;
+        this.largeurExigee = 1;
         this.echellesEssayees.clear();
         this.hauteurDuContenu.set(null);
         this.hauteurNaturelle.set(null);
@@ -701,7 +706,7 @@ export class CoursPresentationComponent {
       const etudiant = this.mode() === 'etudiant';
       const seuil = etudiant ? this.reductionLisible() : ECHELLE_LISIBLE;
       const illisible = reduction !== null && reduction < seuil;
-      const { rogne } = this.contenuRogne();
+      const rogne = this.debordementDuContenu().enLargeur > 1;
       if (this.renvoi() === null || !(illisible || rogne)) {
         return;
       }
@@ -714,6 +719,7 @@ export class CoursPresentationComponent {
     effect(() => {
       const place = this.place();
       const contenu = this.hauteurNaturelle();
+      const { enLargeur } = this.debordementDuContenu();
       const sansEtalement =
         this.mode() === 'etudiant' ||
         this.renvoiAffiche() !== null ||
@@ -722,7 +728,7 @@ export class CoursPresentationComponent {
       if (sansEtalement || place === null || contenu === null || contenu === 0) {
         return;
       }
-      this.etalerLeContenu(place / contenu);
+      this.etalerLeContenu(place / contenu, enLargeur);
     });
     effect((onCleanup) => {
       const cadre = this.cadreObserve()?.nativeElement;
@@ -761,7 +767,7 @@ export class CoursPresentationComponent {
       this.mesureDuRenvoi.set({
         largeur: element.offsetWidth,
         hauteur: element.offsetHeight,
-        deborde: element.scrollWidth > element.clientWidth + 1 || aUnDefileurRogne(element),
+        deborde: element.scrollWidth > element.clientWidth + 1 || debordementEnLargeur(element) > 1,
       }),
     );
     effect(() => {
@@ -787,8 +793,8 @@ export class CoursPresentationComponent {
     const diapositive = contenu.firstElementChild;
     this.elargissementMesure.set(Number.parseFloat(contenu.style.inlineSize || '100') / 100);
     this.hauteurDuContenu.set(contenu.offsetHeight);
-    this.contenuRogne.set({
-      rogne: !untracked(this.compacte) && aUnDefileurRogne(contenu),
+    this.debordementDuContenu.set({
+      enLargeur: untracked(this.compacte) ? 1 : debordementEnLargeur(contenu),
     });
     this.hauteurNaturelle.set(
       diapositive instanceof HTMLElement ? diapositive.offsetHeight : contenu.offsetHeight,
@@ -802,20 +808,35 @@ export class CoursPresentationComponent {
     }
   }
 
-  private etalerLeContenu(parLaHauteur: number): void {
+  private etalerLeContenu(parLaHauteur: number, enLargeur: number): void {
     const elargissement = untracked(this.elargissement);
+    const rogne = enLargeur > 1;
+    if (rogne) {
+      this.largeurExigee = Math.max(
+        this.largeurExigee,
+        elargissement * enLargeur + GAIN_D_ELARGISSEMENT_UTILE,
+      );
+    }
     const remplissage = 1 / (elargissement * parLaHauteur);
-    if (elargissement !== 1 && remplissage < REMPLISSAGE_MINIMAL && this.essaisRestants > 0) {
+    if (
+      elargissement !== 1 &&
+      this.largeurExigee === 1 &&
+      remplissage < REMPLISSAGE_MINIMAL &&
+      this.essaisRestants > 0
+    ) {
       this.echellesEssayees.clear();
       this.essayer(1);
       return;
     }
-    if (elargissement === 1 && parLaHauteur >= ECHELLE_LISIBLE) {
+    if (elargissement === 1 && !rogne && parLaHauteur >= ECHELLE_LISIBLE) {
       return;
     }
-    this.echellesEssayees.set(elargissement, Math.min(1 / elargissement, parLaHauteur));
+    this.echellesEssayees.set(
+      elargissement,
+      rogne ? Number.NEGATIVE_INFINITY : Math.min(1 / elargissement, parLaHauteur),
+    );
     const equilibre = Math.round(Math.sqrt(elargissement / parLaHauteur) * 100) / 100;
-    const vise = bornerEntre(equilibre, 1, ELARGISSEMENT_MAXIMAL);
+    const vise = bornerEntre(Math.max(equilibre, this.largeurExigee), 1, ELARGISSEMENT_MAXIMAL);
     const dejaEssaye = [...this.echellesEssayees.keys()].some(
       (essai) => Math.abs(essai - vise) <= GAIN_D_ELARGISSEMENT_UTILE,
     );

@@ -4,7 +4,12 @@ import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { lignesDeCalculHtml } from './calculs';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
 import { estObjet } from '../core/valeurs';
-import { lireBonneOption, lireBonneReponse, VerdictsParQuestion } from './retours';
+import {
+  bonneReponseRevelee,
+  lireBonneOption,
+  lireBonneReponse,
+  VerdictsParQuestion,
+} from './retours';
 import { FpVerdicts } from './verdicts';
 
 export interface VoteQuestionPublique {
@@ -171,7 +176,7 @@ export class FpVote extends FpVerdicts {
         </div>
       </fieldset>
       ${this.presentateur() ? this.suiviProjete(question) : this.suiviEtudiant(question)}
-      ${this.bonneReponseRevelee()}${this.revelationRevelee()}
+      ${bonneReponseRevelee(this.texte('bonne-reponse'), this.bonneReponse)}${this.revelationRevelee()}
     </div>`;
   }
 
@@ -189,8 +194,7 @@ export class FpVote extends FpVerdicts {
 
   private suiviEtudiant(question: VoteQuestionPublique): EscapedHtml {
     const retour = this.choix.has(question.id) ? this.messageApresEnvoi() : '';
-    const verdict = this.verdictVisible() ? this.recus.de(question.id) : null;
-    return safeHtml`<p aria-live="polite" data-testid="retour">${escapeHtml(retour)}</p>${this.verdictDeReponse(verdict)}${this.annonces()}`;
+    return safeHtml`<p aria-live="polite" data-testid="retour">${escapeHtml(retour)}</p>${this.verdictDeReponse(this.recus.de(question.id))}${this.annonces()}`;
   }
 
   private suiviProjete(question: VoteQuestionPublique): EscapedHtml {
@@ -201,7 +205,7 @@ export class FpVote extends FpVerdicts {
       return this.decompte();
     }
     const comparaison =
-      this.jumelle !== null && this.principale !== null && this.premierVote !== null
+      question === this.jumelle && this.principale !== null && this.premierVote !== null
         ? safeHtml`${this.histogramme(this.principale, this.premierVote, 'premier')}${this.histogramme(question, this.interneResultats, 'second')}`
         : this.histogramme(question, this.interneResultats);
     return safeHtml`${comparaison}${this.decompte()}`;
@@ -220,10 +224,6 @@ export class FpVote extends FpVerdicts {
 
   private surDeuxTemps(): boolean {
     return this.jumelle !== null && this.internePhase !== null;
-  }
-
-  private verdictVisible(): boolean {
-    return !this.surDeuxTemps() || this.internePhase === 'revele';
   }
 
   private ouverte(): boolean {
@@ -286,13 +286,6 @@ export class FpVote extends FpVerdicts {
       return VIDE;
     }
     return safeHtml`<p class="fp-vote__decompte" data-testid="decompte">${escapeHtml(this.texte('pulse-total'))} ${this.interneResultats.total}</p>`;
-  }
-
-  private bonneReponseRevelee(): EscapedHtml {
-    if (this.bonneReponse === null) {
-      return VIDE;
-    }
-    return safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(this.bonneReponse)}</p>`;
   }
 
   private revelationRevelee(): EscapedHtml {

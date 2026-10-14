@@ -12,32 +12,34 @@
   @include panneau.intitule;
 }
 
-.panneau-lecture__indicateurs {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
-  margin: 0;
+.panneau-lecture__lignes {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
 
-  div {
-    padding: 0.65rem;
-    border: 1px solid rgba(12, 9, 2, 0.12);
-    border-radius: 0.65rem;
-    background: rgba(255, 255, 255, 0.42);
+  th,
+  td {
+    padding: 0.35rem 0.5rem;
+    border-block-end: 1px solid rgba(12, 9, 2, 0.12);
+    text-align: end;
   }
 
-  dt {
+  th:first-child {
+    text-align: start;
+  }
+
+  thead th {
     color: var(--ink-mute, #766f63);
     font-size: 0.7rem;
+    font-weight: 400;
   }
 
-  dd {
-    margin: 0.2rem 0 0;
+  tbody th {
     font-weight: 700;
   }
 }
 
-@media (max-width: 520px) {
-  .panneau-lecture__indicateurs {
-    grid-template-columns: 1fr;
-  }
+.panneau-lecture__confiance {
+  @include panneau.ligne-etalee;
+  @include panneau.discret;
 }

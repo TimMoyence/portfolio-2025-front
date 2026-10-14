@@ -6,6 +6,7 @@ import {
 } from '../../../testing/factories/formations.factory';
 import {
   ajouterRetours,
+  questionsAuVerdictRetenu,
   retirerLesRefus,
   retourDeProduction,
   retourDeRefus,
@@ -14,6 +15,7 @@ import {
   retoursDeLEtat,
   reussitesDeLEcran,
   verdictsDeLEcran,
+  verdictsServis,
 } from './retours-brique';
 
 const QUESTION = 'b2-01-a4-feuille-canaux';
@@ -22,6 +24,17 @@ const PARCOURS = 'b2-01-a6-coffre';
 const ECRAN = 'B2-01-A4-02-FEUILLE-CANAUX';
 
 const DETAIL = { cle: 'E3', juste: false, libelleConfusion: 'Base de départ oubliée' };
+const FEUILLE_ENVOYEE = { type: 'feuille', cellules: { E3: '=E2*1,05' } } as const;
+const NE_SAIT_PAS = { type: 'feuille', neSaitPas: true } as const;
+const VERDICT_DU_NE_SAIT_PAS = {
+  correcte: false,
+  score: 0,
+  details: [
+    { cle: 'E3', juste: false, libelleConfusion: null },
+    { cle: 'E4', juste: false, libelleConfusion: null },
+  ],
+  libelleConfusion: null,
+};
 
 function reponseServie(overrides: Record<string, unknown> = {}) {
   return {
@@ -47,20 +60,40 @@ describe('traduction des verdicts du serveur en retours de brique', () => {
     });
   });
 
+  it('QA-12 · ne fait aucun retour d’une réponse dont le serveur retient encore le verdict', () => {
+    expect(retourDeReponse(QUESTION, { reussite: null, libelleConfusion: null })).toBeNull();
+  });
+
   it('traduit un verdict de production avec son score et ses détails', () => {
     expect(
-      retourDeProduction(PRODUCTION, {
-        correcte: false,
-        score: 0.5,
-        details: [DETAIL],
-        libelleConfusion: 'Base de départ oubliée',
-      }),
+      retourDeProduction(
+        PRODUCTION,
+        {
+          correcte: false,
+          score: 0.5,
+          details: [DETAIL],
+          libelleConfusion: 'Base de départ oubliée',
+        },
+        FEUILLE_ENVOYEE,
+      ),
     ).toEqual({
       kind: 'verdict-production',
       questionId: PRODUCTION,
       correcte: false,
       score: 0.5,
       details: [DETAIL],
+      neSaitPas: false,
+    });
+  });
+
+  it('QA-06 · fait d’un « je ne sais pas » envoyé un verdict à zéro qui ne marque aucune case', () => {
+    expect(retourDeProduction(PRODUCTION, VERDICT_DU_NE_SAIT_PAS, NE_SAIT_PAS)).toEqual({
+      kind: 'verdict-production',
+      questionId: PRODUCTION,
+      correcte: false,
+      score: 0,
+      details: [],
+      neSaitPas: true,
     });
   });
 
@@ -140,6 +173,13 @@ describe('AC-33 : reconstruction des retours à la reprise', () => {
   const ecranDe = (identifiant: string): string | null =>
     identifiant === 'hors-deck' ? null : `ecran-de-${identifiant}`;
 
+  const productionReprise = (overrides: Record<string, unknown>): RetourBrique | undefined => {
+    const etat = buildEtatParticipant({
+      reponses: [reponseServie({ questionId: PRODUCTION, ...overrides })],
+    });
+    return retours(retoursDeLEtat(etat, ecranDe), `ecran-de-${PRODUCTION}`).at(0);
+  };
+
   it('fait d’une réponse sans détail un verdict de réponse, et d’une réponse détaillée une production', () => {
     const etat = buildEtatParticipant({
       reponses: [
@@ -172,17 +212,71 @@ describe('AC-33 : reconstruction des retours à la reprise', () => {
         correcte: false,
         score: 0.5,
         details: [DETAIL],
+        neSaitPas: false,
       },
       { kind: 'deja-repondu', questionId: PRODUCTION },
     ]);
   });
 
-  it('remplace par zéro le score absent d’une production servie sans note', () => {
+  it('QA-06 · reprend un « je ne sais pas » à une production comme le verdict envoyé en direct', () => {
+    const production = productionReprise({ valeur: NE_SAIT_PAS, ...VERDICT_DU_NE_SAIT_PAS });
+
+    expect(production).toEqual(retourDeProduction(PRODUCTION, VERDICT_DU_NE_SAIT_PAS, NE_SAIT_PAS));
+    expect(production).toEqual(
+      jasmine.objectContaining({ kind: 'verdict-production', details: [], neSaitPas: true }),
+    );
+  });
+
+  it('QA-12 · ne reprend d’une réponse au verdict retenu que sa marque « déjà répondu »', () => {
     const etat = buildEtatParticipant({
-      reponses: [reponseServie({ questionId: PRODUCTION, score: null, details: [DETAIL] })],
+      reponses: [reponseServie({ correcte: null, libelleConfusion: null })],
     });
 
-    const [production] = retours(retoursDeLEtat(etat, ecranDe), `ecran-de-${PRODUCTION}`);
+    expect(retoursDeLEtat(etat, ecranDe).get(`ecran-de-${QUESTION}`)).toEqual([
+      { kind: 'deja-repondu', questionId: QUESTION },
+    ]);
+  });
+
+  it('QA-12 · nomme les seules réponses dont le serveur retient encore le verdict', () => {
+    const etat = buildEtatParticipant({
+      reponses: [
+        reponseServie({ correcte: null, libelleConfusion: null }),
+        reponseServie({ questionId: PRODUCTION, correcte: false }),
+      ],
+    });
+
+    expect(questionsAuVerdictRetenu(etat)).toEqual([QUESTION]);
+  });
+
+  it('QA-12 · ne pose que le verdict désormais servi d’une réponse retenue, sans autre marque', () => {
+    const etat = buildEtatParticipant({
+      reponses: [
+        reponseServie({ correcte: false, libelleConfusion: 'Taux annuel divisé par 12' }),
+        reponseServie({ questionId: PRODUCTION, correcte: true }),
+        reponseServie({ questionId: PARCOURS, correcte: null }),
+      ],
+    });
+
+    const { servies, retours } = verdictsServis(etat, new Set([QUESTION, PARCOURS]), ecranDe);
+
+    expect(servies).toEqual([QUESTION]);
+    expect([...retours]).toEqual([
+      [
+        `ecran-de-${QUESTION}`,
+        [
+          {
+            kind: 'verdict-reponse',
+            questionId: QUESTION,
+            correcte: false,
+            libelleConfusion: 'Taux annuel divisé par 12',
+          },
+        ],
+      ],
+    ]);
+  });
+
+  it('remplace par zéro le score absent d’une production servie sans note', () => {
+    const production = productionReprise({ score: null, details: [DETAIL] });
 
     expect(production).toEqual(jasmine.objectContaining({ kind: 'verdict-production', score: 0 }));
   });
@@ -225,13 +319,12 @@ describe('AC-33 : reconstruction des retours à la reprise', () => {
 describe('lecture des verdicts et réussites d’un écran révélé', () => {
   it('rend le verdict de chaque réponse et production, sans les autres retours', () => {
     const lot: RetourBrique[] = [
-      retourDeReponse(QUESTION, { reussite: true, libelleConfusion: null }),
-      retourDeProduction(PRODUCTION, {
-        correcte: false,
-        score: 0.5,
-        details: [DETAIL],
-        libelleConfusion: null,
-      }),
+      { kind: 'verdict-reponse', questionId: QUESTION, correcte: true, libelleConfusion: null },
+      retourDeProduction(
+        PRODUCTION,
+        { correcte: false, score: 0.5, details: [DETAIL], libelleConfusion: null },
+        FEUILLE_ENVOYEE,
+      ),
       { kind: 'deja-repondu', questionId: QUESTION },
       retourDeRefus('reseau', 'Hors ligne'),
     ];

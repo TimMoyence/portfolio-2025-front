@@ -2,7 +2,7 @@ import { lireNombreSaisi } from 'portfolio-2025-partage/formule';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpReponse } from './reponse';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
-import { lireBonneReponse } from './retours';
+import { bonneReponseRevelee, lireBonneReponse } from './retours';
 
 export interface NumericQuestionPublique extends ContenuDeBrique {
   readonly enonce: string;
@@ -52,7 +52,7 @@ export class FpNumeric extends FpReponse<NumericQuestionPublique> {
         </div>
         <button type="button" class="fp-numeric__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
         ${this.suiviDeLEnvoi()}`;
-    const revelee = this.bonneReponseRevelee((bonne) => bonne.replace('.', ','));
+    const revelee = bonneReponseRevelee(this.texte('bonne-reponse'), this.bonneReponse);
     const corps =
       saisie === '' && revelee === ''
         ? escapeHtml('')

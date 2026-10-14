@@ -7,12 +7,13 @@ import {
   inscrireUnPoste,
   lireMonEtat,
   optionsDuPoste,
+  premierVote,
   rejoindreDansLeNavigateur,
   repondreDepuisLePoste,
   seanceDemarreeSurLEcran,
   seancePartagee,
   servirLEcran,
-  verdictDuPoste,
+  voterDepuisLePoste,
 } from './contexte';
 import type { EcranDuCours, SeanceOuverte } from './contexte';
 
@@ -38,11 +39,12 @@ let reponseLibre: EcranDuCours;
 
 async function seanceDuFichier(request: APIRequestContext): Promise<SeanceOuverte> {
   return seancePartagee('reprise', async () => {
-    const { votes, reponsesLibres } = await coursReleve(request);
-    vote = votes[0];
-    const suivante = reponsesLibres.find((ecran) => ecran.rang > vote.rang);
-    expect(suivante, 'aucune réponse libre après le premier vote').toBeDefined();
-    reponseLibre = suivante!;
+    const releve = await coursReleve(request);
+    const { reponsesLibres } = releve;
+    vote = premierVote(releve);
+    const proche = reponsesLibres.find((ecran) => ecran.rang > vote.rang) ?? reponsesLibres.at(-1);
+    expect(proche, 'aucune réponse libre dans le cours').toBeDefined();
+    reponseLibre = proche!;
     return seanceDemarreeSurLEcran(request, vote.rang);
   });
 }
@@ -62,9 +64,7 @@ test.describe('Banc — reprise après rechargement', () => {
 
     const poste = await rejoindreDansLeNavigateur(page, seance, identite);
     await expect(optionsDuPoste(page).first()).toBeVisible();
-    await optionsDuPoste(page).first().click();
-
-    await expect(verdictDuPoste(page)).toHaveAttribute('data-etat', /confirme|a-revoir/);
+    await voterDepuisLePoste(page, vote);
 
     const avant = (await lireMonEtat(request, seance, poste)) as unknown as EtatDuPoste;
     expect(avant.reponses.map((reponse) => reponse.questionId)).toEqual([vote.activiteId]);

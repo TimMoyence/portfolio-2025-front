@@ -8,9 +8,11 @@ import {
   optionsDuPoste,
   ouvrirLePupitre,
   posteDansSonNavigateur,
+  premierVote,
   surLEcran,
-  verdictDuPoste,
+  voterDepuisLePoste,
 } from './contexte';
+import type { EcranDuCours } from './contexte';
 
 const ETUDIANTS = 30;
 
@@ -60,9 +62,8 @@ async function toutLeMondeSuit(
   return Date.now() - debut;
 }
 
-async function toutLeMondeVote(postes: readonly Page[]): Promise<void> {
-  await Promise.all(postes.map((poste) => optionsDuPoste(poste).first().click()));
-  await Promise.all(postes.map((poste) => expect(verdictDuPoste(poste)).toHaveCount(1)));
+async function toutLeMondeVote(postes: readonly Page[], vote: EcranDuCours): Promise<void> {
+  await Promise.all(postes.map((poste) => voterDepuisLePoste(poste, vote)));
 }
 
 test.describe('Banc — une classe de trente postes et son formateur sur le même wifi', () => {
@@ -74,8 +75,9 @@ test.describe('Banc — une classe de trente postes et son formateur sur le mêm
     test.setTimeout(600_000);
     const incidents: Incident[] = [];
     surveiller(page, 'formateur', incidents);
-    const { votes, total } = await coursReleve(request);
-    const [premier] = votes;
+    const releve = await coursReleve(request);
+    const { total } = releve;
+    const premier = premierVote(releve);
     const suivant = premier.rang + 1;
     expect(suivant).toBeLessThan(total);
 
@@ -98,7 +100,7 @@ test.describe('Banc — une classe de trente postes et son formateur sur le mêm
     await page.getByTestId('presentateur-demarrer').click();
     await avancerLePupitre(page, 0, premier.rang, total);
     const premiereDiffusion = await toutLeMondeSuit(postes, premier.rang, total, 'options');
-    await toutLeMondeVote(postes);
+    await toutLeMondeVote(postes, premier);
 
     await avancerLePupitre(page, premier.rang, suivant, total);
     const secondeDiffusion = await toutLeMondeSuit(postes, suivant, total, 'ecran');

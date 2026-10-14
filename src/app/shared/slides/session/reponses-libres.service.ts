@@ -5,6 +5,7 @@ import type {
   ReponseLibreEtudiant,
 } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT, ReponseLibreRefusee } from '../../../core/ports/formations.port';
+import type { EtatParticipant } from '../../../../cours/content/types';
 import { readIdentity } from '../../../../cours/runtime/core/identity';
 import type { PendingFreeResponse } from '../interactions/slide-reflection/free-response.queue';
 import {
@@ -34,6 +35,12 @@ export function cleDeReponseLibre(sessionId: string, screenId: string, activityI
   return `${sessionId}:${screenId}:${activityId}`;
 }
 
+const ETATS_GARDES: readonly EtatEnvoiLibre[] = ['enregistre', 'attente_reseau', 'ecran_non_servi'];
+
+function cleDeTexteGarde(sessionId: string, activityId: string): string {
+  return `${sessionId}:${activityId}`;
+}
+
 function cleDeStockage(studentKey: string, cleLogique: string): string {
   return `${studentKey}:${cleLogique}`;
 }
@@ -46,11 +53,39 @@ function cleLogiqueDe(envoi: PendingFreeResponse): string {
 export class ReponsesLibresService {
   private readonly port = inject(FORMATIONS_PORT, { optional: true });
   private readonly etats = signal<ReadonlyMap<string, EtatEnvoiLibre>>(new Map());
+  private readonly gardes = signal<ReadonlyMap<string, string>>(new Map());
 
   readonly etatsDesEnvois = this.etats.asReadonly();
 
-  private noter(cleLogique: string, etat: EtatEnvoiLibre): EtatEnvoiLibre {
-    this.etats.update((connus) => new Map(connus).set(cleLogique, etat));
+  texteGarde(sessionId: string, activityId: string): string | null {
+    return this.gardes().get(cleDeTexteGarde(sessionId, activityId)) ?? null;
+  }
+
+  restaurer(sessionId: string, reponses: EtatParticipant['reponsesLibres']): void {
+    this.gardes.update(
+      (connus) =>
+        new Map([
+          ...connus,
+          ...reponses.map(
+            ({ activityId, response }) =>
+              [cleDeTexteGarde(sessionId, activityId), response] as const,
+          ),
+        ]),
+    );
+  }
+
+  private noter(envoi: PendingFreeResponse, etat: EtatEnvoiLibre): EtatEnvoiLibre {
+    this.etats.update((connus) => new Map(connus).set(cleLogiqueDe(envoi), etat));
+    const cle = cleDeTexteGarde(envoi.sessionId, envoi.activityId);
+    this.gardes.update((connus) => {
+      const suivants = new Map(connus);
+      if (ETATS_GARDES.includes(etat)) {
+        suivants.set(cle, envoi.response);
+      } else {
+        suivants.delete(cle);
+      }
+      return suivants;
+    });
     return etat;
   }
 
@@ -89,7 +124,7 @@ export class ReponsesLibresService {
   }
 
   private async transmettre(jeton: string, envoi: PendingFreeResponse): Promise<EtatEnvoiLibre> {
-    return this.noter(cleLogiqueDe(envoi), await this.issueDeLEnvoi(jeton, envoi));
+    return this.noter(envoi, await this.issueDeLEnvoi(jeton, envoi));
   }
 
   private async issueDeLEnvoi(jeton: string, envoi: PendingFreeResponse): Promise<EtatEnvoiLibre> {

@@ -11,7 +11,7 @@ import {
   rejoindreDansLeNavigateur,
   repondreDepuisLePoste,
   seanceLimiteeSurLePremierVote,
-  verdictDuPoste,
+  voterDepuisLePoste,
 } from './contexte';
 
 const CAPACITE = 3;
@@ -28,14 +28,12 @@ test.describe('Banc — éviction en séance (AC-37)', () => {
     page,
     request,
   }) => {
-    const { releve, seance, jeton } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
-    const { votes } = releve;
-    const autre = autreReponseQue(releve, votes[0].activiteId);
+    const { releve, vote, seance, jeton } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
+    const autre = autreReponseQue(releve, vote.activiteId);
 
     const evince = await rejoindreDansLeNavigateur(page, seance, identiteDuPoste(30));
     await expect(optionsDuPoste(page).first()).toBeVisible();
-    await optionsDuPoste(page).first().click();
-    await expect(verdictDuPoste(page)).toHaveCount(1);
+    await voterDepuisLePoste(page, vote);
 
     await inscrireUnPoste(request, seance, 31);
     await inscrireUnPoste(request, seance, 32);
@@ -64,7 +62,7 @@ test.describe('Banc — éviction en séance (AC-37)', () => {
     const bilan = (await lireLesResultats(request, jeton, seance.sessionId)) as unknown as Bilan;
     expect(bilan.participants.map((candidat) => candidat.nom)).not.toContain(evince.identite.nom);
     const comptee = bilan.resultats.questions.find(
-      (question) => question.questionId === votes[0].activiteId,
+      (question) => question.questionId === vote.activiteId,
     );
     expect(comptee?.total).toBe(1);
   });
@@ -72,15 +70,11 @@ test.describe('Banc — éviction en séance (AC-37)', () => {
   test('le formateur réadmet le poste évincé par erreur, qui retrouve sa place et ses réponses', async ({
     request,
   }) => {
-    const {
-      releve: { votes },
-      seance,
-      jeton,
-    } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
+    const { vote, seance, jeton } = await seanceLimiteeSurLePremierVote(request, CAPACITE);
     const poste = await inscrireUnPoste(request, seance, 40);
     await repondreDepuisLePoste(request, seance, poste, {
-      questionId: votes[0].activiteId,
-      valeur: votes[0].options[0],
+      questionId: vote.activiteId,
+      valeur: vote.options[0],
     });
     expect(await agirSurLePoste(request, jeton, { seance, poste }, 'eviction')).toBe(204);
 

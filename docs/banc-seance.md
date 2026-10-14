@@ -95,17 +95,24 @@ et lit `GET /sessions/:id/sujet` avec le jeton d'un poste. C'est la seule surfac
 écrans de diffusion `seance` : le catalogue public les sert verrouillés, sans leurs questions. Le
 relevé en tire les questions à options, les votes et les réflexions, avec leur rang, leur
 identifiant d'activité et leurs identifiants d'option — jumelle comprise pour un vote à deux
-temps.
+temps. Il sépare les votes au verdict immédiat (`votes`) des votes à deux temps (`votesJumeles`),
+dont le serveur retient le verdict jusqu'à la révélation. Un cours peut n'avoir que des votes à
+deux temps : les fichiers qui jouent « le premier vote » prennent `premierVote`, le
+premier des `votes`, sinon le premier des `votesJumeles`, et votent par `voterDepuisLePoste`.
+Celui-ci exige que la réponse soit enregistrée (201), puis le verdict affiché pour un vote au
+verdict immédiat, ou l'accusé de réception sans aucun verdict pour un vote à deux temps.
+`vote-jumele.spec.ts` joue toujours le premier des `votesJumeles`. La reprise ressert la réponse
+libre qui suit ce vote, sinon la dernière du cours.
 
-| Fichier                   | Ce qui est prouvé                                                                                                                                                                                                                         |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `reprise.spec.ts`         | un poste répond, recharge, retrouve sa séance et son état serveur ; une seconde réponse est refusée (`REPONSE_DEJA_ENREGISTREE`) sans rien écrire                                                                                         |
-| `ecran-non-servi.spec.ts` | toute réflexion au-delà de l'écran servi est refusée (`ECRAN_NON_SERVI`), le poste la garde hors ligne puis affiche le refus au retour du réseau ; les rappels espacés suivent la même garde, et s'ouvrent dès que leur écran est projeté |
-| `vote-jumele.spec.ts`     | deux navigateurs votent en même temps et le pupitre compte les deux ; le pilotage mène `vote` → `discussion` → `revote` → `revele`, le poste bascule sur la jumelle au revote et reçoit son verdict à la révélation                       |
-| `cadence-flux.spec.ts`    | deux onglets formateur reçoivent les mêmes `resultats`, au plus une fois par seconde, barème compris                                                                                                                                      |
-| `eviction.spec.ts`        | le poste évincé perd l'accès (`PARTICIPANT_INTROUVABLE`), sa place est reprise, ses réponses restent comptées au bilan                                                                                                                    |
-| `salle-chargee.spec.ts`   | 35 postes rejoignent depuis une seule adresse, le 36ᵉ est refusé (`SEANCE_COMPLETE`), le débit reste indexé sur le jeton                                                                                                                  |
-| `cloture.spec.ts`         | le pupitre mène la séance de l'ouverture à la clôture et la synthèse reflète ce que les postes ont répondu                                                                                                                                |
+| Fichier                   | Ce qui est prouvé                                                                                                                                                                                                                                                            |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reprise.spec.ts`         | un poste répond, recharge, retrouve sa séance et son état serveur ; une seconde réponse est refusée (`REPONSE_DEJA_ENREGISTREE`) sans rien écrire                                                                                                                            |
+| `ecran-non-servi.spec.ts` | toute réflexion au-delà de l'écran servi est refusée (`ECRAN_NON_SERVI`), le poste la garde hors ligne puis affiche le refus au retour du réseau ; les rappels espacés suivent la même garde, et s'ouvrent dès que leur écran est projeté                                    |
+| `vote-jumele.spec.ts`     | deux navigateurs votent en même temps et le pupitre compte les deux ; le pilotage mène `vote` → `discussion` → `revote` → `revele`, le poste bascule sur la jumelle au revote ; aucun verdict n'est servi ni affiché avant la révélation, le poste le reçoit à la révélation |
+| `cadence-flux.spec.ts`    | deux onglets formateur reçoivent les mêmes `resultats`, au plus une fois par seconde, barème compris                                                                                                                                                                         |
+| `eviction.spec.ts`        | le poste évincé perd l'accès (`PARTICIPANT_INTROUVABLE`), sa place est reprise, ses réponses restent comptées au bilan                                                                                                                                                       |
+| `salle-chargee.spec.ts`   | 35 postes rejoignent depuis une seule adresse, le 36ᵉ est refusé (`SEANCE_COMPLETE`), le débit reste indexé sur le jeton                                                                                                                                                     |
+| `cloture.spec.ts`         | le pupitre mène la séance de l'ouverture à la clôture et la synthèse reflète ce que les postes ont répondu                                                                                                                                                                   |
 
 ## Ce que le banc ne joue pas
 

@@ -1,5 +1,4 @@
 import type { EcranDeroule } from '../../../../cours/content/types';
-import { NOMBRE_FRANCAIS } from '../../../shared/slides/layouts/axe-gradue';
 
 export interface CorrectionAffichee {
   readonly enonce: string;
@@ -7,11 +6,6 @@ export interface CorrectionAffichee {
 }
 
 const CORRIGE_SOUS_CHAQUE_QUESTION = 'questionnaire';
-const NOMBRE_NU = /^-?\d+(\.\d+)?$/;
-
-export function enFrancais(reponse: string): string {
-  return NOMBRE_NU.test(reponse.trim()) ? NOMBRE_FRANCAIS.format(Number(reponse)) : reponse;
-}
 
 export function correctionsAffichees(
   ecran: EcranDeroule | undefined,
@@ -21,6 +15,6 @@ export function correctionsAffichees(
   }
   return (ecran?.corriges ?? []).map((corrige) => ({
     enonce: ecran?.questions.find(({ id }) => id === corrige.questionId)?.enonce ?? '',
-    bonneReponse: enFrancais(corrige.bonneReponse),
+    bonneReponse: corrige.bonneReponse,
   }));
 }

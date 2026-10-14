@@ -5,7 +5,14 @@ import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { NEVER, of, Subject, throwError } from 'rxjs';
-import type { CoursContent, EcranContent, PilotageEcran } from '../../../../cours/content/types';
+import type {
+  CoursContent,
+  EcranContent,
+  EtatParticipant,
+  PilotageEcran,
+} from '../../../../cours/content/types';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
+import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
 import {
   clearIdentity,
   lireSecretDeReprise,
@@ -14,6 +21,7 @@ import {
 } from '../../../../cours/runtime/core/identity';
 import { enqueue, pending } from '../../../../cours/runtime/core/queue';
 import { enqueueFreeResponse } from '../../../shared/slides/interactions/slide-reflection/free-response.queue';
+import { ReponsesLibresService } from '../../../shared/slides/session/reponses-libres.service';
 import type { EtatSession } from '../../../../cours/runtime/core/sync';
 import {
   buildEcran,
@@ -1266,6 +1274,24 @@ describe('CoursEtudiantComponent', () => {
       expect(lire(fixture, 'etudiant-reprise-indisponible')).toBeNull();
     });
 
+    it('rend aux réflexions les réponses libres que l état du participant porte', async () => {
+      port.lireMonEtat.and.returnValue(
+        of(
+          buildEtatParticipant({
+            reponsesLibres: [
+              { activityId: 'reflexion-1', response: 'Gardée avant le rechargement.' },
+            ],
+          }),
+        ),
+      );
+
+      await rattacherALaSeanceEnCours();
+
+      expect(TestBed.inject(ReponsesLibresService).texteGarde(SESSION, 'reflexion-1')).toBe(
+        'Gardée avant le rechargement.',
+      );
+    });
+
     it('porte au poste etudiant chaque revision de pilotage diffusee par le formateur', async () => {
       const fixture = await rattacherALaSeanceEnCours();
       const pilotageVu = (): unknown =>
@@ -1351,6 +1377,7 @@ describe('CoursEtudiantComponent', () => {
           correcte: false,
           score: 0.5,
           details: [{ cle: 'E2', juste: true, libelleConfusion: null }],
+          neSaitPas: false,
         },
         { kind: 'deja-repondu', questionId: 'Q-VA-07' },
       ]);
@@ -1386,6 +1413,212 @@ describe('CoursEtudiantComponent', () => {
       expect(lire(fixture, 'etudiant-fin')).toBeTruthy();
       expect(localStorage.getItem(`fp.${SESSION}.participant-1.fp-exit.B-SORTIE-09`)).toBeNull();
     });
+  });
+
+  describe('QA-12 · verdict d un vote des cours servis, retenu par le serveur jusqu a la revelation', () => {
+    interface VoteServi {
+      readonly cours: string;
+      readonly sujetServi: CoursContent;
+      readonly ecran: EcranContent;
+      readonly rang: number;
+      readonly principale: string;
+      readonly jumele: boolean;
+    }
+
+    const VOTES: readonly VoteServi[] = INSTANTANES_DES_COURS_SERVIS.flatMap(
+      ([cours, instantane]) =>
+        instantane.sujet.ecrans.flatMap((ecran, rang) => {
+          const identifiants = (planDeMontage(ecran) ?? []).flatMap(identifiantsDuMontage);
+          const principale = identifiants.at(0);
+          return ecran.type !== 'fp-vote' || principale === undefined
+            ? []
+            : [
+                {
+                  cours,
+                  sujetServi: instantane.sujet,
+                  ecran,
+                  rang,
+                  principale,
+                  jumele: identifiants.length > 1,
+                },
+              ];
+        }),
+    );
+    const VOTES_JUMELES = VOTES.filter(({ jumele }) => jumele);
+    const VOTES_SIMPLES = VOTES.filter(({ jumele }) => !jumele);
+    const RETENU: VerdictReponse = { reussite: null, libelleConfusion: null };
+
+    function etatAvecLeVote(
+      questionId: string,
+      correcte: boolean | null,
+    ): Observable<EtatParticipant> {
+      return of(
+        buildEtatParticipant({
+          reponses: [
+            {
+              questionId,
+              valeur: 'a',
+              correcte,
+              score: null,
+              details: null,
+              libelleConfusion: correcte === false ? ETIQUETTE_LIBELLE : null,
+            },
+          ],
+        }),
+      );
+    }
+
+    function verdictServi(questionId: string): RetourBrique {
+      return {
+        kind: 'verdict-reponse',
+        questionId,
+        correcte: false,
+        libelleConfusion: ETIQUETTE_LIBELLE,
+      };
+    }
+
+    async function suivreLeCoursJusquAuVote(vote: VoteServi): Promise<Fixture> {
+      sujet = vote.sujetServi;
+      port.lireSujet.and.returnValue(of(sujet));
+      return suivreLaSeanceJusquA(vote.rang);
+    }
+
+    function reponseAuVote(vote: VoteServi) {
+      return {
+        kind: 'reponse',
+        screenId: vote.ecran.id,
+        questionId: vote.principale,
+        valeur: 'a',
+        dureeMs: 400,
+      } as const;
+    }
+
+    async function voterSur(vote: VoteServi, verdict: VerdictReponse): Promise<Fixture> {
+      port.repondre.and.returnValue(of(verdict));
+      const fixture = await suivreLeCoursJusquAuVote(vote);
+      await emettre(fixture, reponseAuVote(vote));
+      return fixture;
+    }
+
+    async function revelerLeVerdictServi(fixture: Fixture, vote: VoteServi): Promise<void> {
+      port.lireMonEtat.and.returnValue(etatAvecLeVote(vote.principale, false));
+      await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, { phase: 'revele' });
+    }
+
+    function attendreLeVerdictServi(fixture: Fixture, vote: VoteServi, lectures: number): void {
+      expect(port.lireMonEtat).toHaveBeenCalledTimes(lectures);
+      expect(retoursDe(fixture, vote.ecran.id)).toContain(verdictServi(vote.principale));
+    }
+
+    function revelerPendantLaLecture(vote: VoteServi): void {
+      double.diffuser({
+        etat: 'en_cours',
+        ecranCourant: vote.rang,
+        pilotage: { [vote.ecran.id]: { phase: 'revele' } },
+      });
+    }
+
+    async function stabiliserTantQuIlChange(fixture: Fixture): Promise<void> {
+      let attendu: Promise<void>;
+      do {
+        attendu = fixture.componentInstance.quandStabilise();
+        await stabiliserLaVue(fixture);
+      } while (fixture.componentInstance.quandStabilise() !== attendu);
+    }
+
+    it('trouve des votes jumeles et des votes simples dans les cours servis', () => {
+      expect(VOTES_JUMELES.length).toBeGreaterThan(0);
+      expect(VOTES_SIMPLES.length).toBeGreaterThan(0);
+    });
+
+    for (const vote of VOTES_JUMELES) {
+      it(`${vote.cours} · ${vote.ecran.id} : ne pose aucun verdict avant la revelation, relit l etat a chaque pilotage de l ecran, puis pose celui que le serveur sert`, async () => {
+        const fixture = await voterSur(vote, RETENU);
+
+        expect(genresDe(fixture, vote.ecran.id)).toEqual([]);
+
+        port.lireMonEtat.calls.reset();
+        port.lireMonEtat.and.returnValue(etatAvecLeVote(vote.principale, null));
+        await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, { phase: 'discussion' });
+
+        expect(port.lireMonEtat).toHaveBeenCalledTimes(1);
+        expect(genresDe(fixture, vote.ecran.id)).not.toContain('verdict-reponse');
+
+        await revelerLeVerdictServi(fixture, vote);
+
+        attendreLeVerdictServi(fixture, vote, 2);
+
+        await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, {
+          phase: 'revele',
+          resultatsProjetes: true,
+        });
+
+        expect(port.lireMonEtat).toHaveBeenCalledTimes(2);
+      });
+
+      it(`${vote.cours} · ${vote.ecran.id} : a la reprise, relit a la revelation le verdict que le serveur retenait`, async () => {
+        port.lireMonEtat.and.returnValue(etatAvecLeVote(vote.principale, null));
+        const fixture = await suivreLeCoursJusquAuVote(vote);
+
+        expect(genresDe(fixture, vote.ecran.id)).toEqual(['deja-repondu']);
+
+        await revelerLeVerdictServi(fixture, vote);
+
+        expect(retoursDe(fixture, vote.ecran.id)).toEqual([
+          { kind: 'deja-repondu', questionId: vote.principale },
+          verdictServi(vote.principale),
+        ]);
+      });
+
+      it(`${vote.cours} · ${vote.ecran.id} : relit l etat quand la revelation arrive pendant que le vote est en vol`, async () => {
+        const enVol = new Subject<VerdictReponse>();
+        const envoye = new Promise<void>((resoudre) => {
+          port.repondre.and.callFake((): Observable<VerdictReponse> => {
+            resoudre();
+            return enVol;
+          });
+        });
+        const fixture = await suivreLeCoursJusquAuVote(vote);
+        port.lireMonEtat.calls.reset();
+        port.lireMonEtat.and.returnValue(etatAvecLeVote(vote.principale, false));
+
+        ecranDe(fixture).triggerEventHandler('evenement', reponseAuVote(vote));
+        await envoye;
+        revelerPendantLaLecture(vote);
+        enVol.next(RETENU);
+        enVol.complete();
+        await stabiliserTantQuIlChange(fixture);
+
+        attendreLeVerdictServi(fixture, vote, 1);
+      });
+
+      it(`${vote.cours} · ${vote.ecran.id} : a la reprise, relit l etat quand la revelation arrive pendant sa lecture`, async () => {
+        sujet = vote.sujetServi;
+        port.lireSujet.and.returnValue(of(sujet));
+        port.lireMonEtat.and.callFake((): Observable<EtatParticipant> => {
+          port.lireMonEtat.and.returnValue(etatAvecLeVote(vote.principale, false));
+          revelerPendantLaLecture(vote);
+          return etatAvecLeVote(vote.principale, null);
+        });
+        const fixture = await rattacher();
+        await stabiliserTantQuIlChange(fixture);
+
+        attendreLeVerdictServi(fixture, vote, 2);
+      });
+    }
+
+    for (const vote of VOTES_SIMPLES) {
+      it(`${vote.cours} · ${vote.ecran.id} : pose aussitot le verdict d un vote simple, sans relire l etat a son pilotage`, async () => {
+        const fixture = await voterSur(vote, CONFUSION);
+
+        expect(retoursDe(fixture, vote.ecran.id)).toEqual([verdictServi(vote.principale)]);
+
+        port.lireMonEtat.calls.reset();
+        await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, { revele: true });
+
+        expect(port.lireMonEtat).not.toHaveBeenCalled();
+      });
+    }
   });
 
   describe('evenements des briques runtime (§ 9.7)', () => {

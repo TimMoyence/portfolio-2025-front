@@ -1,6 +1,12 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { EcranDeroule } from '../../../../cours/content/types';
+import type { CardsortPlanPublic } from '../../../../cours/runtime/blocks/FpCardsort';
+import type { EscapeParcoursPublic } from '../../../../cours/runtime/blocks/FpEscape';
+import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
+import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
+import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
 import { buildEcranDeVoteJumele } from '../../../../testing/banc-du-pupitre';
 import {
   buildCardsortPlan,
@@ -11,6 +17,7 @@ import {
 } from '../../../../testing/factories/cours.factory';
 import {
   buildEcranDeroule,
+  buildProgressionEnigme,
   buildResultatQuestion,
   buildResultatsSeance,
   createFormationsPortStub,
@@ -84,7 +91,7 @@ describe('CoursPanneauActiviteComponent', () => {
       expect(
         lire(monter(vote, { pilotage: { phase: 'revele' } }).fixture, 'activite-phase-suivante'),
       ).toBeNull();
-      const { fixture } = monter(vote, { pilotageBloque: true });
+      const { fixture } = monter(vote, { pilotage: { phase: 'vote' }, pilotageBloque: true });
       expect(
         (cibleMarque(fixture, 'activite-phase-suivante', 'le panneau') as HTMLButtonElement)
           .disabled,
@@ -98,6 +105,31 @@ describe('CoursPanneauActiviteComponent', () => {
       });
       expect(lire(monter(simple).fixture, 'activite-phase')).toBeNull();
     });
+
+    const VOTES_JUMELES = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
+      ecransDuPupitreDe(instantane).filter(
+        ({ type, donnees }) => type === 'fp-vote' && donnees?.['questionJumelle'] != null,
+      ),
+    );
+
+    it('QA-01 · trouve des votes jumeles dans les cours servis', () => {
+      expect(VOTES_JUMELES.length).toBeGreaterThan(0);
+    });
+
+    for (const jumele of VOTES_JUMELES) {
+      it(`QA-01 · ${jumele.id} : lit la phase servie et n en suppose aucune tant qu aucune n est servie`, () => {
+        const sansPhase = monter(jumele, { pilotage: {} }).fixture;
+
+        expect(lire(sansPhase, 'activite-phase')).toBeNull();
+        expect(lire(sansPhase, 'activite-correction')).toBeNull();
+
+        const servie = monter(jumele, { pilotage: { phase: 'vote' } }).fixture;
+
+        expect(texte(servie, 'activite-phase-courante')).toBe('Vote individuel');
+        expect(texte(servie, 'activite-phase-suivante')).toContain('Discussion entre voisins');
+        expect(lire(servie, 'activite-correction')).toBeNull();
+      });
+    }
   });
 
   function revelerUneSeuleFois(
@@ -175,25 +207,50 @@ describe('CoursPanneauActiviteComponent', () => {
     expect(lire(monter(recit).fixture, 'activite-reveler-correction')).toBeNull();
   });
 
-  it('F27 · corrige le tableau en deux temps, les coefficients puis les prix et indices', () => {
-    const tableau = buildEcranDeroule({
-      id: 'ecran-tableau',
-      type: 'fp-table-build',
-      donnees: {},
-      corriges: [],
+  describe('F27 · corrige chaque table servie une colonne non donnee par clic', () => {
+    const TABLES = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
+      ecransDuPupitreDe(instantane).filter((ecran) => ecran.type === 'fp-table-build'),
+    );
+
+    it('trouve les tables des cours servis', () => {
+      expect(TABLES.length).toBeGreaterThan(0);
     });
-    const { fixture, commandes } = monter(tableau);
 
-    expect(lire(fixture, 'activite-reveler-correction')).toBeNull();
-    cliquer(fixture, 'activite-tableau-coefficients');
-    fixture.componentRef.setInput('pilotage', { etayage: 1 });
-    fixture.detectChanges();
-    cliquer(fixture, 'activite-tableau-valeurs');
+    for (const tableau of TABLES) {
+      it(`${tableau.id} : nomme chaque colonne a corriger, dans l ordre du plan`, () => {
+        const intitules = (tableau.donnees?.['plan'] as TableBuildPlanPublic).colonnes
+          .filter(({ role }) => role !== 'donnee')
+          .map(({ intitule }) => intitule);
+        const { fixture, commandes } = monter(tableau);
+        const libelles: string[] = [];
 
-    expect(commandes).toEqual([
-      { screenId: 'ecran-tableau', revele: true, etayage: 1 },
-      { screenId: 'ecran-tableau', etayage: 2 },
-    ]);
+        expect(lire(fixture, 'activite-reveler-correction')).toBeNull();
+        intitules.forEach((_, niveau) => {
+          libelles.push(texte(fixture, 'activite-tableau-colonne-suivante'));
+          cliquer(fixture, 'activite-tableau-colonne-suivante');
+          fixture.componentRef.setInput('pilotage', { revele: true, etayage: niveau + 1 });
+          fixture.detectChanges();
+        });
+
+        expect(libelles).toEqual(
+          intitules.map((intitule) => `Corriger : ${intitule}`.replace(/\s+/g, ' ')),
+        );
+        expect(commandes).toEqual(
+          intitules.map((_, niveau) =>
+            niveau === 0
+              ? { screenId: tableau.id, revele: true, etayage: 1 }
+              : { screenId: tableau.id, etayage: niveau + 1 },
+          ),
+        );
+        expect(lire(fixture, 'activite-tableau-colonne-suivante')).toBeNull();
+        expect(texte(fixture, 'activite-tableau-corrige')).toBe(
+          'Toutes les colonnes sont corrigées.',
+        );
+        expect(texte(fixture, 'activite-correction-tableau')).not.toMatch(
+          /coefficients|prix et les indices/,
+        );
+      });
+    }
   });
 
   it('F02 · affiche tout de suite les options d un rappel, une seule fois', () => {
@@ -378,8 +435,8 @@ describe('CoursPanneauActiviteComponent', () => {
         ),
       ].map(cellulesDe),
     ).toEqual([
-      ['loyer', '15 / 18'],
-      ['matieres', '9 / 18'],
+      ['Loyer de l atelier', '15 / 18'],
+      ['Achat de matieres premieres', '9 / 18'],
     ]);
   });
 
@@ -391,22 +448,22 @@ describe('CoursPanneauActiviteComponent', () => {
     const { fixture } = monter(coffre, {
       resultats: resultats({
         enigmes: [
-          {
+          buildProgressionEnigme({
             parcoursId: 'K-EVASION-01',
             enigmeId: 'seuil',
             ouvertes: 12,
             resolues: 9,
             tentativesMoyennes: 2.5,
             epuisees: 1,
-          },
-          {
+          }),
+          buildProgressionEnigme({
             parcoursId: 'K-AUTRE',
             enigmeId: 'autre',
             ouvertes: 1,
             resolues: 0,
             tentativesMoyennes: 1,
             epuisees: 0,
-          },
+          }),
         ],
       }),
     });
@@ -415,7 +472,7 @@ describe('CoursPanneauActiviteComponent', () => {
     );
 
     expect(lignes.length).toBe(1);
-    expect(cellulesDe(lignes[0])).toEqual(['seuil', '12', '9', '1', '2.5']);
+    expect(cellulesDe(lignes[0])).toEqual(['Le seuil de rentabilite', '12', '9', '1', '2,5']);
   });
 
   it('compte les billets de sortie recus face aux participants', () => {
@@ -432,5 +489,97 @@ describe('CoursPanneauActiviteComponent', () => {
 
   it('ne liste plus les participants, confies a leur propre panneau', () => {
     expect(lire(monter(buildEcranDeroule()).fixture, 'activite-participants')).toBeNull();
+  });
+
+  describe('aucun identifiant interne sur les tables, tris et coffres des cours servis', () => {
+    interface Attendu {
+      readonly cle: string;
+      readonly libelle: string;
+    }
+
+    const ECRANS = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
+      ecransDuPupitreDe(instantane).filter(({ type }) =>
+        ['fp-table-build', 'fp-cardsort', 'fp-escape'].includes(type),
+      ),
+    );
+
+    function attendusDe(ecran: EcranDeroule): readonly Attendu[] {
+      const corrige = ecran.corrigeEcran;
+      if (ecran.type === 'fp-escape') {
+        const parcours = ecran.donnees?.['parcours'] as EscapeParcoursPublic;
+        return parcours.enigmes.map(({ id, intitule }) => ({ cle: id, libelle: intitule }));
+      }
+      if (corrige?.type === 'classement') {
+        const plan = ecran.donnees?.['plan'] as CardsortPlanPublic;
+        return corrige.attendus.map(({ carteId }) => ({
+          cle: carteId,
+          libelle: plan.cartes.find(({ id }) => id === carteId)?.libelle ?? '',
+        }));
+      }
+      if (corrige?.type === 'tableau') {
+        const plan = ecran.donnees?.['plan'] as TableBuildPlanPublic;
+        return corrige.attendus.map(({ rang, cle }) => ({
+          cle: `${rang}:${cle}`,
+          libelle: `${plan.colonnes.find((colonne) => colonne.cle === cle)?.intitule} — ${plan.libellesLignes[rang]}`,
+        }));
+      }
+      return [];
+    }
+
+    function monterAvecChaqueCle(ecran: EcranDeroule, attendus: readonly Attendu[]): Fixture {
+      const [identifiant = ''] = (planDeMontage(ecran) ?? []).flatMap(identifiantsDuMontage);
+      const compte = { total: 2, justes: 1 };
+      return monter(ecran, {
+        resultats: resultats({
+          questions: [
+            buildResultatQuestion({
+              questionId: identifiant,
+              ecranId: ecran.id,
+              type: ecran.type === 'fp-cardsort' ? 'classement' : 'tableau',
+              total: 2,
+              scoreMoyen: 0.5,
+              parCle: Object.fromEntries(attendus.map(({ cle }) => [cle, compte])),
+            }),
+          ],
+          enigmes: attendus.map(({ cle }) =>
+            buildProgressionEnigme({
+              parcoursId: identifiant,
+              enigmeId: cle,
+              ouvertes: 2,
+              resolues: 1,
+              tentativesMoyennes: 1.5,
+              epuisees: 0,
+            }),
+          ),
+        }),
+      }).fixture;
+    }
+
+    it('trouve des tables, des tris et des coffres dans les cours servis', () => {
+      const types = new Set(ECRANS.map(({ type }) => type));
+
+      expect([...types].sort((a, b) => a.localeCompare(b))).toEqual([
+        'fp-cardsort',
+        'fp-escape',
+        'fp-table-build',
+      ]);
+    });
+
+    for (const ecran of ECRANS) {
+      it(`${ecran.id} : nomme chaque ligne par son intitulé servi, jamais par sa clé`, () => {
+        const attendus = attendusDe(ecran);
+        const marque = ecran.type === 'fp-escape' ? 'activite-enigme' : 'activite-production-cle';
+
+        const fixture = monterAvecChaqueCle(ecran, attendus);
+        const entetes = [
+          ...(fixture.nativeElement as HTMLElement).querySelectorAll(
+            `[data-testid="${marque}"] th`,
+          ),
+        ].map((entete) => entete.textContent?.trim());
+
+        expect(attendus.length).toBeGreaterThan(0);
+        expect(entetes).toEqual(attendus.map(({ libelle }) => libelle));
+      });
+    }
   });
 });

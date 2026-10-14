@@ -8,11 +8,13 @@ import {
   enoncesDesActivites,
   enoncesDuDeroule,
 } from '../../../shared/slides/session/lecture-ecran';
+import { NOMBRE_FRANCAIS } from '../../../shared/slides/layouts/axe-gradue';
 import { telechargerFichier } from '../../../shared/utils/telechargement.utils';
 import { chantierApresRendu } from './chantier-apres-rendu';
 
 interface LigneClassement {
   participant: ParticipantRapporte;
+  note: string;
   sansReponse: boolean;
 }
 
@@ -99,7 +101,7 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
                     N'a répondu à aucune question
                   </td>
                 } @else {
-                  <td data-testid="synthese-score">{{ ligne.participant.note }}</td>
+                  <td data-testid="synthese-score">{{ ligne.note }}</td>
                 }
                 <td data-testid="synthese-avancement">
                   {{ ligne.participant.completion | percent }}
@@ -231,6 +233,7 @@ export class CoursSyntheseComponent {
     const participants = this.rapport()?.participants ?? [];
     const lignes = participants.map((participant) => ({
       participant,
+      note: NOMBRE_FRANCAIS.format(participant.note),
       sansReponse: participant.reponses.length === 0,
     }));
     return [

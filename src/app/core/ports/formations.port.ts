@@ -163,7 +163,7 @@ export interface ParticipantDeSeance {
 export type RegleNotation = RegleDeNotation;
 
 export interface VerdictReponse {
-  reussite: boolean;
+  reussite: boolean | null;
   libelleConfusion: string | null;
 }
 
@@ -326,6 +326,7 @@ export type RetourBrique =
         readonly juste: boolean;
         readonly libelleConfusion: string | null;
       }[];
+      readonly neSaitPas: boolean;
     }
   | ({ readonly kind: 'tentative' } & VerdictDeTentative)
   | ({ readonly kind: 'progression-enigmes' } & ProgressionDesEnigmes)

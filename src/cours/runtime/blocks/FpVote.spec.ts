@@ -1,8 +1,9 @@
-import { creerMetadonneesBrique } from '../../content/types';
+import { creerMetadonneesBrique, type VotePhase } from '../../content/types';
 import { buildVerdictDeReponse, buildVoteQuestion } from '../../../testing/factories/cours.factory';
 import {
   attendreLaSeuleOptionFausse,
   installerBrique,
+  noeudsOmbre,
   roleAffiche,
 } from '../../../testing/banc-de-brique';
 import { classesOrphelines } from '../../../testing/classes-briques';
@@ -32,6 +33,12 @@ const REVELATION = {
 const DELAI_CLIC_MS = 300;
 const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
 const RESULTATS = { total: 12, parOption: { a: 7, b: 4, c: 1 } };
+const PHASES: Readonly<Record<VotePhase, VotePhase>> = {
+  vote: 'vote',
+  discussion: 'discussion',
+  revote: 'revote',
+  revele: 'revele',
+};
 
 function ordreAffiche(element: FpVote): string[] {
   return [...(element.shadowRoot?.querySelectorAll('[data-testid="option"]') ?? [])].map(
@@ -49,6 +56,10 @@ function legende(element: FpVote): string {
 
 function marque(element: FpVote, nom: string): Element | null {
   return element.shadowRoot?.querySelector(`[data-testid="${nom}"]`) ?? null;
+}
+
+function voteProjete(histogramme: Element): string | null {
+  return histogramme.getAttribute('data-vote');
 }
 
 function mesurerDuree(lectureMs: number, rendus: number): number | undefined {
@@ -334,9 +345,9 @@ describe('FpVote', () => {
       expect(emis).toEqual([]);
     });
 
-    it('ne montre les verdicts qu a la revelation', () => {
+    it('QA-12 · ne montre aucun verdict tant que le serveur le retient, puis celui qu il sert a la revelation', () => {
       hote.phase = 'vote';
-      hote.verdicts = [buildVerdictDeReponse({ questionId: QUESTION.id })];
+      options(hote)[0].click();
 
       expect(marque(hote, 'verdict')).toBeNull();
       expect(options(hote).every((bouton) => bouton.disabled)).toBeTrue();
@@ -348,6 +359,28 @@ describe('FpVote', () => {
       ];
 
       expect(marque(hote, 'verdict')?.getAttribute('data-etat')).toBe('confirme');
+    });
+
+    for (const phase of [null, ...Object.values(PHASES)]) {
+      it(`QA-12 · montre en phase ${phase} le verdict que le serveur a servi : le retenir revient au serveur seul`, () => {
+        hote.phase = phase;
+        const question = phase === 'revote' || phase === 'revele' ? JUMELLE : QUESTION;
+        hote.verdicts = [buildVerdictDeReponse({ questionId: question.id })];
+
+        expect(marque(hote, 'verdict')?.getAttribute('data-etat')).toBe('a-revoir');
+      });
+    }
+
+    it('QA-01 · au presentateur, un vote jumele clos avant le revote projette son seul premier vote, sans le comparer a lui-meme', () => {
+      presenter();
+      hote.resultatsPremierVote = RESULTATS;
+      hote.resultats = RESULTATS;
+      hote.phase = 'vote';
+      hote.cloture = true;
+
+      const histogrammes = noeudsOmbre(hote, 'histogramme');
+      expect(histogrammes.map(voteProjete)).toEqual([null]);
+      expect(histogrammes[0].textContent).toContain('58%');
     });
 
     it('au presentateur, ne montre l histogramme qu en phase revele', () => {
@@ -384,13 +417,8 @@ describe('FpVote', () => {
     it('RET-20 · projette cote a cote les deux votes une fois la reponse revelee', () => {
       projeterLesDeuxVotesReveles();
 
-      const histogrammes = [
-        ...(hote.shadowRoot?.querySelectorAll('[data-testid="histogramme"]') ?? []),
-      ];
-      expect(histogrammes.map((element) => element.getAttribute('data-vote'))).toEqual([
-        'premier',
-        'second',
-      ]);
+      const histogrammes = noeudsOmbre(hote, 'histogramme');
+      expect(histogrammes.map(voteProjete)).toEqual(['premier', 'second']);
       expect(histogrammes[0].textContent).toContain('58%');
       expect(histogrammes[1].textContent).toContain('80%');
     });
