@@ -79,8 +79,8 @@ describe('SlideChartComponent', () => {
 
     const libelle = element(fixture).querySelector('[role="img"]')?.getAttribute('aria-label');
     expect(libelle).toContain('Une évolution à contrôler');
-    expect(libelle).toContain('Chiffre d’affaires: 120, 132.5, 150');
-    expect(libelle).toContain('Charges: 80, 90, 95');
+    expect(libelle).toContain('Chiffre d’affaires: 120 ; 132,5 ; 150. Charges: 80 ; 90 ; 95');
+    expect(libelle).not.toContain('132.5');
   });
 
   it('expose les données dans un tableau, nombres écrits à la française', () => {

@@ -220,8 +220,8 @@ export class SlideChartComponent {
 
   protected ariaLabel(): string {
     const data = this.series()
-      .map((serie) => `${serie.label}: ${serie.values.join(', ')}`)
-      .join('; ');
+      .map((serie) => `${serie.label}: ${serie.values.map((v) => this.formatValue(v)).join(' ; ')}`)
+      .join('. ');
     return `${this.title()}: ${this.caption()}: ${data}`.trim();
   }
 

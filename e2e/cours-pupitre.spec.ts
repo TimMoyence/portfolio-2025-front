@@ -290,8 +290,10 @@ test.describe('pupitre du formateur (QA-09, QA-10, QA-11)', () => {
     await ouvrirLePupitre(page);
 
     const statistiques = page.getByTestId('presentateur-statistiques');
-    await expect(statistiques).toContainText('13.5');
-    await expect(statistiques).toContainText('3.25');
+    await expect(statistiques).toContainText('13,5');
+    await expect(statistiques).toContainText('3,25');
+    await expect(statistiques).not.toContainText('13.5');
+    await expect(statistiques).not.toContainText('3.25');
     await expect(statistiques).toContainText(/92\s*%/);
     await expect(statistiques).toContainText(/64\s*%/);
     await expect(statistiques).toContainText(ENONCE_PROBLEME);
