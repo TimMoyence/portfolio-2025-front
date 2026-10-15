@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { fondEffectif, rapportDeContraste } from '../../../../../testing/contraste';
+import { uneImage } from '../../../../../testing/deux-images';
 import { INSTANTANE_B2_01 } from '../../../../../testing/fixtures/instantane-b2-01';
 import { INSTANTANE_B2_04 } from '../../../../../testing/fixtures/instantane-b2-04';
 import { INSTANTANE_B2_05 } from '../../../../../testing/fixtures/instantane-b2-05';
@@ -412,7 +413,7 @@ async function rendreALaLargeur(
 ): Promise<void> {
   element(fixture).style.width = largeur;
   for (let image = 0; image < 3; image += 1) {
-    await new Promise((suite) => requestAnimationFrame(suite));
+    await uneImage();
     fixture.detectChanges();
   }
 }

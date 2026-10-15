@@ -56,6 +56,7 @@ import {
   publierSurLaVue,
   stabiliserLaVue,
 } from '../../../../testing/vue-de-seance';
+import { uneImage } from '../../../../testing/deux-images';
 import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formations.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { demanderLaPieceJointe } from '../../../../testing/piece-jointe-demandee';
@@ -935,7 +936,7 @@ describe('CoursPresentateurComponent', () => {
     const racine = fixture.nativeElement as HTMLElement;
     racine.style.display = 'block';
     racine.style.width = '1100px';
-    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await uneImage();
     fixture.detectChanges();
     await fixture.whenStable();
     const corps = racine.querySelector<HTMLElement>('.presentateur-stage__body');
