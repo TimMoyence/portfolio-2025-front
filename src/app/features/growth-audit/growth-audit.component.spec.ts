@@ -1,3 +1,4 @@
+import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { NgForm } from '@angular/forms';
 import { of, throwError } from 'rxjs';
@@ -49,6 +50,15 @@ describe('GrowthAuditComponent', () => {
       imports: [GrowthAuditComponent],
       providers: [{ provide: AUDIT_REQUEST_PORT, useValue: auditServiceMock }],
     }).compileComponents();
+  });
+
+  it('envoie avec la demande d audit la langue du site lue de LOCALE_ID, sans sa région', () => {
+    TestBed.overrideProvider(LOCALE_ID, { useValue: 'en-GB' });
+    const fixture = TestBed.createComponent(GrowthAuditComponent);
+
+    remplirEtSoumettre(fixture.componentInstance, true);
+
+    expect(auditServiceMock.submit.calls.mostRecent().args[0].locale).toBe('en');
   });
 
   function soumettreEtDiffuser(event: AuditStreamEvent, auditId: string) {
@@ -232,16 +242,21 @@ describe('GrowthAuditComponent', () => {
       expect(form.resetForm).toHaveBeenCalledWith(vierge);
     });
 
-    it('affiche le message générique d un audit échoué, servi sans texte d erreur, et efface la chronologie', () => {
-      const { component } = soumettreEtDiffuser(buildAuditFailedEvent({ error: null }), 'audit-5');
+    for (const error of [null, 'connect ECONNREFUSED 10.0.0.5:5432']) {
+      it(`affiche le message générique d un audit échoué sans lire le texte d erreur servi (${error}), et efface la chronologie`, () => {
+        const { component } = soumettreEtDiffuser(buildAuditFailedEvent({ error }), 'audit-5');
 
-      expect(component.isAuditRunning).toBeFalse();
-      expect(component.errorMessage).toBe("L'audit a échoué.");
-      expect(component.auditSectionBadges).toEqual([]);
-    });
+        expect(component.isAuditRunning).toBeFalse();
+        expect(component.errorMessage).toBe("L'audit a échoué.");
+        expect(component.auditSectionBadges).toEqual([]);
+      });
+    }
 
     it('affiche la connexion interrompue sur un délai dépassé, sans relire le résumé ni rouvrir le flux', () => {
-      const { component } = soumettreEtDiffuser(buildAuditTimeoutEvent(), 'audit-6');
+      const { component } = soumettreEtDiffuser(
+        buildAuditTimeoutEvent({ error: 'SSE stream closed after 1800000ms' }),
+        'audit-6',
+      );
 
       expect(component.isAuditRunning).toBeFalse();
       expect(component.errorMessage).toContain('Connexion interrompue pendant l');

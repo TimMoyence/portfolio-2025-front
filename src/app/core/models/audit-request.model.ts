@@ -81,14 +81,14 @@ export interface AuditFailedEvent {
   status: 'FAILED';
   progress: number;
   done: boolean;
-  error: null;
+  error: string | null;
   updatedAt: string;
 }
 
 export interface AuditTimeoutEvent {
   auditId: string;
   status: 'TIMEOUT';
-  error: null;
+  error: string | null;
   updatedAt: string;
 }
 

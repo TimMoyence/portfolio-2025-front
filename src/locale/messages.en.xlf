@@ -121,8 +121,8 @@
         <note category="meaning">auth.error.passwordLength</note>
       </notes>
       <segment>
-        <source>Le mot de passe doit contenir au moins 8 caractères.</source>
-        <target>Password must be at least 8 characters long.</target>
+        <source>Le mot de passe doit contenir au moins 12 caractères.</source>
+        <target>Password must be at least 12 characters long.</target>
       </segment>
     </unit>
 
@@ -9165,8 +9165,26 @@
         <note category="location">src/app/features/privacy/privacy.component.html:59,61</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de contact</pc> : les informations que vous nous transmettez via le formulaire, ainsi que l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer) de l&apos;envoi. </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Contact data</pc>: the information you send us via the form, along with the IP address, the browser (user-agent) and the referring page (referer) of the submission. </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de contact</pc> : les informations que vous nous transmettez via le formulaire. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Contact data</pc>: the information you send us via the form. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCollecteTechnique">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:30,33</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données techniques de la demande</pc> : l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact, chaque demande d&apos;audit et chaque choix de cookies. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Technical request data</pc>: the IP address, the browser (user-agent) and the referring page (referer), recorded with each contact message, each audit request and each cookie choice. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCollecteSecurite">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:35,38</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de sécurité</pc> : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l&apos;adresse IP, le navigateur (user-agent) et l&apos;email saisi, inscrits au journal du serveur ; l&apos;adresse IP et le navigateur d&apos;une requête jugée suspecte. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Security data</pc>: for each sign-in or security event on your account, successful or not, the IP address, the browser (user-agent) and the email entered, written to the server log; the IP address and browser of a request flagged as suspicious. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteItem3">
@@ -9490,6 +9508,24 @@
       <segment>
         <source> Améliorer le site, de façon agrégée et anonyme. </source>
         <target> Improve the site, in an aggregated and anonymous way. </target>
+      </segment>
+    </unit>
+    <unit id="privacyUsagePreuve">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:61</note>
+      </notes>
+      <segment>
+        <source>Garder la preuve de votre choix de cookies.</source>
+        <target>Keep proof of your cookie choice.</target>
+      </segment>
+    </unit>
+    <unit id="privacyUsageSecurite">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:57,59</note>
+      </notes>
+      <segment>
+        <source> Protéger le site et vos comptes : repérer les connexions, les requêtes et les envois de formulaire suspects. </source>
+        <target> Protect the site and your accounts: detect suspicious sign-ins, requests and form submissions. </target>
       </segment>
     </unit>
     <unit id="privacyUsageTitle">

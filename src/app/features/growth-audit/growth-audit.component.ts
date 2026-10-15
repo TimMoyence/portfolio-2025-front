@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  LOCALE_ID,
   PLATFORM_ID,
   inject,
 } from '@angular/core';
@@ -11,9 +12,8 @@ import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import type { Subscription } from 'rxjs';
 import { estObjet } from '../../../cours/runtime/core/valeurs';
-import { LOCALES_DU_SITE } from '../../core/config/locales';
+import { langueDuSite } from '../../core/config/locales';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
-import { routeSansLocale } from '../../core/seo/chemins';
 import {
   type AuditContactMethod,
   type AuditRequestPayload,
@@ -79,7 +79,8 @@ export class GrowthAuditComponent implements OnDestroy {
   private readonly auditService: AuditRequestPort = inject(AUDIT_REQUEST_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-  readonly localeUrlPrefix = this.getLocaleUrlPrefix();
+  private readonly langue: NonNullable<AuditRequestPayload['locale']> =
+    langueDuSite(inject(LOCALE_ID)) === 'en' ? 'en' : 'fr';
   protected readonly iaTaskFallback = $localize`:@@auditIaTaskFallback:IA`;
 
   private streamSub?: Subscription;
@@ -235,16 +236,6 @@ export class GrowthAuditComponent implements OnDestroy {
     return formatSummaryText(this.auditSummary?.summaryText);
   }
 
-  private getLocaleUrlPrefix(): 'fr' | 'en' {
-    if (!this.isBrowser) {
-      return 'fr';
-    }
-
-    const { locale } = routeSansLocale(window.location.pathname.toLowerCase(), LOCALES_DU_SITE);
-
-    return locale === 'en' ? 'en' : 'fr';
-  }
-
   onContactMethodToggle(event: Event): void {
     const isPhone = (event.target as HTMLInputElement).checked;
     const method: AuditContactMethod = isPhone ? 'PHONE' : 'EMAIL';
@@ -283,7 +274,7 @@ export class GrowthAuditComponent implements OnDestroy {
     const payload = {
       website: this.auditFormState.website,
       formStartedAt: this.auditFormState.formStartedAt,
-      locale: this.localeUrlPrefix,
+      locale: this.langue,
       websiteName: this.auditFormState.websiteName.trim(),
       contactMethod: this.auditFormState.contactMethod,
       contactValue: this.auditFormState.contactValue.trim(),
