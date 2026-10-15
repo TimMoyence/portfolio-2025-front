@@ -86,6 +86,12 @@ describe('ToolkitFormComponent', () => {
     expect(enEchec.nativeElement.querySelector('[data-toolkit-error]')).not.toBeNull();
   });
 
+  it('transmet la langue du site, sans sa région, comme langue d acceptation des conditions', async () => {
+    await soumettre(fixture);
+
+    expect(portStub.requestToolkit.calls.mostRecent().args[0].termsLocale).toBe('en');
+  });
+
   it('transmet le formationSlug en @Input au port.requestToolkit', async () => {
     fixture.componentRef.setInput('formationSlug', 'automatiser-avec-ia');
 

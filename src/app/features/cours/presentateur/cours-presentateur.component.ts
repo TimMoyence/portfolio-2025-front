@@ -37,6 +37,7 @@ import type {
   RegleNotation,
   SyntheseConcept,
 } from '../../../core/ports/formations.port';
+import { part } from '../../../../cours/runtime/core/valeurs';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
@@ -452,7 +453,7 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
                 min="0"
                 [max]="dernierEcran()"
                 [value]="ecran()"
-                [style.--progress]="(ecran() / (dernierEcran() || 1)) * 100 + '%'"
+                [style.--progress]="avancementDuCurseur() * 100 + '%'"
                 [disabled]="pilotageBloque()"
                 (input)="changerLEcranDepuisLeCurseur($event)"
               />
@@ -724,6 +725,8 @@ export class CoursPresentateurComponent {
   readonly participants = computed(() => this.resultats()?.participants ?? 0);
 
   readonly dernierEcran = computed(() => (this.deroule()?.ecrans.length ?? 0) - 1);
+
+  protected readonly avancementDuCurseur = computed(() => part(this.ecran(), this.dernierEcran()));
 
   readonly ecranCourant = computed<EcranDeroule | null>(
     () => this.deroule()?.ecrans[this.ecran()] ?? null,

@@ -5,6 +5,7 @@ import type {
   ProgressionEnigme,
   ResultatQuestion,
 } from '../../../../../cours/content/types';
+import { part } from '../../../../../cours/runtime/core/valeurs';
 import type { ReponseLibreFormateur } from '../../../../core/ports/formations.port';
 import {
   enoncesDesActivites,
@@ -37,7 +38,7 @@ const LIBELLES_CONFIANCE: Readonly<Record<Confiance, string>> = {
 function ligneDEnigme(enigme: ProgressionEnigme): LigneDeLecture {
   return {
     reponses: enigme.ouvertes,
-    taux: enigme.ouvertes > 0 ? enigme.resolues / enigme.ouvertes : null,
+    taux: enigme.ouvertes > 0 ? part(enigme.resolues, enigme.ouvertes) : null,
     avecTaux: true,
   };
 }
@@ -49,7 +50,7 @@ function ligneDeResultat(resultat: ResultatQuestion | undefined): LigneDeLecture
     taux:
       resultat === undefined || reponses === 0
         ? null
-        : (resultat.scoreMoyen ?? resultat.correctes / reponses),
+        : (resultat.scoreMoyen ?? part(resultat.correctes, reponses)),
     avecTaux: true,
   };
 }
@@ -94,8 +95,7 @@ function confianceDe(lignes: readonly LigneDeLecture[], participants: number): C
   if (notees.every((ligne) => ligne.reponses === 0)) {
     return 'aucune';
   }
-  return participants > 0 &&
-    notees.every((ligne) => ligne.reponses / participants >= COUVERTURE_SOLIDE)
+  return notees.every((ligne) => part(ligne.reponses, participants) >= COUVERTURE_SOLIDE)
     ? 'solide'
     : 'a-confirmer';
 }

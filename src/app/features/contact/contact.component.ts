@@ -11,6 +11,7 @@ import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { APP_CONFIG } from '../../core/config/app-config.token';
+import { langueDuSite } from '../../core/config/locales';
 import type { ContactFormState } from '../../core/models/contact.model';
 import type { ContactPort } from '../../core/ports/contact.port';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
@@ -43,7 +44,7 @@ export class ContactComponent implements OnInit {
   contactErrorMessage?: string;
   contactSuccessMessage?: string;
   private readonly appConfig = inject(APP_CONFIG);
-  private readonly localeId = inject(LOCALE_ID);
+  private readonly langue = langueDuSite(inject(LOCALE_ID));
   private readonly contactPort: ContactPort = inject(CONTACT_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly route = inject(ActivatedRoute);
@@ -91,7 +92,7 @@ export class ContactComponent implements OnInit {
     role: '',
     terms: false,
     termsVersion: this.appConfig.gdpr?.termsVersion ?? '2026-02-11',
-    termsLocale: this.localeId,
+    termsLocale: this.langue,
     termsMethod: 'contact_form_checkbox',
   };
 
@@ -198,7 +199,7 @@ export class ContactComponent implements OnInit {
       role: trimOrEmpty(form.role),
       phone: telephoneFacultatif(form.phone),
       termsAcceptedAt: form.terms ? new Date().toISOString() : undefined,
-      termsLocale: this.localeId,
+      termsLocale: this.langue,
       termsVersion: this.appConfig.gdpr?.termsVersion ?? form.termsVersion,
       termsMethod: form.termsMethod ?? 'contact_form_checkbox',
     };

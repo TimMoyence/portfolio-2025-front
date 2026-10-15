@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { CONTACT_PORT } from '../../core/ports/contact.port';
+import { CONTACT_PORT, type ContactPort } from '../../core/ports/contact.port';
 import { ContactComponent } from './contact.component';
 import { createContactPortStubWithDefault } from '../../../testing/factories/contact.factory';
 import { pageMontee } from '../../../testing/montage-page';
+import { formulaireSoumis } from '../../../testing/page-auth';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 
 describe('ContactComponent', () => {
@@ -13,6 +14,27 @@ describe('ContactComponent', () => {
 
   it('should create', () => {
     expect(page.composant).toBeTruthy();
+  });
+
+  it('envoie la langue du site, sans sa région, comme langue d acceptation des conditions', () => {
+    const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
+
+    page.composant.handleContactSubmit(formulaireSoumis());
+
+    expect(port.contact.calls.mostRecent().args[0].termsLocale).toBe('en');
+  });
+
+  it('envoie null pour un téléphone blanc et le téléphone renseigné sans ses espaces', () => {
+    const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
+    for (const phone of ['   ', '  +33 6 12 34 56 78  ']) {
+      page.composant.contactForm = { ...page.composant.contactForm, phone };
+      page.composant.handleContactSubmit(formulaireSoumis());
+    }
+
+    expect(port.contact.calls.allArgs().map(([demande]) => demande.phone)).toEqual([
+      null,
+      '+33 6 12 34 56 78',
+    ]);
   });
 
   it('should render main title', () => {

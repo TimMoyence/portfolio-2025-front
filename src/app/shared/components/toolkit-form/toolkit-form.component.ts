@@ -9,6 +9,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { langueDuSite } from '../../../core/config/locales';
 import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import type { ToolkitRequest } from '../../../core/models/toolkit-request.model';
 import { HoneypotDirective } from '../../directives/honeypot.directive';
@@ -153,10 +154,7 @@ export class ToolkitFormComponent {
       email: this.email().trim(),
       formationSlug: this.formationSlug,
       termsVersion: TOOLKIT_FORM_TERMS_VERSION,
-      // Extrait le code langue court (fr, en) quand Angular donne un
-      // code regional (fr-FR, en-GB) : le backend n'a besoin que de la
-      // langue pour le rendu du mail, pas du pays.
-      termsLocale: this.locale.slice(0, 2).toLowerCase(),
+      termsLocale: langueDuSite(this.locale),
       termsAcceptedAt: new Date().toISOString(),
     };
 
