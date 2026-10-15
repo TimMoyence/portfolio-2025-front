@@ -47,12 +47,23 @@ function ouverte(cellule: HTMLElement): boolean {
   return cellule instanceof HTMLSelectElement && !cellule.disabled;
 }
 
+function enregistrerLesProductions(): void {
+  for (const [balise, [classe]] of Object.entries(BRIQUES_DE_PRODUCTION)) {
+    enregistrerBrique(balise, classe);
+  }
+}
+
+function verdictAffiche(hote: HTMLElement): readonly (string | null | undefined)[] {
+  const verdict = noeudOmbre(hote, 'verdict');
+  return [
+    verdict?.getAttribute('data-etat'),
+    verdict?.querySelector('strong')?.textContent,
+    libelleOmbre(hote, 'score'),
+  ];
+}
+
 describe('QA-06 · « je ne sais pas » à chaque production des cours servis', () => {
-  beforeAll(() => {
-    for (const [balise, [classe]] of Object.entries(BRIQUES_DE_PRODUCTION)) {
-      enregistrerBrique(balise, classe);
-    }
-  });
+  beforeAll(enregistrerLesProductions);
 
   it('sert des feuilles, des tables et des tris', () => {
     expect(new Set(PRODUCTIONS_SERVIES.map(({ brique }) => brique))).toEqual(
@@ -87,6 +98,25 @@ describe('QA-06 · « je ne sais pas » à chaque production des cours servis', 
         ),
       ).toEqual([true, true]);
       expect(reperes(hote, '[data-testid="cellule"]').filter(ouverte)).toEqual([]);
+      hote.remove();
+    });
+  }
+});
+
+describe('QP-05 · une production des cours servis n est « Juste » que toute juste', () => {
+  beforeAll(enregistrerLesProductions);
+
+  for (const { id, brique, plan } of PRODUCTIONS_SERVIES) {
+    it(`${id} : dit « À revoir » à une production juste à 80 %, score gardé, et « Juste » à la seule production toute juste`, () => {
+      const hote = creerBrique<BriqueDeProduction>(brique, (production) => {
+        production.plan = plan;
+      });
+
+      hote.verdict = buildVerdictDeProduction({ questionId: plan.id, correcte: false, score: 0.8 });
+      expect(verdictAffiche(hote)).toEqual(['a-revoir', 'À revoir', 'Score : 80 %']);
+
+      hote.verdict = buildVerdictDeProduction({ questionId: plan.id, correcte: true, score: 1 });
+      expect(verdictAffiche(hote)).toEqual(['confirme', 'Juste', 'Score : 100 %']);
       hote.remove();
     });
   }

@@ -41,6 +41,7 @@ import { buildEnvoiReponse } from '../../../../testing/factories/queue.factory';
 import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
+import { lireLesLibelles, lireLesLibellesDeChaqueEcran } from '../../../../testing/libelles-colles';
 import { lireMarque as lire } from '../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
@@ -776,6 +777,9 @@ describe('CoursEtudiantComponent', () => {
 
     expect(libellesDesVerdicts(fixture)).toEqual([['b2-s03-prediction', 'Question 1 : Manqué']]);
     expect(lire(fixture, 'etudiant-confusion')?.textContent).toContain('composés');
+    expect(
+      lireLesLibelles(fixture.nativeElement, ['etudiant-verdict', 'etudiant-confusion']),
+    ).toEqual({ colles: [], vuesAbsentes: [] });
   });
 
   it('envoie au retour du reseau la reponse mise en file hors ligne, une seule fois', async () => {
@@ -1413,6 +1417,31 @@ describe('CoursEtudiantComponent', () => {
       expect(lire(fixture, 'etudiant-fin')).toBeTruthy();
       expect(localStorage.getItem(`fp.${SESSION}.participant-1.fp-exit.B-SORTIE-09`)).toBeNull();
     });
+  });
+
+  describe('QP-02 · aucun libellé collé à sa valeur au poste étudiant des cours servis', () => {
+    const VUES_DU_POSTE = ['etudiant-titre', 'etudiant-progression', 'etudiant-plein-ecran'];
+
+    for (const [prefixe, { sujet: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+      it(`${prefixe} : l entrée, puis chaque écran avant et après révélation, séparent chaque libellé de sa valeur`, async () => {
+        sujet = servi;
+        port.lireSujet.and.returnValue(of(sujet));
+        const entree = lireLesLibelles(monter().nativeElement, ['etudiant-entree']);
+        const fixture = await rattacherALaSeanceEnCours();
+
+        const lecture = await lireLesLibellesDeChaqueEcran(
+          fixture.nativeElement,
+          sujet.ecrans,
+          (ecranCourant, pilotage) => diffuserPuisStabiliser(fixture, { ecranCourant, pilotage }),
+          VUES_DU_POSTE,
+        );
+
+        expect([entree, lecture]).toEqual([
+          { colles: [], vuesAbsentes: [] },
+          { colles: [], vuesAbsentes: [] },
+        ]);
+      });
+    }
   });
 
   describe('QA-12 · verdict d un vote des cours servis, retenu par le serveur jusqu a la revelation', () => {

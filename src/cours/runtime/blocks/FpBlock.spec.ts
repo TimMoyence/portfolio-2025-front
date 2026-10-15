@@ -1,4 +1,6 @@
 import { enregistrerBrique, roleAffiche } from '../../../testing/banc-de-brique';
+import { deuxImages } from '../../../testing/deux-images';
+import { compterLesAbonnesAuxPolices } from '../../../testing/polices';
 import { type EscapedHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
 
@@ -26,6 +28,20 @@ class FpBroken extends FpBlock {
   }
 }
 
+class FpSaisie extends FpBlock {
+  render(): EscapedHtml {
+    return safeHtml`<textarea data-cle="a"></textarea><div data-zone="z"><textarea data-cle="b"></textarea></div>`;
+  }
+
+  bind(): void {
+    return undefined;
+  }
+
+  reecrireLaZone(): void {
+    this.rafraichirZone('z', safeHtml`<textarea data-cle="b"></textarea>`);
+  }
+}
+
 describe('FpBlock', () => {
   let hote: FpDemo;
   let enveloppe: HTMLDivElement | null;
@@ -34,6 +50,7 @@ describe('FpBlock', () => {
   beforeAll(() => {
     enregistrerBrique('fp-demo', FpDemo);
     enregistrerBrique('fp-broken', FpBroken);
+    enregistrerBrique('fp-saisie', FpSaisie);
   });
 
   beforeEach(() => {
@@ -229,6 +246,26 @@ describe('FpBlock', () => {
     expect(remplacant).not.toBe(champ);
     expect(hote.shadowRoot?.activeElement).toBe(remplacant ?? null);
     expect([remplacant?.selectionStart, remplacant?.selectionEnd]).toEqual([2, 4]);
+  });
+
+  it('QP-09 · n abonne aux polices que les zones de saisie presentes d une brique masquee rafraichie, et plus aucune une fois retiree', async () => {
+    const abonnes = compterLesAbonnesAuxPolices();
+    enveloppe = document.createElement('div');
+    enveloppe.hidden = true;
+    document.body.appendChild(enveloppe);
+    const saisie = document.createElement('fp-saisie') as FpSaisie;
+    enveloppe.appendChild(saisie);
+    await deuxImages();
+    saisie.refresh();
+    await deuxImages();
+    saisie.reecrireLaZone();
+    await deuxImages();
+    const presente = abonnes();
+
+    enveloppe.remove();
+    await deuxImages();
+
+    expect({ presente, retiree: abonnes() }).toEqual({ presente: 2, retiree: 0 });
   });
 
   it('signale une erreur de rendu par un evenement compose', (done) => {

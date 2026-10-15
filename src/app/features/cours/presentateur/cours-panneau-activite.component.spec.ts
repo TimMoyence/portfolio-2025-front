@@ -8,6 +8,7 @@ import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-co
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
 import { buildEcranDeVoteJumele } from '../../../../testing/banc-du-pupitre';
+import { lignesDe } from '../../../../testing/lignes-de-texte';
 import {
   buildCardsortPlan,
   buildEscapeParcours,
@@ -581,5 +582,35 @@ describe('CoursPanneauActiviteComponent', () => {
         expect(entetes).toEqual(attendus.map(({ libelle }) => libelle));
       });
     }
+
+    it('QP-13 · dans un panneau de 482 px (table de 440 px mesurée en QA), aucun intitulé de ligne n est écrasé sur plus de deux lignes dans une colonne de moins de la moitié de la table, et chaque en-tête chiffré tient sur une ligne', () => {
+      const fautes = ECRANS.flatMap((ecran) => {
+        const fixture = monterAvecChaqueCle(ecran, attendusDe(ecran));
+        const hote = fixture.nativeElement as HTMLElement;
+        hote.style.inlineSize = '482px';
+        fixture.detectChanges();
+        const intitules = [...hote.querySelectorAll<HTMLElement>('tbody th[scope="row"]')]
+          .filter(
+            (entete) =>
+              lignesDe(entete) > 2 &&
+              entete.offsetWidth < (entete.closest('table')?.offsetWidth ?? 0) / 2,
+          )
+          .map(
+            (entete) =>
+              `${ecran.id} « ${entete.textContent?.trim()} » sur ${lignesDe(entete)} lignes dans ${entete.offsetWidth} px`,
+          );
+        const chiffres = [...hote.querySelectorAll('thead th:not(:first-child)')]
+          .filter((entete) => lignesDe(entete) > 1)
+          .map(
+            (entete) =>
+              `${ecran.id} en-tête « ${entete.textContent?.trim()} » sur ${lignesDe(entete)} lignes`,
+          );
+        fixture.destroy();
+        return [...intitules, ...chiffres];
+      });
+
+      expect(ECRANS.some(({ type }) => type === 'fp-escape')).toBeTrue();
+      expect(fautes).toEqual([]);
+    });
   });
 });

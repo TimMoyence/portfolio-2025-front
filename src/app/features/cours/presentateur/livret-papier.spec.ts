@@ -343,7 +343,6 @@ const SOURCES_DE_REPONSE: readonly (readonly [string, Partial<EcranDeroule>])[] 
             forme: 'references',
           },
         ],
-        seuilReussite: 1,
       },
     },
   ],
@@ -353,7 +352,6 @@ const SOURCES_DE_REPONSE: readonly (readonly [string, Partial<EcranDeroule>])[] 
       corrigeEcran: {
         type: 'classement',
         attendus: [{ carteId: 'carte', categorieId: 'categorie', justification: REPRISE }],
-        seuilReussite: 1,
       },
     },
   ],

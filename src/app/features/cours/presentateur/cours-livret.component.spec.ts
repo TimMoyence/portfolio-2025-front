@@ -8,7 +8,6 @@ import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02'
 import {
   buildDerouleCours,
   buildEcranDeroule,
-  buildGuideFormateur,
   buildLivretDuCours,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
@@ -332,11 +331,13 @@ describe('CoursLivretComponent', () => {
     });
   });
 
-  it('accompagne chaque écran du corrigé de ses notes, de ses bonnes réponses et du guide formateur', async () => {
+  it('QP-17 · accompagne chaque écran du corrigé de ses notes et de ses bonnes réponses, sans guide formateur même si le déroulé en porte encore un', async () => {
+    const ecranAvecGuide = {
+      ...buildEcranDeroule({ id: 'ecran-guide' }),
+      guide: { aDire: 'Guide retiré du livret', reponse: 'Réponse du guide retiré' },
+    };
     const livret = buildLivretDuCours({
-      corrige: buildDerouleCours({
-        ecrans: [buildEcranDeroule({ id: 'ecran-guide', guide: buildGuideFormateur() })],
-      }),
+      corrige: buildDerouleCours({ ecrans: [ecranAvecGuide] }),
     });
     const { fixture } = await monter(of(livret));
 
@@ -346,7 +347,8 @@ describe('CoursLivretComponent', () => {
       'Rappeler la formule de capitalisation',
     );
     expect(un(fixture, 'livret-reponses')?.textContent).toContain('1 480,24');
-    expect(un(fixture, 'livret-guide')?.textContent).toContain('Des milliers d’euros');
+    expect(un(fixture, 'livret-guide')).toBeNull();
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('guide retiré');
   });
 
   it('numérote chaque bonne réponse du corrigé par l’énoncé de sa question, sans identifiant technique', async () => {

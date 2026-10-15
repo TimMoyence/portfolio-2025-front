@@ -16,6 +16,7 @@ import {
   attendreAucunEnTeteSansSession,
   buildEcranDeVoteCorrige,
   demonterLeBancDuPupitre,
+  garnirLaSeance,
   JETON_FORMATEUR,
   buildEcranDeVoteJumele,
   monterLeBancSurLeDeroule,
@@ -30,21 +31,21 @@ import {
 import {
   buildDerouleCours,
   buildEcranDeroule,
-  buildGuideFormateur,
   buildRapportSeance,
   buildRegleNotation,
   buildResultatQuestion,
+  buildResultatsDeChaqueQuestion,
   buildResultatsSeance,
   buildStatistiquesSeance,
 } from '../../../../testing/factories/formations.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
-import {
-  buildVisualQuizSlide,
-  buildVisualSlide,
-} from '../../../../testing/factories/visual-slide.factory';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
+import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
 import {
+  attendreChaqueCalqueEntierDansLaToile,
+  attendreChaqueLibelleSepareDeSaValeur,
   attendreLaFermetureDuFlux,
   diffuserSurLaVue,
   idsDesEcransMontes,
@@ -169,6 +170,13 @@ describe('CoursPresentateurComponent', () => {
     deroule = nouveau;
     port.lireDeroule.and.returnValue(of(deroule));
     return ouvrirLaSeance();
+  }
+
+  async function ouvrirLeCoursServi(servi: DerouleCours): Promise<Fixture> {
+    garnirLaSeance(port, servi.ecrans);
+    const fixture = await ouvrirLaSeanceSur(servi);
+    publierSurLaVue(double, fixture, buildResultatsDeChaqueQuestion(servi.ecrans));
+    return fixture;
   }
 
   async function attendreLaSceneOuverte(ouvrir: () => Promise<Fixture>): Promise<void> {
@@ -533,26 +541,6 @@ describe('CoursPresentateurComponent', () => {
     expect(texte(fixture, 'presentateur-question-enonce')).toBe('Quelle échelle ?');
   });
 
-  it('ne rajoute pas de prose de transition dans le guide', async () => {
-    port.lireDeroule.and.returnValue(
-      of(
-        buildDerouleCours({
-          ecrans: [
-            buildEcranDeroule({ id: 'ecran-1' }),
-            buildEcranDeroule({ ...buildVisualSlide(), corriges: [], seuil: null }),
-          ],
-        }),
-      ),
-    );
-    const fixture = await ouvrirLaSeance();
-
-    const guide = (fixture.nativeElement as HTMLElement).querySelector(
-      '[data-testid="presentateur-guide"]',
-    );
-    expect(guide?.textContent ?? '').not.toContain('Lire un chiffre');
-    expect(guide?.textContent ?? '').not.toContain(buildVisualSlide().id);
-  });
-
   it('relit notes et reponses libres a chaque resultat du flux', async () => {
     const fixture = await ouvrirLaSeance();
     const lecturesAvant = port.lireAnnotations.calls.count();
@@ -837,17 +825,20 @@ describe('CoursPresentateurComponent', () => {
     expect(apercu(fixture)).toBe(ecran);
   });
 
-  it('R5 · presente les notes, le guide de facilitation, puis l activite, la lecture de la classe et la pedagogie', async () => {
-    const fixture = await ouvrirLaSeanceSur(
-      buildDerouleCours({ ecrans: [buildEcranDeroule({ guide: buildGuideFormateur() })] }),
-    );
+  it('R5 · QP-17 · presente les notes, puis l activite, la lecture de la classe et la pedagogie, sans guide de facilitation meme si le deroule en porte encore un', async () => {
+    const ecranAvecGuide = {
+      ...buildEcranDeroule(),
+      guide: { aDire: 'Guide retiré du pupitre', reponse: 'Réponse du guide retiré' },
+    };
+    const fixture = await ouvrirLaSeanceSur(buildDerouleCours({ ecrans: [ecranAvecGuide] }));
     const suit = (avant: string, apres: string): boolean =>
       (cible(fixture, avant).compareDocumentPosition(cible(fixture, apres)) &
         Node.DOCUMENT_POSITION_FOLLOWING) !==
       0;
 
-    expect(suit('presentateur-notes', 'presentateur-guide')).toBeTrue();
-    expect(suit('presentateur-guide', 'presentateur-questions')).toBeTrue();
+    expect(lire(fixture, 'presentateur-guide')).toBeNull();
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('guide retiré');
+    expect(suit('presentateur-notes', 'presentateur-questions')).toBeTrue();
     expect(suit('presentateur-questions', 'panneau-exporter-bilan')).toBeTrue();
   });
 
@@ -1295,6 +1286,51 @@ describe('CoursPresentateurComponent', () => {
 
       expect(cible(fixture, 'presentateur-maitrise-echec').getAttribute('role')).toBe('status');
     });
+  });
+
+  describe('QP-02 · aucun libellé collé à sa valeur au pupitre des cours servis', () => {
+    const VUES_DU_PUPITRE = [
+      'resultats-projetes-question',
+      'cours-correction',
+      'presentateur-question',
+      'lecture-classe-ligne',
+      'activite-participants',
+      'reponse-libre',
+      'activite-phase',
+      'activite-production',
+      'activite-production-cles',
+      'activite-billets',
+      'activite-etayage',
+      'activite-questions',
+    ];
+
+    for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+      it(`${prefixe} : chaque écran, avant et après révélation, sépare chaque libellé de sa valeur`, async () => {
+        const fixture = await ouvrirLeCoursServi(servi);
+
+        await attendreChaqueLibelleSepareDeSaValeur(
+          double,
+          fixture,
+          servi.ecrans,
+          VUES_DU_PUPITRE,
+          {
+            participants: 2,
+          },
+        );
+      });
+    }
+  });
+
+  describe('QP-CALQUE · la correction et les résultats projetés tiennent dans l aperçu du pupitre', () => {
+    for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+      it(`${prefixe} : sur chaque écran révélé, rien de la correction ni des résultats projetés n est coupé, ni réduit par un zoom que Safari arrête à 9 px`, async () => {
+        const fixture = await ouvrirLeCoursServi(servi);
+
+        await attendreChaqueCalqueEntierDansLaToile(double, fixture, servi.ecrans, {
+          participants: 2,
+        });
+      });
+    }
   });
 });
 

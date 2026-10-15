@@ -171,7 +171,6 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     const CORRIGE_ECRAN: CorrigeEcranPresentateur = {
       type: 'classement',
       attendus: [{ carteId: 'loyer', categorieId: 'fixe', justification: 'Montant stable' }],
-      seuilReussite: 0.8,
     };
 
     it('ne pose aucun corrige a l etudiant tant que l ecran ne sert pas de correction', () => {

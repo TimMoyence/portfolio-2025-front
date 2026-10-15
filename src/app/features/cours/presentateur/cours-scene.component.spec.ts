@@ -14,6 +14,7 @@ import {
   buildEcranDeVoteCorrige,
   buildReponsesALaMission,
   demonterLeBancDuPupitre,
+  garnirLaSeance,
   JETON_FORMATEUR,
   monterLeBancSurLeDeroule,
   monterSurLeBanc,
@@ -22,8 +23,10 @@ import {
   buildDerouleCours,
   buildEcranDeroule,
   buildResultatQuestion,
+  buildResultatsDeChaqueQuestion,
   buildResultatsSeance,
 } from '../../../../testing/factories/formations.factory';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import type { FpPlot } from '../../../../cours/runtime/blocks/FpPlot';
 import { attendreQue, briqueMontee } from '../../../../testing/briques-montees';
 import { buildPlotEnBarres, buildVoteQuestion } from '../../../../testing/factories/cours.factory';
@@ -31,10 +34,13 @@ import { buildVisualSlide } from '../../../../testing/factories/visual-slide.fac
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { cibleMarque } from '../../../../testing/marqueurs-dom';
 import {
+  attendreChaqueCalqueEntierDansLaToile,
+  attendreChaqueLibelleSepareDeSaValeur,
   attendreLaFermetureDuFlux,
   diffuserSurLaVue,
   ecransMontes,
   idsDesEcransMontes,
+  mettreLaToileALEchelle,
   stabiliserLaVue,
 } from '../../../../testing/vue-de-seance';
 import type { FormationsPort } from '../../../core/ports/formations.port';
@@ -502,5 +508,43 @@ describe('CoursSceneComponent', () => {
     await attendreQue(fixture, () => trace.valeurs['origine'] === 0, 'le réglage piloté');
 
     expect(trace.valeurs).toEqual({ origine: 0 });
+  });
+
+  async function projeterLeCoursServi(servi: DerouleCours): Promise<Fixture> {
+    garnirLaSeance(port, servi.ecrans);
+    port.lireDeroule.and.returnValue(of(servi));
+    const fixture = await monterEtStabiliser();
+    double.diffuserResultats(buildResultatsDeChaqueQuestion(servi.ecrans));
+    return fixture;
+  }
+
+  describe('QP-02 · aucun libellé collé à sa valeur en projection des cours servis', () => {
+    const VUES_DE_LA_SCENE = ['resultats-projetes-question', 'resultats-projetes-libres'];
+
+    for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+      it(`${prefixe} : chaque écran projeté, avant et après révélation, sépare chaque libellé de sa valeur`, async () => {
+        const fixture = await projeterLeCoursServi(servi);
+
+        await attendreChaqueLibelleSepareDeSaValeur(
+          double,
+          fixture,
+          servi.ecrans,
+          VUES_DE_LA_SCENE,
+        );
+      });
+    }
+  });
+
+  describe('QP-CALQUE · la correction et les résultats projetés tiennent dans la toile projetée', () => {
+    for (const echelle of [1.5, 0.625]) {
+      for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+        it(`${prefixe} : dans une toile projetée à l’échelle ${echelle}, sur chaque écran révélé, rien de la correction ni des résultats projetés n est coupé, ni réduit par un zoom que Safari arrête à 9 px`, async () => {
+          const fixture = await projeterLeCoursServi(servi);
+
+          expect(await mettreLaToileALEchelle(fixture, echelle)).toBeCloseTo(echelle, 2);
+          await attendreChaqueCalqueEntierDansLaToile(double, fixture, servi.ecrans);
+        });
+      }
+    }
   });
 });

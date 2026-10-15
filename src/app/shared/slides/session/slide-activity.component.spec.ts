@@ -1,3 +1,4 @@
+import { NgZone } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { attendreQue, briqueMontee, ROLES_DE_MONTAGE } from '../../../../testing/briques-montees';
 import {
@@ -265,6 +266,71 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
       expect(numerique.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(role);
     });
   }
+
+  it('laisse l application stable pendant que le minuteur du coffre bat à la seconde', async () => {
+    const coffre = ecransPublicsB2_01().find(({ type }) => type === 'fp-escape');
+    const fixture = monter({ slide: ECRAN_NUMERIQUE, role: 'etudiant', sessionId: 'seance-1' });
+    await brique(fixture, 'fp-numeric');
+    const zones: string[] = [];
+    const originel = window.setInterval.bind(window);
+    spyOn(window, 'setInterval').and.callFake(((...args: Parameters<typeof setInterval>) => {
+      zones.push(NgZone.isInAngularZone() ? 'angular' : 'hors');
+      return originel(...args);
+    }) as typeof setInterval);
+    TestBed.inject(NgZone).run(() => {
+      fixture.componentRef.setInput('slide', coffre);
+      fixture.detectChanges();
+    });
+    const minuteur = (): Element | null | undefined =>
+      (fixture.nativeElement as HTMLElement)
+        .querySelector('fp-escape')
+        ?.shadowRoot?.querySelector('[data-testid="minuteur"]');
+    for (let essai = 0; essai < 100 && minuteur() == null; essai += 1) {
+      fixture.detectChanges();
+      await new Promise((suite) => setTimeout(suite, 20));
+    }
+    await new Promise((suite) => setTimeout(suite, 1500));
+
+    expect(minuteur()).not.toBeNull();
+    expect(zones).toEqual(['hors']);
+    expect(TestBed.inject(NgZone).hasPendingMacrotasks).toBeFalse();
+    expect(fixture.isStable()).toBeTrue();
+  });
+
+  it('rend une brique hors de la zone Angular quand l écran change ou qu un retour lui est posé depuis la zone', async () => {
+    const fixture = monter({ slide: ECRAN_NUMERIQUE });
+    const zones: boolean[] = [];
+    const rendre = Object.getPrototypeOf(await brique(fixture, 'fp-numeric')) as {
+      refresh: () => void;
+    };
+    const originel = rendre.refresh;
+    spyOn(rendre, 'refresh').and.callFake(function (this: unknown) {
+      zones.push(NgZone.isInAngularZone());
+      originel.call(this);
+    });
+    const suivant = buildEcran({
+      id: 'b2-01-numerique-suivant',
+      type: 'fp-numeric',
+      donnees: { question: buildNumericQuestion() },
+    });
+
+    TestBed.inject(NgZone).run(() => {
+      fixture.componentRef.setInput('slide', suivant);
+      fixture.detectChanges();
+    });
+    const numerique = await brique(fixture, 'fp-numeric');
+    const auChangement = zones.splice(0);
+    TestBed.inject(NgZone).run(() => {
+      fixture.componentRef.setInput('retours', new Map([[suivant.id, [VERDICT]]]));
+      fixture.detectChanges();
+    });
+
+    expect(dans(numerique, 'confusion')?.textContent).toBe('Intérêts simples au lieu de composés');
+    expect(auChangement.length).toBeGreaterThan(0);
+    expect(auChangement).not.toContain(true);
+    expect(zones.length).toBeGreaterThan(0);
+    expect(zones).not.toContain(true);
+  });
 
   it('pose l entete d un questionnaire et monte une brique par question', async () => {
     const fixture = monter({ slide: buildEcranQuestionnaire() });

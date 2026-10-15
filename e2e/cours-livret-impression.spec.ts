@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import { libellesColles } from '../src/testing/libelles-colles';
+import { valeursSurUneForme } from '../src/testing/valeurs-sur-les-formes';
 import { intercepterApi, servirJson, servirSansContenu, SESSION_FORMATEUR } from './fixtures';
 import {
   hauteurDePageA,
@@ -405,6 +407,25 @@ test.describe('livret papier imprimé', () => {
 
       expect(debordants).toEqual([]);
     });
+
+    test(`${cours} · QP-02 · QP-18 · aucun texte imprimé ne touche ni ne chevauche son voisin, aucune valeur d un graphique ne touche une forme qui n est pas la sienne, au sujet comme au corrigé`, async ({
+      page,
+    }) => {
+      const slug = await servirLeLivret(page, cours);
+      const colles: string[] = [];
+      for (const vue of ['sujet', 'corrige'] as const) {
+        await imprimerLeLivret(page, slug, vue, FENETRE_LARGE);
+        await miseEnPageStable(page);
+        const livret = page.locator('.livret');
+        const jonctions = [
+          ...(await livret.evaluate(libellesColles, 'toutes' as const)),
+          ...(await livret.evaluate(valeursSurUneForme)),
+        ];
+        colles.push(...jonctions.map((jonction) => `${vue} · ${jonction}`));
+      }
+
+      expect(colles).toEqual([]);
+    });
   }
 
   for (const vue of ['sujet', 'corrige'] as const) {
@@ -524,5 +545,40 @@ test.describe('livret papier imprimé', () => {
         expect(large).toEqual(etroite);
       });
     }
+
+    test(`${cours} · à l’impression du sujet, une zone de saisie garde la hauteur de ses lignes, pas celle calculée pour l’écran`, async ({
+      page,
+    }) => {
+      const slug = await servirLeLivret(page, cours);
+      await imprimerLeLivret(page, slug, 'sujet', FENETRE_ETROITE);
+      await miseEnPageStable(page);
+
+      const zones = await page.locator('.livret').evaluate((livret) => {
+        const zonesDe = (racine: ParentNode): HTMLTextAreaElement[] => [
+          ...racine.querySelectorAll('textarea'),
+          ...[...racine.querySelectorAll('*')].flatMap((element) =>
+            element.shadowRoot === null ? [] : zonesDe(element.shadowRoot),
+          ),
+        ];
+        return zonesDe(livret).map((zone) => {
+          const racine = zone.getRootNode();
+          const hote = racine instanceof ShadowRoot ? racine.host : zone;
+          const calculee = zone.style.blockSize;
+          zone.style.blockSize = '';
+          const sesLignes = zone.offsetHeight;
+          zone.style.blockSize = `${2 * sesLignes}px`;
+          const imprimee = zone.offsetHeight;
+          zone.style.blockSize = calculee;
+          return {
+            ecran: hote.closest('[data-ecran]')?.getAttribute('data-ecran'),
+            imprimee,
+            sesLignes,
+          };
+        });
+      });
+
+      expect(zones.length).toBeGreaterThan(0);
+      expect(zones.filter(({ imprimee, sesLignes }) => imprimee !== sesLignes)).toEqual([]);
+    });
   }
 });

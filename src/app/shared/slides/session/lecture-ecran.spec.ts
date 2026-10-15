@@ -106,6 +106,32 @@ describe('enonces des defis de tous les cours servis', () => {
   }
 });
 
+describe('QP-01 · ne compte pas l activité libre d un rappel sans délai, sur les écrans des cours servis', () => {
+  const RAPPELS = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
+    ecransDuPupitreDe(instantane).filter(({ type }) => type === 'fp-recall'),
+  );
+
+  it('sert un rappel dans chacun des cours servis', () => {
+    expect(RAPPELS.length).toBe(INSTANTANES_DES_COURS_SERVIS.length);
+  });
+
+  for (const rappel of RAPPELS) {
+    const question = rappel.donnees?.['question'] as { readonly id: string };
+    const avecDelai = (delaiMs: unknown) => ({
+      ...rappel,
+      donnees: { ...rappel.donnees, delaiMs },
+    });
+
+    it(`${rappel.id} : aucune ligne « rappel » sans délai, où le poste n offre aucune saisie ; une ligne sinon`, () => {
+      expect([...enoncesDesActivites(avecDelai(0)).keys()]).toEqual([]);
+      expect([...enoncesDesActivites(avecDelai(8000)).keys()]).toEqual([`${question.id}:rappel`]);
+      expect([...enoncesDesActivites(avecDelai(undefined)).keys()]).toEqual([
+        `${question.id}:rappel`,
+      ]);
+    });
+  }
+});
+
 describe('lecture de l ecran', () => {
   it('lit la question du QCM principal d un ecran servi en presentation v2, sans correction', () => {
     const ecran = buildVisualQuizSlide();

@@ -17,7 +17,7 @@ interface EnvoiPro {
 
 const CAS = buildProCas();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
-const CLASSES_ATTENDUES = 13;
+const CLASSES_ATTENDUES = 12;
 const CLASSES_AVEC_QUESTIONS = 19;
 
 function cible(element: FpPro, repere: string): Element | null {
