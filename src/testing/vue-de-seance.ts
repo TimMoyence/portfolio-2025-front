@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import type { EcranContent, PilotageEcran, ResultatsSeance } from '../cours/content/types';
 import type { EtatSession } from '../cours/runtime/core/sync';
 import { SlideActivityComponent } from '../app/shared/slides/session/slide-activity.component';
-import { deuxImages } from './deux-images';
+import { deuxImages, uneImage } from './deux-images';
 import { elementsCoupes } from './elements-coupes';
 import type { FluxDouble } from './factories/sync.factory';
 import { type LectureDesLibelles, lireLesLibellesDeChaqueEcran } from './libelles-colles';
@@ -17,7 +17,8 @@ export async function stabiliserLaVue(fixture: ComponentFixture<VueDeSeance>): P
   fixture.detectChanges();
 }
 
-const POSES_DE_LA_MISE_EN_PAGE = 5;
+const IMAGES_DE_LA_MISE_EN_PAGE = 10;
+const IMAGES_STABLES = 2;
 
 function empreinteDeLaMiseEnPage(hote: HTMLElement): string {
   return [...hote.querySelectorAll<HTMLElement>('app-cours-presentation')]
@@ -35,17 +36,19 @@ export async function stabiliserLaMiseEnPage(
   const hote = fixture.nativeElement as HTMLElement;
   await stabiliserLaVue(fixture);
   let empreinte = empreinteDeLaMiseEnPage(hote);
-  for (let pose = 0; pose < POSES_DE_LA_MISE_EN_PAGE; pose += 1) {
+  let stables = 0;
+  for (let image = 0; image < IMAGES_DE_LA_MISE_EN_PAGE; image += 1) {
     const avant = empreinte;
-    await deuxImages();
+    await uneImage();
     await stabiliserLaVue(fixture);
     empreinte = empreinteDeLaMiseEnPage(hote);
-    if (empreinte === avant) {
+    stables = empreinte === avant ? stables + 1 : 0;
+    if (stables === IMAGES_STABLES) {
       return;
     }
   }
   throw new Error(
-    `mise en page non posée après ${POSES_DE_LA_MISE_EN_PAGE} paires d'images : ${empreinte}`,
+    `mise en page non posée après ${IMAGES_DE_LA_MISE_EN_PAGE} images : ${empreinte}`,
   );
 }
 

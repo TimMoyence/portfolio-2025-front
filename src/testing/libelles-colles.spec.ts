@@ -3,6 +3,10 @@ import { libellesColles } from './libelles-colles';
 
 describe('libellesColles', () => {
   const rendre = hoteDeRendu({ inlineSize: '40rem' });
+  const empilees = (decalage: string): string =>
+    `<div style="position:relative;height:4rem;font-size:1rem;line-height:1"><span style="position:absolute;top:0;right:0">1 000</span><span style="position:absolute;top:${decalage};right:0">500</span></div>`;
+  const aLEchelle = (echelle: number, contenu: string): string =>
+    `<div style="transform:scale(${echelle});transform-origin:0 0">${contenu}</div>`;
 
   it('signale un libellé collé à sa valeur, comme « score moyen90 % » vu en QA', () => {
     expect(libellesColles(rendre('<p><span>score moyen</span><strong>90 %</strong></p>'))).toEqual([
@@ -124,9 +128,6 @@ describe('libellesColles', () => {
   });
 
   it('signale deux étiquettes empilées qui se touchent, comme les graduations d un axe serré, mais pas deux paragraphes serrés', () => {
-    const empilees = (decalage: string): string =>
-      `<div style="position:relative;height:4rem;font-size:1rem;line-height:1"><span style="position:absolute;top:0;right:0">1 000</span><span style="position:absolute;top:${decalage};right:0">500</span></div>`;
-
     expect(libellesColles(rendre(empilees('0.8em')))).toEqual(['1 000|500']);
     expect(libellesColles(rendre(empilees('1.6em')))).toEqual([]);
     expect(
@@ -139,22 +140,18 @@ describe('libellesColles', () => {
   });
 
   it('juge chaque écart dans la mise en page, quelle que soit la réduction de la toile à l écran', () => {
-    const reduit = (echelle: number, contenu: string): string =>
-      `<div style="transform:scale(${echelle});transform-origin:0 0">${contenu}</div>`;
     const compte = (ecart: string): string =>
       `<p style="display:flex;gap:${ecart};margin:0"><strong>2</strong><span>réponse(s)</span></p>`;
-    const empilees = (decalage: string): string =>
-      `<div style="position:relative;height:4rem;font-size:1rem;line-height:1"><span style="position:absolute;top:0;right:0">1 000</span><span style="position:absolute;top:${decalage};right:0">500</span></div>`;
     const chevauchees =
       '<div style="position:relative;height:2rem;font-size:1rem"><span style="position:absolute;left:0">0000</span><span style="position:absolute;left:calc(4ch - 0.25rem)">−000</span></div>';
 
     expect({
       separees: [0.2, 1, 3].flatMap((echelle) => [
-        ...libellesColles(rendre(reduit(echelle, compte('0.35rem')))),
-        ...libellesColles(rendre(reduit(echelle, empilees('1.6em')))),
+        ...libellesColles(rendre(aLEchelle(echelle, compte('0.35rem')))),
+        ...libellesColles(rendre(aLEchelle(echelle, empilees('1.6em')))),
       ]),
-      colleesAGrandeEchelle: libellesColles(rendre(reduit(3, compte('0.1rem')))),
-      chevaucheesAPetiteEchelle: libellesColles(rendre(reduit(0.2, chevauchees))),
+      colleesAGrandeEchelle: libellesColles(rendre(aLEchelle(3, compte('0.1rem')))),
+      chevaucheesAPetiteEchelle: libellesColles(rendre(aLEchelle(0.2, chevauchees))),
     }).toEqual({
       separees: [],
       colleesAGrandeEchelle: ['2|réponse(s)'],
@@ -163,10 +160,6 @@ describe('libellesColles', () => {
   });
 
   it('signale deux étiquettes empilées à 1 px de mise en page, dans une toile agrandie comme à ×1', () => {
-    const reduit = (echelle: number, contenu: string): string =>
-      `<div style="transform:scale(${echelle});transform-origin:0 0">${contenu}</div>`;
-    const empilees = (decalage: string): string =>
-      `<div style="position:relative;height:4rem;font-size:1rem;line-height:1"><span style="position:absolute;top:0;right:0">1 000</span><span style="position:absolute;top:${decalage};right:0">500</span></div>`;
     const mesure = rendre(empilees('3rem'));
     const plage = document.createRange();
     plage.selectNodeContents(mesure.querySelector('span')?.firstChild as Node);
@@ -175,8 +168,8 @@ describe('libellesColles', () => {
 
     expect({
       hauteurLue: hauteur > 0,
-      collees: [3, 1.5, 1].map((echelle) => libellesColles(rendre(reduit(echelle, aUnPixel)))),
-      eloigneesAGrandeEchelle: libellesColles(rendre(reduit(3, empilees('1.6em')))),
+      collees: [3, 1.5, 1].map((echelle) => libellesColles(rendre(aLEchelle(echelle, aUnPixel)))),
+      eloigneesAGrandeEchelle: libellesColles(rendre(aLEchelle(3, empilees('1.6em')))),
     }).toEqual({
       hauteurLue: true,
       collees: [['1 000|500'], ['1 000|500'], ['1 000|500']],
