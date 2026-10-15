@@ -178,6 +178,7 @@ export const cardsort = `
 :where(.fp-root) .fp-cardsort__progression {
   color: var(--fp-ink-mute);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   letter-spacing: 0.02em;
 }
 
@@ -191,6 +192,7 @@ export const cardsort = `
 :where(.fp-root) .fp-cardsort__chrono {
   color: var(--fp-ink-mute);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-variant-numeric: tabular-nums;
 }
 

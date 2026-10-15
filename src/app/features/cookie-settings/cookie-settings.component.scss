@@ -1,4 +1,5 @@
 @use '../legal/legal-hero';
+@use '../../styles-shared/mono';
 
 :host {
   display: block;
@@ -39,7 +40,7 @@
   line-height: 1.55;
 }
 .ck-item .ck-tag {
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 11px;
   color: var(--teal-deep);
   margin-top: 8px;

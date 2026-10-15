@@ -1,4 +1,5 @@
 @use '../../styles-shared/breakpoints' as bp;
+@use '../../styles-shared/mono';
 
 .modes {
   display: grid;
@@ -25,7 +26,7 @@
   }
 
   .mode-n {
-    font-family: var(--font-mono);
+    @include mono.police;
     font-size: 13px;
     color: var(--teal-deep);
   }
@@ -90,7 +91,7 @@
   }
 
   .diff-n {
-    font-family: var(--font-mono);
+    @include mono.police;
     font-size: 12px;
     opacity: 0.6;
   }

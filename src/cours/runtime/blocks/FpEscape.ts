@@ -1,6 +1,6 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { estObjet } from '../core/valeurs';
-import { MINUTE_MS, SECONDE_MS } from './battement';
+import { Battement, formaterChrono, SECONDE_MS } from './battement';
 import { FpContenu } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 import type { ProgressionDesEnigmes, VerdictDeTentative } from './retours';
@@ -93,8 +93,10 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
   private enVol: string | null = null;
   private saisie = '';
   private indiceOuvert = false;
+  private attenteIndice = false;
   private message = '';
   private solutionnaire: Solutionnaire | null = null;
+  private readonly battement = new Battement(() => this.battre());
 
   set parcours(valeur: EscapeParcoursPublic | null) {
     this.poserLeContenu(valeur, projeterParcours);
@@ -108,7 +110,13 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     this.enVol = null;
     this.saisie = '';
     this.indiceOuvert = false;
+    this.attenteIndice = false;
     this.message = '';
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.battement.arreter();
   }
 
   get parcours(): EscapeParcoursPublic | null {
@@ -170,7 +178,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     const retour =
       this.presentateur() || this.surPapier()
         ? VIDE
-        : safeHtml`<p class="fp-escape__annonce" role="status" aria-live="polite" data-testid="annonce">${escapeHtml(this.message)}</p>
+        : safeHtml`<p class="fp-escape__annonce" role="status" aria-live="polite" data-testid="annonce" data-zone="annonce">${escapeHtml(this.message)}</p>
         ${this.annonces()}`;
     return safeHtml`
       <section class="fp-carte fp-scene fp-escape__parcours">
@@ -185,6 +193,9 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
   }
 
   bind(racine: ShadowRoot): void {
+    if (racine.querySelector('[data-testid="minuteur"]') !== null) {
+      this.battement.demarrer();
+    }
     if (!this.suivreEtSaisir(this.cleAffichage())) {
       return;
     }
@@ -204,6 +215,25 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
       ?.addEventListener('click', () => this.demanderIndice());
   }
 
+  private battre(): void {
+    const minuteur = this.racine.querySelector<HTMLElement>('[data-testid="minuteur"]');
+    if (minuteur === null) {
+      this.battement.arreter();
+      return;
+    }
+    minuteur.dataset['echu'] = String(this.echu());
+    this.rafraichirZone('minuteur', this.tempsDuMinuteur());
+    const indice = this.racine.querySelector<HTMLElement>('[data-testid="demander-indice"]');
+    if (indice !== null) {
+      indice.dataset['pret'] = String(this.indiceDisponible());
+    }
+    if (this.attenteIndice) {
+      this.message = this.attenteDeLIndice();
+      this.attenteIndice = this.message !== '';
+      this.rafraichirZone('annonce', escapeHtml(this.message));
+    }
+  }
+
   protected override appliquerErreur(valeur: string | null): void {
     if (valeur !== null) {
       this.enVol = null;
@@ -221,13 +251,18 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
       this.fragments.set(tentative.enigmeId, tentative.fragment);
       this.saisie = '';
       this.indiceOuvert = false;
+      this.attenteIndice = false;
       this.message = deja ? this.message : this.annonceOuverture();
       return;
     }
-    this.message =
-      tentative.tentativesRestantes <= 0
-        ? this.texte('escape-tentatives-epuisees')
-        : this.texte('escape-a-chercher');
+    if (tentative.tentativesRestantes > 0) {
+      this.message = this.texte('escape-a-chercher');
+      return;
+    }
+    this.attenteIndice = false;
+    this.message = this.acheve()
+      ? this.annonceOuverture()
+      : this.texte('escape-tentatives-epuisees');
   }
 
   private tentativesMax(): number {
@@ -284,15 +319,19 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
   }
 
   private minuteur(): EscapedHtml {
+    return safeHtml`<p class="fp-escape__minuteur" data-testid="minuteur" data-zone="minuteur" data-echu="${escapeHtml(this.echu())}">${this.tempsDuMinuteur()}</p>`;
+  }
+
+  private echu(): boolean {
     const budget = this.interne?.budgetEnigmeMs ?? 0;
+    return budget > 0 && this.depuisAffichage() >= budget;
+  }
+
+  private tempsDuMinuteur(): EscapedHtml {
     const ecoule = this.depuisAffichage();
-    const echu = budget > 0 && ecoule >= budget;
-    return safeHtml`
-      <p class="fp-escape__minuteur" data-testid="minuteur" data-echu="${escapeHtml(echu)}">
-        ${escapeHtml(this.texte('escape-minuteur'))} ${Math.floor(ecoule / MINUTE_MS)} / ${Math.round(budget / MINUTE_MS)} ${escapeHtml(this.texte('escape-minuteur-annonce'))}
-        ${echu ? this.echeance() : VIDE}
-      </p>
-    `;
+    const secondesPleines = ecoule - (ecoule % SECONDE_MS);
+    const budget = this.interne?.budgetEnigmeMs ?? 0;
+    return safeHtml`${escapeHtml(this.texte('escape-minuteur'))} ${escapeHtml(formaterChrono(secondesPleines))} / ${escapeHtml(formaterChrono(budget))} ${escapeHtml(this.texte('escape-minuteur-annonce'))} ${this.echu() ? this.echeance() : VIDE}`;
   }
 
   private echeance(): EscapedHtml {
@@ -348,7 +387,8 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
       return safeHtml`<p class="fp-escape__verrou" data-testid="verrou">${escapeHtml(this.texte('escape-verrouillee'))}</p>`;
     }
     if (etat === 'epuisee') {
-      return safeHtml`<p class="fp-escape__verrou" data-testid="epuisee">${escapeHtml(this.texte('escape-tentatives-epuisees'))}</p>`;
+      const derniere = this.interne?.enigmes.at(-1)?.id === enigme.id;
+      return safeHtml`<p class="fp-escape__verrou" data-testid="epuisee">${escapeHtml(this.texte(derniere ? 'escape-tentatives-epuisees-derniere' : 'escape-tentatives-epuisees'))}</p>`;
     }
     if (etat === 'resolue') {
       return safeHtml`<p class="fp-escape__fragment" data-testid="fragment"><span class="fp-escape__mention">${escapeHtml(this.texte('escape-fragment'))}</span> <span class="fp-montant">${escapeHtml(this.fragments.get(enigme.id) ?? '')}</span></p>`;
@@ -404,13 +444,22 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     return this.depuisAffichage() >= (this.interne?.delaiIndiceMs ?? 0);
   }
 
-  private demanderIndice(): void {
+  private attenteDeLIndice(): string {
     const reste = (this.interne?.delaiIndiceMs ?? 0) - this.depuisAffichage();
-    if (reste > 0) {
-      this.message = `${this.texte('escape-indice-attente')} ${Math.ceil(reste / SECONDE_MS)} ${this.texte('escape-secondes')}`;
+    return reste > 0
+      ? `${this.texte('escape-indice-attente')} ${Math.ceil(reste / SECONDE_MS)} ${this.texte('escape-secondes')}`
+      : '';
+  }
+
+  private demanderIndice(): void {
+    const attente = this.attenteDeLIndice();
+    if (attente !== '') {
+      this.attenteIndice = true;
+      this.message = attente;
       this.refresh();
       return;
     }
+    this.attenteIndice = false;
     this.indiceOuvert = true;
     this.message = this.texte('escape-indice-pris');
     this.refresh();
@@ -442,7 +491,8 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
   private annonceOuverture(): string {
     const suivante = this.enigmeOuverte();
     if (suivante === null) {
-      return `${this.texte('escape-termine')} ${this.codeReconstitue()}`;
+      const complet = this.resolues() === this.total();
+      return `${this.texte(complet ? 'escape-termine' : 'escape-incomplet')} ${this.codeReconstitue()}`;
     }
     return `${this.texte('escape-debloquee')} ${suivante.intitule}`;
   }

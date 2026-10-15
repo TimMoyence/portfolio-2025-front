@@ -1,4 +1,5 @@
 import { feuilleDe } from '../cours/runtime/design/blocks';
+import { defileurDeTableau } from '../cours/runtime/design/defileur';
 import { base, correction, tokens } from '../cours/runtime/design/styles';
 
 const ROLES = ['etudiant', 'presentateur'] as const;
@@ -15,7 +16,7 @@ export function classesEmises(hote: HTMLElement): Set<string> {
 }
 
 export function classesOrphelines(hote: HTMLElement, brique: string): string[] {
-  const feuille = [tokens, base, feuilleDe(brique), correction].join('\n');
+  const feuille = [tokens, base, defileurDeTableau, feuilleDe(brique), correction].join('\n');
   return [...classesEmises(hote)].filter(
     (classe) => !new RegExp(`\\.${classe}(?![\\w-])`).test(feuille),
   );

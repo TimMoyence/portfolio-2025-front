@@ -8,6 +8,7 @@ import {
   enoncesDesActivites,
   enoncesDuDeroule,
 } from '../../../shared/slides/session/lecture-ecran';
+import { DefileurDeTableauComponent } from '../../../shared/slides/defileur-de-tableau/defileur-de-tableau.component';
 import { NOMBRE_FRANCAIS } from '../../../shared/slides/layouts/axe-gradue';
 import { telechargerFichier } from '../../../shared/utils/telechargement.utils';
 import { chantierApresRendu } from './chantier-apres-rendu';
@@ -68,7 +69,7 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
 @Component({
   selector: 'app-cours-synthese',
   standalone: true,
-  imports: [PercentPipe],
+  imports: [DefileurDeTableauComponent, PercentPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="cours-synthese">
@@ -79,73 +80,77 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
           Aucun participant n'a rejoint cette séance : il n'y a rien à analyser.
         </p>
       } @else {
-        <table data-testid="synthese-classement">
-          <thead>
-            <tr>
-              <th i18n="synthese.etudiant|@@syntheseEtudiant">Étudiant</th>
-              <th i18n="synthese.score|@@syntheseScore">Score</th>
-              <th i18n="synthese.avancement|@@syntheseAvancement">Avancement</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (ligne of classement(); track ligne.participant.email) {
-              <tr data-testid="synthese-ligne">
-                <td data-testid="synthese-nom">
-                  {{ ligne.participant.prenom }} {{ ligne.participant.nom }}
-                </td>
-                @if (ligne.sansReponse) {
-                  <td
-                    data-testid="synthese-sans-reponse"
-                    i18n="synthese.sansReponse|@@syntheseSansReponse"
-                  >
-                    N'a répondu à aucune question
-                  </td>
-                } @else {
-                  <td data-testid="synthese-score">{{ ligne.note }}</td>
-                }
-                <td data-testid="synthese-avancement">
-                  {{ ligne.participant.completion | percent }}
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-        <section>
-          <h3 i18n="synthese.questionsTitre|@@syntheseQuestionsTitre">Résultats par question</h3>
-          <table data-testid="synthese-questions">
-            <caption i18n="synthese.questionsLegende|@@syntheseQuestionsLegende">
-              Bonnes réponses, total et « je ne sais pas » pour chaque question de la séance
-            </caption>
+        <app-defileur-de-tableau>
+          <table data-testid="synthese-classement">
             <thead>
               <tr>
-                <th scope="col" i18n="synthese.questionColonne|@@syntheseQuestionColonne">
-                  Question
-                </th>
-                <th scope="col" i18n="synthese.correctesColonne|@@syntheseCorrectesColonne">
-                  Bonnes réponses
-                </th>
-                <th scope="col" i18n="synthese.totalColonne|@@syntheseTotalColonne">Total</th>
-                <th scope="col" i18n="synthese.neSaitPasColonne|@@syntheseNeSaitPasColonne">
-                  Je ne sais pas
-                </th>
+                <th i18n="synthese.etudiant|@@syntheseEtudiant">Étudiant</th>
+                <th i18n="synthese.score|@@syntheseScore">Score</th>
+                <th i18n="synthese.avancement|@@syntheseAvancement">Avancement</th>
               </tr>
             </thead>
             <tbody>
-              @for (question of questions(); track question.questionId) {
-                <tr data-testid="synthese-question-ligne">
-                  <th scope="row">
-                    @if (enonces().questions.get(question.questionId); as enonce) {
-                      <span data-testid="synthese-question-libelle">{{ enonce }}</span>
-                    }
-                    <small data-testid="synthese-question-id">{{ question.questionId }}</small>
-                  </th>
-                  <td data-testid="synthese-question-correctes">{{ question.correctes }}</td>
-                  <td data-testid="synthese-question-total">{{ question.total }}</td>
-                  <td data-testid="synthese-question-ne-sait-pas">{{ question.neSaitPas }}</td>
+              @for (ligne of classement(); track ligne.participant.email) {
+                <tr data-testid="synthese-ligne">
+                  <td data-testid="synthese-nom">
+                    {{ ligne.participant.prenom }} {{ ligne.participant.nom }}
+                  </td>
+                  @if (ligne.sansReponse) {
+                    <td
+                      data-testid="synthese-sans-reponse"
+                      i18n="synthese.sansReponse|@@syntheseSansReponse"
+                    >
+                      N'a répondu à aucune question
+                    </td>
+                  } @else {
+                    <td data-testid="synthese-score">{{ ligne.note }}</td>
+                  }
+                  <td data-testid="synthese-avancement">
+                    {{ ligne.participant.completion | percent }}
+                  </td>
                 </tr>
               }
             </tbody>
           </table>
+        </app-defileur-de-tableau>
+        <section>
+          <h3 i18n="synthese.questionsTitre|@@syntheseQuestionsTitre">Résultats par question</h3>
+          <app-defileur-de-tableau>
+            <table data-testid="synthese-questions">
+              <caption i18n="synthese.questionsLegende|@@syntheseQuestionsLegende">
+                Bonnes réponses, total et « je ne sais pas » pour chaque question de la séance
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col" i18n="synthese.questionColonne|@@syntheseQuestionColonne">
+                    Question
+                  </th>
+                  <th scope="col" i18n="synthese.correctesColonne|@@syntheseCorrectesColonne">
+                    Bonnes réponses
+                  </th>
+                  <th scope="col" i18n="synthese.totalColonne|@@syntheseTotalColonne">Total</th>
+                  <th scope="col" i18n="synthese.neSaitPasColonne|@@syntheseNeSaitPasColonne">
+                    Je ne sais pas
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (question of questions(); track question.questionId) {
+                  <tr data-testid="synthese-question-ligne">
+                    <th scope="row">
+                      @if (enonces().questions.get(question.questionId); as enonce) {
+                        <span data-testid="synthese-question-libelle">{{ enonce }}</span>
+                      }
+                      <small data-testid="synthese-question-id">{{ question.questionId }}</small>
+                    </th>
+                    <td data-testid="synthese-question-correctes">{{ question.correctes }}</td>
+                    <td data-testid="synthese-question-total">{{ question.total }}</td>
+                    <td data-testid="synthese-question-ne-sait-pas">{{ question.neSaitPas }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </app-defileur-de-tableau>
         </section>
         <section>
           <h3 i18n="synthese.confusionsTitre|@@syntheseConfusionsTitre">

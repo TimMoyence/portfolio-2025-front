@@ -24,6 +24,7 @@ import {
   questionsDeLEcran,
 } from '../../../shared/slides/session/lecture-ecran';
 import { part } from '../../../../cours/runtime/core/valeurs';
+import { TenirDansSaPlaceDirective } from '../../../shared/slides/session/tenir-dans-sa-place.directive';
 import type { GroupeDeReponses } from './panneau-pedagogique/panneau-reponses-libres.component';
 import { grouperLesReponses } from './panneau-pedagogique/panneau-reponses-libres.component';
 
@@ -91,7 +92,7 @@ function resultatsProjetes(
 @Component({
   selector: 'app-cours-resultats-projetes',
   standalone: true,
-  imports: [PercentPipe],
+  imports: [PercentPipe, TenirDansSaPlaceDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (actif()) {
@@ -105,72 +106,74 @@ function resultatsProjetes(
             <strong>{{ resultats()?.participants ?? 0 }}</strong>
           </p>
         </header>
-        <div class="resultats-projetes__grille">
-          @for (question of questions(); track question.id) {
-            <section class="resultats-projetes__carte" data-testid="resultats-projetes-question">
-              @if (question.enonce !== '') {
-                <p class="resultats-projetes__enonce">{{ question.enonce }}</p>
-              }
-              <p class="resultats-projetes__compte">
-                <strong data-testid="resultats-projetes-total">{{ question.total }}</strong>
-                <span i18n="@@resultatsProjetesReponses">réponse(s)</span>
-                @if (revele() && question.total > 0) {
-                  ·
-                  @if (question.scoreMoyen !== null) {
-                    <span i18n="@@resultatsProjetesScoreMoyen">score moyen</span>
-                    <strong>{{ question.scoreMoyen | percent }}</strong>
-                  } @else {
-                    <strong>{{ question.partJuste | percent }}</strong>
-                    <span i18n="@@resultatsProjetesJustes">de réponses justes</span>
-                  }
+        <div class="resultats-projetes__place">
+          <div class="resultats-projetes__grille" appTenirDansSaPlace>
+            @for (question of questions(); track question.id) {
+              <section class="resultats-projetes__carte" data-testid="resultats-projetes-question">
+                @if (question.enonce !== '') {
+                  <p class="resultats-projetes__enonce">{{ question.enonce }}</p>
                 }
-              </p>
-              @if (question.barres.length > 0) {
-                <ul class="resultats-projetes__barres">
-                  @for (barre of question.barres; track barre.id) {
-                    <li data-testid="resultats-projetes-barre" [attr.data-option]="barre.id">
-                      <span class="resultats-projetes__libelle">{{ barre.libelle }}</span>
-                      <span class="resultats-projetes__jauge">
-                        <span [style.inline-size.%]="barre.part * 100"></span>
-                      </span>
-                      <strong>{{ barre.compte }}</strong>
-                    </li>
+                <p class="resultats-projetes__compte">
+                  <strong data-testid="resultats-projetes-total">{{ question.total }}</strong>
+                  <span i18n="@@resultatsProjetesReponses">réponse(s)</span>
+                  @if (revele() && question.total > 0) {
+                    ·
+                    @if (question.scoreMoyen !== null) {
+                      <span i18n="@@resultatsProjetesScoreMoyen">score moyen</span>
+                      <strong>{{ question.scoreMoyen | percent }}</strong>
+                    } @else {
+                      <strong>{{ question.partJuste | percent }}</strong>
+                      <span i18n="@@resultatsProjetesJustes">de réponses justes</span>
+                    }
+                  }
+                </p>
+                @if (question.barres.length > 0) {
+                  <ul class="resultats-projetes__barres">
+                    @for (barre of question.barres; track barre.id) {
+                      <li data-testid="resultats-projetes-barre" [attr.data-option]="barre.id">
+                        <span class="resultats-projetes__libelle">{{ barre.libelle }}</span>
+                        <span class="resultats-projetes__jauge">
+                          <span [style.inline-size.%]="barre.part * 100"></span>
+                        </span>
+                        <strong>{{ barre.compte }}</strong>
+                      </li>
+                    }
+                  </ul>
+                }
+              </section>
+            }
+            @for (groupe of groupes(); track groupe.activityId) {
+              <section class="resultats-projetes__carte" data-testid="resultats-projetes-libres">
+                @if (groupe.enonce !== null) {
+                  <p class="resultats-projetes__enonce">{{ groupe.enonce }}</p>
+                }
+                <p class="resultats-projetes__compte">
+                  <strong>{{ groupe.reponses.length }}</strong>
+                  <span i18n="@@resultatsProjetesReponses">réponse(s)</span>
+                </p>
+                <ul class="resultats-projetes__libres">
+                  @for (reponse of dernieres(groupe); track reponse.id) {
+                    <li data-testid="resultats-projetes-reponse">{{ reponse.response }}</li>
                   }
                 </ul>
-              }
-            </section>
-          }
-          @for (groupe of groupes(); track groupe.activityId) {
-            <section class="resultats-projetes__carte" data-testid="resultats-projetes-libres">
-              @if (groupe.enonce !== null) {
-                <p class="resultats-projetes__enonce">{{ groupe.enonce }}</p>
-              }
-              <p class="resultats-projetes__compte">
-                <strong>{{ groupe.reponses.length }}</strong>
-                <span i18n="@@resultatsProjetesReponses">réponse(s)</span>
+              </section>
+            }
+            @if (lectureEchouee()) {
+              <p
+                class="resultats-projetes__vide"
+                role="alert"
+                data-testid="resultats-projetes-echec"
+                i18n="@@resultatsProjetesEchec"
+              >
+                Les réponses libres n’ont pas pu être relues : elles le seront au prochain résultat.
               </p>
-              <ul class="resultats-projetes__libres">
-                @for (reponse of dernieres(groupe); track reponse.id) {
-                  <li data-testid="resultats-projetes-reponse">{{ reponse.response }}</li>
-                }
-              </ul>
-            </section>
-          }
-          @if (lectureEchouee()) {
-            <p
-              class="resultats-projetes__vide"
-              role="alert"
-              data-testid="resultats-projetes-echec"
-              i18n="@@resultatsProjetesEchec"
-            >
-              Les réponses libres n’ont pas pu être relues : elles le seront au prochain résultat.
-            </p>
-          }
-          @if (questions().length === 0 && groupes().length === 0) {
-            <p class="resultats-projetes__vide" i18n="@@resultatsProjetesVide">
-              Aucune réponse reçue pour l’instant.
-            </p>
-          }
+            }
+            @if (questions().length === 0 && groupes().length === 0) {
+              <p class="resultats-projetes__vide" i18n="@@resultatsProjetesVide">
+                Aucune réponse reçue pour l’instant.
+              </p>
+            }
+          </div>
         </div>
       </aside>
     }
@@ -212,12 +215,15 @@ function resultatsProjetes(
       font-size: 1.1rem;
     }
 
+    .resultats-projetes__place {
+      min-block-size: 0;
+    }
+
     .resultats-projetes__grille {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
       align-content: start;
       gap: 1rem;
-      min-block-size: 0;
     }
 
     .resultats-projetes__carte {

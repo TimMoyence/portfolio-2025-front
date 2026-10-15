@@ -1,15 +1,19 @@
 import {
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
   effect,
+  ElementRef,
   inject,
   input,
   computed,
   OnInit,
   signal,
+  viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { suivreLaSaisie } from '../../../../../cours/runtime/core/zone-de-saisie';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import type { EtatEnvoiLibre } from '../../session/reponses-libres.service';
 import { cleDeReponseLibre, ReponsesLibresService } from '../../session/reponses-libres.service';
@@ -80,8 +84,16 @@ export class SlideReflectionComponent implements OnInit {
   private readonly reponsesLibres = inject(ReponsesLibresService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly startedAt = Date.now();
+  private readonly zone = viewChild<ElementRef<HTMLTextAreaElement>>('zone');
 
   constructor() {
+    afterRenderEffect((onCleanup) => {
+      this.garde();
+      const zone = this.zone()?.nativeElement;
+      if (zone !== undefined) {
+        onCleanup(suivreLaSaisie(zone));
+      }
+    });
     effect(() => {
       const sessionId = this.seanceCourante();
       if (sessionId !== null) {

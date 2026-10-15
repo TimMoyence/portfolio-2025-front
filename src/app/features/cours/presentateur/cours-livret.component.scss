@@ -82,20 +82,6 @@ $hauteur-de-toile-imprimee: math.div($largeur-imprimee * 9, 16);
   font-weight: 600;
 }
 
-.livret__guide {
-  display: grid;
-  gap: 0.5rem;
-  margin: 0;
-
-  dt {
-    font-weight: 600;
-  }
-
-  dd {
-    margin: 0;
-  }
-}
-
 .livret__notes {
   margin: 0;
   font-style: italic;

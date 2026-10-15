@@ -1,22 +1,26 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { TenirDansSaPlaceDirective } from '../../../shared/slides/session/tenir-dans-sa-place.directive';
 import type { CorrectionAffichee } from './corrections-affichees';
 
 @Component({
   selector: 'app-cours-bandeau-correction',
   standalone: true,
+  imports: [TenirDansSaPlaceDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (revele() && corrections().length > 0) {
       <aside class="cours-correction" data-testid="cours-correction" aria-live="polite">
         <p class="cours-correction__titre" i18n="@@coursCorrectionTitre">Correction</p>
-        <dl class="cours-correction__liste">
-          @for (ligne of corrections(); track $index) {
-            <div class="cours-correction__ligne">
-              <dt>{{ ligne.enonce }}</dt>
-              <dd>{{ ligne.bonneReponse }}</dd>
-            </div>
-          }
-        </dl>
+        <div class="cours-correction__place">
+          <dl class="cours-correction__liste" appTenirDansSaPlace>
+            @for (ligne of corrections(); track $index) {
+              <div class="cours-correction__ligne">
+                <dt>{{ ligne.enonce }}</dt>
+                <dd>{{ ligne.bonneReponse }}</dd>
+              </div>
+            }
+          </dl>
+        </div>
       </aside>
     }
   `,
@@ -43,6 +47,10 @@ import type { CorrectionAffichee } from './corrections-affichees';
       margin: 0;
       font-weight: 700;
       font-size: 1.1rem;
+    }
+
+    .cours-correction__place {
+      min-block-size: 0;
     }
 
     .cours-correction__liste {

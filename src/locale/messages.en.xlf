@@ -11741,60 +11741,6 @@
         <target>The note could not be saved: it stays displayed here, edit it again to retry.</target>
       </segment>
     </unit>
-    <unit id="panneauGuideQuestion">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:23</note>
-      </notes>
-      <segment>
-        <source>Question à poser</source>
-        <target>Question to ask</target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideReponse">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:24</note>
-      </notes>
-      <segment>
-        <source>Réponse attendue</source>
-        <target>Expected answer</target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideRelance">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:26</note>
-      </notes>
-      <segment>
-        <source>Relance</source>
-        <target>Follow-up prompt</target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideTitre">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:42,44</note>
-      </notes>
-      <segment>
-        <source> Guide de facilitation </source>
-        <target> Facilitation guide </target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideMasquer">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:70,71</note>
-      </notes>
-      <segment>
-        <source>Masquer la réponse attendue</source>
-        <target>Hide the expected answer</target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideReveler">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:72,74</note>
-      </notes>
-      <segment>
-        <source>Révéler la réponse attendue</source>
-        <target>Reveal the expected answer</target>
-      </segment>
-    </unit>
     <unit id="panneauLectureConfianceAucune">
       <notes>
         <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-lecture-classe.component.ts:16</note>
@@ -11998,14 +11944,14 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:86</note>
       </notes>
       <segment>
-        <source>Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Express a business rule with and, or, not, if… then, negate it with De Morgan’s laws, say “all” or “at least one”, then check it in a spreadsheet, as in the CCF exam. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+        <source>Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Express a business rule with and, or, not, if… then, negate it with De Morgan’s laws, say “all” or “at least one”, then check it in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-03.duration">
       <segment>
-        <source>3 h 00</source>
-        <target>3 h</target>
+        <source>2 h 20</source>
+        <target>2 h 20 min</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-04.title">
@@ -12230,13 +12176,13 @@
         <target>View the data</target>
       </segment>
     </unit>
-    <unit id="slideChartSource">
+    <unit id="donneesDeFigureSource">
       <notes>
-        <note category="location">src/app/shared/slides/layouts/slide-chart/slide-chart.component.html:140,142</note>
+        <note category="location">src/app/shared/slides/donnees-de-figure/donnees-de-figure.component.html:9,15</note>
       </notes>
       <segment>
-        <source>Source : <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></source>
-        <target>Source: <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></target>
+        <source> Source : <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/> </source>
+        <target> Source: <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/> </target>
       </segment>
     </unit>
     <unit id="slideBoxplotLegendeBoite">
@@ -12318,15 +12264,6 @@
       <segment>
         <source>Moyenne</source>
         <target>Mean</target>
-      </segment>
-    </unit>
-    <unit id="slideBoxplotSource">
-      <notes>
-        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:125,127</note>
-      </notes>
-      <segment>
-        <source>Source : <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></source>
-        <target>Source: <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></target>
       </segment>
     </unit>
     <unit id="slideLessonDefinition">
@@ -13835,12 +13772,6 @@
         <target>Discuss with your neighbour</target>
       </segment>
     </unit>
-    <unit id="coursRuntimeRevoter">
-      <segment>
-        <source>Deuxième question : votez seul·e</source>
-        <target>Second question: vote on your own</target>
-      </segment>
-    </unit>
     <unit id="coursRuntimeEnvoyer">
       <segment>
         <source>Envoyer</source>
@@ -14455,8 +14386,8 @@
     </unit>
     <unit id="coursRuntimeEscapeMinuteurAnnonce">
       <segment>
-        <source>minutes annoncées</source>
-        <target>minutes planned</target>
+        <source>annoncées</source>
+        <target>planned</target>
       </segment>
     </unit>
     <unit id="coursRuntimeEscapeEchu">
@@ -14565,6 +14496,12 @@
       <segment>
         <source>Toutes les énigmes sont résolues, le code est reconstitué :</source>
         <target>All puzzles are solved, the code is complete:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeIncomplet">
+      <segment>
+        <source>Parcours terminé sans tous les fragments, le code reste incomplet :</source>
+        <target>Trail finished without every code piece, the code stays incomplete:</target>
       </segment>
     </unit>
     <unit id="coursRuntimeEscapeCode">
@@ -14693,16 +14630,16 @@
         <target>No attempts left: the next puzzle opens, without a code piece</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeEscapeTentativesEpuiseesDerniere">
+      <segment>
+        <source>Tentatives épuisées : cette dernière énigme ne livre pas son fragment</source>
+        <target>No attempts left: this last puzzle does not give its code piece</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimeChallengeAttenteRevelation">
       <segment>
         <source>Les pistes fausses seront signalées à la révélation</source>
         <target>Wrong leads will be flagged at the reveal</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeVotePhaseVote">
-      <segment>
-        <source>Votez seul·e, sans en parler</source>
-        <target>Vote on your own, without talking</target>
       </segment>
     </unit>
     <unit id="coursRuntimeVotePhaseRevele">
@@ -14715,18 +14652,6 @@
       <segment>
         <source>Le vote est fermé pour cette question</source>
         <target>Voting is closed for this question</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeVotePremier">
-      <segment>
-        <source>Première question</source>
-        <target>First question</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeVoteSecond">
-      <segment>
-        <source>Deuxième question, après discussion</source>
-        <target>Second question, after discussion</target>
       </segment>
     </unit>
     <unit id="coursRuntimeReponsesCloses">
@@ -15065,6 +14990,30 @@
         <target>Average attempts</target>
       </segment>
     </unit>
+    <unit id="panneauActiviteOuvertesAbrege">
+      <segment>
+        <source>Comm.</source>
+        <target>Start.</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteResoluesAbrege">
+      <segment>
+        <source>Rés.</source>
+        <target>Solv.</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteEpuiseesAbrege">
+      <segment>
+        <source>Ép.</source>
+        <target>Out</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteTentativesAbrege">
+      <segment>
+        <source>Tent.</source>
+        <target>Avg.</target>
+      </segment>
+    </unit>
     <unit id="panneauActiviteBilletsTitre">
       <segment>
         <source>Billets de sortie</source>
@@ -15299,40 +15248,10 @@
         <target> Printable booklet </target>
       </segment>
     </unit>
-    <unit id="livretGuideADire">
-      <segment>
-        <source>À dire</source>
-        <target>To say</target>
-      </segment>
-    </unit>
-    <unit id="livretGuideQuestion">
-      <segment>
-        <source>Question à poser</source>
-        <target>Question to ask</target>
-      </segment>
-    </unit>
     <unit id="livretGuideReponse">
       <segment>
         <source>Réponse attendue</source>
         <target>Expected answer</target>
-      </segment>
-    </unit>
-    <unit id="livretGuideCalcul">
-      <segment>
-        <source>Calcul</source>
-        <target>Calculation</target>
-      </segment>
-    </unit>
-    <unit id="livretGuideRelance">
-      <segment>
-        <source>Relance</source>
-        <target>Follow-up prompt</target>
-      </segment>
-    </unit>
-    <unit id="livretGuideTransition">
-      <segment>
-        <source>Transition</source>
-        <target>Moving on</target>
       </segment>
     </unit>
   </file>

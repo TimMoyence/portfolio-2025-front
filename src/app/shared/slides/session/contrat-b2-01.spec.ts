@@ -191,20 +191,17 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
               forme: formes[1],
             },
           ],
-          seuilReussite: 0.8,
         },
         {
           type: 'tableau',
           attendus: [{ rang: 1, cle: 'prix', valeur: 20.52 }],
           tolerance: TOLERANCE,
-          seuilReussite: 0.75,
         },
         {
           type: 'classement',
           attendus: [
             { carteId: 'carte-1', categorieId: 'comparable', justification: 'Même périmètre.' },
           ],
-          seuilReussite: 0.75,
         },
         {
           type: 'enigmes',

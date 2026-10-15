@@ -108,4 +108,8 @@
   .slide-reflection__apercu {
     display: none;
   }
+
+  .slide-reflection textarea {
+    block-size: auto !important;
+  }
 }

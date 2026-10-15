@@ -1,7 +1,9 @@
 import type { ExplicationServie, Role } from '../../content/types';
 import { adoptCoursStyles } from '../design/sheet';
 import { texte as traduire } from '../core/i18n';
+import { suivreLesDefileurs } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { suivreLesZonesDeSaisie } from '../core/zone-de-saisie';
 import type { DetailDeVerdict, VerdictDeProduction, VerdictDeReponse } from './retours';
 
 const VIDE = escapeHtml('');
@@ -63,6 +65,7 @@ export abstract class FpBlock extends HTMLElement {
   private interneErreur: string | null = null;
   private interneExplications: readonly ExplicationServie[] = [];
   private brouillonRepris = false;
+  private arreterSesZonesDeSaisie: () => void = () => undefined;
 
   constructor() {
     super();
@@ -119,6 +122,10 @@ export abstract class FpBlock extends HTMLElement {
     } catch (erreur) {
       this.signalerErreur(erreur);
     }
+  }
+
+  disconnectedCallback(): void {
+    this.arreterSesZonesDeSaisie();
   }
 
   attributeChangedCallback(): void {
@@ -183,6 +190,8 @@ export abstract class FpBlock extends HTMLElement {
     const foyer = this.reperer(this.racine.activeElement);
     this.racine.innerHTML = safeHtml`<div class="fp-root" data-role="${escapeHtml(this.roleActuel())}">${this.render()}${this.explicationsRevelees()}</div>`;
     this.bind(this.racine);
+    suivreLesDefileurs(this.racine);
+    this.suivreSesZonesDeSaisie();
     if (foyer !== null && this.racine.activeElement === null) {
       this.restaurer(foyer);
     }
@@ -195,6 +204,13 @@ export abstract class FpBlock extends HTMLElement {
       return;
     }
     cible.innerHTML = contenu;
+    suivreLesDefileurs(cible);
+    this.suivreSesZonesDeSaisie();
+  }
+
+  private suivreSesZonesDeSaisie(): void {
+    this.arreterSesZonesDeSaisie();
+    this.arreterSesZonesDeSaisie = suivreLesZonesDeSaisie(this.racine);
   }
 
   protected verrouilleApresEnvoi(envoye: boolean, verdictRecu: boolean): boolean {

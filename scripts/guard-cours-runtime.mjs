@@ -217,9 +217,12 @@ function lignesEffacees(contenu) {
   let profondeur = 0;
   let aliasOuvert = false;
   contenu.split('\n').forEach((texte, index) => {
-    const entre = profondeur === 0 && !aliasOuvert && OUVERTURE_TYPE.test(texte);
+    const entre =
+      profondeur === 0 &&
+      !aliasOuvert &&
+      (OUVERTURE_TYPE.test(texte) || DECLARATION_TYPE.test(texte));
     const dansUnType = profondeur > 0 || entre || aliasOuvert;
-    if (dansUnType || DECLARATION_TYPE.test(texte)) {
+    if (dansUnType) {
       effacees.add(index);
     }
     if (dansUnType) {

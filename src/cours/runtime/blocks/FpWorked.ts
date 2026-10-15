@@ -197,7 +197,7 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
   }
 
   private raisonnement(etape: WorkedEtape): EscapedHtml {
-    return safeHtml`<p class="fp-worked__raisonnement" data-testid="raisonnement" data-etape="${escapeHtml(etape.id)}">${lignesDeCalculHtml(etape.raisonnement)}</p>`;
+    return safeHtml`<p data-testid="raisonnement" data-etape="${escapeHtml(etape.id)}">${lignesDeCalculHtml(etape.raisonnement)}</p>`;
   }
 
   private redaction(etape: WorkedEtape): EscapedHtml {

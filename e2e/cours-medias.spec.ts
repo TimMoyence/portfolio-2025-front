@@ -1,11 +1,14 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
-const DOSSIERS_DES_COURS: readonly { readonly cours: string; readonly version: string }[] = [
-  { cours: 'b2-01', version: 'v3' },
-  { cours: 'b2-02', version: 'v1' },
-  { cours: 'b2-02', version: 'v2' },
-];
+const CATALOGUE = 'medias.manifest.json';
+const DOSSIERS_DES_COURS: readonly { readonly cours: string; readonly version: string }[] =
+  readdirSync('src/assets/cours', { recursive: true, encoding: 'utf8' })
+    .filter((relatif) => relatif.endsWith(`/${CATALOGUE}`))
+    .map((relatif) => {
+      const [cours = '', version = ''] = relatif.split('/');
+      return { cours, version };
+    });
 const PREFIXES_DE_LOCALE = ['/fr', '/en'];
 const TYPES_ATTENDUS: Readonly<Record<string, string>> = {
   webp: 'image/webp',
@@ -40,7 +43,7 @@ function fichiersDeLaCapsule(dossier: string, media: MediaDuCatalogue): FichierD
 }
 
 function fichiersDuCatalogue(dossier: string): FichierDeMedia[] {
-  const catalogue = `${dossier}/medias.manifest.json`;
+  const catalogue = `${dossier}/${CATALOGUE}`;
   const lu = lireJson<{ medias?: MediaDuCatalogue[] }>(catalogue);
   const fichiers = (lu.medias ?? []).flatMap((media) =>
     typeof media.manifeste === 'string'
@@ -104,11 +107,11 @@ for (const { cours, version } of DOSSIERS_DES_COURS) {
     });
 
     test('ne sert pas les manifestes de licence comme un media', async ({ request }) => {
-      const reponse = await request.get(`${baseSsr}${prefixeServi}/medias.manifest.json`);
+      const reponse = await request.get(`${baseSsr}${prefixeServi}/${CATALOGUE}`);
 
       expect(reponse.status()).toBe(200);
       expect(reponse.headers()['content-type']).toContain('application/json');
-      expect(medias.map((media) => media.fichier)).not.toContain('medias.manifest.json');
+      expect(medias.map((media) => media.fichier)).not.toContain(CATALOGUE);
     });
   });
 }

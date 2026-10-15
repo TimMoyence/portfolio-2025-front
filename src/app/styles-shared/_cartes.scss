@@ -1,3 +1,5 @@
+@use './mono';
+
 @mixin carte-soulevee($levee) {
   transition:
     transform 0.5s var(--ease),
@@ -41,7 +43,7 @@
   place-items: center;
 
   span {
-    font-family: var(--font-mono);
+    @include mono.police;
     font-size: 11px;
     color: var(--ink-mute);
     letter-spacing: $interlettrage;

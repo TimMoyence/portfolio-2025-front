@@ -25,13 +25,17 @@ import {
   buildEcranDeroule,
   buildFichierTelecharge,
   buildResultatQuestion,
+  buildResultatsDeChaqueQuestion,
   buildResultatsSeance,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
-import { INSTANTANE_B2_03 } from '../../../../testing/fixtures/instantane-b2-03';
 import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantane-b3-01';
+import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
+import { lireLesLibelles } from '../../../../testing/libelles-colles';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
+import { enoncesDesActivites } from '../../../shared/slides/session/lecture-ecran';
 import { CoursSyntheseComponent } from './cours-synthese.component';
 
 type Fixture = ComponentFixture<CoursSyntheseComponent>;
@@ -426,24 +430,35 @@ describe('CoursSyntheseComponent', () => {
     });
   });
 
-  it('titre la tentative au défi IA du B2-03 par l invite de son problème, jamais par son identifiant', async () => {
-    const LEA = {
-      ...etudiant('Lea', 10, false, []),
-      reponsesLibres: [
-        {
-          screenId: 'B2-03-A3-06-DEFI-IA',
-          activityId: 'b2-03-a3-defi-ia',
-          reponse: 'La marge se calcule sur le prix de vente.',
-        },
-      ],
-    };
+  const DEFIS_SERVIS = INSTANTANES_DES_COURS_SERVIS.flatMap(([, { deroule }]) =>
+    deroule.ecrans.flatMap((ecran) => {
+      const { id, invite } = (ecran.donnees?.['probleme'] ?? {}) as Partial<
+        Record<'id' | 'invite', string>
+      >;
+      return ecran.type === 'fp-challenge' && id !== undefined && invite !== undefined
+        ? [{ deroule, screenId: ecran.id, activityId: id, invite }]
+        : [];
+    }),
+  );
 
-    const fixture = await monter(rapportDe([LEA]), of(INSTANTANE_B2_03.deroule));
-
-    expect(textes(fixture, 'synthese-libre-question')).toEqual([
-      'Trouvez les erreurs de l’IA, corrigez chacune et dites comment la vérifier dans le fichier.',
-    ]);
+  it('trouve des défis dans les cours servis', () => {
+    expect(DEFIS_SERVIS.length).toBeGreaterThan(0);
   });
+
+  for (const { deroule, screenId, activityId, invite } of DEFIS_SERVIS) {
+    it(`${screenId} : titre la tentative au défi par l invite de son problème, jamais par son identifiant`, async () => {
+      const LEA = {
+        ...etudiant('Lea', 10, false, []),
+        reponsesLibres: [
+          { screenId, activityId, reponse: 'La marge se calcule sur le prix de vente.' },
+        ],
+      };
+
+      const fixture = await monter(rapportDe([LEA]), of(deroule));
+
+      expect(textes(fixture, 'synthese-libre-question')).toEqual([invite]);
+    });
+  }
 
   function exporter(fixture: Fixture): void {
     (fixture.nativeElement as HTMLElement)
@@ -495,5 +510,43 @@ describe('CoursSyntheseComponent', () => {
     expect(racine.querySelector("[data-testid='synthese-vide']")).toBeTruthy();
     expect(racine.querySelector("[data-testid='synthese-classement']")).toBeNull();
     expect((racine.textContent ?? '').trim()).toContain('Aucun participant');
+  });
+
+  describe('QP-02 · aucun libellé collé à sa valeur sur la synthèse des cours servis', () => {
+    const VUES_DE_LA_SYNTHESE = [
+      'synthese-ligne',
+      'synthese-question-libelle',
+      'synthese-confusion',
+      'synthese-fragile',
+      'synthese-libre-question',
+    ];
+
+    for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+      it(
+        `${prefixe} : sépare chaque libellé de sa valeur, réponses libres comprises`,
+        async () => {
+          const reponsesLibres = servi.ecrans.flatMap((ecran) =>
+            [...enoncesDesActivites(ecran).keys()].map((activityId) => ({
+              screenId: ecran.id,
+              activityId,
+              reponse: 'Je compare les bases avant les pourcentages.',
+            })),
+          );
+          const fixture = await monter(
+            rapportDe(
+              [{ ...MALIK, reponsesLibres }, NORA, CHLOE, THEO],
+              buildResultatsDeChaqueQuestion(servi.ecrans),
+            ),
+            of(servi),
+          );
+
+          expect(lireLesLibelles(fixture.nativeElement, VUES_DE_LA_SYNTHESE)).toEqual({
+            colles: [],
+            vuesAbsentes: [],
+          });
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
   });
 });

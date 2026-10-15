@@ -2,6 +2,7 @@ import type { EcranContent, Role } from '../cours/content/types';
 import { SlideActivityComponent } from '../app/shared/slides/session/slide-activity.component';
 import { recolterDansLArbre } from './arbre-json';
 import { DELAI_DE_MONTAGE_MS, monterEcran } from './briques-montees';
+import { compterLesAbonnesAuxPolices } from './polices';
 import {
   ecransDuPupitreDe,
   ecransPublicsDe,
@@ -37,6 +38,7 @@ function clesDe(valeur: unknown): readonly string[] {
 }
 
 export async function attesterLeMontage(ecran: EcranContent, role: Role): Promise<void> {
+  const abonnesAuxPolices = compterLesAbonnesAuxPolices();
   const monte = await monterEcran(ecran, role);
 
   expect(monte.erreurs).toEqual([]);
@@ -58,6 +60,10 @@ export async function attesterLeMontage(ecran: EcranContent, role: Role): Promis
       ),
   ).toBeTrue();
   monte.detruire();
+  monte.element.remove();
+  expect(abonnesAuxPolices())
+    .withContext(`${ecran.id} en ${role}, abonnements aux polices après destruction`)
+    .toBe(0);
 }
 
 export interface AttenduDeLInstantane {

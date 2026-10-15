@@ -1,6 +1,7 @@
 @use '../../styles-shared/breakpoints' as bp;
 @use '../../styles-shared/cartes';
 @use '../../styles-shared/surfaces' as surfaces;
+@use '../../styles-shared/mono';
 
 :host {
   display: block;
@@ -65,7 +66,7 @@
 
 .badge {
   align-self: flex-start;
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -88,7 +89,7 @@
   }
 
   .fk {
-    font-family: var(--font-mono);
+    @include mono.police;
     font-size: 10.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;

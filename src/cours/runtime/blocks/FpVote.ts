@@ -32,15 +32,8 @@ interface Revelation {
 const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
 const VIDE = escapeHtml('');
 
-const TITRES_DES_VOTES: Readonly<Record<'premier' | 'second', string>> = {
-  premier: 'vote-premier',
-  second: 'vote-second',
-};
-
-const ANNONCE_DE_PHASE: Readonly<Record<VotePhase, string>> = {
-  vote: 'vote-phase-vote',
+const ANNONCE_DE_PHASE: Readonly<Partial<Record<VotePhase, string>>> = {
   discussion: 'discussion-en-cours',
-  revote: 'revoter',
   revele: 'vote-phase-revele',
 };
 
@@ -72,6 +65,14 @@ function lireRevelation(valeur: unknown): Revelation | null {
     lignes.every((ligne) => typeof ligne === 'string')
     ? { titre, lignes }
     : null;
+}
+
+function optionDeLaRevelation(valeur: unknown): string | null {
+  if (lireRevelation(valeur) === null || !estObjet(valeur)) {
+    return null;
+  }
+  const optionId = valeur['optionId'];
+  return typeof optionId === 'string' ? optionId : null;
 }
 
 export class FpVote extends FpVerdicts {
@@ -141,7 +142,7 @@ export class FpVote extends FpVerdicts {
   set corrige(valeur: unknown) {
     this.revelation = lireRevelation(valeur);
     this.bonneReponse = lireBonneReponse(valeur);
-    this.bonneOption = lireBonneOption(valeur);
+    this.bonneOption = lireBonneOption(valeur) ?? optionDeLaRevelation(valeur);
     this.refreshSiConnecte();
   }
 
@@ -166,7 +167,7 @@ export class FpVote extends FpVerdicts {
           this.texte('je-ne-sais-pas'),
           'fp-vote__option fp-vote__option--neutre',
         );
-    return safeHtml`<div class="fp-carte fp-scene">
+    return safeHtml`<div class="fp-carte fp-scene"${this.marqueDePhase()}>
       ${this.annoncePhase()}
       <fieldset class="fp-vote__options">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
@@ -239,11 +240,22 @@ export class FpVote extends FpVerdicts {
     return !repondue && !this.dejaRepondu && !this.cloture;
   }
 
-  private annoncePhase(): EscapedHtml {
+  private marqueDePhase(): EscapedHtml {
     if (!this.surDeuxTemps() || this.internePhase === null) {
       return VIDE;
     }
-    return safeHtml`<p class="fp-vote__phase" role="status" data-testid="phase" data-phase="${escapeHtml(this.internePhase)}">${escapeHtml(this.texte(ANNONCE_DE_PHASE[this.internePhase]))}</p>`;
+    return safeHtml` data-phase="${escapeHtml(this.internePhase)}"`;
+  }
+
+  private annoncePhase(): EscapedHtml {
+    const annonce =
+      this.surDeuxTemps() && this.internePhase !== null
+        ? ANNONCE_DE_PHASE[this.internePhase]
+        : undefined;
+    if (annonce === undefined) {
+      return VIDE;
+    }
+    return safeHtml`<p class="fp-vote__phase" role="status" data-testid="phase">${escapeHtml(this.texte(annonce))}</p>`;
   }
 
   private bouton(
@@ -313,12 +325,8 @@ export class FpVote extends FpVerdicts {
     vote?: 'premier' | 'second',
   ): EscapedHtml {
     const marqueDuVote = vote === undefined ? VIDE : safeHtml` data-vote="${escapeHtml(vote)}"`;
-    const titre =
-      vote === undefined
-        ? VIDE
-        : safeHtml`<p class="fp-vote__titre">${escapeHtml(this.texte(TITRES_DES_VOTES[vote]))}</p>`;
     if (!resultats || resultats.total === 0) {
-      return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"${marqueDuVote}>${titre}</div>`;
+      return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"${marqueDuVote}></div>`;
     }
     const idsConnus = new Set([...question.options.map((option) => option.id), ID_JE_NE_SAIS_PAS]);
     const barres = [...question.options.map((option) => option.id), ID_JE_NE_SAIS_PAS]
@@ -330,6 +338,6 @@ export class FpVote extends FpVerdicts {
           Math.round(part(resultats.parOption[id] ?? 0, resultats.total) * 100),
         ),
       );
-    return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"${marqueDuVote}>${titre}${barres}</div>`;
+    return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"${marqueDuVote}>${barres}</div>`;
   }
 }

@@ -9,8 +9,10 @@ import { AuthStateService } from '../app/core/services/auth-state.service';
 import { CREATEUR_FLUX } from '../app/features/cours/cours-flux.token';
 import { buildAuthSession } from './factories/auth.factory';
 import { buildVoteQuestion } from './factories/cours.factory';
+import { enoncesDesActivites } from '../app/shared/slides/session/lecture-ecran';
 import {
   buildEcranDeroule,
+  buildParticipantDeSeance,
   buildReponseLibreFormateur,
   createFormationsPortStub,
 } from './factories/formations.factory';
@@ -69,6 +71,33 @@ export function demonterLeBancDuPupitre(): void {
   }
   montees.length = 0;
   TestBed.inject(AuthStateService).clearSession();
+}
+
+export function garnirLaSeance(
+  port: jasmine.SpyObj<FormationsPort>,
+  ecrans: readonly EcranDeroule[],
+): void {
+  port.lireParticipants.and.returnValue(
+    of({
+      participants: [
+        buildParticipantDeSeance(),
+        buildParticipantDeSeance({ id: 'participant-2', prenom: 'Malik', nom: 'Face' }),
+      ],
+    }),
+  );
+  port.lireReponsesLibres.and.returnValue(
+    of({
+      responses: ecrans.flatMap((ecran) =>
+        [...enoncesDesActivites(ecran).keys()].map((activityId) =>
+          buildReponseLibreFormateur({
+            id: `${ecran.id}:${activityId}`,
+            screenId: ecran.id,
+            activityId,
+          }),
+        ),
+      ),
+    }),
+  );
 }
 
 export function attendreAucunEnTeteSansSession(double: FluxDouble): void {

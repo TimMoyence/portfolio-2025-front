@@ -128,15 +128,6 @@ export interface CorrigePresentateur {
   readonly confusions: readonly { readonly id: string; readonly libelle: string }[];
 }
 
-export interface GuideFormateur {
-  readonly aDire?: string;
-  readonly question?: string;
-  readonly reponse?: string;
-  readonly calcul?: string;
-  readonly relance?: string;
-  readonly transition?: string;
-}
-
 export type CorrigeEcranPresentateur =
   | {
       readonly type: 'feuille';
@@ -147,7 +138,6 @@ export type CorrigeEcranPresentateur =
         readonly tolerance: Tolerance;
         readonly forme: FormeFormule;
       }[];
-      readonly seuilReussite: number;
     }
   | {
       readonly type: 'tableau';
@@ -157,7 +147,6 @@ export type CorrigeEcranPresentateur =
         readonly valeur: number;
       }[];
       readonly tolerance: Tolerance;
-      readonly seuilReussite: number;
     }
   | {
       readonly type: 'classement';
@@ -166,7 +155,6 @@ export type CorrigeEcranPresentateur =
         readonly categorieId: string;
         readonly justification: string;
       }[];
-      readonly seuilReussite: number;
     }
   | {
       readonly type: 'enigmes';
@@ -207,7 +195,6 @@ export interface EcranDeroule extends EcranContent {
     readonly options: readonly { readonly id: string; readonly libelle: string }[] | null;
   }[];
   readonly corrigeEcran: CorrigeEcranPresentateur | null;
-  readonly guide?: GuideFormateur;
   readonly explications?: readonly ExplicationServie[];
 }
 

@@ -1,4 +1,5 @@
 import { evaluerExpression } from 'portfolio-2025-partage/formule';
+import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
 import { lierLesNombres } from '../core/typographie';
 import { bornerEntre } from '../core/valeurs';
@@ -474,7 +475,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
       <div class="fp-plot__lecture">
         ${this.enBarres() ? rapport : this.legende(tracees)}
         ${this.tableau(tracees)}
-        ${this.enBarres() ? safeHtml`` : safeHtml`<p class="fp-prose fp-plot__synthese" data-testid="synthese">${escapeHtml(this.phraseDeLecture(tracees))}</p>`}
+        ${this.enBarres() ? safeHtml`` : safeHtml`<p class="fp-prose" data-testid="synthese">${escapeHtml(this.phraseDeLecture(tracees))}</p>`}
       </div>
     `;
   }
@@ -533,7 +534,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
       return safeHtml``;
     }
     const axe = definition.abscisse;
-    const table = safeHtml`
+    const table = dansUnDefileur(safeHtml`
         <table class="fp-plot__tableau" data-testid="tableau">
           <caption class="fp-plot__intitule">${escapeHtml(this.texte('plot-tableau'))}</caption>
           <thead>
@@ -544,7 +545,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
             </tr>
           </thead>
           <tbody>${tracees.map((tracee) => this.ligne(tracee))}</tbody>
-        </table>`;
+        </table>`);
     if (this.surPapier()) {
       return table;
     }

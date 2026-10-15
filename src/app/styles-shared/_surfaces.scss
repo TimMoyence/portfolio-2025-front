@@ -1,3 +1,5 @@
+@use './mono';
+
 @mixin teal-glow-veil {
   content: '';
   position: absolute;
@@ -20,7 +22,7 @@
 }
 
 @mixin mono-caption {
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;

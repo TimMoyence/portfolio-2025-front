@@ -11,7 +11,7 @@ export interface QuestionLibre {
 export interface ProCas extends ContenuDeBrique {
   readonly metier: string;
   readonly situation: string;
-  readonly geste: string;
+  readonly geste: string | null;
   readonly consequence: string | null;
   readonly questionsLibres?: readonly QuestionLibre[];
 }
@@ -87,7 +87,7 @@ export class FpPro extends FpRedaction<ProCas> {
       <aside class="fp-scene fp-pro__cas">
         ${this.metier(cas)}
         <div class="fp-prose fp-pro__corps">
-          <p class="fp-pro__situation" data-testid="situation">${escapeHtml(cas.situation)}</p>
+          <p data-testid="situation">${escapeHtml(cas.situation)}</p>
           ${this.geste(cas)}
           ${this.consequence(cas)}
         </div>
@@ -104,12 +104,13 @@ export class FpPro extends FpRedaction<ProCas> {
   }
 
   private geste(cas: ProCas): EscapedHtml {
-    if (cas.geste.trim().length === 0) {
+    const geste = cas.geste;
+    if (geste === null || geste.trim().length === 0) {
       return safeHtml``;
     }
     return safeHtml`<div class="fp-encadre fp-pro__geste">
       <h3 class="fp-pro__intitule">${escapeHtml(this.texte('pro-geste'))}</h3>
-      <p class="fp-pro__geste-texte" data-testid="geste">${escapeHtml(cas.geste)}</p>
+      <p class="fp-pro__geste-texte" data-testid="geste">${escapeHtml(geste)}</p>
     </div>`;
   }
 

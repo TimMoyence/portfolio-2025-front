@@ -1,4 +1,5 @@
 @use '../../slide-toile' as toile;
+@use '../../../../styles-shared/mono';
 
 .slide-guide {
   width: min(100%, 76rem);
@@ -84,7 +85,7 @@
   border: 1px solid var(--accent, var(--teal));
   border-radius: 50%;
   color: var(--accent-dark, var(--teal-dark));
-  font-family: var(--font-mono, ui-monospace, monospace);
+  @include mono.police;
   font-size: 0.78rem;
   font-weight: 800;
 }

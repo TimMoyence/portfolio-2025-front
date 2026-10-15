@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { DefileurDeTableauComponent } from '../../defileur-de-tableau/defileur-de-tableau.component';
 import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
 const LIGNES_AVANT_RESSERREMENT = 10;
@@ -13,7 +14,7 @@ type TableRow = Record<string, string>;
 @Component({
   selector: 'app-slide-table',
   standalone: true,
-  imports: [SlideEnTeteComponent],
+  imports: [DefileurDeTableauComponent, SlideEnTeteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-table.component.html',
   styleUrl: './slide-table.component.scss',

@@ -17,7 +17,7 @@ interface EnvoiPro {
 
 const CAS = buildProCas();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
-const CLASSES_ATTENDUES = 13;
+const CLASSES_ATTENDUES = 12;
 const CLASSES_AVEC_QUESTIONS = 19;
 
 function cible(element: FpPro, repere: string): Element | null {
@@ -48,7 +48,8 @@ describe('FpPro', () => {
 
   it('detache le geste professionnel de la situation sous un intitule propre', () => {
     const geste = cible(hote, 'geste');
-    expect(lu(hote, 'geste')).toBe(CAS.geste);
+    expect(CAS.geste).toBeTruthy();
+    expect(lu(hote, 'geste')).toBe(CAS.geste ?? '');
     expect(geste?.closest('.fp-pro__geste')).toBeTruthy();
     expect(hote.shadowRoot?.querySelector('.fp-pro__intitule')?.textContent?.trim()).toBe(
       'Le geste professionnel',
@@ -61,6 +62,15 @@ describe('FpPro', () => {
     expect(cible(hote, 'metier')).toBeNull();
     expect(hote.shadowRoot?.querySelector('.fp-pro__geste')).toBeNull();
     expect(lu(hote, 'situation')).toBe(CAS.situation);
+  });
+
+  it('pose la situation sans encadré du geste quand le cours ne nomme aucun geste', () => {
+    hote.cas = buildProCas({ id: 'M-METIER-SANS-GESTE', geste: null });
+
+    expect(lu(hote, 'situation')).toBe(CAS.situation);
+    expect(lu(hote, 'metier')).toBe(CAS.metier);
+    expect(hote.shadowRoot?.querySelector('.fp-pro__geste')).toBeNull();
+    expect(hote.shadowRoot?.innerHTML ?? '').not.toContain('Le geste professionnel');
   });
 
   it('annonce la portee du geste quand la consequence est renseignee', () => {

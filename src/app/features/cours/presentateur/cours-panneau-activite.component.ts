@@ -10,11 +10,13 @@ import type {
   ResultatsSeance,
   VotePhase,
 } from '../../../../cours/content/types';
+import { rappelEcritAvantLesOptions } from '../../../../cours/runtime/blocks/FpRecall';
 import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
 import { colonnesACorriger } from '../../../../cours/runtime/blocks/FpTableBuild';
 import type { ResultatsDuFlux } from '../../../../cours/runtime/core/sync';
 import { NOMBRE_FRANCAIS } from '../../../shared/slides/layouts/axe-gradue';
 import {
+  estVoteJumele,
   identifiantsDuMontage,
   libellesDesElements,
   planDeMontage,
@@ -108,7 +110,7 @@ interface LigneDEnigme extends ProgressionEnigme {
       <section class="activite-section" data-testid="activite-phase">
         <h3 i18n="@@panneauActivitePhaseTitre">Instruction par les pairs</h3>
         <p>
-          <span i18n="@@panneauActivitePhaseCourante">Phase en cours :</span>
+          <span i18n="@@panneauActivitePhaseCourante">Phase en cours :</span>&ngsp;
           <strong data-testid="activite-phase-courante">{{ libelleDe(courante) }}</strong>
         </p>
         @if (phaseSuivante(); as suivante) {
@@ -295,7 +297,7 @@ interface LigneDEnigme extends ProgressionEnigme {
           <span i18n="@@panneauActiviteProductionRecues"> production(s) reçue(s)</span>
           @if (resultat.scoreMoyen !== null) {
             ·
-            <span i18n="@@panneauActiviteScoreMoyen">score moyen</span>
+            <span i18n="@@panneauActiviteScoreMoyen">score moyen</span>&ngsp;
             <strong data-testid="activite-production-score">{{
               resultat.scoreMoyen | percent
             }}</strong>
@@ -328,10 +330,38 @@ interface LigneDEnigme extends ProgressionEnigme {
           <thead>
             <tr>
               <th scope="col" i18n="@@panneauActiviteEnigme">Énigme</th>
-              <th scope="col" i18n="@@panneauActiviteOuvertes">Commencée</th>
-              <th scope="col" i18n="@@panneauActiviteResolues">Résolue</th>
-              <th scope="col" i18n="@@panneauActiviteEpuisees">Épuisée</th>
-              <th scope="col" i18n="@@panneauActiviteTentatives">Tentatives moyennes</th>
+              <th scope="col">
+                <abbr
+                  title="Commencée"
+                  i18n-title="@@panneauActiviteOuvertes"
+                  i18n="@@panneauActiviteOuvertesAbrege"
+                  >Comm.</abbr
+                >
+              </th>
+              <th scope="col">
+                <abbr
+                  title="Résolue"
+                  i18n-title="@@panneauActiviteResolues"
+                  i18n="@@panneauActiviteResoluesAbrege"
+                  >Rés.</abbr
+                >
+              </th>
+              <th scope="col">
+                <abbr
+                  title="Épuisée"
+                  i18n-title="@@panneauActiviteEpuisees"
+                  i18n="@@panneauActiviteEpuiseesAbrege"
+                  >Ép.</abbr
+                >
+              </th>
+              <th scope="col">
+                <abbr
+                  title="Tentatives moyennes"
+                  i18n-title="@@panneauActiviteTentatives"
+                  i18n="@@panneauActiviteTentativesAbrege"
+                  >Tent.</abbr
+                >
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -372,10 +402,7 @@ export class CoursPanneauActiviteComponent {
     (planDeMontage(this.ecran()) ?? []).flatMap(identifiantsDuMontage),
   );
 
-  protected readonly phaseVisible = computed(
-    () =>
-      this.ecran().type === 'fp-vote' && objet(this.ecran().donnees?.['questionJumelle']) !== null,
-  );
+  protected readonly phaseVisible = computed(() => estVoteJumele(this.ecran()));
 
   protected readonly correctionRevelable = computed(() => {
     const ecran = this.ecran();
@@ -393,7 +420,9 @@ export class CoursPanneauActiviteComponent {
   });
 
   protected readonly optionsDuRappelDifferees = computed(
-    () => this.ecran().type === 'fp-recall' && this.ecran().donnees?.['delaiMs'] !== 0,
+    () =>
+      this.ecran().type === 'fp-recall' &&
+      rappelEcritAvantLesOptions(this.ecran().donnees?.['delaiMs']),
   );
 
   protected readonly questionsACorriger = computed(() =>
@@ -467,7 +496,11 @@ export class CoursPanneauActiviteComponent {
   }
 
   protected passerA(phase: VotePhase): void {
-    this.commande.emit({ screenId: this.ecran().id, phase });
+    if (phase === 'revele') {
+      this.reveler();
+    } else {
+      this.commande.emit({ screenId: this.ecran().id, phase });
+    }
   }
 
   protected reveler(): void {

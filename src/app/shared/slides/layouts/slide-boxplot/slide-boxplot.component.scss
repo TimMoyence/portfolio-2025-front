@@ -50,7 +50,7 @@ h2 {
 
 .slide-boxplot__label {
   color: var(--ink, #0c0902);
-  font-family: var(--font-mono, ui-monospace, monospace);
+  @include figure.police;
   font-size: clamp(0.78rem, 1.2cqi, 0.95rem);
   font-weight: 700;
 }
@@ -184,14 +184,10 @@ h2 {
 }
 
 .slide-boxplot__data {
-  @include figure.donnees(30rem, right);
-  overflow-x: auto;
+  --donnees-largeur-min: 30rem;
+  --donnees-alignement: right;
 
   th[scope='row'] {
     text-align: left;
   }
-}
-
-.slide-boxplot__source {
-  @include figure.source;
 }

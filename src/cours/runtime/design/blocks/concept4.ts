@@ -92,6 +92,7 @@ export const concept4 = `
 :where(.fp-root) .fp-concept4__valeur {
   color: var(--fp-teal-ink);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-weight: 600;
 }
 
@@ -127,8 +128,8 @@ export const concept4 = `
 :where(.fp-root) .fp-concept4__formule {
   color: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: calc(1.05rem * var(--fp-echelle));
-  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-concept4__terme {
@@ -213,10 +214,6 @@ export const concept4 = `
   background: var(--fp-a-revoir-fond);
   color: var(--fp-texte-fort);
   font-weight: 700;
-}
-
-:where(.fp-root) .fp-concept4__phrase {
-  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-concept4__reperes {

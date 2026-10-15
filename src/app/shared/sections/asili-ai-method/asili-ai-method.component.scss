@@ -1,5 +1,6 @@
 @use '../../../styles-shared/breakpoints' as bp;
 @use '../../../styles-shared/surfaces' as surfaces;
+@use '../../../styles-shared/mono';
 :host {
   display: block;
 }
@@ -66,7 +67,7 @@
 }
 
 .ai-n {
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 12px;
   color: var(--teal);
   flex: none;
@@ -108,7 +109,7 @@
 }
 
 .ai-rule-who {
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 12px;
   color: rgba(251, 243, 230, 0.55);
   margin-top: 20px;

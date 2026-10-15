@@ -2,11 +2,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed, tick } from '@angular/core/testing';
 import { CoursPanneauPedagogiqueComponent } from '../app/features/cours/presentateur/cours-panneau-pedagogique.component';
 import { FORMATIONS_PORT, type FormationsPort } from '../app/core/ports/formations.port';
-import {
-  buildEcranDeroule,
-  buildGuideFormateur,
-  buildResultatQuestion,
-} from './factories/formations.factory';
+import { buildEcranDeroule, buildResultatQuestion } from './factories/formations.factory';
 import { setupTestBed } from './setup-test-bed';
 
 export type FixtureDuPanneau = ComponentFixture<CoursPanneauPedagogiqueComponent>;
@@ -31,10 +27,7 @@ export function relireLePanneau(fixture: FixtureDuPanneau): void {
 
 export function monterLePanneau(sessionId: string | null = SEANCE_DU_PANNEAU): FixtureDuPanneau {
   const fixture = TestBed.createComponent(CoursPanneauPedagogiqueComponent);
-  fixture.componentRef.setInput(
-    'ecran',
-    buildEcranDeroule({ id: ECRAN_DU_PANNEAU, guide: buildGuideFormateur() }),
-  );
+  fixture.componentRef.setInput('ecran', buildEcranDeroule({ id: ECRAN_DU_PANNEAU }));
   fixture.componentRef.setInput('resultats', []);
   fixture.componentRef.setInput('participants', 12);
   fixture.componentRef.setInput('sessionId', sessionId);

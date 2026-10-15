@@ -1,7 +1,23 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { fondEffectif, rapportDeContraste } from '../../../../../testing/contraste';
-import { monterLeGraphique, preparerLeGraphique } from '../../../../../testing/graphique-monte';
+import { uneImage } from '../../../../../testing/deux-images';
+import { INSTANTANE_B2_01 } from '../../../../../testing/fixtures/instantane-b2-01';
+import { INSTANTANE_B2_04 } from '../../../../../testing/fixtures/instantane-b2-04';
+import { INSTANTANE_B2_05 } from '../../../../../testing/fixtures/instantane-b2-05';
+import {
+  ecransPublicsDe,
+  type InstantaneDuCoursB2,
+} from '../../../../../testing/fixtures/instantane-de-cours';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../../testing/fixtures/instantanes-des-cours';
+import {
+  jouerLesGraphiquesJusquAuBout,
+  monterLeGraphique,
+  preparerLeGraphique,
+} from '../../../../../testing/graphique-monte';
+import { libellesColles } from '../../../../../testing/libelles-colles';
 import { textes } from '../../../../../testing/textes-dom';
+import { valeursSurUneForme } from '../../../../../testing/valeurs-sur-les-formes';
+import { presentationDe } from '../../visual/presentation-v2';
 import type { SlideChartKind, SlideChartSeries } from './slide-chart.component';
 import { SlideChartComponent } from './slide-chart.component';
 
@@ -372,5 +388,383 @@ describe('SlideChartComponent', () => {
     expect(element(avecLecture).querySelector('.slide-chart__source')?.textContent).toContain(
       'Comptes annuels',
     );
+  });
+});
+
+const ABSCISSES = '.slide-chart__labels > span';
+const VALEURS_DES_POINTS = '.slide-chart__point-value';
+const VALEURS_DES_BARRES = '.slide-chart__value';
+
+function graphiqueServi(
+  instantane: InstantaneDuCoursB2,
+  id: string,
+): Readonly<Record<string, unknown>> {
+  const ecran = ecransPublicsDe(instantane).find((candidat) => candidat.id === id);
+  const presentation = ecran === undefined ? null : presentationDe(ecran);
+  if (presentation?.renderer !== 'chart') {
+    throw new Error(`graphique absent du cours servi : ${id}`);
+  }
+  return presentation.props;
+}
+
+async function rendreALaLargeur(
+  fixture: ComponentFixture<SlideChartComponent>,
+  largeur: string,
+): Promise<void> {
+  element(fixture).style.width = largeur;
+  for (let image = 0; image < 3; image += 1) {
+    await uneImage();
+    fixture.detectChanges();
+  }
+}
+
+function rangsVisibles(rendu: HTMLElement, selecteur: string): number[] {
+  return Array.from(rendu.querySelectorAll(selecteur)).flatMap((texte, rang) =>
+    getComputedStyle(texte).visibility === 'visible' ? [rang] : [],
+  );
+}
+
+const GRADUATIONS = '.slide-chart__axis--left .slide-chart__tick';
+
+function glisse(rendu: HTMLElement): boolean {
+  const defileur = rendu.querySelector<HTMLElement>('.slide-chart__defileur');
+  return defileur !== null && defileur.scrollWidth > defileur.clientWidth + 1;
+}
+
+const TEXTES_RECULABLES = `${ABSCISSES}, ${VALEURS_DES_BARRES}, ${VALEURS_DES_POINTS}`;
+
+function reculsDesTextes(rendu: HTMLElement): string[] {
+  return Array.from(rendu.querySelectorAll<HTMLElement>(TEXTES_RECULABLES)).flatMap((texte) => {
+    const recul = texte.style.getPropertyValue('--recul').trim();
+    const sorte = texte.matches(ABSCISSES) ? 'abscisse' : 'valeur';
+    return recul === '' || recul === '0px'
+      ? []
+      : [`${sorte} ${texte.textContent?.trim()} ${recul}`];
+  });
+}
+
+function placementDesTextes(rendu: HTMLElement): string[] {
+  return [
+    ...Array.from(
+      rendu.querySelectorAll<HTMLElement>(`${TEXTES_RECULABLES}, ${GRADUATIONS}`),
+      (texte) =>
+        `${texte.textContent?.trim()} ${getComputedStyle(texte).visibility}${texte.classList.contains('is-below') ? ' dessous' : ''}`,
+    ),
+    ...Array.from(
+      rendu.querySelectorAll<HTMLElement>('.slide-chart__serie-label'),
+      (etiquette) =>
+        `${etiquette.textContent?.trim()} à ${etiquette.style.getPropertyValue('--y')}`,
+    ),
+  ];
+}
+
+const GRAPHIQUES_SERVIS = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
+  ecransPublicsDe(instantane).flatMap((ecran) => {
+    const presentation = presentationDe(ecran);
+    return presentation?.renderer === 'chart' ? [[ecran.id, presentation.props] as const] : [];
+  }),
+);
+
+const LARGEURS_DES_RECULS = ['18rem', '37.3rem', '80rem'];
+const ECHELLES_DES_TOILES = [1.5, 2, 0.55, 0.45, 1.4, 0.75, 1];
+
+function textesHorsDuTrace(rendu: HTMLElement): string[] {
+  const trace = rendu.querySelector('.slide-chart__plot')?.getBoundingClientRect();
+  return Array.from(rendu.querySelectorAll<HTMLElement>(TEXTES_RECULABLES)).flatMap((texte) => {
+    if (trace === undefined || getComputedStyle(texte).visibility !== 'visible') {
+      return [];
+    }
+    const plage = document.createRange();
+    plage.selectNodeContents(texte);
+    const cadre = plage.getBoundingClientRect();
+    return cadre.left < trace.left - 0.5 || cadre.right > trace.right + 0.5
+      ? [`${texte.textContent?.trim()} ${Math.round(cadre.left)}→${Math.round(cadre.right)}`]
+      : [];
+  });
+}
+
+function rangsDesGraduationsVisibles(rendu: HTMLElement): number[] {
+  return Array.from(rendu.querySelectorAll<HTMLElement>(GRADUATIONS))
+    .flatMap((graduation) =>
+      getComputedStyle(graduation).visibility === 'visible'
+        ? [Number(graduation.dataset['rang'])]
+        : [],
+    )
+    .sort((un, autre) => un - autre);
+}
+
+function unSurN(nombre: number, pas: number): number[] {
+  return Array.from({ length: Math.floor((nombre - 1) / pas) + 1 }, (_, rang) => rang * pas);
+}
+
+const LARGEURS_DU_TELEPHONE_A_LA_PROJECTION = [18, 21, 24, 27, 30, 34, 38, 44, 50];
+
+async function lireAChaqueLargeur<T extends object>(
+  fixture: ComponentFixture<SlideChartComponent>,
+  largeurs: readonly number[],
+  lire: (rendu: HTMLElement) => T,
+): Promise<({ largeur: number } & T)[]> {
+  const lectures: ({ largeur: number } & T)[] = [];
+  for (const largeur of largeurs) {
+    await rendreALaLargeur(fixture, `${largeur}rem`);
+    lectures.push({ largeur, ...lire(element(fixture)) });
+  }
+  return lectures;
+}
+
+async function tracerALaHauteur(
+  fixture: ComponentFixture<SlideChartComponent>,
+  hauteur: string,
+): Promise<void> {
+  element(fixture)
+    .querySelector<HTMLElement>('.slide-chart__plot')
+    ?.style.setProperty('--plot-h', hauteur);
+  await rendreALaLargeur(fixture, '44rem');
+}
+
+async function lireAChaqueHauteurJusquAuTraceMinimal<T extends object>(
+  fixture: ComponentFixture<SlideChartComponent>,
+  lire: (rendu: HTMLElement) => T,
+): Promise<({ hauteur: number } & T)[]> {
+  const lectures: ({ hauteur: number } & T)[] = [];
+  for (const hauteur of [4, 5, 6, 8, 10]) {
+    await tracerALaHauteur(fixture, `${hauteur}rem`);
+    lectures.push({ hauteur, ...lire(element(fixture)) });
+  }
+  await tracerALaHauteur(fixture, '12rem');
+  return lectures;
+}
+
+describe('SlideChartComponent · QP-02, des libellés qui ne se touchent jamais', () => {
+  preparerLeGraphique();
+  jouerLesGraphiquesJusquAuBout();
+
+  it('n écrit qu une fois la valeur du point commun à deux courbes, comme 826 au B2-04', () => {
+    const rendu = element(
+      monterLeGraphique(graphiqueServi(INSTANTANE_B2_04, 'B2-04-A3-01-GRAPHIQUE')),
+    );
+
+    expect(textes(rendu, VALEURS_DES_POINTS)).toEqual([
+      '826',
+      '870',
+      '914',
+      '958',
+      '1 002',
+      '1 046',
+      '875,56',
+      '928,09',
+      '983,78',
+      '1 042,81',
+      '1 105,37',
+    ]);
+  });
+
+  it('garde au-dessus la valeur du point commun aux courbes les plus hautes, et la plus basse au-dessous', () => {
+    const rendu = element(
+      monter({
+        kind: 'line',
+        series: [
+          { label: 'Hypothèse A', values: [150, 132.5, 120], tone: 'teal' },
+          { label: 'Hypothèse B', values: [150, 90, 95], tone: 'gold' },
+          { label: 'Plancher', values: [60, 80, 70], tone: 'ink' },
+        ],
+        axisRanges: [[0, 180]],
+      }),
+    );
+
+    expect(
+      Array.from(rendu.querySelectorAll('.slide-chart__point-value[data-rang="0"]')).map(
+        (valeur) => [valeur.textContent?.trim(), valeur.classList.contains('is-below')],
+      ),
+    ).toEqual([
+      ['150', false],
+      ['60', true],
+    ]);
+  });
+
+  it('ne garde qu une abscisse et une valeur sur deux, ou sur trois, quand elles ne tiennent pas, et les rend toutes dès qu elles tiennent', async () => {
+    const fixture = monterLeGraphique(graphiqueServi(INSTANTANE_B2_01, 'B2-01-A3-08-INDICE-PRIX'));
+    const rendu = element(fixture);
+    const lectures = await lireAChaqueLargeur(
+      fixture,
+      LARGEURS_DU_TELEPHONE_A_LA_PROJECTION,
+      (vue) => ({
+        colles: libellesColles(vue),
+        abscisses: rangsVisibles(vue, ABSCISSES),
+        valeurs: rangsVisibles(vue, VALEURS_DES_POINTS),
+      }),
+    );
+    await rendreALaLargeur(fixture, '75rem');
+
+    expect(lectures).toEqual(
+      lectures.map(({ largeur, abscisses, valeurs }) => ({
+        largeur,
+        colles: [],
+        abscisses: unSurN(7, abscisses[1] ?? 1),
+        valeurs: unSurN(7, valeurs[1] ?? 1),
+      })),
+    );
+    expect([
+      lectures.some(({ abscisses }) => abscisses.length < 7),
+      lectures.some(({ valeurs }) => valeurs.length < 7),
+    ]).toEqual([true, true]);
+    expect([
+      libellesColles(rendu),
+      rangsVisibles(rendu, ABSCISSES),
+      rangsVisibles(rendu, VALEURS_DES_POINTS),
+    ]).toEqual([[], unSurN(7, 1), unSurN(7, 1)]);
+  });
+
+  it('QP-19 · ne garde qu une graduation sur deux, base comprise, quand elles se touchent, et les rend toutes dès que le tracé est assez haut, comme le prix du sac du B2-01 en projection', async () => {
+    const fixture = monterLeGraphique(graphiqueServi(INSTANTANE_B2_01, 'B2-01-A3-03-PRIX-SAC'));
+    const rendu = element(fixture);
+    const nombre = rendu.querySelectorAll(GRADUATIONS).length;
+    const lectures = await lireAChaqueHauteurJusquAuTraceMinimal(fixture, (vue) => ({
+      colles: libellesColles(vue),
+      graduations: rangsDesGraduationsVisibles(vue),
+    }));
+
+    expect(lectures).toEqual(
+      lectures.map(({ hauteur, graduations }) => ({
+        hauteur,
+        colles: [],
+        graduations: unSurN(nombre, graduations[1] ?? 1),
+      })),
+    );
+    expect(lectures.some(({ graduations }) => graduations.length < nombre)).toBeTrue();
+    expect([libellesColles(rendu), rangsDesGraduationsVisibles(rendu)]).toEqual([
+      [],
+      unSurN(nombre, 1),
+    ]);
+  });
+
+  it('remesure ses abscisses quand une police finit de charger, sans que le graphique change de taille', async () => {
+    const fixture = monterLeGraphique(graphiqueServi(INSTANTANE_B2_01, 'B2-01-A3-08-INDICE-PRIX'));
+    const rendu = element(fixture);
+    await rendreALaLargeur(fixture, '44rem');
+    const avant = rangsVisibles(rendu, ABSCISSES);
+
+    rendu
+      .querySelector<HTMLElement>('.slide-chart__labels')
+      ?.style.setProperty('letter-spacing', '1.5em');
+    document.fonts.dispatchEvent(new Event('loadingdone'));
+    await rendreALaLargeur(fixture, '44rem');
+
+    expect([avant, libellesColles(rendu)]).toEqual([unSurN(7, 1), []]);
+    expect(rangsVisibles(rendu, ABSCISSES).length).toBeLessThan(7);
+  });
+});
+
+describe('SlideChartComponent · QP-18, une valeur ne touche que sa propre forme', () => {
+  preparerLeGraphique();
+  jouerLesGraphiquesJusquAuBout();
+
+  it('cale la valeur sur le bord extérieur de sa barre, sinon n en garde qu une sur deux, sans jamais toucher la barre ou le marqueur d une autre série, comme l emprunt du B2-05', async () => {
+    const fixture = monterLeGraphique(graphiqueServi(INSTANTANE_B2_05, 'B2-05-A3-01-GRAPHIQUE'));
+    const rendu = element(fixture);
+    const lectures = await lireAChaqueLargeur(
+      fixture,
+      [...LARGEURS_DU_TELEPHONE_A_LA_PROJECTION, 60],
+      (vue) => ({
+        surLesFormes: valeursSurUneForme(vue),
+        colles: libellesColles(vue),
+        glisse: glisse(vue),
+      }),
+    );
+    await rendreALaLargeur(fixture, '75rem');
+
+    expect(lectures).toEqual(
+      lectures.map(({ largeur }) => ({ largeur, surLesFormes: [], colles: [], glisse: false })),
+    );
+    expect([valeursSurUneForme(rendu), rangsVisibles(rendu, VALEURS_DES_BARRES).length]).toEqual([
+      [],
+      20,
+    ]);
+  });
+
+  it('fait reculer au moins une valeur et une abscisse des graphiques servis, au téléphone ou en projection', async () => {
+    const sortes = new Set<string>();
+    for (const [, entrees] of GRAPHIQUES_SERVIS) {
+      const fixture = monterLeGraphique(entrees);
+      for (const largeur of LARGEURS_DES_RECULS) {
+        await rendreALaLargeur(fixture, largeur);
+        reculsDesTextes(element(fixture)).forEach((recul) => sortes.add(recul.split(' ')[0]));
+      }
+      fixture.destroy();
+    }
+
+    expect([sortes.has('abscisse'), sortes.has('valeur')]).toEqual([true, true]);
+  });
+
+  for (const [id, entrees] of GRAPHIQUES_SERVIS) {
+    it(`${id} : recule, montre, masque et retourne les mêmes valeurs, abscisses et graduations à toute échelle de la toile et à chaque nouvelle mesure, sans qu aucune sorte du tracé, comme l emprunt du B2-05 en projection ou les hypothèses du B2-04 sur un portable 14 pouces`, async () => {
+      const fixture = monterLeGraphique(entrees);
+      const rendu = element(fixture);
+      rendu.style.transformOrigin = '0 0';
+      const lectures: object[] = [];
+      const attendues: object[] = [];
+      for (const largeur of LARGEURS_DES_RECULS) {
+        rendu.style.transform = '';
+        await rendreALaLargeur(fixture, largeur);
+        const aLEchelleUn = reculsDesTextes(rendu);
+        const placesALEchelleUn = placementDesTextes(rendu);
+        for (const echelle of ECHELLES_DES_TOILES) {
+          rendu.style.transform = `scale(${echelle})`;
+          for (const mesure of [1, 2, 3]) {
+            document.fonts.dispatchEvent(new Event('loadingdone'));
+            await rendreALaLargeur(fixture, largeur);
+            const lecture = { largeur, echelle, mesure };
+            lectures.push({
+              ...lecture,
+              reculs: reculsDesTextes(rendu),
+              places: placementDesTextes(rendu),
+              hors: textesHorsDuTrace(rendu),
+            });
+            attendues.push({
+              ...lecture,
+              reculs: aLEchelleUn,
+              places: placesALEchelleUn,
+              hors: [],
+            });
+          }
+        }
+      }
+
+      expect(lectures).toEqual(attendues);
+    });
+  }
+
+  it('écarte la valeur d un point du point d une autre courbe, ou la masque, et les rend toutes dès que le tracé est assez haut, comme « 80 » au prix du sac du B2-01', async () => {
+    const fixture = monterLeGraphique(graphiqueServi(INSTANTANE_B2_01, 'B2-01-A3-03-PRIX-SAC'));
+    const rendu = element(fixture);
+    const lectures = await lireAChaqueHauteurJusquAuTraceMinimal(fixture, (vue) => ({
+      surLesFormes: valeursSurUneForme(vue),
+      colles: libellesColles(vue),
+    }));
+
+    expect(lectures).toEqual(
+      lectures.map(({ hauteur }) => ({ hauteur, surLesFormes: [], colles: [] })),
+    );
+    expect([valeursSurUneForme(rendu), rangsVisibles(rendu, VALEURS_DES_POINTS).length]).toEqual([
+      [],
+      9,
+    ]);
+  });
+
+  it('passe la valeur de l autre côté de son point quand elle toucherait un point voisin, plutôt que de la masquer, comme l indice des prix du B2-01', async () => {
+    const fixture = monterLeGraphique(graphiqueServi(INSTANTANE_B2_01, 'B2-01-A3-08-INDICE-PRIX'));
+    const lectures = await lireAChaqueLargeur(
+      fixture,
+      LARGEURS_DU_TELEPHONE_A_LA_PROJECTION,
+      (vue) => ({
+        surLesFormes: valeursSurUneForme(vue),
+        dessous: rangsVisibles(vue, `${VALEURS_DES_POINTS}.is-below`).length,
+      }),
+    );
+
+    expect(lectures.map(({ largeur, surLesFormes }) => ({ largeur, surLesFormes }))).toEqual(
+      lectures.map(({ largeur }) => ({ largeur, surLesFormes: [] })),
+    );
+    expect(lectures.filter(({ dessous }) => dessous > 0).length).toBeGreaterThan(0);
   });
 });

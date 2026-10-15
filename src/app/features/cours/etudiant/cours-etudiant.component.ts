@@ -217,7 +217,6 @@ function sourceRevelee(ecran: EcranContent, pilotage: PilotageEcran | undefined)
   const etayageRevelateur = ecran.type === 'fp-worked' ? 0 : (pilotage?.etayage ?? 0);
   return (
     pilotage?.revele === true ||
-    pilotage?.phase === 'revele' ||
     (pilotage?.explicationsDevoilees ?? 0) > 0 ||
     Math.max(pilotage?.etayageAtteint ?? 0, etayageRevelateur) > 0
   );

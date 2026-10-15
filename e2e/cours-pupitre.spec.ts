@@ -5,7 +5,6 @@ import { intercepterApi, servirFlux, servirJson, servirSansContenu } from './fix
 const SESSION = '33333333-3333-4333-8333-333333333333';
 const SLUG = 'b2-01-traitement-information-chiffree';
 const PARTICIPANT = '55555555-5555-4555-8555-555555555555';
-const REPONSE_ATTENDUE = 'Des milliers d’euros, pas des euros.';
 const ENONCE_PROBLEME = 'Le prix monte de 20 %, puis baisse de 20 %. Où arrive-t-il ?';
 const NOTE = 'Relancer Léa sur la base de départ.';
 
@@ -45,12 +44,6 @@ const ECRAN = {
   corriges: [{ questionId: QUESTION.id, bonneReponse: 'a', confusions: [] }],
   questions: [{ id: QUESTION.id, enonce: ENONCE_PROBLEME, options: QUESTION.options }],
   corrigeEcran: null,
-  guide: {
-    aDire: 'Avant de commenter la pente, vérifiez le repère.',
-    question: 'Quelle est l’unité de l’axe vertical ?',
-    reponse: REPONSE_ATTENDUE,
-    relance: 'Qui peut lire la légende à voix haute ?',
-  },
 };
 
 const DEROULE = {
@@ -225,34 +218,10 @@ async function installerLePupitre(page: Page): Promise<Journal> {
 
 async function ouvrirLePupitre(page: Page): Promise<void> {
   await page.goto(`/cours/presenter/${SLUG}?seance=${SESSION}`);
-  await expect(page.getByTestId('presentateur-guide')).toBeVisible();
+  await expect(page.getByTestId('presentateur-notes')).toBeVisible();
 }
 
-test.describe('pupitre du formateur (QA-09, QA-10, QA-11)', () => {
-  test('la réponse attendue n’entre dans le DOM du pupitre qu’après le clic de révélation', async ({
-    page,
-  }) => {
-    await installerLePupitre(page);
-    await ouvrirLePupitre(page);
-
-    await expect(page.getByTestId('panneau-guide-rubrique')).not.toHaveCount(0);
-    expect(await page.content()).not.toContain(REPONSE_ATTENDUE);
-    await expect(page.getByTestId('panneau-guide-reveler')).toHaveAttribute(
-      'aria-expanded',
-      'false',
-    );
-
-    await page.getByTestId('panneau-guide-reveler').click();
-
-    await expect(page.getByTestId('panneau-guide-reponse')).toHaveText(REPONSE_ATTENDUE);
-    expect(await page.content()).toContain(REPONSE_ATTENDUE);
-
-    await page.getByTestId('panneau-guide-reveler').click();
-
-    await expect(page.getByTestId('panneau-guide-reponse')).toHaveCount(0);
-    expect(await page.content()).not.toContain(REPONSE_ATTENDUE);
-  });
-
+test.describe('pupitre du formateur (QA-10, QA-11)', () => {
   test('G05 · annote l’écran sans groupe de suivi, relit l’annotation et exporte le bilan', async ({
     page,
   }) => {

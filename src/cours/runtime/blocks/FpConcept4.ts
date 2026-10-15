@@ -1,4 +1,5 @@
 import { evaluerExpression, remplirGabarit } from 'portfolio-2025-partage/formule';
+import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { fini } from '../core/valeurs';
 import { type Reglages } from './animation';
@@ -263,41 +264,44 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     }
     const lignes = this.lignes(parametre, valeurs);
     const courante = lignes.find((ligne) => ligne.courant);
-    return safeHtml`
-      <div class="fp-concept4__face" data-testid="tableau" data-valeur="${escapeHtml(String(courante?.resultat ?? Number.NaN))}">
-        <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-tableau'))}</h3>
-        <table class="fp-concept4__tableau">
-          <thead>
-            <tr>
-              <th scope="col">${escapeHtml(parametre.libelle)}</th>
-              <th scope="col">${escapeHtml(this.texte('concept4-resultat'))}</th>
-            </tr>
-          </thead>
-          <tbody>${lignes.map((ligne) => this.ligne(ligne))}</tbody>
-        </table>
-      </div>
-    `;
+    return this.faceDuTableau(
+      courante?.resultat ?? Number.NaN,
+      parametre.libelle,
+      lignes.map((ligne) => this.ligne(ligne)),
+    );
   }
 
   private tableauDesEtapes(valeurs: Valeurs): EscapedHtml {
     const etapes = this.definition?.etapes ?? [];
     const resultats = this.valeursDesEtapes(valeurs);
     const derniere = etapes.length - 1;
+    return this.faceDuTableau(
+      this.resultat(valeurs),
+      this.texte('concept4-etape'),
+      etapes.map(
+        (etape, rang) =>
+          safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(rang === derniere))}"><td>${escapeHtml(etape.libelle)}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(formater(resultats[rang]))}</td></tr>`,
+      ),
+    );
+  }
+
+  private faceDuTableau(
+    valeur: number,
+    premiereColonne: string,
+    lignes: readonly EscapedHtml[],
+  ): EscapedHtml {
     return safeHtml`
-      <div class="fp-concept4__face" data-testid="tableau" data-valeur="${escapeHtml(String(this.resultat(valeurs)))}">
+      <div class="fp-concept4__face" data-testid="tableau" data-valeur="${escapeHtml(String(valeur))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-tableau'))}</h3>
-        <table class="fp-concept4__tableau">
+        ${dansUnDefileur(safeHtml`<table class="fp-concept4__tableau">
           <thead>
             <tr>
-              <th scope="col">${escapeHtml(this.texte('concept4-etape'))}</th>
+              <th scope="col">${escapeHtml(premiereColonne)}</th>
               <th scope="col">${escapeHtml(this.texte('concept4-resultat'))}</th>
             </tr>
           </thead>
-          <tbody>${etapes.map(
-            (etape, rang) =>
-              safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(rang === derniere))}"><td>${escapeHtml(etape.libelle)}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(formater(resultats[rang]))}</td></tr>`,
-          )}</tbody>
-        </table>
+          <tbody>${lignes}</tbody>
+        </table>`)}
       </div>
     `;
   }
@@ -324,7 +328,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     return safeHtml`
       <div class="fp-concept4__face" data-testid="phrase" data-valeur="${escapeHtml(String(resultat))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-phrase'))}</h3>
-        <p class="fp-prose fp-concept4__phrase" data-testid="phrase-texte">${escapeHtml(phrase)}</p>
+        <p class="fp-prose" data-testid="phrase-texte">${escapeHtml(phrase)}</p>
       </div>
     `;
   }

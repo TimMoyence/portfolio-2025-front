@@ -10,6 +10,7 @@ import {
   inject,
   InjectionToken,
   input,
+  NgZone,
   output,
   Renderer2,
   signal,
@@ -35,6 +36,7 @@ import {
   planDeMontage,
   PROPRIETES_PAR_BRIQUE,
   type ReponsesDuQuestionnaire,
+  type RevelationDuVote,
 } from './lecture-ecran';
 import {
   type ImpressionDeLEcran,
@@ -43,7 +45,8 @@ import {
   posesDeReinjection,
 } from './reinjection';
 
-type DonneesFormateur = CorrigeEcranPresentateur | ReponsesDuQuestionnaire | null;
+type DonneesFormateur =
+  CorrigeEcranPresentateur | ReponsesDuQuestionnaire | RevelationDuVote | null;
 
 interface MontageActif extends MontageIdentifie {
   readonly element: HTMLElement;
@@ -65,7 +68,9 @@ interface ReponseVisuelle {
     @if (entete(); as questionnaire) {
       <header class="slide-activity__entete" data-testid="slide-activity-entete">
         <h2 class="slide-activity__intitule">{{ questionnaire.intitule }}</h2>
-        <p class="slide-activity__consigne">{{ questionnaire.consigne }}</p>
+        @if (questionnaire.consigne; as consigne) {
+          <p class="slide-activity__consigne">{{ consigne }}</p>
+        }
       </header>
     }
     @if (verrouille()) {
@@ -258,6 +263,7 @@ export class SlideActivityComponent {
 
   private readonly host = viewChild.required<ElementRef<HTMLElement>>('host');
   private readonly renderer = inject(Renderer2);
+  private readonly zone = inject(NgZone);
   private readonly registerBlocks = inject(REGISTER_SLIDE_BLOCKS);
   private readonly registered = this.registerAfterRender();
   private readonly posees = new WeakMap<HTMLElement, Map<string, unknown>>();
@@ -279,7 +285,7 @@ export class SlideActivityComponent {
       this.direct();
       this.donneesFormateur();
       this.maitrise();
-      untracked(() => this.reinjecter());
+      untracked(() => this.zone.runOutsideAngular(() => this.reinjecter()));
     });
   }
 
@@ -336,10 +342,12 @@ export class SlideActivityComponent {
   }
 
   private registerAfterRender(): Promise<boolean> {
-    return new Promise<void>((resolve) => afterNextRender(resolve)).then(this.registerBlocks).then(
-      () => true,
-      () => false,
-    );
+    return new Promise<void>((resolve) => afterNextRender(resolve))
+      .then(() => this.zone.runOutsideAngular(this.registerBlocks))
+      .then(
+        () => true,
+        () => false,
+      );
   }
 
   private scheduleMount(slide: EcranContent, role: Role, apercu: boolean): void {
@@ -357,7 +365,7 @@ export class SlideActivityComponent {
         this.error.set(true);
         return;
       }
-      this.mount(slide, role, apercu);
+      this.zone.runOutsideAngular(() => this.mount(slide, role, apercu));
     });
   }
 

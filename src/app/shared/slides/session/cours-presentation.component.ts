@@ -30,6 +30,7 @@ import { telechargerFichier } from '../../utils/telechargement.utils';
 import type { DirectEcran, EvenementBrique } from './contrat-hote';
 import { extraireDuRenvoi } from './extrait-du-renvoi';
 import { SlideActivityComponent } from './slide-activity.component';
+import { reductionPourTenir } from './tenir-dans-sa-place.directive';
 import { SlideComponent } from '../deck/slide.component';
 
 export type CoursPresentationMode = 'etudiant' | 'formateur' | 'projection';
@@ -447,7 +448,7 @@ function debordementEnLargeur(contenu: HTMLElement): number {
       block-size: auto;
       overflow: visible;
       padding: 1rem;
-      container-type: inline-size;
+      container: toile-compacte / inline-size;
     }
 
     :host(.cours-presentation--defilante) .cours-cadre,
@@ -457,14 +458,29 @@ function debordementEnLargeur(contenu: HTMLElement): number {
     }
 
     :host(.cours-presentation--compacte) .cours-renvoi {
+      order: -1;
       flex-basis: auto;
+      padding: 1rem 1rem 0;
       border-inline-start: 0;
-      border-block-start: 1px solid rgba(12, 9, 2, 0.12);
     }
 
     :host(.cours-presentation--compacte) .cours-renvoi__cadre {
       flex: none;
-      aspect-ratio: 16 / 9;
+      overflow: visible;
+      border-width: 0 0 1px;
+      border-radius: 0;
+      background: none;
+    }
+
+    :host(.cours-presentation--compacte) .cours-renvoi__toile {
+      position: static;
+      inline-size: auto;
+      block-size: auto;
+      padding: 0 0 1rem;
+      container: toile-compacte / inline-size;
+      overflow: visible;
+      transform: none;
+      pointer-events: auto;
     }
   `,
   host: {
@@ -572,7 +588,7 @@ export class CoursPresentationComponent {
 
   protected readonly toileDuRenvoi = computed<Mesure | null>(() => {
     const cadre = this.cadreDuRenvoi();
-    if (cadre === null || cadre.largeur === 0 || cadre.hauteur === 0) {
+    if (this.compacte() || cadre === null || cadre.largeur === 0 || cadre.hauteur === 0) {
       return null;
     }
     const echelleMinimale = cadre.largeur / LARGEUR_DE_TOILE;
@@ -640,16 +656,17 @@ export class CoursPresentationComponent {
   private readonly reduction = computed(() => {
     const place = this.place();
     const contenu = this.hauteurDuContenu();
-    if (this.compacte() || place === null || contenu === null || contenu <= place + 1) {
-      return null;
-    }
-    return place / contenu;
+    return this.compacte() || place === null || contenu === null
+      ? null
+      : reductionPourTenir(place, contenu);
   });
 
   private readonly reductionLisible = computed(() => {
     const echelle = this.echelleDeToile();
     return echelle === null ? ECHELLE_LISIBLE : ECHELLE_LISIBLE / Math.max(1, echelle);
   });
+
+  private readonly plafondDElargissement = computed(() => 1 / this.reductionLisible());
 
   protected readonly defilante = computed(() => {
     const reduction = this.reduction();
@@ -721,14 +738,23 @@ export class CoursPresentationComponent {
       const contenu = this.hauteurNaturelle();
       const { enLargeur } = this.debordementDuContenu();
       const sansEtalement =
-        this.mode() === 'etudiant' ||
         this.renvoiAffiche() !== null ||
         Math.abs(this.elargissementMesure() - untracked(this.elargissement)) >
           PRECISION_D_ELARGISSEMENT;
       if (sansEtalement || place === null || contenu === null || contenu === 0) {
         return;
       }
+      if (this.mode() === 'etudiant') {
+        this.elargirPourLaLargeur(enLargeur, this.plafondDElargissement());
+        return;
+      }
       this.etalerLeContenu(place / contenu, enLargeur);
+    });
+    effect(() => {
+      const plafond = this.plafondDElargissement();
+      if (this.mode() === 'etudiant' && untracked(this.elargissement) > plafond) {
+        this.elargissement.set(plafond);
+      }
     });
     effect((onCleanup) => {
       const cadre = this.cadreObserve()?.nativeElement;
@@ -849,6 +875,15 @@ export class CoursPresentationComponent {
       [elargissement, Number.NEGATIVE_INFINITY],
     );
     this.elargissement.set(meilleur);
+  }
+
+  private elargirPourLaLargeur(enLargeur: number, plafond: number): void {
+    const elargissement = untracked(this.elargissement);
+    if (enLargeur > 1 && elargissement < plafond) {
+      this.elargissement.set(
+        Math.min(plafond, elargissement * enLargeur + GAIN_D_ELARGISSEMENT_UTILE),
+      );
+    }
   }
 
   private essayer(elargissement: number): void {

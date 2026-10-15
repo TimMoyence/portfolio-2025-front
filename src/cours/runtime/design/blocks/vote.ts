@@ -53,7 +53,6 @@ export const vote = `
 :where(.fp-root) .fp-vote__barre__libelle {
   color: var(--fp-texte-fort);
   font-weight: 600;
-  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-vote__barre__piste {

@@ -17,6 +17,7 @@
       </p>
     } @else {
       <textarea
+        #zone
         rows="6"
         [placeholder]="r.placeholder || ''"
         [value]="garde() ?? value()"

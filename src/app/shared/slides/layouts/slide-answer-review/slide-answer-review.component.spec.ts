@@ -4,6 +4,7 @@ import {
   buildAnswerReviewProps,
 } from '../../../../../testing/factories/visual-slide.factory';
 import type { DecomptesParCle } from '../../../../../cours/content/types';
+import { libellesColles } from '../../../../../testing/libelles-colles';
 import { setupTestBed } from '../../../../../testing/setup-test-bed';
 import { SlideAnswerReviewComponent } from './slide-answer-review.component';
 
@@ -53,6 +54,12 @@ describe('SlideAnswerReviewComponent', () => {
     expect(explication(element, PART)?.textContent).toContain('Réponse attendue');
     expect(explication(element, PART)?.textContent).toContain('45,5 %');
     expect(explication(element, EVOLUTION)?.textContent).not.toContain('Réponse attendue');
+  });
+
+  it('sépare « Réponse attendue : » de la valeur tirée par un blanc rendu', () => {
+    const element = monter({ cibles: { [PART]: '45,5 %' } });
+
+    expect(libellesColles(element)).toEqual([]);
   });
 
   it('T6 · borde de vert la reponse juste et de rouge la reponse a revoir', () => {
