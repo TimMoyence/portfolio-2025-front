@@ -17,6 +17,33 @@ export async function stabiliserLaVue(fixture: ComponentFixture<VueDeSeance>): P
   fixture.detectChanges();
 }
 
+const POSES_DE_LA_MISE_EN_PAGE = 5;
+
+function empreinteDeLaMiseEnPage(hote: HTMLElement): string {
+  return [...hote.querySelectorAll<HTMLElement>('app-cours-presentation')]
+    .map((presentation) => {
+      const cadre = presentation.querySelector<HTMLElement>('[data-testid="cours-cadre"]');
+      const toile = presentation.querySelector<HTMLElement>('[data-testid="cours-toile"]');
+      return `${presentation.className}|${toile?.style.transform ?? ''}|${cadre?.clientWidth ?? 0}x${cadre?.clientHeight ?? 0}`;
+    })
+    .join(';');
+}
+
+export async function stabiliserLaMiseEnPage(
+  fixture: ComponentFixture<VueDeSeance>,
+): Promise<void> {
+  const hote = fixture.nativeElement as HTMLElement;
+  await stabiliserLaVue(fixture);
+  for (let pose = 0; pose < POSES_DE_LA_MISE_EN_PAGE; pose += 1) {
+    const avant = empreinteDeLaMiseEnPage(hote);
+    await deuxImages();
+    await stabiliserLaVue(fixture);
+    if (empreinteDeLaMiseEnPage(hote) === avant) {
+      return;
+    }
+  }
+}
+
 export function diffuserSurLaVue<T>(
   double: FluxDouble,
   fixture: ComponentFixture<T>,
@@ -38,7 +65,7 @@ export async function attendreChaqueLibelleSepareDeSaValeur(
     ecrans,
     async (ecranCourant, pilotage) => {
       diffuserSurLaVue(double, fixture, { etat: 'en_cours', ...etat, ecranCourant, pilotage });
-      await stabiliserLaVue(fixture);
+      await stabiliserLaMiseEnPage(fixture);
     },
     vues,
     'bout-a-bout',
@@ -67,9 +94,7 @@ export async function attendreChaqueCalqueEntierDansLaToile(
     for (const pilotageDeLEcran of PILOTAGES_DES_CALQUES) {
       const pilotage = { [id]: pilotageDeLEcran };
       diffuserSurLaVue(double, fixture, { etat: 'en_cours', ...etat, ecranCourant, pilotage });
-      await stabiliserLaVue(fixture);
-      await deuxImages();
-      await stabiliserLaVue(fixture);
+      await stabiliserLaMiseEnPage(fixture);
       const toile = hote.querySelector('[data-testid="cours-toile"]');
       const vus = [...(toile?.querySelectorAll(SELECTEUR_DES_CALQUES) ?? [])];
       calques += vus.length;

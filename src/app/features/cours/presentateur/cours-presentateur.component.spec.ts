@@ -40,6 +40,7 @@ import {
 } from '../../../../testing/factories/formations.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
+import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
@@ -1305,31 +1306,39 @@ describe('CoursPresentateurComponent', () => {
     ];
 
     for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
-      it(`${prefixe} : chaque écran, avant et après révélation, sépare chaque libellé de sa valeur`, async () => {
-        const fixture = await ouvrirLeCoursServi(servi);
+      it(
+        `${prefixe} : chaque écran, avant et après révélation, sépare chaque libellé de sa valeur`,
+        async () => {
+          const fixture = await ouvrirLeCoursServi(servi);
 
-        await attendreChaqueLibelleSepareDeSaValeur(
-          double,
-          fixture,
-          servi.ecrans,
-          VUES_DU_PUPITRE,
-          {
-            participants: 2,
-          },
-        );
-      });
+          await attendreChaqueLibelleSepareDeSaValeur(
+            double,
+            fixture,
+            servi.ecrans,
+            VUES_DU_PUPITRE,
+            {
+              participants: 2,
+            },
+          );
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
     }
   });
 
   describe('QP-CALQUE · la correction et les résultats projetés tiennent dans l aperçu du pupitre', () => {
     for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
-      it(`${prefixe} : sur chaque écran révélé, rien de la correction ni des résultats projetés n est coupé, ni réduit par un zoom que Safari arrête à 9 px`, async () => {
-        const fixture = await ouvrirLeCoursServi(servi);
+      it(
+        `${prefixe} : sur chaque écran révélé, rien de la correction ni des résultats projetés n est coupé, ni réduit par un zoom que Safari arrête à 9 px`,
+        async () => {
+          const fixture = await ouvrirLeCoursServi(servi);
 
-        await attendreChaqueCalqueEntierDansLaToile(double, fixture, servi.ecrans, {
-          participants: 2,
-        });
-      });
+          await attendreChaqueCalqueEntierDansLaToile(double, fixture, servi.ecrans, {
+            participants: 2,
+          });
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
     }
   });
 });

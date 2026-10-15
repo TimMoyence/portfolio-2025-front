@@ -138,6 +138,30 @@ describe('libellesColles', () => {
     ).toEqual([]);
   });
 
+  it('juge chaque écart dans la mise en page, quelle que soit la réduction de la toile à l écran', () => {
+    const reduit = (echelle: number, contenu: string): string =>
+      `<div style="transform:scale(${echelle});transform-origin:0 0">${contenu}</div>`;
+    const compte = (ecart: string): string =>
+      `<p style="display:flex;gap:${ecart};margin:0"><strong>2</strong><span>réponse(s)</span></p>`;
+    const empilees = (decalage: string): string =>
+      `<div style="position:relative;height:4rem;font-size:1rem;line-height:1"><span style="position:absolute;top:0;right:0">1 000</span><span style="position:absolute;top:${decalage};right:0">500</span></div>`;
+    const chevauchees =
+      '<div style="position:relative;height:2rem;font-size:1rem"><span style="position:absolute;left:0">0000</span><span style="position:absolute;left:calc(4ch - 0.25rem)">−000</span></div>';
+
+    expect({
+      separees: [0.2, 1, 3].flatMap((echelle) => [
+        ...libellesColles(rendre(reduit(echelle, compte('0.35rem')))),
+        ...libellesColles(rendre(reduit(echelle, empilees('1.6em')))),
+      ]),
+      colleesAGrandeEchelle: libellesColles(rendre(reduit(3, compte('0.1rem')))),
+      chevaucheesAPetiteEchelle: libellesColles(rendre(reduit(0.2, chevauchees))),
+    }).toEqual({
+      separees: [],
+      colleesAGrandeEchelle: ['2|réponse(s)'],
+      chevaucheesAPetiteEchelle: ['0000|−000'],
+    });
+  });
+
   it('ignore un texte masqué', () => {
     expect(
       libellesColles(
