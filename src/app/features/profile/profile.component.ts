@@ -13,18 +13,28 @@ import type { AuthUser } from '../../core/models/auth.model';
 import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
+import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
+import { MotDePasseNeufDirective } from '../../shared/directives/mot-de-passe-neuf.directive';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import {
   LONGUEUR_MAX_D_UN_NOM,
-  LONGUEUR_MIN_D_UN_MOT_DE_PASSE,
+  LONGUEUR_MAX_D_UN_TELEPHONE,
+  REGLE_D_UN_MOT_DE_PASSE,
 } from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, RevealOnScrollDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    RevealOnScrollDirective,
+    FieldErrorsComponent,
+    MotDePasseNeufDirective,
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,8 +45,9 @@ export class ProfileComponent {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly router = inject(Router);
 
-  protected readonly longueurMinDUnMotDePasse = LONGUEUR_MIN_D_UN_MOT_DE_PASSE;
+  protected readonly regleDUnMotDePasse = REGLE_D_UN_MOT_DE_PASSE;
   protected readonly longueurMaxDUnNom = LONGUEUR_MAX_D_UN_NOM;
+  protected readonly longueurMaxDUnTelephone = LONGUEUR_MAX_D_UN_TELEPHONE;
 
   isEditing = signal(false);
   editFirstName = '';

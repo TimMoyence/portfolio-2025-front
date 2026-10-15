@@ -124,6 +124,9 @@ describe('ToolkitFormComponent', () => {
       'marie@example..com',
       'marie exemple@example.com',
       'marie@exa mple.com',
+      'marie@exemple.c',
+      'marie@-exemple.fr',
+      'marie..dupont@exemple.fr',
     ];
 
     function setValidExcept(email: string): void {
@@ -145,6 +148,20 @@ describe('ToolkitFormComponent', () => {
         expect(component.isValid()).toBeFalse();
       });
     }
+  });
+
+  it('plafonne le prénom à 50 caractères, comme le back, dans le champ et dans la validité', () => {
+    const champ: HTMLInputElement | null = fixture.nativeElement.querySelector(
+      'input[autocomplete="given-name"]',
+    );
+    expect(champ?.maxLength).toBe(50);
+
+    component.email.set('marie@example.com');
+    component.termsAccepted.set(true);
+    component.firstName.set('a'.repeat(51));
+    expect(component.isValid()).toBeFalse();
+    component.firstName.set('a'.repeat(50));
+    expect(component.isValid()).toBeTrue();
   });
 
   it("utilise 'ia-solopreneurs' par defaut si aucun formationSlug n'est passe", async () => {

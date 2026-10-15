@@ -1,8 +1,14 @@
+import { estUneAdresseEmail } from './adresse-email';
 import { creerCle } from './cle';
 import { persistJson, readJson, removeKey } from './storage';
 
 const CLE = 'fp.identite';
-const EMAIL_MOTIF = /^[^\s@]{1,64}@[^\s@]{1,253}\.[^\s@]{2,24}$/;
+
+export const LONGUEURS_MAX_DE_L_IDENTITE: Readonly<Record<keyof IdentityInput, number>> = {
+  prenom: 80,
+  nom: 80,
+  email: 180,
+};
 
 export interface Identity {
   studentKey: string;
@@ -36,7 +42,14 @@ export function saveIdentity(input: IdentityInput): IdentityRegistration {
   if (prenom.length === 0 || nom.length === 0) {
     throw new Error('Le prénom et le nom sont obligatoires');
   }
-  if (!EMAIL_MOTIF.test(email)) {
+  if (
+    prenom.length > LONGUEURS_MAX_DE_L_IDENTITE.prenom ||
+    nom.length > LONGUEURS_MAX_DE_L_IDENTITE.nom ||
+    email.length > LONGUEURS_MAX_DE_L_IDENTITE.email
+  ) {
+    throw new Error('Identité trop longue');
+  }
+  if (!estUneAdresseEmail(email)) {
     throw new Error('Adresse électronique invalide');
   }
   const existante = readIdentity();

@@ -16,6 +16,7 @@ import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/insta
 import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
 import {
   clearIdentity,
+  LONGUEURS_MAX_DE_L_IDENTITE,
   lireSecretDeReprise,
   readIdentity,
   saveIdentity,
@@ -175,9 +176,9 @@ describe('CoursEtudiantComponent', () => {
     return (ecranDe(fixture).componentInstance as SlideActivityComponent).slide();
   }
 
-  function soumettre(fixture: Fixture, code: string): void {
+  function soumettre(fixture: Fixture, code: string, identite = IDENTITE): void {
     const formulaire = lire(fixture, 'etudiant-entree');
-    const valeurs: readonly (readonly [string, string])[] = [['code', code], ...IDENTITE];
+    const valeurs: readonly (readonly [string, string])[] = [['code', code], ...identite];
     for (const [nom, valeur] of valeurs) {
       const champ = formulaire?.querySelector<HTMLInputElement>(`[name="${nom}"]`);
       if (champ) {
@@ -194,11 +195,11 @@ describe('CoursEtudiantComponent', () => {
     return fixture;
   }
 
-  async function rattacher(code = CODE_SAISI): Promise<Fixture> {
+  async function rattacher(code = CODE_SAISI, identite = IDENTITE): Promise<Fixture> {
     jasmine.clock().install();
     try {
       const fixture = monter();
-      soumettre(fixture, code);
+      soumettre(fixture, code, identite);
       jasmine.clock().tick(1_200);
       await stabiliserLaVue(fixture);
       return fixture;
@@ -372,6 +373,39 @@ describe('CoursEtudiantComponent', () => {
     expect(port.rejoindre).not.toHaveBeenCalled();
     expect(lire(fixture, 'etudiant-echec')?.getAttribute('data-motif')).toBe('code-invalide');
     expect(fixture.componentInstance.etat()).toBe('code');
+  });
+
+  it('borne les champs d identite comme le serveur, dans le formulaire d entree', () => {
+    const formulaire = lire(monter(), 'etudiant-entree');
+    const plafond = (nom: string): number | undefined =>
+      formulaire?.querySelector<HTMLInputElement>(`[name="${nom}"]`)?.maxLength;
+
+    expect([plafond('prenom'), plafond('nom'), plafond('email')]).toEqual([
+      LONGUEURS_MAX_DE_L_IDENTITE.prenom,
+      LONGUEURS_MAX_DE_L_IDENTITE.nom,
+      LONGUEURS_MAX_DE_L_IDENTITE.email,
+    ]);
+  });
+
+  it('refuse avant tout appel reseau une identite que le serveur refuserait', async () => {
+    const refusees: readonly (readonly [string, string, string])[] = [
+      ['Lea', 'Dubois', 'lea@gmail'],
+      ['Lea', 'Dubois', 'lea@exemple.c'],
+      ['L'.repeat(81), 'Dubois', 'lea.dubois@example.com'],
+      ['Lea', 'D'.repeat(81), 'lea.dubois@example.com'],
+    ];
+    for (const [prenom, nom, email] of refusees) {
+      const fixture = await rattacher(CODE_SAISI, [
+        ['prenom', prenom],
+        ['nom', nom],
+        ['email', email],
+      ]);
+
+      expect(lire(fixture, 'etudiant-echec')?.getAttribute('data-motif'))
+        .withContext(`${prenom.slice(0, 5)} ${nom.slice(0, 5)} ${email}`)
+        .toBe('identite-refusee');
+    }
+    expect(port.rejoindre).not.toHaveBeenCalled();
   });
 
   it('retire les espaces du code avant de le transmettre au serveur', async () => {

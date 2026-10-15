@@ -26,6 +26,7 @@ import { texte } from '../../../../cours/runtime/core/i18n';
 import type { Identity } from '../../../../cours/runtime/core/identity';
 import {
   clearIdentity,
+  LONGUEURS_MAX_DE_L_IDENTITE,
   lireSecretDeReprise,
   memoriserSecretDeReprise,
   saveIdentity,
@@ -553,11 +554,23 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
               </div>
               <div class="student-entry__field">
                 <label for="etudiant-prenom" i18n="cours.prenom|@@coursPrenom">Prénom</label>
-                <input id="etudiant-prenom" name="prenom" autocomplete="given-name" required />
+                <input
+                  id="etudiant-prenom"
+                  name="prenom"
+                  autocomplete="given-name"
+                  required
+                  [maxLength]="longueursMaxDeLIdentite.prenom"
+                />
               </div>
               <div class="student-entry__field">
                 <label for="etudiant-nom" i18n="cours.nom|@@coursNom">Nom</label>
-                <input id="etudiant-nom" name="nom" autocomplete="family-name" required />
+                <input
+                  id="etudiant-nom"
+                  name="nom"
+                  autocomplete="family-name"
+                  required
+                  [maxLength]="longueursMaxDeLIdentite.nom"
+                />
               </div>
               <div class="student-entry__field student-entry__field--wide">
                 <label for="etudiant-email" i18n="cours.email|@@coursEmail">Adresse e-mail</label>
@@ -570,6 +583,7 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
                   type="email"
                   autocomplete="email"
                   required
+                  [maxLength]="longueursMaxDeLIdentite.email"
                 />
               </div>
             </div>
@@ -612,6 +626,7 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
   `,
 })
 export class CoursEtudiantComponent {
+  protected readonly longueursMaxDeLIdentite = LONGUEURS_MAX_DE_L_IDENTITE;
   readonly etat = signal<EtatEtudiant>('code');
   readonly motifEchec = signal<MotifEchec | null>(null);
   readonly messageEchec = signal<string | null>(null);

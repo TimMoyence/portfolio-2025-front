@@ -2,6 +2,7 @@ import { MOTIF_UUID_V4 } from '../../../testing/sans-random-uuid';
 import { sansStockageLocal, saturationDuStockage } from '../../../testing/sans-stockage';
 import {
   clearIdentity,
+  LONGUEURS_MAX_DE_L_IDENTITE,
   lireSecretDeReprise,
   memoriserSecretDeReprise,
   readIdentity,
@@ -119,6 +120,36 @@ describe('identity', () => {
     expect(() =>
       saveIdentity({ prenom: '  ', nom: 'Martin', email: 'theo@example.com' }),
     ).toThrow();
+  });
+
+  it('refuse une adresse que le serveur refuse, avec la grammaire unique du site', () => {
+    for (const email of ['theo@gmail', 'theo@exemple.c', 'theo..martin@exemple.fr']) {
+      expect(() => saveIdentity({ ...THEO, email }))
+        .withContext(email)
+        .toThrow();
+    }
+  });
+
+  it('borne le prenom et le nom a 80 caracteres et l adresse a 180, comme le serveur', () => {
+    const { prenom, nom, email } = LONGUEURS_MAX_DE_L_IDENTITE;
+    expect([prenom, nom, email]).toEqual([80, 80, 180]);
+
+    const adresseDe181 = `${'a'.repeat(56)}@${'b'.repeat(60)}.${'c'.repeat(60)}.fr`;
+    expect(adresseDe181.length).toBe(181);
+    for (const [cas, identite] of [
+      ['prenom', { ...THEO, prenom: 'P'.repeat(81) }],
+      ['nom', { ...THEO, nom: 'N'.repeat(81) }],
+      ['email', { ...THEO, email: adresseDe181 }],
+    ] as const) {
+      expect(() => saveIdentity(identite))
+        .withContext(cas)
+        .toThrow();
+    }
+
+    expect(
+      saveIdentity({ prenom: 'P'.repeat(80), nom: 'N'.repeat(80), email: adresseDe181.slice(1) })
+        .identite.prenom,
+    ).toBe('P'.repeat(80));
   });
 
   it('sous saturation du stockage, l identite tient en memoire et signale qu elle n est pas persistee', () => {

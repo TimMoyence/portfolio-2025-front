@@ -23,11 +23,15 @@ import { loadGoogleGis } from '../../core/utils/google-gis';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import { extractErrorMessage } from '../../shared/utils/http-error.utils';
 import {
+  LONGUEUR_MAX_D_UN_MOT_DE_PASSE,
   LONGUEUR_MAX_D_UN_NOM,
-  LONGUEUR_MIN_D_UN_MOT_DE_PASSE,
+  LONGUEUR_MAX_D_UN_TELEPHONE,
+  REGLE_D_UN_MOT_DE_PASSE,
 } from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { SvgIconComponent } from '../../shared/components/svg-icon.component';
+import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
+import { MotDePasseNeufDirective } from '../../shared/directives/mot-de-passe-neuf.directive';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
@@ -41,8 +45,9 @@ interface ChampAuth {
   label: string;
   type: string;
   required: boolean;
-  longueurMin?: number;
   longueurMax?: number;
+  motDePasseNeuf?: true;
+  indication?: string;
 }
 
 interface PanneauAuth {
@@ -67,6 +72,8 @@ interface PanneauAuth {
     RevealOnScrollDirective,
     AuthShellComponent,
     FieldErrorsComponent,
+    FormatDeContactDirective,
+    MotDePasseNeufDirective,
   ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
@@ -137,7 +144,8 @@ export class AuthComponent {
       label: $localize`:auth.signup.field.password|Signup field label@@authSignupFieldPassword:Mot de passe`,
       type: 'password',
       required: true,
-      longueurMin: LONGUEUR_MIN_D_UN_MOT_DE_PASSE,
+      motDePasseNeuf: true,
+      indication: REGLE_D_UN_MOT_DE_PASSE,
     },
     {
       key: 'verifPassword',
@@ -150,6 +158,7 @@ export class AuthComponent {
       label: $localize`:auth.signup.field.phone|Signup field label@@authSignupFieldPhone:Téléphone`,
       type: 'tel',
       required: false,
+      longueurMax: LONGUEUR_MAX_D_UN_TELEPHONE,
     },
   ];
 
@@ -167,6 +176,7 @@ export class AuthComponent {
       label: $localize`:auth.login.field.password|Login field label@@authLoginFieldPassword:Mot de passe`,
       type: 'password',
       required: true,
+      longueurMax: LONGUEUR_MAX_D_UN_MOT_DE_PASSE,
     },
   ];
 
@@ -328,7 +338,7 @@ export class AuthComponent {
       next: (session) => this.ouvrirLaSession(session),
       error: (err) => {
         const message =
-          extractErrorMessage(err, { includeTopLevelMessage: false }) ??
+          extractErrorMessage(err) ??
           $localize`:auth.google.error@@authGoogleError:Échec de l'authentification Google.`;
         this.setGoogleError(context, message);
         this.cdr.markForCheck();

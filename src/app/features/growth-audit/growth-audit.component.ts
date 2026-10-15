@@ -29,7 +29,12 @@ import type { FaqItem } from '../../shared/components/faq-section/faq-section.co
 import { FaqSectionComponent } from '../../shared/components/faq-section/faq-section.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
+import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
+import {
+  BORNES_D_UN_CONTACT_D_AUDIT,
+  BORNES_D_UN_NOM_DE_SITE,
+} from '../../shared/utils/regles-de-saisie';
 import { AuditClientReportSectionComponent } from './components/audit-client-report-section/audit-client-report-section.component';
 import {
   type AuditSectionBadge,
@@ -69,6 +74,7 @@ function formulaireVierge(): AuditRequestPayload {
     FaqSectionComponent,
     AuditClientReportSectionComponent,
     FieldErrorsComponent,
+    FormatDeContactDirective,
     HoneypotDirective,
   ],
   templateUrl: './growth-audit.component.html',
@@ -82,6 +88,8 @@ export class GrowthAuditComponent implements OnDestroy {
   private readonly langue: NonNullable<AuditRequestPayload['locale']> =
     langueDuSite(inject(LOCALE_ID)) === 'en' ? 'en' : 'fr';
   protected readonly iaTaskFallback = $localize`:@@auditIaTaskFallback:IA`;
+  protected readonly bornesDuNomDeSite = BORNES_D_UN_NOM_DE_SITE;
+  protected readonly bornesDuContact = BORNES_D_UN_CONTACT_D_AUDIT;
 
   private streamSub?: Subscription;
   private reconnectAttempts = 0;

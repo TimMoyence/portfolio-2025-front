@@ -1,16 +1,29 @@
+import type { ComponentFixture } from '@angular/core/testing';
 import { Observable, of } from 'rxjs';
+import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/champ-de-formulaire';
 import type { PageAuthMontee } from '../../../testing/page-auth';
 import { formulaireSoumis, monterPageAuth } from '../../../testing/page-auth';
 import { ForgotPasswordComponent } from './forgot-password.component';
 
 describe('ForgotPasswordComponent', () => {
   let component: ForgotPasswordComponent;
+  let fixture: ComponentFixture<ForgotPasswordComponent>;
   let authService: PageAuthMontee<ForgotPasswordComponent>['authService'];
 
   beforeEach(async () => {
     const page = await monterPageAuth(ForgotPasswordComponent);
-    ({ component, authService } = page);
-    page.fixture.detectChanges();
+    ({ component, fixture, authService } = page);
+    fixture.detectChanges();
+  });
+
+  it('refuse avant l envoi une adresse que le back refuse, et le dit sous le champ', async () => {
+    for (const refusee of ['jean', 'jean@gmail', 'jean@exemple.c']) {
+      expect(await erreursApresSaisie(fixture, '#email', refusee))
+        .withContext(refusee)
+        .toEqual({ email: true });
+    }
+    expect(texteDuBlocDuChamp(fixture, '#email')).toContain('Veuillez renseigner un email valide.');
+    expect(await erreursApresSaisie(fixture, '#email', 'jean@exemple.fr')).toBeNull();
   });
 
   it('appelle le service quand le formulaire est valide', () => {

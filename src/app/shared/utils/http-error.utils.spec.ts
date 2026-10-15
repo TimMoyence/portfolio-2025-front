@@ -1,3 +1,5 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { REGLE_SERVIE_PAR_LE_BACK as REGLE_SERVIE } from '../../../testing/champ-de-formulaire';
 import { extractErrorMessage } from './http-error.utils';
 
 describe('extractErrorMessage', () => {
@@ -15,8 +17,31 @@ describe('extractErrorMessage', () => {
     expect(extractErrorMessage(error)).toBe('Champ requis Email invalide');
   });
 
-  it('devrait fallback sur error.message', () => {
-    expect(extractErrorMessage(echecHttpSansCorps)).toBe('Http failure response');
+  it('ne retombe jamais sur le message technique de l erreur HTTP', () => {
+    expect(extractErrorMessage(echecHttpSansCorps)).toBeUndefined();
+    expect(
+      extractErrorMessage(
+        new HttpErrorResponse({
+          status: 0,
+          url: 'https://asilidesign.fr/api/v1/portfolio25/contacts',
+        }),
+      ),
+    ).toBeUndefined();
+  });
+
+  it('lit le detail en tableau d un refus du back, jamais « Http failure response »', () => {
+    const refus = new HttpErrorResponse({
+      status: 400,
+      statusText: 'Bad Request',
+      url: 'https://asilidesign.fr/api/v1/portfolio25/users',
+      error: { status: 400, detail: [REGLE_SERVIE] },
+    });
+
+    expect(extractErrorMessage(refus)).toBe(REGLE_SERVIE);
+  });
+
+  it('joint les lignes d un detail en tableau', () => {
+    expect(extractErrorMessage({ error: { detail: ['a', 'b'] } })).toBe('a b');
   });
 
   it('devrait retourner undefined si pas de message', () => {
@@ -50,40 +75,9 @@ describe('extractErrorMessage', () => {
       expect(extractErrorMessage(error)).toBe('M');
     });
 
-    it('devrait retourner undefined si detail non-string et aucun autre message (flag false)', () => {
+    it('devrait retourner undefined si detail non-string et aucun autre message', () => {
       const error = { error: { detail: 123 } };
-      expect(extractErrorMessage(error, { includeTopLevelMessage: false })).toBeUndefined();
-    });
-  });
-
-  describe('option includeTopLevelMessage', () => {
-    it('devrait, par defaut (true), retomber sur error.message top-level', () => {
-      expect(extractErrorMessage(echecHttpSansCorps)).toBe('Http failure response');
-    });
-
-    it('ne devrait PAS retomber sur error.message quand false', () => {
-      expect(
-        extractErrorMessage(echecHttpSansCorps, { includeTopLevelMessage: false }),
-      ).toBeUndefined();
-    });
-
-    it('devrait quand meme retourner error.error.message quand false', () => {
-      const error = { error: { message: 'Email pris' } };
-      expect(extractErrorMessage(error, { includeTopLevelMessage: false })).toBe('Email pris');
-    });
-
-    it('devrait quand meme retourner error.error.detail quand false', () => {
-      const error = { error: { detail: 'Lien expire' } };
-      expect(extractErrorMessage(error, { includeTopLevelMessage: false })).toBe('Lien expire');
-    });
-
-    it('devrait joindre un tableau error.error.message meme quand false', () => {
-      const error = { error: { message: ['a', 'b'] } };
-      expect(extractErrorMessage(error, { includeTopLevelMessage: false })).toBe('a b');
-    });
-
-    it('devrait retourner undefined pour {} avec flag false', () => {
-      expect(extractErrorMessage({}, { includeTopLevelMessage: false })).toBeUndefined();
+      expect(extractErrorMessage(error)).toBeUndefined();
     });
   });
 });

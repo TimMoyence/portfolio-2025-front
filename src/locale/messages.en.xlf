@@ -114,15 +114,33 @@
       </segment>
     </unit>
 
-    <unit id="authErrorPasswordLength">
+    <unit id="regleDUnMotDePasse">
       <notes>
-        <note category="location">src/app/features/auth/auth.component.html:103,106</note>
-        <note category="description">Password length error</note>
-        <note category="meaning">auth.error.passwordLength</note>
+        <note category="location">src/app/shared/utils/regles-de-saisie.ts:10</note>
       </notes>
       <segment>
-        <source>Le mot de passe doit contenir au moins 12 caractères.</source>
-        <target>Password must be at least 12 characters long.</target>
+        <source>Le mot de passe doit contenir au moins <ph id="0" equiv="longueur" disp="LONGUEUR_MIN_D_UN_MOT_DE_PASSE"/> caractères, dont une majuscule, un chiffre et un caractère spécial.</source>
+        <target>Password must be at least <ph id="0" equiv="longueur" disp="LONGUEUR_MIN_D_UN_MOT_DE_PASSE"/> characters long, including an uppercase letter, a digit and a special character.</target>
+      </segment>
+    </unit>
+
+    <unit id="champTropCourt">
+      <notes>
+        <note category="location">src/app/shared/components/field-errors/field-errors.component.html:10,12</note>
+      </notes>
+      <segment>
+        <source>Ce champ doit contenir au moins <ph id="0" equiv="INTERPOLATION" disp="{{ errors()?.[&apos;minlength&apos;].requiredLength }}"/> caractères.</source>
+        <target>This field must contain at least <ph id="0" equiv="INTERPOLATION" disp="{{ errors()?.[&apos;minlength&apos;].requiredLength }}"/> characters.</target>
+      </segment>
+    </unit>
+
+    <unit id="champTropLong">
+      <notes>
+        <note category="location">src/app/shared/components/field-errors/field-errors.component.html:14,16</note>
+      </notes>
+      <segment>
+        <source>Ce champ doit contenir au plus <ph id="0" equiv="INTERPOLATION" disp="{{ errors()?.[&apos;maxlength&apos;].requiredLength }}"/> caractères.</source>
+        <target>This field must contain at most <ph id="0" equiv="INTERPOLATION" disp="{{ errors()?.[&apos;maxlength&apos;].requiredLength }}"/> characters.</target>
       </segment>
     </unit>
 
@@ -9156,8 +9174,8 @@
         <note category="location">src/app/features/privacy/privacy.component.html:55,57</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de compte</pc> : nom, adresse email, mot de passe (chiffré). </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Account data</pc>: name, email address, password (encrypted). </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de compte</pc> : prénom, nom, adresse email, téléphone (facultatif), mot de passe (chiffré) et, si vous vous connectez avec Google, votre identifiant Google. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Account data</pc>: first name, last name, email address, phone number (optional), password (encrypted) and, if you sign in with Google, your Google identifier. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteItem2">
@@ -9185,6 +9203,24 @@
       <segment>
         <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de sécurité</pc> : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l&apos;adresse IP, le navigateur (user-agent) et l&apos;email saisi, inscrits au journal du serveur ; l&apos;adresse IP et le navigateur d&apos;une requête jugée suspecte. </source>
         <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Security data</pc>: for each sign-in or security event on your account, successful or not, the IP address, the browser (user-agent) and the email entered, written to the server log; the IP address and browser of a request flagged as suspicious. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCollecteJournal">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:40,43</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Journal d&apos;accès</pc> : pour chaque requête adressée au serveur, l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer), inscrits au journal du serveur. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Access log</pc>: for each request sent to the server, the IP address, the browser (user-agent) and the referring page (referer), written to the server log. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCollecteSeances">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:44,51</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données des séances de cours</pc> : le prénom, le nom et l&apos;adresse email saisis pour rejoindre une séance ; vos réponses aux questions, avec leur durée, et aux sondages, vos productions, vos tentatives d&apos;énigme, vos scores et votre progression par notion ; le relevé des incidents survenus pendant la séance (onglet masqué, fenêtre quittée, sortie du plein écran, tentative de copier ou de coller, raccourci bloqué, outils de développement soupçonnés, connexion perdue, réponse trop rapide), avec leur contexte. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Class session data</pc>: the first name, last name and email address entered to join a session; your answers to questions, with how long they took, and to polls, your work, your puzzle attempts, your scores and your progress per concept; the record of incidents during the session (hidden tab, window left, full screen exited, copy or paste attempt, blocked shortcut, suspected developer tools, lost connection, answer given too fast), with their context. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteItem3">
@@ -9483,6 +9519,15 @@
         <target> Manage your account and your access (training). </target>
       </segment>
     </unit>
+    <unit id="privacyUsageSeances">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:64,67</note>
+      </notes>
+      <segment>
+        <source> Suivre vos apprentissages pendant et après une séance de cours, et garantir l&apos;intégrité d&apos;une évaluation. </source>
+        <target> Follow your learning during and after a class session, and safeguard the integrity of an assessment. </target>
+      </segment>
+    </unit>
     <unit id="privacyUsageItem2">
       <notes>
         <note category="location">src/app/features/privacy/privacy.component.html:81,83</note>
@@ -9517,6 +9562,15 @@
       <segment>
         <source>Garder la preuve de votre choix de cookies.</source>
         <target>Keep proof of your cookie choice.</target>
+      </segment>
+    </unit>
+    <unit id="privacyUsageJournal">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:78,80</note>
+      </notes>
+      <segment>
+        <source> Faire fonctionner le serveur et diagnostiquer ses pannes. </source>
+        <target> Run the server and diagnose its failures. </target>
       </segment>
     </unit>
     <unit id="privacyUsageSecurite">
@@ -12435,15 +12489,6 @@
       </segment>
     </unit>
 
-    <unit id="contactErrorMessageMinLength">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:206,209</note>
-      </notes>
-      <segment>
-        <source>Ce champ est obligatoire et doit contenir au moins 10 caractères.</source>
-        <target>This field is required and must contain at least 10 characters.</target>
-      </segment>
-    </unit>
     <unit id="coursEcranIndisponible">
       <notes>
         <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:84</note>
@@ -12678,15 +12723,6 @@
       <segment>
         <source>vous@exemple.fr</source>
         <target>you@example.com</target>
-      </segment>
-    </unit>
-    <unit id="authResetPasswordPlaceholder">
-      <notes>
-        <note category="location">src/app/features/auth/reset-password.component.html:34,35</note>
-      </notes>
-      <segment>
-        <source>12 caractères minimum</source>
-        <target>12 characters minimum</target>
       </segment>
     </unit>
     <unit id="contactCtaInfoAriaLabel">

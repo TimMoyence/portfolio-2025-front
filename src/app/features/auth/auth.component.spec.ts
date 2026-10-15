@@ -1,11 +1,16 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { NgModel } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import type { AuthSession } from '../../core/models/auth.model';
 import type { SignupFormState } from '../../core/models/signupForm.model';
+import {
+  decrireLaRegleDUnMotDePasseNeuf,
+  erreursApresSaisie,
+  MOTS_DE_PASSE,
+  REGLE_SERVIE_PAR_LE_BACK as REGLE_SERVIE,
+} from '../../../testing/champ-de-formulaire';
 import {
   buildAuthSession,
   buildAuthUser,
@@ -179,30 +184,81 @@ describe('AuthComponent', () => {
       expect(component.activeTab).toBe('sign-up');
     });
 
-    async function saisir(id: string, valeur: string): Promise<NgModel> {
-      const champ = fixture.debugElement.query(By.css(`#${id}`));
-      const input = champ.nativeElement as HTMLInputElement;
-      input.value = valeur;
-      input.dispatchEvent(new Event('input'));
-      fixture.detectChanges();
-      await fixture.whenStable();
-      return champ.injector.get(NgModel);
-    }
+    const saisir = (id: string, valeur: string) => erreursApresSaisie(fixture, `#${id}`, valeur);
 
     it('exige 12 caractères au mot de passe, comme le back', async () => {
-      expect((await saisir('reg-password', 'Abcdefgh1!x')).errors).toEqual({
+      expect(await saisir('reg-password', 'Abcdefgh1!x')).toEqual({
         minlength: { requiredLength: 12, actualLength: 11 },
       });
-      expect((await saisir('reg-password', 'Abcdefgh1!xy')).errors).toBeNull();
+      expect(await saisir('reg-password', 'Abcdefgh1!xy')).toBeNull();
     });
+
+    decrireLaRegleDUnMotDePasseNeuf(() => fixture, '#reg-password');
 
     it('plafonne le prénom et le nom à 50 caractères, comme le back', async () => {
       for (const id of ['reg-firstName', 'reg-lastName']) {
-        expect((await saisir(id, 'a'.repeat(51))).errors).toEqual({
+        expect(await saisir(id, 'a'.repeat(51))).toEqual({
           maxlength: { requiredLength: 50, actualLength: 51 },
         });
-        expect((await saisir(id, 'a'.repeat(50))).errors).toBeNull();
+        expect(await saisir(id, 'a'.repeat(50))).toBeNull();
       }
+    });
+
+    it('plafonne le téléphone à 30 caractères, comme le back', async () => {
+      expect(await saisir('reg-phone', '0'.repeat(31))).toEqual({
+        maxlength: { requiredLength: 30, actualLength: 31 },
+      });
+      expect(await saisir('reg-phone', '0'.repeat(30))).toBeNull();
+    });
+
+    it('refuse à l inscription une adresse que le back refuse', async () => {
+      expect(await saisir('reg-email', 'jean@gmail')).toEqual({ email: true });
+      expect(await saisir('reg-email', 'jean@exemple.fr')).toBeNull();
+    });
+
+    it('affiche la règle servie par le back, jamais « Http failure response »', () => {
+      authService.register.and.returnValue(
+        throwError(
+          () =>
+            new HttpErrorResponse({
+              status: 400,
+              url: 'https://asilidesign.fr/api/v1/portfolio25/users',
+              error: { status: 400, detail: [REGLE_SERVIE] },
+            }),
+        ),
+      );
+      remplirInscription();
+
+      component.handleSignupSubmit(formulaireSoumis());
+
+      expect(component.signupErrorMessage).toBe(REGLE_SERVIE);
+    });
+
+    it('affiche le message localisé quand le back ne répond pas', () => {
+      authService.register.and.returnValue(
+        throwError(() => new HttpErrorResponse({ status: 0, url: 'https://asilidesign.fr' })),
+      );
+      remplirInscription();
+
+      component.handleSignupSubmit(formulaireSoumis());
+
+      expect(component.signupErrorMessage).toBe('Une erreur est survenue. Veuillez réessayer.');
+    });
+  });
+
+  describe('connexion', () => {
+    const saisir = (id: string, valeur: string) => erreursApresSaisie(fixture, `#${id}`, valeur);
+
+    it('refuse à la connexion une adresse que le back refuse', async () => {
+      expect(await saisir('login-email', 'jean@gmail')).toEqual({ email: true });
+      expect(await saisir('login-email', 'jean@exemple.fr')).toBeNull();
+    });
+
+    it('plafonne le mot de passe à 256 caractères, comme le back, sans exiger la règle d un compte neuf', async () => {
+      expect(await saisir('login-password', MOTS_DE_PASSE.tropLong)).toEqual({
+        maxlength: { requiredLength: 256, actualLength: 257 },
+      });
+      expect(await saisir('login-password', 'abc')).toBeNull();
     });
   });
 
@@ -211,13 +267,7 @@ describe('AuthComponent', () => {
       TestBed.resetTestingModule();
     });
 
-    it('appelle googleAuth et redirige vers returnUrl par defaut', async () => {
-      await setupWithSeoKey('login');
-
-      const router = TestBed.inject(Router);
-      const navigateSpy = spyOn(router, 'navigateByUrl');
-      authService.googleAuth.and.returnValue(of(buildAuthSession()));
-
+    function connecterParGoogle(): void {
       (
         component as unknown as {
           onGoogleCredential: (
@@ -226,9 +276,30 @@ describe('AuthComponent', () => {
           ) => void;
         }
       ).onGoogleCredential({ credential: 'google-id-token' }, 'log-in');
+    }
+
+    it('appelle googleAuth et redirige vers returnUrl par defaut', async () => {
+      await setupWithSeoKey('login');
+
+      const router = TestBed.inject(Router);
+      const navigateSpy = spyOn(router, 'navigateByUrl');
+      authService.googleAuth.and.returnValue(of(buildAuthSession()));
+
+      connecterParGoogle();
 
       expect(authService.googleAuth).toHaveBeenCalledWith('google-id-token');
       expect(navigateSpy).toHaveBeenCalledWith('/');
+    });
+
+    it('affiche le message localisé quand Google échoue sans réponse du back', async () => {
+      await setupWithSeoKey('login');
+      authService.googleAuth.and.returnValue(
+        throwError(() => new HttpErrorResponse({ status: 0, url: 'https://asilidesign.fr' })),
+      );
+
+      connecterParGoogle();
+
+      expect(component.loginErrorMessage).toBe("Échec de l'authentification Google.");
     });
   });
 });

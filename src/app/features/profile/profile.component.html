@@ -70,7 +70,13 @@
               </div>
               <div class="pf-field">
                 <label for="editPhone" i18n="@@profileEditPhoneLabel">Téléphone</label>
-                <input id="editPhone" name="editPhone" type="tel" [(ngModel)]="editPhone" />
+                <input
+                  id="editPhone"
+                  name="editPhone"
+                  type="tel"
+                  [maxlength]="longueurMaxDUnTelephone"
+                  [(ngModel)]="editPhone"
+                />
               </div>
               <p class="pf-note">
                 <strong i18n="@@profileEmailLabel">Email</strong> :
@@ -133,11 +139,17 @@
                   name="newPassword"
                   type="password"
                   required
-                  [minlength]="longueurMinDUnMotDePasse"
+                  appMotDePasseNeuf
                   [(ngModel)]="newPassword"
                   #newPasswordCtrl="ngModel"
                   [class.invalid]="
                     newPasswordCtrl.invalid && (newPasswordCtrl.touched || setPasswordSubmitted)
+                  "
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    aideDuMotDePasseNeuf;
+                    context: { $implicit: newPasswordCtrl, soumis: setPasswordSubmitted }
                   "
                 />
               </div>
@@ -205,12 +217,18 @@
                   name="changeNewPassword"
                   type="password"
                   required
-                  [minlength]="longueurMinDUnMotDePasse"
+                  appMotDePasseNeuf
                   [(ngModel)]="changeNewPassword"
                   #changeNewPasswordCtrl="ngModel"
                   [class.invalid]="
                     changeNewPasswordCtrl.invalid &&
                     (changeNewPasswordCtrl.touched || changePasswordSubmitted)
+                  "
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    aideDuMotDePasseNeuf;
+                    context: { $implicit: changeNewPasswordCtrl, soumis: changePasswordSubmitted }
                   "
                 />
               </div>
@@ -254,4 +272,12 @@
       </div>
     }
   </div>
+
+  <ng-template #aideDuMotDePasseNeuf let-controle let-soumis="soumis">
+    @if (controle.invalid && (controle.touched || soumis)) {
+      <p class="pf-msg err" appFieldErrors [errors]="controle.errors" [motDePasse]="true"></p>
+    } @else {
+      <p class="pf-note">{{ regleDUnMotDePasse }}</p>
+    }
+  </ng-template>
 </section>

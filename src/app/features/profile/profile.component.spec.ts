@@ -4,6 +4,10 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AuthStateService } from '../../core/services/auth-state.service';
+import {
+  decrireLaRegleDUnMotDePasseNeuf,
+  erreursApresSaisie,
+} from '../../../testing/champ-de-formulaire';
 import { buildAuthUser, buildSetPasswordPayload } from '../../../testing/factories/auth.factory';
 import type { PageAuthMontee } from '../../../testing/page-auth';
 import { formulaireSoumis, monterPageAuth } from '../../../testing/page-auth';
@@ -33,13 +37,16 @@ describe('ProfileComponent', () => {
   let authService: PageAuthMontee<ProfileComponent>['authService'];
   let authState: ReturnType<typeof createAuthStateMock>;
 
-  beforeEach(async () => {
-    authState = createAuthStateMock();
-
+  async function monter(options?: { hasPassword: boolean }): Promise<void> {
+    authState = createAuthStateMock(options);
     ({ fixture, component, authService } = await monterPageAuth(ProfileComponent, [
       { provide: AuthStateService, useValue: authState },
     ]));
     fixture.detectChanges();
+  }
+
+  beforeEach(async () => {
+    await monter();
   });
 
   it('devrait se creer', () => {
@@ -90,6 +97,22 @@ describe('ProfileComponent', () => {
     expect(page.querySelector<HTMLInputElement>('#newPassword')?.minLength).toBe(12);
   });
 
+  describe('règle du back sur chaque mot de passe neuf', () => {
+    for (const [hasPassword, selecteur] of [
+      [false, '#newPassword'],
+      [true, '#changeNewPassword'],
+    ] as const) {
+      describe(selecteur, () => {
+        beforeEach(async () => {
+          TestBed.resetTestingModule();
+          await monter({ hasPassword });
+        });
+
+        decrireLaRegleDUnMotDePasseNeuf(() => fixture, selecteur);
+      });
+    }
+  });
+
   it('ne presente plus l atelier retire', () => {
     const page: HTMLElement = fixture.nativeElement;
 
@@ -117,6 +140,16 @@ describe('ProfileComponent', () => {
       for (const id of ['editFirstName', 'editLastName']) {
         expect(page.querySelector<HTMLInputElement>(`#${id}`)?.maxLength).toBe(50);
       }
+    });
+
+    it('plafonne le téléphone à 30 caractères, comme le back', async () => {
+      component.startEditing();
+      fixture.detectChanges();
+
+      expect(await erreursApresSaisie(fixture, '#editPhone', '0'.repeat(31))).toEqual({
+        maxlength: { requiredLength: 30, actualLength: 31 },
+      });
+      expect(await erreursApresSaisie(fixture, '#editPhone', '0'.repeat(30))).toBeNull();
     });
 
     it('startEditing pre-remplit le telephone quand il est renseigne', () => {

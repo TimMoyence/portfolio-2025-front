@@ -1,10 +1,12 @@
 import { LOCALE_ID } from '@angular/core';
+import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { NgForm } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import type { AuditStreamEvent } from '../../core/models/audit-request.model';
 import { AUDIT_REQUEST_PORT } from '../../core/ports/audit-request.port';
 import { GrowthAuditComponent } from './growth-audit.component';
+import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/champ-de-formulaire';
 import {
   buildAuditCompletedEvent,
   buildAuditCreateResponse,
@@ -192,6 +194,59 @@ describe('GrowthAuditComponent', () => {
     expect(component.auditPhaseLabel).toBe('');
     expect(component.auditCurrentUrl).toBe('');
     expect(component.auditRecentCompletedUrls).toEqual([]);
+  });
+
+  describe('bornes et grammaires du back sur la demande d audit', () => {
+    function monterLeFormulaire(): ComponentFixture<GrowthAuditComponent> {
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    it('borne le nom du site entre 2 et 200 caractères', async () => {
+      const fixture = monterLeFormulaire();
+
+      expect(await erreursApresSaisie(fixture, '#websiteName', 'a')).toEqual({
+        minlength: { requiredLength: 2, actualLength: 1 },
+      });
+      expect(texteDuBlocDuChamp(fixture, '#websiteName', 'form')).toContain(
+        'Ce champ doit contenir au moins 2 caractères.',
+      );
+      expect(await erreursApresSaisie(fixture, '#websiteName', 'a'.repeat(201))).toEqual({
+        maxlength: { requiredLength: 200, actualLength: 201 },
+      });
+      expect(await erreursApresSaisie(fixture, '#websiteName', 'ab')).toBeNull();
+    });
+
+    it('refuse un contact par email que le back refuse, et le borne entre 6 et 200 caractères', async () => {
+      const fixture = monterLeFormulaire();
+
+      expect(await erreursApresSaisie(fixture, '#contactValue', 'jean@gmail')).toEqual({
+        email: true,
+      });
+      expect(
+        Object.keys((await erreursApresSaisie(fixture, '#contactValue', 'a@b.c')) ?? {}),
+      ).toEqual(jasmine.arrayWithExactContents(['email', 'minlength']));
+      const adresseDe201 = `${'a'.repeat(15)}@${'b'.repeat(60)}.${'c'.repeat(60)}.${'d'.repeat(60)}.fr`;
+      expect(await erreursApresSaisie(fixture, '#contactValue', adresseDe201)).toEqual({
+        maxlength: { requiredLength: 200, actualLength: 201 },
+      });
+      expect(await erreursApresSaisie(fixture, '#contactValue', 'jean@exemple.fr')).toBeNull();
+    });
+
+    it('refuse un contact par téléphone que le back refuse, et le dit sous le champ', async () => {
+      const fixture = monterLeFormulaire();
+      fixture.componentInstance.handleMethodChange('PHONE');
+      fixture.detectChanges();
+
+      expect(await erreursApresSaisie(fixture, '#contactValue', '06 98 a0 32 82')).toEqual({
+        phone: true,
+      });
+      expect(texteDuBlocDuChamp(fixture, '#contactValue', 'div')).toContain(
+        'Merci d’entrer un numéro de téléphone valide.',
+      );
+      expect(await erreursApresSaisie(fixture, '#contactValue', '06 98 50 32 82')).toBeNull();
+    });
   });
 
   it('exposes the seven report pillars in the public offer', () => {

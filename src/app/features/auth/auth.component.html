@@ -107,9 +107,9 @@
                 [name]="field.key"
                 [(ngModel)]="panneau.valeurs[field.key]"
                 [required]="field.required"
-                [minlength]="field.longueurMin ?? null"
                 [maxlength]="field.longueurMax ?? null"
-                [email]="field.type === 'email' ? '' : false"
+                [appMotDePasseNeuf]="field.motDePasseNeuf === true"
+                [appFormatDeContact]="field.type === 'email' ? 'email' : null"
                 #control="ngModel"
                 [class.invalid]="control.invalid && (control.touched || panneau.soumis)"
               />
@@ -122,8 +122,10 @@
                 class="err"
                 appFieldErrors
                 [errors]="control.errors"
-                [longueur]="field.longueurMin !== undefined"
+                [motDePasse]="field.motDePasseNeuf === true"
               ></p>
+            } @else if (field.indication) {
+              <div class="hint">{{ field.indication }}</div>
             }
           </div>
         }

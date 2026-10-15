@@ -1,7 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { throwError } from 'rxjs';
 import { CONTACT_PORT, type ContactPort } from '../../core/ports/contact.port';
 import { ContactComponent } from './contact.component';
+import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/champ-de-formulaire';
 import { createContactPortStubWithDefault } from '../../../testing/factories/contact.factory';
 import { pageMontee } from '../../../testing/montage-page';
 import { formulaireSoumis } from '../../../testing/page-auth';
@@ -35,6 +38,61 @@ describe('ContactComponent', () => {
       null,
       '+33 6 12 34 56 78',
     ]);
+  });
+
+  describe('bornes du DTO de contact du back', () => {
+    const saisir = (selecteur: string, valeur: string) =>
+      erreursApresSaisie(page.fixture, selecteur, valeur);
+
+    it('plafonne le prénom et le nom à 50 caractères', async () => {
+      for (const selecteur of ['#firstName', '#lastName']) {
+        expect(await saisir(selecteur, 'a'.repeat(51)))
+          .withContext(selecteur)
+          .toEqual({ maxlength: { requiredLength: 50, actualLength: 51 } });
+        expect(await saisir(selecteur, 'a'.repeat(50))).toBeNull();
+      }
+    });
+
+    it('refuse une adresse que le back refuse', async () => {
+      expect(await saisir('#email', 'jean@gmail')).toEqual({ email: true });
+      expect(await saisir('#email', 'jean@exemple.fr')).toBeNull();
+    });
+
+    it('borne le message entre 10 et 2000 caractères, et nomme le minimum sous le champ', async () => {
+      expect(await saisir('#message', 'a'.repeat(9))).toEqual({
+        minlength: { requiredLength: 10, actualLength: 9 },
+      });
+      expect(texteDuBlocDuChamp(page.fixture, '#message')).toContain(
+        'Ce champ doit contenir au moins 10 caractères.',
+      );
+      expect(await saisir('#message', 'a'.repeat(2001))).toEqual({
+        maxlength: { requiredLength: 2000, actualLength: 2001 },
+      });
+      expect(await saisir('#message', 'a'.repeat(2000))).toBeNull();
+    });
+
+    it('affiche le refus servi par le back, jamais « Http failure response »', () => {
+      const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
+      port.contact.and.returnValue(
+        throwError(
+          () =>
+            new HttpErrorResponse({
+              status: 400,
+              url: 'https://asilidesign.fr/api/v1/portfolio25/contacts',
+              error: {
+                status: 400,
+                detail: ['message must be longer than or equal to 10 characters'],
+              },
+            }),
+        ),
+      );
+
+      page.composant.handleContactSubmit(formulaireSoumis());
+
+      expect(page.composant.contactErrorMessage).toBe(
+        'message must be longer than or equal to 10 characters',
+      );
+    });
   });
 
   it('should render main title', () => {

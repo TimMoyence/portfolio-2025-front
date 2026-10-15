@@ -1,5 +1,7 @@
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import type { ComponentFixture } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { decrireLaRegleDUnMotDePasseNeuf } from '../../../testing/champ-de-formulaire';
 import { buildResetPasswordPayload } from '../../../testing/factories/auth.factory';
 import type { PageAuthMontee } from '../../../testing/page-auth';
 import { formulaireSoumis, monterPageAuth } from '../../../testing/page-auth';
@@ -9,6 +11,7 @@ const NEW_PASSWORD = buildResetPasswordPayload().newPassword;
 
 describe('ResetPasswordComponent', () => {
   let component: ResetPasswordComponent;
+  let fixture: ComponentFixture<ResetPasswordComponent>;
   let authService: PageAuthMontee<ResetPasswordComponent>['authService'];
 
   beforeEach(async () => {
@@ -22,9 +25,9 @@ describe('ResetPasswordComponent', () => {
         },
       },
     ]);
-    ({ component, authService } = page);
+    ({ component, fixture, authService } = page);
     component.ngOnInit();
-    page.fixture.detectChanges();
+    fixture.detectChanges();
   });
 
   it('soumet le reset quand le token est present et le formulaire valide', () => {
@@ -41,5 +44,9 @@ describe('ResetPasswordComponent', () => {
       newPassword: NEW_PASSWORD,
     });
     expect(component.successMessage).toContain('reinitialise');
+  });
+
+  describe('règle du back sur le nouveau mot de passe', () => {
+    decrireLaRegleDUnMotDePasseNeuf(() => fixture, '#newPassword');
   });
 });

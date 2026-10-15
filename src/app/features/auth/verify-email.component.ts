@@ -50,7 +50,7 @@ export class VerifyEmailComponent implements OnInit {
       error: (err) => {
         this.isLoading = false;
         this.errorMessage =
-          extractErrorMessage(err, { includeTopLevelMessage: false }) ??
+          extractErrorMessage(err) ??
           $localize`:verify-email.error.generic@@verifyEmailErrorGeneric:La verification a echoue. Le lien est peut-etre expire.`;
         this.cdr.markForCheck();
       },

@@ -16,10 +16,15 @@ import type { ContactFormState } from '../../core/models/contact.model';
 import type { ContactPort } from '../../core/ports/contact.port';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
+import {
+  BORNES_D_UN_MESSAGE_DE_CONTACT,
+  LONGUEUR_MAX_D_UN_NOM,
+} from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
+import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
 
 @Component({
@@ -32,6 +37,7 @@ import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
     HeroSectionComponent,
     ContactCtaComponent,
     FieldErrorsComponent,
+    FormatDeContactDirective,
     HoneypotDirective,
   ],
   templateUrl: './contact.component.html',
@@ -123,23 +129,28 @@ export class ContactComponent implements OnInit {
     return $localize`:contact.access.message@@contactAccessMessage:Bonjour Tim, je souhaite un accès à ${appLabel}:appLabel: . Pouvez-vous m'expliquer les modalités ? Merci.`;
   }
 
+  protected readonly bornesDuMessage = BORNES_D_UN_MESSAGE_DE_CONTACT;
+
   contactFields: {
     key: Extract<keyof ContactFormState, 'firstName' | 'lastName' | 'email' | 'phone'>;
     label: string;
     type: 'text' | 'email' | 'tel';
     required: boolean;
+    longueurMax?: number;
   }[] = [
     {
       key: 'firstName',
       label: $localize`:contact.form.field.firstName@@contactFormFieldFirstName:Prénom`,
       type: 'text',
       required: true,
+      longueurMax: LONGUEUR_MAX_D_UN_NOM,
     },
     {
       key: 'lastName',
       label: $localize`:contact.form.field.lastName@@contactFormFieldLastName:Nom`,
       type: 'text',
       required: true,
+      longueurMax: LONGUEUR_MAX_D_UN_NOM,
     },
     {
       key: 'email',

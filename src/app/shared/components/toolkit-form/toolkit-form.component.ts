@@ -9,18 +9,18 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { estUneAdresseEmail } from '../../../../cours/runtime/core/adresse-email';
 import { langueDuSite } from '../../../core/config/locales';
 import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import type { ToolkitRequest } from '../../../core/models/toolkit-request.model';
 import { HoneypotDirective } from '../../directives/honeypot.directive';
 import { InteractionCollectorService } from '../../services/interaction-collector.service';
 import { readInputValue, readCheckboxChecked } from '../../utils/dom-event.utils';
+import { LONGUEUR_MAX_D_UN_NOM } from '../../utils/regles-de-saisie';
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 
 const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
 
 @Component({
   selector: 'app-toolkit-form',
@@ -52,6 +52,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
           <div>
             <input
               type="text"
+              [maxLength]="longueurMaxDUnNom"
               [value]="firstName()"
               (input)="firstName.set(readInputValue($event))"
               i18n-placeholder="@@toolkit-form.firstName.placeholder"
@@ -130,12 +131,17 @@ export class ToolkitFormComponent {
   readonly state = signal<FormState>('idle');
   readonly submittedEmail = signal('');
 
-  readonly isValid = computed(
-    () =>
-      this.firstName().trim().length > 0 &&
-      EMAIL_PATTERN.test(this.email()) &&
-      this.termsAccepted(),
-  );
+  protected readonly longueurMaxDUnNom = LONGUEUR_MAX_D_UN_NOM;
+
+  readonly isValid = computed(() => {
+    const prenom = this.firstName().trim();
+    return (
+      prenom.length > 0 &&
+      prenom.length <= LONGUEUR_MAX_D_UN_NOM &&
+      estUneAdresseEmail(this.email().trim()) &&
+      this.termsAccepted()
+    );
+  });
 
   protected readInputValue = readInputValue;
 
