@@ -3083,8 +3083,8 @@
     </unit>
     <unit id="privacyMetaLastUpdated">
       <segment>
-        <source>Dernière mise à jour : 4 juin 2026</source>
-        <target>Last updated: June 4, 2026</target>
+        <source>Dernière mise à jour : 15 octobre 2026</source>
+        <target>Last updated: October 15, 2026</target>
       </segment>
     </unit>
     <unit id="footerLegalPrivacy">
@@ -9165,8 +9165,8 @@
         <note category="location">src/app/features/privacy/privacy.component.html:59,61</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de contact</pc> : les informations que vous nous transmettez via le formulaire. </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Contact data</pc>: the information you send us via the form. </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de contact</pc> : les informations que vous nous transmettez via le formulaire, ainsi que l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer) de l&apos;envoi. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Contact data</pc>: the information you send us via the form, along with the IP address, the browser (user-agent) and the referring page (referer) of the submission. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteItem3">

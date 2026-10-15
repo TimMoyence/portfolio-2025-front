@@ -208,6 +208,8 @@ export class GrowthAuditComponent implements OnDestroy {
   private readonly etapeTerminee = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Audit terminé`;
   private readonly echecDeLAudit = $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
 
+  private readonly connexionPerdue = $localize`:growthAudit.error.connectionLost|Connection lost during audit@@auditErrorConnectionLost:Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.`;
+
   rgpdConsent = false;
 
   get contactInputType(): 'email' | 'tel' {
@@ -399,10 +401,11 @@ export class GrowthAuditComponent implements OnDestroy {
       return;
     }
 
-    this.arreterLAudit(event.data.error || this.echecDeLAudit);
+    const delaiDepasse = event.type === 'timeout';
+    this.arreterLAudit(delaiDepasse ? this.connexionPerdue : this.echecDeLAudit);
     this.trackAuditEvent('audit_failed', {
       auditId: event.data.auditId,
-      reason: event.data.error ?? 'unknown',
+      reason: delaiDepasse ? 'timeout' : 'unknown',
     });
   }
 
@@ -428,9 +431,7 @@ export class GrowthAuditComponent implements OnDestroy {
           return;
         }
 
-        this.arreterLAudit(
-          $localize`:growthAudit.error.connectionLost|Connection lost during audit@@auditErrorConnectionLost:Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.`,
-        );
+        this.arreterLAudit(this.connexionPerdue);
       },
       error: () => {
         this.arreterLAudit(

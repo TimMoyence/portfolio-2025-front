@@ -11,6 +11,7 @@ import {
   buildAuditProgressEvent,
   buildAuditSummaryResponse,
   buildAuditStreamHeartbeat,
+  buildAuditTimeoutEvent,
   buildClientReport,
   createAuditRequestPortStub,
 } from '../../../testing/factories/audit-request.factory';
@@ -231,15 +232,23 @@ describe('GrowthAuditComponent', () => {
       expect(form.resetForm).toHaveBeenCalledWith(vierge);
     });
 
-    it('affiche l erreur d un audit echoue et efface la chronologie', () => {
-      const { component } = soumettreEtDiffuser(
-        buildAuditFailedEvent({ error: 'Site injoignable' }),
-        'audit-5',
-      );
+    it('affiche le message générique d un audit échoué, servi sans texte d erreur, et efface la chronologie', () => {
+      const { component } = soumettreEtDiffuser(buildAuditFailedEvent({ error: null }), 'audit-5');
 
       expect(component.isAuditRunning).toBeFalse();
-      expect(component.errorMessage).toBe('Site injoignable');
+      expect(component.errorMessage).toBe("L'audit a échoué.");
       expect(component.auditSectionBadges).toEqual([]);
+    });
+
+    it('affiche la connexion interrompue sur un délai dépassé, sans relire le résumé ni rouvrir le flux', () => {
+      const { component } = soumettreEtDiffuser(buildAuditTimeoutEvent(), 'audit-6');
+
+      expect(component.isAuditRunning).toBeFalse();
+      expect(component.errorMessage).toContain('Connexion interrompue pendant l');
+      expect(component.errorMessage).not.toContain('SSE');
+      expect(component.auditSectionBadges).toEqual([]);
+      expect(auditServiceMock.stream).toHaveBeenCalledTimes(1);
+      expect(auditServiceMock.getSummary).not.toHaveBeenCalled();
     });
 
     it('reprend un audit termine depuis le resume quand le flux tombe', () => {

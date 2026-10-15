@@ -81,7 +81,14 @@ export interface AuditFailedEvent {
   status: 'FAILED';
   progress: number;
   done: boolean;
-  error: string | null;
+  error: null;
+  updatedAt: string;
+}
+
+export interface AuditTimeoutEvent {
+  auditId: string;
+  status: 'TIMEOUT';
+  error: null;
   updatedAt: string;
 }
 
@@ -89,4 +96,5 @@ export type AuditStreamEvent =
   | { type: 'progress'; data: AuditProgressEvent }
   | { type: 'completed'; data: AuditCompletedEvent }
   | { type: 'failed'; data: AuditFailedEvent }
+  | { type: 'timeout'; data: AuditTimeoutEvent }
   | { type: 'heartbeat'; data: { ts: string } };
