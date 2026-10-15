@@ -38,8 +38,6 @@ export const tokens = `
   --fp-s-2: calc(0.75rem * var(--fp-densite));
   --fp-s-3: calc(1.25rem * var(--fp-densite));
   --fp-s-4: calc(2rem * var(--fp-densite));
-  --fp-s-5: calc(3.25rem * var(--fp-densite));
-  --fp-s-6: calc(5.25rem * var(--fp-densite));
 
   --fp-r-sm: 0.5rem;
   --fp-r: 0.75rem;

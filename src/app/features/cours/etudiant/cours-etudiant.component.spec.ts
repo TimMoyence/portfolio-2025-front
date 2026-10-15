@@ -1589,9 +1589,11 @@ describe('CoursEtudiantComponent', () => {
       return fixture;
     }
 
+    const REVELE = { phase: 'revele', revele: true } as const;
+
     async function revelerLeVerdictServi(fixture: Fixture, vote: VoteServi): Promise<void> {
       port.lireMonEtat.and.returnValue(etatAvecLeVote(vote.principale, false));
-      await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, { phase: 'revele' });
+      await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, REVELE);
     }
 
     function attendreLeVerdictServi(fixture: Fixture, vote: VoteServi, lectures: number): void {
@@ -1603,7 +1605,7 @@ describe('CoursEtudiantComponent', () => {
       double.diffuser({
         etat: 'en_cours',
         ecranCourant: vote.rang,
-        pilotage: { [vote.ecran.id]: { phase: 'revele' } },
+        pilotage: { [vote.ecran.id]: REVELE },
       });
     }
 
@@ -1638,11 +1640,24 @@ describe('CoursEtudiantComponent', () => {
         attendreLeVerdictServi(fixture, vote, 2);
 
         await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, {
-          phase: 'revele',
+          ...REVELE,
           resultatsProjetes: true,
         });
 
         expect(port.lireMonEtat).toHaveBeenCalledTimes(2);
+      });
+
+      it(`${vote.cours} · ${vote.ecran.id} : Q1 · ne relit son corrigé qu à la révélation, jamais à la seule phase de révélation`, async () => {
+        const fixture = await suivreLeCoursJusquAuVote(vote);
+        port.lireSujet.calls.reset();
+
+        await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, { phase: 'revele' });
+
+        expect(port.lireSujet).not.toHaveBeenCalled();
+
+        await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, REVELE);
+
+        expect(port.lireSujet).toHaveBeenCalledTimes(1);
       });
 
       it(`${vote.cours} · ${vote.ecran.id} : a la reprise, relit a la revelation le verdict que le serveur retenait`, async () => {

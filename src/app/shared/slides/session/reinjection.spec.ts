@@ -6,7 +6,10 @@ import {
   buildResultatQuestion,
   buildSyntheseConcept,
 } from '../../../../testing/factories/formations.factory';
+import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import type { CorrigeEcranPresentateur } from '../../../../cours/content/types';
+import { annexeFormateurDeLEcran } from '../../../features/cours/presentateur/annexe-formateur';
 import type { RetourBrique } from '../../../core/ports/formations.port';
 import type { DirectEcran } from './contrat-hote';
 import {
@@ -117,7 +120,6 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     const cartes = ['K-CHARGES-01'];
     const PILOTAGES_REVELES = [
       { nom: 'revele', pilotage: { revele: true } },
-      { nom: 'phase revele', pilotage: { phase: 'revele' as const } },
       { nom: 'etayage avance', pilotage: { etayage: 1 } },
     ];
     const PILOTAGES_MUETS = [
@@ -125,6 +127,7 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
       { nom: 'pilotage vide', direct: direct() },
       { nom: 'revele faux', direct: direct({ pilotage: { revele: false } }) },
       { nom: 'phase discussion', direct: direct({ pilotage: { phase: 'discussion' } }) },
+      { nom: 'Q1 · phase revele sans revele', direct: direct({ pilotage: { phase: 'revele' } }) },
       { nom: 'etayage nul', direct: direct({ pilotage: { etayage: 0 } }) },
     ];
 
@@ -228,6 +231,34 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
         optionId: 'a',
       });
     });
+  });
+
+  describe('Q1 · le vote revele projette son encadre et sa bonne option, rien d autre', () => {
+    const votes = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
+      ecransDuPupitreDe(instantane),
+    ).filter(({ type, corrigeEcran }) => type === 'fp-vote' && corrigeEcran?.type === 'revelation');
+
+    it('couvre les votes a revelation de tous les cours servis', () => {
+      expect(votes.length).toBeGreaterThan(0);
+    });
+
+    for (const ecran of votes) {
+      it(`pose sur ${ecran.id} la revelation et l option juste de la question affichee`, () => {
+        const identifiants = ecran.questions.map(({ id }) => id);
+        const affichee = ecran.questions.at(-1);
+        const bonne = ecran.corriges.find(({ questionId }) => questionId === affichee?.id);
+        const option = affichee?.options?.find(({ libelle }) => libelle === bonne?.bonneReponse);
+
+        expect(option).withContext('option juste du corrigé').toBeDefined();
+        expect(
+          pose('fp-vote', identifiants, 'corrige', {
+            role: 'presentateur',
+            donneesFormateur: annexeFormateurDeLEcran(ecran),
+            direct: direct({ pilotage: { phase: 'revele', revele: true } }),
+          }),
+        ).toEqual({ ...ecran.corrigeEcran, optionId: option?.id });
+      });
+    }
   });
 
   describe('annexeDuMontage : un questionnaire corrige se decoupe par question affichee', () => {

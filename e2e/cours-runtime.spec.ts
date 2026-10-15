@@ -1,5 +1,14 @@
 import { expect, test } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 import { COURS_EN_SEANCE } from '../src/app/core/config/cours-en-seance';
+
+const dureeDuCoursServi = (slug: string): string => {
+  const { sujet } = JSON.parse(
+    readFileSync(`src/testing/fixtures/${slug.slice(0, 5)}.instantane.json`, 'utf8'),
+  ) as { readonly sujet: { readonly duree: number } };
+  const minutes = Math.round(sujet.duree / 5) * 5;
+  return `${Math.floor(minutes / 60)} h ${String(minutes % 60).padStart(2, '0')}`;
+};
 
 test.describe('Parcours public des formations', () => {
   test('l ancienne demonstration technique redirige vers le catalogue', async ({ page }) => {
@@ -21,7 +30,7 @@ test.describe('Parcours public des formations', () => {
 
       const card = page.locator('.formation--live').filter({ hasText: code });
       await expect(card).toBeVisible();
-      await expect(card).toContainText('3 h 30');
+      await expect(card).toContainText(dureeDuCoursServi(slug));
       await expect(card).not.toContainText(/\d écrans/);
       await expect(card).toContainText('À suivre en séance accompagnée');
       await expect(card).not.toContainText('librement');

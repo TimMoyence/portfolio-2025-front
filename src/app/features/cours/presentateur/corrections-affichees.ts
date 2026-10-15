@@ -5,16 +5,21 @@ export interface CorrectionAffichee {
   readonly bonneReponse: string;
 }
 
-const CORRIGE_SOUS_CHAQUE_QUESTION = 'questionnaire';
+const CORRIGE_DANS_LA_BRIQUE: ReadonlySet<string> = new Set([
+  'questionnaire',
+  'fp-vote',
+  'fp-recall',
+  'fp-numeric',
+]);
 
 export function correctionsAffichees(
   ecran: EcranDeroule | undefined,
 ): readonly CorrectionAffichee[] {
-  if (ecran?.type === CORRIGE_SOUS_CHAQUE_QUESTION) {
+  if (ecran === undefined || CORRIGE_DANS_LA_BRIQUE.has(ecran.type)) {
     return [];
   }
-  return (ecran?.corriges ?? []).map((corrige) => ({
-    enonce: ecran?.questions.find(({ id }) => id === corrige.questionId)?.enonce ?? '',
+  return ecran.corriges.map((corrige) => ({
+    enonce: ecran.questions.find(({ id }) => id === corrige.questionId)?.enonce ?? '',
     bonneReponse: corrige.bonneReponse,
   }));
 }

@@ -79,6 +79,11 @@ export function buildEcranQuestionnaire(overrides: Partial<EcranContent> = {}): 
   });
 }
 
+export function buildEcranQuestionnaireSansConsigne(): EcranContent {
+  const { intitule, regime, ordre, questions } = buildDonneesQuestionnaire();
+  return buildEcranQuestionnaire({ donnees: { intitule, regime, ordre, questions } });
+}
+
 export const ENTETE_COURS_B1_09: Omit<CoursContent, 'ecrans'> = {
   id: 'b1-09-interets-composes',
   titre: 'Faire fructifier : interets composes et capitalisation',

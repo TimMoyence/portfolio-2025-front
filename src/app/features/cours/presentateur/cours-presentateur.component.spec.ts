@@ -41,7 +41,10 @@ import {
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
-import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
+import {
+  INSTANTANES_DES_COURS_SERVIS,
+  VOTES_JUMELES_DU_PUPITRE,
+} from '../../../../testing/fixtures/instantanes-des-cours';
 import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
 import {
@@ -1221,7 +1224,10 @@ describe('CoursPresentateurComponent', () => {
       diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase: 'discussion' } } });
       publierSurLaVue(double, fixture, resultats);
 
-      expect(apercu(fixture).donneesFormateur()).toBe(annexe);
+      expect(apercu(fixture).donneesFormateur()).toEqual({
+        ...annexe,
+        reponses: { 'Q-CAP-03': { cible: '1 480,24', optionId: null } },
+      });
       expect(apercu(fixture).direct()).toEqual({
         pilotage: { phase: 'discussion' },
         resultats: resultats.questions,
@@ -1229,16 +1235,48 @@ describe('CoursPresentateurComponent', () => {
       });
     });
 
-    it('pilote la phase du vote servie depuis le panneau d activite', async () => {
-      const fixture = await ouvrirSurLEcran(buildEcranDeVoteJumele());
-      diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase: 'vote' } } });
+    for (const [titre, phase, pilote] of [
+      [
+        'pilote la phase du vote servie depuis le panneau d activite',
+        'vote',
+        { phase: 'discussion' },
+      ],
+      [
+        'Q1 · « Passer à : Révélation » pilote la même révélation que « Révéler la correction »',
+        'revote',
+        { revele: true },
+      ],
+    ] as const) {
+      it(titre, async () => {
+        const fixture = await ouvrirSurLEcran(buildEcranDeVoteJumele());
+        diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase } } });
 
-      await cliquer(fixture, 'activite-phase-suivante');
+        await cliquer(fixture, 'activite-phase-suivante');
 
-      expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
-        pilotage: { screenId: 'ecran-vote', phase: 'discussion' },
+        expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
+          pilotage: { screenId: 'ecran-vote', ...pilote },
+        });
       });
-    });
+    }
+
+    for (const jumele of VOTES_JUMELES_DU_PUPITRE) {
+      it(`Q1 · ${jumele.id} : ne révèle la correction qu une fois la deuxième question posée`, async () => {
+        const fixture = await ouvrirSurLEcran(jumele);
+
+        for (const phase of ['vote', 'discussion'] as const) {
+          diffuserSurLaVue(double, fixture, { pilotage: { [jumele.id]: { phase } } });
+          expect(bouton(fixture, 'presentateur-questions-reveler').disabled)
+            .withContext(phase)
+            .toBeTrue();
+        }
+        diffuserSurLaVue(double, fixture, { pilotage: { [jumele.id]: { phase: 'revote' } } });
+        await cliquer(fixture, 'presentateur-questions-reveler');
+
+        expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
+          pilotage: { screenId: jumele.id, revele: true },
+        });
+      });
+    }
 
     it('RET-21 · envoie au serveur le reglage de la machine fait au pupitre', async () => {
       const fixture = await ouvrirSurLEcran({
@@ -1304,6 +1342,10 @@ describe('CoursPresentateurComponent', () => {
       'activite-etayage',
       'activite-questions',
     ];
+    const vuesDuPupitre = (servi: DerouleCours): readonly string[] =>
+      servi.ecrans.some(({ type }) => type === 'fp-worked')
+        ? VUES_DU_PUPITRE
+        : VUES_DU_PUPITRE.filter((vue) => vue !== 'activite-etayage');
 
     for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
       it(
@@ -1315,7 +1357,7 @@ describe('CoursPresentateurComponent', () => {
             double,
             fixture,
             servi.ecrans,
-            VUES_DU_PUPITRE,
+            vuesDuPupitre(servi),
             {
               participants: 2,
             },

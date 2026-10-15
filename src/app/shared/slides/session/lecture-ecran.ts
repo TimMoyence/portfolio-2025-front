@@ -1,4 +1,9 @@
-import type { CoursContent, DerouleCours, EcranContent } from '../../../../cours/content/types';
+import type {
+  CorrigeEcranPresentateur,
+  CoursContent,
+  DerouleCours,
+  EcranContent,
+} from '../../../../cours/content/types';
 import { rappelEcritAvantLesOptions } from '../../../../cours/runtime/blocks/FpRecall';
 import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
 import {
@@ -27,7 +32,7 @@ export interface QuestionDeLEcran {
 
 export interface EnteteDeQuestionnaire {
   readonly intitule: string;
-  readonly consigne: string;
+  readonly consigne: string | null;
 }
 
 const RESOLU_AILLEURS = 'resoluAilleurs';
@@ -94,6 +99,9 @@ export interface ReponsesDuQuestionnaire {
   >;
 }
 
+export type RevelationDuVote = Extract<CorrigeEcranPresentateur, { readonly type: 'revelation' }> &
+  Pick<ReponsesDuQuestionnaire, 'reponses'>;
+
 const QUESTIONNAIRE = 'questionnaire';
 export const ECRAN_VERROUILLE = 'ecran-verrouille';
 
@@ -128,13 +136,17 @@ export function planDeMontage(ecran: EcranContent): readonly Montage[] | null {
   return montages.every((montage): montage is Montage => montage !== null) ? montages : null;
 }
 
+export function estVoteJumele(ecran: EcranContent): boolean {
+  return ecran.type === 'fp-vote' && objet(ecran.donnees?.['questionJumelle']) !== null;
+}
+
 export function enteteDeQuestionnaire(ecran: EcranContent): EnteteDeQuestionnaire | null {
   if (ecran.type !== QUESTIONNAIRE) {
     return null;
   }
   const intitule = ecran.donnees?.['intitule'];
-  const consigne = ecran.donnees?.['consigne'];
-  return typeof intitule === 'string' && typeof consigne === 'string'
+  const consigne = ecran.donnees?.['consigne'] ?? null;
+  return typeof intitule === 'string' && (consigne === null || typeof consigne === 'string')
     ? { intitule, consigne }
     : null;
 }
