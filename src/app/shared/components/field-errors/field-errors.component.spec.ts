@@ -66,7 +66,7 @@ describe('FieldErrorsComponent', () => {
 
   it('signale un mot de passe trop court quand la longueur est attendue', () => {
     expect(rendre({ minlength: true }, { longueur: true }).textContent?.trim()).toBe(
-      'Le mot de passe doit contenir au moins 8 caractères.',
+      'Le mot de passe doit contenir au moins 12 caractères.',
     );
   });
 

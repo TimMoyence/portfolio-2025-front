@@ -54,6 +54,7 @@
                   id="editFirstName"
                   name="editFirstName"
                   type="text"
+                  [maxlength]="longueurMaxDUnNom"
                   [(ngModel)]="editFirstName"
                 />
               </div>
@@ -63,6 +64,7 @@
                   id="editLastName"
                   name="editLastName"
                   type="text"
+                  [maxlength]="longueurMaxDUnNom"
                   [(ngModel)]="editLastName"
                 />
               </div>
@@ -131,7 +133,7 @@
                   name="newPassword"
                   type="password"
                   required
-                  minlength="12"
+                  [minlength]="longueurMinDUnMotDePasse"
                   [(ngModel)]="newPassword"
                   #newPasswordCtrl="ngModel"
                   [class.invalid]="
@@ -203,7 +205,7 @@
                   name="changeNewPassword"
                   type="password"
                   required
-                  minlength="12"
+                  [minlength]="longueurMinDUnMotDePasse"
                   [(ngModel)]="changeNewPassword"
                   #changeNewPasswordCtrl="ngModel"
                   [class.invalid]="

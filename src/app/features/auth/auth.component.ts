@@ -22,6 +22,10 @@ import { AUTH_PORT } from '../../core/ports/auth.port';
 import { loadGoogleGis } from '../../core/utils/google-gis';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import { extractErrorMessage } from '../../shared/utils/http-error.utils';
+import {
+  LONGUEUR_MAX_D_UN_NOM,
+  LONGUEUR_MIN_D_UN_MOT_DE_PASSE,
+} from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { SvgIconComponent } from '../../shared/components/svg-icon.component';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
@@ -37,6 +41,8 @@ interface ChampAuth {
   label: string;
   type: string;
   required: boolean;
+  longueurMin?: number;
+  longueurMax?: number;
 }
 
 interface PanneauAuth {
@@ -111,12 +117,14 @@ export class AuthComponent {
       label: $localize`:auth.signup.field.firstName|Signup field label@@authSignupFieldFirstName:Prénom`,
       type: 'text',
       required: true,
+      longueurMax: LONGUEUR_MAX_D_UN_NOM,
     },
     {
       key: 'lastName',
       label: $localize`:auth.signup.field.lastName|Signup field label@@authSignupFieldLastName:Nom`,
       type: 'text',
       required: true,
+      longueurMax: LONGUEUR_MAX_D_UN_NOM,
     },
     {
       key: 'email',
@@ -129,6 +137,7 @@ export class AuthComponent {
       label: $localize`:auth.signup.field.password|Signup field label@@authSignupFieldPassword:Mot de passe`,
       type: 'password',
       required: true,
+      longueurMin: LONGUEUR_MIN_D_UN_MOT_DE_PASSE,
     },
     {
       key: 'verifPassword',

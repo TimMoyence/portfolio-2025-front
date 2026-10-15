@@ -107,7 +107,8 @@
                 [name]="field.key"
                 [(ngModel)]="panneau.valeurs[field.key]"
                 [required]="field.required"
-                [minlength]="field.key === 'password' ? 8 : null"
+                [minlength]="field.longueurMin ?? null"
+                [maxlength]="field.longueurMax ?? null"
                 [email]="field.type === 'email' ? '' : false"
                 #control="ngModel"
                 [class.invalid]="control.invalid && (control.touched || panneau.soumis)"
@@ -121,7 +122,7 @@
                 class="err"
                 appFieldErrors
                 [errors]="control.errors"
-                [longueur]="onglet === 'sign-up' && field.key === 'password'"
+                [longueur]="field.longueurMin !== undefined"
               ></p>
             }
           </div>

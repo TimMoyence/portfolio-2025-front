@@ -1,4 +1,7 @@
+import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { NgModel } from '@angular/forms';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import type { AuthSession } from '../../core/models/auth.model';
@@ -16,6 +19,7 @@ const VALID_PASSWORD = buildLoginCredentials().password;
 const MISMATCHED_PASSWORD = `${VALID_PASSWORD}-different`;
 
 describe('AuthComponent', () => {
+  let fixture: ComponentFixture<AuthComponent>;
   let component: AuthComponent;
   let authService: PageAuthMontee<AuthComponent>['authService'];
 
@@ -36,8 +40,8 @@ describe('AuthComponent', () => {
         },
       },
     ]);
-    ({ component, authService } = page);
-    page.fixture.detectChanges();
+    ({ fixture, component, authService } = page);
+    fixture.detectChanges();
   }
 
   function remplirInscription(champs: Partial<SignupFormState> = {}): void {
@@ -173,6 +177,32 @@ describe('AuthComponent', () => {
 
     it('devrait afficher l onglet inscription par defaut sur /register', () => {
       expect(component.activeTab).toBe('sign-up');
+    });
+
+    async function saisir(id: string, valeur: string): Promise<NgModel> {
+      const champ = fixture.debugElement.query(By.css(`#${id}`));
+      const input = champ.nativeElement as HTMLInputElement;
+      input.value = valeur;
+      input.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      await fixture.whenStable();
+      return champ.injector.get(NgModel);
+    }
+
+    it('exige 12 caractères au mot de passe, comme le back', async () => {
+      expect((await saisir('reg-password', 'Abcdefgh1!x')).errors).toEqual({
+        minlength: { requiredLength: 12, actualLength: 11 },
+      });
+      expect((await saisir('reg-password', 'Abcdefgh1!xy')).errors).toBeNull();
+    });
+
+    it('plafonne le prénom et le nom à 50 caractères, comme le back', async () => {
+      for (const id of ['reg-firstName', 'reg-lastName']) {
+        expect((await saisir(id, 'a'.repeat(51))).errors).toEqual({
+          maxlength: { requiredLength: 50, actualLength: 51 },
+        });
+        expect((await saisir(id, 'a'.repeat(50))).errors).toBeNull();
+      }
     });
   });
 

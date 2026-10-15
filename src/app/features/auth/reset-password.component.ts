@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/cor
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { LONGUEUR_MIN_D_UN_MOT_DE_PASSE } from '../../shared/utils/regles-de-saisie';
 import { FormulaireAuthComponent } from './formulaire-auth.component';
 import { FormulaireDeMotDePasse } from './formulaire-de-mot-de-passe';
 import { IMPORTS_PAGE_AUTH } from './page-auth.imports';
@@ -23,6 +24,7 @@ export class ResetPasswordComponent extends FormulaireDeMotDePasse implements On
 
   token: string | null = null;
   motsDePasse: Record<ChampDeMotDePasse, string> = { newPassword: '', confirmPassword: '' };
+  protected readonly longueurMin = LONGUEUR_MIN_D_UN_MOT_DE_PASSE;
 
   protected readonly champs: readonly {
     cle: ChampDeMotDePasse;

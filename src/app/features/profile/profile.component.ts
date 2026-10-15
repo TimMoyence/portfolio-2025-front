@@ -15,6 +15,10 @@ import { AUTH_PORT } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
+import {
+  LONGUEUR_MAX_D_UN_NOM,
+  LONGUEUR_MIN_D_UN_MOT_DE_PASSE,
+} from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 
 @Component({
@@ -30,6 +34,9 @@ export class ProfileComponent {
   readonly authState = inject(AuthStateService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly router = inject(Router);
+
+  protected readonly longueurMinDUnMotDePasse = LONGUEUR_MIN_D_UN_MOT_DE_PASSE;
+  protected readonly longueurMaxDUnNom = LONGUEUR_MAX_D_UN_NOM;
 
   isEditing = signal(false);
   editFirstName = '';

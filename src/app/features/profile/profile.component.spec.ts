@@ -84,6 +84,12 @@ describe('ProfileComponent', () => {
     expect(component.setPasswordSuccess).toBeDefined();
   });
 
+  it('exige 12 caractères au nouveau mot de passe, comme le back', () => {
+    const page: HTMLElement = fixture.nativeElement;
+
+    expect(page.querySelector<HTMLInputElement>('#newPassword')?.minLength).toBe(12);
+  });
+
   it('ne presente plus l atelier retire', () => {
     const page: HTMLElement = fixture.nativeElement;
 
@@ -101,6 +107,16 @@ describe('ProfileComponent', () => {
       expect(component.editFirstName).toBe('Jean');
       expect(component.editLastName).toBe('Dupont');
       expect(component.editPhone).toBe('');
+    });
+
+    it('plafonne le prénom et le nom à 50 caractères, comme le back', () => {
+      component.startEditing();
+      fixture.detectChanges();
+
+      const page: HTMLElement = fixture.nativeElement;
+      for (const id of ['editFirstName', 'editLastName']) {
+        expect(page.querySelector<HTMLInputElement>(`#${id}`)?.maxLength).toBe(50);
+      }
     });
 
     it('startEditing pre-remplit le telephone quand il est renseigne', () => {
