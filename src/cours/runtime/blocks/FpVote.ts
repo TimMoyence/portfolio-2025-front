@@ -3,7 +3,7 @@ import type { MetadonneesBrique, VotePhase } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { lignesDeCalculHtml } from './calculs';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import { estObjet } from '../core/valeurs';
+import { estObjet, part } from '../core/valeurs';
 import {
   bonneReponseRevelee,
   lireBonneOption,
@@ -327,7 +327,7 @@ export class FpVote extends FpVerdicts {
         this.barre(
           question,
           id,
-          Math.round(((resultats.parOption[id] ?? 0) / resultats.total) * 100),
+          Math.round(part(resultats.parOption[id] ?? 0, resultats.total) * 100),
         ),
       );
     return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"${marqueDuVote}>${titre}${barres}</div>`;

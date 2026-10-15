@@ -15,6 +15,7 @@ import { AUTH_PORT } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
+import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 
 @Component({
   selector: 'app-profile',
@@ -101,7 +102,7 @@ export class ProfileComponent {
       this.authService.updateProfile({
         firstName: this.editFirstName,
         lastName: this.editLastName,
-        phone: this.editPhone || null,
+        phone: telephoneFacultatif(this.editPhone),
       }),
       this.cdr,
       {

@@ -165,6 +165,21 @@ describe('ProfileComponent', () => {
       );
     });
 
+    it('saveProfile envoie null pour un telephone blanc et un telephone renseigne sans ses espaces', () => {
+      authService.updateProfile.and.returnValue(of(buildAuthUser()));
+
+      component.startEditing();
+      for (const saisie of ['   ', ' +33600000000 ']) {
+        component.editPhone = saisie;
+        component.saveProfile();
+      }
+
+      expect(authService.updateProfile.calls.allArgs().map(([profil]) => profil.phone)).toEqual([
+        null,
+        '+33600000000',
+      ]);
+    });
+
     it("saveProfile affiche une erreur en cas d'echec", () => {
       authService.updateProfile.and.returnValue(
         throwError(() => ({ error: { message: 'Erreur serveur' } })),

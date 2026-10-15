@@ -8,6 +8,7 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
+import { part } from '../../../../../cours/runtime/core/valeurs';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import { chargerInteraction } from '../interactions.util';
 
@@ -67,11 +68,7 @@ export class SlidePollComponent implements OnInit {
   }
 
   protected percent(index: number): number {
-    const total = this.totalVotes();
-    if (total === 0) {
-      return 0;
-    }
-    return Math.round(((this.votes()[index] ?? 0) / total) * 100);
+    return Math.round(part(this.votes()[index] ?? 0, this.totalVotes()) * 100);
   }
 
   private load(): void {

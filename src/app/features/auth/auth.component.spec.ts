@@ -135,6 +135,12 @@ describe('AuthComponent', () => {
   const redirectionsApresLogin: readonly [string, string | null, string][] = [
     ['vers returnUrl apres login si present', '/profil', '/profil'],
     ['vers / si pas de returnUrl', null, '/'],
+    ['vers / si returnUrl mene a une autre origine par une barre inverse', '/\\evil.example', '/'],
+    [
+      'vers / si returnUrl cache une autre origine derriere une tabulation',
+      '/\t/evil.example',
+      '/',
+    ],
   ];
 
   for (const [cas, returnUrl, destination] of redirectionsApresLogin) {

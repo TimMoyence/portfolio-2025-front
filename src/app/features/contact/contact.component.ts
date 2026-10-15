@@ -15,6 +15,7 @@ import type { ContactFormState } from '../../core/models/contact.model';
 import type { ContactPort } from '../../core/ports/contact.port';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
+import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
@@ -187,8 +188,6 @@ export class ContactComponent implements OnInit {
 
   private normalizeContactPayload(form: ContactFormState): ContactFormState {
     const trimOrEmpty = (value: string): string => value.trim();
-    const trimmedPhone =
-      form.phone === undefined || form.phone === null ? null : trimOrEmpty(form.phone);
     return {
       ...form,
       email: trimOrEmpty(form.email),
@@ -197,7 +196,7 @@ export class ContactComponent implements OnInit {
       subject: trimOrEmpty(form.subject),
       message: trimOrEmpty(form.message),
       role: trimOrEmpty(form.role),
-      phone: trimmedPhone === '' ? null : trimmedPhone,
+      phone: telephoneFacultatif(form.phone),
       termsAcceptedAt: form.terms ? new Date().toISOString() : undefined,
       termsLocale: this.localeId,
       termsVersion: this.appConfig.gdpr?.termsVersion ?? form.termsVersion,

@@ -6,6 +6,7 @@ import type {
   DerouleCours,
   ResultatQuestion,
 } from '../../../../cours/content/types';
+import { part } from '../../../../cours/runtime/core/valeurs';
 
 export interface QuestionDuPanneau {
   readonly numero: number;
@@ -58,13 +59,13 @@ function lirePanneau(
 ): PanneauQuestion {
   const resultat =
     resultats.find((question) => question.questionId === corrige.questionId) ?? SANS_REPONSE;
-  const part = resultat.total > 0 ? resultat.correctes / resultat.total : 0;
-  const sousLeSeuil = seuil !== null && resultat.total > 0 && part < seuil;
+  const partJuste = part(resultat.correctes, resultat.total);
+  const sousLeSeuil = seuil !== null && resultat.total > 0 && partJuste < seuil;
   return {
     questionId: corrige.questionId,
     bonneReponse: corrige.bonneReponse,
     total: resultat.total,
-    part,
+    part: partJuste,
     neSaitPas: resultat.neSaitPas,
     sousLeSeuil,
     confusions: corrige.confusions.map((confusion) => ({

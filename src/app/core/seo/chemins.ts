@@ -15,6 +15,21 @@ export const buildLocalizedPath = (locale: string, path: string): string => {
 
 export const estAliasDAccueil = (route: string): boolean => route === '/' || route === '/home';
 
+const ESPACE_ASCII = 32;
+const SUPPRESSION_ASCII = 127;
+
+const porteUnCaractereDeControle = (valeur: string): boolean =>
+  [...valeur].some((caractere) => {
+    const code = caractere.charCodeAt(0);
+    return code <= ESPACE_ASCII || code === SUPPRESSION_ASCII;
+  });
+
+export const estCheminInterne = (valeur: string): boolean =>
+  valeur.startsWith('/') &&
+  valeur[1] !== '/' &&
+  valeur[1] !== '\\' &&
+  !porteUnCaractereDeControle(valeur);
+
 export interface RouteLocalisee {
   readonly locale?: string;
   readonly route: string;

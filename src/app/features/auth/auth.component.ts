@@ -15,27 +15,18 @@ import type { LoginFormState } from '../../core/models/loginForm.model';
 import type { SignupFormState } from '../../core/models/signupForm.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { APP_CONFIG } from '../../core/config/app-config.token';
+import { estCheminInterne } from '../../core/seo/chemins';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
 import { loadGoogleGis } from '../../core/utils/google-gis';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import { extractErrorMessage } from '../../shared/utils/http-error.utils';
+import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { SvgIconComponent } from '../../shared/components/svg-icon.component';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
-
-const ASCII_SPACE = 32;
-const ASCII_DELETE = 127;
-
-function hasControlCharacter(value: string): boolean {
-  for (const char of value) {
-    const code = char.charCodeAt(0);
-    if (code <= ASCII_SPACE || code === ASCII_DELETE) return true;
-  }
-  return false;
-}
 
 type AuthTab = 'sign-up' | 'log-in';
 type SignupFormKey = keyof SignupFormState;
@@ -228,7 +219,7 @@ export class AuthComponent {
       password: this.signupForm.password,
       firstName: this.signupForm.firstName,
       lastName: this.signupForm.lastName,
-      phone: this.signupForm.phone?.trim() || null,
+      phone: telephoneFacultatif(this.signupForm.phone),
     };
 
     this.isSignupLoading = true;
@@ -255,9 +246,7 @@ export class AuthComponent {
   private sanitizeReturnUrl(raw: string | null | undefined): string {
     if (!raw) return '/';
     const trimmed = raw.trim();
-    const isSameOriginPath = trimmed.startsWith('/') && !trimmed.startsWith('//');
-    if (!isSameOriginPath || hasControlCharacter(trimmed)) return '/';
-    return trimmed;
+    return estCheminInterne(trimmed) ? trimmed : '/';
   }
 
   private ouvrirLaSession(session: AuthSession): void {

@@ -18,6 +18,10 @@ export function fini(valeur: number, repli: number): number {
   return Number.isFinite(valeur) ? valeur : repli;
 }
 
+export function part(compte: number, total: number): number {
+  return total > 0 ? compte / total : 0;
+}
+
 export function bornerEntre(valeur: number, minimum: number, maximum: number): number {
   return Math.max(minimum, Math.min(maximum, valeur));
 }
