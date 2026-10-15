@@ -40,7 +40,7 @@ import type {
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
-import { enoncesDuDeroule } from '../../../shared/slides/session/lecture-ecran';
+import { enoncesDuDeroule, estVoteJumele } from '../../../shared/slides/session/lecture-ecran';
 import {
   CoursPresentationComponent,
   type TelechargementDePieceJointe,
@@ -564,7 +564,11 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
                         type="button"
                         class="control-btn"
                         data-testid="presentateur-questions-reveler"
-                        [disabled]="pilotageBloque() || pilotageDeLEcran().revele === true"
+                        [disabled]="
+                          pilotageBloque() ||
+                          pilotageDeLEcran().revele === true ||
+                          jumelleAttendue()
+                        "
                         (click)="revelerLaCorrection(ecranAffiche.id)"
                       >
                         @if (pilotageDeLEcran().revele === true) {
@@ -779,6 +783,12 @@ export class CoursPresentateurComponent {
   readonly pilotageDeLEcran = computed<PilotageEcran>(() => {
     const ecran = this.ecranCourant();
     return ecran === null ? {} : (this.pilotage()[ecran.id] ?? {});
+  });
+
+  protected readonly jumelleAttendue = computed(() => {
+    const ecran = this.ecranCourant();
+    const phase = this.pilotageDeLEcran().phase ?? 'vote';
+    return ecran !== null && estVoteJumele(ecran) && (phase === 'vote' || phase === 'discussion');
   });
 
   readonly direct = computed<DirectEcran | null>(() =>

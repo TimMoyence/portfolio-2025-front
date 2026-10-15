@@ -29,7 +29,11 @@ import {
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import type { FpPlot } from '../../../../cours/runtime/blocks/FpPlot';
 import { attendreQue, briqueMontee } from '../../../../testing/briques-montees';
-import { buildPlotEnBarres, buildVoteQuestion } from '../../../../testing/factories/cours.factory';
+import {
+  buildExitBillet,
+  buildPlotEnBarres,
+  buildVoteQuestion,
+} from '../../../../testing/factories/cours.factory';
 import { buildVisualSlide } from '../../../../testing/factories/visual-slide.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { cibleMarque } from '../../../../testing/marqueurs-dom';
@@ -403,23 +407,46 @@ describe('CoursSceneComponent', () => {
     attendreLaFermetureDuFlux(double, await monterEtStabiliser());
   });
 
+  function bandeauDeLaToile(fixture: Fixture): string | undefined {
+    return (fixture.nativeElement as HTMLElement)
+      .querySelector('[data-testid="cours-toile"] [data-testid="cours-correction"]')
+      ?.textContent?.replace(/\s+/g, ' ');
+  }
+
   it('R1 · projette dans la toile la réponse attendue une fois la correction révélée, pas avant', async () => {
-    const fixture = await monterEtStabiliser();
-    const bandeau = (): string | undefined =>
-      (fixture.nativeElement as HTMLElement)
-        .querySelector('[data-testid="cours-toile"] [data-testid="cours-correction"]')
-        ?.textContent?.replace(/\s+/g, ' ');
+    const fixture = await monterSur([
+      buildEcranDeroule({
+        id: 'ecran-billet',
+        type: 'fp-exit',
+        donnees: { billet: buildExitBillet() },
+      }),
+    ]);
 
     diffuserSurLaVue(double, fixture, { ecranCourant: 0 });
 
-    expect(bandeau()).toBeUndefined();
+    expect(bandeauDeLaToile(fixture)).toBeUndefined();
 
+    diffuserSurLaVue(double, fixture, {
+      ecranCourant: 0,
+      pilotage: { 'ecran-billet': { revele: true } },
+    });
+
+    expect(bandeauDeLaToile(fixture)).toContain('1 480,24');
+  });
+
+  it('Q1 · sous un vote révélé, la brique porte seule la correction, sans bandeau', async () => {
+    const fixture = await monterEtStabiliser();
     diffuserSurLaVue(double, fixture, {
       ecranCourant: 0,
       pilotage: { 'ecran-vote': { revele: true } },
     });
+    const vote = await briqueMontee(fixture, 'fp-vote');
+    const bonneReponse = (): string | null | undefined =>
+      vote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]')?.textContent;
+    await attendreQue(fixture, () => bonneReponse() != null, 'la bonne réponse dans le vote');
 
-    expect(bandeau()).toContain('1 480,24');
+    expect(bonneReponse()).toContain('1 480,24');
+    expect(bandeauDeLaToile(fixture)).toBeUndefined();
   });
 
   it('ne projette les comptes d un jalon qu a partir de cinq reponses', async () => {

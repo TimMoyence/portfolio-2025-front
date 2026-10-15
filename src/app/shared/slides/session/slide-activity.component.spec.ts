@@ -5,6 +5,7 @@ import {
   buildCardsortPlan,
   buildEcran,
   buildEcranQuestionnaire,
+  buildEcranQuestionnaireSansConsigne,
   buildExitBillet,
   buildNumericQuestion,
   buildRevelationServie,
@@ -332,16 +333,41 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     expect(zones).not.toContain(true);
   });
 
-  it('pose l entete d un questionnaire et monte une brique par question', async () => {
-    const fixture = monter({ slide: buildEcranQuestionnaire() });
+  const questionnaireMonte = async (
+    entrees: Parameters<typeof monter>[0],
+  ): Promise<{ readonly element: HTMLElement; readonly intitule: string | null | undefined }> => {
+    const fixture = monter(entrees);
     await brique(fixture, 'fp-vote');
-
     const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelector('[data-testid="slide-activity-entete"] h2')?.textContent).toBe(
-      'Atelier 1 — Lire, rapporter, estimer',
-    );
+    return {
+      element,
+      intitule: element.querySelector('[data-testid="slide-activity-entete"] h2')?.textContent,
+    };
+  };
+
+  it('pose l entete d un questionnaire et monte une brique par question', async () => {
+    const { element, intitule } = await questionnaireMonte({ slide: buildEcranQuestionnaire() });
+
+    expect(intitule).toBe('Atelier 1 — Lire, rapporter, estimer');
     expect(element.querySelectorAll('fp-numeric, fp-vote').length).toBe(2);
   });
+
+  for (const [support, entrees] of [
+    ['à l écran', {}],
+    ['au livret', { role: 'etudiant', apercu: true, papier: true }],
+  ] as const) {
+    it(`pose l intitule seul d un questionnaire sans consigne, ${support}`, async () => {
+      const { element, intitule } = await questionnaireMonte({
+        slide: buildEcranQuestionnaireSansConsigne(),
+        ...entrees,
+      });
+
+      expect(intitule).toBe('Atelier 1 — Lire, rapporter, estimer');
+      expect(element.querySelector('.slide-activity__consigne')).toBeNull();
+      expect(element.classList).toContain('slide-activity--questionnaire');
+      expect(element.querySelectorAll('fp-numeric, fp-vote').length).toBe(2);
+    });
+  }
 
   it('RET-20 · projette l histogramme des votes d un questionnaire une fois la correction revelee', async () => {
     const resultats = [

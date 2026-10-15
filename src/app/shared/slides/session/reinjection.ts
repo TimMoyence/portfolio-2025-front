@@ -106,12 +106,7 @@ function phaseDuVote(direct: DirectEcran | null): VotePhase | null {
 
 function ecranRevele(contexte: ContexteDeReinjection): boolean {
   const pilotage = contexte.direct?.pilotage;
-  return (
-    contexte.papier !== null ||
-    pilotage?.phase === 'revele' ||
-    pilotage?.revele === true ||
-    (pilotage?.etayage ?? 0) > 0
-  );
+  return contexte.papier !== null || pilotage?.revele === true || (pilotage?.etayage ?? 0) > 0;
 }
 
 function rappelImprime(papier: ImpressionDeLEcran): SpacedQuestionPublique[] {
@@ -152,21 +147,39 @@ function annexeVisible(contexte: ContexteDeReinjection): unknown {
   return contexte.revelation === null ? null : annexeDeLaRevelation(contexte.revelation);
 }
 
-function annexeDuMontage(
+function cibleDeLaQuestionAffichee(
   montage: MontageIdentifie,
-  donnees: unknown,
+  reponses: unknown,
   direct: DirectEcran | null,
-): unknown {
-  if (!estObjet(donnees) || donnees['type'] !== 'reponses') {
-    return donnees;
-  }
-  const reponses = donnees['reponses'];
+): { readonly cible: string; readonly optionId: string | null } | null {
   const bonne = estObjet(reponses) ? reponses[questionAffichee(montage, direct) ?? ''] : undefined;
   if (!estObjet(bonne) || typeof bonne['cible'] !== 'string') {
     return null;
   }
   const optionId = typeof bonne['optionId'] === 'string' ? bonne['optionId'] : null;
-  return { type: 'cible', cible: bonne['cible'], optionId };
+  return { cible: bonne['cible'], optionId };
+}
+
+function annexeDuMontage(
+  montage: MontageIdentifie,
+  donnees: unknown,
+  direct: DirectEcran | null,
+): unknown {
+  if (!estObjet(donnees)) {
+    return donnees;
+  }
+  if (donnees['type'] === 'revelation' && 'reponses' in donnees) {
+    const { reponses, ...revelation } = donnees;
+    return {
+      ...revelation,
+      optionId: cibleDeLaQuestionAffichee(montage, reponses, direct)?.optionId ?? null,
+    };
+  }
+  if (donnees['type'] !== 'reponses') {
+    return donnees;
+  }
+  const bonne = cibleDeLaQuestionAffichee(montage, donnees['reponses'], direct);
+  return bonne === null ? null : { type: 'cible', ...bonne };
 }
 
 function visantLeMontage<T extends { readonly questionId: string }>(

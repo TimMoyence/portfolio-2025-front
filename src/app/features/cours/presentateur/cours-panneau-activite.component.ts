@@ -16,6 +16,7 @@ import { colonnesACorriger } from '../../../../cours/runtime/blocks/FpTableBuild
 import type { ResultatsDuFlux } from '../../../../cours/runtime/core/sync';
 import { NOMBRE_FRANCAIS } from '../../../shared/slides/layouts/axe-gradue';
 import {
+  estVoteJumele,
   identifiantsDuMontage,
   libellesDesElements,
   planDeMontage,
@@ -401,10 +402,7 @@ export class CoursPanneauActiviteComponent {
     (planDeMontage(this.ecran()) ?? []).flatMap(identifiantsDuMontage),
   );
 
-  protected readonly phaseVisible = computed(
-    () =>
-      this.ecran().type === 'fp-vote' && objet(this.ecran().donnees?.['questionJumelle']) !== null,
-  );
+  protected readonly phaseVisible = computed(() => estVoteJumele(this.ecran()));
 
   protected readonly correctionRevelable = computed(() => {
     const ecran = this.ecran();
@@ -498,7 +496,11 @@ export class CoursPanneauActiviteComponent {
   }
 
   protected passerA(phase: VotePhase): void {
-    this.commande.emit({ screenId: this.ecran().id, phase });
+    if (phase === 'revele') {
+      this.reveler();
+    } else {
+      this.commande.emit({ screenId: this.ecran().id, phase });
+    }
   }
 
   protected reveler(): void {

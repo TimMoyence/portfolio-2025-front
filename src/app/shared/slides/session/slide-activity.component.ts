@@ -36,6 +36,7 @@ import {
   planDeMontage,
   PROPRIETES_PAR_BRIQUE,
   type ReponsesDuQuestionnaire,
+  type RevelationDuVote,
 } from './lecture-ecran';
 import {
   type ImpressionDeLEcran,
@@ -44,7 +45,8 @@ import {
   posesDeReinjection,
 } from './reinjection';
 
-type DonneesFormateur = CorrigeEcranPresentateur | ReponsesDuQuestionnaire | null;
+type DonneesFormateur =
+  CorrigeEcranPresentateur | ReponsesDuQuestionnaire | RevelationDuVote | null;
 
 interface MontageActif extends MontageIdentifie {
   readonly element: HTMLElement;
@@ -66,7 +68,9 @@ interface ReponseVisuelle {
     @if (entete(); as questionnaire) {
       <header class="slide-activity__entete" data-testid="slide-activity-entete">
         <h2 class="slide-activity__intitule">{{ questionnaire.intitule }}</h2>
-        <p class="slide-activity__consigne">{{ questionnaire.consigne }}</p>
+        @if (questionnaire.consigne; as consigne) {
+          <p class="slide-activity__consigne">{{ consigne }}</p>
+        }
       </header>
     }
     @if (verrouille()) {

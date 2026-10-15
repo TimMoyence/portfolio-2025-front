@@ -5,7 +5,10 @@ import type { CardsortPlanPublic } from '../../../../cours/runtime/blocks/FpCard
 import type { EscapeParcoursPublic } from '../../../../cours/runtime/blocks/FpEscape';
 import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
 import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
-import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
+import {
+  INSTANTANES_DES_COURS_SERVIS,
+  VOTES_JUMELES_DU_PUPITRE,
+} from '../../../../testing/fixtures/instantanes-des-cours';
 import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
 import { buildEcranDeVoteJumele } from '../../../../testing/banc-du-pupitre';
 import { lignesDe } from '../../../../testing/lignes-de-texte';
@@ -107,17 +110,20 @@ describe('CoursPanneauActiviteComponent', () => {
       expect(lire(monter(simple).fixture, 'activite-phase')).toBeNull();
     });
 
-    const VOTES_JUMELES = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
-      ecransDuPupitreDe(instantane).filter(
-        ({ type, donnees }) => type === 'fp-vote' && donnees?.['questionJumelle'] != null,
-      ),
-    );
-
     it('QA-01 · trouve des votes jumeles dans les cours servis', () => {
-      expect(VOTES_JUMELES.length).toBeGreaterThan(0);
+      expect(VOTES_JUMELES_DU_PUPITRE.length).toBeGreaterThan(0);
     });
 
-    for (const jumele of VOTES_JUMELES) {
+    for (const jumele of VOTES_JUMELES_DU_PUPITRE) {
+      it(`Q1 · ${jumele.id} : passer à la révélation envoie le même ordre que « Révéler la correction »`, () => {
+        const { fixture, commandes } = monter(jumele, { pilotage: { phase: 'revote' } });
+
+        expect(texte(fixture, 'activite-phase-suivante')).toContain('Révélation');
+        cliquer(fixture, 'activite-phase-suivante');
+
+        expect(commandes).toEqual([{ screenId: jumele.id, revele: true }]);
+      });
+
       it(`QA-01 · ${jumele.id} : lit la phase servie et n en suppose aucune tant qu aucune n est servie`, () => {
         const sansPhase = monter(jumele, { pilotage: {} }).fixture;
 

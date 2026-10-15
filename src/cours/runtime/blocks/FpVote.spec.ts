@@ -310,9 +310,39 @@ describe('FpVote', () => {
       hote.phase = 'vote';
 
       expect(legende(hote)).toBe(QUESTION.enonce);
-      expect(marque(hote, 'phase')?.textContent).toContain('Votez seul·e');
       expect(hote.shadowRoot?.innerHTML).not.toContain(JUMELLE.enonce);
     });
+
+    it('Q2 · n annonce ni le vote ni le revote, et ne titre aucun des deux histogrammes', () => {
+      const rendus: string[] = [];
+      for (const phase of ['vote', 'revote'] as const) {
+        hote.phase = phase;
+        expect(marque(hote, 'phase')).withContext(phase).toBeNull();
+        rendus.push(hote.shadowRoot?.innerHTML ?? '');
+      }
+      projeterLesDeuxVotesReveles();
+      rendus.push(hote.shadowRoot?.innerHTML ?? '');
+
+      for (const phrase of [
+        'Votez seul',
+        'sans en parler',
+        'Première question',
+        'Deuxième question',
+      ]) {
+        expect(rendus.join('')).not.toContain(phrase);
+      }
+      expect(
+        hote.shadowRoot?.querySelectorAll('.fp-vote__histogramme > .fp-vote__titre').length,
+      ).toBe(0);
+    });
+
+    for (const phase of Object.values(PHASES)) {
+      it(`marque la phase ${phase} sur la carte du vote, que le banc lit`, () => {
+        hote.phase = phase;
+
+        expect(hote.shadowRoot?.querySelector('.fp-carte')?.getAttribute('data-phase')).toBe(phase);
+      });
+    }
 
     it('ferme le vote pendant la discussion', () => {
       hote.phase = 'discussion';
@@ -423,7 +453,7 @@ describe('FpVote', () => {
       expect(histogrammes[1].textContent).toContain('80%');
     });
 
-    it('QF-14 · le titre d un vote occupe sa propre ligne : chaque barre garde son libelle, sa piste et son pourcentage alignes', () => {
+    it('QF-14 · cote a cote, chaque barre garde son libelle, sa piste et son pourcentage alignes', () => {
       hote.style.cssText = 'display:block;width:900px;';
       projeterLesDeuxVotesReveles();
 
@@ -436,9 +466,9 @@ describe('FpVote', () => {
             piste.bottom <= libelle.top,
         );
 
-      expect(
-        hote.shadowRoot?.querySelectorAll('.fp-vote__histogramme > .fp-vote__titre').length,
-      ).toBe(2);
+      expect(noeudsOmbre(hote, 'barre').length).toBe(
+        QUESTION.options.length + JUMELLE.options.length + 2,
+      );
       expect(desalignees.length).toBe(0);
     });
 
@@ -470,6 +500,21 @@ describe('FpVote', () => {
         expect(marque(hote, 'revelation')?.textContent).toContain('Le capital double');
       });
     }
+
+    it('Q1 · au presentateur, marque en vert la bonne option sous l encadre, sans autre correction', () => {
+      presenter();
+      hote.phase = 'revele';
+
+      hote.corrige = { ...REVELATION, optionId: 'j-b' };
+
+      expect(marque(hote, 'revelation')?.textContent).toContain('Le capital double');
+      expect(
+        options(hote)
+          .filter((option) => option.getAttribute('data-correction') === 'juste')
+          .map((option) => option.dataset['option']),
+      ).toEqual(['j-b']);
+      expect(marque(hote, 'bonne-reponse')).toBeNull();
+    });
   });
 
   it('montre le verdict d un vote simple des qu il arrive', () => {
