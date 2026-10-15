@@ -92,6 +92,26 @@ export function libellesColles(racine: Node, jonctions: Jonctions = 'toutes'): r
   };
   const rogneurs = textes.map(rogneursDe);
 
+  const echelleDe = (noeud: Text): number => {
+    let echelle = 1;
+    for (
+      let element: Element | null = noeud.parentElement;
+      element !== null;
+      element = parentDe(element)
+    ) {
+      const { transform } = getComputedStyle(element);
+      if (transform !== 'none') {
+        const matrice = new DOMMatrixReadOnly(transform);
+        echelle *= Math.hypot(matrice.a, matrice.b);
+      }
+    }
+    return echelle;
+  };
+  const echelles = textes.map(echelleDe);
+
+  const seuil = (pixels: number, rang: number, autreRang: number): number =>
+    pixels * Math.max(echelles[rang], echelles[autreRang]);
+
   const propres = (rang: number, autreRang: number): readonly Element[] =>
     rogneurs[rang].filter((element) => !rogneurs[autreRang].includes(element));
 
@@ -140,7 +160,7 @@ export function libellesColles(racine: Node, jonctions: Jonctions = 'toutes'): r
   const empilees = (une: LigneDeTexte, autre: LigneDeTexte): boolean =>
     etiquette(une.rang) &&
     etiquette(autre.rang) &&
-    -recouvrementVertical(une.cadre, autre.cadre) < ECART_VISIBLE_PX;
+    -recouvrementVertical(une.cadre, autre.cadre) < seuil(ECART_VISIBLE_PX, une.rang, autre.rang);
 
   const collesBoutABout = (gauche: number, droite: number): boolean => {
     const avant = textes[gauche].data;
@@ -154,7 +174,8 @@ export function libellesColles(racine: Node, jonctions: Jonctions = 'toutes'): r
       fin !== null &&
       debut !== null &&
       surLaMemeLigne(fin, debut) &&
-      Math.max(debut.left - fin.right, fin.left - debut.right) < ECART_VISIBLE_PX &&
+      Math.max(debut.left - fin.right, fin.left - debut.right) <
+        seuil(ECART_VISIBLE_PX, gauche, droite) &&
       rogne(fin, propres(gauche, droite)) !== null &&
       rogne(debut, propres(droite, gauche)) !== null
     );
@@ -170,10 +191,10 @@ export function libellesColles(racine: Node, jonctions: Jonctions = 'toutes'): r
 
   const seChevauchent = (ligne: LigneDeTexte, autre: LigneDeTexte): boolean => {
     const { rang, cadre } = ligne;
+    const tolere = seuil(CHEVAUCHEMENT_TOLERE_PX, rang, autre.rang);
     if (
       !(surLaMemeLigne(cadre, autre.cadre) || empilees(ligne, autre)) ||
-      Math.min(cadre.right, autre.cadre.right) - Math.max(cadre.left, autre.cadre.left) <=
-        CHEVAUCHEMENT_TOLERE_PX
+      Math.min(cadre.right, autre.cadre.right) - Math.max(cadre.left, autre.cadre.left) <= tolere
     ) {
       return false;
     }
@@ -187,7 +208,7 @@ export function libellesColles(racine: Node, jonctions: Jonctions = 'toutes'): r
       Math.max(1, Math.abs(bas - haut)),
     );
     const vu = rogne(contact, [...propres(rang, autre.rang), ...propres(autre.rang, rang)]);
-    return vu !== null && vu.width > CHEVAUCHEMENT_TOLERE_PX;
+    return vu !== null && vu.width > tolere;
   };
 
   const chevauches =
@@ -196,7 +217,11 @@ export function libellesColles(racine: Node, jonctions: Jonctions = 'toutes'): r
       : lignes.flatMap((ligne, index) =>
           lignes
             .slice(index + 1)
-            .filter((autre) => autre.cadre.top < ligne.cadre.bottom + ECART_VISIBLE_PX)
+            .filter(
+              (autre) =>
+                autre.cadre.top <
+                ligne.cadre.bottom + seuil(ECART_VISIBLE_PX, ligne.rang, autre.rang),
+            )
             .filter((autre) => autre.rang !== ligne.rang && seChevauchent(ligne, autre))
             .map(
               (autre) =>

@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import type { EcranContent, PieceJointe } from '../../../../cours/content/types';
 import { attendreQue, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
+import { deuxImages } from '../../../../testing/deux-images';
 import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
@@ -1754,16 +1755,12 @@ function zonesDeSaisie(monte: EcranCadre): HTMLTextAreaElement[] {
   );
 }
 
-async function fautesDesZonesDeSaisie(monte: EcranCadre): Promise<{
+const PAIRES_D_IMAGES_POUR_QUE_LA_SAISIE_SE_POSE = 10;
+
+function constaterLesZonesDeSaisie(monte: EcranCadre): {
   readonly zones: number;
   readonly fautes: string[];
-}> {
-  const saisies = zonesDeSaisie(monte);
-  for (const zone of saisies) {
-    zone.value = REPONSE_DE_500_CARACTERES;
-    zone.dispatchEvent(new Event('input', { bubbles: true }));
-  }
-  await stabiliser(monte, saisies.length > 0 ? 2 : 0);
+} {
   const relues = zonesDeSaisie(monte);
   return {
     zones: relues.length,
@@ -1777,6 +1774,28 @@ async function fautesDesZonesDeSaisie(monte: EcranCadre): Promise<{
         : [];
     }),
   };
+}
+
+async function fautesDesZonesDeSaisie(monte: EcranCadre): Promise<{
+  readonly zones: number;
+  readonly fautes: string[];
+}> {
+  const saisies = zonesDeSaisie(monte);
+  for (const zone of saisies) {
+    zone.value = REPONSE_DE_500_CARACTERES;
+    zone.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  await stabiliser(monte, saisies.length > 0 ? 2 : 0);
+  let constat = constaterLesZonesDeSaisie(monte);
+  for (
+    let paire = 0;
+    paire < PAIRES_D_IMAGES_POUR_QUE_LA_SAISIE_SE_POSE && constat.fautes.length > 0;
+    paire += 1
+  ) {
+    await deuxImages();
+    constat = constaterLesZonesDeSaisie(monte);
+  }
+  return constat;
 }
 
 describe('QP-09 · une zone de saisie grandit avec une réponse de 500 caractères, sur tous les cours servis', () => {

@@ -11,6 +11,7 @@ import type {
   EtatParticipant,
   PilotageEcran,
 } from '../../../../cours/content/types';
+import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
 import {
@@ -47,6 +48,7 @@ import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
   attendreLaFermetureDuFlux,
   diffuserSurLaVue,
+  stabiliserLaMiseEnPage,
   stabiliserLaVue,
 } from '../../../../testing/vue-de-seance';
 import type {
@@ -1423,24 +1425,80 @@ describe('CoursEtudiantComponent', () => {
     const VUES_DU_POSTE = ['etudiant-titre', 'etudiant-progression', 'etudiant-plein-ecran'];
 
     for (const [prefixe, { sujet: servi }] of INSTANTANES_DES_COURS_SERVIS) {
-      it(`${prefixe} : l entrée, puis chaque écran avant et après révélation, séparent chaque libellé de sa valeur`, async () => {
-        sujet = servi;
-        port.lireSujet.and.returnValue(of(sujet));
-        const entree = lireLesLibelles(monter().nativeElement, ['etudiant-entree']);
-        const fixture = await rattacherALaSeanceEnCours();
+      it(
+        `${prefixe} : l entrée, puis chaque écran avant et après révélation, séparent chaque libellé de sa valeur`,
+        async () => {
+          sujet = servi;
+          port.lireSujet.and.returnValue(of(sujet));
+          const entree = lireLesLibelles(monter().nativeElement, ['etudiant-entree']);
+          const fixture = await rattacherALaSeanceEnCours();
 
-        const lecture = await lireLesLibellesDeChaqueEcran(
-          fixture.nativeElement,
-          sujet.ecrans,
-          (ecranCourant, pilotage) => diffuserPuisStabiliser(fixture, { ecranCourant, pilotage }),
-          VUES_DU_POSTE,
-        );
+          const lecture = await lireLesLibellesDeChaqueEcran(
+            fixture.nativeElement,
+            sujet.ecrans,
+            async (ecranCourant, pilotage) => {
+              diffuserSurLaVue(double, fixture, { ecranCourant, pilotage });
+              await stabiliserLaMiseEnPage(fixture);
+            },
+            VUES_DU_POSTE,
+          );
 
-        expect([entree, lecture]).toEqual([
-          { colles: [], vuesAbsentes: [] },
-          { colles: [], vuesAbsentes: [] },
-        ]);
-      });
+          expect([entree, lecture]).toEqual([
+            { colles: [], vuesAbsentes: [] },
+            { colles: [], vuesAbsentes: [] },
+          ]);
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
+  });
+
+  describe('QP-BASCULE · un écran du poste étudiant garde sa mise en page, quel que soit l écran précédent', () => {
+    const LARGEUR_DE_CADRE_AU_BORD_DU_SEUIL_COMPACT = 707;
+
+    for (const [prefixe, { sujet: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+      it(
+        `${prefixe} : au bord du seuil compact, chaque écran a la même mise en page à l aller et au retour`,
+        async () => {
+          sujet = servi;
+          port.lireSujet.and.returnValue(of(sujet));
+          const fixture = await rattacherALaSeanceEnCours();
+          const hote = fixture.nativeElement as HTMLElement;
+          hote.style.display = 'block';
+          await stabiliserLaMiseEnPage(fixture);
+          const defileur = hote.querySelector<HTMLElement>('.student-session__cadre');
+          const cadre = hote.querySelector<HTMLElement>('[data-testid="cours-cadre"]');
+          const barre = (defileur?.offsetWidth ?? 0) - (defileur?.clientWidth ?? 0);
+          hote.style.inlineSize = `${hote.offsetWidth - (cadre?.clientWidth ?? 0) - barre + LARGEUR_DE_CADRE_AU_BORD_DU_SEUIL_COMPACT}px`;
+          const parcourir = async (
+            rangs: readonly number[],
+          ): Promise<ReadonlyMap<string, boolean>> => {
+            const compactes = new Map<string, boolean>();
+            for (const rang of rangs) {
+              diffuserSurLaVue(double, fixture, { ecranCourant: rang });
+              await stabiliserLaMiseEnPage(fixture);
+              compactes.set(
+                sujet.ecrans[rang].id,
+                hote
+                  .querySelector('app-cours-presentation')
+                  ?.classList.contains('cours-presentation--compacte') === true,
+              );
+            }
+            return compactes;
+          };
+          const rangs = sujet.ecrans.map((_, rang) => rang);
+
+          const aller = await parcourir(rangs);
+          const retour = await parcourir([...rangs].reverse());
+
+          expect(
+            sujet.ecrans
+              .filter(({ id }) => aller.get(id) !== retour.get(id))
+              .map(({ id }) => `${id} ${aller.get(id) === true ? 'compact' : 'réduit'} à l aller`),
+          ).toEqual([]);
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
     }
   });
 

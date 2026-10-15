@@ -133,14 +133,14 @@ function valeurSousLePoint(hauteurs: readonly number[], rang: number): boolean {
   return hauteur - Math.max(...audessous) > Math.min(...audessus) - hauteur;
 }
 
-function seGenent(un: Cadre, autre: Cadre): boolean {
+function seGenent(un: Cadre, autre: Cadre, echelle: number): boolean {
   return (
-    Math.min(un.right, autre.right) - Math.max(un.left, autre.left) > -ECART_LISIBLE_PX &&
-    Math.min(un.bottom, autre.bottom) - Math.max(un.top, autre.top) > -ECART_EMPILE_PX
+    Math.min(un.right, autre.right) - Math.max(un.left, autre.left) > -ECART_LISIBLE_PX * echelle &&
+    Math.min(un.bottom, autre.bottom) - Math.max(un.top, autre.top) > -ECART_EMPILE_PX * echelle
   );
 }
 
-function pasQuiDegage(colonnes: readonly (readonly Cadre[])[]): number {
+function pasQuiDegage(colonnes: readonly (readonly Cadre[])[], echelle: number): number {
   const degage = (pas: number): boolean => {
     const gardes = colonnes.flatMap((cadres, rang) =>
       rang % pas === 0 ? cadres.map((cadre) => ({ rang, cadre })) : [],
@@ -148,7 +148,7 @@ function pasQuiDegage(colonnes: readonly (readonly Cadre[])[]): number {
     return gardes.every(({ rang, cadre }, index) =>
       gardes
         .slice(index + 1)
-        .every((autre) => autre.rang === rang || !seGenent(cadre, autre.cadre)),
+        .every((autre) => autre.rang === rang || !seGenent(cadre, autre.cadre, echelle)),
     );
   };
   return Array.from({ length: colonnes.length }, (_, rang) => rang + 1).find(degage) ?? 1;
@@ -182,11 +182,12 @@ function cadreFixe({ left, right, top, bottom }: Cadre): Cadre {
   return { left, right, top, bottom };
 }
 
-function touchent(valeur: Cadre, forme: Cadre): boolean {
+function touchent(valeur: Cadre, forme: Cadre, echelle: number): boolean {
   return (
     Math.min(valeur.right, forme.right) - Math.max(valeur.left, forme.left) >
-      -ECART_AUX_FORMES_PX &&
-    Math.min(valeur.bottom, forme.bottom) - Math.max(valeur.top, forme.top) > -ECART_AUX_FORMES_PX
+      -ECART_AUX_FORMES_PX * echelle &&
+    Math.min(valeur.bottom, forme.bottom) - Math.max(valeur.top, forme.top) >
+      -ECART_AUX_FORMES_PX * echelle
   );
 }
 
@@ -438,6 +439,7 @@ export class SlideChartComponent {
   private degagerLesLibelles(): void {
     const rendu: HTMLElement = this.elementRef.nativeElement;
     const trace = cadreDuTrace(rendu);
+    const echelle = trace?.echelle ?? 1;
     const reculs = new Map<number, number>();
     const abscisses: Cadre[][] = [];
     for (const texte of rendu.querySelectorAll<HTMLElement>('.slide-chart__labels [data-rang]')) {
@@ -450,12 +452,13 @@ export class SlideChartComponent {
       abscisses[rang] = [decale(brut, recul, trace)];
     }
     this.reculsDesAbscisses.set(reculs);
-    this.pasDesAbscisses.set(pasQuiDegage(abscisses));
+    this.pasDesAbscisses.set(pasQuiDegage(abscisses, echelle));
     this.pasDesGraduations.set(
       pasQuiDegage(
         cadresParRang(
           rendu.querySelectorAll<HTMLElement>('.slide-chart__axis--left .slide-chart__tick'),
         ),
+        echelle,
       ),
     );
     const formesParAbscisse = this.kind() === 'line' ? 1 : this.series().length;
@@ -473,7 +476,7 @@ export class SlideChartComponent {
         ),
       );
       this.ecartDesEtiquettes.set(
-        Math.max(ECART_DES_ETIQUETTES, ((etiquette + ECART_LISIBLE_PX) / zone) * 100),
+        Math.max(ECART_DES_ETIQUETTES, ((etiquette + ECART_LISIBLE_PX * echelle) / zone) * 100),
       );
     }
     this.placerLesValeurs(rendu);
@@ -491,6 +494,7 @@ export class SlideChartComponent {
       ),
     );
     const trace = cadreDuTrace(rendu);
+    const echelle = trace?.echelle ?? 1;
     const retournees = new Set<string>();
     const horsPlace = new Set<string>();
     const reculs = new Map<string, number>();
@@ -511,8 +515,10 @@ export class SlideChartComponent {
       const cotes = enPlace.map((cadre) => decale(cadre, recul, trace));
       const place = cotes.find(
         (cadre) =>
-          formes.every((forme) => forme.cle === cle || !touchent(cadre, forme.cadre)) &&
-          [...textes, ...(colonnes[rang] ?? [])].every((voisin) => !seGenent(cadre, voisin)),
+          formes.every((forme) => forme.cle === cle || !touchent(cadre, forme.cadre, echelle)) &&
+          [...textes, ...(colonnes[rang] ?? [])].every(
+            (voisin) => !seGenent(cadre, voisin, echelle),
+          ),
       );
       if (place === undefined) {
         horsPlace.add(cle);
@@ -526,7 +532,7 @@ export class SlideChartComponent {
     this.valeursRetournees.set(retournees);
     this.valeursHorsPlace.set(horsPlace);
     this.reculsDesValeurs.set(reculs);
-    this.pasDesValeurs.set(pasQuiDegage(colonnes));
+    this.pasDesValeurs.set(pasQuiDegage(colonnes, echelle));
   }
 
   private abscisse(index: number): number {

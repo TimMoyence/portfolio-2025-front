@@ -28,7 +28,11 @@ import {
 } from '../../../../testing/factories/formations.factory';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import type { FpPlot } from '../../../../cours/runtime/blocks/FpPlot';
-import { attendreQue, briqueMontee } from '../../../../testing/briques-montees';
+import {
+  attendreQue,
+  briqueMontee,
+  DELAI_DE_MONTAGE_MS,
+} from '../../../../testing/briques-montees';
 import {
   buildExitBillet,
   buildPlotEnBarres,
@@ -549,28 +553,36 @@ describe('CoursSceneComponent', () => {
     const VUES_DE_LA_SCENE = ['resultats-projetes-question', 'resultats-projetes-libres'];
 
     for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
-      it(`${prefixe} : chaque écran projeté, avant et après révélation, sépare chaque libellé de sa valeur`, async () => {
-        const fixture = await projeterLeCoursServi(servi);
+      it(
+        `${prefixe} : chaque écran projeté, avant et après révélation, sépare chaque libellé de sa valeur`,
+        async () => {
+          const fixture = await projeterLeCoursServi(servi);
 
-        await attendreChaqueLibelleSepareDeSaValeur(
-          double,
-          fixture,
-          servi.ecrans,
-          VUES_DE_LA_SCENE,
-        );
-      });
+          await attendreChaqueLibelleSepareDeSaValeur(
+            double,
+            fixture,
+            servi.ecrans,
+            VUES_DE_LA_SCENE,
+          );
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
     }
   });
 
   describe('QP-CALQUE · la correction et les résultats projetés tiennent dans la toile projetée', () => {
     for (const echelle of [1.5, 0.625]) {
       for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
-        it(`${prefixe} : dans une toile projetée à l’échelle ${echelle}, sur chaque écran révélé, rien de la correction ni des résultats projetés n est coupé, ni réduit par un zoom que Safari arrête à 9 px`, async () => {
-          const fixture = await projeterLeCoursServi(servi);
+        it(
+          `${prefixe} : dans une toile projetée à l’échelle ${echelle}, sur chaque écran révélé, rien de la correction ni des résultats projetés n est coupé, ni réduit par un zoom que Safari arrête à 9 px`,
+          async () => {
+            const fixture = await projeterLeCoursServi(servi);
 
-          expect(await mettreLaToileALEchelle(fixture, echelle)).toBeCloseTo(echelle, 2);
-          await attendreChaqueCalqueEntierDansLaToile(double, fixture, servi.ecrans);
-        });
+            expect(await mettreLaToileALEchelle(fixture, echelle)).toBeCloseTo(echelle, 2);
+            await attendreChaqueCalqueEntierDansLaToile(double, fixture, servi.ecrans);
+          },
+          DELAI_DE_MONTAGE_MS,
+        );
       }
     }
   });

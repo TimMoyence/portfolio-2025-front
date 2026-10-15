@@ -442,6 +442,21 @@ function reculsDesTextes(rendu: HTMLElement): string[] {
   });
 }
 
+function placementDesTextes(rendu: HTMLElement): string[] {
+  return [
+    ...Array.from(
+      rendu.querySelectorAll<HTMLElement>(`${TEXTES_RECULABLES}, ${GRADUATIONS}`),
+      (texte) =>
+        `${texte.textContent?.trim()} ${getComputedStyle(texte).visibility}${texte.classList.contains('is-below') ? ' dessous' : ''}`,
+    ),
+    ...Array.from(
+      rendu.querySelectorAll<HTMLElement>('.slide-chart__serie-label'),
+      (etiquette) =>
+        `${etiquette.textContent?.trim()} à ${etiquette.style.getPropertyValue('--y')}`,
+    ),
+  ];
+}
+
 const GRAPHIQUES_SERVIS = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
   ecransPublicsDe(instantane).flatMap((ecran) => {
     const presentation = presentationDe(ecran);
@@ -680,7 +695,7 @@ describe('SlideChartComponent · QP-18, une valeur ne touche que sa propre forme
   });
 
   for (const [id, entrees] of GRAPHIQUES_SERVIS) {
-    it(`${id} : recule une valeur ou une abscisse de la même longueur à toute échelle de la toile et à chaque nouvelle mesure, sans qu elle sorte du tracé, comme l emprunt du B2-05 en projection`, async () => {
+    it(`${id} : recule, montre, masque et retourne les mêmes valeurs, abscisses et graduations à toute échelle de la toile et à chaque nouvelle mesure, sans qu aucune sorte du tracé, comme l emprunt du B2-05 en projection ou les hypothèses du B2-04 sur un portable 14 pouces`, async () => {
       const fixture = monterLeGraphique(entrees);
       const rendu = element(fixture);
       rendu.style.transformOrigin = '0 0';
@@ -690,6 +705,7 @@ describe('SlideChartComponent · QP-18, une valeur ne touche que sa propre forme
         rendu.style.transform = '';
         await rendreALaLargeur(fixture, largeur);
         const aLEchelleUn = reculsDesTextes(rendu);
+        const placesALEchelleUn = placementDesTextes(rendu);
         for (const echelle of [1.4, 0.75, 1]) {
           rendu.style.transform = `scale(${echelle})`;
           for (const mesure of [1, 2, 3]) {
@@ -699,9 +715,15 @@ describe('SlideChartComponent · QP-18, une valeur ne touche que sa propre forme
             lectures.push({
               ...lecture,
               reculs: reculsDesTextes(rendu),
+              places: placementDesTextes(rendu),
               hors: textesHorsDuTrace(rendu),
             });
-            attendues.push({ ...lecture, reculs: aLEchelleUn, hors: [] });
+            attendues.push({
+              ...lecture,
+              reculs: aLEchelleUn,
+              places: placesALEchelleUn,
+              hors: [],
+            });
           }
         }
       }
