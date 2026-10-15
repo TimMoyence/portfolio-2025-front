@@ -1,6 +1,6 @@
 @use '../../../styles-shared/deck-tokens' as deck;
 
 :host {
-  @include deck.deck-tokens(#0f7b65, #0c6452, #094d3f);
+  @include deck.deck-tokens(#0f7b65, #094d3f);
   display: block;
 }

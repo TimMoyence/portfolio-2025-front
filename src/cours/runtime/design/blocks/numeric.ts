@@ -31,6 +31,7 @@ export const numeric = `
   background: var(--fp-surface);
   color: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: var(--fp-corps);
   font-variant-numeric: tabular-nums;
   text-align: right;

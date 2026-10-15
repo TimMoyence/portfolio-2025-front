@@ -71,7 +71,9 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
 - Rien n'y dépend de la fenêtre : la hauteur de toile est imposée par des variables
   (`--slide-hauteur-de-toile`, `--fp-hauteur-de-toile-imposee`), les requêtes média des
   gabarits s'écrivent `print, (min-width: …)`, aucun élément n'est zoomé et aucune image n'est
-  différée.
+  différée. Une zone de saisie, que l'écran ajuste à sa réponse (`suivreLaSaisie`), s'imprime
+  à la hauteur de ses lignes : à l'impression réelle, aucun script ne tourne entre la mise en
+  page du papier et le PDF, qui garderait sinon la hauteur calculée pour la fenêtre.
 - La pagination ne repose sur aucune propriété `break-*` d'évitement : chaque bloc insécable
   est une `inline-grid` pleine largeur dans un flux `display: block` (`orphans` et `widows` à
   1), que les deux moteurs déplacent d'un seul tenant. Un écran du corrigé se scinde entre son
@@ -133,9 +135,10 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
 
 - `e2e/cours-livret-impression.spec.ts` garde chacune de ces règles : voile, zoom, images,
   largeur fixe, marges entières, blocs d'un seul tenant rognés et sans ombre, légendes
-  flottantes, hauteurs identiques d'une fenêtre à l'autre, fond blanc, gouttière, réglages de
-  la projection, cartes de cours sur une rangée, aucun élément hors de son écran, parcours de
-  méthode imprimé en entier et indépendant de son minuteur.
+  flottantes, hauteurs identiques d'une fenêtre à l'autre, zones de saisie à la hauteur de leurs
+  lignes, fond blanc, gouttière, réglages de la projection, cartes de cours sur une rangée,
+  aucun élément hors de son écran, parcours de méthode imprimé en entier et indépendant de son
+  minuteur.
 - `src/server/routes-client.spec.ts` vérifie que chaque route qui déclare des en-têtes les
   reçoit et que le pupitre et la projection n'en reçoivent pas ; `e2e/entetes-ssr.spec.ts`
   vérifie l'en-tête sur la réponse du serveur SSR construit.

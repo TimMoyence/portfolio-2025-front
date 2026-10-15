@@ -125,19 +125,15 @@ describe('PanneauLectureClasseComponent', () => {
     const fixture = monter(ecranServi(ATELIER), {
       participants: 2,
       resultats: [
-        buildResultatQuestion({ questionId: 'b2-03-a1-visa', total: 2, correctes: 2 }),
         buildResultatQuestion({ questionId: 'b2-03-a1-implication', total: 2, correctes: 1 }),
-        buildResultatQuestion({ questionId: 'b2-03-a1-f213', total: 1, correctes: 1 }),
-        buildResultatQuestion({ questionId: 'b2-03-a1-f205', total: 2, correctes: 1 }),
+        buildResultatQuestion({ questionId: 'b2-03-a1-f205', total: 1, correctes: 1 }),
         buildResultatQuestion({ questionId: 'b2-03-a2-formule', total: 20, correctes: 20 }),
       ],
     });
 
     expect(lignes(fixture)).toEqual([
-      ['Q1', '2 / 2', '100%'],
-      ['Q2', '2 / 2', '50%'],
-      ['Q3', '1 / 2', '100%'],
-      ['Q4', '2 / 2', '50%'],
+      ['Q1', '2 / 2', '50%'],
+      ['Q2', '1 / 2', '100%'],
     ]);
     expect(confiance(fixture)).toBe('À confirmer');
   });
@@ -148,8 +144,6 @@ describe('PanneauLectureClasseComponent', () => {
     expect(lignes(fixture)).toEqual([
       ['Q1', '0 / 12', '—'],
       ['Q2', '0 / 12', '—'],
-      ['Q3', '0 / 12', '—'],
-      ['Q4', '0 / 12', '—'],
     ]);
     expect(confiance(fixture)).toBe('Aucune donnée');
   });
@@ -168,11 +162,11 @@ describe('PanneauLectureClasseComponent', () => {
   });
 
   it('lit une production par son score moyen', () => {
-    const fixture = monter(ecranServi('B2-03-A1-11-TABLEUR-SI-OU'), {
+    const fixture = monter(ecranServi('B2-03-A2-06-TABLEUR-NON-OU'), {
       participants: 2,
       resultats: [
         buildResultatQuestion({
-          questionId: 'b2-03-a1-tableur-si-ou',
+          questionId: 'b2-03-a2-tableur-non-ou',
           type: 'feuille',
           total: 2,
           correctes: 0,

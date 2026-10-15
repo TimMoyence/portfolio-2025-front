@@ -42,3 +42,32 @@ export function ecransPublicsDe(instantane: InstantaneDuCoursB2): readonly Ecran
 export function ecransDuPupitreDe(instantane: InstantaneDuCoursB2): readonly EcranDeroule[] {
   return instantane.deroule.ecrans;
 }
+
+export function ecranReveleAuPosteEtudiant(
+  ecran: EcranContent,
+  pupitre: readonly EcranDeroule[],
+): EcranContent {
+  const source = pupitre.find(({ id }) => id === ecran.id);
+  if (source === undefined) {
+    return ecran;
+  }
+  const corrige = source.corrigeEcran;
+  return {
+    ...ecran,
+    revelation: {
+      ecranId: ecran.id,
+      questions: source.corriges.map(({ questionId, bonneReponse }) => ({
+        questionId,
+        cible: bonneReponse,
+        optionId:
+          source.questions
+            .find(({ id }) => id === questionId)
+            ?.options?.find(({ libelle }) => libelle === bonneReponse)?.id ?? null,
+      })),
+      annexe: corrige,
+      reflexion:
+        corrige?.type === 'reflexion' ? { attendu: corrige.attendu, suite: corrige.suite } : null,
+      explications: source.explications ?? [],
+    },
+  };
+}

@@ -72,7 +72,7 @@
   border-radius: 50%;
   background: var(--slide-bg, #f8f5ef);
   color: var(--teal-deep, #277c70);
-  font-family: var(--font-mono, monospace);
+  @include slide.police;
   font-size: 0.8rem;
   font-weight: 700;
 }
@@ -114,7 +114,7 @@
 .slide-method-path__detail-kicker {
   margin: 0 0 0.75rem;
   color: var(--teal-deep, #277c70);
-  font-family: var(--font-mono, monospace);
+  @include slide.police;
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;

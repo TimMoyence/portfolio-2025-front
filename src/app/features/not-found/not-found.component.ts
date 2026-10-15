@@ -21,7 +21,7 @@ import { bornerEntre } from '../../../cours/runtime/core/valeurs';
     <section class="nf-body">
       <div class="nf-inner">
         <span class="nf-kicker" i18n="@@notFoundLabel">Erreur 404</span>
-        <div class="nf-code" aria-label="404">
+        <div class="nf-code" role="img" aria-label="404">
           4<span #zero class="o" aria-hidden="true">0</span>4
         </div>
         <!--
@@ -78,6 +78,7 @@ import { bornerEntre } from '../../../cours/runtime/core/valeurs';
       }
       .nf-kicker {
         font-family: var(--font-mono);
+        font-variant-ligatures: none;
         font-size: 12px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
@@ -133,6 +134,7 @@ import { bornerEntre } from '../../../cours/runtime/core/valeurs';
       }
       .nf-hint {
         font-family: var(--font-mono);
+        font-variant-ligatures: none;
         font-size: 12px;
         color: var(--ink-faint);
         margin-top: 30px;

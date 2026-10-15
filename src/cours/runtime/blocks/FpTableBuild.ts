@@ -1,4 +1,5 @@
 import { evaluerExpression, lireNombreSaisi } from 'portfolio-2025-partage/formule';
+import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { entierBorne } from '../core/valeurs';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
@@ -386,12 +387,14 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
         : (this.interne?.intitule ?? '');
     const marque = rendu === 'correction' ? safeHtml`data-correction="juste"` : VIDE;
     return safeHtml`
-      <table class="fp-table-build__tableau" data-testid="${escapeHtml(rendu === 'correction' ? 'tableau-corrige' : 'tableau')}" ${marque}>
-        <caption class="fp-table-build__intitule">${escapeHtml(intitule)}</caption>
-        <thead><tr>${this.enteteRang()}${this.colonnes().map((colonne) => this.entete(colonne))}</tr></thead>
-        <tbody>${lignes.map((ligne) => this.ligne(ligne, rendu))}</tbody>
-        <tfoot>${this.ligneDesTotaux(lignes)}</tfoot>
-      </table>
+      ${dansUnDefileur(safeHtml`
+        <table class="fp-table-build__tableau" data-testid="${escapeHtml(rendu === 'correction' ? 'tableau-corrige' : 'tableau')}" ${marque}>
+          <caption class="fp-table-build__intitule">${escapeHtml(intitule)}</caption>
+          <thead><tr>${this.enteteRang()}${this.colonnes().map((colonne) => this.entete(colonne))}</tr></thead>
+          <tbody>${lignes.map((ligne) => this.ligne(ligne, rendu))}</tbody>
+          <tfoot>${this.ligneDesTotaux(lignes)}</tfoot>
+        </table>
+      `)}
       ${lignes.length === 0 ? this.vide() : VIDE}
     `;
   }

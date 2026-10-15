@@ -6,7 +6,8 @@ import {
   installerBrique,
 } from '../../../testing/banc-de-brique';
 import { buildSheetPlan, buildVerdictDeProduction } from '../../../testing/factories/cours.factory';
-import { FpSheet } from './FpSheet';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../testing/fixtures/instantanes-des-cours';
+import { FpSheet, type SheetPlanPublic } from './FpSheet';
 
 const PLAN = buildSheetPlan();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
@@ -94,6 +95,59 @@ function envois(hote: FpSheet): Record<string, unknown>[] {
   return detailsEmis(hote, 'fp-sheet-submit');
 }
 
+const FEUILLES_SERVIES = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
+  instantane.sujet.ecrans
+    .filter(({ type }) => type === 'fp-sheet')
+    .map((ecran) => ({
+      id: ecran.id,
+      plan: ecran.donnees?.['plan'] as SheetPlanPublic,
+      corrige: instantane.deroule.ecrans.find(({ id }) => id === ecran.id)?.corrigeEcran ?? null,
+    })),
+);
+
+const SAISIES_ET_ALIGNEMENTS = [
+  ['Relancer', 'left'],
+  ['12,5', 'right'],
+  ['=2*3', 'right'],
+  ['="Oui"', 'left'],
+  ['=2>1', 'center'],
+  ['=1/0', 'center'],
+] as const;
+
+function alignementExcel(affiche: string): string | null {
+  const texte = affiche.trim();
+  if (texte === '') {
+    return null;
+  }
+  if (/^(VRAI|FAUX|#[\p{Lu}\d/!?]+)$/u.test(texte)) {
+    return 'center';
+  }
+  return /^-?\d[\d\s]*(,\d+)?\s?%?$/u.test(texte) ? 'right' : 'left';
+}
+
+function fautesDAlignement(hote: FpSheet, id: string): string[] {
+  const cases = [...(hote.shadowRoot?.querySelectorAll<HTMLElement>('td.fp-sheet__cellule') ?? [])];
+  return cases.flatMap((td) => {
+    const champ = td.querySelector('input');
+    const correction = td.querySelector<HTMLElement>('.fp-sheet__correction');
+    const affiche =
+      champ?.value ??
+      (correction?.querySelector('.fp-montant') ?? correction?.querySelector('code') ?? td)
+        .textContent ??
+      '';
+    const attendu = alignementExcel(affiche);
+    const lu =
+      correction === null
+        ? getComputedStyle(champ ?? td).textAlign
+        : { start: 'left', end: 'right', center: 'center' }[
+            getComputedStyle(correction).justifyItems
+          ];
+    return attendu === null || lu === attendu
+      ? []
+      : [`${id} ${td.getAttribute('headers')} « ${affiche.trim()} » ${lu} au lieu de ${attendu}`];
+  });
+}
+
 describe('FpSheet', () => {
   let hote: FpSheet;
   const traces = installerBrique<FpSheet>({
@@ -115,6 +169,19 @@ describe('FpSheet', () => {
     expect(reperes(hote, 'colonne').map((th) => th.textContent)).toEqual(['A', 'B', 'C', 'D']);
     expect(racine?.querySelectorAll('tbody tr').length).toBe(PLAN.lignes);
     expect(racine?.querySelector('[role="grid"]')).toBeNull();
+  });
+
+  it('QP-04 · écrit la barre de formule et les cellules en police mono, sans aucune ligature', () => {
+    const enMono = [...(hote.shadowRoot?.querySelectorAll<HTMLElement>('*') ?? [])].filter(
+      (element) => getComputedStyle(element).fontFamily.startsWith('"Geist Mono"'),
+    );
+
+    expect(enMono.map((element) => element.className)).toContain('fp-sheet__saisie');
+    expect(
+      enMono
+        .filter((element) => getComputedStyle(element).fontVariantLigatures !== 'none')
+        .map((element) => element.className),
+    ).toEqual([]);
   });
 
   it('resserre la grille au-dela de dix lignes pour tenir dans la toile', () => {
@@ -547,5 +614,61 @@ describe('FpSheet', () => {
     hote.etayage = 2;
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
     expect(classesOrphelines(hote, 'sheet')).toEqual([]);
+  });
+
+  describe('QP-07 · la feuille aligne comme Excel : texte à gauche, nombres à droite, logiques et erreurs au centre', () => {
+    it('QP-07 · au poste étudiant, chaque cellule fixe et chaque saisie de chaque feuille servie', () => {
+      const fautes = FEUILLES_SERVIES.flatMap(({ id, plan }) => {
+        hote.plan = plan;
+        const libres = [
+          ...(hote.shadowRoot?.querySelectorAll<HTMLInputElement>(
+            'input[data-role="cellule"]:not([readonly])',
+          ) ?? []),
+        ].map((champ) => champ.dataset['nom'] ?? '');
+        const [cible = '', ailleurs = ''] = libres;
+        const saisies =
+          libres.length < 2
+            ? [`${id} moins de deux cellules à saisir`]
+            : SAISIES_ET_ALIGNEMENTS.flatMap(([texte, attendu]) => {
+                saisir(hote, cible, texte);
+                selectionner(hote, ailleurs);
+                const lu = getComputedStyle(cellule(hote, cible)).textAlign;
+                return lu === attendu
+                  ? []
+                  : [`${id} ${cible} « ${texte} » ${lu} au lieu de ${attendu}`];
+              });
+        return [...fautesDAlignement(hote, id), ...saisies];
+      });
+
+      expect(FEUILLES_SERVIES.length).toBeGreaterThan(0);
+      expect(fautes).toEqual([]);
+    });
+
+    it('QP-07 · en projection, chaque cellule et chaque résultat révélé de chaque feuille servie', () => {
+      hote.setAttribute('data-cours-role', 'presentateur');
+      const fautes = FEUILLES_SERVIES.flatMap(({ id, plan, corrige }) => {
+        hote.plan = plan;
+        hote.corrige = corrige;
+        hote.etayage = 2;
+        const revelees = hote.shadowRoot?.querySelectorAll('.fp-sheet__correction').length ?? 0;
+        return [
+          ...fautesDAlignement(hote, id),
+          ...(revelees > 0 ? [] : [`${id} aucun résultat révélé`]),
+        ];
+      });
+
+      expect(fautes).toEqual([]);
+    });
+
+    it('QP-07 · au livret, chaque cellule imprimée de chaque feuille servie', () => {
+      hote.setAttribute('data-papier', '');
+      const fautes = FEUILLES_SERVIES.flatMap(({ id, plan }) => {
+        hote.plan = plan;
+        return fautesDAlignement(hote, id);
+      });
+
+      expect(hote.shadowRoot?.querySelectorAll('input').length).toBe(0);
+      expect(fautes).toEqual([]);
+    });
   });
 });

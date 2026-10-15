@@ -11,6 +11,7 @@ import type {
   EtatParticipant,
   PilotageEcran,
 } from '../../../../cours/content/types';
+import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
 import {
@@ -41,11 +42,13 @@ import { buildEnvoiReponse } from '../../../../testing/factories/queue.factory';
 import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/sync.factory';
+import { lireLesLibelles, lireLesLibellesDeChaqueEcran } from '../../../../testing/libelles-colles';
 import { lireMarque as lire } from '../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
   attendreLaFermetureDuFlux,
   diffuserSurLaVue,
+  stabiliserLaMiseEnPage,
   stabiliserLaVue,
 } from '../../../../testing/vue-de-seance';
 import type {
@@ -776,6 +779,9 @@ describe('CoursEtudiantComponent', () => {
 
     expect(libellesDesVerdicts(fixture)).toEqual([['b2-s03-prediction', 'Question 1 : Manqué']]);
     expect(lire(fixture, 'etudiant-confusion')?.textContent).toContain('composés');
+    expect(
+      lireLesLibelles(fixture.nativeElement, ['etudiant-verdict', 'etudiant-confusion']),
+    ).toEqual({ colles: [], vuesAbsentes: [] });
   });
 
   it('envoie au retour du reseau la reponse mise en file hors ligne, une seule fois', async () => {
@@ -1415,6 +1421,89 @@ describe('CoursEtudiantComponent', () => {
     });
   });
 
+  describe('QP-02 · aucun libellé collé à sa valeur au poste étudiant des cours servis', () => {
+    const VUES_DU_POSTE = ['etudiant-titre', 'etudiant-progression', 'etudiant-plein-ecran'];
+
+    for (const [prefixe, { sujet: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+      it(
+        `${prefixe} : l entrée, puis chaque écran avant et après révélation, séparent chaque libellé de sa valeur`,
+        async () => {
+          sujet = servi;
+          port.lireSujet.and.returnValue(of(sujet));
+          const entree = lireLesLibelles(monter().nativeElement, ['etudiant-entree']);
+          const fixture = await rattacherALaSeanceEnCours();
+
+          const lecture = await lireLesLibellesDeChaqueEcran(
+            fixture.nativeElement,
+            sujet.ecrans,
+            async (ecranCourant, pilotage) => {
+              diffuserSurLaVue(double, fixture, { ecranCourant, pilotage });
+              await stabiliserLaMiseEnPage(fixture);
+            },
+            VUES_DU_POSTE,
+          );
+
+          expect([entree, lecture]).toEqual([
+            { colles: [], vuesAbsentes: [] },
+            { colles: [], vuesAbsentes: [] },
+          ]);
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
+  });
+
+  describe('QP-BASCULE · un écran du poste étudiant garde sa mise en page, quel que soit l écran précédent', () => {
+    const LARGEUR_DE_CADRE_AU_BORD_DU_SEUIL_COMPACT = 707;
+
+    for (const [prefixe, { sujet: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+      it(
+        `${prefixe} : au bord du seuil compact, chaque écran a la même mise en page à l aller et au retour`,
+        async () => {
+          sujet = servi;
+          port.lireSujet.and.returnValue(of(sujet));
+          const fixture = await rattacherALaSeanceEnCours();
+          const hote = fixture.nativeElement as HTMLElement;
+          hote.style.display = 'block';
+          await stabiliserLaMiseEnPage(fixture);
+          const cadre = hote.querySelector<HTMLElement>('[data-testid="cours-cadre"]');
+          hote.style.inlineSize = `${hote.offsetWidth - (cadre?.clientWidth ?? 0) + LARGEUR_DE_CADRE_AU_BORD_DU_SEUIL_COMPACT}px`;
+          const parcourir = async (
+            rangs: readonly number[],
+          ): Promise<ReadonlyMap<string, boolean>> => {
+            const compactes = new Map<string, boolean>();
+            for (const rang of rangs) {
+              diffuserSurLaVue(double, fixture, { ecranCourant: rang });
+              await stabiliserLaMiseEnPage(fixture);
+              compactes.set(
+                sujet.ecrans[rang].id,
+                hote
+                  .querySelector('app-cours-presentation')
+                  ?.classList.contains('cours-presentation--compacte') === true,
+              );
+            }
+            return compactes;
+          };
+          const rangs = sujet.ecrans.map((_, rang) => rang);
+
+          const aller = await parcourir(rangs);
+          const retour = await parcourir([...rangs].reverse());
+
+          expect([
+            hote.querySelector<HTMLElement>('[data-testid="cours-cadre"]')?.clientWidth,
+            [...aller.values()].filter(Boolean).length,
+          ]).toEqual([LARGEUR_DE_CADRE_AU_BORD_DU_SEUIL_COMPACT, 0]);
+          expect(
+            sujet.ecrans
+              .filter(({ id }) => aller.get(id) !== retour.get(id))
+              .map(({ id }) => `${id} ${aller.get(id) === true ? 'compact' : 'réduit'} à l aller`),
+          ).toEqual([]);
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
+  });
+
   describe('QA-12 · verdict d un vote des cours servis, retenu par le serveur jusqu a la revelation', () => {
     interface VoteServi {
       readonly cours: string;
@@ -1500,9 +1589,11 @@ describe('CoursEtudiantComponent', () => {
       return fixture;
     }
 
+    const REVELE = { phase: 'revele', revele: true } as const;
+
     async function revelerLeVerdictServi(fixture: Fixture, vote: VoteServi): Promise<void> {
       port.lireMonEtat.and.returnValue(etatAvecLeVote(vote.principale, false));
-      await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, { phase: 'revele' });
+      await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, REVELE);
     }
 
     function attendreLeVerdictServi(fixture: Fixture, vote: VoteServi, lectures: number): void {
@@ -1514,7 +1605,7 @@ describe('CoursEtudiantComponent', () => {
       double.diffuser({
         etat: 'en_cours',
         ecranCourant: vote.rang,
-        pilotage: { [vote.ecran.id]: { phase: 'revele' } },
+        pilotage: { [vote.ecran.id]: REVELE },
       });
     }
 
@@ -1549,11 +1640,24 @@ describe('CoursEtudiantComponent', () => {
         attendreLeVerdictServi(fixture, vote, 2);
 
         await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, {
-          phase: 'revele',
+          ...REVELE,
           resultatsProjetes: true,
         });
 
         expect(port.lireMonEtat).toHaveBeenCalledTimes(2);
+      });
+
+      it(`${vote.cours} · ${vote.ecran.id} : Q1 · ne relit son corrigé qu à la révélation, jamais à la seule phase de révélation`, async () => {
+        const fixture = await suivreLeCoursJusquAuVote(vote);
+        port.lireSujet.calls.reset();
+
+        await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, { phase: 'revele' });
+
+        expect(port.lireSujet).not.toHaveBeenCalled();
+
+        await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, REVELE);
+
+        expect(port.lireSujet).toHaveBeenCalledTimes(1);
       });
 
       it(`${vote.cours} · ${vote.ecran.id} : a la reprise, relit a la revelation le verdict que le serveur retenait`, async () => {

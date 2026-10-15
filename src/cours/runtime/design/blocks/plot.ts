@@ -67,6 +67,7 @@ export const plot = `
 :where(.fp-root) .fp-plot__valeur {
   color: var(--fp-teal-ink);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-weight: 600;
 }
 
@@ -121,6 +122,12 @@ export const plot = `
   :where(.fp-root) .fp-plot__graphique {
     min-height: 0;
     max-height: calc(var(--fp-hauteur-de-toile) * 0.25);
+  }
+}
+
+@container (max-width: 25rem) {
+  :where(.fp-root) .fp-plot__corps {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -201,6 +208,7 @@ export const plot = `
 :where(.fp-root) .fp-plot__graduation {
   fill: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: calc(0.6875rem * var(--fp-echelle));
 }
 
@@ -224,6 +232,7 @@ export const plot = `
 :where(.fp-root) .fp-plot__montant-barre {
   fill: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: calc(0.625rem * var(--fp-echelle));
   font-weight: 600;
 }
@@ -264,6 +273,7 @@ export const plot = `
 :where(.fp-root) .fp-plot__chiffre-cle {
   color: var(--fp-teal-ink);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
 }
 
 :where(.fp-root) .fp-plot__vide {
@@ -332,13 +342,10 @@ export const plot = `
   text-align: left;
 }
 
-:where(.fp-root) .fp-plot__synthese {
-  overflow-wrap: anywhere;
-}
-
 :where(.fp-root) .fp-plot__source {
   color: var(--fp-ink-mute);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: calc(0.7rem * var(--fp-echelle));
 }
 

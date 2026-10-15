@@ -93,36 +93,35 @@
     </p>
   }
 
-  <details class="slide-boxplot__data">
-    <summary i18n="@@slideBoxplotVoirDonnees">Voir les valeurs</summary>
-    <table>
-      <thead>
+  <app-donnees-de-figure
+    bloc="slide-boxplot"
+    resume="Voir les valeurs"
+    i18n-resume="@@slideBoxplotVoirDonnees"
+    [source]="source()"
+  >
+    <thead>
+      <tr>
+        <th scope="col" i18n="@@slideBoxplotSerie">Série</th>
+        <th scope="col">Min</th>
+        <th scope="col">Q1</th>
+        <th scope="col" i18n="@@slideBoxplotMediane">Médiane</th>
+        <th scope="col">Q3</th>
+        <th scope="col">Max</th>
+        <th scope="col" i18n="@@slideBoxplotMoyenne">Moyenne</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (trace of boites(); track trace.serie.label) {
         <tr>
-          <th scope="col" i18n="@@slideBoxplotSerie">Série</th>
-          <th scope="col">Min</th>
-          <th scope="col">Q1</th>
-          <th scope="col" i18n="@@slideBoxplotMediane">Médiane</th>
-          <th scope="col">Q3</th>
-          <th scope="col">Max</th>
-          <th scope="col" i18n="@@slideBoxplotMoyenne">Moyenne</th>
+          <th scope="row">{{ trace.serie.label }}</th>
+          <td>{{ formater(trace.serie.min) }}</td>
+          <td>{{ formater(trace.serie.q1) }}</td>
+          <td>{{ formater(trace.serie.median) }}</td>
+          <td>{{ formater(trace.serie.q3) }}</td>
+          <td>{{ formater(trace.serie.max) }}</td>
+          <td>{{ formater(trace.serie.mean) }}</td>
         </tr>
-      </thead>
-      <tbody>
-        @for (trace of boites(); track trace.serie.label) {
-          <tr>
-            <th scope="row">{{ trace.serie.label }}</th>
-            <td>{{ formater(trace.serie.min) }}</td>
-            <td>{{ formater(trace.serie.q1) }}</td>
-            <td>{{ formater(trace.serie.median) }}</td>
-            <td>{{ formater(trace.serie.q3) }}</td>
-            <td>{{ formater(trace.serie.max) }}</td>
-            <td>{{ formater(trace.serie.mean) }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-    @if (source()) {
-      <p class="slide-boxplot__source" i18n="@@slideBoxplotSource">Source : {{ source() }}</p>
-    }
-  </details>
+      }
+    </tbody>
+  </app-donnees-de-figure>
 </figure>

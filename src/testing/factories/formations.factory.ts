@@ -3,7 +3,6 @@ import type {
   DerouleCours,
   EcranDeroule,
   EtatParticipant,
-  GuideFormateur,
   ProgressionEnigme,
   ResultatQuestion,
   ResultatsSeance,
@@ -11,6 +10,9 @@ import type {
   StatistiquesSeance,
 } from '../../cours/content/types';
 import type { SpacedQuestionPublique } from '../../cours/runtime/blocks/donnees-publiques';
+import type { ResultatsDuFlux } from '../../cours/runtime/core/sync';
+import { libellesDesElements } from '../../app/shared/slides/session/lecture-ecran';
+import { objet } from '../../app/shared/slides/visual/presentation-v2';
 import type {
   AnnotationFormateur,
   FichierTelecharge,
@@ -71,6 +73,65 @@ export function buildResultatsSeance(overrides: Partial<ResultatsSeance> = {}): 
     participants: 24,
     questions: [buildResultatQuestion()],
     ...overrides,
+  };
+}
+
+const TYPE_DE_LA_PRODUCTION: ReadonlyMap<string, ResultatQuestion['type']> = new Map([
+  ['fp-sheet', 'feuille'],
+  ['fp-table-build', 'tableau'],
+  ['fp-cardsort', 'classement'],
+  ['fp-escape', 'enigme'],
+]);
+
+function resultatsDeLEcran(ecran: EcranDeroule): readonly ResultatQuestion[] {
+  const production = TYPE_DE_LA_PRODUCTION.get(ecran.type);
+  const cles = [...libellesDesElements(ecran).keys()];
+  return ecran.questions.map(({ id, options }) =>
+    buildResultatQuestion({
+      questionId: id,
+      ecranId: ecran.id,
+      type: options === null ? (production ?? 'numeric') : 'vote',
+      total: 2,
+      correctes: 1,
+      neSaitPas: 1,
+      confusions: (
+        ecran.corriges.find(({ questionId }) => questionId === id)?.confusions ?? []
+      ).map((confusion) => ({ ...confusion, nombre: 1 })),
+      parOption:
+        options === null ? null : Object.fromEntries(options.map((option) => [option.id, 1])),
+      scoreMoyen: production === undefined ? null : 0.9,
+      parCle:
+        cles.length === 0
+          ? null
+          : Object.fromEntries(cles.map((cle) => [cle, { total: 2, justes: 1 }])),
+    }),
+  );
+}
+
+function identifiantDe(ecran: EcranDeroule, propriete: string): string | null {
+  const id = objet(ecran.donnees?.[propriete])?.['id'];
+  return typeof id === 'string' ? id : null;
+}
+
+export function buildResultatsDeChaqueQuestion(
+  ecrans: readonly EcranDeroule[],
+): ResultatsSeance & Pick<ResultatsDuFlux, 'jalons' | 'enigmes'> {
+  return {
+    participants: 2,
+    questions: ecrans.flatMap(resultatsDeLEcran),
+    jalons: Object.fromEntries(
+      ecrans
+        .filter(({ type }) => type === 'fp-pulse')
+        .flatMap((ecran) => identifiantDe(ecran, 'sondage') ?? [])
+        .map((sondage) => [sondage, { perdu: 1, 'ca-va': 1, clair: 1, total: 3 }]),
+    ),
+    enigmes: ecrans
+      .filter(({ type }) => type === 'fp-escape')
+      .flatMap((ecran) =>
+        [...libellesDesElements(ecran).keys()].map((enigmeId) =>
+          buildProgressionEnigme({ parcoursId: identifiantDe(ecran, 'parcours') ?? '', enigmeId }),
+        ),
+      ),
   };
 }
 
@@ -226,18 +287,6 @@ export function buildEcranDeroule(overrides: Partial<EcranDeroule> = {}): EcranD
     ],
     questions: [],
     corrigeEcran: null,
-    ...overrides,
-  };
-}
-
-export function buildGuideFormateur(overrides: Partial<GuideFormateur> = {}): GuideFormateur {
-  return {
-    aDire: 'Avant de commenter la pente, vérifiez le repère.',
-    question: 'Quelle est l’unité de l’axe vertical ?',
-    reponse: 'Des milliers d’euros, pas des euros.',
-    calcul: '12 400 / 1 000 = 12,4',
-    relance: 'Qui peut lire la légende à voix haute ?',
-    transition: 'On passe au taux global.',
     ...overrides,
   };
 }

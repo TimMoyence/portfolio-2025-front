@@ -1,6 +1,8 @@
+@use './mono';
+
 @mixin field-label {
   display: block;
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 11.5px;
   letter-spacing: 0.06em;
   text-transform: uppercase;

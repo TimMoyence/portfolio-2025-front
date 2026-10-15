@@ -502,7 +502,7 @@ export async function voterDepuisLePoste(page: Page, vote: EcranDuCours): Promis
 }
 
 export function phaseDuPoste(page: Page): import('@playwright/test').Locator {
-  return page.locator('[data-testid="slide-activity-host"] [data-testid="phase"]');
+  return page.locator('[data-testid="slide-activity-host"] fp-vote .fp-carte[data-phase]');
 }
 
 async function connecterLeFormateur(page: Page): Promise<void> {

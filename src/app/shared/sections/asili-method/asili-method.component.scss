@@ -1,5 +1,6 @@
 @use '../../../styles-shared/breakpoints' as bp;
 @use '../../../styles-shared/heads' as heads;
+@use '../../../styles-shared/mono';
 :host {
   display: block;
 }
@@ -51,7 +52,7 @@
   border: 1px solid var(--line);
   display: grid;
   place-items: center;
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 13px;
   color: var(--teal-deep);
   position: relative;
@@ -69,7 +70,7 @@
 }
 
 .step .ix {
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 11px;
   color: var(--teal);
   display: inline-block;

@@ -1,5 +1,6 @@
+import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { Battement, MINUTE_MS, SECONDE_MS } from './battement';
+import { Battement, formaterChrono } from './battement';
 import { lignesDeCalculHtml } from './calculs';
 import { FpProduction } from './production';
 import {
@@ -44,12 +45,6 @@ function copierPlan(source: CardsortPlanPublic): CardsortPlanPublic {
   };
 }
 
-function formaterChrono(restantMs: number): string {
-  const secondes = Math.ceil(restantMs / SECONDE_MS);
-  const minutes = Math.floor((secondes * SECONDE_MS) / MINUTE_MS);
-  return `${minutes}:${String(secondes % 60).padStart(2, '0')}`;
-}
-
 export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateur> {
   protected readonly evenementDeSoumission = 'fp-cardsort-submit';
   protected readonly lectureDuCorrige = {
@@ -90,7 +85,8 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
     return true;
   }
 
-  disconnectedCallback(): void {
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
     this.battement.arreter();
   }
 
@@ -126,10 +122,10 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
       <section class="fp-carte fp-scene fp-cardsort__atelier">
         <p class="fp-enonce fp-cardsort__intitule">${escapeHtml(plan.intitule)}</p>
         <p class="fp-cardsort__consigne" data-testid="consigne-papier">${escapeHtml(this.texte('cardsort-consigne-papier'))}</p>
-        <table class="fp-cardsort__grille">
+        ${dansUnDefileur(safeHtml`<table class="fp-cardsort__grille">
           <thead><tr><th scope="col"></th>${entetes}</tr></thead>
           <tbody>${lignes}</tbody>
-        </table>
+        </table>`)}
       </section>
     `;
   }

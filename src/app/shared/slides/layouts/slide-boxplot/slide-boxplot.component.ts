@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { DonneesDeFigureComponent } from '../../donnees-de-figure/donnees-de-figure.component';
 import { NOMBRE_FRANCAIS, graduer, position, type Graduation, type Plage } from '../axe-gradue';
 import { generateurDIdentifiants } from '../identifiant-de-description';
 
@@ -26,6 +27,7 @@ const prochainIdentifiantDeDescription = generateurDIdentifiants('slide-boxplot'
 @Component({
   selector: 'app-slide-boxplot',
   standalone: true,
+  imports: [DonneesDeFigureComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-boxplot.component.html',
   styleUrl: './slide-boxplot.component.scss',

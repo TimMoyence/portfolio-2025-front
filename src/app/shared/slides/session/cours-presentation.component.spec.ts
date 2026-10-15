@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import type { EcranContent, PieceJointe } from '../../../../cours/content/types';
 import { attendreQue, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
+import { deuxImages } from '../../../../testing/deux-images';
 import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
@@ -9,18 +10,24 @@ import {
 import { INSTANTANE_B2_04 } from '../../../../testing/fixtures/instantane-b2-04';
 import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantane-b3-01';
 import {
+  ecranReveleAuPosteEtudiant,
   ecransDuPupitreDe,
   ecransPublicsDe,
 } from '../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
+import { libellesColles } from '../../../../testing/libelles-colles';
+import { lignesDe } from '../../../../testing/lignes-de-texte';
 import { chargerLesPolicesDeLApplication } from '../../../../testing/polices';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
+import { valeursSurUneForme } from '../../../../testing/valeurs-sur-les-formes';
 import { annexeFormateurDeLEcran } from '../../../features/cours/presentateur/annexe-formateur';
+import { presentationDe } from '../visual/presentation-v2';
 import type { DirectEcran } from './contrat-hote';
 import { of, Subject, throwError } from 'rxjs';
 import type { FichierTelecharge } from '../../../core/ports/formations.port';
 import { PieceJointeRefusee } from '../../../core/ports/formations.port';
 import { buildFichierTelecharge } from '../../../../testing/factories/formations.factory';
+import { jouerLesGraphiquesJusquAuBout } from '../../../../testing/graphique-monte';
 import {
   CoursPresentationComponent,
   type CoursPresentationMode,
@@ -32,24 +39,23 @@ const POSTES = ['cours-etudiant', 'cours-presentateur'] as const;
 const COURS_MESURES = INSTANTANES_DES_COURS_SERVIS.map(([code, instantane]) => ({
   code,
   instantane,
+  pupitre: ecransDuPupitreDe(instantane),
+  publics: ecransPublicsDe(instantane),
 }));
 
-const COURS_A_RENVOIS = COURS_MESURES.filter(({ instantane }) =>
-  ecransDuPupitreDe(instantane).some(({ renvoi }) => renvoi !== undefined),
+const COURS_A_RENVOIS = COURS_MESURES.filter(({ pupitre }) =>
+  pupitre.some(({ renvoi }) => renvoi !== undefined),
 );
 
 const ECRANS_DU_PUPITRE = new Map(
-  COURS_MESURES.flatMap(({ instantane }) =>
-    ecransDuPupitreDe(instantane).map((ecran) => [ecran.id, ecran] as const),
-  ),
+  COURS_MESURES.flatMap(({ pupitre }) => pupitre.map((ecran) => [ecran.id, ecran] as const)),
 );
 
-const TABLEURS_DES_COURS = COURS_MESURES.flatMap(({ instantane }) => {
-  const pupitre = ecransDuPupitreDe(instantane);
-  return pupitre
+const TABLEURS_DES_COURS = COURS_MESURES.flatMap(({ pupitre }) =>
+  pupitre
     .filter(({ type }) => type === 'fp-sheet')
-    .map((ecran) => ({ ecran, renvoi: pupitre.find(({ id }) => id === ecran.renvoi) ?? null }));
-});
+    .map((ecran) => ({ ecran, renvoi: pupitre.find(({ id }) => id === ecran.renvoi) ?? null })),
+);
 
 const TABLEURS_PROJETES = TABLEURS_DES_COURS.flatMap((tableur) =>
   (['projection', 'formateur'] as const).map((mode) => ({ ...tableur, mode })),
@@ -76,6 +82,7 @@ interface EcranCadre {
   readonly brique: () => HTMLElement | null;
   readonly rafraichir: () => Promise<void>;
   readonly afficher: (ecran: EcranContent) => Promise<void>;
+  readonly piloter: (direct: DirectEcran | null) => Promise<void>;
   readonly detruire: () => void;
 }
 
@@ -98,7 +105,7 @@ function ecranB2_01Du(mode: CoursPresentationMode, suffixe: string): EcranConten
   return ecran;
 }
 
-async function monterDansUnCadre(
+function monterDansUnCadre(
   ecran: EcranContent,
   mode: CoursPresentationMode,
   largeur: number,
@@ -109,7 +116,29 @@ async function monterDansUnCadre(
 ): Promise<EcranCadre> {
   const cadre = document.createElement('div');
   cadre.style.cssText = `position:fixed;top:0;left:0;width:${largeur}px;height:${hauteur}px;display:flex;overflow:auto;`;
-  document.body.appendChild(cadre);
+  return monterDans(cadre, cadre, ecran, mode, renvoi, direct, telechargement);
+}
+
+function monterAuTelephone(ecran: EcranContent, renvoi: EcranContent | null): Promise<EcranCadre> {
+  const page = document.createElement('section');
+  page.className = 'student-session';
+  page.style.cssText = `position:fixed;top:0;left:0;width:${CADRE_TELEPHONE.largeur}px;height:${CADRE_TELEPHONE.hauteur}px;`;
+  const cadre = document.createElement('div');
+  cadre.className = 'student-session__cadre';
+  page.appendChild(cadre);
+  return monterDans(page, cadre, ecran, 'etudiant', renvoi);
+}
+
+async function monterDans(
+  page: HTMLElement,
+  cadre: HTMLElement,
+  ecran: EcranContent,
+  mode: CoursPresentationMode,
+  renvoi: EcranContent | null,
+  direct: DirectEcran | null = null,
+  telechargement: TelechargementDePieceJointe | null = null,
+): Promise<EcranCadre> {
+  document.body.appendChild(page);
   const fixture = TestBed.createComponent(CoursPresentationComponent);
   cadre.appendChild(fixture.nativeElement as HTMLElement);
   fixture.componentRef.setInput('mode', mode);
@@ -152,9 +181,13 @@ async function monterDansUnCadre(
       fixture.componentRef.setInput('slide', suivant);
       await rafraichir();
     },
+    piloter: async (suivant) => {
+      fixture.componentRef.setInput('direct', suivant);
+      await rafraichir();
+    },
     detruire: () => {
       fixture.destroy();
-      cadre.remove();
+      page.remove();
     },
   };
 }
@@ -188,12 +221,11 @@ async function monterReveleEnProjection(
 function ecransARenvoiDesCours(
   ecransDe: (instantane: (typeof COURS_MESURES)[number]['instantane']) => readonly EcranContent[],
 ): { readonly ecran: EcranContent; readonly renvoi: EcranContent | null }[] {
-  return COURS_MESURES.flatMap(({ instantane }) => {
-    const pupitre = ecransDuPupitreDe(instantane);
-    return ecransDe(instantane)
+  return COURS_MESURES.flatMap(({ instantane, pupitre }) =>
+    ecransDe(instantane)
       .filter(({ renvoi }) => renvoi !== undefined)
-      .map((ecran) => ({ ecran, renvoi: pupitre.find(({ id }) => id === ecran.renvoi) ?? null }));
-  });
+      .map((ecran) => ({ ecran, renvoi: pupitre.find(({ id }) => id === ecran.renvoi) ?? null })),
+  );
 }
 
 function constaterLesProjectionsARenvoi(
@@ -227,6 +259,27 @@ async function fautesDesEcrans(
     monte.detruire();
   }
   return fautes;
+}
+
+function itSansEcranFautif(
+  titre: string,
+  ecrans: readonly EcranContent[],
+  pupitre: readonly EcranContent[],
+  monter: (ecran: EcranContent, renvoi: EcranContent | null) => Promise<EcranCadre>,
+  fautesDeLEcran: (ecran: EcranContent, monte: EcranCadre) => Promise<readonly string[]>,
+): void {
+  it(
+    titre,
+    async () => {
+      const fautes = await fautesDesEcrans(ecrans, pupitre, monter, async (ecran, monte) => {
+        const faute = await fautesDeLEcran(ecran, monte);
+        return faute.length > 0 ? `${ecran.id} ${faute.join(',')}` : null;
+      });
+
+      expect(fautes).toEqual([]);
+    },
+    DELAI_DE_MONTAGE_MS,
+  );
 }
 
 describe('CoursPresentationComponent : un seul écran pour la projection et le pupitre', () => {
@@ -412,7 +465,6 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     const titre = monte.hote.querySelector<HTMLElement>('.slide-chart h2');
     const trace = monte.hote.querySelector<HTMLElement>('[data-testid="slide-chart-zone"]');
     const interligne = Number.parseFloat(getComputedStyle(titre as HTMLElement).fontSize) * 1.5;
-
     expect(titre?.offsetHeight).toBeLessThan(interligne);
     expect(trace?.offsetHeight).toBeGreaterThanOrEqual(200);
     monte.detruire();
@@ -564,19 +616,13 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     expect(COURS_A_RENVOIS.length).toBeGreaterThan(0);
   });
 
-  for (const { code, instantane } of COURS_A_RENVOIS) {
-    const pupitre = ecransDuPupitreDe(instantane);
-
+  for (const { code, pupitre, publics } of COURS_A_RENVOIS) {
     for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
       it(
         `T1 ·chaque écran à renvoi du ${code} tient entier dans sa demi-toile en ${mode}, titre compris`,
         async () => {
           const aRenvoi = pupitre.filter(({ renvoi }) => renvoi !== undefined);
-          expect(
-            ecransPublicsDe(instantane)
-              .filter(({ renvoi }) => renvoi !== undefined)
-              .map(({ id }) => id),
-          )
+          expect(publics.filter(({ renvoi }) => renvoi !== undefined).map(({ id }) => id))
             .withContext(`écrans à renvoi du ${code} au poste étudiant`)
             .toEqual(aRenvoi.map(({ id }) => id));
           const coupes = await fautesDesEcrans(
@@ -749,9 +795,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     DELAI_DE_MONTAGE_MS,
   );
 
-  for (const { code, instantane } of COURS_A_RENVOIS) {
-    const pupitre = ecransDuPupitreDe(instantane);
-
+  for (const { code, pupitre, publics } of COURS_A_RENVOIS) {
     it(
       `QF-27 · ne rogne en largeur aucun écran à renvoi du ${code} projeté : pas de défilement horizontal à la projection`,
       async () => {
@@ -766,7 +810,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
       `QF-28 · au poste étudiant, ne rogne en largeur ni un écran à renvoi du ${code} ni sa diapositive commentée`,
       async () => {
         const rognes = await fautesDesEcrans(
-          ecransPublicsDe(instantane).filter(({ renvoi }) => renvoi !== undefined),
+          publics.filter(({ renvoi }) => renvoi !== undefined),
           pupitre,
           (ecran, renvoi) => monterDansUnCadre(ecran, 'etudiant', 1280, 720, renvoi),
           async (ecran, monte) => {
@@ -918,26 +962,29 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
   }
 });
 
-function decrireLaTenueDuCours({ code, instantane }: (typeof COURS_MESURES)[number]): void {
-  const pupitre = ecransDuPupitreDe(instantane);
-  const publics = ecransPublicsDe(instantane);
-
+function decrireLaTenueDuCours({ code, pupitre, publics }: (typeof COURS_MESURES)[number]): void {
   for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
     it(
-      `T2 · T3 · G01 · chaque écran du ${code} tient sur une toile 1280 × 720 en ${mode}, sans défilement interne ni tassement`,
+      `T2 · T3 · G01 · QP-04 · QP-02 · chaque écran du ${code} tient sur une toile 1280 × 720 en ${mode}, sans défilement interne ni tassement, sa police mono sans ligature, et aucun libellé collé à son voisin avant comme après révélation`,
       async () => {
         const ecrans = mode === 'etudiant' ? publics : pupitre;
         const fautes = await fautesDesEcrans(
           ecrans,
           pupitre,
           (ecran, renvoi) => monterDansUnCadre(ecran, mode, 1280, 720, renvoi),
-          (ecran, monte) => {
+          async (ecran, monte) => {
             const toile = monte.toile();
             const horsToile = elementsPerdus(monte);
             const defileurs = toile === null ? [] : defileursInternes(toile);
             const echelle = echelleDuContenu(toile);
-            return horsToile.length > 0 || defileurs.length > 0 || echelle < ECHELLE_MINIMALE
-              ? `${ecran.id} ${mode} hors=${horsToile.join(',')} defile=${defileurs.join(',')} echelle=${echelle}`
+            const ligatures = toile === null ? [] : monoAvecLigatures(toile);
+            const colles = await libellesCollesAvantEtApresRevelation(monte);
+            return horsToile.length > 0 ||
+              defileurs.length > 0 ||
+              echelle < ECHELLE_MINIMALE ||
+              ligatures.length > 0 ||
+              colles.length > 0
+              ? `${ecran.id} ${mode} hors=${horsToile.join(',')} defile=${defileurs.join(',')} echelle=${echelle} ligatures=${ligatures.join(',')} colles=${colles.join(',')}`
               : null;
           },
         );
@@ -952,33 +999,35 @@ function decrireLaTenueDuCours({ code, instantane }: (typeof COURS_MESURES)[numb
     );
   }
 
-  it(
-    `G01 · sur un portable 14 pouces, chaque écran étudiant du ${code} tient dans son cadre sans défiler, à une taille lisible`,
-    async () => {
-      const fautes = await fautesDesEcrans(
-        publics,
-        pupitre,
-        (ecran, renvoi) =>
-          monterDansUnCadre(
-            ecran,
-            'etudiant',
-            CADRE_ETUDIANT_14_POUCES.largeur,
-            CADRE_ETUDIANT_14_POUCES.hauteur,
-            renvoi,
-          ),
-        (ecran, monte) => {
-          const defile = monte.cadre.scrollHeight > monte.cadre.clientHeight + 1;
-          const horsToile = elementsHorsToile(monte);
-          const echelle = echelleAffichee(monte);
-          return defile || horsToile.length > 0 || echelle < ECHELLE_MINIMALE - 0.001
-            ? `${ecran.id} defile=${String(defile)} hors=${horsToile.join(',')} echelle=${echelle.toFixed(3)}`
-            : null;
-        },
-      );
-
-      expect(fautes).toEqual([]);
+  itSansEcranFautif(
+    `G01 · QP-02 · sur un portable 14 pouces, chaque écran étudiant du ${code} tient dans son cadre sans défiler, à une taille lisible, sans libellé collé à son voisin avant comme après révélation`,
+    publics,
+    pupitre,
+    (ecran, renvoi) =>
+      monterDansUnCadre(
+        ecran,
+        'etudiant',
+        CADRE_ETUDIANT_14_POUCES.largeur,
+        CADRE_ETUDIANT_14_POUCES.hauteur,
+        renvoi,
+      ),
+    async (_ecran, monte) => {
+      const echelle = echelleAffichee(monte);
+      return [
+        ...(monte.cadre.scrollHeight > monte.cadre.clientHeight + 1 ? ['defile'] : []),
+        ...elementsHorsToile(monte).map((element) => `hors=${element}`),
+        ...(echelle < ECHELLE_MINIMALE - 0.001 ? [`echelle=${echelle.toFixed(3)}`] : []),
+        ...(await libellesCollesAvantEtApresRevelation(monte)),
+      ];
     },
-    DELAI_DE_MONTAGE_MS,
+  );
+
+  itSansEcranFautif(
+    `QP-02 · sur un téléphone, aucun libellé d un écran étudiant du ${code} ne touche ni ne chevauche son voisin, avant comme après révélation`,
+    publics,
+    pupitre,
+    monterAuTelephone,
+    (_ecran, monte) => libellesCollesAvantEtApresRevelation(monte),
   );
 }
 
@@ -1019,24 +1068,34 @@ function elementsDebordantLaToile(
   );
 }
 
-function elementsHorsToile(monte: EcranCadre): string[] {
-  const horsToile = elementsDebordantLaToile(monte, (element, bloc, toile) => {
-    const replie = element.parentElement?.closest('details:not([open])');
-    const resume = element.tagName === 'SUMMARY' && element.parentElement === replie;
-    return (
-      bloc.height > 0 &&
-      (replie === null || replie === undefined || resume) &&
-      getComputedStyle(element).visibility === 'visible' &&
-      (bloc.top < toile.top - 1 || bloc.bottom > toile.bottom + 1)
-    );
-  });
-  return horsToile?.map(({ tagName }) => tagName) ?? ['toile absente'];
+function affiche(element: HTMLElement): boolean {
+  const replie = element.parentElement?.closest('details:not([open])');
+  const resume = element.tagName === 'SUMMARY' && element.parentElement === replie;
+  return (
+    (replie === null || replie === undefined || resume) &&
+    getComputedStyle(element).visibility === 'visible'
+  );
 }
 
-function elementsHorsToileEnLargeur(monte: EcranCadre): string[] {
+function elementsHorsToile(monte: EcranCadre): string[] {
   const horsToile = elementsDebordantLaToile(
     monte,
     (element, bloc, toile) =>
+      bloc.height > 0 &&
+      affiche(element) &&
+      (bloc.top < toile.top - 1 || bloc.bottom > toile.bottom + 1),
+  );
+  return horsToile?.map(({ tagName }) => tagName) ?? ['toile absente'];
+}
+
+function elementsHorsToileEnLargeur(
+  monte: EcranCadre,
+  { saufDansUnDefileur = false } = {},
+): string[] {
+  const horsToile = elementsDebordantLaToile(
+    monte,
+    (element, bloc, toile) =>
+      !(saufDansUnDefileur && element.closest('.defileur-de-tableau > *') !== null) &&
       bloc.width > 0 &&
       element.checkVisibility() &&
       (bloc.left < toile.left - 1 || bloc.right > toile.right + 1),
@@ -1054,6 +1113,27 @@ const ECHELLE_MINIMALE = 0.8;
 const ECRAN_TROP_LONG = 'A2-07-JEU-COMPARABLE';
 
 const CADRE_ETUDIANT_14_POUCES = { largeur: 1480, hauteur: 913 } as const;
+
+const CADRE_TELEPHONE = { largeur: 390, hauteur: 844 } as const;
+
+const CADRE_ETUDIANT_1920 = { largeur: 1888, hauteur: 960 } as const;
+
+const CADRE_ETUDIANT_1366 = { largeur: 1334, hauteur: 648 } as const;
+
+async function libellesCollesAvantEtApresRevelation(
+  monte: EcranCadre,
+  juger: (racine: HTMLElement) => readonly string[] = libellesColles,
+): Promise<string[]> {
+  await stabiliser(monte, 1);
+  const avant = juger(monte.hote).map((jonction) => `avant ${jonction}`);
+  await monte.piloter(PILOTAGE_REVELE);
+  await stabiliser(monte, 3);
+  return [...avant, ...juger(monte.hote).map((jonction) => `révélé ${jonction}`)];
+}
+
+function libellesOuValeursSurUneForme(racine: HTMLElement): readonly string[] {
+  return [...libellesColles(racine), ...valeursSurUneForme(racine)];
+}
 
 function echelleAffichee(monte: EcranCadre): number {
   const toile = monte.toile();
@@ -1080,7 +1160,7 @@ function elementsHorsDeLaPage(monte: EcranCadre): string[] {
           const bloc = element.getBoundingClientRect();
           return (
             bloc.height > 0 &&
-            getComputedStyle(element).visibility === 'visible' &&
+            affiche(element) &&
             (bloc.bottom > fond + 1 || bloc.right > cadre.right + 1 || bloc.left < cadre.left - 1)
           );
         })
@@ -1101,6 +1181,21 @@ function elementsDe(racine: ParentNode): HTMLElement[] {
     element,
     ...(element.shadowRoot === null ? [] : elementsDe(element.shadowRoot)),
   ]);
+}
+
+function monoAvecLigatures(racine: ParentNode): string[] {
+  return [
+    ...new Set(
+      elementsDe(racine)
+        .filter((element) => {
+          const style = getComputedStyle(element);
+          return (
+            style.fontFamily.startsWith('"Geist Mono"') && style.fontVariantLigatures !== 'none'
+          );
+        })
+        .map((element) => `${element.tagName.toLowerCase()}.${element.classList.item(0) ?? ''}`),
+    ),
+  ];
 }
 
 function defileursQuiDebordent(racine: ParentNode, axe: 'x' | 'y'): string[] {
@@ -1134,6 +1229,599 @@ function ecranRogneEnLargeur(ecran: EcranContent, monte: EcranCadre): string | n
   ].flatMap((zone) => (zone === null ? [] : defileursRognes(zone)));
   return defileurs.length > 0 ? `${ecran.id} (${defileurs.join(',')})` : null;
 }
+
+const TRACE_MINIMAL_REM = 12;
+
+function tracesTropBas(racine: ParentNode): string[] {
+  const minimum =
+    TRACE_MINIMAL_REM * Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+  return [...racine.querySelectorAll<HTMLElement>('.slide-chart__zone')]
+    .filter((zone) => zone.checkVisibility() && zone.offsetHeight < minimum - 0.5)
+    .map((zone) => `tracé de ${zone.offsetHeight} px`);
+}
+
+const POSTES_DES_GRAPHIQUES = [
+  {
+    poste: 'projection 1280 × 720',
+    ecransDe: ecransDuPupitreDe,
+    monter: (ecran: EcranContent, renvoi: EcranContent | null) =>
+      monterDansUnCadre(ecran, 'projection', 1280, 720, renvoi),
+  },
+  {
+    poste: 'pupitre 1280 × 720',
+    ecransDe: ecransDuPupitreDe,
+    monter: (ecran: EcranContent, renvoi: EcranContent | null) =>
+      monterDansUnCadre(ecran, 'formateur', 1280, 720, renvoi),
+  },
+  {
+    poste: 'portable 14 pouces',
+    ecransDe: ecransPublicsDe,
+    monter: (ecran: EcranContent, renvoi: EcranContent | null) =>
+      monterDansUnCadre(
+        ecran,
+        'etudiant',
+        CADRE_ETUDIANT_14_POUCES.largeur,
+        CADRE_ETUDIANT_14_POUCES.hauteur,
+        renvoi,
+      ),
+  },
+  { poste: 'téléphone', ecransDe: ecransPublicsDe, monter: monterAuTelephone },
+] as const;
+
+describe('QP-02 · QP-18 · QP-21 · graphiques des cours servis, aucun libellé qui en touche un autre, aucune valeur sur une forme qui n est pas la sienne, un tracé d au moins 12 rem', () => {
+  beforeEach(() => setupTestBed({ imports: [CoursPresentationComponent] }));
+  jouerLesGraphiquesJusquAuBout();
+
+  for (const { code, instantane, pupitre, publics } of COURS_MESURES) {
+    const montreUnGraphique = (ecran: EcranContent): boolean =>
+      [ecran, pupitre.find(({ id }) => id === ecran.renvoi)].some(
+        (montre) => montre !== undefined && presentationDe(montre)?.renderer === 'chart',
+      );
+    for (const { poste, ecransDe, monter } of POSTES_DES_GRAPHIQUES) {
+      const graphiques = ecransDe(instantane).filter(montreUnGraphique);
+      if (graphiques.length > 0) {
+        itSansEcranFautif(
+          `${code} · ${poste} : aucun libellé d un graphique ne touche ni ne chevauche son voisin, aucune valeur ne touche une barre, un marqueur ou un point qui n est pas le sien, avant comme après révélation, et chaque tracé mesure au moins 12 rem`,
+          graphiques,
+          pupitre,
+          monter,
+          async (_ecran, monte) => [
+            ...(await libellesCollesAvantEtApresRevelation(monte, libellesOuValeursSurUneForme)),
+            ...(poste === 'téléphone'
+              ? []
+              : [...monte.hote.querySelectorAll('.slide-chart__defileur')].flatMap((zone) =>
+                  zone.scrollWidth > zone.clientWidth + 1 ? ['le graphique glisse'] : [],
+                )),
+            ...tracesTropBas(monte.hote),
+          ],
+        );
+      }
+    }
+
+    const graphiquesPropres = publics.filter(
+      (ecran) => presentationDe(ecran)?.renderer === 'chart',
+    );
+    if (graphiquesPropres.length > 0) {
+      itSansEcranFautif(
+        `QP-18 · ${code} · téléphone : un graphique trop serré glisse en largeur comme un tableau, chaque valeur écrite, l axe des valeurs toujours en vue`,
+        graphiquesPropres,
+        pupitre,
+        monterAuTelephone,
+        async (_ecran, monte) => {
+          await stabiliser(monte, 3);
+          return [...monte.hote.querySelectorAll('.cours-toile__principal .slide-chart')].flatMap(
+            valeursTaiesOuAxePerdu,
+          );
+        },
+      );
+    }
+  }
+});
+
+describe('QP-20 · au téléphone, l écran rappelé se lit comme lui-même, plus aucune miniature', () => {
+  beforeEach(() => setupTestBed({ imports: [CoursPresentationComponent] }));
+  jouerLesGraphiquesJusquAuBout();
+
+  for (const { code, pupitre, publics } of COURS_A_RENVOIS) {
+    const aRenvoi = publics.filter(({ renvoi }) => renvoi !== undefined);
+    if (aRenvoi.length > 0) {
+      itSansEcranFautif(
+        `QP-20 · ${code} · au téléphone, chaque écran rappelé s affiche en pleine largeur, à une taille d au moins 0,8, au-dessus de la question`,
+        aRenvoi,
+        pupitre,
+        monterAuTelephone,
+        async (_ecran, monte) => {
+          await stabiliser(monte, 3);
+          return renvoiIllisibleOuMalPlace(monte);
+        },
+      );
+    }
+  }
+});
+
+function renvoiIllisibleOuMalPlace(monte: EcranCadre): string[] {
+  const toile = monte.hote.querySelector<HTMLElement>('.cours-renvoi__toile');
+  const contenu = monte.hote.querySelector<HTMLElement>('[data-testid="cours-contenu"]');
+  if (toile === null || contenu === null) {
+    return ['écran rappelé absent'];
+  }
+  const renvoi = toile.getBoundingClientRect();
+  const question = contenu.getBoundingClientRect();
+  const echelle = renvoi.width / Math.max(1, toile.offsetWidth);
+  const bas = Math.max(
+    renvoi.bottom,
+    ...elementsDe(toile)
+      .filter((element) => element.checkVisibility())
+      .map((element) => element.getBoundingClientRect().bottom),
+  );
+  return [
+    ...(echelle < ECHELLE_MINIMALE ? [`taille ${echelle.toFixed(2)}`] : []),
+    ...(Math.abs(renvoi.width - question.width) > 1
+      ? [`largeur ${renvoi.width.toFixed(0)} sur ${question.width.toFixed(0)}`]
+      : []),
+    ...(bas > question.top + 1 ? ['pas au-dessus de la question'] : []),
+  ];
+}
+
+function valeursTaiesOuAxePerdu(graphique: Element): string[] {
+  const taies = [...graphique.querySelectorAll('.slide-chart__value, .slide-chart__point-value')]
+    .filter((valeur) => getComputedStyle(valeur).visibility !== 'visible')
+    .map((valeur) => `masquée ${valeur.textContent?.trim() ?? ''}`);
+  const axe = graphique.querySelector('.slide-chart__axis--left');
+  const defileur = elementsDe(graphique).find((element) => {
+    const { overflowX } = getComputedStyle(element);
+    return (
+      (overflowX === 'auto' || overflowX === 'scroll') &&
+      element.scrollWidth > element.clientWidth + 1
+    );
+  });
+  if (defileur === undefined || axe === null) {
+    return taies;
+  }
+  defileur.scrollLeft = defileur.scrollWidth;
+  const vue = defileur.getBoundingClientRect();
+  const bord = axe.getBoundingClientRect();
+  const perdu = bord.left < vue.left - 1 || bord.right > vue.right + 1;
+  defileur.scrollLeft = 0;
+  return [
+    ...taies,
+    ...(defileur.classList.contains('defileur-de-tableau') ? [] : [`défile hors défileur`]),
+    ...(perdu ? ['axe perdu au bout du tracé'] : []),
+  ];
+}
+
+const TYPES_A_TABLEAU: ReadonlySet<string> = new Set([
+  'fp-sheet',
+  'fp-table-build',
+  'fp-plot',
+  'fp-concept4',
+  'fp-spaced',
+  'fp-cardsort',
+]);
+const RENDUS_A_TABLEAU: ReadonlySet<string> = new Set(['table', 'chart', 'boxplot', 'scatter']);
+
+function peutMontrerUnTableau(ecran: EcranContent): boolean {
+  return (
+    TYPES_A_TABLEAU.has(ecran.type) || RENDUS_A_TABLEAU.has(presentationDe(ecran)?.renderer ?? '')
+  );
+}
+
+const POSTES_DES_TABLEAUX = [
+  {
+    poste: 'ordinateur 1920 × 1080',
+    entier: true,
+    lisible: true,
+    graphiqueQuiGlisse: false,
+    monter: (ecran: EcranContent, renvoi: EcranContent | null) =>
+      monterDansUnCadre(
+        ecran,
+        'etudiant',
+        CADRE_ETUDIANT_1920.largeur,
+        CADRE_ETUDIANT_1920.hauteur,
+        renvoi,
+      ),
+  },
+  {
+    poste: 'portable 1366 × 768',
+    entier: false,
+    lisible: true,
+    graphiqueQuiGlisse: false,
+    monter: (ecran: EcranContent, renvoi: EcranContent | null) =>
+      monterDansUnCadre(
+        ecran,
+        'etudiant',
+        CADRE_ETUDIANT_1366.largeur,
+        CADRE_ETUDIANT_1366.hauteur,
+        renvoi,
+      ),
+  },
+  {
+    poste: 'téléphone 390 × 844',
+    entier: false,
+    lisible: false,
+    graphiqueQuiGlisse: true,
+    monter: monterAuTelephone,
+  },
+] as const;
+
+function contenuMonte(monte: EcranCadre): HTMLElement | null {
+  return monte.hote.querySelector<HTMLElement>('[data-testid="cours-contenu"]');
+}
+
+async function tableauxDepliesDe(monte: EcranCadre): Promise<HTMLTableElement[]> {
+  const contenu = contenuMonte(monte);
+  const elements = contenu === null ? [] : elementsDe(contenu);
+  const replies = elements.filter(
+    (element): element is HTMLDetailsElement => element instanceof HTMLDetailsElement,
+  );
+  replies.forEach((details) => {
+    details.open = true;
+  });
+  await stabiliser(monte, replies.length > 0 ? 4 : 1);
+  return elements.filter(
+    (element): element is HTMLTableElement =>
+      element instanceof HTMLTableElement && element.checkVisibility(),
+  );
+}
+
+function nomDuDefileur(defileur: HTMLElement): string {
+  return `${defileur.tagName.toLowerCase()}.${defileur.classList.item(0) ?? ''}`;
+}
+
+function horsDeLaCarteEnLargeur(monte: EcranCadre): string[] {
+  return elementsHorsToileEnLargeur(monte, { saufDansUnDefileur: true }).map(
+    (faute) => `hors carte ${faute}`,
+  );
+}
+
+function motsCoupes(monte: EcranCadre): string[] {
+  const contenu = contenuMonte(monte);
+  if (contenu === null) return ['contenu absent'];
+  const plage = document.createRange();
+  return elementsDe(contenu)
+    .flatMap((element) => [...element.childNodes])
+    .filter((noeud): noeud is Text => {
+      if (!(noeud instanceof Text)) return false;
+      plage.selectNodeContents(noeud);
+      return lignesDe(plage) > 1;
+    })
+    .filter(
+      ({ parentElement: parent }) =>
+        parent !== null &&
+        parent.closest('svg, option') === null &&
+        !getComputedStyle(parent).fontFamily.startsWith('"Geist Mono"'),
+    )
+    .flatMap((noeud) => {
+      const texte = noeud.textContent ?? '';
+      const lettrine =
+        noeud.parentElement?.firstChild === noeud &&
+        getComputedStyle(noeud.parentElement, '::first-letter').float !== 'none'
+          ? texte.search(/\p{L}/u)
+          : -1;
+      return [...texte.matchAll(/\S+/gu)]
+        .filter(({ 0: jeton }) => !/[=();!$:"[\]]/u.test(jeton))
+        .flatMap(({ 0: jeton, index: debut }) =>
+          [...jeton.matchAll(/\p{L}{2,}/gu)].map(({ 0: mot, index }) => ({
+            mot,
+            index: debut + index,
+          })),
+        )
+        .filter(({ mot, index }) => {
+          const apresLaLettrine = index === lettrine ? 1 : 0;
+          plage.setStart(noeud, index + apresLaLettrine);
+          plage.setEnd(noeud, index + mot.length);
+          return lignesDe(plage) > 1;
+        })
+        .map(
+          ({ mot }) =>
+            `mot coupé ${mot} dans ${noeud.parentElement?.tagName.toLowerCase()}.${noeud.parentElement?.classList.item(0) ?? ''}`,
+        );
+    });
+}
+
+async function fautesDuDefileur(monte: EcranCadre, defileur: HTMLElement): Promise<string[]> {
+  const nom = nomDuDefileur(defileur);
+  const ombre = (): string => getComputedStyle(defileur, '::after').opacity;
+  const fautes: string[] = [];
+  if (
+    !defileur.hasAttribute('data-suite-apres') ||
+    defileur.hasAttribute('data-suite-avant') ||
+    ombre() !== '1'
+  ) {
+    fautes.push(`${nom} sans ombre de suite au départ`);
+  }
+  defileur.scrollLeft = defileur.scrollWidth;
+  await stabiliser(monte, 2);
+  const bord = defileur.getBoundingClientRect();
+  if (
+    !defileur.hasAttribute('data-suite-avant') ||
+    defileur.hasAttribute('data-suite-apres') ||
+    ombre() !== '0'
+  ) {
+    fautes.push(`${nom} suite mal signalée au bout`);
+  }
+  const enTetes = [
+    ...defileur.querySelectorAll<HTMLElement>(
+      ':scope > table > * > tr > :first-child, [data-colonne-fixe]',
+    ),
+  ];
+  const decroches = enTetes.filter(
+    (cellule) => Math.abs(cellule.getBoundingClientRect().left - bord.left) > 1,
+  );
+  if (enTetes.length === 0 || decroches.length > 0) {
+    fautes.push(`${nom} en-têtes de ligne non figés (${decroches.length}/${enTetes.length})`);
+  }
+  const legende = defileur.querySelector(':scope > table > caption')?.getBoundingClientRect();
+  if (legende !== undefined && (legende.left < bord.left - 1 || legende.right > bord.right + 1)) {
+    fautes.push(`${nom} légende hors de vue au bout`);
+  }
+  defileur.scrollLeft = 0;
+  await stabiliser(monte, 1);
+  return fautes;
+}
+
+async function fautesDesTableauxLarges(
+  monte: EcranCadre,
+  tableaux: readonly HTMLTableElement[],
+  entier: boolean,
+  lisible: boolean,
+  graphiqueQuiGlisse: boolean,
+): Promise<string[]> {
+  const contenu = contenuMonte(monte);
+  if (contenu === null) {
+    return ['contenu absent'];
+  }
+  const fautes = tableaux
+    .filter((tableau) => tableau.parentElement?.classList.contains('defileur-de-tableau') !== true)
+    .map((tableau) => `${nomDuDefileur(tableau)} hors du défileur des tableaux`);
+  const defileurs = elementsDe(contenu).filter(
+    (element) =>
+      ['auto', 'scroll'].includes(getComputedStyle(element).overflowX) &&
+      element.scrollWidth > element.clientWidth + 1 &&
+      element.checkVisibility(),
+  );
+  const echelleDeLaToile = (monte.toile()?.getBoundingClientRect().width ?? 0) / 1280;
+  const reductionMinimale = ECHELLE_MINIMALE / Math.max(1, echelleDeLaToile);
+  const elargissement = Number.parseFloat(contenu.style.inlineSize || '100') / 100;
+  for (const defileur of defileurs) {
+    if (entier) {
+      fautes.push(`${nomDuDefileur(defileur)} défile au lieu de tenir entier`);
+    } else if (!defileur.classList.contains('defileur-de-tableau')) {
+      fautes.push(`${nomDuDefileur(defileur)} défile hors d un tableau`);
+    } else if (defileur.classList.contains('slide-chart__defileur') && !graphiqueQuiGlisse) {
+      fautes.push(`${nomDuDefileur(defileur)} graphique qui glisse hors du téléphone`);
+    } else {
+      if (lisible && elargissement < 1 / reductionMinimale - 0.01) {
+        fautes.push(
+          `${nomDuDefileur(defileur)} défile sur une carte élargie à ${elargissement.toFixed(2)} seulement`,
+        );
+      }
+      fautes.push(...(await fautesDuDefileur(monte, defileur)));
+    }
+  }
+  const reduction = echelleDuContenu(monte.toile());
+  if (lisible && reduction < reductionMinimale - 0.001) {
+    fautes.push(`réduction ${reduction.toFixed(3)} sous ${reductionMinimale.toFixed(3)}`);
+  }
+  return [...fautes, ...horsDeLaCarteEnLargeur(monte)];
+}
+
+describe('QP-03 · tenue des tableaux larges en mode étudiant, sur tous les cours servis, à 1920, 1366 et 390', () => {
+  beforeEach(() => setupTestBed({ imports: [CoursPresentationComponent] }));
+
+  for (const { code, pupitre, publics } of COURS_MESURES) {
+    const aTableau = publics.filter(peutMontrerUnTableau);
+
+    it(
+      `QP-03 · ${code} · au poste étudiant, chaque tableau montré est dans le défileur des tableaux, sur un écran retenu par ce test`,
+      async () => {
+        const fautes = await fautesDesEcrans(
+          publics,
+          pupitre,
+          monterAuTelephone,
+          async (ecran, monte) => {
+            const tableaux = await tableauxDepliesDe(monte);
+            const hors = tableaux.filter(
+              (tableau) =>
+                tableau.parentElement?.classList.contains('defileur-de-tableau') !== true,
+            );
+            const nonRetenu = tableaux.length > 0 && !peutMontrerUnTableau(ecran);
+            return hors.length > 0 || nonRetenu
+              ? `${ecran.id} hors du défileur=${hors.length} non retenu=${String(nonRetenu)}`
+              : null;
+          },
+        );
+
+        expect(fautes).toEqual([]);
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
+
+    for (const { poste, entier, lisible, graphiqueQuiGlisse, monter } of POSTES_DES_TABLEAUX) {
+      it(
+        `QP-03 · ${code} · ${poste} : ${entier ? 'chaque tableau tient entier, à une taille lisible' : 'seul un tableau plus large que la carte défile, avec l ombre de la suite et ses en-têtes de ligne figés'}`,
+        async () => {
+          const fautes = await fautesDesEcrans(aTableau, pupitre, monter, async (ecran, monte) => {
+            const tableaux = await tableauxDepliesDe(monte);
+            if (tableaux.length === 0) {
+              return null;
+            }
+            const faute = await fautesDesTableauxLarges(
+              monte,
+              tableaux,
+              entier,
+              lisible,
+              graphiqueQuiGlisse,
+            );
+            return faute.length > 0 ? `${ecran.id} ${faute.join(' ; ')}` : null;
+          });
+
+          expect(fautes).toEqual([]);
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
+  }
+});
+
+async function choisirLesOptionsLesPlusLongues(monte: EcranCadre): Promise<void> {
+  const contenu = contenuMonte(monte);
+  const options = (contenu === null ? [] : elementsDe(contenu)).filter(
+    (element): element is HTMLInputElement =>
+      element instanceof HTMLInputElement &&
+      ['radio', 'checkbox'].includes(element.type) &&
+      !element.disabled &&
+      element.checkVisibility(),
+  );
+  const libelle = (option: HTMLInputElement): number =>
+    option.closest('label')?.textContent?.trim().length ?? 0;
+  const racines: Node[] = [];
+  const groupes = new Map<string, HTMLInputElement[]>();
+  options.forEach((option, rang) => {
+    const racine = option.getRootNode();
+    if (!racines.includes(racine)) {
+      racines.push(racine);
+    }
+    const cle =
+      option.type === 'radio' ? `${racines.indexOf(racine)}:${option.name}` : `case:${rang}`;
+    groupes.set(cle, [...(groupes.get(cle) ?? []), option]);
+  });
+  for (const groupe of groupes.values()) {
+    groupe
+      .reduce(
+        (retenue, option) => (libelle(option) > libelle(retenue) ? option : retenue),
+        groupe[0],
+      )
+      .click();
+  }
+  await stabiliser(monte, options.length > 0 ? 2 : 0);
+}
+
+describe('QP-08 · aucune brique révélée ne dépasse sa colonne à 390, sur tous les cours servis', () => {
+  beforeEach(() => setupTestBed({ imports: [CoursPresentationComponent] }));
+
+  for (const { code, pupitre, publics } of COURS_MESURES) {
+    it(
+      `QP-08 · ${code} · au téléphone, rien ne dépasse la carte et aucun mot n'est coupé : écran servi, option la plus longue choisie, puis corrigé révélé`,
+      async () => {
+        const constater = (monte: EcranCadre): string[] => [
+          ...horsDeLaCarteEnLargeur(monte),
+          ...motsCoupes(monte),
+        ];
+        const fautes = await fautesDesEcrans(
+          publics,
+          pupitre,
+          monterAuTelephone,
+          async (ecran, monte) => {
+            await stabiliser(monte, 1);
+            const servi = constater(monte);
+            await choisirLesOptionsLesPlusLongues(monte);
+            const choisi = constater(monte);
+            await monte.afficher(ecranReveleAuPosteEtudiant(ecran, pupitre));
+            await monte.piloter(PILOTAGE_REVELE);
+            await stabiliser(monte, 3);
+            const revele = constater(monte);
+            const etapes = [
+              ['servi', servi],
+              ['choisi', choisi],
+              ['révélé', revele],
+            ] as const;
+            const constats = etapes
+              .filter(([, hors]) => hors.length > 0)
+              .map(([etape, hors]) => `${etape} : ${hors.join(' ; ')}`);
+            return constats.length > 0 ? `${ecran.id} ${constats.join(' | ')}` : null;
+          },
+        );
+
+        expect(fautes).toEqual([]);
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
+  }
+});
+
+const REPONSE_DE_500_CARACTERES = 'La marge baisse car le coût d’achat augmente plus vite. '
+  .repeat(10)
+  .slice(0, 500);
+
+function zonesDeSaisie(monte: EcranCadre): HTMLTextAreaElement[] {
+  const contenu = contenuMonte(monte);
+  return (contenu === null ? [] : elementsDe(contenu)).filter(
+    (element): element is HTMLTextAreaElement =>
+      element instanceof HTMLTextAreaElement &&
+      !element.disabled &&
+      !element.readOnly &&
+      element.checkVisibility(),
+  );
+}
+
+const PAIRES_D_IMAGES_POUR_QUE_LA_SAISIE_SE_POSE = 10;
+
+function constaterLesZonesDeSaisie(monte: EcranCadre): {
+  readonly zones: number;
+  readonly fautes: string[];
+} {
+  const relues = zonesDeSaisie(monte);
+  return {
+    zones: relues.length,
+    fautes: relues.flatMap((zone) => {
+      const nom = `${zone.tagName.toLowerCase()}.${zone.classList.item(0) ?? ''}`;
+      if (zone.value !== REPONSE_DE_500_CARACTERES) {
+        return [`${nom} réponse tronquée à ${zone.value.length}`];
+      }
+      return zone.scrollHeight > zone.clientHeight + 1
+        ? [`${nom} défile en interne (${zone.scrollHeight}/${zone.clientHeight})`]
+        : [];
+    }),
+  };
+}
+
+async function fautesDesZonesDeSaisie(monte: EcranCadre): Promise<{
+  readonly zones: number;
+  readonly fautes: string[];
+}> {
+  const saisies = zonesDeSaisie(monte);
+  for (const zone of saisies) {
+    zone.value = REPONSE_DE_500_CARACTERES;
+    zone.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  await stabiliser(monte, saisies.length > 0 ? 2 : 0);
+  let constat = constaterLesZonesDeSaisie(monte);
+  for (
+    let paire = 0;
+    paire < PAIRES_D_IMAGES_POUR_QUE_LA_SAISIE_SE_POSE && constat.fautes.length > 0;
+    paire += 1
+  ) {
+    await deuxImages();
+    constat = constaterLesZonesDeSaisie(monte);
+  }
+  return constat;
+}
+
+describe('QP-09 · une zone de saisie grandit avec une réponse de 500 caractères, sur tous les cours servis', () => {
+  beforeEach(() => setupTestBed({ imports: [CoursPresentationComponent] }));
+
+  for (const { code, pupitre, publics } of COURS_MESURES) {
+    for (const { poste, monter } of [POSTES_DES_TABLEAUX[0], POSTES_DES_TABLEAUX[2]]) {
+      it(
+        `QP-09 · ${code} · ${poste} : chaque zone de saisie montre toute une réponse de 500 caractères, sans défiler`,
+        async () => {
+          let zones = 0;
+          const fautes = await fautesDesEcrans(publics, pupitre, monter, async (ecran, monte) => {
+            await stabiliser(monte, 1);
+            const constat = await fautesDesZonesDeSaisie(monte);
+            zones += constat.zones;
+            return constat.fautes.length > 0 ? `${ecran.id} ${constat.fautes.join(' ; ')}` : null;
+          });
+
+          expect(zones).toBeGreaterThan(0);
+          expect(fautes).toEqual([]);
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
+  }
+});
 
 describe('CoursPresentationComponent au poste étudiant', () => {
   beforeEach(() => setupTestBed({ imports: [CoursPresentationComponent] }));
@@ -1213,7 +1901,7 @@ describe('CoursPresentationComponent au poste étudiant', () => {
 
 const PIECE_JOINTE: PieceJointe = {
   libelle: 'Export des ventes Norvane (classeur Excel)',
-  fichier: '/assets/cours/b3-01/B3-01_export_ventes.d4f2ceab.xlsx',
+  fichier: '/assets/cours/b3-01/B3-01_export_ventes.dfa709a7.xlsx',
 };
 
 const MODES = ['etudiant', 'formateur', 'projection'] as const;

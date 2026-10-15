@@ -2,6 +2,7 @@ import {
   buildCoursContent,
   buildEcran,
   buildEcranQuestionnaire,
+  buildEcranQuestionnaireSansConsigne,
   buildNumericQuestion,
   buildSpacedRappel,
   buildVoteQuestion,
@@ -102,6 +103,32 @@ describe('enonces des defis de tous les cours servis', () => {
 
       expect(probleme.invite.trim()).not.toBe('');
       expect([...enoncesDesActivites(defi)]).toEqual([[probleme.id, probleme.invite]]);
+    });
+  }
+});
+
+describe('QP-01 · ne compte pas l activité libre d un rappel sans délai, sur les écrans des cours servis', () => {
+  const RAPPELS = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
+    ecransDuPupitreDe(instantane).filter(({ type }) => type === 'fp-recall'),
+  );
+
+  it('sert des rappels dans les cours servis', () => {
+    expect(RAPPELS.length).toBeGreaterThan(0);
+  });
+
+  for (const rappel of RAPPELS) {
+    const question = rappel.donnees?.['question'] as { readonly id: string };
+    const avecDelai = (delaiMs: unknown) => ({
+      ...rappel,
+      donnees: { ...rappel.donnees, delaiMs },
+    });
+
+    it(`${rappel.id} : aucune ligne « rappel » sans délai, où le poste n offre aucune saisie ; une ligne sinon`, () => {
+      expect([...enoncesDesActivites(avecDelai(0)).keys()]).toEqual([]);
+      expect([...enoncesDesActivites(avecDelai(8000)).keys()]).toEqual([`${question.id}:rappel`]);
+      expect([...enoncesDesActivites(avecDelai(undefined)).keys()]).toEqual([
+        `${question.id}:rappel`,
+      ]);
     });
   }
 });
@@ -231,15 +258,22 @@ describe('entete de questionnaire', () => {
     });
   });
 
-  it('ne rend rien pour un questionnaire sans entete complete', () => {
-    const sansConsigne = buildEcranQuestionnaire({
-      donnees: { intitule: 'Atelier 1', questions: [] },
+  it('lit l intitule d un questionnaire sans consigne, que son intitule suffit a presenter', () => {
+    expect(enteteDeQuestionnaire(buildEcranQuestionnaireSansConsigne())).toEqual({
+      intitule: 'Atelier 1 — Lire, rapporter, estimer',
+      consigne: null,
+    });
+  });
+
+  it('ne rend rien pour un questionnaire a l entete mal formee', () => {
+    const consigneNonTexte = buildEcranQuestionnaire({
+      donnees: { intitule: 'Atelier 1', consigne: 3, questions: [] },
     });
     const intituleNonTexte = buildEcranQuestionnaire({
       donnees: { intitule: 3, consigne: 'Répondez.', questions: [] },
     });
 
-    expect(enteteDeQuestionnaire(sansConsigne)).toBeNull();
+    expect(enteteDeQuestionnaire(consigneNonTexte)).toBeNull();
     expect(enteteDeQuestionnaire(intituleNonTexte)).toBeNull();
   });
 

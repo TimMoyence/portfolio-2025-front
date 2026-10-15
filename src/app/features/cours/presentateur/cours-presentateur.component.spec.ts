@@ -16,6 +16,7 @@ import {
   attendreAucunEnTeteSansSession,
   buildEcranDeVoteCorrige,
   demonterLeBancDuPupitre,
+  garnirLaSeance,
   JETON_FORMATEUR,
   buildEcranDeVoteJumele,
   monterLeBancSurLeDeroule,
@@ -30,27 +31,32 @@ import {
 import {
   buildDerouleCours,
   buildEcranDeroule,
-  buildGuideFormateur,
   buildRapportSeance,
   buildRegleNotation,
   buildResultatQuestion,
+  buildResultatsDeChaqueQuestion,
   buildResultatsSeance,
   buildStatistiquesSeance,
 } from '../../../../testing/factories/formations.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
+import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
 import {
-  buildVisualQuizSlide,
-  buildVisualSlide,
-} from '../../../../testing/factories/visual-slide.factory';
+  INSTANTANES_DES_COURS_SERVIS,
+  VOTES_JUMELES_DU_PUPITRE,
+} from '../../../../testing/fixtures/instantanes-des-cours';
+import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
 import {
+  attendreChaqueCalqueEntierDansLaToile,
+  attendreChaqueLibelleSepareDeSaValeur,
   attendreLaFermetureDuFlux,
   diffuserSurLaVue,
   idsDesEcransMontes,
   publierSurLaVue,
   stabiliserLaVue,
 } from '../../../../testing/vue-de-seance';
+import { uneImage } from '../../../../testing/deux-images';
 import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formations.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { demanderLaPieceJointe } from '../../../../testing/piece-jointe-demandee';
@@ -169,6 +175,13 @@ describe('CoursPresentateurComponent', () => {
     deroule = nouveau;
     port.lireDeroule.and.returnValue(of(deroule));
     return ouvrirLaSeance();
+  }
+
+  async function ouvrirLeCoursServi(servi: DerouleCours): Promise<Fixture> {
+    garnirLaSeance(port, servi.ecrans);
+    const fixture = await ouvrirLaSeanceSur(servi);
+    publierSurLaVue(double, fixture, buildResultatsDeChaqueQuestion(servi.ecrans));
+    return fixture;
   }
 
   async function attendreLaSceneOuverte(ouvrir: () => Promise<Fixture>): Promise<void> {
@@ -533,26 +546,6 @@ describe('CoursPresentateurComponent', () => {
     expect(texte(fixture, 'presentateur-question-enonce')).toBe('Quelle échelle ?');
   });
 
-  it('ne rajoute pas de prose de transition dans le guide', async () => {
-    port.lireDeroule.and.returnValue(
-      of(
-        buildDerouleCours({
-          ecrans: [
-            buildEcranDeroule({ id: 'ecran-1' }),
-            buildEcranDeroule({ ...buildVisualSlide(), corriges: [], seuil: null }),
-          ],
-        }),
-      ),
-    );
-    const fixture = await ouvrirLaSeance();
-
-    const guide = (fixture.nativeElement as HTMLElement).querySelector(
-      '[data-testid="presentateur-guide"]',
-    );
-    expect(guide?.textContent ?? '').not.toContain('Lire un chiffre');
-    expect(guide?.textContent ?? '').not.toContain(buildVisualSlide().id);
-  });
-
   it('relit notes et reponses libres a chaque resultat du flux', async () => {
     const fixture = await ouvrirLaSeance();
     const lecturesAvant = port.lireAnnotations.calls.count();
@@ -837,17 +830,20 @@ describe('CoursPresentateurComponent', () => {
     expect(apercu(fixture)).toBe(ecran);
   });
 
-  it('R5 · presente les notes, le guide de facilitation, puis l activite, la lecture de la classe et la pedagogie', async () => {
-    const fixture = await ouvrirLaSeanceSur(
-      buildDerouleCours({ ecrans: [buildEcranDeroule({ guide: buildGuideFormateur() })] }),
-    );
+  it('R5 · QP-17 · presente les notes, puis l activite, la lecture de la classe et la pedagogie, sans guide de facilitation meme si le deroule en porte encore un', async () => {
+    const ecranAvecGuide = {
+      ...buildEcranDeroule(),
+      guide: { aDire: 'Guide retiré du pupitre', reponse: 'Réponse du guide retiré' },
+    };
+    const fixture = await ouvrirLaSeanceSur(buildDerouleCours({ ecrans: [ecranAvecGuide] }));
     const suit = (avant: string, apres: string): boolean =>
       (cible(fixture, avant).compareDocumentPosition(cible(fixture, apres)) &
         Node.DOCUMENT_POSITION_FOLLOWING) !==
       0;
 
-    expect(suit('presentateur-notes', 'presentateur-guide')).toBeTrue();
-    expect(suit('presentateur-guide', 'presentateur-questions')).toBeTrue();
+    expect(lire(fixture, 'presentateur-guide')).toBeNull();
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('guide retiré');
+    expect(suit('presentateur-notes', 'presentateur-questions')).toBeTrue();
     expect(suit('presentateur-questions', 'panneau-exporter-bilan')).toBeTrue();
   });
 
@@ -940,7 +936,7 @@ describe('CoursPresentateurComponent', () => {
     const racine = fixture.nativeElement as HTMLElement;
     racine.style.display = 'block';
     racine.style.width = '1100px';
-    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await uneImage();
     fixture.detectChanges();
     await fixture.whenStable();
     const corps = racine.querySelector<HTMLElement>('.presentateur-stage__body');
@@ -1229,7 +1225,10 @@ describe('CoursPresentateurComponent', () => {
       diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase: 'discussion' } } });
       publierSurLaVue(double, fixture, resultats);
 
-      expect(apercu(fixture).donneesFormateur()).toBe(annexe);
+      expect(apercu(fixture).donneesFormateur()).toEqual({
+        ...annexe,
+        reponses: { 'Q-CAP-03': { cible: '1 480,24', optionId: null } },
+      });
       expect(apercu(fixture).direct()).toEqual({
         pilotage: { phase: 'discussion' },
         resultats: resultats.questions,
@@ -1237,16 +1236,48 @@ describe('CoursPresentateurComponent', () => {
       });
     });
 
-    it('pilote la phase du vote servie depuis le panneau d activite', async () => {
-      const fixture = await ouvrirSurLEcran(buildEcranDeVoteJumele());
-      diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase: 'vote' } } });
+    for (const [titre, phase, pilote] of [
+      [
+        'pilote la phase du vote servie depuis le panneau d activite',
+        'vote',
+        { phase: 'discussion' },
+      ],
+      [
+        'Q1 · « Passer à : Révélation » pilote la même révélation que « Révéler la correction »',
+        'revote',
+        { revele: true },
+      ],
+    ] as const) {
+      it(titre, async () => {
+        const fixture = await ouvrirSurLEcran(buildEcranDeVoteJumele());
+        diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase } } });
 
-      await cliquer(fixture, 'activite-phase-suivante');
+        await cliquer(fixture, 'activite-phase-suivante');
 
-      expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
-        pilotage: { screenId: 'ecran-vote', phase: 'discussion' },
+        expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
+          pilotage: { screenId: 'ecran-vote', ...pilote },
+        });
       });
-    });
+    }
+
+    for (const jumele of VOTES_JUMELES_DU_PUPITRE) {
+      it(`Q1 · ${jumele.id} : ne révèle la correction qu une fois la deuxième question posée`, async () => {
+        const fixture = await ouvrirSurLEcran(jumele);
+
+        for (const phase of ['vote', 'discussion'] as const) {
+          diffuserSurLaVue(double, fixture, { pilotage: { [jumele.id]: { phase } } });
+          expect(bouton(fixture, 'presentateur-questions-reveler').disabled)
+            .withContext(phase)
+            .toBeTrue();
+        }
+        diffuserSurLaVue(double, fixture, { pilotage: { [jumele.id]: { phase: 'revote' } } });
+        await cliquer(fixture, 'presentateur-questions-reveler');
+
+        expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
+          pilotage: { screenId: jumele.id, revele: true },
+        });
+      });
+    }
 
     it('RET-21 · envoie au serveur le reglage de la machine fait au pupitre', async () => {
       const fixture = await ouvrirSurLEcran({
@@ -1295,6 +1326,63 @@ describe('CoursPresentateurComponent', () => {
 
       expect(cible(fixture, 'presentateur-maitrise-echec').getAttribute('role')).toBe('status');
     });
+  });
+
+  describe('QP-02 · aucun libellé collé à sa valeur au pupitre des cours servis', () => {
+    const VUES_DU_PUPITRE = [
+      'resultats-projetes-question',
+      'cours-correction',
+      'presentateur-question',
+      'lecture-classe-ligne',
+      'activite-participants',
+      'reponse-libre',
+      'activite-phase',
+      'activite-production',
+      'activite-production-cles',
+      'activite-billets',
+      'activite-etayage',
+      'activite-questions',
+    ];
+    const vuesDuPupitre = (servi: DerouleCours): readonly string[] =>
+      servi.ecrans.some(({ type }) => type === 'fp-worked')
+        ? VUES_DU_PUPITRE
+        : VUES_DU_PUPITRE.filter((vue) => vue !== 'activite-etayage');
+
+    for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+      it(
+        `${prefixe} : chaque écran, avant et après révélation, sépare chaque libellé de sa valeur`,
+        async () => {
+          const fixture = await ouvrirLeCoursServi(servi);
+
+          await attendreChaqueLibelleSepareDeSaValeur(
+            double,
+            fixture,
+            servi.ecrans,
+            vuesDuPupitre(servi),
+            {
+              participants: 2,
+            },
+          );
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
+  });
+
+  describe('QP-CALQUE · la correction et les résultats projetés tiennent dans l aperçu du pupitre', () => {
+    for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+      it(
+        `${prefixe} : sur chaque écran révélé, rien de la correction ni des résultats projetés n est coupé, ni réduit par un zoom que Safari arrête à 9 px`,
+        async () => {
+          const fixture = await ouvrirLeCoursServi(servi);
+
+          await attendreChaqueCalqueEntierDansLaToile(double, fixture, servi.ecrans, {
+            participants: 2,
+          });
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
   });
 });
 

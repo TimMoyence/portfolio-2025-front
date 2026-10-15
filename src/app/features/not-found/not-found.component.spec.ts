@@ -20,3 +20,14 @@ describe('NotFoundComponent — statut HTTP rendu côté serveur', () => {
     expect(statuses).toEqual([404]);
   });
 });
+
+describe('NotFoundComponent — accessibilité', () => {
+  it('nomme « 404 » le code dessiné lettre à lettre, comme une image, pour un lecteur d écran', () => {
+    setupTestBed({ router: true, http: false, imports: [NotFoundComponent] });
+    const fixture = TestBed.createComponent(NotFoundComponent);
+    fixture.detectChanges();
+
+    const code = (fixture.nativeElement as HTMLElement).querySelector('.nf-code');
+    expect([code?.getAttribute('role'), code?.getAttribute('aria-label')]).toEqual(['img', '404']);
+  });
+});

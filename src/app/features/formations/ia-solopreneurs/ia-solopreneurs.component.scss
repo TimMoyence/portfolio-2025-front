@@ -1,6 +1,6 @@
 @use '../../../styles-shared/deck-tokens' as deck;
 
 :host {
-  @include deck.deck-tokens(var(--teal), #3f9c8e, var(--teal-dark));
+  @include deck.deck-tokens(var(--teal), var(--teal-dark));
   display: block;
 }

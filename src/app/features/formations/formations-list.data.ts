@@ -91,8 +91,8 @@ export const FORMATIONS: readonly FormationCard[] = [
   coursBtsEnSeance({
     link: '/formations/b2-03-logique',
     title: $localize`:@@formations-list.b2-03.title:B2-03 — Logique : écrire et contrôler une règle`,
-    description: $localize`:@@formations-list.b2-03.description:Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
-    duree: $localize`:@@formations-list.b2-03.duration:3 h 00`,
+    description: $localize`:@@formations-list.b2-03.description:Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b2-03.duration:2 h 20`,
   }),
   coursBtsEnSeance({
     link: '/formations/b2-04-suites',

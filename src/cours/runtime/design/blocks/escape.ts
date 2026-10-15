@@ -21,6 +21,7 @@ export const escape = `
 :where(.fp-root) .fp-escape__progression {
   color: var(--fp-ink-mute);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   letter-spacing: 0.02em;
 }
 
@@ -31,6 +32,7 @@ export const escape = `
   align-items: baseline;
   color: var(--fp-ink-mute);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
 }
 
 :where(.fp-root) .fp-escape__minuteur[data-echu='true'] {
@@ -150,6 +152,7 @@ export const escape = `
   background: var(--fp-surface);
   color: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: var(--fp-corps);
 }
 
@@ -231,6 +234,7 @@ export const escape = `
 :where(.fp-root) .fp-escape__solution {
   color: var(--fp-ink-soft);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
 }
 
 :where(.fp-root) .fp-escape__vide {

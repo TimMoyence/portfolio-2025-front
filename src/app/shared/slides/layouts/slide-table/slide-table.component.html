@@ -3,7 +3,7 @@
   [class.slide-table--dense]="dense()"
   [appSlideEnTete]="{ bloc: 'slide-table', titre: title(), sousTitre: subtitle() }"
 >
-  <div class="slide-table__scroll">
+  <app-defileur-de-tableau class="slide-table__scroll">
     <table>
       <thead>
         <tr>
@@ -22,7 +22,7 @@
         }
       </tbody>
     </table>
-  </div>
+  </app-defileur-de-tableau>
   @if (note()) {
     <p class="slide-table__note">{{ note() }}</p>
   }

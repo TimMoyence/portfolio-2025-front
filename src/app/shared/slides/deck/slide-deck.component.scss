@@ -1,3 +1,5 @@
+@use '../../../styles-shared/mono';
+
 :host {
   display: block;
   width: 100%;
@@ -85,7 +87,7 @@
 }
 
 .slide-deck-fullscreen__label {
-  font-family: var(--font-mono, ui-monospace, monospace);
+  @include mono.police;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }

@@ -160,16 +160,6 @@ type VueDuLivret = 'sujet' | 'corrige';
                     }
                   </ol>
                 }
-                @if (page.guide.length > 0) {
-                  <dl class="livret__guide" data-testid="livret-guide">
-                    @for (rubrique of page.guide; track rubrique.cle) {
-                      <div>
-                        <dt>{{ rubrique.libelle }}</dt>
-                        <dd>{{ rubrique.texte }}</dd>
-                      </div>
-                    }
-                  </dl>
-                }
                 @if (page.ecran.notes !== '') {
                   <p class="livret__notes" data-testid="livret-notes">{{ page.ecran.notes }}</p>
                 }

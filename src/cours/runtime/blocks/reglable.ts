@@ -110,7 +110,8 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
     this.refreshSiConnecte();
   }
 
-  disconnectedCallback(): void {
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
     this.arreterAnimation();
   }
 

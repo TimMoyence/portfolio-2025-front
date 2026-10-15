@@ -191,6 +191,56 @@ describe('FpEscape', () => {
     );
   });
 
+  const ANNONCES_DU_DERNIER_FRAGMENT: readonly (readonly [
+    string,
+    Parameters<typeof buildProgressionDesEnigmes>[0],
+    string,
+  ])[] = [
+    [
+      'dit le code incomplet, et non toutes les énigmes résolues, quand une énigme est épuisée',
+      { tentativesRestantes: { seuil: 8, marge: 0, tva: 10 } },
+      'Parcours terminé sans tous les fragments, le code reste incomplet : TR·OR',
+    ],
+    [
+      'dit toutes les énigmes résolues quand chacune a livré son fragment',
+      { resolues: [...DEUX_FRAGMENTS], tentativesRestantes: { seuil: 8, marge: 7, tva: 10 } },
+      'Toutes les énigmes sont résolues, le code est reconstitué : TRESOR',
+    ],
+  ];
+
+  for (const [cas, progression, annonce] of ANNONCES_DU_DERNIER_FRAGMENT) {
+    it(`QP-14 · ${cas}`, () => {
+      hote.progression = buildProgressionDesEnigmes(progression);
+      proposer(hote, '2500');
+      hote.tentatives = [buildVerdictDeTentative({ enigmeId: 'tva', fragment: 'OR' })];
+
+      expect(libelleDe(hote, 'annonce')).toBe(annonce);
+    });
+  }
+
+  it('QP-14 · annonce la fin du parcours, et non une énigme suivante, quand la dernière s’épuise', () => {
+    hote.progression = buildProgressionDesEnigmes({
+      resolues: [...DEUX_FRAGMENTS],
+      tentativesRestantes: { seuil: 8, marge: 7, tva: 1 },
+    });
+    proposer(hote, '12');
+    hote.tentatives = [
+      buildVerdictDeTentative({
+        enigmeId: 'tva',
+        correcte: false,
+        fragment: null,
+        tentativesRestantes: 0,
+      }),
+    ];
+
+    expect(libelleDe(hote, 'annonce')).toBe(
+      'Parcours terminé sans tous les fragments, le code reste incomplet : TRES·',
+    );
+    expect(libelleDe(hote, 'epuisee')).toBe(
+      'Tentatives épuisées : cette dernière énigme ne livre pas son fragment',
+    );
+  });
+
   it('reprend la progression servie apres rechargement', () => {
     hote.progression = buildProgressionDesEnigmes();
     expect(etats(hote)).toEqual(['resolue', 'ouverte', 'verrouillee']);
@@ -244,9 +294,51 @@ describe('FpEscape', () => {
     expect(hote.shadowRoot?.textContent ?? '').not.toContain('ne retire rien');
   });
 
+  it('QP-12 · fait avancer le minuteur à la seconde, sans attendre un autre rendu', () => {
+    expect(libelleDe(hote, 'minuteur')).toBe(
+      'Temps passé sur cette énigme : 0:00 / 6:00 annoncées',
+    );
+
+    jasmine.clock().tick(65_000);
+
+    expect(libelleDe(hote, 'minuteur')).toBe(
+      'Temps passé sur cette énigme : 1:05 / 6:00 annoncées',
+    );
+  });
+
+  it('QP-12 · arrête le minuteur quand le coffre quitte la page', () => {
+    hote.remove();
+    jasmine.clock().tick(5_000);
+
+    expect(libelleDe(hote, 'minuteur')).toBe(
+      'Temps passé sur cette énigme : 0:00 / 6:00 annoncées',
+    );
+  });
+
+  it('QP-12 · annonce un budget non entier à la seconde près', () => {
+    hote.parcours = buildEscapeParcours({ budgetEnigmeMs: 150_000 });
+
+    expect(libelleDe(hote, 'minuteur')).toBe(
+      'Temps passé sur cette énigme : 0:00 / 2:30 annoncées',
+    );
+  });
+
+  it('QP-12 · rend l indice prêt et efface l attente à l échéance du délai, sans autre rendu', () => {
+    cliquerOmbre(hote, 'demander-indice');
+    expect(noeud(hote, 'demander-indice')?.getAttribute('data-pret')).toBe('false');
+    expect(libelleDe(hote, 'annonce')).toBe('L’indice s’ouvre dans 120 secondes');
+
+    jasmine.clock().tick(DELAI_INDICE_MS / 2);
+    expect(libelleDe(hote, 'annonce')).toBe('L’indice s’ouvre dans 60 secondes');
+
+    jasmine.clock().tick(DELAI_INDICE_MS / 2);
+
+    expect(noeud(hote, 'demander-indice')?.getAttribute('data-pret')).toBe('true');
+    expect(libelleDe(hote, 'annonce')).toBe('');
+  });
+
   it('signale le budget annonce depasse sans rien fermer', () => {
     jasmine.clock().tick(BUDGET_MS);
-    hote.setAttribute('data-cours-role', 'etudiant');
     expect(noeud(hote, 'minuteur')?.getAttribute('data-echu')).toBe('true');
     expect(libelleDe(hote, 'echeance')).toContain('rien ne se ferme');
     expect(noeud(hote, 'saisie')).not.toBeNull();

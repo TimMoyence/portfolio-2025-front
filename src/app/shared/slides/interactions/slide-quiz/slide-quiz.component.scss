@@ -91,7 +91,7 @@ ol.slide-quiz__options {
   color: var(--ink-soft, #3c3529);
 
   strong {
-    font-family: var(--font-mono, ui-monospace, monospace);
+    @include slide.police;
     font-size: 1.4rem;
     font-variant-numeric: tabular-nums;
   }

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { DonneesDeFigureComponent } from '../../donnees-de-figure/donnees-de-figure.component';
 import { NOMBRE_FRANCAIS, graduer, position, type Plage } from '../axe-gradue';
 import { generateurDIdentifiants } from '../identifiant-de-description';
 
@@ -67,6 +68,7 @@ function segmentDansLeCadre(
 @Component({
   selector: 'app-slide-scatter',
   standalone: true,
+  imports: [DonneesDeFigureComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-scatter.component.html',
   styleUrl: './slide-scatter.component.scss',

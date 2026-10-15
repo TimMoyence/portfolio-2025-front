@@ -1,4 +1,6 @@
+@forward '../../styles-shared/mono' show police;
 @use 'slide-toile' as toile;
+@use '../../styles-shared/mono';
 
 @mixin cadre-centre($marge) {
   width: 100%;
@@ -52,7 +54,7 @@
 
 @mixin competence {
   color: var(--accent-dark, var(--teal-dark));
-  font-family: var(--font-mono, ui-monospace, monospace);
+  @include mono.police;
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.05em;

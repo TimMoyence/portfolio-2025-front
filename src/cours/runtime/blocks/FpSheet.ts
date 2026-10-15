@@ -11,6 +11,7 @@ import {
   lireNombreSaisi,
   nomCellule,
 } from 'portfolio-2025-partage/formule';
+import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { bornerEntre, entierBorne } from '../core/valeurs';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
@@ -29,6 +30,8 @@ interface AttenduDeFeuille {
 }
 
 type Foyer = 'cellule' | 'barre' | null;
+
+type NatureDeCellule = 'texte' | 'nombre' | 'logique' | 'erreur';
 
 interface EvaluationDeLaFeuille {
   readonly contenus: Readonly<Record<string, string>>;
@@ -60,6 +63,21 @@ function arrondirUnNombre(valeur: number): number {
 
 function arrondirLAttendu(valeur: ValeurFormule): ValeurFormule {
   return typeof valeur === 'number' ? arrondirUnNombre(valeur) : valeur;
+}
+
+function natureDUneValeur(valeur: ValeurFormule): NatureDeCellule {
+  switch (typeof valeur) {
+    case 'number':
+      return 'nombre';
+    case 'boolean':
+      return 'logique';
+    default:
+      return 'texte';
+  }
+}
+
+function marqueDeNature(nature: NatureDeCellule | null): EscapedHtml {
+  return nature === null ? VIDE : safeHtml`data-nature="${escapeHtml(nature)}"`;
 }
 
 function borner(brut: number): number {
@@ -340,6 +358,21 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     return formaterResultat(this.resultat(nom));
   }
 
+  private nature(nom: string, interactif: boolean): NatureDeCellule | null {
+    const brut = this.brut(nom);
+    if (brut.trim() === '') {
+      return null;
+    }
+    if (!estUneFormule(brut)) {
+      return lireNombreSaisi(brut) === null ? 'texte' : 'nombre';
+    }
+    if (interactif && nom === this.selection) {
+      return 'texte';
+    }
+    const { valeur, erreur } = this.resultat(nom);
+    return erreur !== null || valeur === null ? 'erreur' : natureDUneValeur(valeur);
+  }
+
   private cellulesEnErreur(): string[] {
     return Object.keys(this.contenus).filter(
       (nom) => estUneFormule(this.brut(nom)) && this.resultat(nom).erreur !== null,
@@ -358,11 +391,13 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   private tableau(interactif: boolean): EscapedHtml {
     const lignes = [...Array(this.interne?.lignes ?? 0).keys()];
     return safeHtml`
-      <table class="fp-sheet__tableau${lignes.length > LIGNES_AVANT_RESSERREMENT ? TABLEAU_RESSERRE : VIDE}" data-testid="tableau">
-        <caption class="fp-sheet__intitule">${escapeHtml(this.interne?.intitule ?? '')}</caption>
-        <thead><tr>${this.coin()}${this.enteteColonnes()}</tr></thead>
-        <tbody>${lignes.map((ligne) => this.ligne(ligne, interactif))}</tbody>
-      </table>
+      ${dansUnDefileur(safeHtml`
+        <table class="fp-sheet__tableau${lignes.length > LIGNES_AVANT_RESSERREMENT ? TABLEAU_RESSERRE : VIDE}" data-testid="tableau">
+          <caption class="fp-sheet__intitule">${escapeHtml(this.interne?.intitule ?? '')}</caption>
+          <thead><tr>${this.coin()}${this.enteteColonnes()}</tr></thead>
+          <tbody>${lignes.map((ligne) => this.ligne(ligne, interactif))}</tbody>
+        </table>
+      `)}
       ${lignes.length === 0 ? this.grilleVide() : VIDE}
     `;
   }
@@ -419,7 +454,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
       const nature = this.estUnIntituleDeColonne(ligne, nom)
         ? safeHtml` ${escapeHtml(STYLE_CELLULE)}--intitule`
         : VIDE;
-      return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}${nature}" headers="${escapeHtml(portes)}">${this.lecture(nom)}</td>`;
+      return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}${nature}" headers="${escapeHtml(portes)}" ${marqueDeNature(this.nature(nom, false))}>${this.lecture(nom)}</td>`;
     }
     return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)} ${escapeHtml(STYLE_CELLULE)}--saisie" headers="${escapeHtml(portes)}" style="--fp-sheet-largeur: ${largeur}" ${this.etatDeLaCellule(nom)}>${this.champ(nom)}</td>`;
   }
@@ -442,7 +477,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   private lecture(nom: string): EscapedHtml {
     const attendu = this.attendus.find((candidat) => candidat.reference === nom);
     if (attendu !== undefined && this.correction >= 1) {
-      return safeHtml`<span class="fp-sheet__correction" data-testid="correction-feuille" data-nom="${escapeHtml(nom)}"><code>${escapeHtml(attendu.formuleReference)}</code>${this.valeurAttendue(attendu)}</span>`;
+      return safeHtml`<span class="fp-sheet__correction" data-testid="correction-feuille" data-nom="${escapeHtml(nom)}" ${marqueDeNature(natureDUneValeur(attendu.valeur))}><code>${escapeHtml(attendu.formuleReference)}</code>${this.valeurAttendue(attendu)}</span>`;
     }
     return safeHtml`<span data-testid="cellule" data-nom="${escapeHtml(nom)}">${escapeHtml(this.affichage(nom, false))}</span>`;
   }
@@ -463,7 +498,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
         : safeHtml`aria-invalid="true" data-erreur="${escapeHtml(code)}" title="${escapeHtml(alerte)}"`;
     const enonce = `${this.texte('sheet-cellule')} ${nom}`;
     const bloquee = !this.modifiable(nom);
-    return safeHtml`<input class="fp-sheet__champ fp-montant" data-testid="cellule" data-role="cellule" data-nom="${escapeHtml(nom)}" type="text" autocomplete="off" spellcheck="false" maxlength="${LONGUEUR_MAX_FORMULE}" aria-label="${escapeHtml(enonce)}" value="${escapeHtml(this.affichage(nom, true))}" ${marque} ${bloquee ? LECTURE_SEULE : VIDE}>`;
+    return safeHtml`<input class="fp-sheet__champ fp-montant" data-testid="cellule" data-role="cellule" data-nom="${escapeHtml(nom)}" type="text" autocomplete="off" spellcheck="false" maxlength="${LONGUEUR_MAX_FORMULE}" aria-label="${escapeHtml(enonce)}" value="${escapeHtml(this.affichage(nom, true))}" ${marqueDeNature(this.nature(nom, true))} ${marque} ${bloquee ? LECTURE_SEULE : VIDE}>`;
   }
 
   private bilanErreurs(): EscapedHtml {

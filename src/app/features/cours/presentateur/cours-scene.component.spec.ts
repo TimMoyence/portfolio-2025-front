@@ -14,6 +14,7 @@ import {
   buildEcranDeVoteCorrige,
   buildReponsesALaMission,
   demonterLeBancDuPupitre,
+  garnirLaSeance,
   JETON_FORMATEUR,
   monterLeBancSurLeDeroule,
   monterSurLeBanc,
@@ -22,19 +23,32 @@ import {
   buildDerouleCours,
   buildEcranDeroule,
   buildResultatQuestion,
+  buildResultatsDeChaqueQuestion,
   buildResultatsSeance,
 } from '../../../../testing/factories/formations.factory';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import type { FpPlot } from '../../../../cours/runtime/blocks/FpPlot';
-import { attendreQue, briqueMontee } from '../../../../testing/briques-montees';
-import { buildPlotEnBarres, buildVoteQuestion } from '../../../../testing/factories/cours.factory';
+import {
+  attendreQue,
+  briqueMontee,
+  DELAI_DE_MONTAGE_MS,
+} from '../../../../testing/briques-montees';
+import {
+  buildExitBillet,
+  buildPlotEnBarres,
+  buildVoteQuestion,
+} from '../../../../testing/factories/cours.factory';
 import { buildVisualSlide } from '../../../../testing/factories/visual-slide.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { cibleMarque } from '../../../../testing/marqueurs-dom';
 import {
+  attendreChaqueCalqueEntierDansLaToile,
+  attendreChaqueLibelleSepareDeSaValeur,
   attendreLaFermetureDuFlux,
   diffuserSurLaVue,
   ecransMontes,
   idsDesEcransMontes,
+  mettreLaToileALEchelle,
   stabiliserLaVue,
 } from '../../../../testing/vue-de-seance';
 import type { FormationsPort } from '../../../core/ports/formations.port';
@@ -397,23 +411,46 @@ describe('CoursSceneComponent', () => {
     attendreLaFermetureDuFlux(double, await monterEtStabiliser());
   });
 
+  function bandeauDeLaToile(fixture: Fixture): string | undefined {
+    return (fixture.nativeElement as HTMLElement)
+      .querySelector('[data-testid="cours-toile"] [data-testid="cours-correction"]')
+      ?.textContent?.replace(/\s+/g, ' ');
+  }
+
   it('R1 · projette dans la toile la réponse attendue une fois la correction révélée, pas avant', async () => {
-    const fixture = await monterEtStabiliser();
-    const bandeau = (): string | undefined =>
-      (fixture.nativeElement as HTMLElement)
-        .querySelector('[data-testid="cours-toile"] [data-testid="cours-correction"]')
-        ?.textContent?.replace(/\s+/g, ' ');
+    const fixture = await monterSur([
+      buildEcranDeroule({
+        id: 'ecran-billet',
+        type: 'fp-exit',
+        donnees: { billet: buildExitBillet() },
+      }),
+    ]);
 
     diffuserSurLaVue(double, fixture, { ecranCourant: 0 });
 
-    expect(bandeau()).toBeUndefined();
+    expect(bandeauDeLaToile(fixture)).toBeUndefined();
 
+    diffuserSurLaVue(double, fixture, {
+      ecranCourant: 0,
+      pilotage: { 'ecran-billet': { revele: true } },
+    });
+
+    expect(bandeauDeLaToile(fixture)).toContain('1 480,24');
+  });
+
+  it('Q1 · sous un vote révélé, la brique porte seule la correction, sans bandeau', async () => {
+    const fixture = await monterEtStabiliser();
     diffuserSurLaVue(double, fixture, {
       ecranCourant: 0,
       pilotage: { 'ecran-vote': { revele: true } },
     });
+    const vote = await briqueMontee(fixture, 'fp-vote');
+    const bonneReponse = (): string | null | undefined =>
+      vote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]')?.textContent;
+    await attendreQue(fixture, () => bonneReponse() != null, 'la bonne réponse dans le vote');
 
-    expect(bandeau()).toContain('1 480,24');
+    expect(bonneReponse()).toContain('1 480,24');
+    expect(bandeauDeLaToile(fixture)).toBeUndefined();
   });
 
   it('ne projette les comptes d un jalon qu a partir de cinq reponses', async () => {
@@ -502,5 +539,51 @@ describe('CoursSceneComponent', () => {
     await attendreQue(fixture, () => trace.valeurs['origine'] === 0, 'le réglage piloté');
 
     expect(trace.valeurs).toEqual({ origine: 0 });
+  });
+
+  async function projeterLeCoursServi(servi: DerouleCours): Promise<Fixture> {
+    garnirLaSeance(port, servi.ecrans);
+    port.lireDeroule.and.returnValue(of(servi));
+    const fixture = await monterEtStabiliser();
+    double.diffuserResultats(buildResultatsDeChaqueQuestion(servi.ecrans));
+    return fixture;
+  }
+
+  describe('QP-02 · aucun libellé collé à sa valeur en projection des cours servis', () => {
+    const VUES_DE_LA_SCENE = ['resultats-projetes-question', 'resultats-projetes-libres'];
+
+    for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+      it(
+        `${prefixe} : chaque écran projeté, avant et après révélation, sépare chaque libellé de sa valeur`,
+        async () => {
+          const fixture = await projeterLeCoursServi(servi);
+
+          await attendreChaqueLibelleSepareDeSaValeur(
+            double,
+            fixture,
+            servi.ecrans,
+            VUES_DE_LA_SCENE,
+          );
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
+  });
+
+  describe('QP-CALQUE · la correction et les résultats projetés tiennent dans la toile projetée', () => {
+    for (const echelle of [1.5, 0.625]) {
+      for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
+        it(
+          `${prefixe} : dans une toile projetée à l’échelle ${echelle}, sur chaque écran révélé, rien de la correction ni des résultats projetés n est coupé, ni réduit par un zoom que Safari arrête à 9 px`,
+          async () => {
+            const fixture = await projeterLeCoursServi(servi);
+
+            expect(await mettreLaToileALEchelle(fixture, echelle)).toBeCloseTo(echelle, 2);
+            await attendreChaqueCalqueEntierDansLaToile(double, fixture, servi.ecrans);
+          },
+          DELAI_DE_MONTAGE_MS,
+        );
+      }
+    }
   });
 });

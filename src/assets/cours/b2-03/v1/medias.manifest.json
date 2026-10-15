@@ -1,0 +1,91 @@
+{
+  "cours": "b2-03",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours-b2-03-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-06",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La remise de la boutique · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "remise-boutique-ou.webp",
+          "octets": 125264,
+          "sha256": "e6abfcacdbf3f6fe8946517c41d79e8006b999fede1d1e0da531983112ea8ce8"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La prime d’ancienneté · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "prime-anciennete-implication.webp",
+          "octets": 170918,
+          "sha256": "6fdc1fd39dc76bebf92b7a466de13e5a0d6de5d352adaa3b59285b8c9467c77f"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A2-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La prime d’ancienneté, le cas de Léo · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "prime-anciennete-negation.webp",
+          "octets": 101526,
+          "sha256": "3e56d4c8ecbf9283d0028889a853caa0e07556ce90a580b00e9e8ad4a8d36386"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le contraire de la remise · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "remise-boutique-morgan.webp",
+          "octets": 123074,
+          "sha256": "e6f0d4fb0d3bac39f065882476ee05490098d333e0886cfd134e7def590c7975"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A3-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "L’équipe de vente · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "equipe-de-vente-quantificateurs.webp",
+          "octets": 169312,
+          "sha256": "ca55439d78304d5592ff549fafaa713ded24ae4f1dca33b8b1a4d0f80c9a6891"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "ecran": "A3-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Les voiles vendues · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "voiles-vendues-nb-si.webp",
+          "octets": 139742,
+          "sha256": "2556c9e0d4e40e39ec2cd88325155e39c2787151afc2659b09a80deadaecaecc"
+        }
+      ]
+    }
+  ]
+}

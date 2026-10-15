@@ -223,6 +223,27 @@ void test('AD-4 : un alias laisse sans point-virgule ne masque pas la suite du f
   assert.deepEqual(reperes(resultat), ['src/cours/content/types.ts:5:AD-4']);
 });
 
+const IMPORT_DE_TYPES_SUR_PLUSIEURS_LIGNES = [
+  'import type {',
+  '  CorrigeEcranPresentateur,',
+  '  CoursContent,',
+  "} from '../../../../cours/content/types';",
+].join('\n');
+
+void test('AD-4 : un import de types reparti sur plusieurs lignes par le formateur passe', () => {
+  const resultat = garder({
+    'src/app/shared/slides/session/lecture-ecran.ts': `${IMPORT_DE_TYPES_SUR_PLUSIEURS_LIGNES}\n`,
+  });
+  assert.equal(resultat.code, 0);
+});
+
+void test('AD-4 : la ligne qui suit un import de types sur plusieurs lignes reste inspectee', () => {
+  const resultat = garder({
+    'src/app/shared/slides/session/lecture-ecran.ts': `${IMPORT_DE_TYPES_SUR_PLUSIEURS_LIGNES}\nconst fuite = { correcte: true };\n`,
+  });
+  assert.deepEqual(reperes(resultat), ['src/app/shared/slides/session/lecture-ecran.ts:5:AD-4']);
+});
+
 void test('AD-4 : la ligne qui suit la fermeture de l interface reste inspectee', () => {
   const resultat = garder({
     'src/cours/content/types.ts':

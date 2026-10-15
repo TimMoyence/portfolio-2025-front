@@ -255,7 +255,7 @@
 }
 
 .lp-preview-foot {
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 11px;
   color: rgba(255, 255, 255, 0.4);
   margin-top: 20px;
@@ -263,7 +263,7 @@
 }
 
 .lp-disclaimer {
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 11px;
   letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.4);

@@ -71,6 +71,7 @@ export const story = `
   padding: 0 var(--fp-s-2) var(--fp-s-2);
   color: var(--fp-cream);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: calc(0.68rem * var(--fp-echelle));
 }
 
@@ -134,15 +135,12 @@ export const story = `
   padding: 0 var(--fp-s-3) var(--fp-s-3);
   color: var(--fp-sand);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: calc(0.68rem * var(--fp-echelle));
 }
 
 :where(.fp-root) .fp-story__licence a {
   color: var(--fp-cream);
-}
-
-:where(.fp-root) .fp-story__paragraphe {
-  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-story__paragraphe:first-child::first-letter {
@@ -180,10 +178,6 @@ export const pro = `
   width: 100%;
 }
 
-:where(.fp-root) .fp-pro__situation {
-  overflow-wrap: anywhere;
-}
-
 :where(.fp-root) .fp-pro__geste {
   display: grid;
   gap: var(--fp-s-1);
@@ -201,13 +195,11 @@ export const pro = `
 
 :where(.fp-root) .fp-pro__geste-texte {
   color: var(--fp-texte-fort);
-  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-pro__consequence {
   color: var(--fp-ink-mute);
   font-style: italic;
-  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-pro__questions {
@@ -222,7 +214,6 @@ export const pro = `
   display: grid;
   gap: var(--fp-s-1);
   color: var(--fp-texte-fort);
-  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-pro__libelle {

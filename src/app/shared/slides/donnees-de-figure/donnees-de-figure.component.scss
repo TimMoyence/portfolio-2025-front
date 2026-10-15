@@ -1,0 +1,46 @@
+@use '../slide-figure' as figure;
+
+app-donnees-de-figure {
+  display: contents;
+}
+
+.donnees-de-figure {
+  border-top: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
+  color: var(--text-muted, var(--slide-text-muted));
+  font-size: 0.8rem;
+
+  summary {
+    width: fit-content;
+    padding: 0.55rem 0;
+    cursor: pointer;
+    color: var(--ink, #0c0902);
+    font-weight: 700;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: var(--donnees-largeur-min);
+    text-align: var(--donnees-alignement);
+  }
+
+  th,
+  td {
+    padding: 0.45rem 0.7rem;
+    border-top: 1px solid rgba(var(--ink-rgb), 0.1);
+    white-space: nowrap;
+  }
+
+  tr > :first-child {
+    white-space: normal;
+  }
+
+  th {
+    color: var(--ink, #0c0902);
+    font-weight: 700;
+  }
+}
+
+.donnees-de-figure__source {
+  @include figure.source;
+}
