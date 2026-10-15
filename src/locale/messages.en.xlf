@@ -11908,14 +11908,14 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:86</note>
       </notes>
       <segment>
-        <source>Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Express a business rule with and, or, not, if… then, negate it with De Morgan’s laws, say “all” or “at least one”, then check it in a spreadsheet, as in the CCF exam. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+        <source>Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Express a business rule with and, or, not, if… then, negate it with De Morgan’s laws, say “all” or “at least one”, then check it in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-03.duration">
       <segment>
-        <source>3 h 00</source>
-        <target>3 h</target>
+        <source>2 h 20</source>
+        <target>2 h 20 min</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-04.title">
@@ -13736,12 +13736,6 @@
         <target>Discuss with your neighbour</target>
       </segment>
     </unit>
-    <unit id="coursRuntimeRevoter">
-      <segment>
-        <source>Deuxième question : votez seul·e</source>
-        <target>Second question: vote on your own</target>
-      </segment>
-    </unit>
     <unit id="coursRuntimeEnvoyer">
       <segment>
         <source>Envoyer</source>
@@ -14612,12 +14606,6 @@
         <target>Wrong leads will be flagged at the reveal</target>
       </segment>
     </unit>
-    <unit id="coursRuntimeVotePhaseVote">
-      <segment>
-        <source>Votez seul·e, sans en parler</source>
-        <target>Vote on your own, without talking</target>
-      </segment>
-    </unit>
     <unit id="coursRuntimeVotePhaseRevele">
       <segment>
         <source>Réponse révélée</source>
@@ -14628,18 +14616,6 @@
       <segment>
         <source>Le vote est fermé pour cette question</source>
         <target>Voting is closed for this question</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeVotePremier">
-      <segment>
-        <source>Première question</source>
-        <target>First question</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeVoteSecond">
-      <segment>
-        <source>Deuxième question, après discussion</source>
-        <target>Second question, after discussion</target>
       </segment>
     </unit>
     <unit id="coursRuntimeReponsesCloses">
