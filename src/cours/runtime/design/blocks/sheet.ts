@@ -29,6 +29,7 @@ export const sheet = `
   background: var(--fp-sand);
   color: var(--fp-teal-ink);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-weight: 700;
   text-align: center;
 }
@@ -42,14 +43,12 @@ export const sheet = `
   background: var(--fp-surface);
   color: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: var(--fp-corps);
 }
 
 :where(.fp-root) .fp-sheet__tableau {
-  display: block;
-  overflow-x: auto;
   border-collapse: collapse;
-  width: 100%;
 }
 
 :where(.fp-root) .fp-sheet__intitule {
@@ -69,6 +68,7 @@ export const sheet = `
   background: var(--fp-sand);
   color: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-weight: 700;
   text-align: center;
 }
@@ -87,6 +87,7 @@ export const sheet = `
   background: var(--fp-sand);
   color: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-weight: 700;
   text-align: center;
 }
@@ -104,6 +105,7 @@ export const sheet = `
   padding: var(--fp-s-1) var(--fp-s-2);
   color: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;
@@ -120,6 +122,22 @@ export const sheet = `
   justify-items: end;
 }
 
+:where(.fp-root) :is(.fp-sheet__cellule, .fp-sheet__champ)[data-nature='texte'] {
+  text-align: left;
+}
+
+:where(.fp-root) :is(.fp-sheet__cellule, .fp-sheet__champ):is([data-nature='logique'], [data-nature='erreur']) {
+  text-align: center;
+}
+
+:where(.fp-root) .fp-sheet__correction[data-nature='texte'] {
+  justify-items: start;
+}
+
+:where(.fp-root) .fp-sheet__correction:is([data-nature='logique'], [data-nature='erreur']) {
+  justify-items: center;
+}
+
 :where(.fp-root) .fp-sheet__cellule--saisie {
   width: calc((var(--fp-sheet-largeur, 8) + 1) * 0.6 * var(--fp-corps) + 2 * var(--fp-s-2));
 }
@@ -134,6 +152,7 @@ export const sheet = `
   background: transparent;
   color: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: var(--fp-corps);
   text-align: right;
 }
@@ -206,7 +225,6 @@ export const sheet = `
 :where(.fp-root) .fp-sheet__bilan {
   min-height: calc(1.5rem * var(--fp-echelle));
   color: var(--fp-texte);
-  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-sheet__bilan--fautif {
@@ -229,6 +247,7 @@ export const sheet = `
 :where(.fp-root) .fp-sheet__progression {
   color: var(--fp-ink-mute);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   letter-spacing: 0.02em;
 }
 
@@ -253,11 +272,6 @@ export const sheet = `
 }
 
 @media print {
-  :where(.fp-root) .fp-sheet__tableau {
-    display: table;
-    overflow: visible;
-  }
-
   :where(.fp-root) .fp-sheet__entete,
   :where(.fp-root) .fp-sheet__rang,
   :where(.fp-root) .fp-sheet__cellule:not(.fp-sheet__cellule--saisie) {

@@ -151,8 +151,7 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeEscapeConsignePapier:Répondez à chaque question sur votre copie, en rédigeant vos calculs`,
   'escape-progression': () => $localize`:@@coursRuntimeEscapeProgression:Énigmes résolues :`,
   'escape-minuteur': () => $localize`:@@coursRuntimeEscapeMinuteur:Temps passé sur cette énigme :`,
-  'escape-minuteur-annonce': () =>
-    $localize`:@@coursRuntimeEscapeMinuteurAnnonce:minutes annoncées`,
+  'escape-minuteur-annonce': () => $localize`:@@coursRuntimeEscapeMinuteurAnnonce:annoncées`,
   'escape-echu': () =>
     $localize`:@@coursRuntimeEscapeEchu:Le temps annoncé est écoulé : rien ne se ferme, prenez le temps qu’il faut`,
   'escape-vide': () => $localize`:@@coursRuntimeEscapeVide:Aucune énigme dans ce parcours`,
@@ -178,6 +177,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeEscapeDebloquee:Énigme suivante déverrouillée :`,
   'escape-termine': () =>
     $localize`:@@coursRuntimeEscapeTermine:Toutes les énigmes sont résolues, le code est reconstitué :`,
+  'escape-incomplet': () =>
+    $localize`:@@coursRuntimeEscapeIncomplet:Parcours terminé sans tous les fragments, le code reste incomplet :`,
   'escape-code': () => $localize`:@@coursRuntimeEscapeCode:Code final :`,
   'spaced-consigne': () =>
     $localize`:@@coursRuntimeSpacedConsigne:Quelques questions sur ce que vous avez travaillé plus tôt.`,
@@ -208,6 +209,8 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeEscapeTentativesRestantes:Tentatives restantes :`,
   'escape-tentatives-epuisees': () =>
     $localize`:@@coursRuntimeEscapeTentativesEpuisees:Tentatives épuisées : l’énigme suivante s’ouvre, sans fragment`,
+  'escape-tentatives-epuisees-derniere': () =>
+    $localize`:@@coursRuntimeEscapeTentativesEpuiseesDerniere:Tentatives épuisées : cette dernière énigme ne livre pas son fragment`,
   'challenge-attente-revelation': () =>
     $localize`:@@coursRuntimeChallengeAttenteRevelation:Les pistes fausses seront signalées à la révélation`,
   'vote-phase-vote': () => $localize`:@@coursRuntimeVotePhaseVote:Votez seul·e, sans en parler`,

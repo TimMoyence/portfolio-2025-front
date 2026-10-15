@@ -63,6 +63,8 @@ export const tokens = `
 
   --fp-piste: var(--fp-sand);
   --fp-remplissage: var(--fp-teal-deep);
+
+  --defileur-fond: var(--fp-surface);
 }
 `;
 
@@ -85,6 +87,7 @@ export const base = `
   font-family: var(--fp-font-sans);
   font-size: var(--fp-corps);
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-ligne-de-calcul {
@@ -96,6 +99,10 @@ export const base = `
 :where(.fp-root) video {
   display: block;
   max-width: 100%;
+}
+
+:where(.fp-root) :is(input, select, textarea) {
+  max-inline-size: 100%;
 }
 
 :where(.fp-root) h1,
@@ -166,6 +173,7 @@ export const base = `
 
 :where(.fp-root) .fp-scene {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--fp-s-4);
 }
 
@@ -211,7 +219,6 @@ export const base = `
   gap: var(--fp-s-1);
   margin-top: var(--fp-s-2);
   border-left-color: var(--fp-confirme);
-  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-explications__titre {
@@ -239,7 +246,6 @@ export const base = `
   border: 1px solid var(--fp-bordure);
   border-radius: var(--fp-r);
   background: var(--fp-surface);
-  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-dossier__ligne {
@@ -355,6 +361,10 @@ export const impression = `
 
   :where(.fp-root) .fp-carte {
     box-shadow: none;
+  }
+
+  :where(.fp-root) textarea {
+    block-size: auto !important;
   }
 
   :where(.fp-root) [data-testid='valider'],

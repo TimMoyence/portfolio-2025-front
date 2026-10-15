@@ -27,6 +27,16 @@ function projeterQuestion(source: RecallQuestionPublique): RecallQuestionPubliqu
   };
 }
 
+function delaiDuRappel(valeur: unknown): number {
+  return typeof valeur === 'number' && Number.isFinite(valeur) && valeur >= 0
+    ? valeur
+    : DELAI_RAPPEL_MS;
+}
+
+export function rappelEcritAvantLesOptions(delaiMs: unknown): boolean {
+  return delaiDuRappel(delaiMs) > 0;
+}
+
 export class FpRecall extends FpReponse<RecallQuestionPublique> {
   private interneDelaiMs = DELAI_RAPPEL_MS;
   private interneOptionsAffichees = false;
@@ -62,7 +72,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   }
 
   set delaiMs(valeur: number) {
-    this.interneDelaiMs = Number.isFinite(valeur) && valeur >= 0 ? valeur : DELAI_RAPPEL_MS;
+    this.interneDelaiMs = delaiDuRappel(valeur);
     this.refreshSiConnecte();
   }
 
@@ -96,12 +106,13 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
     super.connectedCallback();
   }
 
-  disconnectedCallback(): void {
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
     this.battement.arreter();
   }
 
   protected rendreLaQuestion(question: RecallQuestionPublique): EscapedHtml {
-    const ecritAvantLesOptions = this.delaiMs > 0;
+    const ecritAvantLesOptions = rappelEcritAvantLesOptions(this.delaiMs);
     const saisie =
       this.presentateur() || !ecritAvantLesOptions
         ? VIDE

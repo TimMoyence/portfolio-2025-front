@@ -80,6 +80,7 @@ export const pulse = `
 
 :where(.fp-root) .fp-pulse__compte {
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: calc(1.3rem * var(--fp-echelle));
   font-variant-numeric: tabular-nums;
   font-weight: 700;

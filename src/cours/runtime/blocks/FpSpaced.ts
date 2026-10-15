@@ -1,3 +1,4 @@
+import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import {
   type ContenuDeBrique,
@@ -279,13 +280,13 @@ export class FpSpaced extends FpVerdicts {
       (concept) =>
         safeHtml`<tr class="fp-spaced__concept" data-testid="concept" data-concept="${escapeHtml(concept.concept)}"><th scope="row">${escapeHtml(concept.libelle)}</th><td class="fp-montant">${concept.boite1}</td><td class="fp-montant">${concept.boite2}</td><td class="fp-montant">${concept.boite3}</td><td class="fp-montant">${concept.nonVus}</td></tr>`,
     );
-    return safeHtml`
+    return dansUnDefileur(safeHtml`
       <table class="fp-spaced__maitrise" data-testid="carte-maitrise">
         <caption class="fp-spaced__mention">${escapeHtml(this.texte('spaced-carte-maitrise'))}</caption>
         <thead><tr><th scope="col"></th>${entetes}<th scope="col">${escapeHtml(this.texte('spaced-non-vus'))}</th></tr></thead>
         <tbody>${lignes}</tbody>
       </table>
-    `;
+    `);
   }
 
   private repondre(optionId: string): void {

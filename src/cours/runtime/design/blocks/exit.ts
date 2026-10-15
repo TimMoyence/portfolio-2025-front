@@ -62,6 +62,7 @@ export const exit = `
   justify-self: end;
   color: var(--fp-ink-mute);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: calc(0.85rem * var(--fp-echelle));
   font-variant-numeric: tabular-nums;
 }
@@ -101,6 +102,5 @@ export const exit = `
 :where(.fp-root) .fp-exit__recap-texte {
   color: var(--fp-texte);
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
 }
 `;

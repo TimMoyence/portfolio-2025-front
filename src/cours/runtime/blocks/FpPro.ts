@@ -87,7 +87,7 @@ export class FpPro extends FpRedaction<ProCas> {
       <aside class="fp-scene fp-pro__cas">
         ${this.metier(cas)}
         <div class="fp-prose fp-pro__corps">
-          <p class="fp-pro__situation" data-testid="situation">${escapeHtml(cas.situation)}</p>
+          <p data-testid="situation">${escapeHtml(cas.situation)}</p>
           ${this.geste(cas)}
           ${this.consequence(cas)}
         </div>

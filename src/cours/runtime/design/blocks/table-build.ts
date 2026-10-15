@@ -15,10 +15,7 @@ export const tableBuild = `
 }
 
 :where(.fp-root) .fp-table-build__tableau {
-  display: block;
-  overflow-x: auto;
   border-collapse: collapse;
-  width: 100%;
 }
 
 :where(.fp-root) .fp-table-build__intitule {
@@ -50,7 +47,7 @@ export const tableBuild = `
   text-transform: uppercase;
 }
 
-:where(.fp-root) .fp-table-build__ligne:nth-child(even) {
+:where(.fp-root) .fp-table-build__ligne:nth-child(even) > * {
   background: var(--fp-en-attente-fond);
 }
 
@@ -81,6 +78,7 @@ export const tableBuild = `
   background: var(--fp-surface);
   color: var(--fp-texte-fort);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   font-size: var(--fp-corps);
   text-align: right;
 }
@@ -120,7 +118,6 @@ export const tableBuild = `
 :where(.fp-root) .fp-table-build__solde {
   color: var(--fp-texte-fort);
   font-weight: 600;
-  overflow-wrap: anywhere;
 }
 
 :where(.fp-root) .fp-table-build__vide {
@@ -156,6 +153,7 @@ export const tableBuild = `
 :where(.fp-root) .fp-table-build__progression {
   color: var(--fp-ink-mute);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   letter-spacing: 0.02em;
 }
 

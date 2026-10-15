@@ -47,10 +47,6 @@ export const worked = `
   font-weight: 700;
 }
 
-:where(.fp-root) .fp-worked__raisonnement {
-  overflow-wrap: anywhere;
-}
-
 :where(.fp-root) .fp-worked__demande {
   color: var(--fp-a-revoir);
   font-weight: 600;
@@ -91,7 +87,6 @@ export const worked = `
   border-radius: var(--fp-r-sm);
   background: var(--fp-en-attente-fond);
   color: var(--fp-texte-fort);
-  overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 
@@ -126,6 +121,7 @@ export const worked = `
 :where(.fp-root) .fp-worked__niveau {
   color: var(--fp-ink-mute);
   font-family: var(--fp-font-mono);
+  font-variant-ligatures: none;
   letter-spacing: 0.02em;
 }
 `;
