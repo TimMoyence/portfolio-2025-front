@@ -465,6 +465,7 @@ const GRAPHIQUES_SERVIS = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) 
 );
 
 const LARGEURS_DES_RECULS = ['18rem', '37.3rem', '80rem'];
+const ECHELLES_DES_TOILES = [1.5, 2, 0.55, 0.45, 1.4, 0.75, 1];
 
 function textesHorsDuTrace(rendu: HTMLElement): string[] {
   const trace = rendu.querySelector('.slide-chart__plot')?.getBoundingClientRect();
@@ -706,7 +707,7 @@ describe('SlideChartComponent · QP-18, une valeur ne touche que sa propre forme
         await rendreALaLargeur(fixture, largeur);
         const aLEchelleUn = reculsDesTextes(rendu);
         const placesALEchelleUn = placementDesTextes(rendu);
-        for (const echelle of [1.4, 0.75, 1]) {
+        for (const echelle of ECHELLES_DES_TOILES) {
           rendu.style.transform = `scale(${echelle})`;
           for (const mesure of [1, 2, 3]) {
             document.fonts.dispatchEvent(new Event('loadingdone'));

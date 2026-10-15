@@ -162,6 +162,28 @@ describe('libellesColles', () => {
     });
   });
 
+  it('signale deux étiquettes empilées à 1 px de mise en page, dans une toile agrandie comme à ×1', () => {
+    const reduit = (echelle: number, contenu: string): string =>
+      `<div style="transform:scale(${echelle});transform-origin:0 0">${contenu}</div>`;
+    const empilees = (decalage: string): string =>
+      `<div style="position:relative;height:4rem;font-size:1rem;line-height:1"><span style="position:absolute;top:0;right:0">1 000</span><span style="position:absolute;top:${decalage};right:0">500</span></div>`;
+    const mesure = rendre(empilees('3rem'));
+    const plage = document.createRange();
+    plage.selectNodeContents(mesure.querySelector('span')?.firstChild as Node);
+    const hauteur = plage.getBoundingClientRect().height;
+    const aUnPixel = empilees(`${hauteur + 1}px`);
+
+    expect({
+      hauteurLue: hauteur > 0,
+      collees: [3, 1.5, 1].map((echelle) => libellesColles(rendre(reduit(echelle, aUnPixel)))),
+      eloigneesAGrandeEchelle: libellesColles(rendre(reduit(3, empilees('1.6em')))),
+    }).toEqual({
+      hauteurLue: true,
+      collees: [['1 000|500'], ['1 000|500'], ['1 000|500']],
+      eloigneesAGrandeEchelle: [],
+    });
+  });
+
   it('ignore un texte masqué', () => {
     expect(
       libellesColles(

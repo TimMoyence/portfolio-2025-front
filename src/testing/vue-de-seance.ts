@@ -34,14 +34,19 @@ export async function stabiliserLaMiseEnPage(
 ): Promise<void> {
   const hote = fixture.nativeElement as HTMLElement;
   await stabiliserLaVue(fixture);
+  let empreinte = empreinteDeLaMiseEnPage(hote);
   for (let pose = 0; pose < POSES_DE_LA_MISE_EN_PAGE; pose += 1) {
-    const avant = empreinteDeLaMiseEnPage(hote);
+    const avant = empreinte;
     await deuxImages();
     await stabiliserLaVue(fixture);
-    if (empreinteDeLaMiseEnPage(hote) === avant) {
+    empreinte = empreinteDeLaMiseEnPage(hote);
+    if (empreinte === avant) {
       return;
     }
   }
+  throw new Error(
+    `mise en page non posée après ${POSES_DE_LA_MISE_EN_PAGE} paires d'images : ${empreinte}`,
+  );
 }
 
 export function diffuserSurLaVue<T>(

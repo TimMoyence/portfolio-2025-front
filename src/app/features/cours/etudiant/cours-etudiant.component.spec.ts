@@ -1466,10 +1466,8 @@ describe('CoursEtudiantComponent', () => {
           const hote = fixture.nativeElement as HTMLElement;
           hote.style.display = 'block';
           await stabiliserLaMiseEnPage(fixture);
-          const defileur = hote.querySelector<HTMLElement>('.student-session__cadre');
           const cadre = hote.querySelector<HTMLElement>('[data-testid="cours-cadre"]');
-          const barre = (defileur?.offsetWidth ?? 0) - (defileur?.clientWidth ?? 0);
-          hote.style.inlineSize = `${hote.offsetWidth - (cadre?.clientWidth ?? 0) - barre + LARGEUR_DE_CADRE_AU_BORD_DU_SEUIL_COMPACT}px`;
+          hote.style.inlineSize = `${hote.offsetWidth - (cadre?.clientWidth ?? 0) + LARGEUR_DE_CADRE_AU_BORD_DU_SEUIL_COMPACT}px`;
           const parcourir = async (
             rangs: readonly number[],
           ): Promise<ReadonlyMap<string, boolean>> => {
@@ -1491,6 +1489,10 @@ describe('CoursEtudiantComponent', () => {
           const aller = await parcourir(rangs);
           const retour = await parcourir([...rangs].reverse());
 
+          expect([
+            hote.querySelector<HTMLElement>('[data-testid="cours-cadre"]')?.clientWidth,
+            [...aller.values()].filter(Boolean).length,
+          ]).toEqual([LARGEUR_DE_CADRE_AU_BORD_DU_SEUIL_COMPACT, 0]);
           expect(
             sujet.ecrans
               .filter(({ id }) => aller.get(id) !== retour.get(id))
