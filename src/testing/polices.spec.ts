@@ -5,7 +5,7 @@ function facesNonChargees(): readonly string[] {
 }
 
 describe('Polices des specs', () => {
-  it('chaque face déclarée par les styles est chargée avant le premier test, pour qu aucune mesure ne se prenne sur une police de repli', () => {
+  it('chaque face déclarée par les styles est chargée avant le premier test ; un glyphe hors de leurs plages (∧ ∨ ⇒ ≈ ≤ …) reste dessiné par la police de repli du système', () => {
     expect(document.fonts.size).toBeGreaterThan(0);
     expect(facesNonChargees()).toEqual([]);
   });

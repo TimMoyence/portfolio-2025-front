@@ -164,7 +164,6 @@ async function monterDans(
     () => racine.querySelector('app-slide-activity *') !== null,
     `l écran ${ecran.id} en ${mode}`,
   );
-  await chargerLesPolicesDeLApplication();
   await new Promise((suite) => setTimeout(suite, 50));
   fixture.detectChanges();
   const rafraichir = async (): Promise<void> => {
@@ -691,7 +690,6 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
       () => racine.querySelector('app-slide-activity *') !== null,
       'l écran sous sa surimpression',
     );
-    await chargerLesPolicesDeLApplication();
     for (let tour = 0; tour < 4; tour += 1) {
       await new Promise((suite) => setTimeout(suite, 50));
       fixture.detectChanges();
