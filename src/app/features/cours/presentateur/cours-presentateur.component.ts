@@ -53,7 +53,6 @@ import { CoursPanneauActiviteComponent } from './cours-panneau-activite.componen
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
 import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
-import { PanneauGuideComponent } from './panneau-pedagogique/panneau-guide.component';
 import { PanneauParticipantsComponent } from './panneau-pedagogique/panneau-participants.component';
 import { questionsDuPanneau } from './questions-du-panneau';
 import { phraseDeNotation } from './regle-de-notation';
@@ -101,7 +100,6 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
     CoursPanneauPedagogiqueComponent,
     CoursPresentationComponent,
     CoursResultatsProjetesComponent,
-    PanneauGuideComponent,
     PanneauParticipantsComponent,
     PercentPipe,
   ],
@@ -545,7 +543,6 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
                     <p class="notes">{{ ecranAffiche.notes }}</p>
                   </section>
                 }
-                <app-panneau-guide [guide]="ecranAffiche.guide" [ecranId]="ecranAffiche.id" />
                 <app-cours-panneau-activite
                   [ecran]="ecranAffiche"
                   [resultats]="resultats()"

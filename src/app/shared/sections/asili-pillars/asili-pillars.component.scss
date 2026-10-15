@@ -1,5 +1,6 @@
 @use '../../../styles-shared/breakpoints' as bp;
 @use '../../../styles-shared/lists';
+@use '../../../styles-shared/mono';
 
 :host {
   display: block;
@@ -59,7 +60,7 @@
 }
 
 .pillar-tag {
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;

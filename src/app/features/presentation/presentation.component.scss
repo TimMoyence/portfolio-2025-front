@@ -2,6 +2,7 @@
 @use '../../styles-shared/cartes';
 @use '../../styles-shared/lists';
 @use '../../styles-shared/surfaces' as surfaces;
+@use '../../styles-shared/mono';
 
 .intro-split {
   display: grid;
@@ -89,7 +90,7 @@
   }
 
   .stack span {
-    font-family: var(--font-mono);
+    @include mono.police;
     font-size: 11px;
     color: var(--teal-deep);
     background: rgba(var(--teal-rgb), 0.1);
@@ -118,7 +119,7 @@
   }
 
   .tl-year {
-    font-family: var(--font-mono);
+    @include mono.police;
     font-size: 13px;
     color: var(--teal-deep);
     padding-top: 6px;
@@ -143,7 +144,7 @@
   }
 
   .tl-tags span {
-    font-family: var(--font-mono);
+    @include mono.police;
     font-size: 11px;
     color: var(--ink-mute);
     border: 1px solid var(--line);

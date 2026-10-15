@@ -1,3 +1,6 @@
+@forward '../../styles-shared/mono' show police;
+@use '../../styles-shared/mono';
+
 @mixin cadre($ecart) {
   display: grid;
   align-content: center;
@@ -43,7 +46,7 @@
 @mixin graduation {
   position: absolute;
   color: var(--text-muted, var(--slide-text-muted));
-  font-family: var(--font-mono, ui-monospace, monospace);
+  @include mono.police;
   font-size: 0.72rem;
   line-height: 1;
   white-space: nowrap;
@@ -79,7 +82,7 @@
   border: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
   border-radius: var(--r-pill, 999px);
   color: var(--text-muted, var(--slide-text-muted));
-  font-family: var(--font-mono, ui-monospace, monospace);
+  @include mono.police;
   font-size: 0.75rem;
 }
 
@@ -97,39 +100,6 @@
     font-size: 0.78rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-  }
-}
-
-@mixin donnees($largeur-min, $alignement) {
-  border-top: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
-  color: var(--text-muted, var(--slide-text-muted));
-  font-size: 0.8rem;
-
-  summary {
-    width: fit-content;
-    padding: 0.55rem 0;
-    cursor: pointer;
-    color: var(--ink, #0c0902);
-    font-weight: 700;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: $largeur-min;
-    text-align: $alignement;
-  }
-
-  th,
-  td {
-    padding: 0.45rem 0.7rem;
-    border-top: 1px solid rgba(var(--ink-rgb), 0.1);
-    white-space: nowrap;
-  }
-
-  th {
-    color: var(--ink, #0c0902);
-    font-weight: 700;
   }
 }
 

@@ -1,5 +1,6 @@
 @use '../../../styles-shared/breakpoints' as bp;
 @use '../../../styles-shared/hero-meta' as hero;
+@use '../../../styles-shared/mono';
 :host {
   display: block;
 }
@@ -103,7 +104,7 @@
   left: 50%;
   translate: -50% 0;
   z-index: 2;
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 11px;
   letter-spacing: 0.15em;
   text-transform: uppercase;

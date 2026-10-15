@@ -1,5 +1,6 @@
 @use '../../../styles-shared/breakpoints' as bp;
 @use '../../../styles-shared/cartes';
+@use '../../../styles-shared/mono';
 :host {
   display: block;
 }
@@ -109,7 +110,7 @@
 .proj-case-study summary {
   cursor: pointer;
   color: var(--teal);
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 11px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -129,7 +130,7 @@
 
 .proj-case-study dt {
   color: var(--ink);
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 10px;
   text-transform: uppercase;
 }

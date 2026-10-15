@@ -99,25 +99,26 @@
     </p>
   }
 
-  <details class="slide-scatter__data">
-    <summary i18n="@@slideScatterVoirDonnees">Voir les valeurs</summary>
-    <table>
-      <thead>
+  <app-donnees-de-figure
+    bloc="slide-scatter"
+    resume="Voir les valeurs"
+    i18n-resume="@@slideScatterVoirDonnees"
+  >
+    <thead>
+      <tr>
+        <th scope="col">{{ xLabel() }}</th>
+        <th scope="col">{{ yLabel() }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (place of places(); track $index) {
         <tr>
-          <th scope="col">{{ xLabel() }}</th>
-          <th scope="col">{{ yLabel() }}</th>
+          <td>{{ formater(place.point.x) }}</td>
+          <td>{{ formater(place.point.y) }}</td>
         </tr>
-      </thead>
-      <tbody>
-        @for (place of places(); track $index) {
-          <tr>
-            <td>{{ formater(place.point.x) }}</td>
-            <td>{{ formater(place.point.y) }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </details>
+      }
+    </tbody>
+  </app-donnees-de-figure>
 
   @if (source()) {
     <p class="slide-scatter__source" i18n="@@slideScatterSource">Source : {{ source() }}</p>

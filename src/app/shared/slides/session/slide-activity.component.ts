@@ -10,6 +10,7 @@ import {
   inject,
   InjectionToken,
   input,
+  NgZone,
   output,
   Renderer2,
   signal,
@@ -258,6 +259,7 @@ export class SlideActivityComponent {
 
   private readonly host = viewChild.required<ElementRef<HTMLElement>>('host');
   private readonly renderer = inject(Renderer2);
+  private readonly zone = inject(NgZone);
   private readonly registerBlocks = inject(REGISTER_SLIDE_BLOCKS);
   private readonly registered = this.registerAfterRender();
   private readonly posees = new WeakMap<HTMLElement, Map<string, unknown>>();
@@ -279,7 +281,7 @@ export class SlideActivityComponent {
       this.direct();
       this.donneesFormateur();
       this.maitrise();
-      untracked(() => this.reinjecter());
+      untracked(() => this.zone.runOutsideAngular(() => this.reinjecter()));
     });
   }
 
@@ -336,10 +338,12 @@ export class SlideActivityComponent {
   }
 
   private registerAfterRender(): Promise<boolean> {
-    return new Promise<void>((resolve) => afterNextRender(resolve)).then(this.registerBlocks).then(
-      () => true,
-      () => false,
-    );
+    return new Promise<void>((resolve) => afterNextRender(resolve))
+      .then(() => this.zone.runOutsideAngular(this.registerBlocks))
+      .then(
+        () => true,
+        () => false,
+      );
   }
 
   private scheduleMount(slide: EcranContent, role: Role, apercu: boolean): void {
@@ -357,7 +361,7 @@ export class SlideActivityComponent {
         this.error.set(true);
         return;
       }
-      this.mount(slide, role, apercu);
+      this.zone.runOutsideAngular(() => this.mount(slide, role, apercu));
     });
   }
 

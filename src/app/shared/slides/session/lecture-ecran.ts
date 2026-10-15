@@ -1,4 +1,5 @@
 import type { CoursContent, DerouleCours, EcranContent } from '../../../../cours/content/types';
+import { rappelEcritAvantLesOptions } from '../../../../cours/runtime/blocks/FpRecall';
 import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
 import {
   cleDeCellule,
@@ -226,6 +227,9 @@ function activitesDuTravaille(donnees: Donnees): readonly (readonly [string, str
 }
 
 function activitesDuRappel(donnees: Donnees): readonly (readonly [string, string])[] {
+  if (!rappelEcritAvantLesOptions(donnees['delaiMs'])) {
+    return [];
+  }
   return entreesPortees(donnees['question'], 'enonce').map(
     ([id, enonce]) => [`${id}:rappel`, enonce] as const,
   );

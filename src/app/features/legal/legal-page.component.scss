@@ -1,5 +1,6 @@
 @use '../../styles-shared/lists';
 @use './legal-hero';
+@use '../../styles-shared/mono';
 
 :host {
   display: block;
@@ -22,7 +23,7 @@
   top: 100px;
 }
 .lg-toc .toc-k {
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -50,7 +51,7 @@
 }
 .lg-toc a::before {
   content: counter(toc, decimal-leading-zero) '  ';
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 11px;
   color: var(--ink-faint);
 }

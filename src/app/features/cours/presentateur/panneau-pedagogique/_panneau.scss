@@ -1,3 +1,5 @@
+@use '../../../../styles-shared/mono';
+
 @mixin bloc {
   display: grid;
   gap: 0.45rem;
@@ -8,7 +10,7 @@
 @mixin intitule {
   margin: 0;
   color: var(--teal-deep, #277c70);
-  font-family: var(--font-mono, monospace);
+  @include mono.police;
   font-size: 0.67rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;

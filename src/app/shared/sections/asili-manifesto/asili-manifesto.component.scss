@@ -1,3 +1,5 @@
+@use '../../../styles-shared/mono';
+
 :host {
   display: block;
 }
@@ -34,7 +36,7 @@
 }
 
 .mani-step {
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 12px;
   color: var(--teal);
   letter-spacing: 0.14em;

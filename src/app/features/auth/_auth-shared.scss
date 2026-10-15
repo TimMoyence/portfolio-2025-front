@@ -1,5 +1,6 @@
 @use '../../styles-shared/forms' as forms;
 @use './auth-msg';
+@use '../../styles-shared/mono';
 
 .auth-split {
   display: grid;
@@ -46,7 +47,7 @@
   box-shadow: 0 0 0 4px rgba(var(--teal-rgb), 0.2);
 }
 .auth-aside .auth-logo small {
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
 }
@@ -85,7 +86,7 @@
 .auth-aside-foot {
   display: flex;
   gap: 26px;
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.45);
   flex-wrap: wrap;

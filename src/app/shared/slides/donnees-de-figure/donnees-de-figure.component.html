@@ -1,0 +1,17 @@
+<details class="donnees-de-figure">
+  <summary>{{ resume() }}</summary>
+  <app-defileur-de-tableau>
+    <table>
+      <ng-content />
+    </table>
+  </app-defileur-de-tableau>
+  @if (source()) {
+    <p
+      class="donnees-de-figure__source"
+      [class]="bloc() + '__source'"
+      i18n="@@donneesDeFigureSource"
+    >
+      Source : {{ source() }}
+    </p>
+  }
+</details>

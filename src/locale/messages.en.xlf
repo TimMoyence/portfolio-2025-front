@@ -11705,60 +11705,6 @@
         <target>The note could not be saved: it stays displayed here, edit it again to retry.</target>
       </segment>
     </unit>
-    <unit id="panneauGuideQuestion">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:23</note>
-      </notes>
-      <segment>
-        <source>Question à poser</source>
-        <target>Question to ask</target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideReponse">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:24</note>
-      </notes>
-      <segment>
-        <source>Réponse attendue</source>
-        <target>Expected answer</target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideRelance">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:26</note>
-      </notes>
-      <segment>
-        <source>Relance</source>
-        <target>Follow-up prompt</target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideTitre">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:42,44</note>
-      </notes>
-      <segment>
-        <source> Guide de facilitation </source>
-        <target> Facilitation guide </target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideMasquer">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:70,71</note>
-      </notes>
-      <segment>
-        <source>Masquer la réponse attendue</source>
-        <target>Hide the expected answer</target>
-      </segment>
-    </unit>
-    <unit id="panneauGuideReveler">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-guide.component.ts:72,74</note>
-      </notes>
-      <segment>
-        <source>Révéler la réponse attendue</source>
-        <target>Reveal the expected answer</target>
-      </segment>
-    </unit>
     <unit id="panneauLectureConfianceAucune">
       <notes>
         <note category="location">src/app/features/cours/presentateur/panneau-pedagogique/panneau-lecture-classe.component.ts:16</note>
@@ -12194,13 +12140,13 @@
         <target>View the data</target>
       </segment>
     </unit>
-    <unit id="slideChartSource">
+    <unit id="donneesDeFigureSource">
       <notes>
-        <note category="location">src/app/shared/slides/layouts/slide-chart/slide-chart.component.html:140,142</note>
+        <note category="location">src/app/shared/slides/donnees-de-figure/donnees-de-figure.component.html:9,15</note>
       </notes>
       <segment>
-        <source>Source : <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></source>
-        <target>Source: <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></target>
+        <source> Source : <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/> </source>
+        <target> Source: <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/> </target>
       </segment>
     </unit>
     <unit id="slideBoxplotLegendeBoite">
@@ -12282,15 +12228,6 @@
       <segment>
         <source>Moyenne</source>
         <target>Mean</target>
-      </segment>
-    </unit>
-    <unit id="slideBoxplotSource">
-      <notes>
-        <note category="location">src/app/shared/slides/layouts/slide-boxplot/slide-boxplot.component.html:125,127</note>
-      </notes>
-      <segment>
-        <source>Source : <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></source>
-        <target>Source: <ph id="0" equiv="INTERPOLATION" disp="{{ source() }}"/></target>
       </segment>
     </unit>
     <unit id="slideLessonDefinition">
@@ -14419,8 +14356,8 @@
     </unit>
     <unit id="coursRuntimeEscapeMinuteurAnnonce">
       <segment>
-        <source>minutes annoncées</source>
-        <target>minutes planned</target>
+        <source>annoncées</source>
+        <target>planned</target>
       </segment>
     </unit>
     <unit id="coursRuntimeEscapeEchu">
@@ -14529,6 +14466,12 @@
       <segment>
         <source>Toutes les énigmes sont résolues, le code est reconstitué :</source>
         <target>All puzzles are solved, the code is complete:</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeIncomplet">
+      <segment>
+        <source>Parcours terminé sans tous les fragments, le code reste incomplet :</source>
+        <target>Trail finished without every code piece, the code stays incomplete:</target>
       </segment>
     </unit>
     <unit id="coursRuntimeEscapeCode">
@@ -14655,6 +14598,12 @@
       <segment>
         <source>Tentatives épuisées : l’énigme suivante s’ouvre, sans fragment</source>
         <target>No attempts left: the next puzzle opens, without a code piece</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEscapeTentativesEpuiseesDerniere">
+      <segment>
+        <source>Tentatives épuisées : cette dernière énigme ne livre pas son fragment</source>
+        <target>No attempts left: this last puzzle does not give its code piece</target>
       </segment>
     </unit>
     <unit id="coursRuntimeChallengeAttenteRevelation">
@@ -15029,6 +14978,30 @@
         <target>Average attempts</target>
       </segment>
     </unit>
+    <unit id="panneauActiviteOuvertesAbrege">
+      <segment>
+        <source>Comm.</source>
+        <target>Start.</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteResoluesAbrege">
+      <segment>
+        <source>Rés.</source>
+        <target>Solv.</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteEpuiseesAbrege">
+      <segment>
+        <source>Ép.</source>
+        <target>Out</target>
+      </segment>
+    </unit>
+    <unit id="panneauActiviteTentativesAbrege">
+      <segment>
+        <source>Tent.</source>
+        <target>Avg.</target>
+      </segment>
+    </unit>
     <unit id="panneauActiviteBilletsTitre">
       <segment>
         <source>Billets de sortie</source>
@@ -15263,40 +15236,10 @@
         <target> Printable booklet </target>
       </segment>
     </unit>
-    <unit id="livretGuideADire">
-      <segment>
-        <source>À dire</source>
-        <target>To say</target>
-      </segment>
-    </unit>
-    <unit id="livretGuideQuestion">
-      <segment>
-        <source>Question à poser</source>
-        <target>Question to ask</target>
-      </segment>
-    </unit>
     <unit id="livretGuideReponse">
       <segment>
         <source>Réponse attendue</source>
         <target>Expected answer</target>
-      </segment>
-    </unit>
-    <unit id="livretGuideCalcul">
-      <segment>
-        <source>Calcul</source>
-        <target>Calculation</target>
-      </segment>
-    </unit>
-    <unit id="livretGuideRelance">
-      <segment>
-        <source>Relance</source>
-        <target>Follow-up prompt</target>
-      </segment>
-    </unit>
-    <unit id="livretGuideTransition">
-      <segment>
-        <source>Transition</source>
-        <target>Moving on</target>
       </segment>
     </unit>
   </file>

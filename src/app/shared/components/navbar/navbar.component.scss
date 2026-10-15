@@ -1,4 +1,5 @@
 @use '../../../styles-shared/surfaces' as surfaces;
+@use '../../../styles-shared/mono';
 :host {
   display: block;
 }
@@ -276,7 +277,7 @@
 .asili-lang {
   display: inline-flex;
   align-items: stretch;
-  font-family: var(--font-mono);
+  @include mono.police;
   font-size: 12px;
   border: 1px solid var(--line);
   border-radius: var(--r-pill);

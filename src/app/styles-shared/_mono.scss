@@ -1,5 +1,10 @@
-@mixin capitales-mono($taille, $interlettrage, $couleur) {
+@mixin police {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+@mixin capitales-mono($taille, $interlettrage, $couleur) {
+  @include police;
   font-size: $taille;
   letter-spacing: $interlettrage;
   text-transform: uppercase;

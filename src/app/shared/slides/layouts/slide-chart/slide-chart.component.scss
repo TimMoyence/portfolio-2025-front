@@ -1,6 +1,8 @@
 @use '../../slide-figure' as figure;
 @use '../../slide-toile' as toile;
 
+$trace-minimal: 12rem;
+
 :host {
   display: block;
   width: 100%;
@@ -20,7 +22,7 @@
 .slide-chart__eyebrow {
   margin: 0 0 0.75rem;
   color: var(--accent-dark, var(--teal-dark));
-  font-family: var(--font-mono, ui-monospace, monospace);
+  @include figure.police;
   font-size: 0.73rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -57,6 +59,11 @@ h2 {
   line-height: 1.5;
 }
 
+.slide-chart__defileur {
+  --defileur-fond: var(--slide-deck-bg, var(--cream, #fffaf2));
+  container-type: normal;
+}
+
 .slide-chart__plot {
   --plot-h: clamp(15rem, #{toile.part-de-hauteur(0.4)}, 22rem);
   --axe: clamp(3.25rem, 7cqi, 4.75rem);
@@ -79,12 +86,15 @@ h2 {
 .slide-chart__axis,
 .slide-chart__labels {
   color: var(--text-muted, var(--slide-text-muted));
-  font-family: var(--font-mono, ui-monospace, monospace);
+  @include figure.police;
   font-size: 0.72rem;
 }
 
-.slide-chart__axis {
+:where(.slide-chart__axis) {
   position: relative;
+}
+
+.slide-chart__axis {
   grid-row: 1;
   grid-column: 1;
 }
@@ -153,9 +163,9 @@ h2 {
 .slide-chart__group {
   display: flex;
   justify-content: center;
-  gap: clamp(0.25rem, 0.7cqi, 0.55rem);
+  gap: min(clamp(0.25rem, 0.7cqi, 0.55rem), 8%);
   min-width: 0;
-  padding-inline: clamp(0.3rem, 1.4cqi, 1.1rem);
+  padding-inline: min(clamp(0.3rem, 1.4cqi, 1.1rem), 12%);
 }
 
 .slide-chart__bar-wrap {
@@ -189,11 +199,12 @@ h2 {
 .slide-chart__point-value {
   position: absolute;
   color: var(--ink, #0c0902);
-  font-family: var(--font-mono, ui-monospace, monospace);
+  @include figure.police;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
   opacity: 0;
+  translate: var(--recul, 0px) 0;
   transition: opacity 220ms ease;
 }
 
@@ -206,6 +217,17 @@ h2 {
 
 .slide-chart__value.has-marqueur {
   bottom: calc(var(--hauteur) + 1.5rem);
+}
+
+.slide-chart__value.is-a-gauche {
+  right: 0;
+  left: auto;
+  transform: none;
+}
+
+.slide-chart__value.is-a-droite {
+  left: 0;
+  transform: none;
 }
 
 .slide-chart__point-value {
@@ -223,6 +245,13 @@ h2 {
 .slide-chart__value.is-visible,
 .slide-chart__point-value.is-visible {
   opacity: 1;
+}
+
+.slide-chart__labels > .is-masquee,
+.slide-chart__tick.is-masquee,
+.slide-chart__value.is-masquee,
+.slide-chart__point-value.is-masquee {
+  visibility: hidden;
 }
 
 .slide-chart__marqueur {
@@ -250,6 +279,9 @@ h2 {
 
 .slide-chart__marqueur--barre {
   --place: translateX(-50%);
+  width: min(0.8rem, 100%);
+  height: auto;
+  aspect-ratio: 1;
   bottom: calc(var(--hauteur) + 0.4rem);
   left: 50%;
   transform: var(--place);
@@ -322,6 +354,10 @@ h2 {
   text-align: center;
 }
 
+.slide-chart__labels > span {
+  translate: var(--recul, 0px) 0;
+}
+
 .slide-chart__takeaway {
   margin: 0;
   color: var(--ink-soft, #3c3529);
@@ -335,15 +371,8 @@ h2 {
 }
 
 .slide-chart__data {
-  @include figure.donnees(34rem, left);
-}
-
-.slide-chart__table-wrap {
-  overflow-x: auto;
-}
-
-.slide-chart__source {
-  @include figure.source;
+  --donnees-largeur-min: 34rem;
+  --donnees-alignement: left;
 }
 
 .slide-chart__legend {
@@ -395,16 +424,11 @@ h2 {
   .slide-chart__plot {
     --plot-h: 14rem;
     --axe: 3rem;
+    grid-template-columns: var(--axe) minmax(var(--largeur-du-trace, 0px), 1fr) var(--marge-droite);
   }
 
   .slide-chart__plot.is-line {
-    --marge-droite: 5rem;
-  }
-
-  .slide-chart__serie-label {
-    width: max-content;
-    max-width: 5rem;
-    white-space: normal;
+    --marge-droite: calc(var(--largeur-des-etiquettes, 3.85rem) + 1.15rem);
   }
 }
 
@@ -416,7 +440,7 @@ h2 {
     gap: 0.75rem;
     width: 100%;
     min-height: 100cqh;
-    padding: 2rem 3.5rem;
+    padding: var(--slide-marge-bloc, 2rem) var(--slide-marge-ligne, 3.5rem);
   }
 
   h2 {
@@ -432,10 +456,12 @@ h2 {
     max-width: none;
   }
 
+  .slide-chart__defileur {
+    flex: 1 0 auto;
+  }
+
   .slide-chart__plot {
-    flex: 1 1 0;
-    min-height: 10rem;
-    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-rows: minmax($trace-minimal, 1fr) auto;
     padding-top: 1.75rem;
   }
 }

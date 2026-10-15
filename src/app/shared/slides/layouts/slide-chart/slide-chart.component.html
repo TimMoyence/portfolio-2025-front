@@ -18,132 +18,170 @@
     </p>
   }
 
-  <div
-    class="slide-chart__plot"
-    [class.is-line]="kind() === 'line'"
-    [class.has-right-axis]="graduationsDroites().length > 0"
-    role="img"
-    [attr.aria-label]="ariaLabel()"
-    [attr.aria-describedby]="description() ? idDescription : null"
-    [style.--count]="labels().length"
-  >
+  <app-defileur-de-tableau class="slide-chart__defileur">
     <div
-      class="slide-chart__axis slide-chart__axis--left"
-      aria-hidden="true"
-      data-testid="slide-chart-axes"
+      class="slide-chart__plot"
+      [class.is-line]="kind() === 'line'"
+      [class.has-right-axis]="graduationsDroites().length > 0"
+      role="img"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-describedby]="description() ? idDescription : null"
+      [style.--count]="labels().length"
+      [style.--largeur-du-trace]="largeurDuTrace() + 'px'"
+      [style.--largeur-des-etiquettes]="largeurDesEtiquettes() + 'px'"
     >
-      @if (graduationsDroites().length > 0) {
-        <span class="slide-chart__axis-title">{{ axisLabels()[0] }}</span>
-      }
-      @for (graduation of graduations(); track graduation.position) {
-        <span
-          class="slide-chart__tick"
-          data-testid="slide-chart-graduation"
-          [style.--y]="graduation.position + '%'"
-          >{{ graduation.libelle }}</span
-        >
-      }
-    </div>
-
-    <div class="slide-chart__zone" aria-hidden="true" data-testid="slide-chart-zone">
-      @for (graduation of graduations(); track graduation.position) {
-        <span class="slide-chart__gridline" [style.--y]="graduation.position + '%'"></span>
-      }
-      <span class="slide-chart__base"></span>
-
-      @if (kind() === 'line') {
-        <svg class="slide-chart__svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-          @for (trace of traces(); track trace.serie.label) {
-            <polyline
-              class="slide-chart__line"
-              [class]="'tone-' + (trace.serie.tone ?? 'teal')"
-              [attr.points]="trace.ligne"
-              [class.is-visible]="step() >= labels().length - 1"
-            />
-          }
-        </svg>
-        @for (trace of traces(); track trace.serie.label) {
-          @for (point of trace.points; track $index) {
-            <span
-              class="slide-chart__point slide-chart__marqueur"
-              [class]="'tone-' + (trace.serie.tone ?? 'teal')"
-              [class.is-visible]="$index <= step()"
-              [attr.data-marqueur]="trace.marqueur"
-              [style.--x]="point.x + '%'"
-              [style.--y]="point.y + '%'"
-            ></span>
-            <span
-              class="slide-chart__point-value"
-              [class.is-below]="point.dessous"
-              [class.is-visible]="$index <= step()"
-              [style.--x]="point.x + '%'"
-              [style.--y]="point.y + '%'"
-              >{{ point.libelle }}</span
-            >
-          }
-          @if (trace.etiquette; as etiquette) {
-            <span
-              class="slide-chart__serie-label"
-              data-testid="slide-chart-etiquette"
-              [style.--x]="etiquette.x + '%'"
-              [style.--y]="etiquette.y + '%'"
-              >{{ trace.serie.label }}</span
-            >
-          }
+      <div
+        class="slide-chart__axis slide-chart__axis--left"
+        aria-hidden="true"
+        data-testid="slide-chart-axes"
+        data-colonne-fixe
+      >
+        @if (graduationsDroites().length > 0) {
+          <span class="slide-chart__axis-title">{{ axisLabels()[0] }}</span>
         }
-      } @else {
-        <div class="slide-chart__bars">
-          @for (groupe of groupes(); track $index; let index = $index) {
-            <div class="slide-chart__group">
-              @for (barre of groupe.barres; track barre.serie.label) {
-                <div class="slide-chart__bar-wrap">
-                  <span
-                    class="slide-chart__bar"
-                    [class]="'tone-' + (barre.serie.tone ?? 'teal')"
-                    [class.is-visible]="index <= step()"
-                    [style.--hauteur]="barre.hauteur + '%'"
-                  ></span>
-                  @if (series().length > 1) {
+        @for (graduation of graduations(); track graduation.position) {
+          <span
+            class="slide-chart__tick"
+            data-testid="slide-chart-graduation"
+            [class.is-masquee]="($count - 1 - $index) % pasDesGraduations() !== 0"
+            [attr.data-rang]="$count - 1 - $index"
+            [style.--y]="graduation.position + '%'"
+            >{{ graduation.libelle }}</span
+          >
+        }
+      </div>
+
+      <div class="slide-chart__zone" aria-hidden="true" data-testid="slide-chart-zone">
+        @for (graduation of graduations(); track graduation.position) {
+          <span class="slide-chart__gridline" [style.--y]="graduation.position + '%'"></span>
+        }
+        <span class="slide-chart__base"></span>
+
+        @if (kind() === 'line') {
+          <svg class="slide-chart__svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+            @for (trace of traces(); track trace.serie.label) {
+              <polyline
+                class="slide-chart__line"
+                [class]="'tone-' + (trace.serie.tone ?? 'teal')"
+                [attr.points]="trace.ligne"
+                [class.is-visible]="step() >= labels().length - 1"
+              />
+            }
+          </svg>
+          @for (trace of traces(); track trace.serie.label) {
+            @for (point of trace.points; track $index) {
+              <span
+                class="slide-chart__point slide-chart__marqueur"
+                [class]="'tone-' + (trace.serie.tone ?? 'teal')"
+                [class.is-visible]="$index <= step()"
+                [attr.data-marqueur]="trace.marqueur"
+                [attr.data-cle]="point.cle"
+                [style.--x]="point.x + '%'"
+                [style.--y]="point.y + '%'"
+              ></span>
+              @if (!point.doublon) {
+                <span
+                  class="slide-chart__point-value"
+                  [class.is-below]="point.dessous !== valeursRetournees().has(point.cle)"
+                  [class.is-visible]="$index <= step()"
+                  [class.is-masquee]="
+                    $index % pasDesValeurs() !== 0 || valeursHorsPlace().has(point.cle)
+                  "
+                  [attr.data-cle]="point.cle"
+                  [attr.data-rang]="$index"
+                  [style.--x]="point.x + '%'"
+                  [style.--y]="point.y + '%'"
+                  [style.--recul]="(reculsDesValeurs().get(point.cle) ?? 0) + 'px'"
+                  >{{ point.libelle }}</span
+                >
+              }
+            }
+            @if (trace.etiquette; as etiquette) {
+              <span
+                class="slide-chart__serie-label"
+                data-testid="slide-chart-etiquette"
+                [style.--x]="etiquette.x + '%'"
+                [style.--y]="etiquette.y + '%'"
+                >{{ trace.serie.label }}</span
+              >
+            }
+          }
+        } @else {
+          <div class="slide-chart__bars">
+            @for (groupe of groupes(); track $index; let index = $index) {
+              <div class="slide-chart__group">
+                @for (
+                  barre of groupe.barres;
+                  track barre.serie.label;
+                  let premiere = $first, derniere = $last
+                ) {
+                  <div class="slide-chart__bar-wrap">
                     <span
-                      class="slide-chart__marqueur slide-chart__marqueur--barre"
+                      class="slide-chart__bar"
                       [class]="'tone-' + (barre.serie.tone ?? 'teal')"
                       [class.is-visible]="index <= step()"
-                      [attr.data-marqueur]="barre.marqueur"
+                      [attr.data-cle]="barre.cle"
                       [style.--hauteur]="barre.hauteur + '%'"
                     ></span>
-                  }
-                  <span
-                    class="slide-chart__value"
-                    [class.has-marqueur]="series().length > 1"
-                    [class.is-visible]="index <= step()"
-                    [style.--hauteur]="barre.hauteur + '%'"
-                    >{{ barre.libelle }}</span
-                  >
-                </div>
-              }
-            </div>
+                    @if (series().length > 1) {
+                      <span
+                        class="slide-chart__marqueur slide-chart__marqueur--barre"
+                        [class]="'tone-' + (barre.serie.tone ?? 'teal')"
+                        [class.is-visible]="index <= step()"
+                        [attr.data-marqueur]="barre.marqueur"
+                        [attr.data-cle]="barre.cle"
+                        [style.--hauteur]="barre.hauteur + '%'"
+                      ></span>
+                    }
+                    <span
+                      class="slide-chart__value"
+                      [class.has-marqueur]="series().length > 1"
+                      [class.is-a-gauche]="premiere && !derniere"
+                      [class.is-a-droite]="derniere && !premiere"
+                      [class.is-visible]="index <= step()"
+                      [class.is-masquee]="
+                        index % pasDesValeurs() !== 0 || valeursHorsPlace().has(barre.cle)
+                      "
+                      [attr.data-cle]="barre.cle"
+                      [attr.data-rang]="index"
+                      [style.--hauteur]="barre.hauteur + '%'"
+                      [style.--recul]="(reculsDesValeurs().get(barre.cle) ?? 0) + 'px'"
+                      >{{ barre.libelle }}</span
+                    >
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      @if (graduationsDroites().length > 0) {
+        <div class="slide-chart__axis slide-chart__axis--right" aria-hidden="true">
+          <span class="slide-chart__axis-title">{{ axisLabels()[1] }}</span>
+          @for (graduation of graduationsDroites(); track graduation.position) {
+            <span
+              class="slide-chart__tick"
+              [class.is-masquee]="($count - 1 - $index) % pasDesGraduations() !== 0"
+              [style.--y]="graduation.position + '%'"
+              >{{ graduation.libelle }}</span
+            >
           }
         </div>
       }
-    </div>
 
-    @if (graduationsDroites().length > 0) {
-      <div class="slide-chart__axis slide-chart__axis--right" aria-hidden="true">
-        <span class="slide-chart__axis-title">{{ axisLabels()[1] }}</span>
-        @for (graduation of graduationsDroites(); track graduation.position) {
-          <span class="slide-chart__tick" [style.--y]="graduation.position + '%'">{{
-            graduation.libelle
-          }}</span>
+      <div class="slide-chart__labels" aria-hidden="true">
+        @for (label of labels(); track $index) {
+          <span
+            [class.is-masquee]="$index % pasDesAbscisses() !== 0"
+            [attr.data-rang]="$index"
+            [style.--recul]="(reculsDesAbscisses().get($index) ?? 0) + 'px'"
+            >{{ label }}</span
+          >
         }
       </div>
-    }
-
-    <div class="slide-chart__labels" aria-hidden="true">
-      @for (label of labels(); track $index) {
-        <span>{{ label }}</span>
-      }
     </div>
-  </div>
+  </app-defileur-de-tableau>
 
   @if (formula()) {
     <p class="slide-chart__takeaway">{{ formula() }}</p>
@@ -155,34 +193,31 @@
     </p>
   }
 
-  <details class="slide-chart__data">
-    <summary i18n="@@slideChartVoirDonnees">Voir les données</summary>
-    <div class="slide-chart__table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">{{ caption() || libellePeriode }}</th>
-            @for (label of labels(); track $index) {
-              <th scope="col">{{ label }}</th>
-            }
-          </tr>
-        </thead>
-        <tbody>
-          @for (serie of series(); track serie.label) {
-            <tr>
-              <th scope="row">{{ serie.label }}</th>
-              @for (value of serie.values; track $index) {
-                <td>{{ formatValue(value) }}</td>
-              }
-            </tr>
+  <app-donnees-de-figure
+    bloc="slide-chart"
+    resume="Voir les données"
+    i18n-resume="@@slideChartVoirDonnees"
+    [source]="source()"
+  >
+    <thead>
+      <tr>
+        <th scope="col">{{ caption() || libellePeriode }}</th>
+        @for (label of labels(); track $index) {
+          <th scope="col">{{ label }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (serie of series(); track serie.label) {
+        <tr>
+          <th scope="row">{{ serie.label }}</th>
+          @for (value of serie.values; track $index) {
+            <td>{{ formatValue(value) }}</td>
           }
-        </tbody>
-      </table>
-    </div>
-    @if (source()) {
-      <p class="slide-chart__source" i18n="@@slideChartSource">Source : {{ source() }}</p>
-    }
-  </details>
+        </tr>
+      }
+    </tbody>
+  </app-donnees-de-figure>
 
   @if (kind() !== 'line') {
     <ul class="slide-chart__legend" aria-label="Légende" i18n-aria-label="@@slideChartLegende">

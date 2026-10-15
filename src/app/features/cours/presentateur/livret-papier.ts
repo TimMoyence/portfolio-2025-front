@@ -4,7 +4,6 @@ import type {
   DerouleCours,
   EcranContent,
   EcranDeroule,
-  GuideFormateur,
 } from '../../../../cours/content/types';
 import { estObjet } from '../../../../cours/runtime/core/valeurs';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
@@ -35,19 +34,10 @@ export interface FicheDuLivretEtudiant {
   readonly aLaSuite: boolean;
 }
 
-type CleDuGuide = keyof GuideFormateur;
-
-export interface RubriqueDuGuide {
-  readonly cle: CleDuGuide;
-  readonly libelle: string;
-  readonly texte: string;
-}
-
 export interface PageDuCorrige {
   readonly ecran: EcranDeroule;
   readonly annexe: ReturnType<typeof annexeFormateurDeLEcran>;
   readonly reponses: readonly QuestionDuPanneau[];
-  readonly guide: readonly RubriqueDuGuide[];
   readonly attendu: ReponseAttendue | null;
   readonly repeteLaSource: boolean;
 }
@@ -57,35 +47,8 @@ export interface ReponseAttendue {
   readonly suite: string;
 }
 
-const LIBELLES_DU_GUIDE: Readonly<Record<CleDuGuide, string>> = {
-  aDire: $localize`:@@livretGuideADire:À dire`,
-  question: $localize`:@@livretGuideQuestion:Question à poser`,
-  reponse: $localize`:@@livretGuideReponse:Réponse attendue`,
-  calcul: $localize`:@@livretGuideCalcul:Calcul`,
-  relance: $localize`:@@livretGuideRelance:Relance`,
-  transition: $localize`:@@livretGuideTransition:Transition`,
-};
-
-const ORDRE_DU_GUIDE: readonly CleDuGuide[] = [
-  'aDire',
-  'question',
-  'reponse',
-  'calcul',
-  'relance',
-  'transition',
-];
-
 function aTraiterSurPapier(ecran: EcranContent): boolean {
   return !ECRANS_DE_SEANCE_SEULEMENT.has(ecran.type);
-}
-
-function rubriquesDuGuide(guide: GuideFormateur | undefined): readonly RubriqueDuGuide[] {
-  return ORDRE_DU_GUIDE.flatMap((cle) => {
-    const texte = guide?.[cle];
-    return texte === undefined || texte === ''
-      ? []
-      : [{ cle, libelle: LIBELLES_DU_GUIDE[cle], texte }];
-  });
 }
 
 function reponseAttendue(ecran: EcranDeroule): ReponseAttendue | null {
@@ -250,7 +213,6 @@ export function pagesDuCorrige(corrige: DerouleCours): readonly PageDuCorrige[] 
     ecran,
     annexe: annexeFormateurDeLEcran(ecran),
     reponses: questionsDuPanneau(ecran),
-    guide: rubriquesDuGuide(ecran.guide),
     attendu: reponseAttendue(ecran),
     repeteLaSource: repeteLaSource(ecran, corrige),
   }));

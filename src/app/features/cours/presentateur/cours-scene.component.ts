@@ -95,6 +95,7 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
     .scene-toolbar__eyebrow {
       color: var(--teal-deep, #277c70);
       font-family: var(--font-mono, monospace);
+      font-variant-ligatures: none;
       font-size: 0.68rem;
       letter-spacing: 0.13em;
       text-transform: uppercase;
@@ -123,6 +124,7 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
       border-radius: 999px;
       backdrop-filter: blur(10px);
       font-family: var(--font-mono, monospace);
+      font-variant-ligatures: none;
       font-size: 0.75rem;
     }
 

@@ -9,7 +9,9 @@
 }
 
 @mixin etroite-a-l-ecran($largeur-max) {
-  @media screen and (max-width: $largeur-max) {
-    @content;
+  @media screen {
+    @container toile-compacte (max-width: #{$largeur-max}) {
+      @content;
+    }
   }
 }
