@@ -65,7 +65,10 @@
             >
           }
           @case ('attente_limite') {
-            <span>{{ limite() }}</span>
+            <span i18n="@@slideReflectionAttenteLimite"
+              >Le serveur limite les envois : la réflexion est gardée sur cet appareil et repartira
+              d’elle-même.</span
+            >
           }
           @case ('ecran_non_servi') {
             <span i18n="@@slideReflectionEcranNonServi"

@@ -84,10 +84,6 @@ export class SlideReflectionComponent implements OnInit {
       ? null
       : this.reponsesLibres.texteGarde(sessionId, this.activiteCourante());
   });
-  protected readonly limite = computed(() => {
-    const sessionId = this.seanceCourante();
-    return sessionId === null ? null : this.reponsesLibres.limiteDe(this.cleCourante(sessionId));
-  });
   protected readonly etatVisible = computed<EtatEnvoi>(() =>
     this.saveState() === 'repos' && this.garde() !== null ? 'enregistre' : this.saveState(),
   );

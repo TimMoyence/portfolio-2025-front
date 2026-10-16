@@ -22,6 +22,12 @@ import {
   UNE_HEURE_MS,
 } from '../../../../testing/horloge-simulee';
 import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
+import { presentationDe } from '../../../shared/slides/visual/presentation-v2';
+import {
+  etatDeLaReflexion,
+  garderLaReflexion,
+  jusqua,
+} from '../../../../testing/hote-d-interaction';
 import {
   clearIdentity,
   LONGUEURS_MAX_DE_L_IDENTITE,
@@ -70,6 +76,7 @@ import type {
 import {
   FORMATIONS_PORT,
   RattachementRefuse,
+  ReponseLibreRefusee,
   ReponseRefusee,
   SujetRefuse,
 } from '../../../core/ports/formations.port';
@@ -91,6 +98,12 @@ interface ReponseSlide {
 const JETON = 'jeton-participant-7f3a91';
 const SESSION = 'sess-42';
 const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
+const ATTENTE_DU_RESEAU =
+  'Votre réponse est enregistrée sur ce poste et partira au retour du réseau.';
+const REPONSE_LIMITEE =
+  'Votre réponse est gardée sur ce poste : le serveur limite les envois, elle repartira d’elle-même.';
+const ECRAN_LIMITE =
+  'L’écran n’a pas encore pu être chargé : le serveur limite les demandes, il s’affichera de lui-même.';
 
 function refusLimite(): ReponseRefusee {
   return new ReponseRefusee('reseau', 429, { minutes: 2 });
@@ -102,6 +115,34 @@ const JALON_PERDU: EvenementBrique = {
   sondageId: 'P-PULSE-01',
   etat: 'perdu',
 };
+const REFLEXION_DU_RAPPEL: EvenementBrique = {
+  kind: 'libre',
+  screenId: 'ecran-1',
+  activityId: 'Q-RAPPEL-04:rappel',
+  response: 'On capitalise',
+  dureeMs: 2000,
+};
+const TENTATIVE_DU_SEUIL: EvenementBrique = {
+  kind: 'tentative',
+  screenId: 'ecran-1',
+  parcoursId: 'K-EVASION-01',
+  enigmeId: 'seuil',
+  reponse: '30000',
+  dureeMs: 40000,
+};
+const DEFI_DE_LA_DIZAINE: EvenementBrique = {
+  kind: 'defi',
+  screenId: 'ecran-1',
+  defiId: 'D-DEFI-07',
+  texte: 'Une dizaine d annees',
+  dureeMs: 90000,
+};
+const ECRANS_DE_REFLEXION = [...INSTANTANES_DES_COURS_SERVIS].flatMap(
+  ([prefixe, { sujet: servi }]) =>
+    servi.ecrans.flatMap((ecran, rang) =>
+      presentationDe(ecran)?.renderer === 'reflection' ? [{ prefixe, servi, rang }] : [],
+    ),
+);
 const CODE_SAISI = '12 34';
 const CODE_NORMALISE = '1234';
 const ETIQUETTE_BRUTE = 'interets-simples';
@@ -320,6 +361,10 @@ describe('CoursEtudiantComponent', () => {
   function attendreLaFileVideeEnLigne(fixture: Fixture): void {
     expect(pending().length).toBe(0);
     expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
+  }
+
+  function texteDeLaFile(fixture: Fixture): string | undefined {
+    return lire(fixture, 'etudiant-hors-ligne')?.textContent?.replace(/\s+/g, ' ').trim();
   }
 
   async function laisserPasserLeReseau(fixture: Fixture): Promise<void> {
@@ -879,7 +924,7 @@ describe('CoursEtudiantComponent', () => {
     {
       cause: 'la cadence du serveur',
       refus: new SujetRefuse('sujet-indisponible', 429, { minutes: 2 }),
-      message: ATTENTE_COMMUNE,
+      message: ECRAN_LIMITE,
     },
     {
       cause: 'un cours modifie',
@@ -927,6 +972,273 @@ describe('CoursEtudiantComponent', () => {
       });
     }
   }
+
+  describe('D-16 · ce que la cadence du serveur retient repart a chaque declencheur promis', () => {
+    const ecranLimite = () =>
+      throwError(() => new SujetRefuse('sujet-indisponible', 429, { minutes: 2 }));
+
+    const ecranRelu = (fixture: Fixture) => ({
+      lectures: port.lireSujet.calls.count(),
+      second: fixture.componentInstance.sujet()?.ecrans[1].type,
+      echec: lire(fixture, 'etudiant-ecran-echec'),
+      chargement: lire(fixture, 'etudiant-ecran-chargement'),
+    });
+    const ECRAN_RELU = () => ({
+      lectures: 3,
+      second: sujet.ecrans[1].type,
+      echec: null,
+      chargement: null,
+    });
+    const ecranRetenu = (fixture: Fixture): Fixture => {
+      expect(lire(fixture, 'etudiant-ecran-echec')?.textContent?.trim()).toBe(ECRAN_LIMITE);
+      return fixture;
+    };
+
+    const ATTENTES_RETENUES: readonly {
+      readonly attente: string;
+      readonly briqueAffichee: boolean;
+      readonly retenir: () => Promise<Fixture>;
+      readonly etatSuivant: () => Partial<EtatSession>;
+      readonly observerLeDepart: (fixture: Fixture) => unknown;
+      readonly depart: () => unknown;
+    }[] = [
+      {
+        attente: 'la relecture d un ecran verrouille a l arrivee',
+        briqueAffichee: false,
+        retenir: async () => {
+          port.lireSujet.and.returnValues(
+            of(sujetAuSecondEcranVerrouille()),
+            ecranLimite(),
+            of(sujet),
+          );
+          return ecranRetenu(await suivreLaSeanceJusquA(1));
+        },
+        etatSuivant: () => ({ ecranCourant: 1 }),
+        observerLeDepart: (fixture) => ({ ...ecranRelu(fixture), affiche: ecranAffiche(fixture) }),
+        depart: () => ({ ...ECRAN_RELU(), affiche: sujet.ecrans[1] }),
+      },
+      {
+        attente: 'la relecture d un ecran verrouille a la revelation de sa source',
+        briqueAffichee: false,
+        retenir: async () => {
+          const { source, sujetInitial, sujetRelu } = correctionVerrouillee();
+          port.lireSujet.and.returnValues(of(sujetInitial), ecranLimite(), of(sujetRelu));
+          const fixture = await suivreLaSeanceJusquA(0);
+          await piloterSurLEcran(fixture, 0, source.id, { revele: true });
+          return ecranRetenu(fixture);
+        },
+        etatSuivant: () => ({
+          ecranCourant: 0,
+          pilotage: { [sujet.ecrans[0].id]: { revele: true } },
+        }),
+        observerLeDepart: ecranRelu,
+        depart: ECRAN_RELU,
+      },
+      {
+        attente: 'une reflexion',
+        briqueAffichee: true,
+        retenir: async () => {
+          port.enregistrerReponseLibre.and.returnValues(
+            throwError(() => new ReponseLibreRefusee('reseau', 429, { minutes: 2 })),
+            of({ status: 'enregistre' }),
+            of({ status: 'enregistre' }),
+          );
+          const fixture = await rattacherALaSeanceEnCours();
+          await emettre(fixture, REFLEXION_DU_RAPPEL);
+          expect(lire(fixture, 'etudiant-reflexion-en-attente')?.getAttribute('data-etat')).toBe(
+            'attente_limite',
+          );
+          return fixture;
+        },
+        etatSuivant: () => ({}),
+        observerLeDepart: (fixture) => ({
+          renvois: port.enregistrerReponseLibre.calls
+            .allArgs()
+            .filter(([, , reponse]) => reponse.activityId === 'Q-RAPPEL-04:rappel').length,
+          paragraphe: lire(fixture, 'etudiant-reflexion-en-attente'),
+        }),
+        depart: () => ({ renvois: 2, paragraphe: null }),
+      },
+      {
+        attente: 'une reponse en file',
+        briqueAffichee: true,
+        retenir: async () => {
+          port.repondre.and.returnValues(throwError(refusLimite), of(REUSSITE), of(REUSSITE));
+          const fixture = await rattacherALaSeanceEnCours();
+          await repondre(fixture, REPONSE_NUMERIQUE);
+          expect(texteDeLaFile(fixture)).toBe(REPONSE_LIMITEE);
+          return fixture;
+        },
+        etatSuivant: () => ({}),
+        observerLeDepart: (fixture) => ({
+          enFile: pending().length,
+          bandeau: lire(fixture, 'etudiant-hors-ligne'),
+        }),
+        depart: () => ({ enFile: 0, bandeau: null }),
+      },
+    ];
+
+    const DECLENCHEURS: readonly {
+      readonly declencheur: string;
+      readonly depuisUneBrique: boolean;
+      readonly declencher: (fixture: Fixture, etatSuivant: Partial<EtatSession>) => Promise<void>;
+    }[] = [
+      {
+        declencheur: 'la prochaine action du formateur',
+        depuisUneBrique: false,
+        declencher: (fixture, etatSuivant) =>
+          diffuserPuisStabiliser(fixture, { ...etatSuivant, participants: 14 }),
+      },
+      {
+        declencheur: 'le retour du reseau',
+        depuisUneBrique: false,
+        declencher: (fixture) => laisserPasserLeReseau(fixture),
+      },
+      {
+        declencheur: 'la reponse suivante, transmise',
+        depuisUneBrique: true,
+        declencher: (fixture) => repondre(fixture, REPONSE_VOTE),
+      },
+      {
+        declencheur: 'une autre reflexion, enregistree',
+        depuisUneBrique: true,
+        declencher: (fixture) =>
+          emettre(fixture, {
+            kind: 'libre',
+            screenId: 'ecran-1',
+            activityId: 'Q-RAPPEL-05:rappel',
+            response: 'On actualise',
+            dureeMs: 1500,
+          }),
+      },
+      {
+        declencheur: 'une tentative d enigme, transmise',
+        depuisUneBrique: true,
+        declencher: (fixture) => emettre(fixture, TENTATIVE_DU_SEUIL),
+      },
+      {
+        declencheur: 'un defi, transmis',
+        depuisUneBrique: true,
+        declencher: (fixture) => emettre(fixture, DEFI_DE_LA_DIZAINE),
+      },
+    ];
+
+    for (const {
+      attente,
+      briqueAffichee,
+      retenir,
+      etatSuivant,
+      observerLeDepart,
+      depart,
+    } of ATTENTES_RETENUES) {
+      for (const { declencheur, declencher } of DECLENCHEURS.filter(
+        ({ depuisUneBrique }) => briqueAffichee || !depuisUneBrique,
+      )) {
+        it(`${attente} retenue par la cadence du serveur repart des ${declencheur}`, async () => {
+          const fixture = await retenir();
+
+          await declencher(fixture, etatSuivant());
+
+          expect(observerLeDepart(fixture)).toEqual(depart());
+        });
+      }
+    }
+  });
+
+  describe('l etat d une reflexion se dit une seule fois au poste des cours servis', () => {
+    const REFLEXION_LIMITEE =
+      'Le serveur limite les envois : la réflexion est gardée sur cet appareil et repartira d’elle-même.';
+
+    function foisDitesAuPoste(fixture: Fixture): number {
+      const texte = (fixture.nativeElement as HTMLElement).textContent?.replace(/\s+/g, ' ') ?? '';
+      return texte.split(REFLEXION_LIMITEE).length - 1;
+    }
+
+    it('trouve la brique de reflexion dans les cours servis', () => {
+      expect(ECRANS_DE_REFLEXION.length).toBeGreaterThan(0);
+    });
+
+    async function retenirLaReflexionSurSonEcran(
+      servi: CoursContent,
+      rang: number,
+    ): Promise<Fixture> {
+      sujet = servi;
+      port.lireSujet.and.returnValue(of(sujet));
+      port.enregistrerReponseLibre.and.returnValue(
+        throwError(() => new ReponseLibreRefusee('reseau', 429, { minutes: 2 })),
+      );
+      const fixture = await rattacherALaSeanceEnCours();
+      await diffuserPuisStabiliser(fixture, { ecranCourant: rang });
+      garderLaReflexion(fixture, 'On compare des parts de totaux differents.');
+      await jusqua(fixture, () => etatDeLaReflexion(fixture) === 'attente_limite');
+      return fixture;
+    }
+
+    for (const { prefixe, servi, rang } of ECRANS_DE_REFLEXION) {
+      it(
+        `${prefixe} ecran ${rang + 1} : la brique dit seule sa reflexion retenue, le poste la dit depuis un autre ecran`,
+        async () => {
+          const fixture = await retenirLaReflexionSurSonEcran(servi, rang);
+          const surSonEcran = foisDitesAuPoste(fixture);
+          await diffuserPuisStabiliser(fixture, { ecranCourant: rang === 0 ? 1 : rang - 1 });
+
+          expect([surSonEcran, foisDitesAuPoste(fixture)]).toEqual([1, 1]);
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+
+      for (const statut of [429, 503]) {
+        it(
+          `${prefixe} ecran ${rang + 1} : le poste dit la reflexion retenue quand le suivi refuse en ${statut} demonte sa brique`,
+          async () => {
+            const fixture = await retenirLaReflexionSurSonEcran(servi, rang);
+
+            double.diffuserStatut({ etat: 'refuse', statut });
+            fixture.detectChanges();
+
+            expect([
+              lire(fixture, 'etudiant-flux-refuse')?.getAttribute('data-statut'),
+              etatDeLaReflexion(fixture),
+              foisDitesAuPoste(fixture),
+            ]).toEqual([String(statut), null, 1]);
+          },
+          DELAI_DE_MONTAGE_MS,
+        );
+      }
+    }
+  });
+
+  describe('D-19 · la reflexion enregistree par sa brique relance ce que la cadence retient', () => {
+    for (const { prefixe, servi, rang } of ECRANS_DE_REFLEXION) {
+      it(
+        `${prefixe} ecran ${rang + 1} : la reponse en file repart quand la brique enregistre la reflexion`,
+        async () => {
+          sujet = servi;
+          port.lireSujet.and.returnValue(of(sujet));
+          port.repondre.and.returnValues(throwError(refusLimite), of(REUSSITE));
+          port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
+          const fixture = await rattacherALaSeanceEnCours();
+          await diffuserPuisStabiliser(fixture, { ecranCourant: rang });
+          await emettre(fixture, {
+            kind: 'reponse',
+            screenId: servi.ecrans[rang].id,
+            ...REPONSE_NUMERIQUE,
+          });
+          expect(texteDeLaFile(fixture)).toBe(REPONSE_LIMITEE);
+
+          garderLaReflexion(fixture, 'On compare des parts de totaux differents.');
+          await jusqua(fixture, () => pending().length === 0);
+
+          expect({
+            reflexion: etatDeLaReflexion(fixture),
+            enFile: pending().length,
+            bandeau: lire(fixture, 'etudiant-hors-ligne'),
+          }).toEqual({ reflexion: 'enregistre', enFile: 0, bandeau: null });
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
+  });
 
   it('envoie au serveur la reponse d une brique avec son identifiant de question', async () => {
     const fixture = await rattacherALaSeanceEnCours();
@@ -1196,26 +1508,49 @@ describe('CoursEtudiantComponent', () => {
       expect(lire(fixture, 'etudiant-reponse-refusee')).toBeNull();
     });
 
-    function texteDeLaFile(fixture: Fixture): string | undefined {
-      return lire(fixture, 'etudiant-hors-ligne')?.textContent?.trim();
-    }
-
     async function repondreEnFileParLaLimite(): Promise<Fixture> {
       const fixture = await repondreEnFile();
-      expect(texteDeLaFile(fixture)).toBe(ATTENTE_COMMUNE);
+      expect(texteDeLaFile(fixture)).toBe(REPONSE_LIMITEE);
       return fixture;
     }
 
     function attendreLaReponseSeuleRetenueParLaLimite(fixture: Fixture): void {
       expect(pending().map(({ questionId }) => questionId)).toEqual([REPONSE_NUMERIQUE.questionId]);
-      expect(texteDeLaFile(fixture)).toBe(ATTENTE_COMMUNE);
+      expect(texteDeLaFile(fixture)).toBe(REPONSE_LIMITEE);
     }
 
     function unTourDeBoucle(): Promise<void> {
       return new Promise((resoudre) => setTimeout(resoudre));
     }
 
-    it('dit d une reponse mise en file par la cadence du serveur l attente commune, pas le reseau, puis la renvoie', async () => {
+    function suspendreLeJalon(): Subject<void> {
+      const jalonEnVol = new Subject<void>();
+      port.declarerJalon.and.returnValue(jalonEnVol);
+      return jalonEnVol;
+    }
+
+    async function viderJusquAuJalonEnVol(fixture: Fixture): Promise<void> {
+      await emettre(fixture, JALON_PERDU);
+      window.dispatchEvent(new Event('online'));
+      await unTourDeBoucle();
+      expect(port.declarerJalon).toHaveBeenCalledTimes(1);
+    }
+
+    function enPanne(): ReturnType<FormationsPort['repondre']> {
+      return throwError(() => new ReponseRefusee('reseau', 502));
+    }
+
+    async function mettreEnFileUneRetenueEtUnePanne(
+      ...renvois: ReturnType<FormationsPort['repondre']>[]
+    ): Promise<Fixture> {
+      port.repondre.and.returnValues(throwError(refusLimite), enPanne(), ...renvois);
+      const fixture = await repondreEnFileParLaLimite();
+      await repondre(fixture, REPONSE_VOTE);
+      expect(pending().length).toBe(2);
+      return fixture;
+    }
+
+    it('dit d une reponse mise en file par la cadence du serveur qu elle est gardee et repartira seule, pas le reseau, puis la renvoie', async () => {
       port.repondre.and.returnValues(throwError(refusLimite), of(REUSSITE));
       const fixture = await repondreEnFileParLaLimite();
 
@@ -1225,7 +1560,7 @@ describe('CoursEtudiantComponent', () => {
       attendreLaFileVideeEnLigne(fixture);
     });
 
-    it('garde l attente commune d une reponse retenue quand un autre envoi de la file passe', async () => {
+    it('dit encore la limite d une reponse retenue quand un autre envoi de la file passe', async () => {
       port.repondre.and.returnValue(throwError(refusLimite));
       const fixture = await repondreHorsLigne();
       await emettre(fixture, JALON_PERDU);
@@ -1237,16 +1572,12 @@ describe('CoursEtudiantComponent', () => {
       attendreLaReponseSeuleRetenueParLaLimite(fixture);
     });
 
-    it('garde l attente commune d une reponse retenue qui entre dans la file pendant un vidage', async () => {
+    it('dit encore la limite d une reponse retenue qui entre dans la file pendant un vidage', async () => {
       port.repondre.and.returnValue(throwError(refusLimite));
-      const jalonTransmis = new Subject<void>();
-      port.declarerJalon.and.returnValue(jalonTransmis);
+      const jalonTransmis = suspendreLeJalon();
       const fixture = await rattacherALaSeanceEnCours();
       window.dispatchEvent(new Event('offline'));
-      await emettre(fixture, JALON_PERDU);
-      window.dispatchEvent(new Event('online'));
-      await unTourDeBoucle();
-      expect(port.declarerJalon).toHaveBeenCalledTimes(1);
+      await viderJusquAuJalonEnVol(fixture);
 
       const ecran = ecranAffiche(fixture) as EcranContent;
       ecranDe(fixture).triggerEventHandler('evenement', {
@@ -1272,9 +1603,37 @@ describe('CoursEtudiantComponent', () => {
       window.dispatchEvent(new Event('offline'));
       await stabiliserLaVue(fixture);
 
-      expect(texteDeLaFile(fixture)).toBe(
-        'Votre réponse est enregistrée sur ce poste et partira au retour du réseau.',
-      );
+      expect(texteDeLaFile(fixture)).toBe(ATTENTE_DU_RESEAU);
+    });
+
+    it('dit le reseau quand le poste perd le reseau pendant un vidage qui a retenu une reponse par la limite', async () => {
+      port.repondre.and.returnValue(throwError(refusLimite));
+      const jalonEnVol = suspendreLeJalon();
+      const fixture = await repondreHorsLigne();
+      await viderJusquAuJalonEnVol(fixture);
+
+      window.dispatchEvent(new Event('offline'));
+      jalonEnVol.error(new ReponseRefusee('reseau', 0));
+      await unTourDeBoucle();
+      await stabiliserLaVue(fixture);
+
+      expect(pending().length).toBe(2);
+      expect(texteDeLaFile(fixture)).toBe(ATTENTE_DU_RESEAU);
+    });
+
+    it('dit encore la limite quand un envoi direct tombe en panne derriere une reponse retenue en file', async () => {
+      const fixture = await mettreEnFileUneRetenueEtUnePanne();
+
+      expect(texteDeLaFile(fixture)).toBe(REPONSE_LIMITEE);
+    });
+
+    it('revient au reseau quand la reponse retenue passe au vidage et qu un envoi en panne reste en file', async () => {
+      const fixture = await mettreEnFileUneRetenueEtUnePanne(of(REUSSITE), enPanne());
+
+      await diffuserPuisStabiliser(fixture, { participants: 14 });
+
+      expect(pending().map(({ questionId }) => questionId)).toEqual([REPONSE_VOTE.questionId]);
+      expect(texteDeLaFile(fixture)).toBe(ATTENTE_DU_RESEAU);
     });
 
     it('vide la file apres un envoi reussi, sans attendre le retour du reseau', async () => {
@@ -2160,14 +2519,7 @@ describe('CoursEtudiantComponent', () => {
     it('confie la tentative d enigme au serveur et pose le fragment servi', async () => {
       const fixture = await rattacherALaSeanceEnCours();
 
-      await emettre(fixture, {
-        kind: 'tentative',
-        screenId: 'ecran-1',
-        parcoursId: 'K-EVASION-01',
-        enigmeId: 'seuil',
-        reponse: '30000',
-        dureeMs: 40000,
-      });
+      await emettre(fixture, TENTATIVE_DU_SEUIL);
 
       expect(port.tenterEnigme).toHaveBeenCalledOnceWith(SESSION, JETON, 'K-EVASION-01', {
         enigmeId: 'seuil',
@@ -2269,13 +2621,7 @@ describe('CoursEtudiantComponent', () => {
     it('envoie la premiere tentative d un defi et pose les strategies servies', async () => {
       const fixture = await rattacherALaSeanceEnCours();
 
-      await emettre(fixture, {
-        kind: 'defi',
-        screenId: 'ecran-1',
-        defiId: 'D-DEFI-07',
-        texte: 'Une dizaine d annees',
-        dureeMs: 90000,
-      });
+      await emettre(fixture, DEFI_DE_LA_DIZAINE);
 
       expect(port.envoyerDefi).toHaveBeenCalledOnceWith(SESSION, JETON, 'D-DEFI-07', {
         texte: 'Une dizaine d annees',
@@ -2288,13 +2634,7 @@ describe('CoursEtudiantComponent', () => {
       const fixture = await rattacherALaSeanceEnCours();
 
       await emettre(fixture, JALON_PERDU);
-      await emettre(fixture, {
-        kind: 'libre',
-        screenId: 'ecran-1',
-        activityId: 'Q-RAPPEL-04:rappel',
-        response: 'On capitalise',
-        dureeMs: 2000,
-      });
+      await emettre(fixture, REFLEXION_DU_RAPPEL);
 
       expect(port.declarerJalon).toHaveBeenCalledOnceWith(SESSION, JETON, 'P-PULSE-01', 'perdu');
       expect(port.enregistrerReponseLibre).toHaveBeenCalledOnceWith(SESSION, JETON, {
@@ -2304,6 +2644,44 @@ describe('CoursEtudiantComponent', () => {
         dureeMs: 2000,
       });
     });
+
+    const REFLEXIONS_RETENUES = [
+      {
+        cause: 'la cadence du serveur',
+        refus: new ReponseLibreRefusee('reseau', 429, { minutes: 2 }),
+        etat: 'attente_limite',
+        message:
+          'Le serveur limite les envois : la réflexion est gardée sur cet appareil et repartira d’elle-même.',
+      },
+      {
+        cause: 'le reseau',
+        refus: new ReponseLibreRefusee('reseau', 0),
+        etat: 'attente_reseau',
+        message:
+          'En attente de réseau : la réflexion est gardée sur cet appareil et partira au retour de la connexion.',
+      },
+      {
+        cause: 'un ecran plus servi',
+        refus: new ReponseLibreRefusee('ecran-non-servi', 404),
+        etat: 'ecran_non_servi',
+        message:
+          'Votre réflexion est gardée sur ce poste : elle partira dès que le formateur réaffichera l’écran.',
+      },
+    ];
+
+    for (const { cause, refus, etat, message } of REFLEXIONS_RETENUES) {
+      it(`dit au poste qu une reflexion retenue par ${cause} est gardee, et ce qui la fera repartir`, async () => {
+        port.enregistrerReponseLibre.and.returnValue(throwError(() => refus));
+        const fixture = await rattacherALaSeanceEnCours();
+
+        await emettre(fixture, REFLEXION_DU_RAPPEL);
+        await stabiliserLaVue(fixture);
+
+        const paragraphe = lire(fixture, 'etudiant-reflexion-en-attente');
+        expect(paragraphe?.getAttribute('data-etat')).toBe(etat);
+        expect(paragraphe?.textContent?.replace(/\s+/g, ' ').trim()).toBe(message);
+      });
+    }
   });
 
   describe('reflexion gardee sur un ecran pas encore servi', () => {

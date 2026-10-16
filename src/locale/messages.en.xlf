@@ -10283,14 +10283,24 @@
         <target> Your answer is saved on this device and will be sent once the network is back. </target>
       </segment>
     </unit>
+    <unit id="coursFileLimitee">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:490,492</note>
+        <note category="meaning">cours.fileLimitee</note>
+      </notes>
+      <segment>
+        <source> Votre réponse est gardée sur ce poste : le serveur limite les envois, elle repartira d’elle-même. </source>
+        <target> Your answer is kept on this device: the server is limiting submissions, it will be sent again on its own. </target>
+      </segment>
+    </unit>
     <unit id="coursReflexionEnAttente">
       <notes>
         <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:197,200</note>
         <note category="meaning">cours.reflexionEnAttente</note>
       </notes>
       <segment>
-        <source> Votre réflexion est gardée sur ce poste : elle partira dès que le formateur réaffichera l’écran. </source>
-        <target> Your reflection is kept on this device: it will be sent as soon as your teacher shows the screen again. </target>
+        <source>Votre réflexion est gardée sur ce poste : elle partira dès que le formateur réaffichera l’écran.</source>
+        <target>Your reflection is kept on this device: it will be sent as soon as your teacher shows the screen again.</target>
       </segment>
     </unit>
     <unit id="coursFileRefusee">
@@ -11949,6 +11959,15 @@
         <target>Waiting for the network: your reflection is kept on this device and will be sent once the connection is back.</target>
       </segment>
     </unit>
+    <unit id="slideReflectionAttenteLimite">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:68,71</note>
+      </notes>
+      <segment>
+        <source>Le serveur limite les envois : la réflexion est gardée sur cet appareil et repartira d’elle-même.</source>
+        <target>The server is limiting submissions: your reflection is kept on this device and will be sent again on its own.</target>
+      </segment>
+    </unit>
     <unit id="slideReflectionEcranNonServi">
       <notes>
         <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:67,70</note>
@@ -12289,6 +12308,16 @@
       <segment>
         <source>L’écran n’a pas pu être chargé.</source>
         <target>The screen could not be loaded.</target>
+      </segment>
+    </unit>
+    <unit id="coursEcranLimite">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:155</note>
+        <note category="meaning">cours.ecranLimite</note>
+      </notes>
+      <segment>
+        <source>L’écran n’a pas encore pu être chargé : le serveur limite les demandes, il s’affichera de lui-même.</source>
+        <target>The screen could not be loaded yet: the server is limiting requests, it will appear on its own.</target>
       </segment>
     </unit>
     <unit id="coursKickerPreparation">

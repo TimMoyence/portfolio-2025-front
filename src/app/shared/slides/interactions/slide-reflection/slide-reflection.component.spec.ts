@@ -10,6 +10,9 @@ import type {
 import { createFormationsPortStub } from '../../../../../testing/factories/formations.factory';
 import {
   configurerLHoteDInteraction,
+  etatDeLaReflexion,
+  garderLaReflexion,
+  jusqua,
   monterApresChargement,
 } from '../../../../../testing/hote-d-interaction';
 import { horlogesDeSaisie, sousHorlogeArreteeA } from '../../../../../testing/horloge-simulee';
@@ -29,7 +32,8 @@ import { SlideReflectionComponent } from './slide-reflection.component';
 
 const cleEtudiante = (): string => readIdentity()?.studentKey ?? '';
 
-const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
+const REFLEXION_LIMITEE =
+  'Le serveur limite les envois : la réflexion est gardée sur cet appareil et repartira d’elle-même.';
 
 interface ReflexionServie {
   readonly screenId: string;
@@ -84,14 +88,6 @@ describe('SlideReflectionComponent', () => {
 
   function racine(fixture: ComponentFixture<unknown>): HTMLElement {
     return fixture.nativeElement as HTMLElement;
-  }
-
-  function garder(fixture: ComponentFixture<unknown>, texte: string): void {
-    const zone = racine(fixture).querySelector('textarea') as HTMLTextAreaElement;
-    zone.value = texte;
-    zone.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-    (racine(fixture).querySelector('.slide-reflection__save') as HTMLButtonElement).click();
   }
 
   function monterEnSeance(
@@ -172,7 +168,7 @@ describe('SlideReflectionComponent', () => {
       const fixture = monterEnSeance('seance', 'seance-duree');
       avantLEnvoi();
 
-      garder(fixture, 'Comparer les bases.');
+      garderLaReflexion(fixture, 'Comparer les bases.');
       return envoyer.calls.mostRecent()?.args[2].dureeMs;
     }
 
@@ -197,29 +193,11 @@ describe('SlideReflectionComponent', () => {
       return (await pendingFreeResponses(sessionId, cleEtudiante())).map((envoi) => envoi.key);
     }
 
-    function etat(fixture: ComponentFixture<unknown>): string | null {
-      return (
-        racine(fixture)
-          .querySelector('[data-testid="slide-reflection-etat"]')
-          ?.getAttribute('data-etat') ?? null
-      );
-    }
-
-    async function jusqua(
-      fixture: ComponentFixture<unknown>,
-      condition: () => boolean,
-    ): Promise<void> {
-      for (let essai = 0; essai < 200 && !condition(); essai += 1) {
-        await new Promise((resoudre) => setTimeout(resoudre, 10));
-        fixture.detectChanges();
-      }
-    }
-
     it('annonce l enregistrement quand le serveur accepte', async () => {
       const fixture = monterEnSeance('seance', `seance-ok-${Date.now()}`);
 
-      garder(fixture, 'Comparer les bases.');
-      await jusqua(fixture, () => etat(fixture) === 'enregistre');
+      garderLaReflexion(fixture, 'Comparer les bases.');
+      await jusqua(fixture, () => etatDeLaReflexion(fixture) === 'enregistre');
 
       expect(racine(fixture).textContent).toContain('Réflexion enregistrée');
     });
@@ -237,8 +215,8 @@ describe('SlideReflectionComponent', () => {
     it('garde la réflexion enregistrée affichée en lecture seule, sans bouton', async () => {
       const fixture = monterEnSeance('seance', `seance-figee-${Date.now()}`);
 
-      garder(fixture, '  Comparer les bases.  ');
-      await jusqua(fixture, () => etat(fixture) === 'enregistre');
+      garderLaReflexion(fixture, '  Comparer les bases.  ');
+      await jusqua(fixture, () => etatDeLaReflexion(fixture) === 'enregistre');
 
       attendreFigee(fixture, 'Comparer les bases.');
     });
@@ -246,8 +224,8 @@ describe('SlideReflectionComponent', () => {
     it('retrouve la réflexion gardée, figée, après un retour sur l écran', async () => {
       const sessionId = `seance-retour-${Date.now()}`;
       const premiere = monterEnSeance('seance', sessionId);
-      garder(premiere, 'Comparer les bases.');
-      await jusqua(premiere, () => etat(premiere) === 'enregistre');
+      garderLaReflexion(premiere, 'Comparer les bases.');
+      await jusqua(premiere, () => etatDeLaReflexion(premiere) === 'enregistre');
       premiere.destroy();
 
       const retour = monterEnSeance('seance', sessionId);
@@ -272,8 +250,8 @@ describe('SlideReflectionComponent', () => {
       );
       const fixture = monterEnSeance('seance', `seance-figee-hors-ligne-${Date.now()}`);
 
-      garder(fixture, 'Envoyée plus tard.');
-      await jusqua(fixture, () => etat(fixture) === 'attente_reseau');
+      garderLaReflexion(fixture, 'Envoyée plus tard.');
+      await jusqua(fixture, () => etatDeLaReflexion(fixture) === 'attente_reseau');
 
       attendreFigee(fixture, 'Envoyée plus tard.');
     });
@@ -287,8 +265,8 @@ describe('SlideReflectionComponent', () => {
         it(`${reflexion.screenId} : fige la réflexion gardée et la rend après un retour sur l écran`, async () => {
           const sessionId = `seance-${reflexion.screenId}-${Date.now()}`;
           const premiere = monterEnSeance('seance', sessionId, reflexion);
-          garder(premiere, 'Ma réflexion.');
-          await jusqua(premiere, () => etat(premiere) === 'enregistre');
+          garderLaReflexion(premiere, 'Ma réflexion.');
+          await jusqua(premiere, () => etatDeLaReflexion(premiere) === 'enregistre');
 
           attendreFigee(premiere, 'Ma réflexion.');
           premiere.destroy();
@@ -303,8 +281,8 @@ describe('SlideReflectionComponent', () => {
       );
       const fixture = monterEnSeance('seance', `seance-echec-${Date.now()}`);
 
-      garder(fixture, 'À renvoyer.');
-      await jusqua(fixture, () => etat(fixture) === 'echec');
+      garderLaReflexion(fixture, 'À renvoyer.');
+      await jusqua(fixture, () => etatDeLaReflexion(fixture) === 'echec');
 
       expect(zone(fixture)?.readOnly).toBeFalse();
       expect(racine(fixture).querySelector('.slide-reflection__save')).not.toBeNull();
@@ -319,8 +297,8 @@ describe('SlideReflectionComponent', () => {
       formations.enregistrerReponseLibre.and.returnValue(throwError(() => refus));
       const fixture = monterEnSeance('seance', sessionId);
 
-      garder(fixture, texte);
-      await jusqua(fixture, () => etat(fixture) === etatAttendu);
+      garderLaReflexion(fixture, texte);
+      await jusqua(fixture, () => etatDeLaReflexion(fixture) === etatAttendu);
       return fixture;
     }
 
@@ -339,12 +317,12 @@ describe('SlideReflectionComponent', () => {
 
       formations.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
       window.dispatchEvent(new Event('online'));
-      await jusqua(fixture, () => etat(fixture) === 'enregistre');
+      await jusqua(fixture, () => etatDeLaReflexion(fixture) === 'enregistre');
 
       expect(await clesEnAttente(sessionId)).toEqual([]);
     });
 
-    it('limitee par la cadence du serveur, fige la reflexion en file et dit l attente commune, pas le reseau', async () => {
+    it('limitee par la cadence du serveur, fige la reflexion en file et dit qu elle repartira seule, pas le reseau', async () => {
       const sessionId = `seance-limite-${Date.now()}`;
       const fixture = await garderMalgreLeRefus(
         sessionId,
@@ -354,8 +332,11 @@ describe('SlideReflectionComponent', () => {
       );
 
       expect(
-        racine(fixture).querySelector('[data-testid="slide-reflection-etat"]')?.textContent?.trim(),
-      ).toBe(ATTENTE_COMMUNE);
+        racine(fixture)
+          .querySelector('[data-testid="slide-reflection-etat"]')
+          ?.textContent?.replace(/\s+/g, ' ')
+          .trim(),
+      ).toBe(REFLEXION_LIMITEE);
       attendreFigee(fixture, 'Envoyée après l attente.');
       expect(await clesEnAttente(sessionId)).toEqual([CLE(sessionId)]);
     });
@@ -375,9 +356,9 @@ describe('SlideReflectionComponent', () => {
 
       formations.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
       await TestBed.inject(ReponsesLibresService).reprendre(sessionId, 'jeton-1');
-      await jusqua(fixture, () => etat(fixture) === 'enregistre');
+      await jusqua(fixture, () => etatDeLaReflexion(fixture) === 'enregistre');
 
-      expect(etat(fixture)).toBe('enregistre');
+      expect(etatDeLaReflexion(fixture)).toBe('enregistre');
       expect(await clesEnAttente(sessionId)).toEqual([]);
     });
 
@@ -414,7 +395,7 @@ describe('SlideReflectionComponent', () => {
           attendu,
         );
 
-        expect(etat(fixture)).toBe(attendu);
+        expect(etatDeLaReflexion(fixture)).toBe(attendu);
         expect(racine(fixture).textContent).toContain(message);
         expect(await clesEnAttente(sessionId)).toEqual([]);
       });
@@ -424,7 +405,7 @@ describe('SlideReflectionComponent', () => {
   it('en seance, envoie la reflexion au serveur avec l ecran et l activite', () => {
     const fixture = monterEnSeance('seance', 'seance-envoi');
 
-    garder(fixture, '  On compare des parts de totaux différents.  ');
+    garderLaReflexion(fixture, '  On compare des parts de totaux différents.  ');
 
     expect(formations.enregistrerReponseLibre).toHaveBeenCalledOnceWith(
       'seance-envoi',
@@ -443,7 +424,7 @@ describe('SlideReflectionComponent', () => {
     const fixture = monterEnSeance('seance', 'seance-duree');
 
     horloges.saisirPendant(20_000);
-    garder(fixture, 'Une réflexion mesurée.');
+    garderLaReflexion(fixture, 'Une réflexion mesurée.');
 
     expect(formations.enregistrerReponseLibre).toHaveBeenCalledOnceWith(
       'seance-duree',

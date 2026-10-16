@@ -1,10 +1,10 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 import type {
   MotifRefusReponseLibre,
   ReponseLibreEtudiant,
 } from '../../../core/ports/formations.port';
-import { type LimiteDeDebit, messageDeLaLimite } from '../../../core/models/limite-de-debit';
 import {
   FORMATIONS_PORT,
   limiteDuRefus,
@@ -67,13 +67,9 @@ export class ReponsesLibresService {
   private readonly gardes = signal<ReadonlyMap<string, string>>(new Map());
 
   readonly etatsDesEnvois = this.etats.asReadonly();
-
-  private readonly limites = signal<ReadonlyMap<string, LimiteDeDebit>>(new Map());
-
-  limiteDe(cleLogique: string): string | null {
-    const limite = this.limites().get(cleLogique);
-    return limite === undefined ? null : messageDeLaLimite(limite);
-  }
+  private readonly reussites = new Subject<void>();
+  readonly envoisReussis: Observable<void> = this.reussites.asObservable();
+  private readonly reprises = new Map<string, Promise<unknown>>();
 
   texteGarde(sessionId: string, activityId: string): string | null {
     return this.gardes().get(cleDeTexteGarde(sessionId, activityId)) ?? null;
@@ -95,13 +91,6 @@ export class ReponsesLibresService {
   private noter(envoi: PendingFreeResponse, etat: EtatEnvoiLibre): EtatEnvoiLibre {
     const cleLogique = cleLogiqueDe(envoi);
     this.etats.update((connus) => new Map(connus).set(cleLogique, etat));
-    if (etat !== 'attente_limite') {
-      this.limites.update((connues) => {
-        const suivantes = new Map(connues);
-        suivantes.delete(cleLogique);
-        return suivantes;
-      });
-    }
     const cle = cleDeTexteGarde(envoi.sessionId, envoi.activityId);
     this.gardes.update((connus) => {
       const suivants = new Map(connus);
@@ -137,7 +126,21 @@ export class ReponsesLibresService {
     });
   }
 
-  async reprendre(sessionId: string, jeton: string): Promise<ReadonlyMap<string, EtatEnvoiLibre>> {
+  reprendre(sessionId: string, jeton: string): Promise<ReadonlyMap<string, EtatEnvoiLibre>> {
+    const passe = (this.reprises.get(sessionId) ?? Promise.resolve()).then(() =>
+      this.repasserLaFile(sessionId, jeton),
+    );
+    this.reprises.set(
+      sessionId,
+      passe.catch(() => undefined),
+    );
+    return passe;
+  }
+
+  private async repasserLaFile(
+    sessionId: string,
+    jeton: string,
+  ): Promise<ReadonlyMap<string, EtatEnvoiLibre>> {
     const etats = new Map<string, EtatEnvoiLibre>();
     const studentKey = readIdentity()?.studentKey;
     if (studentKey === undefined) {
@@ -150,7 +153,11 @@ export class ReponsesLibresService {
   }
 
   private async transmettre(jeton: string, envoi: PendingFreeResponse): Promise<EtatEnvoiLibre> {
-    return this.noter(envoi, await this.issueDeLEnvoi(jeton, envoi));
+    const etat = this.noter(envoi, await this.issueDeLEnvoi(jeton, envoi));
+    if (etat === 'enregistre') {
+      this.reussites.next();
+    }
+    return etat;
   }
 
   private async issueDeLEnvoi(jeton: string, envoi: PendingFreeResponse): Promise<EtatEnvoiLibre> {
@@ -190,9 +197,7 @@ export class ReponsesLibresService {
     } catch {
       return 'echec';
     }
-    const limite = limiteDuRefus(erreur);
-    if (limite !== null) {
-      this.limites.update((connues) => new Map(connues).set(cleLogiqueDe(envoi), limite));
+    if (limiteDuRefus(erreur) !== null) {
       return 'attente_limite';
     }
     return motif === 'reseau' ? 'attente_reseau' : 'ecran_non_servi';
