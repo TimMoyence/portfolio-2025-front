@@ -2,10 +2,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   OnInit,
+  computed,
   inject,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, timer } from 'rxjs';
 import { AUTH_PORT, type AuthPort } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
@@ -25,6 +29,21 @@ export class VerifyEmailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
+
+  protected readonly suite = computed(() =>
+    this.authState.isLoggedIn()
+      ? {
+          lien: '/profil',
+          annonce: $localize`:@@verifyEmailRedirectProfil:Vous allez être redirigé vers votre profil…`,
+          libelle: $localize`:@@authVerifyGoToProfil:Accéder à mon profil`,
+        }
+      : {
+          lien: '/login',
+          annonce: $localize`:verify-email.redirect@@verifyEmailRedirect:Vous allez être redirigé vers la page de connexion…`,
+          libelle: $localize`:@@authVerifyGoToLogin:Accéder à la connexion`,
+        },
+  );
 
   isLoading = true;
   successMessage?: string;
@@ -44,10 +63,9 @@ export class VerifyEmailComponent implements OnInit {
       onSuccess: () => {
         this.isLoading = false;
         this.successMessage = $localize`:@@verifyEmailSucces:Votre adresse e-mail est vérifiée : votre compte est activé.`;
-        this.authState.relireLeCompte();
-        setTimeout(() => {
-          void this.router.navigate(['/login']);
-        }, 3000);
+        forkJoin([this.authState.relireLeCompte(), timer(3000)])
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => void this.router.navigate([this.suite().lien]));
       },
       onError: (message) => {
         this.isLoading = false;

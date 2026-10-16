@@ -16,13 +16,11 @@
   @if (successMessage) {
     <app-auth-success
       [message]="successMessage"
-      libelleConnexion="Accéder à la connexion"
-      i18n-libelleConnexion="@@authVerifyGoToLogin"
+      [libelleConnexion]="suite().libelle"
+      [lien]="suite().lien"
     >
       <h1 title i18n="@@authVerifySuccessTitle">Compte <em>activé</em></h1>
-      <p class="sub" i18n="verify-email.redirect@@verifyEmailRedirect">
-        Vous allez être redirigé vers la page de connexion…
-      </p>
+      <p class="sub">{{ suite().annonce }}</p>
     </app-auth-success>
   }
 

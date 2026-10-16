@@ -4320,8 +4320,20 @@
     </unit>
     <unit id="verifyEmailRedirect">
       <segment>
-        <source> Vous allez être redirigé vers la page de connexion… </source>
-        <target> You will be redirected to the login page... </target>
+        <source>Vous allez être redirigé vers la page de connexion…</source>
+        <target>You will be redirected to the login page…</target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailRedirectProfil">
+      <segment>
+        <source>Vous allez être redirigé vers votre profil…</source>
+        <target>You will be redirected to your profile…</target>
+      </segment>
+    </unit>
+    <unit id="authVerifyGoToProfil">
+      <segment>
+        <source>Accéder à mon profil</source>
+        <target>Go to my profile</target>
       </segment>
     </unit>
     <unit id="verifyEmailBackToLogin">

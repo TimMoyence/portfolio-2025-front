@@ -33,6 +33,12 @@ async function verifier(
   return { ...page, navigate, texte: () => page.fixture.nativeElement.textContent as string };
 }
 
+function lienDuBouton(fixture: { nativeElement: HTMLElement }): string | null {
+  return (
+    fixture.nativeElement.querySelector('app-auth-success a.btn')?.getAttribute('href') ?? null
+  );
+}
+
 describe('VerifyEmailComponent', () => {
   it('dit la vérification réussie par son propre texte, puis mène à la connexion', fakeAsync(async () => {
     const { authService, fixture, navigate, texte } = await verifier('a'.repeat(64));
@@ -42,6 +48,7 @@ describe('VerifyEmailComponent', () => {
     expect(texte()).toContain('Votre adresse e-mail est vérifiée : votre compte est activé.');
     expect(texte()).not.toContain('verifiee avec succes');
     expect(texte()).toContain('Vous allez être redirigé vers la page de connexion…');
+    expect(lienDuBouton(fixture)).toBe('/login');
 
     tick(3000);
     expect(navigate).toHaveBeenCalledOnceWith(['/login']);
@@ -66,6 +73,24 @@ describe('VerifyEmailComponent', () => {
       etat.clearSession();
       tick(3000);
     }));
+
+    it('dit et mene le compte restaure vers son profil, jamais vers la connexion', fakeAsync(async () => {
+      const verifie = buildAuthUser({ email: 'jean@exemple.fr', emailVerified: true });
+      const { fixture, navigate, texte } = await verifier(
+        'e'.repeat(64),
+        undefined,
+        null,
+        of(buildAuthSession({ user: verifie })),
+      );
+
+      fixture.detectChanges();
+      expect(texte()).toContain('Vous allez être redirigé vers votre profil…');
+      expect(texte()).not.toContain('page de connexion');
+      expect(lienDuBouton(fixture)).toBe('/profil');
+      tick(3000);
+      expect(navigate).toHaveBeenCalledOnceWith(['/profil']);
+      TestBed.inject(AuthStateService).clearSession();
+    }));
   });
 
   describe('pour un compte connecte dont l adresse attend sa verification', () => {
@@ -83,6 +108,8 @@ describe('VerifyEmailComponent', () => {
       expect(etat.user()?.emailVerified).toBeTrue();
       expect(etat.isLoggedIn()).toBeTrue();
       tick(3000);
+      expect(TestBed.inject(Router).navigate).toHaveBeenCalledOnceWith(['/profil']);
+      etat.clearSession();
     }));
 
     it('garde la session ouverte quand le lien verifiait une autre adresse que la sienne', fakeAsync(async () => {

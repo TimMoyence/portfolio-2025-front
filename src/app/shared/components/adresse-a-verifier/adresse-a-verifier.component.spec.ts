@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, discardPeriodicTasks, fakeAsync, tick } from '@angular/core/testing';
 import { Subject, of, throwError } from 'rxjs';
-import type { AuthActionMessage } from '../../../core/models/auth.model';
+import type { AuthActionMessage, AuthUser } from '../../../core/models/auth.model';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { preparerAvecLePortDAuth } from '../../../../testing/etat-auth';
 import {
@@ -80,15 +80,56 @@ describe('AdresseAVerifierComponent', () => {
       document.dispatchEvent(new Event('visibilitychange'));
     }
 
+    function relueUneFoisEtEffacee(fixture: ReturnType<typeof monter>): void {
+      fixture.detectChanges();
+      expect(port.me).toHaveBeenCalledTimes(1);
+      expect(lireMarque(fixture, 'adresse-a-verifier')).toBeNull();
+    }
+
     it('relit le compte quand l onglet redevient visible : le bandeau s efface', () => {
       const fixture = monter(false);
       port.me.and.returnValue(of(verifie));
 
       revenirSurLOnglet('visible');
-      fixture.detectChanges();
+      relueUneFoisEtEffacee(fixture);
+    });
 
+    it('relit le compte toutes les 30 s tant que l onglet reste affiche : le bandeau s efface sans retour sur l onglet', fakeAsync(() => {
+      spyOnProperty(Document.prototype, 'visibilityState', 'get').and.returnValue('visible');
+      const fixture = monter(false);
+      port.me.and.returnValue(of(verifie));
+
+      tick(29_999);
+      expect(port.me).not.toHaveBeenCalled();
+      tick(1);
+      relueUneFoisEtEffacee(fixture);
+      tick(60_000);
       expect(port.me).toHaveBeenCalledTimes(1);
-      expect(lireMarque(fixture, 'adresse-a-verifier')).toBeNull();
+      TestBed.inject(AuthStateService).clearSession();
+      discardPeriodicTasks();
+    }));
+
+    it('ne relit rien toutes les 30 s quand l onglet est en arriere-plan', fakeAsync(() => {
+      spyOnProperty(Document.prototype, 'visibilityState', 'get').and.returnValue('hidden');
+      monter(false);
+
+      tick(90_000);
+      expect(port.me).not.toHaveBeenCalled();
+      TestBed.inject(AuthStateService).clearSession();
+      discardPeriodicTasks();
+    }));
+
+    it('attend la relecture du compte avant de promettre un lien', () => {
+      const relu = new Subject<AuthUser>();
+      const fixture = monter(false);
+      port.me.and.returnValue(relu);
+
+      renvoyer(fixture);
+      expect(retour(fixture)?.textContent).not.toContain('un nouveau lien part');
+      relu.next(buildAuthUser({ email: ADRESSE, emailVerified: false }));
+      relu.complete();
+      fixture.detectChanges();
+      expect(retour(fixture)?.textContent).toContain('un nouveau lien part');
     });
 
     it('ne relit rien quand l onglet passe en arriere-plan', () => {

@@ -3,14 +3,17 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  NgZone,
   PLATFORM_ID,
   inject,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter, fromEvent } from 'rxjs';
+import { exhaustMap, filter, fromEvent, interval, merge } from 'rxjs';
 import { AUTH_PORT, type AuthPort } from '../../../core/ports/auth.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { ADRESSE_NON_VERIFIEE, handleFormSubmit } from '../../utils/form-submit.utils';
+
+const RELECTURE_PERIODIQUE_MS = 30_000;
 
 @Component({
   selector: 'app-adresse-a-verifier',
@@ -52,12 +55,16 @@ export class AdresseAVerifierComponent {
 
   constructor() {
     if (!isPlatformBrowser(inject(PLATFORM_ID))) return;
-    fromEvent(this.document, 'visibilitychange')
-      .pipe(
-        filter(() => this.document.visibilityState === 'visible' && this.adresseAVerifier()),
-        takeUntilDestroyed(),
-      )
-      .subscribe(() => this.authState.relireLeCompte());
+    const jusquALaFin = takeUntilDestroyed<void>();
+    inject(NgZone).runOutsideAngular(() =>
+      merge(fromEvent(this.document, 'visibilitychange'), interval(RELECTURE_PERIODIQUE_MS))
+        .pipe(
+          filter(() => this.document.visibilityState === 'visible' && this.adresseAVerifier()),
+          exhaustMap(() => this.authState.relireLeCompte()),
+          jusquALaFin,
+        )
+        .subscribe(),
+    );
   }
 
   private adresseAVerifier(): boolean {
@@ -69,8 +76,11 @@ export class AdresseAVerifierComponent {
     this.retour = '';
     handleFormSubmit(this.authService.resendVerification({ email }), this.cdr, {
       onSuccess: () => {
-        this.retour = $localize`:@@adresseAVerifierEnvoye:Demande reçue : un nouveau lien part vers votre adresse, sauf si trois liens sont déjà partis dans l’heure ; ouvrez alors le plus récent.`;
-        this.authState.relireLeCompte();
+        this.authState.relireLeCompte().subscribe(() => {
+          if (!this.adresseAVerifier()) return;
+          this.retour = $localize`:@@adresseAVerifierEnvoye:Demande reçue : un nouveau lien part vers votre adresse, sauf si trois liens sont déjà partis dans l’heure ; ouvrez alors le plus récent.`;
+          this.cdr.markForCheck();
+        });
       },
       onError: (message) => {
         this.retour = message;
