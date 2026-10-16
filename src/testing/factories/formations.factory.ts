@@ -19,10 +19,12 @@ import type {
   FormationsPort,
   LivretDuCours,
   ParticipantDeSeance,
+  ParticipantRapporte,
   RapportSeance,
   Rattachement,
   RegleNotation,
   ReponseLibreFormateur,
+  ReponseRapportee,
   StrategiePublique,
   SyntheseConcept,
   VerdictProduction,
@@ -149,6 +151,17 @@ export function buildStatistiquesSeance(
   };
 }
 
+export function buildResultatsDuFlux(overrides: Partial<ResultatsDuFlux> = {}): ResultatsDuFlux {
+  return {
+    ...buildResultatsSeance(),
+    statistiques: buildStatistiquesSeance(),
+    jalons: {},
+    enigmes: [],
+    bareme: buildResumeBareme(),
+    ...overrides,
+  };
+}
+
 export function buildRegleNotation(overrides: Partial<RegleNotation> = {}): RegleNotation {
   return {
     noteMax: 20,
@@ -256,6 +269,39 @@ export function buildEtatParticipant(overrides: Partial<EtatParticipant> = {}): 
   };
 }
 
+export function buildReponseRapportee(overrides: Partial<ReponseRapportee> = {}): ReponseRapportee {
+  return {
+    questionId: 'Q-CAP-03',
+    concept: 'capitalisation',
+    type: 'numeric',
+    score: null,
+    valeur: '1480.24',
+    reponse: '1 480,24',
+    correcte: true,
+    misconception: null,
+    libelleConfusion: null,
+    dureeMs: 4200,
+    ...overrides,
+  };
+}
+
+export function buildParticipantRapporte(
+  overrides: Partial<ParticipantRapporte> = {},
+): ParticipantRapporte {
+  return {
+    prenom: 'Malik',
+    nom: 'Durand',
+    email: 'malik@example.com',
+    completion: 1,
+    note: 12,
+    sousSeuil: false,
+    reponses: [buildReponseRapportee()],
+    reponsesLibres: [],
+    incidents: 0,
+    ...overrides,
+  };
+}
+
 export function buildRapportSeance(overrides: Partial<RapportSeance> = {}): RapportSeance {
   return {
     courseSlug: 'b1-09-interets-composes',
@@ -264,7 +310,13 @@ export function buildRapportSeance(overrides: Partial<RapportSeance> = {}): Rapp
     fermeeLe: '2026-09-11T10:00:00.000Z',
     participants: [],
     conceptsFragiles: ['capitalisation'],
+    libellesDesConcepts: { capitalisation: 'Capitalisation' },
     resultats: buildResultatsSeance(),
+    statistiques: buildStatistiquesSeance(),
+    notation: buildRegleNotation(),
+    bareme: buildResumeBareme(),
+    jalons: {},
+    enigmes: [],
     ...overrides,
   };
 }
@@ -336,6 +388,8 @@ export function buildReponseLibreFormateur(
     screenId: 'ecran-1',
     activityId: 'reflexion-1',
     response: 'Je compare d’abord les bases avant les pourcentages.',
+    premiereReponse: null,
+    strategiesServiesLe: null,
     dureeMs: 42_000,
     status: 'enregistre',
     submittedAt: HORODATAGE,

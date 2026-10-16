@@ -46,6 +46,9 @@ export function buildToolkitPageData(overrides: Partial<ToolkitPageData> = {}): 
         level: 'debutant',
         prompt: 'Redige un email de relance pour un devis sans reponse.',
         tool: 'ChatGPT',
+        description: 'Relancer un prospect sans paraitre insistant.',
+        example: 'Bonjour Paul, je reviens vers vous au sujet du devis...',
+        tip: 'Precisez la date du devis initial.',
       },
     ],
     workflows: [
@@ -53,7 +56,7 @@ export function buildToolkitPageData(overrides: Partial<ToolkitPageData> = {}): 
         title: 'Devis automatise',
         description: "Generer un devis a partir d'un brief.",
         setupTime: '1h',
-        monthlyCost: '0EUR',
+        monthlyCost: 0,
         steps: [
           {
             step: 1,
@@ -71,7 +74,7 @@ export function buildToolkitPageData(overrides: Partial<ToolkitPageData> = {}): 
         platform: 'Notion',
         url: 'https://notion.so/template',
         description: 'Un devis pret a dupliquer.',
-        minBudget: '0EUR',
+        minBudget: 0,
       },
     ],
     generatedPrompt: 'Cree une presentation Gamma pour un cabinet de conseil.',

@@ -38,11 +38,16 @@ export function animer(hote: HTMLElement): void {
   bouton.click();
 }
 
-export function glisserCurseur(hote: HTMLElement, cle: string, valeur: string): HTMLInputElement {
+function champDuCurseur(hote: HTMLElement, cle: string): HTMLInputElement {
   const curseur = parametre(hote, 'curseur', cle);
   if (!(curseur instanceof HTMLInputElement)) {
     throw new Error(`le curseur ${cle} n est pas un champ`);
   }
+  return curseur;
+}
+
+export function glisserCurseur(hote: HTMLElement, cle: string, valeur: string): HTMLInputElement {
+  const curseur = champDuCurseur(hote, cle);
   curseur.value = valeur;
   curseur.dispatchEvent(new Event('input', { bubbles: true }));
   return curseur;
@@ -52,11 +57,34 @@ export function relacherCurseur(hote: HTMLElement, cle: string, valeur: string):
   glisserCurseur(hote, cle, valeur).dispatchEvent(new Event('change', { bubbles: true }));
 }
 
+export const PARAMETRE_A_PAS_DECIMAL = {
+  cle: 'd',
+  libelle: 'Decalage',
+  min: 0,
+  max: 1,
+  pas: 0.1,
+  defaut: 0,
+} as const;
+
+function avancerDeCrans(hote: HTMLElement, cle: string, crans: number): void {
+  const curseur = champDuCurseur(hote, cle);
+  curseur.stepUp(crans);
+  curseur.dispatchEvent(new Event('input', { bubbles: true }));
+  curseur.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
 export function emisAuPupitre(hote: HTMLElement, evenement: string, geste: () => void): unknown[] {
   hote.setAttribute('data-cours-role', 'presentateur');
   const emis = detailsEmis(hote, evenement);
   geste();
   return emis;
+}
+
+export function attendreLeTroisiemeCranEmisSansArrondi(hote: HTMLElement, evenement: string): void {
+  const { cle } = PARAMETRE_A_PAS_DECIMAL;
+  const emis = emisAuPupitre(hote, evenement, () => avancerDeCrans(hote, cle, 3));
+
+  expect(emis).toEqual([{ reglages: { [cle]: 0.3 } }]);
 }
 
 export function jouerAuPupitre(hote: HTMLElement, evenement: string): unknown[] {

@@ -1,3 +1,5 @@
+import type { z } from 'zod';
+
 export const DELAI_DE_LECTURE_MS = 2_000;
 const DUREE_DU_CACHE_MS = 300_000;
 
@@ -42,4 +44,14 @@ export function garderEnCache<T>(
 
 export function messageDErreur(erreur: unknown): string {
   return erreur instanceof Error ? erreur.message : String(erreur);
+}
+
+export function champsHorsContrat(erreur: z.ZodError): string {
+  const champs = erreur.issues.flatMap((issue) => {
+    const chemin = issue.path.map(String);
+    return issue.code === 'unrecognized_keys'
+      ? issue.keys.map((cle) => [...chemin, cle].join('.'))
+      : [chemin.join('.')];
+  });
+  return [...new Set(champs)].join(', ');
 }

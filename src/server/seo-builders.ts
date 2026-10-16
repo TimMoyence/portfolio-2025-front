@@ -1,4 +1,4 @@
-import { escapeHtml } from 'portfolio-2025-partage/html';
+import { escapeHtml } from '../cours/runtime/core/html';
 import type {
   SeoLocaleMeta,
   SeoMetadataFile,

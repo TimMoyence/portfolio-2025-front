@@ -2,6 +2,7 @@ import {
   bornerEntre,
   entierBorne,
   estEntierPositif,
+  estMembre,
   estObjet,
   fini,
   jsonOuNull,
@@ -35,6 +36,22 @@ describe('valeurs', () => {
       expect(estEntierPositif(1.5)).toBeFalse();
       expect(estEntierPositif(2 ** 53)).toBeFalse();
       expect(estEntierPositif('3')).toBeFalse();
+    });
+  });
+
+  describe('estMembre', () => {
+    const PHASES = ['ouverte', 'close'] as const;
+
+    it('reconnait une valeur de la liste fermee', () => {
+      expect(estMembre(PHASES, 'ouverte')).toBeTrue();
+      expect(estMembre(PHASES, 'close')).toBeTrue();
+    });
+
+    it('refuse une valeur hors liste, un non-texte et un objet qui se lit comme un membre', () => {
+      const imitation = { toString: (): string => 'close' };
+      for (const valeur of ['Close', '', undefined, null, 0, ['close'], imitation]) {
+        expect(estMembre(PHASES, valeur)).withContext(String(valeur)).toBeFalse();
+      }
     });
   });
 

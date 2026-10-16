@@ -1,13 +1,14 @@
 import {
+  champsHorsContrat,
   DELAI_DE_LECTURE_MS,
   garderEnCache,
   lireJsonSousDelai,
   messageDErreur,
 } from './lecture-api';
 import type { DynamicArticleSitemapEntry } from './seo-builders';
+import { pageDArticlesServie } from '../app/core/adapters/site-schemas';
 import { LOCALES_DU_SITE } from '../app/core/config/locales';
 import { trimTrailingSlashes } from '../app/core/utils/barres';
-import { estObjet } from '../cours/runtime/core/valeurs';
 
 export interface DependancesDuLecteurDArticles {
   readonly apiBaseUrl: string | undefined;
@@ -24,22 +25,6 @@ interface PageDArticles {
   readonly suivant: string | null;
 }
 
-function entreesDe(locale: string, items: unknown): DynamicArticleSitemapEntry[] {
-  if (!Array.isArray(items)) return [];
-  return items.flatMap((item: unknown) => {
-    if (!estObjet(item)) return [];
-    const champs = item;
-    if (typeof champs['slug'] !== 'string') return [];
-    return [
-      {
-        locale,
-        slug: champs['slug'],
-        lastmod: typeof champs['updated_at'] === 'string' ? champs['updated_at'] : undefined,
-      },
-    ];
-  });
-}
-
 async function lirePage(
   url: string,
   locale: string,
@@ -51,11 +36,20 @@ async function lirePage(
       dependances.journal.warn(`[sitemap] articles ${locale} : l'API a répondu ${lecture.statut}`);
       return null;
     }
-    const corps = estObjet(lecture.corps) ? lecture.corps : null;
-    const suivant = corps?.['next_cursor'];
+    const lue = pageDArticlesServie.safeParse(lecture.corps);
+    if (!lue.success) {
+      dependances.journal.warn(
+        `[sitemap] articles ${locale} : réponse de l'API hors contrat (${champsHorsContrat(lue.error)})`,
+      );
+      return null;
+    }
     return {
-      entrees: entreesDe(locale, corps?.['items']),
-      suivant: typeof suivant === 'string' && suivant ? suivant : null,
+      entrees: lue.data.items.map((article) => ({
+        locale,
+        slug: article.slug,
+        lastmod: article.updated_at,
+      })),
+      suivant: lue.data.next_cursor || null,
     };
   } catch (erreur) {
     dependances.journal.warn(

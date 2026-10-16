@@ -1,15 +1,16 @@
+import { z } from 'zod';
 import type {
   CoursContent,
   DerouleCours,
   EcranContent,
   EcranDeroule,
 } from '../../cours/content/types';
+import { derouleDuFil, sujetDuFil } from '../../app/core/adapters/formations-fil';
 import {
-  type DerouleDuFil,
-  derouleDuFil,
-  type SujetDuFil,
-  sujetDuFil,
-} from '../../app/core/adapters/formations-fil';
+  coursPublicServi,
+  derouleServi,
+  sujetServi,
+} from '../../app/core/adapters/formations-schemas';
 
 export interface InstantaneDuCoursB2 {
   readonly graine: number;
@@ -19,14 +20,18 @@ export interface InstantaneDuCoursB2 {
   readonly catalogue: CoursContent;
 }
 
-interface InstantaneDuFil extends Omit<InstantaneDuCoursB2, 'sujet' | 'deroule' | 'catalogue'> {
-  readonly sujet: SujetDuFil;
-  readonly deroule: DerouleDuFil;
-  readonly catalogue: SujetDuFil;
-}
+export const instantaneDuFil = z
+  .object({
+    graine: z.number(),
+    empreinte: z.string(),
+    sujet: sujetServi,
+    deroule: derouleServi,
+    catalogue: coursPublicServi,
+  })
+  .strict();
 
 export function lireInstantaneDuFil(fichier: unknown): InstantaneDuCoursB2 {
-  const duFil = fichier as InstantaneDuFil;
+  const duFil = instantaneDuFil.parse(fichier);
   return {
     ...duFil,
     sujet: sujetDuFil(duFil.sujet),
