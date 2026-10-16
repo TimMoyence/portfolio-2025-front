@@ -27,7 +27,6 @@
     "serve:ssr:portfolio-app": "node dist/portfolio-app/server/fr/server.mjs",
     "serve:ssr:portfolio-app:en": "PORT=4001 node dist/portfolio-app/server/en/server.mjs",
     "extract-i18n": "ng extract-i18n --output-path src/locale --format xlf",
-    "formation:validate": "node scripts/validate-formation.mjs",
     "test:e2e": "npx playwright test --project=chromium",
     "test:e2e:cours": "npx playwright test --project=chromium e2e/cours-b2-server.spec.ts e2e/cours-pupitre.spec.ts e2e/cours-reprise.spec.ts e2e/cours-runtime.spec.ts e2e/cours-session.spec.ts e2e/slide-engine.spec.ts",
     "test:e2e:portail": "SSR_BASE_URL=http://localhost:4000 SSR_EN_BASE_URL=http://localhost:4001 npx playwright test --project=chromium",

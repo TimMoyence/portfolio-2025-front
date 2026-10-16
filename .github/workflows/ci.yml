@@ -137,6 +137,18 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
+      - name: Lighthouse
+        run: npm run lighthouse
+
+      - name: Rapports Lighthouse
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse
+          path: .lighthouseci/
+          retention-days: 7
+          if-no-files-found: ignore
+
   # scripts/banc/jouer.mjs cherche le back en frere du front
   # (../portfolio-2025-back) : les deux depots sont extraits cote a cote.
   banc:
