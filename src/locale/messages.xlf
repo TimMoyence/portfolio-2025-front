@@ -6518,22 +6518,6 @@
           <context context-type="linenumber">138,139</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formations.toolkitPrivate.sectionGamma" datatype="html">
-        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;tkp-num&quot;&gt;"/>5.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Votre prompt Gamma personnalisé </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
-          <context context-type="linenumber">162,163</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.toolkitPrivate.gammaCta" datatype="html">
-        <source> Collez ce prompt dans <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://gamma.app&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;
-                    &gt;"/>gamma.app<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-                  &gt;"/> pour générer votre présentation en 60 secondes. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
-          <context context-type="linenumber">176,180</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="formations.toolkitPrivate.brand" datatype="html">
         <source>Asili Design — asilidesign.fr</source>
         <context-group purpose="location">

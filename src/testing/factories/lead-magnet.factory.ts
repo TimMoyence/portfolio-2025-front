@@ -24,9 +24,6 @@ export function buildToolkitPageData(overrides: Partial<ToolkitPageData> = {}): 
   return {
     recap: {
       firstName: 'Tim',
-      aiLevel: 'debutant',
-      sector: 'conseil',
-      budgetTier: '0-50',
     },
     cheatsheet: [
       {
@@ -36,7 +33,6 @@ export function buildToolkitPageData(overrides: Partial<ToolkitPageData> = {}): 
         url: 'https://chat.openai.com',
         tip: "Brouillons d'emails en quelques secondes",
         decision: 'Adopter',
-        alreadyUsed: false,
       },
     ],
     prompts: [
@@ -77,7 +73,6 @@ export function buildToolkitPageData(overrides: Partial<ToolkitPageData> = {}): 
         minBudget: 0,
       },
     ],
-    generatedPrompt: 'Cree une presentation Gamma pour un cabinet de conseil.',
     ...overrides,
   };
 }

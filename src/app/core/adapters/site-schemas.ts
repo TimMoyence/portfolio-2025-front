@@ -287,9 +287,9 @@ export const guideServi: z.ZodType<ToolkitPageData> = z
     recap: z
       .object({
         firstName: z.string(),
-        aiLevel: z.string().nullable(),
-        sector: z.string().nullable(),
-        budgetTier: z.string().nullable(),
+        aiLevel: z.string().nullable().optional(),
+        sector: z.string().nullable().optional(),
+        budgetTier: z.string().nullable().optional(),
       })
       .strict(),
     cheatsheet: z.array(
@@ -301,7 +301,7 @@ export const guideServi: z.ZodType<ToolkitPageData> = z
           url: z.string(),
           tip: z.string(),
           decision: z.string(),
-          alreadyUsed: z.boolean(),
+          alreadyUsed: z.boolean().optional(),
         })
         .strict(),
     ),
@@ -351,7 +351,7 @@ export const guideServi: z.ZodType<ToolkitPageData> = z
         })
         .strict(),
     ),
-    generatedPrompt: z.string().nullable(),
+    generatedPrompt: z.string().nullable().optional(),
   })
   .strict();
 

@@ -4551,18 +4551,6 @@
         <target><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">4.</pc> Reusable templates </target>
       </segment>
     </unit>
-    <unit id="formations.toolkitPrivate.sectionGamma">
-      <segment>
-        <source><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">5.</pc> Votre prompt Gamma personnalisé </source>
-        <target><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">5.</pc> Your personalized Gamma prompt </target>
-      </segment>
-    </unit>
-    <unit id="formations.toolkitPrivate.gammaCta">
-      <segment>
-        <source> Collez ce prompt dans <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="fmt" dispStart="&lt;a href=&quot;https://gamma.app&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;" dispEnd="&lt;/a&gt;">gamma.app</pc> pour générer votre présentation en 60 secondes. </source>
-        <target> Paste this prompt into <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="fmt" dispStart="&lt;a href=&quot;https://gamma.app&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;" dispEnd="&lt;/a&gt;">gamma.app</pc> to generate your presentation in 60 seconds. </target>
-      </segment>
-    </unit>
     <unit id="contactFormSubjectAccess">
       <segment>
         <source>Demande d&apos;accès application</source>
