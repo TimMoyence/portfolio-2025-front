@@ -7,6 +7,9 @@ import { AuthStateService } from '../../core/services/auth-state.service';
 import {
   decrireLaRegleDUnMotDePasseNeuf,
   erreursApresSaisie,
+  MOTS_DE_PASSE,
+  telephoneBienFormeDeLongueur,
+  texteDuBlocDuChamp,
 } from '../../../testing/champ-de-formulaire';
 import { buildAuthUser, buildSetPasswordPayload } from '../../../testing/factories/auth.factory';
 import type { PageAuthMontee } from '../../../testing/page-auth';
@@ -111,6 +114,18 @@ describe('ProfileComponent', () => {
         decrireLaRegleDUnMotDePasseNeuf(() => fixture, selecteur);
       });
     }
+
+    it('plafonne le mot de passe actuel à 256 caractères sans le rogner, comme le back', async () => {
+      TestBed.resetTestingModule();
+      await monter({ hasPassword: true });
+
+      expect(await erreursApresSaisie(fixture, '#currentPassword', MOTS_DE_PASSE.tropLong)).toEqual(
+        {
+          maxlength: { requiredLength: 256, actualLength: 257 },
+        },
+      );
+      expect(await erreursApresSaisie(fixture, '#currentPassword', '   ')).toBeNull();
+    });
   });
 
   it('ne presente plus l atelier retire', () => {
@@ -132,24 +147,72 @@ describe('ProfileComponent', () => {
       expect(component.editPhone).toBe('');
     });
 
-    it('plafonne le prénom et le nom à 50 caractères, comme le back', () => {
+    it('juge le prénom et le nom rognés, requis et comptés en caractères, comme le back', async () => {
+      component.startEditing();
+      fixture.detectChanges();
+      const sourire = String.fromCodePoint(0x1f600);
+
+      for (const selecteur of ['#editFirstName', '#editLastName']) {
+        expect(await erreursApresSaisie(fixture, selecteur, '   '))
+          .withContext(selecteur)
+          .toEqual({ required: true });
+        expect(await erreursApresSaisie(fixture, selecteur, sourire.repeat(50)))
+          .withContext(selecteur)
+          .toBeNull();
+        expect(await erreursApresSaisie(fixture, selecteur, 'a'.repeat(51)))
+          .withContext(selecteur)
+          .toEqual({ maxlength: { requiredLength: 50, actualLength: 51 } });
+      }
+      expect(texteDuBlocDuChamp(fixture, '#editLastName')).toContain(
+        'Ce champ doit contenir au plus 50 caractères.',
+      );
+    });
+
+    it('refuse un téléphone que le back refuse, et le dit sous le champ', async () => {
       component.startEditing();
       fixture.detectChanges();
 
-      const page: HTMLElement = fixture.nativeElement;
-      for (const id of ['editFirstName', 'editLastName']) {
-        expect(page.querySelector<HTMLInputElement>(`#${id}`)?.maxLength).toBe(50);
-      }
+      expect(await erreursApresSaisie(fixture, '#editPhone', '06 98 a0 32 82')).toEqual({
+        phone: true,
+      });
+      expect(texteDuBlocDuChamp(fixture, '#editPhone')).toContain(
+        'Merci d’entrer un numéro de téléphone valide.',
+      );
+    });
+
+    it('n envoie pas un profil que le back refuserait', () => {
+      component.startEditing();
+
+      component.saveProfile(formulaireSoumis(true));
+
+      expect(authService.updateProfile).not.toHaveBeenCalled();
+    });
+
+    it('envoie le prénom et le nom rognés, ceux que le back garde', () => {
+      authService.updateProfile.and.returnValue(of(buildAuthUser()));
+      component.startEditing();
+      component.editFirstName = '  Pierre ';
+      component.editLastName = ' Martin  ';
+
+      component.saveProfile(formulaireSoumis());
+
+      expect(authService.updateProfile).toHaveBeenCalledWith(
+        jasmine.objectContaining({ firstName: 'Pierre', lastName: 'Martin' }),
+      );
     });
 
     it('plafonne le téléphone à 30 caractères, comme le back', async () => {
       component.startEditing();
       fixture.detectChanges();
 
-      expect(await erreursApresSaisie(fixture, '#editPhone', '0'.repeat(31))).toEqual({
+      expect(
+        await erreursApresSaisie(fixture, '#editPhone', telephoneBienFormeDeLongueur(31)),
+      ).toEqual({
         maxlength: { requiredLength: 30, actualLength: 31 },
       });
-      expect(await erreursApresSaisie(fixture, '#editPhone', '0'.repeat(30))).toBeNull();
+      expect(
+        await erreursApresSaisie(fixture, '#editPhone', telephoneBienFormeDeLongueur(30)),
+      ).toBeNull();
     });
 
     it('startEditing pre-remplit le telephone quand il est renseigne', () => {
@@ -190,7 +253,7 @@ describe('ProfileComponent', () => {
       component.editFirstName = 'Pierre';
       component.editLastName = 'Martin';
       component.editPhone = '+33600000000';
-      component.saveProfile();
+      component.saveProfile(formulaireSoumis());
 
       expect(authService.updateProfile).toHaveBeenCalledWith({
         firstName: 'Pierre',
@@ -207,7 +270,7 @@ describe('ProfileComponent', () => {
 
       component.startEditing();
       component.editPhone = '';
-      component.saveProfile();
+      component.saveProfile(formulaireSoumis());
 
       expect(authService.updateProfile).toHaveBeenCalledWith(
         jasmine.objectContaining({ phone: null }),
@@ -220,7 +283,7 @@ describe('ProfileComponent', () => {
       component.startEditing();
       for (const saisie of ['   ', ' +33600000000 ']) {
         component.editPhone = saisie;
-        component.saveProfile();
+        component.saveProfile(formulaireSoumis());
       }
 
       expect(authService.updateProfile.calls.allArgs().map(([profil]) => profil.phone)).toEqual([
@@ -235,7 +298,7 @@ describe('ProfileComponent', () => {
       );
 
       component.startEditing();
-      component.saveProfile();
+      component.saveProfile(formulaireSoumis());
 
       expect(component.editProfileError).toBeDefined();
       expect(component.isEditing()).toBeTrue();

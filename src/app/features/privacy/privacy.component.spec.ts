@@ -90,6 +90,6 @@ describe('PrivacyComponent', () => {
   }
 
   it('date la politique du jour où elle a nommé ces données', () => {
-    expect(rendre().textContent).toContain('Dernière mise à jour : 15 octobre 2026');
+    expect(rendre().textContent).toContain('Dernière mise à jour : 16 octobre 2026');
   });
 });

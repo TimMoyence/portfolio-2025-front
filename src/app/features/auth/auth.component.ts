@@ -22,14 +22,17 @@ import { AUTH_PORT } from '../../core/ports/auth.port';
 import { loadGoogleGis } from '../../core/utils/google-gis';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import { extractErrorMessage } from '../../shared/utils/http-error.utils';
+import type { Bornes } from '../../shared/utils/regles-de-saisie';
 import {
-  LONGUEUR_MAX_D_UN_MOT_DE_PASSE,
-  LONGUEUR_MAX_D_UN_NOM,
-  LONGUEUR_MAX_D_UN_TELEPHONE,
+  BORNES_D_UN_MOT_DE_PASSE_SAISI,
+  BORNES_D_UN_NOM,
+  BORNES_D_UN_TELEPHONE,
   REGLE_D_UN_MOT_DE_PASSE,
 } from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { SvgIconComponent } from '../../shared/components/svg-icon.component';
+import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
+import type { FormatDeContact } from '../../shared/directives/format-de-contact.directive';
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { MotDePasseNeufDirective } from '../../shared/directives/mot-de-passe-neuf.directive';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
@@ -45,7 +48,8 @@ interface ChampAuth {
   label: string;
   type: string;
   required: boolean;
-  longueurMax?: number;
+  bornes?: Bornes;
+  format?: FormatDeContact;
   motDePasseNeuf?: true;
   indication?: string;
 }
@@ -72,6 +76,7 @@ interface PanneauAuth {
     RevealOnScrollDirective,
     AuthShellComponent,
     FieldErrorsComponent,
+    BornesDeSaisieDirective,
     FormatDeContactDirective,
     MotDePasseNeufDirective,
   ],
@@ -124,20 +129,21 @@ export class AuthComponent {
       label: $localize`:auth.signup.field.firstName|Signup field label@@authSignupFieldFirstName:Prénom`,
       type: 'text',
       required: true,
-      longueurMax: LONGUEUR_MAX_D_UN_NOM,
+      bornes: BORNES_D_UN_NOM,
     },
     {
       key: 'lastName',
       label: $localize`:auth.signup.field.lastName|Signup field label@@authSignupFieldLastName:Nom`,
       type: 'text',
       required: true,
-      longueurMax: LONGUEUR_MAX_D_UN_NOM,
+      bornes: BORNES_D_UN_NOM,
     },
     {
       key: 'email',
       label: $localize`:auth.signup.field.email|Signup field label@@authSignupFieldEmail:Email`,
       type: 'email',
       required: true,
+      format: 'email',
     },
     {
       key: 'password',
@@ -149,7 +155,7 @@ export class AuthComponent {
     },
     {
       key: 'verifPassword',
-      label: $localize`:auth.signup.field.passwordConfirm|Signup field label@@authSignupFieldPasswordConfirm:Verification de mot de passe`,
+      label: $localize`:auth.signup.field.passwordConfirm|Signup field label@@authSignupFieldPasswordConfirm:Vérification du mot de passe`,
       type: 'password',
       required: true,
     },
@@ -158,7 +164,8 @@ export class AuthComponent {
       label: $localize`:auth.signup.field.phone|Signup field label@@authSignupFieldPhone:Téléphone`,
       type: 'tel',
       required: false,
-      longueurMax: LONGUEUR_MAX_D_UN_TELEPHONE,
+      bornes: BORNES_D_UN_TELEPHONE,
+      format: 'telephone',
     },
   ];
 
@@ -170,13 +177,14 @@ export class AuthComponent {
       label: $localize`:auth.login.field.email|Login field label@@authLoginFieldEmail:Email`,
       type: 'email',
       required: true,
+      format: 'email',
     },
     {
       key: 'password',
       label: $localize`:auth.login.field.password|Login field label@@authLoginFieldPassword:Mot de passe`,
       type: 'password',
       required: true,
-      longueurMax: LONGUEUR_MAX_D_UN_MOT_DE_PASSE,
+      bornes: BORNES_D_UN_MOT_DE_PASSE_SAISI,
     },
   ];
 
@@ -236,8 +244,8 @@ export class AuthComponent {
     const payload: RegisterUserPayload = {
       email: this.signupForm.email,
       password: this.signupForm.password,
-      firstName: this.signupForm.firstName,
-      lastName: this.signupForm.lastName,
+      firstName: this.signupForm.firstName.trim(),
+      lastName: this.signupForm.lastName.trim(),
       phone: telephoneFacultatif(this.signupForm.phone),
     };
 

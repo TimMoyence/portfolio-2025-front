@@ -152,6 +152,16 @@ describe('identity', () => {
     ).toBe('P'.repeat(80));
   });
 
+  it('compte le prenom et le nom rognes en caracteres, comme les colonnes varchar du serveur', () => {
+    const sourires = String.fromCodePoint(0x1f600).repeat(80);
+    const coeurs = String.fromCodePoint(0x2764, 0xfe0f).repeat(41);
+
+    expect(saveIdentity({ ...THEO, prenom: ` ${sourires} `, nom: sourires }).identite.prenom).toBe(
+      sourires,
+    );
+    expect(() => saveIdentity({ ...THEO, prenom: coeurs })).toThrow();
+  });
+
   it('sous saturation du stockage, l identite tient en memoire et signale qu elle n est pas persistee', () => {
     spyOn(globalThis.localStorage, 'setItem').and.throwError(saturationDuStockage());
     const enregistrement = saveIdentity(THEO);

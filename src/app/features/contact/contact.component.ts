@@ -16,14 +16,17 @@ import type { ContactFormState } from '../../core/models/contact.model';
 import type { ContactPort } from '../../core/ports/contact.port';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
+import type { Bornes } from '../../shared/utils/regles-de-saisie';
 import {
   BORNES_D_UN_MESSAGE_DE_CONTACT,
-  LONGUEUR_MAX_D_UN_NOM,
+  BORNES_D_UN_NOM,
 } from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
+import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
+import type { FormatDeContact } from '../../shared/directives/format-de-contact.directive';
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
 
@@ -37,6 +40,7 @@ import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
     HeroSectionComponent,
     ContactCtaComponent,
     FieldErrorsComponent,
+    BornesDeSaisieDirective,
     FormatDeContactDirective,
     HoneypotDirective,
   ],
@@ -136,33 +140,36 @@ export class ContactComponent implements OnInit {
     label: string;
     type: 'text' | 'email' | 'tel';
     required: boolean;
-    longueurMax?: number;
+    bornes?: Bornes;
+    format?: FormatDeContact;
   }[] = [
     {
       key: 'firstName',
       label: $localize`:contact.form.field.firstName@@contactFormFieldFirstName:Prénom`,
       type: 'text',
       required: true,
-      longueurMax: LONGUEUR_MAX_D_UN_NOM,
+      bornes: BORNES_D_UN_NOM,
     },
     {
       key: 'lastName',
       label: $localize`:contact.form.field.lastName@@contactFormFieldLastName:Nom`,
       type: 'text',
       required: true,
-      longueurMax: LONGUEUR_MAX_D_UN_NOM,
+      bornes: BORNES_D_UN_NOM,
     },
     {
       key: 'email',
       label: $localize`:contact.form.field.email@@contactFormFieldEmail:Email`,
       type: 'email',
       required: true,
+      format: 'email',
     },
     {
       key: 'phone',
       label: $localize`:contact.form.field.phone@@contactFormFieldPhone:Téléphone`,
       type: 'tel',
       required: false,
+      format: 'telephone',
     },
   ];
 

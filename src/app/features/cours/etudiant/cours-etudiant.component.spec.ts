@@ -375,16 +375,20 @@ describe('CoursEtudiantComponent', () => {
     expect(fixture.componentInstance.etat()).toBe('code');
   });
 
-  it('borne les champs d identite comme le serveur, dans le formulaire d entree', () => {
-    const formulaire = lire(monter(), 'etudiant-entree');
-    const plafond = (nom: string): number | undefined =>
-      formulaire?.querySelector<HTMLInputElement>(`[name="${nom}"]`)?.maxLength;
+  it('laisse saisir et accepte une identite au plafond du serveur, comptee en caracteres', async () => {
+    const sourire = String.fromCodePoint(0x1f600);
+    const entree = lire(monter(), 'etudiant-entree');
 
-    expect([plafond('prenom'), plafond('nom'), plafond('email')]).toEqual([
-      LONGUEURS_MAX_DE_L_IDENTITE.prenom,
-      LONGUEURS_MAX_DE_L_IDENTITE.nom,
-      LONGUEURS_MAX_DE_L_IDENTITE.email,
+    expect(entree?.querySelectorAll('input[name]').length).toBeGreaterThan(0);
+    expect(entree?.querySelectorAll('input[maxlength]').length).toBe(0);
+
+    await rattacher(CODE_SAISI, [
+      ['prenom', sourire.repeat(LONGUEURS_MAX_DE_L_IDENTITE.prenom)],
+      ['nom', sourire.repeat(LONGUEURS_MAX_DE_L_IDENTITE.nom)],
+      ['email', 'lea.dubois@example.com'],
     ]);
+
+    expect(port.rejoindre).toHaveBeenCalledTimes(1);
   });
 
   it('refuse avant tout appel reseau une identite que le serveur refuserait', async () => {

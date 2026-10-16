@@ -150,18 +150,32 @@ describe('ToolkitFormComponent', () => {
     }
   });
 
-  it('plafonne le prénom à 50 caractères, comme le back, dans le champ et dans la validité', () => {
-    const champ: HTMLInputElement | null = fixture.nativeElement.querySelector(
-      'input[autocomplete="given-name"]',
-    );
-    expect(champ?.maxLength).toBe(50);
-
+  it('plafonne le prénom rogné à 50 caractères comptés comme le back, et le dit sous le champ', () => {
+    const texte = (): string => (fixture.nativeElement as HTMLElement).textContent ?? '';
     component.email.set('marie@example.com');
     component.termsAccepted.set(true);
-    component.firstName.set('a'.repeat(51));
-    expect(component.isValid()).toBeFalse();
-    component.firstName.set('a'.repeat(50));
+
+    component.firstName.set(` ${String.fromCodePoint(0x1f600).repeat(50)} `);
     expect(component.isValid()).toBeTrue();
+
+    component.firstName.set('a'.repeat(51));
+    fixture.detectChanges();
+    expect(component.isValid()).toBeFalse();
+    expect(texte()).toContain('Ce champ doit contenir au plus 50 caractères.');
+
+    component.firstName.set('a'.repeat(50));
+    fixture.detectChanges();
+    expect(component.isValid()).toBeTrue();
+    expect(texte()).not.toContain('Ce champ doit contenir au plus 50 caractères.');
+  });
+
+  it('dit sous le champ une adresse que le back refuse', () => {
+    component.email.set('marie@gmail');
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain(
+      'Merci d’entrer une adresse email valide.',
+    );
   });
 
   it("utilise 'ia-solopreneurs' par defaut si aucun formationSlug n'est passe", async () => {

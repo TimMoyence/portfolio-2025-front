@@ -13,9 +13,15 @@ export const MOTS_DE_PASSE = {
   robuste: 'Abcdefghij1!',
   sansMajusculeNiChiffreNiSigne: 'abcdefghijkl',
   sansSigne: 'Abcdefghijk1',
+  sansMajuscule: 'abcdefghij1!',
+  sansChiffre: 'Abcdefghijk!',
   court: 'Ab1!',
-  tropLong: `Ab1!${'a'.repeat(253)}`,
+  onzeCaracteresEnDouzeUnites: `Abcdefgh1!${String.fromCodePoint(0x1f600)}`,
+  tropLong: `Ab1!${String.fromCodePoint(0x1f600).repeat(253)}`,
 } as const;
+
+export const telephoneBienFormeDeLongueur = (longueur: number): string =>
+  `06${' '.repeat(longueur - 10)}98403282`;
 
 const BLOCS_D_UN_CHAMP = '.auth-field, .pf-field, .relative';
 
@@ -74,7 +80,17 @@ export function decrireLaRegleDUnMotDePasseNeuf<T>(
         },
       }),
     );
-    for (const faible of [MOTS_DE_PASSE.sansMajusculeNiChiffreNiSigne, MOTS_DE_PASSE.sansSigne]) {
+    expect(
+      await erreursApresSaisie(fixture, selecteur, MOTS_DE_PASSE.onzeCaracteresEnDouzeUnites),
+    ).toEqual({
+      minlength: { requiredLength: LONGUEUR_MIN_D_UN_MOT_DE_PASSE, actualLength: 11 },
+    });
+    for (const faible of [
+      MOTS_DE_PASSE.sansMajusculeNiChiffreNiSigne,
+      MOTS_DE_PASSE.sansSigne,
+      MOTS_DE_PASSE.sansMajuscule,
+      MOTS_DE_PASSE.sansChiffre,
+    ]) {
       expect(Object.keys((await erreursApresSaisie(fixture, selecteur, faible)) ?? {}))
         .withContext(faible)
         .toEqual(['pattern']);

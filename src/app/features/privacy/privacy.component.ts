@@ -11,7 +11,7 @@ import { LEGAL_PAGE_IMPORTS, type LegalTocItem } from '../legal/legal-page.compo
 export class PrivacyComponent {
   readonly hero = {
     kicker: $localize`:privacy.hero.kicker@@privacyHeroLabel:Vos données`,
-    updated: $localize`:privacy.hero.updated@@privacyMetaLastUpdated:Dernière mise à jour : 15 octobre 2026`,
+    updated: $localize`:privacy.hero.updated@@privacyMetaLastUpdated:Dernière mise à jour : 16 octobre 2026`,
   };
 
   readonly toc: readonly LegalTocItem[] = [

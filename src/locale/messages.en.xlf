@@ -1046,7 +1046,7 @@
         <note category="meaning">auth.signup.field.passwordConfirm</note>
       </notes>
       <segment>
-        <source>Verification de mot de passe</source>
+        <source>Vérification du mot de passe</source>
         <target>Password confirmation</target>
       </segment>
     </unit>
@@ -3101,8 +3101,8 @@
     </unit>
     <unit id="privacyMetaLastUpdated">
       <segment>
-        <source>Dernière mise à jour : 15 octobre 2026</source>
-        <target>Last updated: October 15, 2026</target>
+        <source>Dernière mise à jour : 16 octobre 2026</source>
+        <target>Last updated: October 16, 2026</target>
       </segment>
     </unit>
     <unit id="footerLegalPrivacy">
@@ -3544,13 +3544,13 @@
     </unit>
     <unit id="profileEditErrorGeneric">
       <segment>
-        <source>Impossible de mettre a jour le profil pour le moment.</source>
+        <source>Impossible de mettre à jour le profil pour le moment.</source>
         <target>Unable to update profile at this time.</target>
       </segment>
     </unit>
     <unit id="profileEditSuccess">
       <segment>
-        <source>Profil mis a jour avec succes.</source>
+        <source>Profil mis à jour avec succès.</source>
         <target>Profile updated successfully.</target>
       </segment>
     </unit>

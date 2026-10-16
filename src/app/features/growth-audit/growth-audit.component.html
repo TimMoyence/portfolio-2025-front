@@ -24,8 +24,7 @@
         name="websiteName"
         type="text"
         required
-        [minlength]="bornesDuNomDeSite.min"
-        [maxlength]="bornesDuNomDeSite.max"
+        [appBornesDeSaisie]="bornesDuNomDeSite"
         [(ngModel)]="auditFormState.websiteName"
         [placeholder]="formLabels.websitePlaceholder"
         class="mt-2 block w-full rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
@@ -97,8 +96,7 @@
             name="contactValue"
             [type]="contactInputType"
             required
-            [minlength]="bornesDuContact.min"
-            [maxlength]="bornesDuContact.max"
+            [appBornesDeSaisie]="bornesDuContact"
             [appFormatDeContact]="auditFormState.contactMethod === 'PHONE' ? 'telephone' : 'email'"
             [(ngModel)]="auditFormState.contactValue"
             [placeholder]="contactPlaceholder"

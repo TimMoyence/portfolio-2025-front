@@ -10,6 +10,8 @@ import {
   erreursApresSaisie,
   MOTS_DE_PASSE,
   REGLE_SERVIE_PAR_LE_BACK as REGLE_SERVIE,
+  telephoneBienFormeDeLongueur,
+  texteDuBlocDuChamp,
 } from '../../../testing/champ-de-formulaire';
 import {
   buildAuthSession,
@@ -204,11 +206,48 @@ describe('AuthComponent', () => {
       }
     });
 
+    it('juge le prénom et le nom rognés et comptés en caractères, comme le back', async () => {
+      const sourire = String.fromCodePoint(0x1f600);
+      for (const id of ['reg-firstName', 'reg-lastName']) {
+        expect(await saisir(id, '   '))
+          .withContext(id)
+          .toEqual({ required: true });
+        expect(await saisir(id, `  ${'a'.repeat(50)}  `))
+          .withContext(id)
+          .toBeNull();
+        expect(await saisir(id, sourire.repeat(50)))
+          .withContext(id)
+          .toBeNull();
+        expect(await saisir(id, sourire.repeat(51)))
+          .withContext(id)
+          .toEqual({ maxlength: { requiredLength: 50, actualLength: 51 } });
+      }
+    });
+
+    it('envoie le prénom et le nom rognés, ceux que le back garde', () => {
+      remplirInscription({ firstName: '  John ', lastName: ' Doe  ' });
+      accepterLInscription();
+
+      component.handleSignupSubmit(formulaireSoumis());
+
+      expect(authService.register).toHaveBeenCalledWith(
+        jasmine.objectContaining({ firstName: 'John', lastName: 'Doe' }),
+      );
+    });
+
+    it('refuse à l inscription un téléphone que le back refuse, et le dit sous le champ', async () => {
+      expect(await saisir('reg-phone', '06 98 a0 32 82')).toEqual({ phone: true });
+      expect(texteDuBlocDuChamp(fixture, '#reg-phone')).toContain(
+        'Merci d’entrer un numéro de téléphone valide.',
+      );
+      expect(await saisir('reg-phone', '06 98 40 32 82')).toBeNull();
+    });
+
     it('plafonne le téléphone à 30 caractères, comme le back', async () => {
-      expect(await saisir('reg-phone', '0'.repeat(31))).toEqual({
+      expect(await saisir('reg-phone', telephoneBienFormeDeLongueur(31))).toEqual({
         maxlength: { requiredLength: 30, actualLength: 31 },
       });
-      expect(await saisir('reg-phone', '0'.repeat(30))).toBeNull();
+      expect(await saisir('reg-phone', telephoneBienFormeDeLongueur(30))).toBeNull();
     });
 
     it('refuse à l inscription une adresse que le back refuse', async () => {

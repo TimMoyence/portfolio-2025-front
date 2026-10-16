@@ -17,14 +17,15 @@ export class FormatDeContactDirective extends ValidateurDeSaisie {
 
   validate(controle: AbstractControl): ValidationErrors | null {
     const valeur: unknown = controle.value;
-    if (typeof valeur !== 'string' || valeur.length === 0) {
+    const saisie = typeof valeur === 'string' ? valeur.trim() : '';
+    if (saisie.length === 0) {
       return null;
     }
     switch (this.appFormatDeContact()) {
       case 'email':
-        return estUneAdresseEmail(valeur) ? null : { email: true };
+        return estUneAdresseEmail(saisie) ? null : { email: true };
       case 'telephone':
-        return estUnNumeroDeTelephone(valeur) ? null : { phone: true };
+        return estUnNumeroDeTelephone(saisie) ? null : { phone: true };
       default:
         return null;
     }

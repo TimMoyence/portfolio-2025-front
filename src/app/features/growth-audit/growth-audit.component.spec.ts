@@ -218,6 +218,17 @@ describe('GrowthAuditComponent', () => {
       expect(await erreursApresSaisie(fixture, '#websiteName', 'ab')).toBeNull();
     });
 
+    it('juge le nom du site rogné et compté en caractères, comme le back', async () => {
+      const fixture = monterLeFormulaire();
+      const unCaractere = { minlength: { requiredLength: 2, actualLength: 1 } };
+
+      expect(await erreursApresSaisie(fixture, '#websiteName', ' a')).toEqual(unCaractere);
+      expect(
+        await erreursApresSaisie(fixture, '#websiteName', String.fromCodePoint(0x1f600)),
+      ).toEqual(unCaractere);
+      expect(await erreursApresSaisie(fixture, '#websiteName', '   ')).toEqual({ required: true });
+    });
+
     it('refuse un contact par email que le back refuse, et le borne entre 6 et 200 caractères', async () => {
       const fixture = monterLeFormulaire();
 

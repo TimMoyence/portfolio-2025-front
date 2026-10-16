@@ -14,12 +14,15 @@ import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
+import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
+import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { MotDePasseNeufDirective } from '../../shared/directives/mot-de-passe-neuf.directive';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import {
-  LONGUEUR_MAX_D_UN_NOM,
-  LONGUEUR_MAX_D_UN_TELEPHONE,
+  BORNES_D_UN_MOT_DE_PASSE_SAISI,
+  BORNES_D_UN_NOM,
+  BORNES_D_UN_TELEPHONE,
   REGLE_D_UN_MOT_DE_PASSE,
 } from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
@@ -33,6 +36,8 @@ import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
     RouterModule,
     RevealOnScrollDirective,
     FieldErrorsComponent,
+    BornesDeSaisieDirective,
+    FormatDeContactDirective,
     MotDePasseNeufDirective,
   ],
   templateUrl: './profile.component.html',
@@ -46,13 +51,15 @@ export class ProfileComponent {
   private readonly router = inject(Router);
 
   protected readonly regleDUnMotDePasse = REGLE_D_UN_MOT_DE_PASSE;
-  protected readonly longueurMaxDUnNom = LONGUEUR_MAX_D_UN_NOM;
-  protected readonly longueurMaxDUnTelephone = LONGUEUR_MAX_D_UN_TELEPHONE;
+  protected readonly bornesDUnNom = BORNES_D_UN_NOM;
+  protected readonly bornesDUnTelephone = BORNES_D_UN_TELEPHONE;
+  protected readonly bornesDUnMotDePasseSaisi = BORNES_D_UN_MOT_DE_PASSE_SAISI;
 
   isEditing = signal(false);
   editFirstName = '';
   editLastName = '';
   editPhone = '';
+  editProfileSubmitted = false;
   editProfileLoading = false;
   editProfileSuccess?: string;
   editProfileError?: string;
@@ -100,6 +107,7 @@ export class ProfileComponent {
     this.editFirstName = user.firstName;
     this.editLastName = user.lastName;
     this.editPhone = user.phone ?? '';
+    this.editProfileSubmitted = false;
     this.editProfileSuccess = undefined;
     this.editProfileError = undefined;
     this.isEditing.set(true);
@@ -107,27 +115,30 @@ export class ProfileComponent {
 
   cancelEditing(): void {
     this.isEditing.set(false);
+    this.editProfileSubmitted = false;
     this.editProfileSuccess = undefined;
     this.editProfileError = undefined;
   }
 
-  saveProfile(): void {
-    this.editProfileLoading = true;
+  saveProfile(form: NgForm): void {
+    this.editProfileSubmitted = true;
     this.editProfileSuccess = undefined;
     this.editProfileError = undefined;
+    if (form.invalid) return;
 
+    this.editProfileLoading = true;
     handleFormSubmit(
       this.authService.updateProfile({
-        firstName: this.editFirstName,
-        lastName: this.editLastName,
+        firstName: this.editFirstName.trim(),
+        lastName: this.editLastName.trim(),
         phone: telephoneFacultatif(this.editPhone),
       }),
       this.cdr,
       {
-        fallbackError: $localize`:profile.edit.error.generic@@profileEditErrorGeneric:Impossible de mettre a jour le profil pour le moment.`,
+        fallbackError: $localize`:profile.edit.error.generic@@profileEditErrorGeneric:Impossible de mettre à jour le profil pour le moment.`,
         onSuccess: (updatedUser) => {
           this.authState.updateUser(updatedUser);
-          this.editProfileSuccess = $localize`:profile.edit.success@@profileEditSuccess:Profil mis a jour avec succes.`;
+          this.editProfileSuccess = $localize`:profile.edit.success@@profileEditSuccess:Profil mis à jour avec succès.`;
           this.isEditing.set(false);
         },
         onError: (message) => {

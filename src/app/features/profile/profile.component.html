@@ -47,15 +47,27 @@
               </button>
             </div>
           } @else {
-            <div class="pf-edit">
+            <form
+              class="pf-edit"
+              #editProfileForm="ngForm"
+              (ngSubmit)="saveProfile(editProfileForm)"
+            >
               <div class="pf-field">
                 <label for="editFirstName" i18n="@@profileEditFirstNameLabel">Prénom</label>
                 <input
                   id="editFirstName"
                   name="editFirstName"
                   type="text"
-                  [maxlength]="longueurMaxDUnNom"
+                  required
+                  [appBornesDeSaisie]="bornesDUnNom"
                   [(ngModel)]="editFirstName"
+                  #editFirstNameCtrl="ngModel"
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    erreursDuChamp;
+                    context: { $implicit: editFirstNameCtrl, soumis: editProfileSubmitted }
+                  "
                 />
               </div>
               <div class="pf-field">
@@ -64,8 +76,16 @@
                   id="editLastName"
                   name="editLastName"
                   type="text"
-                  [maxlength]="longueurMaxDUnNom"
+                  required
+                  [appBornesDeSaisie]="bornesDUnNom"
                   [(ngModel)]="editLastName"
+                  #editLastNameCtrl="ngModel"
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    erreursDuChamp;
+                    context: { $implicit: editLastNameCtrl, soumis: editProfileSubmitted }
+                  "
                 />
               </div>
               <div class="pf-field">
@@ -74,8 +94,16 @@
                   id="editPhone"
                   name="editPhone"
                   type="tel"
-                  [maxlength]="longueurMaxDUnTelephone"
+                  [appBornesDeSaisie]="bornesDUnTelephone"
+                  appFormatDeContact="telephone"
                   [(ngModel)]="editPhone"
+                  #editPhoneCtrl="ngModel"
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    erreursDuChamp;
+                    context: { $implicit: editPhoneCtrl, soumis: editProfileSubmitted }
+                  "
                 />
               </div>
               <p class="pf-note">
@@ -85,9 +113,8 @@
               </p>
               <div class="pf-actions">
                 <button
-                  type="button"
+                  type="submit"
                   class="btn btn-teal"
-                  (click)="saveProfile()"
                   [disabled]="editProfileLoading"
                   [attr.aria-busy]="editProfileLoading"
                 >
@@ -107,7 +134,7 @@
                   Annuler
                 </button>
               </div>
-            </div>
+            </form>
           }
 
           @if (editProfileSuccess) {
@@ -148,8 +175,12 @@
                 />
                 <ng-container
                   *ngTemplateOutlet="
-                    aideDuMotDePasseNeuf;
-                    context: { $implicit: newPasswordCtrl, soumis: setPasswordSubmitted }
+                    erreursDuChamp;
+                    context: {
+                      $implicit: newPasswordCtrl,
+                      soumis: setPasswordSubmitted,
+                      motDePasseNeuf: true,
+                    }
                   "
                 />
               </div>
@@ -200,11 +231,18 @@
                   name="currentPassword"
                   type="password"
                   required
+                  [appBornesDeSaisie]="bornesDUnMotDePasseSaisi"
                   [(ngModel)]="currentPassword"
                   #currentPasswordCtrl="ngModel"
                   [class.invalid]="
                     currentPasswordCtrl.invalid &&
                     (currentPasswordCtrl.touched || changePasswordSubmitted)
+                  "
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    erreursDuChamp;
+                    context: { $implicit: currentPasswordCtrl, soumis: changePasswordSubmitted }
                   "
                 />
               </div>
@@ -227,8 +265,12 @@
                 />
                 <ng-container
                   *ngTemplateOutlet="
-                    aideDuMotDePasseNeuf;
-                    context: { $implicit: changeNewPasswordCtrl, soumis: changePasswordSubmitted }
+                    erreursDuChamp;
+                    context: {
+                      $implicit: changeNewPasswordCtrl,
+                      soumis: changePasswordSubmitted,
+                      motDePasseNeuf: true,
+                    }
                   "
                 />
               </div>
@@ -273,10 +315,16 @@
     }
   </div>
 
-  <ng-template #aideDuMotDePasseNeuf let-controle let-soumis="soumis">
+  <ng-template #erreursDuChamp let-controle let-soumis="soumis" let-motDePasseNeuf="motDePasseNeuf">
     @if (controle.invalid && (controle.touched || soumis)) {
-      <p class="pf-msg err" appFieldErrors [errors]="controle.errors" [motDePasse]="true"></p>
-    } @else {
+      <p
+        class="pf-msg err"
+        appFieldErrors
+        [errors]="controle.errors"
+        [phone]="controle.name === 'editPhone'"
+        [motDePasse]="motDePasseNeuf === true"
+      ></p>
+    } @else if (motDePasseNeuf === true) {
       <p class="pf-note">{{ regleDUnMotDePasse }}</p>
     }
   </ng-template>

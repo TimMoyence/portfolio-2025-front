@@ -71,6 +71,34 @@ describe('ContactComponent', () => {
       expect(await saisir('#message', 'a'.repeat(2000))).toBeNull();
     });
 
+    it('juge le prénom, le nom et le message rognés et comptés en caractères, comme le back', async () => {
+      const sourire = String.fromCodePoint(0x1f600);
+      const mainsJointes = String.fromCodePoint(0x1f64f);
+      for (const selecteur of ['#firstName', '#lastName']) {
+        expect(await saisir(selecteur, '   '))
+          .withContext(selecteur)
+          .toEqual({ required: true });
+        expect(await saisir(selecteur, sourire.repeat(50)))
+          .withContext(selecteur)
+          .toBeNull();
+      }
+      expect(await saisir('#message', 'Bonjour   ')).toEqual({
+        minlength: { requiredLength: 10, actualLength: 7 },
+      });
+      expect(await saisir('#message', `Merci ${mainsJointes}${mainsJointes}`)).toEqual({
+        minlength: { requiredLength: 10, actualLength: 8 },
+      });
+      expect(await saisir('#message', sourire.repeat(2000))).toBeNull();
+    });
+
+    it('refuse un téléphone que le back refuse, et le dit sous le champ', async () => {
+      expect(await saisir('#phone', '06 98 a0 32 82')).toEqual({ phone: true });
+      expect(texteDuBlocDuChamp(page.fixture, '#phone')).toContain(
+        'Merci d’entrer un numéro de téléphone valide.',
+      );
+      expect(await saisir('#phone', '06 98 40 32 82')).toBeNull();
+    });
+
     it('affiche le refus servi par le back, jamais « Http failure response »', () => {
       const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
       port.contact.and.returnValue(

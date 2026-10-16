@@ -16,7 +16,8 @@ import type { ToolkitRequest } from '../../../core/models/toolkit-request.model'
 import { HoneypotDirective } from '../../directives/honeypot.directive';
 import { InteractionCollectorService } from '../../services/interaction-collector.service';
 import { readInputValue, readCheckboxChecked } from '../../utils/dom-event.utils';
-import { LONGUEUR_MAX_D_UN_NOM } from '../../utils/regles-de-saisie';
+import { BORNES_D_UN_NOM, erreursDeLongueur } from '../../utils/regles-de-saisie';
+import { FieldErrorsComponent } from '../field-errors/field-errors.component';
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 
@@ -25,7 +26,7 @@ const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
 @Component({
   selector: 'app-toolkit-form',
   standalone: true,
-  imports: [CommonModule, HoneypotDirective],
+  imports: [CommonModule, FieldErrorsComponent, HoneypotDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @switch (state()) {
@@ -52,7 +53,6 @@ const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
           <div>
             <input
               type="text"
-              [maxLength]="longueurMaxDUnNom"
               [value]="firstName()"
               (input)="firstName.set(readInputValue($event))"
               i18n-placeholder="@@toolkit-form.firstName.placeholder"
@@ -61,6 +61,9 @@ const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
               autocomplete="given-name"
               required
             />
+            @if (firstName().length > 0 && erreursDuPrenom(); as erreurs) {
+              <p appFieldErrors class="mt-1 text-sm text-red-600" [errors]="erreurs"></p>
+            }
           </div>
           <div>
             <input
@@ -73,6 +76,9 @@ const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
               autocomplete="email"
               required
             />
+            @if (erreurDAdresse(); as erreurs) {
+              <p appFieldErrors class="mt-1 text-sm text-red-600" [errors]="erreurs"></p>
+            }
           </div>
           <label class="flex items-start gap-2 text-xs text-scheme-text-muted cursor-pointer">
             <input
@@ -131,17 +137,21 @@ export class ToolkitFormComponent {
   readonly state = signal<FormState>('idle');
   readonly submittedEmail = signal('');
 
-  protected readonly longueurMaxDUnNom = LONGUEUR_MAX_D_UN_NOM;
+  protected readonly erreursDuPrenom = computed(() =>
+    erreursDeLongueur(this.firstName(), BORNES_D_UN_NOM),
+  );
 
-  readonly isValid = computed(() => {
-    const prenom = this.firstName().trim();
-    return (
-      prenom.length > 0 &&
-      prenom.length <= LONGUEUR_MAX_D_UN_NOM &&
-      estUneAdresseEmail(this.email().trim()) &&
-      this.termsAccepted()
-    );
+  protected readonly erreurDAdresse = computed(() => {
+    const adresse = this.email().trim();
+    return adresse.length > 0 && !estUneAdresseEmail(adresse) ? { email: true } : null;
   });
+
+  readonly isValid = computed(
+    () =>
+      this.erreursDuPrenom() === null &&
+      estUneAdresseEmail(this.email().trim()) &&
+      this.termsAccepted(),
+  );
 
   protected readInputValue = readInputValue;
 

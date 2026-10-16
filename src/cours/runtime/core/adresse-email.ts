@@ -7,6 +7,7 @@ const MORCEAU_DE_PARTIE_LOCALE = /^[a-z\d!#$%&'*+\-/=?^_`{|}~¡-퟿豈-﷏ﷰ-�
 const DOMAINE_DE_PREMIER_NIVEAU = /^([a-z¡-¨ª-퟿豈-﷏ﷰ-￯]{2,}|xn[a-z0-9-]{2,})$/i;
 const LABEL_DE_DOMAINE = /^[a-z_¡-￿0-9-]+$/i;
 const CARACTERE_PLEINE_CHASSE = /[！-～]/;
+const CARACTERE_INVISIBLE = /[\p{C}\p{Z}]/u;
 
 function octets(texte: string): number {
   return encodeURI(texte).split(/%..|./).length - 1;
@@ -38,7 +39,7 @@ function estUnePartieLocale(partieLocale: string): boolean {
 }
 
 export function estUneAdresseEmail(adresse: string): boolean {
-  if (adresse.length > LONGUEUR_MAX_D_UNE_ADRESSE) {
+  if (adresse.length > LONGUEUR_MAX_D_UNE_ADRESSE || CARACTERE_INVISIBLE.test(adresse)) {
     return false;
   }
   const parties = adresse.split('@');

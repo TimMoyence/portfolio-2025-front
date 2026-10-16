@@ -1,5 +1,6 @@
 import { estUneAdresseEmail } from './adresse-email';
 import { creerCle } from './cle';
+import { longueurDeTexte } from './longueur-de-texte';
 import { persistJson, readJson, removeKey } from './storage';
 
 const CLE = 'fp.identite';
@@ -43,9 +44,9 @@ export function saveIdentity(input: IdentityInput): IdentityRegistration {
     throw new Error('Le prénom et le nom sont obligatoires');
   }
   if (
-    prenom.length > LONGUEURS_MAX_DE_L_IDENTITE.prenom ||
-    nom.length > LONGUEURS_MAX_DE_L_IDENTITE.nom ||
-    email.length > LONGUEURS_MAX_DE_L_IDENTITE.email
+    longueurDeTexte(prenom) > LONGUEURS_MAX_DE_L_IDENTITE.prenom ||
+    longueurDeTexte(nom) > LONGUEURS_MAX_DE_L_IDENTITE.nom ||
+    longueurDeTexte(email) > LONGUEURS_MAX_DE_L_IDENTITE.email
   ) {
     throw new Error('Identité trop longue');
   }

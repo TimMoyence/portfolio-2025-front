@@ -29,6 +29,7 @@ import type { FaqItem } from '../../shared/components/faq-section/faq-section.co
 import { FaqSectionComponent } from '../../shared/components/faq-section/faq-section.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
+import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
 import {
@@ -74,6 +75,7 @@ function formulaireVierge(): AuditRequestPayload {
     FaqSectionComponent,
     AuditClientReportSectionComponent,
     FieldErrorsComponent,
+    BornesDeSaisieDirective,
     FormatDeContactDirective,
     HoneypotDirective,
   ],
