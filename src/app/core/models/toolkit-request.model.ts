@@ -1,8 +1,7 @@
+import type { ChampsAntiRobot } from './champs-anti-robot.model';
 import type { InteractionProfile } from './interaction-profile.model';
 
-export interface ToolkitRequest {
-  website?: string;
-  formStartedAt?: number;
+export interface ToolkitRequest extends ChampsAntiRobot {
   firstName: string;
   email: string;
   formationSlug: string;
@@ -14,5 +13,5 @@ export interface ToolkitRequest {
 
 export interface ToolkitResponse {
   message: string;
-  accessToken: string;
+  accessToken?: string;
 }

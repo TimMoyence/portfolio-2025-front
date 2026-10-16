@@ -5,6 +5,8 @@ import { getApiBaseUrl } from '../http/api-config';
 import type { ToolkitPageData } from '../models/toolkit-page.model';
 import type { ToolkitRequest, ToolkitResponse } from '../models/toolkit-request.model';
 import type { LeadMagnetPort } from '../ports/lead-magnet.port';
+import { luPar } from './lu-par';
+import { guideDemandeServi, guideServi } from './site-schemas';
 
 @Injectable()
 export class LeadMagnetHttpAdapter implements LeadMagnetPort {
@@ -13,15 +15,14 @@ export class LeadMagnetHttpAdapter implements LeadMagnetPort {
   constructor(private readonly http: HttpClient) {}
 
   requestToolkit(request: ToolkitRequest): Observable<ToolkitResponse> {
-    return this.http.post<ToolkitResponse>(
-      `${this.baseUrl}/lead-magnets/formations-toolkit`,
-      request,
-    );
+    return this.http
+      .post<unknown>(`${this.baseUrl}/lead-magnets/formations-toolkit`, request)
+      .pipe(luPar(guideDemandeServi));
   }
 
   getToolkitByToken(token: string): Observable<ToolkitPageData> {
-    return this.http.get<ToolkitPageData>(
-      `${this.baseUrl}/lead-magnets/toolkit/${encodeURIComponent(token)}`,
-    );
+    return this.http
+      .get<unknown>(`${this.baseUrl}/lead-magnets/toolkit/${encodeURIComponent(token)}`)
+      .pipe(luPar(guideServi));
   }
 }

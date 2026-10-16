@@ -6,11 +6,11 @@ export interface AuthUser {
   phone: string | null;
   isActive: boolean;
   roles: string[];
-  hasPassword?: boolean;
+  createdAt: string;
+  updatedAt: string;
+  updatedOrCreatedBy: string | null;
+  hasPassword: boolean;
   emailVerified: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-  updatedOrCreatedBy?: string | null;
 }
 
 export interface AuthSession {

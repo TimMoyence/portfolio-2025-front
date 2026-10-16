@@ -1,4 +1,5 @@
 import type { CanActivateFn } from '@angular/router';
+import { cheminDuPupitre } from '../config/cours-en-seance';
 import { gardeApresLaSession } from './apres-la-session';
 
 export const coursEntreeGuard: CanActivateFn = gardeApresLaSession(
@@ -9,7 +10,7 @@ export const coursEntreeGuard: CanActivateFn = gardeApresLaSession(
       return router.createUrlTree(['/cours/rejoindre']);
     }
     return authState.hasRole('teacher')
-      ? router.createUrlTree(['/cours/presenter', slug])
+      ? router.parseUrl(cheminDuPupitre(slug))
       : router.createUrlTree(['/cours/rejoindre'], { queryParams: { cours: slug } });
   },
 );
