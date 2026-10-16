@@ -8,7 +8,6 @@ export {
   type RichListItem,
 } from './layouts/slide-image/slide-image.component';
 export { SlideIllustrationComponent } from './layouts/slide-illustration/slide-illustration.component';
-export { SlideVideoComponent } from './layouts/slide-video/slide-video.component';
 export { SlideStatsComponent } from './layouts/slide-stats/slide-stats.component';
 export { SlideQuoteComponent } from './layouts/slide-quote/slide-quote.component';
 export {
@@ -27,6 +26,5 @@ export { SlideScatterComponent } from './layouts/slide-scatter/slide-scatter.com
 export { SlideSortReviewComponent } from './layouts/slide-sort-review/slide-sort-review.component';
 export { SlideAnswerReviewComponent } from './layouts/slide-answer-review/slide-answer-review.component';
 
-export { SlideQuizComponent } from './interactions/slide-quiz/slide-quiz.component';
 export { SlidePollComponent } from './interactions/slide-poll/slide-poll.component';
 export { SlideReflectionComponent } from './interactions/slide-reflection/slide-reflection.component';

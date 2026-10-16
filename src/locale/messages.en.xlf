@@ -3267,23 +3267,6 @@
         <target>Select your role</target>
       </segment>
     </unit>
-    <!-- Navbar — L'Atelier dropdown -->
-    <!-- Weather presentation -->
-    <!-- Weather app -->
-    <!-- Weather level system -->
-    <!-- Budget app -->
-    <!-- Dashboard hero -->
-    <!-- Empty state -->
-    <!-- Month picker -->
-    <!-- Summary cards -->
-    <!-- Filters -->
-    <!-- Transactions table -->
-    <!-- Months -->
-    <!-- Sebastian presentation -->
-
-    <!-- Cartes meteo Curieux (Phase 2B) -->
-
-    <!-- Cartes meteo Expert (Phase 3) -->
     <unit id="navProfileLabel">
       <segment>
         <source>Profil</source>
@@ -3632,19 +3615,7 @@
     </unit>
 
     <!-- ============================================================ -->
-    <!-- budget-presentation-data.ts                                   -->
-    <!-- ============================================================ -->
-
-    <!-- ============================================================ -->
-    <!-- weather-presentation-data.ts                                  -->
-    <!-- ============================================================ -->
-
-    <!-- ============================================================ -->
-    <!-- sebastian-presentation-data.ts                                -->
-    <!-- ============================================================ -->
-
-    <!-- ============================================================ -->
-    <!-- ia-solopreneurs.data.ts                                       -->
+    <!-- ia-solopreneurs.component.html                                -->
     <!-- ============================================================ -->
 
     <!-- Slide: accroche -->
@@ -4175,8 +4146,6 @@
       </segment>
     </unit>
 
-    <!-- Slide: demo-gamma -->
-
     <!-- Slide: recap-8020 -->
     <unit id="ia-solo.recap-8020.title">
       <segment>
@@ -4354,9 +4323,6 @@
         <target>Verification failed: the link is invalid or has expired.</target>
       </segment>
     </unit>
-    <!-- Members panel -->
-    <!-- Contributions panel -->
-    <!-- Savings goals -->
     <unit id="navFormationsLabel">
       <segment>
         <source>Formations</source>
@@ -7493,7 +7459,6 @@
       </segment>
     </unit>
 
-    <!-- Budget magic-link invitations (Phase 3 — 2026-05-12) -->
 
 
 

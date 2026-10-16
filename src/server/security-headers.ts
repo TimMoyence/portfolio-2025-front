@@ -5,7 +5,6 @@
  * pour ne pas risquer de casser le rendu SSR/hydratation : elle se contente de
  * journaliser les violations cote navigateur. Les origines listees correspondent
  * aux ressources reellement chargees par l'application :
- * - `plausible.io` : analytics (script + events).
  * - `accounts.google.com` / `apis.google.com` : OAuth Google.
  * - `style-src 'unsafe-inline'` requis par Angular (styles inline d'hydratation).
  */
@@ -14,8 +13,8 @@ const CSP_REPORT_ONLY = [
   "frame-ancestors 'self'",
   "img-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
-  "script-src 'self' https://plausible.io https://accounts.google.com https://apis.google.com",
-  "connect-src 'self' https://plausible.io",
+  "script-src 'self' https://accounts.google.com https://apis.google.com",
+  "connect-src 'self'",
   "font-src 'self' data:",
 ].join('; ');
 

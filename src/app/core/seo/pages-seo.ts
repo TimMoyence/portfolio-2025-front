@@ -1,4 +1,4 @@
-import { estAliasDAccueil, normalizePath } from './chemins';
+import { normalizePath } from './chemins';
 import type { SeoMetadataFile, SeoPageEntry } from './seo-metadata.model';
 
 const ID_DE_L_ACCUEIL = 'home';
@@ -22,7 +22,7 @@ export const pageSeoDeLaRoute = (
   route: string,
 ): SeoPageEntry | undefined =>
   metadata.pages.find((page) =>
-    estAliasDAccueil(normalizePath(route))
+    normalizePath(route) === '/'
       ? estPageDAccueil(page)
       : normalizePath(page.path) === normalizePath(route),
   );

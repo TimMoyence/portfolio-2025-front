@@ -429,7 +429,7 @@ describe('GrowthAuditComponent', () => {
         "Impossible d'envoyer la demande. Réessayez dans un instant.",
       ],
     ] as const) {
-      it(`dit ${cas} par un message localisé, rend le bouton et ne suit que le statut`, () => {
+      it(`dit ${cas} par un message localisé, rend le bouton et n envoie aucun suivi (${statut})`, () => {
         const fixture = TestBed.createComponent(GrowthAuditComponent);
         auditServiceMock.submit.and.returnValue(throwError(() => erreur));
 
@@ -438,9 +438,7 @@ describe('GrowthAuditComponent', () => {
 
         expect(fixture.componentInstance.errorMessage).toBe(attendu);
         expect(fixture.componentInstance.isSubmitting).toBeFalse();
-        expect(suivi).toHaveBeenCalledOnceWith('audit_error', {
-          props: { reason: `http_${statut}` },
-        });
+        expect(suivi).not.toHaveBeenCalled();
       });
     }
 

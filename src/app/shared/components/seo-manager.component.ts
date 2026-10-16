@@ -7,7 +7,6 @@ import { filter, map, mergeMap, switchMap } from 'rxjs/operators';
 import { APP_CONFIG } from '../../core/config/app-config.token';
 import {
   buildLocalizedPath,
-  estAliasDAccueil,
   routeSansLocale,
   urlAbsolue,
   urlLocalisee,
@@ -172,8 +171,10 @@ export class SeoManagerComponent {
     canonicalPath: string;
     relativePath: string;
   } {
-    const { locale, route } = routeSansLocale(currentUrl, this.seoRegistry.getLocales());
-    const relativePath = estAliasDAccueil(route) ? '/' : route;
+    const { locale, route: relativePath } = routeSansLocale(
+      currentUrl,
+      this.seoRegistry.getLocales(),
+    );
     return {
       canonicalPath: buildLocalizedPath(locale ?? this.seoRegistry.getLocaleId(), relativePath),
       relativePath,

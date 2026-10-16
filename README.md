@@ -35,7 +35,6 @@ Source de verite : [`src/app/app.routes.ts`](./src/app/app.routes.ts) (et [`src/
 - `/offer` — Page des offres
 - `/contact` — Formulaire de contact
 - `/growth-audit` — Audit SEO automatise
-- `/atelier` et toutes ses sous-routes, `/client-project` — Redirections vers `/projets` (les apps de l'atelier sont retirees)
 
 ### Auth
 
@@ -81,9 +80,11 @@ Pages non indexables (`noindex, nofollow`), en rendu client (`RenderMode.Client`
 - `/cookie-settings` — Parametres cookies
 - `/terms` — CGU
 - `/privacy` — Politique de confidentialite
-- `/commonbudgetTM` — Redirection vers l'accueil `/`
-- `/slides/library` — Bibliotheque de slides interne (`noindex, nofollow`)
 - `/**` — 404
+
+Les anciennes URL (`/home`, `/client-project`, `/commonbudgetTM`, `/atelier` et ses sous-routes, l'ancien
+slug du B2-02) sont redirigées en 301 par le serveur Express (`src/server/redirects.ts`), avant le
+routeur Angular.
 
 ## Prise en main rapide
 

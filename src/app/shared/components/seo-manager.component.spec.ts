@@ -162,7 +162,7 @@ describe('SeoManagerComponent', () => {
   });
 
   describe('accueil, aligne sur le canonical rendu par le serveur', () => {
-    for (const url of ['/', '/home', '/fr', '/fr/', '/fr/home']) {
+    for (const url of ['/', '/fr', '/fr/']) {
       it(`canonise ${url} en /fr/ et annonce /fr/ et /en/`, () => {
         routerStub.url = url;
 

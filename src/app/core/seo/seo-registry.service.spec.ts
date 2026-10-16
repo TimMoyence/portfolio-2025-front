@@ -133,11 +133,6 @@ describe('SeoRegistryService', () => {
         expectedId: 'presentation',
       },
       {
-        label: "devrait normaliser le chemin '/home' vers la page d'accueil",
-        path: '/home',
-        expectedId: 'home',
-      },
-      {
         label: 'devrait ignorer les query params et fragments',
         path: '/contact?source=test#section',
         expectedId: 'contact',
@@ -174,12 +169,14 @@ describe('SeoRegistryService', () => {
       expect(seo.title).toBe('Présentation — Tim Moyence Portfolio');
     });
 
-    it('devrait retourner null pour un chemin inexistant', async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByPath('/chemin-inexistant'));
+    for (const chemin of ['/chemin-inexistant', '/home']) {
+      it(`devrait retourner null pour ${chemin}, que le routeur ne sert pas`, async () => {
+        const service = createService('fr');
+        const result = await firstValueFrom(service.getSeoByPath(chemin));
 
-      expect(result).toBeNull();
-    });
+        expect(result).toBeNull();
+      });
+    }
   });
 
   describe('resolution de locale avec fallback', () => {

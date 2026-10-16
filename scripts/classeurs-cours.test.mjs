@@ -66,11 +66,9 @@ test('le B3-01 garde le manifeste de ses classeurs parmi les fixtures de test', 
   );
 });
 
-test('fouille chaque dossier qu angular.json publie, src/assets et public compris', () => {
+test('fouille chaque dossier qu angular.json publie, src/assets compris', () => {
   assert.deepEqual(
-    [DOSSIER_DES_ASSETS, cheminDuDepot('public')].filter(
-      (racine) => !racinesDesAssetsPublies().includes(racine),
-    ),
+    [DOSSIER_DES_ASSETS].filter((racine) => !racinesDesAssetsPublies().includes(racine)),
     [],
   );
 });
