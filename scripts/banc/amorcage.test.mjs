@@ -33,7 +33,7 @@ function apiSimulee(reponses) {
 }
 
 function inscriptionPuisConnexion() {
-  return [{ status: 201 }, { status: 201, json: { accessToken: 'jeton-du-banc' } }];
+  return [{ status: 200 }, { status: 200, json: { accessToken: 'jeton-du-banc' } }];
 }
 
 function amorcerSur(api, executerSql = () => Promise.resolve('UPDATE 1')) {
@@ -59,21 +59,36 @@ test("corpsDInscription reprend l'identite du formateur du banc", () => {
   });
 });
 
-test('inscrireFormateur accepte une creation comme un compte deja present', async () => {
-  for (const status of [201, 409]) {
-    const api = apiSimulee([{ status }]);
-    await inscrireFormateur({ appeler: api.appeler, urlApi: '/api', identifiants: IDENTIFIANTS });
-    assert.equal(api.vues[0].url, '/api/auth/register');
+test('inscrireFormateur accepte le 200 que le back rend a une creation comme a un compte deja present', async () => {
+  const api = apiSimulee([{ status: 200 }]);
+
+  await inscrireFormateur({ appeler: api.appeler, urlApi: '/api', identifiants: IDENTIFIANTS });
+
+  assert.equal(api.vues[0].url, '/api/auth/register');
+});
+
+test('inscrireFormateur remonte le statut et le corps de toute autre reponse', async () => {
+  for (const [status, corps] of [
+    [500, 'panne base'],
+    [201, 'ancien contrat'],
+    [409, 'ancien contrat'],
+  ]) {
+    const api = apiSimulee([{ status, corps }]);
+
+    await assert.rejects(
+      inscrireFormateur({ appeler: api.appeler, urlApi: '/api', identifiants: IDENTIFIANTS }),
+      new RegExp(`inscription : ${status} ${corps}`),
+    );
   }
 });
 
-test('inscrireFormateur remonte le corps de la reponse quand l API refuse', async () => {
-  const api = apiSimulee([{ status: 500, corps: 'panne base' }]);
+test('amorcerFormateur refuse une connexion qui ne rend pas 200', async () => {
+  const api = apiSimulee([
+    { status: 200 },
+    { status: 201, json: { accessToken: 'jeton-du-banc' } },
+  ]);
 
-  await assert.rejects(
-    inscrireFormateur({ appeler: api.appeler, urlApi: '/api', identifiants: IDENTIFIANTS }),
-    /inscription : 500 panne base/,
-  );
+  await assert.rejects(amorcerSur(api), /connexion : 201/);
 });
 
 test('amorcerFormateur enchaine inscription, promotion et connexion', async () => {
@@ -116,7 +131,7 @@ test("amorcerFormateur poste l'inscription et la connexion en JSON", async () =>
 });
 
 test('amorcerFormateur echoue quand la promotion ne touche aucune ligne', async () => {
-  const api = apiSimulee([{ status: 201 }]);
+  const api = apiSimulee([{ status: 200 }]);
 
   await assert.rejects(
     amorcerSur(api, () => Promise.resolve('UPDATE 0')),
@@ -125,7 +140,7 @@ test('amorcerFormateur echoue quand la promotion ne touche aucune ligne', async 
 });
 
 test('amorcerFormateur refuse une connexion sans jeton', async () => {
-  const api = apiSimulee([{ status: 201 }, { status: 201, json: {} }]);
+  const api = apiSimulee([{ status: 200 }, { status: 200, json: {} }]);
 
   await assert.rejects(amorcerSur(api), /jeton absent/);
 });

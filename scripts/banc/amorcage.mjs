@@ -65,7 +65,7 @@ export async function inscrireFormateur({ appeler, urlApi, identifiants }) {
     `${urlApi}/auth/register`,
     corpsDInscription(identifiants),
   );
-  if (reponse.status !== 201 && reponse.status !== 409) {
+  if (reponse.status !== 200) {
     throw new AmorcageEchoue('inscription', `${reponse.status} ${await reponse.text()}`);
   }
 }
@@ -83,7 +83,7 @@ async function connecterLeFormateur({ appeler, urlApi, identifiants }) {
     email: identifiants.email,
     password: identifiants.motDePasse,
   });
-  if (reponse.status !== 201) {
+  if (reponse.status !== 200) {
     throw new AmorcageEchoue('connexion', `${reponse.status} ${await reponse.text()}`);
   }
   const { accessToken } = await reponse.json();
