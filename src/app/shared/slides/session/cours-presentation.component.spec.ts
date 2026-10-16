@@ -2045,35 +2045,52 @@ describe('CoursPresentationComponent : pièce jointe d un écran', () => {
       };
     };
 
+    const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
+
+    const REFUS_SIGNALES: readonly {
+      readonly cas: string;
+      readonly refus: Error;
+      readonly alerte: (mode: 'etudiant' | 'formateur') => string;
+    }[] = [
+      { cas: 'refusé', refus: new Error('404'), alerte: (mode) => ALERTES_D_ECHEC[mode] },
+      {
+        cas: 'limité par la cadence du serveur',
+        refus: new PieceJointeRefusee('indisponible', 429, { minutes: 2 }),
+        alerte: () => ATTENTE_COMMUNE,
+      },
+    ];
+
     for (const mode of ['etudiant', 'formateur'] as const) {
-      it(`V5 · en ${mode}, signale un téléchargement refusé, puis réessaie au clic suivant`, async () => {
-        const { telechargement, clic, monte, bouton } = await monterUnRefusPuisLeClasseur(
-          mode,
-          new Error('404'),
-        );
+      for (const { cas, refus, alerte } of REFUS_SIGNALES) {
+        it(`V5 · en ${mode}, signale un téléchargement ${cas}, puis réessaie au clic suivant`, async () => {
+          const { telechargement, clic, monte, bouton } = await monterUnRefusPuisLeClasseur(
+            mode,
+            refus,
+          );
 
-        bouton.click();
-        await monte.rafraichir();
-        const apresLEchec = {
-          alerte: texteDe(alerteDEchec(monte)),
-          role: alerteDEchec(monte)?.getAttribute('role'),
-          desactive: bouton.disabled,
-        };
-        bouton.click();
-        await monte.rafraichir();
+          bouton.click();
+          await monte.rafraichir();
+          const apresLEchec = {
+            alerte: texteDe(alerteDEchec(monte)),
+            role: alerteDEchec(monte)?.getAttribute('role'),
+            desactive: bouton.disabled,
+          };
+          bouton.click();
+          await monte.rafraichir();
 
-        expect(apresLEchec).toEqual({
-          alerte: ALERTES_D_ECHEC[mode],
-          role: 'alert',
-          desactive: false,
+          expect(apresLEchec).toEqual({
+            alerte: alerte(mode),
+            role: 'alert',
+            desactive: false,
+          });
+          expect({
+            appels: telechargement.calls.count(),
+            telecharges: clic.calls.count(),
+            alerte: alerteDEchec(monte),
+          }).toEqual({ appels: 2, telecharges: 1, alerte: null });
+          monte.detruire();
         });
-        expect({
-          appels: telechargement.calls.count(),
-          telecharges: clic.calls.count(),
-          alerte: alerteDEchec(monte),
-        }).toEqual({ appels: 2, telecharges: 1, alerte: null });
-        monte.detruire();
-      });
+      }
     }
 
     it('V5 · au poste, invite à réessayer une reprise retenue, sans échec, et l efface au téléchargement suivant', async () => {

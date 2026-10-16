@@ -1,6 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { Subject, of, throwError } from 'rxjs';
 import { balisesInjectees, CHARGE_XSS, xssDeclenche } from '../../../../../testing/charge-xss';
 import {
   buildParticipantDeSeance,
@@ -8,7 +8,7 @@ import {
 } from '../../../../../testing/factories/formations.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../../testing/setup-test-bed';
-import type { FormationsPort } from '../../../../core/ports/formations.port';
+import type { FormationsPort, ParticipantDeSeance } from '../../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../../core/ports/formations.port';
 import { PanneauParticipantsComponent } from './panneau-participants.component';
 
@@ -86,6 +86,29 @@ describe('PanneauParticipantsComponent', () => {
     expect(lire(fixture, 'activite-participant')).toBeNull();
     expect(lire(fixture, 'activite-participants-afficher')).not.toBeNull();
   }
+
+  it('L4-F17 · annonce le chargement de la liste pendant sa lecture', async () => {
+    const lecture = new Subject<{ participants: readonly ParticipantDeSeance[] }>();
+    port.lireParticipants.and.returnValue(lecture);
+    const fixture = monter();
+    const racine = fixture.nativeElement as HTMLElement;
+    const statut = (): string | undefined =>
+      racine.querySelector('[role="status"]')?.textContent?.trim();
+
+    cibleMarque(fixture, 'activite-participants-afficher', 'le panneau').click();
+    fixture.detectChanges();
+
+    expect(statut()).toBe('Chargement…');
+    expect(lire(fixture, 'activite-participants-masquer')).not.toBeNull();
+
+    lecture.next({ participants: [buildParticipantDeSeance()] });
+    lecture.complete();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(statut()).toBeUndefined();
+    expect(lire(fixture, 'activite-participant')).not.toBeNull();
+  });
 
   it('lit les participants puis marque evince celui que le formateur retire', async () => {
     const fixture = await afficherDeuxParticipants();

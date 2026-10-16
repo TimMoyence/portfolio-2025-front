@@ -1,5 +1,10 @@
 import { creerMetadonneesBrique } from '../../content/types';
-import { projeterMetadonnees, projeterOptions } from './projection';
+import {
+  avecJeNeSaisPas,
+  ID_JE_NE_SAIS_PAS,
+  projeterMetadonnees,
+  projeterOptions,
+} from './projection';
 
 const METADONNEES = creerMetadonneesBrique({
   concepts: ['capitalisation'],
@@ -41,5 +46,18 @@ describe('projection vers le poste etudiant', () => {
 
     expect(Object.keys(options[0])).toEqual(['id', 'libelle']);
     expect(JSON.stringify(options)).not.toContain('interet-simple');
+  });
+});
+
+describe('L4-F15 · option je ne sais pas', () => {
+  it('ajoute l option je ne sais pas après les options servies, sans toucher la source', () => {
+    const servies = [{ id: 'a', libelle: 'Mille euros' }];
+
+    expect(avecJeNeSaisPas(servies, 'Je ne sais pas')).toEqual([
+      { id: 'a', libelle: 'Mille euros' },
+      { id: '__je_ne_sais_pas__', libelle: 'Je ne sais pas' },
+    ]);
+    expect(servies.length).toBe(1);
+    expect(ID_JE_NE_SAIS_PAS).toBe('__je_ne_sais_pas__');
   });
 });

@@ -96,6 +96,12 @@ export function attendreLEnvoiVideRefuse(hote: HTMLElement): void {
   );
 }
 
+export function attendreLeRefusEffaceALaFrappe(hote: HTMLElement, frapper: () => void): void {
+  attendreLEnvoiVideRefuse(hote);
+  frapper();
+  expect(libelleOmbre(hote, 'retour')).toBe('');
+}
+
 export function attendreLeRenvoiEpuise(
   hote: HTMLElement,
   recus: readonly unknown[],

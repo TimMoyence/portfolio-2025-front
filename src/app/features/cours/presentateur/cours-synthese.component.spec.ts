@@ -1,7 +1,7 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { Observable } from 'rxjs';
-import { of, throwError } from 'rxjs';
+import { isObservable, of, throwError } from 'rxjs';
 import type {
   FichierTelecharge,
   ParticipantRapporte,
@@ -104,12 +104,12 @@ function textes(fixture: Fixture, nom: string): readonly string[] {
 }
 
 async function monter(
-  rapport: RapportSeance,
+  rapport: RapportSeance | Observable<RapportSeance>,
   deroule: Observable<DerouleCours> = of(buildDerouleCours()),
   csv: Observable<FichierTelecharge> = of(buildFichierTelecharge()),
 ): Promise<Fixture> {
   const port = createFormationsPortStub();
-  port.lireResultats.and.returnValue(of(rapport));
+  port.lireResultats.and.returnValue(isObservable(rapport) ? rapport : of(rapport));
   port.lireDeroule.and.returnValue(deroule);
   port.telechargerRapportCsv.and.returnValue(csv);
   setupTestBed({
@@ -501,6 +501,15 @@ describe('CoursSyntheseComponent', () => {
     exporter(fixture);
 
     expect(textes(fixture, 'synthese-export-echec').length).toBe(1);
+  });
+
+  it('L4-F17 · alerte quand le rapport de la seance ne peut pas etre lu', async () => {
+    const fixture = await monter(throwError(() => new Error('reseau coupe')));
+
+    expect(textes(fixture, 'synthese-echec')).toEqual([
+      "La synthèse n'a pas pu être lue. Rechargez la page, puis réessayez.",
+    ]);
+    expect(textes(fixture, 'synthese-ligne')).toEqual([]);
   });
 
   it('une seance sans participant affiche un message plutot qu un tableau vide', async () => {

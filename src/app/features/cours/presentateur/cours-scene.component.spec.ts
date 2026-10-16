@@ -42,6 +42,7 @@ import { buildVisualSlide } from '../../../../testing/factories/visual-slide.fac
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { cibleMarque } from '../../../../testing/marqueurs-dom';
 import {
+  attendreAucunFluxApresLaDestruction,
   attendreChaqueCalqueEntierDansLaToile,
   attendreChaqueLibelleSepareDeSaValeur,
   attendreLaFermetureDuFlux,
@@ -311,6 +312,15 @@ describe('CoursSceneComponent', () => {
 
     expect(cible(fixture, 'scene-echec').getAttribute('role')).toBe('alert');
     expect(double.fabrique).not.toHaveBeenCalled();
+  });
+
+  it('L4-F17 · n ouvre aucun flux quand le deroule arrive apres la destruction de la scene', async () => {
+    const lecture = new Subject<DerouleCours>();
+    port.lireDeroule.and.returnValue(lecture);
+    const fixture = monter();
+    await fixture.whenStable();
+
+    await attendreAucunFluxApresLaDestruction(double, fixture, lecture, deroule);
   });
 
   it('affiche un message de fin et ferme le flux quand la seance est close', async () => {

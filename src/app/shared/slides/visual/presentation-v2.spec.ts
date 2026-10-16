@@ -1,10 +1,12 @@
 import type { EcranContent } from '../../../../cours/content/types';
 import {
   aUnePresentation,
+  ecranSourceDe,
   objet,
   presentationDe,
   quizImbrique,
   quizPrincipal,
+  RENDUS_DE_REVELATION,
 } from './presentation-v2';
 
 const QUESTION = { id: 'b2-s3-quiz', type: 'quiz', question: 'Quelle échelle vérifier ?' };
@@ -102,5 +104,20 @@ describe('quizPrincipal et quizImbrique', () => {
   it('rend null sur une présentation absente, sans lever', () => {
     expect(quizPrincipal(null)).toBeNull();
     expect(quizImbrique(null)).toBeNull();
+  });
+});
+
+describe('ecranSourceDe et RENDUS_DE_REVELATION', () => {
+  it('ne tient pour rendus de révélation que la revue du tri et celle de la réponse', () => {
+    expect([...RENDUS_DE_REVELATION]).toEqual(['sort-review', 'answer-review']);
+  });
+
+  it('lit l’écran source d’une correction, et rend null sans source ni identifiant textuel', () => {
+    expect(ecranSourceDe({ screenId: 'B2-01-A1-05-ANATOMIE', sortId: 'K' })).toBe(
+      'B2-01-A1-05-ANATOMIE',
+    );
+    for (const sans of [null, {}, { screenId: 12 }, { screenId: null }]) {
+      expect(ecranSourceDe(sans)).withContext(JSON.stringify(sans)).toBeNull();
+    }
   });
 });

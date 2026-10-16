@@ -268,6 +268,7 @@ describe('FpPro', () => {
 
       expect(envoisEmis()).toEqual(['fp-pro-submit']);
       expect(champs().every((champ) => champ.disabled)).toBeTrue();
+      expect(cible(hote, 'valider')?.hasAttribute('disabled')).toBeTrue();
     });
 
     it('L3 · confie chaque frappe au brouillon et la restaure au remontage', () => {

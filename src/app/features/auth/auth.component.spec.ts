@@ -355,7 +355,7 @@ describe('AuthComponent', () => {
       TestBed.resetTestingModule();
     });
 
-    function connecterParGoogle(): void {
+    function connecterParGoogle(context: 'sign-up' | 'log-in' = 'log-in'): void {
       (
         component as unknown as {
           onGoogleCredential: (
@@ -363,7 +363,7 @@ describe('AuthComponent', () => {
             context: 'sign-up' | 'log-in',
           ) => void;
         }
-      ).onGoogleCredential({ credential: 'google-id-token' }, 'log-in');
+      ).onGoogleCredential({ credential: 'google-id-token' }, context);
     }
 
     it('appelle googleAuth et redirige vers returnUrl par defaut', async () => {
@@ -401,6 +401,33 @@ describe('AuthComponent', () => {
       connecterParGoogle();
 
       expect(component.loginErrorMessage).toBe("Échec de l'authentification Google.");
+    });
+
+    async function echouerParGoogle(erreur: unknown, context: 'sign-up' | 'log-in'): Promise<void> {
+      await setupWithSeoKey(context === 'sign-up' ? 'register' : 'login');
+      authService.googleAuth.and.returnValue(throwError(() => erreur));
+      connecterParGoogle(context);
+    }
+
+    it('L4-F22 · dit l échec Google dans l onglet d inscription quand il en part, sans toucher la connexion', async () => {
+      await echouerParGoogle(
+        new HttpErrorResponse({ status: 0, url: 'https://asilidesign.fr' }),
+        'sign-up',
+      );
+
+      expect(component.signupErrorMessage).toBe("Échec de l'authentification Google.");
+      expect(component.loginErrorMessage).toBeUndefined();
+    });
+
+    it('L4-F22 · dit la limite horaire d un échec Google avec l attente lue dans Retry-After', async () => {
+      await echouerParGoogle(
+        refusDuBack(429, 'ThrottlerException: Too Many Requests', { 'Retry-After': '120' }),
+        'log-in',
+      );
+
+      expect(component.loginErrorMessage).toBe(
+        'Trop de tentatives en peu de temps : réessayez dans 2 min.',
+      );
     });
   });
 });

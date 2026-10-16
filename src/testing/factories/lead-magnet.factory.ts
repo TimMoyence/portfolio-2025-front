@@ -79,8 +79,10 @@ export function buildToolkitPageData(overrides: Partial<ToolkitPageData> = {}): 
   };
 }
 
-export function createLeadMagnetPortStubWithError(): jasmine.SpyObj<LeadMagnetPort> {
+export function createLeadMagnetPortStubWithError(
+  erreur: unknown = new Error('Network error'),
+): jasmine.SpyObj<LeadMagnetPort> {
   const stub = espionnerLeadMagnetPort();
-  stub.requestToolkit.and.returnValue(throwError(() => new Error('Network error')));
+  stub.requestToolkit.and.returnValue(throwError(() => erreur));
   return stub;
 }

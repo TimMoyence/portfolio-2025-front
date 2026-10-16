@@ -40,6 +40,7 @@ import type {
 } from '../ports/formations.port';
 import {
   FORMATIONS_PORT,
+  limiteDuRefus,
   PieceJointeRefusee,
   RattachementRefuse,
   ReponseLibreRefusee,
@@ -67,6 +68,29 @@ const REPONSE_LIBRE = {
   response: 'raisonnement',
   dureeMs: 3200,
 };
+
+const LIMITE_ATTEINTE = {
+  status: 429,
+  statusText: 'Too Many Requests',
+  headers: { 'Retry-After': '120' },
+};
+
+const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
+
+function attendreLAttenteCommune(
+  refus: {
+    readonly motif: string;
+    readonly statut: number;
+    readonly message: string;
+    readonly limite?: unknown;
+  },
+  motif: string,
+  contexte = motif,
+): void {
+  expect([refus.motif, refus.statut, refus.message, refus.limite, limiteDuRefus(refus)])
+    .withContext(contexte)
+    .toEqual([motif, LIMITE_ATTEINTE.status, ATTENTE_COMMUNE, { minutes: 2 }, { minutes: 2 }]);
+}
 
 const RATTACHEMENT: Rattachement = {
   participantId: '8f1c3b2a-5d4e-4f6a-9b8c-7d6e5f4a3b2c',
@@ -292,6 +316,14 @@ describe('FormationsHttpAdapter', () => {
         attendreLeRefus(await refusAuPoste(repondre), motif, statut);
       });
     }
+
+    it('signale au poste un 429 par l attente commune lue dans Retry-After', async () => {
+      const refus = await refusAuPoste((requete) =>
+        requete.flush(new Blob([''], { type: 'application/json' }), LIMITE_ATTEINTE),
+      );
+
+      attendreLAttenteCommune(refus, 'indisponible');
+    });
   });
 
   function sujetDontLePremierEcranPorte(fil: (premier: EcranContent) => Record<string, unknown>) {
@@ -405,6 +437,16 @@ describe('FormationsHttpAdapter', () => {
       expect(refus.message).not.toBe('');
     });
   }
+
+  it('lireSujet dit un 429 par l attente commune lue dans Retry-After', () => {
+    const erreurs = erreursApres(
+      adapter.lireSujet(SESSION_ID, JETON),
+      `${URL_SEANCE}/sujet`,
+      (req) => req.flush('', LIMITE_ATTEINTE),
+    );
+
+    attendreLAttenteCommune(erreurs[0] as SujetRefuse, 'sujet-indisponible');
+  });
 
   it('demarrer POSTe sur start', () => {
     expect(corpsEnvoye(adapter.demarrer(SESSION_ID), `${URL_SEANCE}/start`, 'POST')).toEqual({});
@@ -540,6 +582,16 @@ describe('FormationsHttpAdapter', () => {
         attendreLeRefus(refusDeReponseLibre(statut, corps), motif, statut);
       });
     }
+
+    it('garde un 429 en panne passagere, dite par l attente commune lue dans Retry-After', () => {
+      const erreurs = erreursApres(
+        adapter.enregistrerReponseLibre(SESSION_ID, JETON, REPONSE_LIBRE),
+        `${URL_SEANCE}/free-responses`,
+        (requete) => requete.flush(buildProblemeHttp({ status: 429 }), LIMITE_ATTEINTE),
+      );
+
+      attendreLAttenteCommune(erreurs[0] as ReponseLibreRefusee, 'reseau');
+    });
   });
 
   it('persiste les reponses libres et les annotations du formateur', () => {
@@ -603,6 +655,7 @@ describe('FormationsHttpAdapter', () => {
       statut: number,
       statusText: string,
       corps: ProblemeHttp | '' = '',
+      headers: Record<string, string> = {},
     ): RattachementRefuse => {
       const erreurs: unknown[] = [];
 
@@ -610,7 +663,9 @@ describe('FormationsHttpAdapter', () => {
         error: (recue: unknown) => erreurs.push(recue),
       });
 
-      httpMock.expectOne(`${RACINE}/${CODE}/join`).flush(corps, { status: statut, statusText });
+      httpMock
+        .expectOne(`${RACINE}/${CODE}/join`)
+        .flush(corps, { status: statut, statusText, headers });
 
       expect(erreurs.length).toBe(1);
       expect(erreurs[0]).toBeInstanceOf(RattachementRefuse);
@@ -667,6 +722,17 @@ describe('FormationsHttpAdapter', () => {
 
     it('rend un motif generique pour les autres statuts', () => {
       attendreMotif(refusPour(500, 'Server Error'), 'rattachement-impossible');
+    });
+
+    it('dit un 429 par l attente commune lue dans Retry-After, pas par un echec du rattachement', () => {
+      const refus = refusPour(
+        LIMITE_ATTEINTE.status,
+        LIMITE_ATTEINTE.statusText,
+        buildProblemeHttp({ status: 429, title: 'Too Many Requests' }),
+        LIMITE_ATTEINTE.headers,
+      );
+
+      attendreLAttenteCommune(refus, 'rattachement-impossible');
     });
   });
 
@@ -1054,6 +1120,16 @@ describe('FormationsHttpAdapter', () => {
           expect((erreurs[0] as ReponseRefusee).motif)
             .withContext(ecriture.nom)
             .toBe('reseau');
+        }
+      });
+
+      it('garde un 429 en panne passagere, renvoyable, dite par l attente commune lue dans Retry-After', () => {
+        for (const ecriture of ecritures()) {
+          const erreurs = erreursApres(ecriture.appeler(), ecriture.url, (req) =>
+            req.flush(buildProblemeHttp({ status: 429 }), LIMITE_ATTEINTE),
+          );
+
+          attendreLAttenteCommune(erreurs[0] as ReponseRefusee, 'reseau', ecriture.nom);
         }
       });
 

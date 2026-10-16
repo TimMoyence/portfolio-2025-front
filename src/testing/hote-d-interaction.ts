@@ -33,6 +33,33 @@ export function choisirLOptionDuQuiz<T>(
   return fixture;
 }
 
+export function garderLaReflexion(fixture: ComponentFixture<unknown>, texte: string): void {
+  const racine = fixture.nativeElement as HTMLElement;
+  const zone = racine.querySelector('textarea') as HTMLTextAreaElement;
+  zone.value = texte;
+  zone.dispatchEvent(new Event('input'));
+  fixture.detectChanges();
+  (racine.querySelector('.slide-reflection__save') as HTMLButtonElement).click();
+}
+
+export function etatDeLaReflexion(fixture: ComponentFixture<unknown>): string | null {
+  return (
+    (fixture.nativeElement as HTMLElement)
+      .querySelector('[data-testid="slide-reflection-etat"]')
+      ?.getAttribute('data-etat') ?? null
+  );
+}
+
+export async function jusqua(
+  fixture: ComponentFixture<unknown>,
+  condition: () => boolean,
+): Promise<void> {
+  for (let essai = 0; essai < 200 && !condition(); essai += 1) {
+    await new Promise((resoudre) => setTimeout(resoudre, 10));
+    fixture.detectChanges();
+  }
+}
+
 export function monterApresChargement<T>(hote: Type<T>): ComponentFixture<T> {
   const fixture = TestBed.createComponent(hote);
   fixture.detectChanges();

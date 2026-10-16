@@ -12,6 +12,7 @@ import {
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import { briqueMontee } from '../../../../testing/briques-montees';
+import { refusDuBack } from '../../../../testing/factories/probleme-http.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { textes } from '../../../../testing/textes-dom';
 import { CoursLivretComponent } from './cours-livret.component';
@@ -380,5 +381,16 @@ describe('CoursLivretComponent', () => {
 
     expect(un(fixture, 'livret-echec')?.getAttribute('role')).toBe('alert');
     expect(tous(fixture, 'livret-ecran')).toEqual([]);
+  });
+
+  it('dit l attente commune d un livret limite au lieu de faire verifier la connexion', async () => {
+    const { fixture } = await monter(
+      throwError(() => refusDuBack(429, 'Too Many Requests', { 'Retry-After': '120' })),
+    );
+
+    expect(un(fixture, 'livret-echec')?.getAttribute('role')).toBe('alert');
+    expect(un(fixture, 'livret-echec')?.textContent?.trim()).toBe(
+      'Trop de tentatives en peu de temps : réessayez dans 2 min.',
+    );
   });
 });
