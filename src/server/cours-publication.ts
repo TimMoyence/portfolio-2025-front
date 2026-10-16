@@ -1,10 +1,4 @@
-import {
-  champsHorsContrat,
-  DELAI_DE_LECTURE_MS,
-  garderEnCache,
-  lireJsonSousDelai,
-  messageDErreur,
-} from './lecture-api';
+import { champsHorsContrat, garderEnCache, lireJsonJournalise } from './lecture-api';
 import { catalogueServi } from '../app/core/adapters/formations-schemas';
 import { cheminDuCoursEnSeance } from '../app/core/config/cours-en-seance';
 import { trimTrailingSlashes } from '../app/core/utils/barres';
@@ -34,32 +28,24 @@ async function lirePublication(
   dependances: DependancesDuLecteur,
 ): Promise<PublicationDeCours | null> {
   const chemin = cheminDuCours(slug);
-  try {
-    const lecture = await lireJsonSousDelai(
-      dependances.fetch,
-      `${apiBaseUrl}/formations/catalogue/${slug}`,
-      DELAI_DE_LECTURE_MS,
-    );
-    if (!lecture.ok) {
-      dependances.journal.warn(
-        `[sitemap] ${chemin} : GET /formations/catalogue/${slug} a répondu ${lecture.statut}, ${REPLI}`,
-      );
-      return null;
-    }
-    const catalogue = catalogueServi.safeParse(lecture.corps);
-    if (!catalogue.success) {
-      dependances.journal.warn(
-        `[sitemap] ${chemin} : réponse de l'API hors contrat (${champsHorsContrat(catalogue.error)}), ${REPLI}`,
-      );
-      return null;
-    }
-    return { chemin, publieLe: catalogue.data.publieLe };
-  } catch (erreur) {
+  const lecture = await lireJsonJournalise(
+    dependances,
+    `${apiBaseUrl}/formations/catalogue/${slug}`,
+    {
+      refus: (statut) =>
+        `[sitemap] ${chemin} : GET /formations/catalogue/${slug} a répondu ${statut}, ${REPLI}`,
+      injoignable: (message) => `[sitemap] ${chemin} : API injoignable (${message}), ${REPLI}`,
+    },
+  );
+  if (lecture === null) return null;
+  const catalogue = catalogueServi.safeParse(lecture.corps);
+  if (!catalogue.success) {
     dependances.journal.warn(
-      `[sitemap] ${chemin} : API injoignable (${messageDErreur(erreur)}), ${REPLI}`,
+      `[sitemap] ${chemin} : réponse de l'API hors contrat (${champsHorsContrat(catalogue.error)}), ${REPLI}`,
     );
     return null;
   }
+  return { chemin, publieLe: catalogue.data.publieLe };
 }
 
 export function lecteurDePublicationsDeCours(

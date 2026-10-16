@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 
-export const DELAI_DE_LECTURE_MS = 2_000;
+const DELAI_DE_LECTURE_MS = 2_000;
 const DUREE_DU_CACHE_MS = 300_000;
 
 export type LectureJson =
