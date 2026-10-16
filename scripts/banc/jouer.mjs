@@ -5,6 +5,7 @@ import { dirname, resolve } from 'node:path';
 import { setTimeout as patienter } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 
+import { messageDErreur } from '../../src/server/lecture-api.ts';
 import { amorcerFormateur } from './amorcage.mjs';
 import { attendreQue, sondeHttp } from './attente.mjs';
 import {
@@ -309,6 +310,6 @@ process.on('SIGTERM', interrompre);
 const action = process.argv[2] === '--nettoyer' ? redescendre : jouer;
 
 action().catch((erreur) => {
-  process.stderr.write(`\n${erreur instanceof Error ? erreur.message : String(erreur)}\n`);
+  process.stderr.write(`\n${messageDErreur(erreur)}\n`);
   process.exitCode = 1;
 });

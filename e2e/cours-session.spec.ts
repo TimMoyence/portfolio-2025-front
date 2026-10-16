@@ -1,11 +1,24 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import type { DerouleDuFil, SujetDuFil } from '../src/app/core/adapters/formations-fil';
+import {
+  derouleServi,
+  rapportServi,
+  sujetServi,
+  verdictReponseServi,
+} from '../src/app/core/adapters/formations-schemas';
+import { sessionServie, utilisateurServi } from '../src/app/core/adapters/site-schemas';
+import type { AuthSession } from '../src/app/core/models/auth.model';
+import { buildAuthSession, buildAuthUser } from '../src/testing/factories/auth.factory';
 import {
   ETAT_EN_COURS,
   intercepterApi,
+  rapportDeSeance,
   remplirLaJonction,
   servirFlux,
   servirJson,
+  servirLaJonction,
+  servirRefus,
   servirSansContenu,
 } from './fixtures';
 
@@ -25,23 +38,27 @@ const QUESTION = {
   ],
 };
 
-const SUJET = {
+const ECRAN_DE_VOTE = {
+  id: 'ecran-1',
+  type: 'fp-vote',
+  titre: null,
+  duree: 180,
+  interactif: true,
+  donnees: { question: QUESTION },
+} as const;
+
+const SUJET: SujetDuFil = {
   id: 'b2-01-traitement-information-chiffree',
   titre: 'Décider avec des taux fiables',
   niveau: 'B2',
   duree: 195,
   concepts: ['proportions', 'taux', 'evolutions'],
   ecrans: [
-    {
-      id: 'ecran-1',
-      type: 'fp-vote',
-      duree: 180,
-      interactif: true,
-      donnees: { question: QUESTION },
-    },
+    ECRAN_DE_VOTE,
     {
       id: 'ecran-2',
       type: 'ecran-verrouille',
+      titre: null,
       duree: 180,
       interactif: false,
       donnees: {},
@@ -49,12 +66,13 @@ const SUJET = {
   ],
 };
 
-const DEROULE = {
+const DEROULE: DerouleDuFil = {
   ...SUJET,
   ecrans: [
     {
-      ...SUJET.ecrans[0],
+      ...ECRAN_DE_VOTE,
       notes: 'Faire verbaliser la différence entre taux simple et composé.',
+      diffusion: 'seance',
       seuil: 0.7,
       corriges: [
         {
@@ -63,23 +81,23 @@ const DEROULE = {
           confusions: [{ id: 'interet-simple', libelle: 'Intérêt simple' }],
         },
       ],
+      questions: [{ id: QUESTION.id, enonce: QUESTION.enonce, options: QUESTION.options }],
+      corrigeEcran: null,
     },
   ],
   remediations: {},
 };
 
-const FORMATRICE = {
+const FORMATRICE = buildAuthUser({
   id: 'teacher-1',
   email: 'formateur@example.com',
   firstName: 'Anne',
   lastName: 'Formateur',
-  phone: null,
-  isActive: true,
   roles: ['teacher'],
-};
+});
 
-function accesFormatrice(accessToken: string): Record<string, unknown> {
-  return { accessToken, expiresIn: 900, user: FORMATRICE };
+function accesFormatrice(accessToken: string): AuthSession {
+  return buildAuthSession({ accessToken, expiresIn: 900, user: FORMATRICE });
 }
 
 async function installerApiEtudiant(
@@ -91,32 +109,32 @@ async function installerApiEtudiant(
 
   await intercepterApi(page, async (route, chemin, methode) => {
     if (chemin.endsWith(`/sessions/${CODE}/join`) && methode === 'POST') {
-      await servirJson(
-        route,
-        {
-          participantId: PARTICIPANT,
-          sessionId: SESSION,
-          ecranCourant: 0,
-          modeRythme: 'pilote',
-          jeton: JETON,
-        },
-        201,
-      );
+      await servirLaJonction(route, {
+        participantId: PARTICIPANT,
+        sessionId: SESSION,
+        ecranCourant: 0,
+        jeton: JETON,
+      });
     } else if (chemin.endsWith(`/sessions/${SESSION}/sujet`) && methode === 'GET') {
       if (options.sujetLent) {
         await new Promise((resolve) => setTimeout(resolve, REPONSE_LENTE_MS));
       }
-      await servirJson(route, SUJET);
+      await servirJson(route, sujetServi, SUJET);
     } else if (chemin.endsWith(`/sessions/${SESSION}/stream`) && methode === 'GET') {
       fluxOuverts += 1;
       if (options.fluxRefuse) {
-        await servirJson(route, { title: 'Flux refusé' }, 429);
+        await servirRefus(route, 429, { title: 'Flux refusé' });
       } else {
         await servirFlux(route, ETAT_EN_COURS);
       }
     } else if (chemin.endsWith(`/sessions/${SESSION}/answers`) && methode === 'POST') {
       reponses += 1;
-      await servirJson(route, { correcte: true, misconception: null, libelleConfusion: null }, 201);
+      await servirJson(
+        route,
+        verdictReponseServi,
+        { correcte: true, misconception: null, libelleConfusion: null },
+        201,
+      );
     } else {
       await route.continue();
     }
@@ -179,21 +197,22 @@ test.describe('Séance de cours dans un navigateur réel', () => {
   test('reprend un pupitre rechargé avec son déroulé et son flux', async ({ page }) => {
     await intercepterApi(page, async (route, chemin) => {
       if (chemin.endsWith('/auth/refresh')) {
-        await servirJson(route, accesFormatrice('teacher-token'));
+        await servirJson(route, sessionServie, accesFormatrice('teacher-token'));
       } else if (chemin.endsWith('/auth/me')) {
-        await servirJson(route, FORMATRICE);
+        await servirJson(route, utilisateurServi, FORMATRICE);
       } else if (chemin.endsWith(`/sessions/${SESSION}/results`)) {
-        await servirJson(route, {
-          courseSlug: 'b2-01-traitement-information-chiffree',
-          code: CODE,
-          ouverteLe: '2026-09-15T08:00:00.000Z',
-          fermeeLe: '2026-09-15T10:00:00.000Z',
-          participants: [],
-          conceptsFragiles: [],
-          resultats: { participants: 1, questions: [] },
-        });
+        await servirJson(
+          route,
+          rapportServi,
+          rapportDeSeance({
+            code: CODE,
+            ouverteLe: '2026-09-15T08:00:00.000Z',
+            fermeeLe: '2026-09-15T10:00:00.000Z',
+            resultats: { participants: 1, questions: [] },
+          }),
+        );
       } else if (chemin.endsWith(`/sessions/${SESSION}/deroule`)) {
-        await servirJson(route, DEROULE);
+        await servirJson(route, derouleServi, DEROULE);
       } else if (chemin.endsWith(`/sessions/${SESSION}/presenter-stream`)) {
         await servirFlux(route, ETAT_EN_COURS);
       } else {
@@ -220,7 +239,7 @@ test.describe('Séance de cours dans un navigateur réel', () => {
     await intercepterApi(page, async (route, chemin) => {
       if (chemin.endsWith('/auth/refresh')) {
         renouvellements += 1;
-        await servirJson(route, accesFormatrice(`renewed-${renouvellements}`));
+        await servirJson(route, sessionServie, accesFormatrice(`renewed-${renouvellements}`));
       } else {
         await route.continue();
       }
@@ -249,7 +268,7 @@ test('R3 · envoie le visiteur sans session de la page du cours au rattachement 
 }) => {
   await intercepterApi(page, async (route, chemin) => {
     if (chemin.endsWith('/auth/refresh')) {
-      await servirJson(route, { status: 401, code: 'REFRESH_ABSENT' }, 401);
+      await servirRefus(route, 401, { status: 401, code: 'REFRESH_ABSENT' });
     } else {
       await servirSansContenu(route);
     }

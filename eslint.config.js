@@ -74,6 +74,7 @@ module.exports = tseslint.config(
   },
   {
     files: ['src/cours/**/*.ts', 'src/app/**/cours*/**/*.ts'],
+    ignores: ['src/cours/runtime/core/html.ts'],
     rules: {
       'no-restricted-syntax': ['error', SANS_CAST_VERS_ESCAPED_HTML],
     },

@@ -1,6 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import type { DerouleDuFil, SujetDuFil } from '../src/app/core/adapters/formations-fil';
+import { livretServi } from '../src/app/core/adapters/formations-schemas';
+import { sessionServie, utilisateurServi } from '../src/app/core/adapters/site-schemas';
 import { libellesColles } from '../src/testing/libelles-colles';
 import { valeursSurUneForme } from '../src/testing/valeurs-sur-les-formes';
 import { intercepterApi, servirJson, servirSansContenu, SESSION_FORMATEUR } from './fixtures';
@@ -28,8 +31,8 @@ const TEINTES_DE_PAPIER = ['rgb(255, 250, 242)', 'rgb(251, 243, 230)', 'rgb(253,
 const DEFILEMENT_DU_PARCOURS_MS = 2600;
 
 interface InstantaneDuCours {
-  readonly sujet: { readonly id: string };
-  readonly deroule: unknown;
+  readonly sujet: SujetDuFil;
+  readonly deroule: DerouleDuFil;
 }
 
 interface MiseEnPageImprimee {
@@ -82,11 +85,11 @@ async function servirLeLivret(page: Page, cours: Cours): Promise<string> {
   const { sujet, deroule } = instantaneDe(cours);
   await intercepterApi(page, async (route, chemin) => {
     if (chemin.endsWith('/auth/refresh')) {
-      await servirJson(route, SESSION_FORMATEUR);
+      await servirJson(route, sessionServie, SESSION_FORMATEUR);
     } else if (chemin.endsWith('/auth/me')) {
-      await servirJson(route, SESSION_FORMATEUR.user);
+      await servirJson(route, utilisateurServi, SESSION_FORMATEUR.user);
     } else if (chemin.endsWith(`/formations/livrets/${sujet.id}`)) {
-      await servirJson(route, { version: 4, sujet, corrige: deroule });
+      await servirJson(route, livretServi, { version: 4, sujet, corrige: deroule });
     } else {
       await servirSansContenu(route);
     }

@@ -3,12 +3,35 @@ import {
   verifierErreurRelayee,
   verifierPostRelaye,
 } from '../../../testing/http-attendu';
+import { lecturesStrictes } from '../../../testing/lecture-stricte';
 import type { CookieConsentPayload } from '../models/cookie-consent.model';
-import type { MessageResponse } from '../models/message.response';
 import { CookieConsentHttpAdapter } from './cookie-consent-http.adapter';
 
 describe('CookieConsentHttpAdapter', () => {
   const banc = bancAdaptateurHttp(CookieConsentHttpAdapter);
+
+  describe('lecture des réponses servies par le back', () => {
+    lecturesStrictes(banc, [
+      {
+        route: 'POST /api/cookie-consents',
+        chemin: '/cookie-consents',
+        appel: (a) =>
+          a.recordConsent({
+            policyVersion: '2026-02-11',
+            locale: 'fr',
+            region: 'EU_UK',
+            source: 'banner',
+            action: 'essential_only',
+            preferences: {
+              essential: true,
+              preferences: false,
+              analytics: false,
+              marketing: false,
+            },
+          }),
+      },
+    ]);
+  });
 
   it('should POST consent payload to the cookie-consents endpoint', () => {
     const payload: CookieConsentPayload = {
@@ -24,8 +47,9 @@ describe('CookieConsentHttpAdapter', () => {
         marketing: true,
       },
     };
-    const response: MessageResponse = {
+    const response = {
       message: 'Consentement enregistré.',
+      httpCode: 201,
     };
 
     verifierPostRelaye(

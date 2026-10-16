@@ -1,3 +1,5 @@
+import { messageDErreur } from '../../src/server/lecture-api.ts';
+
 export class AttenteEpuisee extends Error {
   /**
    * @param {string} quoi
@@ -27,7 +29,7 @@ export async function attendreQue({ quoi, sonder, essais, patienter, intervalleM
       if (await sonder()) return tentative;
       dernier = 'sonde négative';
     } catch (erreur) {
-      dernier = erreur instanceof Error ? erreur.message : String(erreur);
+      dernier = messageDErreur(erreur);
     }
     if (tentative < essais) await patienter(intervalleMs);
   }

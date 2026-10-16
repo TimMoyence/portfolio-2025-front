@@ -2,11 +2,23 @@ import type { TestRequest } from '@angular/common/http/testing';
 import { environment } from '../../../environments/environment';
 import { buildPublishedArticle } from '../../../testing/factories/article.factory';
 import { bancAdaptateurHttp } from '../../../testing/http-attendu';
+import { lecturesStrictes } from '../../../testing/lecture-stricte';
 import type { ArticleListResponse } from '../models/article.model';
 import { ArticleHttpAdapter } from './article-http.adapter';
 
 describe('ArticleHttpAdapter', () => {
   const banc = bancAdaptateurHttp(ArticleHttpAdapter);
+
+  describe('lecture des réponses servies par le back', () => {
+    lecturesStrictes(banc, [
+      { route: 'GET /api/articles', chemin: '/articles', appel: (a) => a.list('fr') },
+      {
+        route: 'GET /api/articles/:slug',
+        chemin: '/articles/veille',
+        appel: (a) => a.getBySlug('veille', 'fr'),
+      },
+    ]);
+  });
 
   function attendreLaListe(locale: string, parametre: string, valeur: string): TestRequest {
     const request = banc.httpMock.expectOne(

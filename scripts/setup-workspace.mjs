@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 
+import { messageDErreur } from '../src/server/lecture-api.ts';
+
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const FRONT_DIR = resolve(SCRIPT_DIR, '..');
 const PARENT_DIR = resolve(FRONT_DIR, '..');
@@ -626,6 +628,6 @@ function main() {
 try {
   main();
 } catch (error) {
-  console.error(`\nSetup echoue : ${error instanceof Error ? error.message : String(error)}`);
+  console.error(`\nSetup echoue : ${messageDErreur(error)}`);
   process.exit(1);
 }

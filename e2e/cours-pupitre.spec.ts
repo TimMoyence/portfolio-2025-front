@@ -1,6 +1,25 @@
 import { expect, test } from '@playwright/test';
 import type { Page, Route } from '@playwright/test';
-import { intercepterApi, servirFlux, servirJson, servirSansContenu } from './fixtures';
+import type { DerouleDuFil } from '../src/app/core/adapters/formations-fil';
+import {
+  annotationServie,
+  annotationsServies,
+  derouleServi,
+  participantsServis,
+  rapportServi,
+  reponsesLibresServies,
+} from '../src/app/core/adapters/formations-schemas';
+import { sessionServie, utilisateurServi } from '../src/app/core/adapters/site-schemas';
+import type { AnnotationFormateur } from '../src/app/core/ports/formations.port';
+import { buildAuthSession, buildAuthUser } from '../src/testing/factories/auth.factory';
+import {
+  ETAT_EN_COURS,
+  intercepterApi,
+  rapportDeSeance,
+  servirFlux,
+  servirJson,
+  servirSansContenu,
+} from './fixtures';
 
 const SESSION = '33333333-3333-4333-8333-333333333333';
 const SLUG = 'b2-01-traitement-information-chiffree';
@@ -8,19 +27,13 @@ const PARTICIPANT = '55555555-5555-4555-8555-555555555555';
 const ENONCE_PROBLEME = 'Le prix monte de 20 %, puis baisse de 20 %. Où arrive-t-il ?';
 const NOTE = 'Relancer Léa sur la base de départ.';
 
-const FORMATEUR = {
+const FORMATEUR = buildAuthUser({
   id: '1',
   email: 'formateur@example.com',
   firstName: 'Tim',
   lastName: 'Moyence',
-  phone: null,
-  isActive: true,
   roles: ['teacher'],
-  hasPassword: true,
-  createdAt: '2026-01-01T00:00:00.000Z',
-  updatedAt: '2026-01-01T00:00:00.000Z',
-  updatedOrCreatedBy: null,
-};
+});
 
 const QUESTION = {
   id: 'b2-01-a3-vote-hausse-baisse',
@@ -31,7 +44,7 @@ const QUESTION = {
   ],
 };
 
-const ECRAN = {
+const ECRAN: DerouleDuFil['ecrans'][number] = {
   id: 'B2-01-A3-01-VOTE',
   type: 'fp-vote',
   titre: 'Hausse puis baisse',
@@ -46,7 +59,7 @@ const ECRAN = {
   corrigeEcran: null,
 };
 
-const DEROULE = {
+const DEROULE: DerouleDuFil = {
   id: SLUG,
   titre: 'Lire et contrôler l’information chiffrée',
   niveau: 'B2',
@@ -65,28 +78,11 @@ const STATISTIQUES = {
   questionsProblemes: [QUESTION.id],
 };
 
-const NOTATION = {
-  noteMax: 20,
-  base: 'participation-relative-cohorte',
-  partCohorteReference: 0.1,
-  ratioSeuilValidation: 0.5,
-  neSaitPasCompteCommeReponse: true,
-  pointsNonReponse: 0,
-  reponsesLibresNotees: false,
-  seuilQuestionProbleme: 0.5,
-  decimalesStatistiques: 2,
-  typesNotables: ['vote', 'numeric'],
-  productionCompteSi: 'au-moins-une-saisie',
-  statistiquesSurQuestionsNotees: true,
-};
-
-const RAPPORT = {
+const RAPPORT = rapportDeSeance({
   courseSlug: SLUG,
   code: '4821',
-  ouverteLe: '2026-09-20T08:00:00.000Z',
-  fermeeLe: '2026-09-20T10:00:00.000Z',
-  participants: [],
   conceptsFragiles: ['taux-evolution'],
+  libellesDesConcepts: { 'taux-evolution': 'Taux d’évolution' },
   resultats: {
     participants: 24,
     questions: [
@@ -106,16 +102,9 @@ const RAPPORT = {
     ],
   },
   statistiques: STATISTIQUES,
-  notation: NOTATION,
-};
+});
 
-const ETAT_DU_FLUX = {
-  etat: 'en_cours',
-  modeRythme: 'pilote',
-  ecranCourant: 0,
-  intervalleLibre: null,
-  participants: 24,
-};
+const ETAT_DU_FLUX = { ...ETAT_EN_COURS, participants: 24 };
 
 type Corps = Record<string, unknown>;
 
@@ -124,7 +113,7 @@ interface SaisieAnnotation {
   readonly note: string;
 }
 
-function annotationServie(saisie: SaisieAnnotation, rang: number): Record<string, unknown> {
+function annotationDuFormateur(saisie: SaisieAnnotation, rang: number): AnnotationFormateur {
   return {
     id: `annotation-${rang + 1}`,
     sessionId: SESSION,
@@ -154,7 +143,12 @@ async function installerLePupitre(page: Page): Promise<Journal> {
 
   const annotationEnregistree = async (route: Route, saisie: SaisieAnnotation): Promise<void> => {
     annotations.push(saisie);
-    await servirJson(route, annotationServie(saisie, annotations.length - 1), 201);
+    await servirJson(
+      route,
+      annotationServie,
+      annotationDuFormateur(saisie, annotations.length - 1),
+      201,
+    );
   };
 
   const ecritures = new Map<string, (route: Route, corps: Corps) => Promise<void>>([
@@ -165,20 +159,27 @@ async function installerLePupitre(page: Page): Promise<Journal> {
     [`PATCH ${SESSION}/control`, pilotageApplique],
   ]);
 
-  const lectures = new Map<string, () => unknown>([
-    ['/auth/me', () => FORMATEUR],
-    [`/sessions/${SESSION}/results`, () => RAPPORT],
-    [`/sessions/${SESSION}/deroule`, () => DEROULE],
-    [`/sessions/${SESSION}/free-responses`, () => ({ responses: [] })],
+  const lectures = new Map<string, (route: Route) => Promise<void>>([
+    ['/auth/me', (route) => servirJson(route, utilisateurServi, FORMATEUR)],
+    [`/sessions/${SESSION}/results`, (route) => servirJson(route, rapportServi, RAPPORT)],
+    [`/sessions/${SESSION}/deroule`, (route) => servirJson(route, derouleServi, DEROULE)],
+    [
+      `/sessions/${SESSION}/free-responses`,
+      (route) => servirJson(route, reponsesLibresServies, { responses: [] }),
+    ],
     [
       `/sessions/${SESSION}/annotations`,
-      () => ({ annotations: annotations.map(annotationServie) }),
+      (route) =>
+        servirJson(route, annotationsServies, {
+          annotations: annotations.map(annotationDuFormateur),
+        }),
     ],
     [
       `/sessions/${SESSION}/participants`,
-      () => ({
-        participants: [{ id: PARTICIPANT, prenom: 'Léa', nom: 'Dubois' }],
-      }),
+      (route) =>
+        servirJson(route, participantsServis, {
+          participants: [{ id: PARTICIPANT, prenom: 'Léa', nom: 'Dubois', evince: false }],
+        }),
     ],
   ]);
 
@@ -189,20 +190,20 @@ async function installerLePupitre(page: Page): Promise<Journal> {
     const lecture = [...lectures].find(([cle]) => methode === 'GET' && chemin.endsWith(cle));
 
     if (methode === 'POST' && chemin.endsWith('/auth/refresh')) {
-      await servirJson(route, {
-        accessToken: 'jeton-formateur',
-        expiresIn: 900,
-        user: FORMATEUR,
-      });
+      await servirJson(
+        route,
+        sessionServie,
+        buildAuthSession({ accessToken: 'jeton-formateur', expiresIn: 900, user: FORMATEUR }),
+      );
     } else if (ecriture !== undefined) {
       await ecriture[1](route, (route.request().postDataJSON() ?? {}) as Corps);
     } else if (chemin.endsWith(`/sessions/${SESSION}/report`)) {
       bilansExportes += 1;
-      await servirJson(route, RAPPORT);
+      await servirJson(route, rapportServi, RAPPORT);
     } else if (chemin.includes(`/sessions/${SESSION}/`) && chemin.endsWith('stream')) {
       await servirFlux(route, { ...ETAT_DU_FLUX, ecranCourant: ecranPilote });
     } else if (lecture !== undefined) {
-      await servirJson(route, lecture[1]());
+      await lecture[1](route);
     } else {
       await servirSansContenu(route);
     }
