@@ -18,6 +18,7 @@ import {
   buildAuthUser,
   buildLoginCredentials,
 } from '../../../testing/factories/auth.factory';
+import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
 import type { PageAuthMontee } from '../../../testing/page-auth';
 import { formulaireSoumis, monterPageAuth } from '../../../testing/page-auth';
 import { AuthComponent } from './auth.component';
@@ -93,7 +94,22 @@ describe('AuthComponent', () => {
       lastName: 'Doe',
       phone: '+33 6 12 34 56 78',
     });
-    expect(component.signupSuccessMessage).toContain('Inscription reussie');
+  });
+
+  it('dit le succès de l inscription par son propre texte, sur le panneau de connexion affiché ensuite', () => {
+    component.activeTab = 'sign-up';
+    remplirInscription();
+    accepterLInscription();
+
+    component.handleSignupSubmit(formulaireSoumis());
+    fixture.detectChanges();
+
+    const texte = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(component.activeTab).toBe('log-in');
+    expect(texte).toContain(
+      'Inscription réussie. Vérifiez votre e-mail pour activer votre compte.',
+    );
+    expect(texte).not.toContain('Un email de verification');
   });
 
   it('devrait basculer vers l onglet login apres inscription reussie', () => {
@@ -255,22 +271,16 @@ describe('AuthComponent', () => {
       expect(await saisir('reg-email', 'jean@exemple.fr')).toBeNull();
     });
 
-    it('affiche la règle servie par le back, jamais « Http failure response »', () => {
-      authService.register.and.returnValue(
-        throwError(
-          () =>
-            new HttpErrorResponse({
-              status: 400,
-              url: 'https://asilidesign.fr/api/v1/portfolio25/users',
-              error: { status: 400, detail: [REGLE_SERVIE] },
-            }),
-        ),
-      );
+    it('dit un refus de l inscription par un message localisé, jamais par le texte servi', () => {
+      authService.register.and.returnValue(throwError(() => refusDuBack(400, [REGLE_SERVIE])));
       remplirInscription();
 
       component.handleSignupSubmit(formulaireSoumis());
 
-      expect(component.signupErrorMessage).toBe(REGLE_SERVIE);
+      expect(component.signupErrorMessage).toBe(
+        'Certaines informations ont été refusées : vérifiez les champs et réessayez.',
+      );
+      expect(component.isSignupLoading).toBeFalse();
     });
 
     it('affiche le message localisé quand le back ne répond pas', () => {
@@ -299,6 +309,29 @@ describe('AuthComponent', () => {
       });
       expect(await saisir('login-password', 'abc')).toBeNull();
     });
+
+    for (const [statut, servi, attendu] of [
+      [401, 'Invalid credentials', 'Adresse e-mail ou mot de passe incorrect.'],
+      [400, 'email must be an email', 'Adresse e-mail ou mot de passe incorrect.'],
+      [
+        429,
+        'ThrottlerException: Too Many Requests',
+        'Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.',
+      ],
+    ] as const) {
+      it(`dit un refus ${statut} de la connexion par un message localisé, sous le formulaire`, () => {
+        component.loginForm = { email: 'john@example.com', password: VALID_PASSWORD };
+        authService.login.and.returnValue(throwError(() => refusDuBack(statut, servi)));
+
+        component.handleLoginSubmit(formulaireSoumis());
+        fixture.detectChanges();
+
+        const texte = (fixture.nativeElement as HTMLElement).textContent ?? '';
+        expect(texte).toContain(attendu);
+        expect(texte).not.toContain(servi);
+        expect(component.isLoginLoading).toBeFalse();
+      });
+    }
   });
 
   describe('Google OAuth', () => {
@@ -334,6 +367,19 @@ describe('AuthComponent', () => {
       await setupWithSeoKey('login');
       authService.googleAuth.and.returnValue(
         throwError(() => new HttpErrorResponse({ status: 0, url: 'https://asilidesign.fr' })),
+      );
+
+      connecterParGoogle();
+
+      expect(component.loginErrorMessage).toBe("Échec de l'authentification Google.");
+    });
+
+    it('dit un refus de Google par le message localisé, jamais par le texte servi', async () => {
+      await setupWithSeoKey('login');
+      authService.googleAuth.and.returnValue(
+        throwError(() =>
+          refusDuBack(401, 'Local account email not verified — refusing Google link'),
+        ),
       );
 
       connecterParGoogle();

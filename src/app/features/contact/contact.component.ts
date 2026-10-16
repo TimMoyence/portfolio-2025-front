@@ -189,10 +189,11 @@ export class ContactComponent implements OnInit {
 
     handleFormSubmit(this.contactPort.contact(payload), this.cdr, {
       fallbackError: $localize`:contact.form.error.generic@@contactFormErrorGeneric:Une erreur est survenue. Veuillez réessayer plus tard.`,
-      onSuccess: (response) => {
-        if (response.httpCode !== 201) this.contactErrorMessage = response.message;
-        else
-          this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
+      refus: {
+        400: $localize`:@@contactFormErreurRefus:Votre message n’a pas été accepté : vérifiez les champs et réessayez.`,
+      },
+      onSuccess: () => {
+        this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
       },
       onError: (message) => {
         this.contactErrorMessage = message;
@@ -201,6 +202,9 @@ export class ContactComponent implements OnInit {
         this.contactForm = { ...this.defaultContactFormState, formStartedAt: Date.now() };
         form.resetForm(this.contactForm);
         this.isContactSubmitted = false;
+      },
+      finalement: () => {
+        this.isContactLoading = false;
       },
     });
   }

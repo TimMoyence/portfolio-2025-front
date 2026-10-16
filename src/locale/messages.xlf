@@ -556,25 +556,32 @@
           <context context-type="linenumber">195,196</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="authLoginErreurIdentifiants" datatype="html">
+        <source>Adresse e-mail ou mot de passe incorrect.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="authShowPassword" datatype="html">
         <source>Afficher le mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authHidePassword" datatype="html">
         <source>Masquer le mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">120</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authSignupFieldFirstName" datatype="html">
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.firstName</note>
@@ -583,7 +590,7 @@
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">140</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.lastName</note>
@@ -592,7 +599,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">147</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.email</note>
@@ -601,7 +608,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">154</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.password</note>
@@ -610,7 +617,7 @@
         <source>Vérification du mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.passwordConfirm</note>
@@ -619,7 +626,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">164</context>
+          <context context-type="linenumber">168</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.phone</note>
@@ -628,7 +635,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">181</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.email</note>
@@ -637,7 +644,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">188</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.password</note>
@@ -646,21 +653,21 @@
         <source>Connectez-vous avec Google</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">206</context>
+          <context context-type="linenumber">210</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7215127729541696793" datatype="html">
         <source>Inscrivez-vous avec Google</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">216</context>
+          <context context-type="linenumber">220</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authSignupErrorPasswordMismatch" datatype="html">
         <source>Les mots de passe ne correspondent pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">242</context>
         </context-group>
         <note priority="1" from="description">Signup error message</note>
         <note priority="1" from="meaning">auth.signup.error.passwordMismatch</note>
@@ -669,7 +676,7 @@
         <source>Une erreur est survenue. Veuillez réessayer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">255</context>
+          <context context-type="linenumber">257</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
@@ -679,10 +686,10 @@
         <note priority="1" from="meaning">auth.genericError</note>
       </trans-unit>
       <trans-unit id="authSignupSuccess" datatype="html">
-        <source>Inscription reussie. Verifiez votre email pour activer votre compte.</source>
+        <source>Inscription réussie. Vérifiez votre e-mail pour activer votre compte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">259</context>
+          <context context-type="linenumber">260</context>
         </context-group>
         <note priority="1" from="description">Signup success message</note>
         <note priority="1" from="meaning">auth.signup.success</note>
@@ -691,7 +698,7 @@
         <source>Bienvenue <x id="PH" equiv-text="session.user.firstName"/> !</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">297</context>
+          <context context-type="linenumber">298</context>
         </context-group>
         <note priority="1" from="description">Login success message</note>
         <note priority="1" from="meaning">auth.login.success</note>
@@ -716,7 +723,7 @@
         <source>Échec de l&apos;authentification Google.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">353</context>
         </context-group>
         <note priority="1" from="description">auth.google.error</note>
       </trans-unit>
@@ -808,11 +815,25 @@
           <context context-type="linenumber">56,57</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="authForgotSucces" datatype="html">
+        <source>Si un compte existe avec cette adresse, un lien de réinitialisation vient de vous être envoyé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/forgot-password.component.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authForgotErreurAdresse" datatype="html">
+        <source>Cette adresse e-mail n’a pas été acceptée : vérifiez-la et réessayez.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/forgot-password.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="authForgotErrorGeneric" datatype="html">
         <source>Impossible d&apos;envoyer le lien pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/forgot-password.component.ts</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <note priority="1" from="description">auth.forgot.error.generic</note>
       </trans-unit>
@@ -890,7 +911,7 @@
         <source>Le lien de réinitialisation est invalide ou incomplet.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">auth.reset.error.missingToken</note>
       </trans-unit>
@@ -898,36 +919,50 @@
         <source>Nouveau mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authResetConfirmLabel" datatype="html">
         <source>Confirmer le mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authResetConfirmHint" datatype="html">
         <source>Les deux doivent correspondre.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authResetErrorMismatch" datatype="html">
         <source>Les mots de passe ne correspondent pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="description">auth.reset.error.mismatch</note>
+      </trans-unit>
+      <trans-unit id="authResetSucces" datatype="html">
+        <source>Mot de passe réinitialisé : vous pouvez maintenant vous connecter.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="authResetErreurLienExpire" datatype="html">
+        <source>Ce lien de réinitialisation est invalide ou a expiré : demandez-en un nouveau.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="authResetErrorGeneric" datatype="html">
         <source>Impossible de réinitialiser le mot de passe.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/reset-password.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="description">auth.reset.error.generic</note>
       </trans-unit>
@@ -960,7 +995,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="verifyEmailLoading" datatype="html">
-        <source>Verification en cours...</source>
+        <source>Vérification en cours…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.html</context>
           <context context-type="linenumber">13,17</context>
@@ -982,7 +1017,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="verifyEmailRedirect" datatype="html">
-        <source> Vous allez etre redirige vers la page de connexion... </source>
+        <source> Vous allez être redirigé vers la page de connexion… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.html</context>
           <context context-type="linenumber">24,29</context>
@@ -997,7 +1032,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="verifyEmailBackToLogin" datatype="html">
-        <source> Retour a la connexion </source>
+        <source> Retour à la connexion </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.html</context>
           <context context-type="linenumber">36,41</context>
@@ -1005,20 +1040,34 @@
         <note priority="1" from="description">verify-email.backToLogin</note>
       </trans-unit>
       <trans-unit id="verifyEmailErrorNoToken" datatype="html">
-        <source>Aucun token de verification fourni.</source>
+        <source>Le lien de vérification est incomplet : ouvrez-le depuis l’e-mail reçu.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
           <context context-type="linenumber">36</context>
         </context-group>
         <note priority="1" from="description">verify-email.error.noToken</note>
       </trans-unit>
-      <trans-unit id="verifyEmailErrorGeneric" datatype="html">
-        <source>La verification a echoue. Le lien est peut-etre expire.</source>
+      <trans-unit id="verifyEmailSucces" datatype="html">
+        <source>Votre adresse e-mail est vérifiée : votre compte est activé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="verifyEmailErrorGeneric" datatype="html">
+        <source>La vérification a échoué : le lien est invalide ou a expiré.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <note priority="1" from="description">verify-email.error.generic</note>
+      </trans-unit>
+      <trans-unit id="verifyEmailErreurIndisponible" datatype="html">
+        <source>La vérification n’a pas pu aboutir pour le moment : réessayez dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="contactFormHeading" datatype="html">
         <source> Formulaire de contact </source>
@@ -1386,11 +1435,18 @@
         </context-group>
         <note priority="1" from="description">contact.form.error.generic</note>
       </trans-unit>
+      <trans-unit id="contactFormErreurRefus" datatype="html">
+        <source>Votre message n’a pas été accepté : vérifiez les champs et réessayez.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="contactFormSuccess" datatype="html">
         <source>Message envoyé. Je reviens vers vous rapidement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">196</context>
         </context-group>
         <note priority="1" from="description">contact.form.success</note>
       </trans-unit>
@@ -1405,7 +1461,7 @@
         <source>Vos choix</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.hero.kicker</note>
       </trans-unit>
@@ -1413,7 +1469,7 @@
         <source>Vous gardez la main — modifiable à tout moment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.hero.updated</note>
       </trans-unit>
@@ -1421,7 +1477,7 @@
         <source>On utilise le strict nécessaire pour que le site fonctionne, et rien de plus sans votre accord. Réglez chaque catégorie ci-dessous.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.intro</note>
       </trans-unit>
@@ -1429,7 +1485,7 @@
         <source>Essentiels</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">31</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.essential.title</note>
       </trans-unit>
@@ -1437,7 +1493,7 @@
         <source>Indispensables au fonctionnement du site : connexion, sécurité, mémorisation de vos préférences. Ils ne peuvent pas être désactivés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.essential.desc</note>
       </trans-unit>
@@ -1445,7 +1501,7 @@
         <source>Toujours actifs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.essential.tag</note>
       </trans-unit>
@@ -1453,7 +1509,7 @@
         <source>Mesure d&apos;audience</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">36</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.analytics.title</note>
       </trans-unit>
@@ -1461,7 +1517,7 @@
         <source>Permettraient des statistiques anonymisées pour améliorer le site. L&apos;app est en lancement : on n&apos;en collecte aucune pour l&apos;instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.analytics.desc</note>
       </trans-unit>
@@ -1469,7 +1525,7 @@
         <source>Non collecté</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.analytics.tag</note>
       </trans-unit>
@@ -1477,7 +1533,7 @@
         <source>Préférences</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.preferences.title</note>
       </trans-unit>
@@ -1485,7 +1541,7 @@
         <source>Mémorisent vos choix d&apos;affichage (langue, réglages) pour une expérience plus fluide d&apos;une visite à l&apos;autre.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.preferences.desc</note>
       </trans-unit>
@@ -1493,7 +1549,7 @@
         <source>Confort</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.preferences.tag</note>
       </trans-unit>
@@ -1501,7 +1557,7 @@
         <source>Marketing</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.marketing.title</note>
       </trans-unit>
@@ -1509,7 +1565,7 @@
         <source>Permettraient de mesurer l&apos;efficacité de campagnes. Désactivés par défaut — l&apos;app est en lancement, on n&apos;en utilise pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.marketing.desc</note>
       </trans-unit>
@@ -1517,7 +1573,7 @@
         <source>Désactivé par défaut</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.marketing.tag</note>
       </trans-unit>
@@ -1525,7 +1581,7 @@
         <source>Enregistrer mes choix</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.actions.save</note>
       </trans-unit>
@@ -1533,7 +1589,7 @@
         <source>Tout accepter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.actions.acceptAll</note>
       </trans-unit>
@@ -1541,7 +1597,7 @@
         <source>Préférences enregistrées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.actions.saved</note>
       </trans-unit>
@@ -1549,7 +1605,7 @@
         <source>Impossible d&apos;enregistrer vos préférences pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.actions.error</note>
       </trans-unit>
@@ -1557,7 +1613,7 @@
         <source>Pour en savoir plus, consultez notre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.privacyNote.before</note>
       </trans-unit>
@@ -1565,7 +1621,7 @@
         <source>politique de confidentialité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.privacyNote.link</note>
       </trans-unit>
@@ -1573,7 +1629,7 @@
         <source>Cookies essentiels</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.aria.essential</note>
       </trans-unit>
@@ -1581,7 +1637,7 @@
         <source>Mesure d&apos;audience</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.aria.analytics</note>
       </trans-unit>
@@ -1589,7 +1645,7 @@
         <source>Préférences</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.aria.preferences</note>
       </trans-unit>
@@ -1597,7 +1653,7 @@
         <source>Marketing</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <note priority="1" from="description">cookie.settings.aria.marketing</note>
       </trans-unit>
@@ -3411,14 +3467,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.constat.title" datatype="html">
-        <source>Le constat : la majorite des sites d&apos;entrepreneurs sont invisibles</source>
+        <source>Le constat : la majorité des sites d&apos;entrepreneurs sont invisibles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">16,17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.promesse.quote" datatype="html">
-        <source>A la fin de ces 20 minutes, vous aurez une checklist imprimable des 7 points critiques a verifier sur votre site cette semaine. Pas de jargon, pas d&apos;abonnement, pas de cookies espions.</source>
+        <source>À la fin de ces 20 minutes, vous aurez une checklist imprimable des 7 points critiques à vérifier sur votre site cette semaine. Pas de jargon, pas d&apos;abonnement, pas de cookies espions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">24,25</context>
@@ -3432,14 +3488,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.promesse.authorNote" datatype="html">
-        <source>Cette methode vient de 40+ audits reels pour des coachs, artisans, commercants. Les memes 7 points reviennent a chaque fois.</source>
+        <source>Cette méthode vient de 40+ audits réels pour des coachs, artisans, commerçants. Les mêmes 7 points reviennent à chaque fois.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">28,29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check1.imageAlt" datatype="html">
-        <source>Page de resultats Google Search Console sur ecran</source>
+        <source>Page de résultats Google Search Console sur écran</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">36,37</context>
@@ -3453,7 +3509,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check1.subtitle" datatype="html">
-        <source> Sans indexation, votre site est invisible. Verification en 30 secondes, gratuite. </source>
+        <source> Sans indexation, votre site est invisible. Vérification en 30 secondes, gratuite. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">42,44</context>
@@ -3467,14 +3523,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check2.title" datatype="html">
-        <source>Check 2 — Vos titres disent-ils &apos;je vends quoi, a qui&apos; ?</source>
+        <source>Check 2 — Vos titres disent-ils &apos;je vends quoi, à qui&apos; ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">53,54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check2.subtitle" datatype="html">
-        <source> Le titre SEO, c&apos;est la devanture de votre magasin en ligne. Une faute ici = perte de clics meme bien classe. </source>
+        <source> Le titre SEO, c&apos;est la devanture de votre magasin en ligne. Une faute ici = perte de clics même bien classé. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">57,60</context>
@@ -3495,7 +3551,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check3.subtitle" datatype="html">
-        <source> Sur mobile, 1 seconde de plus = 7% de clients qui partent. Verification gratuite en 2 clics. </source>
+        <source> Sur mobile, 1 seconde de plus = 7% de clients qui partent. Vérification gratuite en 2 clics. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">73,75</context>
@@ -3516,28 +3572,28 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check4.subtitle" datatype="html">
-        <source> 60% des recherches locales se font sur mobile. Un site non-mobile = 60% de clients perdus avant meme de voir votre offre. </source>
+        <source> 60% des recherches locales se font sur mobile. Un site non-mobile = 60% de clients perdus avant même de voir votre offre. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">88,91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check5.imageAlt" datatype="html">
-        <source>Page web ouverte affichant une FAQ structuree</source>
+        <source>Page web ouverte affichant une FAQ structurée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">98,99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check5.title" datatype="html">
-        <source>Check 5 — Avez-vous du contenu qui repond aux questions clients ?</source>
+        <source>Check 5 — Avez-vous du contenu qui répond aux questions clients ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">100,101</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check5.subtitle" datatype="html">
-        <source> Les IA (ChatGPT, Perplexity, Google AI Overview) citent les sites qui repondent clairement. Pas les sites-brochure. </source>
+        <source> Les IA (ChatGPT, Perplexity, Google AI Overview) citent les sites qui répondent clairement. Pas les sites-brochure. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">104,107</context>
@@ -3565,21 +3621,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.livrable.description" datatype="html">
-        <source>Un bon audit DIY tient en une page A4 : 7 lignes, 3 colonnes (check, verdict, action). Le toolkit fournit le template de rapport pre-rempli, format imprimable + Google Sheets dupliquable.</source>
+        <source>Un bon audit DIY tient en une page A4 : 7 lignes, 3 colonnes (check, verdict, action). Le toolkit fournit le template de rapport pré-rempli, format imprimable + Google Sheets dupliquable.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">131,132</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.livrable.ctaLabel" datatype="html">
-        <source>Recuperer le template d&apos;audit</source>
+        <source>Récupérer le template d&apos;audit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">133,134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.quandaider.imageAlt" datatype="html">
-        <source>Reunion entre un client et un consultant SEO autour d&apos;un ordinateur</source>
+        <source>Réunion entre un client et un consultant SEO autour d&apos;un ordinateur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">142,143</context>
@@ -3614,14 +3670,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.synthese.description" datatype="html">
-        <source>Checklist imprimable (7 checks + colonne OK/A corriger) + rapport type Google Sheets a dupliquer + script &apos;briefer un developpeur SEO&apos; + alternative premium via Growth Audit (IA + humain).</source>
+        <source>Checklist imprimable (7 checks + colonne OK/À corriger) + rapport type Google Sheets à dupliquer + script &apos;briefer un développeur SEO&apos; + alternative premium via Growth Audit (IA + humain).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">167,168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.synthese.ctaLabel" datatype="html">
-        <source>Telecharger le toolkit</source>
+        <source>Télécharger le toolkit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">169,170</context>
@@ -3635,7 +3691,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check1.bullets.1" datatype="html">
-        <source> Google affiche les pages qu&apos;il a indexees — si la liste est vide ou tres courte, alerte rouge </source>
+        <source> Google affiche les pages qu&apos;il a indexées — si la liste est vide ou très courte, alerte rouge </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">16</context>
@@ -3649,7 +3705,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check1.bullets.3" datatype="html">
-        <source> Cas verifie : 1 client sur 4 decouvre ici qu&apos;il bloque accidentellement Google via un fichier robots.txt mal configure </source>
+        <source> Cas vérifié : 1 client sur 4 découvre ici qu&apos;il bloque accidentellement Google via un fichier robots.txt mal configuré </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">18</context>
@@ -3663,7 +3719,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check2.bullets.1" datatype="html">
-        <source> Un bon titre : &quot;Photographe mariage Lyon — Asilidesign&quot; (metier + ville + marque) </source>
+        <source> Un bon titre : &quot;Photographe mariage Lyon — Asilidesign&quot; (métier + ville + marque) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">22</context>
@@ -3698,14 +3754,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check3.bullets.2" datatype="html">
-        <source> Verifiez : score mobile &gt;= 70 (bon), entre 50-70 (ameliorable), &lt; 50 (urgence) </source>
+        <source> Vérifiez : score mobile &gt;= 70 (bon), entre 50-70 (améliorable), &lt; 50 (urgence) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check3.bullets.3" datatype="html">
-        <source> Les 3 causes frequentes : images trop lourdes, trop de plugins WordPress, pas de mise en cache </source>
+        <source> Les 3 causes fréquentes : images trop lourdes, trop de plugins WordPress, pas de mise en cache </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">30</context>
@@ -3719,14 +3775,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check4.bullets.1" datatype="html">
-        <source> Test simple : un visiteur peut-il commander/reserver/vous contacter sans zoomer ni deroulement horizontal ? </source>
+        <source> Test simple : un visiteur peut-il commander/réserver/vous contacter sans zoomer ni déroulement horizontal ? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check4.bullets.2" datatype="html">
-        <source> Bouton trop petit, texte qui deborde, formulaire inutilisable au pouce = red flag </source>
+        <source> Bouton trop petit, texte qui déborde, formulaire inutilisable au pouce = red flag </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">35</context>
@@ -3747,56 +3803,56 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check5.bullets.1" datatype="html">
-        <source> Verifiez : chacune de ces questions a-t-elle une reponse claire (50-100 mots) sur votre site ? </source>
+        <source> Vérifiez : chacune de ces questions a-t-elle une réponse claire (50-100 mots) sur votre site ? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check5.bullets.2" datatype="html">
-        <source> Si non, creez une page FAQ ou un blog avec 1 question = 1 page dediee </source>
+        <source> Si non, créez une page FAQ ou un blog avec 1 question = 1 page dédiée </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.check5.bullets.3" datatype="html">
-        <source> Bonus IA-friendly : utilisez des titres H2 au format question (&quot;Combien coute un audit SEO ?&quot;) </source>
+        <source> Bonus IA-friendly : utilisez des titres H2 au format question (&quot;Combien coûte un audit SEO ?&quot;) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.quandaider.bullets.0" datatype="html">
-        <source> Chute brutale de trafic (&gt; 30% sur un mois) — il y a une cause technique ou penalite a identifier </source>
+        <source> Chute brutale de trafic (&gt; 30% sur un mois) — il y a une cause technique ou pénalité à identifier </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.quandaider.bullets.1" datatype="html">
-        <source> Migration de site prevue — un audit prealable evite de perdre 100% du trafic </source>
+        <source> Migration de site prévue — un audit préalable évite de perdre 100% du trafic </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.quandaider.bullets.2" datatype="html">
-        <source> Site e-commerce avec &gt; 500 pages — la massification change les priorites d&apos;audit </source>
+        <source> Site e-commerce avec &gt; 500 pages — la massification change les priorités d&apos;audit </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.quandaider.bullets.3" datatype="html">
-        <source> Concurrence agressive sur des mots-cles a fort CA — analyse concurrentielle approfondie necessaire </source>
+        <source> Concurrence agressive sur des mots-clés à fort CA — analyse concurrentielle approfondie nécessaire </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.constat.stats.0.label" datatype="html">
-        <source>des recherches Google ne donnent jamais un clic au dela du premier ecran</source>
+        <source>des recherches Google ne donnent jamais un clic au-delà du premier écran</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">55</context>
@@ -3810,7 +3866,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.constat.stats.1.label" datatype="html">
-        <source>des experiences en ligne commencent par une recherche — si vous n&apos;y etes pas, vous n&apos;existez pas</source>
+        <source>des expériences en ligne commencent par une recherche — si vous n&apos;y êtes pas, vous n&apos;existez pas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">60</context>
@@ -3824,7 +3880,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.constat.stats.2.label" datatype="html">
-        <source>suffisent pour reperer 80% des problemes SEO d&apos;un site de petite entreprise, avec les bons outils gratuits</source>
+        <source>suffisent pour repérer 80% des problèmes SEO d&apos;un site de petite entreprise, avec les bons outils gratuits</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">65</context>
@@ -3845,7 +3901,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.pratique.item0.description" datatype="html">
-        <source>Commande &quot;site:&quot; + check Google Search Console. Zero indexation = priorite absolue.</source>
+        <source>Commande &quot;site:&quot; + check Google Search Console. Zéro indexation = priorité absolue.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">73</context>
@@ -3887,7 +3943,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.pratique.item3.description" datatype="html">
-        <source>Listez 3 questions clients sans reponse sur votre site. Ce sont vos 3 prochains articles.</source>
+        <source>Listez 3 questions clients sans réponse sur votre site. Ce sont vos 3 prochains articles.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">85</context>
@@ -3901,7 +3957,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.outils.item0.description" datatype="html">
-        <source>Gratuit, officiel Google. Voir si vos pages sont indexees, les mots-cles qui vous amenent des clics, les erreurs techniques.</source>
+        <source>Gratuit, officiel Google. Voir si vos pages sont indexées, les mots-clés qui vous amènent des clics, les erreurs techniques.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">92</context>
@@ -3915,7 +3971,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.outils.item1.description" datatype="html">
-        <source>Gratuit, Google aussi. Score de vitesse mobile + desktop + recommandations concretes par ordre d&apos;importance.</source>
+        <source>Gratuit, Google aussi. Score de vitesse mobile + desktop + recommandations concrètes par ordre d&apos;importance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">96</context>
@@ -3943,7 +3999,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.outils.item3.description" datatype="html">
-        <source>Gratuit. Moins utilise que Google, mais tres utile : ChatGPT Search s&apos;appuie sur Bing pour ses resultats web.</source>
+        <source>Gratuit. Moins utilisé que Google, mais très utile : ChatGPT Search s&apos;appuie sur Bing pour ses résultats web.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">104</context>
@@ -3957,21 +4013,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.outils.item4.description" datatype="html">
-        <source>Version gratuite reservee au proprietaire verifie. Voir les liens entrants vers votre site (backlinks) sans payer les 99 euro/mois d&apos;Ahrefs Pro.</source>
+        <source>Version gratuite réservée au propriétaire vérifié. Voir les liens entrants vers votre site (backlinks) sans payer les 99 euros/mois d&apos;Ahrefs Pro.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.faq.item0.title" datatype="html">
-        <source>Combien de temps avant de voir des resultats ?</source>
+        <source>Combien de temps avant de voir des résultats ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">114</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.faq.item0.description" datatype="html">
-        <source>3 a 6 mois pour des effets visibles sur le trafic. Les correctifs techniques (indexation, vitesse) peuvent payer sous 2 semaines.</source>
+        <source>3 à 6 mois pour des effets visibles sur le trafic. Les correctifs techniques (indexation, vitesse) peuvent payer sous 2 semaines.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">115</context>
@@ -3985,7 +4041,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.faq.item1.description" datatype="html">
-        <source>Non. Un audit complet tous les 6 mois suffit. Entre-deux, un check rapide mensuel sur Google Search Console (20 min) detecte les problemes qui emergent.</source>
+        <source>Non. Un audit complet tous les 6 mois suffit. Entre-deux, un check rapide mensuel sur Google Search Console (20 min) détecte les problèmes qui émergent.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">119</context>
@@ -3999,7 +4055,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.faq.item2.description" datatype="html">
-        <source>Oui, plus que jamais. Les IA (ChatGPT, Perplexity) citent les sites bien optimises. Le SEO 2026 = SEO classique + AEO (optimisation pour les moteurs de reponse).</source>
+        <source>Oui, plus que jamais. Les IA (ChatGPT, Perplexity) citent les sites bien optimisés. Le SEO 2026 = SEO classique + AEO (optimisation pour les moteurs de réponse).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">123</context>
@@ -4013,7 +4069,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.faq.item3.description" datatype="html">
-        <source>Pour une petite entreprise, non. Les 5 outils gratuits couverts ici suffisent. Semrush/Ahrefs deviennent utiles au-dela de 10 k visites/mois.</source>
+        <source>Pour une petite entreprise, non. Les 5 outils gratuits couverts ici suffisent. Semrush/Ahrefs deviennent utiles au-delà de 10 k visites/mois.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.ts</context>
           <context context-type="linenumber">127</context>
@@ -4034,28 +4090,28 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.accroche.subtitle" datatype="html">
-        <source>5 workflows testes qui font gagner 2 heures par jour aux entrepreneurs et TPE</source>
+        <source>5 workflows testés qui font gagner 2 heures par jour aux entrepreneurs et TPE</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">6,7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.accroche.imageAlt" datatype="html">
-        <source>Entrepreneur concentre devant son ordinateur au milieu d&apos;une journee de travail</source>
+        <source>Entrepreneur concentré devant son ordinateur au milieu d&apos;une journée de travail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">9,10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.constat.title" datatype="html">
-        <source>Combien d&apos;heures perdez-vous chaque semaine sur des taches automatisables ?</source>
+        <source>Combien d&apos;heures perdez-vous chaque semaine sur des tâches automatisables ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">16,17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.promesse.quote" datatype="html">
-        <source>A la fin de ces 25 minutes, vous aurez identifie au moins un workflow concret que vous lancerez cette semaine. Pas besoin de coder, pas besoin d&apos;abonnement paye.</source>
+        <source>À la fin de ces 25 minutes, vous aurez identifié au moins un workflow concret que vous lancerez cette semaine. Pas besoin de coder, pas besoin d&apos;abonnement payé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">24,25</context>
@@ -4069,21 +4125,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.promesse.authorNote" datatype="html">
-        <source>Les exemples viennent de ma pratique quotidienne et de celle de clients reels (coachs, photographes, artisans, commercants).</source>
+        <source>Les exemples viennent de ma pratique quotidienne et de celle de clients réels (coachs, photographes, artisans, commerçants).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">28,29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w1.imageAlt" datatype="html">
-        <source>Entrepreneur redigeant un devis sur ordinateur portable</source>
+        <source>Entrepreneur rédigeant un devis sur ordinateur portable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">36,37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w1.title" datatype="html">
-        <source>Workflow 1 — Generer un devis en 3 minutes</source>
+        <source>Workflow 1 — Générer un devis en 3 minutes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">38,39</context>
@@ -4104,49 +4160,49 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w2.title" datatype="html">
-        <source>Workflow 2 — Reponses emails recurrentes</source>
+        <source>Workflow 2 — Réponses emails récurrentes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">53,54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w2.subtitle" datatype="html">
-        <source> Gmail + une bibliotheque de reponses pre-ecrites par l&apos;IA. </source>
+        <source> Gmail + une bibliothèque de réponses pré-écrites par l&apos;IA. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">57,59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w3.imageAlt" datatype="html">
-        <source>Smartphone affichant un calendrier de publications sur les reseaux sociaux</source>
+        <source>Smartphone affichant un calendrier de publications sur les réseaux sociaux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">66,67</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w3.title" datatype="html">
-        <source>Workflow 3 — Publier sur les reseaux sans y penser</source>
+        <source>Workflow 3 — Publier sur les réseaux sans y penser</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">68,69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w3.subtitle" datatype="html">
-        <source> Une seance de 30 min = un mois de contenu planifie. </source>
+        <source> Une séance de 30 min = un mois de contenu planifié. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">72,74</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w4.imageAlt" datatype="html">
-        <source>Pile de factures papier a traiter sur un bureau</source>
+        <source>Pile de factures papier à traiter sur un bureau</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">81,82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w4.title" datatype="html">
-        <source>Workflow 4 — Extraire les donnees des factures</source>
+        <source>Workflow 4 — Extraire les données des factures</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">83,84</context>
@@ -4174,28 +4230,28 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w5.subtitle" datatype="html">
-        <source> Recevez chaque lundi un resume des nouveautes de votre secteur. </source>
+        <source> Recevez chaque lundi un résumé des nouveautés de votre secteur. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">102,104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.pratiquer.title" datatype="html">
-        <source>Par ou commencer selon votre metier ?</source>
+        <source>Par où commencer selon votre métier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">110,111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.declencheur.title" datatype="html">
-        <source>Quelle action concrete lancez-vous cette semaine ?</source>
+        <source>Quelle action concrète lancez-vous cette semaine ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">122,123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.declencheur.description" datatype="html">
-        <source>PDF 12 pages avec captures d&apos;ecran par etape, prompts prets a copier-coller testes en conditions reelles, sequence email 5 jours (un workflow par jour) — repondez a n&apos;importe quel email, je lis tout sans bot.</source>
+        <source>PDF 12 pages avec captures d&apos;écran par étape, prompts prêts à copier-coller testés en conditions réelles, séquence email 5 jours (un workflow par jour) — répondez à n&apos;importe quel email, je lis tout sans bot.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">124,125</context>
@@ -4209,7 +4265,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.erreurs.title" datatype="html">
-        <source>Pourquoi certains workflows IA echouent : 5 erreurs evitables</source>
+        <source>Pourquoi certains workflows IA échouent : 4 erreurs évitables</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">134,135</context>
@@ -4223,35 +4279,35 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.synthese.title" datatype="html">
-        <source>La prochaine etape concrete</source>
+        <source>La prochaine étape concrète</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">150,151</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.synthese.description" datatype="html">
-        <source>Aujourd&apos;hui : telecharger le toolkit + lire le workflow adapte a votre metier. Cette semaine : tester sur 1 tache reelle (pas 5, pas 10 — une seule). Dans 7 jours : mesurer le temps gagne. Si ca marche : automatiser la 2e tache. Sinon : me repondre, on ajuste ensemble.</source>
+        <source>Aujourd&apos;hui : télécharger le toolkit + lire le workflow adapté à votre métier. Cette semaine : tester sur 1 tâche réelle (pas 5, pas 10 — une seule). Dans 7 jours : mesurer le temps gagné. Si ça marche : automatiser la 2e tâche. Sinon : me répondre, on ajuste ensemble.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">152,153</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.synthese.ctaLabel" datatype="html">
-        <source>Telecharger le toolkit</source>
+        <source>Télécharger le toolkit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">154,155</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w1.bullets.0" datatype="html">
-        <source> Vous dictez a ChatGPT : &quot;prestation X, duree Y, tarif horaire Z&quot; </source>
+        <source> Vous dictez à ChatGPT : &quot;prestation X, durée Y, tarif horaire Z&quot; </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w1.bullets.1" datatype="html">
-        <source> L&apos;IA produit un texte formel + un tableau recapitulatif </source>
+        <source> L&apos;IA produit un texte formel + un tableau récapitulatif </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">17</context>
@@ -4265,63 +4321,63 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w1.bullets.3" datatype="html">
-        <source> Gain mesure : de 25 min a 3 min par devis </source>
+        <source> Gain mesuré : de 25 min à 3 min par devis </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w2.bullets.0" datatype="html">
-        <source> Vous listez vos 5 questions clients les plus frequentes </source>
+        <source> Vous listez vos 5 questions clients les plus fréquentes </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w2.bullets.1" datatype="html">
-        <source> ChatGPT genere une reponse type personnalisable pour chaque </source>
+        <source> ChatGPT génère une réponse type personnalisable pour chaque </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w2.bullets.2" datatype="html">
-        <source> Vous les enregistrez comme &quot;reponses standard&quot; dans Gmail </source>
+        <source> Vous les enregistrez comme &quot;réponses standard&quot; dans Gmail </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w2.bullets.3" datatype="html">
-        <source> Chaque email traite en 30 secondes au lieu de 5 minutes </source>
+        <source> Chaque email traité en 30 secondes au lieu de 5 minutes </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w3.bullets.0" datatype="html">
-        <source> Vous listez 4 themes de la semaine (une realisation, une astuce, un temoignage, un behind-the-scenes) </source>
+        <source> Vous listez 4 thèmes de la semaine (une réalisation, une astuce, un témoignage, un behind-the-scenes) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w3.bullets.1" datatype="html">
-        <source> ChatGPT produit 4 textes + 4 idees d&apos;images </source>
+        <source> ChatGPT produit 4 textes + 4 idées d&apos;images </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w3.bullets.2" datatype="html">
-        <source> Vous les programmez dans Buffer ou Metricool (gratuit jusqu&apos;a 3 reseaux) </source>
+        <source> Vous les programmez dans Buffer ou Metricool (gratuit jusqu&apos;à 3 réseaux) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w3.bullets.3" datatype="html">
-        <source> Publication automatique, vous reprenez la main pour repondre aux commentaires </source>
+        <source> Publication automatique, vous reprenez la main pour répondre aux commentaires </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">31</context>
@@ -4349,14 +4405,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w4.bullets.3" datatype="html">
-        <source> 15 factures traitees en 10 minutes au lieu d&apos;une heure </source>
+        <source> 15 factures traitées en 10 minutes au lieu d&apos;une heure </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w5.bullets.0" datatype="html">
-        <source> Vous definissez 3 sujets cles (ex : &quot;reglementation artisan BTP&quot;, &quot;nouvelles aides BPI&quot;) </source>
+        <source> Vous définissez 3 sujets clés (ex : &quot;réglementation artisan BTP&quot;, &quot;nouvelles aides BPI&quot;) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">40</context>
@@ -4377,42 +4433,42 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.w5.bullets.3" datatype="html">
-        <source> 5 minutes le lundi = vous etes a jour sur toute la semaine </source>
+        <source> 5 minutes le lundi = vous êtes à jour sur toute la semaine </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.constat.stats.0.label" datatype="html">
-        <source>par semaine en moyenne sur des taches automatisables (devis, emails, reseaux sociaux)</source>
+        <source>par semaine en moyenne sur des tâches automatisables (devis, emails, réseaux sociaux)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.constat.stats.0.source" datatype="html">
-        <source>Enquete BPI France / OpinionWay, 2025</source>
+        <source>Enquête BPI France / OpinionWay, 2025</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.constat.stats.1.label" datatype="html">
-        <source>des dirigeants de TPE disent manquer de temps pour developper leur activite</source>
+        <source>des dirigeants de TPE disent manquer de temps pour développer leur activité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.constat.stats.1.source" datatype="html">
-        <source>CPME, barometre 2025</source>
+        <source>CPME, baromètre 2025</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.constat.stats.2.label" datatype="html">
-        <source>c&apos;est le budget IA necessaire pour demarrer — les 5 workflows montres tournent sur du gratuit</source>
+        <source>c&apos;est le budget IA nécessaire pour démarrer — les 5 workflows montrés tournent sur du gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">60</context>
@@ -4433,7 +4489,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.pratiquer.items.0.description" datatype="html">
-        <source>Commencer par le workflow devis (W1). Chaque shooting a un cahier des charges similaire — l&apos;IA economise 20 min par demande client.</source>
+        <source>Commencer par le workflow devis (W1). Chaque shooting a un cahier des charges similaire — l&apos;IA économise 20 min par demande client.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">68</context>
@@ -4447,7 +4503,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.pratiquer.items.1.description" datatype="html">
-        <source>Workflow reseaux sociaux (W3). Capitaliser sur les notes de seances pour generer des posts authentiques sans y passer le week-end.</source>
+        <source>Workflow réseaux sociaux (W3). Capitaliser sur les notes de séances pour générer des posts authentiques sans y passer le week-end.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">72</context>
@@ -4461,21 +4517,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.pratiquer.items.2.description" datatype="html">
-        <source>Workflow factures (W4) + veille reglementaire (W5). Deux heures gagnees par semaine sur l&apos;administratif et les normes.</source>
+        <source>Workflow factures (W4) + veille réglementaire (W5). Deux heures gagnées par semaine sur l&apos;administratif et les normes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.pratiquer.items.3.title" datatype="html">
-        <source>Commerce de proximite</source>
+        <source>Commerce de proximité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.pratiquer.items.3.description" datatype="html">
-        <source>Workflow emails (W2) + reseaux (W3). Maintenir la relation clientele a frequence constante sans exploser le temps passe.</source>
+        <source>Workflow emails (W2) + réseaux (W3). Maintenir la relation clientèle à fréquence constante sans exploser le temps passé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">80</context>
@@ -4489,7 +4545,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.pratiquer.items.4.description" datatype="html">
-        <source>Workflow devis (W1) + veille (W5). Reponse sous 24h aux appels d&apos;offres, veille pour nourrir les propositions.</source>
+        <source>Workflow devis (W1) + veille (W5). Réponse sous 24h aux appels d&apos;offres, veille pour nourrir les propositions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">84</context>
@@ -4503,7 +4559,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.pratiquer.items.5.description" datatype="html">
-        <source>Tous les workflows en sequence : commencer par W2 (emails), le plus vite rentable. Puis W3, W1, W4, W5.</source>
+        <source>Tous les workflows en séquence : commencer par W2 (emails), le plus vite rentable. Puis W3, W1, W4, W5.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">88</context>
@@ -4517,49 +4573,49 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.faq.items.0.description" datatype="html">
-        <source>Elle se trompe, c&apos;est une donnee. Chaque workflow contient une etape de relecture explicite. La regle : l&apos;IA accelere, vous validez.</source>
+        <source>Elle se trompe, c&apos;est une donnée. Chaque workflow contient une étape de relecture explicite. La règle : l&apos;IA accélère, vous validez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.faq.items.1.title" datatype="html">
-        <source>Mes donnees sont-elles reutilisees ?</source>
+        <source>Mes données sont-elles réutilisées ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.faq.items.1.description" datatype="html">
-        <source>Oui par defaut. Le toolkit indique comment desactiver l&apos;entrainement sur vos echanges (ChatGPT, Perplexity) en 2 clics. RGPD OK.</source>
+        <source>Oui par défaut. Le toolkit indique comment désactiver l&apos;entraînement sur vos échanges (ChatGPT, Perplexity) en 2 clics. RGPD OK.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.faq.items.2.title" datatype="html">
-        <source>Faut-il apprendre a coder ?</source>
+        <source>Faut-il apprendre à coder ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">102</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.faq.items.2.description" datatype="html">
-        <source>Non. Zero ligne de code, zero API, zero webhook. Tout passe par des interfaces graphiques standards — si vous savez utiliser Word et Gmail, vous savez deja.</source>
+        <source>Non. Zéro ligne de code, zéro API, zéro webhook. Tout passe par des interfaces graphiques standards — si vous savez utiliser Word et Gmail, vous savez déjà.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">103</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.erreurs.rows.0.0" datatype="html">
-        <source>Automatiser 1 tache a la fois, mesurer, puis en ajouter</source>
+        <source>Automatiser 1 tâche à la fois, mesurer, puis en ajouter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.erreurs.rows.1.0" datatype="html">
-        <source>Relire systematiquement avant d&apos;envoyer au client</source>
+        <source>Relire systématiquement avant d&apos;envoyer au client</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">109</context>
@@ -4587,21 +4643,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.erreurs.rows.1.1" datatype="html">
-        <source>Confier des emails sensibles a l&apos;IA sans relecture</source>
+        <source>Confier des emails sensibles à l&apos;IA sans relecture</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.erreurs.rows.2.1" datatype="html">
-        <source>Payer un abonnement avant d&apos;avoir valide le workflow</source>
+        <source>Payer un abonnement avant d&apos;avoir validé le workflow</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.erreurs.rows.3.1" datatype="html">
-        <source>Accepter le ton robotique par defaut — on perd la personnalite</source>
+        <source>Accepter le ton robotique par défaut — on perd la personnalité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">118</context>
@@ -4615,7 +4671,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.erreurs.headers.1" datatype="html">
-        <source>A eviter au depart</source>
+        <source>À éviter au départ</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">128</context>
@@ -6364,7 +6420,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.errorDetail" datatype="html">
-        <source> Le lien est peut-etre expire ou invalide. Verifiez votre email ou refaites une demande. </source>
+        <source> Le lien est peut-être expiré ou invalide. Vérifiez votre email ou refaites une demande. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
           <context context-type="linenumber">20,24</context>
@@ -6450,7 +6506,7 @@
       <trans-unit id="formations.toolkitPrivate.gammaCta" datatype="html">
         <source> Collez ce prompt dans <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://gamma.app&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;
                     &gt;"/>gamma.app<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-                  &gt;"/> pour generer votre presentation en 60 secondes. </source>
+                  &gt;"/> pour générer votre présentation en 60 secondes. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.html</context>
           <context context-type="linenumber">176,180</context>
@@ -7644,11 +7700,18 @@
         <note priority="1" from="description">Connection lost during audit</note>
         <note priority="1" from="meaning">growthAudit.error.connectionLost</note>
       </trans-unit>
+      <trans-unit id="auditFormErreurRefus" datatype="html">
+        <source>La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">296</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="auditStepPending" datatype="html">
         <source>Audit en attente...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="linenumber">302</context>
         </context-group>
         <note priority="1" from="description">Audit pending step</note>
         <note priority="1" from="meaning">growthAudit.step.pending</note>
@@ -7657,7 +7720,7 @@
         <source>Impossible de récupérer le résumé de l&apos;audit pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">439</context>
+          <context context-type="linenumber">436</context>
         </context-group>
         <note priority="1" from="description">Summary fetch error</note>
         <note priority="1" from="meaning">growthAudit.error.summaryFetch</note>
@@ -9789,7 +9852,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileEmailReadonly" datatype="html">
@@ -9845,112 +9908,112 @@
         <source>Enregistrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">191,193</context>
+          <context context-type="linenumber">195,197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSetPasswordLoading" datatype="html">
         <source>Enregistrement...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">193,195</context>
+          <context context-type="linenumber">197,199</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordTitle" datatype="html">
         <source> Changer le mot de passe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">210,212</context>
+          <context context-type="linenumber">214,216</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordSub" datatype="html">
         <source> Mettez à jour votre mot de passe régulièrement. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">213,216</context>
+          <context context-type="linenumber">217,219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileCurrentPasswordLabel" datatype="html">
         <source>Mot de passe actuel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">223,225</context>
+          <context context-type="linenumber">230,232</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileNewPasswordLabel" datatype="html">
         <source>Nouveau mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">247,249</context>
+          <context context-type="linenumber">254,256</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordSubmit" datatype="html">
         <source>Modifier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">277,279</context>
+          <context context-type="linenumber">288,290</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordLoading" datatype="html">
         <source>Modification...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">279,281</context>
+          <context context-type="linenumber">290,292</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSessionTitle" datatype="html">
         <source>Préférences &amp; session</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">294,295</context>
+          <context context-type="linenumber">305,306</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSessionSub" datatype="html">
         <source>Gérez votre accès à l&apos;écosystème Asili.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">295,296</context>
+          <context context-type="linenumber">306,307</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSessionLabel" datatype="html">
         <source>Session</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">298,299</context>
+          <context context-type="linenumber">309,310</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSessionValue" datatype="html">
         <source>Connecté sur cet appareil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">299,301</context>
+          <context context-type="linenumber">310,312</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileLogout" datatype="html">
         <source> Se déconnecter </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">302,303</context>
+          <context context-type="linenumber">313,314</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileFirstNameLabel" datatype="html">
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileLastNameLabel" datatype="html">
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileEditErrorGeneric" datatype="html">
         <source>Impossible de mettre à jour le profil pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <note priority="1" from="description">profile.edit.error.generic</note>
       </trans-unit>
@@ -9958,23 +10021,30 @@
         <source>Profil mis à jour avec succès.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <note priority="1" from="description">profile.edit.success</note>
       </trans-unit>
       <trans-unit id="profilePasswordErrorGeneric" datatype="html">
-        <source>Impossible de definir le mot de passe pour le moment.</source>
+        <source>Impossible de définir le mot de passe pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">164</context>
+          <context context-type="linenumber">168</context>
         </context-group>
         <note priority="1" from="description">profile.password.error.generic</note>
       </trans-unit>
-      <trans-unit id="profilePasswordSuccess" datatype="html">
-        <source>Mot de passe defini avec succes.</source>
+      <trans-unit id="profilePasswordErreurDejaDefini" datatype="html">
+        <source>Un mot de passe est déjà défini pour ce compte : utilisez « Changer le mot de passe ».</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profilePasswordSuccess" datatype="html">
+        <source>Mot de passe défini avec succès.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">174</context>
         </context-group>
         <note priority="1" from="description">profile.password.success</note>
       </trans-unit>
@@ -9982,15 +10052,22 @@
         <source>Impossible de changer le mot de passe pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">205</context>
         </context-group>
         <note priority="1" from="description">profile.changePassword.error.generic</note>
       </trans-unit>
-      <trans-unit id="profileChangePasswordSuccess" datatype="html">
-        <source>Mot de passe modifie avec succes.</source>
+      <trans-unit id="profileChangePasswordErreurSaisie" datatype="html">
+        <source>Vérifiez votre mot de passe actuel et la règle du nouveau mot de passe.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">207</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileChangePasswordSuccess" datatype="html">
+        <source>Mot de passe modifié avec succès.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">210</context>
         </context-group>
         <note priority="1" from="description">profile.changePassword.success</note>
       </trans-unit>
@@ -12497,6 +12574,34 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/visual/slide-visual.component.ts</context>
           <context context-type="linenumber">144,148</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formulaireRefusInformations" datatype="html">
+        <source>Certaines informations ont été refusées : vérifiez les champs et réessayez.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/form-submit.utils.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formulaireRefusMotDePasseNeuf" datatype="html">
+        <source>Le nouveau mot de passe n’a pas été accepté : il doit respecter la règle indiquée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/form-submit.utils.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formulaireRefusAdresseNonVerifiee" datatype="html">
+        <source>Votre adresse e-mail n’est pas encore vérifiée : ouvrez le lien reçu par e-mail pour activer votre compte.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/form-submit.utils.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="formulaireRefusTropDeTentatives" datatype="html">
+        <source>Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/form-submit.utils.ts</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="regleDUnMotDePasse" datatype="html">

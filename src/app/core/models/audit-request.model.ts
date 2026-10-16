@@ -38,7 +38,6 @@ export interface AuditRequestPayload {
 
 export interface AuditCreateResponse {
   message: string;
-  httpCode: number;
   auditId: string;
   status: AuditProcessingStatus;
 }

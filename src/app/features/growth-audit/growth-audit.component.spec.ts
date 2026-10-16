@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { LOCALE_ID } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
@@ -18,6 +19,7 @@ import {
   buildClientReport,
   createAuditRequestPortStub,
 } from '../../../testing/factories/audit-request.factory';
+import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
 
 function buildValidForm(): NgForm {
   return jasmine.createSpyObj<NgForm>('NgForm', ['resetForm'], {
@@ -65,9 +67,7 @@ describe('GrowthAuditComponent', () => {
 
   function soumettreEtDiffuser(event: AuditStreamEvent, auditId: string) {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
-    auditServiceMock.submit.and.returnValue(
-      of(buildAuditCreateResponse({ auditId, httpCode: 201 })),
-    );
+    auditServiceMock.submit.and.returnValue(of(buildAuditCreateResponse({ auditId })));
     auditServiceMock.stream.and.returnValue(of<AuditStreamEvent>(event));
 
     remplirEtSoumettre(fixture.componentInstance, true);
@@ -374,6 +374,66 @@ describe('GrowthAuditComponent', () => {
     });
   });
 
+  describe('refus de la demande d audit', () => {
+    type FenetreSuivie = { plausible?: jasmine.Spy };
+    let suivi: jasmine.Spy;
+
+    beforeEach(() => {
+      suivi = jasmine.createSpy('plausible');
+      (window as unknown as FenetreSuivie).plausible = suivi;
+    });
+
+    afterEach(() => {
+      delete (window as unknown as FenetreSuivie).plausible;
+    });
+
+    for (const [cas, erreur, statut, attendu] of [
+      [
+        'un refus du DTO, de l anti-robot ou un audit du site lui-même (400)',
+        refusDuBack(400, 'Self-audit is not allowed for domain "asilidesign.fr".'),
+        400,
+        'La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.',
+      ],
+      [
+        'la limite horaire (429)',
+        refusDuBack(429, 'ThrottlerException: Too Many Requests'),
+        429,
+        'Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.',
+      ],
+      [
+        'un back injoignable',
+        new HttpErrorResponse({ status: 0, url: 'https://asilidesign.fr' }),
+        0,
+        "Impossible d'envoyer la demande. Réessayez dans un instant.",
+      ],
+    ] as const) {
+      it(`dit ${cas} par un message localisé, rend le bouton et ne suit que le statut`, () => {
+        const fixture = TestBed.createComponent(GrowthAuditComponent);
+        auditServiceMock.submit.and.returnValue(throwError(() => erreur));
+
+        remplirEtSoumettre(fixture.componentInstance, true);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.errorMessage).toBe(attendu);
+        expect(fixture.componentInstance.isSubmitting).toBeFalse();
+        expect(suivi).toHaveBeenCalledOnceWith('audit_error', {
+          props: { reason: `http_${statut}` },
+        });
+      });
+    }
+
+    it('lance l audit sur toute réponse 2xx porteuse d un identifiant', () => {
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      auditServiceMock.submit.and.returnValue(of(buildAuditCreateResponse({ auditId: 'a-2xx' })));
+
+      remplirEtSoumettre(fixture.componentInstance, true);
+
+      expect(fixture.componentInstance.errorMessage).toBeUndefined();
+      expect(fixture.componentInstance.auditId).toBe('a-2xx');
+      expect(auditServiceMock.stream).toHaveBeenCalledWith('a-2xx');
+    });
+  });
+
   describe('P0.4 — consentement RGPD obligatoire', () => {
     it('bloque la soumission si rgpdConsent est false', () => {
       const fixture = TestBed.createComponent(GrowthAuditComponent);
@@ -390,7 +450,7 @@ describe('GrowthAuditComponent', () => {
       const fixture = TestBed.createComponent(GrowthAuditComponent);
       const component = fixture.componentInstance;
       auditServiceMock.submit.and.returnValue(
-        of(buildAuditCreateResponse({ auditId: 'audit-ok', httpCode: 201 })),
+        of(buildAuditCreateResponse({ auditId: 'audit-ok' })),
       );
 
       remplirEtSoumettre(component, true);

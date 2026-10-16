@@ -216,6 +216,9 @@
             <p class="ch-sub" i18n="@@profileChangePasswordSub">
               Mettez à jour votre mot de passe régulièrement.
             </p>
+            @if (setPasswordSuccess) {
+              <p class="pf-msg ok">{{ setPasswordSuccess }}</p>
+            }
 
             <form
               #changePasswordForm="ngForm"

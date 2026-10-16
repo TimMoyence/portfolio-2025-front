@@ -26,7 +26,13 @@ export class ForgotPasswordComponent extends FormulaireDeMotDePasse {
 
     this.envoyer(
       this.authService.requestPasswordReset({ email: this.email.trim() }),
-      $localize`:auth.forgot.error.generic@@authForgotErrorGeneric:Impossible d'envoyer le lien pour le moment.`,
+      {
+        succes: $localize`:@@authForgotSucces:Si un compte existe avec cette adresse, un lien de réinitialisation vient de vous être envoyé.`,
+        refus: {
+          400: $localize`:@@authForgotErreurAdresse:Cette adresse e-mail n’a pas été acceptée : vérifiez-la et réessayez.`,
+        },
+        repli: $localize`:auth.forgot.error.generic@@authForgotErrorGeneric:Impossible d'envoyer le lien pour le moment.`,
+      },
       () => {
         this.email = '';
         form.resetForm({ email: '' });

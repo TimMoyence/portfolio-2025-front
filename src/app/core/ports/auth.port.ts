@@ -18,7 +18,7 @@ export interface AuthPort {
   login(credentials: LoginCredentials): Observable<AuthSession>;
   register(payload: RegisterUserPayload): Observable<AuthActionMessage>;
   me(): Observable<AuthUser>;
-  googleAuth(idToken: string, inviteToken?: string): Observable<AuthSession>;
+  googleAuth(idToken: string): Observable<AuthSession>;
   requestPasswordReset(payload: ForgotPasswordPayload): Observable<AuthActionMessage>;
   resetPassword(payload: ResetPasswordPayload): Observable<AuthActionMessage>;
   setPassword(payload: SetPasswordPayload): Observable<AuthUser>;

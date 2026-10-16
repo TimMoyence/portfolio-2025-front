@@ -292,15 +292,10 @@ export class GrowthAuditComponent implements OnDestroy {
 
     handleFormSubmit(this.auditService.submit(payload), this.cdr, {
       fallbackError: this.formLabels.error,
+      refus: {
+        400: $localize`:@@auditFormErreurRefus:La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.`,
+      },
       onSuccess: (response) => {
-        if (response.httpCode !== 201 || !response.auditId) {
-          this.errorMessage = response.message || this.formLabels.error;
-          this.trackAuditEvent('audit_rejected', {
-            reason: response.message ?? 'unknown',
-          });
-          return;
-        }
-
         this.successMessage = this.formLabels.success;
         this.auditId = response.auditId;
         this.auditProgress = 0;
@@ -315,16 +310,18 @@ export class GrowthAuditComponent implements OnDestroy {
         });
         this.startStream(response.auditId);
       },
-      onError: (message) => {
+      onError: (message, statut) => {
         this.errorMessage = message;
-        this.trackAuditEvent('audit_error', { reason: message });
+        this.trackAuditEvent('audit_error', { reason: `http_${statut}` });
       },
       onComplete: () => {
-        this.isSubmitting = false;
         this.isSubmitted = false;
         this.auditFormState = formulaireVierge();
         this.rgpdConsent = false;
         form.resetForm(this.auditFormState);
+      },
+      finalement: () => {
+        this.isSubmitting = false;
       },
     });
   }
@@ -337,7 +334,7 @@ export class GrowthAuditComponent implements OnDestroy {
    * pret a emettre sans redeploy lorsque la config arrive.
    */
   private trackAuditEvent(
-    name: 'audit_submitted' | 'audit_completed' | 'audit_failed' | 'audit_error' | 'audit_rejected',
+    name: 'audit_submitted' | 'audit_completed' | 'audit_failed' | 'audit_error',
     props: Record<string, string>,
   ): void {
     if (!this.isBrowser) return;

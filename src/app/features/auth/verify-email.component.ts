@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AUTH_PORT, type AuthPort } from '../../core/ports/auth.port';
-import { extractErrorMessage } from '../../shared/utils/http-error.utils';
+import { messageDuRefus } from '../../shared/utils/form-submit.utils';
 import { IMPORTS_PAGE_AUTH } from './page-auth.imports';
 
 @Component({
@@ -33,25 +33,29 @@ export class VerifyEmailComponent implements OnInit {
 
     if (!token) {
       this.isLoading = false;
-      this.errorMessage = $localize`:verify-email.error.noToken@@verifyEmailErrorNoToken:Aucun token de verification fourni.`;
+      this.errorMessage = $localize`:verify-email.error.noToken@@verifyEmailErrorNoToken:Le lien de vérification est incomplet : ouvrez-le depuis l’e-mail reçu.`;
       this.cdr.markForCheck();
       return;
     }
 
     this.authService.verifyEmail(token).subscribe({
-      next: (result) => {
+      next: () => {
         this.isLoading = false;
-        this.successMessage = result.message;
+        this.successMessage = $localize`:@@verifyEmailSucces:Votre adresse e-mail est vérifiée : votre compte est activé.`;
         this.cdr.markForCheck();
         setTimeout(() => {
           void this.router.navigate(['/login']);
         }, 3000);
       },
-      error: (err) => {
+      error: (err: unknown) => {
         this.isLoading = false;
-        this.errorMessage =
-          extractErrorMessage(err) ??
-          $localize`:verify-email.error.generic@@verifyEmailErrorGeneric:La verification a echoue. Le lien est peut-etre expire.`;
+        this.errorMessage = messageDuRefus(
+          err,
+          {
+            404: $localize`:verify-email.error.generic@@verifyEmailErrorGeneric:La vérification a échoué : le lien est invalide ou a expiré.`,
+          },
+          $localize`:@@verifyEmailErreurIndisponible:La vérification n’a pas pu aboutir pour le moment : réessayez dans un instant.`,
+        );
         this.cdr.markForCheck();
       },
     });

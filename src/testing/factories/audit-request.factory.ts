@@ -15,7 +15,6 @@ export function buildAuditCreateResponse(
 ): AuditCreateResponse {
   return {
     message: 'Audit cree avec succes.',
-    httpCode: 201,
     auditId: 'audit-1',
     status: 'PENDING',
     ...overrides,

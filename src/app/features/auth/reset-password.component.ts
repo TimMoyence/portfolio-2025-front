@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 import { MotDePasseNeufDirective } from '../../shared/directives/mot-de-passe-neuf.directive';
+import { MOT_DE_PASSE_NEUF_REFUSE } from '../../shared/utils/form-submit.utils';
 import { REGLE_D_UN_MOT_DE_PASSE } from '../../shared/utils/regles-de-saisie';
 import { FormulaireAuthComponent } from './formulaire-auth.component';
 import { FormulaireDeMotDePasse } from './formulaire-de-mot-de-passe';
@@ -75,7 +76,14 @@ export class ResetPasswordComponent extends FormulaireDeMotDePasse implements On
 
     this.envoyer(
       this.authService.resetPassword({ token: this.token, newPassword }),
-      $localize`:auth.reset.error.generic@@authResetErrorGeneric:Impossible de réinitialiser le mot de passe.`,
+      {
+        succes: $localize`:@@authResetSucces:Mot de passe réinitialisé : vous pouvez maintenant vous connecter.`,
+        refus: {
+          400: MOT_DE_PASSE_NEUF_REFUSE,
+          404: $localize`:@@authResetErreurLienExpire:Ce lien de réinitialisation est invalide ou a expiré : demandez-en un nouveau.`,
+        },
+        repli: $localize`:auth.reset.error.generic@@authResetErrorGeneric:Impossible de réinitialiser le mot de passe.`,
+      },
       () => {
         this.motsDePasse = { newPassword: '', confirmPassword: '' };
         form.resetForm(this.motsDePasse);

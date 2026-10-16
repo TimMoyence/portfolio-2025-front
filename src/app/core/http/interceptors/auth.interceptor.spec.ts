@@ -46,6 +46,15 @@ describe('authInterceptor', () => {
     return req.request.headers.get('Authorization');
   }
 
+  function statutsRecusApres401(url: string, headers: Record<string, string> = {}): number[] {
+    const statutsRecus: number[] = [];
+    http
+      .post(url, {}, { headers })
+      .subscribe({ error: (erreur: HttpErrorResponse) => statutsRecus.push(erreur.status) });
+    httpMock.expectOne(url).flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
+    return statutsRecus;
+  }
+
   it('devrait ajouter le header Authorization aux requetes de notre API', () => {
     authState.login(buildAuthSession({ accessToken: 'mon-token-jwt' }));
 
@@ -131,12 +140,10 @@ describe('authInterceptor', () => {
     spyOn(authState, 'clearSession').and.callThrough();
     const navigate = spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
     const url = `${environment.apiBaseUrl}/formations/sessions/seance-1/answers`;
-    const statutsRecus: number[] = [];
 
-    http
-      .post(url, {}, { headers: { [ENTETE_JETON_PARTICIPANT]: 'jeton-participant' } })
-      .subscribe({ error: (erreur: HttpErrorResponse) => statutsRecus.push(erreur.status) });
-    httpMock.expectOne(url).flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
+    const statutsRecus = statutsRecusApres401(url, {
+      [ENTETE_JETON_PARTICIPANT]: 'jeton-participant',
+    });
 
     expect(statutsRecus).withContext('le 401 remonte a l appelant').toEqual([401]);
     expect(authState.clearSession).not.toHaveBeenCalled();
@@ -144,15 +151,22 @@ describe('authInterceptor', () => {
     expect(authState.token()).toBe('jwt-formateur');
   });
 
+  for (const route of ['/auth/login', '/auth/google']) {
+    it(`laisse au formulaire un 401 de ${route}, qui juge des identifiants et non une session`, () => {
+      authState.login(buildAuthSession({ accessToken: 'jwt-en-cours' }));
+      spyOn(authState, 'clearSession').and.callThrough();
+      const navigate = spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+      const statutsRecus = statutsRecusApres401(`${environment.apiBaseUrl}${route}`);
+
+      expect(statutsRecus).withContext('le 401 remonte au formulaire').toEqual([401]);
+      expect(authState.clearSession).not.toHaveBeenCalled();
+      expect(navigate).not.toHaveBeenCalled();
+    });
+  }
+
   it('R3 · laisse aux gardes la destination quand le rafraichissement silencieux d un visiteur echoue en 401', () => {
     const navigate = spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
-    const url = `${environment.apiBaseUrl}/auth/refresh`;
-    const statutsRecus: number[] = [];
-
-    http
-      .post(url, {})
-      .subscribe({ error: (erreur: HttpErrorResponse) => statutsRecus.push(erreur.status) });
-    httpMock.expectOne(url).flush('Non autorise', { status: 401, statusText: 'Unauthorized' });
+    const statutsRecus = statutsRecusApres401(`${environment.apiBaseUrl}/auth/refresh`);
 
     expect(statutsRecus).withContext('le 401 remonte a la restauration de session').toEqual([401]);
     expect(navigate).not.toHaveBeenCalled();

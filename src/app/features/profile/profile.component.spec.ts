@@ -12,6 +12,7 @@ import {
   texteDuBlocDuChamp,
 } from '../../../testing/champ-de-formulaire';
 import { buildAuthUser, buildSetPasswordPayload } from '../../../testing/factories/auth.factory';
+import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
 import type { PageAuthMontee } from '../../../testing/page-auth';
 import { formulaireSoumis, monterPageAuth } from '../../../testing/page-auth';
 import { ProfileComponent } from './profile.component';
@@ -292,16 +293,85 @@ describe('ProfileComponent', () => {
       ]);
     });
 
-    it("saveProfile affiche une erreur en cas d'echec", () => {
-      authService.updateProfile.and.returnValue(
-        throwError(() => ({ error: { message: 'Erreur serveur' } })),
+    for (const [statut, attendu] of [
+      [400, 'Certaines informations ont été refusées : vérifiez les champs et réessayez.'],
+      [
+        403,
+        'Votre adresse e-mail n’est pas encore vérifiée : ouvrez le lien reçu par e-mail pour activer votre compte.',
+      ],
+      [500, 'Impossible de mettre à jour le profil pour le moment.'],
+    ] as const) {
+      it(`saveProfile dit un refus ${statut} par un message localisé et reste en édition`, () => {
+        authService.updateProfile.and.returnValue(
+          throwError(() => refusDuBack(statut, 'Invalid user phone number')),
+        );
+
+        component.startEditing();
+        component.saveProfile(formulaireSoumis());
+
+        expect(component.editProfileError).toBe(attendu);
+        expect(component.editProfileLoading).toBeFalse();
+        expect(component.isEditing()).toBeTrue();
+      });
+    }
+  });
+
+  describe('refus et succès des mots de passe', () => {
+    const texte = () => (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+    it('garde lisible le succès de la définition du mot de passe après le rechargement de la session', () => {
+      authService.setPassword.and.returnValue(of(buildAuthUser({ hasPassword: true })));
+      authState.restoreSession.and.callFake(() =>
+        authState.user.set(buildAuthUser({ hasPassword: true })),
       );
 
-      component.startEditing();
-      component.saveProfile(formulaireSoumis());
+      component.newPassword = NEW_PASSWORD;
+      component.setPassword(formulaireSoumis());
+      fixture.detectChanges();
 
-      expect(component.editProfileError).toBeDefined();
-      expect(component.isEditing()).toBeTrue();
+      expect(texte()).toContain('Changer le mot de passe');
+      expect(texte()).toContain('Mot de passe défini avec succès.');
+    });
+
+    for (const [statut, attendu] of [
+      [
+        409,
+        'Un mot de passe est déjà défini pour ce compte : utilisez « Changer le mot de passe ».',
+      ],
+      [400, 'Le nouveau mot de passe n’a pas été accepté : il doit respecter la règle indiquée.'],
+    ] as const) {
+      it(`setPassword dit un refus ${statut} par un message localisé`, () => {
+        authService.setPassword.and.returnValue(
+          throwError(() => refusDuBack(statut, 'Password is already configured')),
+        );
+
+        component.newPassword = NEW_PASSWORD;
+        component.setPassword(formulaireSoumis());
+
+        expect(component.setPasswordError).toBe(attendu);
+        expect(component.setPasswordLoading).toBeFalse();
+      });
+    }
+
+    it('changePassword dit un refus par un message localisé, et son succès accentué', async () => {
+      TestBed.resetTestingModule();
+      await monter({ hasPassword: true });
+      authService.changePassword.and.returnValues(
+        throwError(() => refusDuBack(400, 'Current password is invalid')),
+        of(buildAuthUser({ hasPassword: true })),
+      );
+      component.currentPassword = 'actuel';
+      component.changeNewPassword = NEW_PASSWORD;
+
+      component.changePassword(formulaireSoumis());
+      expect(component.changePasswordError).toBe(
+        'Vérifiez votre mot de passe actuel et la règle du nouveau mot de passe.',
+      );
+      expect(component.changePasswordLoading).toBeFalse();
+
+      component.changePassword(formulaireSoumis());
+      fixture.detectChanges();
+      expect(texte()).toContain('Mot de passe modifié avec succès.');
     });
   });
 });

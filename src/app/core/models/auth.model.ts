@@ -29,12 +29,6 @@ export interface RegisterUserPayload {
   firstName: string;
   lastName: string;
   phone?: string | null;
-  inviteToken?: string;
-}
-
-interface InviteWarning {
-  code: string;
-  message: string;
 }
 
 export interface ForgotPasswordPayload {
@@ -63,7 +57,6 @@ export interface UpdateProfilePayload {
 
 export interface AuthActionMessage {
   message: string;
-  inviteWarning?: InviteWarning;
 }
 
 export interface ResendVerificationPayload {

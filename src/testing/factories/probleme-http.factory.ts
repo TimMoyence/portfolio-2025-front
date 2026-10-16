@@ -1,3 +1,5 @@
+import { HttpErrorResponse } from '@angular/common/http';
+
 export interface ProblemeHttp {
   readonly type: string;
   readonly title: string;
@@ -15,4 +17,15 @@ export function buildProblemeHttp(overrides: Partial<ProblemeHttp> = {}): Proble
     detail: 'Conflit avec la ressource existante',
     ...overrides,
   };
+}
+
+export function refusDuBack(
+  status: number,
+  detail: string | readonly string[] = 'Texte servi par le back',
+): HttpErrorResponse {
+  return new HttpErrorResponse({
+    status,
+    url: 'https://asilidesign.fr/api/v1/portfolio25',
+    error: { ...buildProblemeHttp({ status }), detail },
+  });
 }

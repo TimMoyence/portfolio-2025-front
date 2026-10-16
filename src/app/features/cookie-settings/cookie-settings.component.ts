@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import type { CookieConsentPreferences } from '../../core/models/cookie-consent.model';
 import { CookieConsentService } from '../../core/services/cookie-consent.service';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
+import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 
 @Component({
   selector: 'app-cookie-settings',
@@ -16,6 +17,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 })
 export class CookieSettingsComponent {
   private readonly consentService = inject(CookieConsentService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly hero = {
     kicker: $localize`:cookie.settings.hero.kicker@@cookieSettingsHeroLabel:Vos choix`,
@@ -103,19 +105,16 @@ export class CookieSettingsComponent {
     this.isSaving = true;
     this.statusMessage = undefined;
     this.showSaved = false;
-    call.subscribe({
-      next: (response) => {
-        if (response?.httpCode === 201) {
-          this.statusMessage = this.actions.saved;
-          this.showSaved = true;
-        } else {
-          this.statusMessage = this.actions.error;
-        }
+    handleFormSubmit(call, this.cdr, {
+      fallbackError: this.actions.error,
+      onSuccess: () => {
+        this.statusMessage = this.actions.saved;
+        this.showSaved = true;
       },
-      error: () => {
-        this.statusMessage = this.actions.error;
+      onError: (message) => {
+        this.statusMessage = message;
       },
-      complete: () => {
+      finalement: () => {
         this.isSaving = false;
       },
     });

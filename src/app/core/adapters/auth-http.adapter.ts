@@ -20,14 +20,14 @@ export class AuthHttpAdapter implements AuthPort {
 
   readonly me: AuthPort['me'] = () => this.http.get<AuthUser>(`${this.baseUrl}/auth/me`);
 
-  readonly googleAuth: AuthPort['googleAuth'] = (idToken, inviteToken) => {
-    const body: { idToken: string; inviteToken?: string } = { idToken };
-    if (inviteToken) {
-      body.inviteToken = inviteToken;
-    }
-    return this.http.post<AuthSession>(`${this.baseUrl}/auth/google`, body, {
-      withCredentials: true,
-    });
+  readonly googleAuth: AuthPort['googleAuth'] = (idToken) => {
+    return this.http.post<AuthSession>(
+      `${this.baseUrl}/auth/google`,
+      { idToken },
+      {
+        withCredentials: true,
+      },
+    );
   };
 
   readonly requestPasswordReset: AuthPort['requestPasswordReset'] = (payload) =>

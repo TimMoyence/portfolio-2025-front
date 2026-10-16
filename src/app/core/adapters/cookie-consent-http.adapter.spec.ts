@@ -26,7 +26,6 @@ describe('CookieConsentHttpAdapter', () => {
     };
     const response: MessageResponse = {
       message: 'Consentement enregistré.',
-      httpCode: 201,
     };
 
     verifierPostRelaye(

@@ -20,8 +20,11 @@ import { AuthStateService } from '../../core/services/auth-state.service';
 import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
 import { loadGoogleGis } from '../../core/utils/google-gis';
-import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
-import { extractErrorMessage } from '../../shared/utils/http-error.utils';
+import {
+  handleFormSubmit,
+  INFORMATIONS_REFUSEES,
+  messageDuRefus,
+} from '../../shared/utils/form-submit.utils';
 import type { Bornes } from '../../shared/utils/regles-de-saisie';
 import {
   BORNES_D_UN_MOT_DE_PASSE_SAISI,
@@ -38,6 +41,8 @@ import { MotDePasseNeufDirective } from '../../shared/directives/mot-de-passe-ne
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
+
+const IDENTIFIANTS_REFUSES = $localize`:@@authLoginErreurIdentifiants:Adresse e-mail ou mot de passe incorrect.`;
 
 type AuthTab = 'sign-up' | 'log-in';
 type SignupFormKey = keyof SignupFormState;
@@ -118,7 +123,6 @@ export class AuthComponent {
   isSignupLoading: boolean = false;
   isLoginLoading: boolean = false;
   signupErrorMessage?: string;
-  signupSuccessMessage?: string;
   loginErrorMessage?: string;
   loginSuccessMessage?: string;
   signupForm: SignupFormState = { ...this.defaultSignupState };
@@ -217,7 +221,6 @@ export class AuthComponent {
           soumis: this.isSignupSubmitted,
           enCours: this.isSignupLoading,
           erreur: this.signupErrorMessage,
-          succes: this.signupSuccessMessage,
         };
   }
 
@@ -232,7 +235,6 @@ export class AuthComponent {
   handleSignupSubmit(form: NgForm): void {
     this.isSignupSubmitted = true;
     this.signupErrorMessage = undefined;
-    this.signupSuccessMessage = undefined;
 
     if (form.invalid) return;
 
@@ -253,18 +255,16 @@ export class AuthComponent {
 
     handleFormSubmit(this.authService.register(payload), this.cdr, {
       fallbackError: $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`,
-      onSuccess: (result) => {
-        this.signupSuccessMessage =
-          result.message ??
-          $localize`:auth.signup.success|Signup success message@@authSignupSuccess:Inscription reussie. Verifiez votre email pour activer votre compte.`;
+      refus: { 400: INFORMATIONS_REFUSEES },
+      onSuccess: () => {
+        this.loginSuccessMessage = $localize`:auth.signup.success|Signup success message@@authSignupSuccess:Inscription réussie. Vérifiez votre e-mail pour activer votre compte.`;
         this.resetSignupForm(form);
         this.activeTab = 'log-in';
       },
       onError: (message) => {
         this.signupErrorMessage = message;
-        this.isSignupLoading = false;
       },
-      onComplete: () => {
+      finalement: () => {
         this.isSignupLoading = false;
       },
     });
@@ -293,15 +293,15 @@ export class AuthComponent {
 
     handleFormSubmit(this.authService.login(this.loginForm), this.cdr, {
       fallbackError: $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`,
+      refus: { 400: IDENTIFIANTS_REFUSES, 401: IDENTIFIANTS_REFUSES },
       onSuccess: (session) => {
         this.loginSuccessMessage = $localize`:auth.login.success|Login success message@@authLoginSuccess:Bienvenue ${session.user.firstName} !`;
         this.ouvrirLaSession(session);
       },
       onError: (message) => {
         this.loginErrorMessage = message;
-        this.isLoginLoading = false;
       },
-      onComplete: () => {
+      finalement: () => {
         this.isLoginLoading = false;
       },
     });
@@ -344,12 +344,15 @@ export class AuthComponent {
   ): void {
     this.authService.googleAuth(response.credential).subscribe({
       next: (session) => this.ouvrirLaSession(session),
-      error: (err) => {
-        const message =
-          extractErrorMessage(err) ??
-          $localize`:auth.google.error@@authGoogleError:Échec de l'authentification Google.`;
-        this.setGoogleError(context, message);
-        this.cdr.markForCheck();
+      error: (err: unknown) => {
+        this.setGoogleError(
+          context,
+          messageDuRefus(
+            err,
+            {},
+            $localize`:auth.google.error@@authGoogleError:Échec de l'authentification Google.`,
+          ),
+        );
       },
     });
   }

@@ -18,7 +18,11 @@ import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisi
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { MotDePasseNeufDirective } from '../../shared/directives/mot-de-passe-neuf.directive';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
-import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
+import {
+  handleFormSubmit,
+  INFORMATIONS_REFUSEES,
+  MOT_DE_PASSE_NEUF_REFUSE,
+} from '../../shared/utils/form-submit.utils';
 import {
   BORNES_D_UN_MOT_DE_PASSE_SAISI,
   BORNES_D_UN_NOM,
@@ -136,6 +140,7 @@ export class ProfileComponent {
       this.cdr,
       {
         fallbackError: $localize`:profile.edit.error.generic@@profileEditErrorGeneric:Impossible de mettre à jour le profil pour le moment.`,
+        refus: { 400: INFORMATIONS_REFUSEES },
         onSuccess: (updatedUser) => {
           this.authState.updateUser(updatedUser);
           this.editProfileSuccess = $localize`:profile.edit.success@@profileEditSuccess:Profil mis à jour avec succès.`;
@@ -143,9 +148,8 @@ export class ProfileComponent {
         },
         onError: (message) => {
           this.editProfileError = message;
-          this.editProfileLoading = false;
         },
-        onComplete: () => {
+        finalement: () => {
           this.editProfileLoading = false;
         },
       },
@@ -161,9 +165,13 @@ export class ProfileComponent {
     this.setPasswordLoading = true;
 
     handleFormSubmit(this.authService.setPassword({ newPassword: this.newPassword }), this.cdr, {
-      fallbackError: $localize`:profile.password.error.generic@@profilePasswordErrorGeneric:Impossible de definir le mot de passe pour le moment.`,
+      fallbackError: $localize`:profile.password.error.generic@@profilePasswordErrorGeneric:Impossible de définir le mot de passe pour le moment.`,
+      refus: {
+        400: MOT_DE_PASSE_NEUF_REFUSE,
+        409: $localize`:@@profilePasswordErreurDejaDefini:Un mot de passe est déjà défini pour ce compte : utilisez « Changer le mot de passe ».`,
+      },
       onSuccess: () => {
-        this.setPasswordSuccess = $localize`:profile.password.success@@profilePasswordSuccess:Mot de passe defini avec succes.`;
+        this.setPasswordSuccess = $localize`:profile.password.success@@profilePasswordSuccess:Mot de passe défini avec succès.`;
         this.newPassword = '';
         form.resetForm({ newPassword: '' });
         this.setPasswordSubmitted = false;
@@ -171,9 +179,8 @@ export class ProfileComponent {
       },
       onError: (message) => {
         this.setPasswordError = message;
-        this.setPasswordLoading = false;
       },
-      onComplete: () => {
+      finalement: () => {
         this.setPasswordLoading = false;
       },
     });
@@ -181,6 +188,7 @@ export class ProfileComponent {
 
   changePassword(form: NgForm): void {
     this.changePasswordSubmitted = true;
+    this.setPasswordSuccess = undefined;
     this.changePasswordSuccess = undefined;
     this.changePasswordError = undefined;
     if (form.invalid) return;
@@ -195,8 +203,11 @@ export class ProfileComponent {
       this.cdr,
       {
         fallbackError: $localize`:profile.changePassword.error.generic@@profileChangePasswordErrorGeneric:Impossible de changer le mot de passe pour le moment.`,
+        refus: {
+          400: $localize`:@@profileChangePasswordErreurSaisie:Vérifiez votre mot de passe actuel et la règle du nouveau mot de passe.`,
+        },
         onSuccess: () => {
-          this.changePasswordSuccess = $localize`:profile.changePassword.success@@profileChangePasswordSuccess:Mot de passe modifie avec succes.`;
+          this.changePasswordSuccess = $localize`:profile.changePassword.success@@profileChangePasswordSuccess:Mot de passe modifié avec succès.`;
           this.currentPassword = '';
           this.changeNewPassword = '';
           form.resetForm({ currentPassword: '', changeNewPassword: '' });
@@ -205,9 +216,8 @@ export class ProfileComponent {
         },
         onError: (message) => {
           this.changePasswordError = message;
-          this.changePasswordLoading = false;
         },
-        onComplete: () => {
+        finalement: () => {
           this.changePasswordLoading = false;
         },
       },

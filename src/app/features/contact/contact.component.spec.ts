@@ -6,6 +6,7 @@ import { CONTACT_PORT, type ContactPort } from '../../core/ports/contact.port';
 import { ContactComponent } from './contact.component';
 import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/champ-de-formulaire';
 import { createContactPortStubWithDefault } from '../../../testing/factories/contact.factory';
+import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
 import { pageMontee } from '../../../testing/montage-page';
 import { formulaireSoumis } from '../../../testing/page-auth';
 import { setupTestBed } from '../../../testing/setup-test-bed';
@@ -98,28 +99,49 @@ describe('ContactComponent', () => {
       );
       expect(await saisir('#phone', '06 98 40 32 82')).toBeNull();
     });
+  });
 
-    it('affiche le refus servi par le back, jamais « Http failure response »', () => {
-      const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
-      port.contact.and.returnValue(
-        throwError(
-          () =>
-            new HttpErrorResponse({
-              status: 400,
-              url: 'https://asilidesign.fr/api/v1/portfolio25/contacts',
-              error: {
-                status: 400,
-                detail: ['message must be longer than or equal to 10 characters'],
-              },
-            }),
-        ),
-      );
+  describe('envoi', () => {
+    const envoiEnCours = () =>
+      page.racine.querySelector('form button[type="submit"]')?.getAttribute('aria-busy');
 
+    for (const [cas, erreur, attendu] of [
+      [
+        'un refus du DTO ou de l anti-robot (400)',
+        refusDuBack(400, ['message must be longer than or equal to 10 characters']),
+        'Votre message n’a pas été accepté : vérifiez les champs et réessayez.',
+      ],
+      [
+        'la limite horaire (429)',
+        refusDuBack(429, 'ThrottlerException: Too Many Requests'),
+        'Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.',
+      ],
+      [
+        'un back injoignable',
+        new HttpErrorResponse({ status: 0, url: 'https://asilidesign.fr' }),
+        'Une erreur est survenue. Veuillez réessayer plus tard.',
+      ],
+    ] as const) {
+      it(`dit ${cas} par un message localisé et rend le bouton`, () => {
+        const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
+        port.contact.and.returnValue(throwError(() => erreur));
+
+        page.composant.handleContactSubmit(formulaireSoumis());
+        page.fixture.detectChanges();
+
+        expect(page.composant.contactErrorMessage).toBe(attendu);
+        expect(page.racine.textContent).toContain(attendu);
+        expect(envoiEnCours()).toBe('false');
+      });
+    }
+
+    it('dit le succès par son propre texte sur toute réponse 2xx, et rend le bouton', () => {
       page.composant.handleContactSubmit(formulaireSoumis());
+      page.fixture.detectChanges();
 
-      expect(page.composant.contactErrorMessage).toBe(
-        'message must be longer than or equal to 10 characters',
-      );
+      expect(page.composant.contactErrorMessage).toBeUndefined();
+      expect(page.racine.textContent).toContain('Message envoyé. Je reviens vers vous rapidement.');
+      expect(envoiEnCours()).toBe('false');
     });
   });
 
