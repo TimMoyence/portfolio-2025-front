@@ -5,7 +5,12 @@ import {
   attendreSansModaliteNiDuree,
   parcourirLesRolesSansEffet,
 } from '../../../testing/assertions-briques';
-import { installerBrique } from '../../../testing/banc-de-brique';
+import {
+  installerBrique,
+  noeudOmbre,
+  noeudsOmbre,
+  texteOmbre,
+} from '../../../testing/banc-de-brique';
 import { buildStoryRecit } from '../../../testing/factories/cours.factory';
 import { FpStory, type StoryVideo } from './FpStory';
 
@@ -22,13 +27,8 @@ const VIDEO: StoryVideo = {
   licence: 'CC BY-SA 4.0',
 };
 
-function marque(element: FpStory, repere: string): Element | null {
-  return element.shadowRoot?.querySelector(`[data-testid="${repere}"]`) ?? null;
-}
-
 function paragraphes(element: FpStory): string[] {
-  const trouves = element.shadowRoot?.querySelectorAll('[data-testid="paragraphe"]') ?? [];
-  return [...trouves].map((noeud) => noeud.textContent?.trim() ?? '');
+  return noeudsOmbre(element, 'paragraphe').map((noeud) => noeud.textContent?.trim() ?? '');
 }
 
 describe('FpStory', () => {
@@ -45,8 +45,8 @@ describe('FpStory', () => {
   it('pose le recit dans un aside et non dans un div nu', () => {
     const cadre = hote.shadowRoot?.querySelector('.fp-story__recit');
     expect(cadre?.tagName).toBe('ASIDE');
-    expect(marque(hote, 'titre')?.tagName).toBe('H2');
-    expect(marque(hote, 'titre')?.textContent?.trim()).toBe(RECIT.titre);
+    expect(noeudOmbre(hote, 'titre')?.tagName).toBe('H2');
+    expect(texteOmbre(hote, 'titre')).toBe(RECIT.titre);
   });
 
   it('rend un paragraphe par fragment du recit, dans l ordre recu', () => {
@@ -68,7 +68,7 @@ describe('FpStory', () => {
       paragraphes: [CHARGE_XSS],
     });
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
-    expect(marque(hote, 'titre')?.textContent?.trim()).toBe(CHARGE_XSS);
+    expect(texteOmbre(hote, 'titre')).toBe(CHARGE_XSS);
     expect(paragraphes(hote)).toEqual([CHARGE_XSS]);
     expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
   });
@@ -82,7 +82,7 @@ describe('FpStory', () => {
         legende: 'Lire la donnée avant de la calculer.',
       },
     };
-    const visuel = marque(hote, 'visuel');
+    const visuel = noeudOmbre(hote, 'visuel');
     expect(visuel?.querySelector('img')?.getAttribute('src')).toBe('#');
     expect(visuel?.querySelector('img')?.getAttribute('alt')).toBe('Tableau de données');
     expect(visuel?.querySelector('figcaption')?.textContent).toBe(
@@ -101,18 +101,18 @@ describe('FpStory', () => {
       },
     });
 
-    const lien = hote.shadowRoot?.querySelector('[data-testid="source-visuel"]');
+    const lien = noeudOmbre(hote, 'source-visuel');
     expect(lien?.getAttribute('href')).toBe('https://example.com/photo');
   });
 
   it('rend une video avec transcription, source et licence', () => {
     hote.recit = { ...RECIT, video: VIDEO };
-    const video = marque(hote, 'video');
+    const video = noeudOmbre(hote, 'video');
     expect(video?.querySelector('video')?.getAttribute('poster')).toBe('#');
     expect(video?.querySelector('source')?.getAttribute('src')).toBe(
       'https://example.com/rappel.webm',
     );
-    expect(marque(hote, 'transcription')?.textContent).toContain('Partie divisée');
+    expect(noeudOmbre(hote, 'transcription')?.textContent).toContain('Partie divisée');
     expect(video?.querySelector('a')?.getAttribute('href')).toBe('https://example.com/source');
     expect(video?.textContent).toContain('CC BY-SA 4.0');
   });
@@ -121,28 +121,28 @@ describe('FpStory', () => {
     hote.recit = { ...RECIT, video: VIDEO };
     hote.setAttribute('data-papier', '');
 
-    const video = marque(hote, 'video');
+    const video = noeudOmbre(hote, 'video');
     expect(video?.querySelector('video, details, summary')).toBeNull();
-    expect(marque(hote, 'transcription')?.textContent).toBe(VIDEO.transcript);
+    expect(noeudOmbre(hote, 'transcription')?.textContent).toBe(VIDEO.transcript);
     expect(video?.textContent).toContain(VIDEO.titre);
   });
 
   it('donne la grande typographie au titre pour le presentateur comme pour l etudiant', () => {
-    attendreLaMemeTypographieAuPresentateur(hote, () => marque(hote, 'titre'));
+    attendreLaMemeTypographieAuPresentateur(hote, 'titre');
+  });
+
+  it('n affiche plus la modalite ni la duree, quel que soit le role', () => {
+    attendreSansModaliteNiDuree(hote);
   });
 
   it('sert la video allegee au poste etudiant et la source pleine au presentateur', () => {
     hote.recit = { ...RECIT, video: { ...VIDEO, srcPoste: 'https://example.com/poste.webm' } };
     const source = (): string | null | undefined =>
-      marque(hote, 'video')?.querySelector('source')?.getAttribute('src');
+      noeudOmbre(hote, 'video')?.querySelector('source')?.getAttribute('src');
 
     expect(source()).toBe('https://example.com/poste.webm');
     hote.setAttribute('data-cours-role', 'presentateur');
     expect(source()).toBe(VIDEO.src);
-  });
-
-  it('n affiche plus la modalite ni la duree, quel que soit le role', () => {
-    attendreSansModaliteNiDuree(hote, (repere) => marque(hote, repere));
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {

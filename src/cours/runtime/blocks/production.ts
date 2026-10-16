@@ -1,6 +1,6 @@
 import type { Decompte } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpEnvoi } from './contenu';
+import { FpEnvoiJuge } from './contenu';
 import { estObjet } from '../core/valeurs';
 import { type DetailDeVerdict, estVerdictDeProduction, type VerdictDeProduction } from './retours';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
@@ -39,8 +39,7 @@ function lireAttendusDuCorrige<Attendu>(
 export abstract class FpProduction<
   Plan extends { readonly id: string },
   Attendu,
-> extends FpEnvoi<Plan> {
-  protected interneVerdict: VerdictDeProduction | null = null;
+> extends FpEnvoiJuge<Plan, VerdictDeProduction> {
   protected attendus: readonly Attendu[] = [];
 
   protected abstract readonly evenementDeSoumission: string;
@@ -54,28 +53,13 @@ export abstract class FpProduction<
     this.refreshSiConnecte();
   }
 
-  protected override repartirDeZero(): void {
-    super.repartirDeZero();
-    this.interneVerdict = null;
-  }
-
-  set verdict(valeur: VerdictDeProduction | null) {
-    this.interneVerdict =
-      estVerdictDeProduction(valeur) && valeur.questionId === this.interne?.id ? valeur : null;
-    this.refreshSiConnecte();
-  }
-
-  get verdict(): VerdictDeProduction | null {
-    return this.interneVerdict;
+  protected estVerdict(valeur: unknown): valeur is VerdictDeProduction {
+    return estVerdictDeProduction(valeur);
   }
 
   set corrige(valeur: unknown) {
     this.attendus = lireAttendusDuCorrige(valeur, this.lectureDuCorrige);
     this.refreshSiConnecte();
-  }
-
-  protected override verdictRecu(): boolean {
-    return this.interneVerdict !== null;
   }
 
   protected detailDe(cle: string): DetailDeVerdict | null {
@@ -197,6 +181,19 @@ export abstract class FpProductionEtayee<Plan extends PlanEtaye, Attendu> extend
 
   protected enReprise(): boolean {
     return this.correction === 0 && this.interneVerdict !== null && this.reprises.size > 0;
+  }
+
+  protected celluleAccessible(cle: string): boolean {
+    return !this.verrouille() || (this.correction === 0 && this.detailDe(cle)?.juste === false);
+  }
+
+  protected noterLaSaisie(cle: string, brouillon: unknown): void {
+    this.message = '';
+    if (this.verrouille()) {
+      this.reprises = new Set([...this.reprises, cle]);
+    }
+    this.signalerBrouillon(this.interne?.id ?? '', brouillon);
+    this.refresh();
   }
 
   protected planAValider(): Plan | null {

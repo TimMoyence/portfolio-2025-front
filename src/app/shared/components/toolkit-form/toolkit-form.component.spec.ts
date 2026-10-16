@@ -1,9 +1,12 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import {
   createLeadMagnetPortStub,
   createLeadMagnetPortStubWithError,
 } from '../../../../testing/factories/lead-magnet.factory';
+import { refusDuBack } from '../../../../testing/factories/probleme-http.factory';
+import { champsAntiRobotDe, horlogesDeSaisie } from '../../../../testing/horloge-simulee';
 import { ToolkitFormComponent } from './toolkit-form.component';
 
 async function monter(port: unknown): Promise<ComponentFixture<ToolkitFormComponent>> {
@@ -174,5 +177,52 @@ describe('ToolkitFormComponent', () => {
     expect(payload.formationSlug).toBe('ia-solopreneurs');
     expect(payload.email).toBe('marie@example.com');
     expect(payload.firstName).toBe('Marie');
+  });
+
+  describe('L4-F22 · dit le refus du back par son message, et une erreur réseau par celui du formulaire', () => {
+    for (const [cas, erreur, attendu] of [
+      [
+        'un refus du DTO ou de l anti-robot (400)',
+        refusDuBack(400, ['firstName must be shorter than or equal to 50 characters']),
+        'Certaines informations ont été refusées : vérifiez les champs et réessayez.',
+      ],
+      [
+        'la limite horaire (429), avec l attente lue dans Retry-After',
+        refusDuBack(429, 'ThrottlerException: Too Many Requests', { 'Retry-After': '120' }),
+        'Trop de tentatives en peu de temps : réessayez dans 2 min.',
+      ],
+      [
+        'un back injoignable, par le message du formulaire (décision F22 de Tim)',
+        new HttpErrorResponse({ status: 0, url: 'https://asilidesign.fr' }),
+        'Une erreur est survenue. Réessayez.',
+      ],
+    ] as const) {
+      it(`dit ${cas} et rend le bouton`, async () => {
+        TestBed.resetTestingModule();
+        const enEchec = await monter(createLeadMagnetPortStubWithError(erreur));
+
+        await soumettre(enEchec);
+
+        const racine = enEchec.nativeElement as HTMLElement;
+        expect(enEchec.componentInstance.state()).toBe('error');
+        expect(racine.querySelector('[data-toolkit-error]')?.textContent?.trim()).toBe(attendu);
+        expect(
+          racine.querySelector<HTMLButtonElement>('button[type="submit"]')?.disabled,
+        ).toBeFalse();
+      });
+    }
+  });
+
+  it('envoie la durée de saisie mesurée sur l horloge monotone, sans heure de début', async () => {
+    const horloges = horlogesDeSaisie();
+    const fixtureMesuree = TestBed.createComponent(ToolkitFormComponent);
+
+    horloges.saisirPendant(20_000);
+    await soumettre(fixtureMesuree);
+
+    expect(champsAntiRobotDe(portStub.requestToolkit.calls.mostRecent().args[0])).toEqual({
+      formFillDurationMs: 20_000,
+      heureDeDebutEnvoyee: false,
+    });
   });
 });

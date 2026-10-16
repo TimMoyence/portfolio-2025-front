@@ -11,6 +11,7 @@ import {
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import type { Subscription } from 'rxjs';
+import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
 import { estObjet } from '../../../cours/runtime/core/valeurs';
 import { langueDuSite } from '../../core/config/locales';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
@@ -32,6 +33,7 @@ import { HeroSectionComponent } from '../../shared/components/hero-section/hero-
 import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
+import { readCheckboxChecked } from '../../shared/utils/dom-event.utils';
 import {
   BORNES_D_UN_CONTACT_D_AUDIT,
   BORNES_D_UN_NOM_DE_SITE,
@@ -58,7 +60,6 @@ interface AuditPillar {
 function formulaireVierge(): AuditRequestPayload {
   return {
     website: '',
-    formStartedAt: Date.now(),
     websiteName: '',
     contactMethod: 'EMAIL',
     contactValue: '',
@@ -86,6 +87,7 @@ function formulaireVierge(): AuditRequestPayload {
 export class GrowthAuditComponent implements OnDestroy {
   private readonly auditService: AuditRequestPort = inject(AUDIT_REQUEST_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
+  private debutDeSaisie = instantMonotone();
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly langue: NonNullable<AuditRequestPayload['locale']> =
     langueDuSite(inject(LOCALE_ID)) === 'en' ? 'en' : 'fr';
@@ -247,7 +249,7 @@ export class GrowthAuditComponent implements OnDestroy {
   }
 
   onContactMethodToggle(event: Event): void {
-    const isPhone = (event.target as HTMLInputElement).checked;
+    const isPhone = readCheckboxChecked(event);
     const method: AuditContactMethod = isPhone ? 'PHONE' : 'EMAIL';
     this.handleMethodChange(method);
   }
@@ -283,7 +285,7 @@ export class GrowthAuditComponent implements OnDestroy {
     this.isSubmitting = true;
     const payload = {
       website: this.auditFormState.website,
-      formStartedAt: this.auditFormState.formStartedAt,
+      formFillDurationMs: dureeMonotoneDepuis(this.debutDeSaisie),
       locale: this.langue,
       websiteName: this.auditFormState.websiteName.trim(),
       contactMethod: this.auditFormState.contactMethod,
@@ -317,6 +319,7 @@ export class GrowthAuditComponent implements OnDestroy {
       onComplete: () => {
         this.isSubmitted = false;
         this.auditFormState = formulaireVierge();
+        this.debutDeSaisie = instantMonotone();
         this.rgpdConsent = false;
         form.resetForm(this.auditFormState);
       },

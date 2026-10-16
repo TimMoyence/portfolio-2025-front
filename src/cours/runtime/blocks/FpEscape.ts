@@ -1,5 +1,5 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { estObjet } from '../core/valeurs';
+import { estEntierStrictementPositif, estObjet } from '../core/valeurs';
 import { Battement, formaterChrono, SECONDE_MS } from './battement';
 import { FpContenu } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
@@ -44,10 +44,9 @@ function projeterParcours(source: EscapeParcoursPublic): EscapeParcoursPublic {
     intitule: source.intitule,
     delaiIndiceMs: source.delaiIndiceMs,
     budgetEnigmeMs: source.budgetEnigmeMs,
-    tentativesMax:
-      Number.isInteger(source.tentativesMax) && source.tentativesMax > 0
-        ? source.tentativesMax
-        : TENTATIVES_PAR_DEFAUT,
+    tentativesMax: estEntierStrictementPositif(source.tentativesMax)
+      ? source.tentativesMax
+      : TENTATIVES_PAR_DEFAUT,
     enigmes: source.enigmes.map((enigme) => ({
       id: enigme.id,
       intitule: enigme.intitule,
@@ -158,12 +157,13 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     this.refreshSiConnecte();
   }
 
-  set brouillon(valeur: unknown) {
-    if (estObjet(valeur) && typeof valeur['saisie'] === 'string') {
-      this.saisie = valeur['saisie'];
-      this.noterBrouillonRepris();
-      this.refreshSiConnecte();
+  protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
+    const saisie = brouillon['saisie'];
+    if (typeof saisie !== 'string') {
+      return false;
     }
+    this.saisie = saisie;
+    return true;
   }
 
   render(): EscapedHtml {

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { Subject, of } from 'rxjs';
+import { fournirLaRoute } from '../../../testing/factories/route.factory';
 import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-registry.service';
 import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';
@@ -13,11 +14,6 @@ describe('SeoManagerComponent', () => {
   let routerEvents$: Subject<NavigationEnd>;
   let seoServiceSpy: jasmine.SpyObj<SeoService>;
   let seoRegistrySpy: jasmine.SpyObj<SeoRegistryService>;
-  let activatedRouteStub: {
-    firstChild: ActivatedRoute | null;
-    outlet: string;
-    data: Subject<Record<string, unknown>>;
-  };
   let routeData$: Subject<Record<string, unknown>>;
   let routerStub: { events: unknown; url: string };
 
@@ -66,12 +62,6 @@ describe('SeoManagerComponent', () => {
     seoRegistrySpy.getSeoByKey.and.returnValue(of(resolvedConfig));
     seoRegistrySpy.getSeoByPath.and.returnValue(of(null));
 
-    activatedRouteStub = {
-      firstChild: null,
-      outlet: 'primary',
-      data: routeData$,
-    };
-
     routerStub = {
       events: routerEvents$.asObservable(),
       url: '/fr/test',
@@ -87,7 +77,7 @@ describe('SeoManagerComponent', () => {
       appConfig: { baseUrl: appBaseUrl },
       providers: [
         { provide: Router, useValue: routerStub },
-        { provide: ActivatedRoute, useValue: activatedRouteStub },
+        fournirLaRoute({ donnees: routeData$ }),
         { provide: SeoService, useValue: seoServiceSpy },
         { provide: SeoRegistryService, useValue: seoRegistrySpy },
       ],

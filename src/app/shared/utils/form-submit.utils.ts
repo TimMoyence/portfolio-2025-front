@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import type { ChangeDetectorRef } from '@angular/core';
 import type { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs';
+import { messageDeLaLimiteAtteinte } from '../../core/http/limite-de-debit';
 
 export type MessagesDeRefus = Readonly<Partial<Record<number, string>>>;
 
@@ -23,21 +24,8 @@ function messageDuStatut(messages: MessagesDeRefus, statut: number): string | un
   return Object.hasOwn(messages, statut) ? messages[statut] : undefined;
 }
 
-function minutesAAttendre(erreur: unknown): number | null {
-  const secondes =
-    erreur instanceof HttpErrorResponse ? Number(erreur.headers.get('Retry-After')) : Number.NaN;
-  return Number.isFinite(secondes) && secondes > 0 ? Math.ceil(secondes / 60) : null;
-}
-
-function messageDeLaLimite(erreur: unknown): string {
-  const minutes = minutesAAttendre(erreur);
-  return minutes === null
-    ? $localize`:@@formulaireRefusTropDeTentatives:Trop de tentatives en peu de temps : réessayez plus tard.`
-    : $localize`:@@formulaireRefusTropDeTentativesDelai:Trop de tentatives en peu de temps : réessayez dans ${minutes}:minutes: min.`;
-}
-
 function messageCommun(erreur: unknown, statut: number): string | undefined {
-  return statut === 429 ? messageDeLaLimite(erreur) : messageDuStatut(REFUS_COMMUNS, statut);
+  return messageDeLaLimiteAtteinte(erreur) ?? messageDuStatut(REFUS_COMMUNS, statut);
 }
 
 export function messageDuRefus(erreur: unknown, refus: MessagesDeRefus, repli: string): string {

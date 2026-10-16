@@ -17,6 +17,7 @@ import {
 import { libellesColles } from '../../../../../testing/libelles-colles';
 import { textes } from '../../../../../testing/textes-dom';
 import { valeursSurUneForme } from '../../../../../testing/valeurs-sur-les-formes';
+import { ecranDIdentifiant } from '../../session/lecture-ecran';
 import { presentationDe } from '../../visual/presentation-v2';
 import type { SlideChartKind, SlideChartSeries } from './slide-chart.component';
 import { SlideChartComponent } from './slide-chart.component';
@@ -399,7 +400,7 @@ function graphiqueServi(
   instantane: InstantaneDuCoursB2,
   id: string,
 ): Readonly<Record<string, unknown>> {
-  const ecran = ecransPublicsDe(instantane).find((candidat) => candidat.id === id);
+  const ecran = ecranDIdentifiant(ecransPublicsDe(instantane), id);
   const presentation = ecran === undefined ? null : presentationDe(ecran);
   if (presentation?.renderer !== 'chart') {
     throw new Error(`graphique absent du cours servi : ${id}`);

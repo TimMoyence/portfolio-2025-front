@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import type { AuthUser } from '../../core/models/auth.model';
 import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
@@ -23,6 +23,7 @@ import {
   INFORMATIONS_REFUSEES,
   MOT_DE_PASSE_NEUF_REFUSE,
 } from '../../shared/utils/form-submit.utils';
+import { initialeDe } from '../../shared/utils/initiale.utils';
 import {
   BORNES_D_UN_MOT_DE_PASSE_SAISI,
   BORNES_D_UN_NOM,
@@ -30,6 +31,8 @@ import {
   REGLE_D_UN_MOT_DE_PASSE,
 } from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
+
+const CHANGEMENT_DE_MOT_DE_PASSE_REFUSE = $localize`:@@profileChangePasswordErreurSaisie:Vérifiez votre mot de passe actuel et la règle du nouveau mot de passe.`;
 
 @Component({
   selector: 'app-profile',
@@ -52,7 +55,6 @@ export class ProfileComponent {
   private readonly authService: AuthPort = inject(AUTH_PORT);
   readonly authState = inject(AuthStateService);
   private readonly cdr = inject(ChangeDetectorRef);
-  private readonly router = inject(Router);
 
   protected readonly regleDUnMotDePasse = REGLE_D_UN_MOT_DE_PASSE;
   protected readonly bornesDUnNom = BORNES_D_UN_NOM;
@@ -96,13 +98,11 @@ export class ProfileComponent {
   }
 
   initial(firstName?: string, lastName?: string, email?: string): string {
-    const source = firstName || lastName || email || '?';
-    return source.charAt(0).toUpperCase();
+    return initialeDe(firstName, lastName, email) || '?';
   }
 
   logout(): void {
-    this.authState.logout();
-    void this.router.navigate(['/']);
+    this.authState.logoutEtAccueil();
   }
 
   startEditing(): void {
@@ -204,7 +204,8 @@ export class ProfileComponent {
       {
         fallbackError: $localize`:profile.changePassword.error.generic@@profileChangePasswordErrorGeneric:Impossible de changer le mot de passe pour le moment.`,
         refus: {
-          400: $localize`:@@profileChangePasswordErreurSaisie:Vérifiez votre mot de passe actuel et la règle du nouveau mot de passe.`,
+          400: CHANGEMENT_DE_MOT_DE_PASSE_REFUSE,
+          401: CHANGEMENT_DE_MOT_DE_PASSE_REFUSE,
         },
         onSuccess: () => {
           this.changePasswordSuccess = $localize`:profile.changePassword.success@@profileChangePasswordSuccess:Mot de passe modifié avec succès.`;

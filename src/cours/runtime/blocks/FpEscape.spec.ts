@@ -3,6 +3,9 @@ import {
   cliquerOmbre,
   detailsEmis,
   installerBrique,
+  libelleOmbre,
+  noeudOmbre,
+  noeudsOmbre,
 } from '../../../testing/banc-de-brique';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import {
@@ -63,34 +66,22 @@ function sansAccent(texte: string): string {
     .toLowerCase();
 }
 
-function noeud(hote: FpEscape, nom: string): Element | null {
-  return hote.shadowRoot?.querySelector(`[data-testid="${nom}"]`) ?? null;
-}
-
-function noeuds(hote: FpEscape, nom: string): Element[] {
-  return [...(hote.shadowRoot?.querySelectorAll(`[data-testid="${nom}"]`) ?? [])];
-}
-
-function libelleDe(hote: FpEscape, nom: string): string {
-  return noeud(hote, nom)?.textContent?.trim().replace(/\s+/g, ' ') ?? '';
-}
-
 function enoncesAffiches(hote: FpEscape): (string | undefined)[] {
-  return noeuds(hote, 'enonce').map((enonce) => enonce.textContent?.trim());
+  return noeudsOmbre(hote, 'enonce').map((enonce) => enonce.textContent?.trim());
 }
 
 function etats(hote: FpEscape): string[] {
-  return noeuds(hote, 'enigme').map((element) => element.getAttribute('data-etat') ?? '');
+  return noeudsOmbre(hote, 'enigme').map((element) => element.getAttribute('data-etat') ?? '');
 }
 
 function proposer(hote: FpEscape, reponse: string): void {
-  const champ = noeud(hote, 'saisie');
+  const champ = noeudOmbre(hote, 'saisie');
   if (!(champ instanceof HTMLInputElement)) {
     throw new Error('aucun champ de reponse');
   }
   champ.value = reponse;
   champ.dispatchEvent(new Event('input', { bubbles: true }));
-  noeud(hote, 'repondre')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  cliquerOmbre(hote, 'repondre');
 }
 
 function ouvrirLIndice(hote: FpEscape): void {
@@ -116,9 +107,35 @@ describe('FpEscape', () => {
 
   it('ouvre la premiere enigme et verrouille les suivantes', () => {
     expect(etats(hote)).toEqual(['ouverte', 'verrouillee', 'verrouillee']);
-    expect(libelleDe(hote, 'enonce')).toBe(PARCOURS.enigmes[0].enonce);
-    expect(libelleDe(hote, 'progression')).toBe('Énigmes résolues : 0 / 3');
-    expect(libelleDe(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 10');
+    expect(libelleOmbre(hote, 'enonce')).toBe(PARCOURS.enigmes[0].enonce);
+    expect(libelleOmbre(hote, 'progression')).toBe('Énigmes résolues : 0 / 3');
+    expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 10');
+  });
+
+  const MAXIMUMS_REFUSES: readonly (readonly [string, unknown])[] = [
+    ['nul', 0],
+    ['négatif', -1],
+    ['décimal', 2.5],
+    ['infini', Number.POSITIVE_INFINITY],
+    ['NaN', Number.NaN],
+    ['écrit en chaîne', '3'],
+    ['absent', undefined],
+    ['au-delà des entiers sûrs (1e21)', 1e21],
+    ['égal à 2^53, premier entier non sûr', 2 ** 53],
+  ];
+
+  for (const [cas, tentativesMax] of MAXIMUMS_REFUSES) {
+    it(`retombe sur 10 tentatives quand le maximum servi est ${cas}`, () => {
+      hote.parcours = buildEscapeParcours({ tentativesMax: tentativesMax as number });
+
+      expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 10');
+    });
+  }
+
+  it('annonce le maximum servi quand c est un entier strictement positif', () => {
+    hote.parcours = buildEscapeParcours({ tentativesMax: 3 });
+
+    expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 3');
   });
 
   it('imprime sur papier l énoncé de chaque énigme, sans saisie, tentatives, indice ni progression', () => {
@@ -133,7 +150,7 @@ describe('FpEscape', () => {
       'progression',
       'minuteur',
     ]) {
-      expect(noeud(hote, absent)).withContext(absent).toBeNull();
+      expect(noeudOmbre(hote, absent)).withContext(absent).toBeNull();
     }
   });
 
@@ -146,7 +163,7 @@ describe('FpEscape', () => {
       { parcoursId: PARCOURS.id, enigmeId: 'seuil', reponse: '30 000', dureeMs: 45000 },
     ]);
     expect(etats(hote)).toEqual(['ouverte', 'verrouillee', 'verrouillee']);
-    expect(noeud(hote, 'repondre')?.hasAttribute('disabled')).toBeTrue();
+    expect(noeudOmbre(hote, 'repondre')?.hasAttribute('disabled')).toBeTrue();
     expect(JSON.stringify(hote.parcours)).not.toContain('30000');
   });
 
@@ -154,7 +171,7 @@ describe('FpEscape', () => {
     const emises = tentativesEmises(hote);
     proposer(hote, '   ');
     expect(emises).toEqual([]);
-    expect(libelleDe(hote, 'annonce')).toBe('Écrivez une réponse avant de la proposer');
+    expect(libelleOmbre(hote, 'annonce')).toBe('Écrivez une réponse avant de la proposer');
   });
 
   it('livre le fragment servi et ouvre l enigme suivante sur verdict juste', () => {
@@ -162,9 +179,11 @@ describe('FpEscape', () => {
     hote.tentatives = [buildVerdictDeTentative()];
 
     expect(etats(hote)).toEqual(['resolue', 'ouverte', 'verrouillee']);
-    expect(libelleDe(hote, 'fragment')).toBe('Fragment du code obtenu : TR');
-    expect(libelleDe(hote, 'annonce')).toBe('Énigme suivante déverrouillée : La marge commerciale');
-    expect(noeud(hote, 'repondre')?.hasAttribute('disabled')).toBeFalse();
+    expect(libelleOmbre(hote, 'fragment')).toBe('Fragment du code obtenu : TR');
+    expect(libelleOmbre(hote, 'annonce')).toBe(
+      'Énigme suivante déverrouillée : La marge commerciale',
+    );
+    expect(noeudOmbre(hote, 'repondre')?.hasAttribute('disabled')).toBeFalse();
   });
 
   it('decompte les tentatives sur verdict faux et laisse chercher', () => {
@@ -174,8 +193,8 @@ describe('FpEscape', () => {
     ];
 
     expect(etats(hote)[0]).toBe('ouverte');
-    expect(libelleDe(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 9');
-    expect(libelleDe(hote, 'annonce')).toBe(
+    expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 9');
+    expect(libelleOmbre(hote, 'annonce')).toBe(
       'Ce n’est pas encore cela : relisez l’énoncé et proposez autre chose',
     );
   });
@@ -186,7 +205,7 @@ describe('FpEscape', () => {
       buildVerdictDeTentative({ correcte: false, fragment: null, tentativesRestantes: 0 }),
     ];
     expect(etats(hote)).toEqual(['epuisee', 'ouverte', 'verrouillee']);
-    expect(libelleDe(hote, 'epuisee')).toBe(
+    expect(libelleOmbre(hote, 'epuisee')).toBe(
       'Tentatives épuisées : l’énigme suivante s’ouvre, sans fragment',
     );
   });
@@ -214,7 +233,7 @@ describe('FpEscape', () => {
       proposer(hote, '2500');
       hote.tentatives = [buildVerdictDeTentative({ enigmeId: 'tva', fragment: 'OR' })];
 
-      expect(libelleDe(hote, 'annonce')).toBe(annonce);
+      expect(libelleOmbre(hote, 'annonce')).toBe(annonce);
     });
   }
 
@@ -233,10 +252,10 @@ describe('FpEscape', () => {
       }),
     ];
 
-    expect(libelleDe(hote, 'annonce')).toBe(
+    expect(libelleOmbre(hote, 'annonce')).toBe(
       'Parcours terminé sans tous les fragments, le code reste incomplet : TRES·',
     );
-    expect(libelleDe(hote, 'epuisee')).toBe(
+    expect(libelleOmbre(hote, 'epuisee')).toBe(
       'Tentatives épuisées : cette dernière énigme ne livre pas son fragment',
     );
   });
@@ -244,7 +263,7 @@ describe('FpEscape', () => {
   it('reprend la progression servie apres rechargement', () => {
     hote.progression = buildProgressionDesEnigmes();
     expect(etats(hote)).toEqual(['resolue', 'ouverte', 'verrouillee']);
-    expect(libelleDe(hote, 'progression')).toBe('Énigmes résolues : 1 / 3');
+    expect(libelleOmbre(hote, 'progression')).toBe('Énigmes résolues : 1 / 3');
   });
 
   it('ignore une progression ou une tentative d un autre parcours', () => {
@@ -255,53 +274,53 @@ describe('FpEscape', () => {
 
   it('reconstitue le code a partir des seuls fragments servis', () => {
     hote.progression = deuxEnigmesResolues();
-    expect(libelleDe(hote, 'code')).toBe('Code final : TRES·');
+    expect(libelleOmbre(hote, 'code')).toBe('Code final : TRES·');
   });
 
   it('retire le minuteur une fois le parcours achevé', () => {
-    expect(noeud(hote, 'minuteur')).not.toBeNull();
+    expect(noeudOmbre(hote, 'minuteur')).not.toBeNull();
 
     hote.progression = deuxEnigmesResolues();
 
-    expect(noeud(hote, 'minuteur')).toBeNull();
-    expect(noeud(hote, 'progression')).not.toBeNull();
+    expect(noeudOmbre(hote, 'minuteur')).toBeNull();
+    expect(noeudOmbre(hote, 'progression')).not.toBeNull();
   });
 
   it('libere la saisie quand l envoi echoue', () => {
     proposer(hote, '30000');
     hote.erreur = 'Envoi impossible pour le moment';
-    expect(noeud(hote, 'repondre')?.hasAttribute('disabled')).toBeFalse();
-    expect(libelleDe(hote, 'erreur')).toBe('Envoi impossible pour le moment');
+    expect(noeudOmbre(hote, 'repondre')?.hasAttribute('disabled')).toBeFalse();
+    expect(libelleOmbre(hote, 'erreur')).toBe('Envoi impossible pour le moment');
   });
 
   it('retient l indice jusqu au delai puis l offre', () => {
     cliquerOmbre(hote, 'demander-indice');
-    expect(libelleDe(hote, 'annonce')).toBe('L’indice s’ouvre dans 120 secondes');
-    expect(noeud(hote, 'indice')).toBeNull();
+    expect(libelleOmbre(hote, 'annonce')).toBe('L’indice s’ouvre dans 120 secondes');
+    expect(noeudOmbre(hote, 'indice')).toBeNull();
 
     ouvrirLIndice(hote);
 
-    expect(libelleDe(hote, 'indice')).toBe(`Indice : ${PARCOURS.enigmes[0].indice}`);
+    expect(libelleOmbre(hote, 'indice')).toBe(`Indice : ${PARCOURS.enigmes[0].indice}`);
   });
 
   it('G06 · ne garde aucune mention inutile à côté du bouton d indice, ouvert ou non', () => {
-    expect(noeud(hote, 'gratuite')).toBeNull();
+    expect(noeudOmbre(hote, 'gratuite')).toBeNull();
     expect(hote.shadowRoot?.textContent ?? '').not.toContain('ne retire rien');
 
     ouvrirLIndice(hote);
 
-    expect(libelleDe(hote, 'annonce')).toBe('Indice ouvert');
+    expect(libelleOmbre(hote, 'annonce')).toBe('Indice ouvert');
     expect(hote.shadowRoot?.textContent ?? '').not.toContain('ne retire rien');
   });
 
   it('QP-12 · fait avancer le minuteur à la seconde, sans attendre un autre rendu', () => {
-    expect(libelleDe(hote, 'minuteur')).toBe(
+    expect(libelleOmbre(hote, 'minuteur')).toBe(
       'Temps passé sur cette énigme : 0:00 / 6:00 annoncées',
     );
 
     jasmine.clock().tick(65_000);
 
-    expect(libelleDe(hote, 'minuteur')).toBe(
+    expect(libelleOmbre(hote, 'minuteur')).toBe(
       'Temps passé sur cette énigme : 1:05 / 6:00 annoncées',
     );
   });
@@ -310,7 +329,7 @@ describe('FpEscape', () => {
     hote.remove();
     jasmine.clock().tick(5_000);
 
-    expect(libelleDe(hote, 'minuteur')).toBe(
+    expect(libelleOmbre(hote, 'minuteur')).toBe(
       'Temps passé sur cette énigme : 0:00 / 6:00 annoncées',
     );
   });
@@ -318,30 +337,30 @@ describe('FpEscape', () => {
   it('QP-12 · annonce un budget non entier à la seconde près', () => {
     hote.parcours = buildEscapeParcours({ budgetEnigmeMs: 150_000 });
 
-    expect(libelleDe(hote, 'minuteur')).toBe(
+    expect(libelleOmbre(hote, 'minuteur')).toBe(
       'Temps passé sur cette énigme : 0:00 / 2:30 annoncées',
     );
   });
 
   it('QP-12 · rend l indice prêt et efface l attente à l échéance du délai, sans autre rendu', () => {
     cliquerOmbre(hote, 'demander-indice');
-    expect(noeud(hote, 'demander-indice')?.getAttribute('data-pret')).toBe('false');
-    expect(libelleDe(hote, 'annonce')).toBe('L’indice s’ouvre dans 120 secondes');
+    expect(noeudOmbre(hote, 'demander-indice')?.getAttribute('data-pret')).toBe('false');
+    expect(libelleOmbre(hote, 'annonce')).toBe('L’indice s’ouvre dans 120 secondes');
 
     jasmine.clock().tick(DELAI_INDICE_MS / 2);
-    expect(libelleDe(hote, 'annonce')).toBe('L’indice s’ouvre dans 60 secondes');
+    expect(libelleOmbre(hote, 'annonce')).toBe('L’indice s’ouvre dans 60 secondes');
 
     jasmine.clock().tick(DELAI_INDICE_MS / 2);
 
-    expect(noeud(hote, 'demander-indice')?.getAttribute('data-pret')).toBe('true');
-    expect(libelleDe(hote, 'annonce')).toBe('');
+    expect(noeudOmbre(hote, 'demander-indice')?.getAttribute('data-pret')).toBe('true');
+    expect(libelleOmbre(hote, 'annonce')).toBe('');
   });
 
   it('signale le budget annonce depasse sans rien fermer', () => {
     jasmine.clock().tick(BUDGET_MS);
-    expect(noeud(hote, 'minuteur')?.getAttribute('data-echu')).toBe('true');
-    expect(libelleDe(hote, 'echeance')).toContain('rien ne se ferme');
-    expect(noeud(hote, 'saisie')).not.toBeNull();
+    expect(noeudOmbre(hote, 'minuteur')?.getAttribute('data-echu')).toBe('true');
+    expect(libelleOmbre(hote, 'echeance')).toContain('rien ne se ferme');
+    expect(noeudOmbre(hote, 'saisie')).not.toBeNull();
   });
 
   it('confie la saisie au brouillon de l hote et la restaure', () => {
@@ -349,37 +368,37 @@ describe('FpEscape', () => {
     hote.addEventListener('fp-brouillon', (evenement) =>
       brouillons.push((evenement as CustomEvent).detail),
     );
-    const champ = noeud(hote, 'saisie') as HTMLInputElement;
+    const champ = noeudOmbre(hote, 'saisie') as HTMLInputElement;
     champ.value = '300';
     champ.dispatchEvent(new Event('input', { bubbles: true }));
     expect(brouillons).toEqual([{ id: PARCOURS.id, valeur: { saisie: '300' } }]);
     expect(traces.ecritures).toEqual([]);
 
     hote.brouillon = { saisie: '29 000' };
-    expect((noeud(hote, 'saisie') as HTMLInputElement).value).toBe('29 000');
+    expect((noeudOmbre(hote, 'saisie') as HTMLInputElement).value).toBe('29 000');
   });
 
   it('ne publie pour aucun role les solutions ni le code final tant que le corrige n est pas pose', () => {
     for (const role of ROLES) {
       hote.setAttribute('data-cours-role', role);
       expect(hote.shadowRoot?.innerHTML).withContext(role).not.toContain('TRESOR');
-      expect(noeuds(hote, 'solution')).withContext(role).toEqual([]);
-      expect(noeud(hote, 'code-final')).withContext(role).toBeNull();
+      expect(noeudsOmbre(hote, 'solution')).withContext(role).toEqual([]);
+      expect(noeudOmbre(hote, 'code-final')).withContext(role).toBeNull();
     }
   });
 
   it('projette au presentateur chaque enigme avec son enonce, sans champ ni jeu', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
 
-    expect(noeuds(hote, 'enigme').map((enigme) => enigme.getAttribute('data-enigme'))).toEqual(
+    expect(noeudsOmbre(hote, 'enigme').map((enigme) => enigme.getAttribute('data-enigme'))).toEqual(
       PARCOURS.enigmes.map((enigme) => enigme.id),
     );
     expect(enoncesAffiches(hote)).toEqual(PARCOURS.enigmes.map((enigme) => enigme.enonce));
     expect(hote.shadowRoot?.querySelectorAll('input, button').length).toBe(0);
-    expect(noeud(hote, 'progression')).toBeNull();
-    expect(noeud(hote, 'minuteur')).toBeNull();
-    expect(noeud(hote, 'annonce')).toBeNull();
-    expect(libelleDe(hote, 'intitule')).toBe(PARCOURS.intitule);
+    expect(noeudOmbre(hote, 'progression')).toBeNull();
+    expect(noeudOmbre(hote, 'minuteur')).toBeNull();
+    expect(noeudOmbre(hote, 'annonce')).toBeNull();
+    expect(libelleOmbre(hote, 'intitule')).toBe(PARCOURS.intitule);
   });
 
   it('ne projette pas au presentateur le code reconstitue par un poste', () => {
@@ -387,34 +406,34 @@ describe('FpEscape', () => {
     hote.progression = buildProgressionDesEnigmes({
       resolues: [...DEUX_FRAGMENTS, { enigmeId: 'tva', fragment: 'OR' }],
     });
-    expect(noeud(hote, 'code')).toBeNull();
-    expect(noeuds(hote, 'fragment')).toEqual([]);
+    expect(noeudOmbre(hote, 'code')).toBeNull();
+    expect(noeudsOmbre(hote, 'fragment')).toEqual([]);
   });
 
   it('projette au presentateur la solution de chaque enigme et le code final une fois le corrige pose', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.corrige = SOLUTIONNAIRE;
 
-    expect(noeuds(hote, 'enonce').length).toBe(PARCOURS.enigmes.length);
-    expect(noeuds(hote, 'solution').map((solution) => solution.textContent?.trim())).toEqual([
+    expect(noeudsOmbre(hote, 'enonce').length).toBe(PARCOURS.enigmes.length);
+    expect(noeudsOmbre(hote, 'solution').map((solution) => solution.textContent?.trim())).toEqual([
       '30000 · TR',
       '30000 · ES',
       '2500 · OR',
     ]);
-    expect(noeud(hote, 'solution')?.getAttribute('data-etat')).toBe('confirme');
-    expect(libelleDe(hote, 'code-final')).toBe('Code final : TRESOR');
+    expect(noeudOmbre(hote, 'solution')?.getAttribute('data-etat')).toBe('confirme');
+    expect(libelleOmbre(hote, 'code-final')).toBe('Code final : TRESOR');
   });
 
   it('sert a l etudiant la meme projection corrigee, jeu retire, une fois le corrige pose', () => {
     hote.corrige = SOLUTIONNAIRE;
     const etudiant = hote.shadowRoot?.querySelector('ol')?.innerHTML;
 
-    expect(noeuds(hote, 'solution').length).toBe(3);
-    expect(libelleDe(hote, 'code-final')).toBe('Code final : TRESOR');
-    expect(noeud(hote, 'saisie')).toBeNull();
-    expect(noeud(hote, 'progression')).toBeNull();
-    expect(noeud(hote, 'minuteur')).toBeNull();
-    expect(noeud(hote, 'annonce')).not.toBeNull();
+    expect(noeudsOmbre(hote, 'solution').length).toBe(3);
+    expect(libelleOmbre(hote, 'code-final')).toBe('Code final : TRESOR');
+    expect(noeudOmbre(hote, 'saisie')).toBeNull();
+    expect(noeudOmbre(hote, 'progression')).toBeNull();
+    expect(noeudOmbre(hote, 'minuteur')).toBeNull();
+    expect(noeudOmbre(hote, 'annonce')).not.toBeNull();
 
     hote.setAttribute('data-cours-role', 'presentateur');
     expect(hote.shadowRoot?.querySelector('ol')?.innerHTML).toBe(etudiant);
@@ -422,15 +441,15 @@ describe('FpEscape', () => {
 
   it('ignore un corrige mal forme', () => {
     hote.corrige = { type: 'enigmes', enigmes: SOLUTIONNAIRE.enigmes };
-    expect(noeud(hote, 'code-final')).toBeNull();
-    expect(noeud(hote, 'saisie')).not.toBeNull();
+    expect(noeudOmbre(hote, 'code-final')).toBeNull();
+    expect(noeudOmbre(hote, 'saisie')).not.toBeNull();
   });
 
   it('annonce aux deux roles un parcours sans enigme', () => {
     hote.parcours = buildEscapeParcours({ id: 'ESC-VIDE', enigmes: [] });
     for (const role of ROLES) {
       hote.setAttribute('data-cours-role', role);
-      expect(noeud(hote, 'vide')).withContext(role).not.toBeNull();
+      expect(noeudOmbre(hote, 'vide')).withContext(role).not.toBeNull();
     }
   });
 

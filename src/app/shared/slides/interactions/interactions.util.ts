@@ -67,9 +67,6 @@ export function chargerInteraction<T>(chargement: ChargementInteraction<T>): voi
 }
 
 function normaliseInteractions(value: unknown): FlatInteraction[] {
-  if (Array.isArray(value)) {
-    return fromFlatList(value);
-  }
   if (!estObjet(value)) {
     return [];
   }
@@ -79,10 +76,6 @@ function normaliseInteractions(value: unknown): FlatInteraction[] {
 
 function versInteraction(slideId: string, item: Record<string, unknown>): FlatInteraction {
   return { slideId, type: stringField(item, 'type'), ...item } as FlatInteraction;
-}
-
-function fromFlatList(items: readonly unknown[]): FlatInteraction[] {
-  return items.filter(estObjet).map((item) => versInteraction(flatSlideIdOf(item), item));
 }
 
 function fromGroupedBySlide(interactions: Record<string, unknown>): FlatInteraction[] {
@@ -102,13 +95,6 @@ function fromSlideBuckets(
     }
     return list.filter(estObjet).map((item) => versInteraction(slideId, item));
   });
-}
-
-function flatSlideIdOf(item: Record<string, unknown>): string {
-  if (typeof item['slideId'] === 'string') {
-    return item['slideId'];
-  }
-  return stringField(item, 'id');
 }
 
 function stringField(item: Record<string, unknown>, key: string): string {

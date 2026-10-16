@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DonneesDeFigureComponent } from '../../donnees-de-figure/donnees-de-figure.component';
-import { NOMBRE_FRANCAIS, graduer, position, type Plage } from '../axe-gradue';
+import { enFrancais } from '../../../../../cours/runtime/core/typographie';
+import { graduer, position, type Plage } from '../axe-gradue';
 import { generateurDIdentifiants } from '../identifiant-de-description';
 
 export interface SlideScatterPoint {
@@ -105,9 +106,7 @@ export class SlideScatterComponent {
     return droite === null ? null : segmentDansLeCadre(droite, this.xRange(), this.yRange());
   });
 
-  protected formater(valeur: number): string {
-    return NOMBRE_FRANCAIS.format(valeur);
-  }
+  protected readonly formater = enFrancais;
 
   private placer(point: SlideScatterPoint): PointPlace {
     return { point, x: position(point.x, this.xRange()), y: position(point.y, this.yRange()) };

@@ -1,6 +1,6 @@
 import { Component, type Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { SlideImageComponent } from './slide-image.component';
+import { type RichListItem, SlideImageComponent } from './slide-image.component';
 
 @Component({
   standalone: true,
@@ -17,6 +17,11 @@ import { SlideImageComponent } from './slide-image.component';
 })
 class HostLeftComponent {}
 
+class ContenuComplet {
+  readonly paragraphs = ['Premier paragraphe', 'Second paragraphe'];
+  readonly items = ['Item un', 'Item deux', 'Item trois'];
+}
+
 @Component({
   standalone: true,
   imports: [SlideImageComponent],
@@ -32,10 +37,7 @@ class HostLeftComponent {}
     </app-slide-image-left>
   `,
 })
-class HostLeftFullComponent {
-  readonly paragraphs = ['Premier paragraphe', 'Second paragraphe'];
-  readonly items = ['Item un', 'Item deux', 'Item trois'];
-}
+class HostLeftFullComponent extends ContenuComplet {}
 
 @Component({
   standalone: true,
@@ -63,12 +65,23 @@ class HostRightComponent {}
     </app-slide-image-right>
   `,
 })
-class HostRightFullComponent {
-  readonly paragraphs = ['Premier paragraphe', 'Second paragraphe'];
-  readonly items = ['Item un', 'Item deux', 'Item trois'];
+class HostRightFullComponent extends ContenuComplet {}
+
+@Component({
+  standalone: true,
+  imports: [SlideImageComponent],
+  template: `
+    <app-slide-image-left image="/images/x.webp" imageAlt="alt" [richItems]="richItems" />
+  `,
+})
+class HostRichComponent {
+  readonly richItems: RichListItem[] = [
+    { title: '  banque du territoire', description: 'Partenaire' },
+    { title: 'Agence', description: 'Avec logo', logo: '/images/agence.webp' },
+  ];
 }
 
-function decrireLeContenuComplet(hote: Type<HostLeftFullComponent | HostRightFullComponent>): void {
+function decrireLeContenuComplet(hote: Type<ContenuComplet>): void {
   const rendu = (): HTMLElement => {
     const fixture = TestBed.createComponent(hote);
     fixture.detectChanges();
@@ -146,5 +159,16 @@ describe('SlideImageComponent', () => {
     });
 
     decrireLeContenuComplet(HostRightFullComponent);
+  });
+
+  it('remplace le logo absent par l initiale en majuscule du titre, blancs de tete ôtés', () => {
+    const fixture = TestBed.createComponent(HostRichComponent);
+    fixture.detectChanges();
+    const logos = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll('.slide-image__rich-logo'),
+    ];
+
+    expect(logos.map((logo) => logo.querySelector('span')?.textContent)).toEqual(['B', undefined]);
+    expect(logos[1].querySelector('img')?.getAttribute('src')).toBe('/images/agence.webp');
   });
 });

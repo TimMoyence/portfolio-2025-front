@@ -1,5 +1,11 @@
 import { NgZone } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  attributDOption,
+  noeudOmbre,
+  noeudsOmbre,
+  roleAffiche,
+} from '../../../../testing/banc-de-brique';
 import { attendreQue, briqueMontee, ROLES_DE_MONTAGE } from '../../../../testing/briques-montees';
 import {
   buildCardsortPlan,
@@ -31,6 +37,7 @@ import {
   ecransPublicsB2_01,
 } from '../../../../testing/fixtures/instantane-b2-01';
 import { choisirLOptionDuQuiz } from '../../../../testing/hote-d-interaction';
+import { ecranNomme } from '../../../../testing/montage-d-instantane';
 import { poserLesEntrees } from '../../../../testing/montage-page';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { RetourBrique } from '../../../core/ports/formations.port';
@@ -104,15 +111,11 @@ function evenements(fixture: Fixture): EvenementBrique[] {
   return recus;
 }
 
-function dans(element: HTMLElement, testid: string): HTMLElement | null {
-  return element.shadowRoot?.querySelector<HTMLElement>(`[data-testid="${testid}"]`) ?? null;
-}
-
 function repondre(numerique: HTMLElement, saisie: string): void {
-  const champ = dans(numerique, 'champ') as HTMLInputElement;
+  const champ = noeudOmbre(numerique, 'champ') as HTMLInputElement;
   champ.value = saisie;
   champ.dispatchEvent(new Event('input'));
-  dans(numerique, 'valider')?.click();
+  noeudOmbre<HTMLButtonElement>(numerique, 'valider')?.click();
 }
 
 describe('SlideActivityComponent : deck visuel B2', () => {
@@ -182,10 +185,9 @@ describe('SlideActivityComponent : deck visuel B2', () => {
 
     for (const id of REFLEXIONS) {
       it(`${id} : l étudiant lit l attendu servi à la révélation, et rien avant`, () => {
-        const pupitre = ecransDuPupitreB2_01().find((ecran) => ecran.id === id);
-        const publie = ecransPublicsB2_01().find((ecran) => ecran.id === id);
-        const corrige = pupitre?.corrigeEcran;
-        if (publie === undefined || corrige?.type !== 'reflexion') {
+        const publie = ecranNomme(ecransPublicsB2_01(), id);
+        const corrige = ecranNomme(ecransDuPupitreB2_01(), id).corrigeEcran;
+        if (corrige?.type !== 'reflexion') {
           throw new Error(`réflexion sans corrigé : ${id}`);
         }
         const avant = monter({ slide: publie, role: 'etudiant', sessionId: 'seance-1' });
@@ -210,8 +212,8 @@ describe('SlideActivityComponent : deck visuel B2', () => {
       });
 
       it(`${id} : le formateur projette l attendu une fois l écran révélé`, () => {
-        const pupitre = ecransDuPupitreB2_01().find((ecran) => ecran.id === id);
-        if (pupitre?.corrigeEcran?.type !== 'reflexion') {
+        const pupitre = ecranNomme(ecransDuPupitreB2_01(), id);
+        if (pupitre.corrigeEcran?.type !== 'reflexion') {
           throw new Error(`réflexion sans corrigé : ${id}`);
         }
         const entrees = {
@@ -264,7 +266,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
       expect(numerique.getAttribute('data-cours-role')).toBe(role);
       expect(numerique.hasAttribute('render')).toBeFalse();
       expect(numerique.hasAttribute('data-apercu')).toBeFalse();
-      expect(numerique.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role')).toBe(role);
+      expect(roleAffiche(numerique)).toBe(role);
     });
   }
 
@@ -282,10 +284,10 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
       fixture.componentRef.setInput('slide', coffre);
       fixture.detectChanges();
     });
-    const minuteur = (): Element | null | undefined =>
-      (fixture.nativeElement as HTMLElement)
-        .querySelector('fp-escape')
-        ?.shadowRoot?.querySelector('[data-testid="minuteur"]');
+    const minuteur = (): Element | null => {
+      const brique = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('fp-escape');
+      return brique === null ? null : noeudOmbre(brique, 'minuteur');
+    };
     for (let essai = 0; essai < 100 && minuteur() == null; essai += 1) {
       fixture.detectChanges();
       await new Promise((suite) => setTimeout(suite, 20));
@@ -326,7 +328,9 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
       fixture.detectChanges();
     });
 
-    expect(dans(numerique, 'confusion')?.textContent).toBe('Intérêts simples au lieu de composés');
+    expect(noeudOmbre(numerique, 'confusion')?.textContent).toBe(
+      'Intérêts simples au lieu de composés',
+    );
     expect(auChangement.length).toBeGreaterThan(0);
     expect(auChangement).not.toContain(true);
     expect(zones.length).toBeGreaterThan(0);
@@ -384,8 +388,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
       direct: direct(false),
     });
     const vote = await brique(fixture, 'fp-vote');
-    const barres = (): number =>
-      vote.shadowRoot?.querySelectorAll('[data-testid="barre"]').length ?? 0;
+    const barres = (): number => noeudsOmbre(vote, 'barre').length;
 
     expect(barres()).toBe(0);
     fixture.componentRef.setInput('direct', direct(true));
@@ -410,8 +413,8 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     });
     const { vote, numerique } = await briquesDuQuestionnaire(fixture);
 
-    expect(dans(vote, 'bonne-reponse')).toBeNull();
-    expect(dans(numerique, 'bonne-reponse')).toBeNull();
+    expect(noeudOmbre(vote, 'bonne-reponse')).toBeNull();
+    expect(noeudOmbre(numerique, 'bonne-reponse')).toBeNull();
     fixture.componentRef.setInput('direct', direct(true));
     fixture.detectChanges();
     attendreLeCorrigeDuQuestionnaire(vote, numerique);
@@ -421,22 +424,20 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     const poste = await questionnaireDuPosteEtudiant();
     const { fixture, vote, numerique } = poste;
 
-    expect(dans(vote, 'bonne-reponse')).toBeNull();
+    expect(noeudOmbre(vote, 'bonne-reponse')).toBeNull();
     revelerAuPoste(poste, {
       questions: [CIBLE_VA_07, { questionId: 'Q-CAP-03', cible: '1 480,24 €', optionId: 'b' }],
     });
-    await attendreQue(fixture, () => dans(vote, 'bonne-reponse') !== null, 'la correction');
+    await attendreQue(fixture, () => noeudOmbre(vote, 'bonne-reponse') !== null, 'la correction');
 
     expect(await brique(fixture, 'fp-vote')).toBe(vote);
     attendreLeCorrigeDuQuestionnaire(vote, numerique);
   });
 
   function attendreLeCorrigeDuQuestionnaire(vote: HTMLElement, numerique: HTMLElement): void {
-    expect(dans(vote, 'bonne-reponse')?.textContent).toContain('1 480,24 €');
-    expect(
-      vote.shadowRoot?.querySelector('[data-option="b"]')?.getAttribute('data-correction'),
-    ).toBe('juste');
-    expect(dans(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
+    expect(noeudOmbre(vote, 'bonne-reponse')?.textContent).toContain('1 480,24 €');
+    expect(attributDOption(vote, 'b', 'data-correction')).toBe('juste');
+    expect(noeudOmbre(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
   }
 
   it('ne montre pas a l etudiant les donnees du formateur, meme une fois la correction revelee', async () => {
@@ -451,7 +452,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     });
     const vote = await brique(fixture, 'fp-vote');
 
-    expect(dans(vote, 'bonne-reponse')).toBeNull();
+    expect(noeudOmbre(vote, 'bonne-reponse')).toBeNull();
     expect(vote.shadowRoot?.querySelector('[data-correction]')).toBeNull();
   });
 
@@ -463,12 +464,16 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
       questions: [CIBLE_VA_07],
       explications: [{ reference: 'Q-VA-07', texte: '1 000 × 1,04^10 ≈ 1 480,24 €.' }],
     });
-    await attendreQue(fixture, () => dans(numerique, 'explication') !== null, 'l explication');
+    await attendreQue(
+      fixture,
+      () => noeudOmbre(numerique, 'explication') !== null,
+      'l explication',
+    );
 
-    expect(dans(numerique, 'explication')?.textContent).toBe('1 000 × 1,04^10 ≈ 1 480,24 €.');
-    expect(dans(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
-    expect((dans(numerique, 'champ') as HTMLInputElement).disabled).toBeTrue();
-    expect(dans(vote, 'explications')).toBeNull();
+    expect(noeudOmbre(numerique, 'explication')?.textContent).toBe('1 000 × 1,04^10 ≈ 1 480,24 €.');
+    expect(noeudOmbre(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).disabled).toBeTrue();
+    expect(noeudOmbre(vote, 'explications')).toBeNull();
     expect(
       [...(vote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-option]') ?? [])].some(
         (option) => !option.disabled,
@@ -490,10 +495,10 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     });
     const { vote, numerique } = await briquesDuQuestionnaire(fixture);
 
-    expect(dans(vote, 'explication')?.textContent).toBe(
+    expect(noeudOmbre(vote, 'explication')?.textContent).toBe(
       'Capitaliser, c’est réinvestir les intérêts.',
     );
-    expect(dans(numerique, 'explications')).toBeNull();
+    expect(noeudOmbre(numerique, 'explications')).toBeNull();
   });
 
   it('RET-32 · ferme aux reponses le poste etudiant une fois la correction du questionnaire revelee', async () => {
@@ -510,13 +515,13 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     ];
 
     expect(options().every((option) => !option.disabled)).toBeTrue();
-    expect((dans(numerique, 'champ') as HTMLInputElement).disabled).toBeFalse();
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).disabled).toBeFalse();
     fixture.componentRef.setInput('direct', direct(true));
     fixture.detectChanges();
     expect(options().length).toBeGreaterThan(0);
     expect(options().every((option) => option.disabled)).toBeTrue();
-    expect((dans(numerique, 'champ') as HTMLInputElement).disabled).toBeTrue();
-    expect(dans(numerique, 'reponses-closes')).not.toBeNull();
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).disabled).toBeTrue();
+    expect(noeudOmbre(numerique, 'reponses-closes')).not.toBeNull();
   });
 
   it('RET-31 · projette la correction de la feuille au rythme de l etayage du pupitre', async () => {
@@ -540,13 +545,15 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     });
     const feuille = await brique(fixture, 'fp-sheet');
 
-    expect(dans(feuille, 'correction-feuille')).toBeNull();
+    expect(noeudOmbre(feuille, 'correction-feuille')).toBeNull();
     fixture.componentRef.setInput('direct', direct(1));
     fixture.detectChanges();
-    expect(dans(feuille, 'correction-feuille')?.textContent?.trim()).toBe('=C3*(1+$B$1)');
+    expect(noeudOmbre(feuille, 'correction-feuille')?.textContent?.trim()).toBe('=C3*(1+$B$1)');
     fixture.componentRef.setInput('direct', direct(2));
     fixture.detectChanges();
-    expect(dans(feuille, 'correction-feuille')?.textContent?.trim()).toBe('=C3*(1+$B$1) 64,8');
+    expect(noeudOmbre(feuille, 'correction-feuille')?.textContent?.trim()).toBe(
+      '=C3*(1+$B$1) 64,8',
+    );
   });
 
   it('traduit la soumission d une brique en evenement de seance', async () => {
@@ -605,7 +612,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
   it('pose les retours sans remonter la brique ni perdre la saisie en cours (F6)', async () => {
     const fixture = monter({ slide: ECRAN_NUMERIQUE });
     const numerique = await brique(fixture, 'fp-numeric');
-    const champ = dans(numerique, 'champ') as HTMLInputElement;
+    const champ = noeudOmbre(numerique, 'champ') as HTMLInputElement;
     champ.value = '1 400';
     champ.dispatchEvent(new Event('input'));
 
@@ -613,20 +620,22 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     fixture.detectChanges();
 
     expect(await brique(fixture, 'fp-numeric')).toBe(numerique);
-    expect((dans(numerique, 'champ') as HTMLInputElement).value).toBe('1 400');
-    expect(dans(numerique, 'confusion')?.textContent).toBe('Intérêts simples au lieu de composés');
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).value).toBe('1 400');
+    expect(noeudOmbre(numerique, 'confusion')?.textContent).toBe(
+      'Intérêts simples au lieu de composés',
+    );
   });
 
   it('laisse intacte la brique voisine pendant sa saisie quand le verdict d une autre question du questionnaire arrive', async () => {
     const { ecran, fixture, vote, numerique } = await questionnaireDuPosteEtudiant();
-    const champ = dans(numerique, 'champ') as HTMLInputElement;
+    const champ = noeudOmbre(numerique, 'champ') as HTMLInputElement;
     champ.value = '1 48';
     champ.dispatchEvent(new Event('input'));
 
     const verdictDuVote: RetourBrique = { ...VERDICT, questionId: 'Q-CAP-03', correcte: true };
     fixture.componentRef.setInput('retours', new Map([[ecran.id, [verdictDuVote]]]));
     fixture.detectChanges();
-    expect(dans(numerique, 'champ')).toBe(champ);
+    expect(noeudOmbre(numerique, 'champ')).toBe(champ);
 
     const votee = vote.shadowRoot?.querySelector('[data-option]');
     fixture.componentRef.setInput('retours', new Map([[ecran.id, [verdictDuVote, VERDICT]]]));
@@ -641,10 +650,10 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     });
     const numerique = await brique(fixture, 'fp-numeric');
 
-    expect(dans(numerique, 'deja-repondu')?.textContent).toBe(
+    expect(noeudOmbre(numerique, 'deja-repondu')?.textContent).toBe(
       'Réponse déjà enregistrée : voici votre verdict',
     );
-    expect((dans(numerique, 'champ') as HTMLInputElement).disabled).toBeTrue();
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).disabled).toBeTrue();
   });
 
   it('montre un refus a la seule brique qui vient d emettre', async () => {
@@ -669,8 +678,10 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     );
     fixture.detectChanges();
 
-    expect(dans(numerique, 'erreur')?.textContent).toBe('Le vote est fermé pour cette question');
-    expect((dans(numerique, 'champ') as HTMLInputElement).disabled).toBeFalse();
+    expect(noeudOmbre(numerique, 'erreur')?.textContent).toBe(
+      'Le vote est fermé pour cette question',
+    );
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).disabled).toBeFalse();
   });
 
   it('n emet rien et marque les briques en apercu hors seance', async () => {
@@ -682,7 +693,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
 
     expect(numerique.hasAttribute('data-apercu')).toBeTrue();
     expect(recus).toEqual([]);
-    expect(dans(numerique, 'retour')?.textContent).toBe(
+    expect(noeudOmbre(numerique, 'retour')?.textContent).toBe(
       'Aperçu : les réponses s’envoient pendant la séance',
     );
     expect(brouillons.lire).not.toHaveBeenCalled();
@@ -695,11 +706,11 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     const billet = await brique(fixture, 'fp-exit');
 
     expect(brouillons.lire).toHaveBeenCalledWith('fp-exit', 'B-SORTIE-09');
-    expect((dans(billet, 'texte-libre') as HTMLTextAreaElement).value).toBe(
+    expect((noeudOmbre(billet, 'texte-libre') as HTMLTextAreaElement).value).toBe(
       'Repris apres rechargement',
     );
 
-    const champ = dans(billet, 'texte-libre') as HTMLTextAreaElement;
+    const champ = noeudOmbre(billet, 'texte-libre') as HTMLTextAreaElement;
     champ.value = 'Nouvelle frappe';
     champ.dispatchEvent(new Event('input'));
 

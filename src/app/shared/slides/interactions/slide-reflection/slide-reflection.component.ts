@@ -13,8 +13,10 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { dureeMonotoneDepuis, instantMonotone } from '../../../../../cours/runtime/core/duree';
 import { suivreLaSaisie } from '../../../../../cours/runtime/core/zone-de-saisie';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
+import { readInputValue } from '../../../utils/dom-event.utils';
 import type { EtatEnvoiLibre } from '../../session/reponses-libres.service';
 import { cleDeReponseLibre, ReponsesLibresService } from '../../session/reponses-libres.service';
 import { chargerInteraction } from '../interactions.util';
@@ -40,7 +42,11 @@ export interface DebriefDeReflexion {
 
 type EtatEnvoi = 'repos' | 'envoi' | Exclude<EtatEnvoiLibre, 'vide'>;
 
-const ETATS_GARDES_EN_FILE: readonly EtatEnvoi[] = ['attente_reseau', 'ecran_non_servi'];
+const ETATS_GARDES_EN_FILE: readonly EtatEnvoi[] = [
+  'attente_reseau',
+  'attente_limite',
+  'ecran_non_servi',
+];
 
 function etatAffiche(etat: EtatEnvoiLibre): EtatEnvoi {
   return etat === 'vide' ? 'repos' : etat;
@@ -76,6 +82,10 @@ export class SlideReflectionComponent implements OnInit {
       ? null
       : this.reponsesLibres.texteGarde(sessionId, this.activiteCourante());
   });
+  protected readonly limite = computed(() => {
+    const sessionId = this.seanceCourante();
+    return sessionId === null ? null : this.reponsesLibres.limiteDe(this.cleCourante(sessionId));
+  });
   protected readonly etatVisible = computed<EtatEnvoi>(() =>
     this.saveState() === 'repos' && this.garde() !== null ? 'enregistre' : this.saveState(),
   );
@@ -83,7 +93,7 @@ export class SlideReflectionComponent implements OnInit {
   private readonly port = inject(PRESENTATION_PORT, { optional: true });
   private readonly reponsesLibres = inject(ReponsesLibresService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly startedAt = Date.now();
+  private readonly startedAt = instantMonotone();
   private readonly zone = viewChild<ElementRef<HTMLTextAreaElement>>('zone');
 
   constructor() {
@@ -122,7 +132,7 @@ export class SlideReflectionComponent implements OnInit {
       screenId: this.screenId(),
       activityId: this.activiteCourante(),
       response,
-      dureeMs: Math.max(0, Date.now() - this.startedAt),
+      dureeMs: dureeMonotoneDepuis(this.startedAt),
     });
     this.saveState.set(etatAffiche(etat));
   }
@@ -152,8 +162,8 @@ export class SlideReflectionComponent implements OnInit {
     }
   }
 
-  protected onInput(text: string): void {
-    this.value.set(text);
+  protected onInput(evenement: Event): void {
+    this.value.set(readInputValue(evenement));
     if (!ETATS_GARDES_EN_FILE.includes(this.saveState())) {
       this.saveState.set('repos');
     }

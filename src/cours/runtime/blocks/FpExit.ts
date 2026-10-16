@@ -98,10 +98,9 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
     if (!branche) {
       return;
     }
-    for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
-      bouton.disabled = verrouille;
-      bouton.addEventListener('click', () => this.selectionner(bouton.dataset['option'] ?? ''));
-    }
+    this.brancherLesBoutons(racine, '[data-option]', verrouille, ({ dataset }) =>
+      this.selectionner(dataset['option'] ?? ''),
+    );
   }
 
   protected effacerLaSaisie(): void {

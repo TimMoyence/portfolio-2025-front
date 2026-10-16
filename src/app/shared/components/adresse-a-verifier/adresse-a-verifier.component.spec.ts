@@ -1,5 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { TestBed, discardPeriodicTasks, fakeAsync, tick } from '@angular/core/testing';
+import {
+  TestBed,
+  discardPeriodicTasks,
+  fakeAsync,
+  flushMicrotasks,
+  tick,
+} from '@angular/core/testing';
 import { Subject, of, throwError } from 'rxjs';
 import type { AuthActionMessage, AuthUser } from '../../../core/models/auth.model';
 import { AuthStateService } from '../../../core/services/auth-state.service';
@@ -10,6 +16,7 @@ import {
   createAuthPortStub,
 } from '../../../../testing/factories/auth.factory';
 import { refusDuBack } from '../../../../testing/factories/probleme-http.factory';
+import { reveillerApres } from '../../../../testing/horloge-simulee';
 import { lireMarque } from '../../../../testing/marqueurs-dom';
 import { AdresseAVerifierComponent } from './adresse-a-verifier.component';
 
@@ -132,19 +139,20 @@ describe('AdresseAVerifierComponent', () => {
       expect(retour(fixture)?.textContent).toContain('un nouveau lien part');
     });
 
-    it('apres une veille plus longue que le jeton, relit le compte par un refresh, jamais avec le jeton expire', () => {
+    it('apres une veille plus longue que le jeton, relit le compte par un refresh, jamais avec le jeton expire', fakeAsync(() => {
       const fixture = monter(false);
-      const auReveil = Date.now() + 2 * 3_600_000;
-      spyOn(Date, 'now').and.returnValue(auReveil);
+      reveillerApres(2 * 3_600_000);
       port.refresh.and.returnValue(of(buildAuthSession({ user: verifie })));
 
       revenirSurLOnglet('visible');
+      flushMicrotasks();
       expect(port.me).not.toHaveBeenCalled();
       expect(port.refresh).toHaveBeenCalledTimes(1);
       fixture.detectChanges();
       expect(lireMarque(fixture, 'adresse-a-verifier')).toBeNull();
       TestBed.inject(AuthStateService).clearSession();
-    });
+      discardPeriodicTasks();
+    }));
 
     it('ne relit rien quand l onglet passe en arriere-plan', () => {
       monter(false);

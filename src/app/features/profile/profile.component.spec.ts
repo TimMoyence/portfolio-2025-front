@@ -29,6 +29,7 @@ function createAuthStateMock(overrides?: Partial<{ hasPassword: boolean; roles: 
     updateUser: jasmine.createSpy('updateUser'),
     clearSession: jasmine.createSpy('clearSession'),
     logout: jasmine.createSpy('logout'),
+    logoutEtAccueil: jasmine.createSpy('logoutEtAccueil'),
     user: signal(user),
     isLoggedIn: signal(true),
     hasRole: (role: string) => user.roles.includes(role),
@@ -64,14 +65,21 @@ describe('ProfileComponent', () => {
     expect(component.initial()).toBe('?');
   });
 
-  it("logout revoque la session serveur et redirige vers l'accueil", () => {
+  it('initial saute les blancs d un libelle et rend ? quand aucun n en porte', () => {
+    expect(component.initial('  jean', 'Dupont')).toBe('J');
+    expect(component.initial('   ', ' dupont')).toBe('D');
+    expect(component.initial('   ', '', ' ')).toBe('?');
+  });
+
+  it("logout revoque la session serveur et redirige vers l'accueil par AuthStateService", () => {
     const router = TestBed.inject(Router);
     const navigateSpy = spyOn(router, 'navigate').and.resolveTo(true);
 
     component.logout();
 
-    expect(authState.logout).toHaveBeenCalled();
-    expect(navigateSpy).toHaveBeenCalledWith(['/']);
+    expect(authState.logoutEtAccueil).toHaveBeenCalledOnceWith();
+    expect(authState.logout).not.toHaveBeenCalled();
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 
   it('logout ne doit pas se limiter a la purge locale (cookie de refresh a revoquer)', () => {
@@ -353,25 +361,30 @@ describe('ProfileComponent', () => {
       });
     }
 
-    it('changePassword dit un refus par un message localisé, et son succès accentué', async () => {
-      TestBed.resetTestingModule();
-      await monter({ hasPassword: true });
-      authService.changePassword.and.returnValues(
-        throwError(() => refusDuBack(400, 'Current password is invalid')),
-        of(buildAuthUser({ hasPassword: true })),
-      );
-      component.currentPassword = 'actuel';
-      component.changeNewPassword = NEW_PASSWORD;
+    for (const [statut, detail] of [
+      [401, 'Current password is invalid'],
+      [400, 'newPassword must be longer than or equal to 12 characters'],
+    ] as const) {
+      it(`changePassword dit un refus ${statut} par un message localisé, et son succès accentué`, async () => {
+        TestBed.resetTestingModule();
+        await monter({ hasPassword: true });
+        authService.changePassword.and.returnValues(
+          throwError(() => refusDuBack(statut, detail)),
+          of(buildAuthUser({ hasPassword: true })),
+        );
+        component.currentPassword = 'actuel';
+        component.changeNewPassword = NEW_PASSWORD;
 
-      component.changePassword(formulaireSoumis());
-      expect(component.changePasswordError).toBe(
-        'Vérifiez votre mot de passe actuel et la règle du nouveau mot de passe.',
-      );
-      expect(component.changePasswordLoading).toBeFalse();
+        component.changePassword(formulaireSoumis());
+        expect(component.changePasswordError).toBe(
+          'Vérifiez votre mot de passe actuel et la règle du nouveau mot de passe.',
+        );
+        expect(component.changePasswordLoading).toBeFalse();
 
-      component.changePassword(formulaireSoumis());
-      fixture.detectChanges();
-      expect(texte()).toContain('Mot de passe modifié avec succès.');
-    });
+        component.changePassword(formulaireSoumis());
+        fixture.detectChanges();
+        expect(texte()).toContain('Mot de passe modifié avec succès.');
+      });
+    }
   });
 });

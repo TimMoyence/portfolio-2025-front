@@ -1,10 +1,13 @@
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import {
+  cliquerOmbre,
   creerBrique,
   detailsEmis,
   installerBrique,
   lignesDuRappel,
+  noeudOmbre,
+  noeudsOmbre,
 } from '../../../testing/banc-de-brique';
 import { buildWorkedExemple } from '../../../testing/factories/cours.factory';
 import { FpWorked } from './FpWorked';
@@ -22,12 +25,10 @@ const DERNIERE = ETAPES[PLEIN - 1];
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const CLASSES_ATTENDUES = 17;
 
-function reperes(hote: FpWorked, repere: string): HTMLElement[] {
-  return [...(hote.shadowRoot?.querySelectorAll<HTMLElement>(`[data-testid="${repere}"]`) ?? [])];
-}
-
 function zone(hote: FpWorked, repere: string, etape: string): HTMLTextAreaElement {
-  const trouve = reperes(hote, repere).find((noeud) => noeud.dataset['etape'] === etape);
+  const trouve = noeudsOmbre<HTMLElement>(hote, repere).find(
+    (noeud) => noeud.dataset['etape'] === etape,
+  );
   if (!(trouve instanceof HTMLTextAreaElement)) {
     throw new Error(`aucune zone ${repere} pour l etape ${etape}`);
   }
@@ -40,12 +41,8 @@ function ecrire(hote: FpWorked, repere: string, etape: string, contenu: string):
   champ.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-function valider(hote: FpWorked): void {
-  hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="valider"]')?.click();
-}
-
 function aCompleter(hote: FpWorked): string[] {
-  return reperes(hote, 'etape')
+  return noeudsOmbre<HTMLElement>(hote, 'etape')
     .filter((etape) => etape.dataset['resolue'] === 'false')
     .map((etape) => etape.dataset['etape'] ?? '');
 }
@@ -57,7 +54,9 @@ function completerTout(hote: FpWorked): void {
 }
 
 function montrees(hote: FpWorked): string[] {
-  return reperes(hote, 'raisonnement').map((detail) => detail.dataset['etape'] ?? '');
+  return noeudsOmbre<HTMLElement>(hote, 'raisonnement').map(
+    (detail) => detail.dataset['etape'] ?? '',
+  );
 }
 
 describe('FpWorked', () => {
@@ -110,7 +109,7 @@ describe('FpWorked', () => {
     expect(hote.etayage).toBe(0);
     expect(montrees(hote)).toEqual([]);
     expect(aCompleter(hote)).toEqual(ETAPES);
-    expect(reperes(hote, 'saisie').length).toBe(PLEIN);
+    expect(noeudsOmbre(hote, 'saisie').length).toBe(PLEIN);
   }
 
   it('imprime sur papier le raisonnement de chaque étape au corrigé, sans attendre l étayage', () => {
@@ -123,8 +122,8 @@ describe('FpWorked', () => {
   it('imprime sur papier les étapes de l étudiant sans bouton valider', () => {
     hote.setAttribute('data-papier', '');
 
-    expect(reperes(hote, 'saisie').length).toBe(PLEIN);
-    expect(reperes(hote, 'valider')).toEqual([]);
+    expect(noeudsOmbre(hote, 'saisie').length).toBe(PLEIN);
+    expect(noeudsOmbre(hote, 'valider')).toEqual([]);
     expect(montrees(hote)).toEqual([]);
   });
 
@@ -133,7 +132,7 @@ describe('FpWorked', () => {
   });
 
   it('RET-23 · pose sous chaque etape sa question puis un seul champ de reponse', () => {
-    const etapes = reperes(hote, 'etape');
+    const etapes = noeudsOmbre(hote, 'etape');
 
     expect(etapes.map((etape) => etape.querySelector('label')?.textContent?.trim() ?? '')).toEqual(
       EXEMPLE.etapes.map(({ invite }) => invite),
@@ -141,14 +140,14 @@ describe('FpWorked', () => {
     expect(etapes.map((etape) => etape.querySelectorAll('textarea').length)).toEqual(
       ETAPES.map(() => 1),
     );
-    expect(reperes(hote, 'explication')).toEqual([]);
+    expect(noeudsOmbre(hote, 'explication')).toEqual([]);
     expect(hote.shadowRoot?.textContent ?? '').not.toContain('À vous de rédiger');
   });
 
   it('RET-23 · fige la reponse de l etudiant sous laquelle s affiche la correction revelee', () => {
     ecrire(hote, 'saisie', ETAPES[0], 'ma reponse a la premiere question');
     hote.etayage = 1;
-    const premiere = reperes(hote, 'etape')[0];
+    const premiere = noeudsOmbre(hote, 'etape')[0];
     const ordre = [...premiere.querySelectorAll<HTMLElement>('[data-testid]')].map(
       (noeud) => noeud.dataset['testid'],
     );
@@ -158,13 +157,13 @@ describe('FpWorked', () => {
       'ma reponse a la premiere question',
     );
     expect(ordre).toEqual(['saisie-figee', 'correction', 'raisonnement']);
-    expect(reperes(hote, 'correction')[0]?.textContent?.trim()).toBe('Correction');
+    expect(noeudsOmbre(hote, 'correction')[0]?.textContent?.trim()).toBe('Correction');
     expect(montrees(hote)).toEqual([ETAPES[0]]);
   });
 
   it('RET-23 · laisse un blanc fige sous une etape corrigee sans reponse', () => {
     hote.etayage = 1;
-    const premiere = reperes(hote, 'etape')[0];
+    const premiere = noeudsOmbre(hote, 'etape')[0];
 
     expect(premiere.querySelector('textarea')).toBeNull();
     expect(premiere.querySelector('[data-testid="saisie-figee"]')?.textContent?.trim()).toBe('');
@@ -180,12 +179,10 @@ describe('FpWorked', () => {
 
   it('RET-23 · n envoie rien quand toutes les etapes sont deja corrigees', () => {
     hote.etayage = PLEIN;
-    valider(hote);
+    cliquerOmbre(hote, 'valider');
 
     expect(envoisEmis()).toEqual([]);
-    expect(
-      hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="valider"]')?.disabled,
-    ).toBeTrue();
+    expect(noeudOmbre<HTMLButtonElement>(hote, 'valider')?.disabled).toBeTrue();
   });
 
   it('retire la derniere etape puis les deux dernieres a mesure que l etayage baisse', () => {
@@ -218,7 +215,7 @@ describe('FpWorked', () => {
   it('n envoie que les reponses redigees, jamais le niveau d etayage', () => {
     hote.etayage = 1;
     completerTout(hote);
-    valider(hote);
+    cliquerOmbre(hote, 'valider');
     expect(
       Object.keys(dernierEnvoi()).sort((gauche, droite) => gauche.localeCompare(droite)),
     ).toEqual(['dureeMs', 'exempleId', 'redactions']);
@@ -227,7 +224,7 @@ describe('FpWorked', () => {
   it('emet la reponse de l etape encore sans correction', () => {
     hote.etayage = PLEIN - 1;
     ecrire(hote, 'saisie', DERNIERE, 'la valeur acquise vaut 1 124,86 euros');
-    valider(hote);
+    cliquerOmbre(hote, 'valider');
     expect(dernierEnvoi().redactions).toEqual({
       [DERNIERE]: 'la valeur acquise vaut 1 124,86 euros',
     });
@@ -237,11 +234,11 @@ describe('FpWorked', () => {
   it('refuse d avancer tant qu une etape a completer reste vide', () => {
     hote.etayage = PLEIN - 2;
     ecrire(hote, 'saisie', DERNIERE, 'la valeur acquise');
-    valider(hote);
+    cliquerOmbre(hote, 'valider');
     expect(envoisEmis()).toEqual([]);
-    expect(reperes(hote, 'retour')[0]?.textContent).toContain('avant de valider');
+    expect(noeudsOmbre(hote, 'retour')[0]?.textContent).toContain('avant de valider');
     ecrire(hote, 'saisie', ETAPES[PLEIN - 2], 'on remplace les valeurs dans la formule');
-    valider(hote);
+    cliquerOmbre(hote, 'valider');
     expect(envoisEmis()).toEqual(['fp-worked-submit']);
   });
 
@@ -259,7 +256,7 @@ describe('FpWorked', () => {
     rouvert.brouillon = { redactions: { [DERNIERE]: 'la valeur acquise' } };
 
     expect(zone(rouvert, 'saisie', DERNIERE).value).toBe('la valeur acquise');
-    expect(reperes(rouvert, 'brouillon-restaure')[0]?.textContent).toBe('Brouillon restauré');
+    expect(noeudsOmbre(rouvert, 'brouillon-restaure')[0]?.textContent).toBe('Brouillon restauré');
     expect(traces.ecritures).toEqual([]);
   });
 
@@ -299,21 +296,21 @@ describe('FpWorked', () => {
     });
     hote.etayage = PLEIN;
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
-    expect(reperes(hote, 'enonce')[0]?.textContent).toBe(CHARGE_XSS);
-    expect(reperes(hote, 'raisonnement')[0]?.textContent).toBe(CHARGE_XSS);
+    expect(noeudsOmbre(hote, 'enonce')[0]?.textContent).toBe(CHARGE_XSS);
+    expect(noeudsOmbre(hote, 'raisonnement')[0]?.textContent).toBe(CHARGE_XSS);
     expect(hote.shadowRoot?.innerHTML ?? '').toContain('&lt;img');
   });
 
   it('montre au presentateur les etapes revelees sans zone de saisie ni badge de niveau', () => {
     hote.etayage = 2;
     hote.setAttribute('data-cours-role', 'presentateur');
-    expect(reperes(hote, 'saisie')).toEqual([]);
-    expect(reperes(hote, 'explication')).toEqual([]);
-    expect(reperes(hote, 'valider')).toEqual([]);
+    expect(noeudsOmbre(hote, 'saisie')).toEqual([]);
+    expect(noeudsOmbre(hote, 'explication')).toEqual([]);
+    expect(noeudsOmbre(hote, 'valider')).toEqual([]);
     expect(montrees(hote)).toEqual(ETAPES.slice(0, 2));
-    expect(reperes(hote, 'niveau')).toEqual([]);
-    expect(reperes(hote, 'modalite')).toEqual([]);
-    expect(reperes(hote, 'duree')).toEqual([]);
+    expect(noeudsOmbre(hote, 'niveau')).toEqual([]);
+    expect(noeudsOmbre(hote, 'modalite')).toEqual([]);
+    expect(noeudsOmbre(hote, 'duree')).toEqual([]);
     expect(hote.exemple?.metadonnees.dureeMinutes).toBe(8);
   });
 
@@ -331,7 +328,7 @@ describe('FpWorked', () => {
   it('RET-23 · projette au presentateur chaque question et, dessous, les seules corrections revelees', () => {
     hote.etayage = 1;
     hote.setAttribute('data-cours-role', 'presentateur');
-    const etapes = reperes(hote, 'etape');
+    const etapes = noeudsOmbre(hote, 'etape');
 
     expect(
       etapes.map(
@@ -352,8 +349,8 @@ describe('FpWorked', () => {
 
     expect(montrees(hote)).toEqual(ETAPES.slice(0, 1));
     expect(hote.shadowRoot?.querySelectorAll('textarea').length).toBe(0);
-    expect(reperes(hote, 'valider')).toEqual([]);
-    expect(reperes(hote, 'question').length).toBe(PLEIN);
+    expect(noeudsOmbre(hote, 'valider')).toEqual([]);
+    expect(noeudsOmbre(hote, 'question').length).toBe(PLEIN);
     expect(hote.shadowRoot?.querySelector('section')?.getAttribute('data-pilote')).toBe('true');
 
     hote.etayage = PLEIN;
@@ -392,12 +389,12 @@ describe('FpWorked', () => {
       hote.pilote = pilote;
       for (const role of ROLES_DE_MONTAGE) {
         hote.setAttribute('data-cours-role', role);
-        const rappel = hote.shadowRoot?.querySelector('[data-testid="rappel"]');
+        const rappel = noeudOmbre(hote, 'rappel');
         const contexte = `role ${role}, pilote ${String(pilote)}`;
 
         expect(lignesDuRappel(hote)).withContext(contexte).toEqual(attendues);
         expect(
-          (rappel?.compareDocumentPosition(reperes(hote, 'etape')[0]) ?? 0) &
+          (rappel?.compareDocumentPosition(noeudsOmbre(hote, 'etape')[0]) ?? 0) &
             Node.DOCUMENT_POSITION_FOLLOWING,
         )
           .withContext(contexte)
@@ -415,7 +412,7 @@ describe('FpWorked', () => {
   it('R-04 · ne montre aucun rappel a un exemple qui n en porte pas', () => {
     for (const role of ROLES_DE_MONTAGE) {
       hote.setAttribute('data-cours-role', role);
-      expect(reperes(hote, 'rappel')).withContext(role).toEqual([]);
+      expect(noeudsOmbre(hote, 'rappel')).withContext(role).toEqual([]);
     }
   });
 

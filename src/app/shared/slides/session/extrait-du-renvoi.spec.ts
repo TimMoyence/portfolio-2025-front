@@ -1,15 +1,12 @@
 import type { EcranContent } from '../../../../cours/content/types';
 import { ecransPublicsB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
+import { ecranNomme } from '../../../../testing/montage-d-instantane';
 import { extraireDuRenvoi } from './extrait-du-renvoi';
 
 const ECRANS = ecransPublicsB2_01();
 
 function ecran(id: string): EcranContent {
-  const trouve = ECRANS.find((candidat) => candidat.id === id);
-  if (trouve === undefined) {
-    throw new Error(`écran absent de l instantané : ${id}`);
-  }
-  return trouve;
+  return ecranNomme(ECRANS, id);
 }
 
 function renvoiDe(id: string): EcranContent {

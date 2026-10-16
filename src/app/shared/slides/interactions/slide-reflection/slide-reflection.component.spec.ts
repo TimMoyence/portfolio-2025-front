@@ -12,6 +12,7 @@ import {
   configurerLHoteDInteraction,
   monterApresChargement,
 } from '../../../../../testing/hote-d-interaction';
+import { horlogesDeSaisie, sousHorlogeArreteeA } from '../../../../../testing/horloge-simulee';
 import type { ModeInteraction } from '../mode-interaction';
 import {
   clearIdentity,
@@ -27,6 +28,8 @@ import type { ReflectionInteraction } from './slide-reflection.component';
 import { SlideReflectionComponent } from './slide-reflection.component';
 
 const cleEtudiante = (): string => readIdentity()?.studentKey ?? '';
+
+const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
 
 interface ReflexionServie {
   readonly screenId: string;
@@ -157,6 +160,34 @@ describe('SlideReflectionComponent', () => {
     expect(
       racine(fixture).querySelector('[data-testid="slide-reflection-projection"]'),
     ).not.toBeNull();
+  });
+
+  describe('durée de réponse envoyée à la séance', () => {
+    const horloge = sousHorlogeArreteeA(new Date('2026-10-16T08:00:00Z'));
+
+    function dureeEnvoyee(avantLEnvoi: () => void): number | undefined {
+      const envoyer = spyOn(TestBed.inject(ReponsesLibresService), 'envoyer').and.resolveTo(
+        'enregistre',
+      );
+      const fixture = monterEnSeance('seance', 'seance-duree');
+      avantLEnvoi();
+
+      garder(fixture, 'Comparer les bases.');
+      return envoyer.calls.mostRecent()?.args[2].dureeMs;
+    }
+
+    it('mesure le temps écoulé depuis l affichage de la réflexion', () => {
+      expect(dureeEnvoyee(() => jasmine.clock().tick(4200))).toBe(4200);
+    });
+
+    it('envoie la durée écoulée quand l horloge recule de plus que cette durée avant l envoi', () => {
+      expect(
+        dureeEnvoyee(() => {
+          jasmine.clock().tick(300);
+          horloge.reculerDe(1000);
+        }),
+      ).toBe(300);
+    });
   });
 
   describe('etats de l envoi en seance', () => {
@@ -313,6 +344,22 @@ describe('SlideReflectionComponent', () => {
       expect(await clesEnAttente(sessionId)).toEqual([]);
     });
 
+    it('limitee par la cadence du serveur, fige la reflexion en file et dit l attente commune, pas le reseau', async () => {
+      const sessionId = `seance-limite-${Date.now()}`;
+      const fixture = await garderMalgreLeRefus(
+        sessionId,
+        new ReponseLibreRefusee('reseau', 429, { minutes: 2 }),
+        'Envoyée après l attente.',
+        'attente_limite',
+      );
+
+      expect(
+        racine(fixture).querySelector('[data-testid="slide-reflection-etat"]')?.textContent?.trim(),
+      ).toBe(ATTENTE_COMMUNE);
+      attendreFigee(fixture, 'Envoyée après l attente.');
+      expect(await clesEnAttente(sessionId)).toEqual([CLE(sessionId)]);
+    });
+
     function garderSurEcranNonServi(sessionId: string): Promise<ReturnType<typeof monterEnSeance>> {
       return garderMalgreLeRefus(
         sessionId,
@@ -389,5 +436,19 @@ describe('SlideReflectionComponent', () => {
       }),
     );
     expect(racine(fixture).querySelector('[data-testid="slide-reflection-apercu"]')).toBeNull();
+  });
+
+  it('en seance, envoie la duree de reflexion mesuree sur l horloge monotone quand l horloge du poste recule', () => {
+    const horloges = horlogesDeSaisie();
+    const fixture = monterEnSeance('seance', 'seance-duree');
+
+    horloges.saisirPendant(20_000);
+    garder(fixture, 'Une réflexion mesurée.');
+
+    expect(formations.enregistrerReponseLibre).toHaveBeenCalledOnceWith(
+      'seance-duree',
+      'jeton-1',
+      jasmine.objectContaining({ dureeMs: 20_000 }),
+    );
   });
 });

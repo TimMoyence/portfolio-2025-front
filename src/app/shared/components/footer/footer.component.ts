@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { NOM_DU_SITE } from '../../../core/seo/nom-du-site';
 import { CONTACT_METHODS } from '../../data/contact-methods';
 import type { FooterColumn, FooterLink, SocialLink } from '../../models/footer.model';
 import { SvgIconComponent } from '../svg-icon.component';
@@ -15,6 +16,8 @@ import { SvgIconComponent } from '../svg-icon.component';
 })
 export class FooterComponent {
   readonly contactMethods = CONTACT_METHODS;
+
+  protected readonly nomDuSite = NOM_DU_SITE;
 
   readonly brandBaseline = $localize`:footer.brand.baseline|Footer brand baseline@@footerBrandBaseline:« Asili » — la racine, l'essentiel. Le design est fonctionnel et réfléchi, jamais décoratif pour décorer.`;
 

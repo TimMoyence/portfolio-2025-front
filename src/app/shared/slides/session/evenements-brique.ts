@@ -1,7 +1,6 @@
-import { ETATS_PULSE } from 'portfolio-2025-partage/contrats';
-import type { ValeurProduction } from '../../../../cours/content/types';
+import { ETATS_PULSE, type ValeurProduction } from '../../../../cours/content/types';
 import { lireTextes } from '../../../../cours/runtime/blocks/retours';
-import { estEntierPositif, estObjet } from '../../../../cours/runtime/core/valeurs';
+import { estEntierPositif, estMembre, estObjet } from '../../../../cours/runtime/core/valeurs';
 import type { EvenementBrique } from './contrat-hote';
 import { objet } from '../visual/presentation-v2';
 
@@ -161,8 +160,8 @@ function tentative(screenId: string, detail: Detail, dureeMs: number): Evenement
 
 function jalon(screenId: string, detail: Detail): EvenementBrique[] {
   const sondageId = detail['sondageId'];
-  const etat = ETATS_PULSE.find((connu) => connu === detail['etat']);
-  return identifiant(sondageId) && etat !== undefined
+  const etat = detail['etat'];
+  return identifiant(sondageId) && estMembre(ETATS_PULSE, etat)
     ? [{ kind: 'jalon', screenId, sondageId, etat }]
     : [];
 }

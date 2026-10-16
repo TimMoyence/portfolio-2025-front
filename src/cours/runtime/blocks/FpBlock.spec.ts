@@ -1,5 +1,12 @@
-import { enregistrerBrique, roleAffiche } from '../../../testing/banc-de-brique';
+import {
+  enregistrerBrique,
+  noeudOmbre,
+  noeudsOmbre,
+  racineOmbre,
+  roleAffiche,
+} from '../../../testing/banc-de-brique';
 import { deuxImages } from '../../../testing/deux-images';
+import { figerLesHorloges, reculerLaPendule, UNE_HEURE_MS } from '../../../testing/horloge-simulee';
 import { compterLesAbonnesAuxPolices } from '../../../testing/polices';
 import { type EscapedHtml, safeHtml } from '../core/html';
 import { FpBlock } from './FpBlock';
@@ -67,9 +74,8 @@ describe('FpBlock', () => {
   });
 
   function figerLHorloge(): void {
+    figerLesHorloges(0);
     horlogeSimulee = jasmine.clock();
-    horlogeSimulee.install();
-    horlogeSimulee.mockDate(new Date(0));
   }
 
   function poserLaQuestionChronometree(): void {
@@ -91,20 +97,21 @@ describe('FpBlock', () => {
   }
 
   it('rend son unique rendu pour le role etudiant par defaut', () => {
-    expect(hote.shadowRoot?.querySelector('[data-testid="scene"]')).toBeTruthy();
-    expect(hote.shadowRoot?.querySelector('[data-testid="action"]')).toBeTruthy();
+    expect(noeudOmbre(hote, 'scene')).toBeTruthy();
+    expect(noeudOmbre(hote, 'action')).toBeTruthy();
   });
 
   it('rend le meme contenu au presentateur qu a l etudiant', () => {
-    const etudiant = hote.shadowRoot?.querySelector('.fp-root')?.innerHTML;
+    const etudiant = racineOmbre(hote)?.innerHTML;
+    expect(etudiant).toContain('data-testid="scene"');
     hote.setAttribute('data-cours-role', 'presentateur');
-    expect(hote.shadowRoot?.querySelector('.fp-root')?.innerHTML).toBe(etudiant);
+    expect(racineOmbre(hote)?.innerHTML).toBe(etudiant);
   });
 
   it('se rafraichit quand l hote change le role', () => {
-    const avant = hote.shadowRoot?.querySelector('.fp-root');
+    const avant = racineOmbre(hote);
     hote.setAttribute('data-cours-role', 'presentateur');
-    expect(hote.shadowRoot?.querySelector('.fp-root')).not.toBe(avant);
+    expect(racineOmbre(hote)).not.toBe(avant);
   });
 
   it('adopte les styles du design system', () => {
@@ -112,7 +119,7 @@ describe('FpBlock', () => {
   });
 
   it('pose la classe racine sur son conteneur', () => {
-    expect(hote.shadowRoot?.querySelector('.fp-root')).toBeTruthy();
+    expect(racineOmbre(hote)).toBeTruthy();
   });
 
   it('expose le role sur le conteneur', () => {
@@ -123,7 +130,7 @@ describe('FpBlock', () => {
 
   it('emet un evenement composed qui traverse le shadow DOM', (done) => {
     attendreLActionSurLeDocument(done);
-    hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="action"]')?.click();
+    noeudOmbre<HTMLButtonElement>(hote, 'action')?.click();
   });
 
   it('emet un evenement composed qui traverse une racine shadow englobante', (done) => {
@@ -135,7 +142,7 @@ describe('FpBlock', () => {
 
     attendreLActionSurLeDocument(done);
 
-    hoteImbrique.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="action"]')?.click();
+    noeudOmbre<HTMLButtonElement>(hoteImbrique, 'action')?.click();
   });
 
   it('lit le role reel pose par l hote sur data-cours-role', () => {
@@ -155,24 +162,22 @@ describe('FpBlock', () => {
   it('affiche le refus et le deja repondu que l hote reinjecte, puis les retire', () => {
     hote.erreur = 'Cet écran n’est pas encore ouvert';
     hote.dejaRepondu = true;
-    const racine = hote.shadowRoot;
 
-    expect(racine?.querySelector('[data-testid="erreur"]')?.getAttribute('role')).toBe('alert');
-    expect(racine?.querySelector('[data-testid="erreur"]')?.textContent).toContain('pas encore');
-    expect(racine?.querySelector('[data-testid="deja-repondu"]')?.textContent).toBe(
+    expect(noeudOmbre(hote, 'erreur')?.getAttribute('role')).toBe('alert');
+    expect(noeudOmbre(hote, 'erreur')?.textContent).toContain('pas encore');
+    expect(noeudOmbre(hote, 'deja-repondu')?.textContent).toBe(
       'Réponse déjà enregistrée : voici votre verdict',
     );
 
     hote.erreur = null;
     hote.dejaRepondu = false;
 
-    expect(racine?.querySelector('[data-testid="erreur"]')).toBeNull();
-    expect(racine?.querySelector('[data-testid="deja-repondu"]')).toBeNull();
+    expect(noeudOmbre(hote, 'erreur')).toBeNull();
+    expect(noeudOmbre(hote, 'deja-repondu')).toBeNull();
   });
 
   it('S-02 · affiche sous la brique les explications de correction révélées, et rien sans elles', () => {
-    const racine = hote.shadowRoot;
-    expect(racine?.querySelector('[data-testid="explications"]')).toBeNull();
+    expect(noeudOmbre(hote, 'explications')).toBeNull();
 
     hote.explications = [
       { reference: 'e1', texte: '140 400 ÷ 600 000 = 23,4 %.' },
@@ -180,7 +185,7 @@ describe('FpBlock', () => {
     ];
 
     expect(
-      [...(racine?.querySelectorAll('[data-testid="explication"]') ?? [])].map((explication) => [
+      noeudsOmbre(hote, 'explication').map((explication) => [
         explication.getAttribute('data-cle'),
         explication.textContent,
       ]),
@@ -188,12 +193,10 @@ describe('FpBlock', () => {
       ['e1', '140 400 ÷ 600 000 = 23,4 %.'],
       ['e2', '23,4 − 26,2 = −2,8 points.'],
     ]);
-    expect(racine?.querySelector('[data-testid="explications"]')?.textContent).toContain(
-      'Correction',
-    );
+    expect(noeudOmbre(hote, 'explications')?.textContent).toContain('Correction');
 
     hote.explications = [];
-    expect(racine?.querySelector('[data-testid="explications"]')).toBeNull();
+    expect(noeudOmbre(hote, 'explications')).toBeNull();
   });
 
   it('R-02 · passe a la ligne une formule insecable des explications plutot que de deborder de l encadre', () => {
@@ -205,15 +208,13 @@ describe('FpBlock', () => {
       },
     ];
 
-    const encadre = hote.shadowRoot?.querySelector<HTMLElement>('[data-testid="explications"]');
+    const encadre = noeudOmbre<HTMLElement>(hote, 'explications');
     expect(encadre?.scrollWidth).toBeLessThanOrEqual(encadre?.clientWidth ?? 0);
   });
 
   it('R-03 · range plusieurs explications sur deux colonnes d une toile large, dans l ordre de lecture, une seule pleine largeur', () => {
     const lignes = (): DOMRect[] =>
-      [...(hote.shadowRoot?.querySelectorAll('[data-testid="explication"]') ?? [])].map((ligne) =>
-        ligne.getBoundingClientRect(),
-      );
+      noeudsOmbre(hote, 'explication').map((ligne) => ligne.getBoundingClientRect());
     hote.style.cssText = 'display:block;width:1216px;';
     hote.explications = [{ reference: 'e1', texte: 'Ville mal écrite : on corrige par formule.' }];
     const [seule] = lignes();
@@ -236,13 +237,13 @@ describe('FpBlock', () => {
   });
 
   it('rend le foyer et la selection au champ saisi quand un rafraichissement le remplace', () => {
-    const champ = hote.shadowRoot?.querySelector<HTMLInputElement>('[data-testid="champ"]');
+    const champ = noeudOmbre<HTMLInputElement>(hote, 'champ');
     champ?.focus();
     champ?.setSelectionRange(2, 4);
 
     hote.dejaRepondu = true;
 
-    const remplacant = hote.shadowRoot?.querySelector<HTMLInputElement>('[data-testid="champ"]');
+    const remplacant = noeudOmbre<HTMLInputElement>(hote, 'champ');
     expect(remplacant).not.toBe(champ);
     expect(hote.shadowRoot?.activeElement).toBe(remplacant ?? null);
     expect([remplacant?.selectionStart, remplacant?.selectionEnd]).toEqual([2, 4]);
@@ -305,5 +306,20 @@ describe('FpBlock', () => {
     jasmine.clock().tick(300);
 
     expect(hote.depuisAffichage()).toBe(300);
+  });
+
+  it('compte zero et non une duree negative quand la mesure passe sous l instant d affichage', () => {
+    poserLaQuestionChronometree();
+    jasmine.clock().mockDate(new Date(-60_000));
+
+    expect(hote.depuisAffichage()).toBe(0);
+  });
+
+  it('garde le temps d affichage juste quand l horloge du poste recule d une heure', () => {
+    poserLaQuestionChronometree();
+    reculerLaPendule(UNE_HEURE_MS);
+    jasmine.clock().tick(300);
+
+    expect(hote.depuisAffichage()).toBe(8300);
   });
 });

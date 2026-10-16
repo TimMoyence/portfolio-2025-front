@@ -1,16 +1,10 @@
 import { evaluerExpression } from 'portfolio-2025-partage/formule';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
-import { lierLesNombres } from '../core/typographie';
+import { enFrancais, lierLesNombres } from '../core/typographie';
 import { bornerEntre } from '../core/valeurs';
 import { type Reglages, borner } from './animation';
-import {
-  type DefinitionReglable,
-  FpReglable,
-  arrondi,
-  copierLeReglable,
-  formater,
-} from './reglable';
+import { type DefinitionReglable, FpReglable, arrondi, copierLeReglable } from './reglable';
 import { plafondDe, plancherDe } from './curseurs';
 import { echelle, jalons } from './echelle';
 
@@ -222,20 +216,20 @@ export class FpPlot extends FpReglable<PlotDefinition> {
     if (this.interne?.unite === 'euros' && Number.isFinite(valeur)) {
       return EUROS.format(valeur);
     }
-    return formater(valeur);
+    return enFrancais(valeur);
   }
 
   private graduation(valeur: number): string {
     if (this.interne?.unite === 'euros' && Number.isFinite(valeur)) {
       return EUROS_COMPACTS.format(valeur);
     }
-    return formater(valeur);
+    return enFrancais(valeur);
   }
 
   private etiquette(abscisse: number): string {
     const definition = this.interne;
     const rang = abscisse - plancherDe(definition?.abscisse ?? { min: 0, max: 0 });
-    return definition?.etiquettes?.[rang] ?? formater(abscisse);
+    return definition?.etiquettes?.[rang] ?? enFrancais(abscisse);
   }
 
   private rendu(): EscapedHtml {
@@ -441,7 +435,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
   private graduationsHorizontales(cadre: Cadre): EscapedHtml[] {
     return jalons(cadre.depart, cadre.arrivee, GRADUATIONS).map(
       (valeur) =>
-        safeHtml`<text class="fp-plot__graduation" data-testid="graduation-x" text-anchor="middle" x="${arrondi(versX(cadre, valeur))}" y="${LIGNE_BASSE + DECALAGE_X}">${escapeHtml(formater(valeur))}</text>`,
+        safeHtml`<text class="fp-plot__graduation" data-testid="graduation-x" text-anchor="middle" x="${arrondi(versX(cadre, valeur))}" y="${LIGNE_BASSE + DECALAGE_X}">${escapeHtml(enFrancais(valeur))}</text>`,
     );
   }
 
@@ -491,7 +485,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
     const hauteurs = (derniere.ordonnee - plancher) / (premiere.ordonnee - plancher);
     const rapport =
       premiere.ordonnee > plancher && derniere.ordonnee >= plancher
-        ? `×${formater(hauteurs)}`
+        ? `×${enFrancais(hauteurs)}`
         : '—';
     return safeHtml`<p class="fp-plot__rapport" data-testid="rapport" aria-live="${escapeHtml(vivant ? 'polite' : 'off')}">${escapeHtml(this.texte('plot-rapport-hauteurs'))} ${escapeHtml(this.etiquette(derniere.abscisse))} ${escapeHtml(this.texte('plot-rapport-a'))} ${escapeHtml(this.etiquette(premiere.abscisse))} : <strong class="fp-plot__chiffre-cle" data-testid="rapport-hauteurs">${escapeHtml(rapport)}</strong>${this.evolutionReelle(premiere.ordonnee, derniere.ordonnee)}</p>`;
   }
@@ -509,7 +503,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
     if (this.enBarres() && definition?.etiquettes !== undefined) {
       return this.etiquette(abscisse);
     }
-    return `${definition?.abscisse.libelle ?? ''} = ${formater(abscisse)}`;
+    return `${definition?.abscisse.libelle ?? ''} = ${enFrancais(abscisse)}`;
   }
 
   private legende(tracees: readonly SerieTracee[]): EscapedHtml {
@@ -596,7 +590,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
       .join(' ; ');
     const entete = this.enteteAbscisse(plafondDe(definition.abscisse));
     const ecart = this.ecartFinal(tracees);
-    const fin = ecart === null ? '' : ` ${this.texte('plot-ecart')} ${formater(ecart)}`;
+    const fin = ecart === null ? '' : ` ${this.texte('plot-ecart')} ${enFrancais(ecart)}`;
     return `${entete} — ${arrivees} (${definition.ordonnee}).${fin}`;
   }
 

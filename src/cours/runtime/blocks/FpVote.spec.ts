@@ -7,6 +7,7 @@ import {
   roleAffiche,
 } from '../../../testing/banc-de-brique';
 import { classesOrphelines } from '../../../testing/classes-briques';
+import { figerLesHorloges, reculerLaPendule, UNE_HEURE_MS } from '../../../testing/horloge-simulee';
 import { FpVote } from './FpVote';
 
 const QUESTION = buildVoteQuestion();
@@ -62,10 +63,9 @@ function voteProjete(histogramme: Element): string | null {
   return histogramme.getAttribute('data-vote');
 }
 
-function mesurerDuree(lectureMs: number, rendus: number): number | undefined {
-  jasmine.clock().install();
+function mesurerDuree(lectureMs: number, rendus: number, reculMs = 0): number | undefined {
+  figerLesHorloges('2026-09-11T08:00:00.000Z');
   try {
-    jasmine.clock().mockDate(new Date('2026-09-11T08:00:00.000Z'));
     const element = document.createElement('fp-vote') as FpVote;
     element.question = QUESTION;
     document.body.appendChild(element);
@@ -74,6 +74,7 @@ function mesurerDuree(lectureMs: number, rendus: number): number | undefined {
       durees.push((evenement as CustomEvent).detail.dureeMs);
     });
     jasmine.clock().tick(lectureMs);
+    reculerLaPendule(reculMs);
     for (let index = 1; index <= rendus; index += 1) {
       element.resultats = { total: index, parOption: { a: index } };
     }
@@ -193,6 +194,12 @@ describe('FpVote', () => {
       expect(mesurerDuree(cas.lecture, cas.rendus)).toBe(cas.attendu);
     });
   }
+
+  it('compte un vote sur le temps reellement ecoule, meme si l horloge du poste recule d une heure', () => {
+    const recule = mesurerDuree(6000, 1, UNE_HEURE_MS);
+
+    expect(recule).toBe(6300);
+  });
 
   it('verrouille les options apres le vote et l annonce dans la region live', () => {
     options(hote)[0].click();

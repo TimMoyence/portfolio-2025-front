@@ -20,6 +20,7 @@ import {
   createAuditRequestPortStub,
 } from '../../../testing/factories/audit-request.factory';
 import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
+import { champsAntiRobotDeChaqueSaisie, SAISIES_MESUREES } from '../../../testing/saisies-mesurees';
 
 function buildValidForm(): NgForm {
   return jasmine.createSpyObj<NgForm>('NgForm', ['resetForm'], {
@@ -260,6 +261,23 @@ describe('GrowthAuditComponent', () => {
     });
   });
 
+  it('bascule le moyen de contact au fil de la case du téléphone', () => {
+    const fixture = TestBed.createComponent(GrowthAuditComponent);
+    fixture.detectChanges();
+    const bascule = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>(
+      'input[type="checkbox"]:not([name="rgpdConsent"])',
+    );
+
+    bascule?.click();
+    const apresLaCoche = fixture.componentInstance.auditFormState.contactMethod;
+    bascule?.click();
+
+    expect([apresLaCoche, fixture.componentInstance.auditFormState.contactMethod]).toEqual([
+      'PHONE',
+      'EMAIL',
+    ]);
+  });
+
   it('exposes the seven report pillars in the public offer', () => {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
     const component = fixture.componentInstance;
@@ -299,7 +317,6 @@ describe('GrowthAuditComponent', () => {
       const vierge = fixture.componentInstance.auditFormState;
       expect(vierge).toEqual({
         website: '',
-        formStartedAt: jasmine.any(Number),
         websiteName: '',
         contactMethod: 'EMAIL',
         contactValue: '',
@@ -308,29 +325,34 @@ describe('GrowthAuditComponent', () => {
       expect(form.resetForm).toHaveBeenCalledWith(vierge);
     });
 
-    for (const error of [null, 'connect ECONNREFUSED 10.0.0.5:5432']) {
-      it(`affiche le message générique d un audit échoué sans lire le texte d erreur servi (${error}), et efface la chronologie`, () => {
-        const { component } = soumettreEtDiffuser(buildAuditFailedEvent({ error }), 'audit-5');
+    it('envoie la durée de chaque saisie, mesurée sur l horloge monotone, sans heure de début', () => {
+      expect(
+        champsAntiRobotDeChaqueSaisie(
+          GrowthAuditComponent,
+          (composant) => remplirEtSoumettre(composant, true),
+          auditServiceMock.submit,
+        ),
+      ).toEqual(SAISIES_MESUREES);
+    });
+
+    for (const [cas, evenement, message] of [
+      ['le message générique d un audit échoué', buildAuditFailedEvent(), "L'audit a échoué."],
+      [
+        'la connexion interrompue sur un délai dépassé',
+        buildAuditTimeoutEvent(),
+        "Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.",
+      ],
+    ] as const) {
+      it(`affiche ${cas}, efface la chronologie, sans relire le résumé ni rouvrir le flux`, () => {
+        const { component } = soumettreEtDiffuser(evenement, 'audit-5');
 
         expect(component.isAuditRunning).toBeFalse();
-        expect(component.errorMessage).toBe("L'audit a échoué.");
+        expect(component.errorMessage).toBe(message);
         expect(component.auditSectionBadges).toEqual([]);
+        expect(auditServiceMock.stream).toHaveBeenCalledTimes(1);
+        expect(auditServiceMock.getSummary).not.toHaveBeenCalled();
       });
     }
-
-    it('affiche la connexion interrompue sur un délai dépassé, sans relire le résumé ni rouvrir le flux', () => {
-      const { component } = soumettreEtDiffuser(
-        buildAuditTimeoutEvent({ error: 'SSE stream closed after 1800000ms' }),
-        'audit-6',
-      );
-
-      expect(component.isAuditRunning).toBeFalse();
-      expect(component.errorMessage).toContain('Connexion interrompue pendant l');
-      expect(component.errorMessage).not.toContain('SSE');
-      expect(component.auditSectionBadges).toEqual([]);
-      expect(auditServiceMock.stream).toHaveBeenCalledTimes(1);
-      expect(auditServiceMock.getSummary).not.toHaveBeenCalled();
-    });
 
     it('reprend un audit termine depuis le resume quand le flux tombe', () => {
       auditServiceMock.getSummary.and.returnValue(

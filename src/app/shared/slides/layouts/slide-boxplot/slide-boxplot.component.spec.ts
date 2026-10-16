@@ -69,6 +69,14 @@ describe('SlideBoxplotComponent', () => {
     expect(racine.querySelectorAll('[data-testid="slide-boxplot-moyenne"]').length).toBe(1);
   });
 
+  it('L4-F11 · ecrit un tiret dans le tableau des valeurs quand la moyenne manque', () => {
+    const racine = monter({ series: [DELAIS_2024, { ...DELAIS_2025, mean: undefined }] });
+    const moyennes = Array.from(racine.querySelectorAll('tbody tr'), (ligne) =>
+      ligne.lastElementChild?.textContent?.trim(),
+    );
+    expect(moyennes).toEqual(['48,23', '—']);
+  });
+
   it('gradue l axe avec un pas rond et des nombres a la francaise', () => {
     const racine = monter({ axisRange: [1400, 6400] });
     const graduations = Array.from(

@@ -6,6 +6,7 @@ import type {
 } from '../../../../cours/content/types';
 import { rappelEcritAvantLesOptions } from '../../../../cours/runtime/blocks/FpRecall';
 import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
+import type { CibleRevelee } from '../../../../cours/runtime/blocks/retours';
 import {
   cleDeCellule,
   enonceDeCellule,
@@ -94,9 +95,7 @@ const CHAMP_ENONCE: Readonly<Record<string, string>> = {
 
 export interface ReponsesDuQuestionnaire {
   readonly type: 'reponses';
-  readonly reponses: Readonly<
-    Record<string, { readonly cible: string; readonly optionId: string | null }>
-  >;
+  readonly reponses: Readonly<Record<string, CibleRevelee>>;
 }
 
 export type RevelationDuVote = Extract<CorrigeEcranPresentateur, { readonly type: 'revelation' }> &
@@ -311,6 +310,13 @@ export function ecransDesIdentifiants(cours: CoursContent): ReadonlyMap<string, 
     }
   }
   return ecrans;
+}
+
+export function ecranDIdentifiant<T extends EcranContent>(
+  ecrans: readonly T[],
+  id: string | undefined,
+): T | undefined {
+  return ecrans.find((ecran) => ecran.id === id);
 }
 
 export function ecranDuRappel(cours: CoursContent): string | null {

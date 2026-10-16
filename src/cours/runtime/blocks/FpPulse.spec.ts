@@ -214,6 +214,15 @@ describe('FpPulse', () => {
     expect(presses(hote)).toEqual(['clair']);
   });
 
+  it('L4-F20 · annonce a l etudiant l etat restaure, et rien pour un brouillon illisible', () => {
+    hote.brouillon = { etat: 'inconnu' };
+    expect(hote.shadowRoot?.querySelector('[data-testid="brouillon-restaure"]')).toBeNull();
+
+    hote.brouillon = { etat: 'clair' };
+    expect(presses(hote)).toEqual(['clair']);
+    expect(texteOmbre(hote, 'brouillon-restaure')).toBe('Brouillon restauré');
+  });
+
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
     hote.comptes = COMPTES;
     declarer(hote, 'clair');

@@ -11,7 +11,6 @@ import type {
   PilotageEcran,
   ProgressionEnigme,
   ResultatQuestion,
-  ResultatsEnDirect,
   ResumeBareme,
   Tolerance,
   TypeQuestion,
@@ -36,6 +35,7 @@ import type {
   VotePublic,
   WorkedExemple,
 } from '../../../../cours/runtime/blocks/donnees-publiques';
+import type { ResultatsDuFlux } from '../../../../cours/runtime/core/sync';
 import {
   COLONNE_COEFFICIENT_TOILE,
   buildConcept4Definition,
@@ -163,7 +163,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
           } satisfies ProgressionEnigme,
         ],
         bareme: buildResumeBareme() satisfies ResumeBareme,
-      } satisfies ResultatsEnDirect;
+      } satisfies ResultatsDuFlux;
       const types: TypeQuestion[] = Object.keys(enDirect.bareme.parType) as TypeQuestion[];
 
       expect([...types].sort((a, b) => a.localeCompare(b))).toEqual([

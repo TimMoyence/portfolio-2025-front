@@ -14,13 +14,14 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { LOCALES_DU_SITE, langueDuSite } from '../../../core/config/locales';
 import { cheminEnLocale } from '../../../core/seo/chemins';
 import { BreakpointService } from '../../../core/services/breakpoint.service';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import type { DropdownSection, NavLink } from '../../models/navbar.model';
 import { A11yDialogService } from '../../services/a11y-dialog.service';
+import { initialeDe } from '../../utils/initiale.utils';
 import { SvgIconComponent } from '../svg-icon.component';
 
 @Component({
@@ -93,15 +94,11 @@ export class NavbarComponent {
   readonly openMenuIconLabel = $localize`:navbar.menu.icon.open|Icon label@@navMenuOpenIcon:Ouvrir le menu`;
   readonly currentLocale = inject(LOCALE_ID);
   readonly authState = inject(AuthStateService);
-  private readonly router = inject(Router);
   private readonly breakpointService = inject(BreakpointService);
 
   readonly userInitials = computed(() => {
     const user = this.authState.user();
-    if (!user?.firstName && !user?.lastName) return '';
-    const first = (user.firstName ?? '').charAt(0).toUpperCase();
-    const last = (user.lastName ?? '').charAt(0).toUpperCase();
-    return `${first}${last}`;
+    return `${initialeDe(user?.firstName)}${initialeDe(user?.lastName)}`;
   });
 
   readonly avatarColor = computed(() => {
@@ -188,9 +185,8 @@ export class NavbarComponent {
 
   logout(): void {
     this.closeUserDropdown();
-    this.authState.logout();
     this.closeMobileMenu();
-    void this.router.navigate(['/']);
+    this.authState.logoutEtAccueil();
   }
 
   toggleUserDropdown(): void {

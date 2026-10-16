@@ -1,16 +1,11 @@
-import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom } from 'rxjs';
-import { buildAppConfig } from '../../../../../testing/factories/app-config.factory';
 import { buildVisualCourse } from '../../../../../testing/factories/formation-catalogue.factory';
 import { buildVisualChartSlide } from '../../../../../testing/factories/visual-slide.factory';
 import { GRAPHIQUE_MARGE_BRUTE } from '../../../../../testing/fixtures/graphique-marge-brute';
 import { setupTestBed } from '../../../../../testing/setup-test-bed';
 import { textes } from '../../../../../testing/textes-dom';
-import { FormationCatalogueHttpAdapter } from '../../../../core/adapters/formation-catalogue-http.adapter';
+import { catalogueServi } from '../../../../core/adapters/formations-schemas';
 import { SlideActivityComponent } from '../../session/slide-activity.component';
-
-const SLUG = 'b2-01-traitement-information-chiffree';
 
 const G1 = {
   ...GRAPHIQUE_MARGE_BRUTE,
@@ -19,21 +14,12 @@ const G1 = {
 };
 
 describe('Graphique v2 servi par le catalogue (F13, intégration)', () => {
-  it('rend G1 depuis la réponse HTTP réelle de /formations/catalogue/:slug', async () => {
-    setupTestBed({
-      router: true,
-      imports: [SlideActivityComponent],
-      providers: [FormationCatalogueHttpAdapter],
-    });
-    const httpMock = TestBed.inject(HttpTestingController);
-    const lecture = firstValueFrom(TestBed.inject(FormationCatalogueHttpAdapter).lire(SLUG));
-
-    const requete = httpMock.expectOne(
-      `${buildAppConfig().apiBaseUrl}/formations/catalogue/${SLUG}`,
+  it('rend G1 depuis la réponse de /formations/catalogue/:slug lue par le contrat du front', () => {
+    setupTestBed({ router: true, imports: [SlideActivityComponent] });
+    const reponse: unknown = JSON.parse(
+      JSON.stringify(buildVisualCourse({ ecrans: [buildVisualChartSlide(G1)] })),
     );
-    expect(requete.request.method).toBe('GET');
-    requete.flush(buildVisualCourse({ ecrans: [buildVisualChartSlide(G1)] }));
-    const [ecran] = (await lecture).ecrans;
+    const [ecran] = catalogueServi.parse(reponse).ecrans;
 
     const fixture = TestBed.createComponent(SlideActivityComponent);
     fixture.componentRef.setInput('slide', ecran);
@@ -68,6 +54,5 @@ describe('Graphique v2 servi par le catalogue (F13, intégration)', () => {
       '289 800',
       '291 000',
     ]);
-    httpMock.verify();
   });
 });

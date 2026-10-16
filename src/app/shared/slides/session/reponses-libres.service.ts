@@ -4,7 +4,12 @@ import type {
   MotifRefusReponseLibre,
   ReponseLibreEtudiant,
 } from '../../../core/ports/formations.port';
-import { FORMATIONS_PORT, ReponseLibreRefusee } from '../../../core/ports/formations.port';
+import { type LimiteDeDebit, messageDeLaLimite } from '../../../core/models/limite-de-debit';
+import {
+  FORMATIONS_PORT,
+  limiteDuRefus,
+  ReponseLibreRefusee,
+} from '../../../core/ports/formations.port';
 import type { EtatParticipant } from '../../../../cours/content/types';
 import { readIdentity } from '../../../../cours/runtime/core/identity';
 import type { PendingFreeResponse } from '../interactions/slide-reflection/free-response.queue';
@@ -17,6 +22,7 @@ import {
 export type EtatEnvoiLibre =
   | 'enregistre'
   | 'attente_reseau'
+  | 'attente_limite'
   | 'ecran_non_servi'
   | 'seance_non_demarree'
   | 'seance_terminee'
@@ -35,7 +41,12 @@ export function cleDeReponseLibre(sessionId: string, screenId: string, activityI
   return `${sessionId}:${screenId}:${activityId}`;
 }
 
-const ETATS_GARDES: readonly EtatEnvoiLibre[] = ['enregistre', 'attente_reseau', 'ecran_non_servi'];
+const ETATS_GARDES: readonly EtatEnvoiLibre[] = [
+  'enregistre',
+  'attente_reseau',
+  'attente_limite',
+  'ecran_non_servi',
+];
 
 function cleDeTexteGarde(sessionId: string, activityId: string): string {
   return `${sessionId}:${activityId}`;
@@ -57,6 +68,13 @@ export class ReponsesLibresService {
 
   readonly etatsDesEnvois = this.etats.asReadonly();
 
+  private readonly limites = signal<ReadonlyMap<string, LimiteDeDebit>>(new Map());
+
+  limiteDe(cleLogique: string): string | null {
+    const limite = this.limites().get(cleLogique);
+    return limite === undefined ? null : messageDeLaLimite(limite);
+  }
+
   texteGarde(sessionId: string, activityId: string): string | null {
     return this.gardes().get(cleDeTexteGarde(sessionId, activityId)) ?? null;
   }
@@ -75,7 +93,15 @@ export class ReponsesLibresService {
   }
 
   private noter(envoi: PendingFreeResponse, etat: EtatEnvoiLibre): EtatEnvoiLibre {
-    this.etats.update((connus) => new Map(connus).set(cleLogiqueDe(envoi), etat));
+    const cleLogique = cleLogiqueDe(envoi);
+    this.etats.update((connus) => new Map(connus).set(cleLogique, etat));
+    if (etat !== 'attente_limite') {
+      this.limites.update((connues) => {
+        const suivantes = new Map(connues);
+        suivantes.delete(cleLogique);
+        return suivantes;
+      });
+    }
     const cle = cleDeTexteGarde(envoi.sessionId, envoi.activityId);
     this.gardes.update((connus) => {
       const suivants = new Map(connus);
@@ -161,9 +187,14 @@ export class ReponsesLibresService {
     }
     try {
       await enqueueFreeResponse(envoi);
-      return motif === 'reseau' ? 'attente_reseau' : 'ecran_non_servi';
     } catch {
       return 'echec';
     }
+    const limite = limiteDuRefus(erreur);
+    if (limite !== null) {
+      this.limites.update((connues) => new Map(connues).set(cleLogiqueDe(envoi), limite));
+      return 'attente_limite';
+    }
+    return motif === 'reseau' ? 'attente_reseau' : 'ecran_non_servi';
   }
 }

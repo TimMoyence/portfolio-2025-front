@@ -2,7 +2,9 @@ import type { ExplicationServie, Role } from '../../content/types';
 import { adoptCoursStyles } from '../design/sheet';
 import { texte as traduire } from '../core/i18n';
 import { suivreLesDefileurs } from '../core/defileur';
+import { dureeMonotoneDepuis, instantMonotone } from '../core/duree';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { avecUnite } from '../core/valeurs';
 import { suivreLesZonesDeSaisie } from '../core/zone-de-saisie';
 import type { DetailDeVerdict, VerdictDeProduction, VerdictDeReponse } from './retours';
 
@@ -173,7 +175,7 @@ export abstract class FpBlock extends HTMLElement {
   suivreAffichage(id: string | null): void {
     if (id !== this.idAffiche) {
       this.idAffiche = id;
-      this.affiche = Date.now();
+      this.affiche = instantMonotone();
     }
   }
 
@@ -183,7 +185,7 @@ export abstract class FpBlock extends HTMLElement {
   }
 
   depuisAffichage(): number {
-    return Date.now() - this.affiche;
+    return dureeMonotoneDepuis(this.affiche);
   }
 
   refresh(): void {
@@ -301,12 +303,26 @@ export abstract class FpBlock extends HTMLElement {
     if (verdict.neSaitPas) {
       return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict"><strong>${escapeHtml(this.texte('verdict-ne-sait-pas'))}</strong></p>`;
     }
-    const pourcentage = Math.round(verdict.score * 100);
-    return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict" data-etat="${escapeHtml(verdict.correcte ? 'confirme' : 'a-revoir')}"><strong>${escapeHtml(this.texte(verdict.correcte ? 'verdict-juste' : 'verdict-a-revoir'))}</strong> <span data-testid="decompte">${escapeHtml(this.texte(cleDuDecompte))} ${justes}/${total}</span> <span data-testid="score">${escapeHtml(this.texte('verdict-score'))} ${pourcentage} %</span></p>`;
+    const pourcentage = avecUnite(Math.round(verdict.score * 100), '%');
+    return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict" data-etat="${escapeHtml(verdict.correcte ? 'confirme' : 'a-revoir')}"><strong>${escapeHtml(this.texte(verdict.correcte ? 'verdict-juste' : 'verdict-a-revoir'))}</strong> <span data-testid="decompte">${escapeHtml(this.texte(cleDuDecompte))} ${justes}/${total}</span> <span data-testid="score">${escapeHtml(this.texte('verdict-score'))} ${escapeHtml(pourcentage)}</span></p>`;
   }
 
   protected boutonNeSaitPas(desactive: boolean): EscapedHtml {
     return safeHtml`<button type="button" class="fp-bouton-neutre" data-testid="je-ne-sais-pas" ${desactive ? DESACTIVE : VIDE}>${escapeHtml(this.texte('je-ne-sais-pas'))}</button>`;
+  }
+
+  protected brancherLesBoutons(
+    racine: ShadowRoot,
+    selecteur: string,
+    verrouille: boolean,
+    agir: (bouton: HTMLButtonElement) => void,
+  ): void {
+    for (const bouton of racine.querySelectorAll<HTMLButtonElement>(selecteur)) {
+      bouton.disabled = verrouille;
+      if (!verrouille) {
+        bouton.addEventListener('click', () => agir(bouton));
+      }
+    }
   }
 
   private signalerErreur(erreur: unknown): void {

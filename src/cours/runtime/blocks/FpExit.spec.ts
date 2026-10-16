@@ -162,6 +162,11 @@ describe('FpExit', () => {
     envoyer(hote);
     expect(details.length).toBe(1);
     expect(champLibre(hote).disabled).toBe(true);
+    expect(
+      [...(hote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-option]') ?? [])].map(
+        (option) => option.disabled,
+      ),
+    ).toEqual(BILLET.options.map(() => true));
     expect(texteOmbre(hote, 'retour')).toBe('Réponse enregistrée');
   });
 
@@ -223,6 +228,17 @@ describe('FpExit', () => {
       rechargee.shadowRoot?.querySelector('[data-option="c"]')?.getAttribute('aria-pressed'),
     ).toBe('true');
     rechargee.remove();
+  });
+
+  it('L4-F20 · ignore un brouillon arrive apres l envoi du billet', () => {
+    choisir(hote, 'a');
+    ecrire(hote, TEXTE_COURT);
+    envoyer(hote);
+    hote.brouillon = { texteLibre: 'un autre texte', choix: 'c' };
+
+    expect(champLibre(hote).value).toBe(TEXTE_COURT);
+    expect(attributDOption(hote, 'a', 'aria-pressed')).toBe('true');
+    expect(hote.shadowRoot?.querySelector('[data-testid="brouillon-restaure"]')).toBeNull();
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {

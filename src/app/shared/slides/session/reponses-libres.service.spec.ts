@@ -12,6 +12,7 @@ const cleCourante = (): string => readIdentity()?.studentKey ?? '';
 
 const SESSION = 'seance-libres-1';
 const JETON = 'jeton-participant';
+const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
 const REPONSE = {
   screenId: 'b2-01-sortie',
   activityId: 'B-SORTIE-09',
@@ -79,6 +80,20 @@ describe('ReponsesLibresService', () => {
 
     expect(await service.envoyer(SESSION, JETON, REPONSE)).toBe('attente_reseau');
     await attendreLaRepriseEnregistree(SESSION);
+  });
+
+  it('garde en file un texte limite par la cadence du serveur, dit l attente commune, puis le renvoie a la reprise', async () => {
+    const seance = `${SESSION}-limite`;
+    const cle = cleDeReponseLibre(seance, REPONSE.screenId, REPONSE.activityId);
+    port.enregistrerReponseLibre.and.returnValue(
+      throwError(() => new ReponseLibreRefusee('reseau', 429, { minutes: 2 })),
+    );
+
+    expect(await service.envoyer(seance, JETON, REPONSE)).toBe('attente_limite');
+    expect(service.limiteDe(cle)).toBe(ATTENTE_COMMUNE);
+
+    await attendreLaRepriseEnregistree(seance);
+    expect(service.limiteDe(cle)).toBeNull();
   });
 
   async function attendreLaRepriseEnregistree(seance: string): Promise<void> {

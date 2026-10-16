@@ -22,7 +22,7 @@
         [placeholder]="r.placeholder || ''"
         [value]="garde() ?? value()"
         [readOnly]="garde() !== null"
-        (input)="onInput($any($event.target).value)"
+        (input)="onInput($event)"
       ></textarea>
       @if (mode() === 'apercu') {
         <p
@@ -63,6 +63,9 @@
               >En attente de réseau : la réflexion est gardée sur cet appareil et partira au retour
               de la connexion.</span
             >
+          }
+          @case ('attente_limite') {
+            <span>{{ limite() }}</span>
           }
           @case ('ecran_non_servi') {
             <span i18n="@@slideReflectionEcranNonServi"

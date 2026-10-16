@@ -154,6 +154,23 @@ describe('FpSpaced', () => {
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
   });
 
+  it('L4-F14 · écrit la bonne réponse du bilan avec la phrase commune, sur sa ligne et sans encadré', () => {
+    hote.questions = DUES;
+    hote.corrige = {
+      type: 'reponses',
+      reponses: { [DUES[1].questionId]: { cible: 'Non', optionId: 'van-a' } },
+    };
+
+    const bonnes = noeuds(hote, 'bonne-reponse');
+    expect(bonnes.length).toBe(1);
+    expect(bonnes[0].closest('[data-testid="ligne"]')?.getAttribute('data-question')).toBe(
+      DUES[1].questionId,
+    );
+    expect(bonnes[0].className).toBe('fp-spaced__bonne');
+    expect(bonnes[0].hasAttribute('data-etat')).toBeFalse();
+    expect(bonnes[0].textContent).toBe('Bonne réponse : Non, il detruit de la valeur');
+  });
+
   it('T9 · sans revelation, ne montre aucune bonne reponse et garde les options', () => {
     hote.questions = DUES;
     hote.corrige = null;

@@ -9,6 +9,7 @@ import {
   signal,
   output,
 } from '@angular/core';
+import { dureeMonotoneDepuis, instantMonotone } from '../../../../../cours/runtime/core/duree';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import { chargerInteraction } from '../interactions.util';
 import type { ModeInteraction } from '../mode-interaction';
@@ -61,7 +62,7 @@ export class SlideQuizComponent implements OnInit {
 
   private readonly port = inject(PRESENTATION_PORT, { optional: true });
   private readonly destroyRef = inject(DestroyRef);
-  private readonly startedAt = Date.now();
+  private readonly startedAt = instantMonotone();
 
   ngOnInit(): void {
     this.load();
@@ -77,7 +78,7 @@ export class SlideQuizComponent implements OnInit {
       this.selection.emit({
         questionId: quiz.id,
         valeur: `o${index + 1}`,
-        dureeMs: Math.max(0, Date.now() - this.startedAt),
+        dureeMs: dureeMonotoneDepuis(this.startedAt),
       });
     }
   }

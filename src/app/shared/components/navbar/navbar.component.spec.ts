@@ -3,7 +3,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { type EnvironmentProviders, LOCALE_ID, PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { throwError } from 'rxjs';
 import { AUTH_PORT } from '../../../core/ports/auth.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
@@ -12,6 +12,7 @@ import {
   buildAuthUser,
   createAuthPortStub,
 } from '../../../../testing/factories/auth.factory';
+import { fournirLaRoute } from '../../../../testing/factories/route.factory';
 import { NavbarComponent } from './navbar.component';
 
 async function monterLaNavbar(
@@ -25,7 +26,7 @@ async function monterLaNavbar(
       { provide: PLATFORM_ID, useValue: plateforme },
       { provide: LOCALE_ID, useValue: 'fr' },
       ...routeur,
-      { provide: ActivatedRoute, useValue: {} },
+      fournirLaRoute(),
       provideHttpClient(withInterceptorsFromDi()),
       provideHttpClientTesting(),
       { provide: AUTH_PORT, useValue: authPort },
@@ -147,6 +148,15 @@ describe('NavbarComponent', () => {
 
       const userMenuBtn = nav.querySelector('button[aria-label="Menu utilisateur"]');
       expect(userMenuBtn).toBeTruthy();
+    });
+
+    it('compose les initiales du prenom et du nom sans leurs blancs', () => {
+      const authState = TestBed.inject(AuthStateService);
+      authState.login(
+        buildAuthSession({ user: buildAuthUser({ firstName: '  tim', lastName: ' test' }) }),
+      );
+
+      expect(component.userInitials()).toBe('TT');
     });
 
     describe('defilement vers une ancre', () => {

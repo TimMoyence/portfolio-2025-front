@@ -1,4 +1,5 @@
 import type { EcranContent, Role } from '../../../../cours/content/types';
+import { noeudsOmbre } from '../../../../testing/banc-de-brique';
 import {
   DELAI_DE_MONTAGE_MS,
   monterEcran,
@@ -25,9 +26,10 @@ async function comptesDesColonnes(
   revelation: RevelationDuPupitre | null = null,
 ): Promise<readonly number[]> {
   const monte = await monterEcran(ecran, role, revelation);
-  const comptes = [
-    ...(monte.montees()[0]?.shadowRoot?.querySelectorAll('[data-testid="compte"]') ?? []),
-  ].map((compte) => Number(compte.textContent));
+  const [brique] = monte.montees();
+  const comptes = (brique instanceof HTMLElement ? noeudsOmbre(brique, 'compte') : []).map(
+    (compte) => Number(compte.textContent),
+  );
 
   expect(monte.erreurs).withContext(`${ecran.id} en ${role}`).toEqual([]);
   monte.detruire();

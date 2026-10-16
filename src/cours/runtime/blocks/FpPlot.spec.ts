@@ -4,10 +4,12 @@ import { buildPlotDefinition, buildPlotEnBarres } from '../../../testing/factori
 import {
   animer,
   attendreLeParametreEchappe,
+  attendreLeTroisiemeCranEmisSansArrondi,
   attendreParametresAnnonces,
   decrireLaSobrieteDUneBriqueReglable,
   emisAuPupitre,
   jouerAuPupitre,
+  PARAMETRE_A_PAS_DECIMAL,
   relacherCurseur,
 } from '../../../testing/reglages-briques';
 import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
@@ -29,6 +31,7 @@ const CLASSES_ATTENDUES = 27;
 const GRADUATIONS_ATTENDUES = 5;
 const ECHANTILLONS_ATTENDUS = 25;
 const SEPT_CHIFFRES = 5_000_000;
+const ESPACE_FINE = ' ';
 
 function lineaire(): PlotDefinition {
   return buildPlotDefinition({
@@ -51,7 +54,7 @@ function texteDe(hote: FpPlot, nom: string): string {
   return repere(hote, nom)?.textContent?.trim() ?? '';
 }
 
-function textesDe(hote: FpPlot, nom: string): string[] {
+function textesDesReperes(hote: FpPlot, nom: string): string[] {
   return reperes(hote, nom).map((noeud) => noeud.textContent?.trim() ?? '');
 }
 
@@ -136,7 +139,7 @@ describe('FpPlot', () => {
   it('distingue les deux series par le trait et par une legende en toutes lettres', () => {
     const traits = reperes(hote, 'trace').map((trace) => trace.getAttribute('data-trait'));
     expect(traits).toEqual(['plein', 'tirets']);
-    expect(textesDe(hote, 'serie')).toEqual([
+    expect(textesDesReperes(hote, 'serie')).toEqual([
       'Interets composes — trait plein',
       'Interets simples — trait en pointillés',
     ]);
@@ -146,10 +149,12 @@ describe('FpPlot', () => {
   });
 
   it('gradue les deux axes avec des reperes chiffres lisibles', () => {
-    expect(textesDe(hote, 'graduation-x')).toEqual(['0', '5', '10', '15', '20']);
-    expect(textesDe(hote, 'graduation-y').length).toBe(GRADUATIONS_ATTENDUES);
-    expect(textesDe(hote, 'graduation-y')[0]).toBe('1000');
-    expect(textesDe(hote, 'graduation-y')[GRADUATIONS_ATTENDUES - 1]).toBe('2191,12');
+    expect(textesDesReperes(hote, 'graduation-x')).toEqual(['0', '5', '10', '15', '20']);
+    expect(textesDesReperes(hote, 'graduation-y').length).toBe(GRADUATIONS_ATTENDUES);
+    expect(textesDesReperes(hote, 'graduation-y')[0]).toBe(`1${ESPACE_FINE}000`);
+    expect(textesDesReperes(hote, 'graduation-y')[GRADUATIONS_ATTENDUES - 1]).toBe(
+      `2${ESPACE_FINE}191,12`,
+    );
   });
 
   it('rend une definition sans aucune serie sans casser la figure', () => {
@@ -168,7 +173,7 @@ describe('FpPlot', () => {
     });
     expect(reperes(hote, 'trace')).toEqual([]);
     expect(reperes(hote, 'ligne').length).toBe(1);
-    expect(textesDe(hote, 'arrivee')).toEqual(['—']);
+    expect(textesDesReperes(hote, 'arrivee')).toEqual(['—']);
     expect(texteDe(hote, 'vide')).toContain('Aucune courbe');
   });
 
@@ -189,7 +194,7 @@ describe('FpPlot', () => {
     });
     expect(tousLesPoints(hote).length).toBe(ECHANTILLONS_ATTENDUS * 2);
     expect(horsZoneDeTrace(hote)).toEqual([]);
-    expect(texteDe(hote, 'arrivee')).toBe('33637499,75');
+    expect(texteDe(hote, 'arrivee')).toBe(`33${ESPACE_FINE}637${ESPACE_FINE}499,75`);
   });
 
   it('decrit le graphique par un titre et une description pour un lecteur d ecran', () => {
@@ -215,8 +220,11 @@ describe('FpPlot', () => {
   });
 
   it('donne les valeurs cles en tableau equivalent a la courbe', () => {
-    expect(textesDe(hote, 'depart')).toEqual(['1000', '1000']);
-    expect(textesDe(hote, 'arrivee')).toEqual(['2191,12', '1800']);
+    expect(textesDesReperes(hote, 'depart')).toEqual([`1${ESPACE_FINE}000`, `1${ESPACE_FINE}000`]);
+    expect(textesDesReperes(hote, 'arrivee')).toEqual([
+      `2${ESPACE_FINE}191,12`,
+      `1${ESPACE_FINE}800`,
+    ]);
     expect(texteDe(hote, 'synthese')).toContain('Écart entre les deux courbes : 391,12');
   });
 
@@ -239,9 +247,9 @@ describe('FpPlot', () => {
       series: [{ id: 'serie', libelle: 'Série', trait: 'plein', calcul: '100 + x * 2' }],
     });
 
-    const avant = textesDe(hote, 'graduation-y');
+    const avant = textesDesReperes(hote, 'graduation-y');
     animer(hote);
-    const apres = textesDe(hote, 'graduation-y');
+    const apres = textesDesReperes(hote, 'graduation-y');
 
     expect(avant[0]).toBe('0');
     expect(apres).not.toEqual(avant);
@@ -255,11 +263,15 @@ describe('FpPlot', () => {
       ),
     });
     expect(hote.valeurs['C']).toBe(5000);
-    expect(valeurAffichee(hote, 'C')).toBe('5000');
+    expect(valeurAffichee(hote, 'C')).toBe(`5${ESPACE_FINE}000`);
   });
 
   it('annonce chaque parametre en francais lisible et pas par un nombre nu', () => {
-    attendreParametresAnnonces(hote, 'C', 'Capital place en euros : 1000 (de 100 à 5000)');
+    attendreParametresAnnonces(
+      hote,
+      'C',
+      `Capital place en euros : 1${ESPACE_FINE}000 (de 100 à 5${ESPACE_FINE}000)`,
+    );
   });
 
   it('regle un parametre au curseur et redessine sans remplacer le curseur', () => {
@@ -269,7 +281,7 @@ describe('FpPlot', () => {
     curseur.dispatchEvent(new Event('input', { bubbles: true }));
 
     expect(repere(hote, 'curseur')).toBe(curseur);
-    expect(repere(hote, 'valeur')?.textContent?.trim()).toBe('3000');
+    expect(repere(hote, 'valeur')?.textContent?.trim()).toBe(`3${ESPACE_FINE}000`);
     expect(texteDe(hote, 'tableau')).not.toBe(avant);
   });
 
@@ -297,7 +309,7 @@ describe('FpPlot', () => {
       curseur.value = '3000';
       curseur.dispatchEvent(new Event('input', { bubbles: true }));
     }
-    expect(repere(hote, 'valeur')?.textContent?.trim()).toBe('3000');
+    expect(repere(hote, 'valeur')?.textContent?.trim()).toBe(`3${ESPACE_FINE}000`);
     expect(texteDe(hote, 'tableau')).not.toBe(avant);
   });
 
@@ -306,8 +318,8 @@ describe('FpPlot', () => {
 
     expect(reperes(hote, 'barre').length).toBe(4);
     expect(reperes(hote, 'trace').length).toBe(0);
-    expect(textesDe(hote, 'graduation-x')).toEqual(['2022', '2023', '2024', '2025']);
-    expect(textesDe(hote, 'montant-barre').map(sansEspaces)).toEqual([
+    expect(textesDesReperes(hote, 'graduation-x')).toEqual(['2022', '2023', '2024', '2025']);
+    expect(textesDesReperes(hote, 'montant-barre').map(sansEspaces)).toEqual([
       '285000€',
       '288000€',
       '289800€',
@@ -525,6 +537,17 @@ describe('FpPlot', () => {
       expect(emis).toEqual([{ reglages: { C: 3000, i: 4 } }]);
     });
 
+    it('G2 · au pupitre, emet le cran écrit par un curseur à pas décimal, sans erreur d arrondi', () => {
+      hote.definition = buildPlotDefinition({
+        id: 'K-COURBE-PAS-DECIMAL',
+        abscisse: { libelle: 'Rang', min: 0, max: 10 },
+        parametres: [PARAMETRE_A_PAS_DECIMAL],
+        series: [{ id: 'rampe', libelle: 'Rampe', trait: 'plein', calcul: 'x+d' }],
+      });
+
+      attendreLeTroisiemeCranEmisSansArrondi(hote, REGLAGE);
+    });
+
     it('RET-21 · au pupitre, emet les reglages au clic d un prereglage', () => {
       hote.definition = buildPlotEnBarres();
       const emis = emisAuPupitre(hote, REGLAGE, () => prereglage(hote, 'Axe à zéro'));
@@ -554,7 +577,7 @@ describe('FpPlot', () => {
       hote.reglages = { C: 3000, i: 99, inconnu: 1 };
 
       expect(hote.valeurs).toEqual({ C: 3000, i: 10 });
-      expect(valeurAffichee(hote, 'C')).toBe('3000');
+      expect(valeurAffichee(hote, 'C')).toBe(`3${ESPACE_FINE}000`);
       expect(valeurAffichee(hote, 'i')).toBe('10');
     });
 

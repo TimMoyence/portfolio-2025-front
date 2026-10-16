@@ -21,6 +21,7 @@ import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-co
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import {
   ECRAN_VERROUILLE,
+  ecranDIdentifiant,
   ecranDuRappel,
   ecransDesIdentifiants,
   enoncesDesActivites,
@@ -372,4 +373,18 @@ describe('ecran du rappel espace', () => {
   it('rend null quand le cours ne porte aucun rappel espace', () => {
     expect(ecranDuRappel(buildCoursContent())).toBeNull();
   });
+});
+
+describe('ecran designe par son identifiant', () => {
+  for (const [prefixe, instantane] of INSTANTANES_DES_COURS_SERVIS) {
+    it(`${prefixe} : rend chaque ecran du deroule par son identifiant, rien pour un identifiant absent`, () => {
+      const ecrans = ecransDuPupitreDe(instantane);
+
+      for (const ecran of ecrans) {
+        expect(ecranDIdentifiant(ecrans, ecran.id)).withContext(ecran.id).toBe(ecran);
+      }
+      expect(ecranDIdentifiant(ecrans, `${prefixe}-absent`)).toBeUndefined();
+      expect(ecranDIdentifiant(ecrans, undefined)).toBeUndefined();
+    });
+  }
 });

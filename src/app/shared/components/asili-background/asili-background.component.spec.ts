@@ -1,4 +1,5 @@
 import type { ComponentFixture } from '@angular/core/testing';
+import { simulerIntersectionObserverAChaqueTest } from '../../../../testing/factories/intersection-observer.factory';
 import { monterSurPlateforme, type PlateformeDeRendu } from '../../../../testing/plateforme';
 import { AsiliBackgroundComponent } from './asili-background.component';
 
@@ -97,6 +98,28 @@ describe('AsiliBackgroundComponent', () => {
 
       expect(rafSpy).toHaveBeenCalled();
       fixture.destroy();
+    });
+
+    describe('selon sa visibilite', () => {
+      const observateur = simulerIntersectionObserverAChaqueTest();
+
+      it('suspend la boucle quand le fond sort de la vue et la reprend quand il y revient', () => {
+        simulerMouvementReduit(false);
+        const rafSpy = spyOn(window, 'requestAnimationFrame').and.returnValue(7);
+        const cancelSpy = spyOn(window, 'cancelAnimationFrame');
+        const fixture = monterLeFond('browser');
+
+        observateur().declencher([{ isIntersecting: false }]);
+
+        expect(cancelSpy).toHaveBeenCalledOnceWith(7);
+
+        observateur().declencher([{ isIntersecting: false }]);
+        observateur().declencher([{ isIntersecting: true }]);
+
+        expect(cancelSpy).toHaveBeenCalledTimes(1);
+        expect(rafSpy).toHaveBeenCalledTimes(2);
+        fixture.destroy();
+      });
     });
 
     it("retire l'ecouteur de prefers-reduced-motion au destroy", () => {

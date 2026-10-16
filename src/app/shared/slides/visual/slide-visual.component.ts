@@ -39,7 +39,14 @@ import type { ModeInteraction } from '../interactions/mode-interaction';
 import type { DebriefDeReflexion } from '../interactions/slide-reflection/slide-reflection.component';
 import { reussitesDeLEcran, verdictsDeLEcran } from '../../../core/adapters/retours-brique';
 import type { RetourBrique } from '../../../core/ports/formations.port';
-import { objet, presentationDe, quizImbrique, quizPrincipal } from './presentation-v2';
+import {
+  ecranSourceDe,
+  objet,
+  presentationDe,
+  quizImbrique,
+  quizPrincipal,
+  RENDUS_DE_REVELATION,
+} from './presentation-v2';
 
 const layouts: Readonly<Record<string, Type<unknown>>> = {
   hero: SlideHeroComponent,
@@ -64,8 +71,6 @@ const layouts: Readonly<Record<string, Type<unknown>>> = {
   'answer-review': SlideAnswerReviewComponent,
 };
 
-const RENDUS_DE_REVELATION: ReadonlySet<string> = new Set(['sort-review', 'answer-review']);
-
 const RENDUS_A_IMAGE_PRIORISABLE: ReadonlySet<string> = new Set([
   'hero',
   'image-left',
@@ -78,9 +83,9 @@ function cartesDuTri(
   retours: ReadonlyMap<string, readonly RetourBrique[]>,
   juste: boolean,
 ): readonly string[] {
-  const screenId = source?.['screenId'];
+  const screenId = ecranSourceDe(source);
   const sortId = source?.['sortId'];
-  if (typeof screenId !== 'string' || typeof sortId !== 'string') {
+  if (screenId === null || typeof sortId !== 'string') {
     return [];
   }
   return (retours.get(screenId) ?? []).flatMap((retour) =>
@@ -94,16 +99,11 @@ function comptesDuTri(
   source: Readonly<Record<string, unknown>> | null,
   resultats: ResultatsSeance | null,
 ): DecomptesParCle {
+  const ecranSource = ecranSourceDe(source);
   const question = (resultats?.questions ?? []).find(
-    (candidate) =>
-      candidate.ecranId === source?.['screenId'] && candidate.questionId === source?.['sortId'],
+    (candidate) => candidate.ecranId === ecranSource && candidate.questionId === source?.['sortId'],
   );
   return question?.parCle ?? {};
-}
-
-function ecranSourceDe(source: Readonly<Record<string, unknown>> | null): string | null {
-  const screenId = source?.['screenId'];
-  return typeof screenId === 'string' ? screenId : null;
 }
 
 function commeQuiz(quiz: Readonly<Record<string, unknown>> | null): QuizInteraction | null {

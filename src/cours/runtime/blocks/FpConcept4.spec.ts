@@ -3,15 +3,18 @@ import { buildConcept4Definition } from '../../../testing/factories/cours.factor
 import {
   animer,
   attendreLeParametreEchappe,
+  attendreLeTroisiemeCranEmisSansArrondi,
   attendreParametresAnnonces,
   decrireLaSobrieteDUneBriqueReglable,
   emisAuPupitre,
   glisserCurseur,
   jouerAuPupitre,
+  PARAMETRE_A_PAS_DECIMAL,
   relacherCurseur,
 } from '../../../testing/reglages-briques';
 import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
 import { evaluerExpression, remplirGabarit } from 'portfolio-2025-partage/formule';
+import { ecransPublicsB2_01 } from '../../../testing/fixtures/instantane-b2-01';
 import { type Concept4Definition, FpConcept4 } from './FpConcept4';
 
 const REGLAGE = 'fp-concept4-reglage';
@@ -37,7 +40,12 @@ const MACHINE = buildConcept4Definition({
     { libelle: '+20 % puis −20 %', valeurs: { tauxUn: 20, tauxDeux: -20 } },
   ],
 });
+const MACHINE_SERVIE = ecransPublicsB2_01().find(
+  (ecran) => ecran.id === 'B2-01-A3-02-MACHINE-COEFFICIENTS',
+)?.donnees?.['definition'] as Concept4Definition;
+const ECRITURE_ATTENDUE = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
+const ESPACE_FINE = ' ';
 const CLASSES_ATTENDUES = 27;
 const POINTS_ATTENDUS = 25;
 
@@ -85,7 +93,7 @@ function resultatsDuTableau(hote: FpConcept4): string[] {
 }
 
 function formaterEsperee(valeur: number): string {
-  return Number.isFinite(valeur) ? String(Math.round(valeur * 100) / 100).replace('.', ',') : '—';
+  return Number.isFinite(valeur) ? ECRITURE_ATTENDUE.format(valeur) : '—';
 }
 
 function resultatAttendu(valeurs: Readonly<Record<string, number>>): number {
@@ -173,6 +181,24 @@ describe('FpConcept4', () => {
       remplirGabarit(DEFINITION.phrase, { ...valeurs, resultat }, formaterEsperee),
     );
     expect(lu(hote, 'phrase-texte')).not.toBe(avant);
+  });
+
+  it('L4-F11 · arrondit un demi comme Excel sur la machine servie du B2-01 : 1 € a -50 % puis +13 % arrive a 0,57 €', () => {
+    hote.definition = MACHINE_SERVIE;
+    glisserCurseur(hote, 'depart', '1');
+    glisserCurseur(hote, 'tauxUn', '-50');
+    glisserCurseur(hote, 'tauxDeux', '13');
+
+    expect(lu(hote, 'resultat-formule')).toBe('0,57');
+    expect(resultatsDuTableau(hote)).toEqual(['1', '0,5', '0,57']);
+  });
+
+  it('L4-F11 · ecrit la phrase, la formule et le reglage a la francaise, milliers en espace fine', () => {
+    expect(lu(hote, 'phrase-texte')).toBe(
+      `Un capital de 1${ESPACE_FINE}000 € placé à 4 % pendant 10 an(s) devient 1${ESPACE_FINE}480,24 €.`,
+    );
+    expect(lu(hote, 'resultat-formule')).toBe(`1${ESPACE_FINE}480,24`);
+    expect(un(hote, 'valeur')?.textContent?.trim()).toBe(`1${ESPACE_FINE}000`);
   });
 
   it('dessine le graphique en svg produit par la brique sans bibliotheque', () => {
@@ -326,6 +352,16 @@ describe('FpConcept4', () => {
       const emis = emisAuPupitre(hote, REGLAGE, () => reglerN('20'));
 
       expect(emis).toEqual([{ reglages: { C: 1000, i: 4, n: 20 } }]);
+    });
+
+    it('G2 · au pupitre, emet le cran écrit par un curseur à pas décimal, sans erreur d arrondi', () => {
+      hote.definition = buildConcept4Definition({
+        parametres: [PARAMETRE_A_PAS_DECIMAL],
+        calcul: 'd',
+        phrase: 'Un décalage de {d} donne {resultat}.',
+      });
+
+      attendreLeTroisiemeCranEmisSansArrondi(hote, REGLAGE);
     });
 
     const REGLAGES_SANS_EMISSION: readonly { titre: string; regler: () => unknown[] }[] = [
