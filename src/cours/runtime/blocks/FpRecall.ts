@@ -1,4 +1,5 @@
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { chaineDe, estTexteNonVide } from '../core/valeurs';
 import { Battement, SECONDE_MS } from './battement';
 import { FpReponse } from './reponse';
 import {
@@ -16,8 +17,6 @@ export interface RecallQuestionPublique extends ContenuDeBrique {
 }
 
 const DELAI_RAPPEL_MS = 8000;
-const VIDE = escapeHtml('');
-const DESACTIVE = safeHtml`disabled`;
 
 function projeterQuestion(source: RecallQuestionPublique): RecallQuestionPublique {
   return {
@@ -47,7 +46,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   private readonly battement = new Battement(() => this.battre());
 
   set consigne(valeur: string | null | undefined) {
-    this.interneConsigne = typeof valeur === 'string' && valeur.trim() !== '' ? valeur : null;
+    this.interneConsigne = estTexteNonVide(valeur) ? valeur : null;
     this.refreshSiConnecte();
   }
 
@@ -93,8 +92,8 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   }
 
   protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
-    const rappel = brouillon['rappel'];
-    if (typeof rappel !== 'string') {
+    const rappel = chaineDe(brouillon, 'rappel');
+    if (rappel === null) {
       return false;
     }
     this.rappel = rappel;
@@ -117,7 +116,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
       this.presentateur() || !ecritAvantLesOptions
         ? VIDE
         : safeHtml`<textarea class="fp-recall__champ" data-testid="rappel" rows="4" aria-label="${escapeHtml(this.texte('rappel-champ'))}">${escapeHtml(this.rappel)}</textarea>`;
-    const suivi = this.presentateur() ? escapeHtml('') : this.suiviDeLEnvoi();
+    const suivi = this.presentateur() ? VIDE : this.suiviDeLEnvoi();
     return safeHtml`
       <fieldset class="fp-carte fp-recall__billet">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
@@ -153,7 +152,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
       champ.disabled = verrouille;
       champ.addEventListener('input', () => {
         this.rappel = champ.value;
-        this.signalerBrouillon(this.interne?.id ?? '', { rappel: champ.value });
+        this.signalerLeBrouillon({ rappel: champ.value });
       });
     }
     this.brancherLesBoutons(racine, '[data-option]', verrouille, ({ dataset }) =>
@@ -171,7 +170,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   }
 
   private restantMs(): number {
-    return this.interneOptionsAffichees ? 0 : Math.max(0, this.delaiMs - this.depuisAffichage());
+    return this.interneOptionsAffichees ? 0 : this.restantDepuisAffichage(this.delaiMs);
   }
 
   private annonce(): string {
@@ -189,7 +188,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   private optionsVisibles(): EscapedHtml {
     const question = this.question;
     if (question === null || this.restantMs() > 0) {
-      return escapeHtml('');
+      return VIDE;
     }
     const proposees = this.presentateur()
       ? question.options

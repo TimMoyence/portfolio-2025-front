@@ -1,5 +1,5 @@
 import type { EcranContent } from '../../../../cours/content/types';
-import { estObjet } from '../../../../cours/runtime/core/valeurs';
+import { chaineDe, objet } from '../../../../cours/runtime/core/valeurs';
 
 export type Donnees = Readonly<Record<string, unknown>>;
 
@@ -12,13 +12,8 @@ interface PresentationV2 {
 
 export const RENDUS_DE_REVELATION: ReadonlySet<string> = new Set(['sort-review', 'answer-review']);
 
-export function objet(value: unknown): Donnees | null {
-  return estObjet(value) ? value : null;
-}
-
 export function ecranSourceDe(source: Donnees | null): string | null {
-  const screenId = source?.['screenId'];
-  return typeof screenId === 'string' ? screenId : null;
+  return chaineDe(source, 'screenId');
 }
 
 export function aUnePresentation(slide: EcranContent): boolean {

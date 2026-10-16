@@ -1,6 +1,6 @@
 import type { QuestionRevelee } from '../../content/types';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { estObjet } from '../core/valeurs';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { chaineDe, estChaineOuNul, estObjet } from '../core/valeurs';
 
 export interface VerdictDeReponse {
   readonly questionId: string;
@@ -67,11 +67,8 @@ export function lireTextes(valeur: unknown): Readonly<Record<string, string>> {
 export type CibleRevelee = Pick<QuestionRevelee, 'cible' | 'optionId'>;
 
 export function lireCibleRevelee(valeur: unknown): CibleRevelee | null {
-  if (!estObjet(valeur) || typeof valeur['cible'] !== 'string') {
-    return null;
-  }
-  const optionId = valeur['optionId'];
-  return { cible: valeur['cible'], optionId: typeof optionId === 'string' ? optionId : null };
+  const cible = chaineDe(valeur, 'cible');
+  return cible === null ? null : { cible, optionId: chaineDe(valeur, 'optionId') };
 }
 
 function cibleTypee(valeur: unknown): CibleRevelee | null {
@@ -88,7 +85,7 @@ export function lireBonneOption(valeur: unknown): string | null {
 
 export function marqueDeCorrection(juste: boolean | null): EscapedHtml {
   if (juste === null) {
-    return escapeHtml('');
+    return VIDE;
   }
   return safeHtml` data-correction="${escapeHtml(juste ? 'juste' : 'fausse')}"`;
 }
@@ -112,7 +109,7 @@ export function bonneReponseRevelee(
   forme: EscapedHtml = ENCADRE_CONFIRME,
 ): EscapedHtml {
   return bonneReponse === null
-    ? escapeHtml('')
+    ? VIDE
     : safeHtml`<p ${forme} data-testid="bonne-reponse">${escapeHtml(libelle)} ${escapeHtml(bonneReponse)}</p>`;
 }
 
@@ -121,7 +118,7 @@ export function estVerdictDeReponse(valeur: unknown): valeur is VerdictDeReponse
     estObjet(valeur) &&
     typeof valeur['questionId'] === 'string' &&
     typeof valeur['correcte'] === 'boolean' &&
-    (valeur['libelleConfusion'] === null || typeof valeur['libelleConfusion'] === 'string')
+    estChaineOuNul(valeur['libelleConfusion'])
   );
 }
 
@@ -155,7 +152,7 @@ function estDetail(valeur: unknown): valeur is DetailDeVerdict {
     estObjet(valeur) &&
     typeof valeur['cle'] === 'string' &&
     typeof valeur['juste'] === 'boolean' &&
-    (valeur['libelleConfusion'] === null || typeof valeur['libelleConfusion'] === 'string')
+    estChaineOuNul(valeur['libelleConfusion'])
   );
 }
 

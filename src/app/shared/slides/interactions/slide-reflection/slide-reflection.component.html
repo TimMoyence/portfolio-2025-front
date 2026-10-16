@@ -37,8 +37,8 @@
         <button
           type="button"
           class="slide-reflection__save"
-          [class.is-disabled]="value().trim().length === 0"
-          [attr.aria-disabled]="value().trim().length === 0 ? 'true' : null"
+          [class.is-disabled]="vide()"
+          [attr.aria-disabled]="vide() ? 'true' : null"
           (click)="save()"
           i18n="@@slideReflectionSave"
         >

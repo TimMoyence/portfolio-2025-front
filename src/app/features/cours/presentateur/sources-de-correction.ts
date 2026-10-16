@@ -1,15 +1,14 @@
 import type { EcranDeroule } from '../../../../cours/content/types';
+import { chaineDe, objet } from '../../../../cours/runtime/core/valeurs';
 import {
   ecranSourceDe,
-  objet,
   presentationDe,
   RENDUS_DE_REVELATION,
 } from '../../../shared/slides/visual/presentation-v2';
 
 export function sourceCorrigeePar(ecran: EcranDeroule): string | null {
   if (ecran.type === 'fp-worked') {
-    const source = ecran.donnees?.['corrigeDe'];
-    return typeof source === 'string' ? source : null;
+    return chaineDe(ecran.donnees, 'corrigeDe');
   }
   const presentation = presentationDe(ecran);
   if (presentation === null || !RENDUS_DE_REVELATION.has(presentation.renderer)) {

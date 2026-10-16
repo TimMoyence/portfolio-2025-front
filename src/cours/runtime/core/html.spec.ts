@@ -1,11 +1,23 @@
-import { escapeHtml, escapeUrl, safeHtml, type EscapedHtml } from './html';
+import {
+  DESACTIVE,
+  escapeHtml,
+  escapeUrl,
+  LECTURE_SEULE,
+  safeHtml,
+  VIDE,
+  type EscapedHtml,
+} from './html';
 
 type Rendu = () => unknown;
 
 const LIEN_PIEGE = 'javascript:alert(1)';
 const ARBITRAIRE = '<img src=x onerror=alert(1)>';
-const DESACTIVE = safeHtml`disabled`;
-const VIDE = safeHtml``;
+
+describe('fragments des briques', () => {
+  it('rendent le vide, l attribut disabled et l attribut readonly', () => {
+    expect([VIDE, DESACTIVE, LECTURE_SEULE].map(String)).toEqual(['', 'disabled', 'readonly']);
+  });
+});
 
 function refuseChaqueInterpolation(cas: readonly (readonly [string, Rendu])[]): void {
   for (const [nom, rendre] of cas) {

@@ -49,7 +49,7 @@ import {
   type StatutSession,
   type Sync,
 } from '../../../../cours/runtime/core/sync';
-import { bornerEntre, estMembre, estObjet } from '../../../../cours/runtime/core/valeurs';
+import { bornerEntre, estMembre, estObjet, objet } from '../../../../cours/runtime/core/valeurs';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../../cours/runtime/core/duree';
 import { getApiFormationsUrl } from '../../../core/http/api-config';
 import {
@@ -89,9 +89,11 @@ import {
 } from '../../../core/adapters/retours-brique';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import {
+  ecranAuRang,
   ecranDIdentifiant,
   ecranDuRappel,
   ecransDesIdentifiants,
+  identifiantPorte,
   identifiantsDesQuestions,
 } from '../../../shared/slides/session/lecture-ecran';
 import { memeValeur } from '../../../shared/slides/session/reinjection';
@@ -101,7 +103,7 @@ import {
   CoursPresentationComponent,
   type TelechargementDePieceJointe,
 } from '../../../shared/slides/session/cours-presentation.component';
-import { aUnePresentation, objet } from '../../../shared/slides/visual/presentation-v2';
+import { aUnePresentation } from '../../../shared/slides/visual/presentation-v2';
 import { CREATEUR_FLUX } from '../cours-flux.token';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
 
@@ -202,7 +204,7 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
 }
 
 function regimeDuContenu(contenu: unknown): RegimeVerrou | null {
-  const regime = estObjet(contenu) ? contenu['regime'] : undefined;
+  const regime = objet(contenu)?.['regime'];
   return estMembre(REGIMES_DE_VERROU, regime) ? regime : null;
 }
 
@@ -691,7 +693,7 @@ export class CoursEtudiantComponent {
   readonly accesPerdu = computed<boolean>(() => this.refusDuFlux()?.motif === 'session');
 
   readonly ecranCourant = computed<EcranContent | null>(() => {
-    const ecran = this.sujet()?.ecrans[this.indexEcran()];
+    const ecran = ecranAuRang(this.sujet(), this.indexEcran());
     return estEcranVerrouille(ecran) ? null : (ecran ?? null);
   });
 
@@ -960,7 +962,7 @@ export class CoursEtudiantComponent {
     flux.ouvrir();
     this.flux = flux;
     this.identite = identite;
-    this.configurerLeVerrou(sujet.ecrans[deck.current()]);
+    this.configurerLeVerrou(ecranAuRang(sujet, deck.current()));
     this.etat.set('seance');
   }
 
@@ -994,10 +996,10 @@ export class CoursEtudiantComponent {
     if (index !== this.indexEcran()) {
       this.indexEcran.set(index);
       this.verdicts.set(new Map());
-      this.configurerLeVerrou(this.sujet()?.ecrans[index]);
+      this.configurerLeVerrou(ecranAuRang(this.sujet(), index));
       this.chantier = this.chargerLecranSiNecessaire(index);
     }
-    const verrouille = estEcranVerrouille(this.sujet()?.ecrans[index]);
+    const verrouille = estEcranVerrouille(ecranAuRang(this.sujet(), index));
     this.peutAvancer.set(!verrouille && deck.canNavigate(index + 1));
     this.peutReculer.set(!verrouille && deck.canNavigate(index - 1));
   }
@@ -1021,7 +1023,7 @@ export class CoursEtudiantComponent {
     if (sessionId === null || jeton === '') {
       return;
     }
-    const ecran = this.sujet()?.ecrans[index];
+    const ecran = ecranAuRang(this.sujet(), index);
     if (!estEcranVerrouille(ecran)) {
       await this.chargerLesDonneesDeLEcran(ecran);
       return;
@@ -1032,7 +1034,7 @@ export class CoursEtudiantComponent {
       const sujet = await this.relireLeSujet(sessionId, jeton);
       if (!this.detruit) {
         this.sujet.set(sujet);
-        const relu = sujet.ecrans[index];
+        const relu = ecranAuRang(sujet, index);
         this.configurerLeVerrou(relu);
         if (this.deck !== null) {
           this.peutAvancer.set(!estEcranVerrouille(relu) && this.deck.canNavigate(index + 1));
@@ -1169,7 +1171,7 @@ export class CoursEtudiantComponent {
 
   private suivreLeSujetRelu(relu: CoursContent): void {
     const index = this.indexEcran();
-    const ecran = relu.ecrans[index];
+    const ecran = ecranAuRang(relu, index);
     if (estEcranVerrouille(ecran) || this.deck === null) {
       return;
     }
@@ -1195,12 +1197,12 @@ export class CoursEtudiantComponent {
   private async relireLesStrategiesRevelees(): Promise<void> {
     const ecran = this.ecranCourant();
     const sessionId = this.sessionId();
-    const defiId = objet(ecran?.donnees?.['probleme'])?.['id'];
+    const defiId = identifiantPorte(ecran?.donnees, 'probleme');
     if (
       ecran === null ||
       sessionId === null ||
       ecran.type !== BRIQUE_DE_DEFI ||
-      typeof defiId !== 'string' ||
+      defiId === null ||
       this.pilotage()[ecran.id]?.revele !== true ||
       this.defisReveles.has(defiId) ||
       !(this.retours().get(ecran.id) ?? []).some((retour) => retour.kind === 'strategies')

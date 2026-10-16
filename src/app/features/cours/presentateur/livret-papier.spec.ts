@@ -6,9 +6,8 @@ import type {
   EcranDeroule,
   ValeurFormule,
 } from '../../../../cours/content/types';
-import { avecUnite, echapperPourRegex } from '../../../../cours/runtime/core/valeurs';
+import { avecUnite, echapperPourRegex, objet } from '../../../../cours/runtime/core/valeurs';
 import { type Recolte, recolterDansLArbre } from '../../../../testing/arbre-json';
-import { objet } from '../../../shared/slides/visual/presentation-v2';
 import { INSTANTANE_B2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
 import { INSTANTANE_B2_03 } from '../../../../testing/fixtures/instantane-b2-03';

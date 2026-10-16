@@ -1,5 +1,5 @@
 import { PHASES_DE_VOTE, type MetadonneesBrique, type VotePhase } from '../../content/types';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { lignesDeCalculHtml } from './calculs';
 import {
   avecJeNeSaisPas,
@@ -8,7 +8,7 @@ import {
   projeterMetadonnees,
   projeterOptions,
 } from './projection';
-import { estMembre, estObjet, part } from '../core/valeurs';
+import { chaineDe, estMembre, estObjet, memeIdentifiant, part } from '../core/valeurs';
 import {
   bonneReponseRevelee,
   lireBonneOption,
@@ -34,8 +34,6 @@ interface Revelation {
   readonly titre: string;
   readonly lignes: readonly string[];
 }
-
-const VIDE = escapeHtml('');
 
 const ANNONCE_DE_PHASE: Readonly<Partial<Record<VotePhase, string>>> = {
   discussion: 'discussion-en-cours',
@@ -63,9 +61,9 @@ function lireRevelation(valeur: unknown): Revelation | null {
   if (!estObjet(valeur) || valeur['type'] !== 'revelation') {
     return null;
   }
-  const titre = valeur['titre'];
+  const titre = chaineDe(valeur, 'titre');
   const lignes = valeur['lignes'];
-  return typeof titre === 'string' &&
+  return titre !== null &&
     Array.isArray(lignes) &&
     lignes.every((ligne) => typeof ligne === 'string')
     ? { titre, lignes }
@@ -73,11 +71,7 @@ function lireRevelation(valeur: unknown): Revelation | null {
 }
 
 function optionDeLaRevelation(valeur: unknown): string | null {
-  if (lireRevelation(valeur) === null || !estObjet(valeur)) {
-    return null;
-  }
-  const optionId = valeur['optionId'];
-  return typeof optionId === 'string' ? optionId : null;
+  return lireRevelation(valeur) === null ? null : chaineDe(valeur, 'optionId');
 }
 
 export class FpVote extends FpVerdicts {
@@ -92,7 +86,7 @@ export class FpVote extends FpVerdicts {
   private choix = new Map<string, string>();
 
   set question(valeur: VoteQuestionPublique | null) {
-    if ((valeur?.id ?? null) !== (this.principale?.id ?? null)) {
+    if (!memeIdentifiant(valeur, this.principale)) {
       this.recus = new VerdictsParQuestion();
       this.choix = new Map();
     }
@@ -185,7 +179,7 @@ export class FpVote extends FpVerdicts {
     return safeHtml`<div class="fp-carte fp-scene">${questions.map(
       (question) => safeHtml`<fieldset class="fp-vote__options">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
-        <ul class="fp-cases">${question.options.map((option) => safeHtml`<li>${escapeHtml(option.libelle)}</li>`)}</ul>
+        <ul class="fp-cases">${this.casesAImprimer(question.options)}</ul>
       </fieldset>`,
     )}</div>`;
   }

@@ -187,6 +187,13 @@ describe('FpChallenge', () => {
     expect(zoneTentative(hote).disabled).toBeTrue();
   });
 
+  it('ne reprend pas un brouillon dont la tentative n est pas un texte', () => {
+    hote.brouillon = { tentative: 12 };
+
+    expect(zoneTentative(hote).value).toBe('');
+    expect(hote.shadowRoot?.textContent).not.toContain('Brouillon restauré');
+  });
+
   it('memorise la tentative en brouillon a chaque frappe', () => {
     const brouillons = detailsEmis(hote, 'fp-brouillon');
     const champ = zoneTentative(hote);

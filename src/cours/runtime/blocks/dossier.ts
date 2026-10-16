@@ -1,12 +1,10 @@
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { estObjet } from '../core/valeurs';
 
 export interface LigneDuDossier {
   readonly libelle: string;
   readonly valeur: string;
 }
-
-const VIDE = escapeHtml('');
 
 export function lireRappel(valeur: unknown): readonly LigneDuDossier[] {
   return Array.isArray(valeur)

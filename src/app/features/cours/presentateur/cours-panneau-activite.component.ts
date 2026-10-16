@@ -14,13 +14,13 @@ import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTa
 import { colonnesACorriger } from '../../../../cours/runtime/blocks/FpTableBuild';
 import type { ResultatsDuFlux } from '../../../../cours/runtime/core/sync';
 import { enFrancais } from '../../../../cours/runtime/core/typographie';
+import { objet } from '../../../../cours/runtime/core/valeurs';
 import {
   estVoteJumele,
   identifiantsDuMontage,
   libellesDesElements,
   planDeMontage,
 } from '../../../shared/slides/session/lecture-ecran';
-import { objet } from '../../../shared/slides/visual/presentation-v2';
 
 export type CommandeDEcran = { readonly screenId: string } & PilotageEcran;
 

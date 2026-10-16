@@ -290,6 +290,13 @@ describe('FpRecall', () => {
     rechargee.remove();
   });
 
+  it('ne reprend pas un brouillon dont le rappel n est pas un texte', () => {
+    hote.brouillon = { rappel: 12 };
+
+    expect(champRappel(hote).value).toBe('');
+    expect(hote.shadowRoot?.textContent).not.toContain('Brouillon restauré');
+  });
+
   it('efface une donnee de correction nichee dans les metadonnees', () => {
     const piege = buildRecallQuestion({ id: 'Q-RAPPEL-06' });
     const metadonnees = { ...piege.metadonnees, bonneReponse: 'a' };

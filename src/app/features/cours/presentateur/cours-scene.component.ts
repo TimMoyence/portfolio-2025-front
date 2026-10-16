@@ -25,7 +25,7 @@ import { type Chargement, lectureSuivie } from '../lecture-suivie';
 import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
 import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
-import { ecranDIdentifiant } from '../../../shared/slides/session/lecture-ecran';
+import { ecranAuRang, ecranDIdentifiant } from '../../../shared/slides/session/lecture-ecran';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
 import { chantierApresRendu } from './chantier-apres-rendu';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
@@ -357,7 +357,7 @@ export class CoursSceneComponent {
   });
 
   readonly ecranDuDeroule = computed<EcranDeroule | null>(
-    () => this.deroule()?.ecrans[this.ecran()] ?? null,
+    () => ecranAuRang(this.deroule(), this.ecran()) ?? null,
   );
 
   readonly ecranCourant = computed<EcranContent | null>(() => {
@@ -366,9 +366,8 @@ export class CoursSceneComponent {
   });
 
   readonly ecranRenvoye = computed<EcranContent | null>(() => {
-    const deroule = this.deroule();
-    const renvoi = deroule?.ecrans[this.ecran()]?.renvoi;
-    const cible = deroule === null ? undefined : ecranDIdentifiant(deroule.ecrans, renvoi);
+    const renvoi = this.ecranDuDeroule()?.renvoi;
+    const cible = ecranDIdentifiant(this.deroule()?.ecrans ?? [], renvoi);
     return cible === undefined || this.correctionEncoreVerrouillee(cible)
       ? null
       : ecranProjete(cible);
@@ -380,12 +379,12 @@ export class CoursSceneComponent {
   }
 
   readonly correctionsDeLEcran = computed(() =>
-    correctionsAffichees(this.deroule()?.ecrans[this.ecran()]),
+    correctionsAffichees(this.ecranDuDeroule() ?? undefined),
   );
 
   readonly annexeDeLEcran = computed(() => {
-    const ecran = this.deroule()?.ecrans[this.ecran()];
-    return ecran === undefined ? null : annexeFormateurDeLEcran(ecran);
+    const ecran = this.ecranDuDeroule();
+    return ecran === null ? null : annexeFormateurDeLEcran(ecran);
   });
 
   readonly direct = computed<DirectEcran | null>(() =>

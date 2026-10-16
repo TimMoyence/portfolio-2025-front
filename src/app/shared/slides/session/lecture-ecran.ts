@@ -8,6 +8,12 @@ import { rappelEcritAvantLesOptions } from '../../../../cours/runtime/blocks/FpR
 import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
 import type { CibleRevelee } from '../../../../cours/runtime/blocks/retours';
 import {
+  chaineDe,
+  estChaineNonVide,
+  estChaineOuNul,
+  objet,
+} from '../../../../cours/runtime/core/valeurs';
+import {
   cleDeCellule,
   enonceDeCellule,
   saisiesDuPlan,
@@ -15,7 +21,6 @@ import {
 import type { Donnees } from '../visual/presentation-v2';
 import {
   aUnePresentation,
-  objet,
   presentationDe,
   quizImbrique,
   quizPrincipal,
@@ -143,16 +148,14 @@ export function enteteDeQuestionnaire(ecran: EcranContent): EnteteDeQuestionnair
   if (ecran.type !== QUESTIONNAIRE) {
     return null;
   }
-  const intitule = ecran.donnees?.['intitule'];
+  const intitule = chaineDe(ecran.donnees, 'intitule');
   const consigne = ecran.donnees?.['consigne'] ?? null;
-  return typeof intitule === 'string' && (consigne === null || typeof consigne === 'string')
-    ? { intitule, consigne }
-    : null;
+  return intitule !== null && estChaineOuNul(consigne) ? { intitule, consigne } : null;
 }
 
-function identifiantPorte(donnees: Donnees, propriete: string): string | null {
-  const identifiant = objet(donnees[propriete])?.['id'];
-  return typeof identifiant === 'string' && identifiant !== '' ? identifiant : null;
+export function identifiantPorte(donnees: Donnees | undefined, propriete: string): string | null {
+  const identifiant = objet(donnees?.[propriete])?.['id'];
+  return estChaineNonVide(identifiant) ? identifiant : null;
 }
 
 export function identifiantsDuMontage(montage: Montage): readonly string[] {
@@ -162,11 +165,8 @@ export function identifiantsDuMontage(montage: Montage): readonly string[] {
 }
 
 function questionPortee(porteur: Donnees | null, champEnonce: string): readonly QuestionDeLEcran[] {
-  if (porteur === null || typeof porteur['id'] !== 'string') {
-    return [];
-  }
-  const enonce = porteur[champEnonce];
-  return [{ id: porteur['id'], enonce: typeof enonce === 'string' ? enonce : '' }];
+  const id = chaineDe(porteur, 'id');
+  return id === null ? [] : [{ id, enonce: chaineDe(porteur, champEnonce) ?? '' }];
 }
 
 function questionsDuMontage(montage: Montage): readonly QuestionDeLEcran[] {
@@ -193,11 +193,7 @@ export function titreDeLEcran(ecran: EcranContent): string | null {
     presentation?.props['title'],
     quizPrincipal(presentation)?.['question'],
   ];
-  return (
-    candidats.find(
-      (candidat): candidat is string => typeof candidat === 'string' && candidat !== '',
-    ) ?? null
-  );
+  return candidats.find(estChaineNonVide) ?? null;
 }
 
 export function identifiantsDesQuestions(ecran: EcranContent): readonly string[] {
@@ -219,22 +215,19 @@ function entreesPortees(
   prefixe = '',
 ): readonly (readonly [string, string])[] {
   return (Array.isArray(porteurs) ? porteurs : [porteurs]).flatMap((porteur) => {
-    const entree = objet(porteur);
-    const id = entree?.['id'];
-    const enonce = entree?.[champEnonce];
-    return typeof id === 'string' && typeof enonce === 'string'
-      ? [[`${prefixe}${id}`, enonce] as const]
-      : [];
+    const id = chaineDe(porteur, 'id');
+    const enonce = chaineDe(porteur, champEnonce);
+    return id !== null && enonce !== null ? [[`${prefixe}${id}`, enonce] as const] : [];
   });
 }
 
 function activitesDuTravaille(donnees: Donnees): readonly (readonly [string, string])[] {
-  const exemple = objet(donnees['exemple']);
-  const id = exemple?.['id'];
-  if (donnees['pilote'] === true || typeof id !== 'string') {
+  const exemple = donnees['exemple'];
+  const id = chaineDe(exemple, 'id');
+  if (donnees['pilote'] === true || id === null) {
     return [];
   }
-  return entreesPortees(exemple?.['etapes'], 'invite', `${id}:`);
+  return entreesPortees(objet(exemple)?.['etapes'], 'invite', `${id}:`);
 }
 
 function activitesDuRappel(donnees: Donnees): readonly (readonly [string, string])[] {
@@ -317,6 +310,13 @@ export function ecranDIdentifiant<T extends EcranContent>(
   id: string | undefined,
 ): T | undefined {
   return ecrans.find((ecran) => ecran.id === id);
+}
+
+export function ecranAuRang<T extends EcranContent>(
+  contenu: { readonly ecrans: readonly T[] } | null | undefined,
+  rang: number,
+): T | undefined {
+  return contenu?.ecrans[rang];
 }
 
 export function ecranDuRappel(cours: CoursContent): string | null {

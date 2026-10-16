@@ -1,8 +1,14 @@
 import { ETATS_PULSE, type ValeurProduction } from '../../../../cours/content/types';
 import { lireTextes } from '../../../../cours/runtime/blocks/retours';
-import { estEntierPositif, estMembre, estObjet } from '../../../../cours/runtime/core/valeurs';
+import {
+  estChaineNonVide,
+  estEntierPositif,
+  estMembre,
+  estObjet,
+  estTexteNonVide,
+  objet,
+} from '../../../../cours/runtime/core/valeurs';
 import type { EvenementBrique } from './contrat-hote';
-import { objet } from '../visual/presentation-v2';
 
 type Detail = Readonly<Record<string, unknown>>;
 
@@ -32,14 +38,6 @@ export const EVENEMENTS_DES_BRIQUES: readonly string[] = [
   'fp-plot-reglage',
 ];
 
-function texteNonVide(valeur: unknown): valeur is string {
-  return typeof valeur === 'string' && valeur.trim().length > 0;
-}
-
-function identifiant(valeur: unknown): valeur is string {
-  return typeof valeur === 'string' && valeur !== '';
-}
-
 function duree(detail: Detail): number | null {
   const dureeMs = detail['dureeMs'];
   return estEntierPositif(dureeMs) ? dureeMs : null;
@@ -55,7 +53,7 @@ function reponse(
   valeur: unknown,
   dureeMs: number,
 ): EvenementBrique[] {
-  return identifiant(questionId) && estValeurDeReponse(valeur)
+  return estChaineNonVide(questionId) && estValeurDeReponse(valeur)
     ? [{ kind: 'reponse', screenId, questionId, valeur, dureeMs }]
     : [];
 }
@@ -66,14 +64,14 @@ function libre(
   texte: unknown,
   dureeMs: number,
 ): EvenementBrique[] {
-  return texteNonVide(texte)
+  return estTexteNonVide(texte)
     ? [{ kind: 'libre', screenId, activityId, response: texte, dureeMs }]
     : [];
 }
 
 function champsTextuels(valeur: unknown): readonly [string, string][] {
   return Object.entries(objet(valeur) ?? {}).filter((entree): entree is [string, string] =>
-    texteNonVide(entree[1]),
+    estTexteNonVide(entree[1]),
   );
 }
 
@@ -115,14 +113,14 @@ function production(
   const forme = PRODUCTIONS[nom];
   const questionId = detail['planId'];
   const valeur = valeurDeProduction(forme.type, forme.champ, detail);
-  return identifiant(questionId) && valeur !== null
+  return estChaineNonVide(questionId) && valeur !== null
     ? [{ kind: 'production', screenId, questionId, valeur, dureeMs }]
     : [];
 }
 
 function redactions(screenId: string, detail: Detail, dureeMs: number): EvenementBrique[] {
   const exempleId = detail['exempleId'];
-  if (!identifiant(exempleId)) {
+  if (!estChaineNonVide(exempleId)) {
     return [];
   }
   return champsTextuels(detail['redactions']).flatMap(([etape, texte]) =>
@@ -143,7 +141,7 @@ function reglage(screenId: string, detail: Detail): EvenementBrique[] {
 }
 
 function reponsesDuCas(screenId: string, detail: Detail, dureeMs: number): EvenementBrique[] {
-  if (!identifiant(detail['casId'])) {
+  if (!estChaineNonVide(detail['casId'])) {
     return [];
   }
   return champsTextuels(detail['reponses']).flatMap(([questionId, texte]) =>
@@ -153,7 +151,7 @@ function reponsesDuCas(screenId: string, detail: Detail, dureeMs: number): Evene
 
 function tentative(screenId: string, detail: Detail, dureeMs: number): EvenementBrique[] {
   const { parcoursId, enigmeId, reponse: saisie } = detail;
-  return identifiant(parcoursId) && identifiant(enigmeId) && texteNonVide(saisie)
+  return estChaineNonVide(parcoursId) && estChaineNonVide(enigmeId) && estTexteNonVide(saisie)
     ? [{ kind: 'tentative', screenId, parcoursId, enigmeId, reponse: saisie, dureeMs }]
     : [];
 }
@@ -161,7 +159,7 @@ function tentative(screenId: string, detail: Detail, dureeMs: number): Evenement
 function jalon(screenId: string, detail: Detail): EvenementBrique[] {
   const sondageId = detail['sondageId'];
   const etat = detail['etat'];
-  return identifiant(sondageId) && estMembre(ETATS_PULSE, etat)
+  return estChaineNonVide(sondageId) && estMembre(ETATS_PULSE, etat)
     ? [{ kind: 'jalon', screenId, sondageId, etat }]
     : [];
 }
@@ -169,7 +167,7 @@ function jalon(screenId: string, detail: Detail): EvenementBrique[] {
 function defi(screenId: string, detail: Detail, dureeMs: number): EvenementBrique[] {
   const defiId = detail['problemeId'];
   const texte = detail['tentative'];
-  return identifiant(defiId) && texteNonVide(texte)
+  return estChaineNonVide(defiId) && estTexteNonVide(texte)
     ? [{ kind: 'defi', screenId, defiId, texte, dureeMs }]
     : [];
 }

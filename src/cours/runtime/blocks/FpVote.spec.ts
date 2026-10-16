@@ -508,19 +508,35 @@ describe('FpVote', () => {
       });
     }
 
-    it('Q1 · au presentateur, marque en vert la bonne option sous l encadre, sans autre correction', () => {
+    it('ne montre pas une revelation dont le titre n est pas un texte', () => {
+      hote.setAttribute('data-cours-role', 'etudiant');
+      hote.phase = 'vote';
+
+      hote.corrige = { ...REVELATION, titre: 12 };
+
+      expect(marque(hote, 'revelation')).toBeNull();
+    });
+
+    function revelerAuPresentateur(optionId: unknown): string | null | undefined {
       presenter();
       hote.phase = 'revele';
+      hote.corrige = { ...REVELATION, optionId };
+      return marque(hote, 'revelation')?.textContent;
+    }
 
-      hote.corrige = { ...REVELATION, optionId: 'j-b' };
-
-      expect(marque(hote, 'revelation')?.textContent).toContain('Le capital double');
+    it('Q1 · au presentateur, marque en vert la bonne option sous l encadre, sans autre correction', () => {
+      expect(revelerAuPresentateur('j-b')).toContain('Le capital double');
       expect(
         options(hote)
           .filter((option) => option.getAttribute('data-correction') === 'juste')
           .map((option) => option.dataset['option']),
       ).toEqual(['j-b']);
       expect(marque(hote, 'bonne-reponse')).toBeNull();
+    });
+
+    it('Q1 · ne marque aucune option quand l option revelee n est pas un texte', () => {
+      expect(revelerAuPresentateur(7)).toContain('Le capital double');
+      expect(options(hote).filter((option) => option.hasAttribute('data-correction'))).toEqual([]);
     });
   });
 

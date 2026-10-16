@@ -71,7 +71,7 @@ import {
   verdictTentativeServi,
 } from './formations-schemas';
 import { ENTETE_JETON_PARTICIPANT } from '../../../cours/runtime/core/jeton-participant';
-import { estObjet, jsonOuNull } from '../../../cours/runtime/core/valeurs';
+import { chaineDe, jsonOuNull } from '../../../cours/runtime/core/valeurs';
 
 const MOTIFS_DE_REFUS_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusReponseLibre>> = {
   SEANCE_NON_DEMARREE: 'seance-non-demarree',
@@ -134,12 +134,7 @@ function refuserSujet(erreur: unknown): SujetRefuse {
 }
 
 function codeDuProbleme(erreur: HttpErrorResponse): string | null {
-  return codeDuCorps(erreur.error);
-}
-
-function codeDuCorps(corps: unknown): string | null {
-  const code = estObjet(corps) ? corps['code'] : undefined;
-  return typeof code === 'string' ? code : null;
+  return chaineDe(erreur.error, 'code');
 }
 
 async function corpsDuFichierRefuse(corps: unknown): Promise<unknown> {
@@ -156,7 +151,7 @@ async function refuserPieceJointe(erreur: unknown): Promise<PieceJointeRefusee> 
   if (limite !== null) {
     return new PieceJointeRefusee('indisponible', erreur.status, limite);
   }
-  const code = codeDuCorps(await corpsDuFichierRefuse(erreur.error));
+  const code = chaineDe(await corpsDuFichierRefuse(erreur.error), 'code');
   return new PieceJointeRefusee(
     code === 'PIECE_JOINTE_RETENUE' ? 'retenue' : 'indisponible',
     erreur.status,

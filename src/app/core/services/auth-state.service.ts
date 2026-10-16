@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { catchError, finalize, firstValueFrom, from, map, of, tap, timeout } from 'rxjs';
 import type { IssueDuRenouvellement } from '../../../cours/runtime/core/sync';
-import { bornerEntre, estObjet } from '../../../cours/runtime/core/valeurs';
+import { bornerEntre, objet } from '../../../cours/runtime/core/valeurs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
 import {
@@ -30,7 +30,7 @@ const MARGE_D_ACHEMINEMENT_MS = 5_000;
 export type IssueDuRafraichissement = IssueDuRenouvellement;
 
 function httpStatusOf(error: unknown): number | null {
-  const status = estObjet(error) ? error['status'] : undefined;
+  const status = objet(error)?.['status'];
   return typeof status === 'number' ? status : null;
 }
 

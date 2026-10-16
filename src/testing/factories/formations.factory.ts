@@ -11,8 +11,8 @@ import type {
 } from '../../cours/content/types';
 import type { SpacedQuestionPublique } from '../../cours/runtime/blocks/donnees-publiques';
 import type { ResultatsDuFlux } from '../../cours/runtime/core/sync';
+import { objet } from '../../cours/runtime/core/valeurs';
 import { libellesDesElements } from '../../app/shared/slides/session/lecture-ecran';
-import { objet } from '../../app/shared/slides/visual/presentation-v2';
 import type {
   AnnotationFormateur,
   FichierTelecharge,

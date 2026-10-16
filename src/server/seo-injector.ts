@@ -9,6 +9,7 @@ import {
   localeParDefaut,
   pageSeoDeLaRoute,
 } from '../app/core/seo/pages-seo';
+import { chaineDe } from '../cours/runtime/core/valeurs';
 
 const FRESHNESS_ENABLED_TYPES = new Set([
   'WebPage',
@@ -33,8 +34,7 @@ const enrichJsonLdBlock = (
   block: Record<string, unknown>,
   page: { lastmod?: string },
 ): Record<string, unknown> => {
-  const type = block['@type'];
-  const typeStr = typeof type === 'string' ? type : null;
+  const typeStr = chaineDe(block, '@type');
   if (!typeStr || !FRESHNESS_ENABLED_TYPES.has(typeStr)) return block;
 
   const enriched: Record<string, unknown> = { ...block };

@@ -1,19 +1,19 @@
 import type { CadrageDuRenvoi, EcranContent } from '../../../../cours/content/types';
-import { estObjet } from '../../../../cours/runtime/core/valeurs';
+import { estObjet, objet } from '../../../../cours/runtime/core/valeurs';
 
 type Objet = Readonly<Record<string, unknown>>;
 
 const CHAMPS_DU_CAS = ['metier', 'situation', 'geste'] as const;
 
-function sans(objet: Objet, cles: readonly string[]): Objet {
-  return Object.fromEntries(Object.entries(objet).filter(([cle]) => !cles.includes(cle)));
+function sans(source: Objet, cles: readonly string[]): Objet {
+  return Object.fromEntries(Object.entries(source).filter(([cle]) => !cles.includes(cle)));
 }
 
 function lignesDuTableau(donnees: Objet, lignes: readonly number[]): Objet {
-  const recit = donnees['recit'];
-  const presentation = estObjet(recit) ? recit['presentation'] : undefined;
-  const props = estObjet(presentation) ? presentation['props'] : undefined;
-  if (!estObjet(recit) || !estObjet(presentation) || !estObjet(props)) {
+  const recit = objet(donnees['recit']);
+  const presentation = objet(recit?.['presentation']);
+  const props = objet(presentation?.['props']);
+  if (recit === null || presentation === null || props === null) {
     return donnees;
   }
   const reste = sans(props, ['title', 'subtitle', 'note']);

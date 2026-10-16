@@ -59,6 +59,15 @@ describe('extraireDuRenvoi', () => {
     expect(Object.keys(cas)).not.toContain('questionsLibres');
   });
 
+  it('rend telles quelles les données d un écran renvoyé sans tableau à découper', () => {
+    const cible: EcranContent = {
+      ...ecran('B2-01-A1-09-DIAPOSITIVE'),
+      donnees: { recit: { presentation: 'texte' } },
+    };
+
+    expect(extraireDuRenvoi(cible, { extrait: { lignes: [0] } }).donnees).toEqual(cible.donnees);
+  });
+
   it('rend tel quel un écran renvoyé sans extrait', () => {
     const cible = ecran('B2-01-A1-09-DIAPOSITIVE');
 

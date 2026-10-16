@@ -2,8 +2,33 @@ export function estObjet(valeur: unknown): valeur is Readonly<Record<string, unk
   return typeof valeur === 'object' && valeur !== null && !Array.isArray(valeur);
 }
 
+export function objet(valeur: unknown): Readonly<Record<string, unknown>> | null {
+  return estObjet(valeur) ? valeur : null;
+}
+
+export function chaineDe(valeur: unknown, cle: string): string | null {
+  const champ = objet(valeur)?.[cle];
+  return typeof champ === 'string' ? champ : null;
+}
+
+export function estChaineOuNul(valeur: unknown): valeur is string | null {
+  return valeur === null || typeof valeur === 'string';
+}
+
 export function estEntierStrictementPositif(valeur: unknown): valeur is number {
   return typeof valeur === 'number' && Number.isSafeInteger(valeur) && valeur > 0;
+}
+
+export function estChaineNonVide(valeur: unknown): valeur is string {
+  return typeof valeur === 'string' && valeur !== '';
+}
+
+export function estTexteNonVide(valeur: unknown): valeur is string {
+  return typeof valeur === 'string' && valeur.trim() !== '';
+}
+
+export function estPositif(valeur: unknown): valeur is number {
+  return typeof valeur === 'number' && Number.isFinite(valeur) && valeur > 0;
 }
 
 export function estEntierPositif(valeur: unknown): valeur is number {
@@ -12,6 +37,13 @@ export function estEntierPositif(valeur: unknown): valeur is number {
 
 export function estMembre<T extends string>(valeurs: readonly T[], valeur: unknown): valeur is T {
   return typeof valeur === 'string' && (valeurs as readonly string[]).includes(valeur);
+}
+
+export function memeIdentifiant(
+  avant: { readonly id: string } | null,
+  apres: { readonly id: string } | null,
+): boolean {
+  return (avant?.id ?? null) === (apres?.id ?? null);
 }
 
 export function echapperPourRegex(texte: string): string {

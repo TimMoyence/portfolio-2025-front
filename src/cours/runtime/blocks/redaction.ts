@@ -1,3 +1,4 @@
+import { estTexteNonVide } from '../core/valeurs';
 import { FpEnvoi } from './contenu';
 import { lireTextes } from './retours';
 
@@ -31,12 +32,12 @@ export abstract class FpRedaction<
   }
 
   protected manqueUnTexte(cles: readonly string[]): boolean {
-    return cles.some((cle) => this.texteDe(cle).trim().length === 0);
+    return cles.some((cle) => !estTexteNonVide(this.texteDe(cle)));
   }
 
   protected noter(cle: string, valeur: string): void {
     this.textes = { ...this.textes, [cle]: valeur };
-    this.signalerBrouillon(this.interne?.id ?? '', { [this.cleDuBrouillon]: this.textes });
+    this.signalerLeBrouillon({ [this.cleDuBrouillon]: this.textes });
   }
 
   protected brancherLesZones(

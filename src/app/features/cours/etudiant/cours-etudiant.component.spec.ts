@@ -2035,15 +2035,53 @@ describe('CoursEtudiantComponent', () => {
   });
 
   describe('evenements des briques runtime (§ 9.7)', () => {
-    function commencerParLEcranDeRappel(): void {
-      const rappel = buildEcran({
-        id: 'ecran-rappel',
-        type: 'fp-spaced',
-        donnees: { rappel: buildSpacedRappel() },
-      });
-      sujet = { ...sujet, ecrans: [rappel, ...sujet.ecrans.slice(1)] };
+    function commencerPar(premier: EcranContent): void {
+      sujet = { ...sujet, ecrans: [premier, ...sujet.ecrans.slice(1)] };
       port.lireSujet.and.returnValue(of(sujet));
     }
+
+    function commencerParLEcranDeRappel(): void {
+      commencerPar(
+        buildEcran({
+          id: 'ecran-rappel',
+          type: 'fp-spaced',
+          donnees: { rappel: buildSpacedRappel() },
+        }),
+      );
+    }
+
+    async function tenterPuisReveler(defiId: string): Promise<void> {
+      commencerPar(
+        buildEcran({
+          id: 'ecran-defi',
+          type: 'fp-challenge',
+          donnees: { probleme: { id: defiId, invite: 'Estimez le delai.' } },
+        }),
+      );
+      const fixture = await rattacherALaSeanceEnCours();
+      await emettre(fixture, {
+        kind: 'defi',
+        screenId: 'ecran-defi',
+        defiId,
+        texte: 'Une dizaine d annees',
+        dureeMs: 90000,
+      });
+      port.lireStrategies.calls.reset();
+
+      await piloterSurLEcran(fixture, 0, 'ecran-defi', { revele: true });
+    }
+
+    it('relit les strategies d un defi deja tente des que le formateur le revele', async () => {
+      await tenterPuisReveler('D-DEFI-07');
+
+      expect(port.lireStrategies).toHaveBeenCalledOnceWith(SESSION, JETON, 'D-DEFI-07');
+    });
+
+    it('ne relit aucune strategie a la revelation d un defi d identifiant vide', async () => {
+      await tenterPuisReveler('');
+
+      expect(port.lireStrategies).not.toHaveBeenCalled();
+    });
 
     it('charge une seule fois les questions dues quand l ecran de rappel est le premier', async () => {
       commencerParLEcranDeRappel();

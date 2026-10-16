@@ -14,6 +14,7 @@ import {
   buildVerdictDeTentative,
 } from '../../../testing/factories/cours.factory';
 import { FpEscape } from './FpEscape';
+import type { VerdictDeTentative } from './retours';
 
 const PARCOURS = buildEscapeParcours();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
@@ -210,6 +211,16 @@ describe('FpEscape', () => {
     );
   });
 
+  it('ignore une tentative dont le fragment n est ni un texte ni nul', () => {
+    proposer(hote, '12');
+    const malformee: unknown = {
+      ...buildVerdictDeTentative({ correcte: false, fragment: null, tentativesRestantes: 0 }),
+      fragment: 3,
+    };
+    hote.tentatives = [malformee as VerdictDeTentative];
+    expect(etats(hote)).toEqual(['ouverte', 'verrouillee', 'verrouillee']);
+  });
+
   const ANNONCES_DU_DERNIER_FRAGMENT: readonly (readonly [
     string,
     Parameters<typeof buildProgressionDesEnigmes>[0],
@@ -376,6 +387,13 @@ describe('FpEscape', () => {
 
     hote.brouillon = { saisie: '29 000' };
     expect((noeudOmbre(hote, 'saisie') as HTMLInputElement).value).toBe('29 000');
+  });
+
+  it('ne reprend pas un brouillon dont la saisie n est pas un texte', () => {
+    hote.brouillon = { saisie: 29000 };
+
+    expect((noeudOmbre(hote, 'saisie') as HTMLInputElement).value).toBe('');
+    expect(hote.shadowRoot?.textContent).not.toContain('Brouillon restauré');
   });
 
   it('ne publie pour aucun role les solutions ni le code final tant que le corrige n est pas pose', () => {

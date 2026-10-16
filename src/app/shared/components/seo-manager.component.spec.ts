@@ -132,6 +132,13 @@ describe('SeoManagerComponent', () => {
     expect(call.canonicalUrl).toContain('https://example.com');
   });
 
+  it('garde la directive robots declaree par la route, et ignore celle qui n est pas un texte', () => {
+    expect(naviguer('/fr/unknown', { robots: 'noindex, nofollow' }).robots).toBe(
+      'noindex, nofollow',
+    );
+    expect(naviguer('/fr/unknown', { robots: false }).robots).toBe('index, follow');
+  });
+
   it('devrait construire les hreflangs pour toutes les locales', () => {
     const call = naviguer('/fr/test');
 

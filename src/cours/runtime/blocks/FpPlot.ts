@@ -1,8 +1,8 @@
 import { evaluerExpression } from 'portfolio-2025-partage/formule';
 import { dansUnDefileur } from '../core/defileur';
-import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml, VIDE } from '../core/html';
 import { enFrancais, lierLesNombres } from '../core/typographie';
-import { bornerEntre } from '../core/valeurs';
+import { bornerEntre, estTexteNonVide } from '../core/valeurs';
 import { type Reglages, borner } from './animation';
 import { type DefinitionReglable, FpReglable, arrondi, copierLeReglable } from './reglable';
 import { plafondDe, plancherDe } from './curseurs';
@@ -199,7 +199,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
 
   private commandesDeReglage(): EscapedHtml {
     if (this.surPapier()) {
-      return safeHtml``;
+      return VIDE;
     }
     const declencheurs =
       (this.interne?.prereglages ?? []).length === 0
@@ -277,8 +277,8 @@ export class FpPlot extends FpReglable<PlotDefinition> {
   private description(): EscapedHtml {
     const description =
       (this.surPapier() ? this.interne?.descriptionPapier : undefined) ?? this.interne?.description;
-    if (description === undefined || description.trim().length === 0) {
-      return safeHtml``;
+    if (!estTexteNonVide(description)) {
+      return VIDE;
     }
     return safeHtml`<p class="fp-plot__description" data-testid="description">${escapeHtml(lierLesNombres(description))}</p>`;
   }
@@ -343,7 +343,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
   private titre(): EscapedHtml {
     const titre = this.interne?.titre;
     return titre === undefined
-      ? safeHtml``
+      ? VIDE
       : safeHtml`<h3 class="fp-plot__titre" data-testid="titre">${escapeHtml(titre)}</h3>`;
   }
 
@@ -356,9 +356,9 @@ export class FpPlot extends FpReglable<PlotDefinition> {
       <figure class="fp-plot__figure" data-testid="figure" data-vue="${escapeHtml(vue?.nom ?? 'unique')}">
         ${vue === null ? this.titre() : safeHtml`<p class="fp-plot__vue" data-testid="vue">${escapeHtml(vue.libelle)}</p>`}
         ${this.graphique(tracees, cadre, vue)}
-        ${dessinees.length > 0 ? safeHtml`` : this.vide()}
-        ${vue !== null && this.enBarres() ? this.rapport(tracees, cadre, vue.nom === 'reglable') : safeHtml``}
-        ${vue === null ? this.source(definition) : safeHtml``}
+        ${dessinees.length > 0 ? VIDE : this.vide()}
+        ${vue !== null && this.enBarres() ? this.rapport(tracees, cadre, vue.nom === 'reglable') : VIDE}
+        ${vue === null ? this.source(definition) : VIDE}
       </figure>
     `;
   }
@@ -366,14 +366,14 @@ export class FpPlot extends FpReglable<PlotDefinition> {
   private source(definition: PlotDefinition | null): EscapedHtml {
     const libelle = this.libelleDeSource(definition);
     return libelle === null
-      ? safeHtml``
+      ? VIDE
       : safeHtml`<figcaption class="fp-plot__source" data-testid="source">${libelle}</figcaption>`;
   }
 
   private sourceCommune(): EscapedHtml {
     const libelle = this.libelleDeSource(this.interne);
     return libelle === null
-      ? safeHtml``
+      ? VIDE
       : safeHtml`<p class="fp-plot__source" data-testid="source">${libelle}</p>`;
   }
 
@@ -448,7 +448,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
 
   private polyligne(tracee: SerieTracee, cadre: Cadre): EscapedHtml {
     if (tracee.echantillons.length === 0) {
-      return safeHtml``;
+      return VIDE;
     }
     const points = tracee.echantillons
       .map(
@@ -462,21 +462,19 @@ export class FpPlot extends FpReglable<PlotDefinition> {
   private lecture(avecRapport: boolean): EscapedHtml {
     const valeurs = this.valeurs;
     const tracees = this.tracees(valeurs);
-    const rapport = avecRapport
-      ? this.rapport(tracees, this.cadre(tracees, valeurs), true)
-      : safeHtml``;
+    const rapport = avecRapport ? this.rapport(tracees, this.cadre(tracees, valeurs), true) : VIDE;
     return safeHtml`
       <div class="fp-plot__lecture">
         ${this.enBarres() ? rapport : this.legende(tracees)}
         ${this.tableau(tracees)}
-        ${this.enBarres() ? safeHtml`` : safeHtml`<p class="fp-prose" data-testid="synthese">${escapeHtml(this.phraseDeLecture(tracees))}</p>`}
+        ${this.enBarres() ? VIDE : safeHtml`<p class="fp-prose" data-testid="synthese">${escapeHtml(this.phraseDeLecture(tracees))}</p>`}
       </div>
     `;
   }
 
   private rapport(tracees: readonly SerieTracee[], cadre: Cadre, vivant: boolean): EscapedHtml {
     if (tracees.length === 0 || tracees[0].echantillons.length < 2) {
-      return safeHtml``;
+      return VIDE;
     }
     const [tracee] = tracees;
     const premiere = tracee.echantillons[0];
@@ -492,7 +490,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
 
   private evolutionReelle(depart: number, arrivee: number): EscapedHtml {
     if (this.surPapier()) {
-      return safeHtml``;
+      return VIDE;
     }
     const evolution = depart === 0 ? '—' : EVOLUTION.format((arrivee - depart) / depart);
     return safeHtml` — ${escapeHtml(this.texte('plot-evolution-reelle'))} : <strong class="fp-plot__chiffre-cle" data-testid="evolution-reelle">${escapeHtml(evolution)}</strong>`;
@@ -525,7 +523,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
   private tableau(tracees: readonly SerieTracee[]): EscapedHtml {
     const definition = this.interne;
     if (definition === null) {
-      return safeHtml``;
+      return VIDE;
     }
     const axe = definition.abscisse;
     const table = dansUnDefileur(safeHtml`

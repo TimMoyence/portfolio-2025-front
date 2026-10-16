@@ -2,7 +2,6 @@ import type { EcranContent } from '../../../../cours/content/types';
 import {
   aUnePresentation,
   ecranSourceDe,
-  objet,
   presentationDe,
   quizImbrique,
   quizPrincipal,
@@ -24,17 +23,6 @@ function ecran(presentation: unknown): EcranContent {
 function presentation(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return { version: 2, screenId: 'B2-01-S03', renderer: 'quiz', props: {}, ...overrides };
 }
-
-describe('objet', () => {
-  it('rend l’objet lui-même et rejette tableau, null et primitives', () => {
-    const valeur = { a: 1 };
-
-    expect(objet(valeur)).toBe(valeur);
-    for (const refuse of [null, undefined, [], ['a'], 'texte', 3, true]) {
-      expect(objet(refuse)).toBeNull();
-    }
-  });
-});
 
 describe('aUnePresentation', () => {
   it('reconnaît une présentation v2 portée par n’importe quelle donnée de l’écran', () => {

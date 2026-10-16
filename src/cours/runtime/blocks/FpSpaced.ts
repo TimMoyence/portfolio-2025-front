@@ -1,6 +1,6 @@
 import { BOITES_DE_REVISION, type BoiteDeRevision } from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import {
   type ContenuDeBrique,
   type OptionPublique,
@@ -30,7 +30,6 @@ export interface SpacedQuestionPublique {
   readonly options: readonly OptionPublique[];
 }
 
-const VIDE = escapeHtml('');
 const BONNE_EN_LIGNE = safeHtml`class="fp-spaced__bonne"`;
 
 function projeterQuestion(source: SpacedQuestionPublique): SpacedQuestionPublique {
@@ -86,8 +85,7 @@ export class FpSpaced extends FpVerdicts {
   set questions(valeur: readonly SpacedQuestionPublique[] | null) {
     this.interne = valeur === null ? null : valeur.map(projeterQuestion);
     this.message = '';
-    this.suivreAffichage(this.cleAffichage());
-    this.refreshSiConnecte();
+    this.suivreEtRafraichir(this.cleAffichage());
   }
 
   get questions(): readonly SpacedQuestionPublique[] | null {
@@ -99,8 +97,7 @@ export class FpSpaced extends FpVerdicts {
   }
 
   protected override verdictsRecus(): void {
-    this.suivreAffichage(this.cleAffichage());
-    this.refreshSiConnecte();
+    this.suivreEtRafraichir(this.cleAffichage());
   }
 
   set maitrise(valeur: readonly ConceptMaitrise[] | null) {
@@ -143,9 +140,9 @@ export class FpSpaced extends FpVerdicts {
     const questions = (this.interne ?? []).map(
       (question) => safeHtml`<li data-question="${escapeHtml(question.questionId)}">
         <p class="fp-spaced__enonce" data-testid="enonce">${escapeHtml(question.enonce)}</p>
-        <ul class="fp-spaced__choix fp-cases">${[...question.options]
-          .sort((a, b) => a.libelle.localeCompare(b.libelle, 'fr'))
-          .map((option) => safeHtml`<li>${escapeHtml(option.libelle)}</li>`)}</ul>
+        <ul class="fp-spaced__choix fp-cases">${this.casesAImprimer(
+          [...question.options].sort((a, b) => a.libelle.localeCompare(b.libelle, 'fr')),
+        )}</ul>
       </li>`,
     );
     return safeHtml`<ol class="fp-spaced__imprimees">${questions}</ol>`;

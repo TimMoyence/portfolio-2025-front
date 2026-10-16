@@ -1,4 +1,4 @@
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { entierBorne } from '../core/valeurs';
 import { lignesDeCalculHtml } from './calculs';
 import { dossierDeRappel, type LigneDuDossier, lireRappel } from './dossier';
@@ -93,7 +93,7 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
         ${dossierDeRappel(exemple.rappel)}
         <p class="fp-worked__consigne">${escapeHtml(this.texte(this.surPapier() ? 'worked-consigne-papier' : 'worked-consigne'))}</p>
         <ol class="fp-worked__etapes">${exemple.etapes.map((etape, rang) => this.etape(etape, rang))}</ol>
-        ${this.surPapier() ? safeHtml`` : this.envoi()}
+        ${this.surPapier() ? VIDE : this.envoi()}
       </section>
     `;
   }
@@ -171,7 +171,7 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
       rang,
       (resolue) => safeHtml`
         ${resolue ? this.saisieFigee(etape) : this.redaction(etape)}
-        ${resolue && etape.raisonnement !== '' ? this.correction(etape) : safeHtml``}
+        ${resolue && etape.raisonnement !== '' ? this.correction(etape) : VIDE}
       `,
     );
   }
@@ -189,7 +189,7 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
       rang,
       (resolue) => safeHtml`
         <p class="fp-worked__invite" data-testid="question">${escapeHtml(etape.invite)}</p>
-        ${resolue ? this.correction(etape) : safeHtml``}
+        ${resolue ? this.correction(etape) : VIDE}
       `,
     );
   }

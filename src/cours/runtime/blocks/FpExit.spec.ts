@@ -230,6 +230,17 @@ describe('FpExit', () => {
     rechargee.remove();
   });
 
+  it('ne restaure d un brouillon que ses champs textuels', () => {
+    const rechargee = document.createElement('fp-exit') as FpExit;
+    rechargee.billet = BILLET;
+    rechargee.brouillon = { texteLibre: 42, choix: 'c' };
+    document.body.appendChild(rechargee);
+
+    expect(champLibre(rechargee).value).toBe('');
+    expect(attributDOption(rechargee, 'c', 'aria-pressed')).toBe('true');
+    rechargee.remove();
+  });
+
   it('L4-F20 · ignore un brouillon arrive apres l envoi du billet', () => {
     choisir(hote, 'a');
     ecrire(hote, TEXTE_COURT);
@@ -277,7 +288,7 @@ describe('FpExit', () => {
     hote.setAttribute('data-papier', '');
 
     expect(
-      [...(hote.shadowRoot?.querySelectorAll('li[data-testid="option"]') ?? [])].map((option) =>
+      [...(hote.shadowRoot?.querySelectorAll('li[data-testid="case"]') ?? [])].map((option) =>
         option.textContent?.trim(),
       ),
     ).toEqual(BILLET.options.map((option) => option.libelle));

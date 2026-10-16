@@ -1,4 +1,5 @@
 import { escapeHtml } from '../../../cours/runtime/core/html';
+import { estTexteNonVide } from '../../../cours/runtime/core/valeurs';
 
 const TOKEN_PREFIX = 'MBTOKEN';
 const TOKEN_SUFFIX = 'X';
@@ -120,7 +121,7 @@ export function renderArticleMarkdown(markdown: string): string {
       continue;
     }
 
-    if (line.trim() === '') {
+    if (!estTexteNonVide(line)) {
       flushTextBlocks();
       continue;
     }

@@ -15,10 +15,10 @@ describe('coursEntreeGuard', () => {
     authState.login(buildAuthSession({ user: buildAuthUser({ roles: [role] }) }));
   }
 
-  function attendreLaRedirectionVers(url: string): void {
+  function attendreLaRedirectionVers(url: string, coursSlug: unknown = SLUG): void {
     const result = TestBed.runInInjectionContext(() =>
       coursEntreeGuard(
-        { data: { coursSlug: SLUG } } as unknown as ActivatedRouteSnapshot,
+        { data: { coursSlug } } as unknown as ActivatedRouteSnapshot,
         {} as RouterStateSnapshot,
       ),
     );
@@ -47,5 +47,11 @@ describe('coursEntreeGuard', () => {
 
   it('R3 · F03 · envoie le visiteur non connecté au rattachement étudiant, en gardant le cours visé', () => {
     attendreLaRedirectionVers(`/cours/rejoindre?cours=${SLUG}`);
+  });
+
+  it('envoie au rattachement, sans cours visé, une route dont le cours n est pas un texte', () => {
+    connecter('teacher');
+
+    attendreLaRedirectionVers('/cours/rejoindre', 201);
   });
 });

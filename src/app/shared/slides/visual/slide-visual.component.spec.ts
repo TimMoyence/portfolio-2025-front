@@ -152,6 +152,30 @@ describe('SlideVisualComponent', () => {
     });
   });
 
+  describe('lien vers la source', () => {
+    function lienDe(sourceLink: unknown): HTMLAnchorElement | null {
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput(
+        'slide',
+        buildRecitVisuel('B2-01-S01-ACCROCHE', 'hero', { title: 'Lire un chiffre', sourceLink }),
+      );
+      fixture.detectChanges();
+      return (fixture.nativeElement as HTMLElement).querySelector('.slide-visual__source a');
+    }
+
+    it('cite la source declaree par l ecran', () => {
+      const lien = lienDe({ href: 'https://www.insee.fr/', label: 'Insee' });
+
+      expect(lien?.getAttribute('href')).toBe('https://www.insee.fr/');
+      expect(lien?.textContent?.trim()).toBe('Insee');
+    });
+
+    it('ne cite aucune source dont l adresse ou le libelle n est pas un texte', () => {
+      expect(lienDe({ href: null, label: 'Insee' })).toBeNull();
+      expect(lienDe({ href: 'https://www.insee.fr/', label: 12 })).toBeNull();
+    });
+  });
+
   describe('correction du tri', () => {
     function monter(retours: ReadonlyMap<string, RetourBrique[]> = new Map()): HTMLElement {
       const fixture = TestBed.createComponent(SlideVisualComponent);

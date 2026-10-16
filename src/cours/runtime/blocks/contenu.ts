@@ -1,5 +1,5 @@
 import { FpBlock } from './FpBlock';
-import { estObjet } from '../core/valeurs';
+import { estObjet, memeIdentifiant } from '../core/valeurs';
 
 interface CiblesDeSaisie {
   readonly champ: string;
@@ -35,10 +35,16 @@ export abstract class FpContenu<Contenu extends { readonly id: string }> extends
   }
 
   protected poserLeContenu(valeur: Contenu | null, copier: (source: Contenu) => Contenu): void {
-    const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
+    const change = !memeIdentifiant(valeur, this.interne);
     this.interne = valeur === null ? null : copier(valeur);
     if (change) {
       this.repartirDeZero();
+    }
+  }
+
+  protected signalerLeBrouillon(valeur: unknown): void {
+    if (!this.enApercu() && !this.presentateur()) {
+      this.emit('fp-brouillon', { id: this.interne?.id ?? '', valeur });
     }
   }
 

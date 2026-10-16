@@ -1,8 +1,8 @@
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { FpEnvoi } from './contenu';
 import { dossierDeRappel, type LigneDuDossier, lireRappel } from './dossier';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
-import { estObjet } from '../core/valeurs';
+import { chaineDe, estObjet, estTexteNonVide } from '../core/valeurs';
 import type { StrategieServie } from './retours';
 
 export interface ChallengeProblemePublic extends ContenuDeBrique {
@@ -13,7 +13,6 @@ export interface ChallengeProblemePublic extends ContenuDeBrique {
 }
 
 const ID_TENTATIVE = 'fp-challenge-tentative';
-const VIDE = escapeHtml('');
 const OUVERT = safeHtml`open`;
 
 function lireStrategie(valeur: unknown): StrategieServie | null {
@@ -89,8 +88,8 @@ export class FpChallenge extends FpEnvoi<ChallengeProblemePublic> {
   }
 
   protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
-    const tentative = brouillon['tentative'];
-    if (typeof tentative !== 'string') {
+    const tentative = chaineDe(brouillon, 'tentative');
+    if (tentative === null) {
       return false;
     }
     this.tentative = tentative;
@@ -146,7 +145,7 @@ export class FpChallenge extends FpEnvoi<ChallengeProblemePublic> {
       {
         saisir: (tentative) => {
           this.tentative = tentative;
-          this.signalerBrouillon(this.interne?.id ?? '', { tentative });
+          this.signalerLeBrouillon({ tentative });
         },
         envoyer: (tentative) => this.envoyer(tentative),
       },
@@ -191,7 +190,7 @@ export class FpChallenge extends FpEnvoi<ChallengeProblemePublic> {
       return;
     }
     this.tentative = brut;
-    if (brut.trim().length === 0) {
+    if (!estTexteNonVide(brut)) {
       this.refuserLEnvoi(this.texte('challenge-tentative-vide'));
       return;
     }

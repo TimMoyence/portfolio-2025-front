@@ -19,6 +19,7 @@ import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import { readInputValue } from '../../../utils/dom-event.utils';
 import type { EtatEnvoiLibre } from '../../session/reponses-libres.service';
 import { cleDeReponseLibre, ReponsesLibresService } from '../../session/reponses-libres.service';
+import { estTexteNonVide } from '../../../../../cours/runtime/core/valeurs';
 import { chargerInteraction } from '../interactions.util';
 import type { ModeInteraction } from '../mode-interaction';
 
@@ -75,6 +76,7 @@ export class SlideReflectionComponent implements OnInit {
   protected readonly activeReflection = computed(() => this.promptData() ?? this.reflection());
   protected readonly error = signal<boolean>(false);
   protected readonly value = signal<string>('');
+  protected readonly vide = computed(() => !estTexteNonVide(this.value()));
   protected readonly saveState = signal<EtatEnvoi>('repos');
   protected readonly garde = computed(() => {
     const sessionId = this.seanceCourante();
@@ -123,10 +125,10 @@ export class SlideReflectionComponent implements OnInit {
 
   protected async save(): Promise<void> {
     const sessionId = this.seanceCourante();
-    const response = this.value().trim();
-    if (response === '' || sessionId === null) {
+    if (this.vide() || sessionId === null) {
       return;
     }
+    const response = this.value().trim();
     this.saveState.set('envoi');
     const etat = await this.reponsesLibres.envoyer(sessionId, this.jeton(), {
       screenId: this.screenId(),

@@ -1,6 +1,6 @@
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { enFrancais } from '../core/typographie';
-import { fini } from '../core/valeurs';
+import { estTexteNonVide, fini } from '../core/valeurs';
 import {
   type Reglages,
   borner,
@@ -36,7 +36,7 @@ export function arrondi(valeur: number): number {
 
 function copierParametres(source: readonly ParametreReglable[]): ParametreReglable[] {
   return source
-    .filter((parametre) => parametre.cle.trim().length > 0)
+    .filter((parametre) => estTexteNonVide(parametre.cle))
     .map((parametre) => ({
       cle: parametre.cle,
       libelle: parametre.libelle,
@@ -157,7 +157,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
       <fieldset class="fp-${bloc}__reglages">
         <legend>${escapeHtml(this.texteDuBloc(papier ? 'reglages-papier' : 'reglages'))}</legend>
         <div class="fp-${bloc}__corps">
-          ${papier ? safeHtml`` : declencheurs}
+          ${papier ? VIDE : declencheurs}
           <div class="fp-${bloc}__parametres" aria-live="polite">
             ${(this.interne?.parametres ?? []).map((parametre) => this.parametreAffiche(parametre))}
           </div>
@@ -173,7 +173,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
   protected prereglagesAffiches(): EscapedHtml {
     const prereglages = this.interne?.prereglages ?? [];
     if (prereglages.length === 0) {
-      return safeHtml``;
+      return VIDE;
     }
     const boutons = prereglages.map(
       (prereglage, rang) =>
@@ -190,7 +190,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
     return safeHtml`
       <div class="fp-${bloc}__parametre" data-testid="parametre" data-cle="${escapeHtml(parametre.cle)}">
         <span class="fp-${bloc}__etiquette">${escapeHtml(parametre.libelle)}</span>
-        ${this.surPapier() ? safeHtml`` : curseur(prefixe, parametre, valeur, enonce)}
+        ${this.surPapier() ? VIDE : curseur(prefixe, parametre, valeur, enonce)}
         <output class="fp-${bloc}__valeur fp-montant" data-testid="valeur" data-cle="${escapeHtml(parametre.cle)}" aria-label="${escapeHtml(enonce)}">${escapeHtml(this.afficherValeur(valeur))}</output>
       </div>
     `;

@@ -1,4 +1,5 @@
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { estTexteNonVide } from '../core/valeurs';
 import { FpBlock } from './FpBlock';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 
@@ -6,10 +7,6 @@ export interface QuoteCitation extends ContenuDeBrique {
   readonly texte: string;
   readonly auteur: string | null;
   readonly source: string | null;
-}
-
-function renseigne(valeur: string | null): valeur is string {
-  return valeur !== null && valeur.trim().length > 0;
 }
 
 export class FpQuote extends FpBlock {
@@ -50,9 +47,9 @@ export class FpQuote extends FpBlock {
   }
 
   private attribution(citation: QuoteCitation): EscapedHtml {
-    const parts = [citation.auteur, citation.source].filter(renseigne);
+    const parts = [citation.auteur, citation.source].filter(estTexteNonVide);
     if (parts.length === 0) {
-      return safeHtml``;
+      return VIDE;
     }
     return safeHtml`<figcaption class="fp-quote__attribution" data-testid="attribution">${escapeHtml(parts.join(', '))}</figcaption>`;
   }

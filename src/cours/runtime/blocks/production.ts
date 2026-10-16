@@ -1,5 +1,5 @@
 import type { Decompte } from '../../content/types';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { FpEnvoiJuge } from './contenu';
 import { estObjet } from '../core/valeurs';
 import { type DetailDeVerdict, estVerdictDeProduction, type VerdictDeProduction } from './retours';
@@ -12,9 +12,6 @@ const GENRES_DE_VALEUR: ReadonlySet<string> = new Set(['number', 'string', 'bool
 function estDuType(champ: unknown, genre: TypeDeChamp): boolean {
   return genre === 'valeur' ? GENRES_DE_VALEUR.has(typeof champ) : typeof champ === genre;
 }
-
-const VIDE = escapeHtml('');
-const DESACTIVE = safeHtml`disabled`;
 
 export interface LectureDuCorrige<Attendu> {
   readonly type: string;
@@ -192,7 +189,7 @@ export abstract class FpProductionEtayee<Plan extends PlanEtaye, Attendu> extend
     if (this.verrouille()) {
       this.reprises = new Set([...this.reprises, cle]);
     }
-    this.signalerBrouillon(this.interne?.id ?? '', brouillon);
+    this.signalerLeBrouillon(brouillon);
     this.refresh();
   }
 

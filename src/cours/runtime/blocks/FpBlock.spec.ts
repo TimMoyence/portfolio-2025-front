@@ -23,6 +23,15 @@ class FpDemo extends FpBlock {
       .querySelector('[data-testid="action"]')
       ?.addEventListener('click', () => this.emit('fp-action', { ok: true }));
   }
+
+  imprimer(libelles: readonly string[]): string {
+    return this.casesAImprimer(libelles.map((libelle) => ({ libelle }))).join('');
+  }
+
+  changerDeQuestion(id: string): void {
+    this.question = id;
+    this.suivreEtRafraichir(id);
+  }
 }
 
 class FpBroken extends FpBlock {
@@ -308,11 +317,46 @@ describe('FpBlock', () => {
     expect(hote.depuisAffichage()).toBe(300);
   });
 
+  it('rafraichit le rendu d une brique connectee quand la question suivie change', () => {
+    poserLaQuestionChronometree();
+    const rendu = spyOn(hote, 'render').and.callThrough();
+
+    hote.changerDeQuestion('Q-SUIVANTE');
+
+    expect(rendu).toHaveBeenCalledTimes(1);
+  });
+
+  it('rearme le chronometre de la question suivie sans rendre une brique detachee', () => {
+    poserLaQuestionChronometree();
+    hote.remove();
+    const rendu = spyOn(hote, 'render').and.callThrough();
+
+    hote.changerDeQuestion('Q-SUIVANTE');
+    jasmine.clock().tick(300);
+
+    expect(hote.depuisAffichage()).toBe(300);
+    expect(rendu).not.toHaveBeenCalled();
+  });
+
+  it('imprime une case par option, son libelle echappe', () => {
+    expect(hote.imprimer(['<b>A</b>', 'B'])).toBe(
+      '<li data-testid="case">&lt;b&gt;A&lt;/b&gt;</li><li data-testid="case">B</li>',
+    );
+  });
+
   it('compte zero et non une duree negative quand la mesure passe sous l instant d affichage', () => {
     poserLaQuestionChronometree();
     jasmine.clock().mockDate(new Date(-60_000));
 
     expect(hote.depuisAffichage()).toBe(0);
+  });
+
+  it('rend le temps restant d une duree depuis l affichage, sans descendre sous zero', () => {
+    poserLaQuestionChronometree();
+
+    expect(hote.restantDepuisAffichage(10_000)).toBe(2000);
+    expect(hote.restantDepuisAffichage(8000)).toBe(0);
+    expect(hote.restantDepuisAffichage(5000)).toBe(0);
   });
 
   it('garde le temps d affichage juste quand l horloge du poste recule d une heure', () => {

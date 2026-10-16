@@ -21,7 +21,7 @@ import type { CorrigeEcranPresentateur, ExplicationServie } from '../../../../co
 import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
 import { texte } from '../../../../cours/runtime/core/i18n';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
-import { estObjet } from '../../../../cours/runtime/core/valeurs';
+import { estChaineNonVide, estObjet } from '../../../../cours/runtime/core/valeurs';
 import type { RetourBrique, SyntheseConcept } from '../../../core/ports/formations.port';
 import type { DebriefDeReflexion } from '../interactions/slide-reflection/slide-reflection.component';
 import { aUnePresentation } from '../visual/presentation-v2';
@@ -329,7 +329,7 @@ export class SlideActivityComponent {
     const detail: unknown = event.detail;
     if (estObjet(detail) && 'valeur' in detail) {
       const { id, valeur } = detail;
-      if (typeof id === 'string' && id !== '') {
+      if (estChaineNonVide(id)) {
         brouillons.ecrire(cible.localName, id, valeur);
       }
     }

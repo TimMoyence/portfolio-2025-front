@@ -1,6 +1,6 @@
 import { evaluerExpression, lireNombreSaisi } from 'portfolio-2025-partage/formule';
 import { dansUnDefileur } from '../core/defileur';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, LECTURE_SEULE, safeHtml, VIDE } from '../core/html';
 import { enFrancais } from '../core/typographie';
 import { avecUnite, entierBorne, estMembre } from '../core/valeurs';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
@@ -56,8 +56,6 @@ const PREFIXE_COLONNE = 'fp-table-build-col-';
 const PREFIXE_LIGNE = 'fp-table-build-ligne-';
 const STYLE_CELLULE = 'fp-table-build__cellule fp-montant';
 const STYLE_RANG = 'fp-table-build__rang';
-const VIDE = escapeHtml('');
-const LECTURE_SEULE = safeHtml`readonly`;
 const SELECTIONNEE = safeHtml`selected`;
 const DECIMALES_MAX = 6;
 const ROLES: readonly RoleColonne[] = ['donnee', 'saisie', 'deduite'];

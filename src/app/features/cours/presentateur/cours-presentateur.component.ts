@@ -44,6 +44,7 @@ import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.to
 import { type Chargement, lectureSuivie } from '../lecture-suivie';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import {
+  ecranAuRang,
   ecranDIdentifiant,
   enoncesDuDeroule,
   estVoteJumele,
@@ -749,7 +750,7 @@ export class CoursPresentateurComponent {
   protected readonly avancementDuCurseur = computed(() => part(this.ecran(), this.dernierEcran()));
 
   readonly ecranCourant = computed<EcranDeroule | null>(
-    () => this.deroule()?.ecrans[this.ecran()] ?? null,
+    () => ecranAuRang(this.deroule(), this.ecran()) ?? null,
   );
 
   readonly annexeDeLEcran = computed(() => {

@@ -101,6 +101,13 @@ describe('interactions.util', () => {
       });
     });
 
+    it('donne un type vide a une interaction servie sans type', (done) => {
+      flattenInteractions(sourceImbriquee({ present: [{ question: 'Q3' }] })).subscribe((list) => {
+        expect(list.map((interaction) => interaction.type)).toEqual(['']);
+        done();
+      });
+    });
+
     it('retourne [] pour des entrees invalides (null, non-objet, liste plate, sans interactions)', (done) => {
       flattenInteractions(of(null)).subscribe((a) => {
         expect(a).toEqual([]);

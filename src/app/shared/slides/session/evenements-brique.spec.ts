@@ -127,4 +127,10 @@ describe('evenementsDe : traduction des evenements de brique vers le contrat hot
     expect(evenementsDe('fp-vote-submit', 'texte brut', ECRAN)).toEqual([]);
     expect(evenementsDe('fp-inconnu-submit', { dureeMs: 1 }, ECRAN)).toEqual([]);
   });
+
+  it('transmet a la seance une duree nulle, celle d un poste dont l horloge a recule', () => {
+    expect(traduire('fp-numeric-submit', { dureeMs: 0 })).toEqual([
+      { kind: 'reponse', screenId: ECRAN, questionId: 'Q-VA-07', valeur: 1480.24, dureeMs: 0 },
+    ]);
+  });
 });

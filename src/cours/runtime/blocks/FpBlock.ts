@@ -3,13 +3,11 @@ import { adoptCoursStyles } from '../design/sheet';
 import { texte as traduire } from '../core/i18n';
 import { suivreLesDefileurs } from '../core/defileur';
 import { dureeMonotoneDepuis, instantMonotone } from '../core/duree';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { avecUnite } from '../core/valeurs';
+import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { avecUnite, estChaineNonVide } from '../core/valeurs';
 import { suivreLesZonesDeSaisie } from '../core/zone-de-saisie';
 import type { DetailDeVerdict, VerdictDeProduction, VerdictDeReponse } from './retours';
 
-const VIDE = escapeHtml('');
-const DESACTIVE = safeHtml`disabled`;
 const ATTRIBUTS_DE_REPERE: readonly string[] = [
   'data-testid',
   'data-nom',
@@ -113,7 +111,7 @@ export abstract class FpBlock extends HTMLElement {
   }
 
   protected appliquerErreur(valeur: string | null): void {
-    this.interneErreur = typeof valeur === 'string' && valeur.length > 0 ? valeur : null;
+    this.interneErreur = estChaineNonVide(valeur) ? valeur : null;
     this.refreshSiConnecte();
   }
 
@@ -164,6 +162,12 @@ export abstract class FpBlock extends HTMLElement {
     return this.hasAttribute('data-papier');
   }
 
+  protected casesAImprimer(options: readonly { readonly libelle: string }[]): EscapedHtml[] {
+    return options.map(
+      (option) => safeHtml`<li data-testid="case">${escapeHtml(option.libelle)}</li>`,
+    );
+  }
+
   texte(cle: string): string {
     return traduire(cle);
   }
@@ -184,8 +188,17 @@ export abstract class FpBlock extends HTMLElement {
     return !this.presentateur();
   }
 
+  protected suivreEtRafraichir(id: string | null): void {
+    this.suivreAffichage(id);
+    this.refreshSiConnecte();
+  }
+
   depuisAffichage(): number {
     return dureeMonotoneDepuis(this.affiche);
+  }
+
+  restantDepuisAffichage(dureeMs: number): number {
+    return Math.max(0, dureeMs - this.depuisAffichage());
   }
 
   refresh(): void {
@@ -229,12 +242,6 @@ export abstract class FpBlock extends HTMLElement {
 
   protected messageApresEnvoi(): string {
     return this.texte(this.enApercu() ? 'apercu' : 'reponse-enregistree');
-  }
-
-  protected signalerBrouillon(id: string, valeur: unknown): void {
-    if (!this.enApercu() && !this.presentateur()) {
-      this.emit('fp-brouillon', { id, valeur });
-    }
   }
 
   protected noterBrouillonRepris(): void {

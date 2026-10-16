@@ -427,7 +427,7 @@ function interpolerUne(
 function interpoler(lecteur: LecteurDeGabarit, valeur: HtmlFragment, suite: string): string {
   if (!estUnTableau(valeur)) return interpolerUne(lecteur, valeur, () => suite);
   const elements = copieDe(valeur);
-  if (elements.length === 0) return interpolerUne(lecteur, escapeHtml(''), () => suite);
+  if (elements.length === 0) return interpolerUne(lecteur, VIDE, () => suite);
   return elements
     .map((element, rang) =>
       interpolerUne(
@@ -473,3 +473,7 @@ export function safeHtml(
   }
   return out as EscapedHtml;
 }
+
+export const VIDE = escapeHtml('');
+export const DESACTIVE = safeHtml`disabled`;
+export const LECTURE_SEULE = safeHtml`readonly`;
