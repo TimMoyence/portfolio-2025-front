@@ -173,11 +173,6 @@
   }
 }
 
-.tkp-card--accent {
-  border: 2px solid rgba(var(--teal-rgb), 0.25);
-  background: rgba(var(--teal-rgb), 0.04);
-}
-
 .tkp-card__head {
   display: flex;
   align-items: center;
@@ -279,20 +274,6 @@
   flex: none;
   font-weight: 600;
   color: var(--teal-deep);
-}
-
-.tkp-gamma-cta {
-  margin-top: 12px;
-  font-size: 13px;
-  color: var(--ink-mute);
-
-  a {
-    @include toolkit.lien-souligne;
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
 }
 
 .tkp-foot {

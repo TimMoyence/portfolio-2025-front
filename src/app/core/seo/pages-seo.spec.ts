@@ -19,11 +19,14 @@ describe('pages-seo', () => {
       expect(pageSeoDeLaRoute(metadata, '/contact/')).toBe(contact);
     });
 
-    it('ramene /, /home et une route faite de slashs a la page d accueil', () => {
+    it('ramene / et une route faite de slashs a la page d accueil', () => {
       expect(pageSeoDeLaRoute(metadata, '/')).toBe(accueil);
-      expect(pageSeoDeLaRoute(metadata, '/home')).toBe(accueil);
-      expect(pageSeoDeLaRoute(metadata, '/home/')).toBe(accueil);
       expect(pageSeoDeLaRoute(metadata, '//')).toBe(accueil);
+    });
+
+    it('laisse /home au 301 du serveur, sans le confondre avec l accueil', () => {
+      expect(pageSeoDeLaRoute(metadata, '/home')).toBeUndefined();
+      expect(pageSeoDeLaRoute(metadata, '/home/')).toBeUndefined();
     });
 
     it('reconnait l accueil a son identifiant, quel que soit son chemin declare', () => {

@@ -1,11 +1,10 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import type { OnDestroy } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   LOCALE_ID,
-  PLATFORM_ID,
   inject,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
@@ -88,7 +87,6 @@ export class GrowthAuditComponent implements OnDestroy {
   private readonly auditService: AuditRequestPort = inject(AUDIT_REQUEST_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
   private debutDeSaisie = instantMonotone();
-  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly langue: NonNullable<AuditRequestPayload['locale']> =
     langueDuSite(inject(LOCALE_ID)) === 'en' ? 'en' : 'fr';
   protected readonly iaTaskFallback = $localize`:@@auditIaTaskFallback:IA`;
@@ -305,16 +303,10 @@ export class GrowthAuditComponent implements OnDestroy {
         this.resetAuditTimeline();
         this.isAuditRunning = true;
         this.reconnectAttempts = 0;
-        this.trackAuditEvent('audit_submitted', {
-          auditId: response.auditId,
-          contactMethod: payload.contactMethod,
-          locale: payload.locale,
-        });
         this.startStream(response.auditId);
       },
-      onError: (message, statut) => {
+      onError: (message) => {
         this.errorMessage = message;
-        this.trackAuditEvent('audit_error', { reason: `http_${statut}` });
       },
       onComplete: () => {
         this.isSubmitted = false;
@@ -327,31 +319,6 @@ export class GrowthAuditComponent implements OnDestroy {
         this.isSubmitting = false;
       },
     });
-  }
-
-  /**
-   * Emet un event Plausible si le script est charge cote client. No-op en
-   * SSR ou quand Plausible est absent (self-hosted optionnel). Le script
-   * est charge via `<script data-domain="asilidesign.fr" src="...">` dans
-   * `index.html` une fois le compte Plausible provisionne — ce hook est
-   * pret a emettre sans redeploy lorsque la config arrive.
-   */
-  private trackAuditEvent(
-    name: 'audit_submitted' | 'audit_completed' | 'audit_failed' | 'audit_error',
-    props: Record<string, string>,
-  ): void {
-    if (!this.isBrowser) return;
-    const plausible = (
-      window as unknown as {
-        plausible?: (event: string, opts: { props: Record<string, string> }) => void;
-      }
-    ).plausible;
-    if (typeof plausible !== 'function') return;
-    try {
-      plausible(name, { props });
-    } catch {
-      // Analytics ne doivent jamais faire remonter d'erreur UX.
-    }
   }
 
   ngOnDestroy(): void {
@@ -394,20 +361,12 @@ export class GrowthAuditComponent implements OnDestroy {
         pillarScores: event.data.pillarScores,
       };
       this.clientReport = event.data.clientReport ?? null;
-      this.trackAuditEvent('audit_completed', {
-        auditId: event.data.auditId,
-        status: event.data.status,
-      });
       this.cdr.markForCheck();
       return;
     }
 
     const delaiDepasse = event.type === 'timeout';
     this.arreterLAudit(delaiDepasse ? this.connexionPerdue : this.echecDeLAudit);
-    this.trackAuditEvent('audit_failed', {
-      auditId: event.data.auditId,
-      reason: delaiDepasse ? 'timeout' : 'unknown',
-    });
   }
 
   private recoverFromSummary(auditId: string): void {

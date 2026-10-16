@@ -3267,23 +3267,6 @@
         <target>Select your role</target>
       </segment>
     </unit>
-    <!-- Navbar — L'Atelier dropdown -->
-    <!-- Weather presentation -->
-    <!-- Weather app -->
-    <!-- Weather level system -->
-    <!-- Budget app -->
-    <!-- Dashboard hero -->
-    <!-- Empty state -->
-    <!-- Month picker -->
-    <!-- Summary cards -->
-    <!-- Filters -->
-    <!-- Transactions table -->
-    <!-- Months -->
-    <!-- Sebastian presentation -->
-
-    <!-- Cartes meteo Curieux (Phase 2B) -->
-
-    <!-- Cartes meteo Expert (Phase 3) -->
     <unit id="navProfileLabel">
       <segment>
         <source>Profil</source>
@@ -3632,19 +3615,7 @@
     </unit>
 
     <!-- ============================================================ -->
-    <!-- budget-presentation-data.ts                                   -->
-    <!-- ============================================================ -->
-
-    <!-- ============================================================ -->
-    <!-- weather-presentation-data.ts                                  -->
-    <!-- ============================================================ -->
-
-    <!-- ============================================================ -->
-    <!-- sebastian-presentation-data.ts                                -->
-    <!-- ============================================================ -->
-
-    <!-- ============================================================ -->
-    <!-- ia-solopreneurs.data.ts                                       -->
+    <!-- ia-solopreneurs.component.html                                -->
     <!-- ============================================================ -->
 
     <!-- Slide: accroche -->
@@ -4175,8 +4146,6 @@
       </segment>
     </unit>
 
-    <!-- Slide: demo-gamma -->
-
     <!-- Slide: recap-8020 -->
     <unit id="ia-solo.recap-8020.title">
       <segment>
@@ -4354,9 +4323,6 @@
         <target>Verification failed: the link is invalid or has expired.</target>
       </segment>
     </unit>
-    <!-- Members panel -->
-    <!-- Contributions panel -->
-    <!-- Savings goals -->
     <unit id="navFormationsLabel">
       <segment>
         <source>Formations</source>
@@ -4583,18 +4549,6 @@
       <segment>
         <source><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">4.</pc> Templates réutilisables </source>
         <target><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">4.</pc> Reusable templates </target>
-      </segment>
-    </unit>
-    <unit id="formations.toolkitPrivate.sectionGamma">
-      <segment>
-        <source><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">5.</pc> Votre prompt Gamma personnalisé </source>
-        <target><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">5.</pc> Your personalized Gamma prompt </target>
-      </segment>
-    </unit>
-    <unit id="formations.toolkitPrivate.gammaCta">
-      <segment>
-        <source> Collez ce prompt dans <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="fmt" dispStart="&lt;a href=&quot;https://gamma.app&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;" dispEnd="&lt;/a&gt;">gamma.app</pc> pour générer votre présentation en 60 secondes. </source>
-        <target> Paste this prompt into <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="fmt" dispStart="&lt;a href=&quot;https://gamma.app&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;" dispEnd="&lt;/a&gt;">gamma.app</pc> to generate your presentation in 60 seconds. </target>
       </segment>
     </unit>
     <unit id="contactFormSubjectAccess">
@@ -7493,7 +7447,6 @@
       </segment>
     </unit>
 
-    <!-- Budget magic-link invitations (Phase 3 — 2026-05-12) -->
 
 
 

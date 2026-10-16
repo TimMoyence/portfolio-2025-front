@@ -26,8 +26,6 @@ const OUVERTE_PAR_UN_LIEN_A_JETON: Readonly<Record<string, string>> = {
 
 export const serverRoutes: ServerRoute[] = [
   { path: 'profil', renderMode: RenderMode.Client },
-  { path: 'atelier', renderMode: RenderMode.Server },
-  { path: 'atelier/**', renderMode: RenderMode.Server },
   { path: 'cours/rejoindre', renderMode: RenderMode.Client },
   { path: 'cours/presenter/:slug', renderMode: RenderMode.Client },
   {

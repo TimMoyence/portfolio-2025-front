@@ -1,7 +1,6 @@
 import {
   buildLocalizedPath,
   cheminEnLocale,
-  estAliasDAccueil,
   estCheminInterne,
   normalizePath,
   routeSansLocale,
@@ -158,15 +157,6 @@ describe('chemins', () => {
       for (const chemin of ['/a b', '/a\u0000b', '/a\u007fb']) {
         expect(estCheminInterne(chemin)).withContext(JSON.stringify(chemin)).toBeFalse();
       }
-    });
-  });
-
-  describe('estAliasDAccueil', () => {
-    it('reconnait / et /home, et rien d autre', () => {
-      expect(estAliasDAccueil('/')).toBeTrue();
-      expect(estAliasDAccueil('/home')).toBeTrue();
-      expect(estAliasDAccueil('/homepage')).toBeFalse();
-      expect(estAliasDAccueil('/fr/')).toBeFalse();
     });
   });
 });

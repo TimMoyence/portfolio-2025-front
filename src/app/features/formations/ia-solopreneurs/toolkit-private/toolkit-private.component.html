@@ -156,33 +156,6 @@
             </section>
           }
 
-          @if (toolkit.generatedPrompt) {
-            <section class="tkp-section">
-              <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionGamma">
-                <span class="tkp-num">5.</span> Votre prompt Gamma personnalisé
-              </h2>
-              <div class="tkp-card tkp-card--accent">
-                <div class="tkp-code">
-                  <pre>{{ toolkit.generatedPrompt }}</pre>
-                  <button
-                    type="button"
-                    class="tkp-copy"
-                    (click)="copyToClipboard(toolkit.generatedPrompt!)"
-                  >
-                    {{ copyButtonLabel(toolkit.generatedPrompt) }}
-                  </button>
-                </div>
-                <p class="tkp-gamma-cta" i18n="@@formations.toolkitPrivate.gammaCta">
-                  Collez ce prompt dans
-                  <a href="https://gamma.app" target="_blank" rel="noopener noreferrer"
-                    >gamma.app</a
-                  >
-                  pour générer votre présentation en 60 secondes.
-                </p>
-              </div>
-            </section>
-          }
-
           <footer class="tkp-foot">
             <p i18n="@@formations.toolkitPrivate.brand">Asili Design — asilidesign.fr</p>
           </footer>

@@ -8,7 +8,6 @@ import { chaineDe } from '../../../cours/runtime/core/valeurs';
 import { APP_CONFIG } from '../../core/config/app-config.token';
 import {
   buildLocalizedPath,
-  estAliasDAccueil,
   routeSansLocale,
   urlAbsolue,
   urlLocalisee,
@@ -169,8 +168,10 @@ export class SeoManagerComponent {
     canonicalPath: string;
     relativePath: string;
   } {
-    const { locale, route } = routeSansLocale(currentUrl, this.seoRegistry.getLocales());
-    const relativePath = estAliasDAccueil(route) ? '/' : route;
+    const { locale, route: relativePath } = routeSansLocale(
+      currentUrl,
+      this.seoRegistry.getLocales(),
+    );
     return {
       canonicalPath: buildLocalizedPath(locale ?? this.seoRegistry.getLocaleId(), relativePath),
       relativePath,

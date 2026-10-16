@@ -5,7 +5,6 @@ import {
   withEventReplay,
   withHttpTransferCacheOptions,
 } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
@@ -44,7 +43,6 @@ export const appConfig: ApplicationConfig = {
         filter: (req) => !req.url.includes('/auth/'),
       }),
     ),
-    provideAnimations(),
     provideHttpClient(withInterceptors([authInterceptor, requestIdInterceptor]), withFetch()),
 
     {

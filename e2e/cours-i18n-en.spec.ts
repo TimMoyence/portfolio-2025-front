@@ -14,8 +14,6 @@ const baseAnglaise = process.env['SSR_EN_BASE_URL'] ?? '';
 
 const ROUTES_EN = [
   '/en',
-  '/en/client-project',
-  '/en/commonbudgetTM',
   '/en/contact',
   '/en/cookie-settings',
   '/en/cours/demo',
@@ -27,7 +25,6 @@ const ROUTES_EN = [
   '/en/formations/ia-solopreneurs',
   '/en/formations/ia-solopreneurs/toolkit',
   '/en/growth-audit',
-  '/en/home',
   '/en/login',
   '/en/offer',
   '/en/presentation',
@@ -35,7 +32,6 @@ const ROUTES_EN = [
   '/en/projets',
   '/en/register',
   '/en/reset-password',
-  '/en/slides/library',
   '/en/terms',
   '/en/verify-email',
 ];

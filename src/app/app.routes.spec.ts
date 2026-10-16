@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from '@angular/router';
-import { provideRouter, Router } from '@angular/router';
 import { buildAuthSession, buildAuthUser } from '../testing/factories/auth.factory';
 import { setupTestBed } from '../testing/setup-test-bed';
 import { authGuard } from './core/guards/auth.guard';
 import { coursEntreeGuard } from './core/guards/cours-entree.guard';
 import { AuthStateService } from './core/services/auth-state.service';
+import { resolveRedirect } from '../server/redirects';
 import { routes } from './app.routes';
 
 describe('app routes', () => {
@@ -25,7 +25,6 @@ describe('app routes', () => {
   it('devrait contenir toutes les routes principales', () => {
     const cheminsPrincipaux = [
       '',
-      'home',
       'login',
       'register',
       'forgot-password',
@@ -35,13 +34,10 @@ describe('app routes', () => {
       'offer',
       'contact',
       'projets',
-      'client-project',
       'cookie-settings',
       'terms',
       'privacy',
       'growth-audit',
-      'atelier',
-      'commonbudgetTM',
       '**',
     ];
 
@@ -52,51 +48,16 @@ describe('app routes', () => {
     }
   });
 
-  it('devrait rediriger /home vers /', () => {
-    const homeRedirect = routes.find((r) => r.path === 'home');
+  it('ne double pas cote client une url que le serveur redirige en 301', () => {
+    const doublons = routes
+      .map((route) => route.path ?? '')
+      .filter((chemin) => chemin !== '**' && resolveRedirect(`/${chemin}`) !== null);
 
-    expect(homeRedirect).toBeDefined();
-    expect(homeRedirect?.redirectTo).toBe('');
-    expect(homeRedirect?.pathMatch).toBe('full');
+    expect(doublons).toEqual([]);
   });
 
-  it("devrait rediriger /commonbudgetTM vers l'accueil", () => {
-    const commonBudgetRedirect = routes.find((r) => r.path === 'commonbudgetTM');
-
-    expect(commonBudgetRedirect).toBeDefined();
-    expect(commonBudgetRedirect?.redirectTo).toBe('');
-    expect(commonBudgetRedirect?.pathMatch).toBe('full');
-  });
-
-  for (const ancienneUrl of [
-    '/atelier',
-    '/atelier/meteo',
-    '/atelier/sebastian',
-    '/atelier/meteo/app',
-    '/atelier/sebastian/app/badges',
-  ]) {
-    it(`redirige l ancienne url de l atelier ${ancienneUrl} vers /projets`, async () => {
-      setupTestBed({ providers: [provideRouter(routes)] });
-
-      await TestBed.inject(Router).navigateByUrl(ancienneUrl);
-
-      expect(TestBed.inject(Router).url).toBe('/projets');
-    });
-  }
-
-  it('ne sert plus aucune application de l atelier', () => {
-    const cheminsDeLAtelier = routes.filter((r) => r.path?.startsWith('atelier'));
-
-    expect(cheminsDeLAtelier.every((r) => !r.loadComponent && !r.canActivate)).toBeTrue();
-  });
-
-  it('devrait rediriger /client-project vers /projets sans servir de composant', () => {
-    const caseStudyRedirect = routes.find((r) => r.path === 'client-project');
-
-    expect(caseStudyRedirect).toBeDefined();
-    expect(caseStudyRedirect?.redirectTo).toBe('projets');
-    expect(caseStudyRedirect?.pathMatch).toBe('full');
-    expect(caseStudyRedirect?.loadComponent).toBeUndefined();
+  it('n expose plus la bibliotheque interne de diapositives', () => {
+    expect(routes.some((route) => route.path === 'slides/library')).toBeFalse();
   });
 
   it('ne sert de boîte à outils que pour ia-solopreneurs, la seule que le back connaît', () => {

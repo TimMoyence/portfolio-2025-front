@@ -1,15 +1,11 @@
 export interface ToolkitPageData {
   recap: {
     firstName: string;
-    aiLevel: string | null;
-    sector: string | null;
-    budgetTier: string | null;
   };
   cheatsheet: CheatsheetEntry[];
   prompts: PromptEntry[];
   workflows: WorkflowEntry[];
   templates: TemplateEntry[];
-  generatedPrompt: string | null;
 }
 
 interface CheatsheetEntry {
@@ -19,7 +15,6 @@ interface CheatsheetEntry {
   url: string;
   tip: string;
   decision: string;
-  alreadyUsed: boolean;
 }
 
 interface PromptEntry {

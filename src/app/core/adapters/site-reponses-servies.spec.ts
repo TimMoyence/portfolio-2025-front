@@ -80,7 +80,34 @@ const SERVIES_SANS_LECTEUR: Readonly<Record<string, string>> = {
     '@Roles(admin), aucun client dans le front',
 };
 
-const OPTIONNELLES_AU_CONTRAT_DU_BACK: Readonly<Partial<Record<string, readonly string[]>>> = {};
+const PERSONNALISATION_DU_GUIDE = {
+  $: ['generatedPrompt'],
+  '$.recap': ['aiLevel', 'budgetTier', 'sector'],
+  '$.cheatsheet[]': ['alreadyUsed'],
+} as const;
+
+const OPTIONNELLES_AU_CONTRAT_DU_BACK: Readonly<Partial<Record<string, readonly string[]>>> =
+  PERSONNALISATION_DU_GUIDE;
+
+function sansLaPersonnalisation(page: unknown): unknown {
+  const copie = structuredClone(page) as {
+    recap: Record<string, unknown>;
+    cheatsheet: Record<string, unknown>[];
+  } & Record<string, unknown>;
+  const objetsDe = {
+    $: [copie],
+    '$.recap': [copie.recap],
+    '$.cheatsheet[]': copie.cheatsheet,
+  };
+  for (const [chemin, cles] of Object.entries(PERSONNALISATION_DU_GUIDE)) {
+    for (const objet of objetsDe[chemin as keyof typeof objetsDe]) {
+      for (const cle of cles) {
+        delete objet[cle];
+      }
+    }
+  }
+  return copie;
+}
 
 const OUVERT_AU_CONTRAT_DU_BACK = '$.keyChecks';
 
@@ -108,6 +135,22 @@ describe('Réponses réellement servies par le back hors des formations, lues pa
       nonLues: [],
       declareesNonServies: [],
     });
+  });
+
+  it('lit la page du guide que le back sert sans personnalisation, avant qu il cesse de la servir (LEG-06)', () => {
+    const pages = reponsesServiesPar('GET /api/lead-magnets/toolkit/:token').map(
+      sansLaPersonnalisation,
+    );
+
+    const lecteur: z.ZodType = guideServi;
+
+    expect(pages.length).toBeGreaterThan(0);
+    for (const page of pages) {
+      const lue = lecteur.safeParse(page);
+
+      expect(lue.success ? [] : lue.error.issues).toEqual([]);
+      expect(lue.data).toEqual(page);
+    }
   });
 
   it('ne déclare ouvert au contrat qu’un chemin réellement servi', () => {

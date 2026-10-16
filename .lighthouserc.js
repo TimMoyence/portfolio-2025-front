@@ -8,6 +8,7 @@ module.exports = {
       numberOfRuns: 3,
       settings: {
         preset: 'desktop',
+        chromeFlags: '--no-sandbox',
       },
     },
     assert: {
@@ -19,7 +20,8 @@ module.exports = {
       },
     },
     upload: {
-      target: 'temporary-public-storage',
+      target: 'filesystem',
+      outputDir: '.lighthouseci/rapports',
     },
   },
 };

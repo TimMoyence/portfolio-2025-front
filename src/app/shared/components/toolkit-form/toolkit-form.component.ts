@@ -15,7 +15,6 @@ import { langueDuSite } from '../../../core/config/locales';
 import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import type { ToolkitRequest } from '../../../core/models/toolkit-request.model';
 import { HoneypotDirective } from '../../directives/honeypot.directive';
-import { InteractionCollectorService } from '../../services/interaction-collector.service';
 import { readInputValue, readCheckboxChecked } from '../../utils/dom-event.utils';
 import { handleFormSubmit, INFORMATIONS_REFUSEES } from '../../utils/form-submit.utils';
 import { BORNES_D_UN_NOM, erreursDeLongueur } from '../../utils/regles-de-saisie';
@@ -118,9 +117,6 @@ export class ToolkitFormComponent {
 
   private readonly port = inject(LEAD_MAGNET_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
-  private readonly collector = inject(InteractionCollectorService, {
-    optional: true,
-  });
 
   /**
    * Locale courante detectee par Angular via `LOCALE_ID`. Sert de valeur
@@ -174,10 +170,6 @@ export class ToolkitFormComponent {
       termsLocale: langueDuSite(this.locale),
       termsAcceptedAt: new Date().toISOString(),
     };
-
-    if (this.collector?.hasData()) {
-      request.profile = this.collector.profile();
-    }
 
     handleFormSubmit(this.port.requestToolkit(request), this.cdr, {
       fallbackError: $localize`:@@toolkit-form.error.message:Une erreur est survenue. Réessayez.`,

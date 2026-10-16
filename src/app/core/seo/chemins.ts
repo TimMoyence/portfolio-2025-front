@@ -13,8 +13,6 @@ export const buildLocalizedPath = (locale: string, path: string): string => {
   return normalizePath(`/${locale}${normalized}`);
 };
 
-export const estAliasDAccueil = (route: string): boolean => route === '/' || route === '/home';
-
 const ESPACE_ASCII = 32;
 const SUPPRESSION_ASCII = 127;
 
