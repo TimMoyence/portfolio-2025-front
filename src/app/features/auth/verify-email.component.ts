@@ -6,10 +6,11 @@ import {
   OnInit,
   computed,
   inject,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, timer } from 'rxjs';
+import { forkJoin, tap, timer } from 'rxjs';
 import { AUTH_PORT, type AuthPort } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
@@ -31,7 +32,11 @@ export class VerifyEmailComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly suite = computed(() =>
+  private readonly compteRelu = signal(false);
+
+  protected readonly suite = computed(() => (this.compteRelu() ? this.suiteConnue() : null));
+
+  protected readonly suiteConnue = computed(() =>
     this.authState.isLoggedIn()
       ? {
           lien: '/profil',
@@ -63,9 +68,12 @@ export class VerifyEmailComponent implements OnInit {
       onSuccess: () => {
         this.isLoading = false;
         this.successMessage = $localize`:@@verifyEmailSucces:Votre adresse e-mail est vérifiée : votre compte est activé.`;
-        forkJoin([this.authState.relireLeCompte(), timer(3000)])
+        const relecture = this.authState
+          .relireLeCompte()
+          .pipe(tap(() => this.compteRelu.set(true)));
+        forkJoin([relecture, timer(3000)])
           .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => void this.router.navigate([this.suite().lien]));
+          .subscribe(() => void this.router.navigate([this.suiteConnue().lien]));
       },
       onError: (message) => {
         this.isLoading = false;

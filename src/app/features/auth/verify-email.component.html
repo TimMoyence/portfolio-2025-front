@@ -16,11 +16,13 @@
   @if (successMessage) {
     <app-auth-success
       [message]="successMessage"
-      [libelleConnexion]="suite().libelle"
-      [lien]="suite().lien"
+      [libelleConnexion]="suite()?.libelle"
+      [lien]="suiteConnue().lien"
     >
       <h1 title i18n="@@authVerifySuccessTitle">Compte <em>activé</em></h1>
-      <p class="sub">{{ suite().annonce }}</p>
+      @if (suite(); as suiteAnnoncee) {
+        <p class="sub">{{ suiteAnnoncee.annonce }}</p>
+      }
     </app-auth-success>
   }
 

@@ -1013,14 +1013,14 @@
         <source>Vérification <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>impossible<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.html</context>
-          <context context-type="linenumber">30,31</context>
+          <context context-type="linenumber">32,33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="verifyEmailBackToLogin" datatype="html">
         <source> Retour à la connexion </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.html</context>
-          <context context-type="linenumber">34,39</context>
+          <context context-type="linenumber">36,41</context>
         </context-group>
         <note priority="1" from="description">verify-email.backToLogin</note>
       </trans-unit>
@@ -1028,21 +1028,21 @@
         <source>Vous allez être redirigé vers votre profil…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authVerifyGoToProfil" datatype="html">
         <source>Accéder à mon profil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="verifyEmailRedirect" datatype="html">
         <source>Vous allez être redirigé vers la page de connexion…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <note priority="1" from="description">verify-email.redirect</note>
       </trans-unit>
@@ -1050,14 +1050,14 @@
         <source>Accéder à la connexion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="verifyEmailErrorNoToken" datatype="html">
         <source>Le lien de vérification est incomplet : ouvrez-le depuis l’e-mail reçu.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <note priority="1" from="description">verify-email.error.noToken</note>
       </trans-unit>
@@ -1065,14 +1065,14 @@
         <source>Votre adresse e-mail est vérifiée : votre compte est activé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="verifyEmailErrorGeneric" datatype="html">
         <source>La vérification a échoué : le lien est invalide ou a expiré.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">verify-email.error.generic</note>
       </trans-unit>
@@ -1080,7 +1080,7 @@
         <source>La vérification n’a pas pu aboutir pour le moment : réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/verify-email.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormHeading" datatype="html">

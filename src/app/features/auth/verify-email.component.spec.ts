@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import type { Observable } from 'rxjs';
-import { of, throwError } from 'rxjs';
+import { Subject, of, throwError } from 'rxjs';
 import type { AuthSession, AuthUser } from '../../core/models/auth.model';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { buildAuthSession, buildAuthUser } from '../../../testing/factories/auth.factory';
@@ -72,6 +72,35 @@ describe('VerifyEmailComponent', () => {
       expect(etat.user()?.emailVerified).toBeTrue();
       etat.clearSession();
       tick(3000);
+    }));
+
+    it('n annonce aucune suite tant que la session se restaure', fakeAsync(async () => {
+      const restauration = new Subject<AuthSession>();
+      const { fixture, navigate, texte } = await verifier(
+        'f'.repeat(64),
+        undefined,
+        null,
+        restauration,
+      );
+
+      fixture.detectChanges();
+      expect(texte()).toContain('Votre adresse e-mail est vérifiée : votre compte est activé.');
+      expect(texte()).not.toContain('Vous allez être redirigé');
+      expect(lienDuBouton(fixture)).toBeNull();
+      tick(3000);
+      expect(navigate).not.toHaveBeenCalled();
+
+      restauration.next(
+        buildAuthSession({
+          user: buildAuthUser({ email: 'jean@exemple.fr', emailVerified: true }),
+        }),
+      );
+      restauration.complete();
+      fixture.detectChanges();
+      expect(texte()).toContain('Vous allez être redirigé vers votre profil…');
+      expect(lienDuBouton(fixture)).toBe('/profil');
+      expect(navigate).toHaveBeenCalledOnceWith(['/profil']);
+      TestBed.inject(AuthStateService).clearSession();
     }));
 
     it('dit et mene le compte restaure vers son profil, jamais vers la connexion', fakeAsync(async () => {
