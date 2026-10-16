@@ -9,8 +9,10 @@ export const INFORMATIONS_REFUSEES = $localize`:@@formulaireRefusInformations:Ce
 
 export const MOT_DE_PASSE_NEUF_REFUSE = $localize`:@@formulaireRefusMotDePasseNeuf:Le nouveau mot de passe n’a pas été accepté : il doit respecter la règle indiquée.`;
 
+export const ADRESSE_NON_VERIFIEE = $localize`:@@formulaireRefusAdresseNonVerifiee:Votre adresse e-mail n’est pas encore vérifiée : ouvrez le lien reçu par e-mail pour activer votre compte.`;
+
 const REFUS_COMMUNS: MessagesDeRefus = {
-  403: $localize`:@@formulaireRefusAdresseNonVerifiee:Votre adresse e-mail n’est pas encore vérifiée : ouvrez le lien reçu par e-mail pour activer votre compte.`,
+  403: ADRESSE_NON_VERIFIEE,
   429: $localize`:@@formulaireRefusTropDeTentatives:Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.`,
 };
 

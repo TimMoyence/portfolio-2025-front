@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import type { ActivatedRouteSnapshot } from '@angular/router';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
+import { AdresseAVerifierComponent } from './shared/components/adresse-a-verifier/adresse-a-verifier.component';
 import { AsiliBackgroundComponent } from './shared/components/asili-background/asili-background.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner.component';
@@ -33,6 +34,7 @@ function porteLaCoquille(racine: ActivatedRouteSnapshot): boolean {
     SkipLinkComponent,
     CookieBannerComponent,
     SessionRetryComponent,
+    AdresseAVerifierComponent,
   ],
   template: `
     @if (coquille()) {
@@ -51,6 +53,7 @@ function porteLaCoquille(racine: ActivatedRouteSnapshot): boolean {
              opaque qui masquerait le champ de particules global. -->
         @if (coquille()) {
           <div class="pt-24 lg:pt-28"></div>
+          <app-adresse-a-verifier />
         }
         <app-session-retry />
         <router-outlet></router-outlet>

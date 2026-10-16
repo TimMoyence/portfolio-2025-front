@@ -7,7 +7,8 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AUTH_PORT, type AuthPort } from '../../core/ports/auth.port';
-import { messageDuRefus } from '../../shared/utils/form-submit.utils';
+import { AuthStateService } from '../../core/services/auth-state.service';
+import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import { IMPORTS_PAGE_AUTH } from './page-auth.imports';
 
 @Component({
@@ -20,6 +21,7 @@ import { IMPORTS_PAGE_AUTH } from './page-auth.imports';
 })
 export class VerifyEmailComponent implements OnInit {
   private readonly authService: AuthPort = inject(AUTH_PORT);
+  private readonly authState = inject(AuthStateService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -38,26 +40,31 @@ export class VerifyEmailComponent implements OnInit {
       return;
     }
 
-    this.authService.verifyEmail(token).subscribe({
-      next: () => {
+    handleFormSubmit(this.authService.verifyEmail(token), this.cdr, {
+      onSuccess: () => {
         this.isLoading = false;
         this.successMessage = $localize`:@@verifyEmailSucces:Votre adresse e-mail est vérifiée : votre compte est activé.`;
-        this.cdr.markForCheck();
+        this.relireLeCompteConnecte();
         setTimeout(() => {
           void this.router.navigate(['/login']);
         }, 3000);
       },
-      error: (err: unknown) => {
+      onError: (message) => {
         this.isLoading = false;
-        this.errorMessage = messageDuRefus(
-          err,
-          {
-            404: $localize`:verify-email.error.generic@@verifyEmailErrorGeneric:La vérification a échoué : le lien est invalide ou a expiré.`,
-          },
-          $localize`:@@verifyEmailErreurIndisponible:La vérification n’a pas pu aboutir pour le moment : réessayez dans un instant.`,
-        );
-        this.cdr.markForCheck();
+        this.errorMessage = message;
       },
+      refus: {
+        404: $localize`:verify-email.error.generic@@verifyEmailErrorGeneric:La vérification a échoué : le lien est invalide ou a expiré.`,
+      },
+      fallbackError: $localize`:@@verifyEmailErreurIndisponible:La vérification n’a pas pu aboutir pour le moment : réessayez dans un instant.`,
+    });
+  }
+
+  private relireLeCompteConnecte(): void {
+    if (!this.authState.isLoggedIn()) return;
+    this.authService.me().subscribe({
+      next: (compte) => this.authState.updateUser(compte),
+      error: () => undefined,
     });
   }
 }

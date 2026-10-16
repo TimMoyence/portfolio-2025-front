@@ -7,8 +7,10 @@ import {
 } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { AUTH_PORT } from './core/ports/auth.port';
 import { COOKIE_CONSENT_PORT } from './core/ports/cookie-consent.port';
 import { AppComponent } from './app.component';
+import { createAuthPortStub } from '../testing/factories/auth.factory';
 import { createCookieConsentPortStub } from '../testing/factories/cookie-consent.factory';
 import { cliquerSansQuitterLaPage } from '../testing/montage-page';
 import { setupTestBed } from '../testing/setup-test-bed';
@@ -28,13 +30,15 @@ class PageRouteeComponent {
   }
 }
 
+const portsDeLaCoquille = (): Provider[] => [
+  { provide: COOKIE_CONSENT_PORT, useValue: createCookieConsentPortStub() },
+  { provide: AUTH_PORT, useValue: createAuthPortStub() },
+];
+
 const preparerLApplication = (...providers: (Provider | EnvironmentProviders)[]): Promise<void> =>
   setupTestBed({
     imports: [AppComponent],
-    providers: [
-      { provide: COOKIE_CONSENT_PORT, useValue: createCookieConsentPortStub() },
-      ...providers,
-    ],
+    providers: [...portsDeLaCoquille(), ...providers],
   }).compileComponents();
 
 const ouvrirLaRoute = async (
@@ -54,6 +58,7 @@ describe('AppComponent sur une route sans coquille', () => {
     'app-asili-background',
     'app-skip-link',
     'main .pt-24',
+    'main app-adresse-a-verifier',
   ];
 
   beforeEach(() =>
@@ -103,12 +108,7 @@ describe('AppComponent', () => {
     await setupTestBed({
       router: true,
       imports: [AppComponent],
-      providers: [
-        {
-          provide: COOKIE_CONSENT_PORT,
-          useValue: createCookieConsentPortStub(),
-        },
-      ],
+      providers: portsDeLaCoquille(),
     }).compileComponents();
   });
 

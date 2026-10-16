@@ -7,7 +7,11 @@ import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { throwError } from 'rxjs';
 import { AUTH_PORT } from '../../../core/ports/auth.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
-import { buildAuthSession, createAuthPortStub } from '../../../../testing/factories/auth.factory';
+import {
+  buildAuthSession,
+  buildAuthUser,
+  createAuthPortStub,
+} from '../../../../testing/factories/auth.factory';
 import { NavbarComponent } from './navbar.component';
 
 async function monterLaNavbar(
@@ -129,19 +133,12 @@ describe('NavbarComponent', () => {
 
     it("devrait afficher l'avatar apres login et masquer le bouton login", () => {
       const authState = TestBed.inject(AuthStateService);
-      authState.login({
-        accessToken: 'fake-jwt',
-        expiresIn: 3600,
-        user: {
-          id: 'u1',
-          email: 'test@example.com',
-          firstName: 'Tim',
-          lastName: 'Test',
-          phone: null,
-          isActive: true,
-          roles: ['user'],
-        },
-      });
+      authState.login(
+        buildAuthSession({
+          accessToken: 'fake-jwt',
+          user: buildAuthUser({ id: 'u1', firstName: 'Tim', lastName: 'Test' }),
+        }),
+      );
       fixture.detectChanges();
 
       const nav = fixture.nativeElement as HTMLElement;

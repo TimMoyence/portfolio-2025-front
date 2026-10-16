@@ -2,15 +2,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { AUTH_PORT } from '../../../core/ports/auth.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
+import { preparerAvecLePortDAuth } from '../../../../testing/etat-auth';
 import {
   buildAuthSession,
   buildAuthUser,
   createAuthPortStub,
 } from '../../../../testing/factories/auth.factory';
 import { lireMarque } from '../../../../testing/marqueurs-dom';
-import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { SessionRetryComponent } from './session-retry.component';
 
 describe('SessionRetryComponent', () => {
@@ -23,21 +22,15 @@ describe('SessionRetryComponent', () => {
     return fixture;
   }
 
-  beforeEach(async () => {
+  beforeEach(() => {
     port = createAuthPortStub();
     port.refresh.and.returnValues(
       throwError(() => new HttpErrorResponse({ status: 503 })),
       of(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) })),
     );
-    await setupTestBed({
-      imports: [SessionRetryComponent],
-      providers: [{ provide: AUTH_PORT, useValue: port }],
-    }).compileComponents();
   });
 
-  afterEach(() => {
-    TestBed.inject(AuthStateService).clearSession();
-  });
+  preparerAvecLePortDAuth(SessionRetryComponent, () => port);
 
   it('ne montre rien tant que la session n a pas echoue a se verifier', () => {
     port.refresh.and.returnValue(of(buildAuthSession()));

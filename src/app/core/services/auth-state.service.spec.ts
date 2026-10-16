@@ -252,15 +252,13 @@ describe('AuthStateService', () => {
     it('devrait verifier les roles via hasRole', () => {
       service.login(
         buildAuthSession({
-          user: {
+          user: buildAuthUser({
             id: '1',
             email: 'a@b.com',
             firstName: 'A',
             lastName: 'B',
-            phone: null,
-            isActive: true,
             roles: ['user', 'teacher'],
-          },
+          }),
         }),
       );
 

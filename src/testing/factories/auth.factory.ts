@@ -21,6 +21,7 @@ export function buildAuthUser(overrides?: Partial<AuthUser>): AuthUser {
     phone: null,
     isActive: true,
     roles: ['user'],
+    emailVerified: true,
     ...overrides,
   };
 }

@@ -7,6 +7,7 @@ export interface AuthUser {
   isActive: boolean;
   roles: string[];
   hasPassword?: boolean;
+  emailVerified: boolean;
   createdAt?: string;
   updatedAt?: string;
   updatedOrCreatedBy?: string | null;

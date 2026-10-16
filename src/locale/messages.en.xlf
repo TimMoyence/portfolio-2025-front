@@ -15134,6 +15134,34 @@
         <target>Your email address is not verified yet: open the link you received by email to activate your account.</target>
       </segment>
     </unit>
+    <unit id="adresseAVerifierRenvoi">
+      <notes>
+        <note category="location">src/app/shared/components/adresse-a-verifier/adresse-a-verifier.component.ts:26,28</note>
+        <note category="meaning">adresseAVerifier.renvoi</note>
+      </notes>
+      <segment>
+        <source> Renvoyer le lien </source>
+        <target> Resend the link </target>
+      </segment>
+    </unit>
+    <unit id="adresseAVerifierEnvoye">
+      <notes>
+        <note category="location">src/app/shared/components/adresse-a-verifier/adresse-a-verifier.component.ts:48</note>
+      </notes>
+      <segment>
+        <source>Demande reçue : un nouveau lien part vers votre adresse, sauf si trois liens sont déjà partis dans l’heure ; ouvrez alors le plus récent.</source>
+        <target>Request received: a new link is on its way to your address, unless three links have already been sent within the hour; in that case, open the most recent one.</target>
+      </segment>
+    </unit>
+    <unit id="adresseAVerifierIndisponible">
+      <notes>
+        <note category="location">src/app/shared/components/adresse-a-verifier/adresse-a-verifier.component.ts:56</note>
+      </notes>
+      <segment>
+        <source>Le lien n’a pas pu être renvoyé pour le moment : réessayez dans un instant.</source>
+        <target>The link could not be resent right now: try again in a moment.</target>
+      </segment>
+    </unit>
     <unit id="formulaireRefusTropDeTentatives">
       <segment>
         <source>Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.</source>
