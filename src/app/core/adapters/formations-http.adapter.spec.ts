@@ -1,6 +1,8 @@
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import type { HttpTestingController, TestRequest } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import type { Observable } from 'rxjs';
+import { firstValueFrom, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   buildAnnotationFormateur,
@@ -22,6 +24,7 @@ import { buildProblemeHttp } from '../../../testing/factories/probleme-http.fact
 import { bancAdaptateurHttp } from '../../../testing/http-attendu';
 import filB201 from '../../../testing/fixtures/b2-01.instantane.json';
 import { INSTANTANE_B2_01 } from '../../../testing/fixtures/instantane-b2-01';
+import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { CoursContent, EcranContent } from '../../../cours/content/types';
 import type {
   AnnotationFormateur,
@@ -631,6 +634,9 @@ describe('FormationsHttpAdapter', () => {
     );
 
     expect(erreurs).toEqual([jasmine.any(Error)]);
+    expect(erreurs[0]).toBeInstanceOf(RattachementRefuse);
+    const { motif, statut } = erreurs[0] as RattachementRefuse;
+    expect([motif, statut]).toEqual(['rattachement-impossible', 0]);
   });
 
   it('rejoindre presente le secret de reprise du poste quand il en a un', () => {
@@ -1219,4 +1225,71 @@ describe('FormationsHttpAdapter', () => {
       expect(erreurs.every((erreur) => erreur instanceof Error)).toBeTrue();
     });
   });
+});
+
+describe('FormationsHttpAdapter, echec hors HTTP', () => {
+  let adapter: FormationsHttpAdapter;
+
+  beforeEach(() => {
+    setupTestBed({
+      http: false,
+      providers: [
+        FormationsHttpAdapter,
+        provideHttpClient(
+          withInterceptors([() => throwError(() => new TypeError('Failed to fetch'))]),
+        ),
+      ],
+    });
+    adapter = TestBed.inject(FormationsHttpAdapter);
+  });
+
+  const refusDe = (appel: Observable<unknown>): Promise<unknown> =>
+    firstValueFrom(appel).then(
+      () => {
+        throw new Error('appel abouti malgre l echec');
+      },
+      (refus: unknown) => refus,
+    );
+
+  for (const { cas, appel, refus, motif } of [
+    {
+      cas: 'une reponse en panne reseau',
+      appel: () =>
+        adapter.repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1, dureeMs: 1 }),
+      refus: ReponseRefusee,
+      motif: 'reseau',
+    },
+    {
+      cas: 'une reponse libre en panne reseau',
+      appel: () => adapter.enregistrerReponseLibre(SESSION_ID, JETON, REPONSE_LIBRE),
+      refus: ReponseLibreRefusee,
+      motif: 'reseau',
+    },
+    {
+      cas: 'un rattachement impossible',
+      appel: () => adapter.rejoindre(CODE, INSCRIPTION),
+      refus: RattachementRefuse,
+      motif: 'rattachement-impossible',
+    },
+    {
+      cas: 'un sujet indisponible',
+      appel: () => adapter.lireSujet(SESSION_ID, JETON),
+      refus: SujetRefuse,
+      motif: 'sujet-indisponible',
+    },
+    {
+      cas: 'une piece jointe indisponible',
+      appel: () => adapter.telechargerPieceJointe(SESSION_ID, JETON, 'B3-01-A2-01-VOTE-FAMILLE'),
+      refus: PieceJointeRefusee,
+      motif: 'indisponible',
+    },
+  ]) {
+    it(`relance un echec qui n est pas une reponse HTTP en ${cas}, sans statut`, async () => {
+      const recu = await refusDe(appel());
+
+      expect(recu).toBeInstanceOf(refus);
+      const { motif: motifRecu, statut } = recu as { motif: string; statut: number };
+      expect([motifRecu, statut]).toEqual([motif, 0]);
+    });
+  }
 });

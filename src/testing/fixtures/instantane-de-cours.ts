@@ -11,6 +11,7 @@ import {
   derouleServi,
   sujetServi,
 } from '../../app/core/adapters/formations-schemas';
+import { optionDeLaBonneReponse } from '../../app/features/cours/presentateur/annexe-formateur';
 import { ecranDIdentifiant } from '../../app/shared/slides/session/lecture-ecran';
 
 export interface InstantaneDuCoursB2 {
@@ -65,10 +66,7 @@ export function ecranReveleAuPosteEtudiant(
       questions: source.corriges.map(({ questionId, bonneReponse }) => ({
         questionId,
         cible: bonneReponse,
-        optionId:
-          source.questions
-            .find(({ id }) => id === questionId)
-            ?.options?.find(({ libelle }) => libelle === bonneReponse)?.id ?? null,
+        optionId: optionDeLaBonneReponse(source, questionId, bonneReponse),
       })),
       annexe: corrige,
       reflexion:

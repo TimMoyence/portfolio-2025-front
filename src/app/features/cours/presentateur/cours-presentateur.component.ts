@@ -38,10 +38,11 @@ import type {
   SyntheseConcept,
 } from '../../../core/ports/formations.port';
 import { part } from '../../../../cours/runtime/core/valeurs';
+import { cheminDuPupitre } from '../../../core/config/cours-en-seance';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { messageDeLaLimiteAtteinte } from '../../../core/http/limite-de-debit';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
-import { type Chargement, lectureSuivie } from '../lecture-suivie';
+import { type Chargement, lectureSuivie, suivreLaDestruction } from '../lecture-suivie';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import {
   ecranAuRang,
@@ -839,18 +840,13 @@ export class CoursPresentateurComponent {
   private flux: Sync | null = null;
   private notationEnVol = false;
   private maitriseEnVol = false;
-  private detruit = false;
+  private readonly estDetruit = suivreLaDestruction(() => this.flux?.close());
   private chantier: Promise<void> = chantierApresRendu(() => {
     const seance = this.seance();
     return seance === undefined ? this.ouvrirLaSeance() : this.reprendreLaSeance(seance);
   });
 
   constructor() {
-    const aLaDestruction = inject(DestroyRef);
-    aLaDestruction.onDestroy(() => {
-      this.detruit = true;
-      this.flux?.close();
-    });
     if (this.navigateur) {
       const avantDeQuitter = (evenement: BeforeUnloadEvent): void => {
         if (this.statut() === 'ouverte' || this.statut() === 'en_cours') {
@@ -858,7 +854,9 @@ export class CoursPresentateurComponent {
         }
       };
       window.addEventListener('beforeunload', avantDeQuitter);
-      aLaDestruction.onDestroy(() => window.removeEventListener('beforeunload', avantDeQuitter));
+      inject(DestroyRef).onDestroy(() =>
+        window.removeEventListener('beforeunload', avantDeQuitter),
+      );
     }
   }
 
@@ -950,7 +948,7 @@ export class CoursPresentateurComponent {
     if (session === null || !this.navigateur) {
       return;
     }
-    const chemin = `/cours/presenter/${encodeURIComponent(this.slug())}/scene/${encodeURIComponent(session)}`;
+    const chemin = `${cheminDuPupitre(this.slug())}/scene/${encodeURIComponent(session)}`;
     window.open(this.location.prepareExternalUrl(chemin), FENETRE_SCENE);
   }
 
@@ -958,7 +956,7 @@ export class CoursPresentateurComponent {
     if (!this.navigateur) {
       return;
     }
-    const chemin = `/cours/presenter/${encodeURIComponent(this.slug())}/livret`;
+    const chemin = `${cheminDuPupitre(this.slug())}/livret`;
     window.open(this.location.prepareExternalUrl(chemin), '_blank', 'noopener');
   }
 
@@ -1173,7 +1171,7 @@ export class CoursPresentateurComponent {
 
   private suivreLaCommande(source: Observable<void>, conclure: (abouti: boolean) => void): void {
     this.chantier = this.executer(source).then((abouti) => {
-      if (!this.detruit) {
+      if (!this.estDetruit()) {
         conclure(abouti);
       }
     });

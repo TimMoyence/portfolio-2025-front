@@ -11,6 +11,7 @@ import {
   type ResumeBareme,
   type StatistiquesSeance,
 } from '../../content/types';
+import { urlDeLaSeance } from './adresse-de-seance';
 import { abonner, diffuserA } from './ecoutes';
 import { ENTETE_JETON_PARTICIPANT } from './jeton-participant';
 import {
@@ -307,7 +308,7 @@ export function createSync(options: SyncOptions): Sync {
   const ouvrirFlux = options.ouvrirFlux ?? ouvertureNative(() => tentative?.controleur ?? null);
 
   const urlFlux = (): string =>
-    `${options.baseUrl}/sessions/${encodeURIComponent(options.sessionId)}/${options.chemin ?? CHEMIN_PAR_DEFAUT}`;
+    `${urlDeLaSeance(options.baseUrl, options.sessionId)}/${options.chemin ?? CHEMIN_PAR_DEFAUT}`;
 
   const entetes = (): Record<string, string> => {
     const valeurs: Record<string, string> = { accept: TYPE_FLUX };

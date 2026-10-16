@@ -10,6 +10,7 @@ import {
 import {
   buildDerouleCours,
   buildEcranDeroule,
+  buildResultatsDeChaqueQuestion,
 } from '../../../../testing/factories/formations.factory';
 import {
   buildVisualNestedQuizSlide,
@@ -20,6 +21,7 @@ import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2
 import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import {
+  deLaQuestion,
   ECRAN_VERROUILLE,
   ecranAuRang,
   ecranDIdentifiant,
@@ -34,6 +36,7 @@ import {
   planDeMontage,
   PROPRIETES_PAR_BRIQUE,
   questionsDeLEcran,
+  questionServie,
   titreDeLEcran,
 } from './lecture-ecran';
 
@@ -425,6 +428,44 @@ describe('ecran au rang du deroule', () => {
       });
       expect(ecranAuRang({ ecrans }, ecrans.length)).toBeUndefined();
       expect(ecranAuRang(null, 0)).toBeUndefined();
+    });
+  }
+});
+
+describe('resultat, corrige et question servie d un identifiant de question', () => {
+  for (const [prefixe, instantane] of INSTANTANES_DES_COURS_SERVIS) {
+    it(`${prefixe} : rend le resultat et le corrige de chaque question de l ecran, rien pour une autre`, () => {
+      let lus = 0;
+      for (const ecran of ecransDuPupitreDe(instantane)) {
+        const { questions } = buildResultatsDeChaqueQuestion([ecran]);
+        for (const resultat of questions) {
+          expect(deLaQuestion(questions, resultat.questionId))
+            .withContext(resultat.questionId)
+            .toBe(resultat);
+        }
+        for (const corrige of ecran.corriges) {
+          expect(deLaQuestion(ecran.corriges, corrige.questionId))
+            .withContext(corrige.questionId)
+            .toBe(corrige);
+        }
+        lus += questions.length + ecran.corriges.length;
+        expect(deLaQuestion(questions, `${ecran.id}-absente`)).toBeUndefined();
+        expect(deLaQuestion(questions, null)).toBeUndefined();
+        expect(deLaQuestion(null, questions[0]?.questionId)).toBeUndefined();
+      }
+      expect(lus).toBeGreaterThan(0);
+    });
+
+    it(`${prefixe} : rend chaque question servie d un ecran par son identifiant, rien pour une autre`, () => {
+      let lues = 0;
+      for (const ecran of ecransDuPupitreDe(instantane)) {
+        for (const question of ecran.questions) {
+          expect(questionServie(ecran, question.id)).withContext(question.id).toBe(question);
+          lues += 1;
+        }
+        expect(questionServie(ecran, `${ecran.id}-absente`)).toBeUndefined();
+      }
+      expect(lues).toBeGreaterThan(0);
     });
   }
 });

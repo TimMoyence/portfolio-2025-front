@@ -10,11 +10,17 @@ export type LectureSuivie = <T>(
   limite?: WritableSignal<string | null>,
 ) => Promise<T | null>;
 
-export function lectureSuivie(): LectureSuivie {
+export function suivreLaDestruction(aFermer: () => void = () => undefined): () => boolean {
   let detruit = false;
   inject(DestroyRef).onDestroy(() => {
     detruit = true;
+    aFermer();
   });
+  return () => detruit;
+}
+
+export function lectureSuivie(): LectureSuivie {
+  const estDetruit = suivreLaDestruction();
   return async <T>(
     source: Observable<T>,
     etat?: WritableSignal<Chargement>,
@@ -24,13 +30,13 @@ export function lectureSuivie(): LectureSuivie {
     limite?.set(null);
     try {
       const valeur = await firstValueFrom(source);
-      if (detruit) {
+      if (estDetruit()) {
         return null;
       }
       etat?.set('succes');
       return valeur;
     } catch (erreur) {
-      if (!detruit) {
+      if (!estDetruit()) {
         etat?.set('echec');
         limite?.set(messageDeLaLimiteAtteinte(erreur));
       }

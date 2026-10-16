@@ -3,6 +3,7 @@ import type {
   CoursContent,
   DerouleCours,
   EcranContent,
+  EcranDeroule,
 } from '../../../../cours/content/types';
 import { rappelEcritAvantLesOptions } from '../../../../cours/runtime/blocks/FpRecall';
 import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
@@ -317,6 +318,20 @@ export function ecranAuRang<T extends EcranContent>(
   rang: number,
 ): T | undefined {
   return contenu?.ecrans[rang];
+}
+
+export function deLaQuestion<T extends { readonly questionId: string }>(
+  entrees: readonly T[] | null | undefined,
+  questionId: string | null | undefined,
+): T | undefined {
+  return entrees?.find((entree) => entree.questionId === questionId);
+}
+
+export function questionServie(
+  ecran: Pick<EcranDeroule, 'questions'>,
+  id: string,
+): EcranDeroule['questions'][number] | undefined {
+  return ecran.questions.find((question) => question.id === id);
 }
 
 export function ecranDuRappel(cours: CoursContent): string | null {

@@ -7,6 +7,7 @@ import type {
   ResultatQuestion,
 } from '../../../../cours/content/types';
 import { part } from '../../../../cours/runtime/core/valeurs';
+import { deLaQuestion } from '../../../shared/slides/session/lecture-ecran';
 
 export interface QuestionDuPanneau {
   readonly numero: number;
@@ -57,8 +58,7 @@ function lirePanneau(
   corrige: CorrigePresentateur,
   resultats: readonly ResultatQuestion[],
 ): PanneauQuestion {
-  const resultat =
-    resultats.find((question) => question.questionId === corrige.questionId) ?? SANS_REPONSE;
+  const resultat = deLaQuestion(resultats, corrige.questionId) ?? SANS_REPONSE;
   const partJuste = part(resultat.correctes, resultat.total);
   const sousLeSeuil = seuil !== null && resultat.total > 0 && partJuste < seuil;
   return {

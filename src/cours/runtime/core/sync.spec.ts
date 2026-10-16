@@ -13,6 +13,7 @@ import {
   type Sync,
   type SyncOptions,
 } from './sync';
+import { urlDeLaSeance } from './adresse-de-seance';
 import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
 
 const BASE = 'https://api.test';
@@ -944,5 +945,12 @@ describe('refusDuFlux', () => {
     expect(refusDuFlux({ etat: 'connecte' })).toBeNull();
     expect(refusDuFlux({ etat: 'reconnexion' })).toBeNull();
     expect(refusDuFlux(null)).toBeNull();
+  });
+});
+
+describe('urlDeLaSeance', () => {
+  it('nomme la seance sous la base de l API, son identifiant encode', () => {
+    expect(urlDeLaSeance(BASE, SESSION)).toBe(`${BASE}/sessions/${SESSION}`);
+    expect(urlDeLaSeance(BASE, 's1/../admin?x=1')).toBe(`${BASE}/sessions/s1%2F..%2Fadmin%3Fx%3D1`);
   });
 });

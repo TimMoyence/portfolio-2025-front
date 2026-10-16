@@ -16,6 +16,7 @@ import type { ResultatsDuFlux } from '../../../../cours/runtime/core/sync';
 import { enFrancais } from '../../../../cours/runtime/core/typographie';
 import { objet } from '../../../../cours/runtime/core/valeurs';
 import {
+  deLaQuestion,
   estVoteJumele,
   identifiantsDuMontage,
   libellesDesElements,
@@ -457,7 +458,7 @@ export class CoursPanneauActiviteComponent {
       return null;
     }
     const [identifiant] = this.identifiants();
-    return this.resultatDe(identifiant ?? '');
+    return deLaQuestion(this.resultats()?.questions, identifiant) ?? null;
   });
 
   private readonly libelles = computed(() => libellesDesElements(this.ecran()));
@@ -484,7 +485,7 @@ export class CoursPanneauActiviteComponent {
 
   protected readonly billetsRecus = computed(() => {
     const [billetId] = this.identifiants();
-    return this.resultatDe(billetId ?? '')?.total ?? 0;
+    return deLaQuestion(this.resultats()?.questions, billetId)?.total ?? 0;
   });
 
   protected libelleDe(phase: VotePhase): string {
@@ -495,28 +496,28 @@ export class CoursPanneauActiviteComponent {
     if (phase === 'revele') {
       this.reveler();
     } else {
-      this.commande.emit({ screenId: this.ecran().id, phase });
+      this.piloter({ phase });
     }
   }
 
   protected reveler(): void {
-    this.commande.emit({ screenId: this.ecran().id, revele: true });
+    this.piloter({ revele: true });
   }
 
   protected ouvrirLaCorrection(): void {
-    this.commande.emit({ screenId: this.ecran().id, revele: true, etayage: 1 });
+    this.piloter({ revele: true, etayage: 1 });
   }
 
   protected corrigerJusquA(explicationsDevoilees: number): void {
-    this.commande.emit({ screenId: this.ecran().id, explicationsDevoilees });
+    this.piloter({ explicationsDevoilees });
   }
 
   protected afficherLesOptions(): void {
-    this.commande.emit({ screenId: this.ecran().id, optionsAffichees: true });
+    this.piloter({ optionsAffichees: true });
   }
 
   protected etayer(etayage: number): void {
-    this.commande.emit({ screenId: this.ecran().id, etayage });
+    this.piloter({ etayage });
   }
 
   protected corrigerLaColonneSuivante(): void {
@@ -527,9 +528,7 @@ export class CoursPanneauActiviteComponent {
     }
   }
 
-  private resultatDe(questionId: string): ResultatQuestion | null {
-    return (
-      this.resultats()?.questions.find((question) => question.questionId === questionId) ?? null
-    );
+  private piloter(patch: PilotageEcran): void {
+    this.commande.emit({ screenId: this.ecran().id, ...patch });
   }
 }

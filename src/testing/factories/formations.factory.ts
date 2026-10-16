@@ -11,8 +11,11 @@ import type {
 } from '../../cours/content/types';
 import type { SpacedQuestionPublique } from '../../cours/runtime/blocks/donnees-publiques';
 import type { ResultatsDuFlux } from '../../cours/runtime/core/sync';
-import { objet } from '../../cours/runtime/core/valeurs';
-import { libellesDesElements } from '../../app/shared/slides/session/lecture-ecran';
+import {
+  deLaQuestion,
+  identifiantPorte,
+  libellesDesElements,
+} from '../../app/shared/slides/session/lecture-ecran';
 import type {
   AnnotationFormateur,
   FichierTelecharge,
@@ -96,9 +99,10 @@ function resultatsDeLEcran(ecran: EcranDeroule): readonly ResultatQuestion[] {
       total: 2,
       correctes: 1,
       neSaitPas: 1,
-      confusions: (
-        ecran.corriges.find(({ questionId }) => questionId === id)?.confusions ?? []
-      ).map((confusion) => ({ ...confusion, nombre: 1 })),
+      confusions: (deLaQuestion(ecran.corriges, id)?.confusions ?? []).map((confusion) => ({
+        ...confusion,
+        nombre: 1,
+      })),
       parOption:
         options === null ? null : Object.fromEntries(options.map((option) => [option.id, 1])),
       scoreMoyen: production === undefined ? null : 0.9,
@@ -110,11 +114,6 @@ function resultatsDeLEcran(ecran: EcranDeroule): readonly ResultatQuestion[] {
   );
 }
 
-function identifiantDe(ecran: EcranDeroule, propriete: string): string | null {
-  const id = objet(ecran.donnees?.[propriete])?.['id'];
-  return typeof id === 'string' ? id : null;
-}
-
 export function buildResultatsDeChaqueQuestion(
   ecrans: readonly EcranDeroule[],
 ): ResultatsSeance & Pick<ResultatsDuFlux, 'jalons' | 'enigmes'> {
@@ -124,14 +123,17 @@ export function buildResultatsDeChaqueQuestion(
     jalons: Object.fromEntries(
       ecrans
         .filter(({ type }) => type === 'fp-pulse')
-        .flatMap((ecran) => identifiantDe(ecran, 'sondage') ?? [])
+        .flatMap((ecran) => identifiantPorte(ecran.donnees, 'sondage') ?? [])
         .map((sondage) => [sondage, { perdu: 1, 'ca-va': 1, clair: 1, total: 3 }]),
     ),
     enigmes: ecrans
       .filter(({ type }) => type === 'fp-escape')
       .flatMap((ecran) =>
         [...libellesDesElements(ecran).keys()].map((enigmeId) =>
-          buildProgressionEnigme({ parcoursId: identifiantDe(ecran, 'parcours') ?? '', enigmeId }),
+          buildProgressionEnigme({
+            parcoursId: identifiantPorte(ecran.donnees, 'parcours') ?? '',
+            enigmeId,
+          }),
         ),
       ),
   };

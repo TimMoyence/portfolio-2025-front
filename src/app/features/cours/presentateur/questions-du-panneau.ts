@@ -1,5 +1,5 @@
 import type { EcranDeroule } from '../../../../cours/content/types';
-import { questionsDeLEcran } from '../../../shared/slides/session/lecture-ecran';
+import { questionsDeLEcran, questionServie } from '../../../shared/slides/session/lecture-ecran';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 
 export function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPanneau[] {
@@ -11,8 +11,8 @@ export function questionsDuPanneau(ecran: EcranDeroule): readonly QuestionDuPann
       return { numero: position + 1, enonce: apercu[position].enonce, corrige };
     }
     horsApercu += 1;
-    const servie = ecran.questions.find((question) => question.id === corrige.questionId);
-    return { numero: horsApercu, enonce: servie?.enonce ?? '', corrige };
+    const enonce = questionServie(ecran, corrige.questionId)?.enonce ?? '';
+    return { numero: horsApercu, enonce, corrige };
   });
   return questions.sort((gauche, droite) => gauche.numero - droite.numero);
 }

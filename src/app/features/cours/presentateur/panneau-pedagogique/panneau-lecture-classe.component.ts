@@ -8,6 +8,7 @@ import type {
 import { part } from '../../../../../cours/runtime/core/valeurs';
 import type { ReponseLibreFormateur } from '../../../../core/ports/formations.port';
 import {
+  deLaQuestion,
   enoncesDesActivites,
   identifiantsDuMontage,
   planDeMontage,
@@ -80,7 +81,7 @@ function lireLaClasse(ecran: EcranDeroule, sources: SourcesDeLecture): readonly 
         (candidate) => parcours.has(candidate.parcoursId) && candidate.enigmeId === questionId,
       );
       return enigme === undefined
-        ? ligneDeResultat(sources.resultats.find((resultat) => resultat.questionId === questionId))
+        ? ligneDeResultat(deLaQuestion(sources.resultats, questionId))
         : ligneDEnigme(enigme);
     }),
     ...activites.map((activityId) => ligneDActivite(ecran.id, activityId, sources.reponsesLibres)),

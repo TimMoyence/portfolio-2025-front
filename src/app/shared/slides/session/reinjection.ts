@@ -1,7 +1,6 @@
 import type {
   EcranDeroule,
   ExplicationServie,
-  ResultatQuestion,
   RevelationServie,
   Role,
   VotePhase,
@@ -15,7 +14,7 @@ import {
 import { estObjet } from '../../../../cours/runtime/core/valeurs';
 import type { RetourBrique, SyntheseConcept } from '../../../core/ports/formations.port';
 import type { DirectEcran } from './contrat-hote';
-import type { Montage, ReponsesDuQuestionnaire } from './lecture-ecran';
+import { deLaQuestion, type Montage, type ReponsesDuQuestionnaire } from './lecture-ecran';
 
 export interface MontageIdentifie extends Montage {
   readonly identifiants: readonly string[];
@@ -82,9 +81,7 @@ function resultatsDe(
   identifiant: string | null | undefined,
   direct: DirectEcran | null,
 ): ResultatsDeVote | null {
-  const resultat: ResultatQuestion | undefined = direct?.resultats?.find(
-    (question) => question.questionId === identifiant,
-  );
+  const resultat = deLaQuestion(direct?.resultats, identifiant);
   return resultat === undefined
     ? null
     : { total: resultat.total, parOption: resultat.parOption ?? {} };

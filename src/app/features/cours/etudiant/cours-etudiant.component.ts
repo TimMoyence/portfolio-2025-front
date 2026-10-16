@@ -51,6 +51,7 @@ import {
 } from '../../../../cours/runtime/core/sync';
 import { bornerEntre, estMembre, estObjet, objet } from '../../../../cours/runtime/core/valeurs';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../../cours/runtime/core/duree';
+import { cheminDuPupitre } from '../../../core/config/cours-en-seance';
 import { getApiFormationsUrl } from '../../../core/http/api-config';
 import {
   type LimiteDeDebit,
@@ -106,6 +107,7 @@ import {
 import { aUnePresentation } from '../../../shared/slides/visual/presentation-v2';
 import { CREATEUR_FLUX } from '../cours-flux.token';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
+import { suivreLaDestruction } from '../lecture-suivie';
 
 type EtatEtudiant = 'code' | 'rattachement' | 'chargement' | 'sujet-refuse' | 'seance';
 
@@ -744,7 +746,7 @@ export class CoursEtudiantComponent {
   );
   protected readonly retourFormateur = computed(() => {
     const slug = this.coursVise();
-    return slug !== null && SLUG_DE_COURS.test(slug) ? `/cours/presenter/${slug}` : null;
+    return slug !== null && SLUG_DE_COURS.test(slug) ? cheminDuPupitre(slug) : null;
   });
   private readonly baseUrl = getApiFormationsUrl();
   private readonly enLigne = signal(typeof navigator === 'undefined' || navigator.onLine);
@@ -774,12 +776,14 @@ export class CoursEtudiantComponent {
   private rappelsDemandes = false;
   private relectureEnCours = false;
   private lectureDuSujet: Promise<CoursContent> | null = null;
-  private detruit = false;
+  private readonly estDetruit = suivreLaDestruction(() => {
+    this.flux?.close();
+    this.verrou?.disarm();
+  });
   private limitesDuVidage: (LimiteDeDebit | null)[] | null = null;
   private chantier: Promise<void> = Promise.resolve();
 
   constructor() {
-    const aLaDestruction = inject(DestroyRef);
     const fenetre = typeof window === 'undefined' ? null : window;
     if (fenetre !== null) {
       const surRetour = (): void => {
@@ -792,16 +796,11 @@ export class CoursEtudiantComponent {
       };
       fenetre.addEventListener('online', surRetour);
       fenetre.addEventListener('offline', surPerte);
-      aLaDestruction.onDestroy(() => {
+      inject(DestroyRef).onDestroy(() => {
         fenetre.removeEventListener('online', surRetour);
         fenetre.removeEventListener('offline', surPerte);
       });
     }
-    aLaDestruction.onDestroy(() => {
-      this.detruit = true;
-      this.flux?.close();
-      this.verrou?.disarm();
-    });
   }
 
   quandStabilise(): Promise<void> {
@@ -844,7 +843,7 @@ export class CoursEtudiantComponent {
       return;
     }
     const rattachement = await this.demanderRattachement(code, identite, donnees);
-    if (rattachement === null || this.detruit) {
+    if (rattachement === null || this.estDetruit()) {
       return;
     }
     this.identite = identite;
@@ -854,7 +853,7 @@ export class CoursEtudiantComponent {
 
   private async chargerLaSeance(identite: Identity, rattachement: Rattachement): Promise<void> {
     const sujet = await this.lireLeSujet(rattachement);
-    if (sujet !== null && !this.detruit) {
+    if (sujet !== null && !this.estDetruit()) {
       this.ouvrirLaSeance(identite, rattachement, sujet);
       await Promise.all([
         this.relireMonEtat(),
@@ -886,7 +885,7 @@ export class CoursEtudiantComponent {
     ) {
       await new Promise<void>((resolve) => setTimeout(resolve, restant));
     }
-    if (this.detruit) {
+    if (this.estDetruit()) {
       return null;
     }
     try {
@@ -1032,7 +1031,7 @@ export class CoursEtudiantComponent {
     this.echecEcran.set(null);
     try {
       const sujet = await this.relireLeSujet(sessionId, jeton);
-      if (!this.detruit) {
+      if (!this.estDetruit()) {
         this.sujet.set(sujet);
         const relu = ecranAuRang(sujet, index);
         this.configurerLeVerrou(relu);
@@ -1052,7 +1051,7 @@ export class CoursEtudiantComponent {
     } catch (erreur) {
       this.echecEcran.set(echecDeLaRelecture(erreur));
     } finally {
-      if (!this.detruit) {
+      if (!this.estDetruit()) {
         this.chargementEcran.set(false);
       }
     }
@@ -1155,7 +1154,7 @@ export class CoursEtudiantComponent {
     this.relectureEnCours = true;
     try {
       const relu = await this.relireLeSujet(sessionId, this.jeton());
-      if (!this.detruit) {
+      if (!this.estDetruit()) {
         this.sujet.set(relu);
         this.suivreLeSujetRelu(relu);
       }

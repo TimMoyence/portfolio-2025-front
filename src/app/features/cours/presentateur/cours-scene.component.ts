@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DestroyRef,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import type {
   DerouleCours,
   EcranContent,
@@ -21,7 +13,7 @@ import type {
 } from '../../../../cours/runtime/core/sync';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
-import { type Chargement, lectureSuivie } from '../lecture-suivie';
+import { type Chargement, lectureSuivie, suivreLaDestruction } from '../lecture-suivie';
 import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
 import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
@@ -405,9 +397,7 @@ export class CoursSceneComponent {
   private readonly chantier = chantierApresRendu(() => this.lireLeDeroule());
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => {
-      this.flux?.close();
-    });
+    suivreLaDestruction(() => this.flux?.close());
   }
 
   quandStabilise(): Promise<void> {

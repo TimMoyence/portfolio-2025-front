@@ -8,7 +8,12 @@ import { TestBed } from '@angular/core/testing';
 import { type Observable, Subject, of, throwError } from 'rxjs';
 import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
-import { type Chargement, type LectureSuivie, lectureSuivie } from './lecture-suivie';
+import {
+  type Chargement,
+  type LectureSuivie,
+  lectureSuivie,
+  suivreLaDestruction,
+} from './lecture-suivie';
 
 function lecteur(): LectureSuivie {
   return TestBed.runInInjectionContext(() => lectureSuivie());
@@ -83,5 +88,25 @@ describe('lectureSuivie', () => {
 
     expect(await lectures).toEqual([null, null]);
     expect([reussie(), echouee()]).toEqual(['chargement', 'chargement']);
+  });
+});
+
+describe('suivreLaDestruction', () => {
+  beforeEach(() => {
+    setupTestBed({ http: false });
+  });
+
+  it('ferme une seule fois ce qui est ouvert et se sait detruit, a la destruction seulement', () => {
+    const injecteur = createEnvironmentInjector([], TestBed.inject(EnvironmentInjector));
+    const fermer = jasmine.createSpy('fermer');
+    const estDetruit = runInInjectionContext(injecteur, () => suivreLaDestruction(fermer));
+
+    expect(estDetruit()).toBeFalse();
+    expect(fermer).not.toHaveBeenCalled();
+
+    injecteur.destroy();
+
+    expect(estDetruit()).toBeTrue();
+    expect(fermer).toHaveBeenCalledTimes(1);
   });
 });

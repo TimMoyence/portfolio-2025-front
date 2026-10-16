@@ -705,18 +705,21 @@ describe('CoursEtudiantComponent', () => {
     expect(refus?.textContent).toContain('dès que la connexion sera rétablie');
   });
 
+  const ecranAuRegime = (id: string, regime: 'focus' | 'examen') =>
+    buildEcranQuestionnaire({ id, donnees: { ...buildEcranQuestionnaire().donnees, regime } });
+
+  const copieBloquee = (): boolean => {
+    const copie = new Event('copy', { cancelable: true });
+    document.dispatchEvent(copie);
+    return copie.defaultPrevented;
+  };
+
   it('applique le regime de verrou propre a chaque ecran', async () => {
     sujet = {
       ...sujet,
       ecrans: [
-        buildEcranQuestionnaire({
-          id: 'ecran-focus',
-          donnees: { ...buildEcranQuestionnaire().donnees, regime: 'focus' },
-        }),
-        buildEcranQuestionnaire({
-          id: 'ecran-examen',
-          donnees: { ...buildEcranQuestionnaire().donnees, regime: 'examen' },
-        }),
+        ecranAuRegime('ecran-focus', 'focus'),
+        ecranAuRegime('ecran-examen', 'examen'),
         ...sujet.ecrans.slice(2),
       ],
     };
@@ -728,10 +731,22 @@ describe('CoursEtudiantComponent', () => {
     expect(port.signalerIncidents.calls.mostRecent().args[2][0].type).toBe('blur');
 
     diffuserSurLaVue(double, fixture, { ecranCourant: 1 });
-    const copie = new Event('copy', { cancelable: true });
-    document.dispatchEvent(copie);
 
-    expect(copie.defaultPrevented).toBeTrue();
+    expect(copieBloquee()).toBeTrue();
+  });
+
+  it('rend le copier a la page quand le poste quitte un ecran d examen', async () => {
+    sujet = {
+      ...sujet,
+      ecrans: [ecranAuRegime('ecran-examen', 'examen'), ...sujet.ecrans.slice(1)],
+    };
+    port.lireSujet.and.returnValue(of(sujet));
+    const fixture = await rattacherALaSeanceEnCours();
+    const pendantLaSeance = copieBloquee();
+
+    fixture.destroy();
+
+    expect([pendantLaSeance, copieBloquee()]).toEqual([true, false]);
   });
 
   const verrouiller = <E extends object>(ecran: E) => ({
