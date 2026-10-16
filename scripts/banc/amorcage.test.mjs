@@ -16,7 +16,12 @@ function apiSimulee(reponses) {
   return {
     vues,
     appeler: (url, options) => {
-      vues.push({ url, corps: JSON.parse(String(options.body)) });
+      vues.push({
+        url,
+        methode: options.method,
+        entetes: options.headers,
+        corps: JSON.parse(String(options.body)),
+      });
       const prochaine = reponses.shift();
       return Promise.resolve({
         status: prochaine.status,
@@ -25,6 +30,19 @@ function apiSimulee(reponses) {
       });
     },
   };
+}
+
+function inscriptionPuisConnexion() {
+  return [{ status: 201 }, { status: 201, json: { accessToken: 'jeton-du-banc' } }];
+}
+
+function amorcerSur(api, executerSql = () => Promise.resolve('UPDATE 1')) {
+  return amorcerFormateur({
+    appeler: api.appeler,
+    executerSql,
+    urlApi: '/api',
+    identifiants: IDENTIFIANTS,
+  });
 }
 
 test('sqlDePromotion ne construit une requete que pour une adresse reconnue', () => {
@@ -59,20 +77,12 @@ test('inscrireFormateur remonte le corps de la reponse quand l API refuse', asyn
 });
 
 test('amorcerFormateur enchaine inscription, promotion et connexion', async () => {
-  const api = apiSimulee([
-    { status: 201 },
-    { status: 201, json: { accessToken: 'jeton-du-banc' } },
-  ]);
+  const api = apiSimulee(inscriptionPuisConnexion());
   const requetes = [];
 
-  const jeton = await amorcerFormateur({
-    appeler: api.appeler,
-    executerSql: (sql) => {
-      requetes.push(sql);
-      return Promise.resolve('UPDATE 1');
-    },
-    urlApi: '/api',
-    identifiants: IDENTIFIANTS,
+  const jeton = await amorcerSur(api, (sql) => {
+    requetes.push(sql);
+    return Promise.resolve('UPDATE 1');
   });
 
   assert.equal(jeton, 'jeton-du-banc');
@@ -83,16 +93,33 @@ test('amorcerFormateur enchaine inscription, promotion et connexion', async () =
   assert.equal(requetes.length, 1);
 });
 
+test("amorcerFormateur poste l'inscription et la connexion en JSON", async () => {
+  const api = apiSimulee(inscriptionPuisConnexion());
+
+  await amorcerSur(api);
+
+  const json = { 'content-type': 'application/json' };
+  assert.deepEqual(api.vues, [
+    {
+      url: '/api/auth/register',
+      methode: 'POST',
+      entetes: json,
+      corps: corpsDInscription(IDENTIFIANTS),
+    },
+    {
+      url: '/api/auth/login',
+      methode: 'POST',
+      entetes: json,
+      corps: { email: IDENTIFIANTS.email, password: IDENTIFIANTS.motDePasse },
+    },
+  ]);
+});
+
 test('amorcerFormateur echoue quand la promotion ne touche aucune ligne', async () => {
   const api = apiSimulee([{ status: 201 }]);
 
   await assert.rejects(
-    amorcerFormateur({
-      appeler: api.appeler,
-      executerSql: () => Promise.resolve('UPDATE 0'),
-      urlApi: '/api',
-      identifiants: IDENTIFIANTS,
-    }),
+    amorcerSur(api, () => Promise.resolve('UPDATE 0')),
     /aucune ligne mise a jour|aucune ligne mise à jour/,
   );
 });
@@ -100,13 +127,5 @@ test('amorcerFormateur echoue quand la promotion ne touche aucune ligne', async 
 test('amorcerFormateur refuse une connexion sans jeton', async () => {
   const api = apiSimulee([{ status: 201 }, { status: 201, json: {} }]);
 
-  await assert.rejects(
-    amorcerFormateur({
-      appeler: api.appeler,
-      executerSql: () => Promise.resolve('UPDATE 1'),
-      urlApi: '/api',
-      identifiants: IDENTIFIANTS,
-    }),
-    /jeton absent/,
-  );
+  await assert.rejects(amorcerSur(api), /jeton absent/);
 });

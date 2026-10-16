@@ -3,6 +3,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
+import { echapperPourRegex } from '../src/cours/runtime/core/valeurs.ts';
 import { cheminDuDepot, RACINE } from './lib/depot.mjs';
 import { avecDossierPlante } from './lib/dossier-temporaire.mjs';
 
@@ -74,13 +75,10 @@ function suitesNommeesPar(commande) {
   return [...commande.matchAll(/e2e\/([\w.-]+\.spec\.ts)/g)].map((trouve) => trouve[1]);
 }
 
-function nomEchappe(porte) {
-  return porte.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 function estNommeeDans(chaine, porte) {
   return (
-    typeof chaine === 'string' && new RegExp(`\\bnpm run ${nomEchappe(porte)}\\b`).test(chaine)
+    typeof chaine === 'string' &&
+    new RegExp(`\\bnpm run ${echapperPourRegex(porte)}\\b`).test(chaine)
   );
 }
 

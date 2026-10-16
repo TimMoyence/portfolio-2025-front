@@ -37,6 +37,21 @@ export function corpsDInscription(identifiants) {
 }
 
 /**
+ * @template R
+ * @param {(url: string, options: Record<string, unknown>) => Promise<R>} appeler
+ * @param {string} url
+ * @param {unknown} corps
+ * @returns {Promise<R>}
+ */
+function posterJson(appeler, url, corps) {
+  return appeler(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(corps),
+  });
+}
+
+/**
  * @param {{
  *   appeler: (url: string, options: Record<string, unknown>) => Promise<{ status: number, text: () => Promise<string> }>,
  *   urlApi: string,
@@ -45,11 +60,11 @@ export function corpsDInscription(identifiants) {
  * @returns {Promise<void>}
  */
 export async function inscrireFormateur({ appeler, urlApi, identifiants }) {
-  const reponse = await appeler(`${urlApi}/auth/register`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(corpsDInscription(identifiants)),
-  });
+  const reponse = await posterJson(
+    appeler,
+    `${urlApi}/auth/register`,
+    corpsDInscription(identifiants),
+  );
   if (reponse.status !== 201 && reponse.status !== 409) {
     throw new AmorcageEchoue('inscription', `${reponse.status} ${await reponse.text()}`);
   }
@@ -64,10 +79,9 @@ export async function inscrireFormateur({ appeler, urlApi, identifiants }) {
  * @returns {Promise<string>}
  */
 async function connecterLeFormateur({ appeler, urlApi, identifiants }) {
-  const reponse = await appeler(`${urlApi}/auth/login`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ email: identifiants.email, password: identifiants.motDePasse }),
+  const reponse = await posterJson(appeler, `${urlApi}/auth/login`, {
+    email: identifiants.email,
+    password: identifiants.motDePasse,
   });
   if (reponse.status !== 201) {
     throw new AmorcageEchoue('connexion', `${reponse.status} ${await reponse.text()}`);

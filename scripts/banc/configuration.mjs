@@ -49,10 +49,7 @@ const CARACTERES_SPECIAUX = '!@#$%';
  * @returns {string}
  */
 export function secretAleatoire(source) {
-  return Array.from(source.octets(LONGUEUR_SECRET))
-    .map((octet) => octet.toString(16).padStart(2, '0'))
-    .join('')
-    .slice(0, LONGUEUR_SECRET);
+  return Buffer.from(source.octets(LONGUEUR_SECRET)).toString('hex').slice(0, LONGUEUR_SECRET);
 }
 
 /**

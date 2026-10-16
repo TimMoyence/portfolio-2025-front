@@ -26,7 +26,6 @@ import type {
   RappelsDus,
   RapportSeance,
   Rattachement,
-  RegleNotation,
   ReponseEtudiant,
   ReponseLibreEnregistree,
   ReponseLibreEtudiant,
@@ -48,14 +47,29 @@ import {
   SujetRefuse,
 } from '../ports/formations.port';
 import { getApiFormationsUrl } from '../http/api-config';
+import { limiteDeLaReponse, STATUT_LIMITE_DE_DEBIT } from '../http/limite-de-debit';
+import { derouleDuFil, livretDuFil, sujetDuFil } from './formations-fil';
 import {
-  type DerouleDuFil,
-  derouleDuFil,
-  type LivretDuFil,
-  livretDuFil,
-  type SujetDuFil,
-  sujetDuFil,
-} from './formations-fil';
+  annotationServie,
+  annotationsServies,
+  derouleServi,
+  etatParticipantServi,
+  livretServi,
+  luPar,
+  participantsServis,
+  rappelsServis,
+  rapportServi,
+  rattachementServi,
+  reponseLibreEnregistreeServie,
+  reponsesLibresServies,
+  seanceOuverteServie,
+  strategiesServies,
+  sujetServi,
+  syntheseServie,
+  verdictProductionServi,
+  verdictReponseServi,
+  verdictTentativeServi,
+} from './formations-schemas';
 import { ENTETE_JETON_PARTICIPANT } from '../../../cours/runtime/core/jeton-participant';
 import { estObjet, jsonOuNull } from '../../../cours/runtime/core/valeurs';
 
@@ -87,24 +101,13 @@ const MOTIFS_D_ECRITURE_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = 
 
 const POSTE_ABSENT_DE_LA_SEANCE: MotifRefusReponse = 'evince';
 
-const NOTATION_ABSENTE_D_UN_SERVEUR_V2: Pick<
-  RegleNotation,
-  'typesNotables' | 'productionCompteSi' | 'statistiquesSurQuestionsNotees'
-> = {
-  typesNotables: ['vote', 'numeric', 'classement', 'feuille', 'tableau'],
-  productionCompteSi: 'au-moins-une-saisie',
-  statistiquesSurQuestionsNotees: true,
-};
-
-interface VerdictBrut {
-  correcte: boolean | null;
-  misconception?: string | null;
-  libelleConfusion?: string | null;
-}
-
 function refuserRattachement(erreur: unknown): RattachementRefuse {
   if (!(erreur instanceof HttpErrorResponse)) {
     return new RattachementRefuse('rattachement-impossible', 0);
+  }
+  const limite = limiteDeLaReponse(erreur);
+  if (limite !== null) {
+    return new RattachementRefuse('rattachement-impossible', erreur.status, limite);
   }
   const code = codeDuProbleme(erreur);
   if (code !== null && Object.hasOwn(MOTIFS_DE_RATTACHEMENT_PAR_CODE, code)) {
@@ -117,8 +120,17 @@ function refuserRattachement(erreur: unknown): RattachementRefuse {
 }
 
 function refuserSujet(erreur: unknown): SujetRefuse {
-  const statut = erreur instanceof HttpErrorResponse ? erreur.status : 0;
-  return new SujetRefuse(statut === 409 ? 'cours-modifie' : 'sujet-indisponible', statut);
+  if (!(erreur instanceof HttpErrorResponse)) {
+    return new SujetRefuse('sujet-indisponible', 0);
+  }
+  const limite = limiteDeLaReponse(erreur);
+  if (limite !== null) {
+    return new SujetRefuse('sujet-indisponible', erreur.status, limite);
+  }
+  return new SujetRefuse(
+    erreur.status === 409 ? 'cours-modifie' : 'sujet-indisponible',
+    erreur.status,
+  );
 }
 
 function codeDuProbleme(erreur: HttpErrorResponse): string | null {
@@ -140,6 +152,10 @@ async function refuserPieceJointe(erreur: unknown): Promise<PieceJointeRefusee> 
   if (!(erreur instanceof HttpErrorResponse)) {
     return new PieceJointeRefusee('indisponible', 0);
   }
+  const limite = limiteDeLaReponse(erreur);
+  if (limite !== null) {
+    return new PieceJointeRefusee('indisponible', erreur.status, limite);
+  }
   const code = codeDuCorps(await corpsDuFichierRefuse(erreur.error));
   return new PieceJointeRefusee(
     code === 'PIECE_JOINTE_RETENUE' ? 'retenue' : 'indisponible',
@@ -155,7 +171,7 @@ function motifDeRefusSelonCode<M extends string>(
   const statut = erreur.status;
   const code = codeDuProbleme(erreur);
   let motif: M | 'reseau' | 'refusee' = 'refusee';
-  if (statut === 0 || statut === 429 || statut >= 500) {
+  if (statut === 0 || statut === STATUT_LIMITE_DE_DEBIT || statut >= 500) {
     motif = 'reseau';
   } else if (code !== null && Object.hasOwn(motifsParCode, code)) {
     motif = motifsParCode[code];
@@ -172,6 +188,7 @@ function refuserReponseLibre(erreur: unknown): ReponseLibreRefusee {
   return new ReponseLibreRefusee(
     motifDeRefusSelonCode(erreur, MOTIFS_DE_REFUS_DE_REPONSE_LIBRE),
     erreur.status,
+    limiteDeLaReponse(erreur),
   );
 }
 
@@ -182,6 +199,7 @@ function refuserEcritureEtudiante(erreur: unknown, absence: MotifRefusReponse): 
   return new ReponseRefusee(
     motifDeRefusSelonCode(erreur, MOTIFS_D_ECRITURE_PAR_CODE, absence),
     erreur.status,
+    limiteDeLaReponse(erreur),
   );
 }
 
@@ -194,12 +212,6 @@ function ecritureEtudiante<T>(
   );
 }
 
-function completerNotation(rapport: RapportSeance): RapportSeance {
-  return rapport.notation === undefined
-    ? rapport
-    : { ...rapport, notation: { ...NOTATION_ABSENTE_D_UN_SERVEUR_V2, ...rapport.notation } };
-}
-
 @Injectable()
 export class FormationsHttpAdapter implements FormationsPort {
   private readonly baseUrl = getApiFormationsUrl();
@@ -207,13 +219,15 @@ export class FormationsHttpAdapter implements FormationsPort {
   constructor(private readonly http: HttpClient) {}
 
   ouvrirSeance(courseSlug: string, options?: { capacite?: number }): Observable<SeanceOuverte> {
-    return this.http.post<SeanceOuverte>(`${this.baseUrl}/sessions`, { courseSlug, ...options });
+    return this.http
+      .post<unknown>(`${this.baseUrl}/sessions`, { courseSlug, ...options })
+      .pipe(luPar(seanceOuverteServie));
   }
 
   lireDeroule(sessionId: string): Observable<DerouleCours> {
     return this.http
-      .get<DerouleDuFil>(`${this.urlSeance(sessionId)}/deroule`)
-      .pipe(map(derouleDuFil));
+      .get<unknown>(`${this.urlSeance(sessionId)}/deroule`)
+      .pipe(luPar(derouleServi), map(derouleDuFil));
   }
 
   telechargerPieceJointeDuDeroule(
@@ -238,14 +252,15 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   lireLivret(courseSlug: string): Observable<LivretDuCours> {
     return this.http
-      .get<LivretDuFil>(`${this.baseUrl}/livrets/${encodeURIComponent(courseSlug)}`)
-      .pipe(map(livretDuFil));
+      .get<unknown>(`${this.baseUrl}/livrets/${encodeURIComponent(courseSlug)}`)
+      .pipe(luPar(livretServi), map(livretDuFil));
   }
 
   lireSujet(sessionId: string, jeton: string): Observable<CoursContent> {
     return this.http
-      .get<SujetDuFil>(`${this.urlSeance(sessionId)}/sujet`, { headers: entetes(jeton) })
+      .get<unknown>(`${this.urlSeance(sessionId)}/sujet`, { headers: entetes(jeton) })
       .pipe(
+        luPar(sujetServi),
         map(sujetDuFil),
         catchError((erreur: unknown) => throwError(() => refuserSujet(erreur))),
       );
@@ -264,13 +279,11 @@ export class FormationsHttpAdapter implements FormationsPort {
   }
 
   lireResultats(sessionId: string): Observable<RapportSeance> {
-    return this.http
-      .get<RapportSeance>(`${this.urlSeance(sessionId)}/results`)
-      .pipe(map(completerNotation));
+    return this.http.get<unknown>(`${this.urlSeance(sessionId)}/results`).pipe(luPar(rapportServi));
   }
 
   exporterBilan(sessionId: string): Observable<RapportSeance> {
-    return this.http.get<RapportSeance>(`${this.urlSeance(sessionId)}/report`);
+    return this.http.get<unknown>(`${this.urlSeance(sessionId)}/report`).pipe(luPar(rapportServi));
   }
 
   telechargerRapportCsv(sessionId: string): Observable<FichierTelecharge> {
@@ -278,62 +291,52 @@ export class FormationsHttpAdapter implements FormationsPort {
   }
 
   lireAnnotations(sessionId: string): Observable<{ annotations: readonly AnnotationFormateur[] }> {
-    return this.http.get<{ annotations: readonly AnnotationFormateur[] }>(
-      `${this.urlSeance(sessionId)}/annotations`,
-    );
+    return this.http
+      .get<unknown>(`${this.urlSeance(sessionId)}/annotations`)
+      .pipe(luPar(annotationsServies));
   }
 
   enregistrerAnnotation(
     sessionId: string,
     annotation: Pick<AnnotationFormateur, 'screenId' | 'note'>,
   ): Observable<AnnotationFormateur> {
-    return this.http.post<AnnotationFormateur>(
-      `${this.urlSeance(sessionId)}/annotations`,
-      annotation,
-    );
+    return this.http
+      .post<unknown>(`${this.urlSeance(sessionId)}/annotations`, annotation)
+      .pipe(luPar(annotationServie));
   }
 
   lireReponsesLibres(
     sessionId: string,
   ): Observable<{ responses: readonly ReponseLibreFormateur[] }> {
-    return this.http.get<{ responses: readonly ReponseLibreFormateur[] }>(
-      `${this.urlSeance(sessionId)}/free-responses`,
-    );
+    return this.http
+      .get<unknown>(`${this.urlSeance(sessionId)}/free-responses`)
+      .pipe(luPar(reponsesLibresServies));
   }
 
   lireParticipants(
     sessionId: string,
   ): Observable<{ participants: readonly ParticipantDeSeance[] }> {
-    return this.http.get<{ participants: readonly ParticipantDeSeance[] }>(
-      `${this.urlSeance(sessionId)}/participants`,
-    );
+    return this.http
+      .get<unknown>(`${this.urlSeance(sessionId)}/participants`)
+      .pipe(luPar(participantsServis));
   }
 
   rejoindre(code: string, inscription: InscriptionParticipant): Observable<Rattachement> {
     const url = `${this.baseUrl}/sessions/${encodeURIComponent(code)}/join`;
-    return this.http.post<Rattachement>(url, inscription).pipe(
-      map(({ participantId, sessionId, ecranCourant, modeRythme, jeton, secretDeReprise }) => ({
-        participantId,
-        sessionId,
-        ecranCourant,
-        modeRythme,
-        jeton,
-        secretDeReprise,
-      })),
+    return this.http.post<unknown>(url, inscription).pipe(
+      luPar(rattachementServi),
       catchError((erreur: unknown) => throwError(() => refuserRattachement(erreur))),
     );
   }
 
   repondre(sessionId: string, jeton: string, reponse: ReponseEtudiant): Observable<VerdictReponse> {
     return ecritureEtudiante(
-      this.http.post<VerdictBrut>(`${this.urlSeance(sessionId)}/answers`, reponse, {
+      this.http.post<unknown>(`${this.urlSeance(sessionId)}/answers`, reponse, {
         headers: entetes(jeton),
       }),
     ).pipe(
-      map(({ correcte, libelleConfusion }) => ({
-        reussite: correcte,
-        libelleConfusion: libelleConfusion ?? null,
-      })),
+      luPar(verdictReponseServi),
+      map(({ correcte, libelleConfusion }) => ({ reussite: correcte, libelleConfusion })),
     );
   }
 
@@ -343,10 +346,13 @@ export class FormationsHttpAdapter implements FormationsPort {
     reponse: ReponseLibreEtudiant,
   ): Observable<ReponseLibreEnregistree> {
     return this.http
-      .post<ReponseLibreEnregistree>(`${this.urlSeance(sessionId)}/free-responses`, reponse, {
+      .post<unknown>(`${this.urlSeance(sessionId)}/free-responses`, reponse, {
         headers: entetes(jeton),
       })
-      .pipe(catchError((erreur: unknown) => throwError(() => refuserReponseLibre(erreur))));
+      .pipe(
+        catchError((erreur: unknown) => throwError(() => refuserReponseLibre(erreur))),
+        luPar(reponseLibreEnregistreeServie),
+      );
   }
 
   signalerIncidents(
@@ -367,10 +373,10 @@ export class FormationsHttpAdapter implements FormationsPort {
     production: ProductionEtudiante,
   ): Observable<VerdictProduction> {
     return ecritureEtudiante(
-      this.http.post<VerdictProduction>(`${this.urlSeance(sessionId)}/productions`, production, {
+      this.http.post<unknown>(`${this.urlSeance(sessionId)}/productions`, production, {
         headers: entetes(jeton),
       }),
-    );
+    ).pipe(luPar(verdictProductionServi));
   }
 
   tenterEnigme(
@@ -381,9 +387,9 @@ export class FormationsHttpAdapter implements FormationsPort {
   ): Observable<VerdictTentative> {
     const url = `${this.urlSeance(sessionId)}/escape/${encodeURIComponent(parcoursId)}/tentatives`;
     return ecritureEtudiante(
-      this.http.post<VerdictTentative>(url, tentative, { headers: entetes(jeton) }),
+      this.http.post<unknown>(url, tentative, { headers: entetes(jeton) }),
       'refusee',
-    );
+    ).pipe(luPar(verdictTentativeServi));
   }
 
   declarerJalon(
@@ -398,10 +404,10 @@ export class FormationsHttpAdapter implements FormationsPort {
 
   lireRappels(sessionId: string, jeton: string): Observable<RappelsDus> {
     return ecritureEtudiante(
-      this.http.get<RappelsDus>(`${this.urlSeance(sessionId)}/rappels`, {
+      this.http.get<unknown>(`${this.urlSeance(sessionId)}/rappels`, {
         headers: entetes(jeton),
       }),
-    );
+    ).pipe(luPar(rappelsServis));
   }
 
   envoyerDefi(
@@ -411,32 +417,30 @@ export class FormationsHttpAdapter implements FormationsPort {
     tentative: TentativeDefi,
   ): Observable<StrategiesDuDefi> {
     return ecritureEtudiante(
-      this.http.post<StrategiesDuDefi>(
-        `${this.urlDuDefi(sessionId, defiId)}/tentative`,
-        tentative,
-        {
-          headers: entetes(jeton),
-        },
-      ),
-    );
+      this.http.post<unknown>(`${this.urlDuDefi(sessionId, defiId)}/tentative`, tentative, {
+        headers: entetes(jeton),
+      }),
+    ).pipe(luPar(strategiesServies));
   }
 
   lireStrategies(sessionId: string, jeton: string, defiId: string): Observable<StrategiesDuDefi> {
-    return this.http.get<StrategiesDuDefi>(`${this.urlDuDefi(sessionId, defiId)}/strategies`, {
-      headers: entetes(jeton),
-    });
+    return this.http
+      .get<unknown>(`${this.urlDuDefi(sessionId, defiId)}/strategies`, {
+        headers: entetes(jeton),
+      })
+      .pipe(luPar(strategiesServies));
   }
 
   lireMonEtat(sessionId: string, jeton: string): Observable<EtatParticipant> {
-    return this.http.get<EtatParticipant>(`${this.urlSeance(sessionId)}/moi`, {
-      headers: entetes(jeton),
-    });
+    return this.http
+      .get<unknown>(`${this.urlSeance(sessionId)}/moi`, { headers: entetes(jeton) })
+      .pipe(luPar(etatParticipantServi));
   }
 
   lireSyntheseRappels(sessionId: string): Observable<{ concepts: readonly SyntheseConcept[] }> {
-    return this.http.get<{ concepts: readonly SyntheseConcept[] }>(
-      `${this.urlSeance(sessionId)}/rappels/synthese`,
-    );
+    return this.http
+      .get<unknown>(`${this.urlSeance(sessionId)}/rappels/synthese`)
+      .pipe(luPar(syntheseServie));
   }
 
   evincerParticipant(sessionId: string, participantId: string): Observable<void> {

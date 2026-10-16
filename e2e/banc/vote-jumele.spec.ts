@@ -3,6 +3,7 @@ import type { APIRequestContext, APIResponse, Page } from '@playwright/test';
 import {
   URL_API,
   coursReleve,
+  entetesDuFormateur,
   inscrireUnPoste,
   lireLesResultats,
   optionsDuPoste,
@@ -65,7 +66,7 @@ function piloterLaPhase(
   pilotage: Readonly<Record<string, unknown>>,
 ): Promise<APIResponse> {
   return request.patch(`${URL_API}/formations/sessions/${sessionId}/control`, {
-    headers: { authorization: `Bearer ${jeton}` },
+    headers: entetesDuFormateur(jeton),
     data: { pilotage },
   });
 }

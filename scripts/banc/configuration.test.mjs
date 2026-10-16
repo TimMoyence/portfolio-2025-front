@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import fc from 'fast-check';
 
+import { cheminDuDepot, lireTexte } from '../lib/depot.mjs';
 import {
   BASE_DU_BANC,
   PORTS,
@@ -111,6 +112,16 @@ test('secretAleatoire rend toujours une chaine hexadecimale de la longueur atten
   );
 });
 
+test('secretAleatoire écrit chaque octet en deux chiffres hexadécimaux minuscules, dans l ordre', () => {
+  const motif = [0x00, 0x0f, 0xa0, 0xff];
+  const source = {
+    octets: (taille) =>
+      Uint8Array.from({ length: taille }, (_, rang) => motif[rang % motif.length]),
+  };
+
+  assert.equal(secretAleatoire(source), '000fa0ff'.repeat(6));
+});
+
 test('racineDuBack prend le dépôt back voisin du front par défaut', () => {
   assert.equal(
     racineDuBack({ env: {}, racineFront: '/depots/portfolio-2025-front' }),
@@ -133,9 +144,7 @@ test('racineDuBack suit BANC_RACINE_BACK, relatif au front, pour jouer un worktr
 });
 
 test("aucun script du package.json n'appelle le compose du banc hors de jouer.mjs", () => {
-  const { scripts } = JSON.parse(
-    readFileSync(fileURLToPath(new URL('../../package.json', import.meta.url)), 'utf8'),
-  );
+  const { scripts } = JSON.parse(lireTexte(cheminDuDepot('package.json')));
 
   assert.deepEqual(
     Object.entries(scripts).filter(([, commande]) => commande.includes('banc.compose.yaml')),

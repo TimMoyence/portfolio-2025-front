@@ -9,42 +9,25 @@
  */
 
 import { pathToFileURL } from 'node:url';
-import { spawn } from 'node:child_process';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(__dirname, '..');
+import { cheminDuDepot } from './lib/depot.mjs';
+import { messageDErreur } from '../src/server/lecture-api.ts';
+import { executer } from './lib/processus.mjs';
 
 const MIN_OFFER_SCORE = 7;
 const MAX_OFFER_SCORE = 7;
+const SLUG_EN_KEBAB = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-function collectFormations() {
-  return new Promise((resolveP, rejectP) => {
-    const bridgePath = resolve(__dirname, 'validate-formation.bridge.mts');
-    const bridgeArgs = ['-y', 'tsx', bridgePath];
-    // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
-    const child = spawn('npx', bridgeArgs, {
-      cwd: REPO_ROOT,
-      stdio: ['ignore', 'pipe', 'inherit'],
-    });
-    let stdout = '';
-    child.stdout.on('data', (chunk) => {
-      stdout += chunk.toString();
-    });
-    child.on('error', rejectP);
-    child.on('close', (code) => {
-      if (code !== 0) {
-        rejectP(new Error(`tsx bridge exited with code ${code}`));
-        return;
-      }
-      try {
-        resolveP(JSON.parse(stdout));
-      } catch (err) {
-        rejectP(new Error(`Invalid JSON from bridge: ${err.message}\n${stdout}`));
-      }
-    });
+async function collectFormations() {
+  const bridgePath = cheminDuDepot('scripts/validate-formation.bridge.mts');
+  const stdout = await executer('npx', ['-y', 'tsx', bridgePath], {
+    stdio: ['ignore', 'pipe', 'inherit'],
   });
+  try {
+    return JSON.parse(stdout);
+  } catch (err) {
+    throw new Error(`Invalid JSON from bridge: ${messageDErreur(err)}\n${stdout}`);
+  }
 }
 
 function countWords(text) {
@@ -56,7 +39,7 @@ function checkRequirement(errors, condition, message) {
   return condition ? 1 : 0;
 }
 
-function validateOffer(config) {
+export function validateOffer(config) {
   const errors = [];
   const warnings = [];
   const hasTitle = typeof config.title === 'string' && config.title.trim().length >= 10;
@@ -74,7 +57,7 @@ function validateOffer(config) {
         typeof entry.value === 'string' &&
         entry.value.trim(),
     );
-  const hasSlug = typeof config.slug === 'string' && /^[a-z0-9-]+$/.test(config.slug);
+  const hasSlug = typeof config.slug === 'string' && SLUG_EN_KEBAB.test(config.slug);
   let score = checkRequirement(
     errors,
     hasTitle,
@@ -109,7 +92,7 @@ async function main() {
   try {
     configs = await collectFormations();
   } catch (err) {
-    console.error(`[validate-formation] failed to load registry: ${err.message}`);
+    console.error(`[validate-formation] failed to load registry: ${messageDErreur(err)}`);
     process.exit(1);
   }
 

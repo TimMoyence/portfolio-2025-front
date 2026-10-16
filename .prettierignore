@@ -8,3 +8,4 @@ yarn.lock
 CLAUDE.md
 AGENTS.md
 .claude
+src/testing/fixtures/reponses-servies.json

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 
-const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
-const FRONT_DIR = resolve(SCRIPT_DIR, '..');
+import { RACINE as FRONT_DIR } from './lib/depot.mjs';
+import { messageDErreur } from '../src/server/lecture-api.ts';
+
 const PARENT_DIR = resolve(FRONT_DIR, '..');
 const BACK_DIR = resolve(PARENT_DIR, 'portfolio-2025-back');
 
@@ -74,6 +74,15 @@ function parseOptions(args) {
   return opts;
 }
 
+function lancer(command, args, { cwd = PARENT_DIR, env, captureOutput }) {
+  return spawnSync(command, args, {
+    cwd,
+    env,
+    encoding: 'utf8',
+    stdio: captureOutput ? 'pipe' : 'inherit',
+  });
+}
+
 function run(command, args, options = {}) {
   const {
     cwd = PARENT_DIR,
@@ -89,12 +98,7 @@ function run(command, args, options = {}) {
     console.log(`  [dry-run] ${printable}`);
     return { status: 0, stdout: '', stderr: '' };
   }
-  const result = spawnSync(command, args, {
-    cwd,
-    env,
-    encoding: 'utf8',
-    stdio: captureOutput ? 'pipe' : 'inherit',
-  });
+  const result = lancer(command, args, { cwd, env, captureOutput });
   if (!allowFailure && result.status !== 0) {
     throw new Error(`Commande echouee : ${printable}`);
   }
@@ -105,14 +109,19 @@ function run(command, args, options = {}) {
   };
 }
 
+function capturer(command, args, { opts, env, description, allowFailure = false }) {
+  return run(command, args, {
+    captureOutput: true,
+    allowFailure,
+    dryRun: opts.dryRun,
+    env,
+    description,
+  });
+}
+
 function commandExists(cmd, env) {
   return (
-    spawnSync('/bin/zsh', ['-lc', `command -v ${cmd}`], {
-      cwd: PARENT_DIR,
-      env,
-      encoding: 'utf8',
-      stdio: 'pipe',
-    }).status === 0
+    lancer('/bin/zsh', ['-lc', `command -v ${cmd}`], { env, captureOutput: true }).status === 0
   );
 }
 
@@ -123,9 +132,8 @@ function prependToPath(env, dir) {
 }
 
 function applyBrewEnv(env, opts) {
-  const out = run('brew', ['shellenv'], {
-    captureOutput: true,
-    dryRun: opts.dryRun,
+  const out = capturer('brew', ['shellenv'], {
+    opts,
     env,
     description: 'Chargement Homebrew',
   }).stdout;
@@ -152,12 +160,11 @@ function ensureHomebrew(opts, env) {
 }
 
 function ensureBrewFormula(formula, opts, env) {
-  const info = run('brew', ['list', '--versions', formula], {
-    captureOutput: true,
-    allowFailure: true,
-    dryRun: opts.dryRun,
+  const info = capturer('brew', ['list', '--versions', formula], {
+    opts,
     env,
     description: `Verification ${formula}`,
+    allowFailure: true,
   });
   if (opts.dryRun || info.status === 0) return;
   run('brew', ['install', formula], {
@@ -168,9 +175,8 @@ function ensureBrewFormula(formula, opts, env) {
 }
 
 function ensureFormulaBin(formula, opts, env) {
-  const prefix = run('brew', ['--prefix', formula], {
-    captureOutput: true,
-    dryRun: opts.dryRun,
+  const prefix = capturer('brew', ['--prefix', formula], {
+    opts,
     env,
     description: `Prefix ${formula}`,
   }).stdout.trim();
@@ -178,12 +184,11 @@ function ensureFormulaBin(formula, opts, env) {
 }
 
 function ensureXcodeCLT(opts, env) {
-  const probe = run('xcode-select', ['-p'], {
-    captureOutput: true,
-    allowFailure: true,
-    dryRun: opts.dryRun,
+  const probe = capturer('xcode-select', ['-p'], {
+    opts,
     env,
     description: 'Verification Xcode CLT',
+    allowFailure: true,
   });
   if (opts.dryRun || probe.status === 0) return;
   run('xcode-select', ['--install'], {
@@ -229,12 +234,11 @@ function ensurePostgres(opts, env) {
   });
   const max = opts.dryRun ? 1 : 15;
   for (let i = 1; i <= max; i++) {
-    const r = run('pg_isready', ['-h', '127.0.0.1', '-p', '5432', '-d', 'postgres'], {
-      captureOutput: true,
-      allowFailure: true,
-      dryRun: opts.dryRun,
+    const r = capturer('pg_isready', ['-h', '127.0.0.1', '-p', '5432', '-d', 'postgres'], {
+      opts,
       env,
       description: `PostgreSQL readiness (${i}/${max})`,
+      allowFailure: true,
     });
     if (opts.dryRun || r.status === 0) break;
     if (i === max) throw new Error("PostgreSQL n'a pas demarre.");
@@ -243,7 +247,7 @@ function ensurePostgres(opts, env) {
 }
 
 function ensureLocalDatabase(opts, env) {
-  run(
+  capturer(
     'psql',
     [
       'postgres',
@@ -258,10 +262,10 @@ function ensureLocalDatabase(opts, env) {
        END IF;
      END $$;`,
     ],
-    { captureOutput: true, dryRun: opts.dryRun, env, description: 'Creation role DB' },
+    { opts, env, description: 'Creation role DB' },
   );
 
-  const exists = run(
+  const exists = capturer(
     'psql',
     [
       'postgres',
@@ -270,7 +274,7 @@ function ensureLocalDatabase(opts, env) {
       '-tAc',
       `SELECT 1 FROM pg_database WHERE datname = '${LOCAL_DB_NAME}';`,
     ],
-    { captureOutput: true, dryRun: opts.dryRun, env, description: 'Verification base' },
+    { opts, env, description: 'Verification base' },
   ).stdout.trim();
 
   if (opts.dryRun || exists !== '1') {
@@ -626,6 +630,6 @@ function main() {
 try {
   main();
 } catch (error) {
-  console.error(`\nSetup echoue : ${error instanceof Error ? error.message : String(error)}`);
+  console.error(`\nSetup echoue : ${messageDErreur(error)}`);
   process.exit(1);
 }

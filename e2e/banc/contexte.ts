@@ -123,7 +123,7 @@ export function jetonDuFormateur(request: APIRequestContext): Promise<string> {
   return jetonPartage;
 }
 
-function entetesDuFormateur(jeton: string): Record<string, string> {
+export function entetesDuFormateur(jeton: string): Record<string, string> {
   return { authorization: `Bearer ${jeton}` };
 }
 

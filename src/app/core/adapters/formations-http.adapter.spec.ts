@@ -4,8 +4,6 @@ import type { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   buildAnnotationFormateur,
-  buildCoursContent,
-  buildDerouleCours,
   buildEtatParticipant,
   buildFichierTelecharge,
   buildParticipantDeSeance,
@@ -22,6 +20,8 @@ import {
 import type { ProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { buildProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { bancAdaptateurHttp } from '../../../testing/http-attendu';
+import filB201 from '../../../testing/fixtures/b2-01.instantane.json';
+import { INSTANTANE_B2_01 } from '../../../testing/fixtures/instantane-b2-01';
 import type { CoursContent, EcranContent } from '../../../cours/content/types';
 import type {
   AnnotationFormateur,
@@ -33,13 +33,13 @@ import type {
   ParticipantDeSeance,
   RapportSeance,
   Rattachement,
-  RegleNotation,
   ReponseLibreFormateur,
   SeanceOuverte,
   VerdictReponse,
 } from '../ports/formations.port';
 import {
   FORMATIONS_PORT,
+  limiteDuRefus,
   PieceJointeRefusee,
   RattachementRefuse,
   ReponseLibreRefusee,
@@ -67,6 +67,29 @@ const REPONSE_LIBRE = {
   response: 'raisonnement',
   dureeMs: 3200,
 };
+
+const LIMITE_ATTEINTE = {
+  status: 429,
+  statusText: 'Too Many Requests',
+  headers: { 'Retry-After': '120' },
+};
+
+const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
+
+function attendreLAttenteCommune(
+  refus: {
+    readonly motif: string;
+    readonly statut: number;
+    readonly message: string;
+    readonly limite?: unknown;
+  },
+  motif: string,
+  contexte = motif,
+): void {
+  expect([refus.motif, refus.statut, refus.message, refus.limite, limiteDuRefus(refus)])
+    .withContext(contexte)
+    .toEqual([motif, LIMITE_ATTEINTE.status, ATTENTE_COMMUNE, { minutes: 2 }, { minutes: 2 }]);
+}
 
 const RATTACHEMENT: Rattachement = {
   participantId: '8f1c3b2a-5d4e-4f6a-9b8c-7d6e5f4a3b2c',
@@ -160,24 +183,21 @@ describe('FormationsHttpAdapter', () => {
   });
 
   it('lireDeroule GETe le deroule du presentateur sur deroule', () => {
-    const deroule = buildDerouleCours();
-
-    expect(lus(adapter.lireDeroule(SESSION_ID), `${URL_SEANCE}/deroule`, deroule)).toEqual([
-      deroule,
+    expect(lus(adapter.lireDeroule(SESSION_ID), `${URL_SEANCE}/deroule`, filB201.deroule)).toEqual([
+      INSTANTANE_B2_01.deroule,
     ]);
   });
 
   it('lireSujet GETe le sujet de l etudiant avec l en-tete de participant', () => {
-    const sujet = buildCoursContent();
     const recus: CoursContent[] = [];
 
     adapter.lireSujet(SESSION_ID, JETON).subscribe((valeur) => recus.push(valeur));
 
     const req = attendre(`${URL_SEANCE}/sujet`, 'GET');
     expect(req.request.headers.get(ENTETE_JETON)).toBe(JETON);
-    req.flush(sujet);
+    req.flush(filB201.sujet);
 
-    expect(recus).toEqual([sujet]);
+    expect(recus).toEqual([INSTANTANE_B2_01.sujet]);
   });
 
   describe('pièce jointe réservée à la séance', () => {
@@ -292,14 +312,22 @@ describe('FormationsHttpAdapter', () => {
         attendreLeRefus(await refusAuPoste(repondre), motif, statut);
       });
     }
+
+    it('signale au poste un 429 par l attente commune lue dans Retry-After', async () => {
+      const refus = await refusAuPoste((requete) =>
+        requete.flush(new Blob([''], { type: 'application/json' }), LIMITE_ATTEINTE),
+      );
+
+      attendreLAttenteCommune(refus, 'indisponible');
+    });
   });
 
   function sujetDontLePremierEcranPorte(fil: (premier: EcranContent) => Record<string, unknown>) {
-    const base = buildCoursContent();
-    const [premier, ...reste] = base.ecrans;
+    const [premierServi, ...resteServi] = filB201.sujet.ecrans;
+    const [premier, ...reste] = INSTANTANE_B2_01.sujet.ecrans;
     const recus = lus(adapter.lireSujet(SESSION_ID, JETON), `${URL_SEANCE}/sujet`, {
-      ...base,
-      ecrans: [{ ...premier, ...fil(premier) }, ...reste],
+      ...filB201.sujet,
+      ecrans: [{ ...premierServi, ...fil(premier) }, ...resteServi],
     });
     return { premier, reste, recus };
   }
@@ -340,37 +368,42 @@ describe('FormationsHttpAdapter', () => {
   });
 
   it('lireDeroule traduit l ecran source servi par le fil', () => {
-    const base = buildDerouleCours();
-    const [premier, ...reste] = base.ecrans;
+    const [premierServi, ...resteServi] = filB201.deroule.ecrans;
+    const [premier] = INSTANTANE_B2_01.deroule.ecrans;
 
     const recus = lus(adapter.lireDeroule(SESSION_ID), `${URL_SEANCE}/deroule`, {
-      ...base,
-      ecrans: [{ ...premier, ecranCorrige: 'ecran-source' }, ...reste],
+      ...filB201.deroule,
+      ecrans: [{ ...premierServi, ecranCorrige: 'ecran-source' }, ...resteServi],
     });
 
     expect(recus[0].ecrans[0]).toEqual({ ...premier, ecranSource: 'ecran-source' });
   });
 
   it('lireLivret GETe le livret du cours et traduit le sujet et le corrige servis par le fil', () => {
-    const sujet = buildCoursContent();
-    const corrige = buildDerouleCours();
-    const [premier, ...reste] = corrige.ecrans;
+    const [premierServi, ...resteServi] = filB201.deroule.ecrans;
+    const [premier, ...reste] = INSTANTANE_B2_01.deroule.ecrans;
 
     const recus = lus(
-      adapter.lireLivret('b2-02-series-statistiques'),
-      `${environment.apiBaseUrl}/formations/livrets/b2-02-series-statistiques`,
+      adapter.lireLivret('b2-01-traitement-information-chiffree'),
+      `${environment.apiBaseUrl}/formations/livrets/b2-01-traitement-information-chiffree`,
       {
         version: 3,
-        sujet,
-        corrige: { ...corrige, ecrans: [{ ...premier, ecranCorrige: 'ecran-source' }, ...reste] },
+        sujet: filB201.sujet,
+        corrige: {
+          ...filB201.deroule,
+          ecrans: [{ ...premierServi, ecranCorrige: 'ecran-source' }, ...resteServi],
+        },
       },
     );
 
     expect(recus).toEqual([
       {
         version: 3,
-        sujet,
-        corrige: { ...corrige, ecrans: [{ ...premier, ecranSource: 'ecran-source' }, ...reste] },
+        sujet: INSTANTANE_B2_01.sujet,
+        corrige: {
+          ...INSTANTANE_B2_01.deroule,
+          ecrans: [{ ...premier, ecranSource: 'ecran-source' }, ...reste],
+        },
       },
     ]);
   });
@@ -379,7 +412,7 @@ describe('FormationsHttpAdapter', () => {
     const recus = lus(
       adapter.lireLivret('a/b'),
       `${environment.apiBaseUrl}/formations/livrets/a%2Fb`,
-      { version: 1, sujet: buildCoursContent(), corrige: buildDerouleCours() },
+      { version: 1, sujet: filB201.sujet, corrige: filB201.deroule },
     );
 
     expect(recus.length).toBe(1);
@@ -405,6 +438,16 @@ describe('FormationsHttpAdapter', () => {
       expect(refus.message).not.toBe('');
     });
   }
+
+  it('lireSujet dit un 429 par l attente commune lue dans Retry-After', () => {
+    const erreurs = erreursApres(
+      adapter.lireSujet(SESSION_ID, JETON),
+      `${URL_SEANCE}/sujet`,
+      (req) => req.flush('', LIMITE_ATTEINTE),
+    );
+
+    attendreLAttenteCommune(erreurs[0] as SujetRefuse, 'sujet-indisponible');
+  });
 
   it('demarrer POSTe sur start', () => {
     expect(corpsEnvoye(adapter.demarrer(SESSION_ID), `${URL_SEANCE}/start`, 'POST')).toEqual({});
@@ -540,6 +583,16 @@ describe('FormationsHttpAdapter', () => {
         attendreLeRefus(refusDeReponseLibre(statut, corps), motif, statut);
       });
     }
+
+    it('garde un 429 en panne passagere, dite par l attente commune lue dans Retry-After', () => {
+      const erreurs = erreursApres(
+        adapter.enregistrerReponseLibre(SESSION_ID, JETON, REPONSE_LIBRE),
+        `${URL_SEANCE}/free-responses`,
+        (requete) => requete.flush(buildProblemeHttp({ status: 429 }), LIMITE_ATTEINTE),
+      );
+
+      attendreLAttenteCommune(erreurs[0] as ReponseLibreRefusee, 'reseau');
+    });
   });
 
   it('persiste les reponses libres et les annotations du formateur', () => {
@@ -570,18 +623,14 @@ describe('FormationsHttpAdapter', () => {
     expect(recus).toEqual([RATTACHEMENT]);
   });
 
-  it('rejoindre ne garde du rattachement aucune graine, meme si le serveur en envoie encore une', () => {
-    const { recus } = rejoindreAvec({ ...RATTACHEMENT, seed: 1_234_567 });
+  it('rejoindre refuse un rattachement qui porte une graine, que le back ne sert pas', () => {
+    const erreurs = erreursApres(
+      adapter.rejoindre(CODE, INSCRIPTION),
+      `${RACINE}/${CODE}/join`,
+      (requete) => requete.flush({ ...RATTACHEMENT, seed: 1_234_567 }),
+    );
 
-    expect(recus).toEqual([RATTACHEMENT]);
-    expect(Object.keys(recus[0]).sort((a, b) => a.localeCompare(b))).toEqual([
-      'ecranCourant',
-      'jeton',
-      'modeRythme',
-      'participantId',
-      'secretDeReprise',
-      'sessionId',
-    ]);
+    expect(erreurs).toEqual([jasmine.any(Error)]);
   });
 
   it('rejoindre presente le secret de reprise du poste quand il en a un', () => {
@@ -603,6 +652,7 @@ describe('FormationsHttpAdapter', () => {
       statut: number,
       statusText: string,
       corps: ProblemeHttp | '' = '',
+      headers: Record<string, string> = {},
     ): RattachementRefuse => {
       const erreurs: unknown[] = [];
 
@@ -610,7 +660,9 @@ describe('FormationsHttpAdapter', () => {
         error: (recue: unknown) => erreurs.push(recue),
       });
 
-      httpMock.expectOne(`${RACINE}/${CODE}/join`).flush(corps, { status: statut, statusText });
+      httpMock
+        .expectOne(`${RACINE}/${CODE}/join`)
+        .flush(corps, { status: statut, statusText, headers });
 
       expect(erreurs.length).toBe(1);
       expect(erreurs[0]).toBeInstanceOf(RattachementRefuse);
@@ -668,6 +720,17 @@ describe('FormationsHttpAdapter', () => {
     it('rend un motif generique pour les autres statuts', () => {
       attendreMotif(refusPour(500, 'Server Error'), 'rattachement-impossible');
     });
+
+    it('dit un 429 par l attente commune lue dans Retry-After, pas par un echec du rattachement', () => {
+      const refus = refusPour(
+        LIMITE_ATTEINTE.status,
+        LIMITE_ATTEINTE.statusText,
+        buildProblemeHttp({ status: 429, title: 'Too Many Requests' }),
+        LIMITE_ATTEINTE.headers,
+      );
+
+      attendreLAttenteCommune(refus, 'rattachement-impossible');
+    });
   });
 
   it('repondre POSTe la reponse sur answers avec l en-tete de participant', () => {
@@ -681,7 +744,7 @@ describe('FormationsHttpAdapter', () => {
     req.flush({ correcte: true, misconception: null, libelleConfusion: null });
   });
 
-  it('repondre traduit le correcte du serveur en reussite et ne rend que ca avec le libelle de confusion, meme si le serveur ajoute misconception', () => {
+  it('repondre traduit le correcte du serveur en reussite et ne rend que ca avec le libelle de confusion', () => {
     const recus: VerdictReponse[] = [];
 
     adapter
@@ -692,29 +755,28 @@ describe('FormationsHttpAdapter', () => {
       correcte: false,
       misconception: 'interet-simple',
       libelleConfusion: 'Intérêts simples au lieu de composés',
-      solution: 1338.23,
-      note: 12,
     });
 
-    expect(recus.length).toBe(1);
-    const cles = Object.keys(recus[0]).sort((a, b) => a.localeCompare(b));
-    expect(cles).toEqual(['libelleConfusion', 'reussite']);
-    expect(recus[0]).toEqual({
-      reussite: false,
-      libelleConfusion: 'Intérêts simples au lieu de composés',
-    });
+    expect(recus).toEqual([
+      { reussite: false, libelleConfusion: 'Intérêts simples au lieu de composés' },
+    ]);
   });
 
-  it('repondre rend un libelle de confusion nul quand le serveur ne le transmet pas', () => {
-    const recus: VerdictReponse[] = [];
+  it('repondre refuse un verdict incomplet ou qui porte une cle que le back ne sert pas', () => {
+    const verdicts = [
+      { correcte: true, misconception: null },
+      { correcte: false, misconception: null, libelleConfusion: null, solution: 1338.23 },
+    ];
 
-    adapter
-      .repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1480.24, dureeMs: 1000 })
-      .subscribe((valeur) => recus.push(valeur));
+    const erreurs = verdicts.flatMap((verdict) =>
+      erreursApres(
+        adapter.repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1, dureeMs: 1 }),
+        `${URL_SEANCE}/answers`,
+        (requete) => requete.flush(verdict),
+      ),
+    );
 
-    attendre(`${URL_SEANCE}/answers`, 'POST').flush({ correcte: true, misconception: null });
-
-    expect(recus).toEqual([{ reussite: true, libelleConfusion: null }]);
+    expect(erreurs).toEqual([jasmine.any(Error), jasmine.any(Error)]);
   });
 
   describe('refus d une reponse', () => {
@@ -1057,6 +1119,16 @@ describe('FormationsHttpAdapter', () => {
         }
       });
 
+      it('garde un 429 en panne passagere, renvoyable, dite par l attente commune lue dans Retry-After', () => {
+        for (const ecriture of ecritures()) {
+          const erreurs = erreursApres(ecriture.appeler(), ecriture.url, (req) =>
+            req.flush(buildProblemeHttp({ status: 429 }), LIMITE_ATTEINTE),
+          );
+
+          attendreLAttenteCommune(erreurs[0] as ReponseRefusee, 'reseau', ecriture.nom);
+        }
+      });
+
       it('lit un 404 sans code comme une eviction, sauf la ou il designe une enigme absente', () => {
         for (const ecriture of ecritures()) {
           const erreurs = erreursApres(ecriture.appeler(), ecriture.url, (req) =>
@@ -1115,43 +1187,36 @@ describe('FormationsHttpAdapter', () => {
       });
     });
 
-    describe('regle de notation servie par un serveur v2', () => {
-      const RAPPORT_V2 = (): object => {
-        const notation: Partial<Record<keyof RegleNotation, unknown>> = {
-          ...buildRegleNotation(),
-        };
-        delete notation['typesNotables'];
-        delete notation['productionCompteSi'];
-        delete notation['statistiquesSurQuestionsNotees'];
-        return { ...buildRapportSeance(), notation };
-      };
+    it('refuse au rapport comme au bilan un champ ou une regle de notation que le back sert toujours', () => {
+      const rapport = buildRapportSeance();
+      const sans = (objet: object, cle: string): object =>
+        Object.fromEntries(Object.entries(objet).filter(([nom]) => nom !== cle));
+      const incomplets = [
+        ...Object.keys(rapport).map((cle) => sans(rapport, cle)),
+        ...Object.keys(rapport.notation).map((cle) => ({
+          ...rapport,
+          notation: sans(rapport.notation, cle),
+        })),
+      ];
+      const lectures = [
+        {
+          lire: (): Observable<RapportSeance> => adapter.lireResultats(SESSION_ID),
+          route: 'results',
+        },
+        {
+          lire: (): Observable<RapportSeance> => adapter.exporterBilan(SESSION_ID),
+          route: 'report',
+        },
+      ];
 
-      it('lireResultats la complete des trois champs du contrat final', () => {
-        const recus: RapportSeance[] = [];
+      const erreurs = lectures.flatMap(({ lire, route }) =>
+        incomplets.flatMap((corps) =>
+          erreursApres(lire(), `${URL_SEANCE}/${route}`, (requete) => requete.flush(corps)),
+        ),
+      );
 
-        adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
-        attendre(`${URL_SEANCE}/results`, 'GET').flush(RAPPORT_V2());
-
-        expect(recus[0].notation).toEqual(buildRegleNotation());
-      });
-
-      it('exporterBilan rend le rapport tel que le serveur l a servi', () => {
-        const recus: RapportSeance[] = [];
-
-        adapter.exporterBilan(SESSION_ID).subscribe((valeur) => recus.push(valeur));
-        attendre(`${URL_SEANCE}/report`, 'GET').flush(RAPPORT_V2());
-
-        expect(recus).toEqual([RAPPORT_V2() as RapportSeance]);
-      });
-    });
-
-    it('laisse sans notation un rapport qui n en porte pas', () => {
-      const recus: RapportSeance[] = [];
-
-      adapter.lireResultats(SESSION_ID).subscribe((valeur) => recus.push(valeur));
-      attendre(`${URL_SEANCE}/results`, 'GET').flush(buildRapportSeance());
-
-      expect(recus).toEqual([buildRapportSeance()]);
+      expect(erreurs.length).toBe(2 * incomplets.length);
+      expect(erreurs.every((erreur) => erreur instanceof Error)).toBeTrue();
     });
   });
 });
