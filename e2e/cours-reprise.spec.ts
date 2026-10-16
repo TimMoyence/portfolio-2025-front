@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import {
+  reponseLibreEnregistreeServie,
+  verdictReponseServi,
+} from '../src/app/core/adapters/formations-schemas';
+import {
   BILLET_DE_SORTIE,
   ETAT_EN_COURS,
   etatDuParticipant,
@@ -42,11 +46,13 @@ async function installerLaSeance(page: Page, seance: SeanceDeSortie): Promise<vo
         repondu = true;
         return servirJson(
           route,
+          verdictReponseServi,
           { correcte: false, misconception: null, libelleConfusion: CONFUSION },
           201,
         );
       },
-      'free-responses': (route) => servirJson(route, { status: 'enregistre' }, 201),
+      'free-responses': (route) =>
+        servirJson(route, reponseLibreEnregistreeServie, { status: 'enregistre' }, 201),
     },
   });
 }

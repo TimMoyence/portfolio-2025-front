@@ -1,22 +1,16 @@
 import { test, expect } from '@playwright/test';
-import type { Page } from '@playwright/test';
-import { API_BASE, MOCK_SESSION } from './fixtures';
+import type { Page, Route } from '@playwright/test';
+import { sessionServie } from '../src/app/core/adapters/site-schemas';
+import { API_BASE, MOCK_SESSION, servirJson, servirRefus } from './fixtures';
 
 interface TentativeDeConnexion {
   readonly email: string;
   readonly motDePasse: string;
-  readonly statut: number;
-  readonly corps: unknown;
+  readonly reponse: (route: Route) => Promise<void>;
 }
 
 async function soumettreLaConnexion(page: Page, tentative: TentativeDeConnexion): Promise<void> {
-  await page.route(`${API_BASE}/auth/login`, async (route) => {
-    await route.fulfill({
-      status: tentative.statut,
-      contentType: 'application/json',
-      body: JSON.stringify(tentative.corps),
-    });
-  });
+  await page.route(`${API_BASE}/auth/login`, tentative.reponse);
 
   await page.goto('/login');
 
@@ -49,8 +43,7 @@ test.describe('Auth — Page de connexion', () => {
     await soumettreLaConnexion(page, {
       email: 'test@test.com',
       motDePasse: 'password123',
-      statut: 200,
-      corps: MOCK_SESSION,
+      reponse: (route) => servirJson(route, sessionServie, MOCK_SESSION),
     });
 
     await expect(page).toHaveURL('/');
@@ -60,8 +53,8 @@ test.describe('Auth — Page de connexion', () => {
     await soumettreLaConnexion(page, {
       email: 'wrong@test.com',
       motDePasse: 'wrongpassword',
-      statut: 401,
-      corps: { message: 'Identifiants invalides', statusCode: 401 },
+      reponse: (route) =>
+        servirRefus(route, 401, { message: 'Identifiants invalides', statusCode: 401 }),
     });
 
     const errorMessage = page.locator('#auth-tab-log-in .auth-msg[role="alert"]');

@@ -195,7 +195,7 @@ describe('FpTableBuild', () => {
     ).toEqual(['4,00 %', '3,50 %']);
   });
 
-  it('L4-F11 · ecrit les cellules, le total et le solde a la francaise, milliers en espace fine', () => {
+  it('L4-F11 ·ecrit les cellules, le total et le solde a la francaise, milliers en espace fine', () => {
     hote.plan = buildTableBuildPlan({
       echeances: 2,
       libellesLignes: ['Année 1', 'Année 2'],

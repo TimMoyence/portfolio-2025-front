@@ -1,6 +1,10 @@
 import { z } from 'zod';
 import { MODALITES, REGIMES_DE_VERROU } from '../../../cours/content/types';
-import { sortiesDeMachine, valeursParCle } from '../../../cours/runtime/core/schemas-communs';
+import {
+  sortiesDeMachine,
+  valeurAffichee,
+  valeursParCle,
+} from '../../../cours/runtime/core/schemas-communs';
 
 const strict = <F extends z.ZodRawShape>(forme: F) => z.object(forme).strict();
 
@@ -380,6 +384,18 @@ const planDeFeuille = strict({
   metadonnees,
 });
 
+export const tableauEvalue = strict({
+  lignes: z.array(
+    strict({
+      rang: z.number(),
+      valeurs: z.record(z.string(), valeurAffichee),
+    }),
+  ),
+  totaux: z.record(z.string(), valeurAffichee),
+  synthese: z.array(valeurAffichee),
+  soldeFinal: valeurAffichee.nullable(),
+});
+
 const planDeTableau = strict({
   id: z.string(),
   intitule: z.string(),
@@ -410,6 +426,7 @@ const planDeTableau = strict({
       decimales: z.number(),
     }),
   ),
+  tableauInitial: tableauEvalue.optional(),
   metadonnees,
 });
 

@@ -15,7 +15,6 @@ import {
   resultatServi,
   resumeBareme,
   statistiquesServies,
-  valeurAffichee,
 } from '../../../cours/runtime/core/schemas-communs';
 import type {
   AnnotationFormateur,
@@ -32,7 +31,7 @@ import type {
   VerdictProduction,
   VerdictTentative,
 } from '../ports/formations.port';
-import { ecranServi, optionPublique } from './donnees-servies';
+import { ecranServi, optionPublique, tableauEvalue } from './donnees-servies';
 import type { DerouleDuFil, LivretDuFil, SujetDuFil } from './formations-fil';
 
 export { luPar } from './lu-par';
@@ -41,22 +40,6 @@ const tolerance = z
   .object({
     type: z.enum(['relative', 'absolue', 'decimales']),
     valeur: z.number(),
-  })
-  .strict();
-
-const tableauEvalue = z
-  .object({
-    lignes: z.array(
-      z
-        .object({
-          rang: z.number(),
-          valeurs: z.record(z.string(), valeurAffichee),
-        })
-        .strict(),
-    ),
-    totaux: z.record(z.string(), valeurAffichee),
-    synthese: z.array(valeurAffichee),
-    soldeFinal: valeurAffichee.nullable(),
   })
   .strict();
 
