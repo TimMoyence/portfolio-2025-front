@@ -116,10 +116,12 @@ export class AuthStateService {
   relireLeCompte(): Observable<void> {
     const port = this.authPort;
     if (port === null) return of(undefined);
-    const relecture: Observable<unknown> =
-      this._token() === null
-        ? port.refresh().pipe(tap((session) => this.login(session)))
-        : port.me().pipe(tap((user) => this._user.set(user)));
+    const jetonPerime =
+      this._token() === null ||
+      (this.accessTokenExpiresAt !== null && Date.now() >= this.accessTokenExpiresAt);
+    const relecture: Observable<unknown> = jetonPerime
+      ? port.refresh().pipe(tap((session) => this.login(session)))
+      : port.me().pipe(tap((user) => this._user.set(user)));
     return relecture.pipe(
       timeout(ME_TIMEOUT_MS),
       map(() => undefined),

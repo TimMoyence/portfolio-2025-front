@@ -132,6 +132,20 @@ describe('AdresseAVerifierComponent', () => {
       expect(retour(fixture)?.textContent).toContain('un nouveau lien part');
     });
 
+    it('apres une veille plus longue que le jeton, relit le compte par un refresh, jamais avec le jeton expire', () => {
+      const fixture = monter(false);
+      const auReveil = Date.now() + 2 * 3_600_000;
+      spyOn(Date, 'now').and.returnValue(auReveil);
+      port.refresh.and.returnValue(of(buildAuthSession({ user: verifie })));
+
+      revenirSurLOnglet('visible');
+      expect(port.me).not.toHaveBeenCalled();
+      expect(port.refresh).toHaveBeenCalledTimes(1);
+      fixture.detectChanges();
+      expect(lireMarque(fixture, 'adresse-a-verifier')).toBeNull();
+      TestBed.inject(AuthStateService).clearSession();
+    });
+
     it('ne relit rien quand l onglet passe en arriere-plan', () => {
       monter(false);
 
