@@ -14,6 +14,7 @@ import { forkJoin, tap, timer } from 'rxjs';
 import { AUTH_PORT, type AuthPort } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
+import { jetonDuLien } from './jeton-du-lien';
 import { IMPORTS_PAGE_AUTH } from './page-auth.imports';
 
 @Component({
@@ -55,7 +56,7 @@ export class VerifyEmailComponent implements OnInit {
   errorMessage?: string;
 
   ngOnInit(): void {
-    const token = this.route.snapshot.queryParamMap.get('token');
+    const token = jetonDuLien(this.route);
 
     if (!token) {
       this.isLoading = false;

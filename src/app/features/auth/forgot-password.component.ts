@@ -18,9 +18,7 @@ export class ForgotPasswordComponent extends FormulaireDeMotDePasse {
   email = '';
 
   submit(form: NgForm): void {
-    this.submitted = true;
-    this.successMessage = undefined;
-    this.errorMessage = undefined;
+    this.commencerLEnvoi();
 
     if (form.invalid) return;
 

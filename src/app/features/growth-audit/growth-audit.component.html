@@ -15,7 +15,6 @@
 
     <form #auditForm="ngForm" class="grid gap-4" (ngSubmit)="submit(auditForm)">
       <input appHoneypot name="website" [(ngModel)]="auditFormState.website" />
-      <input type="hidden" name="formStartedAt" [(ngModel)]="auditFormState.formStartedAt" />
       <label class="text-sm md:text-base font-semibold" for="websiteName">{{
         formLabels.websiteLabel
       }}</label>

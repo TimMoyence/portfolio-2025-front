@@ -1,20 +1,19 @@
 import { PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { PHASES_DE_VOTE } from 'portfolio-2025-partage/contrats';
-import type {
-  Decompte,
-  EcranDeroule,
-  PilotageEcran,
-  ProgressionEnigme,
-  ResultatQuestion,
-  ResultatsSeance,
-  VotePhase,
+import {
+  PHASES_DE_VOTE,
+  type Decompte,
+  type EcranDeroule,
+  type PilotageEcran,
+  type ProgressionEnigme,
+  type ResultatQuestion,
+  type VotePhase,
 } from '../../../../cours/content/types';
 import { rappelEcritAvantLesOptions } from '../../../../cours/runtime/blocks/FpRecall';
 import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
 import { colonnesACorriger } from '../../../../cours/runtime/blocks/FpTableBuild';
 import type { ResultatsDuFlux } from '../../../../cours/runtime/core/sync';
-import { NOMBRE_FRANCAIS } from '../../../shared/slides/layouts/axe-gradue';
+import { enFrancais } from '../../../../cours/runtime/core/typographie';
 import {
   estVoteJumele,
   identifiantsDuMontage,
@@ -24,9 +23,6 @@ import {
 import { objet } from '../../../shared/slides/visual/presentation-v2';
 
 export type CommandeDEcran = { readonly screenId: string } & PilotageEcran;
-
-export type ResultatsDuPupitre = ResultatsSeance &
-  Partial<Pick<ResultatsDuFlux, 'jalons' | 'enigmes' | 'bareme'>>;
 
 const PRODUCTIONS: ReadonlySet<string> = new Set(['fp-sheet', 'fp-table-build', 'fp-cardsort']);
 const REVELATIONS_DEDIEES: ReadonlySet<string> = new Set([
@@ -390,7 +386,7 @@ interface LigneDEnigme extends ProgressionEnigme {
 })
 export class CoursPanneauActiviteComponent {
   readonly ecran = input.required<EcranDeroule>();
-  readonly resultats = input<ResultatsDuPupitre | null>(null);
+  readonly resultats = input<ResultatsDuFlux | null>(null);
   readonly pilotage = input<PilotageEcran>({});
   readonly participants = input(0);
   readonly sessionId = input<string | null>(null);
@@ -482,7 +478,7 @@ export class CoursPanneauActiviteComponent {
       .map((enigme) => ({
         ...enigme,
         intitule: this.libelles().get(enigme.enigmeId) ?? enigme.enigmeId,
-        tentatives: NOMBRE_FRANCAIS.format(enigme.tentativesMoyennes),
+        tentatives: enFrancais(enigme.tentativesMoyennes),
       }));
   });
 

@@ -1,12 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { throwError } from 'rxjs';
 import { CONTACT_PORT, type ContactPort } from '../../core/ports/contact.port';
 import { ContactComponent } from './contact.component';
 import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/champ-de-formulaire';
 import { createContactPortStubWithDefault } from '../../../testing/factories/contact.factory';
 import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
+import { fournirLaRoute } from '../../../testing/factories/route.factory';
+import { champsAntiRobotDeChaqueSaisie, SAISIES_MESUREES } from '../../../testing/saisies-mesurees';
 import { pageMontee } from '../../../testing/montage-page';
 import { formulaireSoumis } from '../../../testing/page-auth';
 import { setupTestBed } from '../../../testing/setup-test-bed';
@@ -26,6 +27,17 @@ describe('ContactComponent', () => {
     page.composant.handleContactSubmit(formulaireSoumis());
 
     expect(port.contact.calls.mostRecent().args[0].termsLocale).toBe('en');
+  });
+
+  it('envoie la durée de chaque saisie, mesurée sur l horloge monotone, sans heure de début', () => {
+    const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
+    const champs = champsAntiRobotDeChaqueSaisie(
+      ContactComponent,
+      (composant) => composant.handleContactSubmit(formulaireSoumis()),
+      port.contact,
+    );
+
+    expect(champs).toEqual(SAISIES_MESUREES);
   });
 
   it('envoie null pour un téléphone blanc et le téléphone renseigné sans ses espaces', () => {
@@ -280,10 +292,7 @@ describe('ContactComponent — demande d acces redirigee par le garde de role', 
       imports: [ContactComponent],
       providers: [
         { provide: CONTACT_PORT, useValue: createContactPortStubWithDefault() },
-        {
-          provide: ActivatedRoute,
-          useValue: { snapshot: { queryParamMap: convertToParamMap({ reason: 'access', app }) } },
-        },
+        fournirLaRoute({ requete: { reason: 'access', app } }),
       ],
     });
     const fixture = TestBed.createComponent(ContactComponent);

@@ -13,6 +13,14 @@ import type {
 } from '../../../../cours/content/types';
 import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
+import {
+  champsAntiRobotDe,
+  figerLesHorloges,
+  horlogesDeSaisie,
+  retarderLaMesure,
+  sousHorlogeArreteeA,
+  UNE_HEURE_MS,
+} from '../../../../testing/horloge-simulee';
 import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
 import {
   clearIdentity,
@@ -52,6 +60,7 @@ import {
   stabiliserLaMiseEnPage,
   stabiliserLaVue,
 } from '../../../../testing/vue-de-seance';
+import type { LimiteDeDebit } from '../../../core/models/limite-de-debit';
 import type {
   FormationsPort,
   MotifRefusRattachement,
@@ -67,6 +76,7 @@ import {
 import { CREATEUR_FLUX } from '../cours-flux.token';
 import type { EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import { demanderLaPieceJointe } from '../../../../testing/piece-jointe-demandee';
+import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { CoursEtudiantComponent } from './cours-etudiant.component';
 
@@ -80,6 +90,18 @@ interface ReponseSlide {
 
 const JETON = 'jeton-participant-7f3a91';
 const SESSION = 'sess-42';
+const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
+
+function refusLimite(): ReponseRefusee {
+  return new ReponseRefusee('reseau', 429, { minutes: 2 });
+}
+
+const JALON_PERDU: EvenementBrique = {
+  kind: 'jalon',
+  screenId: 'ecran-1',
+  sondageId: 'P-PULSE-01',
+  etat: 'perdu',
+};
 const CODE_SAISI = '12 34';
 const CODE_NORMALISE = '1234';
 const ETIQUETTE_BRUTE = 'interets-simples';
@@ -196,7 +218,7 @@ describe('CoursEtudiantComponent', () => {
   }
 
   async function rattacher(code = CODE_SAISI, identite = IDENTITE): Promise<Fixture> {
-    jasmine.clock().install();
+    figerLesHorloges(Date.now());
     try {
       const fixture = monter();
       soumettre(fixture, code, identite);
@@ -419,25 +441,68 @@ describe('CoursEtudiantComponent', () => {
     expect(fixture.componentInstance.etat()).toBe('seance');
   });
 
-  it('attend le délai anti-robot avant de demander le rattachement', async () => {
-    jasmine.clock().install();
-    try {
+  it('envoie au rattachement la durée de saisie mesurée sur l horloge monotone, sans heure de début', async () => {
+    const horloges = horlogesDeSaisie();
+    const fixture = monter();
+
+    horloges.saisirPendant(20_000);
+    soumettre(fixture, CODE_SAISI);
+    await stabiliserLaVue(fixture);
+
+    expect(champsAntiRobotDe(port.rejoindre.calls.argsFor(0)[1] ?? {})).toEqual({
+      formFillDurationMs: 20_000,
+      heureDeDebutEnvoyee: false,
+    });
+  });
+
+  describe('délai anti-robot du rattachement', () => {
+    const horloge = sousHorlogeArreteeA(new Date('2026-10-16T08:00:00Z'));
+
+    async function laisserPasser(dureeMs: number): Promise<void> {
+      jasmine.clock().tick(dureeMs);
+      await Promise.resolve();
+      await Promise.resolve();
+    }
+
+    for (const [cas, reculDeLHorloge] of [
+      ['', 0],
+      [', sans plus quand l horloge recule d une minute avant l envoi', 60_000],
+      [', sans plus quand l horloge recule d une heure avant l envoi', UNE_HEURE_MS],
+    ] as const) {
+      it(`attend le délai anti-robot avant de demander le rattachement${cas}`, async () => {
+        const fixture = monter();
+        horloge.reculerDe(reculDeLHorloge);
+        soumettre(fixture, CODE_SAISI);
+        await Promise.resolve();
+        fixture.detectChanges();
+
+        expect(port.rejoindre).not.toHaveBeenCalled();
+        expect(fixture.componentInstance.etat()).toBe('rattachement');
+        expect(lire(fixture, 'etudiant-rattachement')).not.toBeNull();
+
+        await laisserPasser(1_200);
+
+        expect(port.rejoindre).toHaveBeenCalledOnceWith(CODE_NORMALISE, jasmine.any(Object));
+      });
+    }
+
+    it('n envoie jamais une durée de saisie sous le délai anti-robot, même quand la mesure du poste retarde', async () => {
       const fixture = monter();
       soumettre(fixture, CODE_SAISI);
       await Promise.resolve();
-      fixture.detectChanges();
+      retarderLaMesure(50);
+
+      await laisserPasser(1_200);
 
       expect(port.rejoindre).not.toHaveBeenCalled();
-      expect(fixture.componentInstance.etat()).toBe('rattachement');
-      expect(lire(fixture, 'etudiant-rattachement')).not.toBeNull();
 
-      jasmine.clock().tick(1_200);
-      await stabiliserLaVue(fixture);
+      await laisserPasser(50);
 
-      expect(port.rejoindre).toHaveBeenCalledOnceWith(CODE_NORMALISE, jasmine.any(Object));
-    } finally {
-      jasmine.clock().uninstall();
-    }
+      expect(champsAntiRobotDe(port.rejoindre.calls.argsFor(0)[1] ?? {})).toEqual({
+        formFillDurationMs: 1_200,
+        heureDeDebutEnvoyee: false,
+      });
+    });
   });
 
   it('V5 · télécharge la pièce réservée d un écran avec le jeton du poste', async () => {
@@ -503,6 +568,13 @@ describe('CoursEtudiantComponent', () => {
       message: 'n’a pas pu être chargé',
       reessayable: true,
     },
+    {
+      cas: 'le serveur limite la cadence des lectures',
+      erreur: new SujetRefuse('sujet-indisponible', 429, { minutes: 2 }),
+      motif: 'sujet-indisponible',
+      message: ATTENTE_COMMUNE,
+      reessayable: true,
+    },
   ];
 
   for (const { cas, erreur, motif, message, reessayable } of lecturesRefusees) {
@@ -515,7 +587,7 @@ describe('CoursEtudiantComponent', () => {
       expect(alerte?.getAttribute('data-motif')).toBe(motif);
       expect(alerte?.textContent).toContain(message);
       expect(lire(fixture, 'etudiant-sujet-reessayer') !== null)
-        .withContext('seul un sujet indisponible se relit, un cours modifie reste un refus')
+        .withContext('un sujet indisponible ou limite se relit, un cours modifie reste un refus')
         .toBe(reessayable);
       expect(lire(fixture, 'etudiant-seance')).toBeNull();
       expect(lire(fixture, 'etudiant-entree')).toBeNull();
@@ -613,6 +685,24 @@ describe('CoursEtudiantComponent', () => {
 
     expect(lire(fixture, 'etudiant-flux-refuse')?.getAttribute('data-statut')).toBe('429');
     expect(lire(fixture, 'etudiant-acces-perdu')).toBeNull();
+  });
+
+  it('dit la saturation du suivi sans parler de connexion', async () => {
+    const fixture = await rattacherPuisRefuserLeFlux(429);
+    const refus = lire(fixture, 'etudiant-flux-refuse');
+
+    expect(refus?.getAttribute('data-motif')).toBe('saturation');
+    expect(refus?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
+      'Le suivi en direct est momentanément saturé (statut 429) : il reprendra de lui-même, sans rien à faire de votre côté.',
+    );
+  });
+
+  it('garde la promesse du retour de la connexion pour un autre refus du suivi', async () => {
+    const fixture = await rattacherPuisRefuserLeFlux(503);
+    const refus = lire(fixture, 'etudiant-flux-refuse');
+
+    expect(refus?.getAttribute('data-motif')).toBe('autre');
+    expect(refus?.textContent).toContain('dès que la connexion sera rétablie');
   });
 
   it('applique le regime de verrou propre a chaque ecran', async () => {
@@ -761,6 +851,68 @@ describe('CoursEtudiantComponent', () => {
     expect(fixture.debugElement.query(By.directive(SlideActivityComponent))).toBeNull();
   });
 
+  const RELECTURES_REFUSEES: readonly {
+    readonly cause: string;
+    readonly refus: SujetRefuse;
+    readonly message: string;
+  }[] = [
+    {
+      cause: 'un sujet indisponible',
+      refus: new SujetRefuse('sujet-indisponible', 503),
+      message: 'L’écran n’a pas pu être chargé.',
+    },
+    {
+      cause: 'la cadence du serveur',
+      refus: new SujetRefuse('sujet-indisponible', 429, { minutes: 2 }),
+      message: ATTENTE_COMMUNE,
+    },
+    {
+      cause: 'un cours modifie',
+      refus: new SujetRefuse('cours-modifie', 409),
+      message: 'Le cours a changé depuis l’ouverture de la séance : prévenez votre formateur.',
+    },
+  ];
+
+  const MOMENTS_DE_RELECTURE: readonly {
+    readonly moment: string;
+    readonly relire: (refus: SujetRefuse) => Promise<Fixture>;
+  }[] = [
+    {
+      moment: 'a l arrivee sur un ecran verrouille',
+      relire: (refus) => {
+        port.lireSujet.and.returnValues(
+          of(sujetAuSecondEcranVerrouille()),
+          throwError(() => refus),
+        );
+        return suivreLaSeanceJusquA(1);
+      },
+    },
+    {
+      moment: 'a la revelation de sa source',
+      relire: async (refus) => {
+        const { source, sujetInitial } = correctionVerrouillee();
+        port.lireSujet.and.returnValues(
+          of(sujetInitial),
+          throwError(() => refus),
+        );
+        const fixture = await suivreLaSeanceJusquA(0);
+        await piloterSurLEcran(fixture, 0, source.id, { revele: true });
+        return fixture;
+      },
+    },
+  ];
+
+  for (const { moment, relire } of MOMENTS_DE_RELECTURE) {
+    for (const { cause, refus, message } of RELECTURES_REFUSEES) {
+      it(`dit d une relecture d ecran refusee ${moment} par ${cause} sa vraie cause`, async () => {
+        const fixture = await relire(refus);
+
+        expect(port.lireSujet).toHaveBeenCalledTimes(2);
+        expect(lire(fixture, 'etudiant-ecran-echec')?.textContent?.trim()).toBe(message);
+      });
+    }
+  }
+
   it('envoie au serveur la reponse d une brique avec son identifiant de question', async () => {
     const fixture = await rattacherALaSeanceEnCours();
 
@@ -850,6 +1002,28 @@ describe('CoursEtudiantComponent', () => {
     expect(genresDe(fixture)).toEqual(['verdict-reponse']);
     expect(retoursDe(fixture, sujet.ecrans[1].id)).toEqual([]);
     expect(verdictsAffiches(fixture)).toEqual([]);
+  });
+
+  describe('ecran auquel renvoie l ecran courant', () => {
+    async function renvoiServiVers(cible: EcranContent): Promise<EcranContent | null> {
+      sujet = { ...sujet, ecrans: [{ ...sujet.ecrans[0], renvoi: cible.id }, cible] };
+      port.lireSujet.and.returnValue(of(sujet));
+      const fixture = await rattacherALaSeanceEnCours();
+      const presentation = fixture.debugElement.query(By.directive(CoursPresentationComponent));
+      return (presentation.componentInstance as CoursPresentationComponent).renvoi();
+    }
+
+    it('le donne a la presentation du poste etudiant', async () => {
+      const cible = buildEcran({ id: 'ecran-cible' });
+
+      expect(await renvoiServiVers(cible)).toBe(cible);
+    });
+
+    it('ne donne rien quand l ecran renvoye est encore verrouille', async () => {
+      const cible = buildEcran({ id: 'ecran-cible', type: 'ecran-verrouille', interactif: false });
+
+      expect(await renvoiServiVers(cible)).toBeNull();
+    });
   });
 
   describe('avant le demarrage de la seance', () => {
@@ -990,15 +1164,102 @@ describe('CoursEtudiantComponent', () => {
       expect(genresDe(fixture)).toEqual(['verdict-reponse']);
     });
 
-    it('met en file une reponse refusee par une panne du serveur (5xx)', async () => {
-      refuser('reseau', 503);
+    async function repondreEnFile(): Promise<Fixture> {
       const fixture = await rattacherALaSeanceEnCours();
 
       await repondre(fixture, REPONSE_NUMERIQUE);
 
       expect(pending().length).toBe(1);
+      return fixture;
+    }
+
+    it('met en file une reponse refusee par une panne du serveur (5xx)', async () => {
+      refuser('reseau', 503);
+      const fixture = await repondreEnFile();
+
       expect(lire(fixture, 'etudiant-hors-ligne')).toBeTruthy();
       expect(lire(fixture, 'etudiant-reponse-refusee')).toBeNull();
+    });
+
+    function texteDeLaFile(fixture: Fixture): string | undefined {
+      return lire(fixture, 'etudiant-hors-ligne')?.textContent?.trim();
+    }
+
+    async function repondreEnFileParLaLimite(): Promise<Fixture> {
+      const fixture = await repondreEnFile();
+      expect(texteDeLaFile(fixture)).toBe(ATTENTE_COMMUNE);
+      return fixture;
+    }
+
+    function attendreLaReponseSeuleRetenueParLaLimite(fixture: Fixture): void {
+      expect(pending().map(({ questionId }) => questionId)).toEqual([REPONSE_NUMERIQUE.questionId]);
+      expect(texteDeLaFile(fixture)).toBe(ATTENTE_COMMUNE);
+    }
+
+    function unTourDeBoucle(): Promise<void> {
+      return new Promise((resoudre) => setTimeout(resoudre));
+    }
+
+    it('dit d une reponse mise en file par la cadence du serveur l attente commune, pas le reseau, puis la renvoie', async () => {
+      port.repondre.and.returnValues(throwError(refusLimite), of(REUSSITE));
+      const fixture = await repondreEnFileParLaLimite();
+
+      await laisserPasserLeReseau(fixture);
+
+      expect(port.repondre).toHaveBeenCalledTimes(2);
+      attendreLaFileVideeEnLigne(fixture);
+    });
+
+    it('garde l attente commune d une reponse retenue quand un autre envoi de la file passe', async () => {
+      port.repondre.and.returnValue(throwError(refusLimite));
+      const fixture = await repondreHorsLigne();
+      await emettre(fixture, JALON_PERDU);
+      expect(pending().length).toBe(2);
+
+      await laisserPasserLeReseau(fixture);
+
+      expect(port.declarerJalon).toHaveBeenCalledOnceWith(SESSION, JETON, 'P-PULSE-01', 'perdu');
+      attendreLaReponseSeuleRetenueParLaLimite(fixture);
+    });
+
+    it('garde l attente commune d une reponse retenue qui entre dans la file pendant un vidage', async () => {
+      port.repondre.and.returnValue(throwError(refusLimite));
+      const jalonTransmis = new Subject<void>();
+      port.declarerJalon.and.returnValue(jalonTransmis);
+      const fixture = await rattacherALaSeanceEnCours();
+      window.dispatchEvent(new Event('offline'));
+      await emettre(fixture, JALON_PERDU);
+      window.dispatchEvent(new Event('online'));
+      await unTourDeBoucle();
+      expect(port.declarerJalon).toHaveBeenCalledTimes(1);
+
+      const ecran = ecranAffiche(fixture) as EcranContent;
+      ecranDe(fixture).triggerEventHandler('evenement', {
+        kind: 'reponse',
+        screenId: ecran.id,
+        ...REPONSE_NUMERIQUE,
+      });
+      await unTourDeBoucle();
+      expect(pending().length).toBe(2);
+
+      jalonTransmis.next();
+      jalonTransmis.complete();
+      await unTourDeBoucle();
+      await stabiliserLaVue(fixture);
+
+      attendreLaReponseSeuleRetenueParLaLimite(fixture);
+    });
+
+    it('dit le reseau d une reponse limitee quand le poste perd le reseau', async () => {
+      port.repondre.and.returnValue(throwError(refusLimite));
+      const fixture = await repondreEnFileParLaLimite();
+
+      window.dispatchEvent(new Event('offline'));
+      await stabiliserLaVue(fixture);
+
+      expect(texteDeLaFile(fixture)).toBe(
+        'Votre réponse est enregistrée sur ce poste et partira au retour du réseau.',
+      );
     });
 
     it('vide la file apres un envoi reussi, sans attendre le retour du reseau', async () => {
@@ -1153,6 +1414,7 @@ describe('CoursEtudiantComponent', () => {
     readonly motif: MotifRefusRattachement;
     readonly statut: number;
     readonly explication: string;
+    readonly limite?: LimiteDeDebit;
   }> = [
     {
       cas: 'distingue une seance complete d un code inconnu',
@@ -1178,11 +1440,20 @@ describe('CoursEtudiantComponent', () => {
       statut: 403,
       explication: 'formateur',
     },
+    {
+      cas: 'dit a l etudiant trop presse d attendre avant de rejoindre',
+      motif: 'rattachement-impossible',
+      statut: 429,
+      explication: 'réessayez plus tard',
+      limite: { minutes: null },
+    },
   ];
 
-  for (const { cas, motif, statut, explication } of REFUS_EXPLIQUES) {
+  for (const { cas, motif, statut, explication, limite } of REFUS_EXPLIQUES) {
     it(cas, async () => {
-      port.rejoindre.and.returnValue(throwError(() => new RattachementRefuse(motif, statut)));
+      port.rejoindre.and.returnValue(
+        throwError(() => new RattachementRefuse(motif, statut, limite)),
+      );
       const fixture = await rattacher();
 
       expect(lire(fixture, 'etudiant-echec')?.getAttribute('data-motif')).toBe(motif);
@@ -1764,7 +2035,7 @@ describe('CoursEtudiantComponent', () => {
   });
 
   describe('evenements des briques runtime (§ 9.7)', () => {
-    it('charge une seule fois les questions dues quand l ecran de rappel est le premier', async () => {
+    function commencerParLEcranDeRappel(): void {
       const rappel = buildEcran({
         id: 'ecran-rappel',
         type: 'fp-spaced',
@@ -1772,6 +2043,10 @@ describe('CoursEtudiantComponent', () => {
       });
       sujet = { ...sujet, ecrans: [rappel, ...sujet.ecrans.slice(1)] };
       port.lireSujet.and.returnValue(of(sujet));
+    }
+
+    it('charge une seule fois les questions dues quand l ecran de rappel est le premier', async () => {
+      commencerParLEcranDeRappel();
       const fixture = await rattacherALaSeanceEnCours();
 
       expect(port.lireRappels).toHaveBeenCalledOnceWith(SESSION, JETON);
@@ -1779,6 +2054,30 @@ describe('CoursEtudiantComponent', () => {
         { kind: 'rappels', questions: [buildSpacedQuestionPublique()] },
       ]);
     });
+
+    for (const { cas, refus, message } of [
+      {
+        cas: 'dit l attente commune quand les rappels sont limites',
+        refus: refusLimite(),
+        message: ATTENTE_COMMUNE,
+      },
+      {
+        cas: 'garde le repli des rappels quand le serveur est en panne',
+        refus: new ReponseRefusee('reseau', 503),
+        message:
+          'Les questions à revoir ne sont pas arrivées : réessayez dans un instant, rien n’est perdu',
+      },
+    ]) {
+      it(cas, async () => {
+        commencerParLEcranDeRappel();
+        port.lireRappels.and.returnValue(throwError(() => refus));
+        const fixture = await rattacherALaSeanceEnCours();
+
+        expect(retoursDe(fixture, 'ecran-rappel')).toEqual([
+          { kind: 'refus', motif: 'reseau', message },
+        ]);
+      });
+    }
 
     it('envoie une production et pose son verdict detaille sur l ecran', async () => {
       const fixture = await rattacherALaSeanceEnCours();
@@ -1854,6 +2153,66 @@ describe('CoursEtudiantComponent', () => {
       expect(port.lireMonEtat).toHaveBeenCalledTimes(1);
     });
 
+    const ENVOIS_A_REPROPOSER: readonly {
+      readonly nature: string;
+      readonly echouer: (refus: ReponseRefusee) => void;
+      readonly evenement: EvenementBrique;
+    }[] = [
+      {
+        nature: 'tentative d enigme',
+        echouer: (refus) => port.tenterEnigme.and.returnValue(throwError(() => refus)),
+        evenement: {
+          kind: 'tentative',
+          screenId: 'ecran-1',
+          parcoursId: 'K-EVASION-01',
+          enigmeId: 'seuil',
+          reponse: '1',
+          dureeMs: 100,
+        },
+      },
+      {
+        nature: 'tentative de defi',
+        echouer: (refus) => port.envoyerDefi.and.returnValue(throwError(() => refus)),
+        evenement: {
+          kind: 'defi',
+          screenId: 'ecran-1',
+          defiId: 'D-DEFI-07',
+          texte: 'Une dizaine d annees',
+          dureeMs: 90000,
+        },
+      },
+    ];
+
+    const PANNES_PASSAGERES: readonly {
+      readonly cas: string;
+      readonly refus: ReponseRefusee;
+      readonly message: string;
+    }[] = [
+      {
+        cas: 'un 429 par l attente commune',
+        refus: refusLimite(),
+        message: ATTENTE_COMMUNE,
+      },
+      {
+        cas: 'une coupure par la connexion a verifier',
+        refus: new ReponseRefusee('reseau', 0),
+        message: 'Tentative non envoyée : vérifiez la connexion et proposez-la de nouveau',
+      },
+    ];
+
+    for (const { nature, echouer, evenement } of ENVOIS_A_REPROPOSER) {
+      for (const { cas, refus, message } of PANNES_PASSAGERES) {
+        it(`dit d une ${nature} refusee ${cas}`, async () => {
+          echouer(refus);
+          const fixture = await rattacherALaSeanceEnCours();
+
+          await emettre(fixture, evenement);
+
+          expect(retoursDe(fixture)).toEqual([{ kind: 'refus', motif: 'reseau', message }]);
+        });
+      }
+    }
+
     it('envoie la premiere tentative d un defi et pose les strategies servies', async () => {
       const fixture = await rattacherALaSeanceEnCours();
 
@@ -1875,12 +2234,7 @@ describe('CoursEtudiantComponent', () => {
     it('declare un jalon sans duree et envoie un texte libre par le service des reponses libres', async () => {
       const fixture = await rattacherALaSeanceEnCours();
 
-      await emettre(fixture, {
-        kind: 'jalon',
-        screenId: 'ecran-1',
-        sondageId: 'P-PULSE-01',
-        etat: 'perdu',
-      });
+      await emettre(fixture, JALON_PERDU);
       await emettre(fixture, {
         kind: 'libre',
         screenId: 'ecran-1',

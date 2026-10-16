@@ -21,6 +21,12 @@ export abstract class FormulaireDeMotDePasse {
   protected readonly authService: AuthPort = inject(AUTH_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
 
+  protected commencerLEnvoi(erreur?: string): void {
+    this.submitted = true;
+    this.successMessage = undefined;
+    this.errorMessage = erreur;
+  }
+
   protected envoyer(
     requete: Observable<unknown>,
     envoi: Envoi,

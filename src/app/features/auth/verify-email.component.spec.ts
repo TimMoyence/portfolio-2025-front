@@ -1,12 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
+import { Router } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { Subject, of, throwError } from 'rxjs';
 import type { AuthSession, AuthUser } from '../../core/models/auth.model';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { buildAuthSession, buildAuthUser } from '../../../testing/factories/auth.factory';
 import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
+import { fournirLaRoute } from '../../../testing/factories/route.factory';
 import { monterPageAuth } from '../../../testing/page-auth';
 import { VerifyEmailComponent } from './verify-email.component';
 
@@ -17,10 +18,7 @@ async function verifier(
   restauration: Observable<AuthSession> = throwError(() => refusDuBack(401)),
 ) {
   const page = await monterPageAuth(VerifyEmailComponent, [
-    {
-      provide: ActivatedRoute,
-      useValue: { snapshot: { queryParamMap: convertToParamMap(token ? { token } : {}) } },
-    },
+    fournirLaRoute({ requete: token === null ? {} : { token } }),
   ]);
   page.authService.refresh.and.returnValue(restauration);
   if (compte !== null) {
@@ -182,13 +180,24 @@ describe('VerifyEmailComponent', () => {
     });
   }
 
-  it('n appelle pas le back sans lien, et le dit sans jargon', async () => {
-    const { authService, fixture, texte } = await verifier(null);
+  it('envoie le jeton du lien sans les blancs qui l entourent', async () => {
+    const { authService } = await verifier('  jeton-du-mail \n');
 
-    fixture.detectChanges();
-    expect(authService.verifyEmail).not.toHaveBeenCalled();
-    expect(texte()).toContain(
-      'Le lien de vérification est incomplet : ouvrez-le depuis l’e-mail reçu.',
-    );
+    expect(authService.verifyEmail).toHaveBeenCalledOnceWith('jeton-du-mail');
   });
+
+  for (const [cas, token] of [
+    ['sans jeton', null],
+    ['dont le jeton n est fait que de blancs', '   '],
+  ] as const) {
+    it(`n appelle pas le back pour un lien ${cas}, et le dit sans jargon`, async () => {
+      const { authService, fixture, texte } = await verifier(token);
+
+      fixture.detectChanges();
+      expect(authService.verifyEmail).not.toHaveBeenCalled();
+      expect(texte()).toContain(
+        'Le lien de vérification est incomplet : ouvrez-le depuis l’e-mail reçu.',
+      );
+    });
+  }
 });

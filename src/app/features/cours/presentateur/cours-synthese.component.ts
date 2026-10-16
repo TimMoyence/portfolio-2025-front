@@ -1,15 +1,15 @@
 import { DOCUMENT, PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
+import { type Chargement, lectureSuivie } from '../lecture-suivie';
 import type { DerouleCours, ResultatQuestion } from '../../../../cours/content/types';
 import {
   enoncesDesActivites,
   enoncesDuDeroule,
 } from '../../../shared/slides/session/lecture-ecran';
 import { DefileurDeTableauComponent } from '../../../shared/slides/defileur-de-tableau/defileur-de-tableau.component';
-import { NOMBRE_FRANCAIS } from '../../../shared/slides/layouts/axe-gradue';
+import { enFrancais } from '../../../../cours/runtime/core/typographie';
 import { telechargerFichier } from '../../../shared/utils/telechargement.utils';
 import { chantierApresRendu } from './chantier-apres-rendu';
 
@@ -186,7 +186,7 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
                   {{ participant.prenom }} {{ participant.nom }}
                 </h4>
                 <dl>
-                  @for (libre of participant.reponsesLibres ?? []; track $index) {
+                  @for (libre of participant.reponsesLibres; track $index) {
                     <dt data-testid="synthese-libre-question">
                       {{ enonces().activites.get(libre.activityId) ?? libre.activityId }}
                     </dt>
@@ -228,8 +228,10 @@ export class CoursSyntheseComponent {
   readonly sessionId = input.required<string>();
 
   readonly rapport = signal<RapportSeance | null>(null);
-  readonly echec = signal(false);
   readonly echecExport = signal(false);
+
+  private readonly lectureDuRapport = signal<Chargement>('repos');
+  readonly echec = computed(() => this.lectureDuRapport() === 'echec');
   readonly enonces = signal<EnoncesDeLaSeance>(AUCUN_ENONCE);
 
   readonly vide = computed(() => this.rapport()?.participants.length === 0);
@@ -238,7 +240,7 @@ export class CoursSyntheseComponent {
     const participants = this.rapport()?.participants ?? [];
     const lignes = participants.map((participant) => ({
       participant,
-      note: NOMBRE_FRANCAIS.format(participant.note),
+      note: enFrancais(participant.note),
       sansReponse: participant.reponses.length === 0,
     }));
     return [
@@ -257,7 +259,7 @@ export class CoursSyntheseComponent {
     return rapport.conceptsFragiles
       .map((concept) => ({
         concept,
-        libelle: rapport.libellesDesConcepts?.[concept] ?? concept,
+        libelle: rapport.libellesDesConcepts[concept] ?? concept,
         effectif: this.compterLesFreins(rapport, concept),
       }))
       .sort((gauche, droite) => droite.effectif - gauche.effectif);
@@ -273,12 +275,13 @@ export class CoursSyntheseComponent {
 
   readonly auteursDeReponsesLibres = computed<readonly ParticipantRapporte[]>(() =>
     (this.rapport()?.participants ?? []).filter(
-      (participant) => (participant.reponsesLibres ?? []).length > 0,
+      (participant) => participant.reponsesLibres.length > 0,
     ),
   );
 
   private readonly port = inject(FORMATIONS_PORT);
   private readonly document = inject(DOCUMENT);
+  private readonly charger = lectureSuivie();
 
   private readonly chantier = chantierApresRendu(() => this.lire());
 
@@ -307,19 +310,19 @@ export class CoursSyntheseComponent {
   }
 
   private async lireLeRapport(): Promise<void> {
-    try {
-      this.rapport.set(await firstValueFrom(this.port.lireResultats(this.sessionId())));
-    } catch {
-      this.echec.set(true);
+    const rapport = await this.charger(
+      this.port.lireResultats(this.sessionId()),
+      this.lectureDuRapport,
+    );
+    if (rapport !== null) {
+      this.rapport.set(rapport);
     }
   }
 
   private async lireLesEnonces(): Promise<void> {
-    try {
-      const deroule = await firstValueFrom(this.port.lireDeroule(this.sessionId()));
+    const deroule = await this.charger(this.port.lireDeroule(this.sessionId()));
+    if (deroule !== null) {
       this.enonces.set(enoncesDeLaSeance(deroule));
-    } catch {
-      this.enonces.set(AUCUN_ENONCE);
     }
   }
 }

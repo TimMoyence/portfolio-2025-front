@@ -10,6 +10,7 @@ import {
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
 import { APP_CONFIG } from '../../core/config/app-config.token';
 import { langueDuSite } from '../../core/config/locales';
 import type { ContactFormState } from '../../core/models/contact.model';
@@ -57,6 +58,7 @@ export class ContactComponent implements OnInit {
   private readonly langue = langueDuSite(inject(LOCALE_ID));
   private readonly contactPort: ContactPort = inject(CONTACT_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
+  private debutDeSaisie = instantMonotone();
   private readonly route = inject(ActivatedRoute);
 
   readonly hero = {
@@ -92,7 +94,6 @@ export class ContactComponent implements OnInit {
 
   private readonly defaultContactFormState: ContactFormState = {
     website: '',
-    formStartedAt: Date.now(),
     email: '',
     firstName: '',
     lastName: '',
@@ -199,7 +200,8 @@ export class ContactComponent implements OnInit {
         this.contactErrorMessage = message;
       },
       onComplete: () => {
-        this.contactForm = { ...this.defaultContactFormState, formStartedAt: Date.now() };
+        this.contactForm = { ...this.defaultContactFormState };
+        this.debutDeSaisie = instantMonotone();
         form.resetForm(this.contactForm);
         this.isContactSubmitted = false;
       },
@@ -213,6 +215,7 @@ export class ContactComponent implements OnInit {
     const trimOrEmpty = (value: string): string => value.trim();
     return {
       ...form,
+      formFillDurationMs: dureeMonotoneDepuis(this.debutDeSaisie),
       email: trimOrEmpty(form.email),
       firstName: trimOrEmpty(form.firstName),
       lastName: trimOrEmpty(form.lastName),

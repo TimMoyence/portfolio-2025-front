@@ -6,6 +6,7 @@ import type {
   EcranDeroule,
 } from '../../../../cours/content/types';
 import { estObjet } from '../../../../cours/runtime/core/valeurs';
+import { ecranDIdentifiant } from '../../../shared/slides/session/lecture-ecran';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { questionsDuPanneau } from './questions-du-panneau';
@@ -60,7 +61,7 @@ function avecSaBanqueDeQuestions(ecran: EcranContent, corrige: DerouleCours): Ec
   if (!QUESTIONS_TIREES_EN_SEANCE.has(ecran.type)) {
     return ecran;
   }
-  return corrige.ecrans.find((candidat) => candidat.id === ecran.id) ?? ecran;
+  return ecranDIdentifiant(corrige.ecrans, ecran.id) ?? ecran;
 }
 
 function corrigeDonneALaSuite(deroule: EcranDeroule | undefined): boolean {
@@ -72,15 +73,14 @@ function reponseDonneeALaSuite(ecran: EcranContent, corrige: DerouleCours): bool
   if (QUESTIONS_TIREES_EN_SEANCE.has(ecran.type) || CORRIGES_SUR_PLACE.has(ecran.type)) {
     return true;
   }
-  const deroule = corrige.ecrans.find((candidat) => candidat.id === ecran.id);
+  const deroule = ecranDIdentifiant(corrige.ecrans, ecran.id);
   return (deroule?.explications?.length ?? 0) > 0 || corrigeDonneALaSuite(deroule);
 }
 
 function ouvreUneNotion(fiche: readonly PageDuLivretEtudiant[], corrige: DerouleCours): boolean {
   const [seule] = fiche;
   return (
-    fiche.length === 1 &&
-    corrigeDonneALaSuite(corrige.ecrans.find((candidat) => candidat.id === seule.ecran.id))
+    fiche.length === 1 && corrigeDonneALaSuite(ecranDIdentifiant(corrige.ecrans, seule.ecran.id))
   );
 }
 
@@ -144,7 +144,7 @@ function redactionsDesReponses(
   page: PageDuLivretEtudiant,
   corrige: DerouleCours,
 ): readonly string[] {
-  const deroule = corrige.ecrans.find((candidat) => candidat.id === page.ecran.id);
+  const deroule = ecranDIdentifiant(corrige.ecrans, page.ecran.id);
   return deroule === undefined
     ? []
     : [
@@ -204,7 +204,7 @@ export function feuillesDuLivretEtudiant(
 }
 
 function repeteLaSource(ecran: EcranDeroule, corrige: DerouleCours): boolean {
-  const source = corrige.ecrans.find((candidat) => candidat.id === ecran.ecranSource);
+  const source = ecranDIdentifiant(corrige.ecrans, ecran.ecranSource);
   return source !== undefined && source.type === ecran.type;
 }
 

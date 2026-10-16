@@ -5,7 +5,6 @@ export interface AuditSectionBadge {
 }
 
 export function formatPhaseLabel(phase: string): string {
-  if (!phase) return '';
   switch (phase) {
     case 'technical_pages':
       return $localize`:audit.phase.technicalPages|Phase label@@auditPhaseTechnicalPages:Scan technique des pages`;
@@ -14,12 +13,11 @@ export function formatPhaseLabel(phase: string): string {
     case 'synthesis':
       return $localize`:audit.phase.synthesis|Phase label@@auditPhaseSynthesis:Synthèse finale IA`;
     default:
-      return phase.replaceAll('_', ' ');
+      return formatSubTaskLabel(phase);
   }
 }
 
 export function formatTaskLabel(task: string): string {
-  if (!task) return '';
   switch (task) {
     case 'technical_scan':
       return $localize`:audit.task.technicalScan|Task label@@auditTaskTechnicalScan:Scan technique`;
@@ -28,7 +26,7 @@ export function formatTaskLabel(task: string): string {
     case 'synthesis':
       return $localize`:audit.task.synthesis|Task label@@auditTaskSynthesis:Synthèse IA`;
     default:
-      return task.replaceAll('_', ' ');
+      return formatSubTaskLabel(task);
   }
 }
 

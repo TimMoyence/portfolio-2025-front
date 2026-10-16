@@ -8,6 +8,7 @@ import { MOT_DE_PASSE_NEUF_REFUSE } from '../../shared/utils/form-submit.utils';
 import { REGLE_D_UN_MOT_DE_PASSE } from '../../shared/utils/regles-de-saisie';
 import { FormulaireAuthComponent } from './formulaire-auth.component';
 import { FormulaireDeMotDePasse } from './formulaire-de-mot-de-passe';
+import { jetonDuLien } from './jeton-du-lien';
 import { IMPORTS_PAGE_AUTH } from './page-auth.imports';
 
 const LIEN_INCOMPLET = $localize`:auth.reset.error.missingToken@@authResetErrorMissingToken:Le lien de réinitialisation est invalide ou incomplet.`;
@@ -53,8 +54,7 @@ export class ResetPasswordComponent extends FormulaireDeMotDePasse implements On
   ];
 
   ngOnInit(): void {
-    const token = this.route.snapshot.queryParamMap.get('token');
-    this.token = token?.trim() || null;
+    this.token = jetonDuLien(this.route);
 
     if (!this.token) {
       this.errorMessage = LIEN_INCOMPLET;
@@ -62,9 +62,7 @@ export class ResetPasswordComponent extends FormulaireDeMotDePasse implements On
   }
 
   submit(form: NgForm): void {
-    this.submitted = true;
-    this.successMessage = undefined;
-    this.errorMessage = this.token ? undefined : LIEN_INCOMPLET;
+    this.commencerLEnvoi(this.token ? undefined : LIEN_INCOMPLET);
 
     if (!this.token || form.invalid) return;
 

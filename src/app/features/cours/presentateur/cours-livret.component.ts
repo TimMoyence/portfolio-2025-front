@@ -1,9 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 import type { LivretDuCours } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import { type Chargement, lectureSuivie } from '../lecture-suivie';
 import { chantierApresRendu } from './chantier-apres-rendu';
 import { feuillesDuLivretEtudiant, pagesDuCorrige } from './livret-papier';
 
@@ -18,10 +18,14 @@ type VueDuLivret = 'sujet' | 'corrige';
   template: `
     <main class="livret">
       @if (echec()) {
-        <p class="livret__echec" data-testid="livret-echec" role="alert" i18n="@@livretEchec">
-          Le livret de ce cours n’a pas pu être chargé. Vérifiez la connexion, puis rechargez la
-          page.
-        </p>
+        @if (limiteDuLivret(); as limite) {
+          <p class="livret__echec" data-testid="livret-echec" role="alert">{{ limite }}</p>
+        } @else {
+          <p class="livret__echec" data-testid="livret-echec" role="alert" i18n="@@livretEchec">
+            Le livret de ce cours n’a pas pu être chargé. Vérifiez la connexion, puis rechargez la
+            page.
+          </p>
+        }
       }
       @if (livret(); as lu) {
         <header class="livret__entete">
@@ -175,8 +179,11 @@ export class CoursLivretComponent {
   readonly slug = input.required<string>();
 
   readonly livret = signal<LivretDuCours | null>(null);
-  readonly echec = signal(false);
   readonly vue = signal<VueDuLivret>('sujet');
+
+  private readonly lectureDuLivret = signal<Chargement>('repos');
+  readonly echec = computed(() => this.lectureDuLivret() === 'echec');
+  readonly limiteDuLivret = signal<string | null>(null);
 
   readonly feuillesEtudiant = computed(() => {
     const livret = this.livret();
@@ -195,6 +202,7 @@ export class CoursLivretComponent {
   }
 
   private readonly port = inject(FORMATIONS_PORT);
+  private readonly charger = lectureSuivie();
   private readonly lecture = chantierApresRendu(() => this.chargerLeLivret());
 
   quandStabilise(): Promise<void> {
@@ -202,10 +210,13 @@ export class CoursLivretComponent {
   }
 
   private async chargerLeLivret(): Promise<void> {
-    try {
-      this.livret.set(await firstValueFrom(this.port.lireLivret(this.slug())));
-    } catch {
-      this.echec.set(true);
+    const livret = await this.charger(
+      this.port.lireLivret(this.slug()),
+      this.lectureDuLivret,
+      this.limiteDuLivret,
+    );
+    if (livret !== null) {
+      this.livret.set(livret);
     }
   }
 }

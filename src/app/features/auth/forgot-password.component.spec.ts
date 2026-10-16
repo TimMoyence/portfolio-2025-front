@@ -48,6 +48,17 @@ describe('ForgotPasswordComponent', () => {
     expect(component.submitted).toBeTrue();
   });
 
+  it('efface les messages du precedent envoi des qu un nouvel envoi commence', () => {
+    component.successMessage = 'Lien envoye';
+    component.errorMessage = 'Utilisateur inconnu';
+
+    component.submit(formulaireSoumis(true));
+
+    expect(component.submitted).toBeTrue();
+    expect(component.successMessage).toBeUndefined();
+    expect(component.errorMessage).toBeUndefined();
+  });
+
   it('dit un refus du back par un message localisé, jamais par le texte servi, et rend le bouton', () => {
     authService.requestPasswordReset.and.returnValue(
       throwError(() => refusDuBack(400, ['email must be an email'])),

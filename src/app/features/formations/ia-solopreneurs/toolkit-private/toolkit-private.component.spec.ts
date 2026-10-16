@@ -1,13 +1,14 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { NEVER, of, throwError } from 'rxjs';
 import { LEAD_MAGNET_PORT } from '../../../../core/ports/lead-magnet.port';
 import {
   buildToolkitPageData,
   createLeadMagnetPortStub,
 } from '../../../../../testing/factories/lead-magnet.factory';
+import { fournirLaRoute } from '../../../../../testing/factories/route.factory';
 import { ToolkitPrivateComponent } from './toolkit-private.component';
 
 interface SetupOptions {
@@ -38,14 +39,7 @@ function setup(opts: SetupOptions = {}): {
       provideRouter([]),
       { provide: LEAD_MAGNET_PORT, useValue: port },
       { provide: PLATFORM_ID, useValue: platform },
-      {
-        provide: ActivatedRoute,
-        useValue: {
-          snapshot: {
-            paramMap: convertToParamMap(token ? { token } : {}),
-          },
-        },
-      },
+      fournirLaRoute({ parametres: token ? { token } : {} }),
     ],
   });
 

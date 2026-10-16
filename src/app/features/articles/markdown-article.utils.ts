@@ -1,4 +1,4 @@
-import { escapeHtml } from 'portfolio-2025-partage/html';
+import { escapeHtml } from '../../../cours/runtime/core/html';
 
 const TOKEN_PREFIX = 'MBTOKEN';
 const TOKEN_SUFFIX = 'X';

@@ -23,7 +23,6 @@
       (ngSubmit)="handleContactSubmit(contactFormRef)"
     >
       <input appHoneypot name="website" [(ngModel)]="contactForm.website" />
-      <input type="hidden" name="formStartedAt" [(ngModel)]="contactForm.formStartedAt" />
       <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
         @for (field of contactFields; track field.key) {
           <div class="relative">
