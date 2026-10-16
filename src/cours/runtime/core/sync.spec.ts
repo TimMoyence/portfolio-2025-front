@@ -1,5 +1,4 @@
-import type { ResultatsSeance } from '../../content/types';
-import { buildResumeBareme } from '../../../testing/factories/formations.factory';
+import { buildResultatsDuFlux } from '../../../testing/factories/formations.factory';
 import type { FluxFactice } from '../../../testing/flux-sse';
 import { bloc, creerOuverture, laisserPasserLeFlux, vider } from '../../../testing/flux-sse';
 import {
@@ -7,6 +6,7 @@ import {
   refusDuFlux,
   type CheminFlux,
   type EtatSession,
+  type IssueDuRenouvellement,
   type RaisonDeFin,
   type ResultatsDuFlux,
   type StatutFlux,
@@ -20,35 +20,24 @@ const SESSION = 's1';
 const JETON = 'jeton-participant';
 const ENTETE_JETON = 'x-participant-token';
 
-const ETAT_ANCIEN = {
+const ETAT: EtatSession = {
   etat: 'en_cours',
   modeRythme: 'pilote',
   ecranCourant: 2,
   intervalleLibre: null,
   participants: 24,
-} satisfies Omit<EtatSession, 'revision' | 'pilotage'>;
-
-const ETAT: EtatSession = {
-  ...ETAT_ANCIEN,
   revision: 7,
   pilotage: {
     'B2-01-A3-01-VOTE-HAUSSE-BAISSE': { phase: 'revote' },
     'B2-01-A5-08-RECOMMANDATION': { revele: true },
     'B2-01-A3-06-INDICE-ET-TAUX-MOYEN': { etayage: 2 },
   },
-};
-
-const QUESTION_ANCIENNE = {
-  questionId: 'Q-2',
-  total: 8,
-  correctes: 5,
-  neSaitPas: 0,
-  confusions: [],
+  majLe: '2026-10-15T18:00:00.000Z',
 };
 
 const JETON_PRESENTATEUR = 'jwt-presentateur';
 
-const RESULTATS: ResultatsSeance = {
+const RESULTATS: ResultatsDuFlux = buildResultatsDuFlux({
   participants: 12,
   questions: [
     {
@@ -65,9 +54,11 @@ const RESULTATS: ResultatsSeance = {
       parCle: null,
     },
   ],
-};
+});
 
-const EN_DIRECT_ABSENT = { jalons: {}, enigmes: [], bareme: null };
+function sans(objet: object, cle: string): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(objet).filter(([nom]) => nom !== cle));
+}
 
 describe('sync', () => {
   let sync: Sync;
@@ -342,12 +333,7 @@ describe('sync', () => {
 
   it('notifie les ecouteurs de resultats sur un evenement resultats valide', async () => {
     const recus = await collecterResultats([RESULTATS]);
-    expect(recus).toEqual([{ ...RESULTATS, ...EN_DIRECT_ABSENT }]);
-  });
-
-  it('ignore un evenement resultats malforme', async () => {
-    const recus = await collecterResultats([{ participants: 'douze' }, RESULTATS]);
-    expect(recus).toEqual([{ ...RESULTATS, ...EN_DIRECT_ABSENT }]);
+    expect(recus).toEqual([RESULTATS]);
   });
 
   it('transmet les jalons, les enigmes et le bareme des resultats en direct', async () => {
@@ -364,30 +350,57 @@ describe('sync', () => {
           epuisees: 1,
         },
       ],
-      bareme: buildResumeBareme(),
     };
-    const recus = await collecterResultats([
-      { ...enDirect, jalons: { x: { perdu: 'deux' } } },
-      enDirect,
-    ]);
+    const recus = await collecterResultats([enDirect]);
     expect(recus).toEqual([enDirect]);
   });
 
-  describe('forme du flux servie par un serveur v2 ou v3 (F20)', () => {
-    it('complete un etat de l ancienne forme par une revision nulle et un pilotage vide', async () => {
-      const recus = await collecter([bloc('etat', ETAT_ANCIEN)]);
+  describe('contrat strict du flux servi par le back (L2b-SCHEMAS)', () => {
+    const SORTIES_DE_MACHINE = {
+      valeurs: { prix: 12 },
+      resultat: { valeur: 3, affichage: '3,00 €' },
+      etapes: [{ valeur: 12, affichage: '12,00 €' }],
+      courbes: { marge: [{ x: 0, y: null }] },
+      lignes: {
+        marge: [
+          {
+            valeur: { valeur: 12, affichage: '12,00 €' },
+            resultat: { valeur: 3, affichage: '3,00 €' },
+            courante: true,
+          },
+        ],
+      },
+      phrase: 'La marge vaut 3,00 €.',
+    };
 
-      expect(recus).toEqual([{ ...ETAT_ANCIEN, revision: 0, pilotage: {} }]);
-    });
-
-    it('transmet la revision et le pilotage d un etat de la forme finale', async () => {
+    it('transmet la revision, le pilotage et l horodatage d un etat servi', async () => {
       const recus = await collecter([bloc('etat', ETAT)]);
 
       expect(recus).toEqual([ETAT]);
     });
 
-    it('ignore un etat dont la revision ou le pilotage est malforme', async () => {
+    it('accepte le pilotage servi par le lot 2c', async () => {
+      const servi = {
+        ...ETAT,
+        pilotage: {
+          ...ETAT.pilotage,
+          'B2-03-JUMELLE': {
+            phase: 'vote' as const,
+            questionAffichee: 'Q-A',
+            questionOuverte: null,
+          },
+          'B2-03-MACHINE': { reglages: { prix: 12 }, sortiesProjetees: SORTIES_DE_MACHINE },
+        },
+      };
+
+      const recus = await collecter([bloc('etat', servi)]);
+
+      expect(recus).toEqual([servi]);
+    });
+
+    it('ignore un etat incomplet, malforme ou qui porte une cle que le back ne sert pas', async () => {
       const recus = await collecter([
+        ...Object.keys(ETAT).map((cle) => bloc('etat', sans(ETAT, cle))),
         bloc('etat', { ...ETAT, revision: 'sept' }),
         bloc('etat', { ...ETAT, revision: 2 ** 53 }),
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A3-01': { phase: 'fin' } } }),
@@ -395,54 +408,71 @@ describe('sync', () => {
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A5-08': { revele: 'oui' } } }),
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A2-03': { explicationsDevoilees: 1.5 } } }),
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A2-06': { etayageAtteint: -2 } } }),
+        bloc('etat', { ...ETAT, inconnu: 1 }),
+        bloc('etat', { ...ETAT, pilotage: { 'B2-01-A3-01': { phase: 'vote', inconnu: true } } }),
+        bloc('etat', {
+          ...ETAT,
+          pilotage: { 'B2-03-MACHINE': { sortiesProjetees: { ...SORTIES_DE_MACHINE, x: 1 } } },
+        }),
+        bloc('etat', { ...ETAT, majLe: 'hier' }),
         bloc('etat', ETAT),
       ]);
 
       expect(recus).toEqual([ETAT]);
     });
 
-    it('complete une question de resultats de l ancienne forme sans toucher ses comptes', async () => {
-      const recus = await collecterResultats([
-        { participants: 12, questions: [QUESTION_ANCIENNE] },
-      ]);
+    it('accepte la confusion dominante, la part, le seuil et la remediation du lot 2c', async () => {
+      const [question] = RESULTATS.questions;
+      const servis = {
+        ...RESULTATS,
+        questions: [
+          {
+            ...question,
+            confusionDominante: 'c1',
+            part: 0.3,
+            sousLeSeuil: true,
+            remediation: { confusionId: 'c1', ecranId: 'E-2' },
+          },
+        ],
+      };
 
-      expect(recus).toEqual([
-        {
-          ...EN_DIRECT_ABSENT,
-          participants: 12,
-          questions: [
-            {
-              ...QUESTION_ANCIENNE,
-              ecranId: '',
-              type: 'vote',
-              noteCompte: true,
-              parOption: null,
-              scoreMoyen: null,
-              parCle: null,
-            },
-          ],
-        },
-      ]);
+      const recus = await collecterResultats([servis]);
+
+      expect(recus).toEqual([servis]);
     });
 
-    it('ignore des resultats dont un champ de la forme finale est malforme', async () => {
+    it('ignore des resultats incomplets, malformes ou qui portent une cle que le back ne sert pas', async () => {
       const [question] = RESULTATS.questions;
       const recus = await collecterResultats([
+        ...Object.keys(RESULTATS).map((cle) => sans(RESULTATS, cle)),
+        ...Object.keys(question).map((cle) => ({ ...RESULTATS, questions: [sans(question, cle)] })),
+        { ...RESULTATS, participants: 'douze' },
+        { ...RESULTATS, bareme: null },
+        { ...RESULTATS, jalons: { x: { perdu: 'deux' } } },
         { ...RESULTATS, questions: [{ ...question, type: 'graphique' }] },
         { ...RESULTATS, questions: [{ ...question, parOption: { a: 'six' } }] },
         { ...RESULTATS, questions: [{ ...question, parCle: { E3: { total: 2 } } }] },
         { ...RESULTATS, questions: [{ ...question, scoreMoyen: '0,7' }] },
+        { ...RESULTATS, inconnu: 1 },
+        { ...RESULTATS, questions: [{ ...question, inconnu: 1 }] },
+        { ...RESULTATS, questions: [{ ...question, remediation: { confusionId: 'c1' } }] },
         RESULTATS,
       ]);
 
-      expect(recus).toEqual([{ ...RESULTATS, ...EN_DIRECT_ABSENT }]);
+      expect(recus).toEqual([RESULTATS]);
+    });
+
+    it('ne lit pas la raison d une fin qui porte une cle que le back ne sert pas', async () => {
+      const raisons = await servirLaFin(bloc('fin', { raison: 'cloturee', inconnu: 1 }));
+
+      expect(raisons).toEqual([null]);
     });
   });
 
   it('un evenement resultats n atteint pas onState', async () => {
     monter();
     const etats: EtatSession[] = [];
-    const resultats: ResultatsSeance[] = [];
+    const resultats: ResultatsDuFlux[] = [];
     sync.onState((etat) => etats.push(etat));
     sync.onResultats((recu) => resultats.push(recu));
     sync.ouvrir();
@@ -548,6 +578,187 @@ describe('sync', () => {
         expect(tentatives.nombre).toBe(2);
       });
     }
+
+    describe('jeton du compte expire ou refuse au reveil d une veille plus longue que lui', () => {
+      type Preparation = (forcer: boolean) => Promise<IssueDuRenouvellement>;
+
+      let jeton: string;
+      let expire: boolean;
+      let ouvertures: string[];
+      let preparer: jasmine.Spy<Preparation>;
+
+      function renouvelerLeJeton(forcer: boolean): Promise<IssueDuRenouvellement> {
+        if (forcer || expire) {
+          jeton = 'jwt-neuf';
+          expire = false;
+        }
+        return Promise.resolve('reussi');
+      }
+
+      function injoignableAuxPremiersEssais(essais: number, forces: boolean): Preparation {
+        let restants = essais;
+        return (forcer) => {
+          if ((forcer || !forces) && restants > 0) {
+            restants -= 1;
+            return Promise.resolve('injoignable');
+          }
+          return renouvelerLeJeton(forcer);
+        };
+      }
+
+      function ouvrirAuJeton({
+        refusees = [] as readonly number[],
+        expireALOuverture = false,
+        preparation = renouvelerLeJeton as Preparation,
+        statutDuRefus = 401,
+      } = {}): void {
+        jeton = 'jwt-perime';
+        expire = expireALOuverture;
+        ouvertures = [];
+        preparer = jasmine.createSpy('preparerLaSession').and.callFake(preparation);
+        const accepter = creerOuverture(flux);
+        sync = createSync({
+          baseUrl: BASE,
+          sessionId: SESSION,
+          chemin: 'presenter-stream',
+          entetes: () => ({ authorization: `Bearer ${jeton}` }),
+          preparerLaSession: preparer,
+          ouvrirFlux: (url, entetes) => {
+            ouvertures.push(entetes['authorization'] ?? '');
+            return refusees.includes(ouvertures.length)
+              ? Promise.resolve(new Response(null, { status: statutDuRefus }))
+              : accepter(url, entetes);
+          },
+        });
+        suivreLesStatuts();
+        sync.ouvrir();
+      }
+
+      function refus(): StatutFlux[] {
+        return statuts.filter((statut) => statut.etat === 'refuse');
+      }
+
+      it('rafraichit la session avant d ouvrir le flux d un jeton expire, qui ne part jamais', async () => {
+        ouvrirAuJeton({ expireALOuverture: true });
+        await vider();
+
+        expect(ouvertures).toEqual(['Bearer jwt-neuf']);
+        expect(statuts).toEqual([{ etat: 'connecte' }]);
+      });
+
+      it('renouvelle la session puis rouvre le flux avec le jeton neuf quand le serveur refuse le jeton', async () => {
+        ouvrirAuJeton({ refusees: [1] });
+        await vider();
+
+        expect(preparer.calls.allArgs()).toEqual([[false], [true]]);
+        expect(ouvertures).toEqual(['Bearer jwt-perime', 'Bearer jwt-neuf']);
+        expect(statuts).toEqual([{ etat: 'reconnexion' }, { etat: 'connecte' }]);
+      });
+
+      it('tient pour definitif un second 401 apres un renouvellement reussi, sans boucler', async () => {
+        ouvrirAuJeton({ refusees: [1, 2, 3] });
+        await vider();
+        jasmine.clock().tick(60_000);
+        await vider();
+
+        expect(preparer.calls.allArgs()).toEqual([[false], [true]]);
+        expect(ouvertures.length).toBe(2);
+        expect(statuts).toEqual([{ etat: 'reconnexion' }, { etat: 'refuse', statut: 401 }]);
+      });
+
+      it('ne rouvre pas un flux ferme pendant le renouvellement', async () => {
+        let renouvele: () => void = () => undefined;
+        ouvrirAuJeton({
+          refusees: [1],
+          preparation: (forcer) =>
+            forcer
+              ? new Promise<IssueDuRenouvellement>((resoudre) => {
+                  renouvele = () => resoudre('reussi');
+                })
+              : Promise.resolve('reussi'),
+        });
+        await vider();
+        sync.close();
+        renouvele();
+        await vider();
+
+        expect(ouvertures.length).toBe(1);
+      });
+
+      it('rearme le renouvellement une fois le flux de nouveau accepte', async () => {
+        ouvrirAuJeton({ refusees: [1, 3] });
+        await vider();
+        jeton = 'jwt-perime';
+        await flux[0].couper();
+        await laisserPasserLeFlux();
+        jasmine.clock().tick(1000);
+        await laisserPasserLeFlux();
+
+        expect(preparer.calls.allArgs().filter(([forcer]) => forcer).length).toBe(2);
+        expect(ouvertures).toEqual([
+          'Bearer jwt-perime',
+          'Bearer jwt-neuf',
+          'Bearer jwt-perime',
+          'Bearer jwt-neuf',
+        ]);
+        expect(statuts.at(-1)).toEqual({ etat: 'connecte' });
+      });
+
+      it('laisse definitif un refus 403, qu aucun jeton neuf ne levera', async () => {
+        ouvrirAuJeton({ refusees: [1], statutDuRefus: 403 });
+        await vider();
+
+        expect(preparer).not.toHaveBeenCalledWith(true);
+        expect(ouvertures.length).toBe(1);
+        expect(statuts).toEqual([{ etat: 'refuse', statut: 403 }]);
+      });
+
+      it('garde la relance a delai croissant quand le renouvellement est injoignable, puis rouvre', async () => {
+        ouvrirAuJeton({ refusees: [1], preparation: injoignableAuxPremiersEssais(2, true) });
+        await vider();
+        jasmine.clock().tick(1000);
+        await vider();
+
+        expect(ouvertures)
+          .withContext('aucun essai avec le jeton refuse')
+          .toEqual(['Bearer jwt-perime']);
+
+        jasmine.clock().tick(2000);
+        await laisserPasserLeFlux();
+
+        expect(ouvertures).toEqual(['Bearer jwt-perime', 'Bearer jwt-neuf']);
+        expect(refus()).withContext('aucun refus definitif').toEqual([]);
+        expect(statuts.at(-1)).toEqual({ etat: 'connecte' });
+      });
+
+      it('n ouvre pas le flux d un jeton expire tant que le rafraichissement est injoignable', async () => {
+        ouvrirAuJeton({
+          expireALOuverture: true,
+          preparation: injoignableAuxPremiersEssais(1, false),
+        });
+        await vider();
+
+        expect(ouvertures).toEqual([]);
+        expect(statuts).toEqual([{ etat: 'reconnexion' }]);
+
+        jasmine.clock().tick(1000);
+        await laisserPasserLeFlux();
+
+        expect(ouvertures).toEqual(['Bearer jwt-neuf']);
+        expect(statuts.at(-1)).toEqual({ etat: 'connecte' });
+      });
+
+      it('tient pour definitif un rafraichissement refuse, sans ouvrir le flux', async () => {
+        ouvrirAuJeton({ expireALOuverture: true, preparation: () => Promise.resolve('refuse') });
+        await vider();
+        jasmine.clock().tick(60_000);
+        await vider();
+
+        expect(ouvertures).toEqual([]);
+        expect(preparer).toHaveBeenCalledTimes(1);
+        expect(statuts).toEqual([{ etat: 'refuse', statut: 401 }]);
+      });
+    });
 
     for (const statut of [429, 500, 503]) {
       it(`annonce un refus ${statut} a chaque essai sans le masquer par une reconnexion`, async () => {

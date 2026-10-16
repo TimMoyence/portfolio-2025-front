@@ -1,12 +1,13 @@
 import {
+  champsHorsContrat,
   DELAI_DE_LECTURE_MS,
   garderEnCache,
   lireJsonSousDelai,
   messageDErreur,
 } from './lecture-api';
+import { catalogueServi } from '../app/core/adapters/formations-schemas';
 import { cheminDuCoursEnSeance } from '../app/core/config/cours-en-seance';
 import { trimTrailingSlashes } from '../app/core/utils/barres';
-import { estObjet } from '../cours/runtime/core/valeurs';
 
 export interface PublicationDeCours {
   readonly chemin: string;
@@ -27,11 +28,6 @@ function cheminDuCours(slug: string): string {
   return `/${cheminDuCoursEnSeance(slug)}`;
 }
 
-function dateDePublication(corps: unknown): string | null {
-  const publieLe = estObjet(corps) ? corps['publieLe'] : undefined;
-  return typeof publieLe === 'string' && !Number.isNaN(Date.parse(publieLe)) ? publieLe : null;
-}
-
 async function lirePublication(
   slug: string,
   apiBaseUrl: string,
@@ -50,14 +46,14 @@ async function lirePublication(
       );
       return null;
     }
-    const publieLe = dateDePublication(lecture.corps);
-    if (publieLe === null) {
+    const catalogue = catalogueServi.safeParse(lecture.corps);
+    if (!catalogue.success) {
       dependances.journal.warn(
-        `[sitemap] ${chemin} : publieLe absent ou invalide dans la réponse de l'API, ${REPLI}`,
+        `[sitemap] ${chemin} : réponse de l'API hors contrat (${champsHorsContrat(catalogue.error)}), ${REPLI}`,
       );
       return null;
     }
-    return { chemin, publieLe };
+    return { chemin, publieLe: catalogue.data.publieLe };
   } catch (erreur) {
     dependances.journal.warn(
       `[sitemap] ${chemin} : API injoignable (${messageDErreur(erreur)}), ${REPLI}`,

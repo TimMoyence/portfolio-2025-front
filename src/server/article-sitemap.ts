@@ -1,13 +1,8 @@
-import {
-  DELAI_DE_LECTURE_MS,
-  garderEnCache,
-  lireJsonSousDelai,
-  messageDErreur,
-} from './lecture-api';
+import { champsHorsContrat, garderEnCache, lireJsonJournalise } from './lecture-api';
 import type { DynamicArticleSitemapEntry } from './seo-builders';
+import { pageDArticlesServie } from '../app/core/adapters/site-schemas';
 import { LOCALES_DU_SITE } from '../app/core/config/locales';
 import { trimTrailingSlashes } from '../app/core/utils/barres';
-import { estObjet } from '../cours/runtime/core/valeurs';
 
 export interface DependancesDuLecteurDArticles {
   readonly apiBaseUrl: string | undefined;
@@ -24,45 +19,31 @@ interface PageDArticles {
   readonly suivant: string | null;
 }
 
-function entreesDe(locale: string, items: unknown): DynamicArticleSitemapEntry[] {
-  if (!Array.isArray(items)) return [];
-  return items.flatMap((item: unknown) => {
-    if (!estObjet(item)) return [];
-    const champs = item;
-    if (typeof champs['slug'] !== 'string') return [];
-    return [
-      {
-        locale,
-        slug: champs['slug'],
-        lastmod: typeof champs['updated_at'] === 'string' ? champs['updated_at'] : undefined,
-      },
-    ];
-  });
-}
-
 async function lirePage(
   url: string,
   locale: string,
   dependances: DependancesDuLecteurDArticles,
 ): Promise<PageDArticles | null> {
-  try {
-    const lecture = await lireJsonSousDelai(dependances.fetch, url, DELAI_DE_LECTURE_MS);
-    if (!lecture.ok) {
-      dependances.journal.warn(`[sitemap] articles ${locale} : l'API a répondu ${lecture.statut}`);
-      return null;
-    }
-    const corps = estObjet(lecture.corps) ? lecture.corps : null;
-    const suivant = corps?.['next_cursor'];
-    return {
-      entrees: entreesDe(locale, corps?.['items']),
-      suivant: typeof suivant === 'string' && suivant ? suivant : null,
-    };
-  } catch (erreur) {
+  const lecture = await lireJsonJournalise(dependances, url, {
+    refus: (statut) => `[sitemap] articles ${locale} : l'API a répondu ${statut}`,
+    injoignable: (message) => `[sitemap] articles ${locale} : API injoignable (${message})`,
+  });
+  if (lecture === null) return null;
+  const lue = pageDArticlesServie.safeParse(lecture.corps);
+  if (!lue.success) {
     dependances.journal.warn(
-      `[sitemap] articles ${locale} : API injoignable (${messageDErreur(erreur)})`,
+      `[sitemap] articles ${locale} : réponse de l'API hors contrat (${champsHorsContrat(lue.error)})`,
     );
     return null;
   }
+  return {
+    entrees: lue.data.items.map((article) => ({
+      locale,
+      slug: article.slug,
+      lastmod: article.updated_at,
+    })),
+    suivant: lue.data.next_cursor || null,
+  };
 }
 
 async function lireLocale(

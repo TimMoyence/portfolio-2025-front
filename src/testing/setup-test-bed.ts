@@ -6,6 +6,10 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import type { AppConfig } from '../app/core/config/app-config.model';
 import { APP_CONFIG } from '../app/core/config/app-config.token';
+import {
+  MEMOIRE_DU_RENOUVELLEMENT,
+  creerMemoireDuRenouvellementEnMemoire,
+} from '../app/core/services/fenetre-de-renouvellement';
 import { buildAppConfig } from './factories/app-config.factory';
 
 export interface SetupTestBedOptions extends TestModuleMetadata {
@@ -19,6 +23,7 @@ export function setupTestBed(options: SetupTestBedOptions = {}) {
 
   const baseProviders: (Provider | EnvironmentProviders)[] = [
     { provide: APP_CONFIG, useValue: buildAppConfig(appConfig) },
+    { provide: MEMOIRE_DU_RENOUVELLEMENT, useFactory: creerMemoireDuRenouvellementEnMemoire },
   ];
 
   if (http) {

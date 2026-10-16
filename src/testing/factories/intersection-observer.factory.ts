@@ -63,6 +63,23 @@ export function installerIntersectionObserverSimule(): IntersectionObserverSimul
   };
 }
 
+export function simulerIntersectionObserverAChaqueTest(): () => IntersectionObserverSimule {
+  let observateur: IntersectionObserverSimule | null = null;
+  beforeEach(() => {
+    observateur = installerIntersectionObserverSimule();
+  });
+  afterEach(() => {
+    observateur?.restaurer();
+    observateur = null;
+  });
+  return () => {
+    if (observateur === null) {
+      throw new Error('IntersectionObserver simulé lu hors d un test');
+    }
+    return observateur;
+  };
+}
+
 export function installerIntersectionObserverToujoursVisible(): () => void {
   return remplacerIntersectionObserver(
     class extends ObservateurInerte {

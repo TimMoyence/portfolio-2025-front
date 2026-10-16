@@ -2,7 +2,9 @@ import { PLATFORM_ID, type Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AUTH_PORT } from '../app/core/ports/auth.port';
 import { AuthStateService } from '../app/core/services/auth-state.service';
+import { VERROU_INTER_ONGLETS } from '../app/core/services/verrou-inter-onglets';
 import { createAuthPortStub } from './factories/auth.factory';
+import { createVerrouEnMemoire } from './factories/verrou.factory';
 import { setupTestBed } from './setup-test-bed';
 
 export function etatAuth(
@@ -26,7 +28,10 @@ export function preparerAvecLePortDAuth(
   beforeEach(async () => {
     await setupTestBed({
       imports: [composant],
-      providers: [{ provide: AUTH_PORT, useValue: port() }],
+      providers: [
+        { provide: AUTH_PORT, useValue: port() },
+        { provide: VERROU_INTER_ONGLETS, useValue: createVerrouEnMemoire() },
+      ],
     }).compileComponents();
   });
 

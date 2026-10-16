@@ -32,7 +32,7 @@ import type {
 } from '../../cours/runtime/blocks/retours';
 import type { Brouillons } from '../../cours/runtime/core/storage';
 
-function metadonnees(overrides: Partial<MetadonneesBrique> = {}): MetadonneesBrique {
+export function metadonnees(overrides: Partial<MetadonneesBrique> = {}): MetadonneesBrique {
   return creerMetadonneesBrique({
     concepts: ['capitalisation'],
     misconceptionsCiblees: [],

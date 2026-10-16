@@ -1,4 +1,5 @@
 import { type TracesEffets, surveillerEffets } from './effets-briques';
+import { figerLesHorloges } from './horloge-simulee';
 
 export interface OptionsDeBanc<T extends HTMLElement> {
   readonly balise: string;
@@ -11,11 +12,6 @@ export function enregistrerBrique(balise: string, classe: CustomElementConstruct
   if (!customElements.get(balise)) {
     customElements.define(balise, classe);
   }
-}
-
-function figerHorloge(instant: Date | string): void {
-  jasmine.clock().install();
-  jasmine.clock().mockDate(new Date(instant));
 }
 
 export function creerBrique<T extends HTMLElement>(balise: string, poser: (hote: T) => void): T {
@@ -40,7 +36,7 @@ export function installerBrique<T extends HTMLElement>(options: OptionsDeBanc<T>
 
   beforeEach(() => {
     if (instant !== undefined) {
-      figerHorloge(instant);
+      figerLesHorloges(instant);
     }
     montee = creerBrique<T>(balise, (hote) => {
       traces = surveillerEffets(hote);
@@ -73,12 +69,15 @@ export function detailsEmis<T>(hote: HTMLElement, evenement: string): T[] {
   return recus;
 }
 
-export function noeudOmbre(hote: HTMLElement, repere: string): Element | null {
-  return hote.shadowRoot?.querySelector(`[data-testid="${repere}"]`) ?? null;
+export function noeudOmbre<T extends Element = Element>(
+  hote: HTMLElement,
+  repere: string,
+): T | null {
+  return hote.shadowRoot?.querySelector<T>(`[data-testid="${repere}"]`) ?? null;
 }
 
-export function noeudsOmbre(hote: HTMLElement, repere: string): Element[] {
-  return [...(hote.shadowRoot?.querySelectorAll(`[data-testid="${repere}"]`) ?? [])];
+export function noeudsOmbre<T extends Element = Element>(hote: HTMLElement, repere: string): T[] {
+  return [...(hote.shadowRoot?.querySelectorAll<T>(`[data-testid="${repere}"]`) ?? [])];
 }
 
 export function cliquerOmbre(hote: HTMLElement, repere: string): void {
@@ -86,7 +85,7 @@ export function cliquerOmbre(hote: HTMLElement, repere: string): void {
 }
 
 export function libelleOmbre(hote: HTMLElement, repere: string): string {
-  return noeudOmbre(hote, repere)?.textContent?.trim().replace(/\s+/g, ' ') ?? '';
+  return texteOmbre(hote, repere).replace(/\s+/g, ' ');
 }
 
 export function attendreLEnvoiVideRefuse(hote: HTMLElement): void {
@@ -94,6 +93,12 @@ export function attendreLEnvoiVideRefuse(hote: HTMLElement): void {
   expect(libelleOmbre(hote, 'retour')).toBe(
     'Saisissez au moins une valeur ou choisissez « Je ne sais pas »',
   );
+}
+
+export function attendreLeRefusEffaceALaFrappe(hote: HTMLElement, frapper: () => void): void {
+  attendreLEnvoiVideRefuse(hote);
+  frapper();
+  expect(libelleOmbre(hote, 'retour')).toBe('');
 }
 
 export function attendreLeRenvoiEpuise(
@@ -133,8 +138,12 @@ export function attendreLaSeuleOptionFausse(
   expect(attributDOption(hote, intacte, 'data-correction')).toBeNull();
 }
 
+export function racineOmbre(hote: HTMLElement): Element | null | undefined {
+  return hote.shadowRoot?.querySelector('.fp-root');
+}
+
 export function roleAffiche(hote: HTMLElement): string | null | undefined {
-  return hote.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role');
+  return racineOmbre(hote)?.getAttribute('data-role');
 }
 
 export function texteOmbre(hote: HTMLElement, repere: string): string {

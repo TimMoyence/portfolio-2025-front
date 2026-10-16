@@ -1,5 +1,4 @@
 import type { CreateurFlux } from '../../app/features/cours/cours-flux.token';
-import type { ResultatsSeance } from '../../cours/content/types';
 import { abonner, diffuserA, type Ecoute } from '../../cours/runtime/core/ecoutes';
 import type {
   EtatSession,
@@ -8,12 +7,13 @@ import type {
   StatutFlux,
   Sync,
 } from '../../cours/runtime/core/sync';
+import { buildResultatsDuFlux } from './formations.factory';
 
 export interface FluxDouble {
   readonly fabrique: jasmine.Spy<CreateurFlux>;
   readonly flux: jasmine.SpyObj<Sync>;
   diffuser(etat: Partial<EtatSession>): void;
-  diffuserResultats(resultats: ResultatsSeance & Partial<ResultatsDuFlux>): void;
+  diffuserResultats(resultats: Partial<ResultatsDuFlux>): void;
   diffuserStatut(statut: StatutFlux): void;
   diffuserFin(raison: RaisonDeFin | null): void;
 }
@@ -27,6 +27,7 @@ function buildEtatSession(overrides: Partial<EtatSession>): EtatSession {
     participants: 3,
     revision: 0,
     pilotage: {},
+    majLe: '2026-09-19T08:00:00.000Z',
     ...overrides,
   };
 }
@@ -52,8 +53,7 @@ export function createFluxDouble(): FluxDouble {
     fabrique: jasmine.createSpy<CreateurFlux>('creerFlux').and.returnValue(flux),
     flux,
     diffuser: (etat) => diffuserA(etats, buildEtatSession(etat)),
-    diffuserResultats: (partiels) =>
-      diffuserA(resultats, { jalons: {}, enigmes: [], bareme: null, ...partiels }),
+    diffuserResultats: (partiels) => diffuserA(resultats, buildResultatsDuFlux(partiels)),
     diffuserStatut: (statut) => diffuserA(statuts, statut),
     diffuserFin: (raison) => diffuserA(fins, raison),
   };

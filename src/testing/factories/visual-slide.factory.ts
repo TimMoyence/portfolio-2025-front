@@ -1,5 +1,6 @@
 import type { RetourBrique } from '../../app/core/ports/formations.port';
 import type { EcranContent } from '../../cours/content/types';
+import { metadonnees } from './cours.factory';
 
 type PropsVisuelles = Readonly<Record<string, unknown>>;
 
@@ -8,13 +9,20 @@ function donneesDeRecit(
   renderer: string,
   props: PropsVisuelles,
 ): EcranContent['donnees'] {
-  return { recit: { id, presentation: { version: 2, screenId: id, renderer, props } } };
+  return {
+    recit: {
+      id,
+      presentation: { version: 2, screenId: id, renderer, props },
+      metadonnees: metadonnees(),
+    },
+  };
 }
 
 export function buildVisualSlide(overrides: Partial<EcranContent> = {}): EcranContent {
   return {
     id: 'B2-01-S01-ACCROCHE',
     type: 'fp-story',
+    titre: null,
     duree: 3,
     interactif: false,
     donnees: donneesDeRecit('B2-01-S01-ACCROCHE', 'hero', {

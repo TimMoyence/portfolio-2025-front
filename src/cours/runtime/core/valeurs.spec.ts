@@ -2,6 +2,8 @@ import {
   bornerEntre,
   entierBorne,
   estEntierPositif,
+  estEntierStrictementPositif,
+  estMembre,
   estObjet,
   fini,
   jsonOuNull,
@@ -24,6 +26,31 @@ describe('valeurs', () => {
     });
   });
 
+  describe('estEntierStrictementPositif', () => {
+    it('accepte les entiers surs a partir de un', () => {
+      for (const valeur of [1, 42, Number.MAX_SAFE_INTEGER]) {
+        expect(estEntierStrictementPositif(valeur)).withContext(String(valeur)).toBeTrue();
+      }
+    });
+
+    it('refuse zero, les negatifs, les decimaux, les entiers non surs et les non-nombres', () => {
+      for (const valeur of [
+        0,
+        -1,
+        2.5,
+        2 ** 53,
+        1e21,
+        Infinity,
+        Number.NaN,
+        '3',
+        undefined,
+        null,
+      ]) {
+        expect(estEntierStrictementPositif(valeur)).withContext(String(valeur)).toBeFalse();
+      }
+    });
+  });
+
   describe('estEntierPositif', () => {
     it('accepte zero et les entiers surs positifs', () => {
       expect(estEntierPositif(0)).toBeTrue();
@@ -35,6 +62,22 @@ describe('valeurs', () => {
       expect(estEntierPositif(1.5)).toBeFalse();
       expect(estEntierPositif(2 ** 53)).toBeFalse();
       expect(estEntierPositif('3')).toBeFalse();
+    });
+  });
+
+  describe('estMembre', () => {
+    const PHASES = ['ouverte', 'close'] as const;
+
+    it('reconnait une valeur de la liste fermee', () => {
+      expect(estMembre(PHASES, 'ouverte')).toBeTrue();
+      expect(estMembre(PHASES, 'close')).toBeTrue();
+    });
+
+    it('refuse une valeur hors liste, un non-texte et un objet qui se lit comme un membre', () => {
+      const imitation = { toString: (): string => 'close' };
+      for (const valeur of ['Close', '', undefined, null, 0, ['close'], imitation]) {
+        expect(estMembre(PHASES, valeur)).withContext(String(valeur)).toBeFalse();
+      }
     });
   });
 
