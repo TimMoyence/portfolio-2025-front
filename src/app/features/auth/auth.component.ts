@@ -244,7 +244,7 @@ export class AuthComponent {
     }
 
     const payload: RegisterUserPayload = {
-      email: this.signupForm.email,
+      email: this.signupForm.email.trim(),
       password: this.signupForm.password,
       firstName: this.signupForm.firstName.trim(),
       lastName: this.signupForm.lastName.trim(),
@@ -291,7 +291,12 @@ export class AuthComponent {
 
     this.isLoginLoading = true;
 
-    handleFormSubmit(this.authService.login(this.loginForm), this.cdr, {
+    const identifiants: LoginFormState = {
+      email: this.loginForm.email.trim(),
+      password: this.loginForm.password,
+    };
+
+    handleFormSubmit(this.authService.login(identifiants), this.cdr, {
       fallbackError: $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`,
       refus: { 400: IDENTIFIANTS_REFUSES, 401: IDENTIFIANTS_REFUSES },
       onSuccess: (session) => {

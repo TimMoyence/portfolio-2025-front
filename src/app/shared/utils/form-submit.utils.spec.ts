@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import type { ChangeDetectorRef } from '@angular/core';
 import { of, throwError, EMPTY } from 'rxjs';
 import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
+import type { MessagesDeRefus } from './form-submit.utils';
 import { handleFormSubmit, messageDuRefus } from './form-submit.utils';
 
 const REPLI = 'Le formulaire n’a pas pu partir.';
@@ -138,5 +139,11 @@ describe('messageDuRefus', () => {
 
   it('ne lit aucune propriété héritée pour un statut inconnu', () => {
     expect(messageDuRefus(refusHttp(418), {}, REPLI)).toBe(REPLI);
+  });
+
+  it('ne lit pas un message que la table du formulaire hérite au lieu de le porter', () => {
+    const tableHeritee = Object.create({ 400: 'Message hérité.' }) as MessagesDeRefus;
+
+    expect(messageDuRefus(refusHttp(400), tableHeritee, REPLI)).toBe(REPLI);
   });
 });

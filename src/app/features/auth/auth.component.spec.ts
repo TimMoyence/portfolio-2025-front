@@ -240,17 +240,6 @@ describe('AuthComponent', () => {
       }
     });
 
-    it('envoie le prénom et le nom rognés, ceux que le back garde', () => {
-      remplirInscription({ firstName: '  John ', lastName: ' Doe  ' });
-      accepterLInscription();
-
-      component.handleSignupSubmit(formulaireSoumis());
-
-      expect(authService.register).toHaveBeenCalledWith(
-        jasmine.objectContaining({ firstName: 'John', lastName: 'Doe' }),
-      );
-    });
-
     it('refuse à l inscription un téléphone que le back refuse, et le dit sous le champ', async () => {
       expect(await saisir('reg-phone', '06 98 a0 32 82')).toEqual({ phone: true });
       expect(texteDuBlocDuChamp(fixture, '#reg-phone')).toContain(
@@ -269,6 +258,19 @@ describe('AuthComponent', () => {
     it('refuse à l inscription une adresse que le back refuse', async () => {
       expect(await saisir('reg-email', 'jean@gmail')).toEqual({ email: true });
       expect(await saisir('reg-email', 'jean@exemple.fr')).toBeNull();
+    });
+
+    it('envoie l adresse, le prénom et le nom rognés, ceux que les champs ont jugés et que le back garde', async () => {
+      const collee = `${String.fromCharCode(0xa0)}jean@exemple.fr  `;
+      expect(await saisir('reg-email', collee)).toBeNull();
+      remplirInscription({ email: collee, firstName: '  John ', lastName: ' Doe  ' });
+      accepterLInscription();
+
+      component.handleSignupSubmit(formulaireSoumis());
+
+      expect(authService.register).toHaveBeenCalledWith(
+        jasmine.objectContaining({ email: 'jean@exemple.fr', firstName: 'John', lastName: 'Doe' }),
+      );
     });
 
     it('dit un refus de l inscription par un message localisé, jamais par le texte servi', () => {
@@ -301,6 +303,20 @@ describe('AuthComponent', () => {
     it('refuse à la connexion une adresse que le back refuse', async () => {
       expect(await saisir('login-email', 'jean@gmail')).toEqual({ email: true });
       expect(await saisir('login-email', 'jean@exemple.fr')).toBeNull();
+    });
+
+    it('envoie l adresse rognée, celle que le champ a jugée, et le mot de passe tel quel', async () => {
+      const collee = `${String.fromCharCode(0xa0)}jean@exemple.fr  `;
+      expect(await saisir('login-email', collee)).toBeNull();
+      component.loginForm = { email: collee, password: ` ${VALID_PASSWORD} ` };
+      authService.login.and.returnValue(of(buildAuthSession()));
+
+      component.handleLoginSubmit(formulaireSoumis());
+
+      expect(authService.login).toHaveBeenCalledWith({
+        email: 'jean@exemple.fr',
+        password: ` ${VALID_PASSWORD} `,
+      });
     });
 
     it('plafonne le mot de passe à 256 caractères, comme le back, sans exiger la règle d un compte neuf', async () => {
