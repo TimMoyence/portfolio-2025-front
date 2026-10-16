@@ -1,7 +1,7 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import type { EcranContent, PilotageEcran, ResultatsSeance } from '../cours/content/types';
-import type { EtatSession } from '../cours/runtime/core/sync';
+import type { EcranContent, PilotageEcran } from '../cours/content/types';
+import type { EtatSession, ResultatsDuFlux } from '../cours/runtime/core/sync';
 import { SlideActivityComponent } from '../app/shared/slides/session/slide-activity.component';
 import { deuxImages, uneImage } from './deux-images';
 import { elementsCoupes } from './elements-coupes';
@@ -169,7 +169,7 @@ const SELECTEUR_DES_CALQUES =
 export function publierSurLaVue<T>(
   double: FluxDouble,
   fixture: ComponentFixture<T>,
-  resultats: ResultatsSeance,
+  resultats: Partial<ResultatsDuFlux>,
 ): void {
   double.diffuserResultats(resultats);
   fixture.detectChanges();
