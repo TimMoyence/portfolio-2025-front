@@ -113,6 +113,18 @@ export class AuthStateService {
     this._user.set(user);
   }
 
+  relireLeCompte(): void {
+    if (this.authPort === null) return;
+    if (this._token() === null) {
+      this.restoreSession();
+      return;
+    }
+    this.authPort.me().subscribe({
+      next: (user) => this._user.set(user),
+      error: () => undefined,
+    });
+  }
+
   restoreSession(): void {
     const token = this._token();
     if (!this.authPort || this._isUserLoading()) return;

@@ -113,8 +113,8 @@ describe('ContactComponent', () => {
       ],
       [
         'la limite horaire (429)',
-        refusDuBack(429, 'ThrottlerException: Too Many Requests'),
-        'Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.',
+        refusDuBack(429, 'ThrottlerException: Too Many Requests', { 'Retry-After': '45' }),
+        'Trop de tentatives en peu de temps : réessayez dans 1 min.',
       ],
       [
         'un back injoignable',

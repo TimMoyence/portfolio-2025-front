@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { of, throwError } from 'rxjs';
-import type { AuthUser } from '../../core/models/auth.model';
+import type { AuthSession, AuthUser } from '../../core/models/auth.model';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { buildAuthSession, buildAuthUser } from '../../../testing/factories/auth.factory';
 import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
@@ -14,6 +14,7 @@ async function verifier(
   token: string | null,
   reponse: Observable<{ message: string }> = of({ message: 'Adresse email verifiee avec succes.' }),
   compte: { connecte: AuthUser; relu: Observable<AuthUser> } | null = null,
+  restauration: Observable<AuthSession> = throwError(() => refusDuBack(401)),
 ) {
   const page = await monterPageAuth(VerifyEmailComponent, [
     {
@@ -21,6 +22,7 @@ async function verifier(
       useValue: { snapshot: { queryParamMap: convertToParamMap(token ? { token } : {}) } },
     },
   ]);
+  page.authService.refresh.and.returnValue(restauration);
   if (compte !== null) {
     TestBed.inject(AuthStateService).login(buildAuthSession({ user: compte.connecte }));
     page.authService.me.and.returnValue(compte.relu);
@@ -44,7 +46,27 @@ describe('VerifyEmailComponent', () => {
     tick(3000);
     expect(navigate).toHaveBeenCalledOnceWith(['/login']);
     expect(authService.me).not.toHaveBeenCalled();
+    expect(TestBed.inject(AuthStateService).isLoggedIn()).toBeFalse();
   }));
+
+  describe('ouvert depuis l e-mail dans un onglet neuf, sans session en memoire', () => {
+    it('restaure la session du navigateur apres la verification : le compte lu est verifie', fakeAsync(async () => {
+      const verifie = buildAuthUser({ email: 'jean@exemple.fr', emailVerified: true });
+      const { authService } = await verifier(
+        'd'.repeat(64),
+        undefined,
+        null,
+        of(buildAuthSession({ user: verifie })),
+      );
+
+      const etat = TestBed.inject(AuthStateService);
+      expect(authService.refresh).toHaveBeenCalledTimes(1);
+      expect(etat.isLoggedIn()).toBeTrue();
+      expect(etat.user()?.emailVerified).toBeTrue();
+      etat.clearSession();
+      tick(3000);
+    }));
+  });
 
   describe('pour un compte connecte dont l adresse attend sa verification', () => {
     const connecte = buildAuthUser({ email: 'jean@exemple.fr', emailVerified: false });
@@ -87,8 +109,8 @@ describe('VerifyEmailComponent', () => {
     ],
     [
       'trop de tentatives (429)',
-      refusDuBack(429, 'ThrottlerException: Too Many Requests'),
-      'Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.',
+      refusDuBack(429, 'ThrottlerException: Too Many Requests', { 'Retry-After': '3600' }),
+      'Trop de tentatives en peu de temps : réessayez dans 60 min.',
     ],
   ] as const) {
     it(`dit ${cas} par un message localisé, jamais par le texte servi`, async () => {

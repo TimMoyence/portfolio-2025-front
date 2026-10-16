@@ -13,7 +13,6 @@ export const ADRESSE_NON_VERIFIEE = $localize`:@@formulaireRefusAdresseNonVerifi
 
 const REFUS_COMMUNS: MessagesDeRefus = {
   403: ADRESSE_NON_VERIFIEE,
-  429: $localize`:@@formulaireRefusTropDeTentatives:Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.`,
 };
 
 function statutDuRefus(erreur: unknown): number {
@@ -24,9 +23,26 @@ function messageDuStatut(messages: MessagesDeRefus, statut: number): string | un
   return Object.hasOwn(messages, statut) ? messages[statut] : undefined;
 }
 
+function minutesAAttendre(erreur: unknown): number | null {
+  const secondes =
+    erreur instanceof HttpErrorResponse ? Number(erreur.headers.get('Retry-After')) : Number.NaN;
+  return Number.isFinite(secondes) && secondes > 0 ? Math.ceil(secondes / 60) : null;
+}
+
+function messageDeLaLimite(erreur: unknown): string {
+  const minutes = minutesAAttendre(erreur);
+  return minutes === null
+    ? $localize`:@@formulaireRefusTropDeTentatives:Trop de tentatives en peu de temps : réessayez plus tard.`
+    : $localize`:@@formulaireRefusTropDeTentativesDelai:Trop de tentatives en peu de temps : réessayez dans ${minutes}:minutes: min.`;
+}
+
+function messageCommun(erreur: unknown, statut: number): string | undefined {
+  return statut === 429 ? messageDeLaLimite(erreur) : messageDuStatut(REFUS_COMMUNS, statut);
+}
+
 export function messageDuRefus(erreur: unknown, refus: MessagesDeRefus, repli: string): string {
   const statut = statutDuRefus(erreur);
-  return messageDuStatut(refus, statut) ?? messageDuStatut(REFUS_COMMUNS, statut) ?? repli;
+  return messageDuStatut(refus, statut) ?? messageCommun(erreur, statut) ?? repli;
 }
 
 export interface FormSubmitOptions<T> {

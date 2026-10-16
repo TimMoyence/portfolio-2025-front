@@ -398,7 +398,7 @@ describe('GrowthAuditComponent', () => {
         'la limite horaire (429)',
         refusDuBack(429, 'ThrottlerException: Too Many Requests'),
         429,
-        'Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.',
+        'Trop de tentatives en peu de temps : réessayez plus tard.',
       ],
       [
         'un back injoignable',

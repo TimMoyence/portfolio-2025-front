@@ -332,7 +332,7 @@ describe('AuthComponent', () => {
       [
         429,
         'ThrottlerException: Too Many Requests',
-        'Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.',
+        'Trop de tentatives en peu de temps : réessayez plus tard.',
       ],
     ] as const) {
       it(`dit un refus ${statut} de la connexion par un message localisé, sous le formulaire`, () => {

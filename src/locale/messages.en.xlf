@@ -15164,8 +15164,14 @@
     </unit>
     <unit id="formulaireRefusTropDeTentatives">
       <segment>
-        <source>Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.</source>
-        <target>Too many attempts in a short time: wait a few minutes before trying again.</target>
+        <source>Trop de tentatives en peu de temps : réessayez plus tard.</source>
+        <target>Too many attempts in a short time: try again later.</target>
+      </segment>
+    </unit>
+    <unit id="formulaireRefusTropDeTentativesDelai">
+      <segment>
+        <source>Trop de tentatives en peu de temps : réessayez dans <ph id="0" equiv="minutes" disp="minutes"/> min.</source>
+        <target>Too many attempts in a short time: try again in <ph id="0" equiv="minutes" disp="minutes"/> min.</target>
       </segment>
     </unit>
   </file>

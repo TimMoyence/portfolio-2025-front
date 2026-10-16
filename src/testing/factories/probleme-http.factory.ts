@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 export interface ProblemeHttp {
   readonly type: string;
@@ -22,9 +22,11 @@ export function buildProblemeHttp(overrides: Partial<ProblemeHttp> = {}): Proble
 export function refusDuBack(
   status: number,
   detail: string | readonly string[] = 'Texte servi par le back',
+  entetes: Readonly<Record<string, string>> = {},
 ): HttpErrorResponse {
   return new HttpErrorResponse({
     status,
+    headers: new HttpHeaders(entetes),
     url: 'https://asilidesign.fr/api/v1/portfolio25',
     error: { ...buildProblemeHttp({ status }), detail },
   });

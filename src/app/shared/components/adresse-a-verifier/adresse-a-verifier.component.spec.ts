@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { Subject, throwError } from 'rxjs';
+import { Subject, of, throwError } from 'rxjs';
 import type { AuthActionMessage } from '../../../core/models/auth.model';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { preparerAvecLePortDAuth } from '../../../../testing/etat-auth';
@@ -20,6 +20,7 @@ describe('AdresseAVerifierComponent', () => {
 
   beforeEach(() => {
     port = createAuthPortStub();
+    port.me.and.returnValue(of(buildAuthUser({ email: ADRESSE, emailVerified: false })));
   });
 
   preparerAvecLePortDAuth(AdresseAVerifierComponent, () => port);
@@ -71,6 +72,53 @@ describe('AdresseAVerifierComponent', () => {
     expect(lireMarque(fixture, 'adresse-a-verifier')).toBeNull();
   });
 
+  describe('pour une adresse verifiee depuis un autre onglet ou un autre appareil', () => {
+    const verifie = buildAuthUser({ email: ADRESSE, emailVerified: true });
+
+    function revenirSurLOnglet(visibilite: DocumentVisibilityState): void {
+      spyOnProperty(Document.prototype, 'visibilityState', 'get').and.returnValue(visibilite);
+      document.dispatchEvent(new Event('visibilitychange'));
+    }
+
+    it('relit le compte quand l onglet redevient visible : le bandeau s efface', () => {
+      const fixture = monter(false);
+      port.me.and.returnValue(of(verifie));
+
+      revenirSurLOnglet('visible');
+      fixture.detectChanges();
+
+      expect(port.me).toHaveBeenCalledTimes(1);
+      expect(lireMarque(fixture, 'adresse-a-verifier')).toBeNull();
+    });
+
+    it('ne relit rien quand l onglet passe en arriere-plan', () => {
+      monter(false);
+
+      revenirSurLOnglet('hidden');
+
+      expect(port.me).not.toHaveBeenCalled();
+    });
+
+    it('ne relit rien pour un compte deja verifie', () => {
+      monter(true);
+
+      revenirSurLOnglet('visible');
+
+      expect(port.me).not.toHaveBeenCalled();
+    });
+
+    it('relit le compte apres un renvoi : le bandeau s efface sans promettre de lien', () => {
+      const fixture = monter(false);
+      port.me.and.returnValue(of(verifie));
+
+      renvoyer(fixture);
+
+      expect(port.me).toHaveBeenCalledTimes(1);
+      expect(lireMarque(fixture, 'adresse-a-verifier')).toBeNull();
+      expect(fixture.nativeElement.textContent).not.toContain('un nouveau lien part');
+    });
+  });
+
   it('renvoie le lien a l adresse du compte, attend la reponse, puis dit l envoi par son propre texte', () => {
     const reponse = new Subject<AuthActionMessage>();
     port.resendVerification.and.returnValue(reponse);
@@ -104,8 +152,8 @@ describe('AdresseAVerifierComponent', () => {
     ],
     [
       'trop de tentatives (429)',
-      refusDuBack(429, 'ThrottlerException: Too Many Requests'),
-      'Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.',
+      refusDuBack(429, 'ThrottlerException: Too Many Requests', { 'Retry-After': '3540' }),
+      'Trop de tentatives en peu de temps : réessayez dans 59 min.',
     ],
     [
       'un back injoignable',

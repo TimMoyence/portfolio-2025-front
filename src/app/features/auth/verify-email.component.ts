@@ -44,7 +44,7 @@ export class VerifyEmailComponent implements OnInit {
       onSuccess: () => {
         this.isLoading = false;
         this.successMessage = $localize`:@@verifyEmailSucces:Votre adresse e-mail est vérifiée : votre compte est activé.`;
-        this.relireLeCompteConnecte();
+        this.authState.relireLeCompte();
         setTimeout(() => {
           void this.router.navigate(['/login']);
         }, 3000);
@@ -57,14 +57,6 @@ export class VerifyEmailComponent implements OnInit {
         404: $localize`:verify-email.error.generic@@verifyEmailErrorGeneric:La vérification a échoué : le lien est invalide ou a expiré.`,
       },
       fallbackError: $localize`:@@verifyEmailErreurIndisponible:La vérification n’a pas pu aboutir pour le moment : réessayez dans un instant.`,
-    });
-  }
-
-  private relireLeCompteConnecte(): void {
-    if (!this.authState.isLoggedIn()) return;
-    this.authService.me().subscribe({
-      next: (compte) => this.authState.updateUser(compte),
-      error: () => undefined,
     });
   }
 }

@@ -52,14 +52,40 @@ describe('handleFormSubmit', () => {
     expect(cdr.markForCheck).toHaveBeenCalled();
   });
 
-  it('dit le même message à tout formulaire limité par le back (429)', () => {
-    const onError = soumettreEnEchec(refusHttp(429, 'ThrottlerException: Too Many Requests'));
+  for (const [cas, retryAfter, attendu] of [
+    ['une heure de blocage', '3600', 'Trop de tentatives en peu de temps : réessayez dans 60 min.'],
+    [
+      'un reste de 58 min et 1 s',
+      '3481',
+      'Trop de tentatives en peu de temps : réessayez dans 59 min.',
+    ],
+    ['un reste de 30 s', '30', 'Trop de tentatives en peu de temps : réessayez dans 1 min.'],
+  ] as const) {
+    it(`dit l attente que le back sert par Retry-After pour un 429 (${cas})`, () => {
+      const onError = soumettreEnEchec(
+        refusDuBack(429, 'ThrottlerException: Too Many Requests', { 'Retry-After': retryAfter }),
+      );
 
-    expect(onError).toHaveBeenCalledOnceWith(
-      'Trop de tentatives en peu de temps : patientez quelques minutes avant de réessayer.',
-      429,
-    );
-  });
+      expect(onError).toHaveBeenCalledOnceWith(attendu, 429);
+    });
+  }
+
+  for (const [cas, entetes] of [
+    ['sans Retry-After', {}],
+    ['avec un Retry-After illisible', { 'Retry-After': 'Wed, 21 Oct 2026 07:28:00 GMT' }],
+    ['avec un Retry-After nul', { 'Retry-After': '0' }],
+  ] as const) {
+    it(`ne promet aucune durée pour un 429 ${cas}`, () => {
+      const onError = soumettreEnEchec(
+        refusDuBack(429, 'ThrottlerException: Too Many Requests', entetes),
+      );
+
+      expect(onError).toHaveBeenCalledOnceWith(
+        'Trop de tentatives en peu de temps : réessayez plus tard.',
+        429,
+      );
+    });
+  }
 
   it('dit une adresse non vérifiée (403) à toute route protégée', () => {
     const onError = soumettreEnEchec(refusHttp(403, 'Email non verifie'));
