@@ -186,7 +186,7 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
                   {{ participant.prenom }} {{ participant.nom }}
                 </h4>
                 <dl>
-                  @for (libre of participant.reponsesLibres ?? []; track $index) {
+                  @for (libre of participant.reponsesLibres; track $index) {
                     <dt data-testid="synthese-libre-question">
                       {{ enonces().activites.get(libre.activityId) ?? libre.activityId }}
                     </dt>
@@ -257,7 +257,7 @@ export class CoursSyntheseComponent {
     return rapport.conceptsFragiles
       .map((concept) => ({
         concept,
-        libelle: rapport.libellesDesConcepts?.[concept] ?? concept,
+        libelle: rapport.libellesDesConcepts[concept] ?? concept,
         effectif: this.compterLesFreins(rapport, concept),
       }))
       .sort((gauche, droite) => droite.effectif - gauche.effectif);
@@ -273,7 +273,7 @@ export class CoursSyntheseComponent {
 
   readonly auteursDeReponsesLibres = computed<readonly ParticipantRapporte[]>(() =>
     (this.rapport()?.participants ?? []).filter(
-      (participant) => (participant.reponsesLibres ?? []).length > 0,
+      (participant) => participant.reponsesLibres.length > 0,
     ),
   );
 

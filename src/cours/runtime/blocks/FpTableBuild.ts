@@ -1,7 +1,7 @@
 import { evaluerExpression, lireNombreSaisi } from 'portfolio-2025-partage/formule';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { entierBorne } from '../core/valeurs';
+import { avecUnite, entierBorne, estMembre } from '../core/valeurs';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
 import { type DetailDeVerdict } from './retours';
 
@@ -126,7 +126,7 @@ function copierColonne(colonne: TableColonne): TableColonne {
   return {
     cle: colonne.cle,
     intitule: colonne.intitule,
-    role: ROLES.find((role) => role === colonne.role) ?? 'deduite',
+    role: estMembre(ROLES, colonne.role) ? colonne.role : 'deduite',
     ...(estBooleenne(colonne) ? { format: 'booleen' } : {}),
     decimales: bornerDecimales(colonne.decimales),
     ...(colonne.valeurs === undefined ? {} : { valeurs: [...colonne.valeurs] }),
@@ -541,7 +541,9 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     const valeur = this.evaluer(element.formule, variables);
     const formatee = formater(valeur, element.decimales);
     const affichee =
-      Number.isFinite(valeur) && element.unite !== null ? `${formatee} ${element.unite}` : formatee;
+      Number.isFinite(valeur) && element.unite !== null
+        ? avecUnite(formatee, element.unite)
+        : formatee;
     return safeHtml`<div class="fp-table-build__resultat" data-testid="synthese-ligne"><dt>${escapeHtml(element.libelle)}</dt><dd class="fp-montant">${escapeHtml(affichee)}</dd></div>`;
   }
 

@@ -1,42 +1,149 @@
 import type { ProgressionDesEnigmes } from '../runtime/blocks/retours';
-import {
-  MODALITES,
-  REGIMES_DE_VERROU,
-  type Diffusion,
-  type EtatPulse,
-  type FormeFormule,
-  type MetadonneesBrique,
-  type ResultatsSeance as ResultatsSeanceServis,
-  type StatistiquesSeance,
-  type Tolerance,
-  type ValeurProduction,
-  type VotePhase,
-} from 'portfolio-2025-partage/contrats';
-import type { ValeurFormule } from 'portfolio-2025-partage/formule';
+import { estMembre } from '../runtime/core/valeurs';
 
-export type {
-  ComptesJalon,
-  ConfusionComptee,
-  Decompte,
-  DecomptesParCle,
-  Diffusion,
-  EtatPulse,
-  FormeFormule,
-  FreeRange,
-  MetadonneesBrique,
-  Modalite,
-  PacingMode,
-  ProgressionEnigme,
-  RegimeVerrou,
-  ResultatQuestion,
-  ResultatsEnDirect,
-  StatistiquesSeance,
-  Tolerance,
-  TypeQuestion,
-  ValeurProduction,
-  VotePhase,
-} from 'portfolio-2025-partage/contrats';
-export type { ResumeBareme } from 'portfolio-2025-partage/contrats';
+export type ValeurFormule = number | string | boolean;
+
+export const TYPES_QUESTION = [
+  'numeric',
+  'vote',
+  'feuille',
+  'tableau',
+  'classement',
+  'enigme',
+] as const;
+export type TypeQuestion = (typeof TYPES_QUESTION)[number];
+
+export type Diffusion = 'catalogue' | 'seance';
+
+export const ETATS_PULSE = ['perdu', 'ca-va', 'clair'] as const;
+export type EtatPulse = (typeof ETATS_PULSE)[number];
+
+export const PHASES_DE_VOTE = ['vote', 'discussion', 'revote', 'revele'] as const;
+export type VotePhase = (typeof PHASES_DE_VOTE)[number];
+
+export const PACING_MODES = ['pilote', 'libre'] as const;
+export type PacingMode = (typeof PACING_MODES)[number];
+
+export interface FreeRange {
+  premier: number;
+  dernier: number;
+}
+
+export const MODALITES = ['solo', 'binome', 'groupe', 'classe'] as const;
+export type Modalite = (typeof MODALITES)[number];
+
+export const REGIMES_DE_VERROU = ['ouvert', 'focus', 'examen'] as const;
+export type RegimeVerrou = (typeof REGIMES_DE_VERROU)[number];
+
+export const BOITES_DE_REVISION = [1, 2, 3] as const;
+export type BoiteDeRevision = (typeof BOITES_DE_REVISION)[number];
+
+export interface MetadonneesBrique {
+  readonly concepts: readonly string[];
+  readonly misconceptionsCiblees: readonly string[];
+  readonly dureeMinutes: number;
+  readonly modalite: Modalite;
+  readonly regime: RegimeVerrou;
+}
+
+export interface Tolerance {
+  readonly type: 'relative' | 'absolue' | 'decimales';
+  readonly valeur: number;
+}
+
+export type FormeFormule = 'references' | { readonly memeQue: string };
+
+export type ValeurProduction =
+  | { readonly type: 'feuille'; readonly cellules: Readonly<Record<string, string>> }
+  | {
+      readonly type: 'tableau';
+      readonly saisies: readonly {
+        readonly rang: number;
+        readonly cle: string;
+        readonly valeur: number;
+      }[];
+    }
+  | { readonly type: 'classement'; readonly classement: Readonly<Record<string, string>> }
+  | { readonly type: 'feuille' | 'tableau' | 'classement'; readonly neSaitPas: true };
+
+export interface ConfusionComptee {
+  readonly id: string;
+  readonly libelle: string;
+  readonly nombre: number;
+}
+
+export interface Decompte {
+  readonly total: number;
+  readonly justes: number;
+}
+
+export type DecomptesParCle = Readonly<Record<string, Decompte>>;
+
+export interface ResultatQuestion {
+  readonly questionId: string;
+  readonly ecranId: string;
+  readonly type: TypeQuestion;
+  readonly noteCompte: boolean;
+  readonly total: number;
+  readonly correctes: number;
+  readonly neSaitPas: number;
+  readonly confusions: readonly ConfusionComptee[];
+  readonly parOption: Readonly<Record<string, number>> | null;
+  readonly scoreMoyen: number | null;
+  readonly parCle: DecomptesParCle | null;
+}
+
+export interface ResultatsSeance {
+  readonly participants: number;
+  readonly questions: readonly ResultatQuestion[];
+}
+
+export interface StatistiquesSeance {
+  readonly moyenne: number;
+  readonly mediane: number;
+  readonly dispersion: number;
+  readonly tauxParticipation: number;
+  readonly tauxReussite: number;
+  readonly questionsProblemes: readonly string[];
+}
+
+export interface ComptesJalon {
+  readonly perdu: number;
+  readonly 'ca-va': number;
+  readonly clair: number;
+  readonly total: number;
+}
+
+export interface ProgressionEnigme {
+  readonly parcoursId: string;
+  readonly enigmeId: string;
+  readonly ouvertes: number;
+  readonly resolues: number;
+  readonly tentativesMoyennes: number;
+  readonly epuisees: number;
+}
+
+export interface ResumeBareme {
+  readonly questionsNotees: number;
+  readonly parType: Readonly<
+    Record<TypeQuestion, { readonly notees: number; readonly nonNotees: number }>
+  >;
+}
+
+export interface RegleDeNotation {
+  readonly noteMax: number;
+  readonly base: 'participation-relative-cohorte';
+  readonly partCohorteReference: number;
+  readonly ratioSeuilValidation: number;
+  readonly neSaitPasCompteCommeReponse: boolean;
+  readonly pointsNonReponse: number;
+  readonly reponsesLibresNotees: boolean;
+  readonly seuilQuestionProbleme: number;
+  readonly decimalesStatistiques: number;
+  readonly typesNotables: readonly TypeQuestion[];
+  readonly productionCompteSi: 'au-moins-une-saisie';
+  readonly statistiquesSurQuestionsNotees: boolean;
+}
 
 export type Role = 'presentateur' | 'etudiant';
 
@@ -116,10 +223,6 @@ export interface CoursContent {
 export interface CoursCatalogue extends CoursContent {
   readonly version: number;
   readonly publieLe: string;
-}
-
-export interface ResultatsSeance extends ResultatsSeanceServis {
-  readonly statistiques?: StatistiquesSeance;
 }
 
 export interface CorrigePresentateur {
@@ -244,10 +347,10 @@ export function creerMetadonneesBrique(entree: MetadonneesBrique): MetadonneesBr
   if (!Number.isFinite(entree.dureeMinutes) || entree.dureeMinutes <= 0) {
     throw new Error('La durée annoncée doit être strictement positive');
   }
-  if (!MODALITES.includes(entree.modalite)) {
+  if (!estMembre(MODALITES, entree.modalite)) {
     throw new Error('Modalité inconnue');
   }
-  if (!REGIMES_DE_VERROU.includes(entree.regime)) {
+  if (!estMembre(REGIMES_DE_VERROU, entree.regime)) {
     throw new Error('Régime de verrou inconnu');
   }
   return entree;

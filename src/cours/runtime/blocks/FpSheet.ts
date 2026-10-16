@@ -2,7 +2,6 @@ import {
   type Feuille,
   LONGUEUR_MAX_FORMULE,
   type ResultatFormule,
-  type ValeurFormule,
   decalerFormule,
   estUneFormule,
   evaluerFeuille,
@@ -11,6 +10,7 @@ import {
   lireNombreSaisi,
   nomCellule,
 } from 'portfolio-2025-partage/formule';
+import type { ValeurFormule } from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { bornerEntre, entierBorne } from '../core/valeurs';

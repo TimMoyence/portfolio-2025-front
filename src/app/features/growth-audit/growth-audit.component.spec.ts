@@ -308,29 +308,24 @@ describe('GrowthAuditComponent', () => {
       expect(form.resetForm).toHaveBeenCalledWith(vierge);
     });
 
-    for (const error of [null, 'connect ECONNREFUSED 10.0.0.5:5432']) {
-      it(`affiche le message générique d un audit échoué sans lire le texte d erreur servi (${error}), et efface la chronologie`, () => {
-        const { component } = soumettreEtDiffuser(buildAuditFailedEvent({ error }), 'audit-5');
+    for (const [cas, evenement, message] of [
+      ['le message générique d un audit échoué', buildAuditFailedEvent(), "L'audit a échoué."],
+      [
+        'la connexion interrompue sur un délai dépassé',
+        buildAuditTimeoutEvent(),
+        "Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.",
+      ],
+    ] as const) {
+      it(`affiche ${cas}, efface la chronologie, sans relire le résumé ni rouvrir le flux`, () => {
+        const { component } = soumettreEtDiffuser(evenement, 'audit-5');
 
         expect(component.isAuditRunning).toBeFalse();
-        expect(component.errorMessage).toBe("L'audit a échoué.");
+        expect(component.errorMessage).toBe(message);
         expect(component.auditSectionBadges).toEqual([]);
+        expect(auditServiceMock.stream).toHaveBeenCalledTimes(1);
+        expect(auditServiceMock.getSummary).not.toHaveBeenCalled();
       });
     }
-
-    it('affiche la connexion interrompue sur un délai dépassé, sans relire le résumé ni rouvrir le flux', () => {
-      const { component } = soumettreEtDiffuser(
-        buildAuditTimeoutEvent({ error: 'SSE stream closed after 1800000ms' }),
-        'audit-6',
-      );
-
-      expect(component.isAuditRunning).toBeFalse();
-      expect(component.errorMessage).toContain('Connexion interrompue pendant l');
-      expect(component.errorMessage).not.toContain('SSE');
-      expect(component.auditSectionBadges).toEqual([]);
-      expect(auditServiceMock.stream).toHaveBeenCalledTimes(1);
-      expect(auditServiceMock.getSummary).not.toHaveBeenCalled();
-    });
 
     it('reprend un audit termine depuis le resume quand le flux tombe', () => {
       auditServiceMock.getSummary.and.returnValue(

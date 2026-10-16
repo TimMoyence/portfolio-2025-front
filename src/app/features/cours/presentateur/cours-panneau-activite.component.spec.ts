@@ -23,7 +23,7 @@ import {
   buildEcranDeroule,
   buildProgressionEnigme,
   buildResultatQuestion,
-  buildResultatsSeance,
+  buildResultatsDuFlux,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
@@ -31,7 +31,7 @@ import { poserLesEntrees } from '../../../../testing/montage-page';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { FormationsPort } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
-import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
+import type { CommandeDEcran } from './cours-panneau-activite.component';
 import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
 
 type Fixture = ComponentFixture<CoursPanneauActiviteComponent>;
@@ -65,10 +65,6 @@ describe('CoursPanneauActiviteComponent', () => {
   function cliquer(fixture: Fixture, marque: string): void {
     (cibleMarque(fixture, marque, 'le panneau d activite') as HTMLButtonElement).click();
     fixture.detectChanges();
-  }
-
-  function resultats(overrides: Partial<ResultatsDuPupitre> = {}): ResultatsDuPupitre {
-    return { ...buildResultatsSeance(), ...overrides };
   }
 
   beforeEach(async () => {
@@ -420,7 +416,7 @@ describe('CoursPanneauActiviteComponent', () => {
       donnees: { plan: buildCardsortPlan() },
     });
     const { fixture } = monter(classement, {
-      resultats: resultats({
+      resultats: buildResultatsDuFlux({
         questions: [
           buildResultatQuestion({
             questionId: 'K-CHARGES-01',
@@ -453,7 +449,7 @@ describe('CoursPanneauActiviteComponent', () => {
       donnees: { parcours: buildEscapeParcours() },
     });
     const { fixture } = monter(coffre, {
-      resultats: resultats({
+      resultats: buildResultatsDuFlux({
         enigmes: [
           buildProgressionEnigme({
             parcoursId: 'K-EVASION-01',
@@ -486,7 +482,7 @@ describe('CoursPanneauActiviteComponent', () => {
     const sortie = buildEcranDeroule({ type: 'fp-exit', donnees: { billet: buildExitBillet() } });
     const { fixture } = monter(sortie, {
       participants: 22,
-      resultats: resultats({
+      resultats: buildResultatsDuFlux({
         questions: [buildResultatQuestion({ questionId: 'B-SORTIE-09', total: 17 })],
       }),
     });
@@ -537,7 +533,7 @@ describe('CoursPanneauActiviteComponent', () => {
       const [identifiant = ''] = (planDeMontage(ecran) ?? []).flatMap(identifiantsDuMontage);
       const compte = { total: 2, justes: 1 };
       return monter(ecran, {
-        resultats: resultats({
+        resultats: buildResultatsDuFlux({
           questions: [
             buildResultatQuestion({
               questionId: identifiant,

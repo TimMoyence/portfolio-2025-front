@@ -1,3 +1,4 @@
+import { BOITES_DE_REVISION, type BoiteDeRevision } from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import {
@@ -17,14 +18,13 @@ export interface SpacedRappel extends ContenuDeBrique {
 export interface SpacedQuestionPublique {
   readonly questionId: string;
   readonly concept: string;
-  readonly boite: 1 | 2 | 3;
+  readonly boite: BoiteDeRevision;
   readonly cours: string;
   readonly enonce: string;
   readonly options: readonly OptionPublique[];
 }
 
 const VIDE = escapeHtml('');
-const BOITES = [1, 2, 3] as const;
 
 function projeterQuestion(source: SpacedQuestionPublique): SpacedQuestionPublique {
   return {
@@ -273,7 +273,7 @@ export class FpSpaced extends FpVerdicts {
     if (this.carte.length === 0) {
       return VIDE;
     }
-    const entetes = BOITES.map(
+    const entetes = BOITES_DE_REVISION.map(
       (boite) => safeHtml`<th scope="col">${escapeHtml(this.texte('spaced-boite'))} ${boite}</th>`,
     );
     const lignes = this.carte.map(

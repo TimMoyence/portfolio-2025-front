@@ -1,8 +1,9 @@
 import type { ResumeBareme } from '../../../../cours/content/types';
+import { avecUnite } from '../../../../cours/runtime/core/valeurs';
 import type { RegleNotation } from '../../../core/ports/formations.port';
 
 function pourcentage(part: number): string {
-  return `${Math.round(part * 100)} %`;
+  return avecUnite(Math.round(part * 100), '%');
 }
 
 function phraseDuBareme(bareme: ResumeBareme | null): string {

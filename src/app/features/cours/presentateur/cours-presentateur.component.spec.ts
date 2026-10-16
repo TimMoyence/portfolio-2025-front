@@ -567,7 +567,7 @@ describe('CoursPresentateurComponent', () => {
       );
       const fixture = await ouvrirLaSeance();
 
-      publierSurLaVue(double, fixture, buildResultatsSeance({ statistiques: PROBLEMATIQUE }));
+      publierSurLaVue(double, fixture, { statistiques: PROBLEMATIQUE });
       await stabiliserLaVue(fixture);
 
       const statistiques = texte(fixture, 'presentateur-statistiques');

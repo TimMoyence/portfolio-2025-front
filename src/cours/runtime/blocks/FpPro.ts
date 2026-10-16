@@ -179,6 +179,6 @@ export class FpPro extends FpRedaction<ProCas> {
       this.refuserLEnvoi(this.texte('pro-reponse-vide'));
       return;
     }
-    this.conclureLEnvoi('fp-pro-submit', { casId: cas.id, reponses: this.textesDe(cles) });
+    this.conclureLEnvoi('fp-pro-submit', { casId: cas.id, reponses: this.textesSaisis(cles) });
   }
 }

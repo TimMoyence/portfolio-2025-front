@@ -4,8 +4,9 @@ import type {
   DerouleCours,
   EcranContent,
   EcranDeroule,
+  ValeurFormule,
 } from '../../../../cours/content/types';
-import type { ValeurFormule } from 'portfolio-2025-partage/formule';
+import { avecUnite, echapperPourRegex } from '../../../../cours/runtime/core/valeurs';
 import { type Recolte, recolterDansLArbre } from '../../../../testing/arbre-json';
 import { objet } from '../../../shared/slides/visual/presentation-v2';
 import { INSTANTANE_B2_01 } from '../../../../testing/fixtures/instantane-b2-01';
@@ -43,7 +44,7 @@ function formesDeLaReponse(valeur: ValeurFormule): readonly string[] {
     return [valeur];
   }
   const pourcentage =
-    valeur !== 0 && Math.abs(valeur) < 1 ? [`${ecritEnFrancais(valeur * 100, 2)} %`] : [];
+    valeur !== 0 && Math.abs(valeur) < 1 ? [avecUnite(ecritEnFrancais(valeur * 100, 2), '%')] : [];
   return [...new Set([ecritEnFrancais(valeur), ecritEnFrancais(valeur, 2), ...pourcentage])];
 }
 
@@ -186,7 +187,7 @@ function cite(texte: string, reponse: string): boolean {
   if (cherchee === '') {
     return false;
   }
-  const motif = cherchee.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+  const motif = echapperPourRegex(cherchee);
   return new RegExp(`(?<![\\p{L}\\p{N}])${motif}(?![\\p{L}\\p{N}])`, 'u').test(texte);
 }
 
@@ -572,7 +573,7 @@ describe('livret papier des cours servis', () => {
     );
 
     expect(reponsesDe(tableur)).toEqual(
-      jasmine.arrayContaining(['=PENTE(B2:B6;A2:A6)', '0,997852', '1', '99,79 %', '3,51']),
+      jasmine.arrayContaining(['=PENTE(B2:B6;A2:A6)', '0,997852', '1', '99,79 %', '3,51']),
     );
     expect(formesDeLaReponse(false)).toEqual(['FAUX']);
   });

@@ -1,9 +1,8 @@
-import { ETATS_PULSE } from 'portfolio-2025-partage/contrats';
-import type { EtatPulse } from '../../content/types';
+import { ETATS_PULSE, type EtatPulse } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpContenu } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
-import { estObjet } from '../core/valeurs';
+import { estMembre, estObjet } from '../core/valeurs';
 
 export interface PulseComptes {
   readonly perdu: number;
@@ -42,7 +41,7 @@ function projeterComptes(source: PulseComptes): Required<PulseComptes> {
 }
 
 function lireEtat(valeur: unknown): EtatPulse | null {
-  return ETATS_PULSE.find((etat) => etat === valeur) ?? null;
+  return estMembre(ETATS_PULSE, valeur) ? valeur : null;
 }
 
 function copierSondage(source: PulseSondage): PulseSondage {

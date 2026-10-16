@@ -142,6 +142,23 @@ describe('SvgIconComponent', () => {
       expect(content).toContain('<a href="#ancre" id="a3"');
     });
 
+    it('retire un lien javascript: dont le schéma est coupé par un blanc que le navigateur ôte', () => {
+      loadIcon('coupe-icon');
+
+      httpMock
+        .expectOne('assets/icons/coupe-icon.svg')
+        .flush(
+          '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
+            '<a href="java&#9;script:alert(1)" id="a1"/><a xlink:href="java&#10;script:alert(2)" id="a2"/>' +
+            '<a href="https://asilidesign.fr" id="a3"/></svg>',
+        );
+
+      const content = component.svgContent?.toString() ?? '';
+      expect(content).toContain('<a id="a1"');
+      expect(content).toContain('<a id="a2"');
+      expect(content).toContain('<a href="https://asilidesign.fr" id="a3"');
+    });
+
     it('devrait appliquer les dimensions en rem', () => {
       component.name = 'size-icon';
       component.size = 2;

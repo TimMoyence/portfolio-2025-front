@@ -3,7 +3,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { throwError } from 'rxjs';
 import type { PresentationPort } from '../../../../core/ports/presentation.port';
-import type { ScrollInteraction } from '../../../../core/models/presentation-interactions.model';
+import type { SlideInteractions } from '../../../../core/models/presentation-interactions.model';
 import {
   choisirLOptionDuQuiz,
   configurerLHoteDInteraction,
@@ -30,7 +30,7 @@ describe('SlideQuizComponent', () => {
         options: ['Délégation', 'Automatisation', 'Génération'],
         correctIndex: 1,
       },
-    ] as unknown as ScrollInteraction[];
+    ] as unknown as SlideInteractions['scroll'];
 
     portStub = configurerLHoteDInteraction(HostComponent, {
       'quiz-intro': { scroll: knowledgeQuizPayload },

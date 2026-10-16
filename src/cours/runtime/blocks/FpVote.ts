@@ -1,9 +1,8 @@
-import { PHASES_DE_VOTE } from 'portfolio-2025-partage/contrats';
-import type { MetadonneesBrique, VotePhase } from '../../content/types';
+import { PHASES_DE_VOTE, type MetadonneesBrique, type VotePhase } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { lignesDeCalculHtml } from './calculs';
 import { type OptionPublique, projeterMetadonnees, projeterOptions } from './projection';
-import { estObjet, part } from '../core/valeurs';
+import { estMembre, estObjet, part } from '../core/valeurs';
 import {
   bonneReponseRevelee,
   lireBonneOption,
@@ -109,7 +108,7 @@ export class FpVote extends FpVerdicts {
   }
 
   set phase(valeur: VotePhase | null | undefined) {
-    this.internePhase = PHASES_DE_VOTE.find((phase) => phase === valeur) ?? null;
+    this.internePhase = estMembre(PHASES_DE_VOTE, valeur) ? valeur : null;
     this.refreshSiConnecte();
   }
 

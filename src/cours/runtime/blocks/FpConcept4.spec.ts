@@ -3,11 +3,13 @@ import { buildConcept4Definition } from '../../../testing/factories/cours.factor
 import {
   animer,
   attendreLeParametreEchappe,
+  attendreLeTroisiemeCranEmisSansArrondi,
   attendreParametresAnnonces,
   decrireLaSobrieteDUneBriqueReglable,
   emisAuPupitre,
   glisserCurseur,
   jouerAuPupitre,
+  PARAMETRE_A_PAS_DECIMAL,
   relacherCurseur,
 } from '../../../testing/reglages-briques';
 import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
@@ -326,6 +328,16 @@ describe('FpConcept4', () => {
       const emis = emisAuPupitre(hote, REGLAGE, () => reglerN('20'));
 
       expect(emis).toEqual([{ reglages: { C: 1000, i: 4, n: 20 } }]);
+    });
+
+    it('G2 · au pupitre, emet le cran écrit par un curseur à pas décimal, sans erreur d arrondi', () => {
+      hote.definition = buildConcept4Definition({
+        parametres: [PARAMETRE_A_PAS_DECIMAL],
+        calcul: 'd',
+        phrase: 'Un décalage de {d} donne {resultat}.',
+      });
+
+      attendreLeTroisiemeCranEmisSansArrondi(hote, REGLAGE);
     });
 
     const REGLAGES_SANS_EMISSION: readonly { titre: string; regler: () => unknown[] }[] = [

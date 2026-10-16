@@ -24,6 +24,9 @@ import {
   buildDerouleCours,
   buildEcranDeroule,
   buildFichierTelecharge,
+  buildParticipantRapporte,
+  buildRapportSeance,
+  buildReponseRapportee,
   buildResultatQuestion,
   buildResultatsDeChaqueQuestion,
   buildResultatsSeance,
@@ -41,14 +44,15 @@ import { CoursSyntheseComponent } from './cours-synthese.component';
 type Fixture = ComponentFixture<CoursSyntheseComponent>;
 
 function reponse(concept: string, valeur: string, dureeMs = 4200): ReponseRapportee {
-  return {
+  return buildReponseRapportee({
     questionId: `Q-${concept}`,
     concept,
     valeur,
+    reponse: valeur,
     correcte: false,
     misconception: 'taux-simple',
     dureeMs,
-  };
+  });
 }
 
 function confusion(id: string, nombre: number): ConfusionComptee {
@@ -61,16 +65,14 @@ function etudiant(
   sousSeuil: boolean,
   reponses: readonly ReponseRapportee[],
 ): ParticipantRapporte {
-  return {
+  return buildParticipantRapporte({
     prenom,
-    nom: 'Durand',
     email: `${prenom.toLowerCase()}@example.com`,
     completion: reponses.length / 4,
     note,
     sousSeuil,
     reponses,
-    incidents: 0,
-  };
+  });
 }
 
 const MALIK = etudiant('Malik', 4, true, [
@@ -85,15 +87,15 @@ function rapportDe(
   participants: readonly ParticipantRapporte[],
   resultats: ResultatsSeance = buildResultatsSeance({ participants: participants.length }),
 ): RapportSeance {
-  return {
+  return buildRapportSeance({
     courseSlug: 'maths-financieres',
-    code: '4821',
     ouverteLe: '2026-09-12T08:00:00.000Z',
     fermeeLe: '2026-09-12T09:30:00.000Z',
     participants,
     conceptsFragiles: ['interets-composes', 'actualisation'],
+    libellesDesConcepts: {},
     resultats,
-  };
+  });
 }
 
 function textes(fixture: Fixture, nom: string): readonly string[] {

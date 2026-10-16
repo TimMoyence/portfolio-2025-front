@@ -190,7 +190,7 @@ describe('FpTableBuild', () => {
     expect(hote.shadowRoot?.querySelector('[data-testid="total"]')).toBeNull();
     expect(
       reperes(hote, 'synthese-ligne').map((ligne) => ligne.querySelector('dd')?.textContent),
-    ).toEqual(['4,00 %', '3,50 %']);
+    ).toEqual(['4,00 %', '3,50 %']);
   });
 
   it('garde le foyer et la frappe dans la cellule saisie malgre le recalcul', () => {

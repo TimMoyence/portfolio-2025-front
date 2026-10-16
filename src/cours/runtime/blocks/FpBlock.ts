@@ -3,6 +3,7 @@ import { adoptCoursStyles } from '../design/sheet';
 import { texte as traduire } from '../core/i18n';
 import { suivreLesDefileurs } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { avecUnite } from '../core/valeurs';
 import { suivreLesZonesDeSaisie } from '../core/zone-de-saisie';
 import type { DetailDeVerdict, VerdictDeProduction, VerdictDeReponse } from './retours';
 
@@ -301,8 +302,8 @@ export abstract class FpBlock extends HTMLElement {
     if (verdict.neSaitPas) {
       return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict"><strong>${escapeHtml(this.texte('verdict-ne-sait-pas'))}</strong></p>`;
     }
-    const pourcentage = Math.round(verdict.score * 100);
-    return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict" data-etat="${escapeHtml(verdict.correcte ? 'confirme' : 'a-revoir')}"><strong>${escapeHtml(this.texte(verdict.correcte ? 'verdict-juste' : 'verdict-a-revoir'))}</strong> <span data-testid="decompte">${escapeHtml(this.texte(cleDuDecompte))} ${justes}/${total}</span> <span data-testid="score">${escapeHtml(this.texte('verdict-score'))} ${pourcentage} %</span></p>`;
+    const pourcentage = avecUnite(Math.round(verdict.score * 100), '%');
+    return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict" data-etat="${escapeHtml(verdict.correcte ? 'confirme' : 'a-revoir')}"><strong>${escapeHtml(this.texte(verdict.correcte ? 'verdict-juste' : 'verdict-a-revoir'))}</strong> <span data-testid="decompte">${escapeHtml(this.texte(cleDuDecompte))} ${justes}/${total}</span> <span data-testid="score">${escapeHtml(this.texte('verdict-score'))} ${escapeHtml(pourcentage)}</span></p>`;
   }
 
   protected boutonNeSaitPas(desactive: boolean): EscapedHtml {

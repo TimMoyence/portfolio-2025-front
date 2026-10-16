@@ -56,9 +56,7 @@ export interface EscapeParcoursPublic extends Omit<EscapeParcoursBrique, 'enigme
   readonly enigmes: readonly Omit<EscapeEnigmePublique, 'fragment'>[];
 }
 
-export interface SpacedQuestionPublique extends Omit<SpacedQuestionBrique, 'boite'> {
-  readonly boite: 1 | 2 | 3;
-}
+export type SpacedQuestionPublique = SpacedQuestionBrique;
 
 type QuestionDeQuestionnaire =
   | { readonly brique: 'fp-numeric'; readonly donnees: DonneesParBrique['fp-numeric'] }

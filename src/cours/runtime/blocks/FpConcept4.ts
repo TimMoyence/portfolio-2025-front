@@ -1,7 +1,7 @@
 import { evaluerExpression, remplirGabarit } from 'portfolio-2025-partage/formule';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { fini } from '../core/valeurs';
+import { echapperPourRegex, fini } from '../core/valeurs';
 import { type Reglages } from './animation';
 import { plafondDe, plancherDe } from './curseurs';
 import { echelle, jalons } from './echelle';
@@ -46,12 +46,10 @@ const INTERVALLES_TABLEAU = 6;
 const LARGEUR = 320;
 const HAUTEUR = 180;
 const MARGE = 12;
-const SPECIAUX = /[.*+?^${}()|[\]\\]/g;
-
 function motifDesTermes(cles: readonly string[]): RegExp {
   const alternatives = [...cles]
     .sort((gauche, droite) => droite.length - gauche.length)
-    .map((cle) => cle.replace(SPECIAUX, '\\$&'))
+    .map(echapperPourRegex)
     .join('|');
   return new RegExp(`(?<![A-Za-z0-9_])(?:${alternatives})(?![A-Za-z0-9_])`, 'g');
 }

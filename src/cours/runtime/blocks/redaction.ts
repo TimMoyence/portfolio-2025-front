@@ -21,7 +21,7 @@ export abstract class FpRedaction<
     return this.textes[cle] ?? '';
   }
 
-  protected textesDe(cles: readonly string[]): Record<string, string> {
+  protected textesSaisis(cles: readonly string[]): Record<string, string> {
     return Object.fromEntries(cles.map((cle) => [cle, this.texteDe(cle)]));
   }
 

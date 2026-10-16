@@ -14,5 +14,5 @@ export interface ToolkitRequest {
 
 export interface ToolkitResponse {
   message: string;
-  accessToken: string;
+  accessToken?: string;
 }

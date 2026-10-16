@@ -22,11 +22,11 @@ import type {
   PacingMode,
   PilotageEcran,
   ResultatQuestion,
-  ResultatsSeance,
 } from '../../../../cours/content/types';
 import {
   refusDuFlux,
   type EtatSession,
+  type ResultatsDuFlux,
   type StatutFlux,
   type StatutSession,
   type Sync,
@@ -49,7 +49,7 @@ import {
 import { annexeFormateurDeLEcran } from './annexe-formateur';
 import { chantierApresRendu } from './chantier-apres-rendu';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
-import type { CommandeDEcran, ResultatsDuPupitre } from './cours-panneau-activite.component';
+import type { CommandeDEcran } from './cours-panneau-activite.component';
 import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
 import type { QuestionDuPanneau } from './cours-panneau-question.component';
 import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
@@ -67,10 +67,9 @@ type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
 
 type LectureDeLaNotation = 'a-lire' | 'lue' | 'echec';
 
-function resultatsDuRapport(rapport: RapportSeance): ResultatsSeance {
-  return rapport.statistiques === undefined
-    ? rapport.resultats
-    : { ...rapport.resultats, statistiques: rapport.statistiques };
+function resultatsDuRapport(rapport: RapportSeance): ResultatsDuFlux {
+  const { resultats, statistiques, jalons, enigmes, bareme } = rapport;
+  return { ...resultats, statistiques, jalons, enigmes, bareme };
 }
 
 type Chargement = 'repos' | 'chargement' | 'succes' | 'echec';
@@ -704,7 +703,7 @@ export class CoursPresentateurComponent {
   readonly deroule = signal<DerouleCours | null>(null);
   readonly ecran = signal(0);
   readonly mode = signal<PacingMode>('pilote');
-  readonly resultats = signal<ResultatsDuPupitre | null>(null);
+  readonly resultats = signal<ResultatsDuFlux | null>(null);
   readonly pilotage = signal<Readonly<Record<string, PilotageEcran>>>({});
   readonly maitrise = signal<readonly SyntheseConcept[] | null>(null);
   readonly maitriseIndisponible = signal(false);
@@ -761,7 +760,7 @@ export class CoursPresentateurComponent {
   readonly questionsProblematiques = computed<readonly string[]>(() => {
     const deroule = this.deroule();
     const enonces = deroule === null ? new Map<string, string>() : enoncesDuDeroule(deroule);
-    return (this.resultats()?.statistiques?.questionsProblemes ?? []).map(
+    return (this.resultats()?.statistiques.questionsProblemes ?? []).map(
       (questionId) => enonces.get(questionId) ?? questionId,
     );
   });
@@ -1065,7 +1064,7 @@ export class CoursPresentateurComponent {
   }
 
   private retenirLaNotation(rapport: RapportSeance): void {
-    this.notation.set(rapport.notation ?? null);
+    this.notation.set(rapport.notation);
     this.lectureDeLaNotation.set('lue');
   }
 

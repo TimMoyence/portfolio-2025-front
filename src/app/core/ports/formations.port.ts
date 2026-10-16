@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
-import type { RegleDeNotation } from 'portfolio-2025-partage/contrats';
 import type { Observable } from 'rxjs';
 import type {
+  ComptesJalon,
   CoursContent,
   DerouleCours,
   EtatParticipant,
@@ -9,8 +9,12 @@ import type {
   FreeRange,
   PacingMode,
   PilotageEcran,
+  ProgressionEnigme,
+  RegleDeNotation,
   ResultatsSeance,
+  ResumeBareme,
   StatistiquesSeance,
+  TypeQuestion,
   ValeurProduction,
 } from '../../../cours/content/types';
 import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donnees-publiques';
@@ -148,6 +152,8 @@ export interface ReponseLibreFormateur {
   screenId: string;
   activityId: string;
   response: string;
+  premiereReponse: string | null;
+  strategiesServiesLe: string | null;
   dureeMs: number;
   status: 'enregistre' | 'en_attente' | 'echec';
   submittedAt: string;
@@ -176,9 +182,13 @@ export interface IncidentEtudiant {
 export interface ReponseRapportee {
   questionId: string;
   concept: string;
+  type: TypeQuestion;
+  score: number | null;
   valeur: string;
+  reponse: string;
   correcte: boolean;
   misconception: string | null;
+  libelleConfusion: string | null;
   dureeMs: number;
 }
 
@@ -196,7 +206,7 @@ export interface ParticipantRapporte {
   note: number;
   sousSeuil: boolean;
   reponses: readonly ReponseRapportee[];
-  reponsesLibres?: readonly ReponseLibreRapportee[];
+  reponsesLibres: readonly ReponseLibreRapportee[];
   incidents: number;
 }
 
@@ -207,10 +217,13 @@ export interface RapportSeance {
   fermeeLe: string;
   participants: readonly ParticipantRapporte[];
   conceptsFragiles: readonly string[];
-  libellesDesConcepts?: Readonly<Record<string, string>>;
+  libellesDesConcepts: Readonly<Record<string, string>>;
   resultats: ResultatsSeance;
-  statistiques?: StatistiquesSeance;
-  notation?: RegleNotation;
+  statistiques: StatistiquesSeance;
+  notation: RegleNotation;
+  bareme: ResumeBareme;
+  jalons: Readonly<Record<string, ComptesJalon>>;
+  enigmes: readonly ProgressionEnigme[];
 }
 
 export type MotifRefusRattachement =

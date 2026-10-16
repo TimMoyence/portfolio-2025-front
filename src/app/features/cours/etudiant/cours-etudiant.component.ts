@@ -9,16 +9,16 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom, map } from 'rxjs';
-import { REGIMES_DE_VERROU } from 'portfolio-2025-partage/contrats';
-import type {
-  CoursContent,
-  EcranContent,
-  EtatParticipant,
-  EtatPulse,
-  PacingMode,
-  PilotageEcran,
-  RegimeVerrou,
-  ValeurProduction,
+import {
+  REGIMES_DE_VERROU,
+  type CoursContent,
+  type EcranContent,
+  type EtatParticipant,
+  type EtatPulse,
+  type PacingMode,
+  type PilotageEcran,
+  type RegimeVerrou,
+  type ValeurProduction,
 } from '../../../../cours/content/types';
 import type { Deck } from '../../../../cours/runtime/core/deck';
 import { createDeck } from '../../../../cours/runtime/core/deck';
@@ -49,7 +49,7 @@ import {
   type StatutSession,
   type Sync,
 } from '../../../../cours/runtime/core/sync';
-import { estObjet } from '../../../../cours/runtime/core/valeurs';
+import { estMembre, estObjet } from '../../../../cours/runtime/core/valeurs';
 import { getApiFormationsUrl } from '../../../core/http/api-config';
 import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
 import type {
@@ -184,9 +184,7 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
 
 function regimeDuContenu(contenu: unknown): RegimeVerrou | null {
   const regime = estObjet(contenu) ? contenu['regime'] : undefined;
-  return typeof regime === 'string' && REGIMES_DE_VERROU.includes(regime as RegimeVerrou)
-    ? (regime as RegimeVerrou)
-    : null;
+  return estMembre(REGIMES_DE_VERROU, regime) ? regime : null;
 }
 
 function regimeDeLEcran(ecran: EcranContent): RegimeVerrou {

@@ -1,4 +1,4 @@
-import type { StatutScore } from 'portfolio-2025-partage/score';
+export type StatutScore = 'critical' | 'warning' | 'ok';
 
 /**
  * Miroir du type backend `ClientReportSynthesis`
@@ -27,6 +27,8 @@ interface ClientReportEngineMatrix {
 interface ClientReportEngineScore {
   readonly score: number;
   readonly summary: string;
+  readonly status?: StatutScore;
+  readonly statusLabel?: string;
 }
 
 interface ClientReportPillar {
@@ -34,6 +36,7 @@ interface ClientReportPillar {
   readonly score: number;
   readonly target: number;
   readonly status: StatutScore;
+  readonly statusLabel?: string;
 }
 
 interface ClientReportQuickWin {

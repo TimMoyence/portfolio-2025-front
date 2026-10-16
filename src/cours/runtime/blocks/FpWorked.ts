@@ -245,7 +245,7 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
     }
     this.conclureLEnvoi('fp-worked-submit', {
       exempleId: exemple.id,
-      redactions: this.textesDe(cles),
+      redactions: this.textesSaisis(cles),
     });
   }
 

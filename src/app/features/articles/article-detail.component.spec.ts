@@ -102,7 +102,7 @@ describe('ArticleDetailComponent — URL canonique', () => {
       .flush(
         buildPublishedArticle({
           slug: 'veille',
-          seo: { description: 'x', canonical_path: '/articles/veille/' },
+          seo: { ...buildPublishedArticle().seo, canonical_path: '/articles/veille/' },
         }),
       );
 
