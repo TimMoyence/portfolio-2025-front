@@ -1,11 +1,12 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import type { ElementRef } from '@angular/core';
+import { CommonModule, isPlatformBrowser, ViewportScroller } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
+  DestroyRef,
   effect,
+  ElementRef,
   HostListener,
   Inject,
   LOCALE_ID,
@@ -14,7 +15,7 @@ import {
   inject,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { LOCALES_DU_SITE } from '../../../core/config/locales';
+import { LOCALES_DU_SITE, langueDuSite } from '../../../core/config/locales';
 import { cheminEnLocale } from '../../../core/seo/chemins';
 import { BreakpointService } from '../../../core/services/breakpoint.service';
 import { AuthStateService } from '../../../core/services/auth-state.service';
@@ -154,16 +155,25 @@ export class NavbarComponent {
       this.authState.user();
       this.cdr.markForCheck();
     });
+    if (isPlatformBrowser(this.platformId)) {
+      const defilement = inject(ViewportScroller);
+      const hote = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+      defilement.setOffset(() => [
+        0,
+        hote.querySelector('nav')?.getBoundingClientRect().bottom ?? 0,
+      ]);
+      inject(DestroyRef).onDestroy(() => defilement.setOffset([0, 0]));
+    }
   }
 
   getAlternateLocaleUrl(): string {
     if (!isPlatformBrowser(this.platformId)) return '#';
-    const targetLocale = this.currentLocale.startsWith('fr') ? 'en' : 'fr';
+    const targetLocale = langueDuSite(this.currentLocale) === 'fr' ? 'en' : 'fr';
     return cheminEnLocale(window.location.pathname, targetLocale, LOCALES_DU_SITE);
   }
 
   getAlternateLocaleLabel(): string {
-    return this.currentLocale.startsWith('fr') ? 'EN' : 'FR';
+    return langueDuSite(this.currentLocale) === 'fr' ? 'EN' : 'FR';
   }
 
   @HostListener('window:scroll', [])

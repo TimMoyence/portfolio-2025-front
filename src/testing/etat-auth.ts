@@ -1,4 +1,4 @@
-import { PLATFORM_ID } from '@angular/core';
+import { PLATFORM_ID, type Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AUTH_PORT } from '../app/core/ports/auth.port';
 import { AuthStateService } from '../app/core/services/auth-state.service';
@@ -17,4 +17,20 @@ export function etatAuth(
     ],
   });
   return TestBed.inject(AuthStateService);
+}
+
+export function preparerAvecLePortDAuth(
+  composant: Type<unknown>,
+  port: () => ReturnType<typeof createAuthPortStub>,
+): void {
+  beforeEach(async () => {
+    await setupTestBed({
+      imports: [composant],
+      providers: [{ provide: AUTH_PORT, useValue: port() }],
+    }).compileComponents();
+  });
+
+  afterEach(() => {
+    TestBed.inject(AuthStateService).clearSession();
+  });
 }

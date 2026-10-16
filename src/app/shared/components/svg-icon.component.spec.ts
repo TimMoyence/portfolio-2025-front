@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { PLATFORM_ID } from '@angular/core';
 import type { SimpleChanges } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { CONTACT_METHODS } from '../data/contact-methods';
 import { SvgIconComponent } from './svg-icon.component';
 
 const MOCK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#000" d="M0 0h24v24H0z"/></svg>`;
@@ -174,14 +175,21 @@ describe('SvgIconComponent', () => {
       expect(component.role).toBe('img');
     });
 
-    it('devrait charger une icone en sous-dossier (network/google)', () => {
-      spyOn(console, 'warn');
+    const ICONES_ADMISES = [
+      'network/google',
+      ...CONTACT_METHODS.flatMap((methode) => methode.icon ?? []),
+    ];
 
-      chargerEnGet('network/google');
+    for (const icon of ICONES_ADMISES) {
+      it(`charge l icone ${icon}, sous-dossier et tiret bas compris`, () => {
+        spyOn(console, 'warn');
 
-      expect(component.svgContent).not.toBeNull();
-      expect(console.warn).not.toHaveBeenCalled();
-    });
+        chargerEnGet(icon);
+
+        expect(component.svgContent).not.toBeNull();
+        expect(console.warn).not.toHaveBeenCalled();
+      });
+    }
 
     for (const { label, name } of REJECTED_NAMES) {
       it(`ne devrait pas charger un SVG si le name contient ${label}`, () => {

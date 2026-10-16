@@ -23,6 +23,7 @@ import {
   planDeMontage,
   questionsDeLEcran,
 } from '../../../shared/slides/session/lecture-ecran';
+import { part } from '../../../../cours/runtime/core/valeurs';
 import { TenirDansSaPlaceDirective } from '../../../shared/slides/session/tenir-dans-sa-place.directive';
 import type { GroupeDeReponses } from './panneau-pedagogique/panneau-reponses-libres.component';
 import { grouperLesReponses } from './panneau-pedagogique/panneau-reponses-libres.component';
@@ -44,7 +45,7 @@ interface ResultatProjete {
   readonly id: string;
   readonly enonce: string;
   readonly total: number;
-  readonly correctes: number;
+  readonly partJuste: number;
   readonly scoreMoyen: number | null;
   readonly barres: readonly BarreDOption[];
 }
@@ -56,10 +57,9 @@ function barresDe(
   if (resultat.parOption === null || options === null) {
     return [];
   }
-  const total = Math.max(resultat.total, 1);
   return options.map(({ id, libelle }) => {
     const compte = resultat.parOption?.[id] ?? 0;
-    return { id, libelle, compte, part: compte / total };
+    return { id, libelle, compte, part: part(compte, resultat.total) };
   });
 }
 
@@ -83,7 +83,7 @@ function resultatsProjetes(
       id: resultat.questionId,
       enonce: enonces.get(resultat.questionId) ?? '',
       total: resultat.total,
-      correctes: resultat.correctes,
+      partJuste: part(resultat.correctes, resultat.total),
       scoreMoyen: resultat.scoreMoyen,
       barres: barresDe(resultat, options.get(resultat.questionId) ?? null),
     }));
@@ -122,7 +122,7 @@ function resultatsProjetes(
                       <span i18n="@@resultatsProjetesScoreMoyen">score moyen</span>
                       <strong>{{ question.scoreMoyen | percent }}</strong>
                     } @else {
-                      <strong>{{ question.correctes / question.total | percent }}</strong>
+                      <strong>{{ question.partJuste | percent }}</strong>
                       <span i18n="@@resultatsProjetesJustes">de réponses justes</span>
                     }
                   }

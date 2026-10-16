@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
 export interface LegalTocItem {
@@ -10,7 +10,7 @@ export interface LegalTocItem {
 @Component({
   selector: 'app-legal-page',
   standalone: true,
-  imports: [RevealOnScrollDirective],
+  imports: [RevealOnScrollDirective, RouterLink],
   templateUrl: './legal-page.component.html',
   styleUrl: './legal-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

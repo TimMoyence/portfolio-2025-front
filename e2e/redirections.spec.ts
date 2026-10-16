@@ -14,6 +14,10 @@ const REDIRECTIONS_PERMANENTES: ReadonlyArray<readonly [string, string]> = [
   ['/fr', '/fr/'],
   ['/en', '/en/'],
   ['/fr/contact/', '/fr/contact'],
+  ['/fr/formations/automatiser-avec-ia/toolkit', '/fr/formations/automatiser-avec-ia'],
+  ['/en/formations/automatiser-avec-ia/toolkit', '/en/formations/automatiser-avec-ia'],
+  ['/fr/formations/audit-seo-diy/toolkit', '/fr/formations/audit-seo-diy'],
+  ['/en/formations/audit-seo-diy/toolkit', '/en/formations/audit-seo-diy'],
 ];
 
 test.describe('les pages retirées répondent un vrai 301', () => {

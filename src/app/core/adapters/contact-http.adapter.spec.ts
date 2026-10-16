@@ -27,7 +27,6 @@ describe('ContactHttpAdapter', () => {
     };
     const response: MessageResponse = {
       message: 'Message envoyé avec succès.',
-      httpCode: 201,
     };
 
     verifierPostRelaye(

@@ -1,8 +1,11 @@
+import { APP_BASE_HREF } from '@angular/common';
 import { Component } from '@angular/core';
-import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
+import { provideRouter, Router } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { isolateAnimReady } from '../../../testing/anim-ready';
+import { cliquerSansQuitterLaPage } from '../../../testing/montage-page';
 import { LegalPageComponent, type LegalTocItem } from './legal-page.component';
 
 const SOMMAIRE: readonly LegalTocItem[] = [
@@ -29,23 +32,27 @@ class PageHoteComponent {
 }
 
 describe('LegalPageComponent', () => {
-  let fixture: ComponentFixture<PageHoteComponent>;
+  let harnais: RouterTestingHarness;
   let page: HTMLElement;
 
   isolateAnimReady();
 
-  beforeEach(() => {
-    fixture = TestBed.configureTestingModule({
-      imports: [PageHoteComponent],
-      providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
-    }).createComponent(PageHoteComponent);
-    page = fixture.nativeElement as HTMLElement;
+  beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: PLATFORM_ID, useValue: 'browser' },
+        { provide: APP_BASE_HREF, useValue: '/en/' },
+        provideRouter([{ path: 'privacy', component: PageHoteComponent }]),
+      ],
+    });
+    harnais = await RouterTestingHarness.create('/privacy');
+    page = harnais.fixture.nativeElement as HTMLElement;
     document.body.appendChild(page);
-    fixture.detectChanges();
+    harnais.detectChanges();
   });
 
   afterEach(() => {
-    fixture.destroy();
+    harnais.fixture.destroy();
     page.remove();
   });
 
@@ -57,14 +64,19 @@ describe('LegalPageComponent', () => {
     expect(page.querySelector('.lg-hero .updated')?.textContent).toBe('Mise à jour : 4 juin 2026');
   });
 
-  it('rend le sommaire comme une liste de liens vers les ancres du corps', () => {
+  it('rend le sommaire comme une liste de liens vers les ancres du corps, sur la page courante', async () => {
     const sommaire = page.querySelector('nav.lg-toc') as HTMLElement;
     expect(sommaire.getAttribute('aria-label')).toBe('Sommaire');
     const liens = Array.from(sommaire.querySelectorAll<HTMLAnchorElement>('ol li a'));
     expect(liens.map((lien) => [lien.getAttribute('href'), lien.textContent])).toEqual([
-      ['#principe', 'Notre principe'],
-      ['#droits', 'Vos droits'],
+      ['/en/privacy#principe', 'Notre principe'],
+      ['/en/privacy#droits', 'Vos droits'],
     ]);
+
+    expect(cliquerSansQuitterLaPage(liens[1]).priseParLeRouteur).toBeTrue();
+    await harnais.fixture.whenStable();
+
+    expect(TestBed.inject(Router).url).toBe('/privacy#droits');
   });
 
   it('projette le corps de la page dans .lg-body et lui applique la typographie legale', () => {

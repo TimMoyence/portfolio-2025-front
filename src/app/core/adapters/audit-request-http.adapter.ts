@@ -56,10 +56,12 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
           subscriber.complete();
         }
       });
-      source.addEventListener('failed', (event) => {
-        relayer('failed', event);
-        subscriber.complete();
-      });
+      for (const fin of ['failed', 'timeout'] as const) {
+        source.addEventListener(fin, (event) => {
+          relayer(fin, event);
+          subscriber.complete();
+        });
+      }
       source.onerror = () => {
         subscriber.error(new Error('Audit stream disconnected'));
       };

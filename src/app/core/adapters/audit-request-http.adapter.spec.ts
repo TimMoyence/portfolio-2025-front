@@ -11,6 +11,7 @@ import {
   buildAuditFailedEvent,
   buildAuditProgressEvent,
   buildAuditStreamHeartbeat,
+  buildAuditTimeoutEvent,
   buildClientReport,
 } from '../../../testing/factories/audit-request.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
@@ -141,6 +142,21 @@ describe('AuditRequestHttpAdapter', () => {
       diffuser(echec);
 
       verifierLeFlux([echec], true);
+    });
+
+    it('relaie le délai dépassé puis clôt le flux, sans le prendre pour une coupure', () => {
+      const delai = buildAuditTimeoutEvent({ auditId: 'audit-99' });
+
+      diffuser(delai);
+      source.couper();
+
+      verifierLeFlux([delai], true);
+    });
+
+    it('clôt le flux sur un délai dépassé même quand sa charge est illisible', () => {
+      source.diffuser('timeout', '{illisible');
+
+      verifierLeFlux([], true);
     });
 
     it('signale une coupure du flux et ferme la source une seule fois', () => {

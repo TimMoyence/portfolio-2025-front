@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  LOCALE_ID,
   PLATFORM_ID,
   inject,
 } from '@angular/core';
@@ -11,9 +12,8 @@ import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import type { Subscription } from 'rxjs';
 import { estObjet } from '../../../cours/runtime/core/valeurs';
-import { LOCALES_DU_SITE } from '../../core/config/locales';
+import { langueDuSite } from '../../core/config/locales';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
-import { routeSansLocale } from '../../core/seo/chemins';
 import {
   type AuditContactMethod,
   type AuditRequestPayload,
@@ -29,7 +29,13 @@ import type { FaqItem } from '../../shared/components/faq-section/faq-section.co
 import { FaqSectionComponent } from '../../shared/components/faq-section/faq-section.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
+import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
+import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
+import {
+  BORNES_D_UN_CONTACT_D_AUDIT,
+  BORNES_D_UN_NOM_DE_SITE,
+} from '../../shared/utils/regles-de-saisie';
 import { AuditClientReportSectionComponent } from './components/audit-client-report-section/audit-client-report-section.component';
 import {
   type AuditSectionBadge,
@@ -69,6 +75,8 @@ function formulaireVierge(): AuditRequestPayload {
     FaqSectionComponent,
     AuditClientReportSectionComponent,
     FieldErrorsComponent,
+    BornesDeSaisieDirective,
+    FormatDeContactDirective,
     HoneypotDirective,
   ],
   templateUrl: './growth-audit.component.html',
@@ -79,8 +87,11 @@ export class GrowthAuditComponent implements OnDestroy {
   private readonly auditService: AuditRequestPort = inject(AUDIT_REQUEST_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-  readonly localeUrlPrefix = this.getLocaleUrlPrefix();
+  private readonly langue: NonNullable<AuditRequestPayload['locale']> =
+    langueDuSite(inject(LOCALE_ID)) === 'en' ? 'en' : 'fr';
   protected readonly iaTaskFallback = $localize`:@@auditIaTaskFallback:IA`;
+  protected readonly bornesDuNomDeSite = BORNES_D_UN_NOM_DE_SITE;
+  protected readonly bornesDuContact = BORNES_D_UN_CONTACT_D_AUDIT;
 
   private streamSub?: Subscription;
   private reconnectAttempts = 0;
@@ -208,6 +219,8 @@ export class GrowthAuditComponent implements OnDestroy {
   private readonly etapeTerminee = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Audit terminé`;
   private readonly echecDeLAudit = $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
 
+  private readonly connexionPerdue = $localize`:growthAudit.error.connectionLost|Connection lost during audit@@auditErrorConnectionLost:Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.`;
+
   rgpdConsent = false;
 
   get contactInputType(): 'email' | 'tel' {
@@ -231,16 +244,6 @@ export class GrowthAuditComponent implements OnDestroy {
 
   get formattedSummaryText(): string {
     return formatSummaryText(this.auditSummary?.summaryText);
-  }
-
-  private getLocaleUrlPrefix(): 'fr' | 'en' {
-    if (!this.isBrowser) {
-      return 'fr';
-    }
-
-    const { locale } = routeSansLocale(window.location.pathname.toLowerCase(), LOCALES_DU_SITE);
-
-    return locale === 'en' ? 'en' : 'fr';
   }
 
   onContactMethodToggle(event: Event): void {
@@ -281,7 +284,7 @@ export class GrowthAuditComponent implements OnDestroy {
     const payload = {
       website: this.auditFormState.website,
       formStartedAt: this.auditFormState.formStartedAt,
-      locale: this.localeUrlPrefix,
+      locale: this.langue,
       websiteName: this.auditFormState.websiteName.trim(),
       contactMethod: this.auditFormState.contactMethod,
       contactValue: this.auditFormState.contactValue.trim(),
@@ -289,15 +292,10 @@ export class GrowthAuditComponent implements OnDestroy {
 
     handleFormSubmit(this.auditService.submit(payload), this.cdr, {
       fallbackError: this.formLabels.error,
+      refus: {
+        400: $localize`:@@auditFormErreurRefus:La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.`,
+      },
       onSuccess: (response) => {
-        if (response.httpCode !== 201 || !response.auditId) {
-          this.errorMessage = response.message || this.formLabels.error;
-          this.trackAuditEvent('audit_rejected', {
-            reason: response.message ?? 'unknown',
-          });
-          return;
-        }
-
         this.successMessage = this.formLabels.success;
         this.auditId = response.auditId;
         this.auditProgress = 0;
@@ -312,16 +310,18 @@ export class GrowthAuditComponent implements OnDestroy {
         });
         this.startStream(response.auditId);
       },
-      onError: (message) => {
+      onError: (message, statut) => {
         this.errorMessage = message;
-        this.trackAuditEvent('audit_error', { reason: message });
+        this.trackAuditEvent('audit_error', { reason: `http_${statut}` });
       },
       onComplete: () => {
-        this.isSubmitting = false;
         this.isSubmitted = false;
         this.auditFormState = formulaireVierge();
         this.rgpdConsent = false;
         form.resetForm(this.auditFormState);
+      },
+      finalement: () => {
+        this.isSubmitting = false;
       },
     });
   }
@@ -334,7 +334,7 @@ export class GrowthAuditComponent implements OnDestroy {
    * pret a emettre sans redeploy lorsque la config arrive.
    */
   private trackAuditEvent(
-    name: 'audit_submitted' | 'audit_completed' | 'audit_failed' | 'audit_error' | 'audit_rejected',
+    name: 'audit_submitted' | 'audit_completed' | 'audit_failed' | 'audit_error',
     props: Record<string, string>,
   ): void {
     if (!this.isBrowser) return;
@@ -399,10 +399,11 @@ export class GrowthAuditComponent implements OnDestroy {
       return;
     }
 
-    this.arreterLAudit(event.data.error || this.echecDeLAudit);
+    const delaiDepasse = event.type === 'timeout';
+    this.arreterLAudit(delaiDepasse ? this.connexionPerdue : this.echecDeLAudit);
     this.trackAuditEvent('audit_failed', {
       auditId: event.data.auditId,
-      reason: event.data.error ?? 'unknown',
+      reason: delaiDepasse ? 'timeout' : 'unknown',
     });
   }
 
@@ -428,9 +429,7 @@ export class GrowthAuditComponent implements OnDestroy {
           return;
         }
 
-        this.arreterLAudit(
-          $localize`:growthAudit.error.connectionLost|Connection lost during audit@@auditErrorConnectionLost:Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.`,
-        );
+        this.arreterLAudit(this.connexionPerdue);
       },
       error: () => {
         this.arreterLAudit(

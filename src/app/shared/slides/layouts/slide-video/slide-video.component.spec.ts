@@ -85,6 +85,23 @@ describe('SlideVideoComponent', () => {
     expect(src).toBe('');
   });
 
+  it('garde un chemin de même origine et neutralise ce qu un navigateur lit comme une autre origine', () => {
+    const sourceRendue = (src: string): string => {
+      const fixture = TestBed.createComponent(SlideVideoComponent);
+      fixture.componentRef.setInput('src', src);
+      fixture.componentRef.setInput('type', 'iframe');
+      fixture.detectChanges();
+      return (
+        (fixture.nativeElement as HTMLElement).querySelector('iframe')?.getAttribute('src') ?? ''
+      );
+    };
+
+    expect(sourceRendue('/videos/demo.html')).toBe('/videos/demo.html');
+    for (const src of ['//evil.example/x', '/\\evil.example/x', '/\t/evil.example/x']) {
+      expect(sourceRendue(src)).withContext(JSON.stringify(src)).toBe('');
+    }
+  });
+
   it('affiche la caption sous la vidéo', () => {
     const fixture = TestBed.createComponent(HostNativeComponent);
     fixture.detectChanges();

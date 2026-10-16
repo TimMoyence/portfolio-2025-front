@@ -30,7 +30,7 @@ function estUnLienJavascript(attr: Attr): boolean {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SvgIconComponent implements OnChanges {
-  private static readonly TRAVERSAL_SAFE_NAME = /^[a-zA-Z0-9-]+(?:\/[a-zA-Z0-9-]+)*$/;
+  private static readonly TRAVERSAL_SAFE_NAME = /^[\w-]+(?:\/[\w-]+)*$/;
 
   private static cache = new Map<string, string>();
 
@@ -86,7 +86,7 @@ export class SvgIconComponent implements OnChanges {
 
     if (!SvgIconComponent.TRAVERSAL_SAFE_NAME.test(this.name)) {
       console.warn(
-        `[SvgIconComponent] Nom d'icone invalide : "${this.name}". Seuls les caracteres alphanumeriques et tirets sont autorises.`,
+        `[SvgIconComponent] Nom d'icone invalide : "${this.name}". Seuls les caracteres alphanumeriques, tirets et tirets bas sont autorises.`,
       );
       this.svgContent = null;
       return;

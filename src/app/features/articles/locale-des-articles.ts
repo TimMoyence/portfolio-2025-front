@@ -1,13 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import { LOCALE_ID, inject } from '@angular/core';
-import { LOCALES_DU_SITE } from '../../core/config/locales';
+import { LOCALES_DU_SITE, langueDuSite } from '../../core/config/locales';
 import { routeSansLocale } from '../../core/seo/chemins';
 
 export type LocaleDesArticles = 'fr' | 'en';
 
 export function localeDesArticles(localeId: string, chemin: string): LocaleDesArticles {
-  return localeId.toLowerCase().startsWith('en') ||
-    routeSansLocale(chemin, LOCALES_DU_SITE).locale === 'en'
+  return langueDuSite(localeId) === 'en' || routeSansLocale(chemin, LOCALES_DU_SITE).locale === 'en'
     ? 'en'
     : 'fr';
 }

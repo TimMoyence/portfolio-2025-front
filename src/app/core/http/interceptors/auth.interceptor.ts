@@ -8,6 +8,7 @@ import { ENTETE_JETON_PARTICIPANT } from '../../../../cours/runtime/core/jeton-p
 
 const LOGIN_URL = '/login';
 const REFRESH_PATH = '/auth/refresh';
+const CHEMINS_QUI_JUGENT_DES_IDENTIFIANTS = ['/auth/login', '/auth/google'];
 
 function pendingNavigationUrl(router: Router): string | null {
   const navigation = router.getCurrentNavigation();
@@ -40,7 +41,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authReq =
     token && targetsOwnApi ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
   const isSilentRefresh = req.url === `${config.apiBaseUrl}${REFRESH_PATH}`;
-  const concernsTeacherSession = !req.headers.has(ENTETE_JETON_PARTICIPANT) && !isSilentRefresh;
+  const jugeDesIdentifiants = CHEMINS_QUI_JUGENT_DES_IDENTIFIANTS.some(
+    (chemin) => req.url === `${config.apiBaseUrl}${chemin}`,
+  );
+  const concernsTeacherSession =
+    !req.headers.has(ENTETE_JETON_PARTICIPANT) && !isSilentRefresh && !jugeDesIdentifiants;
 
   return next(authReq).pipe(
     tap({

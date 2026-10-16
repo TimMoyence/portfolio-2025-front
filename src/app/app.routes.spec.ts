@@ -99,6 +99,13 @@ describe('app routes', () => {
     expect(caseStudyRedirect?.loadComponent).toBeUndefined();
   });
 
+  it('ne sert de boîte à outils que pour ia-solopreneurs, la seule que le back connaît', () => {
+    expect(routes.map((r) => r.path).filter((chemin) => chemin?.includes('toolkit'))).toEqual([
+      'formations/ia-solopreneurs/toolkit/:token',
+      'formations/ia-solopreneurs/toolkit',
+    ]);
+  });
+
   it('devrait définir un seoKey pour chaque route indexable', () => {
     const routesIndexables = routes.filter((r) => r.loadComponent && !r.redirectTo);
 

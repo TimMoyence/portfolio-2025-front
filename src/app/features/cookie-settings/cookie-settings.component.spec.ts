@@ -1,6 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
+import type { MessageResponse } from '../../core/models/message.response';
 import { CookieConsentService } from '../../core/services/cookie-consent.service';
 import { CookieSettingsComponent } from './cookie-settings.component';
 import {
@@ -19,8 +20,8 @@ describe('CookieSettingsComponent', () => {
 
     consentServiceStub.getPreferences.and.returnValue(buildCookiePreferences());
     consentServiceStub.getDefaultPreferences.and.returnValue(buildCookiePreferences());
-    consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
-    consentServiceStub.withdrawConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
+    consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok' }));
+    consentServiceStub.withdrawConsent.and.returnValue(of({ message: 'ok' }));
 
     await TestBed.configureTestingModule({
       imports: [CookieSettingsComponent],
@@ -104,24 +105,38 @@ describe('CookieSettingsComponent', () => {
     );
   });
 
-  it('devrait afficher le message de succes apres sauvegarde reussie (httpCode 201)', () => {
-    const component = sauvegarderAvecReponse(of({ message: 'ok', httpCode: 201 }));
+  it('dit le succès sur toute réponse 2xx, sans lire de code recopié dans le corps', () => {
+    const component = sauvegarderAvecReponse(
+      of({ message: 'Cookie consent recorded successfully.' }),
+    );
 
     expect(component.showSaved).toBeTrue();
     expect(component.statusMessage).toBe(component.actions.saved);
   });
 
-  it("devrait afficher le message d'erreur si httpCode n'est pas 201", () => {
-    const component = sauvegarderAvecReponse(of({ message: 'error', httpCode: 500 }));
+  it('rend le succès et les boutons quand la réponse arrive après le clic', () => {
+    const reponse = new Subject<MessageResponse>();
+    consentServiceStub.saveConsent.and.returnValue(reponse);
+    const fixture = rendre();
+    const page = fixture.nativeElement as HTMLElement;
+    fixture.componentInstance.savePreferences();
+    fixture.detectChanges();
 
-    expect(component.showSaved).toBeFalse();
-    expect(component.statusMessage).toBe(component.actions.error);
+    reponse.next({ message: 'Cookie consent recorded successfully.' });
+    reponse.complete();
+    fixture.detectChanges();
+
+    expect(page.querySelector('.ck-saved')?.classList).toContain('show');
+    expect(
+      Array.from(page.querySelectorAll('button')).every((bouton) => !bouton.disabled),
+    ).toBeTrue();
   });
 
-  it("devrait afficher le message d'erreur en cas d'erreur observable", () => {
+  it("devrait afficher le message d'erreur en cas d'erreur observable, et rendre les boutons", () => {
     const component = sauvegarderAvecReponse(throwError(() => new Error('network')));
 
     expect(component.statusMessage).toBe(component.actions.error);
+    expect(component.isSaving).toBeFalse();
   });
 
   it("devrait rendre Mesure d'audience et Marketing desactives (non collectes)", () => {
@@ -162,7 +177,7 @@ describe('CookieSettingsComponent', () => {
   });
 
   it('devrait passer isSaving a true pendant la sauvegarde et a false apres', () => {
-    consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
+    consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok' }));
 
     const component = rendre().componentInstance;
     expect(component.isSaving).toBeFalse();

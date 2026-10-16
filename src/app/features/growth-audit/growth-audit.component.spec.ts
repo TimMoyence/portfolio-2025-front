@@ -1,9 +1,13 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { LOCALE_ID } from '@angular/core';
+import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { NgForm } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import type { AuditStreamEvent } from '../../core/models/audit-request.model';
 import { AUDIT_REQUEST_PORT } from '../../core/ports/audit-request.port';
 import { GrowthAuditComponent } from './growth-audit.component';
+import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/champ-de-formulaire';
 import {
   buildAuditCompletedEvent,
   buildAuditCreateResponse,
@@ -11,9 +15,11 @@ import {
   buildAuditProgressEvent,
   buildAuditSummaryResponse,
   buildAuditStreamHeartbeat,
+  buildAuditTimeoutEvent,
   buildClientReport,
   createAuditRequestPortStub,
 } from '../../../testing/factories/audit-request.factory';
+import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
 
 function buildValidForm(): NgForm {
   return jasmine.createSpyObj<NgForm>('NgForm', ['resetForm'], {
@@ -50,11 +56,18 @@ describe('GrowthAuditComponent', () => {
     }).compileComponents();
   });
 
+  it('envoie avec la demande d audit la langue du site lue de LOCALE_ID, sans sa région', () => {
+    TestBed.overrideProvider(LOCALE_ID, { useValue: 'en-GB' });
+    const fixture = TestBed.createComponent(GrowthAuditComponent);
+
+    remplirEtSoumettre(fixture.componentInstance, true);
+
+    expect(auditServiceMock.submit.calls.mostRecent().args[0].locale).toBe('en');
+  });
+
   function soumettreEtDiffuser(event: AuditStreamEvent, auditId: string) {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
-    auditServiceMock.submit.and.returnValue(
-      of(buildAuditCreateResponse({ auditId, httpCode: 201 })),
-    );
+    auditServiceMock.submit.and.returnValue(of(buildAuditCreateResponse({ auditId })));
     auditServiceMock.stream.and.returnValue(of<AuditStreamEvent>(event));
 
     remplirEtSoumettre(fixture.componentInstance, true);
@@ -183,6 +196,70 @@ describe('GrowthAuditComponent', () => {
     expect(component.auditRecentCompletedUrls).toEqual([]);
   });
 
+  describe('bornes et grammaires du back sur la demande d audit', () => {
+    function monterLeFormulaire(): ComponentFixture<GrowthAuditComponent> {
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    it('borne le nom du site entre 2 et 200 caractères', async () => {
+      const fixture = monterLeFormulaire();
+
+      expect(await erreursApresSaisie(fixture, '#websiteName', 'a')).toEqual({
+        minlength: { requiredLength: 2, actualLength: 1 },
+      });
+      expect(texteDuBlocDuChamp(fixture, '#websiteName', 'form')).toContain(
+        'Ce champ doit contenir au moins 2 caractères.',
+      );
+      expect(await erreursApresSaisie(fixture, '#websiteName', 'a'.repeat(201))).toEqual({
+        maxlength: { requiredLength: 200, actualLength: 201 },
+      });
+      expect(await erreursApresSaisie(fixture, '#websiteName', 'ab')).toBeNull();
+    });
+
+    it('juge le nom du site rogné et compté en caractères, comme le back', async () => {
+      const fixture = monterLeFormulaire();
+      const unCaractere = { minlength: { requiredLength: 2, actualLength: 1 } };
+
+      expect(await erreursApresSaisie(fixture, '#websiteName', ' a')).toEqual(unCaractere);
+      expect(
+        await erreursApresSaisie(fixture, '#websiteName', String.fromCodePoint(0x1f600)),
+      ).toEqual(unCaractere);
+      expect(await erreursApresSaisie(fixture, '#websiteName', '   ')).toEqual({ required: true });
+    });
+
+    it('refuse un contact par email que le back refuse, et le borne entre 6 et 200 caractères', async () => {
+      const fixture = monterLeFormulaire();
+
+      expect(await erreursApresSaisie(fixture, '#contactValue', 'jean@gmail')).toEqual({
+        email: true,
+      });
+      expect(
+        Object.keys((await erreursApresSaisie(fixture, '#contactValue', 'a@b.c')) ?? {}),
+      ).toEqual(jasmine.arrayWithExactContents(['email', 'minlength']));
+      const adresseDe201 = `${'a'.repeat(15)}@${'b'.repeat(60)}.${'c'.repeat(60)}.${'d'.repeat(60)}.fr`;
+      expect(await erreursApresSaisie(fixture, '#contactValue', adresseDe201)).toEqual({
+        maxlength: { requiredLength: 200, actualLength: 201 },
+      });
+      expect(await erreursApresSaisie(fixture, '#contactValue', 'jean@exemple.fr')).toBeNull();
+    });
+
+    it('refuse un contact par téléphone que le back refuse, et le dit sous le champ', async () => {
+      const fixture = monterLeFormulaire();
+      fixture.componentInstance.handleMethodChange('PHONE');
+      fixture.detectChanges();
+
+      expect(await erreursApresSaisie(fixture, '#contactValue', '06 98 a0 32 82')).toEqual({
+        phone: true,
+      });
+      expect(texteDuBlocDuChamp(fixture, '#contactValue', 'div')).toContain(
+        'Merci d’entrer un numéro de téléphone valide.',
+      );
+      expect(await erreursApresSaisie(fixture, '#contactValue', '06 98 50 32 82')).toBeNull();
+    });
+  });
+
   it('exposes the seven report pillars in the public offer', () => {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
     const component = fixture.componentInstance;
@@ -231,15 +308,28 @@ describe('GrowthAuditComponent', () => {
       expect(form.resetForm).toHaveBeenCalledWith(vierge);
     });
 
-    it('affiche l erreur d un audit echoue et efface la chronologie', () => {
+    for (const error of [null, 'connect ECONNREFUSED 10.0.0.5:5432']) {
+      it(`affiche le message générique d un audit échoué sans lire le texte d erreur servi (${error}), et efface la chronologie`, () => {
+        const { component } = soumettreEtDiffuser(buildAuditFailedEvent({ error }), 'audit-5');
+
+        expect(component.isAuditRunning).toBeFalse();
+        expect(component.errorMessage).toBe("L'audit a échoué.");
+        expect(component.auditSectionBadges).toEqual([]);
+      });
+    }
+
+    it('affiche la connexion interrompue sur un délai dépassé, sans relire le résumé ni rouvrir le flux', () => {
       const { component } = soumettreEtDiffuser(
-        buildAuditFailedEvent({ error: 'Site injoignable' }),
-        'audit-5',
+        buildAuditTimeoutEvent({ error: 'SSE stream closed after 1800000ms' }),
+        'audit-6',
       );
 
       expect(component.isAuditRunning).toBeFalse();
-      expect(component.errorMessage).toBe('Site injoignable');
+      expect(component.errorMessage).toContain('Connexion interrompue pendant l');
+      expect(component.errorMessage).not.toContain('SSE');
       expect(component.auditSectionBadges).toEqual([]);
+      expect(auditServiceMock.stream).toHaveBeenCalledTimes(1);
+      expect(auditServiceMock.getSummary).not.toHaveBeenCalled();
     });
 
     it('reprend un audit termine depuis le resume quand le flux tombe', () => {
@@ -284,6 +374,66 @@ describe('GrowthAuditComponent', () => {
     });
   });
 
+  describe('refus de la demande d audit', () => {
+    type FenetreSuivie = { plausible?: jasmine.Spy };
+    let suivi: jasmine.Spy;
+
+    beforeEach(() => {
+      suivi = jasmine.createSpy('plausible');
+      (window as unknown as FenetreSuivie).plausible = suivi;
+    });
+
+    afterEach(() => {
+      delete (window as unknown as FenetreSuivie).plausible;
+    });
+
+    for (const [cas, erreur, statut, attendu] of [
+      [
+        'un refus du DTO, de l anti-robot ou un audit du site lui-même (400)',
+        refusDuBack(400, 'Self-audit is not allowed for domain "asilidesign.fr".'),
+        400,
+        'La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.',
+      ],
+      [
+        'la limite horaire (429)',
+        refusDuBack(429, 'ThrottlerException: Too Many Requests'),
+        429,
+        'Trop de tentatives en peu de temps : réessayez plus tard.',
+      ],
+      [
+        'un back injoignable',
+        new HttpErrorResponse({ status: 0, url: 'https://asilidesign.fr' }),
+        0,
+        "Impossible d'envoyer la demande. Réessayez dans un instant.",
+      ],
+    ] as const) {
+      it(`dit ${cas} par un message localisé, rend le bouton et ne suit que le statut`, () => {
+        const fixture = TestBed.createComponent(GrowthAuditComponent);
+        auditServiceMock.submit.and.returnValue(throwError(() => erreur));
+
+        remplirEtSoumettre(fixture.componentInstance, true);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.errorMessage).toBe(attendu);
+        expect(fixture.componentInstance.isSubmitting).toBeFalse();
+        expect(suivi).toHaveBeenCalledOnceWith('audit_error', {
+          props: { reason: `http_${statut}` },
+        });
+      });
+    }
+
+    it('lance l audit sur toute réponse 2xx porteuse d un identifiant', () => {
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      auditServiceMock.submit.and.returnValue(of(buildAuditCreateResponse({ auditId: 'a-2xx' })));
+
+      remplirEtSoumettre(fixture.componentInstance, true);
+
+      expect(fixture.componentInstance.errorMessage).toBeUndefined();
+      expect(fixture.componentInstance.auditId).toBe('a-2xx');
+      expect(auditServiceMock.stream).toHaveBeenCalledWith('a-2xx');
+    });
+  });
+
   describe('P0.4 — consentement RGPD obligatoire', () => {
     it('bloque la soumission si rgpdConsent est false', () => {
       const fixture = TestBed.createComponent(GrowthAuditComponent);
@@ -300,7 +450,7 @@ describe('GrowthAuditComponent', () => {
       const fixture = TestBed.createComponent(GrowthAuditComponent);
       const component = fixture.componentInstance;
       auditServiceMock.submit.and.returnValue(
-        of(buildAuditCreateResponse({ auditId: 'audit-ok', httpCode: 201 })),
+        of(buildAuditCreateResponse({ auditId: 'audit-ok' })),
       );
 
       remplirEtSoumettre(component, true);

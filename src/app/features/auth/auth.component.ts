@@ -15,27 +15,34 @@ import type { LoginFormState } from '../../core/models/loginForm.model';
 import type { SignupFormState } from '../../core/models/signupForm.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { APP_CONFIG } from '../../core/config/app-config.token';
+import { estCheminInterne } from '../../core/seo/chemins';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
 import { loadGoogleGis } from '../../core/utils/google-gis';
-import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
-import { extractErrorMessage } from '../../shared/utils/http-error.utils';
+import {
+  handleFormSubmit,
+  INFORMATIONS_REFUSEES,
+  messageDuRefus,
+} from '../../shared/utils/form-submit.utils';
+import type { Bornes } from '../../shared/utils/regles-de-saisie';
+import {
+  BORNES_D_UN_MOT_DE_PASSE_SAISI,
+  BORNES_D_UN_NOM,
+  BORNES_D_UN_TELEPHONE,
+  REGLE_D_UN_MOT_DE_PASSE,
+} from '../../shared/utils/regles-de-saisie';
+import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { SvgIconComponent } from '../../shared/components/svg-icon.component';
+import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
+import type { FormatDeContact } from '../../shared/directives/format-de-contact.directive';
+import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
+import { MotDePasseNeufDirective } from '../../shared/directives/mot-de-passe-neuf.directive';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 
-const ASCII_SPACE = 32;
-const ASCII_DELETE = 127;
-
-function hasControlCharacter(value: string): boolean {
-  for (const char of value) {
-    const code = char.charCodeAt(0);
-    if (code <= ASCII_SPACE || code === ASCII_DELETE) return true;
-  }
-  return false;
-}
+const IDENTIFIANTS_REFUSES = $localize`:@@authLoginErreurIdentifiants:Adresse e-mail ou mot de passe incorrect.`;
 
 type AuthTab = 'sign-up' | 'log-in';
 type SignupFormKey = keyof SignupFormState;
@@ -46,6 +53,10 @@ interface ChampAuth {
   label: string;
   type: string;
   required: boolean;
+  bornes?: Bornes;
+  format?: FormatDeContact;
+  motDePasseNeuf?: true;
+  indication?: string;
 }
 
 interface PanneauAuth {
@@ -70,6 +81,9 @@ interface PanneauAuth {
     RevealOnScrollDirective,
     AuthShellComponent,
     FieldErrorsComponent,
+    BornesDeSaisieDirective,
+    FormatDeContactDirective,
+    MotDePasseNeufDirective,
   ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
@@ -109,7 +123,6 @@ export class AuthComponent {
   isSignupLoading: boolean = false;
   isLoginLoading: boolean = false;
   signupErrorMessage?: string;
-  signupSuccessMessage?: string;
   loginErrorMessage?: string;
   loginSuccessMessage?: string;
   signupForm: SignupFormState = { ...this.defaultSignupState };
@@ -120,28 +133,33 @@ export class AuthComponent {
       label: $localize`:auth.signup.field.firstName|Signup field label@@authSignupFieldFirstName:Prénom`,
       type: 'text',
       required: true,
+      bornes: BORNES_D_UN_NOM,
     },
     {
       key: 'lastName',
       label: $localize`:auth.signup.field.lastName|Signup field label@@authSignupFieldLastName:Nom`,
       type: 'text',
       required: true,
+      bornes: BORNES_D_UN_NOM,
     },
     {
       key: 'email',
       label: $localize`:auth.signup.field.email|Signup field label@@authSignupFieldEmail:Email`,
       type: 'email',
       required: true,
+      format: 'email',
     },
     {
       key: 'password',
       label: $localize`:auth.signup.field.password|Signup field label@@authSignupFieldPassword:Mot de passe`,
       type: 'password',
       required: true,
+      motDePasseNeuf: true,
+      indication: REGLE_D_UN_MOT_DE_PASSE,
     },
     {
       key: 'verifPassword',
-      label: $localize`:auth.signup.field.passwordConfirm|Signup field label@@authSignupFieldPasswordConfirm:Verification de mot de passe`,
+      label: $localize`:auth.signup.field.passwordConfirm|Signup field label@@authSignupFieldPasswordConfirm:Vérification du mot de passe`,
       type: 'password',
       required: true,
     },
@@ -150,6 +168,8 @@ export class AuthComponent {
       label: $localize`:auth.signup.field.phone|Signup field label@@authSignupFieldPhone:Téléphone`,
       type: 'tel',
       required: false,
+      bornes: BORNES_D_UN_TELEPHONE,
+      format: 'telephone',
     },
   ];
 
@@ -161,12 +181,14 @@ export class AuthComponent {
       label: $localize`:auth.login.field.email|Login field label@@authLoginFieldEmail:Email`,
       type: 'email',
       required: true,
+      format: 'email',
     },
     {
       key: 'password',
       label: $localize`:auth.login.field.password|Login field label@@authLoginFieldPassword:Mot de passe`,
       type: 'password',
       required: true,
+      bornes: BORNES_D_UN_MOT_DE_PASSE_SAISI,
     },
   ];
 
@@ -199,7 +221,6 @@ export class AuthComponent {
           soumis: this.isSignupSubmitted,
           enCours: this.isSignupLoading,
           erreur: this.signupErrorMessage,
-          succes: this.signupSuccessMessage,
         };
   }
 
@@ -214,7 +235,6 @@ export class AuthComponent {
   handleSignupSubmit(form: NgForm): void {
     this.isSignupSubmitted = true;
     this.signupErrorMessage = undefined;
-    this.signupSuccessMessage = undefined;
 
     if (form.invalid) return;
 
@@ -224,29 +244,27 @@ export class AuthComponent {
     }
 
     const payload: RegisterUserPayload = {
-      email: this.signupForm.email,
+      email: this.signupForm.email.trim(),
       password: this.signupForm.password,
-      firstName: this.signupForm.firstName,
-      lastName: this.signupForm.lastName,
-      phone: this.signupForm.phone?.trim() || null,
+      firstName: this.signupForm.firstName.trim(),
+      lastName: this.signupForm.lastName.trim(),
+      phone: telephoneFacultatif(this.signupForm.phone),
     };
 
     this.isSignupLoading = true;
 
     handleFormSubmit(this.authService.register(payload), this.cdr, {
       fallbackError: $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`,
-      onSuccess: (result) => {
-        this.signupSuccessMessage =
-          result.message ??
-          $localize`:auth.signup.success|Signup success message@@authSignupSuccess:Inscription reussie. Verifiez votre email pour activer votre compte.`;
+      refus: { 400: INFORMATIONS_REFUSEES },
+      onSuccess: () => {
+        this.loginSuccessMessage = $localize`:auth.signup.success|Signup success message@@authSignupSuccess:Inscription réussie. Vérifiez votre e-mail pour activer votre compte.`;
         this.resetSignupForm(form);
         this.activeTab = 'log-in';
       },
       onError: (message) => {
         this.signupErrorMessage = message;
-        this.isSignupLoading = false;
       },
-      onComplete: () => {
+      finalement: () => {
         this.isSignupLoading = false;
       },
     });
@@ -255,9 +273,7 @@ export class AuthComponent {
   private sanitizeReturnUrl(raw: string | null | undefined): string {
     if (!raw) return '/';
     const trimmed = raw.trim();
-    const isSameOriginPath = trimmed.startsWith('/') && !trimmed.startsWith('//');
-    if (!isSameOriginPath || hasControlCharacter(trimmed)) return '/';
-    return trimmed;
+    return estCheminInterne(trimmed) ? trimmed : '/';
   }
 
   private ouvrirLaSession(session: AuthSession): void {
@@ -275,17 +291,22 @@ export class AuthComponent {
 
     this.isLoginLoading = true;
 
-    handleFormSubmit(this.authService.login(this.loginForm), this.cdr, {
+    const identifiants: LoginFormState = {
+      email: this.loginForm.email.trim(),
+      password: this.loginForm.password,
+    };
+
+    handleFormSubmit(this.authService.login(identifiants), this.cdr, {
       fallbackError: $localize`:auth.genericError|Generic error message@@authGenericError:Une erreur est survenue. Veuillez réessayer.`,
+      refus: { 400: IDENTIFIANTS_REFUSES, 401: IDENTIFIANTS_REFUSES },
       onSuccess: (session) => {
         this.loginSuccessMessage = $localize`:auth.login.success|Login success message@@authLoginSuccess:Bienvenue ${session.user.firstName} !`;
         this.ouvrirLaSession(session);
       },
       onError: (message) => {
         this.loginErrorMessage = message;
-        this.isLoginLoading = false;
       },
-      onComplete: () => {
+      finalement: () => {
         this.isLoginLoading = false;
       },
     });
@@ -328,12 +349,15 @@ export class AuthComponent {
   ): void {
     this.authService.googleAuth(response.credential).subscribe({
       next: (session) => this.ouvrirLaSession(session),
-      error: (err) => {
-        const message =
-          extractErrorMessage(err, { includeTopLevelMessage: false }) ??
-          $localize`:auth.google.error@@authGoogleError:Échec de l'authentification Google.`;
-        this.setGoogleError(context, message);
-        this.cdr.markForCheck();
+      error: (err: unknown) => {
+        this.setGoogleError(
+          context,
+          messageDuRefus(
+            err,
+            {},
+            $localize`:auth.google.error@@authGoogleError:Échec de l'authentification Google.`,
+          ),
+        );
       },
     });
   }

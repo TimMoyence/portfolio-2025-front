@@ -1,11 +1,56 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import type { ChangeDetectorRef } from '@angular/core';
 import type { Observable, Subscription } from 'rxjs';
-import { extractErrorMessage } from './http-error.utils';
+import { finalize } from 'rxjs';
+
+export type MessagesDeRefus = Readonly<Partial<Record<number, string>>>;
+
+export const INFORMATIONS_REFUSEES = $localize`:@@formulaireRefusInformations:Certaines informations ont été refusées : vérifiez les champs et réessayez.`;
+
+export const MOT_DE_PASSE_NEUF_REFUSE = $localize`:@@formulaireRefusMotDePasseNeuf:Le nouveau mot de passe n’a pas été accepté : il doit respecter la règle indiquée.`;
+
+export const ADRESSE_NON_VERIFIEE = $localize`:@@formulaireRefusAdresseNonVerifiee:Votre adresse e-mail n’est pas encore vérifiée : ouvrez le lien reçu par e-mail pour activer votre compte.`;
+
+const REFUS_COMMUNS: MessagesDeRefus = {
+  403: ADRESSE_NON_VERIFIEE,
+};
+
+function statutDuRefus(erreur: unknown): number {
+  return erreur instanceof HttpErrorResponse ? erreur.status : 0;
+}
+
+function messageDuStatut(messages: MessagesDeRefus, statut: number): string | undefined {
+  return Object.hasOwn(messages, statut) ? messages[statut] : undefined;
+}
+
+function minutesAAttendre(erreur: unknown): number | null {
+  const secondes =
+    erreur instanceof HttpErrorResponse ? Number(erreur.headers.get('Retry-After')) : Number.NaN;
+  return Number.isFinite(secondes) && secondes > 0 ? Math.ceil(secondes / 60) : null;
+}
+
+function messageDeLaLimite(erreur: unknown): string {
+  const minutes = minutesAAttendre(erreur);
+  return minutes === null
+    ? $localize`:@@formulaireRefusTropDeTentatives:Trop de tentatives en peu de temps : réessayez plus tard.`
+    : $localize`:@@formulaireRefusTropDeTentativesDelai:Trop de tentatives en peu de temps : réessayez dans ${minutes}:minutes: min.`;
+}
+
+function messageCommun(erreur: unknown, statut: number): string | undefined {
+  return statut === 429 ? messageDeLaLimite(erreur) : messageDuStatut(REFUS_COMMUNS, statut);
+}
+
+export function messageDuRefus(erreur: unknown, refus: MessagesDeRefus, repli: string): string {
+  const statut = statutDuRefus(erreur);
+  return messageDuStatut(refus, statut) ?? messageCommun(erreur, statut) ?? repli;
+}
 
 export interface FormSubmitOptions<T> {
   onSuccess?: (result: T) => void;
-  onError?: (message: string) => void;
+  onError?: (message: string, statut: number) => void;
   onComplete?: () => void;
+  finalement?: () => void;
+  refus?: MessagesDeRefus;
   fallbackError: string;
 }
 
@@ -14,19 +59,28 @@ export function handleFormSubmit<T>(
   cdr: ChangeDetectorRef,
   options: FormSubmitOptions<T>,
 ): Subscription {
-  return source$.subscribe({
-    next: (result) => {
-      options.onSuccess?.(result);
-      cdr.markForCheck();
-    },
-    error: (error: unknown) => {
-      const message = extractErrorMessage(error) ?? options.fallbackError;
-      options.onError?.(message);
-      cdr.markForCheck();
-    },
-    complete: () => {
-      options.onComplete?.();
-      cdr.markForCheck();
-    },
-  });
+  return source$
+    .pipe(
+      finalize(() => {
+        options.finalement?.();
+        cdr.markForCheck();
+      }),
+    )
+    .subscribe({
+      next: (result) => {
+        options.onSuccess?.(result);
+        cdr.markForCheck();
+      },
+      error: (error: unknown) => {
+        options.onError?.(
+          messageDuRefus(error, options.refus ?? {}, options.fallbackError),
+          statutDuRefus(error),
+        );
+        cdr.markForCheck();
+      },
+      complete: () => {
+        options.onComplete?.();
+        cdr.markForCheck();
+      },
+    });
 }

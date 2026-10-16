@@ -49,9 +49,15 @@
           }
           @if (pillar.link; as link) {
             <div class="pillar-foot">
-              <a class="link-arrow" [href]="link.href">
-                {{ link.label }} <span aria-hidden="true">→</span>
-              </a>
+              @if (estCheminInterne(link.href)) {
+                <a class="link-arrow" [routerLink]="link.href">
+                  {{ link.label }} <span aria-hidden="true">→</span>
+                </a>
+              } @else {
+                <a class="link-arrow" [href]="link.href">
+                  {{ link.label }} <span aria-hidden="true">→</span>
+                </a>
+              }
             </div>
           }
         </article>

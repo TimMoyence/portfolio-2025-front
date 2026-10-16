@@ -33,7 +33,8 @@
               [name]="field.key"
               [(ngModel)]="contactForm[field.key]"
               [required]="field.required"
-              [email]="field.type === 'email'"
+              [appBornesDeSaisie]="field.bornes ?? null"
+              [appFormatDeContact]="field.format ?? null"
               placeholder=" "
               class="peer block w-full rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
               #control="ngModel"
@@ -68,6 +69,7 @@
                 appFieldErrors
                 class="mt-1 text-sm md:text-base text-red-500"
                 [errors]="control.errors"
+                [phone]="field.format === 'telephone'"
               ></p>
             }
           </div>
@@ -154,7 +156,7 @@
           id="message"
           name="message"
           required
-          minlength="10"
+          [appBornesDeSaisie]="bornesDuMessage"
           [(ngModel)]="contactForm.message"
           placeholder=" "
           class="peer block w-full min-h-[11.25rem] md:min-h-[17rem] rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
@@ -183,11 +185,11 @@
         </label>
 
         @if (messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)) {
-          <p class="mt-1 text-sm md:text-base text-red-500">
-            <span i18n="@@contactErrorMessageMinLength"
-              >Ce champ est obligatoire et doit contenir au moins 10 caractères.</span
-            >
-          </p>
+          <p
+            appFieldErrors
+            class="mt-1 text-sm md:text-base text-red-500"
+            [errors]="messageCtrl.errors"
+          ></p>
         }
       </div>
 

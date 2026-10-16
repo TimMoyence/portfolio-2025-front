@@ -11,13 +11,23 @@ import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { APP_CONFIG } from '../../core/config/app-config.token';
+import { langueDuSite } from '../../core/config/locales';
 import type { ContactFormState } from '../../core/models/contact.model';
 import type { ContactPort } from '../../core/ports/contact.port';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
+import type { Bornes } from '../../shared/utils/regles-de-saisie';
+import {
+  BORNES_D_UN_MESSAGE_DE_CONTACT,
+  BORNES_D_UN_NOM,
+} from '../../shared/utils/regles-de-saisie';
+import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
+import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
+import type { FormatDeContact } from '../../shared/directives/format-de-contact.directive';
+import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
 
 @Component({
@@ -30,6 +40,8 @@ import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
     HeroSectionComponent,
     ContactCtaComponent,
     FieldErrorsComponent,
+    BornesDeSaisieDirective,
+    FormatDeContactDirective,
     HoneypotDirective,
   ],
   templateUrl: './contact.component.html',
@@ -42,7 +54,7 @@ export class ContactComponent implements OnInit {
   contactErrorMessage?: string;
   contactSuccessMessage?: string;
   private readonly appConfig = inject(APP_CONFIG);
-  private readonly localeId = inject(LOCALE_ID);
+  private readonly langue = langueDuSite(inject(LOCALE_ID));
   private readonly contactPort: ContactPort = inject(CONTACT_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly route = inject(ActivatedRoute);
@@ -90,7 +102,7 @@ export class ContactComponent implements OnInit {
     role: '',
     terms: false,
     termsVersion: this.appConfig.gdpr?.termsVersion ?? '2026-02-11',
-    termsLocale: this.localeId,
+    termsLocale: this.langue,
     termsMethod: 'contact_form_checkbox',
   };
 
@@ -121,35 +133,43 @@ export class ContactComponent implements OnInit {
     return $localize`:contact.access.message@@contactAccessMessage:Bonjour Tim, je souhaite un accès à ${appLabel}:appLabel: . Pouvez-vous m'expliquer les modalités ? Merci.`;
   }
 
+  protected readonly bornesDuMessage = BORNES_D_UN_MESSAGE_DE_CONTACT;
+
   contactFields: {
     key: Extract<keyof ContactFormState, 'firstName' | 'lastName' | 'email' | 'phone'>;
     label: string;
     type: 'text' | 'email' | 'tel';
     required: boolean;
+    bornes?: Bornes;
+    format?: FormatDeContact;
   }[] = [
     {
       key: 'firstName',
       label: $localize`:contact.form.field.firstName@@contactFormFieldFirstName:Prénom`,
       type: 'text',
       required: true,
+      bornes: BORNES_D_UN_NOM,
     },
     {
       key: 'lastName',
       label: $localize`:contact.form.field.lastName@@contactFormFieldLastName:Nom`,
       type: 'text',
       required: true,
+      bornes: BORNES_D_UN_NOM,
     },
     {
       key: 'email',
       label: $localize`:contact.form.field.email@@contactFormFieldEmail:Email`,
       type: 'email',
       required: true,
+      format: 'email',
     },
     {
       key: 'phone',
       label: $localize`:contact.form.field.phone@@contactFormFieldPhone:Téléphone`,
       type: 'tel',
       required: false,
+      format: 'telephone',
     },
   ];
 
@@ -169,10 +189,11 @@ export class ContactComponent implements OnInit {
 
     handleFormSubmit(this.contactPort.contact(payload), this.cdr, {
       fallbackError: $localize`:contact.form.error.generic@@contactFormErrorGeneric:Une erreur est survenue. Veuillez réessayer plus tard.`,
-      onSuccess: (response) => {
-        if (response.httpCode !== 201) this.contactErrorMessage = response.message;
-        else
-          this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
+      refus: {
+        400: $localize`:@@contactFormErreurRefus:Votre message n’a pas été accepté : vérifiez les champs et réessayez.`,
+      },
+      onSuccess: () => {
+        this.contactSuccessMessage = $localize`:contact.form.success@@contactFormSuccess:Message envoyé. Je reviens vers vous rapidement.`;
       },
       onError: (message) => {
         this.contactErrorMessage = message;
@@ -182,13 +203,14 @@ export class ContactComponent implements OnInit {
         form.resetForm(this.contactForm);
         this.isContactSubmitted = false;
       },
+      finalement: () => {
+        this.isContactLoading = false;
+      },
     });
   }
 
   private normalizeContactPayload(form: ContactFormState): ContactFormState {
     const trimOrEmpty = (value: string): string => value.trim();
-    const trimmedPhone =
-      form.phone === undefined || form.phone === null ? null : trimOrEmpty(form.phone);
     return {
       ...form,
       email: trimOrEmpty(form.email),
@@ -197,9 +219,9 @@ export class ContactComponent implements OnInit {
       subject: trimOrEmpty(form.subject),
       message: trimOrEmpty(form.message),
       role: trimOrEmpty(form.role),
-      phone: trimmedPhone === '' ? null : trimmedPhone,
+      phone: telephoneFacultatif(form.phone),
       termsAcceptedAt: form.terms ? new Date().toISOString() : undefined,
-      termsLocale: this.localeId,
+      termsLocale: this.langue,
       termsVersion: this.appConfig.gdpr?.termsVersion ?? form.termsVersion,
       termsMethod: form.termsMethod ?? 'contact_form_checkbox',
     };

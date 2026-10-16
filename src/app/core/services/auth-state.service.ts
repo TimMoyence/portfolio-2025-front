@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { computed, signal } from '@angular/core';
 import type { Observable } from 'rxjs';
-import { finalize, firstValueFrom, timeout } from 'rxjs';
+import { catchError, finalize, firstValueFrom, map, of, tap, timeout } from 'rxjs';
 import { bornerEntre, estObjet } from '../../../cours/runtime/core/valeurs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
@@ -111,6 +111,22 @@ export class AuthStateService {
 
   updateUser(user: AuthUser): void {
     this._user.set(user);
+  }
+
+  relireLeCompte(): Observable<void> {
+    const port = this.authPort;
+    if (port === null) return of(undefined);
+    const jetonPerime =
+      this._token() === null ||
+      (this.accessTokenExpiresAt !== null && Date.now() >= this.accessTokenExpiresAt);
+    const relecture: Observable<unknown> = jetonPerime
+      ? port.refresh().pipe(tap((session) => this.login(session)))
+      : port.me().pipe(tap((user) => this._user.set(user)));
+    return relecture.pipe(
+      timeout(ME_TIMEOUT_MS),
+      map(() => undefined),
+      catchError(() => of(undefined)),
+    );
   }
 
   restoreSession(): void {

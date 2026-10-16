@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { estCheminInterne } from '../../../../core/seo/chemins';
 
 const ALLOWED_IFRAME_HOST_PATH_PREFIXES = [
   'youtube-nocookie.com/',
@@ -7,16 +8,12 @@ const ALLOWED_IFRAME_HOST_PATH_PREFIXES = [
   'player.vimeo.com/',
 ] as const;
 
-function isSameOriginPath(value: string): boolean {
-  return value.startsWith('/') && !value.startsWith('//');
-}
-
 function isAllowedIframeUrl(raw: string): boolean {
   const value = raw.trim();
   if (value === '') {
     return false;
   }
-  if (isSameOriginPath(value)) {
+  if (estCheminInterne(value)) {
     return true;
   }
   let parsed: URL;

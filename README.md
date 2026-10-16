@@ -57,9 +57,7 @@ Pages d'articles : un slug inconnu rend une vraie 404, et une API indisponible r
 - `/formations/ia-solopreneurs/toolkit` — Toolkit IA Solopreneurs (capture email)
 - `/formations/ia-solopreneurs/toolkit/:token` — Toolkit personnalise (acces direct via token, rendu serveur on-demand)
 - `/formations/automatiser-avec-ia` — Formation Automatiser avec l'IA (slides)
-- `/formations/automatiser-avec-ia/toolkit` — Toolkit Automatiser avec l'IA
 - `/formations/audit-seo-diy` — Formation Audit SEO DIY (slides)
-- `/formations/audit-seo-diy/toolkit` — Toolkit Audit SEO DIY
 - `/formations/b2-01-traitement-information-chiffree` — Cours B2-01 (72 écrans servis par le back via `/formations/catalogue/:slug`), rendu serveur à la demande (`RenderMode.Server`) pour refléter le contenu publié au moment de la visite. Hors séance, les quiz et réflexions sont en aperçu : rien n'est envoyé, le résultat n'est donné qu'en séance. La page propose « Rejoindre une séance » vers `/cours/rejoindre` ; la carte de `/formations` y mène.
 
 ### Médias du cours B2-01

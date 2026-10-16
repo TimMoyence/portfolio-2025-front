@@ -1,4 +1,12 @@
-import { bornerEntre, entierBorne, estEntierPositif, estObjet, fini, jsonOuNull } from './valeurs';
+import {
+  bornerEntre,
+  entierBorne,
+  estEntierPositif,
+  estObjet,
+  fini,
+  jsonOuNull,
+  part,
+} from './valeurs';
 
 describe('valeurs', () => {
   describe('estObjet', () => {
@@ -61,6 +69,14 @@ describe('valeurs', () => {
       for (const valeur of [Number.NaN, Infinity, -Infinity]) {
         expect(fini(valeur, 9)).withContext(String(valeur)).toBe(9);
       }
+    });
+  });
+
+  describe('part', () => {
+    it('rend la part d un decompte sur son total, et 0 sur un total nul', () => {
+      expect([part(3, 4), part(0, 5), part(5, 5), part(0, 0), part(2, 0)]).toEqual([
+        0.75, 0, 1, 0, 0,
+      ]);
     });
   });
 

@@ -7,6 +7,6 @@ function createContactPortStub(): jasmine.SpyObj<ContactPort> {
 
 export function createContactPortStubWithDefault(): jasmine.SpyObj<ContactPort> {
   const stub = createContactPortStub();
-  stub.contact.and.returnValue(of({ message: 'ok', httpCode: 200 }));
+  stub.contact.and.returnValue(of({ message: 'ok' }));
   return stub;
 }

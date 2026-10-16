@@ -4,9 +4,15 @@
   <span i18n="auth.error.email@@authErrorEmail">Merci d’entrer une adresse email valide.</span>
 } @else if (phone() && errors()?.['phone']) {
   <span i18n="auth.error.phone@@authErrorPhone">Merci d’entrer un numéro de téléphone valide.</span>
-} @else if (longueur() && errors()?.['minlength']) {
-  <span i18n="auth.error.passwordLength|Password length error@@authErrorPasswordLength"
-    >Le mot de passe doit contenir au moins 8 caractères.</span
+} @else if (motDePasse() && (errors()?.['minlength'] || errors()?.['pattern'])) {
+  <span>{{ regleDUnMotDePasse }}</span>
+} @else if (errors()?.['minlength']) {
+  <span i18n="@@champTropCourt"
+    >Ce champ doit contenir au moins {{ errors()?.['minlength'].requiredLength }} caractères.</span
+  >
+} @else if (errors()?.['maxlength']) {
+  <span i18n="@@champTropLong"
+    >Ce champ doit contenir au plus {{ errors()?.['maxlength'].requiredLength }} caractères.</span
   >
 } @else {
   <span i18n="auth.error.generic@@authErrorGeneric">Valeur invalide.</span>

@@ -47,14 +47,27 @@
               </button>
             </div>
           } @else {
-            <div class="pf-edit">
+            <form
+              class="pf-edit"
+              #editProfileForm="ngForm"
+              (ngSubmit)="saveProfile(editProfileForm)"
+            >
               <div class="pf-field">
                 <label for="editFirstName" i18n="@@profileEditFirstNameLabel">Prénom</label>
                 <input
                   id="editFirstName"
                   name="editFirstName"
                   type="text"
+                  required
+                  [appBornesDeSaisie]="bornesDUnNom"
                   [(ngModel)]="editFirstName"
+                  #editFirstNameCtrl="ngModel"
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    erreursDuChamp;
+                    context: { $implicit: editFirstNameCtrl, soumis: editProfileSubmitted }
+                  "
                 />
               </div>
               <div class="pf-field">
@@ -63,12 +76,35 @@
                   id="editLastName"
                   name="editLastName"
                   type="text"
+                  required
+                  [appBornesDeSaisie]="bornesDUnNom"
                   [(ngModel)]="editLastName"
+                  #editLastNameCtrl="ngModel"
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    erreursDuChamp;
+                    context: { $implicit: editLastNameCtrl, soumis: editProfileSubmitted }
+                  "
                 />
               </div>
               <div class="pf-field">
                 <label for="editPhone" i18n="@@profileEditPhoneLabel">Téléphone</label>
-                <input id="editPhone" name="editPhone" type="tel" [(ngModel)]="editPhone" />
+                <input
+                  id="editPhone"
+                  name="editPhone"
+                  type="tel"
+                  [appBornesDeSaisie]="bornesDUnTelephone"
+                  appFormatDeContact="telephone"
+                  [(ngModel)]="editPhone"
+                  #editPhoneCtrl="ngModel"
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    erreursDuChamp;
+                    context: { $implicit: editPhoneCtrl, soumis: editProfileSubmitted }
+                  "
+                />
               </div>
               <p class="pf-note">
                 <strong i18n="@@profileEmailLabel">Email</strong> :
@@ -77,9 +113,8 @@
               </p>
               <div class="pf-actions">
                 <button
-                  type="button"
+                  type="submit"
                   class="btn btn-teal"
-                  (click)="saveProfile()"
                   [disabled]="editProfileLoading"
                   [attr.aria-busy]="editProfileLoading"
                 >
@@ -99,7 +134,7 @@
                   Annuler
                 </button>
               </div>
-            </div>
+            </form>
           }
 
           @if (editProfileSuccess) {
@@ -131,11 +166,21 @@
                   name="newPassword"
                   type="password"
                   required
-                  minlength="12"
+                  appMotDePasseNeuf
                   [(ngModel)]="newPassword"
                   #newPasswordCtrl="ngModel"
                   [class.invalid]="
                     newPasswordCtrl.invalid && (newPasswordCtrl.touched || setPasswordSubmitted)
+                  "
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    erreursDuChamp;
+                    context: {
+                      $implicit: newPasswordCtrl,
+                      soumis: setPasswordSubmitted,
+                      motDePasseNeuf: true,
+                    }
                   "
                 />
               </div>
@@ -171,6 +216,9 @@
             <p class="ch-sub" i18n="@@profileChangePasswordSub">
               Mettez à jour votre mot de passe régulièrement.
             </p>
+            @if (setPasswordSuccess) {
+              <p class="pf-msg ok">{{ setPasswordSuccess }}</p>
+            }
 
             <form
               #changePasswordForm="ngForm"
@@ -186,11 +234,18 @@
                   name="currentPassword"
                   type="password"
                   required
+                  [appBornesDeSaisie]="bornesDUnMotDePasseSaisi"
                   [(ngModel)]="currentPassword"
                   #currentPasswordCtrl="ngModel"
                   [class.invalid]="
                     currentPasswordCtrl.invalid &&
                     (currentPasswordCtrl.touched || changePasswordSubmitted)
+                  "
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    erreursDuChamp;
+                    context: { $implicit: currentPasswordCtrl, soumis: changePasswordSubmitted }
                   "
                 />
               </div>
@@ -203,12 +258,22 @@
                   name="changeNewPassword"
                   type="password"
                   required
-                  minlength="12"
+                  appMotDePasseNeuf
                   [(ngModel)]="changeNewPassword"
                   #changeNewPasswordCtrl="ngModel"
                   [class.invalid]="
                     changeNewPasswordCtrl.invalid &&
                     (changeNewPasswordCtrl.touched || changePasswordSubmitted)
+                  "
+                />
+                <ng-container
+                  *ngTemplateOutlet="
+                    erreursDuChamp;
+                    context: {
+                      $implicit: changeNewPasswordCtrl,
+                      soumis: changePasswordSubmitted,
+                      motDePasseNeuf: true,
+                    }
                   "
                 />
               </div>
@@ -252,4 +317,18 @@
       </div>
     }
   </div>
+
+  <ng-template #erreursDuChamp let-controle let-soumis="soumis" let-motDePasseNeuf="motDePasseNeuf">
+    @if (controle.invalid && (controle.touched || soumis)) {
+      <p
+        class="pf-msg err"
+        appFieldErrors
+        [errors]="controle.errors"
+        [phone]="controle.name === 'editPhone'"
+        [motDePasse]="motDePasseNeuf === true"
+      ></p>
+    } @else if (motDePasseNeuf === true) {
+      <p class="pf-note">{{ regleDUnMotDePasse }}</p>
+    }
+  </ng-template>
 </section>

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { FormulaireAuthComponent } from './formulaire-auth.component';
 import { FormulaireDeMotDePasse } from './formulaire-de-mot-de-passe';
 import { IMPORTS_PAGE_AUTH } from './page-auth.imports';
@@ -8,7 +9,7 @@ import { IMPORTS_PAGE_AUTH } from './page-auth.imports';
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [IMPORTS_PAGE_AUTH, FormsModule, FormulaireAuthComponent],
+  imports: [IMPORTS_PAGE_AUTH, FormsModule, FormulaireAuthComponent, FormatDeContactDirective],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +26,13 @@ export class ForgotPasswordComponent extends FormulaireDeMotDePasse {
 
     this.envoyer(
       this.authService.requestPasswordReset({ email: this.email.trim() }),
-      $localize`:auth.forgot.error.generic@@authForgotErrorGeneric:Impossible d'envoyer le lien pour le moment.`,
+      {
+        succes: $localize`:@@authForgotSucces:Si un compte existe avec cette adresse, un lien de réinitialisation vient de vous être envoyé.`,
+        refus: {
+          400: $localize`:@@authForgotErreurAdresse:Cette adresse e-mail n’a pas été acceptée : vérifiez-la et réessayez.`,
+        },
+        repli: $localize`:auth.forgot.error.generic@@authForgotErrorGeneric:Impossible d'envoyer le lien pour le moment.`,
+      },
       () => {
         this.email = '';
         form.resetForm({ email: '' });

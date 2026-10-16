@@ -38,7 +38,6 @@ export interface AuditRequestPayload {
 
 export interface AuditCreateResponse {
   message: string;
-  httpCode: number;
   auditId: string;
   status: AuditProcessingStatus;
 }
@@ -85,8 +84,16 @@ export interface AuditFailedEvent {
   updatedAt: string;
 }
 
+export interface AuditTimeoutEvent {
+  auditId: string;
+  status: 'TIMEOUT';
+  error: string | null;
+  updatedAt: string;
+}
+
 export type AuditStreamEvent =
   | { type: 'progress'; data: AuditProgressEvent }
   | { type: 'completed'; data: AuditCompletedEvent }
   | { type: 'failed'; data: AuditFailedEvent }
+  | { type: 'timeout'; data: AuditTimeoutEvent }
   | { type: 'heartbeat'; data: { ts: string } };

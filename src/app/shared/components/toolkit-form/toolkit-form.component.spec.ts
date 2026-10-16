@@ -86,16 +86,10 @@ describe('ToolkitFormComponent', () => {
     expect(enEchec.nativeElement.querySelector('[data-toolkit-error]')).not.toBeNull();
   });
 
-  it('transmet le formationSlug en @Input au port.requestToolkit', async () => {
-    fixture.componentRef.setInput('formationSlug', 'automatiser-avec-ia');
-
+  it('transmet la langue du site, sans sa région, comme langue d acceptation des conditions', async () => {
     await soumettre(fixture);
 
-    expect(portStub.requestToolkit).toHaveBeenCalledTimes(1);
-    const payload = portStub.requestToolkit.calls.mostRecent().args[0];
-    expect(payload.formationSlug).toBe('automatiser-avec-ia');
-    expect(payload.email).toBe('marie@example.com');
-    expect(payload.firstName).toBe('Marie');
+    expect(portStub.requestToolkit.calls.mostRecent().args[0].termsLocale).toBe('en');
   });
 
   it("affiche l'email soumis dans le bloc succes (data-toolkit-success)", async () => {
@@ -118,6 +112,9 @@ describe('ToolkitFormComponent', () => {
       'marie@example..com',
       'marie exemple@example.com',
       'marie@exa mple.com',
+      'marie@exemple.c',
+      'marie@-exemple.fr',
+      'marie..dupont@exemple.fr',
     ];
 
     function setValidExcept(email: string): void {
@@ -141,10 +138,41 @@ describe('ToolkitFormComponent', () => {
     }
   });
 
-  it("utilise 'ia-solopreneurs' par defaut si aucun formationSlug n'est passe", async () => {
+  it('plafonne le prénom rogné à 50 caractères comptés comme le back, et le dit sous le champ', () => {
+    const texte = (): string => (fixture.nativeElement as HTMLElement).textContent ?? '';
+    component.email.set('marie@example.com');
+    component.termsAccepted.set(true);
+
+    component.firstName.set(` ${String.fromCodePoint(0x1f600).repeat(50)} `);
+    expect(component.isValid()).toBeTrue();
+
+    component.firstName.set('a'.repeat(51));
+    fixture.detectChanges();
+    expect(component.isValid()).toBeFalse();
+    expect(texte()).toContain('Ce champ doit contenir au plus 50 caractères.');
+
+    component.firstName.set('a'.repeat(50));
+    fixture.detectChanges();
+    expect(component.isValid()).toBeTrue();
+    expect(texte()).not.toContain('Ce champ doit contenir au plus 50 caractères.');
+  });
+
+  it('dit sous le champ une adresse que le back refuse', () => {
+    component.email.set('marie@gmail');
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain(
+      'Merci d’entrer une adresse email valide.',
+    );
+  });
+
+  it('envoie au port le toolkit ia-solopreneurs, le seul que le back connaît, avec la saisie', async () => {
     await soumettre(fixture);
 
+    expect(portStub.requestToolkit).toHaveBeenCalledTimes(1);
     const payload = portStub.requestToolkit.calls.mostRecent().args[0];
     expect(payload.formationSlug).toBe('ia-solopreneurs');
+    expect(payload.email).toBe('marie@example.com');
+    expect(payload.firstName).toBe('Marie');
   });
 });

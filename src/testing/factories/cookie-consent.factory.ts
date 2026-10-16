@@ -18,7 +18,7 @@ export function buildCookiePreferences(
 
 export function createCookieConsentPortStub(): jasmine.SpyObj<CookieConsentPort> {
   const stub = jasmine.createSpyObj<CookieConsentPort>('CookieConsentPort', ['recordConsent']);
-  stub.recordConsent.and.returnValue(of({ message: 'ok', httpCode: 200 }));
+  stub.recordConsent.and.returnValue(of({ message: 'ok' }));
   return stub;
 }
 
@@ -57,8 +57,8 @@ export function createCookieConsentServiceStub(): jasmine.SpyObj<CookieConsentSe
   stub.shouldShowBanner.and.returnValue(false);
   stub.getPreferences.and.returnValue(buildCookiePreferences());
   stub.getDefaultPreferences.and.returnValue(buildCookiePreferences());
-  stub.saveConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
-  stub.withdrawConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
+  stub.saveConsent.and.returnValue(of({ message: 'ok' }));
+  stub.withdrawConsent.and.returnValue(of({ message: 'ok' }));
   stub.isConsentRequired.and.returnValue(true);
   return stub as jasmine.SpyObj<CookieConsentService> & {
     consentChanges$: BehaviorSubject<null>;

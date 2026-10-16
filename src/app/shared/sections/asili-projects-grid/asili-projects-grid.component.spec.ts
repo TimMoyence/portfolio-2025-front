@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { rendreLHoteNavigateur } from '../../../../testing/montage-page';
-import { decrireRenduServeur, decrireSectionAsili } from '../../../../testing/section-asili';
+import {
+  decrireLiensDansLaLangueDeLaPage,
+  decrireRenduServeur,
+  decrireSectionAsili,
+} from '../../../../testing/section-asili';
 import type { AsiliProject } from './asili-projects-grid.component';
 import { AsiliProjectsGridComponent } from './asili-projects-grid.component';
 
@@ -69,6 +73,13 @@ describe('AsiliProjectsGridComponent', () => {
   let fixture: ComponentFixture<AsiliProjectsGridComponent>;
 
   const monter = decrireSectionAsili(AsiliProjectsGridComponent, { projects: PROJECTS });
+
+  decrireLiensDansLaLangueDeLaPage(
+    monter,
+    { projects: [PROJECTS[0], { ...PROJECTS[1], href: 'https://github.com/' }] },
+    '.proj-link',
+    ['/en/projets', 'https://github.com/'],
+  );
 
   function setup(projects: readonly AsiliProject[] = PROJECTS): void {
     fixture = monter('browser', { projects });

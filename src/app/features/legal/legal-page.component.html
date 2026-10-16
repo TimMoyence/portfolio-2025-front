@@ -13,7 +13,9 @@
       <ol>
         @for (item of toc(); track item.anchor) {
           <li>
-            <a [href]="'#' + item.anchor">{{ item.label }}</a>
+            <a [routerLink]="[]" [fragment]="item.anchor" queryParamsHandling="preserve">{{
+              item.label
+            }}</a>
           </li>
         }
       </ol>
