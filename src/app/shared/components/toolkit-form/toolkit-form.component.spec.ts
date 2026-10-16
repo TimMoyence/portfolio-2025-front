@@ -92,18 +92,6 @@ describe('ToolkitFormComponent', () => {
     expect(portStub.requestToolkit.calls.mostRecent().args[0].termsLocale).toBe('en');
   });
 
-  it('transmet le formationSlug en @Input au port.requestToolkit', async () => {
-    fixture.componentRef.setInput('formationSlug', 'automatiser-avec-ia');
-
-    await soumettre(fixture);
-
-    expect(portStub.requestToolkit).toHaveBeenCalledTimes(1);
-    const payload = portStub.requestToolkit.calls.mostRecent().args[0];
-    expect(payload.formationSlug).toBe('automatiser-avec-ia');
-    expect(payload.email).toBe('marie@example.com');
-    expect(payload.firstName).toBe('Marie');
-  });
-
   it("affiche l'email soumis dans le bloc succes (data-toolkit-success)", async () => {
     await soumettre(fixture);
 
@@ -178,10 +166,13 @@ describe('ToolkitFormComponent', () => {
     );
   });
 
-  it("utilise 'ia-solopreneurs' par defaut si aucun formationSlug n'est passe", async () => {
+  it('envoie au port le toolkit ia-solopreneurs, le seul que le back connaît, avec la saisie', async () => {
     await soumettre(fixture);
 
+    expect(portStub.requestToolkit).toHaveBeenCalledTimes(1);
     const payload = portStub.requestToolkit.calls.mostRecent().args[0];
     expect(payload.formationSlug).toBe('ia-solopreneurs');
+    expect(payload.email).toBe('marie@example.com');
+    expect(payload.firstName).toBe('Marie');
   });
 });

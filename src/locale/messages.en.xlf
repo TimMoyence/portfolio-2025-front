@@ -4447,174 +4447,6 @@
         <target> Leave your email in the form above. You&apos;ll receive the toolkit PDF within the minute. No automated newsletter, no marketing follow-up: that&apos;s a promise, and fully GDPR-compliant. </target>
       </segment>
     </unit>
-    <unit id="formations.auto.toolkit.title">
-      <segment>
-        <source> Vos 5 workflows<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>prêts à <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">l'emploi</pc>. </source>
-        <target> Your 5 workflows<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>ready to <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">use</pc>. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.subtitle">
-      <segment>
-        <source> Les cinq workflows testés de la formation — avec les prompts exacts, les pièges à éviter et la checklist de relecture — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement. </source>
-        <target> The five tested workflows from the training — with exact prompts, pitfalls to avoid and a review checklist — delivered as a PDF to your inbox in 30 seconds. Free, no commitment. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.contentsTitle">
-      <segment>
-        <source> Ce que contient le toolkit </source>
-        <target> What's in the toolkit </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.content1">
-      <segment>
-        <source> Les 5 workflows complets avec le prompt exact, le résultat attendu et la durée pour le mettre en place — devis, emails, réseaux sociaux, factures, veille. </source>
-        <target> All 5 complete workflows with the exact prompt, expected output and setup time — quotes, emails, social media, invoices, news monitoring. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.content2">
-      <segment>
-        <source> La checklist de relecture en une minute — les 6 points à vérifier avant d'envoyer un contenu généré par l'IA à un client ou un prospect. </source>
-        <target> The one-minute review checklist — 6 points to check before sending AI-generated content to a client or prospect. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.content3">
-      <segment>
-        <source> Le tableau de bord "temps gagné" — une feuille Google Docs pré-remplie pour mesurer le retour sur investissement de chaque workflow sur 4 semaines. </source>
-        <target> The "time saved" dashboard — a pre-filled Google Docs sheet to measure the ROI of each workflow over 4 weeks. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.content4">
-      <segment>
-        <source> Les alternatives gratuites aux outils payants — pour chaque workflow, les options zéro euro qui tiennent la route en 2026 et celles à éviter. </source>
-        <target> Free alternatives to paid tools — for each workflow, the zero-cost options that still hold up in 2026 and which ones to avoid. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faqTitle">
-      <segment>
-        <source> Questions fréquentes </source>
-        <target> Frequently asked questions </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq1Q">
-      <segment>
-        <source> Les workflows fonctionnent-ils sans outil payant ? </source>
-        <target> Do the workflows work without paid tools? </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq1A">
-      <segment>
-        <source> Oui. Les 5 workflows tournent entièrement sur les versions gratuites de ChatGPT, Perplexity, Buffer et Google Docs. Le toolkit indique quand un outil payant apporte un gain réel et quand c'est un achat inutile. </source>
-        <target> Yes. All 5 workflows run entirely on the free tiers of ChatGPT, Perplexity, Buffer and Google Docs. The toolkit tells you when a paid tool provides real value and when it's an unnecessary purchase. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq2Q">
-      <segment>
-        <source> Faut-il avoir suivi la formation pour utiliser le toolkit ? </source>
-        <target> Do I need to have taken the training to use the toolkit? </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq2A">
-      <segment>
-        <source> Non. Le PDF est autonome — chaque workflow est documenté étape par étape avec captures d'écran. La formation ajoute le contexte et les explications, le toolkit donne les instructions pratiques directement copiables. </source>
-        <target> No. The PDF is self-contained — each workflow is documented step by step with screenshots. The training adds context and explanations; the toolkit gives you the practical instructions ready to copy. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq3Q">
-      <segment>
-        <source> Comment recevoir le toolkit ? </source>
-        <target> How do I receive the toolkit? </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq3A">
-      <segment>
-        <source> Laissez votre email dans le formulaire. Vous recevrez le PDF dans la minute. Aucune newsletter automatique, aucun suivi marketing — conforme RGPD. </source>
-        <target> Leave your email in the form. You'll receive the PDF within the minute. No automated newsletter, no marketing follow-up — GDPR-compliant. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.title">
-      <segment>
-        <source> Votre checklist<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">audit SEO</pc>. </source>
-        <target> Your <ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">SEO audit</pc> checklist. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.subtitle">
-      <segment>
-        <source> Les 7 checks SEO de la formation — avec les liens directs vers les 5 outils gratuits, le template de rapport à imprimer et le script pour briefer un développeur — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement. </source>
-        <target> The 7 SEO checks from the training — with direct links to the 5 free tools, a printable report template and a script to brief a developer — delivered as a PDF in your inbox in 30 seconds. Free, no commitment. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.contentsTitle">
-      <segment>
-        <source> Ce que contient le toolkit </source>
-        <target> What's in the toolkit </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.content1">
-      <segment>
-        <source> La checklist imprimable des 7 points à vérifier — indexation, titres, vitesse, mobile, contenu, questions-réponses, signaux AEO — avec colonne OK / à corriger / urgent à cocher. </source>
-        <target> The printable 7-point checklist — indexing, titles, speed, mobile, content, Q&amp;A, AEO signals — with OK / fix / urgent columns to tick. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.content2">
-      <segment>
-        <source> Le template de rapport d'audit sur une page A4 au format Google Sheets dupliquable — 3 colonnes (check, verdict, action) prêtes à remplir pour vos clients ou votre propre site. </source>
-        <target> The one-page A4 audit report template as a duplicable Google Sheets file — 3 columns (check, verdict, action) ready to fill in for your clients or your own site. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.content3">
-      <segment>
-        <source> Les 5 outils SEO gratuits avec liens directs et mode d'emploi commenté — Google Search Console, PageSpeed Insights, Bing Webmaster, Ahrefs Webmaster Tools, SEO Meta in 1 Click. </source>
-        <target> The 5 free SEO tools with direct links and annotated walkthroughs — Google Search Console, PageSpeed Insights, Bing Webmaster, Ahrefs Webmaster Tools, SEO Meta in 1 Click. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.content4">
-      <segment>
-        <source> Le script "briefer un développeur" — les 5 questions non-techniques à poser pour faire corriger les problèmes SEO sans être baladé(e) par un jargon incompréhensible. </source>
-        <target> The "brief a developer" script — the 5 non-technical questions to ask to get SEO issues fixed without being lost in incomprehensible jargon. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faqTitle">
-      <segment>
-        <source> Questions fréquentes </source>
-        <target> Frequently asked questions </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq1Q">
-      <segment>
-        <source> Puis-je faire cet audit sans compétence technique ? </source>
-        <target> Can I run this audit without technical skills? </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq1A">
-      <segment>
-        <source> Oui entièrement. Chaque check utilise Google directement ou des outils avec un formulaire. Aucun terminal, aucun code. Si vous savez faire une recherche Google, vous savez lire le verdict de chaque outil présenté dans le toolkit. </source>
-        <target> Yes, entirely. Every check uses Google directly or tools with a form. No terminal, no code. If you can run a Google search, you can read the verdict of each tool presented in the toolkit. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq2Q">
-      <segment>
-        <source> Combien de temps pour voir des résultats SEO ? </source>
-        <target> How long before I see SEO results? </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq2A">
-      <segment>
-        <source> Les corrections techniques (indexation, vitesse) produisent des effets visibles en 2 à 4 semaines. Les améliorations de contenu prennent 3 à 6 mois pour grimper dans les résultats. SEO = marathon, pas sprint. </source>
-        <target> Technical fixes (indexing, speed) produce visible effects in 2 to 4 weeks. Content improvements take 3 to 6 months to climb in results. SEO = marathon, not sprint. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq3Q">
-      <segment>
-        <source> Comment recevoir le toolkit ? </source>
-        <target> How do I receive the toolkit? </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq3A">
-      <segment>
-        <source> Laissez votre email dans le formulaire. Vous recevrez le PDF dans la minute. Aucune newsletter automatique, aucun suivi marketing — conforme RGPD. </source>
-        <target> Leave your email in the form. You'll receive the PDF within the minute. No automated newsletter, no marketing follow-up — GDPR-compliant. </target>
-      </segment>
-    </unit>
     <unit id="toolkit-form.success.title">
       <segment>
         <source>Envoyé !</source>
@@ -5049,14 +4881,14 @@
     </unit>
     <unit id="formations.audit-seo-diy.livrable.description">
       <segment>
-        <source>Un bon audit DIY tient en une page A4 : 7 lignes, 3 colonnes (check, verdict, action). Le toolkit fournit le template de rapport pré-rempli, format imprimable + Google Sheets dupliquable.</source>
-        <target>A good DIY audit fits on a single A4 page: 7 rows, 3 columns (check, verdict, action). The toolkit provides the pre-filled report template, printable plus a Google Sheets version you can duplicate.</target>
+        <source>Un bon audit DIY tient en une page A4 : 7 lignes, 3 colonnes (check, verdict, action). Recopiez ce tableau dans un document ou une feuille de calcul, puis remplissez une ligne par check.</source>
+        <target>A good DIY audit fits on a single A4 page: 7 rows, 3 columns (check, verdict, action). Copy this table into a document or a spreadsheet, then fill in one row per check.</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.livrable.ctaLabel">
       <segment>
-        <source>Récupérer le template d&apos;audit</source>
-        <target>Get the toolkit</target>
+        <source>Poser une question sur mon audit</source>
+        <target>Ask a question about my audit</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.quandaider.imageAlt">
@@ -5109,20 +4941,20 @@
     </unit>
     <unit id="formations.audit-seo-diy.synthese.title">
       <segment>
-        <source>Recevez le kit audit SEO DIY complet</source>
-        <target>Get the full DIY SEO audit toolkit</target>
+        <source>Passez à l&apos;action sur votre site</source>
+        <target>Take action on your site</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.synthese.description">
       <segment>
-        <source>Checklist imprimable (7 checks + colonne OK/À corriger) + rapport type Google Sheets à dupliquer + script &apos;briefer un développeur SEO&apos; + alternative premium via Growth Audit (IA + humain).</source>
-        <target>Printable checklist (7 checks + an OK/To fix column) + a Google Sheets report template to duplicate + a &apos;briefing an SEO developer&apos; script + a premium alternative through Growth Audit (AI + human).</target>
+        <source>Lancez les 7 checks, notez chaque verdict dans votre rapport d&apos;une page, puis corrigez dans l&apos;ordre des urgences. Pour une analyse approfondie, Growth Audit (IA + humain) prend le relais.</source>
+        <target>Run the 7 checks, record each verdict in your one-page report, then fix issues in order of urgency. For an in-depth analysis, Growth Audit (AI + human) takes over.</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.synthese.ctaLabel">
       <segment>
-        <source>Télécharger le toolkit</source>
-        <target>Download the toolkit</target>
+        <source>Me contacter</source>
+        <target>Contact me</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.constat.stats.0.label">
@@ -5583,14 +5415,14 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.declencheur.description">
       <segment>
-        <source>PDF 12 pages avec captures d&apos;écran par étape, prompts prêts à copier-coller testés en conditions réelles, séquence email 5 jours (un workflow par jour) — répondez à n&apos;importe quel email, je lis tout sans bot.</source>
-        <target>A 12-page PDF with screenshots for every step, ready-to-paste prompts tested in real conditions, a 5-day email sequence (one workflow per day) — reply to any of those emails, I read them all myself, no bot.</target>
+        <source>Choisissez une seule tâche répétitive de votre semaine et appliquez-lui le workflow adapté à votre métier. Une question, un blocage : écrivez-moi, je réponds moi-même, sans bot.</source>
+        <target>Pick a single repetitive task from your week and apply the workflow that fits your trade. A question, a roadblock: write to me, I answer myself, no bot.</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.declencheur.ctaLabel">
       <segment>
-        <source>Recevoir le toolkit complet</source>
-        <target>Start now</target>
+        <source>Me poser une question</source>
+        <target>Ask me a question</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.erreurs.title">
@@ -5625,14 +5457,14 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.synthese.description">
       <segment>
-        <source>Aujourd&apos;hui : télécharger le toolkit + lire le workflow adapté à votre métier. Cette semaine : tester sur 1 tâche réelle (pas 5, pas 10 — une seule). Dans 7 jours : mesurer le temps gagné. Si ça marche : automatiser la 2e tâche. Sinon : me répondre, on ajuste ensemble.</source>
-        <target>Today: download the toolkit + read the workflow that fits your trade. This week: try it on 1 real task (not 5, not 10 — just one). In 7 days: measure the time saved. If it works: automate the 2nd task. If not: reply to me and we adjust together.</target>
+        <source>Aujourd&apos;hui : relire le workflow adapté à votre métier. Cette semaine : tester sur 1 tâche réelle (pas 5, pas 10 — une seule). Dans 7 jours : mesurer le temps gagné. Si ça marche : automatiser la 2e tâche. Sinon : écrivez-moi, on ajuste ensemble.</source>
+        <target>Today: reread the workflow that fits your trade. This week: try it on 1 real task (not 5, not 10 — just one). In 7 days: measure the time saved. If it works: automate the 2nd task. If not: write to me and we adjust together.</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.synthese.ctaLabel">
       <segment>
-        <source>Télécharger le toolkit</source>
-        <target>Download the playbook</target>
+        <source>Me contacter</source>
+        <target>Contact me</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.constat.stats.0.label">
@@ -5763,8 +5595,8 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.faq.items.1.description">
       <segment>
-        <source>Oui par défaut. Le toolkit indique comment désactiver l&apos;entraînement sur vos échanges (ChatGPT, Perplexity) en 2 clics. RGPD OK.</source>
-        <target>Yes by default. The toolkit shows how to turn off training on your conversations (ChatGPT, Perplexity) in 2 clicks. GDPR OK.</target>
+        <source>Oui par défaut. Désactivez l&apos;entraînement sur vos échanges dans les réglages de ChatGPT ou de Perplexity : 2 clics. RGPD OK.</source>
+        <target>Yes by default. Turn off training on your conversations in the ChatGPT or Perplexity settings: 2 clicks. GDPR OK.</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.faq.items.2.title">
@@ -8510,8 +8342,8 @@
     </unit>
     <unit id="formations-list.toolkit.description">
       <segment>
-        <source>Chaque formation s'accompagne d'un toolkit PDF : modèles de prompts, checklists, workflows prêts à l'emploi. Votre email sert uniquement à vous l'envoyer.</source>
-        <target>Each training comes with a PDF toolkit: prompt templates, checklists, ready-to-use workflows. Your email is only used to send it to you.</target>
+        <source>La formation « L'IA au service des solopreneurs » s'accompagne d'un toolkit PDF : modèles de prompts, checklists, workflows prêts à l'emploi. Votre email sert uniquement à vous l'envoyer.</source>
+        <target>The “AI for solopreneurs” training comes with a PDF toolkit: prompt templates, checklists, ready-to-use workflows. Your email is only used to send it to you.</target>
       </segment>
     </unit>
     <unit id="formations-list.toolkit.meta.content">
@@ -8570,8 +8402,8 @@
     </unit>
     <unit id="formations-list.benefit.toolkit.desc">
       <segment>
-        <source>Chaque session se termine par un PDF actionnable, pour passer de l'écoute à la pratique.</source>
-        <target>Each session ends with an actionable PDF, to move from listening to doing.</target>
+        <source>La formation IA pour solopreneurs se termine par un toolkit PDF actionnable, pour passer de l'écoute à la pratique.</source>
+        <target>The AI for solopreneurs training ends with an actionable PDF toolkit, to move from listening to doing.</target>
       </segment>
     </unit>
     <unit id="formations.toolkit.item1">
@@ -8605,78 +8437,6 @@
       </segment>
     </unit>
     <unit id="formations.toolkit.privacyLink">
-      <segment>
-        <source>Politique de confidentialité</source>
-        <target>Privacy policy</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.item1">
-      <segment>
-        <source>5 workflows complets : devis, emails, réseaux, factures, veille</source>
-        <target>5 complete workflows: quotes, emails, social, invoices, monitoring</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.item2">
-      <segment>
-        <source>La checklist de relecture en une minute</source>
-        <target>The one-minute review checklist</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.item3">
-      <segment>
-        <source>Le tableau de bord « temps gagné » pré-rempli</source>
-        <target>The pre-filled "time saved" dashboard</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.foot">
-      <segment>
-        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
-        <target>Free, no commitment. One-click unsubscribe. Your data stays confidential.</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.brand">
-      <segment>
-        <source>Asili Design — asilidesign.fr</source>
-        <target>Asili Design — asilidesign.fr</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.privacyLink">
-      <segment>
-        <source>Politique de confidentialité</source>
-        <target>Privacy policy</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.item1">
-      <segment>
-        <source>La checklist imprimable des 7 points à vérifier</source>
-        <target>The printable checklist of the 7 points to check</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.item2">
-      <segment>
-        <source>Le template de rapport d'audit sur une page A4</source>
-        <target>The one-page A4 audit report template</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.item3">
-      <segment>
-        <source>Les 5 outils SEO gratuits avec liens directs</source>
-        <target>The 5 free SEO tools with direct links</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.foot">
-      <segment>
-        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
-        <target>Free, no commitment. One-click unsubscribe. Your data stays confidential.</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.brand">
-      <segment>
-        <source>Asili Design — asilidesign.fr</source>
-        <target>Asili Design — asilidesign.fr</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.privacyLink">
       <segment>
         <source>Politique de confidentialité</source>
         <target>Privacy policy</target>

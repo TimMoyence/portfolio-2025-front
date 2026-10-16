@@ -41,11 +41,11 @@ test.describe('Slide engine', () => {
     }
   });
 
-  test('/formations/audit-seo-diy : CTA toolkit cliquable', async ({ page }) => {
+  test('/formations/audit-seo-diy : CTA vers le contact cliquable', async ({ page }) => {
     await page.goto('/formations/audit-seo-diy');
     const cta = page.locator('app-slide-cta a.slide-cta__btn').first();
     await cta.scrollIntoViewIfNeeded();
     await expect(cta).toBeVisible();
-    await expect(cta).toHaveAttribute('href', '/formations/audit-seo-diy/toolkit');
+    await expect(cta).toHaveAttribute('href', '/contact');
   });
 });

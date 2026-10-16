@@ -193,26 +193,6 @@ export const routes: Routes = [
     },
   },
   {
-    path: 'formations/automatiser-avec-ia/toolkit',
-    loadComponent: () =>
-      import('./features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component').then(
-        (m) => m.ToolkitAutoComponent,
-      ),
-    data: {
-      seoKey: 'formations-automatiser-avec-ia-toolkit',
-    },
-  },
-  {
-    path: 'formations/audit-seo-diy/toolkit',
-    loadComponent: () =>
-      import('./features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component').then(
-        (m) => m.ToolkitAuditSeoComponent,
-      ),
-    data: {
-      seoKey: 'formations-audit-seo-diy-toolkit',
-    },
-  },
-  {
     path: 'formations/ia-solopreneurs',
     loadComponent: () =>
       import('./features/formations/ia-solopreneurs/ia-solopreneurs.component').then(

@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
-  Input,
   LOCALE_ID,
   computed,
   inject,
@@ -115,7 +114,7 @@ const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
   `,
 })
 export class ToolkitFormComponent {
-  @Input() formationSlug = 'ia-solopreneurs';
+  readonly formationSlug = 'ia-solopreneurs';
 
   private readonly port = inject(LEAD_MAGNET_PORT);
   private readonly collector = inject(InteractionCollectorService, {

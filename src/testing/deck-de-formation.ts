@@ -23,3 +23,17 @@ export function decrireDeckDeFormation<T>(composant: Type<T>): () => HTMLElement
 
   return rendu;
 }
+
+export function decrireDesAppelsAuContact(rendu: () => HTMLElement): void {
+  it('mène chaque appel à l action au contact, sans promettre de boîte à outils', () => {
+    const boutons = Array.from(rendu().querySelectorAll('.slide-cta__btn'));
+
+    expect(boutons.length).toBeGreaterThan(0);
+    for (const bouton of boutons) {
+      expect(bouton.getAttribute('href'))
+        .withContext(bouton.textContent ?? '')
+        .toBe('/contact');
+    }
+    expect(rendu().textContent ?? '').not.toMatch(/toolkit|\bkit\b|PDF|télécharg/i);
+  });
+}

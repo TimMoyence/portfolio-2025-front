@@ -2036,7 +2036,7 @@
                   "name": "Mes donnees clients sont-elles reutilisees par l'IA ?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Par defaut oui sur les versions gratuites. Le toolkit indique comment desactiver l'entrainement en deux clics dans les parametres."
+                    "text": "Par defaut oui sur les versions gratuites. Desactivez l'entrainement sur vos echanges dans les parametres de ChatGPT ou de Perplexity : deux clics."
                   }
                 },
                 {
@@ -2122,7 +2122,7 @@
                   "name": "Is my customer data reused by AI?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "By default yes on free versions. The toolkit shows how to disable training in two clicks in the settings."
+                    "text": "By default yes on free versions. Turn off training on your conversations in the ChatGPT or Perplexity settings: two clicks."
                   }
                 },
                 {
@@ -2342,126 +2342,6 @@
               ]
             }
           ]
-        }
-      }
-    },
-    {
-      "id": "formations-audit-seo-diy-toolkit",
-      "path": "/formations/audit-seo-diy/toolkit",
-      "index": true,
-      "changefreq": "monthly",
-      "priority": 0.6,
-      "lastmod": "2026-09-25",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Audit SEO DIY",
-          "path": "/formations/audit-seo-diy"
-        },
-        {
-          "name": "Toolkit",
-          "path": "/formations/audit-seo-diy/toolkit"
-        }
-      ],
-      "locales": {
-        "fr": {
-          "title": "Checklist audit SEO — Template de rapport et 5 outils gratuits",
-          "description": "Recevez la checklist imprimable des 7 checks SEO + le template de rapport Google Sheets + les liens des 5 outils gratuits. PDF en 30 secondes.",
-          "ogTitle": "Checklist audit SEO",
-          "ogDescription": "Checklist imprimable + rapport type + 5 outils gratuits — PDF dans votre inbox en 30 secondes.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "Checklist audit SEO DIY",
-            "description": "Page de capture pour recevoir le kit complet audit SEO DIY : checklist imprimable, rapport Google Sheets, liens outils, script developpeur.",
-            "url": "https://asilidesign.fr/fr/formations/audit-seo-diy/toolkit",
-            "isPartOf": {
-              "@id": "https://asilidesign.fr/#website"
-            }
-          }
-        },
-        "en": {
-          "title": "SEO Audit Checklist — Report template and 5 free tools",
-          "description": "Get the printable 7-check SEO checklist + Google Sheets report template + the 5 free tool links. PDF in 30 seconds.",
-          "ogTitle": "SEO Audit Checklist",
-          "ogDescription": "Printable checklist + report template + 5 free tools — PDF in your inbox in 30 seconds.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "DIY SEO Audit Checklist",
-            "description": "Capture page to receive the full DIY SEO audit kit: printable checklist, Google Sheets report, tool links, developer briefing script.",
-            "url": "https://asilidesign.fr/en/formations/audit-seo-diy/toolkit",
-            "isPartOf": {
-              "@id": "https://asilidesign.fr/#website"
-            }
-          }
-        }
-      }
-    },
-    {
-      "id": "formations-automatiser-avec-ia-toolkit",
-      "path": "/formations/automatiser-avec-ia/toolkit",
-      "index": true,
-      "changefreq": "monthly",
-      "priority": 0.6,
-      "lastmod": "2026-09-25",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Automatiser avec l'IA",
-          "path": "/formations/automatiser-avec-ia"
-        },
-        {
-          "name": "Toolkit",
-          "path": "/formations/automatiser-avec-ia/toolkit"
-        }
-      ],
-      "locales": {
-        "fr": {
-          "title": "Toolkit Automatiser avec l'IA — 5 workflows prets a l'emploi",
-          "description": "Recevez les 5 workflows IA de la formation en PDF : devis, emails, reseaux sociaux, factures, veille. Gratuit, dans votre inbox en 30 secondes.",
-          "ogTitle": "Toolkit Automatiser avec l'IA",
-          "ogDescription": "5 workflows IA prets a l'emploi — PDF gratuit dans votre inbox en 30 secondes.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "Toolkit Automatiser avec l'IA",
-            "description": "Page de capture pour recevoir les 5 workflows IA en PDF : prompts exacts, pieges a eviter, checklist de relecture.",
-            "url": "https://asilidesign.fr/fr/formations/automatiser-avec-ia/toolkit",
-            "isPartOf": {
-              "@id": "https://asilidesign.fr/#website"
-            }
-          }
-        },
-        "en": {
-          "title": "Automate with AI Toolkit — 5 ready-to-use workflows",
-          "description": "Get the 5 AI workflows from the training as a PDF: quotes, emails, social media, invoices, monitoring. Free, in your inbox in 30 seconds.",
-          "ogTitle": "Automate with AI Toolkit",
-          "ogDescription": "5 ready-to-use AI workflows — free PDF in your inbox in 30 seconds.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "Automate with AI Toolkit",
-            "description": "Capture page to receive the 5 AI workflows as a PDF: exact prompts, pitfalls to avoid, review checklist.",
-            "url": "https://asilidesign.fr/en/formations/automatiser-avec-ia/toolkit",
-            "isPartOf": {
-              "@id": "https://asilidesign.fr/#website"
-            }
-          }
         }
       }
     },

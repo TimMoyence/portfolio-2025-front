@@ -96,7 +96,7 @@ export class AutomatiserAvecIaComponent {
     },
     {
       title: $localize`:@@formations.automatiser-avec-ia.faq.items.1.title:Mes données sont-elles réutilisées ?`,
-      description: $localize`:@@formations.automatiser-avec-ia.faq.items.1.description:Oui par défaut. Le toolkit indique comment désactiver l'entraînement sur vos échanges (ChatGPT, Perplexity) en 2 clics. RGPD OK.`,
+      description: $localize`:@@formations.automatiser-avec-ia.faq.items.1.description:Oui par défaut. Désactivez l'entraînement sur vos échanges dans les réglages de ChatGPT ou de Perplexity : 2 clics. RGPD OK.`,
     },
     {
       title: $localize`:@@formations.automatiser-avec-ia.faq.items.2.title:Faut-il apprendre à coder ?`,

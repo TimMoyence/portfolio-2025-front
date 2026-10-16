@@ -680,7 +680,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">295</context>
+          <context context-type="linenumber">300</context>
         </context-group>
         <note priority="1" from="description">Generic error message</note>
         <note priority="1" from="meaning">auth.genericError</note>
@@ -698,7 +698,7 @@
         <source>Bienvenue <x id="PH" equiv-text="session.user.firstName"/> !</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">298</context>
+          <context context-type="linenumber">303</context>
         </context-group>
         <note priority="1" from="description">Login success message</note>
         <note priority="1" from="meaning">auth.login.success</note>
@@ -707,7 +707,7 @@
         <source>L&apos;authentification Google n&apos;est pas configurée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">317</context>
+          <context context-type="linenumber">322</context>
         </context-group>
         <note priority="1" from="description">auth.google.notConfigured</note>
       </trans-unit>
@@ -715,7 +715,7 @@
         <source>Impossible de charger Google Sign-In.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">327</context>
+          <context context-type="linenumber">332</context>
         </context-group>
         <note priority="1" from="description">auth.google.loadError</note>
       </trans-unit>
@@ -723,7 +723,7 @@
         <source>Échec de l&apos;authentification Google.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.component.ts</context>
-          <context context-type="linenumber">353</context>
+          <context context-type="linenumber">358</context>
         </context-group>
         <note priority="1" from="description">auth.google.error</note>
       </trans-unit>
@@ -3621,14 +3621,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.livrable.description" datatype="html">
-        <source>Un bon audit DIY tient en une page A4 : 7 lignes, 3 colonnes (check, verdict, action). Le toolkit fournit le template de rapport pré-rempli, format imprimable + Google Sheets dupliquable.</source>
+        <source>Un bon audit DIY tient en une page A4 : 7 lignes, 3 colonnes (check, verdict, action). Recopiez ce tableau dans un document ou une feuille de calcul, puis remplissez une ligne par check.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">131,132</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.livrable.ctaLabel" datatype="html">
-        <source>Récupérer le template d&apos;audit</source>
+        <source>Poser une question sur mon audit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">133,134</context>
@@ -3663,21 +3663,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.synthese.title" datatype="html">
-        <source>Recevez le kit audit SEO DIY complet</source>
+        <source>Passez à l&apos;action sur votre site</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">165,166</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.synthese.description" datatype="html">
-        <source>Checklist imprimable (7 checks + colonne OK/À corriger) + rapport type Google Sheets à dupliquer + script &apos;briefer un développeur SEO&apos; + alternative premium via Growth Audit (IA + humain).</source>
+        <source>Lancez les 7 checks, notez chaque verdict dans votre rapport d&apos;une page, puis corrigez dans l&apos;ordre des urgences. Pour une analyse approfondie, Growth Audit (IA + humain) prend le relais.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">167,168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.audit-seo-diy.synthese.ctaLabel" datatype="html">
-        <source>Télécharger le toolkit</source>
+        <source>Me contacter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/audit-seo-diy.component.html</context>
           <context context-type="linenumber">169,170</context>
@@ -4075,13 +4075,6 @@
           <context context-type="linenumber">127</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.title" datatype="html">
-        <source>Votre checklist<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br /&gt;"/><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>audit SEO<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component.ts</context>
-          <context context-type="linenumber">12,14</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.accroche.title" datatype="html">
         <source>Automatiser avec l&apos;IA — sans coder, sans se perdre</source>
         <context-group purpose="location">
@@ -4251,14 +4244,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.declencheur.description" datatype="html">
-        <source>PDF 12 pages avec captures d&apos;écran par étape, prompts prêts à copier-coller testés en conditions réelles, séquence email 5 jours (un workflow par jour) — répondez à n&apos;importe quel email, je lis tout sans bot.</source>
+        <source>Choisissez une seule tâche répétitive de votre semaine et appliquez-lui le workflow adapté à votre métier. Une question, un blocage : écrivez-moi, je réponds moi-même, sans bot.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">124,125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.declencheur.ctaLabel" datatype="html">
-        <source>Recevoir le toolkit complet</source>
+        <source>Me poser une question</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">126,127</context>
@@ -4286,14 +4279,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.synthese.description" datatype="html">
-        <source>Aujourd&apos;hui : télécharger le toolkit + lire le workflow adapté à votre métier. Cette semaine : tester sur 1 tâche réelle (pas 5, pas 10 — une seule). Dans 7 jours : mesurer le temps gagné. Si ça marche : automatiser la 2e tâche. Sinon : me répondre, on ajuste ensemble.</source>
+        <source>Aujourd&apos;hui : relire le workflow adapté à votre métier. Cette semaine : tester sur 1 tâche réelle (pas 5, pas 10 — une seule). Dans 7 jours : mesurer le temps gagné. Si ça marche : automatiser la 2e tâche. Sinon : écrivez-moi, on ajuste ensemble.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">152,153</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.synthese.ctaLabel" datatype="html">
-        <source>Télécharger le toolkit</source>
+        <source>Me contacter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.html</context>
           <context context-type="linenumber">154,155</context>
@@ -4587,7 +4580,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations.automatiser-avec-ia.faq.items.1.description" datatype="html">
-        <source>Oui par défaut. Le toolkit indique comment désactiver l&apos;entraînement sur vos échanges (ChatGPT, Perplexity) en 2 clics. RGPD OK.</source>
+        <source>Oui par défaut. Désactivez l&apos;entraînement sur vos échanges dans les réglages de ChatGPT ou de Perplexity : 2 clics. RGPD OK.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">99</context>
@@ -4675,13 +4668,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/automatiser-avec-ia.component.ts</context>
           <context context-type="linenumber">128</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.title" datatype="html">
-        <source>Vos 5 workflows<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br /&gt;"/>prêts à <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>l&apos;emploi<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component.ts</context>
-          <context context-type="linenumber">12,14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formationsHeroTitle" datatype="html">
@@ -5084,7 +5070,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.toolkit.description" datatype="html">
-        <source>Chaque formation s&apos;accompagne d&apos;un toolkit PDF : modèles de prompts, checklists, workflows prêts à l&apos;emploi. Votre email sert uniquement à vous l&apos;envoyer.</source>
+        <source>La formation « L&apos;IA au service des solopreneurs » s&apos;accompagne d&apos;un toolkit PDF : modèles de prompts, checklists, workflows prêts à l&apos;emploi. Votre email sert uniquement à vous l&apos;envoyer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
           <context context-type="linenumber">155</context>
@@ -5168,7 +5154,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.benefit.toolkit.desc" datatype="html">
-        <source>Chaque session se termine par un PDF actionnable, pour passer de l&apos;écoute à la pratique.</source>
+        <source>La formation IA pour solopreneurs se termine par un toolkit PDF actionnable, pour passer de l&apos;écoute à la pratique.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
           <context context-type="linenumber">186</context>
@@ -6551,399 +6537,133 @@
         <source>Un kit de démarrage concret, offert. De quoi vous faire une idée juste — et passer à l&apos;action dès aujourd&apos;hui.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.item1" datatype="html">
         <source>30 prompts prêts à l&apos;emploi, classés par usage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.item2" datatype="html">
         <source>Une checklist d&apos;automatisation pas-à-pas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.item3" datatype="html">
         <source>Un mini-guide « par où commencer »</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.foot" datatype="html">
         <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.contentsTitle" datatype="html">
         <source>Ce que contient le toolkit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.content1" datatype="html">
         <source>16 outils IA sélectionnés pour la génération de contenu, l&apos;automatisation marketing, la création visuelle, la prospection commerciale et le support client — avec une fiche comparative pour chacun.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.content2" datatype="html">
         <source>Les budgets mensuels estimés par tier d&apos;usage (solo, équipe, agence) pour dimensionner votre stack IA sans surpayer — typiquement 30 à 150 € / mois pour un solopreneur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.content3" datatype="html">
         <source>3 workflows concrets clé en main : rédaction de newsletters hebdo, réponse client multilingue, création de visuels LinkedIn — chacun avec prompt, outil recommandé et temps gagné.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.content4" datatype="html">
         <source>Les pièges à éviter : outils payants qui ne tiennent pas leurs promesses, RGPD sur les données, hallucinations IA sur la partie juridique et comptable.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faqTitle" datatype="html">
         <source>Questions fréquentes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq1Q" datatype="html">
         <source>À qui s&apos;adresse ce toolkit ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq1A" datatype="html">
         <source>Aux solopreneurs, freelances et indépendants qui veulent gagner du temps sans se noyer dans les dizaines d&apos;outils IA qui sortent chaque semaine. Niveau requis : zéro — les fiches expliquent pas à pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq2Q" datatype="html">
         <source>Pourquoi le toolkit est gratuit ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq2A" datatype="html">
         <source>Parce que c&apos;est une version condensée des formations que je vends en intra-entreprise. L&apos;objectif est de démontrer la qualité du travail avant de proposer un accompagnement sur-mesure, si vous en avez besoin.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq3Q" datatype="html">
         <source>Comment le recevoir ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.faq3A" datatype="html">
         <source>Laissez votre email dans le formulaire ci-dessus. Vous recevrez le PDF du toolkit dans la minute. Aucune newsletter automatique, aucun follow-up marketing : c&apos;est promis, et conforme RGPD.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.brand" datatype="html">
         <source>Asili Design — asilidesign.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.privacyLink" datatype="html">
         <source>Politique de confidentialité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.subtitle" datatype="html">
-        <source>Les cinq workflows testés de la formation — avec les prompts exacts, les pièges à éviter et la checklist de relecture — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.item1" datatype="html">
-        <source>5 workflows complets : devis, emails, réseaux, factures, veille</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.item2" datatype="html">
-        <source>La checklist de relecture en une minute</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.item3" datatype="html">
-        <source>Le tableau de bord « temps gagné » pré-rempli</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.foot" datatype="html">
-        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">58</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.contentsTitle" datatype="html">
-        <source>Ce que contient le toolkit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">59</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.content1" datatype="html">
-        <source>Les 5 workflows complets avec le prompt exact, le résultat attendu et la durée pour le mettre en place — devis, emails, réseaux sociaux, factures, veille.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">61</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.content2" datatype="html">
-        <source>La checklist de relecture en une minute — les 6 points à vérifier avant d&apos;envoyer un contenu généré par l&apos;IA à un client ou un prospect.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.content3" datatype="html">
-        <source>Le tableau de bord &quot;temps gagné&quot; — une feuille Google Docs pré-remplie pour mesurer le retour sur investissement de chaque workflow sur 4 semaines.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">63</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.content4" datatype="html">
-        <source>Les alternatives gratuites aux outils payants — pour chaque workflow, les options zéro euro qui tiennent la route en 2026 et celles à éviter.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">64</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.faqTitle" datatype="html">
-        <source>Questions fréquentes</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.faq1Q" datatype="html">
-        <source>Les workflows fonctionnent-ils sans outil payant ?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">69</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.faq1A" datatype="html">
-        <source>Oui. Les 5 workflows tournent entièrement sur les versions gratuites de ChatGPT, Perplexity, Buffer et Google Docs. Le toolkit indique quand un outil payant apporte un gain réel et quand c&apos;est un achat inutile.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">70</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.faq2Q" datatype="html">
-        <source>Faut-il avoir suivi la formation pour utiliser le toolkit ?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">73</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.faq2A" datatype="html">
-        <source>Non. Le PDF est autonome — chaque workflow est documenté étape par étape avec captures d&apos;écran. La formation ajoute le contexte et les explications, le toolkit donne les instructions pratiques directement copiables.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">74</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.faq3Q" datatype="html">
-        <source>Comment recevoir le toolkit ?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">77</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.faq3A" datatype="html">
-        <source>Laissez votre email dans le formulaire. Vous recevrez le PDF dans la minute. Aucune newsletter automatique, aucun suivi marketing — conforme RGPD.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">78</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.brand" datatype="html">
-        <source>Asili Design — asilidesign.fr</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">81</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.auto.toolkit.privacyLink" datatype="html">
-        <source>Politique de confidentialité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">82</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.subtitle" datatype="html">
-        <source>Les 7 checks SEO de la formation — avec les liens directs vers les 5 outils gratuits, le template de rapport à imprimer et le script pour briefer un développeur — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">85</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.item1" datatype="html">
-        <source>La checklist imprimable des 7 points à vérifier</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">88</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.item2" datatype="html">
-        <source>Le template de rapport d&apos;audit sur une page A4</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">91</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.item3" datatype="html">
-        <source>Les 5 outils SEO gratuits avec liens directs</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">94</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.foot" datatype="html">
-        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">97</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.contentsTitle" datatype="html">
-        <source>Ce que contient le toolkit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">98</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.content1" datatype="html">
-        <source>La checklist imprimable des 7 points à vérifier — indexation, titres, vitesse, mobile, contenu, questions-réponses, signaux AEO — avec colonne OK / à corriger / urgent à cocher.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">100</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.content2" datatype="html">
-        <source>Le template de rapport d&apos;audit sur une page A4 au format Google Sheets dupliquable — 3 colonnes (check, verdict, action) prêtes à remplir pour vos clients ou votre propre site.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">101</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.content3" datatype="html">
-        <source>Les 5 outils SEO gratuits avec liens directs et mode d&apos;emploi commenté — Google Search Console, PageSpeed Insights, Bing Webmaster, Ahrefs Webmaster Tools, SEO Meta in 1 Click.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">102</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.content4" datatype="html">
-        <source>Le script &quot;briefer un développeur&quot; — les 5 questions non-techniques à poser pour faire corriger les problèmes SEO sans être baladé(e) par un jargon incompréhensible.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">103</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.faqTitle" datatype="html">
-        <source>Questions fréquentes</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">105</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.faq1Q" datatype="html">
-        <source>Puis-je faire cet audit sans compétence technique ?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">108</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.faq1A" datatype="html">
-        <source>Oui entièrement. Chaque check utilise Google directement ou des outils avec un formulaire. Aucun terminal, aucun code. Si vous savez faire une recherche Google, vous savez lire le verdict de chaque outil présenté dans le toolkit.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">109</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.faq2Q" datatype="html">
-        <source>Combien de temps pour voir des résultats SEO ?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">112</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.faq2A" datatype="html">
-        <source>Les corrections techniques (indexation, vitesse) produisent des effets visibles en 2 à 4 semaines. Les améliorations de contenu prennent 3 à 6 mois pour grimper dans les résultats. SEO = marathon, pas sprint.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">113</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.faq3Q" datatype="html">
-        <source>Comment recevoir le toolkit ?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">116</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.faq3A" datatype="html">
-        <source>Laissez votre email dans le formulaire. Vous recevrez le PDF dans la minute. Aucune newsletter automatique, aucun suivi marketing — conforme RGPD.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">117</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.brand" datatype="html">
-        <source>Asili Design — asilidesign.fr</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">120</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.audit-seo.toolkit.privacyLink" datatype="html">
-        <source>Politique de confidentialité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/shared/toolkits-formations.data.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditReportTitle" datatype="html">
@@ -11667,7 +11387,7 @@
         <source>Présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.presentation</note>
@@ -11676,7 +11396,7 @@
         <source>Projets</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.projects</note>
@@ -11685,7 +11405,7 @@
         <source>Articles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.articles</note>
@@ -11694,7 +11414,7 @@
         <source>Services</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <note priority="1" from="description">Navbar primary link</note>
         <note priority="1" from="meaning">navbar.link.offer</note>
@@ -11703,7 +11423,7 @@
         <source>Formations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <note priority="1" from="description">Formations dropdown label</note>
         <note priority="1" from="meaning">navbar.formations.label</note>
@@ -11712,7 +11432,7 @@
         <source>IA pour Solopreneurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.ia.title</note>
       </trans-unit>
@@ -11720,7 +11440,7 @@
         <source>Panorama des outils IA pour entrepreneurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.ia.desc</note>
       </trans-unit>
@@ -11728,7 +11448,7 @@
         <source>Automatiser avec l&apos;IA</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.auto.title</note>
       </trans-unit>
@@ -11736,7 +11456,7 @@
         <source>5 workflows non-tech pour gagner 2h/semaine</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.auto.desc</note>
       </trans-unit>
@@ -11744,7 +11464,7 @@
         <source>Audit SEO DIY</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.seo.title</note>
       </trans-unit>
@@ -11752,7 +11472,7 @@
         <source>7 checks en 20 min avec 5 outils gratuits</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.seo.desc</note>
       </trans-unit>
@@ -11760,7 +11480,7 @@
         <source>Toutes les formations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.all.title</note>
       </trans-unit>
@@ -11768,7 +11488,7 @@
         <source>Voir le catalogue complet</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="meaning">navbar.formations.all.desc</note>
       </trans-unit>
@@ -11776,7 +11496,7 @@
         <source>Ouvrir le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.open</note>
@@ -11785,7 +11505,7 @@
         <source>Fermer le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.close</note>
@@ -11794,7 +11514,7 @@
         <source>Menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">Mobile nav heading</note>
         <note priority="1" from="meaning">navbar.menu.heading</note>
@@ -11803,7 +11523,7 @@
         <source>Fermer le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.close</note>
@@ -11812,7 +11532,7 @@
         <source>Ouvrir le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">93</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.open</note>
@@ -11909,7 +11629,7 @@
         <source> Passer au contenu principal </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/skip-link.component.ts</context>
-          <context context-type="linenumber">14,20</context>
+          <context context-type="linenumber">16,22</context>
         </context-group>
         <note priority="1" from="description">Skip to main content</note>
         <note priority="1" from="meaning">skipLink.label</note>
@@ -11918,56 +11638,56 @@
         <source> Envoyé ! </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">36,38</context>
+          <context context-type="linenumber">35,37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.success.checkInbox" datatype="html">
         <source>Vérifiez votre boîte mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">39,41</context>
+          <context context-type="linenumber">38,40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.firstName.placeholder" datatype="html">
         <source>Votre prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">59,60</context>
+          <context context-type="linenumber">58,59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.email.placeholder" datatype="html">
         <source>Votre email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">74,75</context>
+          <context context-type="linenumber">73,74</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.terms.label" datatype="html">
         <source> J&apos;accepte que mes données soient utilisées pour recevoir la boîte à outils. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">91,93</context>
+          <context context-type="linenumber">90,92</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.error.message" datatype="html">
         <source> Une erreur est survenue. Réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">97,99</context>
+          <context context-type="linenumber">96,98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.submit.loading" datatype="html">
         <source>Envoi en cours...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">107,109</context>
+          <context context-type="linenumber">106,108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.submit.idle" datatype="html">
         <source>Recevoir la boîte à outils</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">109,111</context>
+          <context context-type="linenumber">108,110</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactMethodEmailLabel" datatype="html">
@@ -12028,42 +11748,42 @@
         <source>Voir le cas d’usage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html</context>
-          <context context-type="linenumber">50,52</context>
+          <context context-type="linenumber">59,61</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projectsGridCaseContext" datatype="html">
         <source>Contexte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html</context>
-          <context context-type="linenumber">53,54</context>
+          <context context-type="linenumber">62,63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projectsGridCaseProblem" datatype="html">
         <source>Problème</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html</context>
-          <context context-type="linenumber">57,58</context>
+          <context context-type="linenumber">66,67</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projectsGridCaseSolution" datatype="html">
         <source>Solution</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html</context>
-          <context context-type="linenumber">61,62</context>
+          <context context-type="linenumber">70,71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projectsGridCaseRole" datatype="html">
         <source>Rôle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html</context>
-          <context context-type="linenumber">65,66</context>
+          <context context-type="linenumber">74,75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projectsGridCaseResult" datatype="html">
         <source>Résultat</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/sections/asili-projects-grid/asili-projects-grid.component.html</context>
-          <context context-type="linenumber">69,70</context>
+          <context context-type="linenumber">78,79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideDeckFullscreenExit" datatype="html">

@@ -98,6 +98,25 @@ describe('redirects', () => {
       );
     });
 
+    for (const formation of ['automatiser-avec-ia', 'audit-seo-diy']) {
+      it(`redirige la boîte à outils retirée de ${formation} vers sa formation, locale préservée`, () => {
+        expect(resolveRedirect(`/formations/${formation}/toolkit`)).toBe(
+          `/fr/formations/${formation}`,
+        );
+        expect(resolveRedirect(`/fr/formations/${formation}/toolkit`)).toBe(
+          `/fr/formations/${formation}`,
+        );
+        expect(resolveRedirect(`/en/formations/${formation}/toolkit/`)).toBe(
+          `/en/formations/${formation}`,
+        );
+      });
+    }
+
+    it('laisse servir la boîte à outils d ia-solopreneurs', () => {
+      expect(resolveRedirect('/fr/formations/ia-solopreneurs/toolkit')).toBeNull();
+      expect(resolveRedirect('/en/formations/ia-solopreneurs/toolkit')).toBeNull();
+    });
+
     it('ne prend pas pour l atelier un chemin qui en partage seulement le debut', () => {
       expect(resolveRedirect('/ateliers')).toBeNull();
       expect(resolveRedirect('/fr/atelier-ia')).toBeNull();

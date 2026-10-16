@@ -135,7 +135,7 @@ export const FORMATIONS: readonly FormationCard[] = [
     description: $localize`:@@formations-list.auto-ia.description:5 workflows testés sans coder — devis, emails, réseaux, factures, veille — pour récupérer environ 2h par jour. Concrets, reproductibles, applicables tout de suite.`,
     duree: $localize`:@@formations-list.auto-ia.duration:25 min · 13 slides`,
     format: $localize`:@@formations-list.auto-ia.format:Slides + sondages`,
-    avecToolkit: true,
+    avecToolkit: false,
     variant: 'default',
   }),
   formationGratuite({
@@ -145,14 +145,14 @@ export const FORMATIONS: readonly FormationCard[] = [
     description: $localize`:@@formations-list.audit-seo.description:7 checks SEO concrets avec 5 outils gratuits, pour savoir si Google trouve votre site — et corriger vous-même ce qui coince.`,
     duree: $localize`:@@formations-list.audit-seo.duration:20 min · 14 slides`,
     format: $localize`:@@formations-list.audit-seo.format:Slides + checklist`,
-    avecToolkit: true,
+    avecToolkit: false,
     variant: 'default',
   }),
   {
     link: '/formations/ia-solopreneurs/toolkit',
     badge: $localize`:@@formations-list.toolkit.badge:Bonus`,
     title: $localize`:@@formations-list.toolkit.title:Le toolkit à emporter`,
-    description: $localize`:@@formations-list.toolkit.description:Chaque formation s'accompagne d'un toolkit PDF : modèles de prompts, checklists, workflows prêts à l'emploi. Votre email sert uniquement à vous l'envoyer.`,
+    description: $localize`:@@formations-list.toolkit.description:La formation « L'IA au service des solopreneurs » s'accompagne d'un toolkit PDF : modèles de prompts, checklists, workflows prêts à l'emploi. Votre email sert uniquement à vous l'envoyer.`,
     meta: [
       {
         key: $localize`:@@formations-list.toolkit.meta.content:Contenu`,
@@ -183,6 +183,6 @@ export const FORMATION_BENEFITS: readonly FormationBenefit[] = [
   {
     icon: 'toolkit',
     title: $localize`:@@formations-list.benefit.toolkit.title:Un toolkit à emporter`,
-    desc: $localize`:@@formations-list.benefit.toolkit.desc:Chaque session se termine par un PDF actionnable, pour passer de l'écoute à la pratique.`,
+    desc: $localize`:@@formations-list.benefit.toolkit.desc:La formation IA pour solopreneurs se termine par un toolkit PDF actionnable, pour passer de l'écoute à la pratique.`,
   },
 ];

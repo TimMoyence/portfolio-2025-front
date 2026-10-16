@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RevealOnScrollDirective } from '../../../shared/directives/reveal-on-scroll.directive';
 import { ToolkitFormComponent } from '../../../shared/components/toolkit-form/toolkit-form.component';
-import { TOOLKITS_FORMATIONS, type ToolkitFormation } from './toolkits-formations.data';
+import { TOOLKIT_IA_SOLO } from './toolkits-formations.data';
 
 @Component({
   selector: 'app-toolkit-gate-page',
@@ -13,17 +13,5 @@ import { TOOLKITS_FORMATIONS, type ToolkitFormation } from './toolkits-formation
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToolkitGatePageComponent {
-  readonly formationSlug = input<Exclude<ToolkitFormation, 'ia-solo'> | null>(null);
-
-  readonly headingKey = computed((): ToolkitFormation => this.formationSlug() ?? 'ia-solo');
-
-  protected readonly data = computed(() => TOOLKITS_FORMATIONS[this.headingKey()]);
-
-  protected get contentsHeadingId(): string {
-    return `toolkit-${this.headingKey()}-contents-heading`;
-  }
-
-  protected get faqHeadingId(): string {
-    return `toolkit-${this.headingKey()}-faq-heading`;
-  }
+  protected readonly data = TOOLKIT_IA_SOLO;
 }

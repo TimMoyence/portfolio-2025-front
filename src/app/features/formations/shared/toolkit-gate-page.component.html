@@ -15,10 +15,10 @@
       <ng-content select="[title]" />
     </h1>
 
-    <p class="lead">{{ data().lead }}</p>
+    <p class="lead">{{ data.lead }}</p>
 
     <div class="tk-items">
-      @for (item of data().items; track item.label) {
+      @for (item of data.items; track item.label) {
         <div class="it">
           <span class="ck" aria-hidden="true">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
@@ -37,30 +37,26 @@
     </div>
 
     <div class="tk-form-host">
-      @if (formationSlug(); as slug) {
-        <app-toolkit-form [formationSlug]="slug" />
-      } @else {
-        <app-toolkit-form />
-      }
+      <app-toolkit-form />
     </div>
 
-    <p class="tk-foot">{{ data().foot }}</p>
+    <p class="tk-foot">{{ data.foot }}</p>
   </div>
 
   <div class="tk-editorial">
-    <section class="tk-section" [attr.aria-labelledby]="contentsHeadingId">
-      <h2 [id]="contentsHeadingId">{{ data().contentsTitle }}</h2>
+    <section class="tk-section" aria-labelledby="toolkit-ia-solo-contents-heading">
+      <h2 id="toolkit-ia-solo-contents-heading">{{ data.contentsTitle }}</h2>
       <ul class="tk-list">
-        @for (point of data().contents; track point) {
+        @for (point of data.contents; track point) {
           <li>{{ point }}</li>
         }
       </ul>
     </section>
 
-    <section class="tk-section" [attr.aria-labelledby]="faqHeadingId">
-      <h2 [id]="faqHeadingId">{{ data().faqTitle }}</h2>
+    <section class="tk-section" aria-labelledby="toolkit-ia-solo-faq-heading">
+      <h2 id="toolkit-ia-solo-faq-heading">{{ data.faqTitle }}</h2>
       <div class="tk-faq">
-        @for (qa of data().faq; track qa.question) {
+        @for (qa of data.faq; track qa.question) {
           <div class="tk-qa">
             <h3>{{ qa.question }}</h3>
             <p>{{ qa.answer }}</p>
@@ -70,9 +66,9 @@
     </section>
 
     <p class="tk-brand">
-      <span>{{ data().brand }}</span>
+      <span>{{ data.brand }}</span>
       —
-      <a routerLink="/privacy">{{ data().privacyLabel }}</a>
+      <a routerLink="/privacy">{{ data.privacyLabel }}</a>
     </p>
   </div>
 </section>
