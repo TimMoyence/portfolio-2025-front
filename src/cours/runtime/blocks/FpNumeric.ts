@@ -2,7 +2,7 @@ import { lireNombreSaisi } from 'portfolio-2025-partage/formule';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpReponse } from './reponse';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
-import { bonneReponseRevelee, lireBonneReponse } from './retours';
+import { bonneReponseRevelee, lireBonneReponse, marqueDeCorrection } from './retours';
 
 export interface NumericQuestionPublique extends ContenuDeBrique {
   readonly enonce: string;
@@ -69,12 +69,9 @@ export class FpNumeric extends FpReponse<NumericQuestionPublique> {
   }
 
   private marqueDeSaisie(): EscapedHtml {
-    if (this.bonneReponse === null || this.interneVerdict === null) {
-      return escapeHtml('');
-    }
-    return this.interneVerdict.correcte
-      ? safeHtml` data-correction="juste"`
-      : safeHtml` data-correction="fausse"`;
+    return marqueDeCorrection(
+      this.bonneReponse === null ? null : (this.interneVerdict?.correcte ?? null),
+    );
   }
 
   bind(racine: ShadowRoot): void {

@@ -1,17 +1,12 @@
 import { evaluerExpression, remplirGabarit } from 'portfolio-2025-partage/formule';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { enFrancais } from '../core/typographie';
 import { fini } from '../core/valeurs';
 import { type Reglages } from './animation';
 import { plafondDe, plancherDe } from './curseurs';
 import { echelle, jalons } from './echelle';
-import {
-  type DefinitionReglable,
-  FpReglable,
-  arrondi,
-  copierLeReglable,
-  formater,
-} from './reglable';
+import { type DefinitionReglable, FpReglable, arrondi, copierLeReglable } from './reglable';
 
 export interface Concept4Definition extends DefinitionReglable {
   readonly formuleLatexSimplifie: string;
@@ -133,7 +128,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     return safeHtml`
       <div class="fp-concept4__face fp-encadre" data-testid="formule" data-valeur="${escapeHtml(String(resultat))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-formule'))}</h3>
-        <p class="fp-concept4__formule fp-montant">${this.termes(definition)} = <span class="fp-concept4__resultat" data-testid="resultat-formule">${escapeHtml(formater(resultat))}</span></p>
+        <p class="fp-concept4__formule fp-montant">${this.termes(definition)} = <span class="fp-concept4__resultat" data-testid="resultat-formule">${escapeHtml(enFrancais(resultat))}</span></p>
       </div>
     `;
   }
@@ -280,7 +275,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
       this.texte('concept4-etape'),
       etapes.map(
         (etape, rang) =>
-          safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(rang === derniere))}"><td>${escapeHtml(etape.libelle)}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(formater(resultats[rang]))}</td></tr>`,
+          safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(rang === derniere))}"><td>${escapeHtml(etape.libelle)}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(enFrancais(resultats[rang]))}</td></tr>`,
       ),
     );
   }
@@ -320,11 +315,11 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
   }
 
   private ligne(ligne: LigneTableau): EscapedHtml {
-    return safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(ligne.courant))}"><td class="fp-montant">${escapeHtml(formater(ligne.valeur))}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(formater(ligne.resultat))}</td></tr>`;
+    return safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(ligne.courant))}"><td class="fp-montant">${escapeHtml(enFrancais(ligne.valeur))}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(enFrancais(ligne.resultat))}</td></tr>`;
   }
 
   private enMots(definition: Concept4Definition, valeurs: Valeurs, resultat: number): EscapedHtml {
-    const phrase = remplirGabarit(definition.phrase, { ...valeurs, resultat }, formater);
+    const phrase = remplirGabarit(definition.phrase, { ...valeurs, resultat }, enFrancais);
     return safeHtml`
       <div class="fp-concept4__face" data-testid="phrase" data-valeur="${escapeHtml(String(resultat))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-phrase'))}</h3>

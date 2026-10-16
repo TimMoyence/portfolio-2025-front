@@ -59,19 +59,10 @@ export class FpPro extends FpRedaction<ProCas> {
       return;
     }
     const verrouille = this.verrouille();
-    for (const champ of racine.querySelectorAll<HTMLTextAreaElement>('textarea[data-question]')) {
-      const cle = champ.dataset['question'] ?? '';
-      champ.disabled = verrouille;
-      champ.addEventListener('input', () => {
-        this.noter(cle, champ.value);
-        this.effacerRappel(racine);
-      });
-    }
-    const valider = racine.querySelector<HTMLButtonElement>('[data-testid="valider"]');
-    if (valider !== null) {
-      valider.disabled = verrouille;
-      valider.addEventListener('click', () => this.valider());
-    }
+    this.brancherLesZones(racine, 'data-question', verrouille, {
+      apresSaisie: () => this.effacerRappel(racine),
+    });
+    this.brancherLesBoutons(racine, '[data-testid="valider"]', verrouille, () => this.valider());
   }
 
   private questions(): readonly QuestionLibre[] {

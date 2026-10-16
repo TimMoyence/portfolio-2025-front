@@ -4,10 +4,11 @@ import { FpReponse } from './reponse';
 import {
   type ContenuDeBrique,
   type OptionPublique,
+  avecJeNeSaisPas,
   copierLeSocle,
   projeterOptions,
 } from './projection';
-import { bonneReponseRevelee, lireBonneOption, lireBonneReponse } from './retours';
+import { bonneReponseRevelee, lireBonneOption, lireBonneReponse, marqueDOption } from './retours';
 
 export interface RecallQuestionPublique extends ContenuDeBrique {
   readonly enonce: string;
@@ -15,7 +16,6 @@ export interface RecallQuestionPublique extends ContenuDeBrique {
 }
 
 const DELAI_RAPPEL_MS = 8000;
-const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
 const VIDE = escapeHtml('');
 const DESACTIVE = safeHtml`disabled`;
 
@@ -156,10 +156,9 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
         this.signalerBrouillon(this.interne?.id ?? '', { rappel: champ.value });
       });
     }
-    for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
-      bouton.disabled = verrouille;
-      bouton.addEventListener('click', () => this.choisir(bouton.dataset['option'] ?? ''));
-    }
+    this.brancherLesBoutons(racine, '[data-option]', verrouille, ({ dataset }) =>
+      this.choisir(dataset['option'] ?? ''),
+    );
   }
 
   protected effacerLaSaisie(): void {
@@ -192,28 +191,14 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
     if (question === null || this.restantMs() > 0) {
       return escapeHtml('');
     }
-    const options = [
-      ...question.options,
-      { id: ID_JE_NE_SAIS_PAS, libelle: this.texte('je-ne-sais-pas') },
-    ];
     const proposees = this.presentateur()
-      ? options.filter((option) => option.id !== ID_JE_NE_SAIS_PAS)
-      : options;
+      ? question.options
+      : avecJeNeSaisPas(question.options, this.texte('je-ne-sais-pas'));
     const boutons = proposees.map(
       (option) =>
-        safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}" aria-pressed="${escapeHtml(String(option.id === this.choisie))}"${this.marqueDeCorrection(option.id)} ${this.presentateur() ? DESACTIVE : VIDE}>${escapeHtml(option.libelle)}</button>`,
+        safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}" aria-pressed="${escapeHtml(String(option.id === this.choisie))}"${marqueDOption(option.id, this.bonneOption, option.id === this.choisie)} ${this.presentateur() ? DESACTIVE : VIDE}>${escapeHtml(option.libelle)}</button>`,
     );
     return safeHtml`<div class="fp-recall__options" data-testid="options">${boutons}</div>`;
-  }
-
-  private marqueDeCorrection(id: string): EscapedHtml {
-    if (this.bonneOption === null) {
-      return escapeHtml('');
-    }
-    if (id === this.bonneOption) {
-      return safeHtml` data-correction="juste"`;
-    }
-    return id === this.choisie ? safeHtml` data-correction="fausse"` : escapeHtml('');
   }
 
   private planifier(): void {

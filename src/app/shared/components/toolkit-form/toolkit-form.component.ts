@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Inject,
   LOCALE_ID,
@@ -15,6 +16,7 @@ import type { ToolkitRequest } from '../../../core/models/toolkit-request.model'
 import { HoneypotDirective } from '../../directives/honeypot.directive';
 import { InteractionCollectorService } from '../../services/interaction-collector.service';
 import { readInputValue, readCheckboxChecked } from '../../utils/dom-event.utils';
+import { handleFormSubmit, INFORMATIONS_REFUSEES } from '../../utils/form-submit.utils';
 import { BORNES_D_UN_NOM, erreursDeLongueur } from '../../utils/regles-de-saisie';
 import { FieldErrorsComponent } from '../field-errors/field-errors.component';
 
@@ -92,9 +94,7 @@ const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
           </label>
 
           @if (state() === 'error') {
-            <p class="text-sm text-red-600" data-toolkit-error i18n="@@toolkit-form.error.message">
-              Une erreur est survenue. Réessayez.
-            </p>
+            <p class="text-sm text-red-600" data-toolkit-error>{{ erreurDEnvoi() }}</p>
           }
 
           <button
@@ -117,6 +117,7 @@ export class ToolkitFormComponent {
   readonly formationSlug = 'ia-solopreneurs';
 
   private readonly port = inject(LEAD_MAGNET_PORT);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly collector = inject(InteractionCollectorService, {
     optional: true,
   });
@@ -135,6 +136,7 @@ export class ToolkitFormComponent {
   readonly termsAccepted = signal(false);
   readonly state = signal<FormState>('idle');
   readonly submittedEmail = signal('');
+  protected readonly erreurDEnvoi = signal('');
 
   protected readonly erreursDuPrenom = computed(() =>
     erreursDeLongueur(this.firstName(), BORNES_D_UN_NOM),
@@ -177,9 +179,14 @@ export class ToolkitFormComponent {
       request.profile = this.collector.profile();
     }
 
-    this.port.requestToolkit(request).subscribe({
-      next: () => this.state.set('success'),
-      error: () => this.state.set('error'),
+    handleFormSubmit(this.port.requestToolkit(request), this.cdr, {
+      fallbackError: $localize`:@@toolkit-form.error.message:Une erreur est survenue. Réessayez.`,
+      refus: { 400: INFORMATIONS_REFUSEES },
+      onSuccess: () => this.state.set('success'),
+      onError: (message) => {
+        this.erreurDEnvoi.set(message);
+        this.state.set('error');
+      },
     });
   }
 }

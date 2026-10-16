@@ -1,10 +1,15 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 import type {
   MotifRefusReponseLibre,
   ReponseLibreEtudiant,
 } from '../../../core/ports/formations.port';
-import { FORMATIONS_PORT, ReponseLibreRefusee } from '../../../core/ports/formations.port';
+import {
+  FORMATIONS_PORT,
+  limiteDuRefus,
+  ReponseLibreRefusee,
+} from '../../../core/ports/formations.port';
 import type { EtatParticipant } from '../../../../cours/content/types';
 import { readIdentity } from '../../../../cours/runtime/core/identity';
 import type { PendingFreeResponse } from '../interactions/slide-reflection/free-response.queue';
@@ -17,6 +22,7 @@ import {
 export type EtatEnvoiLibre =
   | 'enregistre'
   | 'attente_reseau'
+  | 'attente_limite'
   | 'ecran_non_servi'
   | 'seance_non_demarree'
   | 'seance_terminee'
@@ -35,7 +41,12 @@ export function cleDeReponseLibre(sessionId: string, screenId: string, activityI
   return `${sessionId}:${screenId}:${activityId}`;
 }
 
-const ETATS_GARDES: readonly EtatEnvoiLibre[] = ['enregistre', 'attente_reseau', 'ecran_non_servi'];
+const ETATS_GARDES: readonly EtatEnvoiLibre[] = [
+  'enregistre',
+  'attente_reseau',
+  'attente_limite',
+  'ecran_non_servi',
+];
 
 function cleDeTexteGarde(sessionId: string, activityId: string): string {
   return `${sessionId}:${activityId}`;
@@ -56,6 +67,9 @@ export class ReponsesLibresService {
   private readonly gardes = signal<ReadonlyMap<string, string>>(new Map());
 
   readonly etatsDesEnvois = this.etats.asReadonly();
+  private readonly reussites = new Subject<void>();
+  readonly envoisReussis: Observable<void> = this.reussites.asObservable();
+  private readonly reprises = new Map<string, Promise<unknown>>();
 
   texteGarde(sessionId: string, activityId: string): string | null {
     return this.gardes().get(cleDeTexteGarde(sessionId, activityId)) ?? null;
@@ -75,7 +89,8 @@ export class ReponsesLibresService {
   }
 
   private noter(envoi: PendingFreeResponse, etat: EtatEnvoiLibre): EtatEnvoiLibre {
-    this.etats.update((connus) => new Map(connus).set(cleLogiqueDe(envoi), etat));
+    const cleLogique = cleLogiqueDe(envoi);
+    this.etats.update((connus) => new Map(connus).set(cleLogique, etat));
     const cle = cleDeTexteGarde(envoi.sessionId, envoi.activityId);
     this.gardes.update((connus) => {
       const suivants = new Map(connus);
@@ -111,7 +126,21 @@ export class ReponsesLibresService {
     });
   }
 
-  async reprendre(sessionId: string, jeton: string): Promise<ReadonlyMap<string, EtatEnvoiLibre>> {
+  reprendre(sessionId: string, jeton: string): Promise<ReadonlyMap<string, EtatEnvoiLibre>> {
+    const passe = (this.reprises.get(sessionId) ?? Promise.resolve()).then(() =>
+      this.repasserLaFile(sessionId, jeton),
+    );
+    this.reprises.set(
+      sessionId,
+      passe.catch(() => undefined),
+    );
+    return passe;
+  }
+
+  private async repasserLaFile(
+    sessionId: string,
+    jeton: string,
+  ): Promise<ReadonlyMap<string, EtatEnvoiLibre>> {
     const etats = new Map<string, EtatEnvoiLibre>();
     const studentKey = readIdentity()?.studentKey;
     if (studentKey === undefined) {
@@ -124,7 +153,11 @@ export class ReponsesLibresService {
   }
 
   private async transmettre(jeton: string, envoi: PendingFreeResponse): Promise<EtatEnvoiLibre> {
-    return this.noter(envoi, await this.issueDeLEnvoi(jeton, envoi));
+    const etat = this.noter(envoi, await this.issueDeLEnvoi(jeton, envoi));
+    if (etat === 'enregistre') {
+      this.reussites.next();
+    }
+    return etat;
   }
 
   private async issueDeLEnvoi(jeton: string, envoi: PendingFreeResponse): Promise<EtatEnvoiLibre> {
@@ -161,9 +194,12 @@ export class ReponsesLibresService {
     }
     try {
       await enqueueFreeResponse(envoi);
-      return motif === 'reseau' ? 'attente_reseau' : 'ecran_non_servi';
     } catch {
       return 'echec';
     }
+    if (limiteDuRefus(erreur) !== null) {
+      return 'attente_limite';
+    }
+    return motif === 'reseau' ? 'attente_reseau' : 'ecran_non_servi';
   }
 }

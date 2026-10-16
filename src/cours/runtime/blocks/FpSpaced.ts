@@ -3,11 +3,17 @@ import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import {
   type ContenuDeBrique,
   type OptionPublique,
+  avecJeNeSaisPas,
   copierLeSocle,
   projeterOptions,
 } from './projection';
 import { estObjet } from '../core/valeurs';
-import type { ConceptMaitrise } from './retours';
+import {
+  bonneReponseRevelee,
+  type CibleRevelee,
+  type ConceptMaitrise,
+  lireCibleRevelee,
+} from './retours';
 import { FpVerdicts } from './verdicts';
 
 export interface SpacedRappel extends ContenuDeBrique {
@@ -25,6 +31,7 @@ export interface SpacedQuestionPublique {
 
 const VIDE = escapeHtml('');
 const BOITES = [1, 2, 3] as const;
+const BONNE_EN_LIGNE = safeHtml`class="fp-spaced__bonne"`;
 
 function projeterQuestion(source: SpacedQuestionPublique): SpacedQuestionPublique {
   return {
@@ -37,29 +44,15 @@ function projeterQuestion(source: SpacedQuestionPublique): SpacedQuestionPubliqu
   };
 }
 
-interface BonneReponse {
-  readonly cible: string;
-  readonly optionId: string | null;
-}
-
-function lireBonnesReponses(valeur: unknown): ReadonlyMap<string, BonneReponse> | null {
+function lireBonnesReponses(valeur: unknown): ReadonlyMap<string, CibleRevelee> | null {
   if (!estObjet(valeur) || valeur['type'] !== 'reponses' || !estObjet(valeur['reponses'])) {
     return null;
   }
   return new Map(
-    Object.entries(valeur['reponses']).flatMap(([questionId, bonne]) =>
-      estObjet(bonne) && typeof bonne['cible'] === 'string'
-        ? [
-            [
-              questionId,
-              {
-                cible: bonne['cible'],
-                optionId: typeof bonne['optionId'] === 'string' ? bonne['optionId'] : null,
-              },
-            ] as const,
-          ]
-        : [],
-    ),
+    Object.entries(valeur['reponses']).flatMap(([questionId, bonne]) => {
+      const cible = lireCibleRevelee(bonne);
+      return cible === null ? [] : [[questionId, cible] as const];
+    }),
   );
 }
 
@@ -77,7 +70,7 @@ export class FpSpaced extends FpVerdicts {
   private interne: readonly SpacedQuestionPublique[] | null = null;
   private repondues = new Set<string>();
   private carte: readonly ConceptMaitrise[] = [];
-  private bonnes: ReadonlyMap<string, BonneReponse> | null = null;
+  private bonnes: ReadonlyMap<string, CibleRevelee> | null = null;
   private message = '';
 
   set rappel(valeur: SpacedRappel | null) {
@@ -160,9 +153,9 @@ export class FpSpaced extends FpVerdicts {
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.cleAffichage());
-    for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
-      bouton.addEventListener('click', () => this.repondre(bouton.dataset['option'] ?? ''));
-    }
+    this.brancherLesBoutons(racine, '[data-option]', false, ({ dataset }) =>
+      this.repondre(dataset['option'] ?? ''),
+    );
   }
 
   private entete(): EscapedHtml {
@@ -236,11 +229,7 @@ export class FpSpaced extends FpVerdicts {
   }
 
   private options(question: SpacedQuestionPublique): EscapedHtml {
-    const options = [
-      ...question.options,
-      { id: '__je_ne_sais_pas__', libelle: this.texte('je-ne-sais-pas') },
-    ];
-    const boutons = options.map(
+    const boutons = avecJeNeSaisPas(question.options, this.texte('je-ne-sais-pas')).map(
       (option) =>
         safeHtml`<button type="button" class="fp-spaced__option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,
     );
@@ -266,7 +255,7 @@ export class FpSpaced extends FpVerdicts {
     }
     const libelle =
       question.options.find((option) => option.id === bonne.optionId)?.libelle ?? bonne.cible;
-    return safeHtml`<span class="fp-spaced__bonne" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(libelle)}</span>`;
+    return bonneReponseRevelee(this.texte('bonne-reponse'), libelle, BONNE_EN_LIGNE);
   }
 
   private carteDeMaitrise(): EscapedHtml {

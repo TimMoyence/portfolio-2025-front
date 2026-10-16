@@ -1,9 +1,10 @@
 import { evaluerExpression, lireNombreSaisi } from 'portfolio-2025-partage/formule';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { enFrancais } from '../core/typographie';
 import { entierBorne } from '../core/valeurs';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
-import { type DetailDeVerdict } from './retours';
+import { type DetailDeVerdict, marqueDeCorrection } from './retours';
 
 export type RoleColonne = 'donnee' | 'saisie' | 'deduite';
 
@@ -71,12 +72,6 @@ function lireMontant(brut: string): number {
 
 function bornerDecimales(decimales: number): number {
   return entierBorne(decimales, 0, DECIMALES_MAX, 2);
-}
-
-function formater(valeur: number, decimales: number): string {
-  return Number.isFinite(valeur)
-    ? valeur.toFixed(bornerDecimales(decimales)).replace('.', ',')
-    : TIRET;
 }
 
 export function cleDeCellule(rang: number | string, cle: string): string {
@@ -148,7 +143,10 @@ function copierPlan(source: TableBuildPlanPublic): TableBuildPlanPublic {
     libellesLignes: [...source.libellesLignes],
     parametres: nombresFinis(source.parametres),
     colonnes: source.colonnes.map(copierColonne),
-    synthese: source.synthese.map((element) => ({ ...element })),
+    synthese: source.synthese.map((element) => ({
+      ...element,
+      decimales: bornerDecimales(element.decimales),
+    })),
   };
 }
 
@@ -256,19 +254,11 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     );
   }
 
-  private accessible(cle: string): boolean {
-    if (!this.verrouille()) {
-      return true;
-    }
-    const [rang, colonne] = cle.split(':');
-    return this.correction === 0 && this.detailDeLaCellule(Number(rang), colonne)?.juste === false;
-  }
-
   private brancher(champ: HTMLInputElement | HTMLSelectElement): void {
     const cle = cleDeCellule(champ.dataset['rang'] ?? '', champ.dataset['cle'] ?? '');
-    champ.disabled = !this.accessible(cle);
+    champ.disabled = !this.celluleAccessible(cle);
     champ.addEventListener('input', () => this.noter(cle, champ.value));
-    if (cle === this.suivie && this.accessible(cle)) {
+    if (cle === this.suivie && this.celluleAccessible(cle)) {
       champ.focus();
       if (champ instanceof HTMLInputElement) {
         champ.setSelectionRange(champ.value.length, champ.value.length);
@@ -277,17 +267,12 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
   }
 
   private noter(cle: string, valeur: string): void {
-    if (!this.accessible(cle)) {
+    if (!this.celluleAccessible(cle)) {
       return;
     }
     this.tapees = { ...this.tapees, [cle]: valeur };
     this.suivie = cle;
-    this.message = '';
-    if (this.verrouille()) {
-      this.reprises = new Set([...this.reprises, cle]);
-    }
-    this.signalerBrouillon(this.interne?.id ?? '', { ...this.tapees });
-    this.refresh();
+    this.noterLaSaisie(cle, { ...this.tapees });
   }
 
   private colonnes(): readonly TableColonne[] {
@@ -385,10 +370,10 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
       rendu === 'correction'
         ? `${this.texte('worked-correction')} — ${this.interne?.intitule ?? ''}`
         : (this.interne?.intitule ?? '');
-    const marque = rendu === 'correction' ? safeHtml`data-correction="juste"` : VIDE;
+    const marque = marqueDeCorrection(rendu === 'correction' ? true : null);
     return safeHtml`
       ${dansUnDefileur(safeHtml`
-        <table class="fp-table-build__tableau" data-testid="${escapeHtml(rendu === 'correction' ? 'tableau-corrige' : 'tableau')}" ${marque}>
+        <table class="fp-table-build__tableau" data-testid="${escapeHtml(rendu === 'correction' ? 'tableau-corrige' : 'tableau')}"${marque}>
           <caption class="fp-table-build__intitule">${escapeHtml(intitule)}</caption>
           <thead><tr>${this.enteteRang()}${this.colonnes().map((colonne) => this.entete(colonne))}</tr></thead>
           <tbody>${lignes.map((ligne) => this.ligne(ligne, rendu))}</tbody>
@@ -455,7 +440,7 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     const valeur = ligne.valeurs[colonne.cle] ?? Number.NaN;
     return estBooleenne(colonne)
       ? this.valeurDeVerite(colonne, valeur)
-      : formater(valeur, colonne.decimales);
+      : enFrancais(valeur, colonne.decimales);
   }
 
   private valeurDeVerite(colonne: TableColonne, valeur: number): string {
@@ -506,9 +491,7 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     colonne: TableColonne,
     totaux: Readonly<Record<string, number>>,
   ): EscapedHtml {
-    const total = colonne.totalise
-      ? formater(totaux[colonne.cle] ?? Number.NaN, colonne.decimales)
-      : '';
+    const total = colonne.totalise ? enFrancais(totaux[colonne.cle], colonne.decimales) : '';
     return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}" data-testid="total" data-cle="${escapeHtml(colonne.cle)}">${escapeHtml(total)}</td>`;
   }
 
@@ -521,7 +504,7 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     const reste =
       (derniere.valeurs[colonne.soldeDe] ?? Number.NaN) -
       (derniere.valeurs[colonne.cle] ?? Number.NaN);
-    return safeHtml`<p class="fp-table-build__solde fp-montant" data-testid="solde">${escapeHtml(this.texte('table-build-solde'))} ${escapeHtml(formater(reste, colonne.decimales))}</p>`;
+    return safeHtml`<p class="fp-table-build__solde fp-montant" data-testid="solde">${escapeHtml(this.texte('table-build-solde'))} ${escapeHtml(enFrancais(reste, colonne.decimales))}</p>`;
   }
 
   private synthese(lignes: readonly LigneBatie[]): EscapedHtml {
@@ -539,7 +522,7 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     variables: Record<string, number>,
   ): EscapedHtml {
     const valeur = this.evaluer(element.formule, variables);
-    const formatee = formater(valeur, element.decimales);
+    const formatee = enFrancais(valeur, element.decimales);
     const affichee =
       Number.isFinite(valeur) && element.unite !== null ? `${formatee} ${element.unite}` : formatee;
     return safeHtml`<div class="fp-table-build__resultat" data-testid="synthese-ligne"><dt>${escapeHtml(element.libelle)}</dt><dd class="fp-montant">${escapeHtml(affichee)}</dd></div>`;

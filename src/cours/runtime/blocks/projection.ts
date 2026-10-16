@@ -27,3 +27,12 @@ export function copierLeSocle(source: ContenuDeBrique): ContenuDeBrique {
 export function projeterOptions(options: readonly OptionPublique[]): OptionPublique[] {
   return options.map((option) => ({ id: option.id, libelle: option.libelle }));
 }
+
+export const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
+
+export function avecJeNeSaisPas(
+  options: readonly OptionPublique[],
+  libelle: string,
+): OptionPublique[] {
+  return [...options, { id: ID_JE_NE_SAIS_PAS, libelle }];
+}

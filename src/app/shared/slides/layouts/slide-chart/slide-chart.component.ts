@@ -12,10 +12,10 @@ import {
 } from '@angular/core';
 import { prefereMouvementReduit } from '../../../../../cours/runtime/core/mouvement';
 import { DefileurDeTableauComponent } from '../../defileur-de-tableau/defileur-de-tableau.component';
+import { enFrancais } from '../../../../../cours/runtime/core/typographie';
 import { DonneesDeFigureComponent } from '../../donnees-de-figure/donnees-de-figure.component';
 import {
   INTERVALLES_VISES,
-  NOMBRE_FRANCAIS,
   PRECISION,
   arrondir,
   position,
@@ -408,9 +408,7 @@ export class SlideChartComponent {
     return `${this.title()}: ${this.caption()}: ${data}`.trim();
   }
 
-  protected formatValue(value: number): string {
-    return NOMBRE_FRANCAIS.format(value);
-  }
+  protected readonly formatValue = enFrancais;
 
   protected marqueur(seriesIndex: number): MarqueurDeSerie {
     return MARQUEURS[seriesIndex % MARQUEURS.length];

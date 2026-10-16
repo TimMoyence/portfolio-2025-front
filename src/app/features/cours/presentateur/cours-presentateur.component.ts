@@ -1,5 +1,5 @@
 import { isPlatformBrowser, Location, PercentPipe } from '@angular/common';
-import type { ElementRef, WritableSignal } from '@angular/core';
+import type { ElementRef } from '@angular/core';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -39,7 +39,9 @@ import type {
 } from '../../../core/ports/formations.port';
 import { part } from '../../../../cours/runtime/core/valeurs';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
+import { messageDeLaLimiteAtteinte } from '../../../core/http/limite-de-debit';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
+import { type Chargement, lectureSuivie } from '../lecture-suivie';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import { enoncesDuDeroule, estVoteJumele } from '../../../shared/slides/session/lecture-ecran';
 import {
@@ -57,7 +59,7 @@ import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.co
 import { PanneauParticipantsComponent } from './panneau-pedagogique/panneau-participants.component';
 import { questionsDuPanneau } from './questions-du-panneau';
 import { phraseDeNotation } from './regle-de-notation';
-import { NOMBRE_FRANCAIS } from '../../../shared/slides/layouts/axe-gradue';
+import { enFrancais } from '../../../../cours/runtime/core/typographie';
 import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
 import { correctionsAffichees } from './corrections-affichees';
 import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
@@ -72,8 +74,6 @@ function resultatsDuRapport(rapport: RapportSeance): ResultatsSeance {
     ? rapport.resultats
     : { ...rapport.resultats, statistiques: rapport.statistiques };
 }
-
-type Chargement = 'repos' | 'chargement' | 'succes' | 'echec';
 
 const RANG_DE_L_ETAT: Readonly<Record<EtatSeance, number>> = {
   fermee: 0,
@@ -131,13 +131,17 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
           </p>
         }
         @case ('echec') {
-          <p
-            data-testid="presentateur-ouverture-echec"
-            role="alert"
-            i18n="presentateur.ouvertureEchec|@@presentateurOuvertureEchec"
-          >
-            La séance n'a pas pu être ouverte. Vérifiez la connexion, puis réessayez.
-          </p>
+          @if (limiteDeLOuverture(); as limite) {
+            <p data-testid="presentateur-ouverture-echec" role="alert">{{ limite }}</p>
+          } @else {
+            <p
+              data-testid="presentateur-ouverture-echec"
+              role="alert"
+              i18n="presentateur.ouvertureEchec|@@presentateurOuvertureEchec"
+            >
+              La séance n'a pas pu être ouverte. Vérifiez la connexion, puis réessayez.
+            </p>
+          }
         }
       }
       @switch (reprise()) {
@@ -151,13 +155,17 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
           </p>
         }
         @case ('echec') {
-          <p
-            data-testid="presentateur-reprise-echec"
-            role="alert"
-            i18n="presentateur.repriseEchec|@@presentateurRepriseEchec"
-          >
-            La séance n'a pas pu être reprise. Vérifiez la connexion, puis réessayez.
-          </p>
+          @if (limiteDeLaReprise(); as limite) {
+            <p data-testid="presentateur-reprise-echec" role="alert">{{ limite }}</p>
+          } @else {
+            <p
+              data-testid="presentateur-reprise-echec"
+              role="alert"
+              i18n="presentateur.repriseEchec|@@presentateurRepriseEchec"
+            >
+              La séance n'a pas pu être reprise. Vérifiez la connexion, puis réessayez.
+            </p>
+          }
           <button
             type="button"
             data-testid="presentateur-reprise-reessayer"
@@ -680,13 +688,17 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
         </button>
       }
       @if (echec()) {
-        <p
-          data-testid="presentateur-echec"
-          role="alert"
-          i18n="presentateur.echec|@@presentateurEchec"
-        >
-          La dernière commande n'est pas passée. Vérifiez la connexion, puis réessayez.
-        </p>
+        @if (limiteDeLaCommande(); as limite) {
+          <p data-testid="presentateur-echec" role="alert">{{ limite }}</p>
+        } @else {
+          <p
+            data-testid="presentateur-echec"
+            role="alert"
+            i18n="presentateur.echec|@@presentateurEchec"
+          >
+            La dernière commande n'est pas passée. Vérifiez la connexion, puis réessayez.
+          </p>
+        }
       }
     </div>
   `,
@@ -697,7 +709,9 @@ export class CoursPresentateurComponent {
 
   readonly statut = signal<EtatSeance>('fermee');
   readonly ouverture = signal<Chargement>('repos');
+  readonly limiteDeLOuverture = signal<string | null>(null);
   readonly reprise = signal<Chargement>('repos');
+  readonly limiteDeLaReprise = signal<string | null>(null);
   readonly lectureDeroule = signal<Chargement>('repos');
   readonly code = signal<string | null>(null);
   readonly sessionId = signal<string | null>(null);
@@ -714,6 +728,7 @@ export class CoursPresentateurComponent {
   readonly clotureDemandee = signal(false);
   readonly clotureEnVol = signal(false);
   readonly echec = signal(false);
+  readonly limiteDeLaCommande = signal<string | null>(null);
   readonly suiviDuFlux = signal<StatutFlux | null>(null);
   readonly etatDeLaRepriseAttendu = signal(false);
 
@@ -772,9 +787,9 @@ export class CoursPresentateurComponent {
       ? null
       : {
           ...statistiques,
-          moyenne: NOMBRE_FRANCAIS.format(statistiques.moyenne),
-          mediane: NOMBRE_FRANCAIS.format(statistiques.mediane),
-          dispersion: NOMBRE_FRANCAIS.format(statistiques.dispersion),
+          moyenne: enFrancais(statistiques.moyenne),
+          mediane: enFrancais(statistiques.mediane),
+          dispersion: enFrancais(statistiques.dispersion),
         };
   });
 
@@ -806,6 +821,7 @@ export class CoursPresentateurComponent {
   });
 
   private readonly port = inject(FORMATIONS_PORT);
+  private readonly charger = lectureSuivie();
   private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -977,7 +993,11 @@ export class CoursPresentateurComponent {
   }
 
   private async ouvrirLaSeance(): Promise<void> {
-    const seance = await this.charger(this.ouverture, this.port.ouvrirSeance(this.slug()));
+    const seance = await this.charger(
+      this.port.ouvrirSeance(this.slug()),
+      this.ouverture,
+      this.limiteDeLOuverture,
+    );
     if (seance === null) {
       return;
     }
@@ -994,7 +1014,11 @@ export class CoursPresentateurComponent {
   }
 
   private async reprendreLaSeance(sessionId: string): Promise<void> {
-    const rapport = await this.charger(this.reprise, this.port.lireResultats(sessionId));
+    const rapport = await this.charger(
+      this.port.lireResultats(sessionId),
+      this.reprise,
+      this.limiteDeLaReprise,
+    );
     if (rapport === null) {
       return;
     }
@@ -1008,25 +1032,10 @@ export class CoursPresentateurComponent {
   }
 
   private async lireLeDeroule(sessionId: string): Promise<void> {
-    const deroule = await this.charger(this.lectureDeroule, this.port.lireDeroule(sessionId));
+    const deroule = await this.charger(this.port.lireDeroule(sessionId), this.lectureDeroule);
     if (deroule !== null) {
       this.deroule.set(deroule);
       this.ecouterLeFlux(sessionId);
-    }
-  }
-
-  private async charger<T>(
-    etat: WritableSignal<Chargement>,
-    source: Observable<T>,
-  ): Promise<T | null> {
-    etat.set('chargement');
-    try {
-      const valeur = await firstValueFrom(source);
-      etat.set('succes');
-      return this.detruit ? null : valeur;
-    } catch {
-      etat.set('echec');
-      return null;
     }
   }
 
@@ -1170,7 +1179,8 @@ export class CoursPresentateurComponent {
       await lastValueFrom(source, { defaultValue: undefined });
       this.echec.set(false);
       return true;
-    } catch {
+    } catch (erreur) {
+      this.limiteDeLaCommande.set(messageDeLaLimiteAtteinte(erreur));
       this.echec.set(true);
       return false;
     }

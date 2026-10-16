@@ -9,6 +9,7 @@ import {
   copierLeSocle,
   projeterOptions,
 } from './projection';
+import { marqueDeCorrection } from './retours';
 
 export interface CardsortPlanPublic extends ContenuDeBrique {
   readonly intitule: string;
@@ -345,7 +346,7 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
     if (juste === null) {
       return VIDE;
     }
-    return safeHtml`data-etat="${escapeHtml(juste ? 'confirme' : 'a-revoir')}" data-correction="${escapeHtml(juste ? 'juste' : 'fausse')}"`;
+    return safeHtml`data-etat="${escapeHtml(juste ? 'confirme' : 'a-revoir')}"${marqueDeCorrection(juste)}`;
   }
 
   private correction(): EscapedHtml {
@@ -367,8 +368,8 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
   private place(carte: OptionPublique, zone: OptionPublique, interactif: boolean): EscapedHtml {
     const enonce = `${carte.libelle} — ${zone.libelle}`;
     if (!interactif) {
-      const marque = this.attenduDe(carte.id) === null ? VIDE : safeHtml`data-correction="juste"`;
-      return safeHtml`<li class="fp-cardsort__place"><span class="fp-carte fp-cardsort__carte" data-testid="carte" data-carte="${escapeHtml(carte.id)}" ${marque}>${escapeHtml(carte.libelle)}</span></li>`;
+      const marque = marqueDeCorrection(this.attenduDe(carte.id) === null ? null : true);
+      return safeHtml`<li class="fp-cardsort__place"><span class="fp-carte fp-cardsort__carte" data-testid="carte" data-carte="${escapeHtml(carte.id)}"${marque}>${escapeHtml(carte.libelle)}</span></li>`;
     }
     const choisie = carte.id === this.selection;
     const detail = this.detailDe(carte.id);

@@ -3,7 +3,6 @@ import type { EtatPulse } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
 import { FpContenu } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
-import { estObjet } from '../core/valeurs';
 
 export interface PulseComptes {
   readonly perdu: number;
@@ -74,12 +73,13 @@ export class FpPulse extends FpContenu<PulseSondage> {
     return this.interneComptes;
   }
 
-  set brouillon(valeur: unknown) {
-    const etat = estObjet(valeur) ? lireEtat(valeur['etat']) : null;
-    if (etat !== null) {
-      this.choix = etat;
-      this.refreshSiConnecte();
+  protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
+    const etat = lireEtat(brouillon['etat']);
+    if (etat === null) {
+      return false;
     }
+    this.choix = etat;
+    return true;
   }
 
   render(): EscapedHtml {
@@ -115,9 +115,9 @@ export class FpPulse extends FpContenu<PulseSondage> {
     if (!this.suivreEtSaisir(this.sondage?.id ?? null)) {
       return;
     }
-    for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-etat-pulse]')) {
-      bouton.addEventListener('click', () => this.declarer(bouton.dataset['etatPulse'] ?? ''));
-    }
+    this.brancherLesBoutons(racine, '[data-etat-pulse]', false, ({ dataset }) =>
+      this.declarer(dataset['etatPulse'] ?? ''),
+    );
   }
 
   protected repartirDeZero(): void {

@@ -1,4 +1,5 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { enFrancais } from '../core/typographie';
 import { fini } from '../core/valeurs';
 import {
   type Reglages,
@@ -31,10 +32,6 @@ export interface DefinitionReglable extends ContenuDeBrique {
 
 export function arrondi(valeur: number): number {
   return Math.round(valeur * 100) / 100;
-}
-
-export function formater(valeur: number): string {
-  return Number.isFinite(valeur) ? String(arrondi(valeur)).replace('.', ',') : '—';
 }
 
 function copierParametres(source: readonly ParametreReglable[]): ParametreReglable[] {
@@ -123,11 +120,9 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
         this.animer();
       });
     brancherCurseurs(racine, (cle, valeur) => this.regler(cle, valeur));
-    racine.querySelectorAll<HTMLButtonElement>('[data-testid="prereglage"]').forEach((bouton) => {
-      bouton.addEventListener('click', () => {
-        this.appliquerPrereglage(Number(bouton.dataset['rang']));
-        this.relayerReglages();
-      });
+    this.brancherLesBoutons(racine, '[data-testid="prereglage"]', false, ({ dataset }) => {
+      this.appliquerPrereglage(Number(dataset['rang']));
+      this.relayerReglages();
     });
     for (const curseur of racine.querySelectorAll('input[data-testid="curseur"]')) {
       curseur.addEventListener('change', () => this.relayerReglages());
@@ -141,7 +136,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
   protected apresEtape?(etape: Reglages): void;
 
   protected afficherValeur(valeur: number): string {
-    return formater(valeur);
+    return enFrancais(valeur);
   }
 
   protected estActif(prereglage: Prereglage | undefined): boolean {

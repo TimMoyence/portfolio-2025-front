@@ -21,6 +21,19 @@ export abstract class FpContenu<Contenu extends { readonly id: string }> extends
 
   protected abstract repartirDeZero(): void;
 
+  protected abstract reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean;
+
+  set brouillon(valeur: unknown) {
+    if (estObjet(valeur) && this.accepteLeBrouillon() && this.reprendreLeBrouillon(valeur)) {
+      this.noterBrouillonRepris();
+      this.refreshSiConnecte();
+    }
+  }
+
+  protected accepteLeBrouillon(): boolean {
+    return true;
+  }
+
   protected poserLeContenu(valeur: Contenu | null, copier: (source: Contenu) => Contenu): void {
     const change = (valeur?.id ?? null) !== (this.interne?.id ?? null);
     this.interne = valeur === null ? null : copier(valeur);
@@ -61,16 +74,7 @@ export abstract class FpEnvoi<Contenu extends { readonly id: string }> extends F
 
   protected abstract effacerLaSaisie(): void;
 
-  protected abstract reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean;
-
-  set brouillon(valeur: unknown) {
-    if (estObjet(valeur) && this.accepteLeBrouillon() && this.reprendreLeBrouillon(valeur)) {
-      this.noterBrouillonRepris();
-      this.refreshSiConnecte();
-    }
-  }
-
-  protected accepteLeBrouillon(): boolean {
+  protected override accepteLeBrouillon(): boolean {
     return !this.envoye;
   }
 
@@ -112,5 +116,33 @@ export abstract class FpEnvoi<Contenu extends { readonly id: string }> extends F
     this.message = this.messageApresEnvoi();
     this.emit(evenement, { ...detail, dureeMs: this.depuisAffichage() });
     this.refresh();
+  }
+}
+
+export abstract class FpEnvoiJuge<
+  Contenu extends { readonly id: string },
+  Verdict extends { readonly questionId: string },
+> extends FpEnvoi<Contenu> {
+  protected interneVerdict: Verdict | null = null;
+
+  protected abstract estVerdict(valeur: unknown): valeur is Verdict;
+
+  set verdict(valeur: Verdict | null) {
+    this.interneVerdict =
+      this.estVerdict(valeur) && valeur.questionId === this.interne?.id ? valeur : null;
+    this.refreshSiConnecte();
+  }
+
+  get verdict(): Verdict | null {
+    return this.interneVerdict;
+  }
+
+  protected override repartirDeZero(): void {
+    super.repartirDeZero();
+    this.interneVerdict = null;
+  }
+
+  protected override verdictRecu(): boolean {
+    return this.interneVerdict !== null;
   }
 }

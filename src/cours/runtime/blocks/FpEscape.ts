@@ -158,12 +158,13 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     this.refreshSiConnecte();
   }
 
-  set brouillon(valeur: unknown) {
-    if (estObjet(valeur) && typeof valeur['saisie'] === 'string') {
-      this.saisie = valeur['saisie'];
-      this.noterBrouillonRepris();
-      this.refreshSiConnecte();
+  protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
+    const saisie = brouillon['saisie'];
+    if (typeof saisie !== 'string') {
+      return false;
     }
+    this.saisie = saisie;
+    return true;
   }
 
   render(): EscapedHtml {

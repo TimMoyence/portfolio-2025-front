@@ -25,7 +25,8 @@ import type {
   RetourBrique,
   SyntheseConcept,
 } from '../../../core/ports/formations.port';
-import { PieceJointeRefusee } from '../../../core/ports/formations.port';
+import { type LimiteDeDebit, messageDeLaLimite } from '../../../core/models/limite-de-debit';
+import { limiteDuRefus, PieceJointeRefusee } from '../../../core/ports/formations.port';
 import { telechargerFichier } from '../../utils/telechargement.utils';
 import type { DirectEcran, EvenementBrique } from './contrat-hote';
 import { extraireDuRenvoi } from './extrait-du-renvoi';
@@ -37,7 +38,20 @@ export type CoursPresentationMode = 'etudiant' | 'formateur' | 'projection';
 
 export type TelechargementDePieceJointe = (ecranId: string) => Observable<FichierTelecharge>;
 
-type EtatDuTelechargement = 'pret' | 'en-cours' | 'echec' | 'retenue';
+interface LimiteDuTelechargement {
+  readonly limite: LimiteDeDebit;
+}
+
+type EtatDuTelechargement = 'pret' | 'en-cours' | 'echec' | 'retenue' | LimiteDuTelechargement;
+
+function attenteDuRefus(erreur: unknown): LimiteDuTelechargement | null {
+  const limite = limiteDuRefus(erreur);
+  return limite === null ? null : { limite };
+}
+
+function issueDuRefus(erreur: unknown): 'echec' | 'retenue' {
+  return erreur instanceof PieceJointeRefusee && erreur.motif === 'retenue' ? 'retenue' : 'echec';
+}
 
 interface PieceJointeAffichee {
   readonly libelle: string;
@@ -160,13 +174,17 @@ function debordementEnLargeur(contenu: HTMLElement): number {
                           <span i18n="@@coursPieceJointeTelecharger">Télécharger</span>
                           {{ piece.libelle }}
                         </button>
-                        @if (etatDuTelechargement() === 'echec') {
+                        @if (
+                          etatDuTelechargement() === 'echec' || limiteDuTelechargement() !== null
+                        ) {
                           <p
                             class="cours-piece-jointe-echec"
                             role="alert"
                             data-testid="cours-piece-jointe-echec"
                           >
-                            @if (mode() === 'formateur') {
+                            @if (limiteDuTelechargement(); as limite) {
+                              {{ limite }}
+                            } @else if (mode() === 'formateur') {
                               <ng-container i18n="@@coursPieceJointeEchecPupitre">
                                 Téléchargement impossible : réessayez.
                               </ng-container>
@@ -557,6 +575,11 @@ export class CoursPresentationComponent {
     return (ecranId === null ? undefined : this.telechargementsParEcran().get(ecranId)) ?? 'pret';
   });
 
+  protected readonly limiteDuTelechargement = computed((): string | null => {
+    const etat = this.etatDuTelechargement();
+    return typeof etat === 'object' ? messageDeLaLimite(etat.limite) : null;
+  });
+
   protected telechargerLaPieceReservee(): void {
     const telecharger = this.telechargement();
     const ecranId = this.ecranAffiche();
@@ -572,10 +595,7 @@ export class CoursPresentationComponent {
         telechargerFichier(this.document, contenu, nom, contenu.type);
         signaler('pret');
       },
-      error: (erreur: unknown) =>
-        signaler(
-          erreur instanceof PieceJointeRefusee && erreur.motif === 'retenue' ? 'retenue' : 'echec',
-        ),
+      error: (erreur: unknown) => signaler(attenteDuRefus(erreur) ?? issueDuRefus(erreur)),
     });
   }
 

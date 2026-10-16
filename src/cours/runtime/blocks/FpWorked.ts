@@ -111,17 +111,15 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
       return;
     }
     const verrouille = this.verrouille();
-    for (const champ of racine.querySelectorAll<HTMLTextAreaElement>('textarea[data-etape]')) {
-      const cle = champ.dataset['etape'] ?? '';
-      champ.disabled = verrouille;
-      champ.addEventListener('input', () => this.noter(cle, champ.value));
-      champ.addEventListener('change', () => this.envoyerEtape(cle));
-    }
-    const valider = racine.querySelector<HTMLButtonElement>('[data-testid="valider"]');
-    if (valider !== null) {
-      valider.disabled = verrouille || this.aCompleter().length === 0;
-      valider.addEventListener('click', () => this.valider());
-    }
+    this.brancherLesZones(racine, 'data-etape', verrouille, {
+      aLaSortie: (cle) => this.envoyerEtape(cle),
+    });
+    this.brancherLesBoutons(
+      racine,
+      '[data-testid="valider"]',
+      verrouille || this.aCompleter().length === 0,
+      () => this.valider(),
+    );
   }
 
   private etapesPilotees(exemple: WorkedExemple): EscapedHtml {

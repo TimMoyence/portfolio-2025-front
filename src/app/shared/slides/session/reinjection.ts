@@ -7,7 +7,11 @@ import type {
   VotePhase,
 } from '../../../../cours/content/types';
 import type { SpacedQuestionPublique } from '../../../../cours/runtime/blocks/FpSpaced';
-import { PROPRIETE_FORMATEUR } from '../../../../cours/runtime/blocks/retours';
+import {
+  type CibleRevelee,
+  lireCibleRevelee,
+  PROPRIETE_FORMATEUR,
+} from '../../../../cours/runtime/blocks/retours';
 import { estObjet } from '../../../../cours/runtime/core/valeurs';
 import type { RetourBrique, SyntheseConcept } from '../../../core/ports/formations.port';
 import type { DirectEcran } from './contrat-hote';
@@ -151,13 +155,10 @@ function cibleDeLaQuestionAffichee(
   montage: MontageIdentifie,
   reponses: unknown,
   direct: DirectEcran | null,
-): { readonly cible: string; readonly optionId: string | null } | null {
-  const bonne = estObjet(reponses) ? reponses[questionAffichee(montage, direct) ?? ''] : undefined;
-  if (!estObjet(bonne) || typeof bonne['cible'] !== 'string') {
-    return null;
-  }
-  const optionId = typeof bonne['optionId'] === 'string' ? bonne['optionId'] : null;
-  return { cible: bonne['cible'], optionId };
+): CibleRevelee | null {
+  return estObjet(reponses)
+    ? lireCibleRevelee(reponses[questionAffichee(montage, direct) ?? ''])
+    : null;
 }
 
 function annexeDuMontage(

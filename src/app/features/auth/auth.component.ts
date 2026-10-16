@@ -20,11 +20,7 @@ import { AuthStateService } from '../../core/services/auth-state.service';
 import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
 import { loadGoogleGis } from '../../core/utils/google-gis';
-import {
-  handleFormSubmit,
-  INFORMATIONS_REFUSEES,
-  messageDuRefus,
-} from '../../shared/utils/form-submit.utils';
+import { handleFormSubmit, INFORMATIONS_REFUSEES } from '../../shared/utils/form-submit.utils';
 import type { Bornes } from '../../shared/utils/regles-de-saisie';
 import {
   BORNES_D_UN_MOT_DE_PASSE_SAISI,
@@ -347,18 +343,10 @@ export class AuthComponent {
     response: google.accounts.id.CredentialResponse,
     context: AuthTab,
   ): void {
-    this.authService.googleAuth(response.credential).subscribe({
-      next: (session) => this.ouvrirLaSession(session),
-      error: (err: unknown) => {
-        this.setGoogleError(
-          context,
-          messageDuRefus(
-            err,
-            {},
-            $localize`:auth.google.error@@authGoogleError:Échec de l'authentification Google.`,
-          ),
-        );
-      },
+    handleFormSubmit(this.authService.googleAuth(response.credential), this.cdr, {
+      fallbackError: $localize`:auth.google.error@@authGoogleError:Échec de l'authentification Google.`,
+      onSuccess: (session) => this.ouvrirLaSession(session),
+      onError: (message) => this.setGoogleError(context, message),
     });
   }
 

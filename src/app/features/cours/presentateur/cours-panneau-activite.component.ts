@@ -14,7 +14,7 @@ import { rappelEcritAvantLesOptions } from '../../../../cours/runtime/blocks/FpR
 import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
 import { colonnesACorriger } from '../../../../cours/runtime/blocks/FpTableBuild';
 import type { ResultatsDuFlux } from '../../../../cours/runtime/core/sync';
-import { NOMBRE_FRANCAIS } from '../../../shared/slides/layouts/axe-gradue';
+import { enFrancais } from '../../../../cours/runtime/core/typographie';
 import {
   estVoteJumele,
   identifiantsDuMontage,
@@ -482,7 +482,7 @@ export class CoursPanneauActiviteComponent {
       .map((enigme) => ({
         ...enigme,
         intitule: this.libelles().get(enigme.enigmeId) ?? enigme.enigmeId,
-        tentatives: NOMBRE_FRANCAIS.format(enigme.tentativesMoyennes),
+        tentatives: enFrancais(enigme.tentativesMoyennes),
       }));
   });
 

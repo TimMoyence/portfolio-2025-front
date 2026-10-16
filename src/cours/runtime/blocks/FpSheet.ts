@@ -198,11 +198,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private modifiable(nom: string): boolean {
-    return !this.verrouillee(nom) && this.accessible(nom);
-  }
-
-  private accessible(nom: string): boolean {
-    return !this.verrouille() || (this.correction === 0 && this.detailDe(nom)?.juste === false);
+    return !this.verrouillee(nom) && this.celluleAccessible(nom);
   }
 
   private dansLaGrille(nom: string): boolean {
@@ -228,9 +224,9 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     if (barre === null) {
       return;
     }
-    barre.disabled = !this.accessible(this.selection);
+    barre.disabled = !this.celluleAccessible(this.selection);
     barre.addEventListener('input', () => this.ecrire(this.selection, barre.value, 'barre'));
-    if (this.foyer === 'barre' && this.accessible(this.selection)) {
+    if (this.foyer === 'barre' && this.celluleAccessible(this.selection)) {
       barre.focus();
       barre.setSelectionRange(barre.value.length, barre.value.length);
     }
@@ -241,7 +237,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     champ.addEventListener('input', () => this.ecrire(nom, champ.value, 'cellule'));
     champ.addEventListener('focus', () => this.selectionner(nom));
     champ.addEventListener('keydown', (evenement) => this.auClavier(evenement, nom));
-    if (nom === this.selection && this.foyer === 'cellule' && this.accessible(nom)) {
+    if (nom === this.selection && this.foyer === 'cellule' && this.celluleAccessible(nom)) {
       champ.focus();
       champ.setSelectionRange(champ.value.length, champ.value.length);
     }
@@ -279,7 +275,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private selectionner(nom: string): void {
-    if (nom !== this.selection && this.accessible(nom)) {
+    if (nom !== this.selection && this.celluleAccessible(nom)) {
       this.selection = nom;
       this.foyer = 'cellule';
       this.refresh();
@@ -307,12 +303,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     this.contenus = { ...this.contenus, [nom]: contenu.slice(0, LONGUEUR_MAX_FORMULE) };
     this.selection = nom;
     this.foyer = source;
-    this.message = '';
-    if (this.verrouille()) {
-      this.reprises = new Set([...this.reprises, nom]);
-    }
-    this.signalerBrouillon(this.interne?.id ?? '', this.saisiesDeLEtudiant());
-    this.refresh();
+    this.noterLaSaisie(nom, this.saisiesDeLEtudiant());
   }
 
   private recopier(): void {
@@ -326,9 +317,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     this.contenus = { ...this.contenus, [cible]: decalee };
     this.selection = cible;
     this.foyer = 'cellule';
-    this.message = '';
-    this.signalerBrouillon(this.interne?.id ?? '', this.saisiesDeLEtudiant());
-    this.refresh();
+    this.noterLaSaisie(cible, this.saisiesDeLEtudiant());
   }
 
   private feuille(): Feuille {

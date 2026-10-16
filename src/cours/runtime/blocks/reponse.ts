@@ -1,36 +1,21 @@
 import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { FpEnvoi } from './contenu';
+import { FpEnvoiJuge } from './contenu';
 import { estVerdictDeReponse, type VerdictDeReponse } from './retours';
 
-export abstract class FpReponse<
-  Question extends { readonly id: string },
-> extends FpEnvoi<Question> {
-  protected interneVerdict: VerdictDeReponse | null = null;
+export abstract class FpReponse<Question extends { readonly id: string }> extends FpEnvoiJuge<
+  Question,
+  VerdictDeReponse
+> {
   protected bonneReponse: string | null = null;
 
   protected abstract rendreLaQuestion(question: Question): EscapedHtml;
 
-  set verdict(valeur: VerdictDeReponse | null) {
-    this.interneVerdict =
-      estVerdictDeReponse(valeur) && valeur.questionId === this.interne?.id ? valeur : null;
-    this.refreshSiConnecte();
-  }
-
-  get verdict(): VerdictDeReponse | null {
-    return this.interneVerdict;
+  protected estVerdict(valeur: unknown): valeur is VerdictDeReponse {
+    return estVerdictDeReponse(valeur);
   }
 
   render(): EscapedHtml {
     return this.interne === null ? this.attente() : this.rendreLaQuestion(this.interne);
-  }
-
-  protected override repartirDeZero(): void {
-    super.repartirDeZero();
-    this.interneVerdict = null;
-  }
-
-  protected override verdictRecu(): boolean {
-    return this.interneVerdict !== null;
   }
 
   protected suiviDeLEnvoi(): EscapedHtml {

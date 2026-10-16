@@ -1,3 +1,4 @@
+import { enFrancais } from '../../../../cours/runtime/core/typographie';
 import { bornerEntre } from '../../../../cours/runtime/core/valeurs';
 
 export type Plage = readonly [number, number];
@@ -14,7 +15,6 @@ const GRADUATIONS_DE_REPLI = 5;
 
 export const INTERVALLES_VISES = 5;
 export const PRECISION = 1e-6;
-export const NOMBRE_FRANCAIS = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
 
 export function arrondir(valeur: number): number {
   return Math.round(valeur * 1e4) / 1e4;
@@ -66,7 +66,7 @@ export function valeursGraduees(plage: Plage): readonly number[] {
 
 export function graduer(plage: Plage): readonly Graduation[] {
   return valeursGraduees(plage).map((valeur) => ({
-    libelle: NOMBRE_FRANCAIS.format(valeur),
+    libelle: enFrancais(valeur),
     position: position(valeur, plage),
   }));
 }

@@ -309,6 +309,20 @@ export abstract class FpBlock extends HTMLElement {
     return safeHtml`<button type="button" class="fp-bouton-neutre" data-testid="je-ne-sais-pas" ${desactive ? DESACTIVE : VIDE}>${escapeHtml(this.texte('je-ne-sais-pas'))}</button>`;
   }
 
+  protected brancherLesBoutons(
+    racine: ShadowRoot,
+    selecteur: string,
+    verrouille: boolean,
+    agir: (bouton: HTMLButtonElement) => void,
+  ): void {
+    for (const bouton of racine.querySelectorAll<HTMLButtonElement>(selecteur)) {
+      bouton.disabled = verrouille;
+      if (!verrouille) {
+        bouton.addEventListener('click', () => agir(bouton));
+      }
+    }
+  }
+
   private signalerErreur(erreur: unknown): void {
     this.dispatchEvent(
       new CustomEvent('fp-block-error', {

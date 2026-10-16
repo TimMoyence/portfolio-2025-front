@@ -7,7 +7,6 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 import type {
   DerouleCours,
   EcranContent,
@@ -22,6 +21,7 @@ import type {
 } from '../../../../cours/runtime/core/sync';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
+import { type Chargement, lectureSuivie } from '../lecture-suivie';
 import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
 import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
@@ -32,8 +32,6 @@ import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.comp
 import { correctionsAffichees } from './corrections-affichees';
 import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
 import { sourceCorrigeePar } from './sources-de-correction';
-
-type Chargement = 'chargement' | 'succes' | 'echec';
 
 const SEUIL_DE_PROJECTION = 5;
 
@@ -401,13 +399,13 @@ export class CoursSceneComponent {
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFluxFormateur = inject(CREATEUR_FLUX_FORMATEUR);
 
+  private readonly charger = lectureSuivie();
+
   private flux: Sync | null = null;
-  private detruit = false;
   private readonly chantier = chantierApresRendu(() => this.lireLeDeroule());
 
   constructor() {
     inject(DestroyRef).onDestroy(() => {
-      this.detruit = true;
       this.flux?.close();
     });
   }
@@ -417,18 +415,13 @@ export class CoursSceneComponent {
   }
 
   private async lireLeDeroule(): Promise<void> {
-    try {
-      const deroule = await firstValueFrom(this.port.lireDeroule(this.sessionId()));
-      if (this.detruit) {
-        return;
-      }
+    const deroule = await this.charger(
+      this.port.lireDeroule(this.sessionId()),
+      this.lectureDeroule,
+    );
+    if (deroule !== null) {
       this.deroule.set(deroule);
-      this.lectureDeroule.set('succes');
       this.ecouterLeFlux();
-    } catch {
-      if (!this.detruit) {
-        this.lectureDeroule.set('echec');
-      }
     }
   }
 

@@ -48,6 +48,7 @@ import {
   SujetRefuse,
 } from '../ports/formations.port';
 import { getApiFormationsUrl } from '../http/api-config';
+import { limiteDeLaReponse, STATUT_LIMITE_DE_DEBIT } from '../http/limite-de-debit';
 import {
   type DerouleDuFil,
   derouleDuFil,
@@ -106,6 +107,10 @@ function refuserRattachement(erreur: unknown): RattachementRefuse {
   if (!(erreur instanceof HttpErrorResponse)) {
     return new RattachementRefuse('rattachement-impossible', 0);
   }
+  const limite = limiteDeLaReponse(erreur);
+  if (limite !== null) {
+    return new RattachementRefuse('rattachement-impossible', erreur.status, limite);
+  }
   const code = codeDuProbleme(erreur);
   if (code !== null && Object.hasOwn(MOTIFS_DE_RATTACHEMENT_PAR_CODE, code)) {
     return new RattachementRefuse(MOTIFS_DE_RATTACHEMENT_PAR_CODE[code], erreur.status);
@@ -117,8 +122,17 @@ function refuserRattachement(erreur: unknown): RattachementRefuse {
 }
 
 function refuserSujet(erreur: unknown): SujetRefuse {
-  const statut = erreur instanceof HttpErrorResponse ? erreur.status : 0;
-  return new SujetRefuse(statut === 409 ? 'cours-modifie' : 'sujet-indisponible', statut);
+  if (!(erreur instanceof HttpErrorResponse)) {
+    return new SujetRefuse('sujet-indisponible', 0);
+  }
+  const limite = limiteDeLaReponse(erreur);
+  if (limite !== null) {
+    return new SujetRefuse('sujet-indisponible', erreur.status, limite);
+  }
+  return new SujetRefuse(
+    erreur.status === 409 ? 'cours-modifie' : 'sujet-indisponible',
+    erreur.status,
+  );
 }
 
 function codeDuProbleme(erreur: HttpErrorResponse): string | null {
@@ -140,6 +154,10 @@ async function refuserPieceJointe(erreur: unknown): Promise<PieceJointeRefusee> 
   if (!(erreur instanceof HttpErrorResponse)) {
     return new PieceJointeRefusee('indisponible', 0);
   }
+  const limite = limiteDeLaReponse(erreur);
+  if (limite !== null) {
+    return new PieceJointeRefusee('indisponible', erreur.status, limite);
+  }
   const code = codeDuCorps(await corpsDuFichierRefuse(erreur.error));
   return new PieceJointeRefusee(
     code === 'PIECE_JOINTE_RETENUE' ? 'retenue' : 'indisponible',
@@ -155,7 +173,7 @@ function motifDeRefusSelonCode<M extends string>(
   const statut = erreur.status;
   const code = codeDuProbleme(erreur);
   let motif: M | 'reseau' | 'refusee' = 'refusee';
-  if (statut === 0 || statut === 429 || statut >= 500) {
+  if (statut === 0 || statut === STATUT_LIMITE_DE_DEBIT || statut >= 500) {
     motif = 'reseau';
   } else if (code !== null && Object.hasOwn(motifsParCode, code)) {
     motif = motifsParCode[code];
@@ -172,6 +190,7 @@ function refuserReponseLibre(erreur: unknown): ReponseLibreRefusee {
   return new ReponseLibreRefusee(
     motifDeRefusSelonCode(erreur, MOTIFS_DE_REFUS_DE_REPONSE_LIBRE),
     erreur.status,
+    limiteDeLaReponse(erreur),
   );
 }
 
@@ -182,6 +201,7 @@ function refuserEcritureEtudiante(erreur: unknown, absence: MotifRefusReponse): 
   return new ReponseRefusee(
     motifDeRefusSelonCode(erreur, MOTIFS_D_ECRITURE_PAR_CODE, absence),
     erreur.status,
+    limiteDeLaReponse(erreur),
   );
 }
 

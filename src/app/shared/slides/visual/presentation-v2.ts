@@ -10,8 +10,15 @@ interface PresentationV2 {
   readonly props: Donnees;
 }
 
+export const RENDUS_DE_REVELATION: ReadonlySet<string> = new Set(['sort-review', 'answer-review']);
+
 export function objet(value: unknown): Donnees | null {
   return estObjet(value) ? value : null;
+}
+
+export function ecranSourceDe(source: Donnees | null): string | null {
+  const screenId = source?.['screenId'];
+  return typeof screenId === 'string' ? screenId : null;
 }
 
 export function aUnePresentation(slide: EcranContent): boolean {

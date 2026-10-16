@@ -6,6 +6,7 @@ import type {
 } from '../../../../cours/content/types';
 import { rappelEcritAvantLesOptions } from '../../../../cours/runtime/blocks/FpRecall';
 import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
+import type { CibleRevelee } from '../../../../cours/runtime/blocks/retours';
 import {
   cleDeCellule,
   enonceDeCellule,
@@ -94,9 +95,7 @@ const CHAMP_ENONCE: Readonly<Record<string, string>> = {
 
 export interface ReponsesDuQuestionnaire {
   readonly type: 'reponses';
-  readonly reponses: Readonly<
-    Record<string, { readonly cible: string; readonly optionId: string | null }>
-  >;
+  readonly reponses: Readonly<Record<string, CibleRevelee>>;
 }
 
 export type RevelationDuVote = Extract<CorrigeEcranPresentateur, { readonly type: 'revelation' }> &
