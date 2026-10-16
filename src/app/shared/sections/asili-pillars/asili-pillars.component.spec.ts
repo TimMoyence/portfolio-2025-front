@@ -1,6 +1,10 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { decrireEnTeteDeSection } from '../../../../testing/en-tete-de-section';
-import { decrireRenduServeur, decrireSectionAsili } from '../../../../testing/section-asili';
+import {
+  decrireLiensDansLaLangueDeLaPage,
+  decrireRenduServeur,
+  decrireSectionAsili,
+} from '../../../../testing/section-asili';
 import { AsiliPillarsComponent, type AsiliPillar } from './asili-pillars.component';
 
 const PILLARS: readonly AsiliPillar[] = [
@@ -25,6 +29,18 @@ const PILLARS: readonly AsiliPillar[] = [
 describe('AsiliPillarsComponent', () => {
   let fixture: ComponentFixture<AsiliPillarsComponent>;
   const monter = decrireSectionAsili(AsiliPillarsComponent, { pillars: PILLARS });
+
+  decrireLiensDansLaLangueDeLaPage(
+    monter,
+    {
+      pillars: [
+        PILLARS[0],
+        { ...PILLARS[1], link: { label: 'Code', href: 'https://github.com/' } },
+      ],
+    },
+    '.pillar-foot a',
+    ['/en/offer', 'https://github.com/'],
+  );
 
   function setup(): void {
     fixture = monter();

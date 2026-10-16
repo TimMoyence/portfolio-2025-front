@@ -22,9 +22,7 @@ const ROUTES_EN = [
   '/en/forgot-password',
   '/en/formations',
   '/en/formations/audit-seo-diy',
-  '/en/formations/audit-seo-diy/toolkit',
   '/en/formations/automatiser-avec-ia',
-  '/en/formations/automatiser-avec-ia/toolkit',
   '/en/formations/b2-01-traitement-information-chiffree',
   '/en/formations/ia-solopreneurs',
   '/en/formations/ia-solopreneurs/toolkit',
@@ -102,6 +100,20 @@ function fuitesFrancaises(texte: string): string[] {
   return LIBELLES.filter(({ source }) => texte.includes(source)).map(({ id }) => id);
 }
 
+async function liensHorsDeLaLangue(page: Page, langue: string): Promise<string[]> {
+  const liens = await page
+    .locator('a[href]:not(.asili-lang__switch)')
+    .evaluateAll((ancres) => ancres.map((ancre) => ancre.getAttribute('href') ?? ''));
+  return liens.filter(
+    (href) =>
+      href.startsWith('#') ||
+      (href.startsWith('/') &&
+        !href.startsWith('//') &&
+        href !== `/${langue}` &&
+        !href.startsWith(`/${langue}/`)),
+  );
+}
+
 test.describe('la version anglaise ne laisse aucun libelle francais (QA-15)', () => {
   test.skip(
     baseSsr === '' || baseAnglaise === '',
@@ -117,12 +129,19 @@ test.describe('la version anglaise ne laisse aucun libelle francais (QA-15)', ()
       expect(fuites, `libelles francais servis sur ${route}`).toEqual([]);
       expect(page.url()).toContain('/en');
     });
+
+    test(`${route} garde chaque lien interne dans la langue anglaise`, async ({ page }) => {
+      await page.goto(`${baseAnglaise}${route}`, { waitUntil: 'domcontentloaded' });
+
+      expect(await liensHorsDeLaLangue(page, 'en'), `liens hors de /en sur ${route}`).toEqual([]);
+    });
   }
 
   test('le detecteur rougirait sur la meme page servie en francais', async ({ page }) => {
     await page.goto(`${baseSsr}/fr/offer`, { waitUntil: 'domcontentloaded' });
 
     expect(fuitesFrancaises(await texteVisible(page)).length).toBeGreaterThan(0);
+    expect((await liensHorsDeLaLangue(page, 'en')).length).toBeGreaterThan(0);
   });
 
   test('couvre toutes les routes anglaises que le build prerend', () => {

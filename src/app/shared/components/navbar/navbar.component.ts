@@ -1,11 +1,12 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import type { ElementRef } from '@angular/core';
+import { CommonModule, isPlatformBrowser, ViewportScroller } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
+  DestroyRef,
   effect,
+  ElementRef,
   HostListener,
   Inject,
   LOCALE_ID,
@@ -154,6 +155,15 @@ export class NavbarComponent {
       this.authState.user();
       this.cdr.markForCheck();
     });
+    if (isPlatformBrowser(this.platformId)) {
+      const defilement = inject(ViewportScroller);
+      const hote = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+      defilement.setOffset(() => [
+        0,
+        hote.querySelector('nav')?.getBoundingClientRect().bottom ?? 0,
+      ]);
+      inject(DestroyRef).onDestroy(() => defilement.setOffset([0, 0]));
+    }
   }
 
   getAlternateLocaleUrl(): string {

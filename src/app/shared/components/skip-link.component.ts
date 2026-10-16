@@ -1,14 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-skip-link',
   standalone: true,
-  imports: [CommonModule],
+  imports: [RouterLink],
   template: `
     <a
       class="skip-link"
-      href="#main-content"
+      [routerLink]="[]"
+      fragment="main-content"
+      queryParamsHandling="preserve"
       i18n="skipLink.label|Skip to main content@@skipLinkLabel"
     >
       Passer au contenu principal

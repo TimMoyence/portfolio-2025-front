@@ -46,7 +46,7 @@ function porteLaCoquille(racine: ActivatedRouteSnapshot): boolean {
       @if (coquille()) {
         <app-navbar></app-navbar>
       }
-      <main id="main-content" role="main">
+      <main id="main-content" role="main" tabindex="-1">
         <!-- Cale sous la navbar fixe : purement dimensionnelle, sans fond
              opaque qui masquerait le champ de particules global. -->
         @if (coquille()) {
@@ -74,6 +74,10 @@ function porteLaCoquille(racine: ActivatedRouteSnapshot): boolean {
     `
       :host {
         display: block;
+      }
+
+      main:focus-visible {
+        outline: none;
       }
     `,
   ],

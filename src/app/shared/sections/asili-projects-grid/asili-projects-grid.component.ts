@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { AsiliEnTeteDirective, EN_TETE_ASILI } from '../asili-en-tete.directive';
+import { AsiliLiensDirective, LIENS_ASILI } from '../asili-en-tete.directive';
 
 export type AsiliProjectSize = 'big' | 'small';
 
@@ -48,12 +48,12 @@ const IMAGE_DIMENSIONS: Readonly<
 @Component({
   selector: 'app-asili-projects-grid',
   standalone: true,
-  imports: [EN_TETE_ASILI, NgTemplateOutlet],
+  imports: [LIENS_ASILI, NgTemplateOutlet],
   templateUrl: './asili-projects-grid.component.html',
   styleUrls: ['./asili-projects-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AsiliProjectsGridComponent extends AsiliEnTeteDirective {
+export class AsiliProjectsGridComponent extends AsiliLiensDirective {
   readonly projects = input.required<readonly AsiliProject[]>();
 
   /**

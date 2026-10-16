@@ -1,3 +1,4 @@
+import { ViewportScroller } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { type EnvironmentProviders, LOCALE_ID, PLATFORM_ID } from '@angular/core';
@@ -149,6 +150,44 @@ describe('NavbarComponent', () => {
 
       const userMenuBtn = nav.querySelector('button[aria-label="Menu utilisateur"]');
       expect(userMenuBtn).toBeTruthy();
+    });
+
+    describe('defilement vers une ancre', () => {
+      let cible: HTMLElement;
+
+      beforeEach(() => {
+        cible = document.createElement('section');
+        cible.id = 'section-visee';
+        cible.style.margin = '3000px 0';
+        cible.style.height = '400px';
+        document.body.append(fixture.nativeElement as HTMLElement, cible);
+        document.documentElement.style.scrollBehavior = 'auto';
+        fixture.detectChanges();
+      });
+
+      afterEach(() => {
+        cible.remove();
+        (fixture.nativeElement as HTMLElement).remove();
+        window.scrollTo(0, 0);
+        document.documentElement.style.scrollBehavior = '';
+      });
+
+      it('arrete la section visee sous la barre fixe, pas dessous', () => {
+        TestBed.inject(ViewportScroller).scrollToAnchor('section-visee');
+
+        const barre = (fixture.nativeElement as HTMLElement).querySelector('nav.asili-nav');
+        const basDeLaBarre = barre?.getBoundingClientRect().bottom ?? 0;
+        expect(basDeLaBarre).toBeGreaterThan(0);
+        expect(cible.getBoundingClientRect().top).toBeCloseTo(basDeLaBarre, 0);
+      });
+
+      it('rend toute la hauteur a la page quand la barre disparait', () => {
+        fixture.destroy();
+
+        TestBed.inject(ViewportScroller).scrollToAnchor('section-visee');
+
+        expect(cible.getBoundingClientRect().top).toBeCloseTo(0, 0);
+      });
     });
 
     describe('deconnexion', () => {
