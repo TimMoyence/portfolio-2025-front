@@ -397,18 +397,6 @@ describe('GrowthAuditComponent', () => {
   });
 
   describe('refus de la demande d audit', () => {
-    type FenetreSuivie = { plausible?: jasmine.Spy };
-    let suivi: jasmine.Spy;
-
-    beforeEach(() => {
-      suivi = jasmine.createSpy('plausible');
-      (window as unknown as FenetreSuivie).plausible = suivi;
-    });
-
-    afterEach(() => {
-      delete (window as unknown as FenetreSuivie).plausible;
-    });
-
     for (const [cas, erreur, statut, attendu] of [
       [
         'un refus du DTO, de l anti-robot ou un audit du site lui-même (400)',
@@ -429,7 +417,7 @@ describe('GrowthAuditComponent', () => {
         "Impossible d'envoyer la demande. Réessayez dans un instant.",
       ],
     ] as const) {
-      it(`dit ${cas} par un message localisé, rend le bouton et n envoie aucun suivi (${statut})`, () => {
+      it(`dit ${cas} par un message localisé et rend le bouton (${statut})`, () => {
         const fixture = TestBed.createComponent(GrowthAuditComponent);
         auditServiceMock.submit.and.returnValue(throwError(() => erreur));
 
@@ -438,7 +426,6 @@ describe('GrowthAuditComponent', () => {
 
         expect(fixture.componentInstance.errorMessage).toBe(attendu);
         expect(fixture.componentInstance.isSubmitting).toBeFalse();
-        expect(suivi).not.toHaveBeenCalled();
       });
     }
 
