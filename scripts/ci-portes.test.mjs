@@ -1241,7 +1241,7 @@ test('ci-portes : knip juge chaque fichier de code de src, e2e et scripts, comme
         avecTemoins: premier,
         sources: toutes,
         sansImports: jouerKnip(copie),
-        sansReglages: jouerKnip(copie, ['--config', 'zz-garde-knip.json']),
+        sansReglages: jouerKnip(copie, ['--config', 'zz-garde-knip.json', '--no-gitignore']),
       };
     },
   );
@@ -1269,7 +1269,7 @@ test('ci-portes : knip juge chaque fichier de code de src, e2e et scripts, comme
   assert.deepEqual(
     racinesSansLanceur,
     [],
-    'ci-portes : sans importeur, un fichier qui n est ni un test, ni lance par ce que knip reconnait seul (scripts, angular.json, configurations, workflows, hooks), echappe pourtant a knip : un reglage le soustrait a la porte de code mort.',
+    'ci-portes : sans importeur, un fichier qui n est ni un test, ni lance par ce que knip reconnait seul (scripts, angular.json, configurations, workflows, hooks), echappe pourtant a knip : un reglage ou un .gitignore le soustrait a la porte de code mort.',
   );
 });
 
