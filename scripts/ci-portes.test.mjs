@@ -109,6 +109,8 @@ const NPM_SEUL = new RegExp(`^npm (?:ci|test|run ${NOM_DE_SCRIPT})$`);
 
 const NPM_RUN = new RegExp(String.raw`\bnpm run (${NOM_DE_SCRIPT})(?=\s*(?:&&|$))`, 'g');
 
+const SUITE_DE_PORTES = new RegExp(`^npm run ${NOM_DE_SCRIPT}(?: && npm run ${NOM_DE_SCRIPT})*$`);
+
 const ABSORBE_UN_ECHEC = /\||;|\n|`|\$\(|(?<!&)&(?!&)|(?:^|[\s&|;(])!\s/;
 
 const PROLONGEMENT_DE_TEST_CI = {
@@ -237,9 +239,9 @@ function portesDeLaChaine(chaine) {
       'ci-portes : ci:check ne joue aucune porte « npm run » - une CI comparee a une chaine vide ne serait jugee sur rien.',
     );
   }
-  if (appelleNpmAutrement(chaine)) {
+  if (!SUITE_DE_PORTES.test(chaine)) {
     throw new Error(
-      'ci-portes : ci:check joue une porte autrement que par « npm run <script> » nu - la porte disparaitrait de la comparaison avec la CI.',
+      'ci-portes : ci:check joue une porte autrement que par « npm run <script> » nu, seul maillon admis entre deux « && » - la porte disparaitrait de la comparaison avec la CI.',
     );
   }
   return portes;
@@ -470,6 +472,10 @@ test('ci-portes : leve si ci:check joue une porte autrement que par « npm run <
     'npm run lint --silent && npm run typecheck',
     'npm run lint && npm -s run typecheck',
     'npm run lint && npm run typecheck -- --pretty',
+    'eslint . --max-warnings=0 && npm run typecheck',
+    'npm run lint && ng test --watch=false',
+    'npm run lint &&  npm run typecheck',
+    'npm run lint && npm run typecheck && ',
   ]) {
     assert.throws(() => portesDeLaChaine(chaine), /autrement que par/, chaine);
   }
