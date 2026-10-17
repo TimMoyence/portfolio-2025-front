@@ -11,6 +11,7 @@ Application Angular 19 du portfolio. Le frontend est SSR, localise en `fr` et `e
 - SCSS + Tailwind CSS
 - Jasmine / Karma
 - ESLint + Prettier
+- Node 22.18 au minimum (`engines` de `package.json`) : les scripts `.mjs` importent du TypeScript, que Node ne lit pas avant cette version
 
 ## Architecture
 
@@ -83,8 +84,9 @@ Pages non indexables (`noindex, nofollow`), en rendu client (`RenderMode.Client`
 - `/**` — 404
 
 Les anciennes URL (`/home`, `/client-project`, `/commonbudgetTM`, `/atelier` et ses sous-routes, l'ancien
-slug du B2-02) sont redirigées en 301 par le serveur Express (`src/server/redirects.ts`), avant le
-routeur Angular.
+slug du B2-02, les toolkits retirés `/formations/automatiser-avec-ia/toolkit` et
+`/formations/audit-seo-diy/toolkit`) sont redirigées en 301 par le serveur Express
+(`src/server/redirects.ts`), avant le routeur Angular.
 
 ## Prise en main rapide
 
