@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { extname, join } from 'node:path';
 import { test } from 'node:test';
@@ -10,7 +10,7 @@ import * as prettier from 'prettier';
 import { echapperPourRegex } from '../src/cours/runtime/core/valeurs.ts';
 import { git, trackedFiles } from './guard-no-comments.mjs';
 import { cheminDuDepot, RACINE } from './lib/depot.mjs';
-import { avecDossierPlante } from './lib/dossier-temporaire.mjs';
+import { avecDossierPlante, planterDossier, supprimerDossier } from './lib/dossier-temporaire.mjs';
 
 const CHEMIN_PACKAGE = cheminDuDepot('package.json');
 
@@ -692,6 +692,115 @@ test('ci-portes : eslint ignore exactement les chemins que git ignore, rapports 
     [],
     'ci-portes : eslint et git divergent : un rapport laisse sur le poste fait echouer lint et pre-push, ou un fichier suivi echappe a lint.',
   );
+});
+
+const CORPUS_DU_GITIGNORE = [
+  'nom-partout',
+  'dossier-partout/',
+  '/ancre-racine',
+  'ancre/milieu',
+  '*.etoile',
+  '?uestion',
+  '[ab]crochet',
+  '**/double-tete',
+  'double/**/milieu',
+  'contenu-etoile/*',
+  '!contenu-etoile/garde.html',
+  'contenu-double/**',
+  '!contenu-double/garde.html',
+  '*.local',
+  '!garde.local',
+  '/sortie-*',
+  '!/sortie-gardee',
+  'exclu/',
+  '!exclu/garde.html',
+  String.raw`\#diese`,
+  String.raw`\!point`,
+  'espaces-finaux   ',
+  String.raw`espace-echappe\ `,
+];
+
+const LIGNES_SANS_EFFET_POUR_GIT = ['!exclu/garde.html'];
+
+const EXEMPLES_DU_CORPUS = [
+  ...[
+    'nom-partout',
+    'dossier-partout',
+    'ancre-racine',
+    'ancre/milieu',
+    'x.etoile',
+    'question',
+    'acrochet',
+    'ccrochet',
+    'double-tete',
+    'double/milieu',
+    'double/a/b/milieu',
+    'contenu-etoile/autre',
+    'contenu-double/autre',
+    'x.local',
+    'garde.local',
+    'sortie-x',
+    'sortie-gardee',
+    'exclu',
+    '#diese',
+    '!point',
+    'espaces-finaux',
+    'espace-echappe ',
+    'espace-echappe',
+  ].map((dossier) => `${dossier}/rapport.html`),
+  'contenu-etoile/garde.html',
+  'contenu-double/garde.html',
+  'exclu/garde.html',
+].flatMap((chemin) => [chemin, `profond/${chemin}`]);
+
+test('ci-portes : eslint traduit chaque forme de ligne du gitignore comme git la lit, negations et echappements compris', async () => {
+  const { ignoresDeGit } = createRequire(import.meta.url)('./lib/ignores-de-git.cjs');
+  const racine = planterDossier('ci-portes-gitignore-');
+  try {
+    git(racine, ['init', '--quiet']);
+    const sortieDeGit = (lignes) => {
+      writeFileSync(join(racine, '.gitignore'), `${lignes.join('\n')}\n`);
+      return git(racine, ['check-ignore', '--no-index', '-z', '--stdin'], {
+        input: EXEMPLES_DU_CORPUS.join('\0'),
+      });
+    };
+    const complete = sortieDeGit(CORPUS_DU_GITIGNORE);
+    const sansEffet = CORPUS_DU_GITIGNORE.filter(
+      (_, rang) =>
+        sortieDeGit(CORPUS_DU_GITIGNORE.filter((__, autre) => autre !== rang)) === complete,
+    );
+    const ignores = new Set(complete.split('\0').filter(Boolean));
+    const eslint = new ESLint({
+      cwd: racine,
+      overrideConfigFile: true,
+      overrideConfig: [
+        { files: ['**/*.html'] },
+        { ignores: ignoresDeGit(`${CORPUS_DU_GITIGNORE.join('\n')}\n`) },
+      ],
+    });
+    const ecarts = [];
+    for (const chemin of EXEMPLES_DU_CORPUS) {
+      const ignoreParGit = ignores.has(chemin);
+      if ((await eslint.isPathIgnored(join(racine, chemin))) !== ignoreParGit) {
+        ecarts.push(
+          `${chemin} : ${ignoreParGit ? 'ignore par git, lu par eslint' : 'lu par git, ignore par eslint'}`,
+        );
+      }
+    }
+
+    assert.deepEqual(
+      sansEffet,
+      LIGNES_SANS_EFFET_POUR_GIT,
+      'ci-portes : chaque ligne du corpus doit changer le verdict de git sur un exemple, sinon la garde ne juge pas sa traduction.',
+    );
+    assert.deepEqual(
+      ecarts,
+      [],
+      'ci-portes : eslint traduit une ligne du gitignore autrement que git : un rapport ignore fait echouer lint, ou un fichier suivi echappe a lint.',
+    );
+  } finally {
+    supprimerDossier(racine);
+  }
 });
 
 test('ci-portes : Lighthouse est joue apres le build du job e2e, bloque sous 0,9 d accessibilite et garde ses rapports sur le runner', () => {

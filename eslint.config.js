@@ -5,18 +5,9 @@ const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
 const sonarjs = require('eslint-plugin-sonarjs');
 const globals = require('globals');
+const { ignoresDeGit } = require('./scripts/lib/ignores-de-git.cjs');
 
-const motifEslintDeLaLigne = (ligne) => {
-  const barre = ligne.indexOf('/');
-  const partout = barre === -1 || barre === ligne.length - 1 ? '**/' : '';
-  return `${partout}${barre === 0 ? ligne.slice(1) : ligne}`;
-};
-
-const IGNORES_DE_GIT = readFileSync(join(__dirname, '.gitignore'), 'utf8')
-  .split('\n')
-  .map((ligne) => ligne.trimEnd())
-  .filter((ligne) => ligne !== '' && !ligne.startsWith('#'))
-  .map(motifEslintDeLaLigne);
+const IGNORES_DE_GIT = ignoresDeGit(readFileSync(join(__dirname, '.gitignore'), 'utf8'));
 
 const COEUR_SANS_SHARED_NI_FEATURES =
   'Le core ne dépend ni de shared ni de features : le contrat vit dans core/ports.';
