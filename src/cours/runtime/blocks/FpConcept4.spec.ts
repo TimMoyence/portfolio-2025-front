@@ -1,7 +1,12 @@
 import { detailsEmis, installerBrique, roleAffiche } from '../../../testing/banc-de-brique';
-import { buildConcept4Definition } from '../../../testing/factories/cours.factory';
+import {
+  buildConcept4Definition,
+  buildSortiesMachine,
+  buildSortiesMachineATrenteAns,
+} from '../../../testing/factories/cours.factory';
 import {
   animer,
+  animerJusquAuRepos,
   attendreLeParametreEchappe,
   attendreLeTroisiemeCranEmisSansArrondi,
   attendreParametresAnnonces,
@@ -13,41 +18,60 @@ import {
   relacherCurseur,
 } from '../../../testing/reglages-briques';
 import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
-import { evaluerExpression, remplirGabarit } from 'portfolio-2025-partage/formule';
 import { ecransPublicsB2_01 } from '../../../testing/fixtures/instantane-b2-01';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../testing/fixtures/instantanes-des-cours';
+import type { SortiesMachine } from '../../content/types';
 import { type Concept4Definition, FpConcept4 } from './FpConcept4';
 
 const REGLAGE = 'fp-concept4-reglage';
+const EVALUATION = 'fp-concept4-evaluation';
 const DEFINITION = buildConcept4Definition();
-const MACHINE = buildConcept4Definition({
-  id: 'K-MACHINE-COEFFICIENTS',
-  parametres: [
-    { cle: 'depart', libelle: 'Valeur de départ (€)', min: 1, max: 200, pas: 1, defaut: 100 },
-    { cle: 'tauxUn', libelle: 'Premier taux (%)', min: -50, max: 50, pas: 1, defaut: 10 },
-    { cle: 'tauxDeux', libelle: 'Second taux (%)', min: -50, max: 50, pas: 1, defaut: -10 },
-  ],
-  formuleLatexSimplifie: 'arrivée = départ × (1 + t₁) × (1 + t₂)',
-  calcul: 'depart * (1 + tauxUn / 100) * (1 + tauxDeux / 100)',
-  phrase: 'De {depart} € on arrive à {resultat} €.',
-  etapes: [
-    { libelle: 'Départ', calcul: 'depart' },
-    { libelle: 'Après t₁', calcul: 'depart * (1 + tauxUn / 100)' },
-    { libelle: 'Arrivée', calcul: 'depart * (1 + tauxUn / 100) * (1 + tauxDeux / 100)' },
-  ],
-  prereglages: [
-    { libelle: '+10 % puis −10 %', valeurs: { tauxUn: 10, tauxDeux: -10 } },
-    { libelle: '−10 % puis +10 %', valeurs: { tauxUn: -10, tauxDeux: 10 } },
-    { libelle: '+20 % puis −20 %', valeurs: { tauxUn: 20, tauxDeux: -20 } },
-  ],
-});
+const A_DIX_ANS = buildSortiesMachine();
+const A_TRENTE_ANS = buildSortiesMachineATrenteAns();
 const MACHINE_SERVIE = ecransPublicsB2_01().find(
   (ecran) => ecran.id === 'B2-01-A3-02-MACHINE-COEFFICIENTS',
 )?.donnees?.['definition'] as Concept4Definition;
-const ECRITURE_ATTENDUE = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
+const MACHINES_SERVIES = INSTANTANES_DES_COURS_SERVIS.flatMap(([cours, instantane]) =>
+  instantane.sujet.ecrans
+    .filter(({ type }) => type === 'fp-concept4')
+    .map((ecran) => ({
+      cours,
+      id: ecran.id,
+      definition: ecran.donnees?.['definition'] as Concept4Definition,
+    })),
+);
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
-const ESPACE_FINE = ' ';
+const ESPACE_FINE = String.fromCharCode(0x202f);
+const INSECABLE = String.fromCharCode(0x00a0);
+const MOINS = String.fromCharCode(0x2212);
 const CLASSES_ATTENDUES = 27;
-const POINTS_ATTENDUS = 25;
+
+function couple(premier: string, second: string): string {
+  return `${premier}${INSECABLE}% puis ${second}${INSECABLE}%`;
+}
+
+const PLUS_DIX_MOINS_DIX = couple('+10', `${MOINS}10`);
+const MOINS_DIX_PLUS_DIX = couple(`${MOINS}10`, '+10');
+const PLUS_VINGT_MOINS_VINGT = couple('+20', `${MOINS}20`);
+
+function sortieEvaluee(
+  valeurs: Readonly<Record<string, number>>,
+  valeur: number,
+  affichage: string,
+): SortiesMachine {
+  return buildSortiesMachine({
+    valeurs,
+    resultat: { valeur, affichage },
+    phrase: `Un capital de 1${ESPACE_FINE}000 € placé à ${valeurs['i']} % pendant ${valeurs['n']} an(s) devient ${affichage} €.`,
+  });
+}
+
+const A_VINGT_ANS = sortieEvaluee({ C: 1000, i: 4, n: 20 }, 2191.123143, `2${ESPACE_FINE}191,12`);
+const A_VINGT_ANS_A_DIX_POUR_CENT = sortieEvaluee(
+  { C: 1000, i: 10, n: 20 },
+  6727.499949,
+  `6${ESPACE_FINE}727,5`,
+);
 
 function tous(hote: FpConcept4, selecteur: string): Element[] {
   return [...(hote.shadowRoot?.querySelectorAll(selecteur) ?? [])];
@@ -74,6 +98,14 @@ function quatreFaces(hote: FpConcept4): Readonly<Record<string, string>> {
   };
 }
 
+function enAttente(hote: FpConcept4): boolean {
+  return un(hote, 'faces')?.getAttribute('aria-busy') === 'true';
+}
+
+function nombreDuCurseur(hote: FpConcept4, cle: string): string {
+  return tous(hote, `[data-testid="valeur"][data-cle="${cle}"]`)[0]?.textContent?.trim() ?? '';
+}
+
 function boutonsDePrereglage(hote: FpConcept4): HTMLButtonElement[] {
   return tous(hote, '[data-testid="prereglage"]') as HTMLButtonElement[];
 }
@@ -90,14 +122,6 @@ function prereglage(hote: FpConcept4, libelle: string): void {
 
 function resultatsDuTableau(hote: FpConcept4): string[] {
   return tous(hote, '[data-testid="resultat-ligne"]').map((cellule) => cellule.textContent ?? '');
-}
-
-function formaterEsperee(valeur: number): string {
-  return Number.isFinite(valeur) ? ECRITURE_ATTENDUE.format(valeur) : '—';
-}
-
-function resultatAttendu(valeurs: Readonly<Record<string, number>>): number {
-  return evaluerExpression(DEFINITION.calcul, valeurs).valeur ?? Number.NaN;
 }
 
 function avecDefaut(cle: string, defaut: number): Concept4Definition {
@@ -120,10 +144,10 @@ describe('FpConcept4', () => {
     },
   });
 
-  it('reflete la meme valeur dans les quatre faces apres une animation', () => {
+  it('reflete la meme valeur servie dans les quatre faces apres une animation', () => {
     animer(hote);
-    const attendue = String(resultatAttendu(hote.valeurs));
-    expect(hote.valeurs['n']).toBeGreaterThan(10);
+    const attendue = String(A_TRENTE_ANS.resultat.valeur);
+    expect(hote.valeurs['n']).toBe(30);
     expect(quatreFaces(hote)).toEqual({
       formule: attendue,
       graphique: attendue,
@@ -148,8 +172,7 @@ describe('FpConcept4', () => {
         { cle: 'total', libelle: 'total', min: 100, max: 900, pas: 100, defaut: 100 },
       ],
       formuleLatexSimplifie: '\\dfrac{partie}{total} \\times 100',
-      calcul: '(partie/total)*100',
-      phrase: '{partie} représente {resultat} % de {total}.',
+      sorties: [],
     });
 
     const formule = lu(hote, 'formule');
@@ -162,38 +185,27 @@ describe('FpConcept4', () => {
     expect(formule).not.toContain('\\times');
   });
 
-  it('recalcule le tableau de valeurs et marque la seule ligne courante', () => {
+  it('montre le tableau de valeurs servi du parametre pilote et marque la seule ligne courante', () => {
     const avant = resultatsDuTableau(hote);
     animer(hote);
     const apres = resultatsDuTableau(hote);
     const courantes = tous(hote, '[data-testid="ligne"][data-courant="true"]');
-    expect(apres).not.toEqual(avant);
+    expect(avant).toEqual(A_DIX_ANS.lignes['C'].map(({ resultat }) => resultat.affichage));
+    expect(apres).toEqual(A_TRENTE_ANS.lignes['n'].map(({ resultat }) => resultat.affichage));
     expect(courantes.length).toBe(1);
+    expect(courantes[0]?.textContent).toContain('30');
     expect(lu(hote, 'tableau')).toContain('Duree en annees');
   });
 
-  it('regenere la phrase en langage courant a chaque mouvement', () => {
-    const avant = lu(hote, 'phrase-texte');
+  it('montre la phrase servie a chaque mouvement', () => {
+    expect(lu(hote, 'phrase-texte')).toBe(A_DIX_ANS.phrase);
+
     animer(hote);
-    const valeurs = hote.valeurs;
-    const resultat = resultatAttendu(valeurs);
-    expect(lu(hote, 'phrase-texte')).toBe(
-      remplirGabarit(DEFINITION.phrase, { ...valeurs, resultat }, formaterEsperee),
-    );
-    expect(lu(hote, 'phrase-texte')).not.toBe(avant);
+
+    expect(lu(hote, 'phrase-texte')).toBe(A_TRENTE_ANS.phrase);
   });
 
-  it('L4-F11 · arrondit un demi comme Excel sur la machine servie du B2-01 : 1 € a -50 % puis +13 % arrive a 0,57 €', () => {
-    hote.definition = MACHINE_SERVIE;
-    glisserCurseur(hote, 'depart', '1');
-    glisserCurseur(hote, 'tauxUn', '-50');
-    glisserCurseur(hote, 'tauxDeux', '13');
-
-    expect(lu(hote, 'resultat-formule')).toBe('0,57');
-    expect(resultatsDuTableau(hote)).toEqual(['1', '0,5', '0,57']);
-  });
-
-  it('L4-F11 · ecrit la phrase, la formule et le reglage a la francaise, milliers en espace fine', () => {
+  it('L4-F11 · montre la phrase et la formule servies, et ecrit le reglage a la francaise, milliers en espace fine', () => {
     expect(lu(hote, 'phrase-texte')).toBe(
       `Un capital de 1${ESPACE_FINE}000 € placé à 4 % pendant 10 an(s) devient 1${ESPACE_FINE}480,24 €.`,
     );
@@ -201,18 +213,20 @@ describe('FpConcept4', () => {
     expect(un(hote, 'valeur')?.textContent?.trim()).toBe(`1${ESPACE_FINE}000`);
   });
 
-  it('dessine le graphique en svg produit par la brique sans bibliotheque', () => {
+  it('dessine le graphique en svg produit par la brique sans bibliotheque, point par point servi', () => {
     const courbe = un(hote, 'courbe');
     const trace = un(hote, 'trace');
     expect(courbe).toBeInstanceOf(SVGSVGElement);
     expect(trace).toBeInstanceOf(SVGPolylineElement);
-    expect((trace?.getAttribute('points') ?? '').split(' ').length).toBe(POINTS_ATTENDUS);
+    expect((trace?.getAttribute('points') ?? '').split(' ').length).toBe(
+      A_DIX_ANS.courbes['C'].length,
+    );
     expect(un(hote, 'point')).toBeInstanceOf(SVGCircleElement);
     expect(tous(hote, 'img, canvas, iframe, object, script')).toEqual([]);
   });
 
   it('RET-21 · trace la trajectoire depart, apres t1, arrivee avec le niveau de depart en repere', () => {
-    hote.definition = MACHINE;
+    hote.definition = MACHINE_SERVIE;
     const points = (un(hote, 'trace')?.getAttribute('points') ?? '')
       .split(' ')
       .map((couple) => couple.split(',').map(Number));
@@ -227,8 +241,8 @@ describe('FpConcept4', () => {
     expect(arrivee).toBeGreaterThan(depart);
   });
 
-  it('RET-21 · liste dans le tableau chaque etape de la machine avec sa valeur', () => {
-    hote.definition = MACHINE;
+  it('RET-21 · liste dans le tableau chaque etape de la machine avec sa valeur servie', () => {
+    hote.definition = MACHINE_SERVIE;
 
     expect(
       tous(hote, '[data-testid="ligne"]').map((ligne) => ligne.firstElementChild?.textContent),
@@ -237,12 +251,12 @@ describe('FpConcept4', () => {
   });
 
   it('F20 · propose les couples de taux en un clic et marque celui qui est en place', () => {
-    hote.definition = MACHINE;
+    hote.definition = MACHINE_SERVIE;
 
     expect(boutonsDePrereglage(hote).map((bouton) => bouton.textContent?.trim())).toEqual([
-      '+10 % puis −10 %',
-      '−10 % puis +10 %',
-      '+20 % puis −20 %',
+      PLUS_DIX_MOINS_DIX,
+      MOINS_DIX_PLUS_DIX,
+      PLUS_VINGT_MOINS_VINGT,
     ]);
     expect(boutonsDePrereglage(hote).map((b) => b.getAttribute('aria-pressed'))).toEqual([
       'true',
@@ -250,7 +264,7 @@ describe('FpConcept4', () => {
       'false',
     ]);
 
-    prereglage(hote, '+20 % puis −20 %');
+    prereglage(hote, PLUS_VINGT_MOINS_VINGT);
 
     expect(resultatsDuTableau(hote)).toEqual(['100', '120', '96']);
     expect(boutonsDePrereglage(hote).map((b) => b.getAttribute('aria-pressed'))).toEqual([
@@ -265,7 +279,7 @@ describe('FpConcept4', () => {
   });
 
   it('imprime sur papier les valeurs retenues en clair, sans bouton ni curseur', () => {
-    hote.definition = MACHINE;
+    hote.definition = MACHINE_SERVIE;
     hote.setAttribute('data-papier', '');
 
     expect(tous(hote, 'button, input')).toEqual([]);
@@ -282,31 +296,46 @@ describe('FpConcept4', () => {
     hote.definition = avecDefaut('n', 99);
     expect(hote.valeurs['n']).toBe(30);
     expect(lu(hote, 'phrase-texte')).toContain('30 an(s)');
-    expect(valeurDe(hote, 'formule')).toBe(String(resultatAttendu({ C: 1000, i: 4, n: 30 })));
+    expect(valeurDe(hote, 'formule')).toBe(String(A_TRENTE_ANS.resultat.valeur));
   });
 
   it('annonce chaque parametre en francais lisible et pas par un nombre nu', () => {
     attendreParametresAnnonces(hote, 'n', 'Duree en annees : 10 (de 1 à 30)');
   });
 
-  it('echappe le html injecte dans la formule, les libelles et la phrase', () => {
+  it('echappe le html injecte dans la formule, les libelles et les sorties servies', () => {
     hote.definition = buildConcept4Definition({
       id: 'K-QUATRE-FACES-03',
       formuleLatexSimplifie: CHARGE_XSS,
-      phrase: CHARGE_XSS,
       parametres: DEFINITION.parametres.map((parametre) => ({ ...parametre, libelle: CHARGE_XSS })),
+      sorties: [
+        buildSortiesMachine({
+          resultat: { valeur: 1, affichage: CHARGE_XSS },
+          phrase: CHARGE_XSS,
+        }),
+      ],
     });
     expect(lu(hote, 'phrase-texte')).toBe(CHARGE_XSS);
+    expect(lu(hote, 'resultat-formule')).toBe(CHARGE_XSS);
     expect(lu(hote, 'formule')).toContain(CHARGE_XSS);
     attendreLeParametreEchappe(hote, 'n', CHARGE_XSS);
   });
 
-  it('affiche un tiret quand la formule de calcul est invalide sans casser la brique', () => {
-    hote.definition = buildConcept4Definition({ id: 'K-QUATRE-FACES-05', calcul: 'C+' });
+  it('affiche le tiret servi pour un resultat absent sans casser la brique', () => {
+    const ABSENT = { valeur: null, affichage: '—' };
+    const sortie = buildSortiesMachine({
+      resultat: ABSENT,
+      courbes: { C: [{ x: 100, y: null }], i: [], n: [] },
+      lignes: { C: A_DIX_ANS.lignes['C'].map((ligne) => ({ ...ligne, resultat: ABSENT })) },
+      phrase: 'Un capital de 1 000 € devient — €.',
+    });
+    hote.definition = buildConcept4Definition({ id: 'K-QUATRE-FACES-05', sorties: [sortie] });
+
     expect(lu(hote, 'resultat-formule')).toBe('—');
     expect(resultatsDuTableau(hote).every((resultat) => resultat === '—')).toBe(true);
     expect(lu(hote, 'phrase-texte')).toContain('— €.');
     expect(un(hote, 'courbe')).toBeInstanceOf(SVGSVGElement);
+    expect(un(hote, 'trace')?.getAttribute('points')).toBe('');
   });
 
   it('rend la meme machine pour l etudiant et le presentateur, seul le role de la racine change', () => {
@@ -336,11 +365,184 @@ describe('FpConcept4', () => {
 
   it('RET-21 · laisse le formateur manipuler la machine en projection', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
-    glisserCurseur(hote, 'n', '20');
+    relacherCurseur(hote, 'n', '30');
 
-    expect(hote.valeurs['n']).toBe(20);
-    expect(valeurDe(hote, 'formule')).toBe(String(resultatAttendu({ C: 1000, i: 4, n: 20 })));
+    expect(hote.valeurs['n']).toBe(30);
+    expect(valeurDe(hote, 'formule')).toBe(String(A_TRENTE_ANS.resultat.valeur));
     expect(tous(hote, '[data-testid="animer"]').length).toBe(1);
+  });
+
+  describe('F-37 · la machine montre les sorties servies par le back et n evalue rien', () => {
+    function montreSansRienDemander(sortie: SortiesMachine, ...positions: string[]): void {
+      const evaluations = detailsEmis(hote, EVALUATION);
+      for (const position of positions) {
+        relacherCurseur(hote, 'n', position);
+      }
+      expect(evaluations).toEqual([]);
+      expect(lu(hote, 'resultat-formule')).toBe(sortie.resultat.affichage);
+    }
+
+    it('montre aux quatre faces la sortie servie pour les reglages en place, sans rien calculer', () => {
+      const temoin = buildSortiesMachine({
+        resultat: { valeur: 4321, affichage: `4${ESPACE_FINE}321` },
+        phrase: 'Phrase servie par le back.',
+      });
+      hote.definition = buildConcept4Definition({ sorties: [temoin] });
+
+      expect(lu(hote, 'resultat-formule')).toBe(`4${ESPACE_FINE}321`);
+      expect(lu(hote, 'phrase-texte')).toBe('Phrase servie par le back.');
+      expect(quatreFaces(hote)).toEqual({
+        formule: '4321',
+        graphique: '4321',
+        tableau: '4321',
+        phrase: '4321',
+      });
+      expect(enAttente(hote)).toBe(false);
+    });
+
+    it('pendant le glisser, seul le nombre du curseur bouge', () => {
+      const evaluations = detailsEmis(hote, EVALUATION);
+      const tableauAvant = resultatsDuTableau(hote);
+
+      glisserCurseur(hote, 'n', '30');
+
+      expect(nombreDuCurseur(hote, 'n')).toBe('30');
+      expect(lu(hote, 'resultat-formule')).toBe(A_DIX_ANS.resultat.affichage);
+      expect(lu(hote, 'phrase-texte')).toBe(A_DIX_ANS.phrase);
+      expect(resultatsDuTableau(hote)).toEqual(tableauAvant);
+      expect(enAttente(hote)).toBe(true);
+      expect(evaluations).toEqual([]);
+    });
+
+    it('au relachement sur une position servie, montre sa sortie sans rien demander au back', () => {
+      const evaluations = detailsEmis(hote, EVALUATION);
+
+      relacherCurseur(hote, 'n', '30');
+
+      expect(evaluations).toEqual([]);
+      expect(lu(hote, 'resultat-formule')).toBe(A_TRENTE_ANS.resultat.affichage);
+      expect(lu(hote, 'phrase-texte')).toBe(A_TRENTE_ANS.phrase);
+      expect(enAttente(hote)).toBe(false);
+    });
+
+    it('au relachement sur une position non servie, demande son evaluation et garde la sortie montree, en attente', () => {
+      const evaluations = detailsEmis(hote, EVALUATION);
+
+      relacherCurseur(hote, 'n', '20');
+
+      expect(evaluations).toEqual([{ reglages: { C: 1000, i: 4, n: 20 } }]);
+      expect(lu(hote, 'resultat-formule')).toBe(A_DIX_ANS.resultat.affichage);
+      expect(enAttente(hote)).toBe(true);
+    });
+
+    it('montre la sortie evaluee qui repond aux reglages en place, puis la reprend sans la redemander', () => {
+      relacherCurseur(hote, 'n', '20');
+
+      hote.evaluee = A_VINGT_ANS;
+
+      expect(lu(hote, 'resultat-formule')).toBe(A_VINGT_ANS.resultat.affichage);
+      expect(lu(hote, 'phrase-texte')).toBe(A_VINGT_ANS.phrase);
+      expect(enAttente(hote)).toBe(false);
+      montreSansRienDemander(A_VINGT_ANS, '10', '20');
+    });
+
+    it('garde en reserve une sortie evaluee qui ne repond plus aux reglages en place', () => {
+      relacherCurseur(hote, 'n', '20');
+      relacherCurseur(hote, 'n', '25');
+
+      hote.evaluee = A_VINGT_ANS;
+
+      expect(lu(hote, 'resultat-formule')).toBe(A_DIX_ANS.resultat.affichage);
+      expect(enAttente(hote)).toBe(true);
+      montreSansRienDemander(A_VINGT_ANS, '20');
+    });
+
+    it('au pupitre, ne demande aucune evaluation : il montre les sorties projetees par la seance', () => {
+      const evaluations = emisAuPupitre(hote, EVALUATION, () => relacherCurseur(hote, 'n', '20'));
+
+      expect(evaluations).toEqual([]);
+      expect(enAttente(hote)).toBe(true);
+
+      hote.evaluee = A_VINGT_ANS;
+
+      expect(lu(hote, 'resultat-formule')).toBe(A_VINGT_ANS.resultat.affichage);
+    });
+
+    it('annonce le refus d une evaluation sous les faces', () => {
+      relacherCurseur(hote, 'n', '20');
+
+      hote.erreur = 'Calcul non reçu';
+
+      expect(lu(hote, 'erreur')).toBe('Calcul non reçu');
+      expect(un(hote, 'erreur')?.getAttribute('role')).toBe('alert');
+      expect(nombreDuCurseur(hote, 'n')).toBe('20');
+    });
+
+    it('en apercu, ne demande aucune evaluation', () => {
+      hote.setAttribute('data-apercu', '');
+      const evaluations = detailsEmis(hote, EVALUATION);
+
+      relacherCurseur(hote, 'n', '20');
+
+      expect(evaluations).toEqual([]);
+    });
+
+    describe('animation sans suite servie', () => {
+      sousHorlogeSimulee(() => {
+        hote.definition = buildConcept4Definition({ animation: undefined });
+      });
+
+      it('demande au back l evaluation de chaque etat joue', () => {
+        const evaluations = detailsEmis(hote, EVALUATION);
+        const joues: Readonly<Record<string, number>>[] = [];
+
+        animerJusquAuRepos(hote, () => joues.push(hote.valeurs));
+
+        expect(joues.length).toBeGreaterThan(1);
+        expect(joues.at(-1)).toEqual({ C: 5000, i: 10, n: 30 });
+        expect(evaluations).toEqual(joues.map((reglages) => ({ reglages })));
+      });
+    });
+  });
+
+  describe('F-37 · chaque reglage atteignable d une machine servie trouve sa sortie servie', () => {
+    sousHorlogeSimulee();
+
+    function attendreLaSortieServie(
+      definition: Concept4Definition,
+      evaluations: unknown[],
+      contexte: string,
+    ): void {
+      const servie = definition.sorties.find((sortie) =>
+        definition.parametres.every(({ cle }) => sortie.valeurs[cle] === hote.valeurs[cle]),
+      );
+      const detail = `${contexte} ${JSON.stringify(hote.valeurs)}`;
+      expect(servie).withContext(detail).toBeDefined();
+      expect(enAttente(hote)).withContext(detail).toBe(false);
+      expect(lu(hote, 'resultat-formule'))
+        .withContext(detail)
+        .toBe(servie?.resultat.affichage ?? '');
+      expect(evaluations).withContext(detail).toEqual([]);
+    }
+
+    it('trouve des machines servies dans les cours', () => {
+      expect(MACHINES_SERVIES.length).toBeGreaterThan(0);
+    });
+
+    for (const { cours, id, definition } of MACHINES_SERVIES) {
+      it(`${cours} ${id} · au defaut, a chaque prereglage et a chaque etat anime`, () => {
+        hote.definition = definition;
+        const evaluations = detailsEmis(hote, EVALUATION);
+        attendreLaSortieServie(definition, evaluations, 'defaut');
+        for (let rang = 0; rang < boutonsDePrereglage(hote).length; rang += 1) {
+          boutonsDePrereglage(hote)[rang]?.click();
+          attendreLaSortieServie(definition, evaluations, `prereglage ${rang}`);
+        }
+        animerJusquAuRepos(hote, () =>
+          attendreLaSortieServie(definition, evaluations, 'animation'),
+        );
+      });
+    }
   });
 
   describe('synchronisation du pupitre vers la projection', () => {
@@ -355,11 +557,7 @@ describe('FpConcept4', () => {
     });
 
     it('G2 · au pupitre, emet le cran écrit par un curseur à pas décimal, sans erreur d arrondi', () => {
-      hote.definition = buildConcept4Definition({
-        parametres: [PARAMETRE_A_PAS_DECIMAL],
-        calcul: 'd',
-        phrase: 'Un décalage de {d} donne {resultat}.',
-      });
+      hote.definition = buildConcept4Definition({ parametres: [PARAMETRE_A_PAS_DECIMAL] });
 
       attendreLeTroisiemeCranEmisSansArrondi(hote, REGLAGE);
     });
@@ -396,39 +594,41 @@ describe('FpConcept4', () => {
     }
 
     it('F20 · au pupitre, emet les reglages au clic d un prereglage', () => {
-      hote.definition = MACHINE;
-      const emis = emisAuPupitre(hote, REGLAGE, () => prereglage(hote, '+20 % puis −20 %'));
+      hote.definition = MACHINE_SERVIE;
+      const emis = emisAuPupitre(hote, REGLAGE, () => prereglage(hote, PLUS_VINGT_MOINS_VINGT));
 
       expect(emis).toEqual([{ reglages: { depart: 100, tauxUn: 20, tauxDeux: -20 } }]);
     });
 
     it('F20 · chez l etudiant, un prereglage regle la machine sans rien emettre', () => {
-      hote.definition = MACHINE;
+      hote.definition = MACHINE_SERVIE;
       const emis = detailsEmis(hote, REGLAGE);
+      const evaluations = detailsEmis(hote, EVALUATION);
 
-      prereglage(hote, '−10 % puis +10 %');
+      prereglage(hote, MOINS_DIX_PLUS_DIX);
 
       expect(emis).toEqual([]);
+      expect(evaluations).toEqual([]);
       expect(hote.valeurs).toEqual({ depart: 100, tauxUn: -10, tauxDeux: 10 });
     });
 
-    it('RET-21 · la projection suit les reglages pilotes, bornes a la machine', () => {
+    it('RET-21 · la projection suit les reglages pilotes, bornes a la machine, et montre leur sortie projetee', () => {
       hote.setAttribute('data-cours-role', 'presentateur');
 
       hote.reglages = { n: 20, i: 99 };
 
       expect(hote.valeurs).toEqual({ C: 1000, i: 10, n: 20 });
-      expect(valeurDe(hote, 'formule')).toBe(String(resultatAttendu({ C: 1000, i: 10, n: 20 })));
+      expect(enAttente(hote)).toBe(true);
+
+      hote.evaluee = A_VINGT_ANS_A_DIX_POUR_CENT;
+
+      expect(valeurDe(hote, 'formule')).toBe(String(A_VINGT_ANS_A_DIX_POUR_CENT.resultat.valeur));
+      expect(enAttente(hote)).toBe(false);
     });
 
     describe('R8 · animation de la machine à coefficients', () => {
-      const ANIMEE = buildConcept4Definition({
-        ...MACHINE,
-        animation: [{ depart: 100, tauxUn: 0, tauxDeux: 0 }, { tauxUn: 50 }, { tauxDeux: -50 }],
-      });
-
       sousHorlogeSimulee(() => {
-        hote.definition = ANIMEE;
+        hote.definition = MACHINE_SERVIE;
       });
 
       it('change une seule valeur toutes les trois secondes, de +50 % à −50 %', () => {
@@ -456,7 +656,7 @@ describe('FpConcept4', () => {
 
       it('s arrête dès qu un préréglage est choisi', () => {
         animer(hote);
-        prereglage(hote, '+10 % puis −10 %');
+        prereglage(hote, PLUS_DIX_MOINS_DIX);
         jasmine.clock().tick(6000);
 
         expect(hote.valeurs).toEqual({ depart: 100, tauxUn: 10, tauxDeux: -10 });
