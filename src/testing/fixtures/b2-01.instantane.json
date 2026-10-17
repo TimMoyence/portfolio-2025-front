@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "d4118e6d5f2fafc511d0de6a6d2b00e296f34e9656beb44d3c013287b923bfc2",
+  "empreinte": "bd26668e56a6b7d060fc8a75b4375a00d4eefa327b7a24d8f3460a0b728ce4fe",
   "sujet": {
     "id": "b2-01-traitement-information-chiffree",
     "titre": "Lire, contrôler et décider avec l’information chiffrée",
@@ -763,6 +763,15 @@
               }
             ],
             "reference": "Axe de Samir",
+            "abscisses": [0, 1, 2, 3],
+            "positions": [
+              {
+                "valeurs": {},
+                "ordonnees": {
+                  "marge": [285000, 288000, 289800, 291000]
+                }
+              }
+            ],
             "metadonnees": {
               "concepts": ["lecture-graphique"],
               "misconceptionsCiblees": [],
@@ -1364,6 +1373,7 @@
                 "tauxDeux": -50
               }
             ],
+            "sorties": [],
             "metadonnees": {
               "concepts": ["coefficient-multiplicateur", "evolutions-successives"],
               "misconceptionsCiblees": [],
@@ -1919,6 +1929,71 @@
               "En F5, calculez le taux de marge brute global : marge totale ÷ CA total.",
               "En B7, contrôlez vos formules : les parts doivent faire 100 % : =SI(ARRONDI(SOMME(E2:E4);6)=1;1;0). En C7, contrôlez vos données : votre marge (G5) doit égaler celle du compte de résultat (B6)."
             ],
+            "lettres": ["A", "B", "C", "D", "E", "F", "G"],
+            "grille": [
+              ["A1", "B1", "C1", "D1", "E1", "F1", "G1"],
+              ["A2", "B2", "C2", "D2", "E2", "F2", "G2"],
+              ["A3", "B3", "C3", "D3", "E3", "F3", "G3"],
+              ["A4", "B4", "C4", "D4", "E4", "F4", "G4"],
+              ["A5", "B5", "C5", "D5", "E5", "F5", "G5"],
+              ["A6", "B6", "C6", "D6", "E6", "F6", "G6"],
+              ["A7", "B7", "C7", "D7", "E7", "F7", "G7"]
+            ],
+            "longueurMaxSaisie": 200,
+            "initiale": {
+              "saisies": {},
+              "affichages": {
+                "A1": "Canal",
+                "B1": "CA HT 2024 (€)",
+                "C1": "CA HT 2025 (€)",
+                "D1": "Évolution du CA",
+                "E1": "Part du CA 2025",
+                "F1": "Taux de marge brute",
+                "G1": "Marge brute 2025 (€)",
+                "A2": "Sur-mesure",
+                "A3": "Entretien",
+                "A4": "Marketplace",
+                "A5": "Total",
+                "A6": "Marge brute 2025 (compte de résultat)",
+                "A7": "Contrôles",
+                "B2": "483000",
+                "B3": "210000",
+                "B4": "357000",
+                "C2": "397000",
+                "C3": "230000",
+                "C4": "523000",
+                "F2": "0,36",
+                "F3": "0,28",
+                "F4": "0,16",
+                "B6": "291000"
+              },
+              "natures": {
+                "A1": "texte",
+                "B1": "texte",
+                "C1": "texte",
+                "D1": "texte",
+                "E1": "texte",
+                "F1": "texte",
+                "G1": "texte",
+                "A2": "texte",
+                "A3": "texte",
+                "A4": "texte",
+                "A5": "texte",
+                "A6": "texte",
+                "A7": "texte",
+                "B2": "nombre",
+                "B3": "nombre",
+                "B4": "nombre",
+                "C2": "nombre",
+                "C3": "nombre",
+                "C4": "nombre",
+                "F2": "nombre",
+                "F3": "nombre",
+                "F4": "nombre",
+                "B6": "nombre"
+              },
+              "formules": []
+            },
             "metadonnees": {
               "concepts": ["tableur"],
               "misconceptionsCiblees": [],
@@ -2418,6 +2493,352 @@
               },
               {
                 "tauxMarketplace": 30
+              }
+            ],
+            "abscisses": [
+              0, 3.3333333333333335, 6.666666666666667, 10, 13.333333333333334, 16.666666666666668,
+              20, 23.333333333333332, 26.666666666666668, 30, 33.333333333333336,
+              36.666666666666664, 40, 43.333333333333336, 46.666666666666664, 50,
+              53.333333333333336, 56.666666666666664, 60, 63.333333333333336, 66.66666666666667, 70,
+              73.33333333333333, 76.66666666666667, 80
+            ],
+            "positions": [
+              {
+                "valeurs": {
+                  "tauxMarketplace": 10
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.533333, 32.666667, 31.8, 30.933333, 30.066667, 29.2, 28.333333,
+                    27.466667, 26.6, 25.733333, 24.866667, 24, 23.133333, 22.266667, 21.4,
+                    20.533333, 19.666667, 18.8, 17.933333, 17.066667, 16.2, 15.333333, 14.466667,
+                    13.6
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 11
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.566667, 32.733333, 31.9, 31.066667, 30.233333, 29.4, 28.566667,
+                    27.733333, 26.9, 26.066667, 25.233333, 24.4, 23.566667, 22.733333, 21.9,
+                    21.066667, 20.233333, 19.4, 18.566667, 17.733333, 16.9, 16.066667, 15.233333,
+                    14.4
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 12
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.6, 32.8, 32, 31.2, 30.4, 29.6, 28.8, 28, 27.2, 26.4, 25.6, 24.8, 24,
+                    23.2, 22.4, 21.6, 20.8, 20, 19.2, 18.4, 17.6, 16.8, 16, 15.2
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 13
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.633333, 32.866667, 32.1, 31.333333, 30.566667, 29.8, 29.033333,
+                    28.266667, 27.5, 26.733333, 25.966667, 25.2, 24.433333, 23.666667, 22.9,
+                    22.133333, 21.366667, 20.6, 19.833333, 19.066667, 18.3, 17.533333, 16.766667, 16
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 14
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.666667, 32.933333, 32.2, 31.466667, 30.733333, 30, 29.266667,
+                    28.533333, 27.8, 27.066667, 26.333333, 25.6, 24.866667, 24.133333, 23.4,
+                    22.666667, 21.933333, 21.2, 20.466667, 19.733333, 19, 18.266667, 17.533333, 16.8
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 15
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.7, 33, 32.3, 31.6, 30.9, 30.2, 29.5, 28.8, 28.1, 27.4, 26.7, 26, 25.3,
+                    24.6, 23.9, 23.2, 22.5, 21.8, 21.1, 20.4, 19.7, 19, 18.3, 17.6
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 16
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.733333, 33.066667, 32.4, 31.733333, 31.066667, 30.4, 29.733333,
+                    29.066667, 28.4, 27.733333, 27.066667, 26.4, 25.733333, 25.066667, 24.4,
+                    23.733333, 23.066667, 22.4, 21.733333, 21.066667, 20.4, 19.733333, 19.066667,
+                    18.4
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 17
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.766667, 33.133333, 32.5, 31.866667, 31.233333, 30.6, 29.966667,
+                    29.333333, 28.7, 28.066667, 27.433333, 26.8, 26.166667, 25.533333, 24.9,
+                    24.266667, 23.633333, 23, 22.366667, 21.733333, 21.1, 20.466667, 19.833333, 19.2
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 18
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.8, 33.2, 32.6, 32, 31.4, 30.8, 30.2, 29.6, 29, 28.4, 27.8, 27.2, 26.6,
+                    26, 25.4, 24.8, 24.2, 23.6, 23, 22.4, 21.8, 21.2, 20.6, 20
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 19
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.833333, 33.266667, 32.7, 32.133333, 31.566667, 31, 30.433333,
+                    29.866667, 29.3, 28.733333, 28.166667, 27.6, 27.033333, 26.466667, 25.9,
+                    25.333333, 24.766667, 24.2, 23.633333, 23.066667, 22.5, 21.933333, 21.366667,
+                    20.8
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 20
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.866667, 33.333333, 32.8, 32.266667, 31.733333, 31.2, 30.666667,
+                    30.133333, 29.6, 29.066667, 28.533333, 28, 27.466667, 26.933333, 26.4,
+                    25.866667, 25.333333, 24.8, 24.266667, 23.733333, 23.2, 22.666667, 22.133333,
+                    21.6
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 21
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.9, 33.4, 32.9, 32.4, 31.9, 31.4, 30.9, 30.4, 29.9, 29.4, 28.9, 28.4,
+                    27.9, 27.4, 26.9, 26.4, 25.9, 25.4, 24.9, 24.4, 23.9, 23.4, 22.9, 22.4
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 22
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.933333, 33.466667, 33, 32.533333, 32.066667, 31.6, 31.133333,
+                    30.666667, 30.2, 29.733333, 29.266667, 28.8, 28.333333, 27.866667, 27.4,
+                    26.933333, 26.466667, 26, 25.533333, 25.066667, 24.6, 24.133333, 23.666667, 23.2
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 23
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.966667, 33.533333, 33.1, 32.666667, 32.233333, 31.8, 31.366667,
+                    30.933333, 30.5, 30.066667, 29.633333, 29.2, 28.766667, 28.333333, 27.9,
+                    27.466667, 27.033333, 26.6, 26.166667, 25.733333, 25.3, 24.866667, 24.433333, 24
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 24
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34, 33.6, 33.2, 32.8, 32.4, 32, 31.6, 31.2, 30.8, 30.4, 30, 29.6, 29.2,
+                    28.8, 28.4, 28, 27.6, 27.2, 26.8, 26.4, 26, 25.6, 25.2, 24.8
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 25
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.033333, 33.666667, 33.3, 32.933333, 32.566667, 32.2, 31.833333,
+                    31.466667, 31.1, 30.733333, 30.366667, 30, 29.633333, 29.266667, 28.9,
+                    28.533333, 28.166667, 27.8, 27.433333, 27.066667, 26.7, 26.333333, 25.966667,
+                    25.6
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 26
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.066667, 33.733333, 33.4, 33.066667, 32.733333, 32.4, 32.066667,
+                    31.733333, 31.4, 31.066667, 30.733333, 30.4, 30.066667, 29.733333, 29.4,
+                    29.066667, 28.733333, 28.4, 28.066667, 27.733333, 27.4, 27.066667, 26.733333,
+                    26.4
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 27
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.1, 33.8, 33.5, 33.2, 32.9, 32.6, 32.3, 32, 31.7, 31.4, 31.1, 30.8,
+                    30.5, 30.2, 29.9, 29.6, 29.3, 29, 28.7, 28.4, 28.1, 27.8, 27.5, 27.2
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 28
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.133333, 33.866667, 33.6, 33.333333, 33.066667, 32.8, 32.533333,
+                    32.266667, 32, 31.733333, 31.466667, 31.2, 30.933333, 30.666667, 30.4,
+                    30.133333, 29.866667, 29.6, 29.333333, 29.066667, 28.8, 28.533333, 28.266667, 28
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 29
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.166667, 33.933333, 33.7, 33.466667, 33.233333, 33, 32.766667,
+                    32.533333, 32.3, 32.066667, 31.833333, 31.6, 31.366667, 31.133333, 30.9,
+                    30.666667, 30.433333, 30.2, 29.966667, 29.733333, 29.5, 29.266667, 29.033333,
+                    28.8
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 30
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.2, 34, 33.8, 33.6, 33.4, 33.2, 33, 32.8, 32.6, 32.4, 32.2, 32, 31.8,
+                    31.6, 31.4, 31.2, 31, 30.8, 30.6, 30.4, 30.2, 30, 29.8, 29.6
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
               }
             ],
             "metadonnees": {
@@ -3477,7 +3898,8 @@
             ]
           }
         ],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A1-02-ACCROCHE",
@@ -3517,7 +3939,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A1-03-MISSION",
@@ -3563,7 +3986,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A1-07-PLAN",
@@ -3640,7 +4064,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A1-04-TABLEAU-DE-BORD",
@@ -3731,7 +4156,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A1-05-ANATOMIE",
@@ -3869,8 +4295,10 @@
               "categorieId": "evolution",
               "justification": "variation depuis le 1ᵉʳ janvier (calcul à vérifier à l’acte 4)"
             }
-          ]
-        }
+          ],
+          "seuilReussite": 0.75
+        },
+        "reflexion": null
       },
       {
         "id": "B2-01-A1-05-CORRECTION",
@@ -3981,7 +4409,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A1-06-FICHE-INDICATEUR",
@@ -4047,7 +4476,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A1-08-QUESTION-DE-GESTION",
@@ -4094,6 +4524,10 @@
         "questions": [],
         "corrigeEcran": {
           "type": "reflexion",
+          "attendu": "Par exemple : la marge brute d’Atelier Rivage (trois canaux) a-t-elle augmenté entre 2024 et 2025, en euros et rapportée au CA HT ? Deux réponses sont attendues : un montant et un taux.",
+          "suite": "Vérifiez que votre question nomme un indicateur, un dénominateur, deux dates et un périmètre."
+        },
+        "reflexion": {
           "attendu": "Par exemple : la marge brute d’Atelier Rivage (trois canaux) a-t-elle augmenté entre 2024 et 2025, en euros et rapportée au CA HT ? Deux réponses sont attendues : un montant et un taux.",
           "suite": "Vérifiez que votre question nomme un indicateur, un dénominateur, deux dates et un périmètre."
         }
@@ -4144,7 +4578,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A1-10-AUDIT-DIAPOSITIVE",
@@ -4203,6 +4638,7 @@
             }
           ]
         },
+        "reflexion": null,
         "explications": [
           {
             "reference": "axe",
@@ -4250,7 +4686,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A2-01-PLAYFAIR",
@@ -4296,7 +4733,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A2-02-ORIGINE-AXE",
@@ -4357,6 +4795,15 @@
               }
             ],
             "reference": "Axe de Samir",
+            "abscisses": [0, 1, 2, 3],
+            "positions": [
+              {
+                "valeurs": {},
+                "ordonnees": {
+                  "marge": [285000, 288000, 289800, 291000]
+                }
+              }
+            ],
             "metadonnees": {
               "concepts": ["lecture-graphique"],
               "misconceptionsCiblees": [],
@@ -4371,7 +4818,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A2-03-ATELIER-1",
@@ -4461,7 +4909,7 @@
             "confusions": [
               {
                 "id": "axe-tronque-lu-comme-ecart",
-                "libelle": "Lire ou construire un graphique sans tenir compte de l’origine et de l’amplitude de l’axe : juger un écart à la hauteur des barres, tronquer l’axe ou supprimer ses graduations, ou renoncer à lire un écart que les graduations permettent de mesurer."
+                "libelle": "Juger une évolution à la hauteur des barres sans lire l’origine et l’amplitude de l’axe."
               },
               {
                 "id": "ecart-absolu-au-lieu-du-taux",
@@ -4542,6 +4990,7 @@
           }
         ],
         "corrigeEcran": null,
+        "reflexion": null,
         "explications": [
           {
             "reference": "b2-01-a2-evolution-marge",
@@ -4656,7 +5105,7 @@
               },
               {
                 "id": "sens-de-variation",
-                "libelle": "Se tromper sur le sens d’une variation : oublier le signe moins d’une baisse, traduire une baisse par le coefficient 1 + t au lieu de 1 − t, ou juger croissante une suite géométrique de raison positive, qui ne croît que si sa raison dépasse 1."
+                "libelle": "Oublier le signe d’une variation : une baisse s’écrit avec un signe moins."
               }
             ]
           },
@@ -4733,6 +5182,7 @@
           }
         ],
         "corrigeEcran": null,
+        "reflexion": null,
         "explications": [
           {
             "reference": "b2-01-a2-evolution-sur-mesure",
@@ -4803,7 +5253,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A2-06-POINTS",
@@ -4862,7 +5313,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A2-07-JEU-COMPARABLE",
@@ -4996,8 +5448,10 @@
               "categorieId": "impossible",
               "justification": "activité saisonnière : doubler un semestre ne donne pas l’année ; il faut le 1ᵉʳ semestre 2024"
             }
-          ]
-        }
+          ],
+          "seuilReussite": 0.75
+        },
+        "reflexion": null
       },
       {
         "id": "B2-01-A2-07-CORRECTION",
@@ -5106,7 +5560,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A2-08-JALON-2",
@@ -5132,7 +5587,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A3-01-VOTE-HAUSSE-BAISSE",
@@ -5257,7 +5713,8 @@
             "Coefficient global : 1,10 × 0,90 = 0,99, soit −1 %.",
             "Remises : 0,90 × 0,98 = 0,882 : le net est inférieur de 11,8 % au prix catalogue (3 528 € HT), pas de 12 %."
           ]
-        }
+        },
+        "reflexion": null
       },
       {
         "id": "B2-01-A3-02-MACHINE-COEFFICIENTS",
@@ -5347,6 +5804,7 @@
                 "tauxDeux": -50
               }
             ],
+            "sorties": [],
             "metadonnees": {
               "concepts": ["coefficient-multiplicateur", "evolutions-successives"],
               "misconceptionsCiblees": [],
@@ -5361,7 +5819,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A3-03-PRIX-SAC",
@@ -5421,7 +5880,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A3-04-FIL-TECHNIQUE",
@@ -5486,7 +5946,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A3-05-INFLATION-RYTHME",
@@ -5533,7 +5994,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A3-06-INDICE-ET-TAUX-MOYEN",
@@ -5592,7 +6054,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A3-07-ATELIER-2",
@@ -5676,7 +6139,7 @@
             "confusions": [
               {
                 "id": "rythme-confondu-avec-niveau",
-                "libelle": "Confondre désinflation et des prix stables ou en baisse : quand la hausse des prix ralentit (désinflation), les prix continuent de monter ; ils ne baissent qu’en déflation."
+                "libelle": "Confondre désinflation (la hausse des prix ralentit) et déflation (les prix baissent)."
               }
             ]
           },
@@ -5740,6 +6203,7 @@
           }
         ],
         "corrigeEcran": null,
+        "reflexion": null,
         "explications": [
           {
             "reference": "b2-01-a3-niveau-prix",
@@ -5820,7 +6284,11 @@
             "confusions": [
               {
                 "id": "taux-moyen-arithmetique",
-                "libelle": "Prendre pour taux moyen une moyenne arithmétique, le taux global divisé par le nombre de périodes ou la moyenne des taux de chaque période, au lieu de la racine n-ième du coefficient global."
+                "libelle": "Diviser un taux global par le nombre de périodes au lieu de prendre une racine n-ième."
+              },
+              {
+                "id": "taux-successifs-additionnes",
+                "libelle": "Additionner des taux successifs au lieu de multiplier les coefficients."
               }
             ]
           },
@@ -5830,7 +6298,7 @@
             "confusions": [
               {
                 "id": "reciproque-meme-taux",
-                "libelle": "Croire que le même pourcentage en sens inverse ramène au départ, qu’il soit le taux d’une évolution ou la somme de taux successifs : on revient au départ en divisant par le coefficient multiplicateur."
+                "libelle": "Croire que le même pourcentage en sens inverse suffit pour revenir au départ."
               },
               {
                 "id": "coefficient-confondu-avec-taux",
@@ -5865,6 +6333,7 @@
           }
         ],
         "corrigeEcran": null,
+        "reflexion": null,
         "explications": [
           {
             "reference": "b2-01-a3-taux-moyen",
@@ -5924,7 +6393,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A3-09-NOTE-CONJONCTURE",
@@ -5969,6 +6439,10 @@
           "type": "reflexion",
           "attendu": "L’argument ne tient pas : l’inflation ralentit (désinflation : 0,9 % en 2025 après 2,0 % en 2024), mais le niveau des prix continue de monter. Les prix ayant augmenté de 16,0 % depuis 2019 (Insee, IPC), des tarifs inchangés ont perdu 13,8 % de leur valeur réelle (1 ÷ 1,1597 − 1) : les baisser aggraverait la perte.",
           "suite": "Citez toujours deux chiffres : le rythme (taux annuel) et le niveau (indice), avec leur source."
+        },
+        "reflexion": {
+          "attendu": "L’argument ne tient pas : l’inflation ralentit (désinflation : 0,9 % en 2025 après 2,0 % en 2024), mais le niveau des prix continue de monter. Les prix ayant augmenté de 16,0 % depuis 2019 (Insee, IPC), des tarifs inchangés ont perdu 13,8 % de leur valeur réelle (1 ÷ 1,1597 − 1) : les baisser aggraverait la perte.",
+          "suite": "Citez toujours deux chiffres : le rythme (taux annuel) et le niveau (indice), avec leur source."
         }
       },
       {
@@ -5995,7 +6469,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A4-01-CAPSULE",
@@ -6041,7 +6516,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A4-02-FEUILLE-CANAUX",
@@ -6113,6 +6589,71 @@
               "En F5, calculez le taux de marge brute global : marge totale ÷ CA total.",
               "En B7, contrôlez vos formules : les parts doivent faire 100 % : =SI(ARRONDI(SOMME(E2:E4);6)=1;1;0). En C7, contrôlez vos données : votre marge (G5) doit égaler celle du compte de résultat (B6)."
             ],
+            "lettres": ["A", "B", "C", "D", "E", "F", "G"],
+            "grille": [
+              ["A1", "B1", "C1", "D1", "E1", "F1", "G1"],
+              ["A2", "B2", "C2", "D2", "E2", "F2", "G2"],
+              ["A3", "B3", "C3", "D3", "E3", "F3", "G3"],
+              ["A4", "B4", "C4", "D4", "E4", "F4", "G4"],
+              ["A5", "B5", "C5", "D5", "E5", "F5", "G5"],
+              ["A6", "B6", "C6", "D6", "E6", "F6", "G6"],
+              ["A7", "B7", "C7", "D7", "E7", "F7", "G7"]
+            ],
+            "longueurMaxSaisie": 200,
+            "initiale": {
+              "saisies": {},
+              "affichages": {
+                "A1": "Canal",
+                "B1": "CA HT 2024 (€)",
+                "C1": "CA HT 2025 (€)",
+                "D1": "Évolution du CA",
+                "E1": "Part du CA 2025",
+                "F1": "Taux de marge brute",
+                "G1": "Marge brute 2025 (€)",
+                "A2": "Sur-mesure",
+                "A3": "Entretien",
+                "A4": "Marketplace",
+                "A5": "Total",
+                "A6": "Marge brute 2025 (compte de résultat)",
+                "A7": "Contrôles",
+                "B2": "483000",
+                "B3": "210000",
+                "B4": "357000",
+                "C2": "397000",
+                "C3": "230000",
+                "C4": "523000",
+                "F2": "0,36",
+                "F3": "0,28",
+                "F4": "0,16",
+                "B6": "291000"
+              },
+              "natures": {
+                "A1": "texte",
+                "B1": "texte",
+                "C1": "texte",
+                "D1": "texte",
+                "E1": "texte",
+                "F1": "texte",
+                "G1": "texte",
+                "A2": "texte",
+                "A3": "texte",
+                "A4": "texte",
+                "A5": "texte",
+                "A6": "texte",
+                "A7": "texte",
+                "B2": "nombre",
+                "B3": "nombre",
+                "B4": "nombre",
+                "C2": "nombre",
+                "C3": "nombre",
+                "C4": "nombre",
+                "F2": "nombre",
+                "F3": "nombre",
+                "F4": "nombre",
+                "B6": "nombre"
+              },
+              "formules": []
+            },
             "metadonnees": {
               "concepts": ["tableur"],
               "misconceptionsCiblees": [],
@@ -6140,6 +6681,7 @@
               "reference": "B5",
               "formuleReference": "=SOMME(B2:B4)",
               "valeur": 1050000,
+              "affichage": "1050000",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6150,6 +6692,7 @@
               "reference": "C5",
               "formuleReference": "=SOMME(C2:C4)",
               "valeur": 1150000,
+              "affichage": "1150000",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6160,6 +6703,7 @@
               "reference": "D2",
               "formuleReference": "=(C2-B2)/B2",
               "valeur": -0.178054,
+              "affichage": "-0,1781",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6170,6 +6714,7 @@
               "reference": "D3",
               "formuleReference": "=(C3-B3)/B3",
               "valeur": 0.095238,
+              "affichage": "0,0952",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6182,6 +6727,7 @@
               "reference": "D4",
               "formuleReference": "=(C4-B4)/B4",
               "valeur": 0.464986,
+              "affichage": "0,465",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6194,6 +6740,7 @@
               "reference": "D5",
               "formuleReference": "=(C5-B5)/B5",
               "valeur": 0.095238,
+              "affichage": "0,0952",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6206,6 +6753,7 @@
               "reference": "E2",
               "formuleReference": "=C2/$C$5",
               "valeur": 0.345217,
+              "affichage": "0,3452",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6216,6 +6764,7 @@
               "reference": "E3",
               "formuleReference": "=C3/$C$5",
               "valeur": 0.2,
+              "affichage": "0,2",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6228,6 +6777,7 @@
               "reference": "E4",
               "formuleReference": "=C4/$C$5",
               "valeur": 0.454783,
+              "affichage": "0,4548",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6240,6 +6790,7 @@
               "reference": "E5",
               "formuleReference": "=C5/$C$5",
               "valeur": 1,
+              "affichage": "1",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6252,6 +6803,7 @@
               "reference": "G2",
               "formuleReference": "=C2*F2",
               "valeur": 142920,
+              "affichage": "142920",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6262,6 +6814,7 @@
               "reference": "G3",
               "formuleReference": "=C3*F3",
               "valeur": 64400,
+              "affichage": "64400",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6274,6 +6827,7 @@
               "reference": "G4",
               "formuleReference": "=C4*F4",
               "valeur": 83680,
+              "affichage": "83680",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6286,6 +6840,7 @@
               "reference": "G5",
               "formuleReference": "=SOMME(G2:G4)",
               "valeur": 291000,
+              "affichage": "291000",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6296,6 +6851,7 @@
               "reference": "F5",
               "formuleReference": "=G5/C5",
               "valeur": 0.253043,
+              "affichage": "0,253",
               "tolerance": {
                 "type": "relative",
                 "valeur": 0.0001
@@ -6306,6 +6862,7 @@
               "reference": "B7",
               "formuleReference": "=SI(ARRONDI(SOMME(E2:E4);6)=1;1;0)",
               "valeur": 1,
+              "affichage": "1",
               "tolerance": {
                 "type": "absolue",
                 "valeur": 0
@@ -6316,14 +6873,17 @@
               "reference": "C7",
               "formuleReference": "=SI(ARRONDI(G5-B6;0)=0;1;0)",
               "valeur": 1,
+              "affichage": "1",
               "tolerance": {
                 "type": "absolue",
                 "valeur": 0
               },
               "forme": "references"
             }
-          ]
-        }
+          ],
+          "seuilReussite": 0.8
+        },
+        "reflexion": null
       },
       {
         "id": "B2-01-A4-03-ATELIER-3",
@@ -6409,7 +6969,7 @@
               },
               {
                 "id": "unite-manquante-ignoree",
-                "libelle": "Accepter ou produire un chiffre, un titre ou une légende sans sa définition, son unité, sa base ou sa période."
+                "libelle": "Accepter un chiffre sans unité, base ou période."
               }
             ]
           }
@@ -6453,6 +7013,7 @@
           }
         ],
         "corrigeEcran": null,
+        "reflexion": null,
         "explications": [
           {
             "reference": "b2-01-a4-forme",
@@ -6534,7 +7095,7 @@
             "confusions": [
               {
                 "id": "axe-tronque-lu-comme-ecart",
-                "libelle": "Lire ou construire un graphique sans tenir compte de l’origine et de l’amplitude de l’axe : juger un écart à la hauteur des barres, tronquer l’axe ou supprimer ses graduations, ou renoncer à lire un écart que les graduations permettent de mesurer."
+                "libelle": "Juger une évolution à la hauteur des barres sans lire l’origine et l’amplitude de l’axe."
               }
             ]
           },
@@ -6544,7 +7105,7 @@
             "confusions": [
               {
                 "id": "valeur-confondue-avec-taux",
-                "libelle": "Confondre un montant et un taux : conclure sur une rentabilité à partir d’un montant, lire un montant comme un pourcentage ou un écart en points, ou un pourcentage comme un montant."
+                "libelle": "Conclure sur une rentabilité (un taux) à partir d’un montant, ou lire un montant comme un taux."
               },
               {
                 "id": "titre-interpretatif",
@@ -6592,6 +7153,7 @@
           }
         ],
         "corrigeEcran": null,
+        "reflexion": null,
         "explications": [
           {
             "reference": "b2-01-a4-axe",
@@ -6659,7 +7221,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A4-05-INDICE-TOILE",
@@ -6806,11 +7369,134 @@
               "valeur": 103.5
             }
           ],
+          "tableauCorrige": {
+            "lignes": [
+              {
+                "rang": 0,
+                "valeurs": {
+                  "taux": {
+                    "valeur": 8,
+                    "affichage": "8"
+                  },
+                  "prix": {
+                    "valeur": 21.6,
+                    "affichage": "21,60"
+                  },
+                  "coef": {
+                    "valeur": 1.08,
+                    "affichage": "1,0800"
+                  },
+                  "indice": {
+                    "valeur": 108,
+                    "affichage": "108,00"
+                  },
+                  "evolution": {
+                    "valeur": 8,
+                    "affichage": "8,00"
+                  }
+                }
+              },
+              {
+                "rang": 1,
+                "valeurs": {
+                  "taux": {
+                    "valeur": -5,
+                    "affichage": "-5"
+                  },
+                  "prix": {
+                    "valeur": 20.52,
+                    "affichage": "20,52"
+                  },
+                  "coef": {
+                    "valeur": 0.95,
+                    "affichage": "0,9500"
+                  },
+                  "indice": {
+                    "valeur": 102.6,
+                    "affichage": "102,60"
+                  },
+                  "evolution": {
+                    "valeur": 2.6,
+                    "affichage": "2,60"
+                  }
+                }
+              },
+              {
+                "rang": 2,
+                "valeurs": {
+                  "taux": {
+                    "valeur": 4,
+                    "affichage": "4"
+                  },
+                  "prix": {
+                    "valeur": 21.34,
+                    "affichage": "21,34"
+                  },
+                  "coef": {
+                    "valeur": 1.039961,
+                    "affichage": "1,0400"
+                  },
+                  "indice": {
+                    "valeur": 106.7,
+                    "affichage": "106,70"
+                  },
+                  "evolution": {
+                    "valeur": 6.7,
+                    "affichage": "6,70"
+                  }
+                }
+              },
+              {
+                "rang": 3,
+                "valeurs": {
+                  "taux": {
+                    "valeur": -3,
+                    "affichage": "-3"
+                  },
+                  "prix": {
+                    "valeur": 20.7,
+                    "affichage": "20,70"
+                  },
+                  "coef": {
+                    "valeur": 0.970009,
+                    "affichage": "0,9700"
+                  },
+                  "indice": {
+                    "valeur": 103.5,
+                    "affichage": "103,50"
+                  },
+                  "evolution": {
+                    "valeur": 3.5,
+                    "affichage": "3,50"
+                  }
+                }
+              }
+            ],
+            "totaux": {
+              "taux": {
+                "valeur": 4,
+                "affichage": "4"
+              }
+            },
+            "synthese": [
+              {
+                "valeur": 4,
+                "affichage": "4,00 %"
+              },
+              {
+                "valeur": 3.5,
+                "affichage": "3,50 %"
+              }
+            ],
+            "soldeFinal": null
+          },
           "tolerance": {
             "type": "absolue",
             "valeur": 0.01
-          }
+          },
+          "seuilReussite": 0.75
         },
+        "reflexion": null,
         "explications": [
           {
             "reference": "b2-01-a4-indice-toile",
@@ -6842,7 +7528,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A5-01-NIGHTINGALE",
@@ -6886,7 +7573,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A5-03-MOYENNE-PONDEREE",
@@ -6951,7 +7639,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A5-02-VOTE-PARADOXE",
@@ -7076,7 +7765,8 @@
             "Grille du débat — argument correct : taux locaux constants et poids modifiés, avec un exemple chiffré ; incomplet : une intuition sans chiffre ; faux : moyenne simple des taux, ou poids ignorés.",
             "Au lycée, la part des candidats de MCO, moins souvent reçus, a augmenté."
           ]
-        }
+        },
+        "reflexion": null
       },
       {
         "id": "B2-01-A5-04-SIMULATEUR-MIX",
@@ -7142,6 +7832,352 @@
                 "tauxMarketplace": 30
               }
             ],
+            "abscisses": [
+              0, 3.3333333333333335, 6.666666666666667, 10, 13.333333333333334, 16.666666666666668,
+              20, 23.333333333333332, 26.666666666666668, 30, 33.333333333333336,
+              36.666666666666664, 40, 43.333333333333336, 46.666666666666664, 50,
+              53.333333333333336, 56.666666666666664, 60, 63.333333333333336, 66.66666666666667, 70,
+              73.33333333333333, 76.66666666666667, 80
+            ],
+            "positions": [
+              {
+                "valeurs": {
+                  "tauxMarketplace": 10
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.533333, 32.666667, 31.8, 30.933333, 30.066667, 29.2, 28.333333,
+                    27.466667, 26.6, 25.733333, 24.866667, 24, 23.133333, 22.266667, 21.4,
+                    20.533333, 19.666667, 18.8, 17.933333, 17.066667, 16.2, 15.333333, 14.466667,
+                    13.6
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 11
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.566667, 32.733333, 31.9, 31.066667, 30.233333, 29.4, 28.566667,
+                    27.733333, 26.9, 26.066667, 25.233333, 24.4, 23.566667, 22.733333, 21.9,
+                    21.066667, 20.233333, 19.4, 18.566667, 17.733333, 16.9, 16.066667, 15.233333,
+                    14.4
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 12
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.6, 32.8, 32, 31.2, 30.4, 29.6, 28.8, 28, 27.2, 26.4, 25.6, 24.8, 24,
+                    23.2, 22.4, 21.6, 20.8, 20, 19.2, 18.4, 17.6, 16.8, 16, 15.2
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 13
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.633333, 32.866667, 32.1, 31.333333, 30.566667, 29.8, 29.033333,
+                    28.266667, 27.5, 26.733333, 25.966667, 25.2, 24.433333, 23.666667, 22.9,
+                    22.133333, 21.366667, 20.6, 19.833333, 19.066667, 18.3, 17.533333, 16.766667, 16
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 14
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.666667, 32.933333, 32.2, 31.466667, 30.733333, 30, 29.266667,
+                    28.533333, 27.8, 27.066667, 26.333333, 25.6, 24.866667, 24.133333, 23.4,
+                    22.666667, 21.933333, 21.2, 20.466667, 19.733333, 19, 18.266667, 17.533333, 16.8
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 15
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.7, 33, 32.3, 31.6, 30.9, 30.2, 29.5, 28.8, 28.1, 27.4, 26.7, 26, 25.3,
+                    24.6, 23.9, 23.2, 22.5, 21.8, 21.1, 20.4, 19.7, 19, 18.3, 17.6
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 16
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.733333, 33.066667, 32.4, 31.733333, 31.066667, 30.4, 29.733333,
+                    29.066667, 28.4, 27.733333, 27.066667, 26.4, 25.733333, 25.066667, 24.4,
+                    23.733333, 23.066667, 22.4, 21.733333, 21.066667, 20.4, 19.733333, 19.066667,
+                    18.4
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 17
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.766667, 33.133333, 32.5, 31.866667, 31.233333, 30.6, 29.966667,
+                    29.333333, 28.7, 28.066667, 27.433333, 26.8, 26.166667, 25.533333, 24.9,
+                    24.266667, 23.633333, 23, 22.366667, 21.733333, 21.1, 20.466667, 19.833333, 19.2
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 18
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.8, 33.2, 32.6, 32, 31.4, 30.8, 30.2, 29.6, 29, 28.4, 27.8, 27.2, 26.6,
+                    26, 25.4, 24.8, 24.2, 23.6, 23, 22.4, 21.8, 21.2, 20.6, 20
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 19
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.833333, 33.266667, 32.7, 32.133333, 31.566667, 31, 30.433333,
+                    29.866667, 29.3, 28.733333, 28.166667, 27.6, 27.033333, 26.466667, 25.9,
+                    25.333333, 24.766667, 24.2, 23.633333, 23.066667, 22.5, 21.933333, 21.366667,
+                    20.8
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 20
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.866667, 33.333333, 32.8, 32.266667, 31.733333, 31.2, 30.666667,
+                    30.133333, 29.6, 29.066667, 28.533333, 28, 27.466667, 26.933333, 26.4,
+                    25.866667, 25.333333, 24.8, 24.266667, 23.733333, 23.2, 22.666667, 22.133333,
+                    21.6
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 21
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.9, 33.4, 32.9, 32.4, 31.9, 31.4, 30.9, 30.4, 29.9, 29.4, 28.9, 28.4,
+                    27.9, 27.4, 26.9, 26.4, 25.9, 25.4, 24.9, 24.4, 23.9, 23.4, 22.9, 22.4
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 22
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.933333, 33.466667, 33, 32.533333, 32.066667, 31.6, 31.133333,
+                    30.666667, 30.2, 29.733333, 29.266667, 28.8, 28.333333, 27.866667, 27.4,
+                    26.933333, 26.466667, 26, 25.533333, 25.066667, 24.6, 24.133333, 23.666667, 23.2
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 23
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 33.966667, 33.533333, 33.1, 32.666667, 32.233333, 31.8, 31.366667,
+                    30.933333, 30.5, 30.066667, 29.633333, 29.2, 28.766667, 28.333333, 27.9,
+                    27.466667, 27.033333, 26.6, 26.166667, 25.733333, 25.3, 24.866667, 24.433333, 24
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 24
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34, 33.6, 33.2, 32.8, 32.4, 32, 31.6, 31.2, 30.8, 30.4, 30, 29.6, 29.2,
+                    28.8, 28.4, 28, 27.6, 27.2, 26.8, 26.4, 26, 25.6, 25.2, 24.8
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 25
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.033333, 33.666667, 33.3, 32.933333, 32.566667, 32.2, 31.833333,
+                    31.466667, 31.1, 30.733333, 30.366667, 30, 29.633333, 29.266667, 28.9,
+                    28.533333, 28.166667, 27.8, 27.433333, 27.066667, 26.7, 26.333333, 25.966667,
+                    25.6
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 26
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.066667, 33.733333, 33.4, 33.066667, 32.733333, 32.4, 32.066667,
+                    31.733333, 31.4, 31.066667, 30.733333, 30.4, 30.066667, 29.733333, 29.4,
+                    29.066667, 28.733333, 28.4, 28.066667, 27.733333, 27.4, 27.066667, 26.733333,
+                    26.4
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 27
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.1, 33.8, 33.5, 33.2, 32.9, 32.6, 32.3, 32, 31.7, 31.4, 31.1, 30.8,
+                    30.5, 30.2, 29.9, 29.6, 29.3, 29, 28.7, 28.4, 28.1, 27.8, 27.5, 27.2
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 28
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.133333, 33.866667, 33.6, 33.333333, 33.066667, 32.8, 32.533333,
+                    32.266667, 32, 31.733333, 31.466667, 31.2, 30.933333, 30.666667, 30.4,
+                    30.133333, 29.866667, 29.6, 29.333333, 29.066667, 28.8, 28.533333, 28.266667, 28
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 29
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.166667, 33.933333, 33.7, 33.466667, 33.233333, 33, 32.766667,
+                    32.533333, 32.3, 32.066667, 31.833333, 31.6, 31.366667, 31.133333, 30.9,
+                    30.666667, 30.433333, 30.2, 29.966667, 29.733333, 29.5, 29.266667, 29.033333,
+                    28.8
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              },
+              {
+                "valeurs": {
+                  "tauxMarketplace": 30
+                },
+                "ordonnees": {
+                  "global": [
+                    34.4, 34.2, 34, 33.8, 33.6, 33.4, 33.2, 33, 32.8, 32.6, 32.4, 32.2, 32, 31.8,
+                    31.6, 31.4, 31.2, 31, 30.8, 30.6, 30.4, 30.2, 30, 29.8, 29.6
+                  ],
+                  "reference": [
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6,
+                    27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6, 27.6
+                  ]
+                }
+              }
+            ],
             "metadonnees": {
               "concepts": ["moyenne-ponderee"],
               "misconceptionsCiblees": [],
@@ -7156,7 +8192,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A5-05-TCD",
@@ -7243,7 +8280,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A5-06-ATELIER-4",
@@ -7344,7 +8382,7 @@
             "confusions": [
               {
                 "id": "sens-de-variation",
-                "libelle": "Se tromper sur le sens d’une variation : oublier le signe moins d’une baisse, traduire une baisse par le coefficient 1 + t au lieu de 1 − t, ou juger croissante une suite géométrique de raison positive, qui ne croît que si sa raison dépasse 1."
+                "libelle": "Oublier le signe d’une variation : une baisse s’écrit avec un signe moins."
               },
               {
                 "id": "ca-confondu-avec-marge",
@@ -7358,7 +8396,7 @@
             "confusions": [
               {
                 "id": "correlation-prise-pour-causalite",
-                "libelle": "Tirer de deux évolutions simultanées, ou d’un coefficient de corrélation proche de 1, une conclusion qu’ils ne prouvent pas : une cause, l’absence de cause ou la poursuite de la tendance."
+                "libelle": "Conclure sur une cause, ou sur l’absence de cause, à partir de deux évolutions simultanées."
               }
             ]
           }
@@ -7394,6 +8432,7 @@
           }
         ],
         "corrigeEcran": null,
+        "reflexion": null,
         "explications": [
           {
             "reference": "b2-01-a5-part-marge-marketplace",
@@ -7480,11 +8519,11 @@
             "confusions": [
               {
                 "id": "points-confondus-avec-pourcentage",
-                "libelle": "Confondre l’écart entre deux taux, qui se mesure en points, et un pourcentage, part d’un total ou évolution relative, qui se mesure en %."
+                "libelle": "Exprimer en % l’écart entre deux taux, qui se mesure en points."
               },
               {
                 "id": "valeur-confondue-avec-taux",
-                "libelle": "Confondre un montant et un taux : conclure sur une rentabilité à partir d’un montant, lire un montant comme un pourcentage ou un écart en points, ou un pourcentage comme un montant."
+                "libelle": "Conclure sur une rentabilité (un taux) à partir d’un montant, ou lire un montant comme un taux."
               }
             ]
           },
@@ -7538,6 +8577,7 @@
           }
         ],
         "corrigeEcran": null,
+        "reflexion": null,
         "explications": [
           {
             "reference": "b2-01-a5-synthese",
@@ -7684,8 +8724,10 @@
               "categorieId": "preuve",
               "justification": "Un total qui concorde peut cacher +100 € et −100 € : on contrôle ligne à ligne, pièce en main."
             }
-          ]
-        }
+          ],
+          "seuilReussite": 0.75
+        },
+        "reflexion": null
       },
       {
         "id": "B2-01-A5-07-CORRECTION",
@@ -7798,7 +8840,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A5-08-DOSSIER-COMITE",
@@ -7860,7 +8903,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A5-08-RECOMMANDATION",
@@ -7928,7 +8972,8 @@
               "fausse": true
             }
           ]
-        }
+        },
+        "reflexion": null
       },
       {
         "id": "B2-01-A5-09-JALON-5",
@@ -7954,7 +8999,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A6-01-PACIOLI",
@@ -7999,7 +9045,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A6-02-COFFRE",
@@ -8106,6 +9153,7 @@
           ],
           "codeFinal": "K7M2Q94X"
         },
+        "reflexion": null,
         "explications": [
           {
             "reference": "b2-01-a6-e1-mix",
@@ -8187,7 +9235,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A6-04-IA-ERREUR",
@@ -8239,7 +9288,8 @@
               "fausse": true
             }
           ]
-        }
+        },
+        "reflexion": null
       },
       {
         "id": "B2-01-A6-05-RAPPEL",
@@ -8295,7 +9345,7 @@
             "confusions": [
               {
                 "id": "points-confondus-avec-pourcentage",
-                "libelle": "Confondre l’écart entre deux taux, qui se mesure en points, et un pourcentage, part d’un total ou évolution relative, qui se mesure en %."
+                "libelle": "Exprimer en % l’écart entre deux taux, qui se mesure en points."
               }
             ]
           },
@@ -8319,7 +9369,7 @@
             "confusions": [
               {
                 "id": "reciproque-meme-taux",
-                "libelle": "Croire que le même pourcentage en sens inverse ramène au départ, qu’il soit le taux d’une évolution ou la somme de taux successifs : on revient au départ en divisant par le coefficient multiplicateur."
+                "libelle": "Croire que le même pourcentage en sens inverse suffit pour revenir au départ."
               },
               {
                 "id": "coefficient-confondu-avec-taux",
@@ -8347,7 +9397,7 @@
             "confusions": [
               {
                 "id": "taux-moyen-arithmetique",
-                "libelle": "Prendre pour taux moyen une moyenne arithmétique, le taux global divisé par le nombre de périodes ou la moyenne des taux de chaque période, au lieu de la racine n-ième du coefficient global."
+                "libelle": "Diviser un taux global par le nombre de périodes au lieu de prendre une racine n-ième."
               },
               {
                 "id": "coefficient-confondu-avec-taux",
@@ -8365,7 +9415,7 @@
               },
               {
                 "id": "raisonnement-additif",
-                "libelle": "Raisonner par addition là où la situation est proportionnelle : ajouter un écart constant, ou additionner les taux de plusieurs composantes pour obtenir un taux global."
+                "libelle": "Ajouter un écart constant là où la situation est proportionnelle."
               }
             ]
           },
@@ -8385,7 +9435,7 @@
             "confusions": [
               {
                 "id": "axe-tronque-lu-comme-ecart",
-                "libelle": "Lire ou construire un graphique sans tenir compte de l’origine et de l’amplitude de l’axe : juger un écart à la hauteur des barres, tronquer l’axe ou supprimer ses graduations, ou renoncer à lire un écart que les graduations permettent de mesurer."
+                "libelle": "Juger une évolution à la hauteur des barres sans lire l’origine et l’amplitude de l’axe."
               }
             ]
           },
@@ -8395,11 +9445,11 @@
             "confusions": [
               {
                 "id": "total-concordant-vaut-preuve",
-                "libelle": "Juger les lignes sur les seuls totaux : croire qu’un total exact garantit chaque ligne, ou conclure à l’absence d’erreur malgré un écart entre deux totaux."
+                "libelle": "Croire qu’un total exact garantit l’exactitude de chaque ligne."
               },
               {
                 "id": "controle-non-discriminant",
-                "libelle": "Se contenter d’un contrôle ou d’un calcul qui ne localise ni ne tranche l’anomalie, en jugeant un écart négligeable ou en ne calculant que l’effet de l’écart, au lieu de remonter à la pièce qui dit quelle valeur est fausse."
+                "libelle": "Choisir un contrôle qui ne permet ni de localiser ni de trancher l’anomalie."
               }
             ]
           },
@@ -8413,7 +9463,7 @@
               },
               {
                 "id": "total-concordant-vaut-preuve",
-                "libelle": "Juger les lignes sur les seuls totaux : croire qu’un total exact garantit chaque ligne, ou conclure à l’absence d’erreur malgré un écart entre deux totaux."
+                "libelle": "Croire qu’un total exact garantit l’exactitude de chaque ligne."
               }
             ]
           },
@@ -8423,7 +9473,7 @@
             "confusions": [
               {
                 "id": "taux-moyen-arithmetique",
-                "libelle": "Prendre pour taux moyen une moyenne arithmétique, le taux global divisé par le nombre de périodes ou la moyenne des taux de chaque période, au lieu de la racine n-ième du coefficient global."
+                "libelle": "Diviser un taux global par le nombre de périodes au lieu de prendre une racine n-ième."
               },
               {
                 "id": "taux-successifs-additionnes",
@@ -8437,7 +9487,7 @@
             "confusions": [
               {
                 "id": "reciproque-meme-taux",
-                "libelle": "Croire que le même pourcentage en sens inverse ramène au départ, qu’il soit le taux d’une évolution ou la somme de taux successifs : on revient au départ en divisant par le coefficient multiplicateur."
+                "libelle": "Croire que le même pourcentage en sens inverse suffit pour revenir au départ."
               },
               {
                 "id": "coefficient-confondu-avec-taux",
@@ -8682,7 +9732,8 @@
             ]
           }
         ],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A6-06-FICHE-MEMO",
@@ -8785,7 +9836,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A6-07-BOITE-A-OUTILS",
@@ -8891,7 +9943,8 @@
         "seuil": null,
         "corriges": [],
         "questions": [],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       },
       {
         "id": "B2-01-A6-08-BILLET-DE-SORTIE",
@@ -8941,7 +9994,7 @@
             "confusions": [
               {
                 "id": "points-confondus-avec-pourcentage",
-                "libelle": "Confondre l’écart entre deux taux, qui se mesure en points, et un pourcentage, part d’un total ou évolution relative, qui se mesure en %."
+                "libelle": "Exprimer en % l’écart entre deux taux, qui se mesure en points."
               },
               {
                 "id": "baisse-attribuee-aux-taux-locaux",
@@ -8949,7 +10002,7 @@
               },
               {
                 "id": "valeur-confondue-avec-taux",
-                "libelle": "Confondre un montant et un taux : conclure sur une rentabilité à partir d’un montant, lire un montant comme un pourcentage ou un écart en points, ou un pourcentage comme un montant."
+                "libelle": "Conclure sur une rentabilité (un taux) à partir d’un montant, ou lire un montant comme un taux."
               }
             ]
           }
@@ -8978,7 +10031,8 @@
             ]
           }
         ],
-        "corrigeEcran": null
+        "corrigeEcran": null,
+        "reflexion": null
       }
     ],
     "remediations": {
@@ -9019,12 +10073,7 @@
       "tva-calculee-sur-ttc": "B2-01-A3-04-FIL-TECHNIQUE",
       "reference-relative-non-figee": "B2-01-A4-01-CAPSULE",
       "valeur-saisie-sans-formule": "B2-01-A4-01-CAPSULE",
-      "formule-non-recopiable": "B2-01-A4-01-CAPSULE",
-      "chiffre-lisible-juge-ambigu": "B2-01-A1-06-FICHE-INDICATEUR",
-      "retraitement-superflu": "B2-01-A2-07-JEU-COMPARABLE",
-      "comparaison-possible-refusee": "B2-01-A2-07-JEU-COMPARABLE",
-      "retraitement-sans-donnee": "B2-01-A2-07-JEU-COMPARABLE",
-      "preuve-externe-superflue": "B2-01-A5-07-CONTROLE-DISCRIMINANT"
+      "formule-non-recopiable": "B2-01-A4-01-CAPSULE"
     }
   },
   "catalogue": {
@@ -9497,6 +10546,15 @@
               }
             ],
             "reference": "Axe de Samir",
+            "abscisses": [0, 1, 2, 3],
+            "positions": [
+              {
+                "valeurs": {},
+                "ordonnees": {
+                  "marge": [285000, 288000, 289800, 291000]
+                }
+              }
+            ],
             "metadonnees": {
               "concepts": ["lecture-graphique"],
               "misconceptionsCiblees": [],
