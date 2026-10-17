@@ -96,14 +96,18 @@ const CLES_D_UNE_ETAPE = {
   run: 'commande',
   if: 'condition',
   'continue-on-error': 'continueSurErreur',
+  shell: 'shell',
 };
 
 const ECHEC_RATTRAPE = /\|\||;\s*(?:true|:)(?:\s|$)|\bexit\s+0\b|\bset\s+\+e\b/;
+
+const CLE_YAML = /^(\s*)(-\s+)?([\w-]+):(.*)$/s;
 
 function estNeutralisee(etape) {
   return (
     etape.condition !== null ||
     (etape.continueSurErreur ?? 'false') !== 'false' ||
+    (etape.shell ?? 'bash') !== 'bash' ||
     ECHEC_RATTRAPE.test(etape.commande ?? '')
   );
 }
@@ -124,28 +128,40 @@ function blocDuJob(texteWorkflow, job) {
 }
 
 function enteteDuJob(texteWorkflow, job) {
-  const entete = { condition: null, continueSurErreur: null };
+  const entete = { condition: null, continueSurErreur: null, shell: null };
+  let dansLesDefauts = false;
   for (const ligne of blocDuJob(texteWorkflow, job)) {
-    const cle = ligne.match(/^ {4}(if|continue-on-error):(.*)$/);
+    const cle = ligne.match(/^ {4}([\w-]+):(.*)$/);
     if (cle) {
+      dansLesDefauts = cle[1] === 'defaults';
+    }
+    if (cle && (cle[1] === 'if' || cle[1] === 'continue-on-error')) {
       entete[CLES_D_UNE_ETAPE[cle[1]]] = cle[2].trim();
+    }
+    const shell = dansLesDefauts ? ligne.match(/^ {8}shell:(.*)$/) : null;
+    if (shell) {
+      entete.shell = shell[1].trim();
     }
   }
   return entete;
 }
 
-function replierLesScripts(lignes) {
+function replierLesValeurs(lignes) {
   const repliees = [];
-  let indentationDuScript = null;
+  let colonneDeLaCle = null;
+  let separateur = ' ';
   for (const ligne of lignes) {
     const indentation = ligne.search(/\S/);
-    if (indentationDuScript !== null && (indentation === -1 || indentation > indentationDuScript)) {
+    if (colonneDeLaCle !== null && (indentation === -1 || indentation > colonneDeLaCle)) {
       if (indentation !== -1) {
-        repliees.push(`${repliees.pop()}\n${ligne.trim()}`);
+        repliees.push(`${repliees.pop()}${separateur}${ligne.trim()}`);
       }
       continue;
     }
-    indentationDuScript = /^\s*(?:-\s+)?run:\s*[|>][-+]?\s*$/.test(ligne) ? indentation : null;
+    const cle = ligne.match(CLE_YAML);
+    const replie = cle !== null && Object.hasOwn(CLES_D_UNE_ETAPE, cle[3]);
+    colonneDeLaCle = replie ? cle[1].length + (cle[2] ?? '').length : null;
+    separateur = replie && cle[4].trim().startsWith('|') ? '\n' : ' ';
     repliees.push(ligne);
   }
   return repliees;
@@ -154,15 +170,20 @@ function replierLesScripts(lignes) {
 function etapesDuJob(texteWorkflow, job) {
   const toutes = [];
   let courante = null;
-  for (const ligne of replierLesScripts(blocDuJob(texteWorkflow, job))) {
-    const debutEtape = ligne.match(/^\s*-\s+([\w-]+):(.*)$/s);
-    if (debutEtape) {
-      courante = { nom: null, commande: null, condition: null, continueSurErreur: null };
+  for (const ligne of replierLesValeurs(blocDuJob(texteWorkflow, job))) {
+    const cle = ligne.match(CLE_YAML);
+    if (cle?.[2] !== undefined) {
+      courante = {
+        nom: null,
+        commande: null,
+        condition: null,
+        continueSurErreur: null,
+        shell: null,
+      };
       toutes.push(courante);
     }
-    const cle = debutEtape ?? ligne.match(/^\s*([\w-]+):(.*)$/s);
-    if (courante && cle && Object.hasOwn(CLES_D_UNE_ETAPE, cle[1])) {
-      courante[CLES_D_UNE_ETAPE[cle[1]]] = cle[2].trim().replace(/^[|>][-+]?(?:\n|$)/, '');
+    if (courante && cle && Object.hasOwn(CLES_D_UNE_ETAPE, cle[3])) {
+      courante[CLES_D_UNE_ETAPE[cle[3]]] = cle[4].trim().replace(/^[|>][-+0-9]*(?:\s+|$)/, '');
     }
   }
   const etapes = toutes.filter((etape) => etape.commande !== null);
@@ -329,14 +350,14 @@ test('ci-portes : aucun job bloquant ni aucune de ses commandes n est conditionn
   for (const job of [JOB_WORKFLOW, JOB_E2E, JOB_BANC]) {
     assert.deepEqual(
       enteteDuJob(texteWorkflow, job),
-      { condition: null, continueSurErreur: null },
-      `ci-portes : le job « ${job} » ne porte ni « if: » ni « continue-on-error: », sinon il ne juge plus chaque PR.`,
+      { condition: null, continueSurErreur: null, shell: 'bash' },
+      `ci-portes : le job « ${job} » ne porte ni « if: » ni « continue-on-error: », sinon il ne juge plus chaque PR, et ses commandes tournent sous « shell: bash » (pipefail), sinon « cmd | tee » masque l echec de cmd.`,
     );
     const neutralisees = etapesDuJob(texteWorkflow, job).filter(estNeutralisee);
     assert.deepEqual(
       neutralisees,
       [],
-      `ci-portes : dans le job « ${job} », une etape « run: » conditionnee, autorisee a echouer ou qui rattrape son echec (||, ; true, exit 0, set +e) ne peut plus faire echouer le job.`,
+      `ci-portes : dans le job « ${job} », une etape « run: » conditionnee, autorisee a echouer, sous un autre shell que bash ou qui rattrape son echec (||, ; true, exit 0, set +e) ne peut plus faire echouer le job.`,
     );
   }
 });
@@ -499,41 +520,81 @@ test('ci-portes : leve si le job cible est introuvable dans le workflow', () => 
 });
 
 test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans les preter a sa voisine', () => {
-  const texte = `jobs:\n  ${JOB_WORKFLOW}:\n    if: github.event_name == 'push'\n    steps:\n      - name: Porte\n        if: false\n        run: npm run lint\n      - uses: actions/upload-artifact@v4\n        if: always()\n      - name: Tolerante\n        continue-on-error: true\n        run: npm run typecheck\n      - name: Bloquante\n        continue-on-error: false\n        run: npm run build\n      - run: npm test\n      - name: Rattrapee\n        run: npm run quality:knip || true\n      - name: Script\n        run: |\n          set +e\n\n          npm run test:guards\n      - name: Suivante\n        run: npm run guard:comments\n`;
+  const texte = [
+    'jobs:',
+    `  ${JOB_WORKFLOW}:`,
+    "    if: github.event_name == 'push'",
+    '    defaults:',
+    '      run:',
+    '        shell: bash',
+    '    steps:',
+    '      - name: Porte',
+    '        if: false',
+    '        run: npm run lint',
+    '      - uses: actions/upload-artifact@v4',
+    '        if: always()',
+    '      - name: Tolerante',
+    '        continue-on-error: true',
+    '        run: npm run typecheck',
+    '      - name: Bloquante',
+    '        continue-on-error: false',
+    '        run: npm run build',
+    '      - run: npm test',
+    '      - name: Rattrapee',
+    '        run: npm run quality:knip || true',
+    '      - name: Script',
+    '        run: |',
+    '          set +e',
+    '',
+    '          npm run test:guards',
+    '      - run: |',
+    '          npm run quality:dup',
+    '        name: Bloc en tete',
+    '        if: false',
+    '      - name: Repliee',
+    '        run: npm run quality:dup:tests',
+    '          || true',
+    '      - name: Sans pipefail',
+    '        shell: sh',
+    '        run: npm run build | tee build.log',
+    '      - name: Suivante',
+    '        run: npm run guard:comments',
+    '',
+  ].join('\n');
+  const etape = (nom, commande, autres = {}) => ({
+    nom,
+    commande,
+    condition: null,
+    continueSurErreur: null,
+    shell: null,
+    ...autres,
+  });
 
   assert.deepEqual(enteteDuJob(texte, JOB_WORKFLOW), {
     condition: "github.event_name == 'push'",
     continueSurErreur: null,
+    shell: 'bash',
   });
   assert.deepEqual(etapesDuJob(texte, JOB_WORKFLOW), [
-    { nom: 'Porte', commande: 'npm run lint', condition: 'false', continueSurErreur: null },
-    { nom: 'Tolerante', commande: 'npm run typecheck', condition: null, continueSurErreur: 'true' },
-    { nom: 'Bloquante', commande: 'npm run build', condition: null, continueSurErreur: 'false' },
-    { nom: null, commande: 'npm test', condition: null, continueSurErreur: null },
-    {
-      nom: 'Rattrapee',
-      commande: 'npm run quality:knip || true',
-      condition: null,
-      continueSurErreur: null,
-    },
-    {
-      nom: 'Script',
-      commande: 'set +e\nnpm run test:guards',
-      condition: null,
-      continueSurErreur: null,
-    },
-    {
-      nom: 'Suivante',
-      commande: 'npm run guard:comments',
-      condition: null,
-      continueSurErreur: null,
-    },
+    etape('Porte', 'npm run lint', { condition: 'false' }),
+    etape('Tolerante', 'npm run typecheck', { continueSurErreur: 'true' }),
+    etape('Bloquante', 'npm run build', { continueSurErreur: 'false' }),
+    etape(null, 'npm test'),
+    etape('Rattrapee', 'npm run quality:knip || true'),
+    etape('Script', 'set +e\nnpm run test:guards'),
+    etape('Bloc en tete', 'npm run quality:dup', { condition: 'false' }),
+    etape('Repliee', 'npm run quality:dup:tests || true'),
+    etape('Sans pipefail', 'npm run build | tee build.log', { shell: 'sh' }),
+    etape('Suivante', 'npm run guard:comments'),
   ]);
   assert.deepEqual(etapesDuJob(texte, JOB_WORKFLOW).map(estNeutralisee), [
     true,
     true,
     false,
     false,
+    true,
+    true,
+    true,
     true,
     true,
     false,
