@@ -22,6 +22,8 @@ const JOB_WORKFLOW = 'quality-gate';
 
 const JOB_E2E = 'e2e';
 
+const JOB_BANC = 'banc';
+
 const PORTE_E2E_COMPLETE = 'test:e2e:portail';
 
 const PORTE_E2E_RAPIDE = 'test:e2e:cours';
@@ -89,6 +91,17 @@ function estNommeeDans(chaine, porte) {
   );
 }
 
+const CLES_D_UNE_ETAPE = {
+  name: 'nom',
+  run: 'commande',
+  if: 'condition',
+  'continue-on-error': 'continueSurErreur',
+};
+
+function estNeutralisee(etape) {
+  return etape.condition !== null || (etape.continueSurErreur ?? 'false') !== 'false';
+}
+
 function etapesDuJob(texteWorkflow, job) {
   if (typeof texteWorkflow !== 'string' || texteWorkflow.trim() === '') {
     throw new Error('ci-portes : le workflow est vide - aucune porte ne peut y etre verifiee.');
@@ -102,20 +115,20 @@ function etapesDuJob(texteWorkflow, job) {
     (ligne, index) => index > debutJob && /^ {2}[\w-]+:\s*$/.test(ligne),
   );
   const bloc = lignes.slice(debutJob + 1, finJob === -1 ? lignes.length : finJob);
-  const etapes = [];
-  let nomCourant = null;
+  const toutes = [];
+  let courante = null;
   for (const ligne of bloc) {
-    const nomTrouve = ligne.match(/^\s*-\s*name:(.*)$/);
-    if (nomTrouve) {
-      nomCourant = nomTrouve[1].trim();
-      continue;
+    const debutEtape = ligne.match(/^\s*-\s+([\w-]+):(.*)$/);
+    if (debutEtape) {
+      courante = { nom: null, commande: null, condition: null, continueSurErreur: null };
+      toutes.push(courante);
     }
-    const commandeTrouvee = ligne.match(/^\s*run:(.*)$/);
-    if (commandeTrouvee && nomCourant) {
-      etapes.push({ nom: nomCourant, commande: commandeTrouvee[1].trim() });
-      nomCourant = null;
+    const cle = debutEtape ?? ligne.match(/^\s*([\w-]+):(.*)$/);
+    if (courante && cle && Object.hasOwn(CLES_D_UNE_ETAPE, cle[1])) {
+      courante[CLES_D_UNE_ETAPE[cle[1]]] = cle[2].trim();
     }
   }
+  const etapes = toutes.filter((etape) => etape.commande !== null);
   if (etapes.length === 0) {
     throw new Error(
       `ci-portes : le job « ${job} » ne declare aucune etape « run: » - impossible d'y verifier une porte.`,
@@ -274,6 +287,20 @@ test('ci-portes : Playwright est joue par une etape du job e2e du workflow', () 
   );
 });
 
+test('ci-portes : aucune commande des jobs bloquants n est conditionnee ni autorisee a echouer', () => {
+  const texteWorkflow = readFileSync(CHEMIN_WORKFLOW, 'utf8');
+  for (const job of [JOB_WORKFLOW, JOB_E2E, JOB_BANC]) {
+    const neutralisees = etapesDuJob(texteWorkflow, job)
+      .filter(estNeutralisee)
+      .map(({ nom, condition, continueSurErreur }) => ({ nom, condition, continueSurErreur }));
+    assert.deepEqual(
+      neutralisees,
+      [],
+      `ci-portes : dans le job « ${job} », une etape « run: » qui porte « if: » ou « continue-on-error: » ne peut plus faire echouer le job.`,
+    );
+  }
+});
+
 test('ci-portes : le job e2e bloque la suite du workflow', () => {
   const texteWorkflow = readFileSync(CHEMIN_WORKFLOW, 'utf8');
   const bloc = /\n {2}docker:\n([\s\S]*?)(?=\n {2}[\w-]+:\n)/.exec(texteWorkflow);
@@ -305,6 +332,19 @@ test('ci-portes : Lighthouse est joue apres le build du job e2e, bloque sous 0,9
     configuration.assert.assertions['categories:accessibility'],
     ['error', { minScore: 0.9 }],
     'ci-portes : une accessibilite sous 0,9 doit faire echouer Lighthouse, donc le deploiement.',
+  );
+  assert.deepEqual(
+    {
+      performance: configuration.assert.assertions['categories:performance'],
+      bonnesPratiques: configuration.assert.assertions['categories:best-practices'],
+      seo: configuration.assert.assertions['categories:seo'],
+    },
+    {
+      performance: ['warn', { minScore: 0.8 }],
+      bonnesPratiques: ['warn', { minScore: 0.8 }],
+      seo: ['warn', { minScore: 0.9 }],
+    },
+    'ci-portes : performance, bonnes pratiques et SEO avertissent sous leur seuil, sans bloquer.',
   );
   assert.deepEqual(
     configuration.upload,
@@ -416,6 +456,23 @@ test('ci-portes : leve si le job cible est introuvable dans le workflow', () => 
   const texte =
     'jobs:\n  autre-job:\n    steps:\n      - name: Checkout\n        uses: actions/checkout@v4\n';
   assert.throws(() => etapesDuJob(texte, JOB_WORKFLOW), /introuvable/);
+});
+
+test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans les preter a sa voisine', () => {
+  const texte = `jobs:\n  ${JOB_WORKFLOW}:\n    if: github.event_name == 'push'\n    steps:\n      - name: Porte\n        if: false\n        run: npm run lint\n      - uses: actions/upload-artifact@v4\n        if: always()\n      - name: Tolerante\n        continue-on-error: true\n        run: npm run typecheck\n      - name: Bloquante\n        continue-on-error: false\n        run: npm run build\n      - run: npm test\n`;
+
+  assert.deepEqual(etapesDuJob(texte, JOB_WORKFLOW), [
+    { nom: 'Porte', commande: 'npm run lint', condition: 'false', continueSurErreur: null },
+    { nom: 'Tolerante', commande: 'npm run typecheck', condition: null, continueSurErreur: 'true' },
+    { nom: 'Bloquante', commande: 'npm run build', condition: null, continueSurErreur: 'false' },
+    { nom: null, commande: 'npm test', condition: null, continueSurErreur: null },
+  ]);
+  assert.deepEqual(etapesDuJob(texte, JOB_WORKFLOW).map(estNeutralisee), [
+    true,
+    true,
+    false,
+    false,
+  ]);
 });
 
 test('ci-portes : leve si le job cible ne declare aucune etape run', () => {
