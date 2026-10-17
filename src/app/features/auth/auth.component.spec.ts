@@ -283,6 +283,26 @@ describe('AuthComponent', () => {
 
       expect(component.signupErrorMessage).toBe('Une erreur est survenue. Veuillez réessayer.');
     });
+
+    it('FZ2-G-02 · dit le message localisé quand le back de prod refuse un doublon en 500, sans annoncer l inscription', () => {
+      const onglet = component.activeTab;
+      authService.register.and.returnValue(
+        throwError(() =>
+          refusDuBack(
+            500,
+            'duplicate key value violates unique constraint "UQ_97672ac88f789774dd47f7c8be3"',
+          ),
+        ),
+      );
+      remplirInscription();
+
+      component.handleSignupSubmit(formulaireSoumis());
+
+      expect(component.signupErrorMessage).toBe('Une erreur est survenue. Veuillez réessayer.');
+      expect(component.loginSuccessMessage).toBeUndefined();
+      expect(component.activeTab).toBe(onglet);
+      expect(component.isSignupLoading).toBeFalse();
+    });
   });
 
   describe('connexion', () => {
