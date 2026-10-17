@@ -101,14 +101,20 @@ const CLES_D_UNE_ETAPE = {
 
 const ECHEC_RATTRAPE = /\|\||;\s*(?:true|:)(?:\s|$)|\bexit\s+0\b|\bset\s+\+e\b/;
 
+const NOMME_UNE_PORTE = /\bnpm\s+run(?:-script)?\b/;
+
+const PORTE_SEULE = /^npm run [\w:.-]+$/;
+
 const CLE_YAML = /^(\s*)(-\s+)?([\w-]+):(.*)$/s;
 
 function estNeutralisee(etape) {
+  const commande = etape.commande ?? '';
   return (
     etape.condition !== null ||
     (etape.continueSurErreur ?? 'false') !== 'false' ||
     (etape.shell ?? 'bash') !== 'bash' ||
-    ECHEC_RATTRAPE.test(etape.commande ?? '')
+    ECHEC_RATTRAPE.test(commande) ||
+    (NOMME_UNE_PORTE.test(commande) && !PORTE_SEULE.test(commande))
   );
 }
 
@@ -357,7 +363,7 @@ test('ci-portes : aucun job bloquant ni aucune de ses commandes n est conditionn
     assert.deepEqual(
       neutralisees,
       [],
-      `ci-portes : dans le job « ${job} », une etape « run: » conditionnee, autorisee a echouer, sous un autre shell que bash ou qui rattrape son echec (||, ; true, exit 0, set +e) ne peut plus faire echouer le job.`,
+      `ci-portes : dans le job « ${job} », une etape « run: » conditionnee, autorisee a echouer, sous un autre shell que bash, qui rattrape son echec (||, ; true, exit 0, set +e) ou qui joue une porte autrement que par la seule commande « npm run <script> » ne peut plus faire echouer le job.`,
     );
   }
 });
@@ -557,6 +563,26 @@ test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans
     '      - name: Sans pipefail',
     '        shell: sh',
     '        run: npm run build | tee build.log',
+    '      - name: Pipefail defait',
+    '        run: |',
+    '          set +o pipefail',
+    '          npm run lint | tee lint.log',
+    '      - name: Errexit defait',
+    '        run: |',
+    '          set +eo pipefail',
+    '          npm run lint',
+    '      - name: Errexit en long',
+    '        run: |',
+    '          set +o errexit',
+    '          npm run lint',
+    '      - name: Condition du shell',
+    '        run: if npm run lint; then :; fi',
+    '      - name: Et puis',
+    '        run: |',
+    '          npm run lint && echo fin',
+    '          echo suite',
+    '      - name: Installation',
+    '        run: npm ci',
     '      - name: Suivante',
     '        run: npm run guard:comments',
     '',
@@ -585,6 +611,12 @@ test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans
     etape('Bloc en tete', 'npm run quality:dup', { condition: 'false' }),
     etape('Repliee', 'npm run quality:dup:tests || true'),
     etape('Sans pipefail', 'npm run build | tee build.log', { shell: 'sh' }),
+    etape('Pipefail defait', 'set +o pipefail\nnpm run lint | tee lint.log'),
+    etape('Errexit defait', 'set +eo pipefail\nnpm run lint'),
+    etape('Errexit en long', 'set +o errexit\nnpm run lint'),
+    etape('Condition du shell', 'if npm run lint; then :; fi'),
+    etape('Et puis', 'npm run lint && echo fin\necho suite'),
+    etape('Installation', 'npm ci'),
     etape('Suivante', 'npm run guard:comments'),
   ]);
   assert.deepEqual(etapesDuJob(texte, JOB_WORKFLOW).map(estNeutralisee), [
@@ -597,6 +629,12 @@ test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans
     true,
     true,
     true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    false,
     false,
   ]);
 });
