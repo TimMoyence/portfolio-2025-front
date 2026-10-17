@@ -1137,6 +1137,16 @@ test('ci-portes : rien ne soustrait de code a knip, ni option, ni reglage, ni ba
     undefined,
     'ci-portes : package.json porte des reglages de knip, que knip fusionne a knip.json.',
   );
+  assert.equal(
+    paquet.workspaces,
+    undefined,
+    'ci-portes : package.json declare des workspaces, dont une negation soustrait du code a knip.',
+  );
+  assert.equal(
+    existsSync(cheminDuDepot('pnpm-workspace.yaml')),
+    false,
+    'ci-portes : pnpm-workspace.yaml declare des workspaces, dont une negation soustrait du code a knip.',
+  );
   assert.deepEqual(
     Object.keys(reglages).filter((cle) => !REGLAGES_PERMIS_A_KNIP.has(cle)),
     [],
@@ -1208,6 +1218,7 @@ function jouerKnip(copie, options = []) {
   const { issues } = JSON.parse(execution.stdout);
   return {
     statut: execution.status,
+    constats: Object.fromEntries(issues.map((issue) => [issue.file, issue])),
     morts: new Set(issues.flatMap((issue) => (issue.files ?? []).map(({ name }) => name))),
     exportsInutiles: (fichier) =>
       (issues.find((issue) => issue.file === fichier)?.exports ?? []).map(({ name }) => name),
@@ -1219,13 +1230,12 @@ test('ci-portes : knip juge chaque fichier de code de src, e2e et scripts, comme
   const styles = fichiersDuDepot().filter((fichier) =>
     /^(src|e2e|scripts)\/.+\.css$/.test(fichier),
   );
-  const { temoins, avecTemoins, sources, sansImports, sansReglages } = avecDossierPlante(
-    'ci-portes-knip-',
-    {},
-    (copie) => {
+  const { temoins, avecTemoins, sansGitignore, sources, sansImports, sansReglages } =
+    avecDossierPlante('ci-portes-knip-', {}, (copie) => {
       copierLeDepot(copie);
       const plantes = planterLesTemoinsDeKnip(copie, code);
       const premier = jouerKnip(copie);
+      const premierSansGitignore = jouerKnip(copie, ['--no-gitignore']);
       const toutes = [
         ...code,
         ...styles,
@@ -1239,12 +1249,12 @@ test('ci-portes : knip juge chaque fichier de code de src, e2e et scripts, comme
       return {
         temoins: plantes,
         avecTemoins: premier,
+        sansGitignore: premierSansGitignore,
         sources: toutes,
         sansImports: jouerKnip(copie),
         sansReglages: jouerKnip(copie, ['--config', 'zz-garde-knip.json', '--no-gitignore']),
       };
-    },
-  );
+    });
   const aveugles = temoins.flatMap(({ module }) =>
     ['zzGardeInterne', 'zzGardeInutile']
       .filter((nom) => !avecTemoins.exportsInutiles(module).includes(nom))
@@ -1265,6 +1275,11 @@ test('ci-portes : knip juge chaque fichier de code de src, e2e et scripts, comme
     aveugles,
     [],
     'ci-portes : un dossier de code echappe a knip : la porte de code mort ne voit pas ses exports inutiles.',
+  );
+  assert.deepEqual(
+    avecTemoins.constats,
+    sansGitignore.constats,
+    'ci-portes : un .gitignore soustrait du code a knip : ses constats changent quand il ne le lit plus.',
   );
   assert.deepEqual(
     racinesSansLanceur,
