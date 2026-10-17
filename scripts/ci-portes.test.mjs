@@ -1,7 +1,16 @@
 import assert from 'node:assert/strict';
-import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  symlinkSync,
+  writeFileSync,
+} from 'node:fs';
 import { createRequire } from 'node:module';
-import { extname, join } from 'node:path';
+import { basename, dirname, extname, join } from 'node:path';
 import { test } from 'node:test';
 
 import { ESLint } from 'eslint';
@@ -9,6 +18,7 @@ import sonarjs from 'eslint-plugin-sonarjs';
 import * as prettier from 'prettier';
 
 import { echapperPourRegex } from '../src/cours/runtime/core/valeurs.ts';
+import { estFichierDeTest } from './guard-cours-runtime.mjs';
 import { trackedFiles } from './guard-no-comments.mjs';
 import { cheminDuDepot, RACINE } from './lib/depot.mjs';
 import {
@@ -1056,10 +1066,16 @@ function unFichierSuiviParExtension() {
   return parExtension;
 }
 
-function fichiersDeCodeDuDepot() {
-  const fichiers = git(RACINE, ['ls-files', '-z', '--cached', '--others', '--exclude-standard'])
+function fichiersDuDepot() {
+  return git(RACINE, ['ls-files', '-z', '--cached', '--others', '--exclude-standard'])
     .split('\0')
-    .filter((fichier) => /^(src|e2e|scripts)\/.+\.[cm]?[jt]s$/.test(fichier));
+    .filter((fichier) => fichier !== '' && existsSync(cheminDuDepot(fichier)));
+}
+
+function fichiersDeCodeDuDepot() {
+  const fichiers = fichiersDuDepot().filter((fichier) =>
+    /^(src|e2e|scripts)\/.+\.[cm]?[jt]s$/.test(fichier),
+  );
   assert.ok(
     new Set(fichiers.map((fichier) => extname(fichier))).size > 2,
     'ci-portes : la garde ne lit pas chaque langage de code du depot.',
@@ -1067,32 +1083,132 @@ function fichiersDeCodeDuDepot() {
   return fichiers;
 }
 
-function perimetreDeKnip() {
-  const { project } = JSON.parse(readFileSync(cheminDuDepot('knip.json'), 'utf8'));
-  return project.map((motif) => {
-    const [dossier, fin, ...reste] = motif.split('/**/');
-    if (fin === undefined || reste.length > 0) {
-      throw new Error(`ci-portes : motif project de knip non reconnu : « ${motif} ».`);
-    }
-    return { dossier, extensions: extensionsDuMotif(fin) };
+const LANCE_DU_CODE = /^(?:[^/]+\.[cm]?[jt]s|angular\.json|\.github\/workflows\/.+|\.husky\/.+)$/;
+
+function suffixeDeTestDe(code, dossier) {
+  const tete = `${dossier.split('/')[0]}/`;
+  const suffixes = new Set(
+    code
+      .filter((fichier) => fichier.startsWith(tete) && estFichierDeTest(fichier))
+      .map((fichier) => `.${basename(fichier).split('.').slice(-2).join('.')}`),
+  );
+  assert.equal(
+    suffixes.size,
+    1,
+    `ci-portes : ${tete} doit porter un seul suffixe de test, lu : ${[...suffixes].join(', ')}.`,
+  );
+  return [...suffixes][0];
+}
+
+function sourceDuTemoin(extension) {
+  return extension === '.cjs'
+    ? 'exports.zzGardeInterne = 1;\nexports.zzGardeUtilise = exports.zzGardeInterne;\nexports.zzGardeInutile = 2;\n'
+    : 'export const zzGardeInterne = 1;\nexport const zzGardeUtilise = zzGardeInterne;\nexport const zzGardeInutile = 2;\n';
+}
+
+function planterLesTemoinsDeKnip(copie, code) {
+  const paires = new Set(code.map((fichier) => `${dirname(fichier)}\0${extname(fichier)}`));
+  return [...paires].map((paire) => {
+    const [dossier, extension] = paire.split('\0');
+    const temoins = {
+      module: `${dossier}/zz-garde-module${extension}`,
+      essai: `${dossier}/zz-garde-${extension.slice(1)}${suffixeDeTestDe(code, dossier)}`,
+    };
+    ecrireFichiers(copie, {
+      [temoins.module]: sourceDuTemoin(extension),
+      [temoins.essai]: `import { zzGardeUtilise } from './${basename(temoins.module)}';\n\nconsole.log(zzGardeUtilise);\n`,
+    });
+    return temoins;
   });
 }
 
+function copierLeDepot(copie) {
+  for (const fichier of fichiersDuDepot()) {
+    mkdirSync(dirname(join(copie, fichier)), { recursive: true });
+    copyFileSync(cheminDuDepot(fichier), join(copie, fichier));
+  }
+  symlinkSync(cheminDuDepot('node_modules'), join(copie, 'node_modules'));
+}
+
+function knipCommeLaCi(copie) {
+  const { scripts } = JSON.parse(readFileSync(join(copie, 'package.json'), 'utf8'));
+  const [outil, ...options] = scripts['quality:knip'].trim().split(/\s+/);
+  assert.equal(
+    outil,
+    'knip',
+    'ci-portes : quality:knip ne lance plus knip lui-meme : la garde ne sait plus le jouer comme la CI.',
+  );
+  const execution = spawnSync(
+    process.execPath,
+    [cheminDuDepot('node_modules/knip/bin/knip.js'), ...options, '--reporter', 'json'],
+    { cwd: copie, encoding: 'utf8' },
+  );
+  const { issues } = JSON.parse(execution.stdout);
+  return {
+    statut: execution.status,
+    morts: new Set(issues.flatMap((issue) => (issue.files ?? []).map(({ name }) => name))),
+    exportsInutiles: (fichier) =>
+      (issues.find((issue) => issue.file === fichier)?.exports ?? []).map(({ name }) => name),
+  };
+}
+
+function textesQuiLancentDuCode() {
+  const { scripts } = JSON.parse(readFileSync(CHEMIN_PACKAGE, 'utf8'));
+  return [
+    ...Object.values(scripts),
+    ...fichiersDuDepot()
+      .filter((fichier) => LANCE_DU_CODE.test(fichier))
+      .map((fichier) => readFileSync(cheminDuDepot(fichier), 'utf8')),
+  ].join('\n');
+}
+
 test('ci-portes : knip juge chaque fichier de code de src, e2e et scripts, comme la CI le promet', () => {
-  const perimetre = perimetreDeKnip();
-  const fichiers = fichiersDeCodeDuDepot();
-  const horsDeKnip = fichiers.filter(
+  const code = fichiersDeCodeDuDepot();
+  const { temoins, avecTemoins, sources, sansImports } = avecDossierPlante(
+    'ci-portes-knip-',
+    {},
+    (copie) => {
+      copierLeDepot(copie);
+      const plantes = planterLesTemoinsDeKnip(copie, code);
+      const premier = knipCommeLaCi(copie);
+      const toutes = [...code, ...plantes.flatMap(({ module, essai }) => [module, essai])];
+      ecrireFichiers(copie, Object.fromEntries(toutes.map((fichier) => [fichier, ''])));
+      return {
+        temoins: plantes,
+        avecTemoins: premier,
+        sources: toutes,
+        sansImports: knipCommeLaCi(copie),
+      };
+    },
+  );
+  const aveugles = temoins.flatMap(({ module }) =>
+    ['zzGardeInterne', 'zzGardeInutile']
+      .filter((nom) => !avecTemoins.exportsInutiles(module).includes(nom))
+      .map((nom) => `${module} : export inutile ${nom} non signale`),
+  );
+  const lanceurs = textesQuiLancentDuCode();
+  const racinesSansLanceur = sources.filter(
     (fichier) =>
-      !perimetre.some(
-        ({ dossier, extensions }) =>
-          fichier.startsWith(`${dossier}/`) && extensions.includes(extname(fichier).slice(1)),
-      ),
+      !sansImports.morts.has(fichier) &&
+      !estFichierDeTest(fichier) &&
+      !fichier.endsWith('.d.ts') &&
+      !lanceurs.includes(fichier),
   );
 
+  assert.notEqual(
+    avecTemoins.statut,
+    0,
+    'ci-portes : knip trouve du code mort et sort pourtant en succes : la CI ne rougirait pas.',
+  );
   assert.deepEqual(
-    horsDeKnip,
+    aveugles,
     [],
-    'ci-portes : un fichier de code echappe a knip : la porte de code mort ne voit ni son export inutile ni sa perte du dernier importeur.',
+    'ci-portes : un dossier de code echappe a knip : la porte de code mort ne voit pas ses exports inutiles.',
+  );
+  assert.deepEqual(
+    racinesSansLanceur,
+    [],
+    'ci-portes : sans importeur, un fichier que ni un test, ni un script, ni une configuration ne lance echappe pourtant a knip : un reglage le soustrait a la porte de code mort.',
   );
 });
 

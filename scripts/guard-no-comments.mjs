@@ -52,7 +52,7 @@ export function analyzeFile({ text, file, dependencies = [] }) {
  * @param {string} root
  * @returns {string[]}
  */
-export function rootDependencies(root) {
+function rootDependencies(root) {
   const manifest = join(root, 'package.json');
   if (!existsSync(manifest)) return [];
   return declaredDependencies(JSON.parse(readFileSync(manifest, 'utf8')));
@@ -134,7 +134,7 @@ export function runGate({ root = '.' } = {}) {
   };
 }
 
-export const TIGHTEN_COMMAND = 'node scripts/guard-no-comments.cli.mjs --root . --tighten';
+const TIGHTEN_COMMAND = 'node scripts/guard-no-comments.cli.mjs --root . --tighten';
 
 /**
  * @param {{ offenders: Offender[], inspected: number, ceiling?: number }} result

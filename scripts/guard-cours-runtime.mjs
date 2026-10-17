@@ -63,7 +63,7 @@ const POURQUOI = {
  * @param {string} racine
  * @returns {string[]}
  */
-export function collecterFichiers(depot, racine) {
+function collecterFichiers(depot, racine) {
   return listerFichiers(join(depot, racine), (nom) =>
     EXTENSIONS.some((extension) => nom.endsWith(extension)),
   ).map((relatif) => `${racine}/${relatif}`);
