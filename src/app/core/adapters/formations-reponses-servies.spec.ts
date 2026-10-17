@@ -7,6 +7,7 @@ import {
   lireLesReponsesServies,
   routesServiesSansSchema,
 } from '../../../testing/reponses-servies-lues';
+import { tolerancesDe, type ContratDuBack } from '../../../testing/tolerances-des-schemas';
 import * as schemasDesFormations from './formations-schemas';
 import {
   annotationServie,
@@ -39,12 +40,14 @@ const route = (methode: 'GET' | 'POST', chemin: string): string =>
 const desFormations = (servie: string): boolean =>
   servie.split(' ')[1].startsWith(PREFIXE_DES_FORMATIONS);
 
+const DEROULE = route('GET', 'sessions/:id/deroule');
+
 const ROUTES_LUES: readonly (readonly [string, z.ZodType])[] = [
   [route('GET', 'catalogue/:slug'), catalogueServi],
   [route('GET', 'livrets/:slug'), livretServi],
   [route('POST', 'sessions'), seanceOuverteServie],
   [route('POST', 'sessions/:code/join'), rattachementServi],
-  [route('GET', 'sessions/:id/deroule'), derouleServi],
+  [DEROULE, derouleServi],
   [route('GET', 'sessions/:id/sujet'), sujetServi],
   [route('GET', 'sessions/:id/results'), rapportServi],
   [route('GET', 'sessions/:id/report'), rapportServi],
@@ -77,7 +80,7 @@ const SERVIES_SANS_LECTEUR: Readonly<Record<string, string>> = {
 };
 
 const PARTIES_DES_INSTANTANES: Readonly<Partial<Record<string, string>>> = {
-  [route('GET', 'sessions/:id/deroule')]: 'deroule',
+  [DEROULE]: 'deroule',
   [route('GET', 'sessions/:id/sujet')]: 'sujet',
 };
 
@@ -126,6 +129,31 @@ const OPTIONNELLES_AU_CONTRAT_DU_BACK: Readonly<Partial<Record<string, readonly 
   [`${PRESENTATION}<renderer=table>.props`]: ['subtitle', 'note'],
 };
 
+const TOLEREES_ABSENTES_JUSQU_AU_LOT_2D: Readonly<Partial<Record<string, readonly string[]>>> = {
+  '': ['reflexion'],
+  '.corrigeEcran': ['tableauCorrige'],
+  '.corrigeEcran.attendus[]': ['affichage'],
+  '.donnees.definition': ['abscisses', 'positions'],
+  '.donnees.plan': ['lettres', 'grille', 'longueurMaxSaisie', 'initiale'],
+};
+
+const OPTIONNELLES_OU_TOLEREES = Object.fromEntries(
+  [
+    ...new Set([
+      ...Object.keys(OPTIONNELLES_AU_CONTRAT_DU_BACK),
+      ...Object.keys(TOLEREES_ABSENTES_JUSQU_AU_LOT_2D),
+    ]),
+  ].map((chemin) => [
+    chemin,
+    [
+      ...(OPTIONNELLES_AU_CONTRAT_DU_BACK[chemin] ?? []),
+      ...(TOLEREES_ABSENTES_JUSQU_AU_LOT_2D[chemin] ?? []),
+    ],
+  ]),
+);
+
+const TOLEREE_ABSENTE = /^(.*)\.([^.]+) toujours servie, mais tolérée absente$/;
+
 const VARIANTE_DE_TYPE = /<type=[^>]*>/g;
 
 function dansLEcran(chemin: string): string {
@@ -148,8 +176,26 @@ describe('Réponses réellement servies par le back, lues par les schémas du fr
     schemas: schemasDesFormations,
     horsRoute: SCHEMAS_LUS_HORS_ROUTE,
     documentsDe,
-    optionnelles: OPTIONNELLES_AU_CONTRAT_DU_BACK,
+    optionnelles: OPTIONNELLES_OU_TOLEREES,
     normaliser: dansLEcran,
+  });
+
+  it('lit le déroulé du back en prod : seules les clés neuves du back 2c y restent tolérées absentes', () => {
+    const contratSansLeLot2d: ContratDuBack = {
+      optionnelle: (chemin, cle) =>
+        OPTIONNELLES_AU_CONTRAT_DU_BACK[dansLEcran(chemin)]?.includes(cle) ?? false,
+    };
+    const tolerees = tolerancesDe(derouleServi, documentsDe(DEROULE), contratSansLeLot2d).map(
+      (faute) => {
+        const [, chemin, cle] = TOLEREE_ABSENTE.exec(faute) ?? [faute, faute, ''];
+        return `${dansLEcran(chemin)} ${cle}`;
+      },
+    );
+    const attendues = Object.entries(TOLEREES_ABSENTES_JUSQU_AU_LOT_2D).flatMap(([chemin, cles]) =>
+      (cles ?? []).map((cle) => `${chemin} ${cle}`),
+    );
+
+    expect([...new Set(tolerees)]).toEqual(jasmine.arrayWithExactContents(attendues));
   });
 
   it('lit chaque route servie des formations par un schéma du front, ou dit pourquoi aucun lecteur ne la lit', () => {
