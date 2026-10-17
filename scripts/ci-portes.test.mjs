@@ -101,9 +101,9 @@ const CLES_D_UNE_ETAPE = {
 
 const ECHEC_RATTRAPE = /\|\||;\s*(?:true|:)(?:\s|$)|\bexit\s+0\b|\bset\s+\+e\b/;
 
-const NOMME_UNE_PORTE = /\bnpm\s+run(?:-script)?\b/;
+const APPELLE_NPM = /\bnpm\b/;
 
-const PORTE_SEULE = /^npm run [\w:.-]+$/;
+const NPM_SEUL = /^npm (?:ci|test|run [\w:.-]+)$/;
 
 const CLE_YAML = /^(\s*)(-\s+)?([\w-]+):(.*)$/s;
 
@@ -114,7 +114,7 @@ function estNeutralisee(etape) {
     (etape.continueSurErreur ?? 'false') !== 'false' ||
     (etape.shell ?? 'bash') !== 'bash' ||
     ECHEC_RATTRAPE.test(commande) ||
-    (NOMME_UNE_PORTE.test(commande) && !PORTE_SEULE.test(commande))
+    (APPELLE_NPM.test(commande) && !NPM_SEUL.test(commande))
   );
 }
 
@@ -212,6 +212,29 @@ function lireContexte() {
 
 function requiertLeBuild(scripts, porte) {
   return /\bdist\b/.test(scripts[porte]);
+}
+
+function portesDeLaChaine(chaine) {
+  const portes = [...(chaine ?? '').matchAll(/\bnpm run ([\w:.-]+)/g)].map((trouve) => trouve[1]);
+  if (portes.length === 0) {
+    throw new Error(
+      'ci-portes : ci:check ne joue aucune porte « npm run » - une CI comparee a une chaine vide ne serait jugee sur rien.',
+    );
+  }
+  return portes;
+}
+
+function portesJoueesParLesJobsBloquants(texteWorkflow) {
+  return [JOB_WORKFLOW, JOB_E2E, JOB_BANC].flatMap((job) =>
+    etapesDuJob(texteWorkflow, job)
+      .map((etape) => /^npm run ([\w:.-]+)$/.exec(etape.commande)?.[1])
+      .filter((porte) => porte !== undefined)
+      .map((porte) => ({ job, porte })),
+  );
+}
+
+function estJoueePar(scripts, porte, jouee) {
+  return jouee === porte || (scripts[jouee] ?? '').startsWith(`${scripts[porte]} `);
 }
 
 test('ci-portes : detecte au moins une porte du chantier des lints dans le vrai package.json', () => {
@@ -363,9 +386,48 @@ test('ci-portes : aucun job bloquant ni aucune de ses commandes n est conditionn
     assert.deepEqual(
       neutralisees,
       [],
-      `ci-portes : dans le job « ${job} », une etape « run: » conditionnee, autorisee a echouer, sous un autre shell que bash, qui rattrape son echec (||, ; true, exit 0, set +e) ou qui joue une porte autrement que par la seule commande « npm run <script> » ne peut plus faire echouer le job.`,
+      `ci-portes : dans le job « ${job} », une etape « run: » conditionnee, autorisee a echouer, sous un autre shell que bash, qui rattrape son echec (||, ; true, exit 0, set +e) ou qui appelle npm autrement que par la seule commande « npm ci », « npm test » ou « npm run <script> » ne peut plus faire echouer le job.`,
     );
   }
+});
+
+test('ci-portes : chaque porte de ci:check et le banc sont joues par un job bloquant', () => {
+  const { scripts } = lireContexte();
+  const jouees = portesJoueesParLesJobsBloquants(readFileSync(CHEMIN_WORKFLOW, 'utf8'));
+  const absentes = portesDeLaChaine(scripts['ci:check']).filter(
+    (porte) => !jouees.some((jouee) => estJoueePar(scripts, porte, jouee.porte)),
+  );
+
+  assert.deepEqual(
+    absentes,
+    [],
+    'ci-portes : une porte de ci:check n est jouee par aucune etape « npm run » des jobs bloquants, elle-meme ou un script qui la prolonge d options - retirer son etape la sortirait de la CI sans bruit.',
+  );
+  assert.ok(
+    jouees.some(({ job, porte }) => job === JOB_BANC && porte === 'test:banc'),
+    `ci-portes : le job « ${JOB_BANC} » doit jouer « npm run test:banc ».`,
+  );
+});
+
+test('ci-portes : leve si ci:check ne joue aucune porte', () => {
+  assert.throws(() => portesDeLaChaine('ng build'), /aucune porte/);
+  assert.throws(() => portesDeLaChaine(undefined), /aucune porte/);
+});
+
+test('ci-portes : une porte n est jouee que par elle-meme ou un script qui la prolonge d options', () => {
+  const scripts = {
+    'test:ci': 'ng test --watch=false',
+    'test:cov': 'ng test --watch=false --code-coverage',
+    'test:autre': 'ng test --watch=falsey',
+    lint: 'eslint .',
+  };
+
+  assert.deepEqual(
+    ['test:ci', 'test:cov', 'test:autre', 'lint'].map((jouee) =>
+      estJoueePar(scripts, 'test:ci', jouee),
+    ),
+    [true, true, false, false],
+  );
 });
 
 test('ci-portes : le job e2e bloque la suite du workflow', () => {
@@ -583,6 +645,25 @@ test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans
     '          echo suite',
     '      - name: Installation',
     '        run: npm ci',
+    '      - name: Option avant run',
+    '        run: if npm --prefix . run lint; then :; fi',
+    '      - name: Silencieuse',
+    '        run: |',
+    '          npm -s run lint && echo lint-ok',
+    '          echo fin',
+    '      - name: Alias de run',
+    '        run: |',
+    '          set +o pipefail',
+    '          npm rum lint | tee lint.log',
+    '      - name: Dossier du banc',
+    '        run: |',
+    '          set +o errexit',
+    '          npm -C . run test:banc',
+    '          echo fin',
+    '      - name: Navigateur',
+    '        run: npx playwright install --with-deps chromium',
+    '      - name: Back',
+    '        run: pnpm install --frozen-lockfile',
     '      - name: Suivante',
     '        run: npm run guard:comments',
     '',
@@ -617,6 +698,12 @@ test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans
     etape('Condition du shell', 'if npm run lint; then :; fi'),
     etape('Et puis', 'npm run lint && echo fin\necho suite'),
     etape('Installation', 'npm ci'),
+    etape('Option avant run', 'if npm --prefix . run lint; then :; fi'),
+    etape('Silencieuse', 'npm -s run lint && echo lint-ok\necho fin'),
+    etape('Alias de run', 'set +o pipefail\nnpm rum lint | tee lint.log'),
+    etape('Dossier du banc', 'set +o errexit\nnpm -C . run test:banc\necho fin'),
+    etape('Navigateur', 'npx playwright install --with-deps chromium'),
+    etape('Back', 'pnpm install --frozen-lockfile'),
     etape('Suivante', 'npm run guard:comments'),
   ]);
   assert.deepEqual(etapesDuJob(texte, JOB_WORKFLOW).map(estNeutralisee), [
@@ -634,6 +721,12 @@ test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans
     true,
     true,
     true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    false,
     false,
     false,
   ]);
