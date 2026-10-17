@@ -227,8 +227,12 @@ describe('CoursEtudiantComponent', () => {
     return { arrivee, lectureDemandee };
   }
 
+  function ecranMonte(fixture: Fixture): DebugElement | undefined {
+    return fixture.debugElement.queryAll(By.directive(SlideActivityComponent)).at(0);
+  }
+
   function ecranDe(fixture: Fixture): DebugElement {
-    const ecran = fixture.debugElement.queryAll(By.directive(SlideActivityComponent)).at(0);
+    const ecran = ecranMonte(fixture);
     if (ecran === undefined) {
       throw new Error('Aucun ecran de cours monte dans la vue etudiant');
     }
@@ -258,8 +262,12 @@ describe('CoursEtudiantComponent', () => {
     return fixture;
   }
 
+  let horlogeTenueParLeTest = false;
+
   async function rattacher(code = CODE_SAISI, identite = IDENTITE): Promise<Fixture> {
-    figerLesHorloges(Date.now());
+    if (!horlogeTenueParLeTest) {
+      figerLesHorloges(Date.now());
+    }
     try {
       const fixture = monter();
       soumettre(fixture, code, identite);
@@ -267,6 +275,19 @@ describe('CoursEtudiantComponent', () => {
       await stabiliserLaVue(fixture);
       return fixture;
     } finally {
+      if (!horlogeTenueParLeTest) {
+        jasmine.clock().uninstall();
+      }
+    }
+  }
+
+  async function sousLHorlogeDuTest(scenario: () => Promise<void>): Promise<void> {
+    figerLesHorloges(Date.now());
+    horlogeTenueParLeTest = true;
+    try {
+      await scenario();
+    } finally {
+      horlogeTenueParLeTest = false;
       jasmine.clock().uninstall();
     }
   }
@@ -1014,7 +1035,13 @@ describe('CoursEtudiantComponent', () => {
           return ecranRetenu(await suivreLaSeanceJusquA(1));
         },
         etatSuivant: () => ({ ecranCourant: 1 }),
-        observerLeDepart: (fixture) => ({ ...ecranRelu(fixture), affiche: ecranAffiche(fixture) }),
+        observerLeDepart: (fixture) => ({
+          ...ecranRelu(fixture),
+          affiche:
+            (
+              ecranMonte(fixture)?.componentInstance as SlideActivityComponent | undefined
+            )?.slide() ?? null,
+        }),
         depart: () => ({ ...ECRAN_RELU(), affiche: sujet.ecrans[1] }),
       },
       {
@@ -1142,6 +1169,23 @@ describe('CoursEtudiantComponent', () => {
           expect(observerLeDepart(fixture)).toEqual(depart());
         });
       }
+
+      it(`${attente} retenue par la cadence du serveur repart d elle-meme au delai annonce, pas avant`, async () => {
+        const delaiAnnonceMs = (refusLimite().limite?.minutes ?? 0) * 60_000;
+        await sousLHorlogeDuTest(async () => {
+          const fixture = await retenir();
+
+          jasmine.clock().tick(delaiAnnonceMs - 1);
+          await stabiliserLaVue(fixture);
+          const avantLeDelai = observerLeDepart(fixture);
+          jasmine.clock().tick(1);
+          await stabiliserLaVue(fixture);
+
+          expect(delaiAnnonceMs).toBeGreaterThan(0);
+          expect(avantLeDelai).not.toEqual(depart());
+          expect(observerLeDepart(fixture)).toEqual(depart());
+        });
+      });
     }
   });
 
@@ -1157,6 +1201,39 @@ describe('CoursEtudiantComponent', () => {
     it('trouve la brique de reflexion dans les cours servis', () => {
       expect(ECRANS_DE_REFLEXION.length).toBeGreaterThan(0);
     });
+
+    const CACHES_DE_L_ECRAN: readonly {
+      readonly cache: string;
+      readonly temoin: string;
+      readonly cacher: (fixture: Fixture) => void;
+    }[] = [
+      {
+        cache: 'l eviction du poste',
+        temoin: 'etudiant-evince',
+        cacher: (fixture) => {
+          double.diffuserFin('evince');
+          fixture.detectChanges();
+        },
+      },
+      {
+        cache: 'la place liberee',
+        temoin: 'etudiant-poste-libere',
+        cacher: (fixture) => {
+          double.diffuserFin('revoque');
+          fixture.detectChanges();
+        },
+      },
+      {
+        cache: 'la fin de la seance',
+        temoin: 'etudiant-fin',
+        cacher: (fixture) => diffuserSurLaVue(double, fixture, { etat: 'terminee' }),
+      },
+      {
+        cache: 'le retour en attente',
+        temoin: 'etudiant-attente',
+        cacher: (fixture) => diffuserSurLaVue(double, fixture, { etat: 'attente' }),
+      },
+    ];
 
     async function retenirLaReflexionSurSonEcran(
       servi: CoursContent,
@@ -1201,6 +1278,24 @@ describe('CoursEtudiantComponent', () => {
               etatDeLaReflexion(fixture),
               foisDitesAuPoste(fixture),
             ]).toEqual([String(statut), null, 1]);
+          },
+          DELAI_DE_MONTAGE_MS,
+        );
+      }
+
+      for (const { cache, temoin, cacher } of CACHES_DE_L_ECRAN) {
+        it(
+          `${prefixe} ecran ${rang + 1} : le poste dit la reflexion retenue quand ${cache} cache sa brique`,
+          async () => {
+            const fixture = await retenirLaReflexionSurSonEcran(servi, rang);
+
+            cacher(fixture);
+
+            expect([
+              lire(fixture, temoin) !== null,
+              etatDeLaReflexion(fixture),
+              foisDitesAuPoste(fixture),
+            ]).toEqual([true, null, 1]);
           },
           DELAI_DE_MONTAGE_MS,
         );
