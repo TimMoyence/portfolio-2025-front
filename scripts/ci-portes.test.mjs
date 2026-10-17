@@ -12,6 +12,7 @@ import {
 import { createRequire } from 'node:module';
 import { basename, dirname, extname, join } from 'node:path';
 import { test } from 'node:test';
+import { pathToFileURL } from 'node:url';
 
 import { ESLint } from 'eslint';
 import sonarjs from 'eslint-plugin-sonarjs';
@@ -1113,6 +1114,23 @@ function balisesQueKnipIgnoreToujours() {
   return new Set(balises);
 }
 
+const moduleDeKnip = (chemin) =>
+  import(pathToFileURL(cheminDuDepot(`node_modules/knip/dist/${chemin}`)).href);
+const { getEntrySpecifiersFromManifest } = await moduleDeKnip('util/package-json.js');
+const { isAmbientDeclarationFile } = await moduleDeKnip('typescript/ast-nodes.js');
+
+function declarationsQuiExportent() {
+  return fichiersDuDepot()
+    .filter((fichier) => /\.d\.[cm]?ts$/.test(fichier))
+    .filter(
+      (fichier) =>
+        !isAmbientDeclarationFile(
+          cheminDuDepot(fichier),
+          readFileSync(cheminDuDepot(fichier), 'utf8'),
+        ),
+    );
+}
+
 function balisesDeKnipDansLeCode() {
   const balises = balisesQueKnipIgnoreToujours();
   return fichiersDeCodeDuDepot().flatMap((fichier) =>
@@ -1146,6 +1164,16 @@ test('ci-portes : rien ne soustrait de code a knip, ni option, ni reglage, ni ba
     existsSync(cheminDuDepot('pnpm-workspace.yaml')),
     false,
     'ci-portes : pnpm-workspace.yaml declare des workspaces, dont une negation soustrait du code a knip.',
+  );
+  assert.deepEqual(
+    [...getEntrySpecifiersFromManifest(paquet)],
+    [],
+    'ci-portes : package.json designe des entrees, dont knip ne juge plus les exports.',
+  );
+  assert.deepEqual(
+    declarationsQuiExportent(),
+    [],
+    'ci-portes : un .d.ts exporte : knip en fait une entree, dont il ne juge plus les exports.',
   );
   assert.deepEqual(
     Object.keys(reglages).filter((cle) => !REGLAGES_PERMIS_A_KNIP.has(cle)),
