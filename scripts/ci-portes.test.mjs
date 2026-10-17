@@ -105,6 +105,16 @@ const APPELLE_NPM = /\bnpm\b/;
 
 const NPM_SEUL = /^npm (?:ci|test|run [\w:.-]+)$/;
 
+const NPM_RUN = /\bnpm run ([\w:.-]+)/g;
+
+const ABSORBE_UN_ECHEC = /\||;|\n|`|\$\(|(?<!&)&(?!&)|(?:^|[\s&|;(])!\s/;
+
+const PROLONGEMENT_DE_TEST_CI = {
+  prolongee: 'test:ci',
+  prolongement: 'test:cov',
+  options: '--code-coverage',
+};
+
 const CLE_YAML = /^(\s*)(-\s+)?([\w-]+):(.*)$/s;
 
 function estNeutralisee(etape) {
@@ -214,8 +224,12 @@ function requiertLeBuild(scripts, porte) {
   return /\bdist\b/.test(scripts[porte]);
 }
 
+function scriptsLancesPar(chaine) {
+  return [...(chaine ?? '').matchAll(NPM_RUN)].map((trouve) => trouve[1]);
+}
+
 function portesDeLaChaine(chaine) {
-  const portes = [...(chaine ?? '').matchAll(/\bnpm run ([\w:.-]+)/g)].map((trouve) => trouve[1]);
+  const portes = scriptsLancesPar(chaine);
   if (portes.length === 0) {
     throw new Error(
       'ci-portes : ci:check ne joue aucune porte « npm run » - une CI comparee a une chaine vide ne serait jugee sur rien.',
@@ -234,7 +248,36 @@ function portesJoueesParLesJobsBloquants(texteWorkflow) {
 }
 
 function estJoueePar(scripts, porte, jouee) {
-  return jouee === porte || (scripts[jouee] ?? '').startsWith(`${scripts[porte]} `);
+  const { prolongee, prolongement, options } = PROLONGEMENT_DE_TEST_CI;
+  return (
+    jouee === porte ||
+    (porte === prolongee &&
+      jouee === prolongement &&
+      scripts[jouee] === `${scripts[porte]} ${options}`)
+  );
+}
+
+function absorbeUnEchec(script) {
+  return ABSORBE_UN_ECHEC.test(script);
+}
+
+function scriptsAppelesPar(scripts, porte, vus = new Set()) {
+  if (vus.has(porte)) {
+    return [];
+  }
+  vus.add(porte);
+  return [
+    porte,
+    ...scriptsLancesPar(scripts[porte]).flatMap((appele) =>
+      scriptsAppelesPar(scripts, appele, vus),
+    ),
+  ];
+}
+
+function appelleNpmAutrement(script) {
+  return (
+    (script.match(new RegExp(APPELLE_NPM, 'g')) ?? []).length !== scriptsLancesPar(script).length
+  );
 }
 
 test('ci-portes : detecte au moins une porte du chantier des lints dans le vrai package.json', () => {
@@ -414,7 +457,7 @@ test('ci-portes : leve si ci:check ne joue aucune porte', () => {
   assert.throws(() => portesDeLaChaine(undefined), /aucune porte/);
 });
 
-test('ci-portes : une porte n est jouee que par elle-meme ou un script qui la prolonge d options', () => {
+test('ci-portes : une porte n est jouee que par elle-meme ou par test:cov, test:ci a la seule couverture pres', () => {
   const scripts = {
     'test:ci': 'ng test --watch=false',
     'test:cov': 'ng test --watch=false --code-coverage',
@@ -427,6 +470,84 @@ test('ci-portes : une porte n est jouee que par elle-meme ou un script qui la pr
       estJoueePar(scripts, 'test:ci', jouee),
     ),
     [true, true, false, false],
+  );
+  assert.deepEqual(
+    [
+      ['test:ci', 'test:cov', 'ng test --watch=false --code-coverage || true'],
+      ['test:ci', 'test:cov', 'ng test --watch=false --include=src/app/app.config.spec.ts'],
+      ['test:ci', 'test:cov', 'ng test --watch=false --code-coverage | tee karma.log'],
+      ['lint', 'lint:ci', 'eslint . || true'],
+      ['lint', 'lint:ci', 'eslint . --code-coverage'],
+    ].map(([porte, jouee, prolongement]) =>
+      estJoueePar({ ...scripts, [jouee]: prolongement }, porte, jouee),
+    ),
+    [false, false, false, false, false],
+  );
+});
+
+test('ci-portes : reconnait chaque operateur du shell qui absorbe un echec, jusque dans un script appele', () => {
+  assert.deepEqual(
+    [
+      'eslint . || true',
+      'eslint . | tee lint.log',
+      'eslint . ; exit 0',
+      'eslint .\ntrue',
+      'eslint . & wait',
+      'echo $(eslint .)',
+      'echo `eslint .`',
+      '! eslint .',
+      'true && ! eslint .',
+    ].filter((script) => !absorbeUnEchec(script)),
+    [],
+  );
+  assert.deepEqual(
+    [
+      'eslint . && prettier --check "src/**/*.{ts,html}"',
+      'ng test --watch=false --code-coverage',
+      'SSR_BASE_URL=http://localhost:4000 npx playwright test --project=chromium',
+      'npm run seo:lastmod && CI=true ng build',
+    ].filter(absorbeUnEchec),
+    [],
+  );
+  assert.deepEqual(
+    scriptsAppelesPar(
+      { lint: 'npm run lint:eslint && npm run lint:css', 'lint:eslint': 'eslint . || true' },
+      'lint',
+    ),
+    ['lint', 'lint:eslint', 'lint:css'],
+  );
+  assert.deepEqual(
+    [
+      'npm --prefix . run lint:eslint',
+      'npm -s run lint:eslint',
+      'npm rum lint:eslint',
+      'npm test',
+      'npm run lint:eslint && npm exec eslint .',
+      'npm run seo:lastmod && CI=true ng build',
+      'pnpm install --frozen-lockfile && npx playwright test',
+    ].map(appelleNpmAutrement),
+    [true, true, true, true, true, false, false],
+  );
+});
+
+test('ci-portes : aucun script joue par un job bloquant n absorbe l echec d une commande', () => {
+  const { scripts } = lireContexte();
+  const jouees = portesJoueesParLesJobsBloquants(readFileSync(CHEMIN_WORKFLOW, 'utf8'));
+  const appeles = [...new Set(jouees.flatMap(({ porte }) => scriptsAppelesPar(scripts, porte)))];
+
+  assert.ok(
+    appeles.includes('test:cov') && appeles.includes('seo:lastmod'),
+    'ci-portes : les scripts joues par les jobs bloquants doivent comprendre test:cov et seo:lastmod, appele par build.',
+  );
+  assert.deepEqual(
+    appeles.filter((nom) => absorbeUnEchec(scripts[nom] ?? '')),
+    [],
+    'ci-portes : npm joue un script par « sh -c », sans pipefail : « || », « | », « ; », un saut de ligne, « & », « $( », « ` » ou « ! » y rendent un echec vert en CI.',
+  );
+  assert.deepEqual(
+    appeles.filter((nom) => appelleNpmAutrement(scripts[nom] ?? '')),
+    [],
+    'ci-portes : un script joue par un job bloquant n appelle npm que par « npm run <script> », seule forme dont la garde suit le script appele.',
   );
 });
 
