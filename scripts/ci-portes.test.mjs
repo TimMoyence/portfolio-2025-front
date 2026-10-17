@@ -718,6 +718,10 @@ const CORPUS_DU_GITIGNORE = [
   String.raw`\!point`,
   'espaces-finaux   ',
   String.raw`espace-echappe\ `,
+  'accolade{1,2}',
+  String.raw`\{echappee\}`,
+  'plus+(glob)',
+  'arobase@(x|y)',
 ];
 
 const LIGNES_SANS_EFFET_POUR_GIT = ['!exclu/garde.html'];
@@ -747,6 +751,14 @@ const EXEMPLES_DU_CORPUS = [
     'espaces-finaux',
     'espace-echappe ',
     'espace-echappe',
+    'accolade{1,2}',
+    'accolade1',
+    '{echappee}',
+    'echappee',
+    'plus+(glob)',
+    'plusglob',
+    'arobase@(x|y)',
+    'arobasex',
   ].map((dossier) => `${dossier}/rapport.html`),
   'contenu-etoile/garde.html',
   'contenu-double/garde.html',
