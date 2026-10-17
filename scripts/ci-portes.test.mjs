@@ -103,9 +103,11 @@ const ECHEC_RATTRAPE = /\|\||;\s*(?:true|:)(?:\s|$)|\bexit\s+0\b|\bset\s+\+e\b/;
 
 const APPELLE_NPM = /\bnpm\b/;
 
-const NPM_SEUL = /^npm (?:ci|test|run [\w:.-]+)$/;
+const NOM_DE_SCRIPT = String.raw`[\w:.][\w:.-]*`;
 
-const NPM_RUN = /\bnpm run ([\w:.-]+)/g;
+const NPM_SEUL = new RegExp(`^npm (?:ci|test|run ${NOM_DE_SCRIPT})$`);
+
+const NPM_RUN = new RegExp(String.raw`\bnpm run (${NOM_DE_SCRIPT})(?=\s*(?:&&|$))`, 'g');
 
 const ABSORBE_UN_ECHEC = /\||;|\n|`|\$\(|(?<!&)&(?!&)|(?:^|[\s&|;(])!\s/;
 
@@ -523,10 +525,22 @@ test('ci-portes : reconnait chaque operateur du shell qui absorbe un echec, jusq
       'npm rum lint:eslint',
       'npm test',
       'npm run lint:eslint && npm exec eslint .',
+      'npm run -s lint:eslint',
+      'npm run --silent lint:eslint',
+      'npm run --if-present lint:eslint',
+      'npm run lint:eslint --if-present',
+      'npm run lint:eslint -- --fix && CI=true ng build',
       'npm run seo:lastmod && CI=true ng build',
       'pnpm install --frozen-lockfile && npx playwright test',
     ].map(appelleNpmAutrement),
-    [true, true, true, true, true, false, false],
+    [true, true, true, true, true, true, true, true, true, true, false, false],
+  );
+  assert.deepEqual(
+    scriptsAppelesPar(
+      { lint: 'npm run -s lint:eslint', 'lint:eslint': 'eslint . || true' },
+      'lint',
+    ),
+    ['lint'],
   );
 });
 
@@ -547,7 +561,12 @@ test('ci-portes : aucun script joue par un job bloquant n absorbe l echec d une 
   assert.deepEqual(
     appeles.filter((nom) => appelleNpmAutrement(scripts[nom] ?? '')),
     [],
-    'ci-portes : un script joue par un job bloquant n appelle npm que par « npm run <script> », seule forme dont la garde suit le script appele.',
+    'ci-portes : un script joue par un job bloquant n appelle npm que par « npm run <script> », sans option ni argument, seule forme dont la garde suit le script appele.',
+  );
+  assert.deepEqual(
+    appeles.filter((nom) => scripts[nom] === undefined),
+    [],
+    'ci-portes : un script lance par un job bloquant doit exister dans package.json.',
   );
 });
 
@@ -785,6 +804,8 @@ test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans
     '        run: npx playwright install --with-deps chromium',
     '      - name: Back',
     '        run: pnpm install --frozen-lockfile',
+    '      - name: Liste des scripts',
+    '        run: npm run --silent',
     '      - name: Suivante',
     '        run: npm run guard:comments',
     '',
@@ -825,6 +846,7 @@ test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans
     etape('Dossier du banc', 'set +o errexit\nnpm -C . run test:banc\necho fin'),
     etape('Navigateur', 'npx playwright install --with-deps chromium'),
     etape('Back', 'pnpm install --frozen-lockfile'),
+    etape('Liste des scripts', 'npm run --silent'),
     etape('Suivante', 'npm run guard:comments'),
   ]);
   assert.deepEqual(etapesDuJob(texte, JOB_WORKFLOW).map(estNeutralisee), [
@@ -849,6 +871,7 @@ test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans
     true,
     false,
     false,
+    true,
     false,
   ]);
 });
