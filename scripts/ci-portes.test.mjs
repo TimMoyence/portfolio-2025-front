@@ -237,6 +237,11 @@ function portesDeLaChaine(chaine) {
       'ci-portes : ci:check ne joue aucune porte « npm run » - une CI comparee a une chaine vide ne serait jugee sur rien.',
     );
   }
+  if (appelleNpmAutrement(chaine)) {
+    throw new Error(
+      'ci-portes : ci:check joue une porte autrement que par « npm run <script> » nu - la porte disparaitrait de la comparaison avec la CI.',
+    );
+  }
   return portes;
 }
 
@@ -457,6 +462,18 @@ test('ci-portes : chaque porte de ci:check et le banc sont joues par un job bloq
 test('ci-portes : leve si ci:check ne joue aucune porte', () => {
   assert.throws(() => portesDeLaChaine('ng build'), /aucune porte/);
   assert.throws(() => portesDeLaChaine(undefined), /aucune porte/);
+});
+
+test('ci-portes : leve si ci:check joue une porte autrement que par « npm run <script> » nu', () => {
+  for (const chaine of [
+    'npm run --silent lint && npm run typecheck',
+    'npm run lint --silent && npm run typecheck',
+    'npm run lint && npm -s run typecheck',
+    'npm run lint && npm run typecheck -- --pretty',
+  ]) {
+    assert.throws(() => portesDeLaChaine(chaine), /autrement que par/, chaine);
+  }
+  assert.deepEqual(portesDeLaChaine('npm run lint && npm run typecheck'), ['lint', 'typecheck']);
 });
 
 test('ci-portes : une porte n est jouee que par elle-meme ou par test:cov, test:ci a la seule couverture pres', () => {
