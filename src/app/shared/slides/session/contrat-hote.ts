@@ -5,6 +5,7 @@ import type {
   ResultatQuestion,
   ValeurProduction,
 } from '../../../../cours/content/types';
+import type { DemandeDeFeuille, SaisieDeTableau } from '../../../core/ports/formations.port';
 
 export type { EtatPulse };
 
@@ -55,6 +56,25 @@ export type EvenementBrique =
       readonly kind: 'reglage';
       readonly screenId: string;
       readonly reglages: Readonly<Record<string, number>>;
+    }
+  | {
+      readonly kind: 'evaluation-machine';
+      readonly screenId: string;
+      readonly reglages: Readonly<Record<string, number>>;
+    }
+  | {
+      readonly kind: 'evaluation-feuille';
+      readonly screenId: string;
+      readonly planId: string;
+      readonly rang: number;
+      readonly demande: DemandeDeFeuille;
+    }
+  | {
+      readonly kind: 'evaluation-tableau';
+      readonly screenId: string;
+      readonly planId: string;
+      readonly rang: number;
+      readonly saisies: readonly SaisieDeTableau[];
     };
 
 export interface DirectEcran {

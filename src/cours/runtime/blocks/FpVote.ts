@@ -78,6 +78,7 @@ export class FpVote extends FpVerdicts {
   private principale: VoteQuestionPublique | null = null;
   private jumelle: VoteQuestionPublique | null = null;
   private internePhase: VotePhase | null = null;
+  private questionServie: string | null = null;
   private interneResultats: VoteResultats | null = null;
   private premierVote: VoteResultats | null = null;
   private revelation: Revelation | null = null;
@@ -145,13 +146,23 @@ export class FpVote extends FpVerdicts {
     this.refreshSiConnecte();
   }
 
-  get questionAffichee(): VoteQuestionPublique | null {
-    const surLaJumelle = this.internePhase === 'revote' || this.internePhase === 'revele';
-    return surLaJumelle && this.jumelle !== null ? this.jumelle : this.principale;
+  set questionAffichee(valeur: string | null | undefined) {
+    this.questionServie = typeof valeur === 'string' ? valeur : null;
+    this.refreshSiConnecte();
+  }
+
+  get questionAffichee(): string | null {
+    return this.questionServie;
+  }
+
+  private affichee(): VoteQuestionPublique | null {
+    return this.jumelle !== null && this.questionServie === this.jumelle.id
+      ? this.jumelle
+      : this.principale;
   }
 
   render(): EscapedHtml {
-    const question = this.questionAffichee;
+    const question = this.affichee();
     if (!question) {
       return this.attente();
     }
@@ -204,7 +215,7 @@ export class FpVote extends FpVerdicts {
   }
 
   bind(racine: ShadowRoot): void {
-    this.suivreAffichage(this.questionAffichee?.id ?? null);
+    this.suivreAffichage(this.affichee()?.id ?? null);
     const ouverte = !this.presentateur() && this.ouverte();
     this.brancherLesBoutons(racine, '[data-option]', !ouverte, ({ dataset }) =>
       this.choisir(dataset['option'] ?? ''),
@@ -216,7 +227,7 @@ export class FpVote extends FpVerdicts {
   }
 
   private ouverte(): boolean {
-    const question = this.questionAffichee;
+    const question = this.affichee();
     if (question === null || this.internePhase === 'discussion') {
       return false;
     }
@@ -259,7 +270,7 @@ export class FpVote extends FpVerdicts {
   }
 
   private choisir(valeur: string): void {
-    const question = this.questionAffichee;
+    const question = this.affichee();
     if (question === null || !this.ouverte()) {
       return;
     }

@@ -27,7 +27,9 @@ export const EVENEMENTS_DES_BRIQUES: readonly string[] = [
   'fp-exit-submit',
   'fp-spaced-reponse',
   'fp-sheet-submit',
+  'fp-sheet-evaluation',
   'fp-table-build-submit',
+  'fp-table-build-evaluation',
   'fp-cardsort-submit',
   'fp-escape-tentative',
   'fp-pulse-change',
@@ -35,6 +37,7 @@ export const EVENEMENTS_DES_BRIQUES: readonly string[] = [
   'fp-worked-submit',
   'fp-pro-submit',
   'fp-concept4-reglage',
+  'fp-concept4-evaluation',
   'fp-plot-reglage',
 ];
 
@@ -69,6 +72,32 @@ function libre(
     : [];
 }
 
+function estNombreFini(valeur: unknown): valeur is number {
+  return typeof valeur === 'number' && Number.isFinite(valeur);
+}
+
+function estTexte(valeur: unknown): valeur is string {
+  return typeof valeur === 'string';
+}
+
+function cellulesDuTableau<Valeur>(
+  contenu: unknown,
+  champ: string,
+  estValeur: (valeur: unknown) => valeur is Valeur,
+): (readonly [number, string, Valeur])[] | null {
+  if (!Array.isArray(contenu)) {
+    return null;
+  }
+  return contenu.map(objet).flatMap((cellule) => {
+    const rang = cellule?.['rang'];
+    const cle = cellule?.['cle'];
+    const valeur = cellule?.[champ];
+    return estEntierPositif(rang) && estChaineNonVide(cle) && estValeur(valeur)
+      ? [[rang, cle, valeur] as const]
+      : [];
+  });
+}
+
 function champsTextuels(valeur: unknown): readonly [string, string][] {
   return Object.entries(objet(valeur) ?? {}).filter((entree): entree is [string, string] =>
     estTexteNonVide(entree[1]),
@@ -85,15 +114,8 @@ function valeurDeProduction(
   }
   const contenu = detail[champ];
   if (type === 'tableau') {
-    const saisies = Array.isArray(contenu) ? contenu.map(objet) : [];
-    const valides = saisies.flatMap((saisie) =>
-      saisie !== null &&
-      typeof saisie['rang'] === 'number' &&
-      typeof saisie['cle'] === 'string' &&
-      typeof saisie['valeur'] === 'number' &&
-      Number.isFinite(saisie['valeur'])
-        ? [{ rang: saisie['rang'], cle: saisie['cle'], valeur: saisie['valeur'] }]
-        : [],
+    const valides = (cellulesDuTableau(contenu, 'valeur', estNombreFini) ?? []).map(
+      ([rang, cle, valeur]) => ({ rang, cle, valeur }),
     );
     return valides.length > 0 ? { type, saisies: valides } : null;
   }
@@ -128,7 +150,11 @@ function redactions(screenId: string, detail: Detail, dureeMs: number): Evenemen
   );
 }
 
-function reglage(screenId: string, detail: Detail): EvenementBrique[] {
+function reglage(
+  kind: 'reglage' | 'evaluation-machine',
+  screenId: string,
+  detail: Detail,
+): EvenementBrique[] {
   const reglages = objet(detail['reglages']);
   if (reglages === null) {
     return [];
@@ -136,7 +162,39 @@ function reglage(screenId: string, detail: Detail): EvenementBrique[] {
   const valeurs = Object.entries(reglages);
   return valeurs.length > 0 &&
     valeurs.every(([, valeur]) => typeof valeur === 'number' && Number.isFinite(valeur))
-    ? [{ kind: 'reglage', screenId, reglages: reglages as Readonly<Record<string, number>> }]
+    ? [{ kind, screenId, reglages: reglages as Readonly<Record<string, number>> }]
+    : [];
+}
+
+function evaluationDeFeuille(screenId: string, detail: Detail): EvenementBrique[] {
+  const { planId, rang, recopie } = detail;
+  const cellules = objet(detail['cellules']);
+  if (!estChaineNonVide(planId) || !estEntierPositif(rang) || cellules === null) {
+    return [];
+  }
+  const evaluation = { kind: 'evaluation-feuille', screenId, planId, rang } as const;
+  if (recopie === undefined) {
+    return [{ ...evaluation, demande: { cellules: lireTextes(cellules) } }];
+  }
+  const de = objet(recopie)?.['de'];
+  return estChaineNonVide(de)
+    ? [{ ...evaluation, demande: { cellules: lireTextes(cellules), recopie: { de } } }]
+    : [];
+}
+
+function evaluationDeTableau(screenId: string, detail: Detail): EvenementBrique[] {
+  const { planId, rang } = detail;
+  const saisies = cellulesDuTableau(detail['saisies'], 'saisie', estTexte);
+  return estChaineNonVide(planId) && estEntierPositif(rang) && saisies !== null
+    ? [
+        {
+          kind: 'evaluation-tableau',
+          screenId,
+          planId,
+          rang,
+          saisies: saisies.map(([ligne, cle, saisie]) => ({ rang: ligne, cle, saisie })),
+        },
+      ]
     : [];
 }
 
@@ -211,7 +269,16 @@ export function evenementsDe(nom: string, brut: unknown, screenId: string): Even
     return jalon(screenId, detail);
   }
   if (nom === 'fp-concept4-reglage' || nom === 'fp-plot-reglage') {
-    return reglage(screenId, detail);
+    return reglage('reglage', screenId, detail);
+  }
+  if (nom === 'fp-concept4-evaluation') {
+    return reglage('evaluation-machine', screenId, detail);
+  }
+  if (nom === 'fp-sheet-evaluation') {
+    return evaluationDeFeuille(screenId, detail);
+  }
+  if (nom === 'fp-table-build-evaluation') {
+    return evaluationDeTableau(screenId, detail);
   }
   const dureeMs = duree(detail);
   return dureeMs === null ? [] : selon(nom, screenId, detail, dureeMs);

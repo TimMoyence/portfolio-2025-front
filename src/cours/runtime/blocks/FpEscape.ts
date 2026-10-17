@@ -1,9 +1,14 @@
 import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
-import { chaineDe, estChaineOuNul, estEntierStrictementPositif, estObjet } from '../core/valeurs';
+import { chaineDe, estChaineOuNul, estObjet } from '../core/valeurs';
 import { Battement, formaterChrono, SECONDE_MS } from './battement';
 import { FpContenu } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
-import type { ProgressionDesEnigmes, VerdictDeTentative } from './retours';
+import type {
+  EtatDesEnigmes,
+  EtatEnigme,
+  ProgressionDesEnigmes,
+  VerdictDeTentative,
+} from './retours';
 
 export interface EscapeEnigmePublique {
   readonly id: string;
@@ -31,9 +36,6 @@ interface Solutionnaire {
   readonly codeFinal: string;
 }
 
-type EtatEnigme = 'resolue' | 'epuisee' | 'ouverte' | 'verrouillee';
-
-const TENTATIVES_PAR_DEFAUT = 10;
 const LONGUEUR_MAX_REPONSE = 40;
 
 function projeterParcours(source: EscapeParcoursPublic): EscapeParcoursPublic {
@@ -42,9 +44,7 @@ function projeterParcours(source: EscapeParcoursPublic): EscapeParcoursPublic {
     intitule: source.intitule,
     delaiIndiceMs: source.delaiIndiceMs,
     budgetEnigmeMs: source.budgetEnigmeMs,
-    tentativesMax: estEntierStrictementPositif(source.tentativesMax)
-      ? source.tentativesMax
-      : TENTATIVES_PAR_DEFAUT,
+    tentativesMax: source.tentativesMax,
     enigmes: source.enigmes.map((enigme) => ({
       id: enigme.id,
       intitule: enigme.intitule,
@@ -73,6 +73,15 @@ function lireSolutionnaire(valeur: unknown): Solutionnaire | null {
   return { enigmes, codeFinal: valeur['codeFinal'] };
 }
 
+function estEtatDesEnigmes(valeur: unknown): boolean {
+  return (
+    estObjet(valeur) &&
+    estObjet(valeur['etats']) &&
+    estChaineOuNul(valeur['enigmeOuverte']) &&
+    typeof valeur['acheve'] === 'boolean'
+  );
+}
+
 function estTentative(valeur: unknown): valeur is VerdictDeTentative {
   return (
     estObjet(valeur) &&
@@ -80,13 +89,18 @@ function estTentative(valeur: unknown): valeur is VerdictDeTentative {
     typeof valeur['enigmeId'] === 'string' &&
     typeof valeur['correcte'] === 'boolean' &&
     estChaineOuNul(valeur['fragment']) &&
-    typeof valeur['tentativesRestantes'] === 'number'
+    typeof valeur['tentativesRestantes'] === 'number' &&
+    estEtatDesEnigmes(valeur)
   );
+}
+
+function etatServi({ etats, enigmeOuverte, acheve }: EtatDesEnigmes): EtatDesEnigmes {
+  return { etats, enigmeOuverte, acheve };
 }
 
 export class FpEscape extends FpContenu<EscapeParcoursPublic> {
   private fragments = new Map<string, string>();
-  private restantes = new Map<string, number>();
+  private servi: EtatDesEnigmes | null = null;
   private enVol: string | null = null;
   private saisie = '';
   private indiceOuvert = false;
@@ -102,7 +116,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
 
   protected repartirDeZero(): void {
     this.fragments = new Map();
-    this.restantes = new Map();
+    this.servi = null;
     this.enVol = null;
     this.saisie = '';
     this.indiceOuvert = false;
@@ -124,16 +138,14 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
       !estObjet(valeur) ||
       valeur.parcoursId !== this.interne?.id ||
       !Array.isArray(valeur.resolues) ||
-      !estObjet(valeur.tentativesRestantes)
+      !estEtatDesEnigmes(valeur)
     ) {
       return;
     }
     for (const resolue of valeur.resolues) {
       this.fragments.set(resolue.enigmeId, resolue.fragment);
     }
-    for (const [enigmeId, restantes] of Object.entries(valeur.tentativesRestantes)) {
-      this.restantes.set(enigmeId, restantes);
-    }
+    this.servi = etatServi(valeur);
     this.suivreEtRafraichir(this.cleAffichage());
   }
 
@@ -240,7 +252,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     if (this.enVol === tentative.enigmeId) {
       this.enVol = null;
     }
-    this.restantes.set(tentative.enigmeId, tentative.tentativesRestantes);
+    this.servi = etatServi(tentative);
     if (tentative.correcte && tentative.fragment !== null) {
       const deja = this.fragments.has(tentative.enigmeId);
       this.fragments.set(tentative.enigmeId, tentative.fragment);
@@ -250,7 +262,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
       this.message = deja ? this.message : this.annonceOuverture();
       return;
     }
-    if (tentative.tentativesRestantes > 0) {
+    if (this.etatDe(tentative.enigmeId) !== 'epuisee') {
       this.message = this.texte('escape-a-chercher');
       return;
     }
@@ -260,30 +272,25 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
       : this.texte('escape-tentatives-epuisees');
   }
 
-  private tentativesMax(): number {
-    return this.interne?.tentativesMax ?? TENTATIVES_PAR_DEFAUT;
-  }
-
   private restantesDe(enigmeId: string): number {
-    return this.restantes.get(enigmeId) ?? this.tentativesMax();
+    return this.servi?.etats[enigmeId]?.tentativesRestantes ?? this.interne?.tentativesMax ?? 0;
   }
 
   private etatDe(enigmeId: string): EtatEnigme {
-    if (this.fragments.has(enigmeId)) {
-      return 'resolue';
-    }
-    if (this.restantesDe(enigmeId) <= 0) {
-      return 'epuisee';
+    const servi = this.servi?.etats[enigmeId]?.etat;
+    if (servi !== undefined) {
+      return servi;
     }
     return this.enigmeOuverte()?.id === enigmeId ? 'ouverte' : 'verrouillee';
   }
 
   private enigmeOuverte(): EscapeEnigmePublique | null {
-    return (
-      this.interne?.enigmes.find(
-        (enigme) => !this.fragments.has(enigme.id) && this.restantesDe(enigme.id) > 0,
-      ) ?? null
-    );
+    const enigmes = this.interne?.enigmes ?? [];
+    if (this.servi === null) {
+      return enigmes.at(0) ?? null;
+    }
+    const ouverte = this.servi.enigmeOuverte;
+    return enigmes.find((enigme) => enigme.id === ouverte) ?? null;
   }
 
   private resolues(): number {
@@ -295,7 +302,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
   }
 
   private acheve(): boolean {
-    return this.total() > 0 && this.enigmeOuverte() === null;
+    return this.servi?.acheve ?? false;
   }
 
   private codeReconstitue(): string {

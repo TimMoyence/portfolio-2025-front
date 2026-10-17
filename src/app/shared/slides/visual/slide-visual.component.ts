@@ -10,6 +10,7 @@ import {
 import type {
   DecomptesParCle,
   EcranContent,
+  ReflexionServie,
   ResultatsSeance,
   Role,
 } from '../../../../cours/content/types';
@@ -36,7 +37,6 @@ import {
 import type { QuizInteraction } from '../interactions/slide-quiz/slide-quiz.component';
 import { SlideQuizComponent } from '../interactions/slide-quiz/slide-quiz.component';
 import type { ModeInteraction } from '../interactions/mode-interaction';
-import type { DebriefDeReflexion } from '../interactions/slide-reflection/slide-reflection.component';
 import { reussitesDeLEcran, verdictsDeLEcran } from '../../../core/adapters/retours-brique';
 import type { RetourBrique } from '../../../core/ports/formations.port';
 import { chaineDe, objet } from '../../../../cours/runtime/core/valeurs';
@@ -179,7 +179,7 @@ export class SlideVisualComponent {
   readonly resultats = input<ResultatsSeance | null>(null);
   readonly prioritaire = input(false);
   readonly retours = input<ReadonlyMap<string, readonly RetourBrique[]>>(new Map());
-  readonly debrief = input<DebriefDeReflexion | null>(null);
+  readonly debrief = input<ReflexionServie | null>(null);
   readonly reponse = output<{
     questionId: string;
     valeur: string;

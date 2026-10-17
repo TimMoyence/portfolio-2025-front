@@ -1,34 +1,23 @@
-import { evaluerExpression, remplirGabarit } from 'portfolio-2025-partage/formule';
+import type { LigneDeMachine, SortiesMachine, ValeurAffichee } from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
-import { enFrancais } from '../core/typographie';
 import { echapperPourRegex, fini } from '../core/valeurs';
 import { type Reglages } from './animation';
 import { plafondDe, plancherDe } from './curseurs';
-import { echelle, jalons } from './echelle';
+import { echelle } from './echelle';
 import { type DefinitionReglable, FpReglable, arrondi, copierLeReglable } from './reglable';
 
 export interface Concept4Definition extends DefinitionReglable {
   readonly formuleLatexSimplifie: string;
-  readonly calcul: string;
-  readonly phrase: string;
   readonly etapes?: readonly Concept4Etape[];
+  readonly sorties: readonly SortiesMachine[];
 }
 
 export interface Concept4Etape {
   readonly libelle: string;
-  readonly calcul: string;
 }
 
 type Concept4Parametre = Concept4Definition['parametres'][number];
-
-type Valeurs = Reglages;
-
-interface LigneTableau {
-  readonly valeur: number;
-  readonly resultat: number;
-  readonly courant: boolean;
-}
 
 interface Trace {
   readonly points: string;
@@ -36,8 +25,8 @@ interface Trace {
   readonly cy: number;
 }
 
-const POINTS_COURBE = 24;
-const INTERVALLES_TABLEAU = 6;
+const EVENEMENT_D_EVALUATION = 'fp-concept4-evaluation';
+const ABSENTE: ValeurAffichee = { valeur: null, affichage: '—' };
 const LARGEUR = 320;
 const HAUTEUR = 180;
 const MARGE = 12;
@@ -49,23 +38,75 @@ function motifDesTermes(cles: readonly string[]): RegExp {
   return new RegExp(`(?<![A-Za-z0-9_])(?:${alternatives})(?![A-Za-z0-9_])`, 'g');
 }
 
+function copierValeur({ valeur, affichage }: ValeurAffichee): ValeurAffichee {
+  return { valeur, affichage };
+}
+
+function copierSortie(sortie: SortiesMachine): SortiesMachine {
+  return {
+    valeurs: { ...sortie.valeurs },
+    resultat: copierValeur(sortie.resultat),
+    etapes: sortie.etapes.map(copierValeur),
+    courbes: Object.fromEntries(
+      Object.entries(sortie.courbes).map(([cle, points]) => [
+        cle,
+        points.map(({ x, y }) => ({ x, y })),
+      ]),
+    ),
+    lignes: Object.fromEntries(
+      Object.entries(sortie.lignes).map(([cle, lignes]) => [
+        cle,
+        lignes.map(({ valeur, resultat, courante }) => ({
+          valeur: copierValeur(valeur),
+          resultat: copierValeur(resultat),
+          courante,
+        })),
+      ]),
+    ),
+    phrase: sortie.phrase,
+  };
+}
+
+function valeurDeFace(resultat: ValeurAffichee): EscapedHtml {
+  return escapeHtml(String(resultat.valeur ?? Number.NaN));
+}
+
 export class FpConcept4 extends FpReglable<Concept4Definition> {
   protected readonly evenementDeReglage = 'fp-concept4-reglage';
   protected readonly bloc = 'concept4';
   private actif: string | null = null;
+  private connues = new Map<string, SortiesMachine>();
+  private montree: SortiesMachine | null = null;
+  private derniereRecue: SortiesMachine | null = null;
+
+  set evaluee(valeur: SortiesMachine | null) {
+    if (valeur === null || valeur === this.derniereRecue || this.interne === null) {
+      return;
+    }
+    this.derniereRecue = valeur;
+    const cle = this.cleDe(valeur.valeurs);
+    this.connues.set(cle, copierSortie(valeur));
+    if (this.isConnected && cle === this.cleDe(this.courantes)) {
+      this.rafraichirZone('faces', this.faces());
+    }
+  }
 
   protected copier(valeur: Concept4Definition): Concept4Definition {
     return {
       ...copierLeReglable(valeur),
       formuleLatexSimplifie: valeur.formuleLatexSimplifie,
-      calcul: valeur.calcul,
-      phrase: valeur.phrase,
-      etapes: (valeur.etapes ?? []).map(({ libelle, calcul }) => ({ libelle, calcul })),
+      etapes: (valeur.etapes ?? []).map(({ libelle }) => ({ libelle })),
+      sorties: valeur.sorties.map(copierSortie),
     };
   }
 
   protected override apresDefinition(): void {
     this.actif = null;
+    this.montree = null;
+    this.derniereRecue = null;
+    this.connues = new Map(
+      (this.interne?.sorties ?? []).map((sortie) => [this.cleDe(sortie.valeurs), sortie]),
+    );
   }
 
   protected override apresReglage(cle: string): void {
@@ -77,8 +118,18 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     this.actif = parametres.filter(({ cle }) => cle in etape).at(-1)?.cle ?? this.actif;
   }
 
-  protected rafraichirLeRendu(): void {
+  protected override apresRelachement(): void {
     this.rafraichirZone('faces', this.faces());
+    if (this.connues.has(this.cleDe(this.courantes)) || this.presentateur() || this.enApercu()) {
+      return;
+    }
+    this.emit(EVENEMENT_D_EVALUATION, { reglages: this.valeurs });
+  }
+
+  protected rafraichirLeRendu(): void {
+    this.racine
+      .querySelector('[data-testid="faces"]')
+      ?.setAttribute('aria-busy', String(this.enAttente()));
   }
 
   render(): EscapedHtml {
@@ -86,7 +137,15 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
       return this.attente();
     }
     const declencheurs = safeHtml`${this.boutonAnimer()}${this.prereglagesAffiches()}`;
-    return safeHtml`<section class="fp-carte fp-scene fp-concept4__atelier">${this.panneauDeReglages(declencheurs)}<div class="fp-concept4__zone" data-zone="faces">${this.faces()}</div></section>`;
+    return safeHtml`<section class="fp-carte fp-scene fp-concept4__atelier">${this.panneauDeReglages(declencheurs)}<div class="fp-concept4__zone" data-zone="faces">${this.faces()}</div>${this.annonces()}</section>`;
+  }
+
+  private cleDe(valeurs: Reglages): string {
+    return JSON.stringify((this.interne?.parametres ?? []).map(({ cle }) => valeurs[cle]));
+  }
+
+  private enAttente(): boolean {
+    return this.montree === null || this.cleDe(this.montree.valeurs) !== this.cleDe(this.courantes);
   }
 
   private faces(): EscapedHtml {
@@ -94,23 +153,21 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     if (definition === null) {
       return VIDE;
     }
-    const valeurs = this.valeurs;
-    const resultat = this.resultat(valeurs);
+    this.montree = this.connues.get(this.cleDe(this.courantes)) ?? this.montree;
+    const sortie = this.montree;
+    const resultat = sortie?.resultat ?? ABSENTE;
+    const parametre = this.pilote();
+    const pilotees =
+      parametre === null
+        ? VIDE
+        : safeHtml`${this.graphique(parametre, sortie, resultat)}${this.tableau(parametre, sortie, resultat)}`;
     return safeHtml`
-      <div class="fp-concept4__faces">
+      <div class="fp-concept4__faces" data-testid="faces" aria-busy="${escapeHtml(String(this.enAttente()))}">
         ${this.formule(definition, resultat)}
-        ${this.graphique(valeurs)}
-        ${this.tableau(valeurs)}
-        ${this.enMots(definition, valeurs, resultat)}
+        ${pilotees}
+        ${this.enMots(sortie, resultat)}
       </div>
     `;
-  }
-
-  private resultat(valeurs: Valeurs): number {
-    const definition = this.definition;
-    return definition === null
-      ? Number.NaN
-      : (evaluerExpression(definition.calcul, valeurs).valeur ?? Number.NaN);
   }
 
   private parametre(cle: string): Concept4Parametre | null {
@@ -122,11 +179,11 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     return this.parametre(this.actif ?? '') ?? parametres[0] ?? null;
   }
 
-  private formule(definition: Concept4Definition, resultat: number): EscapedHtml {
+  private formule(definition: Concept4Definition, resultat: ValeurAffichee): EscapedHtml {
     return safeHtml`
-      <div class="fp-concept4__face fp-encadre" data-testid="formule" data-valeur="${escapeHtml(String(resultat))}">
+      <div class="fp-concept4__face fp-encadre" data-testid="formule" data-valeur="${valeurDeFace(resultat)}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-formule'))}</h3>
-        <p class="fp-concept4__formule fp-montant">${this.termes(definition)} = <span class="fp-concept4__resultat" data-testid="resultat-formule">${escapeHtml(enFrancais(resultat))}</span></p>
+        <p class="fp-concept4__formule fp-montant">${this.termes(definition)} = <span class="fp-concept4__resultat" data-testid="resultat-formule">${escapeHtml(resultat.affichage)}</span></p>
       </div>
     `;
   }
@@ -175,16 +232,16 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     return safeHtml`<span class="fp-concept4__terme" data-testid="terme" data-cle="${escapeHtml(cle)}" data-actif="${escapeHtml(String(cle === this.actif))}">${escapeHtml(cle)}</span>`;
   }
 
-  private graphique(valeurs: Valeurs): EscapedHtml {
-    const parametre = this.pilote();
-    if (parametre === null) {
-      return VIDE;
-    }
-    const trajectoire = this.trajectoire(valeurs);
-    const trace = trajectoire ?? this.trace(parametre, valeurs);
+  private graphique(
+    parametre: Concept4Parametre,
+    sortie: SortiesMachine | null,
+    resultat: ValeurAffichee,
+  ): EscapedHtml {
+    const trajectoire = this.trajectoire(sortie);
+    const trace = trajectoire ?? this.trace(parametre, sortie, resultat);
     const etiquette = `${this.texte('concept4-courbe')} ${parametre.libelle}`;
     return safeHtml`
-      <figure class="fp-concept4__face" data-testid="graphique" data-valeur="${escapeHtml(String(this.resultat(valeurs)))}">
+      <figure class="fp-concept4__face" data-testid="graphique" data-valeur="${valeurDeFace(resultat)}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-graphique'))}</h3>
         <svg class="fp-concept4__courbe" data-testid="courbe" viewBox="0 0 ${LARGEUR} ${HAUTEUR}" role="img" aria-label="${escapeHtml(etiquette)}">
           ${trajectoire === null ? VIDE : safeHtml`<line class="fp-concept4__repere" data-testid="repere" x1="${MARGE}" x2="${LARGEUR - MARGE}" y1="${trajectoire.repere}" y2="${trajectoire.repere}"></line>`}
@@ -195,14 +252,11 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     `;
   }
 
-  private valeursDesEtapes(valeurs: Valeurs): number[] {
-    return (this.definition?.etapes ?? []).map((etape) =>
-      fini(evaluerExpression(etape.calcul, valeurs).valeur ?? Number.NaN, 0),
-    );
-  }
-
-  private trajectoire(valeurs: Valeurs): (Trace & { readonly repere: number }) | null {
-    const ordonnees = this.valeursDesEtapes(valeurs);
+  private trajectoire(sortie: SortiesMachine | null): (Trace & { readonly repere: number }) | null {
+    const ordonnees =
+      (this.definition?.etapes ?? []).length > 0
+        ? (sortie?.etapes ?? []).map((etape) => fini(etape.valeur ?? Number.NaN, 0))
+        : [];
     if (ordonnees.length < 2) {
       return null;
     }
@@ -227,64 +281,63 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     };
   }
 
-  private trace(parametre: Concept4Parametre, valeurs: Valeurs): Trace {
+  private trace(
+    parametre: Concept4Parametre,
+    sortie: SortiesMachine | null,
+    resultat: ValeurAffichee,
+  ): Trace {
     const depart = plancherDe(parametre);
     const arrivee = plafondDe(parametre);
-    const abscisses = jalons(depart, arrivee, POINTS_COURBE);
-    const ordonnees = abscisses.map((abscisse) =>
-      fini(this.resultat({ ...valeurs, [parametre.cle]: abscisse }), 0),
+    const versX = echelle(depart, arrivee - depart, MARGE, LARGEUR - 2 * MARGE);
+    const cx = arrondi(versX(this.valeurDe(parametre)));
+    const points = (sortie?.courbes[parametre.cle] ?? []).flatMap(({ x, y }) =>
+      y !== null && Number.isFinite(y) ? [{ x, y }] : [],
     );
+    if (points.length === 0) {
+      return { points: '', cx, cy: HAUTEUR - MARGE };
+    }
+    const ordonnees = points.map(({ y }) => y);
     const plancher = Math.min(...ordonnees);
     const plafond = Math.max(...ordonnees);
-    const versX = echelle(depart, arrivee - depart, MARGE, LARGEUR - 2 * MARGE);
     const versY = echelle(plancher, plafond - plancher, HAUTEUR - MARGE, -(HAUTEUR - 2 * MARGE));
     return {
-      points: abscisses
-        .map((abscisse, rang) => `${arrondi(versX(abscisse))},${arrondi(versY(ordonnees[rang]))}`)
-        .join(' '),
-      cx: arrondi(versX(this.valeurDe(parametre, valeurs))),
-      cy: arrondi(versY(fini(this.resultat(valeurs), plancher))),
+      points: points.map(({ x, y }) => `${arrondi(versX(x))},${arrondi(versY(y))}`).join(' '),
+      cx,
+      cy: arrondi(versY(fini(resultat.valeur ?? Number.NaN, plancher))),
     };
   }
 
-  private tableau(valeurs: Valeurs): EscapedHtml {
-    const parametre = this.pilote();
-    if (parametre === null) {
-      return VIDE;
-    }
-    if ((this.definition?.etapes ?? []).length > 0) {
-      return this.tableauDesEtapes(valeurs);
-    }
-    const lignes = this.lignes(parametre, valeurs);
-    const courante = lignes.find((ligne) => ligne.courant);
-    return this.faceDuTableau(
-      courante?.resultat ?? Number.NaN,
-      parametre.libelle,
-      lignes.map((ligne) => this.ligne(ligne)),
-    );
-  }
-
-  private tableauDesEtapes(valeurs: Valeurs): EscapedHtml {
+  private tableau(
+    parametre: Concept4Parametre,
+    sortie: SortiesMachine | null,
+    resultat: ValeurAffichee,
+  ): EscapedHtml {
     const etapes = this.definition?.etapes ?? [];
-    const resultats = this.valeursDesEtapes(valeurs);
+    if (etapes.length === 0) {
+      return this.faceDuTableau(
+        resultat,
+        parametre.libelle,
+        (sortie?.lignes[parametre.cle] ?? []).map((ligne) => this.ligne(ligne)),
+      );
+    }
     const derniere = etapes.length - 1;
     return this.faceDuTableau(
-      this.resultat(valeurs),
+      resultat,
       this.texte('concept4-etape'),
       etapes.map(
         (etape, rang) =>
-          safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(rang === derniere))}"><td>${escapeHtml(etape.libelle)}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(enFrancais(resultats[rang]))}</td></tr>`,
+          safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(rang === derniere))}"><td>${escapeHtml(etape.libelle)}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml((sortie?.etapes[rang] ?? ABSENTE).affichage)}</td></tr>`,
       ),
     );
   }
 
   private faceDuTableau(
-    valeur: number,
+    resultat: ValeurAffichee,
     premiereColonne: string,
     lignes: readonly EscapedHtml[],
   ): EscapedHtml {
     return safeHtml`
-      <div class="fp-concept4__face" data-testid="tableau" data-valeur="${escapeHtml(String(valeur))}">
+      <div class="fp-concept4__face" data-testid="tableau" data-valeur="${valeurDeFace(resultat)}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-tableau'))}</h3>
         ${dansUnDefileur(safeHtml`<table class="fp-concept4__tableau">
           <thead>
@@ -299,29 +352,15 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     `;
   }
 
-  private lignes(parametre: Concept4Parametre, valeurs: Valeurs): LigneTableau[] {
-    const depart = plancherDe(parametre);
-    const arrivee = plafondDe(parametre);
-    const courante = this.valeurDe(parametre, valeurs);
-    return [...new Set([...jalons(depart, arrivee, INTERVALLES_TABLEAU), courante])]
-      .sort((gauche, droite) => gauche - droite)
-      .map((valeur) => ({
-        valeur,
-        resultat: this.resultat({ ...valeurs, [parametre.cle]: valeur }),
-        courant: valeur === courante,
-      }));
+  private ligne(ligne: LigneDeMachine): EscapedHtml {
+    return safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(ligne.courante))}"><td class="fp-montant">${escapeHtml(ligne.valeur.affichage)}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(ligne.resultat.affichage)}</td></tr>`;
   }
 
-  private ligne(ligne: LigneTableau): EscapedHtml {
-    return safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(ligne.courant))}"><td class="fp-montant">${escapeHtml(enFrancais(ligne.valeur))}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(enFrancais(ligne.resultat))}</td></tr>`;
-  }
-
-  private enMots(definition: Concept4Definition, valeurs: Valeurs, resultat: number): EscapedHtml {
-    const phrase = remplirGabarit(definition.phrase, { ...valeurs, resultat }, enFrancais);
+  private enMots(sortie: SortiesMachine | null, resultat: ValeurAffichee): EscapedHtml {
     return safeHtml`
-      <div class="fp-concept4__face" data-testid="phrase" data-valeur="${escapeHtml(String(resultat))}">
+      <div class="fp-concept4__face" data-testid="phrase" data-valeur="${valeurDeFace(resultat)}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-phrase'))}</h3>
-        <p class="fp-prose" data-testid="phrase-texte">${escapeHtml(phrase)}</p>
+        <p class="fp-prose" data-testid="phrase-texte">${escapeHtml(sortie?.phrase ?? '')}</p>
       </div>
     `;
   }

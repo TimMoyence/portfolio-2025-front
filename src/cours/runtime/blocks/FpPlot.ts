@@ -1,4 +1,3 @@
-import { evaluerExpression } from 'portfolio-2025-partage/formule';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml, VIDE } from '../core/html';
 import { enFrancais, lierLesNombres } from '../core/typographie';
@@ -27,7 +26,11 @@ export interface PlotSerie {
   readonly id: string;
   readonly libelle: string;
   readonly trait: TraitSerie;
-  readonly calcul: string;
+}
+
+export interface PlotPosition {
+  readonly valeurs: Readonly<Record<string, number>>;
+  readonly ordonnees: Readonly<Record<string, readonly (number | null)[]>>;
 }
 
 export interface PlotDefinition extends DefinitionReglable {
@@ -44,6 +47,8 @@ export interface PlotDefinition extends DefinitionReglable {
   readonly unite?: 'euros';
   readonly etiquettes?: readonly string[];
   readonly reference?: string;
+  readonly abscisses: readonly number[];
+  readonly positions: readonly PlotPosition[];
 }
 
 type PlotPrereglage = NonNullable<PlotDefinition['prereglages']>[number];
@@ -78,7 +83,6 @@ export const MARGE_GAUCHE = 64;
 export const MARGE_DROITE = 18;
 export const MARGE_HAUT = 20;
 export const MARGE_BAS = 42;
-const ECHANTILLONS = 24;
 const GRADUATIONS = 4;
 
 const LARGEUR_TRACE = LARGEUR - MARGE_GAUCHE - MARGE_DROITE;
@@ -113,14 +117,6 @@ const EVOLUTION = new Intl.NumberFormat('fr-FR', {
   signDisplay: 'exceptZero',
 });
 
-function entiers(depart: number, arrivee: number): number[] {
-  const premier = Math.ceil(depart);
-  return Array.from(
-    { length: Math.max(Math.floor(arrivee) - premier + 1, 0) },
-    (_, rang) => premier + rang,
-  );
-}
-
 function versX(cadre: Cadre, abscisse: number): number {
   return echelle(cadre.depart, cadre.arrivee - cadre.depart, MARGE_GAUCHE, LARGEUR_TRACE)(abscisse);
 }
@@ -139,7 +135,6 @@ function copierSerie(serie: PlotSerie): PlotSerie {
     id: serie.id,
     libelle: serie.libelle,
     trait: serie.trait === 'tirets' ? 'tirets' : 'plein',
-    calcul: serie.calcul,
   };
 }
 
@@ -163,6 +158,17 @@ function copierDefinition(source: PlotDefinition): PlotDefinition {
     unite: source.unite === 'euros' ? 'euros' : undefined,
     etiquettes: source.etiquettes === undefined ? undefined : [...source.etiquettes],
     reference: source.reference,
+    abscisses: [...source.abscisses],
+    positions: source.positions.map(copierPosition),
+  };
+}
+
+function copierPosition(source: PlotPosition): PlotPosition {
+  return {
+    valeurs: Object.fromEntries(Object.entries(source.valeurs)),
+    ordonnees: Object.fromEntries(
+      Object.entries(source.ordonnees).map(([serie, ordonnees]) => [serie, [...ordonnees]]),
+    ),
   };
 }
 
@@ -288,21 +294,24 @@ export class FpPlot extends FpReglable<PlotDefinition> {
     if (definition === null) {
       return [];
     }
-    const depart = plancherDe(definition.abscisse);
-    const arrivee = plafondDe(definition.abscisse);
-    const abscisses = this.enBarres()
-      ? entiers(depart, arrivee)
-      : jalons(depart, arrivee, ECHANTILLONS);
-    return definition.series.map((serie) => ({
-      serie,
-      echantillons: abscisses
-        .map((abscisse) => ({
-          abscisse,
-          ordonnee:
-            evaluerExpression(serie.calcul, { ...valeurs, x: abscisse }).valeur ?? Number.NaN,
-        }))
-        .filter((point) => Number.isFinite(point.ordonnee)),
-    }));
+    const position = definition.positions.find((candidate) =>
+      Object.entries(candidate.valeurs).every(([cle, valeur]) => valeurs[cle] === valeur),
+    );
+    return definition.series.map((serie) => {
+      const ordonnees =
+        position !== undefined && Object.hasOwn(position.ordonnees, serie.id)
+          ? position.ordonnees[serie.id]
+          : [];
+      return {
+        serie,
+        echantillons: definition.abscisses.flatMap((abscisse, rang) => {
+          const ordonnee = ordonnees[rang];
+          return typeof ordonnee === 'number' && Number.isFinite(ordonnee)
+            ? [{ abscisse, ordonnee }]
+            : [];
+        }),
+      };
+    });
   }
 
   private cadre(tracees: readonly SerieTracee[], valeurs: Valeurs): Cadre {

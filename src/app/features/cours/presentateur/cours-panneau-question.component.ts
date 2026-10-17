@@ -6,7 +6,6 @@ import type {
   DerouleCours,
   ResultatQuestion,
 } from '../../../../cours/content/types';
-import { part } from '../../../../cours/runtime/core/valeurs';
 import { deLaQuestion } from '../../../shared/slides/session/lecture-ecran';
 
 export interface QuestionDuPanneau {
@@ -26,55 +25,42 @@ interface PanneauQuestion {
   readonly remediation: number | null;
 }
 
-const SANS_REPONSE: Pick<ResultatQuestion, 'total' | 'correctes' | 'neSaitPas' | 'confusions'> = {
+const SANS_REPONSE: Pick<
+  ResultatQuestion,
+  'total' | 'neSaitPas' | 'confusions' | 'part' | 'sousLeSeuil' | 'remediation'
+> = {
   total: 0,
-  correctes: 0,
   neSaitPas: 0,
   confusions: [],
+  part: 0,
+  sousLeSeuil: false,
+  remediation: null,
 };
 
-function confusionDominante(confusions: readonly ConfusionComptee[]): ConfusionComptee | null {
-  return confusions.reduce<ConfusionComptee | null>(
-    (dominante, confusion) => (confusion.nombre > (dominante?.nombre ?? 0) ? confusion : dominante),
-    null,
-  );
-}
-
-function ecranDeRemediation(
-  deroule: DerouleCours,
-  confusion: ConfusionComptee | null,
-): number | null {
-  if (confusion === null || !Object.hasOwn(deroule.remediations, confusion.id)) {
-    return null;
-  }
-  const cible = deroule.remediations[confusion.id];
-  const index = deroule.ecrans.findIndex((ecran) => ecran.id === cible);
+function rangDeLEcran(deroule: DerouleCours, ecranId: string): number | null {
+  const index = deroule.ecrans.findIndex((ecran) => ecran.id === ecranId);
   return index === -1 ? null : index;
 }
 
 function lirePanneau(
   deroule: DerouleCours,
-  seuil: number | null,
   corrige: CorrigePresentateur,
   resultats: readonly ResultatQuestion[],
 ): PanneauQuestion {
   const resultat = deLaQuestion(resultats, corrige.questionId) ?? SANS_REPONSE;
-  const partJuste = part(resultat.correctes, resultat.total);
-  const sousLeSeuil = seuil !== null && resultat.total > 0 && partJuste < seuil;
   return {
     questionId: corrige.questionId,
     bonneReponse: corrige.bonneReponse,
     total: resultat.total,
-    part: partJuste,
+    part: resultat.part,
     neSaitPas: resultat.neSaitPas,
-    sousLeSeuil,
+    sousLeSeuil: resultat.sousLeSeuil,
     confusions: corrige.confusions.map((confusion) => ({
       ...confusion,
       nombre: resultat.confusions.find((comptee) => comptee.id === confusion.id)?.nombre ?? 0,
     })),
-    remediation: sousLeSeuil
-      ? ecranDeRemediation(deroule, confusionDominante(resultat.confusions))
-      : null,
+    remediation:
+      resultat.remediation === null ? null : rangDeLEcran(deroule, resultat.remediation.ecranId),
   };
 }
 
@@ -166,7 +152,7 @@ export class CoursPanneauQuestionComponent {
   readonly remediation = output<number>();
 
   protected readonly panneau = computed(() =>
-    lirePanneau(this.deroule(), this.seuil(), this.question().corrige, this.resultats()),
+    lirePanneau(this.deroule(), this.question().corrige, this.resultats()),
   );
 
   protected readonly enonce = computed(() => {

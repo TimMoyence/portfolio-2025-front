@@ -18,12 +18,16 @@ import {
   viewChild,
 } from '@angular/core';
 import type { CorrigeEcranPresentateur, ExplicationServie } from '../../../../cours/content/types';
-import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
+import type {
+  EcranContent,
+  ReflexionServie,
+  ResultatsSeance,
+  Role,
+} from '../../../../cours/content/types';
 import { texte } from '../../../../cours/runtime/core/i18n';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import { estChaineNonVide, estObjet } from '../../../../cours/runtime/core/valeurs';
 import type { RetourBrique, SyntheseConcept } from '../../../core/ports/formations.port';
-import type { DebriefDeReflexion } from '../interactions/slide-reflection/slide-reflection.component';
 import { aUnePresentation } from '../visual/presentation-v2';
 import { SlideVisualComponent } from '../visual/slide-visual.component';
 import type { DirectEcran, EvenementBrique } from './contrat-hote';
@@ -95,7 +99,9 @@ interface ReponseVisuelle {
       (fp-exit-submit)="relayer($event)"
       (fp-spaced-reponse)="relayer($event)"
       (fp-sheet-submit)="relayer($event)"
+      (fp-sheet-evaluation)="relayer($event)"
       (fp-table-build-submit)="relayer($event)"
+      (fp-table-build-evaluation)="relayer($event)"
       (fp-cardsort-submit)="relayer($event)"
       (fp-escape-tentative)="relayer($event)"
       (fp-pulse-change)="relayer($event)"
@@ -103,6 +109,7 @@ interface ReponseVisuelle {
       (fp-worked-submit)="relayer($event)"
       (fp-pro-submit)="relayer($event)"
       (fp-concept4-reglage)="relayer($event)"
+      (fp-concept4-evaluation)="relayer($event)"
       (fp-plot-reglage)="relayer($event)"
       (fp-brouillon)="memoriser($event)"
       (fp-block-error)="showError()"
@@ -223,14 +230,11 @@ export class SlideActivityComponent {
   readonly evenement = output<EvenementBrique>();
 
   protected readonly visual = computed(() => aUnePresentation(this.slide()));
-  protected readonly debrief = computed<DebriefDeReflexion | null>(() => {
+  protected readonly debrief = computed<ReflexionServie | null>(() => {
     if (this.role() !== 'presentateur') {
       return this.slide().revelation?.reflexion ?? null;
     }
-    const donnees = this.donneesFormateur();
-    return this.direct()?.pilotage.revele === true && donnees?.type === 'reflexion'
-      ? { attendu: donnees.attendu, suite: donnees.suite }
-      : null;
+    return this.direct()?.pilotage.revele === true ? (this.slide().reflexion ?? null) : null;
   });
   private readonly impression = computed<ImpressionDeLEcran | null>(() => {
     if (!this.papier()) {

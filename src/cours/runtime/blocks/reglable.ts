@@ -135,6 +135,8 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
 
   protected apresEtape?(etape: Reglages): void;
 
+  protected apresRelachement?(): void;
+
   protected afficherValeur(valeur: number): string {
     return enFrancais(valeur);
   }
@@ -209,6 +211,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
     if (this.presentateur() && !this.enApercu()) {
       this.emit(this.evenementDeReglage, { reglages: this.valeurs });
     }
+    this.apresRelachement?.();
   }
 
   private appliquerPrereglage(rang: number): void {

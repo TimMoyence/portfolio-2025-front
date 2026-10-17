@@ -60,14 +60,10 @@ export const resultatServi = z
     parOption: valeursParCle.nullable(),
     scoreMoyen: z.number().nullable(),
     parCle: z.record(z.string(), decompte).nullable(),
-    confusionDominante: z.string().nullable().optional(),
-    part: z.number().optional(),
-    sousLeSeuil: z.boolean().optional(),
-    remediation: z
-      .object({ confusionId: z.string(), ecranId: z.string() })
-      .strict()
-      .nullable()
-      .optional(),
+    confusionDominante: z.string().nullable(),
+    part: z.number(),
+    sousLeSeuil: z.boolean(),
+    remediation: z.object({ confusionId: z.string(), ecranId: z.string() }).strict().nullable(),
   })
   .strict();
 

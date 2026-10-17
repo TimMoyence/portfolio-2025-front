@@ -1,16 +1,4 @@
-import {
-  type Feuille,
-  LONGUEUR_MAX_FORMULE,
-  type ResultatFormule,
-  decalerFormule,
-  estUneFormule,
-  evaluerFeuille,
-  formaterResultat,
-  lettreColonne,
-  lireNombreSaisi,
-  nomCellule,
-} from 'portfolio-2025-partage/formule';
-import type { ValeurFormule } from '../../content/types';
+import type { FeuilleEvaluee, NatureDeCellule, ValeurFormule } from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
 import {
   DESACTIVE,
@@ -21,31 +9,42 @@ import {
   VIDE,
 } from '../core/html';
 import { bornerEntre, entierBorne, estTexteNonVide } from '../core/valeurs';
-import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
+import {
+  type DemandeEnAttente,
+  FpProductionEvaluee,
+  type PlanEtaye,
+  copierLEnonce,
+  memesSaisies,
+} from './production';
+import type { EvaluationDeFeuille } from './retours';
 
 export interface SheetPlanPublic extends PlanEtaye {
   readonly lignes: number;
   readonly colonnes: number;
   readonly cellules: Readonly<Record<string, string>>;
   readonly verrouillees: readonly string[];
+  readonly lettres: readonly string[];
+  readonly grille: readonly (readonly string[])[];
+  readonly longueurMaxSaisie: number;
+  readonly initiale: FeuilleEvaluee;
 }
 
 interface AttenduDeFeuille {
   readonly reference: string;
   readonly formuleReference: string;
   readonly valeur: ValeurFormule;
+  readonly affichage: string;
 }
 
 type Foyer = 'cellule' | 'barre' | null;
 
-type NatureDeCellule = 'texte' | 'nombre' | 'logique' | 'erreur';
+type Contenus = Readonly<Record<string, string>>;
 
-interface EvaluationDeLaFeuille {
-  readonly contenus: Readonly<Record<string, string>>;
-  readonly resultats: ReadonlyMap<string, ResultatFormule>;
+interface Recopie {
+  readonly de: string;
+  readonly vers: string;
 }
 
-const CELLULE_INITIALE = 'A1';
 const STYLE_CELLULE = 'fp-sheet__cellule';
 const STYLE_ENTETE = 'fp-sheet__entete';
 const PREFIXE_COLONNE = 'fp-sheet-col-';
@@ -56,18 +55,7 @@ export const LIGNES_AVANT_RESSERREMENT = 10;
 const TABLEAU_RESSERRE = safeHtml` fp-sheet__tableau--dense`;
 const LARGEUR_MIN_DE_COLONNE_CH = 8;
 const LARGEUR_MAX_DE_COLONNE_CH = 24;
-const DECIMALES_D_UN_MONTANT = 2;
-const DECIMALES_D_UN_TAUX = 4;
-
-function arrondirUnNombre(valeur: number): number {
-  return Number(
-    valeur.toFixed(Math.abs(valeur) < 1 ? DECIMALES_D_UN_TAUX : DECIMALES_D_UN_MONTANT),
-  );
-}
-
-function arrondirLAttendu(valeur: ValeurFormule): ValeurFormule {
-  return typeof valeur === 'number' ? arrondirUnNombre(valeur) : valeur;
-}
+const SANS_EVALUATION: FeuilleEvaluee = { saisies: {}, affichages: {}, natures: {}, formules: [] };
 
 function natureDUneValeur(valeur: ValeurFormule): NatureDeCellule {
   switch (typeof valeur) {
@@ -88,20 +76,7 @@ function borner(brut: number): number {
   return entierBorne(brut, 0, LIMITE_GRILLE, 0);
 }
 
-function nomsDeLaGrille(lignes: number, colonnes: number): ReadonlySet<string> {
-  const noms = new Set<string>();
-  for (let ligne = 0; ligne < lignes; ligne += 1) {
-    for (let colonne = 0; colonne < colonnes; colonne += 1) {
-      noms.add(nomCellule(ligne, colonne));
-    }
-  }
-  return noms;
-}
-
-function copierCellules(
-  source: Readonly<Record<string, string>>,
-  grille: ReadonlySet<string>,
-): Record<string, string> {
+function copierCellules(source: Contenus, grille: ReadonlySet<string>): Record<string, string> {
   return Object.fromEntries(
     Object.entries(source)
       .map(([nom, contenu]): [string, string] => [nom.toUpperCase(), String(contenu)])
@@ -110,28 +85,44 @@ function copierCellules(
 }
 
 function copierPlan(source: SheetPlanPublic): SheetPlanPublic {
-  const lignes = borner(source.lignes);
-  const colonnes = borner(source.colonnes);
+  const grille = source.grille
+    .slice(0, LIMITE_GRILLE)
+    .map((rang) => rang.slice(0, LIMITE_GRILLE).map(String));
   return {
     ...copierLEnonce(source),
-    lignes,
-    colonnes,
-    cellules: copierCellules(source.cellules, nomsDeLaGrille(lignes, colonnes)),
+    lignes: borner(source.lignes),
+    colonnes: borner(source.colonnes),
+    cellules: copierCellules(source.cellules, new Set(grille.flat())),
     verrouillees: source.verrouillees.map((nom) => nom.toUpperCase()),
+    lettres: source.lettres.slice(0, LIMITE_GRILLE).map(String),
+    grille,
+    longueurMaxSaisie: entierBorne(source.longueurMaxSaisie, 0, Number.MAX_SAFE_INTEGER, 0),
+    initiale: source.initiale,
   };
 }
 
-export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuille> {
+export class FpSheet extends FpProductionEvaluee<
+  SheetPlanPublic,
+  AttenduDeFeuille,
+  EvaluationDeFeuille,
+  Recopie | null
+> {
   protected readonly evenementDeSoumission = 'fp-sheet-submit';
+  protected readonly evenementDEvaluation = 'fp-sheet-evaluation';
   protected readonly bloc = 'sheet';
   protected readonly lectureDuCorrige = {
     type: 'feuille',
-    champs: { reference: 'string', formuleReference: 'string', valeur: 'valeur' },
+    champs: {
+      reference: 'string',
+      formuleReference: 'string',
+      valeur: 'valeur',
+      affichage: 'string',
+    },
   } as const;
-  private contenus: Record<string, string> = {};
-  private selection = CELLULE_INITIALE;
+  private contenus: Contenus = {};
+  private selection = '';
   private foyer: Foyer = null;
-  private evaluation: EvaluationDeLaFeuille | null = null;
+  private evaluee: FeuilleEvaluee = SANS_EVALUATION;
 
   set plan(valeur: SheetPlanPublic | null) {
     this.poserLePlan(valeur, copierPlan);
@@ -139,6 +130,30 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
 
   get plan(): SheetPlanPublic | null {
     return this.interne;
+  }
+
+  protected recevoirLEvaluation(
+    valeur: EvaluationDeFeuille,
+    attente: DemandeEnAttente<Recopie | null>,
+  ): void {
+    this.evaluee = valeur.evaluee;
+    const recopie = attente.complement;
+    if (recopie === null) {
+      return;
+    }
+    const recopiee = valeur.evaluee.saisies[recopie.vers] ?? '';
+    this.contenus = { ...this.contenus, [recopie.vers]: recopiee };
+    this.saisiesEvaluees = { ...attente.saisies, [recopie.vers]: recopiee };
+    this.saisiesDemandees = this.saisiesEvaluees;
+    if (this.selection === recopie.de) {
+      this.selection = recopie.vers;
+      this.foyer = 'cellule';
+    }
+    this.signalerLeBrouillon(this.saisiesDeLEtudiant());
+  }
+
+  protected validerApresEvaluation(): void {
+    this.validerLaCellule();
   }
 
   protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
@@ -155,6 +170,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
       ...this.contenus,
       ...Object.fromEntries(reprises.map(([nom, contenu]) => [nom.toUpperCase(), contenu])),
     };
+    this.validerLaCellule();
     return true;
   }
 
@@ -197,8 +213,11 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
 
   protected effacerLaSaisie(): void {
     this.relacherLaSaisie();
-    this.contenus = { ...(this.interne?.cellules ?? {}) };
-    this.selection = CELLULE_INITIALE;
+    const plan = this.interne;
+    this.contenus = { ...(plan?.cellules ?? {}) };
+    this.selection = plan?.grille[0]?.[0] ?? '';
+    this.evaluee = plan?.initiale ?? SANS_EVALUATION;
+    this.repartirDe(this.contenus);
   }
 
   private modifiable(nom: string): boolean {
@@ -206,22 +225,16 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private dansLaGrille(nom: string): boolean {
-    const plan = this.interne;
-    if (plan === null) {
-      return false;
-    }
-    for (let ligne = 0; ligne < plan.lignes; ligne += 1) {
-      for (let colonne = 0; colonne < plan.colonnes; colonne += 1) {
-        if (nomCellule(ligne, colonne) === nom) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return this.coordonnees(nom) !== null;
+  }
+
+  private recopieEnAttente(): boolean {
+    return this.enAttente?.complement != null;
   }
 
   private boutonRecopier(): EscapedHtml {
-    return safeHtml`<button type="button" class="fp-sheet__recopier" data-testid="recopier" ${this.verrouille() ? DESACTIVE : VIDE}>${escapeHtml(this.texte('sheet-recopier'))}</button>`;
+    const bloque = this.verrouille() || this.recopieEnAttente();
+    return safeHtml`<button type="button" class="fp-sheet__recopier" data-testid="recopier" ${bloque ? DESACTIVE : VIDE}>${escapeHtml(this.texte('sheet-recopier'))}</button>`;
   }
 
   private brancherBarre(barre: HTMLInputElement | null): void {
@@ -237,7 +250,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private brancherCellule(champ: HTMLInputElement): void {
-    const nom = champ.dataset['nom'] ?? CELLULE_INITIALE;
+    const nom = champ.dataset['nom'] ?? this.selection;
     champ.addEventListener('input', () => this.ecrire(nom, champ.value, 'cellule'));
     champ.addEventListener('focus', () => this.selectionner(nom));
     champ.addEventListener('keydown', (evenement) => this.auClavier(evenement, nom));
@@ -252,6 +265,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
       return;
     }
     evenement.preventDefault();
+    this.validerLaCellule();
     this.selection = this.dessous(nom);
     this.foyer = 'cellule';
     this.message = '';
@@ -259,27 +273,22 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private dessous(nom: string): string {
-    const plan = this.interne;
     const depart = this.coordonnees(nom);
-    if (plan === null || depart === null || depart.ligne + 1 >= plan.lignes) {
+    if (depart === null) {
       return nom;
     }
-    return nomCellule(depart.ligne + 1, depart.colonne);
+    return this.interne?.grille[depart.ligne + 1]?.[depart.colonne] ?? nom;
   }
 
   private coordonnees(nom: string): { ligne: number; colonne: number } | null {
-    for (let ligne = 0; ligne < (this.interne?.lignes ?? 0); ligne += 1) {
-      for (let colonne = 0; colonne < (this.interne?.colonnes ?? 0); colonne += 1) {
-        if (nomCellule(ligne, colonne) === nom) {
-          return { ligne, colonne };
-        }
-      }
-    }
-    return null;
+    const grille = this.interne?.grille ?? [];
+    const ligne = grille.findIndex((rang) => rang.includes(nom));
+    return ligne < 0 ? null : { ligne, colonne: grille[ligne].indexOf(nom) };
   }
 
   private selectionner(nom: string): void {
     if (nom !== this.selection && this.celluleAccessible(nom)) {
+      this.validerLaCellule();
       this.selection = nom;
       this.foyer = 'cellule';
       this.refresh();
@@ -304,94 +313,109 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     if (!this.modifiable(nom)) {
       return;
     }
-    this.contenus = { ...this.contenus, [nom]: contenu.slice(0, LONGUEUR_MAX_FORMULE) };
+    if (nom !== this.selection) {
+      this.validerLaCellule();
+    }
+    const longueur = this.interne?.longueurMaxSaisie ?? 0;
+    this.contenus = { ...this.contenus, [nom]: contenu.slice(0, longueur) };
     this.selection = nom;
     this.foyer = source;
     this.noterLaSaisie(nom, this.saisiesDeLEtudiant());
   }
 
+  private validerLaCellule(): void {
+    if (memesSaisies(this.contenus, this.saisiesDemandees)) {
+      return;
+    }
+    if (this.recopieEnAttente()) {
+      this.validationDifferee = true;
+      return;
+    }
+    this.demanderPour(null);
+  }
+
+  private demanderPour(recopie: Recopie | null): void {
+    this.demanderLEvaluation(this.contenus, recopie, {
+      cellules: this.saisiesDeLEtudiant(),
+      ...(recopie === null ? {} : { recopie: { de: recopie.de } }),
+    });
+  }
+
   private recopier(): void {
+    if (this.recopieEnAttente()) {
+      return;
+    }
     const cible = this.dessous(this.selection);
     if (this.verrouille() || cible === this.selection || this.verrouillee(cible)) {
       this.message = this.texte('sheet-recopie-impossible');
       this.refresh();
       return;
     }
-    const decalee = decalerFormule(this.contenus[this.selection] ?? '', 1, 0);
-    this.contenus = { ...this.contenus, [cible]: decalee };
-    this.selection = cible;
-    this.foyer = 'cellule';
-    this.noterLaSaisie(cible, this.saisiesDeLEtudiant());
-  }
-
-  private feuille(): Feuille {
-    return {
-      lignes: this.interne?.lignes ?? 0,
-      colonnes: this.interne?.colonnes ?? 0,
-      cellules: this.contenus,
-    };
-  }
-
-  private resultat(nom: string): ResultatFormule {
-    if (this.evaluation?.contenus !== this.contenus) {
-      this.evaluation = { contenus: this.contenus, resultats: evaluerFeuille(this.feuille()) };
-    }
-    return this.evaluation.resultats.get(nom) ?? { valeur: null, erreur: null };
+    this.message = '';
+    this.demanderPour({ de: this.selection, vers: cible });
+    this.refresh();
   }
 
   private brut(nom: string): string {
     return this.contenus[nom] ?? '';
   }
 
+  private courante(nom: string): boolean {
+    return this.brut(nom) === (this.saisiesEvaluees[nom] ?? '');
+  }
+
+  private natureServie(nom: string): NatureDeCellule | null {
+    return this.courante(nom) ? (this.evaluee.natures[nom] ?? null) : null;
+  }
+
+  private porteUneFormule(nom: string): boolean {
+    return this.courante(nom) && this.evaluee.formules.includes(nom);
+  }
+
   private affichage(nom: string, interactif: boolean): string {
     const brut = this.brut(nom);
-    if ((interactif && nom === this.selection) || !estUneFormule(brut)) {
+    if ((interactif && nom === this.selection) || !this.courante(nom)) {
       return brut;
     }
-    return formaterResultat(this.resultat(nom));
+    return this.evaluee.affichages[nom] ?? brut;
   }
 
   private nature(nom: string, interactif: boolean): NatureDeCellule | null {
-    const brut = this.brut(nom);
-    if (!estTexteNonVide(brut)) {
+    if (!estTexteNonVide(this.brut(nom))) {
       return null;
     }
-    if (!estUneFormule(brut)) {
-      return lireNombreSaisi(brut) === null ? 'texte' : 'nombre';
-    }
-    if (interactif && nom === this.selection) {
+    const servie = this.natureServie(nom);
+    if (interactif && nom === this.selection && (servie === null || this.porteUneFormule(nom))) {
       return 'texte';
     }
-    const { valeur, erreur } = this.resultat(nom);
-    return erreur !== null || valeur === null ? 'erreur' : natureDUneValeur(valeur);
+    return servie;
   }
 
   private cellulesEnErreur(): string[] {
-    return Object.keys(this.contenus).filter(
-      (nom) => estUneFormule(this.brut(nom)) && this.resultat(nom).erreur !== null,
-    );
+    return (this.interne?.grille ?? []).flat().filter((nom) => this.natureServie(nom) === 'erreur');
   }
 
   private barre(): EscapedHtml {
     return safeHtml`
       <p class="fp-sheet__barre">
         <label class="fp-sheet__reference" for="fp-sheet-barre" data-testid="reference">${escapeHtml(this.selection)}</label>
-        <input class="fp-sheet__saisie" id="fp-sheet-barre" data-testid="barre" type="text" autocomplete="off" spellcheck="false" maxlength="${LONGUEUR_MAX_FORMULE}" value="${escapeHtml(this.brut(this.selection))}">
+        <input class="fp-sheet__saisie" id="fp-sheet-barre" data-testid="barre" type="text" autocomplete="off" spellcheck="false" maxlength="${this.interne?.longueurMaxSaisie ?? 0}" value="${escapeHtml(this.brut(this.selection))}">
       </p>
     `;
   }
 
   private tableau(interactif: boolean): EscapedHtml {
-    const lignes = [...Array(this.interne?.lignes ?? 0).keys()];
+    const grille = this.interne?.grille ?? [];
+    const largeurs = this.largeursDesColonnes();
     return safeHtml`
       ${dansUnDefileur(safeHtml`
-        <table class="fp-sheet__tableau${lignes.length > LIGNES_AVANT_RESSERREMENT ? TABLEAU_RESSERRE : VIDE}" data-testid="tableau">
+        <table class="fp-sheet__tableau${grille.length > LIGNES_AVANT_RESSERREMENT ? TABLEAU_RESSERRE : VIDE}" data-testid="tableau">
           <caption class="fp-sheet__intitule">${escapeHtml(this.interne?.intitule ?? '')}</caption>
           <thead><tr>${this.coin()}${this.enteteColonnes()}</tr></thead>
-          <tbody>${lignes.map((ligne) => this.ligne(ligne, interactif))}</tbody>
+          <tbody>${grille.map((rang, ligne) => this.ligne(rang, ligne, interactif, largeurs))}</tbody>
         </table>
       `)}
-      ${lignes.length === 0 ? this.grilleVide() : VIDE}
+      ${grille.length === 0 ? this.grilleVide() : VIDE}
     `;
   }
 
@@ -404,29 +428,36 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private enteteColonnes(): EscapedHtml {
-    const colonnes = [...Array(this.interne?.colonnes ?? 0).keys()];
-    return safeHtml`${colonnes.map(
-      (colonne) =>
-        safeHtml`<th class="${escapeHtml(STYLE_ENTETE)}" scope="col" id="${escapeHtml(PREFIXE_COLONNE + lettreColonne(colonne))}" data-testid="colonne">${escapeHtml(lettreColonne(colonne))}</th>`,
+    return safeHtml`${(this.interne?.lettres ?? []).map(
+      (lettre) =>
+        safeHtml`<th class="${escapeHtml(STYLE_ENTETE)}" scope="col" id="${escapeHtml(PREFIXE_COLONNE + lettre)}" data-testid="colonne">${escapeHtml(lettre)}</th>`,
     )}`;
   }
 
-  private ligne(ligne: number, interactif: boolean): EscapedHtml {
-    const largeurs = this.largeursDesColonnes();
+  private ligne(
+    rang: readonly string[],
+    ligne: number,
+    interactif: boolean,
+    largeurs: readonly number[],
+  ): EscapedHtml {
     return safeHtml`
       <tr class="fp-sheet__ligne" data-testid="ligne">
         <th class="fp-sheet__rang" scope="row" id="${escapeHtml(PREFIXE_LIGNE + (ligne + 1))}">${ligne + 1}</th>
-        ${largeurs.map((largeur, colonne) => this.cellule(ligne, colonne, interactif, largeur))}
+        ${rang.map((nom, colonne) => this.cellule(nom, ligne, colonne, interactif, largeurs[colonne] ?? LARGEUR_MIN_DE_COLONNE_CH))}
       </tr>
     `;
   }
 
   private largeursDesColonnes(): number[] {
-    const lignes = [...Array(this.interne?.lignes ?? 0).keys()];
-    return [...Array(this.interne?.colonnes ?? 0).keys()].map((colonne) => {
-      const libelles = lignes
-        .map((ligne) => this.interne?.cellules[nomCellule(ligne, colonne)] ?? '')
-        .filter((libelle) => !estUneFormule(libelle));
+    const plan = this.interne;
+    if (plan === null) {
+      return [];
+    }
+    return plan.lettres.map((_, colonne) => {
+      const libelles = plan.grille
+        .map((rang) => rang[colonne] ?? '')
+        .filter((nom) => !plan.initiale.formules.includes(nom))
+        .map((nom) => plan.cellules[nom] ?? '');
       return bornerEntre(
         Math.max(...libelles.map((libelle) => [...libelle].length)),
         LARGEUR_MIN_DE_COLONNE_CH,
@@ -436,13 +467,14 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private cellule(
+    nom: string,
     ligne: number,
     colonne: number,
     interactif: boolean,
     largeur: number,
   ): EscapedHtml {
-    const nom = nomCellule(ligne, colonne);
-    const portes = `${PREFIXE_COLONNE}${lettreColonne(colonne)} ${PREFIXE_LIGNE}${ligne + 1}`;
+    const lettre = this.interne?.lettres[colonne] ?? '';
+    const portes = `${PREFIXE_COLONNE}${lettre} ${PREFIXE_LIGNE}${ligne + 1}`;
     if (!interactif) {
       const nature = this.estUnIntituleDeColonne(ligne, nom)
         ? safeHtml` ${escapeHtml(STYLE_CELLULE)}--intitule`
@@ -453,8 +485,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private estUnIntituleDeColonne(ligne: number, nom: string): boolean {
-    const brut = this.brut(nom).trim();
-    return ligne === 0 && brut !== '' && !estUneFormule(brut) && lireNombreSaisi(brut) === null;
+    return ligne === 0 && this.natureServie(nom) === 'texte' && !this.porteUneFormule(nom);
   }
 
   private etatDeLaCellule(nom: string): EscapedHtml {
@@ -477,21 +508,19 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
 
   private valeurAttendue(attendu: AttenduDeFeuille): EscapedHtml {
     return this.correction >= 2
-      ? safeHtml` <span class="fp-montant">${escapeHtml(formaterResultat({ valeur: arrondirLAttendu(attendu.valeur), erreur: null }))}</span>`
+      ? safeHtml` <span class="fp-montant">${escapeHtml(attendu.affichage)}</span>`
       : VIDE;
   }
 
   private champ(nom: string): EscapedHtml {
-    const formule = estUneFormule(this.brut(nom));
-    const code = formule ? this.resultat(nom).erreur : null;
     const alerte = `${SIGNE_ERREUR} ${this.texte('sheet-cellule-fautive')}`;
     const marque =
-      code === null
-        ? VIDE
-        : safeHtml`aria-invalid="true" data-erreur="${escapeHtml(code)}" title="${escapeHtml(alerte)}"`;
+      this.natureServie(nom) === 'erreur'
+        ? safeHtml`aria-invalid="true" data-erreur="${escapeHtml(this.evaluee.affichages[nom] ?? '')}" title="${escapeHtml(alerte)}"`
+        : VIDE;
     const enonce = `${this.texte('sheet-cellule')} ${nom}`;
     const bloquee = !this.modifiable(nom);
-    return safeHtml`<input class="fp-sheet__champ fp-montant" data-testid="cellule" data-role="cellule" data-nom="${escapeHtml(nom)}" type="text" autocomplete="off" spellcheck="false" maxlength="${LONGUEUR_MAX_FORMULE}" aria-label="${escapeHtml(enonce)}" value="${escapeHtml(this.affichage(nom, true))}" ${marqueDeNature(this.nature(nom, true))} ${marque} ${bloquee ? LECTURE_SEULE : VIDE}>`;
+    return safeHtml`<input class="fp-sheet__champ fp-montant" data-testid="cellule" data-role="cellule" data-nom="${escapeHtml(nom)}" type="text" autocomplete="off" spellcheck="false" maxlength="${this.interne?.longueurMaxSaisie ?? 0}" aria-label="${escapeHtml(enonce)}" value="${escapeHtml(this.affichage(nom, true))}" ${marqueDeNature(this.nature(nom, true))} ${marque} ${bloquee ? LECTURE_SEULE : VIDE}>`;
   }
 
   private bilanErreurs(): EscapedHtml {

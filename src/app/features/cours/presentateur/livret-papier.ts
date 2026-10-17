@@ -4,6 +4,7 @@ import type {
   DerouleCours,
   EcranContent,
   EcranDeroule,
+  ReflexionServie,
 } from '../../../../cours/content/types';
 import { estObjet } from '../../../../cours/runtime/core/valeurs';
 import { ecranDIdentifiant } from '../../../shared/slides/session/lecture-ecran';
@@ -39,22 +40,12 @@ export interface PageDuCorrige {
   readonly ecran: EcranDeroule;
   readonly annexe: ReturnType<typeof annexeFormateurDeLEcran>;
   readonly reponses: readonly QuestionDuPanneau[];
-  readonly attendu: ReponseAttendue | null;
+  readonly attendu: ReflexionServie | null;
   readonly repeteLaSource: boolean;
-}
-
-export interface ReponseAttendue {
-  readonly attendu: string;
-  readonly suite: string;
 }
 
 function aTraiterSurPapier(ecran: EcranContent): boolean {
   return !ECRANS_DE_SEANCE_SEULEMENT.has(ecran.type);
-}
-
-function reponseAttendue(ecran: EcranDeroule): ReponseAttendue | null {
-  const corrige = ecran.corrigeEcran;
-  return corrige?.type === 'reflexion' ? { attendu: corrige.attendu, suite: corrige.suite } : null;
 }
 
 function avecSaBanqueDeQuestions(ecran: EcranContent, corrige: DerouleCours): EcranContent {
@@ -213,7 +204,7 @@ export function pagesDuCorrige(corrige: DerouleCours): readonly PageDuCorrige[] 
     ecran,
     annexe: annexeFormateurDeLEcran(ecran),
     reponses: questionsDuPanneau(ecran),
-    attendu: reponseAttendue(ecran),
+    attendu: ecran.reflexion,
     repeteLaSource: repeteLaSource(ecran, corrige),
   }));
 }

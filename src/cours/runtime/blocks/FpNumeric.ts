@@ -1,4 +1,4 @@
-import { lireNombreSaisi } from 'portfolio-2025-partage/formule';
+import { lireNombreSaisi } from '../core/valeurs';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { FpReponse } from './reponse';
 import { type ContenuDeBrique, copierLeSocle } from './projection';

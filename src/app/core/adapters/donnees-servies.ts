@@ -318,7 +318,7 @@ const definitionDeMachine = strict({
   etapes: z.array(strict({ libelle: z.string(), calcul: z.string() })).optional(),
   prereglages: prereglages.optional(),
   animation: animation.optional(),
-  sorties: z.array(sortiesDeMachine).optional(),
+  sorties: z.array(sortiesDeMachine),
   metadonnees,
 });
 
@@ -334,7 +334,7 @@ const definitionDeTrace = strict({
       id: z.string(),
       libelle: z.string(),
       trait: z.enum(['plein', 'tirets']),
-      calcul: z.string(),
+      calcul: z.string().optional(),
     }),
   ),
   bornesOrdonnee: strict({
@@ -352,16 +352,21 @@ const definitionDeTrace = strict({
   prereglages: prereglages.optional(),
   reference: z.string().optional(),
   animation: animation.optional(),
-  abscisses: z.array(z.number()).optional(),
-  positions: z
-    .array(
-      strict({
-        valeurs: valeursParCle,
-        ordonnees: z.record(z.string(), z.array(z.number().nullable())),
-      }),
-    )
-    .optional(),
+  abscisses: z.array(z.number()),
+  positions: z.array(
+    strict({
+      valeurs: valeursParCle,
+      ordonnees: z.record(z.string(), z.array(z.number().nullable())),
+    }),
+  ),
   metadonnees,
+});
+
+export const feuilleEvaluee = strict({
+  saisies: z.record(z.string(), z.string()),
+  affichages: z.record(z.string(), z.string()),
+  natures: z.record(z.string(), z.enum(['texte', 'nombre', 'logique', 'erreur'])),
+  formules: textes,
 });
 
 const planDeFeuille = strict({
@@ -372,15 +377,10 @@ const planDeFeuille = strict({
   cellules: z.record(z.string(), z.string()),
   verrouillees: textes,
   consignes: textes,
-  lettres: textes.optional(),
-  grille: z.array(textes).optional(),
-  longueurMaxSaisie: z.number().optional(),
-  initiale: strict({
-    saisies: z.record(z.string(), z.string()),
-    affichages: z.record(z.string(), z.string()),
-    natures: z.record(z.string(), z.enum(['texte', 'nombre', 'logique', 'erreur'])),
-    formules: textes,
-  }).optional(),
+  lettres: textes,
+  grille: z.array(textes),
+  longueurMaxSaisie: z.number(),
+  initiale: feuilleEvaluee,
   metadonnees,
 });
 
@@ -426,7 +426,7 @@ const planDeTableau = strict({
       decimales: z.number(),
     }),
   ),
-  tableauInitial: tableauEvalue.optional(),
+  tableauInitial: tableauEvalue,
   metadonnees,
 });
 
@@ -514,7 +514,7 @@ const DONNEES_PAR_BRIQUE = {
       intitule: z.string(),
       delaiIndiceMs: z.number(),
       budgetEnigmeMs: z.number(),
-      tentativesMax: z.number(),
+      tentativesMax: z.number().int().positive(),
       enigmes: z.array(
         strict({
           id: z.string(),

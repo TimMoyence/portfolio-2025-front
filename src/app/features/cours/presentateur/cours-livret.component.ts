@@ -149,7 +149,9 @@ type VueDuLivret = 'sujet' | 'corrige';
                   <div class="livret__attendu" data-testid="livret-attendu">
                     <p class="livret__question" i18n="@@livretGuideReponse">Réponse attendue</p>
                     <p>{{ reflexion.attendu }}</p>
-                    <p>{{ reflexion.suite }}</p>
+                    @if (reflexion.suite !== null) {
+                      <p>{{ reflexion.suite }}</p>
+                    }
                   </div>
                 }
                 @if (page.reponses.length > 0) {

@@ -7,6 +7,7 @@ import type {
   DerouleCours,
   EtatParticipant,
   EtatPulse,
+  FeuilleEvaluee,
   FreeRange,
   PacingMode,
   PilotageEcran,
@@ -14,12 +15,18 @@ import type {
   RegleDeNotation,
   ResultatsSeance,
   ResumeBareme,
+  SortiesMachine,
   StatistiquesSeance,
+  TableauEvalue,
   TypeQuestion,
   ValeurProduction,
 } from '../../../cours/content/types';
+import type { Reglages } from '../../../cours/runtime/blocks/animation';
 import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donnees-publiques';
 import type {
+  EtatDesEnigmes,
+  EvaluationDeFeuille,
+  EvaluationDeTableau,
   ProgressionDesEnigmes,
   StrategieServie,
   VerdictDeTentative,
@@ -57,7 +64,7 @@ export interface VerdictProduction {
   libelleConfusion: string | null;
 }
 
-export interface VerdictTentative {
+export interface VerdictTentative extends EtatDesEnigmes {
   correcte: boolean;
   fragment: string | null;
   tentativesRestantes: number;
@@ -87,6 +94,17 @@ export interface TentativeEnigme {
   enigmeId: string;
   reponse: string;
   dureeMs: number;
+}
+
+export interface SaisieDeTableau {
+  readonly rang: number;
+  readonly cle: string;
+  readonly saisie: string;
+}
+
+export interface DemandeDeFeuille {
+  readonly cellules: Readonly<Record<string, string>>;
+  readonly recopie?: { readonly de: string };
 }
 
 export interface TentativeDefi {
@@ -360,6 +378,9 @@ export type RetourBrique =
       readonly questions: readonly SpacedQuestionPublique[];
     }
   | { readonly kind: 'deja-repondu'; readonly questionId: string }
+  | { readonly kind: 'machine-evaluee'; readonly sorties: SortiesMachine }
+  | ({ readonly kind: 'feuille-evaluee'; readonly planId: string } & EvaluationDeFeuille)
+  | ({ readonly kind: 'tableau-evalue'; readonly planId: string } & EvaluationDeTableau)
   | {
       readonly kind: 'refus';
       readonly motif: MotifRefusReponse;
@@ -437,6 +458,24 @@ export interface FormationsPort {
     parcoursId: string,
     tentative: TentativeEnigme,
   ): Observable<VerdictTentative>;
+  evaluerMachine(
+    sessionId: string,
+    jeton: string,
+    ecranId: string,
+    reglages: Reglages,
+  ): Observable<SortiesMachine>;
+  evaluerTableau(
+    sessionId: string,
+    jeton: string,
+    planId: string,
+    saisies: readonly SaisieDeTableau[],
+  ): Observable<TableauEvalue>;
+  evaluerFeuille(
+    sessionId: string,
+    jeton: string,
+    planId: string,
+    demande: DemandeDeFeuille,
+  ): Observable<FeuilleEvaluee>;
   declarerJalon(
     sessionId: string,
     jeton: string,

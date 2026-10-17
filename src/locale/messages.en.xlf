@@ -13422,33 +13422,6 @@
         <target>AI citability</target>
       </segment>
     </unit>
-    <unit id="auditPillarStatusCritical">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:37</note>
-      </notes>
-      <segment>
-        <source>Critique</source>
-        <target>Critical</target>
-      </segment>
-    </unit>
-    <unit id="auditPillarStatusWarning">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:39</note>
-      </notes>
-      <segment>
-        <source>À améliorer</source>
-        <target>Needs improvement</target>
-      </segment>
-    </unit>
-    <unit id="auditPillarStatusOk">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:41</note>
-      </notes>
-      <segment>
-        <source>Objectif atteint</source>
-        <target>Target met</target>
-      </segment>
-    </unit>
     <unit id="auditProgressDefaultStep">
       <notes>
         <note category="location">src/app/features/growth-audit/growth-audit-format.utils.ts:110</note>
@@ -14542,6 +14515,18 @@
       <segment>
         <source>Tentative non envoyée : vérifiez la connexion et proposez-la de nouveau</source>
         <target>Attempt not sent: check the connection and submit it again</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeEvaluationReseau">
+      <segment>
+        <source>Calcul non reçu : vérifiez la connexion et réglez de nouveau la machine</source>
+        <target>Calculation not received: check the connection and set the machine again</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeFeuilleReseau">
+      <segment>
+        <source>Calcul non reçu : vérifiez la connexion et validez de nouveau la cellule</source>
+        <target>Calculation not received: check the connection and confirm the cell again</target>
       </segment>
     </unit>
     <unit id="coursRuntimeStorySourceVisuel">
