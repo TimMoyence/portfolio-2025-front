@@ -1,10 +1,14 @@
 import assert from 'node:assert/strict';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { join } from 'node:path';
+import { extname, join } from 'node:path';
 import { test } from 'node:test';
 
+import { ESLint } from 'eslint';
+import * as prettier from 'prettier';
+
 import { echapperPourRegex } from '../src/cours/runtime/core/valeurs.ts';
+import { trackedFiles } from './guard-no-comments.mjs';
 import { cheminDuDepot, RACINE } from './lib/depot.mjs';
 import { avecDossierPlante } from './lib/dossier-temporaire.mjs';
 
@@ -306,6 +310,62 @@ test('ci-portes : Lighthouse est joue apres le build du job e2e, bloque sous 0,9
     configuration.upload,
     { target: 'filesystem', outputDir: '.lighthouseci/rapports' },
     'ci-portes : les rapports Lighthouse restent sur le runner (artefact .lighthouseci/), jamais sur un stockage public.',
+  );
+});
+
+function extensionsDuMotif(motif) {
+  const correspondance = /^\*\.(?:\{([^{}]+)\}|(\w+))$/.exec(motif);
+  if (correspondance === null) {
+    throw new Error(`ci-portes : motif lint-staged non reconnu : « ${motif} ».`);
+  }
+  return (correspondance[1] ?? correspondance[2]).split(',');
+}
+
+function extensionsPasseesAuCommitPar(outil) {
+  const paquet = JSON.parse(readFileSync(CHEMIN_PACKAGE, 'utf8'));
+  return Object.entries(paquet['lint-staged'])
+    .filter(([, commandes]) =>
+      [commandes].flat().some((commande) => commande.startsWith(`${outil} `)),
+    )
+    .flatMap(([motif]) => extensionsDuMotif(motif));
+}
+
+function unFichierSuiviParExtension() {
+  const parExtension = new Map();
+  for (const fichier of trackedFiles(RACINE)) {
+    const extension = extname(fichier).slice(1);
+    if (extension !== '' && !parExtension.has(extension)) parExtension.set(extension, fichier);
+  }
+  return parExtension;
+}
+
+test('ci-portes : au commit, prettier et eslint passent sur chaque fichier suivi qu ils savent traiter', async () => {
+  const echantillons = unFichierSuiviParExtension();
+  const eslint = new ESLint({ cwd: RACINE });
+  const oublies = { prettier: [], eslint: [] };
+
+  for (const [extension, fichier] of echantillons) {
+    const chemin = join(RACINE, fichier);
+    const { inferredParser } = await prettier.getFileInfo(chemin);
+    if (inferredParser !== null && !extensionsPasseesAuCommitPar('prettier').includes(extension)) {
+      oublies.prettier.push(fichier);
+    }
+    const linte =
+      !(await eslint.isPathIgnored(chemin)) &&
+      (await eslint.calculateConfigForFile(chemin)) !== undefined;
+    if (linte && !extensionsPasseesAuCommitPar('eslint').includes(extension)) {
+      oublies.eslint.push(fichier);
+    }
+  }
+
+  assert.ok(
+    ['ts', 'mts', 'html', 'scss'].every((extension) => echantillons.has(extension)),
+    'ci-portes : git ls-files ne rend pas les fichiers du depot, la garde ne verrait rien.',
+  );
+  assert.deepEqual(
+    oublies,
+    { prettier: [], eslint: [] },
+    'ci-portes : une extension que prettier ou eslint sait traiter echappe a lint-staged, et format:check ne lit ni scripts/ ni e2e/.',
   );
 });
 
