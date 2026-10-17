@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { Subject, of, throwError } from 'rxjs';
@@ -40,6 +40,7 @@ function lienDuBouton(fixture: { nativeElement: HTMLElement }): string | null {
 describe('VerifyEmailComponent', () => {
   it('dit la vérification réussie par son propre texte, puis mène à la connexion', fakeAsync(async () => {
     const { authService, fixture, navigate, texte } = await verifier('a'.repeat(64));
+    flushMicrotasks();
 
     expect(authService.verifyEmail).toHaveBeenCalledOnceWith('a'.repeat(64));
     fixture.detectChanges();
@@ -63,6 +64,7 @@ describe('VerifyEmailComponent', () => {
         null,
         of(buildAuthSession({ user: verifie })),
       );
+      flushMicrotasks();
 
       const etat = TestBed.inject(AuthStateService);
       expect(authService.refresh).toHaveBeenCalledTimes(1);
@@ -94,6 +96,7 @@ describe('VerifyEmailComponent', () => {
         }),
       );
       restauration.complete();
+      flushMicrotasks();
       fixture.detectChanges();
       expect(texte()).toContain('Vous allez être redirigé vers votre profil…');
       expect(lienDuBouton(fixture)).toBe('/profil');
@@ -109,6 +112,7 @@ describe('VerifyEmailComponent', () => {
         null,
         of(buildAuthSession({ user: verifie })),
       );
+      flushMicrotasks();
 
       fixture.detectChanges();
       expect(texte()).toContain('Vous allez être redirigé vers votre profil…');

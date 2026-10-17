@@ -94,6 +94,7 @@ import {
   identifiantsDesQuestions,
 } from '../../../shared/slides/session/lecture-ecran';
 import { memeValeur } from '../../../shared/slides/session/reinjection';
+import type { LimiteDeDebit } from '../../../core/models/limite-de-debit';
 import type { EtatEnvoiLibre } from '../../../shared/slides/session/reponses-libres.service';
 import {
   cleDeReponseLibre,
@@ -109,6 +110,9 @@ import { directDeLEcranCourant } from '../direct-de-l-ecran';
 import { suivreLaDestruction } from '../lecture-suivie';
 
 type EtatEtudiant = 'code' | 'rattachement' | 'chargement' | 'sujet-refuse' | 'seance';
+
+type VueDeSeance =
+  'evince' | 'libere' | 'terminee' | 'echec-ecran' | 'refus' | 'attente' | 'chargement' | 'ecran';
 
 type MotifEchec = MotifRefusRattachement | 'code-invalide' | 'identite-refusee';
 
@@ -170,6 +174,7 @@ const MESSAGE_ECRAN_LIMITE = $localize`:cours.ecranLimite|@@coursEcranLimite:L�
 const MOTIF_CODE = /^\d{4}$/;
 const ESPACES = /\s+/g;
 const DELAI_MINIMUM_FORMULAIRE_MS = 1_200;
+const UNE_MINUTE_MS = 60_000;
 const BRIQUE_DE_RAPPEL = 'fp-spaced';
 const BRIQUE_DE_DEFI = 'fp-challenge';
 const MOTIFS_DE_RESYNCHRONISATION: readonly MotifRefusReponse[] = [
@@ -332,35 +337,39 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
                 </button>
               </header>
             }
-            @if (evince()) {
-              <p data-testid="etudiant-evince" role="alert" i18n="cours.evince|@@coursEvince">
-                Votre formateur vous a retiré de la séance. S’il vous y réadmet, rejoignez-la à
-                nouveau avec le même code depuis ce poste.
-              </p>
-            } @else if (posteLibere()) {
-              <p
-                data-testid="etudiant-poste-libere"
-                role="alert"
-                i18n="cours.posteLibere|@@coursPosteLibere"
-              >
-                Votre formateur a libéré cette place pour un autre poste : ce poste ne suit plus la
-                séance.
-              </p>
-            } @else if (terminee()) {
-              <p
-                class="student-session__fin"
-                data-testid="etudiant-fin"
-                role="status"
-                i18n="cours.fin|@@coursFin"
-              >
-                La séance est terminée. Merci de votre participation.
-              </p>
-            } @else {
-              @if (echecEcran(); as echec) {
-                <p data-testid="etudiant-ecran-echec" role="alert">
-                  {{ echec.message }}
+            @switch (vueDeSeance()) {
+              @case ('evince') {
+                <p data-testid="etudiant-evince" role="alert" i18n="cours.evince|@@coursEvince">
+                  Votre formateur vous a retiré de la séance. S’il vous y réadmet, rejoignez-la à
+                  nouveau avec le même code depuis ce poste.
                 </p>
-              } @else {
+              }
+              @case ('libere') {
+                <p
+                  data-testid="etudiant-poste-libere"
+                  role="alert"
+                  i18n="cours.posteLibere|@@coursPosteLibere"
+                >
+                  Votre formateur a libéré cette place pour un autre poste : ce poste ne suit plus
+                  la séance.
+                </p>
+              }
+              @case ('terminee') {
+                <p
+                  class="student-session__fin"
+                  data-testid="etudiant-fin"
+                  role="status"
+                  i18n="cours.fin|@@coursFin"
+                >
+                  La séance est terminée. Merci de votre participation.
+                </p>
+              }
+              @case ('echec-ecran') {
+                <p data-testid="etudiant-ecran-echec" role="alert">
+                  {{ echecEcran()?.message }}
+                </p>
+              }
+              @case ('refus') {
                 @if (refusDuFlux(); as refus) {
                   @if (accesPerdu()) {
                     <p
@@ -399,67 +408,70 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
                       Les activités réapparaîtront dès que la connexion sera rétablie.
                     </p>
                   }
-                } @else if (statutSeance() !== 'en_cours') {
-                  <p
-                    class="student-status"
-                    data-testid="etudiant-attente"
-                    role="status"
-                    i18n="cours.attenteDemarrage|@@coursAttenteDemarrage"
-                  >
-                    La séance n’a pas encore démarré : le premier écran s’affichera dès que votre
-                    formateur la lancera.
-                  </p>
-                } @else if (chargementEcran()) {
-                  <p
-                    class="student-status"
-                    data-testid="etudiant-ecran-chargement"
-                    role="status"
-                    i18n="cours.chargementEcran|@@coursChargementEcran"
-                  >
-                    Chargement de l’écran…
-                  </p>
-                } @else {
-                  @if (ecranPresente(); as ecran) {
-                    <div class="student-session__cadre">
-                      <app-cours-presentation
-                        mode="etudiant"
-                        [slide]="ecran"
-                        [renvoi]="ecranRenvoye()"
-                        [sessionId]="sessionId()"
-                        [jeton]="jeton()"
-                        [retours]="retours()"
-                        [direct]="direct()"
-                        [brouillons]="brouillons()"
-                        [telechargement]="telechargement()"
-                        (evenement)="surEvenement($event)"
-                      />
-                    </div>
-                  }
-                  <div class="student-session__navigation">
-                    @if (peutReculer()) {
-                      <button
-                        type="button"
-                        class="btn btn-ghost"
-                        data-testid="etudiant-precedent"
-                        (click)="reculer()"
-                        i18n="cours.ecranPrecedent|@@coursEcranPrecedent"
-                      >
-                        Écran précédent
-                      </button>
-                    }
-                    @if (peutAvancer()) {
-                      <button
-                        type="button"
-                        class="btn btn-teal"
-                        data-testid="etudiant-suivant"
-                        (click)="avancer()"
-                        i18n="cours.ecranSuivant|@@coursEcranSuivant"
-                      >
-                        Écran suivant
-                      </button>
-                    }
+                }
+              }
+              @case ('attente') {
+                <p
+                  class="student-status"
+                  data-testid="etudiant-attente"
+                  role="status"
+                  i18n="cours.attenteDemarrage|@@coursAttenteDemarrage"
+                >
+                  La séance n’a pas encore démarré : le premier écran s’affichera dès que votre
+                  formateur la lancera.
+                </p>
+              }
+              @case ('chargement') {
+                <p
+                  class="student-status"
+                  data-testid="etudiant-ecran-chargement"
+                  role="status"
+                  i18n="cours.chargementEcran|@@coursChargementEcran"
+                >
+                  Chargement de l’écran…
+                </p>
+              }
+              @case ('ecran') {
+                @if (ecranPresente(); as ecran) {
+                  <div class="student-session__cadre">
+                    <app-cours-presentation
+                      mode="etudiant"
+                      [slide]="ecran"
+                      [renvoi]="ecranRenvoye()"
+                      [sessionId]="sessionId()"
+                      [jeton]="jeton()"
+                      [retours]="retours()"
+                      [direct]="direct()"
+                      [brouillons]="brouillons()"
+                      [telechargement]="telechargement()"
+                      (evenement)="surEvenement($event)"
+                    />
                   </div>
                 }
+                <div class="student-session__navigation">
+                  @if (peutReculer()) {
+                    <button
+                      type="button"
+                      class="btn btn-ghost"
+                      data-testid="etudiant-precedent"
+                      (click)="reculer()"
+                      i18n="cours.ecranPrecedent|@@coursEcranPrecedent"
+                    >
+                      Écran précédent
+                    </button>
+                  }
+                  @if (peutAvancer()) {
+                    <button
+                      type="button"
+                      class="btn btn-teal"
+                      data-testid="etudiant-suivant"
+                      (click)="avancer()"
+                      i18n="cours.ecranSuivant|@@coursEcranSuivant"
+                    >
+                      Écran suivant
+                    </button>
+                  }
+                </div>
               }
             }
             <ul class="student-verdicts" data-testid="etudiant-verdicts" aria-live="polite">
@@ -735,16 +747,19 @@ export class CoursEtudiantComponent {
     return estEcranVerrouille(ecran) ? null : (ecran ?? null);
   });
 
+  readonly vueDeSeance = computed<VueDeSeance>(() => {
+    if (this.evince()) return 'evince';
+    if (this.posteLibere()) return 'libere';
+    if (this.terminee()) return 'terminee';
+    if (this.echecEcran() !== null) return 'echec-ecran';
+    if (this.refusDuFlux() !== null) return 'refus';
+    if (this.statutSeance() !== 'en_cours') return 'attente';
+    if (this.chargementEcran()) return 'chargement';
+    return 'ecran';
+  });
+
   readonly ecranPresente = computed<EcranContent | null>(() =>
-    this.evince() ||
-    this.posteLibere() ||
-    this.terminee() ||
-    this.echecEcran() !== null ||
-    this.refusDuFlux() !== null ||
-    this.statutSeance() !== 'en_cours' ||
-    this.chargementEcran()
-      ? null
-      : this.ecranCourant(),
+    this.vueDeSeance() === 'ecran' ? this.ecranCourant() : null,
   );
 
   readonly ecranRenvoye = computed<EcranContent | null>(() => {
@@ -825,7 +840,9 @@ export class CoursEtudiantComponent {
   private readonly estDetruit = suivreLaDestruction(() => {
     this.flux?.close();
     this.verrou?.disarm();
+    this.annulerLaRepriseApresLaLimite();
   });
+  private repriseApresLaLimite: ReturnType<typeof setTimeout> | null = null;
   private ecranARelire: number | null = null;
   private retenuesDuVidage: boolean[] | null = null;
   private chantier: Promise<void> = Promise.resolve();
@@ -852,10 +869,41 @@ export class CoursEtudiantComponent {
       });
     }
     this.reponsesLibres.envoisReussis.pipe(takeUntilDestroyed()).subscribe(() => {
-      this.chantier = Promise.all([this.chantier, this.reprendreCeQuiAttend()]).then(
-        () => undefined,
-      );
+      this.reprendreEnFondCeQuiAttend();
     });
+    this.reponsesLibres.limitesAtteintes.pipe(takeUntilDestroyed()).subscribe((limite) => {
+      this.repartirApresLaLimite(limite);
+    });
+  }
+
+  private reprendreEnFondCeQuiAttend(): void {
+    this.chantier = Promise.all([this.chantier, this.reprendreCeQuiAttend()]).then(() => undefined);
+  }
+
+  private repartirApresLaLimite(limite: LimiteDeDebit | null): void {
+    if (limite === null || this.estDetruit()) {
+      return;
+    }
+    this.annulerLaRepriseApresLaLimite();
+    this.repriseApresLaLimite = setTimeout(
+      () => {
+        this.repriseApresLaLimite = null;
+        this.reprendreEnFondCeQuiAttend();
+      },
+      (limite.minutes ?? 1) * UNE_MINUTE_MS,
+    );
+  }
+
+  private annulerLaRepriseApresLaLimite(): void {
+    if (this.repriseApresLaLimite !== null) {
+      clearTimeout(this.repriseApresLaLimite);
+      this.repriseApresLaLimite = null;
+    }
+  }
+
+  private retenirLaRelecture(erreur: unknown): void {
+    this.echecEcran.set(echecDeLaRelecture(erreur));
+    this.repartirApresLaLimite(limiteDuRefus(erreur));
   }
 
   quandStabilise(): Promise<void> {
@@ -1113,7 +1161,7 @@ export class CoursEtudiantComponent {
       }
     } catch (erreur) {
       this.ecranARelire = index;
-      this.echecEcran.set(echecDeLaRelecture(erreur));
+      this.retenirLaRelecture(erreur);
     } finally {
       if (!this.estDetruit()) {
         this.chargementEcran.set(false);
@@ -1240,7 +1288,7 @@ export class CoursEtudiantComponent {
       for (const cle of nouvelles) {
         this.relectures.delete(cle);
       }
-      this.echecEcran.set(echecDeLaRelecture(erreur));
+      this.retenirLaRelecture(erreur);
     } finally {
       this.relectureEnCours = false;
     }
@@ -1415,7 +1463,9 @@ export class CoursEtudiantComponent {
     } catch (erreur) {
       const refus = refusDe(erreur);
       if (refus.motif === 'reseau') {
-        return { limitee: limiteDuRefus(refus) !== null };
+        const limite = limiteDuRefus(refus);
+        this.repartirApresLaLimite(limite);
+        return { limitee: limite !== null };
       }
       await this.traiterLeRefus(refus, envoi.questionId, screenId, depuisLaFile);
       return 'transmise';

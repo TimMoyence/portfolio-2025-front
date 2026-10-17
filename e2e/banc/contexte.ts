@@ -1,5 +1,7 @@
 import { expect } from '@playwright/test';
-import type { APIRequestContext, Page } from '@playwright/test';
+import type { APIRequestContext, APIResponse, Page } from '@playwright/test';
+
+import { connecterLeFormateur as connecterLeFormateurALApi } from '../../scripts/banc/amorcage.mjs';
 
 export const URL_API = process.env['BANC_URL_API'] ?? 'http://127.0.0.1:3010/api/v1/portfolio25';
 
@@ -9,7 +11,7 @@ const SLUG_B2 = process.env['BANC_COURS'] || 'b2-01-traitement-information-chiff
 
 export const CODE_DU_COURS = SLUG_B2.slice(0, 5).toUpperCase();
 
-export const EN_TETE_JETON = 'x-participant-token';
+const EN_TETE_JETON = 'x-participant-token';
 
 const IDENTIFIANTS_FORMATEUR = {
   email: process.env['BANC_FORMATEUR_EMAIL'] ?? 'formateur.banc@example.test',
@@ -84,18 +86,6 @@ export function identiteDuPoste(rang: number): Identite {
 
 let jetonPartage: Promise<string> | null = null;
 
-async function ouvrirUneSession(request: APIRequestContext): Promise<string> {
-  const reponse = await request.post(`${URL_API}/auth/login`, {
-    data: {
-      email: IDENTIFIANTS_FORMATEUR.email,
-      password: IDENTIFIANTS_FORMATEUR.motDePasse,
-    },
-  });
-  expect(reponse.status(), await reponse.text()).toBe(200);
-  const { accessToken } = (await reponse.json()) as { accessToken: string };
-  return accessToken;
-}
-
 let jetonCourant = process.env['BANC_JETON_FORMATEUR'] ?? '';
 
 const MARGE_AVANT_EXPIRATION_MS = 120_000;
@@ -115,7 +105,14 @@ export function jetonDuFormateur(request: APIRequestContext): Promise<string> {
   if (jetonCourant !== '' && !expireBientot(jetonCourant)) {
     return Promise.resolve(jetonCourant);
   }
-  jetonPartage ??= ouvrirUneSession(request).then((jeton) => {
+  jetonPartage ??= connecterLeFormateurALApi({
+    appeler: async (url, { method, headers, body }) => {
+      const reponse = await request.fetch(url, { method, headers, data: body });
+      return { status: reponse.status(), text: () => reponse.text(), json: () => reponse.json() };
+    },
+    urlApi: URL_API,
+    identifiants: IDENTIFIANTS_FORMATEUR,
+  }).then((jeton) => {
     jetonCourant = jeton;
     jetonPartage = null;
     return jeton;
@@ -151,16 +148,25 @@ async function demarrerLaSeance(
   expect(reponse.status(), await reponse.text()).toBe(204);
 }
 
+export function piloterLaSeance(
+  request: APIRequestContext,
+  jeton: string,
+  sessionId: string,
+  commande: Readonly<Record<string, unknown>>,
+): Promise<APIResponse> {
+  return request.patch(`${URL_API}/formations/sessions/${sessionId}/control`, {
+    headers: entetesDuFormateur(jeton),
+    data: commande,
+  });
+}
+
 export async function servirLEcran(
   request: APIRequestContext,
   jeton: string,
   sessionId: string,
   ecran: number,
 ): Promise<void> {
-  const reponse = await request.patch(`${URL_API}/formations/sessions/${sessionId}/control`, {
-    headers: entetesDuFormateur(jeton),
-    data: { ecran },
-  });
+  const reponse = await piloterLaSeance(request, jeton, sessionId, { ecran });
   expect(reponse.status(), await reponse.text()).toBe(204);
 }
 
@@ -198,21 +204,34 @@ export async function agirSurLePoste(
   return reponse.status();
 }
 
-export async function inscrireUnPoste(
+export function demanderUnePlace(
   request: APIRequestContext,
   seance: Seance,
-  rang: number,
+  identite: Identite,
+): Promise<APIResponse> {
+  return request.post(`${URL_API}/formations/sessions/${seance.code}/join`, { data: identite });
+}
+
+export async function rejoindreLaSeance(
+  request: APIRequestContext,
+  seance: Seance,
+  identite: Identite,
 ): Promise<Poste> {
-  const identite = identiteDuPoste(rang);
-  const reponse = await request.post(`${URL_API}/formations/sessions/${seance.code}/join`, {
-    data: identite,
-  });
+  const reponse = await demanderUnePlace(request, seance, identite);
   expect(reponse.status(), await reponse.text()).toBe(201);
   const { participantId, jeton } = (await reponse.json()) as {
     participantId: string;
     jeton: string;
   };
   return { participantId, jeton, identite };
+}
+
+export function inscrireUnPoste(
+  request: APIRequestContext,
+  seance: Seance,
+  rang: number,
+): Promise<Poste> {
+  return rejoindreLaSeance(request, seance, identiteDuPoste(rang));
 }
 
 export function repondreDepuisLePoste(
@@ -232,13 +251,14 @@ export function envoyerUneReponseLibre(
   seance: Seance,
   poste: Poste,
   ecran: EcranDuCours,
-): Promise<import('@playwright/test').APIResponse> {
+  texte = 'Unité, période et source à vérifier.',
+): Promise<APIResponse> {
   return request.post(`${URL_API}/formations/sessions/${seance.sessionId}/free-responses`, {
     headers: { [EN_TETE_JETON]: poste.jeton },
     data: {
       screenId: ecran.id,
       activityId: ecran.activiteId,
-      response: 'Unité, période et source à vérifier.',
+      response: texte,
       dureeMs: 4000,
     },
   });

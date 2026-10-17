@@ -7,7 +7,7 @@ import {
   corpsDInscription,
   inscrireFormateur,
   sqlDePromotion,
-} from './amorcage.mjs';
+} from './amorcage.mts';
 
 const IDENTIFIANTS = { email: 'formateur.banc@example.test', motDePasse: 'Banc!abcdef12349' };
 
@@ -59,19 +59,21 @@ test("corpsDInscription reprend l'identite du formateur du banc", () => {
   });
 });
 
-test('inscrireFormateur accepte le 200 que le back rend a une creation comme a un compte deja present', async () => {
-  const api = apiSimulee([{ status: 200 }]);
+test('inscrireFormateur accepte tout 2xx : le 200 du back qui tait un compte present, le 201 du back en prod', async () => {
+  for (const status of [200, 201]) {
+    const api = apiSimulee([{ status }]);
 
-  await inscrireFormateur({ appeler: api.appeler, urlApi: '/api', identifiants: IDENTIFIANTS });
+    await inscrireFormateur({ appeler: api.appeler, urlApi: '/api', identifiants: IDENTIFIANTS });
 
-  assert.equal(api.vues[0].url, '/api/auth/register');
+    assert.equal(api.vues[0].url, '/api/auth/register', String(status));
+  }
 });
 
 test('inscrireFormateur remonte le statut et le corps de toute autre reponse', async () => {
   for (const [status, corps] of [
     [500, 'panne base'],
-    [201, 'ancien contrat'],
-    [409, 'ancien contrat'],
+    [409, 'compte deja present'],
+    [302, 'redirection'],
   ]) {
     const api = apiSimulee([{ status, corps }]);
 
@@ -82,13 +84,22 @@ test('inscrireFormateur remonte le statut et le corps de toute autre reponse', a
   }
 });
 
-test('amorcerFormateur refuse une connexion qui ne rend pas 200', async () => {
+test('amorcerFormateur accepte la connexion en 201 du back en prod', async () => {
   const api = apiSimulee([
-    { status: 200 },
+    { status: 201 },
     { status: 201, json: { accessToken: 'jeton-du-banc' } },
   ]);
 
-  await assert.rejects(amorcerSur(api), /connexion : 201/);
+  assert.equal(await amorcerSur(api), 'jeton-du-banc');
+});
+
+test('amorcerFormateur refuse une connexion hors 2xx', async () => {
+  const api = apiSimulee([
+    { status: 200 },
+    { status: 401, corps: 'identifiants refuses', json: { accessToken: 'jeton-du-banc' } },
+  ]);
+
+  await assert.rejects(amorcerSur(api), /connexion : 401 identifiants refuses/);
 });
 
 test('amorcerFormateur enchaine inscription, promotion et connexion', async () => {

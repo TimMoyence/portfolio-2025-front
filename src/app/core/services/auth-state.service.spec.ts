@@ -15,12 +15,10 @@ import {
   buildAuthUser,
   createAuthPortStub,
 } from '../../../testing/factories/auth.factory';
-import { createVerrouEnMemoire } from '../../../testing/factories/verrou.factory';
 import { reveillerApres } from '../../../testing/horloge-simulee';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuthStateService } from './auth-state.service';
 import { PLUS_LONGUE_FENETRE_MS } from './fenetre-de-renouvellement';
-import { VERROU_INTER_ONGLETS } from './verrou-inter-onglets';
 
 function refusHttp(status: number): () => HttpErrorResponse {
   return () => new HttpErrorResponse({ status });
@@ -47,7 +45,6 @@ describe('AuthStateService', () => {
         providers: [
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: AUTH_PORT, useValue: portStub },
-          { provide: VERROU_INTER_ONGLETS, useValue: createVerrouEnMemoire() },
         ],
       });
       service = TestBed.inject(AuthStateService);
@@ -92,6 +89,7 @@ describe('AuthStateService', () => {
 
       service.restoreSession();
       TestBed.inject(ApplicationRef).tick();
+      flushMicrotasks();
 
       expect(service.token()).toBe('jwt-restaure');
       expect(service.user()).toEqual(session.user);
@@ -201,6 +199,17 @@ describe('AuthStateService', () => {
 
       expect(portStub.refresh).toHaveBeenCalledTimes(2);
       expect(service.token()).toBe('jwt-apres-panne');
+    }));
+
+    it('traite un renouvellement reste sans reponse dix secondes comme une panne du reseau, puis le rejoue', fakeAsync(() => {
+      portStub.refresh.and.returnValues(
+        NEVER,
+        of(buildAuthSession({ accessToken: 'jwt-apres-silence', expiresIn: 900 })),
+      );
+      atteindreLePremierRenouvellement();
+      attendreLeDeuxiemeEssaiApres(10_000 + 2_000);
+
+      expect(service.token()).toBe('jwt-apres-silence');
     }));
 
     describe('renouvellement refuse par la limite de cadence (429)', () => {
@@ -351,6 +360,7 @@ describe('AuthStateService', () => {
       ] as const) {
         it(`ne connecte pas une session que ${chemin} ramene apres un effacement`, fakeAsync(() => {
           lancer(service);
+          flushMicrotasks();
           expect(portStub.refresh).toHaveBeenCalledTimes(1);
 
           service.clearSession();
@@ -397,6 +407,7 @@ describe('AuthStateService', () => {
       function restaurer(): void {
         service.restoreSession();
         TestBed.inject(ApplicationRef).tick();
+        flushMicrotasks();
       }
 
       function restaurerSansJetonApresUnRefus(status: number): void {
@@ -408,7 +419,7 @@ describe('AuthStateService', () => {
       }
 
       for (const status of [0, 503]) {
-        it(`signale un echec de restauration quand le refresh echoue en ${status}`, () => {
+        it(`signale un echec de restauration quand le refresh echoue en ${status}`, fakeAsync(() => {
           restaurerSansJetonApresUnRefus(status);
 
           expect(service.user()).toBeNull();
@@ -416,17 +427,43 @@ describe('AuthStateService', () => {
           expect(service.isSessionResolved())
             .withContext('aucun garde ne doit juger le role sur une verification en echec')
             .toBeFalse();
-        });
+        }));
       }
 
       for (const status of [401, 403]) {
-        it(`efface la session quand le refresh est refuse en ${status}`, () => {
+        it(`efface la session quand le refresh est refuse en ${status}`, fakeAsync(() => {
           restaurerSansJetonApresUnRefus(status);
 
           expect(service.isRestoreFailed()).toBeFalse();
           expect(service.isSessionResolved()).toBeTrue();
-        });
+        }));
       }
+
+      it('une relecture du compte lancee pendant la restauration rejoint son rafraichissement, sans en lancer un second', fakeAsync(() => {
+        const reponse = new Subject<AuthSession>();
+        portStub.refresh.and.returnValue(reponse);
+
+        service.restoreSession();
+        service.relireLeCompte().subscribe();
+        flushMicrotasks();
+        reponse.next(buildAuthSession({ accessToken: 'jwt-restaure' }));
+        reponse.complete();
+        flushMicrotasks();
+
+        expect(portStub.refresh).toHaveBeenCalledTimes(1);
+        expect(service.token()).toBe('jwt-restaure');
+      }));
+
+      it('sous une panne du refresh, une relecture du compte sans jeton attend la fin du recul', fakeAsync(() => {
+        portStub.refresh.and.returnValue(throwError(refusHttp(503)));
+
+        for (let lecture = 0; lecture < 2; lecture += 1) {
+          service.relireLeCompte().subscribe();
+          flushMicrotasks();
+        }
+
+        expect(portStub.refresh).toHaveBeenCalledTimes(1);
+      }));
 
       it('abandonne une restauration sans reponse apres dix secondes', fakeAsync(() => {
         portStub.refresh.and.returnValue(NEVER);
@@ -442,19 +479,62 @@ describe('AuthStateService', () => {
         expect(service.token()).toBeNull();
       }));
 
-      it('resout la session quand le nouvel essai aboutit', () => {
+      for (const { cause, refus } of [
+        { cause: 'une panne', refus: refusHttp(503) },
+        { cause: 'une limite de cadence de 30 s', refus: limiteAtteinte('30') },
+      ]) {
+        it(`resout la session quand le nouvel essai aboutit, aussitot apres ${cause}`, fakeAsync(() => {
+          portStub.refresh.and.returnValues(
+            throwError(refus),
+            of(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) })),
+          );
+          restaurer();
+
+          restaurer();
+
+          expect(portStub.refresh).toHaveBeenCalledTimes(2);
+          expect(service.isRestoreFailed()).toBeFalse();
+          expect(service.hasRole('teacher')).toBeTrue();
+          expect(service.isSessionResolved()).toBeTrue();
+        }));
+
+        it(`restaure la session d une page rechargee aussitot apres ${cause}`, fakeAsync(() => {
+          portStub.refresh.and.returnValues(
+            throwError(refus),
+            of(buildAuthSession({ accessToken: 'jwt-recharge' })),
+          );
+          restaurer();
+          const pageRechargee = createEnvironmentInjector(
+            [AuthStateService],
+            TestBed.inject(EnvironmentInjector),
+          );
+          const rechargee = pageRechargee.get(AuthStateService);
+
+          rechargee.restoreSession();
+          flushMicrotasks();
+
+          expect(portStub.refresh).toHaveBeenCalledTimes(2);
+          expect(rechargee.token()).toBe('jwt-recharge');
+          expect(rechargee.isRestoreFailed()).toBeFalse();
+          rechargee.clearSession();
+          pageRechargee.destroy();
+        }));
+      }
+
+      it('relance le refresh au nouvel essai quand le precedent est reste sans reponse', fakeAsync(() => {
         portStub.refresh.and.returnValues(
-          throwError(refusHttp(503)),
-          of(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) })),
+          NEVER,
+          of(buildAuthSession({ accessToken: 'jwt-relance' })),
         );
         restaurer();
+        tick(10_000);
+        expect(service.isRestoreFailed()).toBeTrue();
 
-        service.restoreSession();
+        restaurer();
 
-        expect(service.isRestoreFailed()).toBeFalse();
-        expect(service.hasRole('teacher')).toBeTrue();
-        expect(service.isSessionResolved()).toBeTrue();
-      });
+        expect(portStub.refresh).toHaveBeenCalledTimes(2);
+        expect(service.token()).toBe('jwt-relance');
+      }));
     });
 
     it('devrait se creer', () => {

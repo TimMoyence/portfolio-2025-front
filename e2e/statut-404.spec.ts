@@ -1,12 +1,9 @@
 import { expect, test } from '@playwright/test';
 
-const baseSsr = process.env['SSR_BASE_URL'] ?? '';
+import { baseSsr, exigerLaPorteSsr } from './porte-ssr';
 
 test.describe('une page introuvable répond un vrai 404', () => {
-  test.skip(
-    baseSsr === '',
-    'hors porte : SSR_BASE_URL absente. La porte la fournit (npm run test:e2e:portail).',
-  );
+  exigerLaPorteSsr();
 
   for (const chemin of ['/fr/page-inexistante', '/en/page-inexistante']) {
     test(`${chemin} répond 404, en noindex, sans cache long`, async ({ request }) => {

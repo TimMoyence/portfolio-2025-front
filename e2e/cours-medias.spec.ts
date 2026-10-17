@@ -1,6 +1,8 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
+import { baseSsr, exigerLaPorteSsr } from './porte-ssr';
+
 const CATALOGUE = 'medias.manifest.json';
 const DOSSIERS_DES_COURS: readonly { readonly cours: string; readonly version: string }[] =
   readdirSync('src/assets/cours', { recursive: true, encoding: 'utf8' })
@@ -16,8 +18,6 @@ const TYPES_ATTENDUS: Readonly<Record<string, string>> = {
   jpg: 'image/jpeg',
   vtt: 'text/vtt',
 };
-
-const baseSsr = process.env['SSR_BASE_URL'] ?? '';
 
 interface FichierDeMedia {
   readonly id: string;
@@ -74,10 +74,7 @@ for (const { cours, version } of DOSSIERS_DES_COURS) {
   const medias = fichiersDuCatalogue(`src${prefixeServi}`);
 
   test.describe(`medias du cours ${cours.toUpperCase()} ${version} servis par le build (V3-L5)`, () => {
-    test.skip(
-      baseSsr === '',
-      'hors porte : SSR_BASE_URL absente. La porte la fournit (npm run test:e2e:portail).',
-    );
+    exigerLaPorteSsr();
 
     for (const media of medias) {
       test(`${media.id} — ${media.fichier} repond 200 avec son type MIME`, async ({ request }) => {

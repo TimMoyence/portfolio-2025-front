@@ -177,6 +177,26 @@ describe('ProfileComponent', () => {
       );
     });
 
+    it('exige 2 caractères au prénom et au nom, comme le back en prod jusqu au lot 2d, et le dit sous le champ', async () => {
+      component.startEditing();
+      fixture.detectChanges();
+
+      for (const selecteur of ['#editFirstName', '#editLastName']) {
+        for (const unSeul of ['A', '李', String.fromCodePoint(0x1f600)]) {
+          expect(await erreursApresSaisie(fixture, selecteur, ` ${unSeul} `))
+            .withContext(`${selecteur} ${unSeul}`)
+            .toEqual({ minlength: { requiredLength: 2, actualLength: 1 } });
+        }
+        expect(await erreursApresSaisie(fixture, selecteur, 'Al'))
+          .withContext(selecteur)
+          .toBeNull();
+      }
+      await erreursApresSaisie(fixture, '#editLastName', 'A');
+      expect(texteDuBlocDuChamp(fixture, '#editLastName')).toContain(
+        'Ce champ doit contenir au moins 2 caractères.',
+      );
+    });
+
     it('refuse un téléphone que le back refuse, et le dit sous le champ', async () => {
       component.startEditing();
       fixture.detectChanges();

@@ -1,13 +1,12 @@
 import { expect, test } from '@playwright/test';
 import type { APIRequestContext, APIResponse, Page } from '@playwright/test';
 import {
-  URL_API,
   coursReleve,
-  entetesDuFormateur,
   inscrireUnPoste,
   lireLesResultats,
   optionsDuPoste,
   phaseDuPoste,
+  piloterLaSeance,
   posteDansSonNavigateur,
   reponseApres,
   repondreDepuisLePoste,
@@ -65,10 +64,7 @@ function piloterLaPhase(
   sessionId: string,
   pilotage: Readonly<Record<string, unknown>>,
 ): Promise<APIResponse> {
-  return request.patch(`${URL_API}/formations/sessions/${sessionId}/control`, {
-    headers: entetesDuFormateur(jeton),
-    data: { pilotage },
-  });
+  return piloterLaSeance(request, jeton, sessionId, { pilotage });
 }
 
 test.describe('Banc — vote à question jumelle', () => {

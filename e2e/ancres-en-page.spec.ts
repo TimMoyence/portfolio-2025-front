@@ -1,15 +1,11 @@
 import { expect, test } from '@playwright/test';
 
-const baseSsr = process.env['SSR_BASE_URL'] ?? '';
-const baseAnglaise = process.env['SSR_EN_BASE_URL'] ?? '';
+import { baseAnglaise, baseSsr, exigerLaPorteSsr } from './porte-ssr';
 
 const baseDe = (chemin: string): string => (chemin.startsWith('/en/') ? baseAnglaise : baseSsr);
 
 test.describe('une ancre de page reste sur la page', () => {
-  test.skip(
-    baseSsr === '' || baseAnglaise === '',
-    'hors porte : SSR_BASE_URL ou SSR_EN_BASE_URL absente. La porte les fournit (npm run test:e2e:portail).',
-  );
+  exigerLaPorteSsr({ anglaise: true });
 
   test.beforeEach(async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });

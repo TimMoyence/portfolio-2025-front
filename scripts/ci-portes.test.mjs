@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
@@ -10,6 +11,8 @@ import { avecDossierPlante } from './lib/dossier-temporaire.mjs';
 const CHEMIN_PACKAGE = cheminDuDepot('package.json');
 
 const CHEMIN_WORKFLOW = cheminDuDepot('.github/workflows/ci.yml');
+
+const CHEMIN_LIGHTHOUSE = cheminDuDepot('.lighthouserc.js');
 
 const JOB_WORKFLOW = 'quality-gate';
 
@@ -275,6 +278,34 @@ test('ci-portes : le job e2e bloque la suite du workflow', () => {
     bloc[1],
     new RegExp(`needs:[\\s\\S]*?- ${JOB_E2E}\\b`),
     `ci-portes : le job « docker » doit dependre de « ${JOB_E2E} », sinon une suite e2e rouge n empeche rien.`,
+  );
+});
+
+test('ci-portes : Lighthouse est joue apres le build du job e2e, bloque sous 0,9 d accessibilite et garde ses rapports sur le runner', () => {
+  const { scripts } = lireContexte();
+  const etapes = etapesDuJob(readFileSync(CHEMIN_WORKFLOW, 'utf8'), JOB_E2E);
+  const indexBuild = etapes.findIndex((etape) => /\bnpm run build\b/.test(etape.commande));
+  const indexLighthouse = etapes.findIndex((etape) => etape.commande === 'npm run lighthouse');
+  const configuration = createRequire(import.meta.url)(CHEMIN_LIGHTHOUSE).ci;
+
+  assert.match(
+    scripts.lighthouse,
+    /^lhci autorun$/,
+    'ci-portes : « npm run lighthouse » doit jouer « lhci autorun », qui collecte, juge et range les rapports.',
+  );
+  assert.ok(
+    indexBuild !== -1 && indexLighthouse !== -1 && indexBuild < indexLighthouse,
+    `ci-portes : le job « ${JOB_E2E} » doit jouer « npm run lighthouse » apres le build (le serveur SSR lit dist/).`,
+  );
+  assert.deepEqual(
+    configuration.assert.assertions['categories:accessibility'],
+    ['error', { minScore: 0.9 }],
+    'ci-portes : une accessibilite sous 0,9 doit faire echouer Lighthouse, donc le deploiement.',
+  );
+  assert.deepEqual(
+    configuration.upload,
+    { target: 'filesystem', outputDir: '.lighthouseci/rapports' },
+    'ci-portes : les rapports Lighthouse restent sur le runner (artefact .lighthouseci/), jamais sur un stockage public.',
   );
 });
 

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const baseSsr = process.env['SSR_BASE_URL'] ?? '';
+import { baseSsr, exigerLaPorteSsr } from './porte-ssr';
 
 const ROUTES_DE_SEANCE = [
   '/fr/cours/rejoindre',
@@ -11,10 +11,7 @@ const ROUTES_DE_SEANCE = [
 ];
 
 test.describe('les routes de séance sont servies en coquille client', () => {
-  test.skip(
-    baseSsr === '',
-    'hors porte : SSR_BASE_URL absente. La porte la fournit (npm run test:e2e:portail).',
-  );
+  exigerLaPorteSsr();
 
   for (const chemin of ROUTES_DE_SEANCE) {
     test(`${chemin} ne rend aucun formulaire avant Angular et ne s indexe pas`, async ({

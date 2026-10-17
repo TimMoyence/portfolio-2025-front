@@ -12,15 +12,24 @@ import { enteteDAutorisation } from '../entete-d-autorisation';
 const LOGIN_URL = '/login';
 const REFRESH_PATH = '/auth/refresh';
 const DEFI_DU_JETON_DE_SESSION = /^Bearer\b/i;
+const ROUTES_QUI_JUGENT_DES_IDENTIFIANTS: readonly string[] = [
+  '/auth/login',
+  '/auth/google',
+  '/auth/change-password',
+  '/auth/set-password',
+  '/auth/logout',
+];
 
 type Rafraichissement = 'a-tenter' | IssueDuRafraichissement;
 
-function refuseLeJetonDeSession(error: unknown): error is HttpErrorResponse {
-  return (
-    error instanceof HttpErrorResponse &&
-    error.status === 401 &&
-    DEFI_DU_JETON_DE_SESSION.test(error.headers.get('WWW-Authenticate') ?? '')
-  );
+function refuseLeJetonDeSession(error: unknown, route: string): error is HttpErrorResponse {
+  if (!(error instanceof HttpErrorResponse) || error.status !== 401) {
+    return false;
+  }
+  const defi = error.headers.get('WWW-Authenticate');
+  return defi === null
+    ? !ROUTES_QUI_JUGENT_DES_IDENTIFIANTS.includes(route)
+    : DEFI_DU_JETON_DE_SESSION.test(defi);
 }
 
 function pendingNavigationUrl(router: Router): string | null {
@@ -50,6 +59,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const config = inject(APP_CONFIG);
 
   const targetsOwnApi = req.url.startsWith(config.apiBaseUrl);
+  const route = req.url.slice(config.apiBaseUrl.length);
   const isSilentRefresh = req.url === `${config.apiBaseUrl}${REFRESH_PATH}`;
   const concernsTeacherSession =
     targetsOwnApi && !req.headers.has(ENTETE_JETON_PARTICIPANT) && !isSilentRefresh;
@@ -76,7 +86,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       token && targetsOwnApi ? req.clone({ setHeaders: enteteDAutorisation(token) }) : req;
     return next(authReq).pipe(
       catchError((error: unknown) =>
-        concernsTeacherSession && refuseLeJetonDeSession(error)
+        concernsTeacherSession && refuseLeJetonDeSession(error, route)
           ? apresUnRefus(error, rafraichissement)
           : throwError(() => error),
       ),

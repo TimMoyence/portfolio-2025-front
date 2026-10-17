@@ -3101,8 +3101,8 @@
     </unit>
     <unit id="privacyMetaLastUpdated">
       <segment>
-        <source>Dernière mise à jour : 16 octobre 2026</source>
-        <target>Last updated: October 16, 2026</target>
+        <source>Dernière mise à jour : 17 octobre 2026</source>
+        <target>Last updated: October 17, 2026</target>
       </segment>
     </unit>
     <unit id="footerLegalPrivacy">
@@ -8872,8 +8872,8 @@
         <note category="location">src/app/features/privacy/privacy.component.html:93,96</note>
       </notes>
       <segment>
-        <source> Le traitement repose, selon les cas, sur l&apos;exécution d&apos;un contrat (votre achat), votre consentement (toolkit), ou notre intérêt légitime (sécurité et amélioration du site). </source>
-        <target> Processing relies, depending on the case, on the performance of a contract (your purchase), your consent (toolkit), or our legitimate interest (security and improvement of the site). </target>
+        <source> Le traitement repose, selon les cas, sur l&apos;exécution d&apos;un contrat (votre achat), votre consentement (toolkit), ou notre intérêt légitime (sécurité et bon fonctionnement du site). </source>
+        <target> Processing relies, depending on the case, on the performance of a contract (your purchase), your consent (toolkit), or our legitimate interest (security and proper operation of the site). </target>
       </segment>
     </unit>
     <unit id="privacyBaseTitle">
@@ -8953,8 +8953,8 @@
         <note category="location">src/app/features/privacy/privacy.component.html:63,65</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données d&apos;usage</pc> : statistiques de navigation anonymisées, pour améliorer le site. </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Usage data</pc>: anonymized browsing statistics, to improve the site. </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Mesure d&apos;audience</pc> : aucune pour l&apos;instant, le site ne collecte aucune statistique de navigation. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Audience measurement</pc>: none for now, the site collects no browsing statistics. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteTitle">
@@ -9269,15 +9269,6 @@
       <segment>
         <source>Répondre à vos messages.</source>
         <target>Reply to your messages.</target>
-      </segment>
-    </unit>
-    <unit id="privacyUsageItem4">
-      <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:85,87</note>
-      </notes>
-      <segment>
-        <source> Améliorer le site, de façon agrégée et anonyme. </source>
-        <target> Improve the site, in an aggregated and anonymous way. </target>
       </segment>
     </unit>
     <unit id="privacyUsagePreuve">

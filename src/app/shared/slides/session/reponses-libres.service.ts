@@ -10,6 +10,7 @@ import {
   limiteDuRefus,
   ReponseLibreRefusee,
 } from '../../../core/ports/formations.port';
+import type { LimiteDeDebit } from '../../../core/models/limite-de-debit';
 import type { EtatParticipant } from '../../../../cours/content/types';
 import { readIdentity } from '../../../../cours/runtime/core/identity';
 import type { PendingFreeResponse } from '../interactions/slide-reflection/free-response.queue';
@@ -69,6 +70,8 @@ export class ReponsesLibresService {
   readonly etatsDesEnvois = this.etats.asReadonly();
   private readonly reussites = new Subject<void>();
   readonly envoisReussis: Observable<void> = this.reussites.asObservable();
+  private readonly limites = new Subject<LimiteDeDebit>();
+  readonly limitesAtteintes: Observable<LimiteDeDebit> = this.limites.asObservable();
   private readonly reprises = new Map<string, Promise<unknown>>();
 
   texteGarde(sessionId: string, activityId: string): string | null {
@@ -197,7 +200,9 @@ export class ReponsesLibresService {
     } catch {
       return 'echec';
     }
-    if (limiteDuRefus(erreur) !== null) {
+    const limite = limiteDuRefus(erreur);
+    if (limite !== null) {
+      this.limites.next(limite);
       return 'attente_limite';
     }
     return motif === 'reseau' ? 'attente_reseau' : 'ecran_non_servi';

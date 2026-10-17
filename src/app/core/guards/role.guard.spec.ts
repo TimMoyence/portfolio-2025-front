@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApplicationRef } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot, GuardResult, RouterStateSnapshot } from '@angular/router';
 import { UrlTree } from '@angular/router';
 import { isObservable, Subject } from 'rxjs';
@@ -35,6 +35,7 @@ describe('roleGuard', () => {
   }
 
   function rendreLaPage(): void {
+    flushMicrotasks();
     TestBed.inject(ApplicationRef).tick();
   }
 
@@ -69,7 +70,7 @@ describe('roleGuard', () => {
     expect(String(decision)).toBe(REDIRECTION_FORMATEUR);
   });
 
-  it('devrait rediriger vers /contact une fois la session resolue sans jeton', () => {
+  it('devrait rediriger vers /contact une fois la session resolue sans jeton', fakeAsync(() => {
     sessionRestauree.error(new HttpErrorResponse({ status: 401 }));
     const decisions = decisionsDe('teacher');
 
@@ -79,10 +80,10 @@ describe('roleGuard', () => {
     expect(decisions.length).toBe(1);
     expect(decisions[0]).toBeInstanceOf(UrlTree);
     expect(String(decisions[0])).toBe(REDIRECTION_FORMATEUR);
-  });
+  }));
 
   describe('au chargement d une page avec un cookie de refresh', () => {
-    it('attend la session restauree et autorise le role qu elle porte', () => {
+    it('attend la session restauree et autorise le role qu elle porte', fakeAsync(() => {
       const decisions = decisionsDe('teacher');
 
       rendreLaPage();
@@ -98,9 +99,9 @@ describe('roleGuard', () => {
       rendreLaPage();
 
       expect(decisions).toEqual([true]);
-    });
+    }));
 
-    it('ne renvoie pas vers /contact quand la verification echoue hors refus, puis decide au nouvel essai', () => {
+    it('ne renvoie pas vers /contact quand la verification echoue hors refus, puis decide au nouvel essai', fakeAsync(() => {
       const decisions = decisionsDe('teacher');
 
       rendreLaPage();
@@ -112,14 +113,15 @@ describe('roleGuard', () => {
       const nouvelEssai = new Subject<ReturnType<typeof buildAuthSession>>();
       port.refresh.and.returnValue(nouvelEssai);
       authState.restoreSession();
+      rendreLaPage();
       nouvelEssai.next(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) }));
       nouvelEssai.complete();
       rendreLaPage();
 
       expect(decisions).toEqual([true]);
-    });
+    }));
 
-    it('redirige quand l utilisateur restaure ne porte pas le role', () => {
+    it('redirige quand l utilisateur restaure ne porte pas le role', fakeAsync(() => {
       const decisions = decisionsDe('teacher');
 
       rendreLaPage();
@@ -129,6 +131,6 @@ describe('roleGuard', () => {
 
       expect(decisions.length).toBe(1);
       expect(String(decisions[0])).toBe('/contact?reason=access&app=teacher');
-    });
+    }));
   });
 });
