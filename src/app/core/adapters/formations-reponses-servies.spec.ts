@@ -129,12 +129,22 @@ const OPTIONNELLES_AU_CONTRAT_DU_BACK: Readonly<Partial<Record<string, readonly 
   [`${PRESENTATION}<renderer=table>.props`]: ['subtitle', 'note'],
 };
 
+const SYNTHESE_D_UNE_QUESTION = ['confusionDominante', 'part', 'sousLeSeuil', 'remediation'];
+
+const SUITE_D_UNE_ENIGME = ['etats', 'enigmeOuverte', 'acheve'];
+
 const TOLEREES_ABSENTES_JUSQU_AU_LOT_2D: Readonly<Partial<Record<string, readonly string[]>>> = {
   '': ['reflexion'],
   '.corrigeEcran': ['tableauCorrige'],
   '.corrigeEcran.attendus[]': ['affichage'],
-  '.donnees.definition': ['abscisses', 'positions'],
-  '.donnees.plan': ['lettres', 'grille', 'longueurMaxSaisie', 'initiale'],
+  '.correction.corrige': ['tableauCorrige'],
+  '.correction.corrige.attendus[]': ['affichage'],
+  '.donnees.definition': ['abscisses', 'positions', 'sorties'],
+  '.donnees.plan': ['lettres', 'grille', 'longueurMaxSaisie', 'initiale', 'tableauInitial'],
+  $: SUITE_D_UNE_ENIGME,
+  '$.enigmes[]': SUITE_D_UNE_ENIGME,
+  '$.questions[]': SYNTHESE_D_UNE_QUESTION,
+  '$.resultats.questions[]': SYNTHESE_D_UNE_QUESTION,
 };
 
 const OPTIONNELLES_OU_TOLEREES = Object.fromEntries(
@@ -180,17 +190,17 @@ describe('Réponses réellement servies par le back, lues par les schémas du fr
     normaliser: dansLEcran,
   });
 
-  it('lit le déroulé du back en prod : seules les clés neuves du back 2c y restent tolérées absentes', () => {
+  it('lit chaque route du back : seules les clés neuves que le back en prod ne sert pas encore y restent tolérées absentes', () => {
     const contratSansLeLot2d: ContratDuBack = {
       optionnelle: (chemin, cle) =>
         OPTIONNELLES_AU_CONTRAT_DU_BACK[dansLEcran(chemin)]?.includes(cle) ?? false,
     };
-    const tolerees = tolerancesDe(derouleServi, documentsDe(DEROULE), contratSansLeLot2d).map(
-      (faute) => {
-        const [, chemin, cle] = TOLEREE_ABSENTE.exec(faute) ?? [faute, faute, ''];
-        return `${dansLEcran(chemin)} ${cle}`;
-      },
-    );
+    const tolerees = ROUTES_LUES.flatMap(([lue, schema]) =>
+      tolerancesDe(schema, documentsDe(lue), contratSansLeLot2d),
+    ).map((faute) => {
+      const [, chemin, cle] = TOLEREE_ABSENTE.exec(faute) ?? [faute, faute, ''];
+      return `${dansLEcran(chemin)} ${cle}`;
+    });
     const attendues = Object.entries(TOLEREES_ABSENTES_JUSQU_AU_LOT_2D).flatMap(([chemin, cles]) =>
       (cles ?? []).map((cle) => `${chemin} ${cle}`),
     );

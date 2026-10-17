@@ -70,26 +70,27 @@ const ROUTES_LUES: readonly (readonly [string, z.ZodType])[] = [
 
 const SERVIES_SANS_LECTEUR: Readonly<Record<string, string>> = {
   'GET /api/v1/portfolio25/articles/admin/articles': '@Roles(admin), aucun client dans le front',
-  'POST /api/v1/portfolio25/articles/admin/:articleId/broadcast/approve':
-    '@Roles(admin), aucun client dans le front',
-  'POST /api/v1/portfolio25/articles/admin/:articleId/broadcast/cancel':
-    '@Roles(admin), aucun client dans le front',
   'POST /api/v1/portfolio25/articles/admin/:articleId/restore':
     '@Roles(admin), aucun client dans le front',
   'POST /api/v1/portfolio25/articles/admin/:articleId/withdraw':
     '@Roles(admin), aucun client dans le front',
 };
 
-const PERSONNALISATION_DU_GUIDE = {
-  $: ['generatedPrompt'],
-  '$.recap': ['aiLevel', 'budgetTier', 'sector'],
-  '$.cheatsheet[]': ['alreadyUsed'],
+const PERSONNALISATION_DU_GUIDE_EN_PROD = {
+  $: { generatedPrompt: null },
+  '$.recap': { aiLevel: null, budgetTier: null, sector: null },
+  '$.cheatsheet[]': { alreadyUsed: false },
 } as const;
 
-const OPTIONNELLES_AU_CONTRAT_DU_BACK: Readonly<Partial<Record<string, readonly string[]>>> =
-  PERSONNALISATION_DU_GUIDE;
+const STATUT_D_UNE_VISIBILITE = ['status', 'statusLabel'];
 
-function sansLaPersonnalisation(page: unknown): unknown {
+const TOLEREES_ABSENTES_JUSQU_AU_LOT_2D: Readonly<Partial<Record<string, readonly string[]>>> = {
+  '$.clientReport.googleVsAiMatrix.googleVisibility': STATUT_D_UNE_VISIBILITE,
+  '$.clientReport.googleVsAiMatrix.aiVisibility': STATUT_D_UNE_VISIBILITE,
+  '$.clientReport.pillarScorecard[]': ['statusLabel'],
+};
+
+function avecLaPersonnalisationEnProd(page: unknown): unknown {
   const copie = structuredClone(page) as {
     recap: Record<string, unknown>;
     cheatsheet: Record<string, unknown>[];
@@ -99,11 +100,9 @@ function sansLaPersonnalisation(page: unknown): unknown {
     '$.recap': [copie.recap],
     '$.cheatsheet[]': copie.cheatsheet,
   };
-  for (const [chemin, cles] of Object.entries(PERSONNALISATION_DU_GUIDE)) {
+  for (const [chemin, cles] of Object.entries(PERSONNALISATION_DU_GUIDE_EN_PROD)) {
     for (const objet of objetsDe[chemin as keyof typeof objetsDe]) {
-      for (const cle of cles) {
-        delete objet[cle];
-      }
+      Object.assign(objet, cles);
     }
   }
   return copie;
@@ -126,7 +125,7 @@ describe('Réponses réellement servies par le back hors des formations, lues pa
     routes: ROUTES_LUES,
     schemas: schemasDuSite,
     documentsDe: reponsesServiesPar,
-    optionnelles: OPTIONNELLES_AU_CONTRAT_DU_BACK,
+    optionnelles: TOLEREES_ABSENTES_JUSQU_AU_LOT_2D,
     ouvert: ouvertAuContrat,
   });
 
@@ -137,14 +136,15 @@ describe('Réponses réellement servies par le back hors des formations, lues pa
     });
   });
 
-  it('lit la page du guide que le back sert sans personnalisation, avant qu il cesse de la servir (LEG-06)', () => {
+  it('lit la page du guide que le back en prod sert encore avec la personnalisation, jusqu au déploiement de LEG-06', () => {
     const pages = reponsesServiesPar('GET /api/lead-magnets/toolkit/:token').map(
-      sansLaPersonnalisation,
+      avecLaPersonnalisationEnProd,
     );
 
     const lecteur: z.ZodType = guideServi;
 
     expect(pages.length).toBeGreaterThan(0);
+    expect(pages.every((page) => JSON.stringify(page).includes('"alreadyUsed":false'))).toBeTrue();
     for (const page of pages) {
       const lue = lecteur.safeParse(page);
 
