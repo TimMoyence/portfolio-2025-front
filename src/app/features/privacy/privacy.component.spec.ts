@@ -89,6 +89,12 @@ describe('PrivacyComponent', () => {
     });
   }
 
+  it('ne fonde plus le consentement sur une newsletter, que le site n envoie plus (LEG-05)', () => {
+    expect(texteNormalise(rendre().querySelector('#base p'))).toBe(
+      "Le traitement repose, selon les cas, sur l'exécution d'un contrat (votre achat), votre consentement (toolkit), ou notre intérêt légitime (sécurité et amélioration du site).",
+    );
+  });
+
   it('date la politique du jour où elle a nommé ces données', () => {
     expect(rendre().textContent).toContain('Dernière mise à jour : 16 octobre 2026');
   });
