@@ -5,7 +5,7 @@ import {
 } from '../../../../testing/montage-d-instantane';
 
 decrireLeMontageDeLInstantane('B2-04', INSTANTANE_B2_04, {
-  empreinte: '7b3b11308928d4a538d79f2384bd153799bf999d5a90ea5a237ba2529501f6ff',
+  empreinte: '1d8b0b9ac06f4aec610ee860e8b1d0eeedad56e98e9ead3192c1c6c9e72f0676',
   ecrans: 34,
   publicsAuCatalogue: [
     'A1-02-ACCROCHE',
