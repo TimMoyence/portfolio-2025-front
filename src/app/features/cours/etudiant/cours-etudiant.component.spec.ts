@@ -11,7 +11,10 @@ import type {
   EtatParticipant,
   PilotageEcran,
 } from '../../../../cours/content/types';
-import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
+import { noeudsOmbre } from '../../../../testing/banc-de-brique';
+import { briqueMontee, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
+import type { EscapeParcoursPublic } from '../../../../cours/runtime/blocks/FpEscape';
+import type { EtatDesEnigmes, EtatEnigme } from '../../../../cours/runtime/blocks/retours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import {
   champsAntiRobotDe,
@@ -171,6 +174,40 @@ const ECRANS_DE_REFLEXION = [...INSTANTANES_DES_COURS_SERVIS].flatMap(
       presentationDe(ecran)?.renderer === 'reflection' ? [{ prefixe, servi, rang }] : [],
     ),
 );
+const COFFRES_SERVIS = [...INSTANTANES_DES_COURS_SERVIS].flatMap(([prefixe, { sujet: servi }]) =>
+  servi.ecrans.flatMap((ecran, rang) =>
+    ecran.type === 'fp-escape'
+      ? [{ prefixe, servi, rang, parcours: ecran.donnees?.['parcours'] as EscapeParcoursPublic }]
+      : [],
+  ),
+);
+
+function etatDeLEnigme(rang: number, ouverte: number): EtatEnigme {
+  if (rang < ouverte) {
+    return 'resolue';
+  }
+  return rang === ouverte ? 'ouverte' : 'verrouillee';
+}
+
+function etatDuCoffre(
+  parcours: EscapeParcoursPublic,
+  ouverte: number,
+  restantesDeLaPremiere: number,
+): EtatDesEnigmes {
+  return {
+    etats: Object.fromEntries(
+      parcours.enigmes.map(({ id }, rang) => [
+        id,
+        {
+          etat: etatDeLEnigme(rang, ouverte),
+          tentativesRestantes: rang === 0 ? restantesDeLaPremiere : parcours.tentativesMax,
+        },
+      ]),
+    ),
+    enigmeOuverte: parcours.enigmes[ouverte]?.id ?? null,
+    acheve: false,
+  };
+}
 const CODE_SAISI = '12 34';
 const CODE_NORMALISE = '1234';
 const ETIQUETTE_BRUTE = 'interets-simples';
@@ -2692,6 +2729,65 @@ describe('CoursEtudiantComponent', () => {
       expect(genresDe(fixture)).toEqual(['refus']);
       expect(port.lireMonEtat).toHaveBeenCalledTimes(1);
     });
+
+    for (const { prefixe, servi, rang, parcours } of COFFRES_SERVIS) {
+      it(
+        `N-D01 · ${prefixe} ecran ${rang + 1} : l enigme que le serveur relit resolue le reste apres un aller-retour d ecran`,
+        async () => {
+          const [premiere] = parcours.enigmes;
+          sujet = servi;
+          port.lireSujet.and.returnValue(of(sujet));
+          port.tenterEnigme.and.returnValues(
+            of(
+              buildVerdictTentative({
+                correcte: false,
+                fragment: null,
+                tentativesRestantes: parcours.tentativesMax - 1,
+                ...etatDuCoffre(parcours, 0, parcours.tentativesMax - 1),
+              }),
+            ),
+            throwError(() => new ReponseRefusee('deja-repondue', 409)),
+          );
+          const fixture = await rattacherALaSeanceEnCours();
+          await diffuserPuisStabiliser(fixture, { ecranCourant: rang });
+          port.lireMonEtat.and.returnValue(
+            of(
+              buildEtatParticipant({
+                enigmes: [
+                  {
+                    parcoursId: parcours.id,
+                    resolues: [{ enigmeId: premiere.id, fragment: 'A' }],
+                    tentativesRestantes: { [premiere.id]: parcours.tentativesMax - 2 },
+                    ...etatDuCoffre(parcours, 1, parcours.tentativesMax - 2),
+                  },
+                ],
+              }),
+            ),
+          );
+          const tentative = {
+            kind: 'tentative',
+            screenId: servi.ecrans[rang].id,
+            parcoursId: parcours.id,
+            enigmeId: premiere.id,
+            dureeMs: 100,
+          } as const;
+          await emettre(fixture, { ...tentative, reponse: '1' });
+          await emettre(fixture, { ...tentative, reponse: '2' });
+
+          await diffuserPuisStabiliser(fixture, { ecranCourant: rang - 1 });
+          await diffuserPuisStabiliser(fixture, { ecranCourant: rang });
+          const coffre = await briqueMontee(fixture, 'fp-escape');
+          await stabiliserLaVue(fixture);
+
+          expect(
+            noeudsOmbre(coffre, 'enigme')
+              .slice(0, 2)
+              .map((enigme) => enigme.getAttribute('data-etat')),
+          ).toEqual(['resolue', 'ouverte']);
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
 
     const TENTATIVE_A_REPROPOSER =
       'Tentative non envoyée : vérifiez la connexion et proposez-la de nouveau';

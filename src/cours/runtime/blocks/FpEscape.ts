@@ -98,6 +98,13 @@ function etatServi({ etats, enigmeOuverte, acheve }: EtatDesEnigmes): EtatDesEni
   return { etats, enigmeOuverte, acheve };
 }
 
+function enRetardSur(lu: EtatDesEnigmes, servi: EtatDesEnigmes | null): boolean {
+  return Object.entries(servi?.etats ?? {}).some(
+    ([enigmeId, actuel]) =>
+      (lu.etats[enigmeId]?.tentativesRestantes ?? 0) > actuel.tentativesRestantes,
+  );
+}
+
 export class FpEscape extends FpContenu<EscapeParcoursPublic> {
   private fragments = new Map<string, string>();
   private servi: EtatDesEnigmes | null = null;
@@ -145,7 +152,9 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     for (const resolue of valeur.resolues) {
       this.fragments.set(resolue.enigmeId, resolue.fragment);
     }
-    this.servi = etatServi(valeur);
+    if (!enRetardSur(valeur, this.servi)) {
+      this.servi = etatServi(valeur);
+    }
     this.suivreEtRafraichir(this.cleAffichage());
   }
 
@@ -251,6 +260,9 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
   private appliquer(tentative: VerdictDeTentative): void {
     if (this.enVol === tentative.enigmeId) {
       this.enVol = null;
+    }
+    if (enRetardSur(tentative, this.servi)) {
+      return;
     }
     this.servi = etatServi(tentative);
     if (tentative.correcte && tentative.fragment !== null) {

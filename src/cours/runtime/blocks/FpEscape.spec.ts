@@ -80,6 +80,22 @@ function verdictFaux(verdict: Partial<VerdictDeTentative>): VerdictDeTentative {
   return buildVerdictDeTentative({ correcte: false, fragment: null, ...verdict });
 }
 
+const A_CHERCHER = 'Ce n’est pas encore cela : relisez l’énoncé et proposez autre chose';
+
+function seuilManqueUneFois(): VerdictDeTentative {
+  return verdictFaux({
+    tentativesRestantes: 9,
+    ...servi(
+      [
+        ['ouverte', 9],
+        ['verrouillee', 10],
+        ['verrouillee', 10],
+      ],
+      'seuil',
+    ),
+  });
+}
+
 function deuxEnigmesResolues(): ReturnType<typeof buildProgressionDesEnigmes> {
   return buildProgressionDesEnigmes({
     resolues: [...DEUX_FRAGMENTS],
@@ -184,6 +200,37 @@ describe('FpEscape', () => {
     expect(libelleOmbre(hote, 'code')).toBe('Code final : ···');
   });
 
+  it('N-D01 · au remontage, une tentative antérieure à la progression servie ne rouvre pas l énigme résolue', () => {
+    hote.progression = buildProgressionDesEnigmes();
+    hote.tentatives = [seuilManqueUneFois()];
+
+    expect(etats(hote)).toEqual(['resolue', 'ouverte', 'verrouillee']);
+    expect(libelleOmbre(hote, 'fragment')).toBe('Fragment du code obtenu : TR');
+    expect(libelleOmbre(hote, 'enonce')).toBe(PARCOURS.enigmes[1].enonce);
+    expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 10');
+    expect(libelleOmbre(hote, 'annonce')).toBe('');
+  });
+
+  it('N-D01 · une progression lue avant la dernière tentative ne défait pas l énigme qu elle a résolue', () => {
+    proposer(hote, '30000');
+    hote.tentatives = [buildVerdictDeTentative()];
+    hote.progression = buildProgressionDesEnigmes({
+      resolues: [],
+      tentativesRestantes: {},
+      ...servi(
+        [
+          ['ouverte', 10],
+          ['verrouillee', 10],
+          ['verrouillee', 10],
+        ],
+        'seuil',
+      ),
+    });
+
+    expect(etats(hote)).toEqual(['resolue', 'ouverte', 'verrouillee']);
+    expect(libelleOmbre(hote, 'enonce')).toBe(PARCOURS.enigmes[1].enonce);
+  });
+
   it('imprime sur papier l énoncé de chaque énigme, sans saisie, tentatives, indice ni progression', () => {
     hote.setAttribute('data-papier', '');
 
@@ -234,25 +281,22 @@ describe('FpEscape', () => {
 
   it('decompte les tentatives sur verdict faux et laisse chercher', () => {
     proposer(hote, '12');
-    hote.tentatives = [
-      verdictFaux({
-        tentativesRestantes: 9,
-        ...servi(
-          [
-            ['ouverte', 9],
-            ['verrouillee', 10],
-            ['verrouillee', 10],
-          ],
-          'seuil',
-        ),
-      }),
-    ];
+    hote.tentatives = [seuilManqueUneFois()];
 
     expect(etats(hote)[0]).toBe('ouverte');
     expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 9');
-    expect(libelleOmbre(hote, 'annonce')).toBe(
-      'Ce n’est pas encore cela : relisez l’énoncé et proposez autre chose',
-    );
+    expect(libelleOmbre(hote, 'annonce')).toBe(A_CHERCHER);
+  });
+
+  it('N-D01 · une réponse déjà proposée, que le serveur ne décompte pas, reçoit encore son verdict', () => {
+    proposer(hote, '12');
+    hote.tentatives = [seuilManqueUneFois()];
+    proposer(hote, '12');
+    hote.tentatives = [seuilManqueUneFois(), seuilManqueUneFois()];
+
+    expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 9');
+    expect(libelleOmbre(hote, 'annonce')).toBe(A_CHERCHER);
+    expect(noeudOmbre(hote, 'repondre')?.hasAttribute('disabled')).toBeFalse();
   });
 
   it('ouvre l enigme suivante, sans fragment, quand les tentatives sont epuisees', () => {
