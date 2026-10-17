@@ -1083,7 +1083,76 @@ function fichiersDeCodeDuDepot() {
   return fichiers;
 }
 
-const LANCE_DU_CODE = /^(?:[^/]+\.[cm]?[jt]s|angular\.json|\.github\/workflows\/.+|\.husky\/.+)$/;
+const REGLAGES_PERMIS_A_KNIP = new Set([
+  '$schema',
+  'entry',
+  'project',
+  'ignoreDependencies',
+  'ignoreExportsUsedInFile',
+]);
+const GENRES_PERMIS_DANS_LEUR_FICHIER = new Set(['interface', 'type']);
+
+function genresIgnoresDansLeurFichier({ ignoreExportsUsedInFile = false }) {
+  if (ignoreExportsUsedInFile === true) return ['tous'];
+  return Object.entries(Object(ignoreExportsUsedInFile))
+    .filter(([genre, ignore]) => ignore !== false && !GENRES_PERMIS_DANS_LEUR_FICHIER.has(genre))
+    .map(([genre]) => genre);
+}
+
+function balisesQueKnipIgnoreToujours() {
+  const lire = (chemin) => readFileSync(cheminDuDepot(`node_modules/knip/dist/${chemin}`), 'utf8');
+  const constantes = lire('constants.js');
+  const regle = /isAlwaysIgnored = \(jsDocTags\) => ([^;]+);/.exec(lire('util/tag.js'))?.[1] ?? '';
+  const balises = [...regle.matchAll(/jsDocTags\.has\((\w+)\)/g)].map(
+    ([, nom]) => new RegExp(`export const ${nom} = '(@\\w+)'`).exec(constantes)?.[1],
+  );
+  assert.ok(
+    balises.length > 0 && balises.every(Boolean),
+    'ci-portes : la garde ne lit plus dans knip les balises qui soustraient un export a son jugement.',
+  );
+  return new Set(balises);
+}
+
+function balisesDeKnipDansLeCode() {
+  const balises = balisesQueKnipIgnoreToujours();
+  return fichiersDeCodeDuDepot().flatMap((fichier) =>
+    (readFileSync(cheminDuDepot(fichier), 'utf8').match(/\/\*\*[\s\S]*?\*\//g) ?? [])
+      .flatMap((bloc) => bloc.match(/@\w+/g) ?? [])
+      .filter((balise) => balises.has(balise))
+      .map((balise) => `${fichier} : ${balise}`),
+  );
+}
+
+test('ci-portes : rien ne soustrait de code a knip, ni option, ni reglage, ni balise', () => {
+  const paquet = JSON.parse(readFileSync(CHEMIN_PACKAGE, 'utf8'));
+  const reglages = JSON.parse(readFileSync(cheminDuDepot('knip.json'), 'utf8'));
+
+  assert.equal(
+    paquet.scripts['quality:knip'],
+    'knip',
+    'ci-portes : quality:knip passe a knip une option ou un autre lanceur : la CI ne le joue plus sur toute sa configuration.',
+  );
+  assert.equal(
+    paquet.knip,
+    undefined,
+    'ci-portes : package.json porte des reglages de knip, que knip fusionne a knip.json.',
+  );
+  assert.deepEqual(
+    Object.keys(reglages).filter((cle) => !REGLAGES_PERMIS_A_KNIP.has(cle)),
+    [],
+    'ci-portes : knip.json porte un reglage qui peut soustraire du code a knip.',
+  );
+  assert.deepEqual(
+    genresIgnoresDansLeurFichier(reglages),
+    [],
+    'ci-portes : knip.json tait les exports utilises dans leur fichier au-dela des interfaces et des types.',
+  );
+  assert.deepEqual(
+    balisesDeKnipDansLeCode(),
+    [],
+    'ci-portes : une balise JSDoc soustrait un export au jugement de knip.',
+  );
+});
 
 function suffixeDeTestDe(code, dossier) {
   const tete = `${dossier.split('/')[0]}/`;
@@ -1130,14 +1199,7 @@ function copierLeDepot(copie) {
   symlinkSync(cheminDuDepot('node_modules'), join(copie, 'node_modules'));
 }
 
-function knipCommeLaCi(copie) {
-  const { scripts } = JSON.parse(readFileSync(join(copie, 'package.json'), 'utf8'));
-  const [outil, ...options] = scripts['quality:knip'].trim().split(/\s+/);
-  assert.equal(
-    outil,
-    'knip',
-    'ci-portes : quality:knip ne lance plus knip lui-meme : la garde ne sait plus le jouer comme la CI.',
-  );
+function jouerKnip(copie, options = []) {
   const execution = spawnSync(
     process.execPath,
     [cheminDuDepot('node_modules/knip/bin/knip.js'), ...options, '--reporter', 'json'],
@@ -1152,32 +1214,34 @@ function knipCommeLaCi(copie) {
   };
 }
 
-function textesQuiLancentDuCode() {
-  const { scripts } = JSON.parse(readFileSync(CHEMIN_PACKAGE, 'utf8'));
-  return [
-    ...Object.values(scripts),
-    ...fichiersDuDepot()
-      .filter((fichier) => LANCE_DU_CODE.test(fichier))
-      .map((fichier) => readFileSync(cheminDuDepot(fichier), 'utf8')),
-  ].join('\n');
-}
-
 test('ci-portes : knip juge chaque fichier de code de src, e2e et scripts, comme la CI le promet', () => {
   const code = fichiersDeCodeDuDepot();
-  const { temoins, avecTemoins, sources, sansImports } = avecDossierPlante(
+  const styles = fichiersDuDepot().filter((fichier) =>
+    /^(src|e2e|scripts)\/.+\.css$/.test(fichier),
+  );
+  const { temoins, avecTemoins, sources, sansImports, sansReglages } = avecDossierPlante(
     'ci-portes-knip-',
     {},
     (copie) => {
       copierLeDepot(copie);
       const plantes = planterLesTemoinsDeKnip(copie, code);
-      const premier = knipCommeLaCi(copie);
-      const toutes = [...code, ...plantes.flatMap(({ module, essai }) => [module, essai])];
-      ecrireFichiers(copie, Object.fromEntries(toutes.map((fichier) => [fichier, ''])));
+      const premier = jouerKnip(copie);
+      const toutes = [
+        ...code,
+        ...styles,
+        ...new Set(styles.map((fichier) => `${dirname(fichier)}/zz-garde-style.css`)),
+        ...plantes.flatMap(({ module, essai }) => [module, essai]),
+      ];
+      ecrireFichiers(copie, {
+        ...Object.fromEntries(toutes.map((fichier) => [fichier, ''])),
+        'zz-garde-knip.json': JSON.stringify({ project: toutes }),
+      });
       return {
         temoins: plantes,
         avecTemoins: premier,
         sources: toutes,
-        sansImports: knipCommeLaCi(copie),
+        sansImports: jouerKnip(copie),
+        sansReglages: jouerKnip(copie, ['--config', 'zz-garde-knip.json']),
       };
     },
   );
@@ -1186,13 +1250,10 @@ test('ci-portes : knip juge chaque fichier de code de src, e2e et scripts, comme
       .filter((nom) => !avecTemoins.exportsInutiles(module).includes(nom))
       .map((nom) => `${module} : export inutile ${nom} non signale`),
   );
-  const lanceurs = textesQuiLancentDuCode();
-  const racinesSansLanceur = sources.filter(
-    (fichier) =>
-      !sansImports.morts.has(fichier) &&
-      !estFichierDeTest(fichier) &&
-      !fichier.endsWith('.d.ts') &&
-      !lanceurs.includes(fichier),
+  const racines = ({ morts }) => sources.filter((fichier) => !morts.has(fichier));
+  const lancees = new Set(racines(sansReglages));
+  const racinesSansLanceur = racines(sansImports).filter(
+    (fichier) => !lancees.has(fichier) && !estFichierDeTest(fichier),
   );
 
   assert.notEqual(
@@ -1208,7 +1269,7 @@ test('ci-portes : knip juge chaque fichier de code de src, e2e et scripts, comme
   assert.deepEqual(
     racinesSansLanceur,
     [],
-    'ci-portes : sans importeur, un fichier que ni un test, ni un script, ni une configuration ne lance echappe pourtant a knip : un reglage le soustrait a la porte de code mort.',
+    'ci-portes : sans importeur, un fichier qui n est ni un test, ni lance par ce que knip reconnait seul (scripts, angular.json, configurations, workflows, hooks), echappe pourtant a knip : un reglage le soustrait a la porte de code mort.',
   );
 });
 
