@@ -1,7 +1,10 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { ResultatsSeance, Role } from '../../../../cours/content/types';
-import { buildRevelationServie } from '../../../../testing/factories/cours.factory';
+import {
+  buildProgressionDesEnigmes,
+  buildRevelationServie,
+} from '../../../../testing/factories/cours.factory';
 import {
   buildResultatQuestion,
   buildResultatsSeance,
@@ -369,9 +372,18 @@ describe('SlideVisualComponent', () => {
             [
               {
                 kind: 'progression-enigmes',
-                parcoursId: 'b2-01-a6-coffre',
-                resolues: [{ enigmeId: 'b2-01-a6-e1-mix', fragment: 'A' }],
-                tentativesRestantes: { 'b2-01-a6-e1-mix': 2, 'b2-01-a6-e2-points': 0 },
+                ...buildProgressionDesEnigmes({
+                  parcoursId: 'b2-01-a6-coffre',
+                  resolues: [{ enigmeId: 'b2-01-a6-e1-mix', fragment: 'A' }],
+                  tentativesRestantes: { 'b2-01-a6-e1-mix': 2, 'b2-01-a6-e2-points': 0 },
+                  etats: {
+                    'b2-01-a6-e1-mix': { etat: 'resolue', tentativesRestantes: 2 },
+                    'b2-01-a6-e2-points': { etat: 'epuisee', tentativesRestantes: 0 },
+                    'b2-01-a6-e3-rouleau': { etat: 'ouverte', tentativesRestantes: 10 },
+                    'b2-01-a6-e4-tva': { etat: 'verrouillee', tentativesRestantes: 10 },
+                  },
+                  enigmeOuverte: 'b2-01-a6-e3-rouleau',
+                }),
               },
             ],
           ],

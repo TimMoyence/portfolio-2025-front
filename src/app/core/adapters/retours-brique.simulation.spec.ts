@@ -28,6 +28,16 @@ const parcoursServi = fc.record({
   parcoursId: identifiant,
   resolues: fc.array(fc.record({ enigmeId: identifiant, fragment: identifiant }), { maxLength: 3 }),
   tentativesRestantes: fc.dictionary(identifiant, fc.nat({ max: 10 }), { maxKeys: 3 }),
+  etats: fc.dictionary(
+    identifiant,
+    fc.record({
+      etat: fc.constantFrom('resolue', 'epuisee', 'ouverte', 'verrouillee'),
+      tentativesRestantes: fc.nat({ max: 10 }),
+    }),
+    { maxKeys: 3 },
+  ),
+  enigmeOuverte: fc.option(identifiant, { nil: null }),
+  acheve: fc.boolean(),
 });
 
 const etatServi = fc

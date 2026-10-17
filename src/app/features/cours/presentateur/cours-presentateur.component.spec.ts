@@ -9,6 +9,7 @@ import type {
   ConfusionComptee,
   DerouleCours,
   PilotageEcran,
+  ResultatQuestion,
   ResultatsSeance,
 } from '../../../../cours/content/types';
 import type { EtatSession, StatutFlux } from '../../../../cours/runtime/core/sync';
@@ -62,6 +63,7 @@ import { uneImage } from '../../../../testing/deux-images';
 import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formations.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { demanderLaPieceJointe } from '../../../../testing/piece-jointe-demandee';
+import { identifiantPorte } from '../../../shared/slides/session/lecture-ecran';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { CoursPresentateurComponent } from './cours-presentateur.component';
 
@@ -114,7 +116,31 @@ function quitterLaPage(): boolean {
   }
 }
 
-function resultatsDeLaQuestion(total: number, correctes: number): ResultatsSeance {
+const SERVI_SOUS_LE_SEUIL: Partial<ResultatQuestion> = {
+  confusionDominante: 'taux-annuel',
+  part: 0.5,
+  sousLeSeuil: true,
+  remediation: { confusionId: 'taux-annuel', ecranId: 'ecran-taux' },
+};
+
+const SERVI_AU_SEUIL: Partial<ResultatQuestion> = {
+  part: 0.7,
+  sousLeSeuil: false,
+  remediation: null,
+};
+
+const SERVI_SANS_REPONSE: Partial<ResultatQuestion> = {
+  confusionDominante: null,
+  part: 0,
+  sousLeSeuil: false,
+  remediation: null,
+};
+
+function resultatsDeLaQuestion(
+  total: number,
+  correctes: number,
+  servi: Partial<ResultatQuestion> = {},
+): ResultatsSeance {
   return buildResultatsSeance({
     participants: 20,
     questions: [
@@ -124,6 +150,7 @@ function resultatsDeLaQuestion(total: number, correctes: number): ResultatsSeanc
         correctes,
         neSaitPas: 1,
         confusions: CONFUSIONS_DE_LA_CLASSE,
+        ...servi,
       }),
     ],
   });
@@ -1117,10 +1144,10 @@ describe('CoursPresentateurComponent', () => {
   it('E14 · sous le seuil, detaille la question, sa réponse attendue au format français et vise l ecran de la confusion dominante', async () => {
     const fixture = await ouvrirLaSeance();
 
-    publierSurLaVue(double, fixture, resultatsDeLaQuestion(10, 5));
+    publierSurLaVue(double, fixture, resultatsDeLaQuestion(10, 5, SERVI_SOUS_LE_SEUIL));
 
     expect(apercu(fixture)?.resultats()).toEqual(
-      jasmine.objectContaining({ ...resultatsDeLaQuestion(10, 5) }),
+      jasmine.objectContaining({ ...resultatsDeLaQuestion(10, 5, SERVI_SOUS_LE_SEUIL) }),
     );
     expect(
       (fixture.nativeElement as HTMLElement).querySelector("[data-testid='cours-reponses-slide']"),
@@ -1150,31 +1177,34 @@ describe('CoursPresentateurComponent', () => {
     expect(apercu(fixture).slide()).toBe(deroule.ecrans[3]);
   });
 
-  for (const [cas, total, correctes] of [
-    ['le seuil est atteint', 10, 7],
-    ['personne n a encore repondu', 0, 0],
+  for (const [cas, total, correctes, servi] of [
+    ['le seuil est atteint', 10, 7, SERVI_AU_SEUIL],
+    ['personne n a encore repondu', 0, 0, SERVI_SANS_REPONSE],
   ] as const) {
     it(`ne propose aucune remediation quand ${cas}`, async () => {
       const fixture = await ouvrirLaSeance();
 
-      publierSurLaVue(double, fixture, resultatsDeLaQuestion(total, correctes));
+      publierSurLaVue(double, fixture, resultatsDeLaQuestion(total, correctes, servi));
 
       expect(cible(fixture, 'presentateur-question').hasAttribute('data-etat')).toBeFalse();
       expect(lire(fixture, 'presentateur-remediation')).toBeNull();
     });
   }
 
-  const remediationsIncompletes: readonly (readonly [string, DerouleCours['remediations']])[] = [
-    ['n a pas d ecran de remediation', { 'interet-simple': 'ecran-rappel' }],
-    ['vise un ecran absent du deroule', { 'taux-annuel': 'ecran-disparu' }],
+  const remediationsIncompletes: readonly (readonly [string, ResultatQuestion['remediation']])[] = [
+    ['n a pas d ecran de remediation', null],
+    ['vise un ecran absent du deroule', { confusionId: 'taux-annuel', ecranId: 'ecran-disparu' }],
   ];
 
-  for (const [cas, remediations] of remediationsIncompletes) {
+  for (const [cas, remediation] of remediationsIncompletes) {
     it(`cache la remediation quand la confusion dominante ${cas}`, async () => {
-      port.lireDeroule.and.returnValue(of({ ...deroule, remediations }));
       const fixture = await ouvrirLaSeance();
 
-      publierSurLaVue(double, fixture, resultatsDeLaQuestion(10, 5));
+      publierSurLaVue(
+        double,
+        fixture,
+        resultatsDeLaQuestion(10, 5, { ...SERVI_SOUS_LE_SEUIL, remediation }),
+      );
 
       expect(cible(fixture, 'presentateur-question').getAttribute('data-etat')).toBe(
         'sous-le-seuil',
@@ -1317,21 +1347,46 @@ describe('CoursPresentateurComponent', () => {
     }
 
     for (const jumele of VOTES_JUMELES_DU_PUPITRE) {
+      const principale = identifiantPorte(jumele.donnees, 'question');
+      const jumelle = identifiantPorte(jumele.donnees, 'questionJumelle');
+
       it(`Q1 · ${jumele.id} : ne révèle la correction qu une fois la deuxième question posée`, async () => {
         const fixture = await ouvrirSurLEcran(jumele);
 
         for (const phase of ['vote', 'discussion'] as const) {
-          diffuserSurLaVue(double, fixture, { pilotage: { [jumele.id]: { phase } } });
+          diffuserSurLaVue(double, fixture, {
+            pilotage: { [jumele.id]: { phase, questionAffichee: principale ?? undefined } },
+          });
           expect(bouton(fixture, 'presentateur-questions-reveler').disabled)
             .withContext(phase)
             .toBeTrue();
         }
-        diffuserSurLaVue(double, fixture, { pilotage: { [jumele.id]: { phase: 'revote' } } });
+        diffuserSurLaVue(double, fixture, {
+          pilotage: { [jumele.id]: { phase: 'revote', questionAffichee: jumelle ?? undefined } },
+        });
         await cliquer(fixture, 'presentateur-questions-reveler');
 
         expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
           pilotage: { screenId: jumele.id, revele: true },
         });
+      });
+
+      it(`F-29 · ${jumele.id} : attend la deuxième question selon la question affichée que le back sert, pas selon la phase`, async () => {
+        const fixture = await ouvrirSurLEcran(jumele);
+
+        diffuserSurLaVue(double, fixture, {
+          pilotage: { [jumele.id]: { phase: 'revote', questionAffichee: principale ?? undefined } },
+        });
+        const avantLaJumelle = bouton(fixture, 'presentateur-questions-reveler').disabled;
+        diffuserSurLaVue(double, fixture, {
+          pilotage: { [jumele.id]: { phase: 'vote', questionAffichee: jumelle ?? undefined } },
+        });
+
+        expect([principale, jumelle].every((id) => id !== null)).toBeTrue();
+        expect([
+          avantLaJumelle,
+          bouton(fixture, 'presentateur-questions-reveler').disabled,
+        ]).toEqual([true, false]);
       });
     }
 

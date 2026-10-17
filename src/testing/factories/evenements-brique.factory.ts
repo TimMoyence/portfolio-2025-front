@@ -17,10 +17,16 @@ const DETAILS: Readonly<Partial<Record<string, Readonly<Record<string, unknown>>
   },
   'fp-spaced-reponse': { questionId: 'Q-ACT-01', optionId: 'act-a', dureeMs: DUREE_MS },
   'fp-sheet-submit': { planId: 'K-TABLEUR-01', cellules: { C3: '=A3*B3' }, dureeMs: DUREE_MS },
+  'fp-sheet-evaluation': { planId: 'K-TABLEUR-01', rang: 3, cellules: { C3: '=A3*B3' } },
   'fp-table-build-submit': {
     planId: 'b2-01-a4-indice-toile',
     saisies: [{ rang: 0, cle: 'prix', valeur: 21.6 }],
     dureeMs: DUREE_MS,
+  },
+  'fp-table-build-evaluation': {
+    planId: 'b2-01-a4-indice-toile',
+    rang: 2,
+    saisies: [{ rang: 0, cle: 'prix', saisie: '21,6' }],
   },
   'fp-cardsort-submit': {
     planId: 'K-CHARGES-01',
@@ -45,6 +51,7 @@ const DETAILS: Readonly<Partial<Record<string, Readonly<Record<string, unknown>>
     dureeMs: DUREE_MS,
   },
   'fp-concept4-reglage': { reglages: { prix: 250, taux: -12 } },
+  'fp-concept4-evaluation': { reglages: { tauxUn: 50, tauxDeux: -50 } },
   'fp-plot-reglage': { reglages: { taux: 4 } },
   'fp-pro-submit': {
     casId: 'B2-01-A1-03-MISSION',

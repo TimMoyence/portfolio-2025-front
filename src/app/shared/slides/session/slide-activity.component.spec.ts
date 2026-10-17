@@ -228,6 +228,22 @@ describe('SlideActivityComponent : deck visuel B2', () => {
         expect(debrief(revele)?.open).toBeTrue();
         expect(debrief(revele)?.textContent).toContain(pupitre.corrigeEcran.attendu);
       });
+
+      it(`F-29 · ${id} : le formateur projette l attendu que le back sert, sans le rebâtir depuis le corrigé`, () => {
+        const pupitre = ecranNomme(ecransDuPupitreB2_01(), id);
+        const servi = { attendu: 'Attendu servi par le back', suite: null };
+
+        const revele = monter({
+          slide: { ...pupitre, reflexion: servi },
+          role: 'presentateur',
+          sessionId: 'seance-1',
+          donneesFormateur: pupitre.corrigeEcran,
+          direct: directRevele(true),
+        });
+
+        expect(pupitre.reflexion).withContext('réflexion servie au pupitre').not.toBeNull();
+        expect(debrief(revele)?.textContent).toContain(servi.attendu);
+      });
     }
   });
 
@@ -540,7 +556,9 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
       direct: direct(0),
       donneesFormateur: {
         type: 'feuille',
-        attendus: [{ reference: 'D3', formuleReference: '=C3*(1+$B$1)', valeur: 64.8 }],
+        attendus: [
+          { reference: 'D3', formuleReference: '=C3*(1+$B$1)', valeur: 64.8, affichage: '64,8' },
+        ],
       },
     });
     const feuille = await brique(fixture, 'fp-sheet');
@@ -580,6 +598,26 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     const recus = evenements(fixture);
     return { recus, numerique: await brique(fixture, 'fp-numeric') };
   }
+
+  it('F-37 · relaie la demande d evaluation de la machine a la seance', async () => {
+    const { recus, numerique } = await numeriqueEcoutee();
+
+    numerique.dispatchEvent(
+      new CustomEvent('fp-concept4-evaluation', {
+        detail: buildDetailDeBrique('fp-concept4-evaluation'),
+        bubbles: true,
+        composed: true,
+      }),
+    );
+
+    expect(recus).toEqual([
+      {
+        kind: 'evaluation-machine',
+        screenId: ECRAN_NUMERIQUE.id,
+        reglages: { tauxUn: 50, tauxDeux: -50 },
+      },
+    ]);
+  });
 
   it('L3 · relaie les reponses libres d un cas professionnel a la seance', async () => {
     const { recus, numerique } = await numeriqueEcoutee();

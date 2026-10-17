@@ -42,11 +42,13 @@ import {
   buildExitBillet,
   buildProCas,
   buildPulseSondage,
+  buildTableauEvalue,
   buildWorkedExemple,
 } from '../../../../testing/factories/cours.factory';
 import {
   buildDerouleCours,
   buildEcranDeroule,
+  buildEtatDesEnigmes,
   buildRegleNotation,
   buildResultatQuestion,
   buildResumeBareme,
@@ -101,6 +103,10 @@ const RESULTAT = {
   parOption: null,
   scoreMoyen: 0.71,
   parCle: { E3: { total: 24, justes: 19 } },
+  confusionDominante: null,
+  part: 15 / 24,
+  sousLeSeuil: false,
+  remediation: null,
 } satisfies ResultatQuestion;
 
 const PARCOURS = {
@@ -196,6 +202,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
           type: 'tableau',
           attendus: [{ rang: 1, cle: 'prix', valeur: 20.52 }],
           tolerance: TOLERANCE,
+          tableauCorrige: buildTableauEvalue(),
         },
         {
           type: 'classement',
@@ -265,6 +272,12 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
             parcoursId: 'b2-01-a6-coffre',
             resolues: [{ enigmeId: 'enigme-1', fragment: '7' }],
             tentativesRestantes: { 'enigme-2': 9 },
+            etats: {
+              'enigme-1': { etat: 'resolue', tentativesRestantes: 10 },
+              'enigme-2': { etat: 'ouverte', tentativesRestantes: 9 },
+            },
+            enigmeOuverte: 'enigme-2',
+            acheve: false,
           },
         ],
         defis: [{ defiId: 'b2-01-a5-defi', premiereTentative: 'Renforcer la marketplace.' }],
@@ -295,6 +308,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
         synthese: [
           { libelle: 'Évolution réelle', formule: 'dernierEvolution', unite: '%', decimales: 2 },
         ],
+        tableauInitial: buildTableauEvalue(),
         metadonnees: METADONNEES,
       } satisfies TableBuildPlanPublic;
       const feuille = {
@@ -305,6 +319,17 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
         cellules: { A1: 'Canal', C2: '397000' },
         verrouillees: ['A1', 'C2'],
         consignes: ['En B5 et C5, calculez les totaux avec SOMME.'],
+        lettres: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+        grille: [1, 2, 3, 4, 5, 6, 7].map((ligne) =>
+          ['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((lettre) => `${lettre}${ligne}`),
+        ),
+        longueurMaxSaisie: 200,
+        initiale: {
+          saisies: {},
+          affichages: { A1: 'Canal', C2: '397 000' },
+          natures: { A1: 'texte', C2: 'nombre' },
+          formules: [],
+        },
         metadonnees: METADONNEES,
       } satisfies SheetPlanPublic;
       const cartes = {
@@ -341,7 +366,9 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
         abscisse: { libelle: 'Part du sur-mesure', min: 0, max: 1 },
         ordonnee: 'Taux de marge global',
         parametres: [],
-        series: [{ id: 'mix', libelle: 'Taux global', trait: 'plein', calcul: 'x' }],
+        series: [{ id: 'mix', libelle: 'Taux global', trait: 'plein' }],
+        abscisses: [0, 1],
+        positions: [{ valeurs: {}, ordonnees: { mix: [0, 1] } }],
         description: 'Le taux global suit la part de chaque canal.',
         metadonnees: METADONNEES,
       } satisfies PlotDefinition;
@@ -446,12 +473,14 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
           correcte: true,
           fragment: '7',
           tentativesRestantes: 9,
+          ...buildEtatDesEnigmes(),
         },
         {
           kind: 'progression-enigmes',
           parcoursId: PARCOURS.id,
           resolues: [{ enigmeId: 'enigme-1', fragment: '7' }],
           tentativesRestantes: { 'enigme-2': 10 },
+          ...buildEtatDesEnigmes(),
         },
         { kind: 'strategies', defiId: 'D', strategies: [{ id: 'coefficients', libelle: 'Coef.' }] },
         { kind: 'rappels', questions: [SPACED] },
@@ -518,6 +547,12 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
         correcte: false,
         fragment: null,
         tentativesRestantes: 8,
+        etats: {
+          'enigme-1': { etat: 'resolue', tentativesRestantes: 10 },
+          'enigme-2': { etat: 'ouverte', tentativesRestantes: 8 },
+        },
+        enigmeOuverte: 'enigme-2',
+        acheve: false,
       } satisfies VerdictTentative;
       const strategies = [
         { id: 'coefficients', libelle: 'Multiplier les coefficients' },

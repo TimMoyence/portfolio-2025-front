@@ -1,6 +1,12 @@
 import {
+  buildFeuilleEvaluee,
+  buildProgressionDesEnigmes,
   buildRevelationServie,
+  buildSortiesMachine,
+  buildSortiesMachineATrenteAns,
   buildSpacedQuestions,
+  buildTableauEvalue,
+  buildVerdictDeTentative,
 } from '../../../../testing/factories/cours.factory';
 import {
   buildResultatQuestion,
@@ -85,7 +91,7 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
   }
 
   it('pose sur le vote la phase pilotee et les resultats de la question jumelle au revote', () => {
-    const suivi = voteJumele({ phase: 'revote' });
+    const suivi = voteJumele({ phase: 'revote', questionAffichee: 'Q-CAP-03-bis' });
     expect(pose('fp-vote', ['Q-CAP-03', 'Q-CAP-03-bis'], 'phase', { direct: suivi })).toBe(
       'revote',
     );
@@ -93,6 +99,25 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
       total: 18,
       parOption: { a: 18 },
     });
+  });
+
+  it('F-29 · pose sur le vote la question que le back sert et ses resultats, sans la deduire de la phase', () => {
+    const identifiants = ['Q-CAP-03', 'Q-CAP-03-bis'];
+    const servi = (pilotage: DirectEcran['pilotage'] | null): unknown => {
+      const surcharges = { direct: pilotage === null ? null : voteJumele(pilotage) };
+      return [
+        pose('fp-vote', identifiants, 'questionAffichee', surcharges),
+        (pose('fp-vote', identifiants, 'resultats', surcharges) as { total: number } | null)
+          ?.total ?? null,
+      ];
+    };
+
+    expect(servi({ phase: 'revote', questionAffichee: 'Q-CAP-03' })).toEqual(['Q-CAP-03', 20]);
+    expect(servi({ phase: 'vote', questionAffichee: 'Q-CAP-03-bis' })).toEqual([
+      'Q-CAP-03-bis',
+      18,
+    ]);
+    expect(servi(null)).toEqual(['Q-CAP-03', null]);
   });
 
   it('QA-01 · pose sur le vote la phase que le serveur sert, sans en deduire une de la revelation ni en supposer une', () => {
@@ -254,7 +279,9 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
           pose('fp-vote', identifiants, 'corrige', {
             role: 'presentateur',
             donneesFormateur: annexeFormateurDeLEcran(ecran),
-            direct: direct({ pilotage: { phase: 'revele', revele: true } }),
+            direct: direct({
+              pilotage: { phase: 'revele', revele: true, questionAffichee: affichee?.id },
+            }),
           }),
         ).toEqual({ ...ecran.corrigeEcran, optionId: option?.id });
       });
@@ -284,7 +311,7 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
         expect(
           pose('fp-vote', jumeles, 'corrige', {
             revelation,
-            direct: direct({ pilotage: { phase } }),
+            direct: direct({ pilotage: { phase, questionAffichee: 'Q-CAP-03-bis' } }),
           }),
         ).toEqual({ type: 'cible', cible: '2 960,49 €', optionId: 'j-b' });
       });
@@ -424,17 +451,20 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
   it('pose sur le coffre la progression reprise et les tentatives de son parcours', () => {
     const progression: RetourBrique = {
       kind: 'progression-enigmes',
-      parcoursId: 'K-EVASION-01',
-      resolues: [],
-      tentativesRestantes: {},
+      ...buildProgressionDesEnigmes({
+        resolues: [],
+        tentativesRestantes: {},
+        etats: {
+          seuil: { etat: 'ouverte', tentativesRestantes: 10 },
+          marge: { etat: 'verrouillee', tentativesRestantes: 10 },
+          tva: { etat: 'verrouillee', tentativesRestantes: 10 },
+        },
+        enigmeOuverte: 'seuil',
+      }),
     };
     const tentative: RetourBrique = {
       kind: 'tentative',
-      parcoursId: 'K-EVASION-01',
-      enigmeId: 'seuil',
-      correcte: false,
-      fragment: null,
-      tentativesRestantes: 9,
+      ...buildVerdictDeTentative({ correcte: false, fragment: null, tentativesRestantes: 9 }),
     };
     const etrangere: RetourBrique = { ...tentative, parcoursId: 'K-AUTRE' };
     const retours = [progression, tentative, etrangere];
@@ -474,6 +504,71 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
       ).toBeUndefined();
     });
   }
+
+  it('F-37 · pose sur la machine du formateur les sorties projetees, sur celle de l etudiant sa derniere evaluation', () => {
+    const projetees = buildSortiesMachine({ valeurs: { C: 1000, i: 4, n: 20 } });
+    const pilote = direct({ pilotage: { reglages: { n: 20 }, sortiesProjetees: projetees } });
+    const derniere = buildSortiesMachineATrenteAns();
+    const retours: RetourBrique[] = [
+      { kind: 'machine-evaluee', sorties: buildSortiesMachine() },
+      { kind: 'machine-evaluee', sorties: derniere },
+    ];
+
+    expect(
+      pose('fp-concept4', ['K-MACHINE'], 'evaluee', { role: 'presentateur', direct: pilote }),
+    ).toBe(projetees);
+    expect(pose('fp-concept4', ['K-MACHINE'], 'evaluee', { role: 'presentateur' })).toBeNull();
+    expect(pose('fp-concept4', ['K-MACHINE'], 'evaluee', { direct: pilote, retours })).toBe(
+      derniere,
+    );
+    expect(pose('fp-concept4', ['K-MACHINE'], 'evaluee', { direct: pilote })).toBeNull();
+    expect(pose('fp-plot', ['K-MACHINE'], 'evaluee', { retours })).toBeUndefined();
+  });
+
+  it('F-36 · pose sur la feuille de l etudiant la derniere evaluation servie pour son plan, rien sur celle du formateur', () => {
+    const evaluationDe = (planId: string, rang: number): RetourBrique => ({
+      kind: 'feuille-evaluee',
+      planId,
+      rang,
+      evaluee: buildFeuilleEvaluee(),
+    });
+    const derniere = evaluationDe('K-TABLEUR-01', 2);
+    const retours = [evaluationDe('K-TABLEUR-01', 1), derniere, evaluationDe('K-TABLEUR-02', 3)];
+
+    expect(pose('fp-sheet', ['K-TABLEUR-01'], 'evaluation', { retours })).toBe(derniere);
+    expect(pose('fp-sheet', ['K-TABLEUR-01'], 'evaluation', {})).toBeNull();
+    expect(
+      pose('fp-sheet', ['K-TABLEUR-01'], 'evaluation', { role: 'presentateur', retours }),
+    ).toBeNull();
+    expect(pose('fp-table-build', ['K-TABLEUR-01'], 'evaluation', { retours })).toBeNull();
+  });
+
+  it('F-37 · pose sur le tableau de l etudiant la derniere evaluation servie pour son plan, rien sur celui du formateur', () => {
+    const evaluationDe = (planId: string, rang: number): RetourBrique => ({
+      kind: 'tableau-evalue',
+      planId,
+      rang,
+      evalue: buildTableauEvalue(),
+    });
+    const derniere = evaluationDe('b2-01-a4-indice-toile', 2);
+    const retours = [
+      evaluationDe('b2-01-a4-indice-toile', 1),
+      derniere,
+      evaluationDe('b2-02-a2-ecarts-point-moyen', 3),
+    ];
+
+    expect(pose('fp-table-build', ['b2-01-a4-indice-toile'], 'evaluation', { retours })).toBe(
+      derniere,
+    );
+    expect(pose('fp-table-build', ['b2-01-a4-indice-toile'], 'evaluation', {})).toBeNull();
+    expect(
+      pose('fp-table-build', ['b2-01-a4-indice-toile'], 'evaluation', {
+        role: 'presentateur',
+        retours,
+      }),
+    ).toBeNull();
+    expect(pose('fp-sheet', ['b2-01-a4-indice-toile'], 'evaluation', { retours })).toBeNull();
+  });
 
   it('F02 · pose sur le rappel des deux roles les options affichees par le formateur', () => {
     const pilote = direct({ pilotage: { optionsAffichees: true } });

@@ -12,8 +12,16 @@ import { INSTANTANE_B2_01 } from '../../../../testing/fixtures/instantane-b2-01'
 import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
 import { INSTANTANE_B2_03 } from '../../../../testing/fixtures/instantane-b2-03';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
+import {
+  buildDerouleCours,
+  buildEcranDeroule,
+} from '../../../../testing/factories/formations.factory';
 import { ecranNomme } from '../../../../testing/montage-d-instantane';
-import { type FicheDuLivretEtudiant, feuillesDuLivretEtudiant } from './livret-papier';
+import {
+  type FicheDuLivretEtudiant,
+  feuillesDuLivretEtudiant,
+  pagesDuCorrige,
+} from './livret-papier';
 
 interface ExtraitAdmis {
   readonly extrait: string;
@@ -574,5 +582,17 @@ describe('livret papier des cours servis', () => {
       jasmine.arrayContaining(['=PENTE(B2:B6;A2:A6)', '0,997852', '1', '99,79 %', '3,51']),
     );
     expect(formesDeLaReponse(false)).toEqual(['FAUX']);
+  });
+
+  it('F-29 · imprime au corrigé la réponse attendue que le back sert, sans la rebâtir depuis le corrigé', () => {
+    const ecran = buildEcranDeroule({
+      corriges: [],
+      corrigeEcran: { type: 'reflexion', attendu: 'Rebâti du corrigé', suite: 'Suite rebâtie' },
+      reflexion: { attendu: 'Attendu servi', suite: null },
+    });
+
+    expect(
+      pagesDuCorrige(buildDerouleCours({ ecrans: [ecran] })).map(({ attendu }) => attendu),
+    ).toEqual([{ attendu: 'Attendu servi', suite: null }]);
   });
 });

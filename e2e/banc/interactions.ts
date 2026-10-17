@@ -271,6 +271,7 @@ async function feuille(zone: Locator, numero: number): Promise<void> {
   await cellule.click();
   await cellule.pressSequentially(`=${numero}+1`, { delay: 0 });
   await cellule.press('Enter');
+  await expect(cellule).toHaveValue(String(numero + 1), { timeout: DELAI_DE_RETOUR_MS });
   await validerPourUnVerdict(bloc);
 }
 

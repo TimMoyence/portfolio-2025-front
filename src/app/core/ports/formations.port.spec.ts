@@ -15,7 +15,17 @@ import type {
   VerdictProduction,
   VerdictTentative,
 } from './formations.port';
-import type { EtatParticipant } from '../../../cours/content/types';
+import {
+  buildFeuilleEvaluee,
+  buildSortiesMachine,
+  buildTableauEvalue,
+} from '../../../testing/factories/cours.factory';
+import type {
+  EtatParticipant,
+  FeuilleEvaluee,
+  SortiesMachine,
+  TableauEvalue,
+} from '../../../cours/content/types';
 import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donnees-publiques';
 
 const METHODES_DU_PORT = {
@@ -47,6 +57,9 @@ const METHODES_DU_PORT = {
   lireStrategies: true,
   lireMonEtat: true,
   lireSyntheseRappels: true,
+  evaluerMachine: true,
+  evaluerTableau: true,
+  evaluerFeuille: true,
   evincerParticipant: true,
   readmettreParticipant: true,
   libererPoste: true,
@@ -90,7 +103,25 @@ describe('createFormationsPortStub', () => {
     const synthese: { concepts: readonly SyntheseConcept[] } = await firstValueFrom(
       port.lireSyntheseRappels('seance-1'),
     );
+    const machine: SortiesMachine = await firstValueFrom(
+      port.evaluerMachine('seance-1', 'jeton-1', 'B2-01-A3-02-MACHINE-COEFFICIENTS', {
+        depart: 100,
+      }),
+    );
+    const tableau: TableauEvalue = await firstValueFrom(
+      port.evaluerTableau('seance-1', 'jeton-1', 'b2-01-a4-indice-toile', [
+        { rang: 0, cle: 'prix', saisie: '21,6' },
+      ]),
+    );
+    const feuille: FeuilleEvaluee = await firstValueFrom(
+      port.evaluerFeuille('seance-1', 'jeton-1', 'b2-03-a4-feuille-visa', {
+        cellules: { C3: '=A3*B3' },
+      }),
+    );
 
+    expect(machine).toEqual(buildSortiesMachine());
+    expect(tableau).toEqual(buildTableauEvalue());
+    expect(feuille).toEqual(buildFeuilleEvaluee());
     expect(production).toEqual(buildVerdictProduction());
     expect(tentative).toEqual(buildVerdictTentative());
     expect(rappels).toEqual({ questions: [buildSpacedQuestionPublique()] });

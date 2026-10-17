@@ -83,6 +83,7 @@ const DEROULE: DerouleDuFil = {
       ],
       questions: [{ id: QUESTION.id, enonce: QUESTION.enonce, options: QUESTION.options }],
       corrigeEcran: null,
+      reflexion: null,
     },
   ],
   remediations: {},
