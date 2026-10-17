@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApplicationRef } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { preparerAvecLePortDAuth } from '../../../../testing/etat-auth';
@@ -32,29 +32,33 @@ describe('SessionRetryComponent', () => {
 
   preparerAvecLePortDAuth(SessionRetryComponent, () => port);
 
-  it('ne montre rien tant que la session n a pas echoue a se verifier', () => {
+  it('ne montre rien tant que la session n a pas echoue a se verifier', fakeAsync(() => {
     port.refresh.and.returnValue(of(buildAuthSession()));
     const fixture = monter();
     TestBed.inject(ApplicationRef).tick();
+    flushMicrotasks();
     fixture.detectChanges();
 
     expect(lireMarque(fixture, 'session-retry')).toBeNull();
-  });
+  }));
 
-  it('propose un nouvel essai quand la verification echoue, puis s efface quand elle aboutit', () => {
+  it('propose un nouvel essai quand la verification echoue, puis s efface quand il aboutit apres le recul', fakeAsync(() => {
     const fixture = monter();
     TestBed.inject(ApplicationRef).tick();
+    flushMicrotasks();
     fixture.detectChanges();
 
     const alerte = lireMarque(fixture, 'session-retry');
     expect(alerte?.getAttribute('role')).toBe('alert');
     expect(TestBed.inject(AuthStateService).token()).toBeNull();
 
+    tick(2_000);
     lireMarque(fixture, 'session-retry-bouton')?.click();
+    flushMicrotasks();
     fixture.detectChanges();
 
     expect(port.refresh).toHaveBeenCalledTimes(2);
     expect(lireMarque(fixture, 'session-retry')).toBeNull();
     expect(TestBed.inject(AuthStateService).hasRole('teacher')).toBeTrue();
-  });
+  }));
 });

@@ -39,7 +39,7 @@ export function buildAuthSession(overrides?: Partial<AuthSession>): AuthSession 
   };
 }
 
-export function buildReponseEn401(defi: 'session' | 'identifiants' = 'session'): {
+export function buildReponseEn401(defi: 'session' | 'sans-defi' = 'session'): {
   status: number;
   statusText: string;
   headers: Record<string, string>;

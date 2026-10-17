@@ -41,6 +41,10 @@ function throttledRetryDelayMs(error: unknown): number {
   return bornerEntre(requestedMs, THROTTLED_RETRY_MIN_MS, PLUS_LONGUE_FENETRE_MS);
 }
 
+function refuseLaSession(status: number | null): boolean {
+  return status === 401 || status === 403;
+}
+
 function isTransientFailure(status: number | null): boolean {
   return status === 0 || (status !== null && status >= 500);
 }
@@ -158,9 +162,7 @@ export class AuthStateService {
   private relectureDuCompte(port: AuthPort): Observable<unknown> {
     const generation = this.generationDeSession;
     if (this._token() === null) {
-      return port
-        .refresh()
-        .pipe(tap((session) => this.connecterSiLaSessionDure(generation, session)));
+      return from(this.rafraichirUneFois(generation));
     }
     if (this.jetonAExpire()) {
       return from(this.rafraichirLaSession());
@@ -179,8 +181,11 @@ export class AuthStateService {
     this._isRestoreFailed.set(false);
     this._isUserLoading.set(true);
     if (token === null) {
-      this.suivreLaRestauration(this.authPort.refresh(), (session: AuthSession) =>
-        this.login(session),
+      this.suivreLaRestauration(
+        from(this.rafraichirUneFois(this.generationDeSession)),
+        (issue: IssueDuRafraichissement) => {
+          if (issue === 'injoignable') this.signalerLEchecDeLaRestauration();
+        },
       );
       return;
     }
@@ -212,12 +217,15 @@ export class AuthStateService {
   }
 
   private onRestoreError(error: unknown): void {
-    const status = httpStatusOf(error);
-    this._isSessionChecked.set(true);
-    if (status === 401 || status === 403) {
+    if (refuseLaSession(httpStatusOf(error))) {
       this.clearSession();
       return;
     }
+    this.signalerLEchecDeLaRestauration();
+  }
+
+  private signalerLEchecDeLaRestauration(): void {
+    this._isSessionChecked.set(true);
     this._isRestoreFailed.set(true);
   }
 
@@ -250,9 +258,9 @@ export class AuthStateService {
     void this.rafraichirUneFois();
   }
 
-  private rafraichirUneFois(): Promise<IssueDuRafraichissement> {
+  private rafraichirUneFois(generationARestaurer?: number): Promise<IssueDuRafraichissement> {
     this.rafraichissementEnCours ??= this.crossWindowLock(REFRESH_LOCK, () =>
-      this.refreshUnderLock(),
+      this.refreshUnderLock(generationARestaurer),
     )
       .catch((error: unknown) => this.onRefreshError(error))
       .finally(() => {
@@ -261,14 +269,16 @@ export class AuthStateService {
     return this.rafraichissementEnCours;
   }
 
-  private async refreshUnderLock(): Promise<IssueDuRafraichissement> {
-    const generation = this.generationDeSession;
-    if (this._token() === null || this.authPort === null) {
+  private async refreshUnderLock(generationARestaurer?: number): Promise<IssueDuRafraichissement> {
+    const generation = generationARestaurer ?? this.generationDeSession;
+    const sansSession =
+      generationARestaurer === undefined ? this._token() === null : !this.laSessionDure(generation);
+    if (sansSession || this.authPort === null) {
       return 'refuse';
     }
     const { pasAvant } = this.fenetre.lire();
     if (Date.now() < pasAvant) {
-      if (this.refreshTimer === null) this.planRefresh(pasAvant - Date.now());
+      if (this.refreshTimer === null) this.replanifierSiConnecte(pasAvant - Date.now());
       return 'injoignable';
     }
     try {
@@ -293,7 +303,7 @@ export class AuthStateService {
 
   private onRefreshError(error: unknown): IssueDuRafraichissement {
     const status = httpStatusOf(error);
-    if (status === 401) {
+    if (refuseLaSession(status)) {
       this.clearSession();
       return 'refuse';
     }
@@ -301,7 +311,7 @@ export class AuthStateService {
     if (status === 429) {
       const delayMs = throttledRetryDelayMs(error);
       this.reculer(delayMs, echecs);
-      this.planRefresh(delayMs);
+      this.replanifierSiConnecte(delayMs);
       return 'injoignable';
     }
     if (!isTransientFailure(status)) {
@@ -313,8 +323,12 @@ export class AuthStateService {
     }
     const delayMs = Math.min(RETRY_INITIAL_DELAY_MS * 2 ** echecs, RETRY_MAX_DELAY_MS);
     this.reculer(delayMs, echecs + 1);
-    this.planRefresh(delayMs);
+    this.replanifierSiConnecte(delayMs);
     return 'injoignable';
+  }
+
+  private replanifierSiConnecte(delayMs: number): void {
+    if (this._token() !== null) this.planRefresh(delayMs);
   }
 
   private reculer(delaiMs: number, echecs: number): void {

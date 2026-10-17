@@ -225,7 +225,7 @@ describe('authInterceptor', () => {
       const statutsRecus = statutsRecusApres401(
         `${environment.apiBaseUrl}${route}`,
         {},
-        buildReponseEn401('identifiants'),
+        buildReponseEn401('sans-defi'),
       );
       flushMicrotasks();
 
@@ -281,8 +281,8 @@ describe('authInterceptor', () => {
       return recu;
     }
 
-    function refuserEn401(): void {
-      httpMock.expectOne(URL_DU_COMPTE).flush('Non autorise', buildReponseEn401());
+    function refuserEn401(reponse = buildReponseEn401()): void {
+      httpMock.expectOne(URL_DU_COMPTE).flush('Non autorise', reponse);
       flushMicrotasks();
     }
 
@@ -299,11 +299,11 @@ describe('authInterceptor', () => {
       authState.clearSession();
     }
 
-    function lireLeCompteRefuseEn401(reponse: string | number) {
+    function lireLeCompteRefuseEn401(reponse: string | number, refus = buildReponseEn401()) {
       repondreAuRafraichissement(reponse);
       const navigate = spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
       const recu = lireLeCompte();
-      refuserEn401();
+      refuserEn401(refus);
       return { recu, navigate };
     }
 
@@ -396,27 +396,32 @@ describe('authInterceptor', () => {
       requete.flush([]);
     }));
 
-    it('sur un 401, rafraichit la session puis rejoue la requete une seule fois avec le jeton neuf', fakeAsync(() => {
-      authState.login(buildAuthSession({ accessToken: 'jwt-refuse' }));
-      const { recu, navigate } = lireLeCompteRefuseEn401('jwt-neuf');
+    for (const [back, refus] of [
+      ['du back qui pose le defi Bearer', buildReponseEn401()],
+      ['du back en prod, qui ne pose aucun defi', buildReponseEn401('sans-defi')],
+    ] as const) {
+      it(`sur un 401 ${back}, rafraichit la session puis rejoue la requete une seule fois avec le jeton neuf`, fakeAsync(() => {
+        authState.login(buildAuthSession({ accessToken: 'jwt-refuse' }));
+        const { recu, navigate } = lireLeCompteRefuseEn401('jwt-neuf', refus);
 
-      const rejouee = httpMock.expectOne(URL_DU_COMPTE);
-      expect(rejouee.request.headers.get('Authorization')).toBe('Bearer jwt-neuf');
-      rejouee.flush({ id: 'user-1' });
+        const rejouee = httpMock.expectOne(URL_DU_COMPTE);
+        expect(rejouee.request.headers.get('Authorization')).toBe('Bearer jwt-neuf');
+        rejouee.flush({ id: 'user-1' });
 
-      expect(recu).toEqual({ corps: [{ id: 'user-1' }], statuts: [] });
-      expect(navigate).not.toHaveBeenCalled();
-      expect(authState.token()).toBe('jwt-neuf');
-      authState.clearSession();
-    }));
+        expect(recu).toEqual({ corps: [{ id: 'user-1' }], statuts: [] });
+        expect(navigate).not.toHaveBeenCalled();
+        expect(authState.token()).toBe('jwt-neuf');
+        authState.clearSession();
+      }));
 
-    it('sur un 401 dont le rafraichissement est refuse, vide la session et mene a /login', fakeAsync(() => {
-      authState.login(buildAuthSession());
-      const { recu, navigate } = lireLeCompteRefuseEn401(401);
+      it(`sur un 401 ${back} dont le rafraichissement est refuse, vide la session et mene a /login`, fakeAsync(() => {
+        authState.login(buildAuthSession());
+        const { recu, navigate } = lireLeCompteRefuseEn401(401, refus);
 
-      expect(recu.statuts).toEqual([401]);
-      attendreLaDeconnexion(navigate);
-    }));
+        expect(recu.statuts).toEqual([401]);
+        attendreLaDeconnexion(navigate);
+      }));
+    }
 
     for (const status of [0, 503]) {
       it(`sur un 401 dont le rafraichissement echoue en ${status}, garde la session et laisse remonter le 401`, fakeAsync(() => {
