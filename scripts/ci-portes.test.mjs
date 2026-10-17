@@ -98,11 +98,17 @@ const CLES_D_UNE_ETAPE = {
   'continue-on-error': 'continueSurErreur',
 };
 
+const ECHEC_RATTRAPE = /\|\||;\s*(?:true|:)(?:\s|$)|\bexit\s+0\b|\bset\s+\+e\b/;
+
 function estNeutralisee(etape) {
-  return etape.condition !== null || (etape.continueSurErreur ?? 'false') !== 'false';
+  return (
+    etape.condition !== null ||
+    (etape.continueSurErreur ?? 'false') !== 'false' ||
+    ECHEC_RATTRAPE.test(etape.commande ?? '')
+  );
 }
 
-function etapesDuJob(texteWorkflow, job) {
+function blocDuJob(texteWorkflow, job) {
   if (typeof texteWorkflow !== 'string' || texteWorkflow.trim() === '') {
     throw new Error('ci-portes : le workflow est vide - aucune porte ne peut y etre verifiee.');
   }
@@ -114,18 +120,49 @@ function etapesDuJob(texteWorkflow, job) {
   const finJob = lignes.findIndex(
     (ligne, index) => index > debutJob && /^ {2}[\w-]+:\s*$/.test(ligne),
   );
-  const bloc = lignes.slice(debutJob + 1, finJob === -1 ? lignes.length : finJob);
+  return lignes.slice(debutJob + 1, finJob === -1 ? lignes.length : finJob);
+}
+
+function enteteDuJob(texteWorkflow, job) {
+  const entete = { condition: null, continueSurErreur: null };
+  for (const ligne of blocDuJob(texteWorkflow, job)) {
+    const cle = ligne.match(/^ {4}(if|continue-on-error):(.*)$/);
+    if (cle) {
+      entete[CLES_D_UNE_ETAPE[cle[1]]] = cle[2].trim();
+    }
+  }
+  return entete;
+}
+
+function replierLesScripts(lignes) {
+  const repliees = [];
+  let indentationDuScript = null;
+  for (const ligne of lignes) {
+    const indentation = ligne.search(/\S/);
+    if (indentationDuScript !== null && (indentation === -1 || indentation > indentationDuScript)) {
+      if (indentation !== -1) {
+        repliees.push(`${repliees.pop()}\n${ligne.trim()}`);
+      }
+      continue;
+    }
+    indentationDuScript = /^\s*(?:-\s+)?run:\s*[|>][-+]?\s*$/.test(ligne) ? indentation : null;
+    repliees.push(ligne);
+  }
+  return repliees;
+}
+
+function etapesDuJob(texteWorkflow, job) {
   const toutes = [];
   let courante = null;
-  for (const ligne of bloc) {
-    const debutEtape = ligne.match(/^\s*-\s+([\w-]+):(.*)$/);
+  for (const ligne of replierLesScripts(blocDuJob(texteWorkflow, job))) {
+    const debutEtape = ligne.match(/^\s*-\s+([\w-]+):(.*)$/s);
     if (debutEtape) {
       courante = { nom: null, commande: null, condition: null, continueSurErreur: null };
       toutes.push(courante);
     }
-    const cle = debutEtape ?? ligne.match(/^\s*([\w-]+):(.*)$/);
+    const cle = debutEtape ?? ligne.match(/^\s*([\w-]+):(.*)$/s);
     if (courante && cle && Object.hasOwn(CLES_D_UNE_ETAPE, cle[1])) {
-      courante[CLES_D_UNE_ETAPE[cle[1]]] = cle[2].trim();
+      courante[CLES_D_UNE_ETAPE[cle[1]]] = cle[2].trim().replace(/^[|>][-+]?(?:\n|$)/, '');
     }
   }
   const etapes = toutes.filter((etape) => etape.commande !== null);
@@ -287,16 +324,19 @@ test('ci-portes : Playwright est joue par une etape du job e2e du workflow', () 
   );
 });
 
-test('ci-portes : aucune commande des jobs bloquants n est conditionnee ni autorisee a echouer', () => {
+test('ci-portes : aucun job bloquant ni aucune de ses commandes n est conditionne ni autorise a echouer', () => {
   const texteWorkflow = readFileSync(CHEMIN_WORKFLOW, 'utf8');
   for (const job of [JOB_WORKFLOW, JOB_E2E, JOB_BANC]) {
-    const neutralisees = etapesDuJob(texteWorkflow, job)
-      .filter(estNeutralisee)
-      .map(({ nom, condition, continueSurErreur }) => ({ nom, condition, continueSurErreur }));
+    assert.deepEqual(
+      enteteDuJob(texteWorkflow, job),
+      { condition: null, continueSurErreur: null },
+      `ci-portes : le job « ${job} » ne porte ni « if: » ni « continue-on-error: », sinon il ne juge plus chaque PR.`,
+    );
+    const neutralisees = etapesDuJob(texteWorkflow, job).filter(estNeutralisee);
     assert.deepEqual(
       neutralisees,
       [],
-      `ci-portes : dans le job « ${job} », une etape « run: » qui porte « if: » ou « continue-on-error: » ne peut plus faire echouer le job.`,
+      `ci-portes : dans le job « ${job} », une etape « run: » conditionnee, autorisee a echouer ou qui rattrape son echec (||, ; true, exit 0, set +e) ne peut plus faire echouer le job.`,
     );
   }
 });
@@ -459,18 +499,43 @@ test('ci-portes : leve si le job cible est introuvable dans le workflow', () => 
 });
 
 test('ci-portes : lit la condition et la tolerance d echec de chaque etape, sans les preter a sa voisine', () => {
-  const texte = `jobs:\n  ${JOB_WORKFLOW}:\n    if: github.event_name == 'push'\n    steps:\n      - name: Porte\n        if: false\n        run: npm run lint\n      - uses: actions/upload-artifact@v4\n        if: always()\n      - name: Tolerante\n        continue-on-error: true\n        run: npm run typecheck\n      - name: Bloquante\n        continue-on-error: false\n        run: npm run build\n      - run: npm test\n`;
+  const texte = `jobs:\n  ${JOB_WORKFLOW}:\n    if: github.event_name == 'push'\n    steps:\n      - name: Porte\n        if: false\n        run: npm run lint\n      - uses: actions/upload-artifact@v4\n        if: always()\n      - name: Tolerante\n        continue-on-error: true\n        run: npm run typecheck\n      - name: Bloquante\n        continue-on-error: false\n        run: npm run build\n      - run: npm test\n      - name: Rattrapee\n        run: npm run quality:knip || true\n      - name: Script\n        run: |\n          set +e\n\n          npm run test:guards\n      - name: Suivante\n        run: npm run guard:comments\n`;
 
+  assert.deepEqual(enteteDuJob(texte, JOB_WORKFLOW), {
+    condition: "github.event_name == 'push'",
+    continueSurErreur: null,
+  });
   assert.deepEqual(etapesDuJob(texte, JOB_WORKFLOW), [
     { nom: 'Porte', commande: 'npm run lint', condition: 'false', continueSurErreur: null },
     { nom: 'Tolerante', commande: 'npm run typecheck', condition: null, continueSurErreur: 'true' },
     { nom: 'Bloquante', commande: 'npm run build', condition: null, continueSurErreur: 'false' },
     { nom: null, commande: 'npm test', condition: null, continueSurErreur: null },
+    {
+      nom: 'Rattrapee',
+      commande: 'npm run quality:knip || true',
+      condition: null,
+      continueSurErreur: null,
+    },
+    {
+      nom: 'Script',
+      commande: 'set +e\nnpm run test:guards',
+      condition: null,
+      continueSurErreur: null,
+    },
+    {
+      nom: 'Suivante',
+      commande: 'npm run guard:comments',
+      condition: null,
+      continueSurErreur: null,
+    },
   ]);
   assert.deepEqual(etapesDuJob(texte, JOB_WORKFLOW).map(estNeutralisee), [
     true,
     true,
     false,
+    false,
+    true,
+    true,
     false,
   ]);
 });
