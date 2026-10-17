@@ -7,6 +7,7 @@ import {
   lireLesReponsesServies,
   routesServiesSansSchema,
 } from '../../../testing/reponses-servies-lues';
+import { tolerancesDe, type ContratDuBack } from '../../../testing/tolerances-des-schemas';
 import * as schemasDesFormations from './formations-schemas';
 import {
   annotationServie,
@@ -129,6 +130,30 @@ const OPTIONNELLES_AU_CONTRAT_DU_BACK: Readonly<Partial<Record<string, readonly 
   [`${PRESENTATION}<renderer=table>.props`]: ['subtitle', 'note'],
 };
 
+const TOLEREES_ABSENTES_JUSQU_AU_RETRAIT_DU_BACK: Readonly<
+  Partial<Record<string, readonly string[]>>
+> = {
+  $: ['remediations'],
+  '$.corrige': ['remediations'],
+};
+
+const OPTIONNELLES_OU_TOLEREES = Object.fromEntries(
+  [
+    ...new Set([
+      ...Object.keys(OPTIONNELLES_AU_CONTRAT_DU_BACK),
+      ...Object.keys(TOLEREES_ABSENTES_JUSQU_AU_RETRAIT_DU_BACK),
+    ]),
+  ].map((chemin) => [
+    chemin,
+    [
+      ...(OPTIONNELLES_AU_CONTRAT_DU_BACK[chemin] ?? []),
+      ...(TOLEREES_ABSENTES_JUSQU_AU_RETRAIT_DU_BACK[chemin] ?? []),
+    ],
+  ]),
+);
+
+const TOLEREE_ABSENTE = /^(.*)\.([^.]+) toujours servie, mais tolérée absente$/;
+
 const VARIANTE_DE_TYPE = /<type=[^>]*>/g;
 
 function dansLEcran(chemin: string): string {
@@ -151,8 +176,26 @@ describe('Réponses réellement servies par le back, lues par les schémas du fr
     schemas: schemasDesFormations,
     horsRoute: SCHEMAS_LUS_HORS_ROUTE,
     documentsDe,
-    optionnelles: OPTIONNELLES_AU_CONTRAT_DU_BACK,
+    optionnelles: OPTIONNELLES_OU_TOLEREES,
     normaliser: dansLEcran,
+  });
+
+  it('lit chaque route du back : seules les remédiations du déroulé, que le back cessera de servir, y restent tolérées absentes', () => {
+    const contratDuBack: ContratDuBack = {
+      optionnelle: (chemin, cle) =>
+        OPTIONNELLES_AU_CONTRAT_DU_BACK[dansLEcran(chemin)]?.includes(cle) ?? false,
+    };
+    const tolerees = ROUTES_LUES.flatMap(([lue, schema]) =>
+      tolerancesDe(schema, documentsDe(lue), contratDuBack),
+    ).map((faute) => {
+      const [, chemin, cle] = TOLEREE_ABSENTE.exec(faute) ?? [faute, faute, ''];
+      return `${dansLEcran(chemin)} ${cle}`;
+    });
+    const attendues = Object.entries(TOLEREES_ABSENTES_JUSQU_AU_RETRAIT_DU_BACK).flatMap(
+      ([chemin, cles]) => (cles ?? []).map((cle) => `${chemin} ${cle}`),
+    );
+
+    expect([...new Set(tolerees)]).toEqual(jasmine.arrayWithExactContents(attendues));
   });
 
   it('lit chaque route servie des formations par un schéma du front, ou dit pourquoi aucun lecteur ne la lit', () => {

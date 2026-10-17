@@ -92,7 +92,6 @@ function derouleDeSeance(): DerouleCours {
       buildEcranDeroule({ id: 'ecran-exercice', ...sansQuestion }),
       buildEcranDeroule({ id: 'ecran-taux', ...sansQuestion }),
     ],
-    remediations: { 'interet-simple': 'ecran-rappel', 'taux-annuel': 'ecran-taux' },
   });
 }
 

@@ -67,7 +67,6 @@ const DEROULE: DerouleDuFil = {
   duree: 210,
   concepts: ['proportions'],
   ecrans: [ECRAN, { ...ECRAN, id: 'B2-01-A3-02-REVELATION', titre: 'La compensation' }],
-  remediations: {},
 };
 
 const STATISTIQUES = {

@@ -396,7 +396,6 @@ export interface EtatParticipant {
 
 export interface DerouleCours extends Omit<CoursContent, 'ecrans'> {
   readonly ecrans: readonly EcranDeroule[];
-  readonly remediations: Readonly<Record<string, string>>;
 }
 
 export function creerMetadonneesBrique(entree: MetadonneesBrique): MetadonneesBrique {

@@ -86,7 +86,6 @@ const DEROULE: DerouleDuFil = {
       reflexion: null,
     },
   ],
-  remediations: {},
 };
 
 const FORMATRICE = buildAuthUser({

@@ -290,7 +290,6 @@ export function buildDerouleCours(overrides: Partial<DerouleCours> = {}): Deroul
   return {
     ...ENTETE_COURS_B1_09,
     ecrans: [buildEcranDeroule({ id: 'ecran-1' }), buildEcranDeroule({ id: 'ecran-2' })],
-    remediations: { 'interet-simple': 'ecran-2' },
     ...overrides,
   };
 }

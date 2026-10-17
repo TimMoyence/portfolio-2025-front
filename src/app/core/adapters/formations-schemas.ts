@@ -239,7 +239,7 @@ export const derouleServi: z.ZodType<DerouleDuFil> = z
   .object({
     ...champsDuCours,
     ecrans: z.array(ecranDuDeroule),
-    remediations: z.record(z.string(), z.string()),
+    remediations: z.record(z.string(), z.string()).optional(),
   })
   .strict();
 
