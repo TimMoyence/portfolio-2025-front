@@ -17,6 +17,7 @@ import { pathToFileURL } from 'node:url';
 import { ESLint } from 'eslint';
 import sonarjs from 'eslint-plugin-sonarjs';
 import * as prettier from 'prettier';
+import ts from 'typescript';
 
 import { echapperPourRegex } from '../src/cours/runtime/core/valeurs.ts';
 import { estFichierDeTest } from './guard-cours-runtime.mjs';
@@ -1114,20 +1115,21 @@ function balisesQueKnipIgnoreToujours() {
   return new Set(balises);
 }
 
-const moduleDeKnip = (chemin) =>
-  import(pathToFileURL(cheminDuDepot(`node_modules/knip/dist/${chemin}`)).href);
-const { getEntrySpecifiersFromManifest } = await moduleDeKnip('util/package-json.js');
-const { isAmbientDeclarationFile } = await moduleDeKnip('typescript/ast-nodes.js');
+const { getEntrySpecifiersFromManifest } = await import(
+  pathToFileURL(cheminDuDepot('node_modules/knip/dist/util/package-json.js')).href
+);
 
-function declarationsQuiExportent() {
+function declarationsQuiSontDesModules() {
   return fichiersDuDepot()
     .filter((fichier) => /\.d\.[cm]?ts$/.test(fichier))
-    .filter(
-      (fichier) =>
-        !isAmbientDeclarationFile(
-          cheminDuDepot(fichier),
+    .filter((fichier) =>
+      ts.isExternalModule(
+        ts.createSourceFile(
+          fichier,
           readFileSync(cheminDuDepot(fichier), 'utf8'),
+          ts.ScriptTarget.Latest,
         ),
+      ),
     );
 }
 
@@ -1171,9 +1173,9 @@ test('ci-portes : rien ne soustrait de code a knip, ni option, ni reglage, ni ba
     'ci-portes : package.json designe des entrees, dont knip ne juge plus les exports.',
   );
   assert.deepEqual(
-    declarationsQuiExportent(),
+    declarationsQuiSontDesModules(),
     [],
-    'ci-portes : un .d.ts exporte : knip en fait une entree, dont il ne juge plus les exports.',
+    'ci-portes : un .d.ts importe ou exporte : knip en fait une entree, qui tait ses exports et garde en vie ce qu il importe.',
   );
   assert.deepEqual(
     Object.keys(reglages).filter((cle) => !REGLAGES_PERMIS_A_KNIP.has(cle)),
@@ -1272,7 +1274,7 @@ test('ci-portes : knip juge chaque fichier de code de src, e2e et scripts, comme
       ];
       ecrireFichiers(copie, {
         ...Object.fromEntries(toutes.map((fichier) => [fichier, ''])),
-        'zz-garde-knip.json': JSON.stringify({ project: toutes }),
+        'zz-garde-knip.json': JSON.stringify({ project: toutes, node: false }),
       });
       return {
         temoins: plantes,

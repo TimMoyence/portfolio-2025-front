@@ -1,0 +1,16 @@
+# Configuration gitleaks — étend les règles par défaut, comme celle du back.
+# But : la fixture des réponses servies est enregistrée par le banc du back
+# (test/helpers/reponses-servies.ts). Ses jetons d'accès sont signés avec
+# TEST_JWT_SECRET (test/factories/env.factory.ts du back) pour l'utilisateur
+# factice test@example.com, et ses secrets de reprise sont tirés pendant les
+# tests : aucune valeur n'est sensible. Le fichier tient sur une seule ligne et
+# change à chaque réenregistrement, ce qui rendrait caduque toute empreinte de
+# .gitleaksignore.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Jetons de test des réponses servies enregistrées par le banc du back"
+paths = [
+  '''src/testing/fixtures/reponses-servies\.json''',
+]
