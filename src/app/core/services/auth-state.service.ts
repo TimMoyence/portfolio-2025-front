@@ -4,17 +4,7 @@ import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@a
 import { computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import type { Observable } from 'rxjs';
-import {
-  TimeoutError,
-  catchError,
-  finalize,
-  firstValueFrom,
-  from,
-  map,
-  of,
-  tap,
-  timeout,
-} from 'rxjs';
+import { catchError, finalize, firstValueFrom, from, map, of, tap, timeout } from 'rxjs';
 import type { IssueDuRenouvellement } from '../../../cours/runtime/core/sync';
 import { bornerEntre, objet } from '../../../cours/runtime/core/valeurs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
@@ -45,7 +35,6 @@ interface DemandeDeRafraichissement {
 }
 
 function httpStatusOf(error: unknown): number | null {
-  if (error instanceof TimeoutError) return 0;
   const status = objet(error)?.['status'];
   return typeof status === 'number' ? status : null;
 }
@@ -119,6 +108,7 @@ export class AuthStateService {
     const expiresAt = Date.now() + session.expiresIn * 1000;
     this._user.set(session.user);
     this._isSessionChecked.set(true);
+    this._isRestoreFailed.set(false);
     this.adoptToken(session.accessToken, expiresAt);
   }
 
@@ -303,7 +293,7 @@ export class AuthStateService {
       return 'injoignable';
     }
     try {
-      const session = await firstValueFrom(this.authPort.refresh().pipe(timeout(ME_TIMEOUT_MS)));
+      const session = await firstValueFrom(this.authPort.refresh());
       return this.connecterSiLaSessionDure(generation, session) ? 'reussi' : 'refuse';
     } catch (error) {
       return this.laSessionDure(generation) ? this.onRefreshError(error) : 'refuse';

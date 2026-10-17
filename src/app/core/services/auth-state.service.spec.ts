@@ -201,15 +201,20 @@ describe('AuthStateService', () => {
       expect(service.token()).toBe('jwt-apres-panne');
     }));
 
-    it('traite un renouvellement reste sans reponse dix secondes comme une panne du reseau, puis le rejoue', fakeAsync(() => {
-      portStub.refresh.and.returnValues(
-        NEVER,
-        of(buildAuthSession({ accessToken: 'jwt-apres-silence', expiresIn: 900 })),
-      );
+    it('n abandonne jamais un renouvellement lent : l ancien cookie n est pas renvoye, et la reponse tardive connecte', fakeAsync(() => {
+      const reponse = new Subject<AuthSession>();
+      portStub.refresh.and.returnValue(reponse);
       atteindreLePremierRenouvellement();
-      attendreLeDeuxiemeEssaiApres(10_000 + 2_000);
+      avancer(75_000);
 
-      expect(service.token()).toBe('jwt-apres-silence');
+      expect(portStub.refresh).toHaveBeenCalledTimes(1);
+      expect(reponse.observed).withContext('la requete en vol est encore ecoutee').toBeTrue();
+
+      reponse.next(buildAuthSession({ accessToken: 'jwt-tardif', expiresIn: 900 }));
+      reponse.complete();
+      flushMicrotasks();
+
+      expect(service.token()).toBe('jwt-tardif');
     }));
 
     describe('renouvellement refuse par la limite de cadence (429)', () => {
@@ -521,19 +526,29 @@ describe('AuthStateService', () => {
         }));
       }
 
-      it('relance le refresh au nouvel essai quand le precedent est reste sans reponse', fakeAsync(() => {
-        portStub.refresh.and.returnValues(
-          NEVER,
-          of(buildAuthSession({ accessToken: 'jwt-relance' })),
-        );
+      it('un nouvel essai rejoint le refresh encore en vol sans renvoyer l ancien cookie, et sa reponse tardive connecte et efface le bandeau', fakeAsync(() => {
+        const reponse = new Subject<AuthSession>();
+        portStub.refresh.and.returnValue(reponse);
         restaurer();
         tick(10_000);
         expect(service.isRestoreFailed()).toBeTrue();
+        tick(65_000);
 
         restaurer();
+        tick(10_000);
 
-        expect(portStub.refresh).toHaveBeenCalledTimes(2);
-        expect(service.token()).toBe('jwt-relance');
+        expect(portStub.refresh).toHaveBeenCalledTimes(1);
+        expect(reponse.observed).withContext('la requete en vol est encore ecoutee').toBeTrue();
+        expect(service.isRestoreFailed()).toBeTrue();
+
+        reponse.next(buildAuthSession({ accessToken: 'jwt-tardif' }));
+        reponse.complete();
+        flushMicrotasks();
+
+        expect(service.token()).toBe('jwt-tardif');
+        expect(service.isRestoreFailed())
+          .withContext('le bandeau ne dit plus que la verification n a pas abouti')
+          .toBeFalse();
       }));
     });
 
