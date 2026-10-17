@@ -8872,8 +8872,8 @@
         <note category="location">src/app/features/privacy/privacy.component.html:93,96</note>
       </notes>
       <segment>
-        <source> Le traitement repose, selon les cas, sur l&apos;exécution d&apos;un contrat (votre achat), votre consentement (toolkit), ou notre intérêt légitime (sécurité et amélioration du site). </source>
-        <target> Processing relies, depending on the case, on the performance of a contract (your purchase), your consent (toolkit), or our legitimate interest (security and improvement of the site). </target>
+        <source> Le traitement repose, selon les cas, sur l&apos;exécution d&apos;un contrat (votre achat), votre consentement (toolkit), ou notre intérêt légitime (sécurité et bon fonctionnement du site). </source>
+        <target> Processing relies, depending on the case, on the performance of a contract (your purchase), your consent (toolkit), or our legitimate interest (security and proper operation of the site). </target>
       </segment>
     </unit>
     <unit id="privacyBaseTitle">

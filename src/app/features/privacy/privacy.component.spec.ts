@@ -91,7 +91,7 @@ describe('PrivacyComponent', () => {
 
   it('ne fonde plus le consentement sur une newsletter, que le site n envoie plus (LEG-05)', () => {
     expect(texteNormalise(rendre().querySelector('#base p'))).toBe(
-      "Le traitement repose, selon les cas, sur l'exécution d'un contrat (votre achat), votre consentement (toolkit), ou notre intérêt légitime (sécurité et amélioration du site).",
+      "Le traitement repose, selon les cas, sur l'exécution d'un contrat (votre achat), votre consentement (toolkit), ou notre intérêt légitime (sécurité et bon fonctionnement du site).",
     );
   });
 
@@ -105,6 +105,7 @@ describe('PrivacyComponent', () => {
     expect([...page.querySelectorAll('#usage li')].map(texteNormalise)).not.toContain(
       'Améliorer le site, de façon agrégée et anonyme.',
     );
+    expect(texteNormalise(page.querySelector('#base'))).not.toContain('amélioration du site');
   });
 
   it('date la politique du jour où elle a nommé ces données', () => {
