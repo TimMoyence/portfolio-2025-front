@@ -112,8 +112,10 @@ const REPONSE_LIMITEE =
 const ECRAN_LIMITE =
   'L’écran n’a pas encore pu être chargé : le serveur limite les demandes, il s’affichera de lui-même.';
 
-function refusLimite(): ReponseRefusee {
-  return new ReponseRefusee('reseau', 429, { minutes: 2 });
+const LIMITE_DE_DEUX_MINUTES: LimiteDeDebit = { minutes: 2 };
+
+function refusLimite(limite: LimiteDeDebit = LIMITE_DE_DEUX_MINUTES): ReponseRefusee {
+  return new ReponseRefusee('reseau', 429, limite);
 }
 
 const JALON_PERDU: EvenementBrique = {
@@ -1021,8 +1023,8 @@ describe('CoursEtudiantComponent', () => {
   }
 
   describe('D-16 · ce que la cadence du serveur retient repart a chaque declencheur promis', () => {
-    const ecranLimite = () =>
-      throwError(() => new SujetRefuse('sujet-indisponible', 429, { minutes: 2 }));
+    const ecranLimite = (limite: LimiteDeDebit) =>
+      throwError(() => new SujetRefuse('sujet-indisponible', 429, limite));
 
     const ecranRelu = (fixture: Fixture) => ({
       lectures: port.lireSujet.calls.count(),
@@ -1044,7 +1046,7 @@ describe('CoursEtudiantComponent', () => {
     const ATTENTES_RETENUES: readonly {
       readonly attente: string;
       readonly briqueAffichee: boolean;
-      readonly retenir: () => Promise<Fixture>;
+      readonly retenir: (limite?: LimiteDeDebit) => Promise<Fixture>;
       readonly etatSuivant: () => Partial<EtatSession>;
       readonly observerLeDepart: (fixture: Fixture) => unknown;
       readonly depart: () => unknown;
@@ -1052,10 +1054,10 @@ describe('CoursEtudiantComponent', () => {
       {
         attente: 'la relecture d un ecran verrouille a l arrivee',
         briqueAffichee: false,
-        retenir: async () => {
+        retenir: async (limite = LIMITE_DE_DEUX_MINUTES) => {
           port.lireSujet.and.returnValues(
             of(sujetAuSecondEcranVerrouille()),
-            ecranLimite(),
+            ecranLimite(limite),
             of(sujet),
           );
           return ecranRetenu(await suivreLaSeanceJusquA(1));
@@ -1073,9 +1075,9 @@ describe('CoursEtudiantComponent', () => {
       {
         attente: 'la relecture d un ecran verrouille a la revelation de sa source',
         briqueAffichee: false,
-        retenir: async () => {
+        retenir: async (limite = LIMITE_DE_DEUX_MINUTES) => {
           const { source, sujetInitial, sujetRelu } = correctionVerrouillee();
-          port.lireSujet.and.returnValues(of(sujetInitial), ecranLimite(), of(sujetRelu));
+          port.lireSujet.and.returnValues(of(sujetInitial), ecranLimite(limite), of(sujetRelu));
           const fixture = await suivreLaSeanceJusquA(0);
           await piloterSurLEcran(fixture, 0, source.id, { revele: true });
           return ecranRetenu(fixture);
@@ -1090,9 +1092,9 @@ describe('CoursEtudiantComponent', () => {
       {
         attente: 'une reflexion',
         briqueAffichee: true,
-        retenir: async () => {
+        retenir: async (limite = LIMITE_DE_DEUX_MINUTES) => {
           port.enregistrerReponseLibre.and.returnValues(
-            throwError(() => new ReponseLibreRefusee('reseau', 429, { minutes: 2 })),
+            throwError(() => new ReponseLibreRefusee('reseau', 429, limite)),
             of({ status: 'enregistre' }),
             of({ status: 'enregistre' }),
           );
@@ -1115,8 +1117,12 @@ describe('CoursEtudiantComponent', () => {
       {
         attente: 'une reponse en file',
         briqueAffichee: true,
-        retenir: async () => {
-          port.repondre.and.returnValues(throwError(refusLimite), of(REUSSITE), of(REUSSITE));
+        retenir: async (limite = LIMITE_DE_DEUX_MINUTES) => {
+          port.repondre.and.returnValues(
+            throwError(() => refusLimite(limite)),
+            of(REUSSITE),
+            of(REUSSITE),
+          );
           const fixture = await rattacherALaSeanceEnCours();
           await repondre(fixture, REPONSE_NUMERIQUE);
           expect(texteDeLaFile(fixture)).toBe(REPONSE_LIMITEE);
@@ -1196,22 +1202,29 @@ describe('CoursEtudiantComponent', () => {
         });
       }
 
-      it(`${attente} retenue par la cadence du serveur repart d elle-meme au delai annonce, pas avant`, async () => {
-        const delaiAnnonceMs = (refusLimite().limite?.minutes ?? 0) * 60_000;
-        await sousLHorlogeDuTest(async () => {
-          const fixture = await retenir();
+      for (const { quand, limite, delaiMs } of [
+        { quand: 'au delai annonce', limite: LIMITE_DE_DEUX_MINUTES, delaiMs: 120_000 },
+        {
+          quand: 'une minute apres un refus sans delai',
+          limite: { minutes: null },
+          delaiMs: 60_000,
+        },
+      ]) {
+        it(`${attente} retenue par la cadence du serveur repart d elle-meme ${quand}, pas avant`, async () => {
+          await sousLHorlogeDuTest(async () => {
+            const fixture = await retenir(limite);
 
-          jasmine.clock().tick(delaiAnnonceMs - 1);
-          await stabiliserLaVue(fixture);
-          const avantLeDelai = observerLeDepart(fixture);
-          jasmine.clock().tick(1);
-          await stabiliserLaVue(fixture);
+            jasmine.clock().tick(delaiMs - 1);
+            await stabiliserLaVue(fixture);
+            const avantLeDelai = observerLeDepart(fixture);
+            jasmine.clock().tick(1);
+            await stabiliserLaVue(fixture);
 
-          expect(delaiAnnonceMs).toBeGreaterThan(0);
-          expect(avantLeDelai).not.toEqual(depart());
-          expect(observerLeDepart(fixture)).toEqual(depart());
+            expect(avantLeDelai).not.toEqual(depart());
+            expect(observerLeDepart(fixture)).toEqual(depart());
+          });
         });
-      });
+      }
     }
   });
 

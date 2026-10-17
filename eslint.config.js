@@ -3,6 +3,9 @@ const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
 const sonarjs = require('eslint-plugin-sonarjs');
 const globals = require('globals');
+const { ignoresDeGit } = require('./scripts/lib/ignores-de-git.cjs');
+
+const IGNORES_DE_GIT = ignoresDeGit(__dirname);
 
 const COEUR_SANS_SHARED_NI_FEATURES =
   'Le core ne dépend ni de shared ni de features : le contrat vit dans core/ports.';
@@ -30,17 +33,10 @@ const COEUR_SANS_CHEMIN_VERS_SHARED_NI_FEATURES = [
 
 module.exports = tseslint.config(
   {
-    ignores: [
-      'dist/**',
-      'coverage/**',
-      '.angular/**',
-      '.claude/**',
-      'playwright-report/**',
-      'test-results/**',
-    ],
+    ignores: ['.claude/**', ...IGNORES_DE_GIT],
   },
   {
-    files: ['src/**/*.ts', 'e2e/**/*.ts', 'scripts/**/*.{mjs,mts}'],
+    files: ['src/**/*.ts', 'e2e/**/*.ts', 'scripts/**/*.{mjs,cjs,mts}'],
     rules: {
       'no-eval': 'error',
       'no-implied-eval': 'error',
@@ -119,7 +115,7 @@ module.exports = tseslint.config(
     },
   },
   {
-    files: ['scripts/**/*.mjs'],
+    files: ['scripts/**/*.{mjs,cjs}'],
     extends: [sonarjs.configs.recommended],
     languageOptions: {
       globals: { ...globals.node },

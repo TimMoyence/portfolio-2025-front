@@ -47,3 +47,15 @@ export function avecDossierPlante(prefixe, fichiers, executer) {
     supprimerDossier(racine);
   }
 }
+
+/** @param {string} gitDir @param {() => void} run @returns {void} */
+export const underInheritedGitDir = (gitDir, run) => {
+  const inherited = process.env.GIT_DIR;
+  process.env.GIT_DIR = gitDir;
+  try {
+    run();
+  } finally {
+    if (inherited === undefined) delete process.env.GIT_DIR;
+    else process.env.GIT_DIR = inherited;
+  }
+};
