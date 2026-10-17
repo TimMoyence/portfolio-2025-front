@@ -20,9 +20,9 @@
       <span
         data-testid="pillar-status"
         [class]="statusClass(item.status)"
-        [attr.aria-label]="statusLabel(item.status)"
+        [attr.aria-label]="item.statusLabel"
       >
-        {{ statusLabel(item.status) }}
+        {{ item.statusLabel }}
       </span>
     </div>
   }

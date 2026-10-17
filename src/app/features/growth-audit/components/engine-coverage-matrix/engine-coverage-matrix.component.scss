@@ -1,5 +1,11 @@
+@use '../../../../styles-shared/badges' as badges;
+
 :host {
   display: block;
+}
+
+.engine-card__status {
+  @include badges.badge-de-statut;
 }
 
 .engine-card__bar-fill {

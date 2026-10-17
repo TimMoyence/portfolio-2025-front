@@ -26,3 +26,19 @@
   color: #b91c1c;
   border-color: #fecaca;
 }
+
+@mixin badge-de-statut {
+  @include status-badge;
+
+  &--critical {
+    @include tone-critical;
+  }
+
+  &--warning {
+    @include tone-caution;
+  }
+
+  &--ok {
+    @include tone-positive;
+  }
+}

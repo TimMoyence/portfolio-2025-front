@@ -30,15 +30,4 @@ export class PillarScorecardComponent {
   statusClass(status: StatutScore): string {
     return `pillar-card__status pillar-card__status--${status}`;
   }
-
-  statusLabel(status: StatutScore): string {
-    switch (status) {
-      case 'critical':
-        return $localize`:@@auditPillarStatusCritical:Critique`;
-      case 'warning':
-        return $localize`:@@auditPillarStatusWarning:À améliorer`;
-      case 'ok':
-        return $localize`:@@auditPillarStatusOk:Objectif atteint`;
-    }
-  }
 }
