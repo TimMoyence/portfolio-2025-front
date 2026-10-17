@@ -8,7 +8,7 @@ import { ESLint } from 'eslint';
 import * as prettier from 'prettier';
 
 import { echapperPourRegex } from '../src/cours/runtime/core/valeurs.ts';
-import { trackedFiles } from './guard-no-comments.mjs';
+import { git, trackedFiles } from './guard-no-comments.mjs';
 import { cheminDuDepot, RACINE } from './lib/depot.mjs';
 import { avecDossierPlante } from './lib/dossier-temporaire.mjs';
 
@@ -604,48 +604,93 @@ test('ci-portes : le job e2e bloque la suite du workflow', () => {
   );
 });
 
-function dossiersIgnoresParGit() {
+function exemplesDuGitignore() {
   return readFileSync(cheminDuDepot('.gitignore'), 'utf8')
     .split('\n')
     .map((ligne) => ligne.trim())
-    .filter((ligne) => !ligne.startsWith('#') && !ligne.startsWith('!'))
-    .filter((ligne) => /\/(?:\*\*?)?$/.test(ligne))
-    .map((ligne) => ligne.replace(/^\//, '').replace(/\/(?:\*\*?)?$/, ''))
-    .filter((dossier) => dossier !== '' && !dossier.includes('*'));
+    .filter((ligne) => ligne !== '' && !ligne.startsWith('#'))
+    .map((ligne) =>
+      ligne
+        .replace(/^!/, '')
+        .replace(/^\//, '')
+        .replace(/\/(?:\*\*?)?$/, '')
+        .replaceAll(/\*+/g, 'x'),
+    )
+    .flatMap((exemple) => [`${exemple}/rapport.html`, `profond/${exemple}/rapport.html`]);
 }
 
-function eslintDuScriptLint() {
+function sortiesDesRapports() {
+  const { scripts } = lireContexte();
+  return [
+    createRequire(import.meta.url)(CHEMIN_LIGHTHOUSE).ci.upload.outputDir,
+    ...Object.values(scripts).flatMap((commande) =>
+      [...commande.matchAll(/--output\s+(\S+)/g)].map(([, sortie]) => sortie),
+    ),
+  ];
+}
+
+const ignoresParGit = (chemins) =>
+  git(RACINE, ['check-ignore', '--no-index', '-z', '--stdin'], { input: chemins.join('\0') })
+    .split('\0')
+    .filter(Boolean);
+
+async function eslintLit(eslint, chemin) {
+  return (
+    !(await eslint.isPathIgnored(chemin)) &&
+    (await eslint.calculateConfigForFile(chemin)) !== undefined
+  );
+}
+
+function eslintDuScriptLint(options = {}) {
   const { lint } = analyserScripts(JSON.parse(readFileSync(CHEMIN_PACKAGE, 'utf8')));
   const extensions = /--ext\s+(\S+)/.exec(lint)?.[1].split(',') ?? [];
   return new ESLint({
     cwd: RACINE,
     overrideConfig: [{ files: extensions.map((extension) => `**/*${extension}`) }],
+    ...options,
   });
 }
 
-test('ci-portes : eslint ne lit aucun dossier que git ignore, rapports Lighthouse compris', async () => {
+test('ci-portes : eslint ignore exactement les chemins que git ignore, rapports des outils compris, quelle que soit l ecriture de la ligne', async () => {
   const eslint = eslintDuScriptLint();
-  const dossiers = dossiersIgnoresParGit();
-  const lus = [];
-  for (const dossier of dossiers) {
-    if (!(await eslint.isPathIgnored(join(RACINE, dossier, 'rapport.html')))) {
-      lus.push(dossier);
+  const eslintSansConfiguration = eslintDuScriptLint({ overrideConfigFile: true });
+  const rapports = sortiesDesRapports().map((sortie) => `${sortie}/rapport.html`);
+  const exemples = [...exemplesDuGitignore(), ...rapports];
+  const ignores = new Set(ignoresParGit(exemples));
+  const nonIgnores = [];
+  const ecarts = [];
+  for (const chemin of exemples) {
+    const lu = await eslintLit(eslint, join(RACINE, chemin));
+    if (ignores.has(chemin)) {
+      if (lu) ecarts.push(`${chemin} : ignore par git, lu par eslint`);
+    } else if (!(await eslintSansConfiguration.isPathIgnored(join(RACINE, chemin)))) {
+      nonIgnores.push(chemin);
+      if (!lu) ecarts.push(`${chemin} : lu par git, ignore par eslint`);
     }
   }
 
   assert.ok(
-    dossiers.includes('.lighthouseci'),
-    'ci-portes : la lecture de .gitignore ne rend pas le dossier des rapports Lighthouse.',
+    rapports.length > 1,
+    'ci-portes : la garde ne lit la sortie d aucun rapport, ni de Lighthouse ni des scripts.',
+  );
+  assert.deepEqual(
+    rapports.filter((rapport) => !ignores.has(rapport)),
+    [],
+    'ci-portes : git doit ignorer chaque rapport qu un outil du depot ecrit sur le poste.',
+  );
+  assert.ok(
+    nonIgnores.length > 0,
+    'ci-portes : git ignore chaque exemple, la garde ne verrait pas eslint ignorer un chemin que git lit.',
   );
   assert.equal(
-    await eslint.isPathIgnored(join(RACINE, unFichierSuiviParExtension().get('html'))),
-    false,
+    await eslintLit(eslint, join(RACINE, unFichierSuiviParExtension().get('html'))),
+    true,
     'ci-portes : eslint ne lit aucun fichier html suivi, la garde ne verrait rien.',
   );
   assert.deepEqual(
-    lus,
+    ecarts,
     [],
-    'ci-portes : un dossier que git ignore est lu par eslint, et un rapport laisse sur le poste fait echouer lint et pre-push.',
+    'ci-portes : eslint et git divergent : un rapport laisse sur le poste fait echouer lint et pre-push, ou un fichier suivi echappe a lint.',
   );
 });
 
@@ -727,10 +772,10 @@ test('ci-portes : au commit, prettier et eslint passent sur chaque fichier suivi
     if (inferredParser !== null && !extensionsPasseesAuCommitPar('prettier').includes(extension)) {
       oublies.prettier.push(fichier);
     }
-    const linte =
-      !(await eslint.isPathIgnored(chemin)) &&
-      (await eslint.calculateConfigForFile(chemin)) !== undefined;
-    if (linte && !extensionsPasseesAuCommitPar('eslint').includes(extension)) {
+    if (
+      (await eslintLit(eslint, chemin)) &&
+      !extensionsPasseesAuCommitPar('eslint').includes(extension)
+    ) {
       oublies.eslint.push(fichier);
     }
   }

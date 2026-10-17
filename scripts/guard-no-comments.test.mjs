@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -9,9 +8,9 @@ import {
   collectFiles,
   formatGate,
   GATE,
+  git,
   githubAnnotation,
   isInScope,
-  isolatedGitEnv,
   parseArgs,
   ratchetCeiling,
   runGate,
@@ -31,10 +30,8 @@ const withRepo = ({ files = {}, ratchet }, run) => {
   const manifest = { name: 'guard-fixture', ...(ratchet && { [GATE]: ratchet }) };
   const plantes = { 'package.json': `${JSON.stringify(manifest, null, 2)}\n`, ...files };
   avecDossierPlante('guard-no-comments-', plantes, (root) => {
-    // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
-    execFileSync('git', ['-C', root, 'init', '-q'], { env: isolatedGitEnv() });
-    // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
-    execFileSync('git', ['-C', root, 'add', '-A'], { env: isolatedGitEnv() });
+    git(root, ['init', '-q']);
+    git(root, ['add', '-A']);
     run(root);
   });
 };
@@ -50,11 +47,6 @@ const underInheritedGitDir = (gitDir, run) => {
     else process.env.GIT_DIR = inherited;
   }
 };
-
-/** @param {string} repo @param {string[]} args @returns {string} */
-const gitIn = (repo, args) =>
-  // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
-  execFileSync('git', ['-C', repo, ...args], { encoding: 'utf8', env: isolatedGitEnv() });
 
 /** @param {string} root @returns {unknown} */
 const declaredCeiling = (root) =>
@@ -375,7 +367,7 @@ void test('HOOK-WT-2 · le depot de fixture laisse intact le depot designe par u
       withRepo({ files: { 'src/a.service.ts': 'export const a = 1;\n' } }, () => {});
     });
     assert.deepEqual(
-      { tracked: gitIn(hookRepo, ['ls-files']), bare: gitIn(hookRepo, ['config', 'core.bare']) },
+      { tracked: git(hookRepo, ['ls-files']), bare: git(hookRepo, ['config', 'core.bare']) },
       { tracked: 'package.json\nsrc/b.service.ts\n', bare: 'false\n' },
     );
   });

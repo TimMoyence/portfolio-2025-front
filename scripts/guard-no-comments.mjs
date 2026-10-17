@@ -96,16 +96,26 @@ export function isolatedGitEnv(env = process.env) {
 
 /**
  * @param {string} root
- * @returns {string[]}
+ * @param {string[]} args
+ * @param {{ input?: string }} [options]
+ * @returns {string}
  */
-export function trackedFiles(root) {
+export function git(root, args, options = {}) {
   // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
-  const out = execFileSync('git', ['-C', root, 'ls-files', '-z'], {
+  return execFileSync('git', ['-C', root, ...args], {
     encoding: 'utf8',
     maxBuffer: 1 << 28,
     env: isolatedGitEnv(),
+    ...options,
   });
-  return out.split('\0').filter(Boolean);
+}
+
+/**
+ * @param {string} root
+ * @returns {string[]}
+ */
+export function trackedFiles(root) {
+  return git(root, ['ls-files', '-z']).split('\0').filter(Boolean);
 }
 
 /**

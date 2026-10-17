@@ -1,8 +1,22 @@
+const { readFileSync } = require('node:fs');
+const { join } = require('node:path');
 const eslint = require('@eslint/js');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
 const sonarjs = require('eslint-plugin-sonarjs');
 const globals = require('globals');
+
+const motifEslintDeLaLigne = (ligne) => {
+  const barre = ligne.indexOf('/');
+  const partout = barre === -1 || barre === ligne.length - 1 ? '**/' : '';
+  return `${partout}${barre === 0 ? ligne.slice(1) : ligne}`;
+};
+
+const IGNORES_DE_GIT = readFileSync(join(__dirname, '.gitignore'), 'utf8')
+  .split('\n')
+  .map((ligne) => ligne.trimEnd())
+  .filter((ligne) => ligne !== '' && !ligne.startsWith('#'))
+  .map(motifEslintDeLaLigne);
 
 const COEUR_SANS_SHARED_NI_FEATURES =
   'Le core ne dépend ni de shared ni de features : le contrat vit dans core/ports.';
@@ -30,23 +44,7 @@ const COEUR_SANS_CHEMIN_VERS_SHARED_NI_FEATURES = [
 
 module.exports = tseslint.config(
   {
-    ignores: [
-      'dist/**',
-      'coverage/**',
-      '.angular/**',
-      '.claude/**',
-      'playwright-report/**',
-      'test-results/**',
-      'e2e/test-results/**',
-      'e2e/__screenshots__/**',
-      '.lighthouseci/**',
-      '.sass-cache/**',
-      '.idea/**',
-      '.c9/**',
-      '.settings/**',
-      '.vscode/**',
-      '.history/**',
-    ],
+    ignores: ['.claude/**', ...IGNORES_DE_GIT],
   },
   {
     files: ['src/**/*.ts', 'e2e/**/*.ts', 'scripts/**/*.{mjs,mts}'],
