@@ -6,12 +6,20 @@ import {
   sujetServi,
 } from '../src/app/core/adapters/formations-schemas';
 import type { SujetDuFil } from '../src/app/core/adapters/formations-fil';
-import type { RapportSeance, RegleNotation } from '../src/app/core/ports/formations.port';
+import type { RapportSeance } from '../src/app/core/ports/formations.port';
 import { TYPES_QUESTION } from '../src/cours/content/types';
 import type { EtatParticipant, ResumeBareme } from '../src/cours/content/types';
 import { etatServi } from '../src/cours/runtime/core/sync';
 import type { EtatSession } from '../src/cours/runtime/core/sync';
 import { buildAuthSession, buildAuthUser } from '../src/testing/factories/auth.factory';
+import {
+  buildRapportSeance,
+  buildRattachement,
+  buildRegleNotation,
+  buildResultatsSeance,
+  buildResumeBareme,
+  buildStatistiquesSeance,
+} from '../src/testing/factories/rapport-seance.factory';
 import { etatParticipantVierge } from '../src/testing/fixtures/etat-participant';
 
 export const API_BASE = 'http://localhost:3000/api/v1/portfolio25';
@@ -166,49 +174,34 @@ export const ETAT_EN_COURS: EtatSession = {
   majLe: '2026-09-20T08:00:00.000Z',
 };
 
-const NOTATION: RegleNotation = {
-  noteMax: 20,
-  base: 'participation-relative-cohorte',
-  partCohorteReference: 0.1,
-  ratioSeuilValidation: 0.5,
-  neSaitPasCompteCommeReponse: true,
-  pointsNonReponse: 0,
-  reponsesLibresNotees: false,
-  seuilQuestionProbleme: 0.5,
-  decimalesStatistiques: 2,
-  typesNotables: ['vote', 'numeric'],
-  productionCompteSi: 'au-moins-une-saisie',
-  statistiquesSurQuestionsNotees: true,
-};
-
 const SANS_QUESTION_NOTEE = Object.fromEntries(
   TYPES_QUESTION.map((type) => [type, { notees: 0, nonNotees: 0 }]),
 ) as ResumeBareme['parType'];
 
 export function rapportDeSeance(surcharges: Partial<RapportSeance>): RapportSeance {
-  return {
+  return buildRapportSeance({
     courseSlug: B2_SLUG,
-    code: '4821',
     ouverteLe: '2026-09-20T08:00:00.000Z',
     fermeeLe: '2026-09-20T10:00:00.000Z',
-    participants: [],
     conceptsFragiles: [],
     libellesDesConcepts: {},
-    resultats: { participants: 0, questions: [] },
-    statistiques: {
+    resultats: buildResultatsSeance({ participants: 0, questions: [] }),
+    statistiques: buildStatistiquesSeance({
       moyenne: 0,
       mediane: 0,
       dispersion: 0,
       tauxParticipation: 0,
       tauxReussite: 0,
-      questionsProblemes: [],
-    },
-    notation: NOTATION,
-    bareme: { questionsNotees: 0, parType: SANS_QUESTION_NOTEE },
-    jalons: {},
-    enigmes: [],
+    }),
+    notation: buildRegleNotation({
+      partCohorteReference: 0.1,
+      ratioSeuilValidation: 0.5,
+      seuilQuestionProbleme: 0.5,
+      typesNotables: ['vote', 'numeric'],
+    }),
+    bareme: buildResumeBareme({ questionsNotees: 0, parType: SANS_QUESTION_NOTEE }),
     ...surcharges,
-  };
+  });
 }
 
 export async function intercepterApi(
@@ -260,7 +253,7 @@ export async function servirLaJonction(route: Route, jonction: Jonction): Promis
   await servirJson(
     route,
     rattachementServi,
-    { ...jonction, modeRythme: 'pilote', secretDeReprise: SECRET_DE_REPRISE },
+    buildRattachement({ ...jonction, secretDeReprise: SECRET_DE_REPRISE }),
     201,
   );
 }

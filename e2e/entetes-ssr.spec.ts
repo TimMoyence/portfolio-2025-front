@@ -1,12 +1,9 @@
 import { expect, test, type Request } from '@playwright/test';
 
-const baseSsr = process.env['SSR_BASE_URL'] ?? '';
+import { baseSsr, exigerLaPorteSsr } from './porte-ssr';
 
 test.describe('le serveur SSR ne révèle pas sa pile', () => {
-  test.skip(
-    baseSsr === '',
-    'hors porte : SSR_BASE_URL absente. La porte la fournit (npm run test:e2e:portail).',
-  );
+  exigerLaPorteSsr();
 
   for (const chemin of ['/fr/', '/fr/page-inexistante']) {
     test(`${chemin} répond sans en-tête x-powered-by`, async ({ request }) => {
@@ -18,10 +15,7 @@ test.describe('le serveur SSR ne révèle pas sa pile', () => {
 });
 
 test.describe('le serveur SSR interdit le reniflage de type sur toute réponse', () => {
-  test.skip(
-    baseSsr === '',
-    'hors porte : SSR_BASE_URL absente. La porte la fournit (npm run test:e2e:portail).',
-  );
+  exigerLaPorteSsr();
 
   for (const chemin of [
     '/fr/',
@@ -42,10 +36,7 @@ test.describe('le serveur SSR interdit le reniflage de type sur toute réponse',
 });
 
 test.describe('une page ouverte par un lien à jeton ne transmet son URL ni à l’API ni à un tiers', () => {
-  test.skip(
-    baseSsr === '',
-    'hors porte : SSR_BASE_URL absente. La porte la fournit (npm run test:e2e:portail).',
-  );
+  exigerLaPorteSsr();
 
   const jeton = '6f0e3c1a-9b2d-4c8e-a1f7-3d5b9e2c4a10';
 
@@ -107,10 +98,7 @@ test.describe('une page ouverte par un lien à jeton ne transmet son URL ni à l
 });
 
 test.describe('le livret papier s’imprime hors du processus du pupitre', () => {
-  test.skip(
-    baseSsr === '',
-    'hors porte : SSR_BASE_URL absente. La porte la fournit (npm run test:e2e:portail).',
-  );
+  exigerLaPorteSsr();
 
   const pupitre = '/fr/cours/presenter/b2-02-series-statistiques';
 

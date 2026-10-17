@@ -7,7 +7,7 @@ import { setTimeout as patienter } from 'node:timers/promises';
 import { RACINE as RACINE_FRONT } from '../lib/depot.mjs';
 import { messageDErreur } from '../../src/server/lecture-api.ts';
 import { executer } from '../lib/processus.mjs';
-import { amorcerFormateur } from './amorcage.mjs';
+import { amorcerFormateur } from './amorcage.mts';
 import { attendreQue, sondeHttp } from './attente.mjs';
 import {
   BASE_DU_BANC,

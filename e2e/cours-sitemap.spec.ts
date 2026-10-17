@@ -1,14 +1,11 @@
 import { expect, test } from '@playwright/test';
 
+import { baseSsr, exigerLaPorteSsr } from './porte-ssr';
+
 const CHEMIN_DU_COURS = '/formations/b2-01-traitement-information-chiffree';
 
-const baseSsr = process.env['SSR_BASE_URL'] ?? '';
-
 test.describe('sitemap sans la page B2-01 retirée (L1)', () => {
-  test.skip(
-    baseSsr === '',
-    'hors porte : SSR_BASE_URL absente. La porte la fournit (npm run test:e2e:portail).',
-  );
+  exigerLaPorteSsr();
 
   test('L1 · le sitemap et llms.txt ne publient plus la page B2-01, suivie en séance seulement', async ({
     request,

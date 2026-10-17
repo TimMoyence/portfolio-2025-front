@@ -2,15 +2,13 @@ import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 
+import { baseAnglaise, baseSsr, exigerLaPorteSsr } from './porte-ssr';
+
 const XLF_ANGLAIS = 'src/locale/messages.en.xlf';
 const ROUTES_PRERENDUES = 'dist/portfolio-app/prerendered-routes.json';
 const LONGUEUR_MIN_LIBELLE = 25;
 const LIBELLES_MIN_ATTENDUS = 300;
 const SEPARATEUR_DE_CIBLES = ' \u0000 ';
-
-const baseSsr = process.env['SSR_BASE_URL'] ?? '';
-
-const baseAnglaise = process.env['SSR_EN_BASE_URL'] ?? '';
 
 const ROUTES_EN = [
   '/en',
@@ -111,10 +109,7 @@ async function liensHorsDeLaLangue(page: Page, langue: string): Promise<string[]
 }
 
 test.describe('la version anglaise ne laisse aucun libelle francais (QA-15)', () => {
-  test.skip(
-    baseSsr === '' || baseAnglaise === '',
-    'hors porte : SSR_BASE_URL ou SSR_EN_BASE_URL absente. La porte les fournit (npm run test:e2e:portail).',
-  );
+  exigerLaPorteSsr({ anglaise: true });
 
   for (const route of ROUTES_EN) {
     test(`${route} n affiche aucun libelle reste en francais`, async ({ page }) => {

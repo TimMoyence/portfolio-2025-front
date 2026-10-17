@@ -7,7 +7,7 @@ import {
   corpsDInscription,
   inscrireFormateur,
   sqlDePromotion,
-} from './amorcage.mjs';
+} from './amorcage.mts';
 
 const IDENTIFIANTS = { email: 'formateur.banc@example.test', motDePasse: 'Banc!abcdef12349' };
 
