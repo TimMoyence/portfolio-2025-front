@@ -1,13 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": [
-    "src/polyfills.ts",
-    "src/**/*.spec.ts",
-    "scripts/*.{mjs,mts}",
-    "scripts/**/*.test.mjs",
-    "e2e/**/*.spec.ts"
-  ],
-  "project": ["src/**/*.ts", "scripts/**/*.{mjs,mts}", "e2e/**/*.ts"],
-  "ignoreDependencies": ["@fontsource/.+", "sharp"],
+  "entry": ["src/**/*.spec.ts", "scripts/**/*.test.mjs", "e2e/**/*.spec.ts"],
+  "project": ["src/**/*.{ts,css}", "scripts/**/*.{mjs,cjs,mts}", "e2e/**/*.ts"],
+  "ignoreDependencies": ["@fontsource/.+"],
   "ignoreExportsUsedInFile": { "interface": true, "type": true }
 }

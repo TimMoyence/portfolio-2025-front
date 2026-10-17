@@ -3,16 +3,21 @@ import {
   reponseJson,
   type DoublesDeLecteur,
 } from '../testing/lecteur-http-simule';
+import { reponsesServiesPar } from '../testing/fixtures/reponses-servies';
+import { avecUneCleHorsContrat } from '../testing/lecture-stricte';
+import { CLE_INCONNUE } from '../testing/tolerances-des-schemas';
 import { lecteurDArticlesDuSitemap, PAGES_MAX_PAR_LOCALE } from './article-sitemap';
 
 const API = 'https://asilidesign.fr/api/v1/portfolio25';
 const CINQ_MINUTES = 300_000;
+const [ARTICLE_SERVI] = reponsesServiesPar('GET /api/articles/:slug') as readonly object[];
+
+function article(slug: string): object {
+  return { ...ARTICLE_SERVI, slug, updated_at: '2026-09-23T04:15:00.000Z' };
+}
 
 function page(slugs: readonly string[], nextCursor: string | null): Response {
-  return reponseJson({
-    items: slugs.map((slug) => ({ slug, updated_at: '2026-09-23T04:15:00.000Z' })),
-    next_cursor: nextCursor,
-  });
+  return reponseJson({ items: slugs.map(article), next_cursor: nextCursor });
 }
 
 describe('lecteurDArticlesDuSitemap', () => {
@@ -81,15 +86,37 @@ describe('lecteurDArticlesDuSitemap', () => {
     expect(doubles.journal.warn).toHaveBeenCalledTimes(2);
   });
 
-  it('ignore les éléments mal formés', async () => {
-    doubles.appels.and.callFake(async () =>
-      reponseJson({ items: [{ slug: 42 }, { slug: 'ok-ok-ok' }, null], next_cursor: null }),
+  it('journalise le refus de l API et l API injoignable, chacun avec sa locale', async () => {
+    doubles.appels.and.callFake(async (input) => {
+      if (new URL(String(input)).searchParams.get('locale') === 'en') return reponseJson({}, 503);
+      throw new TypeError('fetch failed');
+    });
+
+    expect(await lecteur(API)()).toEqual([]);
+    expect(doubles.journal.warn.calls.allArgs()).toEqual(
+      jasmine.arrayWithExactContents([
+        ["[sitemap] articles en : l'API a répondu 503"],
+        ['[sitemap] articles fr : API injoignable (fetch failed)'],
+      ]),
     );
+  });
+
+  it('refuse une réponse hors contrat, la signale et arrête sa locale', async () => {
+    doubles.appels.and.callFake(async (input) => {
+      if (new URL(String(input)).searchParams.get('locale') === 'en') return page(['b-c-d'], null);
+      return reponseJson({
+        items: [avecUneCleHorsContrat(article('a-b-c'))],
+        next_cursor: 'suite',
+      });
+    });
 
     const entrees = await lecteur(API)();
 
-    expect(entrees.map((entree) => entree.slug)).toEqual(['ok-ok-ok', 'ok-ok-ok']);
-    expect(entrees[0].lastmod).toBeUndefined();
+    expect(entrees.map((entree) => entree.slug)).toEqual(['b-c-d']);
+    expect(doubles.appels).toHaveBeenCalledTimes(2);
+    expect(doubles.journal.warn).toHaveBeenCalledOnceWith(
+      `[sitemap] articles fr : réponse de l'API hors contrat (items.0.${CLE_INCONNUE})`,
+    );
   });
 
   it('sert le cache cinq minutes', async () => {

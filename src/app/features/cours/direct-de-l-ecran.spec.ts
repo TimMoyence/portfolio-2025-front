@@ -21,6 +21,14 @@ describe('directDeLEcran', () => {
     expect(directDeLEcran(buildEcran(), {}, RESULTATS, 0).comptesJalon).toBeNull();
     expect(directDeLEcran(SONDAGE, {}, null, 0)).toEqual(DIRECT_SANS_RESULTATS);
   });
+
+  it('ne rend aucun compte a un sondage d identifiant vide', () => {
+    const anonyme = buildEcran({ type: 'fp-pulse', donnees: { sondage: { id: '' } } });
+
+    expect(
+      directDeLEcran(anonyme, {}, { ...RESULTATS, jalons: { '': COMPTES } }, 0).comptesJalon,
+    ).toBeNull();
+  });
 });
 
 describe('directDeLEcranCourant', () => {

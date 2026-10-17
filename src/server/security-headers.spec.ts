@@ -41,9 +41,10 @@ describe('security-headers', () => {
       expect(headers['Strict-Transport-Security']).toBe('max-age=63072000; includeSubDomains');
     });
 
-    it('autorise les origines externes reellement chargees dans la CSP', () => {
+    it('n autorise dans la CSP que les origines externes reellement chargees', () => {
       const csp = buildSecurityHeaders({ isHttps: true })['Content-Security-Policy-Report-Only'];
-      expect(csp).toContain('https://plausible.io');
+      expect(csp).not.toContain('plausible');
+      expect(csp).toContain("connect-src 'self';");
       expect(csp).toContain('https://accounts.google.com');
     });
 

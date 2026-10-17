@@ -1,13 +1,20 @@
+import { BOITES_DE_REVISION, type BoiteDeRevision } from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import {
   type ContenuDeBrique,
   type OptionPublique,
+  avecJeNeSaisPas,
   copierLeSocle,
   projeterOptions,
 } from './projection';
 import { estObjet } from '../core/valeurs';
-import type { ConceptMaitrise } from './retours';
+import {
+  bonneReponseRevelee,
+  type CibleRevelee,
+  type ConceptMaitrise,
+  lireCibleRevelee,
+} from './retours';
 import { FpVerdicts } from './verdicts';
 
 export interface SpacedRappel extends ContenuDeBrique {
@@ -17,14 +24,13 @@ export interface SpacedRappel extends ContenuDeBrique {
 export interface SpacedQuestionPublique {
   readonly questionId: string;
   readonly concept: string;
-  readonly boite: 1 | 2 | 3;
+  readonly boite: BoiteDeRevision;
   readonly cours: string;
   readonly enonce: string;
   readonly options: readonly OptionPublique[];
 }
 
-const VIDE = escapeHtml('');
-const BOITES = [1, 2, 3] as const;
+const BONNE_EN_LIGNE = safeHtml`class="fp-spaced__bonne"`;
 
 function projeterQuestion(source: SpacedQuestionPublique): SpacedQuestionPublique {
   return {
@@ -37,29 +43,15 @@ function projeterQuestion(source: SpacedQuestionPublique): SpacedQuestionPubliqu
   };
 }
 
-interface BonneReponse {
-  readonly cible: string;
-  readonly optionId: string | null;
-}
-
-function lireBonnesReponses(valeur: unknown): ReadonlyMap<string, BonneReponse> | null {
+function lireBonnesReponses(valeur: unknown): ReadonlyMap<string, CibleRevelee> | null {
   if (!estObjet(valeur) || valeur['type'] !== 'reponses' || !estObjet(valeur['reponses'])) {
     return null;
   }
   return new Map(
-    Object.entries(valeur['reponses']).flatMap(([questionId, bonne]) =>
-      estObjet(bonne) && typeof bonne['cible'] === 'string'
-        ? [
-            [
-              questionId,
-              {
-                cible: bonne['cible'],
-                optionId: typeof bonne['optionId'] === 'string' ? bonne['optionId'] : null,
-              },
-            ] as const,
-          ]
-        : [],
-    ),
+    Object.entries(valeur['reponses']).flatMap(([questionId, bonne]) => {
+      const cible = lireCibleRevelee(bonne);
+      return cible === null ? [] : [[questionId, cible] as const];
+    }),
   );
 }
 
@@ -77,7 +69,7 @@ export class FpSpaced extends FpVerdicts {
   private interne: readonly SpacedQuestionPublique[] | null = null;
   private repondues = new Set<string>();
   private carte: readonly ConceptMaitrise[] = [];
-  private bonnes: ReadonlyMap<string, BonneReponse> | null = null;
+  private bonnes: ReadonlyMap<string, CibleRevelee> | null = null;
   private message = '';
 
   set rappel(valeur: SpacedRappel | null) {
@@ -93,8 +85,7 @@ export class FpSpaced extends FpVerdicts {
   set questions(valeur: readonly SpacedQuestionPublique[] | null) {
     this.interne = valeur === null ? null : valeur.map(projeterQuestion);
     this.message = '';
-    this.suivreAffichage(this.cleAffichage());
-    this.refreshSiConnecte();
+    this.suivreEtRafraichir(this.cleAffichage());
   }
 
   get questions(): readonly SpacedQuestionPublique[] | null {
@@ -106,8 +97,7 @@ export class FpSpaced extends FpVerdicts {
   }
 
   protected override verdictsRecus(): void {
-    this.suivreAffichage(this.cleAffichage());
-    this.refreshSiConnecte();
+    this.suivreEtRafraichir(this.cleAffichage());
   }
 
   set maitrise(valeur: readonly ConceptMaitrise[] | null) {
@@ -150,9 +140,9 @@ export class FpSpaced extends FpVerdicts {
     const questions = (this.interne ?? []).map(
       (question) => safeHtml`<li data-question="${escapeHtml(question.questionId)}">
         <p class="fp-spaced__enonce" data-testid="enonce">${escapeHtml(question.enonce)}</p>
-        <ul class="fp-spaced__choix fp-cases">${[...question.options]
-          .sort((a, b) => a.libelle.localeCompare(b.libelle, 'fr'))
-          .map((option) => safeHtml`<li>${escapeHtml(option.libelle)}</li>`)}</ul>
+        <ul class="fp-spaced__choix fp-cases">${this.casesAImprimer(
+          [...question.options].sort((a, b) => a.libelle.localeCompare(b.libelle, 'fr')),
+        )}</ul>
       </li>`,
     );
     return safeHtml`<ol class="fp-spaced__imprimees">${questions}</ol>`;
@@ -160,9 +150,9 @@ export class FpSpaced extends FpVerdicts {
 
   bind(racine: ShadowRoot): void {
     this.suivreAffichage(this.cleAffichage());
-    for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
-      bouton.addEventListener('click', () => this.repondre(bouton.dataset['option'] ?? ''));
-    }
+    this.brancherLesBoutons(racine, '[data-option]', false, ({ dataset }) =>
+      this.repondre(dataset['option'] ?? ''),
+    );
   }
 
   private entete(): EscapedHtml {
@@ -236,11 +226,7 @@ export class FpSpaced extends FpVerdicts {
   }
 
   private options(question: SpacedQuestionPublique): EscapedHtml {
-    const options = [
-      ...question.options,
-      { id: '__je_ne_sais_pas__', libelle: this.texte('je-ne-sais-pas') },
-    ];
-    const boutons = options.map(
+    const boutons = avecJeNeSaisPas(question.options, this.texte('je-ne-sais-pas')).map(
       (option) =>
         safeHtml`<button type="button" class="fp-spaced__option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,
     );
@@ -266,14 +252,14 @@ export class FpSpaced extends FpVerdicts {
     }
     const libelle =
       question.options.find((option) => option.id === bonne.optionId)?.libelle ?? bonne.cible;
-    return safeHtml`<span class="fp-spaced__bonne" data-testid="bonne-reponse">${escapeHtml(this.texte('bonne-reponse'))} ${escapeHtml(libelle)}</span>`;
+    return bonneReponseRevelee(this.texte('bonne-reponse'), libelle, BONNE_EN_LIGNE);
   }
 
   private carteDeMaitrise(): EscapedHtml {
     if (this.carte.length === 0) {
       return VIDE;
     }
-    const entetes = BOITES.map(
+    const entetes = BOITES_DE_REVISION.map(
       (boite) => safeHtml`<th scope="col">${escapeHtml(this.texte('spaced-boite'))} ${boite}</th>`,
     );
     const lignes = this.carte.map(

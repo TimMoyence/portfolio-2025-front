@@ -1,7 +1,7 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { Observable } from 'rxjs';
-import { of, throwError } from 'rxjs';
+import { isObservable, of, throwError } from 'rxjs';
 import type {
   FichierTelecharge,
   ParticipantRapporte,
@@ -24,6 +24,9 @@ import {
   buildDerouleCours,
   buildEcranDeroule,
   buildFichierTelecharge,
+  buildParticipantRapporte,
+  buildRapportSeance,
+  buildReponseRapportee,
   buildResultatQuestion,
   buildResultatsDeChaqueQuestion,
   buildResultatsSeance,
@@ -41,14 +44,15 @@ import { CoursSyntheseComponent } from './cours-synthese.component';
 type Fixture = ComponentFixture<CoursSyntheseComponent>;
 
 function reponse(concept: string, valeur: string, dureeMs = 4200): ReponseRapportee {
-  return {
+  return buildReponseRapportee({
     questionId: `Q-${concept}`,
     concept,
     valeur,
+    reponse: valeur,
     correcte: false,
     misconception: 'taux-simple',
     dureeMs,
-  };
+  });
 }
 
 function confusion(id: string, nombre: number): ConfusionComptee {
@@ -61,16 +65,14 @@ function etudiant(
   sousSeuil: boolean,
   reponses: readonly ReponseRapportee[],
 ): ParticipantRapporte {
-  return {
+  return buildParticipantRapporte({
     prenom,
-    nom: 'Durand',
     email: `${prenom.toLowerCase()}@example.com`,
     completion: reponses.length / 4,
     note,
     sousSeuil,
     reponses,
-    incidents: 0,
-  };
+  });
 }
 
 const MALIK = etudiant('Malik', 4, true, [
@@ -85,15 +87,15 @@ function rapportDe(
   participants: readonly ParticipantRapporte[],
   resultats: ResultatsSeance = buildResultatsSeance({ participants: participants.length }),
 ): RapportSeance {
-  return {
+  return buildRapportSeance({
     courseSlug: 'maths-financieres',
-    code: '4821',
     ouverteLe: '2026-09-12T08:00:00.000Z',
     fermeeLe: '2026-09-12T09:30:00.000Z',
     participants,
     conceptsFragiles: ['interets-composes', 'actualisation'],
+    libellesDesConcepts: {},
     resultats,
-  };
+  });
 }
 
 function textes(fixture: Fixture, nom: string): readonly string[] {
@@ -104,12 +106,12 @@ function textes(fixture: Fixture, nom: string): readonly string[] {
 }
 
 async function monter(
-  rapport: RapportSeance,
+  rapport: RapportSeance | Observable<RapportSeance>,
   deroule: Observable<DerouleCours> = of(buildDerouleCours()),
   csv: Observable<FichierTelecharge> = of(buildFichierTelecharge()),
 ): Promise<Fixture> {
   const port = createFormationsPortStub();
-  port.lireResultats.and.returnValue(of(rapport));
+  port.lireResultats.and.returnValue(isObservable(rapport) ? rapport : of(rapport));
   port.lireDeroule.and.returnValue(deroule);
   port.telechargerRapportCsv.and.returnValue(csv);
   setupTestBed({
@@ -501,6 +503,15 @@ describe('CoursSyntheseComponent', () => {
     exporter(fixture);
 
     expect(textes(fixture, 'synthese-export-echec').length).toBe(1);
+  });
+
+  it('L4-F17 · alerte quand le rapport de la seance ne peut pas etre lu', async () => {
+    const fixture = await monter(throwError(() => new Error('reseau coupe')));
+
+    expect(textes(fixture, 'synthese-echec')).toEqual([
+      "La synthèse n'a pas pu être lue. Rechargez la page, puis réessayez.",
+    ]);
+    expect(textes(fixture, 'synthese-ligne')).toEqual([]);
   });
 
   it('une seance sans participant affiche un message plutot qu un tableau vide', async () => {

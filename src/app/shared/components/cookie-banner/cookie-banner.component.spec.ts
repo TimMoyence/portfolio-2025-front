@@ -16,7 +16,7 @@ describe('CookieBannerComponent', () => {
     consentServiceStub.saveConsent.calls.reset();
 
     consentServiceStub.shouldShowBanner.and.returnValue(false);
-    consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok', httpCode: 201 }));
+    consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok' }));
 
     await TestBed.configureTestingModule({
       imports: [CookieBannerComponent, RouterModule.forRoot([])],

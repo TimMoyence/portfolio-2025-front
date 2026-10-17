@@ -1,3 +1,5 @@
+import { ID_JE_NE_SAIS_PAS } from '../blocks/projection';
+
 export const tokens = `
 :where(.fp-root) {
   --fp-cream: #fffaf2;
@@ -367,7 +369,7 @@ export const impression = `
 
   :where(.fp-root) [data-testid='valider'],
   :where(.fp-root) [data-testid='je-ne-sais-pas'],
-  :where(.fp-root) [data-option='__je_ne_sais_pas__'] {
+  :where(.fp-root) [data-option='${ID_JE_NE_SAIS_PAS}'] {
     display: none;
   }
 }

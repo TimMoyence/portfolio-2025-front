@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angu
 import { firstValueFrom } from 'rxjs';
 import type { ParticipantDeSeance } from '../../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../../core/ports/formations.port';
-
-type LectureDesParticipants = 'fermee' | 'chargement' | 'ouverte' | 'echec';
+import { type Chargement, lectureSuivie } from '../../lecture-suivie';
 
 @Component({
   selector: 'app-panneau-participants',
@@ -14,7 +13,7 @@ type LectureDesParticipants = 'fermee' | 'chargement' | 'ouverte' | 'echec';
     <section class="panneau-participants" data-testid="activite-participants">
       <div class="panneau-participants__tete">
         <h3 i18n="@@panneauActiviteParticipantsTitre">Participants</h3>
-        @if (lecture() === 'fermee') {
+        @if (lecture() === 'repos') {
           <button
             type="button"
             class="control-btn"
@@ -59,7 +58,7 @@ type LectureDesParticipants = 'fermee' | 'chargement' | 'ouverte' | 'echec';
             Réessayer
           </button>
         }
-        @case ('ouverte') {
+        @case ('succes') {
           <ul class="panneau-participants__liste">
             @for (participant of listeDesParticipants(); track participant.id) {
               <li
@@ -119,29 +118,26 @@ type LectureDesParticipants = 'fermee' | 'chargement' | 'ouverte' | 'echec';
 export class PanneauParticipantsComponent {
   readonly sessionId = input<string | null>(null);
 
-  protected readonly lecture = signal<LectureDesParticipants>('fermee');
+  protected readonly lecture = signal<Chargement>('repos');
   protected readonly listeDesParticipants = signal<readonly ParticipantDeSeance[]>([]);
   protected readonly posteLibere = signal<ParticipantDeSeance | null>(null);
 
   private readonly port = inject(FORMATIONS_PORT);
+  private readonly charger = lectureSuivie();
 
   protected async afficherLesParticipants(): Promise<void> {
     const sessionId = this.sessionId();
     if (sessionId === null) {
       return;
     }
-    this.lecture.set('chargement');
-    try {
-      const { participants } = await firstValueFrom(this.port.lireParticipants(sessionId));
-      this.listeDesParticipants.set(participants);
-      this.lecture.set('ouverte');
-    } catch {
-      this.lecture.set('echec');
+    const lue = await this.charger(this.port.lireParticipants(sessionId), this.lecture);
+    if (lue !== null) {
+      this.listeDesParticipants.set(lue.participants);
     }
   }
 
   protected masquerLesParticipants(): void {
-    this.lecture.set('fermee');
+    this.lecture.set('repos');
   }
 
   protected evincer(participant: ParticipantDeSeance): Promise<void> {

@@ -1,4 +1,5 @@
 import type { EcranContent, Role } from '../../../../cours/content/types';
+import { noeudsOmbre } from '../../../../testing/banc-de-brique';
 import {
   DELAI_DE_MONTAGE_MS,
   monterEcran,
@@ -25,9 +26,10 @@ async function comptesDesColonnes(
   revelation: RevelationDuPupitre | null = null,
 ): Promise<readonly number[]> {
   const monte = await monterEcran(ecran, role, revelation);
-  const comptes = [
-    ...(monte.montees()[0]?.shadowRoot?.querySelectorAll('[data-testid="compte"]') ?? []),
-  ].map((compte) => Number(compte.textContent));
+  const [brique] = monte.montees();
+  const comptes = (brique instanceof HTMLElement ? noeudsOmbre(brique, 'compte') : []).map(
+    (compte) => Number(compte.textContent),
+  );
 
   expect(monte.erreurs).withContext(`${ecran.id} en ${role}`).toEqual([]);
   monte.detruire();
@@ -35,7 +37,7 @@ async function comptesDesColonnes(
 }
 
 decrireLeMontageDeLInstantane('B3-01', INSTANTANE_B3_01, {
-  empreinte: 'ce7856e856f3464e7c85bc1926979e9163c31de0b47f046252e0182d9af25d6b',
+  empreinte: '3844a98831048444e37bfbf78dc17ffd53dfb1a70462b81704631c7855807b85',
   ecrans: 38,
   publicsAuCatalogue: [
     'A1-02-COURRIEL',

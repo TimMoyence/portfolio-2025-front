@@ -7,32 +7,24 @@ import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import { createLeadMagnetPortStub } from '../../../../testing/factories/lead-magnet.factory';
 import { ToolkitFormComponent } from '../../../shared/components/toolkit-form/toolkit-form.component';
 import { ToolkitGatePageComponent } from './toolkit-gate-page.component';
-import { TOOLKITS_FORMATIONS, type ToolkitFormation } from './toolkits-formations.data';
+import { TOOLKIT_IA_SOLO } from './toolkits-formations.data';
 
 @Component({
   standalone: true,
   imports: [ToolkitGatePageComponent],
   template: `
-    <app-toolkit-gate-page [formationSlug]="slug">
+    <app-toolkit-gate-page>
       <ng-container title>Le toolkit IA pour <em>solopreneurs</em>.</ng-container>
     </app-toolkit-gate-page>
   `,
 })
 class HostComponent {
-  slug: Exclude<ToolkitFormation, 'ia-solo'> | null = null;
-  readonly data = TOOLKITS_FORMATIONS['ia-solo'];
+  readonly data = TOOLKIT_IA_SOLO;
 }
 
 describe('ToolkitGatePageComponent', () => {
   let fixture: ComponentFixture<HostComponent>;
   let host: HostComponent;
-
-  function monter(slug: HostComponent['slug']): void {
-    fixture = TestBed.createComponent(HostComponent);
-    host = fixture.componentInstance;
-    host.slug = slug;
-    fixture.detectChanges();
-  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -43,7 +35,9 @@ describe('ToolkitGatePageComponent', () => {
       ],
     }).compileComponents();
 
-    monter(null);
+    fixture = TestBed.createComponent(HostComponent);
+    host = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   afterEach(() => {
@@ -85,30 +79,21 @@ describe('ToolkitGatePageComponent', () => {
     expect(link?.getAttribute('href')).toBe('/privacy');
   });
 
-  it('devrait embarquer le formulaire de capture sans slug par defaut', () => {
+  it('devrait embarquer le formulaire de capture du toolkit ia-solopreneurs', () => {
     const form = fixture.debugElement.query(By.directive(ToolkitFormComponent));
     expect(form).not.toBeNull();
     expect(form.componentInstance.formationSlug).toBe('ia-solopreneurs');
   });
 
-  it('devrait transmettre le formationSlug fourni au formulaire (cle metier)', () => {
-    monter('audit-seo-diy');
-    const form = fixture.debugElement.query(By.directive(ToolkitFormComponent));
-    expect(form.componentInstance.formationSlug).toBe('audit-seo-diy');
-  });
-
-  it('devrait afficher le contenu du toolkit de la formation designee par le slug', () => {
-    monter('audit-seo-diy');
+  it('relie chaque section editoriale a son titre', () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.lead')?.textContent).toBe(
-      TOOLKITS_FORMATIONS['audit-seo-diy'].lead,
-    );
-  });
-
-  it("devrait deriver des id d'en-tete uniques depuis le slug", () => {
-    monter('automatiser-avec-ia');
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('#toolkit-automatiser-avec-ia-contents-heading')).not.toBeNull();
-    expect(compiled.querySelector('#toolkit-automatiser-avec-ia-faq-heading')).not.toBeNull();
+    for (const id of ['toolkit-ia-solo-contents-heading', 'toolkit-ia-solo-faq-heading']) {
+      expect(compiled.querySelector(`#${id}`))
+        .withContext(id)
+        .not.toBeNull();
+      expect(compiled.querySelector(`[aria-labelledby="${id}"]`))
+        .withContext(id)
+        .not.toBeNull();
+    }
   });
 });

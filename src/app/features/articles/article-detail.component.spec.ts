@@ -1,10 +1,11 @@
 import { HttpTestingController } from '@angular/common/http/testing';
 import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { buildPublishedArticle } from '../../../testing/factories/article.factory';
+import { fournirLaRoute } from '../../../testing/factories/route.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
+import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../core/ssr/http-response-status';
 import { ArticleDetailComponent } from './article-detail.component';
@@ -20,10 +21,7 @@ describe('ArticleDetailComponent — statut HTTP rendu côté serveur', () => {
       imports: [ArticleDetailComponent],
       providers: [
         { provide: HTTP_RESPONSE_STATUS, useValue: { set: (code: number) => statuses.push(code) } },
-        {
-          provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: convertToParamMap(slug ? { slug } : {}) } },
-        },
+        fournirLaRoute({ parametres: slug ? { slug } : {} }),
       ],
     });
     httpMock = TestBed.inject(HttpTestingController);
@@ -78,18 +76,15 @@ describe('ArticleDetailComponent — statut HTTP rendu côté serveur', () => {
   });
 });
 
-describe('ArticleDetailComponent — URL canonique', () => {
-  it('construit le canonical comme le reste du site, base terminee par un slash comprise', () => {
+describe('ArticleDetailComponent — métadonnées SEO', () => {
+  function seoDeLArticle(): SeoConfig {
     setupTestBed({
       router: true,
       appConfig: { baseUrl: 'https://example.com/' },
       imports: [ArticleDetailComponent],
       providers: [
         { provide: LOCALE_ID, useValue: 'fr' },
-        {
-          provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: convertToParamMap({ slug: 'veille' }) } },
-        },
+        fournirLaRoute({ parametres: { slug: 'veille' } }),
       ],
     });
     const seo = TestBed.inject(SeoService);
@@ -102,13 +97,28 @@ describe('ArticleDetailComponent — URL canonique', () => {
       .flush(
         buildPublishedArticle({
           slug: 'veille',
-          seo: { description: 'x', canonical_path: '/articles/veille/' },
+          seo: { ...buildPublishedArticle().seo, canonical_path: '/articles/veille/' },
         }),
       );
 
-    const config = miseAJour.calls.mostRecent().args[0];
+    httpMock.verify();
+    return miseAJour.calls.mostRecent().args[0];
+  }
+
+  it('construit le canonical comme le reste du site, base terminee par un slash comprise', () => {
+    const config = seoDeLArticle();
     expect(config.canonicalUrl).toBe('https://example.com/fr/articles/veille');
     expect(config.ogUrl).toBe('https://example.com/fr/articles/veille');
-    httpMock.verify();
+  });
+
+  it('signe du nom du site le titre de l article et son éditeur', () => {
+    const config = seoDeLArticle();
+
+    expect(config.title).toBe('Veille IA — Asili Design');
+    expect(config.jsonLd).toEqual(
+      jasmine.objectContaining({
+        publisher: { '@type': 'Organization', name: 'Asili Design' },
+      }),
+    );
   });
 });

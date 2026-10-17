@@ -42,6 +42,7 @@ import { buildVisualSlide } from '../../../../testing/factories/visual-slide.fac
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { cibleMarque } from '../../../../testing/marqueurs-dom';
 import {
+  attendreAucunFluxApresLaDestruction,
   attendreChaqueCalqueEntierDansLaToile,
   attendreChaqueLibelleSepareDeSaValeur,
   attendreLaFermetureDuFlux,
@@ -55,6 +56,7 @@ import type { FormationsPort } from '../../../core/ports/formations.port';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import type { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
 import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
+import { ecranNomme } from '../../../../testing/montage-d-instantane';
 import { CoursSceneComponent } from './cours-scene.component';
 import { sourceCorrigeePar } from './sources-de-correction';
 
@@ -190,9 +192,7 @@ describe('CoursSceneComponent', () => {
   describe('miniature d un écran de correction du B2-01', () => {
     const ecrans = ecransDuPupitreB2_01();
     const renvoyant = ecrans.findIndex(({ renvoi }) => renvoi === 'B2-01-A1-05-CORRECTION');
-    const source = sourceCorrigeePar(
-      ecrans.find(({ id }) => id === 'B2-01-A1-05-CORRECTION') ?? ecrans[0],
-    );
+    const source = sourceCorrigeePar(ecranNomme(ecrans, 'B2-01-A1-05-CORRECTION'));
 
     async function miniaturesDuRenvoyant(
       pilotage: EtatSession['pilotage'],
@@ -311,6 +311,15 @@ describe('CoursSceneComponent', () => {
 
     expect(cible(fixture, 'scene-echec').getAttribute('role')).toBe('alert');
     expect(double.fabrique).not.toHaveBeenCalled();
+  });
+
+  it('L4-F17 · n ouvre aucun flux quand le deroule arrive apres la destruction de la scene', async () => {
+    const lecture = new Subject<DerouleCours>();
+    port.lireDeroule.and.returnValue(lecture);
+    const fixture = monter();
+    await fixture.whenStable();
+
+    await attendreAucunFluxApresLaDestruction(double, fixture, lecture, deroule);
   });
 
   it('affiche un message de fin et ferme le flux quand la seance est close', async () => {

@@ -7,6 +7,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { initialeDe } from '../../../utils/initiale.utils';
 import { ImagePrioritaireDirective } from '../image-prioritaire.directive';
 import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
 
@@ -44,7 +45,5 @@ export class SlideImageComponent {
     () => this.reverse() || this.tagName === 'app-slide-image-right',
   );
 
-  protected initial(label: string): string {
-    return label.trim().charAt(0).toUpperCase();
-  }
+  protected readonly initiale = initialeDe;
 }

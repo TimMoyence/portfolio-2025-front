@@ -1,6 +1,7 @@
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import {
   attendreLEnvoiVideRefuse,
+  attendreLeRefusEffaceALaFrappe,
   attendreLeRenvoiEpuise,
   creerBrique,
   detailsEmis,
@@ -17,6 +18,7 @@ import { INSTANTANES_DES_COURS_SERVIS } from '../../../testing/fixtures/instanta
 import { FpTableBuild, type TableBuildPlanPublic } from './FpTableBuild';
 
 const PLAN = buildTableBuildPlan();
+const ESPACE_FINE = ' ';
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const CLASSES_ATTENDUES = 14;
 const ROLES = ['etudiant', 'presentateur'] as const;
@@ -190,7 +192,50 @@ describe('FpTableBuild', () => {
     expect(hote.shadowRoot?.querySelector('[data-testid="total"]')).toBeNull();
     expect(
       reperes(hote, 'synthese-ligne').map((ligne) => ligne.querySelector('dd')?.textContent),
-    ).toEqual(['4,00 %', '3,50 %']);
+    ).toEqual(['4,00 %', '3,50 %']);
+  });
+
+  it('L4-F11 ·ecrit les cellules, le total et le solde a la francaise, milliers en espace fine', () => {
+    hote.plan = buildTableBuildPlan({
+      echeances: 2,
+      libellesLignes: ['Année 1', 'Année 2'],
+      colonnes: [
+        {
+          cle: 'capital',
+          intitule: 'Capital (€)',
+          role: 'donnee',
+          valeurs: [25001, 25001],
+          decimales: 2,
+          totalise: false,
+        },
+        {
+          cle: 'rembourse',
+          intitule: 'Remboursé (€)',
+          role: 'deduite',
+          formule: 'capital / 2',
+          decimales: 2,
+          totalise: true,
+          soldeDe: 'capital',
+        },
+      ],
+      synthese: [],
+    });
+
+    expect(colonneAffichee(hote, 'capital')).toEqual([
+      `25${ESPACE_FINE}001,00`,
+      `25${ESPACE_FINE}001,00`,
+    ]);
+    expect(colonneAffichee(hote, 'rembourse')).toEqual([
+      `12${ESPACE_FINE}500,50`,
+      `12${ESPACE_FINE}500,50`,
+    ]);
+    expect(reperes(hote, 'total').map((total) => total.textContent)).toEqual([
+      '',
+      `25${ESPACE_FINE}001,00`,
+    ]);
+    expect(repere(hote, 'solde')?.textContent?.trim()).toMatch(
+      new RegExp(` 12${ESPACE_FINE}500,50$`),
+    );
   });
 
   it('garde le foyer et la frappe dans la cellule saisie malgre le recalcul', () => {
@@ -227,6 +272,10 @@ describe('FpTableBuild', () => {
     ]);
     expect(texteDe(hote, 'retour')).toBe('Réponse enregistrée');
     expect(cellule(hote, 0, 'prix').disabled).toBeTrue();
+  });
+
+  it('L4-F21 · efface le refus des qu une cellule est saisie', () => {
+    attendreLeRefusEffaceALaFrappe(hote, () => saisir(hote, 0, 'prix', PRIX_SAISIS[0]));
   });
 
   it('envoie je ne sais pas sans saisie', () => {

@@ -22,12 +22,21 @@
           [appRevealDelay]="i % 2 === 1 ? 1 : null"
         >
           @if (project.href; as href) {
-            <a class="proj-link" [href]="href">
-              <ng-container
-                [ngTemplateOutlet]="shot"
-                [ngTemplateOutletContext]="{ $implicit: project, index: i }"
-              />
-            </a>
+            @if (estCheminInterne(href)) {
+              <a class="proj-link" [routerLink]="href">
+                <ng-container
+                  [ngTemplateOutlet]="shot"
+                  [ngTemplateOutletContext]="{ $implicit: project, index: i }"
+                />
+              </a>
+            } @else {
+              <a class="proj-link" [href]="href">
+                <ng-container
+                  [ngTemplateOutlet]="shot"
+                  [ngTemplateOutletContext]="{ $implicit: project, index: i }"
+                />
+              </a>
+            }
           } @else {
             <ng-container
               [ngTemplateOutlet]="shot"

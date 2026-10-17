@@ -1,30 +1,33 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Inject,
-  Input,
   LOCALE_ID,
   computed,
   inject,
   signal,
 } from '@angular/core';
+import { estUneAdresseEmail } from '../../../../cours/runtime/core/adresse-email';
+import { dureeMonotoneDepuis, instantMonotone } from '../../../../cours/runtime/core/duree';
+import { langueDuSite } from '../../../core/config/locales';
 import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import type { ToolkitRequest } from '../../../core/models/toolkit-request.model';
 import { HoneypotDirective } from '../../directives/honeypot.directive';
-import { InteractionCollectorService } from '../../services/interaction-collector.service';
 import { readInputValue, readCheckboxChecked } from '../../utils/dom-event.utils';
+import { handleFormSubmit, INFORMATIONS_REFUSEES } from '../../utils/form-submit.utils';
+import { BORNES_D_UN_NOM, erreursDeLongueur } from '../../utils/regles-de-saisie';
+import { FieldErrorsComponent } from '../field-errors/field-errors.component';
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 
 const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
-
 @Component({
   selector: 'app-toolkit-form',
   standalone: true,
-  imports: [CommonModule, HoneypotDirective],
+  imports: [CommonModule, FieldErrorsComponent, HoneypotDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @switch (state()) {
@@ -47,7 +50,6 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
             [value]="website()"
             (input)="website.set(readInputValue($event))"
           />
-          <input type="hidden" name="formStartedAt" [value]="formStartedAt()" />
           <div>
             <input
               type="text"
@@ -59,6 +61,9 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
               autocomplete="given-name"
               required
             />
+            @if (firstName().length > 0 && erreursDuPrenom(); as erreurs) {
+              <p appFieldErrors class="mt-1 text-sm text-red-600" [errors]="erreurs"></p>
+            }
           </div>
           <div>
             <input
@@ -71,6 +76,9 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
               autocomplete="email"
               required
             />
+            @if (erreurDAdresse(); as erreurs) {
+              <p appFieldErrors class="mt-1 text-sm text-red-600" [errors]="erreurs"></p>
+            }
           </div>
           <label class="flex items-start gap-2 text-xs text-scheme-text-muted cursor-pointer">
             <input
@@ -85,9 +93,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
           </label>
 
           @if (state() === 'error') {
-            <p class="text-sm text-red-600" data-toolkit-error i18n="@@toolkit-form.error.message">
-              Une erreur est survenue. Réessayez.
-            </p>
+            <p class="text-sm text-red-600" data-toolkit-error>{{ erreurDEnvoi() }}</p>
           }
 
           <button
@@ -107,12 +113,10 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
   `,
 })
 export class ToolkitFormComponent {
-  @Input() formationSlug = 'ia-solopreneurs';
+  readonly formationSlug = 'ia-solopreneurs';
 
   private readonly port = inject(LEAD_MAGNET_PORT);
-  private readonly collector = inject(InteractionCollectorService, {
-    optional: true,
-  });
+  private readonly cdr = inject(ChangeDetectorRef);
 
   /**
    * Locale courante detectee par Angular via `LOCALE_ID`. Sert de valeur
@@ -124,15 +128,25 @@ export class ToolkitFormComponent {
   readonly firstName = signal('');
   readonly email = signal('');
   readonly website = signal('');
-  readonly formStartedAt = signal(Date.now());
+  private readonly debutDeSaisie = instantMonotone();
   readonly termsAccepted = signal(false);
   readonly state = signal<FormState>('idle');
   readonly submittedEmail = signal('');
+  protected readonly erreurDEnvoi = signal('');
+
+  protected readonly erreursDuPrenom = computed(() =>
+    erreursDeLongueur(this.firstName(), BORNES_D_UN_NOM),
+  );
+
+  protected readonly erreurDAdresse = computed(() => {
+    const adresse = this.email().trim();
+    return adresse.length > 0 && !estUneAdresseEmail(adresse) ? { email: true } : null;
+  });
 
   readonly isValid = computed(
     () =>
-      this.firstName().trim().length > 0 &&
-      EMAIL_PATTERN.test(this.email()) &&
+      this.erreursDuPrenom() === null &&
+      estUneAdresseEmail(this.email().trim()) &&
       this.termsAccepted(),
   );
 
@@ -148,25 +162,23 @@ export class ToolkitFormComponent {
 
     const request: ToolkitRequest = {
       website: this.website(),
-      formStartedAt: this.formStartedAt(),
+      formFillDurationMs: dureeMonotoneDepuis(this.debutDeSaisie),
       firstName: this.firstName().trim(),
       email: this.email().trim(),
       formationSlug: this.formationSlug,
       termsVersion: TOOLKIT_FORM_TERMS_VERSION,
-      // Extrait le code langue court (fr, en) quand Angular donne un
-      // code regional (fr-FR, en-GB) : le backend n'a besoin que de la
-      // langue pour le rendu du mail, pas du pays.
-      termsLocale: this.locale.slice(0, 2).toLowerCase(),
+      termsLocale: langueDuSite(this.locale),
       termsAcceptedAt: new Date().toISOString(),
     };
 
-    if (this.collector?.hasData()) {
-      request.profile = this.collector.profile();
-    }
-
-    this.port.requestToolkit(request).subscribe({
-      next: () => this.state.set('success'),
-      error: () => this.state.set('error'),
+    handleFormSubmit(this.port.requestToolkit(request), this.cdr, {
+      fallbackError: $localize`:@@toolkit-form.error.message:Une erreur est survenue. Réessayez.`,
+      refus: { 400: INFORMATIONS_REFUSEES },
+      onSuccess: () => this.state.set('success'),
+      onError: (message) => {
+        this.erreurDEnvoi.set(message);
+        this.state.set('error');
+      },
     });
   }
 }

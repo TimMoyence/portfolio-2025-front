@@ -1,4 +1,10 @@
-import { detailsEmis, installerBrique } from '../../../testing/banc-de-brique';
+import {
+  detailsEmis,
+  installerBrique,
+  noeudOmbre,
+  noeudsOmbre,
+  texteOmbre,
+} from '../../../testing/banc-de-brique';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import {
   buildCardsortPlan,
@@ -31,18 +37,6 @@ const ATTENDUS_DES_DEUX_CARTES = {
 };
 const DEBUT = new Date('2026-09-14T09:00:00.000Z');
 
-function noeud(hote: FpCardsort, nom: string): Element | null {
-  return hote.shadowRoot?.querySelector(`[data-testid="${nom}"]`) ?? null;
-}
-
-function noeuds(hote: FpCardsort, nom: string): Element[] {
-  return [...(hote.shadowRoot?.querySelectorAll(`[data-testid="${nom}"]`) ?? [])];
-}
-
-function libelleDe(hote: FpCardsort, nom: string): string {
-  return noeud(hote, nom)?.textContent?.trim() ?? '';
-}
-
 function carte(hote: FpCardsort, id: string): HTMLElement {
   const trouvee = hote.shadowRoot?.querySelector<HTMLElement>(
     `[data-testid="carte"][data-carte="${id}"]`,
@@ -70,7 +64,7 @@ function titreDeZone(hote: FpCardsort, zone: Element): string {
 }
 
 function cible(hote: FpCardsort): HTMLSelectElement {
-  const trouvee = noeud(hote, 'cible');
+  const trouvee = noeudOmbre(hote, 'cible');
   if (!(trouvee instanceof HTMLSelectElement)) {
     throw new Error('aucun selecteur de destination');
   }
@@ -92,7 +86,7 @@ function viserAuClavier(hote: FpCardsort, zone: string): void {
 function deplacerAuClavier(hote: FpCardsort, id: string, zone: string): void {
   activerAuClavier(carte(hote, id));
   viserAuClavier(hote, zone);
-  activerAuClavier(noeud(hote, 'deplacer'));
+  activerAuClavier(noeudOmbre(hote, 'deplacer'));
 }
 
 function glisser(hote: FpCardsort, id: string, zone: string): void {
@@ -103,7 +97,7 @@ function glisser(hote: FpCardsort, id: string, zone: string): void {
 }
 
 function ordreAffiche(hote: FpCardsort): string[] {
-  return noeuds(hote, 'carte').map((element) => element.getAttribute('data-carte') ?? '');
+  return noeudsOmbre(hote, 'carte').map((element) => element.getAttribute('data-carte') ?? '');
 }
 
 function toutClasser(hote: FpCardsort): void {
@@ -133,14 +127,14 @@ describe('FpCardsort', () => {
   });
 
   it('pose une zone nommee par carte a trier et par categorie', () => {
-    const zones = noeuds(hote, 'zone');
+    const zones = noeudsOmbre(hote, 'zone');
     expect(zones.length).toBe(PLAN.categories.length + 1);
     expect(zones.map((zone) => titreDeZone(hote, zone))).toEqual([
       'Cartes à trier',
       'Charges fixes',
       'Charges variables',
     ]);
-    expect(noeuds(hote, 'carte').length).toBe(PLAN.cartes.length);
+    expect(noeudsOmbre(hote, 'carte').length).toBe(PLAN.cartes.length);
     expect(TOUS_LES_IDS.every((id) => zoneDe(hote, id) === PIOCHE)).toBe(true);
   });
 
@@ -159,8 +153,8 @@ describe('FpCardsort', () => {
       ),
     ).toEqual(PLAN.cartes.map((carteDuPlan) => carteDuPlan.libelle));
     expect(hote.shadowRoot?.querySelectorAll('button, select').length).toBe(0);
-    expect(noeud(hote, 'progression')).toBeNull();
-    expect(libelleDe(hote, 'consigne-papier')).toContain('copie');
+    expect(noeudOmbre(hote, 'progression')).toBeNull();
+    expect(texteOmbre(hote, 'consigne-papier')).toContain('copie');
   });
 
   it('garde l ordre des cartes servi par le serveur, sans melange local', () => {
@@ -172,7 +166,9 @@ describe('FpCardsort', () => {
     expect(premiere.tagName).toBe('BUTTON');
     expect(premiere.getAttribute('aria-pressed')).toBe('false');
     expect(premiere.getAttribute('aria-label')).toBe('Loyer de l atelier — Cartes à trier');
-    expect(noeuds(hote, 'carte').some((element) => element.hasAttribute('tabindex'))).toBe(false);
+    expect(noeudsOmbre(hote, 'carte').some((element) => element.hasAttribute('tabindex'))).toBe(
+      false,
+    );
   });
 
   it('deplace une carte sans le moindre pointeur : choix, destination, validation du geste', () => {
@@ -180,19 +176,19 @@ describe('FpCardsort', () => {
     expect(carte(hote, LOYER).getAttribute('aria-pressed')).toBe('true');
     expect(hote.shadowRoot?.activeElement).toBe(cible(hote));
     viserAuClavier(hote, FIXE);
-    activerAuClavier(noeud(hote, 'deplacer'));
+    activerAuClavier(noeudOmbre(hote, 'deplacer'));
     expect(zoneDe(hote, LOYER)).toBe(FIXE);
     expect(carte(hote, LOYER).getAttribute('aria-pressed')).toBe('false');
     expect(hote.shadowRoot?.activeElement).toBe(carte(hote, LOYER));
   });
 
   it('annonce chaque deplacement dans une region aria-live', () => {
-    expect(noeud(hote, 'annonce')?.getAttribute('aria-live')).toBe('polite');
+    expect(noeudOmbre(hote, 'annonce')?.getAttribute('aria-live')).toBe('polite');
     activerAuClavier(carte(hote, MATIERES));
-    expect(libelleDe(hote, 'annonce')).toBe('Carte choisie : Achat de matieres premieres');
+    expect(texteOmbre(hote, 'annonce')).toBe('Carte choisie : Achat de matieres premieres');
     viserAuClavier(hote, VARIABLE);
-    activerAuClavier(noeud(hote, 'deplacer'));
-    expect(libelleDe(hote, 'annonce')).toBe(
+    activerAuClavier(noeudOmbre(hote, 'deplacer'));
+    expect(texteOmbre(hote, 'annonce')).toBe(
       'Achat de matieres premieres déplacée vers Charges variables',
     );
   });
@@ -201,15 +197,15 @@ describe('FpCardsort', () => {
     deplacerAuClavier(hote, LOYER, FIXE);
     deplacerAuClavier(hote, LOYER, PIOCHE);
     expect(zoneDe(hote, LOYER)).toBe(PIOCHE);
-    expect(libelleDe(hote, 'annonce')).toBe('Loyer de l atelier déplacée vers Cartes à trier');
+    expect(texteOmbre(hote, 'annonce')).toBe('Loyer de l atelier déplacée vers Cartes à trier');
   });
 
   it('relache la carte deja choisie et refuse de deplacer sans carte', () => {
     activerAuClavier(carte(hote, LOYER));
     activerAuClavier(carte(hote, LOYER));
     expect(carte(hote, LOYER).getAttribute('aria-pressed')).toBe('false');
-    activerAuClavier(noeud(hote, 'deplacer'));
-    expect(libelleDe(hote, 'annonce')).toBe('Choisissez d’abord une carte à déplacer');
+    activerAuClavier(noeudOmbre(hote, 'deplacer'));
+    expect(texteOmbre(hote, 'annonce')).toBe('Choisissez d’abord une carte à déplacer');
     expect(zoneDe(hote, LOYER)).toBe(PIOCHE);
   });
 
@@ -226,7 +222,7 @@ describe('FpCardsort', () => {
   it('deplace aussi une carte a la souris par glisser deposer', () => {
     glisser(hote, MATIERES, VARIABLE);
     expect(zoneDe(hote, MATIERES)).toBe(VARIABLE);
-    expect(libelleDe(hote, 'annonce')).toBe(
+    expect(texteOmbre(hote, 'annonce')).toBe(
       'Achat de matieres premieres déplacée vers Charges variables',
     );
   });
@@ -236,7 +232,7 @@ describe('FpCardsort', () => {
     carte(hote, LOYER).dispatchEvent(new DragEvent('dragstart', { bubbles: true }));
     carte(hote, LOYER).dispatchEvent(new DragEvent('dragend', { bubbles: true }));
     expect(zoneDe(hote, LOYER)).toBe(FIXE);
-    expect(libelleDe(hote, 'annonce')).toBe(
+    expect(texteOmbre(hote, 'annonce')).toBe(
       'Dépôt hors d’une catégorie : la carte est revenue à sa place',
     );
   });
@@ -244,17 +240,17 @@ describe('FpCardsort', () => {
   it('refuse de valider tant qu une carte reste a trier, puis envoie le classement complet', () => {
     const recus = envois(hote);
     deplacerAuClavier(hote, LOYER, FIXE);
-    activerAuClavier(noeud(hote, 'valider'));
-    expect(libelleDe(hote, 'annonce')).toBe(
+    activerAuClavier(noeudOmbre(hote, 'valider'));
+    expect(texteOmbre(hote, 'annonce')).toBe(
       'Placez chaque carte dans une catégorie avant de valider',
     );
     expect(recus).toEqual([]);
 
     jasmine.clock().tick(6000);
     toutClasser(hote);
-    activerAuClavier(noeud(hote, 'valider'));
+    activerAuClavier(noeudOmbre(hote, 'valider'));
 
-    expect(libelleDe(hote, 'annonce')).toBe('Réponse enregistrée');
+    expect(texteOmbre(hote, 'annonce')).toBe('Réponse enregistrée');
     expect(recus).toEqual([
       {
         planId: PLAN.id,
@@ -266,15 +262,15 @@ describe('FpCardsort', () => {
 
   it('envoie je ne sais pas sans classement', () => {
     const recus = envois(hote);
-    activerAuClavier(noeud(hote, 'je-ne-sais-pas'));
+    activerAuClavier(noeudOmbre(hote, 'je-ne-sais-pas'));
     expect(recus).toEqual([{ planId: PLAN.id, neSaitPas: true, dureeMs: 0 }]);
   });
 
   it('n ecrit dans aucun stockage et n envoie qu une seule fois le classement', () => {
     const recus = envois(hote);
     toutClasser(hote);
-    activerAuClavier(noeud(hote, 'valider'));
-    activerAuClavier(noeud(hote, 'valider'));
+    activerAuClavier(noeudOmbre(hote, 'valider'));
+    activerAuClavier(noeudOmbre(hote, 'valider'));
     expect(recus.length).toBe(1);
     expect(traces.ecritures).toEqual([]);
     expect(carte(hote, LOYER).hasAttribute('disabled')).toBe(true);
@@ -290,7 +286,7 @@ describe('FpCardsort', () => {
 
     expect(zoneDe(hote, MATIERES)).toBe(VARIABLE);
     expect(zoneDe(hote, LOYER)).toBe(PIOCHE);
-    expect(libelleDe(hote, 'brouillon-restaure')).toBe('Brouillon restauré');
+    expect(texteOmbre(hote, 'brouillon-restaure')).toBe('Brouillon restauré');
   });
 
   it('n emet aucun brouillon en apercu hors seance', () => {
@@ -302,7 +298,7 @@ describe('FpCardsort', () => {
 
   function validerPuisRecevoirLeVerdict(confusionSurMatieres: string | null): void {
     toutClasser(hote);
-    activerAuClavier(noeud(hote, 'valider'));
+    activerAuClavier(noeudOmbre(hote, 'valider'));
     hote.verdict = buildVerdictDeProduction({
       questionId: PLAN.id,
       details: [
@@ -320,8 +316,8 @@ describe('FpCardsort', () => {
     expect(carte(hote, LOYER).getAttribute('data-correction')).toBe('juste');
     expect(carte(hote, MATIERES).getAttribute('data-correction')).toBe('fausse');
     expect(carte(hote, 'assurance').hasAttribute('data-correction')).toBeFalse();
-    expect(libelleDe(hote, 'confusion')).toBe('Charge liée au volume');
-    expect(libelleDe(hote, 'decompte')).toBe('Cartes bien placées : 1/6');
+    expect(texteOmbre(hote, 'confusion')).toBe('Charge liée au volume');
+    expect(texteOmbre(hote, 'decompte')).toBe('Cartes bien placées : 1/6');
     expect(zoneDe(hote, MATIERES)).toBe(FIXE);
   });
 
@@ -348,25 +344,25 @@ describe('FpCardsort', () => {
 
   it('ignore un verdict adresse a un autre plan', () => {
     hote.verdict = buildVerdictDeProduction({ questionId: 'K-AUTRE' });
-    expect(noeud(hote, 'verdict')).toBeNull();
+    expect(noeudOmbre(hote, 'verdict')).toBeNull();
   });
 
   it('decompte le temps de jeu quand le plan en fixe un, sans bloquer l envoi a echeance', () => {
     hote.plan = buildCardsortPlan({ id: 'K-CHARGES-CHRONO', dureeJeuMs: 90_000 });
-    expect(libelleDe(hote, 'chrono')).toBe('Temps restant : 1:30');
+    expect(texteOmbre(hote, 'chrono')).toBe('Temps restant : 1:30');
     jasmine.clock().tick(31_000);
-    expect(libelleDe(hote, 'chrono')).toBe('Temps restant : 0:59');
+    expect(texteOmbre(hote, 'chrono')).toBe('Temps restant : 0:59');
     jasmine.clock().tick(60_000);
-    expect(libelleDe(hote, 'chrono')).toBe('Le temps est écoulé : vous pouvez encore envoyer');
-    expect(noeud(hote, 'valider')?.hasAttribute('disabled')).toBeFalse();
+    expect(texteOmbre(hote, 'chrono')).toBe('Le temps est écoulé : vous pouvez encore envoyer');
+    expect(noeudOmbre(hote, 'valider')?.hasAttribute('disabled')).toBeFalse();
   });
 
   it('trie un plan sans carte sans casser le plateau', () => {
     const recus = envois(hote);
     hote.plan = buildCardsortPlan({ id: 'K-CHARGES-VIDE', cartes: [] });
-    expect(noeuds(hote, 'carte')).toEqual([]);
-    expect(libelleDe(hote, 'vide')).toContain('Aucune carte à trier');
-    activerAuClavier(noeud(hote, 'valider'));
+    expect(noeudsOmbre(hote, 'carte')).toEqual([]);
+    expect(texteOmbre(hote, 'vide')).toContain('Aucune carte à trier');
+    activerAuClavier(noeudOmbre(hote, 'valider'));
     expect(recus).toEqual([]);
   });
 
@@ -404,11 +400,11 @@ describe('FpCardsort', () => {
     for (const role of ROLES) {
       hote.setAttribute('data-cours-role', role);
       hote.corrige = null;
-      expect(noeud(hote, 'cardsort-correction')).withContext(role).toBeNull();
+      expect(noeudOmbre(hote, 'cardsort-correction')).withContext(role).toBeNull();
 
       hote.corrige = ATTENDUS_FORMATEUR;
 
-      expect(noeuds(hote, 'cardsort-justification').map((ligne) => ligne.textContent?.trim()))
+      expect(noeudsOmbre(hote, 'cardsort-justification').map((ligne) => ligne.textContent?.trim()))
         .withContext(role)
         .toEqual(['Loyer de l atelier — Charges fixes Le loyer ne suit pas le volume']);
     }
@@ -419,18 +415,18 @@ describe('FpCardsort', () => {
     hote.setAttribute('data-papier', '');
     hote.corrige = ATTENDUS_FORMATEUR;
 
-    const liste = noeud(hote, 'cardsort-correction')?.querySelector('ul') as Element;
+    const liste = noeudOmbre(hote, 'cardsort-correction')?.querySelector('ul') as Element;
     expect(getComputedStyle(liste).columnCount).toBe('2');
-    expect(getComputedStyle(noeud(hote, 'cardsort-justification') as Element).breakInside).toBe(
-      'avoid',
-    );
+    expect(
+      getComputedStyle(noeudOmbre(hote, 'cardsort-justification') as Element).breakInside,
+    ).toBe('avoid');
   });
 
   it('R-03 · met a l ecran la correction du classement sur deux colonnes d une toile large, sur une seule d un poste etroit', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.corrige = ATTENDUS_DES_DEUX_CARTES;
     const positions = (): DOMRect[] =>
-      noeuds(hote, 'cardsort-justification').map((ligne) => ligne.getBoundingClientRect());
+      noeudsOmbre(hote, 'cardsort-justification').map((ligne) => ligne.getBoundingClientRect());
 
     hote.style.cssText = 'display:block;width:1216px;';
     const [premiereLarge, secondeLarge] = positions();
@@ -450,7 +446,7 @@ describe('FpCardsort', () => {
       hote.shadowRoot?.querySelector('.fp-cardsort__zones')?.getBoundingClientRect() ??
       new DOMRect();
     const categories = (): DOMRect[] =>
-      noeuds(hote, 'zone')
+      noeudsOmbre(hote, 'zone')
         .filter((zone) => zone.getAttribute('data-pioche') === 'false')
         .map((zone) => zone.getBoundingClientRect());
 
@@ -475,7 +471,7 @@ describe('FpCardsort', () => {
         justification: 'Ne suit pas le volume',
       })),
     };
-    const titres = (): string[] => noeuds(hote, 'zone').map((zone) => titreDeZone(hote, zone));
+    const titres = (): string[] => noeudsOmbre(hote, 'zone').map((zone) => titreDeZone(hote, zone));
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.corrige = toutRange;
     expect(titres()).toEqual(['Cartes à trier', 'Charges fixes', 'Charges variables']);
@@ -495,7 +491,7 @@ describe('FpCardsort', () => {
       hote.setAttribute('data-cours-role', role);
       hote.corrige = ATTENDUS_FORMATEUR;
 
-      expect(noeud(hote, 'cardsort-correction')).withContext(role).toBeNull();
+      expect(noeudOmbre(hote, 'cardsort-correction')).withContext(role).toBeNull();
       expect(carte(hote, LOYER).getAttribute('data-correction')).withContext(role).toBe('juste');
     }
   });
@@ -504,9 +500,9 @@ describe('FpCardsort', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.corrige = { ...ATTENDUS_FORMATEUR, type: 'tableau' };
     expect(zoneDe(hote, LOYER)).toBe(PIOCHE);
-    expect(noeuds(hote, 'carte').some((element) => element.hasAttribute('data-correction'))).toBe(
-      false,
-    );
+    expect(
+      noeudsOmbre(hote, 'carte').some((element) => element.hasAttribute('data-correction')),
+    ).toBe(false);
   });
 
   it('echappe le html injecte dans les libelles des cartes et des categories', () => {
@@ -524,7 +520,7 @@ describe('FpCardsort', () => {
   it('partage le meme plateau entre les roles et retire toute commande au presentateur', () => {
     for (const role of ROLES) {
       hote.setAttribute('data-cours-role', role);
-      expect(noeuds(hote, 'zone').map((zone) => titreDeZone(hote, zone)))
+      expect(noeudsOmbre(hote, 'zone').map((zone) => titreDeZone(hote, zone)))
         .withContext(role)
         .toEqual(['Cartes à trier', 'Charges fixes', 'Charges variables']);
       expect(ordreAffiche(hote)).withContext(role).toEqual(TOUS_LES_IDS);
@@ -535,8 +531,8 @@ describe('FpCardsort', () => {
     expect(hote.shadowRoot?.querySelectorAll('button').length).toBe(0);
     expect(hote.shadowRoot?.querySelectorAll('select').length).toBe(0);
     expect(hote.shadowRoot?.querySelector('.fp-cardsort__consigne')).toBeNull();
-    expect(noeud(hote, 'annonce')).toBeNull();
-    expect(noeud(hote, 'modalite')).toBeNull();
+    expect(noeudOmbre(hote, 'annonce')).toBeNull();
+    expect(noeudOmbre(hote, 'modalite')).toBeNull();
     expect(carte(hote, LOYER).tagName).toBe('SPAN');
   });
 
@@ -549,15 +545,15 @@ describe('FpCardsort', () => {
   it('decompte aussi le temps de jeu en projection', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.plan = buildCardsortPlan({ id: 'K-CHARGES-CHRONO-SCENE', dureeJeuMs: 90_000 });
-    expect(libelleDe(hote, 'chrono')).toBe('Temps restant : 1:30');
+    expect(texteOmbre(hote, 'chrono')).toBe('Temps restant : 1:30');
     jasmine.clock().tick(31_000);
-    expect(libelleDe(hote, 'chrono')).toBe('Temps restant : 0:59');
+    expect(texteOmbre(hote, 'chrono')).toBe('Temps restant : 0:59');
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
     hote.plan = buildCardsortPlan({ id: 'K-CHARGES-CLASSES', dureeJeuMs: 60_000 });
     toutClasser(hote);
-    activerAuClavier(noeud(hote, 'valider'));
+    activerAuClavier(noeudOmbre(hote, 'valider'));
     hote.verdict = buildVerdictDeProduction({
       questionId: 'K-CHARGES-CLASSES',
       details: [{ cle: MATIERES, juste: false, libelleConfusion: 'Charge liée au volume' }],

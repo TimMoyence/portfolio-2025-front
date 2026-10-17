@@ -1,5 +1,5 @@
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { estObjet } from '../core/valeurs';
+import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { chaineDe, estChaineOuNul, estEntierStrictementPositif, estObjet } from '../core/valeurs';
 import { Battement, formaterChrono, SECONDE_MS } from './battement';
 import { FpContenu } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
@@ -33,8 +33,6 @@ interface Solutionnaire {
 
 type EtatEnigme = 'resolue' | 'epuisee' | 'ouverte' | 'verrouillee';
 
-const VIDE = escapeHtml('');
-const DESACTIVE = safeHtml`disabled`;
 const TENTATIVES_PAR_DEFAUT = 10;
 const LONGUEUR_MAX_REPONSE = 40;
 
@@ -44,10 +42,9 @@ function projeterParcours(source: EscapeParcoursPublic): EscapeParcoursPublic {
     intitule: source.intitule,
     delaiIndiceMs: source.delaiIndiceMs,
     budgetEnigmeMs: source.budgetEnigmeMs,
-    tentativesMax:
-      Number.isInteger(source.tentativesMax) && source.tentativesMax > 0
-        ? source.tentativesMax
-        : TENTATIVES_PAR_DEFAUT,
+    tentativesMax: estEntierStrictementPositif(source.tentativesMax)
+      ? source.tentativesMax
+      : TENTATIVES_PAR_DEFAUT,
     enigmes: source.enigmes.map((enigme) => ({
       id: enigme.id,
       intitule: enigme.intitule,
@@ -82,7 +79,7 @@ function estTentative(valeur: unknown): valeur is VerdictDeTentative {
     typeof valeur['parcoursId'] === 'string' &&
     typeof valeur['enigmeId'] === 'string' &&
     typeof valeur['correcte'] === 'boolean' &&
-    (valeur['fragment'] === null || typeof valeur['fragment'] === 'string') &&
+    estChaineOuNul(valeur['fragment']) &&
     typeof valeur['tentativesRestantes'] === 'number'
   );
 }
@@ -100,8 +97,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
 
   set parcours(valeur: EscapeParcoursPublic | null) {
     this.poserLeContenu(valeur, projeterParcours);
-    this.suivreAffichage(this.cleAffichage());
-    this.refreshSiConnecte();
+    this.suivreEtRafraichir(this.cleAffichage());
   }
 
   protected repartirDeZero(): void {
@@ -138,8 +134,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     for (const [enigmeId, restantes] of Object.entries(valeur.tentativesRestantes)) {
       this.restantes.set(enigmeId, restantes);
     }
-    this.suivreAffichage(this.cleAffichage());
-    this.refreshSiConnecte();
+    this.suivreEtRafraichir(this.cleAffichage());
   }
 
   set tentatives(valeur: readonly VerdictDeTentative[] | null) {
@@ -149,8 +144,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
         this.appliquer(tentative);
       }
     }
-    this.suivreAffichage(this.cleAffichage());
-    this.refreshSiConnecte();
+    this.suivreEtRafraichir(this.cleAffichage());
   }
 
   set corrige(valeur: unknown) {
@@ -158,12 +152,13 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     this.refreshSiConnecte();
   }
 
-  set brouillon(valeur: unknown) {
-    if (estObjet(valeur) && typeof valeur['saisie'] === 'string') {
-      this.saisie = valeur['saisie'];
-      this.noterBrouillonRepris();
-      this.refreshSiConnecte();
+  protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
+    const saisie = chaineDe(brouillon, 'saisie');
+    if (saisie === null) {
+      return false;
     }
+    this.saisie = saisie;
+    return true;
   }
 
   render(): EscapedHtml {
@@ -205,7 +200,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
       {
         saisir: (saisie) => {
           this.saisie = saisie;
-          this.signalerBrouillon(this.interne?.id ?? '', { saisie });
+          this.signalerLeBrouillon({ saisie });
         },
         envoyer: () => this.repondre(),
       },
@@ -324,7 +319,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
 
   private echu(): boolean {
     const budget = this.interne?.budgetEnigmeMs ?? 0;
-    return budget > 0 && this.depuisAffichage() >= budget;
+    return budget > 0 && this.restantDepuisAffichage(budget) === 0;
   }
 
   private tempsDuMinuteur(): EscapedHtml {
@@ -440,12 +435,16 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     return safeHtml`<p class="fp-escape__coffre" data-testid="code-final"><span class="fp-escape__mention">${escapeHtml(this.texte('escape-code'))}</span> <span class="fp-montant">${escapeHtml(solutionnaire.codeFinal)}</span></p>`;
   }
 
+  private resteAvantLIndice(): number {
+    return this.restantDepuisAffichage(this.interne?.delaiIndiceMs ?? 0);
+  }
+
   private indiceDisponible(): boolean {
-    return this.depuisAffichage() >= (this.interne?.delaiIndiceMs ?? 0);
+    return this.resteAvantLIndice() === 0;
   }
 
   private attenteDeLIndice(): string {
-    const reste = (this.interne?.delaiIndiceMs ?? 0) - this.depuisAffichage();
+    const reste = this.resteAvantLIndice();
     return reste > 0
       ? `${this.texte('escape-indice-attente')} ${Math.ceil(reste / SECONDE_MS)} ${this.texte('escape-secondes')}`
       : '';

@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { PLATFORM_ID } from '@angular/core';
 import type { SimpleChanges } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { CONTACT_METHODS } from '../data/contact-methods';
 import { SvgIconComponent } from './svg-icon.component';
 
 const MOCK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#000" d="M0 0h24v24H0z"/></svg>`;
@@ -141,6 +142,23 @@ describe('SvgIconComponent', () => {
       expect(content).toContain('<a href="#ancre" id="a3"');
     });
 
+    it('retire un lien javascript: dont le schéma est coupé par un blanc que le navigateur ôte', () => {
+      loadIcon('coupe-icon');
+
+      httpMock
+        .expectOne('assets/icons/coupe-icon.svg')
+        .flush(
+          '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
+            '<a href="java&#9;script:alert(1)" id="a1"/><a xlink:href="java&#10;script:alert(2)" id="a2"/>' +
+            '<a href="https://asilidesign.fr" id="a3"/></svg>',
+        );
+
+      const content = component.svgContent?.toString() ?? '';
+      expect(content).toContain('<a id="a1"');
+      expect(content).toContain('<a id="a2"');
+      expect(content).toContain('<a href="https://asilidesign.fr" id="a3"');
+    });
+
     it('devrait appliquer les dimensions en rem', () => {
       component.name = 'size-icon';
       component.size = 2;
@@ -174,14 +192,21 @@ describe('SvgIconComponent', () => {
       expect(component.role).toBe('img');
     });
 
-    it('devrait charger une icone en sous-dossier (network/google)', () => {
-      spyOn(console, 'warn');
+    const ICONES_ADMISES = [
+      'network/google',
+      ...CONTACT_METHODS.flatMap((methode) => methode.icon ?? []),
+    ];
 
-      chargerEnGet('network/google');
+    for (const icon of ICONES_ADMISES) {
+      it(`charge l icone ${icon}, sous-dossier et tiret bas compris`, () => {
+        spyOn(console, 'warn');
 
-      expect(component.svgContent).not.toBeNull();
-      expect(console.warn).not.toHaveBeenCalled();
-    });
+        chargerEnGet(icon);
+
+        expect(component.svgContent).not.toBeNull();
+        expect(console.warn).not.toHaveBeenCalled();
+      });
+    }
 
     for (const { label, name } of REJECTED_NAMES) {
       it(`ne devrait pas charger un SVG si le name contient ${label}`, () => {

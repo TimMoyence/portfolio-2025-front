@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DonneesDeFigureComponent } from '../../donnees-de-figure/donnees-de-figure.component';
-import { NOMBRE_FRANCAIS, graduer, position, type Graduation, type Plage } from '../axe-gradue';
+import { enFrancais } from '../../../../../cours/runtime/core/typographie';
+import { graduer, position, type Graduation, type Plage } from '../axe-gradue';
 import { generateurDIdentifiants } from '../identifiant-de-description';
 
 export interface SlideBoxplotSeries {
@@ -57,7 +58,5 @@ export class SlideBoxplotComponent {
     }));
   });
 
-  protected formater(valeur: number | undefined): string {
-    return valeur === undefined ? '—' : NOMBRE_FRANCAIS.format(valeur);
-  }
+  protected readonly formater = enFrancais;
 }

@@ -1,4 +1,5 @@
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { estTexteNonVide } from '../core/valeurs';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { FpRedaction } from './redaction';
 
@@ -59,19 +60,10 @@ export class FpPro extends FpRedaction<ProCas> {
       return;
     }
     const verrouille = this.verrouille();
-    for (const champ of racine.querySelectorAll<HTMLTextAreaElement>('textarea[data-question]')) {
-      const cle = champ.dataset['question'] ?? '';
-      champ.disabled = verrouille;
-      champ.addEventListener('input', () => {
-        this.noter(cle, champ.value);
-        this.effacerRappel(racine);
-      });
-    }
-    const valider = racine.querySelector<HTMLButtonElement>('[data-testid="valider"]');
-    if (valider !== null) {
-      valider.disabled = verrouille;
-      valider.addEventListener('click', () => this.valider());
-    }
+    this.brancherLesZones(racine, 'data-question', verrouille, {
+      apresSaisie: () => this.effacerRappel(racine),
+    });
+    this.brancherLesBoutons(racine, '[data-testid="valider"]', verrouille, () => this.valider());
   }
 
   private questions(): readonly QuestionLibre[] {
@@ -81,7 +73,7 @@ export class FpPro extends FpRedaction<ProCas> {
   private dossier(suite: EscapedHtml): EscapedHtml {
     const cas = this.cas;
     if (cas === null) {
-      return safeHtml``;
+      return VIDE;
     }
     return safeHtml`
       <aside class="fp-scene fp-pro__cas">
@@ -97,16 +89,16 @@ export class FpPro extends FpRedaction<ProCas> {
   }
 
   private metier(cas: ProCas): EscapedHtml {
-    if (cas.metier.trim().length === 0) {
-      return safeHtml``;
+    if (!estTexteNonVide(cas.metier)) {
+      return VIDE;
     }
     return safeHtml`<p class="fp-badge fp-pro__metier" data-testid="metier">${escapeHtml(cas.metier)}</p>`;
   }
 
   private geste(cas: ProCas): EscapedHtml {
     const geste = cas.geste;
-    if (geste === null || geste.trim().length === 0) {
-      return safeHtml``;
+    if (!estTexteNonVide(geste)) {
+      return VIDE;
     }
     return safeHtml`<div class="fp-encadre fp-pro__geste">
       <h3 class="fp-pro__intitule">${escapeHtml(this.texte('pro-geste'))}</h3>
@@ -116,8 +108,8 @@ export class FpPro extends FpRedaction<ProCas> {
 
   private consequence(cas: ProCas): EscapedHtml {
     const retombee = cas.consequence;
-    if (retombee === null || retombee.trim().length === 0) {
-      return safeHtml``;
+    if (!estTexteNonVide(retombee)) {
+      return VIDE;
     }
     return safeHtml`<p class="fp-pro__consequence" data-testid="consequence">${escapeHtml(this.texte('pro-consequence'))} ${escapeHtml(retombee)}</p>`;
   }
@@ -125,14 +117,14 @@ export class FpPro extends FpRedaction<ProCas> {
   private questionsLibres(): EscapedHtml {
     const questions = this.questions();
     if (questions.length === 0) {
-      return safeHtml``;
+      return VIDE;
     }
     const projetees = this.presentateur();
     const lignes = questions.map((question) =>
       projetees ? this.enonce(question) : this.champ(question),
     );
     const envoi = projetees
-      ? safeHtml``
+      ? VIDE
       : safeHtml`<button type="button" class="fp-pro__valider" data-testid="valider">${escapeHtml(this.texte('valider'))}</button>
         <p class="fp-pro__retour" aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>`;
     return safeHtml`
@@ -140,7 +132,7 @@ export class FpPro extends FpRedaction<ProCas> {
         <ol class="fp-pro__questions">${lignes}</ol>
         ${envoi}
       </div>
-      ${projetees ? safeHtml`` : this.annonces()}
+      ${projetees ? VIDE : this.annonces()}
     `;
   }
 
@@ -179,6 +171,6 @@ export class FpPro extends FpRedaction<ProCas> {
       this.refuserLEnvoi(this.texte('pro-reponse-vide'));
       return;
     }
-    this.conclureLEnvoi('fp-pro-submit', { casId: cas.id, reponses: this.textesDe(cles) });
+    this.conclureLEnvoi('fp-pro-submit', { casId: cas.id, reponses: this.textesSaisis(cles) });
   }
 }

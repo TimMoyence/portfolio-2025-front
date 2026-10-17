@@ -23,6 +23,16 @@ describe('sources des écrans de correction du déroulé', () => {
     expect([...sourcesDeCorrection([correction])]).toEqual(['ecran-exemple']);
   });
 
+  it('G07 · ignore un exemple travaillé dont la source n est pas un texte', () => {
+    const correction = buildEcranDeroule({
+      id: 'ecran-correction',
+      type: 'fp-worked',
+      donnees: { corrigeDe: 3, pilote: true },
+    });
+
+    expect([...sourcesDeCorrection([correction])]).toEqual([]);
+  });
+
   it('G07 · ignore un écran à réponses libres qu aucun écran ne corrige', () => {
     expect(sources).not.toContain('B2-01-A1-03-MISSION');
   });

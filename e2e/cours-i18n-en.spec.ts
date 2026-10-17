@@ -2,34 +2,27 @@ import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 
+import { baseAnglaise, baseSsr, exigerLaPorteSsr } from './porte-ssr';
+
 const XLF_ANGLAIS = 'src/locale/messages.en.xlf';
 const ROUTES_PRERENDUES = 'dist/portfolio-app/prerendered-routes.json';
 const LONGUEUR_MIN_LIBELLE = 25;
 const LIBELLES_MIN_ATTENDUS = 300;
 const SEPARATEUR_DE_CIBLES = ' \u0000 ';
 
-const baseSsr = process.env['SSR_BASE_URL'] ?? '';
-
-const baseAnglaise = process.env['SSR_EN_BASE_URL'] ?? '';
-
 const ROUTES_EN = [
   '/en',
-  '/en/client-project',
-  '/en/commonbudgetTM',
   '/en/contact',
   '/en/cookie-settings',
   '/en/cours/demo',
   '/en/forgot-password',
   '/en/formations',
   '/en/formations/audit-seo-diy',
-  '/en/formations/audit-seo-diy/toolkit',
   '/en/formations/automatiser-avec-ia',
-  '/en/formations/automatiser-avec-ia/toolkit',
   '/en/formations/b2-01-traitement-information-chiffree',
   '/en/formations/ia-solopreneurs',
   '/en/formations/ia-solopreneurs/toolkit',
   '/en/growth-audit',
-  '/en/home',
   '/en/login',
   '/en/offer',
   '/en/presentation',
@@ -37,7 +30,6 @@ const ROUTES_EN = [
   '/en/projets',
   '/en/register',
   '/en/reset-password',
-  '/en/slides/library',
   '/en/terms',
   '/en/verify-email',
 ];
@@ -102,11 +94,22 @@ function fuitesFrancaises(texte: string): string[] {
   return LIBELLES.filter(({ source }) => texte.includes(source)).map(({ id }) => id);
 }
 
-test.describe('la version anglaise ne laisse aucun libelle francais (QA-15)', () => {
-  test.skip(
-    baseSsr === '' || baseAnglaise === '',
-    'hors porte : SSR_BASE_URL ou SSR_EN_BASE_URL absente. La porte les fournit (npm run test:e2e:portail).',
+async function liensHorsDeLaLangue(page: Page, langue: string): Promise<string[]> {
+  const liens = await page
+    .locator('a[href]:not(.asili-lang__switch)')
+    .evaluateAll((ancres) => ancres.map((ancre) => ancre.getAttribute('href') ?? ''));
+  return liens.filter(
+    (href) =>
+      href.startsWith('#') ||
+      (href.startsWith('/') &&
+        !href.startsWith('//') &&
+        href !== `/${langue}` &&
+        !href.startsWith(`/${langue}/`)),
   );
+}
+
+test.describe('la version anglaise ne laisse aucun libelle francais (QA-15)', () => {
+  exigerLaPorteSsr({ anglaise: true });
 
   for (const route of ROUTES_EN) {
     test(`${route} n affiche aucun libelle reste en francais`, async ({ page }) => {
@@ -117,12 +120,19 @@ test.describe('la version anglaise ne laisse aucun libelle francais (QA-15)', ()
       expect(fuites, `libelles francais servis sur ${route}`).toEqual([]);
       expect(page.url()).toContain('/en');
     });
+
+    test(`${route} garde chaque lien interne dans la langue anglaise`, async ({ page }) => {
+      await page.goto(`${baseAnglaise}${route}`, { waitUntil: 'domcontentloaded' });
+
+      expect(await liensHorsDeLaLangue(page, 'en'), `liens hors de /en sur ${route}`).toEqual([]);
+    });
   }
 
   test('le detecteur rougirait sur la meme page servie en francais', async ({ page }) => {
     await page.goto(`${baseSsr}/fr/offer`, { waitUntil: 'domcontentloaded' });
 
     expect(fuitesFrancaises(await texteVisible(page)).length).toBeGreaterThan(0);
+    expect((await liensHorsDeLaLangue(page, 'en')).length).toBeGreaterThan(0);
   });
 
   test('couvre toutes les routes anglaises que le build prerend', () => {

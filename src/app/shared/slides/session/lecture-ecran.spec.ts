@@ -10,6 +10,7 @@ import {
 import {
   buildDerouleCours,
   buildEcranDeroule,
+  buildResultatsDeChaqueQuestion,
 } from '../../../../testing/factories/formations.factory';
 import {
   buildVisualNestedQuizSlide,
@@ -20,17 +21,22 @@ import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2
 import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import {
+  deLaQuestion,
   ECRAN_VERROUILLE,
+  ecranAuRang,
+  ecranDIdentifiant,
   ecranDuRappel,
   ecransDesIdentifiants,
   enoncesDesActivites,
   enoncesDuDeroule,
   enteteDeQuestionnaire,
+  identifiantPorte,
   identifiantsDesQuestions,
   identifiantsDuMontage,
   planDeMontage,
   PROPRIETES_PAR_BRIQUE,
   questionsDeLEcran,
+  questionServie,
   titreDeLEcran,
 } from './lecture-ecran';
 
@@ -82,6 +88,17 @@ describe('enonces des activites libres du cours B2-01', () => {
     const vote = ecransDuPupitreB2_01().find(({ type }) => type === 'fp-vote');
 
     expect(vote === undefined ? null : enoncesDesActivites(vote).size).toBe(0);
+  });
+
+  it('ignore une activite dont l identifiant ou l enonce n est pas un texte', () => {
+    const activites = (type: string, donnees: Readonly<Record<string, unknown>>) =>
+      enoncesDesActivites(buildEcran({ type, donnees })).size;
+    const etapes = [{ id: 'etape-1', invite: 'Calculez la marge.' }];
+
+    expect(activites('fp-challenge', { probleme: { id: 7, invite: 'Estimez.' } })).toBe(0);
+    expect(activites('fp-challenge', { probleme: { id: 'defi-1', invite: 7 } })).toBe(0);
+    expect(activites('fp-worked', { exemple: { id: 'exemple-1', etapes } })).toBe(1);
+    expect(activites('fp-worked', { exemple: { id: 7, etapes } })).toBe(0);
   });
 });
 
@@ -153,21 +170,26 @@ describe('lecture de l ecran', () => {
     expect(identifiantsDesQuestions(buildVisualSlide())).toEqual([]);
   });
 
-  it('ignore un quiz v2 sans identifiant', () => {
-    const ecran = buildVisualQuizSlide({
+  function quizV2(
+    questionData: Readonly<Record<string, unknown>>,
+  ): ReturnType<typeof buildVisualQuizSlide> {
+    return buildVisualQuizSlide({
       donnees: {
         recit: {
-          presentation: {
-            version: 2,
-            screenId: 'S',
-            renderer: 'quiz',
-            props: { questionData: { question: 'Sans id ?' } },
-          },
+          presentation: { version: 2, screenId: 'S', renderer: 'quiz', props: { questionData } },
         },
       },
     });
+  }
 
-    expect(questionsDeLEcran(ecran)).toEqual([]);
+  it('ignore un quiz v2 sans identifiant', () => {
+    expect(questionsDeLEcran(quizV2({ question: 'Sans id ?' }))).toEqual([]);
+  });
+
+  it('donne un enonce vide a un quiz v2 dont la question n est pas un texte', () => {
+    expect(questionsDeLEcran(quizV2({ id: 'Q-NOMBRE', question: 12 }))).toEqual([
+      { id: 'Q-NOMBRE', enonce: '' },
+    ]);
   });
 
   it('lit toujours les questions des briques d un questionnaire', () => {
@@ -313,6 +335,14 @@ describe('identifiants portes par un montage', () => {
       identifiantsDuMontage({ brique: 'fp-story', donnees: { recit: { id: 'R-1' } } }),
     ).toEqual([]);
   });
+
+  it('lit l identifiant non vide d un porteur, rien pour des donnees absentes ou un autre identifiant', () => {
+    expect(identifiantPorte({ sondage: { id: 'J1' } }, 'sondage')).toBe('J1');
+    expect(identifiantPorte(undefined, 'sondage')).toBeNull();
+    expect(identifiantPorte({ sondage: 'J1' }, 'sondage')).toBeNull();
+    expect(identifiantPorte({ sondage: { id: 7 } }, 'sondage')).toBeNull();
+    expect(identifiantPorte({ sondage: { id: '' } }, 'sondage')).toBeNull();
+  });
 });
 
 describe('carte des identifiants vers leur ecran', () => {
@@ -372,4 +402,70 @@ describe('ecran du rappel espace', () => {
   it('rend null quand le cours ne porte aucun rappel espace', () => {
     expect(ecranDuRappel(buildCoursContent())).toBeNull();
   });
+});
+
+describe('ecran designe par son identifiant', () => {
+  for (const [prefixe, instantane] of INSTANTANES_DES_COURS_SERVIS) {
+    it(`${prefixe} : rend chaque ecran du deroule par son identifiant, rien pour un identifiant absent`, () => {
+      const ecrans = ecransDuPupitreDe(instantane);
+
+      for (const ecran of ecrans) {
+        expect(ecranDIdentifiant(ecrans, ecran.id)).withContext(ecran.id).toBe(ecran);
+      }
+      expect(ecranDIdentifiant(ecrans, `${prefixe}-absent`)).toBeUndefined();
+      expect(ecranDIdentifiant(ecrans, undefined)).toBeUndefined();
+    });
+  }
+});
+
+describe('ecran au rang du deroule', () => {
+  for (const [prefixe, instantane] of INSTANTANES_DES_COURS_SERVIS) {
+    it(`${prefixe} : rend chaque ecran a son rang, rien au-dela du dernier ni sans deroule`, () => {
+      const ecrans = ecransDuPupitreDe(instantane);
+
+      ecrans.forEach((ecran, rang) => {
+        expect(ecranAuRang({ ecrans }, rang)).withContext(ecran.id).toBe(ecran);
+      });
+      expect(ecranAuRang({ ecrans }, ecrans.length)).toBeUndefined();
+      expect(ecranAuRang(null, 0)).toBeUndefined();
+    });
+  }
+});
+
+describe('resultat, corrige et question servie d un identifiant de question', () => {
+  for (const [prefixe, instantane] of INSTANTANES_DES_COURS_SERVIS) {
+    it(`${prefixe} : rend le resultat et le corrige de chaque question de l ecran, rien pour une autre`, () => {
+      let lus = 0;
+      for (const ecran of ecransDuPupitreDe(instantane)) {
+        const { questions } = buildResultatsDeChaqueQuestion([ecran]);
+        for (const resultat of questions) {
+          expect(deLaQuestion(questions, resultat.questionId))
+            .withContext(resultat.questionId)
+            .toBe(resultat);
+        }
+        for (const corrige of ecran.corriges) {
+          expect(deLaQuestion(ecran.corriges, corrige.questionId))
+            .withContext(corrige.questionId)
+            .toBe(corrige);
+        }
+        lus += questions.length + ecran.corriges.length;
+        expect(deLaQuestion(questions, `${ecran.id}-absente`)).toBeUndefined();
+        expect(deLaQuestion(questions, null)).toBeUndefined();
+        expect(deLaQuestion(null, questions[0]?.questionId)).toBeUndefined();
+      }
+      expect(lus).toBeGreaterThan(0);
+    });
+
+    it(`${prefixe} : rend chaque question servie d un ecran par son identifiant, rien pour une autre`, () => {
+      let lues = 0;
+      for (const ecran of ecransDuPupitreDe(instantane)) {
+        for (const question of ecran.questions) {
+          expect(questionServie(ecran, question.id)).withContext(question.id).toBe(question);
+          lues += 1;
+        }
+        expect(questionServie(ecran, `${ecran.id}-absente`)).toBeUndefined();
+      }
+      expect(lues).toBeGreaterThan(0);
+    });
+  }
 });

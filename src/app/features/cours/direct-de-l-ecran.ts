@@ -1,7 +1,7 @@
 import type { EcranContent, PilotageEcran, ResultatsSeance } from '../../../cours/content/types';
 import type { ResultatsDuFlux } from '../../../cours/runtime/core/sync';
 import type { DirectEcran } from '../../shared/slides/session/contrat-hote';
-import { objet } from '../../shared/slides/visual/presentation-v2';
+import { identifiantPorte } from '../../shared/slides/session/lecture-ecran';
 
 export type ResultatsDuDirect = Pick<ResultatsSeance, 'questions'> &
   Partial<Pick<ResultatsDuFlux, 'jalons'>>;
@@ -12,8 +12,8 @@ export function directDeLEcran(
   resultats: ResultatsDuDirect | null,
   seuilDeProjection: number,
 ): DirectEcran {
-  const sondageId = objet(ecran.donnees?.['sondage'])?.['id'];
-  const comptes = typeof sondageId === 'string' ? (resultats?.jalons?.[sondageId] ?? null) : null;
+  const sondageId = identifiantPorte(ecran.donnees, 'sondage');
+  const comptes = sondageId === null ? null : (resultats?.jalons?.[sondageId] ?? null);
   return {
     pilotage,
     resultats: resultats?.questions ?? null,

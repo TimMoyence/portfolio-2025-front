@@ -17,7 +17,7 @@
           Impossible de charger le toolkit
         </p>
         <p class="tkp-state__text" i18n="@@formations.toolkitPrivate.errorDetail">
-          Le lien est peut-etre expire ou invalide. Verifiez votre email ou refaites une demande.
+          Le lien est peut-être expiré ou invalide. Vérifiez votre email ou refaites une demande.
         </p>
       </div>
     </section>
@@ -152,33 +152,6 @@
                     <p class="tkp-card__meta">{{ tmpl.description }}</p>
                   </a>
                 }
-              </div>
-            </section>
-          }
-
-          @if (toolkit.generatedPrompt) {
-            <section class="tkp-section">
-              <h2 class="tkp-h2" i18n="@@formations.toolkitPrivate.sectionGamma">
-                <span class="tkp-num">5.</span> Votre prompt Gamma personnalisé
-              </h2>
-              <div class="tkp-card tkp-card--accent">
-                <div class="tkp-code">
-                  <pre>{{ toolkit.generatedPrompt }}</pre>
-                  <button
-                    type="button"
-                    class="tkp-copy"
-                    (click)="copyToClipboard(toolkit.generatedPrompt!)"
-                  >
-                    {{ copyButtonLabel(toolkit.generatedPrompt) }}
-                  </button>
-                </div>
-                <p class="tkp-gamma-cta" i18n="@@formations.toolkitPrivate.gammaCta">
-                  Collez ce prompt dans
-                  <a href="https://gamma.app" target="_blank" rel="noopener noreferrer"
-                    >gamma.app</a
-                  >
-                  pour generer votre presentation en 60 secondes.
-                </p>
               </div>
             </section>
           }

@@ -1,12 +1,18 @@
+import { ViewportScroller } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { type EnvironmentProviders, LOCALE_ID, PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { throwError } from 'rxjs';
 import { AUTH_PORT } from '../../../core/ports/auth.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
-import { buildAuthSession, createAuthPortStub } from '../../../../testing/factories/auth.factory';
+import {
+  buildAuthSession,
+  buildAuthUser,
+  createAuthPortStub,
+} from '../../../../testing/factories/auth.factory';
+import { fournirLaRoute } from '../../../../testing/factories/route.factory';
 import { NavbarComponent } from './navbar.component';
 
 async function monterLaNavbar(
@@ -20,7 +26,7 @@ async function monterLaNavbar(
       { provide: PLATFORM_ID, useValue: plateforme },
       { provide: LOCALE_ID, useValue: 'fr' },
       ...routeur,
-      { provide: ActivatedRoute, useValue: {} },
+      fournirLaRoute(),
       provideHttpClient(withInterceptorsFromDi()),
       provideHttpClientTesting(),
       { provide: AUTH_PORT, useValue: authPort },
@@ -128,19 +134,12 @@ describe('NavbarComponent', () => {
 
     it("devrait afficher l'avatar apres login et masquer le bouton login", () => {
       const authState = TestBed.inject(AuthStateService);
-      authState.login({
-        accessToken: 'fake-jwt',
-        expiresIn: 3600,
-        user: {
-          id: 'u1',
-          email: 'test@example.com',
-          firstName: 'Tim',
-          lastName: 'Test',
-          phone: null,
-          isActive: true,
-          roles: ['user'],
-        },
-      });
+      authState.login(
+        buildAuthSession({
+          accessToken: 'fake-jwt',
+          user: buildAuthUser({ id: 'u1', firstName: 'Tim', lastName: 'Test' }),
+        }),
+      );
       fixture.detectChanges();
 
       const nav = fixture.nativeElement as HTMLElement;
@@ -149,6 +148,53 @@ describe('NavbarComponent', () => {
 
       const userMenuBtn = nav.querySelector('button[aria-label="Menu utilisateur"]');
       expect(userMenuBtn).toBeTruthy();
+    });
+
+    it('compose les initiales du prenom et du nom sans leurs blancs', () => {
+      const authState = TestBed.inject(AuthStateService);
+      authState.login(
+        buildAuthSession({ user: buildAuthUser({ firstName: '  tim', lastName: ' test' }) }),
+      );
+
+      expect(component.userInitials()).toBe('TT');
+    });
+
+    describe('defilement vers une ancre', () => {
+      let cible: HTMLElement;
+
+      beforeEach(() => {
+        cible = document.createElement('section');
+        cible.id = 'section-visee';
+        cible.style.margin = '3000px 0';
+        cible.style.height = '400px';
+        document.body.append(fixture.nativeElement as HTMLElement, cible);
+        document.documentElement.style.scrollBehavior = 'auto';
+        fixture.detectChanges();
+      });
+
+      afterEach(() => {
+        cible.remove();
+        (fixture.nativeElement as HTMLElement).remove();
+        window.scrollTo(0, 0);
+        document.documentElement.style.scrollBehavior = '';
+      });
+
+      it('arrete la section visee sous la barre fixe, pas dessous', () => {
+        TestBed.inject(ViewportScroller).scrollToAnchor('section-visee');
+
+        const barre = (fixture.nativeElement as HTMLElement).querySelector('nav.asili-nav');
+        const basDeLaBarre = barre?.getBoundingClientRect().bottom ?? 0;
+        expect(basDeLaBarre).toBeGreaterThan(0);
+        expect(cible.getBoundingClientRect().top).toBeCloseTo(basDeLaBarre, 0);
+      });
+
+      it('rend toute la hauteur a la page quand la barre disparait', () => {
+        fixture.destroy();
+
+        TestBed.inject(ViewportScroller).scrollToAnchor('section-visee');
+
+        expect(cible.getBoundingClientRect().top).toBeCloseTo(0, 0);
+      });
     });
 
     describe('deconnexion', () => {

@@ -107,8 +107,9 @@
                 [name]="field.key"
                 [(ngModel)]="panneau.valeurs[field.key]"
                 [required]="field.required"
-                [minlength]="field.key === 'password' ? 8 : null"
-                [email]="field.type === 'email' ? '' : false"
+                [appBornesDeSaisie]="field.bornes ?? null"
+                [appMotDePasseNeuf]="field.motDePasseNeuf === true"
+                [appFormatDeContact]="field.format ?? null"
                 #control="ngModel"
                 [class.invalid]="control.invalid && (control.touched || panneau.soumis)"
               />
@@ -121,8 +122,11 @@
                 class="err"
                 appFieldErrors
                 [errors]="control.errors"
-                [longueur]="onglet === 'sign-up' && field.key === 'password'"
+                [phone]="field.format === 'telephone'"
+                [motDePasse]="field.motDePasseNeuf === true"
               ></p>
+            } @else if (field.indication) {
+              <div class="hint">{{ field.indication }}</div>
             }
           </div>
         }

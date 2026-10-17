@@ -1,6 +1,7 @@
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import {
   attendreLEnvoiVideRefuse,
+  attendreLeRefusEffaceALaFrappe,
   attendreLeRenvoiEpuise,
   detailsEmis,
   installerBrique,
@@ -248,6 +249,15 @@ describe('FpSheet', () => {
     expect(formuleDe(hote, 'C3')).toBe(MONTANT_HT);
   });
 
+  it('L4-F11 · ecrit le resultat d une formule au format Standard d Excel, sans milliers', () => {
+    saisir(hote, 'C3', '=6400');
+    saisir(hote, 'D3', '=12501/2');
+    expect(cellule(hote, 'C3').value).toBe('6400');
+
+    selectionner(hote, 'C3');
+    expect(cellule(hote, 'D3').value).toBe('6250,5');
+  });
+
   it('montre la formule de la cellule selectionnee dans la barre de formule', () => {
     chiffrer(hote);
     expect(texteDe(hote, 'reference')).toBe('D3');
@@ -294,6 +304,21 @@ describe('FpSheet', () => {
     cliquer(hote, 'recopier');
     expect(texteDe(hote, 'retour')).toContain('rien où aller');
     expect(barre(hote).value).toBe('=A3*2');
+  });
+
+  it('L4-F21 · confie la recopie au brouillon et efface le refus qui la precedait', () => {
+    const brouillons = detailsEmis(hote, 'fp-brouillon');
+    saisir(hote, 'C3', MONTANT_HT);
+    selectionner(hote, 'C6');
+    cliquer(hote, 'recopier');
+    expect(texteDe(hote, 'retour')).toContain('rien où aller');
+    selectionner(hote, 'C3');
+    cliquer(hote, 'recopier');
+    expect(texteDe(hote, 'retour')).toBe('');
+    expect(brouillons).toEqual([
+      { id: PLAN.id, valeur: { C3: MONTANT_HT } },
+      { id: PLAN.id, valeur: { C3: MONTANT_HT, C4: '=A4*B4' } },
+    ]);
   });
 
   it('signale une cellule en erreur autrement que par la couleur seule', () => {
@@ -347,6 +372,10 @@ describe('FpSheet', () => {
         dureeMs: jasmine.any(Number),
       },
     ]);
+  });
+
+  it('L4-F21 · efface le refus des qu une cellule est saisie', () => {
+    attendreLeRefusEffaceALaFrappe(hote, () => saisir(hote, 'C3', MONTANT_HT));
   });
 
   it('envoie je ne sais pas sans cellule', () => {

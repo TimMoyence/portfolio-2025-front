@@ -1,4 +1,5 @@
 import * as fc from 'fast-check';
+import { buildResultatsDuFlux } from '../../../testing/factories/formations.factory';
 import type { FluxFactice } from '../../../testing/flux-sse';
 import { bloc, creerOuverture, vider } from '../../../testing/flux-sse';
 import type { EtatSession, RaisonDeFin, ResultatsDuFlux, Sync } from './sync';
@@ -50,7 +51,10 @@ function texteDe(evenement: Evenement): string {
     });
   }
   if (evenement.nom === 'resultats') {
-    return bloc('resultats', { participants: evenement.participants, questions: [] });
+    return bloc(
+      'resultats',
+      buildResultatsDuFlux({ participants: evenement.participants, questions: [] }),
+    );
   }
   if (evenement.nom === 'fin') {
     return bloc('fin', { raison: evenement.raison });

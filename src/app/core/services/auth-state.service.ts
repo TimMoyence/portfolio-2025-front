@@ -2,11 +2,18 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { computed, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import type { Observable } from 'rxjs';
-import { finalize, firstValueFrom, timeout } from 'rxjs';
-import { bornerEntre, estObjet } from '../../../cours/runtime/core/valeurs';
+import { catchError, finalize, firstValueFrom, from, map, of, tap, timeout } from 'rxjs';
+import type { IssueDuRenouvellement } from '../../../cours/runtime/core/sync';
+import { bornerEntre, objet } from '../../../cours/runtime/core/valeurs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
+import {
+  FENETRE_OUVERTE,
+  MEMOIRE_DU_RENOUVELLEMENT,
+  PLUS_LONGUE_FENETRE_MS,
+} from './fenetre-de-renouvellement';
 import { VERROU_INTER_ONGLETS } from './verrou-inter-onglets';
 
 const REFRESH_LOCK = 'portfolio-auth-refresh';
@@ -15,12 +22,20 @@ const REFRESH_MIN_DELAY_MS = 5_000;
 const RETRY_INITIAL_DELAY_MS = 2_000;
 const RETRY_MAX_DELAY_MS = 30_000;
 const RETRY_MAX_ATTEMPTS = 5;
+const RECUL_EN_PANNE_MS = 2 * 60_000;
 const THROTTLED_RETRY_MIN_MS = 15 * 60_000;
-const THROTTLED_RETRY_MAX_MS = 60 * 60_000;
 const ME_TIMEOUT_MS = 10_000;
+const MARGE_D_ACHEMINEMENT_MS = 5_000;
+
+export type IssueDuRafraichissement = IssueDuRenouvellement;
+
+interface DemandeDeRafraichissement {
+  readonly generation?: number;
+  readonly malgreLeRecul?: boolean;
+}
 
 function httpStatusOf(error: unknown): number | null {
-  const status = estObjet(error) ? error['status'] : undefined;
+  const status = objet(error)?.['status'];
   return typeof status === 'number' ? status : null;
 }
 
@@ -28,7 +43,11 @@ function throttledRetryDelayMs(error: unknown): number {
   const retryAfterS =
     error instanceof HttpErrorResponse ? Number(error.headers.get('Retry-After')) : 0;
   const requestedMs = Number.isFinite(retryAfterS) ? retryAfterS * 1000 : 0;
-  return bornerEntre(requestedMs, THROTTLED_RETRY_MIN_MS, THROTTLED_RETRY_MAX_MS);
+  return bornerEntre(requestedMs, THROTTLED_RETRY_MIN_MS, PLUS_LONGUE_FENETRE_MS);
+}
+
+function refuseLaSession(status: number | null): boolean {
+  return status === 401 || status === 403;
 }
 
 function isTransientFailure(status: number | null): boolean {
@@ -42,6 +61,8 @@ export class AuthStateService {
     optional: true,
   }) as AuthPort | null;
   private readonly crossWindowLock = inject(VERROU_INTER_ONGLETS);
+  private readonly fenetre = inject(MEMOIRE_DU_RENOUVELLEMENT);
+  private readonly router = inject(Router);
 
   private readonly destroyRef = inject(DestroyRef);
 
@@ -52,8 +73,9 @@ export class AuthStateService {
   private readonly _isUserLoading = signal(false);
   private readonly _isRestoreFailed = signal(false);
   private refreshTimer: ReturnType<typeof setTimeout> | null = null;
-  private refreshAttempts = 0;
   private accessTokenExpiresAt: number | null = null;
+  private rafraichissementEnCours: Promise<IssueDuRafraichissement> | null = null;
+  private generationDeSession = 0;
 
   readonly token = this._token.asReadonly();
   readonly user = this._user.asReadonly();
@@ -86,6 +108,7 @@ export class AuthStateService {
     const expiresAt = Date.now() + session.expiresIn * 1000;
     this._user.set(session.user);
     this._isSessionChecked.set(true);
+    this._isRestoreFailed.set(false);
     this.adoptToken(session.accessToken, expiresAt);
   }
 
@@ -94,15 +117,19 @@ export class AuthStateService {
   }
 
   logout(): void {
+    this.clearState();
     try {
       this.authPort?.logout().subscribe({ error: () => {} });
     } catch {
       // Une deconnexion ne doit jamais echouer cote client. Contrepartie assumee :
       // serveur injoignable => le cookie de refresh HttpOnly survit cote serveur
       // jusqu a son expiration, alors que la session locale est deja purgee.
-    } finally {
-      this.clearState();
     }
+  }
+
+  logoutEtAccueil(): void {
+    this.logout();
+    void this.router.navigate(['/']);
   }
 
   hasRole(role: string): boolean {
@@ -113,6 +140,46 @@ export class AuthStateService {
     this._user.set(user);
   }
 
+  jetonAExpire(): boolean {
+    return (
+      this._token() !== null &&
+      this.accessTokenExpiresAt !== null &&
+      Date.now() >= this.accessTokenExpiresAt - MARGE_D_ACHEMINEMENT_MS
+    );
+  }
+
+  rafraichirLaSession(): Promise<IssueDuRafraichissement> {
+    if (Date.now() < this.fenetre.lire().pasAvant) {
+      return Promise.resolve('injoignable');
+    }
+    return this.rafraichirUneFois();
+  }
+
+  relireLeCompte(): Observable<void> {
+    const port = this.authPort;
+    if (port === null) return of(undefined);
+    return this.relectureDuCompte(port).pipe(
+      timeout(ME_TIMEOUT_MS),
+      map(() => undefined),
+      catchError(() => of(undefined)),
+    );
+  }
+
+  private relectureDuCompte(port: AuthPort): Observable<unknown> {
+    const generation = this.generationDeSession;
+    if (this._token() === null) {
+      return from(this.rafraichirUneFois({ generation }));
+    }
+    if (this.jetonAExpire()) {
+      return from(this.rafraichirLaSession());
+    }
+    return port.me().pipe(
+      tap((user) => {
+        if (this.laSessionDure(generation)) this._user.set(user);
+      }),
+    );
+  }
+
   restoreSession(): void {
     const token = this._token();
     if (!this.authPort || this._isUserLoading()) return;
@@ -120,8 +187,11 @@ export class AuthStateService {
     this._isRestoreFailed.set(false);
     this._isUserLoading.set(true);
     if (token === null) {
-      this.suivreLaRestauration(this.authPort.refresh(), (session: AuthSession) =>
-        this.login(session),
+      this.suivreLaRestauration(
+        from(this.rafraichirUneFois({ generation: this.generationDeSession, malgreLeRecul: true })),
+        (issue: IssueDuRafraichissement) => {
+          if (issue === 'injoignable') this.signalerLEchecDeLaRestauration();
+        },
       );
       return;
     }
@@ -136,24 +206,32 @@ export class AuthStateService {
     restauration: Observable<Resultat>,
     appliquer: (resultat: Resultat) => void,
   ): void {
+    const generation = this.generationDeSession;
     restauration
       .pipe(
         timeout(ME_TIMEOUT_MS),
         finalize(() => this._isUserLoading.set(false)),
       )
       .subscribe({
-        next: appliquer,
-        error: (error: unknown) => this.onRestoreError(error),
+        next: (resultat) => {
+          if (this.laSessionDure(generation)) appliquer(resultat);
+        },
+        error: (error: unknown) => {
+          if (this.laSessionDure(generation)) this.onRestoreError(error);
+        },
       });
   }
 
   private onRestoreError(error: unknown): void {
-    const status = httpStatusOf(error);
-    this._isSessionChecked.set(true);
-    if (status === 401 || status === 403) {
+    if (refuseLaSession(httpStatusOf(error))) {
       this.clearSession();
       return;
     }
+    this.signalerLEchecDeLaRestauration();
+  }
+
+  private signalerLEchecDeLaRestauration(): void {
+    this._isSessionChecked.set(true);
     this._isRestoreFailed.set(true);
   }
 
@@ -173,52 +251,105 @@ export class AuthStateService {
 
   private planRefresh(delayMs: number): void {
     this.clearRefreshTimer();
-    this.refreshTimer = setTimeout(() => this.doRefresh(), delayMs);
+    this.refreshTimer = setTimeout(
+      () => this.doRefresh(),
+      Number.isFinite(delayMs)
+        ? bornerEntre(delayMs, 0, PLUS_LONGUE_FENETRE_MS)
+        : PLUS_LONGUE_FENETRE_MS,
+    );
   }
 
   private doRefresh(): void {
     this.refreshTimer = null;
-    this.crossWindowLock(REFRESH_LOCK, () => this.refreshUnderLock()).catch((error: unknown) =>
-      this.onRefreshError(error),
-    );
+    void this.rafraichirUneFois();
   }
 
-  private async refreshUnderLock(): Promise<void> {
-    if (this._token() === null || this.authPort === null) {
-      return;
+  private rafraichirUneFois(
+    demande: DemandeDeRafraichissement = {},
+  ): Promise<IssueDuRafraichissement> {
+    this.rafraichissementEnCours ??= this.crossWindowLock(REFRESH_LOCK, () =>
+      this.refreshUnderLock(demande),
+    )
+      .catch((error: unknown) => this.onRefreshError(error))
+      .finally(() => {
+        this.rafraichissementEnCours = null;
+      });
+    return this.rafraichissementEnCours;
+  }
+
+  private async refreshUnderLock({
+    generation: generationARestaurer,
+    malgreLeRecul = false,
+  }: DemandeDeRafraichissement): Promise<IssueDuRafraichissement> {
+    const generation = generationARestaurer ?? this.generationDeSession;
+    const sansSession =
+      generationARestaurer === undefined ? this._token() === null : !this.laSessionDure(generation);
+    if (sansSession || this.authPort === null) {
+      return 'refuse';
+    }
+    const { pasAvant } = this.fenetre.lire();
+    if (!malgreLeRecul && Date.now() < pasAvant) {
+      if (this.refreshTimer === null) this.replanifierSiConnecte(pasAvant - Date.now());
+      return 'injoignable';
     }
     try {
-      this.login(await firstValueFrom(this.authPort.refresh()));
+      const session = await firstValueFrom(this.authPort.refresh());
+      return this.connecterSiLaSessionDure(generation, session) ? 'reussi' : 'refuse';
     } catch (error) {
-      this.onRefreshError(error);
+      return this.laSessionDure(generation) ? this.onRefreshError(error) : 'refuse';
     }
   }
 
-  private onRefreshError(error: unknown): void {
+  private laSessionDure(generation: number): boolean {
+    return generation === this.generationDeSession;
+  }
+
+  private connecterSiLaSessionDure(generation: number, session: AuthSession): boolean {
+    if (!this.laSessionDure(generation)) {
+      return false;
+    }
+    this.login(session);
+    return true;
+  }
+
+  private onRefreshError(error: unknown): IssueDuRafraichissement {
     const status = httpStatusOf(error);
-    if (status === 401) {
+    if (refuseLaSession(status)) {
       this.clearSession();
-      return;
+      return 'refuse';
     }
+    const { echecs } = this.fenetre.lire();
     if (status === 429) {
-      this.planRefresh(throttledRetryDelayMs(error));
-      return;
+      const delayMs = throttledRetryDelayMs(error);
+      this.reculer(delayMs, echecs);
+      this.replanifierSiConnecte(delayMs);
+      return 'injoignable';
     }
-    if (!isTransientFailure(status) || this.refreshAttempts >= RETRY_MAX_ATTEMPTS) {
-      return;
+    if (!isTransientFailure(status)) {
+      return 'injoignable';
     }
-    const delayMs = Math.min(
-      RETRY_INITIAL_DELAY_MS * 2 ** this.refreshAttempts,
-      RETRY_MAX_DELAY_MS,
-    );
-    this.refreshAttempts += 1;
-    this.planRefresh(delayMs);
+    if (echecs >= RETRY_MAX_ATTEMPTS) {
+      this.reculer(RECUL_EN_PANNE_MS, echecs);
+      return 'injoignable';
+    }
+    const delayMs = Math.min(RETRY_INITIAL_DELAY_MS * 2 ** echecs, RETRY_MAX_DELAY_MS);
+    this.reculer(delayMs, echecs + 1);
+    this.replanifierSiConnecte(delayMs);
+    return 'injoignable';
+  }
+
+  private replanifierSiConnecte(delayMs: number): void {
+    if (this._token() !== null) this.planRefresh(delayMs);
+  }
+
+  private reculer(delaiMs: number, echecs: number): void {
+    this.fenetre.ecrire({ pasAvant: Date.now() + delaiMs, echecs });
   }
 
   private adoptToken(token: string, expiresAt: number | null): void {
     this._token.set(token);
     this.accessTokenExpiresAt = expiresAt;
-    this.refreshAttempts = 0;
+    this.fenetre.ecrire(FENETRE_OUVERTE);
     this.scheduleRefresh(expiresAt);
   }
 
@@ -230,8 +361,9 @@ export class AuthStateService {
   }
 
   private clearState(): void {
+    this.generationDeSession += 1;
     this.clearRefreshTimer();
-    this.refreshAttempts = 0;
+    this.fenetre.ecrire(FENETRE_OUVERTE);
     this._isRestoreFailed.set(false);
     this._isSessionChecked.set(true);
     this._token.set(null);

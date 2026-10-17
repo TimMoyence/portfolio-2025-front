@@ -2,13 +2,13 @@ import { HttpTestingController, type TestRequest } from '@angular/common/http/te
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { buildArticleSummary } from '../../../testing/factories/article.factory';
+import { buildPublishedArticle } from '../../../testing/factories/article.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
-import type { ArticleSummary } from '../../core/models/article.model';
+import type { PublishedArticle } from '../../core/models/article.model';
 import { ArticlesListComponent } from './articles-list.component';
 
-const summary = (day: number): ArticleSummary =>
-  buildArticleSummary({
+const summary = (day: number): PublishedArticle =>
+  buildPublishedArticle({
     slug: `morning-brief-2026-09-${day}`,
     title: `Veille IA du ${day} septembre`,
     published_at: `2026-09-${day}T04:15:00.000Z`,
@@ -57,6 +57,20 @@ describe('ArticlesListComponent — pagination', () => {
       'Veille IA du 22 septembre',
       'Veille IA du 21 septembre',
     ]);
+    expect(loadMore()).toBeNull();
+  });
+
+  it('annonce le chargement, puis l indisponibilité quand la première page échoue', () => {
+    const etat = (): string =>
+      fixture.nativeElement.querySelector('p.state')?.textContent?.trim() ?? '';
+    expect(etat()).toBe('Chargement des articles…');
+
+    page(null).flush(null, { status: 503, statusText: 'Unavailable' });
+    fixture.detectChanges();
+
+    expect(etat()).toBe('Les articles seront disponibles dans un instant.');
+    expect(fixture.nativeElement.querySelector('p.state[role="status"]')).not.toBeNull();
+    expect(titles()).toEqual([]);
     expect(loadMore()).toBeNull();
   });
 

@@ -62,6 +62,28 @@ describe('injectSeoHead — echappement JSON-LD', () => {
   });
 });
 
+describe('injectSeoHead — fraicheur du JSON-LD de la page', () => {
+  const blocsDeLaPage = (jsonLd: Record<string, unknown>): unknown[] => {
+    const page = buildPageSeoFr('article', '/article', { jsonLd }, { lastmod: '2026-10-01' });
+    const html = injectSeoHead(EMPTY_HTML, buildSeoMetadata([page]), '/fr/article', BASE_URL);
+    return [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(
+      ([, json]) => JSON.parse(json) as unknown,
+    );
+  };
+
+  it('date un bloc d un type connu du lastmod de la page', () => {
+    expect(blocsDeLaPage({ '@type': 'Article', headline: 'A' })).toEqual([
+      jasmine.objectContaining({ dateModified: '2026-10-01', datePublished: '2026-10-01' }),
+    ]);
+  });
+
+  it('laisse tel quel un bloc dont le type n est pas un texte', () => {
+    const bloc = { '@type': ['Article'], headline: 'A' };
+
+    expect(blocsDeLaPage(bloc)).toEqual([bloc]);
+  });
+});
+
 describe('injectSeoHead — flux RSS des articles', () => {
   const metadata = buildMetadata({ '@type': 'LocalBusiness' });
 

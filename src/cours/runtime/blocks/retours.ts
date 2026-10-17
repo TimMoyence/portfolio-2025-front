@@ -1,5 +1,6 @@
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { estObjet } from '../core/valeurs';
+import type { QuestionRevelee } from '../../content/types';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { chaineDe, estChaineOuNul, estObjet } from '../core/valeurs';
 
 export interface VerdictDeReponse {
   readonly questionId: string;
@@ -63,26 +64,53 @@ export function lireTextes(valeur: unknown): Readonly<Record<string, string>> {
   );
 }
 
-function texteDeLaCible(valeur: unknown, champ: 'cible' | 'optionId'): string | null {
-  if (!estObjet(valeur) || valeur['type'] !== 'cible') {
-    return null;
-  }
-  const texte = valeur[champ];
-  return typeof texte === 'string' ? texte : null;
+export type CibleRevelee = Pick<QuestionRevelee, 'cible' | 'optionId'>;
+
+export function lireCibleRevelee(valeur: unknown): CibleRevelee | null {
+  const cible = chaineDe(valeur, 'cible');
+  return cible === null ? null : { cible, optionId: chaineDe(valeur, 'optionId') };
+}
+
+function cibleTypee(valeur: unknown): CibleRevelee | null {
+  return estObjet(valeur) && valeur['type'] === 'cible' ? lireCibleRevelee(valeur) : null;
 }
 
 export function lireBonneReponse(valeur: unknown): string | null {
-  return texteDeLaCible(valeur, 'cible');
+  return cibleTypee(valeur)?.cible ?? null;
 }
 
 export function lireBonneOption(valeur: unknown): string | null {
-  return texteDeLaCible(valeur, 'optionId');
+  return cibleTypee(valeur)?.optionId ?? null;
 }
 
-export function bonneReponseRevelee(libelle: string, bonneReponse: string | null): EscapedHtml {
+export function marqueDeCorrection(juste: boolean | null): EscapedHtml {
+  if (juste === null) {
+    return VIDE;
+  }
+  return safeHtml` data-correction="${escapeHtml(juste ? 'juste' : 'fausse')}"`;
+}
+
+export function marqueDOption(
+  id: string,
+  bonneOption: string | null,
+  choisie: boolean,
+): EscapedHtml {
+  if (bonneOption === null || (id !== bonneOption && !choisie)) {
+    return marqueDeCorrection(null);
+  }
+  return marqueDeCorrection(id === bonneOption);
+}
+
+const ENCADRE_CONFIRME = safeHtml`class="fp-encadre" data-etat="confirme"`;
+
+export function bonneReponseRevelee(
+  libelle: string,
+  bonneReponse: string | null,
+  forme: EscapedHtml = ENCADRE_CONFIRME,
+): EscapedHtml {
   return bonneReponse === null
-    ? escapeHtml('')
-    : safeHtml`<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">${escapeHtml(libelle)} ${escapeHtml(bonneReponse)}</p>`;
+    ? VIDE
+    : safeHtml`<p ${forme} data-testid="bonne-reponse">${escapeHtml(libelle)} ${escapeHtml(bonneReponse)}</p>`;
 }
 
 export function estVerdictDeReponse(valeur: unknown): valeur is VerdictDeReponse {
@@ -90,7 +118,7 @@ export function estVerdictDeReponse(valeur: unknown): valeur is VerdictDeReponse
     estObjet(valeur) &&
     typeof valeur['questionId'] === 'string' &&
     typeof valeur['correcte'] === 'boolean' &&
-    (valeur['libelleConfusion'] === null || typeof valeur['libelleConfusion'] === 'string')
+    estChaineOuNul(valeur['libelleConfusion'])
   );
 }
 
@@ -124,7 +152,7 @@ function estDetail(valeur: unknown): valeur is DetailDeVerdict {
     estObjet(valeur) &&
     typeof valeur['cle'] === 'string' &&
     typeof valeur['juste'] === 'boolean' &&
-    (valeur['libelleConfusion'] === null || typeof valeur['libelleConfusion'] === 'string')
+    estChaineOuNul(valeur['libelleConfusion'])
   );
 }
 

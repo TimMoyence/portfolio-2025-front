@@ -4,6 +4,10 @@
     @if (description()) {
       <p>{{ description() }}</p>
     }
-    <a class="slide-cta__btn" [href]="ctaHref()">{{ ctaLabel() }}</a>
+    @if (estCheminInterne(ctaHref())) {
+      <a class="slide-cta__btn" [routerLink]="ctaHref()">{{ ctaLabel() }}</a>
+    } @else {
+      <a class="slide-cta__btn" [href]="ctaHref()">{{ ctaLabel() }}</a>
+    }
   </div>
 </div>

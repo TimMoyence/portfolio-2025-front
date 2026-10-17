@@ -1,7 +1,8 @@
 import { InjectionToken } from '@angular/core';
-import type { RegleDeNotation } from 'portfolio-2025-partage/contrats';
 import type { Observable } from 'rxjs';
+import { type LimiteDeDebit, messageDeLaLimite } from '../models/limite-de-debit';
 import type {
+  ComptesJalon,
   CoursContent,
   DerouleCours,
   EtatParticipant,
@@ -9,8 +10,12 @@ import type {
   FreeRange,
   PacingMode,
   PilotageEcran,
+  ProgressionEnigme,
+  RegleDeNotation,
   ResultatsSeance,
+  ResumeBareme,
   StatistiquesSeance,
+  TypeQuestion,
   ValeurProduction,
 } from '../../../cours/content/types';
 import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donnees-publiques';
@@ -19,6 +24,7 @@ import type {
   StrategieServie,
   VerdictDeTentative,
 } from '../../../cours/runtime/blocks/retours';
+import type { ChampsAntiRobot } from '../models/champs-anti-robot.model';
 
 export type ValeurReponse = number | string;
 
@@ -97,12 +103,10 @@ export interface SyntheseConcept {
   nonVus: number;
 }
 
-export interface InscriptionParticipant {
+export interface InscriptionParticipant extends ChampsAntiRobot {
   prenom: string;
   nom: string;
   email: string;
-  website?: string;
-  formStartedAt?: number;
   secretDeReprise?: string;
 }
 
@@ -148,6 +152,8 @@ export interface ReponseLibreFormateur {
   screenId: string;
   activityId: string;
   response: string;
+  premiereReponse: string | null;
+  strategiesServiesLe: string | null;
   dureeMs: number;
   status: 'enregistre' | 'en_attente' | 'echec';
   submittedAt: string;
@@ -176,9 +182,13 @@ export interface IncidentEtudiant {
 export interface ReponseRapportee {
   questionId: string;
   concept: string;
+  type: TypeQuestion;
+  score: number | null;
   valeur: string;
+  reponse: string;
   correcte: boolean;
   misconception: string | null;
+  libelleConfusion: string | null;
   dureeMs: number;
 }
 
@@ -196,7 +206,7 @@ export interface ParticipantRapporte {
   note: number;
   sousSeuil: boolean;
   reponses: readonly ReponseRapportee[];
-  reponsesLibres?: readonly ReponseLibreRapportee[];
+  reponsesLibres: readonly ReponseLibreRapportee[];
   incidents: number;
 }
 
@@ -207,10 +217,13 @@ export interface RapportSeance {
   fermeeLe: string;
   participants: readonly ParticipantRapporte[];
   conceptsFragiles: readonly string[];
-  libellesDesConcepts?: Readonly<Record<string, string>>;
+  libellesDesConcepts: Readonly<Record<string, string>>;
   resultats: ResultatsSeance;
-  statistiques?: StatistiquesSeance;
-  notation?: RegleNotation;
+  statistiques: StatistiquesSeance;
+  notation: RegleNotation;
+  bareme: ResumeBareme;
+  jalons: Readonly<Record<string, ComptesJalon>>;
+  enigmes: readonly ProgressionEnigme[];
 }
 
 export type MotifRefusRattachement =
@@ -221,6 +234,23 @@ export type MotifRefusRattachement =
   | 'participant-evince'
   | 'rattachement-impossible';
 
+abstract class RefusDuServeur<M extends string> extends Error {
+  protected constructor(
+    nom: string,
+    readonly motif: M,
+    readonly statut: number,
+    readonly limite: LimiteDeDebit | null,
+    messageDuMotif: string,
+  ) {
+    super(limite === null ? messageDuMotif : messageDeLaLimite(limite));
+    this.name = nom;
+  }
+}
+
+export function limiteDuRefus(erreur: unknown): LimiteDeDebit | null {
+  return erreur instanceof RefusDuServeur ? erreur.limite : null;
+}
+
 const MESSAGES_REFUS_RATTACHEMENT: Readonly<Record<MotifRefusRattachement, string>> = {
   'code-inconnu': $localize`:cours.refusCodeInconnu|@@coursRefusCodeInconnu:Ce code de séance n'existe pas : vérifiez les caractères dictés.`,
   'seance-complete': $localize`:cours.refusSeanceComplete|@@coursRefusSeanceComplete:Cette séance a atteint sa capacité : demandez à votre formateur de libérer une place.`,
@@ -230,13 +260,9 @@ const MESSAGES_REFUS_RATTACHEMENT: Readonly<Record<MotifRefusRattachement, strin
   'rattachement-impossible': $localize`:cours.refusRattachementImpossible|@@coursRefusRattachementImpossible:Le rattachement à la séance a échoué.`,
 };
 
-export class RattachementRefuse extends Error {
-  constructor(
-    readonly motif: MotifRefusRattachement,
-    readonly statut: number,
-  ) {
-    super(MESSAGES_REFUS_RATTACHEMENT[motif]);
-    this.name = 'RattachementRefuse';
+export class RattachementRefuse extends RefusDuServeur<MotifRefusRattachement> {
+  constructor(motif: MotifRefusRattachement, statut: number, limite: LimiteDeDebit | null = null) {
+    super('RattachementRefuse', motif, statut, limite, MESSAGES_REFUS_RATTACHEMENT[motif]);
   }
 }
 
@@ -247,13 +273,9 @@ const MESSAGES_REFUS_SUJET: Readonly<Record<MotifRefusSujet, string>> = {
   'sujet-indisponible': $localize`:cours.refusSujetIndisponible|@@coursRefusSujetIndisponible:Le sujet de la séance n’a pas pu être chargé.`,
 };
 
-export class SujetRefuse extends Error {
-  constructor(
-    readonly motif: MotifRefusSujet,
-    readonly statut: number,
-  ) {
-    super(MESSAGES_REFUS_SUJET[motif]);
-    this.name = 'SujetRefuse';
+export class SujetRefuse extends RefusDuServeur<MotifRefusSujet> {
+  constructor(motif: MotifRefusSujet, statut: number, limite: LimiteDeDebit | null = null) {
+    super('SujetRefuse', motif, statut, limite, MESSAGES_REFUS_SUJET[motif]);
   }
 }
 
@@ -286,26 +308,24 @@ const MESSAGES_REFUS_REPONSE: Readonly<Record<MotifRefusReponse, string>> = {
   refusee: $localize`:cours.reponseRefusee|@@coursReponseRefusee:Votre réponse n’a pas été acceptée par le serveur : prévenez votre formateur.`,
 };
 
-export class ReponseRefusee extends Error {
-  constructor(
-    readonly motif: MotifRefusReponse,
-    readonly statut: number,
-  ) {
-    super(MESSAGES_REFUS_REPONSE[motif]);
-    this.name = 'ReponseRefusee';
+export class ReponseRefusee extends RefusDuServeur<MotifRefusReponse> {
+  constructor(motif: MotifRefusReponse, statut: number, limite: LimiteDeDebit | null = null) {
+    super('ReponseRefusee', motif, statut, limite, MESSAGES_REFUS_REPONSE[motif]);
   }
 }
 
 export type MotifRefusReponseLibre =
   'reseau' | 'seance-non-demarree' | 'seance-terminee' | 'ecran-non-servi' | 'refusee';
 
-export class ReponseLibreRefusee extends Error {
-  constructor(
-    readonly motif: MotifRefusReponseLibre,
-    readonly statut: number,
-  ) {
-    super(`Réponse libre refusée : ${motif} (statut ${statut})`);
-    this.name = 'ReponseLibreRefusee';
+export class ReponseLibreRefusee extends RefusDuServeur<MotifRefusReponseLibre> {
+  constructor(motif: MotifRefusReponseLibre, statut: number, limite: LimiteDeDebit | null = null) {
+    super(
+      'ReponseLibreRefusee',
+      motif,
+      statut,
+      limite,
+      `Réponse libre refusée : ${motif} (statut ${statut})`,
+    );
   }
 }
 
@@ -353,13 +373,15 @@ export interface FichierTelecharge {
 
 export type MotifRefusPieceJointe = 'retenue' | 'indisponible';
 
-export class PieceJointeRefusee extends Error {
-  constructor(
-    readonly motif: MotifRefusPieceJointe,
-    readonly statut: number,
-  ) {
-    super(`Pièce jointe refusée : ${motif} (statut ${statut})`);
-    this.name = 'PieceJointeRefusee';
+export class PieceJointeRefusee extends RefusDuServeur<MotifRefusPieceJointe> {
+  constructor(motif: MotifRefusPieceJointe, statut: number, limite: LimiteDeDebit | null = null) {
+    super(
+      'PieceJointeRefusee',
+      motif,
+      statut,
+      limite,
+      `Pièce jointe refusée : ${motif} (statut ${statut})`,
+    );
   }
 }
 

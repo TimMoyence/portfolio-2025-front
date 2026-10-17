@@ -2,12 +2,14 @@ import type { SeoMetadataFile, SeoPageEntry } from '../app/core/seo/seo-metadata
 import { LOCALES_DU_SITE } from '../app/core/config/locales';
 import { routeSansLocale, urlLocalisee } from '../app/core/seo/chemins';
 import { serialiserJsonLd } from '../app/core/seo/json-ld';
+import { NOM_DU_SITE } from '../app/core/seo/nom-du-site';
 import {
   cheminPublicDeLaPage,
   estIndexable,
   localeParDefaut,
   pageSeoDeLaRoute,
 } from '../app/core/seo/pages-seo';
+import { chaineDe } from '../cours/runtime/core/valeurs';
 
 const FRESHNESS_ENABLED_TYPES = new Set([
   'WebPage',
@@ -32,8 +34,7 @@ const enrichJsonLdBlock = (
   block: Record<string, unknown>,
   page: { lastmod?: string },
 ): Record<string, unknown> => {
-  const type = block['@type'];
-  const typeStr = typeof type === 'string' ? type : null;
+  const typeStr = chaineDe(block, '@type');
   if (!typeStr || !FRESHNESS_ENABLED_TYPES.has(typeStr)) return block;
 
   const enriched: Record<string, unknown> = { ...block };
@@ -150,8 +151,8 @@ const buildSeoLinkTags = (
 
 const ARTICLE_FEED_PATH = '/api/v1/portfolio25/articles/feed.xml';
 const ARTICLE_FEED_TITLES: Record<string, string> = {
-  fr: 'Veille IA — Asili Design',
-  en: 'AI Watch — Asili Design',
+  fr: `Veille IA — ${NOM_DU_SITE}`,
+  en: `AI Watch — ${NOM_DU_SITE}`,
 };
 
 const buildArticleFeedLink = (

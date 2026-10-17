@@ -4,8 +4,15 @@ import {
 } from '../../../testing/factories/cours.factory';
 import { attendreUneRegionLive } from '../../../testing/assertions-briques';
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
-import { installerBrique } from '../../../testing/banc-de-brique';
+import {
+  cliquerOmbre,
+  detailsEmis,
+  installerBrique,
+  noeudOmbre,
+  texteOmbre,
+} from '../../../testing/banc-de-brique';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
+import { figerLesHorloges, reculerLaPendule, UNE_HEURE_MS } from '../../../testing/horloge-simulee';
 import { FpNumeric, type NumericQuestionPublique } from './FpNumeric';
 
 type ClesIdentiques<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
@@ -32,7 +39,7 @@ const AUTRE_QUESTION = 'Q-TAUX-02';
 const CORRIGE = { type: 'cible', cible: VALEUR_ATTENDUE };
 
 function champDe(element: FpNumeric): HTMLInputElement | null {
-  return element.shadowRoot?.querySelector<HTMLInputElement>('[data-testid="champ"]') ?? null;
+  return noeudOmbre<HTMLInputElement>(element, 'champ');
 }
 
 function saisir(element: FpNumeric, frappe: string): void {
@@ -40,34 +47,26 @@ function saisir(element: FpNumeric, frappe: string): void {
   if (champ !== null) {
     champ.value = frappe;
   }
-  element.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="valider"]')?.click();
+  cliquerOmbre(element, 'valider');
 }
 
 function clesDe(element: FpNumeric): string[] {
   return Object.keys(element.question ?? {}).sort((gauche, droite) => gauche.localeCompare(droite));
 }
 
-function retourDe(element: FpNumeric): string {
-  return element.shadowRoot?.querySelector('[data-testid="retour"]')?.textContent?.trim() ?? '';
+function soumissionsDe(element: FpNumeric): DetailNumeric[] {
+  return detailsEmis(element, 'fp-numeric-submit');
 }
 
-function detailsEmis(element: FpNumeric): DetailNumeric[] {
-  const details: DetailNumeric[] = [];
-  element.addEventListener('fp-numeric-submit', (evenement) => {
-    details.push((evenement as CustomEvent).detail as DetailNumeric);
-  });
-  return details;
-}
-
-function dureeEmise(lectureMs: number, rafraichissements: number): number | undefined {
-  jasmine.clock().install();
+function dureeEmise(lectureMs: number, rafraichissements: number, reculMs = 0): number | undefined {
+  figerLesHorloges(INSTANT_INITIAL);
   try {
-    jasmine.clock().mockDate(new Date(INSTANT_INITIAL));
     const element = document.createElement('fp-numeric') as FpNumeric;
     element.question = QUESTION_NOTEE;
     document.body.appendChild(element);
-    const details = detailsEmis(element);
+    const details = soumissionsDe(element);
     jasmine.clock().tick(lectureMs);
+    reculerLaPendule(reculMs);
     for (let rang = 0; rang < rafraichissements; rang += 1) {
       element.setAttribute('etat', `rendu-${rang}`);
     }
@@ -104,7 +103,7 @@ describe('FpNumeric', () => {
   });
 
   it('rend l unite hors du champ et la rattache a la saisie', () => {
-    const unite = hote.shadowRoot?.querySelector('[data-testid="unite"]');
+    const unite = noeudOmbre(hote, 'unite');
     expect(unite?.tagName).toBe('SPAN');
     expect(unite?.textContent?.trim()).toBe('€');
     expect(champDe(hote)?.value).toBe('');
@@ -113,7 +112,7 @@ describe('FpNumeric', () => {
 
   it('n annonce aucune unite quand la question n en porte pas', () => {
     hote.question = buildNumericQuestion({ id: AUTRE_QUESTION, unite: null });
-    expect(hote.shadowRoot?.querySelector('[data-testid="unite"]')).toBeNull();
+    expect(noeudOmbre(hote, 'unite')).toBeNull();
     expect(champDe(hote)?.getAttribute('aria-describedby')).toBeNull();
   });
 
@@ -129,7 +128,7 @@ describe('FpNumeric', () => {
 
   for (const cas of SAISIES_VALIDES) {
     it(`normalise ${cas.nom}`, () => {
-      const details = detailsEmis(hote);
+      const details = soumissionsDe(hote);
       saisir(hote, cas.frappe);
       expect(details.length).toBe(1);
       expect(details[0].valeur).toBe(cas.valeur);
@@ -141,10 +140,10 @@ describe('FpNumeric', () => {
 
   for (const frappe of SAISIES_REFUSEES) {
     it(`n emet rien pour la saisie non numerique « ${frappe} »`, () => {
-      const details = detailsEmis(hote);
+      const details = soumissionsDe(hote);
       saisir(hote, frappe);
       expect(details).toEqual([]);
-      expect(retourDe(hote)).toBe(MESSAGE_REFUS);
+      expect(texteOmbre(hote, 'retour')).toBe(MESSAGE_REFUS);
     });
   }
 
@@ -157,11 +156,11 @@ describe('FpNumeric', () => {
   it('verrouille le champ apres une reponse acceptee', () => {
     saisir(hote, SAISIE_VALIDE);
     expect(champDe(hote)?.disabled).toBe(true);
-    expect(retourDe(hote)).toBe('Réponse enregistrée');
+    expect(texteOmbre(hote, 'retour')).toBe('Réponse enregistrée');
   });
 
   it('valide la saisie à la touche Entrée, comme le bouton', () => {
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     const champ = champDe(hote);
     if (champ === null) {
       throw new Error('champ absent');
@@ -177,7 +176,7 @@ describe('FpNumeric', () => {
   });
 
   it('n emet qu une seule reponse par question', () => {
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     saisir(hote, SAISIE_VALIDE);
     saisir(hote, '99');
     expect(details.length).toBe(1);
@@ -188,13 +187,14 @@ describe('FpNumeric', () => {
     hote.question = buildNumericQuestion({ id: AUTRE_QUESTION });
     expect(champDe(hote)?.disabled).toBe(false);
     expect(champDe(hote)?.value).toBe('');
-    expect(retourDe(hote)).toBe('');
+    expect(texteOmbre(hote, 'retour')).toBe('');
   });
 
   const CAS_DUREE: ReadonlyArray<{
     nom: string;
     lecture: number;
     rendus: number;
+    recul?: number;
     attendu: number;
   }> = [
     { nom: 'une reponse immediate', lecture: 0, rendus: 0, attendu: DELAI_SAISIE_MS },
@@ -205,11 +205,18 @@ describe('FpNumeric', () => {
       rendus: 2,
       attendu: 40300,
     },
+    {
+      nom: 'une reponse dont l horloge du poste recule d une heure pendant la lecture',
+      lecture: 4000,
+      rendus: 0,
+      recul: UNE_HEURE_MS,
+      attendu: 4000 + DELAI_SAISIE_MS,
+    },
   ];
 
   for (const cas of CAS_DUREE) {
     it(`mesure ${cas.nom} depuis la presentation de la question`, () => {
-      expect(dureeEmise(cas.lecture, cas.rendus)).toBe(cas.attendu);
+      expect(dureeEmise(cas.lecture, cas.rendus, cas.recul)).toBe(cas.attendu);
     });
   }
 
@@ -242,9 +249,7 @@ describe('FpNumeric', () => {
     for (const role of ROLES_DE_MONTAGE) {
       hote.setAttribute('data-cours-role', role);
       expect(hote.shadowRoot?.innerHTML).withContext(role).not.toContain(VALEUR_ATTENDUE);
-      expect(hote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]'))
-        .withContext(role)
-        .toBeNull();
+      expect(noeudOmbre(hote, 'bonne-reponse')).withContext(role).toBeNull();
     }
   });
 
@@ -252,7 +257,7 @@ describe('FpNumeric', () => {
     hote.corrige = CORRIGE;
     for (const role of ROLES_DE_MONTAGE) {
       hote.setAttribute('data-cours-role', role);
-      const bonneReponse = hote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]');
+      const bonneReponse = noeudOmbre(hote, 'bonne-reponse');
       expect(bonneReponse?.textContent).withContext(role).toContain(VALEUR_ATTENDUE);
       expect(bonneReponse?.getAttribute('data-etat')).withContext(role).toBe('confirme');
     }
@@ -260,7 +265,7 @@ describe('FpNumeric', () => {
 
   it('ignore un corrige qui n est pas une cible', () => {
     hote.corrige = { type: 'option', option: 'A' };
-    expect(hote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]')).toBeNull();
+    expect(noeudOmbre(hote, 'bonne-reponse')).toBeNull();
   });
 
   it('marque la saisie juste ou fausse quand corrige et verdict sont reinjectes', () => {
@@ -280,8 +285,8 @@ describe('FpNumeric', () => {
       QUESTION_NOTEE.enonce,
     );
     expect(champDe(hote)).toBeNull();
-    expect(hote.shadowRoot?.querySelector('[data-testid="valider"]')).toBeNull();
-    expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')).toBeNull();
+    expect(noeudOmbre(hote, 'valider')).toBeNull();
+    expect(noeudOmbre(hote, 'retour')).toBeNull();
   });
 
   it('laisse l enonce seul dans sa carte au presentateur tant que rien n est revele, sans corps vide sous la legende', () => {
@@ -316,9 +321,7 @@ describe('FpNumeric', () => {
         parseFloat(style.borderRightWidth) -
         parseFloat(style.paddingRight);
       const champ = champDe(hote)?.getBoundingClientRect();
-      const unite = hote.shadowRoot
-        ?.querySelector('[data-testid="unite"]')
-        ?.getBoundingClientRect();
+      const unite = noeudOmbre(hote, 'unite')?.getBoundingClientRect();
 
       expect(champ?.right).toBeLessThanOrEqual(bordInterieur + 0.5);
       expect(unite?.right).toBeLessThanOrEqual(bordInterieur + 0.5);
@@ -331,9 +334,7 @@ describe('FpNumeric', () => {
       const vide = document.createElement('fp-numeric') as FpNumeric;
       vide.setAttribute('data-cours-role', role);
       document.body.appendChild(vide);
-      expect(vide.shadowRoot?.querySelector('[data-testid="attente"]')?.textContent?.trim())
-        .withContext(role)
-        .toBe(vide.texte('chargement'));
+      expect(texteOmbre(vide, 'attente')).withContext(role).toBe(vide.texte('chargement'));
       vide.remove();
     }
   });
@@ -352,26 +353,24 @@ describe('FpNumeric', () => {
   it('ne recapitule plus la modalite ni la duree prevue, quel que soit le role', () => {
     for (const role of ROLES_DE_MONTAGE) {
       hote.setAttribute('data-cours-role', role);
-      expect(hote.shadowRoot?.querySelector('[data-testid="modalite"]'))
-        .withContext(role)
-        .toBeNull();
-      expect(hote.shadowRoot?.querySelector('[data-testid="duree"]')).withContext(role).toBeNull();
+      expect(noeudOmbre(hote, 'modalite')).withContext(role).toBeNull();
+      expect(noeudOmbre(hote, 'duree')).withContext(role).toBeNull();
     }
     expect(hote.question?.metadonnees.modalite).toBe(QUESTION_NOTEE.metadonnees.modalite);
   });
 
   it('accepte le signe moins typographique', () => {
-    const details = detailsEmis(hote);
+    const details = soumissionsDe(hote);
     saisir(hote, '−2,8');
     expect(details[0]?.valeur).toBeCloseTo(-2.8, 12);
   });
 
   it('affiche le verdict reinjecte de sa question, jamais celui d une autre', () => {
     hote.verdict = buildVerdictDeReponse({ questionId: AUTRE_QUESTION });
-    expect(hote.shadowRoot?.querySelector('[data-testid="verdict"]')).toBeNull();
+    expect(noeudOmbre(hote, 'verdict')).toBeNull();
 
     hote.verdict = buildVerdictDeReponse({ questionId: QUESTION_NOTEE.id });
-    const verdict = hote.shadowRoot?.querySelector('[data-testid="verdict"]');
+    const verdict = noeudOmbre(hote, 'verdict');
 
     expect(verdict?.getAttribute('data-etat')).toBe('a-revoir');
     expect(verdict?.textContent).toContain('À revoir');
@@ -381,7 +380,7 @@ describe('FpNumeric', () => {
 
   it('montre le deja repondu et verrouille la saisie', () => {
     hote.dejaRepondu = true;
-    expect(hote.shadowRoot?.querySelector('[data-testid="deja-repondu"]')).not.toBeNull();
+    expect(noeudOmbre(hote, 'deja-repondu')).not.toBeNull();
     expect(champDe(hote)?.disabled).toBeTrue();
   });
 
@@ -390,16 +389,14 @@ describe('FpNumeric', () => {
     hote.erreur = 'Cet écran n’est pas encore ouvert';
 
     expect(champDe(hote)?.disabled).toBeFalse();
-    expect(hote.shadowRoot?.querySelector('[data-testid="erreur"]')?.textContent).toContain(
-      'pas encore ouvert',
-    );
+    expect(noeudOmbre(hote, 'erreur')?.textContent).toContain('pas encore ouvert');
   });
 
   it('en apercu, annonce que les reponses partent en seance et laisse reessayer', () => {
     hote.setAttribute('data-apercu', '');
     saisir(hote, SAISIE_VALIDE);
 
-    expect(retourDe(hote)).toBe('Aperçu : les réponses s’envoient pendant la séance');
+    expect(texteOmbre(hote, 'retour')).toBe('Aperçu : les réponses s’envoient pendant la séance');
     expect(champDe(hote)?.disabled).toBeFalse();
   });
 

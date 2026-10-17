@@ -12,6 +12,10 @@ export function cheminDuCoursEnSeance(slug: string): string {
   return `formations/${slug}`;
 }
 
+export function cheminDuPupitre(slug: string): string {
+  return `/cours/presenter/${encodeURIComponent(slug)}`;
+}
+
 export function cleSeoDuCoursEnSeance(slug: string): string {
   return `formations-${slug}`;
 }

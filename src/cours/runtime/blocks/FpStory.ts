@@ -1,6 +1,7 @@
-import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml, VIDE } from '../core/html';
 import { FpBlock } from './FpBlock';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
+import { estTexteNonVide } from '../core/valeurs';
 
 export interface StoryVideo {
   readonly src: string;
@@ -30,8 +31,6 @@ export interface StoryRecit extends ContenuDeBrique {
   };
   readonly video?: StoryVideo;
 }
-
-const VIDE = safeHtml``;
 
 function copierVideo(video: StoryVideo): StoryVideo {
   return {
@@ -118,8 +117,9 @@ export class FpStory extends FpBlock {
     if (sousTitres === undefined) {
       return VIDE;
     }
-    const libelle =
-      sousTitres.libelle.trim().length > 0 ? sousTitres.libelle : this.texte('video-sous-titres');
+    const libelle = estTexteNonVide(sousTitres.libelle)
+      ? sousTitres.libelle
+      : this.texte('video-sous-titres');
     return safeHtml`<track data-testid="sous-titres" kind="captions" srclang="${escapeHtml(sousTitres.srclang)}" label="${escapeHtml(libelle)}" src="${escapeUrl(sousTitres.src)}" default />`;
   }
 

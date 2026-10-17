@@ -1,6 +1,8 @@
 import type { EcranContent, Role } from '../cours/content/types';
+import { ecranDIdentifiant } from '../app/shared/slides/session/lecture-ecran';
 import { SlideActivityComponent } from '../app/shared/slides/session/slide-activity.component';
 import { recolterDansLArbre } from './arbre-json';
+import { roleAffiche } from './banc-de-brique';
 import { DELAI_DE_MONTAGE_MS, monterEcran } from './briques-montees';
 import { compterLesAbonnesAuxPolices } from './polices';
 import {
@@ -22,7 +24,7 @@ const CLES_SECRETES = [
 ];
 
 export function ecranNomme<T extends EcranContent>(ecrans: readonly T[], id: string): T {
-  const ecran = ecrans.find((candidat) => candidat.id === id);
+  const ecran = ecranDIdentifiant(ecrans, id);
   if (ecran === undefined) {
     throw new Error(`écran absent de l instantané : ${id}`);
   }
@@ -54,10 +56,7 @@ export async function attesterLeMontage(ecran: EcranContent, role: Role): Promis
   expect(
     monte
       .montees()
-      .every(
-        (brique) =>
-          brique.shadowRoot?.querySelector('.fp-root')?.getAttribute('data-role') === role,
-      ),
+      .every((brique) => brique instanceof HTMLElement && roleAffiche(brique) === role),
   ).toBeTrue();
   monte.detruire();
   monte.element.remove();

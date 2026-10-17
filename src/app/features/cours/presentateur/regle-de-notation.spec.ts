@@ -9,12 +9,12 @@ describe('phraseDeNotation', () => {
     const phrase = phraseDeNotation(buildRegleNotation());
 
     expect(phrase).toMatch(/^Note \/20 relative aux/);
-    expect(phrase).toMatch(/20\s?% les plus actifs/);
-    expect(phrase).toMatch(/Sous 40\s?% de cette référence/);
+    expect(phrase).toContain('20 % les plus actifs');
+    expect(phrase).toContain('Sous 40 % de cette référence');
     expect(phrase).toContain('« je ne sais pas » compte comme une réponse');
     expect(phrase).toContain('une non-réponse vaut 0 point');
     expect(phrase).toContain('les réponses libres ne sont pas notées');
-    expect(phrase).toMatch(/problématique sous 70\s?% de réussite/);
+    expect(phrase).toContain('problématique sous 70 % de réussite');
     expect(phrase).not.toContain('\n');
   });
 

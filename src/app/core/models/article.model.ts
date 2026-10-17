@@ -10,7 +10,9 @@ export interface ArticleSummary {
   seo: {
     description: string;
     canonical_path: string;
-    keywords?: string[];
+    keywords: string[];
+    image_url: string | null;
+    image_alt: string | null;
   };
 }
 
@@ -21,20 +23,33 @@ export interface PublishedArticle extends ArticleSummary {
     id: string;
     kind: 'essential' | 'deep_dive' | 'rubric' | 'radar';
     title: string;
-    intro?: string;
-    body?: string;
+    intro: string;
+    body: string;
     items: Array<{
       entity: string;
       text: string;
       source: string;
       url: string;
+      published_at?: string;
+      retrieved_at?: string;
     }>;
   }>;
-  sources: Array<{ name: string; url: string }>;
-  provenance: Record<string, unknown>;
+  sources: Array<{
+    name: string;
+    url: string;
+    published_at: string | null;
+    retrieved_at: string | null;
+  }>;
+  provenance: {
+    run_id: string;
+    edition_date: string;
+    item_count: number;
+    source_count: number;
+    content_sha256: string;
+  };
 }
 
 export interface ArticleListResponse {
-  items: ArticleSummary[];
+  items: PublishedArticle[];
   next_cursor: string | null;
 }

@@ -1,6 +1,6 @@
-export interface ContactFormState {
-  website?: string;
-  formStartedAt?: number;
+import type { ChampsAntiRobot } from './champs-anti-robot.model';
+
+export interface ContactFormState extends ChampsAntiRobot {
   email: string;
   firstName: string;
   lastName: string;

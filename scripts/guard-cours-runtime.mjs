@@ -63,7 +63,7 @@ const POURQUOI = {
  * @param {string} racine
  * @returns {string[]}
  */
-export function collecterFichiers(depot, racine) {
+function collecterFichiers(depot, racine) {
   return listerFichiers(join(depot, racine), (nom) =>
     EXTENSIONS.some((extension) => nom.endsWith(extension)),
   ).map((relatif) => `${racine}/${relatif}`);
@@ -97,6 +97,14 @@ export function estSurfaceCours(fichier) {
  */
 export function estPupitreFormateur(fichier) {
   return fichier.startsWith(PREFIXE_PUPITRE);
+}
+
+/**
+ * @param {string} fichier
+ * @returns {boolean}
+ */
+function estSurfaceEtudiante(fichier) {
+  return estSurfaceCours(fichier) && !estFichierDeTest(fichier) && !estPupitreFormateur(fichier);
 }
 
 /**
@@ -179,7 +187,7 @@ function viseLePupitre(fichier, specification) {
  * @returns {{ fichier: string, ligne: number, regle: string, raison: string, extrait: string }[]}
  */
 export function analyserImportsDuPupitre({ fichier, contenu }) {
-  if (!estSurfaceCours(fichier) || estFichierDeTest(fichier) || estPupitreFormateur(fichier)) {
+  if (!estSurfaceEtudiante(fichier)) {
     return [];
   }
   const lignes = contenu.split('\n');
@@ -252,7 +260,7 @@ function compter(texte, caractere) {
  * @returns {{ fichier: string, ligne: number, regle: string, raison: string, extrait: string }[]}
  */
 export function analyserCorrige({ fichier, contenu }) {
-  if (!estSurfaceCours(fichier) || estFichierDeTest(fichier) || estPupitreFormateur(fichier)) {
+  if (!estSurfaceEtudiante(fichier)) {
     return [];
   }
   const effacees = lignesEffacees(contenu);
@@ -277,9 +285,9 @@ export function analyserCorrige({ fichier, contenu }) {
  */
 function porteLaRevelation(fichier) {
   return (
-    fichier === ADAPTATEUR_DE_REVELATION ||
-    fichier.startsWith(PREFIXE_RUNTIME) ||
-    (estSurfaceCours(fichier) && !estPupitreFormateur(fichier))
+    estSurfaceEtudiante(fichier) ||
+    ((fichier === ADAPTATEUR_DE_REVELATION || fichier.startsWith(PREFIXE_RUNTIME)) &&
+      !estFichierDeTest(fichier))
   );
 }
 
@@ -297,7 +305,7 @@ function indexDeLigne(contenu, position) {
  * @returns {{ fichier: string, ligne: number, regle: string, raison: string, extrait: string }[]}
  */
 export function analyserRevelationEnDur({ fichier, contenu }) {
-  if (!porteLaRevelation(fichier) || estFichierDeTest(fichier)) {
+  if (!porteLaRevelation(fichier)) {
     return [];
   }
   const effacees = lignesEffacees(contenu);

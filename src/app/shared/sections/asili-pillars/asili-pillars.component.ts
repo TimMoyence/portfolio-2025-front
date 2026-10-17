@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { AsiliEnTeteDirective, EN_TETE_ASILI } from '../asili-en-tete.directive';
+import { AsiliLiensDirective, LIENS_ASILI } from '../asili-en-tete.directive';
 
 type AsiliPillarVariant = 'services' | 'formations';
 
@@ -20,12 +20,12 @@ export interface AsiliPillar {
 @Component({
   selector: 'app-asili-pillars',
   standalone: true,
-  imports: [EN_TETE_ASILI],
+  imports: [LIENS_ASILI],
   templateUrl: './asili-pillars.component.html',
   styleUrls: ['./asili-pillars.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AsiliPillarsComponent extends AsiliEnTeteDirective {
+export class AsiliPillarsComponent extends AsiliLiensDirective {
   readonly pillars = input.required<readonly AsiliPillar[]>();
 
   readonly intro = input<string | null>(null);

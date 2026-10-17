@@ -13,4 +13,5 @@ import { PictoComponent } from '../picto/picto.component';
 export class AuthSuccessComponent {
   readonly message = input<string>();
   readonly libelleConnexion = input<string>();
+  readonly lien = input('/login');
 }

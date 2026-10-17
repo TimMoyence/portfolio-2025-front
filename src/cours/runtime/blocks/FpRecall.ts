@@ -1,13 +1,15 @@
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { chaineDe, estTexteNonVide } from '../core/valeurs';
 import { Battement, SECONDE_MS } from './battement';
 import { FpReponse } from './reponse';
 import {
   type ContenuDeBrique,
   type OptionPublique,
+  avecJeNeSaisPas,
   copierLeSocle,
   projeterOptions,
 } from './projection';
-import { bonneReponseRevelee, lireBonneOption, lireBonneReponse } from './retours';
+import { bonneReponseRevelee, lireBonneOption, lireBonneReponse, marqueDOption } from './retours';
 
 export interface RecallQuestionPublique extends ContenuDeBrique {
   readonly enonce: string;
@@ -15,9 +17,6 @@ export interface RecallQuestionPublique extends ContenuDeBrique {
 }
 
 const DELAI_RAPPEL_MS = 8000;
-const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
-const VIDE = escapeHtml('');
-const DESACTIVE = safeHtml`disabled`;
 
 function projeterQuestion(source: RecallQuestionPublique): RecallQuestionPublique {
   return {
@@ -47,7 +46,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   private readonly battement = new Battement(() => this.battre());
 
   set consigne(valeur: string | null | undefined) {
-    this.interneConsigne = typeof valeur === 'string' && valeur.trim() !== '' ? valeur : null;
+    this.interneConsigne = estTexteNonVide(valeur) ? valeur : null;
     this.refreshSiConnecte();
   }
 
@@ -93,8 +92,8 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   }
 
   protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
-    const rappel = brouillon['rappel'];
-    if (typeof rappel !== 'string') {
+    const rappel = chaineDe(brouillon, 'rappel');
+    if (rappel === null) {
       return false;
     }
     this.rappel = rappel;
@@ -117,7 +116,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
       this.presentateur() || !ecritAvantLesOptions
         ? VIDE
         : safeHtml`<textarea class="fp-recall__champ" data-testid="rappel" rows="4" aria-label="${escapeHtml(this.texte('rappel-champ'))}">${escapeHtml(this.rappel)}</textarea>`;
-    const suivi = this.presentateur() ? escapeHtml('') : this.suiviDeLEnvoi();
+    const suivi = this.presentateur() ? VIDE : this.suiviDeLEnvoi();
     return safeHtml`
       <fieldset class="fp-carte fp-recall__billet">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
@@ -153,13 +152,12 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
       champ.disabled = verrouille;
       champ.addEventListener('input', () => {
         this.rappel = champ.value;
-        this.signalerBrouillon(this.interne?.id ?? '', { rappel: champ.value });
+        this.signalerLeBrouillon({ rappel: champ.value });
       });
     }
-    for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
-      bouton.disabled = verrouille;
-      bouton.addEventListener('click', () => this.choisir(bouton.dataset['option'] ?? ''));
-    }
+    this.brancherLesBoutons(racine, '[data-option]', verrouille, ({ dataset }) =>
+      this.choisir(dataset['option'] ?? ''),
+    );
   }
 
   protected effacerLaSaisie(): void {
@@ -172,7 +170,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   }
 
   private restantMs(): number {
-    return this.interneOptionsAffichees ? 0 : Math.max(0, this.delaiMs - this.depuisAffichage());
+    return this.interneOptionsAffichees ? 0 : this.restantDepuisAffichage(this.delaiMs);
   }
 
   private annonce(): string {
@@ -190,30 +188,16 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
   private optionsVisibles(): EscapedHtml {
     const question = this.question;
     if (question === null || this.restantMs() > 0) {
-      return escapeHtml('');
+      return VIDE;
     }
-    const options = [
-      ...question.options,
-      { id: ID_JE_NE_SAIS_PAS, libelle: this.texte('je-ne-sais-pas') },
-    ];
     const proposees = this.presentateur()
-      ? options.filter((option) => option.id !== ID_JE_NE_SAIS_PAS)
-      : options;
+      ? question.options
+      : avecJeNeSaisPas(question.options, this.texte('je-ne-sais-pas'));
     const boutons = proposees.map(
       (option) =>
-        safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}" aria-pressed="${escapeHtml(String(option.id === this.choisie))}"${this.marqueDeCorrection(option.id)} ${this.presentateur() ? DESACTIVE : VIDE}>${escapeHtml(option.libelle)}</button>`,
+        safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}" aria-pressed="${escapeHtml(String(option.id === this.choisie))}"${marqueDOption(option.id, this.bonneOption, option.id === this.choisie)} ${this.presentateur() ? DESACTIVE : VIDE}>${escapeHtml(option.libelle)}</button>`,
     );
     return safeHtml`<div class="fp-recall__options" data-testid="options">${boutons}</div>`;
-  }
-
-  private marqueDeCorrection(id: string): EscapedHtml {
-    if (this.bonneOption === null) {
-      return escapeHtml('');
-    }
-    if (id === this.bonneOption) {
-      return safeHtml` data-correction="juste"`;
-    }
-    return id === this.choisie ? safeHtml` data-correction="fausse"` : escapeHtml('');
   }
 
   private planifier(): void {

@@ -38,6 +38,21 @@ describe('correctionsAffichees', () => {
     ).toEqual([]);
   });
 
+  it('met chaque bonne réponse du bandeau sous l énoncé servi de sa question, sur tous les cours servis', () => {
+    const lignes = INSTANTANES_DES_COURS_SERVIS.flatMap(([prefixe, instantane]) =>
+      ecransDuPupitreDe(instantane).flatMap((ecran) => {
+        const enonces = new Map(ecran.questions.map(({ id, enonce }) => [id, enonce]));
+        return correctionsAffichees(ecran).map(({ enonce }, rang) => ({
+          ligne: `${prefixe} ${ecran.id} ${ecran.corriges[rang].questionId}`,
+          juste: enonce !== '' && enonce === enonces.get(ecran.corriges[rang].questionId),
+        }));
+      }),
+    );
+
+    expect(lignes.length).toBeGreaterThan(0);
+    expect(lignes.filter(({ juste }) => !juste).map(({ ligne }) => ligne)).toEqual([]);
+  });
+
   it('D-05 · projette chaque bonne réponse servie par les cours telle que le back l écrit', () => {
     const corriges = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
       ecransDuPupitreDe(instantane).flatMap((ecran) => ecran.corriges),

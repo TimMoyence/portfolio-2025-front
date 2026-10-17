@@ -1,3 +1,4 @@
+import { noeudOmbre, racineOmbre, roleAffiche } from './banc-de-brique';
 import { ROLES_DE_MONTAGE } from './briques-montees';
 import { classesEmises, classesOrphelines } from './classes-briques';
 import type { TracesEffets } from './effets-briques';
@@ -16,7 +17,8 @@ export function parcourirLesRolesSansEffet(hote: HTMLElement, traces: TracesEffe
 
 export function attendreSansModaliteNiDuree(
   hote: HTMLElement,
-  repere: (nom: 'modalite' | 'duree') => Element | null | undefined,
+  repere: (nom: 'modalite' | 'duree') => Element | null | undefined = (nom) =>
+    noeudOmbre(hote, nom),
 ): void {
   for (const role of ROLES_DE_MONTAGE) {
     hote.setAttribute('data-cours-role', role);
@@ -42,17 +44,14 @@ export function attendreLaCorrectionNicheeEffacee<T extends { metadonnees: objec
   expect(JSON.stringify(poser(contamine))).not.toContain('bonneReponse');
 }
 
-export function attendreLaMemeTypographieAuPresentateur(
-  hote: HTMLElement,
-  enonce: () => Element | null | undefined,
-): void {
-  const racine = (): Element | null | undefined => hote.shadowRoot?.querySelector('.fp-root');
-  const etudiant = racine()?.innerHTML;
+export function attendreLaMemeTypographieAuPresentateur(hote: HTMLElement, repere: string): void {
+  const enonce = (): Element | null => noeudOmbre(hote, repere);
+  const etudiant = racineOmbre(hote)?.innerHTML;
   expect(enonce()?.classList.contains('fp-enonce')).toBe(true);
   hote.setAttribute('data-cours-role', 'presentateur');
   expect(enonce()?.classList.contains('fp-enonce')).toBe(true);
-  expect(racine()?.getAttribute('data-role')).toBe('presentateur');
-  expect(racine()?.innerHTML).toBe(etudiant);
+  expect(roleAffiche(hote)).toBe('presentateur');
+  expect(racineOmbre(hote)?.innerHTML).toBe(etudiant);
 }
 
 export function attendreUneRegionLive(hote: HTMLElement): void {

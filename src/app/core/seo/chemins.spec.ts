@@ -1,7 +1,7 @@
 import {
   buildLocalizedPath,
   cheminEnLocale,
-  estAliasDAccueil,
+  estCheminInterne,
   normalizePath,
   routeSansLocale,
   urlAbsolue,
@@ -129,12 +129,34 @@ describe('chemins', () => {
     });
   });
 
-  describe('estAliasDAccueil', () => {
-    it('reconnait / et /home, et rien d autre', () => {
-      expect(estAliasDAccueil('/')).toBeTrue();
-      expect(estAliasDAccueil('/home')).toBeTrue();
-      expect(estAliasDAccueil('/homepage')).toBeFalse();
-      expect(estAliasDAccueil('/fr/')).toBeFalse();
+  describe('estCheminInterne', () => {
+    it('reconnait un chemin de même origine', () => {
+      for (const chemin of ['/', '/profil', '/fr/cours/rejoindre?code=AB12#haut']) {
+        expect(estCheminInterne(chemin)).withContext(chemin).toBeTrue();
+      }
+    });
+
+    it('refuse ce qu un navigateur lit comme une autre origine', () => {
+      for (const chemin of [
+        '//evil.example',
+        '/\\evil.example',
+        '/\t/evil.example',
+        '/\n/evil.example',
+        '/\r/evil.example',
+        'https://evil.example/x',
+        'javascript:alert(1)',
+        'profil',
+        ' /profil',
+        '',
+      ]) {
+        expect(estCheminInterne(chemin)).withContext(JSON.stringify(chemin)).toBeFalse();
+      }
+    });
+
+    it('refuse un chemin porteur d un espace ou d un caractère de contrôle', () => {
+      for (const chemin of ['/a b', '/a\u0000b', '/a\u007fb']) {
+        expect(estCheminInterne(chemin)).withContext(JSON.stringify(chemin)).toBeFalse();
+      }
     });
   });
 });

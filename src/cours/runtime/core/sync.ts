@@ -1,18 +1,30 @@
-import type {
-  ComptesJalon,
-  ConfusionComptee,
-  FreeRange,
-  PacingMode,
-  PilotageEcran,
-  ProgressionEnigme,
-  ResultatQuestion,
-  ResultatsSeance,
-  ResumeBareme,
+import { z } from 'zod';
+import {
+  PACING_MODES,
+  PHASES_DE_VOTE,
+  type ComptesJalon,
+  type FreeRange,
+  type PacingMode,
+  type PilotageEcran,
+  type ProgressionEnigme,
+  type ResultatsSeance,
+  type ResumeBareme,
+  type StatistiquesSeance,
 } from '../../content/types';
-import { PACING_MODES, PHASES_DE_VOTE, TYPES_QUESTION } from 'portfolio-2025-partage/contrats';
+import { urlDeLaSeance } from './adresse-de-seance';
 import { abonner, diffuserA } from './ecoutes';
 import { ENTETE_JETON_PARTICIPANT } from './jeton-participant';
-import { estEntierPositif, estObjet, jsonOuNull } from './valeurs';
+import {
+  comptesJalon,
+  entierPositif,
+  progressionEnigme,
+  resultatServi,
+  resumeBareme,
+  sortiesDeMachine,
+  statistiquesServies,
+  valeursParCle,
+} from './schemas-communs';
+import { jsonOuNull } from './valeurs';
 
 export type StatutSession = 'attente' | 'en_cours' | 'terminee';
 
@@ -24,34 +36,8 @@ export interface EtatSession {
   participants: number;
   revision: number;
   pilotage: Readonly<Record<string, PilotageEcran>>;
+  majLe: string;
 }
-
-type ChampsV3DeLEtat = Pick<EtatSession, 'revision' | 'pilotage'>;
-
-type EtatRecu = Omit<EtatSession, keyof ChampsV3DeLEtat> & Partial<ChampsV3DeLEtat>;
-
-type ChampsV3DuResultat = Pick<
-  ResultatQuestion,
-  'ecranId' | 'type' | 'noteCompte' | 'parOption' | 'scoreMoyen' | 'parCle'
->;
-
-type ResultatRecu = Omit<ResultatQuestion, keyof ChampsV3DuResultat> & Partial<ChampsV3DuResultat>;
-
-type ResultatsRecus = Omit<ResultatsSeance, 'questions'> &
-  Partial<Pick<ResultatsDuFlux, 'jalons' | 'enigmes' | 'bareme'>> & {
-    readonly questions: readonly ResultatRecu[];
-  };
-
-const ETAT_SERVI_PAR_UN_SERVEUR_V2: ChampsV3DeLEtat = { revision: 0, pilotage: {} };
-
-const RESULTAT_SERVI_PAR_UN_SERVEUR_V2: ChampsV3DuResultat = {
-  ecranId: '',
-  type: 'vote',
-  noteCompte: true,
-  parOption: null,
-  scoreMoyen: null,
-  parCle: null,
-};
 
 export type StatutFlux =
   | { readonly etat: 'connecte' }
@@ -59,9 +45,10 @@ export type StatutFlux =
   | { readonly etat: 'refuse'; readonly statut: number };
 
 export interface ResultatsDuFlux extends ResultatsSeance {
+  readonly statistiques: StatistiquesSeance;
   readonly jalons: Readonly<Record<string, ComptesJalon>>;
   readonly enigmes: readonly ProgressionEnigme[];
-  readonly bareme: ResumeBareme | null;
+  readonly bareme: ResumeBareme;
 }
 
 export type RaisonDeFin = 'cloturee' | 'introuvable' | 'expiree' | 'evince' | 'revoque';
@@ -75,12 +62,15 @@ export type OuvertureFlux = (url: string, entetes: Record<string, string>) => Pr
 
 export type CheminFlux = 'stream' | 'presenter-stream';
 
+export type IssueDuRenouvellement = 'reussi' | 'refuse' | 'injoignable';
+
 export interface SyncOptions {
   baseUrl: string;
   sessionId: string;
   jeton?: string;
   chemin?: CheminFlux;
   entetes?: () => Readonly<Record<string, string>>;
+  preparerLaSession?: (forcer: boolean) => Promise<IssueDuRenouvellement>;
   ouvrirFlux?: OuvertureFlux;
 }
 
@@ -123,181 +113,68 @@ const EVENEMENT_FIN = 'fin';
 const EVENEMENT_RESULTATS = 'resultats';
 const CHEMIN_PAR_DEFAUT: CheminFlux = 'stream';
 const FLUX_REFUSE = "Le serveur a refusé l'ouverture du flux de séance";
+const FLUX_ABANDONNE = 'Ouverture du flux abandonnée pendant la préparation de la session';
+const SESSION_INJOIGNABLE = 'Session du compte injoignable avant l ouverture du flux';
 
-const STATUTS_VALIDES: readonly StatutSession[] = ['attente', 'en_cours', 'terminee'];
+const STATUTS_VALIDES = [
+  'attente',
+  'en_cours',
+  'terminee',
+] as const satisfies readonly StatutSession[];
 
-function estMembre<T extends string>(valeurs: readonly T[], valeur: unknown): valeur is T {
-  return typeof valeur === 'string' && (valeurs as readonly string[]).includes(valeur);
-}
+const pilotageServi = z
+  .object({
+    phase: z.enum(PHASES_DE_VOTE).optional(),
+    revele: z.boolean().optional(),
+    etayage: entierPositif.optional(),
+    etayageAtteint: entierPositif.optional(),
+    explicationsDevoilees: entierPositif.optional(),
+    reglages: valeursParCle.optional(),
+    resultatsProjetes: z.boolean().optional(),
+    optionsAffichees: z.boolean().optional(),
+    sortiesProjetees: sortiesDeMachine.optional(),
+    questionAffichee: z.string().optional(),
+    questionOuverte: z.string().nullable().optional(),
+  })
+  .strict();
 
-function absentOu(valeur: unknown, estValide: (valeur: unknown) => boolean): boolean {
-  return valeur === undefined || estValide(valeur);
-}
+export const etatServi: z.ZodType<EtatSession> = z
+  .object({
+    etat: z.enum(STATUTS_VALIDES),
+    modeRythme: z.enum(PACING_MODES),
+    ecranCourant: z.number(),
+    intervalleLibre: z.object({ premier: z.number(), dernier: z.number() }).strict().nullable(),
+    participants: z.number(),
+    revision: entierPositif,
+    pilotage: z.record(z.string(), pilotageServi),
+    majLe: z.iso.datetime(),
+  })
+  .strict();
 
-function nulOu(valeur: unknown, estValide: (valeur: unknown) => boolean): boolean {
-  return valeur === null || estValide(valeur);
-}
+export const resultatsServis: z.ZodType<ResultatsDuFlux> = z
+  .object({
+    participants: z.number(),
+    questions: z.array(resultatServi),
+    statistiques: statistiquesServies,
+    jalons: z.record(z.string(), comptesJalon),
+    enigmes: z.array(progressionEnigme),
+    bareme: resumeBareme,
+  })
+  .strict();
 
-function estNombre(valeur: unknown): boolean {
-  return typeof valeur === 'number';
-}
-
-function estPilotageEcran(valeur: unknown): boolean {
-  return (
-    estObjet(valeur) &&
-    absentOu(valeur['phase'], (phase) => estMembre(PHASES_DE_VOTE, phase)) &&
-    absentOu(valeur['revele'], (revele) => typeof revele === 'boolean') &&
-    absentOu(valeur['etayage'], estEntierPositif) &&
-    absentOu(valeur['etayageAtteint'], estEntierPositif) &&
-    absentOu(valeur['explicationsDevoilees'], estEntierPositif)
-  );
-}
-
-function estPilotage(valeur: unknown): boolean {
-  return estObjet(valeur) && Object.values(valeur).every(estPilotageEcran);
-}
-
-function estComptesParCle(valeur: unknown): boolean {
-  return (
-    estObjet(valeur) &&
-    Object.values(valeur).every(
-      (compte) => estObjet(compte) && estNombre(compte['total']) && estNombre(compte['justes']),
-    )
-  );
-}
-
-function estComptesParOption(valeur: unknown): boolean {
-  return estObjet(valeur) && Object.values(valeur).every(estNombre);
-}
-
-function estFreeRange(valeur: unknown): valeur is FreeRange {
-  return estObjet(valeur) && estNombre(valeur['premier']) && estNombre(valeur['dernier']);
-}
-
-function estEtatSession(valeur: unknown): valeur is EtatRecu {
-  return (
-    estObjet(valeur) &&
-    estMembre(STATUTS_VALIDES, valeur['etat']) &&
-    estMembre(PACING_MODES, valeur['modeRythme']) &&
-    estNombre(valeur['ecranCourant']) &&
-    estNombre(valeur['participants']) &&
-    nulOu(valeur['intervalleLibre'], estFreeRange) &&
-    absentOu(valeur['revision'], estEntierPositif) &&
-    absentOu(valeur['pilotage'], estPilotage)
-  );
-}
-
-function completerEtat(recu: EtatRecu): EtatSession {
-  return { ...ETAT_SERVI_PAR_UN_SERVEUR_V2, ...recu };
-}
-
-function estConfusionComptee(valeur: unknown): valeur is ConfusionComptee {
-  return (
-    estObjet(valeur) &&
-    typeof valeur['id'] === 'string' &&
-    typeof valeur['libelle'] === 'string' &&
-    estNombre(valeur['nombre'])
-  );
-}
-
-function aDesChampsV3Valides(candidat: Record<string, unknown>): boolean {
-  return (
-    absentOu(candidat['ecranId'], (ecranId) => typeof ecranId === 'string') &&
-    absentOu(candidat['type'], (type) => estMembre(TYPES_QUESTION, type)) &&
-    absentOu(candidat['noteCompte'], (noteCompte) => typeof noteCompte === 'boolean') &&
-    absentOu(candidat['parOption'], (parOption) => nulOu(parOption, estComptesParOption)) &&
-    absentOu(candidat['scoreMoyen'], (scoreMoyen) => nulOu(scoreMoyen, estNombre)) &&
-    absentOu(candidat['parCle'], (parCle) => nulOu(parCle, estComptesParCle))
-  );
-}
-
-function estResultatQuestion(valeur: unknown): valeur is ResultatRecu {
-  return (
-    estObjet(valeur) &&
-    typeof valeur['questionId'] === 'string' &&
-    estNombre(valeur['total']) &&
-    estNombre(valeur['correctes']) &&
-    estNombre(valeur['neSaitPas']) &&
-    Array.isArray(valeur['confusions']) &&
-    valeur['confusions'].every(estConfusionComptee) &&
-    aDesChampsV3Valides(valeur)
-  );
-}
-
-function estComptesJalon(valeur: unknown): valeur is ComptesJalon {
-  return (
-    estObjet(valeur) &&
-    estNombre(valeur['perdu']) &&
-    estNombre(valeur['ca-va']) &&
-    estNombre(valeur['clair']) &&
-    estNombre(valeur['total'])
-  );
-}
-
-function estProgressionEnigme(valeur: unknown): valeur is ProgressionEnigme {
-  return (
-    estObjet(valeur) &&
-    typeof valeur['parcoursId'] === 'string' &&
-    typeof valeur['enigmeId'] === 'string' &&
-    ['ouvertes', 'resolues', 'tentativesMoyennes', 'epuisees'].every((cle) =>
-      estNombre(valeur[cle]),
-    )
-  );
-}
-
-function estResumeBareme(valeur: unknown): valeur is ResumeBareme {
-  return estObjet(valeur) && estNombre(valeur['questionsNotees']) && estObjet(valeur['parType']);
-}
-
-function aDesChampsEnDirectValides(candidat: Record<string, unknown>): boolean {
-  return (
-    absentOu(
-      candidat['jalons'],
-      (jalons) => estObjet(jalons) && Object.values(jalons).every(estComptesJalon),
-    ) &&
-    absentOu(
-      candidat['enigmes'],
-      (enigmes) => Array.isArray(enigmes) && enigmes.every(estProgressionEnigme),
-    ) &&
-    absentOu(candidat['bareme'], (bareme) => nulOu(bareme, estResumeBareme))
-  );
-}
-
-function estResultatsSeance(valeur: unknown): valeur is ResultatsRecus {
-  return (
-    estObjet(valeur) &&
-    estNombre(valeur['participants']) &&
-    Array.isArray(valeur['questions']) &&
-    valeur['questions'].every(estResultatQuestion) &&
-    aDesChampsEnDirectValides(valeur)
-  );
-}
-
-function completerResultats(recus: ResultatsRecus): ResultatsDuFlux {
-  return {
-    jalons: {},
-    enigmes: [],
-    bareme: null,
-    ...recus,
-    questions: recus.questions.map((question) => ({
-      ...RESULTAT_SERVI_PAR_UN_SERVEUR_V2,
-      ...question,
-    })),
-  };
-}
-
-const RAISONS_DE_FIN: readonly RaisonDeFin[] = [
+const RAISONS_DE_FIN = [
   'cloturee',
   'introuvable',
   'expiree',
   'evince',
   'revoque',
-];
+] as const satisfies readonly RaisonDeFin[];
 
-function lireRaisonDeFin(donnees: string): RaisonDeFin | null {
-  const charge = jsonOuNull(donnees);
-  const raison = estObjet(charge) ? charge['raison'] : null;
-  return estMembre(RAISONS_DE_FIN, raison) ? raison : null;
+export const finServie = z.object({ raison: z.enum(RAISONS_DE_FIN) }).strict();
+
+function lireLeFlux<T>(schema: z.ZodType<T>, donnees: string): T | null {
+  const lu = schema.safeParse(jsonOuNull(donnees));
+  return lu.success ? lu.data : null;
 }
 
 export interface EvenementFlux {
@@ -360,6 +237,7 @@ function ouvertureNative(courant: () => AbortController | null): OuvertureFlux |
 }
 
 const REFUS_SANS_RELANCE: readonly number[] = [401, 403];
+const STATUT_JETON_REFUSE = 401;
 const STATUT_SATURATION = 429;
 
 export type MotifDuRefus = 'session' | 'saturation' | 'autre';
@@ -388,6 +266,7 @@ interface Tentative {
   garde: ReturnType<typeof setTimeout> | null;
   refusee: boolean;
   definitive: boolean;
+  renouvelable: boolean;
 }
 
 function desarmerLaGarde(tentative: Tentative): void {
@@ -423,12 +302,13 @@ export function createSync(options: SyncOptions): Sync {
   let relanceId: ReturnType<typeof setTimeout> | null = null;
   let dernierSigne = 0;
   let refusDefinitif = false;
+  let renouvellement: 'permis' | 'a-faire' | 'fait' = 'permis';
   let arreterLeReveil: (() => void) | null = null;
 
   const ouvrirFlux = options.ouvrirFlux ?? ouvertureNative(() => tentative?.controleur ?? null);
 
   const urlFlux = (): string =>
-    `${options.baseUrl}/sessions/${encodeURIComponent(options.sessionId)}/${options.chemin ?? CHEMIN_PAR_DEFAUT}`;
+    `${urlDeLaSeance(options.baseUrl, options.sessionId)}/${options.chemin ?? CHEMIN_PAR_DEFAUT}`;
 
   const entetes = (): Record<string, string> => {
     const valeurs: Record<string, string> = { accept: TYPE_FLUX };
@@ -479,21 +359,21 @@ export function createSync(options: SyncOptions): Sync {
     }
     if (evenement.nom === EVENEMENT_FIN) {
       terminer();
-      diffuserA(ecoutesFin, lireRaisonDeFin(evenement.donnees));
+      diffuserA(ecoutesFin, lireLeFlux(finServie, evenement.donnees)?.raison ?? null);
       return;
     }
     if (evenement.nom === EVENEMENT_RESULTATS) {
-      const resultats = jsonOuNull(evenement.donnees);
-      if (estResultatsSeance(resultats)) {
-        diffuserA(ecoutesResultats, completerResultats(resultats));
+      const resultats = lireLeFlux(resultatsServis, evenement.donnees);
+      if (resultats !== null) {
+        diffuserA(ecoutesResultats, resultats);
       }
       return;
     }
-    const charge = jsonOuNull(evenement.donnees);
-    if (!estEtatSession(charge)) {
+    const etat = lireLeFlux(etatServi, evenement.donnees);
+    if (etat === null) {
       return;
     }
-    etatCourant = completerEtat(charge);
+    etatCourant = etat;
     diffuserA(ecoutes, etatCourant);
   };
 
@@ -518,17 +398,29 @@ export function createSync(options: SyncOptions): Sync {
     }
   };
 
+  const refuser = (propre: Tentative, statutDuRefus: number): Error => {
+    propre.refusee = true;
+    propre.renouvelable =
+      statutDuRefus === STATUT_JETON_REFUSE &&
+      renouvellement === 'permis' &&
+      options.preparerLaSession !== undefined;
+    propre.definitive = !propre.renouvelable && motifDuRefus(statutDuRefus) === 'session';
+    const statut: StatutFlux = propre.renouvelable
+      ? { etat: 'reconnexion' }
+      : { etat: 'refuse', statut: statutDuRefus };
+    diffuserA(ecoutesStatut, statut);
+    return new Error(FLUX_REFUSE);
+  };
+
   const lireFlux = async (propre: Tentative, promesse: Promise<Response>): Promise<void> => {
     const reponse = await promesse;
     if (tentative !== propre) {
       return;
     }
     if (!reponse.ok) {
-      propre.refusee = true;
-      propre.definitive = motifDuRefus(reponse.status) === 'session';
-      diffuserA(ecoutesStatut, { etat: 'refuse', statut: reponse.status });
-      throw new Error(FLUX_REFUSE);
+      throw refuser(propre, reponse.status);
     }
+    renouvellement = 'permis';
     delai = DELAI_INITIAL_MS;
     dernierSigne = Date.now();
     rearmerLaGarde(propre);
@@ -548,10 +440,44 @@ export function createSync(options: SyncOptions): Sync {
         diffuserA(ecoutesStatut, { etat: 'reconnexion' });
       }
       refusDefinitif = propre.definitive;
-      if (!propre.definitive) {
+      if (propre.renouvelable) {
+        renouvellement = 'a-faire';
+        tenterOuverture();
+      } else if (!propre.definitive) {
         planifierRelance();
       }
     }
+  };
+
+  const ouvrirApresLaSession = (
+    propre: Tentative,
+    ouvrir: OuvertureFlux,
+    issue: IssueDuRenouvellement,
+  ): Promise<Response> => {
+    if (tentative !== propre || propre.controleur.signal.aborted) {
+      throw new Error(FLUX_ABANDONNE);
+    }
+    if (issue === 'refuse') {
+      renouvellement = 'fait';
+      throw refuser(propre, STATUT_JETON_REFUSE);
+    }
+    if (issue === 'injoignable') {
+      throw new Error(SESSION_INJOIGNABLE);
+    }
+    if (renouvellement === 'a-faire') {
+      renouvellement = 'fait';
+    }
+    return ouvrir(urlFlux(), entetes());
+  };
+
+  const ouvrirLaTentative = (propre: Tentative, ouvrir: OuvertureFlux): Promise<Response> => {
+    const preparer = options.preparerLaSession;
+    if (preparer === undefined) {
+      return ouvrir(urlFlux(), entetes());
+    }
+    return preparer(renouvellement === 'a-faire').then((issue) =>
+      ouvrirApresLaSession(propre, ouvrir, issue),
+    );
   };
 
   const tenterOuverture = (): void => {
@@ -564,10 +490,11 @@ export function createSync(options: SyncOptions): Sync {
       garde: null,
       refusee: false,
       definitive: false,
+      renouvelable: false,
     };
     tentative = propre;
     rearmerLaGarde(propre);
-    void suivre(propre, ouvrirFlux(urlFlux(), entetes()));
+    void suivre(propre, ouvrirLaTentative(propre, ouvrirFlux));
   };
 
   const reveiller = (): void => {
@@ -585,6 +512,7 @@ export function createSync(options: SyncOptions): Sync {
     delai = DELAI_INITIAL_MS;
     ferme = false;
     refusDefinitif = false;
+    renouvellement = 'permis';
     arreterLeReveil ??= ecouterLeReveil(reveiller);
     tenterOuverture();
   };

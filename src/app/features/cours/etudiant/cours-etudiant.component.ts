@@ -6,19 +6,19 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom, map } from 'rxjs';
-import { REGIMES_DE_VERROU } from 'portfolio-2025-partage/contrats';
-import type {
-  CoursContent,
-  EcranContent,
-  EtatParticipant,
-  EtatPulse,
-  PacingMode,
-  PilotageEcran,
-  RegimeVerrou,
-  ValeurProduction,
+import {
+  REGIMES_DE_VERROU,
+  type CoursContent,
+  type EcranContent,
+  type EtatParticipant,
+  type EtatPulse,
+  type PacingMode,
+  type PilotageEcran,
+  type RegimeVerrou,
+  type ValeurProduction,
 } from '../../../../cours/content/types';
 import type { Deck } from '../../../../cours/runtime/core/deck';
 import { createDeck } from '../../../../cours/runtime/core/deck';
@@ -49,7 +49,9 @@ import {
   type StatutSession,
   type Sync,
 } from '../../../../cours/runtime/core/sync';
-import { estObjet } from '../../../../cours/runtime/core/valeurs';
+import { bornerEntre, estMembre, estObjet, objet } from '../../../../cours/runtime/core/valeurs';
+import { dureeMonotoneDepuis, instantMonotone } from '../../../../cours/runtime/core/duree';
+import { cheminDuPupitre } from '../../../core/config/cours-en-seance';
 import { getApiFormationsUrl } from '../../../core/http/api-config';
 import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
 import type {
@@ -65,6 +67,7 @@ import type {
 } from '../../../core/ports/formations.port';
 import {
   FORMATIONS_PORT,
+  limiteDuRefus,
   RattachementRefuse,
   ReponseRefusee,
   SujetRefuse,
@@ -82,22 +85,33 @@ import {
 } from '../../../core/adapters/retours-brique';
 import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import {
+  ecranAuRang,
+  ecranDIdentifiant,
   ecranDuRappel,
   ecransDesIdentifiants,
+  identifiantPorte,
   identifiantsDesQuestions,
 } from '../../../shared/slides/session/lecture-ecran';
 import { memeValeur } from '../../../shared/slides/session/reinjection';
+import type { LimiteDeDebit } from '../../../core/models/limite-de-debit';
 import type { EtatEnvoiLibre } from '../../../shared/slides/session/reponses-libres.service';
-import { ReponsesLibresService } from '../../../shared/slides/session/reponses-libres.service';
+import {
+  cleDeReponseLibre,
+  ReponsesLibresService,
+} from '../../../shared/slides/session/reponses-libres.service';
 import {
   CoursPresentationComponent,
   type TelechargementDePieceJointe,
 } from '../../../shared/slides/session/cours-presentation.component';
-import { aUnePresentation, objet } from '../../../shared/slides/visual/presentation-v2';
+import { aUnePresentation, presentationDe } from '../../../shared/slides/visual/presentation-v2';
 import { CREATEUR_FLUX } from '../cours-flux.token';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
+import { suivreLaDestruction } from '../lecture-suivie';
 
 type EtatEtudiant = 'code' | 'rattachement' | 'chargement' | 'sujet-refuse' | 'seance';
+
+type VueDeSeance =
+  'evince' | 'libere' | 'terminee' | 'echec-ecran' | 'refus' | 'attente' | 'chargement' | 'ecran';
 
 type MotifEchec = MotifRefusRattachement | 'code-invalide' | 'identite-refusee';
 
@@ -120,7 +134,7 @@ interface Envoi {
   readonly dureeMs: number;
 }
 
-type IssueDeLEnvoi = 'transmise' | 'en-panne';
+type IssueDeLEnvoi = 'transmise' | { readonly limitee: boolean };
 
 interface VerdictRecu {
   readonly reussite: boolean;
@@ -139,17 +153,23 @@ interface VerdictAffiche extends VerdictRecu {
 
 const SLUG_DE_COURS = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-const ETATS_LIBRES_EN_ATTENTE: readonly EtatEnvoiLibre[] = ['attente_reseau', 'ecran_non_servi'];
+const ETATS_LIBRES_EN_ATTENTE: readonly EtatEnvoiLibre[] = [
+  'attente_reseau',
+  'attente_limite',
+  'ecran_non_servi',
+];
 
 const MESSAGE_CODE = $localize`:cours.codeInvalide|@@coursCodeInvalide:Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.`;
 const MESSAGE_IDENTITE = $localize`:cours.identiteRefusee|@@coursIdentiteRefusee:Vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez.`;
 const MESSAGE_ECHEC = $localize`:cours.rattachementEchec|@@coursRattachementEchec:Le rattachement à la séance a échoué. Prévenez votre formateur.`;
 const MESSAGE_ECRAN_INDISPONIBLE = $localize`:cours.ecranIndisponible|@@coursEcranIndisponible:L’écran n’est pas encore disponible pour cette séance.`;
 const MESSAGE_ECRAN_ECHEC = $localize`:cours.ecranChargementEchec|@@coursEcranChargementEchec:L’écran n’a pas pu être chargé.`;
+const MESSAGE_ECRAN_LIMITE = $localize`:cours.ecranLimite|@@coursEcranLimite:L’écran n’a pas encore pu être chargé : le serveur limite les demandes, il s’affichera de lui-même.`;
 
 const MOTIF_CODE = /^\d{4}$/;
 const ESPACES = /\s+/g;
 const DELAI_MINIMUM_FORMULAIRE_MS = 1_200;
+const UNE_MINUTE_MS = 60_000;
 const BRIQUE_DE_RAPPEL = 'fp-spaced';
 const BRIQUE_DE_DEFI = 'fp-challenge';
 const MOTIFS_DE_RESYNCHRONISATION: readonly MotifRefusReponse[] = [
@@ -165,6 +185,16 @@ function normaliserCode(saisi: string): string | null {
 function lireRefus(erreur: unknown): RefusAffiche {
   const refus = erreur instanceof SujetRefuse ? erreur : new SujetRefuse('sujet-indisponible', 0);
   return { motif: refus.motif, message: refus.message };
+}
+
+function echecDeLaRelecture(erreur: unknown): RefusAffiche {
+  const refus = lireRefus(erreur);
+  if (limiteDuRefus(erreur) !== null) {
+    return { motif: refus.motif, message: MESSAGE_ECRAN_LIMITE };
+  }
+  return refus.motif === 'sujet-indisponible'
+    ? { motif: refus.motif, message: MESSAGE_ECRAN_ECHEC }
+    : refus;
 }
 
 function refusDe(erreur: unknown): ReponseRefusee {
@@ -183,10 +213,8 @@ function doitSuivreLeFormateur(index: number, etat: EtatSession, bascule: boolea
 }
 
 function regimeDuContenu(contenu: unknown): RegimeVerrou | null {
-  const regime = estObjet(contenu) ? contenu['regime'] : undefined;
-  return typeof regime === 'string' && REGIMES_DE_VERROU.includes(regime as RegimeVerrou)
-    ? (regime as RegimeVerrou)
-    : null;
+  const regime = objet(contenu)?.['regime'];
+  return estMembre(REGIMES_DE_VERROU, regime) ? regime : null;
 }
 
 function regimeDeLEcran(ecran: EcranContent): RegimeVerrou {
@@ -304,35 +332,39 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
                 </button>
               </header>
             }
-            @if (evince()) {
-              <p data-testid="etudiant-evince" role="alert" i18n="cours.evince|@@coursEvince">
-                Votre formateur vous a retiré de la séance. S’il vous y réadmet, rejoignez-la à
-                nouveau avec le même code depuis ce poste.
-              </p>
-            } @else if (posteLibere()) {
-              <p
-                data-testid="etudiant-poste-libere"
-                role="alert"
-                i18n="cours.posteLibere|@@coursPosteLibere"
-              >
-                Votre formateur a libéré cette place pour un autre poste : ce poste ne suit plus la
-                séance.
-              </p>
-            } @else if (terminee()) {
-              <p
-                class="student-session__fin"
-                data-testid="etudiant-fin"
-                role="status"
-                i18n="cours.fin|@@coursFin"
-              >
-                La séance est terminée. Merci de votre participation.
-              </p>
-            } @else {
-              @if (echecEcran(); as echec) {
-                <p data-testid="etudiant-ecran-echec" role="alert">
-                  {{ echec.message }}
+            @switch (vueDeSeance()) {
+              @case ('evince') {
+                <p data-testid="etudiant-evince" role="alert" i18n="cours.evince|@@coursEvince">
+                  Votre formateur vous a retiré de la séance. S’il vous y réadmet, rejoignez-la à
+                  nouveau avec le même code depuis ce poste.
                 </p>
-              } @else {
+              }
+              @case ('libere') {
+                <p
+                  data-testid="etudiant-poste-libere"
+                  role="alert"
+                  i18n="cours.posteLibere|@@coursPosteLibere"
+                >
+                  Votre formateur a libéré cette place pour un autre poste : ce poste ne suit plus
+                  la séance.
+                </p>
+              }
+              @case ('terminee') {
+                <p
+                  class="student-session__fin"
+                  data-testid="etudiant-fin"
+                  role="status"
+                  i18n="cours.fin|@@coursFin"
+                >
+                  La séance est terminée. Merci de votre participation.
+                </p>
+              }
+              @case ('echec-ecran') {
+                <p data-testid="etudiant-ecran-echec" role="alert">
+                  {{ echecEcran()?.message }}
+                </p>
+              }
+              @case ('refus') {
                 @if (refusDuFlux(); as refus) {
                   @if (accesPerdu()) {
                     <p
@@ -346,79 +378,95 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
                       Attendre ne le rétablira pas : redemandez le code à votre formateur et
                       recommencez à rejoindre la séance.
                     </p>
+                  } @else if (refus.motif === 'saturation') {
+                    <p
+                      class="student-status"
+                      data-testid="etudiant-flux-refuse"
+                      role="alert"
+                      [attr.data-statut]="refus.statut"
+                      [attr.data-motif]="refus.motif"
+                      i18n="cours.fluxSature|@@coursFluxSature"
+                    >
+                      Le suivi en direct est momentanément saturé (statut {{ refus.statut }}) : il
+                      reprendra de lui-même, sans rien à faire de votre côté.
+                    </p>
                   } @else {
                     <p
                       class="student-status"
                       data-testid="etudiant-flux-refuse"
                       role="alert"
                       [attr.data-statut]="refus.statut"
+                      [attr.data-motif]="refus.motif"
                       i18n="cours.fluxRefuse|@@coursFluxRefuse"
                     >
                       Le suivi en direct a été refusé par le serveur (statut {{ refus.statut }}).
                       Les activités réapparaîtront dès que la connexion sera rétablie.
                     </p>
                   }
-                } @else if (statutSeance() !== 'en_cours') {
-                  <p
-                    class="student-status"
-                    data-testid="etudiant-attente"
-                    role="status"
-                    i18n="cours.attenteDemarrage|@@coursAttenteDemarrage"
-                  >
-                    La séance n’a pas encore démarré : le premier écran s’affichera dès que votre
-                    formateur la lancera.
-                  </p>
-                } @else if (chargementEcran()) {
-                  <p
-                    class="student-status"
-                    data-testid="etudiant-ecran-chargement"
-                    role="status"
-                    i18n="cours.chargementEcran|@@coursChargementEcran"
-                  >
-                    Chargement de l’écran…
-                  </p>
-                } @else {
-                  @if (ecranCourant(); as ecran) {
-                    <div class="student-session__cadre">
-                      <app-cours-presentation
-                        mode="etudiant"
-                        [slide]="ecran"
-                        [renvoi]="ecranRenvoye()"
-                        [sessionId]="sessionId()"
-                        [jeton]="jeton()"
-                        [retours]="retours()"
-                        [direct]="direct()"
-                        [brouillons]="brouillons()"
-                        [telechargement]="telechargement()"
-                        (evenement)="surEvenement($event)"
-                      />
-                    </div>
-                  }
-                  <div class="student-session__navigation">
-                    @if (peutReculer()) {
-                      <button
-                        type="button"
-                        class="btn btn-ghost"
-                        data-testid="etudiant-precedent"
-                        (click)="reculer()"
-                        i18n="cours.ecranPrecedent|@@coursEcranPrecedent"
-                      >
-                        Écran précédent
-                      </button>
-                    }
-                    @if (peutAvancer()) {
-                      <button
-                        type="button"
-                        class="btn btn-teal"
-                        data-testid="etudiant-suivant"
-                        (click)="avancer()"
-                        i18n="cours.ecranSuivant|@@coursEcranSuivant"
-                      >
-                        Écran suivant
-                      </button>
-                    }
+                }
+              }
+              @case ('attente') {
+                <p
+                  class="student-status"
+                  data-testid="etudiant-attente"
+                  role="status"
+                  i18n="cours.attenteDemarrage|@@coursAttenteDemarrage"
+                >
+                  La séance n’a pas encore démarré : le premier écran s’affichera dès que votre
+                  formateur la lancera.
+                </p>
+              }
+              @case ('chargement') {
+                <p
+                  class="student-status"
+                  data-testid="etudiant-ecran-chargement"
+                  role="status"
+                  i18n="cours.chargementEcran|@@coursChargementEcran"
+                >
+                  Chargement de l’écran…
+                </p>
+              }
+              @case ('ecran') {
+                @if (ecranPresente(); as ecran) {
+                  <div class="student-session__cadre">
+                    <app-cours-presentation
+                      mode="etudiant"
+                      [slide]="ecran"
+                      [renvoi]="ecranRenvoye()"
+                      [sessionId]="sessionId()"
+                      [jeton]="jeton()"
+                      [retours]="retours()"
+                      [direct]="direct()"
+                      [brouillons]="brouillons()"
+                      [telechargement]="telechargement()"
+                      (evenement)="surEvenement($event)"
+                    />
                   </div>
                 }
+                <div class="student-session__navigation">
+                  @if (peutReculer()) {
+                    <button
+                      type="button"
+                      class="btn btn-ghost"
+                      data-testid="etudiant-precedent"
+                      (click)="reculer()"
+                      i18n="cours.ecranPrecedent|@@coursEcranPrecedent"
+                    >
+                      Écran précédent
+                    </button>
+                  }
+                  @if (peutAvancer()) {
+                    <button
+                      type="button"
+                      class="btn btn-teal"
+                      data-testid="etudiant-suivant"
+                      (click)="avancer()"
+                      i18n="cours.ecranSuivant|@@coursEcranSuivant"
+                    >
+                      Écran suivant
+                    </button>
+                  }
+                </div>
               }
             }
             <ul class="student-verdicts" data-testid="etudiant-verdicts" aria-live="polite">
@@ -450,14 +498,26 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
               }
             </ul>
             @if (enAttente()) {
-              <p
-                class="student-feedback"
-                data-testid="etudiant-hors-ligne"
-                role="status"
-                i18n="cours.horsLigne|@@coursHorsLigne"
-              >
-                Votre réponse est enregistrée sur ce poste et partira au retour du réseau.
-              </p>
+              @if (fileLimitee()) {
+                <p
+                  class="student-feedback"
+                  data-testid="etudiant-hors-ligne"
+                  role="status"
+                  i18n="cours.fileLimitee|@@coursFileLimitee"
+                >
+                  Votre réponse est gardée sur ce poste : le serveur limite les envois, elle
+                  repartira d’elle-même.
+                </p>
+              } @else {
+                <p
+                  class="student-feedback"
+                  data-testid="etudiant-hors-ligne"
+                  role="status"
+                  i18n="cours.horsLigne|@@coursHorsLigne"
+                >
+                  Votre réponse est enregistrée sur ce poste et partira au retour du réseau.
+                </p>
+              }
             }
             @if (repriseIndisponible()) {
               <p
@@ -486,10 +546,27 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
                 data-testid="etudiant-reflexion-en-attente"
                 role="status"
                 [attr.data-etat]="etat"
-                i18n="cours.reflexionEnAttente|@@coursReflexionEnAttente"
               >
-                Votre réflexion est gardée sur ce poste : elle partira dès que le formateur
-                réaffichera l’écran.
+                @switch (etat) {
+                  @case ('attente_limite') {
+                    <span i18n="@@slideReflectionAttenteLimite"
+                      >Le serveur limite les envois : la réflexion est gardée sur cet appareil et
+                      repartira d’elle-même.</span
+                    >
+                  }
+                  @case ('attente_reseau') {
+                    <span i18n="@@slideReflectionAttenteReseau"
+                      >En attente de réseau : la réflexion est gardée sur cet appareil et partira au
+                      retour de la connexion.</span
+                    >
+                  }
+                  @default {
+                    <span i18n="cours.reflexionEnAttente|@@coursReflexionEnAttente"
+                      >Votre réflexion est gardée sur ce poste : elle partira dès que le formateur
+                      réaffichera l’écran.</span
+                    >
+                  }
+                }
               </p>
             }
             @if (fileRefusee()) {
@@ -619,6 +696,8 @@ export class CoursEtudiantComponent {
   readonly sujet = signal<CoursContent | null>(null);
   readonly indexEcran = signal(0);
   readonly enAttente = signal(false);
+  readonly fileRetenueParLaLimite = signal(false);
+  protected readonly fileLimitee = computed(() => this.enLigne() && this.fileRetenueParLaLimite());
   readonly fileRefusee = signal(false);
   readonly terminee = signal(false);
   readonly evince = signal(false);
@@ -639,8 +718,17 @@ export class CoursEtudiantComponent {
     if (sessionId === null) {
       return null;
     }
+    const ecran = this.ecranPresente();
+    const ditesParLaBrique =
+      ecran !== null && presentationDe(ecran)?.renderer === 'reflection'
+        ? cleDeReponseLibre(sessionId, ecran.id, '')
+        : null;
     for (const [cle, etat] of this.reponsesLibres.etatsDesEnvois()) {
-      if (cle.startsWith(`${sessionId}:`) && ETATS_LIBRES_EN_ATTENTE.includes(etat)) {
+      if (
+        cle.startsWith(`${sessionId}:`) &&
+        (ditesParLaBrique === null || !cle.startsWith(ditesParLaBrique)) &&
+        ETATS_LIBRES_EN_ATTENTE.includes(etat)
+      ) {
         return etat;
       }
     }
@@ -650,13 +738,28 @@ export class CoursEtudiantComponent {
   readonly accesPerdu = computed<boolean>(() => this.refusDuFlux()?.motif === 'session');
 
   readonly ecranCourant = computed<EcranContent | null>(() => {
-    const ecran = this.sujet()?.ecrans[this.indexEcran()];
+    const ecran = ecranAuRang(this.sujet(), this.indexEcran());
     return estEcranVerrouille(ecran) ? null : (ecran ?? null);
   });
 
+  readonly vueDeSeance = computed<VueDeSeance>(() => {
+    if (this.evince()) return 'evince';
+    if (this.posteLibere()) return 'libere';
+    if (this.terminee()) return 'terminee';
+    if (this.echecEcran() !== null) return 'echec-ecran';
+    if (this.refusDuFlux() !== null) return 'refus';
+    if (this.statutSeance() !== 'en_cours') return 'attente';
+    if (this.chargementEcran()) return 'chargement';
+    return 'ecran';
+  });
+
+  readonly ecranPresente = computed<EcranContent | null>(() =>
+    this.vueDeSeance() === 'ecran' ? this.ecranCourant() : null,
+  );
+
   readonly ecranRenvoye = computed<EcranContent | null>(() => {
     const renvoi = this.ecranCourant()?.renvoi;
-    const cible = this.sujet()?.ecrans.find(({ id }) => id === renvoi);
+    const cible = ecranDIdentifiant(this.sujet()?.ecrans ?? [], renvoi);
     return cible === undefined || estEcranVerrouille(cible) ? null : cible;
   });
 
@@ -701,12 +804,12 @@ export class CoursEtudiantComponent {
   );
   protected readonly retourFormateur = computed(() => {
     const slug = this.coursVise();
-    return slug !== null && SLUG_DE_COURS.test(slug) ? `/cours/presenter/${slug}` : null;
+    return slug !== null && SLUG_DE_COURS.test(slug) ? cheminDuPupitre(slug) : null;
   });
   private readonly baseUrl = getApiFormationsUrl();
   private readonly enLigne = signal(typeof navigator === 'undefined' || navigator.onLine);
   private readonly incidents: IncidentEtudiant[] = [];
-  private readonly debutFormulaire = Date.now();
+  private readonly debutFormulaire = instantMonotone();
   private readonly defisReveles = new Set<string>();
   private readonly relectures = new Set<string>();
   private readonly verdictsRetenus = new Map<string, VerdictRetenu>();
@@ -731,35 +834,84 @@ export class CoursEtudiantComponent {
   private rappelsDemandes = false;
   private relectureEnCours = false;
   private lectureDuSujet: Promise<CoursContent> | null = null;
-  private detruit = false;
-  private videEnCours = false;
+  private readonly estDetruit = suivreLaDestruction(() => {
+    this.flux?.close();
+    this.verrou?.disarm();
+    this.annulerLaRepriseApresLaLimite();
+  });
+  private repriseApresLaLimite: ReturnType<typeof setTimeout> | null = null;
+  private ecranARelire: number | null = null;
+  private retenuesDuVidage: boolean[] | null = null;
   private chantier: Promise<void> = Promise.resolve();
+  private attenteDuChantier: {
+    readonly chantier: Promise<void>;
+    readonly fin: Promise<void>;
+  } | null = null;
 
   constructor() {
-    const aLaDestruction = inject(DestroyRef);
     const fenetre = typeof window === 'undefined' ? null : window;
     if (fenetre !== null) {
       const surRetour = (): void => {
         this.enLigne.set(true);
-        this.chantier = this.reprendreLesEnvois();
+        this.chantier = this.reprendreCeQuiAttend();
       };
-      const surPerte = (): void => this.enLigne.set(false);
+      const surPerte = (): void => {
+        this.enLigne.set(false);
+      };
       fenetre.addEventListener('online', surRetour);
       fenetre.addEventListener('offline', surPerte);
-      aLaDestruction.onDestroy(() => {
+      inject(DestroyRef).onDestroy(() => {
         fenetre.removeEventListener('online', surRetour);
         fenetre.removeEventListener('offline', surPerte);
       });
     }
-    aLaDestruction.onDestroy(() => {
-      this.detruit = true;
-      this.flux?.close();
-      this.verrou?.disarm();
+    this.reponsesLibres.envoisReussis.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.reprendreEnFondCeQuiAttend();
+    });
+    this.reponsesLibres.limitesAtteintes.pipe(takeUntilDestroyed()).subscribe((limite) => {
+      this.repartirApresLaLimite(limite);
     });
   }
 
+  private reprendreEnFondCeQuiAttend(): void {
+    this.chantier = Promise.all([this.chantier, this.reprendreCeQuiAttend()]).then(() => undefined);
+  }
+
+  private repartirApresLaLimite(limite: LimiteDeDebit | null): void {
+    if (limite === null || this.estDetruit()) {
+      return;
+    }
+    this.annulerLaRepriseApresLaLimite();
+    this.repriseApresLaLimite = setTimeout(
+      () => {
+        this.repriseApresLaLimite = null;
+        this.reprendreEnFondCeQuiAttend();
+      },
+      (limite.minutes ?? 1) * UNE_MINUTE_MS,
+    );
+  }
+
+  private annulerLaRepriseApresLaLimite(): void {
+    if (this.repriseApresLaLimite !== null) {
+      clearTimeout(this.repriseApresLaLimite);
+      this.repriseApresLaLimite = null;
+    }
+  }
+
+  private retenirLaRelecture(erreur: unknown): void {
+    this.echecEcran.set(echecDeLaRelecture(erreur));
+    this.repartirApresLaLimite(limiteDuRefus(erreur));
+  }
+
   quandStabilise(): Promise<void> {
-    return this.chantier;
+    const chantier = this.chantier;
+    if (this.attenteDuChantier?.chantier !== chantier) {
+      this.attenteDuChantier = {
+        chantier,
+        fin: chantier.then(() => (chantier === this.chantier ? undefined : this.quandStabilise())),
+      };
+    }
+    return this.attenteDuChantier.fin;
   }
 
   protected soumettre(evenement: Event): void {
@@ -798,7 +950,7 @@ export class CoursEtudiantComponent {
       return;
     }
     const rattachement = await this.demanderRattachement(code, identite, donnees);
-    if (rattachement === null || this.detruit) {
+    if (rattachement === null || this.estDetruit()) {
       return;
     }
     this.identite = identite;
@@ -808,13 +960,21 @@ export class CoursEtudiantComponent {
 
   private async chargerLaSeance(identite: Identity, rattachement: Rattachement): Promise<void> {
     const sujet = await this.lireLeSujet(rattachement);
-    if (sujet !== null && !this.detruit) {
+    if (sujet !== null && !this.estDetruit()) {
       this.ouvrirLaSeance(identite, rattachement, sujet);
       await Promise.all([
         this.relireMonEtat(),
         this.chargerLesDonneesDeLEcran(this.ecranCourant() ?? undefined),
       ]);
     }
+  }
+
+  private attenteAvantLeRattachement(): number {
+    return bornerEntre(
+      DELAI_MINIMUM_FORMULAIRE_MS - dureeMonotoneDepuis(this.debutFormulaire),
+      0,
+      DELAI_MINIMUM_FORMULAIRE_MS,
+    );
   }
 
   private async demanderRattachement(
@@ -825,11 +985,14 @@ export class CoursEtudiantComponent {
     this.motifEchec.set(null);
     this.messageEchec.set(null);
     this.etat.set('rattachement');
-    const restant = DELAI_MINIMUM_FORMULAIRE_MS - (Date.now() - this.debutFormulaire);
-    if (restant > 0) {
+    for (
+      let restant = this.attenteAvantLeRattachement();
+      restant > 0;
+      restant = this.attenteAvantLeRattachement()
+    ) {
       await new Promise<void>((resolve) => setTimeout(resolve, restant));
     }
-    if (this.detruit) {
+    if (this.estDetruit()) {
       return null;
     }
     try {
@@ -839,7 +1002,7 @@ export class CoursEtudiantComponent {
           nom: identite.nom,
           email: identite.email,
           website: String(donnees.get('website') ?? ''),
-          formStartedAt: this.debutFormulaire,
+          formFillDurationMs: dureeMonotoneDepuis(this.debutFormulaire),
           secretDeReprise: lireSecretDeReprise(code),
         }),
       );
@@ -905,7 +1068,7 @@ export class CoursEtudiantComponent {
     flux.ouvrir();
     this.flux = flux;
     this.identite = identite;
-    this.configurerLeVerrou(sujet.ecrans[deck.current()]);
+    this.configurerLeVerrou(ecranAuRang(sujet, deck.current()));
     this.etat.set('seance');
   }
 
@@ -939,10 +1102,10 @@ export class CoursEtudiantComponent {
     if (index !== this.indexEcran()) {
       this.indexEcran.set(index);
       this.verdicts.set(new Map());
-      this.configurerLeVerrou(this.sujet()?.ecrans[index]);
+      this.configurerLeVerrou(ecranAuRang(this.sujet(), index));
       this.chantier = this.chargerLecranSiNecessaire(index);
     }
-    const verrouille = estEcranVerrouille(this.sujet()?.ecrans[index]);
+    const verrouille = estEcranVerrouille(ecranAuRang(this.sujet(), index));
     this.peutAvancer.set(!verrouille && deck.canNavigate(index + 1));
     this.peutReculer.set(!verrouille && deck.canNavigate(index - 1));
   }
@@ -966,7 +1129,8 @@ export class CoursEtudiantComponent {
     if (sessionId === null || jeton === '') {
       return;
     }
-    const ecran = this.sujet()?.ecrans[index];
+    this.ecranARelire = null;
+    const ecran = ecranAuRang(this.sujet(), index);
     if (!estEcranVerrouille(ecran)) {
       await this.chargerLesDonneesDeLEcran(ecran);
       return;
@@ -975,9 +1139,9 @@ export class CoursEtudiantComponent {
     this.echecEcran.set(null);
     try {
       const sujet = await this.relireLeSujet(sessionId, jeton);
-      if (!this.detruit) {
+      if (!this.estDetruit()) {
         this.sujet.set(sujet);
-        const relu = sujet.ecrans[index];
+        const relu = ecranAuRang(sujet, index);
         this.configurerLeVerrou(relu);
         if (this.deck !== null) {
           this.peutAvancer.set(!estEcranVerrouille(relu) && this.deck.canNavigate(index + 1));
@@ -992,15 +1156,20 @@ export class CoursEtudiantComponent {
           await this.chargerLesDonneesDeLEcran(relu);
         }
       }
-    } catch {
-      this.echecEcran.set({
-        motif: 'sujet-indisponible',
-        message: MESSAGE_ECRAN_ECHEC,
-      });
+    } catch (erreur) {
+      this.ecranARelire = index;
+      this.retenirLaRelecture(erreur);
     } finally {
-      if (!this.detruit) {
+      if (!this.estDetruit()) {
         this.chargementEcran.set(false);
       }
+    }
+  }
+
+  private async relireLEcranRetenu(): Promise<void> {
+    const index = this.ecranARelire;
+    if (index !== null && index === this.indexEcran()) {
+      await this.chargerLecranSiNecessaire(index);
     }
   }
 
@@ -1025,7 +1194,9 @@ export class CoursEtudiantComponent {
         this.ajouter(screenId, [{ kind: 'rappels', questions }]);
       } catch (erreur) {
         this.rappelsDemandes = false;
-        this.ajouter(screenId, [retourDeRefus(refusDe(erreur).motif, texte('spaced-erreur'))]);
+        const refus = refusDe(erreur);
+        const message = limiteDuRefus(refus) === null ? texte('spaced-erreur') : refus.message;
+        this.ajouter(screenId, [retourDeRefus(refus.motif, message)]);
       }
     });
   }
@@ -1046,11 +1217,18 @@ export class CoursEtudiantComponent {
       deck.applyRemote(etat.ecranCourant);
     }
     this.chantier = Promise.all([
+      this.reprendreCeQuiAttend(),
+      this.relireLesStrategiesRevelees(),
+      this.relireLesVerdictsRetenus(),
+    ]).then(() => undefined);
+  }
+
+  private reprendreCeQuiAttend(): Promise<void> {
+    return Promise.all([
       this.viderLaFile(),
       this.reprendreLesReponsesLibres(),
-      this.relireLesStrategiesRevelees(),
+      this.relireLEcranRetenu(),
       this.relireLesRevelations(),
-      this.relireLesVerdictsRetenus(),
     ]).then(() => undefined);
   }
 
@@ -1099,15 +1277,15 @@ export class CoursEtudiantComponent {
     this.relectureEnCours = true;
     try {
       const relu = await this.relireLeSujet(sessionId, this.jeton());
-      if (!this.detruit) {
+      if (!this.estDetruit()) {
         this.sujet.set(relu);
         this.suivreLeSujetRelu(relu);
       }
-    } catch {
+    } catch (erreur) {
       for (const cle of nouvelles) {
         this.relectures.delete(cle);
       }
-      this.echecEcran.set({ motif: 'sujet-indisponible', message: MESSAGE_ECRAN_ECHEC });
+      this.retenirLaRelecture(erreur);
     } finally {
       this.relectureEnCours = false;
     }
@@ -1115,7 +1293,7 @@ export class CoursEtudiantComponent {
 
   private suivreLeSujetRelu(relu: CoursContent): void {
     const index = this.indexEcran();
-    const ecran = relu.ecrans[index];
+    const ecran = ecranAuRang(relu, index);
     if (estEcranVerrouille(ecran) || this.deck === null) {
       return;
     }
@@ -1141,12 +1319,12 @@ export class CoursEtudiantComponent {
   private async relireLesStrategiesRevelees(): Promise<void> {
     const ecran = this.ecranCourant();
     const sessionId = this.sessionId();
-    const defiId = objet(ecran?.donnees?.['probleme'])?.['id'];
+    const defiId = identifiantPorte(ecran?.donnees, 'probleme');
     if (
       ecran === null ||
       sessionId === null ||
       ecran.type !== BRIQUE_DE_DEFI ||
-      typeof defiId !== 'string' ||
+      defiId === null ||
       this.pilotage()[ecran.id]?.revele !== true ||
       this.defisReveles.has(defiId) ||
       !(this.retours().get(ecran.id) ?? []).some((retour) => retour.kind === 'strategies')
@@ -1248,14 +1426,17 @@ export class CoursEtudiantComponent {
 
   private envoyerOuMettreEnFile(envoi: Envoi, screenId: string): Promise<void> {
     return this.pourLaSeance(async (sessionId) => {
-      if (
-        !this.enLigne() ||
-        (await this.transmettre(sessionId, envoi, screenId, false)) === 'en-panne'
-      ) {
-        this.mettreEnFile(envoi);
+      const issue: IssueDeLEnvoi = this.enLigne()
+        ? await this.transmettre(sessionId, envoi, screenId, false)
+        : { limitee: false };
+      if (issue === 'transmise') {
+        await this.reprendreCeQuiAttend();
         return;
       }
-      await this.viderLaFile();
+      const limiteeEnFile = this.enAttente() && this.fileRetenueParLaLimite();
+      this.mettreEnFile(envoi);
+      this.retenuesDuVidage?.push(issue.limitee);
+      this.fileRetenueParLaLimite.set(limiteeEnFile || issue.limitee);
     });
   }
 
@@ -1275,7 +1456,9 @@ export class CoursEtudiantComponent {
     } catch (erreur) {
       const refus = refusDe(erreur);
       if (refus.motif === 'reseau') {
-        return 'en-panne';
+        const limite = limiteDuRefus(refus);
+        this.repartirApresLaLimite(limite);
+        return { limitee: limite !== null };
       }
       await this.traiterLeRefus(refus, envoi.questionId, screenId, depuisLaFile);
       return 'transmise';
@@ -1350,13 +1533,18 @@ export class CoursEtudiantComponent {
         if (MOTIFS_DE_RESYNCHRONISATION.includes(refus.motif) || refus.motif === 'deja-repondue') {
           await this.relireMonEtat();
         }
+        return;
       }
+      await this.reprendreCeQuiAttend();
     });
   }
 
   private signalerLeRefusDeTentative(screenId: string, erreur: unknown): ReponseRefusee {
     const refus = refusDe(erreur);
-    const message = refus.motif === 'reseau' ? texte('tentatives-reseau') : refus.message;
+    const message =
+      refus.motif === 'reseau' && limiteDuRefus(refus) === null
+        ? texte('tentatives-reseau')
+        : refus.message;
     this.ajouter(screenId, [retourDeRefus(refus.motif, message)]);
     return refus;
   }
@@ -1375,7 +1563,9 @@ export class CoursEtudiantComponent {
         ]);
       } catch (erreur) {
         this.signalerLeRefusDeTentative(evenement.screenId, erreur);
+        return;
       }
+      await this.reprendreCeQuiAttend();
     });
   }
 
@@ -1474,23 +1664,26 @@ export class CoursEtudiantComponent {
     }
   }
 
-  private async reprendreLesEnvois(): Promise<void> {
-    await this.viderLaFile();
-    await this.reprendreLesReponsesLibres();
-  }
-
   private async viderLaFile(): Promise<void> {
-    if (this.sessionId() === null || this.videEnCours || !this.fileDeLaSeance()) {
+    if (this.sessionId() === null || this.retenuesDuVidage !== null || !this.fileDeLaSeance()) {
       return;
     }
-    this.videEnCours = true;
+    const retenues: boolean[] = [];
+    this.retenuesDuVidage = retenues;
     try {
-      await flush((envoi) => this.renvoyer(envoi), this.identite?.studentKey);
+      await flush(async (envoi) => {
+        const issue = await this.renvoyer(envoi);
+        if (issue !== 'transmise') {
+          retenues.push(issue.limitee);
+        }
+        return issue === 'transmise';
+      }, this.identite?.studentKey);
     } catch {
       this.fileRefusee.set(true);
     } finally {
-      this.videEnCours = false;
+      this.retenuesDuVidage = null;
       this.enAttente.set(this.fileDeLaSeance());
+      this.fileRetenueParLaLimite.set(this.enAttente() && retenues.includes(true));
     }
   }
 
@@ -1499,13 +1692,12 @@ export class CoursEtudiantComponent {
     return pending().some((envoi) => envoi.sessionId === sessionId);
   }
 
-  private async renvoyer(envoi: EnvoiReponse): Promise<boolean> {
+  private async renvoyer(envoi: EnvoiReponse): Promise<IssueDeLEnvoi> {
     const sessionId = this.sessionId();
     if (sessionId === null || envoi.sessionId !== sessionId) {
-      return false;
+      return { limitee: false };
     }
-    const issue = await this.transmettre(sessionId, envoi, this.ecranDe(envoi.questionId), true);
-    return issue === 'transmise';
+    return this.transmettre(sessionId, envoi, this.ecranDe(envoi.questionId), true);
   }
 
   private remonterLesIncidents(): void {

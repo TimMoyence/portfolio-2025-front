@@ -14,13 +14,12 @@ import { DomSanitizer } from '@angular/platform-browser';
 import type { SafeHtml } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
+import { estUrlAutorisee } from '../../../cours/runtime/core/html';
 
 const ATTRIBUTS_DE_LIEN: ReadonlySet<string> = new Set(['href', 'xlink:href']);
 
-function estUnLienJavascript(attr: Attr): boolean {
-  return (
-    ATTRIBUTS_DE_LIEN.has(attr.name) && attr.value.trim().toLowerCase().startsWith('javascript:')
-  );
+function estUnLienRefuse(attr: Attr): boolean {
+  return ATTRIBUTS_DE_LIEN.has(attr.name) && !estUrlAutorisee(attr.value);
 }
 
 @Component({
@@ -30,7 +29,7 @@ function estUnLienJavascript(attr: Attr): boolean {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SvgIconComponent implements OnChanges {
-  private static readonly TRAVERSAL_SAFE_NAME = /^[a-zA-Z0-9-]+(?:\/[a-zA-Z0-9-]+)*$/;
+  private static readonly TRAVERSAL_SAFE_NAME = /^[\w-]+(?:\/[\w-]+)*$/;
 
   private static cache = new Map<string, string>();
 
@@ -86,7 +85,7 @@ export class SvgIconComponent implements OnChanges {
 
     if (!SvgIconComponent.TRAVERSAL_SAFE_NAME.test(this.name)) {
       console.warn(
-        `[SvgIconComponent] Nom d'icone invalide : "${this.name}". Seuls les caracteres alphanumeriques et tirets sont autorises.`,
+        `[SvgIconComponent] Nom d'icone invalide : "${this.name}". Seuls les caracteres alphanumeriques, tirets et tirets bas sont autorises.`,
       );
       this.svgContent = null;
       return;
@@ -128,7 +127,7 @@ export class SvgIconComponent implements OnChanges {
 
     root.querySelectorAll('*').forEach((el) => {
       for (const attr of Array.from(el.attributes)) {
-        if (/^on/i.test(attr.name) || estUnLienJavascript(attr)) {
+        if (/^on/i.test(attr.name) || estUnLienRefuse(attr)) {
           el.removeAttribute(attr.name);
         }
       }

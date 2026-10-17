@@ -11,7 +11,10 @@ import {
   buildLivretDuCours,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
+import { noeudOmbre, noeudsOmbre } from '../../../../testing/banc-de-brique';
 import { briqueMontee } from '../../../../testing/briques-montees';
+import { ecranNomme } from '../../../../testing/montage-d-instantane';
+import { refusDuBack } from '../../../../testing/factories/probleme-http.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { textes } from '../../../../testing/textes-dom';
 import { CoursLivretComponent } from './cours-livret.component';
@@ -233,10 +236,8 @@ describe('CoursLivretComponent', () => {
   it('S-05 · imprime au corrigé chaque question de l exercice suivie de son explication', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
     basculerSurLeCorrige(fixture);
-    const atelier = INSTANTANE_B2_02.deroule.ecrans.find(
-      ({ id }) => id === 'B2-02-A1-08-ATELIER-RESUME',
-    );
-    const [premiere] = atelier?.explications ?? [];
+    const atelier = ecranNomme(INSTANTANE_B2_02.deroule.ecrans, 'B2-02-A1-08-ATELIER-RESUME');
+    const [premiere] = atelier.explications ?? [];
 
     const brique = await briqueMontee(
       fixture,
@@ -244,9 +245,7 @@ describe('CoursLivretComponent', () => {
     );
 
     expect(premiere).toBeDefined();
-    expect(brique.shadowRoot?.querySelector('[data-testid="explication"]')?.textContent).toBe(
-      premiere?.texte,
-    );
+    expect(noeudOmbre(brique, 'explication')?.textContent).toBe(premiere?.texte);
   });
 
   describe('briques imprimées sur le vrai B2-02', () => {
@@ -266,8 +265,8 @@ describe('CoursLivretComponent', () => {
         briqueDeLaPage('B2-02-A4-03-COFFRE-FIBRE', 'fp-escape'),
       );
 
-      expect(coffre.shadowRoot?.querySelectorAll('[data-testid="enonce"]').length).toBe(4);
-      expect(coffre.shadowRoot?.querySelector('[data-testid="saisie"]')).toBeNull();
+      expect(noeudsOmbre(coffre, 'enonce').length).toBe(4);
+      expect(noeudOmbre(coffre, 'saisie')).toBeNull();
     });
 
     it('imprime au livret les deux questions du vote sur la corrélation', async () => {
@@ -286,7 +285,7 @@ describe('CoursLivretComponent', () => {
 
       const rappel = await briqueMontee(fixture, briqueDeLaPage('B2-02-A4-04-RAPPEL', 'fp-spaced'));
 
-      expect(rappel.shadowRoot?.querySelectorAll('[data-testid="enonce"]').length).toBe(12);
+      expect(noeudsOmbre(rappel, 'enonce').length).toBe(12);
     });
 
     it('imprime au corrigé le raisonnement de l’exemple guidé A1-07', async () => {
@@ -311,7 +310,7 @@ describe('CoursLivretComponent', () => {
         briqueDeLaPage('B2-02-A4-03-COFFRE-FIBRE', 'fp-escape'),
       );
 
-      expect(coffre.shadowRoot?.querySelectorAll('[data-testid="solution"]').length).toBe(4);
+      expect(noeudsOmbre(coffre, 'solution').length).toBe(4);
     });
 
     it('imprime au corrigé la réponse attendue des réflexions A1-05 et A3-01', async () => {
@@ -322,7 +321,7 @@ describe('CoursLivretComponent', () => {
         const page = tous(fixture, 'livret-corrige').find(
           (candidate) => candidate.dataset['ecran'] === ecran,
         );
-        const attendu = INSTANTANE_B2_02.deroule.ecrans.find((e) => e.id === ecran)?.corrigeEcran;
+        const attendu = ecranNomme(INSTANTANE_B2_02.deroule.ecrans, ecran).corrigeEcran;
         expect(attendu?.type).withContext(ecran).toBe('reflexion');
         expect(page?.querySelector('[data-testid="livret-attendu"]')?.textContent)
           .withContext(ecran)
@@ -380,5 +379,16 @@ describe('CoursLivretComponent', () => {
 
     expect(un(fixture, 'livret-echec')?.getAttribute('role')).toBe('alert');
     expect(tous(fixture, 'livret-ecran')).toEqual([]);
+  });
+
+  it('dit l attente commune d un livret limite au lieu de faire verifier la connexion', async () => {
+    const { fixture } = await monter(
+      throwError(() => refusDuBack(429, 'Too Many Requests', { 'Retry-After': '120' })),
+    );
+
+    expect(un(fixture, 'livret-echec')?.getAttribute('role')).toBe('alert');
+    expect(un(fixture, 'livret-echec')?.textContent?.trim()).toBe(
+      'Trop de tentatives en peu de temps : réessayez dans 2 min.',
+    );
   });
 });

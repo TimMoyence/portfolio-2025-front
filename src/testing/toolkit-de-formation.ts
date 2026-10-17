@@ -48,14 +48,3 @@ export function decrireToolkitDeFormation<T>(
 
   return rendu;
 }
-
-export function verifierFaqDuToolkit(
-  rendu: HTMLElement,
-  selecteurQuestions: string,
-  minimumQuestions: number,
-): void {
-  expect(rendu.textContent?.toLowerCase()).toContain('questions');
-  expect(rendu.querySelectorAll(selecteurQuestions).length).toBeGreaterThanOrEqual(
-    minimumQuestions,
-  );
-}

@@ -1,38 +1,53 @@
 import type { Page, Route } from '@playwright/test';
+import type { z } from 'zod';
+import {
+  etatParticipantServi,
+  rattachementServi,
+  sujetServi,
+} from '../src/app/core/adapters/formations-schemas';
+import type { SujetDuFil } from '../src/app/core/adapters/formations-fil';
+import type { RapportSeance } from '../src/app/core/ports/formations.port';
+import { TYPES_QUESTION } from '../src/cours/content/types';
+import type { EtatParticipant, ResumeBareme } from '../src/cours/content/types';
+import { etatServi } from '../src/cours/runtime/core/sync';
+import type { EtatSession } from '../src/cours/runtime/core/sync';
+import { buildAuthSession, buildAuthUser } from '../src/testing/factories/auth.factory';
+import {
+  buildRapportSeance,
+  buildRattachement,
+  buildRegleNotation,
+  buildResultatsSeance,
+  buildResumeBareme,
+  buildStatistiquesSeance,
+} from '../src/testing/factories/rapport-seance.factory';
 import { etatParticipantVierge } from '../src/testing/fixtures/etat-participant';
 
 export const API_BASE = 'http://localhost:3000/api/v1/portfolio25';
 
-const MOCK_USER = {
+const MOCK_USER = buildAuthUser({
   id: '1',
   email: 'test@test.com',
   firstName: 'Test',
   lastName: 'User',
-  phone: null,
-  isActive: true,
   roles: [],
-  hasPassword: true,
-  createdAt: '2025-01-01T00:00:00.000Z',
-  updatedAt: '2025-01-01T00:00:00.000Z',
-  updatedOrCreatedBy: null,
-};
+});
 
-export const MOCK_SESSION = {
+export const MOCK_SESSION = buildAuthSession({
   accessToken: 'fake-jwt-token-for-e2e-tests',
-  expiresIn: 3600,
   user: MOCK_USER,
-};
+});
 
-export const SESSION_FORMATEUR = {
+export const SESSION_FORMATEUR = buildAuthSession({
   ...MOCK_SESSION,
   user: { ...MOCK_USER, roles: ['teacher'] },
-};
+});
 
 export const B2_SLUG = 'b2-01-traitement-information-chiffree';
 
 interface EcranCatalogue {
   readonly id: string;
   readonly type: 'fp-story';
+  readonly titre: null;
   readonly duree: number;
   readonly interactif: boolean;
   readonly donnees: {
@@ -44,9 +59,18 @@ interface EcranCatalogue {
         readonly renderer: string;
         readonly props: Readonly<Record<string, unknown>>;
       };
+      readonly metadonnees: typeof METADONNEES_D_UN_RECIT;
     };
   };
 }
+
+const METADONNEES_D_UN_RECIT = {
+  concepts: [],
+  misconceptionsCiblees: [],
+  dureeMinutes: 3,
+  modalite: 'solo',
+  regime: 'ouvert',
+} as const;
 
 function identifiantB2(rang: number): string {
   return `B2-01-S${String(rang).padStart(2, '0')}`;
@@ -61,9 +85,16 @@ function ecranB2(
   return {
     id,
     type: 'fp-story',
+    titre: null,
     duree: 3,
     interactif: renderer === 'quiz',
-    donnees: { recit: { id, presentation: { version: 2, screenId: id, renderer, props } } },
+    donnees: {
+      recit: {
+        id,
+        presentation: { version: 2, screenId: id, renderer, props },
+        metadonnees: METADONNEES_D_UN_RECIT,
+      },
+    },
   };
 }
 
@@ -81,6 +112,8 @@ const SEANCE_B2 = {
   code: '4822',
 } as const;
 
+const SECRET_DE_REPRISE = 'secret-de-reprise-e2e';
+
 const EN_TETES_CORS = {
   'access-control-allow-origin': 'http://localhost:4200',
   'access-control-allow-credentials': 'true',
@@ -88,7 +121,13 @@ const EN_TETES_CORS = {
   'access-control-allow-methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
 };
 
-export async function servirJson(route: Route, corps: unknown, statut = 200): Promise<void> {
+export async function servirJson<T>(
+  route: Route,
+  schema: z.ZodType<T>,
+  corps: NoInfer<T>,
+  statut = 200,
+): Promise<void> {
+  schema.parse(corps);
   await route.fulfill({
     status: statut,
     headers: { ...EN_TETES_CORS, 'content-type': 'application/json' },
@@ -96,11 +135,27 @@ export async function servirJson(route: Route, corps: unknown, statut = 200): Pr
   });
 }
 
+export async function servirRefus(
+  route: Route,
+  statut: number,
+  probleme: Readonly<Record<string, unknown>>,
+): Promise<void> {
+  if (statut < 400) {
+    throw new Error(`Une réponse ${statut} se sert par servirJson et le schéma qui la lit.`);
+  }
+  await route.fulfill({
+    status: statut,
+    headers: { ...EN_TETES_CORS, 'content-type': 'application/json' },
+    body: JSON.stringify(probleme),
+  });
+}
+
 export async function servirSansContenu(route: Route): Promise<void> {
   await route.fulfill({ status: 204, headers: EN_TETES_CORS });
 }
 
-export async function servirFlux(route: Route, ...etats: readonly unknown[]): Promise<void> {
+export async function servirFlux(route: Route, ...etats: readonly EtatSession[]): Promise<void> {
+  etats.forEach((etat) => etatServi.parse(etat));
   await route.fulfill({
     status: 200,
     headers: { ...EN_TETES_CORS, 'content-type': 'text/event-stream' },
@@ -108,13 +163,46 @@ export async function servirFlux(route: Route, ...etats: readonly unknown[]): Pr
   });
 }
 
-export const ETAT_EN_COURS = {
+export const ETAT_EN_COURS: EtatSession = {
   etat: 'en_cours',
   modeRythme: 'pilote',
   ecranCourant: 0,
   intervalleLibre: null,
   participants: 1,
-} as const;
+  revision: 0,
+  pilotage: {},
+  majLe: '2026-09-20T08:00:00.000Z',
+};
+
+const SANS_QUESTION_NOTEE = Object.fromEntries(
+  TYPES_QUESTION.map((type) => [type, { notees: 0, nonNotees: 0 }]),
+) as ResumeBareme['parType'];
+
+export function rapportDeSeance(surcharges: Partial<RapportSeance>): RapportSeance {
+  return buildRapportSeance({
+    courseSlug: B2_SLUG,
+    ouverteLe: '2026-09-20T08:00:00.000Z',
+    fermeeLe: '2026-09-20T10:00:00.000Z',
+    conceptsFragiles: [],
+    libellesDesConcepts: {},
+    resultats: buildResultatsSeance({ participants: 0, questions: [] }),
+    statistiques: buildStatistiquesSeance({
+      moyenne: 0,
+      mediane: 0,
+      dispersion: 0,
+      tauxParticipation: 0,
+      tauxReussite: 0,
+    }),
+    notation: buildRegleNotation({
+      partCohorteReference: 0.1,
+      ratioSeuilValidation: 0.5,
+      seuilQuestionProbleme: 0.5,
+      typesNotables: ['vote', 'numeric'],
+    }),
+    bareme: buildResumeBareme({ questionsNotees: 0, parType: SANS_QUESTION_NOTEE }),
+    ...surcharges,
+  });
+}
 
 export async function intercepterApi(
   page: Page,
@@ -154,6 +242,22 @@ export async function remplirLaJonction(
   await page.getByRole('button', { name: 'Entrer dans la séance' }).click();
 }
 
+export interface Jonction {
+  readonly participantId: string;
+  readonly sessionId: string;
+  readonly ecranCourant: number;
+  readonly jeton: string;
+}
+
+export async function servirLaJonction(route: Route, jonction: Jonction): Promise<void> {
+  await servirJson(
+    route,
+    rattachementServi,
+    buildRattachement({ ...jonction, secretDeReprise: SECRET_DE_REPRISE }),
+    201,
+  );
+}
+
 export const BILLET_DE_SORTIE = {
   id: 'B-SORTIE-09',
   question: 'Le taux équivalent mensuel d’un taux annuel de 12 % vaut :',
@@ -169,9 +273,9 @@ export const BILLET_DE_SORTIE = {
     modalite: 'solo',
     regime: 'ouvert',
   },
-};
+} as const;
 
-const SUJET_DE_SORTIE = {
+const SUJET_DE_SORTIE: SujetDuFil = {
   id: B2_SLUG,
   titre: 'Décider avec des taux fiables',
   niveau: 'B2',
@@ -198,8 +302,8 @@ export function etatDuParticipant(
   seance: SeanceDeSortie,
   participantId: string,
   revision: number,
-  reponses: readonly unknown[] = [],
-): Record<string, unknown> {
+  reponses: EtatParticipant['reponses'] = [],
+): EtatParticipant {
   return {
     ...etatParticipantVierge({ sessionId: seance.id, participantId, revision }),
     reponses,
@@ -210,8 +314,8 @@ interface MontageDeSortie {
   readonly seance: SeanceDeSortie;
   readonly participantId: string;
   readonly jeton: string;
-  readonly etat: () => unknown;
-  readonly flux: readonly unknown[];
+  readonly etat: () => EtatParticipant;
+  readonly flux: readonly EtatSession[];
   readonly ecritures: Readonly<Record<string, (route: Route) => Promise<void>>>;
 }
 
@@ -226,12 +330,16 @@ export async function installerLaSeanceDeSortie(
       chemin.endsWith(`${racine}${suffixe}`),
     );
     if (chemin.endsWith(`/sessions/${seance.code}/join`)) {
-      const corps = { participantId, sessionId: seance.id, ecranCourant: 0, modeRythme: 'pilote' };
-      await servirJson(route, { ...corps, jeton }, 201);
+      await servirLaJonction(route, {
+        participantId,
+        sessionId: seance.id,
+        ecranCourant: 0,
+        jeton,
+      });
     } else if (chemin.endsWith(`${racine}sujet`)) {
-      await servirJson(route, SUJET_DE_SORTIE);
+      await servirJson(route, sujetServi, SUJET_DE_SORTIE);
     } else if (chemin.endsWith(`${racine}moi`)) {
-      await servirJson(route, montage.etat());
+      await servirJson(route, etatParticipantServi, montage.etat());
     } else if (ecriture !== undefined) {
       await ecriture[1](route);
     } else if (chemin.endsWith(`${racine}stream`)) {
@@ -250,10 +358,9 @@ export async function ouvrirEcranEtudiantB2(
   const { sessionId, participantId, jeton, code } = SEANCE_B2;
   await intercepterApi(page, async (route, chemin, methode) => {
     if (methode === 'POST' && chemin.endsWith(`/sessions/${code}/join`)) {
-      const corps = { participantId, sessionId, ecranCourant, modeRythme: 'pilote', jeton };
-      await servirJson(route, corps, 201);
+      await servirLaJonction(route, { participantId, sessionId, ecranCourant, jeton });
     } else if (methode === 'GET' && chemin.endsWith(`/sessions/${sessionId}/sujet`)) {
-      await servirJson(route, {
+      await servirJson(route, sujetServi, {
         id: B2_SLUG,
         titre: 'Lire et contrôler l’information chiffrée',
         niveau: 'B2',

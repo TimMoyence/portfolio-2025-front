@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 import {
-  URL_API,
   agirSurLePoste,
   autreReponseQue,
+  demanderUnePlace,
   identiteDuPoste,
   inscrireUnPoste,
   lireDepuisLePoste,
@@ -38,9 +38,7 @@ test.describe('Banc — éviction en séance (AC-37)', () => {
     await inscrireUnPoste(request, seance, 31);
     await inscrireUnPoste(request, seance, 32);
 
-    const complete = await request.post(`${URL_API}/formations/sessions/${seance.code}/join`, {
-      data: identiteDuPoste(33),
-    });
+    const complete = await demanderUnePlace(request, seance, identiteDuPoste(33));
     expect(complete.status()).toBe(409);
     expect(((await complete.json()) as { code: string }).code).toBe('SEANCE_COMPLETE');
 

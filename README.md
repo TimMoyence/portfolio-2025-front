@@ -11,6 +11,7 @@ Application Angular 19 du portfolio. Le frontend est SSR, localise en `fr` et `e
 - SCSS + Tailwind CSS
 - Jasmine / Karma
 - ESLint + Prettier
+- Node 22.18 au minimum (`engines` de `package.json`) : les scripts `.mjs` importent du TypeScript, que Node ne lit pas avant cette version
 
 ## Architecture
 
@@ -35,7 +36,6 @@ Source de verite : [`src/app/app.routes.ts`](./src/app/app.routes.ts) (et [`src/
 - `/offer` — Page des offres
 - `/contact` — Formulaire de contact
 - `/growth-audit` — Audit SEO automatise
-- `/atelier` et toutes ses sous-routes, `/client-project` — Redirections vers `/projets` (les apps de l'atelier sont retirees)
 
 ### Auth
 
@@ -57,9 +57,7 @@ Pages d'articles : un slug inconnu rend une vraie 404, et une API indisponible r
 - `/formations/ia-solopreneurs/toolkit` — Toolkit IA Solopreneurs (capture email)
 - `/formations/ia-solopreneurs/toolkit/:token` — Toolkit personnalise (acces direct via token, rendu serveur on-demand)
 - `/formations/automatiser-avec-ia` — Formation Automatiser avec l'IA (slides)
-- `/formations/automatiser-avec-ia/toolkit` — Toolkit Automatiser avec l'IA
 - `/formations/audit-seo-diy` — Formation Audit SEO DIY (slides)
-- `/formations/audit-seo-diy/toolkit` — Toolkit Audit SEO DIY
 - `/formations/b2-01-traitement-information-chiffree` — Cours B2-01 (72 écrans servis par le back via `/formations/catalogue/:slug`), rendu serveur à la demande (`RenderMode.Server`) pour refléter le contenu publié au moment de la visite. Hors séance, les quiz et réflexions sont en aperçu : rien n'est envoyé, le résultat n'est donné qu'en séance. La page propose « Rejoindre une séance » vers `/cours/rejoindre` ; la carte de `/formations` y mène.
 
 ### Médias du cours B2-01
@@ -83,9 +81,12 @@ Pages non indexables (`noindex, nofollow`), en rendu client (`RenderMode.Client`
 - `/cookie-settings` — Parametres cookies
 - `/terms` — CGU
 - `/privacy` — Politique de confidentialite
-- `/commonbudgetTM` — Redirection vers l'accueil `/`
-- `/slides/library` — Bibliotheque de slides interne (`noindex, nofollow`)
 - `/**` — 404
+
+Les anciennes URL (`/home`, `/client-project`, `/commonbudgetTM`, `/atelier` et ses sous-routes, l'ancien
+slug du B2-02, les toolkits retirés `/formations/automatiser-avec-ia/toolkit` et
+`/formations/audit-seo-diy/toolkit`) sont redirigées en 301 par le serveur Express
+(`src/server/redirects.ts`), avant le routeur Angular.
 
 ## Prise en main rapide
 

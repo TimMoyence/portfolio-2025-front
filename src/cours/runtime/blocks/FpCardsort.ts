@@ -1,5 +1,6 @@
 import { dansUnDefileur } from '../core/defileur';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { estPositif } from '../core/valeurs';
+import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { Battement, formaterChrono } from './battement';
 import { lignesDeCalculHtml } from './calculs';
 import { FpProduction } from './production';
@@ -9,6 +10,7 @@ import {
   copierLeSocle,
   projeterOptions,
 } from './projection';
+import { marqueDeCorrection } from './retours';
 
 export interface CardsortPlanPublic extends ContenuDeBrique {
   readonly intitule: string;
@@ -26,8 +28,6 @@ interface AttenduFormateur {
 type Foyer = 'carte' | 'cible' | null;
 
 const PIOCHE = '';
-const VIDE = escapeHtml('');
-const DESACTIVE = safeHtml`disabled`;
 const RETENU = safeHtml`selected`;
 const ATTENDUS_SUR_PAPIER = safeHtml` fp-cardsort__attendus--papier`;
 const TOUCHES_ACTION: readonly string[] = ['Enter', ' '];
@@ -39,9 +39,7 @@ function copierPlan(source: CardsortPlanPublic): CardsortPlanPublic {
     intitule: source.intitule,
     cartes: projeterOptions(source.cartes),
     categories: projeterOptions(source.categories),
-    ...(typeof duree === 'number' && Number.isFinite(duree) && duree > 0
-      ? { dureeJeuMs: duree }
-      : {}),
+    ...(estPositif(duree) ? { dureeJeuMs: duree } : {}),
   };
 }
 
@@ -180,7 +178,7 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
 
   private restantMs(): number | null {
     const duree = this.interne?.dureeJeuMs;
-    return duree === undefined ? null : Math.max(0, duree - this.depuisAffichage());
+    return duree === undefined ? null : this.restantDepuisAffichage(duree);
   }
 
   private chrono(): EscapedHtml {
@@ -345,7 +343,7 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
     if (juste === null) {
       return VIDE;
     }
-    return safeHtml`data-etat="${escapeHtml(juste ? 'confirme' : 'a-revoir')}" data-correction="${escapeHtml(juste ? 'juste' : 'fausse')}"`;
+    return safeHtml`data-etat="${escapeHtml(juste ? 'confirme' : 'a-revoir')}"${marqueDeCorrection(juste)}`;
   }
 
   private correction(): EscapedHtml {
@@ -367,8 +365,8 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
   private place(carte: OptionPublique, zone: OptionPublique, interactif: boolean): EscapedHtml {
     const enonce = `${carte.libelle} — ${zone.libelle}`;
     if (!interactif) {
-      const marque = this.attenduDe(carte.id) === null ? VIDE : safeHtml`data-correction="juste"`;
-      return safeHtml`<li class="fp-cardsort__place"><span class="fp-carte fp-cardsort__carte" data-testid="carte" data-carte="${escapeHtml(carte.id)}" ${marque}>${escapeHtml(carte.libelle)}</span></li>`;
+      const marque = marqueDeCorrection(this.attenduDe(carte.id) === null ? null : true);
+      return safeHtml`<li class="fp-cardsort__place"><span class="fp-carte fp-cardsort__carte" data-testid="carte" data-carte="${escapeHtml(carte.id)}"${marque}>${escapeHtml(carte.libelle)}</span></li>`;
     }
     const choisie = carte.id === this.selection;
     const detail = this.detailDe(carte.id);
@@ -448,7 +446,7 @@ export class FpCardsort extends FpProduction<CardsortPlanPublic, AttenduFormateu
     this.destination = cible;
     this.foyer = 'carte';
     this.message = `${carte.libelle} ${this.texte('cardsort-deplacee')} ${this.libelleZone(cible)}`;
-    this.signalerBrouillon(this.interne?.id ?? '', { ...this.places });
+    this.signalerLeBrouillon({ ...this.places });
     this.refresh();
   }
 

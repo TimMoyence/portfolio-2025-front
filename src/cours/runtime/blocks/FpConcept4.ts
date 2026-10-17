@@ -1,17 +1,12 @@
 import { evaluerExpression, remplirGabarit } from 'portfolio-2025-partage/formule';
 import { dansUnDefileur } from '../core/defileur';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { fini } from '../core/valeurs';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { enFrancais } from '../core/typographie';
+import { echapperPourRegex, fini } from '../core/valeurs';
 import { type Reglages } from './animation';
 import { plafondDe, plancherDe } from './curseurs';
 import { echelle, jalons } from './echelle';
-import {
-  type DefinitionReglable,
-  FpReglable,
-  arrondi,
-  copierLeReglable,
-  formater,
-} from './reglable';
+import { type DefinitionReglable, FpReglable, arrondi, copierLeReglable } from './reglable';
 
 export interface Concept4Definition extends DefinitionReglable {
   readonly formuleLatexSimplifie: string;
@@ -46,12 +41,10 @@ const INTERVALLES_TABLEAU = 6;
 const LARGEUR = 320;
 const HAUTEUR = 180;
 const MARGE = 12;
-const SPECIAUX = /[.*+?^${}()|[\]\\]/g;
-
 function motifDesTermes(cles: readonly string[]): RegExp {
   const alternatives = [...cles]
     .sort((gauche, droite) => droite.length - gauche.length)
-    .map((cle) => cle.replace(SPECIAUX, '\\$&'))
+    .map(echapperPourRegex)
     .join('|');
   return new RegExp(`(?<![A-Za-z0-9_])(?:${alternatives})(?![A-Za-z0-9_])`, 'g');
 }
@@ -99,7 +92,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
   private faces(): EscapedHtml {
     const definition = this.definition;
     if (definition === null) {
-      return safeHtml``;
+      return VIDE;
     }
     const valeurs = this.valeurs;
     const resultat = this.resultat(valeurs);
@@ -133,7 +126,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     return safeHtml`
       <div class="fp-concept4__face fp-encadre" data-testid="formule" data-valeur="${escapeHtml(String(resultat))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-formule'))}</h3>
-        <p class="fp-concept4__formule fp-montant">${this.termes(definition)} = <span class="fp-concept4__resultat" data-testid="resultat-formule">${escapeHtml(formater(resultat))}</span></p>
+        <p class="fp-concept4__formule fp-montant">${this.termes(definition)} = <span class="fp-concept4__resultat" data-testid="resultat-formule">${escapeHtml(enFrancais(resultat))}</span></p>
       </div>
     `;
   }
@@ -185,7 +178,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
   private graphique(valeurs: Valeurs): EscapedHtml {
     const parametre = this.pilote();
     if (parametre === null) {
-      return safeHtml``;
+      return VIDE;
     }
     const trajectoire = this.trajectoire(valeurs);
     const trace = trajectoire ?? this.trace(parametre, valeurs);
@@ -194,7 +187,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
       <figure class="fp-concept4__face" data-testid="graphique" data-valeur="${escapeHtml(String(this.resultat(valeurs)))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-graphique'))}</h3>
         <svg class="fp-concept4__courbe" data-testid="courbe" viewBox="0 0 ${LARGEUR} ${HAUTEUR}" role="img" aria-label="${escapeHtml(etiquette)}">
-          ${trajectoire === null ? safeHtml`` : safeHtml`<line class="fp-concept4__repere" data-testid="repere" x1="${MARGE}" x2="${LARGEUR - MARGE}" y1="${trajectoire.repere}" y2="${trajectoire.repere}"></line>`}
+          ${trajectoire === null ? VIDE : safeHtml`<line class="fp-concept4__repere" data-testid="repere" x1="${MARGE}" x2="${LARGEUR - MARGE}" y1="${trajectoire.repere}" y2="${trajectoire.repere}"></line>`}
           <polyline class="fp-concept4__trace" data-testid="trace" points="${escapeHtml(trace.points)}"></polyline>
           <circle class="fp-concept4__point" data-testid="point" cx="${trace.cx}" cy="${trace.cy}" r="6"></circle>
         </svg>
@@ -257,7 +250,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
   private tableau(valeurs: Valeurs): EscapedHtml {
     const parametre = this.pilote();
     if (parametre === null) {
-      return safeHtml``;
+      return VIDE;
     }
     if ((this.definition?.etapes ?? []).length > 0) {
       return this.tableauDesEtapes(valeurs);
@@ -280,7 +273,7 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
       this.texte('concept4-etape'),
       etapes.map(
         (etape, rang) =>
-          safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(rang === derniere))}"><td>${escapeHtml(etape.libelle)}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(formater(resultats[rang]))}</td></tr>`,
+          safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(rang === derniere))}"><td>${escapeHtml(etape.libelle)}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(enFrancais(resultats[rang]))}</td></tr>`,
       ),
     );
   }
@@ -320,11 +313,11 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
   }
 
   private ligne(ligne: LigneTableau): EscapedHtml {
-    return safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(ligne.courant))}"><td class="fp-montant">${escapeHtml(formater(ligne.valeur))}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(formater(ligne.resultat))}</td></tr>`;
+    return safeHtml`<tr class="fp-concept4__ligne" data-testid="ligne" data-courant="${escapeHtml(String(ligne.courant))}"><td class="fp-montant">${escapeHtml(enFrancais(ligne.valeur))}</td><td class="fp-montant" data-testid="resultat-ligne">${escapeHtml(enFrancais(ligne.resultat))}</td></tr>`;
   }
 
   private enMots(definition: Concept4Definition, valeurs: Valeurs, resultat: number): EscapedHtml {
-    const phrase = remplirGabarit(definition.phrase, { ...valeurs, resultat }, formater);
+    const phrase = remplirGabarit(definition.phrase, { ...valeurs, resultat }, enFrancais);
     return safeHtml`
       <div class="fp-concept4__face" data-testid="phrase" data-valeur="${escapeHtml(String(resultat))}">
         <h3 class="fp-concept4__intitule">${escapeHtml(this.texte('concept4-phrase'))}</h3>

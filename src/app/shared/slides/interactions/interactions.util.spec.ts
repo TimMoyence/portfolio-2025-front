@@ -101,29 +101,24 @@ describe('interactions.util', () => {
       });
     });
 
-    it('tolere la shape legacy flat et derive slideId depuis id quand absent', (done) => {
-      const source = of([
-        { id: 'q1', type: 'quiz', question: 'legacy' },
-        { slideId: 's2', type: 'poll', question: 'explicit' },
-      ]);
-
-      flattenInteractions(source).subscribe((list) => {
-        expect(list.length).toBe(2);
-        expect(list[0].slideId).toBe('q1');
-        expect(list[0].type).toBe('quiz');
-        expect(list[1].slideId).toBe('s2');
+    it('donne un type vide a une interaction servie sans type', (done) => {
+      flattenInteractions(sourceImbriquee({ present: [{ question: 'Q3' }] })).subscribe((list) => {
+        expect(list.map((interaction) => interaction.type)).toEqual(['']);
         done();
       });
     });
 
-    it('retourne [] pour des entrees invalides (null, non-objet, sans interactions)', (done) => {
+    it('retourne [] pour des entrees invalides (null, non-objet, liste plate, sans interactions)', (done) => {
       flattenInteractions(of(null)).subscribe((a) => {
         expect(a).toEqual([]);
         flattenInteractions(of(42)).subscribe((b) => {
           expect(b).toEqual([]);
           flattenInteractions(of({ slug: 'x' })).subscribe((c) => {
             expect(c).toEqual([]);
-            done();
+            flattenInteractions(of([{ slideId: 's2', type: 'poll' }])).subscribe((d) => {
+              expect(d).toEqual([]);
+              done();
+            });
           });
         });
       });
@@ -149,16 +144,6 @@ describe('interactions.util', () => {
       chargerSansErreur<Reflection>(source, 'reflection', 'slide-a').subscribe((found) => {
         expect(found).not.toBeNull();
         expect(found?.question).toBe('trouvee');
-        done();
-      });
-    });
-
-    it("trouve l'interaction par id legacy", (done) => {
-      const source = of([{ id: 'q1', type: 'quiz', question: 'legacy-quiz' }]);
-
-      chargerSansErreur(source, 'quiz', 'q1').subscribe((found) => {
-        expect(found).not.toBeNull();
-        expect(found?.type).toBe('quiz');
         done();
       });
     });

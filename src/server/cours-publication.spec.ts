@@ -7,6 +7,7 @@ const API = 'https://api.asilidesign.fr/api/v1/portfolio25';
 const API_AVEC_BARRE = `${API}/`;
 const SLUG = 'b2-01-traitement-information-chiffree';
 const CINQ_MINUTES = 300_000;
+const REPLI = 'repli sur le lastmod de seo-metadata.json';
 
 function coursPublie(champs: Readonly<Record<string, unknown>>): Record<string, unknown> {
   const cours: Record<string, unknown> = { ...buildVisualCourse({ ecrans: [] }) };
@@ -61,10 +62,23 @@ describe('lecteurDePublicationsDeCours (H1)', () => {
   });
 
   it('se replie quand publieLe n est pas une date', async () => {
-    appels.and.resolveTo(reponseJson(coursPublie({ publieLe: 'bientôt' })));
+    appels.and.resolveTo(reponseJson(coursPublie({ version: 3, publieLe: 'bientôt' })));
 
     expect(await lecteur(API_AVEC_BARRE)()).toEqual([]);
-    expect(journal.warn).toHaveBeenCalledTimes(1);
+    expect(journal.warn).toHaveBeenCalledOnceWith(
+      jasmine.stringContaining("réponse de l'API hors contrat (publieLe)"),
+    );
+  });
+
+  it('se replie quand la réponse porte un champ que le contrat du catalogue ne connaît pas', async () => {
+    appels.and.resolveTo(
+      reponseJson(coursPublie({ version: 3, publieLe: '2026-10-02T08:15:00.000Z', inconnu: 1 })),
+    );
+
+    expect(await lecteur(API_AVEC_BARRE)()).toEqual([]);
+    expect(journal.warn).toHaveBeenCalledOnceWith(
+      jasmine.stringContaining("réponse de l'API hors contrat (inconnu)"),
+    );
   });
 
   it('se replie quand l API répond en erreur', async () => {
@@ -72,6 +86,9 @@ describe('lecteurDePublicationsDeCours (H1)', () => {
 
     expect(await lecteur(API_AVEC_BARRE)()).toEqual([]);
     expect(journal.warn).toHaveBeenCalledOnceWith(jasmine.stringContaining('503'));
+    expect(journal.warn).toHaveBeenCalledOnceWith(
+      `[sitemap] /formations/${SLUG} : GET /formations/catalogue/${SLUG} a répondu 503, ${REPLI}`,
+    );
   });
 
   it('se replie quand l API ne répond pas', async () => {
@@ -79,6 +96,9 @@ describe('lecteurDePublicationsDeCours (H1)', () => {
 
     expect(await lecteur(API_AVEC_BARRE)()).toEqual([]);
     expect(journal.warn).toHaveBeenCalledOnceWith(jasmine.stringContaining('délai dépassé'));
+    expect(journal.warn).toHaveBeenCalledOnceWith(
+      `[sitemap] /formations/${SLUG} : API injoignable (délai dépassé), ${REPLI}`,
+    );
   });
 
   it('se replie sans appel réseau quand l URL de l API n est pas configurée', async () => {

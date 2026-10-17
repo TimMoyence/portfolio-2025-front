@@ -1,7 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { langueDuSite } from '../config/locales';
 import { serialiserJsonLd } from './json-ld';
+import { NOM_DU_SITE } from './nom-du-site';
 import type { SeoConfig } from './seo.interface';
 
 const OG_LOCALE_MAP: Record<string, string> = {
@@ -75,7 +77,7 @@ export class SeoService {
 
     this.meta.updateTag({
       property: 'og:site_name',
-      content: 'Asili Design',
+      content: NOM_DU_SITE,
     });
   }
 
@@ -164,6 +166,6 @@ export class SeoService {
 
   /** Angular peut fournir "fr", "fr-FR", "en", "en-US"... selon la configuration. */
   private resolveLocaleKey(): string {
-    return (this.localeId ?? 'fr').toLowerCase().split('-')[0];
+    return langueDuSite(this.localeId ?? 'fr');
   }
 }

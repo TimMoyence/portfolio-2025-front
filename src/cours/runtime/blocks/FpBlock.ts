@@ -2,12 +2,12 @@ import type { ExplicationServie, Role } from '../../content/types';
 import { adoptCoursStyles } from '../design/sheet';
 import { texte as traduire } from '../core/i18n';
 import { suivreLesDefileurs } from '../core/defileur';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { dureeMonotoneDepuis, instantMonotone } from '../core/duree';
+import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { avecUnite, estChaineNonVide } from '../core/valeurs';
 import { suivreLesZonesDeSaisie } from '../core/zone-de-saisie';
 import type { DetailDeVerdict, VerdictDeProduction, VerdictDeReponse } from './retours';
 
-const VIDE = escapeHtml('');
-const DESACTIVE = safeHtml`disabled`;
 const ATTRIBUTS_DE_REPERE: readonly string[] = [
   'data-testid',
   'data-nom',
@@ -111,7 +111,7 @@ export abstract class FpBlock extends HTMLElement {
   }
 
   protected appliquerErreur(valeur: string | null): void {
-    this.interneErreur = typeof valeur === 'string' && valeur.length > 0 ? valeur : null;
+    this.interneErreur = estChaineNonVide(valeur) ? valeur : null;
     this.refreshSiConnecte();
   }
 
@@ -162,6 +162,12 @@ export abstract class FpBlock extends HTMLElement {
     return this.hasAttribute('data-papier');
   }
 
+  protected casesAImprimer(options: readonly { readonly libelle: string }[]): EscapedHtml[] {
+    return options.map(
+      (option) => safeHtml`<li data-testid="case">${escapeHtml(option.libelle)}</li>`,
+    );
+  }
+
   texte(cle: string): string {
     return traduire(cle);
   }
@@ -173,7 +179,7 @@ export abstract class FpBlock extends HTMLElement {
   suivreAffichage(id: string | null): void {
     if (id !== this.idAffiche) {
       this.idAffiche = id;
-      this.affiche = Date.now();
+      this.affiche = instantMonotone();
     }
   }
 
@@ -182,8 +188,17 @@ export abstract class FpBlock extends HTMLElement {
     return !this.presentateur();
   }
 
+  protected suivreEtRafraichir(id: string | null): void {
+    this.suivreAffichage(id);
+    this.refreshSiConnecte();
+  }
+
   depuisAffichage(): number {
-    return Date.now() - this.affiche;
+    return dureeMonotoneDepuis(this.affiche);
+  }
+
+  restantDepuisAffichage(dureeMs: number): number {
+    return Math.max(0, dureeMs - this.depuisAffichage());
   }
 
   refresh(): void {
@@ -227,12 +242,6 @@ export abstract class FpBlock extends HTMLElement {
 
   protected messageApresEnvoi(): string {
     return this.texte(this.enApercu() ? 'apercu' : 'reponse-enregistree');
-  }
-
-  protected signalerBrouillon(id: string, valeur: unknown): void {
-    if (!this.enApercu() && !this.presentateur()) {
-      this.emit('fp-brouillon', { id, valeur });
-    }
   }
 
   protected noterBrouillonRepris(): void {
@@ -301,12 +310,26 @@ export abstract class FpBlock extends HTMLElement {
     if (verdict.neSaitPas) {
       return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict"><strong>${escapeHtml(this.texte('verdict-ne-sait-pas'))}</strong></p>`;
     }
-    const pourcentage = Math.round(verdict.score * 100);
-    return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict" data-etat="${escapeHtml(verdict.correcte ? 'confirme' : 'a-revoir')}"><strong>${escapeHtml(this.texte(verdict.correcte ? 'verdict-juste' : 'verdict-a-revoir'))}</strong> <span data-testid="decompte">${escapeHtml(this.texte(cleDuDecompte))} ${justes}/${total}</span> <span data-testid="score">${escapeHtml(this.texte('verdict-score'))} ${pourcentage} %</span></p>`;
+    const pourcentage = avecUnite(Math.round(verdict.score * 100), '%');
+    return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict" data-etat="${escapeHtml(verdict.correcte ? 'confirme' : 'a-revoir')}"><strong>${escapeHtml(this.texte(verdict.correcte ? 'verdict-juste' : 'verdict-a-revoir'))}</strong> <span data-testid="decompte">${escapeHtml(this.texte(cleDuDecompte))} ${justes}/${total}</span> <span data-testid="score">${escapeHtml(this.texte('verdict-score'))} ${escapeHtml(pourcentage)}</span></p>`;
   }
 
   protected boutonNeSaitPas(desactive: boolean): EscapedHtml {
     return safeHtml`<button type="button" class="fp-bouton-neutre" data-testid="je-ne-sais-pas" ${desactive ? DESACTIVE : VIDE}>${escapeHtml(this.texte('je-ne-sais-pas'))}</button>`;
+  }
+
+  protected brancherLesBoutons(
+    racine: ShadowRoot,
+    selecteur: string,
+    verrouille: boolean,
+    agir: (bouton: HTMLButtonElement) => void,
+  ): void {
+    for (const bouton of racine.querySelectorAll<HTMLButtonElement>(selecteur)) {
+      bouton.disabled = verrouille;
+      if (!verrouille) {
+        bouton.addEventListener('click', () => agir(bouton));
+      }
+    }
   }
 
   private signalerErreur(erreur: unknown): void {

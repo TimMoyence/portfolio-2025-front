@@ -1,4 +1,5 @@
 import type { ResumeBareme } from '../../../../cours/content/types';
+import { avecUnite } from '../../../../cours/runtime/core/valeurs';
 import {
   buildRegleNotation,
   buildResumeBareme,
@@ -47,7 +48,7 @@ const COMBINAISONS: readonly Combinaison[] = produitDesAxes(AXES).flatMap((surch
 );
 
 function pourCent(part: number): string {
-  return `${Math.round(part * 100)} %`;
+  return avecUnite(Math.round(part * 100), '%');
 }
 
 function intitule({ regle, bareme }: Combinaison): string {

@@ -1,15 +1,11 @@
 export interface ToolkitPageData {
   recap: {
     firstName: string;
-    aiLevel: string | null;
-    sector: string | null;
-    budgetTier: string | null;
   };
   cheatsheet: CheatsheetEntry[];
   prompts: PromptEntry[];
   workflows: WorkflowEntry[];
   templates: TemplateEntry[];
-  generatedPrompt: string | null;
 }
 
 interface CheatsheetEntry {
@@ -19,18 +15,17 @@ interface CheatsheetEntry {
   url: string;
   tip: string;
   decision: string;
-  alreadyUsed: boolean;
 }
 
 interface PromptEntry {
   category: string;
   title: string;
-  level: string;
+  level: 'debutant' | 'intermediaire' | 'avance';
   prompt: string;
   tool: string;
-  description?: string;
-  example?: string;
-  tip?: string;
+  description: string;
+  example: string;
+  tip: string;
 }
 
 interface WorkflowStep {
@@ -44,7 +39,7 @@ interface WorkflowEntry {
   title: string;
   description: string;
   setupTime: string;
-  monthlyCost: string;
+  monthlyCost: number;
   steps: WorkflowStep[];
   tools: string[];
 }
@@ -54,5 +49,5 @@ interface TemplateEntry {
   platform: string;
   url: string;
   description: string;
-  minBudget: string;
+  minBudget: number;
 }

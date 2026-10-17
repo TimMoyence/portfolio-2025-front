@@ -1,4 +1,5 @@
 import type { EcranDeroule } from '../../../../cours/content/types';
+import { questionServie } from '../../../shared/slides/session/lecture-ecran';
 
 export interface CorrectionAffichee {
   readonly enonce: string;
@@ -19,7 +20,7 @@ export function correctionsAffichees(
     return [];
   }
   return ecran.corriges.map((corrige) => ({
-    enonce: ecran.questions.find(({ id }) => id === corrige.questionId)?.enonce ?? '',
+    enonce: questionServie(ecran, corrige.questionId)?.enonce ?? '',
     bonneReponse: corrige.bonneReponse,
   }));
 }

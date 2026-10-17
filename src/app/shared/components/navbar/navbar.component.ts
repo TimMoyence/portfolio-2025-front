@@ -1,11 +1,12 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import type { ElementRef } from '@angular/core';
+import { CommonModule, isPlatformBrowser, ViewportScroller } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
+  DestroyRef,
   effect,
+  ElementRef,
   HostListener,
   Inject,
   LOCALE_ID,
@@ -13,13 +14,14 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { LOCALES_DU_SITE } from '../../../core/config/locales';
+import { RouterModule } from '@angular/router';
+import { LOCALES_DU_SITE, langueDuSite } from '../../../core/config/locales';
 import { cheminEnLocale } from '../../../core/seo/chemins';
 import { BreakpointService } from '../../../core/services/breakpoint.service';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import type { DropdownSection, NavLink } from '../../models/navbar.model';
 import { A11yDialogService } from '../../services/a11y-dialog.service';
+import { initialeDe } from '../../utils/initiale.utils';
 import { SvgIconComponent } from '../svg-icon.component';
 
 @Component({
@@ -92,15 +94,11 @@ export class NavbarComponent {
   readonly openMenuIconLabel = $localize`:navbar.menu.icon.open|Icon label@@navMenuOpenIcon:Ouvrir le menu`;
   readonly currentLocale = inject(LOCALE_ID);
   readonly authState = inject(AuthStateService);
-  private readonly router = inject(Router);
   private readonly breakpointService = inject(BreakpointService);
 
   readonly userInitials = computed(() => {
     const user = this.authState.user();
-    if (!user?.firstName && !user?.lastName) return '';
-    const first = (user.firstName ?? '').charAt(0).toUpperCase();
-    const last = (user.lastName ?? '').charAt(0).toUpperCase();
-    return `${first}${last}`;
+    return `${initialeDe(user?.firstName)}${initialeDe(user?.lastName)}`;
   });
 
   readonly avatarColor = computed(() => {
@@ -154,16 +152,25 @@ export class NavbarComponent {
       this.authState.user();
       this.cdr.markForCheck();
     });
+    if (isPlatformBrowser(this.platformId)) {
+      const defilement = inject(ViewportScroller);
+      const hote = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+      defilement.setOffset(() => [
+        0,
+        hote.querySelector('nav')?.getBoundingClientRect().bottom ?? 0,
+      ]);
+      inject(DestroyRef).onDestroy(() => defilement.setOffset([0, 0]));
+    }
   }
 
   getAlternateLocaleUrl(): string {
     if (!isPlatformBrowser(this.platformId)) return '#';
-    const targetLocale = this.currentLocale.startsWith('fr') ? 'en' : 'fr';
+    const targetLocale = langueDuSite(this.currentLocale) === 'fr' ? 'en' : 'fr';
     return cheminEnLocale(window.location.pathname, targetLocale, LOCALES_DU_SITE);
   }
 
   getAlternateLocaleLabel(): string {
-    return this.currentLocale.startsWith('fr') ? 'EN' : 'FR';
+    return langueDuSite(this.currentLocale) === 'fr' ? 'EN' : 'FR';
   }
 
   @HostListener('window:scroll', [])
@@ -178,9 +185,8 @@ export class NavbarComponent {
 
   logout(): void {
     this.closeUserDropdown();
-    this.authState.logout();
     this.closeMobileMenu();
-    void this.router.navigate(['/']);
+    this.authState.logoutEtAccueil();
   }
 
   toggleUserDropdown(): void {

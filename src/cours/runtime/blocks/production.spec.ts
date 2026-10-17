@@ -114,9 +114,11 @@ describe('QP-05 · une production des cours servis n est « Juste » que toute j
 
       hote.verdict = buildVerdictDeProduction({ questionId: plan.id, correcte: false, score: 0.8 });
       expect(verdictAffiche(hote)).toEqual(['a-revoir', 'À revoir', 'Score : 80 %']);
+      expect(noeudOmbre(hote, 'score')?.textContent).toContain('80 %');
 
       hote.verdict = buildVerdictDeProduction({ questionId: plan.id, correcte: true, score: 1 });
       expect(verdictAffiche(hote)).toEqual(['confirme', 'Juste', 'Score : 100 %']);
+      expect(noeudOmbre(hote, 'score')?.textContent).toContain('100 %');
       hote.remove();
     });
   }

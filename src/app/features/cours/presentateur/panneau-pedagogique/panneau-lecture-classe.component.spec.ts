@@ -14,6 +14,7 @@ import {
 } from '../../../../../testing/factories/formations.factory';
 import { ecransDuPupitreDe } from '../../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../../testing/fixtures/instantanes-des-cours';
+import { ecranNomme } from '../../../../../testing/montage-d-instantane';
 import { PanneauLectureClasseComponent } from './panneau-lecture-classe.component';
 
 type Fixture = ComponentFixture<PanneauLectureClasseComponent>;
@@ -30,11 +31,7 @@ const ECRANS_SERVIS: readonly EcranDeroule[] = INSTANTANES_DES_COURS_SERVIS.flat
 );
 
 function ecranServi(id: string): EcranDeroule {
-  const ecran = ECRANS_SERVIS.find((candidat) => candidat.id === id);
-  if (ecran === undefined) {
-    throw new Error(`Écran ${id} absent des cours servis`);
-  }
-  return ecran;
+  return ecranNomme(ECRANS_SERVIS, id);
 }
 
 function parcoursDe(ecran: EcranDeroule): {

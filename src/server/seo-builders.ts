@@ -1,4 +1,4 @@
-import { escapeHtml } from 'portfolio-2025-partage/html';
+import { escapeHtml } from '../cours/runtime/core/html';
 import type {
   SeoLocaleMeta,
   SeoMetadataFile,
@@ -6,6 +6,7 @@ import type {
 } from '../app/core/seo/seo-metadata.model';
 import type { PublicationDeCours } from './cours-publication';
 import { buildLocalizedPath, normalizePath, urlLocalisee } from '../app/core/seo/chemins';
+import { NOM_DU_SITE } from '../app/core/seo/nom-du-site';
 import {
   cheminPublicDeLaPage,
   estIndexable,
@@ -173,7 +174,7 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
 
   const site = metadata.global?.localBusiness as
     { name?: string; description?: string; founder?: { name?: string } } | undefined;
-  const siteName = site?.name ?? 'Asili Design';
+  const siteName = site?.name ?? NOM_DU_SITE;
   const siteDescription = site?.description ?? '';
   const founderName = site?.founder?.name ?? 'Tim Moyence';
 
@@ -265,7 +266,7 @@ export const buildLlmsFullTxt = (metadata: SeoMetadataFile, baseUrl: string): st
   const lines: string[] = [];
   const site = metadata.global?.localBusiness as
     { name?: string; description?: string } | undefined;
-  lines.push(`# ${site?.name ?? 'Asili Design'} — llms-full`);
+  lines.push(`# ${site?.name ?? NOM_DU_SITE} — llms-full`);
   lines.push('');
   lines.push('> Agregation complete du contenu indexable (title, description, URL,');
   lines.push('> dateModified, mots-cles) pour ingestion par moteurs IA generatifs.');

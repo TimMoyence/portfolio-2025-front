@@ -34,17 +34,9 @@ export class ArticlesListComponent {
   private readonly cdr = inject(ChangeDetectorRef);
 
   constructor() {
-    this.api.list(this.locale, ARTICLES_PAGE_SIZE).subscribe({
-      next: (response) => {
-        this.ajouterLaPage(response);
-        this.isLoading = false;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.isLoading = false;
-        this.hasError = true;
-        this.cdr.markForCheck();
-      },
+    this.lireLaPage(undefined, (echec) => {
+      this.isLoading = false;
+      this.hasError = echec;
     });
   }
 
@@ -52,15 +44,21 @@ export class ArticlesListComponent {
     if (!this.nextCursor || this.isLoadingMore) return;
     this.isLoadingMore = true;
     this.hasLoadMoreError = false;
-    this.api.list(this.locale, ARTICLES_PAGE_SIZE, this.nextCursor).subscribe({
-      next: (response) => {
-        this.ajouterLaPage(response);
-        this.isLoadingMore = false;
+    this.lireLaPage(this.nextCursor, (echec) => {
+      this.isLoadingMore = false;
+      this.hasLoadMoreError = echec;
+    });
+  }
+
+  private lireLaPage(curseur: string | undefined, conclure: (echec: boolean) => void): void {
+    this.api.list(this.locale, ARTICLES_PAGE_SIZE, curseur).subscribe({
+      next: (page) => {
+        this.ajouterLaPage(page);
+        conclure(false);
         this.cdr.markForCheck();
       },
       error: () => {
-        this.isLoadingMore = false;
-        this.hasLoadMoreError = true;
+        conclure(true);
         this.cdr.markForCheck();
       },
     });

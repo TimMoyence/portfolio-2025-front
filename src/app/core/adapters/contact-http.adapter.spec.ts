@@ -3,12 +3,32 @@ import {
   verifierErreurRelayee,
   verifierPostRelaye,
 } from '../../../testing/http-attendu';
+import { lecturesStrictes } from '../../../testing/lecture-stricte';
 import type { ContactFormState } from '../models/contact.model';
-import type { MessageResponse } from '../models/message.response';
 import { ContactHttpAdapter } from './contact-http.adapter';
+
+const DEMANDE_MINIMALE: ContactFormState = {
+  email: 'john@example.com',
+  firstName: 'John',
+  lastName: 'Doe',
+  subject: 'Test',
+  message: 'Test message',
+  role: 'other',
+  terms: true,
+};
 
 describe('ContactHttpAdapter', () => {
   const banc = bancAdaptateurHttp(ContactHttpAdapter);
+
+  describe('lecture des réponses servies par le back', () => {
+    lecturesStrictes(banc, [
+      {
+        route: 'POST /api/contacts',
+        chemin: '/contacts',
+        appel: (a) => a.contact(DEMANDE_MINIMALE),
+      },
+    ]);
+  });
 
   it('should POST contact form data to the contacts endpoint', () => {
     const payload: ContactFormState = {
@@ -25,7 +45,7 @@ describe('ContactHttpAdapter', () => {
       termsAcceptedAt: '2026-03-01T10:00:00Z',
       termsMethod: 'checkbox',
     };
-    const response: MessageResponse = {
+    const response = {
       message: 'Message envoyé avec succès.',
       httpCode: 201,
     };
@@ -40,17 +60,7 @@ describe('ContactHttpAdapter', () => {
   });
 
   it('should propagate HTTP errors', () => {
-    const payload: ContactFormState = {
-      email: 'john@example.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      subject: 'Test',
-      message: 'Test message',
-      role: 'other',
-      terms: true,
-    };
-
-    verifierErreurRelayee(banc.adapter.contact(payload), banc.httpMock, '/contacts', {
+    verifierErreurRelayee(banc.adapter.contact(DEMANDE_MINIMALE), banc.httpMock, '/contacts', {
       corps: 'Validation error',
       status: 422,
       statusText: 'Unprocessable Entity',

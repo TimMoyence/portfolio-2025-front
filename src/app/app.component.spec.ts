@@ -1,9 +1,18 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { APP_BASE_HREF } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  type EnvironmentProviders,
+  type Provider,
+} from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { AUTH_PORT } from './core/ports/auth.port';
 import { COOKIE_CONSENT_PORT } from './core/ports/cookie-consent.port';
 import { AppComponent } from './app.component';
+import { createAuthPortStub } from '../testing/factories/auth.factory';
 import { createCookieConsentPortStub } from '../testing/factories/cookie-consent.factory';
+import { cliquerSansQuitterLaPage } from '../testing/montage-page';
 import { setupTestBed } from '../testing/setup-test-bed';
 
 @Component({
@@ -21,6 +30,27 @@ class PageRouteeComponent {
   }
 }
 
+const portsDeLaCoquille = (): Provider[] => [
+  { provide: COOKIE_CONSENT_PORT, useValue: createCookieConsentPortStub() },
+  { provide: AUTH_PORT, useValue: createAuthPortStub() },
+];
+
+const preparerLApplication = (...providers: (Provider | EnvironmentProviders)[]): Promise<void> =>
+  setupTestBed({
+    imports: [AppComponent],
+    providers: [...portsDeLaCoquille(), ...providers],
+  }).compileComponents();
+
+const ouvrirLaRoute = async (
+  url: string,
+): Promise<{ fixture: ComponentFixture<AppComponent>; compiled: HTMLElement; router: Router }> => {
+  const fixture = TestBed.createComponent(AppComponent);
+  const router = TestBed.inject(Router);
+  await router.navigateByUrl(url);
+  fixture.detectChanges();
+  return { fixture, compiled: fixture.nativeElement as HTMLElement, router };
+};
+
 describe('AppComponent sur une route sans coquille', () => {
   const ELEMENTS_DE_LA_COQUILLE = [
     'app-navbar',
@@ -28,28 +58,20 @@ describe('AppComponent sur une route sans coquille', () => {
     'app-asili-background',
     'app-skip-link',
     'main .pt-24',
+    'main app-adresse-a-verifier',
   ];
 
-  beforeEach(async () => {
-    await setupTestBed({
-      imports: [AppComponent],
-      providers: [
-        { provide: COOKIE_CONSENT_PORT, useValue: createCookieConsentPortStub() },
-        provideRouter([
-          { path: 'scene', component: PageRouteeComponent, data: { coquille: false } },
-          { path: 'accueil', component: PageRouteeComponent },
-        ]),
-      ],
-    }).compileComponents();
-  });
+  beforeEach(() =>
+    preparerLApplication(
+      provideRouter([
+        { path: 'scene', component: PageRouteeComponent, data: { coquille: false } },
+        { path: 'accueil', component: PageRouteeComponent },
+      ]),
+    ),
+  );
 
   it('retire la coquille du site sur la route qui la refuse et la rend aux autres', async () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const compiled = fixture.nativeElement as HTMLElement;
-    const router = TestBed.inject(Router);
-
-    await router.navigateByUrl('/scene');
-    fixture.detectChanges();
+    const { fixture, compiled, router } = await ouvrirLaRoute('/scene');
 
     for (const selecteur of ELEMENTS_DE_LA_COQUILLE) {
       expect(compiled.querySelector(selecteur)).withContext(selecteur).toBeNull();
@@ -86,12 +108,7 @@ describe('AppComponent', () => {
     await setupTestBed({
       router: true,
       imports: [AppComponent],
-      providers: [
-        {
-          provide: COOKIE_CONSENT_PORT,
-          useValue: createCookieConsentPortStub(),
-        },
-      ],
+      providers: portsDeLaCoquille(),
     }).compileComponents();
   });
 
@@ -152,5 +169,32 @@ describe('AppComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const footerElement = compiled.querySelector('app-footer');
     expect(footerElement).not.toBeNull();
+  });
+});
+
+describe("AppComponent : le lien d'evitement", () => {
+  beforeEach(() =>
+    preparerLApplication(
+      { provide: APP_BASE_HREF, useValue: '/en/' },
+      provideRouter([{ path: 'formations', component: PageRouteeComponent }]),
+    ),
+  );
+
+  it('mene au contenu principal de la page courante, dans sa langue, et le contenu peut prendre le focus', async () => {
+    const { compiled, router } = await ouvrirLaRoute('/formations?ref=menu');
+    const lien = compiled.querySelector<HTMLAnchorElement>('a.skip-link');
+
+    expect(lien?.getAttribute('href')).toBe('/en/formations?ref=menu#main-content');
+
+    const navigation = spyOn(router, 'navigateByUrl').and.callThrough();
+    expect(cliquerSansQuitterLaPage(lien as HTMLElement).priseParLeRouteur).toBeTrue();
+    await navigation.calls.mostRecent()?.returnValue;
+
+    expect(router.url).toBe('/formations?ref=menu#main-content');
+    const contenu = compiled.querySelector<HTMLElement>('main#main-content');
+    document.body.appendChild(compiled);
+    contenu?.focus();
+    expect(document.activeElement).toBe(contenu);
+    compiled.remove();
   });
 });

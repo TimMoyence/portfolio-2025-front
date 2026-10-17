@@ -1,8 +1,11 @@
 import { attendreLeRenduEchappe } from '../../../testing/assertions-briques';
 import {
   attendreLaSeuleOptionFausse,
+  attributDOption,
   detailsEmis,
   installerBrique,
+  noeudOmbre,
+  noeudsOmbre,
   texteOmbre,
 } from '../../../testing/banc-de-brique';
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
@@ -11,6 +14,7 @@ import {
   buildRecallQuestion,
   buildVerdictDeReponse,
 } from '../../../testing/factories/cours.factory';
+import { reculerLaPendule, UNE_HEURE_MS } from '../../../testing/horloge-simulee';
 import { FpRecall } from './FpRecall';
 
 interface DetailRecall {
@@ -30,8 +34,8 @@ const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const CORRIGE = { type: 'cible', cible: LIBELLE_PREMIERE, optionId: 'a' };
 
 function champRappel(element: FpRecall): HTMLTextAreaElement {
-  const champ = element.shadowRoot?.querySelector<HTMLTextAreaElement>('[data-testid="rappel"]');
-  if (champ === null || champ === undefined) {
+  const champ = noeudOmbre<HTMLTextAreaElement>(element, 'rappel');
+  if (champ === null) {
     throw new Error('champ de rappel absent');
   }
   return champ;
@@ -43,24 +47,27 @@ function saisirRappel(element: FpRecall, frappe: string): void {
   champ.dispatchEvent(new Event('input'));
 }
 
-function optionsDe(element: FpRecall): HTMLButtonElement[] {
-  return [
-    ...(element.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-testid="option"]') ?? []),
-  ];
-}
-
 function ordreAffiche(element: FpRecall): string[] {
-  return optionsDe(element).map((option) => option.getAttribute('data-option') ?? '');
+  return noeudsOmbre(element, 'option').map((option) => option.getAttribute('data-option') ?? '');
 }
 
-function annonceDe(element: FpRecall): string {
-  return (
-    element.shadowRoot?.querySelector('[data-testid="compte-a-rebours"]')?.textContent?.trim() ?? ''
-  );
+function choisirLOption(element: FpRecall, option: string): void {
+  noeudsOmbre<HTMLButtonElement>(element, 'option')
+    .find((bouton) => bouton.getAttribute('data-option') === option)
+    ?.click();
 }
 
 function soumissionsDe(element: FpRecall): DetailRecall[] {
   return detailsEmis(element, 'fp-recall-submit');
+}
+
+function attendreLesOptionsOuvertes(element: FpRecall): void {
+  expect(noeudsOmbre<HTMLButtonElement>(element, 'option').length).toBe(
+    OPTIONS_AVEC_JE_NE_SAIS_PAS,
+  );
+  expect(texteOmbre(element, 'compte-a-rebours')).toBe(
+    'Choisissez maintenant la proposition qui correspond',
+  );
 }
 
 describe('FpRecall', () => {
@@ -86,11 +93,13 @@ describe('FpRecall', () => {
   for (const instant of INSTANTS_MUETS) {
     it(`ne met aucune option dans le dom a ${instant} ms de rappel`, () => {
       jasmine.clock().tick(instant);
-      expect(optionsDe(hote).length).toBe(0);
+      expect(noeudsOmbre<HTMLButtonElement>(hote, 'option').length).toBe(0);
       expect(hote.shadowRoot?.innerHTML).not.toContain(LIBELLE_PREMIERE);
       for (const role of ROLES_DE_MONTAGE) {
         hote.setAttribute('data-cours-role', role);
-        expect(optionsDe(hote).length).withContext(`role ${role}`).toBe(0);
+        expect(noeudsOmbre<HTMLButtonElement>(hote, 'option').length)
+          .withContext(`role ${role}`)
+          .toBe(0);
         expect(hote.shadowRoot?.innerHTML)
           .withContext(`role ${role}`)
           .not.toContain(LIBELLE_PREMIERE);
@@ -102,50 +111,57 @@ describe('FpRecall', () => {
     const neuve = document.createElement('fp-recall') as FpRecall;
     neuve.question = QUESTION;
     document.body.appendChild(neuve);
-    expect(neuve.shadowRoot?.querySelectorAll('[data-testid="option"]').length).toBe(0);
+    expect(noeudsOmbre(neuve, 'option').length).toBe(0);
     expect(neuve.shadowRoot?.innerHTML).not.toContain(LIBELLE_PREMIERE);
-    expect(annonceDe(neuve)).toBe('Temps d’écriture libre : propositions de réponse dans 8 s');
+    expect(texteOmbre(neuve, 'compte-a-rebours')).toBe(
+      'Temps d’écriture libre : propositions de réponse dans 8 s',
+    );
     neuve.remove();
   });
 
   it('fait apparaitre les options a la fin des huit secondes', () => {
     expect(hote.delaiMs).toBe(DELAI_DEFAUT_MS);
     jasmine.clock().tick(DELAI_DEFAUT_MS);
-    expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
-    expect(annonceDe(hote)).toBe('Choisissez maintenant la proposition qui correspond');
+    attendreLesOptionsOuvertes(hote);
+  });
+
+  it('fait apparaitre les options a la fin des huit secondes meme si l horloge du poste recule d une heure', () => {
+    reculerLaPendule(UNE_HEURE_MS);
+    jasmine.clock().tick(DELAI_DEFAUT_MS);
+
+    attendreLesOptionsOuvertes(hote);
   });
 
   it('respecte un delai configure a la place des huit secondes', () => {
     hote.delaiMs = 3000;
     jasmine.clock().tick(2999);
-    expect(optionsDe(hote).length).toBe(0);
+    expect(noeudsOmbre<HTMLButtonElement>(hote, 'option').length).toBe(0);
     jasmine.clock().tick(1);
-    expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
+    expect(noeudsOmbre<HTMLButtonElement>(hote, 'option').length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
   });
 
   it('F02 · montre les options sans attendre quand le formateur les affiche', () => {
     hote.delaiMs = 30000;
     jasmine.clock().tick(1000);
-    expect(optionsDe(hote).length).toBe(0);
+    expect(noeudsOmbre<HTMLButtonElement>(hote, 'option').length).toBe(0);
 
     hote.optionsAffichees = true;
 
-    expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
-    expect(annonceDe(hote)).toBe('Choisissez maintenant la proposition qui correspond');
-    optionsDe(hote)[0].click();
-    expect(optionsDe(hote)[0].disabled).toBeTrue();
+    attendreLesOptionsOuvertes(hote);
+    noeudsOmbre<HTMLButtonElement>(hote, 'option')[0].click();
+    expect(noeudsOmbre<HTMLButtonElement>(hote, 'option')[0].disabled).toBeTrue();
   });
 
   it('sans delai, montre les options d emblee, sans champ, consigne ni compte a rebours', () => {
     hote.delaiMs = 0;
     const details = soumissionsDe(hote);
 
-    expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
-    expect(hote.shadowRoot?.querySelector('[data-testid="rappel"]')).toBeNull();
-    expect(hote.shadowRoot?.querySelector('[data-testid="consigne"]')).toBeNull();
-    expect(hote.shadowRoot?.querySelector('[data-testid="compte-a-rebours"]')).toBeNull();
+    expect(noeudsOmbre<HTMLButtonElement>(hote, 'option').length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
+    expect(noeudOmbre(hote, 'rappel')).toBeNull();
+    expect(noeudOmbre(hote, 'consigne')).toBeNull();
+    expect(noeudOmbre(hote, 'compte-a-rebours')).toBeNull();
 
-    optionsDe(hote)[0].click();
+    noeudsOmbre<HTMLButtonElement>(hote, 'option')[0].click();
     expect(details.length).toBe(1);
     expect(details[0].rappel).toBe('');
   });
@@ -157,7 +173,7 @@ describe('FpRecall', () => {
   });
 
   it('annonce le compte a rebours dans une region live', () => {
-    const compte = hote.shadowRoot?.querySelector('[data-testid="compte-a-rebours"]');
+    const compte = noeudOmbre(hote, 'compte-a-rebours');
     expect(compte?.getAttribute('aria-live')).toBe('polite');
   });
 
@@ -171,7 +187,7 @@ describe('FpRecall', () => {
   for (const palier of PALIERS) {
     it(`annonce le temps restant apres ${palier.ecoule} ms`, () => {
       jasmine.clock().tick(palier.ecoule);
-      expect(annonceDe(hote)).toBe(palier.annonce);
+      expect(texteOmbre(hote, 'compte-a-rebours')).toBe(palier.annonce);
     });
   }
 
@@ -179,9 +195,11 @@ describe('FpRecall', () => {
     jasmine.clock().tick(5000);
     hote.remove();
     document.body.appendChild(hote);
-    expect(annonceDe(hote)).toBe('Temps d’écriture libre : propositions de réponse dans 3 s');
+    expect(texteOmbre(hote, 'compte-a-rebours')).toBe(
+      'Temps d’écriture libre : propositions de réponse dans 3 s',
+    );
     jasmine.clock().tick(3000);
-    expect(optionsDe(hote).length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
+    expect(noeudsOmbre<HTMLButtonElement>(hote, 'option').length).toBe(OPTIONS_AVEC_JE_NE_SAIS_PAS);
   });
 
   it('ne remplace pas le champ de rappel a chaque seconde ecoulee', () => {
@@ -197,9 +215,7 @@ describe('FpRecall', () => {
     saisirRappel(hote, RAPPEL_ETUDIANT);
     jasmine.clock().tick(DELAI_DEFAUT_MS);
     jasmine.clock().tick(400);
-    optionsDe(hote)
-      .find((option) => option.getAttribute('data-option') === 'b')
-      ?.click();
+    choisirLOption(hote, 'b');
     expect(details.length).toBe(1);
     expect(details[0].rappel).toBe(RAPPEL_ETUDIANT);
     expect(details[0].valeur).toBe('b');
@@ -210,19 +226,23 @@ describe('FpRecall', () => {
   it('n emet qu une seule reponse par question', () => {
     const details = soumissionsDe(hote);
     jasmine.clock().tick(DELAI_DEFAUT_MS);
-    optionsDe(hote)[0].click();
-    optionsDe(hote)[1]?.click();
+    noeudsOmbre<HTMLButtonElement>(hote, 'option')[0].click();
+    noeudsOmbre<HTMLButtonElement>(hote, 'option')[1]?.click();
     expect(details.length).toBe(1);
-    expect(optionsDe(hote).every((option) => option.disabled)).toBe(true);
+    expect(noeudsOmbre<HTMLButtonElement>(hote, 'option').every((option) => option.disabled)).toBe(
+      true,
+    );
   });
 
   it('marque l option choisie, et elle seule, une fois la réponse envoyée', () => {
     jasmine.clock().tick(DELAI_DEFAUT_MS);
-    optionsDe(hote)[1].click();
+    noeudsOmbre<HTMLButtonElement>(hote, 'option')[1].click();
 
-    expect(optionsDe(hote).map((option) => option.getAttribute('aria-pressed'))).toEqual(
-      optionsDe(hote).map((_, rang) => String(rang === 1)),
-    );
+    expect(
+      noeudsOmbre<HTMLButtonElement>(hote, 'option').map((option) =>
+        option.getAttribute('aria-pressed'),
+      ),
+    ).toEqual(noeudsOmbre<HTMLButtonElement>(hote, 'option').map((_, rang) => String(rang === 1)));
   });
 
   it('garde l ordre servi, deja melange par le serveur, et termine par je ne sais pas', () => {
@@ -249,7 +269,9 @@ describe('FpRecall', () => {
     hote.verdict = buildVerdictDeReponse({ questionId: QUESTION.id, correcte: true });
 
     expect(texteOmbre(hote, 'verdict')).toContain('Juste');
-    expect(optionsDe(hote).every((option) => option.disabled)).toBeTrue();
+    expect(
+      noeudsOmbre<HTMLButtonElement>(hote, 'option').every((option) => option.disabled),
+    ).toBeTrue();
   });
 
   it('memorise le rappel en brouillon et le restaure apres rechargement', () => {
@@ -266,6 +288,13 @@ describe('FpRecall', () => {
     expect(champRappel(rechargee).value).toBe(RAPPEL_ETUDIANT);
     expect(texteOmbre(rechargee, 'brouillon-restaure')).toBe('Brouillon restauré');
     rechargee.remove();
+  });
+
+  it('ne reprend pas un brouillon dont le rappel n est pas un texte', () => {
+    hote.brouillon = { rappel: 12 };
+
+    expect(champRappel(hote).value).toBe('');
+    expect(hote.shadowRoot?.textContent).not.toContain('Brouillon restauré');
   });
 
   it('efface une donnee de correction nichee dans les metadonnees', () => {
@@ -300,9 +329,7 @@ describe('FpRecall', () => {
     expect(hote.question?.metadonnees.modalite).toBe('solo');
     expect(hote.question?.metadonnees.dureeMinutes).toBe(4);
     for (const repere of ['concepts', 'modalite', 'duree']) {
-      expect(hote.shadowRoot?.querySelector(`[data-testid="${repere}"]`))
-        .withContext(repere)
-        .toBeNull();
+      expect(noeudOmbre(hote, repere)).withContext(repere).toBeNull();
     }
   });
 
@@ -322,9 +349,11 @@ describe('FpRecall', () => {
 
     expect(hote.shadowRoot?.querySelector('legend')?.textContent?.trim()).toBe(QUESTION.enonce);
     expect(texteOmbre(hote, 'consigne')).not.toBe('');
-    expect(annonceDe(hote)).toBe('Temps d’écriture libre : propositions de réponse dans 8 s');
-    expect(hote.shadowRoot?.querySelector('[data-testid="rappel"]')).toBeNull();
-    expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')).toBeNull();
+    expect(texteOmbre(hote, 'compte-a-rebours')).toBe(
+      'Temps d’écriture libre : propositions de réponse dans 8 s',
+    );
+    expect(noeudOmbre(hote, 'rappel')).toBeNull();
+    expect(noeudOmbre(hote, 'retour')).toBeNull();
   });
 
   it('au terme du delai, montre au presentateur les options inertes sans je ne sais pas', () => {
@@ -333,8 +362,10 @@ describe('FpRecall', () => {
     jasmine.clock().tick(DELAI_DEFAUT_MS);
 
     expect(ordreAffiche(hote)).toEqual(QUESTION.options.map((option) => option.id));
-    expect(optionsDe(hote).every((option) => option.disabled)).toBeTrue();
-    optionsDe(hote)[0].click();
+    expect(
+      noeudsOmbre<HTMLButtonElement>(hote, 'option').every((option) => option.disabled),
+    ).toBeTrue();
+    noeudsOmbre<HTMLButtonElement>(hote, 'option')[0].click();
     expect(details).toEqual([]);
   });
 
@@ -342,22 +373,18 @@ describe('FpRecall', () => {
     it(`revele au role ${role} la bonne reponse et marque la bonne option quand le corrige est pose`, () => {
       hote.setAttribute('data-cours-role', role);
       jasmine.clock().tick(DELAI_DEFAUT_MS);
-      expect(hote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]')).toBeNull();
+      expect(noeudOmbre(hote, 'bonne-reponse')).toBeNull();
 
       hote.corrige = CORRIGE;
 
       expect(texteOmbre(hote, 'bonne-reponse')).toContain(LIBELLE_PREMIERE);
-      expect(
-        hote.shadowRoot?.querySelector('[data-option="a"]')?.getAttribute('data-correction'),
-      ).toBe('juste');
+      expect(attributDOption(hote, 'a', 'data-correction')).toBe('juste');
     });
   }
 
   it('marque comme fausse l option choisie par l etudiant quand ce n est pas la bonne', () => {
     jasmine.clock().tick(DELAI_DEFAUT_MS);
-    optionsDe(hote)
-      .find((option) => option.getAttribute('data-option') === 'b')
-      ?.click();
+    choisirLOption(hote, 'b');
 
     hote.corrige = CORRIGE;
 

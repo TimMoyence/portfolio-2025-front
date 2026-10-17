@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import type { StatutScore } from 'portfolio-2025-partage/score';
-import type { ClientReport } from '../../../../core/models/audit-client-report.model';
+import type { ClientReport, StatutScore } from '../../../../core/models/audit-client-report.model';
 
 @Component({
   selector: 'app-pillar-scorecard',

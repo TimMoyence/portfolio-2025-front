@@ -154,6 +154,13 @@ describe('SeoService', () => {
         });
       });
 
+      it('devrait annoncer le nom du site en og:site_name', () => {
+        expect(metaSpy.updateTag).toHaveBeenCalledWith({
+          property: 'og:site_name',
+          content: 'Asili Design',
+        });
+      });
+
       it('devrait mettre a jour les Twitter Card tags', () => {
         expect(metaSpy.updateTag).toHaveBeenCalledWith({
           name: 'twitter:card',

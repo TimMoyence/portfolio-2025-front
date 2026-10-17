@@ -1,19 +1,22 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { NEVER, of, throwError } from 'rxjs';
+import type { ToolkitPageData } from '../../../../core/models/toolkit-page.model';
 import { LEAD_MAGNET_PORT } from '../../../../core/ports/lead-magnet.port';
 import {
   buildToolkitPageData,
   createLeadMagnetPortStub,
 } from '../../../../../testing/factories/lead-magnet.factory';
+import { fournirLaRoute } from '../../../../../testing/factories/route.factory';
 import { ToolkitPrivateComponent } from './toolkit-private.component';
 
 interface SetupOptions {
   token?: string | null;
   behaviour?: 'success' | 'error' | 'pending';
   platform?: 'browser' | 'server';
+  page?: ToolkitPageData;
 }
 
 function setup(opts: SetupOptions = {}): {
@@ -21,11 +24,16 @@ function setup(opts: SetupOptions = {}): {
   component: ToolkitPrivateComponent;
   port: ReturnType<typeof createLeadMagnetPortStub>;
 } {
-  const { token = 'valid-token', behaviour = 'success', platform = 'browser' } = opts;
+  const {
+    token = 'valid-token',
+    behaviour = 'success',
+    platform = 'browser',
+    page = buildToolkitPageData(),
+  } = opts;
 
   const port = createLeadMagnetPortStub();
   if (behaviour === 'success') {
-    port.getToolkitByToken.and.returnValue(of(buildToolkitPageData()));
+    port.getToolkitByToken.and.returnValue(of(page));
   } else if (behaviour === 'error') {
     port.getToolkitByToken.and.returnValue(throwError(() => new Error('token invalide')));
   } else {
@@ -38,14 +46,7 @@ function setup(opts: SetupOptions = {}): {
       provideRouter([]),
       { provide: LEAD_MAGNET_PORT, useValue: port },
       { provide: PLATFORM_ID, useValue: platform },
-      {
-        provide: ActivatedRoute,
-        useValue: {
-          snapshot: {
-            paramMap: convertToParamMap(token ? { token } : {}),
-          },
-        },
-      },
+      fournirLaRoute({ parametres: token ? { token } : {} }),
     ],
   });
 
@@ -105,6 +106,19 @@ describe('ToolkitPrivateComponent', () => {
     expect(headings[0]?.querySelector('em')?.textContent).toContain('débloqué');
     expect(compiled.querySelector('.tkp-table')).not.toBeNull();
     expect(compiled.textContent).toContain('Email de relance');
+  });
+
+  it('n affiche aucun prompt personnalise, meme quand le back le sert encore (LEG-06)', () => {
+    const servieAvecPersonnalisation = {
+      ...buildToolkitPageData(),
+      generatedPrompt: 'Cree une presentation Gamma pour un cabinet de conseil.',
+    };
+    const { fixture } = setup({ page: servieAvecPersonnalisation });
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.textContent).not.toContain('Cree une presentation Gamma');
+    expect(compiled.textContent).not.toContain('Votre prompt Gamma personnalisé');
+    expect(compiled.querySelector('.tkp-gamma-cta')).toBeNull();
   });
 
   it('devrait copier un texte et afficher le feedback de succes', fakeAsync(() => {

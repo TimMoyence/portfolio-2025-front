@@ -81,6 +81,20 @@ describe('ReponsesLibresService', () => {
     await attendreLaRepriseEnregistree(SESSION);
   });
 
+  it('garde en file un texte limite par la cadence du serveur, en attente de la limite, puis le renvoie a la reprise', async () => {
+    const seance = `${SESSION}-limite`;
+    const cle = cleDeReponseLibre(seance, REPONSE.screenId, REPONSE.activityId);
+    port.enregistrerReponseLibre.and.returnValue(
+      throwError(() => new ReponseLibreRefusee('reseau', 429, { minutes: 2 })),
+    );
+
+    expect(await service.envoyer(seance, JETON, REPONSE)).toBe('attente_limite');
+    expect(service.etatsDesEnvois().get(cle)).toBe('attente_limite');
+
+    await attendreLaRepriseEnregistree(seance);
+    expect(service.etatsDesEnvois().get(cle)).toBe('enregistre');
+  });
+
   async function attendreLaRepriseEnregistree(seance: string): Promise<void> {
     port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
     const reprise = await service.reprendre(seance, JETON);
@@ -90,6 +104,58 @@ describe('ReponsesLibresService', () => {
     );
     expect(await pendingFreeResponses(seance, cleCourante())).toEqual([]);
   }
+
+  describe('D-19 · chaque enregistrement reussi se signale au poste', () => {
+    const AUTRE_REFLEXION = { ...REPONSE, activityId: 'B-SORTIE-10' };
+
+    function compterLesReussites(): () => number {
+      let vues = 0;
+      service.envoisReussis.subscribe(() => {
+        vues += 1;
+      });
+      return () => vues;
+    }
+
+    it('signale un envoi enregistre, et pas un envoi retenu par la cadence', async () => {
+      const reussites = compterLesReussites();
+      port.enregistrerReponseLibre.and.returnValues(
+        throwError(() => new ReponseLibreRefusee('reseau', 429, { minutes: 2 })),
+        of({ status: 'enregistre' }),
+      );
+
+      await service.envoyer(`${SESSION}-signal-envoi`, JETON, REPONSE);
+      const apresLeRefus = reussites();
+      await service.envoyer(`${SESSION}-signal-envoi`, JETON, AUTRE_REFLEXION);
+
+      expect([apresLeRefus, reussites()]).toEqual([0, 1]);
+    });
+
+    it('signale un envoi enregistre par la reprise', async () => {
+      const seance = `${SESSION}-signal-reprise`;
+      port.enregistrerReponseLibre.and.returnValue(throwError(() => new Error('reseau coupe')));
+      await service.envoyer(seance, JETON, REPONSE);
+      const reussites = compterLesReussites();
+
+      await attendreLaRepriseEnregistree(seance);
+
+      expect(reussites()).toBe(1);
+    });
+
+    it('n envoie qu une fois chaque reflexion en file sous deux reprises simultanees', async () => {
+      const seance = `${SESSION}-reprises-simultanees`;
+      port.enregistrerReponseLibre.and.returnValue(throwError(() => new Error('reseau coupe')));
+      await service.envoyer(seance, JETON, REPONSE);
+      await service.envoyer(seance, JETON, AUTRE_REFLEXION);
+      port.enregistrerReponseLibre.calls.reset();
+      port.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
+
+      await Promise.all([service.reprendre(seance, JETON), service.reprendre(seance, JETON)]);
+
+      expect(
+        port.enregistrerReponseLibre.calls.allArgs().map(([, , reponse]) => reponse.activityId),
+      ).toEqual(['B-SORTIE-09', 'B-SORTIE-10']);
+    });
+  });
 
   describe('poste partage entre deux etudiants', () => {
     const ECRAN_COMMUN = { ...REPONSE, response: 'texte de A' };

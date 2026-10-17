@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import {
-  URL_API,
+  demanderUnePlace,
   identiteDuPoste,
   inscrireUnPoste,
   lireLeSujet,
@@ -57,9 +57,7 @@ test.describe('Banc — salle chargée derrière une seule adresse', () => {
     expect(postes).toHaveLength(CAPACITE - NAVIGATEURS);
 
     const identiteDeTrop = identiteDuPoste(PREMIER_RANG + CAPACITE);
-    const refus = await request.post(`${URL_API}/formations/sessions/${seance.code}/join`, {
-      data: identiteDeTrop,
-    });
+    const refus = await demanderUnePlace(request, seance, identiteDeTrop);
     expect(refus.status()).toBe(409);
     expect(((await refus.json()) as { code: string }).code).toBe('SEANCE_COMPLETE');
 

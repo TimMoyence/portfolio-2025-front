@@ -1,9 +1,12 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import {
   createLeadMagnetPortStub,
   createLeadMagnetPortStubWithError,
 } from '../../../../testing/factories/lead-magnet.factory';
+import { refusDuBack } from '../../../../testing/factories/probleme-http.factory';
+import { champsAntiRobotDe, horlogesDeSaisie } from '../../../../testing/horloge-simulee';
 import { ToolkitFormComponent } from './toolkit-form.component';
 
 async function monter(port: unknown): Promise<ComponentFixture<ToolkitFormComponent>> {
@@ -86,16 +89,10 @@ describe('ToolkitFormComponent', () => {
     expect(enEchec.nativeElement.querySelector('[data-toolkit-error]')).not.toBeNull();
   });
 
-  it('transmet le formationSlug en @Input au port.requestToolkit', async () => {
-    fixture.componentRef.setInput('formationSlug', 'automatiser-avec-ia');
-
+  it('transmet la langue du site, sans sa région, comme langue d acceptation des conditions', async () => {
     await soumettre(fixture);
 
-    expect(portStub.requestToolkit).toHaveBeenCalledTimes(1);
-    const payload = portStub.requestToolkit.calls.mostRecent().args[0];
-    expect(payload.formationSlug).toBe('automatiser-avec-ia');
-    expect(payload.email).toBe('marie@example.com');
-    expect(payload.firstName).toBe('Marie');
+    expect(portStub.requestToolkit.calls.mostRecent().args[0].termsLocale).toBe('en');
   });
 
   it("affiche l'email soumis dans le bloc succes (data-toolkit-success)", async () => {
@@ -118,6 +115,9 @@ describe('ToolkitFormComponent', () => {
       'marie@example..com',
       'marie exemple@example.com',
       'marie@exa mple.com',
+      'marie@exemple.c',
+      'marie@-exemple.fr',
+      'marie..dupont@exemple.fr',
     ];
 
     function setValidExcept(email: string): void {
@@ -141,10 +141,88 @@ describe('ToolkitFormComponent', () => {
     }
   });
 
-  it("utilise 'ia-solopreneurs' par defaut si aucun formationSlug n'est passe", async () => {
+  it('plafonne le prénom rogné à 50 caractères comptés comme le back, et le dit sous le champ', () => {
+    const texte = (): string => (fixture.nativeElement as HTMLElement).textContent ?? '';
+    component.email.set('marie@example.com');
+    component.termsAccepted.set(true);
+
+    component.firstName.set(` ${String.fromCodePoint(0x1f600).repeat(50)} `);
+    expect(component.isValid()).toBeTrue();
+
+    component.firstName.set('a'.repeat(51));
+    fixture.detectChanges();
+    expect(component.isValid()).toBeFalse();
+    expect(texte()).toContain('Ce champ doit contenir au plus 50 caractères.');
+
+    component.firstName.set('a'.repeat(50));
+    fixture.detectChanges();
+    expect(component.isValid()).toBeTrue();
+    expect(texte()).not.toContain('Ce champ doit contenir au plus 50 caractères.');
+  });
+
+  it('dit sous le champ une adresse que le back refuse', () => {
+    component.email.set('marie@gmail');
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain(
+      'Merci d’entrer une adresse email valide.',
+    );
+  });
+
+  it('envoie au port le toolkit ia-solopreneurs, le seul que le back connaît, avec la saisie', async () => {
     await soumettre(fixture);
 
+    expect(portStub.requestToolkit).toHaveBeenCalledTimes(1);
     const payload = portStub.requestToolkit.calls.mostRecent().args[0];
     expect(payload.formationSlug).toBe('ia-solopreneurs');
+    expect(payload.email).toBe('marie@example.com');
+    expect(payload.firstName).toBe('Marie');
+  });
+
+  describe('L4-F22 · dit le refus du back par son message, et une erreur réseau par celui du formulaire', () => {
+    for (const [cas, erreur, attendu] of [
+      [
+        'un refus du DTO ou de l anti-robot (400)',
+        refusDuBack(400, ['firstName must be shorter than or equal to 50 characters']),
+        'Certaines informations ont été refusées : vérifiez les champs et réessayez.',
+      ],
+      [
+        'la limite horaire (429), avec l attente lue dans Retry-After',
+        refusDuBack(429, 'ThrottlerException: Too Many Requests', { 'Retry-After': '120' }),
+        'Trop de tentatives en peu de temps : réessayez dans 2 min.',
+      ],
+      [
+        'un back injoignable, par le message du formulaire (décision F22 de Tim)',
+        new HttpErrorResponse({ status: 0, url: 'https://asilidesign.fr' }),
+        'Une erreur est survenue. Réessayez.',
+      ],
+    ] as const) {
+      it(`dit ${cas} et rend le bouton`, async () => {
+        TestBed.resetTestingModule();
+        const enEchec = await monter(createLeadMagnetPortStubWithError(erreur));
+
+        await soumettre(enEchec);
+
+        const racine = enEchec.nativeElement as HTMLElement;
+        expect(enEchec.componentInstance.state()).toBe('error');
+        expect(racine.querySelector('[data-toolkit-error]')?.textContent?.trim()).toBe(attendu);
+        expect(
+          racine.querySelector<HTMLButtonElement>('button[type="submit"]')?.disabled,
+        ).toBeFalse();
+      });
+    }
+  });
+
+  it('envoie la durée de saisie mesurée sur l horloge monotone, sans heure de début', async () => {
+    const horloges = horlogesDeSaisie();
+    const fixtureMesuree = TestBed.createComponent(ToolkitFormComponent);
+
+    horloges.saisirPendant(20_000);
+    await soumettre(fixtureMesuree);
+
+    expect(champsAntiRobotDe(portStub.requestToolkit.calls.mostRecent().args[0])).toEqual({
+      formFillDurationMs: 20_000,
+      heureDeDebutEnvoyee: false,
+    });
   });
 });

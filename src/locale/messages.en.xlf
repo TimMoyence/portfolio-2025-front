@@ -114,15 +114,33 @@
       </segment>
     </unit>
 
-    <unit id="authErrorPasswordLength">
+    <unit id="regleDUnMotDePasse">
       <notes>
-        <note category="location">src/app/features/auth/auth.component.html:103,106</note>
-        <note category="description">Password length error</note>
-        <note category="meaning">auth.error.passwordLength</note>
+        <note category="location">src/app/shared/utils/regles-de-saisie.ts:10</note>
       </notes>
       <segment>
-        <source>Le mot de passe doit contenir au moins 8 caractères.</source>
-        <target>Password must be at least 8 characters long.</target>
+        <source>Le mot de passe doit contenir au moins <ph id="0" equiv="longueur" disp="LONGUEUR_MIN_D_UN_MOT_DE_PASSE"/> caractères, dont une majuscule, un chiffre et un caractère spécial.</source>
+        <target>Password must be at least <ph id="0" equiv="longueur" disp="LONGUEUR_MIN_D_UN_MOT_DE_PASSE"/> characters long, including an uppercase letter, a digit and a special character.</target>
+      </segment>
+    </unit>
+
+    <unit id="champTropCourt">
+      <notes>
+        <note category="location">src/app/shared/components/field-errors/field-errors.component.html:10,12</note>
+      </notes>
+      <segment>
+        <source>Ce champ doit contenir au moins <ph id="0" equiv="INTERPOLATION" disp="{{ errors()?.[&apos;minlength&apos;].requiredLength }}"/> caractères.</source>
+        <target>This field must contain at least <ph id="0" equiv="INTERPOLATION" disp="{{ errors()?.[&apos;minlength&apos;].requiredLength }}"/> characters.</target>
+      </segment>
+    </unit>
+
+    <unit id="champTropLong">
+      <notes>
+        <note category="location">src/app/shared/components/field-errors/field-errors.component.html:14,16</note>
+      </notes>
+      <segment>
+        <source>Ce champ doit contenir au plus <ph id="0" equiv="INTERPOLATION" disp="{{ errors()?.[&apos;maxlength&apos;].requiredLength }}"/> caractères.</source>
+        <target>This field must contain at most <ph id="0" equiv="INTERPOLATION" disp="{{ errors()?.[&apos;maxlength&apos;].requiredLength }}"/> characters.</target>
       </segment>
     </unit>
 
@@ -1028,7 +1046,7 @@
         <note category="meaning">auth.signup.field.passwordConfirm</note>
       </notes>
       <segment>
-        <source>Verification de mot de passe</source>
+        <source>Vérification du mot de passe</source>
         <target>Password confirmation</target>
       </segment>
     </unit>
@@ -1088,7 +1106,7 @@
         <note category="meaning">auth.signup.success</note>
       </notes>
       <segment>
-        <source>Inscription reussie. Verifiez votre email pour activer votre compte.</source>
+        <source>Inscription réussie. Vérifiez votre e-mail pour activer votre compte.</source>
         <target>Sign-up successful. Check your email to activate your account.</target>
       </segment>
     </unit>
@@ -3083,8 +3101,8 @@
     </unit>
     <unit id="privacyMetaLastUpdated">
       <segment>
-        <source>Dernière mise à jour : 4 juin 2026</source>
-        <target>Last updated: June 4, 2026</target>
+        <source>Dernière mise à jour : 17 octobre 2026</source>
+        <target>Last updated: October 17, 2026</target>
       </segment>
     </unit>
     <unit id="footerLegalPrivacy">
@@ -3249,23 +3267,6 @@
         <target>Select your role</target>
       </segment>
     </unit>
-    <!-- Navbar — L'Atelier dropdown -->
-    <!-- Weather presentation -->
-    <!-- Weather app -->
-    <!-- Weather level system -->
-    <!-- Budget app -->
-    <!-- Dashboard hero -->
-    <!-- Empty state -->
-    <!-- Month picker -->
-    <!-- Summary cards -->
-    <!-- Filters -->
-    <!-- Transactions table -->
-    <!-- Months -->
-    <!-- Sebastian presentation -->
-
-    <!-- Cartes meteo Curieux (Phase 2B) -->
-
-    <!-- Cartes meteo Expert (Phase 3) -->
     <unit id="navProfileLabel">
       <segment>
         <source>Profil</source>
@@ -3370,13 +3371,13 @@
     </unit>
     <unit id="profilePasswordErrorGeneric">
       <segment>
-        <source>Impossible de definir le mot de passe pour le moment.</source>
+        <source>Impossible de définir le mot de passe pour le moment.</source>
         <target>Unable to set a password right now.</target>
       </segment>
     </unit>
     <unit id="profilePasswordSuccess">
       <segment>
-        <source>Mot de passe defini avec succes.</source>
+        <source>Mot de passe défini avec succès.</source>
         <target>Password set successfully.</target>
       </segment>
     </unit>
@@ -3466,7 +3467,7 @@
     </unit>
     <unit id="profileChangePasswordSuccess">
       <segment>
-        <source>Mot de passe modifie avec succes.</source>
+        <source>Mot de passe modifié avec succès.</source>
         <target>Password changed successfully.</target>
       </segment>
     </unit>
@@ -3526,13 +3527,13 @@
     </unit>
     <unit id="profileEditErrorGeneric">
       <segment>
-        <source>Impossible de mettre a jour le profil pour le moment.</source>
+        <source>Impossible de mettre à jour le profil pour le moment.</source>
         <target>Unable to update profile at this time.</target>
       </segment>
     </unit>
     <unit id="profileEditSuccess">
       <segment>
-        <source>Profil mis a jour avec succes.</source>
+        <source>Profil mis à jour avec succès.</source>
         <target>Profile updated successfully.</target>
       </segment>
     </unit>
@@ -3614,19 +3615,7 @@
     </unit>
 
     <!-- ============================================================ -->
-    <!-- budget-presentation-data.ts                                   -->
-    <!-- ============================================================ -->
-
-    <!-- ============================================================ -->
-    <!-- weather-presentation-data.ts                                  -->
-    <!-- ============================================================ -->
-
-    <!-- ============================================================ -->
-    <!-- sebastian-presentation-data.ts                                -->
-    <!-- ============================================================ -->
-
-    <!-- ============================================================ -->
-    <!-- ia-solopreneurs.data.ts                                       -->
+    <!-- ia-solopreneurs.component.html                                -->
     <!-- ============================================================ -->
 
     <!-- Slide: accroche -->
@@ -4157,8 +4146,6 @@
       </segment>
     </unit>
 
-    <!-- Slide: demo-gamma -->
-
     <!-- Slide: recap-8020 -->
     <unit id="ia-solo.recap-8020.title">
       <segment>
@@ -4296,37 +4283,46 @@
     </unit>
     <unit id="verifyEmailLoading">
       <segment>
-        <source> Verification en cours... </source>
+        <source>Vérification en cours…</source>
         <target> Verification in progress... </target>
       </segment>
     </unit>
     <unit id="verifyEmailRedirect">
       <segment>
-        <source> Vous allez etre redirige vers la page de connexion... </source>
-        <target> You will be redirected to the login page... </target>
+        <source>Vous allez être redirigé vers la page de connexion…</source>
+        <target>You will be redirected to the login page…</target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailRedirectProfil">
+      <segment>
+        <source>Vous allez être redirigé vers votre profil…</source>
+        <target>You will be redirected to your profile…</target>
+      </segment>
+    </unit>
+    <unit id="authVerifyGoToProfil">
+      <segment>
+        <source>Accéder à mon profil</source>
+        <target>Go to my profile</target>
       </segment>
     </unit>
     <unit id="verifyEmailBackToLogin">
       <segment>
-        <source> Retour a la connexion </source>
+        <source> Retour à la connexion </source>
         <target> Back to login </target>
       </segment>
     </unit>
     <unit id="verifyEmailErrorNoToken">
       <segment>
-        <source>Aucun token de verification fourni.</source>
-        <target>No verification token provided.</target>
+        <source>Le lien de vérification est incomplet : ouvrez-le depuis l’e-mail reçu.</source>
+        <target>The verification link is incomplete: open it from the email you received.</target>
       </segment>
     </unit>
     <unit id="verifyEmailErrorGeneric">
       <segment>
-        <source>La verification a echoue. Le lien est peut-etre expire.</source>
-        <target>Verification failed. The link may have expired.</target>
+        <source>La vérification a échoué : le lien est invalide ou a expiré.</source>
+        <target>Verification failed: the link is invalid or has expired.</target>
       </segment>
     </unit>
-    <!-- Members panel -->
-    <!-- Contributions panel -->
-    <!-- Savings goals -->
     <unit id="navFormationsLabel">
       <segment>
         <source>Formations</source>
@@ -4429,174 +4425,6 @@
         <target> Leave your email in the form above. You&apos;ll receive the toolkit PDF within the minute. No automated newsletter, no marketing follow-up: that&apos;s a promise, and fully GDPR-compliant. </target>
       </segment>
     </unit>
-    <unit id="formations.auto.toolkit.title">
-      <segment>
-        <source> Vos 5 workflows<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>prêts à <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">l'emploi</pc>. </source>
-        <target> Your 5 workflows<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>ready to <pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">use</pc>. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.subtitle">
-      <segment>
-        <source> Les cinq workflows testés de la formation — avec les prompts exacts, les pièges à éviter et la checklist de relecture — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement. </source>
-        <target> The five tested workflows from the training — with exact prompts, pitfalls to avoid and a review checklist — delivered as a PDF to your inbox in 30 seconds. Free, no commitment. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.contentsTitle">
-      <segment>
-        <source> Ce que contient le toolkit </source>
-        <target> What's in the toolkit </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.content1">
-      <segment>
-        <source> Les 5 workflows complets avec le prompt exact, le résultat attendu et la durée pour le mettre en place — devis, emails, réseaux sociaux, factures, veille. </source>
-        <target> All 5 complete workflows with the exact prompt, expected output and setup time — quotes, emails, social media, invoices, news monitoring. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.content2">
-      <segment>
-        <source> La checklist de relecture en une minute — les 6 points à vérifier avant d'envoyer un contenu généré par l'IA à un client ou un prospect. </source>
-        <target> The one-minute review checklist — 6 points to check before sending AI-generated content to a client or prospect. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.content3">
-      <segment>
-        <source> Le tableau de bord "temps gagné" — une feuille Google Docs pré-remplie pour mesurer le retour sur investissement de chaque workflow sur 4 semaines. </source>
-        <target> The "time saved" dashboard — a pre-filled Google Docs sheet to measure the ROI of each workflow over 4 weeks. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.content4">
-      <segment>
-        <source> Les alternatives gratuites aux outils payants — pour chaque workflow, les options zéro euro qui tiennent la route en 2026 et celles à éviter. </source>
-        <target> Free alternatives to paid tools — for each workflow, the zero-cost options that still hold up in 2026 and which ones to avoid. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faqTitle">
-      <segment>
-        <source> Questions fréquentes </source>
-        <target> Frequently asked questions </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq1Q">
-      <segment>
-        <source> Les workflows fonctionnent-ils sans outil payant ? </source>
-        <target> Do the workflows work without paid tools? </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq1A">
-      <segment>
-        <source> Oui. Les 5 workflows tournent entièrement sur les versions gratuites de ChatGPT, Perplexity, Buffer et Google Docs. Le toolkit indique quand un outil payant apporte un gain réel et quand c'est un achat inutile. </source>
-        <target> Yes. All 5 workflows run entirely on the free tiers of ChatGPT, Perplexity, Buffer and Google Docs. The toolkit tells you when a paid tool provides real value and when it's an unnecessary purchase. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq2Q">
-      <segment>
-        <source> Faut-il avoir suivi la formation pour utiliser le toolkit ? </source>
-        <target> Do I need to have taken the training to use the toolkit? </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq2A">
-      <segment>
-        <source> Non. Le PDF est autonome — chaque workflow est documenté étape par étape avec captures d'écran. La formation ajoute le contexte et les explications, le toolkit donne les instructions pratiques directement copiables. </source>
-        <target> No. The PDF is self-contained — each workflow is documented step by step with screenshots. The training adds context and explanations; the toolkit gives you the practical instructions ready to copy. </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq3Q">
-      <segment>
-        <source> Comment recevoir le toolkit ? </source>
-        <target> How do I receive the toolkit? </target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.faq3A">
-      <segment>
-        <source> Laissez votre email dans le formulaire. Vous recevrez le PDF dans la minute. Aucune newsletter automatique, aucun suivi marketing — conforme RGPD. </source>
-        <target> Leave your email in the form. You'll receive the PDF within the minute. No automated newsletter, no marketing follow-up — GDPR-compliant. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.title">
-      <segment>
-        <source> Votre checklist<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">audit SEO</pc>. </source>
-        <target> Your <ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">SEO audit</pc> checklist. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.subtitle">
-      <segment>
-        <source> Les 7 checks SEO de la formation — avec les liens directs vers les 5 outils gratuits, le template de rapport à imprimer et le script pour briefer un développeur — livrés en PDF dans votre boîte mail en 30 secondes. Gratuit, sans engagement. </source>
-        <target> The 7 SEO checks from the training — with direct links to the 5 free tools, a printable report template and a script to brief a developer — delivered as a PDF in your inbox in 30 seconds. Free, no commitment. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.contentsTitle">
-      <segment>
-        <source> Ce que contient le toolkit </source>
-        <target> What's in the toolkit </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.content1">
-      <segment>
-        <source> La checklist imprimable des 7 points à vérifier — indexation, titres, vitesse, mobile, contenu, questions-réponses, signaux AEO — avec colonne OK / à corriger / urgent à cocher. </source>
-        <target> The printable 7-point checklist — indexing, titles, speed, mobile, content, Q&amp;A, AEO signals — with OK / fix / urgent columns to tick. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.content2">
-      <segment>
-        <source> Le template de rapport d'audit sur une page A4 au format Google Sheets dupliquable — 3 colonnes (check, verdict, action) prêtes à remplir pour vos clients ou votre propre site. </source>
-        <target> The one-page A4 audit report template as a duplicable Google Sheets file — 3 columns (check, verdict, action) ready to fill in for your clients or your own site. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.content3">
-      <segment>
-        <source> Les 5 outils SEO gratuits avec liens directs et mode d'emploi commenté — Google Search Console, PageSpeed Insights, Bing Webmaster, Ahrefs Webmaster Tools, SEO Meta in 1 Click. </source>
-        <target> The 5 free SEO tools with direct links and annotated walkthroughs — Google Search Console, PageSpeed Insights, Bing Webmaster, Ahrefs Webmaster Tools, SEO Meta in 1 Click. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.content4">
-      <segment>
-        <source> Le script "briefer un développeur" — les 5 questions non-techniques à poser pour faire corriger les problèmes SEO sans être baladé(e) par un jargon incompréhensible. </source>
-        <target> The "brief a developer" script — the 5 non-technical questions to ask to get SEO issues fixed without being lost in incomprehensible jargon. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faqTitle">
-      <segment>
-        <source> Questions fréquentes </source>
-        <target> Frequently asked questions </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq1Q">
-      <segment>
-        <source> Puis-je faire cet audit sans compétence technique ? </source>
-        <target> Can I run this audit without technical skills? </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq1A">
-      <segment>
-        <source> Oui entièrement. Chaque check utilise Google directement ou des outils avec un formulaire. Aucun terminal, aucun code. Si vous savez faire une recherche Google, vous savez lire le verdict de chaque outil présenté dans le toolkit. </source>
-        <target> Yes, entirely. Every check uses Google directly or tools with a form. No terminal, no code. If you can run a Google search, you can read the verdict of each tool presented in the toolkit. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq2Q">
-      <segment>
-        <source> Combien de temps pour voir des résultats SEO ? </source>
-        <target> How long before I see SEO results? </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq2A">
-      <segment>
-        <source> Les corrections techniques (indexation, vitesse) produisent des effets visibles en 2 à 4 semaines. Les améliorations de contenu prennent 3 à 6 mois pour grimper dans les résultats. SEO = marathon, pas sprint. </source>
-        <target> Technical fixes (indexing, speed) produce visible effects in 2 to 4 weeks. Content improvements take 3 to 6 months to climb in results. SEO = marathon, not sprint. </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq3Q">
-      <segment>
-        <source> Comment recevoir le toolkit ? </source>
-        <target> How do I receive the toolkit? </target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.faq3A">
-      <segment>
-        <source> Laissez votre email dans le formulaire. Vous recevrez le PDF dans la minute. Aucune newsletter automatique, aucun suivi marketing — conforme RGPD. </source>
-        <target> Leave your email in the form. You'll receive the PDF within the minute. No automated newsletter, no marketing follow-up — GDPR-compliant. </target>
-      </segment>
-    </unit>
     <unit id="toolkit-form.success.title">
       <segment>
         <source>Envoyé !</source>
@@ -4629,8 +4457,8 @@
     </unit>
     <unit id="toolkit-form.error.message">
       <segment>
-        <source> Une erreur est survenue. Réessayez. </source>
-        <target> Something went wrong. Please try again. </target>
+        <source>Une erreur est survenue. Réessayez.</source>
+        <target>Something went wrong. Please try again.</target>
       </segment>
     </unit>
     <unit id="toolkit-form.submit.loading">
@@ -4659,7 +4487,7 @@
     </unit>
     <unit id="formations.toolkitPrivate.errorDetail">
       <segment>
-        <source>Le lien est peut-etre expire ou invalide. Verifiez votre email ou refaites une demande.</source>
+        <source>Le lien est peut-être expiré ou invalide. Vérifiez votre email ou refaites une demande.</source>
         <target>The link may be expired or invalid. Check your email or request a new one.</target>
       </segment>
     </unit>
@@ -4723,18 +4551,6 @@
         <target><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">4.</pc> Reusable templates </target>
       </segment>
     </unit>
-    <unit id="formations.toolkitPrivate.sectionGamma">
-      <segment>
-        <source><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">5.</pc> Votre prompt Gamma personnalisé </source>
-        <target><pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;tkp-num&quot;&gt;" dispEnd="&lt;/span&gt;">5.</pc> Your personalized Gamma prompt </target>
-      </segment>
-    </unit>
-    <unit id="formations.toolkitPrivate.gammaCta">
-      <segment>
-        <source> Collez ce prompt dans <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="fmt" dispStart="&lt;a href=&quot;https://gamma.app&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;" dispEnd="&lt;/a&gt;">gamma.app</pc> pour generer votre presentation en 60 secondes. </source>
-        <target> Paste this prompt into <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="fmt" dispStart="&lt;a href=&quot;https://gamma.app&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;" dispEnd="&lt;/a&gt;">gamma.app</pc> to generate your presentation in 60 seconds. </target>
-      </segment>
-    </unit>
     <unit id="contactFormSubjectAccess">
       <segment>
         <source>Demande d&apos;accès application</source>
@@ -4779,13 +4595,13 @@
     </unit>
     <unit id="formations.audit-seo-diy.constat.title">
       <segment>
-        <source>Le constat : la majorite des sites d&apos;entrepreneurs sont invisibles</source>
+        <source>Le constat : la majorité des sites d&apos;entrepreneurs sont invisibles</source>
         <target>The reality: most entrepreneurs' websites are invisible</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.promesse.quote">
       <segment>
-        <source>A la fin de ces 20 minutes, vous aurez une checklist imprimable des 7 points critiques a verifier sur votre site cette semaine. Pas de jargon, pas d&apos;abonnement, pas de cookies espions.</source>
+        <source>À la fin de ces 20 minutes, vous aurez une checklist imprimable des 7 points critiques à vérifier sur votre site cette semaine. Pas de jargon, pas d&apos;abonnement, pas de cookies espions.</source>
         <target>By the end of these 20 minutes, you&apos;ll have a printable checklist of the 7 critical points to check on your site this week. No jargon, no subscription, no tracking cookies.</target>
       </segment>
     </unit>
@@ -4797,13 +4613,13 @@
     </unit>
     <unit id="formations.audit-seo-diy.promesse.authorNote">
       <segment>
-        <source>Cette methode vient de 40+ audits reels pour des coachs, artisans, commercants. Les memes 7 points reviennent a chaque fois.</source>
+        <source>Cette méthode vient de 40+ audits réels pour des coachs, artisans, commerçants. Les mêmes 7 points reviennent à chaque fois.</source>
         <target>This method comes from 40+ real audits for coaches, tradespeople and shop owners. The same 7 points come up every time.</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.check1.imageAlt">
       <segment>
-        <source>Page de resultats Google Search Console sur ecran</source>
+        <source>Page de résultats Google Search Console sur écran</source>
         <target>Google Search Console results page on screen</target>
       </segment>
     </unit>
@@ -4815,7 +4631,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.check1.subtitle">
       <segment>
-        <source> Sans indexation, votre site est invisible. Verification en 30 secondes, gratuite. </source>
+        <source> Sans indexation, votre site est invisible. Vérification en 30 secondes, gratuite. </source>
         <target> Without indexing, your site is invisible. A free 30-second check. </target>
       </segment>
     </unit>
@@ -4827,7 +4643,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.check1.bullets.1">
       <segment>
-        <source> Google affiche les pages qu&apos;il a indexees — si la liste est vide ou tres courte, alerte rouge </source>
+        <source> Google affiche les pages qu&apos;il a indexées — si la liste est vide ou très courte, alerte rouge </source>
         <target> Google lists the pages it has indexed — if the list is empty or very short, that&apos;s a red flag </target>
       </segment>
     </unit>
@@ -4839,7 +4655,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.check1.bullets.3">
       <segment>
-        <source> Cas verifie : 1 client sur 4 decouvre ici qu&apos;il bloque accidentellement Google via un fichier robots.txt mal configure </source>
+        <source> Cas vérifié : 1 client sur 4 découvre ici qu&apos;il bloque accidentellement Google via un fichier robots.txt mal configuré </source>
         <target> Verified case: 1 client in 4 discovers here that they are accidentally blocking Google through a misconfigured robots.txt file </target>
       </segment>
     </unit>
@@ -4851,13 +4667,13 @@
     </unit>
     <unit id="formations.audit-seo-diy.check2.title">
       <segment>
-        <source>Check 2 — Vos titres disent-ils &apos;je vends quoi, a qui&apos; ?</source>
+        <source>Check 2 — Vos titres disent-ils &apos;je vends quoi, à qui&apos; ?</source>
         <target>Check 2 — Do your titles say 'what I sell, to whom'?</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.check2.subtitle">
       <segment>
-        <source> Le titre SEO, c&apos;est la devanture de votre magasin en ligne. Une faute ici = perte de clics meme bien classe. </source>
+        <source> Le titre SEO, c&apos;est la devanture de votre magasin en ligne. Une faute ici = perte de clics même bien classé. </source>
         <target> Your SEO title is the shop window of your online store. Get it wrong and you lose clicks even when you rank well. </target>
       </segment>
     </unit>
@@ -4869,7 +4685,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.check2.bullets.1">
       <segment>
-        <source> Un bon titre : &quot;Photographe mariage Lyon — Asilidesign&quot; (metier + ville + marque) </source>
+        <source> Un bon titre : &quot;Photographe mariage Lyon — Asilidesign&quot; (métier + ville + marque) </source>
         <target> A good title: &quot;Wedding Photographer Lyon — Asilidesign&quot; (trade + city + brand) </target>
       </segment>
     </unit>
@@ -4899,7 +4715,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.check3.subtitle">
       <segment>
-        <source> Sur mobile, 1 seconde de plus = 7% de clients qui partent. Verification gratuite en 2 clics. </source>
+        <source> Sur mobile, 1 seconde de plus = 7% de clients qui partent. Vérification gratuite en 2 clics. </source>
         <target> On mobile, one extra second = 7% of customers gone. A free check in 2 clicks. </target>
       </segment>
     </unit>
@@ -4917,13 +4733,13 @@
     </unit>
     <unit id="formations.audit-seo-diy.check3.bullets.2">
       <segment>
-        <source> Verifiez : score mobile &gt;= 70 (bon), entre 50-70 (ameliorable), &lt; 50 (urgence) </source>
+        <source> Vérifiez : score mobile &gt;= 70 (bon), entre 50-70 (améliorable), &lt; 50 (urgence) </source>
         <target> Check: mobile score &gt;= 70 (good), 50-70 (room for improvement), &lt; 50 (urgent) </target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.check3.bullets.3">
       <segment>
-        <source> Les 3 causes frequentes : images trop lourdes, trop de plugins WordPress, pas de mise en cache </source>
+        <source> Les 3 causes fréquentes : images trop lourdes, trop de plugins WordPress, pas de mise en cache </source>
         <target> The 3 common causes: oversized images, too many WordPress plugins, no caching </target>
       </segment>
     </unit>
@@ -4941,7 +4757,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.check4.subtitle">
       <segment>
-        <source> 60% des recherches locales se font sur mobile. Un site non-mobile = 60% de clients perdus avant meme de voir votre offre. </source>
+        <source> 60% des recherches locales se font sur mobile. Un site non-mobile = 60% de clients perdus avant même de voir votre offre. </source>
         <target> 60% of local searches happen on mobile. A site that isn&apos;t mobile-ready = 60% of customers lost before they even see your offer. </target>
       </segment>
     </unit>
@@ -4953,13 +4769,13 @@
     </unit>
     <unit id="formations.audit-seo-diy.check4.bullets.1">
       <segment>
-        <source> Test simple : un visiteur peut-il commander/reserver/vous contacter sans zoomer ni deroulement horizontal ? </source>
+        <source> Test simple : un visiteur peut-il commander/réserver/vous contacter sans zoomer ni déroulement horizontal ? </source>
         <target> Simple test: can a visitor order, book or contact you without zooming or scrolling sideways? </target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.check4.bullets.2">
       <segment>
-        <source> Bouton trop petit, texte qui deborde, formulaire inutilisable au pouce = red flag </source>
+        <source> Bouton trop petit, texte qui déborde, formulaire inutilisable au pouce = red flag </source>
         <target> Buttons too small, text overflowing, a form you can&apos;t use with your thumb = red flag </target>
       </segment>
     </unit>
@@ -4971,19 +4787,19 @@
     </unit>
     <unit id="formations.audit-seo-diy.check5.imageAlt">
       <segment>
-        <source>Page web ouverte affichant une FAQ structuree</source>
+        <source>Page web ouverte affichant une FAQ structurée</source>
         <target>Web page open on a structured FAQ</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.check5.title">
       <segment>
-        <source>Check 5 — Avez-vous du contenu qui repond aux questions clients ?</source>
+        <source>Check 5 — Avez-vous du contenu qui répond aux questions clients ?</source>
         <target>Check 5 — Is your content rich enough?</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.check5.subtitle">
       <segment>
-        <source> Les IA (ChatGPT, Perplexity, Google AI Overview) citent les sites qui repondent clairement. Pas les sites-brochure. </source>
+        <source> Les IA (ChatGPT, Perplexity, Google AI Overview) citent les sites qui répondent clairement. Pas les sites-brochure. </source>
         <target> AI tools (ChatGPT, Perplexity, Google AI Overview) cite the sites that answer clearly. Not brochure sites. </target>
       </segment>
     </unit>
@@ -4995,19 +4811,19 @@
     </unit>
     <unit id="formations.audit-seo-diy.check5.bullets.1">
       <segment>
-        <source> Verifiez : chacune de ces questions a-t-elle une reponse claire (50-100 mots) sur votre site ? </source>
+        <source> Vérifiez : chacune de ces questions a-t-elle une réponse claire (50-100 mots) sur votre site ? </source>
         <target> Check: does each of those questions have a clear answer (50-100 words) on your site? </target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.check5.bullets.2">
       <segment>
-        <source> Si non, creez une page FAQ ou un blog avec 1 question = 1 page dediee </source>
+        <source> Si non, créez une page FAQ ou un blog avec 1 question = 1 page dédiée </source>
         <target> If not, create an FAQ page or a blog with 1 question = 1 dedicated page </target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.check5.bullets.3">
       <segment>
-        <source> Bonus IA-friendly : utilisez des titres H2 au format question (&quot;Combien coute un audit SEO ?&quot;) </source>
+        <source> Bonus IA-friendly : utilisez des titres H2 au format question (&quot;Combien coûte un audit SEO ?&quot;) </source>
         <target> AI-friendly bonus: use H2 headings phrased as questions (&quot;How much does an SEO audit cost?&quot;) </target>
       </segment>
     </unit>
@@ -5031,19 +4847,19 @@
     </unit>
     <unit id="formations.audit-seo-diy.livrable.description">
       <segment>
-        <source>Un bon audit DIY tient en une page A4 : 7 lignes, 3 colonnes (check, verdict, action). Le toolkit fournit le template de rapport pre-rempli, format imprimable + Google Sheets dupliquable.</source>
-        <target>A good DIY audit fits on a single A4 page: 7 rows, 3 columns (check, verdict, action). The toolkit provides the pre-filled report template, printable plus a Google Sheets version you can duplicate.</target>
+        <source>Un bon audit DIY tient en une page A4 : 7 lignes, 3 colonnes (check, verdict, action). Recopiez ce tableau dans un document ou une feuille de calcul, puis remplissez une ligne par check.</source>
+        <target>A good DIY audit fits on a single A4 page: 7 rows, 3 columns (check, verdict, action). Copy this table into a document or a spreadsheet, then fill in one row per check.</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.livrable.ctaLabel">
       <segment>
-        <source>Recuperer le template d&apos;audit</source>
-        <target>Get the toolkit</target>
+        <source>Poser une question sur mon audit</source>
+        <target>Ask a question about my audit</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.quandaider.imageAlt">
       <segment>
-        <source>Reunion entre un client et un consultant SEO autour d&apos;un ordinateur</source>
+        <source>Réunion entre un client et un consultant SEO autour d&apos;un ordinateur</source>
         <target>Meeting between a client and an SEO consultant around a computer</target>
       </segment>
     </unit>
@@ -5061,25 +4877,25 @@
     </unit>
     <unit id="formations.audit-seo-diy.quandaider.bullets.0">
       <segment>
-        <source> Chute brutale de trafic (&gt; 30% sur un mois) — il y a une cause technique ou penalite a identifier </source>
+        <source> Chute brutale de trafic (&gt; 30% sur un mois) — il y a une cause technique ou pénalité à identifier </source>
         <target> A sharp drop in traffic (&gt; 30% in a month) — there is a technical cause or a penalty to identify </target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.quandaider.bullets.1">
       <segment>
-        <source> Migration de site prevue — un audit prealable evite de perdre 100% du trafic </source>
+        <source> Migration de site prévue — un audit préalable évite de perdre 100% du trafic </source>
         <target> A site migration ahead — an audit beforehand keeps you from losing 100% of your traffic </target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.quandaider.bullets.2">
       <segment>
-        <source> Site e-commerce avec &gt; 500 pages — la massification change les priorites d&apos;audit </source>
+        <source> Site e-commerce avec &gt; 500 pages — la massification change les priorités d&apos;audit </source>
         <target> An e-commerce site with &gt; 500 pages — scale changes the audit priorities </target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.quandaider.bullets.3">
       <segment>
-        <source> Concurrence agressive sur des mots-cles a fort CA — analyse concurrentielle approfondie necessaire </source>
+        <source> Concurrence agressive sur des mots-clés à fort CA — analyse concurrentielle approfondie nécessaire </source>
         <target> Aggressive competition on high-revenue keywords — an in-depth competitive analysis is needed </target>
       </segment>
     </unit>
@@ -5091,25 +4907,25 @@
     </unit>
     <unit id="formations.audit-seo-diy.synthese.title">
       <segment>
-        <source>Recevez le kit audit SEO DIY complet</source>
-        <target>Get the full DIY SEO audit toolkit</target>
+        <source>Passez à l&apos;action sur votre site</source>
+        <target>Take action on your site</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.synthese.description">
       <segment>
-        <source>Checklist imprimable (7 checks + colonne OK/A corriger) + rapport type Google Sheets a dupliquer + script &apos;briefer un developpeur SEO&apos; + alternative premium via Growth Audit (IA + humain).</source>
-        <target>Printable checklist (7 checks + an OK/To fix column) + a Google Sheets report template to duplicate + a &apos;briefing an SEO developer&apos; script + a premium alternative through Growth Audit (AI + human).</target>
+        <source>Lancez les 7 checks, notez chaque verdict dans votre rapport d&apos;une page, puis corrigez dans l&apos;ordre des urgences. Pour une analyse approfondie, Growth Audit (IA + humain) prend le relais.</source>
+        <target>Run the 7 checks, record each verdict in your one-page report, then fix issues in order of urgency. For an in-depth analysis, Growth Audit (AI + human) takes over.</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.synthese.ctaLabel">
       <segment>
-        <source>Telecharger le toolkit</source>
-        <target>Download the toolkit</target>
+        <source>Me contacter</source>
+        <target>Contact me</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.constat.stats.0.label">
       <segment>
-        <source>des recherches Google ne donnent jamais un clic au dela du premier ecran</source>
+        <source>des recherches Google ne donnent jamais un clic au-delà du premier écran</source>
         <target>of Google searches never produce a click beyond the first screen</target>
       </segment>
     </unit>
@@ -5121,7 +4937,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.constat.stats.1.label">
       <segment>
-        <source>des experiences en ligne commencent par une recherche — si vous n&apos;y etes pas, vous n&apos;existez pas</source>
+        <source>des expériences en ligne commencent par une recherche — si vous n&apos;y êtes pas, vous n&apos;existez pas</source>
         <target>of online experiences start with a search — if you&apos;re not there, you don&apos;t exist</target>
       </segment>
     </unit>
@@ -5133,7 +4949,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.constat.stats.2.label">
       <segment>
-        <source>suffisent pour reperer 80% des problemes SEO d&apos;un site de petite entreprise, avec les bons outils gratuits</source>
+        <source>suffisent pour repérer 80% des problèmes SEO d&apos;un site de petite entreprise, avec les bons outils gratuits</source>
         <target>is enough to spot 80% of the SEO problems on a small-business site, with the right free tools</target>
       </segment>
     </unit>
@@ -5151,7 +4967,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.pratique.item0.description">
       <segment>
-        <source>Commande &quot;site:&quot; + check Google Search Console. Zero indexation = priorite absolue.</source>
+        <source>Commande &quot;site:&quot; + check Google Search Console. Zéro indexation = priorité absolue.</source>
         <target>The &quot;site:&quot; command + a Google Search Console check. Zero indexing = absolute priority.</target>
       </segment>
     </unit>
@@ -5187,7 +5003,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.pratique.item3.description">
       <segment>
-        <source>Listez 3 questions clients sans reponse sur votre site. Ce sont vos 3 prochains articles.</source>
+        <source>Listez 3 questions clients sans réponse sur votre site. Ce sont vos 3 prochains articles.</source>
         <target>List 3 customer questions your site leaves unanswered. Those are your next 3 articles.</target>
       </segment>
     </unit>
@@ -5199,7 +5015,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.outils.item0.description">
       <segment>
-        <source>Gratuit, officiel Google. Voir si vos pages sont indexees, les mots-cles qui vous amenent des clics, les erreurs techniques.</source>
+        <source>Gratuit, officiel Google. Voir si vos pages sont indexées, les mots-clés qui vous amènent des clics, les erreurs techniques.</source>
         <target>Free, official Google tool. See whether your pages are indexed, which keywords bring you clicks, and the technical errors.</target>
       </segment>
     </unit>
@@ -5211,7 +5027,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.outils.item1.description">
       <segment>
-        <source>Gratuit, Google aussi. Score de vitesse mobile + desktop + recommandations concretes par ordre d&apos;importance.</source>
+        <source>Gratuit, Google aussi. Score de vitesse mobile + desktop + recommandations concrètes par ordre d&apos;importance.</source>
         <target>Free, Google again. Mobile + desktop speed scores plus concrete recommendations in order of importance.</target>
       </segment>
     </unit>
@@ -5235,7 +5051,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.outils.item3.description">
       <segment>
-        <source>Gratuit. Moins utilise que Google, mais tres utile : ChatGPT Search s&apos;appuie sur Bing pour ses resultats web.</source>
+        <source>Gratuit. Moins utilisé que Google, mais très utile : ChatGPT Search s&apos;appuie sur Bing pour ses résultats web.</source>
         <target>Free. Less used than Google, but very useful: ChatGPT Search relies on Bing for its web results.</target>
       </segment>
     </unit>
@@ -5247,19 +5063,19 @@
     </unit>
     <unit id="formations.audit-seo-diy.outils.item4.description">
       <segment>
-        <source>Version gratuite reservee au proprietaire verifie. Voir les liens entrants vers votre site (backlinks) sans payer les 99 euro/mois d&apos;Ahrefs Pro.</source>
+        <source>Version gratuite réservée au propriétaire vérifié. Voir les liens entrants vers votre site (backlinks) sans payer les 99 euros/mois d&apos;Ahrefs Pro.</source>
         <target>Free tier reserved for the verified site owner. See the inbound links to your site (backlinks) without paying the 99 euro/month for Ahrefs Pro.</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.faq.item0.title">
       <segment>
-        <source>Combien de temps avant de voir des resultats ?</source>
+        <source>Combien de temps avant de voir des résultats ?</source>
         <target>How long before I see results?</target>
       </segment>
     </unit>
     <unit id="formations.audit-seo-diy.faq.item0.description">
       <segment>
-        <source>3 a 6 mois pour des effets visibles sur le trafic. Les correctifs techniques (indexation, vitesse) peuvent payer sous 2 semaines.</source>
+        <source>3 à 6 mois pour des effets visibles sur le trafic. Les correctifs techniques (indexation, vitesse) peuvent payer sous 2 semaines.</source>
         <target>3 to 6 months for visible effects on traffic. Technical fixes (indexing, speed) can pay off within 2 weeks.</target>
       </segment>
     </unit>
@@ -5271,7 +5087,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.faq.item1.description">
       <segment>
-        <source>Non. Un audit complet tous les 6 mois suffit. Entre-deux, un check rapide mensuel sur Google Search Console (20 min) detecte les problemes qui emergent.</source>
+        <source>Non. Un audit complet tous les 6 mois suffit. Entre-deux, un check rapide mensuel sur Google Search Console (20 min) détecte les problèmes qui émergent.</source>
         <target>No. A full audit every 6 months is enough. In between, a quick monthly check in Google Search Console (20 min) catches problems as they emerge.</target>
       </segment>
     </unit>
@@ -5283,7 +5099,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.faq.item2.description">
       <segment>
-        <source>Oui, plus que jamais. Les IA (ChatGPT, Perplexity) citent les sites bien optimises. Le SEO 2026 = SEO classique + AEO (optimisation pour les moteurs de reponse).</source>
+        <source>Oui, plus que jamais. Les IA (ChatGPT, Perplexity) citent les sites bien optimisés. Le SEO 2026 = SEO classique + AEO (optimisation pour les moteurs de réponse).</source>
         <target>Yes, more than ever. AI tools (ChatGPT, Perplexity) cite well-optimized sites. SEO in 2026 = classic SEO + AEO (answer engine optimization).</target>
       </segment>
     </unit>
@@ -5295,7 +5111,7 @@
     </unit>
     <unit id="formations.audit-seo-diy.faq.item3.description">
       <segment>
-        <source>Pour une petite entreprise, non. Les 5 outils gratuits couverts ici suffisent. Semrush/Ahrefs deviennent utiles au-dela de 10 k visites/mois.</source>
+        <source>Pour une petite entreprise, non. Les 5 outils gratuits couverts ici suffisent. Semrush/Ahrefs deviennent utiles au-delà de 10 k visites/mois.</source>
         <target>For a small business, no. The 5 free tools covered here are enough. Semrush/Ahrefs become useful beyond 10 k visits/month.</target>
       </segment>
     </unit>
@@ -5307,25 +5123,25 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.accroche.subtitle">
       <segment>
-        <source>5 workflows testes qui font gagner 2 heures par jour aux entrepreneurs et TPE</source>
+        <source>5 workflows testés qui font gagner 2 heures par jour aux entrepreneurs et TPE</source>
         <target>Concrete workflows you can set up this week, no code, no jargon</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.accroche.imageAlt">
       <segment>
-        <source>Entrepreneur concentre devant son ordinateur au milieu d&apos;une journee de travail</source>
+        <source>Entrepreneur concentré devant son ordinateur au milieu d&apos;une journée de travail</source>
         <target>Entrepreneur configuring an AI automation on her laptop</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.constat.title">
       <segment>
-        <source>Combien d&apos;heures perdez-vous chaque semaine sur des taches automatisables ?</source>
+        <source>Combien d&apos;heures perdez-vous chaque semaine sur des tâches automatisables ?</source>
         <target>The reality: AI is here, but most businesses use it like a fancy search engine</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.promesse.quote">
       <segment>
-        <source>A la fin de ces 25 minutes, vous aurez identifie au moins un workflow concret que vous lancerez cette semaine. Pas besoin de coder, pas besoin d&apos;abonnement paye.</source>
+        <source>À la fin de ces 25 minutes, vous aurez identifié au moins un workflow concret que vous lancerez cette semaine. Pas besoin de coder, pas besoin d&apos;abonnement payé.</source>
         <target>By the end of these 25 minutes, you&apos;ll have identified at least one concrete workflow you can launch this week. No coding needed, no paid subscription needed.</target>
       </segment>
     </unit>
@@ -5337,19 +5153,19 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.promesse.authorNote">
       <segment>
-        <source>Les exemples viennent de ma pratique quotidienne et de celle de clients reels (coachs, photographes, artisans, commercants).</source>
+        <source>Les exemples viennent de ma pratique quotidienne et de celle de clients réels (coachs, photographes, artisans, commerçants).</source>
         <target>The examples come from my own daily practice and from that of real clients (coaches, photographers, tradespeople, shop owners).</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w1.imageAlt">
       <segment>
-        <source>Entrepreneur redigeant un devis sur ordinateur portable</source>
+        <source>Entrepreneur rédigeant un devis sur ordinateur portable</source>
         <target>Entrepreneur writing a quote on a laptop</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w1.title">
       <segment>
-        <source>Workflow 1 — Generer un devis en 3 minutes</source>
+        <source>Workflow 1 — Générer un devis en 3 minutes</source>
         <target>Workflow 1 — Inbox triage</target>
       </segment>
     </unit>
@@ -5361,13 +5177,13 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.w1.bullets.0">
       <segment>
-        <source> Vous dictez a ChatGPT : &quot;prestation X, duree Y, tarif horaire Z&quot; </source>
+        <source> Vous dictez à ChatGPT : &quot;prestation X, durée Y, tarif horaire Z&quot; </source>
         <target> You dictate to ChatGPT: &quot;service X, duration Y, hourly rate Z&quot; </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w1.bullets.1">
       <segment>
-        <source> L&apos;IA produit un texte formel + un tableau recapitulatif </source>
+        <source> L&apos;IA produit un texte formel + un tableau récapitulatif </source>
         <target> The AI produces formal wording + a summary table </target>
       </segment>
     </unit>
@@ -5379,7 +5195,7 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.w1.bullets.3">
       <segment>
-        <source> Gain mesure : de 25 min a 3 min par devis </source>
+        <source> Gain mesuré : de 25 min à 3 min par devis </source>
         <target> Measured gain: from 25 min to 3 min per quote </target>
       </segment>
     </unit>
@@ -5391,91 +5207,91 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.w2.title">
       <segment>
-        <source>Workflow 2 — Reponses emails recurrentes</source>
+        <source>Workflow 2 — Réponses emails récurrentes</source>
         <target>Workflow 2 — Meeting notes &amp; action items</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w2.subtitle">
       <segment>
-        <source> Gmail + une bibliotheque de reponses pre-ecrites par l&apos;IA. </source>
+        <source> Gmail + une bibliothèque de réponses pré-écrites par l&apos;IA. </source>
         <target> Gmail + a library of replies pre-written by AI. </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w2.bullets.0">
       <segment>
-        <source> Vous listez vos 5 questions clients les plus frequentes </source>
+        <source> Vous listez vos 5 questions clients les plus fréquentes </source>
         <target> You list your 5 most frequent customer questions </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w2.bullets.1">
       <segment>
-        <source> ChatGPT genere une reponse type personnalisable pour chaque </source>
+        <source> ChatGPT génère une réponse type personnalisable pour chaque </source>
         <target> ChatGPT generates a customizable standard reply for each one </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w2.bullets.2">
       <segment>
-        <source> Vous les enregistrez comme &quot;reponses standard&quot; dans Gmail </source>
+        <source> Vous les enregistrez comme &quot;réponses standard&quot; dans Gmail </source>
         <target> You save them as &quot;canned responses&quot; in Gmail </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w2.bullets.3">
       <segment>
-        <source> Chaque email traite en 30 secondes au lieu de 5 minutes </source>
+        <source> Chaque email traité en 30 secondes au lieu de 5 minutes </source>
         <target> Every email handled in 30 seconds instead of 5 minutes </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w3.imageAlt">
       <segment>
-        <source>Smartphone affichant un calendrier de publications sur les reseaux sociaux</source>
+        <source>Smartphone affichant un calendrier de publications sur les réseaux sociaux</source>
         <target>Smartphone showing a social media publishing calendar</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w3.title">
       <segment>
-        <source>Workflow 3 — Publier sur les reseaux sans y penser</source>
+        <source>Workflow 3 — Publier sur les réseaux sans y penser</source>
         <target>Workflow 3 — Content drafts at scale</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w3.subtitle">
       <segment>
-        <source> Une seance de 30 min = un mois de contenu planifie. </source>
+        <source> Une séance de 30 min = un mois de contenu planifié. </source>
         <target> One 30-min session = a month of content scheduled. </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w3.bullets.0">
       <segment>
-        <source> Vous listez 4 themes de la semaine (une realisation, une astuce, un temoignage, un behind-the-scenes) </source>
+        <source> Vous listez 4 thèmes de la semaine (une réalisation, une astuce, un témoignage, un behind-the-scenes) </source>
         <target> You list 4 themes for the week (a finished job, a tip, a testimonial, a behind-the-scenes) </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w3.bullets.1">
       <segment>
-        <source> ChatGPT produit 4 textes + 4 idees d&apos;images </source>
+        <source> ChatGPT produit 4 textes + 4 idées d&apos;images </source>
         <target> ChatGPT produces 4 texts + 4 image ideas </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w3.bullets.2">
       <segment>
-        <source> Vous les programmez dans Buffer ou Metricool (gratuit jusqu&apos;a 3 reseaux) </source>
+        <source> Vous les programmez dans Buffer ou Metricool (gratuit jusqu&apos;à 3 réseaux) </source>
         <target> You schedule them in Buffer or Metricool (free for up to 3 networks) </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w3.bullets.3">
       <segment>
-        <source> Publication automatique, vous reprenez la main pour repondre aux commentaires </source>
+        <source> Publication automatique, vous reprenez la main pour répondre aux commentaires </source>
         <target> Publishing runs automatically, you step back in to reply to comments </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w4.imageAlt">
       <segment>
-        <source>Pile de factures papier a traiter sur un bureau</source>
+        <source>Pile de factures papier à traiter sur un bureau</source>
         <target>Stack of paper invoices waiting on a desk</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w4.title">
       <segment>
-        <source>Workflow 4 — Extraire les donnees des factures</source>
+        <source>Workflow 4 — Extraire les données des factures</source>
         <target>Workflow 4 — Customer answers, faster</target>
       </segment>
     </unit>
@@ -5505,7 +5321,7 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.w4.bullets.3">
       <segment>
-        <source> 15 factures traitees en 10 minutes au lieu d&apos;une heure </source>
+        <source> 15 factures traitées en 10 minutes au lieu d&apos;une heure </source>
         <target> 15 invoices handled in 10 minutes instead of an hour </target>
       </segment>
     </unit>
@@ -5523,13 +5339,13 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.w5.subtitle">
       <segment>
-        <source> Recevez chaque lundi un resume des nouveautes de votre secteur. </source>
+        <source> Recevez chaque lundi un résumé des nouveautés de votre secteur. </source>
         <target> Get a summary of what&apos;s new in your sector every Monday. </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.w5.bullets.0">
       <segment>
-        <source> Vous definissez 3 sujets cles (ex : &quot;reglementation artisan BTP&quot;, &quot;nouvelles aides BPI&quot;) </source>
+        <source> Vous définissez 3 sujets clés (ex : &quot;réglementation artisan BTP&quot;, &quot;nouvelles aides BPI&quot;) </source>
         <target> You define 3 key topics (e.g. &quot;construction trade regulations&quot;, &quot;new BPI grants&quot;) </target>
       </segment>
     </unit>
@@ -5547,37 +5363,37 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.w5.bullets.3">
       <segment>
-        <source> 5 minutes le lundi = vous etes a jour sur toute la semaine </source>
+        <source> 5 minutes le lundi = vous êtes à jour sur toute la semaine </source>
         <target> 5 minutes on Monday = you&apos;re up to date for the whole week </target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.pratiquer.title">
       <segment>
-        <source>Par ou commencer selon votre metier ?</source>
+        <source>Par où commencer selon votre métier ?</source>
         <target>Pick the workflows that fit your business</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.declencheur.title">
       <segment>
-        <source>Quelle action concrete lancez-vous cette semaine ?</source>
+        <source>Quelle action concrète lancez-vous cette semaine ?</source>
         <target>Where to start: the 3 levers that move the needle</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.declencheur.description">
       <segment>
-        <source>PDF 12 pages avec captures d&apos;ecran par etape, prompts prets a copier-coller testes en conditions reelles, sequence email 5 jours (un workflow par jour) — repondez a n&apos;importe quel email, je lis tout sans bot.</source>
-        <target>A 12-page PDF with screenshots for every step, ready-to-paste prompts tested in real conditions, a 5-day email sequence (one workflow per day) — reply to any of those emails, I read them all myself, no bot.</target>
+        <source>Choisissez une seule tâche répétitive de votre semaine et appliquez-lui le workflow adapté à votre métier. Une question, un blocage : écrivez-moi, je réponds moi-même, sans bot.</source>
+        <target>Pick a single repetitive task from your week and apply the workflow that fits your trade. A question, a roadblock: write to me, I answer myself, no bot.</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.declencheur.ctaLabel">
       <segment>
-        <source>Recevoir le toolkit complet</source>
-        <target>Start now</target>
+        <source>Me poser une question</source>
+        <target>Ask me a question</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.erreurs.title">
       <segment>
-        <source>Pourquoi certains workflows IA echouent : 5 erreurs evitables</source>
+        <source>Pourquoi certains workflows IA échouent : 4 erreurs évitables</source>
         <target>Mistakes I see most often</target>
       </segment>
     </unit>
@@ -5589,7 +5405,7 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.erreurs.headers.1">
       <segment>
-        <source>A eviter au depart</source>
+        <source>À éviter au départ</source>
         <target>What to avoid at the start</target>
       </segment>
     </unit>
@@ -5601,49 +5417,49 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.synthese.title">
       <segment>
-        <source>La prochaine etape concrete</source>
+        <source>La prochaine étape concrète</source>
         <target>Get the AI automation playbook</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.synthese.description">
       <segment>
-        <source>Aujourd&apos;hui : telecharger le toolkit + lire le workflow adapte a votre metier. Cette semaine : tester sur 1 tache reelle (pas 5, pas 10 — une seule). Dans 7 jours : mesurer le temps gagne. Si ca marche : automatiser la 2e tache. Sinon : me repondre, on ajuste ensemble.</source>
-        <target>Today: download the toolkit + read the workflow that fits your trade. This week: try it on 1 real task (not 5, not 10 — just one). In 7 days: measure the time saved. If it works: automate the 2nd task. If not: reply to me and we adjust together.</target>
+        <source>Aujourd&apos;hui : relire le workflow adapté à votre métier. Cette semaine : tester sur 1 tâche réelle (pas 5, pas 10 — une seule). Dans 7 jours : mesurer le temps gagné. Si ça marche : automatiser la 2e tâche. Sinon : écrivez-moi, on ajuste ensemble.</source>
+        <target>Today: reread the workflow that fits your trade. This week: try it on 1 real task (not 5, not 10 — just one). In 7 days: measure the time saved. If it works: automate the 2nd task. If not: write to me and we adjust together.</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.synthese.ctaLabel">
       <segment>
-        <source>Telecharger le toolkit</source>
-        <target>Download the playbook</target>
+        <source>Me contacter</source>
+        <target>Contact me</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.constat.stats.0.label">
       <segment>
-        <source>par semaine en moyenne sur des taches automatisables (devis, emails, reseaux sociaux)</source>
+        <source>par semaine en moyenne sur des tâches automatisables (devis, emails, réseaux sociaux)</source>
         <target>per week on average on automatable tasks (quotes, emails, social media)</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.constat.stats.0.source">
       <segment>
-        <source>Enquete BPI France / OpinionWay, 2025</source>
+        <source>Enquête BPI France / OpinionWay, 2025</source>
         <target>BPI France / OpinionWay survey, 2025</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.constat.stats.1.label">
       <segment>
-        <source>des dirigeants de TPE disent manquer de temps pour developper leur activite</source>
+        <source>des dirigeants de TPE disent manquer de temps pour développer leur activité</source>
         <target>of very small business owners say they lack the time to grow their business</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.constat.stats.1.source">
       <segment>
-        <source>CPME, barometre 2025</source>
+        <source>CPME, baromètre 2025</source>
         <target>CPME, 2025 barometer</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.constat.stats.2.label">
       <segment>
-        <source>c&apos;est le budget IA necessaire pour demarrer — les 5 workflows montres tournent sur du gratuit</source>
+        <source>c&apos;est le budget IA nécessaire pour démarrer — les 5 workflows montrés tournent sur du gratuit</source>
         <target>is the AI budget needed to get started — the 5 workflows shown here all run on free tiers</target>
       </segment>
     </unit>
@@ -5661,7 +5477,7 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.pratiquer.items.0.description">
       <segment>
-        <source>Commencer par le workflow devis (W1). Chaque shooting a un cahier des charges similaire — l&apos;IA economise 20 min par demande client.</source>
+        <source>Commencer par le workflow devis (W1). Chaque shooting a un cahier des charges similaire — l&apos;IA économise 20 min par demande client.</source>
         <target>Start with the quote workflow (W1). Every shoot has a similar brief — the AI saves 20 min per customer enquiry.</target>
       </segment>
     </unit>
@@ -5673,7 +5489,7 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.pratiquer.items.1.description">
       <segment>
-        <source>Workflow reseaux sociaux (W3). Capitaliser sur les notes de seances pour generer des posts authentiques sans y passer le week-end.</source>
+        <source>Workflow réseaux sociaux (W3). Capitaliser sur les notes de séances pour générer des posts authentiques sans y passer le week-end.</source>
         <target>Social media workflow (W3). Build on your session notes to generate authentic posts without spending your weekend on it.</target>
       </segment>
     </unit>
@@ -5685,19 +5501,19 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.pratiquer.items.2.description">
       <segment>
-        <source>Workflow factures (W4) + veille reglementaire (W5). Deux heures gagnees par semaine sur l&apos;administratif et les normes.</source>
+        <source>Workflow factures (W4) + veille réglementaire (W5). Deux heures gagnées par semaine sur l&apos;administratif et les normes.</source>
         <target>Invoices workflow (W4) + regulatory watch (W5). Two hours saved every week on paperwork and standards.</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.pratiquer.items.3.title">
       <segment>
-        <source>Commerce de proximite</source>
+        <source>Commerce de proximité</source>
         <target>Local retail</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.pratiquer.items.3.description">
       <segment>
-        <source>Workflow emails (W2) + reseaux (W3). Maintenir la relation clientele a frequence constante sans exploser le temps passe.</source>
+        <source>Workflow emails (W2) + réseaux (W3). Maintenir la relation clientèle à fréquence constante sans exploser le temps passé.</source>
         <target>Emails workflow (W2) + social media (W3). Keep customer relationships going at a steady rhythm without the time spent exploding.</target>
       </segment>
     </unit>
@@ -5709,7 +5525,7 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.pratiquer.items.4.description">
       <segment>
-        <source>Workflow devis (W1) + veille (W5). Reponse sous 24h aux appels d&apos;offres, veille pour nourrir les propositions.</source>
+        <source>Workflow devis (W1) + veille (W5). Réponse sous 24h aux appels d&apos;offres, veille pour nourrir les propositions.</source>
         <target>Quote workflow (W1) + watch (W5). Answer tenders within 24h, and feed your proposals from the watch.</target>
       </segment>
     </unit>
@@ -5721,7 +5537,7 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.pratiquer.items.5.description">
       <segment>
-        <source>Tous les workflows en sequence : commencer par W2 (emails), le plus vite rentable. Puis W3, W1, W4, W5.</source>
+        <source>Tous les workflows en séquence : commencer par W2 (emails), le plus vite rentable. Puis W3, W1, W4, W5.</source>
         <target>All the workflows in sequence: start with W2 (emails), the fastest to pay off. Then W3, W1, W4, W5.</target>
       </segment>
     </unit>
@@ -5733,43 +5549,43 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.faq.items.0.description">
       <segment>
-        <source>Elle se trompe, c&apos;est une donnee. Chaque workflow contient une etape de relecture explicite. La regle : l&apos;IA accelere, vous validez.</source>
+        <source>Elle se trompe, c&apos;est une donnée. Chaque workflow contient une étape de relecture explicite. La règle : l&apos;IA accélère, vous validez.</source>
         <target>It does get things wrong, that&apos;s a given. Every workflow includes an explicit review step. The rule: the AI speeds things up, you sign them off.</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.faq.items.1.title">
       <segment>
-        <source>Mes donnees sont-elles reutilisees ?</source>
+        <source>Mes données sont-elles réutilisées ?</source>
         <target>Is my data reused?</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.faq.items.1.description">
       <segment>
-        <source>Oui par defaut. Le toolkit indique comment desactiver l&apos;entrainement sur vos echanges (ChatGPT, Perplexity) en 2 clics. RGPD OK.</source>
-        <target>Yes by default. The toolkit shows how to turn off training on your conversations (ChatGPT, Perplexity) in 2 clicks. GDPR OK.</target>
+        <source>Oui par défaut. Désactivez l&apos;entraînement sur vos échanges dans les réglages de ChatGPT ou de Perplexity : 2 clics. RGPD OK.</source>
+        <target>Yes by default. Turn off training on your conversations in the ChatGPT or Perplexity settings: 2 clicks. GDPR OK.</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.faq.items.2.title">
       <segment>
-        <source>Faut-il apprendre a coder ?</source>
+        <source>Faut-il apprendre à coder ?</source>
         <target>Do I need to learn to code?</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.faq.items.2.description">
       <segment>
-        <source>Non. Zero ligne de code, zero API, zero webhook. Tout passe par des interfaces graphiques standards — si vous savez utiliser Word et Gmail, vous savez deja.</source>
+        <source>Non. Zéro ligne de code, zéro API, zéro webhook. Tout passe par des interfaces graphiques standards — si vous savez utiliser Word et Gmail, vous savez déjà.</source>
         <target>No. Zero lines of code, zero APIs, zero webhooks. Everything goes through standard graphical interfaces — if you can use Word and Gmail, you already know how.</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.erreurs.rows.0.0">
       <segment>
-        <source>Automatiser 1 tache a la fois, mesurer, puis en ajouter</source>
+        <source>Automatiser 1 tâche à la fois, mesurer, puis en ajouter</source>
         <target>Automate 1 task at a time, measure, then add another</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.erreurs.rows.1.0">
       <segment>
-        <source>Relire systematiquement avant d&apos;envoyer au client</source>
+        <source>Relire systématiquement avant d&apos;envoyer au client</source>
         <target>Always proofread before sending to the client</target>
       </segment>
     </unit>
@@ -5793,19 +5609,19 @@
     </unit>
     <unit id="formations.automatiser-avec-ia.erreurs.rows.1.1">
       <segment>
-        <source>Confier des emails sensibles a l&apos;IA sans relecture</source>
+        <source>Confier des emails sensibles à l&apos;IA sans relecture</source>
         <target>Handing sensitive emails to the AI without reviewing them</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.erreurs.rows.2.1">
       <segment>
-        <source>Payer un abonnement avant d&apos;avoir valide le workflow</source>
+        <source>Payer un abonnement avant d&apos;avoir validé le workflow</source>
         <target>Paying for a subscription before the workflow is proven</target>
       </segment>
     </unit>
     <unit id="formations.automatiser-avec-ia.erreurs.rows.3.1">
       <segment>
-        <source>Accepter le ton robotique par defaut — on perd la personnalite</source>
+        <source>Accepter le ton robotique par défaut — on perd la personnalité</source>
         <target>Accepting the default robotic tone — you lose your personality</target>
       </segment>
     </unit>
@@ -7631,7 +7447,6 @@
       </segment>
     </unit>
 
-    <!-- Budget magic-link invitations (Phase 3 — 2026-05-12) -->
 
 
 
@@ -8492,8 +8307,8 @@
     </unit>
     <unit id="formations-list.toolkit.description">
       <segment>
-        <source>Chaque formation s'accompagne d'un toolkit PDF : modèles de prompts, checklists, workflows prêts à l'emploi. Votre email sert uniquement à vous l'envoyer.</source>
-        <target>Each training comes with a PDF toolkit: prompt templates, checklists, ready-to-use workflows. Your email is only used to send it to you.</target>
+        <source>La formation « L'IA au service des solopreneurs » s'accompagne d'un toolkit PDF : modèles de prompts, checklists, workflows prêts à l'emploi. Votre email sert uniquement à vous l'envoyer.</source>
+        <target>The “AI for solopreneurs” training comes with a PDF toolkit: prompt templates, checklists, ready-to-use workflows. Your email is only used to send it to you.</target>
       </segment>
     </unit>
     <unit id="formations-list.toolkit.meta.content">
@@ -8552,8 +8367,8 @@
     </unit>
     <unit id="formations-list.benefit.toolkit.desc">
       <segment>
-        <source>Chaque session se termine par un PDF actionnable, pour passer de l'écoute à la pratique.</source>
-        <target>Each session ends with an actionable PDF, to move from listening to doing.</target>
+        <source>La formation IA pour solopreneurs se termine par un toolkit PDF actionnable, pour passer de l'écoute à la pratique.</source>
+        <target>The AI for solopreneurs training ends with an actionable PDF toolkit, to move from listening to doing.</target>
       </segment>
     </unit>
     <unit id="formations.toolkit.item1">
@@ -8587,78 +8402,6 @@
       </segment>
     </unit>
     <unit id="formations.toolkit.privacyLink">
-      <segment>
-        <source>Politique de confidentialité</source>
-        <target>Privacy policy</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.item1">
-      <segment>
-        <source>5 workflows complets : devis, emails, réseaux, factures, veille</source>
-        <target>5 complete workflows: quotes, emails, social, invoices, monitoring</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.item2">
-      <segment>
-        <source>La checklist de relecture en une minute</source>
-        <target>The one-minute review checklist</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.item3">
-      <segment>
-        <source>Le tableau de bord « temps gagné » pré-rempli</source>
-        <target>The pre-filled "time saved" dashboard</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.foot">
-      <segment>
-        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
-        <target>Free, no commitment. One-click unsubscribe. Your data stays confidential.</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.brand">
-      <segment>
-        <source>Asili Design — asilidesign.fr</source>
-        <target>Asili Design — asilidesign.fr</target>
-      </segment>
-    </unit>
-    <unit id="formations.auto.toolkit.privacyLink">
-      <segment>
-        <source>Politique de confidentialité</source>
-        <target>Privacy policy</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.item1">
-      <segment>
-        <source>La checklist imprimable des 7 points à vérifier</source>
-        <target>The printable checklist of the 7 points to check</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.item2">
-      <segment>
-        <source>Le template de rapport d'audit sur une page A4</source>
-        <target>The one-page A4 audit report template</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.item3">
-      <segment>
-        <source>Les 5 outils SEO gratuits avec liens directs</source>
-        <target>The 5 free SEO tools with direct links</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.foot">
-      <segment>
-        <source>Gratuit, sans engagement. Désinscription en un clic. Vos données restent confidentielles.</source>
-        <target>Free, no commitment. One-click unsubscribe. Your data stays confidential.</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.brand">
-      <segment>
-        <source>Asili Design — asilidesign.fr</source>
-        <target>Asili Design — asilidesign.fr</target>
-      </segment>
-    </unit>
-    <unit id="formations.audit-seo.toolkit.privacyLink">
       <segment>
         <source>Politique de confidentialité</source>
         <target>Privacy policy</target>
@@ -9129,8 +8872,8 @@
         <note category="location">src/app/features/privacy/privacy.component.html:93,96</note>
       </notes>
       <segment>
-        <source> Le traitement repose, selon les cas, sur l&apos;exécution d&apos;un contrat (votre achat), votre consentement (newsletter, toolkit), ou notre intérêt légitime (sécurité et amélioration du site). </source>
-        <target> Processing relies, depending on the case, on the performance of a contract (your purchase), your consent (newsletter, toolkit), or our legitimate interest (security and improvement of the site). </target>
+        <source> Le traitement repose, selon les cas, sur l&apos;exécution d&apos;un contrat (votre achat), votre consentement (toolkit), ou notre intérêt légitime (sécurité et bon fonctionnement du site). </source>
+        <target> Processing relies, depending on the case, on the performance of a contract (your purchase), your consent (toolkit), or our legitimate interest (security and proper operation of the site). </target>
       </segment>
     </unit>
     <unit id="privacyBaseTitle">
@@ -9156,8 +8899,8 @@
         <note category="location">src/app/features/privacy/privacy.component.html:55,57</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de compte</pc> : nom, adresse email, mot de passe (chiffré). </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Account data</pc>: name, email address, password (encrypted). </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de compte</pc> : prénom, nom, adresse email, téléphone (facultatif), mot de passe (chiffré) et, si vous vous connectez avec Google, votre identifiant Google. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Account data</pc>: first name, last name, email address, phone number (optional), password (encrypted) and, if you sign in with Google, your Google identifier. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteItem2">
@@ -9169,13 +8912,49 @@
         <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Contact data</pc>: the information you send us via the form. </target>
       </segment>
     </unit>
+    <unit id="privacyCollecteTechnique">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:30,33</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données techniques de la demande</pc> : l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact, chaque demande d&apos;audit et chaque choix de cookies. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Technical request data</pc>: the IP address, the browser (user-agent) and the referring page (referer), recorded with each contact message, each audit request and each cookie choice. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCollecteSecurite">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:35,38</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de sécurité</pc> : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l&apos;adresse IP, le navigateur (user-agent) et l&apos;email saisi, inscrits au journal du serveur ; l&apos;adresse IP et le navigateur d&apos;une requête jugée suspecte. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Security data</pc>: for each sign-in or security event on your account, successful or not, the IP address, the browser (user-agent) and the email entered, written to the server log; the IP address and browser of a request flagged as suspicious. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCollecteJournal">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:40,43</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Journal d&apos;accès</pc> : pour chaque requête adressée au serveur, l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer), inscrits au journal du serveur. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Access log</pc>: for each request sent to the server, the IP address, the browser (user-agent) and the referring page (referer), written to the server log. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCollecteSeances">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:44,51</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données des séances de cours</pc> : le prénom, le nom et l&apos;adresse email saisis pour rejoindre une séance ; vos réponses aux questions, avec leur durée, et aux sondages, vos productions, vos tentatives d&apos;énigme, vos scores et votre progression par notion ; le relevé des incidents survenus pendant la séance (onglet masqué, fenêtre quittée, sortie du plein écran, tentative de copier ou de coller, raccourci bloqué, outils de développement soupçonnés, connexion perdue, réponse trop rapide), avec leur contexte. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Class session data</pc>: the first name, last name and email address entered to join a session; your answers to questions, with how long they took, and to polls, your work, your puzzle attempts, your scores and your progress per concept; the record of incidents during the session (hidden tab, window left, full screen exited, copy or paste attempt, blocked shortcut, suspected developer tools, lost connection, answer given too fast), with their context. </target>
+      </segment>
+    </unit>
     <unit id="privacyCollecteItem3">
       <notes>
         <note category="location">src/app/features/privacy/privacy.component.html:63,65</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données d&apos;usage</pc> : statistiques de navigation anonymisées, pour améliorer le site. </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Usage data</pc>: anonymized browsing statistics, to improve the site. </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Mesure d&apos;audience</pc> : aucune pour l&apos;instant, le site ne collecte aucune statistique de navigation. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Audience measurement</pc>: none for now, the site collects no browsing statistics. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteTitle">
@@ -9465,6 +9244,15 @@
         <target> Manage your account and your access (training). </target>
       </segment>
     </unit>
+    <unit id="privacyUsageSeances">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:64,67</note>
+      </notes>
+      <segment>
+        <source> Suivre vos apprentissages pendant et après une séance de cours, et garantir l&apos;intégrité d&apos;une évaluation. </source>
+        <target> Follow your learning during and after a class session, and safeguard the integrity of an assessment. </target>
+      </segment>
+    </unit>
     <unit id="privacyUsageItem2">
       <notes>
         <note category="location">src/app/features/privacy/privacy.component.html:81,83</note>
@@ -9483,13 +9271,31 @@
         <target>Reply to your messages.</target>
       </segment>
     </unit>
-    <unit id="privacyUsageItem4">
+    <unit id="privacyUsagePreuve">
       <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:85,87</note>
+        <note category="location">src/app/features/privacy/privacy.component.html:61</note>
       </notes>
       <segment>
-        <source> Améliorer le site, de façon agrégée et anonyme. </source>
-        <target> Improve the site, in an aggregated and anonymous way. </target>
+        <source>Garder la preuve de votre choix de cookies.</source>
+        <target>Keep proof of your cookie choice.</target>
+      </segment>
+    </unit>
+    <unit id="privacyUsageJournal">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:78,80</note>
+      </notes>
+      <segment>
+        <source> Faire fonctionner le serveur et diagnostiquer ses pannes. </source>
+        <target> Run the server and diagnose its failures. </target>
+      </segment>
+    </unit>
+    <unit id="privacyUsageSecurite">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:57,59</note>
+      </notes>
+      <segment>
+        <source> Protéger le site et vos comptes : repérer les connexions, les requêtes et les envois de formulaire suspects. </source>
+        <target> Protect the site and your accounts: detect suspicious sign-ins, requests and form submissions. </target>
       </segment>
     </unit>
     <unit id="privacyUsageTitle">
@@ -10321,6 +10127,16 @@
         <target>Live tracking was refused by the server (status <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>). Activities will reappear when the connection is restored.</target>
       </segment>
     </unit>
+    <unit id="coursFluxSature">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:369,370</note>
+        <note category="meaning">cours.fluxSature</note>
+      </notes>
+      <segment>
+        <source>Le suivi en direct est momentanément saturé (statut <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>) : il reprendra de lui-même, sans rien à faire de votre côté.</source>
+        <target>Live tracking is temporarily saturated (status <ph id="0" equiv="INTERPOLATION" disp="{{ refus.statut }}"/>): it will resume on its own, with nothing for you to do.</target>
+      </segment>
+    </unit>
     <unit id="coursChargementSujet">
       <notes>
         <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:102,105</note>
@@ -10411,14 +10227,24 @@
         <target> Your answer is saved on this device and will be sent once the network is back. </target>
       </segment>
     </unit>
+    <unit id="coursFileLimitee">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:490,492</note>
+        <note category="meaning">cours.fileLimitee</note>
+      </notes>
+      <segment>
+        <source> Votre réponse est gardée sur ce poste : le serveur limite les envois, elle repartira d’elle-même. </source>
+        <target> Your answer is kept on this device: the server is limiting submissions, it will be sent again on its own. </target>
+      </segment>
+    </unit>
     <unit id="coursReflexionEnAttente">
       <notes>
         <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:197,200</note>
         <note category="meaning">cours.reflexionEnAttente</note>
       </notes>
       <segment>
-        <source> Votre réflexion est gardée sur ce poste : elle partira dès que le formateur réaffichera l’écran. </source>
-        <target> Your reflection is kept on this device: it will be sent as soon as your teacher shows the screen again. </target>
+        <source>Votre réflexion est gardée sur ce poste : elle partira dès que le formateur réaffichera l’écran.</source>
+        <target>Your reflection is kept on this device: it will be sent as soon as your teacher shows the screen again.</target>
       </segment>
     </unit>
     <unit id="coursFileRefusee">
@@ -12077,6 +11903,15 @@
         <target>Waiting for the network: your reflection is kept on this device and will be sent once the connection is back.</target>
       </segment>
     </unit>
+    <unit id="slideReflectionAttenteLimite">
+      <notes>
+        <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:68,71</note>
+      </notes>
+      <segment>
+        <source>Le serveur limite les envois : la réflexion est gardée sur cet appareil et repartira d’elle-même.</source>
+        <target>The server is limiting submissions: your reflection is kept on this device and will be sent again on its own.</target>
+      </segment>
+    </unit>
     <unit id="slideReflectionEcranNonServi">
       <notes>
         <note category="location">src/app/shared/slides/interactions/slide-reflection/slide-reflection.component.html:67,70</note>
@@ -12399,15 +12234,6 @@
       </segment>
     </unit>
 
-    <unit id="contactErrorMessageMinLength">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:206,209</note>
-      </notes>
-      <segment>
-        <source>Ce champ est obligatoire et doit contenir au moins 10 caractères.</source>
-        <target>This field is required and must contain at least 10 characters.</target>
-      </segment>
-    </unit>
     <unit id="coursEcranIndisponible">
       <notes>
         <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:84</note>
@@ -12426,6 +12252,16 @@
       <segment>
         <source>L’écran n’a pas pu être chargé.</source>
         <target>The screen could not be loaded.</target>
+      </segment>
+    </unit>
+    <unit id="coursEcranLimite">
+      <notes>
+        <note category="location">src/app/features/cours/etudiant/cours-etudiant.component.ts:155</note>
+        <note category="meaning">cours.ecranLimite</note>
+      </notes>
+      <segment>
+        <source>L’écran n’a pas encore pu être chargé : le serveur limite les demandes, il s’affichera de lui-même.</source>
+        <target>The screen could not be loaded yet: the server is limiting requests, it will appear on its own.</target>
       </segment>
     </unit>
     <unit id="coursKickerPreparation">
@@ -12642,15 +12478,6 @@
       <segment>
         <source>vous@exemple.fr</source>
         <target>you@example.com</target>
-      </segment>
-    </unit>
-    <unit id="authResetPasswordPlaceholder">
-      <notes>
-        <note category="location">src/app/features/auth/reset-password.component.html:34,35</note>
-      </notes>
-      <segment>
-        <source>12 caractères minimum</source>
-        <target>12 characters minimum</target>
       </segment>
     </unit>
     <unit id="contactCtaInfoAriaLabel">
@@ -15216,6 +15043,130 @@
       <segment>
         <source>Réponse attendue</source>
         <target>Expected answer</target>
+      </segment>
+    </unit>
+    <unit id="authLoginErreurIdentifiants">
+      <segment>
+        <source>Adresse e-mail ou mot de passe incorrect.</source>
+        <target>Incorrect email address or password.</target>
+      </segment>
+    </unit>
+    <unit id="authForgotSucces">
+      <segment>
+        <source>Si un compte existe avec cette adresse, un lien de réinitialisation vient de vous être envoyé.</source>
+        <target>If an account exists for this address, a reset link has just been sent to you.</target>
+      </segment>
+    </unit>
+    <unit id="authForgotErreurAdresse">
+      <segment>
+        <source>Cette adresse e-mail n’a pas été acceptée : vérifiez-la et réessayez.</source>
+        <target>This email address was not accepted: check it and try again.</target>
+      </segment>
+    </unit>
+    <unit id="authResetSucces">
+      <segment>
+        <source>Mot de passe réinitialisé : vous pouvez maintenant vous connecter.</source>
+        <target>Password reset: you can now sign in.</target>
+      </segment>
+    </unit>
+    <unit id="authResetErreurLienExpire">
+      <segment>
+        <source>Ce lien de réinitialisation est invalide ou a expiré : demandez-en un nouveau.</source>
+        <target>This reset link is invalid or has expired: request a new one.</target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailSucces">
+      <segment>
+        <source>Votre adresse e-mail est vérifiée : votre compte est activé.</source>
+        <target>Your email address is verified: your account is active.</target>
+      </segment>
+    </unit>
+    <unit id="verifyEmailErreurIndisponible">
+      <segment>
+        <source>La vérification n’a pas pu aboutir pour le moment : réessayez dans un instant.</source>
+        <target>Verification could not be completed right now: try again in a moment.</target>
+      </segment>
+    </unit>
+    <unit id="contactFormErreurRefus">
+      <segment>
+        <source>Votre message n’a pas été accepté : vérifiez les champs et réessayez.</source>
+        <target>Your message was not accepted: check the fields and try again.</target>
+      </segment>
+    </unit>
+    <unit id="auditFormErreurRefus">
+      <segment>
+        <source>La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.</source>
+        <target>The request was not accepted: check the site address and your contact details.</target>
+      </segment>
+    </unit>
+    <unit id="profilePasswordErreurDejaDefini">
+      <segment>
+        <source>Un mot de passe est déjà défini pour ce compte : utilisez « Changer le mot de passe ».</source>
+        <target>A password is already set for this account: use “Change password”.</target>
+      </segment>
+    </unit>
+    <unit id="profileChangePasswordErreurSaisie">
+      <segment>
+        <source>Vérifiez votre mot de passe actuel et la règle du nouveau mot de passe.</source>
+        <target>Check your current password and the rule for the new password.</target>
+      </segment>
+    </unit>
+    <unit id="formulaireRefusInformations">
+      <segment>
+        <source>Certaines informations ont été refusées : vérifiez les champs et réessayez.</source>
+        <target>Some information was rejected: check the fields and try again.</target>
+      </segment>
+    </unit>
+    <unit id="formulaireRefusMotDePasseNeuf">
+      <segment>
+        <source>Le nouveau mot de passe n’a pas été accepté : il doit respecter la règle indiquée.</source>
+        <target>The new password was not accepted: it must follow the stated rule.</target>
+      </segment>
+    </unit>
+    <unit id="formulaireRefusAdresseNonVerifiee">
+      <segment>
+        <source>Votre adresse e-mail n’est pas encore vérifiée : ouvrez le lien reçu par e-mail pour activer votre compte.</source>
+        <target>Your email address is not verified yet: open the link you received by email to activate your account.</target>
+      </segment>
+    </unit>
+    <unit id="adresseAVerifierRenvoi">
+      <notes>
+        <note category="location">src/app/shared/components/adresse-a-verifier/adresse-a-verifier.component.ts:26,28</note>
+        <note category="meaning">adresseAVerifier.renvoi</note>
+      </notes>
+      <segment>
+        <source> Renvoyer le lien </source>
+        <target> Resend the link </target>
+      </segment>
+    </unit>
+    <unit id="adresseAVerifierEnvoye">
+      <notes>
+        <note category="location">src/app/shared/components/adresse-a-verifier/adresse-a-verifier.component.ts:48</note>
+      </notes>
+      <segment>
+        <source>Demande reçue : un nouveau lien part vers votre adresse, sauf si trois liens sont déjà partis dans l’heure ; ouvrez alors le plus récent.</source>
+        <target>Request received: a new link is on its way to your address, unless three links have already been sent within the hour; in that case, open the most recent one.</target>
+      </segment>
+    </unit>
+    <unit id="adresseAVerifierIndisponible">
+      <notes>
+        <note category="location">src/app/shared/components/adresse-a-verifier/adresse-a-verifier.component.ts:56</note>
+      </notes>
+      <segment>
+        <source>Le lien n’a pas pu être renvoyé pour le moment : réessayez dans un instant.</source>
+        <target>The link could not be resent right now: try again in a moment.</target>
+      </segment>
+    </unit>
+    <unit id="formulaireRefusTropDeTentatives">
+      <segment>
+        <source>Trop de tentatives en peu de temps : réessayez plus tard.</source>
+        <target>Too many attempts in a short time: try again later.</target>
+      </segment>
+    </unit>
+    <unit id="formulaireRefusTropDeTentativesDelai">
+      <segment>
+        <source>Trop de tentatives en peu de temps : réessayez dans <ph id="0" equiv="minutes" disp="minutes"/> min.</source>
+        <target>Too many attempts in a short time: try again in <ph id="0" equiv="minutes" disp="minutes"/> min.</target>
       </segment>
     </unit>
   </file>

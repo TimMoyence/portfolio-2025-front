@@ -98,7 +98,9 @@ describe('sitemap du cours servi par l API (H1, intégration)', () => {
     const appels = catalogueQuiRepond();
 
     expect(lastmodDuCours(await sitemap(appels, journal))).toBe(lastmodDuCoursDansLeFichier());
-    expect(journal.warn.calls.allArgs()).toEqual(avertiPourChaqueCours('publieLe'));
+    expect(journal.warn.calls.allArgs()).toEqual(
+      avertiPourChaqueCours("réponse de l'API hors contrat (publieLe)"),
+    );
   });
 
   it('abandonne au bout de deux secondes quand l API ne répond pas, sans casser le sitemap', async () => {

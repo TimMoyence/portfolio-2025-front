@@ -1,15 +1,16 @@
 import type { CorrigeEcranPresentateur, EcranDeroule } from '../../../../cours/content/types';
-import type {
-  ReponsesDuQuestionnaire,
-  RevelationDuVote,
+import {
+  questionServie,
+  type ReponsesDuQuestionnaire,
+  type RevelationDuVote,
 } from '../../../shared/slides/session/lecture-ecran';
 
-function optionDeLaBonneReponse(
+export function optionDeLaBonneReponse(
   ecran: EcranDeroule,
   questionId: string,
   cible: string,
 ): string | null {
-  const options = ecran.questions.find((question) => question.id === questionId)?.options ?? [];
+  const options = questionServie(ecran, questionId)?.options ?? [];
   return options.find((option) => option.libelle === cible)?.id ?? null;
 }
 

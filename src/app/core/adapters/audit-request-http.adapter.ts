@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
+import type { z } from 'zod';
 import { getApiBaseUrl } from '../http/api-config';
 import { jsonOuNull } from '../../../cours/runtime/core/valeurs';
 import type {
@@ -11,6 +12,24 @@ import type {
   AuditSummaryResponse,
 } from '../models/audit-request.model';
 import type { AuditRequestPort } from '../ports/audit-request.port';
+import { luPar } from './lu-par';
+import {
+  auditCreeServi,
+  auditEchoueServi,
+  auditExpireServi,
+  auditTermineServi,
+  battementServi,
+  progressionDAuditServie,
+  resumeDAuditServi,
+} from './site-schemas';
+
+const SCHEMAS_DU_FLUX = {
+  progress: progressionDAuditServie,
+  completed: auditTermineServi,
+  failed: auditEchoueServi,
+  timeout: auditExpireServi,
+  heartbeat: battementServi,
+} satisfies Record<AuditStreamEvent['type'], z.ZodType>;
 
 @Injectable()
 export class AuditRequestHttpAdapter implements AuditRequestPort {
@@ -25,13 +44,13 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
   }
 
   submit(payload: AuditRequestPayload): Observable<AuditCreateResponse> {
-    return this.http.post<AuditCreateResponse>(`${this.baseUrl}/audits`, payload);
+    return this.http.post<unknown>(`${this.baseUrl}/audits`, payload).pipe(luPar(auditCreeServi));
   }
 
   getSummary(auditId: string): Observable<AuditSummaryResponse> {
-    return this.http.get<AuditSummaryResponse>(
-      `${this.baseUrl}/audits/${encodeURIComponent(auditId)}/summary`,
-    );
+    return this.http
+      .get<unknown>(`${this.baseUrl}/audits/${encodeURIComponent(auditId)}/summary`)
+      .pipe(luPar(resumeDAuditServi));
   }
 
   stream(auditId: string): Observable<AuditStreamEvent> {
@@ -43,10 +62,16 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
 
       const relayer = (type: AuditStreamEvent['type'], event: MessageEvent): boolean => {
         const data = jsonOuNull(event.data);
-        if (data) {
-          subscriber.next({ type, data } as AuditStreamEvent);
+        if (!data) {
+          return false;
         }
-        return Boolean(data);
+        const lu = SCHEMAS_DU_FLUX[type].safeParse(data);
+        if (!lu.success) {
+          subscriber.error(lu.error);
+          return false;
+        }
+        subscriber.next({ type, data: lu.data } as AuditStreamEvent);
+        return true;
       };
 
       source.addEventListener('progress', (event) => relayer('progress', event));
@@ -56,10 +81,12 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
           subscriber.complete();
         }
       });
-      source.addEventListener('failed', (event) => {
-        relayer('failed', event);
-        subscriber.complete();
-      });
+      for (const fin of ['failed', 'timeout'] as const) {
+        source.addEventListener(fin, (event) => {
+          relayer(fin, event);
+          subscriber.complete();
+        });
+      }
       source.onerror = () => {
         subscriber.error(new Error('Audit stream disconnected'));
       };

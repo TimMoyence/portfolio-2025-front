@@ -2,7 +2,6 @@ import {
   type Feuille,
   LONGUEUR_MAX_FORMULE,
   type ResultatFormule,
-  type ValeurFormule,
   decalerFormule,
   estUneFormule,
   evaluerFeuille,
@@ -11,9 +10,17 @@ import {
   lireNombreSaisi,
   nomCellule,
 } from 'portfolio-2025-partage/formule';
+import type { ValeurFormule } from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
-import { bornerEntre, entierBorne } from '../core/valeurs';
+import {
+  DESACTIVE,
+  type EscapedHtml,
+  escapeHtml,
+  LECTURE_SEULE,
+  safeHtml,
+  VIDE,
+} from '../core/html';
+import { bornerEntre, entierBorne, estTexteNonVide } from '../core/valeurs';
 import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
 
 export interface SheetPlanPublic extends PlanEtaye {
@@ -43,12 +50,9 @@ const STYLE_CELLULE = 'fp-sheet__cellule';
 const STYLE_ENTETE = 'fp-sheet__entete';
 const PREFIXE_COLONNE = 'fp-sheet-col-';
 const PREFIXE_LIGNE = 'fp-sheet-ligne-';
-const VIDE = escapeHtml('');
-const LECTURE_SEULE = safeHtml`readonly`;
-const DESACTIVE = safeHtml`disabled`;
 const SIGNE_ERREUR = '⚠';
 const LIMITE_GRILLE = 40;
-const LIGNES_AVANT_RESSERREMENT = 10;
+export const LIGNES_AVANT_RESSERREMENT = 10;
 const TABLEAU_RESSERRE = safeHtml` fp-sheet__tableau--dense`;
 const LARGEUR_MIN_DE_COLONNE_CH = 8;
 const LARGEUR_MAX_DE_COLONNE_CH = 24;
@@ -198,11 +202,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private modifiable(nom: string): boolean {
-    return !this.verrouillee(nom) && this.accessible(nom);
-  }
-
-  private accessible(nom: string): boolean {
-    return !this.verrouille() || (this.correction === 0 && this.detailDe(nom)?.juste === false);
+    return !this.verrouillee(nom) && this.celluleAccessible(nom);
   }
 
   private dansLaGrille(nom: string): boolean {
@@ -228,9 +228,9 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     if (barre === null) {
       return;
     }
-    barre.disabled = !this.accessible(this.selection);
+    barre.disabled = !this.celluleAccessible(this.selection);
     barre.addEventListener('input', () => this.ecrire(this.selection, barre.value, 'barre'));
-    if (this.foyer === 'barre' && this.accessible(this.selection)) {
+    if (this.foyer === 'barre' && this.celluleAccessible(this.selection)) {
       barre.focus();
       barre.setSelectionRange(barre.value.length, barre.value.length);
     }
@@ -241,7 +241,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     champ.addEventListener('input', () => this.ecrire(nom, champ.value, 'cellule'));
     champ.addEventListener('focus', () => this.selectionner(nom));
     champ.addEventListener('keydown', (evenement) => this.auClavier(evenement, nom));
-    if (nom === this.selection && this.foyer === 'cellule' && this.accessible(nom)) {
+    if (nom === this.selection && this.foyer === 'cellule' && this.celluleAccessible(nom)) {
       champ.focus();
       champ.setSelectionRange(champ.value.length, champ.value.length);
     }
@@ -279,7 +279,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
   }
 
   private selectionner(nom: string): void {
-    if (nom !== this.selection && this.accessible(nom)) {
+    if (nom !== this.selection && this.celluleAccessible(nom)) {
       this.selection = nom;
       this.foyer = 'cellule';
       this.refresh();
@@ -295,7 +295,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     return Object.fromEntries(
       Object.entries(this.contenus).filter(
         ([nom, contenu]) =>
-          !this.verrouillee(nom) && contenu.trim().length > 0 && contenu !== (initiales[nom] ?? ''),
+          !this.verrouillee(nom) && estTexteNonVide(contenu) && contenu !== (initiales[nom] ?? ''),
       ),
     );
   }
@@ -307,12 +307,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     this.contenus = { ...this.contenus, [nom]: contenu.slice(0, LONGUEUR_MAX_FORMULE) };
     this.selection = nom;
     this.foyer = source;
-    this.message = '';
-    if (this.verrouille()) {
-      this.reprises = new Set([...this.reprises, nom]);
-    }
-    this.signalerBrouillon(this.interne?.id ?? '', this.saisiesDeLEtudiant());
-    this.refresh();
+    this.noterLaSaisie(nom, this.saisiesDeLEtudiant());
   }
 
   private recopier(): void {
@@ -326,9 +321,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
     this.contenus = { ...this.contenus, [cible]: decalee };
     this.selection = cible;
     this.foyer = 'cellule';
-    this.message = '';
-    this.signalerBrouillon(this.interne?.id ?? '', this.saisiesDeLEtudiant());
-    this.refresh();
+    this.noterLaSaisie(cible, this.saisiesDeLEtudiant());
   }
 
   private feuille(): Feuille {
@@ -360,7 +353,7 @@ export class FpSheet extends FpProductionEtayee<SheetPlanPublic, AttenduDeFeuill
 
   private nature(nom: string, interactif: boolean): NatureDeCellule | null {
     const brut = this.brut(nom);
-    if (brut.trim() === '') {
+    if (!estTexteNonVide(brut)) {
       return null;
     }
     if (!estUneFormule(brut)) {

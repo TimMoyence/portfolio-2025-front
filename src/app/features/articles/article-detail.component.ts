@@ -6,6 +6,7 @@ import { APP_CONFIG } from '../../core/config/app-config.token';
 import type { PublishedArticle } from '../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../core/adapters/article-http.adapter';
 import { urlLocalisee } from '../../core/seo/chemins';
+import { NOM_DU_SITE } from '../../core/seo/nom-du-site';
 import { SeoService } from '../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../core/ssr/http-response-status';
 import { ArticlesCtaComponent } from './articles-cta.component';
@@ -54,7 +55,7 @@ export class ArticleDetailComponent {
           article.seo.canonical_path,
         );
         this.seo.updateSeoMetadata({
-          title: `${article.title} — Asili Design`,
+          title: `${article.title} — ${NOM_DU_SITE}`,
           description: article.seo.description,
           keywords: article.seo.keywords,
           canonicalUrl,
@@ -69,7 +70,7 @@ export class ArticleDetailComponent {
             dateModified: article.updated_at,
             mainEntityOfPage: canonicalUrl,
             author: { '@type': 'Person', name: 'Tim Moyence' },
-            publisher: { '@type': 'Organization', name: 'Asili Design' },
+            publisher: { '@type': 'Organization', name: NOM_DU_SITE },
           },
         });
         this.cdr.markForCheck();

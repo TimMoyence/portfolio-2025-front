@@ -1,6 +1,7 @@
 import { Component, input } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import type { EcranContent, PieceJointe } from '../../../../cours/content/types';
+import { noeudOmbre, noeudsOmbre } from '../../../../testing/banc-de-brique';
 import { attendreQue, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
 import { deuxImages } from '../../../../testing/deux-images';
 import {
@@ -23,6 +24,7 @@ import { valeursSurUneForme } from '../../../../testing/valeurs-sur-les-formes';
 import { annexeFormateurDeLEcran } from '../../../features/cours/presentateur/annexe-formateur';
 import { presentationDe } from '../visual/presentation-v2';
 import type { DirectEcran } from './contrat-hote';
+import { ecranDIdentifiant } from './lecture-ecran';
 import { of, Subject, throwError } from 'rxjs';
 import type { FichierTelecharge } from '../../../core/ports/formations.port';
 import { PieceJointeRefusee } from '../../../core/ports/formations.port';
@@ -54,7 +56,7 @@ const ECRANS_DU_PUPITRE = new Map(
 const TABLEURS_DES_COURS = COURS_MESURES.flatMap(({ pupitre }) =>
   pupitre
     .filter(({ type }) => type === 'fp-sheet')
-    .map((ecran) => ({ ecran, renvoi: pupitre.find(({ id }) => id === ecran.renvoi) ?? null })),
+    .map((ecran) => ({ ecran, renvoi: ecranDIdentifiant(pupitre, ecran.renvoi) ?? null })),
 );
 
 const TABLEURS_PROJETES = TABLEURS_DES_COURS.flatMap((tableur) =>
@@ -211,7 +213,7 @@ async function monterReveleEnProjection(
   if (ecran === undefined) {
     throw new Error(`écran absent du pupitre : ${suffixe}`);
   }
-  const renvoi = pupitre.find(({ id }) => id === ecran.renvoi) ?? null;
+  const renvoi = ecranDIdentifiant(pupitre, ecran.renvoi) ?? null;
   const monte = await monterDansUnCadre(ecran, 'projection', 1280, 720, renvoi, PILOTAGE_REVELE);
   await stabiliser(monte, 8);
   return monte;
@@ -223,7 +225,7 @@ function ecransARenvoiDesCours(
   return COURS_MESURES.flatMap(({ instantane, pupitre }) =>
     ecransDe(instantane)
       .filter(({ renvoi }) => renvoi !== undefined)
-      .map((ecran) => ({ ecran, renvoi: pupitre.find(({ id }) => id === ecran.renvoi) ?? null })),
+      .map((ecran) => ({ ecran, renvoi: ecranDIdentifiant(pupitre, ecran.renvoi) ?? null })),
   );
 }
 
@@ -250,7 +252,7 @@ async function fautesDesEcrans(
 ): Promise<string[]> {
   const fautes: string[] = [];
   for (const ecran of ecrans) {
-    const monte = await monter(ecran, pupitre.find(({ id }) => id === ecran.renvoi) ?? null);
+    const monte = await monter(ecran, ecranDIdentifiant(pupitre, ecran.renvoi) ?? null);
     const faute = await constater(ecran, monte);
     if (faute !== null) {
       fautes.push(faute);
@@ -339,7 +341,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     for (const mode of ['formateur', 'projection', 'etudiant'] as const) {
       it(`${reference} · ${suffixe} tient dans la toile sans défilement en ${mode}`, async () => {
         const ecran = ecranB2_01Du(mode, suffixe);
-        const renvoi = ecransDuPupitreB2_01().find(({ id }) => id === ecran.renvoi) ?? null;
+        const renvoi = ecranDIdentifiant(ecransDuPupitreB2_01(), ecran.renvoi) ?? null;
         const monte = await monterDansUnCadre(ecran, mode, 1280, 720, renvoi);
         const toile = monte.toile();
 
@@ -380,7 +382,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     it(`G01 · en ${mode}, un écran trop long ne défile jamais : il est mis à l échelle de la toile`, async () => {
       const ecrans = ecransDuPupitreB2_01();
       const jeu = ecranDuPupitre(ECRAN_TROP_LONG);
-      const renvoi = ecrans.find(({ id }) => id === jeu.renvoi) ?? null;
+      const renvoi = ecranDIdentifiant(ecrans, jeu.renvoi) ?? null;
       const monte = await monterDansUnCadre(jeu, mode, 1280, 720, renvoi);
 
       expect(monte.hote.classList).not.toContain('cours-presentation--defilante');
@@ -396,9 +398,10 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     if (jeu === undefined) {
       throw new Error(`écran absent du poste étudiant : ${ECRAN_TROP_LONG}`);
     }
-    const renvoi = ecrans.find(({ id }) => id === jeu.renvoi) ?? null;
+    const renvoi = ecranDIdentifiant(ecrans, jeu.renvoi) ?? null;
     const monte = await monterDansUnCadre(jeu, 'etudiant', 1280, 720, renvoi);
-    const valider = monte.brique()?.shadowRoot?.querySelector('[data-testid="valider"]');
+    const brique = monte.brique();
+    const valider = brique === null ? null : noeudOmbre(brique, 'valider');
 
     expect(monte.hote.classList).toContain('cours-presentation--defilante');
     expect(echelleDuContenu(monte.toile())).toBeGreaterThanOrEqual(ECHELLE_MINIMALE);
@@ -646,7 +649,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     it(`G09 · ORIGINE-AXE remplit sa colonne en ${mode} au lieu d être réduit`, async () => {
       const ecrans = ecransDuPupitreB2_01();
       const ecran = ecranDuPupitre('A2-02-ORIGINE-AXE');
-      const renvoi = ecrans.find(({ id }) => id === ecran.renvoi) ?? null;
+      const renvoi = ecranDIdentifiant(ecrans, ecran.renvoi) ?? null;
       const monte = await monterDansUnCadre(ecran, mode, 1280, 720, renvoi);
       await new Promise((suite) => setTimeout(suite, 50));
       const principal = monte.toile()?.querySelector<HTMLElement>('.cours-toile__principal');
@@ -863,7 +866,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
       'projection',
       1280,
       720,
-      ecrans.find(({ id }) => id === points.renvoi) ?? null,
+      ecranDIdentifiant(ecrans, points.renvoi) ?? null,
     );
     await new Promise((suite) => setTimeout(suite, 50));
     const miniature = monte.toile()?.querySelector('[data-testid="cours-renvoi"]');
@@ -881,12 +884,14 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
   it('R6 · SIMULATEUR-MIX : l aperçu formateur offre le même curseur, à la même place, que la projection', async () => {
     const curseurDe = async (mode: CoursPresentationMode) => {
       const monte = await monterDansUnCadre(ecranDuPupitre('A5-04-SIMULATEUR-MIX'), mode, 640, 360);
-      const racine = monte.brique()?.shadowRoot;
-      const curseur = racine?.querySelector<HTMLInputElement>('[data-testid="parametre"] input');
+      const brique = monte.brique();
+      const curseur = brique?.shadowRoot?.querySelector<HTMLInputElement>(
+        '[data-testid="parametre"] input',
+      );
       const toile = monte.toile()?.getBoundingClientRect();
       const rect = curseur?.getBoundingClientRect();
       const releve = {
-        curseurs: racine?.querySelectorAll('[data-testid="parametre"]').length,
+        curseurs: brique === null ? undefined : noeudsOmbre(brique, 'parametre').length,
         reglable: curseur !== null && curseur !== undefined && !curseur.disabled,
         position:
           rect === undefined || toile === undefined
@@ -1272,7 +1277,7 @@ describe('QP-02 · QP-18 · QP-21 · graphiques des cours servis, aucun libellé
 
   for (const { code, instantane, pupitre, publics } of COURS_MESURES) {
     const montreUnGraphique = (ecran: EcranContent): boolean =>
-      [ecran, pupitre.find(({ id }) => id === ecran.renvoi)].some(
+      [ecran, ecranDIdentifiant(pupitre, ecran.renvoi)].some(
         (montre) => montre !== undefined && presentationDe(montre)?.renderer === 'chart',
       );
     for (const { poste, ecransDe, monter } of POSTES_DES_GRAPHIQUES) {
@@ -2045,35 +2050,52 @@ describe('CoursPresentationComponent : pièce jointe d un écran', () => {
       };
     };
 
+    const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
+
+    const REFUS_SIGNALES: readonly {
+      readonly cas: string;
+      readonly refus: Error;
+      readonly alerte: (mode: 'etudiant' | 'formateur') => string;
+    }[] = [
+      { cas: 'refusé', refus: new Error('404'), alerte: (mode) => ALERTES_D_ECHEC[mode] },
+      {
+        cas: 'limité par la cadence du serveur',
+        refus: new PieceJointeRefusee('indisponible', 429, { minutes: 2 }),
+        alerte: () => ATTENTE_COMMUNE,
+      },
+    ];
+
     for (const mode of ['etudiant', 'formateur'] as const) {
-      it(`V5 · en ${mode}, signale un téléchargement refusé, puis réessaie au clic suivant`, async () => {
-        const { telechargement, clic, monte, bouton } = await monterUnRefusPuisLeClasseur(
-          mode,
-          new Error('404'),
-        );
+      for (const { cas, refus, alerte } of REFUS_SIGNALES) {
+        it(`V5 · en ${mode}, signale un téléchargement ${cas}, puis réessaie au clic suivant`, async () => {
+          const { telechargement, clic, monte, bouton } = await monterUnRefusPuisLeClasseur(
+            mode,
+            refus,
+          );
 
-        bouton.click();
-        await monte.rafraichir();
-        const apresLEchec = {
-          alerte: texteDe(alerteDEchec(monte)),
-          role: alerteDEchec(monte)?.getAttribute('role'),
-          desactive: bouton.disabled,
-        };
-        bouton.click();
-        await monte.rafraichir();
+          bouton.click();
+          await monte.rafraichir();
+          const apresLEchec = {
+            alerte: texteDe(alerteDEchec(monte)),
+            role: alerteDEchec(monte)?.getAttribute('role'),
+            desactive: bouton.disabled,
+          };
+          bouton.click();
+          await monte.rafraichir();
 
-        expect(apresLEchec).toEqual({
-          alerte: ALERTES_D_ECHEC[mode],
-          role: 'alert',
-          desactive: false,
+          expect(apresLEchec).toEqual({
+            alerte: alerte(mode),
+            role: 'alert',
+            desactive: false,
+          });
+          expect({
+            appels: telechargement.calls.count(),
+            telecharges: clic.calls.count(),
+            alerte: alerteDEchec(monte),
+          }).toEqual({ appels: 2, telecharges: 1, alerte: null });
+          monte.detruire();
         });
-        expect({
-          appels: telechargement.calls.count(),
-          telecharges: clic.calls.count(),
-          alerte: alerteDEchec(monte),
-        }).toEqual({ appels: 2, telecharges: 1, alerte: null });
-        monte.detruire();
-      });
+      }
     }
 
     it('V5 · au poste, invite à réessayer une reprise retenue, sans échec, et l efface au téléchargement suivant', async () => {

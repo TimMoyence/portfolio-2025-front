@@ -1,9 +1,13 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { buildAuthSession } from '../../../testing/factories/auth.factory';
+import { of, throwError } from 'rxjs';
+import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
 import { createFluxDouble } from '../../../testing/factories/sync.factory';
+import { reveillerApres } from '../../../testing/horloge-simulee';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { getApiBaseUrl } from '../../core/http/api-config';
+import { AUTH_PORT } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import type { StatutFlux, Sync } from '../../../cours/runtime/core/sync';
 import { CREATEUR_FLUX, CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from './cours-flux.token';
@@ -47,10 +51,17 @@ describe('ouvrirLeFluxFormateur', () => {
 
 describe('CREATEUR_FLUX_FORMATEUR', () => {
   const double = createFluxDouble();
+  let port: ReturnType<typeof createAuthPortStub>;
 
   beforeEach(() => {
     double.fabrique.calls.reset();
-    setupTestBed({ providers: [{ provide: CREATEUR_FLUX, useValue: double.fabrique }] });
+    port = createAuthPortStub();
+    setupTestBed({
+      providers: [
+        { provide: CREATEUR_FLUX, useValue: double.fabrique },
+        { provide: AUTH_PORT, useValue: port },
+      ],
+    });
   });
 
   afterEach(() => {
@@ -85,5 +96,59 @@ describe('CREATEUR_FLUX_FORMATEUR', () => {
     authState.clearSession();
 
     expect(entetes?.()).toEqual({});
+  });
+
+  function preparerLeFlux(accessToken: string) {
+    TestBed.inject(AuthStateService).login(buildAuthSession({ accessToken, expiresIn: 900 }));
+    TestBed.inject(CREATEUR_FLUX_FORMATEUR)('seance-1');
+    const { entetes, preparerLaSession } = double.fabrique.calls.mostRecent().args[0];
+    return {
+      entetes: () => entetes?.(),
+      preparer: (forcer: boolean) => preparerLaSession?.(forcer),
+    };
+  }
+
+  async function attendreLeJetonNeuf(
+    flux: ReturnType<typeof preparerLeFlux>,
+    forcer: boolean,
+  ): Promise<void> {
+    port.refresh.and.returnValue(of(buildAuthSession({ accessToken: 'jwt-neuf' })));
+
+    expect(await flux.preparer(forcer)).toBe('reussi');
+    expect(port.refresh).toHaveBeenCalledTimes(1);
+    expect(flux.entetes()).toEqual({ authorization: 'Bearer jwt-neuf' });
+  }
+
+  it('rafraichit avant l ouverture un jeton expire, pour que le flux parte avec le jeton neuf', async () => {
+    const flux = preparerLeFlux('jwt-perime');
+    reveillerApres(3_600_000);
+
+    await attendreLeJetonNeuf(flux, false);
+  });
+
+  it('ouvre sans rafraichir un jeton valide, et ne le rafraichit que si le serveur l a refuse', async () => {
+    const flux = preparerLeFlux('jwt-valide');
+
+    expect(await flux.preparer(false)).toBe('reussi');
+    expect(port.refresh).not.toHaveBeenCalled();
+
+    await attendreLeJetonNeuf(flux, true);
+  });
+
+  for (const status of [0, 429, 503]) {
+    it(`rend injoignable un rafraichissement en echec ${status}, que le flux relancera`, async () => {
+      port.refresh.and.returnValue(throwError(() => new HttpErrorResponse({ status })));
+      const { preparer } = preparerLeFlux('jwt-refuse');
+
+      expect(await preparer(true)).toBe('injoignable');
+    });
+  }
+
+  it('rend refuse un rafraichissement refuse, qui clot la session', async () => {
+    port.refresh.and.returnValue(throwError(() => new HttpErrorResponse({ status: 401 })));
+    const { entetes, preparer } = preparerLeFlux('jwt-refuse');
+
+    expect(await preparer(true)).toBe('refuse');
+    expect(entetes()).toEqual({});
   });
 });

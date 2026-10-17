@@ -8,18 +8,45 @@ import {
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import type { AuthUser } from '../../core/models/auth.model';
 import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
+import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
+import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
+import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
+import { MotDePasseNeufDirective } from '../../shared/directives/mot-de-passe-neuf.directive';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
-import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
+import {
+  handleFormSubmit,
+  INFORMATIONS_REFUSEES,
+  MOT_DE_PASSE_NEUF_REFUSE,
+} from '../../shared/utils/form-submit.utils';
+import { initialeDe } from '../../shared/utils/initiale.utils';
+import {
+  BORNES_D_UN_MOT_DE_PASSE_SAISI,
+  BORNES_D_UN_NOM_DU_PROFIL_JUSQU_AU_LOT_2D,
+  BORNES_D_UN_TELEPHONE,
+  REGLE_D_UN_MOT_DE_PASSE,
+} from '../../shared/utils/regles-de-saisie';
+import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
+
+const CHANGEMENT_DE_MOT_DE_PASSE_REFUSE = $localize`:@@profileChangePasswordErreurSaisie:Vérifiez votre mot de passe actuel et la règle du nouveau mot de passe.`;
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, RevealOnScrollDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    RevealOnScrollDirective,
+    FieldErrorsComponent,
+    BornesDeSaisieDirective,
+    FormatDeContactDirective,
+    MotDePasseNeufDirective,
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,12 +55,17 @@ export class ProfileComponent {
   private readonly authService: AuthPort = inject(AUTH_PORT);
   readonly authState = inject(AuthStateService);
   private readonly cdr = inject(ChangeDetectorRef);
-  private readonly router = inject(Router);
+
+  protected readonly regleDUnMotDePasse = REGLE_D_UN_MOT_DE_PASSE;
+  protected readonly bornesDUnNom = BORNES_D_UN_NOM_DU_PROFIL_JUSQU_AU_LOT_2D;
+  protected readonly bornesDUnTelephone = BORNES_D_UN_TELEPHONE;
+  protected readonly bornesDUnMotDePasseSaisi = BORNES_D_UN_MOT_DE_PASSE_SAISI;
 
   isEditing = signal(false);
   editFirstName = '';
   editLastName = '';
   editPhone = '';
+  editProfileSubmitted = false;
   editProfileLoading = false;
   editProfileSuccess?: string;
   editProfileError?: string;
@@ -66,13 +98,11 @@ export class ProfileComponent {
   }
 
   initial(firstName?: string, lastName?: string, email?: string): string {
-    const source = firstName || lastName || email || '?';
-    return source.charAt(0).toUpperCase();
+    return initialeDe(firstName, lastName, email) || '?';
   }
 
   logout(): void {
-    this.authState.logout();
-    void this.router.navigate(['/']);
+    this.authState.logoutEtAccueil();
   }
 
   startEditing(): void {
@@ -81,6 +111,7 @@ export class ProfileComponent {
     this.editFirstName = user.firstName;
     this.editLastName = user.lastName;
     this.editPhone = user.phone ?? '';
+    this.editProfileSubmitted = false;
     this.editProfileSuccess = undefined;
     this.editProfileError = undefined;
     this.isEditing.set(true);
@@ -88,34 +119,37 @@ export class ProfileComponent {
 
   cancelEditing(): void {
     this.isEditing.set(false);
+    this.editProfileSubmitted = false;
     this.editProfileSuccess = undefined;
     this.editProfileError = undefined;
   }
 
-  saveProfile(): void {
-    this.editProfileLoading = true;
+  saveProfile(form: NgForm): void {
+    this.editProfileSubmitted = true;
     this.editProfileSuccess = undefined;
     this.editProfileError = undefined;
+    if (form.invalid) return;
 
+    this.editProfileLoading = true;
     handleFormSubmit(
       this.authService.updateProfile({
-        firstName: this.editFirstName,
-        lastName: this.editLastName,
-        phone: this.editPhone || null,
+        firstName: this.editFirstName.trim(),
+        lastName: this.editLastName.trim(),
+        phone: telephoneFacultatif(this.editPhone),
       }),
       this.cdr,
       {
-        fallbackError: $localize`:profile.edit.error.generic@@profileEditErrorGeneric:Impossible de mettre a jour le profil pour le moment.`,
+        fallbackError: $localize`:profile.edit.error.generic@@profileEditErrorGeneric:Impossible de mettre à jour le profil pour le moment.`,
+        refus: { 400: INFORMATIONS_REFUSEES },
         onSuccess: (updatedUser) => {
           this.authState.updateUser(updatedUser);
-          this.editProfileSuccess = $localize`:profile.edit.success@@profileEditSuccess:Profil mis a jour avec succes.`;
+          this.editProfileSuccess = $localize`:profile.edit.success@@profileEditSuccess:Profil mis à jour avec succès.`;
           this.isEditing.set(false);
         },
         onError: (message) => {
           this.editProfileError = message;
-          this.editProfileLoading = false;
         },
-        onComplete: () => {
+        finalement: () => {
           this.editProfileLoading = false;
         },
       },
@@ -131,9 +165,13 @@ export class ProfileComponent {
     this.setPasswordLoading = true;
 
     handleFormSubmit(this.authService.setPassword({ newPassword: this.newPassword }), this.cdr, {
-      fallbackError: $localize`:profile.password.error.generic@@profilePasswordErrorGeneric:Impossible de definir le mot de passe pour le moment.`,
+      fallbackError: $localize`:profile.password.error.generic@@profilePasswordErrorGeneric:Impossible de définir le mot de passe pour le moment.`,
+      refus: {
+        400: MOT_DE_PASSE_NEUF_REFUSE,
+        409: $localize`:@@profilePasswordErreurDejaDefini:Un mot de passe est déjà défini pour ce compte : utilisez « Changer le mot de passe ».`,
+      },
       onSuccess: () => {
-        this.setPasswordSuccess = $localize`:profile.password.success@@profilePasswordSuccess:Mot de passe defini avec succes.`;
+        this.setPasswordSuccess = $localize`:profile.password.success@@profilePasswordSuccess:Mot de passe défini avec succès.`;
         this.newPassword = '';
         form.resetForm({ newPassword: '' });
         this.setPasswordSubmitted = false;
@@ -141,9 +179,8 @@ export class ProfileComponent {
       },
       onError: (message) => {
         this.setPasswordError = message;
-        this.setPasswordLoading = false;
       },
-      onComplete: () => {
+      finalement: () => {
         this.setPasswordLoading = false;
       },
     });
@@ -151,6 +188,7 @@ export class ProfileComponent {
 
   changePassword(form: NgForm): void {
     this.changePasswordSubmitted = true;
+    this.setPasswordSuccess = undefined;
     this.changePasswordSuccess = undefined;
     this.changePasswordError = undefined;
     if (form.invalid) return;
@@ -165,8 +203,12 @@ export class ProfileComponent {
       this.cdr,
       {
         fallbackError: $localize`:profile.changePassword.error.generic@@profileChangePasswordErrorGeneric:Impossible de changer le mot de passe pour le moment.`,
+        refus: {
+          400: CHANGEMENT_DE_MOT_DE_PASSE_REFUSE,
+          401: CHANGEMENT_DE_MOT_DE_PASSE_REFUSE,
+        },
         onSuccess: () => {
-          this.changePasswordSuccess = $localize`:profile.changePassword.success@@profileChangePasswordSuccess:Mot de passe modifie avec succes.`;
+          this.changePasswordSuccess = $localize`:profile.changePassword.success@@profileChangePasswordSuccess:Mot de passe modifié avec succès.`;
           this.currentPassword = '';
           this.changeNewPassword = '';
           form.resetForm({ currentPassword: '', changeNewPassword: '' });
@@ -175,9 +217,8 @@ export class ProfileComponent {
         },
         onError: (message) => {
           this.changePasswordError = message;
-          this.changePasswordLoading = false;
         },
-        onComplete: () => {
+        finalement: () => {
           this.changePasswordLoading = false;
         },
       },

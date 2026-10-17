@@ -1,4 +1,5 @@
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { chaineDe } from '../core/valeurs';
 import { FpReponse } from './reponse';
 import {
   type ContenuDeBrique,
@@ -15,8 +16,6 @@ export interface ExitBilletPublic extends ContenuDeBrique {
 
 const LIMITE_TEXTE_LIBRE = 500;
 const ID_TEXTE_LIBRE = 'fp-exit-texte-libre';
-const VIDE = escapeHtml('');
-const DESACTIVE = safeHtml`disabled`;
 
 function projeterBillet(source: ExitBilletPublic): ExitBilletPublic {
   return {
@@ -41,10 +40,8 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
   }
 
   protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
-    const texte = brouillon['texteLibre'];
-    const choix = brouillon['choix'];
-    this.texteLibre = typeof texte === 'string' ? texte : this.texteLibre;
-    this.choix = typeof choix === 'string' ? choix : this.choix;
+    this.texteLibre = chaineDe(brouillon, 'texteLibre') ?? this.texteLibre;
+    this.choix = chaineDe(brouillon, 'choix') ?? this.choix;
     return true;
   }
 
@@ -98,10 +95,9 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
     if (!branche) {
       return;
     }
-    for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-option]')) {
-      bouton.disabled = verrouille;
-      bouton.addEventListener('click', () => this.selectionner(bouton.dataset['option'] ?? ''));
-    }
+    this.brancherLesBoutons(racine, '[data-option]', verrouille, ({ dataset }) =>
+      this.selectionner(dataset['option'] ?? ''),
+    );
   }
 
   protected effacerLaSaisie(): void {
@@ -114,16 +110,10 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
   }
 
   private memoriser(): void {
-    this.signalerBrouillon(this.interne?.id ?? '', {
+    this.signalerLeBrouillon({
       texteLibre: this.texteLibre,
       choix: this.choix,
     });
-  }
-
-  private casesAImprimer(options: readonly OptionPublique[]): readonly EscapedHtml[] {
-    return options.map(
-      (option) => safeHtml`<li data-testid="option">${escapeHtml(option.libelle)}</li>`,
-    );
   }
 
   private boutonsOption(options: readonly OptionPublique[]): readonly EscapedHtml[] {
@@ -135,7 +125,7 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
 
   private recapitulatif(): EscapedHtml {
     if (!this.envoye && this.interneVerdict === null) {
-      return escapeHtml('');
+      return VIDE;
     }
     return safeHtml`<div class="fp-exit__recap" data-testid="recap"><p class="fp-exit__recap-choix" data-testid="recap-choix">${escapeHtml(this.libelleChoisi())}</p><p class="fp-exit__recap-texte" data-testid="recap-texte">${escapeHtml(this.texteLibre)}</p></div>`;
   }

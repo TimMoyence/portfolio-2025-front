@@ -1,11 +1,13 @@
 import { spawn } from 'node:child_process';
 import { randomFillSync } from 'node:crypto';
 import { existsSync, mkdirSync, openSync, readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { setTimeout as patienter } from 'node:timers/promises';
-import { fileURLToPath } from 'node:url';
 
-import { amorcerFormateur } from './amorcage.mjs';
+import { RACINE as RACINE_FRONT } from '../lib/depot.mjs';
+import { messageDErreur } from '../../src/server/lecture-api.ts';
+import { executer } from '../lib/processus.mjs';
+import { amorcerFormateur } from './amorcage.mts';
 import { attendreQue, sondeHttp } from './attente.mjs';
 import {
   BASE_DU_BANC,
@@ -22,8 +24,6 @@ import {
   variablesDeBase,
 } from './configuration.mjs';
 
-const RACINE_FRONT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-
 const RACINE_BACK = racineDuBack({ env: process.env, racineFront: RACINE_FRONT });
 
 const COMPOSE = resolve(RACINE_FRONT, 'scripts/banc/banc.compose.yaml');
@@ -34,12 +34,6 @@ const JOURNAL_API = resolve(DOSSIER_JOURNAUX, 'api.log');
 
 const source = { octets: (taille) => randomFillSync(new Uint8Array(taille)) };
 
-/**
- * @param {string} commande
- * @param {string[]} args
- * @param {{ cwd?: string, env?: Record<string, string>, silencieux?: boolean }} options
- * @returns {Promise<void>}
- */
 const enfants = new Set();
 
 /**
@@ -80,34 +74,21 @@ async function arreterLesEnfants() {
   await patienter(300);
 }
 
-function executer(commande, args, options = {}) {
-  return new Promise((tenir, rejeter) => {
-    const enfant = lancerSuivi(commande, args, {
-      cwd: options.cwd ?? RACINE_FRONT,
-      env: { ...process.env, ...(options.env ?? {}) },
-      stdio: options.silencieux ? ['ignore', 'ignore', 'pipe'] : 'inherit',
-    });
-    let erreurs = '';
-    enfant.stderr?.on('data', (morceau) => {
-      erreurs += String(morceau);
-    });
-    enfant.on('error', rejeter);
-    enfant.on('close', (code) => {
-      if (code === 0) {
-        tenir();
-        return;
-      }
-      rejeter(new Error(`${commande} ${args.join(' ')} → code ${code}\n${erreurs}`));
-    });
-  });
-}
+/**
+ * @param {string} commande
+ * @param {string[]} args
+ * @param {Parameters<typeof executer>[2]} [options]
+ * @returns {Promise<string>}
+ */
+const executerSuivi = (commande, args, options = {}) =>
+  executer(commande, args, { ...options, lancer: lancerSuivi });
 
 /**
  * @param {string[]} args
- * @returns {Promise<void>}
+ * @returns {Promise<string>}
  */
 function compose(args) {
-  return executer('docker', ['compose', '-p', PROJET_COMPOSE, '-f', COMPOSE, ...args], {
+  return executerSuivi('docker', ['compose', '-p', PROJET_COMPOSE, '-f', COMPOSE, ...args], {
     env: environnementDuCompose(RACINE_BACK),
   });
 }
@@ -117,34 +98,21 @@ function compose(args) {
  * @returns {Promise<string>}
  */
 function executerSql(sql) {
-  return new Promise((tenir, rejeter) => {
-    const enfant = lancerSuivi(
-      'docker',
-      [
-        'exec',
-        BASE_DU_BANC.conteneur,
-        'psql',
-        '-U',
-        BASE_DU_BANC.utilisateur,
-        '-d',
-        BASE_DU_BANC.nom,
-        '-c',
-        sql,
-      ],
-      { stdio: ['ignore', 'pipe', 'pipe'] },
-    );
-    let sortie = '';
-    enfant.stdout.on('data', (morceau) => {
-      sortie += String(morceau);
-    });
-    enfant.stderr.on('data', (morceau) => {
-      sortie += String(morceau);
-    });
-    enfant.on('error', rejeter);
-    enfant.on('close', (code) =>
-      code === 0 ? tenir(sortie) : rejeter(new Error(`psql → code ${code}\n${sortie}`)),
-    );
-  });
+  return executerSuivi(
+    'docker',
+    [
+      'exec',
+      BASE_DU_BANC.conteneur,
+      'psql',
+      '-U',
+      BASE_DU_BANC.utilisateur,
+      '-d',
+      BASE_DU_BANC.nom,
+      '-c',
+      sql,
+    ],
+    { stdio: ['ignore', 'pipe', 'pipe'] },
+  );
 }
 
 /**
@@ -175,9 +143,9 @@ const ENTREE_DE_L_API = resolve(RACINE_BACK, 'dist/main.js');
  * @returns {Promise<void>}
  */
 async function construireLeBack() {
-  await executer('pnpm', ['build'], { cwd: RACINE_BACK });
+  await executerSuivi('pnpm', ['build'], { cwd: RACINE_BACK });
   if (existsSync(ENTREE_DE_L_API)) return;
-  await executer('pnpm', ['build'], { cwd: RACINE_BACK });
+  await executerSuivi('pnpm', ['build'], { cwd: RACINE_BACK });
   if (existsSync(ENTREE_DE_L_API)) return;
   throw new Error(
     `${ENTREE_DE_L_API} reste absent après deux constructions : une autre commande reconstruit le back en même temps (pnpm build y efface dist). Relancez le banc seul.`,
@@ -235,10 +203,14 @@ async function jouer() {
     await construireLeBack();
 
     annoncer('migrations');
-    await executer(
+    await executerSuivi(
       'pnpm',
       ['exec', 'typeorm', 'migration:run', '-d', 'dist/database/data-source.js'],
-      { cwd: RACINE_BACK, env: variablesDeBase(BASE_DU_BANC, PORTS.base), silencieux: true },
+      {
+        cwd: RACINE_BACK,
+        env: variablesDeBase(BASE_DU_BANC, PORTS.base),
+        stdio: ['ignore', 'ignore', 'pipe'],
+      },
     );
 
     annoncer('API');
@@ -264,10 +236,10 @@ async function jouer() {
     });
 
     annoncer('construction du front');
-    await executer('npm', ['run', 'build:banc']);
+    await executerSuivi('npm', ['run', 'build:banc']);
 
     annoncer('scénarios');
-    await executer(
+    await executerSuivi(
       'npx',
       ['playwright', 'test', '--project=banc', '--workers=1', ...process.argv.slice(2)],
       {
@@ -309,6 +281,6 @@ process.on('SIGTERM', interrompre);
 const action = process.argv[2] === '--nettoyer' ? redescendre : jouer;
 
 action().catch((erreur) => {
-  process.stderr.write(`\n${erreur instanceof Error ? erreur.message : String(erreur)}\n`);
+  process.stderr.write(`\n${messageDErreur(erreur)}\n`);
   process.exitCode = 1;
 });

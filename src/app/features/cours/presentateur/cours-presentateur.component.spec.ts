@@ -38,6 +38,7 @@ import {
   buildResultatsSeance,
   buildStatistiquesSeance,
 } from '../../../../testing/factories/formations.factory';
+import { refusDuBack } from '../../../../testing/factories/probleme-http.factory';
 import type { FluxDouble } from '../../../../testing/factories/sync.factory';
 import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
@@ -48,6 +49,7 @@ import {
 import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
 import {
+  attendreAucunFluxApresLaDestruction,
   attendreChaqueCalqueEntierDansLaToile,
   attendreChaqueLibelleSepareDeSaValeur,
   attendreLaFermetureDuFlux,
@@ -70,6 +72,9 @@ const SESSION = 'seance-1';
 const CODE = '4821';
 const JETON = JETON_FORMATEUR;
 const BASE_DE_L_APPLICATION = '/fr/';
+
+const LIMITE_ATTEINTE = refusDuBack(429, 'Too Many Requests', { 'Retry-After': '120' });
+const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
 
 const CONFUSIONS_DE_LA_CLASSE: readonly ConfusionComptee[] = [
   { id: 'interet-simple', libelle: 'Intérêts simples au lieu de composés', nombre: 1 },
@@ -171,6 +176,22 @@ describe('CoursPresentateurComponent', () => {
     return fixture;
   }
 
+  function retenirLaLectureDuDeroule(): {
+    readonly lecture: Subject<DerouleCours>;
+    readonly demandee: Promise<void>;
+  } {
+    const lecture = new Subject<DerouleCours>();
+    let annoncerLaLecture: () => void = () => undefined;
+    const demandee = new Promise<void>((resoudre) => {
+      annoncerLaLecture = resoudre;
+    });
+    port.lireDeroule.and.callFake(() => {
+      annoncerLaLecture();
+      return lecture;
+    });
+    return { lecture, demandee };
+  }
+
   async function ouvrirLaSeanceSur(nouveau: DerouleCours): Promise<Fixture> {
     deroule = nouveau;
     port.lireDeroule.and.returnValue(of(deroule));
@@ -241,16 +262,8 @@ describe('CoursPresentateurComponent', () => {
 
   it('ouvre la seance par son slug et ne lit le deroule qu une fois la seance ouverte', async () => {
     const ouverture = new Subject<SeanceOuverte>();
-    const lecture = new Subject<DerouleCours>();
-    let annoncerLaLecture: () => void = () => undefined;
-    const lectureDemandee = new Promise<void>((resoudre) => {
-      annoncerLaLecture = resoudre;
-    });
+    const { lecture, demandee: lectureDemandee } = retenirLaLectureDuDeroule();
     port.ouvrirSeance.and.returnValue(ouverture);
-    port.lireDeroule.and.callFake(() => {
-      annoncerLaLecture();
-      return lecture;
-    });
     const fixture = monter();
     await fixture.whenStable();
     fixture.detectChanges();
@@ -278,6 +291,15 @@ describe('CoursPresentateurComponent', () => {
     expect(double.fabrique).toHaveBeenCalledTimes(1);
   });
 
+  it('L4-F17 · n ouvre aucun flux quand le deroule arrive apres la destruction du pupitre', async () => {
+    const { lecture, demandee } = retenirLaLectureDuDeroule();
+    const fixture = monter();
+    await fixture.whenStable();
+    await demandee;
+
+    await attendreAucunFluxApresLaDestruction(double, fixture, lecture, deroule);
+  });
+
   it('affiche le code de seance en tres grand des l ouverture', async () => {
     const fixture = await ouvrirLaSeance();
 
@@ -293,6 +315,15 @@ describe('CoursPresentateurComponent', () => {
     expect(cible(fixture, 'presentateur-ouverture-echec').getAttribute('role')).toBe('alert');
     expect(port.lireDeroule).not.toHaveBeenCalled();
     expect(double.fabrique).not.toHaveBeenCalled();
+    expect(bouton(fixture, 'presentateur-ouvrir').disabled).toBeFalse();
+  });
+
+  it('dit l attente commune quand l ouverture est limitee, sans faire verifier la connexion', async () => {
+    port.ouvrirSeance.and.returnValue(throwError(() => LIMITE_ATTEINTE));
+    const fixture = await ouvrirLaSeance();
+
+    expect(cible(fixture, 'presentateur-ouverture-echec').getAttribute('role')).toBe('alert');
+    expect(texte(fixture, 'presentateur-ouverture-echec')).toBe(ATTENTE_COMMUNE);
     expect(bouton(fixture, 'presentateur-ouvrir').disabled).toBeFalse();
   });
 
@@ -424,6 +455,14 @@ describe('CoursPresentateurComponent', () => {
       await stabiliserLaVue(fixture);
 
       expect(port.ouvrirSeance).not.toHaveBeenCalled();
+    });
+
+    it('dit l attente commune quand la reprise est limitee, sans faire verifier la connexion', async () => {
+      port.lireResultats.and.returnValue(throwError(() => LIMITE_ATTEINTE));
+      const fixture = await reprendre();
+
+      expect(cible(fixture, 'presentateur-reprise-echec').getAttribute('role')).toBe('alert');
+      expect(texte(fixture, 'presentateur-reprise-echec')).toBe(ATTENTE_COMMUNE);
     });
 
     it('alerte quand la reprise echoue et la relance a la demande, sans proposer d ouvrir', async () => {
@@ -567,7 +606,7 @@ describe('CoursPresentateurComponent', () => {
       );
       const fixture = await ouvrirLaSeance();
 
-      publierSurLaVue(double, fixture, buildResultatsSeance({ statistiques: PROBLEMATIQUE }));
+      publierSurLaVue(double, fixture, { statistiques: PROBLEMATIQUE });
       await stabiliserLaVue(fixture);
 
       const statistiques = texte(fixture, 'presentateur-statistiques');
@@ -641,13 +680,30 @@ describe('CoursPresentateurComponent', () => {
     });
   });
 
-  it('alerte et laisse redemarrer quand le demarrage echoue', async () => {
-    port.demarrer.and.returnValue(throwError(() => new Error('refus')));
+  async function demarrerMalgre(erreur: unknown): Promise<Fixture> {
+    port.demarrer.and.returnValue(throwError(() => erreur));
     const fixture = await ouvrirLaSeance();
 
     await cliquer(fixture, 'presentateur-demarrer');
 
     expect(cible(fixture, 'presentateur-echec').getAttribute('role')).toBe('alert');
+    return fixture;
+  }
+
+  it('dit l attente commune quand une commande est limitee, sans faire verifier la connexion', async () => {
+    const fixture = await demarrerMalgre(LIMITE_ATTEINTE);
+
+    expect(texte(fixture, 'presentateur-echec')).toBe(ATTENTE_COMMUNE);
+
+    port.demarrer.and.returnValue(throwError(() => new Error('refus')));
+    await cliquer(fixture, 'presentateur-demarrer');
+
+    expect(texte(fixture, 'presentateur-echec')).toContain('Vérifiez la connexion');
+  });
+
+  it('alerte et laisse redemarrer quand le demarrage echoue', async () => {
+    const fixture = await demarrerMalgre(new Error('refus'));
+
     expect(bouton(fixture, 'presentateur-demarrer').disabled).toBeFalse();
 
     port.demarrer.and.returnValue(of(undefined));

@@ -1,8 +1,9 @@
-import { PLATFORM_ID, type Type } from '@angular/core';
+import type { Type } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { isolateAnimReady } from './anim-ready';
+import { monterSurPlateforme } from './plateforme';
 import { setupTestBed, type SetupTestBedOptions } from './setup-test-bed';
 
 export interface OptionsDeMontage<T> extends SetupTestBedOptions {
@@ -53,10 +54,7 @@ export function pageMontee<T>(
 }
 
 export function rendreLHoteNavigateur<T>(hote: Type<T>): HTMLElement {
-  const fixture = TestBed.configureTestingModule({
-    imports: [hote],
-    providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
-  }).createComponent(hote);
+  const fixture = monterSurPlateforme(hote, 'browser');
   fixture.detectChanges();
   return fixture.nativeElement as HTMLElement;
 }
@@ -70,6 +68,20 @@ export function monterAvecRouteur<T>(
     providers: [provideRouter([])],
   }).createComponent(composant);
   return poserLesEntrees(fixture, entrees);
+}
+
+export function cliquerSansQuitterLaPage(lien: HTMLElement): {
+  readonly priseParLeRouteur: boolean;
+} {
+  let priseParLeRouteur = false;
+  const observer = (evenement: Event): void => {
+    priseParLeRouteur = evenement.defaultPrevented;
+    evenement.preventDefault();
+  };
+  document.addEventListener('click', observer);
+  lien.click();
+  document.removeEventListener('click', observer);
+  return { priseParLeRouteur };
 }
 
 export function poserLesEntrees<T>(

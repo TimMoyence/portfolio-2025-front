@@ -4,14 +4,15 @@ import type {
   DerouleCours,
   EcranContent,
   EcranDeroule,
+  ValeurFormule,
 } from '../../../../cours/content/types';
-import type { ValeurFormule } from 'portfolio-2025-partage/formule';
+import { avecUnite, echapperPourRegex, objet } from '../../../../cours/runtime/core/valeurs';
 import { type Recolte, recolterDansLArbre } from '../../../../testing/arbre-json';
-import { objet } from '../../../shared/slides/visual/presentation-v2';
 import { INSTANTANE_B2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
 import { INSTANTANE_B2_03 } from '../../../../testing/fixtures/instantane-b2-03';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
+import { ecranNomme } from '../../../../testing/montage-d-instantane';
 import { type FicheDuLivretEtudiant, feuillesDuLivretEtudiant } from './livret-papier';
 
 interface ExtraitAdmis {
@@ -43,7 +44,7 @@ function formesDeLaReponse(valeur: ValeurFormule): readonly string[] {
     return [valeur];
   }
   const pourcentage =
-    valeur !== 0 && Math.abs(valeur) < 1 ? [`${ecritEnFrancais(valeur * 100, 2)} %`] : [];
+    valeur !== 0 && Math.abs(valeur) < 1 ? [avecUnite(ecritEnFrancais(valeur * 100, 2), '%')] : [];
   return [...new Set([ecritEnFrancais(valeur), ecritEnFrancais(valeur, 2), ...pourcentage])];
 }
 
@@ -186,7 +187,7 @@ function cite(texte: string, reponse: string): boolean {
   if (cherchee === '') {
     return false;
   }
-  const motif = cherchee.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+  const motif = echapperPourRegex(cherchee);
   return new RegExp(`(?<![\\p{L}\\p{N}])${motif}(?![\\p{L}\\p{N}])`, 'u').test(texte);
 }
 
@@ -567,12 +568,10 @@ describe('livret papier des cours servis', () => {
   });
 
   it('cherche une réponse sous sa formule, son arrondi, son pourcentage et sa valeur logique', () => {
-    const tableur = INSTANTANE_B2_02.deroule.ecrans.find(
-      ({ id }) => id === 'B2-02-A4-02-TABLEUR-FIBRE',
-    );
+    const tableur = ecranNomme(INSTANTANE_B2_02.deroule.ecrans, 'B2-02-A4-02-TABLEUR-FIBRE');
 
     expect(reponsesDe(tableur)).toEqual(
-      jasmine.arrayContaining(['=PENTE(B2:B6;A2:A6)', '0,997852', '1', '99,79 %', '3,51']),
+      jasmine.arrayContaining(['=PENTE(B2:B6;A2:A6)', '0,997852', '1', '99,79 %', '3,51']),
     );
     expect(formesDeLaReponse(false)).toEqual(['FAUX']);
   });

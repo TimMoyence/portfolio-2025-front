@@ -2,6 +2,7 @@ import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import seoMetadata from '../../../assets/seo/seo-metadata.json';
+import { langueDuSite } from '../config/locales';
 import { routeSansLocale } from './chemins';
 import { estIndexable, localeParDefaut, pageSeoDeLaRoute } from './pages-seo';
 import type { SeoConfig } from './seo.interface';
@@ -30,7 +31,7 @@ export class SeoRegistryService {
   }
 
   getLocaleId(): string {
-    const normalizedLocale = this.localeId.split('-')[0];
+    const normalizedLocale = langueDuSite(this.localeId);
     const locales = this.getLocales();
     if (locales.includes(normalizedLocale)) {
       return normalizedLocale;
@@ -79,7 +80,7 @@ export class SeoRegistryService {
   }
 
   private resolveLocaleKey(page: SeoPageEntry): string {
-    const locales = [this.localeId, this.localeId.split('-')[0], this.getDefaultLocale()].filter(
+    const locales = [this.localeId, langueDuSite(this.localeId), this.getDefaultLocale()].filter(
       Boolean,
     );
 

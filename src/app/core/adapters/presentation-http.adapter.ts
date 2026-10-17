@@ -6,6 +6,8 @@ import type {
   PresentationInteractionsResponse,
   PresentationPort,
 } from '../ports/presentation.port';
+import { luPar } from './lu-par';
+import { interactionsServies } from './site-schemas';
 
 @Injectable()
 export class PresentationHttpAdapter implements PresentationPort {
@@ -14,8 +16,8 @@ export class PresentationHttpAdapter implements PresentationPort {
   constructor(private readonly http: HttpClient) {}
 
   getInteractions(slug: string): Observable<PresentationInteractionsResponse> {
-    return this.http.get<PresentationInteractionsResponse>(
-      `${this.baseUrl}/presentations/${slug}/interactions`,
-    );
+    return this.http
+      .get<unknown>(`${this.baseUrl}/presentations/${slug}/interactions`)
+      .pipe(luPar(interactionsServies));
   }
 }

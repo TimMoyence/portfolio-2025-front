@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { Subject, of } from 'rxjs';
+import { fournirLaRoute } from '../../../testing/factories/route.factory';
 import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-registry.service';
 import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';
@@ -13,11 +14,6 @@ describe('SeoManagerComponent', () => {
   let routerEvents$: Subject<NavigationEnd>;
   let seoServiceSpy: jasmine.SpyObj<SeoService>;
   let seoRegistrySpy: jasmine.SpyObj<SeoRegistryService>;
-  let activatedRouteStub: {
-    firstChild: ActivatedRoute | null;
-    outlet: string;
-    data: Subject<Record<string, unknown>>;
-  };
   let routeData$: Subject<Record<string, unknown>>;
   let routerStub: { events: unknown; url: string };
 
@@ -66,12 +62,6 @@ describe('SeoManagerComponent', () => {
     seoRegistrySpy.getSeoByKey.and.returnValue(of(resolvedConfig));
     seoRegistrySpy.getSeoByPath.and.returnValue(of(null));
 
-    activatedRouteStub = {
-      firstChild: null,
-      outlet: 'primary',
-      data: routeData$,
-    };
-
     routerStub = {
       events: routerEvents$.asObservable(),
       url: '/fr/test',
@@ -87,7 +77,7 @@ describe('SeoManagerComponent', () => {
       appConfig: { baseUrl: appBaseUrl },
       providers: [
         { provide: Router, useValue: routerStub },
-        { provide: ActivatedRoute, useValue: activatedRouteStub },
+        fournirLaRoute({ donnees: routeData$ }),
         { provide: SeoService, useValue: seoServiceSpy },
         { provide: SeoRegistryService, useValue: seoRegistrySpy },
       ],
@@ -142,6 +132,13 @@ describe('SeoManagerComponent', () => {
     expect(call.canonicalUrl).toContain('https://example.com');
   });
 
+  it('garde la directive robots declaree par la route, et ignore celle qui n est pas un texte', () => {
+    expect(naviguer('/fr/unknown', { robots: 'noindex, nofollow' }).robots).toBe(
+      'noindex, nofollow',
+    );
+    expect(naviguer('/fr/unknown', { robots: false }).robots).toBe('index, follow');
+  });
+
   it('devrait construire les hreflangs pour toutes les locales', () => {
     const call = naviguer('/fr/test');
 
@@ -172,7 +169,7 @@ describe('SeoManagerComponent', () => {
   });
 
   describe('accueil, aligne sur le canonical rendu par le serveur', () => {
-    for (const url of ['/', '/home', '/fr', '/fr/', '/fr/home']) {
+    for (const url of ['/', '/fr', '/fr/']) {
       it(`canonise ${url} en /fr/ et annonce /fr/ et /en/`, () => {
         routerStub.url = url;
 

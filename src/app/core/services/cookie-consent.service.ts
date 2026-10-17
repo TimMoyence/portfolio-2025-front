@@ -4,6 +4,7 @@ import type { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { APP_CONFIG } from '../config/app-config.token';
 import type { AppConfig } from '../config/app-config.model';
+import { LOCALES_DU_SITE, langueDuSite } from '../config/locales';
 import type {
   CookieConsentAction,
   CookieConsentPayload,
@@ -109,9 +110,8 @@ export class CookieConsentService {
   }
 
   private isLocaleEligible(): boolean {
-    const locale = (this.localeId ?? '').toLowerCase();
-    const base = locale.split('-')[0];
-    return base === 'fr' || base === 'en';
+    const langue = langueDuSite(this.localeId ?? '');
+    return LOCALES_DU_SITE.some((locale) => locale === langue);
   }
 
   private normalizePreferences(preferences: CookieConsentPreferences): CookieConsentPreferences {

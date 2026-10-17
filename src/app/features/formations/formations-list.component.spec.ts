@@ -124,6 +124,20 @@ describe('FormationsListComponent', () => {
     expect(bonusCard).not.toBeNull();
   });
 
+  it('n annonce de toolkit que pour la formation qui en sert un, et ne le promet pas aux autres', () => {
+    const avecToolkit = FORMATIONS.filter((carte) =>
+      carte.meta.some((meta) => meta.key === 'Toolkit'),
+    ).map((carte) => carte.link);
+    const bonus = FORMATIONS.find((carte) => carte.variant === 'bonus');
+    const avantage = FORMATION_BENEFITS.find((benefice) => benefice.icon === 'toolkit');
+
+    expect(avecToolkit).toEqual(['/formations/ia-solopreneurs']);
+    expect(bonus?.description).not.toMatch(/chaque formation/i);
+    expect(bonus?.description).toContain('solopreneurs');
+    expect(avantage?.desc).not.toMatch(/chaque session/i);
+    expect(avantage?.desc).toContain('solopreneurs');
+  });
+
   it('présente en séance exactement les cours du BTS et du Bachelor servis par l API', () => {
     expect(
       FORMATIONS.filter((formation) => formation.variant === 'live').map((carte) => carte.link),

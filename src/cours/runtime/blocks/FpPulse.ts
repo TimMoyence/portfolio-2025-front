@@ -1,9 +1,8 @@
-import { ETATS_PULSE } from 'portfolio-2025-partage/contrats';
-import type { EtatPulse } from '../../content/types';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { ETATS_PULSE, type EtatPulse } from '../../content/types';
+import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { FpContenu } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
-import { estObjet } from '../core/valeurs';
+import { estMembre, estPositif } from '../core/valeurs';
 
 export interface PulseComptes {
   readonly perdu: number;
@@ -17,8 +16,6 @@ export interface PulseSondage extends ContenuDeBrique {
 }
 
 const SEUIL_DE_PROJECTION = 5;
-const VIDE = escapeHtml('');
-const DESACTIVE = safeHtml`disabled`;
 
 const FORMES: Readonly<Record<EtatPulse, string>> = {
   perdu: '▲',
@@ -27,9 +24,7 @@ const FORMES: Readonly<Record<EtatPulse, string>> = {
 };
 
 function compte(valeur: unknown): number {
-  return typeof valeur === 'number' && Number.isFinite(valeur) && valeur > 0
-    ? Math.trunc(valeur)
-    : 0;
+  return estPositif(valeur) ? Math.trunc(valeur) : 0;
 }
 
 function projeterComptes(source: PulseComptes): Required<PulseComptes> {
@@ -42,7 +37,7 @@ function projeterComptes(source: PulseComptes): Required<PulseComptes> {
 }
 
 function lireEtat(valeur: unknown): EtatPulse | null {
-  return ETATS_PULSE.find((etat) => etat === valeur) ?? null;
+  return estMembre(ETATS_PULSE, valeur) ? valeur : null;
 }
 
 function copierSondage(source: PulseSondage): PulseSondage {
@@ -74,12 +69,13 @@ export class FpPulse extends FpContenu<PulseSondage> {
     return this.interneComptes;
   }
 
-  set brouillon(valeur: unknown) {
-    const etat = estObjet(valeur) ? lireEtat(valeur['etat']) : null;
-    if (etat !== null) {
-      this.choix = etat;
-      this.refreshSiConnecte();
+  protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
+    const etat = lireEtat(brouillon['etat']);
+    if (etat === null) {
+      return false;
     }
+    this.choix = etat;
+    return true;
   }
 
   render(): EscapedHtml {
@@ -115,9 +111,9 @@ export class FpPulse extends FpContenu<PulseSondage> {
     if (!this.suivreEtSaisir(this.sondage?.id ?? null)) {
       return;
     }
-    for (const bouton of racine.querySelectorAll<HTMLButtonElement>('[data-etat-pulse]')) {
-      bouton.addEventListener('click', () => this.declarer(bouton.dataset['etatPulse'] ?? ''));
-    }
+    this.brancherLesBoutons(racine, '[data-etat-pulse]', false, ({ dataset }) =>
+      this.declarer(dataset['etatPulse'] ?? ''),
+    );
   }
 
   protected repartirDeZero(): void {
@@ -160,7 +156,7 @@ export class FpPulse extends FpContenu<PulseSondage> {
       return;
     }
     this.choix = etat;
-    this.signalerBrouillon(this.sondage?.id ?? '', { etat });
+    this.signalerLeBrouillon({ etat });
     this.emit('fp-pulse-change', {
       sondageId: this.sondage?.id,
       etat,

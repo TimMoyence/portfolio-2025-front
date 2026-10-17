@@ -73,6 +73,7 @@
   font-weight: 500;
 
   &[data-etat='attente_reseau'],
+  &[data-etat='attente_limite'],
   &[data-etat='envoi'] {
     color: var(--text-muted, var(--slide-text-muted));
   }

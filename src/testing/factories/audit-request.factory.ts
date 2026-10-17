@@ -6,6 +6,7 @@ import type {
   AuditProgressEvent,
   AuditStreamEvent,
   AuditSummaryResponse,
+  AuditTimeoutEvent,
 } from '../../app/core/models/audit-request.model';
 import type { AuditRequestPort } from '../../app/core/ports/audit-request.port';
 
@@ -14,7 +15,6 @@ export function buildAuditCreateResponse(
 ): AuditCreateResponse {
   return {
     message: 'Audit cree avec succes.',
-    httpCode: 201,
     auditId: 'audit-1',
     status: 'PENDING',
     ...overrides,
@@ -48,6 +48,7 @@ export function buildAuditProgressEvent(overrides?: Partial<AuditProgressEvent>)
       auditId: 'audit-1',
       status: 'RUNNING',
       progress: 10,
+      step: null,
       done: false,
       updatedAt: '2026-02-19T09:00:00.000Z',
       ...overrides,
@@ -69,6 +70,7 @@ export function buildAuditCompletedEvent(
       keyChecks: {},
       quickWins: [],
       pillarScores: {},
+      clientReport: null,
       updatedAt: '2026-04-15T09:00:00.000Z',
       ...overrides,
     },
@@ -83,8 +85,21 @@ export function buildAuditFailedEvent(overrides?: Partial<AuditFailedEvent>): Au
       status: 'FAILED',
       progress: 40,
       done: true,
-      error: 'Analyse interrompue',
+      error: null,
       updatedAt: '2026-04-15T09:00:00.000Z',
+      ...overrides,
+    },
+  };
+}
+
+export function buildAuditTimeoutEvent(overrides?: Partial<AuditTimeoutEvent>): AuditStreamEvent {
+  return {
+    type: 'timeout',
+    data: {
+      auditId: 'audit-1',
+      status: 'TIMEOUT',
+      error: null,
+      updatedAt: '2026-04-15T09:15:00.000Z',
       ...overrides,
     },
   };

@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { LIGNES_AVANT_RESSERREMENT } from '../../../../../cours/runtime/blocks/FpSheet';
 import { DefileurDeTableauComponent } from '../../defileur-de-tableau/defileur-de-tableau.component';
 import { SlideEnTeteComponent } from '../slide-en-tete/slide-en-tete.component';
-
-const LIGNES_AVANT_RESSERREMENT = 10;
 
 export interface TableColumn {
   key: string;

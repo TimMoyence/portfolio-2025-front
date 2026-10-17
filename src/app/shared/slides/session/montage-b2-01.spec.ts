@@ -1,3 +1,4 @@
+import { noeudOmbre, noeudsOmbre } from '../../../../testing/banc-de-brique';
 import {
   DELAI_DE_MONTAGE_MS,
   monterEcran,
@@ -20,7 +21,7 @@ import { SlideActivityComponent } from './slide-activity.component';
 const SUBSTITUTION = buildInstantaneDeSubstitution();
 
 decrireLeMontageDeLInstantane('B2-01', INSTANTANE_B2_01, {
-  empreinte: 'd4118e6d5f2fafc511d0de6a6d2b00e296f34e9656beb44d3c013287b923bfc2',
+  empreinte: '60c26b8714d621863cb9df31af830269cd3a9eb14085f2e50045ac8d34f935ea',
   ecrans: 59,
   specifiques: () => {
     it(
@@ -31,12 +32,10 @@ decrireLeMontageDeLInstantane('B2-01', INSTANTANE_B2_01, {
         const monte = await monterEcran(diapositive, 'presentateur');
         const graphique = monte.montees()[0] as HTMLElement;
 
-        expect(graphique.shadowRoot?.querySelector('[data-testid="titre"]')?.textContent).toContain(
-          'Samir',
-        );
-        expect(graphique.shadowRoot?.querySelectorAll('[data-testid="parametre"]').length).toBe(1);
-        expect(graphique.shadowRoot?.querySelectorAll('[data-testid="prereglage"]').length).toBe(2);
-        expect(graphique.shadowRoot?.querySelectorAll('[data-testid="barre"]').length).toBe(8);
+        expect(noeudOmbre(graphique, 'titre')?.textContent).toContain('Samir');
+        expect(noeudsOmbre(graphique, 'parametre').length).toBe(1);
+        expect(noeudsOmbre(graphique, 'prereglage').length).toBe(2);
+        expect(noeudsOmbre(graphique, 'barre').length).toBe(8);
         expect(
           graphique.shadowRoot?.querySelector('[data-vue="reference"] [data-testid="vue"]')
             ?.textContent,

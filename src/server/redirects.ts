@@ -23,6 +23,12 @@ export const PERMANENT_REDIRECTS: Readonly<Record<string, string>> = {
   '/formations/b2-02-serie-statistique-une-variable': '/fr/formations/b2-02-series-statistiques',
   '/fr/formations/b2-02-serie-statistique-une-variable': '/fr/formations/b2-02-series-statistiques',
   '/en/formations/b2-02-serie-statistique-une-variable': '/en/formations/b2-02-series-statistiques',
+  '/formations/automatiser-avec-ia/toolkit': '/fr/formations/automatiser-avec-ia',
+  '/fr/formations/automatiser-avec-ia/toolkit': '/fr/formations/automatiser-avec-ia',
+  '/en/formations/automatiser-avec-ia/toolkit': '/en/formations/automatiser-avec-ia',
+  '/formations/audit-seo-diy/toolkit': '/fr/formations/audit-seo-diy',
+  '/fr/formations/audit-seo-diy/toolkit': '/fr/formations/audit-seo-diy',
+  '/en/formations/audit-seo-diy/toolkit': '/en/formations/audit-seo-diy',
 };
 
 const PERMANENT_SUBTREE_REDIRECTS: Readonly<Record<string, string>> = {

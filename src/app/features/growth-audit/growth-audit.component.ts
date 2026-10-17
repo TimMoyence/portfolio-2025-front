@@ -1,19 +1,19 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import type { OnDestroy } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  PLATFORM_ID,
+  LOCALE_ID,
   inject,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import type { Subscription } from 'rxjs';
+import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
 import { estObjet } from '../../../cours/runtime/core/valeurs';
-import { LOCALES_DU_SITE } from '../../core/config/locales';
+import { langueDuSite } from '../../core/config/locales';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
-import { routeSansLocale } from '../../core/seo/chemins';
 import {
   type AuditContactMethod,
   type AuditRequestPayload,
@@ -29,7 +29,14 @@ import type { FaqItem } from '../../shared/components/faq-section/faq-section.co
 import { FaqSectionComponent } from '../../shared/components/faq-section/faq-section.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
 import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
+import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
+import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
+import { readCheckboxChecked } from '../../shared/utils/dom-event.utils';
+import {
+  BORNES_D_UN_CONTACT_D_AUDIT,
+  BORNES_D_UN_NOM_DE_SITE,
+} from '../../shared/utils/regles-de-saisie';
 import { AuditClientReportSectionComponent } from './components/audit-client-report-section/audit-client-report-section.component';
 import {
   type AuditSectionBadge,
@@ -52,7 +59,6 @@ interface AuditPillar {
 function formulaireVierge(): AuditRequestPayload {
   return {
     website: '',
-    formStartedAt: Date.now(),
     websiteName: '',
     contactMethod: 'EMAIL',
     contactValue: '',
@@ -69,6 +75,8 @@ function formulaireVierge(): AuditRequestPayload {
     FaqSectionComponent,
     AuditClientReportSectionComponent,
     FieldErrorsComponent,
+    BornesDeSaisieDirective,
+    FormatDeContactDirective,
     HoneypotDirective,
   ],
   templateUrl: './growth-audit.component.html',
@@ -78,9 +86,12 @@ function formulaireVierge(): AuditRequestPayload {
 export class GrowthAuditComponent implements OnDestroy {
   private readonly auditService: AuditRequestPort = inject(AUDIT_REQUEST_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
-  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-  readonly localeUrlPrefix = this.getLocaleUrlPrefix();
+  private debutDeSaisie = instantMonotone();
+  private readonly langue: NonNullable<AuditRequestPayload['locale']> =
+    langueDuSite(inject(LOCALE_ID)) === 'en' ? 'en' : 'fr';
   protected readonly iaTaskFallback = $localize`:@@auditIaTaskFallback:IA`;
+  protected readonly bornesDuNomDeSite = BORNES_D_UN_NOM_DE_SITE;
+  protected readonly bornesDuContact = BORNES_D_UN_CONTACT_D_AUDIT;
 
   private streamSub?: Subscription;
   private reconnectAttempts = 0;
@@ -208,6 +219,8 @@ export class GrowthAuditComponent implements OnDestroy {
   private readonly etapeTerminee = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Audit terminé`;
   private readonly echecDeLAudit = $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
 
+  private readonly connexionPerdue = $localize`:growthAudit.error.connectionLost|Connection lost during audit@@auditErrorConnectionLost:Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.`;
+
   rgpdConsent = false;
 
   get contactInputType(): 'email' | 'tel' {
@@ -233,18 +246,8 @@ export class GrowthAuditComponent implements OnDestroy {
     return formatSummaryText(this.auditSummary?.summaryText);
   }
 
-  private getLocaleUrlPrefix(): 'fr' | 'en' {
-    if (!this.isBrowser) {
-      return 'fr';
-    }
-
-    const { locale } = routeSansLocale(window.location.pathname.toLowerCase(), LOCALES_DU_SITE);
-
-    return locale === 'en' ? 'en' : 'fr';
-  }
-
   onContactMethodToggle(event: Event): void {
-    const isPhone = (event.target as HTMLInputElement).checked;
+    const isPhone = readCheckboxChecked(event);
     const method: AuditContactMethod = isPhone ? 'PHONE' : 'EMAIL';
     this.handleMethodChange(method);
   }
@@ -280,8 +283,8 @@ export class GrowthAuditComponent implements OnDestroy {
     this.isSubmitting = true;
     const payload = {
       website: this.auditFormState.website,
-      formStartedAt: this.auditFormState.formStartedAt,
-      locale: this.localeUrlPrefix,
+      formFillDurationMs: dureeMonotoneDepuis(this.debutDeSaisie),
+      locale: this.langue,
       websiteName: this.auditFormState.websiteName.trim(),
       contactMethod: this.auditFormState.contactMethod,
       contactValue: this.auditFormState.contactValue.trim(),
@@ -289,15 +292,10 @@ export class GrowthAuditComponent implements OnDestroy {
 
     handleFormSubmit(this.auditService.submit(payload), this.cdr, {
       fallbackError: this.formLabels.error,
+      refus: {
+        400: $localize`:@@auditFormErreurRefus:La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.`,
+      },
       onSuccess: (response) => {
-        if (response.httpCode !== 201 || !response.auditId) {
-          this.errorMessage = response.message || this.formLabels.error;
-          this.trackAuditEvent('audit_rejected', {
-            reason: response.message ?? 'unknown',
-          });
-          return;
-        }
-
         this.successMessage = this.formLabels.success;
         this.auditId = response.auditId;
         this.auditProgress = 0;
@@ -305,50 +303,22 @@ export class GrowthAuditComponent implements OnDestroy {
         this.resetAuditTimeline();
         this.isAuditRunning = true;
         this.reconnectAttempts = 0;
-        this.trackAuditEvent('audit_submitted', {
-          auditId: response.auditId,
-          contactMethod: payload.contactMethod,
-          locale: payload.locale,
-        });
         this.startStream(response.auditId);
       },
       onError: (message) => {
         this.errorMessage = message;
-        this.trackAuditEvent('audit_error', { reason: message });
       },
       onComplete: () => {
-        this.isSubmitting = false;
         this.isSubmitted = false;
         this.auditFormState = formulaireVierge();
+        this.debutDeSaisie = instantMonotone();
         this.rgpdConsent = false;
         form.resetForm(this.auditFormState);
       },
+      finalement: () => {
+        this.isSubmitting = false;
+      },
     });
-  }
-
-  /**
-   * Emet un event Plausible si le script est charge cote client. No-op en
-   * SSR ou quand Plausible est absent (self-hosted optionnel). Le script
-   * est charge via `<script data-domain="asilidesign.fr" src="...">` dans
-   * `index.html` une fois le compte Plausible provisionne — ce hook est
-   * pret a emettre sans redeploy lorsque la config arrive.
-   */
-  private trackAuditEvent(
-    name: 'audit_submitted' | 'audit_completed' | 'audit_failed' | 'audit_error' | 'audit_rejected',
-    props: Record<string, string>,
-  ): void {
-    if (!this.isBrowser) return;
-    const plausible = (
-      window as unknown as {
-        plausible?: (event: string, opts: { props: Record<string, string> }) => void;
-      }
-    ).plausible;
-    if (typeof plausible !== 'function') return;
-    try {
-      plausible(name, { props });
-    } catch {
-      // Analytics ne doivent jamais faire remonter d'erreur UX.
-    }
   }
 
   ngOnDestroy(): void {
@@ -391,19 +361,12 @@ export class GrowthAuditComponent implements OnDestroy {
         pillarScores: event.data.pillarScores,
       };
       this.clientReport = event.data.clientReport ?? null;
-      this.trackAuditEvent('audit_completed', {
-        auditId: event.data.auditId,
-        status: event.data.status,
-      });
       this.cdr.markForCheck();
       return;
     }
 
-    this.arreterLAudit(event.data.error || this.echecDeLAudit);
-    this.trackAuditEvent('audit_failed', {
-      auditId: event.data.auditId,
-      reason: event.data.error ?? 'unknown',
-    });
+    const delaiDepasse = event.type === 'timeout';
+    this.arreterLAudit(delaiDepasse ? this.connexionPerdue : this.echecDeLAudit);
   }
 
   private recoverFromSummary(auditId: string): void {
@@ -428,9 +391,7 @@ export class GrowthAuditComponent implements OnDestroy {
           return;
         }
 
-        this.arreterLAudit(
-          $localize`:growthAudit.error.connectionLost|Connection lost during audit@@auditErrorConnectionLost:Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.`,
-        );
+        this.arreterLAudit(this.connexionPerdue);
       },
       error: () => {
         this.arreterLAudit(

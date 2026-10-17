@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { posix } from 'node:path';
 import { test } from 'node:test';
 
 import {
@@ -317,6 +318,60 @@ void test('AD-4 : seul le dossier du pupitre formateur est reconnu comme pupitre
   );
   assert.equal(estPupitreFormateur('src/cours/content/presentateur/fuite.ts'), false);
 });
+
+const PERIMETRE_AD4 = [
+  { fichier: VUE_ETUDIANT, etudiant: true, revelation: true },
+  { fichier: 'src/cours/content/b1-09.ts', etudiant: true, revelation: true },
+  { fichier: ACTIVITE_PARTAGEE, etudiant: true, revelation: true },
+  {
+    fichier: 'src/app/features/cours/presentateur/cours-scene.component.ts',
+    etudiant: false,
+    revelation: false,
+  },
+  {
+    fichier: 'src/app/features/cours/etudiant/cours-etudiant.component.spec.ts',
+    etudiant: false,
+    revelation: false,
+  },
+  { fichier: 'src/app/core/adapters/formations-fil.ts', etudiant: false, revelation: true },
+  { fichier: 'src/app/core/adapters/formations-fil.spec.ts', etudiant: false, revelation: false },
+  { fichier: 'src/cours/runtime/blocks/FpVote.ts', etudiant: false, revelation: true },
+  { fichier: 'src/cours/runtime/blocks/FpVote.spec.ts', etudiant: false, revelation: false },
+  { fichier: 'src/app/features/projets/projets.component.ts', etudiant: false, revelation: false },
+];
+
+/**
+ * @param {string} fichier
+ * @returns {string}
+ */
+const importDuPupitreDepuis = (fichier) => {
+  const chemin = posix.relative(
+    posix.dirname(fichier),
+    'src/app/features/cours/presentateur/cours-scene.component',
+  );
+  const relatif = chemin.startsWith('.') ? chemin : './' + chemin;
+  return `import { CoursSceneComponent } from '${relatif}';\n`;
+};
+
+for (const { fichier, etudiant, revelation } of PERIMETRE_AD4) {
+  void test(`AD-4 : ${fichier} est inspecte par les trois analyses selon un seul perimetre`, () => {
+    assert.equal(
+      analyserCorrige({ fichier, contenu: LIGNE_DU_PUPITRE }).length > 0,
+      etudiant,
+      'corrige',
+    );
+    assert.equal(
+      analyserImportsDuPupitre({ fichier, contenu: importDuPupitreDepuis(fichier) }).length > 0,
+      etudiant,
+      'import du pupitre',
+    );
+    assert.equal(
+      analyserRevelationEnDur({ fichier, contenu: "const r = { cible: 'B4' };\n" }).length > 0,
+      revelation,
+      'revelation en dur',
+    );
+  });
+}
 
 void test('le verdict nomme le fichier, la ligne et la raison de l interdiction', () => {
   const resultat = garder({

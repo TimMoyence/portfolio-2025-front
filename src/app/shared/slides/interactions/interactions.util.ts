@@ -2,7 +2,7 @@ import type { DestroyRef, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { of, type Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { estObjet } from '../../../../cours/runtime/core/valeurs';
+import { chaineDe, estObjet } from '../../../../cours/runtime/core/valeurs';
 import type { PresentationPort } from '../../../core/ports/presentation.port';
 
 export interface ChargementInteraction<T> {
@@ -67,9 +67,6 @@ export function chargerInteraction<T>(chargement: ChargementInteraction<T>): voi
 }
 
 function normaliseInteractions(value: unknown): FlatInteraction[] {
-  if (Array.isArray(value)) {
-    return fromFlatList(value);
-  }
   if (!estObjet(value)) {
     return [];
   }
@@ -78,11 +75,7 @@ function normaliseInteractions(value: unknown): FlatInteraction[] {
 }
 
 function versInteraction(slideId: string, item: Record<string, unknown>): FlatInteraction {
-  return { slideId, type: stringField(item, 'type'), ...item } as FlatInteraction;
-}
-
-function fromFlatList(items: readonly unknown[]): FlatInteraction[] {
-  return items.filter(estObjet).map((item) => versInteraction(flatSlideIdOf(item), item));
+  return { slideId, type: chaineDe(item, 'type') ?? '', ...item } as FlatInteraction;
 }
 
 function fromGroupedBySlide(interactions: Record<string, unknown>): FlatInteraction[] {
@@ -102,16 +95,4 @@ function fromSlideBuckets(
     }
     return list.filter(estObjet).map((item) => versInteraction(slideId, item));
   });
-}
-
-function flatSlideIdOf(item: Record<string, unknown>): string {
-  if (typeof item['slideId'] === 'string') {
-    return item['slideId'];
-  }
-  return stringField(item, 'id');
-}
-
-function stringField(item: Record<string, unknown>, key: string): string {
-  const value = item[key];
-  return typeof value === 'string' ? value : '';
 }

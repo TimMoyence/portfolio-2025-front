@@ -1,7 +1,14 @@
+import { safeHtml } from '../core/html';
 import {
+  bonneReponseRevelee,
   estVerdictDeProduction,
   estVerdictDeReponse,
+  lireBonneOption,
+  lireBonneReponse,
+  lireCibleRevelee,
   lireTextes,
+  marqueDeCorrection,
+  marqueDOption,
   PROPRIETE_FORMATEUR,
   VerdictsParQuestion,
 } from './retours';
@@ -126,5 +133,75 @@ describe('VerdictsParQuestion', () => {
 describe('propriété réservée au formateur', () => {
   it('nomme la clé que les briques ne lisent qu’au pupitre', () => {
     expect(PROPRIETE_FORMATEUR).toBe('corrige');
+  });
+});
+
+describe('L4-F18 · cible révélée d’une question', () => {
+  it('lit la cible et son option, et rend une option nulle quand elle n’est pas textuelle', () => {
+    expect(lireCibleRevelee({ cible: '1 480,24 €', optionId: 'b' })).toEqual({
+      cible: '1 480,24 €',
+      optionId: 'b',
+    });
+    expect(lireCibleRevelee({ cible: '1 124,86', optionId: null })).toEqual({
+      cible: '1 124,86',
+      optionId: null,
+    });
+    expect(lireCibleRevelee({ cible: 'Puissance', optionId: 3 })).toEqual({
+      cible: 'Puissance',
+      optionId: null,
+    });
+  });
+
+  it('refuse ce qui n’a pas de cible textuelle', () => {
+    for (const malforme of [null, 'b', ['b'], {}, { optionId: 'b' }, { cible: 4, optionId: 'b' }]) {
+      expect(lireCibleRevelee(malforme)).withContext(JSON.stringify(malforme)).toBeNull();
+    }
+  });
+
+  it('ne lit la cible d’un écran que sous le type cible', () => {
+    const posee = { type: 'cible', cible: 'Puissance', optionId: 'a' };
+
+    expect(lireBonneReponse(posee)).toBe('Puissance');
+    expect(lireBonneOption(posee)).toBe('a');
+    expect(lireBonneReponse({ ...posee, type: 'reponses' })).toBeNull();
+    expect(lireBonneOption({ ...posee, type: 'reponses' })).toBeNull();
+    expect(lireBonneOption({ type: 'cible', cible: '1 124,86' })).toBeNull();
+  });
+});
+
+describe('L4-F14 · bonne réponse révélée', () => {
+  it('écrit la phrase commune dans un encadré confirmé, ou rien avant la révélation', () => {
+    expect(bonneReponseRevelee('Bonne réponse :', '1 400 €')).toBe(
+      '<p class="fp-encadre" data-etat="confirme" data-testid="bonne-reponse">Bonne réponse : 1 400 €</p>',
+    );
+    expect(bonneReponseRevelee('Bonne réponse :', null)).toBe('');
+  });
+
+  it('garde la phrase et l’échappement sous une autre forme', () => {
+    expect(
+      bonneReponseRevelee('Bonne réponse :', '<b>Non</b>', safeHtml`class="fp-spaced__bonne"`),
+    ).toBe(
+      '<p class="fp-spaced__bonne" data-testid="bonne-reponse">Bonne réponse : &lt;b&gt;Non&lt;/b&gt;</p>',
+    );
+  });
+});
+
+describe('L4-F13 · marque de correction', () => {
+  it('marque juste, fausse, ou rien tant que rien n’est jugé', () => {
+    expect(marqueDeCorrection(true)).toBe(' data-correction="juste"');
+    expect(marqueDeCorrection(false)).toBe(' data-correction="fausse"');
+    expect(marqueDeCorrection(null)).toBe('');
+  });
+
+  it('marque la bonne option, l’option fausse choisie, et laisse les autres intactes', () => {
+    expect(marqueDOption('a', 'a', false)).toBe(' data-correction="juste"');
+    expect(marqueDOption('a', 'a', true)).toBe(' data-correction="juste"');
+    expect(marqueDOption('b', 'a', true)).toBe(' data-correction="fausse"');
+    expect(marqueDOption('c', 'a', false)).toBe('');
+  });
+
+  it('ne marque aucune option avant la révélation de la bonne', () => {
+    expect(marqueDOption('a', null, true)).toBe('');
+    expect(marqueDOption('b', null, false)).toBe('');
   });
 });

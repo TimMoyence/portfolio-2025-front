@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import type { ValidationErrors } from '@angular/forms';
+import { REGLE_D_UN_MOT_DE_PASSE } from '../../utils/regles-de-saisie';
 
 @Component({
   selector: 'p[appFieldErrors]',
@@ -14,5 +15,7 @@ export class FieldErrorsComponent {
 
   readonly phone = input(false);
 
-  readonly longueur = input(false);
+  readonly motDePasse = input(false);
+
+  protected readonly regleDUnMotDePasse = REGLE_D_UN_MOT_DE_PASSE;
 }

@@ -4,6 +4,7 @@ import {
   URL_API,
   URL_FRONT,
   coursReleve,
+  entetesDuFormateur,
   inscrireUnPoste,
   jetonDuFormateur,
   repondreDepuisLePoste,
@@ -40,7 +41,7 @@ type FenetreDuBanc = Window & { fluxDuBanc?: FluxOuvert };
 
 async function ouvrirLeFlux(page: Page, url: string, jeton: string): Promise<void> {
   await page.evaluate(
-    async ([adresse, autorisation, delaiDOuverture]) => {
+    async ([adresse, entetes, delaiDOuverture]) => {
       const arret = new AbortController();
       const recus: EvenementRecu[] = [];
       const debut = performance.now();
@@ -51,7 +52,7 @@ async function ouvrirLeFlux(page: Page, url: string, jeton: string): Promise<voi
       });
       const lire = async (): Promise<void> => {
         const reponse = await fetch(adresse, {
-          headers: { authorization: `Bearer ${autorisation}` },
+          headers: entetes,
           signal: arret.signal,
         });
         const lecteur = reponse.body?.getReader();
@@ -78,7 +79,7 @@ async function ouvrirLeFlux(page: Page, url: string, jeton: string): Promise<voi
       (window as FenetreDuBanc).fluxDuBanc = { arret, recus, lecture };
       await ouvert;
     },
-    [url, jeton, String(DELAI_D_OUVERTURE_MS)] as const,
+    [url, entetesDuFormateur(jeton), String(DELAI_D_OUVERTURE_MS)] as const,
   );
 }
 

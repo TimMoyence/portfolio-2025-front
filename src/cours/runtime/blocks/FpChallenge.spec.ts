@@ -3,6 +3,7 @@ import {
   installerBrique,
   lignesDuRappel,
   noeudOmbre,
+  noeudsOmbre,
   texteOmbre,
 } from '../../../testing/banc-de-brique';
 import { ROLES_DE_MONTAGE } from '../../../testing/briques-montees';
@@ -27,8 +28,8 @@ const INSTANT_INITIAL = '2026-09-13T10:00:00.000Z';
 const CORRIGE_DU_DEFI = { type: 'defi', strategies: buildStrategiesServies(true) };
 
 function zoneTentative(element: FpChallenge): HTMLTextAreaElement {
-  const champ = element.shadowRoot?.querySelector<HTMLTextAreaElement>('[data-testid="tentative"]');
-  if (champ === null || champ === undefined) {
+  const champ = noeudOmbre<HTMLTextAreaElement>(element, 'tentative');
+  if (champ === null) {
     throw new Error('zone de tentative absente');
   }
   return champ;
@@ -38,11 +39,11 @@ function tenter(element: FpChallenge, frappe: string): void {
   const champ = zoneTentative(element);
   champ.value = frappe;
   champ.dispatchEvent(new Event('input'));
-  element.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="envoyer"]')?.click();
+  noeudOmbre<HTMLButtonElement>(element, 'envoyer')?.click();
 }
 
 function strategiesDe(element: FpChallenge): Element[] {
-  return [...(element.shadowRoot?.querySelectorAll('[data-testid="strategie"]') ?? [])];
+  return noeudsOmbre(element, 'strategie');
 }
 
 function marquesDe(element: FpChallenge): string[] {
@@ -94,8 +95,8 @@ describe('FpChallenge', () => {
     expect(carte()).toBe(etudiant);
     expect(hote.shadowRoot?.querySelector('p.fp-challenge__invite')).not.toBeNull();
     expect(hote.shadowRoot?.querySelector('textarea')).toBeNull();
-    expect(hote.shadowRoot?.querySelector('[data-testid="envoyer"]')).toBeNull();
-    expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')).toBeNull();
+    expect(noeudOmbre(hote, 'envoyer')).toBeNull();
+    expect(noeudOmbre(hote, 'retour')).toBeNull();
   });
 
   it('imprime sur papier l invite de l etudiant, sans zone de tentative ni envoi', () => {
@@ -119,7 +120,7 @@ describe('FpChallenge', () => {
     hote.corrige = { type: 'defi', strategies: buildStrategiesServies() };
 
     expect(strategiesDe(hote).length).toBe(2);
-    expect(hote.shadowRoot?.querySelector('[data-testid="attente-revelation"]')).toBeNull();
+    expect(noeudOmbre(hote, 'attente-revelation')).toBeNull();
   });
 
   it('R4 · rappelle le dossier chiffré pour chaque rôle, sans en échapper le contenu', () => {
@@ -145,9 +146,7 @@ describe('FpChallenge', () => {
     const emises = tentativesEmises(hote);
     tenter(hote, '   \n  ');
     expect(emises).toEqual([]);
-    expect(hote.shadowRoot?.querySelector('[data-testid="retour"]')?.textContent?.trim()).toBe(
-      'Écrivez votre réponse avant de l’envoyer',
-    );
+    expect(texteOmbre(hote, 'retour')).toBe('Écrivez votre réponse avant de l’envoyer');
   });
 
   it('emet la tentative et sa duree au moment de la soumission, une seule fois', () => {
@@ -166,7 +165,7 @@ describe('FpChallenge', () => {
 
     expect(strategiesDe(hote).length).toBe(2);
     expect(marquesDe(hote)).toEqual([]);
-    expect(hote.shadowRoot?.querySelector('[data-testid="attente-revelation"]')?.textContent).toBe(
+    expect(noeudOmbre(hote, 'attente-revelation')?.textContent).toBe(
       'Les pistes fausses seront signalées à la révélation',
     );
   });
@@ -186,6 +185,13 @@ describe('FpChallenge', () => {
 
     expect(zoneTentative(hote).value).toBe(TENTATIVE);
     expect(zoneTentative(hote).disabled).toBeTrue();
+  });
+
+  it('ne reprend pas un brouillon dont la tentative n est pas un texte', () => {
+    hote.brouillon = { tentative: 12 };
+
+    expect(zoneTentative(hote).value).toBe('');
+    expect(hote.shadowRoot?.textContent).not.toContain('Brouillon restauré');
   });
 
   it('memorise la tentative en brouillon a chaque frappe', () => {
@@ -214,9 +220,7 @@ describe('FpChallenge', () => {
     hote.revele = true;
 
     expect(zoneTentative(hote).disabled).toBeTrue();
-    expect(
-      hote.shadowRoot?.querySelector<HTMLButtonElement>('[data-testid="envoyer"]')?.disabled,
-    ).toBeTrue();
+    expect(noeudOmbre<HTMLButtonElement>(hote, 'envoyer')?.disabled).toBeTrue();
   });
 
   it('ne montre pas au presentateur les strategies servies avant la revelation', () => {
@@ -270,12 +274,8 @@ describe('FpChallenge', () => {
     for (const role of ROLES_DE_MONTAGE) {
       hote.setAttribute('data-cours-role', role);
       expect(hote.probleme?.metadonnees.modalite).withContext(`role ${role}`).toBe('binome');
-      expect(hote.shadowRoot?.querySelector('[data-testid="modalite"]'))
-        .withContext(`role ${role}`)
-        .toBeNull();
-      expect(hote.shadowRoot?.querySelector('[data-testid="concepts"]'))
-        .withContext(`role ${role}`)
-        .toBeNull();
+      expect(noeudOmbre(hote, 'modalite')).withContext(`role ${role}`).toBeNull();
+      expect(noeudOmbre(hote, 'concepts')).withContext(`role ${role}`).toBeNull();
     }
   });
 

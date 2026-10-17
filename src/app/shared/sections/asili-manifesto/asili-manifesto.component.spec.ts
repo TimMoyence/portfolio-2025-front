@@ -1,8 +1,5 @@
 import type { ComponentFixture } from '@angular/core/testing';
-import {
-  installerIntersectionObserverSimule,
-  type IntersectionObserverSimule,
-} from '../../../../testing/factories/intersection-observer.factory';
+import { simulerIntersectionObserverAChaqueTest } from '../../../../testing/factories/intersection-observer.factory';
 import type { PlateformeDeRendu } from '../../../../testing/plateforme';
 import { decrireSectionAsili } from '../../../../testing/section-asili';
 import type { AsiliManifestoLine } from './asili-manifesto.component';
@@ -66,28 +63,20 @@ describe('AsiliManifestoComponent', () => {
   });
 
   describe('scrollytelling browser', () => {
-    let observateur: IntersectionObserverSimule;
-
-    beforeEach(() => {
-      observateur = installerIntersectionObserverSimule();
-    });
-
-    afterEach(() => {
-      observateur.restaurer();
-    });
+    const observateur = simulerIntersectionObserverAChaqueTest();
 
     it('retire .lit en mode anime puis observe chaque ligne', () => {
       setup();
       fixture.detectChanges();
       const host = fixture.nativeElement as HTMLElement;
       expect(host.querySelectorAll('.mani-line.lit').length).toBe(0);
-      expect(observateur.observe).toHaveBeenCalledTimes(LINES.length);
+      expect(observateur().observe).toHaveBeenCalledTimes(LINES.length);
     });
 
     it("centre la bande d'observation sur le milieu de l'ecran", () => {
       setup();
       fixture.detectChanges();
-      expect(observateur.init()?.rootMargin).toBe('-48% 0px -48% 0px');
+      expect(observateur().init()?.rootMargin).toBe('-48% 0px -48% 0px');
     });
 
     it("allume une ligne quand elle traverse le centre, l'eteint en sortie", () => {
@@ -97,10 +86,10 @@ describe('AsiliManifestoComponent', () => {
       const line = host.querySelector<HTMLElement>('.mani-line') as HTMLElement;
       expect(line).not.toBeNull();
 
-      observateur.declencher([{ isIntersecting: true, target: line }]);
+      observateur().declencher([{ isIntersecting: true, target: line }]);
       expect(line.classList).toContain('lit');
 
-      observateur.declencher([{ isIntersecting: false, target: line }]);
+      observateur().declencher([{ isIntersecting: false, target: line }]);
       expect(line.classList).not.toContain('lit');
     });
 
@@ -108,7 +97,7 @@ describe('AsiliManifestoComponent', () => {
       setup();
       fixture.detectChanges();
       fixture.destroy();
-      expect(observateur.disconnect).toHaveBeenCalled();
+      expect(observateur().disconnect).toHaveBeenCalled();
     });
   });
 });

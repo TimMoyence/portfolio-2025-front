@@ -162,6 +162,11 @@ describe('FpExit', () => {
     envoyer(hote);
     expect(details.length).toBe(1);
     expect(champLibre(hote).disabled).toBe(true);
+    expect(
+      [...(hote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-option]') ?? [])].map(
+        (option) => option.disabled,
+      ),
+    ).toEqual(BILLET.options.map(() => true));
     expect(texteOmbre(hote, 'retour')).toBe('Réponse enregistrée');
   });
 
@@ -225,6 +230,28 @@ describe('FpExit', () => {
     rechargee.remove();
   });
 
+  it('ne restaure d un brouillon que ses champs textuels', () => {
+    const rechargee = document.createElement('fp-exit') as FpExit;
+    rechargee.billet = BILLET;
+    rechargee.brouillon = { texteLibre: 42, choix: 'c' };
+    document.body.appendChild(rechargee);
+
+    expect(champLibre(rechargee).value).toBe('');
+    expect(attributDOption(rechargee, 'c', 'aria-pressed')).toBe('true');
+    rechargee.remove();
+  });
+
+  it('L4-F20 · ignore un brouillon arrive apres l envoi du billet', () => {
+    choisir(hote, 'a');
+    ecrire(hote, TEXTE_COURT);
+    envoyer(hote);
+    hote.brouillon = { texteLibre: 'un autre texte', choix: 'c' };
+
+    expect(champLibre(hote).value).toBe(TEXTE_COURT);
+    expect(attributDOption(hote, 'a', 'aria-pressed')).toBe('true');
+    expect(hote.shadowRoot?.querySelector('[data-testid="brouillon-restaure"]')).toBeNull();
+  });
+
   it('efface une donnee de correction nichee dans les metadonnees', () => {
     const piege = buildExitBillet({ id: 'B-SORTIE-12' });
     const metadonnees = { ...piege.metadonnees, bonneReponse: 'a' };
@@ -261,7 +288,7 @@ describe('FpExit', () => {
     hote.setAttribute('data-papier', '');
 
     expect(
-      [...(hote.shadowRoot?.querySelectorAll('li[data-testid="option"]') ?? [])].map((option) =>
+      [...(hote.shadowRoot?.querySelectorAll('li[data-testid="case"]') ?? [])].map((option) =>
         option.textContent?.trim(),
       ),
     ).toEqual(BILLET.options.map((option) => option.libelle));

@@ -3,12 +3,13 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { throwError } from 'rxjs';
 import type { PresentationPort } from '../../../../core/ports/presentation.port';
-import type { ScrollInteraction } from '../../../../core/models/presentation-interactions.model';
+import type { SlideInteractions } from '../../../../core/models/presentation-interactions.model';
 import {
   choisirLOptionDuQuiz,
   configurerLHoteDInteraction,
   monterApresChargement,
 } from '../../../../../testing/hote-d-interaction';
+import { horlogesDeSaisie, sousHorlogeArreteeA } from '../../../../../testing/horloge-simulee';
 import type { ModeInteraction } from '../mode-interaction';
 import { SlideQuizComponent } from './slide-quiz.component';
 
@@ -30,7 +31,7 @@ describe('SlideQuizComponent', () => {
         options: ['Délégation', 'Automatisation', 'Génération'],
         correctIndex: 1,
       },
-    ] as unknown as ScrollInteraction[];
+    ] as unknown as SlideInteractions['scroll'];
 
     portStub = configurerLHoteDInteraction(HostComponent, {
       'quiz-intro': { scroll: knowledgeQuizPayload },
@@ -64,7 +65,10 @@ describe('SlideQuizComponent', () => {
     expect(feedback.classList).toContain('is-incorrect');
   }));
 
-  function choisirSansCorrection(mode?: ModeInteraction): {
+  function choisirSansCorrection(
+    mode?: ModeInteraction,
+    avantLeChoix: () => void = () => undefined,
+  ): {
     texte: string;
     choix: jasmine.Spy;
   } {
@@ -81,10 +85,18 @@ describe('SlideQuizComponent', () => {
     const choix = jasmine.createSpy('choix');
     fixture.componentInstance.selection.subscribe(choix);
     fixture.detectChanges();
+    avantLeChoix();
 
     choisirLOptionDuQuiz(fixture, 1);
     return { texte: (fixture.nativeElement as HTMLElement).textContent ?? '', choix };
   }
+
+  it('mesure la duree de reponse sur l horloge monotone quand l horloge du poste recule', () => {
+    const horloges = horlogesDeSaisie();
+    const { choix } = choisirSansCorrection('seance', () => horloges.saisirPendant(20_000));
+
+    expect(choix).toHaveBeenCalledOnceWith(jasmine.objectContaining({ dureeMs: 20_000 }));
+  });
 
   it('envoie le choix au serveur sans divulguer la correction quand elle est absente du sujet', () => {
     const { texte, choix } = choisirSansCorrection('seance');
@@ -104,6 +116,25 @@ describe('SlideQuizComponent', () => {
     expect(texte).toContain('Aperçu');
     expect(texte).not.toContain('Le résultat vient de la séance');
     expect(texte).not.toContain('La bonne réponse est');
+  });
+
+  describe('durée de réponse envoyée à la séance', () => {
+    const horloge = sousHorlogeArreteeA(new Date('2026-10-16T08:00:00Z'));
+
+    it('mesure le temps écoulé depuis l affichage de la question', () => {
+      const { choix } = choisirSansCorrection('seance', () => jasmine.clock().tick(4200));
+
+      expect(choix).toHaveBeenCalledWith(jasmine.objectContaining({ dureeMs: 4200 }));
+    });
+
+    it('envoie la durée écoulée quand l horloge recule de plus que cette durée avant le choix', () => {
+      const { choix } = choisirSansCorrection('seance', () => {
+        jasmine.clock().tick(300);
+        horloge.reculerDe(1000);
+      });
+
+      expect(choix).toHaveBeenCalledWith(jasmine.objectContaining({ dureeMs: 300 }));
+    });
   });
 
   it('ne collecte aucun niveau de confiance que personne ne reçoit', fakeAsync(() => {

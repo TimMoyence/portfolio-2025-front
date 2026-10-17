@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import type { AuthActionMessage, AuthSession, AuthUser } from '../models/auth.model';
 import type { AuthPort } from '../ports/auth.port';
 import { getApiBaseUrl } from '../http/api-config';
+import { luPar } from './lu-par';
+import { messageServi, sessionServie, utilisateurServi } from './site-schemas';
 
 @Injectable()
 export class AuthHttpAdapter implements AuthPort {
@@ -11,51 +12,61 @@ export class AuthHttpAdapter implements AuthPort {
   constructor(private readonly http: HttpClient) {}
 
   readonly login: AuthPort['login'] = (credentials) =>
-    this.http.post<AuthSession>(`${this.baseUrl}/auth/login`, credentials, {
-      withCredentials: true,
-    });
+    this.http
+      .post<unknown>(`${this.baseUrl}/auth/login`, credentials, { withCredentials: true })
+      .pipe(luPar(sessionServie));
 
   readonly register: AuthPort['register'] = (payload) =>
-    this.http.post<AuthActionMessage>(`${this.baseUrl}/auth/register`, payload);
+    this.http.post<unknown>(`${this.baseUrl}/auth/register`, payload).pipe(luPar(messageServi));
 
-  readonly me: AuthPort['me'] = () => this.http.get<AuthUser>(`${this.baseUrl}/auth/me`);
+  readonly me: AuthPort['me'] = () =>
+    this.http.get<unknown>(`${this.baseUrl}/auth/me`).pipe(luPar(utilisateurServi));
 
-  readonly googleAuth: AuthPort['googleAuth'] = (idToken, inviteToken) => {
-    const body: { idToken: string; inviteToken?: string } = { idToken };
-    if (inviteToken) {
-      body.inviteToken = inviteToken;
-    }
-    return this.http.post<AuthSession>(`${this.baseUrl}/auth/google`, body, {
-      withCredentials: true,
-    });
-  };
+  readonly googleAuth: AuthPort['googleAuth'] = (idToken) =>
+    this.http
+      .post<unknown>(`${this.baseUrl}/auth/google`, { idToken }, { withCredentials: true })
+      .pipe(luPar(sessionServie));
 
   readonly requestPasswordReset: AuthPort['requestPasswordReset'] = (payload) =>
-    this.http.post<AuthActionMessage>(`${this.baseUrl}/auth/forgot-password`, payload);
+    this.http
+      .post<unknown>(`${this.baseUrl}/auth/forgot-password`, payload)
+      .pipe(luPar(messageServi));
 
   readonly resetPassword: AuthPort['resetPassword'] = (payload) =>
-    this.http.post<AuthActionMessage>(`${this.baseUrl}/auth/reset-password`, payload);
+    this.http
+      .post<unknown>(`${this.baseUrl}/auth/reset-password`, payload)
+      .pipe(luPar(messageServi));
 
   readonly setPassword: AuthPort['setPassword'] = (payload) =>
-    this.http.post<AuthUser>(`${this.baseUrl}/auth/set-password`, payload);
+    this.http
+      .post<unknown>(`${this.baseUrl}/auth/set-password`, payload)
+      .pipe(luPar(utilisateurServi));
 
   readonly changePassword: AuthPort['changePassword'] = (payload) =>
-    this.http.patch<AuthUser>(`${this.baseUrl}/auth/change-password`, payload);
+    this.http
+      .patch<unknown>(`${this.baseUrl}/auth/change-password`, payload)
+      .pipe(luPar(utilisateurServi));
 
   readonly updateProfile: AuthPort['updateProfile'] = (payload) =>
-    this.http.patch<AuthUser>(`${this.baseUrl}/auth/profile`, payload);
+    this.http.patch<unknown>(`${this.baseUrl}/auth/profile`, payload).pipe(luPar(utilisateurServi));
 
   readonly refresh: AuthPort['refresh'] = () =>
-    this.http.post<AuthSession>(`${this.baseUrl}/auth/refresh`, {}, { withCredentials: true });
+    this.http
+      .post<unknown>(`${this.baseUrl}/auth/refresh`, {}, { withCredentials: true })
+      .pipe(luPar(sessionServie));
 
   readonly logout: AuthPort['logout'] = () =>
-    this.http.post<AuthActionMessage>(`${this.baseUrl}/auth/logout`, {}, { withCredentials: true });
+    this.http
+      .post<unknown>(`${this.baseUrl}/auth/logout`, {}, { withCredentials: true })
+      .pipe(luPar(messageServi));
 
   readonly verifyEmail: AuthPort['verifyEmail'] = (token) =>
-    this.http.get<AuthActionMessage>(`${this.baseUrl}/auth/verify-email`, {
-      params: { token },
-    });
+    this.http
+      .get<unknown>(`${this.baseUrl}/auth/verify-email`, { params: { token } })
+      .pipe(luPar(messageServi));
 
   readonly resendVerification: AuthPort['resendVerification'] = (payload) =>
-    this.http.post<AuthActionMessage>(`${this.baseUrl}/auth/resend-verification`, payload);
+    this.http
+      .post<unknown>(`${this.baseUrl}/auth/resend-verification`, payload)
+      .pipe(luPar(messageServi));
 }

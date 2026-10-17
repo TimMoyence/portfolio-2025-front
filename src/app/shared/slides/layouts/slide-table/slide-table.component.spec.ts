@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { LIGNES_AVANT_RESSERREMENT } from '../../../../../cours/runtime/blocks/FpSheet';
 import { SlideTableComponent, type TableColumn } from './slide-table.component';
 
 @Component({
@@ -50,15 +51,19 @@ describe('SlideTableComponent', () => {
     expect(heading?.textContent).toContain('Outils IA');
   });
 
-  it('resserre les lignes au-dela de dix pour tenir dans la toile', () => {
+  function tableauDeFactures(lignes: number) {
     const fixture = TestBed.createComponent(SlideTableComponent);
     fixture.componentRef.setInput('columns', [{ key: 'numero', label: 'Facture' }]);
     fixture.componentRef.setInput(
       'rows',
-      Array.from({ length: 11 }, (_, rang) => ({ numero: `F${rang}` })),
+      Array.from({ length: lignes }, (_, rang) => ({ numero: `F${rang}` })),
     );
     fixture.detectChanges();
-    const table = fixture.nativeElement.querySelector('.slide-table') as HTMLElement;
+    return { fixture, table: fixture.nativeElement.querySelector('.slide-table') as HTMLElement };
+  }
+
+  it('resserre les lignes au-dela de dix pour tenir dans la toile', () => {
+    const { fixture, table } = tableauDeFactures(11);
 
     expect(table.classList).toContain('slide-table--dense');
 
@@ -66,6 +71,12 @@ describe('SlideTableComponent', () => {
     fixture.detectChanges();
 
     expect(table.classList).not.toContain('slide-table--dense');
+  });
+
+  it('garde dix lignes a l aise, au seuil de la grille du tableur', () => {
+    expect(tableauDeFactures(LIGNES_AVANT_RESSERREMENT).table.classList).not.toContain(
+      'slide-table--dense',
+    );
   });
 
   it('retourne chaine vide pour cle absente', () => {

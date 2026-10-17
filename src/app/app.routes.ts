@@ -17,11 +17,6 @@ export const routes: Routes = [
     },
   },
   {
-    path: 'home',
-    pathMatch: 'full',
-    redirectTo: '',
-  },
-  {
     path: 'login',
     loadComponent: () => import('./features/auth/auth.component').then((m) => m.AuthComponent),
     data: {
@@ -116,11 +111,6 @@ export const routes: Routes = [
     },
   },
   {
-    path: 'client-project',
-    redirectTo: 'projets',
-    pathMatch: 'full' as const,
-  },
-  {
     path: 'cookie-settings',
     loadComponent: () =>
       import('./features/cookie-settings/cookie-settings.component').then(
@@ -154,15 +144,6 @@ export const routes: Routes = [
     },
   },
   {
-    path: 'atelier',
-    children: [{ path: '**', redirectTo: '/projets' }],
-  },
-  {
-    path: 'commonbudgetTM',
-    redirectTo: '',
-    pathMatch: 'full' as const,
-  },
-  {
     path: 'formations',
     loadComponent: () =>
       import('./features/formations/formations-list.component').then(
@@ -190,26 +171,6 @@ export const routes: Routes = [
       ),
     data: {
       seoKey: 'formations-ia-solopreneurs-toolkit',
-    },
-  },
-  {
-    path: 'formations/automatiser-avec-ia/toolkit',
-    loadComponent: () =>
-      import('./features/formations/automatiser-avec-ia/toolkit/toolkit-auto.component').then(
-        (m) => m.ToolkitAutoComponent,
-      ),
-    data: {
-      seoKey: 'formations-automatiser-avec-ia-toolkit',
-    },
-  },
-  {
-    path: 'formations/audit-seo-diy/toolkit',
-    loadComponent: () =>
-      import('./features/formations/audit-seo-diy/toolkit/toolkit-audit-seo.component').then(
-        (m) => m.ToolkitAuditSeoComponent,
-      ),
-    data: {
-      seoKey: 'formations-audit-seo-diy-toolkit',
     },
   },
   {
@@ -320,17 +281,6 @@ export const routes: Routes = [
       ),
     data: {
       seoKey: 'cours-synthese',
-      robots: 'noindex, nofollow',
-    },
-  },
-  {
-    path: 'slides/library',
-    loadComponent: () =>
-      import('./features/slides-library/slides-library.component').then(
-        (m) => m.SlidesLibraryComponent,
-      ),
-    data: {
-      seoKey: 'slides-library',
       robots: 'noindex, nofollow',
     },
   },

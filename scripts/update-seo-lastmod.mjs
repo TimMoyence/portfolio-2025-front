@@ -4,12 +4,11 @@
 
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { format, resolveConfig } from 'prettier';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const metadataPath = resolve(__dirname, '../src/assets/seo/seo-metadata.json');
+import { RACINE, cheminDuDepot } from './lib/depot.mjs';
+
+const metadataPath = cheminDuDepot('src/assets/seo/seo-metadata.json');
 
 const pathToSources = {
   '/': ['src/app/features/home', 'src/app/app.component.ts'],
@@ -22,11 +21,7 @@ const pathToSources = {
   '/formations/ia-solopreneurs': ['src/app/features/formations/ia-solopreneurs'],
   '/formations/ia-solopreneurs/toolkit': ['src/app/features/formations/ia-solopreneurs/toolkit'],
   '/formations/automatiser-avec-ia': ['src/app/features/formations/automatiser-avec-ia'],
-  '/formations/automatiser-avec-ia/toolkit': [
-    'src/app/features/formations/automatiser-avec-ia/toolkit',
-  ],
   '/formations/audit-seo-diy': ['src/app/features/formations/audit-seo-diy'],
-  '/formations/audit-seo-diy/toolkit': ['src/app/features/formations/audit-seo-diy/toolkit'],
   '/cookie-settings': ['src/app/features/cookie-settings'],
   '/terms': ['src/app/features/terms'],
   '/privacy': ['src/app/features/privacy'],
@@ -44,7 +39,7 @@ function lastCommitDate(paths) {
     // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
     const result = execFileSync('git', gitArgs, {
       encoding: 'utf-8',
-      cwd: resolve(__dirname, '..'),
+      cwd: RACINE,
     }).trim();
     return result || null;
   } catch {
@@ -56,7 +51,7 @@ function findMissingSources() {
   const missing = [];
   for (const [path, sources] of Object.entries(pathToSources)) {
     for (const source of sources) {
-      if (!existsSync(resolve(__dirname, '..', source))) {
+      if (!existsSync(cheminDuDepot(source))) {
         missing.push({ path, source });
       }
     }

@@ -68,4 +68,10 @@ describe('FooterComponent', () => {
 
     expect(adresse?.textContent).toMatch(/33100\s+Bordeaux/);
   });
+
+  it('nomme l entreprise des microdonnées par le nom du site', () => {
+    const nom = pied.racine.querySelector('address[itemscope] > meta[itemprop="name"]');
+
+    expect(nom?.getAttribute('content')).toBe('Asili Design');
+  });
 });

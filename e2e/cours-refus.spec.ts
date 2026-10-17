@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import type { EtatSession } from '../src/cours/runtime/core/sync';
 import {
   ETAT_EN_COURS,
   etatDuParticipant,
   installerLaSeanceDeSortie,
   remplirLaJonction,
-  servirJson,
+  servirRefus,
 } from './fixtures';
 
 const SEANCE = { id: '77777777-7777-4777-8777-777777777777', code: '7412' };
@@ -22,8 +23,8 @@ function problemeDuBack(statut: number, code: string, detail: string): Record<st
   };
 }
 
-function etatDeLaSeance(revision: number, pilotage: Record<string, unknown>): object {
-  return { ...ETAT_EN_COURS, revision, pilotage, majLe: '2026-09-20T08:00:00.000Z' };
+function etatDeLaSeance(revision: number, pilotage: EtatSession['pilotage']): EtatSession {
+  return { ...ETAT_EN_COURS, revision, pilotage };
 }
 
 async function installerLaSeance(page: Page, refus: Record<string, unknown>): Promise<void> {
@@ -36,7 +37,7 @@ async function installerLaSeance(page: Page, refus: Record<string, unknown>): Pr
       etatDeLaSeance(3, {}),
       etatDeLaSeance(4, { 'ecran-sortie': { phase: 'revote', revele: false } }),
     ],
-    ecritures: { answers: (route) => servirJson(route, refus, Number(refus['status'])) },
+    ecritures: { answers: (route) => servirRefus(route, Number(refus['status']), refus) },
   });
 }
 

@@ -4,10 +4,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { filter, map, mergeMap, switchMap } from 'rxjs/operators';
+import { chaineDe } from '../../../cours/runtime/core/valeurs';
 import { APP_CONFIG } from '../../core/config/app-config.token';
 import {
   buildLocalizedPath,
-  estAliasDAccueil,
   routeSansLocale,
   urlAbsolue,
   urlLocalisee,
@@ -118,11 +118,7 @@ export class SeoManagerComponent {
   }
 
   private resolveRobots(data: Record<string, unknown>, index: boolean): string {
-    const declared = data['robots'];
-    if (typeof declared === 'string') {
-      return declared;
-    }
-    return index ? 'index, follow' : 'noindex, nofollow';
+    return chaineDe(data, 'robots') ?? (index ? 'index, follow' : 'noindex, nofollow');
   }
 
   private buildHreflangs(baseUrl: string, relativePath: string): Record<string, string> {
@@ -172,8 +168,10 @@ export class SeoManagerComponent {
     canonicalPath: string;
     relativePath: string;
   } {
-    const { locale, route } = routeSansLocale(currentUrl, this.seoRegistry.getLocales());
-    const relativePath = estAliasDAccueil(route) ? '/' : route;
+    const { locale, route: relativePath } = routeSansLocale(
+      currentUrl,
+      this.seoRegistry.getLocales(),
+    );
     return {
       canonicalPath: buildLocalizedPath(locale ?? this.seoRegistry.getLocaleId(), relativePath),
       relativePath,

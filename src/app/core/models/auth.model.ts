@@ -6,10 +6,11 @@ export interface AuthUser {
   phone: string | null;
   isActive: boolean;
   roles: string[];
-  hasPassword?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-  updatedOrCreatedBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  updatedOrCreatedBy: string | null;
+  hasPassword: boolean;
+  emailVerified: boolean;
 }
 
 export interface AuthSession {
@@ -29,12 +30,6 @@ export interface RegisterUserPayload {
   firstName: string;
   lastName: string;
   phone?: string | null;
-  inviteToken?: string;
-}
-
-interface InviteWarning {
-  code: string;
-  message: string;
 }
 
 export interface ForgotPasswordPayload {
@@ -63,7 +58,6 @@ export interface UpdateProfilePayload {
 
 export interface AuthActionMessage {
   message: string;
-  inviteWarning?: InviteWarning;
 }
 
 export interface ResendVerificationPayload {

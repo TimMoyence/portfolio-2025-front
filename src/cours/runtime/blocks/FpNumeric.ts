@@ -1,8 +1,8 @@
 import { lireNombreSaisi } from 'portfolio-2025-partage/formule';
-import { type EscapedHtml, escapeHtml, safeHtml } from '../core/html';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { FpReponse } from './reponse';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
-import { bonneReponseRevelee, lireBonneReponse } from './retours';
+import { bonneReponseRevelee, lireBonneReponse, marqueDeCorrection } from './retours';
 
 export interface NumericQuestionPublique extends ContenuDeBrique {
   readonly enonce: string;
@@ -40,12 +40,11 @@ export class FpNumeric extends FpReponse<NumericQuestionPublique> {
     const unite = question.unite;
     const etiquette =
       unite === null
-        ? escapeHtml('')
+        ? VIDE
         : safeHtml`<span class="fp-numeric__unite" id="${escapeHtml(ID_UNITE)}" data-testid="unite">${escapeHtml(unite)}</span>`;
-    const decrit =
-      unite === null ? escapeHtml('') : safeHtml`aria-describedby="${escapeHtml(ID_UNITE)}"`;
+    const decrit = unite === null ? VIDE : safeHtml`aria-describedby="${escapeHtml(ID_UNITE)}"`;
     const saisie = this.presentateur()
-      ? escapeHtml('')
+      ? VIDE
       : safeHtml`<div class="fp-numeric__saisie">
           <input class="fp-numeric__champ" data-testid="champ" type="text" inputmode="decimal" autocomplete="off" value="${escapeHtml(this.saisie)}"${this.marqueDeSaisie()} ${decrit}>
           ${etiquette}
@@ -55,7 +54,7 @@ export class FpNumeric extends FpReponse<NumericQuestionPublique> {
     const revelee = bonneReponseRevelee(this.texte('bonne-reponse'), this.bonneReponse);
     const corps =
       saisie === '' && revelee === ''
-        ? escapeHtml('')
+        ? VIDE
         : safeHtml`<div class="fp-numeric__corps">
           ${saisie}
           ${revelee}
@@ -69,12 +68,9 @@ export class FpNumeric extends FpReponse<NumericQuestionPublique> {
   }
 
   private marqueDeSaisie(): EscapedHtml {
-    if (this.bonneReponse === null || this.interneVerdict === null) {
-      return escapeHtml('');
-    }
-    return this.interneVerdict.correcte
-      ? safeHtml` data-correction="juste"`
-      : safeHtml` data-correction="fausse"`;
+    return marqueDeCorrection(
+      this.bonneReponse === null ? null : (this.interneVerdict?.correcte ?? null),
+    );
   }
 
   bind(racine: ShadowRoot): void {

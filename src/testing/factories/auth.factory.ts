@@ -21,6 +21,11 @@ export function buildAuthUser(overrides?: Partial<AuthUser>): AuthUser {
     phone: null,
     isActive: true,
     roles: ['user'],
+    createdAt: '2026-09-23T04:15:00.000Z',
+    updatedAt: '2026-09-23T04:15:00.000Z',
+    updatedOrCreatedBy: null,
+    hasPassword: true,
+    emailVerified: true,
     ...overrides,
   };
 }
@@ -31,6 +36,18 @@ export function buildAuthSession(overrides?: Partial<AuthSession>): AuthSession 
     expiresIn: 3600,
     user: buildAuthUser(),
     ...overrides,
+  };
+}
+
+export function buildReponseEn401(defi: 'session' | 'sans-defi' = 'session'): {
+  status: number;
+  statusText: string;
+  headers: Record<string, string>;
+} {
+  return {
+    status: 401,
+    statusText: 'Unauthorized',
+    headers: defi === 'session' ? { 'WWW-Authenticate': 'Bearer error="invalid_token"' } : {},
   };
 }
 

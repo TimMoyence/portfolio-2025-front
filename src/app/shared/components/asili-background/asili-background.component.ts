@@ -130,10 +130,7 @@ export class AsiliBackgroundComponent implements AfterViewInit {
         this.toggleLoop();
         return;
       }
-      if (this.raf) {
-        cancelAnimationFrame(this.raf);
-        this.raf = 0;
-      }
+      this.arreterLaBoucle();
       this.renderFrame();
     };
 
@@ -159,9 +156,7 @@ export class AsiliBackgroundComponent implements AfterViewInit {
     }
 
     this.destroyRef.onDestroy(() => {
-      if (this.raf) {
-        cancelAnimationFrame(this.raf);
-      }
+      this.arreterLaBoucle();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseleave', onLeave);
@@ -184,7 +179,13 @@ export class AsiliBackgroundComponent implements AfterViewInit {
     }
     if (this.visible) {
       this.start();
-    } else if (this.raf) {
+    } else {
+      this.arreterLaBoucle();
+    }
+  }
+
+  private arreterLaBoucle(): void {
+    if (this.raf) {
       cancelAnimationFrame(this.raf);
       this.raf = 0;
     }

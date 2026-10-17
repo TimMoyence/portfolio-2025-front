@@ -1,4 +1,5 @@
 import type { ClientReport } from './audit-client-report.model';
+import type { ChampsAntiRobot } from './champs-anti-robot.model';
 
 export type AuditContactMethod = 'EMAIL' | 'PHONE';
 type AuditProcessingStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
@@ -27,9 +28,7 @@ export const PILLAR_KEYS: readonly PillarKey[] = [
   'citationWorthiness',
 ] as const;
 
-export interface AuditRequestPayload {
-  website?: string;
-  formStartedAt?: number;
+export interface AuditRequestPayload extends ChampsAntiRobot {
   websiteName: string;
   contactMethod: AuditContactMethod;
   contactValue: string;
@@ -38,7 +37,6 @@ export interface AuditRequestPayload {
 
 export interface AuditCreateResponse {
   message: string;
-  httpCode: number;
   auditId: string;
   status: AuditProcessingStatus;
 }
@@ -59,9 +57,9 @@ export interface AuditSummaryResponse extends AuditSynthesis {
 
 export interface AuditProgressEvent {
   auditId: string;
-  status: AuditProcessingStatus;
+  status: 'PENDING' | 'RUNNING';
   progress: number;
-  step?: string | null;
+  step: string | null;
   details?: Record<string, unknown>;
   done: boolean;
   updatedAt: string;
@@ -72,7 +70,7 @@ export interface AuditCompletedEvent extends AuditSynthesis {
   status: 'COMPLETED';
   progress: number;
   done: boolean;
-  clientReport?: ClientReport | null;
+  clientReport: ClientReport | null;
   updatedAt: string;
 }
 
@@ -81,12 +79,24 @@ export interface AuditFailedEvent {
   status: 'FAILED';
   progress: number;
   done: boolean;
-  error: string | null;
+  error: null;
   updatedAt: string;
+}
+
+export interface AuditTimeoutEvent {
+  auditId: string;
+  status: 'TIMEOUT';
+  error: null;
+  updatedAt: string;
+}
+
+export interface AuditHeartbeatEvent {
+  ts: string;
 }
 
 export type AuditStreamEvent =
   | { type: 'progress'; data: AuditProgressEvent }
   | { type: 'completed'; data: AuditCompletedEvent }
   | { type: 'failed'; data: AuditFailedEvent }
-  | { type: 'heartbeat'; data: { ts: string } };
+  | { type: 'timeout'; data: AuditTimeoutEvent }
+  | { type: 'heartbeat'; data: AuditHeartbeatEvent };

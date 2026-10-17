@@ -24,6 +24,7 @@ import {
   revelerDepuisLePupitre,
 } from './interactions';
 import type { NatureDEcran, Revelation } from './interactions';
+import { messageDErreur } from '../../src/server/lecture-api';
 
 const ETUDIANTS = 30;
 
@@ -80,12 +81,7 @@ class Journal {
       postes.map((page, numero) =>
         geste(page, numero).then(
           () => undefined,
-          (erreur: unknown) =>
-            this.consigner(
-              `poste ${numero}`,
-              etape,
-              erreur instanceof Error ? erreur.message : String(erreur),
-            ),
+          (erreur: unknown) => this.consigner(`poste ${numero}`, etape, messageDErreur(erreur)),
         ),
       ),
     );

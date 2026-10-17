@@ -20,6 +20,11 @@ const NATURES_LIBRES: readonly NatureLibre[] = ['reflection', 'fp-pro'];
 
 const POSTE_HORS_LIGNE: Readonly<Record<NatureLibre, number>> = { reflection: 4, 'fp-pro': 9 };
 
+const PARAGRAPHES_SUR_L_ECRAN_DE_LA_SAISIE: Readonly<Record<NatureLibre, number>> = {
+  reflection: 0,
+  'fp-pro': 1,
+};
+
 const SAISIE_LIBRE: Readonly<Record<NatureLibre, string>> = {
   reflection: 'app-slide-reflection textarea',
   'fp-pro': 'fp-pro [data-testid="valider"]',
@@ -146,10 +151,12 @@ test.describe('Banc — écran non servi', () => {
 
       await page.context().setOffline(true);
       await ecrireHorsLigne(page, nature);
-      await expect(page.getByTestId('etudiant-reflexion-en-attente')).toHaveAttribute(
-        'data-etat',
-        'attente_reseau',
+      await expect(page.getByTestId('etudiant-reflexion-en-attente')).toHaveCount(
+        PARAGRAPHES_SUR_L_ECRAN_DE_LA_SAISIE[nature],
       );
+      await expect(
+        page.locator('[data-testid="etudiant-reflexion-en-attente"][data-etat="attente_reseau"]'),
+      ).toHaveCount(PARAGRAPHES_SUR_L_ECRAN_DE_LA_SAISIE[nature]);
 
       await servirLEcran(request, jeton, seance.sessionId, 0);
       await page.context().setOffline(false);
