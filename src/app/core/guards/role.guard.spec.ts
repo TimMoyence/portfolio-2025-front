@@ -1,18 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApplicationRef } from '@angular/core';
-import { TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot, GuardResult, RouterStateSnapshot } from '@angular/router';
 import { UrlTree } from '@angular/router';
 import { isObservable, Subject } from 'rxjs';
 import { AUTH_PORT } from '../ports/auth.port';
 import { AuthStateService } from '../services/auth-state.service';
-import { VERROU_INTER_ONGLETS } from '../services/verrou-inter-onglets';
 import {
   buildAuthSession,
   buildAuthUser,
   createAuthPortStub,
 } from '../../../testing/factories/auth.factory';
-import { createVerrouEnMemoire } from '../../../testing/factories/verrou.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { roleGuard } from './role.guard';
 
@@ -47,10 +45,7 @@ describe('roleGuard', () => {
     port.refresh.and.returnValue(sessionRestauree);
     setupTestBed({
       router: true,
-      providers: [
-        { provide: AUTH_PORT, useValue: port },
-        { provide: VERROU_INTER_ONGLETS, useValue: createVerrouEnMemoire() },
-      ],
+      providers: [{ provide: AUTH_PORT, useValue: port }],
     });
 
     authState = TestBed.inject(AuthStateService);
@@ -117,7 +112,6 @@ describe('roleGuard', () => {
 
       const nouvelEssai = new Subject<ReturnType<typeof buildAuthSession>>();
       port.refresh.and.returnValue(nouvelEssai);
-      tick(2_000);
       authState.restoreSession();
       rendreLaPage();
       nouvelEssai.next(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) }));

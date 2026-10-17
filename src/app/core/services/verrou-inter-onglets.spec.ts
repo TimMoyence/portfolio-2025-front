@@ -1,6 +1,5 @@
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { setupTestBed } from '../../../testing/setup-test-bed';
 import { creerVerrouInterOnglets, VERROU_INTER_ONGLETS } from './verrou-inter-onglets';
 
 const NOM = 'verrou-inter-onglets-spec';
@@ -49,7 +48,7 @@ describe('verrou inter-onglets', () => {
 
   it('ne demande aucun verrou au navigateur pendant un rendu serveur', async () => {
     const demande = spyOn(navigator.locks, 'request').and.callThrough();
-    setupTestBed({ providers: [{ provide: PLATFORM_ID, useValue: 'server' }] });
+    TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: 'server' }] });
     const verrou = TestBed.inject(VERROU_INTER_ONGLETS);
 
     expect(await verrou(NOM, () => Promise.resolve('serveur'))).toBe('serveur');

@@ -4,7 +4,17 @@ import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@a
 import { computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import type { Observable } from 'rxjs';
-import { catchError, finalize, firstValueFrom, from, map, of, tap, timeout } from 'rxjs';
+import {
+  TimeoutError,
+  catchError,
+  finalize,
+  firstValueFrom,
+  from,
+  map,
+  of,
+  tap,
+  timeout,
+} from 'rxjs';
 import type { IssueDuRenouvellement } from '../../../cours/runtime/core/sync';
 import { bornerEntre, objet } from '../../../cours/runtime/core/valeurs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
@@ -29,7 +39,13 @@ const MARGE_D_ACHEMINEMENT_MS = 5_000;
 
 export type IssueDuRafraichissement = IssueDuRenouvellement;
 
+interface DemandeDeRafraichissement {
+  readonly generation?: number;
+  readonly malgreLeRecul?: boolean;
+}
+
 function httpStatusOf(error: unknown): number | null {
+  if (error instanceof TimeoutError) return 0;
   const status = objet(error)?.['status'];
   return typeof status === 'number' ? status : null;
 }
@@ -162,7 +178,7 @@ export class AuthStateService {
   private relectureDuCompte(port: AuthPort): Observable<unknown> {
     const generation = this.generationDeSession;
     if (this._token() === null) {
-      return from(this.rafraichirUneFois(generation));
+      return from(this.rafraichirUneFois({ generation }));
     }
     if (this.jetonAExpire()) {
       return from(this.rafraichirLaSession());
@@ -182,7 +198,7 @@ export class AuthStateService {
     this._isUserLoading.set(true);
     if (token === null) {
       this.suivreLaRestauration(
-        from(this.rafraichirUneFois(this.generationDeSession)),
+        from(this.rafraichirUneFois({ generation: this.generationDeSession, malgreLeRecul: true })),
         (issue: IssueDuRafraichissement) => {
           if (issue === 'injoignable') this.signalerLEchecDeLaRestauration();
         },
@@ -258,9 +274,11 @@ export class AuthStateService {
     void this.rafraichirUneFois();
   }
 
-  private rafraichirUneFois(generationARestaurer?: number): Promise<IssueDuRafraichissement> {
+  private rafraichirUneFois(
+    demande: DemandeDeRafraichissement = {},
+  ): Promise<IssueDuRafraichissement> {
     this.rafraichissementEnCours ??= this.crossWindowLock(REFRESH_LOCK, () =>
-      this.refreshUnderLock(generationARestaurer),
+      this.refreshUnderLock(demande),
     )
       .catch((error: unknown) => this.onRefreshError(error))
       .finally(() => {
@@ -269,7 +287,10 @@ export class AuthStateService {
     return this.rafraichissementEnCours;
   }
 
-  private async refreshUnderLock(generationARestaurer?: number): Promise<IssueDuRafraichissement> {
+  private async refreshUnderLock({
+    generation: generationARestaurer,
+    malgreLeRecul = false,
+  }: DemandeDeRafraichissement): Promise<IssueDuRafraichissement> {
     const generation = generationARestaurer ?? this.generationDeSession;
     const sansSession =
       generationARestaurer === undefined ? this._token() === null : !this.laSessionDure(generation);
@@ -277,12 +298,12 @@ export class AuthStateService {
       return 'refuse';
     }
     const { pasAvant } = this.fenetre.lire();
-    if (Date.now() < pasAvant) {
+    if (!malgreLeRecul && Date.now() < pasAvant) {
       if (this.refreshTimer === null) this.replanifierSiConnecte(pasAvant - Date.now());
       return 'injoignable';
     }
     try {
-      const session = await firstValueFrom(this.authPort.refresh());
+      const session = await firstValueFrom(this.authPort.refresh().pipe(timeout(ME_TIMEOUT_MS)));
       return this.connecterSiLaSessionDure(generation, session) ? 'reussi' : 'refuse';
     } catch (error) {
       return this.laSessionDure(generation) ? this.onRefreshError(error) : 'refuse';

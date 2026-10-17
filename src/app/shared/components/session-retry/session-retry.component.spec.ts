@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApplicationRef } from '@angular/core';
-import { TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { preparerAvecLePortDAuth } from '../../../../testing/etat-auth';
@@ -42,7 +42,7 @@ describe('SessionRetryComponent', () => {
     expect(lireMarque(fixture, 'session-retry')).toBeNull();
   }));
 
-  it('propose un nouvel essai quand la verification echoue, puis s efface quand il aboutit apres le recul', fakeAsync(() => {
+  it('propose un nouvel essai quand la verification echoue, puis s efface quand elle aboutit', fakeAsync(() => {
     const fixture = monter();
     TestBed.inject(ApplicationRef).tick();
     flushMicrotasks();
@@ -52,7 +52,6 @@ describe('SessionRetryComponent', () => {
     expect(alerte?.getAttribute('role')).toBe('alert');
     expect(TestBed.inject(AuthStateService).token()).toBeNull();
 
-    tick(2_000);
     lireMarque(fixture, 'session-retry-bouton')?.click();
     flushMicrotasks();
     fixture.detectChanges();

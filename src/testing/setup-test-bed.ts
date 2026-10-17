@@ -10,7 +10,9 @@ import {
   MEMOIRE_DU_RENOUVELLEMENT,
   creerMemoireDuRenouvellementEnMemoire,
 } from '../app/core/services/fenetre-de-renouvellement';
+import { VERROU_INTER_ONGLETS } from '../app/core/services/verrou-inter-onglets';
 import { buildAppConfig } from './factories/app-config.factory';
+import { createVerrouEnMemoire } from './factories/verrou.factory';
 
 export interface SetupTestBedOptions extends TestModuleMetadata {
   appConfig?: Partial<AppConfig>;
@@ -24,6 +26,7 @@ export function setupTestBed(options: SetupTestBedOptions = {}) {
   const baseProviders: (Provider | EnvironmentProviders)[] = [
     { provide: APP_CONFIG, useValue: buildAppConfig(appConfig) },
     { provide: MEMOIRE_DU_RENOUVELLEMENT, useFactory: creerMemoireDuRenouvellementEnMemoire },
+    { provide: VERROU_INTER_ONGLETS, useFactory: createVerrouEnMemoire },
   ];
 
   if (http) {

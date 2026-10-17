@@ -15,12 +15,10 @@ import {
   buildAuthUser,
   createAuthPortStub,
 } from '../../../testing/factories/auth.factory';
-import { createVerrouEnMemoire } from '../../../testing/factories/verrou.factory';
 import { reveillerApres } from '../../../testing/horloge-simulee';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuthStateService } from './auth-state.service';
 import { PLUS_LONGUE_FENETRE_MS } from './fenetre-de-renouvellement';
-import { VERROU_INTER_ONGLETS } from './verrou-inter-onglets';
 
 function refusHttp(status: number): () => HttpErrorResponse {
   return () => new HttpErrorResponse({ status });
@@ -47,7 +45,6 @@ describe('AuthStateService', () => {
         providers: [
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: AUTH_PORT, useValue: portStub },
-          { provide: VERROU_INTER_ONGLETS, useValue: createVerrouEnMemoire() },
         ],
       });
       service = TestBed.inject(AuthStateService);
@@ -202,6 +199,17 @@ describe('AuthStateService', () => {
 
       expect(portStub.refresh).toHaveBeenCalledTimes(2);
       expect(service.token()).toBe('jwt-apres-panne');
+    }));
+
+    it('traite un renouvellement reste sans reponse dix secondes comme une panne du reseau, puis le rejoue', fakeAsync(() => {
+      portStub.refresh.and.returnValues(
+        NEVER,
+        of(buildAuthSession({ accessToken: 'jwt-apres-silence', expiresIn: 900 })),
+      );
+      atteindreLePremierRenouvellement();
+      attendreLeDeuxiemeEssaiApres(10_000 + 2_000);
+
+      expect(service.token()).toBe('jwt-apres-silence');
     }));
 
     describe('renouvellement refuse par la limite de cadence (429)', () => {
@@ -471,19 +479,61 @@ describe('AuthStateService', () => {
         expect(service.token()).toBeNull();
       }));
 
-      it('resout la session quand le nouvel essai aboutit, le recul passe', fakeAsync(() => {
+      for (const { cause, refus } of [
+        { cause: 'une panne', refus: refusHttp(503) },
+        { cause: 'une limite de cadence de 30 s', refus: limiteAtteinte('30') },
+      ]) {
+        it(`resout la session quand le nouvel essai aboutit, aussitot apres ${cause}`, fakeAsync(() => {
+          portStub.refresh.and.returnValues(
+            throwError(refus),
+            of(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) })),
+          );
+          restaurer();
+
+          restaurer();
+
+          expect(portStub.refresh).toHaveBeenCalledTimes(2);
+          expect(service.isRestoreFailed()).toBeFalse();
+          expect(service.hasRole('teacher')).toBeTrue();
+          expect(service.isSessionResolved()).toBeTrue();
+        }));
+
+        it(`restaure la session d une page rechargee aussitot apres ${cause}`, fakeAsync(() => {
+          portStub.refresh.and.returnValues(
+            throwError(refus),
+            of(buildAuthSession({ accessToken: 'jwt-recharge' })),
+          );
+          restaurer();
+          const pageRechargee = createEnvironmentInjector(
+            [AuthStateService],
+            TestBed.inject(EnvironmentInjector),
+          );
+          const rechargee = pageRechargee.get(AuthStateService);
+
+          rechargee.restoreSession();
+          flushMicrotasks();
+
+          expect(portStub.refresh).toHaveBeenCalledTimes(2);
+          expect(rechargee.token()).toBe('jwt-recharge');
+          expect(rechargee.isRestoreFailed()).toBeFalse();
+          rechargee.clearSession();
+          pageRechargee.destroy();
+        }));
+      }
+
+      it('relance le refresh au nouvel essai quand le precedent est reste sans reponse', fakeAsync(() => {
         portStub.refresh.and.returnValues(
-          throwError(refusHttp(503)),
-          of(buildAuthSession({ user: buildAuthUser({ roles: ['teacher'] }) })),
+          NEVER,
+          of(buildAuthSession({ accessToken: 'jwt-relance' })),
         );
         restaurer();
-        tick(2_000);
+        tick(10_000);
+        expect(service.isRestoreFailed()).toBeTrue();
 
         restaurer();
 
-        expect(service.isRestoreFailed()).toBeFalse();
-        expect(service.hasRole('teacher')).toBeTrue();
-        expect(service.isSessionResolved()).toBeTrue();
+        expect(portStub.refresh).toHaveBeenCalledTimes(2);
+        expect(service.token()).toBe('jwt-relance');
       }));
     });
 
