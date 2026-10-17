@@ -37,6 +37,14 @@ export function corpsDInscription(identifiants) {
 }
 
 /**
+ * @param {number} status
+ * @returns {boolean}
+ */
+function estUnSucces(status) {
+  return status >= 200 && status < 300;
+}
+
+/**
  * @template R
  * @param {(url: string, options: Record<string, unknown>) => Promise<R>} appeler
  * @param {string} url
@@ -65,7 +73,7 @@ export async function inscrireFormateur({ appeler, urlApi, identifiants }) {
     `${urlApi}/auth/register`,
     corpsDInscription(identifiants),
   );
-  if (reponse.status !== 200) {
+  if (!estUnSucces(reponse.status)) {
     throw new AmorcageEchoue('inscription', `${reponse.status} ${await reponse.text()}`);
   }
 }
@@ -83,7 +91,7 @@ async function connecterLeFormateur({ appeler, urlApi, identifiants }) {
     email: identifiants.email,
     password: identifiants.motDePasse,
   });
-  if (reponse.status !== 200) {
+  if (!estUnSucces(reponse.status)) {
     throw new AmorcageEchoue('connexion', `${reponse.status} ${await reponse.text()}`);
   }
   const { accessToken } = await reponse.json();

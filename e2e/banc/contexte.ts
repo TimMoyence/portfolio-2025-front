@@ -91,7 +91,7 @@ async function ouvrirUneSession(request: APIRequestContext): Promise<string> {
       password: IDENTIFIANTS_FORMATEUR.motDePasse,
     },
   });
-  expect(reponse.status(), await reponse.text()).toBe(200);
+  expect(reponse.ok(), `${reponse.status()} ${await reponse.text()}`).toBe(true);
   const { accessToken } = (await reponse.json()) as { accessToken: string };
   return accessToken;
 }

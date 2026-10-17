@@ -93,7 +93,6 @@ const INTEGRATIONS_NEUTRALISEES = Object.freeze({
   CONTACT_NOTIFICATION_TO: '',
   AUDIT_REPORT_TO: '',
   OPENAI_API_KEY: '',
-  METRICS_TOKEN: '',
   MORNING_BRIEF_HMAC_KEYS: '',
   MORNING_BRIEF_HMAC_KEY_ID: '',
   MORNING_BRIEF_HMAC_SECRET: '',
@@ -122,7 +121,6 @@ export function environnementDeLApi({ secrets, ports = PORTS, base = BASE_DU_BAN
     FORMATIONS_PULSE_SECRET: secrets.jalon,
     REDIS_URL: `redis://127.0.0.1:${ports.redis}`,
     AUDIT_QUEUE_ENABLED: 'false',
-    ENABLE_LEGACY_CMS_CONTEXTS: 'false',
   };
 }
 

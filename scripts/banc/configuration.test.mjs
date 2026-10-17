@@ -52,10 +52,15 @@ test("environnementDeLApi neutralise les integrations sortantes de l'API", () =>
   assert.equal(environnement.AUDIT_QUEUE_ENABLED, 'false');
 });
 
-test("environnementDeLApi ne transmet plus les cles des apps de l'atelier retirees", () => {
+test("environnementDeLApi ne transmet plus les cles que le back a retirees, apps de l'atelier, metriques et CMS herite", () => {
   const environnement = environnementDeLApi({ secrets: SECRETS });
 
-  for (const cle of ['OPENWEATHERMAP_API_KEY', 'TELEGRAM_BOT_TOKEN'])
+  for (const cle of [
+    'OPENWEATHERMAP_API_KEY',
+    'TELEGRAM_BOT_TOKEN',
+    'METRICS_TOKEN',
+    'ENABLE_LEGACY_CMS_CONTEXTS',
+  ])
     assert.equal(Object.hasOwn(environnement, cle), false, cle);
 });
 
