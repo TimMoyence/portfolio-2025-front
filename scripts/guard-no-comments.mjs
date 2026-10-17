@@ -1,10 +1,10 @@
-import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { blockOffenses, declaredDependencies } from './lib/comment-doctrine.mjs';
 import { markupBlocks, sourceBlocks, styleBlocks } from './lib/comment-extract.mjs';
 import { hasJsdocTypes, isInScope, languageOf } from './lib/comment-scope.mjs';
+import { git } from './lib/git.cjs';
 
 export const GATE = 'guard-no-comments';
 
@@ -84,30 +84,6 @@ function writeCeiling({ root, ceiling }) {
   const parsed = JSON.parse(readFileSync(manifest, 'utf8'));
   parsed[GATE] = { ...parsed[GATE], maxOffenses: ceiling };
   writeFileSync(manifest, `${JSON.stringify(parsed, null, 2)}\n`);
-}
-
-/**
- * @param {NodeJS.ProcessEnv} [env]
- * @returns {NodeJS.ProcessEnv}
- */
-export function isolatedGitEnv(env = process.env) {
-  return Object.fromEntries(Object.entries(env).filter(([name]) => !name.startsWith('GIT_')));
-}
-
-/**
- * @param {string} root
- * @param {string[]} args
- * @param {{ input?: string }} [options]
- * @returns {string}
- */
-export function git(root, args, options = {}) {
-  // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
-  return execFileSync('git', ['-C', root, ...args], {
-    encoding: 'utf8',
-    maxBuffer: 1 << 28,
-    env: isolatedGitEnv(),
-    ...options,
-  });
 }
 
 /**

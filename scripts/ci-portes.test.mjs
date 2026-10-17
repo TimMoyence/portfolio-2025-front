@@ -5,12 +5,21 @@ import { extname, join } from 'node:path';
 import { test } from 'node:test';
 
 import { ESLint } from 'eslint';
+import sonarjs from 'eslint-plugin-sonarjs';
 import * as prettier from 'prettier';
 
 import { echapperPourRegex } from '../src/cours/runtime/core/valeurs.ts';
-import { git, trackedFiles } from './guard-no-comments.mjs';
+import { trackedFiles } from './guard-no-comments.mjs';
 import { cheminDuDepot, RACINE } from './lib/depot.mjs';
-import { avecDossierPlante, planterDossier, supprimerDossier } from './lib/dossier-temporaire.mjs';
+import {
+  avecDossierPlante,
+  ecrireFichiers,
+  planterDossier,
+  supprimerDossier,
+  underInheritedGitDir,
+} from './lib/dossier-temporaire.mjs';
+import { git } from './lib/git.cjs';
+import { ignoresDeGit } from './lib/ignores-de-git.cjs';
 
 const CHEMIN_PACKAGE = cheminDuDepot('package.json');
 
@@ -629,8 +638,8 @@ function sortiesDesRapports() {
   ];
 }
 
-const ignoresParGit = (chemins) =>
-  git(RACINE, ['check-ignore', '--no-index', '-z', '--stdin'], { input: chemins.join('\0') })
+const ignoresParGit = (chemins, racine = RACINE) =>
+  git(racine, ['check-ignore', '--no-index', '-z', '--stdin'], { input: chemins.join('\0') })
     .split('\0')
     .filter(Boolean);
 
@@ -651,23 +660,54 @@ function eslintDuScriptLint(options = {}) {
   });
 }
 
-test('ci-portes : eslint ignore exactement les chemins que git ignore, rapports des outils compris, quelle que soit l ecriture de la ligne', async () => {
-  const eslint = eslintDuScriptLint();
-  const eslintSansConfiguration = eslintDuScriptLint({ overrideConfigFile: true });
-  const rapports = sortiesDesRapports().map((sortie) => `${sortie}/rapport.html`);
-  const exemples = [...exemplesDuGitignore(), ...rapports];
-  const ignores = new Set(ignoresParGit(exemples));
-  const nonIgnores = [];
+async function avecDepotPlante(exemples, executer) {
+  const racine = planterDossier(
+    'ci-portes-gitignore-',
+    Object.fromEntries(exemples.map((chemin) => [chemin, ''])),
+  );
+  try {
+    git(racine, ['init', '--quiet']);
+    return await executer(racine);
+  } finally {
+    supprimerDossier(racine);
+  }
+}
+
+async function ecartsEntreGitEtEslint(racine, exemples) {
+  const ignores = new Set(ignoresParGit(exemples, racine));
+  const eslintDuDepot = (configuration) =>
+    new ESLint({
+      cwd: racine,
+      overrideConfigFile: true,
+      overrideConfig: [{ files: ['**/*.html'] }, ...configuration],
+    });
+  const eslint = eslintDuDepot([{ ignores: ignoresDeGit(racine) }]);
+  const eslintSansIgnores = eslintDuDepot([]);
+  const lus = [];
   const ecarts = [];
   for (const chemin of exemples) {
-    const lu = await eslintLit(eslint, join(RACINE, chemin));
-    if (ignores.has(chemin)) {
-      if (lu) ecarts.push(`${chemin} : ignore par git, lu par eslint`);
-    } else if (!(await eslintSansConfiguration.isPathIgnored(join(RACINE, chemin)))) {
-      nonIgnores.push(chemin);
-      if (!lu) ecarts.push(`${chemin} : lu par git, ignore par eslint`);
+    const ignoreParGit = ignores.has(chemin);
+    const absolu = join(racine, chemin);
+    if (ignoreParGit || !(await eslintSansIgnores.isPathIgnored(absolu))) {
+      if (!ignoreParGit) lus.push(chemin);
+      if ((await eslint.isPathIgnored(absolu)) !== ignoreParGit) {
+        ecarts.push(
+          `${chemin} : ${ignoreParGit ? 'ignore par git, lu par eslint' : 'lu par git, ignore par eslint'}`,
+        );
+      }
     }
   }
+  return { lus, ecarts };
+}
+
+test('ci-portes : eslint ignore exactement les chemins que le gitignore du depot fait ignorer a git, rapports des outils compris', async () => {
+  const rapports = sortiesDesRapports().map((sortie) => `${sortie}/rapport.html`);
+  const exemples = [...exemplesDuGitignore(), ...rapports];
+  const { lus, ecarts } = await avecDepotPlante(exemples, (racine) => {
+    writeFileSync(join(racine, '.gitignore'), readFileSync(cheminDuDepot('.gitignore'), 'utf8'));
+    return ecartsEntreGitEtEslint(racine, exemples);
+  });
+  const ignores = new Set(ignoresParGit(rapports));
 
   assert.ok(
     rapports.length > 1,
@@ -679,13 +719,8 @@ test('ci-portes : eslint ignore exactement les chemins que git ignore, rapports 
     'ci-portes : git doit ignorer chaque rapport qu un outil du depot ecrit sur le poste.',
   );
   assert.ok(
-    nonIgnores.length > 0,
+    lus.length > 0,
     'ci-portes : git ignore chaque exemple, la garde ne verrait pas eslint ignorer un chemin que git lit.',
-  );
-  assert.equal(
-    await eslintLit(eslint, join(RACINE, unFichierSuiviParExtension().get('html'))),
-    true,
-    'ci-portes : eslint ne lit aucun fichier html suivi, la garde ne verrait rien.',
   );
   assert.deepEqual(
     ecarts,
@@ -693,6 +728,73 @@ test('ci-portes : eslint ignore exactement les chemins que git ignore, rapports 
     'ci-portes : eslint et git divergent : un rapport laisse sur le poste fait echouer lint et pre-push, ou un fichier suivi echappe a lint.',
   );
 });
+
+const premierDossierAbsent = (relatif) =>
+  relatif
+    .split('/')
+    .map((_, rang, morceaux) => morceaux.slice(0, rang + 1).join('/'))
+    .find((dossier) => !existsSync(cheminDuDepot(dossier)));
+
+test('ci-portes : la configuration eslint du depot ignore le rapport qu un outil laisse sur le poste et lit les fichiers suivis', async () => {
+  const sorties = sortiesDesRapports();
+  const plantes = sorties.map((sortie) => `${sortie}/ci-portes-${process.pid}.html`);
+  const creees = sorties.map(premierDossierAbsent).filter((dossier) => dossier !== undefined);
+  ecrireFichiers(RACINE, Object.fromEntries(plantes.map((chemin) => [chemin, ''])));
+  try {
+    const eslint = eslintDuScriptLint();
+    const lus = [];
+    for (const chemin of plantes) {
+      if (await eslintLit(eslint, cheminDuDepot(chemin))) lus.push(chemin);
+    }
+
+    assert.deepEqual(
+      lus,
+      [],
+      'ci-portes : eslint lit un rapport que git ignore : lint et pre-push echouent des qu un outil a tourne sur le poste.',
+    );
+    assert.equal(
+      await eslintLit(eslint, join(RACINE, unFichierSuiviParExtension().get('html'))),
+      true,
+      'ci-portes : eslint ne lit aucun fichier html suivi, la garde ne verrait rien.',
+    );
+  } finally {
+    for (const chemin of [...plantes, ...creees]) supprimerDossier(cheminDuDepot(chemin));
+  }
+});
+
+test('ci-portes : eslint lit les chemins ignores du depot de sa configuration, meme sous le GIT_DIR qu exporte un pre-push de worktree', async () => {
+  const exemples = ['ignore/rapport.html'];
+  const ignores = await avecDepotPlante(exemples, (racine) =>
+    avecDepotPlante(exemples, (depotDuHook) => {
+      for (const depot of [racine, depotDuHook]) {
+        writeFileSync(join(depot, '.gitignore'), 'ignore/\n');
+      }
+      git(depotDuHook, ['add', '--force', ...exemples]);
+      let lus;
+      underInheritedGitDir(join(depotDuHook, '.git'), () => {
+        lus = ignoresDeGit(racine);
+      });
+      return lus;
+    }),
+  );
+
+  assert.deepEqual(
+    ignores,
+    ['ignore/'],
+    'ci-portes : la liste des chemins ignores suit le GIT_DIR herite du hook, pas le depot de la configuration eslint.',
+  );
+});
+
+const NOMS_A_CARACTERE_DE_MOTIF = [
+  ...String.raw`\*?[]{}()!#+@|,.^$- `,
+  '\t',
+  String.fromCodePoint(0xa0),
+].flatMap((caractere) => [`${caractere}debut`, `mi${caractere}lieu`, `fin${caractere}`]);
+
+const ligneDuNomLitteral = (nom) => {
+  const echappe = nom.replaceAll(/[\\*?[]/g, '\\$&').replace(/ $/, '\\ ');
+  return `/${echappe}`;
+};
 
 const CORPUS_DU_GITIGNORE = [
   'nom-partout',
@@ -722,9 +824,18 @@ const CORPUS_DU_GITIGNORE = [
   String.raw`\{echappee\}`,
   'plus+(glob)',
   'arobase@(x|y)',
+  '/#ancre-diese',
+  '/!ancre-bang',
+  'fin-barre\\',
+  'ouvert[',
+  String.raw`\[crochet\]`,
+  String.raw`etoile\*`,
+  String.raw`question\?`,
+  String.raw`barre\\oblique`,
+  ...NOMS_A_CARACTERE_DE_MOTIF.map(ligneDuNomLitteral),
 ];
 
-const LIGNES_SANS_EFFET_POUR_GIT = ['!exclu/garde.html'];
+const LIGNES_SANS_EFFET_POUR_GIT = ['!exclu/garde.html', 'fin-barre\\', 'ouvert['];
 
 const EXEMPLES_DU_CORPUS = [
   ...[
@@ -759,60 +870,59 @@ const EXEMPLES_DU_CORPUS = [
     'plusglob',
     'arobase@(x|y)',
     'arobasex',
+    '#ancre-diese',
+    '!ancre-bang',
+    'fin-barre',
+    'fin-barre\\',
+    'ouvert',
+    'ouvert[',
+    '[crochet]',
+    'c',
+    'etoile*',
+    'etoile-x',
+    'question?',
+    'questionx',
+    String.raw`barre\oblique`,
+    'barreoblique',
+    ...NOMS_A_CARACTERE_DE_MOTIF,
+    'debut',
+    'zdebut',
+    'milieu',
+    'mizlieu',
+    'fin',
+    'finz',
   ].map((dossier) => `${dossier}/rapport.html`),
   'contenu-etoile/garde.html',
   'contenu-double/garde.html',
   'exclu/garde.html',
 ].flatMap((chemin) => [chemin, `profond/${chemin}`]);
 
-test('ci-portes : eslint traduit chaque forme de ligne du gitignore comme git la lit, negations et echappements compris', async () => {
-  const { ignoresDeGit } = createRequire(import.meta.url)('./lib/ignores-de-git.cjs');
-  const racine = planterDossier('ci-portes-gitignore-');
-  try {
-    git(racine, ['init', '--quiet']);
-    const sortieDeGit = (lignes) => {
+test('ci-portes : eslint ignore ce que git ignore, quelle que soit la forme de la ligne du gitignore ou le caractere du chemin', async () => {
+  const { sansEffet, ecarts } = await avecDepotPlante(EXEMPLES_DU_CORPUS, async (racine) => {
+    const verdictDeGit = (lignes) => {
       writeFileSync(join(racine, '.gitignore'), `${lignes.join('\n')}\n`);
-      return git(racine, ['check-ignore', '--no-index', '-z', '--stdin'], {
-        input: EXEMPLES_DU_CORPUS.join('\0'),
-      });
+      return ignoresParGit(EXEMPLES_DU_CORPUS, racine).join('\0');
     };
-    const complete = sortieDeGit(CORPUS_DU_GITIGNORE);
-    const sansEffet = CORPUS_DU_GITIGNORE.filter(
-      (_, rang) =>
-        sortieDeGit(CORPUS_DU_GITIGNORE.filter((__, autre) => autre !== rang)) === complete,
+    const sansChaqueLigne = CORPUS_DU_GITIGNORE.map((_, rang) =>
+      verdictDeGit(CORPUS_DU_GITIGNORE.filter((__, autre) => autre !== rang)),
     );
-    const ignores = new Set(complete.split('\0').filter(Boolean));
-    const eslint = new ESLint({
-      cwd: racine,
-      overrideConfigFile: true,
-      overrideConfig: [
-        { files: ['**/*.html'] },
-        { ignores: ignoresDeGit(`${CORPUS_DU_GITIGNORE.join('\n')}\n`) },
-      ],
-    });
-    const ecarts = [];
-    for (const chemin of EXEMPLES_DU_CORPUS) {
-      const ignoreParGit = ignores.has(chemin);
-      if ((await eslint.isPathIgnored(join(racine, chemin))) !== ignoreParGit) {
-        ecarts.push(
-          `${chemin} : ${ignoreParGit ? 'ignore par git, lu par eslint' : 'lu par git, ignore par eslint'}`,
-        );
-      }
-    }
+    const complet = verdictDeGit(CORPUS_DU_GITIGNORE);
+    return {
+      sansEffet: CORPUS_DU_GITIGNORE.filter((_, rang) => sansChaqueLigne[rang] === complet),
+      ecarts: (await ecartsEntreGitEtEslint(racine, EXEMPLES_DU_CORPUS)).ecarts,
+    };
+  });
 
-    assert.deepEqual(
-      sansEffet,
-      LIGNES_SANS_EFFET_POUR_GIT,
-      'ci-portes : chaque ligne du corpus doit changer le verdict de git sur un exemple, sinon la garde ne juge pas sa traduction.',
-    );
-    assert.deepEqual(
-      ecarts,
-      [],
-      'ci-portes : eslint traduit une ligne du gitignore autrement que git : un rapport ignore fait echouer lint, ou un fichier suivi echappe a lint.',
-    );
-  } finally {
-    supprimerDossier(racine);
-  }
+  assert.deepEqual(
+    sansEffet,
+    LIGNES_SANS_EFFET_POUR_GIT,
+    'ci-portes : chaque ligne du corpus doit changer le verdict de git sur un exemple, sinon la garde ne juge pas sa traduction.',
+  );
+  assert.deepEqual(
+    ecarts,
+    [],
+    'ci-portes : eslint ignore un chemin autrement que git : un rapport ignore fait echouer lint, ou un fichier suivi echappe a lint.',
+  );
 });
 
 test('ci-portes : Lighthouse est joue apres le build du job e2e, bloque sous 0,9 d accessibilite et garde ses rapports sur le runner', () => {
@@ -881,6 +991,41 @@ function unFichierSuiviParExtension() {
   }
   return parExtension;
 }
+
+test('ci-portes : eslint juge chaque fichier de code de src, e2e et scripts avec tout sonarjs et les interdits d eval', async () => {
+  const eslint = eslintDuScriptLint();
+  const regles = [
+    ...Object.entries(sonarjs.configs.recommended.rules)
+      .filter(([, niveau]) => niveau !== 'off')
+      .map(([regle]) => regle),
+    'no-eval',
+    'no-implied-eval',
+    'no-new-func',
+  ];
+  const fichiers = git(RACINE, ['ls-files', '-z', '--cached', '--others', '--exclude-standard'])
+    .split('\0')
+    .filter((fichier) => /^(src|e2e|scripts)\/.+\.[cm]?[jt]s$/.test(fichier));
+  const incomplets = [];
+  for (const fichier of fichiers) {
+    const { rules = {} } = (await eslint.calculateConfigForFile(cheminDuDepot(fichier))) ?? {};
+    const absentes = regles.filter((regle) => rules[regle]?.[0] !== 2);
+    if (absentes.length > 0) incomplets.push(`${fichier} : ${absentes.length} regle(s) absente(s)`);
+  }
+
+  assert.ok(
+    regles.length > 0,
+    'ci-portes : sonarjs ne recommande aucune regle, la garde ne voit rien.',
+  );
+  assert.ok(
+    new Set(fichiers.map((fichier) => extname(fichier))).size > 2,
+    'ci-portes : la garde ne lit pas chaque langage de code du depot.',
+  );
+  assert.deepEqual(
+    incomplets,
+    [],
+    'ci-portes : un fichier de code echappe a sonarjs, alors que la CI promet tout sonarjs en erreur sur src, e2e et scripts.',
+  );
+});
 
 test('ci-portes : au commit, prettier et eslint passent sur chaque fichier suivi qu ils savent traiter', async () => {
   const echantillons = unFichierSuiviParExtension();

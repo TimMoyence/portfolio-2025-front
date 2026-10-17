@@ -1,23 +1,15 @@
-const echapperPourMinimatch = (motif) =>
-  motif.replaceAll(/\\(.)|([{}()])/g, (tout, echappe, special) => {
-    if (special !== undefined) return `\\${special}`;
-    return echappe === ' ' ? '[ ]' : tout;
-  });
+const { git } = require('./git.cjs');
 
-const motifEslintDeLaLigne = (ligne) => {
-  const negation = ligne.startsWith('!') ? '!' : '';
-  const motif = ligne.slice(negation.length);
-  const barre = motif.indexOf('/');
-  const partout = barre === -1 || barre === motif.length - 1 ? '**/' : '';
-  const contenu = echapperPourMinimatch(motif.endsWith('/**') ? `${motif}/*` : motif);
-  return `${negation}${partout}${barre === 0 ? contenu.slice(1) : contenu}`;
-};
+const SPECIAUX_DE_MINIMATCH = /[\\*?[{(!#]/g;
 
-const ignoresDeGit = (texte) =>
-  texte
-    .split('\n')
-    .map((ligne) => ligne.replace(/(?<!\\) +$/, ''))
-    .filter((ligne) => ligne !== '' && !ligne.startsWith('#'))
-    .map(motifEslintDeLaLigne);
+const BLANCS = /\s/g;
+
+const ignoresDeGit = (racine) =>
+  git(racine, ['ls-files', '--others', '--ignored', '--exclude-standard', '--directory', '-z'])
+    .split('\0')
+    .filter((chemin) => chemin !== '')
+    .map((chemin) =>
+      chemin.replaceAll(SPECIAUX_DE_MINIMATCH, String.raw`\$&`).replaceAll(BLANCS, '[$&]'),
+    );
 
 module.exports = { ignoresDeGit };

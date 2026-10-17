@@ -8,7 +8,6 @@ import {
   collectFiles,
   formatGate,
   GATE,
-  git,
   githubAnnotation,
   isInScope,
   parseArgs,
@@ -16,7 +15,8 @@ import {
   runGate,
   tightenCeiling,
 } from './guard-no-comments.mjs';
-import { avecDossierPlante } from './lib/dossier-temporaire.mjs';
+import { avecDossierPlante, underInheritedGitDir } from './lib/dossier-temporaire.mjs';
+import { git } from './lib/git.cjs';
 
 /** @param {string[]} parts @returns {string} */
 const L = (...parts) => parts.join('\n');
@@ -34,18 +34,6 @@ const withRepo = ({ files = {}, ratchet }, run) => {
     git(root, ['add', '-A']);
     run(root);
   });
-};
-
-/** @param {string} gitDir @param {() => void} run @returns {void} */
-const underInheritedGitDir = (gitDir, run) => {
-  const inherited = process.env.GIT_DIR;
-  process.env.GIT_DIR = gitDir;
-  try {
-    run();
-  } finally {
-    if (inherited === undefined) delete process.env.GIT_DIR;
-    else process.env.GIT_DIR = inherited;
-  }
 };
 
 /** @param {string} root @returns {unknown} */
