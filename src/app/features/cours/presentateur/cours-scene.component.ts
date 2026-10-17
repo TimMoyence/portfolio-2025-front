@@ -15,7 +15,6 @@ import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
 import { type Chargement, lectureSuivie, suivreLaDestruction } from '../lecture-suivie';
 import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
-import type { DirectEcran } from '../../../shared/slides/session/contrat-hote';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { ecranAuRang, ecranDIdentifiant } from '../../../shared/slides/session/lecture-ecran';
 import { annexeFormateurDeLEcran } from './annexe-formateur';
@@ -379,7 +378,7 @@ export class CoursSceneComponent {
     return ecran === null ? null : annexeFormateurDeLEcran(ecran);
   });
 
-  readonly direct = computed<DirectEcran | null>(() =>
+  readonly direct = computed(() =>
     directDeLEcranCourant(
       this.ecranCourant(),
       this.pilotage(),

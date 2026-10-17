@@ -64,12 +64,7 @@ function viseUnIdentifiant(identifiants: readonly string[], identifiant: string)
 }
 
 function questionAffichee(montage: MontageIdentifie, direct: DirectEcran | null): string | null {
-  const jumelle = montage.identifiants.at(1);
-  const phase = direct?.pilotage.phase;
-  if ((phase === 'revote' || phase === 'revele') && jumelle !== undefined) {
-    return jumelle;
-  }
-  return montage.identifiants.at(0) ?? null;
+  return direct?.pilotage.questionAffichee ?? montage.identifiants.at(0) ?? null;
 }
 
 interface ResultatsDeVote {
@@ -200,6 +195,7 @@ function posesDesQuestions(montage: MontageIdentifie, contexte: ContexteDeReinje
     return [
       ['verdicts', visantLeMontage(verdicts, montage)],
       ['phase', phaseDuVote(contexte.direct)],
+      ['questionAffichee', questionAffichee(montage, contexte.direct)],
       ['resultats', resultatsDuVote(montage, contexte.direct)],
       ['resultatsPremierVote', resultatsDuPremierVote(montage, contexte.direct)],
     ];
@@ -261,6 +257,18 @@ function etapesDevoilees(contexte: ContexteDeReinjection): number {
     : Math.max(affichees, pilotage?.etayageAtteint ?? 0);
 }
 
+function evaluationDuPoste(
+  montage: MontageIdentifie,
+  contexte: ContexteDeReinjection,
+  genre: 'feuille-evaluee' | 'tableau-evalue',
+): RetourBrique | null {
+  return contexte.role === 'presentateur'
+    ? null
+    : (deGenre(contexte.retours, genre)
+        .filter((retour) => viseUnIdentifiant(montage.identifiants, retour.planId))
+        .at(-1) ?? null);
+}
+
 function posesDuPilotage(montage: MontageIdentifie, contexte: ContexteDeReinjection): Pose[] {
   const pilotage = contexte.direct?.pilotage;
   switch (montage.brique) {
@@ -277,13 +285,26 @@ function posesDuPilotage(montage: MontageIdentifie, contexte: ContexteDeReinject
     case 'fp-worked':
       return [['etayage', etapesDevoilees(contexte)]];
     case 'fp-sheet':
+      return [
+        ['etayage', pilotage?.etayage ?? 0],
+        ['evaluation', evaluationDuPoste(montage, contexte, 'feuille-evaluee')],
+      ];
     case 'fp-table-build':
-      return [['etayage', pilotage?.etayage ?? 0]];
+      return [
+        ['etayage', pilotage?.etayage ?? 0],
+        ['evaluation', evaluationDuPoste(montage, contexte, 'tableau-evalue')],
+      ];
     case 'fp-recall':
       return [['optionsAffichees', pilotage?.optionsAffichees === true]];
     case 'fp-pulse':
       return [['comptes', contexte.direct?.comptesJalon ?? null]];
     case 'fp-concept4':
+      return contexte.role === 'presentateur'
+        ? [
+            ['reglages', pilotage?.reglages ?? null],
+            ['evaluee', pilotage?.sortiesProjetees ?? null],
+          ]
+        : [['evaluee', deGenre(contexte.retours, 'machine-evaluee').at(-1)?.sorties ?? null]];
     case 'fp-plot':
       return contexte.role === 'presentateur' ? [['reglages', pilotage?.reglages ?? null]] : [];
     default:

@@ -24,8 +24,8 @@ export function directDeLEcran(
 export function directDeLEcranCourant(
   ecran: EcranContent | null,
   pilotages: Readonly<Record<string, PilotageEcran>>,
-  resultats: ResultatsDuDirect | null,
-  seuilDeProjection: number,
+  resultats: ResultatsDuDirect | null = null,
+  seuilDeProjection = 0,
 ): DirectEcran | null {
   return ecran === null
     ? null

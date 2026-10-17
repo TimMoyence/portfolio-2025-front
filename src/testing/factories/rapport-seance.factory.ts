@@ -25,6 +25,10 @@ export function buildResultatQuestion(overrides: Partial<ResultatQuestion> = {})
     parOption: null,
     scoreMoyen: null,
     parCle: null,
+    confusionDominante: 'interet-simple',
+    part: 16 / 24,
+    sousLeSeuil: false,
+    remediation: null,
     ...overrides,
   };
 }

@@ -9,10 +9,14 @@ import type {
   DerouleCours,
   EtatParticipant,
   EtatPulse,
+  FeuilleEvaluee,
+  SortiesMachine,
+  TableauEvalue,
 } from '../../../cours/content/types';
 import type {
   CommandePilotage,
   AnnotationFormateur,
+  DemandeDeFeuille,
   FichierTelecharge,
   FormationsPort,
   IncidentEtudiant,
@@ -30,6 +34,7 @@ import type {
   ReponseLibreEnregistree,
   ReponseLibreEtudiant,
   ReponseLibreFormateur,
+  SaisieDeTableau,
   SeanceOuverte,
   StrategiesDuDefi,
   SyntheseConcept,
@@ -54,8 +59,10 @@ import {
   annotationsServies,
   derouleServi,
   etatParticipantServi,
+  feuilleEvalueeServie,
   livretServi,
   luPar,
+  machineEvalueeServie,
   participantsServis,
   rappelsServis,
   rapportServi,
@@ -66,10 +73,12 @@ import {
   strategiesServies,
   sujetServi,
   syntheseServie,
+  tableauEvalueServi,
   verdictProductionServi,
   verdictReponseServi,
   verdictTentativeServi,
 } from './formations-schemas';
+import type { Reglages } from '../../../cours/runtime/blocks/animation';
 import { ENTETE_JETON_PARTICIPANT } from '../../../cours/runtime/core/jeton-participant';
 import { urlDeLaSeance } from '../../../cours/runtime/core/adresse-de-seance';
 import { chaineDe, jsonOuNull } from '../../../cours/runtime/core/valeurs';
@@ -400,6 +409,52 @@ export class FormationsHttpAdapter implements FormationsPort {
       this.http.post<unknown>(url, tentative, { headers: entetes(jeton) }),
       'refusee',
     ).pipe(luPar(verdictTentativeServi));
+  }
+
+  evaluerMachine(
+    sessionId: string,
+    jeton: string,
+    ecranId: string,
+    reglages: Reglages,
+  ): Observable<SortiesMachine> {
+    return this.evaluer(sessionId, jeton, `machines/${encodeURIComponent(ecranId)}`, {
+      reglages,
+    }).pipe(luPar(machineEvalueeServie));
+  }
+
+  evaluerTableau(
+    sessionId: string,
+    jeton: string,
+    planId: string,
+    saisies: readonly SaisieDeTableau[],
+  ): Observable<TableauEvalue> {
+    return this.evaluer(sessionId, jeton, `tableaux/${encodeURIComponent(planId)}`, {
+      saisies,
+    }).pipe(luPar(tableauEvalueServi));
+  }
+
+  evaluerFeuille(
+    sessionId: string,
+    jeton: string,
+    planId: string,
+    demande: DemandeDeFeuille,
+  ): Observable<FeuilleEvaluee> {
+    return this.evaluer(sessionId, jeton, `feuilles/${encodeURIComponent(planId)}`, demande).pipe(
+      luPar(feuilleEvalueeServie),
+    );
+  }
+
+  private evaluer(
+    sessionId: string,
+    jeton: string,
+    cible: string,
+    corps: object,
+  ): Observable<unknown> {
+    return ecritureEtudiante(
+      this.http.post<unknown>(`${this.urlSeance(sessionId)}/${cible}/evaluation`, corps, {
+        headers: entetes(jeton),
+      }),
+    );
   }
 
   declarerJalon(

@@ -11,6 +11,14 @@ function traduire(
   return evenementsDe(nom, buildDetailDeBrique(nom, overrides), ECRAN);
 }
 
+const PLANS_OU_RANGS_FAUTIFS = [{ planId: '' }, { rang: -1 }, { rang: 1.5 }];
+
+function refuserChacun(nom: string, fautifs: readonly Readonly<Record<string, unknown>>[]): void {
+  for (const fautif of fautifs) {
+    expect(traduire(nom, fautif)).withContext(JSON.stringify(fautif)).toEqual([]);
+  }
+}
+
 describe('evenementsDe : traduction des evenements de brique vers le contrat hote (§ 9.7)', () => {
   it('traduit chaque evenement declare en au moins un evenement de seance', () => {
     for (const nom of EVENEMENTS_DES_BRIQUES) {
@@ -103,6 +111,79 @@ describe('evenementsDe : traduction des evenements de brique vers le contrat hot
       { kind: 'reglage', screenId: ECRAN, reglages: { prix: 250, taux: -12 } },
     ]);
     expect(traduire('fp-concept4-reglage', { reglages: { prix: 'cent' } })).toEqual([]);
+  });
+
+  it('F-37 · traduit la demande d evaluation de la machine en evaluation de l ecran, distincte du reglage', () => {
+    expect(traduire('fp-concept4-evaluation')).toEqual([
+      { kind: 'evaluation-machine', screenId: ECRAN, reglages: { tauxUn: 50, tauxDeux: -50 } },
+    ]);
+    expect(traduire('fp-concept4-evaluation', { reglages: { tauxUn: 'cinquante' } })).toEqual([]);
+    expect(traduire('fp-concept4-evaluation', { reglages: {} })).toEqual([]);
+  });
+
+  it('F-36 · traduit la demande d evaluation de la feuille en evaluation de son plan, recopie comprise', () => {
+    const evaluation: Extract<EvenementBrique, { kind: 'evaluation-feuille' }> = {
+      kind: 'evaluation-feuille',
+      screenId: ECRAN,
+      planId: 'K-TABLEUR-01',
+      rang: 3,
+      demande: { cellules: { C3: '=A3*B3' } },
+    };
+
+    expect(traduire('fp-sheet-evaluation')).toEqual([evaluation]);
+    expect(traduire('fp-sheet-evaluation', { recopie: { de: 'C3' } })).toEqual([
+      { ...evaluation, demande: { cellules: { C3: '=A3*B3' }, recopie: { de: 'C3' } } },
+    ]);
+    expect(traduire('fp-sheet-evaluation', { cellules: { C3: 7, D3: '=C3' } })).toEqual([
+      jasmine.objectContaining({ demande: { cellules: { D3: '=C3' } } }),
+    ]);
+  });
+
+  it('F-36 · refuse une demande d evaluation de feuille sans plan, sans rang entier, sans cellules ou a la recopie sans origine', () => {
+    refuserChacun('fp-sheet-evaluation', [
+      ...PLANS_OU_RANGS_FAUTIFS,
+      { cellules: null },
+      { recopie: {} },
+      { recopie: { de: '' } },
+      { recopie: 'C3' },
+    ]);
+  });
+
+  it('F-37 · traduit la demande d evaluation du tableau en evaluation de son plan, saisies brutes comprises', () => {
+    expect(traduire('fp-table-build-evaluation')).toEqual([
+      {
+        kind: 'evaluation-tableau',
+        screenId: ECRAN,
+        planId: 'b2-01-a4-indice-toile',
+        rang: 2,
+        saisies: [{ rang: 0, cle: 'prix', saisie: '21,6' }],
+      },
+    ]);
+    expect(traduire('fp-table-build-evaluation', { saisies: [] })).toEqual([
+      jasmine.objectContaining({ saisies: [] }),
+    ]);
+    expect(
+      traduire('fp-table-build-evaluation', {
+        saisies: [
+          { rang: 0, cle: 'prix', saisie: 21.6 },
+          { rang: -1, cle: 'prix', saisie: '1' },
+          { rang: 1.5, cle: 'prix', saisie: '1' },
+          { rang: 1, cle: '', saisie: '1' },
+          null,
+          { rang: 1, cle: 'indice', saisie: '102,6' },
+        ],
+      }),
+    ).toEqual([
+      jasmine.objectContaining({ saisies: [{ rang: 1, cle: 'indice', saisie: '102,6' }] }),
+    ]);
+  });
+
+  it('F-37 · refuse une demande d evaluation de tableau sans plan, sans rang entier ou sans liste de saisies', () => {
+    refuserChacun('fp-table-build-evaluation', [
+      ...PLANS_OU_RANGS_FAUTIFS,
+      { saisies: null },
+      { saisies: { rang: 0, cle: 'prix', saisie: '1' } },
+    ]);
   });
 
   it('L3 · traduit chaque reponse non vide d un cas professionnel en texte libre de sa question', () => {

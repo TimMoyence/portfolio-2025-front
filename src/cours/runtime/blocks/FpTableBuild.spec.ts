@@ -1,3 +1,4 @@
+import type { TableauEvalue, ValeurAffichee } from '../../content/types';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
 import {
   attendreLEnvoiVideRefuse,
@@ -9,6 +10,7 @@ import {
   installerBrique,
 } from '../../../testing/banc-de-brique';
 import {
+  buildTableauEvalue,
   buildTableBuildPlan,
   buildTableDeVeritePlan,
   buildVerdictDeProduction,
@@ -18,11 +20,13 @@ import { INSTANTANES_DES_COURS_SERVIS } from '../../../testing/fixtures/instanta
 import { FpTableBuild, type TableBuildPlanPublic } from './FpTableBuild';
 
 const PLAN = buildTableBuildPlan();
-const ESPACE_FINE = ' ';
+const ESPACE_FINE = String.fromCharCode(0x202f);
+const ESPACE_INSECABLE = String.fromCharCode(0x00a0);
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const CLASSES_ATTENDUES = 14;
 const ROLES = ['etudiant', 'presentateur'] as const;
 const RENVOYER = 'Renvoyer les cases corrigées';
+const EVALUATIONS = 'fp-table-build-evaluation';
 const VERDICT_PARTIEL = buildVerdictDeProduction({
   questionId: PLAN.id,
   details: [
@@ -35,10 +39,26 @@ const PRIX_SAISIS = ['21,60', '20,52', '21,34', '20,70'];
 const INDICES_SAISIS = ['108', '102,6', '106,7', '103,5'];
 const COEFFICIENTS_DEDUITS = ['1,0800', '0,9500', '1,0400', '0,9700'];
 const EVOLUTIONS_DEDUITES = ['8,00', '2,60', '6,70', '3,50'];
-const ATTENDUS_FORMATEUR = {
-  type: 'tableau',
-  attendus: [{ rang: 0, cle: 'prix', valeur: 21.6 }],
-};
+
+type CorrigeDeTableau = Extract<
+  NonNullable<ReturnType<typeof ecransDuPupitreDe>[number]['corrigeEcran']>,
+  { type: 'tableau' }
+>;
+
+function corrigeServi(planId: string): CorrigeDeTableau {
+  for (const [, instantane] of INSTANTANES_DES_COURS_SERVIS) {
+    for (const ecran of ecransDuPupitreDe(instantane)) {
+      const plan = ecran.donnees?.['plan'] as TableBuildPlanPublic | undefined;
+      if (ecran.corrigeEcran?.type === 'tableau' && plan?.id === planId) {
+        return ecran.corrigeEcran;
+      }
+    }
+  }
+  throw new Error(`aucun corrige servi pour ${planId}`);
+}
+
+const CORRIGE_DE_LA_TOILE = corrigeServi(PLAN.id);
+const TOILE_EVALUEE = CORRIGE_DE_LA_TOILE.tableauCorrige;
 
 function repere(hote: FpTableBuild, nom: string): Element | null {
   return hote.shadowRoot?.querySelector(`[data-testid="${nom}"]`) ?? null;
@@ -90,6 +110,16 @@ function saisir(hote: FpTableBuild, rang: number, cle: string, texte: string): v
   champ.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
+function valider(hote: FpTableBuild, rang: number, cle: string): void {
+  cellule(hote, rang, cle).dispatchEvent(
+    new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }),
+  );
+}
+
+function rejoindre(hote: FpTableBuild, rang: number, cle: string): void {
+  cellule(hote, rang, cle).dispatchEvent(new FocusEvent('focus'));
+}
+
 function toutSaisir(hote: FpTableBuild): void {
   PRIX_SAISIS.forEach((prix, rang) => saisir(hote, rang, 'prix', prix));
   INDICES_SAISIS.forEach((indice, rang) => saisir(hote, rang, 'indice', indice));
@@ -99,19 +129,40 @@ function cliquer(hote: FpTableBuild, nom: string): void {
   repere(hote, nom)?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 }
 
+function demandesDEvaluation(hote: FpTableBuild): Record<string, unknown>[] {
+  return detailsEmis(hote, EVALUATIONS);
+}
+
+function servirLaDerniere(
+  hote: FpTableBuild,
+  demandes: readonly Record<string, unknown>[],
+  evalue: TableauEvalue,
+): void {
+  const derniere = demandes.at(-1);
+  if (derniere === undefined) {
+    throw new Error('aucune demande d evaluation');
+  }
+  hote.evaluation = { rang: derniere['rang'] as number, evalue };
+}
+
+function toutSaisirEtServir(hote: FpTableBuild): void {
+  const demandes = demandesDEvaluation(hote);
+  toutSaisir(hote);
+  valider(hote, 3, 'indice');
+  servirLaDerniere(hote, demandes, TOILE_EVALUEE);
+}
+
 function recevoirLeVerdictPartiel(hote: FpTableBuild): void {
+  const demandes = demandesDEvaluation(hote);
   toutSaisir(hote);
   cliquer(hote, 'valider');
+  servirLaDerniere(hote, demandes, TOILE_EVALUEE);
   hote.verdict = VERDICT_PARTIEL;
 }
 
-function projeterAuPresentateur(
-  hote: FpTableBuild,
-  attendus: readonly { rang: number; cle: string; valeur: number }[],
-  etayage: number,
-): void {
+function projeterAuPresentateur(hote: FpTableBuild, corrige: unknown, etayage: number): void {
   hote.setAttribute('data-cours-role', 'presentateur');
-  hote.corrige = { type: 'tableau', attendus: [...attendus] };
+  hote.corrige = corrige;
   hote.etayage = etayage;
 }
 
@@ -162,40 +213,97 @@ describe('FpTableBuild', () => {
     expect(texteDe(hote, 'consignes')).toContain('calculez le nouveau prix');
   });
 
-  it('affiche les donnees du plan en lecture seule et ne laisse saisir que les colonnes a saisir', () => {
+  it('affiche les donnees du tableau initial servi en lecture seule et ne laisse saisir que les colonnes a saisir', () => {
     expect(colonneAffichee(hote, 'taux')).toEqual(['8', '-5', '4', '-3']);
+    expect(colonneAffichee(hote, 'coef')).toEqual(['—', '—', '—', '—']);
     expect(cellule(hote, 0, 'taux').readOnly).toBeTrue();
     expect(cellule(hote, 0, 'coef').readOnly).toBeTrue();
     expect(cellule(hote, 0, 'prix').readOnly).toBeFalse();
     expect(cellule(hote, 0, 'indice').readOnly).toBeFalse();
   });
 
-  it('deduit chaque colonne par le moteur de formules des qu une valeur est saisie', () => {
-    toutSaisir(hote);
+  it('F-37 · ne calcule rien au poste : valider une cellule demande au back l evaluation des saisies brutes, puis affiche le tableau servi', () => {
+    const demandes = demandesDEvaluation(hote);
+    saisir(hote, 0, 'prix', '21,6');
+
+    expect(demandes).toEqual([]);
+    expect(cellule(hote, 0, 'coef').value).toBe('—');
+
+    valider(hote, 0, 'prix');
+
+    expect(demandes).toEqual([
+      {
+        planId: PLAN.id,
+        rang: jasmine.any(Number),
+        saisies: [{ rang: 0, cle: 'prix', saisie: '21,6' }],
+      },
+    ]);
+    servirLaDerniere(hote, demandes, TOILE_EVALUEE);
     expect(colonneAffichee(hote, 'coef')).toEqual(COEFFICIENTS_DEDUITS);
     expect(colonneAffichee(hote, 'evolution')).toEqual(EVOLUTIONS_DEDUITES);
+    expect(cellule(hote, 0, 'prix').value).toBe('21,6');
   });
 
-  it('marque d un tiret une deduction impossible sans casser la ligne', () => {
-    saisir(hote, 0, 'prix', 'douze euros');
-    expect(cellule(hote, 0, 'coef').value).toBe('—');
-    saisir(hote, 0, 'prix', '12 €');
-    expect(cellule(hote, 0, 'coef').value).toBe('—');
-    saisir(hote, 0, 'prix', '12 %');
-    expect(cellule(hote, 0, 'coef').value).toBe('—');
-    saisir(hote, 0, 'prix', '1 080,00');
-    expect(cellule(hote, 0, 'coef').value).toBe('54,0000');
+  it('F-37 · demande l evaluation quand le foyer rejoint une autre cellule, une seule fois pour les memes saisies', () => {
+    const demandes = demandesDEvaluation(hote);
+    saisir(hote, 0, 'prix', '21,6');
+    rejoindre(hote, 0, 'indice');
+    rejoindre(hote, 0, 'prix');
+
+    expect(demandes.map((demande) => demande['saisies'])).toEqual([
+      [{ rang: 0, cle: 'prix', saisie: '21,6' }],
+    ]);
   });
 
-  it('calcule la synthese sans ligne de totaux a cote', () => {
-    toutSaisir(hote);
+  it('F-37 · n affiche que la reponse a la derniere demande', () => {
+    const demandes = demandesDEvaluation(hote);
+    saisir(hote, 0, 'prix', '21,6');
+    valider(hote, 0, 'prix');
+    saisir(hote, 0, 'prix', '21,60');
+    valider(hote, 0, 'prix');
+
+    hote.evaluation = { rang: demandes[0]['rang'] as number, evalue: TOILE_EVALUEE };
+    expect(cellule(hote, 0, 'coef').value).toBe('—');
+
+    servirLaDerniere(hote, demandes, TOILE_EVALUEE);
+    expect(cellule(hote, 0, 'coef').value).toBe(COEFFICIENTS_DEDUITS[0]);
+  });
+
+  it('F-37 · redemande l evaluation a la validation suivante quand la precedente a ete refusee', () => {
+    const demandes = demandesDEvaluation(hote);
+    saisir(hote, 0, 'prix', '21,6');
+    valider(hote, 0, 'prix');
+    hote.erreur = 'Calcul non reçu : vérifiez la connexion et validez de nouveau la cellule';
+    hote.erreur = null;
+    valider(hote, 0, 'prix');
+
+    expect(demandes.length).toBe(2);
+  });
+
+  it('F-37 · ne demande aucune evaluation hors du poste etudiant, en apercu ni a la projection', () => {
+    const demandes = demandesDEvaluation(hote);
+    hote.setAttribute('data-apercu', '');
+    saisir(hote, 0, 'prix', '21,6');
+    valider(hote, 0, 'prix');
+    cliquer(hote, 'valider');
+    expect(texteDe(hote, 'retour')).toBe('Aperçu : les réponses s’envoient pendant la séance');
+    hote.removeAttribute('data-apercu');
+    hote.setAttribute('data-cours-role', 'presentateur');
+    hote.brouillon = { '0:prix': '21,6' };
+
+    expect(demandes).toEqual([]);
+  });
+
+  it('F-37 · affiche la synthese servie, sans ligne de totaux a cote', () => {
+    toutSaisirEtServir(hote);
     expect(hote.shadowRoot?.querySelector('[data-testid="total"]')).toBeNull();
     expect(
       reperes(hote, 'synthese-ligne').map((ligne) => ligne.querySelector('dd')?.textContent),
-    ).toEqual(['4,00 %', '3,50 %']);
+    ).toEqual([`4,00${ESPACE_INSECABLE}%`, `3,50${ESPACE_INSECABLE}%`]);
   });
 
-  it('L4-F11 ·ecrit les cellules, le total et le solde a la francaise, milliers en espace fine', () => {
+  it('L4-F11 · ecrit cellules, total et solde tels que le back les sert, milliers en espace fine', () => {
+    const ecrit = (valeur: number, affichage: string): ValeurAffichee => ({ valeur, affichage });
     hote.plan = buildTableBuildPlan({
       echeances: 2,
       libellesLignes: ['Année 1', 'Année 2'],
@@ -219,6 +327,18 @@ describe('FpTableBuild', () => {
         },
       ],
       synthese: [],
+      tableauInitial: buildTableauEvalue({
+        lignes: [0, 1].map((rang) => ({
+          rang,
+          valeurs: {
+            capital: ecrit(25001, `25${ESPACE_FINE}001,00`),
+            rembourse: ecrit(12500.5, `12${ESPACE_FINE}500,50`),
+          },
+        })),
+        totaux: { rembourse: ecrit(25001, `25${ESPACE_FINE}001,00`) },
+        synthese: [],
+        soldeFinal: ecrit(12500.5, `12${ESPACE_FINE}500,50`),
+      }),
     });
 
     expect(colonneAffichee(hote, 'capital')).toEqual([
@@ -238,7 +358,7 @@ describe('FpTableBuild', () => {
     );
   });
 
-  it('garde le foyer et la frappe dans la cellule saisie malgre le recalcul', () => {
+  it('garde le foyer et la frappe dans la cellule saisie malgre le rendu', () => {
     const champ = cellule(hote, 1, 'prix');
     champ.focus();
     saisir(hote, 1, 'prix', '20,5');
@@ -247,16 +367,31 @@ describe('FpTableBuild', () => {
     expect(cellule(hote, 1, 'prix').value).toBe('20,5');
   });
 
-  it('refuse un envoi vide puis un envoi incomplet, et envoie les seules valeurs saisies', () => {
+  it('F-37 · refuse un envoi vide puis un envoi incomplet, et envoie les valeurs que le back a lues', () => {
     const recus = envois(hote);
+    const demandes = demandesDEvaluation(hote);
     attendreLEnvoiVideRefuse(hote);
     saisir(hote, 0, 'prix', PRIX_SAISIS[0]);
     cliquer(hote, 'valider');
+    servirLaDerniere(hote, demandes, buildTableauEvalue());
     expect(texteDe(hote, 'retour')).toBe('Complétez chaque cellule à saisir avant de valider');
     expect(recus).toEqual([]);
 
     toutSaisir(hote);
     cliquer(hote, 'valider');
+
+    expect(recus).toEqual([]);
+    expect(demandes.at(-1)?.['saisies']).toEqual([
+      { rang: 0, cle: 'prix', saisie: '21,60' },
+      { rang: 0, cle: 'indice', saisie: '108' },
+      { rang: 1, cle: 'prix', saisie: '20,52' },
+      { rang: 1, cle: 'indice', saisie: '102,6' },
+      { rang: 2, cle: 'prix', saisie: '21,34' },
+      { rang: 2, cle: 'indice', saisie: '106,7' },
+      { rang: 3, cle: 'prix', saisie: '20,70' },
+      { rang: 3, cle: 'indice', saisie: '103,5' },
+    ]);
+    servirLaDerniere(hote, demandes, TOILE_EVALUEE);
 
     expect(recus.length).toBe(1);
     expect(recus[0]['planId']).toBe(PLAN.id);
@@ -284,18 +419,26 @@ describe('FpTableBuild', () => {
     expect(recus.map((detail) => detail['neSaitPas'])).toEqual([true]);
   });
 
-  it('n ecrit dans aucun stockage : le brouillon passe par l hote', () => {
+  it('n ecrit dans aucun stockage : le brouillon passe par l hote, et sa reprise demande l evaluation', () => {
     const brouillons = detailsEmis(hote, 'fp-brouillon');
     saisir(hote, 0, 'prix', PRIX_SAISIS[0]);
     expect(brouillons).toEqual([{ id: PLAN.id, valeur: { '0:prix': PRIX_SAISIS[0] } }]);
     expect(traces.ecritures).toEqual([]);
 
     hote.plan = buildTableBuildPlan({ id: 'b2-01-a4-recharge' });
+    const demandes = demandesDEvaluation(hote);
     hote.brouillon = { '1:indice': '102,6', '0:coef': '9', '9:prix': '1' };
 
     expect(cellule(hote, 1, 'indice').value).toBe('102,6');
     expect(cellule(hote, 0, 'coef').value).toBe('—');
     expect(texteDe(hote, 'brouillon-restaure')).toBe('Brouillon restauré');
+    expect(demandes).toEqual([
+      {
+        planId: 'b2-01-a4-recharge',
+        rang: jasmine.any(Number),
+        saisies: [{ rang: 1, cle: 'indice', saisie: '102,6' }],
+      },
+    ]);
   });
 
   it('marque les cellules selon le verdict recu et compte les lignes justes', () => {
@@ -310,6 +453,7 @@ describe('FpTableBuild', () => {
 
   it('RET-31 · laisse reprendre les seules cases fausses apres verdict puis les renvoie une fois', () => {
     const recus = envois(hote);
+    const demandes = demandesDEvaluation(hote);
     recevoirLeVerdictPartiel(hote);
 
     expect(boutonValider(hote).disabled).toBeTrue();
@@ -320,6 +464,7 @@ describe('FpTableBuild', () => {
     expect(boutonValider(hote).disabled).toBeFalse();
     expect(boutonValider(hote).textContent?.trim()).toBe(RENVOYER);
     cliquer(hote, 'valider');
+    servirLaDerniere(hote, demandes, TOILE_EVALUEE);
 
     expect(recus.length).toBe(2);
     expect(recus[1]['saisies']).toContain({ rang: 1, cle: 'prix', valeur: 20.52 });
@@ -328,14 +473,17 @@ describe('FpTableBuild', () => {
 
   it('RET-31 · ferme la reprise des cases fausses des que la correction est revelee', () => {
     const recus = envois(hote);
+    const demandes = demandesDEvaluation(hote);
     recevoirLeVerdictPartiel(hote);
     hote.etayage = 1;
 
     expect(cellule(hote, 1, 'prix').disabled).toBeTrue();
     saisir(hote, 1, 'prix', '20,52');
     expect(boutonValider(hote).disabled).toBeTrue();
+    const avant = demandes.length;
     cliquer(hote, 'valider');
     expect(recus.length).toBe(1);
+    expect(demandes.length).toBe(avant);
   });
 
   it('ne sert aucun tableau corrige tant que la correction n est pas revelee', () => {
@@ -345,17 +493,21 @@ describe('FpTableBuild', () => {
         expect(repere(hote, 'tableau-corrige')).withContext(role).toBeNull();
       }
     };
-    hote.corrige = ATTENDUS_FORMATEUR;
+    hote.corrige = CORRIGE_DE_LA_TOILE;
     attendreAucunTableauCorrige();
     hote.corrige = null;
     hote.etayage = 2;
     attendreAucunTableauCorrige();
   });
 
-  it('RET-31 · projette le tableau corrige, sa premiere colonne a corriger des le niveau 1', () => {
-    hote.setAttribute('data-cours-role', 'presentateur');
-    hote.corrige = ATTENDUS_FORMATEUR;
-    hote.etayage = 1;
+  it('F-37 · ne projette un tableau corrige que si le back le sert avec le corrige', () => {
+    projeterAuPresentateur(hote, { type: 'tableau', attendus: CORRIGE_DE_LA_TOILE.attendus }, 1);
+
+    expect(repere(hote, 'tableau-corrige')).toBeNull();
+  });
+
+  it('RET-31 · projette le tableau corrige servi, sa premiere colonne a corriger des le niveau 1', () => {
+    projeterAuPresentateur(hote, CORRIGE_DE_LA_TOILE, 1);
 
     const corrige = repere(hote, 'tableau-corrige');
     expect(corrige?.getAttribute('data-correction')).toBe('juste');
@@ -363,7 +515,7 @@ describe('FpTableBuild', () => {
       `Correction — ${PLAN.intitule}`,
     );
     expect(repere(hote, 'tableau')).toBeNull();
-    expect(colonneCorrigee(hote, 'prix')).toEqual(['21,60', '—', '—', '—']);
+    expect(colonneCorrigee(hote, 'prix')).toEqual(PRIX_SAISIS);
     expect(colonneCorrigee(hote, 'indice')).toEqual(['—', '—', '—', '—']);
   });
 
@@ -374,17 +526,11 @@ describe('FpTableBuild', () => {
     }
     hote.plan = buildTableBuildPlan({ id: 'TB-SANS-SYNTHESE', synthese: [] });
     expect(repere(hote, 'totaux')).not.toBeNull();
+    expect(reperes(hote, 'total').map((total) => total.textContent)).toEqual(['4', '', '', '', '']);
   });
 
   it('F27 · corrige une colonne non donnee par niveau, sans laisser deviner les suivantes', () => {
-    projeterAuPresentateur(
-      hote,
-      [
-        { rang: 0, cle: 'prix', valeur: 21.6 },
-        { rang: 0, cle: 'indice', valeur: 108 },
-      ],
-      1,
-    );
+    projeterAuPresentateur(hote, CORRIGE_DE_LA_TOILE, 1);
     const premieres = (): (string | undefined)[] =>
       ['prix', 'coef', 'indice', 'evolution'].map((cle) => colonneCorrigee(hote, cle)[0]);
 
@@ -404,17 +550,18 @@ describe('FpTableBuild', () => {
 
   it('RET-31 · sert a l etudiant le meme tableau corrige sous sa grille de saisie', () => {
     toutSaisir(hote);
-    hote.corrige = ATTENDUS_FORMATEUR;
+    hote.corrige = CORRIGE_DE_LA_TOILE;
     hote.etayage = 2;
 
     expect(repere(hote, 'tableau')).not.toBeNull();
     expect(repere(hote, 'tableau-corrige')?.querySelectorAll('input').length).toBe(0);
-    expect(colonneCorrigee(hote, 'prix')).toEqual(['21,60', '—', '—', '—']);
+    expect(colonneCorrigee(hote, 'prix')).toEqual(PRIX_SAISIS);
+    expect(colonneCorrigee(hote, 'indice')).toEqual(['—', '—', '—', '—']);
     expect(cellule(hote, 0, 'prix').value).toBe(PRIX_SAISIS[0]);
   });
 
   it('partage le meme tableau entre les roles et retire champs et actions au presentateur', () => {
-    toutSaisir(hote);
+    toutSaisirEtServir(hote);
     for (const role of ROLES) {
       hote.setAttribute('data-cours-role', role);
       expect(hote.shadowRoot?.querySelector('caption')?.textContent?.trim())
@@ -458,17 +605,24 @@ describe('FpTableBuild', () => {
     });
   }
 
-  it('echappe le html injecte dans l intitule et les libelles de ligne', () => {
+  it('echappe le html injecte dans l intitule, les libelles de ligne et les valeurs servies', () => {
     hote.plan = buildTableBuildPlan({
       id: 'b2-01-xss',
       intitule: CHARGE_XSS,
       libellesLignes: [CHARGE_XSS],
+      tableauInitial: buildTableauEvalue({
+        lignes: [{ rang: 0, valeurs: { taux: { valeur: 8, affichage: CHARGE_XSS } } }],
+      }),
     });
     expect(hote.shadowRoot?.querySelector('img')).toBeNull();
     expect(hote.shadowRoot?.querySelector('caption')?.textContent?.trim()).toBe(CHARGE_XSS);
+    expect(colonneAffichee(hote, 'taux')[0]).toBe(CHARGE_XSS);
   });
 
   describe('table de verite (colonnes booleennes)', () => {
+    const P = [1, 1, 0, 0];
+    const Q = [1, 0, 1, 0];
+
     function choisir(rang: number, cle: string, valeur: '1' | '0'): void {
       const choix = hote.shadowRoot?.querySelector<HTMLSelectElement>(
         `select[data-rang="${rang}"][data-cle="${cle}"]`,
@@ -483,6 +637,30 @@ describe('FpTableBuild', () => {
     function toutChoisir(): void {
       ['1', '0', '0', '0'].forEach((v, rang) => choisir(rang, 'pEtQ', v as '1' | '0'));
       ['1', '1', '1', '0'].forEach((v, rang) => choisir(rang, 'pOuQ', v as '1' | '0'));
+    }
+
+    function servie(valeur: number | null): ValeurAffichee {
+      return { valeur, affichage: valeur === null ? '—' : String(valeur) };
+    }
+
+    function tableDeVerite(
+      pEtQ: readonly (number | null)[],
+      pOuQ: readonly (number | null)[],
+    ): TableauEvalue {
+      return buildTableauEvalue({
+        lignes: P.map((p, rang) => ({
+          rang,
+          valeurs: {
+            p: servie(p),
+            q: servie(Q[rang]),
+            pEtQ: servie(pEtQ[rang] ?? null),
+            pOuQ: servie(pOuQ[rang] ?? null),
+          },
+        })),
+        totaux: {},
+        synthese: [],
+        soldeFinal: null,
+      });
     }
 
     beforeEach(() => {
@@ -503,10 +681,21 @@ describe('FpTableBuild', () => {
       expect(repere(hote, 'totaux')).toBeNull();
     });
 
-    it('envoie 1 pour V et 0 pour F', () => {
+    it('F-37 · un choix V ou F demande aussitot l evaluation du tableau', () => {
+      const demandes = demandesDEvaluation(hote);
+      choisir(0, 'pEtQ', '1');
+
+      expect(demandes.map((demande) => demande['saisies'])).toEqual([
+        [{ rang: 0, cle: 'pEtQ', saisie: '1' }],
+      ]);
+    });
+
+    it('envoie 1 pour V et 0 pour F, tels que le back les a lus', () => {
       const recus = envois(hote);
+      const demandes = demandesDEvaluation(hote);
       toutChoisir();
       cliquer(hote, 'valider');
+      servirLaDerniere(hote, demandes, tableDeVerite([1, 0, 0, 0], [1, 1, 1, 0]));
 
       expect(recus).toHaveSize(1);
       expect(recus[0]).toEqual(
@@ -528,24 +717,28 @@ describe('FpTableBuild', () => {
 
     it('refuse l envoi tant qu une case reste sans V ni F', () => {
       const recus = envois(hote);
+      const demandes = demandesDEvaluation(hote);
       choisir(0, 'pEtQ', '1');
       cliquer(hote, 'valider');
+      servirLaDerniere(hote, demandes, tableDeVerite([1], []));
 
       expect(recus).toEqual([]);
       expect(texteDe(hote, 'retour')).toBe('Complétez chaque cellule à saisir avant de valider');
     });
 
-    it('projette le corrige en V et F au niveau 2', () => {
+    it('projette le corrige servi en V et F au niveau 2', () => {
       projeterAuPresentateur(
         hote,
-        [
-          { rang: 0, cle: 'pOuQ', valeur: 1 },
-          { rang: 3, cle: 'pOuQ', valeur: 0 },
-        ],
+        {
+          type: 'tableau',
+          attendus: [{ rang: 0, cle: 'pOuQ', valeur: 1 }],
+          tableauCorrige: tableDeVerite([1, 0, 0, 0], [1, 1, 1, 0]),
+        },
         2,
       );
 
-      expect(colonneCorrigee(hote, 'pOuQ')).toEqual(['V', '—', '—', 'F']);
+      expect(colonneCorrigee(hote, 'pEtQ')).toEqual(['V', 'F', 'F', 'F']);
+      expect(colonneCorrigee(hote, 'pOuQ')).toEqual(['V', 'V', 'V', 'F']);
     });
 
     it('imprime sur papier « V / F » a entourer dans chaque case a saisir', () => {
@@ -558,8 +751,8 @@ describe('FpTableBuild', () => {
   });
 
   it('couvre par une regle de la feuille chaque classe fp emise', () => {
-    toutSaisir(hote);
-    hote.corrige = ATTENDUS_FORMATEUR;
+    toutSaisirEtServir(hote);
+    hote.corrige = CORRIGE_DE_LA_TOILE;
     hote.etayage = 2;
     expect(classesEmises(hote).size).toBeGreaterThanOrEqual(CLASSES_ATTENDUES);
     expect(classesOrphelines(hote, 'table-build')).toEqual([]);
@@ -572,6 +765,10 @@ describe('FpTableBuild sur les tables des cours servis', () => {
       .filter((ecran) => ecran.type === 'fp-table-build')
       .map((ecran) => ({ id: ecran.id, plan: ecran.donnees?.['plan'] as TableBuildPlanPublic })),
   );
+  const VERITES = new Map<number | null, string>([
+    [1, 'V'],
+    [0, 'F'],
+  ]);
   const seDeduit = (plan: TableBuildPlanPublic): boolean =>
     plan.colonnes.some((colonne) => colonne.role === 'deduite');
 
@@ -588,25 +785,50 @@ describe('FpTableBuild sur les tables des cours servis', () => {
       .map((ecran) => ({
         id: ecran.id,
         plan: ecran.donnees?.['plan'] as TableBuildPlanPublic,
-        attendus: ecran.corrigeEcran?.type === 'tableau' ? [...ecran.corrigeEcran.attendus] : [],
+        corrige: ecran.corrigeEcran?.type === 'tableau' ? ecran.corrigeEcran : null,
       })),
   );
 
-  it('corrige chaque table servie par ses attendus', () => {
+  it('corrige chaque table servie par ses attendus et son tableau corrige', () => {
     expect(TABLES_CORRIGEES.length).toBe(TABLES_SERVIES.length);
-    for (const { id, attendus } of TABLES_CORRIGEES) {
-      expect(attendus.length).withContext(id).toBeGreaterThan(0);
+    for (const { id, corrige } of TABLES_CORRIGEES) {
+      expect(corrige?.attendus.length ?? 0)
+        .withContext(id)
+        .toBeGreaterThan(0);
+      expect(corrige?.tableauCorrige.lignes.length ?? 0)
+        .withContext(id)
+        .toBeGreaterThan(0);
     }
   });
 
-  for (const { id, plan, attendus } of TABLES_CORRIGEES) {
+  for (const { id, plan } of TABLES_SERVIES) {
+    it(`F-37 · ${id} : affiche chaque donnee du tableau initial servi, sans rien calculer`, () => {
+      const table = creerBrique<FpTableBuild>('fp-table-build', (brique) => {
+        brique.plan = plan;
+      });
+      for (const colonne of plan.colonnes.filter(({ role }) => role !== 'saisie')) {
+        expect(colonneAffichee(table, colonne.cle))
+          .withContext(colonne.cle)
+          .toEqual(
+            plan.tableauInitial.lignes.map(({ valeurs }) =>
+              colonne.format === 'booleen'
+                ? (VERITES.get(valeurs[colonne.cle].valeur) ?? '—')
+                : valeurs[colonne.cle].affichage,
+            ),
+          );
+      }
+      table.remove();
+    });
+  }
+
+  for (const { id, plan, corrige } of TABLES_CORRIGEES) {
     it(`${id} : chaque niveau corrige la colonne non donnee suivante, le solde a la derniere`, () => {
       const aCorriger = plan.colonnes.filter(({ role }) => role !== 'donnee').map(({ cle }) => cle);
       const aSolde = plan.colonnes.some(({ soldeDe }) => soldeDe !== undefined);
       const table = creerBrique<FpTableBuild>('fp-table-build', (brique) => {
         brique.plan = plan;
       });
-      projeterAuPresentateur(table, attendus, aCorriger.length);
+      projeterAuPresentateur(table, corrige, aCorriger.length);
       const completes = aCorriger.map((cle) => colonneCorrigee(table, cle));
 
       completes.forEach((colonne, rang) =>

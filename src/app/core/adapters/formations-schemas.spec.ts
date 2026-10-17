@@ -69,6 +69,32 @@ describe('Schémas stricts des réponses des formations (L2b-SCHEMAS-ROUTES)', (
       ]);
     });
 
+    const MAXIMUMS_DE_TENTATIVES_REFUSES: readonly (readonly [string, unknown])[] = [
+      ['nul', 0],
+      ['négatif', -1],
+      ['décimal', 2.5],
+      ['infini', Number.POSITIVE_INFINITY],
+      ['NaN', Number.NaN],
+      ['écrit en chaîne', '3'],
+      ['absent', undefined],
+      ['au-delà des entiers sûrs (1e21)', 1e21],
+      ['égal à 2^53, premier entier non sûr', 2 ** 53],
+    ];
+
+    for (const [cas, tentativesMax] of MAXIMUMS_DE_TENTATIVES_REFUSES) {
+      it(`F-29 · refuse un coffre dont le maximum de tentatives servi est ${cas}`, () => {
+        const fil = copieDuFil('B2-03');
+        const rang = fil.sujet.ecrans.findIndex((ecran) => ecran['type'] === 'fp-escape');
+        const donnees = fil.sujet.ecrans[rang]['donnees'] as { parcours: Record<string, unknown> };
+        donnees.parcours['tentativesMax'] = tentativesMax;
+
+        expect(rang).toBeGreaterThanOrEqual(0);
+        expect([
+          ...new Set(ecarts(sujetServi, fil.sujet).map((ecart) => ecart.split(' ')[0])),
+        ]).toEqual([`ecrans.${rang}.donnees.parcours.tentativesMax`]);
+      });
+    }
+
     it('refuse des données privées des métadonnées de leur brique', () => {
       const fil = copieDuFil('B2-03');
       const donnees = fil.sujet.ecrans[0]['donnees'] as { recit: Record<string, unknown> };

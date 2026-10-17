@@ -1,4 +1,4 @@
-import type { QuestionRevelee } from '../../content/types';
+import type { FeuilleEvaluee, QuestionRevelee, TableauEvalue } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { chaineDe, estChaineOuNul, estObjet } from '../core/valeurs';
 
@@ -22,7 +22,7 @@ export interface VerdictDeProduction {
   readonly neSaitPas: boolean;
 }
 
-export interface VerdictDeTentative {
+export interface VerdictDeTentative extends EtatDesEnigmes {
   readonly parcoursId: string;
   readonly enigmeId: string;
   readonly correcte: boolean;
@@ -30,10 +30,30 @@ export interface VerdictDeTentative {
   readonly tentativesRestantes: number;
 }
 
-export interface ProgressionDesEnigmes {
+export type EtatEnigme = 'resolue' | 'epuisee' | 'ouverte' | 'verrouillee';
+
+export interface EtatDesEnigmes {
+  readonly etats: Readonly<
+    Record<string, { readonly etat: EtatEnigme; readonly tentativesRestantes: number }>
+  >;
+  readonly enigmeOuverte: string | null;
+  readonly acheve: boolean;
+}
+
+export interface ProgressionDesEnigmes extends EtatDesEnigmes {
   readonly parcoursId: string;
   readonly resolues: readonly { readonly enigmeId: string; readonly fragment: string }[];
   readonly tentativesRestantes: Readonly<Record<string, number>>;
+}
+
+export interface EvaluationDeFeuille {
+  readonly rang: number;
+  readonly evaluee: FeuilleEvaluee;
+}
+
+export interface EvaluationDeTableau {
+  readonly rang: number;
+  readonly evalue: TableauEvalue;
 }
 
 export interface StrategieServie {

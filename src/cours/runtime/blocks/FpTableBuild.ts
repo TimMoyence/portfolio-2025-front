@@ -1,14 +1,15 @@
-import { evaluerExpression, lireNombreSaisi } from 'portfolio-2025-partage/formule';
+import type { TableauEvalue, ValeurAffichee } from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, LECTURE_SEULE, safeHtml, VIDE } from '../core/html';
-import { enFrancais } from '../core/typographie';
-import { avecUnite, entierBorne, estMembre } from '../core/valeurs';
-import { FpProductionEtayee, type PlanEtaye, copierLEnonce } from './production';
-import { type DetailDeVerdict, marqueDeCorrection } from './retours';
+import { entierBorne, estMembre, estObjet, estTexteNonVide } from '../core/valeurs';
+import { FpProductionEvaluee, type PlanEtaye, copierLEnonce, memesSaisies } from './production';
+import { type DetailDeVerdict, type EvaluationDeTableau, marqueDeCorrection } from './retours';
 
 export type RoleColonne = 'donnee' | 'saisie' | 'deduite';
 
 type RenduDuTableau = 'saisie' | 'lecture' | 'correction';
+
+type Saisies = Readonly<Record<string, string>>;
 
 export interface TableColonne {
   readonly cle: string;
@@ -38,6 +39,7 @@ export interface TableBuildPlanPublic extends PlanEtaye {
   readonly parametres: Readonly<Record<string, number>>;
   readonly colonnes: readonly TableColonne[];
   readonly synthese: readonly TableSynthese[];
+  readonly tableauInitial: TableauEvalue;
 }
 
 interface SaisieDeTableau {
@@ -46,12 +48,8 @@ interface SaisieDeTableau {
   readonly valeur: number;
 }
 
-interface LigneBatie {
-  readonly rang: number;
-  readonly valeurs: Readonly<Record<string, number>>;
-}
-
 const TIRET = '—';
+const ABSENTE: ValeurAffichee = { valeur: null, affichage: TIRET };
 const PREFIXE_COLONNE = 'fp-table-build-col-';
 const PREFIXE_LIGNE = 'fp-table-build-ligne-';
 const STYLE_CELLULE = 'fp-table-build__cellule fp-montant';
@@ -63,10 +61,6 @@ const MENTIONS_DE_ROLE: Readonly<Record<Exclude<RoleColonne, 'donnee'>, string>>
   saisie: 'table-build-a-saisir',
   deduite: 'table-build-deduite',
 };
-
-function lireMontant(brut: string): number {
-  return lireNombreSaisi(brut) ?? Number.NaN;
-}
 
 function bornerDecimales(decimales: number): number {
   return entierBorne(decimales, 0, DECIMALES_MAX, 2);
@@ -103,16 +97,27 @@ export function enonceDeCellule(
   return `${intitule} — ${libelleDeLigne(libellesLignes, rang)}`;
 }
 
-function capitaliser(cle: string): string {
-  return cle.charAt(0).toUpperCase() + cle.slice(1);
-}
-
 function nombresFinis(source: Readonly<Record<string, number>>): Record<string, number> {
   return Object.fromEntries(Object.entries(source).filter(([, valeur]) => Number.isFinite(valeur)));
 }
 
 function estBooleenne(colonne: TableColonne): boolean {
   return colonne.format === 'booleen';
+}
+
+function valeurServie(tableau: TableauEvalue, rang: number, cle: string): ValeurAffichee {
+  const valeurs = tableau.lignes.find((ligne) => ligne.rang === rang)?.valeurs;
+  return valeurs !== undefined && Object.hasOwn(valeurs, cle) ? valeurs[cle] : ABSENTE;
+}
+
+function tableauCorrigeDe(corrige: unknown): TableauEvalue | null {
+  if (!estObjet(corrige) || corrige['type'] !== 'tableau') {
+    return null;
+  }
+  const tableau = corrige['tableauCorrige'];
+  return estObjet(tableau) && Array.isArray(tableau['lignes'])
+    ? (tableau as unknown as TableauEvalue)
+    : null;
 }
 
 function copierColonne(colonne: TableColonne): TableColonne {
@@ -145,18 +150,26 @@ function copierPlan(source: TableBuildPlanPublic): TableBuildPlanPublic {
       ...element,
       decimales: bornerDecimales(element.decimales),
     })),
+    tableauInitial: source.tableauInitial,
   };
 }
 
-export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, SaisieDeTableau> {
+export class FpTableBuild extends FpProductionEvaluee<
+  TableBuildPlanPublic,
+  SaisieDeTableau,
+  EvaluationDeTableau,
+  null
+> {
   protected readonly evenementDeSoumission = 'fp-table-build-submit';
+  protected readonly evenementDEvaluation = 'fp-table-build-evaluation';
   protected readonly bloc = 'table-build';
   protected readonly lectureDuCorrige = {
     type: 'tableau',
     champs: { rang: 'number', cle: 'string', valeur: 'number' },
   } as const;
-  private tapees: Record<string, string> = {};
+  private tapees: Saisies = {};
   private suivie: string | null = null;
+  private evalue: TableauEvalue | null = null;
 
   set plan(valeur: TableBuildPlanPublic | null) {
     this.poserLePlan(valeur, copierPlan);
@@ -164,6 +177,14 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
 
   get plan(): TableBuildPlanPublic | null {
     return this.interne;
+  }
+
+  protected recevoirLEvaluation(valeur: EvaluationDeTableau): void {
+    this.evalue = valeur.evalue;
+  }
+
+  protected validerApresEvaluation(): void {
+    this.valider();
   }
 
   protected reprendreLeBrouillon(brouillon: Readonly<Record<string, unknown>>): boolean {
@@ -174,40 +195,36 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
           saisies.has(entree[0]) && typeof entree[1] === 'string',
       ),
     );
+    this.demanderSiNouvelles();
     return true;
   }
 
   protected scene(plan: TableBuildPlanPublic): EscapedHtml {
-    const lignes = this.corrigeVisible()
-      ? this.batir((rang, cle) => this.attenduDe(rang, cle))
-      : this.batir();
+    const corrige = this.corrigeVisible();
+    const tableau = corrige ?? this.tableauCourant(plan);
     return safeHtml`
       <section class="fp-carte fp-scene fp-table-build__atelier">
         ${this.consignes(plan)}
-        ${this.tableau(lignes, this.corrigeVisible() ? 'correction' : 'lecture')}
-        ${this.corrigeVisible() && !this.toutCorrige() ? VIDE : this.soldeFinal(lignes)}
+        ${this.tableau(tableau, corrige === null ? 'lecture' : 'correction')}
+        ${corrige !== null && !this.toutCorrige() ? VIDE : this.soldeFinal(tableau)}
       </section>
     `;
   }
 
   protected atelier(plan: TableBuildPlanPublic): EscapedHtml {
-    const lignes = this.batir();
+    const tableau = this.tableauCourant(plan);
+    const corrige = this.corrigeVisible();
     return safeHtml`
       <section class="fp-carte fp-scene fp-table-build__atelier">
         <p class="fp-table-build__consigne">${escapeHtml(this.texte(this.consigne()))}</p>
         ${this.consignes(plan)}
-        ${this.tableau(lignes, 'saisie')}
-        ${this.soldeFinal(lignes)}
-        ${this.synthese(lignes)}
+        ${this.tableau(tableau, 'saisie')}
+        ${this.soldeFinal(tableau)}
+        ${this.synthese(tableau)}
         ${this.actionsDeProduction()}
         ${this.suiviDeProduction(
           { justes: this.lignesJustes(), total: this.lignesVerifiees() },
-          this.corrigeVisible()
-            ? this.tableau(
-                this.batir((rang, cle) => this.attenduDe(rang, cle)),
-                'correction',
-              )
-            : VIDE,
+          corrige === null ? VIDE : this.tableau(corrige, 'correction'),
         )}
       </section>
     `;
@@ -215,7 +232,7 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
 
   protected brancherLAtelier(racine: ShadowRoot): void {
     for (const champ of racine.querySelectorAll<HTMLInputElement | HTMLSelectElement>(
-      '[data-role="saisie"]',
+      '[data-role]',
     )) {
       this.brancher(champ);
     }
@@ -228,10 +245,16 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
   protected effacerLaSaisie(): void {
     this.relacherLaSaisie();
     this.tapees = {};
+    this.evalue = null;
+    this.repartirDe(this.tapees);
   }
 
-  private corrigeVisible(): boolean {
-    return this.correction >= 1 && this.attendus.length > 0;
+  private tableauCourant(plan: TableBuildPlanPublic): TableauEvalue {
+    return this.evalue ?? plan.tableauInitial;
+  }
+
+  private corrigeVisible(): TableauEvalue | null {
+    return this.correction >= 1 ? tableauCorrigeDe(this.corrigeServi) : null;
   }
 
   private colonneCorrigee(colonne: TableColonne): boolean {
@@ -245,18 +268,17 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     return this.correction >= colonnesACorriger({ colonnes: this.colonnes() }).length;
   }
 
-  private attenduDe(rang: number, cle: string): number {
-    return (
-      this.attendus.find((attendu) => attendu.rang === rang && attendu.cle === cle)?.valeur ??
-      Number.NaN
-    );
-  }
-
   private brancher(champ: HTMLInputElement | HTMLSelectElement): void {
     const cle = cleDeCellule(champ.dataset['rang'] ?? '', champ.dataset['cle'] ?? '');
-    champ.disabled = !this.celluleAccessible(cle);
-    champ.addEventListener('input', () => this.noter(cle, champ.value));
-    if (cle === this.suivie && this.celluleAccessible(cle)) {
+    champ.addEventListener('focus', () => this.rejoindre(cle));
+    if (champ.dataset['role'] === 'saisie') {
+      champ.disabled = !this.celluleAccessible(cle);
+      champ.addEventListener('input', () =>
+        this.noter(cle, champ.value, champ instanceof HTMLSelectElement),
+      );
+      champ.addEventListener('keydown', (evenement) => this.auClavier(evenement));
+    }
+    if (cle === this.suivie && !champ.disabled) {
       champ.focus();
       if (champ instanceof HTMLInputElement) {
         champ.setSelectionRange(champ.value.length, champ.value.length);
@@ -264,13 +286,45 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     }
   }
 
-  private noter(cle: string, valeur: string): void {
+  private rejoindre(cle: string): void {
+    if (cle === this.suivie) {
+      return;
+    }
+    this.suivie = cle;
+    this.demanderSiNouvelles();
+  }
+
+  private auClavier(evenement: Event): void {
+    if (!(evenement instanceof KeyboardEvent) || evenement.key !== 'Enter') {
+      return;
+    }
+    evenement.preventDefault();
+    this.demanderSiNouvelles();
+  }
+
+  private noter(cle: string, valeur: string, aussitot: boolean): void {
     if (!this.celluleAccessible(cle)) {
       return;
     }
     this.tapees = { ...this.tapees, [cle]: valeur };
     this.suivie = cle;
     this.noterLaSaisie(cle, { ...this.tapees });
+    if (aussitot) {
+      this.demanderSiNouvelles();
+    }
+  }
+
+  private demanderSiNouvelles(): void {
+    if (!memesSaisies(this.tapees, this.saisiesDemandees)) {
+      this.demanderLEvaluation(this.tapees, null, { saisies: this.saisiesTapees() });
+    }
+  }
+
+  private saisiesTapees(): { rang: number; cle: string; saisie: string }[] {
+    return this.cellules().flatMap(({ rang, colonne }) => {
+      const saisie = this.tapees[cleDeCellule(rang, colonne.cle)] ?? '';
+      return estTexteNonVide(saisie) ? [{ rang, cle: colonne.cle, saisie }] : [];
+    });
   }
 
   private colonnes(): readonly TableColonne[] {
@@ -283,102 +337,35 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
       : 'table-build-consigne-saisie';
   }
 
+  private cellules(): readonly { readonly rang: number; readonly colonne: TableColonne }[] {
+    return saisiesDuPlan({ echeances: this.interne?.echeances ?? 0, colonnes: this.colonnes() });
+  }
+
   private cellulesASaisir(): string[] {
-    return saisiesDuPlan({
-      echeances: this.interne?.echeances ?? 0,
-      colonnes: this.colonnes(),
-    }).map(({ rang, colonne }) => cleDeCellule(rang, colonne.cle));
+    return this.cellules().map(({ rang, colonne }) => cleDeCellule(rang, colonne.cle));
   }
 
-  private saisieDe(rang: number, cle: string): number {
-    return lireMontant(this.tapees[cleDeCellule(rang, cle)] ?? '');
+  private rangs(): number[] {
+    return Array.from({ length: this.interne?.echeances ?? 0 }, (_, rang) => rang);
   }
 
-  private variablesDeLaLigne(
-    valeurs: Readonly<Record<string, number>>,
-    precedente: Readonly<Record<string, number>> | null,
-  ): Record<string, number> {
-    const avant = Object.fromEntries(
-      Object.entries(precedente ?? {}).map(([cle, valeur]) => [`avant${capitaliser(cle)}`, valeur]),
-    );
-    return nombresFinis({ ...(this.interne?.parametres ?? {}), ...avant, ...valeurs });
-  }
-
-  private evaluer(formule: string | undefined, variables: Record<string, number>): number {
-    if (formule === undefined) {
-      return Number.NaN;
-    }
-    return evaluerExpression(formule, variables).valeur ?? Number.NaN;
-  }
-
-  private batir(
-    lire: (rang: number, cle: string) => number = (rang, cle) => this.saisieDe(rang, cle),
-  ): LigneBatie[] {
-    const lignes: LigneBatie[] = [];
-    let precedente: Record<string, number> | null = null;
-    for (let rang = 0; rang < (this.interne?.echeances ?? 0); rang += 1) {
-      const valeurs: Record<string, number> = {};
-      for (const colonne of this.colonnes()) {
-        if (colonne.role === 'donnee') {
-          valeurs[colonne.cle] = colonne.valeurs?.[rang] ?? Number.NaN;
-        } else if (colonne.role === 'saisie') {
-          valeurs[colonne.cle] = lire(rang, colonne.cle);
-        }
-      }
-      for (const colonne of this.colonnes().filter((candidate) => candidate.role === 'deduite')) {
-        const formule =
-          rang === 0 && colonne.formuleInitiale !== undefined
-            ? colonne.formuleInitiale
-            : colonne.formule;
-        valeurs[colonne.cle] = this.evaluer(formule, this.variablesDeLaLigne(valeurs, precedente));
-      }
-      lignes.push({ rang, valeurs });
-      precedente = valeurs;
-    }
-    return lignes;
-  }
-
-  private totaux(lignes: readonly LigneBatie[]): Record<string, number> {
-    return Object.fromEntries(
-      this.colonnes()
-        .filter((colonne) => colonne.totalise)
-        .map((colonne) => [
-          colonne.cle,
-          lignes.reduce((cumul, ligne) => cumul + (ligne.valeurs[colonne.cle] ?? Number.NaN), 0),
-        ]),
-    );
-  }
-
-  private variablesDeSynthese(lignes: readonly LigneBatie[]): Record<string, number> {
-    const derniere = lignes.at(-1)?.valeurs ?? {};
-    const dernier = Object.fromEntries(
-      Object.entries(derniere).map(([cle, valeur]) => [`dernier${capitaliser(cle)}`, valeur]),
-    );
-    const totaux = Object.fromEntries(
-      Object.entries(this.totaux(lignes)).map(([cle, valeur]) => [
-        `total${capitaliser(cle)}`,
-        valeur,
-      ]),
-    );
-    return nombresFinis({ ...(this.interne?.parametres ?? {}), ...dernier, ...totaux });
-  }
-
-  private tableau(lignes: readonly LigneBatie[], rendu: RenduDuTableau): EscapedHtml {
+  private tableau(tableau: TableauEvalue, rendu: RenduDuTableau): EscapedHtml {
     const intitule =
       rendu === 'correction'
         ? `${this.texte('worked-correction')} — ${this.interne?.intitule ?? ''}`
         : (this.interne?.intitule ?? '');
     const marque = marqueDeCorrection(rendu === 'correction' ? true : null);
+    const rangs = this.rangs();
     return safeHtml`
       ${dansUnDefileur(safeHtml`
         <table class="fp-table-build__tableau" data-testid="${escapeHtml(rendu === 'correction' ? 'tableau-corrige' : 'tableau')}"${marque}>
           <caption class="fp-table-build__intitule">${escapeHtml(intitule)}</caption>
           <thead><tr>${this.enteteRang()}${this.colonnes().map((colonne) => this.entete(colonne))}</tr></thead>
-          <tbody>${lignes.map((ligne) => this.ligne(ligne, rendu))}</tbody>
-          <tfoot>${this.ligneDesTotaux(lignes)}</tfoot>
+          <tbody>${rangs.map((rang) => this.ligne(tableau, rang, rendu))}</tbody>
+          <tfoot>${this.ligneDesTotaux(tableau, rendu)}</tfoot>
         </table>
       `)}
-      ${lignes.length === 0 ? this.vide() : VIDE}
+      ${rangs.length === 0 ? this.vide() : VIDE}
     `;
   }
 
@@ -406,11 +393,11 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     return this.interne?.libellesLignes ?? [];
   }
 
-  private ligne(ligne: LigneBatie, rendu: RenduDuTableau): EscapedHtml {
+  private ligne(tableau: TableauEvalue, rang: number, rendu: RenduDuTableau): EscapedHtml {
     return safeHtml`
-      <tr class="fp-table-build__ligne" data-testid="ligne" data-rang="${ligne.rang}">
-        <th class="${escapeHtml(STYLE_RANG)}" scope="row" id="${escapeHtml(PREFIXE_LIGNE + ligne.rang)}">${escapeHtml(libelleDeLigne(this.libellesLignes(), ligne.rang))}</th>
-        ${this.colonnes().map((colonne) => this.cellule(colonne, ligne, rendu))}
+      <tr class="fp-table-build__ligne" data-testid="ligne" data-rang="${rang}">
+        <th class="${escapeHtml(STYLE_RANG)}" scope="row" id="${escapeHtml(PREFIXE_LIGNE + rang)}">${escapeHtml(libelleDeLigne(this.libellesLignes(), rang))}</th>
+        ${this.colonnes().map((colonne) => this.cellule(colonne, rang, valeurServie(tableau, rang, colonne.cle), rendu))}
       </tr>
     `;
   }
@@ -419,29 +406,41 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     return this.detailDe(cleDeCellule(rang, cle));
   }
 
-  private cellule(colonne: TableColonne, ligne: LigneBatie, rendu: RenduDuTableau): EscapedHtml {
-    const portes = `${PREFIXE_COLONNE}${colonne.cle} ${PREFIXE_LIGNE}${ligne.rang}`;
+  private cellule(
+    colonne: TableColonne,
+    rang: number,
+    valeur: ValeurAffichee,
+    rendu: RenduDuTableau,
+  ): EscapedHtml {
+    const portes = `${PREFIXE_COLONNE}${colonne.cle} ${PREFIXE_LIGNE}${rang}`;
     const saisie = rendu === 'saisie';
-    const contenu = saisie ? this.champ(colonne, ligne) : this.lecture(colonne, ligne, rendu);
-    const detail = saisie ? this.detailDeLaCellule(ligne.rang, colonne.cle) : null;
+    const contenu = saisie
+      ? this.champ(colonne, rang, valeur)
+      : this.lecture(colonne, rang, valeur, rendu);
+    const detail = saisie ? this.detailDeLaCellule(rang, colonne.cle) : null;
     const etat = detail === null ? VIDE : this.etatDuDetail(detail);
     return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}" headers="${escapeHtml(portes)}" ${etat}>${contenu}</td>`;
   }
 
-  private lecture(colonne: TableColonne, ligne: LigneBatie, rendu: RenduDuTableau): EscapedHtml {
-    const masquee = rendu === 'correction' && !this.colonneCorrigee(colonne);
-    const affichee = masquee ? TIRET : this.valeurAffichee(colonne, ligne);
-    return safeHtml`<span data-testid="cellule" data-rang="${ligne.rang}" data-cle="${escapeHtml(colonne.cle)}">${escapeHtml(affichee)}</span>`;
+  private masquee(colonne: TableColonne, rendu: RenduDuTableau): boolean {
+    return rendu === 'correction' && !this.colonneCorrigee(colonne);
   }
 
-  private valeurAffichee(colonne: TableColonne, ligne: LigneBatie): string {
-    const valeur = ligne.valeurs[colonne.cle] ?? Number.NaN;
-    return estBooleenne(colonne)
-      ? this.valeurDeVerite(colonne, valeur)
-      : enFrancais(valeur, colonne.decimales);
+  private lecture(
+    colonne: TableColonne,
+    rang: number,
+    valeur: ValeurAffichee,
+    rendu: RenduDuTableau,
+  ): EscapedHtml {
+    const affichee = this.masquee(colonne, rendu) ? TIRET : this.affichage(colonne, valeur);
+    return safeHtml`<span data-testid="cellule" data-rang="${rang}" data-cle="${escapeHtml(colonne.cle)}">${escapeHtml(affichee)}</span>`;
   }
 
-  private valeurDeVerite(colonne: TableColonne, valeur: number): string {
+  private affichage(colonne: TableColonne, valeur: ValeurAffichee): string {
+    return estBooleenne(colonne) ? this.valeurDeVerite(colonne, valeur.valeur) : valeur.affichage;
+  }
+
+  private valeurDeVerite(colonne: TableColonne, valeur: number | null): string {
     if (valeur === 1 || valeur === 0) {
       return this.texte(valeur === 1 ? 'table-build-vrai' : 'table-build-faux');
     }
@@ -450,82 +449,71 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
       : TIRET;
   }
 
-  private choixDeVerite(colonne: TableColonne, ligne: LigneBatie, enonce: string): EscapedHtml {
-    const choisie = this.tapees[cleDeCellule(ligne.rang, colonne.cle)] ?? '';
+  private choixDeVerite(colonne: TableColonne, rang: number, enonce: string): EscapedHtml {
+    const choisie = this.tapees[cleDeCellule(rang, colonne.cle)] ?? '';
     const option = (valeur: string, libelle: string): EscapedHtml =>
       safeHtml`<option value="${escapeHtml(valeur)}" ${valeur === choisie ? SELECTIONNEE : VIDE}>${escapeHtml(libelle)}</option>`;
-    return safeHtml`<select class="fp-table-build__choix" data-testid="cellule" data-role="saisie" data-rang="${ligne.rang}" data-cle="${escapeHtml(colonne.cle)}" aria-label="${escapeHtml(enonce)}">${option('', TIRET)}${option('1', this.texte('table-build-vrai'))}${option('0', this.texte('table-build-faux'))}</select>`;
+    return safeHtml`<select class="fp-table-build__choix" data-testid="cellule" data-role="saisie" data-rang="${rang}" data-cle="${escapeHtml(colonne.cle)}" aria-label="${escapeHtml(enonce)}">${option('', TIRET)}${option('1', this.texte('table-build-vrai'))}${option('0', this.texte('table-build-faux'))}</select>`;
   }
 
-  private champ(colonne: TableColonne, ligne: LigneBatie): EscapedHtml {
+  private champ(colonne: TableColonne, rang: number, valeur: ValeurAffichee): EscapedHtml {
     const saisie = colonne.role === 'saisie';
-    const enonce = enonceDeCellule(this.libellesLignes(), ligne.rang, colonne.intitule);
+    const enonce = enonceDeCellule(this.libellesLignes(), rang, colonne.intitule);
     if (saisie && estBooleenne(colonne)) {
-      return this.choixDeVerite(colonne, ligne, enonce);
+      return this.choixDeVerite(colonne, rang, enonce);
     }
     const affichee = saisie
-      ? (this.tapees[cleDeCellule(ligne.rang, colonne.cle)] ?? '')
-      : this.valeurAffichee(colonne, ligne);
-    return safeHtml`<input class="fp-table-build__champ fp-montant" data-testid="cellule" data-role="${escapeHtml(colonne.role)}" data-rang="${ligne.rang}" data-cle="${escapeHtml(colonne.cle)}" type="text" inputmode="decimal" autocomplete="off" aria-label="${escapeHtml(enonce)}" value="${escapeHtml(affichee)}" ${saisie ? VIDE : LECTURE_SEULE}>`;
+      ? (this.tapees[cleDeCellule(rang, colonne.cle)] ?? '')
+      : this.affichage(colonne, valeur);
+    return safeHtml`<input class="fp-table-build__champ fp-montant" data-testid="cellule" data-role="${escapeHtml(colonne.role)}" data-rang="${rang}" data-cle="${escapeHtml(colonne.cle)}" type="text" inputmode="decimal" autocomplete="off" aria-label="${escapeHtml(enonce)}" value="${escapeHtml(affichee)}" ${saisie ? VIDE : LECTURE_SEULE}>`;
   }
 
-  private ligneDesTotaux(lignes: readonly LigneBatie[]): EscapedHtml {
+  private ligneDesTotaux(tableau: TableauEvalue, rendu: RenduDuTableau): EscapedHtml {
     if (
       (this.interne?.synthese.length ?? 0) > 0 ||
       !this.colonnes().some((colonne) => colonne.totalise)
     ) {
       return VIDE;
     }
-    const totaux = this.totaux(lignes);
     return safeHtml`
       <tr class="fp-table-build__totaux" data-testid="totaux">
         <th class="${escapeHtml(STYLE_RANG)}" scope="row">${escapeHtml(this.texte('table-build-totaux'))}</th>
-        ${this.colonnes().map((colonne) => this.celluleDeTotal(colonne, totaux))}
+        ${this.colonnes().map((colonne) => this.celluleDeTotal(colonne, tableau, rendu))}
       </tr>
     `;
   }
 
   private celluleDeTotal(
     colonne: TableColonne,
-    totaux: Readonly<Record<string, number>>,
+    tableau: TableauEvalue,
+    rendu: RenduDuTableau,
   ): EscapedHtml {
-    const total = colonne.totalise ? enFrancais(totaux[colonne.cle], colonne.decimales) : '';
+    const servi = Object.hasOwn(tableau.totaux, colonne.cle)
+      ? tableau.totaux[colonne.cle].affichage
+      : TIRET;
+    const visible = this.masquee(colonne, rendu) ? TIRET : servi;
+    const total = colonne.totalise ? visible : '';
     return safeHtml`<td class="${escapeHtml(STYLE_CELLULE)}" data-testid="total" data-cle="${escapeHtml(colonne.cle)}">${escapeHtml(total)}</td>`;
   }
 
-  private soldeFinal(lignes: readonly LigneBatie[]): EscapedHtml {
-    const colonne = this.colonnes().find((candidate) => candidate.soldeDe !== undefined);
-    const derniere = lignes.at(-1);
-    if (colonne?.soldeDe === undefined || derniere === undefined) {
+  private soldeFinal(tableau: TableauEvalue): EscapedHtml {
+    const avecSolde = this.colonnes().some((colonne) => colonne.soldeDe !== undefined);
+    if (!avecSolde || tableau.soldeFinal === null || this.rangs().length === 0) {
       return VIDE;
     }
-    const reste =
-      (derniere.valeurs[colonne.soldeDe] ?? Number.NaN) -
-      (derniere.valeurs[colonne.cle] ?? Number.NaN);
-    return safeHtml`<p class="fp-table-build__solde fp-montant" data-testid="solde">${escapeHtml(this.texte('table-build-solde'))} ${escapeHtml(enFrancais(reste, colonne.decimales))}</p>`;
+    return safeHtml`<p class="fp-table-build__solde fp-montant" data-testid="solde">${escapeHtml(this.texte('table-build-solde'))} ${escapeHtml(tableau.soldeFinal.affichage)}</p>`;
   }
 
-  private synthese(lignes: readonly LigneBatie[]): EscapedHtml {
+  private synthese(tableau: TableauEvalue): EscapedHtml {
     const elements = this.interne?.synthese ?? [];
     if (elements.length === 0) {
       return VIDE;
     }
-    const variables = this.variablesDeSynthese(lignes);
-    const lignesDeSynthese = elements.map((element) => this.resultatDeSynthese(element, variables));
-    return safeHtml`<section class="fp-table-build__synthese" data-testid="synthese"><h3 class="fp-table-build__titre">${escapeHtml(this.texte('table-build-synthese'))}</h3><dl>${lignesDeSynthese}</dl></section>`;
-  }
-
-  private resultatDeSynthese(
-    element: TableSynthese,
-    variables: Record<string, number>,
-  ): EscapedHtml {
-    const valeur = this.evaluer(element.formule, variables);
-    const formatee = enFrancais(valeur, element.decimales);
-    const affichee =
-      Number.isFinite(valeur) && element.unite !== null
-        ? avecUnite(formatee, element.unite)
-        : formatee;
-    return safeHtml`<div class="fp-table-build__resultat" data-testid="synthese-ligne"><dt>${escapeHtml(element.libelle)}</dt><dd class="fp-montant">${escapeHtml(affichee)}</dd></div>`;
+    const lignes = elements.map(
+      (element, rang) =>
+        safeHtml`<div class="fp-table-build__resultat" data-testid="synthese-ligne"><dt>${escapeHtml(element.libelle)}</dt><dd class="fp-montant">${escapeHtml((tableau.synthese[rang] ?? ABSENTE).affichage)}</dd></div>`,
+    );
+    return safeHtml`<section class="fp-table-build__synthese" data-testid="synthese"><h3 class="fp-table-build__titre">${escapeHtml(this.texte('table-build-synthese'))}</h3><dl>${lignes}</dl></section>`;
   }
 
   private lignesVerifiees(): number {
@@ -544,25 +532,38 @@ export class FpTableBuild extends FpProductionEtayee<TableBuildPlanPublic, Saisi
     return [...parRang.values()].filter(Boolean).length;
   }
 
-  private relever(): SaisieDeTableau[] {
-    return this.cellulesASaisir()
-      .map((cle) => {
-        const [rang, colonne] = cle.split(':');
-        return { rang: Number(rang), cle: colonne, valeur: this.saisieDe(Number(rang), colonne) };
-      })
-      .filter((saisie) => Number.isFinite(saisie.valeur));
+  private relever(tableau: TableauEvalue): SaisieDeTableau[] {
+    return this.cellules().flatMap(({ rang, colonne }) => {
+      const tapee = this.tapees[cleDeCellule(rang, colonne.cle)] ?? '';
+      const { valeur } = valeurServie(tableau, rang, colonne.cle);
+      return estTexteNonVide(tapee) && valeur !== null && Number.isFinite(valeur)
+        ? [{ rang, cle: colonne.cle, valeur }]
+        : [];
+    });
   }
 
   protected valider(): void {
+    if (!this.validable()) {
+      return;
+    }
+    if (this.saisiesTapees().length === 0) {
+      this.refuserLEnvoi(this.texte('production-vide'));
+      return;
+    }
+    if (this.evalueAuPoste() && !memesSaisies(this.tapees, this.saisiesEvaluees)) {
+      this.validationDifferee = true;
+      this.demanderSiNouvelles();
+      return;
+    }
     const plan = this.planAValider();
     if (plan === null) {
       return;
     }
-    const saisies = this.relever();
-    if (saisies.length === 0) {
-      this.refuserLEnvoi(this.texte('production-vide'));
+    if (!this.evalueAuPoste()) {
+      this.conclure({ planId: plan.id, saisies: [] });
       return;
     }
+    const saisies = this.relever(this.tableauCourant(plan));
     if (saisies.length < this.cellulesASaisir().length) {
       this.refuserLEnvoi(this.texte('table-build-cellule-vide'));
       return;

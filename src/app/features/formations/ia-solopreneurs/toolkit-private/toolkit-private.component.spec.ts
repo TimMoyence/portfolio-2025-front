@@ -3,7 +3,6 @@ import { TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing
 import { PLATFORM_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { NEVER, of, throwError } from 'rxjs';
-import type { ToolkitPageData } from '../../../../core/models/toolkit-page.model';
 import { LEAD_MAGNET_PORT } from '../../../../core/ports/lead-magnet.port';
 import {
   buildToolkitPageData,
@@ -16,7 +15,6 @@ interface SetupOptions {
   token?: string | null;
   behaviour?: 'success' | 'error' | 'pending';
   platform?: 'browser' | 'server';
-  page?: ToolkitPageData;
 }
 
 function setup(opts: SetupOptions = {}): {
@@ -24,16 +22,11 @@ function setup(opts: SetupOptions = {}): {
   component: ToolkitPrivateComponent;
   port: ReturnType<typeof createLeadMagnetPortStub>;
 } {
-  const {
-    token = 'valid-token',
-    behaviour = 'success',
-    platform = 'browser',
-    page = buildToolkitPageData(),
-  } = opts;
+  const { token = 'valid-token', behaviour = 'success', platform = 'browser' } = opts;
 
   const port = createLeadMagnetPortStub();
   if (behaviour === 'success') {
-    port.getToolkitByToken.and.returnValue(of(page));
+    port.getToolkitByToken.and.returnValue(of(buildToolkitPageData()));
   } else if (behaviour === 'error') {
     port.getToolkitByToken.and.returnValue(throwError(() => new Error('token invalide')));
   } else {
@@ -106,19 +99,6 @@ describe('ToolkitPrivateComponent', () => {
     expect(headings[0]?.querySelector('em')?.textContent).toContain('débloqué');
     expect(compiled.querySelector('.tkp-table')).not.toBeNull();
     expect(compiled.textContent).toContain('Email de relance');
-  });
-
-  it('n affiche aucun prompt personnalise, meme quand le back le sert encore (LEG-06)', () => {
-    const servieAvecPersonnalisation = {
-      ...buildToolkitPageData(),
-      generatedPrompt: 'Cree une presentation Gamma pour un cabinet de conseil.',
-    };
-    const { fixture } = setup({ page: servieAvecPersonnalisation });
-    const compiled = fixture.nativeElement as HTMLElement;
-
-    expect(compiled.textContent).not.toContain('Cree une presentation Gamma');
-    expect(compiled.textContent).not.toContain('Votre prompt Gamma personnalisé');
-    expect(compiled.querySelector('.tkp-gamma-cta')).toBeNull();
   });
 
   it('devrait copier un texte et afficher le feedback de succes', fakeAsync(() => {

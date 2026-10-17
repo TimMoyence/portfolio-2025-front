@@ -11,7 +11,10 @@ import type {
   EtatParticipant,
   PilotageEcran,
 } from '../../../../cours/content/types';
-import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
+import { noeudsOmbre } from '../../../../testing/banc-de-brique';
+import { briqueMontee, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
+import type { EscapeParcoursPublic } from '../../../../cours/runtime/blocks/FpEscape';
+import type { EtatDesEnigmes, EtatEnigme } from '../../../../cours/runtime/blocks/retours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import {
   champsAntiRobotDe,
@@ -42,15 +45,22 @@ import type { EtatSession } from '../../../../cours/runtime/core/sync';
 import {
   buildEcran,
   buildEcranQuestionnaire,
+  buildFeuilleEvaluee,
   buildRevelationServie,
+  buildSortiesMachine,
+  buildSortiesMachineATrenteAns,
   buildSpacedRappel,
+  buildTableauEvalue,
   buildWorkedExemple,
 } from '../../../../testing/factories/cours.factory';
 import {
   buildCoursContent,
+  buildEtatDesEnigmes,
   buildEtatParticipant,
   buildRattachement,
   buildSpacedQuestionPublique,
+  buildStrategiePublique,
+  buildVerdictTentative,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
 import { buildEnvoiReponse } from '../../../../testing/factories/queue.factory';
@@ -132,6 +142,25 @@ const TENTATIVE_DU_SEUIL: EvenementBrique = {
   reponse: '30000',
   dureeMs: 40000,
 };
+const EVALUATION_A_VINGT_ANS: EvenementBrique = {
+  kind: 'evaluation-machine',
+  screenId: 'ecran-1',
+  reglages: { C: 1000, i: 4, n: 20 },
+};
+const EVALUATION_DE_LA_FEUILLE: EvenementBrique = {
+  kind: 'evaluation-feuille',
+  screenId: 'ecran-1',
+  planId: 'K-TABLEUR-01',
+  rang: 4,
+  demande: { cellules: { C3: '=A3*B3' }, recopie: { de: 'C3' } },
+};
+const EVALUATION_DU_TABLEAU: EvenementBrique = {
+  kind: 'evaluation-tableau',
+  screenId: 'ecran-1',
+  planId: 'b2-01-a4-indice-toile',
+  rang: 4,
+  saisies: [{ rang: 0, cle: 'prix', saisie: '21,6' }],
+};
 const DEFI_DE_LA_DIZAINE: EvenementBrique = {
   kind: 'defi',
   screenId: 'ecran-1',
@@ -145,6 +174,40 @@ const ECRANS_DE_REFLEXION = [...INSTANTANES_DES_COURS_SERVIS].flatMap(
       presentationDe(ecran)?.renderer === 'reflection' ? [{ prefixe, servi, rang }] : [],
     ),
 );
+const COFFRES_SERVIS = [...INSTANTANES_DES_COURS_SERVIS].flatMap(([prefixe, { sujet: servi }]) =>
+  servi.ecrans.flatMap((ecran, rang) =>
+    ecran.type === 'fp-escape'
+      ? [{ prefixe, servi, rang, parcours: ecran.donnees?.['parcours'] as EscapeParcoursPublic }]
+      : [],
+  ),
+);
+
+function etatDeLEnigme(rang: number, ouverte: number): EtatEnigme {
+  if (rang < ouverte) {
+    return 'resolue';
+  }
+  return rang === ouverte ? 'ouverte' : 'verrouillee';
+}
+
+function etatDuCoffre(
+  parcours: EscapeParcoursPublic,
+  ouverte: number,
+  restantesDeLaPremiere: number,
+): EtatDesEnigmes {
+  return {
+    etats: Object.fromEntries(
+      parcours.enigmes.map(({ id }, rang) => [
+        id,
+        {
+          etat: etatDeLEnigme(rang, ouverte),
+          tentativesRestantes: rang === 0 ? restantesDeLaPremiere : parcours.tentativesMax,
+        },
+      ]),
+    ),
+    enigmeOuverte: parcours.enigmes[ouverte]?.id ?? null,
+    acheve: false,
+  };
+}
 const CODE_SAISI = '12 34';
 const CODE_NORMALISE = '1234';
 const ETIQUETTE_BRUTE = 'interets-simples';
@@ -2642,6 +2705,7 @@ describe('CoursEtudiantComponent', () => {
           correcte: true,
           fragment: '7',
           tentativesRestantes: 9,
+          ...buildEtatDesEnigmes(),
         },
       ]);
     });
@@ -2666,14 +2730,84 @@ describe('CoursEtudiantComponent', () => {
       expect(port.lireMonEtat).toHaveBeenCalledTimes(1);
     });
 
+    for (const { prefixe, servi, rang, parcours } of COFFRES_SERVIS) {
+      it(
+        `N-D01 · ${prefixe} ecran ${rang + 1} : l enigme que le serveur relit resolue le reste apres un aller-retour d ecran`,
+        async () => {
+          const [premiere] = parcours.enigmes;
+          sujet = servi;
+          port.lireSujet.and.returnValue(of(sujet));
+          port.tenterEnigme.and.returnValues(
+            of(
+              buildVerdictTentative({
+                correcte: false,
+                fragment: null,
+                tentativesRestantes: parcours.tentativesMax - 1,
+                ...etatDuCoffre(parcours, 0, parcours.tentativesMax - 1),
+              }),
+            ),
+            throwError(() => new ReponseRefusee('deja-repondue', 409)),
+          );
+          const fixture = await rattacherALaSeanceEnCours();
+          await diffuserPuisStabiliser(fixture, { ecranCourant: rang });
+          port.lireMonEtat.and.returnValue(
+            of(
+              buildEtatParticipant({
+                enigmes: [
+                  {
+                    parcoursId: parcours.id,
+                    resolues: [{ enigmeId: premiere.id, fragment: 'A' }],
+                    tentativesRestantes: { [premiere.id]: parcours.tentativesMax - 2 },
+                    ...etatDuCoffre(parcours, 1, parcours.tentativesMax - 2),
+                  },
+                ],
+              }),
+            ),
+          );
+          const tentative = {
+            kind: 'tentative',
+            screenId: servi.ecrans[rang].id,
+            parcoursId: parcours.id,
+            enigmeId: premiere.id,
+            dureeMs: 100,
+          } as const;
+          await emettre(fixture, { ...tentative, reponse: '1' });
+          await emettre(fixture, { ...tentative, reponse: '2' });
+
+          await diffuserPuisStabiliser(fixture, { ecranCourant: rang - 1 });
+          await diffuserPuisStabiliser(fixture, { ecranCourant: rang });
+          const coffre = await briqueMontee(fixture, 'fp-escape');
+          await stabiliserLaVue(fixture);
+
+          expect(
+            noeudsOmbre(coffre, 'enigme')
+              .slice(0, 2)
+              .map((enigme) => enigme.getAttribute('data-etat')),
+          ).toEqual(['resolue', 'ouverte']);
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
+
+    const TENTATIVE_A_REPROPOSER =
+      'Tentative non envoyée : vérifiez la connexion et proposez-la de nouveau';
+    const CELLULE_A_REVALIDER =
+      'Calcul non reçu : vérifiez la connexion et validez de nouveau la cellule';
+
     const ENVOIS_A_REPROPOSER: readonly {
       readonly nature: string;
-      readonly echouer: (refus: ReponseRefusee) => void;
+      readonly echouerUneFois: (refus: ReponseRefusee) => void;
       readonly evenement: EvenementBrique;
+      readonly coupure: string;
+      readonly genre: RetourBrique['kind'];
     }[] = [
       {
         nature: 'tentative d enigme',
-        echouer: (refus) => port.tenterEnigme.and.returnValue(throwError(() => refus)),
+        echouerUneFois: (refus) =>
+          port.tenterEnigme.and.returnValues(
+            throwError(() => refus),
+            of(buildVerdictTentative()),
+          ),
         evenement: {
           kind: 'tentative',
           screenId: 'ecran-1',
@@ -2682,49 +2816,128 @@ describe('CoursEtudiantComponent', () => {
           reponse: '1',
           dureeMs: 100,
         },
+        coupure: TENTATIVE_A_REPROPOSER,
+        genre: 'tentative',
       },
       {
         nature: 'tentative de defi',
-        echouer: (refus) => port.envoyerDefi.and.returnValue(throwError(() => refus)),
-        evenement: {
-          kind: 'defi',
-          screenId: 'ecran-1',
-          defiId: 'D-DEFI-07',
-          texte: 'Une dizaine d annees',
-          dureeMs: 90000,
+        echouerUneFois: (refus) =>
+          port.envoyerDefi.and.returnValues(
+            throwError(() => refus),
+            of({ strategies: [buildStrategiePublique()] }),
+          ),
+        evenement: DEFI_DE_LA_DIZAINE,
+        coupure: TENTATIVE_A_REPROPOSER,
+        genre: 'strategies',
+      },
+      {
+        nature: 'evaluation de la machine (F-37)',
+        echouerUneFois: (refus) =>
+          port.evaluerMachine.and.returnValues(
+            throwError(() => refus),
+            of(buildSortiesMachine()),
+          ),
+        evenement: EVALUATION_A_VINGT_ANS,
+        coupure: 'Calcul non reçu : vérifiez la connexion et réglez de nouveau la machine',
+        genre: 'machine-evaluee',
+      },
+      {
+        nature: 'evaluation de la feuille (F-36)',
+        echouerUneFois: (refus) =>
+          port.evaluerFeuille.and.returnValues(
+            throwError(() => refus),
+            of(buildFeuilleEvaluee()),
+          ),
+        evenement: EVALUATION_DE_LA_FEUILLE,
+        coupure: CELLULE_A_REVALIDER,
+        genre: 'feuille-evaluee',
+      },
+      {
+        nature: 'evaluation du tableau (F-37)',
+        echouerUneFois: (refus) =>
+          port.evaluerTableau.and.returnValues(
+            throwError(() => refus),
+            of(buildTableauEvalue()),
+          ),
+        evenement: EVALUATION_DU_TABLEAU,
+        coupure: CELLULE_A_REVALIDER,
+        genre: 'tableau-evalue',
+      },
+    ];
+
+    for (const { nature, echouerUneFois, evenement, coupure, genre } of ENVOIS_A_REPROPOSER) {
+      for (const { cas, refus, message } of [
+        { cas: 'un 429 par l attente commune', refus: refusLimite(), message: ATTENTE_COMMUNE },
+        {
+          cas: 'une coupure par la connexion a verifier',
+          refus: new ReponseRefusee('reseau', 0),
+          message: coupure,
         },
-      },
-    ];
-
-    const PANNES_PASSAGERES: readonly {
-      readonly cas: string;
-      readonly refus: ReponseRefusee;
-      readonly message: string;
-    }[] = [
-      {
-        cas: 'un 429 par l attente commune',
-        refus: refusLimite(),
-        message: ATTENTE_COMMUNE,
-      },
-      {
-        cas: 'une coupure par la connexion a verifier',
-        refus: new ReponseRefusee('reseau', 0),
-        message: 'Tentative non envoyée : vérifiez la connexion et proposez-la de nouveau',
-      },
-    ];
-
-    for (const { nature, echouer, evenement } of ENVOIS_A_REPROPOSER) {
-      for (const { cas, refus, message } of PANNES_PASSAGERES) {
-        it(`dit d une ${nature} refusee ${cas}`, async () => {
-          echouer(refus);
+      ]) {
+        it(`dit d une ${nature} refusee ${cas}, puis l efface a l envoi suivant`, async () => {
+          echouerUneFois(refus);
           const fixture = await rattacherALaSeanceEnCours();
 
           await emettre(fixture, evenement);
 
           expect(retoursDe(fixture)).toEqual([{ kind: 'refus', motif: 'reseau', message }]);
+
+          await emettre(fixture, evenement);
+
+          expect(genresDe(fixture)).toEqual([genre]);
         });
       }
     }
+
+    it('F-37 · confie l evaluation de la machine au serveur et ne garde que la derniere sortie servie', async () => {
+      const aVingtAns = buildSortiesMachine({ valeurs: { C: 1000, i: 4, n: 20 } });
+      const aTrenteAns = buildSortiesMachineATrenteAns();
+      port.evaluerMachine.and.returnValues(of(aVingtAns), of(aTrenteAns));
+      const fixture = await rattacherALaSeanceEnCours();
+
+      await emettre(fixture, EVALUATION_A_VINGT_ANS);
+      await emettre(fixture, { ...EVALUATION_A_VINGT_ANS, reglages: { C: 1000, i: 4, n: 30 } });
+
+      expect(port.evaluerMachine.calls.allArgs()).toEqual([
+        [SESSION, JETON, 'ecran-1', { C: 1000, i: 4, n: 20 }],
+        [SESSION, JETON, 'ecran-1', { C: 1000, i: 4, n: 30 }],
+      ]);
+      expect(retoursDe(fixture)).toEqual([{ kind: 'machine-evaluee', sorties: aTrenteAns }]);
+    });
+
+    it('F-36 · confie l evaluation de la feuille au serveur et pose la feuille servie avec le rang de sa demande', async () => {
+      const evaluee = buildFeuilleEvaluee({ saisies: { C3: '=A3*B3', C4: '=A4*B4' } });
+      port.evaluerFeuille.and.returnValue(of(evaluee));
+      const fixture = await rattacherALaSeanceEnCours();
+
+      await emettre(fixture, EVALUATION_DE_LA_FEUILLE);
+
+      expect(port.evaluerFeuille).toHaveBeenCalledOnceWith(SESSION, JETON, 'K-TABLEUR-01', {
+        cellules: { C3: '=A3*B3' },
+        recopie: { de: 'C3' },
+      });
+      expect(retoursDe(fixture)).toEqual([
+        { kind: 'feuille-evaluee', planId: 'K-TABLEUR-01', rang: 4, evaluee },
+      ]);
+    });
+
+    it('F-37 · confie l evaluation du tableau au serveur et pose le tableau servi avec le rang de sa demande', async () => {
+      const evalue = buildTableauEvalue({ totaux: {} });
+      port.evaluerTableau.and.returnValue(of(evalue));
+      const fixture = await rattacherALaSeanceEnCours();
+
+      await emettre(fixture, EVALUATION_DU_TABLEAU);
+
+      expect(port.evaluerTableau).toHaveBeenCalledOnceWith(
+        SESSION,
+        JETON,
+        'b2-01-a4-indice-toile',
+        [{ rang: 0, cle: 'prix', saisie: '21,6' }],
+      );
+      expect(retoursDe(fixture)).toEqual([
+        { kind: 'tableau-evalue', planId: 'b2-01-a4-indice-toile', rang: 4, evalue },
+      ]);
+    });
 
     it('envoie la premiere tentative d un defi et pose les strategies servies', async () => {
       const fixture = await rattacherALaSeanceEnCours();

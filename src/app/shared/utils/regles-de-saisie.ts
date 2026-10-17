@@ -40,8 +40,6 @@ export const MOT_DE_PASSE_NEUF = {
 
 export const BORNES_D_UN_NOM: Bornes = { min: 1, max: 50 };
 
-export const BORNES_D_UN_NOM_DU_PROFIL_JUSQU_AU_LOT_2D: Bornes = { ...BORNES_D_UN_NOM, min: 2 };
-
 export const BORNES_D_UN_TELEPHONE: Bornes = { min: 0, max: 30 };
 
 export const BORNES_D_UN_MESSAGE_DE_CONTACT: Bornes = { min: 10, max: 2000 };

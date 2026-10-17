@@ -14,7 +14,7 @@ import {
   buildVerdictDeTentative,
 } from '../../../testing/factories/cours.factory';
 import { FpEscape } from './FpEscape';
-import type { VerdictDeTentative } from './retours';
+import type { EtatDesEnigmes, EtatEnigme, VerdictDeTentative } from './retours';
 
 const PARCOURS = buildEscapeParcours();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
@@ -53,10 +53,54 @@ const DEUX_FRAGMENTS = [
   { enigmeId: 'marge', fragment: 'ES' },
 ] as const;
 
+type EtatServi = readonly [EtatEnigme, number];
+
+function servi(
+  [seuil, marge, tva]: readonly [EtatServi, EtatServi, EtatServi],
+  enigmeOuverte: string | null,
+): EtatDesEnigmes {
+  const ligne = ([etat, tentativesRestantes]: EtatServi) => ({ etat, tentativesRestantes });
+  return {
+    etats: { seuil: ligne(seuil), marge: ligne(marge), tva: ligne(tva) },
+    enigmeOuverte,
+    acheve: enigmeOuverte === null,
+  };
+}
+
+const PARCOURS_ACHEVE_SANS_LA_TVA = servi(
+  [
+    ['resolue', 8],
+    ['resolue', 7],
+    ['epuisee', 0],
+  ],
+  null,
+);
+
+function verdictFaux(verdict: Partial<VerdictDeTentative>): VerdictDeTentative {
+  return buildVerdictDeTentative({ correcte: false, fragment: null, ...verdict });
+}
+
+const A_CHERCHER = 'Ce n’est pas encore cela : relisez l’énoncé et proposez autre chose';
+
+function seuilManqueUneFois(): VerdictDeTentative {
+  return verdictFaux({
+    tentativesRestantes: 9,
+    ...servi(
+      [
+        ['ouverte', 9],
+        ['verrouillee', 10],
+        ['verrouillee', 10],
+      ],
+      'seuil',
+    ),
+  });
+}
+
 function deuxEnigmesResolues(): ReturnType<typeof buildProgressionDesEnigmes> {
   return buildProgressionDesEnigmes({
     resolues: [...DEUX_FRAGMENTS],
     tentativesRestantes: { seuil: 8, marge: 7, tva: 0 },
+    ...PARCOURS_ACHEVE_SANS_LA_TVA,
   });
 }
 
@@ -113,30 +157,78 @@ describe('FpEscape', () => {
     expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 10');
   });
 
-  const MAXIMUMS_REFUSES: readonly (readonly [string, unknown])[] = [
-    ['nul', 0],
-    ['négatif', -1],
-    ['décimal', 2.5],
-    ['infini', Number.POSITIVE_INFINITY],
-    ['NaN', Number.NaN],
-    ['écrit en chaîne', '3'],
-    ['absent', undefined],
-    ['au-delà des entiers sûrs (1e21)', 1e21],
-    ['égal à 2^53, premier entier non sûr', 2 ** 53],
-  ];
-
-  for (const [cas, tentativesMax] of MAXIMUMS_REFUSES) {
-    it(`retombe sur 10 tentatives quand le maximum servi est ${cas}`, () => {
-      hote.parcours = buildEscapeParcours({ tentativesMax: tentativesMax as number });
-
-      expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 10');
-    });
-  }
-
   it('annonce le maximum servi quand c est un entier strictement positif', () => {
     hote.parcours = buildEscapeParcours({ tentativesMax: 3 });
 
     expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 3');
+  });
+
+  it('F-29 · affiche l état, l énigme ouverte et l achèvement que le back sert, même contraires à un recalcul', () => {
+    hote.progression = buildProgressionDesEnigmes({
+      resolues: [],
+      tentativesRestantes: { seuil: 6 },
+      etats: {
+        seuil: { etat: 'epuisee', tentativesRestantes: 6 },
+        marge: { etat: 'verrouillee', tentativesRestantes: 10 },
+        tva: { etat: 'ouverte', tentativesRestantes: 4 },
+      },
+      enigmeOuverte: 'tva',
+      acheve: false,
+    });
+
+    expect(etats(hote)).toEqual(['epuisee', 'verrouillee', 'ouverte']);
+    expect(libelleOmbre(hote, 'enonce')).toBe(PARCOURS.enigmes[2].enonce);
+    expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 4');
+
+    proposer(hote, '2500');
+    hote.tentatives = [
+      verdictFaux({
+        enigmeId: 'tva',
+        tentativesRestantes: 3,
+        etats: {
+          seuil: { etat: 'ouverte', tentativesRestantes: 6 },
+          marge: { etat: 'verrouillee', tentativesRestantes: 10 },
+          tva: { etat: 'epuisee', tentativesRestantes: 3 },
+        },
+        enigmeOuverte: null,
+        acheve: true,
+      }),
+    ];
+
+    expect(etats(hote)).toEqual(['ouverte', 'verrouillee', 'epuisee']);
+    expect(noeudOmbre(hote, 'minuteur')).toBeNull();
+    expect(libelleOmbre(hote, 'code')).toBe('Code final : ···');
+  });
+
+  it('N-D01 · au remontage, une tentative antérieure à la progression servie ne rouvre pas l énigme résolue', () => {
+    hote.progression = buildProgressionDesEnigmes();
+    hote.tentatives = [seuilManqueUneFois()];
+
+    expect(etats(hote)).toEqual(['resolue', 'ouverte', 'verrouillee']);
+    expect(libelleOmbre(hote, 'fragment')).toBe('Fragment du code obtenu : TR');
+    expect(libelleOmbre(hote, 'enonce')).toBe(PARCOURS.enigmes[1].enonce);
+    expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 10');
+    expect(libelleOmbre(hote, 'annonce')).toBe('');
+  });
+
+  it('N-D01 · une progression lue avant la dernière tentative ne défait pas l énigme qu elle a résolue', () => {
+    proposer(hote, '30000');
+    hote.tentatives = [buildVerdictDeTentative()];
+    hote.progression = buildProgressionDesEnigmes({
+      resolues: [],
+      tentativesRestantes: {},
+      ...servi(
+        [
+          ['ouverte', 10],
+          ['verrouillee', 10],
+          ['verrouillee', 10],
+        ],
+        'seuil',
+      ),
+    });
+
+    expect(etats(hote)).toEqual(['resolue', 'ouverte', 'verrouillee']);
+    expect(libelleOmbre(hote, 'enonce')).toBe(PARCOURS.enigmes[1].enonce);
   });
 
   it('imprime sur papier l énoncé de chaque énigme, sans saisie, tentatives, indice ni progression', () => {
@@ -189,21 +281,38 @@ describe('FpEscape', () => {
 
   it('decompte les tentatives sur verdict faux et laisse chercher', () => {
     proposer(hote, '12');
-    hote.tentatives = [
-      buildVerdictDeTentative({ correcte: false, fragment: null, tentativesRestantes: 9 }),
-    ];
+    hote.tentatives = [seuilManqueUneFois()];
 
     expect(etats(hote)[0]).toBe('ouverte');
     expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 9');
-    expect(libelleOmbre(hote, 'annonce')).toBe(
-      'Ce n’est pas encore cela : relisez l’énoncé et proposez autre chose',
-    );
+    expect(libelleOmbre(hote, 'annonce')).toBe(A_CHERCHER);
+  });
+
+  it('N-D01 · une réponse déjà proposée, que le serveur ne décompte pas, reçoit encore son verdict', () => {
+    proposer(hote, '12');
+    hote.tentatives = [seuilManqueUneFois()];
+    proposer(hote, '12');
+    hote.tentatives = [seuilManqueUneFois(), seuilManqueUneFois()];
+
+    expect(libelleOmbre(hote, 'tentatives-restantes')).toBe('Tentatives restantes : 9');
+    expect(libelleOmbre(hote, 'annonce')).toBe(A_CHERCHER);
+    expect(noeudOmbre(hote, 'repondre')?.hasAttribute('disabled')).toBeFalse();
   });
 
   it('ouvre l enigme suivante, sans fragment, quand les tentatives sont epuisees', () => {
     proposer(hote, '12');
     hote.tentatives = [
-      buildVerdictDeTentative({ correcte: false, fragment: null, tentativesRestantes: 0 }),
+      verdictFaux({
+        tentativesRestantes: 0,
+        ...servi(
+          [
+            ['epuisee', 0],
+            ['ouverte', 10],
+            ['verrouillee', 10],
+          ],
+          'marge',
+        ),
+      }),
     ];
     expect(etats(hote)).toEqual(['epuisee', 'ouverte', 'verrouillee']);
     expect(libelleOmbre(hote, 'epuisee')).toBe(
@@ -214,7 +323,7 @@ describe('FpEscape', () => {
   it('ignore une tentative dont le fragment n est ni un texte ni nul', () => {
     proposer(hote, '12');
     const malformee: unknown = {
-      ...buildVerdictDeTentative({ correcte: false, fragment: null, tentativesRestantes: 0 }),
+      ...verdictFaux({ tentativesRestantes: 0 }),
       fragment: 3,
     };
     hote.tentatives = [malformee as VerdictDeTentative];
@@ -224,25 +333,55 @@ describe('FpEscape', () => {
   const ANNONCES_DU_DERNIER_FRAGMENT: readonly (readonly [
     string,
     Parameters<typeof buildProgressionDesEnigmes>[0],
+    EtatServi,
     string,
   ])[] = [
     [
       'dit le code incomplet, et non toutes les énigmes résolues, quand une énigme est épuisée',
-      { tentativesRestantes: { seuil: 8, marge: 0, tva: 10 } },
+      {
+        tentativesRestantes: { seuil: 8, marge: 0, tva: 10 },
+        ...servi(
+          [
+            ['resolue', 8],
+            ['epuisee', 0],
+            ['ouverte', 10],
+          ],
+          'tva',
+        ),
+      },
+      ['epuisee', 0],
       'Parcours terminé sans tous les fragments, le code reste incomplet : TR·OR',
     ],
     [
       'dit toutes les énigmes résolues quand chacune a livré son fragment',
-      { resolues: [...DEUX_FRAGMENTS], tentativesRestantes: { seuil: 8, marge: 7, tva: 10 } },
+      {
+        resolues: [...DEUX_FRAGMENTS],
+        tentativesRestantes: { seuil: 8, marge: 7, tva: 10 },
+        ...servi(
+          [
+            ['resolue', 8],
+            ['resolue', 7],
+            ['ouverte', 10],
+          ],
+          'tva',
+        ),
+      },
+      ['resolue', 7],
       'Toutes les énigmes sont résolues, le code est reconstitué : TRESOR',
     ],
   ];
 
-  for (const [cas, progression, annonce] of ANNONCES_DU_DERNIER_FRAGMENT) {
+  for (const [cas, progression, marge, annonce] of ANNONCES_DU_DERNIER_FRAGMENT) {
     it(`QP-14 · ${cas}`, () => {
       hote.progression = buildProgressionDesEnigmes(progression);
       proposer(hote, '2500');
-      hote.tentatives = [buildVerdictDeTentative({ enigmeId: 'tva', fragment: 'OR' })];
+      hote.tentatives = [
+        buildVerdictDeTentative({
+          enigmeId: 'tva',
+          fragment: 'OR',
+          ...servi([['resolue', 8], marge, ['resolue', 9]], null),
+        }),
+      ];
 
       expect(libelleOmbre(hote, 'annonce')).toBe(annonce);
     });
@@ -252,14 +391,21 @@ describe('FpEscape', () => {
     hote.progression = buildProgressionDesEnigmes({
       resolues: [...DEUX_FRAGMENTS],
       tentativesRestantes: { seuil: 8, marge: 7, tva: 1 },
+      ...servi(
+        [
+          ['resolue', 8],
+          ['resolue', 7],
+          ['ouverte', 1],
+        ],
+        'tva',
+      ),
     });
     proposer(hote, '12');
     hote.tentatives = [
-      buildVerdictDeTentative({
+      verdictFaux({
         enigmeId: 'tva',
-        correcte: false,
-        fragment: null,
         tentativesRestantes: 0,
+        ...PARCOURS_ACHEVE_SANS_LA_TVA,
       }),
     ];
 

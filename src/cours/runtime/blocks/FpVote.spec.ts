@@ -320,10 +320,26 @@ describe('FpVote', () => {
       expect(hote.shadowRoot?.innerHTML).not.toContain(JUMELLE.enonce);
     });
 
+    it('F-29 · affiche la question que le back sert, sans la deduire de la phase', () => {
+      hote.phase = 'revote';
+      hote.questionAffichee = QUESTION.id;
+
+      expect(legende(hote)).toBe(QUESTION.enonce);
+
+      hote.phase = 'vote';
+      hote.questionAffichee = JUMELLE.id;
+
+      expect(legende(hote)).toBe(JUMELLE.enonce);
+    });
+
     it('Q2 · n annonce ni le vote ni le revote, et ne titre aucun des deux histogrammes', () => {
       const rendus: string[] = [];
-      for (const phase of ['vote', 'revote'] as const) {
+      for (const [phase, affichee] of [
+        ['vote', QUESTION],
+        ['revote', JUMELLE],
+      ] as const) {
         hote.phase = phase;
+        hote.questionAffichee = affichee.id;
         expect(marque(hote, 'phase')).withContext(phase).toBeNull();
         rendus.push(hote.shadowRoot?.innerHTML ?? '');
       }
@@ -367,6 +383,7 @@ describe('FpVote', () => {
       );
 
       hote.phase = 'revote';
+      hote.questionAffichee = JUMELLE.id;
 
       expect(legende(hote)).toBe(JUMELLE.enonce);
       expect(options(hote).every((bouton) => !bouton.disabled)).toBeTrue();
@@ -390,6 +407,7 @@ describe('FpVote', () => {
       expect(options(hote).every((bouton) => bouton.disabled)).toBeTrue();
 
       hote.phase = 'revele';
+      hote.questionAffichee = JUMELLE.id;
       hote.verdicts = [
         buildVerdictDeReponse({ questionId: QUESTION.id }),
         buildVerdictDeReponse({ questionId: JUMELLE.id, correcte: true, libelleConfusion: null }),
@@ -402,6 +420,7 @@ describe('FpVote', () => {
       it(`QA-12 · montre en phase ${phase} le verdict que le serveur a servi : le retenir revient au serveur seul`, () => {
         hote.phase = phase;
         const question = phase === 'revote' || phase === 'revele' ? JUMELLE : QUESTION;
+        hote.questionAffichee = question.id;
         hote.verdicts = [buildVerdictDeReponse({ questionId: question.id })];
 
         expect(marque(hote, 'verdict')?.getAttribute('data-etat')).toBe('a-revoir');
@@ -424,6 +443,7 @@ describe('FpVote', () => {
       presenter();
       hote.resultats = RESULTATS;
       hote.phase = 'revote';
+      hote.questionAffichee = JUMELLE.id;
 
       expect(marque(hote, 'histogramme')).toBeNull();
       expect(marque(hote, 'decompte')?.textContent).toContain('12');
@@ -444,11 +464,16 @@ describe('FpVote', () => {
       expect(marque(hote, 'bonne-reponse')).toBeNull();
     });
 
+    function revelerLaJumelle(): void {
+      hote.resultats = { total: 10, parOption: { 'j-a': 2, 'j-b': 8 } };
+      hote.phase = 'revele';
+      hote.questionAffichee = JUMELLE.id;
+    }
+
     function projeterLesDeuxVotesReveles(): void {
       presenter();
       hote.resultatsPremierVote = RESULTATS;
-      hote.resultats = { total: 10, parOption: { 'j-a': 2, 'j-b': 8 } };
-      hote.phase = 'revele';
+      revelerLaJumelle();
     }
 
     it('RET-20 · projette cote a cote les deux votes une fois la reponse revelee', () => {
@@ -482,8 +507,7 @@ describe('FpVote', () => {
     it('QF-16 · dans une carte etroite, chaque barre passe sous son libelle quelle que soit la largeur de la toile', () => {
       presenter();
       hote.style.cssText = 'display:block;width:280px;';
-      hote.resultats = { total: 10, parOption: { 'j-a': 2, 'j-b': 8 } };
-      hote.phase = 'revele';
+      revelerLaJumelle();
 
       const barres = [...(hote.shadowRoot?.querySelectorAll('[data-testid="barre"]') ?? [])].map(
         (barre) => [...barre.children].map((cellule) => cellule.getBoundingClientRect()),
@@ -520,6 +544,7 @@ describe('FpVote', () => {
     function revelerAuPresentateur(optionId: unknown): string | null | undefined {
       presenter();
       hote.phase = 'revele';
+      hote.questionAffichee = JUMELLE.id;
       hote.corrige = { ...REVELATION, optionId };
       return marque(hote, 'revelation')?.textContent;
     }

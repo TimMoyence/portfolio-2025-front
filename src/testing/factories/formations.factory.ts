@@ -8,6 +8,7 @@ import type {
   ResultatsSeance,
 } from '../../cours/content/types';
 import type { SpacedQuestionPublique } from '../../cours/runtime/blocks/donnees-publiques';
+import type { EtatDesEnigmes } from '../../cours/runtime/blocks/retours';
 import type { ResultatsDuFlux } from '../../cours/runtime/core/sync';
 import {
   deLaQuestion,
@@ -29,7 +30,13 @@ import type {
   VerdictTentative,
 } from '../../app/core/ports/formations.port';
 import { etatParticipantVierge } from '../fixtures/etat-participant';
-import { ENTETE_COURS_B1_09, buildCoursContent } from './cours.factory';
+import {
+  ENTETE_COURS_B1_09,
+  buildCoursContent,
+  buildFeuilleEvaluee,
+  buildSortiesMachine,
+  buildTableauEvalue,
+} from './cours.factory';
 import {
   buildRapportSeance,
   buildRattachement,
@@ -151,11 +158,24 @@ export function buildVerdictProduction(
   };
 }
 
+export function buildEtatDesEnigmes(overrides: Partial<EtatDesEnigmes> = {}): EtatDesEnigmes {
+  return {
+    etats: {
+      'enigme-1': { etat: 'resolue', tentativesRestantes: 9 },
+      'enigme-2': { etat: 'ouverte', tentativesRestantes: 10 },
+    },
+    enigmeOuverte: 'enigme-2',
+    acheve: false,
+    ...overrides,
+  };
+}
+
 export function buildVerdictTentative(overrides: Partial<VerdictTentative> = {}): VerdictTentative {
   return {
     correcte: true,
     fragment: '7',
     tentativesRestantes: 9,
+    ...buildEtatDesEnigmes(),
     ...overrides,
   };
 }
@@ -261,6 +281,7 @@ export function buildEcranDeroule(overrides: Partial<EcranDeroule> = {}): EcranD
     ],
     questions: [],
     corrigeEcran: null,
+    reflexion: null,
     ...overrides,
   };
 }
@@ -269,7 +290,6 @@ export function buildDerouleCours(overrides: Partial<DerouleCours> = {}): Deroul
   return {
     ...ENTETE_COURS_B1_09,
     ecrans: [buildEcranDeroule({ id: 'ecran-1' }), buildEcranDeroule({ id: 'ecran-2' })],
-    remediations: { 'interet-simple': 'ecran-2' },
     ...overrides,
   };
 }
@@ -364,6 +384,9 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
     'signalerIncidents',
     'envoyerProduction',
     'tenterEnigme',
+    'evaluerMachine',
+    'evaluerTableau',
+    'evaluerFeuille',
     'declarerJalon',
     'lireRappels',
     'envoyerDefi',
@@ -398,6 +421,9 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   port.signalerIncidents.and.returnValue(of(undefined));
   port.envoyerProduction.and.returnValue(of(buildVerdictProduction()));
   port.tenterEnigme.and.returnValue(of(buildVerdictTentative()));
+  port.evaluerMachine.and.returnValue(of(buildSortiesMachine()));
+  port.evaluerTableau.and.returnValue(of(buildTableauEvalue()));
+  port.evaluerFeuille.and.returnValue(of(buildFeuilleEvaluee()));
   port.declarerJalon.and.returnValue(of(undefined));
   port.lireRappels.and.returnValue(of({ questions: [buildSpacedQuestionPublique()] }));
   port.envoyerDefi.and.returnValue(of({ strategies: [buildStrategiePublique()] }));

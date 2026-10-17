@@ -76,21 +76,13 @@ const SERVIES_SANS_LECTEUR: Readonly<Record<string, string>> = {
     '@Roles(admin), aucun client dans le front',
 };
 
-const PERSONNALISATION_DU_GUIDE_EN_PROD = {
+const PERSONNALISATION_RETIREE_DU_GUIDE = {
   $: { generatedPrompt: null },
   '$.recap': { aiLevel: null, budgetTier: null, sector: null },
   '$.cheatsheet[]': { alreadyUsed: false },
 } as const;
 
-const STATUT_D_UNE_VISIBILITE = ['status', 'statusLabel'];
-
-const TOLEREES_ABSENTES_JUSQU_AU_LOT_2D: Readonly<Partial<Record<string, readonly string[]>>> = {
-  '$.clientReport.googleVsAiMatrix.googleVisibility': STATUT_D_UNE_VISIBILITE,
-  '$.clientReport.googleVsAiMatrix.aiVisibility': STATUT_D_UNE_VISIBILITE,
-  '$.clientReport.pillarScorecard[]': ['statusLabel'],
-};
-
-function avecLaPersonnalisationEnProd(page: unknown): unknown {
+function avecLaPersonnalisationRetiree(page: unknown): unknown {
   const copie = structuredClone(page) as {
     recap: Record<string, unknown>;
     cheatsheet: Record<string, unknown>[];
@@ -100,7 +92,7 @@ function avecLaPersonnalisationEnProd(page: unknown): unknown {
     '$.recap': [copie.recap],
     '$.cheatsheet[]': copie.cheatsheet,
   };
-  for (const [chemin, cles] of Object.entries(PERSONNALISATION_DU_GUIDE_EN_PROD)) {
+  for (const [chemin, cles] of Object.entries(PERSONNALISATION_RETIREE_DU_GUIDE)) {
     for (const objet of objetsDe[chemin as keyof typeof objetsDe]) {
       Object.assign(objet, cles);
     }
@@ -125,7 +117,7 @@ describe('Réponses réellement servies par le back hors des formations, lues pa
     routes: ROUTES_LUES,
     schemas: schemasDuSite,
     documentsDe: reponsesServiesPar,
-    optionnelles: TOLEREES_ABSENTES_JUSQU_AU_LOT_2D,
+    optionnelles: {},
     ouvert: ouvertAuContrat,
   });
 
@@ -136,20 +128,29 @@ describe('Réponses réellement servies par le back hors des formations, lues pa
     });
   });
 
-  it('lit la page du guide que le back en prod sert encore avec la personnalisation, jusqu au déploiement de LEG-06', () => {
+  it('refuse la personnalisation du guide, que le back ne sert plus (LEG-06)', () => {
     const pages = reponsesServiesPar('GET /api/lead-magnets/toolkit/:token').map(
-      avecLaPersonnalisationEnProd,
+      avecLaPersonnalisationRetiree,
     );
 
     const lecteur: z.ZodType = guideServi;
 
     expect(pages.length).toBeGreaterThan(0);
-    expect(pages.every((page) => JSON.stringify(page).includes('"alreadyUsed":false'))).toBeTrue();
     for (const page of pages) {
       const lue = lecteur.safeParse(page);
+      const refusees = lue.success
+        ? []
+        : lue.error.issues.flatMap((faute) =>
+            faute.code === 'unrecognized_keys' ? faute.keys : [faute.code],
+          );
 
-      expect(lue.success ? [] : lue.error.issues).toEqual([]);
-      expect(lue.data).toEqual(page);
+      expect([...new Set(refusees)].sort((a, b) => a.localeCompare(b))).toEqual([
+        'aiLevel',
+        'alreadyUsed',
+        'budgetTier',
+        'generatedPrompt',
+        'sector',
+      ]);
     }
   });
 

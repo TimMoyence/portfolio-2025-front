@@ -19,6 +19,11 @@ import {
   buildVerdictProduction,
   buildVerdictTentative,
 } from '../../../testing/factories/formations.factory';
+import {
+  buildFeuilleEvaluee,
+  buildSortiesMachine,
+  buildTableauEvalue,
+} from '../../../testing/factories/cours.factory';
 import type { ProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { buildProblemeHttp } from '../../../testing/factories/probleme-http.factory';
 import { bancAdaptateurHttp } from '../../../testing/http-attendu';
@@ -924,6 +929,15 @@ describe('FormationsHttpAdapter', () => {
     } as const;
     const TENTATIVE = { enigmeId: 'enigme-1', reponse: '142 920', dureeMs: 42000 };
     const TEXTE_DE_DEFI = { texte: 'Multiplier les coefficients.', dureeMs: 180000 };
+    const MACHINE = 'B2-01-A3-02-MACHINE-COEFFICIENTS';
+    const REGLAGES = { tauxUn: 50, tauxDeux: -50 };
+    const TABLEAU = 'b2-01-a4-indice-toile';
+    const SAISIES = [{ rang: 0, cle: 'prix', saisie: '21,6' }];
+    const FEUILLE = 'b2-03-a4-feuille-visa';
+    const DEMANDE_DE_FEUILLE = {
+      cellules: { I3: '=SI(D3>=5000;"Visa";"Non")' },
+      recopie: { de: 'I3' },
+    };
 
     interface AppelAttendu {
       readonly nom: string;
@@ -955,6 +969,33 @@ describe('FormationsHttpAdapter', () => {
         jeton: JETON,
         reponse: buildVerdictTentative(),
         absence: 'refusee',
+      },
+      {
+        nom: 'evaluerMachine',
+        appeler: () => adapter.evaluerMachine(SESSION_ID, JETON, MACHINE, REGLAGES),
+        url: `${URL_SEANCE}/machines/${MACHINE}/evaluation`,
+        methode: 'POST',
+        corps: { reglages: REGLAGES },
+        jeton: JETON,
+        reponse: buildSortiesMachine(),
+      },
+      {
+        nom: 'evaluerTableau',
+        appeler: () => adapter.evaluerTableau(SESSION_ID, JETON, TABLEAU, SAISIES),
+        url: `${URL_SEANCE}/tableaux/${TABLEAU}/evaluation`,
+        methode: 'POST',
+        corps: { saisies: SAISIES },
+        jeton: JETON,
+        reponse: buildTableauEvalue(),
+      },
+      {
+        nom: 'evaluerFeuille',
+        appeler: () => adapter.evaluerFeuille(SESSION_ID, JETON, FEUILLE, DEMANDE_DE_FEUILLE),
+        url: `${URL_SEANCE}/feuilles/${FEUILLE}/evaluation`,
+        methode: 'POST',
+        corps: DEMANDE_DE_FEUILLE,
+        jeton: JETON,
+        reponse: buildFeuilleEvaluee(),
       },
       {
         nom: 'declarerJalon',

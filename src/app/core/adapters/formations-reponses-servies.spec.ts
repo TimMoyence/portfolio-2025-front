@@ -16,7 +16,9 @@ import {
   coursPublicServi,
   derouleServi,
   etatParticipantServi,
+  feuilleEvalueeServie,
   livretServi,
+  machineEvalueeServie,
   participantsServis,
   rappelsServis,
   rapportServi,
@@ -27,6 +29,7 @@ import {
   strategiesServies,
   sujetServi,
   syntheseServie,
+  tableauEvalueServi,
   verdictProductionServi,
   verdictReponseServi,
   verdictTentativeServi,
@@ -59,6 +62,9 @@ const ROUTES_LUES: readonly (readonly [string, z.ZodType])[] = [
   [route('POST', 'sessions/:id/answers'), verdictReponseServi],
   [route('POST', 'sessions/:id/productions'), verdictProductionServi],
   [route('POST', 'sessions/:id/escape/:parcoursId/tentatives'), verdictTentativeServi],
+  [route('POST', 'sessions/:id/machines/:ecranId/evaluation'), machineEvalueeServie],
+  [route('POST', 'sessions/:id/tableaux/:planId/evaluation'), tableauEvalueServi],
+  [route('POST', 'sessions/:id/feuilles/:planId/evaluation'), feuilleEvalueeServie],
   [route('GET', 'sessions/:id/rappels'), rappelsServis],
   [route('GET', 'sessions/:id/rappels/synthese'), syntheseServie],
   [route('POST', 'sessions/:id/defis/:defiId/tentative'), strategiesServies],
@@ -71,13 +77,7 @@ const ROUTES_LUES: readonly (readonly [string, z.ZodType])[] = [
   [route('GET', 'sessions/:id/presenter-stream fin'), finServie],
 ];
 
-const APPELEE_AU_LOT_2D = 'route neuve du back 2c, que le front n’appelle qu’au lot 2d';
-
-const SERVIES_SANS_LECTEUR: Readonly<Record<string, string>> = {
-  [route('POST', 'sessions/:id/feuilles/:planId/evaluation')]: APPELEE_AU_LOT_2D,
-  [route('POST', 'sessions/:id/machines/:ecranId/evaluation')]: APPELEE_AU_LOT_2D,
-  [route('POST', 'sessions/:id/tableaux/:planId/evaluation')]: APPELEE_AU_LOT_2D,
-};
+const SERVIES_SANS_LECTEUR: Readonly<Record<string, string>> = {};
 
 const PARTIES_DES_INSTANTANES: Readonly<Partial<Record<string, string>>> = {
   [DEROULE]: 'deroule',
@@ -109,6 +109,7 @@ const OPTIONNELLES_AU_CONTRAT_DU_BACK: Readonly<Partial<Record<string, readonly 
     'reference',
   ],
   '.donnees.definition.bornesOrdonnee': ['max', 'minParametre'],
+  '.donnees.definition.series[]': ['calcul'],
   '.donnees.recit': ['presentation'],
   '.donnees.recit.video': ['srcPoste', 'poster', 'sousTitres', 'preload'],
   [`${PRESENTATION}<renderer=chart>.props`]: ['caption', 'unit', 'source', 'description'],
@@ -129,35 +130,24 @@ const OPTIONNELLES_AU_CONTRAT_DU_BACK: Readonly<Partial<Record<string, readonly 
   [`${PRESENTATION}<renderer=table>.props`]: ['subtitle', 'note'],
 };
 
-const SYNTHESE_D_UNE_QUESTION = ['confusionDominante', 'part', 'sousLeSeuil', 'remediation'];
-
-const SUITE_D_UNE_ENIGME = ['etats', 'enigmeOuverte', 'acheve'];
-
-const TOLEREES_ABSENTES_JUSQU_AU_LOT_2D: Readonly<Partial<Record<string, readonly string[]>>> = {
-  '': ['reflexion'],
-  '.corrigeEcran': ['tableauCorrige'],
-  '.corrigeEcran.attendus[]': ['affichage'],
-  '.correction.corrige': ['tableauCorrige'],
-  '.correction.corrige.attendus[]': ['affichage'],
-  '.donnees.definition': ['abscisses', 'positions', 'sorties'],
-  '.donnees.plan': ['lettres', 'grille', 'longueurMaxSaisie', 'initiale', 'tableauInitial'],
-  $: SUITE_D_UNE_ENIGME,
-  '$.enigmes[]': SUITE_D_UNE_ENIGME,
-  '$.questions[]': SYNTHESE_D_UNE_QUESTION,
-  '$.resultats.questions[]': SYNTHESE_D_UNE_QUESTION,
+const TOLEREES_ABSENTES_JUSQU_AU_RETRAIT_DU_BACK: Readonly<
+  Partial<Record<string, readonly string[]>>
+> = {
+  $: ['remediations'],
+  '$.corrige': ['remediations'],
 };
 
 const OPTIONNELLES_OU_TOLEREES = Object.fromEntries(
   [
     ...new Set([
       ...Object.keys(OPTIONNELLES_AU_CONTRAT_DU_BACK),
-      ...Object.keys(TOLEREES_ABSENTES_JUSQU_AU_LOT_2D),
+      ...Object.keys(TOLEREES_ABSENTES_JUSQU_AU_RETRAIT_DU_BACK),
     ]),
   ].map((chemin) => [
     chemin,
     [
       ...(OPTIONNELLES_AU_CONTRAT_DU_BACK[chemin] ?? []),
-      ...(TOLEREES_ABSENTES_JUSQU_AU_LOT_2D[chemin] ?? []),
+      ...(TOLEREES_ABSENTES_JUSQU_AU_RETRAIT_DU_BACK[chemin] ?? []),
     ],
   ]),
 );
@@ -190,19 +180,19 @@ describe('Réponses réellement servies par le back, lues par les schémas du fr
     normaliser: dansLEcran,
   });
 
-  it('lit chaque route du back : seules les clés neuves que le back en prod ne sert pas encore y restent tolérées absentes', () => {
-    const contratSansLeLot2d: ContratDuBack = {
+  it('lit chaque route du back : seules les remédiations du déroulé, que le back cessera de servir, y restent tolérées absentes', () => {
+    const contratDuBack: ContratDuBack = {
       optionnelle: (chemin, cle) =>
         OPTIONNELLES_AU_CONTRAT_DU_BACK[dansLEcran(chemin)]?.includes(cle) ?? false,
     };
     const tolerees = ROUTES_LUES.flatMap(([lue, schema]) =>
-      tolerancesDe(schema, documentsDe(lue), contratSansLeLot2d),
+      tolerancesDe(schema, documentsDe(lue), contratDuBack),
     ).map((faute) => {
       const [, chemin, cle] = TOLEREE_ABSENTE.exec(faute) ?? [faute, faute, ''];
       return `${dansLEcran(chemin)} ${cle}`;
     });
-    const attendues = Object.entries(TOLEREES_ABSENTES_JUSQU_AU_LOT_2D).flatMap(([chemin, cles]) =>
-      (cles ?? []).map((cle) => `${chemin} ${cle}`),
+    const attendues = Object.entries(TOLEREES_ABSENTES_JUSQU_AU_RETRAIT_DU_BACK).flatMap(
+      ([chemin, cles]) => (cles ?? []).map((cle) => `${chemin} ${cle}`),
     );
 
     expect([...new Set(tolerees)]).toEqual(jasmine.arrayWithExactContents(attendues));

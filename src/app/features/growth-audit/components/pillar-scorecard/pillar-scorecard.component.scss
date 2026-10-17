@@ -5,17 +5,5 @@
 }
 
 .pillar-card__status {
-  @include badges.status-badge;
-
-  &--critical {
-    @include badges.tone-critical;
-  }
-
-  &--warning {
-    @include badges.tone-caution;
-  }
-
-  &--ok {
-    @include badges.tone-positive;
-  }
+  @include badges.badge-de-statut;
 }

@@ -53,6 +53,9 @@ export function retourDeTentative(
     correcte: verdict.correcte,
     fragment: verdict.fragment,
     tentativesRestantes: verdict.tentativesRestantes,
+    etats: verdict.etats,
+    enigmeOuverte: verdict.enigmeOuverte,
+    acheve: verdict.acheve,
   };
 }
 
@@ -88,14 +91,7 @@ function retoursDesReponses(etat: EtatParticipant): { id: string; retours: Retou
 function retoursDesEnigmes(etat: EtatParticipant): { id: string; retours: RetourBrique[] }[] {
   return etat.enigmes.map((parcours) => ({
     id: parcours.parcoursId,
-    retours: [
-      {
-        kind: 'progression-enigmes',
-        parcoursId: parcours.parcoursId,
-        resolues: parcours.resolues,
-        tentativesRestantes: parcours.tentativesRestantes,
-      },
-    ],
+    retours: [{ kind: 'progression-enigmes', ...parcours }],
   }));
 }
 
@@ -109,6 +105,19 @@ export function ajouterRetours(
   }
   const suite = new Map(existants);
   suite.set(screenId, [...(existants.get(screenId) ?? []), ...nouveaux]);
+  return suite;
+}
+
+export function remplacerRetour(
+  existants: RetoursParEcran,
+  screenId: string,
+  nouveau: RetourBrique,
+): RetoursParEcran {
+  const suite = new Map(existants);
+  suite.set(screenId, [
+    ...(existants.get(screenId) ?? []).filter((retour) => retour.kind !== nouveau.kind),
+    nouveau,
+  ]);
   return suite;
 }
 
@@ -132,14 +141,11 @@ function verdictsDuRetour(retour: RetourBrique): readonly (readonly [string, boo
       return [[retour.questionId, retour.correcte]];
     case 'tentative':
       return [[retour.enigmeId, retour.correcte]];
-    case 'progression-enigmes': {
-      const resolues = new Set(retour.resolues.map(({ enigmeId }) => enigmeId));
-      const epuisees = Object.entries(retour.tentativesRestantes).flatMap(
-        ([enigmeId, restantes]) =>
-          restantes === 0 && !resolues.has(enigmeId) ? [[enigmeId, false] as const] : [],
+    case 'progression-enigmes':
+      return Object.entries(retour.etats).flatMap(
+        ([enigmeId, { etat }]): (readonly [string, boolean])[] =>
+          etat === 'resolue' || etat === 'epuisee' ? [[enigmeId, etat === 'resolue']] : [],
       );
-      return [...epuisees, ...[...resolues].map((enigmeId) => [enigmeId, true] as const)];
-    }
     default:
       return [];
   }

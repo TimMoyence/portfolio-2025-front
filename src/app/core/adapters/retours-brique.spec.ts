@@ -1,12 +1,20 @@
 import type { RetourBrique } from '../ports/formations.port';
 import {
+  buildProgressionDesEnigmes,
+  buildSortiesMachine,
+  buildSortiesMachineATrenteAns,
+} from '../../../testing/factories/cours.factory';
+import {
+  buildEtatDesEnigmes,
   buildEtatParticipant,
   buildResultatQuestion,
   buildResultatsSeance,
+  buildVerdictTentative,
 } from '../../../testing/factories/formations.factory';
 import {
   ajouterRetours,
   questionsAuVerdictRetenu,
+  remplacerRetour,
   retirerLesRefus,
   retourDeProduction,
   retourDeRefus,
@@ -97,20 +105,15 @@ describe('traduction des verdicts du serveur en retours de brique', () => {
     });
   });
 
-  it('traduit une tentative d’énigme avec son fragment et son reste', () => {
-    expect(
-      retourDeTentative(PARCOURS, 'enigme-1', {
-        correcte: true,
-        fragment: '7',
-        tentativesRestantes: 9,
-      }),
-    ).toEqual({
+  it('F-29 · traduit une tentative d’énigme avec son fragment, son reste et l’état servi des énigmes', () => {
+    expect(retourDeTentative(PARCOURS, 'enigme-1', buildVerdictTentative())).toEqual({
       kind: 'tentative',
       parcoursId: PARCOURS,
       enigmeId: 'enigme-1',
       correcte: true,
       fragment: '7',
       tentativesRestantes: 9,
+      ...buildEtatDesEnigmes(),
     });
   });
 
@@ -149,6 +152,21 @@ describe('accumulation des retours par écran', () => {
 
   it('crée l’entrée d’un écran encore inconnu', () => {
     expect(ajouterRetours(new Map(), ECRAN, [refus]).get(ECRAN)).toEqual([refus]);
+  });
+
+  it('F-37 · remplace le retour du même genre, garde les autres et ne mute pas l’ancienne carte', () => {
+    const premiere: RetourBrique = { kind: 'machine-evaluee', sorties: buildSortiesMachine() };
+    const seconde: RetourBrique = {
+      kind: 'machine-evaluee',
+      sorties: buildSortiesMachineATrenteAns(),
+    };
+    const existants = new Map([[ECRAN, [verdict, premiere, refus]]]);
+
+    const suite = remplacerRetour(existants, ECRAN, seconde);
+
+    expect(suite.get(ECRAN)).toEqual([verdict, refus, seconde]);
+    expect(existants.get(ECRAN)).toEqual([verdict, premiere, refus]);
+    expect(remplacerRetour(new Map(), ECRAN, seconde).get(ECRAN)).toEqual([seconde]);
   });
 
   it('rend l’objet identique quand l’écran ne porte aucun refus à retirer', () => {
@@ -281,31 +299,24 @@ describe('AC-33 : reconstruction des retours à la reprise', () => {
     expect(production).toEqual(jasmine.objectContaining({ kind: 'verdict-production', score: 0 }));
   });
 
-  it('reconstruit la progression de chaque parcours d’énigmes', () => {
-    const etat = buildEtatParticipant({
-      enigmes: [
-        {
-          parcoursId: PARCOURS,
-          resolues: [{ enigmeId: 'enigme-1', fragment: '7' }],
-          tentativesRestantes: { 'enigme-2': 10 },
-        },
-      ],
+  it('reconstruit la progression de chaque parcours d’énigmes, état servi compris', () => {
+    const progression = buildProgressionDesEnigmes({
+      parcoursId: PARCOURS,
+      resolues: [{ enigmeId: 'enigme-1', fragment: '7' }],
+      tentativesRestantes: { 'enigme-2': 10 },
+      ...buildEtatDesEnigmes(),
     });
+    const etat = buildEtatParticipant({ enigmes: [progression] });
 
     expect(retoursDeLEtat(etat, ecranDe).get(`ecran-de-${PARCOURS}`)).toEqual([
-      {
-        kind: 'progression-enigmes',
-        parcoursId: PARCOURS,
-        resolues: [{ enigmeId: 'enigme-1', fragment: '7' }],
-        tentativesRestantes: { 'enigme-2': 10 },
-      },
+      { kind: 'progression-enigmes', ...progression },
     ]);
   });
 
   it('ne pose aucun retour pour une question dont l’écran est introuvable', () => {
     const etat = buildEtatParticipant({
       reponses: [reponseServie({ questionId: 'hors-deck' })],
-      enigmes: [{ parcoursId: 'hors-deck', resolues: [], tentativesRestantes: {} }],
+      enigmes: [buildProgressionDesEnigmes({ parcoursId: 'hors-deck' })],
     });
 
     expect([...retoursDeLEtat(etat, ecranDe).keys()]).toEqual([]);
@@ -334,30 +345,38 @@ describe('lecture des verdicts et réussites d’un écran révélé', () => {
 
   it('T6 · rend le verdict de chaque énigme du coffre, résolue ou manquée', () => {
     const lot: RetourBrique[] = [
-      retourDeTentative(PARCOURS, 'b2-01-a6-e1-mix', {
-        correcte: false,
-        fragment: null,
-        tentativesRestantes: 2,
-      }),
-      retourDeTentative(PARCOURS, 'b2-01-a6-e1-mix', {
-        correcte: true,
-        fragment: 'A',
-        tentativesRestantes: 1,
-      }),
-      retourDeTentative(PARCOURS, 'b2-01-a6-e2-points', {
-        correcte: false,
-        fragment: null,
-        tentativesRestantes: 2,
-      }),
+      retourDeTentative(
+        PARCOURS,
+        'b2-01-a6-e1-mix',
+        buildVerdictTentative({ correcte: false, fragment: null, tentativesRestantes: 2 }),
+      ),
+      retourDeTentative(
+        PARCOURS,
+        'b2-01-a6-e1-mix',
+        buildVerdictTentative({ correcte: true, fragment: 'A', tentativesRestantes: 1 }),
+      ),
+      retourDeTentative(
+        PARCOURS,
+        'b2-01-a6-e2-points',
+        buildVerdictTentative({ correcte: false, fragment: null, tentativesRestantes: 2 }),
+      ),
       {
         kind: 'progression-enigmes',
-        parcoursId: PARCOURS,
-        resolues: [{ enigmeId: 'b2-01-a6-e3-rouleau', fragment: 'C' }],
-        tentativesRestantes: {
-          'b2-01-a6-e3-rouleau': 2,
-          'b2-01-a6-e4-tva': 0,
-          'b2-01-a6-e5-jamais': 3,
-        },
+        ...buildProgressionDesEnigmes({
+          parcoursId: PARCOURS,
+          resolues: [{ enigmeId: 'b2-01-a6-e3-rouleau', fragment: 'C' }],
+          tentativesRestantes: {
+            'b2-01-a6-e3-rouleau': 2,
+            'b2-01-a6-e4-tva': 0,
+            'b2-01-a6-e5-jamais': 3,
+          },
+          etats: {
+            'b2-01-a6-e3-rouleau': { etat: 'resolue', tentativesRestantes: 2 },
+            'b2-01-a6-e4-tva': { etat: 'epuisee', tentativesRestantes: 0 },
+            'b2-01-a6-e5-jamais': { etat: 'ouverte', tentativesRestantes: 3 },
+          },
+          enigmeOuverte: 'b2-01-a6-e5-jamais',
+        }),
       },
     ];
 
@@ -367,6 +386,27 @@ describe('lecture des verdicts et réussites d’un écran révélé', () => {
       'b2-01-a6-e3-rouleau': true,
       'b2-01-a6-e4-tva': false,
     });
+  });
+
+  it('F-29 · lit la résolution et l’épuisement de chaque énigme dans l’état servi, sans les déduire des tentatives restantes', () => {
+    const lot: RetourBrique[] = [
+      {
+        kind: 'progression-enigmes',
+        ...buildProgressionDesEnigmes({
+          parcoursId: PARCOURS,
+          resolues: [],
+          tentativesRestantes: { 'enigme-1': 0 },
+          etats: {
+            'enigme-1': { etat: 'ouverte', tentativesRestantes: 0 },
+            'enigme-2': { etat: 'epuisee', tentativesRestantes: 4 },
+            'enigme-3': { etat: 'resolue', tentativesRestantes: 6 },
+          },
+          enigmeOuverte: 'enigme-1',
+        }),
+      },
+    ];
+
+    expect(verdictsDeLEcran(lot)).toEqual({ 'enigme-2': false, 'enigme-3': true });
   });
 
   it('rend la réussite de la classe par question de l’écran, sans les questions sans réponse', () => {

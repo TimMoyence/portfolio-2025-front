@@ -3,6 +3,7 @@ import { detailsEmis, installerBrique, roleAffiche } from '../../../testing/banc
 import { buildPlotDefinition, buildPlotEnBarres } from '../../../testing/factories/cours.factory';
 import {
   animer,
+  animerJusquAuRepos,
   attendreLeParametreEchappe,
   attendreLeTroisiemeCranEmisSansArrondi,
   attendreParametresAnnonces,
@@ -13,6 +14,7 @@ import {
   relacherCurseur,
 } from '../../../testing/reglages-briques';
 import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../testing/fixtures/instantanes-des-cours';
 import {
   FpPlot,
   HAUTEUR,
@@ -29,17 +31,36 @@ const DEFINITION = buildPlotDefinition();
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 const CLASSES_ATTENDUES = 27;
 const GRADUATIONS_ATTENDUES = 5;
-const ECHANTILLONS_ATTENDUS = 25;
+const ECHANTILLONS_ATTENDUS = DEFINITION.abscisses.length;
 const SEPT_CHIFFRES = 5_000_000;
 const ESPACE_FINE = ' ';
+
+const RANGS_DE_LA_RAMPE = Array.from({ length: 25 }, (_, rang) => (10 * rang) / 24);
+const TRACES_SERVIS = INSTANTANES_DES_COURS_SERVIS.flatMap(([cours, instantane]) =>
+  instantane.sujet.ecrans
+    .filter(({ type }) => type === 'fp-plot')
+    .map((ecran) => ({
+      cours,
+      id: ecran.id,
+      definition: ecran.donnees?.['definition'] as PlotDefinition,
+    })),
+);
 
 function lineaire(): PlotDefinition {
   return buildPlotDefinition({
     id: 'K-COURBE-LINEAIRE',
     abscisse: { libelle: 'Rang', min: 0, max: 10 },
     parametres: [],
-    series: [{ id: 'rampe', libelle: 'Rampe', trait: 'plein', calcul: 'x' }],
+    series: [{ id: 'rampe', libelle: 'Rampe', trait: 'plein' }],
+    abscisses: RANGS_DE_LA_RAMPE,
+    positions: positionUnique({ rampe: RANGS_DE_LA_RAMPE }),
   });
+}
+
+function positionUnique(
+  ordonnees: Readonly<Record<string, readonly (number | null)[]>>,
+): PlotDefinition['positions'] {
+  return [{ valeurs: {}, ordonnees }];
 }
 
 function repere(hote: FpPlot, nom: string): Element | null {
@@ -130,10 +151,44 @@ describe('FpPlot', () => {
   it('projette une serie lineaire connue sur les coordonnees attendues', () => {
     hote.definition = lineaire();
     const traces = points(hote, 'rampe');
-    expect(traces.length).toBe(ECHANTILLONS_ATTENDUS);
+    expect(traces.length).toBe(RANGS_DE_LA_RAMPE.length);
     expect(traces[0]).toBe('64,218');
     expect(traces[12]).toBe('203,119');
-    expect(traces[ECHANTILLONS_ATTENDUS - 1]).toBe('342,20');
+    expect(traces[RANGS_DE_LA_RAMPE.length - 1]).toBe('342,20');
+  });
+
+  it('F-37 · trace les ordonnees servies a la position du reglage courant, sans les recalculer', () => {
+    hote.definition = buildPlotDefinition({
+      positions: [
+        {
+          valeurs: { C: 1000, i: 4 },
+          ordonnees: { compose: [1, 2, 3, 4, 5], simple: [5, 4, 3, 2, 1] },
+        },
+      ],
+    });
+
+    expect(points(hote, 'compose').length).toBe(ECHANTILLONS_ATTENDUS);
+    expect(textesDesReperes(hote, 'depart')).toEqual(['1', '5']);
+    expect(textesDesReperes(hote, 'arrivee')).toEqual(['5', '1']);
+  });
+
+  it('F-37 · suit le curseur jusqu a la position servie de son cran', () => {
+    relacherCurseur(hote, 'C', '3000');
+
+    expect(textesDesReperes(hote, 'arrivee')).toEqual([
+      `6${ESPACE_FINE}573,37`,
+      `5${ESPACE_FINE}400`,
+    ]);
+  });
+
+  it('F-37 · ne trace aucune courbe a un reglage dont aucune position n est servie', () => {
+    hote.definition = buildPlotDefinition({
+      positions: DEFINITION.positions.filter(({ valeurs }) => valeurs['C'] !== 1000),
+    });
+
+    expect(reperes(hote, 'trace')).toEqual([]);
+    expect(texteDe(hote, 'vide')).toContain('Aucune courbe');
+    expect(textesDesReperes(hote, 'arrivee')).toEqual(['—', '—']);
   });
 
   it('distingue les deux series par le trait et par une legende en toutes lettres', () => {
@@ -169,7 +224,8 @@ describe('FpPlot', () => {
   it('rend une serie sans point calculable sans casser la figure', () => {
     hote.definition = buildPlotDefinition({
       id: 'K-COURBE-NAN',
-      series: [{ id: 'nulle', libelle: 'Serie sans point', trait: 'plein', calcul: 'z' }],
+      series: [{ id: 'nulle', libelle: 'Serie sans point', trait: 'plein' }],
+      positions: positionUnique({ nulle: DEFINITION.abscisses.map(() => null) }),
     });
     expect(reperes(hote, 'trace')).toEqual([]);
     expect(reperes(hote, 'ligne').length).toBe(1);
@@ -190,6 +246,15 @@ describe('FpPlot', () => {
           defaut: SEPT_CHIFFRES,
         },
         { cle: 'i', libelle: 'Taux annuel en pourcent', min: 1, max: 10, pas: 0.5, defaut: 10 },
+      ],
+      positions: [
+        {
+          valeurs: { C: SEPT_CHIFFRES, i: 10 },
+          ordonnees: {
+            compose: [5_000_000, 8_052_550, 12_968_712.3, 20_886_240.85, 33_637_499.75],
+            simple: [5_000_000, 7_500_000, 10_000_000, 12_500_000, 15_000_000],
+          },
+        },
       ],
     });
     expect(tousLesPoints(hote).length).toBe(ECHANTILLONS_ATTENDUS * 2);
@@ -244,7 +309,9 @@ describe('FpPlot', () => {
       parametres: [
         { cle: 'origine', libelle: 'Origine de l’axe', min: 0, max: 98, pas: 1, defaut: 0 },
       ],
-      series: [{ id: 'serie', libelle: 'Série', trait: 'plein', calcul: '100 + x * 2' }],
+      series: [{ id: 'serie', libelle: 'Série', trait: 'plein' }],
+      abscisses: [1, 2, 3, 4],
+      positions: positionUnique({ serie: [102, 104, 106, 108] }),
     });
 
     const avant = textesDesReperes(hote, 'graduation-y');
@@ -262,15 +329,15 @@ describe('FpPlot', () => {
         parametre.cle === 'C' ? { ...parametre, defaut: 99999 } : parametre,
       ),
     });
-    expect(hote.valeurs['C']).toBe(5000);
-    expect(valeurAffichee(hote, 'C')).toBe(`5${ESPACE_FINE}000`);
+    expect(hote.valeurs['C']).toBe(3000);
+    expect(valeurAffichee(hote, 'C')).toBe(`3${ESPACE_FINE}000`);
   });
 
   it('annonce chaque parametre en francais lisible et pas par un nombre nu', () => {
     attendreParametresAnnonces(
       hote,
       'C',
-      `Capital place en euros : 1${ESPACE_FINE}000 (de 100 à 5${ESPACE_FINE}000)`,
+      `Capital place en euros : 1${ESPACE_FINE}000 (de 1${ESPACE_FINE}000 à 3${ESPACE_FINE}000)`,
     );
   });
 
@@ -380,14 +447,16 @@ describe('FpPlot', () => {
 
   it('E13 · refuse un rapport des hauteurs ou une évolution sans base significative', () => {
     hote.definition = buildPlotEnBarres({
-      series: [{ id: 'marge', libelle: 'Marge brute', trait: 'plein', calcul: '290000-3000*x' }],
+      series: [{ id: 'marge', libelle: 'Marge brute', trait: 'plein' }],
+      positions: positionUnique({ marge: [290000, 287000, 284000, 281000] }),
     });
 
     expect(texteDe(hote, 'rapport-hauteurs')).toBe('—');
 
     hote.definition = buildPlotEnBarres({
       id: 'K-BARRES-NULLE',
-      series: [{ id: 'marge', libelle: 'Marge brute', trait: 'plein', calcul: '1000*x' }],
+      series: [{ id: 'marge', libelle: 'Marge brute', trait: 'plein' }],
+      positions: positionUnique({ marge: [0, 1000, 2000, 3000] }),
     });
     prereglage(hote, 'Axe à zéro');
 
@@ -542,7 +611,9 @@ describe('FpPlot', () => {
         id: 'K-COURBE-PAS-DECIMAL',
         abscisse: { libelle: 'Rang', min: 0, max: 10 },
         parametres: [PARAMETRE_A_PAS_DECIMAL],
-        series: [{ id: 'rampe', libelle: 'Rampe', trait: 'plein', calcul: 'x+d' }],
+        series: [{ id: 'rampe', libelle: 'Rampe', trait: 'plein' }],
+        abscisses: [0, 10],
+        positions: positionUnique({ rampe: [0, 10] }),
       });
 
       attendreLeTroisiemeCranEmisSansArrondi(hote, REGLAGE);
@@ -576,9 +647,9 @@ describe('FpPlot', () => {
 
       hote.reglages = { C: 3000, i: 99, inconnu: 1 };
 
-      expect(hote.valeurs).toEqual({ C: 3000, i: 10 });
+      expect(hote.valeurs).toEqual({ C: 3000, i: 8 });
       expect(valeurAffichee(hote, 'C')).toBe(`3${ESPACE_FINE}000`);
-      expect(valeurAffichee(hote, 'i')).toBe('10');
+      expect(valeurAffichee(hote, 'i')).toBe('8');
     });
 
     describe('R9 · animation de l écran', () => {
@@ -588,9 +659,9 @@ describe('FpPlot', () => {
         parametres: [
           { cle: 'taux', libelle: 'Taux marketplace (%)', min: 10, max: 30, pas: 1, defaut: 16 },
         ],
-        series: [
-          { id: 'global', libelle: 'Taux global', trait: 'plein', calcul: 'x * taux / 100' },
-        ],
+        series: [{ id: 'global', libelle: 'Taux global', trait: 'plein' }],
+        abscisses: [0, 80],
+        positions: positionUnique({ global: [0, 12.8] }),
         animation: [{ taux: 16 }, { taux: 20 }, { taux: 24 }],
       });
 
@@ -644,6 +715,64 @@ describe('FpPlot', () => {
         expect(hote.valeurs).toEqual({ taux: 24 });
       });
     });
+  });
+
+  describe('F-37 · chaque reglage atteignable d un trace servi trouve ses ordonnees servies', () => {
+    sousHorlogeSimulee();
+
+    function attendreUnTrace(contexte: string): void {
+      expect(reperes(hote, 'vide'))
+        .withContext(`${contexte} ${JSON.stringify(hote.valeurs)}`)
+        .toEqual([]);
+    }
+
+    function parcourirLesCrans(curseurs: readonly HTMLInputElement[], contexte: string): void {
+      const [premier, ...suivants] = curseurs;
+      if (curseurs.length === 0) {
+        attendreUnTrace(contexte);
+        return;
+      }
+      premier.value = premier.min;
+      let precedente: string | null = null;
+      while (premier.value !== precedente) {
+        precedente = premier.value;
+        premier.dispatchEvent(new Event('input', { bubbles: true }));
+        parcourirLesCrans(suivants, contexte);
+        premier.stepUp();
+      }
+    }
+
+    function jouerLAnimation(): void {
+      if (repere(hote, 'animer') === null) {
+        return;
+      }
+      animerJusquAuRepos(hote, () => attendreUnTrace('animation'));
+    }
+
+    it('trouve des traces servis dans les cours', () => {
+      expect(TRACES_SERVIS.length).toBeGreaterThan(0);
+    });
+
+    for (const { cours, id, definition } of TRACES_SERVIS) {
+      it(`${cours} ${id} · au defaut, a chaque prereglage, a chaque pas anime et a chaque cran`, () => {
+        hote.definition = definition;
+        attendreUnTrace('defaut');
+        for (let rang = 0; rang < reperes(hote, 'prereglage').length; rang += 1) {
+          const bouton = reperes(hote, 'prereglage')[rang];
+          if (bouton instanceof HTMLButtonElement) {
+            bouton.click();
+          }
+          attendreUnTrace(`prereglage ${rang}`);
+        }
+        jouerLAnimation();
+        parcourirLesCrans(
+          reperes(hote, 'curseur').filter(
+            (curseur): curseur is HTMLInputElement => curseur instanceof HTMLInputElement,
+          ),
+          'cran',
+        );
+      });
+    }
   });
 
   decrireLaSobrieteDUneBriqueReglable({

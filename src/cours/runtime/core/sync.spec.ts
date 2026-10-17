@@ -1,4 +1,7 @@
-import { buildResultatsDuFlux } from '../../../testing/factories/formations.factory';
+import {
+  buildResultatQuestion,
+  buildResultatsDuFlux,
+} from '../../../testing/factories/formations.factory';
 import type { FluxFactice } from '../../../testing/flux-sse';
 import { bloc, creerOuverture, laisserPasserLeFlux, vider } from '../../../testing/flux-sse';
 import {
@@ -41,19 +44,19 @@ const JETON_PRESENTATEUR = 'jwt-presentateur';
 const RESULTATS: ResultatsDuFlux = buildResultatsDuFlux({
   participants: 12,
   questions: [
-    {
+    buildResultatQuestion({
       questionId: 'Q-1',
       ecranId: 'E-1',
-      type: 'vote',
-      noteCompte: true,
       total: 10,
       correctes: 6,
       neSaitPas: 1,
       confusions: [{ id: 'c1', libelle: 'Confusion frequente', nombre: 3 }],
       parOption: { a: 6, b: 3, __je_ne_sais_pas__: 1 },
-      scoreMoyen: null,
-      parCle: null,
-    },
+      confusionDominante: 'c1',
+      part: 6 / 10,
+      sousLeSeuil: true,
+      remediation: { confusionId: 'c1', ecranId: 'E-2' },
+    }),
   ],
 });
 

@@ -75,6 +75,7 @@ import {
 import {
   ajouterRetours,
   questionsAuVerdictRetenu,
+  remplacerRetour,
   retirerLesRefus,
   retourDeProduction,
   retourDeRefus,
@@ -83,7 +84,7 @@ import {
   retoursDeLEtat,
   verdictsServis,
 } from '../../../core/adapters/retours-brique';
-import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
+import type { EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import {
   ecranAuRang,
   ecranDIdentifiant,
@@ -116,6 +117,10 @@ type VueDeSeance =
 type MotifEchec = MotifRefusRattachement | 'code-invalide' | 'identite-refusee';
 
 type EvenementDe<K extends EvenementBrique['kind']> = Extract<EvenementBrique, { kind: K }>;
+
+type DemandeDEvaluation = EvenementDe<
+  'evaluation-machine' | 'evaluation-feuille' | 'evaluation-tableau'
+>;
 
 interface RefusAffiche {
   readonly motif: MotifRefusSujet;
@@ -763,9 +768,7 @@ export class CoursEtudiantComponent {
     return cible === undefined || estEcranVerrouille(cible) ? null : cible;
   });
 
-  readonly direct = computed<DirectEcran | null>(() =>
-    directDeLEcranCourant(this.ecranCourant(), this.pilotage(), null, 0),
-  );
+  readonly direct = computed(() => directDeLEcranCourant(this.ecranCourant(), this.pilotage()));
 
   protected readonly brouillons = signal<Brouillons | null>(null);
 
@@ -1421,6 +1424,10 @@ export class CoursEtudiantComponent {
         return this.envoyerLeTexte(evenement);
       case 'defi':
         return this.defier(evenement);
+      case 'evaluation-machine':
+      case 'evaluation-feuille':
+      case 'evaluation-tableau':
+        return this.evaluer(evenement);
     }
   }
 
@@ -1529,7 +1536,7 @@ export class CoursEtudiantComponent {
           retourDeTentative(evenement.parcoursId, evenement.enigmeId, verdict),
         ]);
       } catch (erreur) {
-        const refus = this.signalerLeRefusDeTentative(evenement.screenId, erreur);
+        const refus = this.signalerLeRefus(evenement.screenId, erreur, 'tentatives-reseau');
         if (MOTIFS_DE_RESYNCHRONISATION.includes(refus.motif) || refus.motif === 'deja-repondue') {
           await this.relireMonEtat();
         }
@@ -1539,14 +1546,56 @@ export class CoursEtudiantComponent {
     });
   }
 
-  private signalerLeRefusDeTentative(screenId: string, erreur: unknown): ReponseRefusee {
+  private signalerLeRefus(
+    screenId: string,
+    erreur: unknown,
+    coupure: 'tentatives-reseau' | 'evaluation-reseau' | 'feuille-reseau',
+  ): ReponseRefusee {
     const refus = refusDe(erreur);
     const message =
-      refus.motif === 'reseau' && limiteDuRefus(refus) === null
-        ? texte('tentatives-reseau')
-        : refus.message;
+      refus.motif === 'reseau' && limiteDuRefus(refus) === null ? texte(coupure) : refus.message;
     this.ajouter(screenId, [retourDeRefus(refus.motif, message)]);
     return refus;
+  }
+
+  private evaluer(evenement: DemandeDEvaluation): Promise<void> {
+    return this.pourLaSeance(async (sessionId, jeton) => {
+      try {
+        const retour = await this.evaluation(sessionId, jeton, evenement);
+        this.retours.update((existants) => remplacerRetour(existants, evenement.screenId, retour));
+      } catch (erreur) {
+        const coupure =
+          evenement.kind === 'evaluation-machine' ? 'evaluation-reseau' : 'feuille-reseau';
+        this.signalerLeRefus(evenement.screenId, erreur, coupure);
+        return;
+      }
+      await this.reprendreCeQuiAttend();
+    });
+  }
+
+  private async evaluation(
+    sessionId: string,
+    jeton: string,
+    evenement: DemandeDEvaluation,
+  ): Promise<RetourBrique> {
+    if (evenement.kind === 'evaluation-machine') {
+      const sorties = await firstValueFrom(
+        this.port.evaluerMachine(sessionId, jeton, evenement.screenId, evenement.reglages),
+      );
+      return { kind: 'machine-evaluee', sorties };
+    }
+    if (evenement.kind === 'evaluation-tableau') {
+      const { planId, rang, saisies } = evenement;
+      const evalue = await firstValueFrom(
+        this.port.evaluerTableau(sessionId, jeton, planId, saisies),
+      );
+      return { kind: 'tableau-evalue', planId, rang, evalue };
+    }
+    const { planId, rang, demande } = evenement;
+    const evaluee = await firstValueFrom(
+      this.port.evaluerFeuille(sessionId, jeton, planId, demande),
+    );
+    return { kind: 'feuille-evaluee', planId, rang, evaluee };
   }
 
   private defier(evenement: EvenementDe<'defi'>): Promise<void> {
@@ -1562,7 +1611,7 @@ export class CoursEtudiantComponent {
           { kind: 'strategies', defiId: evenement.defiId, strategies },
         ]);
       } catch (erreur) {
-        this.signalerLeRefusDeTentative(evenement.screenId, erreur);
+        this.signalerLeRefus(evenement.screenId, erreur, 'tentatives-reseau');
         return;
       }
       await this.reprendreCeQuiAttend();

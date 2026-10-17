@@ -31,11 +31,18 @@
         {{ visibilite.score }}
       </span>
       <span class="text-sm text-scheme-text-muted">/100</span>
+      <span
+        data-testid="engine-status"
+        class="engine-card__status engine-card__status--{{ visibilite.status }}"
+      >
+        {{ visibilite.statusLabel }}
+      </span>
     </div>
     <div class="engine-card__bar h-2 w-full rounded-full bg-scheme-background overflow-hidden">
       <div
-        class="engine-card__bar-fill h-full rounded-full"
-        [class]="scoreClass(visibilite.score)"
+        class="engine-card__bar-fill h-full rounded-full engine-card__score--{{
+          visibilite.status
+        }}"
         [style.width.%]="visibilite.score"
       ></div>
     </div>

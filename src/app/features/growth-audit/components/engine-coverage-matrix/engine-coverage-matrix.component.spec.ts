@@ -19,26 +19,58 @@ describe('EngineCoverageMatrixComponent', () => {
 
   it('devrait afficher les summaries Google et IA', () => {
     const text = rendreLaMatrice({
-      googleVisibility: { score: 80, summary: 'Summary Google ici' },
-      aiVisibility: { score: 45, summary: 'Summary IA ici' },
+      googleVisibility: {
+        score: 80,
+        summary: 'Summary Google ici',
+        status: 'ok',
+        statusLabel: 'Objectif atteint',
+      },
+      aiVisibility: {
+        score: 45,
+        summary: 'Summary IA ici',
+        status: 'critical',
+        statusLabel: 'Critique',
+      },
     }).textContent as string;
 
     expect(text).toContain('Summary Google ici');
     expect(text).toContain('Summary IA ici');
   });
 
-  it('devrait colorer les scores selon les seuils du back (80 et 55)', () => {
+  it('colore chaque score selon le statut servi par le back, sans le recalculer', () => {
     const barres = rendreLaMatrice({
-      googleVisibility: { score: 79, summary: 'Google' },
-      aiVisibility: { score: 54, summary: 'IA' },
+      googleVisibility: {
+        score: 90,
+        summary: 'Google',
+        status: 'critical',
+        statusLabel: 'Critique',
+      },
+      aiVisibility: { score: 10, summary: 'IA', status: 'ok', statusLabel: 'Objectif atteint' },
     }).querySelectorAll('.engine-card__bar-fill');
 
     expect(
-      Array.from(barres, (barre) => barre.classList.contains('engine-card__score--warning')),
+      Array.from(barres, (barre) => barre.classList.contains('engine-card__score--critical')),
     ).toEqual([true, false]);
     expect(
-      Array.from(barres, (barre) => barre.classList.contains('engine-card__score--critical')),
+      Array.from(barres, (barre) => barre.classList.contains('engine-card__score--ok')),
     ).toEqual([false, true]);
+  });
+
+  it('affiche le libellé du statut de chaque moteur tel que le back le sert', () => {
+    const libelles = rendreLaMatrice({
+      googleVisibility: {
+        score: 90,
+        summary: 'Google',
+        status: 'ok',
+        statusLabel: 'Target reached',
+      },
+      aiVisibility: { score: 60, summary: 'IA', status: 'warning', statusLabel: 'Needs work' },
+    }).querySelectorAll("[data-testid='engine-status']");
+
+    expect(Array.from(libelles, (libelle) => libelle.textContent?.trim())).toEqual([
+      'Target reached',
+      'Needs work',
+    ]);
   });
 
   it('devrait rendre exactement deux cards moteur', () => {

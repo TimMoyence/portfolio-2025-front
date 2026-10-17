@@ -5,6 +5,7 @@ import {
 } from './assertions-briques';
 import { detailsEmis, noeudOmbre, noeudsOmbre } from './banc-de-brique';
 import type { TracesEffets } from './effets-briques';
+import { DUREE_ETAPE_MS } from '../cours/runtime/blocks/animation';
 
 const DUREE_DE_TROIS_ETATS_MS = 6000;
 
@@ -36,6 +37,19 @@ export function animer(hote: HTMLElement): void {
     throw new Error('aucun bouton d animation');
   }
   bouton.click();
+}
+
+export function animerJusquAuRepos(
+  hote: HTMLElement & { readonly valeurs: unknown },
+  aChaqueEtat: () => void,
+): void {
+  animer(hote);
+  let precedentes: string | null = null;
+  while (JSON.stringify(hote.valeurs) !== precedentes) {
+    aChaqueEtat();
+    precedentes = JSON.stringify(hote.valeurs);
+    jasmine.clock().tick(DUREE_ETAPE_MS);
+  }
 }
 
 function champDuCurseur(hote: HTMLElement, cle: string): HTMLInputElement {

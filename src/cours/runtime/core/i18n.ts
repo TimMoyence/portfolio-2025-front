@@ -238,6 +238,10 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'plot-voir-donnees': () => $localize`:@@coursRuntimePlotVoirDonnees:Voir les données`,
   'tentatives-reseau': () =>
     $localize`:@@coursRuntimeTentativesReseau:Tentative non envoyée : vérifiez la connexion et proposez-la de nouveau`,
+  'evaluation-reseau': () =>
+    $localize`:@@coursRuntimeEvaluationReseau:Calcul non reçu : vérifiez la connexion et réglez de nouveau la machine`,
+  'feuille-reseau': () =>
+    $localize`:@@coursRuntimeFeuilleReseau:Calcul non reçu : vérifiez la connexion et validez de nouveau la cellule`,
   'story-source-visuel': () => $localize`:@@coursRuntimeStorySourceVisuel:Source du visuel`,
   'story-source-media': () => $localize`:@@coursRuntimeStorySourceMedia:Source du média`,
   'duree-minutes': () => $localize`:@@coursRuntimeDureeMinutes:min`,

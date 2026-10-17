@@ -43,12 +43,13 @@ import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { messageDeLaLimiteAtteinte } from '../../../core/http/limite-de-debit';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
 import { type Chargement, lectureSuivie, suivreLaDestruction } from '../lecture-suivie';
-import type { DirectEcran, EvenementBrique } from '../../../shared/slides/session/contrat-hote';
+import type { EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import {
   ecranAuRang,
   ecranDIdentifiant,
   enoncesDuDeroule,
   estVoteJumele,
+  identifiantPorte,
 } from '../../../shared/slides/session/lecture-ecran';
 import {
   CoursPresentationComponent,
@@ -811,12 +812,13 @@ export class CoursPresentateurComponent {
 
   protected readonly jumelleAttendue = computed(() => {
     const ecran = this.ecranCourant();
-    const phase = this.pilotageDeLEcran().phase ?? 'vote';
-    return ecran !== null && estVoteJumele(ecran) && (phase === 'vote' || phase === 'discussion');
+    if (ecran === null || !estVoteJumele(ecran)) return false;
+    const jumelle = identifiantPorte(ecran.donnees, 'questionJumelle');
+    return jumelle !== null && this.pilotageDeLEcran().questionAffichee !== jumelle;
   });
 
-  readonly direct = computed<DirectEcran | null>(() =>
-    directDeLEcranCourant(this.ecranCourant(), this.pilotage(), this.resultats(), 0),
+  readonly direct = computed(() =>
+    directDeLEcranCourant(this.ecranCourant(), this.pilotage(), this.resultats()),
   );
 
   protected readonly telechargement = computed((): TelechargementDePieceJointe | null => {

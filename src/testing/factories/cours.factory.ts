@@ -1,8 +1,14 @@
 import {
   type CoursContent,
   type EcranContent,
+  type FeuilleEvaluee,
+  type LigneDeMachine,
   type MetadonneesBrique,
+  type NatureDeCellule,
   type RevelationServie,
+  type SortiesMachine,
+  type TableauEvalue,
+  type ValeurAffichee,
   creerMetadonneesBrique,
 } from '../../cours/content/types';
 import type { CardsortPlanPublic } from '../../cours/runtime/blocks/FpCardsort';
@@ -24,6 +30,7 @@ import type { VoteQuestionPublique } from '../../cours/runtime/blocks/FpVote';
 import type { WorkedExemple } from '../../cours/runtime/blocks/FpWorked';
 import type { DonneesParBrique } from '../../cours/runtime/blocks/donnees-publiques';
 import type {
+  EtatDesEnigmes,
   ProgressionDesEnigmes,
   StrategieServie,
   VerdictDeProduction,
@@ -269,6 +276,114 @@ export function buildProCasAQuestionsLibres(overrides: Partial<ProCas> = {}): Pr
   });
 }
 
+const ESPACE_FINE = String.fromCharCode(0x202f);
+const ESPACE_INSECABLE = String.fromCharCode(0x00a0);
+const ABSENTE: ValeurAffichee = { valeur: null, affichage: '—' };
+
+function affichee(valeur: number, affichage: string): ValeurAffichee {
+  return { valeur, affichage: affichage.replaceAll(' ', ESPACE_FINE) };
+}
+
+function ligneDeMachine(
+  [valeur, affichage]: readonly [number, string],
+  [resultat, resultatAffiche]: readonly [number, string],
+  courante = false,
+): LigneDeMachine {
+  return {
+    valeur: affichee(valeur, affichage),
+    resultat: affichee(resultat, resultatAffiche),
+    courante,
+  };
+}
+
+const CAPITAL_ACQUIS: readonly [number, string] = [1480.244285, '1 480,24'];
+
+export function buildSortiesMachine(overrides: Partial<SortiesMachine> = {}): SortiesMachine {
+  return {
+    valeurs: { C: 1000, i: 4, n: 10 },
+    resultat: affichee(...CAPITAL_ACQUIS),
+    etapes: [],
+    courbes: {
+      C: [
+        { x: 100, y: 148.024428 },
+        { x: 2550, y: 3774.622927 },
+        { x: 5000, y: 7401.221425 },
+      ],
+      i: [
+        { x: 1, y: 1104.622125 },
+        { x: 5.5, y: 1708.144458 },
+        { x: 10, y: 2593.74246 },
+      ],
+      n: [
+        { x: 1, y: 1040 },
+        { x: 15.5, y: 1836.609215 },
+        { x: 30, y: 3243.39751 },
+      ],
+    },
+    lignes: {
+      C: [
+        ligneDeMachine([100, '100'], [148.024428, '148,02']),
+        ligneDeMachine([1000, '1 000'], CAPITAL_ACQUIS, true),
+        ligneDeMachine([2550, '2 550'], [3774.622927, '3 774,62']),
+        ligneDeMachine([5000, '5 000'], [7401.221425, '7 401,22']),
+      ],
+      i: [
+        ligneDeMachine([1, '1'], [1104.622125, '1 104,62']),
+        ligneDeMachine([4, '4'], CAPITAL_ACQUIS, true),
+        ligneDeMachine([5.5, '5,5'], [1708.144458, '1 708,14']),
+        ligneDeMachine([10, '10'], [2593.74246, '2 593,74']),
+      ],
+      n: [
+        ligneDeMachine([1, '1'], [1040, '1 040']),
+        ligneDeMachine([10, '10'], CAPITAL_ACQUIS, true),
+        ligneDeMachine([15.5, '15,5'], [1836.609215, '1 836,61']),
+        ligneDeMachine([30, '30'], [3243.39751, '3 243,4']),
+      ],
+    },
+    phrase: `Un capital de 1${ESPACE_FINE}000 € placé à 4 % pendant 10 an(s) devient 1${ESPACE_FINE}480,24 €.`,
+    ...overrides,
+  };
+}
+
+const CAPITAL_A_TRENTE_ANS: readonly [number, string] = [3243.39751, '3 243,4'];
+
+export function buildSortiesMachineATrenteAns(): SortiesMachine {
+  const aDixAns = buildSortiesMachine();
+  return buildSortiesMachine({
+    valeurs: { C: 1000, i: 4, n: 30 },
+    resultat: affichee(...CAPITAL_A_TRENTE_ANS),
+    courbes: {
+      C: [
+        { x: 100, y: 324.339751 },
+        { x: 2550, y: 8270.663651 },
+        { x: 5000, y: 16216.98755 },
+      ],
+      i: [
+        { x: 1, y: 1347.848915 },
+        { x: 5.5, y: 4983.951288 },
+        { x: 10, y: 17449.402269 },
+      ],
+      n: aDixAns.courbes['n'],
+    },
+    lignes: {
+      C: [
+        ligneDeMachine([100, '100'], [324.339751, '324,34']),
+        ligneDeMachine([1000, '1 000'], CAPITAL_A_TRENTE_ANS, true),
+        ligneDeMachine([2550, '2 550'], [8270.663651, '8 270,66']),
+        ligneDeMachine([5000, '5 000'], [16216.98755, '16 216,99']),
+      ],
+      i: [
+        ligneDeMachine([1, '1'], [1347.848915, '1 347,85']),
+        ligneDeMachine([4, '4'], CAPITAL_A_TRENTE_ANS, true),
+        ligneDeMachine([5.5, '5,5'], [4983.951288, '4 983,95']),
+        ligneDeMachine([10, '10'], [17449.402269, '17 449,4']),
+      ],
+      n: aDixAns.lignes['n'].map((ligne) => ({ ...ligne, courante: ligne.valeur.valeur === 30 })),
+    },
+    phrase: `Un capital de 1${ESPACE_FINE}000 € placé à 4 % pendant 30 an(s) devient 3${ESPACE_FINE}243,4 €.`,
+  });
+}
+
 export function buildConcept4Definition(
   overrides: Partial<Concept4Definition> = {},
 ): Concept4Definition {
@@ -280,8 +395,8 @@ export function buildConcept4Definition(
       { cle: 'n', libelle: 'Duree en annees', min: 1, max: 30, pas: 1, defaut: 10 },
     ],
     formuleLatexSimplifie: 'C × (1 + i)^n',
-    calcul: 'C*(1+i/100)^n',
-    phrase: 'Un capital de {C} € placé à {i} % pendant {n} an(s) devient {resultat} €.',
+    animation: [{ n: 30 }],
+    sorties: [buildSortiesMachine(), buildSortiesMachineATrenteAns()],
     metadonnees: metadonnees({ dureeMinutes: 6, modalite: 'binome' }),
     ...overrides,
   };
@@ -328,21 +443,57 @@ export function buildPlotDefinition(overrides: Partial<PlotDefinition> = {}): Pl
     abscisse: { libelle: 'Duree en annees', min: 0, max: 20 },
     ordonnee: 'Capital acquis en euros',
     parametres: [
-      { cle: 'C', libelle: 'Capital place en euros', min: 100, max: 5000, pas: 100, defaut: 1000 },
-      { cle: 'i', libelle: 'Taux annuel en pourcent', min: 1, max: 10, pas: 0.5, defaut: 4 },
+      {
+        cle: 'C',
+        libelle: 'Capital place en euros',
+        min: 1000,
+        max: 3000,
+        pas: 2000,
+        defaut: 1000,
+      },
+      { cle: 'i', libelle: 'Taux annuel en pourcent', min: 4, max: 8, pas: 4, defaut: 4 },
     ],
     series: [
       {
         id: 'compose',
         libelle: 'Interets composes',
         trait: 'plein',
-        calcul: 'C*(1+i/100)^x',
       },
       {
         id: 'simple',
         libelle: 'Interets simples',
         trait: 'tirets',
-        calcul: 'C*(1+i/100*x)',
+      },
+    ],
+    abscisses: [0, 5, 10, 15, 20],
+    positions: [
+      {
+        valeurs: { C: 1000, i: 4 },
+        ordonnees: {
+          compose: [1000, 1216.65, 1480.24, 1800.94, 2191.12],
+          simple: [1000, 1200, 1400, 1600, 1800],
+        },
+      },
+      {
+        valeurs: { C: 1000, i: 8 },
+        ordonnees: {
+          compose: [1000, 1469.33, 2158.92, 3172.17, 4660.96],
+          simple: [1000, 1400, 1800, 2200, 2600],
+        },
+      },
+      {
+        valeurs: { C: 3000, i: 4 },
+        ordonnees: {
+          compose: [3000, 3649.96, 4440.73, 5402.83, 6573.37],
+          simple: [3000, 3600, 4200, 4800, 5400],
+        },
+      },
+      {
+        valeurs: { C: 3000, i: 8 },
+        ordonnees: {
+          compose: [3000, 4407.98, 6476.77, 9516.51, 13982.87],
+          simple: [3000, 4200, 5400, 6600, 7800],
+        },
       },
     ],
     metadonnees: metadonnees({ dureeMinutes: 7, modalite: 'binome' }),
@@ -378,9 +529,10 @@ export function buildPlotEnBarres(overrides: Partial<PlotDefinition> = {}): Plot
         id: 'marge',
         libelle: 'Marge brute',
         trait: 'plein',
-        calcul: 'SI(x<=1;285000+3000*x;SI(x<=2;288000+1800*(x-1);289800+1200*(x-2)))',
       },
     ],
+    abscisses: [0, 1, 2, 3],
+    positions: [{ valeurs: {}, ordonnees: { marge: [285000, 288000, 289800, 291000] } }],
     ...overrides,
   });
 }
@@ -394,6 +546,8 @@ export const COLONNE_COEFFICIENT_TOILE = {
   decimales: 4,
   totalise: false,
 } satisfies TableBuildPlanPublic['colonnes'][number];
+
+const TAUX_DE_LA_TOILE = [8, -5, 4, -3];
 
 export function buildTableBuildPlan(
   overrides: Partial<TableBuildPlanPublic> = {},
@@ -418,7 +572,7 @@ export function buildTableBuildPlan(
         cle: 'taux',
         intitule: 'Taux annoncé (%)',
         role: 'donnee',
-        valeurs: [8, -5, 4, -3],
+        valeurs: TAUX_DE_LA_TOILE,
         decimales: 0,
         totalise: true,
       },
@@ -460,11 +614,54 @@ export function buildTableBuildPlan(
         decimales: 2,
       },
     ],
+    tableauInitial: buildTableauEvalue({
+      lignes: TAUX_DE_LA_TOILE.map((taux, rang) => ({
+        rang,
+        valeurs: {
+          taux: affichee(taux, String(taux)),
+          prix: ABSENTE,
+          coef: ABSENTE,
+          indice: ABSENTE,
+          evolution: ABSENTE,
+        },
+      })),
+    }),
     metadonnees: metadonnees({
       concepts: ['evolutions-successives'],
       dureeMinutes: 11,
       regime: 'focus',
     }),
+    ...overrides,
+  };
+}
+
+export function buildTableauEvalue(overrides: Partial<TableauEvalue> = {}): TableauEvalue {
+  return {
+    lignes: [
+      {
+        rang: 0,
+        valeurs: {
+          taux: affichee(8, '8'),
+          prix: affichee(21.6, '21,60'),
+          coef: affichee(1.08, '1,0800'),
+          indice: ABSENTE,
+          evolution: ABSENTE,
+        },
+      },
+    ],
+    totaux: { taux: affichee(4, '4') },
+    synthese: [{ valeur: 4, affichage: `4,00${ESPACE_INSECABLE}%` }, ABSENTE],
+    soldeFinal: null,
+    ...overrides,
+  };
+}
+
+export function buildFeuilleEvaluee(overrides: Partial<FeuilleEvaluee> = {}): FeuilleEvaluee {
+  return {
+    saisies: { C3: '=A3*B3' },
+    affichages: { A2: 'Quantite', A3: '12', B3: '4,5', C3: '54' },
+    natures: { A2: 'texte', A3: 'nombre', B3: 'nombre', C3: 'nombre' },
+    formules: ['C3'],
     ...overrides,
   };
 }
@@ -485,6 +682,9 @@ function colonneDeVerite(
   };
 }
 
+const VERITES_DE_P = [1, 1, 0, 0];
+const VERITES_DE_Q = [1, 0, 1, 0];
+
 export function buildTableDeVeritePlan(
   overrides: Partial<TableBuildPlanPublic> = {},
 ): TableBuildPlanPublic {
@@ -497,12 +697,25 @@ export function buildTableDeVeritePlan(
     libellesLignes: ['1', '2', '3', '4'],
     parametres: {},
     colonnes: [
-      colonneDeVerite('p', 'P', [1, 1, 0, 0]),
-      colonneDeVerite('q', 'Q', [1, 0, 1, 0]),
+      colonneDeVerite('p', 'P', VERITES_DE_P),
+      colonneDeVerite('q', 'Q', VERITES_DE_Q),
       colonneDeVerite('pEtQ', 'P ∧ Q'),
       colonneDeVerite('pOuQ', 'P ∨ Q'),
     ],
     synthese: [],
+    tableauInitial: buildTableauEvalue({
+      lignes: VERITES_DE_P.map((p, rang) => ({
+        rang,
+        valeurs: {
+          p: affichee(p, String(p)),
+          q: affichee(VERITES_DE_Q[rang], String(VERITES_DE_Q[rang])),
+          pEtQ: ABSENTE,
+          pOuQ: ABSENTE,
+        },
+      })),
+      totaux: {},
+      synthese: [],
+    }),
     metadonnees: metadonnees({ concepts: ['connecteur'], dureeMinutes: 7, regime: 'focus' }),
     ...overrides,
   });
@@ -529,7 +742,43 @@ export function buildCardsortPlan(overrides: Partial<CardsortPlanPublic> = {}): 
   };
 }
 
+const NOMBRE_SAISI = /^-?\d+(?:,\d+)?$/;
+
+function feuilleInitiale(cellules: Readonly<Record<string, string>>): FeuilleEvaluee {
+  return buildFeuilleEvaluee({
+    saisies: {},
+    affichages: { ...cellules },
+    natures: Object.fromEntries(
+      Object.entries(cellules).map(([nom, contenu]): [string, NatureDeCellule] => [
+        nom,
+        NOMBRE_SAISI.test(contenu) ? 'nombre' : 'texte',
+      ]),
+    ),
+    formules: [],
+  });
+}
+
 export function buildSheetPlan(overrides: Partial<SheetPlanPublic> = {}): SheetPlanPublic {
+  const plan = buildPlanDeFeuilleSansGrille(overrides);
+  const lettres =
+    overrides.lettres ??
+    [...Array(plan.colonnes).keys()].map((colonne) => String.fromCharCode(65 + colonne));
+  return {
+    ...plan,
+    lettres,
+    grille:
+      overrides.grille ??
+      [...Array(plan.lignes).keys()].map((ligne) =>
+        lettres.map((lettre) => `${lettre}${ligne + 1}`),
+      ),
+    longueurMaxSaisie: overrides.longueurMaxSaisie ?? 200,
+    initiale: overrides.initiale ?? feuilleInitiale(plan.cellules),
+  };
+}
+
+function buildPlanDeFeuilleSansGrille(
+  overrides: Partial<SheetPlanPublic>,
+): Omit<SheetPlanPublic, 'lettres' | 'grille' | 'longueurMaxSaisie' | 'initiale'> {
   return {
     id: 'K-TABLEUR-01',
     intitule: 'Facture : quantites, prix unitaires et total TTC',
@@ -670,6 +919,18 @@ export function buildVerdictDeProduction(
   };
 }
 
+function margeOuverteApresLeSeuil(tentativesDuSeuil: number): EtatDesEnigmes {
+  return {
+    etats: {
+      seuil: { etat: 'resolue', tentativesRestantes: tentativesDuSeuil },
+      marge: { etat: 'ouverte', tentativesRestantes: 10 },
+      tva: { etat: 'verrouillee', tentativesRestantes: 10 },
+    },
+    enigmeOuverte: 'marge',
+    acheve: false,
+  };
+}
+
 export function buildVerdictDeTentative(
   overrides: Partial<VerdictDeTentative> = {},
 ): VerdictDeTentative {
@@ -679,6 +940,7 @@ export function buildVerdictDeTentative(
     correcte: true,
     fragment: 'TR',
     tentativesRestantes: 9,
+    ...margeOuverteApresLeSeuil(9),
     ...overrides,
   };
 }
@@ -700,6 +962,7 @@ export function buildProgressionDesEnigmes(
     parcoursId: 'K-EVASION-01',
     resolues: [{ enigmeId: 'seuil', fragment: 'TR' }],
     tentativesRestantes: { seuil: 8, marge: 10, tva: 10 },
+    ...margeOuverteApresLeSeuil(8),
     ...overrides,
   };
 }

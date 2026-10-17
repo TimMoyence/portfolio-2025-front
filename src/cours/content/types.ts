@@ -66,6 +66,50 @@ export type ValeurProduction =
   | { readonly type: 'classement'; readonly classement: Readonly<Record<string, string>> }
   | { readonly type: 'feuille' | 'tableau' | 'classement'; readonly neSaitPas: true };
 
+export interface ValeurAffichee {
+  readonly valeur: number | null;
+  readonly affichage: string;
+}
+
+export interface LigneDeMachine {
+  readonly valeur: ValeurAffichee;
+  readonly resultat: ValeurAffichee;
+  readonly courante: boolean;
+}
+
+export interface PointDeCourbe {
+  readonly x: number;
+  readonly y: number | null;
+}
+
+export interface SortiesMachine {
+  readonly valeurs: Readonly<Record<string, number>>;
+  readonly resultat: ValeurAffichee;
+  readonly etapes: readonly ValeurAffichee[];
+  readonly courbes: Readonly<Record<string, readonly PointDeCourbe[]>>;
+  readonly lignes: Readonly<Record<string, readonly LigneDeMachine[]>>;
+  readonly phrase: string;
+}
+
+export interface TableauEvalue {
+  readonly lignes: readonly {
+    readonly rang: number;
+    readonly valeurs: Readonly<Record<string, ValeurAffichee>>;
+  }[];
+  readonly totaux: Readonly<Record<string, ValeurAffichee>>;
+  readonly synthese: readonly ValeurAffichee[];
+  readonly soldeFinal: ValeurAffichee | null;
+}
+
+export type NatureDeCellule = 'texte' | 'nombre' | 'logique' | 'erreur';
+
+export interface FeuilleEvaluee {
+  readonly saisies: Readonly<Record<string, string>>;
+  readonly affichages: Readonly<Record<string, string>>;
+  readonly natures: Readonly<Record<string, NatureDeCellule>>;
+  readonly formules: readonly string[];
+}
+
 export interface ConfusionComptee {
   readonly id: string;
   readonly libelle: string;
@@ -91,6 +135,10 @@ export interface ResultatQuestion {
   readonly parOption: Readonly<Record<string, number>> | null;
   readonly scoreMoyen: number | null;
   readonly parCle: DecomptesParCle | null;
+  readonly confusionDominante: string | null;
+  readonly part: number;
+  readonly sousLeSeuil: boolean;
+  readonly remediation: { readonly confusionId: string; readonly ecranId: string } | null;
 }
 
 export interface ResultatsSeance {
@@ -158,11 +206,16 @@ export interface ExplicationServie {
   readonly texte: string;
 }
 
+export interface ReflexionServie {
+  readonly attendu: string;
+  readonly suite: string | null;
+}
+
 export interface RevelationServie {
   readonly ecranId: string;
   readonly questions: readonly QuestionRevelee[];
   readonly annexe: CorrigeEcranPresentateur | null;
-  readonly reflexion: { readonly attendu: string; readonly suite: string | null } | null;
+  readonly reflexion: ReflexionServie | null;
   readonly explications?: readonly ExplicationServie[];
 }
 
@@ -198,6 +251,7 @@ export interface EcranContent {
   ecranSource?: string;
   resoluPar?: readonly string[];
   revelation?: RevelationServie;
+  reflexion?: ReflexionServie | null;
 }
 
 export interface PilotageEcran {
@@ -209,6 +263,9 @@ export interface PilotageEcran {
   readonly reglages?: Readonly<Record<string, number>>;
   readonly resultatsProjetes?: boolean;
   readonly optionsAffichees?: boolean;
+  readonly sortiesProjetees?: SortiesMachine;
+  readonly questionAffichee?: string;
+  readonly questionOuverte?: string | null;
 }
 
 export interface CoursContent {
@@ -250,6 +307,7 @@ export type CorrigeEcranPresentateur =
         readonly valeur: number;
       }[];
       readonly tolerance: Tolerance;
+      readonly tableauCorrige: TableauEvalue;
     }
   | {
       readonly type: 'classement';
@@ -298,6 +356,7 @@ export interface EcranDeroule extends EcranContent {
     readonly options: readonly { readonly id: string; readonly libelle: string }[] | null;
   }[];
   readonly corrigeEcran: CorrigeEcranPresentateur | null;
+  readonly reflexion: ReflexionServie | null;
   readonly explications?: readonly ExplicationServie[];
 }
 
@@ -337,7 +396,6 @@ export interface EtatParticipant {
 
 export interface DerouleCours extends Omit<CoursContent, 'ecrans'> {
   readonly ecrans: readonly EcranDeroule[];
-  readonly remediations: Readonly<Record<string, string>>;
 }
 
 export function creerMetadonneesBrique(entree: MetadonneesBrique): MetadonneesBrique {

@@ -7,7 +7,21 @@ import { type ContenuDeBrique, copierLeSocle } from './projection';
 
 type TypeDeChamp = 'string' | 'number' | 'valeur';
 
+type Saisies = Readonly<Record<string, string>>;
+
 const GENRES_DE_VALEUR: ReadonlySet<string> = new Set(['number', 'string', 'boolean']);
+
+let rangDeLaDerniereDemande = 0;
+
+function rangDeDemandeSuivant(): number {
+  rangDeLaDerniereDemande += 1;
+  return rangDeLaDerniereDemande;
+}
+
+export function memesSaisies(gauche: Saisies, droite: Saisies): boolean {
+  const noms = new Set([...Object.keys(gauche), ...Object.keys(droite)]);
+  return [...noms].every((nom) => (gauche[nom] ?? '') === (droite[nom] ?? ''));
+}
 
 function estDuType(champ: unknown, genre: TypeDeChamp): boolean {
   return genre === 'valeur' ? GENRES_DE_VALEUR.has(typeof champ) : typeof champ === genre;
@@ -38,6 +52,7 @@ export abstract class FpProduction<
   Attendu,
 > extends FpEnvoiJuge<Plan, VerdictDeProduction> {
   protected attendus: readonly Attendu[] = [];
+  protected corrigeServi: unknown = null;
 
   protected abstract readonly evenementDeSoumission: string;
 
@@ -55,6 +70,7 @@ export abstract class FpProduction<
   }
 
   set corrige(valeur: unknown) {
+    this.corrigeServi = valeur;
     this.attendus = lireAttendusDuCorrige(valeur, this.lectureDuCorrige);
     this.refreshSiConnecte();
   }
@@ -93,7 +109,7 @@ export function copierLEnonce(source: PlanEtaye): PlanEtaye {
   };
 }
 
-export abstract class FpProductionEtayee<Plan extends PlanEtaye, Attendu> extends FpProduction<
+abstract class FpProductionEtayee<Plan extends PlanEtaye, Attendu> extends FpProduction<
   Plan,
   Attendu
 > {
@@ -193,12 +209,93 @@ export abstract class FpProductionEtayee<Plan extends PlanEtaye, Attendu> extend
     this.refresh();
   }
 
+  protected validable(): boolean {
+    return this.interne !== null && (!this.verrouille() || this.enReprise());
+  }
+
   protected planAValider(): Plan | null {
     const plan = this.interne;
-    if (plan === null || (this.verrouille() && !this.enReprise())) {
+    if (plan === null || !this.validable()) {
       return null;
     }
     this.reprises = new Set();
     return plan;
+  }
+}
+
+export interface DemandeEnAttente<Complement> {
+  readonly rang: number;
+  readonly saisies: Saisies;
+  readonly complement: Complement;
+}
+
+export abstract class FpProductionEvaluee<
+  Plan extends PlanEtaye,
+  Attendu,
+  Evaluation extends { readonly rang: number },
+  Complement,
+> extends FpProductionEtayee<Plan, Attendu> {
+  protected saisiesEvaluees: Saisies = {};
+  protected saisiesDemandees: Saisies = {};
+  protected enAttente: DemandeEnAttente<Complement> | null = null;
+  protected validationDifferee = false;
+
+  protected abstract readonly evenementDEvaluation: string;
+
+  protected abstract recevoirLEvaluation(
+    evaluation: Evaluation,
+    attente: DemandeEnAttente<Complement>,
+  ): void;
+
+  protected abstract validerApresEvaluation(): void;
+
+  set evaluation(valeur: Evaluation | null) {
+    const attente = this.enAttente;
+    if (valeur === null || attente === null || valeur.rang !== attente.rang) {
+      return;
+    }
+    this.enAttente = null;
+    this.saisiesEvaluees = attente.saisies;
+    this.recevoirLEvaluation(valeur, attente);
+    this.refreshSiConnecte();
+    if (this.validationDifferee) {
+      this.validationDifferee = false;
+      this.validerApresEvaluation();
+    }
+  }
+
+  protected override appliquerErreur(valeur: string | null): void {
+    if (valeur !== null) {
+      this.enAttente = null;
+      this.validationDifferee = false;
+      this.saisiesDemandees = this.saisiesEvaluees;
+    }
+    super.appliquerErreur(valeur);
+  }
+
+  protected evalueAuPoste(): boolean {
+    return !this.presentateur() && !this.enApercu() && !this.surPapier();
+  }
+
+  protected repartirDe(saisies: Saisies): void {
+    this.saisiesEvaluees = saisies;
+    this.saisiesDemandees = saisies;
+    this.enAttente = null;
+    this.validationDifferee = false;
+  }
+
+  protected demanderLEvaluation(
+    saisies: Saisies,
+    complement: Complement,
+    detail: Readonly<Record<string, unknown>>,
+  ): void {
+    const plan = this.interne;
+    if (plan === null || !this.evalueAuPoste()) {
+      return;
+    }
+    const rang = rangDeDemandeSuivant();
+    this.enAttente = { rang, saisies, complement };
+    this.saisiesDemandees = saisies;
+    this.emit(this.evenementDEvaluation, { planId: plan.id, rang, ...detail });
   }
 }

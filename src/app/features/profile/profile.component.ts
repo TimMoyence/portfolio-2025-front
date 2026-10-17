@@ -26,7 +26,7 @@ import {
 import { initialeDe } from '../../shared/utils/initiale.utils';
 import {
   BORNES_D_UN_MOT_DE_PASSE_SAISI,
-  BORNES_D_UN_NOM_DU_PROFIL_JUSQU_AU_LOT_2D,
+  BORNES_D_UN_NOM,
   BORNES_D_UN_TELEPHONE,
   REGLE_D_UN_MOT_DE_PASSE,
 } from '../../shared/utils/regles-de-saisie';
@@ -57,7 +57,7 @@ export class ProfileComponent {
   private readonly cdr = inject(ChangeDetectorRef);
 
   protected readonly regleDUnMotDePasse = REGLE_D_UN_MOT_DE_PASSE;
-  protected readonly bornesDUnNom = BORNES_D_UN_NOM_DU_PROFIL_JUSQU_AU_LOT_2D;
+  protected readonly bornesDUnNom = BORNES_D_UN_NOM;
   protected readonly bornesDUnTelephone = BORNES_D_UN_TELEPHONE;
   protected readonly bornesDUnMotDePasseSaisi = BORNES_D_UN_MOT_DE_PASSE_SAISI;
 

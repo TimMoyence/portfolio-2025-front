@@ -7,6 +7,9 @@ import {
   type CorrigeEcranPresentateur,
   type CoursCatalogue,
   type EtatParticipant,
+  type FeuilleEvaluee,
+  type SortiesMachine,
+  type TableauEvalue,
 } from '../../../cours/content/types';
 import {
   comptesJalon,
@@ -14,6 +17,7 @@ import {
   progressionEnigme,
   resultatServi,
   resumeBareme,
+  sortiesDeMachine,
   statistiquesServies,
 } from '../../../cours/runtime/core/schemas-communs';
 import type {
@@ -31,7 +35,7 @@ import type {
   VerdictProduction,
   VerdictTentative,
 } from '../ports/formations.port';
-import { ecranServi, optionPublique, tableauEvalue } from './donnees-servies';
+import { ecranServi, feuilleEvaluee, optionPublique, tableauEvalue } from './donnees-servies';
 import type { DerouleDuFil, LivretDuFil, SujetDuFil } from './formations-fil';
 
 export { luPar } from './lu-par';
@@ -53,7 +57,7 @@ const corrigeEcran: z.ZodType<CorrigeEcranPresentateur> = z.discriminatedUnion('
             reference: z.string(),
             formuleReference: z.string(),
             valeur: z.union([z.number(), z.string(), z.boolean()]),
-            affichage: z.string().optional(),
+            affichage: z.string(),
             tolerance,
             forme: z.union([z.literal('references'), z.object({ memeQue: z.string() }).strict()]),
           })
@@ -67,7 +71,7 @@ const corrigeEcran: z.ZodType<CorrigeEcranPresentateur> = z.discriminatedUnion('
       attendus: z.array(
         z.object({ rang: z.number(), cle: z.string(), valeur: z.number() }).strict(),
       ),
-      tableauCorrige: tableauEvalue.optional(),
+      tableauCorrige: tableauEvalue,
       tolerance,
     })
     .strict(),
@@ -216,7 +220,7 @@ const ecranDuDeroule = ecranServi({
       .strict(),
   ),
   corrigeEcran: corrigeEcran.nullable(),
-  reflexion: reflexion.nullable().optional(),
+  reflexion: reflexion.nullable(),
   guide: z
     .object({
       aDire: z.string().optional(),
@@ -235,7 +239,7 @@ export const derouleServi: z.ZodType<DerouleDuFil> = z
   .object({
     ...champsDuCours,
     ecrans: z.array(ecranDuDeroule),
-    remediations: z.record(z.string(), z.string()),
+    remediations: z.record(z.string(), z.string()).optional(),
   })
   .strict();
 
@@ -284,14 +288,12 @@ export const verdictProductionServi: z.ZodType<VerdictProduction> = z
 const ETATS_D_ENIGME = ['resolue', 'epuisee', 'ouverte', 'verrouillee'] as const;
 
 const etatDesEnigmes = {
-  etats: z
-    .record(
-      z.string(),
-      z.object({ etat: z.enum(ETATS_D_ENIGME), tentativesRestantes: entierPositif }).strict(),
-    )
-    .optional(),
-  enigmeOuverte: z.string().nullable().optional(),
-  acheve: z.boolean().optional(),
+  etats: z.record(
+    z.string(),
+    z.object({ etat: z.enum(ETATS_D_ENIGME), tentativesRestantes: entierPositif }).strict(),
+  ),
+  enigmeOuverte: z.string().nullable(),
+  acheve: z.boolean(),
 };
 
 export const verdictTentativeServi: z.ZodType<VerdictTentative> = z
@@ -302,6 +304,12 @@ export const verdictTentativeServi: z.ZodType<VerdictTentative> = z
     ...etatDesEnigmes,
   })
   .strict();
+
+export const machineEvalueeServie: z.ZodType<SortiesMachine> = sortiesDeMachine;
+
+export const tableauEvalueServi: z.ZodType<TableauEvalue> = tableauEvalue;
+
+export const feuilleEvalueeServie: z.ZodType<FeuilleEvaluee> = feuilleEvaluee;
 
 export const strategiesServies: z.ZodType<StrategiesDuDefi> = z
   .object({

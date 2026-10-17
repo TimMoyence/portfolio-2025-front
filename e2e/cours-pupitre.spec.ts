@@ -57,6 +57,7 @@ const ECRAN: DerouleDuFil['ecrans'][number] = {
   corriges: [{ questionId: QUESTION.id, bonneReponse: 'a', confusions: [] }],
   questions: [{ id: QUESTION.id, enonce: ENONCE_PROBLEME, options: QUESTION.options }],
   corrigeEcran: null,
+  reflexion: null,
 };
 
 const DEROULE: DerouleDuFil = {
@@ -66,7 +67,6 @@ const DEROULE: DerouleDuFil = {
   duree: 210,
   concepts: ['proportions'],
   ecrans: [ECRAN, { ...ECRAN, id: 'B2-01-A3-02-REVELATION', titre: 'La compensation' }],
-  remediations: {},
 };
 
 const STATISTIQUES = {
@@ -98,6 +98,10 @@ const RAPPORT = rapportDeSeance({
         parOption: { a: 9, b: 15 },
         scoreMoyen: 0.375,
         parCle: null,
+        confusionDominante: null,
+        part: 0.375,
+        sousLeSeuil: true,
+        remediation: null,
       },
     ],
   },

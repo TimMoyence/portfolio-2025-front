@@ -27,8 +27,8 @@ interface ClientReportEngineMatrix {
 interface ClientReportEngineScore {
   readonly score: number;
   readonly summary: string;
-  readonly status?: StatutScore;
-  readonly statusLabel?: string;
+  readonly status: StatutScore;
+  readonly statusLabel: string;
 }
 
 interface ClientReportPillar {
@@ -36,7 +36,7 @@ interface ClientReportPillar {
   readonly score: number;
   readonly target: number;
   readonly status: StatutScore;
-  readonly statusLabel?: string;
+  readonly statusLabel: string;
 }
 
 interface ClientReportQuickWin {
