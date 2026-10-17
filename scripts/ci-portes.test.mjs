@@ -604,6 +604,51 @@ test('ci-portes : le job e2e bloque la suite du workflow', () => {
   );
 });
 
+function dossiersIgnoresParGit() {
+  return readFileSync(cheminDuDepot('.gitignore'), 'utf8')
+    .split('\n')
+    .map((ligne) => ligne.trim())
+    .filter((ligne) => !ligne.startsWith('#') && !ligne.startsWith('!'))
+    .filter((ligne) => /\/(?:\*\*?)?$/.test(ligne))
+    .map((ligne) => ligne.replace(/^\//, '').replace(/\/(?:\*\*?)?$/, ''))
+    .filter((dossier) => dossier !== '' && !dossier.includes('*'));
+}
+
+function eslintDuScriptLint() {
+  const { lint } = analyserScripts(JSON.parse(readFileSync(CHEMIN_PACKAGE, 'utf8')));
+  const extensions = /--ext\s+(\S+)/.exec(lint)?.[1].split(',') ?? [];
+  return new ESLint({
+    cwd: RACINE,
+    overrideConfig: [{ files: extensions.map((extension) => `**/*${extension}`) }],
+  });
+}
+
+test('ci-portes : eslint ne lit aucun dossier que git ignore, rapports Lighthouse compris', async () => {
+  const eslint = eslintDuScriptLint();
+  const dossiers = dossiersIgnoresParGit();
+  const lus = [];
+  for (const dossier of dossiers) {
+    if (!(await eslint.isPathIgnored(join(RACINE, dossier, 'rapport.html')))) {
+      lus.push(dossier);
+    }
+  }
+
+  assert.ok(
+    dossiers.includes('.lighthouseci'),
+    'ci-portes : la lecture de .gitignore ne rend pas le dossier des rapports Lighthouse.',
+  );
+  assert.equal(
+    await eslint.isPathIgnored(join(RACINE, unFichierSuiviParExtension().get('html'))),
+    false,
+    'ci-portes : eslint ne lit aucun fichier html suivi, la garde ne verrait rien.',
+  );
+  assert.deepEqual(
+    lus,
+    [],
+    'ci-portes : un dossier que git ignore est lu par eslint, et un rapport laisse sur le poste fait echouer lint et pre-push.',
+  );
+});
+
 test('ci-portes : Lighthouse est joue apres le build du job e2e, bloque sous 0,9 d accessibilite et garde ses rapports sur le runner', () => {
   const { scripts } = lireContexte();
   const etapes = etapesDuJob(readFileSync(CHEMIN_WORKFLOW, 'utf8'), JOB_E2E);
