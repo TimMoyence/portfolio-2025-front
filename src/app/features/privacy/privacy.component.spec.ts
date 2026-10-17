@@ -95,7 +95,19 @@ describe('PrivacyComponent', () => {
     );
   });
 
+  it('n annonce aucune statistique de navigation, que le site ne collecte pas', () => {
+    const page = rendre();
+
+    expect(texteNormalise(page.querySelector('#collecte'))).toContain(
+      "Mesure d'audience : aucune pour l'instant, le site ne collecte aucune statistique de navigation.",
+    );
+    expect(texteNormalise(page)).not.toContain('statistiques de navigation anonymisées');
+    expect([...page.querySelectorAll('#usage li')].map(texteNormalise)).not.toContain(
+      'Améliorer le site, de façon agrégée et anonyme.',
+    );
+  });
+
   it('date la politique du jour où elle a nommé ces données', () => {
-    expect(rendre().textContent).toContain('Dernière mise à jour : 16 octobre 2026');
+    expect(rendre().textContent).toContain('Dernière mise à jour : 17 octobre 2026');
   });
 });
