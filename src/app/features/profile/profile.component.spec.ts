@@ -177,7 +177,7 @@ describe('ProfileComponent', () => {
       );
     });
 
-    it('exige 2 caractères au prénom et au nom, comme le back en prod jusqu au lot 2d, et le dit sous le champ', async () => {
+    it('accepte un prénom et un nom d un seul caractère, comme le back (B-35)', async () => {
       component.startEditing();
       fixture.detectChanges();
 
@@ -185,16 +185,10 @@ describe('ProfileComponent', () => {
         for (const unSeul of ['A', '李', String.fromCodePoint(0x1f600)]) {
           expect(await erreursApresSaisie(fixture, selecteur, ` ${unSeul} `))
             .withContext(`${selecteur} ${unSeul}`)
-            .toEqual({ minlength: { requiredLength: 2, actualLength: 1 } });
+            .toBeNull();
         }
-        expect(await erreursApresSaisie(fixture, selecteur, 'Al'))
-          .withContext(selecteur)
-          .toBeNull();
       }
-      await erreursApresSaisie(fixture, '#editLastName', 'A');
-      expect(texteDuBlocDuChamp(fixture, '#editLastName')).toContain(
-        'Ce champ doit contenir au moins 2 caractères.',
-      );
+      expect(texteDuBlocDuChamp(fixture, '#editLastName')).not.toContain('au moins');
     });
 
     it('refuse un téléphone que le back refuse, et le dit sous le champ', async () => {
