@@ -673,8 +673,15 @@ async function avecDepotPlante(exemples, executer) {
   }
 }
 
+const formeVueParGit = (racine) =>
+  git(racine, ['config', '--bool', '--default', 'false', 'core.precomposeunicode']).trim() ===
+  'true'
+    ? (chemin) => chemin.normalize('NFC')
+    : (chemin) => chemin;
+
 async function ecartsEntreGitEtEslint(racine, exemples) {
-  const ignores = new Set(ignoresParGit(exemples, racine));
+  const vueParGit = formeVueParGit(racine);
+  const ignores = new Set(ignoresParGit(exemples.map(vueParGit), racine));
   const eslintDuDepot = (configuration) =>
     new ESLint({
       cwd: racine,
@@ -686,7 +693,7 @@ async function ecartsEntreGitEtEslint(racine, exemples) {
   const lus = [];
   const ecarts = [];
   for (const chemin of exemples) {
-    const ignoreParGit = ignores.has(chemin);
+    const ignoreParGit = ignores.has(vueParGit(chemin));
     const absolu = join(racine, chemin);
     if (ignoreParGit || !(await eslintSansIgnores.isPathIgnored(absolu))) {
       if (!ignoreParGit) lus.push(chemin);
@@ -785,11 +792,13 @@ test('ci-portes : eslint lit les chemins ignores du depot de sa configuration, m
   );
 });
 
-const NOMS_A_CARACTERE_DE_MOTIF = [
-  ...String.raw`\*?[]{}()!#+@|,.^$- `,
-  '\t',
-  String.fromCodePoint(0xa0),
-].flatMap((caractere) => [`${caractere}debut`, `mi${caractere}lieu`, `fin${caractere}`]);
+const CARACTERES_DE_MOTIF = [...String.raw`\*?[]{}()!#+@|,.^$- `, '\t', String.fromCodePoint(0xa0)];
+
+const NOMS_A_CARACTERE_DE_MOTIF = CARACTERES_DE_MOTIF.flatMap((caractere) => [
+  `${caractere}debut`,
+  `mi${caractere}lieu`,
+  `fin${caractere}`,
+]);
 
 const ligneDuNomLitteral = (nom) => {
   const echappe = nom.replaceAll(/[\\*?[]/g, '\\$&').replace(/ $/, '\\ ');
@@ -925,6 +934,61 @@ test('ci-portes : eslint ignore ce que git ignore, quelle que soit la forme de l
   );
 });
 
+const CARACTERES_DE_CHEMIN = [
+  ...CARACTERES_DE_MOTIF,
+  ...[0x0a, 0x0d, 0x2028, 0x2029, 0x0301].map((point) => String.fromCodePoint(point)),
+  'e',
+];
+
+const PAIRES_DE_CARACTERES = CARACTERES_DE_CHEMIN.flatMap((premier) =>
+  CARACTERES_DE_CHEMIN.map((second) => `${premier}${second}`),
+).filter((nom) => nom !== '..');
+
+const VOISINS_DES_PAIRES = [
+  ...new Set(
+    CARACTERES_DE_CHEMIN.flatMap((caractere) => [caractere, `z${caractere}`, `${caractere}z`]),
+  ),
+].filter((nom) => nom !== '.');
+
+const DOSSIERS_A_ACCOLADES = [
+  { nom: 'ac{co}lade', ligne: 'ac{co}lade' },
+  { nom: 'ac{\n}lade', ligne: 'ac{?}lade' },
+];
+
+const CHEMINS_DES_PAIRES = DOSSIERS_A_ACCOLADES.flatMap(({ nom: dossier }) => [
+  ...[...PAIRES_DE_CARACTERES, ...VOISINS_DES_PAIRES].flatMap((nom) => [
+    `${dossier}/${nom}/r.html`,
+    `${dossier}/${nom}.html`,
+  ]),
+  ...CARACTERES_DE_CHEMIN.map((caractere) => `${dossier}/r.html${caractere}`),
+  `${dossier}/r.html`,
+]);
+
+const GITIGNORE_DES_PAIRES = DOSSIERS_A_ACCOLADES.flatMap(({ ligne }) => [
+  `/${ligne}/*`,
+  ...VOISINS_DES_PAIRES.filter((voisin) => !/[\n\r]/.test(voisin))
+    .flatMap((voisin) => [voisin, `${voisin}.html`])
+    .concat('r.html')
+    .map((voisin) => `!/${ligne}${ligneDuNomLitteral(voisin)}`),
+]);
+
+test('ci-portes : eslint ignore chaque chemin que git ignore et aucun voisin, pour toute paire de caracteres, sous des accolades', async () => {
+  const { lus, ecarts } = await avecDepotPlante(CHEMINS_DES_PAIRES, (racine) => {
+    writeFileSync(join(racine, '.gitignore'), `${GITIGNORE_DES_PAIRES.join('\n')}\n`);
+    return ecartsEntreGitEtEslint(racine, CHEMINS_DES_PAIRES);
+  });
+
+  assert.ok(
+    DOSSIERS_A_ACCOLADES.every(({ nom }) => lus.includes(`${nom}/r.html`)),
+    'ci-portes : git ignore chaque voisin, la garde ne verrait pas eslint ignorer un chemin que git lit.',
+  );
+  assert.deepEqual(
+    ecarts,
+    [],
+    'ci-portes : le motif tire d un chemin que git ignore ne designe pas ce chemin seul : un fichier ignore fait echouer lint, ou son voisin suivi echappe a lint.',
+  );
+});
+
 test('ci-portes : Lighthouse est joue apres le build du job e2e, bloque sous 0,9 d accessibilite et garde ses rapports sur le runner', () => {
   const { scripts } = lireContexte();
   const etapes = etapesDuJob(readFileSync(CHEMIN_WORKFLOW, 'utf8'), JOB_E2E);
@@ -992,6 +1056,46 @@ function unFichierSuiviParExtension() {
   return parExtension;
 }
 
+function fichiersDeCodeDuDepot() {
+  const fichiers = git(RACINE, ['ls-files', '-z', '--cached', '--others', '--exclude-standard'])
+    .split('\0')
+    .filter((fichier) => /^(src|e2e|scripts)\/.+\.[cm]?[jt]s$/.test(fichier));
+  assert.ok(
+    new Set(fichiers.map((fichier) => extname(fichier))).size > 2,
+    'ci-portes : la garde ne lit pas chaque langage de code du depot.',
+  );
+  return fichiers;
+}
+
+function perimetreDeKnip() {
+  const { project } = JSON.parse(readFileSync(cheminDuDepot('knip.json'), 'utf8'));
+  return project.map((motif) => {
+    const [dossier, fin, ...reste] = motif.split('/**/');
+    if (fin === undefined || reste.length > 0) {
+      throw new Error(`ci-portes : motif project de knip non reconnu : « ${motif} ».`);
+    }
+    return { dossier, extensions: extensionsDuMotif(fin) };
+  });
+}
+
+test('ci-portes : knip juge chaque fichier de code de src, e2e et scripts, comme la CI le promet', () => {
+  const perimetre = perimetreDeKnip();
+  const fichiers = fichiersDeCodeDuDepot();
+  const horsDeKnip = fichiers.filter(
+    (fichier) =>
+      !perimetre.some(
+        ({ dossier, extensions }) =>
+          fichier.startsWith(`${dossier}/`) && extensions.includes(extname(fichier).slice(1)),
+      ),
+  );
+
+  assert.deepEqual(
+    horsDeKnip,
+    [],
+    'ci-portes : un fichier de code echappe a knip : la porte de code mort ne voit ni son export inutile ni sa perte du dernier importeur.',
+  );
+});
+
 test('ci-portes : eslint juge chaque fichier de code de src, e2e et scripts avec tout sonarjs et les interdits d eval', async () => {
   const eslint = eslintDuScriptLint();
   const regles = [
@@ -1002,9 +1106,7 @@ test('ci-portes : eslint juge chaque fichier de code de src, e2e et scripts avec
     'no-implied-eval',
     'no-new-func',
   ];
-  const fichiers = git(RACINE, ['ls-files', '-z', '--cached', '--others', '--exclude-standard'])
-    .split('\0')
-    .filter((fichier) => /^(src|e2e|scripts)\/.+\.[cm]?[jt]s$/.test(fichier));
+  const fichiers = fichiersDeCodeDuDepot();
   const incomplets = [];
   for (const fichier of fichiers) {
     const { rules = {} } = (await eslint.calculateConfigForFile(cheminDuDepot(fichier))) ?? {};
@@ -1015,10 +1117,6 @@ test('ci-portes : eslint juge chaque fichier de code de src, e2e et scripts avec
   assert.ok(
     regles.length > 0,
     'ci-portes : sonarjs ne recommande aucune regle, la garde ne voit rien.',
-  );
-  assert.ok(
-    new Set(fichiers.map((fichier) => extname(fichier))).size > 2,
-    'ci-portes : la garde ne lit pas chaque langage de code du depot.',
   );
   assert.deepEqual(
     incomplets,
