@@ -75,6 +75,7 @@ h3 {
   color: var(--ink-soft, #3c3529);
   font-size: clamp(0.95rem, 1.35cqi, 1.1rem);
   line-height: 1.5;
+  white-space: pre-line;
 }
 
 .slide-lesson__formula {
@@ -90,6 +91,7 @@ h3 {
   font-variant-numeric: tabular-nums;
   line-height: 1.4;
   overflow-wrap: anywhere;
+  white-space: pre-line;
 }
 
 .slide-lesson__steps {

@@ -79,13 +79,21 @@ export class FpPro extends FpRedaction<ProCas> {
       <aside class="fp-scene fp-pro__cas">
         ${this.metier(cas)}
         <div class="fp-prose fp-pro__corps">
-          <p data-testid="situation">${escapeHtml(cas.situation)}</p>
+          <p data-testid="situation">${this.paragraphes(cas.situation)}</p>
           ${this.geste(cas)}
           ${this.consequence(cas)}
         </div>
         ${suite}
       </aside>
     `;
+  }
+
+  private paragraphes(situation: string): EscapedHtml {
+    return safeHtml`${situation
+      .split('\n')
+      .map(
+        (paragraphe) => safeHtml`<span class="fp-pro__paragraphe">${escapeHtml(paragraphe)}</span>`,
+      )}`;
   }
 
   private metier(cas: ProCas): EscapedHtml {

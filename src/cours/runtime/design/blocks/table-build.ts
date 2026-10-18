@@ -15,6 +15,7 @@ export const tableBuild = `
 }
 
 :where(.fp-root) .fp-table-build__tableau {
+  margin-inline: auto;
   border-collapse: collapse;
 }
 
@@ -25,7 +26,7 @@ export const tableBuild = `
   font-size: calc(0.85rem * var(--fp-echelle));
   font-weight: 700;
   letter-spacing: 0.06em;
-  text-align: left;
+  text-align: center;
   text-transform: uppercase;
 }
 
@@ -128,7 +129,7 @@ export const tableBuild = `
 }
 
 :where(.fp-root) .fp-table-build__valider {
-  justify-self: start;
+  justify-self: center;
   padding: var(--fp-s-2) var(--fp-s-4);
   border: 1px solid var(--fp-teal-deep);
   border-radius: var(--fp-r-pill);
@@ -168,6 +169,10 @@ export const tableBuild = `
   flex-wrap: wrap;
   gap: var(--fp-s-2);
   align-items: center;
+}
+
+:where(.fp-root) .fp-table-build__consignes {
+  justify-self: center;
 }
 
 :where(.fp-root) .fp-table-build__consignes,
