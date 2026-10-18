@@ -64,6 +64,17 @@ describe('FpPro', () => {
     expect(lu(hote, 'situation')).toBe(CAS.situation);
   });
 
+  it('met chaque ligne de la situation dans son propre paragraphe', () => {
+    hote.cas = buildProCas({ id: 'M-PARAGRAPHES', situation: 'Lundi, 9 h.\nHélène écrit.' });
+    const paragraphes = hote.shadowRoot?.querySelectorAll(
+      '[data-testid="situation"] .fp-pro__paragraphe',
+    );
+    expect([...(paragraphes ?? [])].map((paragraphe) => paragraphe.textContent)).toEqual([
+      'Lundi, 9 h.',
+      'Hélène écrit.',
+    ]);
+  });
+
   it('pose la situation sans encadré du geste quand le cours ne nomme aucun geste', () => {
     hote.cas = buildProCas({ id: 'M-METIER-SANS-GESTE', geste: null });
 

@@ -1,0 +1,77 @@
+{
+  "cours": "b2-04",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours-b2-04-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Pour débuter : le loyer · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "loyer-croissant.webp",
+          "octets": 128086,
+          "sha256": "75481ffb8d7e77d994914893b2aecf73b200f54037996fc3a7743d6f01331925"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-08",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Des points alignés · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "points-alignes.webp",
+          "octets": 131662,
+          "sha256": "163ed718a6de2b1dee6b601564f2c1f71fc2064e66a2c8a540d5b83c1e953d6e"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A2-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le livret · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "livret-interets-composes.webp",
+          "octets": 138588,
+          "sha256": "2829f571defb897a09db2b035f5b4519ec338840b3c0f6afa2089fea9a0e053b"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A3-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La tirelire · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "tirelire-boucle.webp",
+          "octets": 154562,
+          "sha256": "e4d33cd0ad95a8b2018c8b0d05ffb7102bfe69c3632eaf53b56d9d05da8aec75"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A3-04",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Les loyers d’un bail · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "loyers-du-bail.webp",
+          "octets": 147068,
+          "sha256": "12064d5f5f5f9a95b1f7fc6fc37f8aad8776c3c7945e4ad15cdca284a7cd686e"
+        }
+      ]
+    }
+  ]
+}

@@ -182,6 +182,7 @@ export const base = `
   font-size: var(--fp-titre);
   line-height: 1.2;
   color: var(--fp-texte-fort);
+  white-space: pre-line;
 }
 
 :where(.fp-root) .fp-cases {

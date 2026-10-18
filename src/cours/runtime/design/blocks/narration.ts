@@ -178,6 +178,14 @@ export const pro = `
   width: 100%;
 }
 
+:where(.fp-root) .fp-pro__paragraphe {
+  display: block;
+}
+
+:where(.fp-root) .fp-pro__paragraphe + .fp-pro__paragraphe {
+  margin-top: var(--fp-s-2);
+}
+
 :where(.fp-root) .fp-pro__geste {
   display: grid;
   gap: var(--fp-s-1);
