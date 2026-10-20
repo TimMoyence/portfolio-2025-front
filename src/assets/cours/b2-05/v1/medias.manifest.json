@@ -1,0 +1,77 @@
+{
+  "cours": "b2-05",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours-b2-05-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le livret à 3 % · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "livret-interets-composes.webp",
+          "octets": 150852,
+          "sha256": "c7deefaa44729c7392cae3944f9303b237ae284e512b50878c6742b92b2d6094"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-08",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Futur : ×, présent : ÷ · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "capitaliser-actualiser.webp",
+          "octets": 135910,
+          "sha256": "86145117e2237a57a7972c96e4bb12624bc838a186e2d8149ec01307c3ab4ff2"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A2-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Chaque versement a sa durée · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "frise-des-versements.webp",
+          "octets": 139584,
+          "sha256": "da53618e2c5d0452820380e6a47053a88faf80ad6f52ea9f4ac64264f9bf34f3"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A3-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Les intérêts d’abord, le reste rembourse · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "annuite-decomposee.webp",
+          "octets": 159758,
+          "sha256": "e26acac5f4e09d8805e83772ba0abc5697f79ad81832827fc127f7e0fdaae45e"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A3-04",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Ce que l’on paie en plus · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "cout-du-credit.webp",
+          "octets": 153450,
+          "sha256": "399b0b5f8d030cdfeae6ac5d879242b1057fbac9705fa19e04460883ca0f28a1"
+        }
+      ]
+    }
+  ]
+}
