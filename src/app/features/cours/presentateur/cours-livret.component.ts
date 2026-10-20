@@ -166,9 +166,6 @@ type VueDuLivret = 'sujet' | 'corrige';
                     }
                   </ol>
                 }
-                @if (page.ecran.notes !== '') {
-                  <p class="livret__notes" data-testid="livret-notes">{{ page.ecran.notes }}</p>
-                }
               </aside>
             </section>
           }

@@ -330,7 +330,7 @@ describe('CoursLivretComponent', () => {
     });
   });
 
-  it('QP-17 · accompagne chaque écran du corrigé de ses notes et de ses bonnes réponses, sans guide formateur même si le déroulé en porte encore un', async () => {
+  it('QP-17 · accompagne chaque écran du corrigé de ses bonnes réponses, sans notes ni guide formateur même si le déroulé en porte encore', async () => {
     const ecranAvecGuide = {
       ...buildEcranDeroule({ id: 'ecran-guide' }),
       guide: { aDire: 'Guide retiré du livret', reponse: 'Réponse du guide retiré' },
@@ -342,12 +342,12 @@ describe('CoursLivretComponent', () => {
 
     basculerSurLeCorrige(fixture);
 
-    expect(un(fixture, 'livret-notes')?.textContent).toContain(
-      'Rappeler la formule de capitalisation',
-    );
     expect(un(fixture, 'livret-reponses')?.textContent).toContain('1 480,24');
+    expect(un(fixture, 'livret-notes')).toBeNull();
     expect(un(fixture, 'livret-guide')).toBeNull();
-    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('guide retiré');
+    const texte = (fixture.nativeElement as HTMLElement).textContent;
+    expect(texte).not.toContain('Rappeler la formule de capitalisation');
+    expect(texte).not.toContain('guide retiré');
   });
 
   it('numérote chaque bonne réponse du corrigé par l’énoncé de sa question, sans identifiant technique', async () => {

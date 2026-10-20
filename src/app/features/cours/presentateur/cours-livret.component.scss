@@ -82,11 +82,6 @@ $hauteur-de-toile-imprimee: math.div($largeur-imprimee * 9, 16);
   font-weight: 600;
 }
 
-.livret__notes {
-  margin: 0;
-  font-style: italic;
-}
-
 .livret__attendu {
   display: grid;
   gap: 0.25rem;
