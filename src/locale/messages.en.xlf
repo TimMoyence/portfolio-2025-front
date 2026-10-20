@@ -11804,6 +11804,24 @@
         <target>Bachelor 3 · Interactive course</target>
       </segment>
     </unit>
+    <unit id="formations-list.b1-01.title">
+      <segment>
+        <source>B1-01 — Proportions et pourcentages</source>
+        <target>B1-01 — Proportions and percentages</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b1-01.description">
+      <segment>
+        <source>Calculer une part et dire de quel tout elle parle, multiplier deux parts, calculer un taux global, distinguer points et pourcentages, taux de marge et taux de marque, puis répartir un effectif au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Compute a share and say which whole it refers to, multiply two shares, compute an overall rate, tell percentage points from percentages and markup from margin rate, then split a headcount in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b1-01.duration">
+      <segment>
+        <source>2 h 40</source>
+        <target>2 h 40 min</target>
+      </segment>
+    </unit>
     <unit id="formations-list.b3-01.title">
       <segment>
         <source>B3-01 — Expert Data : de la donnée brute à la décision</source>

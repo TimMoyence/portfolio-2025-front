@@ -29,6 +29,18 @@ interface ExtraitAdmis {
 }
 
 const EXTRAITS_ADMIS: Readonly<Partial<Record<string, readonly ExtraitAdmis[]>>> = {
+  'B1-01-A2-01-REFLEXION-CARTE': [
+    {
+      extrait: '40 % réservent leur table en ligne',
+      raison:
+        'le taux de réservation en ligne des porteurs de la carte, donnée de la réflexion ; il ne livre pas la part de 40 % des clients de Nantes, cellule C2 du tableur A1-10',
+    },
+    {
+      extrait: '40 % des clients de Nantes réservent en ligne avec la carte',
+      raison:
+        'la phrase fausse de Théo, que la réflexion fait corriger ; elle ne livre pas la cellule C2 du tableur A1-10',
+    },
+  ],
   'B2-03-A2-01-CONTRAIRE': [
     {
       extrait: 'sans employer le mot « non »',

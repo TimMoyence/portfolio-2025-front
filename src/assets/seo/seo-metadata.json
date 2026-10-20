@@ -1397,6 +1397,74 @@
       }
     },
     {
+      "id": "formations-b1-01-proportions-pourcentages",
+      "path": "/formations/b1-01-proportions-pourcentages",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-10-20",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Proportions et pourcentages",
+          "path": "/formations/b1-01-proportions-pourcentages"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Proportions et pourcentages — B1 — Tim Moyence",
+          "description": "Formation B1 interactive : calculer une part et nommer son tout, multiplier deux parts, calculer un taux global, distinguer points et pourcentages, taux de marge et taux de marque.",
+          "ogTitle": "Proportions et pourcentages — B1",
+          "ogDescription": "Un cours interactif pour se demander « parmi qui ? » devant chaque pourcentage et répartir un effectif au tableur, comme en CCF.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Proportions et pourcentages",
+            "description": "Formation B1 interactive sur les proportions, la population de référence, le taux global, les points de pourcentage et les taux de marge et de marque.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H40M",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b1-01-proportions-pourcentages"
+          }
+        },
+        "en": {
+          "title": "Proportions and percentages — B1 — Tim Moyence",
+          "description": "Interactive B1 course: compute a share and name its whole, multiply two shares, compute an overall rate, tell percentage points from percentages, markup from margin rate.",
+          "ogTitle": "Proportions and percentages — B1",
+          "ogDescription": "An interactive course to ask “out of whom?” before every percentage and split a headcount in a spreadsheet, as in the CCF exam.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Proportions and percentages",
+            "description": "Interactive B1 course on proportions, the reference population, overall rates, percentage points, markup and margin rates.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H40M",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b1-01-proportions-pourcentages"
+          }
+        }
+      }
+    },
+    {
       "id": "formations-b2-01-traitement-information-chiffree",
       "path": "/formations/b2-01-traitement-information-chiffree",
       "index": false,
