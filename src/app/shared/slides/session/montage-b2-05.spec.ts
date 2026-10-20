@@ -5,8 +5,8 @@ import {
 } from '../../../../testing/montage-d-instantane';
 
 decrireLeMontageDeLInstantane('B2-05', INSTANTANE_B2_05, {
-  empreinte: '6370f27445c91d8e1f80f703b27c838edac7ea4263e77fc5ad2daa766f72d272',
-  ecrans: 34,
+  empreinte: 'c2683aafad7bdeb8525e15121d540589e01ca12a144442ec22ffb7445f217554',
+  ecrans: 33,
   publicsAuCatalogue: [
     'A1-02-ACCROCHE',
     'A1-04-ACQUIS',
@@ -14,7 +14,6 @@ decrireLeMontageDeLInstantane('B2-05', INSTANTANE_B2_05, {
     'A1-07-COURS-INTERETS-COMPOSES',
     'A1-08-COURS-VALEUR-ACTUELLE',
     'A2-02-COURS-ANNUITES',
-    'A2-03-COURS-ANNUITES-TABLEUR',
     'A3-01-GRAPHIQUE',
     'A3-03-COURS-EMPRUNT',
     'A3-04-COURS-COUT-TABLEUR',
