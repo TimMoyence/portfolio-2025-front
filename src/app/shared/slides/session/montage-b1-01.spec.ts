@@ -5,16 +5,22 @@ import {
 } from '../../../../testing/montage-d-instantane';
 
 decrireLeMontageDeLInstantane('B1-01', INSTANTANE_B1_01, {
-  empreinte: '9debb48d9e65b31249d390b767da16b7cb22bdc915f1c8dfafce374587200891',
-  ecrans: 31,
+  empreinte: 'f379ceb1bf127aec61455efed5bbea80e0e4eac29179fb9909ba0b518f6a5316',
+  ecrans: 37,
   publicsAuCatalogue: [
     'A1-02-ACCROCHE',
     'A1-04-DOSSIER',
+    'A1-06-ILLUSTRATION-CLASSE',
     'A1-06-COURS-PROPORTION',
+    'A1-07-ILLUSTRATION-PARMI',
     'A1-07-COURS-REFERENCE-TABLEUR',
+    'A2-02-ILLUSTRATION-SALLE',
     'A2-02-COURS-PROPORTION-DE-PROPORTION',
+    'A2-03-ILLUSTRATION-DEUX-CLASSES',
     'A2-03-COURS-TAUX-GLOBAL',
+    'A3-02-ILLUSTRATION-CODE',
     'A3-02-COURS-POINTS',
+    'A3-03-ILLUSTRATION-ETIQUETTE',
     'A3-03-COURS-MARGE-MARQUE',
     'A4-01-SITUATION-FESTIVAL',
     'A4-05-FICHE-MEMO',

@@ -1,0 +1,91 @@
+{
+  "cours": "b1-01",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours-b1-01-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-06",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Pour débuter : la classe de 25 · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "classe-alternants.webp",
+          "octets": 149430,
+          "sha256": "7aa87024a876aeb9f8c6dbefdb549fab3abcf8eef2194a63744b64029f811521"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Parmi qui ? · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "parmi-qui.webp",
+          "octets": 131172,
+          "sha256": "25fa79a1f43928c2fd38ddf8555d0e9cae6d050e5d5ba2a5d12a4ccf2b63152f"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A2-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La part d’une part · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "salle-de-spectacle.webp",
+          "octets": 195794,
+          "sha256": "48e2eb3ce82554e9ed40dff24d7730a0dd6a7dba138f1be7b6d50d31e3f75d27"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Deux classes, un taux · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "deux-classes.webp",
+          "octets": 182222,
+          "sha256": "22d57e6fa81d904d4a29042175aacee0fec4b10c497d60e5f153cb14633ecbf2"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A3-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Points ou pourcentage ? · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "code-de-la-route.webp",
+          "octets": 107074,
+          "sha256": "2df58a858f2340cac35cc39d92a428a7c26254b9074c92041ee25063fd54993d"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "ecran": "A3-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Une marge, deux taux · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "etiquette-marge-marque.webp",
+          "octets": 119374,
+          "sha256": "acb88fc2a77c0b3e3a1c9a2c5d8efc99f615a51c6702d9dea1b1997e54c75019"
+        }
+      ]
+    }
+  ]
+}
