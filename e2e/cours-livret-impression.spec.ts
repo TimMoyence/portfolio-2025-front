@@ -16,7 +16,7 @@ import {
   lesPlusHautes,
 } from './impression-a4';
 
-const COURS = ['b2-01', 'b2-02', 'b2-03', 'b2-04', 'b2-05', 'b2-06', 'b3-01'] as const;
+const COURS = ['b1-01', 'b2-01', 'b2-02', 'b2-03', 'b2-04', 'b2-05', 'b2-06', 'b3-01'] as const;
 
 type Cours = (typeof COURS)[number];
 

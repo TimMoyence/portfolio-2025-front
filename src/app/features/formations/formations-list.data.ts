@@ -77,6 +77,12 @@ function coursBachelorEnSeance(carte: CarteDeCoursEnSeance): FormationCard {
 
 export const FORMATIONS: readonly FormationCard[] = [
   coursBtsEnSeance({
+    link: '/formations/b1-01-proportions-pourcentages',
+    title: $localize`:@@formations-list.b1-01.title:B1-01 — Proportions et pourcentages`,
+    description: $localize`:@@formations-list.b1-01.description:Calculer une part et dire de quel tout elle parle, multiplier deux parts, calculer un taux global, distinguer points et pourcentages, taux de marge et taux de marque, puis répartir un effectif au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b1-01.duration:2 h 40`,
+  }),
+  coursBtsEnSeance({
     link: '/formations/b2-01-traitement-information-chiffree',
     title: $localize`:@@formations-list.b2.title:B2-01 — Lire et contrôler l’information chiffrée`,
     description: $localize`:@@formations-list.b2.description:Lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.`,

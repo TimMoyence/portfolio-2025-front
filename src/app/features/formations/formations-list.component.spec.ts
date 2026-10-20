@@ -51,7 +51,7 @@ describe('FormationsListComponent', () => {
 
   it('devrait exposer la liste des formations depuis les donnees statiques', () => {
     expect(component['formations']).toBe(FORMATIONS);
-    expect(component['formations'].length).toBe(11);
+    expect(component['formations'].length).toBe(12);
   });
 
   it('devrait composer les sections Asili (hero, grille, format, bande CTA)', () => {
