@@ -22,10 +22,15 @@ import {
   readIdentity,
   saveIdentity,
 } from '../../../../../cours/runtime/core/identity';
-import { enqueueFreeResponse, pendingFreeResponses } from './free-response.queue';
 import { ecransPublicsDe } from '../../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../../testing/fixtures/instantanes-des-cours';
-import { ReponsesLibresService } from '../../session/reponses-libres.service';
+import { EnvoisDeSeanceService } from '../../session/envois-de-seance.service';
+import { enqueue } from '../../../../../cours/runtime/core/queue';
+import {
+  buildReponseLibreEnFile,
+  reponsesLibresEnFile,
+  viderLaFileDEnvois,
+} from '../../../../../testing/factories/queue.factory';
 import { presentationDe } from '../../visual/presentation-v2';
 import type { ReflectionInteraction } from './slide-reflection.component';
 import { SlideReflectionComponent } from './slide-reflection.component';
@@ -66,6 +71,7 @@ describe('SlideReflectionComponent', () => {
   let formations: jasmine.SpyObj<FormationsPort>;
 
   beforeEach(() => {
+    viderLaFileDEnvois();
     clearIdentity();
     saveIdentity({ prenom: 'Anais', nom: 'Rivet', email: 'anais@example.com' });
     formations = createFormationsPortStub();
@@ -162,7 +168,7 @@ describe('SlideReflectionComponent', () => {
     const horloge = sousHorlogeArreteeA(new Date('2026-10-16T08:00:00Z'));
 
     function dureeEnvoyee(avantLEnvoi: () => void): number | undefined {
-      const envoyer = spyOn(TestBed.inject(ReponsesLibresService), 'envoyer').and.resolveTo(
+      const envoyer = spyOn(TestBed.inject(EnvoisDeSeanceService), 'envoyer').and.resolveTo(
         'enregistre',
       );
       const fixture = monterEnSeance('seance', 'seance-duree');
@@ -189,8 +195,10 @@ describe('SlideReflectionComponent', () => {
   describe('etats de l envoi en seance', () => {
     const CLE = (sessionId: string): string => `${cleEtudiante()}:${sessionId}:ecran-1:reflexion-1`;
 
-    async function clesEnAttente(sessionId: string): Promise<string[]> {
-      return (await pendingFreeResponses(sessionId, cleEtudiante())).map((envoi) => envoi.key);
+    function clesEnAttente(sessionId: string): string[] {
+      return reponsesLibresEnFile(sessionId, cleEtudiante()).map(
+        (envoi) => `${envoi.studentKey}:${envoi.sessionId}:${envoi.screenId}:${envoi.questionId}`,
+      );
     }
 
     it('annonce l enregistrement quand le serveur accepte', async () => {
@@ -235,7 +243,7 @@ describe('SlideReflectionComponent', () => {
 
     it('retrouve la réflexion gardée, figée, après un rechargement, depuis l état servi', () => {
       const sessionId = `seance-rechargee-${Date.now()}`;
-      TestBed.inject(ReponsesLibresService).restaurer(sessionId, [
+      TestBed.inject(EnvoisDeSeanceService).restaurer(sessionId, [
         { activityId: 'reflexion-1', response: 'Gardée avant le rechargement.' },
       ]);
 
@@ -313,13 +321,13 @@ describe('SlideReflectionComponent', () => {
 
       expect(racine(fixture).textContent).toContain('En attente de réseau');
       expect(racine(fixture).textContent).not.toContain('Échec');
-      expect(await clesEnAttente(sessionId)).toEqual([CLE(sessionId)]);
+      expect(clesEnAttente(sessionId)).toEqual([CLE(sessionId)]);
 
       formations.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
       window.dispatchEvent(new Event('online'));
       await jusqua(fixture, () => etatDeLaReflexion(fixture) === 'enregistre');
 
-      expect(await clesEnAttente(sessionId)).toEqual([]);
+      expect(clesEnAttente(sessionId)).toEqual([]);
     });
 
     it('limitee par la cadence du serveur, fige la reflexion en file et dit qu elle repartira seule, pas le reseau', async () => {
@@ -338,7 +346,7 @@ describe('SlideReflectionComponent', () => {
           .trim(),
       ).toBe(REFLEXION_LIMITEE);
       attendreFigee(fixture, 'Envoyée après l attente.');
-      expect(await clesEnAttente(sessionId)).toEqual([CLE(sessionId)]);
+      expect(clesEnAttente(sessionId)).toEqual([CLE(sessionId)]);
     });
 
     function garderSurEcranNonServi(sessionId: string): Promise<ReturnType<typeof monterEnSeance>> {
@@ -355,11 +363,11 @@ describe('SlideReflectionComponent', () => {
       const fixture = await garderSurEcranNonServi(sessionId);
 
       formations.enregistrerReponseLibre.and.returnValue(of({ status: 'enregistre' }));
-      await TestBed.inject(ReponsesLibresService).reprendre(sessionId, 'jeton-1');
+      await TestBed.inject(EnvoisDeSeanceService).reprendre(sessionId, 'jeton-1');
       await jusqua(fixture, () => etatDeLaReflexion(fixture) === 'enregistre');
 
       expect(etatDeLaReflexion(fixture)).toBe('enregistre');
-      expect(await clesEnAttente(sessionId)).toEqual([]);
+      expect(clesEnAttente(sessionId)).toEqual([]);
     });
 
     it('sur un ecran pas encore servi, l annonce et garde la reflexion en file', async () => {
@@ -367,7 +375,7 @@ describe('SlideReflectionComponent', () => {
       const fixture = await garderSurEcranNonServi(sessionId);
 
       expect(racine(fixture).textContent).toContain('pas encore ouvert');
-      expect(await clesEnAttente(sessionId)).toEqual([CLE(sessionId)]);
+      expect(clesEnAttente(sessionId)).toEqual([CLE(sessionId)]);
     });
 
     const REFUS: readonly (readonly [MotifRefusReponseLibre, number, string, string])[] = [
@@ -379,15 +387,7 @@ describe('SlideReflectionComponent', () => {
     for (const [motif, statut, attendu, message] of REFUS) {
       it(`sur un refus ${motif}, l annonce et retire la reflexion de la file`, async () => {
         const sessionId = `seance-${motif}-${Date.now()}`;
-        await enqueueFreeResponse({
-          key: CLE(sessionId),
-          sessionId,
-          studentKey: cleEtudiante(),
-          screenId: 'ecran-1',
-          activityId: 'reflexion-1',
-          response: 'Mise en file plus tôt.',
-          dureeMs: 10,
-        });
+        enqueue(buildReponseLibreEnFile({ sessionId, studentKey: cleEtudiante() }));
         const fixture = await garderMalgreLeRefus(
           sessionId,
           new ReponseLibreRefusee(motif, statut),
@@ -397,7 +397,7 @@ describe('SlideReflectionComponent', () => {
 
         expect(etatDeLaReflexion(fixture)).toBe(attendu);
         expect(racine(fixture).textContent).toContain(message);
-        expect(await clesEnAttente(sessionId)).toEqual([]);
+        expect(clesEnAttente(sessionId)).toEqual([]);
       });
     }
   });

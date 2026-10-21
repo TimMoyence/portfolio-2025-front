@@ -33,12 +33,6 @@ import {
 import type { Lock } from '../../../../cours/runtime/core/lock';
 import { createLock } from '../../../../cours/runtime/core/lock';
 import type { EnvoiReponse, NatureEnvoi } from '../../../../cours/runtime/core/queue';
-import {
-  enqueue,
-  flush,
-  pending,
-  purgerLesAutresEnvois,
-} from '../../../../cours/runtime/core/queue';
 import type { Brouillons } from '../../../../cours/runtime/core/storage';
 import { creerBrouillons, purgerLesAutresBrouillons } from '../../../../cours/runtime/core/storage';
 import {
@@ -95,11 +89,12 @@ import {
 } from '../../../shared/slides/session/lecture-ecran';
 import { memeValeur } from '../../../shared/slides/session/reinjection';
 import type { LimiteDeDebit } from '../../../core/models/limite-de-debit';
-import type { EtatEnvoiLibre } from '../../../shared/slides/session/reponses-libres.service';
+import type { EtatEnvoiLibre } from '../../../shared/slides/session/envois-de-seance.service';
 import {
   cleDeReponseLibre,
-  ReponsesLibresService,
-} from '../../../shared/slides/session/reponses-libres.service';
+  EnvoisDeSeanceService,
+  ETATS_EN_FILE,
+} from '../../../shared/slides/session/envois-de-seance.service';
 import {
   CoursPresentationComponent,
   type TelechargementDePieceJointe,
@@ -157,12 +152,6 @@ interface VerdictAffiche extends VerdictRecu {
 }
 
 const SLUG_DE_COURS = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
-const ETATS_LIBRES_EN_ATTENTE: readonly EtatEnvoiLibre[] = [
-  'attente_reseau',
-  'attente_limite',
-  'ecran_non_servi',
-];
 
 const MESSAGE_CODE = $localize`:cours.codeInvalide|@@coursCodeInvalide:Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.`;
 const MESSAGE_IDENTITE = $localize`:cours.identiteRefusee|@@coursIdentiteRefusee:Vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez.`;
@@ -703,7 +692,7 @@ export class CoursEtudiantComponent {
   readonly enAttente = signal(false);
   readonly fileRetenueParLaLimite = signal(false);
   protected readonly fileLimitee = computed(() => this.enLigne() && this.fileRetenueParLaLimite());
-  readonly fileRefusee = signal(false);
+  readonly fileRefusee = computed(() => this.envois.fileRefusee());
   readonly terminee = signal(false);
   readonly evince = signal(false);
   readonly posteLibere = signal(false);
@@ -728,11 +717,11 @@ export class CoursEtudiantComponent {
       ecran !== null && presentationDe(ecran)?.renderer === 'reflection'
         ? cleDeReponseLibre(sessionId, ecran.id, '')
         : null;
-    for (const [cle, etat] of this.reponsesLibres.etatsDesEnvois()) {
+    for (const [cle, etat] of this.envois.etatsDesEnvois()) {
       if (
         cle.startsWith(`${sessionId}:`) &&
         (ditesParLaBrique === null || !cle.startsWith(ditesParLaBrique)) &&
-        ETATS_LIBRES_EN_ATTENTE.includes(etat)
+        ETATS_EN_FILE.includes(etat)
       ) {
         return etat;
       }
@@ -800,7 +789,7 @@ export class CoursEtudiantComponent {
 
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFlux = inject(CREATEUR_FLUX);
-  private readonly reponsesLibres = inject(ReponsesLibresService);
+  private readonly envois = inject(EnvoisDeSeanceService);
   private readonly coursVise = toSignal(
     inject(ActivatedRoute).queryParamMap.pipe(map((parametres) => parametres.get('cours'))),
     { initialValue: null },
@@ -868,10 +857,10 @@ export class CoursEtudiantComponent {
         fenetre.removeEventListener('offline', surPerte);
       });
     }
-    this.reponsesLibres.envoisReussis.pipe(takeUntilDestroyed()).subscribe(() => {
+    this.envois.envoisReussis.pipe(takeUntilDestroyed()).subscribe(() => {
       this.reprendreEnFondCeQuiAttend();
     });
-    this.reponsesLibres.limitesAtteintes.pipe(takeUntilDestroyed()).subscribe((limite) => {
+    this.envois.limitesAtteintes.pipe(takeUntilDestroyed()).subscribe((limite) => {
       this.repartirApresLaLimite(limite);
     });
   }
@@ -1054,7 +1043,7 @@ export class CoursEtudiantComponent {
   ): void {
     this.seanceOuverte.set({ sessionId: rattachement.sessionId, jeton: rattachement.jeton });
     purgerLesAutresBrouillons(rattachement.sessionId, rattachement.participantId);
-    this.fileRefusee.set(!purgerLesAutresEnvois(rattachement.sessionId));
+    this.envois.ouvrir(rattachement.sessionId);
     this.brouillons.set(creerBrouillons(rattachement.sessionId, rattachement.participantId));
     this.sujet.set(sujet);
     const deck = this.monterLeDeck(sujet, rattachement);
@@ -1229,7 +1218,6 @@ export class CoursEtudiantComponent {
   private reprendreCeQuiAttend(): Promise<void> {
     return Promise.all([
       this.viderLaFile(),
-      this.reprendreLesReponsesLibres(),
       this.relireLEcranRetenu(),
       this.relireLesRevelations(),
     ]).then(() => undefined);
@@ -1315,10 +1303,6 @@ export class CoursEtudiantComponent {
     await action(sessionId, this.jeton());
   }
 
-  private reprendreLesReponsesLibres(): Promise<void> {
-    return this.pourLaSeance((sessionId, jeton) => this.reponsesLibres.reprendre(sessionId, jeton));
-  }
-
   private async relireLesStrategiesRevelees(): Promise<void> {
     const ecran = this.ecranCourant();
     const sessionId = this.sessionId();
@@ -1371,7 +1355,7 @@ export class CoursEtudiantComponent {
       const vu = this.pilotage();
       const etat = await firstValueFrom(this.port.lireMonEtat(sessionId, this.jeton()));
       this.repriseIndisponible.set(false);
-      this.reponsesLibres.restaurer(sessionId, etat.reponsesLibres);
+      this.envois.restaurer(sessionId, etat.reponsesLibres);
       const rappels = new Set(etat.rappels.questionIds);
       const ecranDesRappels = ecranDuRappel(sujet);
       const retrouves = retoursDeLEtat(etat, (identifiant) =>
@@ -1620,7 +1604,7 @@ export class CoursEtudiantComponent {
 
   private envoyerLeTexte(evenement: EvenementDe<'libre'>): Promise<void> {
     return this.pourLaSeance((sessionId, jeton) =>
-      this.reponsesLibres.envoyer(sessionId, jeton, {
+      this.envois.envoyer(sessionId, jeton, {
         screenId: evenement.screenId,
         activityId: evenement.activityId,
         response: evenement.response,
@@ -1692,53 +1676,32 @@ export class CoursEtudiantComponent {
   }
 
   private mettreEnFile(envoi: Envoi): void {
-    const identite = this.identite;
     const sessionId = this.sessionId();
-    if (identite === null || sessionId === null) {
-      return;
-    }
-    try {
-      enqueue({
-        nature: envoi.nature,
-        sessionId,
-        studentKey: identite.studentKey,
-        questionId: envoi.questionId,
-        valeur: envoi.valeur,
-        dureeMs: envoi.dureeMs,
-        horodatage: new Date().toISOString(),
-      });
+    if (sessionId !== null && this.envois.mettreEnFile({ ...envoi, sessionId })) {
       this.enAttente.set(true);
-    } catch {
-      this.fileRefusee.set(true);
     }
   }
 
   private async viderLaFile(): Promise<void> {
-    if (this.sessionId() === null || this.retenuesDuVidage !== null || !this.fileDeLaSeance()) {
+    const sessionId = this.sessionId();
+    if (sessionId === null || this.retenuesDuVidage !== null) {
       return;
     }
     const retenues: boolean[] = [];
     this.retenuesDuVidage = retenues;
     try {
-      await flush(async (envoi) => {
+      await this.envois.reprendre(sessionId, this.jeton(), async (envoi) => {
         const issue = await this.renvoyer(envoi);
         if (issue !== 'transmise') {
           retenues.push(issue.limitee);
         }
         return issue === 'transmise';
-      }, this.identite?.studentKey);
-    } catch {
-      this.fileRefusee.set(true);
+      });
     } finally {
       this.retenuesDuVidage = null;
-      this.enAttente.set(this.fileDeLaSeance());
+      this.enAttente.set(this.envois.reponsesEnAttente(sessionId));
       this.fileRetenueParLaLimite.set(this.enAttente() && retenues.includes(true));
     }
-  }
-
-  private fileDeLaSeance(): boolean {
-    const sessionId = this.sessionId();
-    return pending().some((envoi) => envoi.sessionId === sessionId);
   }
 
   private async renvoyer(envoi: EnvoiReponse): Promise<IssueDeLEnvoi> {
