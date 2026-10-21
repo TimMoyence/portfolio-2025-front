@@ -42,7 +42,10 @@ L'agent respecte strictement cette stack. Il n'introduit pas React, Vue, un stat
   - les composants ne doivent pas embarquer de logique d'infrastructure ou de plomberie reseau.
 - Appliquer DRY :
   - mutualiser les comportements repetes ;
-  - ne pas dupliquer les appels HTTP, les mappings, les contrats ou les etats UI.
+  - ne pas dupliquer les appels HTTP, les mappings, les contrats ou les etats UI ;
+  - ne jamais ecrire un type de reponse ou un schema de lecture a la main : ils viennent de
+    `contrat/`, genere depuis le commit du back epingle dans `contrat.json` (ADR 0005) ; une regle
+    metier servie par le back n'est pas recalculee ici.
 - Appliquer KISS :
   - privilegier une composition Angular simple et lisible ;
   - pas de sur-ingenierie, pas d'abstraction speculative, pas de pattern invente si Angular fournit deja la solution.

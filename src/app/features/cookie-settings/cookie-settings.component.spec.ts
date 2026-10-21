@@ -1,9 +1,10 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
-import type { MessageResponse } from '../../core/models/message.response';
+import type { CookieConsentResponseDto } from '../../../../contrat/types.gen';
 import { CookieConsentService } from '../../core/services/cookie-consent.service';
 import { CookieSettingsComponent } from './cookie-settings.component';
+import { accuse } from '../../../testing/factories/contact.factory';
 import {
   buildCookiePreferences,
   createCookieConsentServiceStub,
@@ -20,8 +21,8 @@ describe('CookieSettingsComponent', () => {
 
     consentServiceStub.getPreferences.and.returnValue(buildCookiePreferences());
     consentServiceStub.getDefaultPreferences.and.returnValue(buildCookiePreferences());
-    consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok' }));
-    consentServiceStub.withdrawConsent.and.returnValue(of({ message: 'ok' }));
+    consentServiceStub.saveConsent.and.returnValue(of(accuse()));
+    consentServiceStub.withdrawConsent.and.returnValue(of(accuse()));
 
     await TestBed.configureTestingModule({
       imports: [CookieSettingsComponent],
@@ -106,23 +107,21 @@ describe('CookieSettingsComponent', () => {
   });
 
   it('dit le succès sur toute réponse 2xx, sans lire de code recopié dans le corps', () => {
-    const component = sauvegarderAvecReponse(
-      of({ message: 'Cookie consent recorded successfully.' }),
-    );
+    const component = sauvegarderAvecReponse(of(accuse('Cookie consent recorded successfully.')));
 
     expect(component.showSaved).toBeTrue();
     expect(component.statusMessage).toBe(component.actions.saved);
   });
 
   it('rend le succès et les boutons quand la réponse arrive après le clic', () => {
-    const reponse = new Subject<MessageResponse>();
+    const reponse = new Subject<CookieConsentResponseDto>();
     consentServiceStub.saveConsent.and.returnValue(reponse);
     const fixture = rendre();
     const page = fixture.nativeElement as HTMLElement;
     fixture.componentInstance.savePreferences();
     fixture.detectChanges();
 
-    reponse.next({ message: 'Cookie consent recorded successfully.' });
+    reponse.next(accuse('Cookie consent recorded successfully.'));
     reponse.complete();
     fixture.detectChanges();
 
@@ -177,7 +176,7 @@ describe('CookieSettingsComponent', () => {
   });
 
   it('devrait passer isSaving a true pendant la sauvegarde et a false apres', () => {
-    consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok' }));
+    consentServiceStub.saveConsent.and.returnValue(of(accuse()));
 
     const component = rendre().componentInstance;
     expect(component.isSaving).toBeFalse();

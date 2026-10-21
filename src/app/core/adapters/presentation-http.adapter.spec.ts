@@ -1,21 +1,10 @@
 import { environment } from '../../../environments/environment';
 import { bancAdaptateurHttp, verifierErreurRelayee } from '../../../testing/http-attendu';
-import { lecturesStrictes } from '../../../testing/lecture-stricte';
 import type { PresentationInteractionsResponse } from '../ports/presentation.port';
 import { PresentationHttpAdapter } from './presentation-http.adapter';
 
 describe('PresentationHttpAdapter', () => {
   const banc = bancAdaptateurHttp(PresentationHttpAdapter);
-
-  describe('lecture des réponses servies par le back', () => {
-    lecturesStrictes(banc, [
-      {
-        route: 'GET /api/presentations/:slug/interactions',
-        chemin: '/presentations/ia-solopreneurs/interactions',
-        appel: (a) => a.getInteractions('ia-solopreneurs'),
-      },
-    ]);
-  });
 
   it('encode le slug dans l URL des interactions', () => {
     banc.adapter.getInteractions('ia solo/x').subscribe();

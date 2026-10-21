@@ -6,13 +6,13 @@ import { APP_CONFIG } from '../config/app-config.token';
 import type { AppConfig } from '../config/app-config.model';
 import { injecterLocaleDeLaPage } from '../config/locale-de-la-page';
 import type {
-  CookieConsentAction,
-  CookieConsentPayload,
-  CookieConsentPreferences,
-  CookieConsentSource,
-  CookieConsentState,
-} from '../models/cookie-consent.model';
-import type { MessageResponse } from '../models/message.response';
+  ActionDeConsentement,
+  CookieConsentPreferencesRequestDto as CookieConsentPreferences,
+  CookieConsentRequestDto,
+  CookieConsentResponseDto,
+  SourceDeConsentement,
+} from '../../../../contrat/types.gen';
+import type { CookieConsentState } from '../models/cookie-consent.model';
 import type { CookieConsentPort } from '../ports/cookie-consent.port';
 import { COOKIE_CONSENT_PORT } from '../ports/cookie-consent.port';
 
@@ -67,9 +67,9 @@ export class CookieConsentService {
 
   saveConsent(
     preferences: CookieConsentPreferences,
-    source: CookieConsentSource,
-    action: CookieConsentAction,
-  ): Observable<MessageResponse> {
+    source: SourceDeConsentement,
+    action: ActionDeConsentement,
+  ): Observable<CookieConsentResponseDto> {
     const normalized = this.normalizePreferences(preferences);
     const state: CookieConsentState = {
       policyVersion: this.getPolicyVersion(),
@@ -85,7 +85,7 @@ export class CookieConsentService {
 
     this.consentSubject.next(state);
 
-    const payload: CookieConsentPayload = {
+    const payload: CookieConsentRequestDto = {
       policyVersion: state.policyVersion,
       locale: state.locale,
       region: state.region,
@@ -97,7 +97,7 @@ export class CookieConsentService {
     return this.consentPort.recordConsent(payload);
   }
 
-  withdrawConsent(): Observable<MessageResponse> {
+  withdrawConsent(): Observable<CookieConsentResponseDto> {
     return this.saveConsent(this.getDefaultPreferences(), 'settings', 'withdraw');
   }
 

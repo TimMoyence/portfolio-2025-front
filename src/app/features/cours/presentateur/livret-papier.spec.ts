@@ -331,7 +331,11 @@ function sansReponse(jeu: EcranDeroule): EcranDeroule {
 const SOURCES_DE_REPONSE: readonly (readonly [string, Partial<EcranDeroule>])[] = [
   [
     'une bonne réponse',
-    { corriges: [{ questionId: 'jeu-comparable', bonneReponse: REPRISE, confusions: [] }] },
+    {
+      corriges: [
+        { questionId: 'jeu-comparable', bonneReponse: REPRISE, optionId: null, confusions: [] },
+      ],
+    },
   ],
   ['une explication', { explications: [{ reference: 'jeu-comparable', texte: REPRISE }] }],
   [
@@ -360,6 +364,7 @@ const SOURCES_DE_REPONSE: readonly (readonly [string, Partial<EcranDeroule>])[] 
             reference: 'A1',
             formuleReference: REPRISE,
             valeur: 0,
+            affichage: '0',
             tolerance: { type: 'absolue', valeur: 0 },
             forme: 'references',
           },
@@ -528,6 +533,7 @@ describe('livret papier des cours servis', () => {
             {
               questionId: 'jeu-comparable',
               bonneReponse: 'non comparable',
+              optionId: null,
               confusions: [{ id: 'meme-prix', libelle: 'Identique au prix de départ' }],
             },
           ],

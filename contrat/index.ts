@@ -491,7 +491,6 @@ export type {
   ToleranceResponseDto,
   ToolkitPageResponseDto,
   ToolkitRecapDto,
-  TypeDEcranServi,
   TypeDeProduction,
   TypeDeSection,
   TypeDeTolerance,

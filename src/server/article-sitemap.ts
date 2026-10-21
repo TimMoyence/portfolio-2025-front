@@ -1,7 +1,7 @@
 import { baseDeLApi } from './base-de-l-api';
 import { champsHorsContrat, garderEnCache, lireJsonJournalise } from './lecture-api';
 import type { DynamicArticleSitemapEntry } from './seo-builders';
-import { pageDArticlesServie } from '../app/core/adapters/site-schemas';
+import { zArticleListResponseDto as pageDArticlesServie } from '../../contrat/zod.gen';
 import { LOCALES_DU_SITE } from '../app/core/config/locales';
 import { urlDesArticles } from '../app/core/http/url-des-articles';
 

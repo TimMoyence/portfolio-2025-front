@@ -1,4 +1,3 @@
-import { lireNombreSaisi } from '../core/valeurs';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { FpReponse } from './reponse';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
@@ -100,11 +99,6 @@ export class FpNumeric extends FpReponse<NumericQuestionPublique> {
       return;
     }
     this.saisie = brut;
-    const valeur = lireNombreSaisi(brut);
-    if (valeur === null) {
-      this.refuserLEnvoi(this.texte('saisie-non-numerique'));
-      return;
-    }
-    this.conclureLEnvoi('fp-numeric-submit', { questionId: this.question?.id, valeur });
+    this.conclureLEnvoi('fp-numeric-submit', { questionId: this.question?.id, valeur: brut });
   }
 }

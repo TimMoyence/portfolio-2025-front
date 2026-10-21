@@ -3,11 +3,10 @@ import {
   verifierErreurRelayee,
   verifierPostRelaye,
 } from '../../../testing/http-attendu';
-import { lecturesStrictes } from '../../../testing/lecture-stricte';
-import type { ContactFormState } from '../models/contact.model';
+import type { ContactRequestDto } from '../../../../contrat/types.gen';
 import { ContactHttpAdapter } from './contact-http.adapter';
 
-const DEMANDE_MINIMALE: ContactFormState = {
+const DEMANDE_MINIMALE: ContactRequestDto = {
   email: 'john@example.com',
   firstName: 'John',
   lastName: 'Doe',
@@ -20,18 +19,8 @@ const DEMANDE_MINIMALE: ContactFormState = {
 describe('ContactHttpAdapter', () => {
   const banc = bancAdaptateurHttp(ContactHttpAdapter);
 
-  describe('lecture des réponses servies par le back', () => {
-    lecturesStrictes(banc, [
-      {
-        route: 'POST /api/contacts',
-        chemin: '/contacts',
-        appel: (a) => a.contact(DEMANDE_MINIMALE),
-      },
-    ]);
-  });
-
   it('should POST contact form data to the contacts endpoint', () => {
-    const payload: ContactFormState = {
+    const payload: ContactRequestDto = {
       email: 'john@example.com',
       firstName: 'John',
       lastName: 'Doe',

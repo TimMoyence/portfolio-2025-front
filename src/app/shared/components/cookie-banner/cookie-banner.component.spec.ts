@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 import { CookieConsentService } from '../../../core/services/cookie-consent.service';
 import { CookieBannerComponent } from './cookie-banner.component';
+import { accuse } from '../../../../testing/factories/contact.factory';
 import {
   buildCookiePreferences,
   createCookieConsentServiceStub,
@@ -16,7 +17,7 @@ describe('CookieBannerComponent', () => {
     consentServiceStub.saveConsent.calls.reset();
 
     consentServiceStub.shouldShowBanner.and.returnValue(false);
-    consentServiceStub.saveConsent.and.returnValue(of({ message: 'ok' }));
+    consentServiceStub.saveConsent.and.returnValue(of(accuse()));
 
     await TestBed.configureTestingModule({
       imports: [CookieBannerComponent, RouterModule.forRoot([])],

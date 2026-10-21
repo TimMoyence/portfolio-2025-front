@@ -1,4 +1,4 @@
-import { creerMetadonneesBrique } from '../../content/types';
+import { metadonnees } from '../../../testing/factories/cours.factory';
 import {
   avecJeNeSaisPas,
   ID_JE_NE_SAIS_PAS,
@@ -6,11 +6,9 @@ import {
   projeterOptions,
 } from './projection';
 
-const METADONNEES = creerMetadonneesBrique({
-  concepts: ['capitalisation'],
+const METADONNEES = metadonnees({
   misconceptionsCiblees: ['interet-simple', 'oubli-de-la-duree'],
   dureeMinutes: 4,
-  modalite: 'solo',
   regime: 'focus',
 });
 

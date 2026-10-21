@@ -70,14 +70,12 @@ describe('lecteurDePublicationsDeCours (H1)', () => {
     );
   });
 
-  it('se replie quand la réponse porte un champ que le contrat du catalogue ne connaît pas', async () => {
-    appels.and.resolveTo(
-      reponseJson(coursPublie({ version: 3, publieLe: '2026-10-02T08:15:00.000Z', inconnu: 1 })),
-    );
+  it('se replie quand la réponse ne respecte pas le contrat du catalogue', async () => {
+    appels.and.resolveTo(reponseJson(coursPublie({ version: 'trois', publieLe: '2026-10-02' })));
 
     expect(await lecteur(API_AVEC_BARRE)()).toEqual([]);
     expect(journal.warn).toHaveBeenCalledOnceWith(
-      jasmine.stringContaining("réponse de l'API hors contrat (inconnu)"),
+      jasmine.stringContaining("réponse de l'API hors contrat (version, publieLe)"),
     );
   });
 

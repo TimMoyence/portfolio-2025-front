@@ -6,8 +6,6 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   precedent: () => $localize`:@@coursRuntimePrecedent:Précédent`,
   'je-ne-sais-pas': () => $localize`:@@coursRuntimeJeNeSaisPas:Je ne sais pas`,
   'reponse-enregistree': () => $localize`:@@coursRuntimeReponseEnregistree:Réponse enregistrée`,
-  'saisie-non-numerique': () =>
-    $localize`:@@coursRuntimeSaisieNonNumerique:Saisissez un nombre — la virgule décimale est acceptée`,
   'a-revoir': () => $localize`:@@coursRuntimeARevoir:Pas encore — regardons pourquoi`,
   confirme: () => $localize`:@@coursRuntimeConfirme:C’est juste`,
   'discussion-en-cours': () =>

@@ -6,9 +6,11 @@ import type {
   FichierTelecharge,
   ParticipantRapporte,
   RapportSeance,
-  ReponseLibreRapportee,
-  ReponseRapportee,
 } from '../../../core/ports/formations.port';
+import type {
+  RapportQuestionResponseDto as ReponseRapportee,
+  RapportReponseLibreResponseDto as ReponseLibreRapportee,
+} from '../../../../../contrat/types.gen';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import type {
   ConfusionComptee,
@@ -63,7 +65,7 @@ function etudiant(
   prenom: string,
   note: number,
   sousSeuil: boolean,
-  reponses: readonly ReponseRapportee[],
+  reponses: ReponseRapportee[],
 ): ParticipantRapporte {
   return buildParticipantRapporte({
     prenom,
@@ -84,7 +86,7 @@ const CHLOE = etudiant('Chloe', 12, false, [reponse('actualisation', '905', 3100
 const THEO = etudiant('Theo', 0, false, []);
 
 function rapportDe(
-  participants: readonly ParticipantRapporte[],
+  participants: ParticipantRapporte[],
   resultats: ResultatsSeance = buildResultatsSeance({ participants: participants.length }),
 ): RapportSeance {
   return buildRapportSeance({
@@ -365,7 +367,7 @@ describe('CoursSyntheseComponent', () => {
       ],
     };
 
-    function monterLeB301(participants: readonly ParticipantRapporte[]): Promise<Fixture> {
+    function monterLeB301(participants: ParticipantRapporte[]): Promise<Fixture> {
       return monter(rapportDe(participants), of(INSTANTANE_B3_01.deroule));
     }
 

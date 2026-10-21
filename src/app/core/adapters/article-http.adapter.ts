@@ -5,7 +5,10 @@ import { getApiBaseUrl } from '../http/api-config';
 import { cheminDesArticles, parametresDesArticles } from '../http/url-des-articles';
 import type { ArticleListResponse, PublishedArticle } from '../models/article.model';
 import { luPar } from './lu-par';
-import { articleServi, pageDArticlesServie } from './site-schemas';
+import {
+  zArticleListResponseDto as pageDArticlesServie,
+  zPublishedArticleResponseDto as articleServi,
+} from '../../../../contrat/zod.gen';
 
 @Injectable({ providedIn: 'root' })
 export class ArticleHttpAdapter {

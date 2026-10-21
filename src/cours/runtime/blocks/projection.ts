@@ -1,10 +1,8 @@
+import type { OptionPubliqueResponseDto } from '../../../../contrat/types.gen';
 import type { MetadonneesBrique } from '../../content/types';
 import { texte } from '../core/i18n';
 
-export interface OptionPublique {
-  readonly id: string;
-  readonly libelle: string;
-}
+export type OptionPublique = OptionPubliqueResponseDto;
 
 export function projeterMetadonnees(source: MetadonneesBrique): MetadonneesBrique {
   return {

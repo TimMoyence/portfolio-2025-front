@@ -7,7 +7,7 @@ import type {
   PresentationPort,
 } from '../ports/presentation.port';
 import { luPar } from './lu-par';
-import { interactionsServies } from './site-schemas';
+import { zPresentationInteractionsResponseDto as interactionsServies } from '../../../../contrat/zod.gen';
 
 @Injectable()
 export class PresentationHttpAdapter implements PresentationPort {

@@ -2,8 +2,11 @@ import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import type { DerouleDuFil, SujetDuFil } from '../src/app/core/adapters/formations-fil';
-import { livretServi } from '../src/app/core/adapters/formations-schemas';
-import { sessionServie, utilisateurServi } from '../src/app/core/adapters/site-schemas';
+import { zLivretResponseDto as livretServi } from '../contrat/zod.gen';
+import {
+  zAuthResponseDto as sessionServie,
+  zUserResponseDto as utilisateurServi,
+} from '../contrat/zod.gen';
 import { libellesColles } from '../src/testing/libelles-colles';
 import { valeursSurUneForme } from '../src/testing/valeurs-sur-les-formes';
 import { intercepterApi, servirJson, servirSansContenu, SESSION_FORMATEUR } from './fixtures';

@@ -89,7 +89,7 @@ function classeEntiere(ecran: EcranDeroule): Required<Classe> {
           ecranId: ecran.id,
           total: 2,
           correctes: 1,
-          scoreMoyen: 0.5,
+          part: 0.5,
         }),
       ),
     enigmes: enigmes.map((enigmeId) =>
@@ -122,9 +122,19 @@ describe('PanneauLectureClasseComponent', () => {
     const fixture = monter(ecranServi(ATELIER), {
       participants: 2,
       resultats: [
-        buildResultatQuestion({ questionId: 'b2-03-a1-implication', total: 2, correctes: 1 }),
-        buildResultatQuestion({ questionId: 'b2-03-a1-f205', total: 1, correctes: 1 }),
-        buildResultatQuestion({ questionId: 'b2-03-a2-formule', total: 20, correctes: 20 }),
+        buildResultatQuestion({
+          questionId: 'b2-03-a1-implication',
+          total: 2,
+          correctes: 1,
+          part: 0.5,
+        }),
+        buildResultatQuestion({ questionId: 'b2-03-a1-f205', total: 1, correctes: 1, part: 1 }),
+        buildResultatQuestion({
+          questionId: 'b2-03-a2-formule',
+          total: 20,
+          correctes: 20,
+          part: 1,
+        }),
       ],
     });
 
@@ -158,7 +168,7 @@ describe('PanneauLectureClasseComponent', () => {
     );
   });
 
-  it('lit une production par son score moyen', () => {
+  it('affiche la part servie, sans la recalculer sur les reponses justes', () => {
     const fixture = monter(ecranServi('B2-03-A2-06-TABLEUR-NON-OU'), {
       participants: 2,
       resultats: [
@@ -168,6 +178,7 @@ describe('PanneauLectureClasseComponent', () => {
           total: 2,
           correctes: 0,
           scoreMoyen: 0.75,
+          part: 0.75,
         }),
       ],
     });

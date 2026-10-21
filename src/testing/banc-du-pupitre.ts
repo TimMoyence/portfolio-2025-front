@@ -120,6 +120,7 @@ export function buildEcranDeVoteCorrige(
       {
         questionId: 'Q-CAP-03',
         bonneReponse: '1 480,24',
+        optionId: 'b',
         confusions: confusions.map(({ id, libelle }) => ({ id, libelle })),
       },
     ],

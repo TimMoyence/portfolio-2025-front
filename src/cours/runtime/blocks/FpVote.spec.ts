@@ -1,5 +1,9 @@
-import { creerMetadonneesBrique, type VotePhase } from '../../content/types';
-import { buildVerdictDeReponse, buildVoteQuestion } from '../../../testing/factories/cours.factory';
+import type { VotePhase } from '../../content/types';
+import {
+  buildVerdictDeReponse,
+  buildVoteQuestion,
+  metadonnees,
+} from '../../../testing/factories/cours.factory';
 import {
   attendreLaSeuleOptionFausse,
   installerBrique,
@@ -243,13 +247,7 @@ describe('FpVote', () => {
 
     hote.question = buildVoteQuestion({
       id: 'Q-CAP-04',
-      metadonnees: creerMetadonneesBrique({
-        concepts: ['capitalisation'],
-        misconceptionsCiblees: [],
-        dureeMinutes: 2,
-        modalite: 'classe',
-        regime: 'ouvert',
-      }),
+      metadonnees: metadonnees({ dureeMinutes: 2, modalite: 'classe' }),
     });
 
     expect(hote.question?.metadonnees?.modalite).toBe('classe');

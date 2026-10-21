@@ -44,6 +44,7 @@ function copierParametres(source: readonly ParametreReglable[]): ParametreReglab
       max: parametre.max,
       pas: parametre.pas,
       defaut: parametre.defaut,
+      positions: [...parametre.positions],
     }));
 }
 

@@ -4,7 +4,7 @@ import { buildVisualChartSlide } from '../../../../../testing/factories/visual-s
 import { GRAPHIQUE_MARGE_BRUTE } from '../../../../../testing/fixtures/graphique-marge-brute';
 import { setupTestBed } from '../../../../../testing/setup-test-bed';
 import { textes } from '../../../../../testing/textes-dom';
-import { catalogueServi } from '../../../../core/adapters/formations-schemas';
+import { zCoursPublicCatalogueResponseDto as catalogueServi } from '../../../../../../contrat/zod.gen';
 import { SlideActivityComponent } from '../../session/slide-activity.component';
 
 const G1 = {

@@ -12,61 +12,10 @@ import {
   estTexteNonVide,
   fini,
   jsonOuNull,
-  lireNombreSaisi,
   memeIdentifiant,
   objet,
   part,
 } from './valeurs';
-
-const MOINS = '−';
-const FINE = ' ';
-const INSECABLE = ' ';
-
-const SAISIES_LUES: readonly (readonly [string, number])[] = [
-  ['12', 12],
-  ['12,5', 12.5],
-  ['12.5', 12.5],
-  ['1 234', 1234],
-  ['1 234,75', 1234.75],
-  ['  42  ', 42],
-  ['-3,5', -3.5],
-  [`${MOINS}3,5`, -3.5],
-  ['+.5', 0.5],
-  ['.5', 0.5],
-  ['-0', 0],
-  [`${MOINS}0,0`, 0],
-  [`142${FINE}920`, 142920],
-  [`142${INSECABLE}920,5`, 142920.5],
-];
-
-const SAISIES_REFUSEES: readonly string[] = [
-  '',
-  '   ',
-  '1.2.3',
-  '1,2,3',
-  '1e3',
-  '1E3',
-  'douze',
-  '--3',
-  '1/2',
-  '0x10',
-  'Infinity',
-  'NaN',
-  '1,',
-  ',',
-  '12x',
-  '%',
-  '12 € 3',
-  '€12',
-  '9'.repeat(309),
-  `1${'0'.repeat(400)},5`,
-  '12 %',
-  '12 €',
-  '12 k€',
-  '3 pts',
-  '3 points',
-  `${MOINS}2,5 €`,
-];
 
 function attendreLeRefus(
   predicat: (valeur: unknown) => boolean,
@@ -249,23 +198,6 @@ describe('valeurs', () => {
       expect([part(3, 4), part(0, 5), part(5, 5), part(0, 0), part(2, 0)]).toEqual([
         0.75, 0, 1, 0, 0,
       ]);
-    });
-  });
-
-  describe('lireNombreSaisi', () => {
-    it('lit la saisie d un nombre, virgule ou point, espaces et moins typographique compris', () => {
-      for (const [saisie, attendu] of SAISIES_LUES) {
-        const lu = lireNombreSaisi(saisie);
-
-        expect(lu).withContext(JSON.stringify(saisie)).toBe(attendu);
-        expect(Object.is(lu, -0)).withContext(JSON.stringify(saisie)).toBeFalse();
-      }
-    });
-
-    it('refuse une saisie qui n est pas un nombre isolé plutôt que de rendre un nombre approché', () => {
-      for (const saisie of SAISIES_REFUSEES) {
-        expect(lireNombreSaisi(saisie)).withContext(JSON.stringify(saisie)).toBeNull();
-      }
     });
   });
 

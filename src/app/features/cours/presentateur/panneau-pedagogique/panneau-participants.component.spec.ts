@@ -15,6 +15,7 @@ import { PanneauParticipantsComponent } from './panneau-participants.component';
 type Fixture = ComponentFixture<PanneauParticipantsComponent>;
 
 const SESSION = 'seance-1';
+const PREMIER = buildParticipantDeSeance().id;
 
 describe('PanneauParticipantsComponent', () => {
   let port: jasmine.SpyObj<FormationsPort>;
@@ -115,7 +116,7 @@ describe('PanneauParticipantsComponent', () => {
 
     await cliquerLePremier(fixture, 'activite-evincer');
 
-    expect(port.evincerParticipant).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
+    expect(port.evincerParticipant).toHaveBeenCalledOnceWith(SESSION, PREMIER);
     expect(evinces(fixture)).toEqual(['true', 'false']);
   });
 
@@ -129,7 +130,7 @@ describe('PanneauParticipantsComponent', () => {
 
     await cliquerLePremier(fixture, 'activite-readmettre');
 
-    expect(port.readmettreParticipant).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
+    expect(port.readmettreParticipant).toHaveBeenCalledOnceWith(SESSION, PREMIER);
     expect(evinces(fixture)).toEqual(['false', 'false']);
   });
 
@@ -149,7 +150,7 @@ describe('PanneauParticipantsComponent', () => {
 
     await cliquerLePremier(fixture, 'activite-liberer');
 
-    expect(port.libererPoste).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
+    expect(port.libererPoste).toHaveBeenCalledOnceWith(SESSION, PREMIER);
     expect(lire(fixture, 'activite-poste-libere')?.getAttribute('role')).toBe('status');
     expect(lire(fixture, 'activite-poste-libere')?.textContent).toContain('Lea Dubois');
     expect(evinces(fixture)).toEqual(['false', 'false']);
@@ -160,7 +161,7 @@ describe('PanneauParticipantsComponent', () => {
     await cliquerLePremier(fixture, 'activite-evincer');
 
     const ligne = (fixture.nativeElement as HTMLElement).querySelector(
-      '[data-participant="participant-1"]',
+      `[data-participant="${PREMIER}"]`,
     );
     expect(ligne?.querySelector('[data-testid="activite-liberer"]')).toBeNull();
   });

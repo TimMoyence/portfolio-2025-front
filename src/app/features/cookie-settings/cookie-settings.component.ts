@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import type { CookieConsentPreferences } from '../../core/models/cookie-consent.model';
+import type { CookieConsentPreferencesRequestDto as CookieConsentPreferences } from '../../../../contrat/types.gen';
 import { CookieConsentService } from '../../core/services/cookie-consent.service';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';

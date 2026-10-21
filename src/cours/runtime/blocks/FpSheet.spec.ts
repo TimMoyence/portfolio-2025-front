@@ -770,9 +770,9 @@ describe('FpSheet', () => {
     expect(recus.length).toBe(1);
   });
 
-  it('RET-31 · ferme la feuille aux reponses des que sa correction est revelee', () => {
+  it('RET-31 · ferme la feuille aux reponses des que le serveur sert la saisie fermee', () => {
     const recus = envois(hote);
-    hote.etayage = 1;
+    hote.saisieFermee = true;
 
     expect(cellule(hote, 'C3').hasAttribute('readonly')).toBe(true);
     expect(bouton(hote, 'valider').disabled).toBe(true);

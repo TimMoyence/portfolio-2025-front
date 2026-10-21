@@ -86,45 +86,48 @@ describe('GrowthAuditComponent', () => {
     };
   }
 
-  it('renders current URL and synthesis section badges from enriched progress details', () => {
+  it('affiche l URL en cours et les dernieres pages terminees pendant l analyse des pages', () => {
     const { component, root } = soumettreEtDiffuser(
       buildAuditProgressEvent({
         auditId: 'audit-1',
-        progress: 72,
-        step: 'Recap IA des pages',
+        progress: 40,
+        step: 'Analyse des pages',
         details: {
-          phase: 'synthesis',
-          iaTask: 'synthesis',
-          iaSubTask: 'prioritySection',
+          phase: 'technical_pages',
+          iaTask: 'technical_scan',
+          iaSubTask: 'scan',
+          done: 2,
+          total: 10,
           currentUrl: 'https://example.com/pricing',
           recentCompletedUrls: ['https://example.com/', 'https://example.com/about'],
-          sectionStatuses: {
-            summary: 'completed',
-            prioritySection: 'started',
-          },
         },
       }),
       'audit-1',
     );
 
     expect(component.auditCurrentUrl).toBe('https://example.com/pricing');
-    expect(component.auditIaTask).toBe('Synthèse IA');
-    expect(component.auditSectionBadges.length).toBeGreaterThan(0);
+    expect(component.auditRecentCompletedUrls).toEqual([
+      'https://example.com/',
+      'https://example.com/about',
+    ]);
     const content = root.textContent as string;
     expect(content).toContain('URL en cours');
     expect(content).toContain('https://example.com/pricing');
-    expect(content).toContain('Résumé: completed');
-    expect(content).toContain('Priorités: started');
   });
 
   it('affiche la section annoncée par l évènement sans altérer les statuts reçus', () => {
-    const statutsRecus = { summary: 'completed' };
-    const { root } = soumettreEtDiffuser(
+    const statutsRecus = { summary: 'completed' as const };
+    const { component, root } = soumettreEtDiffuser(
       buildAuditProgressEvent({
         auditId: 'audit-3',
         progress: 80,
         step: 'Recap IA des pages',
         details: {
+          phase: 'synthesis',
+          iaTask: 'synthesis',
+          iaSubTask: 'prioritySection',
+          done: 2,
+          total: 5,
           sectionStatuses: statutsRecus,
           section: 'prioritySection',
           sectionStatus: 'started',
@@ -133,17 +136,25 @@ describe('GrowthAuditComponent', () => {
       'audit-3',
     );
 
+    expect(component.auditIaTask).toBe('Synthèse IA');
+    expect(root.textContent).toContain('Résumé: completed');
     expect(root.textContent).toContain('Priorités: started');
     expect(statutsRecus).toEqual({ summary: 'completed' });
   });
 
-  it('keeps backward compatibility when progress details only expose done/total', () => {
+  it('n affiche ni URL ni section pour une synthese sans section', () => {
     const { component } = soumettreEtDiffuser(
       buildAuditProgressEvent({
         auditId: 'audit-2',
         progress: 45,
         step: 'Analyse des pages',
-        details: { done: 3, total: 10 },
+        details: {
+          phase: 'synthesis',
+          iaTask: 'synthesis',
+          iaSubTask: 'summary',
+          done: 3,
+          total: 10,
+        },
       }),
       'audit-2',
     );
@@ -182,25 +193,6 @@ describe('GrowthAuditComponent', () => {
     expect(component.clientReport).toBeNull();
     expect(root.querySelector('app-audit-client-report-section')).toBeNull();
     expect(root.textContent).toContain('Résumé de votre audit');
-  });
-
-  it('does not crash on unknown details keys', () => {
-    const { component } = soumettreEtDiffuser(
-      buildAuditProgressEvent({
-        auditId: 'audit-3',
-        progress: 30,
-        step: 'Analyse',
-        details: {
-          foo: 'bar',
-          nested: { ok: true },
-        },
-      }),
-      'audit-3',
-    );
-
-    expect(component.auditPhaseLabel).toBe('');
-    expect(component.auditCurrentUrl).toBe('');
-    expect(component.auditRecentCompletedUrls).toEqual([]);
   });
 
   describe('bornes et grammaires du back sur la demande d audit', () => {

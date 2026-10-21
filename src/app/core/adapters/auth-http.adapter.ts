@@ -1,9 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {
+  zAuthMessageResponseDto as messageServi,
+  zAuthResponseDto as sessionServie,
+  zUserResponseDto as utilisateurServi,
+} from '../../../../contrat/zod.gen';
 import type { AuthPort } from '../ports/auth.port';
 import { getApiBaseUrl } from '../http/api-config';
 import { luPar } from './lu-par';
-import { messageServi, sessionServie, utilisateurServi } from './site-schemas';
 
 @Injectable()
 export class AuthHttpAdapter implements AuthPort {

@@ -1,35 +1,11 @@
 import { environment } from '../../../environments/environment';
 import { buildToolkitPageData } from '../../../testing/factories/lead-magnet.factory';
 import { bancAdaptateurHttp, verifierPostRelaye } from '../../../testing/http-attendu';
-import { lecturesStrictes } from '../../../testing/lecture-stricte';
 import type { ToolkitRequest, ToolkitResponse } from '../models/toolkit-request.model';
 import { LeadMagnetHttpAdapter } from './lead-magnet-http.adapter';
 
 describe('LeadMagnetHttpAdapter', () => {
   const banc = bancAdaptateurHttp(LeadMagnetHttpAdapter);
-
-  describe('lecture des réponses servies par le back', () => {
-    lecturesStrictes(banc, [
-      {
-        route: 'POST /api/lead-magnets/formations-toolkit',
-        chemin: '/lead-magnets/formations-toolkit',
-        appel: (a) =>
-          a.requestToolkit({
-            firstName: 'Tim',
-            email: 'tim@example.com',
-            formationSlug: 'ia-solopreneurs',
-            termsVersion: '2026-02-11',
-            termsLocale: 'fr',
-            termsAcceptedAt: '2026-03-01T10:00:00Z',
-          }),
-      },
-      {
-        route: 'GET /api/lead-magnets/toolkit/:token',
-        chemin: '/lead-magnets/toolkit/jeton',
-        appel: (a) => a.getToolkitByToken('jeton'),
-      },
-    ]);
-  });
 
   it("requestToolkit() devrait POSTer la requete sur l'endpoint lead-magnets", () => {
     const payload: ToolkitRequest = {

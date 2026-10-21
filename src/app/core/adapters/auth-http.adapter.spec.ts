@@ -1,6 +1,5 @@
 import { environment } from '../../../environments/environment';
 import { bancAdaptateurHttp, verifierPostRelaye } from '../../../testing/http-attendu';
-import { lecturesStrictes } from '../../../testing/lecture-stricte';
 import {
   buildAuthSession,
   buildAuthUser,
@@ -13,65 +12,6 @@ import { AuthHttpAdapter } from './auth-http.adapter';
 
 describe('AuthHttpAdapter', () => {
   const banc = bancAdaptateurHttp(AuthHttpAdapter);
-
-  describe('lecture des réponses servies par le back', () => {
-    const profil = { firstName: 'Pierre', lastName: 'Martin', phone: null };
-    lecturesStrictes(banc, [
-      {
-        route: 'POST /api/auth/login',
-        chemin: '/auth/login',
-        appel: (a) => a.login(buildLoginCredentials()),
-      },
-      {
-        route: 'POST /api/auth/register',
-        chemin: '/auth/register',
-        appel: (a) => a.register({ ...buildLoginCredentials(), firstName: 'J', lastName: 'D' }),
-      },
-      { route: 'GET /api/auth/me', chemin: '/auth/me', appel: (a) => a.me() },
-      { route: 'POST /api/auth/google', chemin: '/auth/google', appel: (a) => a.googleAuth('t') },
-      {
-        route: 'POST /api/auth/forgot-password',
-        chemin: '/auth/forgot-password',
-        appel: (a) => a.requestPasswordReset(buildForgotPasswordPayload()),
-      },
-      {
-        route: 'POST /api/auth/reset-password',
-        chemin: '/auth/reset-password',
-        appel: (a) => a.resetPassword(buildResetPasswordPayload()),
-      },
-      {
-        route: 'POST /api/auth/set-password',
-        chemin: '/auth/set-password',
-        appel: (a) => a.setPassword(buildSetPasswordPayload()),
-      },
-      {
-        route: 'PATCH /api/auth/change-password',
-        chemin: '/auth/change-password',
-        appel: (a) =>
-          a.changePassword({
-            currentPassword: buildLoginCredentials().password,
-            newPassword: buildSetPasswordPayload().newPassword,
-          }),
-      },
-      {
-        route: 'PATCH /api/auth/profile',
-        chemin: '/auth/profile',
-        appel: (a) => a.updateProfile(profil),
-      },
-      { route: 'POST /api/auth/refresh', chemin: '/auth/refresh', appel: (a) => a.refresh() },
-      { route: 'POST /api/auth/logout', chemin: '/auth/logout', appel: (a) => a.logout() },
-      {
-        route: 'GET /api/auth/verify-email',
-        chemin: '/auth/verify-email',
-        appel: (a) => a.verifyEmail('jeton'),
-      },
-      {
-        route: 'POST /api/auth/resend-verification',
-        chemin: '/auth/resend-verification',
-        appel: (a) => a.resendVerification({ email: 'john@example.com' }),
-      },
-    ]);
-  });
 
   it('should POST credentials to the login endpoint with credentials', () => {
     const credentials = buildLoginCredentials();

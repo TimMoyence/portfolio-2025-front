@@ -53,6 +53,7 @@ export abstract class FpProduction<
 > extends FpEnvoiJuge<Plan, VerdictDeProduction> {
   protected attendus: readonly Attendu[] = [];
   protected corrigeServi: unknown = null;
+  private fermee = false;
 
   protected abstract readonly evenementDeSoumission: string;
 
@@ -73,6 +74,15 @@ export abstract class FpProduction<
     this.corrigeServi = valeur;
     this.attendus = lireAttendusDuCorrige(valeur, this.lectureDuCorrige);
     this.refreshSiConnecte();
+  }
+
+  set saisieFermee(valeur: boolean) {
+    this.fermee = valeur;
+    this.refreshSiConnecte();
+  }
+
+  protected override verrouille(): boolean {
+    return super.verrouille() || (this.fermee && !this.enApercu());
   }
 
   protected detailDe(cle: string): DetailDeVerdict | null {
@@ -181,10 +191,6 @@ abstract class FpProductionEtayee<Plan extends PlanEtaye, Attendu> extends FpPro
     }
     const lignes = consignes.map((consigne) => safeHtml`<li>${escapeHtml(consigne)}</li>`);
     return safeHtml`<ol class="fp-${escapeHtml(this.bloc)}__consignes" data-testid="consignes">${lignes}</ol>`;
-  }
-
-  protected override verrouille(): boolean {
-    return super.verrouille() || (this.correction > 0 && !this.enApercu());
   }
 
   protected override repartirDeZero(): void {

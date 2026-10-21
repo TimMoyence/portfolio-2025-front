@@ -5,11 +5,13 @@ import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import type { Subscription } from 'rxjs';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
-import { estObjet } from '../../../cours/runtime/core/valeurs';
 import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
+import type {
+  AvancementDAudit,
+  MethodeDeContact as AuditContactMethod,
+} from '../../../../contrat/types.gen';
 import {
-  type AuditContactMethod,
   type AuditRequestPayload,
   type AuditStreamEvent,
   type AuditSummaryResponse,
@@ -35,8 +37,6 @@ import { AuditClientReportSectionComponent } from './components/audit-client-rep
 import {
   type AuditSectionBadge,
   buildSectionBadges,
-  extractString,
-  extractStringArray,
   formatPhaseLabel,
   formatProgressStep,
   formatSummaryText,
@@ -227,12 +227,11 @@ export class GrowthAuditComponent implements OnDestroy {
   }
 
   get scoreEntries(): Array<{ key: PillarKey; score: number }> {
-    if (!this.auditSummary) return [];
-    const scores = this.auditSummary.pillarScores;
-    return PILLAR_KEYS.filter((key) => Number.isFinite(scores[key])).map((key) => ({
-      key,
-      score: scores[key],
-    }));
+    const scores = this.auditSummary?.pillarScores ?? {};
+    return PILLAR_KEYS.flatMap((key) => {
+      const score = scores[key];
+      return score === undefined ? [] : [{ key, score }];
+    });
   }
 
   get formattedSummaryText(): string {
@@ -328,11 +327,11 @@ export class GrowthAuditComponent implements OnDestroy {
   }
 
   private handleStreamEvent(event: AuditStreamEvent): void {
-    if (event.type === 'heartbeat') {
+    if (event.event === 'heartbeat') {
       return;
     }
 
-    if (event.type === 'progress') {
+    if (event.event === 'progress') {
       this.auditProgress = event.data.progress ?? 0;
       this.auditStep = formatProgressStep(event.data);
       this.applyProgressDetails(event.data.details);
@@ -341,7 +340,7 @@ export class GrowthAuditComponent implements OnDestroy {
       return;
     }
 
-    if (event.type === 'completed') {
+    if (event.event === 'completed') {
       this.terminerLAudit(event.data.progress ?? 100);
       this.auditSummary = {
         auditId: event.data.auditId,
@@ -358,7 +357,7 @@ export class GrowthAuditComponent implements OnDestroy {
       return;
     }
 
-    const delaiDepasse = event.type === 'timeout';
+    const delaiDepasse = event.event === 'timeout';
     this.arreterLAudit(delaiDepasse ? this.connexionPerdue : this.echecDeLAudit);
   }
 
@@ -413,26 +412,25 @@ export class GrowthAuditComponent implements OnDestroy {
     this.streamSub = undefined;
   }
 
-  private applyProgressDetails(payload?: Record<string, unknown>): void {
-    if (!estObjet(payload)) {
+  private applyProgressDetails(details?: AvancementDAudit): void {
+    if (details === undefined) {
       this.resetAuditTimeline();
       return;
     }
 
-    const phase = extractString(payload['phase']);
-    this.auditPhaseLabel = formatPhaseLabel(phase);
-    this.auditCurrentUrl = extractString(payload['currentUrl']);
-    this.auditIaTask = formatTaskLabel(extractString(payload['iaTask']));
-    this.auditIaSubTask = formatSubTaskLabel(extractString(payload['iaSubTask']));
-    this.auditRecentCompletedUrls = extractStringArray(payload['recentCompletedUrls']).slice(-5);
-
-    const statutsRecus = payload['sectionStatuses'];
-    const section = extractString(payload['section']);
-    const sectionStatus = extractString(payload['sectionStatus']);
-    this.auditSectionBadges = buildSectionBadges({
-      ...(estObjet(statutsRecus) ? statutsRecus : {}),
-      ...(section && sectionStatus ? { [section]: sectionStatus } : {}),
-    });
+    this.auditPhaseLabel = formatPhaseLabel(details.phase);
+    this.auditIaTask = formatTaskLabel(details.iaTask);
+    this.auditIaSubTask = formatSubTaskLabel(details.iaSubTask);
+    this.auditCurrentUrl = 'currentUrl' in details ? details.currentUrl : '';
+    this.auditRecentCompletedUrls =
+      'recentCompletedUrls' in details ? details.recentCompletedUrls.slice(-5) : [];
+    this.auditSectionBadges =
+      'section' in details
+        ? buildSectionBadges({
+            ...details.sectionStatuses,
+            [details.section]: details.sectionStatus,
+          })
+        : [];
   }
 
   sectionBadgeClass(status: string): string {

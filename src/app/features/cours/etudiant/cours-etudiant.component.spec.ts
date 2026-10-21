@@ -873,13 +873,17 @@ describe('CoursEtudiantComponent', () => {
     expect(copieBloquee()).toBeTrue();
   });
 
-  it('remonte le contexte de l incident au contrat, pas seulement son type', async () => {
+  const rattacherSurUnEcranDExamen = () => {
     sujet = {
       ...sujet,
       ecrans: [ecranAuRegime('ecran-examen', 'examen'), ...sujet.ecrans.slice(1)],
     };
     port.lireSujet.and.returnValue(of(sujet));
-    const fixture = await rattacherALaSeanceEnCours();
+    return rattacherALaSeanceEnCours();
+  };
+
+  it('remonte le contexte de l incident au contrat, pas seulement son type', async () => {
+    const fixture = await rattacherSurUnEcranDExamen();
 
     document.dispatchEvent(
       new KeyboardEvent('keydown', { key: 's', ctrlKey: true, cancelable: true }),
@@ -897,12 +901,7 @@ describe('CoursEtudiantComponent', () => {
   });
 
   it('rend le copier a la page quand le poste quitte un ecran d examen', async () => {
-    sujet = {
-      ...sujet,
-      ecrans: [ecranAuRegime('ecran-examen', 'examen'), ...sujet.ecrans.slice(1)],
-    };
-    port.lireSujet.and.returnValue(of(sujet));
-    const fixture = await rattacherALaSeanceEnCours();
+    const fixture = await rattacherSurUnEcranDExamen();
     const pendantLaSeance = copieBloquee();
 
     fixture.destroy();

@@ -3,17 +3,14 @@ import {
   reponseJson,
   type DoublesDeLecteur,
 } from '../testing/lecteur-http-simule';
-import { reponsesServiesPar } from '../testing/fixtures/reponses-servies';
-import { avecUneCleHorsContrat } from '../testing/lecture-stricte';
-import { CLE_INCONNUE } from '../testing/tolerances-des-schemas';
+import { buildPublishedArticle } from '../testing/factories/article.factory';
 import { lecteurDArticlesDuSitemap, PAGES_MAX_PAR_LOCALE } from './article-sitemap';
 
 const API = 'https://asilidesign.fr/api/v1/portfolio25';
 const CINQ_MINUTES = 300_000;
-const [ARTICLE_SERVI] = reponsesServiesPar('GET /api/articles/:slug') as readonly object[];
 
 function article(slug: string): object {
-  return { ...ARTICLE_SERVI, slug, updated_at: '2026-09-23T04:15:00.000Z' };
+  return buildPublishedArticle({ slug, updated_at: '2026-09-23T04:15:00.000Z' });
 }
 
 function page(slugs: readonly string[], nextCursor: string | null): Response {
@@ -112,7 +109,7 @@ describe('lecteurDArticlesDuSitemap', () => {
     doubles.appels.and.callFake(async (input) => {
       if (new URL(String(input)).searchParams.get('locale') === 'en') return page(['b-c-d'], null);
       return reponseJson({
-        items: [avecUneCleHorsContrat(article('a-b-c'))],
+        items: [{ ...article('a-b-c'), slug: 42 }],
         next_cursor: 'suite',
       });
     });
@@ -122,7 +119,7 @@ describe('lecteurDArticlesDuSitemap', () => {
     expect(entrees.map((entree) => entree.slug)).toEqual(['b-c-d']);
     expect(doubles.appels).toHaveBeenCalledTimes(2);
     expect(doubles.journal.warn).toHaveBeenCalledOnceWith(
-      `[sitemap] articles fr : réponse de l'API hors contrat (items.0.${CLE_INCONNUE})`,
+      `[sitemap] articles fr : réponse de l'API hors contrat (items.0.slug)`,
     );
   });
 

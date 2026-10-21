@@ -12,7 +12,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
 import { APP_CONFIG } from '../../core/config/app-config.token';
 import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
-import type { ContactFormState } from '../../core/models/contact.model';
+import type { ContactRequestDto as ContactFormState } from '../../../../contrat/types.gen';
 import type { ContactPort } from '../../core/ports/contact.port';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';

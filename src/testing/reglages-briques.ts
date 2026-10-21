@@ -78,6 +78,7 @@ export const PARAMETRE_A_PAS_DECIMAL = {
   max: 1,
   pas: 0.1,
   defaut: 0,
+  positions: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
 } as const;
 
 function avancerDeCrans(hote: HTMLElement, cle: string, crans: number): void {

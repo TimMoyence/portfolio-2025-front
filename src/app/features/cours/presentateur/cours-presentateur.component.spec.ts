@@ -78,7 +78,7 @@ const BASE_DE_L_APPLICATION = '/fr/';
 const LIMITE_ATTEINTE = refusDuBack(429, 'Too Many Requests', { 'Retry-After': '120' });
 const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
 
-const CONFUSIONS_DE_LA_CLASSE: readonly ConfusionComptee[] = [
+const CONFUSIONS_DE_LA_CLASSE: ConfusionComptee[] = [
   { id: 'interet-simple', libelle: 'Intérêts simples au lieu de composés', nombre: 1 },
   { id: 'taux-annuel', libelle: 'Taux annuel appliqué à chaque mois', nombre: 3 },
 ];
@@ -559,8 +559,8 @@ describe('CoursPresentateurComponent', () => {
                 ],
               },
               corriges: [
-                { questionId: 'Q-VA-07', bonneReponse: '1 480,24', confusions: [] },
-                { questionId: 'Q-CAP-03', bonneReponse: 'b', confusions: [] },
+                { questionId: 'Q-VA-07', bonneReponse: '1 480,24', optionId: null, confusions: [] },
+                { questionId: 'Q-CAP-03', bonneReponse: 'b', optionId: 'b', confusions: [] },
               ],
             }),
           ],
@@ -600,7 +600,14 @@ describe('CoursPresentateurComponent', () => {
           ecrans: [
             buildEcranDeroule({
               ...buildVisualQuizSlide(),
-              corriges: [{ questionId: 'b2-s03-prediction', bonneReponse: 'o2', confusions: [] }],
+              corriges: [
+                {
+                  questionId: 'b2-s03-prediction',
+                  bonneReponse: 'o2',
+                  optionId: 'o2',
+                  confusions: [],
+                },
+              ],
             }),
           ],
         }),
@@ -1312,7 +1319,7 @@ describe('CoursPresentateurComponent', () => {
 
       expect(apercu(fixture).donneesFormateur()).toEqual({
         ...annexe,
-        reponses: { 'Q-CAP-03': { cible: '1 480,24', optionId: null } },
+        reponses: { 'Q-CAP-03': { cible: '1 480,24', optionId: 'b' } },
       });
       expect(apercu(fixture).direct()).toEqual({
         pilotage: { phase: 'discussion' },

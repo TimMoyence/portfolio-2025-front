@@ -1,6 +1,7 @@
 import { of, BehaviorSubject } from 'rxjs';
 import type { AppConfig } from '../../app/core/config/app-config.model';
-import type { CookieConsentPreferences } from '../../app/core/models/cookie-consent.model';
+import type { CookieConsentPreferencesRequestDto as CookieConsentPreferences } from '../../../contrat/types.gen';
+import { accuse } from './contact.factory';
 import type { CookieConsentPort } from '../../app/core/ports/cookie-consent.port';
 import type { CookieConsentService } from '../../app/core/services/cookie-consent.service';
 
@@ -18,7 +19,7 @@ export function buildCookiePreferences(
 
 export function createCookieConsentPortStub(): jasmine.SpyObj<CookieConsentPort> {
   const stub = jasmine.createSpyObj<CookieConsentPort>('CookieConsentPort', ['recordConsent']);
-  stub.recordConsent.and.returnValue(of({ message: 'ok' }));
+  stub.recordConsent.and.returnValue(of(accuse()));
   return stub;
 }
 
@@ -57,8 +58,8 @@ export function createCookieConsentServiceStub(): jasmine.SpyObj<CookieConsentSe
   stub.shouldShowBanner.and.returnValue(false);
   stub.getPreferences.and.returnValue(buildCookiePreferences());
   stub.getDefaultPreferences.and.returnValue(buildCookiePreferences());
-  stub.saveConsent.and.returnValue(of({ message: 'ok' }));
-  stub.withdrawConsent.and.returnValue(of({ message: 'ok' }));
+  stub.saveConsent.and.returnValue(of(accuse()));
+  stub.withdrawConsent.and.returnValue(of(accuse()));
   stub.isConsentRequired.and.returnValue(true);
   return stub as jasmine.SpyObj<CookieConsentService> & {
     consentChanges$: BehaviorSubject<null>;

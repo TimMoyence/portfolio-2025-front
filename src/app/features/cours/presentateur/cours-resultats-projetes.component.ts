@@ -45,7 +45,7 @@ interface ResultatProjete {
   readonly id: string;
   readonly enonce: string;
   readonly total: number;
-  readonly partJuste: number;
+  readonly part: number;
   readonly scoreMoyen: number | null;
   readonly barres: readonly BarreDOption[];
 }
@@ -83,7 +83,7 @@ function resultatsProjetes(
       id: resultat.questionId,
       enonce: enonces.get(resultat.questionId) ?? '',
       total: resultat.total,
-      partJuste: part(resultat.correctes, resultat.total),
+      part: resultat.part,
       scoreMoyen: resultat.scoreMoyen,
       barres: barresDe(resultat, options.get(resultat.questionId) ?? null),
     }));
@@ -120,9 +120,9 @@ function resultatsProjetes(
                     ·
                     @if (question.scoreMoyen !== null) {
                       <span i18n="@@resultatsProjetesScoreMoyen">score moyen</span>
-                      <strong>{{ formaterPart(question.scoreMoyen) }}</strong>
+                      <strong>{{ formaterPart(question.part) }}</strong>
                     } @else {
-                      <strong>{{ formaterPart(question.partJuste) }}</strong>
+                      <strong>{{ formaterPart(question.part) }}</strong>
                       <span i18n="@@resultatsProjetesJustes">de réponses justes</span>
                     }
                   }

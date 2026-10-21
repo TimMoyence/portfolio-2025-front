@@ -6,21 +6,15 @@ export type Reglages = Readonly<Record<string, number>>;
 
 export const DUREE_ETAPE_MS = 3000;
 const CHANGEMENTS_PAR_DEFAUT = 6;
-const PRECISION = 1e9;
 
 export function borner(parametre: ParametreReglable, valeur: number): number {
   const bas = plancherDe(parametre);
   return bornerEntre(fini(valeur, bas), bas, plafondDe(parametre));
 }
 
-export function caler(parametre: ParametreReglable, valeur: number): number {
-  const borne = borner(parametre, valeur);
-  if (!Number.isFinite(parametre.pas) || parametre.pas <= 0) {
-    return borne;
-  }
-  const bas = borner(parametre, parametre.min);
-  const cale = bas + Math.round((borne - bas) / parametre.pas) * parametre.pas;
-  return borner(parametre, Math.round(cale * PRECISION) / PRECISION);
+function positionVers(parametre: ParametreReglable, depart: number, progression: number): number {
+  const devant = parametre.positions.filter((position) => position >= depart);
+  return devant[Math.round(progression * (devant.length - 1))] ?? depart;
 }
 
 export function changeQuelqueChose(
@@ -43,7 +37,7 @@ export function poserEtape(
   for (const parametre of parametres) {
     const valeur = etape[parametre.cle];
     if (typeof valeur === 'number') {
-      posees[parametre.cle] = caler(parametre, valeur);
+      posees[parametre.cle] = valeur;
     }
   }
   return posees;
@@ -54,20 +48,17 @@ export function suiteVersLeMaximum(
   courantes: Reglages,
 ): Reglages[] {
   const suite: Reglages[] = [];
-  let precedente: Reglages = Object.fromEntries(
-    parametres.map((parametre) => [
-      parametre.cle,
-      caler(parametre, courantes[parametre.cle] ?? parametre.defaut),
-    ]),
+  const departs: Reglages = Object.fromEntries(
+    parametres.map((parametre) => [parametre.cle, courantes[parametre.cle] ?? parametre.defaut]),
   );
+  let precedente = departs;
   for (let changement = 1; changement <= CHANGEMENTS_PAR_DEFAUT; changement += 1) {
     const progression = changement / CHANGEMENTS_PAR_DEFAUT;
     const etape = Object.fromEntries(
-      parametres.map((parametre) => {
-        const depart = caler(parametre, courantes[parametre.cle] ?? parametre.defaut);
-        const haut = borner(parametre, parametre.max);
-        return [parametre.cle, caler(parametre, depart + (haut - depart) * progression)];
-      }),
+      parametres.map((parametre) => [
+        parametre.cle,
+        positionVers(parametre, departs[parametre.cle], progression),
+      ]),
     );
     if (parametres.some(({ cle }) => etape[cle] !== precedente[cle])) {
       suite.push(etape);

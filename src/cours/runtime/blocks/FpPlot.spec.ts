@@ -1,6 +1,10 @@
 import { classesOrphelines } from '../../../testing/classes-briques';
 import { detailsEmis, installerBrique, roleAffiche } from '../../../testing/banc-de-brique';
-import { buildPlotDefinition, buildPlotEnBarres } from '../../../testing/factories/cours.factory';
+import {
+  buildPlotDefinition,
+  buildPlotEnBarres,
+  curseurServi,
+} from '../../../testing/factories/cours.factory';
 import {
   animer,
   animerJusquAuRepos,
@@ -244,8 +248,16 @@ describe('FpPlot', () => {
           max: SEPT_CHIFFRES * 2,
           pas: SEPT_CHIFFRES,
           defaut: SEPT_CHIFFRES,
+          positions: [SEPT_CHIFFRES, SEPT_CHIFFRES * 2],
         },
-        { cle: 'i', libelle: 'Taux annuel en pourcent', min: 1, max: 10, pas: 0.5, defaut: 10 },
+        curseurServi({
+          cle: 'i',
+          libelle: 'Taux annuel en pourcent',
+          min: 1,
+          max: 10,
+          pas: 0.5,
+          defaut: 10,
+        }),
       ],
       positions: [
         {
@@ -307,7 +319,14 @@ describe('FpPlot', () => {
       abscisse: { libelle: 'Période', min: 1, max: 4 },
       bornesOrdonnee: { minParametre: 'origine', max: 120 },
       parametres: [
-        { cle: 'origine', libelle: 'Origine de l’axe', min: 0, max: 98, pas: 1, defaut: 0 },
+        curseurServi({
+          cle: 'origine',
+          libelle: 'Origine de l’axe',
+          min: 0,
+          max: 98,
+          pas: 1,
+          defaut: 0,
+        }),
       ],
       series: [{ id: 'serie', libelle: 'Série', trait: 'plein' }],
       abscisses: [1, 2, 3, 4],
@@ -657,7 +676,14 @@ describe('FpPlot', () => {
         id: 'K-SIMULATEUR-MIX',
         abscisse: { libelle: 'Part de la marketplace (%)', min: 0, max: 80 },
         parametres: [
-          { cle: 'taux', libelle: 'Taux marketplace (%)', min: 10, max: 30, pas: 1, defaut: 16 },
+          curseurServi({
+            cle: 'taux',
+            libelle: 'Taux marketplace (%)',
+            min: 10,
+            max: 30,
+            pas: 1,
+            defaut: 16,
+          }),
         ],
         series: [{ id: 'global', libelle: 'Taux global', trait: 'plein' }],
         abscisses: [0, 80],

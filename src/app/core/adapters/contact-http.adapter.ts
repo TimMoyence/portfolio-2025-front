@@ -1,12 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
+import type { ContactRequestDto, ContactResponseDto } from '../../../../contrat/types.gen';
+import { zContactResponseDto } from '../../../../contrat/zod.gen';
 import { getApiBaseUrl } from '../http/api-config';
-import type { ContactFormState } from '../models/contact.model';
-import type { MessageResponse } from '../models/message.response';
 import type { ContactPort } from '../ports/contact.port';
 import { luPar } from './lu-par';
-import { accuseServi } from './site-schemas';
 
 @Injectable()
 export class ContactHttpAdapter implements ContactPort {
@@ -14,9 +13,9 @@ export class ContactHttpAdapter implements ContactPort {
 
   constructor(private readonly http: HttpClient) {}
 
-  contact(credentials: ContactFormState): Observable<MessageResponse> {
+  contact(credentials: ContactRequestDto): Observable<ContactResponseDto> {
     return this.http
       .post<unknown>(`${this.baseUrl}/contacts`, credentials)
-      .pipe(luPar(accuseServi));
+      .pipe(luPar(zContactResponseDto));
   }
 }

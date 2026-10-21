@@ -112,7 +112,7 @@ function rappelImprime(papier: ImpressionDeLEcran): SpacedQuestionPublique[] {
     boite: 1,
     cours: '',
     enonce: question.enonce,
-    options: question.options ?? [],
+    options: [...(question.options ?? [])],
   }));
 }
 
@@ -287,13 +287,17 @@ function posesDuPilotage(montage: MontageIdentifie, contexte: ContexteDeReinject
     case 'fp-sheet':
       return [
         ['etayage', pilotage?.etayage ?? 0],
+        ['saisieFermee', pilotage?.saisieFermee === true],
         ['evaluation', evaluationDuPoste(montage, contexte, 'feuille-evaluee')],
       ];
     case 'fp-table-build':
       return [
         ['etayage', pilotage?.etayage ?? 0],
+        ['saisieFermee', pilotage?.saisieFermee === true],
         ['evaluation', evaluationDuPoste(montage, contexte, 'tableau-evalue')],
       ];
+    case 'fp-cardsort':
+      return [['saisieFermee', pilotage?.saisieFermee === true]];
     case 'fp-recall':
       return [['optionsAffichees', pilotage?.optionsAffichees === true]];
     case 'fp-pulse':

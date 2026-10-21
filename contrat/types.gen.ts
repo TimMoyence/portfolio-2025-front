@@ -9,12 +9,12 @@ export type UserResponseDto = {
   email: string;
   firstName: string;
   lastName: string;
-  phone?: string | null;
+  phone: string | null;
   isActive: boolean;
   roles: Array<string>;
   createdAt: string;
-  updatedAt?: string;
-  updatedOrCreatedBy?: string | null;
+  updatedAt: string;
+  updatedOrCreatedBy: string | null;
   /**
    * Indique si le compte a un mot de passe defini.
    */
@@ -198,7 +198,13 @@ export type AuditTermineResponseDto = {
   };
   quickWins: Array<string>;
   pillarScores: {
-    [key: string]: number;
+    seo?: number;
+    performance?: number;
+    technical?: number;
+    trust?: number;
+    conversion?: number;
+    aiVisibility?: number;
+    citationWorthiness?: number;
   };
   status: 'COMPLETED';
   done: boolean;
@@ -215,20 +221,12 @@ export type AuditEchoueResponseDto = {
   done: boolean;
   updatedAt: string;
   status: 'FAILED';
-  /**
-   * Toujours null : le motif de l echec n est pas expose
-   */
-  error: null;
 };
 
 export type AuditExpireResponseDto = {
   auditId: string;
   updatedAt: string;
   status: 'TIMEOUT';
-  /**
-   * Toujours null : le motif de l echec n est pas expose
-   */
-  error: null;
 };
 
 export type BattementResponseDto = {
@@ -278,7 +276,13 @@ export type AuditSummaryResponseDto = {
   };
   quickWins: Array<string>;
   pillarScores: {
-    [key: string]: number;
+    seo?: number;
+    performance?: number;
+    technical?: number;
+    trust?: number;
+    conversion?: number;
+    aiVisibility?: number;
+    citationWorthiness?: number;
   };
 };
 
@@ -330,9 +334,9 @@ export type PromptEntryDto = {
   level: NiveauIa;
   prompt: string;
   tool: string;
-  description?: string;
-  example?: string;
-  tip?: string;
+  description: string;
+  example: string;
+  tip: string;
 };
 
 export type WorkflowStepDto = {
@@ -508,30 +512,6 @@ export type PieceJointeReserveeResponseDto = {
 };
 
 /**
- * Brique qui rend l ecran
- */
-export type TypeDEcranServi =
-  | 'fp-quote'
-  | 'fp-story'
-  | 'fp-pro'
-  | 'fp-worked'
-  | 'fp-concept4'
-  | 'fp-plot'
-  | 'fp-challenge'
-  | 'fp-cardsort'
-  | 'fp-sheet'
-  | 'fp-table-build'
-  | 'fp-escape'
-  | 'fp-pulse'
-  | 'fp-spaced'
-  | 'fp-numeric'
-  | 'fp-vote'
-  | 'fp-recall'
-  | 'fp-exit'
-  | 'questionnaire'
-  | 'ecran-verrouille';
-
-/**
  * Champs du cas repris de l ecran renvoye
  */
 export type ChampExtraitDuCas = 'metier' | 'situation' | 'geste' | 'consequence';
@@ -568,7 +548,7 @@ export type ToleranceResponseDto = {
 export type AttenduFeuillePresentateurResponseDto = {
   reference: string;
   formuleReference: string;
-  valeur: number;
+  valeur: number | string | boolean;
   /**
    * Valeur attendue ecrite a la francaise : taux a quatre decimales, montant a deux, milliers separes par une espace fine insecable
    */
@@ -718,37 +698,10 @@ export type CorrectionServieResponseDto = {
 export type EcranPublicResponseDto = {
   id: string;
   /**
-   * Brique qui rend l ecran
-   */
-  type: TypeDEcranServi;
-  /**
    * Duree de l ecran en minutes
    */
   duree: number;
   interactif: boolean;
-  /**
-   * Proprietes de la brique nommee par type, rangees sous la propriete de la brique ; sans solution, piege, confusion ni notes
-   */
-  donnees:
-    | DonneesFpQuote
-    | DonneesFpStory
-    | DonneesFpPro
-    | DonneesFpWorked
-    | DonneesFpConcept4
-    | DonneesFpPlot
-    | DonneesFpChallenge
-    | DonneesFpCardsort
-    | DonneesFpSheet
-    | DonneesFpTableBuild
-    | DonneesFpEscape
-    | DonneesFpPulse
-    | DonneesFpSpaced
-    | DonneesFpNumeric
-    | DonneesFpVote
-    | DonneesFpRecall
-    | DonneesFpExit
-    | DonneesQuestionnaire
-    | DonneesEcranVerrouille;
   /**
    * Titre de l ecran, obligatoire a partir de la version 3
    */
@@ -785,7 +738,87 @@ export type CoursPublicCatalogueResponseDto = {
    */
   duree: number;
   concepts: Array<string>;
-  ecrans: Array<EcranPublicResponseDto>;
+  /**
+   * Ecrans, chacun avec les donnees de la brique nommee par son type ; sans solution, piege, confusion ni notes
+   */
+  ecrans: Array<
+    | (EcranPublicResponseDto & {
+        type: 'fp-quote';
+        donnees: DonneesFpQuote;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-story';
+        donnees: DonneesFpStory;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-pro';
+        donnees: DonneesFpPro;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-worked';
+        donnees: DonneesFpWorked;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-concept4';
+        donnees: DonneesFpConcept4;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-plot';
+        donnees: DonneesFpPlot;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-challenge';
+        donnees: DonneesFpChallenge;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-cardsort';
+        donnees: DonneesFpCardsort;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-sheet';
+        donnees: DonneesFpSheet;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-table-build';
+        donnees: DonneesFpTableBuild;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-escape';
+        donnees: DonneesFpEscape;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-pulse';
+        donnees: DonneesFpPulse;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-spaced';
+        donnees: DonneesFpSpaced;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-numeric';
+        donnees: DonneesFpNumeric;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-vote';
+        donnees: DonneesFpVote;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-recall';
+        donnees: DonneesFpRecall;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-exit';
+        donnees: DonneesFpExit;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'questionnaire';
+        donnees: DonneesQuestionnaire;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'ecran-verrouille';
+        donnees: DonneesEcranVerrouille;
+      })
+  >;
   /**
    * Version publiee du cours
    */
@@ -891,6 +924,10 @@ export type PilotageServiResponseDto = {
    * Etapes deja montrees d un exemple travaille, jamais reculees
    */
   etayageAtteint?: number;
+  /**
+   * Saisie de l ecran fermee par le pupitre : les productions n y sont plus acceptees
+   */
+  saisieFermee?: true;
   /**
    * Sorties de la machine aux reglages projetes
    */
@@ -1310,6 +1347,10 @@ export type CorrigePresentateurResponseDto = {
    * Bonne reponse du tirage de reference : libelle pour un vote, valeur pour une question numerique
    */
   bonneReponse: string;
+  /**
+   * Option de la bonne reponse d un vote, null pour une question numerique
+   */
+  optionId: string | null;
   confusions: Array<ConfusionCorrigeeResponseDto>;
 };
 
@@ -1333,37 +1374,10 @@ export type QuestionDerouleResponseDto = {
 export type EcranDerouleResponseDto = {
   id: string;
   /**
-   * Brique qui rend l ecran
-   */
-  type: TypeDEcranServi;
-  /**
    * Duree de l ecran en minutes
    */
   duree: number;
   interactif: boolean;
-  /**
-   * Proprietes de la brique nommee par type, rangees sous la propriete de la brique ; sans solution, piege, confusion ni notes
-   */
-  donnees:
-    | DonneesFpQuote
-    | DonneesFpStory
-    | DonneesFpPro
-    | DonneesFpWorked
-    | DonneesFpConcept4
-    | DonneesFpPlot
-    | DonneesFpChallenge
-    | DonneesFpCardsort
-    | DonneesFpSheet
-    | DonneesFpTableBuild
-    | DonneesFpEscape
-    | DonneesFpPulse
-    | DonneesFpSpaced
-    | DonneesFpNumeric
-    | DonneesFpVote
-    | DonneesFpRecall
-    | DonneesFpExit
-    | DonneesQuestionnaire
-    | DonneesEcranVerrouille;
   /**
    * Titre de l ecran, obligatoire a partir de la version 3
    */
@@ -1428,10 +1442,87 @@ export type DerouleResponseDto = {
    */
   duree: number;
   concepts: Array<string>;
-  ecrans: Array<EcranDerouleResponseDto>;
-  remediations: {
-    [key: string]: string;
-  };
+  /**
+   * Ecrans, chacun avec les donnees de la brique nommee par son type ; sans solution, piege, confusion ni notes
+   */
+  ecrans: Array<
+    | (EcranDerouleResponseDto & {
+        type: 'fp-quote';
+        donnees: DonneesFpQuote;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-story';
+        donnees: DonneesFpStory;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-pro';
+        donnees: DonneesFpPro;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-worked';
+        donnees: DonneesFpWorked;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-concept4';
+        donnees: DonneesFpConcept4;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-plot';
+        donnees: DonneesFpPlot;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-challenge';
+        donnees: DonneesFpChallenge;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-cardsort';
+        donnees: DonneesFpCardsort;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-sheet';
+        donnees: DonneesFpSheet;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-table-build';
+        donnees: DonneesFpTableBuild;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-escape';
+        donnees: DonneesFpEscape;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-pulse';
+        donnees: DonneesFpPulse;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-spaced';
+        donnees: DonneesFpSpaced;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-numeric';
+        donnees: DonneesFpNumeric;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-vote';
+        donnees: DonneesFpVote;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-recall';
+        donnees: DonneesFpRecall;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'fp-exit';
+        donnees: DonneesFpExit;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'questionnaire';
+        donnees: DonneesQuestionnaire;
+      })
+    | (EcranDerouleResponseDto & {
+        type: 'ecran-verrouille';
+        donnees: DonneesEcranVerrouille;
+      })
+  >;
 };
 
 export type StatutDeReponseLibre = 'enregistre' | 'en_attente' | 'echec';
@@ -1932,7 +2023,87 @@ export type SujetResponseDto = {
    */
   duree: number;
   concepts: Array<string>;
-  ecrans: Array<EcranPublicResponseDto>;
+  /**
+   * Ecrans, chacun avec les donnees de la brique nommee par son type ; sans solution, piege, confusion ni notes
+   */
+  ecrans: Array<
+    | (EcranPublicResponseDto & {
+        type: 'fp-quote';
+        donnees: DonneesFpQuote;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-story';
+        donnees: DonneesFpStory;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-pro';
+        donnees: DonneesFpPro;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-worked';
+        donnees: DonneesFpWorked;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-concept4';
+        donnees: DonneesFpConcept4;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-plot';
+        donnees: DonneesFpPlot;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-challenge';
+        donnees: DonneesFpChallenge;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-cardsort';
+        donnees: DonneesFpCardsort;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-sheet';
+        donnees: DonneesFpSheet;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-table-build';
+        donnees: DonneesFpTableBuild;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-escape';
+        donnees: DonneesFpEscape;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-pulse';
+        donnees: DonneesFpPulse;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-spaced';
+        donnees: DonneesFpSpaced;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-numeric';
+        donnees: DonneesFpNumeric;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-vote';
+        donnees: DonneesFpVote;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-recall';
+        donnees: DonneesFpRecall;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'fp-exit';
+        donnees: DonneesFpExit;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'questionnaire';
+        donnees: DonneesQuestionnaire;
+      })
+    | (EcranPublicResponseDto & {
+        type: 'ecran-verrouille';
+        donnees: DonneesEcranVerrouille;
+      })
+  >;
 };
 
 export type LivretResponseDto = {
@@ -2567,6 +2738,7 @@ export type DonneesFpConcept4 = {
       max: number;
       pas: number;
       defaut: number;
+      positions: Array<number>;
     }>;
     formuleLatexSimplifie: string;
     calcul: string;
@@ -2639,6 +2811,7 @@ export type DonneesFpPlot = {
       max: number;
       pas: number;
       defaut: number;
+      positions: Array<number>;
     }>;
     series: Array<{
       id: string;
@@ -4600,6 +4773,10 @@ export type FormationsStudentControllerAnswerData = {
 };
 
 export type FormationsStudentControllerAnswerErrors = {
+  /**
+   * Saisie d une question numerique qui ne se lit pas en nombre : code SAISIE_NON_NUMERIQUE
+   */
+  400: unknown;
   /**
    * Jeton de participant invalide
    */

@@ -1,15 +1,16 @@
 import type { Page, Route } from '@playwright/test';
 import type { z } from 'zod';
+import type { DonneesFpExit } from '../contrat/types.gen';
 import {
-  etatParticipantServi,
-  rattachementServi,
-  sujetServi,
-} from '../src/app/core/adapters/formations-schemas';
+  zEtatParticipantResponseDto as etatParticipantServi,
+  zJoinSessionResponseDto as rattachementServi,
+  zSujetResponseDto as sujetServi,
+} from '../contrat/zod.gen';
 import type { SujetDuFil } from '../src/app/core/adapters/formations-fil';
 import type { RapportSeance } from '../src/app/core/ports/formations.port';
 import { TYPES_QUESTION } from '../src/cours/content/types';
 import type { EtatParticipant, ResumeBareme } from '../src/cours/content/types';
-import { etatServi } from '../src/cours/runtime/core/sync';
+import { zEtatDeSeanceResponseDto as etatServi } from '../contrat/zod.gen';
 import type { EtatSession } from '../src/cours/runtime/core/sync';
 import { buildAuthSession, buildAuthUser } from '../src/testing/factories/auth.factory';
 import {
@@ -258,7 +259,7 @@ export async function servirLaJonction(route: Route, jonction: Jonction): Promis
   );
 }
 
-export const BILLET_DE_SORTIE = {
+export const BILLET_DE_SORTIE: DonneesFpExit['billet'] = {
   id: 'B-SORTIE-09',
   question: 'Le taux équivalent mensuel d’un taux annuel de 12 % vaut :',
   invite: 'Qu’est-ce qui reste flou ?',
@@ -273,7 +274,7 @@ export const BILLET_DE_SORTIE = {
     modalite: 'solo',
     regime: 'ouvert',
   },
-} as const;
+};
 
 const SUJET_DE_SORTIE: SujetDuFil = {
   id: B2_SLUG,
@@ -360,14 +361,18 @@ export async function ouvrirEcranEtudiantB2(
     if (methode === 'POST' && chemin.endsWith(`/sessions/${code}/join`)) {
       await servirLaJonction(route, { participantId, sessionId, ecranCourant, jeton });
     } else if (methode === 'GET' && chemin.endsWith(`/sessions/${sessionId}/sujet`)) {
-      await servirJson(route, sujetServi, {
-        id: B2_SLUG,
-        titre: 'Lire et contrôler l’information chiffrée',
-        niveau: 'B2',
-        duree: 210,
-        concepts: ['proportions', 'taux', 'evolutions'],
-        ecrans,
-      });
+      await servirJson(
+        route,
+        sujetServi,
+        sujetServi.parse({
+          id: B2_SLUG,
+          titre: 'Lire et contrôler l’information chiffrée',
+          niveau: 'B2',
+          duree: 210,
+          concepts: ['proportions', 'taux', 'evolutions'],
+          ecrans,
+        }),
+      );
     } else if (methode === 'GET' && chemin.endsWith(`/sessions/${sessionId}/stream`)) {
       await servirFlux(route, { ...ETAT_EN_COURS, ecranCourant });
     } else {

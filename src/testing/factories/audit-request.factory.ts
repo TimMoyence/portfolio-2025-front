@@ -1,12 +1,11 @@
+import type { AuditEchoueResponseDto, AuditExpireResponseDto } from '../../../contrat/types.gen';
 import type { ClientReport } from '../../app/core/models/audit-client-report.model';
 import type {
   AuditCompletedEvent,
   AuditCreateResponse,
-  AuditFailedEvent,
   AuditProgressEvent,
   AuditStreamEvent,
   AuditSummaryResponse,
-  AuditTimeoutEvent,
 } from '../../app/core/models/audit-request.model';
 import type { AuditRequestPort } from '../../app/core/ports/audit-request.port';
 
@@ -15,6 +14,7 @@ export function buildAuditCreateResponse(
 ): AuditCreateResponse {
   return {
     message: 'Audit cree avec succes.',
+    httpCode: 201,
     auditId: 'audit-1',
     status: 'PENDING',
     ...overrides,
@@ -38,12 +38,12 @@ export function buildAuditSummaryResponse(
 }
 
 export function buildAuditStreamHeartbeat(): AuditStreamEvent {
-  return { type: 'heartbeat', data: { ts: 'now' } };
+  return { event: 'heartbeat', data: { ts: '2026-02-19T09:00:30.000Z' } };
 }
 
 export function buildAuditProgressEvent(overrides?: Partial<AuditProgressEvent>): AuditStreamEvent {
   return {
-    type: 'progress',
+    event: 'progress',
     data: {
       auditId: 'audit-1',
       status: 'RUNNING',
@@ -60,7 +60,7 @@ export function buildAuditCompletedEvent(
   overrides?: Partial<AuditCompletedEvent>,
 ): AuditStreamEvent {
   return {
-    type: 'completed',
+    event: 'completed',
     data: {
       auditId: 'audit-1',
       status: 'COMPLETED',
@@ -77,28 +77,30 @@ export function buildAuditCompletedEvent(
   };
 }
 
-export function buildAuditFailedEvent(overrides?: Partial<AuditFailedEvent>): AuditStreamEvent {
+export function buildAuditFailedEvent(
+  overrides?: Partial<AuditEchoueResponseDto>,
+): AuditStreamEvent {
   return {
-    type: 'failed',
+    event: 'failed',
     data: {
       auditId: 'audit-1',
       status: 'FAILED',
       progress: 40,
       done: true,
-      error: null,
       updatedAt: '2026-04-15T09:00:00.000Z',
       ...overrides,
     },
   };
 }
 
-export function buildAuditTimeoutEvent(overrides?: Partial<AuditTimeoutEvent>): AuditStreamEvent {
+export function buildAuditTimeoutEvent(
+  overrides?: Partial<AuditExpireResponseDto>,
+): AuditStreamEvent {
   return {
-    type: 'timeout',
+    event: 'timeout',
     data: {
       auditId: 'audit-1',
       status: 'TIMEOUT',
-      error: null,
       updatedAt: '2026-04-15T09:15:00.000Z',
       ...overrides,
     },

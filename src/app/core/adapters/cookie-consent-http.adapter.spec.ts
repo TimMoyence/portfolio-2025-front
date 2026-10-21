@@ -3,38 +3,14 @@ import {
   verifierErreurRelayee,
   verifierPostRelaye,
 } from '../../../testing/http-attendu';
-import { lecturesStrictes } from '../../../testing/lecture-stricte';
-import type { CookieConsentPayload } from '../models/cookie-consent.model';
+import type { CookieConsentRequestDto } from '../../../../contrat/types.gen';
 import { CookieConsentHttpAdapter } from './cookie-consent-http.adapter';
 
 describe('CookieConsentHttpAdapter', () => {
   const banc = bancAdaptateurHttp(CookieConsentHttpAdapter);
 
-  describe('lecture des réponses servies par le back', () => {
-    lecturesStrictes(banc, [
-      {
-        route: 'POST /api/cookie-consents',
-        chemin: '/cookie-consents',
-        appel: (a) =>
-          a.recordConsent({
-            policyVersion: '2026-02-11',
-            locale: 'fr',
-            region: 'EU_UK',
-            source: 'banner',
-            action: 'essential_only',
-            preferences: {
-              essential: true,
-              preferences: false,
-              analytics: false,
-              marketing: false,
-            },
-          }),
-      },
-    ]);
-  });
-
   it('should POST consent payload to the cookie-consents endpoint', () => {
-    const payload: CookieConsentPayload = {
+    const payload: CookieConsentRequestDto = {
       policyVersion: '2026-02-11',
       locale: 'fr',
       region: 'EU_UK',
@@ -62,7 +38,7 @@ describe('CookieConsentHttpAdapter', () => {
   });
 
   it('should propagate HTTP errors', () => {
-    const payload: CookieConsentPayload = {
+    const payload: CookieConsentRequestDto = {
       policyVersion: '2026-02-11',
       locale: 'en',
       region: 'EU_UK',

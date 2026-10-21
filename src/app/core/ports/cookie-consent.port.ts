@@ -1,10 +1,12 @@
 import { InjectionToken } from '@angular/core';
 import type { Observable } from 'rxjs';
-import type { MessageResponse } from '../models/message.response';
-import type { CookieConsentPayload } from '../models/cookie-consent.model';
+import type {
+  CookieConsentRequestDto,
+  CookieConsentResponseDto,
+} from '../../../../contrat/types.gen';
 
 export interface CookieConsentPort {
-  recordConsent(payload: CookieConsentPayload): Observable<MessageResponse>;
+  recordConsent(payload: CookieConsentRequestDto): Observable<CookieConsentResponseDto>;
 }
 
 export const COOKIE_CONSENT_PORT = new InjectionToken<CookieConsentPort>('COOKIE_CONSENT_PORT');

@@ -359,7 +359,7 @@ describe('sync', () => {
     expect(recus).toEqual([enDirect]);
   });
 
-  describe('contrat strict du flux servi par le back (L2b-SCHEMAS)', () => {
+  describe('contrat généré du flux servi par le back (L2b-SCHEMAS)', () => {
     const SORTIES_DE_MACHINE = {
       valeurs: { prix: 12 },
       resultat: { valeur: 3, affichage: '3,00 €' },
@@ -402,7 +402,31 @@ describe('sync', () => {
       expect(recus).toEqual([servi]);
     });
 
-    it('ignore un etat incomplet, malforme ou qui porte une cle que le back ne sert pas', async () => {
+    it('lit un etat qui porte une cle que le back ajoute, sans la transmettre', async () => {
+      const etats = await collecter([
+        bloc('etat', {
+          ...ETAT,
+          inconnu: 1,
+          pilotage: { ...ETAT.pilotage, 'B2-01-A3-01': { phase: 'vote', inconnu: true } },
+        }),
+      ]);
+
+      expect(etats).toEqual([
+        { ...ETAT, pilotage: { ...ETAT.pilotage, 'B2-01-A3-01': { phase: 'vote' } } },
+      ]);
+    });
+
+    it('lit des resultats qui portent une cle que le back ajoute, sans la transmettre', async () => {
+      expect(await collecterResultats([{ ...RESULTATS, inconnu: 1 }])).toEqual([RESULTATS]);
+    });
+
+    it('lit la raison d une fin qui porte une cle que le back ajoute', async () => {
+      expect(await servirLaFin(bloc('fin', { raison: 'cloturee', inconnu: 1 }))).toEqual([
+        'cloturee',
+      ]);
+    });
+
+    it('ignore un etat incomplet ou malforme', async () => {
       const recus = await collecter([
         ...Object.keys(ETAT).map((cle) => bloc('etat', sans(ETAT, cle))),
         bloc('etat', { ...ETAT, revision: 'sept' }),
@@ -412,12 +436,6 @@ describe('sync', () => {
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A5-08': { revele: 'oui' } } }),
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A2-03': { explicationsDevoilees: 1.5 } } }),
         bloc('etat', { ...ETAT, pilotage: { 'B2-01-A2-06': { etayageAtteint: -2 } } }),
-        bloc('etat', { ...ETAT, inconnu: 1 }),
-        bloc('etat', { ...ETAT, pilotage: { 'B2-01-A3-01': { phase: 'vote', inconnu: true } } }),
-        bloc('etat', {
-          ...ETAT,
-          pilotage: { 'B2-03-MACHINE': { sortiesProjetees: { ...SORTIES_DE_MACHINE, x: 1 } } },
-        }),
         bloc('etat', { ...ETAT, majLe: 'hier' }),
         bloc('etat', ETAT),
       ]);
@@ -445,7 +463,7 @@ describe('sync', () => {
       expect(recus).toEqual([servis]);
     });
 
-    it('ignore des resultats incomplets, malformes ou qui portent une cle que le back ne sert pas', async () => {
+    it('ignore des resultats incomplets ou malformes', async () => {
       const [question] = RESULTATS.questions;
       const recus = await collecterResultats([
         ...Object.keys(RESULTATS).map((cle) => sans(RESULTATS, cle)),
@@ -457,19 +475,11 @@ describe('sync', () => {
         { ...RESULTATS, questions: [{ ...question, parOption: { a: 'six' } }] },
         { ...RESULTATS, questions: [{ ...question, parCle: { E3: { total: 2 } } }] },
         { ...RESULTATS, questions: [{ ...question, scoreMoyen: '0,7' }] },
-        { ...RESULTATS, inconnu: 1 },
-        { ...RESULTATS, questions: [{ ...question, inconnu: 1 }] },
         { ...RESULTATS, questions: [{ ...question, remediation: { confusionId: 'c1' } }] },
         RESULTATS,
       ]);
 
       expect(recus).toEqual([RESULTATS]);
-    });
-
-    it('ne lit pas la raison d une fin qui porte une cle que le back ne sert pas', async () => {
-      const raisons = await servirLaFin(bloc('fin', { raison: 'cloturee', inconnu: 1 }));
-
-      expect(raisons).toEqual([null]);
     });
   });
 

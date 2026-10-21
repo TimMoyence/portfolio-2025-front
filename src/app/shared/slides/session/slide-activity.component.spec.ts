@@ -584,7 +584,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
         kind: 'reponse',
         screenId: 'b2-01-numerique',
         questionId: 'Q-VA-07',
-        valeur: 1480.24,
+        valeur: '1 480,24',
         dureeMs: jasmine.any(Number),
       },
     ]);

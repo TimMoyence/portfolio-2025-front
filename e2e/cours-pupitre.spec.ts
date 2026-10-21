@@ -2,14 +2,17 @@ import { expect, test } from '@playwright/test';
 import type { Page, Route } from '@playwright/test';
 import type { DerouleDuFil } from '../src/app/core/adapters/formations-fil';
 import {
-  annotationServie,
-  annotationsServies,
-  derouleServi,
-  participantsServis,
-  rapportServi,
-  reponsesLibresServies,
-} from '../src/app/core/adapters/formations-schemas';
-import { sessionServie, utilisateurServi } from '../src/app/core/adapters/site-schemas';
+  zDerouleResponseDto as derouleServi,
+  zFreeResponsesResponseDto as reponsesLibresServies,
+  zSessionParticipantsResponseDto as participantsServis,
+  zSessionResultsResponseDto as rapportServi,
+  zTeacherAnnotationResponseDto as annotationServie,
+  zTeacherAnnotationsResponseDto as annotationsServies,
+} from '../contrat/zod.gen';
+import {
+  zAuthResponseDto as sessionServie,
+  zUserResponseDto as utilisateurServi,
+} from '../contrat/zod.gen';
 import type { AnnotationFormateur } from '../src/app/core/ports/formations.port';
 import { buildAuthSession, buildAuthUser } from '../src/testing/factories/auth.factory';
 import {
@@ -54,7 +57,7 @@ const ECRAN: DerouleDuFil['ecrans'][number] = {
   notes: 'Laisser voter avant de commenter.',
   diffusion: 'seance',
   seuil: 0.7,
-  corriges: [{ questionId: QUESTION.id, bonneReponse: 'a', confusions: [] }],
+  corriges: [{ questionId: QUESTION.id, bonneReponse: 'a', optionId: 'a', confusions: [] }],
   questions: [{ id: QUESTION.id, enonce: ENONCE_PROBLEME, options: QUESTION.options }],
   corrigeEcran: null,
   reflexion: null,

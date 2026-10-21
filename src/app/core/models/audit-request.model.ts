@@ -1,102 +1,19 @@
-import type { ClientReport } from './audit-client-report.model';
-import type { ChampsAntiRobot } from './champs-anti-robot.model';
+import type {
+  AuditRequestRequestDto,
+  AuditRequestResponseDto,
+  AuditsControllerStreamResponse,
+  AuditSummaryResponseDto,
+  AuditTermineResponseDto,
+  ProgressionDAuditResponseDto,
+} from '../../../../contrat/types.gen';
+import { zAuditSummaryResponseDto } from '../../../../contrat/zod.gen';
 
-export type AuditContactMethod = 'EMAIL' | 'PHONE';
-type AuditProcessingStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
+export const PILLAR_KEYS = zAuditSummaryResponseDto.shape.pillarScores.keyof().options;
+export type PillarKey = (typeof PILLAR_KEYS)[number];
 
-/**
- * Cle litterale d'un pilier d'audit. Duplique du type backend
- * `PillarKey` (scoring.service.ts) — aucune dependance cross-repo.
- * Toute evolution cote backend doit etre resynchronisee ici manuellement.
- */
-export type PillarKey =
-  | 'seo'
-  | 'performance'
-  | 'technical'
-  | 'trust'
-  | 'conversion'
-  | 'aiVisibility'
-  | 'citationWorthiness';
-
-export const PILLAR_KEYS: readonly PillarKey[] = [
-  'seo',
-  'performance',
-  'technical',
-  'trust',
-  'conversion',
-  'aiVisibility',
-  'citationWorthiness',
-] as const;
-
-export interface AuditRequestPayload extends ChampsAntiRobot {
-  websiteName: string;
-  contactMethod: AuditContactMethod;
-  contactValue: string;
-  locale?: 'fr' | 'en';
-}
-
-export interface AuditCreateResponse {
-  message: string;
-  auditId: string;
-  status: AuditProcessingStatus;
-}
-
-interface AuditSynthesis {
-  summaryText: string | null;
-  keyChecks: Record<string, unknown>;
-  quickWins: string[];
-  pillarScores: Record<string, number>;
-}
-
-export interface AuditSummaryResponse extends AuditSynthesis {
-  auditId: string;
-  ready: boolean;
-  status: AuditProcessingStatus;
-  progress: number;
-}
-
-export interface AuditProgressEvent {
-  auditId: string;
-  status: 'PENDING' | 'RUNNING';
-  progress: number;
-  step: string | null;
-  details?: Record<string, unknown>;
-  done: boolean;
-  updatedAt: string;
-}
-
-export interface AuditCompletedEvent extends AuditSynthesis {
-  auditId: string;
-  status: 'COMPLETED';
-  progress: number;
-  done: boolean;
-  clientReport: ClientReport | null;
-  updatedAt: string;
-}
-
-export interface AuditFailedEvent {
-  auditId: string;
-  status: 'FAILED';
-  progress: number;
-  done: boolean;
-  error: null;
-  updatedAt: string;
-}
-
-export interface AuditTimeoutEvent {
-  auditId: string;
-  status: 'TIMEOUT';
-  error: null;
-  updatedAt: string;
-}
-
-export interface AuditHeartbeatEvent {
-  ts: string;
-}
-
-export type AuditStreamEvent =
-  | { type: 'progress'; data: AuditProgressEvent }
-  | { type: 'completed'; data: AuditCompletedEvent }
-  | { type: 'failed'; data: AuditFailedEvent }
-  | { type: 'timeout'; data: AuditTimeoutEvent }
-  | { type: 'heartbeat'; data: AuditHeartbeatEvent };
+export type AuditRequestPayload = AuditRequestRequestDto;
+export type AuditCreateResponse = AuditRequestResponseDto;
+export type AuditSummaryResponse = AuditSummaryResponseDto;
+export type AuditProgressEvent = ProgressionDAuditResponseDto;
+export type AuditCompletedEvent = AuditTermineResponseDto;
+export type AuditStreamEvent = AuditsControllerStreamResponse;

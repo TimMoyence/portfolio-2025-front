@@ -2,7 +2,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
-import type { z } from 'zod';
+import {
+  zAuditRequestResponseDto,
+  zAuditsControllerStreamResponse,
+  zAuditSummaryResponseDto,
+} from '../../../../contrat/zod.gen';
 import { getApiBaseUrl } from '../http/api-config';
 import { jsonOuNull } from '../../../cours/runtime/core/valeurs';
 import type {
@@ -13,23 +17,6 @@ import type {
 } from '../models/audit-request.model';
 import type { AuditRequestPort } from '../ports/audit-request.port';
 import { luPar } from './lu-par';
-import {
-  auditCreeServi,
-  auditEchoueServi,
-  auditExpireServi,
-  auditTermineServi,
-  battementServi,
-  progressionDAuditServie,
-  resumeDAuditServi,
-} from './site-schemas';
-
-const SCHEMAS_DU_FLUX = {
-  progress: progressionDAuditServie,
-  completed: auditTermineServi,
-  failed: auditEchoueServi,
-  timeout: auditExpireServi,
-  heartbeat: battementServi,
-} satisfies Record<AuditStreamEvent['type'], z.ZodType>;
 
 @Injectable()
 export class AuditRequestHttpAdapter implements AuditRequestPort {
@@ -44,13 +31,15 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
   }
 
   submit(payload: AuditRequestPayload): Observable<AuditCreateResponse> {
-    return this.http.post<unknown>(`${this.baseUrl}/audits`, payload).pipe(luPar(auditCreeServi));
+    return this.http
+      .post<unknown>(`${this.baseUrl}/audits`, payload)
+      .pipe(luPar(zAuditRequestResponseDto));
   }
 
   getSummary(auditId: string): Observable<AuditSummaryResponse> {
     return this.http
       .get<unknown>(`${this.baseUrl}/audits/${encodeURIComponent(auditId)}/summary`)
-      .pipe(luPar(resumeDAuditServi));
+      .pipe(luPar(zAuditSummaryResponseDto));
   }
 
   stream(auditId: string): Observable<AuditStreamEvent> {
@@ -60,30 +49,30 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
       const streamUrl = `${this.baseUrl}/audits/${encodeURIComponent(auditId)}/stream`;
       const source = new EventSource(streamUrl);
 
-      const relayer = (type: AuditStreamEvent['type'], event: MessageEvent): boolean => {
-        const data = jsonOuNull(event.data);
+      const relayer = (event: AuditStreamEvent['event'], message: MessageEvent): boolean => {
+        const data = jsonOuNull(message.data);
         if (!data) {
           return false;
         }
-        const lu = SCHEMAS_DU_FLUX[type].safeParse(data);
+        const lu = zAuditsControllerStreamResponse.safeParse({ event, data });
         if (!lu.success) {
           subscriber.error(lu.error);
           return false;
         }
-        subscriber.next({ type, data: lu.data } as AuditStreamEvent);
+        subscriber.next(lu.data);
         return true;
       };
 
-      source.addEventListener('progress', (event) => relayer('progress', event));
-      source.addEventListener('heartbeat', (event) => relayer('heartbeat', event));
-      source.addEventListener('completed', (event) => {
-        if (relayer('completed', event)) {
+      source.addEventListener('progress', (message) => relayer('progress', message));
+      source.addEventListener('heartbeat', (message) => relayer('heartbeat', message));
+      source.addEventListener('completed', (message) => {
+        if (relayer('completed', message)) {
           subscriber.complete();
         }
       });
       for (const fin of ['failed', 'timeout'] as const) {
-        source.addEventListener(fin, (event) => {
-          relayer(fin, event);
+        source.addEventListener(fin, (message) => {
+          relayer(fin, message);
           subscriber.complete();
         });
       }

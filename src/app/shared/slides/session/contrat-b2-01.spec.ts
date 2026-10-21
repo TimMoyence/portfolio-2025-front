@@ -193,6 +193,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
               reference: 'E3',
               formuleReference: '=C3/$C$5',
               valeur: 0.2,
+              affichage: '20 %',
               tolerance: { type: 'relative', valeur: 0.0001 },
               forme: formes[1],
             },

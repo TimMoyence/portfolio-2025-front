@@ -24,7 +24,7 @@ const SURFACE_PUBLIQUE_EXACTE: ClesIdentiques<
 
 interface DetailNumeric {
   questionId: string;
-  valeur: number;
+  valeur: string;
   dureeMs: number;
 }
 
@@ -116,39 +116,20 @@ describe('FpNumeric', () => {
     expect(champDe(hote)?.getAttribute('aria-describedby')).toBeNull();
   });
 
-  const SAISIES_VALIDES: ReadonlyArray<{ nom: string; frappe: string; valeur: number }> = [
-    { nom: 'le point decimal', frappe: '12.5', valeur: 12.5 },
-    { nom: 'la virgule decimale francaise', frappe: SAISIE_VALIDE, valeur: 12.5 },
-    { nom: 'un entier', frappe: '1480', valeur: 1480 },
-    { nom: 'un espace de milliers ordinaire', frappe: '1 480,24', valeur: 1480.24 },
-    { nom: 'une espace fine insecable de milliers', frappe: '1 480,24', valeur: 1480.24 },
-    { nom: 'une espace insecable de milliers', frappe: '1 480,24', valeur: 1480.24 },
-    { nom: 'un montant negatif', frappe: '-1 480,24', valeur: -1480.24 },
-  ];
-
-  for (const cas of SAISIES_VALIDES) {
-    it(`normalise ${cas.nom}`, () => {
-      const details = soumissionsDe(hote);
-      saisir(hote, cas.frappe);
-      expect(details.length).toBe(1);
-      expect(details[0].valeur).toBe(cas.valeur);
-      expect(details[0].questionId).toBe(QUESTION_NOTEE.id);
-    });
-  }
-
-  const SAISIES_REFUSEES = ['douze', '', '12,5,6', '1 480 euros', '12 %', '12 €'];
-
-  for (const frappe of SAISIES_REFUSEES) {
-    it(`n emet rien pour la saisie non numerique « ${frappe} »`, () => {
+  for (const frappe of ['1 480,24', 'douze']) {
+    it(`emet la saisie brute « ${frappe} », que le serveur lit`, () => {
       const details = soumissionsDe(hote);
       saisir(hote, frappe);
-      expect(details).toEqual([]);
-      expect(texteOmbre(hote, 'retour')).toBe(MESSAGE_REFUS);
+      expect(details).toEqual([
+        jasmine.objectContaining({ questionId: QUESTION_NOTEE.id, valeur: frappe }),
+      ]);
     });
   }
 
-  it('conserve la saisie refusee dans le champ', () => {
+  it('garde la saisie refusee par le serveur dans le champ rouvert', () => {
     saisir(hote, 'douze');
+    hote.erreur = MESSAGE_REFUS;
+
     expect(champDe(hote)?.value).toBe('douze');
     expect(champDe(hote)?.disabled).toBe(false);
   });
@@ -171,7 +152,7 @@ describe('FpNumeric', () => {
 
     champ.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true }));
 
-    expect(details.map((detail) => detail.valeur)).toEqual([12.5]);
+    expect(details.map((detail) => detail.valeur)).toEqual([SAISIE_VALIDE]);
     expect(champDe(hote)?.disabled).toBe(true);
   });
 
@@ -357,12 +338,6 @@ describe('FpNumeric', () => {
       expect(noeudOmbre(hote, 'duree')).withContext(role).toBeNull();
     }
     expect(hote.question?.metadonnees.modalite).toBe(QUESTION_NOTEE.metadonnees.modalite);
-  });
-
-  it('accepte le signe moins typographique', () => {
-    const details = soumissionsDe(hote);
-    saisir(hote, '−2,8');
-    expect(details[0]?.valeur).toBeCloseTo(-2.8, 12);
   });
 
   it('affiche le verdict reinjecte de sa question, jamais celui d une autre', () => {

@@ -48,10 +48,7 @@ function ligneDeResultat(resultat: ResultatQuestion | undefined): LigneDeLecture
   const reponses = resultat?.total ?? 0;
   return {
     reponses,
-    taux:
-      resultat === undefined || reponses === 0
-        ? null
-        : (resultat.scoreMoyen ?? part(resultat.correctes, reponses)),
+    taux: resultat === undefined || reponses === 0 ? null : resultat.part,
     avecTaux: true,
   };
 }

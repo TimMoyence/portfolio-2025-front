@@ -9,7 +9,6 @@ import {
   type SortiesMachine,
   type TableauEvalue,
   type ValeurAffichee,
-  creerMetadonneesBrique,
 } from '../../cours/content/types';
 import type { CardsortPlanPublic } from '../../cours/runtime/blocks/FpCardsort';
 import type { ChallengeProblemePublic } from '../../cours/runtime/blocks/FpChallenge';
@@ -38,16 +37,29 @@ import type {
   VerdictDeTentative,
 } from '../../cours/runtime/blocks/retours';
 import type { Brouillons } from '../../cours/runtime/core/storage';
+import type { ParametreReglable } from '../../cours/runtime/blocks/curseurs';
+
+export function curseurServi(curseur: Omit<ParametreReglable, 'positions'>): ParametreReglable {
+  const crans = Math.round((curseur.max - curseur.min) / curseur.pas);
+  const surLePas = Array.from(
+    { length: crans + 1 },
+    (_, rang) => Math.round((curseur.min + rang * curseur.pas) * 1e9) / 1e9,
+  ).filter((position) => position <= curseur.max);
+  return {
+    ...curseur,
+    positions: [...new Set([...surLePas, curseur.defaut])].sort((a, b) => a - b),
+  };
+}
 
 export function metadonnees(overrides: Partial<MetadonneesBrique> = {}): MetadonneesBrique {
-  return creerMetadonneesBrique({
+  return {
     concepts: ['capitalisation'],
     misconceptionsCiblees: [],
     dureeMinutes: 3,
     modalite: 'solo',
     regime: 'ouvert',
     ...overrides,
-  });
+  };
 }
 
 export function buildEcran(overrides: Partial<EcranContent> = {}): EcranContent {
@@ -390,9 +402,23 @@ export function buildConcept4Definition(
   return {
     id: 'K-QUATRE-FACES-01',
     parametres: [
-      { cle: 'C', libelle: 'Capital place en euros', min: 100, max: 5000, pas: 100, defaut: 1000 },
-      { cle: 'i', libelle: 'Taux annuel en pourcent', min: 1, max: 10, pas: 0.5, defaut: 4 },
-      { cle: 'n', libelle: 'Duree en annees', min: 1, max: 30, pas: 1, defaut: 10 },
+      curseurServi({
+        cle: 'C',
+        libelle: 'Capital place en euros',
+        min: 100,
+        max: 5000,
+        pas: 100,
+        defaut: 1000,
+      }),
+      curseurServi({
+        cle: 'i',
+        libelle: 'Taux annuel en pourcent',
+        min: 1,
+        max: 10,
+        pas: 0.5,
+        defaut: 4,
+      }),
+      curseurServi({ cle: 'n', libelle: 'Duree en annees', min: 1, max: 30, pas: 1, defaut: 10 }),
     ],
     formuleLatexSimplifie: 'C × (1 + i)^n',
     animation: [{ n: 30 }],
@@ -450,8 +476,17 @@ export function buildPlotDefinition(overrides: Partial<PlotDefinition> = {}): Pl
         max: 3000,
         pas: 2000,
         defaut: 1000,
+        positions: [1000, 3000],
       },
-      { cle: 'i', libelle: 'Taux annuel en pourcent', min: 4, max: 8, pas: 4, defaut: 4 },
+      {
+        cle: 'i',
+        libelle: 'Taux annuel en pourcent',
+        min: 4,
+        max: 8,
+        pas: 4,
+        defaut: 4,
+        positions: [4, 8],
+      },
     ],
     series: [
       {
@@ -511,14 +546,14 @@ export function buildPlotEnBarres(overrides: Partial<PlotDefinition> = {}): Plot
     ordonnee: 'Marge brute (€)',
     bornesOrdonnee: { minParametre: 'origine', max: 292000 },
     parametres: [
-      {
+      curseurServi({
         cle: 'origine',
         libelle: 'Origine de l’axe',
         min: 0,
         max: 284000,
         pas: 4000,
         defaut: 284000,
-      },
+      }),
     ],
     prereglages: [
       { libelle: 'Axe de Samir', valeurs: { origine: 284000 } },

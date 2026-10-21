@@ -3,6 +3,7 @@ import {
   buildConcept4Definition,
   buildSortiesMachine,
   buildSortiesMachineATrenteAns,
+  curseurServi,
 } from '../../../testing/factories/cours.factory';
 import {
   animer,
@@ -168,8 +169,8 @@ describe('FpConcept4', () => {
     hote.definition = buildConcept4Definition({
       id: 'K-PROPORTION-FORMULE',
       parametres: [
-        { cle: 'partie', libelle: 'partie', min: 10, max: 90, pas: 10, defaut: 30 },
-        { cle: 'total', libelle: 'total', min: 100, max: 900, pas: 100, defaut: 100 },
+        curseurServi({ cle: 'partie', libelle: 'partie', min: 10, max: 90, pas: 10, defaut: 30 }),
+        curseurServi({ cle: 'total', libelle: 'total', min: 100, max: 900, pas: 100, defaut: 100 }),
       ],
       formuleLatexSimplifie: '\\dfrac{partie}{total} \\times 100',
       sorties: [],

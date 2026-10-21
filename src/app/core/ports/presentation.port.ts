@@ -1,11 +1,8 @@
 import { InjectionToken } from '@angular/core';
 import type { Observable } from 'rxjs';
-import type { SlideInteractions } from '../models/presentation-interactions.model';
+import type { PresentationInteractionsResponseDto } from '../../../../contrat/types.gen';
 
-export interface PresentationInteractionsResponse {
-  slug: string;
-  interactions: Record<string, SlideInteractions>;
-}
+export type PresentationInteractionsResponse = PresentationInteractionsResponseDto;
 
 export interface PresentationPort {
   getInteractions(slug: string): Observable<PresentationInteractionsResponse>;

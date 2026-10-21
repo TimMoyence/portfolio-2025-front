@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
-import type { CookieConsentAction } from '../../../core/models/cookie-consent.model';
+import type { ActionDeConsentement as CookieConsentAction } from '../../../../../contrat/types.gen';
 import { CookieConsentService } from '../../../core/services/cookie-consent.service';
 
 @Component({

@@ -46,7 +46,12 @@ describe('CoursResultatsProjetesComponent', () => {
       buildResultatsSeance({
         participants: 20,
         questions: [
-          buildResultatQuestion({ total: 10, correctes: 6, parOption: { a: 3, b: 6, c: 1 } }),
+          buildResultatQuestion({
+            total: 10,
+            correctes: 6,
+            part: 0.6,
+            parOption: { a: 3, b: 6, c: 1 },
+          }),
           buildResultatQuestion({ questionId: 'AUTRE-ECRAN', total: 4 }),
         ],
       }),

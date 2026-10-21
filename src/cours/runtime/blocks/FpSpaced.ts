@@ -1,9 +1,9 @@
-import { BOITES_DE_REVISION, type BoiteDeRevision } from '../../content/types';
+import type { SpacedQuestionPubliqueResponseDto } from '../../../../contrat/types.gen';
+import { BOITES_DE_REVISION } from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import {
   type ContenuDeBrique,
-  type OptionPublique,
   avecJeNeSaisPas,
   copierLeSocle,
   projeterOptions,
@@ -21,14 +21,7 @@ export interface SpacedRappel extends ContenuDeBrique {
   readonly intitule: string;
 }
 
-export interface SpacedQuestionPublique {
-  readonly questionId: string;
-  readonly concept: string;
-  readonly boite: BoiteDeRevision;
-  readonly cours: string;
-  readonly enonce: string;
-  readonly options: readonly OptionPublique[];
-}
+export type SpacedQuestionPublique = SpacedQuestionPubliqueResponseDto;
 
 const BONNE_EN_LIGNE = safeHtml`class="fp-spaced__bonne"`;
 

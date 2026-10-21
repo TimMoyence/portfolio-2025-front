@@ -1,6 +1,6 @@
 import { baseDeLApi } from './base-de-l-api';
 import { champsHorsContrat, garderEnCache, lireJsonJournalise } from './lecture-api';
-import { catalogueServi } from '../app/core/adapters/formations-schemas';
+import { zCoursPublicCatalogueResponseDto as catalogueServi } from '../../contrat/zod.gen';
 import { cheminDuCoursEnSeance } from '../app/core/config/cours-en-seance';
 
 export interface PublicationDeCours {
