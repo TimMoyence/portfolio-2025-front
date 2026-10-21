@@ -96,6 +96,14 @@ export type SetPasswordDto = {
   newPassword: string;
 };
 
+export type InscriptionDto = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  phone?: string | null;
+};
+
 export type ResendVerificationDto = {
   /**
    * Adresse email du compte a verifier
@@ -165,6 +173,71 @@ export type CookieConsentResponseDto = {
   httpCode: number;
 };
 
+export type ProgressionDAuditResponseDto = {
+  auditId: string;
+  progress: number;
+  done: boolean;
+  updatedAt: string;
+  status: 'PENDING' | 'RUNNING';
+  step: string | null;
+  /**
+   * Detail de la phase en cours, absent avant la premiere phase
+   */
+  details?: AvancementDAudit;
+};
+
+export type AuditTermineResponseDto = {
+  auditId: string;
+  progress: number;
+  summaryText: string | null;
+  /**
+   * Constats bruts des controles techniques, volontairement ouverts : leurs cles suivent les controles executes et evoluent avec eux
+   */
+  keyChecks: {
+    [key: string]: unknown;
+  };
+  quickWins: Array<string>;
+  pillarScores: {
+    [key: string]: number;
+  };
+  status: 'COMPLETED';
+  done: boolean;
+  /**
+   * Rapport client, null avant sa persistance
+   */
+  clientReport: RapportClientServi | null;
+  updatedAt: string;
+};
+
+export type AuditEchoueResponseDto = {
+  auditId: string;
+  progress: number;
+  done: boolean;
+  updatedAt: string;
+  status: 'FAILED';
+  /**
+   * Toujours null : le motif de l echec n est pas expose
+   */
+  error: null;
+};
+
+export type AuditExpireResponseDto = {
+  auditId: string;
+  updatedAt: string;
+  status: 'TIMEOUT';
+  /**
+   * Toujours null : le motif de l echec n est pas expose
+   */
+  error: null;
+};
+
+export type BattementResponseDto = {
+  /**
+   * Instant du battement, qui garde le flux ouvert
+   */
+  ts: string;
+};
+
 export type MethodeDeContact = 'EMAIL' | 'PHONE';
 
 export type AuditRequestRequestDto = {
@@ -197,6 +270,9 @@ export type AuditSummaryResponseDto = {
   status: StatutDAudit;
   progress: number;
   summaryText: string | null;
+  /**
+   * Constats bruts des controles techniques, volontairement ouverts : leurs cles suivent les controles executes et evoluent avec eux
+   */
   keyChecks: {
     [key: string]: unknown;
   };
@@ -432,6 +508,30 @@ export type PieceJointeReserveeResponseDto = {
 };
 
 /**
+ * Brique qui rend l ecran
+ */
+export type TypeDEcranServi =
+  | 'fp-quote'
+  | 'fp-story'
+  | 'fp-pro'
+  | 'fp-worked'
+  | 'fp-concept4'
+  | 'fp-plot'
+  | 'fp-challenge'
+  | 'fp-cardsort'
+  | 'fp-sheet'
+  | 'fp-table-build'
+  | 'fp-escape'
+  | 'fp-pulse'
+  | 'fp-spaced'
+  | 'fp-numeric'
+  | 'fp-vote'
+  | 'fp-recall'
+  | 'fp-exit'
+  | 'questionnaire'
+  | 'ecran-verrouille';
+
+/**
  * Champs du cas repris de l ecran renvoye
  */
 export type ChampExtraitDuCas = 'metier' | 'situation' | 'geste' | 'consequence';
@@ -620,18 +720,35 @@ export type EcranPublicResponseDto = {
   /**
    * Brique qui rend l ecran
    */
-  type: string;
+  type: TypeDEcranServi;
   /**
    * Duree de l ecran en minutes
    */
   duree: number;
   interactif: boolean;
   /**
-   * Proprietes de la brique, rangees sous la propriete de la brique ; sans solution, piege, confusion ni notes
+   * Proprietes de la brique nommee par type, rangees sous la propriete de la brique ; sans solution, piege, confusion ni notes
    */
-  donnees: {
-    [key: string]: unknown;
-  };
+  donnees:
+    | DonneesFpQuote
+    | DonneesFpStory
+    | DonneesFpPro
+    | DonneesFpWorked
+    | DonneesFpConcept4
+    | DonneesFpPlot
+    | DonneesFpChallenge
+    | DonneesFpCardsort
+    | DonneesFpSheet
+    | DonneesFpTableBuild
+    | DonneesFpEscape
+    | DonneesFpPulse
+    | DonneesFpSpaced
+    | DonneesFpNumeric
+    | DonneesFpVote
+    | DonneesFpRecall
+    | DonneesFpExit
+    | DonneesQuestionnaire
+    | DonneesEcranVerrouille;
   /**
    * Titre de l ecran, obligatoire a partir de la version 3
    */
@@ -679,6 +796,295 @@ export type CoursPublicCatalogueResponseDto = {
   publieLe: string;
 };
 
+/**
+ * Phase d un vote a question jumelle, jamais ramenee en arriere
+ */
+export type PhaseDeVote = 'vote' | 'discussion' | 'revote' | 'revele';
+
+export type PointDeCourbeResponseDto = {
+  x: number;
+  y: number | null;
+};
+
+export type ValeurDeMachineResponseDto = {
+  /**
+   * Valeur calculee, null si la machine ne la calcule pas
+   */
+  valeur: number | null;
+  /**
+   * Valeur arrondie au centieme, virgule decimale, tiret si elle ne se calcule pas
+   */
+  affichage: string;
+};
+
+export type LigneDeMachineResponseDto = {
+  valeur: ValeurDeMachineResponseDto;
+  resultat: ValeurDeMachineResponseDto;
+  /**
+   * Ligne du reglage courant du curseur
+   */
+  courante: boolean;
+};
+
+export type MachineEvalueeResponseDto = {
+  /**
+   * Reglage de chaque curseur, defauts compris, par cle
+   */
+  valeurs: {
+    [key: string]: number;
+  };
+  resultat: ValeurDeMachineResponseDto;
+  /**
+   * Valeur a la sortie de chaque etape, dans son ordre
+   */
+  etapes: Array<ValeurDeMachineResponseDto>;
+  /**
+   * Resultat le long de chaque curseur, les autres a leur reglage, par cle
+   */
+  courbes: {
+    [key: string]: Array<PointDeCourbeResponseDto>;
+  };
+  /**
+   * Table de valeurs de chaque curseur, par cle
+   */
+  lignes: {
+    [key: string]: Array<LigneDeMachineResponseDto>;
+  };
+  /**
+   * Phrase de la machine, resultat ecrit a sa place
+   */
+  phrase: string;
+};
+
+export type PilotageServiResponseDto = {
+  /**
+   * Phase d un vote a question jumelle, jamais ramenee en arriere
+   */
+  phase?: PhaseDeVote;
+  /**
+   * Revelation des pistes fausses d un defi, jamais retiree
+   */
+  revele?: boolean;
+  /**
+   * Etapes montrees d un exemple travaille
+   */
+  etayage?: number;
+  /**
+   * Explications devoilees sur l ecran d un exercice corrige sur place, dans leur ordre, jamais retirees
+   */
+  explicationsDevoilees?: number;
+  /**
+   * Réglages des curseurs de la machine, par clé de paramètre
+   */
+  reglages?: {
+    [key: string]: number;
+  };
+  /**
+   * Projection a la scene des resultats anonymes agreges de cet ecran
+   */
+  resultatsProjetes?: boolean;
+  /**
+   * Affichage immediat des options d un rappel, sans attendre la fin du decompte, jamais retire
+   */
+  optionsAffichees?: boolean;
+  /**
+   * Etapes deja montrees d un exemple travaille, jamais reculees
+   */
+  etayageAtteint?: number;
+  /**
+   * Sorties de la machine aux reglages projetes
+   */
+  sortiesProjetees?: MachineEvalueeResponseDto;
+  /**
+   * Question affichee d un vote a question jumelle
+   */
+  questionAffichee?: string;
+  /**
+   * Question ouverte au vote, null une fois le vote clos
+   */
+  questionOuverte?: string | null;
+};
+
+export type EtatDeSeance = 'attente' | 'en_cours' | 'terminee';
+
+export type PacingMode = 'pilote' | 'libre';
+
+export type EtatDeSeanceResponseDto = {
+  etat: EtatDeSeance;
+  modeRythme: PacingMode;
+  ecranCourant: number;
+  /**
+   * Ecrans ouverts en rythme libre, null en rythme pilote
+   */
+  intervalleLibre: FreeRangeDto | null;
+  participants: number;
+  /**
+   * Revision de l etat, croissante a chaque changement
+   */
+  revision: number;
+  /**
+   * Pilotage de chaque ecran, par identifiant d ecran
+   */
+  pilotage: {
+    [key: string]: PilotageServiResponseDto;
+  };
+  majLe: string;
+};
+
+/**
+ * Raison de la fermeture : le client cesse de se reconnecter
+ */
+export type RaisonDeFin = 'cloturee' | 'introuvable' | 'expiree' | 'evince' | 'revoque';
+
+export type FinDuFluxResponseDto = {
+  /**
+   * Raison de la fermeture : le client cesse de se reconnecter
+   */
+  raison: RaisonDeFin;
+};
+
+export type JustesParCleResponseDto = {
+  total: number;
+  justes: number;
+};
+
+export type RemediationResponseDto = {
+  confusionId: string;
+  ecranId: string;
+};
+
+export type ConfusionCompteeResponseDto = {
+  id: string;
+  libelle: string;
+  nombre: number;
+};
+
+export type TypeQuestion = 'numeric' | 'vote' | 'feuille' | 'tableau' | 'classement' | 'enigme';
+
+export type ResultatQuestionResponseDto = {
+  questionId: string;
+  total: number;
+  correctes: number;
+  neSaitPas: number;
+  /**
+   * Confusions triees par frequence
+   */
+  confusions: Array<ConfusionCompteeResponseDto>;
+  ecranId: string;
+  type: TypeQuestion;
+  noteCompte: boolean;
+  /**
+   * Votes : nombre par identifiant stable d option, et __je_ne_sais_pas__
+   */
+  parOption: {
+    [key: string]: number;
+  } | null;
+  /**
+   * Productions : score moyen
+   */
+  scoreMoyen: number | null;
+  /**
+   * Productions : justesse par cellule, carte ou ligne
+   */
+  parCle: {
+    [key: string]: JustesParCleResponseDto;
+  } | null;
+  /**
+   * Confusion la plus frequente, a egalite la premiere par identifiant
+   */
+  confusionDominante: string | null;
+  /**
+   * Part des reponses correctes, 0 sans reponse
+   */
+  part: number;
+  /**
+   * Part sous le seuil de l ecran, avec au moins une reponse
+   */
+  sousLeSeuil: boolean;
+  /**
+   * Ecran de remediation de la confusion dominante, sous le seuil seulement
+   */
+  remediation: RemediationResponseDto | null;
+};
+
+export type StatistiquesSeanceResponseDto = {
+  /**
+   * Moyenne des notes sur 20
+   */
+  moyenne: number;
+  /**
+   * Mediane des notes sur 20
+   */
+  mediane: number;
+  /**
+   * Ecart type des notes
+   */
+  dispersion: number;
+  /**
+   * Part des participants ayant repondu a au moins une question
+   */
+  tauxParticipation: number;
+  /**
+   * Part des reponses correctes parmi toutes les reponses
+   */
+  tauxReussite: number;
+  /**
+   * Questions dont le taux de reussite est sous le seuil
+   */
+  questionsProblemes: Array<string>;
+};
+
+export type NotationParTypeResponseDto = {
+  notees: number;
+  nonNotees: number;
+};
+
+export type ParTypeDeQuestionResponseDto = {
+  numeric: NotationParTypeResponseDto;
+  vote: NotationParTypeResponseDto;
+  feuille: NotationParTypeResponseDto;
+  tableau: NotationParTypeResponseDto;
+  classement: NotationParTypeResponseDto;
+  enigme: NotationParTypeResponseDto;
+};
+
+export type ResumeBaremeResponseDto = {
+  questionsNotees: number;
+  parType: ParTypeDeQuestionResponseDto;
+};
+
+export type ProgressionEnigmeResponseDto = {
+  parcoursId: string;
+  enigmeId: string;
+  ouvertes: number;
+  resolues: number;
+  tentativesMoyennes: number;
+  epuisees: number;
+};
+
+export type ResultatsEnDirectResponseDto = {
+  /**
+   * Nombre de participants inscrits
+   */
+  participants: number;
+  questions: Array<ResultatQuestionResponseDto>;
+  /**
+   * Indicateurs calculés côté serveur pour le pilotage formateur
+   */
+  statistiques: StatistiquesSeanceResponseDto;
+  /**
+   * Denominateur de la note : questions notees par type
+   */
+  bareme: ResumeBaremeResponseDto;
+  /**
+   * Comptes de chaque jalon de confiance
+   */
+  jalons: {
+    [key: string]: ComptesJalonResponseDto;
+  };
+  enigmes: Array<ProgressionEnigmeResponseDto>;
+};
+
 export type OpenSessionRequestDto = {
   courseSlug: string;
   /**
@@ -695,17 +1101,10 @@ export type OpenSessionResponseDto = {
   code: string;
 };
 
-export type PacingMode = 'pilote' | 'libre';
-
 export type FreeRangeDto = {
   premier: number;
   dernier: number;
 };
-
-/**
- * Phase d un vote a question jumelle, jamais ramenee en arriere
- */
-export type PhaseDeVote = 'vote' | 'discussion' | 'revote' | 'revele';
 
 export type PilotageEcranRequestDto = {
   screenId: string;
@@ -755,40 +1154,11 @@ export type ComptesJalonResponseDto = {
   total: number;
 };
 
-export type StatistiquesSeanceResponseDto = {
-  /**
-   * Moyenne des notes sur 20
-   */
-  moyenne: number;
-  /**
-   * Mediane des notes sur 20
-   */
-  mediane: number;
-  /**
-   * Ecart type des notes
-   */
-  dispersion: number;
-  /**
-   * Part des participants ayant repondu a au moins une question
-   */
-  tauxParticipation: number;
-  /**
-   * Part des reponses correctes parmi toutes les reponses
-   */
-  tauxReussite: number;
-  /**
-   * Questions dont le taux de reussite est sous le seuil
-   */
-  questionsProblemes: Array<string>;
-};
-
 export type RapportReponseLibreResponseDto = {
   screenId: string;
   activityId: string;
   reponse: string;
 };
-
-export type TypeQuestion = 'numeric' | 'vote' | 'feuille' | 'tableau' | 'classement' | 'enigme';
 
 export type RapportQuestionResponseDto = {
   questionId: string;
@@ -834,68 +1204,6 @@ export type RapportParticipantResponseDto = {
    */
   incidents: number;
   reponses: Array<RapportQuestionResponseDto>;
-};
-
-export type JustesParCleResponseDto = {
-  total: number;
-  justes: number;
-};
-
-export type RemediationResponseDto = {
-  confusionId: string;
-  ecranId: string;
-};
-
-export type ConfusionCompteeResponseDto = {
-  id: string;
-  libelle: string;
-  nombre: number;
-};
-
-export type ResultatQuestionResponseDto = {
-  questionId: string;
-  total: number;
-  correctes: number;
-  neSaitPas: number;
-  /**
-   * Confusions triees par frequence
-   */
-  confusions: Array<ConfusionCompteeResponseDto>;
-  ecranId: string;
-  type: TypeQuestion;
-  noteCompte: boolean;
-  /**
-   * Votes : nombre par identifiant stable d option, et __je_ne_sais_pas__
-   */
-  parOption: {
-    [key: string]: number;
-  } | null;
-  /**
-   * Productions : score moyen
-   */
-  scoreMoyen: number | null;
-  /**
-   * Productions : justesse par cellule, carte ou ligne
-   */
-  parCle: {
-    [key: string]: JustesParCleResponseDto;
-  } | null;
-  /**
-   * Confusion la plus frequente, a egalite la premiere par identifiant
-   */
-  confusionDominante: string | null;
-  /**
-   * Part des reponses correctes, 0 sans reponse
-   */
-  part: number;
-  /**
-   * Part sous le seuil de l ecran, avec au moins une reponse
-   */
-  sousLeSeuil: boolean;
-  /**
-   * Ecran de remediation de la confusion dominante, sous le seuil seulement
-   */
-  remediation: RemediationResponseDto | null;
 };
 
 export type ResultatsSeanceResponseDto = {
@@ -951,42 +1259,14 @@ export type RegleDeNotationResponseDto = {
   statistiquesSurQuestionsNotees: boolean;
 };
 
-export type NotationParTypeResponseDto = {
-  notees: number;
-  nonNotees: number;
-};
-
-export type ParTypeDeQuestionResponseDto = {
-  numeric: NotationParTypeResponseDto;
-  vote: NotationParTypeResponseDto;
-  feuille: NotationParTypeResponseDto;
-  tableau: NotationParTypeResponseDto;
-  classement: NotationParTypeResponseDto;
-  enigme: NotationParTypeResponseDto;
-};
-
-export type ResumeBaremeResponseDto = {
-  questionsNotees: number;
-  parType: ParTypeDeQuestionResponseDto;
-};
-
-export type ProgressionEnigmeResponseDto = {
-  parcoursId: string;
-  enigmeId: string;
-  ouvertes: number;
-  resolues: number;
-  tentativesMoyennes: number;
-  epuisees: number;
-};
-
 export type SessionResultsResponseDto = {
   courseSlug: string;
   code: string;
   ouverteLe: string;
   /**
-   * Date de cloture, ou date de lecture si la seance est ouverte
+   * Date de cloture, null tant que la seance est ouverte
    */
-  fermeeLe: string;
+  fermeeLe: string | null;
   conceptsFragiles: Array<string>;
   /**
    * Libellé lisible de chaque concept fragile
@@ -1055,18 +1335,35 @@ export type EcranDerouleResponseDto = {
   /**
    * Brique qui rend l ecran
    */
-  type: string;
+  type: TypeDEcranServi;
   /**
    * Duree de l ecran en minutes
    */
   duree: number;
   interactif: boolean;
   /**
-   * Proprietes de la brique, rangees sous la propriete de la brique ; sans solution, piege, confusion ni notes
+   * Proprietes de la brique nommee par type, rangees sous la propriete de la brique ; sans solution, piege, confusion ni notes
    */
-  donnees: {
-    [key: string]: unknown;
-  };
+  donnees:
+    | DonneesFpQuote
+    | DonneesFpStory
+    | DonneesFpPro
+    | DonneesFpWorked
+    | DonneesFpConcept4
+    | DonneesFpPlot
+    | DonneesFpChallenge
+    | DonneesFpCardsort
+    | DonneesFpSheet
+    | DonneesFpTableBuild
+    | DonneesFpEscape
+    | DonneesFpPulse
+    | DonneesFpSpaced
+    | DonneesFpNumeric
+    | DonneesFpVote
+    | DonneesFpRecall
+    | DonneesFpExit
+    | DonneesQuestionnaire
+    | DonneesEcranVerrouille;
   /**
    * Titre de l ecran, obligatoire a partir de la version 3
    */
@@ -1428,61 +1725,6 @@ export type EvaluerMachineRequestDto = {
   };
 };
 
-export type PointDeCourbeResponseDto = {
-  x: number;
-  y: number | null;
-};
-
-export type ValeurDeMachineResponseDto = {
-  /**
-   * Valeur calculee, null si la machine ne la calcule pas
-   */
-  valeur: number | null;
-  /**
-   * Valeur arrondie au centieme, virgule decimale, tiret si elle ne se calcule pas
-   */
-  affichage: string;
-};
-
-export type LigneDeMachineResponseDto = {
-  valeur: ValeurDeMachineResponseDto;
-  resultat: ValeurDeMachineResponseDto;
-  /**
-   * Ligne du reglage courant du curseur
-   */
-  courante: boolean;
-};
-
-export type MachineEvalueeResponseDto = {
-  /**
-   * Reglage de chaque curseur, defauts compris, par cle
-   */
-  valeurs: {
-    [key: string]: number;
-  };
-  resultat: ValeurDeMachineResponseDto;
-  /**
-   * Valeur a la sortie de chaque etape, dans son ordre
-   */
-  etapes: Array<ValeurDeMachineResponseDto>;
-  /**
-   * Resultat le long de chaque curseur, les autres a leur reglage, par cle
-   */
-  courbes: {
-    [key: string]: Array<PointDeCourbeResponseDto>;
-  };
-  /**
-   * Table de valeurs de chaque curseur, par cle
-   */
-  lignes: {
-    [key: string]: Array<LigneDeMachineResponseDto>;
-  };
-  /**
-   * Phrase de la machine, resultat ecrit a sa place
-   */
-  phrase: string;
-};
-
 export type TenterEnigmeRequestDto = {
   enigmeId: string;
   /**
@@ -1706,6 +1948,965 @@ export type LivretResponseDto = {
    * Corrige formateur : deroule annote du meme tirage, notes, seuils et corriges
    */
   corrige: DerouleResponseDto;
+};
+
+export type StatutDeSante = 'error' | 'ok' | 'shutting_down';
+
+export type StatutDIndicateur = 'up' | 'down';
+
+export type IndicateurDeSanteResponseDto = {
+  status: StatutDIndicateur;
+  /**
+   * Cause de la panne, rendue par l indicateur en echec
+   */
+  message?: string;
+};
+
+export type IndicateursDeSanteResponseDto = {
+  database?: IndicateurDeSanteResponseDto;
+  memory_heap?: IndicateurDeSanteResponseDto;
+};
+
+export type EtatDeSanteResponseDto = {
+  status: StatutDeSante;
+  /**
+   * Indicateurs en etat de marche
+   */
+  info?: IndicateursDeSanteResponseDto;
+  /**
+   * Indicateurs en panne
+   */
+  error?: IndicateursDeSanteResponseDto;
+  details: IndicateursDeSanteResponseDto;
+};
+
+export type ArticleIngestEnvelopeV1 = {
+  schema_version: '1.0';
+  delivery_id: string;
+  producer: {
+    name: 'morning-brief';
+    version: string;
+    device: string;
+  };
+  sent_at: string;
+  article: {
+    article_id: string;
+    slug: string;
+    locale: 'fr' | 'en';
+    status: 'published';
+    title: string;
+    excerpt: string;
+    content_markdown: string;
+    reading_time_minutes: number;
+    tags: Array<string>;
+    published_at: string;
+    updated_at: string;
+    sections: Array<{
+      id: string;
+      kind: 'essential' | 'deep_dive' | 'rubric' | 'radar';
+      title: string;
+      intro: string;
+      body: string;
+      items: Array<{
+        entity: string;
+        text: string;
+        source: string;
+        url: string;
+        published_at?: string;
+        retrieved_at?: string;
+      }>;
+    }>;
+    sources: Array<{
+      name: string;
+      url: string;
+      published_at: string | null;
+      retrieved_at: string | null;
+    }>;
+    provenance: {
+      run_id: string;
+      edition_date: string;
+      item_count: number;
+      source_count: number;
+      content_sha256: string;
+    };
+    seo: {
+      description: string;
+      canonical_path: string;
+      keywords: Array<string>;
+      image_url: string | null;
+      image_alt: string | null;
+    };
+  };
+};
+
+export type AvancementDAudit =
+  | {
+      phase: 'technical_pages' | 'page_ai_recaps';
+      iaTask: 'technical_scan' | 'page_ai_recap';
+      iaSubTask: string;
+      done: number;
+      total: number;
+      currentUrl: string;
+      recentCompletedUrls: Array<string>;
+    }
+  | {
+      phase: 'synthesis';
+      iaTask: 'synthesis';
+      iaSubTask: string;
+      done: number;
+      total: number;
+      section:
+        | 'summary'
+        | 'executiveSection'
+        | 'prioritySection'
+        | 'executionSection'
+        | 'clientCommsSection';
+      sectionStatus: 'started' | 'completed' | 'failed' | 'fallback';
+      sectionStatuses: {
+        [key: string]: 'started' | 'completed' | 'failed' | 'fallback';
+      };
+    }
+  | {
+      phase: 'synthesis';
+      iaTask: 'synthesis';
+      iaSubTask: string;
+      done: number;
+      total: number;
+    };
+
+export type RapportClientServi = {
+  executiveSummary: string;
+  topFindings: Array<{
+    title: string;
+    impact: string;
+    severity: 'high' | 'medium' | 'low';
+  }>;
+  googleVsAiMatrix: {
+    googleVisibility: {
+      score: number;
+      summary: string;
+      status: 'critical' | 'warning' | 'ok';
+      statusLabel: string;
+    };
+    aiVisibility: {
+      score: number;
+      summary: string;
+      status: 'critical' | 'warning' | 'ok';
+      statusLabel: string;
+    };
+  };
+  pillarScorecard: Array<{
+    pillar: string;
+    score: number;
+    target: number;
+    status: 'critical' | 'warning' | 'ok';
+    statusLabel: string;
+  }>;
+  quickWins: Array<{
+    title: string;
+    businessImpact: string;
+    effort: 'low' | 'medium' | 'high';
+  }>;
+  cta: {
+    title: string;
+    description: string;
+    actionLabel: string;
+  };
+};
+
+export type MetadonneesBrique = {
+  concepts: Array<string>;
+  misconceptionsCiblees: Array<string>;
+  dureeMinutes: number;
+  modalite: 'solo' | 'binome' | 'groupe' | 'classe';
+  regime: 'ouvert' | 'focus' | 'examen';
+};
+
+export type PresentationServie =
+  | {
+      version: 1;
+      screenId: string;
+      renderer: string;
+      title?: string;
+      subtitle?: string;
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'hero';
+      props: {
+        title: string;
+        subtitle?: string;
+        bullets: Array<string>;
+        bgImage?: string | string;
+        bgImageAlt?: string;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'method-path';
+      props: {
+        title: string;
+        subtitle?: string;
+        steps: Array<{
+          id: string;
+          title: string;
+          question: string;
+          proof: string;
+          result: string;
+        }>;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'quiz';
+      props: {
+        questionData: {
+          id: string;
+          type: 'quiz';
+          question: string;
+          options: Array<string>;
+          context?: string;
+          competency?: string;
+        };
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'chart';
+      props: {
+        title: string;
+        caption?: string;
+        context?: string;
+        labels: Array<string>;
+        series: Array<{
+          label: string;
+          values: Array<number>;
+          tone?: 'teal' | 'gold' | 'ink';
+        }>;
+        axisRanges?: Array<[number, number]>;
+        axisLabels?: Array<string>;
+        unit?: string;
+        formula?: string;
+        reading?: string;
+        source?: string;
+        kind?: 'bars' | 'line';
+        description?: string;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'boxplot';
+      props: {
+        title: string;
+        subtitle?: string;
+        unit?: string;
+        axisRange: [number, number];
+        series: Array<{
+          label: string;
+          min: number;
+          q1: number;
+          median: number;
+          q3: number;
+          max: number;
+          mean?: number;
+          tone?: 'teal' | 'gold' | 'ink';
+        }>;
+        reading?: string;
+        source?: string;
+        description: string;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'scatter';
+      props: {
+        title: string;
+        subtitle?: string;
+        xLabel: string;
+        yLabel: string;
+        xRange: [number, number];
+        yRange: [number, number];
+        points: Array<{
+          x: number;
+          y: number;
+          label?: string;
+        }>;
+        meanPoint?: {
+          x: number;
+          y: number;
+        };
+        line?: {
+          slope: number;
+          intercept: number;
+          label?: string;
+        };
+        reading?: string;
+        source?: string;
+        description: string;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'lesson';
+      props: {
+        title: string;
+        subtitle?: string;
+        blocks: Array<{
+          kind: 'definition' | 'property' | 'method' | 'example' | 'exam';
+          title: string;
+          text: string;
+          formula?: string;
+          steps?: Array<string>;
+        }>;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'grid';
+      props: {
+        title: string;
+        subtitle?: string;
+        items: Array<{
+          title: string;
+          description: string;
+          back?: string;
+          href?: string;
+          external?: boolean;
+        }>;
+        imprimable?: boolean;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'comparison';
+      props: {
+        title: string;
+        subtitle?: string;
+        note?: string;
+        columns: Array<{
+          label: string;
+          tone?: 'danger' | 'warning' | 'info' | 'neutral' | 'success';
+          items: Array<string>;
+        }>;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'stats';
+      props: {
+        title: string;
+        subtitle?: string;
+        stats: Array<{
+          value: string;
+          label: string;
+        }>;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'reflection';
+      props: {
+        promptData: {
+          id: string;
+          type: 'reflection';
+          question: string;
+          placeholder?: string;
+          context?: string;
+          competency?: string;
+        };
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'quote';
+      props: {
+        quote: string;
+        author?: string;
+        role?: string;
+        context?: string;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'table';
+      props: {
+        title: string;
+        subtitle?: string;
+        note?: string;
+        columns: Array<{
+          key: string;
+          label: string;
+        }>;
+        rows: Array<{
+          [key: string]: string;
+        }>;
+        sourceLink?: {
+          href: string;
+          label: string;
+        };
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'image-left';
+      props: {
+        title: string;
+        subtitle?: string;
+        image: string | string;
+        imageAlt: string;
+        paragraphs: Array<string>;
+        items?: Array<string>;
+        sourceLink?: {
+          href: string;
+          label: string;
+        };
+        nestedQuiz?: {
+          id: string;
+          type: 'quiz';
+          question: string;
+          options: Array<string>;
+          context?: string;
+          competency?: string;
+        };
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'image-right';
+      props: {
+        title: string;
+        subtitle?: string;
+        image: string | string;
+        imageAlt: string;
+        paragraphs: Array<string>;
+        items?: Array<string>;
+        sourceLink?: {
+          href: string;
+          label: string;
+        };
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'illustration';
+      props: {
+        image: string | string;
+        imageAlt: string;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'cta';
+      props: {
+        title: string;
+        description: string;
+        ctaLabel: string;
+        ctaHref: string;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'guide';
+      props: {
+        title: string;
+        subtitle?: string;
+        context?: string;
+        takeaway?: string;
+        nextAction?: string;
+        items: Array<{
+          title: string;
+          description: string;
+          detail?: string;
+        }>;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'sort-review';
+      props: {
+        title: string;
+        subtitle?: string;
+        source: {
+          screenId: string;
+          sortId: string;
+        };
+        categories: Array<{
+          id: string;
+          label: string;
+        }>;
+        cards: Array<{
+          id: string;
+          label: string;
+          category: string;
+          justification: string;
+        }>;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
+      renderer: 'answer-review';
+      props: {
+        title: string;
+        subtitle?: string;
+        source: {
+          screenId: string;
+        };
+        explications: Array<{
+          reference: string;
+          texte: string;
+        }>;
+      };
+    };
+
+export type DonneesFpQuote = {
+  citation: {
+    id: string;
+    texte: string;
+    auteur: string | null;
+    source: string | null;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpStory = {
+  recit: {
+    id: string;
+    titre?: string;
+    paragraphes?: Array<string>;
+    presentation?: PresentationServie;
+    visuel?: {
+      src: string | string;
+      alt: string;
+      legende?: string;
+      source?: string;
+    };
+    video?: {
+      src: string | string;
+      srcPoste?: string | string;
+      type: 'video/webm' | 'video/mp4';
+      titre: string;
+      poster?: string | string;
+      transcript: string;
+      source: string | string;
+      licence: string;
+      sousTitres?: {
+        src: string | string;
+        srclang: string;
+        libelle: string;
+      };
+      preload?: 'none' | 'metadata';
+    };
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpPro = {
+  cas: {
+    id: string;
+    metier: string;
+    situation: string;
+    geste: string | null;
+    consequence: string | null;
+    questionsLibres?: Array<{
+      id: string;
+      question: string;
+      placeholder?: string;
+    }>;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpWorked = {
+  exemple: {
+    id: string;
+    enonce: string;
+    rappel?: Array<{
+      libelle: string;
+      valeur: string;
+    }>;
+    etapes: Array<{
+      id: string;
+      intitule: string;
+      raisonnement: string;
+      invite: string;
+    }>;
+    metadonnees: MetadonneesBrique;
+  };
+  etayage: number;
+  pilote?: boolean;
+  corrigeDe?: string;
+};
+
+export type DonneesFpConcept4 = {
+  definition: {
+    id: string;
+    parametres: Array<{
+      cle: string;
+      libelle: string;
+      min: number;
+      max: number;
+      pas: number;
+      defaut: number;
+    }>;
+    formuleLatexSimplifie: string;
+    calcul: string;
+    phrase: string;
+    etapes?: Array<{
+      libelle: string;
+      calcul: string;
+    }>;
+    prereglages?: Array<{
+      libelle: string;
+      valeurs: {
+        [key: string]: number;
+      };
+    }>;
+    animation?: Array<{
+      [key: string]: number;
+    }>;
+    sorties: Array<{
+      valeurs: {
+        [key: string]: number;
+      };
+      resultat: {
+        valeur: number | null;
+        affichage: string;
+      };
+      etapes: Array<{
+        valeur: number | null;
+        affichage: string;
+      }>;
+      courbes: {
+        [key: string]: Array<{
+          x: number;
+          y: number | null;
+        }>;
+      };
+      lignes: {
+        [key: string]: Array<{
+          valeur: {
+            valeur: number | null;
+            affichage: string;
+          };
+          resultat: {
+            valeur: number | null;
+            affichage: string;
+          };
+          courante: boolean;
+        }>;
+      };
+      phrase: string;
+    }>;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpPlot = {
+  definition: {
+    id: string;
+    titre?: string;
+    source?: string;
+    abscisse: {
+      libelle: string;
+      min: number;
+      max: number;
+    };
+    ordonnee: string;
+    parametres: Array<{
+      cle: string;
+      libelle: string;
+      min: number;
+      max: number;
+      pas: number;
+      defaut: number;
+    }>;
+    series: Array<{
+      id: string;
+      libelle: string;
+      trait: 'plein' | 'tirets';
+      calcul: string;
+    }>;
+    bornesOrdonnee?: {
+      min?: number;
+      max?: number;
+      minParametre?: string;
+      maxParametre?: string;
+    };
+    sourceUrl?: string;
+    description?: string;
+    descriptionPapier?: string;
+    forme?: 'courbes' | 'barres';
+    unite?: 'euros';
+    etiquettes?: Array<string>;
+    prereglages?: Array<{
+      libelle: string;
+      valeurs: {
+        [key: string]: number;
+      };
+    }>;
+    reference?: string;
+    animation?: Array<{
+      [key: string]: number;
+    }>;
+    abscisses: Array<number>;
+    positions: Array<{
+      valeurs: {
+        [key: string]: number;
+      };
+      ordonnees: {
+        [key: string]: Array<number | null>;
+      };
+    }>;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpChallenge = {
+  probleme: {
+    id: string;
+    enonce: string;
+    invite: string;
+    rappel?: Array<{
+      libelle: string;
+      valeur: string;
+    }>;
+    strategies: Array<unknown>;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpCardsort = {
+  plan: {
+    id: string;
+    intitule: string;
+    cartes: Array<{
+      id: string;
+      libelle: string;
+    }>;
+    categories: Array<{
+      id: string;
+      libelle: string;
+    }>;
+    dureeJeuMs?: number;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpSheet = {
+  plan: {
+    id: string;
+    intitule: string;
+    lignes: number;
+    colonnes: number;
+    cellules: {
+      [key: string]: string;
+    };
+    verrouillees: Array<string>;
+    consignes: Array<string>;
+    lettres: Array<string>;
+    grille: Array<Array<string>>;
+    longueurMaxSaisie: number;
+    initiale: {
+      saisies: {
+        [key: string]: string;
+      };
+      affichages: {
+        [key: string]: string;
+      };
+      natures: {
+        [key: string]: 'texte' | 'nombre' | 'logique' | 'erreur';
+      };
+      formules: Array<string>;
+    };
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpTableBuild = {
+  plan: {
+    id: string;
+    intitule: string;
+    consignes: Array<string>;
+    echeances: number;
+    intituleDesLignes?: string;
+    libellesLignes: Array<string>;
+    parametres: {
+      [key: string]: number;
+    };
+    colonnes: Array<{
+      cle: string;
+      intitule: string;
+      role: 'donnee' | 'saisie' | 'deduite';
+      format?: 'nombre' | 'booleen';
+      decimales: number;
+      valeurs?: Array<number>;
+      formule?: string;
+      formuleInitiale?: string;
+      soldeDe?: string;
+      totalise: boolean;
+    }>;
+    synthese: Array<{
+      libelle: string;
+      formule: string;
+      unite: string | null;
+      decimales: number;
+    }>;
+    tableauInitial: {
+      lignes: Array<{
+        rang: number;
+        valeurs: {
+          [key: string]: {
+            valeur: number | null;
+            affichage: string;
+          };
+        };
+      }>;
+      totaux: {
+        [key: string]: {
+          valeur: number | null;
+          affichage: string;
+        };
+      };
+      synthese: Array<{
+        valeur: number | null;
+        affichage: string;
+      }>;
+      soldeFinal: {
+        valeur: number | null;
+        affichage: string;
+      } | null;
+    };
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpEscape = {
+  parcours: {
+    id: string;
+    intitule: string;
+    delaiIndiceMs: number;
+    budgetEnigmeMs: number;
+    tentativesMax: number;
+    enigmes: Array<{
+      id: string;
+      intitule: string;
+      enonce: string;
+      indice: string;
+    }>;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpPulse = {
+  sondage: {
+    id: string;
+    invite: string;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpSpaced = {
+  rappel: {
+    id: string;
+    intitule: string;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpNumeric = {
+  question: {
+    id: string;
+    enonce: string;
+    unite: string | null;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpVote = {
+  question: {
+    id: string;
+    enonce: string;
+    options: Array<{
+      id: string;
+      libelle: string;
+    }>;
+  };
+  questionJumelle?: {
+    id: string;
+    enonce: string;
+    options: Array<{
+      id: string;
+      libelle: string;
+    }>;
+  };
+};
+
+export type DonneesFpRecall = {
+  question: {
+    id: string;
+    enonce: string;
+    options: Array<{
+      id: string;
+      libelle: string;
+    }>;
+    metadonnees: MetadonneesBrique;
+  };
+  delaiMs: number;
+  consigne?: string;
+};
+
+export type DonneesFpExit = {
+  billet: {
+    id: string;
+    question: string;
+    invite: string;
+    options: Array<{
+      id: string;
+      libelle: string;
+    }>;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesQuestionnaire = {
+  intitule: string;
+  consigne?: string;
+  regime: 'ouvert' | 'focus' | 'examen';
+  ordre: 'fixe' | 'melange';
+  questions: Array<
+    | {
+        brique: 'fp-numeric';
+        donnees: DonneesFpNumeric;
+      }
+    | {
+        brique: 'fp-vote';
+        donnees: DonneesFpVote;
+      }
+  >;
+};
+
+export type DonneesEcranVerrouille = {
+  [key: string]: never;
 };
 
 export type UsersControllerFindAllData = {
@@ -2044,7 +3245,7 @@ export type AuthControllerSetPasswordResponse =
   AuthControllerSetPasswordResponses[keyof AuthControllerSetPasswordResponses];
 
 export type AuthControllerRegisterData = {
-  body: CreateUserDto;
+  body: InscriptionDto;
   path?: never;
   query?: never;
   url: '/api/v1/portfolio25/auth/register';
@@ -2276,7 +3477,27 @@ export type AuditsControllerStreamResponses = {
   /**
    * Flux SSE des evenements d'audit en temps reel
    */
-  200: string;
+  200:
+    | {
+        event: 'progress';
+        data: ProgressionDAuditResponseDto;
+      }
+    | {
+        event: 'completed';
+        data: AuditTermineResponseDto;
+      }
+    | {
+        event: 'failed';
+        data: AuditEchoueResponseDto;
+      }
+    | {
+        event: 'timeout';
+        data: AuditExpireResponseDto;
+      }
+    | {
+        event: 'heartbeat';
+        data: BattementResponseDto;
+      };
 };
 
 export type AuditsControllerStreamResponse =
@@ -2440,7 +3661,10 @@ export type ArticleModerationControllerRestoreResponse =
   ArticleModerationControllerRestoreResponses[keyof ArticleModerationControllerRestoreResponses];
 
 export type ArticlesControllerIngest0Data = {
-  body?: never;
+  /**
+   * Enveloppe Morning-Brief v1 (docs/contracts/article-ingest-envelope-v1.json)
+   */
+  body: ArticleIngestEnvelopeV1;
   headers: {
     'idempotency-key': string;
     'x-morning-brief-nonce': string;
@@ -2472,7 +3696,10 @@ export type ArticlesControllerIngest0Response =
   ArticlesControllerIngest0Responses[keyof ArticlesControllerIngest0Responses];
 
 export type ArticlesControllerIngest1Data = {
-  body?: never;
+  /**
+   * Enveloppe Morning-Brief v1 (docs/contracts/article-ingest-envelope-v1.json)
+   */
+  body: ArticleIngestEnvelopeV1;
   headers: {
     'idempotency-key': string;
     'x-morning-brief-nonce': string;
@@ -2884,7 +4111,23 @@ export type FormationsPresenterControllerPresenterStreamResponses = {
   /**
    * Etat de la seance a chaque changement, vu du pupitre
    */
-  200: string;
+  200:
+    | {
+        event: 'etat';
+        data: EtatDeSeanceResponseDto;
+      }
+    | {
+        event: 'fin';
+        data: FinDuFluxResponseDto;
+      }
+    | {
+        event: 'heartbeat';
+        data: BattementResponseDto;
+      }
+    | {
+        event: 'resultats';
+        data: ResultatsEnDirectResponseDto;
+      };
 };
 
 export type FormationsPresenterControllerPresenterStreamResponse =
@@ -3086,6 +4329,10 @@ export type FormationsStudentControllerFreeResponseErrors = {
    * Jeton de participant invalide
    */
   401: unknown;
+  /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
   /**
    * Seance ou cours introuvable, ou ecran non encore projete : code ECRAN_NON_SERVI
    */
@@ -3358,6 +4605,10 @@ export type FormationsStudentControllerAnswerErrors = {
    */
   401: unknown;
   /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
+  /**
    * Ecran non encore projete par le formateur : code ECRAN_NON_SERVI
    */
   404: unknown;
@@ -3396,6 +4647,10 @@ export type FormationsStudentControllerProductionErrors = {
    * Jeton de participant invalide
    */
   401: unknown;
+  /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
   /**
    * Production refusee, cause dans le champ code du corps : ECRAN_NON_SERVI
    */
@@ -3437,7 +4692,11 @@ export type FormationsStudentControllerEvaluationDeFeuilleErrors = {
    */
   401: unknown;
   /**
-   * Evaluation refusee, cause dans le champ code du corps : ECRAN_NON_SERVI ou PARTICIPANT_INTROUVABLE
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
+  /**
+   * Evaluation refusee, cause dans le champ code du corps : ECRAN_NON_SERVI
    */
   404: unknown;
   /**
@@ -3477,7 +4736,11 @@ export type FormationsStudentControllerEvaluationDeTableauErrors = {
    */
   401: unknown;
   /**
-   * Evaluation refusee, cause dans le champ code du corps : ECRAN_NON_SERVI ou PARTICIPANT_INTROUVABLE
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
+  /**
+   * Evaluation refusee, cause dans le champ code du corps : ECRAN_NON_SERVI
    */
   404: unknown;
   /**
@@ -3517,7 +4780,11 @@ export type FormationsStudentControllerEvaluationDeMachineErrors = {
    */
   401: unknown;
   /**
-   * Evaluation refusee, cause dans le champ code du corps : ECRAN_NON_SERVI ou PARTICIPANT_INTROUVABLE
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
+  /**
+   * Evaluation refusee, cause dans le champ code du corps : ECRAN_NON_SERVI
    */
   404: unknown;
   /**
@@ -3552,6 +4819,10 @@ export type FormationsStudentControllerTentativeEnigmeErrors = {
    * Jeton de participant invalide
    */
   401: unknown;
+  /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
   /**
    * Enigme absente du parcours, ou ecran non encore projete : code ECRAN_NON_SERVI
    */
@@ -3592,6 +4863,10 @@ export type FormationsStudentControllerJalonErrors = {
    * Jeton de participant invalide
    */
   401: unknown;
+  /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
   /**
    * Jalon refuse, cause dans le champ code du corps : ECRAN_NON_SERVI
    */
@@ -3636,6 +4911,10 @@ export type FormationsStudentControllerTentativeDeDefiErrors = {
    */
   401: unknown;
   /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
+  /**
    * Defi absent du cours, ou ecran non encore projete : code ECRAN_NON_SERVI
    */
   404: unknown;
@@ -3668,6 +4947,10 @@ export type FormationsStudentControllerStrategiesDuDefiErrors = {
    */
   401: unknown;
   /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
+  /**
    * Defi inconnu, aucune tentative envoyee, ou ecran non encore projete : code ECRAN_NON_SERVI
    */
   404: unknown;
@@ -3699,6 +4982,10 @@ export type FormationsStudentControllerMonEtatErrors = {
    */
   401: unknown;
   /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
+  /**
    * Trop de requetes
    */
   429: unknown;
@@ -3725,6 +5012,10 @@ export type FormationsStudentControllerRappelsErrors = {
    * Jeton de participant invalide
    */
   401: unknown;
+  /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
   /**
    * Cours sans ecran de rappel espace, ou ecran non encore projete : code ECRAN_NON_SERVI
    */
@@ -3756,6 +5047,10 @@ export type FormationsStudentControllerIncidentsErrors = {
    * Jeton de participant invalide
    */
   401: unknown;
+  /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
   /**
    * SEANCE_TERMINEE : la seance est close
    */
@@ -3791,6 +5086,10 @@ export type FormationsStudentControllerSujetErrors = {
    */
   401: unknown;
   /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
+  /**
    * Le cours a change depuis l ouverture de la seance
    */
   409: unknown;
@@ -3825,6 +5124,10 @@ export type FormationsStudentControllerPieceJointeErrors = {
    * Jeton de participant invalide
    */
   401: unknown;
+  /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
   /**
    * Écran pas encore projeté au poste, ou dont l’écran corrigé reste caché (ECRAN_NON_SERVI) ; écran sans classeur réservé (PIECE_JOINTE_INTROUVABLE)
    */
@@ -3864,6 +5167,10 @@ export type FormationsStudentControllerStreamErrors = {
    */
   401: unknown;
   /**
+   * Participant evince par le formateur, cause dans le champ code du corps : PARTICIPANT_EVINCE
+   */
+  403: unknown;
+  /**
    * Seance pleine (cent flux etudiants) ou trop d ouvertures par minute ; au-dela de deux flux, le plus ancien du participant est ferme
    */
   429: unknown;
@@ -3873,7 +5180,19 @@ export type FormationsStudentControllerStreamResponses = {
   /**
    * Etat de la seance a chaque changement, vu du participant
    */
-  200: string;
+  200:
+    | {
+        event: 'etat';
+        data: EtatDeSeanceResponseDto;
+      }
+    | {
+        event: 'fin';
+        data: FinDuFluxResponseDto;
+      }
+    | {
+        event: 'heartbeat';
+        data: BattementResponseDto;
+      };
 };
 
 export type FormationsStudentControllerStreamResponse =
@@ -3911,29 +5230,9 @@ export type HealthControllerCheckData = {
 
 export type HealthControllerCheckErrors = {
   /**
-   * The Health Check is not successful
+   * Un indicateur au moins est en panne
    */
-  503: {
-    status?: string;
-    info?: {
-      [key: string]: {
-        status: string;
-        [key: string]: unknown;
-      };
-    } | null;
-    error?: {
-      [key: string]: {
-        status: string;
-        [key: string]: unknown;
-      };
-    } | null;
-    details?: {
-      [key: string]: {
-        status: string;
-        [key: string]: unknown;
-      };
-    };
-  };
+  503: EtatDeSanteResponseDto;
 };
 
 export type HealthControllerCheckError =
@@ -3941,29 +5240,9 @@ export type HealthControllerCheckError =
 
 export type HealthControllerCheckResponses = {
   /**
-   * The Health Check is successful
+   * Etat de sante : base de donnees et heap memoire
    */
-  200: {
-    status?: string;
-    info?: {
-      [key: string]: {
-        status: string;
-        [key: string]: unknown;
-      };
-    } | null;
-    error?: {
-      [key: string]: {
-        status: string;
-        [key: string]: unknown;
-      };
-    } | null;
-    details?: {
-      [key: string]: {
-        status: string;
-        [key: string]: unknown;
-      };
-    };
-  };
+  200: EtatDeSanteResponseDto;
 };
 
 export type HealthControllerCheckResponse =

@@ -100,6 +100,18 @@ export const zSetPasswordDto = z.object({
     .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/),
 });
 
+export const zInscriptionDto = z.object({
+  email: z.email(),
+  password: z
+    .string()
+    .min(12)
+    .max(256)
+    .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/),
+  firstName: z.string().min(1).max(50),
+  lastName: z.string().min(1).max(50),
+  phone: z.string().max(30).nullish(),
+});
+
 export const zResendVerificationDto = z.object({
   email: z.email().min(1),
 });
@@ -162,6 +174,26 @@ export const zCookieConsentRequestDto = z.object({
 export const zCookieConsentResponseDto = z.object({
   message: z.string(),
   httpCode: z.number(),
+});
+
+export const zAuditEchoueResponseDto = z.object({
+  auditId: z.string(),
+  progress: z.number(),
+  done: z.boolean(),
+  updatedAt: z.iso.datetime(),
+  status: z.enum(['FAILED']),
+  error: z.unknown().nullable(),
+});
+
+export const zAuditExpireResponseDto = z.object({
+  auditId: z.string(),
+  updatedAt: z.iso.datetime(),
+  status: z.enum(['TIMEOUT']),
+  error: z.unknown().nullable(),
+});
+
+export const zBattementResponseDto = z.object({
+  ts: z.iso.datetime(),
 });
 
 export const zMethodeDeContact = z.enum(['EMAIL', 'PHONE']);
@@ -398,6 +430,31 @@ export const zPieceJointeReserveeResponseDto = z.object({
 });
 
 /**
+ * Brique qui rend l ecran
+ */
+export const zTypeDEcranServi = z.enum([
+  'fp-quote',
+  'fp-story',
+  'fp-pro',
+  'fp-worked',
+  'fp-concept4',
+  'fp-plot',
+  'fp-challenge',
+  'fp-cardsort',
+  'fp-sheet',
+  'fp-table-build',
+  'fp-escape',
+  'fp-pulse',
+  'fp-spaced',
+  'fp-numeric',
+  'fp-vote',
+  'fp-recall',
+  'fp-exit',
+  'questionnaire',
+  'ecran-verrouille',
+]);
+
+/**
  * Champs du cas repris de l ecran renvoye
  */
 export const zChampExtraitDuCas = z.enum(['metier', 'situation', 'geste', 'consequence']);
@@ -547,62 +604,37 @@ export const zCorrectionServieResponseDto = z.object({
   explications: z.array(zExplicationDeCorrectionResponseDto).optional(),
 });
 
-export const zEcranPublicResponseDto = z.object({
-  id: z.string(),
-  type: z.string(),
-  duree: z.number(),
-  interactif: z.boolean(),
-  donnees: z.record(z.string(), z.unknown()),
-  titre: z.string().nullable(),
-  renvoi: z.string().optional(),
-  cadrageDuRenvoi: zCadrageDuRenvoiResponseDto.optional(),
-  pieceJointe: z
-    .union([zPieceJointePubliqueResponseDto, zPieceJointeReserveeResponseDto])
-    .optional(),
-  ecranCorrige: z.string().optional(),
-  resoluPar: z.array(z.string()).optional(),
-  correction: zCorrectionServieResponseDto.optional(),
-});
-
-export const zCoursPublicCatalogueResponseDto = z.object({
-  id: z.string(),
-  titre: z.string(),
-  niveau: z.string(),
-  duree: z.number(),
-  concepts: z.array(z.string()),
-  ecrans: z.array(zEcranPublicResponseDto),
-  version: z.number(),
-  publieLe: z.iso.datetime(),
-});
-
-export const zOpenSessionRequestDto = z.object({
-  courseSlug: z
-    .string()
-    .min(1)
-    .max(120)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-  capacite: z.int().gte(1).lte(60).optional(),
-});
-
-export const zOpenSessionResponseDto = z.object({
-  sessionId: z.string(),
-  code: z.string(),
-});
-
-export const zPacingMode = z.enum(['pilote', 'libre']);
-
-export const zFreeRangeDto = z.object({
-  premier: z.int().gte(0),
-  dernier: z.int().gte(0),
-});
-
 /**
  * Phase d un vote a question jumelle, jamais ramenee en arriere
  */
 export const zPhaseDeVote = z.enum(['vote', 'discussion', 'revote', 'revele']);
 
-export const zPilotageEcranRequestDto = z.object({
-  screenId: z.string().min(1).max(120),
+export const zPointDeCourbeResponseDto = z.object({
+  x: z.number(),
+  y: z.number().nullable(),
+});
+
+export const zValeurDeMachineResponseDto = z.object({
+  valeur: z.number().nullable(),
+  affichage: z.string(),
+});
+
+export const zLigneDeMachineResponseDto = z.object({
+  valeur: zValeurDeMachineResponseDto,
+  resultat: zValeurDeMachineResponseDto,
+  courante: z.boolean(),
+});
+
+export const zMachineEvalueeResponseDto = z.object({
+  valeurs: z.record(z.string(), z.number()),
+  resultat: zValeurDeMachineResponseDto,
+  etapes: z.array(zValeurDeMachineResponseDto),
+  courbes: z.record(z.string(), z.array(zPointDeCourbeResponseDto)),
+  lignes: z.record(z.string(), z.array(zLigneDeMachineResponseDto)),
+  phrase: z.string(),
+});
+
+export const zPilotageServiResponseDto = z.object({
   phase: zPhaseDeVote.optional(),
   revele: z.boolean().optional(),
   etayage: z.int().gte(0).optional(),
@@ -610,69 +642,23 @@ export const zPilotageEcranRequestDto = z.object({
   reglages: z.record(z.string(), z.number()).optional(),
   resultatsProjetes: z.boolean().optional(),
   optionsAffichees: z.boolean().optional(),
+  etayageAtteint: z.number().optional(),
+  sortiesProjetees: zMachineEvalueeResponseDto.optional(),
+  questionAffichee: z.string().optional(),
+  questionOuverte: z.string().nullish(),
 });
 
-export const zControlSessionRequestDto = z.object({
-  ecran: z.int().gte(0).optional(),
-  mode: zPacingMode.optional(),
-  intervalle: zFreeRangeDto.optional(),
-  pilotage: zPilotageEcranRequestDto.optional(),
-});
+export const zEtatDeSeance = z.enum(['attente', 'en_cours', 'terminee']);
 
-export const zComptesJalonResponseDto = z.object({
-  perdu: z.number(),
-  'ca-va': z.number(),
-  clair: z.number(),
-  total: z.number(),
-});
+export const zPacingMode = z.enum(['pilote', 'libre']);
 
-export const zStatistiquesSeanceResponseDto = z.object({
-  moyenne: z.number(),
-  mediane: z.number(),
-  dispersion: z.number(),
-  tauxParticipation: z.number(),
-  tauxReussite: z.number(),
-  questionsProblemes: z.array(z.string()),
-});
+/**
+ * Raison de la fermeture : le client cesse de se reconnecter
+ */
+export const zRaisonDeFin = z.enum(['cloturee', 'introuvable', 'expiree', 'evince', 'revoque']);
 
-export const zRapportReponseLibreResponseDto = z.object({
-  screenId: z.string(),
-  activityId: z.string(),
-  reponse: z.string(),
-});
-
-export const zTypeQuestion = z.enum([
-  'numeric',
-  'vote',
-  'feuille',
-  'tableau',
-  'classement',
-  'enigme',
-]);
-
-export const zRapportQuestionResponseDto = z.object({
-  questionId: z.string(),
-  concept: z.string(),
-  valeur: z.string(),
-  reponse: z.string(),
-  correcte: z.boolean(),
-  misconception: z.string().nullable(),
-  libelleConfusion: z.string().nullable(),
-  dureeMs: z.number(),
-  type: zTypeQuestion,
-  score: z.number().nullable(),
-});
-
-export const zRapportParticipantResponseDto = z.object({
-  prenom: z.string(),
-  nom: z.string(),
-  email: z.string(),
-  completion: z.number(),
-  note: z.number(),
-  sousSeuil: z.boolean(),
-  reponsesLibres: z.array(zRapportReponseLibreResponseDto),
-  incidents: z.number(),
-  reponses: z.array(zRapportQuestionResponseDto),
+export const zFinDuFluxResponseDto = z.object({
+  raison: zRaisonDeFin,
 });
 
 export const zJustesParCleResponseDto = z.object({
@@ -690,6 +676,15 @@ export const zConfusionCompteeResponseDto = z.object({
   libelle: z.string(),
   nombre: z.number(),
 });
+
+export const zTypeQuestion = z.enum([
+  'numeric',
+  'vote',
+  'feuille',
+  'tableau',
+  'classement',
+  'enigme',
+]);
 
 export const zResultatQuestionResponseDto = z.object({
   questionId: z.string(),
@@ -709,24 +704,13 @@ export const zResultatQuestionResponseDto = z.object({
   remediation: z.union([zRemediationResponseDto, z.unknown()]).nullable(),
 });
 
-export const zResultatsSeanceResponseDto = z.object({
-  participants: z.number(),
-  questions: z.array(zResultatQuestionResponseDto),
-});
-
-export const zRegleDeNotationResponseDto = z.object({
-  noteMax: z.number(),
-  base: z.enum(['participation-relative-cohorte']),
-  partCohorteReference: z.number(),
-  ratioSeuilValidation: z.number(),
-  neSaitPasCompteCommeReponse: z.boolean(),
-  pointsNonReponse: z.number(),
-  reponsesLibresNotees: z.boolean(),
-  seuilQuestionProbleme: z.number(),
-  decimalesStatistiques: z.number(),
-  typesNotables: z.array(zTypeQuestion),
-  productionCompteSi: z.enum(['au-moins-une-saisie']),
-  statistiquesSurQuestionsNotees: z.boolean(),
+export const zStatistiquesSeanceResponseDto = z.object({
+  moyenne: z.number(),
+  mediane: z.number(),
+  dispersion: z.number(),
+  tauxParticipation: z.number(),
+  tauxReussite: z.number(),
+  questionsProblemes: z.array(z.string()),
 });
 
 export const zNotationParTypeResponseDto = z.object({
@@ -757,11 +741,126 @@ export const zProgressionEnigmeResponseDto = z.object({
   epuisees: z.number(),
 });
 
+export const zOpenSessionRequestDto = z.object({
+  courseSlug: z
+    .string()
+    .min(1)
+    .max(120)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  capacite: z.int().gte(1).lte(60).optional(),
+});
+
+export const zOpenSessionResponseDto = z.object({
+  sessionId: z.string(),
+  code: z.string(),
+});
+
+export const zFreeRangeDto = z.object({
+  premier: z.int().gte(0),
+  dernier: z.int().gte(0),
+});
+
+export const zEtatDeSeanceResponseDto = z.object({
+  etat: zEtatDeSeance,
+  modeRythme: zPacingMode,
+  ecranCourant: z.number(),
+  intervalleLibre: z.union([zFreeRangeDto, z.unknown()]).nullable(),
+  participants: z.number(),
+  revision: z.number(),
+  pilotage: z.record(z.string(), zPilotageServiResponseDto),
+  majLe: z.iso.datetime(),
+});
+
+export const zPilotageEcranRequestDto = z.object({
+  screenId: z.string().min(1).max(120),
+  phase: zPhaseDeVote.optional(),
+  revele: z.boolean().optional(),
+  etayage: z.int().gte(0).optional(),
+  explicationsDevoilees: z.int().gte(0).optional(),
+  reglages: z.record(z.string(), z.number()).optional(),
+  resultatsProjetes: z.boolean().optional(),
+  optionsAffichees: z.boolean().optional(),
+});
+
+export const zControlSessionRequestDto = z.object({
+  ecran: z.int().gte(0).optional(),
+  mode: zPacingMode.optional(),
+  intervalle: zFreeRangeDto.optional(),
+  pilotage: zPilotageEcranRequestDto.optional(),
+});
+
+export const zComptesJalonResponseDto = z.object({
+  perdu: z.number(),
+  'ca-va': z.number(),
+  clair: z.number(),
+  total: z.number(),
+});
+
+export const zResultatsEnDirectResponseDto = z.object({
+  participants: z.number(),
+  questions: z.array(zResultatQuestionResponseDto),
+  statistiques: zStatistiquesSeanceResponseDto,
+  bareme: zResumeBaremeResponseDto,
+  jalons: z.record(z.string(), zComptesJalonResponseDto),
+  enigmes: z.array(zProgressionEnigmeResponseDto),
+});
+
+export const zRapportReponseLibreResponseDto = z.object({
+  screenId: z.string(),
+  activityId: z.string(),
+  reponse: z.string(),
+});
+
+export const zRapportQuestionResponseDto = z.object({
+  questionId: z.string(),
+  concept: z.string(),
+  valeur: z.string(),
+  reponse: z.string(),
+  correcte: z.boolean(),
+  misconception: z.string().nullable(),
+  libelleConfusion: z.string().nullable(),
+  dureeMs: z.number(),
+  type: zTypeQuestion,
+  score: z.number().nullable(),
+});
+
+export const zRapportParticipantResponseDto = z.object({
+  prenom: z.string(),
+  nom: z.string(),
+  email: z.string(),
+  completion: z.number(),
+  note: z.number(),
+  sousSeuil: z.boolean(),
+  reponsesLibres: z.array(zRapportReponseLibreResponseDto),
+  incidents: z.number(),
+  reponses: z.array(zRapportQuestionResponseDto),
+});
+
+export const zResultatsSeanceResponseDto = z.object({
+  participants: z.number(),
+  questions: z.array(zResultatQuestionResponseDto),
+});
+
+export const zRegleDeNotationResponseDto = z.object({
+  noteMax: z.number(),
+  base: z.enum(['participation-relative-cohorte']),
+  partCohorteReference: z.number(),
+  ratioSeuilValidation: z.number(),
+  neSaitPasCompteCommeReponse: z.boolean(),
+  pointsNonReponse: z.number(),
+  reponsesLibresNotees: z.boolean(),
+  seuilQuestionProbleme: z.number(),
+  decimalesStatistiques: z.number(),
+  typesNotables: z.array(zTypeQuestion),
+  productionCompteSi: z.enum(['au-moins-une-saisie']),
+  statistiquesSurQuestionsNotees: z.boolean(),
+});
+
 export const zSessionResultsResponseDto = z.object({
   courseSlug: z.string(),
   code: z.string(),
   ouverteLe: z.iso.datetime(),
-  fermeeLe: z.iso.datetime(),
+  fermeeLe: z.iso.datetime().nullable(),
   conceptsFragiles: z.array(z.string()),
   libellesDesConcepts: z.record(z.string(), z.string()),
   statistiques: zStatistiquesSeanceResponseDto,
@@ -795,52 +894,6 @@ export const zQuestionDerouleResponseDto = z.object({
   id: z.string(),
   enonce: z.string(),
   options: z.array(zOptionPubliqueResponseDto).nullable(),
-});
-
-export const zEcranDerouleResponseDto = z.object({
-  id: z.string(),
-  type: z.string(),
-  duree: z.number(),
-  interactif: z.boolean(),
-  donnees: z.record(z.string(), z.unknown()),
-  titre: z.string().nullable(),
-  renvoi: z.string().optional(),
-  cadrageDuRenvoi: zCadrageDuRenvoiResponseDto.optional(),
-  pieceJointe: z
-    .union([zPieceJointePubliqueResponseDto, zPieceJointeReserveeResponseDto])
-    .optional(),
-  ecranCorrige: z.string().optional(),
-  resoluPar: z.array(z.string()).optional(),
-  correction: zCorrectionServieResponseDto.optional(),
-  notes: z.string(),
-  diffusion: zDiffusion,
-  seuil: z.number().nullable(),
-  corriges: z.array(zCorrigePresentateurResponseDto),
-  questions: z.array(zQuestionDerouleResponseDto),
-  corrigeEcran: z
-    .union([
-      zCorrigeFeuillePresentateurResponseDto,
-      zCorrigeTableauPresentateurResponseDto,
-      zCorrigeClassementPresentateurResponseDto,
-      zCorrigeEnigmesPresentateurResponseDto,
-      zCorrigeDefiPresentateurResponseDto,
-      zCorrigeRevelationPresentateurResponseDto,
-      zCorrigeReflexionPresentateurResponseDto,
-      z.unknown(),
-    ])
-    .nullable(),
-  reflexion: z.union([zReflexionPresentateurResponseDto, z.unknown()]).nullable(),
-  explications: z.array(zExplicationDeCorrectionResponseDto).optional(),
-});
-
-export const zDerouleResponseDto = z.object({
-  id: z.string(),
-  titre: z.string(),
-  niveau: z.string(),
-  duree: z.number(),
-  concepts: z.array(z.string()),
-  ecrans: z.array(zEcranDerouleResponseDto),
-  remediations: z.record(z.string(), z.string()),
 });
 
 export const zStatutDeReponseLibre = z.enum(['enregistre', 'en_attente', 'echec']);
@@ -1034,31 +1087,6 @@ export const zEvaluerMachineRequestDto = z.object({
   reglages: z.record(z.string(), z.number()),
 });
 
-export const zPointDeCourbeResponseDto = z.object({
-  x: z.number(),
-  y: z.number().nullable(),
-});
-
-export const zValeurDeMachineResponseDto = z.object({
-  valeur: z.number().nullable(),
-  affichage: z.string(),
-});
-
-export const zLigneDeMachineResponseDto = z.object({
-  valeur: zValeurDeMachineResponseDto,
-  resultat: zValeurDeMachineResponseDto,
-  courante: z.boolean(),
-});
-
-export const zMachineEvalueeResponseDto = z.object({
-  valeurs: z.record(z.string(), z.number()),
-  resultat: zValeurDeMachineResponseDto,
-  etapes: z.array(zValeurDeMachineResponseDto),
-  courbes: z.record(z.string(), z.array(zPointDeCourbeResponseDto)),
-  lignes: z.record(z.string(), z.array(zLigneDeMachineResponseDto)),
-  phrase: z.string(),
-});
-
 export const zTenterEnigmeRequestDto = z.object({
   enigmeId: z.string().min(1).max(60),
   reponse: z.string().min(1).max(40),
@@ -1202,6 +1230,1292 @@ export const zReportIncidentsRequestDto = z.object({
   incidents: z.array(zIncidentEntryDto).max(200),
 });
 
+export const zStatutDeSante = z.enum(['error', 'ok', 'shutting_down']);
+
+export const zStatutDIndicateur = z.enum(['up', 'down']);
+
+export const zIndicateurDeSanteResponseDto = z.object({
+  status: zStatutDIndicateur,
+  message: z.string().optional(),
+});
+
+export const zIndicateursDeSanteResponseDto = z.object({
+  database: zIndicateurDeSanteResponseDto.optional(),
+  memory_heap: zIndicateurDeSanteResponseDto.optional(),
+});
+
+export const zEtatDeSanteResponseDto = z.object({
+  status: zStatutDeSante,
+  info: zIndicateursDeSanteResponseDto.optional(),
+  error: zIndicateursDeSanteResponseDto.optional(),
+  details: zIndicateursDeSanteResponseDto,
+});
+
+export const zArticleIngestEnvelopeV1 = z.object({
+  schema_version: z.enum(['1.0']),
+  delivery_id: z.string().regex(/^mb-\d{4}-\d{2}-\d{2}-(fr|en)$/),
+  producer: z.object({
+    name: z.enum(['morning-brief']),
+    version: z.string().min(1),
+    device: z.string().min(1),
+  }),
+  sent_at: z.string(),
+  article: z.object({
+    article_id: z.string().regex(/^morning-brief-\d{4}-\d{2}-\d{2}-(fr|en)$/),
+    slug: z.string().regex(/^morning-brief-\d{4}-\d{2}-\d{2}$/),
+    locale: z.enum(['fr', 'en']),
+    status: z.enum(['published']),
+    title: z.string().min(1).max(180),
+    excerpt: z.string().min(1).max(280),
+    content_markdown: z.string().min(100),
+    reading_time_minutes: z.int().gte(1).lte(60),
+    tags: z.array(z.string().min(1).max(40)).max(12),
+    published_at: z.string(),
+    updated_at: z.string(),
+    sections: z
+      .array(
+        z.object({
+          id: z.string().regex(/^[a-z0-9][a-z0-9-]{1,79}$/),
+          kind: z.enum(['essential', 'deep_dive', 'rubric', 'radar']),
+          title: z.string().min(1).max(120),
+          intro: z.string().max(4000),
+          body: z.string().max(20000),
+          items: z
+            .array(
+              z.object({
+                entity: z.string().max(160),
+                text: z.string().min(20).max(4000),
+                source: z.string().min(1).max(160),
+                url: z.url(),
+                published_at: z.string().optional(),
+                retrieved_at: z.string().optional(),
+              }),
+            )
+            .max(30),
+        }),
+      )
+      .min(1),
+    sources: z
+      .array(
+        z.object({
+          name: z.string().min(1).max(160),
+          url: z.url(),
+          published_at: z.string().nullable(),
+          retrieved_at: z.string().nullable(),
+        }),
+      )
+      .min(1),
+    provenance: z.object({
+      run_id: z.string().min(1),
+      edition_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      item_count: z.int().gte(1).lte(9007199254740991),
+      source_count: z.int().gte(1).lte(9007199254740991),
+      content_sha256: z.string().regex(/^[a-f0-9]{64}$/),
+    }),
+    seo: z.object({
+      description: z.string().max(160),
+      canonical_path: z.string().regex(/^\/articles\/[a-z0-9-]+$/),
+      keywords: z.array(z.string()),
+      image_url: z.url().nullable(),
+      image_alt: z.string().nullable(),
+    }),
+  }),
+});
+
+export const zAvancementDAudit = z.union([
+  z.object({
+    phase: z.enum(['technical_pages', 'page_ai_recaps']),
+    iaTask: z.enum(['technical_scan', 'page_ai_recap']),
+    iaSubTask: z.string(),
+    done: z.number(),
+    total: z.number(),
+    currentUrl: z.string(),
+    recentCompletedUrls: z.array(z.string()),
+  }),
+  z.object({
+    phase: z.enum(['synthesis']),
+    iaTask: z.enum(['synthesis']),
+    iaSubTask: z.string(),
+    done: z.number(),
+    total: z.number(),
+    section: z.enum([
+      'summary',
+      'executiveSection',
+      'prioritySection',
+      'executionSection',
+      'clientCommsSection',
+    ]),
+    sectionStatus: z.enum(['started', 'completed', 'failed', 'fallback']),
+    sectionStatuses: z.record(z.string(), z.enum(['started', 'completed', 'failed', 'fallback'])),
+  }),
+  z.object({
+    phase: z.enum(['synthesis']),
+    iaTask: z.enum(['synthesis']),
+    iaSubTask: z.string(),
+    done: z.number(),
+    total: z.number(),
+  }),
+]);
+
+export const zProgressionDAuditResponseDto = z.object({
+  auditId: z.string(),
+  progress: z.number(),
+  done: z.boolean(),
+  updatedAt: z.iso.datetime(),
+  status: z.enum(['PENDING', 'RUNNING']),
+  step: z.string().nullable(),
+  details: zAvancementDAudit.optional(),
+});
+
+export const zRapportClientServi = z.object({
+  executiveSummary: z.string(),
+  topFindings: z.array(
+    z.object({
+      title: z.string(),
+      impact: z.string(),
+      severity: z.enum(['high', 'medium', 'low']),
+    }),
+  ),
+  googleVsAiMatrix: z.object({
+    googleVisibility: z.object({
+      score: z.number(),
+      summary: z.string(),
+      status: z.enum(['critical', 'warning', 'ok']),
+      statusLabel: z.string(),
+    }),
+    aiVisibility: z.object({
+      score: z.number(),
+      summary: z.string(),
+      status: z.enum(['critical', 'warning', 'ok']),
+      statusLabel: z.string(),
+    }),
+  }),
+  pillarScorecard: z.array(
+    z.object({
+      pillar: z.string(),
+      score: z.number(),
+      target: z.number(),
+      status: z.enum(['critical', 'warning', 'ok']),
+      statusLabel: z.string(),
+    }),
+  ),
+  quickWins: z.array(
+    z.object({
+      title: z.string(),
+      businessImpact: z.string(),
+      effort: z.enum(['low', 'medium', 'high']),
+    }),
+  ),
+  cta: z.object({
+    title: z.string(),
+    description: z.string(),
+    actionLabel: z.string(),
+  }),
+});
+
+export const zAuditTermineResponseDto = z.object({
+  auditId: z.string(),
+  progress: z.number(),
+  summaryText: z.string().nullable(),
+  keyChecks: z.record(z.string(), z.unknown()),
+  quickWins: z.array(z.string()),
+  pillarScores: z.record(z.string(), z.number()),
+  status: z.enum(['COMPLETED']),
+  done: z.boolean(),
+  clientReport: z.union([zRapportClientServi, z.unknown()]).nullable(),
+  updatedAt: z.iso.datetime(),
+});
+
+export const zMetadonneesBrique = z.object({
+  concepts: z.array(z.string()),
+  misconceptionsCiblees: z.array(z.string()),
+  dureeMinutes: z.number(),
+  modalite: z.enum(['solo', 'binome', 'groupe', 'classe']),
+  regime: z.enum(['ouvert', 'focus', 'examen']),
+});
+
+export const zPresentationServie = z.union([
+  z.object({
+    version: z.literal(1),
+    screenId: z.string().min(1),
+    renderer: z.string().min(1),
+    title: z.string().min(1).optional(),
+    subtitle: z.string().min(1).optional(),
+  }),
+  z.union([
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['hero']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        bullets: z.array(z.string().min(1)).min(1),
+        bgImage: z
+          .union([
+            z.url(),
+            z
+              .string()
+              .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+          ])
+          .optional(),
+        bgImageAlt: z.string().min(1).optional(),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['method-path']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        steps: z
+          .array(
+            z.object({
+              id: z.string().min(1),
+              title: z.string().min(1),
+              question: z.string().min(1),
+              proof: z.string().min(1),
+              result: z.string().min(1),
+            }),
+          )
+          .min(1),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['quiz']),
+      props: z.object({
+        questionData: z.object({
+          id: z.string().min(1),
+          type: z.enum(['quiz']),
+          question: z.string().min(1),
+          options: z.array(z.string().min(1)).min(2),
+          context: z.string().min(1).optional(),
+          competency: z.string().min(1).optional(),
+        }),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['chart']),
+      props: z.object({
+        title: z.string().min(1),
+        caption: z.string().min(1).optional(),
+        context: z.string().min(1).optional(),
+        labels: z.array(z.string().min(1)).min(1),
+        series: z
+          .array(
+            z.object({
+              label: z.string().min(1),
+              values: z.array(z.number()).min(1),
+              tone: z.enum(['teal', 'gold', 'ink']).optional(),
+            }),
+          )
+          .min(1),
+        axisRanges: z.array(z.tuple([z.number(), z.number()])).optional(),
+        axisLabels: z.array(z.string().min(1)).min(1).optional(),
+        unit: z.string().min(1).optional(),
+        formula: z.string().min(1).optional(),
+        reading: z.string().min(1).optional(),
+        source: z.string().min(1).optional(),
+        kind: z.enum(['bars', 'line']).optional(),
+        description: z.string().min(1).optional(),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['boxplot']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        unit: z.string().min(1).optional(),
+        axisRange: z.tuple([z.number(), z.number()]),
+        series: z
+          .array(
+            z.object({
+              label: z.string().min(1),
+              min: z.number(),
+              q1: z.number(),
+              median: z.number(),
+              q3: z.number(),
+              max: z.number(),
+              mean: z.number().optional(),
+              tone: z.enum(['teal', 'gold', 'ink']).optional(),
+            }),
+          )
+          .min(1),
+        reading: z.string().min(1).optional(),
+        source: z.string().min(1).optional(),
+        description: z.string().min(1),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['scatter']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        xLabel: z.string().min(1),
+        yLabel: z.string().min(1),
+        xRange: z.tuple([z.number(), z.number()]),
+        yRange: z.tuple([z.number(), z.number()]),
+        points: z
+          .array(
+            z.object({
+              x: z.number(),
+              y: z.number(),
+              label: z.string().min(1).optional(),
+            }),
+          )
+          .min(2),
+        meanPoint: z
+          .object({
+            x: z.number(),
+            y: z.number(),
+          })
+          .optional(),
+        line: z
+          .object({
+            slope: z.number(),
+            intercept: z.number(),
+            label: z.string().min(1).optional(),
+          })
+          .optional(),
+        reading: z.string().min(1).optional(),
+        source: z.string().min(1).optional(),
+        description: z.string().min(1),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['lesson']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        blocks: z
+          .array(
+            z.object({
+              kind: z.enum(['definition', 'property', 'method', 'example', 'exam']),
+              title: z.string().min(1),
+              text: z.string().min(1),
+              formula: z.string().min(1).optional(),
+              steps: z.array(z.string().min(1)).min(1).optional(),
+            }),
+          )
+          .min(1)
+          .max(4),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['grid']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        items: z
+          .array(
+            z.object({
+              title: z.string().min(1),
+              description: z.string().min(1),
+              back: z.string().min(1).optional(),
+              href: z.url().optional(),
+              external: z.boolean().optional(),
+            }),
+          )
+          .min(1),
+        imprimable: z.boolean().optional(),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['comparison']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        note: z.string().min(1).optional(),
+        columns: z
+          .array(
+            z.object({
+              label: z.string().min(1),
+              tone: z.enum(['danger', 'warning', 'info', 'neutral', 'success']).optional(),
+              items: z.array(z.string().min(1)).min(1),
+            }),
+          )
+          .min(1),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['stats']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        stats: z
+          .array(
+            z.object({
+              value: z.string().min(1),
+              label: z.string().min(1),
+            }),
+          )
+          .min(1),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['reflection']),
+      props: z.object({
+        promptData: z.object({
+          id: z.string().min(1),
+          type: z.enum(['reflection']),
+          question: z.string().min(1),
+          placeholder: z.string().min(1).optional(),
+          context: z.string().min(1).optional(),
+          competency: z.string().min(1).optional(),
+        }),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['quote']),
+      props: z.object({
+        quote: z.string().min(1),
+        author: z.string().min(1).optional(),
+        role: z.string().min(1).optional(),
+        context: z.string().min(1).optional(),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['table']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        note: z.string().min(1).optional(),
+        columns: z
+          .array(
+            z.object({
+              key: z.string().min(1),
+              label: z.string().min(1),
+            }),
+          )
+          .min(1),
+        rows: z.array(z.record(z.string(), z.string().min(1))).min(1),
+        sourceLink: z
+          .object({
+            href: z.url(),
+            label: z.string().min(1),
+          })
+          .optional(),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['image-left']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        image: z.union([
+          z.url(),
+          z
+            .string()
+            .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+        ]),
+        imageAlt: z.string().min(1),
+        paragraphs: z.array(z.string().min(1)).min(1),
+        items: z.array(z.string().min(1)).min(1).optional(),
+        sourceLink: z
+          .object({
+            href: z.url(),
+            label: z.string().min(1),
+          })
+          .optional(),
+        nestedQuiz: z
+          .object({
+            id: z.string().min(1),
+            type: z.enum(['quiz']),
+            question: z.string().min(1),
+            options: z.array(z.string().min(1)).min(2),
+            context: z.string().min(1).optional(),
+            competency: z.string().min(1).optional(),
+          })
+          .optional(),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['image-right']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        image: z.union([
+          z.url(),
+          z
+            .string()
+            .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+        ]),
+        imageAlt: z.string().min(1),
+        paragraphs: z.array(z.string().min(1)).min(1),
+        items: z.array(z.string().min(1)).min(1).optional(),
+        sourceLink: z
+          .object({
+            href: z.url(),
+            label: z.string().min(1),
+          })
+          .optional(),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['illustration']),
+      props: z.object({
+        image: z.union([
+          z.url(),
+          z
+            .string()
+            .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+        ]),
+        imageAlt: z.string().min(1),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['cta']),
+      props: z.object({
+        title: z.string().min(1),
+        description: z.string().min(1),
+        ctaLabel: z.string().min(1),
+        ctaHref: z.string().min(1),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['guide']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        context: z.string().min(1).optional(),
+        takeaway: z.string().min(1).optional(),
+        nextAction: z.string().min(1).optional(),
+        items: z
+          .array(
+            z.object({
+              title: z.string().min(1),
+              description: z.string().min(1),
+              detail: z.string().min(1).optional(),
+            }),
+          )
+          .min(1),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['sort-review']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        source: z.object({
+          screenId: z.string().min(1),
+          sortId: z.string().min(1),
+        }),
+        categories: z
+          .array(
+            z.object({
+              id: z.string().min(1),
+              label: z.string().min(1),
+            }),
+          )
+          .min(1),
+        cards: z
+          .array(
+            z.object({
+              id: z.string().min(1),
+              label: z.string().min(1),
+              category: z.string().min(1),
+              justification: z.string().min(1),
+            }),
+          )
+          .min(1),
+      }),
+    }),
+    z.object({
+      version: z.literal(2),
+      screenId: z.string().min(1),
+      renderer: z.enum(['answer-review']),
+      props: z.object({
+        title: z.string().min(1),
+        subtitle: z.string().min(1).optional(),
+        source: z.object({
+          screenId: z.string().min(1),
+        }),
+        explications: z
+          .array(
+            z.object({
+              reference: z.string().min(1),
+              texte: z.string().min(1),
+            }),
+          )
+          .min(1),
+      }),
+    }),
+  ]),
+]);
+
+export const zDonneesFpQuote = z.object({
+  citation: z.object({
+    id: z.string(),
+    texte: z.string(),
+    auteur: z.string().nullable(),
+    source: z.string().nullable(),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpStory = z.object({
+  recit: z.object({
+    id: z.string(),
+    titre: z.string().optional(),
+    paragraphes: z.array(z.string()).optional(),
+    presentation: zPresentationServie.optional(),
+    visuel: z
+      .object({
+        src: z.union([
+          z.url(),
+          z
+            .string()
+            .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+        ]),
+        alt: z.string().min(1),
+        legende: z.string().min(1).optional(),
+        source: z.string().min(1).optional(),
+      })
+      .optional(),
+    video: z
+      .object({
+        src: z.union([
+          z.url(),
+          z
+            .string()
+            .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+        ]),
+        srcPoste: z
+          .union([
+            z.url(),
+            z
+              .string()
+              .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+          ])
+          .optional(),
+        type: z.enum(['video/webm', 'video/mp4']),
+        titre: z.string().min(1),
+        poster: z
+          .union([
+            z.url(),
+            z
+              .string()
+              .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+          ])
+          .optional(),
+        transcript: z.string().min(1),
+        source: z.union([z.url(), z.string().regex(/^\/formations\/[a-z0-9-]+$/)]),
+        licence: z.string().min(1),
+        sousTitres: z
+          .object({
+            src: z.union([
+              z.url(),
+              z
+                .string()
+                .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+            ]),
+            srclang: z.string().min(1),
+            libelle: z.string().min(1),
+          })
+          .optional(),
+        preload: z.enum(['none', 'metadata']).optional(),
+      })
+      .optional(),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpPro = z.object({
+  cas: z.object({
+    id: z.string(),
+    metier: z.string(),
+    situation: z.string(),
+    geste: z.string().nullable(),
+    consequence: z.string().nullable(),
+    questionsLibres: z
+      .array(
+        z.object({
+          id: z.string(),
+          question: z.string(),
+          placeholder: z.string().optional(),
+        }),
+      )
+      .min(1)
+      .optional(),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpWorked = z.object({
+  exemple: z.object({
+    id: z.string(),
+    enonce: z.string(),
+    rappel: z
+      .array(
+        z.object({
+          libelle: z.string(),
+          valeur: z.string(),
+        }),
+      )
+      .min(1)
+      .optional(),
+    etapes: z.array(
+      z.object({
+        id: z.string(),
+        intitule: z.string(),
+        raisonnement: z.string(),
+        invite: z.string(),
+      }),
+    ),
+    metadonnees: zMetadonneesBrique,
+  }),
+  etayage: z.number(),
+  pilote: z.boolean().optional(),
+  corrigeDe: z.string().optional(),
+});
+
+export const zDonneesFpConcept4 = z.object({
+  definition: z.object({
+    id: z.string(),
+    parametres: z
+      .array(
+        z.object({
+          cle: z.string(),
+          libelle: z.string(),
+          min: z.number(),
+          max: z.number(),
+          pas: z.number(),
+          defaut: z.number(),
+        }),
+      )
+      .min(1),
+    formuleLatexSimplifie: z.string(),
+    calcul: z.string(),
+    phrase: z.string(),
+    etapes: z
+      .array(
+        z.object({
+          libelle: z.string(),
+          calcul: z.string(),
+        }),
+      )
+      .min(1)
+      .optional(),
+    prereglages: z
+      .array(
+        z.object({
+          libelle: z.string(),
+          valeurs: z.record(z.string(), z.number()),
+        }),
+      )
+      .optional(),
+    animation: z.array(z.record(z.string(), z.number())).optional(),
+    sorties: z.array(
+      z.object({
+        valeurs: z.record(z.string(), z.number()),
+        resultat: z.object({
+          valeur: z.number().nullable(),
+          affichage: z.string(),
+        }),
+        etapes: z.array(
+          z.object({
+            valeur: z.number().nullable(),
+            affichage: z.string(),
+          }),
+        ),
+        courbes: z.record(
+          z.string(),
+          z.array(
+            z.object({
+              x: z.number(),
+              y: z.number().nullable(),
+            }),
+          ),
+        ),
+        lignes: z.record(
+          z.string(),
+          z.array(
+            z.object({
+              valeur: z.object({
+                valeur: z.number().nullable(),
+                affichage: z.string(),
+              }),
+              resultat: z.object({
+                valeur: z.number().nullable(),
+                affichage: z.string(),
+              }),
+              courante: z.boolean(),
+            }),
+          ),
+        ),
+        phrase: z.string(),
+      }),
+    ),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpPlot = z.object({
+  definition: z.object({
+    id: z.string(),
+    titre: z.string().optional(),
+    source: z.string().optional(),
+    abscisse: z.object({
+      libelle: z.string(),
+      min: z.number(),
+      max: z.number(),
+    }),
+    ordonnee: z.string(),
+    parametres: z.array(
+      z.object({
+        cle: z.string(),
+        libelle: z.string(),
+        min: z.number(),
+        max: z.number(),
+        pas: z.number(),
+        defaut: z.number(),
+      }),
+    ),
+    series: z
+      .array(
+        z.object({
+          id: z.string(),
+          libelle: z.string(),
+          trait: z.enum(['plein', 'tirets']),
+          calcul: z.string(),
+        }),
+      )
+      .min(1),
+    bornesOrdonnee: z
+      .object({
+        min: z.number().optional(),
+        max: z.number().optional(),
+        minParametre: z.string().optional(),
+        maxParametre: z.string().optional(),
+      })
+      .optional(),
+    sourceUrl: z.string().optional(),
+    description: z.string().optional(),
+    descriptionPapier: z.string().optional(),
+    forme: z.enum(['courbes', 'barres']).optional(),
+    unite: z.enum(['euros']).optional(),
+    etiquettes: z.array(z.string()).optional(),
+    prereglages: z
+      .array(
+        z.object({
+          libelle: z.string(),
+          valeurs: z.record(z.string(), z.number()),
+        }),
+      )
+      .optional(),
+    reference: z.string().optional(),
+    animation: z.array(z.record(z.string(), z.number())).optional(),
+    abscisses: z.array(z.number()),
+    positions: z.array(
+      z.object({
+        valeurs: z.record(z.string(), z.number()),
+        ordonnees: z.record(z.string(), z.array(z.number().nullable())),
+      }),
+    ),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpChallenge = z.object({
+  probleme: z.object({
+    id: z.string(),
+    enonce: z.string(),
+    invite: z.string(),
+    rappel: z
+      .array(
+        z.object({
+          libelle: z.string(),
+          valeur: z.string(),
+        }),
+      )
+      .min(1)
+      .optional(),
+    strategies: z.array(z.unknown()).length(0),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpCardsort = z.object({
+  plan: z.object({
+    id: z.string(),
+    intitule: z.string(),
+    cartes: z.array(
+      z.object({
+        id: z.string(),
+        libelle: z.string(),
+      }),
+    ),
+    categories: z.array(
+      z.object({
+        id: z.string(),
+        libelle: z.string(),
+      }),
+    ),
+    dureeJeuMs: z.number().optional(),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpSheet = z.object({
+  plan: z.object({
+    id: z.string(),
+    intitule: z.string(),
+    lignes: z.number(),
+    colonnes: z.number(),
+    cellules: z.record(z.string(), z.string()),
+    verrouillees: z.array(z.string()),
+    consignes: z.array(z.string()),
+    lettres: z.array(z.string()),
+    grille: z.array(z.array(z.string())),
+    longueurMaxSaisie: z.number(),
+    initiale: z.object({
+      saisies: z.record(z.string(), z.string()),
+      affichages: z.record(z.string(), z.string()),
+      natures: z.record(z.string(), z.enum(['texte', 'nombre', 'logique', 'erreur'])),
+      formules: z.array(z.string()),
+    }),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpTableBuild = z.object({
+  plan: z.object({
+    id: z.string(),
+    intitule: z.string(),
+    consignes: z.array(z.string()),
+    echeances: z.number(),
+    intituleDesLignes: z.string().optional(),
+    libellesLignes: z.array(z.string()),
+    parametres: z.record(z.string(), z.number()),
+    colonnes: z.array(
+      z.object({
+        cle: z.string(),
+        intitule: z.string(),
+        role: z.enum(['donnee', 'saisie', 'deduite']),
+        format: z.enum(['nombre', 'booleen']).optional(),
+        decimales: z.number(),
+        valeurs: z.array(z.number()).optional(),
+        formule: z.string().optional(),
+        formuleInitiale: z.string().optional(),
+        soldeDe: z.string().optional(),
+        totalise: z.boolean(),
+      }),
+    ),
+    synthese: z.array(
+      z.object({
+        libelle: z.string(),
+        formule: z.string(),
+        unite: z.string().nullable(),
+        decimales: z.number(),
+      }),
+    ),
+    tableauInitial: z.object({
+      lignes: z.array(
+        z.object({
+          rang: z.number(),
+          valeurs: z.record(
+            z.string(),
+            z.object({
+              valeur: z.number().nullable(),
+              affichage: z.string(),
+            }),
+          ),
+        }),
+      ),
+      totaux: z.record(
+        z.string(),
+        z.object({
+          valeur: z.number().nullable(),
+          affichage: z.string(),
+        }),
+      ),
+      synthese: z.array(
+        z.object({
+          valeur: z.number().nullable(),
+          affichage: z.string(),
+        }),
+      ),
+      soldeFinal: z
+        .object({
+          valeur: z.number().nullable(),
+          affichage: z.string(),
+        })
+        .nullable(),
+    }),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpEscape = z.object({
+  parcours: z.object({
+    id: z.string(),
+    intitule: z.string(),
+    delaiIndiceMs: z.number(),
+    budgetEnigmeMs: z.number(),
+    tentativesMax: z.int().gte(1).lte(9007199254740991),
+    enigmes: z.array(
+      z.object({
+        id: z.string(),
+        intitule: z.string(),
+        enonce: z.string(),
+        indice: z.string(),
+      }),
+    ),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpPulse = z.object({
+  sondage: z.object({
+    id: z.string(),
+    invite: z.string(),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpSpaced = z.object({
+  rappel: z.object({
+    id: z.string(),
+    intitule: z.string(),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpNumeric = z.object({
+  question: z.object({
+    id: z.string(),
+    enonce: z.string(),
+    unite: z.string().nullable(),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesFpVote = z.object({
+  question: z.object({
+    id: z.string(),
+    enonce: z.string(),
+    options: z.array(
+      z.object({
+        id: z.string(),
+        libelle: z.string(),
+      }),
+    ),
+  }),
+  questionJumelle: z
+    .object({
+      id: z.string(),
+      enonce: z.string(),
+      options: z.array(
+        z.object({
+          id: z.string(),
+          libelle: z.string(),
+        }),
+      ),
+    })
+    .optional(),
+});
+
+export const zDonneesFpRecall = z.object({
+  question: z.object({
+    id: z.string(),
+    enonce: z.string(),
+    options: z.array(
+      z.object({
+        id: z.string(),
+        libelle: z.string(),
+      }),
+    ),
+    metadonnees: zMetadonneesBrique,
+  }),
+  delaiMs: z.number(),
+  consigne: z.string().optional(),
+});
+
+export const zDonneesFpExit = z.object({
+  billet: z.object({
+    id: z.string(),
+    question: z.string(),
+    invite: z.string(),
+    options: z.array(
+      z.object({
+        id: z.string(),
+        libelle: z.string(),
+      }),
+    ),
+    metadonnees: zMetadonneesBrique,
+  }),
+});
+
+export const zDonneesQuestionnaire = z.object({
+  intitule: z.string(),
+  consigne: z.string().optional(),
+  regime: z.enum(['ouvert', 'focus', 'examen']),
+  ordre: z.enum(['fixe', 'melange']),
+  questions: z.array(
+    z.union([
+      z.object({
+        brique: z.enum(['fp-numeric']),
+        donnees: zDonneesFpNumeric,
+      }),
+      z.object({
+        brique: z.enum(['fp-vote']),
+        donnees: zDonneesFpVote,
+      }),
+    ]),
+  ),
+});
+
+export const zDonneesEcranVerrouille = z.record(z.string(), z.never());
+
+export const zEcranPublicResponseDto = z.object({
+  id: z.string(),
+  type: zTypeDEcranServi,
+  duree: z.number(),
+  interactif: z.boolean(),
+  donnees: z.union([
+    zDonneesFpQuote,
+    zDonneesFpStory,
+    zDonneesFpPro,
+    zDonneesFpWorked,
+    zDonneesFpConcept4,
+    zDonneesFpPlot,
+    zDonneesFpChallenge,
+    zDonneesFpCardsort,
+    zDonneesFpSheet,
+    zDonneesFpTableBuild,
+    zDonneesFpEscape,
+    zDonneesFpPulse,
+    zDonneesFpSpaced,
+    zDonneesFpNumeric,
+    zDonneesFpVote,
+    zDonneesFpRecall,
+    zDonneesFpExit,
+    zDonneesQuestionnaire,
+    zDonneesEcranVerrouille,
+  ]),
+  titre: z.string().nullable(),
+  renvoi: z.string().optional(),
+  cadrageDuRenvoi: zCadrageDuRenvoiResponseDto.optional(),
+  pieceJointe: z
+    .union([zPieceJointePubliqueResponseDto, zPieceJointeReserveeResponseDto])
+    .optional(),
+  ecranCorrige: z.string().optional(),
+  resoluPar: z.array(z.string()).optional(),
+  correction: zCorrectionServieResponseDto.optional(),
+});
+
+export const zCoursPublicCatalogueResponseDto = z.object({
+  id: z.string(),
+  titre: z.string(),
+  niveau: z.string(),
+  duree: z.number(),
+  concepts: z.array(z.string()),
+  ecrans: z.array(zEcranPublicResponseDto),
+  version: z.number(),
+  publieLe: z.iso.datetime(),
+});
+
+export const zEcranDerouleResponseDto = z.object({
+  id: z.string(),
+  type: zTypeDEcranServi,
+  duree: z.number(),
+  interactif: z.boolean(),
+  donnees: z.union([
+    zDonneesFpQuote,
+    zDonneesFpStory,
+    zDonneesFpPro,
+    zDonneesFpWorked,
+    zDonneesFpConcept4,
+    zDonneesFpPlot,
+    zDonneesFpChallenge,
+    zDonneesFpCardsort,
+    zDonneesFpSheet,
+    zDonneesFpTableBuild,
+    zDonneesFpEscape,
+    zDonneesFpPulse,
+    zDonneesFpSpaced,
+    zDonneesFpNumeric,
+    zDonneesFpVote,
+    zDonneesFpRecall,
+    zDonneesFpExit,
+    zDonneesQuestionnaire,
+    zDonneesEcranVerrouille,
+  ]),
+  titre: z.string().nullable(),
+  renvoi: z.string().optional(),
+  cadrageDuRenvoi: zCadrageDuRenvoiResponseDto.optional(),
+  pieceJointe: z
+    .union([zPieceJointePubliqueResponseDto, zPieceJointeReserveeResponseDto])
+    .optional(),
+  ecranCorrige: z.string().optional(),
+  resoluPar: z.array(z.string()).optional(),
+  correction: zCorrectionServieResponseDto.optional(),
+  notes: z.string(),
+  diffusion: zDiffusion,
+  seuil: z.number().nullable(),
+  corriges: z.array(zCorrigePresentateurResponseDto),
+  questions: z.array(zQuestionDerouleResponseDto),
+  corrigeEcran: z
+    .union([
+      zCorrigeFeuillePresentateurResponseDto,
+      zCorrigeTableauPresentateurResponseDto,
+      zCorrigeClassementPresentateurResponseDto,
+      zCorrigeEnigmesPresentateurResponseDto,
+      zCorrigeDefiPresentateurResponseDto,
+      zCorrigeRevelationPresentateurResponseDto,
+      zCorrigeReflexionPresentateurResponseDto,
+      z.unknown(),
+    ])
+    .nullable(),
+  reflexion: z.union([zReflexionPresentateurResponseDto, z.unknown()]).nullable(),
+  explications: z.array(zExplicationDeCorrectionResponseDto).optional(),
+});
+
+export const zDerouleResponseDto = z.object({
+  id: z.string(),
+  titre: z.string(),
+  niveau: z.string(),
+  duree: z.number(),
+  concepts: z.array(z.string()),
+  ecrans: z.array(zEcranDerouleResponseDto),
+  remediations: z.record(z.string(), z.string()),
+});
+
 export const zSujetResponseDto = z.object({
   id: z.string(),
   titre: z.string(),
@@ -1271,7 +2585,7 @@ export const zAuthControllerSetPasswordBody = zSetPasswordDto;
 
 export const zAuthControllerSetPasswordResponse = zUserResponseDto;
 
-export const zAuthControllerRegisterBody = zCreateUserDto;
+export const zAuthControllerRegisterBody = zInscriptionDto;
 
 export const zAuthControllerRegisterResponse = zAuthMessageResponseDto;
 
@@ -1316,7 +2630,28 @@ export const zAuditsControllerStreamPath = z.object({
 /**
  * Flux SSE des evenements d'audit en temps reel
  */
-export const zAuditsControllerStreamResponse = z.string();
+export const zAuditsControllerStreamResponse = z.union([
+  z.object({
+    event: z.enum(['progress']),
+    data: zProgressionDAuditResponseDto,
+  }),
+  z.object({
+    event: z.enum(['completed']),
+    data: zAuditTermineResponseDto,
+  }),
+  z.object({
+    event: z.enum(['failed']),
+    data: zAuditEchoueResponseDto,
+  }),
+  z.object({
+    event: z.enum(['timeout']),
+    data: zAuditExpireResponseDto,
+  }),
+  z.object({
+    event: z.enum(['heartbeat']),
+    data: zBattementResponseDto,
+  }),
+]);
 
 export const zLeadMagnetsControllerCreateBody = zRequestToolkitRequestDto;
 
@@ -1351,6 +2686,11 @@ export const zArticleModerationControllerRestorePath = z.object({
 
 export const zArticleModerationControllerRestoreResponse = zArticleModerationResponseDto;
 
+/**
+ * Enveloppe Morning-Brief v1 (docs/contracts/article-ingest-envelope-v1.json)
+ */
+export const zArticlesControllerIngest0Body = zArticleIngestEnvelopeV1;
+
 export const zArticlesControllerIngest0Headers = z.object({
   'idempotency-key': z.string(),
   'x-morning-brief-nonce': z.string(),
@@ -1360,6 +2700,11 @@ export const zArticlesControllerIngest0Headers = z.object({
  * Édition acceptée ou déjà reçue
  */
 export const zArticlesControllerIngest0Response = zArticleIngestResponseDto;
+
+/**
+ * Enveloppe Morning-Brief v1 (docs/contracts/article-ingest-envelope-v1.json)
+ */
+export const zArticlesControllerIngest1Body = zArticleIngestEnvelopeV1;
 
 export const zArticlesControllerIngest1Headers = z.object({
   'idempotency-key': z.string(),
@@ -1500,7 +2845,24 @@ export const zFormationsPresenterControllerPresenterStreamPath = z.object({
 /**
  * Etat de la seance a chaque changement, vu du pupitre
  */
-export const zFormationsPresenterControllerPresenterStreamResponse = z.string();
+export const zFormationsPresenterControllerPresenterStreamResponse = z.union([
+  z.object({
+    event: z.enum(['etat']),
+    data: zEtatDeSeanceResponseDto,
+  }),
+  z.object({
+    event: z.enum(['fin']),
+    data: zFinDuFluxResponseDto,
+  }),
+  z.object({
+    event: z.enum(['heartbeat']),
+    data: zBattementResponseDto,
+  }),
+  z.object({
+    event: z.enum(['resultats']),
+    data: zResultatsEnDirectResponseDto,
+  }),
+]);
 
 export const zFormationsPresenterControllerGetResultsPath = z.object({
   id: z.string(),
@@ -1757,7 +3119,20 @@ export const zFormationsStudentControllerStreamPath = z.object({
 /**
  * Etat de la seance a chaque changement, vu du participant
  */
-export const zFormationsStudentControllerStreamResponse = z.string();
+export const zFormationsStudentControllerStreamResponse = z.union([
+  z.object({
+    event: z.enum(['etat']),
+    data: zEtatDeSeanceResponseDto,
+  }),
+  z.object({
+    event: z.enum(['fin']),
+    data: zFinDuFluxResponseDto,
+  }),
+  z.object({
+    event: z.enum(['heartbeat']),
+    data: zBattementResponseDto,
+  }),
+]);
 
 export const zFormationsLivretControllerGetPath = z.object({
   slug: z.string(),
@@ -1766,32 +3141,6 @@ export const zFormationsLivretControllerGetPath = z.object({
 export const zFormationsLivretControllerGetResponse = zLivretResponseDto;
 
 /**
- * The Health Check is successful
+ * Etat de sante : base de donnees et heap memoire
  */
-export const zHealthControllerCheckResponse = z.object({
-  status: z.string().optional(),
-  info: z
-    .record(
-      z.string(),
-      z.object({
-        status: z.string(),
-      }),
-    )
-    .nullish(),
-  error: z
-    .record(
-      z.string(),
-      z.object({
-        status: z.string(),
-      }),
-    )
-    .nullish(),
-  details: z
-    .record(
-      z.string(),
-      z.object({
-        status: z.string(),
-      }),
-    )
-    .optional(),
-});
+export const zHealthControllerCheckResponse = zEtatDeSanteResponseDto;
