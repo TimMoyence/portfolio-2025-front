@@ -33,6 +33,7 @@ import { extraireDuRenvoi } from './extrait-du-renvoi';
 import { SlideActivityComponent } from './slide-activity.component';
 import { reductionPourTenir } from './tenir-dans-sa-place.directive';
 import { SlideComponent } from '../deck/slide.component';
+import { arrondi } from '../../../../cours/runtime/blocks/reglable';
 
 export type CoursPresentationMode = 'etudiant' | 'formateur' | 'projection';
 
@@ -881,7 +882,7 @@ export class CoursPresentationComponent {
       elargissement,
       rogne ? Number.NEGATIVE_INFINITY : Math.min(1 / elargissement, parLaHauteur),
     );
-    const equilibre = Math.round(Math.sqrt(elargissement / parLaHauteur) * 100) / 100;
+    const equilibre = arrondi(Math.sqrt(elargissement / parLaHauteur));
     const vise = bornerEntre(Math.max(equilibre, this.largeurExigee), 1, ELARGISSEMENT_MAXIMAL);
     const dejaEssaye = [...this.echellesEssayees.keys()].some(
       (essai) => Math.abs(essai - vise) <= GAIN_D_ELARGISSEMENT_UTILE,

@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { LOCALE_ID } from '@angular/core';
+import { aLaPage } from '../../../testing/chemin-de-la-page';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { NgForm } from '@angular/forms';
@@ -57,14 +58,19 @@ describe('GrowthAuditComponent', () => {
     }).compileComponents();
   });
 
-  it('envoie avec la demande d audit la langue du site lue de LOCALE_ID, sans sa région', () => {
-    TestBed.overrideProvider(LOCALE_ID, { useValue: 'en-GB' });
-    const fixture = TestBed.createComponent(GrowthAuditComponent);
+  for (const { localeId, chemin } of [
+    { localeId: 'en-GB', chemin: '/growth-audit' },
+    { localeId: 'fr', chemin: '/en/growth-audit' },
+  ]) {
+    it(`envoie avec la demande d audit la langue de la page, sans sa région (LOCALE_ID ${localeId}, ${chemin})`, async () => {
+      TestBed.overrideProvider(LOCALE_ID, { useValue: localeId });
+      const fixture = await aLaPage(chemin, () => TestBed.createComponent(GrowthAuditComponent));
 
-    remplirEtSoumettre(fixture.componentInstance, true);
+      remplirEtSoumettre(fixture.componentInstance, true);
 
-    expect(auditServiceMock.submit.calls.mostRecent().args[0].locale).toBe('en');
-  });
+      expect(auditServiceMock.submit.calls.mostRecent().args[0].locale).toBe('en');
+    });
+  }
 
   function soumettreEtDiffuser(event: AuditStreamEvent, auditId: string) {
     const fixture = TestBed.createComponent(GrowthAuditComponent);

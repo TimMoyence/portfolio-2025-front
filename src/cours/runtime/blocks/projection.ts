@@ -1,4 +1,5 @@
 import type { MetadonneesBrique } from '../../content/types';
+import { texte } from '../core/i18n';
 
 export interface OptionPublique {
   readonly id: string;
@@ -30,9 +31,6 @@ export function projeterOptions(options: readonly OptionPublique[]): OptionPubli
 
 export const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
 
-export function avecJeNeSaisPas(
-  options: readonly OptionPublique[],
-  libelle: string,
-): OptionPublique[] {
-  return [...options, { id: ID_JE_NE_SAIS_PAS, libelle }];
+export function avecJeNeSaisPas(options: readonly OptionPublique[]): OptionPublique[] {
+  return [...options, { id: ID_JE_NE_SAIS_PAS, libelle: texte('je-ne-sais-pas') }];
 }

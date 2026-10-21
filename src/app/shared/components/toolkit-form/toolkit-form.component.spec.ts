@@ -1,5 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { LOCALE_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { aLaPage } from '../../../../testing/chemin-de-la-page';
 import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import {
   createLeadMagnetPortStub,
@@ -9,10 +11,16 @@ import { refusDuBack } from '../../../../testing/factories/probleme-http.factory
 import { champsAntiRobotDe, horlogesDeSaisie } from '../../../../testing/horloge-simulee';
 import { ToolkitFormComponent } from './toolkit-form.component';
 
-async function monter(port: unknown): Promise<ComponentFixture<ToolkitFormComponent>> {
+async function monter(
+  port: unknown,
+  localeId = 'en-US',
+): Promise<ComponentFixture<ToolkitFormComponent>> {
   await TestBed.configureTestingModule({
     imports: [ToolkitFormComponent],
-    providers: [{ provide: LEAD_MAGNET_PORT, useValue: port }],
+    providers: [
+      { provide: LEAD_MAGNET_PORT, useValue: port },
+      { provide: LOCALE_ID, useValue: localeId },
+    ],
   }).compileComponents();
   const fixture = TestBed.createComponent(ToolkitFormComponent);
   fixture.detectChanges();
@@ -89,11 +97,19 @@ describe('ToolkitFormComponent', () => {
     expect(enEchec.nativeElement.querySelector('[data-toolkit-error]')).not.toBeNull();
   });
 
-  it('transmet la langue du site, sans sa région, comme langue d acceptation des conditions', async () => {
-    await soumettre(fixture);
+  for (const { localeId, chemin } of [
+    { localeId: 'en-US', chemin: '/toolkit' },
+    { localeId: 'fr', chemin: '/en/toolkit' },
+  ]) {
+    it(`transmet la langue de la page, sans sa région, comme langue d acceptation des conditions (LOCALE_ID ${localeId}, ${chemin})`, async () => {
+      TestBed.resetTestingModule();
+      const sousLaPage = await aLaPage(chemin, () => monter(portStub, localeId));
 
-    expect(portStub.requestToolkit.calls.mostRecent().args[0].termsLocale).toBe('en');
-  });
+      await soumettre(sousLaPage);
+
+      expect(portStub.requestToolkit.calls.mostRecent().args[0].termsLocale).toBe('en');
+    });
+  }
 
   it("affiche l'email soumis dans le bloc succes (data-toolkit-success)", async () => {
     await soumettre(fixture);

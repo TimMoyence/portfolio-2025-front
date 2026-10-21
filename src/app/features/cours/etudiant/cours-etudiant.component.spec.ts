@@ -513,6 +513,13 @@ describe('CoursEtudiantComponent', () => {
     );
   });
 
+  it('F03 · ne construit aucun retour vers un cours qui n est pas en seance', async () => {
+    await TestBed.inject(Router).navigateByUrl('/?cours=cours-inconnu');
+    const fixture = monter();
+
+    expect(lire(fixture, 'etudiant-connexion-formateur')).toBeNull();
+  });
+
   it('F03 · ne construit aucun retour depuis un cours vise mal forme', async () => {
     await TestBed.inject(Router).navigateByUrl('/?cours=..%2F..%2Fadmin');
     const fixture = monter();

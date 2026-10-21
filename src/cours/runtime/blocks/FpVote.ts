@@ -259,7 +259,7 @@ export class FpVote extends FpVerdicts {
   }
 
   private toutesLesOptions(question: VoteQuestionPublique): OptionPublique[] {
-    return avecJeNeSaisPas(question.options, this.texte('je-ne-sais-pas'));
+    return avecJeNeSaisPas(question.options);
   }
 
   private bouton(question: VoteQuestionPublique, { id, libelle }: OptionPublique): EscapedHtml {

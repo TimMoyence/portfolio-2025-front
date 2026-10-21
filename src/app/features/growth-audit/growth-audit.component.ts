@@ -1,18 +1,12 @@
 import { CommonModule } from '@angular/common';
 import type { OnDestroy } from '@angular/core';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  LOCALE_ID,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import type { Subscription } from 'rxjs';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
 import { estObjet } from '../../../cours/runtime/core/valeurs';
-import { langueDuSite } from '../../core/config/locales';
+import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
 import {
   type AuditContactMethod,
@@ -87,8 +81,7 @@ export class GrowthAuditComponent implements OnDestroy {
   private readonly auditService: AuditRequestPort = inject(AUDIT_REQUEST_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
   private debutDeSaisie = instantMonotone();
-  private readonly langue: NonNullable<AuditRequestPayload['locale']> =
-    langueDuSite(inject(LOCALE_ID)) === 'en' ? 'en' : 'fr';
+  private readonly langue = injecterLocaleDeLaPage();
   protected readonly iaTaskFallback = $localize`:@@auditIaTaskFallback:IA`;
   protected readonly bornesDuNomDeSite = BORNES_D_UN_NOM_DE_SITE;
   protected readonly bornesDuContact = BORNES_D_UN_CONTACT_D_AUDIT;

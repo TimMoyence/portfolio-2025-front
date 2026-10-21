@@ -4,6 +4,7 @@ import {
   estChaineNonVide,
   estEntierPositif,
   estMembre,
+  estNombreFini,
   estObjet,
   estTexteNonVide,
   objet,
@@ -47,7 +48,7 @@ function duree(detail: Detail): number | null {
 }
 
 function estValeurDeReponse(valeur: unknown): valeur is number | string {
-  return typeof valeur === 'string' || (typeof valeur === 'number' && Number.isFinite(valeur));
+  return typeof valeur === 'string' || estNombreFini(valeur);
 }
 
 function reponse(
@@ -70,10 +71,6 @@ function libre(
   return estTexteNonVide(texte)
     ? [{ kind: 'libre', screenId, activityId, response: texte, dureeMs }]
     : [];
-}
-
-function estNombreFini(valeur: unknown): valeur is number {
-  return typeof valeur === 'number' && Number.isFinite(valeur);
 }
 
 function estTexte(valeur: unknown): valeur is string {
@@ -160,8 +157,7 @@ function reglage(
     return [];
   }
   const valeurs = Object.entries(reglages);
-  return valeurs.length > 0 &&
-    valeurs.every(([, valeur]) => typeof valeur === 'number' && Number.isFinite(valeur))
+  return valeurs.length > 0 && valeurs.every(([, valeur]) => estNombreFini(valeur))
     ? [{ kind, screenId, reglages: reglages as Readonly<Record<string, number>> }]
     : [];
 }

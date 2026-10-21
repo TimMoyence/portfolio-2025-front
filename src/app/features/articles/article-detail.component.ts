@@ -10,7 +10,7 @@ import { NOM_DU_SITE } from '../../core/seo/nom-du-site';
 import { SeoService } from '../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../core/ssr/http-response-status';
 import { ArticlesCtaComponent } from './articles-cta.component';
-import { injecterLocaleDesArticles } from './locale-des-articles';
+import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 import { renderArticleMarkdown } from './markdown-article.utils';
 
 @Component({
@@ -29,7 +29,7 @@ export class ArticleDetailComponent {
   protected renderedContent = '';
   protected isLoading = true;
   protected hasError = false;
-  protected readonly locale = injecterLocaleDesArticles();
+  protected readonly locale = injecterLocaleDeLaPage();
   private readonly api = inject(ArticleHttpAdapter);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly seo = inject(SeoService);

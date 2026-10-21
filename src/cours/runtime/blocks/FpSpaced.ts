@@ -226,7 +226,7 @@ export class FpSpaced extends FpVerdicts {
   }
 
   private options(question: SpacedQuestionPublique): EscapedHtml {
-    const boutons = avecJeNeSaisPas(question.options, this.texte('je-ne-sais-pas')).map(
+    const boutons = avecJeNeSaisPas(question.options).map(
       (option) =>
         safeHtml`<button type="button" class="fp-spaced__option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,
     );

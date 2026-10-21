@@ -14,6 +14,7 @@ import {
 import { urlDeLaSeance } from './adresse-de-seance';
 import { abonner, diffuserA } from './ecoutes';
 import { ENTETE_JETON_PARTICIPANT } from './jeton-participant';
+import { refuseLaSession, STATUT_LIMITE_DE_DEBIT } from './statuts-http';
 import {
   comptesJalon,
   entierPositif,
@@ -236,9 +237,7 @@ function ouvertureNative(courant: () => AbortController | null): OuvertureFlux |
   return (url, entetes) => fetch(url, { headers: entetes, signal: courant()?.signal ?? null });
 }
 
-const REFUS_SANS_RELANCE: readonly number[] = [401, 403];
 const STATUT_JETON_REFUSE = 401;
-const STATUT_SATURATION = 429;
 
 export type MotifDuRefus = 'session' | 'saturation' | 'autre';
 
@@ -248,10 +247,10 @@ export interface RefusDuFlux {
 }
 
 function motifDuRefus(statut: number): MotifDuRefus {
-  if (REFUS_SANS_RELANCE.includes(statut)) {
+  if (refuseLaSession(statut)) {
     return 'session';
   }
-  return statut === STATUT_SATURATION ? 'saturation' : 'autre';
+  return statut === STATUT_LIMITE_DE_DEBIT ? 'saturation' : 'autre';
 }
 
 export function refusDuFlux(statut: StatutFlux | null): RefusDuFlux | null {

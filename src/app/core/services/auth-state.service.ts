@@ -1,13 +1,14 @@
 import { isPlatformBrowser } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { afterNextRender, DestroyRef, Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { catchError, finalize, firstValueFrom, from, map, of, tap, timeout } from 'rxjs';
+import { refuseLaSession, STATUT_LIMITE_DE_DEBIT } from '../../../cours/runtime/core/statuts-http';
 import type { IssueDuRenouvellement } from '../../../cours/runtime/core/sync';
 import { bornerEntre, objet } from '../../../cours/runtime/core/valeurs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
+import { secondesDeRetryAfter } from '../http/limite-de-debit';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';
 import {
   FENETRE_OUVERTE,
@@ -40,14 +41,11 @@ function httpStatusOf(error: unknown): number | null {
 }
 
 function throttledRetryDelayMs(error: unknown): number {
-  const retryAfterS =
-    error instanceof HttpErrorResponse ? Number(error.headers.get('Retry-After')) : 0;
-  const requestedMs = Number.isFinite(retryAfterS) ? retryAfterS * 1000 : 0;
-  return bornerEntre(requestedMs, THROTTLED_RETRY_MIN_MS, PLUS_LONGUE_FENETRE_MS);
-}
-
-function refuseLaSession(status: number | null): boolean {
-  return status === 401 || status === 403;
+  return bornerEntre(
+    (secondesDeRetryAfter(error) ?? 0) * 1000,
+    THROTTLED_RETRY_MIN_MS,
+    PLUS_LONGUE_FENETRE_MS,
+  );
 }
 
 function isTransientFailure(status: number | null): boolean {
@@ -319,7 +317,7 @@ export class AuthStateService {
       return 'refuse';
     }
     const { echecs } = this.fenetre.lire();
-    if (status === 429) {
+    if (status === STATUT_LIMITE_DE_DEBIT) {
       const delayMs = throttledRetryDelayMs(error);
       this.reculer(delayMs, echecs);
       this.replanifierSiConnecte(delayMs);

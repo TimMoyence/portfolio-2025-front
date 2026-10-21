@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom, map } from 'rxjs';
 import {
   REGIMES_DE_VERROU,
@@ -45,7 +45,8 @@ import {
 } from '../../../../cours/runtime/core/sync';
 import { bornerEntre, estMembre, estObjet, objet } from '../../../../cours/runtime/core/valeurs';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../../cours/runtime/core/duree';
-import { cheminDuPupitre } from '../../../core/config/cours-en-seance';
+import { cheminDuPupitre, COURS_EN_SEANCE } from '../../../core/config/cours-en-seance';
+import { versLaConnexion } from '../../../core/guards/vers-la-connexion';
 import { getApiFormationsUrl } from '../../../core/http/api-config';
 import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
 import type {
@@ -150,8 +151,6 @@ interface VerdictAffiche extends VerdictRecu {
   readonly questionId: string;
   readonly rang: number;
 }
-
-const SLUG_DE_COURS = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const MESSAGE_CODE = $localize`:cours.codeInvalide|@@coursCodeInvalide:Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.`;
 const MESSAGE_IDENTITE = $localize`:cours.identiteRefusee|@@coursIdentiteRefusee:Vérifiez votre prénom, votre nom et votre adresse e-mail, puis réessayez.`;
@@ -660,12 +659,11 @@ function explicationsEnRetard(ecran: EcranContent, pilotage: PilotageEcran | und
               >
                 Pas de compte à créer. Ces informations restent liées à cette séance.
               </p>
-              @if (retourFormateur(); as returnUrl) {
+              @if (retourFormateur(); as connexion) {
                 <a
                   class="student-entry__privacy"
                   data-testid="etudiant-connexion-formateur"
-                  routerLink="/login"
-                  [queryParams]="{ returnUrl }"
+                  [routerLink]="connexion"
                   i18n="cours.entreeConnexionFormateur|@@coursEntreeConnexionFormateur"
                   >Vous êtes formateur ? Se connecter</a
                 >
@@ -790,13 +788,16 @@ export class CoursEtudiantComponent {
   private readonly port = inject(FORMATIONS_PORT);
   private readonly creerFlux = inject(CREATEUR_FLUX);
   private readonly envois = inject(EnvoisDeSeanceService);
+  private readonly router = inject(Router);
   private readonly coursVise = toSignal(
     inject(ActivatedRoute).queryParamMap.pipe(map((parametres) => parametres.get('cours'))),
     { initialValue: null },
   );
   protected readonly retourFormateur = computed(() => {
     const slug = this.coursVise();
-    return slug !== null && SLUG_DE_COURS.test(slug) ? cheminDuPupitre(slug) : null;
+    return slug !== null && COURS_EN_SEANCE.includes(slug)
+      ? versLaConnexion(this.router, cheminDuPupitre(slug))
+      : null;
   });
   private readonly baseUrl = getApiFormationsUrl();
   private readonly enLigne = signal(typeof navigator === 'undefined' || navigator.onLine);

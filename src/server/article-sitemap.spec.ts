@@ -35,9 +35,16 @@ describe('lecteurDArticlesDuSitemap', () => {
     doubles = doublesDeLecteur(Date.UTC(2026, 8, 23));
   });
 
-  it('ne publie rien et n appelle pas l API sans URL', async () => {
-    expect(await lecteur(undefined)()).toEqual([]);
+  it('ne publie rien, n appelle pas l API et le journalise sans URL, comme la lecture des cours', async () => {
+    for (const absente of [undefined, '', '/']) {
+      expect(await lecteur(absente)())
+        .withContext(String(absente))
+        .toEqual([]);
+    }
     expect(doubles.appels).not.toHaveBeenCalled();
+    expect(doubles.journal.warn).toHaveBeenCalledWith(
+      jasmine.stringContaining('PORTFOLIO_ARTICLE_API_URL'),
+    );
   });
 
   it('respecte le plafond de 24 de l API et suit le curseur jusqu au bout', async () => {

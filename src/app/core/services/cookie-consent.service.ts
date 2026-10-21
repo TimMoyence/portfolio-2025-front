@@ -1,10 +1,10 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, LOCALE_ID, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { APP_CONFIG } from '../config/app-config.token';
 import type { AppConfig } from '../config/app-config.model';
-import { LOCALES_DU_SITE, langueDuSite } from '../config/locales';
+import { injecterLocaleDeLaPage } from '../config/locale-de-la-page';
 import type {
   CookieConsentAction,
   CookieConsentPayload,
@@ -28,11 +28,11 @@ export class CookieConsentService {
     marketing: false,
   };
   private readonly isBrowser: boolean;
+  private readonly locale = injecterLocaleDeLaPage();
   private readonly consentSubject = new BehaviorSubject<CookieConsentState | null>(null);
 
   constructor(
     @Inject(PLATFORM_ID) platformId: object,
-    @Inject(LOCALE_ID) private readonly localeId: string,
     @Inject(APP_CONFIG) private readonly appConfig: AppConfig,
     @Inject(COOKIE_CONSENT_PORT)
     private readonly consentPort: CookieConsentPort,
@@ -48,7 +48,7 @@ export class CookieConsentService {
   }
 
   isConsentRequired(): boolean {
-    return this.appConfig.gdpr?.regionScope === 'EU_UK' && this.isLocaleEligible();
+    return this.appConfig.gdpr?.regionScope === 'EU_UK';
   }
 
   shouldShowBanner(): boolean {
@@ -73,7 +73,7 @@ export class CookieConsentService {
     const normalized = this.normalizePreferences(preferences);
     const state: CookieConsentState = {
       policyVersion: this.getPolicyVersion(),
-      locale: this.localeId,
+      locale: this.locale,
       region: this.getRegionScope(),
       preferences: normalized,
       updatedAt: new Date().toISOString(),
@@ -107,11 +107,6 @@ export class CookieConsentService {
 
   private getRegionScope(): string {
     return this.appConfig.gdpr?.regionScope ?? 'EU_UK';
-  }
-
-  private isLocaleEligible(): boolean {
-    const langue = langueDuSite(this.localeId ?? '');
-    return LOCALES_DU_SITE.some((locale) => locale === langue);
   }
 
   private normalizePreferences(preferences: CookieConsentPreferences): CookieConsentPreferences {

@@ -11,6 +11,7 @@ import type {
   StatutFlux,
   Sync,
 } from '../../../../cours/runtime/core/sync';
+import { SEUIL_D_ANONYMAT } from '../../../../cours/runtime/core/anonymat';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
 import { type Chargement, lectureSuivie, suivreLaDestruction } from '../lecture-suivie';
@@ -24,8 +25,6 @@ import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.comp
 import { correctionsAffichees } from './corrections-affichees';
 import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
 import { sourceCorrigeePar } from './sources-de-correction';
-
-const SEUIL_DE_PROJECTION = 5;
 
 function ecranProjete(ecran: EcranDeroule): EcranContent {
   return {
@@ -379,12 +378,7 @@ export class CoursSceneComponent {
   });
 
   readonly direct = computed(() =>
-    directDeLEcranCourant(
-      this.ecranCourant(),
-      this.pilotage(),
-      this.resultats(),
-      SEUIL_DE_PROJECTION,
-    ),
+    directDeLEcranCourant(this.ecranCourant(), this.pilotage(), this.resultats(), SEUIL_D_ANONYMAT),
   );
 
   private readonly port = inject(FORMATIONS_PORT);

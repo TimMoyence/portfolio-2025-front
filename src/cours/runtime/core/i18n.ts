@@ -1,3 +1,5 @@
+import { SEUIL_D_ANONYMAT } from './anonymat';
+
 const LIBELLES: Readonly<Record<string, () => string>> = {
   valider: () => $localize`:@@coursRuntimeValider:Valider`,
   suivant: () => $localize`:@@coursRuntimeSuivant:Suivant`,
@@ -229,7 +231,7 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeSpacedCarteMaitrise:Carte de maîtrise par concept`,
   'spaced-non-vus': () => $localize`:@@coursRuntimeSpacedNonVus:Non vus`,
   'pulse-masque': () =>
-    $localize`:@@coursRuntimePulseMasque:Comptes affichés à partir de 5 réponses`,
+    $localize`:@@coursRuntimePulseMasque:Comptes affichés à partir de ${SEUIL_D_ANONYMAT}:seuil: réponses`,
   'production-vide': () =>
     $localize`:@@coursRuntimeProductionVide:Saisissez au moins une valeur ou choisissez « Je ne sais pas »`,
   'production-renvoyer': () =>

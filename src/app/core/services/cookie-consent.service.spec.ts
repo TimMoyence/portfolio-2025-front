@@ -5,6 +5,7 @@ import { APP_CONFIG } from '../config/app-config.token';
 import { COOKIE_CONSENT_PORT } from '../ports/cookie-consent.port';
 import { CookieConsentService } from './cookie-consent.service';
 import { LOCALE_ID } from '@angular/core';
+import { aLaPage } from '../../../testing/chemin-de-la-page';
 import {
   createCookieConsentPortStub,
   createMockAppConfig,
@@ -217,9 +218,15 @@ describe('CookieConsentService', () => {
       expect(svc.isConsentRequired()).toBeTrue();
     });
 
-    it('devrait retourner false pour une locale non eligible', () => {
-      const svc = serviceDeConsentement({ plateforme: 'server', locale: 'de' });
-      expect(svc.isConsentRequired()).toBeFalse();
+    it('enregistre le consentement dans la langue de la page /en, meme sous LOCALE_ID francais', async () => {
+      const port = createCookieConsentPortStub();
+      const svc = await aLaPage('/en/contact', () =>
+        serviceDeConsentement({ plateforme: 'server', locale: 'fr', port }),
+      );
+
+      consentirAuxPreferencesSansAnalyse(svc).subscribe();
+
+      expect(port.recordConsent.calls.mostRecent().args[0].locale).toBe('en');
     });
   });
 });

@@ -4,7 +4,6 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
-  LOCALE_ID,
   OnInit,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
@@ -12,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
 import { APP_CONFIG } from '../../core/config/app-config.token';
-import { langueDuSite } from '../../core/config/locales';
+import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 import type { ContactFormState } from '../../core/models/contact.model';
 import type { ContactPort } from '../../core/ports/contact.port';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
@@ -55,7 +54,7 @@ export class ContactComponent implements OnInit {
   contactErrorMessage?: string;
   contactSuccessMessage?: string;
   private readonly appConfig = inject(APP_CONFIG);
-  private readonly langue = langueDuSite(inject(LOCALE_ID));
+  private readonly langue = injecterLocaleDeLaPage();
   private readonly contactPort: ContactPort = inject(CONTACT_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
   private debutDeSaisie = instantMonotone();

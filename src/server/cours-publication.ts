@@ -1,7 +1,7 @@
+import { baseDeLApi } from './base-de-l-api';
 import { champsHorsContrat, garderEnCache, lireJsonJournalise } from './lecture-api';
 import { catalogueServi } from '../app/core/adapters/formations-schemas';
 import { cheminDuCoursEnSeance } from '../app/core/config/cours-en-seance';
-import { trimTrailingSlashes } from '../app/core/utils/barres';
 
 export interface PublicationDeCours {
   readonly chemin: string;
@@ -30,7 +30,7 @@ async function lirePublication(
   const chemin = cheminDuCours(slug);
   const lecture = await lireJsonJournalise(
     dependances,
-    `${apiBaseUrl}/formations/catalogue/${slug}`,
+    `${apiBaseUrl}/formations/catalogue/${encodeURIComponent(slug)}`,
     {
       refus: (statut) =>
         `[sitemap] ${chemin} : GET /formations/catalogue/${slug} a répondu ${statut}, ${REPLI}`,
@@ -54,11 +54,11 @@ export function lecteurDePublicationsDeCours(
   return garderEnCache(
     dependances.maintenant ?? Date.now,
     async (): Promise<readonly PublicationDeCours[]> => {
-      const apiBaseUrl = trimTrailingSlashes(dependances.apiBaseUrl ?? '');
-      if (!apiBaseUrl) {
-        dependances.journal.warn(
-          `[sitemap] PORTFOLIO_ARTICLE_API_URL absente : aucune date de publication lue pour ${dependances.slugs.map(cheminDuCours).join(', ')}, ${REPLI}`,
-        );
+      const apiBaseUrl = baseDeLApi(
+        dependances,
+        `aucune date de publication lue pour ${dependances.slugs.map(cheminDuCours).join(', ')}, ${REPLI}`,
+      );
+      if (apiBaseUrl === null) {
         return [];
       }
       const lues = await Promise.all(

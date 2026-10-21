@@ -7,6 +7,21 @@ import { ValidateurDeSaisie } from './validateur-de-saisie';
 
 export type FormatDeContact = 'email' | 'telephone' | null;
 
+export function erreurDeFormat(valeur: unknown, format: FormatDeContact): ValidationErrors | null {
+  const saisie = typeof valeur === 'string' ? valeur.trim() : '';
+  if (saisie.length === 0) {
+    return null;
+  }
+  switch (format) {
+    case 'email':
+      return estUneAdresseEmail(saisie) ? null : { email: true };
+    case 'telephone':
+      return estUnNumeroDeTelephone(saisie) ? null : { phone: true };
+    default:
+      return null;
+  }
+}
+
 @Directive({
   selector: '[appFormatDeContact][ngModel]',
   standalone: true,
@@ -16,18 +31,6 @@ export class FormatDeContactDirective extends ValidateurDeSaisie {
   readonly appFormatDeContact = input<FormatDeContact>(null);
 
   validate(controle: AbstractControl): ValidationErrors | null {
-    const valeur: unknown = controle.value;
-    const saisie = typeof valeur === 'string' ? valeur.trim() : '';
-    if (saisie.length === 0) {
-      return null;
-    }
-    switch (this.appFormatDeContact()) {
-      case 'email':
-        return estUneAdresseEmail(saisie) ? null : { email: true };
-      case 'telephone':
-        return estUnNumeroDeTelephone(saisie) ? null : { phone: true };
-      default:
-        return null;
-    }
+    return erreurDeFormat(controle.value, this.appFormatDeContact());
   }
 }

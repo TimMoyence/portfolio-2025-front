@@ -1,7 +1,7 @@
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { entierBorne } from '../core/valeurs';
 import { lignesDeCalculHtml } from './calculs';
-import { dossierDeRappel, type LigneDuDossier, lireRappel } from './dossier';
+import { copierRappel, dossierDeRappel, type LigneDuDossier } from './dossier';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { FpRedaction } from './redaction';
 
@@ -25,10 +25,6 @@ function copierEtape(etape: WorkedEtape): WorkedEtape {
     raisonnement: etape.raisonnement,
     invite: etape.invite,
   };
-}
-
-function copierRappel(source: WorkedExemple): Pick<WorkedExemple, 'rappel'> {
-  return source.rappel === undefined ? {} : { rappel: lireRappel(source.rappel) };
 }
 
 function copierExemple(source: WorkedExemple): WorkedExemple {

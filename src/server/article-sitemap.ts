@@ -1,8 +1,9 @@
+import { baseDeLApi } from './base-de-l-api';
 import { champsHorsContrat, garderEnCache, lireJsonJournalise } from './lecture-api';
 import type { DynamicArticleSitemapEntry } from './seo-builders';
 import { pageDArticlesServie } from '../app/core/adapters/site-schemas';
 import { LOCALES_DU_SITE } from '../app/core/config/locales';
-import { trimTrailingSlashes } from '../app/core/utils/barres';
+import { urlDesArticles } from '../app/core/http/url-des-articles';
 
 export interface DependancesDuLecteurDArticles {
   readonly apiBaseUrl: string | undefined;
@@ -54,9 +55,11 @@ async function lireLocale(
   const entrees: DynamicArticleSitemapEntry[] = [];
   let curseur: string | null = null;
   for (let pageLue = 0; pageLue < PAGES_MAX_PAR_LOCALE; pageLue += 1) {
-    const parametres = new URLSearchParams({ locale, limit: String(LIMITE_PAR_PAGE) });
-    if (curseur) parametres.set('cursor', curseur);
-    const page = await lirePage(`${apiBaseUrl}/articles?${parametres}`, locale, dependances);
+    const page = await lirePage(
+      urlDesArticles(apiBaseUrl, { locale, limite: LIMITE_PAR_PAGE, curseur }),
+      locale,
+      dependances,
+    );
     if (page === null) return entrees;
     entrees.push(...page.entrees);
     if (page.suivant === null) return entrees;
@@ -72,8 +75,8 @@ export function lecteurDArticlesDuSitemap(
   dependances: DependancesDuLecteurDArticles,
 ): () => Promise<readonly DynamicArticleSitemapEntry[]> {
   return garderEnCache(dependances.maintenant ?? Date.now, async () => {
-    if (!dependances.apiBaseUrl) return [];
-    const apiBaseUrl = trimTrailingSlashes(dependances.apiBaseUrl);
+    const apiBaseUrl = baseDeLApi(dependances, 'aucun article lu pour le sitemap');
+    if (apiBaseUrl === null) return [];
     const parLocale = await Promise.all(
       LOCALES_DU_SITE.map((locale) => lireLocale(apiBaseUrl, locale, dependances)),
     );
