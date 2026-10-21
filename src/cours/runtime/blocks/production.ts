@@ -53,7 +53,7 @@ export abstract class FpProduction<
 > extends FpEnvoiJuge<Plan, VerdictDeProduction> {
   protected attendus: readonly Attendu[] = [];
   protected corrigeServi: unknown = null;
-  private fermee = false;
+  protected fermee = false;
 
   protected abstract readonly evenementDeSoumission: string;
 
@@ -199,11 +199,11 @@ abstract class FpProductionEtayee<Plan extends PlanEtaye, Attendu> extends FpPro
   }
 
   protected enReprise(): boolean {
-    return this.correction === 0 && this.interneVerdict !== null && this.reprises.size > 0;
+    return !this.fermee && this.interneVerdict !== null && this.reprises.size > 0;
   }
 
   protected celluleAccessible(cle: string): boolean {
-    return !this.verrouille() || (this.correction === 0 && this.detailDe(cle)?.juste === false);
+    return !this.verrouille() || (!this.fermee && this.detailDe(cle)?.juste === false);
   }
 
   protected noterLaSaisie(cle: string, brouillon: unknown): void {

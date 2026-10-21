@@ -471,11 +471,11 @@ describe('FpTableBuild', () => {
     attendreLeRenvoiEpuise(hote, recus, 2);
   });
 
-  it('RET-31 · ferme la reprise des cases fausses des que la correction est revelee', () => {
+  it('RET-31 · ferme la reprise des cases fausses des que le serveur ferme la saisie', () => {
     const recus = envois(hote);
     const demandes = demandesDEvaluation(hote);
     recevoirLeVerdictPartiel(hote);
-    hote.etayage = 1;
+    hote.saisieFermee = true;
 
     expect(cellule(hote, 1, 'prix').disabled).toBeTrue();
     saisir(hote, 1, 'prix', '20,52');
