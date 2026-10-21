@@ -13,8 +13,12 @@
         >
           <span class="slide-poll__label">{{ opt }}</span>
           @if (hasVoted()) {
-            <span class="slide-poll__pct">{{ percent(i) }}%</span>
-            <span class="slide-poll__bar" [attr.data-index]="i" [style.width.%]="percent(i)"></span>
+            <span class="slide-poll__pct">{{ formaterPart(partDe(i)) }}</span>
+            <span
+              class="slide-poll__bar"
+              [attr.data-index]="i"
+              [style.width.%]="partDe(i) * 100"
+            ></span>
           }
         </button>
       }

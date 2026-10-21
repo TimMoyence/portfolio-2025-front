@@ -93,9 +93,3 @@ export function entierBorne(
 ): number {
   return Number.isFinite(valeur) ? bornerEntre(Math.trunc(valeur), minimum, maximum) : repli;
 }
-
-const ESPACE_INSECABLE = String.fromCharCode(0x00a0);
-
-export function avecUnite(valeur: number | string, unite: string): string {
-  return `${valeur}${ESPACE_INSECABLE}${unite}`;
-}

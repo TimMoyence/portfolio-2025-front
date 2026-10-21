@@ -265,7 +265,8 @@ describe('FpWorked', () => {
       hote.setAttribute('data-cours-role', role);
       hote.etayage = PLEIN - 1;
       const cache = EXEMPLE.etapes[PLEIN - 1].raisonnement;
-      const texteAffiche = (): string => (hote.shadowRoot?.textContent ?? '').replaceAll(' ', ' ');
+      const texteAffiche = (): string =>
+        (hote.shadowRoot?.textContent ?? '').replace(/[\u00a0\u202f]/g, ' ');
       expect(JSON.stringify(hote.exemple)).not.toContain(cache);
       expect(texteAffiche()).not.toContain(cache);
 

@@ -4,7 +4,8 @@ import { texte as traduire } from '../core/i18n';
 import { suivreLesDefileurs } from '../core/defileur';
 import { dureeMonotoneDepuis, instantMonotone } from '../core/duree';
 import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
-import { avecUnite, estChaineNonVide } from '../core/valeurs';
+import { formaterPart } from '../core/typographie';
+import { estChaineNonVide } from '../core/valeurs';
 import { suivreLesZonesDeSaisie } from '../core/zone-de-saisie';
 import type { DetailDeVerdict, VerdictDeProduction, VerdictDeReponse } from './retours';
 
@@ -310,7 +311,7 @@ export abstract class FpBlock extends HTMLElement {
     if (verdict.neSaitPas) {
       return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict"><strong>${escapeHtml(this.texte('verdict-ne-sait-pas'))}</strong></p>`;
     }
-    const pourcentage = avecUnite(Math.round(verdict.score * 100), '%');
+    const pourcentage = formaterPart(verdict.score);
     return safeHtml`<p class="fp-verdict" role="status" data-testid="verdict" data-etat="${escapeHtml(verdict.correcte ? 'confirme' : 'a-revoir')}"><strong>${escapeHtml(this.texte(verdict.correcte ? 'verdict-juste' : 'verdict-a-revoir'))}</strong> <span data-testid="decompte">${escapeHtml(this.texte(cleDuDecompte))} ${justes}/${total}</span> <span data-testid="score">${escapeHtml(this.texte('verdict-score'))} ${escapeHtml(pourcentage)}</span></p>`;
   }
 

@@ -436,7 +436,7 @@ describe('FpVote', () => {
 
       const histogrammes = noeudsOmbre(hote, 'histogramme');
       expect(histogrammes.map(voteProjete)).toEqual([null]);
-      expect(histogrammes[0].textContent).toContain('58%');
+      expect(histogrammes[0].textContent).toContain('58\u00a0%');
     });
 
     it('au presentateur, ne montre l histogramme qu en phase revele', () => {
@@ -481,8 +481,8 @@ describe('FpVote', () => {
 
       const histogrammes = noeudsOmbre(hote, 'histogramme');
       expect(histogrammes.map(voteProjete)).toEqual(['premier', 'second']);
-      expect(histogrammes[0].textContent).toContain('58%');
-      expect(histogrammes[1].textContent).toContain('80%');
+      expect(histogrammes[0].textContent).toContain('58\u00a0%');
+      expect(histogrammes[1].textContent).toContain('80\u00a0%');
     });
 
     it('QF-14 · cote a cote, chaque barre garde son libelle, sa piste et son pourcentage alignes', () => {
@@ -605,9 +605,9 @@ describe('FpVote', () => {
         ],
       ),
     );
-    expect(largeurs.get('a')).toBe('58%');
-    expect(largeurs.get('b')).toBe('33%');
-    expect(largeurs.get('c')).toBe('8%');
+    expect(Number.parseFloat(largeurs.get('a') ?? '')).toBeCloseTo(58.33, 1);
+    expect(Number.parseFloat(largeurs.get('b') ?? '')).toBeCloseTo(33.33, 1);
+    expect(Number.parseFloat(largeurs.get('c') ?? '')).toBeCloseTo(8.33, 1);
   });
 
   it('etiquette chaque barre avec le libelle de son option', () => {

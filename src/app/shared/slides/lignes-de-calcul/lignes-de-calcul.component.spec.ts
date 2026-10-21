@@ -3,6 +3,9 @@ import { TestBed } from '@angular/core/testing';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { LignesDeCalculComponent } from './lignes-de-calcul.component';
 
+const FINE = '\u202f';
+const INSECABLE = '\u00a0';
+
 @Component({
   standalone: true,
   imports: [LignesDeCalculComponent],
@@ -31,8 +34,8 @@ describe('LignesDeCalculComponent', () => {
 
     expect(lignes.map((ligne) => ligne.textContent)).toEqual([
       'Marge de la marketplace :',
-      '523 000 × 0,16 = 83 680 €,',
-      'soit 83 680 ÷ 291 000 ≈ 28,8 % de la marge.',
+      `523${FINE}000 × 0,16 = 83${FINE}680${INSECABLE}€,`,
+      `soit 83${FINE}680 ÷ 291${FINE}000 ≈ 28,8${INSECABLE}% de la marge.`,
     ]);
     expect(lignes.every((ligne) => getComputedStyle(ligne).display === 'block')).toBeTrue();
     texte.parentElement?.remove();

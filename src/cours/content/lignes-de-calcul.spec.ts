@@ -1,6 +1,7 @@
 import { lignesDeCalcul } from './lignes-de-calcul';
 
-const FINE = ' ';
+const FINE = '\u202f';
+const INSECABLE = '\u00a0';
 
 describe('lignesDeCalcul : chaque calcul d une correction sur sa propre ligne', () => {
   it('laisse entière une phrase sans calcul', () => {
@@ -20,9 +21,9 @@ describe('lignesDeCalcul : chaque calcul d une correction sur sa propre ligne', 
       ),
     ).toEqual([
       'Marge de la marketplace :',
-      `523${FINE}000 × 0,16 = 83${FINE}680 €,`,
-      `soit 83${FINE}680 ÷ 291${FINE}000 ≈ 28,8 % de la marge.`,
-      '45,5 % est sa part du CA, pas de la marge.',
+      `523${FINE}000 × 0,16 = 83${FINE}680${INSECABLE}€,`,
+      `soit 83${FINE}680 ÷ 291${FINE}000 ≈ 28,8${INSECABLE}% de la marge.`,
+      `45,5${INSECABLE}% est sa part du CA, pas de la marge.`,
     ]);
   });
 
@@ -32,9 +33,9 @@ describe('lignesDeCalcul : chaque calcul d une correction sur sa propre ligne', 
         'Marge : 20 €. Taux de marque = 20 ÷ 100 = 20 % (sur le prix de vente) ; taux de marge = 20 ÷ 80 = 25 % (sur le coût d’achat), la même hausse qu’au diagnostic.',
       ),
     ).toEqual([
-      'Marge : 20 €.',
-      'Taux de marque = 20 ÷ 100 = 20 % (sur le prix de vente) ;',
-      'taux de marge = 20 ÷ 80 = 25 % (sur le coût d’achat),',
+      `Marge : 20${INSECABLE}€.`,
+      `Taux de marque = 20 ÷ 100 = 20${INSECABLE}% (sur le prix de vente) ;`,
+      `taux de marge = 20 ÷ 80 = 25${INSECABLE}% (sur le coût d’achat),`,
       'la même hausse qu’au diagnostic.',
     ]);
   });
@@ -46,7 +47,7 @@ describe('lignesDeCalcul : chaque calcul d une correction sur sa propre ligne', 
       ),
     ).toEqual([
       `Avec les poids exacts (397 ÷ 1${FINE}150 ; 230 ÷ 1${FINE}150 ; 523 ÷ 1${FINE}150),`,
-      'on obtient 25,304 %.',
+      `on obtient 25,304${INSECABLE}%.`,
     ]);
   });
 
@@ -54,6 +55,12 @@ describe('lignesDeCalcul : chaque calcul d une correction sur sa propre ligne', 
     expect(lignesDeCalcul('Contrôle : 1 150 000 × 0,455 ≈ 523 000.')).toEqual([
       'Contrôle :',
       `1${FINE}150${FINE}000 × 0,455 ≈ 523${FINE}000.`,
+    ]);
+  });
+
+  it('lie le nombre à son symbole € ou % comme le reste du runtime', () => {
+    expect(lignesDeCalcul('1 250 € soit 12 %')).toEqual([
+      `1${FINE}250${INSECABLE}€ soit 12${INSECABLE}%`,
     ]);
   });
 });
