@@ -1,4 +1,4 @@
-import { isPlatformBrowser, Location, PercentPipe } from '@angular/common';
+import { isPlatformBrowser, Location } from '@angular/common';
 import type { ElementRef } from '@angular/core';
 import {
   afterNextRender,
@@ -72,6 +72,7 @@ import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.comp
 import { correctionsAffichees } from './corrections-affichees';
 import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
 import { sourcesDeCorrection } from './sources-de-correction';
+import { formaterPart } from '../../../../cours/runtime/core/typographie';
 
 type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
 
@@ -109,7 +110,6 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
     CoursPresentationComponent,
     CoursResultatsProjetesComponent,
     PanneauParticipantsComponent,
-    PercentPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: '',
@@ -261,11 +261,11 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
                 </div>
                 <div>
                   <dt i18n="@@presentateurStatParticipation">Participation</dt>
-                  <dd>{{ statistiques.tauxParticipation | percent }}</dd>
+                  <dd>{{ formaterPart(statistiques.tauxParticipation) }}</dd>
                 </div>
                 <div>
                   <dt i18n="@@presentateurStatReussite">Réussite</dt>
-                  <dd>{{ statistiques.tauxReussite | percent }}</dd>
+                  <dd>{{ formaterPart(statistiques.tauxReussite) }}</dd>
                 </div>
                 <div class="join-panel__problemes">
                   <dt i18n="@@presentateurStatProblemes">Questions problématiques</dt>
@@ -711,6 +711,7 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
   `,
 })
 export class CoursPresentateurComponent {
+  protected readonly formaterPart = formaterPart;
   readonly slug = input.required<string>();
   readonly seance = input<string>();
 

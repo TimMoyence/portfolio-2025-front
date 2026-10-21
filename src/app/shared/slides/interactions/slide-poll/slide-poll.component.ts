@@ -8,6 +8,7 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
+import { formaterPart } from '../../../../../cours/runtime/core/typographie';
 import { part } from '../../../../../cours/runtime/core/valeurs';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import { chargerInteraction } from '../interactions.util';
@@ -31,6 +32,7 @@ export class SlidePollComponent implements OnInit {
   readonly slug = input.required<string>();
   readonly interactionId = input.required<string>();
 
+  protected readonly formaterPart = formaterPart;
   protected readonly poll = signal<PollInteraction | null>(null);
   protected readonly error = signal<boolean>(false);
   protected readonly votes = signal<Record<number, number>>({});
@@ -67,8 +69,8 @@ export class SlidePollComponent implements OnInit {
     this.hasVoted.set(true);
   }
 
-  protected percent(index: number): number {
-    return Math.round(part(this.votes()[index] ?? 0, this.totalVotes()) * 100);
+  protected partDe(index: number): number {
+    return part(this.votes()[index] ?? 0, this.totalVotes());
   }
 
   private load(): void {

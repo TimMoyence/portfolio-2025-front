@@ -1,4 +1,3 @@
-import { PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import type {
   ConfusionComptee,
@@ -7,6 +6,7 @@ import type {
   ResultatQuestion,
 } from '../../../../cours/content/types';
 import { deLaQuestion } from '../../../shared/slides/session/lecture-ecran';
+import { formaterPart } from '../../../../cours/runtime/core/typographie';
 
 export interface QuestionDuPanneau {
   readonly numero: number;
@@ -67,7 +67,6 @@ function lirePanneau(
 @Component({
   selector: 'app-cours-panneau-question',
   standalone: true,
-  imports: [PercentPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
@@ -99,12 +98,13 @@ function lirePanneau(
             {{ panneau.total }} / {{ participants() }}
           </dd>
           <dt i18n="presentateur.part|@@presentateurPart">Bonnes réponses</dt>
-          <dd data-testid="presentateur-question-part">{{ panneau.part | percent }}</dd>
+          <dd data-testid="presentateur-question-part">{{ formaterPart(panneau.part) }}</dd>
           <dt i18n="presentateur.neSaitPas|@@presentateurNeSaitPas">Je ne sais pas</dt>
           <dd data-testid="presentateur-question-ne-sait-pas">{{ panneau.neSaitPas }}</dd>
-          @if (seuil() !== null) {
+          @let seuilServi = seuil();
+          @if (seuilServi !== null) {
             <dt i18n="presentateur.seuil|@@presentateurSeuil">Seuil</dt>
-            <dd data-testid="presentateur-question-seuil">{{ seuil() | percent }}</dd>
+            <dd data-testid="presentateur-question-seuil">{{ formaterPart(seuilServi) }}</dd>
           }
           <dt i18n="presentateur.reponseAttendue|@@presentateurReponseAttendue">
             Réponse attendue
@@ -143,6 +143,7 @@ function lirePanneau(
   `,
 })
 export class CoursPanneauQuestionComponent {
+  protected readonly formaterPart = formaterPart;
   readonly question = input.required<QuestionDuPanneau>();
   readonly deroule = input.required<DerouleCours>();
   readonly seuil = input.required<number | null>();

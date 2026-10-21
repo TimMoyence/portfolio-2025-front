@@ -52,7 +52,8 @@ import {
   SujetRefuse,
 } from '../ports/formations.port';
 import { getApiFormationsUrl } from '../http/api-config';
-import { limiteDeLaReponse, STATUT_LIMITE_DE_DEBIT } from '../http/limite-de-debit';
+import { STATUT_LIMITE_DE_DEBIT } from '../../../cours/runtime/core/statuts-http';
+import { limiteDeLaReponse } from '../http/limite-de-debit';
 import { derouleDuFil, livretDuFil, sujetDuFil } from './formations-fil';
 import {
   annotationServie,

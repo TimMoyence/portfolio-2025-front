@@ -1,4 +1,4 @@
-import { DOCUMENT, PercentPipe } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
@@ -12,6 +12,7 @@ import { DefileurDeTableauComponent } from '../../../shared/slides/defileur-de-t
 import { enFrancais } from '../../../../cours/runtime/core/typographie';
 import { telechargerFichier } from '../../../shared/utils/telechargement.utils';
 import { chantierApresRendu } from './chantier-apres-rendu';
+import { formaterPart } from '../../../../cours/runtime/core/typographie';
 
 interface LigneClassement {
   participant: ParticipantRapporte;
@@ -69,7 +70,7 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
 @Component({
   selector: 'app-cours-synthese',
   standalone: true,
-  imports: [DefileurDeTableauComponent, PercentPipe],
+  imports: [DefileurDeTableauComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="cours-synthese">
@@ -106,7 +107,7 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
                     <td data-testid="synthese-score">{{ ligne.note }}</td>
                   }
                   <td data-testid="synthese-avancement">
-                    {{ ligne.participant.completion | percent }}
+                    {{ formaterPart(ligne.participant.completion) }}
                   </td>
                 </tr>
               }
@@ -225,6 +226,7 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
   `,
 })
 export class CoursSyntheseComponent {
+  protected readonly formaterPart = formaterPart;
   readonly sessionId = input.required<string>();
 
   readonly rapport = signal<RapportSeance | null>(null);

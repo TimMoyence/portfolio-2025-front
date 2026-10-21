@@ -6,7 +6,7 @@ import type {
   EcranDeroule,
   ValeurFormule,
 } from '../../../../cours/content/types';
-import { avecUnite, echapperPourRegex, objet } from '../../../../cours/runtime/core/valeurs';
+import { echapperPourRegex, objet } from '../../../../cours/runtime/core/valeurs';
 import { type Recolte, recolterDansLArbre } from '../../../../testing/arbre-json';
 import { INSTANTANE_B2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
@@ -64,7 +64,7 @@ function formesDeLaReponse(valeur: ValeurFormule): readonly string[] {
     return [valeur];
   }
   const pourcentage =
-    valeur !== 0 && Math.abs(valeur) < 1 ? [avecUnite(ecritEnFrancais(valeur * 100, 2), '%')] : [];
+    valeur !== 0 && Math.abs(valeur) < 1 ? [`${ecritEnFrancais(valeur * 100, 2)}\u00a0%`] : [];
   return [...new Set([ecritEnFrancais(valeur), ecritEnFrancais(valeur, 2), ...pourcentage])];
 }
 

@@ -13,12 +13,14 @@ import {
 import type { LimiteDeDebit } from '../../../core/models/limite-de-debit';
 import type { EtatParticipant } from '../../../../cours/content/types';
 import { readIdentity } from '../../../../cours/runtime/core/identity';
-import type { PendingFreeResponse } from '../interactions/slide-reflection/free-response.queue';
+import type { EnvoiReponse, Envoyeur } from '../../../../cours/runtime/core/queue';
 import {
-  enqueueFreeResponse,
-  pendingFreeResponses,
-  removeFreeResponse,
-} from '../interactions/slide-reflection/free-response.queue';
+  enqueue,
+  flush,
+  pending,
+  purgerLesAutresEnvois,
+  retirerLaReponseLibre,
+} from '../../../../cours/runtime/core/queue';
 
 export type EtatEnvoiLibre =
   | 'enregistre'
@@ -42,27 +44,36 @@ export function cleDeReponseLibre(sessionId: string, screenId: string, activityI
   return `${sessionId}:${screenId}:${activityId}`;
 }
 
-const ETATS_GARDES: readonly EtatEnvoiLibre[] = [
-  'enregistre',
+export const ETATS_EN_FILE: readonly EtatEnvoiLibre[] = [
   'attente_reseau',
   'attente_limite',
   'ecran_non_servi',
 ];
 
+const ETATS_GARDES: readonly EtatEnvoiLibre[] = ['enregistre', ...ETATS_EN_FILE];
+
+type EnvoiEnFile = Omit<EnvoiReponse, 'id' | 'studentKey' | 'horodatage'>;
+
+type ReponseLibreEnFile = Omit<EnvoiReponse, 'id'>;
+
+function cleLogiqueDe(envoi: ReponseLibreEnFile): string {
+  return cleDeReponseLibre(envoi.sessionId, envoi.screenId ?? '', envoi.questionId);
+}
+
+function texteDe(envoi: ReponseLibreEnFile): string {
+  return typeof envoi.valeur === 'string' ? envoi.valeur : '';
+}
+
+function neRenvoiePas(): boolean {
+  return false;
+}
+
 function cleDeTexteGarde(sessionId: string, activityId: string): string {
   return `${sessionId}:${activityId}`;
 }
 
-function cleDeStockage(studentKey: string, cleLogique: string): string {
-  return `${studentKey}:${cleLogique}`;
-}
-
-function cleLogiqueDe(envoi: PendingFreeResponse): string {
-  return cleDeReponseLibre(envoi.sessionId, envoi.screenId, envoi.activityId);
-}
-
 @Injectable({ providedIn: 'root' })
-export class ReponsesLibresService {
+export class EnvoisDeSeanceService {
   private readonly port = inject(FORMATIONS_PORT, { optional: true });
   private readonly etats = signal<ReadonlyMap<string, EtatEnvoiLibre>>(new Map());
   private readonly gardes = signal<ReadonlyMap<string, string>>(new Map());
@@ -73,6 +84,8 @@ export class ReponsesLibresService {
   private readonly limites = new Subject<LimiteDeDebit>();
   readonly limitesAtteintes: Observable<LimiteDeDebit> = this.limites.asObservable();
   private readonly reprises = new Map<string, Promise<unknown>>();
+  private readonly refus = signal(false);
+  readonly fileRefusee = this.refus.asReadonly();
 
   texteGarde(sessionId: string, activityId: string): string | null {
     return this.gardes().get(cleDeTexteGarde(sessionId, activityId)) ?? null;
@@ -91,14 +104,40 @@ export class ReponsesLibresService {
     );
   }
 
-  private noter(envoi: PendingFreeResponse, etat: EtatEnvoiLibre): EtatEnvoiLibre {
+  ouvrir(sessionId: string): void {
+    this.refus.set(!purgerLesAutresEnvois(sessionId));
+  }
+
+  mettreEnFile(envoi: EnvoiEnFile): boolean {
+    const studentKey = readIdentity()?.studentKey ?? '';
+    if (studentKey === '') {
+      return this.refuser();
+    }
+    try {
+      enqueue({ ...envoi, studentKey, horodatage: new Date().toISOString() });
+      return true;
+    } catch {
+      return this.refuser();
+    }
+  }
+
+  private refuser(): false {
+    this.refus.set(true);
+    return false;
+  }
+
+  reponsesEnAttente(sessionId: string): boolean {
+    return pending().some((envoi) => envoi.sessionId === sessionId && envoi.nature !== 'libre');
+  }
+
+  private noter(envoi: ReponseLibreEnFile, etat: EtatEnvoiLibre): EtatEnvoiLibre {
     const cleLogique = cleLogiqueDe(envoi);
     this.etats.update((connus) => new Map(connus).set(cleLogique, etat));
-    const cle = cleDeTexteGarde(envoi.sessionId, envoi.activityId);
+    const cle = cleDeTexteGarde(envoi.sessionId, envoi.questionId);
     this.gardes.update((connus) => {
       const suivants = new Map(connus);
       if (ETATS_GARDES.includes(etat)) {
-        suivants.set(cle, envoi.response);
+        suivants.set(cle, texteDe(envoi));
       } else {
         suivants.delete(cle);
       }
@@ -116,22 +155,30 @@ export class ReponsesLibresService {
     if (texte.length === 0) {
       return 'vide';
     }
-    const studentKey = readIdentity()?.studentKey ?? '';
-    const cleLogique = cleDeReponseLibre(sessionId, reponse.screenId, reponse.activityId);
-    return this.transmettre(jeton, {
-      key: cleDeStockage(studentKey, cleLogique),
+    const envoi: ReponseLibreEnFile = {
+      nature: 'libre',
       sessionId,
-      studentKey,
+      studentKey: readIdentity()?.studentKey ?? '',
       screenId: reponse.screenId,
-      activityId: reponse.activityId,
-      response: texte,
+      questionId: reponse.activityId,
+      valeur: texte,
       dureeMs: Math.max(0, reponse.dureeMs),
-    });
+      horodatage: '',
+    };
+    const etat = await this.transmettre(jeton, envoi);
+    if (!ETATS_EN_FILE.includes(etat)) {
+      return this.retirerOuRefuser(envoi, etat);
+    }
+    return this.mettreEnFile(envoi) ? etat : this.noter(envoi, 'echec');
   }
 
-  reprendre(sessionId: string, jeton: string): Promise<ReadonlyMap<string, EtatEnvoiLibre>> {
+  reprendre(
+    sessionId: string,
+    jeton: string,
+    renvoyer: Envoyeur = neRenvoiePas,
+  ): Promise<ReadonlyMap<string, EtatEnvoiLibre>> {
     const passe = (this.reprises.get(sessionId) ?? Promise.resolve()).then(() =>
-      this.repasserLaFile(sessionId, jeton),
+      this.repasserLaFile(sessionId, jeton, renvoyer),
     );
     this.reprises.set(
       sessionId,
@@ -140,22 +187,44 @@ export class ReponsesLibresService {
     return passe;
   }
 
+  private retirerOuRefuser(envoi: ReponseLibreEnFile, etat: EtatEnvoiLibre): EtatEnvoiLibre {
+    try {
+      retirerLaReponseLibre(envoi);
+    } catch {
+      this.refuser();
+    }
+    return etat;
+  }
+
   private async repasserLaFile(
     sessionId: string,
     jeton: string,
+    renvoyer: Envoyeur,
   ): Promise<ReadonlyMap<string, EtatEnvoiLibre>> {
     const etats = new Map<string, EtatEnvoiLibre>();
     const studentKey = readIdentity()?.studentKey;
     if (studentKey === undefined) {
       return etats;
     }
-    for (const envoi of await pendingFreeResponses(sessionId, studentKey)) {
-      etats.set(cleLogiqueDe(envoi), await this.transmettre(jeton, envoi));
+    try {
+      await flush(async (envoi) => {
+        if (envoi.sessionId !== sessionId) {
+          return false;
+        }
+        if (envoi.nature !== 'libre') {
+          return renvoyer(envoi);
+        }
+        const etat = await this.transmettre(jeton, envoi);
+        etats.set(cleLogiqueDe(envoi), etat);
+        return !ETATS_EN_FILE.includes(etat);
+      }, studentKey);
+    } catch {
+      this.refuser();
     }
     return etats;
   }
 
-  private async transmettre(jeton: string, envoi: PendingFreeResponse): Promise<EtatEnvoiLibre> {
+  private async transmettre(jeton: string, envoi: ReponseLibreEnFile): Promise<EtatEnvoiLibre> {
     const etat = this.noter(envoi, await this.issueDeLEnvoi(jeton, envoi));
     if (etat === 'enregistre') {
       this.reussites.next();
@@ -163,42 +232,29 @@ export class ReponsesLibresService {
     return etat;
   }
 
-  private async issueDeLEnvoi(jeton: string, envoi: PendingFreeResponse): Promise<EtatEnvoiLibre> {
+  private async issueDeLEnvoi(jeton: string, envoi: ReponseLibreEnFile): Promise<EtatEnvoiLibre> {
     if (this.port === null) {
       return 'echec';
     }
     try {
       await firstValueFrom(
         this.port.enregistrerReponseLibre(envoi.sessionId, jeton, {
-          screenId: envoi.screenId,
-          activityId: envoi.activityId,
-          response: envoi.response,
+          screenId: envoi.screenId ?? '',
+          activityId: envoi.questionId,
+          response: texteDe(envoi),
           dureeMs: envoi.dureeMs,
         }),
       );
     } catch (erreur) {
-      return this.traiterLeRefus(envoi, erreur);
+      return this.etatApresLeRefus(erreur);
     }
-    await removeFreeResponse(envoi.key);
     return 'enregistre';
   }
 
-  private async traiterLeRefus(
-    envoi: PendingFreeResponse,
-    erreur: unknown,
-  ): Promise<EtatEnvoiLibre> {
+  private etatApresLeRefus(erreur: unknown): EtatEnvoiLibre {
     const motif = erreur instanceof ReponseLibreRefusee ? erreur.motif : 'reseau';
     if (motif !== 'reseau' && motif !== 'ecran-non-servi') {
-      await removeFreeResponse(envoi.key);
       return ETAT_APRES_REFUS[motif];
-    }
-    if (envoi.studentKey === '') {
-      return 'echec';
-    }
-    try {
-      await enqueueFreeResponse(envoi);
-    } catch {
-      return 'echec';
     }
     const limite = limiteDuRefus(erreur);
     if (limite !== null) {

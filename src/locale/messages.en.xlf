@@ -14492,8 +14492,8 @@
     </unit>
     <unit id="coursRuntimePulseMasque">
       <segment>
-        <source>Comptes affichés à partir de 5 réponses</source>
-        <target>Counts shown from 5 answers</target>
+        <source>Comptes affichés à partir de <ph id="0" equiv="seuil" disp="seuil"/> réponses</source>
+        <target>Counts shown from <ph id="0" equiv="seuil" disp="seuil"/> answers</target>
       </segment>
     </unit>
     <unit id="coursRuntimeProductionVide">

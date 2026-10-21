@@ -17,7 +17,7 @@ export class PresentationHttpAdapter implements PresentationPort {
 
   getInteractions(slug: string): Observable<PresentationInteractionsResponse> {
     return this.http
-      .get<unknown>(`${this.baseUrl}/presentations/${slug}/interactions`)
+      .get<unknown>(`${this.baseUrl}/presentations/${encodeURIComponent(slug)}/interactions`)
       .pipe(luPar(interactionsServies));
   }
 }

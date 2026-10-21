@@ -5,7 +5,7 @@ import type { ArticleListResponse, ArticleSummary } from '../../core/models/arti
 import { ArticleHttpAdapter } from '../../core/adapters/article-http.adapter';
 import { AsiliHeroComponent } from '../../shared/sections';
 import { ArticlesCtaComponent } from './articles-cta.component';
-import { injecterLocaleDesArticles } from './locale-des-articles';
+import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 
 const ARTICLES_PAGE_SIZE = 12;
 
@@ -29,7 +29,7 @@ export class ArticlesListComponent {
   protected nextCursor: string | null = null;
   protected isLoadingMore = false;
   protected hasLoadMoreError = false;
-  protected readonly locale = injecterLocaleDesArticles();
+  protected readonly locale = injecterLocaleDeLaPage();
   private readonly api = inject(ArticleHttpAdapter);
   private readonly cdr = inject(ChangeDetectorRef);
 

@@ -1,4 +1,7 @@
-import { buildEnvoiReponse } from '../../../testing/factories/queue.factory';
+import {
+  buildEnvoiReponse,
+  buildReponseLibreEnFile,
+} from '../../../testing/factories/queue.factory';
 import { sansStockageLocal, saturationDuStockage } from '../../../testing/sans-stockage';
 import { removeKey } from './storage';
 import { enqueue, flush, pending, type EnvoiReponse } from './queue';
@@ -12,6 +15,14 @@ describe('queue', () => {
 
   it('demarre vide', () => {
     expect(pending()).toEqual([]);
+  });
+
+  it('ne garde que le dernier texte d une meme reflexion d un etudiant, sans toucher a celle d un autre', () => {
+    enqueue(buildReponseLibreEnFile({ valeur: 'premier jet' }));
+    enqueue(buildReponseLibreEnFile({ studentKey: 'etu-2', valeur: 'texte de B' }));
+    enqueue(buildReponseLibreEnFile({ valeur: 'second jet' }));
+
+    expect(pending().map((envoi) => envoi.valeur)).toEqual(['texte de B', 'second jet']);
   });
 
   it('ne rejoue pas sous le jeton courant les envois d un autre etudiant du meme poste', async () => {

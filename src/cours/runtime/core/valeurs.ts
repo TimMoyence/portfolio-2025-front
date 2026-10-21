@@ -23,8 +23,12 @@ export function estTexteNonVide(valeur: unknown): valeur is string {
   return typeof valeur === 'string' && valeur.trim() !== '';
 }
 
+export function estNombreFini(valeur: unknown): valeur is number {
+  return typeof valeur === 'number' && Number.isFinite(valeur);
+}
+
 export function estPositif(valeur: unknown): valeur is number {
-  return typeof valeur === 'number' && Number.isFinite(valeur) && valeur > 0;
+  return estNombreFini(valeur) && valeur > 0;
 }
 
 export function estEntierPositif(valeur: unknown): valeur is number {
@@ -92,10 +96,4 @@ export function entierBorne(
   repli: number,
 ): number {
   return Number.isFinite(valeur) ? bornerEntre(Math.trunc(valeur), minimum, maximum) : repli;
-}
-
-const ESPACE_INSECABLE = String.fromCharCode(0x00a0);
-
-export function avecUnite(valeur: number | string, unite: string): string {
-  return `${valeur}${ESPACE_INSECABLE}${unite}`;
 }

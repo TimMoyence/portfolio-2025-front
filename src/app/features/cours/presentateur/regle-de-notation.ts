@@ -1,10 +1,6 @@
 import type { ResumeBareme } from '../../../../cours/content/types';
-import { avecUnite } from '../../../../cours/runtime/core/valeurs';
+import { formaterPart } from '../../../../cours/runtime/core/typographie';
 import type { RegleNotation } from '../../../core/ports/formations.port';
-
-function pourcentage(part: number): string {
-  return avecUnite(Math.round(part * 100), '%');
-}
 
 function phraseDuBareme(bareme: ResumeBareme | null): string {
   if (bareme === null) {
@@ -21,6 +17,6 @@ export function phraseDeNotation(regle: RegleNotation, bareme: ResumeBareme | nu
   const libres = regle.reponsesLibresNotees
     ? $localize`:@@presentateurNotationLibresNotees:les réponses libres sont notées`
     : $localize`:@@presentateurNotationLibresNonNotees:les réponses libres ne sont pas notées`;
-  const phrase = $localize`:@@presentateurNotation:Note /${regle.noteMax}:noteMax: relative aux ${pourcentage(regle.partCohorteReference)}:reference: les plus actifs. Sous ${pourcentage(regle.ratioSeuilValidation)}:validation: de cette référence, l’étudiant est signalé sous le seuil. ${neSaitPas}:neSaitPas: ; une non-réponse vaut ${regle.pointsNonReponse}:pointsNonReponse: point ; ${libres}:libres:. Une question est problématique sous ${pourcentage(regle.seuilQuestionProbleme)}:seuilProbleme: de réussite.`;
+  const phrase = $localize`:@@presentateurNotation:Note /${regle.noteMax}:noteMax: relative aux ${formaterPart(regle.partCohorteReference)}:reference: les plus actifs. Sous ${formaterPart(regle.ratioSeuilValidation)}:validation: de cette référence, l’étudiant est signalé sous le seuil. ${neSaitPas}:neSaitPas: ; une non-réponse vaut ${regle.pointsNonReponse}:pointsNonReponse: point ; ${libres}:libres:. Une question est problématique sous ${formaterPart(regle.seuilQuestionProbleme)}:seuilProbleme: de réussite.`;
   return `${phrase}${phraseDuBareme(bareme)}`;
 }

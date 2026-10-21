@@ -1,5 +1,5 @@
 import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
-import { chaineDe, estTexteNonVide } from '../core/valeurs';
+import { chaineDe, estNombreFini, estTexteNonVide } from '../core/valeurs';
 import { Battement, SECONDE_MS } from './battement';
 import { FpReponse } from './reponse';
 import {
@@ -27,9 +27,7 @@ function projeterQuestion(source: RecallQuestionPublique): RecallQuestionPubliqu
 }
 
 function delaiDuRappel(valeur: unknown): number {
-  return typeof valeur === 'number' && Number.isFinite(valeur) && valeur >= 0
-    ? valeur
-    : DELAI_RAPPEL_MS;
+  return estNombreFini(valeur) && valeur >= 0 ? valeur : DELAI_RAPPEL_MS;
 }
 
 export function rappelEcritAvantLesOptions(delaiMs: unknown): boolean {
@@ -190,9 +188,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
     if (question === null || this.restantMs() > 0) {
       return VIDE;
     }
-    const proposees = this.presentateur()
-      ? question.options
-      : avecJeNeSaisPas(question.options, this.texte('je-ne-sais-pas'));
+    const proposees = this.presentateur() ? question.options : avecJeNeSaisPas(question.options);
     const boutons = proposees.map(
       (option) =>
         safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}" aria-pressed="${escapeHtml(String(option.id === this.choisie))}"${marqueDOption(option.id, this.bonneOption, option.id === this.choisie)} ${this.presentateur() ? DESACTIVE : VIDE}>${escapeHtml(option.libelle)}</button>`,

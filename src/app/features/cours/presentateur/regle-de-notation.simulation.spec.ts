@@ -1,5 +1,5 @@
 import type { ResumeBareme } from '../../../../cours/content/types';
-import { avecUnite } from '../../../../cours/runtime/core/valeurs';
+import { formaterPart } from '../../../../cours/runtime/core/typographie';
 import {
   buildRegleNotation,
   buildResumeBareme,
@@ -46,10 +46,6 @@ const COMBINAISONS: readonly Combinaison[] = produitDesAxes(AXES).flatMap((surch
     bareme: questionsNotees === null ? null : buildResumeBareme({ questionsNotees }),
   })),
 );
-
-function pourCent(part: number): string {
-  return avecUnite(Math.round(part * 100), '%');
-}
 
 function intitule({ regle, bareme }: Combinaison): string {
   return [
@@ -98,9 +94,9 @@ describe('simulation : la phrase de notation sur tout le produit des options', (
   it('dit la note, les pourcentages et les points que la regle porte', () => {
     pourChaqueCombinaison((regle, phrase, contexte) => {
       const manquants = [
-        pourCent(regle.partCohorteReference),
-        pourCent(regle.ratioSeuilValidation),
-        pourCent(regle.seuilQuestionProbleme),
+        formaterPart(regle.partCohorteReference),
+        formaterPart(regle.ratioSeuilValidation),
+        formaterPart(regle.seuilQuestionProbleme),
         `vaut ${regle.pointsNonReponse} point`,
       ].filter((attendu) => !phrase.includes(attendu));
 

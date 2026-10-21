@@ -39,8 +39,8 @@ import {
   saveIdentity,
 } from '../../../../cours/runtime/core/identity';
 import { enqueue, pending } from '../../../../cours/runtime/core/queue';
-import { enqueueFreeResponse } from '../../../shared/slides/interactions/slide-reflection/free-response.queue';
-import { ReponsesLibresService } from '../../../shared/slides/session/reponses-libres.service';
+import { EnvoisDeSeanceService } from '../../../shared/slides/session/envois-de-seance.service';
+import { buildReponseLibreEnFile } from '../../../../testing/factories/queue.factory';
 import type { EtatSession } from '../../../../cours/runtime/core/sync';
 import {
   buildEcran,
@@ -511,6 +511,13 @@ describe('CoursEtudiantComponent', () => {
     expect(lien?.getAttribute('href')).toBe(
       '/login?returnUrl=%2Fcours%2Fpresenter%2Fb2-01-traitement-information-chiffree',
     );
+  });
+
+  it('F03 · ne construit aucun retour vers un cours qui n est pas en seance', async () => {
+    await TestBed.inject(Router).navigateByUrl('/?cours=cours-inconnu');
+    const fixture = monter();
+
+    expect(lire(fixture, 'etudiant-connexion-formateur')).toBeNull();
   });
 
   it('F03 · ne construit aucun retour depuis un cours vise mal forme', async () => {
@@ -2170,7 +2177,7 @@ describe('CoursEtudiantComponent', () => {
 
       await rattacherALaSeanceEnCours();
 
-      expect(TestBed.inject(ReponsesLibresService).texteGarde(SESSION, 'reflexion-1')).toBe(
+      expect(TestBed.inject(EnvoisDeSeanceService).texteGarde(SESSION, 'reflexion-1')).toBe(
         'Gardée avant le rechargement.',
       );
     });
@@ -3035,15 +3042,16 @@ describe('CoursEtudiantComponent', () => {
         nom: 'Dubois',
         email: 'lea.dubois@example.com',
       });
-      await enqueueFreeResponse({
-        key: `${identite.studentKey}:${SESSION}:ecran-3:reflexion-3`,
-        sessionId: SESSION,
-        studentKey: identite.studentKey,
-        screenId: 'ecran-3',
-        activityId: 'reflexion-3',
-        response: 'Ecrite en avance.',
-        dureeMs: 1500,
-      });
+      enqueue(
+        buildReponseLibreEnFile({
+          sessionId: SESSION,
+          studentKey: identite.studentKey,
+          screenId: 'ecran-3',
+          questionId: 'reflexion-3',
+          valeur: 'Ecrite en avance.',
+          dureeMs: 1500,
+        }),
+      );
       return rattacher();
     }
 

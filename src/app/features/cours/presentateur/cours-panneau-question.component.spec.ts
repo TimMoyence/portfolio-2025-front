@@ -1,8 +1,7 @@
-import { formatPercent } from '@angular/common';
-import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { ResultatQuestion } from '../../../../cours/content/types';
 import { resultatsServis } from '../../../../cours/runtime/core/sync';
+import { formaterPart } from '../../../../cours/runtime/core/typographie';
 import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import { reponsesServiesPar } from '../../../../testing/fixtures/reponses-servies';
@@ -27,7 +26,6 @@ function contraireDe(servi: ResultatQuestion, dernierEcran: string): ResultatQue
 describe('CoursPanneauQuestionComponent', () => {
   it('Z1-D02 · suit la part, le seuil et la remédiation servis par le back, même contraires à un recalcul, sur tous les résultats servis', () => {
     const fixture = TestBed.createComponent(CoursPanneauQuestionComponent);
-    const locale = TestBed.inject(LOCALE_ID);
     fixture.componentRef.setInput('participants', 0);
     fixture.componentRef.setInput('pilotageBloque', false);
     const emises: number[] = [];
@@ -68,7 +66,7 @@ describe('CoursPanneauQuestionComponent', () => {
             ],
             servi: [
               resultat.sousLeSeuil ? 'sous-le-seuil' : null,
-              formatPercent(resultat.part, locale),
+              formaterPart(resultat.part),
               rang === -1 ? null : rang,
             ],
           };

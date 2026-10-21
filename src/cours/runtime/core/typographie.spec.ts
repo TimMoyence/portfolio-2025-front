@@ -1,4 +1,4 @@
-import { enFrancais, lierLesNombres } from './typographie';
+import { enFrancais, formaterPart, lierLesNombres } from './typographie';
 
 const ESPACE_FINE = ' ';
 
@@ -42,16 +42,44 @@ describe('enFrancais', () => {
   });
 });
 
-const INSECABLE = ' ';
+const INSECABLE = '\u00a0';
 
 describe('lierLesNombres', () => {
-  it('lie un nombre à son unité et ses groupes de milliers', () => {
+  it('lie les milliers en espace fine insécable et l unité en espace insécable, comme Intl', () => {
     expect(lierLesNombres('part de 0 € et de 284 000 €, soit 27,6 %')).toBe(
-      `part de 0${INSECABLE}€ et de 284${INSECABLE}000${INSECABLE}€, soit 27,6${INSECABLE}%`,
+      `part de 0${INSECABLE}€ et de 284${ESPACE_FINE}000${INSECABLE}€, soit 27,6${INSECABLE}%`,
     );
   });
 
   it('laisse les autres espaces sécables', () => {
     expect(lierLesNombres('en 2025 les 12 mois')).toBe('en 2025 les 12 mois');
+  });
+});
+
+describe('formaterPart', () => {
+  it('arrondit la part écrite, pas sa forme binaire : 0,285 donne 29 %, comme PercentPipe', () => {
+    expect(formaterPart(0.285, 'fr')).toBe(`29${INSECABLE}%`);
+    expect(formaterPart(0.005, 'fr')).toBe(`1${INSECABLE}%`);
+  });
+
+  it('écrit les bornes et un négatif sans signe devant un zéro arrondi', () => {
+    expect(formaterPart(0, 'fr')).toBe(`0${INSECABLE}%`);
+    expect(formaterPart(1, 'fr')).toBe(`100${INSECABLE}%`);
+    expect(formaterPart(-0.285, 'fr')).toBe(`-29${INSECABLE}%`);
+    expect(formaterPart(-0.004, 'fr')).toBe(`0${INSECABLE}%`);
+  });
+
+  it('écrit un tiret pour une part non finie', () => {
+    for (const valeur of [Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(formaterPart(valeur, 'fr')).withContext(String(valeur)).toBe('—');
+    }
+  });
+
+  it('suit la typographie de la locale : pas d espace avant % en anglais', () => {
+    expect(formaterPart(0.42, 'en')).toBe('42%');
+  });
+
+  it('prend la locale du build quand on ne la donne pas, le français à défaut', () => {
+    expect(formaterPart(0.42)).toBe(formaterPart(0.42, $localize.locale ?? 'fr'));
   });
 });

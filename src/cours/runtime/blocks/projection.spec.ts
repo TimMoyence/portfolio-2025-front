@@ -53,7 +53,7 @@ describe('L4-F15 · option je ne sais pas', () => {
   it('ajoute l option je ne sais pas après les options servies, sans toucher la source', () => {
     const servies = [{ id: 'a', libelle: 'Mille euros' }];
 
-    expect(avecJeNeSaisPas(servies, 'Je ne sais pas')).toEqual([
+    expect(avecJeNeSaisPas(servies)).toEqual([
       { id: 'a', libelle: 'Mille euros' },
       { id: '__je_ne_sais_pas__', libelle: 'Je ne sais pas' },
     ]);

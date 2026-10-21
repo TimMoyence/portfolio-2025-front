@@ -3,15 +3,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Inject,
-  LOCALE_ID,
   computed,
   inject,
   signal,
 } from '@angular/core';
-import { estUneAdresseEmail } from '../../../../cours/runtime/core/adresse-email';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../../cours/runtime/core/duree';
-import { langueDuSite } from '../../../core/config/locales';
+import { injecterLocaleDeLaPage } from '../../../core/config/locale-de-la-page';
 import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import type { ToolkitRequest } from '../../../core/models/toolkit-request.model';
 import { HoneypotDirective } from '../../directives/honeypot.directive';
@@ -19,6 +16,7 @@ import { readInputValue, readCheckboxChecked } from '../../utils/dom-event.utils
 import { handleFormSubmit, INFORMATIONS_REFUSEES } from '../../utils/form-submit.utils';
 import { BORNES_D_UN_NOM, erreursDeLongueur } from '../../utils/regles-de-saisie';
 import { FieldErrorsComponent } from '../field-errors/field-errors.component';
+import { erreurDeFormat } from '../../directives/format-de-contact.directive';
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 
@@ -118,12 +116,7 @@ export class ToolkitFormComponent {
   private readonly port = inject(LEAD_MAGNET_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  /**
-   * Locale courante detectee par Angular via `LOCALE_ID`. Sert de valeur
-   * `termsLocale` persistee dans le backend : on garde la trace de la
-   * langue dans laquelle l'utilisateur a accepte les CGV (RGPD).
-   */
-  constructor(@Inject(LOCALE_ID) private readonly locale: string) {}
+  private readonly langue = injecterLocaleDeLaPage();
 
   readonly firstName = signal('');
   readonly email = signal('');
@@ -138,15 +131,13 @@ export class ToolkitFormComponent {
     erreursDeLongueur(this.firstName(), BORNES_D_UN_NOM),
   );
 
-  protected readonly erreurDAdresse = computed(() => {
-    const adresse = this.email().trim();
-    return adresse.length > 0 && !estUneAdresseEmail(adresse) ? { email: true } : null;
-  });
+  protected readonly erreurDAdresse = computed(() => erreurDeFormat(this.email(), 'email'));
 
   readonly isValid = computed(
     () =>
       this.erreursDuPrenom() === null &&
-      estUneAdresseEmail(this.email().trim()) &&
+      this.email().trim().length > 0 &&
+      this.erreurDAdresse() === null &&
       this.termsAccepted(),
   );
 
@@ -167,7 +158,7 @@ export class ToolkitFormComponent {
       email: this.email().trim(),
       formationSlug: this.formationSlug,
       termsVersion: TOOLKIT_FORM_TERMS_VERSION,
-      termsLocale: langueDuSite(this.locale),
+      termsLocale: this.langue,
       termsAcceptedAt: new Date().toISOString(),
     };
 

@@ -1,5 +1,6 @@
 import { ETATS_PULSE, type EtatPulse } from '../../content/types';
 import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { SEUIL_D_ANONYMAT } from '../core/anonymat';
 import { FpContenu } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { estMembre, estPositif } from '../core/valeurs';
@@ -14,8 +15,6 @@ export interface PulseComptes {
 export interface PulseSondage extends ContenuDeBrique {
   readonly invite: string;
 }
-
-const SEUIL_DE_PROJECTION = 5;
 
 const FORMES: Readonly<Record<EtatPulse, string>> = {
   perdu: '▲',
@@ -104,7 +103,7 @@ export class FpPulse extends FpContenu<PulseSondage> {
     if (comptes === null) {
       return VIDE;
     }
-    return comptes.total >= SEUIL_DE_PROJECTION ? this.agregat(comptes) : this.masque();
+    return comptes.total >= SEUIL_D_ANONYMAT ? this.agregat(comptes) : this.masque();
   }
 
   bind(racine: ShadowRoot): void {

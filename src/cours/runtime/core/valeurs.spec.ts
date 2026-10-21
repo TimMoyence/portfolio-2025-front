@@ -6,6 +6,7 @@ import {
   estChaineOuNul,
   estEntierPositif,
   estMembre,
+  estNombreFini,
   estObjet,
   estPositif,
   estTexteNonVide,
@@ -282,5 +283,19 @@ describe('valeurs', () => {
           .toBe(7);
       }
     });
+  });
+});
+
+describe('estNombreFini', () => {
+  it('accepte zéro, un négatif et un décimal', () => {
+    for (const valeur of [0, -3, 0.285]) {
+      expect(estNombreFini(valeur)).withContext(String(valeur)).toBeTrue();
+    }
+  });
+
+  it('refuse NaN, l infini, une chaîne numérique et l absence', () => {
+    for (const valeur of [Number.NaN, Number.POSITIVE_INFINITY, '12', null, undefined]) {
+      expect(estNombreFini(valeur)).withContext(String(valeur)).toBeFalse();
+    }
   });
 });
