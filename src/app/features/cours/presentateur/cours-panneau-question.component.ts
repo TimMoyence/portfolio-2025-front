@@ -101,9 +101,10 @@ function lirePanneau(
           <dd data-testid="presentateur-question-part">{{ formaterPart(panneau.part) }}</dd>
           <dt i18n="presentateur.neSaitPas|@@presentateurNeSaitPas">Je ne sais pas</dt>
           <dd data-testid="presentateur-question-ne-sait-pas">{{ panneau.neSaitPas }}</dd>
-          @if (seuil() !== null) {
+          @let seuilServi = seuil();
+          @if (seuilServi !== null) {
             <dt i18n="presentateur.seuil|@@presentateurSeuil">Seuil</dt>
-            <dd data-testid="presentateur-question-seuil">{{ formaterPart(seuil()) }}</dd>
+            <dd data-testid="presentateur-question-seuil">{{ formaterPart(seuilServi) }}</dd>
           }
           <dt i18n="presentateur.reponseAttendue|@@presentateurReponseAttendue">
             Réponse attendue
