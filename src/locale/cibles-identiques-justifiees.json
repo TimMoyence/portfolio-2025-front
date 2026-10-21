@@ -14,6 +14,7 @@
   "unites": {
     "homeHeroStat1Num": "nombre",
     "homeHeroStat2Num": "nombre",
+    "presentateurNotationTypeVote": "emprunt",
     "authSignupFieldEmail": "emprunt",
     "authLoginFieldEmail": "emprunt",
     "contactFormLabel": "emprunt",

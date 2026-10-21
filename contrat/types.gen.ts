@@ -954,7 +954,6 @@ export type EtatDeSeanceResponseDto = {
    * Ecrans ouverts en rythme libre, null en rythme pilote
    */
   intervalleLibre: FreeRangeDto | null;
-  participants: number;
   /**
    * Revision de l etat, croissante a chaque changement
    */
@@ -1062,7 +1061,7 @@ export type StatistiquesSeanceResponseDto = {
    */
   tauxParticipation: number;
   /**
-   * Part des reponses correctes parmi toutes les reponses
+   * Reussite des reponses, chaque question pesee par son nombre de reponses : score moyen d une production, part des correctes sinon
    */
   tauxReussite: number;
   /**
@@ -1105,6 +1104,10 @@ export type ResultatsEnDirectResponseDto = {
    */
   participants: number;
   questions: Array<ResultatQuestionResponseDto>;
+  /**
+   * Confusions de toutes les questions agregees, triees par frequence puis identifiant
+   */
+  confusions: Array<ConfusionCompteeResponseDto>;
   /**
    * Indicateurs calculés côté serveur pour le pilotage formateur
    */
@@ -1249,6 +1252,10 @@ export type ResultatsSeanceResponseDto = {
    */
   participants: number;
   questions: Array<ResultatQuestionResponseDto>;
+  /**
+   * Confusions de toutes les questions agregees, triees par frequence puis identifiant
+   */
+  confusions: Array<ConfusionCompteeResponseDto>;
 };
 
 export type RegleDeNotationResponseDto = {
@@ -1256,10 +1263,6 @@ export type RegleDeNotationResponseDto = {
    * Note maximale
    */
   noteMax: number;
-  /**
-   * Note de participation : part des questions notees repondues, rapportee a la reference de la cohorte
-   */
-  base: 'participation-relative-cohorte';
   /**
    * Part de la cohorte qui fixe la reference : completion du participant classe a ce rang, qui obtient la note maximale
    */
@@ -1288,8 +1291,6 @@ export type RegleDeNotationResponseDto = {
    * Nombre de decimales des statistiques arrondies
    */
   decimalesStatistiques: number;
-  typesNotables: Array<TypeQuestion>;
-  productionCompteSi: 'au-moins-une-saisie';
   /**
    * Les statistiques ne portent que sur les questions notees
    */

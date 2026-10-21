@@ -14966,8 +14966,50 @@
     </unit>
     <unit id="presentateurNotationBareme">
       <segment>
-        <source>sur <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> questions notées comptent (votes, numérique, classement, feuille et tableau) ; « je ne sais pas » compte aussi pour une production ; une production vide est refusée ; énigmes et rappels sont exclus.</source>
-        <target>over <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> graded questions count (votes, numeric, ranking, spreadsheet and table); “I don’t know” also counts for a production; an empty production is refused; puzzles and recalls are excluded.</target>
+        <source>sur <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> questions notées comptent (<ph id="1" equiv="typesNotes" disp="notes"/>) ; « je ne sais pas » compte aussi pour une production ; une production vide est refusée.</source>
+        <target>over <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> graded questions count (<ph id="1" equiv="typesNotes" disp="notes"/>); “I don’t know” also counts for a production; an empty production is refused.</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationExclus">
+      <segment>
+        <source>Ne comptent pas : <ph id="0" equiv="typesExclus" disp="exclus"/>.</source>
+        <target>Not counted: <ph id="0" equiv="typesExclus" disp="exclus"/>.</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeVote">
+      <segment>
+        <source>votes</source>
+        <target>votes</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeNumerique">
+      <segment>
+        <source>numérique</source>
+        <target>numeric</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeClassement">
+      <segment>
+        <source>classement</source>
+        <target>ranking</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeFeuille">
+      <segment>
+        <source>feuille</source>
+        <target>spreadsheet</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeTableau">
+      <segment>
+        <source>tableau</source>
+        <target>table</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeEnigme">
+      <segment>
+        <source>énigmes</source>
+        <target>puzzles</target>
       </segment>
     </unit>
     <unit id="slideGridImprimer">

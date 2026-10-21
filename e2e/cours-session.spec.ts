@@ -212,7 +212,7 @@ test.describe('Séance de cours dans un navigateur réel', () => {
             code: CODE,
             ouverteLe: '2026-09-15T08:00:00.000Z',
             fermeeLe: '2026-09-15T10:00:00.000Z',
-            resultats: { participants: 1, questions: [] },
+            resultats: { participants: 1, questions: [], confusions: [] },
           }),
         );
       } else if (chemin.endsWith(`/sessions/${SESSION}/deroule`)) {

@@ -195,17 +195,16 @@ describe('CoursSyntheseComponent', () => {
     );
   });
 
-  it('additionne les confusions au travers des questions et les trie par nombre decroissant', async () => {
-    const fixture = await monterMalikFace(3, [
-      {
-        questionId: 'Q-1',
-        confusions: [confusion('interet-simple', 3), confusion('base-arrivee', 1)],
-      },
-      {
-        questionId: 'Q-2',
-        confusions: [confusion('interet-simple', 2), confusion('base-arrivee', 5)],
-      },
-    ]);
+  it('montre les confusions de la seance dans l ordre servi, sans les recompter par question', async () => {
+    const fixture = await monter(
+      rapportDe(
+        [MALIK],
+        buildResultatsSeance({
+          questions: [buildResultatQuestion({ confusions: [confusion('zeta', 1)] })],
+          confusions: [confusion('base-arrivee', 6), confusion('interet-simple', 5)],
+        }),
+      ),
+    );
 
     expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
       'Libelle base-arrivee',
@@ -214,31 +213,22 @@ describe('CoursSyntheseComponent', () => {
     expect(textes(fixture, 'synthese-confusion-nombre')).toEqual(['6', '5']);
   });
 
-  it('classe les confusions a egalite de nombre par id croissant', async () => {
-    const fixture = await monterMalikFace(3, [
-      { questionId: 'Q-1', confusions: [confusion('zeta', 4), confusion('alpha', 4)] },
-    ]);
-
-    expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
-      'Libelle alpha',
-      'Libelle zeta',
-    ]);
-  });
-
-  it('garde cinq confusions au plus meme si la classe en genere davantage', async () => {
-    const fixture = await monterMalikFace(6, [
-      {
-        questionId: 'Q-1',
-        confusions: [
-          confusion('c1', 9),
-          confusion('c2', 8),
-          confusion('c3', 7),
-          confusion('c4', 6),
-          confusion('c5', 5),
-          confusion('c6', 4),
-        ],
-      },
-    ]);
+  it('garde cinq confusions au plus meme si la seance en sert davantage', async () => {
+    const fixture = await monter(
+      rapportDe(
+        [MALIK],
+        buildResultatsSeance({
+          confusions: [
+            confusion('c1', 9),
+            confusion('c2', 8),
+            confusion('c3', 7),
+            confusion('c4', 6),
+            confusion('c5', 5),
+            confusion('c6', 4),
+          ],
+        }),
+      ),
+    );
 
     expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
       'Libelle c1',

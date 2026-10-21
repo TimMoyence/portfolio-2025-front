@@ -1,7 +1,7 @@
 const DUREE_MS = 1200;
 
 const DETAILS: Readonly<Partial<Record<string, Readonly<Record<string, unknown>>>>> = {
-  'fp-numeric-submit': { questionId: 'Q-VA-07', valeur: 1480.24, dureeMs: DUREE_MS },
+  'fp-numeric-submit': { questionId: 'Q-VA-07', valeur: '1 480,24', dureeMs: DUREE_MS },
   'fp-vote-submit': { questionId: 'Q-CAP-03', valeur: 'b', dureeMs: DUREE_MS },
   'fp-recall-submit': {
     questionId: 'Q-RAPPEL-04',

@@ -24,7 +24,6 @@ function buildEtatSession(overrides: Partial<EtatSession>): EtatSession {
     modeRythme: 'pilote',
     ecranCourant: 0,
     intervalleLibre: null,
-    participants: 3,
     revision: 0,
     pilotage: {},
     majLe: '2026-09-19T08:00:00.000Z',

@@ -1,21 +1,14 @@
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { enFrancais } from '../core/typographie';
-import { estTexteNonVide, fini } from '../core/valeurs';
+import { estTexteNonVide } from '../core/valeurs';
 import {
   type Reglages,
-  borner,
   changeQuelqueChose,
   jouerSuite,
   poserEtape,
   suiteVersLeMaximum,
 } from './animation';
-import {
-  type ParametreReglable,
-  brancherCurseurs,
-  curseur,
-  plafondDe,
-  plancherDe,
-} from './curseurs';
+import { type ParametreReglable, brancherCurseurs, curseur } from './curseurs';
 import { FpBlock } from './FpBlock';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 
@@ -80,7 +73,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
     this.courantes = {};
     this.apresDefinition?.();
     for (const parametre of this.interne?.parametres ?? []) {
-      this.courantes[parametre.cle] = borner(parametre, parametre.defaut);
+      this.courantes[parametre.cle] = parametre.defaut;
     }
     this.refreshSiConnecte();
   }
@@ -102,7 +95,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
     for (const parametre of parametres) {
       const pilote = valeur[parametre.cle];
       if (typeof pilote === 'number') {
-        this.courantes[parametre.cle] = borner(parametre, pilote);
+        this.courantes[parametre.cle] = pilote;
       }
     }
     this.refreshSiConnecte();
@@ -150,7 +143,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
   }
 
   protected valeurDe(parametre: ParametreReglable, valeurs: Reglages = this.courantes): number {
-    return borner(parametre, fini(valeurs[parametre.cle], parametre.defaut));
+    return valeurs[parametre.cle] ?? parametre.defaut;
   }
 
   protected panneauDeReglages(declencheurs: EscapedHtml): EscapedHtml {
@@ -200,7 +193,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
   }
 
   private enonceValeur(parametre: ParametreReglable, valeur: number): string {
-    const plage = `${this.texteDuBloc('plage')} ${this.afficherValeur(plancherDe(parametre))} ${this.texteDuBloc('plage-fin')} ${this.afficherValeur(plafondDe(parametre))}`;
+    const plage = `${this.texteDuBloc('plage')} ${this.afficherValeur(parametre.min)} ${this.texteDuBloc('plage-fin')} ${this.afficherValeur(parametre.max)}`;
     return `${parametre.libelle} : ${this.afficherValeur(valeur)} (${plage})`;
   }
 
@@ -225,7 +218,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
       if (Object.hasOwn(prereglage.valeurs, parametre.cle)) {
         this.courantes = {
           ...this.courantes,
-          [parametre.cle]: borner(parametre, prereglage.valeurs[parametre.cle]),
+          [parametre.cle]: prereglage.valeurs[parametre.cle],
         };
       }
     }
@@ -238,7 +231,7 @@ export abstract class FpReglable<Definition extends DefinitionReglable> extends 
       return;
     }
     this.arreterAnimation();
-    this.courantes = { ...this.courantes, [cle]: borner(parametre, valeur) };
+    this.courantes = { ...this.courantes, [cle]: valeur };
     this.apresReglage?.(cle);
     const sortie = this.racine.querySelector<HTMLOutputElement>(
       `output[data-testid="valeur"][data-cle="${cle}"]`,

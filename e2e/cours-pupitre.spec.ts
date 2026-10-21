@@ -88,6 +88,7 @@ const RAPPORT = rapportDeSeance({
   libellesDesConcepts: { 'taux-evolution': 'Taux d’évolution' },
   resultats: {
     participants: 24,
+    confusions: [],
     questions: [
       {
         questionId: QUESTION.id,

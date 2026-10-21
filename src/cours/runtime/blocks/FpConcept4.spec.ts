@@ -125,15 +125,6 @@ function resultatsDuTableau(hote: FpConcept4): string[] {
   return tous(hote, '[data-testid="resultat-ligne"]').map((cellule) => cellule.textContent ?? '');
 }
 
-function avecDefaut(cle: string, defaut: number): Concept4Definition {
-  return buildConcept4Definition({
-    id: 'K-QUATRE-FACES-02',
-    parametres: DEFINITION.parametres.map((parametre) =>
-      parametre.cle === cle ? { ...parametre, defaut } : parametre,
-    ),
-  });
-}
-
 describe('FpConcept4', () => {
   let hote: FpConcept4;
   const traces = installerBrique<FpConcept4>({
@@ -291,13 +282,6 @@ describe('FpConcept4', () => {
       'Valeurs retenues pour le calcul',
     );
     expect(resultatsDuTableau(hote)).toEqual(['100', '110', '99']);
-  });
-
-  it('ramene un defaut hors bornes dans les bornes au lieu de l ignorer', () => {
-    hote.definition = avecDefaut('n', 99);
-    expect(hote.valeurs['n']).toBe(30);
-    expect(lu(hote, 'phrase-texte')).toContain('30 an(s)');
-    expect(valeurDe(hote, 'formule')).toBe(String(A_TRENTE_ANS.resultat.valeur));
   });
 
   it('annonce chaque parametre en francais lisible et pas par un nombre nu', () => {
@@ -613,10 +597,10 @@ describe('FpConcept4', () => {
       expect(hote.valeurs).toEqual({ depart: 100, tauxUn: -10, tauxDeux: 10 });
     });
 
-    it('RET-21 · la projection suit les reglages pilotes, bornes a la machine, et montre leur sortie projetee', () => {
+    it('RET-21 · la projection suit les reglages pilotes et montre leur sortie projetee', () => {
       hote.setAttribute('data-cours-role', 'presentateur');
 
-      hote.reglages = { n: 20, i: 99 };
+      hote.reglages = { n: 20, i: 10 };
 
       expect(hote.valeurs).toEqual({ C: 1000, i: 10, n: 20 });
       expect(enAttente(hote)).toBe(true);

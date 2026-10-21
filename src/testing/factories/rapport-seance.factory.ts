@@ -37,6 +37,7 @@ export function buildResultatsSeance(overrides: Partial<ResultatsSeance> = {}): 
   return {
     participants: 24,
     questions: [buildResultatQuestion()],
+    confusions: buildResultatQuestion().confusions,
     ...overrides,
   };
 }
@@ -58,7 +59,6 @@ export function buildStatistiquesSeance(
 export function buildRegleNotation(overrides: Partial<RegleNotation> = {}): RegleNotation {
   return {
     noteMax: 20,
-    base: 'participation-relative-cohorte',
     partCohorteReference: 0.2,
     ratioSeuilValidation: 0.4,
     neSaitPasCompteCommeReponse: true,
@@ -66,8 +66,6 @@ export function buildRegleNotation(overrides: Partial<RegleNotation> = {}): Regl
     reponsesLibresNotees: false,
     seuilQuestionProbleme: 0.7,
     decimalesStatistiques: 2,
-    typesNotables: ['vote', 'numeric', 'classement', 'feuille', 'tableau'],
-    productionCompteSi: 'au-moins-une-saisie',
     statistiquesSurQuestionsNotees: true,
     ...overrides,
   };

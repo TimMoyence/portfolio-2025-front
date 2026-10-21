@@ -28,6 +28,10 @@ describe('animation des curseurs', () => {
       expect(suiteVersLeMaximum([pasDeQuatre], { k: 0 }).at(-1)).toEqual({ k: 8 });
     });
 
+    it('ne joue rien pour un curseur déjà sur sa dernière position servie', () => {
+      expect(suiteVersLeMaximum([TAUX], { taux: 30 })).toEqual([]);
+    });
+
     it('mène chaque curseur de sa valeur courante à sa dernière position en six changements', () => {
       expect(suiteVersLeMaximum([TAUX], { taux: 16 })).toEqual([
         { taux: 18 },

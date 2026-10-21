@@ -1,3 +1,4 @@
+import { zSubmitAnswerRequestDto } from '../../../../../contrat/zod.gen';
 import { ETATS_PULSE, type ValeurProduction } from '../../../../cours/content/types';
 import { lireTextes } from '../../../../cours/runtime/blocks/retours';
 import {
@@ -42,9 +43,11 @@ export const EVENEMENTS_DES_BRIQUES: readonly string[] = [
   'fp-plot-reglage',
 ];
 
+const DUREE_MAX_MS = zSubmitAnswerRequestDto.shape.dureeMs.maxValue ?? Number.MAX_SAFE_INTEGER;
+
 function duree(detail: Detail): number | null {
   const dureeMs = detail['dureeMs'];
-  return estEntierPositif(dureeMs) ? dureeMs : null;
+  return estEntierPositif(dureeMs) ? Math.min(dureeMs, DUREE_MAX_MS) : null;
 }
 
 function estValeurDeReponse(valeur: unknown): valeur is number | string {

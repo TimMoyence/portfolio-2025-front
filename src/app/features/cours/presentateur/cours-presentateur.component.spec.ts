@@ -856,7 +856,7 @@ describe('CoursPresentateurComponent', () => {
   it('compte les participants dans les resultats et non dans l etat du flux', async () => {
     const fixture = await ouvrirLaSeance();
 
-    diffuserSurLaVue(double, fixture, { participants: 99 });
+    diffuserSurLaVue(double, fixture, { revision: 99 });
 
     expect(texte(fixture, 'presentateur-participants-nombre')).toBe('0');
 
@@ -914,7 +914,7 @@ describe('CoursPresentateurComponent', () => {
       .toBeFalse();
     expect(texte(fixture, 'presentateur-notes')).toContain(deroule.ecrans[0].notes);
 
-    diffuserSurLaVue(double, fixture, { ecranCourant: 0, participants: 5 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 0, revision: 5 });
 
     expect(apercu(fixture)).toBe(ecran);
   });
@@ -1477,7 +1477,7 @@ describe('CoursPresentateurComponent', () => {
             servi.ecrans,
             vuesDuPupitre(servi),
             {
-              participants: 2,
+              revision: 2,
             },
           );
         },
@@ -1494,7 +1494,7 @@ describe('CoursPresentateurComponent', () => {
           const fixture = await ouvrirLeCoursServi(servi);
 
           await attendreChaqueCalqueEntierDansLaToile(double, fixture, servi.ecrans, {
-            participants: 2,
+            revision: 2,
           });
         },
         DELAI_DE_MONTAGE_MS,

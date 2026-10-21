@@ -110,9 +110,11 @@ function resultatsDeLEcran(ecran: EcranDeroule): readonly ResultatQuestion[] {
 export function buildResultatsDeChaqueQuestion(
   ecrans: readonly EcranDeroule[],
 ): ResultatsSeance & Pick<ResultatsDuFlux, 'jalons' | 'enigmes'> {
+  const questions = ecrans.flatMap(resultatsDeLEcran);
   return {
     participants: 2,
-    questions: ecrans.flatMap(resultatsDeLEcran),
+    questions,
+    confusions: questions.flatMap(({ confusions }) => confusions).slice(0, 1),
     jalons: Object.fromEntries(
       ecrans
         .filter(({ type }) => type === 'fp-pulse')

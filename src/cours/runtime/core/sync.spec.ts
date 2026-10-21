@@ -29,7 +29,6 @@ const ETAT: EtatSession = {
   modeRythme: 'pilote',
   ecranCourant: 2,
   intervalleLibre: null,
-  participants: 24,
   revision: 7,
   pilotage: {
     'B2-01-A3-01-VOTE-HAUSSE-BAISSE': { phase: 'revote' },

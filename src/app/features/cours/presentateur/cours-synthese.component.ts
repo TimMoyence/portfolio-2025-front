@@ -26,32 +26,7 @@ interface ConceptCompte {
   effectif: number;
 }
 
-interface ConfusionFrequente {
-  readonly id: string;
-  readonly libelle: string;
-  readonly nombre: number;
-}
-
 const NOMBRE_CONFUSIONS_FREQUENTES = 5;
-
-function confusionsFrequentesDe(
-  questions: readonly ResultatQuestion[],
-): readonly ConfusionFrequente[] {
-  const totaux = new Map<string, ConfusionFrequente>();
-  for (const question of questions) {
-    for (const confusion of question.confusions) {
-      const existante = totaux.get(confusion.id);
-      totaux.set(confusion.id, {
-        id: confusion.id,
-        libelle: existante?.libelle ?? confusion.libelle,
-        nombre: (existante?.nombre ?? 0) + confusion.nombre,
-      });
-    }
-  }
-  return [...totaux.values()]
-    .sort((gauche, droite) => droite.nombre - gauche.nombre || (gauche.id < droite.id ? -1 : 1))
-    .slice(0, NOMBRE_CONFUSIONS_FREQUENTES);
-}
 
 interface EnoncesDeLaSeance {
   readonly questions: ReadonlyMap<string, string>;
@@ -271,8 +246,8 @@ export class CoursSyntheseComponent {
     () => this.rapport()?.resultats.questions ?? [],
   );
 
-  readonly confusionsFrequentes = computed<readonly ConfusionFrequente[]>(() =>
-    confusionsFrequentesDe(this.questions()),
+  readonly confusionsFrequentes = computed(() =>
+    (this.rapport()?.resultats.confusions ?? []).slice(0, NOMBRE_CONFUSIONS_FREQUENTES),
   );
 
   readonly auteursDeReponsesLibres = computed<readonly ParticipantRapporte[]>(() =>

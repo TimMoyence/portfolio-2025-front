@@ -761,7 +761,6 @@ export const zEtatDeSeanceResponseDto = z.object({
   modeRythme: zPacingMode,
   ecranCourant: z.number(),
   intervalleLibre: zFreeRangeDto.nullable(),
-  participants: z.number(),
   revision: z.int().gte(0).lte(9007199254740991),
   pilotage: z.record(z.string(), zPilotageServiResponseDto),
   majLe: z.iso.datetime(),
@@ -795,6 +794,7 @@ export const zComptesJalonResponseDto = z.object({
 export const zResultatsEnDirectResponseDto = z.object({
   participants: z.number(),
   questions: z.array(zResultatQuestionResponseDto),
+  confusions: z.array(zConfusionCompteeResponseDto),
   statistiques: zStatistiquesSeanceResponseDto,
   bareme: zResumeBaremeResponseDto,
   jalons: z.record(z.string(), zComptesJalonResponseDto),
@@ -835,11 +835,11 @@ export const zRapportParticipantResponseDto = z.object({
 export const zResultatsSeanceResponseDto = z.object({
   participants: z.number(),
   questions: z.array(zResultatQuestionResponseDto),
+  confusions: z.array(zConfusionCompteeResponseDto),
 });
 
 export const zRegleDeNotationResponseDto = z.object({
   noteMax: z.number(),
-  base: z.enum(['participation-relative-cohorte']),
   partCohorteReference: z.number(),
   ratioSeuilValidation: z.number(),
   neSaitPasCompteCommeReponse: z.boolean(),
@@ -847,8 +847,6 @@ export const zRegleDeNotationResponseDto = z.object({
   reponsesLibresNotees: z.boolean(),
   seuilQuestionProbleme: z.number(),
   decimalesStatistiques: z.number(),
-  typesNotables: z.array(zTypeQuestion),
-  productionCompteSi: z.enum(['au-moins-une-saisie']),
   statistiquesSurQuestionsNotees: z.boolean(),
 });
 

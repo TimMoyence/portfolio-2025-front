@@ -776,7 +776,7 @@ describe('CoursEtudiantComponent', () => {
       of(buildRattachement({ sessionId: SESSION, jeton: JETON, ecranCourant: 1 })),
     );
     const fixture = await rattacher();
-    diffuserSurLaVue(double, fixture, { ecranCourant: 1, participants: 11 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 1, revision: 11 });
     const avant = ecranDe(fixture).componentInstance as SlideActivityComponent;
 
     expect(avant.slide()).toBe(sujet.ecrans[1]);
@@ -786,7 +786,7 @@ describe('CoursEtudiantComponent', () => {
       .withContext('etudiant est un role du runtime, pas un role ARIA')
       .toBeFalse();
 
-    diffuserSurLaVue(double, fixture, { ecranCourant: 1, participants: 12 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 1, revision: 12 });
 
     expect(ecranDe(fixture).componentInstance).toBe(avant);
     expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
@@ -1212,7 +1212,7 @@ describe('CoursEtudiantComponent', () => {
         declencheur: 'la prochaine action du formateur',
         depuisUneBrique: false,
         declencher: (fixture, etatSuivant) =>
-          diffuserPuisStabiliser(fixture, { ...etatSuivant, participants: 14 }),
+          diffuserPuisStabiliser(fixture, { ...etatSuivant, revision: 14 }),
       },
       {
         declencheur: 'le retour du reseau',
@@ -1830,7 +1830,7 @@ describe('CoursEtudiantComponent', () => {
     it('revient au reseau quand la reponse retenue passe au vidage et qu un envoi en panne reste en file', async () => {
       const fixture = await mettreEnFileUneRetenueEtUnePanne(of(REUSSITE), enPanne());
 
-      await diffuserPuisStabiliser(fixture, { participants: 14 });
+      await diffuserPuisStabiliser(fixture, { revision: 14 });
 
       expect(pending().map(({ questionId }) => questionId)).toEqual([REPONSE_VOTE.questionId]);
       expect(texteDeLaFile(fixture)).toBe(ATTENTE_DU_RESEAU);
@@ -1863,7 +1863,7 @@ describe('CoursEtudiantComponent', () => {
       const fixture = await rattacherALaSeanceEnCours();
       await repondre(fixture, REPONSE_NUMERIQUE);
 
-      await diffuserPuisStabiliser(fixture, { participants: 14 });
+      await diffuserPuisStabiliser(fixture, { revision: 14 });
 
       expect(port.repondre).toHaveBeenCalledTimes(2);
       expect(pending().length).toBe(0);
@@ -1925,7 +1925,7 @@ describe('CoursEtudiantComponent', () => {
 
     lire(fixture, 'etudiant-suivant')?.click();
     fixture.detectChanges();
-    diffuserSurLaVue(double, fixture, { ...libre, participants: 13 });
+    diffuserSurLaVue(double, fixture, { ...libre, revision: 13 });
 
     expect(ecranAffiche(fixture)).toBe(sujet.ecrans[2]);
 

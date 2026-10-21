@@ -1,16 +1,10 @@
-import { bornerEntre, fini } from '../core/valeurs';
 import { prefereMouvementReduit } from '../core/mouvement';
-import { type ParametreReglable, plafondDe, plancherDe } from './curseurs';
+import type { ParametreReglable } from './curseurs';
 
 export type Reglages = Readonly<Record<string, number>>;
 
 export const DUREE_ETAPE_MS = 3000;
 const CHANGEMENTS_PAR_DEFAUT = 6;
-
-export function borner(parametre: ParametreReglable, valeur: number): number {
-  const bas = plancherDe(parametre);
-  return bornerEntre(fini(valeur, bas), bas, plafondDe(parametre));
-}
 
 function positionVers(parametre: ParametreReglable, depart: number, progression: number): number {
   const devant = parametre.positions.filter((position) => position >= depart);
@@ -24,7 +18,7 @@ export function changeQuelqueChose(
 ): boolean {
   return parametres.some((parametre) => {
     const pilote = reglages[parametre.cle];
-    return typeof pilote === 'number' && borner(parametre, pilote) !== courantes[parametre.cle];
+    return typeof pilote === 'number' && pilote !== courantes[parametre.cle];
   });
 }
 

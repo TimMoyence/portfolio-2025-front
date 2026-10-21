@@ -38,8 +38,30 @@ describe('phraseDeNotation', () => {
 
     expect(sansBareme).not.toContain('questions notées');
     expect(avecBareme.startsWith(sansBareme)).toBeTrue();
-    expect(avecBareme).toContain('sur 31 questions notées comptent');
+    expect(avecBareme).toContain(
+      'sur 31 questions notées comptent (votes, numérique, classement, feuille et tableau)',
+    );
     expect(avecBareme).toContain('une production vide est refusée');
-    expect(avecBareme).toContain('énigmes et rappels sont exclus');
+    expect(avecBareme).toContain('Ne comptent pas : énigmes.');
+  });
+
+  it('nomme les types notés et exclus d après le barème servi, pas d après une liste écrite', () => {
+    const phrase = phraseDeNotation(
+      buildRegleNotation(),
+      buildResumeBareme({
+        questionsNotees: 4,
+        parType: {
+          vote: { notees: 0, nonNotees: 2 },
+          numeric: { notees: 4, nonNotees: 0 },
+          classement: { notees: 0, nonNotees: 0 },
+          feuille: { notees: 0, nonNotees: 0 },
+          tableau: { notees: 0, nonNotees: 0 },
+          enigme: { notees: 0, nonNotees: 0 },
+        },
+      }),
+    );
+
+    expect(phrase).toContain('sur 4 questions notées comptent (numérique)');
+    expect(phrase).toContain('Ne comptent pas : votes.');
   });
 });

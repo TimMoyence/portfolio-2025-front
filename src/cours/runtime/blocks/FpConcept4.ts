@@ -3,7 +3,6 @@ import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { echapperPourRegex, fini } from '../core/valeurs';
 import { type Reglages } from './animation';
-import { plafondDe, plancherDe } from './curseurs';
 import { echelle } from './echelle';
 import { type DefinitionReglable, FpReglable, arrondi, copierLeReglable } from './reglable';
 
@@ -286,8 +285,8 @@ export class FpConcept4 extends FpReglable<Concept4Definition> {
     sortie: SortiesMachine | null,
     resultat: ValeurAffichee,
   ): Trace {
-    const depart = plancherDe(parametre);
-    const arrivee = plafondDe(parametre);
+    const depart = parametre.min;
+    const arrivee = parametre.max;
     const versX = echelle(depart, arrivee - depart, MARGE, LARGEUR - 2 * MARGE);
     const cx = arrondi(versX(this.valeurDe(parametre)));
     const points = (sortie?.courbes[parametre.cle] ?? []).flatMap(({ x, y }) =>
