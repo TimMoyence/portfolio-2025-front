@@ -33,7 +33,7 @@ const COEUR_SANS_CHEMIN_VERS_SHARED_NI_FEATURES = [
 
 module.exports = tseslint.config(
   {
-    ignores: ['.claude/**', ...IGNORES_DE_GIT],
+    ignores: ['.claude/**', 'contrat/**', ...IGNORES_DE_GIT],
   },
   {
     files: ['src/**/*.ts', 'e2e/**/*.ts', 'scripts/**/*.{mjs,cjs,mts}'],

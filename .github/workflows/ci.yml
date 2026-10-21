@@ -47,6 +47,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Contrat genere a jour
+        run: npm run contrat:check
+
       - name: Duplication (jscpd)
         run: npm run quality:dup
 
