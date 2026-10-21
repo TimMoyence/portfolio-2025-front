@@ -31,7 +31,7 @@ const ENONCE_PROBLEME = 'Le prix monte de 20 %, puis baisse de 20 %. Où arrive-
 const NOTE = 'Relancer Léa sur la base de départ.';
 
 const FORMATEUR = buildAuthUser({
-  id: '1',
+  id: '44444444-4444-4444-8444-444444444444',
   email: 'formateur@example.com',
   firstName: 'Tim',
   lastName: 'Moyence',
@@ -122,7 +122,7 @@ interface SaisieAnnotation {
 
 function annotationDuFormateur(saisie: SaisieAnnotation, rang: number): AnnotationFormateur {
   return {
-    id: `annotation-${rang + 1}`,
+    id: `55555555-5555-4555-8555-${String(rang + 1).padStart(12, '0')}`,
     sessionId: SESSION,
     teacherId: FORMATEUR.id,
     screenId: saisie.screenId,
