@@ -328,9 +328,7 @@ export function buildReponseLibreFormateur(
     activityId: 'reflexion-1',
     response: 'Je compare d’abord les bases avant les pourcentages.',
     premiereReponse: null,
-    strategiesServiesLe: null,
     dureeMs: 42_000,
-    status: 'enregistre',
     submittedAt: HORODATAGE,
     ...overrides,
   };

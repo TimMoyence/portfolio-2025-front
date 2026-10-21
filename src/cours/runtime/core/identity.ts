@@ -1,14 +1,16 @@
-import { estUneAdresseEmail } from './adresse-email';
+import { zJoinSessionRequestDto } from '../../../../contrat/zod.gen';
 import { creerCle } from './cle';
 import { longueurDeTexte } from './longueur-de-texte';
 import { persistJson, readJson, removeKey } from './storage';
 
 const CLE = 'fp.identite';
 
+const SAISIE_D_IDENTITE = zJoinSessionRequestDto.shape;
+
 export const LONGUEURS_MAX_DE_L_IDENTITE: Readonly<Record<keyof IdentityInput, number>> = {
-  prenom: 80,
-  nom: 80,
-  email: 180,
+  prenom: SAISIE_D_IDENTITE.prenom.maxLength ?? Infinity,
+  nom: SAISIE_D_IDENTITE.nom.maxLength ?? Infinity,
+  email: SAISIE_D_IDENTITE.email.maxLength ?? Infinity,
 };
 
 export interface Identity {
@@ -50,7 +52,7 @@ export function saveIdentity(input: IdentityInput): IdentityRegistration {
   ) {
     throw new Error('Identité trop longue');
   }
-  if (!estUneAdresseEmail(email)) {
+  if (!SAISIE_D_IDENTITE.email.safeParse(email).success) {
     throw new Error('Adresse électronique invalide');
   }
   const existante = readIdentity();

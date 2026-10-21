@@ -22,6 +22,9 @@ la saisie numérique, verrou des productions, option de la bonne réponse).
   contrat est refusée.
 - Le front affiche ce qui est servi, sans recalculer de règle métier. La saisie numérique part
   brute ; un refus du serveur (`SAISIE_NON_NUMERIQUE`) rouvre le champ avec son message.
+- Les formulaires valident avec les contraintes du zod généré : bornes (`minLength`,
+  `maxLength`, comptées en points de code comme au back), motif de l'adresse e-mail et du mot
+  de passe. La fermeture d'une question se lit dans `saisieFermee`, servie par le pilotage.
 - Exception écrite : l'échappement HTML des Custom Elements reste au front (un échappeur par
   environnement, le back gardant le sien pour les mails et les PDF).
 

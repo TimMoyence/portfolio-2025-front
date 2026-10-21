@@ -1,9 +1,11 @@
 import { Directive, input } from '@angular/core';
 import type { AbstractControl, ValidationErrors } from '@angular/forms';
 import { NG_VALIDATORS } from '@angular/forms';
-import { estUneAdresseEmail } from '../../../cours/runtime/core/adresse-email';
+import { zLoginDto } from '../../../../contrat/zod.gen';
 import { estUnNumeroDeTelephone } from '../utils/telephone.utils';
 import { ValidateurDeSaisie } from './validateur-de-saisie';
+
+const ADRESSE_EMAIL = zLoginDto.shape.email;
 
 export type FormatDeContact = 'email' | 'telephone' | null;
 
@@ -14,7 +16,7 @@ export function erreurDeFormat(valeur: unknown, format: FormatDeContact): Valida
   }
   switch (format) {
     case 'email':
-      return estUneAdresseEmail(saisie) ? null : { email: true };
+      return ADRESSE_EMAIL.safeParse(saisie).success ? null : { email: true };
     case 'telephone':
       return estUnNumeroDeTelephone(saisie) ? null : { phone: true };
     default:

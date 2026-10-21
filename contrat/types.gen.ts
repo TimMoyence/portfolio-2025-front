@@ -4,6 +4,11 @@ export type ClientOptions = {
   baseUrl: string;
 };
 
+export type LoginDto = {
+  email: string;
+  password: string;
+};
+
 export type UserResponseDto = {
   id: string;
   email: string;
@@ -23,42 +28,6 @@ export type UserResponseDto = {
    * Indique si l'adresse email a ete verifiee.
    */
   emailVerified: boolean;
-};
-
-/**
- * Liste des roles. Reserve aux administrateurs.
- */
-export type Role = 'admin' | 'teacher';
-
-export type CreateUserDto = {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  phone?: string | null;
-  isActive?: boolean;
-  /**
-   * Liste des roles. Reserve aux administrateurs.
-   */
-  roles?: Array<Role>;
-};
-
-export type UpdateUserDto = {
-  email?: string;
-  password?: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string | null;
-  isActive?: boolean;
-  /**
-   * Liste des roles. Reserve aux administrateurs.
-   */
-  roles?: Array<Role>;
-};
-
-export type LoginDto = {
-  email: string;
-  password: string;
 };
 
 export type AuthResponseDto = {
@@ -1526,8 +1495,6 @@ export type DerouleResponseDto = {
   >;
 };
 
-export type StatutDeReponseLibre = 'enregistre' | 'en_attente' | 'echec';
-
 export type FreeResponseResponseDto = {
   sessionId: string;
   participantId: string;
@@ -1539,12 +1506,7 @@ export type FreeResponseResponseDto = {
    * Première tentative d’un défi, jamais réécrite
    */
   premiereReponse: string | null;
-  /**
-   * Date à laquelle les stratégies du défi ont été servies
-   */
-  strategiesServiesLe: string | null;
   dureeMs: number;
-  status: StatutDeReponseLibre;
   /**
    * Date du premier envoi, conservée lors d’une reprise
    */
@@ -3082,129 +3044,6 @@ export type DonneesQuestionnaire = {
 export type DonneesEcranVerrouille = {
   [key: string]: never;
 };
-
-export type UsersControllerFindAllData = {
-  body?: never;
-  path?: never;
-  query?: never;
-  url: '/api/v1/portfolio25/users';
-};
-
-export type UsersControllerFindAllErrors = {
-  /**
-   * Token JWT invalide ou absent
-   */
-  401: unknown;
-};
-
-export type UsersControllerFindAllResponses = {
-  200: Array<UserResponseDto>;
-};
-
-export type UsersControllerFindAllResponse =
-  UsersControllerFindAllResponses[keyof UsersControllerFindAllResponses];
-
-export type UsersControllerCreateData = {
-  body: CreateUserDto;
-  path?: never;
-  query?: never;
-  url: '/api/v1/portfolio25/users';
-};
-
-export type UsersControllerCreateErrors = {
-  /**
-   * Validation echouee
-   */
-  400: unknown;
-  /**
-   * Adresse ou compte Google deja utilise par un autre compte
-   */
-  409: unknown;
-};
-
-export type UsersControllerCreateResponses = {
-  201: UserResponseDto;
-};
-
-export type UsersControllerCreateResponse =
-  UsersControllerCreateResponses[keyof UsersControllerCreateResponses];
-
-export type UsersControllerDeleteData = {
-  body?: never;
-  path: {
-    id: string;
-  };
-  query?: never;
-  url: '/api/v1/portfolio25/users/{id}';
-};
-
-export type UsersControllerDeleteErrors = {
-  /**
-   * Utilisateur non trouve
-   */
-  404: unknown;
-};
-
-export type UsersControllerDeleteResponses = {
-  200: UserResponseDto;
-};
-
-export type UsersControllerDeleteResponse =
-  UsersControllerDeleteResponses[keyof UsersControllerDeleteResponses];
-
-export type UsersControllerFindOneData = {
-  body?: never;
-  path: {
-    id: string;
-  };
-  query?: never;
-  url: '/api/v1/portfolio25/users/{id}';
-};
-
-export type UsersControllerFindOneErrors = {
-  /**
-   * Utilisateur non trouve
-   */
-  404: unknown;
-};
-
-export type UsersControllerFindOneResponses = {
-  200: UserResponseDto;
-};
-
-export type UsersControllerFindOneResponse =
-  UsersControllerFindOneResponses[keyof UsersControllerFindOneResponses];
-
-export type UsersControllerUpdateData = {
-  body: UpdateUserDto;
-  path: {
-    id: string;
-  };
-  query?: never;
-  url: '/api/v1/portfolio25/users/{id}';
-};
-
-export type UsersControllerUpdateErrors = {
-  /**
-   * Validation echouee
-   */
-  400: unknown;
-  /**
-   * Utilisateur non trouve
-   */
-  404: unknown;
-  /**
-   * Adresse ou compte Google deja utilise par un autre compte
-   */
-  409: unknown;
-};
-
-export type UsersControllerUpdateResponses = {
-  200: UserResponseDto;
-};
-
-export type UsersControllerUpdateResponse =
-  UsersControllerUpdateResponses[keyof UsersControllerUpdateResponses];
 
 export type AuthControllerLoginData = {
   body: LoginDto;

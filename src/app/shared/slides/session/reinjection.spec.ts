@@ -377,17 +377,21 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     }
   });
 
-  it('pose la cloture sur les seules questions revelables, d apres le pilotage', () => {
-    const revele = direct({ pilotage: { revele: true } });
+  it('pose la cloture sur les seules questions revelables, d apres la saisie fermee servie', () => {
+    const fermee = direct({ pilotage: { saisieFermee: true } });
+    const reveleSansFermeture = direct({ pilotage: { revele: true } });
     for (const brique of ['fp-vote', 'fp-numeric', 'fp-recall', 'fp-exit']) {
-      expect(pose(brique, ['Q-VA-07'], 'cloture', { direct: revele }))
+      expect(pose(brique, ['Q-VA-07'], 'cloture', { direct: fermee }))
         .withContext(brique)
         .toBeTrue();
+      expect(pose(brique, ['Q-VA-07'], 'cloture', { direct: reveleSansFermeture }))
+        .withContext(brique)
+        .toBeFalse();
       expect(pose(brique, ['Q-VA-07'], 'cloture', {}))
         .withContext(brique)
         .toBeFalse();
     }
-    expect(pose('fp-sheet', ['Q-VA-07'], 'cloture', { direct: revele })).toBeUndefined();
+    expect(pose('fp-sheet', ['Q-VA-07'], 'cloture', { direct: fermee })).toBeUndefined();
   });
 
   it('sert au rappel espace les questions dues, leurs verdicts et la maitrise au seul pupitre', () => {

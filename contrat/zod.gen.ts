@@ -2,6 +2,15 @@
 
 import * as z from 'zod';
 
+export const zLoginDto = z.object({
+  email: z
+    .string()
+    .regex(
+      /^(?=[^@]{1,64}@)(?=.{1,254}$)[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9](?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9-]{0,61}[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9])?\.)+(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾]{2,63}|xn--[A-Za-z0-9-]{2,59})$/,
+    ),
+  password: z.string().min(1).max(256),
+});
+
 export const zUserResponseDto = z.object({
   id: z.string(),
   email: z.string(),
@@ -15,45 +24,6 @@ export const zUserResponseDto = z.object({
   updatedOrCreatedBy: z.string().nullable(),
   hasPassword: z.boolean(),
   emailVerified: z.boolean(),
-});
-
-/**
- * Liste des roles. Reserve aux administrateurs.
- */
-export const zRole = z.enum(['admin', 'teacher']);
-
-export const zCreateUserDto = z.object({
-  email: z.email(),
-  password: z
-    .string()
-    .min(12)
-    .max(256)
-    .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/),
-  firstName: z.string().min(1).max(50),
-  lastName: z.string().min(1).max(50),
-  phone: z.string().max(30).nullish(),
-  isActive: z.boolean().optional(),
-  roles: z.array(zRole).optional(),
-});
-
-export const zUpdateUserDto = z.object({
-  email: z.email().optional(),
-  password: z
-    .string()
-    .min(12)
-    .max(256)
-    .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/)
-    .optional(),
-  firstName: z.string().min(1).max(50).optional(),
-  lastName: z.string().min(1).max(50).optional(),
-  phone: z.string().max(30).nullish(),
-  isActive: z.boolean().optional(),
-  roles: z.array(zRole).optional(),
-});
-
-export const zLoginDto = z.object({
-  email: z.email(),
-  password: z.string().min(1).max(256),
 });
 
 export const zAuthResponseDto = z.object({
@@ -80,7 +50,11 @@ export const zChangePasswordDto = z.object({
 });
 
 export const zForgotPasswordDto = z.object({
-  email: z.email(),
+  email: z
+    .string()
+    .regex(
+      /^(?=[^@]{1,64}@)(?=.{1,254}$)[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9](?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9-]{0,61}[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9])?\.)+(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾]{2,63}|xn--[A-Za-z0-9-]{2,59})$/,
+    ),
 });
 
 export const zResetPasswordDto = z.object({
@@ -101,7 +75,11 @@ export const zSetPasswordDto = z.object({
 });
 
 export const zInscriptionDto = z.object({
-  email: z.email(),
+  email: z
+    .string()
+    .regex(
+      /^(?=[^@]{1,64}@)(?=.{1,254}$)[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9](?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9-]{0,61}[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9])?\.)+(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾]{2,63}|xn--[A-Za-z0-9-]{2,59})$/,
+    ),
   password: z
     .string()
     .min(12)
@@ -113,7 +91,12 @@ export const zInscriptionDto = z.object({
 });
 
 export const zResendVerificationDto = z.object({
-  email: z.email().min(1),
+  email: z
+    .string()
+    .min(1)
+    .regex(
+      /^(?=[^@]{1,64}@)(?=.{1,254}$)[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9](?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9-]{0,61}[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9])?\.)+(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾]{2,63}|xn--[A-Za-z0-9-]{2,59})$/,
+    ),
 });
 
 export const zUpdateProfileDto = z.object({
@@ -129,7 +112,11 @@ export const zContactRequestDto = z.object({
   formFillDurationMs: z.int().gte(0).optional(),
   firstName: z.string().min(1).max(50),
   lastName: z.string().min(1).max(50),
-  email: z.email(),
+  email: z
+    .string()
+    .regex(
+      /^(?=[^@]{1,64}@)(?=.{1,254}$)[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9](?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9-]{0,61}[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9])?\.)+(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾]{2,63}|xn--[A-Za-z0-9-]{2,59})$/,
+    ),
   message: z.string().min(10).max(2000),
   phone: z.string().nullish(),
   subject: z.string().min(2).max(100),
@@ -239,7 +226,11 @@ export const zRequestToolkitRequestDto = z.object({
   website: z.string().max(200).optional(),
   formFillDurationMs: z.int().gte(0).optional(),
   firstName: z.string().min(1).max(50),
-  email: z.email(),
+  email: z
+    .string()
+    .regex(
+      /^(?=[^@]{1,64}@)(?=.{1,254}$)[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9](?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9-]{0,61}[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9])?\.)+(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾]{2,63}|xn--[A-Za-z0-9-]{2,59})$/,
+    ),
   formationSlug: zFormationDeLaBoite,
   termsVersion: z.string().min(1).max(50),
   termsLocale: zLocale,
@@ -924,8 +915,6 @@ export const zEcranDerouleResponseDto = z.object({
   explications: z.array(zExplicationDeCorrectionResponseDto).optional(),
 });
 
-export const zStatutDeReponseLibre = z.enum(['enregistre', 'en_attente', 'echec']);
-
 export const zFreeResponseResponseDto = z.object({
   sessionId: z.uuid(),
   participantId: z.uuid(),
@@ -934,9 +923,7 @@ export const zFreeResponseResponseDto = z.object({
   activityId: z.string(),
   response: z.string(),
   premiereReponse: z.string().nullable(),
-  strategiesServiesLe: z.iso.datetime().nullable(),
   dureeMs: z.number(),
-  status: zStatutDeReponseLibre,
   submittedAt: z.iso.datetime(),
 });
 
@@ -991,7 +978,12 @@ export const zJoinSessionRequestDto = z.object({
   formFillDurationMs: z.int().gte(0).optional(),
   prenom: z.string().min(1).max(80),
   nom: z.string().min(1).max(80),
-  email: z.email().max(180),
+  email: z
+    .string()
+    .max(180)
+    .regex(
+      /^(?=[^@]{1,64}@)(?=.{1,254}$)[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9](?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9-]{0,61}[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾0-9])?\.)+(?:[A-Za-zÀ-ÖØ-öø-ᙿᚁ-῿Ⰰ-ⷿ⺀-⿟぀-퟿豈-﷏ﷰ-﻾]{2,63}|xn--[A-Za-z0-9-]{2,59})$/,
+    ),
   secretDeReprise: z.string().max(128).optional(),
 });
 
@@ -2825,32 +2817,6 @@ export const zLivretResponseDto = z.object({
   sujet: zSujetResponseDto,
   corrige: zDerouleResponseDto,
 });
-
-export const zUsersControllerFindAllResponse = z.array(zUserResponseDto);
-
-export const zUsersControllerCreateBody = zCreateUserDto;
-
-export const zUsersControllerCreateResponse = zUserResponseDto;
-
-export const zUsersControllerDeletePath = z.object({
-  id: z.string(),
-});
-
-export const zUsersControllerDeleteResponse = zUserResponseDto;
-
-export const zUsersControllerFindOnePath = z.object({
-  id: z.string(),
-});
-
-export const zUsersControllerFindOneResponse = zUserResponseDto;
-
-export const zUsersControllerUpdateBody = zUpdateUserDto;
-
-export const zUsersControllerUpdatePath = z.object({
-  id: z.string(),
-});
-
-export const zUsersControllerUpdateResponse = zUserResponseDto;
 
 export const zAuthControllerLoginBody = zLoginDto;
 

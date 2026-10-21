@@ -325,7 +325,7 @@ function posesCommunes(montage: MontageIdentifie, contexte: ContexteDeReinjectio
     ? [[PROPRIETE_FORMATEUR, annexeDuMontage(montage, annexeVisible(contexte), contexte.direct)]]
     : [];
   const cloture: Pose[] = QUESTIONS_REVELABLES.has(montage.brique)
-    ? [['cloture', contexte.direct?.pilotage.revele === true || expliqueSurPlace(contexte)]]
+    ? [['cloture', contexte.direct?.pilotage.saisieFermee === true || expliqueSurPlace(contexte)]]
     : [];
   return [
     ['dejaRepondu', dejaRepondu],
