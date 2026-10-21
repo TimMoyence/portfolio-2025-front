@@ -1,3 +1,4 @@
+import type { IncidentEntryDto } from '../../../../contrat/types.gen';
 import { InjectionToken } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { type LimiteDeDebit, messageDeLaLimite } from '../models/limite-de-debit';
@@ -191,11 +192,7 @@ export interface VerdictReponse {
   libelleConfusion: string | null;
 }
 
-export interface IncidentEtudiant {
-  type: string;
-  contexte?: Record<string, unknown>;
-  horodatage: string;
-}
+export type IncidentEtudiant = IncidentEntryDto;
 
 export interface ReponseRapportee {
   questionId: string;

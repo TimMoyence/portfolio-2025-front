@@ -907,7 +907,7 @@ describe('FormationsHttpAdapter', () => {
   });
 
   it('signalerIncidents POSTe le journal sur incidents avec l en-tete de participant', () => {
-    const incidents = [{ type: 'tab_hidden', horodatage: '2026-09-11T10:00:00.000Z' }];
+    const incidents = [{ type: 'tab_hidden' as const, horodatage: '2026-09-11T10:00:00.000Z' }];
 
     adapter.signalerIncidents(SESSION_ID, JETON, incidents).subscribe();
 

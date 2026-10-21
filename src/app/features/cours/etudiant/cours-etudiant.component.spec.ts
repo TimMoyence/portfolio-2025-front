@@ -859,11 +859,34 @@ describe('CoursEtudiantComponent', () => {
 
     window.dispatchEvent(new Event('blur'));
     await repondre(fixture, REPONSE_NUMERIQUE);
-    expect(port.signalerIncidents.calls.mostRecent().args[2][0].type).toBe('blur');
+    expect(port.signalerIncidents.calls.mostRecent().args[2][0].type).toBe('window_blur');
 
     diffuserSurLaVue(double, fixture, { ecranCourant: 1 });
 
     expect(copieBloquee()).toBeTrue();
+  });
+
+  it('remonte le contexte de l incident au contrat, pas seulement son type', async () => {
+    sujet = {
+      ...sujet,
+      ecrans: [ecranAuRegime('ecran-examen', 'examen'), ...sujet.ecrans.slice(1)],
+    };
+    port.lireSujet.and.returnValue(of(sujet));
+    const fixture = await rattacherALaSeanceEnCours();
+
+    document.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 's', ctrlKey: true, cancelable: true }),
+    );
+    await repondre(fixture, REPONSE_NUMERIQUE);
+
+    expect(port.signalerIncidents.calls.mostRecent().args[2]).toEqual([
+      { type: 'blocked_shortcut', contexte: { touche: 's' }, horodatage: jasmine.any(String) },
+      {
+        type: 'fast_answer',
+        contexte: { dureeMs: jasmine.any(Number) },
+        horodatage: jasmine.any(String),
+      },
+    ]);
   });
 
   it('rend le copier a la page quand le poste quitte un ecran d examen', async () => {
