@@ -5,7 +5,7 @@ import { SEUIL_D_ANONYMAT } from '../core/anonymat';
 import { FpPulse } from './FpPulse';
 
 const SONDAGE = buildPulseSondage();
-const COMPTES = { perdu: 4, 'ca-va': 11, clair: 7 };
+const COMPTES = { perdu: 4, 'ca-va': 11, clair: 7, total: 22 };
 const INSTANT_INITIAL = '2026-09-13T09:00:00.000Z';
 const NOM_ETUDIANT = 'Nadia Mbarek';
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';

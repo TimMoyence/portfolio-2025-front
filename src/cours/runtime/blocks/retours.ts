@@ -1,4 +1,10 @@
-import type { EnigmesParticipantResponseDto, EtatDEnigme } from '../../../../contrat/types.gen';
+import type {
+  DetailVerdictResponseDto,
+  EnigmesParticipantResponseDto,
+  EtatDEnigme,
+  StrategieDefiResponseDto,
+  SyntheseConceptResponseDto,
+} from '../../../../contrat/types.gen';
 import type { FeuilleEvaluee, QuestionRevelee, TableauEvalue } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { chaineDe, estChaineOuNul, estObjet } from '../core/valeurs';
@@ -9,11 +15,7 @@ export interface VerdictDeReponse {
   readonly libelleConfusion: string | null;
 }
 
-export interface DetailDeVerdict {
-  readonly cle: string;
-  readonly juste: boolean;
-  readonly libelleConfusion: string | null;
-}
+export type DetailDeVerdict = DetailVerdictResponseDto;
 
 export interface VerdictDeProduction {
   readonly questionId: string;
@@ -50,20 +52,9 @@ export interface EvaluationDeTableau {
   readonly evalue: TableauEvalue;
 }
 
-export interface StrategieServie {
-  readonly id: string;
-  readonly libelle: string;
-  readonly fausse?: boolean;
-}
+export type StrategieServie = StrategieDefiResponseDto;
 
-export interface ConceptMaitrise {
-  readonly concept: string;
-  readonly libelle: string;
-  readonly boite1: number;
-  readonly boite2: number;
-  readonly boite3: number;
-  readonly nonVus: number;
-}
+export type ConceptMaitrise = SyntheseConceptResponseDto;
 
 export const PROPRIETE_FORMATEUR = 'corrige';
 
