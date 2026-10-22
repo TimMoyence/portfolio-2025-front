@@ -76,6 +76,18 @@ module.exports = tseslint.config(
     },
   },
   {
+    files: ['src/cours/**/*.ts', 'src/app/**/cours*/**/*.ts'],
+    ignores: ['**/*.spec.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unsafe-argument': 'error',
+      '@typescript-eslint/no-unsafe-assignment': 'error',
+      '@typescript-eslint/no-unsafe-call': 'error',
+      '@typescript-eslint/no-unsafe-member-access': 'error',
+      '@typescript-eslint/no-unsafe-return': 'error',
+    },
+  },
+  {
     files: ['src/app/core/**/*.ts'],
     rules: {
       'no-restricted-imports': [
