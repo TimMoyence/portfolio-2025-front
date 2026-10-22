@@ -20,6 +20,18 @@ const REDIRECTIONS_PERMANENTES: ReadonlyArray<readonly [string, string]> = [
   ['/en/formations/audit-seo-diy/toolkit', '/en/formations/audit-seo-diy'],
 ];
 
+test.describe('le serveur refuse les URL que le routeur ne doit pas analyser', () => {
+  exigerLaPorteSsr();
+
+  for (const chemin of ['/fr/a;1=1;2=2', '/fr/(secondaire:page)', `/fr/${'a'.repeat(2048)}`]) {
+    test(`${chemin.slice(0, 40)} répond 400 sans rendu`, async ({ request }) => {
+      const reponse = await request.get(`${baseSsr}${chemin}`, { maxRedirects: 0 });
+
+      expect(reponse.status()).toBe(400);
+    });
+  }
+});
+
 test.describe('les pages retirées répondent un vrai 301', () => {
   exigerLaPorteSsr();
 

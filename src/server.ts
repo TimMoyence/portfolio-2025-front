@@ -19,7 +19,12 @@ import { buildLlmsFullTxt, buildLlmsTxt, buildRobotsTxt } from './server/seo-bui
 import { buildSecurityHeaders } from './server/security-headers';
 import { injectSeoHead, isKnownRoute } from './server/seo-injector';
 import { routeDuSitemap } from './server/sitemap-route';
-import { ALLOWED_HOSTS, buildBaseUrlFromRequest, cheminCanonique } from './server/url-utils';
+import {
+  ALLOWED_HOSTS,
+  buildBaseUrlFromRequest,
+  cheminCanonique,
+  urlRefusee,
+} from './server/url-utils';
 import { LOCALES_DU_SITE } from './app/core/config/locales';
 import { routeSansLocale } from './app/core/seo/chemins';
 import { localeParDefaut } from './app/core/seo/pages-seo';
@@ -58,6 +63,10 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
+  if (urlRefusee(req.originalUrl)) {
+    res.status(400).type('text/plain').send('Bad Request');
+    return;
+  }
   const canonique = cheminCanonique(req.path);
   if (canonique !== req.path) {
     const query = req.originalUrl.includes('?')

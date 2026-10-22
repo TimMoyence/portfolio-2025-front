@@ -9,6 +9,16 @@ export const cheminCanonique = (path: string): string => {
   return normalizePath(replie);
 };
 
+export const LONGUEUR_MAX_D_UNE_URL = 2048;
+
+const CARACTERES_REFUSES_DANS_LE_CHEMIN = /[;()\\]/;
+
+export const urlRefusee = (urlOriginale: string): boolean => {
+  if (urlOriginale.length > LONGUEUR_MAX_D_UNE_URL) return true;
+  const [chemin = ''] = urlOriginale.split('?', 1);
+  return CARACTERES_REFUSES_DANS_LE_CHEMIN.test(chemin);
+};
+
 export const ALLOWED_HOSTS = [
   'asilidesign.fr',
   'www.asilidesign.fr',
