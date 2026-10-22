@@ -19,8 +19,6 @@ import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import type { Bornes } from '../../shared/utils/regles-de-saisie';
 import { bornesDu } from '../../shared/utils/regles-de-saisie';
-
-const SAISIE_DE_CONTACT = zContactRequestDto.shape;
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
@@ -29,6 +27,10 @@ import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisi
 import type { FormatDeContact } from '../../shared/directives/format-de-contact.directive';
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
+
+const SAISIE_DE_CONTACT = zContactRequestDto.shape;
+
+const SUJET_DE_DEMANDE_D_ACCES = $localize`:contact.form.subject.access@@contactFormSubjectAccess:Demande d'accès application`;
 
 @Component({
   selector: 'app-contact',
@@ -81,6 +83,7 @@ export class ContactComponent implements OnInit {
       $localize`:contact.form.subject.first@@contactFormSubjectFirst:Premier contact`,
       $localize`:contact.form.subject.second@@contactFormSubjectSecond:Demande de devis`,
       $localize`:contact.form.subject.third@@contactFormSubjectThird:Urgent - Besoin rapide`,
+      SUJET_DE_DEMANDE_D_ACCES,
     ],
   };
 
@@ -115,7 +118,7 @@ export class ContactComponent implements OnInit {
     if (reason === 'access' && app) {
       this.contactForm = {
         ...this.contactForm,
-        subject: $localize`:contact.form.subject.access@@contactFormSubjectAccess:Demande d'accès application`,
+        subject: SUJET_DE_DEMANDE_D_ACCES,
         message: this.buildAccessRequestMessage(app),
       };
     }

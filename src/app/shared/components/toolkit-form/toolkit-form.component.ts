@@ -16,10 +16,10 @@ import { readInputValue, readCheckboxChecked } from '../../utils/dom-event.utils
 import { handleFormSubmit, INFORMATIONS_REFUSEES } from '../../utils/form-submit.utils';
 import { zRequestToolkitRequestDto } from '../../../../../contrat/zod.gen';
 import { bornesDu, erreursDeLongueur } from '../../utils/regles-de-saisie';
-
-const BORNES_DU_PRENOM = bornesDu(zRequestToolkitRequestDto.shape.firstName);
 import { FieldErrorsComponent } from '../field-errors/field-errors.component';
 import { erreurDeFormat } from '../../directives/format-de-contact.directive';
+
+const BORNES_DU_PRENOM = bornesDu(zRequestToolkitRequestDto.shape.firstName);
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 

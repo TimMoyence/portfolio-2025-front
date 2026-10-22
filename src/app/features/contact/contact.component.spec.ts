@@ -304,6 +304,19 @@ describe('ContactComponent — demande d acces redirigee par le garde de role', 
     expect(messagePour('teacher')).toContain("l'espace formateur");
   });
 
+  it('pre-remplit un sujet que la liste propose, pour que le select l affiche', async () => {
+    messagePour('teacher');
+    const fixture = TestBed.createComponent(ContactComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const select = (fixture.nativeElement as HTMLElement).querySelector<HTMLSelectElement>(
+      'select#subject',
+    );
+    expect(select?.selectedOptions[0]?.textContent?.trim()).toBe("Demande d'accès application");
+  });
+
   it('nomme une application inconnue sans la presenter comme un atelier', () => {
     const message = messagePour('inconnue');
 

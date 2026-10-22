@@ -5817,10 +5817,16 @@
         <target>See the full catalog</target>
       </segment>
     </unit>
-    <unit id="slidePollVoteRecorded">
+    <unit id="slidePollVotreChoix">
       <segment>
-        <source>Vote enregistré : <ph id="0" equiv="INTERPOLATION" disp="{{ label }}"/></source>
-        <target>Vote recorded: <ph id="0" equiv="INTERPOLATION" disp="{{ label }}"/></target>
+        <source>Votre choix : <ph id="0" equiv="INTERPOLATION" disp="{{ label }}"/></source>
+        <target>Your choice: <ph id="0" equiv="INTERPOLATION" disp="{{ label }}"/></target>
+      </segment>
+    </unit>
+    <unit id="slidePollIndisponible">
+      <segment>
+        <source> Ce sondage n’a pas pu être chargé. </source>
+        <target> This poll could not be loaded. </target>
       </segment>
     </unit>
     <unit id="slideQuizCorrect">
@@ -10841,6 +10847,33 @@
       <segment>
         <source>Le formateur vous a retiré de cette séance : adressez-vous à lui pour être réadmis.</source>
         <target>The trainer removed you from this session: ask them to readmit you.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusPosteSeanceComplete">
+      <notes>
+        <note category="meaning">cours.refusPosteSeanceComplete</note>
+      </notes>
+      <segment>
+        <source>La séance est complète : libérez une place avant de réadmettre ce poste.</source>
+        <target>The session is full: free a seat before readmitting this device.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusPosteGraineReprise">
+      <notes>
+        <note category="meaning">cours.refusPosteGraineReprise</note>
+      </notes>
+      <segment>
+        <source>Le sujet de ce poste a été attribué à un autre poste depuis son éviction : la réadmission est impossible.</source>
+        <target>This device’s paper went to another device after the removal: readmission is impossible.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusPosteActionImpossible">
+      <notes>
+        <note category="meaning">cours.refusPosteActionImpossible</note>
+      </notes>
+      <segment>
+        <source>L’action sur ce poste n’a pas abouti : réessayez.</source>
+        <target>The action on this device did not go through: try again.</target>
       </segment>
     </unit>
     <unit id="coursRefusRattachementImpossible">
