@@ -271,6 +271,14 @@ describe('sync', () => {
     });
   }
 
+  it('rouvre le flux sans annoncer de fin quand le serveur clot une connexion trop longue', async () => {
+    const raisons = await servirLaFin(bloc('fin', { raison: 'expiree' }));
+    await attendreJusqua(() => flux.length > 1);
+
+    expect(flux.length).toBe(2);
+    expect(raisons).toEqual([]);
+  });
+
   it('ne livre plus aucun etat servi dans le meme morceau que la fin', async () => {
     const recus: EtatSession[] = [];
     const raisons = await servirLaFin(

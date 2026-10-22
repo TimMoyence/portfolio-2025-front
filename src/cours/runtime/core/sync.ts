@@ -271,6 +271,11 @@ export function createSync(options: SyncOptions): Sync {
       return;
     }
     const lu = lireLeFlux(evenement);
+    if (evenement.nom === EVENEMENT_FIN && lu?.event === 'fin' && lu.data.raison === 'expiree') {
+      interrompre();
+      tenterOuverture();
+      return;
+    }
     if (evenement.nom === EVENEMENT_FIN) {
       terminer();
       diffuserA(ecoutesFin, lu?.event === 'fin' ? lu.data.raison : null);

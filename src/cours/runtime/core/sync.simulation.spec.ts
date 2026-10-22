@@ -34,7 +34,8 @@ const evenementSansFin: fc.Arbitrary<Evenement> = fc.oneof(
 const raison: fc.Arbitrary<RaisonDeFin> = fc.constantFrom<RaisonDeFin[]>(
   'cloturee',
   'introuvable',
-  'expiree',
+  'evince',
+  'revoque',
 );
 
 function texteDe(evenement: Evenement): string {
