@@ -16,10 +16,10 @@ export type SujetDuFil = SujetResponseDto;
 export type DerouleDuFil = DerouleResponseDto;
 export type LivretDuFil = LivretResponseDto;
 
-interface EcranDuFil {
+type EcranDuFil<E extends EcranContent> = Omit<E, 'ecranSource' | 'revelation'> & {
   readonly ecranCorrige?: string;
   readonly correction?: CorrectionServieResponseDto;
-}
+};
 
 function revelationDuFil(correction: CorrectionServieResponseDto): RevelationServie {
   return {
@@ -35,7 +35,7 @@ function revelationDuFil(correction: CorrectionServieResponseDto): RevelationSer
   };
 }
 
-function ecranDuFil<E extends EcranContent>(ecran: EcranDuFil): E {
+function ecranDuFil<E extends EcranContent>(ecran: EcranDuFil<E>): E {
   const { ecranCorrige, correction, ...reste } = ecran;
   return {
     ...reste,
@@ -45,11 +45,14 @@ function ecranDuFil<E extends EcranContent>(ecran: EcranDuFil): E {
 }
 
 export function sujetDuFil(sujet: SujetDuFil): CoursContent {
-  return { ...sujet, ecrans: sujet.ecrans.map((ecran) => ecranDuFil(ecran)) };
+  return { ...sujet, ecrans: sujet.ecrans.map((ecran) => ecranDuFil<EcranContent>(ecran)) };
 }
 
 export function derouleDuFil(deroule: DerouleDuFil): DerouleCours {
-  return { ...deroule, ecrans: deroule.ecrans.map((ecran) => ecranDuFil(ecran)) };
+  return {
+    ...deroule,
+    ecrans: deroule.ecrans.map((ecran) => ecranDuFil<DerouleCours['ecrans'][number]>(ecran)),
+  };
 }
 
 export function livretDuFil(livret: LivretDuFil): LivretDuCours {
