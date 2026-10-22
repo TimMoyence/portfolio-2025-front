@@ -404,7 +404,9 @@ test('ci-portes : la porte complete joue tout le projet, sans liste de fichiers'
     `ci-portes : « ${PORTE_E2E_COMPLETE} » doit fournir SSR_EN_BASE_URL, sinon e2e/cours-i18n-en.spec.ts se met lui-meme hors porte et /en n est plus verifie.`,
   );
   assert.ok(
-    /serve:ssr:portfolio-app:en/.test(readFileSync(join(RACINE, 'playwright.config.ts'), 'utf8')),
+    /dist\/portfolio-app\/server\/en\/server\.mjs/.test(
+      readFileSync(join(RACINE, 'playwright.config.ts'), 'utf8'),
+    ),
     'ci-portes : la configuration Playwright doit lever le serveur SSR anglais, sinon SSR_EN_BASE_URL pointe vers le vide.',
   );
 });
