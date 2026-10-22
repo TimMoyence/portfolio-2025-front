@@ -9248,109 +9248,116 @@
           <context context-type="linenumber">104,108</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="privacyConservationTechnique" datatype="html">
+        <source> L&apos;adresse IP, le navigateur et la page de provenance enregistrés avec un message de contact ou une demande d&apos;audit sont effacés 6 mois après ; les sauvegardes de la base, gardées 6 mois au plus, peuvent les contenir jusque-là. Les journaux du serveur tournent et n&apos;en gardent que les dernières requêtes. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
+          <context context-type="linenumber">109,114</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="privacyDroitsTitle" datatype="html">
         <source>7. Vos droits</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">111,112</context>
+          <context context-type="linenumber">117,118</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsBody" datatype="html">
         <source> Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification, d&apos;effacement, de portabilité et d&apos;opposition sur vos données. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">113,117</context>
+          <context context-type="linenumber">119,123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsItem1" datatype="html">
         <source>Consulter ou corriger vos informations depuis votre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">118,120</context>
+          <context context-type="linenumber">124,126</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsProfilLink" datatype="html">
         <source>espace personnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">120,121</context>
+          <context context-type="linenumber">126,127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsItem1End" datatype="html">
         <source>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">122,123</context>
+          <context context-type="linenumber">128,129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsItem2" datatype="html">
         <source>Demander la suppression de votre compte à tout moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">123,124</context>
+          <context context-type="linenumber">129,130</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsItem3" datatype="html">
         <source>Vous désinscrire des emails en un clic.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">124,128</context>
+          <context context-type="linenumber">130,134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyContactTitle" datatype="html">
         <source>8. Nous contacter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">129,131</context>
+          <context context-type="linenumber">135,137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyContactBody1" datatype="html">
         <source>Pour exercer vos droits ou poser une question sur vos données, écrivez-nous via la</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">132,134</context>
+          <context context-type="linenumber">138,140</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyContactContactLink" datatype="html">
         <source>page de contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">134,138</context>
+          <context context-type="linenumber">140,144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCookiesTitle" datatype="html">
         <source>9. Cookies et stockage local</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">139,140</context>
+          <context context-type="linenumber">145,146</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCookiesBody" datatype="html">
         <source> Ce site n&apos;utilise que des cookies et un stockage local strictement nécessaires à son fonctionnement. Aucun ne mesure votre audience ni ne sert à la publicité : ils ne demandent donc pas votre consentement. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">141,145</context>
+          <context context-type="linenumber">147,151</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCookiesSession" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Session du compte<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : un cookie sécurisé, illisible par les scripts, garde votre connexion à l&apos;espace formateur pendant 30 jours au plus. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">147,150</context>
+          <context context-type="linenumber">153,156</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCookiesSeance" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Séance de cours<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : le poste garde votre identité de séance (prénom, nom, e-mail et secret qui vous rend votre place), vos brouillons et les réponses en attente de réseau jusqu&apos;à la fin de la séance ; si vous quittez la page avant, votre identité s&apos;efface au plus tard 12 heures après votre dernière action. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">151,154</context>
+          <context context-type="linenumber">157,160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCookiesBandeau" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Bandeau d&apos;information<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : le poste retient que vous l&apos;avez lu, jusqu&apos;à la prochaine mise à jour de cette politique. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">157,160</context>
+          <context context-type="linenumber">163,166</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyHeroLabel" datatype="html">

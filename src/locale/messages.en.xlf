@@ -8760,6 +8760,15 @@
         <target> Your data is kept for as long as necessary for the relevant purpose: the lifetime of your account, then the applicable legal periods (for example, accounting). Beyond that, it is deleted or anonymized. </target>
       </segment>
     </unit>
+    <unit id="privacyConservationTechnique">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:109,114</note>
+      </notes>
+      <segment>
+        <source> L&apos;adresse IP, le navigateur et la page de provenance enregistrés avec un message de contact ou une demande d&apos;audit sont effacés 6 mois après ; les sauvegardes de la base, gardées 6 mois au plus, peuvent les contenir jusque-là. Les journaux du serveur tournent et n&apos;en gardent que les dernières requêtes. </source>
+        <target> The IP address, browser and referring page recorded with a contact message or an audit request are erased after 6 months; database backups, kept for 6 months at most, may contain them until then. Server logs rotate and keep only the latest requests. </target>
+      </segment>
+    </unit>
     <unit id="privacyConservationTitle">
       <notes>
         <note category="location">src/app/features/privacy/privacy.component.html:110,111</note>

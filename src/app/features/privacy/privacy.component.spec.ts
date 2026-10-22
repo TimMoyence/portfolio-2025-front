@@ -112,6 +112,12 @@ describe('PrivacyComponent', () => {
     expect(texteNormalise(page.querySelector('#base'))).not.toContain('amélioration du site');
   });
 
+  it('annonce l effacement des données techniques des demandes au bout de six mois', () => {
+    expect(texteNormalise(rendre().querySelector('#conservation'))).toContain(
+      "L'adresse IP, le navigateur et la page de provenance enregistrés avec un message de contact ou une demande d'audit sont effacés 6 mois après",
+    );
+  });
+
   it('annonce la durée de conservation de l identité de séance que le poste applique', () => {
     const heures = DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS / (60 * 60 * 1000);
 
