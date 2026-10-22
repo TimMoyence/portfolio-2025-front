@@ -9340,7 +9340,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCookiesSeance" datatype="html">
-        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Séance de cours<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : le poste garde votre identité de séance, vos brouillons et les réponses en attente de réseau jusqu&apos;à la fin de la séance. </source>
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Séance de cours<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : le poste garde votre identité de séance (prénom, nom, e-mail et secret qui vous rend votre place), vos brouillons et les réponses en attente de réseau jusqu&apos;à la fin de la séance ; si vous quittez la page avant, votre identité s&apos;efface au plus tard 12 heures après votre dernière action. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
           <context context-type="linenumber">151,154</context>
@@ -9350,7 +9350,7 @@
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Bandeau d&apos;information<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : le poste retient que vous l&apos;avez lu, jusqu&apos;à la prochaine mise à jour de cette politique. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">155,158</context>
+          <context context-type="linenumber">157,160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyHeroLabel" datatype="html">

@@ -1,4 +1,5 @@
 import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
+import { DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS } from '../../../cours/runtime/core/identity';
 import { LIBELLES_DES_INCIDENTS } from '../../core/models/libelles-des-incidents';
 import { isolateAnimReady } from '../../../testing/anim-ready';
 import { setupTestBed } from '../../../testing/setup-test-bed';
@@ -109,6 +110,14 @@ describe('PrivacyComponent', () => {
       'Améliorer le site, de façon agrégée et anonyme.',
     );
     expect(texteNormalise(page.querySelector('#base'))).not.toContain('amélioration du site');
+  });
+
+  it('annonce la durée de conservation de l identité de séance que le poste applique', () => {
+    const heures = DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS / (60 * 60 * 1000);
+
+    expect(texteNormalise(rendre().querySelector('#cookies'))).toContain(
+      `s'efface au plus tard ${heures} heures après votre dernière action`,
+    );
   });
 
   it('nomme chaque type d incident que le poste consigne, et aucun autre', () => {

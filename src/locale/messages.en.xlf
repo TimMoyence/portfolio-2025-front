@@ -8819,8 +8819,8 @@
         <note category="location">src/app/features/privacy/privacy.component.html:151,154</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Séance de cours</pc> : le poste garde votre identité de séance, vos brouillons et les réponses en attente de réseau jusqu&apos;à la fin de la séance. </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Class session</pc>: the device keeps your session identity, your drafts and the answers waiting for the network until the session ends. </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Séance de cours</pc> : le poste garde votre identité de séance (prénom, nom, e-mail et secret qui vous rend votre place), vos brouillons et les réponses en attente de réseau jusqu&apos;à la fin de la séance ; si vous quittez la page avant, votre identité s&apos;efface au plus tard 12 heures après votre dernière action. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Class session</pc>: the device keeps your session identity (first name, last name, email and the secret that gives you back your seat), your drafts and the answers waiting for the network until the session ends; if you leave the page earlier, your identity is erased at the latest 12 hours after your last action. </target>
       </segment>
     </unit>
     <unit id="privacyCookiesBandeau">
