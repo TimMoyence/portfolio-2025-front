@@ -17,7 +17,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\" \"*.{json,js,cjs,md,yml,yaml}\" \".github/**/*.{md,yml,yaml}\" \"docs/**/*.md\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "contrat": "openapi-ts && node scripts/instantanes-du-contrat.mjs && prettier --write --log-level warn \"src/testing/fixtures/*.instantane.json\"",
-    "contrat:check": "npm run contrat && git diff --exit-code -- contrat src/testing/fixtures",
+    "contrat:check": "npm run contrat && git diff --exit-code -- contrat src/testing/fixtures && node scripts/contrat-sans-ecart.mjs",
     "guard:comments": "node scripts/guard-no-comments.cli.mjs --root .",
     "guard:comments:count": "node scripts/guard-no-comments.cli.mjs --root . --count",
     "guard:comments:tighten": "node scripts/guard-no-comments.cli.mjs --root . --tighten",
