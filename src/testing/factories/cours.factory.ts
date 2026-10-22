@@ -172,6 +172,7 @@ export function buildExitBillet(overrides: Partial<ExitBilletPublic> = {}): Exit
     id: 'B-SORTIE-09',
     question: 'Le taux equivalent mensuel d un taux annuel de 12 % vaut :',
     invite: 'Qu est-ce qui reste flou ?',
+    longueurMax: 500,
     options: [
       { id: 'a', libelle: 'Un peu moins de 1 %' },
       { id: 'b', libelle: 'Exactement 1 %' },

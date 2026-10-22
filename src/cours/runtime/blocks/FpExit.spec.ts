@@ -17,7 +17,7 @@ interface DetailExit {
 }
 
 const BILLET = buildExitBillet();
-const LIMITE = 500;
+const LIMITE = BILLET.longueurMax;
 const TEXTE_COURT = 'Le passage du taux annuel au taux mensuel reste flou';
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
 
@@ -110,6 +110,23 @@ describe('FpExit', () => {
     envoyer(hote);
     expect(details.length).toBe(1);
     expect(details[0].texteLibre.length).toBe(LIMITE);
+  });
+
+  it('compte la limite servie en caracteres, comme le serveur, et non en unites UTF-16', () => {
+    const details = soumissionsDe(hote);
+    choisir(hote, 'a');
+    ecrire(hote, '😀'.repeat(LIMITE));
+    envoyer(hote);
+    expect(details.length).toBe(1);
+    expect(texteOmbre(hote, 'jauge')).toBe(`${LIMITE} / ${LIMITE}`);
+  });
+
+  it('ne compte pas les blancs de tete et de fin, que le serveur retire', () => {
+    const details = soumissionsDe(hote);
+    choisir(hote, 'a');
+    ecrire(hote, `  ${'a'.repeat(LIMITE)}  `);
+    envoyer(hote);
+    expect(details.length).toBe(1);
   });
 
   it('refuse un texte libre plus long que la limite en disant la limite', () => {

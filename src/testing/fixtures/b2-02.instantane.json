@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "f7cc2964bc8db72a54db9becb4abf2054bea108f8b9c7c7f289af2075c1614f2",
+  "empreinte": "e145170d5202b719629227f184f8df7b24db07fc9de9ccc6c07707b33967bc6a",
   "sujet": {
     "id": "b2-02-series-statistiques",
     "titre": "Séries statistiques : résumer, relier, prévoir",
@@ -2074,6 +2074,7 @@
             "id": "b2-02-a4-billet",
             "question": "La banque lira une seule phrase. Laquelle peut partir telle quelle ?",
             "invite": "Quelle réserve la phrase juste contient-elle, et pourquoi est-elle nécessaire ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "nos-clients-paient-en-moyenne-a-48-jours-fe436567",
@@ -5640,6 +5641,7 @@
             "id": "b2-02-a4-billet",
             "question": "La banque lira une seule phrase. Laquelle peut partir telle quelle ?",
             "invite": "Quelle réserve la phrase juste contient-elle, et pourquoi est-elle nécessaire ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "nos-clients-paient-en-moyenne-a-48-jours-fe436567",

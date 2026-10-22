@@ -8,6 +8,12 @@ export function dateDuSite(instant: string, locale: string): string {
   );
 }
 
+export function heureDuSite(instant: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, { timeStyle: 'medium', timeZone: FUSEAU_DU_SITE }).format(
+    new Date(instant),
+  );
+}
+
 @Pipe({ name: 'dateDuSite', standalone: true })
 export class DateDuSitePipe implements PipeTransform {
   private readonly locale = inject(LOCALE_ID);

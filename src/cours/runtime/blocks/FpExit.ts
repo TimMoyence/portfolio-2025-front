@@ -1,20 +1,12 @@
+import type { DonneesFpExit } from '../../../../contrat/types.gen';
 import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { longueurDeTexte } from '../core/longueur-de-texte';
 import { chaineDe } from '../core/valeurs';
 import { FpReponse } from './reponse';
-import {
-  type ContenuDeBrique,
-  type OptionPublique,
-  copierLeSocle,
-  projeterOptions,
-} from './projection';
+import { type OptionPublique, copierLeSocle, projeterOptions } from './projection';
 
-export interface ExitBilletPublic extends ContenuDeBrique {
-  readonly question: string;
-  readonly invite: string;
-  readonly options: readonly OptionPublique[];
-}
+export type ExitBilletPublic = DonneesFpExit['billet'];
 
-const LIMITE_TEXTE_LIBRE = 500;
 const ID_TEXTE_LIBRE = 'fp-exit-texte-libre';
 
 function projeterBillet(source: ExitBilletPublic): ExitBilletPublic {
@@ -22,8 +14,13 @@ function projeterBillet(source: ExitBilletPublic): ExitBilletPublic {
     ...copierLeSocle(source),
     question: source.question,
     invite: source.invite,
+    longueurMax: source.longueurMax,
     options: projeterOptions(source.options),
   };
+}
+
+function longueurSaisie(texte: string): number {
+  return longueurDeTexte(texte.trim());
 }
 
 export class FpExit extends FpReponse<ExitBilletPublic> {
@@ -55,7 +52,7 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
         ? safeHtml`<p class="fp-exit__invite" data-testid="invite">${escapeHtml(billet.invite)}</p>`
         : safeHtml`<label class="fp-exit__invite" for="${escapeHtml(ID_TEXTE_LIBRE)}">${escapeHtml(billet.invite)}</label>
         <textarea class="fp-exit__champ" id="${escapeHtml(ID_TEXTE_LIBRE)}" data-testid="texte-libre" rows="3">${escapeHtml(this.texteLibre)}</textarea>
-        <p class="fp-exit__jauge" data-testid="jauge">${escapeHtml(this.jauge())}</p>
+        <p class="fp-exit__jauge" data-testid="jauge">${escapeHtml(this.jauge(billet))}</p>
         <button type="button" class="fp-exit__envoyer" data-testid="envoyer">${escapeHtml(this.texte('envoyer'))}</button>
         <p aria-live="polite" data-testid="retour">${escapeHtml(this.message)}</p>
         ${this.recapitulatif()}
@@ -73,7 +70,8 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
   }
 
   bind(racine: ShadowRoot): void {
-    if (!this.suivreEtSaisir(this.billet?.id ?? null)) {
+    const billet = this.billet;
+    if (billet === null || !this.suivreEtSaisir(billet.id)) {
       return;
     }
     const verrouille = this.verrouille();
@@ -86,10 +84,10 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
           this.memoriser();
           const jauge = racine.querySelector('[data-testid="jauge"]');
           if (jauge !== null) {
-            jauge.textContent = this.jauge();
+            jauge.textContent = this.jauge(billet);
           }
         },
-        envoyer: (texte) => this.envoyer(texte),
+        envoyer: (texte) => this.envoyer(billet, texte),
       },
     );
     if (!branche) {
@@ -105,8 +103,8 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
     this.choix = null;
   }
 
-  private jauge(): string {
-    return `${this.texteLibre.length} / ${LIMITE_TEXTE_LIBRE}`;
+  private jauge(billet: ExitBilletPublic): string {
+    return `${longueurSaisie(this.texteLibre)} / ${billet.longueurMax}`;
   }
 
   private memoriser(): void {
@@ -134,8 +132,8 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
     return this.billet?.options.find((option) => option.id === this.choix)?.libelle ?? '';
   }
 
-  private messageTropLong(): string {
-    return `${this.texte('texte-libre-trop-long')} ${LIMITE_TEXTE_LIBRE} ${this.texte('caracteres-maximum')}`;
+  private messageTropLong(billet: ExitBilletPublic): string {
+    return `${this.texte('texte-libre-trop-long')} ${billet.longueurMax} ${this.texte('caracteres-maximum')}`;
   }
 
   private selectionner(valeur: string): void {
@@ -148,7 +146,7 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
     this.refresh();
   }
 
-  private envoyer(brut: string): void {
+  private envoyer(billet: ExitBilletPublic, brut: string): void {
     if (this.verrouille()) {
       return;
     }
@@ -157,12 +155,12 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
       this.refuserLEnvoi(this.texte('choix-obligatoire'));
       return;
     }
-    if (brut.length > LIMITE_TEXTE_LIBRE) {
-      this.refuserLEnvoi(this.messageTropLong());
+    if (longueurSaisie(brut) > billet.longueurMax) {
+      this.refuserLEnvoi(this.messageTropLong(billet));
       return;
     }
     this.conclureLEnvoi('fp-exit-submit', {
-      billetId: this.billet?.id,
+      billetId: billet.id,
       valeur: this.choix,
       texteLibre: brut,
     });

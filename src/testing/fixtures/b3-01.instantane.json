@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "f83f368f33e15296cefdd29e88f91432289ebeeed1019adc17505fc332c2db67",
+  "empreinte": "3128d1edd53b4b1d5bbb271ccd886d77e7697274eedff89c889d077af8d18739",
   "sujet": {
     "id": "b3-01-donnee-brute-decision",
     "titre": "Expert Data : de la donnée brute à la décision",
@@ -1952,6 +1952,7 @@
             "id": "b3-01-a3-billet",
             "question": "Une ligne porte une date_livraison antérieure à sa date_commande. La corrige-t-on automatiquement ?",
             "invite": "En une phrase : pourquoi ce choix ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "non-on-la-signale-et-on-demande-faux-hum-c6b7abb5",
@@ -5204,6 +5205,7 @@
             "id": "b3-01-a3-billet",
             "question": "Une ligne porte une date_livraison antérieure à sa date_commande. La corrige-t-on automatiquement ?",
             "invite": "En une phrase : pourquoi ce choix ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "non-on-la-signale-et-on-demande-faux-hum-c6b7abb5",

@@ -84,7 +84,24 @@ function interfacesDe(source) {
   });
 }
 
-function porteLesMetadonnees(source, corpus) {
+const CONTRAT = 'contrat/types.gen.ts';
+const ALIAS_DU_CONTRAT = /export type \w+ = (Donnees\w+)\[/g;
+
+function porteLesMetadonneesDuContrat(source, contrat) {
+  return [...source.matchAll(ALIAS_DU_CONTRAT)].some(([, nom]) => {
+    const debut = contrat.indexOf(`export type ${nom} = {`);
+    if (debut === -1) {
+      return false;
+    }
+    const fin = contrat.indexOf('\n};', debut);
+    return DECLARE_LES_METADONNEES.test(contrat.slice(debut, fin === -1 ? contrat.length : fin));
+  });
+}
+
+function porteLesMetadonnees(source, corpus, contrat = '') {
+  if (porteLesMetadonneesDuContrat(source, contrat)) {
+    return true;
+  }
   const parNom = new Map(interfacesDe(corpus).map((iface) => [iface.nom, iface]));
   const porte = (iface, vues) => {
     if (DECLARE_LES_METADONNEES.test(iface.corps)) {
@@ -209,10 +226,11 @@ test('chaque brique inscrite declare ses metadonnees pedagogiques', () => {
   assert.ok(inscrites.length > 0, `${REGISTRE} n inscrit aucune brique : la garde ne garde rien.`);
 
   const corpus = corpusDesBriques();
+  const contrat = readFileSync(CONTRAT, 'utf8');
   const muettes = inscrites
     .filter(({ classe }) => {
       const source = readFileSync(join(DOSSIER_BRIQUES, `${classe}.ts`), 'utf8');
-      return !porteLesMetadonnees(source, corpus);
+      return !porteLesMetadonnees(source, corpus, contrat);
     })
     .map(({ nom }) => nom);
 
@@ -255,4 +273,30 @@ export interface Orphelin {
     !porteLesMetadonnees('interface Plan extends Orphelin {\n  readonly x: number;\n}', corpus),
   );
   assert.ok(!porteLesMetadonnees('export class FpRien {}', corpus));
+});
+
+test('une brique typee par le contrat porte les metadonnees que le contrat lui donne, et seulement celles-la', () => {
+  const contrat = `
+export type DonneesFpPorte = {
+  billet: {
+    id: string;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpMuette = {
+  billet: {
+    id: string;
+  };
+};
+`;
+  assert.ok(
+    porteLesMetadonnees("export type BilletPublic = DonneesFpPorte['billet'];", '', contrat),
+  );
+  assert.ok(
+    !porteLesMetadonnees("export type BilletPublic = DonneesFpMuette['billet'];", '', contrat),
+  );
+  assert.ok(
+    !porteLesMetadonnees("export type BilletPublic = DonneesFpAbsente['billet'];", '', contrat),
+  );
 });

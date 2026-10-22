@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "23499d46be73cabfd0282e8d03a334f3ead00924aa956e4474ee3c902b1b2d65",
+  "empreinte": "7f7d80e690ab8b72173b766019e6fb68781fcc4710f5748cc3245ef15d891e24",
   "sujet": {
     "id": "b2-04-suites",
     "titre": "Suites : modéliser une évolution régulière",
@@ -2164,6 +2164,7 @@
             "id": "b2-04-a4-billet",
             "question": "Hélène prolonge le plan dans un nouveau classeur : chiffre d’affaires de l’année précédente en D2, taux annuel en H1. Quelle formule écrire en D3 pour la recopier vers le bas ?",
             "invite": "En une phrase : pourquoi l’hypothèse B finit-elle par dépasser l’hypothèse A ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "d2-1-plus-h-1-f425a45f",
@@ -6139,6 +6140,7 @@
             "id": "b2-04-a4-billet",
             "question": "Hélène prolonge le plan dans un nouveau classeur : chiffre d’affaires de l’année précédente en D2, taux annuel en H1. Quelle formule écrire en D3 pour la recopier vers le bas ?",
             "invite": "En une phrase : pourquoi l’hypothèse B finit-elle par dépasser l’hypothèse A ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "d2-1-plus-h-1-f425a45f",

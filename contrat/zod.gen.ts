@@ -150,36 +150,6 @@ export const zContactResponseDto = z.object({
   httpCode: z.number(),
 });
 
-export const zSourceDeConsentement = z.enum(['banner', 'settings']);
-
-export const zActionDeConsentement = z.enum([
-  'accept_all',
-  'essential_only',
-  'save_preferences',
-  'withdraw',
-]);
-
-export const zCookieConsentPreferencesRequestDto = z.object({
-  essential: z.boolean(),
-  preferences: z.boolean(),
-  analytics: z.boolean(),
-  marketing: z.boolean(),
-});
-
-export const zCookieConsentRequestDto = z.object({
-  policyVersion: z.string().min(1).max(50),
-  locale: zLocale,
-  region: z.string().min(1).max(20),
-  source: zSourceDeConsentement,
-  action: zActionDeConsentement,
-  preferences: zCookieConsentPreferencesRequestDto,
-});
-
-export const zCookieConsentResponseDto = z.object({
-  message: z.string(),
-  httpCode: z.number(),
-});
-
 export const zAuditEchoueResponseDto = z.object({
   auditId: z.string(),
   progress: z.number(),
@@ -816,6 +786,24 @@ export const zRapportReponseLibreResponseDto = z.object({
   reponse: z.string(),
 });
 
+export const zTypeDIncident = z.enum([
+  'tab_hidden',
+  'window_blur',
+  'copy_attempt',
+  'paste_attempt',
+  'context_menu',
+  'blocked_shortcut',
+  'devtools_suspected',
+  'page_unload',
+  'fast_answer',
+]);
+
+export const zRapportIncidentResponseDto = z.object({
+  type: zTypeDIncident,
+  horodatage: z.iso.datetime(),
+  contexte: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).nullable(),
+});
+
 export const zRapportQuestionResponseDto = z.object({
   questionId: z.string(),
   concept: z.string(),
@@ -835,7 +823,7 @@ export const zRapportParticipantResponseDto = z.object({
   email: z.string(),
   completion: z.number(),
   reponsesLibres: z.array(zRapportReponseLibreResponseDto),
-  incidents: z.number(),
+  incidents: z.array(zRapportIncidentResponseDto),
   reponses: z.array(zRapportQuestionResponseDto),
 });
 
@@ -1237,18 +1225,6 @@ export const zSpacedQuestionPubliqueResponseDto = z.object({
 export const zRappelsResponseDto = z.object({
   questions: z.array(zSpacedQuestionPubliqueResponseDto),
 });
-
-export const zTypeDIncident = z.enum([
-  'tab_hidden',
-  'window_blur',
-  'copy_attempt',
-  'paste_attempt',
-  'context_menu',
-  'blocked_shortcut',
-  'devtools_suspected',
-  'page_unload',
-  'fast_answer',
-]);
 
 export const zIncidentEntryDto = z.object({
   type: zTypeDIncident,
@@ -2413,6 +2389,7 @@ export const zDonneesFpExit = z.object({
     id: z.string(),
     question: z.string(),
     invite: z.string(),
+    longueurMax: z.literal(500),
     options: z.array(
       z.object({
         id: z.string(),
@@ -2881,10 +2858,6 @@ export const zAuthControllerMeResponse = zUserResponseDto;
 export const zContactsControllerCreateBody = zContactRequestDto;
 
 export const zContactsControllerCreateResponse = zContactResponseDto;
-
-export const zCookieConsentsControllerCreateBody = zCookieConsentRequestDto;
-
-export const zCookieConsentsControllerCreateResponse = zCookieConsentResponseDto;
 
 export const zAuditsControllerCreateBody = zAuditRequestRequestDto;
 

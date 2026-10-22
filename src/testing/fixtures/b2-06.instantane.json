@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "440deeb24bca33ec8f1c9bc2a59fbdced246b3f9e788624de76dc89d52361382",
+  "empreinte": "690b3053da295f7135bcd5a16c9c58b49777bf0aad9049d1dad06669f75c3788",
   "sujet": {
     "id": "b2-06-exponentielle-logarithme",
     "titre": "Exponentielle et logarithme",
@@ -2012,6 +2012,7 @@
             "id": "b2-06-a4-billet",
             "question": "Hélène place une trésorerie à 3 % par an. Quelle formule de tableur donne le nombre exact d’années pour que le capital double ?",
             "invite": "En une phrase : pourquoi passe-t-on par ln pour trouver un seuil ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "ln-2-ln-1-03-127ca479",
@@ -5889,6 +5890,7 @@
             "id": "b2-06-a4-billet",
             "question": "Hélène place une trésorerie à 3 % par an. Quelle formule de tableur donne le nombre exact d’années pour que le capital double ?",
             "invite": "En une phrase : pourquoi passe-t-on par ln pour trouver un seuil ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "ln-2-ln-1-03-127ca479",

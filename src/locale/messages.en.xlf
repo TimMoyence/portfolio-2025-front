@@ -10551,6 +10551,16 @@
         <target>Students' free-text answers</target>
       </segment>
     </unit>
+    <unit id="syntheseIncidentsTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:200,202</note>
+        <note category="meaning">synthese.incidentsTitre</note>
+      </notes>
+      <segment>
+        <source> Incidents relevés sur les postes </source>
+        <target> Incidents recorded on the devices </target>
+      </segment>
+    </unit>
     <unit id="syntheseExport">
       <notes>
         <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:185,188</note>
@@ -15013,6 +15023,87 @@
       <segment>
         <source>Le lien n’a pas pu être renvoyé pour le moment : réessayez dans un instant.</source>
         <target>The link could not be resent right now: try again in a moment.</target>
+      </segment>
+    </unit>
+    <unit id="incidentOngletMasque">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:4</note>
+      </notes>
+      <segment>
+        <source>onglet masqué</source>
+        <target>tab hidden</target>
+      </segment>
+    </unit>
+    <unit id="incidentFenetreQuittee">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:5</note>
+      </notes>
+      <segment>
+        <source>fenêtre quittée</source>
+        <target>window left</target>
+      </segment>
+    </unit>
+    <unit id="incidentTentativeDeCopier">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:6</note>
+      </notes>
+      <segment>
+        <source>tentative de copier</source>
+        <target>copy attempt</target>
+      </segment>
+    </unit>
+    <unit id="incidentTentativeDeColler">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:7</note>
+      </notes>
+      <segment>
+        <source>tentative de coller</source>
+        <target>paste attempt</target>
+      </segment>
+    </unit>
+    <unit id="incidentMenuContextuel">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:8</note>
+      </notes>
+      <segment>
+        <source>menu contextuel ouvert</source>
+        <target>context menu opened</target>
+      </segment>
+    </unit>
+    <unit id="incidentRaccourciBloque">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:9</note>
+      </notes>
+      <segment>
+        <source>raccourci bloqué</source>
+        <target>shortcut blocked</target>
+      </segment>
+    </unit>
+    <unit id="incidentOutilsDeDeveloppement">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:10</note>
+      </notes>
+      <segment>
+        <source>outils de développement soupçonnés</source>
+        <target>developer tools suspected</target>
+      </segment>
+    </unit>
+    <unit id="incidentPageQuittee">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:11</note>
+      </notes>
+      <segment>
+        <source>page quittée ou rechargée</source>
+        <target>page left or reloaded</target>
+      </segment>
+    </unit>
+    <unit id="incidentReponseTropRapide">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:12</note>
+      </notes>
+      <segment>
+        <source>réponse trop rapide</source>
+        <target>answer too fast</target>
       </segment>
     </unit>
     <unit id="formulaireRefusTropDeTentatives">

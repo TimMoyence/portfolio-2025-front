@@ -11,6 +11,7 @@ import type {
   RapportQuestionResponseDto as ReponseRapportee,
   RapportReponseLibreResponseDto as ReponseLibreRapportee,
 } from '../../../../../contrat/types.gen';
+import { LIBELLES_DES_INCIDENTS } from '../../../core/models/libelles-des-incidents';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import type {
   ConfusionComptee,
@@ -299,6 +300,41 @@ describe('CoursSyntheseComponent', () => {
       expect(textes(fixture, 'synthese-question-id')).toEqual(['Q-1', 'Q-2']);
       expect(textes(fixture, 'synthese-echec')).toEqual([]);
     });
+  });
+
+  it('montre au formateur les incidents de chaque poste : heure de Paris, type lisible et contexte', async () => {
+    const fixture = await monter(
+      rapportDe([
+        MALIK,
+        {
+          ...NORA,
+          incidents: [
+            { type: 'tab_hidden', horodatage: '2026-09-12T08:05:30.000Z', contexte: null },
+            {
+              type: 'paste_attempt',
+              horodatage: '2026-09-12T08:07:00.000Z',
+              contexte: { champ: 'reponse', longueur: 42 },
+            },
+          ],
+        },
+      ]),
+    );
+
+    expect(textes(fixture, 'synthese-incidents-etudiant')).toEqual(['Nora Durand']);
+    expect(textes(fixture, 'synthese-incident-type')).toEqual([
+      LIBELLES_DES_INCIDENTS.tab_hidden,
+      LIBELLES_DES_INCIDENTS.paste_attempt,
+    ]);
+    expect(textes(fixture, 'synthese-incident-heure')[0]).toContain('10:05:30');
+    expect(textes(fixture, 'synthese-incident-contexte')).toEqual([
+      'champ : reponse, longueur : 42',
+    ]);
+  });
+
+  it('ne montre aucune section d incidents quand aucun poste n en a releve', async () => {
+    const fixture = await monter(rapportDe([MALIK, NORA]));
+
+    expect(textes(fixture, 'synthese-incidents')).toEqual([]);
   });
 
   it('marque l etudiant sans aucune reponse au lieu de lui donner un avancement de zero', async () => {

@@ -251,6 +251,7 @@ export const BILLET_DE_SORTIE: DonneesFpExit['billet'] = {
   id: 'B-SORTIE-09',
   question: 'Le taux équivalent mensuel d’un taux annuel de 12 % vaut :',
   invite: 'Qu’est-ce qui reste flou ?',
+  longueurMax: 500,
   options: [
     { id: 'a', libelle: 'Un peu moins de 1 %' },
     { id: 'b', libelle: 'Exactement 1 %' },

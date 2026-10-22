@@ -264,7 +264,7 @@ export function buildParticipantRapporte(
     completion: 1,
     reponses: [buildReponseRapportee()],
     reponsesLibres: [],
-    incidents: 0,
+    incidents: [],
     ...overrides,
   };
 }

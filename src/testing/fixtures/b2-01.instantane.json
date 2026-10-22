@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "139cef0f7b554aaca996e3a1b337735ef38b5c8f29a525fd0257d12d7cfd8075",
+  "empreinte": "96347d8139194b33fd982f29bc599254f5a27c5f3a1bcf044054d10aba166a55",
   "sujet": {
     "id": "b2-01-traitement-information-chiffree",
     "titre": "Lire, contrôler et décider avec l’information chiffrée",
@@ -7495,6 +7495,7 @@
             "id": "b2-01-a6-billet",
             "question": "Le comité ne retiendra qu’une phrase. Laquelle peut figurer telle quelle au compte rendu ?",
             "invite": "Quels deux chiffres du dossier prouvent que cette phrase est juste ? Écrivez-les avec leur unité.",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "la-marge-brute-progresse-de-1-200-eur-et-c3943fcd",
@@ -17454,6 +17455,7 @@
             "id": "b2-01-a6-billet",
             "question": "Le comité ne retiendra qu’une phrase. Laquelle peut figurer telle quelle au compte rendu ?",
             "invite": "Quels deux chiffres du dossier prouvent que cette phrase est juste ? Écrivez-les avec leur unité.",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "la-marge-brute-progresse-de-1-200-eur-et-c3943fcd",

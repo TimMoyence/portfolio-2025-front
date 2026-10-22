@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "ebbf8fcf573a4403693b32ecc8b4e2331971cf9dd90dbf9839bd296bf85a4eb9",
+  "empreinte": "323d2cbad5a29b8874a2f7f3f9ad95c118c9c20ecd4a9e21bdd23089572c9214",
   "sujet": {
     "id": "b2-05-mathematiques-financieres",
     "titre": "Mathématiques financières : placer, emprunter",
@@ -2131,6 +2131,7 @@
             "id": "b2-05-a4-billet",
             "question": "Hélène prépare le tableau d’un nouvel emprunt : capital dû en début d’année en B2, taux annuel en H1. Quelle formule écrire en C2 pour les intérêts, à recopier vers le bas ?",
             "invite": "En une phrase : pourquoi les intérêts d’un emprunt baissent-ils chaque année ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "b2-h-1-c53d0532",
@@ -6207,6 +6208,7 @@
             "id": "b2-05-a4-billet",
             "question": "Hélène prépare le tableau d’un nouvel emprunt : capital dû en début d’année en B2, taux annuel en H1. Quelle formule écrire en C2 pour les intérêts, à recopier vers le bas ?",
             "invite": "En une phrase : pourquoi les intérêts d’un emprunt baissent-ils chaque année ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "b2-h-1-c53d0532",

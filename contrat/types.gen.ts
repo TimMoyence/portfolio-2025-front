@@ -116,32 +116,6 @@ export type ContactResponseDto = {
   httpCode: number;
 };
 
-export type SourceDeConsentement = 'banner' | 'settings';
-
-export type ActionDeConsentement =
-  'accept_all' | 'essential_only' | 'save_preferences' | 'withdraw';
-
-export type CookieConsentPreferencesRequestDto = {
-  essential: boolean;
-  preferences: boolean;
-  analytics: boolean;
-  marketing: boolean;
-};
-
-export type CookieConsentRequestDto = {
-  policyVersion: string;
-  locale: Locale;
-  region: string;
-  source: SourceDeConsentement;
-  action: ActionDeConsentement;
-  preferences: CookieConsentPreferencesRequestDto;
-};
-
-export type CookieConsentResponseDto = {
-  message: string;
-  httpCode: number;
-};
-
 export type ProgressionDAuditResponseDto = {
   auditId: string;
   progress: number;
@@ -1161,6 +1135,25 @@ export type RapportReponseLibreResponseDto = {
   reponse: string;
 };
 
+export type TypeDIncident =
+  | 'tab_hidden'
+  | 'window_blur'
+  | 'copy_attempt'
+  | 'paste_attempt'
+  | 'context_menu'
+  | 'blocked_shortcut'
+  | 'devtools_suspected'
+  | 'page_unload'
+  | 'fast_answer';
+
+export type RapportIncidentResponseDto = {
+  type: TypeDIncident;
+  horodatage: string;
+  contexte: {
+    [key: string]: string | number | boolean;
+  } | null;
+};
+
 export type RapportQuestionResponseDto = {
   questionId: string;
   concept: string;
@@ -1196,9 +1189,9 @@ export type RapportParticipantResponseDto = {
    */
   reponsesLibres: Array<RapportReponseLibreResponseDto>;
   /**
-   * Nombre d incidents du poste
+   * Incidents du poste, dans l ordre du temps
    */
-  incidents: number;
+  incidents: Array<RapportIncidentResponseDto>;
   reponses: Array<RapportQuestionResponseDto>;
 };
 
@@ -1921,17 +1914,6 @@ export type RappelsResponseDto = {
    */
   questions: Array<SpacedQuestionPubliqueResponseDto>;
 };
-
-export type TypeDIncident =
-  | 'tab_hidden'
-  | 'window_blur'
-  | 'copy_attempt'
-  | 'paste_attempt'
-  | 'context_menu'
-  | 'blocked_shortcut'
-  | 'devtools_suspected'
-  | 'page_unload'
-  | 'fast_answer';
 
 export type IncidentEntryDto = {
   type: TypeDIncident;
@@ -2987,6 +2969,7 @@ export type DonneesFpExit = {
     id: string;
     question: string;
     invite: string;
+    longueurMax: 500;
     options: Array<{
       id: string;
       libelle: string;
@@ -3374,31 +3357,6 @@ export type ContactsControllerCreateResponses = {
 
 export type ContactsControllerCreateResponse =
   ContactsControllerCreateResponses[keyof ContactsControllerCreateResponses];
-
-export type CookieConsentsControllerCreateData = {
-  body: CookieConsentRequestDto;
-  path?: never;
-  query?: never;
-  url: '/api/v1/portfolio25/cookie-consents';
-};
-
-export type CookieConsentsControllerCreateErrors = {
-  /**
-   * Validation echouee
-   */
-  400: unknown;
-  /**
-   * Trop de requetes
-   */
-  429: unknown;
-};
-
-export type CookieConsentsControllerCreateResponses = {
-  201: CookieConsentResponseDto;
-};
-
-export type CookieConsentsControllerCreateResponse =
-  CookieConsentsControllerCreateResponses[keyof CookieConsentsControllerCreateResponses];
 
 export type AuditsControllerCreateData = {
   body: AuditRequestRequestDto;

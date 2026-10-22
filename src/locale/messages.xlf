@@ -2,6 +2,69 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="fr" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="incidentOngletMasque" datatype="html">
+        <source>onglet masqué</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/models/libelles-des-incidents.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="incidentFenetreQuittee" datatype="html">
+        <source>fenêtre quittée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/models/libelles-des-incidents.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="incidentTentativeDeCopier" datatype="html">
+        <source>tentative de copier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/models/libelles-des-incidents.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="incidentTentativeDeColler" datatype="html">
+        <source>tentative de coller</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/models/libelles-des-incidents.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="incidentMenuContextuel" datatype="html">
+        <source>menu contextuel ouvert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/models/libelles-des-incidents.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="incidentRaccourciBloque" datatype="html">
+        <source>raccourci bloqué</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/models/libelles-des-incidents.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="incidentOutilsDeDeveloppement" datatype="html">
+        <source>outils de développement soupçonnés</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/models/libelles-des-incidents.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="incidentPageQuittee" datatype="html">
+        <source>page quittée ou rechargée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/models/libelles-des-incidents.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="incidentReponseTropRapide" datatype="html">
+        <source>réponse trop rapide</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/models/libelles-des-incidents.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="formulaireRefusTropDeTentatives" datatype="html">
         <source>Trop de tentatives en peu de temps : réessayez plus tard.</source>
         <context-group purpose="location">
@@ -2936,7 +2999,7 @@
         <source>Après la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">50,51</context>
+          <context context-type="linenumber">73,74</context>
         </context-group>
         <note priority="1" from="meaning">synthese.kicker</note>
       </trans-unit>
@@ -2944,7 +3007,7 @@
         <source>Synthèse de la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">51,53</context>
+          <context context-type="linenumber">74,76</context>
         </context-group>
         <note priority="1" from="meaning">synthese.titre</note>
       </trans-unit>
@@ -2952,7 +3015,7 @@
         <source> Aucun participant n&apos;a rejoint cette séance : il n&apos;y a rien à analyser. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">54,57</context>
+          <context context-type="linenumber">77,80</context>
         </context-group>
         <note priority="1" from="meaning">synthese.vide</note>
       </trans-unit>
@@ -2960,7 +3023,7 @@
         <source>Étudiant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">61,62</context>
+          <context context-type="linenumber">84,85</context>
         </context-group>
         <note priority="1" from="meaning">synthese.etudiant</note>
       </trans-unit>
@@ -2968,7 +3031,7 @@
         <source>Avancement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">62,65</context>
+          <context context-type="linenumber">85,88</context>
         </context-group>
         <note priority="1" from="meaning">synthese.avancement</note>
       </trans-unit>
@@ -2976,7 +3039,7 @@
         <source> N&apos;a répondu à aucune question </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">76,78</context>
+          <context context-type="linenumber">99,101</context>
         </context-group>
         <note priority="1" from="meaning">synthese.sansReponse</note>
       </trans-unit>
@@ -2984,7 +3047,7 @@
         <source>Résultats par question</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">89,91</context>
+          <context context-type="linenumber">112,114</context>
         </context-group>
         <note priority="1" from="meaning">synthese.questionsTitre</note>
       </trans-unit>
@@ -2992,7 +3055,7 @@
         <source> Bonnes réponses, total et « je ne sais pas » pour chaque question de la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">93,96</context>
+          <context context-type="linenumber">116,119</context>
         </context-group>
         <note priority="1" from="meaning">synthese.questionsLegende</note>
       </trans-unit>
@@ -3000,7 +3063,7 @@
         <source> Question </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">98,100</context>
+          <context context-type="linenumber">121,123</context>
         </context-group>
         <note priority="1" from="meaning">synthese.questionColonne</note>
       </trans-unit>
@@ -3008,7 +3071,7 @@
         <source> Bonnes réponses </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">101,103</context>
+          <context context-type="linenumber">124,126</context>
         </context-group>
         <note priority="1" from="meaning">synthese.correctesColonne</note>
       </trans-unit>
@@ -3016,7 +3079,7 @@
         <source>Total</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">103,104</context>
+          <context context-type="linenumber">126,127</context>
         </context-group>
         <note priority="1" from="meaning">synthese.totalColonne</note>
       </trans-unit>
@@ -3024,7 +3087,7 @@
         <source> Je ne sais pas </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">105,107</context>
+          <context context-type="linenumber">128,130</context>
         </context-group>
         <note priority="1" from="meaning">synthese.neSaitPasColonne</note>
       </trans-unit>
@@ -3032,7 +3095,7 @@
         <source> Confusions fréquentes de la classe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">129,131</context>
+          <context context-type="linenumber">152,154</context>
         </context-group>
         <note priority="1" from="meaning">synthese.confusionsTitre</note>
       </trans-unit>
@@ -3040,7 +3103,7 @@
         <source>Ce qui a le plus accroché</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">141,142</context>
+          <context context-type="linenumber">164,165</context>
         </context-group>
         <note priority="1" from="meaning">synthese.fragiles</note>
       </trans-unit>
@@ -3048,7 +3111,7 @@
         <source>étudiants s’y sont trompés</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">148,152</context>
+          <context context-type="linenumber">171,175</context>
         </context-group>
         <note priority="1" from="meaning">synthese.seSontTrompes</note>
       </trans-unit>
@@ -3056,15 +3119,23 @@
         <source>Réponses libres des étudiants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">156,157</context>
+          <context context-type="linenumber">179,180</context>
         </context-group>
         <note priority="1" from="meaning">synthese.libresTitre</note>
+      </trans-unit>
+      <trans-unit id="syntheseIncidentsTitre" datatype="html">
+        <source> Incidents relevés sur les postes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
+          <context context-type="linenumber">200,202</context>
+        </context-group>
+        <note priority="1" from="meaning">synthese.incidentsTitre</note>
       </trans-unit>
       <trans-unit id="syntheseExport" datatype="html">
         <source> Exporter les réponses en CSV </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">181,183</context>
+          <context context-type="linenumber">231,233</context>
         </context-group>
         <note priority="1" from="meaning">synthese.export</note>
       </trans-unit>
@@ -3072,7 +3143,7 @@
         <source> Le CSV n’a pas pu être exporté. Réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">189,193</context>
+          <context context-type="linenumber">239,243</context>
         </context-group>
         <note priority="1" from="meaning">synthese.exportEchec</note>
       </trans-unit>
@@ -3080,7 +3151,7 @@
         <source> La synthèse n&apos;a pas pu être lue. Rechargez la page, puis réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">195,199</context>
+          <context context-type="linenumber">245,249</context>
         </context-group>
         <note priority="1" from="meaning">synthese.echec</note>
       </trans-unit>

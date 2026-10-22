@@ -1,6 +1,17 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  LOCALE_ID,
+  signal,
+} from '@angular/core';
+import type { RapportIncidentResponseDto } from '../../../../../contrat/types.gen';
+import { LIBELLES_DES_INCIDENTS } from '../../../core/models/libelles-des-incidents';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
+import { heureDuSite } from '../../../shared/pipes/date-du-site.pipe';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { type Chargement, lectureSuivie } from '../lecture-suivie';
 import type { DerouleCours, ResultatQuestion } from '../../../../cours/content/types';
@@ -16,6 +27,18 @@ import { formaterPart } from '../../../../cours/runtime/core/typographie';
 interface LigneClassement {
   participant: ParticipantRapporte;
   sansReponse: boolean;
+}
+
+interface IncidentLu {
+  readonly heure: string;
+  readonly libelle: string;
+  readonly contexte: string;
+}
+
+function contexteLisible(contexte: RapportIncidentResponseDto['contexte']): string {
+  return Object.entries(contexte ?? {})
+    .map(([cle, valeur]) => `${cle} : ${String(valeur)}`)
+    .join(', ');
 }
 
 interface ConceptCompte {
@@ -171,6 +194,33 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
             }
           </section>
         }
+        @if (auteursDIncidents().length > 0) {
+          <section data-testid="synthese-incidents">
+            <h3 i18n="synthese.incidentsTitre|@@syntheseIncidentsTitre">
+              Incidents relevés sur les postes
+            </h3>
+            @for (participant of auteursDIncidents(); track participant.email) {
+              <article>
+                <h4 data-testid="synthese-incidents-etudiant">
+                  {{ participant.prenom }} {{ participant.nom }}
+                </h4>
+                <ul>
+                  @for (incident of incidentsLus(participant); track $index) {
+                    <li data-testid="synthese-incident">
+                      <time data-testid="synthese-incident-heure">{{ incident.heure }}</time>
+                      <span data-testid="synthese-incident-type">{{ incident.libelle }}</span>
+                      @if (incident.contexte !== '') {
+                        <small data-testid="synthese-incident-contexte">{{
+                          incident.contexte
+                        }}</small>
+                      }
+                    </li>
+                  }
+                </ul>
+              </article>
+            }
+          </section>
+        }
         <button
           type="button"
           class="btn btn-teal"
@@ -253,6 +303,11 @@ export class CoursSyntheseComponent {
     ),
   );
 
+  readonly auteursDIncidents = computed<readonly ParticipantRapporte[]>(() =>
+    (this.rapport()?.participants ?? []).filter((participant) => participant.incidents.length > 0),
+  );
+
+  private readonly locale = inject(LOCALE_ID);
   private readonly port = inject(FORMATIONS_PORT);
   private readonly document = inject(DOCUMENT);
   private readonly charger = lectureSuivie();
@@ -261,6 +316,14 @@ export class CoursSyntheseComponent {
 
   quandStabilise(): Promise<void> {
     return this.chantier;
+  }
+
+  protected incidentsLus(participant: ParticipantRapporte): readonly IncidentLu[] {
+    return participant.incidents.map((incident) => ({
+      heure: heureDuSite(incident.horodatage, this.locale),
+      libelle: LIBELLES_DES_INCIDENTS[incident.type],
+      contexte: contexteLisible(incident.contexte),
+    }));
   }
 
   protected telecharger(): void {

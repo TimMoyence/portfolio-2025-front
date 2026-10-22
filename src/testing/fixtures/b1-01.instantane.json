@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "137dce6a8f37dd7edfb4ece29462ffa14f837c4fdd6531b7f5444819d69559aa",
+  "empreinte": "05f9a4b2a93814f62a29886e5e6d5b2a1030e1df3a7f148c325391a5bc9a03a1",
   "sujet": {
     "id": "b1-01-proportions-pourcentages",
     "titre": "Proportions et pourcentages",
@@ -1897,6 +1897,7 @@
             "id": "b1-01-a4-billet",
             "question": "Effectif en B3, total en B7. Quelle formule écrire en C3 pour la part en %, arrondie au dixième, à recopier vers le bas ?",
             "invite": "En une phrase : pourquoi se demander « parmi qui ? » devant un pourcentage ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "arrondi-b-7-b3-100-1-5ab8d03b",
@@ -5281,6 +5282,7 @@
             "id": "b1-01-a4-billet",
             "question": "Effectif en B3, total en B7. Quelle formule écrire en C3 pour la part en %, arrondie au dixième, à recopier vers le bas ?",
             "invite": "En une phrase : pourquoi se demander « parmi qui ? » devant un pourcentage ?",
+            "longueurMax": 500,
             "options": [
               {
                 "id": "arrondi-b-7-b3-100-1-5ab8d03b",
