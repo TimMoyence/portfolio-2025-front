@@ -41,7 +41,11 @@ export type Pose = readonly [propriete: string, valeur: unknown];
 type Genre<K extends RetourBrique['kind']> = Extract<RetourBrique, { kind: K }>;
 
 const QUESTIONS_SIMPLES: ReadonlySet<string> = new Set(['fp-numeric', 'fp-recall', 'fp-exit']);
-const QUESTIONS_REVELABLES: ReadonlySet<string> = new Set([...QUESTIONS_SIMPLES, 'fp-vote']);
+const QUESTIONS_REVELABLES: ReadonlySet<string> = new Set([
+  ...QUESTIONS_SIMPLES,
+  'fp-vote',
+  'fp-spaced',
+]);
 const PRODUCTIONS: ReadonlySet<string> = new Set(['fp-sheet', 'fp-table-build', 'fp-cardsort']);
 const LECTRICES_DE_L_ANNEXE: ReadonlySet<string> = new Set([
   ...PRODUCTIONS,

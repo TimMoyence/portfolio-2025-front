@@ -1,4 +1,16 @@
-import { BORNES_D_UN_MESSAGE_DE_CONTACT, erreursDeLongueur } from './regles-de-saisie';
+import { z } from 'zod';
+import { zContactRequestDto } from '../../../../contrat/zod.gen';
+import { bornesDu, erreursDeLongueur } from './regles-de-saisie';
+
+const BORNES_D_UN_MESSAGE_DE_CONTACT = bornesDu(zContactRequestDto.shape.message);
+
+describe('bornesDu', () => {
+  it('reprend les bornes du champ du contrat, et rien quand le champ n en porte pas', () => {
+    expect(BORNES_D_UN_MESSAGE_DE_CONTACT).toEqual({ min: 10, max: 2000, brute: undefined });
+    expect(bornesDu(z.string())).toEqual({ min: 0, max: Infinity, brute: undefined });
+    expect(bornesDu(z.string().max(3), true)).toEqual({ min: 0, max: 3, brute: true });
+  });
+});
 
 const SOURIRE = String.fromCodePoint(0x1f600);
 const COEUR_EMOJI = String.fromCodePoint(0x2764, 0xfe0f);

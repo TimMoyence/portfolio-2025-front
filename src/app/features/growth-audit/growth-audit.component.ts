@@ -29,10 +29,8 @@ import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisi
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
 import { readCheckboxChecked } from '../../shared/utils/dom-event.utils';
-import {
-  BORNES_D_UN_CONTACT_D_AUDIT,
-  BORNES_D_UN_NOM_DE_SITE,
-} from '../../shared/utils/regles-de-saisie';
+import { zAuditRequestRequestDto } from '../../../../contrat/zod.gen';
+import { bornesDu } from '../../shared/utils/regles-de-saisie';
 import { AuditClientReportSectionComponent } from './components/audit-client-report-section/audit-client-report-section.component';
 import {
   type AuditSectionBadge,
@@ -83,8 +81,8 @@ export class GrowthAuditComponent implements OnDestroy {
   private debutDeSaisie = instantMonotone();
   private readonly langue = injecterLocaleDeLaPage();
   protected readonly iaTaskFallback = $localize`:@@auditIaTaskFallback:IA`;
-  protected readonly bornesDuNomDeSite = BORNES_D_UN_NOM_DE_SITE;
-  protected readonly bornesDuContact = BORNES_D_UN_CONTACT_D_AUDIT;
+  protected readonly bornesDuNomDeSite = bornesDu(zAuditRequestRequestDto.shape.websiteName);
+  protected readonly bornesDuContact = bornesDu(zAuditRequestRequestDto.shape.contactValue);
 
   private streamSub?: Subscription;
   private reconnectAttempts = 0;

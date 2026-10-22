@@ -380,7 +380,7 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
   it('pose la cloture sur les seules questions revelables, d apres la saisie fermee servie', () => {
     const fermee = direct({ pilotage: { saisieFermee: true } });
     const reveleSansFermeture = direct({ pilotage: { revele: true } });
-    for (const brique of ['fp-vote', 'fp-numeric', 'fp-recall', 'fp-exit']) {
+    for (const brique of ['fp-vote', 'fp-numeric', 'fp-recall', 'fp-exit', 'fp-spaced']) {
       expect(pose(brique, ['Q-VA-07'], 'cloture', { direct: fermee }))
         .withContext(brique)
         .toBeTrue();

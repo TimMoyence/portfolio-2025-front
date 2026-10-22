@@ -14,7 +14,10 @@ import type { ToolkitRequest } from '../../../core/models/toolkit-request.model'
 import { HoneypotDirective } from '../../directives/honeypot.directive';
 import { readInputValue, readCheckboxChecked } from '../../utils/dom-event.utils';
 import { handleFormSubmit, INFORMATIONS_REFUSEES } from '../../utils/form-submit.utils';
-import { BORNES_D_UN_NOM, erreursDeLongueur } from '../../utils/regles-de-saisie';
+import { zRequestToolkitRequestDto } from '../../../../../contrat/zod.gen';
+import { bornesDu, erreursDeLongueur } from '../../utils/regles-de-saisie';
+
+const BORNES_DU_PRENOM = bornesDu(zRequestToolkitRequestDto.shape.firstName);
 import { FieldErrorsComponent } from '../field-errors/field-errors.component';
 import { erreurDeFormat } from '../../directives/format-de-contact.directive';
 
@@ -128,7 +131,7 @@ export class ToolkitFormComponent {
   protected readonly erreurDEnvoi = signal('');
 
   protected readonly erreursDuPrenom = computed(() =>
-    erreursDeLongueur(this.firstName(), BORNES_D_UN_NOM),
+    erreursDeLongueur(this.firstName(), BORNES_DU_PRENOM),
   );
 
   protected readonly erreurDAdresse = computed(() => erreurDeFormat(this.email(), 'email'));

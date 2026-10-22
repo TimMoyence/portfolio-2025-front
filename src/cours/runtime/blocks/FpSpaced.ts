@@ -176,7 +176,7 @@ export class FpSpaced extends FpVerdicts {
   }
 
   private pupitreAvantRevelation(): EscapedHtml {
-    return this.bonnes === null ? this.pupitre() : VIDE;
+    return this.bonnes === null && !this.cloture ? this.pupitre() : VIDE;
   }
 
   private pupitre(): EscapedHtml {

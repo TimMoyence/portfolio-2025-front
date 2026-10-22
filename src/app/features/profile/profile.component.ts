@@ -24,13 +24,11 @@ import {
   MOT_DE_PASSE_NEUF_REFUSE,
 } from '../../shared/utils/form-submit.utils';
 import { initialeDe } from '../../shared/utils/initiale.utils';
-import {
-  BORNES_D_UN_MOT_DE_PASSE_SAISI,
-  BORNES_D_UN_NOM,
-  BORNES_D_UN_TELEPHONE,
-  REGLE_D_UN_MOT_DE_PASSE,
-} from '../../shared/utils/regles-de-saisie';
+import { zChangePasswordDto, zUpdateProfileDto } from '../../../../contrat/zod.gen';
+import { bornesDu, REGLE_D_UN_MOT_DE_PASSE } from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
+
+const PROFIL = zUpdateProfileDto.shape;
 
 const CHANGEMENT_DE_MOT_DE_PASSE_REFUSE = $localize`:@@profileChangePasswordErreurSaisie:Vérifiez votre mot de passe actuel et la règle du nouveau mot de passe.`;
 
@@ -57,9 +55,13 @@ export class ProfileComponent {
   private readonly cdr = inject(ChangeDetectorRef);
 
   protected readonly regleDUnMotDePasse = REGLE_D_UN_MOT_DE_PASSE;
-  protected readonly bornesDUnNom = BORNES_D_UN_NOM;
-  protected readonly bornesDUnTelephone = BORNES_D_UN_TELEPHONE;
-  protected readonly bornesDUnMotDePasseSaisi = BORNES_D_UN_MOT_DE_PASSE_SAISI;
+  protected readonly bornesDuPrenom = bornesDu(PROFIL.firstName.unwrap());
+  protected readonly bornesDuNom = bornesDu(PROFIL.lastName.unwrap());
+  protected readonly bornesDUnTelephone = bornesDu(PROFIL.phone.unwrap().unwrap());
+  protected readonly bornesDUnMotDePasseSaisi = bornesDu(
+    zChangePasswordDto.shape.currentPassword,
+    true,
+  );
 
   isEditing = signal(false);
   editFirstName = '';

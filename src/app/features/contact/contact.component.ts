@@ -13,14 +13,14 @@ import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/cor
 import { APP_CONFIG } from '../../core/config/app-config.token';
 import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 import type { ContactRequestDto as ContactFormState } from '../../../../contrat/types.gen';
+import { zContactRequestDto } from '../../../../contrat/zod.gen';
 import type { ContactPort } from '../../core/ports/contact.port';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import type { Bornes } from '../../shared/utils/regles-de-saisie';
-import {
-  BORNES_D_UN_MESSAGE_DE_CONTACT,
-  BORNES_D_UN_NOM,
-} from '../../shared/utils/regles-de-saisie';
+import { bornesDu } from '../../shared/utils/regles-de-saisie';
+
+const SAISIE_DE_CONTACT = zContactRequestDto.shape;
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
@@ -133,7 +133,7 @@ export class ContactComponent implements OnInit {
     return $localize`:contact.access.message@@contactAccessMessage:Bonjour Tim, je souhaite un accès à ${appLabel}:appLabel: . Pouvez-vous m'expliquer les modalités ? Merci.`;
   }
 
-  protected readonly bornesDuMessage = BORNES_D_UN_MESSAGE_DE_CONTACT;
+  protected readonly bornesDuMessage = bornesDu(SAISIE_DE_CONTACT.message);
 
   contactFields: {
     key: Extract<keyof ContactFormState, 'firstName' | 'lastName' | 'email' | 'phone'>;
@@ -148,14 +148,14 @@ export class ContactComponent implements OnInit {
       label: $localize`:contact.form.field.firstName@@contactFormFieldFirstName:Prénom`,
       type: 'text',
       required: true,
-      bornes: BORNES_D_UN_NOM,
+      bornes: bornesDu(SAISIE_DE_CONTACT.firstName),
     },
     {
       key: 'lastName',
       label: $localize`:contact.form.field.lastName@@contactFormFieldLastName:Nom`,
       type: 'text',
       required: true,
-      bornes: BORNES_D_UN_NOM,
+      bornes: bornesDu(SAISIE_DE_CONTACT.lastName),
     },
     {
       key: 'email',
