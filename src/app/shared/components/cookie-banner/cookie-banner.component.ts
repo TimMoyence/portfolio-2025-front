@@ -1,64 +1,28 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isPlatformBrowser } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import type { ActionDeConsentement as CookieConsentAction } from '../../../../../contrat/types.gen';
-import { CookieConsentService } from '../../../core/services/cookie-consent.service';
+import { readJson, writeJson } from '../../../../cours/runtime/core/storage';
+import { VERSIONS_DES_TEXTES_LEGAUX } from '../../../core/config/textes-legaux';
+
+export const CLE_DU_BANDEAU_LU = 'fp.bandeau-cookies-lu';
 
 @Component({
   selector: 'app-cookie-banner',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './cookie-banner.component.html',
   styleUrl: './cookie-banner.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CookieBannerComponent {
-  isVisible = false;
-  private readonly consentService = inject(CookieConsentService);
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly version = VERSIONS_DES_TEXTES_LEGAUX.confidentialite;
 
-  readonly content = {
-    message: $localize`:cookie.banner.message|Cookie banner message@@cookieBannerMessage:Nous utilisons des cookies essentiels pour faire fonctionner le site et mémoriser vos choix. Aucun cookie analytique ou marketing n’est activé sans votre accord.`,
-    settingsLabel: $localize`:cookie.banner.settings|Cookie banner settings link@@cookieBannerSettings:Paramètres des cookies`,
-    acceptAll: $localize`:cookie.banner.acceptAll|Cookie banner accept all@@cookieBannerAcceptAll:Tout accepter`,
-    rejectAll: $localize`:cookie.banner.rejectAll|Cookie banner reject all@@cookieBannerRejectAll:Tout refuser`,
-  };
+  protected readonly visible = signal(
+    isPlatformBrowser(inject(PLATFORM_ID)) && readJson<string>(CLE_DU_BANDEAU_LU) !== this.version,
+  );
 
-  constructor() {
-    this.updateVisibility();
-    this.consentService.consentChanges$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.updateVisibility();
-    });
-  }
-
-  acceptAll(): void {
-    this.saveBannerChoice(true, 'accept_all');
-  }
-
-  rejectAll(): void {
-    this.saveBannerChoice(false, 'essential_only');
-  }
-
-  private saveBannerChoice(preferences: boolean, action: CookieConsentAction): void {
-    this.consentService
-      .saveConsent(
-        {
-          essential: true,
-          preferences,
-          analytics: false,
-          marketing: false,
-        },
-        'banner',
-        action,
-      )
-      .subscribe({
-        next: () => this.updateVisibility(),
-        error: () => this.updateVisibility(),
-      });
-  }
-
-  private updateVisibility(): void {
-    this.isVisible = this.consentService.shouldShowBanner();
+  protected compris(): void {
+    writeJson(CLE_DU_BANDEAU_LU, this.version);
+    this.visible.set(false);
   }
 }

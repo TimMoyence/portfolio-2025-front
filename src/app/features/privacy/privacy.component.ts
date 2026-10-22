@@ -9,10 +9,7 @@ import { LEGAL_PAGE_IMPORTS, type LegalTocItem } from '../legal/legal-page.compo
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PrivacyComponent {
-  readonly hero = {
-    kicker: $localize`:privacy.hero.kicker@@privacyHeroLabel:Vos données`,
-    updated: $localize`:privacy.hero.updated@@privacyMetaLastUpdated:Dernière mise à jour : 17 octobre 2026`,
-  };
+  readonly kicker = $localize`:privacy.hero.kicker@@privacyHeroLabel:Vos données`;
 
   readonly toc: readonly LegalTocItem[] = [
     {
@@ -46,6 +43,10 @@ export class PrivacyComponent {
     {
       anchor: 'contact',
       label: $localize`:privacy.toc.contact@@privacyTocContact:Nous contacter`,
+    },
+    {
+      anchor: 'cookies',
+      label: $localize`:privacy.toc.cookies@@privacyTocCookies:Cookies et stockage local`,
     },
   ];
 }

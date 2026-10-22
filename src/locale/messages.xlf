@@ -1297,7 +1297,7 @@
         <source>Connexion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <note priority="1" from="description">contact.hero.label</note>
       </trans-unit>
@@ -1305,7 +1305,7 @@
         <source>Parler de votre situation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <note priority="1" from="description">contact.hero.title</note>
       </trans-unit>
@@ -1313,7 +1313,7 @@
         <source>Un premier échange pour comprendre votre contexte,clarifier votre besoin et envisager la suite la plus pertinente.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <note priority="1" from="description">contact.hero.description</note>
       </trans-unit>
@@ -1321,7 +1321,7 @@
         <source>Contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <note priority="1" from="description">contact.form.label</note>
       </trans-unit>
@@ -1329,7 +1329,7 @@
         <source>Vous avez un projet, une contrainte ou une idée à clarifier ? Partagez quelques éléments, je vous répondrai rapidement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">contact.form.description</note>
       </trans-unit>
@@ -1337,7 +1337,7 @@
         <source>Développeur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.developer</note>
       </trans-unit>
@@ -1345,7 +1345,7 @@
         <source>Manager</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.manager</note>
       </trans-unit>
@@ -1353,7 +1353,7 @@
         <source>Entrepreneur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.entrepreneur</note>
       </trans-unit>
@@ -1361,7 +1361,7 @@
         <source>CTO</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.cto</note>
       </trans-unit>
@@ -1369,7 +1369,7 @@
         <source>Freelance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.freelance</note>
       </trans-unit>
@@ -1377,7 +1377,7 @@
         <source>Autre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.other</note>
       </trans-unit>
@@ -1385,7 +1385,7 @@
         <source>Premier contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="description">contact.form.subject.first</note>
       </trans-unit>
@@ -1393,7 +1393,7 @@
         <source>Demande de devis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">contact.form.subject.second</note>
       </trans-unit>
@@ -1401,7 +1401,7 @@
         <source>Urgent - Besoin rapide</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="description">contact.form.subject.third</note>
       </trans-unit>
@@ -1409,7 +1409,7 @@
         <source>Vous avez un besoin, une contrainte ou une idée à clarifier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">Home contact lead paragraph</note>
         <note priority="1" from="meaning">home.contact.lead.1</note>
@@ -1418,7 +1418,7 @@
         <source>Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <note priority="1" from="description">Home contact lead paragraph</note>
         <note priority="1" from="meaning">home.contact.lead.2</note>
@@ -1427,7 +1427,7 @@
         <source>l&apos;espace formateur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <note priority="1" from="description">contact.access.app.teacher</note>
       </trans-unit>
@@ -1435,7 +1435,7 @@
         <source>l&apos;application <x id="app" equiv-text="normalizedApp"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">contact.access.app.generic</note>
       </trans-unit>
@@ -1443,7 +1443,7 @@
         <source>Bonjour Tim, je souhaite un accès à <x id="appLabel" equiv-text="appLabel"/> . Pouvez-vous m&apos;expliquer les modalités ? Merci.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">contact.access.message</note>
       </trans-unit>
@@ -1451,7 +1451,7 @@
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.firstName</note>
       </trans-unit>
@@ -1459,7 +1459,7 @@
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.lastName</note>
       </trans-unit>
@@ -1467,7 +1467,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.email</note>
       </trans-unit>
@@ -1475,7 +1475,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">171</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.phone</note>
       </trans-unit>
@@ -1483,7 +1483,7 @@
         <source>Merci de vérifier les champs en rouge.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">184</context>
         </context-group>
         <note priority="1" from="description">contact.form.error.invalid</note>
       </trans-unit>
@@ -1491,7 +1491,7 @@
         <source>Une erreur est survenue. Veuillez réessayer plus tard.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">193</context>
         </context-group>
         <note priority="1" from="description">contact.form.error.generic</note>
       </trans-unit>
@@ -1499,223 +1499,16 @@
         <source>Votre message n’a pas été accepté : vérifiez les champs et réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">195</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormSuccess" datatype="html">
         <source>Message envoyé. Je reviens vers vous rapidement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">198</context>
         </context-group>
         <note priority="1" from="description">contact.form.success</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsHeroTitle" datatype="html">
-        <source>Préférences <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>cookies<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.html</context>
-          <context context-type="linenumber">4,5</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="cookieSettingsHeroLabel" datatype="html">
-        <source>Vos choix</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.hero.kicker</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsMetaLastUpdated" datatype="html">
-        <source>Vous gardez la main — modifiable à tout moment</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.hero.updated</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsIntro" datatype="html">
-        <source>On utilise le strict nécessaire pour que le site fonctionne, et rien de plus sans votre accord. Réglez chaque catégorie ci-dessous.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.intro</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesEssentialTitle" datatype="html">
-        <source>Essentiels</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.essential.title</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesEssentialDesc" datatype="html">
-        <source>Indispensables au fonctionnement du site : connexion, sécurité, mémorisation de vos préférences. Ils ne peuvent pas être désactivés.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.essential.desc</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsEssentialTag" datatype="html">
-        <source>Toujours actifs</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.essential.tag</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesAnalyticsTitle" datatype="html">
-        <source>Mesure d&apos;audience</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">36</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.analytics.title</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesAnalyticsDesc" datatype="html">
-        <source>Permettraient des statistiques anonymisées pour améliorer le site. L&apos;app est en lancement : on n&apos;en collecte aucune pour l&apos;instant.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">37</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.analytics.desc</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsAnalyticsTag" datatype="html">
-        <source>Non collecté</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.analytics.tag</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesOptionalTitle" datatype="html">
-        <source>Préférences</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.preferences.title</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesOptionalDesc" datatype="html">
-        <source>Mémorisent vos choix d&apos;affichage (langue, réglages) pour une expérience plus fluide d&apos;une visite à l&apos;autre.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.preferences.desc</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesTag" datatype="html">
-        <source>Confort</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.preferences.tag</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesMarketingTitle" datatype="html">
-        <source>Marketing</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.marketing.title</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesMarketingDesc" datatype="html">
-        <source>Permettraient de mesurer l&apos;efficacité de campagnes. Désactivés par défaut — l&apos;app est en lancement, on n&apos;en utilise pas.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">47</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.marketing.desc</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsMarketingTag" datatype="html">
-        <source>Désactivé par défaut</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">48</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.marketing.tag</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesSave" datatype="html">
-        <source>Enregistrer mes choix</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">53</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.actions.save</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsAcceptAll" datatype="html">
-        <source>Tout accepter</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">54</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.actions.acceptAll</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesSaved" datatype="html">
-        <source>Préférences enregistrées</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.actions.saved</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPreferencesError" datatype="html">
-        <source>Impossible d&apos;enregistrer vos préférences pour le moment.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">56</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.actions.error</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPrivacyNoteBefore" datatype="html">
-        <source>Pour en savoir plus, consultez notre</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">60</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.privacyNote.before</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsPrivacyNoteLink" datatype="html">
-        <source>politique de confidentialité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">61</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.privacyNote.link</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsAriaEssential" datatype="html">
-        <source>Cookies essentiels</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">65</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.aria.essential</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsAriaAnalytics" datatype="html">
-        <source>Mesure d&apos;audience</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.aria.analytics</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsAriaPreferences" datatype="html">
-        <source>Préférences</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">67</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.aria.preferences</note>
-      </trans-unit>
-      <trans-unit id="cookieSettingsAriaMarketing" datatype="html">
-        <source>Marketing</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cookie-settings/cookie-settings.component.ts</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-        <note priority="1" from="description">cookie.settings.aria.marketing</note>
       </trans-unit>
       <trans-unit id="coursCodeInvalide" datatype="html">
         <source>Le code de séance compte quatre chiffres : recopiez-le sans autre caractère.</source>
@@ -8165,6 +7958,14 @@
           <context context-type="linenumber">12,14</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="legalMetaLastUpdated" datatype="html">
+        <source>Dernière mise à jour : <x id="date" equiv-text="dateDuSite(VERSIONS_DES_TEXTES_LEGAUX[this.texte()], this.locale)"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/legal/legal-page.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">legal.hero.updated</note>
+      </trans-unit>
       <trans-unit id="notFoundLabel" datatype="html">
         <source>Erreur 404</source>
         <context-group purpose="location">
@@ -9323,14 +9124,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCollecteTechnique" datatype="html">
-        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Données techniques de la demande<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact, chaque demande d&apos;audit et chaque choix de cookies. </source>
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Données techniques de la demande<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact et chaque demande d&apos;audit. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
           <context context-type="linenumber">31,34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCollecteSecurite" datatype="html">
-        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Données de sécurité<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l&apos;adresse IP, le navigateur (user-agent) et l&apos;email saisi, inscrits au journal du serveur ; l&apos;adresse IP et le navigateur d&apos;une requête jugée suspecte. </source>
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Données de sécurité<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l&apos;adresse IP, le navigateur (user-agent) et une empreinte non réversible de l&apos;email saisi, inscrits au journal du serveur ; l&apos;adresse IP et le navigateur d&apos;une requête jugée suspecte. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
           <context context-type="linenumber">36,39</context>
@@ -9340,77 +9141,70 @@
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Journal d&apos;accès<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : pour chaque requête adressée au serveur, l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer), inscrits au journal du serveur. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">41,44</context>
+          <context context-type="linenumber">42,45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCollecteSeances" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Données des séances de cours<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : le prénom, le nom et l&apos;adresse email saisis pour rejoindre une séance ; vos réponses aux questions, avec leur durée, et aux sondages, vos productions, vos tentatives d&apos;énigme, vos scores et votre progression par notion ; le relevé des incidents survenus pendant la séance (onglet masqué, fenêtre quittée, sortie du plein écran, tentative de copier ou de coller, raccourci bloqué, outils de développement soupçonnés, connexion perdue, réponse trop rapide), avec leur contexte. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">45,50</context>
+          <context context-type="linenumber">46,51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCollecteItem3" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Mesure d&apos;audience<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : aucune pour l&apos;instant, le site ne collecte aucune statistique de navigation. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">53,56</context>
+          <context context-type="linenumber">54,57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyUsageTitle" datatype="html">
         <source>3. Usage des données</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">60,61</context>
+          <context context-type="linenumber">61,62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyUsageBody" datatype="html">
         <source>Vos données servent uniquement à :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">61,63</context>
+          <context context-type="linenumber">62,64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyUsageItem1" datatype="html">
         <source>Gérer votre compte et vos accès (formations).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">63,64</context>
+          <context context-type="linenumber">64,65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyUsageSeances" datatype="html">
         <source> Suivre vos apprentissages pendant et après une séance de cours, et garantir l&apos;intégrité d&apos;une évaluation. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">65,68</context>
+          <context context-type="linenumber">66,69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyUsageItem2" datatype="html">
         <source> Vous envoyer les ressources demandées (toolkit, rapport d&apos;audit). </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">69,71</context>
+          <context context-type="linenumber">70,72</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyUsageItem3" datatype="html">
         <source>Répondre à vos messages.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">71,72</context>
+          <context context-type="linenumber">72,73</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyUsageSecurite" datatype="html">
         <source> Protéger le site et vos comptes : repérer les connexions, les requêtes et les envois de formulaire suspects. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">73,76</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="privacyUsagePreuve" datatype="html">
-        <source>Garder la preuve de votre choix de cookies.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">76,77</context>
+          <context context-type="linenumber">74,77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyUsageJournal" datatype="html">
@@ -9529,51 +9323,57 @@
         <source>page de contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">133,134</context>
+          <context context-type="linenumber">133,137</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="privacyContactBody2" datatype="html">
-        <source>. Vous pouvez aussi régler vos</source>
+      <trans-unit id="privacyCookiesTitle" datatype="html">
+        <source>9. Cookies et stockage local</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">134,135</context>
+          <context context-type="linenumber">138,139</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="privacyContactCookiesLink" datatype="html">
-        <source>préférences cookies</source>
+      <trans-unit id="privacyCookiesBody" datatype="html">
+        <source> Ce site n&apos;utilise que des cookies et un stockage local strictement nécessaires à son fonctionnement. Aucun ne mesure votre audience ni ne sert à la publicité : ils ne demandent donc pas votre consentement. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">136,138</context>
+          <context context-type="linenumber">140,144</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="privacyContactBody3" datatype="html">
-        <source>à tout moment.</source>
+      <trans-unit id="privacyCookiesSession" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Session du compte<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : un cookie sécurisé, illisible par les scripts, garde votre connexion à l&apos;espace formateur pendant 30 jours au plus. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
-          <context context-type="linenumber">138,141</context>
+          <context context-type="linenumber">146,149</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacyCookiesSeance" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Séance de cours<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : le poste garde votre identité de séance, vos brouillons et les réponses en attente de réseau jusqu&apos;à la fin de la séance. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
+          <context context-type="linenumber">150,153</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacyCookiesBandeau" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Bandeau d&apos;information<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : le poste retient que vous l&apos;avez lu, jusqu&apos;à la prochaine mise à jour de cette politique. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/privacy/privacy.component.html</context>
+          <context context-type="linenumber">154,157</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyHeroLabel" datatype="html">
         <source>Vos données</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <note priority="1" from="description">privacy.hero.kicker</note>
-      </trans-unit>
-      <trans-unit id="privacyMetaLastUpdated" datatype="html">
-        <source>Dernière mise à jour : 17 octobre 2026</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/privacy/privacy.component.ts</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <note priority="1" from="description">privacy.hero.updated</note>
       </trans-unit>
       <trans-unit id="privacyTocPrincipe" datatype="html">
         <source>Notre principe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.ts</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <note priority="1" from="description">privacy.toc.principe</note>
       </trans-unit>
@@ -9581,7 +9381,7 @@
         <source>Données collectées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <note priority="1" from="description">privacy.toc.collecte</note>
       </trans-unit>
@@ -9589,7 +9389,7 @@
         <source>Usage des données</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.ts</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <note priority="1" from="description">privacy.toc.usage</note>
       </trans-unit>
@@ -9597,7 +9397,7 @@
         <source>Base légale</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.ts</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <note priority="1" from="description">privacy.toc.base</note>
       </trans-unit>
@@ -9605,7 +9405,7 @@
         <source>Partage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <note priority="1" from="description">privacy.toc.partage</note>
       </trans-unit>
@@ -9613,7 +9413,7 @@
         <source>Conservation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <note priority="1" from="description">privacy.toc.conservation</note>
       </trans-unit>
@@ -9621,7 +9421,7 @@
         <source>Vos droits</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <note priority="1" from="description">privacy.toc.droits</note>
       </trans-unit>
@@ -9629,9 +9429,17 @@
         <source>Nous contacter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/privacy/privacy.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <note priority="1" from="description">privacy.toc.contact</note>
+      </trans-unit>
+      <trans-unit id="privacyTocCookies" datatype="html">
+        <source>Cookies et stockage local</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/privacy/privacy.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <note priority="1" from="description">privacy.toc.cookies</note>
       </trans-unit>
       <trans-unit id="profileBadge" datatype="html">
         <source>Espace personnel</source>
@@ -10991,51 +10799,22 @@
         <source>politique de confidentialité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/terms/terms.component.html</context>
-          <context context-type="linenumber">116,117</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="termsDroitBody3" datatype="html">
-        <source>et nos</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/terms/terms.component.html</context>
-          <context context-type="linenumber">117,118</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="termsDroitCookiesLink" datatype="html">
-        <source>préférences cookies</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/terms/terms.component.html</context>
-          <context context-type="linenumber">119,120</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="termsDroitBody4" datatype="html">
-        <source>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/terms/terms.component.html</context>
-          <context context-type="linenumber">121,123</context>
+          <context context-type="linenumber">116,120</context>
         </context-group>
       </trans-unit>
       <trans-unit id="termsHeroLabel" datatype="html">
         <source>Mentions légales</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/terms/terms.component.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <note priority="1" from="description">terms.hero.kicker</note>
-      </trans-unit>
-      <trans-unit id="termsMetaLastUpdated" datatype="html">
-        <source>Dernière mise à jour : 4 juin 2026</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/terms/terms.component.ts</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <note priority="1" from="description">terms.hero.updated</note>
       </trans-unit>
       <trans-unit id="termsTocEditeur" datatype="html">
         <source>Éditeur du site</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/terms/terms.component.ts</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <note priority="1" from="description">terms.toc.editeur</note>
       </trans-unit>
@@ -11043,7 +10822,7 @@
         <source>Objet</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/terms/terms.component.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <note priority="1" from="description">terms.toc.objet</note>
       </trans-unit>
@@ -11051,7 +10830,7 @@
         <source>Services &amp; formations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/terms/terms.component.ts</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <note priority="1" from="description">terms.toc.services</note>
       </trans-unit>
@@ -11059,7 +10838,7 @@
         <source>Paiement &amp; accès</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/terms/terms.component.ts</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <note priority="1" from="description">terms.toc.paiement</note>
       </trans-unit>
@@ -11067,7 +10846,7 @@
         <source>Rétractation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/terms/terms.component.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <note priority="1" from="description">terms.toc.retractation</note>
       </trans-unit>
@@ -11075,7 +10854,7 @@
         <source>Propriété intellectuelle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/terms/terms.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <note priority="1" from="description">terms.toc.propriete</note>
       </trans-unit>
@@ -11083,7 +10862,7 @@
         <source>Responsabilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/terms/terms.component.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <note priority="1" from="description">terms.toc.responsabilite</note>
       </trans-unit>
@@ -11091,7 +10870,7 @@
         <source>Droit applicable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/terms/terms.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <note priority="1" from="description">terms.toc.droit</note>
       </trans-unit>
@@ -11124,41 +10903,33 @@
           <context context-type="linenumber">8,10</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="cookieBannerMessage" datatype="html">
-        <source>Nous utilisons des cookies essentiels pour faire fonctionner le site et mémoriser vos choix. Aucun cookie analytique ou marketing n’est activé sans votre accord.</source>
+      <trans-unit id="cookieBannerRegion" datatype="html">
+        <source>Cookies</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.ts</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.html</context>
+          <context context-type="linenumber">6</context>
         </context-group>
-        <note priority="1" from="description">Cookie banner message</note>
-        <note priority="1" from="meaning">cookie.banner.message</note>
       </trans-unit>
-      <trans-unit id="cookieBannerSettings" datatype="html">
-        <source>Paramètres des cookies</source>
+      <trans-unit id="cookieBannerInformation" datatype="html">
+        <source>Ce site n’utilise que des cookies strictement nécessaires à son fonctionnement : aucun cookie de mesure d’audience ni de publicité.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.ts</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.html</context>
+          <context context-type="linenumber">13,16</context>
         </context-group>
-        <note priority="1" from="description">Cookie banner settings link</note>
-        <note priority="1" from="meaning">cookie.banner.settings</note>
       </trans-unit>
-      <trans-unit id="cookieBannerAcceptAll" datatype="html">
-        <source>Tout accepter</source>
+      <trans-unit id="cookieBannerEnSavoirPlus" datatype="html">
+        <source>En savoir plus</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.html</context>
+          <context context-type="linenumber">21,25</context>
         </context-group>
-        <note priority="1" from="description">Cookie banner accept all</note>
-        <note priority="1" from="meaning">cookie.banner.acceptAll</note>
       </trans-unit>
-      <trans-unit id="cookieBannerRejectAll" datatype="html">
-        <source>Tout refuser</source>
+      <trans-unit id="cookieBannerCompris" datatype="html">
+        <source> J’ai compris </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.ts</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="sourcefile">src/app/shared/components/cookie-banner/cookie-banner.component.html</context>
+          <context context-type="linenumber">31,33</context>
         </context-group>
-        <note priority="1" from="description">Cookie banner reject all</note>
-        <note priority="1" from="meaning">cookie.banner.rejectAll</note>
       </trans-unit>
       <trans-unit id="contactCtaInfoAriaLabel" datatype="html">
         <source>Coordonnées</source>
@@ -11365,20 +11136,11 @@
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.privacy</note>
       </trans-unit>
-      <trans-unit id="footerNavCookies" datatype="html">
-        <source>Paramètres cookies</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">72</context>
-        </context-group>
-        <note priority="1" from="description">Footer nav link</note>
-        <note priority="1" from="meaning">footer.nav.cookies</note>
-      </trans-unit>
       <trans-unit id="footerNavLinkedin" datatype="html">
         <source>LinkedIn</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.linkedin</note>
@@ -11387,7 +11149,7 @@
         <source>Facebook</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.facebook</note>
@@ -11396,7 +11158,7 @@
         <source>LinkedIn</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.linkedin</note>
@@ -11405,7 +11167,7 @@
         <source>Conditions d&apos;utilisation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">95</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.terms</note>
@@ -11414,19 +11176,10 @@
         <source>Politique de confidentialité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">99</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.privacy</note>
-      </trans-unit>
-      <trans-unit id="footerLegalCookies" datatype="html">
-        <source>Paramètres de cookies</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/footer/footer.component.ts</context>
-          <context context-type="linenumber">107</context>
-        </context-group>
-        <note priority="1" from="description">Footer legal link</note>
-        <note priority="1" from="meaning">footer.legal.cookiesSettings</note>
       </trans-unit>
       <trans-unit id="navLandmark" datatype="html">
         <source>Navigation principale</source>
@@ -11792,56 +11545,56 @@
         <source> Envoyé ! </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">38,40</context>
+          <context context-type="linenumber">37,39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.success.checkInbox" datatype="html">
         <source>Vérifiez votre boîte mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">41,43</context>
+          <context context-type="linenumber">40,42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.firstName.placeholder" datatype="html">
         <source>Votre prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">60,61</context>
+          <context context-type="linenumber">59,60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.email.placeholder" datatype="html">
         <source>Votre email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">75,76</context>
+          <context context-type="linenumber">74,75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.terms.label" datatype="html">
         <source> J&apos;accepte que mes données soient utilisées pour recevoir la boîte à outils. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">92,94</context>
+          <context context-type="linenumber">91,93</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.submit.loading" datatype="html">
         <source>Envoi en cours...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">106,108</context>
+          <context context-type="linenumber">105,107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.submit.idle" datatype="html">
         <source>Recevoir la boîte à outils</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">108,110</context>
+          <context context-type="linenumber">107,109</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.error.message" datatype="html">
         <source>Une erreur est survenue. Réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactMethodEmailLabel" datatype="html">

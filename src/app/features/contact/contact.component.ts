@@ -10,7 +10,7 @@ import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
-import { APP_CONFIG } from '../../core/config/app-config.token';
+import { VERSIONS_DES_TEXTES_LEGAUX } from '../../core/config/textes-legaux';
 import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 import type { ContactRequestDto as ContactFormState } from '../../../../contrat/types.gen';
 import { zContactRequestDto } from '../../../../contrat/zod.gen';
@@ -55,7 +55,6 @@ export class ContactComponent implements OnInit {
   isContactSubmitted: boolean = false;
   contactErrorMessage?: string;
   contactSuccessMessage?: string;
-  private readonly appConfig = inject(APP_CONFIG);
   private readonly langue = injecterLocaleDeLaPage();
   private readonly contactPort: ContactPort = inject(CONTACT_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -104,7 +103,7 @@ export class ContactComponent implements OnInit {
     message: '',
     role: '',
     terms: false,
-    termsVersion: this.appConfig.gdpr?.termsVersion ?? '2026-02-11',
+    termsVersion: VERSIONS_DES_TEXTES_LEGAUX.conditions,
     termsLocale: this.langue,
     termsMethod: 'contact_form_checkbox',
   };
@@ -227,7 +226,7 @@ export class ContactComponent implements OnInit {
       phone: telephoneFacultatif(form.phone),
       termsAcceptedAt: form.terms ? new Date().toISOString() : undefined,
       termsLocale: this.langue,
-      termsVersion: this.appConfig.gdpr?.termsVersion ?? form.termsVersion,
+      termsVersion: VERSIONS_DES_TEXTES_LEGAUX.conditions,
       termsMethod: form.termsMethod ?? 'contact_form_checkbox',
     };
   }

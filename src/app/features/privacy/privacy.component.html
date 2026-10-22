@@ -1,4 +1,4 @@
-<app-legal-page [kicker]="hero.kicker" [updated]="hero.updated" [toc]="toc">
+<app-legal-page [kicker]="kicker" texte="confidentialite" [toc]="toc">
   <ng-container title i18n="@@privacyHeroTitle"
     >Politique de <em>confidentialité</em>.</ng-container
   >
@@ -29,13 +29,14 @@
       </li>
       <li i18n="@@privacyCollecteTechnique">
         <strong>Données techniques de la demande</strong> : l'adresse IP, le navigateur (user-agent)
-        et la page de provenance (referer), enregistrés avec chaque message de contact, chaque
-        demande d'audit et chaque choix de cookies.
+        et la page de provenance (referer), enregistrés avec chaque message de contact et chaque
+        demande d'audit.
       </li>
       <li i18n="@@privacyCollecteSecurite">
         <strong>Données de sécurité</strong> : à chaque événement de connexion ou de sécurité de
-        votre compte, réussi ou non, l'adresse IP, le navigateur (user-agent) et l'email saisi,
-        inscrits au journal du serveur ; l'adresse IP et le navigateur d'une requête jugée suspecte.
+        votre compte, réussi ou non, l'adresse IP, le navigateur (user-agent) et une empreinte non
+        réversible de l'email saisi, inscrits au journal du serveur ; l'adresse IP et le navigateur
+        d'une requête jugée suspecte.
       </li>
       <li i18n="@@privacyCollecteJournal">
         <strong>Journal d'accès</strong> : pour chaque requête adressée au serveur, l'adresse IP, le
@@ -73,7 +74,6 @@
         Protéger le site et vos comptes : repérer les connexions, les requêtes et les envois de
         formulaire suspects.
       </li>
-      <li i18n="@@privacyUsagePreuve">Garder la preuve de votre choix de cookies.</li>
       <li i18n="@@privacyUsageJournal">
         Faire fonctionner le serveur et diagnostiquer ses pannes.
       </li>
@@ -130,12 +130,30 @@
       <span i18n="@@privacyContactBody1"
         >Pour exercer vos droits ou poser une question sur vos données, écrivez-nous via la</span
       >&ngsp;
-      <a class="inl" routerLink="/contact" i18n="@@privacyContactContactLink">page de contact</a
-      ><span i18n="@@privacyContactBody2">. Vous pouvez aussi régler vos</span>&ngsp;
-      <a class="inl" routerLink="/cookie-settings" i18n="@@privacyContactCookiesLink"
-        >préférences cookies</a
-      >&ngsp;
-      <span i18n="@@privacyContactBody3">à tout moment.</span>
+      <a class="inl" routerLink="/contact" i18n="@@privacyContactContactLink">page de contact</a>.
     </p>
+  </section>
+
+  <section id="cookies" appReveal>
+    <h2 i18n="@@privacyCookiesTitle">9. Cookies et stockage local</h2>
+    <p i18n="@@privacyCookiesBody">
+      Ce site n'utilise que des cookies et un stockage local strictement nécessaires à son
+      fonctionnement. Aucun ne mesure votre audience ni ne sert à la publicité : ils ne demandent
+      donc pas votre consentement.
+    </p>
+    <ul>
+      <li i18n="@@privacyCookiesSession">
+        <strong>Session du compte</strong> : un cookie sécurisé, illisible par les scripts, garde
+        votre connexion à l'espace formateur pendant 30 jours au plus.
+      </li>
+      <li i18n="@@privacyCookiesSeance">
+        <strong>Séance de cours</strong> : le poste garde votre identité de séance, vos brouillons
+        et les réponses en attente de réseau jusqu'à la fin de la séance.
+      </li>
+      <li i18n="@@privacyCookiesBandeau">
+        <strong>Bandeau d'information</strong> : le poste retient que vous l'avez lu, jusqu'à la
+        prochaine mise à jour de cette politique.
+      </li>
+    </ul>
   </section>
 </app-legal-page>

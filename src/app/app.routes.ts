@@ -111,16 +111,6 @@ export const routes: Routes = [
     },
   },
   {
-    path: 'cookie-settings',
-    loadComponent: () =>
-      import('./features/cookie-settings/cookie-settings.component').then(
-        (m) => m.CookieSettingsComponent,
-      ),
-    data: {
-      seoKey: 'cookie-settings',
-    },
-  },
-  {
     path: 'terms',
     loadComponent: () => import('./features/terms/terms.component').then((m) => m.TermsComponent),
     data: {

@@ -1,32 +1,35 @@
-@if (isVisible) {
+@if (visible()) {
   <section
     class="cookie-banner fixed inset-x-0 bottom-0 z-50 border-t border-scheme-border bg-scheme-surface/95 backdrop-blur"
+    role="region"
+    aria-label="Cookies"
+    i18n-aria-label="@@cookieBannerRegion"
   >
     <div
       class="container flex flex-col gap-4 px-[5%] py-4 md:flex-row md:items-center md:justify-between"
     >
       <p class="text-sm md:text-base text-scheme-text">
-        {{ content.message }}
-        <a routerLink="/cookie-settings" class="underline font-semibold">
-          {{ content.settingsLabel }}
-        </a>
+        <span i18n="@@cookieBannerInformation"
+          >Ce site n’utilise que des cookies strictement nécessaires à son fonctionnement : aucun
+          cookie de mesure d’audience ni de publicité.</span
+        >&ngsp;
+        <a
+          routerLink="/privacy"
+          fragment="cookies"
+          class="underline font-semibold"
+          i18n="@@cookieBannerEnSavoirPlus"
+          >En savoir plus</a
+        >
       </p>
-      <div class="flex flex-wrap items-center gap-3">
-        <button
-          type="button"
-          class="rounded-button border-2 border-scheme-text bg-scheme-surface px-4 py-2 text-sm font-semibold text-scheme-text transition-colors hover:bg-scheme-text hover:text-scheme-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-scheme-accent focus-visible:ring-offset-2"
-          (click)="rejectAll()"
-        >
-          {{ content.rejectAll }}
-        </button>
-        <button
-          type="button"
-          class="rounded-button bg-scheme-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-scheme-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-scheme-accent focus-visible:ring-offset-2"
-          (click)="acceptAll()"
-        >
-          {{ content.acceptAll }}
-        </button>
-      </div>
+      <button
+        type="button"
+        class="rounded-button bg-scheme-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-scheme-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-scheme-accent focus-visible:ring-offset-2"
+        data-testid="bandeau-cookies-compris"
+        (click)="compris()"
+        i18n="@@cookieBannerCompris"
+      >
+        J’ai compris
+      </button>
     </div>
   </section>
 }

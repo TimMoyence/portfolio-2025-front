@@ -1,20 +1,20 @@
-import { PLATFORM_ID } from '@angular/core';
+import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
 import { isolateAnimReady } from '../../../testing/anim-ready';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { PrivacyComponent } from './privacy.component';
 
 const DONNEES_NOMMEES: readonly (readonly [string, readonly string[]])[] = [
   [
-    'l adresse IP, le user-agent et le referer qu enregistrent le message de contact, la demande d audit et le choix de cookies',
+    'l adresse IP, le user-agent et le referer qu enregistrent le message de contact et la demande d audit',
     [
       'Données de contact : les informations que vous nous transmettez via le formulaire.',
-      "Données techniques de la demande : l'adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact, chaque demande d'audit et chaque choix de cookies.",
+      "Données techniques de la demande : l'adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact et chaque demande d'audit.",
     ],
   ],
   [
-    'ce que gardent le journal des connexions et la surveillance des requêtes suspectes',
+    'ce que gardent le journal des connexions, sans l email en clair, et la surveillance des requêtes suspectes',
     [
-      "Données de sécurité : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l'adresse IP, le navigateur (user-agent) et l'email saisi, inscrits au journal du serveur ; l'adresse IP et le navigateur d'une requête jugée suspecte.",
+      "Données de sécurité : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l'adresse IP, le navigateur (user-agent) et une empreinte non réversible de l'email saisi, inscrits au journal du serveur ; l'adresse IP et le navigateur d'une requête jugée suspecte.",
     ],
   ],
   [
@@ -39,10 +39,9 @@ const DONNEES_NOMMEES: readonly (readonly [string, readonly string[]])[] = [
 
 const FINALITES_NOMMEES: readonly (readonly [string, readonly string[]])[] = [
   [
-    'ces données techniques : la sécurité et la preuve du choix de cookies',
+    'ces données techniques : la sécurité',
     [
       'Protéger le site et vos comptes : repérer les connexions, les requêtes et les envois de formulaire suspects.',
-      'Garder la preuve de votre choix de cookies.',
     ],
   ],
   [
@@ -62,7 +61,10 @@ describe('PrivacyComponent', () => {
       http: false,
       router: true,
       imports: [PrivacyComponent],
-      providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
+      providers: [
+        { provide: PLATFORM_ID, useValue: 'browser' },
+        { provide: LOCALE_ID, useValue: 'fr' },
+      ],
     }).createComponent(PrivacyComponent);
     fixture.detectChanges();
     return fixture.nativeElement as HTMLElement;
@@ -109,6 +111,17 @@ describe('PrivacyComponent', () => {
   });
 
   it('date la politique du jour où elle a nommé ces données', () => {
-    expect(rendre().textContent).toContain('Dernière mise à jour : 17 octobre 2026');
+    expect(rendre().textContent).toContain('Dernière mise à jour : 22 octobre 2026');
+  });
+
+  it('nomme chaque cookie et stockage local du poste, sans choix à proposer', () => {
+    const cookies = rendre().querySelector('#cookies');
+
+    expect([...(cookies?.querySelectorAll('li strong') ?? [])].map(texteNormalise)).toEqual([
+      'Session du compte',
+      'Séance de cours',
+      "Bandeau d'information",
+    ]);
+    expect(texteNormalise(cookies)).toContain('ils ne demandent donc pas votre consentement');
   });
 });

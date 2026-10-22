@@ -8,10 +8,8 @@ import {
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { AUTH_PORT } from './core/ports/auth.port';
-import { COOKIE_CONSENT_PORT } from './core/ports/cookie-consent.port';
 import { AppComponent } from './app.component';
 import { createAuthPortStub } from '../testing/factories/auth.factory';
-import { createCookieConsentPortStub } from '../testing/factories/cookie-consent.factory';
 import { cliquerSansQuitterLaPage } from '../testing/montage-page';
 import { setupTestBed } from '../testing/setup-test-bed';
 
@@ -31,7 +29,6 @@ class PageRouteeComponent {
 }
 
 const portsDeLaCoquille = (): Provider[] => [
-  { provide: COOKIE_CONSENT_PORT, useValue: createCookieConsentPortStub() },
   { provide: AUTH_PORT, useValue: createAuthPortStub() },
 ];
 

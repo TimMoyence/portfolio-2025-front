@@ -41,17 +41,6 @@ describe('buildRobotsTxt', () => {
     expect(robots).not.toContain('/formations/ia-solopreneurs/toolkit/');
   });
 
-  it('ignore cookie-settings pour permettre crawl + noindex meta', () => {
-    const robots = buildRobotsTxt(
-      pageSeule('cookie-settings', '/cookie-settings', false),
-      BASE_URL,
-    );
-
-    expect(robots).not.toContain('Disallow: /cookie-settings');
-    expect(robots).not.toContain('Disallow: /fr/cookie-settings');
-    expect(robots).not.toContain('Disallow: /en/cookie-settings');
-  });
-
   it('emet le Sitemap absolu en fin de fichier', () => {
     expect(buildRobotsTxt(sansPage(), BASE_URL)).toContain(
       'Sitemap: https://asilidesign.fr/sitemap.xml',

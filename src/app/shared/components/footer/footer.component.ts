@@ -69,10 +69,6 @@ export class FooterComponent {
           href: '/privacy',
         },
         {
-          label: $localize`:footer.nav.cookies|Footer nav link@@footerNavCookies:Paramètres cookies`,
-          href: '/cookie-settings',
-        },
-        {
           label: $localize`:footer.nav.linkedin|Footer nav link@@footerNavLinkedin:LinkedIn`,
           href: 'https://www.linkedin.com/in/tim-moyence',
           external: true,
@@ -102,10 +98,6 @@ export class FooterComponent {
     {
       label: $localize`:footer.legal.privacy|Footer legal link@@footerLegalPrivacy:Politique de confidentialité`,
       href: '/privacy',
-    },
-    {
-      label: $localize`:footer.legal.cookiesSettings|Footer legal link@@footerLegalCookies:Paramètres de cookies`,
-      href: '/cookie-settings',
     },
   ];
 }

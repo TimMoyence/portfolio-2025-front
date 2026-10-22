@@ -2,14 +2,17 @@ import { inject, LOCALE_ID, Pipe, type PipeTransform } from '@angular/core';
 
 const FUSEAU_DU_SITE = 'Europe/Paris';
 
+export function dateDuSite(instant: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: FUSEAU_DU_SITE }).format(
+    new Date(instant),
+  );
+}
+
 @Pipe({ name: 'dateDuSite', standalone: true })
 export class DateDuSitePipe implements PipeTransform {
-  private readonly format = new Intl.DateTimeFormat(inject(LOCALE_ID), {
-    dateStyle: 'long',
-    timeZone: FUSEAU_DU_SITE,
-  });
+  private readonly locale = inject(LOCALE_ID);
 
   transform(instant: string): string {
-    return this.format.format(new Date(instant));
+    return dateDuSite(instant, this.locale);
   }
 }

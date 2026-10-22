@@ -2576,17 +2576,6 @@
       </segment>
     </unit>
 
-    <unit id="footerNavCookies">
-      <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.ts:109</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.cookies</note>
-      </notes>
-      <segment>
-        <source>Paramètres cookies</source>
-        <target>Cookie settings</target>
-      </segment>
-    </unit>
 
     <unit id="footerNavLinkedin">
       <notes>
@@ -2955,114 +2944,6 @@
         <target> Skip to main content </target>
       </segment>
     </unit>
-    <unit id="cookieBannerMessage">
-      <segment>
-        <source>Nous utilisons des cookies essentiels pour faire fonctionner le site et mémoriser vos choix. Aucun cookie analytique ou marketing n’est activé sans votre accord.</source>
-        <target>We use essential cookies to run the site and remember your choices. No analytics or marketing cookies are enabled without your consent.</target>
-      </segment>
-    </unit>
-    <unit id="cookieBannerSettings">
-      <segment>
-        <source>Paramètres des cookies</source>
-        <target>Cookie settings</target>
-      </segment>
-    </unit>
-    <unit id="cookieBannerAcceptAll">
-      <segment>
-        <source>Tout accepter</source>
-        <target>Accept all</target>
-      </segment>
-    </unit>
-    <unit id="cookieBannerRejectAll">
-      <segment>
-        <source>Tout refuser</source>
-        <target>Reject all</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsHeroLabel">
-      <segment>
-        <source>Vos choix</source>
-        <target>Your choices</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsHeroTitle">
-      <segment>
-        <source>Préférences <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">cookies</pc>.</source>
-        <target>Cookie <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">preferences</pc>.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsMetaLastUpdated">
-      <segment>
-        <source>Vous gardez la main — modifiable à tout moment</source>
-        <target>You stay in control — editable at any time</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesEssentialTitle">
-      <segment>
-        <source>Essentiels</source>
-        <target>Essential</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesEssentialDesc">
-      <segment>
-        <source>Indispensables au fonctionnement du site : connexion, sécurité, mémorisation de vos préférences. Ils ne peuvent pas être désactivés.</source>
-        <target>Essential to the operation of the site: login, security, remembering your preferences. They cannot be disabled.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesOptionalTitle">
-      <segment>
-        <source>Préférences</source>
-        <target>Preferences</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesOptionalDesc">
-      <segment>
-        <source>Mémorisent vos choix d&apos;affichage (langue, réglages) pour une expérience plus fluide d&apos;une visite à l&apos;autre.</source>
-        <target>Remember your display choices (language, settings) for a smoother experience from one visit to the next.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesAnalyticsTitle">
-      <segment>
-        <source>Mesure d&apos;audience</source>
-        <target>Audience measurement</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesAnalyticsDesc">
-      <segment>
-        <source>Permettraient des statistiques anonymisées pour améliorer le site. L&apos;app est en lancement : on n&apos;en collecte aucune pour l&apos;instant.</source>
-        <target>Would enable anonymized statistics to improve the site. The app is launching: we collect none for now.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesMarketingTitle">
-      <segment>
-        <source>Marketing</source>
-        <target>Marketing</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesMarketingDesc">
-      <segment>
-        <source>Permettraient de mesurer l&apos;efficacité de campagnes. Désactivés par défaut — l&apos;app est en lancement, on n&apos;en utilise pas.</source>
-        <target>Would measure campaign effectiveness. Disabled by default — the app is launching, we use none.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesSave">
-      <segment>
-        <source>Enregistrer mes choix</source>
-        <target>Save my choices</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesSaved">
-      <segment>
-        <source>Préférences enregistrées</source>
-        <target>Preferences saved</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesError">
-      <segment>
-        <source>Impossible d'enregistrer vos préférences pour le moment.</source>
-        <target>Unable to save your preferences at the moment.</target>
-      </segment>
-    </unit>
       <unit id="termsHeroLabel">
       <segment>
         <source>Mentions légales</source>
@@ -3073,12 +2954,6 @@
       <segment>
         <source>Conditions générales &amp; <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">mentions légales</pc>.</source>
         <target>Terms &amp; <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">legal notice</pc>.</target>
-      </segment>
-    </unit>
-    <unit id="termsMetaLastUpdated">
-      <segment>
-        <source>Dernière mise à jour : 4 juin 2026</source>
-        <target>Last updated: June 4, 2026</target>
       </segment>
     </unit>
     <unit id="termsServicesTitle">
@@ -3099,22 +2974,10 @@
         <target>Privacy <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">policy</pc>.</target>
       </segment>
     </unit>
-    <unit id="privacyMetaLastUpdated">
-      <segment>
-        <source>Dernière mise à jour : 17 octobre 2026</source>
-        <target>Last updated: October 17, 2026</target>
-      </segment>
-    </unit>
     <unit id="footerLegalPrivacy">
       <segment>
         <source>Politique de confidentialité</source>
         <target>Privacy policy</target>
-      </segment>
-    </unit>
-    <unit id="footerLegalCookies">
-      <segment>
-        <source>Paramètres de cookies</source>
-        <target>Cookie settings</target>
       </segment>
     </unit>
     <unit id="auditStepsTitle">
@@ -8519,6 +8382,42 @@
         <target>"Clarify before building"</target>
       </segment>
     </unit>
+    <unit id="cookieBannerRegion">
+      <notes>
+        <note category="location">src/app/shared/components/cookie-banner/cookie-banner.component.html:6</note>
+      </notes>
+      <segment>
+        <source>Cookies</source>
+        <target>Cookie notice</target>
+      </segment>
+    </unit>
+    <unit id="cookieBannerInformation">
+      <notes>
+        <note category="location">src/app/shared/components/cookie-banner/cookie-banner.component.html:13,17</note>
+      </notes>
+      <segment>
+        <source>Ce site n’utilise que des cookies strictement nécessaires à son fonctionnement : aucun cookie de mesure d’audience ni de publicité.</source>
+        <target>This site only uses cookies that are strictly necessary for it to work: no audience measurement or advertising cookies.</target>
+      </segment>
+    </unit>
+    <unit id="cookieBannerEnSavoirPlus">
+      <notes>
+        <note category="location">src/app/shared/components/cookie-banner/cookie-banner.component.html:21,25</note>
+      </notes>
+      <segment>
+        <source>En savoir plus</source>
+        <target>Learn more</target>
+      </segment>
+    </unit>
+    <unit id="cookieBannerCompris">
+      <notes>
+        <note category="location">src/app/shared/components/cookie-banner/cookie-banner.component.html:31,33</note>
+      </notes>
+      <segment>
+        <source> J’ai compris </source>
+        <target> Got it </target>
+      </segment>
+    </unit>
     <unit id="authAsideRegisterKicker">
       <notes>
         <note category="location">src/app/features/auth/auth.component.html:16,17</note>
@@ -8744,126 +8643,6 @@
         <target>Account <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">activated</pc></target>
       </segment>
     </unit>
-    <unit id="cookieSettingsAcceptAll">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:67</note>
-        <note category="description">cookie.settings.actions.acceptAll</note>
-      </notes>
-      <segment>
-        <source>Tout accepter</source>
-        <target>Accept all</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsAnalyticsTag">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:51</note>
-        <note category="description">cookie.settings.analytics.tag</note>
-      </notes>
-      <segment>
-        <source>Non collecté</source>
-        <target>Not collected</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsAriaAnalytics">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:80</note>
-        <note category="description">cookie.settings.aria.analytics</note>
-      </notes>
-      <segment>
-        <source>Mesure d&apos;audience</source>
-        <target>Audience measurement</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsAriaEssential">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:79</note>
-        <note category="description">cookie.settings.aria.essential</note>
-      </notes>
-      <segment>
-        <source>Cookies essentiels</source>
-        <target>Essential cookies</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsAriaMarketing">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:82</note>
-        <note category="description">cookie.settings.aria.marketing</note>
-      </notes>
-      <segment>
-        <source>Marketing</source>
-        <target>Marketing</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsAriaPreferences">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:81</note>
-        <note category="description">cookie.settings.aria.preferences</note>
-      </notes>
-      <segment>
-        <source>Préférences</source>
-        <target>Preferences</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsEssentialTag">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:46</note>
-        <note category="description">cookie.settings.essential.tag</note>
-      </notes>
-      <segment>
-        <source>Toujours actifs</source>
-        <target>Always on</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsIntro">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:40</note>
-        <note category="description">cookie.settings.intro</note>
-      </notes>
-      <segment>
-        <source>On utilise le strict nécessaire pour que le site fonctionne, et rien de plus sans votre accord. Réglez chaque catégorie ci-dessous.</source>
-        <target>We use only the bare minimum needed for the site to work, and nothing more without your consent. Adjust each category below.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsMarketingTag">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:61</note>
-        <note category="description">cookie.settings.marketing.tag</note>
-      </notes>
-      <segment>
-        <source>Désactivé par défaut</source>
-        <target>Disabled by default</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesTag">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:56</note>
-        <note category="description">cookie.settings.preferences.tag</note>
-      </notes>
-      <segment>
-        <source>Confort</source>
-        <target>Comfort</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPrivacyNoteBefore">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:73</note>
-        <note category="description">cookie.settings.privacyNote.before</note>
-      </notes>
-      <segment>
-        <source>Pour en savoir plus, consultez notre</source>
-        <target>To learn more, see our</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPrivacyNoteLink">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:74</note>
-        <note category="description">cookie.settings.privacyNote.link</note>
-      </notes>
-      <segment>
-        <source>politique de confidentialité</source>
-        <target>privacy policy</target>
-      </segment>
-    </unit>
     <unit id="notFoundHint">
       <notes>
         <note category="location">src/app/features/not-found/not-found.component.ts:69,71</note>
@@ -8920,20 +8699,20 @@
     </unit>
     <unit id="privacyCollecteTechnique">
       <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:30,33</note>
+        <note category="location">src/app/features/privacy/privacy.component.html:31,34</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données techniques de la demande</pc> : l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact, chaque demande d&apos;audit et chaque choix de cookies. </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Technical request data</pc>: the IP address, the browser (user-agent) and the referring page (referer), recorded with each contact message, each audit request and each cookie choice. </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données techniques de la demande</pc> : l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact et chaque demande d&apos;audit. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Technical request data</pc>: the IP address, the browser (user-agent) and the referring page (referer), recorded with each contact message and each audit request. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteSecurite">
       <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:35,38</note>
+        <note category="location">src/app/features/privacy/privacy.component.html:36,39</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de sécurité</pc> : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l&apos;adresse IP, le navigateur (user-agent) et l&apos;email saisi, inscrits au journal du serveur ; l&apos;adresse IP et le navigateur d&apos;une requête jugée suspecte. </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Security data</pc>: for each sign-in or security event on your account, successful or not, the IP address, the browser (user-agent) and the email entered, written to the server log; the IP address and browser of a request flagged as suspicious. </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de sécurité</pc> : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l&apos;adresse IP, le navigateur (user-agent) et une empreinte non réversible de l&apos;email saisi, inscrits au journal du serveur ; l&apos;adresse IP et le navigateur d&apos;une requête jugée suspecte. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Security data</pc>: for each sign-in or security event on your account, successful or not, the IP address, the browser (user-agent) and a non-reversible fingerprint of the email entered, written to the server log; the IP address and browser of a request flagged as suspicious. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteJournal">
@@ -8999,24 +8778,6 @@
         <target>To exercise your rights or ask a question about your data, write to us via the</target>
       </segment>
     </unit>
-    <unit id="privacyContactBody2">
-      <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:157,160</note>
-      </notes>
-      <segment>
-        <source>. Vous pouvez aussi régler vos</source>
-        <target>. You can also adjust your</target>
-      </segment>
-    </unit>
-    <unit id="privacyContactBody3">
-      <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:165,167</note>
-      </notes>
-      <segment>
-        <source>à tout moment.</source>
-        <target>at any time.</target>
-      </segment>
-    </unit>
     <unit id="privacyContactContactLink">
       <notes>
         <note category="location">src/app/features/privacy/privacy.component.html:155,156</note>
@@ -9026,13 +8787,49 @@
         <target>contact page</target>
       </segment>
     </unit>
-    <unit id="privacyContactCookiesLink">
+    <unit id="privacyCookiesTitle">
       <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:163,165</note>
+        <note category="location">src/app/features/privacy/privacy.component.html:139,140</note>
       </notes>
       <segment>
-        <source>préférences cookies</source>
-        <target>cookie preferences</target>
+        <source>9. Cookies et stockage local</source>
+        <target>9. Cookies and local storage</target>
+      </segment>
+    </unit>
+    <unit id="privacyCookiesBody">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:141,145</note>
+      </notes>
+      <segment>
+        <source> Ce site n&apos;utilise que des cookies et un stockage local strictement nécessaires à son fonctionnement. Aucun ne mesure votre audience ni ne sert à la publicité : ils ne demandent donc pas votre consentement. </source>
+        <target> This site only uses cookies and local storage that are strictly necessary for it to work. None of them measures your visits or serves advertising, so they do not require your consent. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCookiesSession">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:147,150</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Session du compte</pc> : un cookie sécurisé, illisible par les scripts, garde votre connexion à l&apos;espace formateur pendant 30 jours au plus. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Account session</pc>: a secure cookie, unreadable by scripts, keeps you signed in to the trainer area for 30 days at most. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCookiesSeance">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:151,154</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Séance de cours</pc> : le poste garde votre identité de séance, vos brouillons et les réponses en attente de réseau jusqu&apos;à la fin de la séance. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Class session</pc>: the device keeps your session identity, your drafts and the answers waiting for the network until the session ends. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCookiesBandeau">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:155,158</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Bandeau d&apos;information</pc> : le poste retient que vous l&apos;avez lu, jusqu&apos;à la prochaine mise à jour de cette politique. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Information banner</pc>: the device remembers that you have read it, until the next update of this policy. </target>
       </segment>
     </unit>
     <unit id="privacyContactTitle">
@@ -9192,6 +8989,16 @@
         <target>Contact us</target>
       </segment>
     </unit>
+    <unit id="privacyTocCookies">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.ts:56</note>
+        <note category="description">privacy.toc.cookies</note>
+      </notes>
+      <segment>
+        <source>Cookies et stockage local</source>
+        <target>Cookies and local storage</target>
+      </segment>
+    </unit>
     <unit id="privacyTocDroits">
       <notes>
         <note category="location">src/app/features/privacy/privacy.component.ts:62</note>
@@ -9275,15 +9082,6 @@
       <segment>
         <source>Répondre à vos messages.</source>
         <target>Reply to your messages.</target>
-      </segment>
-    </unit>
-    <unit id="privacyUsagePreuve">
-      <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:61</note>
-      </notes>
-      <segment>
-        <source>Garder la preuve de votre choix de cookies.</source>
-        <target>Keep proof of your cookie choice.</target>
       </segment>
     </unit>
     <unit id="privacyUsageJournal">
@@ -9419,33 +9217,6 @@
       <segment>
         <source>Pour en savoir plus sur le traitement de vos données, consultez notre</source>
         <target>To learn more about how your data is processed, see our</target>
-      </segment>
-    </unit>
-    <unit id="termsDroitBody3">
-      <notes>
-        <note category="location">src/app/features/terms/terms.component.html:161,163</note>
-      </notes>
-      <segment>
-        <source>et nos</source>
-        <target>and our</target>
-      </segment>
-    </unit>
-    <unit id="termsDroitBody4">
-      <notes>
-        <note category="location">src/app/features/terms/terms.component.html:168,169</note>
-      </notes>
-      <segment>
-        <source>.</source>
-        <target>.</target>
-      </segment>
-    </unit>
-    <unit id="termsDroitCookiesLink">
-      <notes>
-        <note category="location">src/app/features/terms/terms.component.html:166,167</note>
-      </notes>
-      <segment>
-        <source>préférences cookies</source>
-        <target>cookie preferences</target>
       </segment>
     </unit>
     <unit id="termsDroitPrivacyLink">
@@ -9718,6 +9489,16 @@
       <segment>
         <source>Sommaire</source>
         <target>Contents</target>
+      </segment>
+    </unit>
+    <unit id="legalMetaLastUpdated">
+      <notes>
+        <note category="location">src/app/features/legal/legal-page.component.ts:38</note>
+        <note category="description">legal.hero.updated</note>
+      </notes>
+      <segment>
+        <source>Dernière mise à jour : <ph id="0" equiv="date" disp="dateDuSite(VERSIONS_DES_TEXTES_LEGAUX[this.texte()], this.locale)"/></source>
+        <target>Last updated: <ph id="0" equiv="date" disp="dateDuSite(VERSIONS_DES_TEXTES_LEGAUX[this.texte()], this.locale)"/></target>
       </segment>
     </unit>
     <unit id="termsTocObjet">

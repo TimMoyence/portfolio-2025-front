@@ -9,10 +9,7 @@ import { LEGAL_PAGE_IMPORTS, type LegalTocItem } from '../legal/legal-page.compo
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TermsComponent {
-  readonly hero = {
-    kicker: $localize`:terms.hero.kicker@@termsHeroLabel:Mentions légales`,
-    updated: $localize`:terms.hero.updated@@termsMetaLastUpdated:Dernière mise à jour : 4 juin 2026`,
-  };
+  readonly kicker = $localize`:terms.hero.kicker@@termsHeroLabel:Mentions légales`;
 
   readonly toc: readonly LegalTocItem[] = [
     {

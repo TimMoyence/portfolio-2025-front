@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { PLATFORM_ID } from '@angular/core';
+import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { isolateAnimReady } from '../../../testing/anim-ready';
@@ -17,7 +17,7 @@ const SOMMAIRE: readonly LegalTocItem[] = [
   standalone: true,
   imports: [LegalPageComponent],
   template: `
-    <app-legal-page kicker="Vos données" updated="Mise à jour : 4 juin 2026" [toc]="toc">
+    <app-legal-page kicker="Vos données" texte="conditions" [toc]="toc">
       <ng-container title>Politique de <em>confidentialité</em>.</ng-container>
       <section id="principe">
         <h2>1. Notre principe</h2>
@@ -41,6 +41,7 @@ describe('LegalPageComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: PLATFORM_ID, useValue: 'browser' },
+        { provide: LOCALE_ID, useValue: 'fr' },
         { provide: APP_BASE_HREF, useValue: '/en/' },
         provideRouter([{ path: 'privacy', component: PageHoteComponent }]),
       ],
@@ -61,7 +62,9 @@ describe('LegalPageComponent', () => {
     const titre = page.querySelector('.lg-hero h1') as HTMLElement;
     expect(titre.textContent?.trim()).toBe('Politique de confidentialité.');
     expect(getComputedStyle(titre.querySelector('em') as HTMLElement).fontStyle).toBe('italic');
-    expect(page.querySelector('.lg-hero .updated')?.textContent).toBe('Mise à jour : 4 juin 2026');
+    expect(page.querySelector('.lg-hero .updated')?.textContent).toBe(
+      'Dernière mise à jour : 4 juin 2026',
+    );
   });
 
   it('rend le sommaire comme une liste de liens vers les ancres du corps, sur la page courante', async () => {

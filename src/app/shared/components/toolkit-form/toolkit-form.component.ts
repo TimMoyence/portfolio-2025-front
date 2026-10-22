@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../../cours/runtime/core/duree';
 import { injecterLocaleDeLaPage } from '../../../core/config/locale-de-la-page';
+import { VERSIONS_DES_TEXTES_LEGAUX } from '../../../core/config/textes-legaux';
 import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import type { ToolkitRequest } from '../../../core/models/toolkit-request.model';
 import { HoneypotDirective } from '../../directives/honeypot.directive';
@@ -22,8 +23,6 @@ import { erreurDeFormat } from '../../directives/format-de-contact.directive';
 const BORNES_DU_PRENOM = bornesDu(zRequestToolkitRequestDto.shape.firstName);
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
-
-const TOOLKIT_FORM_TERMS_VERSION = '2026-04-10';
 
 @Component({
   selector: 'app-toolkit-form',
@@ -160,7 +159,7 @@ export class ToolkitFormComponent {
       firstName: this.firstName().trim(),
       email: this.email().trim(),
       formationSlug: this.formationSlug,
-      termsVersion: TOOLKIT_FORM_TERMS_VERSION,
+      termsVersion: VERSIONS_DES_TEXTES_LEGAUX.conditions,
       termsLocale: this.langue,
       termsAcceptedAt: new Date().toISOString(),
     };

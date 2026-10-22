@@ -2,7 +2,7 @@ import { of } from 'rxjs';
 import type { ContactResponseDto } from '../../../contrat/types.gen';
 import type { ContactPort } from '../../app/core/ports/contact.port';
 
-export const accuse = (message = 'ok'): ContactResponseDto => ({ message, httpCode: 201 });
+const accuse = (message = 'ok'): ContactResponseDto => ({ message, httpCode: 201 });
 
 function createContactPortStub(): jasmine.SpyObj<ContactPort> {
   return jasmine.createSpyObj<ContactPort>('ContactPort', ['contact']);
