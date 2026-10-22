@@ -9,14 +9,12 @@ import {
   enoncesDuDeroule,
 } from '../../../shared/slides/session/lecture-ecran';
 import { DefileurDeTableauComponent } from '../../../shared/slides/defileur-de-tableau/defileur-de-tableau.component';
-import { enFrancais } from '../../../../cours/runtime/core/typographie';
 import { telechargerFichier } from '../../../shared/utils/telechargement.utils';
 import { chantierApresRendu } from './chantier-apres-rendu';
 import { formaterPart } from '../../../../cours/runtime/core/typographie';
 
 interface LigneClassement {
   participant: ParticipantRapporte;
-  note: string;
   sansReponse: boolean;
 }
 
@@ -61,7 +59,6 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
             <thead>
               <tr>
                 <th i18n="synthese.etudiant|@@syntheseEtudiant">Étudiant</th>
-                <th i18n="synthese.score|@@syntheseScore">Score</th>
                 <th i18n="synthese.avancement|@@syntheseAvancement">Avancement</th>
               </tr>
             </thead>
@@ -79,11 +76,10 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
                       N'a répondu à aucune question
                     </td>
                   } @else {
-                    <td data-testid="synthese-score">{{ ligne.note }}</td>
+                    <td data-testid="synthese-avancement">
+                      {{ formaterPart(ligne.participant.completion) }}
+                    </td>
                   }
-                  <td data-testid="synthese-avancement">
-                    {{ formaterPart(ligne.participant.completion) }}
-                  </td>
                 </tr>
               }
             </tbody>
@@ -148,7 +144,9 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
               <li data-testid="synthese-fragile">
                 <span data-testid="synthese-fragile-concept">{{ fragile.libelle }}</span>
                 <span data-testid="synthese-fragile-effectif">{{ fragile.effectif }}</span>
-                <span i18n="synthese.sousSeuil|@@syntheseSousSeuil">étudiants sous le seuil</span>
+                <span i18n="synthese.seSontTrompes|@@syntheseSeSontTrompes"
+                  >étudiants s’y sont trompés</span
+                >
               </li>
             }
           </ul>
@@ -217,13 +215,12 @@ export class CoursSyntheseComponent {
     const participants = this.rapport()?.participants ?? [];
     const lignes = participants.map((participant) => ({
       participant,
-      note: enFrancais(participant.note),
       sansReponse: participant.reponses.length === 0,
     }));
     return [
       ...lignes
         .filter((ligne) => !ligne.sansReponse)
-        .sort((gauche, droite) => gauche.participant.note - droite.participant.note),
+        .sort((gauche, droite) => gauche.participant.completion - droite.participant.completion),
       ...lignes.filter((ligne) => ligne.sansReponse),
     ];
   });
@@ -275,10 +272,8 @@ export class CoursSyntheseComponent {
   }
 
   private compterLesFreins(rapport: RapportSeance, concept: string): number {
-    return rapport.participants.filter(
-      (participant) =>
-        participant.sousSeuil &&
-        participant.reponses.some((reponse) => reponse.concept === concept),
+    return rapport.participants.filter((participant) =>
+      participant.reponses.some((reponse) => reponse.concept === concept && !reponse.correcte),
     ).length;
   }
 

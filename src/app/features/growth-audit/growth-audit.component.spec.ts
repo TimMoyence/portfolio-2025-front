@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { LOCALE_ID } from '@angular/core';
+import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
+import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { aLaPage } from '../../../testing/chemin-de-la-page';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
@@ -45,17 +46,86 @@ describe('GrowthAuditComponent', () => {
 
   beforeEach(async () => {
     auditServiceMock.submit.calls.reset();
+    auditServiceMock.confirmer.calls.reset();
     auditServiceMock.getSummary.calls.reset();
     auditServiceMock.stream.calls.reset();
 
     auditServiceMock.submit.and.returnValue(of(buildAuditCreateResponse({ auditId: 'audit-id' })));
+    auditServiceMock.confirmer.and.returnValue(of({ auditId: 'audit-confirme' }));
     auditServiceMock.getSummary.and.returnValue(of(buildAuditSummaryResponse()));
     auditServiceMock.stream.and.returnValue(of(buildAuditStreamHeartbeat()));
 
     await TestBed.configureTestingModule({
       imports: [GrowthAuditComponent],
-      providers: [{ provide: AUDIT_REQUEST_PORT, useValue: auditServiceMock }],
+      providers: [{ provide: AUDIT_REQUEST_PORT, useValue: auditServiceMock }, provideRouter([])],
     }).compileComponents();
+  });
+
+  describe('S3 — une demande par courriel ne part qu après confirmation', () => {
+    const JETON = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+
+    function ouvrirLeLien(plateforme: 'browser' | 'server' = 'browser') {
+      TestBed.overrideProvider(PLATFORM_ID, { useValue: plateforme });
+      const route = { snapshot: { queryParamMap: convertToParamMap({ token: JETON }) } };
+      TestBed.overrideProvider(ActivatedRoute, { useValue: route });
+      const navigation = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      fixture.detectChanges();
+      return { component: fixture.componentInstance, navigation, route };
+    }
+
+    it('annonce le lien de confirmation sans ouvrir le suivi tant que l adresse n est pas confirmée', () => {
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      auditServiceMock.submit.and.returnValue(
+        of(buildAuditCreateResponse({ auditId: 'audit-en-attente', status: 'UNCONFIRMED' })),
+      );
+
+      remplirEtSoumettre(fixture.componentInstance, true);
+
+      expect(fixture.componentInstance.successMessage).toBe(
+        fixture.componentInstance.formLabels.confirmationEnvoyee,
+      );
+      expect(fixture.componentInstance.auditId).toBeUndefined();
+      expect(auditServiceMock.stream).not.toHaveBeenCalled();
+    });
+
+    it('confirme la demande par le jeton du lien, le retire de l adresse et suit l audit', () => {
+      const { component, navigation, route } = ouvrirLeLien();
+
+      expect(auditServiceMock.confirmer).toHaveBeenCalledOnceWith(JETON);
+      expect(navigation).toHaveBeenCalledOnceWith([], {
+        relativeTo: route as unknown as ActivatedRoute,
+        queryParams: { token: null },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+      expect(component.successMessage).toBe(component.formLabels.confirmee);
+      expect(component.auditId).toBe('audit-confirme');
+      expect(auditServiceMock.stream).toHaveBeenCalledWith('audit-confirme');
+    });
+
+    it('dit un lien invalide ou expiré (404) sans ouvrir de suivi', () => {
+      auditServiceMock.confirmer.and.returnValue(
+        throwError(() => refusDuBack(404, 'Lien invalide ou expiré.')),
+      );
+
+      const { component } = ouvrirLeLien();
+
+      expect(component.errorMessage).toBe(component.formLabels.lienDeConfirmationRefuse);
+      expect(auditServiceMock.stream).not.toHaveBeenCalled();
+    });
+
+    it('ne consomme pas le jeton au rendu serveur', () => {
+      ouvrirLeLien('server');
+
+      expect(auditServiceMock.confirmer).not.toHaveBeenCalled();
+    });
+
+    it('ne confirme rien quand la page s ouvre sans jeton', () => {
+      TestBed.createComponent(GrowthAuditComponent).detectChanges();
+
+      expect(auditServiceMock.confirmer).not.toHaveBeenCalled();
+    });
   });
 
   for (const { localeId, chemin } of [

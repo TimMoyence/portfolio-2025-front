@@ -1289,7 +1289,7 @@
         <source>Demande d&apos;accès application</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <note priority="1" from="description">contact.form.subject.access</note>
       </trans-unit>
@@ -1297,7 +1297,7 @@
         <source>Connexion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <note priority="1" from="description">contact.hero.label</note>
       </trans-unit>
@@ -1305,7 +1305,7 @@
         <source>Parler de votre situation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <note priority="1" from="description">contact.hero.title</note>
       </trans-unit>
@@ -1313,7 +1313,7 @@
         <source>Un premier échange pour comprendre votre contexte,clarifier votre besoin et envisager la suite la plus pertinente.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">69</context>
         </context-group>
         <note priority="1" from="description">contact.hero.description</note>
       </trans-unit>
@@ -1321,7 +1321,7 @@
         <source>Contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="description">contact.form.label</note>
       </trans-unit>
@@ -1329,7 +1329,7 @@
         <source>Vous avez un projet, une contrainte ou une idée à clarifier ? Partagez quelques éléments, je vous répondrai rapidement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <note priority="1" from="description">contact.form.description</note>
       </trans-unit>
@@ -1337,7 +1337,7 @@
         <source>Développeur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.developer</note>
       </trans-unit>
@@ -1345,7 +1345,7 @@
         <source>Manager</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.manager</note>
       </trans-unit>
@@ -1353,7 +1353,7 @@
         <source>Entrepreneur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.entrepreneur</note>
       </trans-unit>
@@ -1361,7 +1361,7 @@
         <source>CTO</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.cto</note>
       </trans-unit>
@@ -1369,7 +1369,7 @@
         <source>Freelance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.freelance</note>
       </trans-unit>
@@ -1377,7 +1377,7 @@
         <source>Autre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="description">contact.form.role.other</note>
       </trans-unit>
@@ -1385,7 +1385,7 @@
         <source>Premier contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="description">contact.form.subject.first</note>
       </trans-unit>
@@ -1393,7 +1393,7 @@
         <source>Demande de devis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="description">contact.form.subject.second</note>
       </trans-unit>
@@ -1401,7 +1401,7 @@
         <source>Urgent - Besoin rapide</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <note priority="1" from="description">contact.form.subject.third</note>
       </trans-unit>
@@ -1409,7 +1409,7 @@
         <source>Vous avez un besoin, une contrainte ou une idée à clarifier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">93</context>
         </context-group>
         <note priority="1" from="description">Home contact lead paragraph</note>
         <note priority="1" from="meaning">home.contact.lead.1</note>
@@ -1418,7 +1418,7 @@
         <source>Un premier échange permet de comprendre votre contexte et de définir la suite la plus pertinente.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <note priority="1" from="description">Home contact lead paragraph</note>
         <note priority="1" from="meaning">home.contact.lead.2</note>
@@ -1427,7 +1427,7 @@
         <source>l&apos;espace formateur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">contact.access.app.teacher</note>
       </trans-unit>
@@ -1435,7 +1435,7 @@
         <source>l&apos;application <x id="app" equiv-text="normalizedApp"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <note priority="1" from="description">contact.access.app.generic</note>
       </trans-unit>
@@ -1443,7 +1443,7 @@
         <source>Bonjour Tim, je souhaite un accès à <x id="appLabel" equiv-text="appLabel"/> . Pouvez-vous m&apos;expliquer les modalités ? Merci.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">137</context>
         </context-group>
         <note priority="1" from="description">contact.access.message</note>
       </trans-unit>
@@ -1451,7 +1451,7 @@
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.firstName</note>
       </trans-unit>
@@ -1459,7 +1459,7 @@
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">159</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.lastName</note>
       </trans-unit>
@@ -1467,7 +1467,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">164</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.email</note>
       </trans-unit>
@@ -1475,7 +1475,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <note priority="1" from="description">contact.form.field.phone</note>
       </trans-unit>
@@ -1483,7 +1483,7 @@
         <source>Merci de vérifier les champs en rouge.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <note priority="1" from="description">contact.form.error.invalid</note>
       </trans-unit>
@@ -1491,7 +1491,7 @@
         <source>Une erreur est survenue. Veuillez réessayer plus tard.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">195</context>
         </context-group>
         <note priority="1" from="description">contact.form.error.generic</note>
       </trans-unit>
@@ -1499,14 +1499,14 @@
         <source>Votre message n’a pas été accepté : vérifiez les champs et réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormSuccess" datatype="html">
         <source>Message envoyé. Je reviens vers vous rapidement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.ts</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">200</context>
         </context-group>
         <note priority="1" from="description">contact.form.success</note>
       </trans-unit>
@@ -2377,7 +2377,7 @@
         <source> Ouvrir la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">127,130</context>
+          <context context-type="linenumber">126,129</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.ouvrir</note>
       </trans-unit>
@@ -2385,7 +2385,7 @@
         <source> Ouverture de la séance… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">137,141</context>
+          <context context-type="linenumber">136,140</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.ouvertureChargement</note>
       </trans-unit>
@@ -2393,7 +2393,7 @@
         <source> La séance n&apos;a pas pu être ouverte. Vérifiez la connexion, puis réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">149,154</context>
+          <context context-type="linenumber">148,153</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.ouvertureEchec</note>
       </trans-unit>
@@ -2401,7 +2401,7 @@
         <source> Reprise de la séance… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">161,165</context>
+          <context context-type="linenumber">160,164</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.repriseChargement</note>
       </trans-unit>
@@ -2409,7 +2409,7 @@
         <source> La séance n&apos;a pas pu être reprise. Vérifiez la connexion, puis réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">173,177</context>
+          <context context-type="linenumber">172,176</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.repriseEchec</note>
       </trans-unit>
@@ -2417,7 +2417,7 @@
         <source> Réessayer la reprise </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">182,186</context>
+          <context context-type="linenumber">181,185</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.repriseReessayer</note>
       </trans-unit>
@@ -2425,7 +2425,7 @@
         <source>Suivi de la séance interrompu : reconnexion en cours. Les résultats et la scène peuvent être en retard.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">197,201</context>
+          <context context-type="linenumber">196,200</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.fluxReconnexion</note>
       </trans-unit>
@@ -2433,7 +2433,7 @@
         <source>Le serveur refuse le suivi de la séance (statut <x id="INTERPOLATION" equiv-text="{{ refus.statut }}"/>) : rechargez le pupitre, reconnectez-vous si la connexion est demandée ; la séance reprendra.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">206,208</context>
+          <context context-type="linenumber">205,207</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.fluxRefusSession</note>
       </trans-unit>
@@ -2441,7 +2441,7 @@
         <source>Trop de connexions au suivi de cette séance (statut <x id="INTERPOLATION" equiv-text="{{ refus.statut }}"/>) : fermez les onglets en trop ; nouvel essai automatique.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">213,214</context>
+          <context context-type="linenumber">212,213</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.fluxRefusSaturation</note>
       </trans-unit>
@@ -2449,7 +2449,7 @@
         <source>Le serveur refuse le suivi de la séance (statut <x id="INTERPOLATION" equiv-text="{{ refus.statut }}"/>) : nouvel essai automatique.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">219,220</context>
+          <context context-type="linenumber">218,219</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.fluxRefus</note>
       </trans-unit>
@@ -2457,7 +2457,7 @@
         <source>Connexion au suivi de la séance…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">228,233</context>
+          <context context-type="linenumber">227,232</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.fluxConnexion</note>
       </trans-unit>
@@ -2465,7 +2465,7 @@
         <source>Code à dicter à la classe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">237,238</context>
+          <context context-type="linenumber">236,237</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.codeTitre</note>
       </trans-unit>
@@ -2473,7 +2473,7 @@
         <source>Participants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">242,243</context>
+          <context context-type="linenumber">241,242</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.participants</note>
       </trans-unit>
@@ -2481,78 +2481,57 @@
         <source>connectés à cette séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">246,249</context>
+          <context context-type="linenumber">245,247</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.participantsEnDirect</note>
-      </trans-unit>
-      <trans-unit id="presentateurStatMoyenne" datatype="html">
-        <source>Moyenne</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">251,252</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="presentateurStatMediane" datatype="html">
-        <source>Médiane</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">255,256</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="presentateurStatDispersion" datatype="html">
-        <source>Dispersion (écart-type)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">259,260</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="presentateurStatParticipation" datatype="html">
         <source>Participation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">263,264</context>
+          <context context-type="linenumber">250,251</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurStatReussite" datatype="html">
         <source>Réussite</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">267,268</context>
+          <context context-type="linenumber">254,255</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurStatProblemes" datatype="html">
         <source>Questions problématiques</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">271,273</context>
+          <context context-type="linenumber">258,260</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurStatAucunProbleme" datatype="html">
         <source>Aucune</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">276,278</context>
+          <context context-type="linenumber">263,265</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurNotationAide" datatype="html">
         <source>Afficher la règle de notation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">291,292</context>
+          <context context-type="linenumber">278,279</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurNotationEchec" datatype="html">
         <source> La règle de notation n’a pas pu être lue. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">317,319</context>
+          <context context-type="linenumber">304,306</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurDerouleChargement" datatype="html">
         <source> Chargement du déroulé… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">331,335</context>
+          <context context-type="linenumber">318,322</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.derouleChargement</note>
       </trans-unit>
@@ -2560,7 +2539,7 @@
         <source> Le déroulé de la séance n&apos;a pas pu être chargé. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">340,343</context>
+          <context context-type="linenumber">327,330</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.derouleEchec</note>
       </trans-unit>
@@ -2568,7 +2547,7 @@
         <source> Réessayer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">348,352</context>
+          <context context-type="linenumber">335,339</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.derouleReessayer</note>
       </trans-unit>
@@ -2576,7 +2555,7 @@
         <source> Pupitre </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">354,358</context>
+          <context context-type="linenumber">341,345</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.titreChargement</note>
       </trans-unit>
@@ -2584,7 +2563,7 @@
         <source>Prête à démarrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">365,367</context>
+          <context context-type="linenumber">352,354</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.statutOuverte</note>
       </trans-unit>
@@ -2592,7 +2571,7 @@
         <source>En cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">368,370</context>
+          <context context-type="linenumber">355,357</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.statutEnCours</note>
       </trans-unit>
@@ -2600,7 +2579,7 @@
         <source>Terminée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">370,374</context>
+          <context context-type="linenumber">357,361</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.statutTerminee</note>
       </trans-unit>
@@ -2608,7 +2587,7 @@
         <source> Démarrer la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">384,387</context>
+          <context context-type="linenumber">371,374</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.demarrer</note>
       </trans-unit>
@@ -2616,14 +2595,14 @@
         <source>Pilotage des écrans</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">390,391</context>
+          <context context-type="linenumber">377,378</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurPrecedent" datatype="html">
         <source> Écran précédent </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">401,403</context>
+          <context context-type="linenumber">388,390</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.precedent</note>
       </trans-unit>
@@ -2631,7 +2610,7 @@
         <source> Écran suivant </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">414,416</context>
+          <context context-type="linenumber">401,403</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.suivant</note>
       </trans-unit>
@@ -2639,14 +2618,14 @@
         <source>Changer le rythme de la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">424,425</context>
+          <context context-type="linenumber">411,412</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurModePilote" datatype="html">
         <source>Piloté</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">433,434</context>
+          <context context-type="linenumber">420,421</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.modePilote</note>
       </trans-unit>
@@ -2654,7 +2633,7 @@
         <source>Libre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">434,437</context>
+          <context context-type="linenumber">421,424</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.modeLibre</note>
       </trans-unit>
@@ -2662,7 +2641,7 @@
         <source>Ouvrir la projection en plein écran</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">442,443</context>
+          <context context-type="linenumber">429,430</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.pleinEcranAria</note>
       </trans-unit>
@@ -2670,7 +2649,7 @@
         <source> Projection plein écran </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">446,448</context>
+          <context context-type="linenumber">433,435</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.pleinEcran</note>
       </trans-unit>
@@ -2678,7 +2657,7 @@
         <source> Livret papier </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">455,457</context>
+          <context context-type="linenumber">442,444</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.livret</note>
       </trans-unit>
@@ -2686,7 +2665,7 @@
         <source>Écran courant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">460,463</context>
+          <context context-type="linenumber">447,450</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.slider</note>
       </trans-unit>
@@ -2694,7 +2673,7 @@
         <source> Écran projeté </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">487,489</context>
+          <context context-type="linenumber">474,476</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.stageTitre</note>
       </trans-unit>
@@ -2702,35 +2681,35 @@
         <source>Retirer les résultats de la projection</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">500,502</context>
+          <context context-type="linenumber">487,489</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurProjeterResultats" datatype="html">
         <source>Projeter les résultats</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">504,506</context>
+          <context context-type="linenumber">491,493</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurMaitriseEchec" datatype="html">
         <source> La carte de maîtrise n’a pas pu être lue : elle sera relue au prochain résultat. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">543,544</context>
+          <context context-type="linenumber">530,531</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurInformationsSeance" datatype="html">
         <source>Informations de séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">553,554</context>
+          <context context-type="linenumber">540,541</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurNotes" datatype="html">
         <source>Notes du formateur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">558,559</context>
+          <context context-type="linenumber">545,546</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.notes</note>
       </trans-unit>
@@ -2738,7 +2717,7 @@
         <source> Lecture de la classe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">576,578</context>
+          <context context-type="linenumber">563,565</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.questionsTitre</note>
       </trans-unit>
@@ -2746,21 +2725,21 @@
         <source>Correction révélée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">592,594</context>
+          <context context-type="linenumber">579,581</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurRevelerCorrection" datatype="html">
         <source>Révéler la correction</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">596,598</context>
+          <context context-type="linenumber">583,585</context>
         </context-group>
       </trans-unit>
       <trans-unit id="presentateurCloturer" datatype="html">
         <source> Clôturer la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">642,645</context>
+          <context context-type="linenumber">629,632</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.cloturer</note>
       </trans-unit>
@@ -2768,7 +2747,7 @@
         <source> Clôturer la séance maintenant ? Les participants ne pourront plus répondre. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">656,660</context>
+          <context context-type="linenumber">643,647</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.clotureQuestion</note>
       </trans-unit>
@@ -2776,7 +2755,7 @@
         <source> Confirmer la clôture </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">665,668</context>
+          <context context-type="linenumber">652,655</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.clotureConfirmer</note>
       </trans-unit>
@@ -2784,7 +2763,7 @@
         <source> Revenir à la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">675,679</context>
+          <context context-type="linenumber">662,666</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.clotureAnnuler</note>
       </trans-unit>
@@ -2792,7 +2771,7 @@
         <source> La séance est close : la synthèse est disponible. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">685,688</context>
+          <context context-type="linenumber">672,675</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.terminee</note>
       </trans-unit>
@@ -2800,7 +2779,7 @@
         <source> Voir la synthèse </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">694,697</context>
+          <context context-type="linenumber">681,684</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.synthese</note>
       </trans-unit>
@@ -2808,7 +2787,7 @@
         <source> La dernière commande n&apos;est pas passée. Vérifiez la connexion, puis réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-presentateur.component.ts</context>
-          <context context-type="linenumber">706,710</context>
+          <context context-type="linenumber">693,697</context>
         </context-group>
         <note priority="1" from="meaning">presentateur.echec</note>
       </trans-unit>
@@ -2957,7 +2936,7 @@
         <source>Après la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">52,53</context>
+          <context context-type="linenumber">50,51</context>
         </context-group>
         <note priority="1" from="meaning">synthese.kicker</note>
       </trans-unit>
@@ -2965,7 +2944,7 @@
         <source>Synthèse de la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">53,55</context>
+          <context context-type="linenumber">51,53</context>
         </context-group>
         <note priority="1" from="meaning">synthese.titre</note>
       </trans-unit>
@@ -2973,7 +2952,7 @@
         <source> Aucun participant n&apos;a rejoint cette séance : il n&apos;y a rien à analyser. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">56,59</context>
+          <context context-type="linenumber">54,57</context>
         </context-group>
         <note priority="1" from="meaning">synthese.vide</note>
       </trans-unit>
@@ -2981,23 +2960,15 @@
         <source>Étudiant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">63,64</context>
+          <context context-type="linenumber">61,62</context>
         </context-group>
         <note priority="1" from="meaning">synthese.etudiant</note>
-      </trans-unit>
-      <trans-unit id="syntheseScore" datatype="html">
-        <source>Score</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">64,65</context>
-        </context-group>
-        <note priority="1" from="meaning">synthese.score</note>
       </trans-unit>
       <trans-unit id="syntheseAvancement" datatype="html">
         <source>Avancement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">65,68</context>
+          <context context-type="linenumber">62,65</context>
         </context-group>
         <note priority="1" from="meaning">synthese.avancement</note>
       </trans-unit>
@@ -3005,7 +2976,7 @@
         <source> N&apos;a répondu à aucune question </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">79,81</context>
+          <context context-type="linenumber">76,78</context>
         </context-group>
         <note priority="1" from="meaning">synthese.sansReponse</note>
       </trans-unit>
@@ -3013,7 +2984,7 @@
         <source>Résultats par question</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">93,95</context>
+          <context context-type="linenumber">89,91</context>
         </context-group>
         <note priority="1" from="meaning">synthese.questionsTitre</note>
       </trans-unit>
@@ -3021,7 +2992,7 @@
         <source> Bonnes réponses, total et « je ne sais pas » pour chaque question de la séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">97,100</context>
+          <context context-type="linenumber">93,96</context>
         </context-group>
         <note priority="1" from="meaning">synthese.questionsLegende</note>
       </trans-unit>
@@ -3029,7 +3000,7 @@
         <source> Question </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">102,104</context>
+          <context context-type="linenumber">98,100</context>
         </context-group>
         <note priority="1" from="meaning">synthese.questionColonne</note>
       </trans-unit>
@@ -3037,7 +3008,7 @@
         <source> Bonnes réponses </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">105,107</context>
+          <context context-type="linenumber">101,103</context>
         </context-group>
         <note priority="1" from="meaning">synthese.correctesColonne</note>
       </trans-unit>
@@ -3045,7 +3016,7 @@
         <source>Total</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">107,108</context>
+          <context context-type="linenumber">103,104</context>
         </context-group>
         <note priority="1" from="meaning">synthese.totalColonne</note>
       </trans-unit>
@@ -3053,7 +3024,7 @@
         <source> Je ne sais pas </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">109,111</context>
+          <context context-type="linenumber">105,107</context>
         </context-group>
         <note priority="1" from="meaning">synthese.neSaitPasColonne</note>
       </trans-unit>
@@ -3061,7 +3032,7 @@
         <source> Confusions fréquentes de la classe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">133,135</context>
+          <context context-type="linenumber">129,131</context>
         </context-group>
         <note priority="1" from="meaning">synthese.confusionsTitre</note>
       </trans-unit>
@@ -3069,23 +3040,23 @@
         <source>Ce qui a le plus accroché</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">145,146</context>
+          <context context-type="linenumber">141,142</context>
         </context-group>
         <note priority="1" from="meaning">synthese.fragiles</note>
       </trans-unit>
-      <trans-unit id="syntheseSousSeuil" datatype="html">
-        <source>étudiants sous le seuil</source>
+      <trans-unit id="syntheseSeSontTrompes" datatype="html">
+        <source>étudiants s’y sont trompés</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">151,154</context>
+          <context context-type="linenumber">148,152</context>
         </context-group>
-        <note priority="1" from="meaning">synthese.sousSeuil</note>
+        <note priority="1" from="meaning">synthese.seSontTrompes</note>
       </trans-unit>
       <trans-unit id="syntheseLibresTitre" datatype="html">
         <source>Réponses libres des étudiants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">158,159</context>
+          <context context-type="linenumber">156,157</context>
         </context-group>
         <note priority="1" from="meaning">synthese.libresTitre</note>
       </trans-unit>
@@ -3093,7 +3064,7 @@
         <source> Exporter les réponses en CSV </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">183,185</context>
+          <context context-type="linenumber">181,183</context>
         </context-group>
         <note priority="1" from="meaning">synthese.export</note>
       </trans-unit>
@@ -3101,7 +3072,7 @@
         <source> Le CSV n’a pas pu être exporté. Réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">191,195</context>
+          <context context-type="linenumber">189,193</context>
         </context-group>
         <note priority="1" from="meaning">synthese.exportEchec</note>
       </trans-unit>
@@ -3109,7 +3080,7 @@
         <source> La synthèse n&apos;a pas pu être lue. Rechargez la page, puis réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/cours-synthese.component.ts</context>
-          <context context-type="linenumber">197,201</context>
+          <context context-type="linenumber">195,199</context>
         </context-group>
         <note priority="1" from="meaning">synthese.echec</note>
       </trans-unit>
@@ -3386,8 +3357,8 @@
           <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="presentateurNotation" datatype="html">
-        <source>Note /<x id="noteMax" equiv-text="regle.noteMax"/> relative aux <x id="reference" equiv-text="formaterPart(regle.partCohorteReference)"/> les plus actifs. Sous <x id="validation" equiv-text="formaterPart(regle.ratioSeuilValidation)"/> de cette référence, l’étudiant est signalé sous le seuil. <x id="neSaitPas" equiv-text="neSaitPas"/> ; une non-réponse vaut <x id="pointsNonReponse" equiv-text="regle.pointsNonReponse"/> point ; <x id="libres" equiv-text="libres"/>. Une question est problématique sous <x id="seuilProbleme" equiv-text="formaterPart(regle.seuilQuestionProbleme)"/> de réussite.</source>
+      <trans-unit id="presentateurRegleDeSuivi" datatype="html">
+        <source>L’avancement d’un étudiant est la part des questions du barème auxquelles il a répondu. <x id="neSaitPas" equiv-text="neSaitPas"/> ; une non-réponse vaut <x id="pointsNonReponse" equiv-text="regle.pointsNonReponse"/> point ; <x id="libres" equiv-text="libres"/>. Une question est problématique sous <x id="seuilProbleme" equiv-text="formaterPart(regle.seuilQuestionProbleme)"/> de réussite.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/cours/presentateur/regle-de-notation.ts</context>
           <context context-type="linenumber">49</context>
@@ -6890,14 +6861,14 @@
         <source>IA</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditHeroLabel" datatype="html">
         <source>Audit gratuit (IA + humain, 24h)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="description">audit.hero.label</note>
       </trans-unit>
@@ -6905,7 +6876,7 @@
         <source>Audit Growth — scorecard 7 piliers</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">audit.hero.title</note>
       </trans-unit>
@@ -6913,7 +6884,7 @@
         <source>Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, conversion, visibilité IA). Ensuite, sous 24h, je repasse l&apos;audit moi-même et je vous envoie une scorecard claire, un rapport PDF détaillé et des recommandations concrètes priorisées par impact/effort.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">audit.hero.description</note>
       </trans-unit>
@@ -6921,7 +6892,7 @@
         <source>1. Vous laissez vos infos</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">126</context>
         </context-group>
         <note priority="1" from="description">audit.steps.one.title</note>
       </trans-unit>
@@ -6929,7 +6900,7 @@
         <source>Nom du site ou URL + contact (email ou téléphone).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <note priority="1" from="description">audit.steps.one.desc</note>
       </trans-unit>
@@ -6937,7 +6908,7 @@
         <source>2. Audit instantané (IA)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">audit.steps.two.title</note>
       </trans-unit>
@@ -6945,7 +6916,7 @@
         <source>Je scanne vos pages (SEO, performance, conversion, visibilité IA) et je sors un premier diagnostic rapide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">131</context>
         </context-group>
         <note priority="1" from="description">audit.steps.two.desc</note>
       </trans-unit>
@@ -6953,7 +6924,7 @@
         <source>3. Audit humain sous 24h</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.title</note>
       </trans-unit>
@@ -6961,7 +6932,7 @@
         <source>Je reprends l&apos;analyse moi-même, je priorise, et je vous envoie la scorecard, le rapport PDF détaillé et un plan d&apos;actions concret.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.desc</note>
       </trans-unit>
@@ -6969,7 +6940,7 @@
         <source>Rapport PDF détaillé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">137</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.pdf</note>
       </trans-unit>
@@ -6977,7 +6948,7 @@
         <source>Scorecard claire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.score</note>
       </trans-unit>
@@ -6985,7 +6956,7 @@
         <source>Quick wins + priorités (impact/effort)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">139</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.wins</note>
       </trans-unit>
@@ -6993,7 +6964,7 @@
         <source>Aucun engagement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">140</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.noObligation</note>
       </trans-unit>
@@ -7001,7 +6972,7 @@
         <source>Questions fréquentes sur l&apos;audit gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <note priority="1" from="description">audit.faq.title</note>
       </trans-unit>
@@ -7009,7 +6980,7 @@
         <source>Ce que vous devez savoir avant de demander votre audit Growth — scorecard 7 piliers + recommandations priorisées.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <note priority="1" from="description">audit.faq.description</note>
       </trans-unit>
@@ -7017,7 +6988,7 @@
         <source>Comment fonctionne l&apos;audit gratuit en 24 heures ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q1</note>
       </trans-unit>
@@ -7025,7 +6996,7 @@
         <source>Vous laissez l&apos;URL de votre site et votre contact. Un premier scan IA analyse vos pages en moins de 5 minutes (SEO, performance, signaux de conversion, visibilité IA). Puis, sous 24h, je reprends l&apos;analyse moi-même et vous envoie une scorecard claire, un rapport PDF détaillé et un plan d&apos;actions priorisé par impact/effort.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a1</note>
       </trans-unit>
@@ -7033,7 +7004,7 @@
         <source>Que contient concrètement l&apos;audit Growth ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">153</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q2</note>
       </trans-unit>
@@ -7041,7 +7012,7 @@
         <source>L&apos;audit couvre sept piliers : SEO fondations (titres, meta, indexation, SEO local), vitesse et performance (Core Web Vitals), tech et scalabilité, crédibilité et confiance, conversion et clarté, visibilité IA (ChatGPT / Perplexity / Gemini) et citabilité (llms.txt, FAQ, sources). Vous recevez une scorecard, des quick wins et des recommandations priorisées.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">154</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a2</note>
       </trans-unit>
@@ -7049,7 +7020,7 @@
         <source>L&apos;audit est-il vraiment gratuit ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q3</note>
       </trans-unit>
@@ -7057,7 +7028,7 @@
         <source>Oui, totalement. Aucun engagement, aucune carte bancaire demandée. Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h. L&apos;objectif est de vous apporter de la valeur immédiatement, et de démarrer un échange pertinent si vous le souhaitez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">158</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a3</note>
       </trans-unit>
@@ -7065,7 +7036,7 @@
         <source>Qui réalise l&apos;audit : une IA ou un humain ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">161</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q4</note>
       </trans-unit>
@@ -7073,7 +7044,7 @@
         <source>Les deux. Un premier scan automatisé tourne instantanément via un pipeline IA (Langchain + OpenAI). Ensuite, je réalise l&apos;audit humain moi-même pour prioriser, contextualiser et formuler des recommandations concrètes adaptées à votre situation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a4</note>
       </trans-unit>
@@ -7081,7 +7052,7 @@
         <source>Pour quels types de sites l&apos;audit est-il pertinent ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q5</note>
       </trans-unit>
@@ -7089,7 +7060,7 @@
         <source>L&apos;audit est pertinent pour les sites vitrines, sites e-commerce, landing pages et applications métier web. Il est particulièrement adapté aux TPE, PME, indépendants et artisans qui veulent améliorer leur visibilité SEO et leur taux de conversion sans se perdre dans la technique.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a5</note>
       </trans-unit>
@@ -7097,7 +7068,7 @@
         <source>Conversion &amp; clarté</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.conversion.title</note>
       </trans-unit>
@@ -7105,7 +7076,7 @@
         <source>Proposition de valeur, CTA, friction contact, mobile.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.conversion.desc</note>
       </trans-unit>
@@ -7113,7 +7084,7 @@
         <source>Vitesse &amp; performance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">176</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.performance.title</note>
       </trans-unit>
@@ -7121,7 +7092,7 @@
         <source>PageSpeed, poids images, Core Web Vitals.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">177</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.performance.desc</note>
       </trans-unit>
@@ -7129,7 +7100,7 @@
         <source>SEO fondations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">180</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.seo.title</note>
       </trans-unit>
@@ -7137,7 +7108,7 @@
         <source>Titres, H1, meta, indexation, SEO local.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">181</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.seo.desc</note>
       </trans-unit>
@@ -7145,7 +7116,7 @@
         <source>Crédibilité &amp; confiance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">184</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.trust.title</note>
       </trans-unit>
@@ -7153,7 +7124,7 @@
         <source>Preuves sociales, portfolio, signaux de confiance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">185</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.trust.desc</note>
       </trans-unit>
@@ -7161,7 +7132,7 @@
         <source>Tech &amp; scalabilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">188</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.tech.title</note>
       </trans-unit>
@@ -7169,7 +7140,7 @@
         <source>CMS, sécurité, erreurs, maintenabilité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">189</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.tech.desc</note>
       </trans-unit>
@@ -7177,7 +7148,7 @@
         <source>Visibilité IA</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">192</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.aiVisibility.title</note>
       </trans-unit>
@@ -7185,7 +7156,7 @@
         <source>Compréhension par les assistants IA, données structurées, réponses génératives.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">193</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.aiVisibility.desc</note>
       </trans-unit>
@@ -7193,7 +7164,7 @@
         <source>Citabilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">196</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.citationWorthiness.title</note>
       </trans-unit>
@@ -7201,7 +7172,7 @@
         <source>Sources, preuves, FAQ et contenus que les moteurs peuvent citer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">197</context>
         </context-group>
         <note priority="1" from="description">audit.pillar.citationWorthiness.desc</note>
       </trans-unit>
@@ -7209,7 +7180,7 @@
         <source>Demander un audit gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">191</context>
+          <context context-type="linenumber">202</context>
         </context-group>
         <note priority="1" from="description">audit.form.title</note>
       </trans-unit>
@@ -7217,7 +7188,7 @@
         <source>Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">203</context>
         </context-group>
         <note priority="1" from="description">audit.form.description</note>
       </trans-unit>
@@ -7225,7 +7196,7 @@
         <source>Nom du site ou URL</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">204</context>
         </context-group>
         <note priority="1" from="description">audit.form.websiteLabel</note>
       </trans-unit>
@@ -7233,7 +7204,7 @@
         <source>ex. https://votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">205</context>
         </context-group>
         <note priority="1" from="description">audit.form.websitePlaceholder</note>
       </trans-unit>
@@ -7241,7 +7212,7 @@
         <source>Méthode de contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">206</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactMethodLabel</note>
       </trans-unit>
@@ -7249,7 +7220,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">207</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactEmail</note>
       </trans-unit>
@@ -7257,7 +7228,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">208</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactPhone</note>
       </trans-unit>
@@ -7265,7 +7236,7 @@
         <source>Coordonnée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">209</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactValueLabel</note>
       </trans-unit>
@@ -7273,7 +7244,7 @@
         <source>ex. hello@votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">210</context>
         </context-group>
         <note priority="1" from="description">audit.form.emailPlaceholder</note>
       </trans-unit>
@@ -7281,7 +7252,7 @@
         <source>ex. +33 6 98 50 32 82</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">211</context>
         </context-group>
         <note priority="1" from="description">audit.form.phonePlaceholder</note>
       </trans-unit>
@@ -7289,7 +7260,7 @@
         <source>Demander mon audit (scan IA immédiat + audit humain sous 24h)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">201</context>
+          <context context-type="linenumber">212</context>
         </context-group>
         <note priority="1" from="description">audit.form.submit</note>
       </trans-unit>
@@ -7297,15 +7268,36 @@
         <source>Merci ! Scan IA lancé — audit humain envoyé sous 24h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">213</context>
         </context-group>
         <note priority="1" from="description">audit.form.success</note>
+      </trans-unit>
+      <trans-unit id="auditFormConfirmationEnvoyee" datatype="html">
+        <source>Vérifiez votre boîte e-mail : l’audit démarre dès que vous ouvrez le lien de confirmation reçu, valable 24 heures.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">214</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditFormConfirmee" datatype="html">
+        <source>Adresse confirmée ! Scan IA lancé — audit humain envoyé sous 24h.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditFormLienDeConfirmationRefuse" datatype="html">
+        <source>Ce lien de confirmation est invalide ou a expiré : refaites la demande d’audit.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="auditFormError" datatype="html">
         <source>Impossible d&apos;envoyer la demande. Réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">203</context>
+          <context context-type="linenumber">217</context>
         </context-group>
         <note priority="1" from="description">audit.form.error</note>
       </trans-unit>
@@ -7313,7 +7305,7 @@
         <source>J&apos;accepte que mes coordonnées soient utilisées pour traiter ma demande d&apos;audit (voir &lt;a href=&quot;/fr/privacy&quot; class=&quot;underline&quot;&gt;politique de confidentialité&lt;/a&gt;).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">218</context>
         </context-group>
         <note priority="1" from="description">audit.form.rgpdLabel</note>
       </trans-unit>
@@ -7321,7 +7313,7 @@
         <source>Votre consentement RGPD est obligatoire pour lancer l&apos;audit.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">205</context>
+          <context context-type="linenumber">219</context>
         </context-group>
         <note priority="1" from="description">audit.form.rgpdError</note>
       </trans-unit>
@@ -7329,7 +7321,7 @@
         <source>Audit terminé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <note priority="1" from="description">Audit completed step</note>
         <note priority="1" from="meaning">growthAudit.step.completed</note>
@@ -7338,7 +7330,7 @@
         <source>L&apos;audit a échoué.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">211</context>
+          <context context-type="linenumber">225</context>
         </context-group>
         <note priority="1" from="description">Audit failed message</note>
         <note priority="1" from="meaning">growthAudit.error.failed</note>
@@ -7347,7 +7339,7 @@
         <source>Connexion interrompue pendant l&apos;audit. Rechargez la page pour vérifier le résultat.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">227</context>
         </context-group>
         <note priority="1" from="description">Connection lost during audit</note>
         <note priority="1" from="meaning">growthAudit.error.connectionLost</note>
@@ -7356,14 +7348,14 @@
         <source>La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">286</context>
+          <context context-type="linenumber">300</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditStepPending" datatype="html">
         <source>Audit en attente...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">292</context>
+          <context context-type="linenumber">357</context>
         </context-group>
         <note priority="1" from="description">Audit pending step</note>
         <note priority="1" from="meaning">growthAudit.step.pending</note>
@@ -7372,7 +7364,7 @@
         <source>Impossible de récupérer le résumé de l&apos;audit pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">388</context>
+          <context context-type="linenumber">434</context>
         </context-group>
         <note priority="1" from="description">Summary fetch error</note>
         <note priority="1" from="meaning">growthAudit.error.summaryFetch</note>

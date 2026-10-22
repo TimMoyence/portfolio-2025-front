@@ -1,6 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import type { Observable } from 'rxjs';
 import type {
+  AuditConfirmeResponse,
   AuditCreateResponse,
   AuditRequestPayload,
   AuditStreamEvent,
@@ -9,6 +10,7 @@ import type {
 
 export interface AuditRequestPort {
   submit(payload: AuditRequestPayload): Observable<AuditCreateResponse>;
+  confirmer(jeton: string): Observable<AuditConfirmeResponse>;
   getSummary(auditId: string): Observable<AuditSummaryResponse>;
   stream(auditId: string): Observable<AuditStreamEvent>;
 }

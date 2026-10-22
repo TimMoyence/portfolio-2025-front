@@ -46,6 +46,6 @@ export function phraseDeNotation(regle: RegleNotation, bareme: ResumeBareme | nu
   const libres = regle.reponsesLibresNotees
     ? $localize`:@@presentateurNotationLibresNotees:les réponses libres sont notées`
     : $localize`:@@presentateurNotationLibresNonNotees:les réponses libres ne sont pas notées`;
-  const phrase = $localize`:@@presentateurNotation:Note /${regle.noteMax}:noteMax: relative aux ${formaterPart(regle.partCohorteReference)}:reference: les plus actifs. Sous ${formaterPart(regle.ratioSeuilValidation)}:validation: de cette référence, l’étudiant est signalé sous le seuil. ${neSaitPas}:neSaitPas: ; une non-réponse vaut ${regle.pointsNonReponse}:pointsNonReponse: point ; ${libres}:libres:. Une question est problématique sous ${formaterPart(regle.seuilQuestionProbleme)}:seuilProbleme: de réussite.`;
+  const phrase = $localize`:@@presentateurRegleDeSuivi:L’avancement d’un étudiant est la part des questions du barème auxquelles il a répondu. ${neSaitPas}:neSaitPas: ; une non-réponse vaut ${regle.pointsNonReponse}:pointsNonReponse: point ; ${libres}:libres:. Une question est problématique sous ${formaterPart(regle.seuilQuestionProbleme)}:seuilProbleme: de réussite.`;
   return `${phrase}${phraseDuBareme(bareme)}`;
 }

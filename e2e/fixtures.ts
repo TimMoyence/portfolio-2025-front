@@ -186,18 +186,8 @@ export function rapportDeSeance(surcharges: Partial<RapportSeance>): RapportSean
     conceptsFragiles: [],
     libellesDesConcepts: {},
     resultats: buildResultatsSeance({ participants: 0, questions: [] }),
-    statistiques: buildStatistiquesSeance({
-      moyenne: 0,
-      mediane: 0,
-      dispersion: 0,
-      tauxParticipation: 0,
-      tauxReussite: 0,
-    }),
-    notation: buildRegleNotation({
-      partCohorteReference: 0.1,
-      ratioSeuilValidation: 0.5,
-      seuilQuestionProbleme: 0.5,
-    }),
+    statistiques: buildStatistiquesSeance({ tauxParticipation: 0, tauxReussite: 0 }),
+    notation: buildRegleNotation({ seuilQuestionProbleme: 0.5 }),
     bareme: buildResumeBareme({ questionsNotees: 0, parType: SANS_QUESTION_NOTEE }),
     ...surcharges,
   });

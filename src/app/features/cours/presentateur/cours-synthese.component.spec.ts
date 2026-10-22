@@ -61,29 +61,22 @@ function confusion(id: string, nombre: number): ConfusionComptee {
   return { id, libelle: `Libelle ${id}`, nombre };
 }
 
-function etudiant(
-  prenom: string,
-  note: number,
-  sousSeuil: boolean,
-  reponses: ReponseRapportee[],
-): ParticipantRapporte {
+function etudiant(prenom: string, reponses: ReponseRapportee[]): ParticipantRapporte {
   return buildParticipantRapporte({
     prenom,
     email: `${prenom.toLowerCase()}@example.com`,
     completion: reponses.length / 4,
-    note,
-    sousSeuil,
     reponses,
   });
 }
 
-const MALIK = etudiant('Malik', 4, true, [
+const MALIK = etudiant('Malik', [
   reponse('interets-composes', '1400'),
   reponse('actualisation', '910'),
 ]);
-const NORA = etudiant('Nora', 6, true, [reponse('interets-composes', '1450')]);
-const CHLOE = etudiant('Chloe', 12, false, [reponse('actualisation', '905', 3100)]);
-const THEO = etudiant('Theo', 0, false, []);
+const NORA = etudiant('Nora', [reponse('interets-composes', '1450')]);
+const CHLOE = etudiant('Chloe', [{ ...reponse('actualisation', '905', 3100), correcte: true }]);
+const THEO = etudiant('Theo', []);
 
 function rapportDe(
   participants: ParticipantRapporte[],
@@ -146,26 +139,19 @@ function monterMalikFace(
 }
 
 describe('CoursSyntheseComponent', () => {
-  it('classe les etudiants du plus bas score au plus haut', async () => {
-    const fixture = await monter(rapportDe([CHLOE, MALIK, NORA]));
+  it('classe les etudiants du moins avance au plus avance, sans aucune note', async () => {
+    const fixture = await monter(rapportDe([MALIK, CHLOE, NORA]));
 
     expect(textes(fixture, 'synthese-nom')).toEqual([
-      'Malik Durand',
-      'Nora Durand',
       'Chloe Durand',
+      'Nora Durand',
+      'Malik Durand',
     ]);
-    expect(textes(fixture, 'synthese-score')).toEqual(['4', '6', '12']);
+    expect(textes(fixture, 'synthese-score')).toEqual([]);
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('Score');
   });
 
-  it('écrit la note sur 20 à la française, avec une virgule', async () => {
-    const QA = etudiant('Qa', 18.9, false, [reponse('actualisation', '905')]);
-
-    const fixture = await monter(rapportDe([QA]));
-
-    expect(textes(fixture, 'synthese-score')).toEqual(['18,9']);
-  });
-
-  it('affiche les concepts fragiles avec leur effectif, du plus lourd au plus leger', async () => {
+  it('compte pour un concept fragile les etudiants qui s y sont trompes, pas ceux qui ont reussi', async () => {
     const fixture = await monter(rapportDe([MALIK, NORA, CHLOE]));
 
     expect(textes(fixture, 'synthese-fragile-concept')).toEqual([
@@ -191,7 +177,7 @@ describe('CoursSyntheseComponent', () => {
     const fixture = await monter(rapportDe([MALIK, NORA]));
 
     expect(textes(fixture, 'synthese-avancement').map((texte) => texte.replace(/\s/g, ''))).toEqual(
-      ['50%', '25%'],
+      ['25%', '50%'],
     );
   });
 
@@ -292,7 +278,7 @@ describe('CoursSyntheseComponent', () => {
     });
 
     it('nomme par son enonce le QCM d un ecran servi en presentation v2', async () => {
-      const participant = etudiant('Ana', 9, false, [
+      const participant = etudiant('Ana', [
         { ...reponse('echelle', 'o2'), questionId: 'b2-s03-prediction' },
       ]);
       const fixture = await monter(
@@ -315,13 +301,15 @@ describe('CoursSyntheseComponent', () => {
     });
   });
 
-  it('marque l etudiant sans aucune reponse au lieu de lui donner un score de zero', async () => {
+  it('marque l etudiant sans aucune reponse au lieu de lui donner un avancement de zero', async () => {
     const fixture = await monter(rapportDe([MALIK, THEO]));
 
     const marques = textes(fixture, 'synthese-sans-reponse');
     expect(marques.length).toBe(1);
     expect(marques[0]).toContain('aucune question');
-    expect(textes(fixture, 'synthese-score')).toEqual(['4']);
+    expect(textes(fixture, 'synthese-avancement').map((texte) => texte.replace(/\s/g, ''))).toEqual(
+      ['50%'],
+    );
     expect(textes(fixture, 'synthese-nom')).toEqual(['Malik Durand', 'Theo Durand']);
   });
 
@@ -343,14 +331,14 @@ describe('CoursSyntheseComponent', () => {
     }
 
     const ANA = {
-      ...etudiant('Ana', 14, false, [reponse('cle-et-relation', '660')]),
+      ...etudiant('Ana', [reponse('cle-et-relation', '660')]),
       reponsesLibres: [
         libre(REGLE_VISUALISER, 'Je pose la question avant le graphique.'),
         libre(REGLE_DECIDER, 'Je chiffre le constat avant l action.'),
       ],
     };
     const BASILE = {
-      ...etudiant('Basile', 0, false, []),
+      ...etudiant('Basile', []),
       reponsesLibres: [
         libre(REGLE_VISUALISER, 'Je lis l axe avant la barre.'),
         libre(FLOU, 'Le modèle de données.', 'B3-01-A3-13-CE-QUI-RESTE-FLOU'),
@@ -385,7 +373,7 @@ describe('CoursSyntheseComponent', () => {
         'Une ligne porte une date_livraison antérieure à sa date_commande. La corrige-t-on automatiquement ?';
       const INVITE_DU_BILLET = 'En une phrase : pourquoi ce choix ?';
       const CLEMENT = {
-        ...etudiant('Clement', 11, false, [
+        ...etudiant('Clement', [
           { ...reponse('qualite-des-donnees', 'non-on-la-signale'), questionId: BILLET },
         ]),
         reponsesLibres: [
@@ -442,7 +430,7 @@ describe('CoursSyntheseComponent', () => {
   for (const { deroule, screenId, activityId, invite } of DEFIS_SERVIS) {
     it(`${screenId} : titre la tentative au défi par l invite de son problème, jamais par son identifiant`, async () => {
       const LEA = {
-        ...etudiant('Lea', 10, false, []),
+        ...etudiant('Lea', []),
         reponsesLibres: [
           { screenId, activityId, reponse: 'La marge se calcule sur le prix de vente.' },
         ],

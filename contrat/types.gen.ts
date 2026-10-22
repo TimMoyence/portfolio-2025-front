@@ -104,7 +104,7 @@ export type ContactRequestDto = {
   phone?: string | null;
   subject: string;
   role: string;
-  terms: boolean;
+  terms: true;
   termsVersion?: string;
   termsLocale?: Locale;
   termsMethod?: string;
@@ -147,7 +147,7 @@ export type ProgressionDAuditResponseDto = {
   progress: number;
   done: boolean;
   updatedAt: string;
-  status: 'PENDING' | 'RUNNING';
+  status: 'UNCONFIRMED' | 'PENDING' | 'RUNNING';
   step: string | null;
   /**
    * Detail de la phase en cours, absent avant la premiere phase
@@ -222,13 +222,17 @@ export type AuditRequestRequestDto = {
   locale?: Locale;
 };
 
-export type StatutDAudit = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
+export type StatutDAudit = 'UNCONFIRMED' | 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
 
 export type AuditRequestResponseDto = {
   message: string;
   httpCode: number;
   auditId: string;
   status: StatutDAudit;
+};
+
+export type AuditConfirmeResponseDto = {
+  auditId: string;
 };
 
 export type AuditSummaryResponseDto = {
@@ -1014,18 +1018,6 @@ export type ResultatQuestionResponseDto = {
 
 export type StatistiquesSeanceResponseDto = {
   /**
-   * Moyenne des notes sur 20
-   */
-  moyenne: number;
-  /**
-   * Mediane des notes sur 20
-   */
-  mediane: number;
-  /**
-   * Ecart type des notes
-   */
-  dispersion: number;
-  /**
    * Part des participants ayant repondu a au moins une question
    */
   tauxParticipation: number;
@@ -1200,11 +1192,6 @@ export type RapportParticipantResponseDto = {
    */
   completion: number;
   /**
-   * Note sur 20
-   */
-  note: number;
-  sousSeuil: boolean;
-  /**
    * Réponses libres du poste, dans l’ordre des écrans puis des activités
    */
   reponsesLibres: Array<RapportReponseLibreResponseDto>;
@@ -1229,18 +1216,6 @@ export type ResultatsSeanceResponseDto = {
 
 export type RegleDeNotationResponseDto = {
   /**
-   * Note maximale
-   */
-  noteMax: number;
-  /**
-   * Part de la cohorte qui fixe la reference : completion du participant classe a ce rang, qui obtient la note maximale
-   */
-  partCohorteReference: number;
-  /**
-   * Seuil de validation, en fraction de la completion de reference
-   */
-  ratioSeuilValidation: number;
-  /**
    * Une reponse « Je ne sais pas » compte comme repondue
    */
   neSaitPasCompteCommeReponse: boolean;
@@ -1256,10 +1231,6 @@ export type RegleDeNotationResponseDto = {
    * Taux de reussite sous lequel une question est problematique
    */
   seuilQuestionProbleme: number;
-  /**
-   * Nombre de decimales des statistiques arrondies
-   */
-  decimalesStatistiques: number;
   /**
    * Les statistiques ne portent que sur les questions notees
    */
@@ -3454,6 +3425,33 @@ export type AuditsControllerCreateResponses = {
 export type AuditsControllerCreateResponse =
   AuditsControllerCreateResponses[keyof AuditsControllerCreateResponses];
 
+export type AuditsControllerConfirmData = {
+  body?: never;
+  path?: never;
+  query: {
+    token: string;
+  };
+  url: '/api/v1/portfolio25/audits/confirmation';
+};
+
+export type AuditsControllerConfirmErrors = {
+  /**
+   * Lien invalide ou expiré.
+   */
+  404: unknown;
+  /**
+   * Trop de requetes
+   */
+  429: unknown;
+};
+
+export type AuditsControllerConfirmResponses = {
+  200: AuditConfirmeResponseDto;
+};
+
+export type AuditsControllerConfirmResponse =
+  AuditsControllerConfirmResponses[keyof AuditsControllerConfirmResponses];
+
 export type AuditsControllerSummaryData = {
   body?: never;
   path: {
@@ -3752,6 +3750,13 @@ export type ArticlesControllerGetDelivery0Data = {
   url: '/api/v1/portfolio25/articles/ingest/{deliveryId}';
 };
 
+export type ArticlesControllerGetDelivery0Errors = {
+  /**
+   * Rôle admin requis
+   */
+  403: unknown;
+};
+
 export type ArticlesControllerGetDelivery0Responses = {
   200: ArticleDeliveryResponseDto;
 };
@@ -3766,6 +3771,13 @@ export type ArticlesControllerGetDelivery1Data = {
   };
   query?: never;
   url: '/api/articles/ingest/{deliveryId}';
+};
+
+export type ArticlesControllerGetDelivery1Errors = {
+  /**
+   * Rôle admin requis
+   */
+  403: unknown;
 };
 
 export type ArticlesControllerGetDelivery1Responses = {

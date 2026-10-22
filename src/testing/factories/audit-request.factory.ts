@@ -204,6 +204,7 @@ export function buildClientReport(overrides?: Partial<ClientReport>): ClientRepo
 export function createAuditRequestPortStub(): jasmine.SpyObj<AuditRequestPort> {
   return jasmine.createSpyObj<AuditRequestPort>('AuditRequestPort', [
     'submit',
+    'confirmer',
     'getSummary',
     'stream',
   ]);

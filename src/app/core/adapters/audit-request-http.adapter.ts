@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 import {
+  zAuditConfirmeResponseDto,
   zAuditRequestResponseDto,
   zAuditsControllerStreamResponse,
   zAuditSummaryResponseDto,
@@ -10,6 +11,7 @@ import {
 import { getApiBaseUrl } from '../http/api-config';
 import { jsonOuNull } from '../../../cours/runtime/core/valeurs';
 import type {
+  AuditConfirmeResponse,
   AuditCreateResponse,
   AuditRequestPayload,
   AuditStreamEvent,
@@ -34,6 +36,12 @@ export class AuditRequestHttpAdapter implements AuditRequestPort {
     return this.http
       .post<unknown>(`${this.baseUrl}/audits`, payload)
       .pipe(luPar(zAuditRequestResponseDto));
+  }
+
+  confirmer(token: string): Observable<AuditConfirmeResponse> {
+    return this.http
+      .post<unknown>(`${this.baseUrl}/audits/confirmation`, null, { params: { token } })
+      .pipe(luPar(zAuditConfirmeResponseDto));
   }
 
   getSummary(auditId: string): Observable<AuditSummaryResponse> {

@@ -262,8 +262,6 @@ export function buildParticipantRapporte(
     nom: 'Durand',
     email: 'malik@example.com',
     completion: 1,
-    note: 12,
-    sousSeuil: false,
     reponses: [buildReponseRapportee()],
     reponsesLibres: [],
     incidents: 0,

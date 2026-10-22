@@ -8,9 +8,10 @@ describe('phraseDeNotation', () => {
   it('rend la regle servie en une phrase lisible par le formateur', () => {
     const phrase = phraseDeNotation(buildRegleNotation());
 
-    expect(phrase).toMatch(/^Note \/20 relative aux/);
-    expect(phrase).toContain('20 % les plus actifs');
-    expect(phrase).toContain('Sous 40 % de cette référence');
+    expect(phrase).toMatch(/^L’avancement d’un étudiant est la part des questions du barème/);
+    expect(phrase).not.toMatch(/Note \/|sous le seuil/);
+    expect(phrase).not.toContain('20 % les plus actifs');
+    expect(phrase).not.toContain('Sous 40 % de cette référence');
     expect(phrase).toContain('« je ne sais pas » compte comme une réponse');
     expect(phrase).toContain('une non-réponse vaut 0 point');
     expect(phrase).toContain('les réponses libres ne sont pas notées');
@@ -21,13 +22,11 @@ describe('phraseDeNotation', () => {
   it('suit les options de la regle au lieu de les supposer', () => {
     const phrase = phraseDeNotation(
       buildRegleNotation({
-        noteMax: 10,
         neSaitPasCompteCommeReponse: false,
         reponsesLibresNotees: true,
       }),
     );
 
-    expect(phrase).toMatch(/^Note \/10 /);
     expect(phrase).toContain('« je ne sais pas » ne compte pas comme une réponse');
     expect(phrase).toContain('les réponses libres sont notées');
   });

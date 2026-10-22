@@ -10432,16 +10432,6 @@
         <target>Student</target>
       </segment>
     </unit>
-    <unit id="syntheseScore">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:100,101</note>
-        <note category="meaning">synthese.score</note>
-      </notes>
-      <segment>
-        <source>Score</source>
-        <target>Score</target>
-      </segment>
-    </unit>
     <unit id="syntheseAvancement">
       <notes>
         <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:101,104</note>
@@ -10532,14 +10522,14 @@
         <target>What tripped up the class the most</target>
       </segment>
     </unit>
-    <unit id="syntheseSousSeuil">
+    <unit id="syntheseSeSontTrompes">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:174,177</note>
-        <note category="meaning">synthese.sousSeuil</note>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:148,152</note>
+        <note category="meaning">synthese.seSontTrompes</note>
       </notes>
       <segment>
-        <source>étudiants sous le seuil</source>
-        <target>students below threshold</target>
+        <source>étudiants s’y sont trompés</source>
+        <target>students got it wrong</target>
       </segment>
     </unit>
     <unit id="syntheseLibresTitre">
@@ -11109,33 +11099,6 @@
         <target> The session notes and answers could not be reloaded: the display may be out of date. </target>
       </segment>
     </unit>
-    <unit id="presentateurStatMoyenne">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:279,280</note>
-      </notes>
-      <segment>
-        <source>Moyenne</source>
-        <target>Average</target>
-      </segment>
-    </unit>
-    <unit id="presentateurStatMediane">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:283,284</note>
-      </notes>
-      <segment>
-        <source>Médiane</source>
-        <target>Median</target>
-      </segment>
-    </unit>
-    <unit id="presentateurStatDispersion">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:287,288</note>
-      </notes>
-      <segment>
-        <source>Dispersion (écart-type)</source>
-        <target>Spread (standard deviation)</target>
-      </segment>
-    </unit>
     <unit id="presentateurStatParticipation">
       <notes>
         <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:291,292</note>
@@ -11474,13 +11437,13 @@
         <target>free answers are not graded</target>
       </segment>
     </unit>
-    <unit id="presentateurNotation">
+    <unit id="presentateurRegleDeSuivi">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/regle-de-notation.ts:14</note>
+        <note category="location">src/app/features/cours/presentateur/regle-de-notation.ts:49</note>
       </notes>
       <segment>
-        <source>Note /<ph id="0" equiv="noteMax" disp="regle.noteMax"/> relative aux <ph id="1" equiv="reference" disp="pourcentage(regle.partCohorteReference)"/> les plus actifs. Sous <ph id="2" equiv="validation" disp="pourcentage(regle.ratioSeuilValidation)"/> de cette référence, l’étudiant est signalé sous le seuil. <ph id="3" equiv="neSaitPas" disp="neSaitPas"/> ; une non-réponse vaut <ph id="4" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point ; <ph id="5" equiv="libres" disp="libres"/>. Une question est problématique sous <ph id="6" equiv="seuilProbleme" disp="pourcentage(regle.seuilQuestionProbleme)"/> de réussite.</source>
-        <target>Grade out of <ph id="0" equiv="noteMax" disp="regle.noteMax"/>, relative to the most active <ph id="1" equiv="reference" disp="pourcentage(regle.partCohorteReference)"/>. Below <ph id="2" equiv="validation" disp="pourcentage(regle.ratioSeuilValidation)"/> of that reference, the student is flagged below threshold. <ph id="3" equiv="neSaitPas" disp="neSaitPas"/>; a non-answer is worth <ph id="4" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point; <ph id="5" equiv="libres" disp="libres"/>. A question is problematic below <ph id="6" equiv="seuilProbleme" disp="pourcentage(regle.seuilQuestionProbleme)"/> success.</target>
+        <source>L’avancement d’un étudiant est la part des questions du barème auxquelles il a répondu. <ph id="0" equiv="neSaitPas" disp="neSaitPas"/> ; une non-réponse vaut <ph id="1" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point ; <ph id="2" equiv="libres" disp="libres"/>. Une question est problématique sous <ph id="3" equiv="seuilProbleme" disp="formaterPart(regle.seuilQuestionProbleme)"/> de réussite.</source>
+        <target>A student&apos;s progress is the share of the scored questions they answered. <ph id="0" equiv="neSaitPas" disp="neSaitPas"/>; a non-answer is worth <ph id="1" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point; <ph id="2" equiv="libres" disp="libres"/>. A question is problematic below <ph id="3" equiv="seuilProbleme" disp="formaterPart(regle.seuilQuestionProbleme)"/> success.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.badge">
@@ -13288,6 +13251,33 @@
       <segment>
         <source>IA</source>
         <target>AI</target>
+      </segment>
+    </unit>
+    <unit id="auditFormConfirmationEnvoyee">
+      <notes>
+        <note category="location">src/app/features/growth-audit/growth-audit.component.ts:214</note>
+      </notes>
+      <segment>
+        <source>Vérifiez votre boîte e-mail : l’audit démarre dès que vous ouvrez le lien de confirmation reçu, valable 24 heures.</source>
+        <target>Check your inbox: the audit starts as soon as you open the confirmation link you received, valid for 24 hours.</target>
+      </segment>
+    </unit>
+    <unit id="auditFormConfirmee">
+      <notes>
+        <note category="location">src/app/features/growth-audit/growth-audit.component.ts:215</note>
+      </notes>
+      <segment>
+        <source>Adresse confirmée ! Scan IA lancé — audit humain envoyé sous 24h.</source>
+        <target>Address confirmed! AI scan started — human audit sent within 24h.</target>
+      </segment>
+    </unit>
+    <unit id="auditFormLienDeConfirmationRefuse">
+      <notes>
+        <note category="location">src/app/features/growth-audit/growth-audit.component.ts:216</note>
+      </notes>
+      <segment>
+        <source>Ce lien de confirmation est invalide ou a expiré : refaites la demande d’audit.</source>
+        <target>This confirmation link is invalid or has expired: please request the audit again.</target>
       </segment>
     </unit>
     <unit id="slideDeckFullscreenExit">

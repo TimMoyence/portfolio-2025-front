@@ -1,9 +1,17 @@
-import { CommonModule } from '@angular/common';
-import type { OnDestroy } from '@angular/core';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import type { OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import type { Subscription } from 'rxjs';
+import { jetonDuLien } from '../auth/jeton-du-lien';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
 import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
@@ -75,9 +83,12 @@ function formulaireVierge(): AuditRequestPayload {
   styleUrl: './growth-audit.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GrowthAuditComponent implements OnDestroy {
+export class GrowthAuditComponent implements OnInit, OnDestroy {
   private readonly auditService: AuditRequestPort = inject(AUDIT_REQUEST_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly dansLeNavigateur = isPlatformBrowser(inject(PLATFORM_ID));
   private debutDeSaisie = instantMonotone();
   private readonly langue = injecterLocaleDeLaPage();
   protected readonly iaTaskFallback = $localize`:@@auditIaTaskFallback:IA`;
@@ -200,6 +211,9 @@ export class GrowthAuditComponent implements OnDestroy {
     phonePlaceholder: $localize`:audit.form.phonePlaceholder@@auditFormPhonePlaceholder:ex. +33 6 98 50 32 82`,
     submit: $localize`:audit.form.submit@@auditFormSubmit:Demander mon audit (scan IA immédiat + audit humain sous 24h)`,
     success: $localize`:audit.form.success@@auditFormSuccess:Merci ! Scan IA lancé — audit humain envoyé sous 24h.`,
+    confirmationEnvoyee: $localize`:@@auditFormConfirmationEnvoyee:Vérifiez votre boîte e-mail : l’audit démarre dès que vous ouvrez le lien de confirmation reçu, valable 24 heures.`,
+    confirmee: $localize`:@@auditFormConfirmee:Adresse confirmée ! Scan IA lancé — audit humain envoyé sous 24h.`,
+    lienDeConfirmationRefuse: $localize`:@@auditFormLienDeConfirmationRefuse:Ce lien de confirmation est invalide ou a expiré : refaites la demande d’audit.`,
     error: $localize`:audit.form.error@@auditFormError:Impossible d'envoyer la demande. Réessayez dans un instant.`,
     rgpdLabel: $localize`:audit.form.rgpdLabel@@auditFormRgpdLabel:J'accepte que mes coordonnées soient utilisées pour traiter ma demande d'audit (voir <a href="/fr/privacy" class="underline">politique de confidentialité</a>).`,
     rgpdError: $localize`:audit.form.rgpdError@@auditFormRgpdError:Votre consentement RGPD est obligatoire pour lancer l'audit.`,
@@ -286,14 +300,12 @@ export class GrowthAuditComponent implements OnDestroy {
         400: $localize`:@@auditFormErreurRefus:La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.`,
       },
       onSuccess: (response) => {
+        if (response.status === 'UNCONFIRMED') {
+          this.successMessage = this.formLabels.confirmationEnvoyee;
+          return;
+        }
         this.successMessage = this.formLabels.success;
-        this.auditId = response.auditId;
-        this.auditProgress = 0;
-        this.auditStep = $localize`:growthAudit.step.pending|Audit pending step@@auditStepPending:Audit en attente...`;
-        this.resetAuditTimeline();
-        this.isAuditRunning = true;
-        this.reconnectAttempts = 0;
-        this.startStream(response.auditId);
+        this.suivreLAudit(response.auditId);
       },
       onError: (message) => {
         this.errorMessage = message;
@@ -311,8 +323,42 @@ export class GrowthAuditComponent implements OnDestroy {
     });
   }
 
+  ngOnInit(): void {
+    const jeton = jetonDuLien(this.route);
+    if (jeton === null || !this.dansLeNavigateur) {
+      return;
+    }
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { token: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+    handleFormSubmit(this.auditService.confirmer(jeton), this.cdr, {
+      fallbackError: this.formLabels.error,
+      refus: { 404: this.formLabels.lienDeConfirmationRefuse },
+      onSuccess: ({ auditId }) => {
+        this.successMessage = this.formLabels.confirmee;
+        this.suivreLAudit(auditId);
+      },
+      onError: (message) => {
+        this.errorMessage = message;
+      },
+    });
+  }
+
   ngOnDestroy(): void {
     this.stopStream();
+  }
+
+  private suivreLAudit(auditId: string): void {
+    this.auditId = auditId;
+    this.auditProgress = 0;
+    this.auditStep = $localize`:growthAudit.step.pending|Audit pending step@@auditStepPending:Audit en attente...`;
+    this.resetAuditTimeline();
+    this.isAuditRunning = true;
+    this.reconnectAttempts = 0;
+    this.startStream(auditId);
   }
 
   private startStream(auditId: string): void {

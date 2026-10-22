@@ -12,6 +12,11 @@ import { pageMontee } from '../../../testing/montage-page';
 import { formulaireSoumis } from '../../../testing/page-auth';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 
+function soumettreAvecLesConditions(composant: ContactComponent): void {
+  composant.contactForm = { ...composant.contactForm, terms: true };
+  composant.handleContactSubmit(formulaireSoumis());
+}
+
 describe('ContactComponent', () => {
   const page = pageMontee(ContactComponent, {
     providers: [{ provide: CONTACT_PORT, useFactory: createContactPortStubWithDefault }],
@@ -21,10 +26,22 @@ describe('ContactComponent', () => {
     expect(page.composant).toBeTruthy();
   });
 
-  it('envoie la langue du site, sans sa région, comme langue d acceptation des conditions', () => {
+  it('n envoie rien tant que les conditions ne sont pas acceptees, et envoie terms à true ensuite', () => {
     const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
 
     page.composant.handleContactSubmit(formulaireSoumis());
+    expect(port.contact).not.toHaveBeenCalled();
+
+    soumettreAvecLesConditions(page.composant);
+    expect(port.contact.calls.mostRecent().args[0]).toEqual(
+      jasmine.objectContaining({ terms: true, termsAcceptedAt: jasmine.any(String) }),
+    );
+  });
+
+  it('envoie la langue du site, sans sa région, comme langue d acceptation des conditions', () => {
+    const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
+
+    soumettreAvecLesConditions(page.composant);
 
     expect(port.contact.calls.mostRecent().args[0].termsLocale).toBe('en');
   });
@@ -33,7 +50,7 @@ describe('ContactComponent', () => {
     const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
     const champs = champsAntiRobotDeChaqueSaisie(
       ContactComponent,
-      (composant) => composant.handleContactSubmit(formulaireSoumis()),
+      soumettreAvecLesConditions,
       port.contact,
     );
 
@@ -44,7 +61,7 @@ describe('ContactComponent', () => {
     const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
     for (const phone of ['   ', '  +33 6 12 34 56 78  ']) {
       page.composant.contactForm = { ...page.composant.contactForm, phone };
-      page.composant.handleContactSubmit(formulaireSoumis());
+      soumettreAvecLesConditions(page.composant);
     }
 
     expect(port.contact.calls.allArgs().map(([demande]) => demande.phone)).toEqual([
@@ -138,7 +155,7 @@ describe('ContactComponent', () => {
         const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
         port.contact.and.returnValue(throwError(() => erreur));
 
-        page.composant.handleContactSubmit(formulaireSoumis());
+        soumettreAvecLesConditions(page.composant);
         page.fixture.detectChanges();
 
         expect(page.composant.contactErrorMessage).toBe(attendu);
@@ -148,7 +165,7 @@ describe('ContactComponent', () => {
     }
 
     it('dit le succès par son propre texte sur toute réponse 2xx, et rend le bouton', () => {
-      page.composant.handleContactSubmit(formulaireSoumis());
+      soumettreAvecLesConditions(page.composant);
       page.fixture.detectChanges();
 
       expect(page.composant.contactErrorMessage).toBeUndefined();

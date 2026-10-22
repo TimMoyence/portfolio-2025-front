@@ -633,7 +633,7 @@ describe('CoursPresentateurComponent', () => {
   describe('statistiques de la seance', () => {
     const PROBLEMATIQUE = buildStatistiquesSeance({ questionsProblemes: ['Q-CAP-03'] });
 
-    it('affiche participation, dispersion, questions problematiques par leur enonce et la regle de notation', async () => {
+    it('affiche participation, reussite, questions problematiques par leur enonce et la regle, sans aucune note', async () => {
       port.lireResultats.and.returnValue(
         of(buildRapportSeance({ notation: buildRegleNotation() })),
       );
@@ -645,14 +645,14 @@ describe('CoursPresentateurComponent', () => {
       const statistiques = texte(fixture, 'presentateur-statistiques');
       expect(statistiques).toContain('Participation');
       expect(statistiques).toMatch(/75\s?%/);
-      expect(statistiques).toContain('Dispersion');
-      expect(statistiques).toContain('12,5');
-      expect(statistiques).toContain('3,25');
-      expect(statistiques).not.toContain('12.5');
-      expect(statistiques).not.toContain('3.25');
+      expect(statistiques).toContain('Réussite');
+      expect(statistiques).toMatch(/60\s?%/);
+      expect(statistiques).not.toMatch(/Moyenne|Médiane|Dispersion/);
       expect(statistiques).toContain(buildVoteQuestion().enonce);
       expect(statistiques).not.toContain('Q-CAP-03');
-      expect(texte(fixture, 'presentateur-notation-tooltip')).toContain('Note /20 relative aux');
+      expect(texte(fixture, 'presentateur-notation-tooltip')).toContain(
+        'L’avancement d’un étudiant',
+      );
       expect(lire(fixture, 'presentateur-notation')).toBeNull();
       expect(cible(fixture, 'presentateur-notation-help').getAttribute('aria-describedby')).toBe(
         'presentateur-notation-tooltip',
@@ -674,7 +674,9 @@ describe('CoursPresentateurComponent', () => {
       await stabiliserLaVue(fixture);
 
       expect(texte(fixture, 'presentateur-statistiques')).toContain(buildVoteQuestion().enonce);
-      expect(texte(fixture, 'presentateur-notation-tooltip')).toContain('Note /20');
+      expect(texte(fixture, 'presentateur-notation-tooltip')).toContain(
+        'L’avancement d’un étudiant',
+      );
       expect(port.lireResultats).toHaveBeenCalledTimes(1);
     });
   });

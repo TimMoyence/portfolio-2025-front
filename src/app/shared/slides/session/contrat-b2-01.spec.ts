@@ -589,7 +589,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
       expect(strategies.filter((strategie) => strategie.fausse === true)).toHaveSize(1);
       expect(synthese.boite1 + synthese.boite2 + synthese.boite3 + synthese.nonVus).toBe(24);
       expect(new Set(motifs).size).toBe(12);
-      expect(notation.noteMax).toBe(20);
+      expect(notation.statistiquesSurQuestionsNotees).toBeTrue();
     });
   });
 });

@@ -12,7 +12,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
 import { VERSIONS_DES_TEXTES_LEGAUX } from '../../core/config/textes-legaux';
 import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
-import type { ContactRequestDto as ContactFormState } from '../../../../contrat/types.gen';
+import type { ContactRequestDto } from '../../../../contrat/types.gen';
 import { zContactRequestDto } from '../../../../contrat/zod.gen';
 import type { ContactPort } from '../../core/ports/contact.port';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
@@ -29,6 +29,8 @@ import { FormatDeContactDirective } from '../../shared/directives/format-de-cont
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
 
 const SAISIE_DE_CONTACT = zContactRequestDto.shape;
+
+type ContactFormState = Omit<ContactRequestDto, 'terms'> & { terms: boolean };
 
 const SUJET_DE_DEMANDE_D_ACCES = $localize`:contact.form.subject.access@@contactFormSubjectAccess:Demande d'accès application`;
 
@@ -180,7 +182,7 @@ export class ContactComponent implements OnInit {
     this.contactErrorMessage = undefined;
     this.contactSuccessMessage = undefined;
 
-    if (!form.valid) {
+    if (!form.valid || !this.contactForm.terms) {
       this.contactErrorMessage = $localize`:contact.form.error.invalid@@contactFormErrorInvalid:Merci de vérifier les champs en rouge.`;
       return;
     }
@@ -212,10 +214,11 @@ export class ContactComponent implements OnInit {
     });
   }
 
-  private normalizeContactPayload(form: ContactFormState): ContactFormState {
+  private normalizeContactPayload(form: ContactFormState): ContactRequestDto {
     const trimOrEmpty = (value: string): string => value.trim();
     return {
       ...form,
+      terms: true,
       formFillDurationMs: dureeMonotoneDepuis(this.debutDeSaisie),
       email: trimOrEmpty(form.email),
       firstName: trimOrEmpty(form.firstName),
@@ -224,7 +227,7 @@ export class ContactComponent implements OnInit {
       message: trimOrEmpty(form.message),
       role: trimOrEmpty(form.role),
       phone: telephoneFacultatif(form.phone),
-      termsAcceptedAt: form.terms ? new Date().toISOString() : undefined,
+      termsAcceptedAt: new Date().toISOString(),
       termsLocale: this.langue,
       termsVersion: VERSIONS_DES_TEXTES_LEGAUX.conditions,
       termsMethod: form.termsMethod ?? 'contact_form_checkbox',

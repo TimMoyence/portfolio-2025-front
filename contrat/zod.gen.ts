@@ -138,7 +138,7 @@ export const zContactRequestDto = z.object({
     .nullish(),
   subject: z.string().min(2).max(100),
   role: z.string().min(2).max(100),
-  terms: z.boolean().default(false),
+  terms: z.literal(true),
   termsVersion: z.string().max(50).optional(),
   termsLocale: zLocale.optional(),
   termsMethod: z.string().max(50).optional(),
@@ -209,13 +209,17 @@ export const zAuditRequestRequestDto = z.object({
   locale: zLocale.optional(),
 });
 
-export const zStatutDAudit = z.enum(['PENDING', 'RUNNING', 'COMPLETED', 'FAILED']);
+export const zStatutDAudit = z.enum(['UNCONFIRMED', 'PENDING', 'RUNNING', 'COMPLETED', 'FAILED']);
 
 export const zAuditRequestResponseDto = z.object({
   message: z.string(),
   httpCode: z.number(),
   auditId: z.string(),
   status: zStatutDAudit,
+});
+
+export const zAuditConfirmeResponseDto = z.object({
+  auditId: z.string(),
 });
 
 export const zAuditSummaryResponseDto = z.object({
@@ -709,9 +713,6 @@ export const zResultatQuestionResponseDto = z.object({
 });
 
 export const zStatistiquesSeanceResponseDto = z.object({
-  moyenne: z.number(),
-  mediane: z.number(),
-  dispersion: z.number(),
   tauxParticipation: z.number(),
   tauxReussite: z.number(),
   questionsProblemes: z.array(z.string()),
@@ -833,8 +834,6 @@ export const zRapportParticipantResponseDto = z.object({
   nom: z.string(),
   email: z.string(),
   completion: z.number(),
-  note: z.number(),
-  sousSeuil: z.boolean(),
   reponsesLibres: z.array(zRapportReponseLibreResponseDto),
   incidents: z.number(),
   reponses: z.array(zRapportQuestionResponseDto),
@@ -847,14 +846,10 @@ export const zResultatsSeanceResponseDto = z.object({
 });
 
 export const zRegleDeNotationResponseDto = z.object({
-  noteMax: z.number(),
-  partCohorteReference: z.number(),
-  ratioSeuilValidation: z.number(),
   neSaitPasCompteCommeReponse: z.boolean(),
   pointsNonReponse: z.number(),
   reponsesLibresNotees: z.boolean(),
   seuilQuestionProbleme: z.number(),
-  decimalesStatistiques: z.number(),
   statistiquesSurQuestionsNotees: z.boolean(),
 });
 
@@ -1399,7 +1394,7 @@ export const zProgressionDAuditResponseDto = z.object({
   progress: z.number(),
   done: z.boolean(),
   updatedAt: z.iso.datetime(),
-  status: z.enum(['PENDING', 'RUNNING']),
+  status: z.enum(['UNCONFIRMED', 'PENDING', 'RUNNING']),
   step: z.string().nullable(),
   details: zAvancementDAudit.optional(),
 });
@@ -2894,6 +2889,12 @@ export const zCookieConsentsControllerCreateResponse = zCookieConsentResponseDto
 export const zAuditsControllerCreateBody = zAuditRequestRequestDto;
 
 export const zAuditsControllerCreateResponse = zAuditRequestResponseDto;
+
+export const zAuditsControllerConfirmQuery = z.object({
+  token: z.string().regex(/^[0-9a-f]{64}$/),
+});
+
+export const zAuditsControllerConfirmResponse = zAuditConfirmeResponseDto;
 
 export const zAuditsControllerSummaryPath = z.object({
   id: z.string(),

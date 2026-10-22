@@ -1,4 +1,5 @@
 import type {
+  AuditConfirmeResponseDto,
   AuditRequestRequestDto,
   AuditRequestResponseDto,
   AuditsControllerStreamResponse,
@@ -13,6 +14,7 @@ export type PillarKey = (typeof PILLAR_KEYS)[number];
 
 export type AuditRequestPayload = AuditRequestRequestDto;
 export type AuditCreateResponse = AuditRequestResponseDto;
+export type AuditConfirmeResponse = AuditConfirmeResponseDto;
 export type AuditSummaryResponse = AuditSummaryResponseDto;
 export type AuditProgressEvent = ProgressionDAuditResponseDto;
 export type AuditCompletedEvent = AuditTermineResponseDto;

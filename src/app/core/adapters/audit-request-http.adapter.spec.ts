@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom, of } from 'rxjs';
 import type { AuditStreamEvent } from '../models/audit-request.model';
 import {
   type EventSourceFactice,
@@ -33,6 +34,38 @@ function injecterAdapter(plateforme: 'server' | 'browser'): AuditRequestHttpAdap
 }
 
 describe('AuditRequestHttpAdapter', () => {
+  describe('confirmation d une demande par le lien recu', () => {
+    it('poste le jeton en parametre et lit l identifiant de l audit au contrat', async () => {
+      const adapter = injecterAdapter('browser');
+      const http = TestBed.inject(HttpClient) as jasmine.SpyObj<HttpClient>;
+      http.post.and.returnValue(of({ auditId: 'audit-confirme' }));
+
+      const reponse = await firstValueFrom(adapter.confirmer('jeton-du-lien'));
+
+      expect(reponse).toEqual({ auditId: 'audit-confirme' });
+      expect(http.post).toHaveBeenCalledOnceWith(
+        jasmine.stringMatching(/\/audits\/confirmation$/),
+        null,
+        {
+          params: { token: 'jeton-du-lien' },
+        },
+      );
+    });
+
+    it('refuse une reponse hors contrat', async () => {
+      const adapter = injecterAdapter('browser');
+      const http = TestBed.inject(HttpClient) as jasmine.SpyObj<HttpClient>;
+      http.post.and.returnValue(of({ id: 'audit-confirme' }));
+
+      const issue = await firstValueFrom(adapter.confirmer('jeton-du-lien')).then(
+        () => 'acceptee',
+        () => 'refusee',
+      );
+
+      expect(issue).toBe('refusee');
+    });
+  });
+
   describe('en contexte serveur (SSR)', () => {
     let adapter: AuditRequestHttpAdapter;
 

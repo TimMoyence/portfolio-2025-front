@@ -46,9 +46,6 @@ export function buildStatistiquesSeance(
   overrides: Partial<StatistiquesSeance> = {},
 ): StatistiquesSeance {
   return {
-    moyenne: 12.5,
-    mediane: 13,
-    dispersion: 3.25,
     tauxParticipation: 0.75,
     tauxReussite: 0.6,
     questionsProblemes: [],
@@ -58,14 +55,10 @@ export function buildStatistiquesSeance(
 
 export function buildRegleNotation(overrides: Partial<RegleNotation> = {}): RegleNotation {
   return {
-    noteMax: 20,
-    partCohorteReference: 0.2,
-    ratioSeuilValidation: 0.4,
     neSaitPasCompteCommeReponse: true,
     pointsNonReponse: 0,
     reponsesLibresNotees: false,
     seuilQuestionProbleme: 0.7,
-    decimalesStatistiques: 2,
     statistiquesSurQuestionsNotees: true,
     ...overrides,
   };

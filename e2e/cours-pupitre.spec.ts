@@ -73,9 +73,6 @@ const DEROULE: DerouleDuFil = {
 };
 
 const STATISTIQUES = {
-  moyenne: 13.5,
-  mediane: 14,
-  dispersion: 3.25,
   tauxParticipation: 0.92,
   tauxReussite: 0.64,
   questionsProblemes: [QUESTION.id],
@@ -268,10 +265,7 @@ test.describe('pupitre du formateur (QA-10, QA-11)', () => {
     await ouvrirLePupitre(page);
 
     const statistiques = page.getByTestId('presentateur-statistiques');
-    await expect(statistiques).toContainText('13,5');
-    await expect(statistiques).toContainText('3,25');
-    await expect(statistiques).not.toContainText('13.5');
-    await expect(statistiques).not.toContainText('3.25');
+    await expect(statistiques).not.toContainText(/Moyenne|Médiane|Dispersion/);
     await expect(statistiques).toContainText(/92\s*%/);
     await expect(statistiques).toContainText(/64\s*%/);
     await expect(statistiques).toContainText(ENONCE_PROBLEME);
@@ -279,7 +273,8 @@ test.describe('pupitre du formateur (QA-10, QA-11)', () => {
     const notationHelp = page.getByTestId('presentateur-notation-help');
     await notationHelp.hover();
     const notation = page.getByTestId('presentateur-notation-tooltip');
-    await expect(notation).toContainText('20');
+    await expect(notation).toContainText('L’avancement d’un étudiant');
+    await expect(notation).not.toContainText('Note /');
     await expect(notation).not.toContainText('undefined');
     await expect(notation).not.toContainText('NaN');
     await expect(page.getByTestId('presentateur-notation-echec')).toHaveCount(0);
