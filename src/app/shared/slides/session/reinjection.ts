@@ -261,16 +261,23 @@ function etapesDevoilees(contexte: ContexteDeReinjection): number {
     : Math.max(affichees, pilotage?.etayageAtteint ?? 0);
 }
 
-function evaluationDuPoste(
+function posesDUneProductionEtayee(
   montage: MontageIdentifie,
   contexte: ContexteDeReinjection,
   genre: 'feuille-evaluee' | 'tableau-evalue',
-): RetourBrique | null {
-  return contexte.role === 'presentateur'
-    ? null
-    : (deGenre(contexte.retours, genre)
-        .filter((retour) => viseUnIdentifiant(montage.identifiants, retour.planId))
-        .at(-1) ?? null);
+): Pose[] {
+  const pilotage = contexte.direct?.pilotage;
+  const evaluation =
+    contexte.role === 'presentateur'
+      ? null
+      : (deGenre(contexte.retours, genre)
+          .filter((retour) => viseUnIdentifiant(montage.identifiants, retour.planId))
+          .at(-1) ?? null);
+  return [
+    ['etayage', pilotage?.etayage ?? 0],
+    ['saisieFermee', pilotage?.saisieFermee === true],
+    ['evaluation', evaluation],
+  ];
 }
 
 function posesDuPilotage(montage: MontageIdentifie, contexte: ContexteDeReinjection): Pose[] {
@@ -289,17 +296,9 @@ function posesDuPilotage(montage: MontageIdentifie, contexte: ContexteDeReinject
     case 'fp-worked':
       return [['etayage', etapesDevoilees(contexte)]];
     case 'fp-sheet':
-      return [
-        ['etayage', pilotage?.etayage ?? 0],
-        ['saisieFermee', pilotage?.saisieFermee === true],
-        ['evaluation', evaluationDuPoste(montage, contexte, 'feuille-evaluee')],
-      ];
+      return posesDUneProductionEtayee(montage, contexte, 'feuille-evaluee');
     case 'fp-table-build':
-      return [
-        ['etayage', pilotage?.etayage ?? 0],
-        ['saisieFermee', pilotage?.saisieFermee === true],
-        ['evaluation', evaluationDuPoste(montage, contexte, 'tableau-evalue')],
-      ];
+      return posesDUneProductionEtayee(montage, contexte, 'tableau-evalue');
     case 'fp-cardsort':
       return [['saisieFermee', pilotage?.saisieFermee === true]];
     case 'fp-recall':

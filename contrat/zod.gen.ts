@@ -87,7 +87,13 @@ export const zInscriptionDto = z.object({
     .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/),
   firstName: z.string().min(1).max(50),
   lastName: z.string().min(1).max(50),
-  phone: z.string().max(30).nullish(),
+  phone: z
+    .string()
+    .max(30)
+    .regex(
+      /^$|^[\s().-]*(?:\+[\s().-]*(?:\d[\s().-]*){6,15}|0[\s().-]*0[\s().-]*(?:\d[\s().-]*){6,15}|(?!0[\s().-]*0)(?:\d[\s().-]*){6,15})$/,
+    )
+    .nullish(),
 });
 
 export const zResendVerificationDto = z.object({
@@ -102,7 +108,13 @@ export const zResendVerificationDto = z.object({
 export const zUpdateProfileDto = z.object({
   firstName: z.string().min(1).max(50).optional(),
   lastName: z.string().min(1).max(50).optional(),
-  phone: z.string().max(30).nullish(),
+  phone: z
+    .string()
+    .max(30)
+    .regex(
+      /^$|^[\s().-]*(?:\+[\s().-]*(?:\d[\s().-]*){6,15}|0[\s().-]*0[\s().-]*(?:\d[\s().-]*){6,15}|(?!0[\s().-]*0)(?:\d[\s().-]*){6,15})$/,
+    )
+    .nullish(),
 });
 
 export const zLocale = z.enum(['fr', 'en']);
@@ -118,7 +130,12 @@ export const zContactRequestDto = z.object({
       /^(?=[^@]{1,64}@)(?=.{1,254}$)[A-Za-z0-9!#$%&'*+\/=?^_`{|}~¡-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﷏ﷰ-﻾＀-￯-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?^_`{|}~¡-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﷏ﷰ-﻾＀-￯-]+)*@(?:[A-Za-z0-9¡-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﻾＀｟-￸￼-￿](?:[A-Za-z0-9¡-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﻾＀｟-￸￼-￿-]{0,61}[A-Za-z0-9¡-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﻾＀｟-￸￼-￿])?\.)+(?:[A-Za-z¡-¨ª-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﷏ﷰ-﻾＀｟-￯]{2,63}|xn--[A-Za-z0-9-]{2,59})$/,
     ),
   message: z.string().min(10).max(2000),
-  phone: z.string().nullish(),
+  phone: z
+    .string()
+    .regex(
+      /^$|^[\s().-]*(?:\+[\s().-]*(?:\d[\s().-]*){6,15}|0[\s().-]*0[\s().-]*(?:\d[\s().-]*){6,15}|(?!0[\s().-]*0)(?:\d[\s().-]*){6,15})$/,
+    )
+    .nullish(),
   subject: z.string().min(2).max(100),
   role: z.string().min(2).max(100),
   terms: z.boolean().default(false),
