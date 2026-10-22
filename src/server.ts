@@ -185,7 +185,15 @@ const envoyerLeDocument = (
   html: string,
   entetes: Readonly<Record<string, string>>,
 ): void => {
-  poserLesEntetes(res, { 'Content-Type': 'text/html; charset=utf-8', ...entetes });
+  const cacheDeclareParLaRoute = res.hasHeader('Cache-Control');
+  poserLesEntetes(res, {
+    'Content-Type': 'text/html; charset=utf-8',
+    ...Object.fromEntries(
+      Object.entries(entetes).filter(
+        ([nom]) => !(cacheDeclareParLaRoute && nom === 'Cache-Control'),
+      ),
+    ),
+  });
   res.send(html);
 };
 

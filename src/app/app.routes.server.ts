@@ -22,6 +22,7 @@ const IMPRIME_HORS_DU_PROCESSUS_DE_SON_OUVREUR: Readonly<Record<string, string>>
 
 const OUVERTE_PAR_UN_LIEN_A_JETON: Readonly<Record<string, string>> = {
   'Referrer-Policy': 'no-referrer',
+  'Cache-Control': 'private, no-store',
 };
 
 export const serverRoutes: ServerRoute[] = [
