@@ -1,4 +1,5 @@
 import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
+import { LIBELLES_DES_INCIDENTS } from '../../core/models/libelles-des-incidents';
 import { isolateAnimReady } from '../../../testing/anim-ready';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { PrivacyComponent } from './privacy.component';
@@ -32,7 +33,7 @@ const DONNEES_NOMMEES: readonly (readonly [string, readonly string[]])[] = [
   [
     'les données des séances de cours, relevé des incidents compris',
     [
-      "Données des séances de cours : le prénom, le nom et l'adresse email saisis pour rejoindre une séance ; vos réponses aux questions, avec leur durée, et aux sondages, vos productions, vos tentatives d'énigme, vos scores et votre progression par notion ; le relevé des incidents survenus pendant la séance (onglet masqué, fenêtre quittée, sortie du plein écran, tentative de copier ou de coller, raccourci bloqué, outils de développement soupçonnés, connexion perdue, réponse trop rapide), avec leur contexte.",
+      "Données des séances de cours : le prénom, le nom et l'adresse email saisis pour rejoindre une séance ; vos réponses aux questions, avec leur durée, et aux sondages, vos productions, vos tentatives d'énigme, vos scores et votre progression par notion ; le relevé des incidents survenus pendant la séance (onglet masqué, fenêtre quittée, tentative de copier, tentative de coller, menu contextuel ouvert, raccourci bloqué, outils de développement soupçonnés, page quittée ou rechargée, réponse trop rapide), avec leur heure et leur contexte, que le formateur voit dans la synthèse de la séance.",
     ],
   ],
 ];
@@ -108,6 +109,13 @@ describe('PrivacyComponent', () => {
       'Améliorer le site, de façon agrégée et anonyme.',
     );
     expect(texteNormalise(page.querySelector('#base'))).not.toContain('amélioration du site');
+  });
+
+  it('nomme chaque type d incident que le poste consigne, et aucun autre', () => {
+    const collecte = texteNormalise(rendre().querySelector('#collecte'));
+    const releve = /incidents survenus pendant la séance \(([^)]*)\)/u.exec(collecte)?.[1] ?? '';
+
+    expect(releve.split(', ')).toEqual(Object.values(LIBELLES_DES_INCIDENTS));
   });
 
   it('date la politique du jour où elle a nommé ces données', () => {
