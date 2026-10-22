@@ -1,6 +1,6 @@
 import type { DonneesFpExit } from '../../../../contrat/types.gen';
 import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
-import { longueurDeTexte } from '../core/longueur-de-texte';
+import { longueurDeLaSaisie } from '../core/longueur-de-texte';
 import { chaineDe } from '../core/valeurs';
 import { FpReponse } from './reponse';
 import { type OptionPublique, copierLeSocle, projeterOptions } from './projection';
@@ -17,10 +17,6 @@ function projeterBillet(source: ExitBilletPublic): ExitBilletPublic {
     longueurMax: source.longueurMax,
     options: projeterOptions(source.options),
   };
-}
-
-function longueurSaisie(texte: string): number {
-  return longueurDeTexte(texte.trim());
 }
 
 export class FpExit extends FpReponse<ExitBilletPublic> {
@@ -104,7 +100,7 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
   }
 
   private jauge(billet: ExitBilletPublic): string {
-    return `${longueurSaisie(this.texteLibre)} / ${billet.longueurMax}`;
+    return `${longueurDeLaSaisie(this.texteLibre)} / ${billet.longueurMax}`;
   }
 
   private memoriser(): void {
@@ -155,7 +151,7 @@ export class FpExit extends FpReponse<ExitBilletPublic> {
       this.refuserLEnvoi(this.texte('choix-obligatoire'));
       return;
     }
-    if (longueurSaisie(brut) > billet.longueurMax) {
+    if (longueurDeLaSaisie(brut) > billet.longueurMax) {
       this.refuserLEnvoi(this.messageTropLong(billet));
       return;
     }

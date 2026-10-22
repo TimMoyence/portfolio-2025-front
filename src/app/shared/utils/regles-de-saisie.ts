@@ -1,6 +1,6 @@
 import type { ValidationErrors } from '@angular/forms';
 import { zInscriptionDto } from '../../../../contrat/zod.gen';
-import { longueurDeTexte } from '../../../cours/runtime/core/longueur-de-texte';
+import { longueurDeLaSaisie, longueurDeTexte } from '../../../cours/runtime/core/longueur-de-texte';
 
 export interface Bornes {
   readonly min: number;
@@ -9,7 +9,7 @@ export interface Bornes {
 }
 
 export function erreursDeLongueur(saisie: string, bornes: Bornes): ValidationErrors | null {
-  const longueur = longueurDeTexte(bornes.brute === true ? saisie : saisie.trim());
+  const longueur = bornes.brute === true ? longueurDeTexte(saisie) : longueurDeLaSaisie(saisie);
   if (longueur === 0) {
     return bornes.min > 0 ? { required: true } : null;
   }

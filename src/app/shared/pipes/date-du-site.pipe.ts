@@ -2,17 +2,18 @@ import { inject, LOCALE_ID, Pipe, type PipeTransform } from '@angular/core';
 
 const FUSEAU_DU_SITE = 'Europe/Paris';
 
-export function dateDuSite(instant: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: FUSEAU_DU_SITE }).format(
-    new Date(instant),
-  );
+function auFuseauDuSite(
+  options: Intl.DateTimeFormatOptions,
+): (instant: string, locale: string) => string {
+  return (instant, locale) =>
+    new Intl.DateTimeFormat(locale, { ...options, timeZone: FUSEAU_DU_SITE }).format(
+      new Date(instant),
+    );
 }
 
-export function heureDuSite(instant: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { timeStyle: 'medium', timeZone: FUSEAU_DU_SITE }).format(
-    new Date(instant),
-  );
-}
+export const dateDuSite = auFuseauDuSite({ dateStyle: 'long' });
+
+export const heureDuSite = auFuseauDuSite({ timeStyle: 'medium' });
 
 @Pipe({ name: 'dateDuSite', standalone: true })
 export class DateDuSitePipe implements PipeTransform {
