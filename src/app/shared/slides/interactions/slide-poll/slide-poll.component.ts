@@ -8,8 +8,6 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { formaterPart } from '../../../../../cours/runtime/core/typographie';
-import { part } from '../../../../../cours/runtime/core/valeurs';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import { chargerInteraction } from '../interactions.util';
 
@@ -32,17 +30,10 @@ export class SlidePollComponent implements OnInit {
   readonly slug = input.required<string>();
   readonly interactionId = input.required<string>();
 
-  protected readonly formaterPart = formaterPart;
   protected readonly poll = signal<PollInteraction | null>(null);
   protected readonly error = signal<boolean>(false);
-  protected readonly votes = signal<Record<number, number>>({});
-  protected readonly hasVoted = signal<boolean>(false);
-
   protected readonly votedIndex = signal<number | null>(null);
-
-  protected readonly totalVotes = computed(() =>
-    Object.values(this.votes()).reduce((a, b) => a + b, 0),
-  );
+  protected readonly hasVoted = computed(() => this.votedIndex() !== null);
 
   protected readonly votedLabel = computed(() => {
     const index = this.votedIndex();
@@ -64,13 +55,7 @@ export class SlidePollComponent implements OnInit {
     if (this.hasVoted()) {
       return;
     }
-    this.votes.update((v) => ({ ...v, [index]: (v[index] ?? 0) + 1 }));
     this.votedIndex.set(index);
-    this.hasVoted.set(true);
-  }
-
-  protected partDe(index: number): number {
-    return part(this.votes()[index] ?? 0, this.totalVotes());
   }
 
   private load(): void {

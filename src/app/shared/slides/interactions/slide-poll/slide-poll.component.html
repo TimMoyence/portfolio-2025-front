@@ -12,22 +12,18 @@
           (click)="vote(i)"
         >
           <span class="slide-poll__label">{{ opt }}</span>
-          @if (hasVoted()) {
-            <span class="slide-poll__pct">{{ formaterPart(partDe(i)) }}</span>
-            <span
-              class="slide-poll__bar"
-              [attr.data-index]="i"
-              [style.width.%]="partDe(i) * 100"
-            ></span>
-          }
         </button>
       }
     </div>
 
     <p class="slide-poll__status" role="status" aria-live="polite">
       @if (votedLabel(); as label) {
-        <span i18n="@@slidePollVoteRecorded">Vote enregistré : {{ label }}</span>
+        <span i18n="@@slidePollVotreChoix">Votre choix : {{ label }}</span>
       }
     </p>
   </div>
+} @else if (error()) {
+  <p class="slide-poll__status" role="alert" i18n="@@slidePollIndisponible">
+    Ce sondage n’a pas pu être chargé.
+  </p>
 }
