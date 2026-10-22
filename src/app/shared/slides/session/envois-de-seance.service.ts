@@ -11,6 +11,7 @@ import {
   ReponseLibreRefusee,
 } from '../../../core/ports/formations.port';
 import type { LimiteDeDebit } from '../../../core/models/limite-de-debit';
+import { reprendreLAncienneFileLibre } from './ancienne-file-libre';
 import type { EtatParticipant } from '../../../../cours/content/types';
 import { readIdentity } from '../../../../cours/runtime/core/identity';
 import type { EnvoiReponse, Envoyeur } from '../../../../cours/runtime/core/queue';
@@ -106,6 +107,7 @@ export class EnvoisDeSeanceService {
 
   ouvrir(sessionId: string): void {
     this.refus.set(!purgerLesAutresEnvois(sessionId));
+    reprendreLAncienneFileLibre(() => new Date()).catch(() => this.refuser());
   }
 
   mettreEnFile(envoi: EnvoiEnFile): boolean {
