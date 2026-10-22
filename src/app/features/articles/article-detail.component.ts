@@ -9,6 +9,7 @@ import { urlLocalisee } from '../../core/seo/chemins';
 import { NOM_DU_SITE } from '../../core/seo/nom-du-site';
 import { SeoService } from '../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../core/ssr/http-response-status';
+import { DateDuSitePipe } from '../../shared/pipes/date-du-site.pipe';
 import { ArticlesCtaComponent } from './articles-cta.component';
 import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 import { renderArticleMarkdown } from './markdown-article.utils';
@@ -16,7 +17,7 @@ import { renderArticleMarkdown } from './markdown-article.utils';
 @Component({
   selector: 'app-article-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, ArticlesCtaComponent],
+  imports: [CommonModule, RouterLink, ArticlesCtaComponent, DateDuSitePipe],
   templateUrl: './article-detail.component.html',
   styleUrl: './article-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

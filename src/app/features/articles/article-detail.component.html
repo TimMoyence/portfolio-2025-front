@@ -17,9 +17,7 @@
         >← Tous les articles</a
       >
       <div class="article-detail__meta">
-        <time [attr.datetime]="article.published_at">{{
-          article.published_at | date: 'longDate'
-        }}</time>
+        <time [attr.datetime]="article.published_at">{{ article.published_at | dateDuSite }}</time>
         @if (article.reading_time_minutes) {
           <span i18n="@@articleDetailReadingTime">{{ article.reading_time_minutes }} min</span>
         }
