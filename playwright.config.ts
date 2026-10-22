@@ -29,21 +29,22 @@ const serveurAngular = {
   timeout: 180_000,
 };
 
-const serveurDeLocale = (commande: string, base: string | undefined) =>
+const serveurDeLocale = (serveur: string, base: string | undefined) =>
   base === undefined || base === ''
     ? []
     : [
         {
-          command: commande,
+          command: `node ${serveur}`,
           url: `${base}/sitemap.xml`,
+          env: { PORT: new URL(base).port },
           reuseExistingServer: !process.env['CI'],
           timeout: 180_000,
         },
       ];
 
 const serveurSsr = [
-  ...serveurDeLocale('npm run serve:ssr:portfolio-app', baseSsr),
-  ...serveurDeLocale('npm run serve:ssr:portfolio-app:en', baseSsrAnglais),
+  ...serveurDeLocale('dist/portfolio-app/server/fr/server.mjs', baseSsr),
+  ...serveurDeLocale('dist/portfolio-app/server/en/server.mjs', baseSsrAnglais),
 ];
 
 const serveurDuBanc = [
