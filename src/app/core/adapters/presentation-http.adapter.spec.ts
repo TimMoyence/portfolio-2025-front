@@ -1,20 +1,19 @@
 import { environment } from '../../../environments/environment';
 import { bancAdaptateurHttp, verifierErreurRelayee } from '../../../testing/http-attendu';
-import { lecturesStrictes } from '../../../testing/lecture-stricte';
 import type { PresentationInteractionsResponse } from '../ports/presentation.port';
 import { PresentationHttpAdapter } from './presentation-http.adapter';
 
 describe('PresentationHttpAdapter', () => {
   const banc = bancAdaptateurHttp(PresentationHttpAdapter);
 
-  describe('lecture des réponses servies par le back', () => {
-    lecturesStrictes(banc, [
-      {
-        route: 'GET /api/presentations/:slug/interactions',
-        chemin: '/presentations/ia-solopreneurs/interactions',
-        appel: (a) => a.getInteractions('ia-solopreneurs'),
-      },
-    ]);
+  it('encode le slug dans l URL des interactions', () => {
+    banc.adapter.getInteractions('ia solo/x').subscribe();
+
+    const requete = banc.httpMock.expectOne(
+      `${environment.apiBaseUrl}/presentations/ia%20solo%2Fx/interactions`,
+    );
+    expect(requete.request.method).toBe('GET');
+    requete.flush({ slug: 'ia solo/x', interactions: {} });
   });
 
   it('appelle GET /presentations/{slug}/interactions et mappe la reponse', () => {

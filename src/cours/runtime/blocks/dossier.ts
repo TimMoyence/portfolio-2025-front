@@ -6,7 +6,7 @@ export interface LigneDuDossier {
   readonly valeur: string;
 }
 
-export function lireRappel(valeur: unknown): readonly LigneDuDossier[] {
+function lireRappel(valeur: unknown): readonly LigneDuDossier[] {
   return Array.isArray(valeur)
     ? valeur.filter(
         (ligne): ligne is LigneDuDossier =>
@@ -15,6 +15,12 @@ export function lireRappel(valeur: unknown): readonly LigneDuDossier[] {
           typeof ligne['valeur'] === 'string',
       )
     : [];
+}
+
+export function copierRappel(source: { readonly rappel?: readonly LigneDuDossier[] }): {
+  readonly rappel?: readonly LigneDuDossier[];
+} {
+  return source.rappel === undefined ? {} : { rappel: lireRappel(source.rappel) };
 }
 
 export function dossierDeRappel(rappel: readonly LigneDuDossier[] | undefined): EscapedHtml {

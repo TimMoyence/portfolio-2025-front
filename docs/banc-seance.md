@@ -81,8 +81,7 @@ Le banc n'est **pas** joué par la CI du front, et c'est délibéré :
   chaque PR, pour vérifier une intégration que la CI du back couvre déjà de son côté
   (`test:integration:db`, `test:e2e:http`).
 
-Le banc se joue donc à la main, avant chaque déploiement qui touche le cours et avant toute
-bascule de version publiée. Le jour où les deux dépôts partageront un pipeline de déploiement, il
+Le banc se joue donc à la main, avant chaque déploiement qui touche le cours. Le jour où les deux dépôts partageront un pipeline de déploiement, il
 s'y branche sans rien changer : `npm run test:banc` suppose seulement que le back est à côté.
 
 ## Ce que le banc couvre

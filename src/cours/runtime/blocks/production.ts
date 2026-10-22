@@ -53,6 +53,7 @@ export abstract class FpProduction<
 > extends FpEnvoiJuge<Plan, VerdictDeProduction> {
   protected attendus: readonly Attendu[] = [];
   protected corrigeServi: unknown = null;
+  protected fermee = false;
 
   protected abstract readonly evenementDeSoumission: string;
 
@@ -73,6 +74,15 @@ export abstract class FpProduction<
     this.corrigeServi = valeur;
     this.attendus = lireAttendusDuCorrige(valeur, this.lectureDuCorrige);
     this.refreshSiConnecte();
+  }
+
+  set saisieFermee(valeur: boolean) {
+    this.fermee = valeur;
+    this.refreshSiConnecte();
+  }
+
+  protected override verrouille(): boolean {
+    return super.verrouille() || (this.fermee && !this.enApercu());
   }
 
   protected detailDe(cle: string): DetailDeVerdict | null {
@@ -183,21 +193,17 @@ abstract class FpProductionEtayee<Plan extends PlanEtaye, Attendu> extends FpPro
     return safeHtml`<ol class="fp-${escapeHtml(this.bloc)}__consignes" data-testid="consignes">${lignes}</ol>`;
   }
 
-  protected override verrouille(): boolean {
-    return super.verrouille() || (this.correction > 0 && !this.enApercu());
-  }
-
   protected override repartirDeZero(): void {
     super.repartirDeZero();
     this.reprises = new Set();
   }
 
   protected enReprise(): boolean {
-    return this.correction === 0 && this.interneVerdict !== null && this.reprises.size > 0;
+    return !this.fermee && this.interneVerdict !== null && this.reprises.size > 0;
   }
 
   protected celluleAccessible(cle: string): boolean {
-    return !this.verrouille() || (this.correction === 0 && this.detailDe(cle)?.juste === false);
+    return !this.verrouille() || (!this.fermee && this.detailDe(cle)?.juste === false);
   }
 
   protected noterLaSaisie(cle: string, brouillon: unknown): void {

@@ -1,6 +1,17 @@
-import { DOCUMENT, PercentPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  LOCALE_ID,
+  signal,
+} from '@angular/core';
+import type { RapportIncidentResponseDto } from '../../../../../contrat/types.gen';
+import { LIBELLES_DES_INCIDENTS } from '../../../core/models/libelles-des-incidents';
 import type { ParticipantRapporte, RapportSeance } from '../../../core/ports/formations.port';
+import { heureDuSite } from '../../../shared/pipes/date-du-site.pipe';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { type Chargement, lectureSuivie } from '../lecture-suivie';
 import type { DerouleCours, ResultatQuestion } from '../../../../cours/content/types';
@@ -9,14 +20,25 @@ import {
   enoncesDuDeroule,
 } from '../../../shared/slides/session/lecture-ecran';
 import { DefileurDeTableauComponent } from '../../../shared/slides/defileur-de-tableau/defileur-de-tableau.component';
-import { enFrancais } from '../../../../cours/runtime/core/typographie';
 import { telechargerFichier } from '../../../shared/utils/telechargement.utils';
 import { chantierApresRendu } from './chantier-apres-rendu';
+import { formaterPart } from '../../../../cours/runtime/core/typographie';
 
 interface LigneClassement {
   participant: ParticipantRapporte;
-  note: string;
   sansReponse: boolean;
+}
+
+interface IncidentLu {
+  readonly heure: string;
+  readonly libelle: string;
+  readonly contexte: string;
+}
+
+function contexteLisible(contexte: RapportIncidentResponseDto['contexte']): string {
+  return Object.entries(contexte ?? {})
+    .map(([cle, valeur]) => `${cle} : ${String(valeur)}`)
+    .join(', ');
 }
 
 interface ConceptCompte {
@@ -25,32 +47,7 @@ interface ConceptCompte {
   effectif: number;
 }
 
-interface ConfusionFrequente {
-  readonly id: string;
-  readonly libelle: string;
-  readonly nombre: number;
-}
-
 const NOMBRE_CONFUSIONS_FREQUENTES = 5;
-
-function confusionsFrequentesDe(
-  questions: readonly ResultatQuestion[],
-): readonly ConfusionFrequente[] {
-  const totaux = new Map<string, ConfusionFrequente>();
-  for (const question of questions) {
-    for (const confusion of question.confusions) {
-      const existante = totaux.get(confusion.id);
-      totaux.set(confusion.id, {
-        id: confusion.id,
-        libelle: existante?.libelle ?? confusion.libelle,
-        nombre: (existante?.nombre ?? 0) + confusion.nombre,
-      });
-    }
-  }
-  return [...totaux.values()]
-    .sort((gauche, droite) => droite.nombre - gauche.nombre || (gauche.id < droite.id ? -1 : 1))
-    .slice(0, NOMBRE_CONFUSIONS_FREQUENTES);
-}
 
 interface EnoncesDeLaSeance {
   readonly questions: ReadonlyMap<string, string>;
@@ -69,7 +66,7 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
 @Component({
   selector: 'app-cours-synthese',
   standalone: true,
-  imports: [DefileurDeTableauComponent, PercentPipe],
+  imports: [DefileurDeTableauComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="cours-synthese">
@@ -85,7 +82,6 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
             <thead>
               <tr>
                 <th i18n="synthese.etudiant|@@syntheseEtudiant">Étudiant</th>
-                <th i18n="synthese.score|@@syntheseScore">Score</th>
                 <th i18n="synthese.avancement|@@syntheseAvancement">Avancement</th>
               </tr>
             </thead>
@@ -103,11 +99,10 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
                       N'a répondu à aucune question
                     </td>
                   } @else {
-                    <td data-testid="synthese-score">{{ ligne.note }}</td>
+                    <td data-testid="synthese-avancement">
+                      {{ formaterPart(ligne.participant.completion) }}
+                    </td>
                   }
-                  <td data-testid="synthese-avancement">
-                    {{ ligne.participant.completion | percent }}
-                  </td>
                 </tr>
               }
             </tbody>
@@ -172,7 +167,9 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
               <li data-testid="synthese-fragile">
                 <span data-testid="synthese-fragile-concept">{{ fragile.libelle }}</span>
                 <span data-testid="synthese-fragile-effectif">{{ fragile.effectif }}</span>
-                <span i18n="synthese.sousSeuil|@@syntheseSousSeuil">étudiants sous le seuil</span>
+                <span i18n="synthese.seSontTrompes|@@syntheseSeSontTrompes"
+                  >étudiants s’y sont trompés</span
+                >
               </li>
             }
           </ul>
@@ -193,6 +190,33 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
                     <dd data-testid="synthese-libre-reponse">{{ libre.reponse }}</dd>
                   }
                 </dl>
+              </article>
+            }
+          </section>
+        }
+        @if (auteursDIncidents().length > 0) {
+          <section data-testid="synthese-incidents">
+            <h3 i18n="synthese.incidentsTitre|@@syntheseIncidentsTitre">
+              Incidents relevés sur les postes
+            </h3>
+            @for (participant of auteursDIncidents(); track participant.email) {
+              <article>
+                <h4 data-testid="synthese-incidents-etudiant">
+                  {{ participant.prenom }} {{ participant.nom }}
+                </h4>
+                <ul>
+                  @for (incident of incidentsLus(participant); track $index) {
+                    <li data-testid="synthese-incident">
+                      <time data-testid="synthese-incident-heure">{{ incident.heure }}</time>
+                      <span data-testid="synthese-incident-type">{{ incident.libelle }}</span>
+                      @if (incident.contexte !== '') {
+                        <small data-testid="synthese-incident-contexte">{{
+                          incident.contexte
+                        }}</small>
+                      }
+                    </li>
+                  }
+                </ul>
               </article>
             }
           </section>
@@ -225,6 +249,7 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
   `,
 })
 export class CoursSyntheseComponent {
+  protected readonly formaterPart = formaterPart;
   readonly sessionId = input.required<string>();
 
   readonly rapport = signal<RapportSeance | null>(null);
@@ -240,13 +265,12 @@ export class CoursSyntheseComponent {
     const participants = this.rapport()?.participants ?? [];
     const lignes = participants.map((participant) => ({
       participant,
-      note: enFrancais(participant.note),
       sansReponse: participant.reponses.length === 0,
     }));
     return [
       ...lignes
         .filter((ligne) => !ligne.sansReponse)
-        .sort((gauche, droite) => gauche.participant.note - droite.participant.note),
+        .sort((gauche, droite) => gauche.participant.completion - droite.participant.completion),
       ...lignes.filter((ligne) => ligne.sansReponse),
     ];
   });
@@ -269,8 +293,8 @@ export class CoursSyntheseComponent {
     () => this.rapport()?.resultats.questions ?? [],
   );
 
-  readonly confusionsFrequentes = computed<readonly ConfusionFrequente[]>(() =>
-    confusionsFrequentesDe(this.questions()),
+  readonly confusionsFrequentes = computed(() =>
+    (this.rapport()?.resultats.confusions ?? []).slice(0, NOMBRE_CONFUSIONS_FREQUENTES),
   );
 
   readonly auteursDeReponsesLibres = computed<readonly ParticipantRapporte[]>(() =>
@@ -279,6 +303,11 @@ export class CoursSyntheseComponent {
     ),
   );
 
+  readonly auteursDIncidents = computed<readonly ParticipantRapporte[]>(() =>
+    (this.rapport()?.participants ?? []).filter((participant) => participant.incidents.length > 0),
+  );
+
+  private readonly locale = inject(LOCALE_ID);
   private readonly port = inject(FORMATIONS_PORT);
   private readonly document = inject(DOCUMENT);
   private readonly charger = lectureSuivie();
@@ -287,6 +316,14 @@ export class CoursSyntheseComponent {
 
   quandStabilise(): Promise<void> {
     return this.chantier;
+  }
+
+  protected incidentsLus(participant: ParticipantRapporte): readonly IncidentLu[] {
+    return participant.incidents.map((incident) => ({
+      heure: heureDuSite(incident.horodatage, this.locale),
+      libelle: LIBELLES_DES_INCIDENTS[incident.type],
+      contexte: contexteLisible(incident.contexte),
+    }));
   }
 
   protected telecharger(): void {
@@ -298,10 +335,8 @@ export class CoursSyntheseComponent {
   }
 
   private compterLesFreins(rapport: RapportSeance, concept: string): number {
-    return rapport.participants.filter(
-      (participant) =>
-        participant.sousSeuil &&
-        participant.reponses.some((reponse) => reponse.concept === concept),
+    return rapport.participants.filter((participant) =>
+      participant.reponses.some((reponse) => reponse.concept === concept && !reponse.correcte),
     ).length;
   }
 

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import type { Page, Route } from '@playwright/test';
-import { sessionServie } from '../src/app/core/adapters/site-schemas';
+import { zAuthResponseDto as sessionServie } from '../contrat/zod.gen';
 import { API_BASE, MOCK_SESSION, servirJson, servirRefus } from './fixtures';
 
 interface TentativeDeConnexion {

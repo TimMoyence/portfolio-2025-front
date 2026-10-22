@@ -4,24 +4,21 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
-  LOCALE_ID,
   OnInit,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
-import { APP_CONFIG } from '../../core/config/app-config.token';
-import { langueDuSite } from '../../core/config/locales';
-import type { ContactFormState } from '../../core/models/contact.model';
+import { VERSIONS_DES_TEXTES_LEGAUX } from '../../core/config/textes-legaux';
+import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
+import type { ContactRequestDto } from '../../../../contrat/types.gen';
+import { zContactRequestDto } from '../../../../contrat/zod.gen';
 import type { ContactPort } from '../../core/ports/contact.port';
 import { CONTACT_PORT } from '../../core/ports/contact.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
 import type { Bornes } from '../../shared/utils/regles-de-saisie';
-import {
-  BORNES_D_UN_MESSAGE_DE_CONTACT,
-  BORNES_D_UN_NOM,
-} from '../../shared/utils/regles-de-saisie';
+import { bornesDu } from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { ContactCtaComponent } from '../../shared/components/cta-contact/cta-contact.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
@@ -30,6 +27,12 @@ import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisi
 import type { FormatDeContact } from '../../shared/directives/format-de-contact.directive';
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
+
+const SAISIE_DE_CONTACT = zContactRequestDto.shape;
+
+type ContactFormState = Omit<ContactRequestDto, 'terms'> & { terms: boolean };
+
+const SUJET_DE_DEMANDE_D_ACCES = $localize`:contact.form.subject.access@@contactFormSubjectAccess:Demande d'accès application`;
 
 @Component({
   selector: 'app-contact',
@@ -54,8 +57,7 @@ export class ContactComponent implements OnInit {
   isContactSubmitted: boolean = false;
   contactErrorMessage?: string;
   contactSuccessMessage?: string;
-  private readonly appConfig = inject(APP_CONFIG);
-  private readonly langue = langueDuSite(inject(LOCALE_ID));
+  private readonly langue = injecterLocaleDeLaPage();
   private readonly contactPort: ContactPort = inject(CONTACT_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
   private debutDeSaisie = instantMonotone();
@@ -82,6 +84,7 @@ export class ContactComponent implements OnInit {
       $localize`:contact.form.subject.first@@contactFormSubjectFirst:Premier contact`,
       $localize`:contact.form.subject.second@@contactFormSubjectSecond:Demande de devis`,
       $localize`:contact.form.subject.third@@contactFormSubjectThird:Urgent - Besoin rapide`,
+      SUJET_DE_DEMANDE_D_ACCES,
     ],
   };
 
@@ -102,7 +105,7 @@ export class ContactComponent implements OnInit {
     message: '',
     role: '',
     terms: false,
-    termsVersion: this.appConfig.gdpr?.termsVersion ?? '2026-02-11',
+    termsVersion: VERSIONS_DES_TEXTES_LEGAUX.conditions,
     termsLocale: this.langue,
     termsMethod: 'contact_form_checkbox',
   };
@@ -116,7 +119,7 @@ export class ContactComponent implements OnInit {
     if (reason === 'access' && app) {
       this.contactForm = {
         ...this.contactForm,
-        subject: $localize`:contact.form.subject.access@@contactFormSubjectAccess:Demande d'accès application`,
+        subject: SUJET_DE_DEMANDE_D_ACCES,
         message: this.buildAccessRequestMessage(app),
       };
     }
@@ -134,7 +137,7 @@ export class ContactComponent implements OnInit {
     return $localize`:contact.access.message@@contactAccessMessage:Bonjour Tim, je souhaite un accès à ${appLabel}:appLabel: . Pouvez-vous m'expliquer les modalités ? Merci.`;
   }
 
-  protected readonly bornesDuMessage = BORNES_D_UN_MESSAGE_DE_CONTACT;
+  protected readonly bornesDuMessage = bornesDu(SAISIE_DE_CONTACT.message);
 
   contactFields: {
     key: Extract<keyof ContactFormState, 'firstName' | 'lastName' | 'email' | 'phone'>;
@@ -149,14 +152,14 @@ export class ContactComponent implements OnInit {
       label: $localize`:contact.form.field.firstName@@contactFormFieldFirstName:Prénom`,
       type: 'text',
       required: true,
-      bornes: BORNES_D_UN_NOM,
+      bornes: bornesDu(SAISIE_DE_CONTACT.firstName),
     },
     {
       key: 'lastName',
       label: $localize`:contact.form.field.lastName@@contactFormFieldLastName:Nom`,
       type: 'text',
       required: true,
-      bornes: BORNES_D_UN_NOM,
+      bornes: bornesDu(SAISIE_DE_CONTACT.lastName),
     },
     {
       key: 'email',
@@ -179,7 +182,7 @@ export class ContactComponent implements OnInit {
     this.contactErrorMessage = undefined;
     this.contactSuccessMessage = undefined;
 
-    if (!form.valid) {
+    if (!form.valid || !this.contactForm.terms) {
       this.contactErrorMessage = $localize`:contact.form.error.invalid@@contactFormErrorInvalid:Merci de vérifier les champs en rouge.`;
       return;
     }
@@ -211,10 +214,11 @@ export class ContactComponent implements OnInit {
     });
   }
 
-  private normalizeContactPayload(form: ContactFormState): ContactFormState {
+  private normalizeContactPayload(form: ContactFormState): ContactRequestDto {
     const trimOrEmpty = (value: string): string => value.trim();
     return {
       ...form,
+      terms: true,
       formFillDurationMs: dureeMonotoneDepuis(this.debutDeSaisie),
       email: trimOrEmpty(form.email),
       firstName: trimOrEmpty(form.firstName),
@@ -223,9 +227,9 @@ export class ContactComponent implements OnInit {
       message: trimOrEmpty(form.message),
       role: trimOrEmpty(form.role),
       phone: telephoneFacultatif(form.phone),
-      termsAcceptedAt: form.terms ? new Date().toISOString() : undefined,
+      termsAcceptedAt: new Date().toISOString(),
       termsLocale: this.langue,
-      termsVersion: this.appConfig.gdpr?.termsVersion ?? form.termsVersion,
+      termsVersion: VERSIONS_DES_TEXTES_LEGAUX.conditions,
       termsMethod: form.termsMethod ?? 'contact_form_checkbox',
     };
   }

@@ -1,4 +1,3 @@
-import { PercentPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,6 +26,7 @@ import { part } from '../../../../cours/runtime/core/valeurs';
 import { TenirDansSaPlaceDirective } from '../../../shared/slides/session/tenir-dans-sa-place.directive';
 import type { GroupeDeReponses } from './panneau-pedagogique/panneau-reponses-libres.component';
 import { grouperLesReponses } from './panneau-pedagogique/panneau-reponses-libres.component';
+import { formaterPart } from '../../../../cours/runtime/core/typographie';
 
 const REPONSES_PROJETEES_PAR_QUESTION = 6;
 
@@ -45,7 +45,7 @@ interface ResultatProjete {
   readonly id: string;
   readonly enonce: string;
   readonly total: number;
-  readonly partJuste: number;
+  readonly part: number;
   readonly scoreMoyen: number | null;
   readonly barres: readonly BarreDOption[];
 }
@@ -83,7 +83,7 @@ function resultatsProjetes(
       id: resultat.questionId,
       enonce: enonces.get(resultat.questionId) ?? '',
       total: resultat.total,
-      partJuste: part(resultat.correctes, resultat.total),
+      part: resultat.part,
       scoreMoyen: resultat.scoreMoyen,
       barres: barresDe(resultat, options.get(resultat.questionId) ?? null),
     }));
@@ -92,7 +92,7 @@ function resultatsProjetes(
 @Component({
   selector: 'app-cours-resultats-projetes',
   standalone: true,
-  imports: [PercentPipe, TenirDansSaPlaceDirective],
+  imports: [TenirDansSaPlaceDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (actif()) {
@@ -120,9 +120,9 @@ function resultatsProjetes(
                     ·
                     @if (question.scoreMoyen !== null) {
                       <span i18n="@@resultatsProjetesScoreMoyen">score moyen</span>
-                      <strong>{{ question.scoreMoyen | percent }}</strong>
+                      <strong>{{ formaterPart(question.part) }}</strong>
                     } @else {
-                      <strong>{{ question.partJuste | percent }}</strong>
+                      <strong>{{ formaterPart(question.part) }}</strong>
                       <span i18n="@@resultatsProjetesJustes">de réponses justes</span>
                     }
                   }
@@ -304,6 +304,7 @@ function resultatsProjetes(
   `,
 })
 export class CoursResultatsProjetesComponent {
+  protected readonly formaterPart = formaterPart;
   readonly ecran = input.required<EcranDeroule>();
   readonly resultats = input<ResultatsSeance | null>(null);
   readonly sessionId = input<string | null>(null);

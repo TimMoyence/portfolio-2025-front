@@ -1,4 +1,3 @@
-import { PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import {
   PHASES_DE_VOTE,
@@ -22,6 +21,7 @@ import {
   libellesDesElements,
   planDeMontage,
 } from '../../../shared/slides/session/lecture-ecran';
+import { formaterPart } from '../../../../cours/runtime/core/typographie';
 
 export type CommandeDEcran = { readonly screenId: string } & PilotageEcran;
 
@@ -60,7 +60,6 @@ interface LigneDEnigme extends ProgressionEnigme {
 @Component({
   selector: 'app-cours-panneau-activite',
   standalone: true,
-  imports: [PercentPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
@@ -296,7 +295,7 @@ interface LigneDEnigme extends ProgressionEnigme {
             ·
             <span i18n="@@panneauActiviteScoreMoyen">score moyen</span>&ngsp;
             <strong data-testid="activite-production-score">{{
-              resultat.scoreMoyen | percent
+              formaterPart(resultat.scoreMoyen)
             }}</strong>
           }
         </p>
@@ -386,6 +385,7 @@ interface LigneDEnigme extends ProgressionEnigme {
   `,
 })
 export class CoursPanneauActiviteComponent {
+  protected readonly formaterPart = formaterPart;
   readonly ecran = input.required<EcranDeroule>();
   readonly resultats = input<ResultatsDuFlux | null>(null);
   readonly pilotage = input<PilotageEcran>({});

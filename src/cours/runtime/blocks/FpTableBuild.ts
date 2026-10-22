@@ -1,3 +1,4 @@
+import type { AttenduTableauPresentateurResponseDto } from '../../../../contrat/types.gen';
 import type { TableauEvalue, ValeurAffichee } from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, LECTURE_SEULE, safeHtml, VIDE } from '../core/html';
@@ -42,11 +43,7 @@ export interface TableBuildPlanPublic extends PlanEtaye {
   readonly tableauInitial: TableauEvalue;
 }
 
-interface SaisieDeTableau {
-  readonly rang: number;
-  readonly cle: string;
-  readonly valeur: number;
-}
+type SaisieDeTableau = AttenduTableauPresentateurResponseDto;
 
 const TIRET = '—';
 const ABSENTE: ValeurAffichee = { valeur: null, affichage: TIRET };

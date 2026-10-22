@@ -18,8 +18,8 @@ import { dureeMonotoneDepuis, instantMonotone } from '../../../../../cours/runti
 import { suivreLaSaisie } from '../../../../../cours/runtime/core/zone-de-saisie';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import { readInputValue } from '../../../utils/dom-event.utils';
-import type { EtatEnvoiLibre } from '../../session/reponses-libres.service';
-import { cleDeReponseLibre, ReponsesLibresService } from '../../session/reponses-libres.service';
+import type { EtatEnvoiLibre } from '../../session/envois-de-seance.service';
+import { cleDeReponseLibre, EnvoisDeSeanceService } from '../../session/envois-de-seance.service';
 import { estTexteNonVide } from '../../../../../cours/runtime/core/valeurs';
 import { chargerInteraction } from '../interactions.util';
 import type { ModeInteraction } from '../mode-interaction';
@@ -76,16 +76,14 @@ export class SlideReflectionComponent implements OnInit {
   protected readonly saveState = signal<EtatEnvoi>('repos');
   protected readonly garde = computed(() => {
     const sessionId = this.seanceCourante();
-    return sessionId === null
-      ? null
-      : this.reponsesLibres.texteGarde(sessionId, this.activiteCourante());
+    return sessionId === null ? null : this.envois.texteGarde(sessionId, this.activiteCourante());
   });
   protected readonly etatVisible = computed<EtatEnvoi>(() =>
     this.saveState() === 'repos' && this.garde() !== null ? 'enregistre' : this.saveState(),
   );
 
   private readonly port = inject(PRESENTATION_PORT, { optional: true });
-  private readonly reponsesLibres = inject(ReponsesLibresService);
+  private readonly envois = inject(EnvoisDeSeanceService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly startedAt = instantMonotone();
   private readonly zone = viewChild<ElementRef<HTMLTextAreaElement>>('zone');
@@ -101,7 +99,7 @@ export class SlideReflectionComponent implements OnInit {
     effect(() => {
       const sessionId = this.seanceCourante();
       if (sessionId !== null) {
-        this.afficherLEtat(this.reponsesLibres.etatsDesEnvois().get(this.cleCourante(sessionId)));
+        this.afficherLEtat(this.envois.etatsDesEnvois().get(this.cleCourante(sessionId)));
       }
     });
   }
@@ -122,7 +120,7 @@ export class SlideReflectionComponent implements OnInit {
     }
     const response = this.value().trim();
     this.saveState.set('envoi');
-    const etat = await this.reponsesLibres.envoyer(sessionId, this.jeton(), {
+    const etat = await this.envois.envoyer(sessionId, this.jeton(), {
       screenId: this.screenId(),
       activityId: this.activiteCourante(),
       response,
@@ -135,7 +133,7 @@ export class SlideReflectionComponent implements OnInit {
     const sessionId = this.seanceCourante();
     if (sessionId === null) return;
     const cle = this.cleCourante(sessionId);
-    this.afficherLEtat((await this.reponsesLibres.reprendre(sessionId, this.jeton())).get(cle));
+    this.afficherLEtat((await this.envois.reprendre(sessionId, this.jeton())).get(cle));
   };
 
   private seanceCourante(): string | null {

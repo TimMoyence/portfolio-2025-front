@@ -1,5 +1,11 @@
 import type express from 'express';
-import { ALLOWED_HOSTS, buildBaseUrlFromRequest, cheminCanonique } from './url-utils';
+import {
+  ALLOWED_HOSTS,
+  LONGUEUR_MAX_D_UNE_URL,
+  buildBaseUrlFromRequest,
+  cheminCanonique,
+  urlRefusee,
+} from './url-utils';
 
 const stubRequest = (opts: {
   headers?: Record<string, string>;
@@ -18,6 +24,27 @@ const stubRequest = (opts: {
 };
 
 describe('url-utils', () => {
+  describe('urlRefusee', () => {
+    it('laisse passer les chemins du site et leurs paramètres', () => {
+      expect(urlRefusee('/fr/contact')).toBeFalse();
+      expect(urlRefusee('/fr/articles/mon-article?utm=(campagne);a')).toBeFalse();
+    });
+
+    it('refuse les paramètres matriciels et les sorties nommées que le routeur analyse', () => {
+      expect(urlRefusee('/fr/a;1=1;2=2')).toBeTrue();
+      expect(urlRefusee('/fr/(secondaire:page)')).toBeTrue();
+    });
+
+    it('refuse la barre oblique inverse, qu un navigateur lit comme un hôte externe', () => {
+      expect(urlRefusee('/\\evil.com/')).toBeTrue();
+    });
+
+    it('refuse une URL plus longue que la borne', () => {
+      expect(urlRefusee(`/${'a'.repeat(LONGUEUR_MAX_D_UNE_URL)}`)).toBeTrue();
+      expect(urlRefusee(`/${'a'.repeat(LONGUEUR_MAX_D_UNE_URL - 1)}`)).toBeFalse();
+    });
+  });
+
   describe('cheminCanonique', () => {
     it('garde un chemin deja canonique', () => {
       expect(cheminCanonique('/')).toBe('/');

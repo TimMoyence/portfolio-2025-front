@@ -1,22 +1,19 @@
+import type {
+  IncidentEntryDto,
+  TypeDIncident as IncidentType,
+} from '../../../../contrat/types.gen';
 import { abonner, diffuserA } from './ecoutes';
 
 export type LockRegime = 'ouvert' | 'focus' | 'examen';
 
-export type IncidentType =
-  | 'visibility'
-  | 'blur'
-  | 'copy'
-  | 'paste'
-  | 'contextmenu'
-  | 'blocked_shortcut'
-  | 'devtools_key'
-  | 'page_unload'
-  | 'fast_answer';
+export type { TypeDIncident as IncidentType } from '../../../../contrat/types.gen';
+
+type ContexteDIncident = Readonly<NonNullable<IncidentEntryDto['contexte']>>;
 
 export interface Incident {
   type: IncidentType;
   horodatage: string;
-  detail?: Readonly<Record<string, unknown>>;
+  detail?: ContexteDIncident;
 }
 
 export type IncidentListener = (incident: Incident) => void;
@@ -59,7 +56,7 @@ export function createLock(regime: LockRegime, options: LockOptions = {}): Lock 
   let estArme = false;
   let nettoyeurs: Nettoyeur[] = [];
 
-  const consigner = (type: IncidentType, detail?: Readonly<Record<string, unknown>>): void => {
+  const consigner = (type: IncidentType, detail?: ContexteDIncident): void => {
     const incident: Incident =
       detail === undefined
         ? { type, horodatage: new Date().toISOString() }
@@ -73,12 +70,12 @@ export function createLock(regime: LockRegime, options: LockOptions = {}): Lock 
 
   const surVisibilite = (): void => {
     if (document.hidden) {
-      consigner('visibility');
+      consigner('tab_hidden');
     }
   };
 
   const surPerteFocus = (): void => {
-    consigner('blur');
+    consigner('window_blur');
   };
 
   const bloquerEtConsigner =
@@ -97,7 +94,7 @@ export function createLock(regime: LockRegime, options: LockOptions = {}): Lock 
   const surTouche = (event: Event): void => {
     const clavier = event as KeyboardEvent;
     if (clavier.key === 'F12') {
-      consigner('devtools_key');
+      consigner('devtools_suspected');
       return;
     }
     const touche = clavier.key.toLowerCase();
@@ -119,9 +116,9 @@ export function createLock(regime: LockRegime, options: LockOptions = {}): Lock 
       ];
       if (regime === 'examen') {
         nettoyeurs.push(
-          ecouter(document, 'copy', bloquerEtConsigner('copy')),
-          ecouter(document, 'paste', bloquerEtConsigner('paste')),
-          ecouter(document, 'contextmenu', bloquerEtConsigner('contextmenu')),
+          ecouter(document, 'copy', bloquerEtConsigner('copy_attempt')),
+          ecouter(document, 'paste', bloquerEtConsigner('paste_attempt')),
+          ecouter(document, 'contextmenu', bloquerEtConsigner('context_menu')),
           ecouter(document, 'keydown', surTouche),
           ecouter(window, 'beforeunload', surDechargement),
         );

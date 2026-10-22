@@ -1,4 +1,4 @@
-import { creerMetadonneesBrique } from '../../content/types';
+import { metadonnees } from '../../../testing/factories/cours.factory';
 import {
   avecJeNeSaisPas,
   ID_JE_NE_SAIS_PAS,
@@ -6,11 +6,9 @@ import {
   projeterOptions,
 } from './projection';
 
-const METADONNEES = creerMetadonneesBrique({
-  concepts: ['capitalisation'],
+const METADONNEES = metadonnees({
   misconceptionsCiblees: ['interet-simple', 'oubli-de-la-duree'],
   dureeMinutes: 4,
-  modalite: 'solo',
   regime: 'focus',
 });
 
@@ -53,7 +51,7 @@ describe('L4-F15 · option je ne sais pas', () => {
   it('ajoute l option je ne sais pas après les options servies, sans toucher la source', () => {
     const servies = [{ id: 'a', libelle: 'Mille euros' }];
 
-    expect(avecJeNeSaisPas(servies, 'Je ne sais pas')).toEqual([
+    expect(avecJeNeSaisPas(servies)).toEqual([
       { id: 'a', libelle: 'Mille euros' },
       { id: '__je_ne_sais_pas__', libelle: 'Je ne sais pas' },
     ]);

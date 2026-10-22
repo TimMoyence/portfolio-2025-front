@@ -5,11 +5,11 @@ import { Router } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { catchError, from, switchMap, throwError } from 'rxjs';
 import { APP_CONFIG } from '../../config/app-config.token';
+import { CHEMIN_DE_CONNEXION, retourApresConnexion } from '../../guards/vers-la-connexion';
 import { AuthStateService, type IssueDuRafraichissement } from '../../services/auth-state.service';
 import { ENTETE_JETON_PARTICIPANT } from '../../../../cours/runtime/core/jeton-participant';
 import { enteteDAutorisation } from '../entete-d-autorisation';
 
-const LOGIN_URL = '/login';
 const REFRESH_PATH = '/auth/refresh';
 const DEFI_DU_JETON_DE_SESSION = /^Bearer\b/i;
 const ROUTES_QUI_JUGENT_DES_IDENTIFIANTS: readonly string[] = [
@@ -40,7 +40,7 @@ function pendingNavigationUrl(router: Router): string | null {
 }
 
 function isLoginUrl(url: string): boolean {
-  return url === LOGIN_URL || url.startsWith(`${LOGIN_URL}?`);
+  return url === CHEMIN_DE_CONNEXION || url.startsWith(`${CHEMIN_DE_CONNEXION}?`);
 }
 
 function redirectToLogin(router: Router): void {
@@ -48,9 +48,7 @@ function redirectToLogin(router: Router): void {
   if (pendingUrl !== null && isLoginUrl(pendingUrl)) {
     return;
   }
-  void router.navigate([LOGIN_URL], {
-    queryParams: { returnUrl: pendingUrl ?? router.url },
-  });
+  void router.navigate([CHEMIN_DE_CONNEXION], retourApresConnexion(pendingUrl ?? router.url));
 }
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {

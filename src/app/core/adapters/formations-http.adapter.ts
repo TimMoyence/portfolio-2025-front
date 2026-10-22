@@ -23,6 +23,7 @@ import type {
   InscriptionParticipant,
   LivretDuCours,
   MotifRefusRattachement,
+  MotifRefusSurLePoste,
   MotifRefusReponse,
   MotifRefusReponseLibre,
   ParticipantDeSeance,
@@ -45,6 +46,7 @@ import type {
   VerdictTentative,
 } from '../ports/formations.port';
 import {
+  ActionSurLePosteRefusee,
   PieceJointeRefusee,
   RattachementRefuse,
   ReponseLibreRefusee,
@@ -52,32 +54,33 @@ import {
   SujetRefuse,
 } from '../ports/formations.port';
 import { getApiFormationsUrl } from '../http/api-config';
-import { limiteDeLaReponse, STATUT_LIMITE_DE_DEBIT } from '../http/limite-de-debit';
+import { STATUT_LIMITE_DE_DEBIT } from '../../../cours/runtime/core/statuts-http';
+import { limiteDeLaReponse } from '../http/limite-de-debit';
 import { derouleDuFil, livretDuFil, sujetDuFil } from './formations-fil';
 import {
-  annotationServie,
-  annotationsServies,
-  derouleServi,
-  etatParticipantServi,
-  feuilleEvalueeServie,
-  livretServi,
-  luPar,
-  machineEvalueeServie,
-  participantsServis,
-  rappelsServis,
-  rapportServi,
-  rattachementServi,
-  reponseLibreEnregistreeServie,
-  reponsesLibresServies,
-  seanceOuverteServie,
-  strategiesServies,
-  sujetServi,
-  syntheseServie,
-  tableauEvalueServi,
-  verdictProductionServi,
-  verdictReponseServi,
-  verdictTentativeServi,
-} from './formations-schemas';
+  zDerouleResponseDto as derouleServi,
+  zEtatParticipantResponseDto as etatParticipantServi,
+  zFeuilleEvalueeResponseDto as feuilleEvalueeServie,
+  zFreeResponseSavedResponseDto as reponseLibreEnregistreeServie,
+  zFreeResponsesResponseDto as reponsesLibresServies,
+  zJoinSessionResponseDto as rattachementServi,
+  zLivretResponseDto as livretServi,
+  zMachineEvalueeResponseDto as machineEvalueeServie,
+  zOpenSessionResponseDto as seanceOuverteServie,
+  zRappelsResponseDto as rappelsServis,
+  zSessionParticipantsResponseDto as participantsServis,
+  zSessionResultsResponseDto as rapportServi,
+  zStrategiesDefiResponseDto as strategiesServies,
+  zSubmitAnswerResponseDto as verdictReponseServi,
+  zSubmitProductionResponseDto as verdictProductionServi,
+  zSujetResponseDto as sujetServi,
+  zSyntheseRappelsResponseDto as syntheseServie,
+  zTableauEvalueResponseDto as tableauEvalueServi,
+  zTeacherAnnotationResponseDto as annotationServie,
+  zTeacherAnnotationsResponseDto as annotationsServies,
+  zTentativeEnigmeResponseDto as verdictTentativeServi,
+} from '../../../../contrat/zod.gen';
+import { luPar } from './lu-par';
 import type { Reglages } from '../../../cours/runtime/blocks/animation';
 import { ENTETE_JETON_PARTICIPANT } from '../../../cours/runtime/core/jeton-participant';
 import { urlDeLaSeance } from '../../../cours/runtime/core/adresse-de-seance';
@@ -107,6 +110,7 @@ const MOTIFS_D_ECRITURE_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = 
   TENTATIVES_EPUISEES: 'tentatives-epuisees',
   REPRISES_EPUISEES: 'reprises-epuisees',
   PRODUCTION_VIDE: 'production-vide',
+  SAISIE_NON_NUMERIQUE: 'saisie-non-numerique',
 };
 
 const POSTE_ABSENT_DE_LA_SEANCE: MotifRefusReponse = 'evince';
@@ -155,6 +159,27 @@ function refuserSujet(erreur: unknown): SujetRefuse {
       }
       return new SujetRefuse(
         reponse.status === 409 ? 'cours-modifie' : 'sujet-indisponible',
+        reponse.status,
+      );
+    },
+  );
+}
+
+const MOTIFS_SUR_LE_POSTE_PAR_CODE: Readonly<Record<string, MotifRefusSurLePoste>> = {
+  SEANCE_COMPLETE: 'seance-complete',
+  GRAINE_REPRISE: 'graine-reprise',
+};
+
+function refuserActionSurLePoste(erreur: unknown): ActionSurLePosteRefusee {
+  return selonLaReponse(
+    erreur,
+    () => new ActionSurLePosteRefusee('action-impossible', 0),
+    (reponse) => {
+      const code = codeDuProbleme(reponse);
+      return new ActionSurLePosteRefusee(
+        code !== null && Object.hasOwn(MOTIFS_SUR_LE_POSTE_PAR_CODE, code)
+          ? MOTIFS_SUR_LE_POSTE_PAR_CODE[code]
+          : 'action-impossible',
         reponse.status,
       );
     },
@@ -509,21 +534,21 @@ export class FormationsHttpAdapter implements FormationsPort {
   }
 
   evincerParticipant(sessionId: string, participantId: string): Observable<void> {
-    return this.http.delete<void>(this.urlDuParticipant(sessionId, participantId));
+    return this.http
+      .delete<void>(this.urlDuParticipant(sessionId, participantId))
+      .pipe(refusRelance(refuserActionSurLePoste));
   }
 
   readmettreParticipant(sessionId: string, participantId: string): Observable<void> {
-    return this.http.post<void>(
-      `${this.urlDuParticipant(sessionId, participantId)}/readmission`,
-      {},
-    );
+    return this.http
+      .post<void>(`${this.urlDuParticipant(sessionId, participantId)}/readmission`, {})
+      .pipe(refusRelance(refuserActionSurLePoste));
   }
 
   libererPoste(sessionId: string, participantId: string): Observable<void> {
-    return this.http.post<void>(
-      `${this.urlDuParticipant(sessionId, participantId)}/liberation`,
-      {},
-    );
+    return this.http
+      .post<void>(`${this.urlDuParticipant(sessionId, participantId)}/liberation`, {})
+      .pipe(refusRelance(refuserActionSurLePoste));
   }
 
   private urlDuParticipant(sessionId: string, participantId: string): string {

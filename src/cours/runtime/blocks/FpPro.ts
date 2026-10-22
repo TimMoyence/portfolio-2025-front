@@ -1,3 +1,4 @@
+import { zSaveFreeResponseRequestDto } from '../../../../contrat/zod.gen';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { estTexteNonVide } from '../core/valeurs';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
@@ -17,7 +18,7 @@ export interface ProCas extends ContenuDeBrique {
   readonly questionsLibres?: readonly QuestionLibre[];
 }
 
-const LONGUEUR_MAX_REPONSE_LIBRE = 10000;
+const LONGUEUR_MAX_REPONSE_LIBRE = zSaveFreeResponseRequestDto.shape.response.maxLength ?? Infinity;
 
 function copierQuestion({ id, question, placeholder }: QuestionLibre): QuestionLibre {
   return placeholder === undefined ? { id, question } : { id, question, placeholder };

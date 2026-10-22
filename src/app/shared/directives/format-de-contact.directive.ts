@@ -1,11 +1,28 @@
 import { Directive, input } from '@angular/core';
 import type { AbstractControl, ValidationErrors } from '@angular/forms';
 import { NG_VALIDATORS } from '@angular/forms';
-import { estUneAdresseEmail } from '../../../cours/runtime/core/adresse-email';
-import { estUnNumeroDeTelephone } from '../utils/telephone.utils';
+import { zContactRequestDto } from '../../../../contrat/zod.gen';
 import { ValidateurDeSaisie } from './validateur-de-saisie';
 
+const ADRESSE_EMAIL = zContactRequestDto.shape.email;
+const TELEPHONE = zContactRequestDto.shape.phone.unwrap().unwrap();
+
 export type FormatDeContact = 'email' | 'telephone' | null;
+
+export function erreurDeFormat(valeur: unknown, format: FormatDeContact): ValidationErrors | null {
+  const saisie = typeof valeur === 'string' ? valeur.trim() : '';
+  if (saisie.length === 0) {
+    return null;
+  }
+  switch (format) {
+    case 'email':
+      return ADRESSE_EMAIL.safeParse(saisie).success ? null : { email: true };
+    case 'telephone':
+      return TELEPHONE.safeParse(saisie).success ? null : { phone: true };
+    default:
+      return null;
+  }
+}
 
 @Directive({
   selector: '[appFormatDeContact][ngModel]',
@@ -16,18 +33,6 @@ export class FormatDeContactDirective extends ValidateurDeSaisie {
   readonly appFormatDeContact = input<FormatDeContact>(null);
 
   validate(controle: AbstractControl): ValidationErrors | null {
-    const valeur: unknown = controle.value;
-    const saisie = typeof valeur === 'string' ? valeur.trim() : '';
-    if (saisie.length === 0) {
-      return null;
-    }
-    switch (this.appFormatDeContact()) {
-      case 'email':
-        return estUneAdresseEmail(saisie) ? null : { email: true };
-      case 'telephone':
-        return estUnNumeroDeTelephone(saisie) ? null : { phone: true };
-      default:
-        return null;
-    }
+    return erreurDeFormat(controle.value, this.appFormatDeContact());
   }
 }

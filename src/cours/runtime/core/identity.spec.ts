@@ -2,6 +2,7 @@ import { MOTIF_UUID_V4 } from '../../../testing/sans-random-uuid';
 import { sansStockageLocal, saturationDuStockage } from '../../../testing/sans-stockage';
 import {
   clearIdentity,
+  DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS,
   LONGUEURS_MAX_DE_L_IDENTITE,
   lireSecretDeReprise,
   memoriserSecretDeReprise,
@@ -60,6 +61,50 @@ describe('identity', () => {
     const premiere = saveIdentity(THEO);
     const reprise = saveIdentity({ prenom: ' Theo ', nom: 'Martin ', email: 'THEO@example.com' });
     expect(reprise.identite.studentKey).toBe(premiere.identite.studentKey);
+  });
+
+  describe('conservation bornée sur le poste', () => {
+    beforeEach(() => {
+      jasmine.clock().install();
+      jasmine.clock().mockDate(new Date('2026-10-22T08:00:00.000Z'));
+    });
+
+    afterEach(() => {
+      jasmine.clock().uninstall();
+    });
+
+    it('oublie identité et secrets douze heures après la dernière écriture, onglet fermé avant la fin de séance', () => {
+      saveIdentity(THEO);
+      memoriserSecretDeReprise('4821', 'secret-a');
+
+      jasmine.clock().tick(DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS - 1);
+      expect(lireSecretDeReprise('4821')).toBe('secret-a');
+
+      jasmine.clock().tick(1);
+      expect(readIdentity()).toBeNull();
+      expect(lireSecretDeReprise('4821')).toBeUndefined();
+      expect(localStorage.getItem('fp.identite')).toBeNull();
+    });
+
+    it('repousse l échéance à chaque écriture, comme une rotation du secret', () => {
+      saveIdentity(THEO);
+      jasmine.clock().tick(DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS - 1);
+      memoriserSecretDeReprise('4821', 'secret-tourne');
+
+      jasmine.clock().tick(DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS - 1);
+
+      expect(lireSecretDeReprise('4821')).toBe('secret-tourne');
+    });
+
+    it('purge une identité conservée sans échéance par une version précédente', () => {
+      localStorage.setItem(
+        'fp.identite',
+        JSON.stringify({ ...THEO, studentKey: 'cle', secretsDeReprise: { '4821': 'secret' } }),
+      );
+
+      expect(readIdentity()).toBeNull();
+      expect(localStorage.getItem('fp.identite')).toBeNull();
+    });
   });
 
   it('oublie l identite apres effacement', () => {

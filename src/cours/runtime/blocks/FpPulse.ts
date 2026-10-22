@@ -1,21 +1,16 @@
+import type { ComptesJalonResponseDto } from '../../../../contrat/types.gen';
 import { ETATS_PULSE, type EtatPulse } from '../../content/types';
 import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
+import { SEUIL_D_ANONYMAT } from '../core/anonymat';
 import { FpContenu } from './contenu';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { estMembre, estPositif } from '../core/valeurs';
 
-export interface PulseComptes {
-  readonly perdu: number;
-  readonly 'ca-va': number;
-  readonly clair: number;
-  readonly total?: number;
-}
+export type PulseComptes = ComptesJalonResponseDto;
 
 export interface PulseSondage extends ContenuDeBrique {
   readonly invite: string;
 }
-
-const SEUIL_DE_PROJECTION = 5;
 
 const FORMES: Readonly<Record<EtatPulse, string>> = {
   perdu: '▲',
@@ -27,13 +22,13 @@ function compte(valeur: unknown): number {
   return estPositif(valeur) ? Math.trunc(valeur) : 0;
 }
 
-function projeterComptes(source: PulseComptes): Required<PulseComptes> {
-  const comptes = {
+function projeterComptes(source: PulseComptes): PulseComptes {
+  return {
     perdu: compte(source.perdu),
     'ca-va': compte(source['ca-va']),
     clair: compte(source.clair),
+    total: compte(source.total),
   };
-  return { ...comptes, total: comptes.perdu + comptes['ca-va'] + comptes.clair };
 }
 
 function lireEtat(valeur: unknown): EtatPulse | null {
@@ -48,7 +43,7 @@ function copierSondage(source: PulseSondage): PulseSondage {
 }
 
 export class FpPulse extends FpContenu<PulseSondage> {
-  private interneComptes: Required<PulseComptes> | null = null;
+  private interneComptes: PulseComptes | null = null;
   private choix: EtatPulse | null = null;
 
   set sondage(valeur: PulseSondage | null) {
@@ -65,7 +60,7 @@ export class FpPulse extends FpContenu<PulseSondage> {
     this.refreshSiConnecte();
   }
 
-  get comptes(): Required<PulseComptes> | null {
+  get comptes(): PulseComptes | null {
     return this.interneComptes;
   }
 
@@ -104,7 +99,7 @@ export class FpPulse extends FpContenu<PulseSondage> {
     if (comptes === null) {
       return VIDE;
     }
-    return comptes.total >= SEUIL_DE_PROJECTION ? this.agregat(comptes) : this.masque();
+    return comptes.total >= SEUIL_D_ANONYMAT ? this.agregat(comptes) : this.masque();
   }
 
   bind(racine: ShadowRoot): void {
@@ -135,7 +130,7 @@ export class FpPulse extends FpContenu<PulseSondage> {
     return safeHtml`<button type="button" class="fp-pulse__etat" data-testid="etat" data-etat-pulse="${escapeHtml(etat)}" aria-pressed="${escapeHtml(String(!inerte && etat === this.choix))}" ${inerte ? DESACTIVE : VIDE}><span class="fp-pulse__forme" aria-hidden="true">${escapeHtml(FORMES[etat])}</span><span class="fp-pulse__libelle">${escapeHtml(this.libelle(etat))}</span></button>`;
   }
 
-  private ligne(comptes: Required<PulseComptes>, etat: EtatPulse): EscapedHtml {
+  private ligne(comptes: PulseComptes, etat: EtatPulse): EscapedHtml {
     return safeHtml`<li class="fp-pulse__ligne" data-testid="ligne" data-etat-pulse="${escapeHtml(etat)}"><span class="fp-pulse__forme" aria-hidden="true">${escapeHtml(FORMES[etat])}</span><span class="fp-pulse__libelle">${escapeHtml(this.libelle(etat))}</span><span class="fp-pulse__compte" data-testid="compte">${comptes[etat]}</span></li>`;
   }
 
@@ -143,7 +138,7 @@ export class FpPulse extends FpContenu<PulseSondage> {
     return safeHtml`<p class="fp-pulse__masque" data-testid="masque">${escapeHtml(this.texte('pulse-masque'))}</p>`;
   }
 
-  private agregat(comptes: Required<PulseComptes>): EscapedHtml {
+  private agregat(comptes: PulseComptes): EscapedHtml {
     return safeHtml`
       <ul class="fp-pulse__agregat" data-testid="agregat">${ETATS_PULSE.map((etat) => this.ligne(comptes, etat))}</ul>
       <p class="fp-pulse__total" data-testid="total">${escapeHtml(this.texte('pulse-total'))} ${comptes.total}</p>

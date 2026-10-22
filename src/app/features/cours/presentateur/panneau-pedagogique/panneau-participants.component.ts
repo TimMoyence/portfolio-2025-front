@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, type Observable } from 'rxjs';
 import type { ParticipantDeSeance } from '../../../../core/ports/formations.port';
-import { FORMATIONS_PORT } from '../../../../core/ports/formations.port';
+import {
+  ActionSurLePosteRefusee,
+  FORMATIONS_PORT,
+  MESSAGES_REFUS_SUR_LE_POSTE,
+} from '../../../../core/ports/formations.port';
 import { type Chargement, lectureSuivie } from '../../lecture-suivie';
 
 @Component({
@@ -100,6 +104,9 @@ import { type Chargement, lectureSuivie } from '../../lecture-suivie';
               </li>
             }
           </ul>
+          @if (refusDAction(); as refus) {
+            <p role="alert" data-testid="activite-action-refusee">{{ refus }}</p>
+          }
           @if (posteLibere(); as libere) {
             <p
               role="status"
@@ -121,6 +128,7 @@ export class PanneauParticipantsComponent {
   protected readonly lecture = signal<Chargement>('repos');
   protected readonly listeDesParticipants = signal<readonly ParticipantDeSeance[]>([]);
   protected readonly posteLibere = signal<ParticipantDeSeance | null>(null);
+  protected readonly refusDAction = signal<string | null>(null);
 
   private readonly port = inject(FORMATIONS_PORT);
   private readonly charger = lectureSuivie();
@@ -154,13 +162,23 @@ export class PanneauParticipantsComponent {
       return;
     }
     this.posteLibere.set(null);
-    try {
-      await firstValueFrom(this.port.libererPoste(sessionId, participant.id), {
-        defaultValue: undefined,
-      });
+    if (await this.agir(this.port.libererPoste(sessionId, participant.id))) {
       this.posteLibere.set(participant);
-    } catch {
-      this.lecture.set('echec');
+    }
+  }
+
+  private async agir(commande: Observable<void>): Promise<boolean> {
+    this.refusDAction.set(null);
+    try {
+      await firstValueFrom(commande, { defaultValue: undefined });
+      return true;
+    } catch (erreur) {
+      this.refusDAction.set(
+        erreur instanceof ActionSurLePosteRefusee
+          ? erreur.message
+          : MESSAGES_REFUS_SUR_LE_POSTE['action-impossible'],
+      );
+      return false;
     }
   }
 
@@ -175,15 +193,12 @@ export class PanneauParticipantsComponent {
     const commande = evince
       ? this.port.evincerParticipant(sessionId, participant.id)
       : this.port.readmettreParticipant(sessionId, participant.id);
-    try {
-      await firstValueFrom(commande, { defaultValue: undefined });
+    if (await this.agir(commande)) {
       this.listeDesParticipants.update((liste) =>
         liste.map((candidat) =>
           candidat.id === participant.id ? { ...candidat, evince } : candidat,
         ),
       );
-    } catch {
-      this.lecture.set('echec');
     }
   }
 }

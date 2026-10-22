@@ -117,6 +117,15 @@ void test('AD-2 : un import relatif qui reste dans src/cours passe', () => {
   assert.equal(resultat.code, 0);
 });
 
+void test('AD-2 : le contrat genere depuis le back est le seul dossier hors de src/cours atteignable', () => {
+  const chemin = 'src/cours/runtime/core/sync.ts';
+  assert.equal(
+    garder({ [chemin]: "import { zEtat } from '../../../../contrat/zod.gen';\n" }).code,
+    0,
+  );
+  assert.equal(garder({ [chemin]: "import { x } from '../../../../contrats/x';\n" }).code, 1);
+});
+
 void test('AD-2 : un spec peut atteindre src/testing, un fichier de production non', () => {
   const chemin = 'src/cours/runtime/core/deck';
   const texte = "import { buildDeckState } from '../../../testing/factories/cours.factory';\n";

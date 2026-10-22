@@ -5,7 +5,7 @@ const CAPACITE_MAX = 200;
 const ECHEC_ECRITURE =
   "Le stockage local de ce poste n'a pas accepté l'écriture — la réponse n'a pas été mise en file";
 
-export type NatureEnvoi = 'reponse' | 'production' | 'jalon';
+export type NatureEnvoi = 'reponse' | 'production' | 'jalon' | 'libre';
 
 export interface EnvoiReponse {
   id: number;
@@ -16,6 +16,7 @@ export interface EnvoiReponse {
   valeur: unknown;
   dureeMs: number;
   horodatage: string;
+  screenId?: string;
 }
 
 export type Envoyeur = (envoi: EnvoiReponse) => boolean | Promise<boolean>;
@@ -29,8 +30,19 @@ export function pending(): readonly EnvoiReponse[] {
   }));
 }
 
+function memeReponseLibre(a: Omit<EnvoiReponse, 'id'>, b: Omit<EnvoiReponse, 'id'>): boolean {
+  return (
+    a.nature === 'libre' &&
+    b.nature === 'libre' &&
+    a.sessionId === b.sessionId &&
+    a.studentKey === b.studentKey &&
+    a.screenId === b.screenId &&
+    a.questionId === b.questionId
+  );
+}
+
 export function enqueue(envoi: Omit<EnvoiReponse, 'id'>): void {
-  const file = pending();
+  const file = pending().filter((existant) => !memeReponseLibre(existant, envoi));
   if (file.length >= CAPACITE_MAX) {
     throw new Error(
       "La file d'attente des réponses est pleine (200 au maximum) — la réponse n'a pas été mise en file",
@@ -54,6 +66,14 @@ function ecrireOuRefuser(file: readonly EnvoiReponse[]): void {
 
 function retirer(id: number): void {
   ecrireOuRefuser(pending().filter((envoi) => envoi.id !== id));
+}
+
+export function retirerLaReponseLibre(envoi: Omit<EnvoiReponse, 'id'>): void {
+  const file = pending();
+  const restants = file.filter((existant) => !memeReponseLibre(existant, envoi));
+  if (restants.length !== file.length) {
+    ecrireOuRefuser(restants);
+  }
 }
 
 export function purgerLesAutresEnvois(sessionId: string): boolean {

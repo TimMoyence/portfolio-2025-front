@@ -2576,17 +2576,6 @@
       </segment>
     </unit>
 
-    <unit id="footerNavCookies">
-      <notes>
-        <note category="location">src/app/shared/components/footer/footer.component.ts:109</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.cookies</note>
-      </notes>
-      <segment>
-        <source>Paramètres cookies</source>
-        <target>Cookie settings</target>
-      </segment>
-    </unit>
 
     <unit id="footerNavLinkedin">
       <notes>
@@ -2955,114 +2944,6 @@
         <target> Skip to main content </target>
       </segment>
     </unit>
-    <unit id="cookieBannerMessage">
-      <segment>
-        <source>Nous utilisons des cookies essentiels pour faire fonctionner le site et mémoriser vos choix. Aucun cookie analytique ou marketing n’est activé sans votre accord.</source>
-        <target>We use essential cookies to run the site and remember your choices. No analytics or marketing cookies are enabled without your consent.</target>
-      </segment>
-    </unit>
-    <unit id="cookieBannerSettings">
-      <segment>
-        <source>Paramètres des cookies</source>
-        <target>Cookie settings</target>
-      </segment>
-    </unit>
-    <unit id="cookieBannerAcceptAll">
-      <segment>
-        <source>Tout accepter</source>
-        <target>Accept all</target>
-      </segment>
-    </unit>
-    <unit id="cookieBannerRejectAll">
-      <segment>
-        <source>Tout refuser</source>
-        <target>Reject all</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsHeroLabel">
-      <segment>
-        <source>Vos choix</source>
-        <target>Your choices</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsHeroTitle">
-      <segment>
-        <source>Préférences <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">cookies</pc>.</source>
-        <target>Cookie <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">preferences</pc>.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsMetaLastUpdated">
-      <segment>
-        <source>Vous gardez la main — modifiable à tout moment</source>
-        <target>You stay in control — editable at any time</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesEssentialTitle">
-      <segment>
-        <source>Essentiels</source>
-        <target>Essential</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesEssentialDesc">
-      <segment>
-        <source>Indispensables au fonctionnement du site : connexion, sécurité, mémorisation de vos préférences. Ils ne peuvent pas être désactivés.</source>
-        <target>Essential to the operation of the site: login, security, remembering your preferences. They cannot be disabled.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesOptionalTitle">
-      <segment>
-        <source>Préférences</source>
-        <target>Preferences</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesOptionalDesc">
-      <segment>
-        <source>Mémorisent vos choix d&apos;affichage (langue, réglages) pour une expérience plus fluide d&apos;une visite à l&apos;autre.</source>
-        <target>Remember your display choices (language, settings) for a smoother experience from one visit to the next.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesAnalyticsTitle">
-      <segment>
-        <source>Mesure d&apos;audience</source>
-        <target>Audience measurement</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesAnalyticsDesc">
-      <segment>
-        <source>Permettraient des statistiques anonymisées pour améliorer le site. L&apos;app est en lancement : on n&apos;en collecte aucune pour l&apos;instant.</source>
-        <target>Would enable anonymized statistics to improve the site. The app is launching: we collect none for now.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesMarketingTitle">
-      <segment>
-        <source>Marketing</source>
-        <target>Marketing</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesMarketingDesc">
-      <segment>
-        <source>Permettraient de mesurer l&apos;efficacité de campagnes. Désactivés par défaut — l&apos;app est en lancement, on n&apos;en utilise pas.</source>
-        <target>Would measure campaign effectiveness. Disabled by default — the app is launching, we use none.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesSave">
-      <segment>
-        <source>Enregistrer mes choix</source>
-        <target>Save my choices</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesSaved">
-      <segment>
-        <source>Préférences enregistrées</source>
-        <target>Preferences saved</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesError">
-      <segment>
-        <source>Impossible d'enregistrer vos préférences pour le moment.</source>
-        <target>Unable to save your preferences at the moment.</target>
-      </segment>
-    </unit>
       <unit id="termsHeroLabel">
       <segment>
         <source>Mentions légales</source>
@@ -3073,12 +2954,6 @@
       <segment>
         <source>Conditions générales &amp; <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">mentions légales</pc>.</source>
         <target>Terms &amp; <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">legal notice</pc>.</target>
-      </segment>
-    </unit>
-    <unit id="termsMetaLastUpdated">
-      <segment>
-        <source>Dernière mise à jour : 4 juin 2026</source>
-        <target>Last updated: June 4, 2026</target>
       </segment>
     </unit>
     <unit id="termsServicesTitle">
@@ -3099,22 +2974,10 @@
         <target>Privacy <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">policy</pc>.</target>
       </segment>
     </unit>
-    <unit id="privacyMetaLastUpdated">
-      <segment>
-        <source>Dernière mise à jour : 17 octobre 2026</source>
-        <target>Last updated: October 17, 2026</target>
-      </segment>
-    </unit>
     <unit id="footerLegalPrivacy">
       <segment>
         <source>Politique de confidentialité</source>
         <target>Privacy policy</target>
-      </segment>
-    </unit>
-    <unit id="footerLegalCookies">
-      <segment>
-        <source>Paramètres de cookies</source>
-        <target>Cookie settings</target>
       </segment>
     </unit>
     <unit id="auditStepsTitle">
@@ -5817,10 +5680,16 @@
         <target>See the full catalog</target>
       </segment>
     </unit>
-    <unit id="slidePollVoteRecorded">
+    <unit id="slidePollVotreChoix">
       <segment>
-        <source>Vote enregistré : <ph id="0" equiv="INTERPOLATION" disp="{{ label }}"/></source>
-        <target>Vote recorded: <ph id="0" equiv="INTERPOLATION" disp="{{ label }}"/></target>
+        <source>Votre choix : <ph id="0" equiv="INTERPOLATION" disp="{{ label }}"/></source>
+        <target>Your choice: <ph id="0" equiv="INTERPOLATION" disp="{{ label }}"/></target>
+      </segment>
+    </unit>
+    <unit id="slidePollIndisponible">
+      <segment>
+        <source> Ce sondage n’a pas pu être chargé. </source>
+        <target> This poll could not be loaded. </target>
       </segment>
     </unit>
     <unit id="slideQuizCorrect">
@@ -8513,6 +8382,42 @@
         <target>"Clarify before building"</target>
       </segment>
     </unit>
+    <unit id="cookieBannerRegion">
+      <notes>
+        <note category="location">src/app/shared/components/cookie-banner/cookie-banner.component.html:6</note>
+      </notes>
+      <segment>
+        <source>Cookies</source>
+        <target>Cookie notice</target>
+      </segment>
+    </unit>
+    <unit id="cookieBannerInformation">
+      <notes>
+        <note category="location">src/app/shared/components/cookie-banner/cookie-banner.component.html:13,17</note>
+      </notes>
+      <segment>
+        <source>Ce site n’utilise que des cookies strictement nécessaires à son fonctionnement : aucun cookie de mesure d’audience ni de publicité.</source>
+        <target>This site only uses cookies that are strictly necessary for it to work: no audience measurement or advertising cookies.</target>
+      </segment>
+    </unit>
+    <unit id="cookieBannerEnSavoirPlus">
+      <notes>
+        <note category="location">src/app/shared/components/cookie-banner/cookie-banner.component.html:21,25</note>
+      </notes>
+      <segment>
+        <source>En savoir plus</source>
+        <target>Learn more</target>
+      </segment>
+    </unit>
+    <unit id="cookieBannerCompris">
+      <notes>
+        <note category="location">src/app/shared/components/cookie-banner/cookie-banner.component.html:31,33</note>
+      </notes>
+      <segment>
+        <source> J’ai compris </source>
+        <target> Got it </target>
+      </segment>
+    </unit>
     <unit id="authAsideRegisterKicker">
       <notes>
         <note category="location">src/app/features/auth/auth.component.html:16,17</note>
@@ -8738,126 +8643,6 @@
         <target>Account <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">activated</pc></target>
       </segment>
     </unit>
-    <unit id="cookieSettingsAcceptAll">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:67</note>
-        <note category="description">cookie.settings.actions.acceptAll</note>
-      </notes>
-      <segment>
-        <source>Tout accepter</source>
-        <target>Accept all</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsAnalyticsTag">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:51</note>
-        <note category="description">cookie.settings.analytics.tag</note>
-      </notes>
-      <segment>
-        <source>Non collecté</source>
-        <target>Not collected</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsAriaAnalytics">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:80</note>
-        <note category="description">cookie.settings.aria.analytics</note>
-      </notes>
-      <segment>
-        <source>Mesure d&apos;audience</source>
-        <target>Audience measurement</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsAriaEssential">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:79</note>
-        <note category="description">cookie.settings.aria.essential</note>
-      </notes>
-      <segment>
-        <source>Cookies essentiels</source>
-        <target>Essential cookies</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsAriaMarketing">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:82</note>
-        <note category="description">cookie.settings.aria.marketing</note>
-      </notes>
-      <segment>
-        <source>Marketing</source>
-        <target>Marketing</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsAriaPreferences">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:81</note>
-        <note category="description">cookie.settings.aria.preferences</note>
-      </notes>
-      <segment>
-        <source>Préférences</source>
-        <target>Preferences</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsEssentialTag">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:46</note>
-        <note category="description">cookie.settings.essential.tag</note>
-      </notes>
-      <segment>
-        <source>Toujours actifs</source>
-        <target>Always on</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsIntro">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:40</note>
-        <note category="description">cookie.settings.intro</note>
-      </notes>
-      <segment>
-        <source>On utilise le strict nécessaire pour que le site fonctionne, et rien de plus sans votre accord. Réglez chaque catégorie ci-dessous.</source>
-        <target>We use only the bare minimum needed for the site to work, and nothing more without your consent. Adjust each category below.</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsMarketingTag">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:61</note>
-        <note category="description">cookie.settings.marketing.tag</note>
-      </notes>
-      <segment>
-        <source>Désactivé par défaut</source>
-        <target>Disabled by default</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPreferencesTag">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:56</note>
-        <note category="description">cookie.settings.preferences.tag</note>
-      </notes>
-      <segment>
-        <source>Confort</source>
-        <target>Comfort</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPrivacyNoteBefore">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:73</note>
-        <note category="description">cookie.settings.privacyNote.before</note>
-      </notes>
-      <segment>
-        <source>Pour en savoir plus, consultez notre</source>
-        <target>To learn more, see our</target>
-      </segment>
-    </unit>
-    <unit id="cookieSettingsPrivacyNoteLink">
-      <notes>
-        <note category="location">src/app/features/cookie-settings/cookie-settings.component.ts:74</note>
-        <note category="description">cookie.settings.privacyNote.link</note>
-      </notes>
-      <segment>
-        <source>politique de confidentialité</source>
-        <target>privacy policy</target>
-      </segment>
-    </unit>
     <unit id="notFoundHint">
       <notes>
         <note category="location">src/app/features/not-found/not-found.component.ts:69,71</note>
@@ -8914,20 +8699,20 @@
     </unit>
     <unit id="privacyCollecteTechnique">
       <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:30,33</note>
+        <note category="location">src/app/features/privacy/privacy.component.html:31,34</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données techniques de la demande</pc> : l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact, chaque demande d&apos;audit et chaque choix de cookies. </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Technical request data</pc>: the IP address, the browser (user-agent) and the referring page (referer), recorded with each contact message, each audit request and each cookie choice. </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données techniques de la demande</pc> : l&apos;adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact et chaque demande d&apos;audit. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Technical request data</pc>: the IP address, the browser (user-agent) and the referring page (referer), recorded with each contact message and each audit request. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteSecurite">
       <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:35,38</note>
+        <note category="location">src/app/features/privacy/privacy.component.html:36,39</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de sécurité</pc> : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l&apos;adresse IP, le navigateur (user-agent) et l&apos;email saisi, inscrits au journal du serveur ; l&apos;adresse IP et le navigateur d&apos;une requête jugée suspecte. </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Security data</pc>: for each sign-in or security event on your account, successful or not, the IP address, the browser (user-agent) and the email entered, written to the server log; the IP address and browser of a request flagged as suspicious. </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données de sécurité</pc> : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l&apos;adresse IP, le navigateur (user-agent) et une empreinte non réversible de l&apos;email saisi, inscrits au journal du serveur ; l&apos;adresse IP et le navigateur d&apos;une requête jugée suspecte. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Security data</pc>: for each sign-in or security event on your account, successful or not, the IP address, the browser (user-agent) and a non-reversible fingerprint of the email entered, written to the server log; the IP address and browser of a request flagged as suspicious. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteJournal">
@@ -8941,11 +8726,11 @@
     </unit>
     <unit id="privacyCollecteSeances">
       <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:44,51</note>
+        <note category="location">src/app/features/privacy/privacy.component.html:46,52</note>
       </notes>
       <segment>
-        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données des séances de cours</pc> : le prénom, le nom et l&apos;adresse email saisis pour rejoindre une séance ; vos réponses aux questions, avec leur durée, et aux sondages, vos productions, vos tentatives d&apos;énigme, vos scores et votre progression par notion ; le relevé des incidents survenus pendant la séance (onglet masqué, fenêtre quittée, sortie du plein écran, tentative de copier ou de coller, raccourci bloqué, outils de développement soupçonnés, connexion perdue, réponse trop rapide), avec leur contexte. </source>
-        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Class session data</pc>: the first name, last name and email address entered to join a session; your answers to questions, with how long they took, and to polls, your work, your puzzle attempts, your scores and your progress per concept; the record of incidents during the session (hidden tab, window left, full screen exited, copy or paste attempt, blocked shortcut, suspected developer tools, lost connection, answer given too fast), with their context. </target>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Données des séances de cours</pc> : le prénom, le nom et l&apos;adresse email saisis pour rejoindre une séance ; vos réponses aux questions, avec leur durée, et aux sondages, vos productions, vos tentatives d&apos;énigme, vos scores et votre progression par notion ; le relevé des incidents survenus pendant la séance (onglet masqué, fenêtre quittée, tentative de copier, tentative de coller, menu contextuel ouvert, raccourci bloqué, outils de développement soupçonnés, page quittée ou rechargée, réponse trop rapide), avec leur heure et leur contexte, que le formateur voit dans la synthèse de la séance. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Class session data</pc>: the first name, last name and email address entered to join a session; your answers to questions, with how long they took, and to polls, your work, your puzzle attempts, your scores and your progress per concept; the record of incidents during the session (tab hidden, window left, copy attempt, paste attempt, context menu opened, shortcut blocked, developer tools suspected, page left or reloaded, answer too fast), with their time and context, which the trainer sees in the session summary. </target>
       </segment>
     </unit>
     <unit id="privacyCollecteItem3">
@@ -8975,6 +8760,15 @@
         <target> Your data is kept for as long as necessary for the relevant purpose: the lifetime of your account, then the applicable legal periods (for example, accounting). Beyond that, it is deleted or anonymized. </target>
       </segment>
     </unit>
+    <unit id="privacyConservationTechnique">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:109,114</note>
+      </notes>
+      <segment>
+        <source> L&apos;adresse IP, le navigateur et la page de provenance enregistrés avec un message de contact ou une demande d&apos;audit sont effacés 6 mois après ; les sauvegardes de la base, gardées 6 mois au plus, peuvent les contenir jusque-là. Les journaux du serveur tournent et n&apos;en gardent que les dernières requêtes. </source>
+        <target> The IP address, browser and referring page recorded with a contact message or an audit request are erased after 6 months; database backups, kept for 6 months at most, may contain them until then. Server logs rotate and keep only the latest requests. </target>
+      </segment>
+    </unit>
     <unit id="privacyConservationTitle">
       <notes>
         <note category="location">src/app/features/privacy/privacy.component.html:110,111</note>
@@ -8993,24 +8787,6 @@
         <target>To exercise your rights or ask a question about your data, write to us via the</target>
       </segment>
     </unit>
-    <unit id="privacyContactBody2">
-      <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:157,160</note>
-      </notes>
-      <segment>
-        <source>. Vous pouvez aussi régler vos</source>
-        <target>. You can also adjust your</target>
-      </segment>
-    </unit>
-    <unit id="privacyContactBody3">
-      <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:165,167</note>
-      </notes>
-      <segment>
-        <source>à tout moment.</source>
-        <target>at any time.</target>
-      </segment>
-    </unit>
     <unit id="privacyContactContactLink">
       <notes>
         <note category="location">src/app/features/privacy/privacy.component.html:155,156</note>
@@ -9020,13 +8796,49 @@
         <target>contact page</target>
       </segment>
     </unit>
-    <unit id="privacyContactCookiesLink">
+    <unit id="privacyCookiesTitle">
       <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:163,165</note>
+        <note category="location">src/app/features/privacy/privacy.component.html:139,140</note>
       </notes>
       <segment>
-        <source>préférences cookies</source>
-        <target>cookie preferences</target>
+        <source>9. Cookies et stockage local</source>
+        <target>9. Cookies and local storage</target>
+      </segment>
+    </unit>
+    <unit id="privacyCookiesBody">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:141,145</note>
+      </notes>
+      <segment>
+        <source> Ce site n&apos;utilise que des cookies et un stockage local strictement nécessaires à son fonctionnement. Aucun ne mesure votre audience ni ne sert à la publicité : ils ne demandent donc pas votre consentement. </source>
+        <target> This site only uses cookies and local storage that are strictly necessary for it to work. None of them measures your visits or serves advertising, so they do not require your consent. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCookiesSession">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:147,150</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Session du compte</pc> : un cookie sécurisé, illisible par les scripts, garde votre connexion à l&apos;espace formateur pendant 30 jours au plus. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Account session</pc>: a secure cookie, unreadable by scripts, keeps you signed in to the trainer area for 30 days at most. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCookiesSeance">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:151,154</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Séance de cours</pc> : le poste garde votre identité de séance (prénom, nom, e-mail et secret qui vous rend votre place), vos brouillons et les réponses en attente de réseau jusqu&apos;à la fin de la séance ; si vous quittez la page avant, votre identité s&apos;efface au plus tard 12 heures après votre dernière action. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Class session</pc>: the device keeps your session identity (first name, last name, email and the secret that gives you back your seat), your drafts and the answers waiting for the network until the session ends; if you leave the page earlier, your identity is erased at the latest 12 hours after your last action. </target>
+      </segment>
+    </unit>
+    <unit id="privacyCookiesBandeau">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.html:155,158</note>
+      </notes>
+      <segment>
+        <source><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Bandeau d&apos;information</pc> : le poste retient que vous l&apos;avez lu, jusqu&apos;à la prochaine mise à jour de cette politique. </source>
+        <target><pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Information banner</pc>: the device remembers that you have read it, until the next update of this policy. </target>
       </segment>
     </unit>
     <unit id="privacyContactTitle">
@@ -9186,6 +8998,16 @@
         <target>Contact us</target>
       </segment>
     </unit>
+    <unit id="privacyTocCookies">
+      <notes>
+        <note category="location">src/app/features/privacy/privacy.component.ts:56</note>
+        <note category="description">privacy.toc.cookies</note>
+      </notes>
+      <segment>
+        <source>Cookies et stockage local</source>
+        <target>Cookies and local storage</target>
+      </segment>
+    </unit>
     <unit id="privacyTocDroits">
       <notes>
         <note category="location">src/app/features/privacy/privacy.component.ts:62</note>
@@ -9269,15 +9091,6 @@
       <segment>
         <source>Répondre à vos messages.</source>
         <target>Reply to your messages.</target>
-      </segment>
-    </unit>
-    <unit id="privacyUsagePreuve">
-      <notes>
-        <note category="location">src/app/features/privacy/privacy.component.html:61</note>
-      </notes>
-      <segment>
-        <source>Garder la preuve de votre choix de cookies.</source>
-        <target>Keep proof of your cookie choice.</target>
       </segment>
     </unit>
     <unit id="privacyUsageJournal">
@@ -9413,33 +9226,6 @@
       <segment>
         <source>Pour en savoir plus sur le traitement de vos données, consultez notre</source>
         <target>To learn more about how your data is processed, see our</target>
-      </segment>
-    </unit>
-    <unit id="termsDroitBody3">
-      <notes>
-        <note category="location">src/app/features/terms/terms.component.html:161,163</note>
-      </notes>
-      <segment>
-        <source>et nos</source>
-        <target>and our</target>
-      </segment>
-    </unit>
-    <unit id="termsDroitBody4">
-      <notes>
-        <note category="location">src/app/features/terms/terms.component.html:168,169</note>
-      </notes>
-      <segment>
-        <source>.</source>
-        <target>.</target>
-      </segment>
-    </unit>
-    <unit id="termsDroitCookiesLink">
-      <notes>
-        <note category="location">src/app/features/terms/terms.component.html:166,167</note>
-      </notes>
-      <segment>
-        <source>préférences cookies</source>
-        <target>cookie preferences</target>
       </segment>
     </unit>
     <unit id="termsDroitPrivacyLink">
@@ -9712,6 +9498,16 @@
       <segment>
         <source>Sommaire</source>
         <target>Contents</target>
+      </segment>
+    </unit>
+    <unit id="legalMetaLastUpdated">
+      <notes>
+        <note category="location">src/app/features/legal/legal-page.component.ts:38</note>
+        <note category="description">legal.hero.updated</note>
+      </notes>
+      <segment>
+        <source>Dernière mise à jour : <ph id="0" equiv="date" disp="dateDuSite(VERSIONS_DES_TEXTES_LEGAUX[this.texte()], this.locale)"/></source>
+        <target>Last updated: <ph id="0" equiv="date" disp="dateDuSite(VERSIONS_DES_TEXTES_LEGAUX[this.texte()], this.locale)"/></target>
       </segment>
     </unit>
     <unit id="termsTocObjet">
@@ -10645,16 +10441,6 @@
         <target>Student</target>
       </segment>
     </unit>
-    <unit id="syntheseScore">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:100,101</note>
-        <note category="meaning">synthese.score</note>
-      </notes>
-      <segment>
-        <source>Score</source>
-        <target>Score</target>
-      </segment>
-    </unit>
     <unit id="syntheseAvancement">
       <notes>
         <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:101,104</note>
@@ -10745,14 +10531,14 @@
         <target>What tripped up the class the most</target>
       </segment>
     </unit>
-    <unit id="syntheseSousSeuil">
+    <unit id="syntheseSeSontTrompes">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:174,177</note>
-        <note category="meaning">synthese.sousSeuil</note>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:148,152</note>
+        <note category="meaning">synthese.seSontTrompes</note>
       </notes>
       <segment>
-        <source>étudiants sous le seuil</source>
-        <target>students below threshold</target>
+        <source>étudiants s’y sont trompés</source>
+        <target>students got it wrong</target>
       </segment>
     </unit>
     <unit id="syntheseLibresTitre">
@@ -10763,6 +10549,16 @@
       <segment>
         <source>Réponses libres des étudiants</source>
         <target>Students' free-text answers</target>
+      </segment>
+    </unit>
+    <unit id="syntheseIncidentsTitre">
+      <notes>
+        <note category="location">src/app/features/cours/presentateur/cours-synthese.component.ts:200,202</note>
+        <note category="meaning">synthese.incidentsTitre</note>
+      </notes>
+      <segment>
+        <source> Incidents relevés sur les postes </source>
+        <target> Incidents recorded on the devices </target>
       </segment>
     </unit>
     <unit id="syntheseExport">
@@ -10841,6 +10637,33 @@
       <segment>
         <source>Le formateur vous a retiré de cette séance : adressez-vous à lui pour être réadmis.</source>
         <target>The trainer removed you from this session: ask them to readmit you.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusPosteSeanceComplete">
+      <notes>
+        <note category="meaning">cours.refusPosteSeanceComplete</note>
+      </notes>
+      <segment>
+        <source>La séance est complète : libérez une place avant de réadmettre ce poste.</source>
+        <target>The session is full: free a seat before readmitting this device.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusPosteGraineReprise">
+      <notes>
+        <note category="meaning">cours.refusPosteGraineReprise</note>
+      </notes>
+      <segment>
+        <source>Le sujet de ce poste a été attribué à un autre poste depuis son éviction : la réadmission est impossible.</source>
+        <target>This device’s paper went to another device after the removal: readmission is impossible.</target>
+      </segment>
+    </unit>
+    <unit id="coursRefusPosteActionImpossible">
+      <notes>
+        <note category="meaning">cours.refusPosteActionImpossible</note>
+      </notes>
+      <segment>
+        <source>L’action sur ce poste n’a pas abouti : réessayez.</source>
+        <target>The action on this device did not go through: try again.</target>
       </segment>
     </unit>
     <unit id="coursRefusRattachementImpossible">
@@ -11295,33 +11118,6 @@
         <target> The session notes and answers could not be reloaded: the display may be out of date. </target>
       </segment>
     </unit>
-    <unit id="presentateurStatMoyenne">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:279,280</note>
-      </notes>
-      <segment>
-        <source>Moyenne</source>
-        <target>Average</target>
-      </segment>
-    </unit>
-    <unit id="presentateurStatMediane">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:283,284</note>
-      </notes>
-      <segment>
-        <source>Médiane</source>
-        <target>Median</target>
-      </segment>
-    </unit>
-    <unit id="presentateurStatDispersion">
-      <notes>
-        <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:287,288</note>
-      </notes>
-      <segment>
-        <source>Dispersion (écart-type)</source>
-        <target>Spread (standard deviation)</target>
-      </segment>
-    </unit>
     <unit id="presentateurStatParticipation">
       <notes>
         <note category="location">src/app/features/cours/presentateur/cours-presentateur.component.ts:291,292</note>
@@ -11660,13 +11456,13 @@
         <target>free answers are not graded</target>
       </segment>
     </unit>
-    <unit id="presentateurNotation">
+    <unit id="presentateurRegleDeSuivi">
       <notes>
-        <note category="location">src/app/features/cours/presentateur/regle-de-notation.ts:14</note>
+        <note category="location">src/app/features/cours/presentateur/regle-de-notation.ts:49</note>
       </notes>
       <segment>
-        <source>Note /<ph id="0" equiv="noteMax" disp="regle.noteMax"/> relative aux <ph id="1" equiv="reference" disp="pourcentage(regle.partCohorteReference)"/> les plus actifs. Sous <ph id="2" equiv="validation" disp="pourcentage(regle.ratioSeuilValidation)"/> de cette référence, l’étudiant est signalé sous le seuil. <ph id="3" equiv="neSaitPas" disp="neSaitPas"/> ; une non-réponse vaut <ph id="4" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point ; <ph id="5" equiv="libres" disp="libres"/>. Une question est problématique sous <ph id="6" equiv="seuilProbleme" disp="pourcentage(regle.seuilQuestionProbleme)"/> de réussite.</source>
-        <target>Grade out of <ph id="0" equiv="noteMax" disp="regle.noteMax"/>, relative to the most active <ph id="1" equiv="reference" disp="pourcentage(regle.partCohorteReference)"/>. Below <ph id="2" equiv="validation" disp="pourcentage(regle.ratioSeuilValidation)"/> of that reference, the student is flagged below threshold. <ph id="3" equiv="neSaitPas" disp="neSaitPas"/>; a non-answer is worth <ph id="4" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point; <ph id="5" equiv="libres" disp="libres"/>. A question is problematic below <ph id="6" equiv="seuilProbleme" disp="pourcentage(regle.seuilQuestionProbleme)"/> success.</target>
+        <source>L’avancement d’un étudiant est la part des questions du barème auxquelles il a répondu. <ph id="0" equiv="neSaitPas" disp="neSaitPas"/> ; une non-réponse vaut <ph id="1" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point ; <ph id="2" equiv="libres" disp="libres"/>. Une question est problématique sous <ph id="3" equiv="seuilProbleme" disp="formaterPart(regle.seuilQuestionProbleme)"/> de réussite.</source>
+        <target>A student&apos;s progress is the share of the scored questions they answered. <ph id="0" equiv="neSaitPas" disp="neSaitPas"/>; a non-answer is worth <ph id="1" equiv="pointsNonReponse" disp="regle.pointsNonReponse"/> point; <ph id="2" equiv="libres" disp="libres"/>. A question is problematic below <ph id="3" equiv="seuilProbleme" disp="formaterPart(regle.seuilQuestionProbleme)"/> success.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.badge">
@@ -13476,6 +13272,33 @@
         <target>AI</target>
       </segment>
     </unit>
+    <unit id="auditFormConfirmationEnvoyee">
+      <notes>
+        <note category="location">src/app/features/growth-audit/growth-audit.component.ts:214</note>
+      </notes>
+      <segment>
+        <source>Vérifiez votre boîte e-mail : l’audit démarre dès que vous ouvrez le lien de confirmation reçu, valable 24 heures.</source>
+        <target>Check your inbox: the audit starts as soon as you open the confirmation link you received, valid for 24 hours.</target>
+      </segment>
+    </unit>
+    <unit id="auditFormConfirmee">
+      <notes>
+        <note category="location">src/app/features/growth-audit/growth-audit.component.ts:215</note>
+      </notes>
+      <segment>
+        <source>Adresse confirmée ! Scan IA lancé — audit humain envoyé sous 24h.</source>
+        <target>Address confirmed! AI scan started — human audit sent within 24h.</target>
+      </segment>
+    </unit>
+    <unit id="auditFormLienDeConfirmationRefuse">
+      <notes>
+        <note category="location">src/app/features/growth-audit/growth-audit.component.ts:216</note>
+      </notes>
+      <segment>
+        <source>Ce lien de confirmation est invalide ou a expiré : refaites la demande d’audit.</source>
+        <target>This confirmation link is invalid or has expired: please request the audit again.</target>
+      </segment>
+    </unit>
     <unit id="slideDeckFullscreenExit">
       <segment>
         <source>Quitter le mode présentation</source>
@@ -14492,8 +14315,8 @@
     </unit>
     <unit id="coursRuntimePulseMasque">
       <segment>
-        <source>Comptes affichés à partir de 5 réponses</source>
-        <target>Counts shown from 5 answers</target>
+        <source>Comptes affichés à partir de <ph id="0" equiv="seuil" disp="seuil"/> réponses</source>
+        <target>Counts shown from <ph id="0" equiv="seuil" disp="seuil"/> answers</target>
       </segment>
     </unit>
     <unit id="coursRuntimeProductionVide">
@@ -14966,8 +14789,50 @@
     </unit>
     <unit id="presentateurNotationBareme">
       <segment>
-        <source>sur <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> questions notées comptent (votes, numérique, classement, feuille et tableau) ; « je ne sais pas » compte aussi pour une production ; une production vide est refusée ; énigmes et rappels sont exclus.</source>
-        <target>over <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> graded questions count (votes, numeric, ranking, spreadsheet and table); “I don’t know” also counts for a production; an empty production is refused; puzzles and recalls are excluded.</target>
+        <source>sur <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> questions notées comptent (<ph id="1" equiv="typesNotes" disp="notes"/>) ; « je ne sais pas » compte aussi pour une production ; une production vide est refusée.</source>
+        <target>over <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> graded questions count (<ph id="1" equiv="typesNotes" disp="notes"/>); “I don’t know” also counts for a production; an empty production is refused.</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationExclus">
+      <segment>
+        <source>Ne comptent pas : <ph id="0" equiv="typesExclus" disp="exclus"/>.</source>
+        <target>Not counted: <ph id="0" equiv="typesExclus" disp="exclus"/>.</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeVote">
+      <segment>
+        <source>votes</source>
+        <target>votes</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeNumerique">
+      <segment>
+        <source>numérique</source>
+        <target>numeric</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeClassement">
+      <segment>
+        <source>classement</source>
+        <target>ranking</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeFeuille">
+      <segment>
+        <source>feuille</source>
+        <target>spreadsheet</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeTableau">
+      <segment>
+        <source>tableau</source>
+        <target>table</target>
+      </segment>
+    </unit>
+    <unit id="presentateurNotationTypeEnigme">
+      <segment>
+        <source>énigmes</source>
+        <target>puzzles</target>
       </segment>
     </unit>
     <unit id="slideGridImprimer">
@@ -15158,6 +15023,87 @@
       <segment>
         <source>Le lien n’a pas pu être renvoyé pour le moment : réessayez dans un instant.</source>
         <target>The link could not be resent right now: try again in a moment.</target>
+      </segment>
+    </unit>
+    <unit id="incidentOngletMasque">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:4</note>
+      </notes>
+      <segment>
+        <source>onglet masqué</source>
+        <target>tab hidden</target>
+      </segment>
+    </unit>
+    <unit id="incidentFenetreQuittee">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:5</note>
+      </notes>
+      <segment>
+        <source>fenêtre quittée</source>
+        <target>window left</target>
+      </segment>
+    </unit>
+    <unit id="incidentTentativeDeCopier">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:6</note>
+      </notes>
+      <segment>
+        <source>tentative de copier</source>
+        <target>copy attempt</target>
+      </segment>
+    </unit>
+    <unit id="incidentTentativeDeColler">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:7</note>
+      </notes>
+      <segment>
+        <source>tentative de coller</source>
+        <target>paste attempt</target>
+      </segment>
+    </unit>
+    <unit id="incidentMenuContextuel">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:8</note>
+      </notes>
+      <segment>
+        <source>menu contextuel ouvert</source>
+        <target>context menu opened</target>
+      </segment>
+    </unit>
+    <unit id="incidentRaccourciBloque">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:9</note>
+      </notes>
+      <segment>
+        <source>raccourci bloqué</source>
+        <target>shortcut blocked</target>
+      </segment>
+    </unit>
+    <unit id="incidentOutilsDeDeveloppement">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:10</note>
+      </notes>
+      <segment>
+        <source>outils de développement soupçonnés</source>
+        <target>developer tools suspected</target>
+      </segment>
+    </unit>
+    <unit id="incidentPageQuittee">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:11</note>
+      </notes>
+      <segment>
+        <source>page quittée ou rechargée</source>
+        <target>page left or reloaded</target>
+      </segment>
+    </unit>
+    <unit id="incidentReponseTropRapide">
+      <notes>
+        <note category="location">src/app/core/models/libelles-des-incidents.ts:12</note>
+      </notes>
+      <segment>
+        <source>réponse trop rapide</source>
+        <target>answer too fast</target>
       </segment>
     </unit>
     <unit id="formulaireRefusTropDeTentatives">

@@ -78,7 +78,7 @@ const BASE_DE_L_APPLICATION = '/fr/';
 const LIMITE_ATTEINTE = refusDuBack(429, 'Too Many Requests', { 'Retry-After': '120' });
 const ATTENTE_COMMUNE = 'Trop de tentatives en peu de temps : réessayez dans 2 min.';
 
-const CONFUSIONS_DE_LA_CLASSE: readonly ConfusionComptee[] = [
+const CONFUSIONS_DE_LA_CLASSE: ConfusionComptee[] = [
   { id: 'interet-simple', libelle: 'Intérêts simples au lieu de composés', nombre: 1 },
   { id: 'taux-annuel', libelle: 'Taux annuel appliqué à chaque mois', nombre: 3 },
 ];
@@ -559,8 +559,8 @@ describe('CoursPresentateurComponent', () => {
                 ],
               },
               corriges: [
-                { questionId: 'Q-VA-07', bonneReponse: '1 480,24', confusions: [] },
-                { questionId: 'Q-CAP-03', bonneReponse: 'b', confusions: [] },
+                { questionId: 'Q-VA-07', bonneReponse: '1 480,24', optionId: null, confusions: [] },
+                { questionId: 'Q-CAP-03', bonneReponse: 'b', optionId: 'b', confusions: [] },
               ],
             }),
           ],
@@ -600,7 +600,14 @@ describe('CoursPresentateurComponent', () => {
           ecrans: [
             buildEcranDeroule({
               ...buildVisualQuizSlide(),
-              corriges: [{ questionId: 'b2-s03-prediction', bonneReponse: 'o2', confusions: [] }],
+              corriges: [
+                {
+                  questionId: 'b2-s03-prediction',
+                  bonneReponse: 'o2',
+                  optionId: 'o2',
+                  confusions: [],
+                },
+              ],
             }),
           ],
         }),
@@ -626,7 +633,7 @@ describe('CoursPresentateurComponent', () => {
   describe('statistiques de la seance', () => {
     const PROBLEMATIQUE = buildStatistiquesSeance({ questionsProblemes: ['Q-CAP-03'] });
 
-    it('affiche participation, dispersion, questions problematiques par leur enonce et la regle de notation', async () => {
+    it('affiche participation, reussite, questions problematiques par leur enonce et la regle, sans aucune note', async () => {
       port.lireResultats.and.returnValue(
         of(buildRapportSeance({ notation: buildRegleNotation() })),
       );
@@ -638,14 +645,14 @@ describe('CoursPresentateurComponent', () => {
       const statistiques = texte(fixture, 'presentateur-statistiques');
       expect(statistiques).toContain('Participation');
       expect(statistiques).toMatch(/75\s?%/);
-      expect(statistiques).toContain('Dispersion');
-      expect(statistiques).toContain('12,5');
-      expect(statistiques).toContain('3,25');
-      expect(statistiques).not.toContain('12.5');
-      expect(statistiques).not.toContain('3.25');
+      expect(statistiques).toContain('Réussite');
+      expect(statistiques).toMatch(/60\s?%/);
+      expect(statistiques).not.toMatch(/Moyenne|Médiane|Dispersion/);
       expect(statistiques).toContain(buildVoteQuestion().enonce);
       expect(statistiques).not.toContain('Q-CAP-03');
-      expect(texte(fixture, 'presentateur-notation-tooltip')).toContain('Note /20 relative aux');
+      expect(texte(fixture, 'presentateur-notation-tooltip')).toContain(
+        'L’avancement d’un étudiant',
+      );
       expect(lire(fixture, 'presentateur-notation')).toBeNull();
       expect(cible(fixture, 'presentateur-notation-help').getAttribute('aria-describedby')).toBe(
         'presentateur-notation-tooltip',
@@ -667,7 +674,9 @@ describe('CoursPresentateurComponent', () => {
       await stabiliserLaVue(fixture);
 
       expect(texte(fixture, 'presentateur-statistiques')).toContain(buildVoteQuestion().enonce);
-      expect(texte(fixture, 'presentateur-notation-tooltip')).toContain('Note /20');
+      expect(texte(fixture, 'presentateur-notation-tooltip')).toContain(
+        'L’avancement d’un étudiant',
+      );
       expect(port.lireResultats).toHaveBeenCalledTimes(1);
     });
   });
@@ -849,7 +858,7 @@ describe('CoursPresentateurComponent', () => {
   it('compte les participants dans les resultats et non dans l etat du flux', async () => {
     const fixture = await ouvrirLaSeance();
 
-    diffuserSurLaVue(double, fixture, { participants: 99 });
+    diffuserSurLaVue(double, fixture, { revision: 99 });
 
     expect(texte(fixture, 'presentateur-participants-nombre')).toBe('0');
 
@@ -907,7 +916,7 @@ describe('CoursPresentateurComponent', () => {
       .toBeFalse();
     expect(texte(fixture, 'presentateur-notes')).toContain(deroule.ecrans[0].notes);
 
-    diffuserSurLaVue(double, fixture, { ecranCourant: 0, participants: 5 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 0, revision: 5 });
 
     expect(apercu(fixture)).toBe(ecran);
   });
@@ -1312,7 +1321,7 @@ describe('CoursPresentateurComponent', () => {
 
       expect(apercu(fixture).donneesFormateur()).toEqual({
         ...annexe,
-        reponses: { 'Q-CAP-03': { cible: '1 480,24', optionId: null } },
+        reponses: { 'Q-CAP-03': { cible: '1 480,24', optionId: 'b' } },
       });
       expect(apercu(fixture).direct()).toEqual({
         pilotage: { phase: 'discussion' },
@@ -1470,7 +1479,7 @@ describe('CoursPresentateurComponent', () => {
             servi.ecrans,
             vuesDuPupitre(servi),
             {
-              participants: 2,
+              revision: 2,
             },
           );
         },
@@ -1487,7 +1496,7 @@ describe('CoursPresentateurComponent', () => {
           const fixture = await ouvrirLeCoursServi(servi);
 
           await attendreChaqueCalqueEntierDansLaToile(double, fixture, servi.ecrans, {
-            participants: 2,
+            revision: 2,
           });
         },
         DELAI_DE_MONTAGE_MS,

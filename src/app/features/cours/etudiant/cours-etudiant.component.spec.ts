@@ -39,8 +39,8 @@ import {
   saveIdentity,
 } from '../../../../cours/runtime/core/identity';
 import { enqueue, pending } from '../../../../cours/runtime/core/queue';
-import { enqueueFreeResponse } from '../../../shared/slides/interactions/slide-reflection/free-response.queue';
-import { ReponsesLibresService } from '../../../shared/slides/session/reponses-libres.service';
+import { EnvoisDeSeanceService } from '../../../shared/slides/session/envois-de-seance.service';
+import { buildReponseLibreEnFile } from '../../../../testing/factories/queue.factory';
 import type { EtatSession } from '../../../../cours/runtime/core/sync';
 import {
   buildEcran,
@@ -513,6 +513,13 @@ describe('CoursEtudiantComponent', () => {
     );
   });
 
+  it('F03 · ne construit aucun retour vers un cours qui n est pas en seance', async () => {
+    await TestBed.inject(Router).navigateByUrl('/?cours=cours-inconnu');
+    const fixture = monter();
+
+    expect(lire(fixture, 'etudiant-connexion-formateur')).toBeNull();
+  });
+
   it('F03 · ne construit aucun retour depuis un cours vise mal forme', async () => {
     await TestBed.inject(Router).navigateByUrl('/?cours=..%2F..%2Fadmin');
     const fixture = monter();
@@ -769,7 +776,7 @@ describe('CoursEtudiantComponent', () => {
       of(buildRattachement({ sessionId: SESSION, jeton: JETON, ecranCourant: 1 })),
     );
     const fixture = await rattacher();
-    diffuserSurLaVue(double, fixture, { ecranCourant: 1, participants: 11 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 1, revision: 11 });
     const avant = ecranDe(fixture).componentInstance as SlideActivityComponent;
 
     expect(avant.slide()).toBe(sujet.ecrans[1]);
@@ -779,7 +786,7 @@ describe('CoursEtudiantComponent', () => {
       .withContext('etudiant est un role du runtime, pas un role ARIA')
       .toBeFalse();
 
-    diffuserSurLaVue(double, fixture, { ecranCourant: 1, participants: 12 });
+    diffuserSurLaVue(double, fixture, { ecranCourant: 1, revision: 12 });
 
     expect(ecranDe(fixture).componentInstance).toBe(avant);
     expect(ecranAffiche(fixture)).toBe(sujet.ecrans[1]);
@@ -859,20 +866,42 @@ describe('CoursEtudiantComponent', () => {
 
     window.dispatchEvent(new Event('blur'));
     await repondre(fixture, REPONSE_NUMERIQUE);
-    expect(port.signalerIncidents.calls.mostRecent().args[2][0].type).toBe('blur');
+    expect(port.signalerIncidents.calls.mostRecent().args[2][0].type).toBe('window_blur');
 
     diffuserSurLaVue(double, fixture, { ecranCourant: 1 });
 
     expect(copieBloquee()).toBeTrue();
   });
 
-  it('rend le copier a la page quand le poste quitte un ecran d examen', async () => {
+  const rattacherSurUnEcranDExamen = () => {
     sujet = {
       ...sujet,
       ecrans: [ecranAuRegime('ecran-examen', 'examen'), ...sujet.ecrans.slice(1)],
     };
     port.lireSujet.and.returnValue(of(sujet));
-    const fixture = await rattacherALaSeanceEnCours();
+    return rattacherALaSeanceEnCours();
+  };
+
+  it('remonte le contexte de l incident au contrat, pas seulement son type', async () => {
+    const fixture = await rattacherSurUnEcranDExamen();
+
+    document.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 's', ctrlKey: true, cancelable: true }),
+    );
+    await repondre(fixture, REPONSE_NUMERIQUE);
+
+    expect(port.signalerIncidents.calls.mostRecent().args[2]).toEqual([
+      { type: 'blocked_shortcut', contexte: { touche: 's' }, horodatage: jasmine.any(String) },
+      {
+        type: 'fast_answer',
+        contexte: { dureeMs: jasmine.any(Number) },
+        horodatage: jasmine.any(String),
+      },
+    ]);
+  });
+
+  it('rend le copier a la page quand le poste quitte un ecran d examen', async () => {
+    const fixture = await rattacherSurUnEcranDExamen();
     const pendantLaSeance = copieBloquee();
 
     fixture.destroy();
@@ -1183,7 +1212,7 @@ describe('CoursEtudiantComponent', () => {
         declencheur: 'la prochaine action du formateur',
         depuisUneBrique: false,
         declencher: (fixture, etatSuivant) =>
-          diffuserPuisStabiliser(fixture, { ...etatSuivant, participants: 14 }),
+          diffuserPuisStabiliser(fixture, { ...etatSuivant, revision: 14 }),
       },
       {
         declencheur: 'le retour du reseau',
@@ -1801,7 +1830,7 @@ describe('CoursEtudiantComponent', () => {
     it('revient au reseau quand la reponse retenue passe au vidage et qu un envoi en panne reste en file', async () => {
       const fixture = await mettreEnFileUneRetenueEtUnePanne(of(REUSSITE), enPanne());
 
-      await diffuserPuisStabiliser(fixture, { participants: 14 });
+      await diffuserPuisStabiliser(fixture, { revision: 14 });
 
       expect(pending().map(({ questionId }) => questionId)).toEqual([REPONSE_VOTE.questionId]);
       expect(texteDeLaFile(fixture)).toBe(ATTENTE_DU_RESEAU);
@@ -1834,7 +1863,7 @@ describe('CoursEtudiantComponent', () => {
       const fixture = await rattacherALaSeanceEnCours();
       await repondre(fixture, REPONSE_NUMERIQUE);
 
-      await diffuserPuisStabiliser(fixture, { participants: 14 });
+      await diffuserPuisStabiliser(fixture, { revision: 14 });
 
       expect(port.repondre).toHaveBeenCalledTimes(2);
       expect(pending().length).toBe(0);
@@ -1896,7 +1925,7 @@ describe('CoursEtudiantComponent', () => {
 
     lire(fixture, 'etudiant-suivant')?.click();
     fixture.detectChanges();
-    diffuserSurLaVue(double, fixture, { ...libre, participants: 13 });
+    diffuserSurLaVue(double, fixture, { ...libre, revision: 13 });
 
     expect(ecranAffiche(fixture)).toBe(sujet.ecrans[2]);
 
@@ -2147,7 +2176,7 @@ describe('CoursEtudiantComponent', () => {
 
       await rattacherALaSeanceEnCours();
 
-      expect(TestBed.inject(ReponsesLibresService).texteGarde(SESSION, 'reflexion-1')).toBe(
+      expect(TestBed.inject(EnvoisDeSeanceService).texteGarde(SESSION, 'reflexion-1')).toBe(
         'Gardée avant le rechargement.',
       );
     });
@@ -3012,15 +3041,16 @@ describe('CoursEtudiantComponent', () => {
         nom: 'Dubois',
         email: 'lea.dubois@example.com',
       });
-      await enqueueFreeResponse({
-        key: `${identite.studentKey}:${SESSION}:ecran-3:reflexion-3`,
-        sessionId: SESSION,
-        studentKey: identite.studentKey,
-        screenId: 'ecran-3',
-        activityId: 'reflexion-3',
-        response: 'Ecrite en avance.',
-        dureeMs: 1500,
-      });
+      enqueue(
+        buildReponseLibreEnFile({
+          sessionId: SESSION,
+          studentKey: identite.studentKey,
+          screenId: 'ecran-3',
+          questionId: 'reflexion-3',
+          valeur: 'Ecrite en avance.',
+          dureeMs: 1500,
+        }),
+      );
       return rattacher();
     }
 

@@ -1,3 +1,5 @@
+import type { AvancementDAudit } from '../../../../contrat/types.gen';
+
 export interface AuditSectionBadge {
   key: string;
   label: string;
@@ -67,51 +69,36 @@ export function sectionBadgeClass(status: string): string {
   }
 }
 
-export function extractString(value: unknown): string {
-  return typeof value === 'string' ? value.trim() : '';
-}
+type StatutDeSection = Extract<AvancementDAudit, { section: string }>['sectionStatus'];
 
-export function extractStringArray(value: unknown): string[] {
-  if (!Array.isArray(value)) return [];
-  return value.map((entry) => extractString(entry)).filter((entry) => entry.length > 0);
-}
+const SECTIONS = [
+  'summary',
+  'executiveSection',
+  'prioritySection',
+  'executionSection',
+  'clientCommsSection',
+] as const;
 
-export function buildSectionBadges(statuses: Record<string, unknown>): AuditSectionBadge[] {
-  const sections = [
-    'summary',
-    'executiveSection',
-    'prioritySection',
-    'executionSection',
-    'clientCommsSection',
-  ];
-
-  return sections
-    .map((key) => ({
-      key,
-      label: formatSectionLabel(key),
-      status: extractString(statuses[key]) || 'pending',
-    }))
-    .filter((entry) => entry.status !== 'pending');
+export function buildSectionBadges(
+  statuses: Readonly<Record<string, StatutDeSection>>,
+): AuditSectionBadge[] {
+  return SECTIONS.flatMap((key) =>
+    Object.hasOwn(statuses, key)
+      ? [{ key, label: formatSectionLabel(key), status: statuses[key] }]
+      : [],
+  );
 }
 
 export function formatProgressStep(event: {
   step?: string | null;
-  details?: Record<string, unknown>;
+  details?: AvancementDAudit;
 }): string {
   const base = event.step ?? $localize`:@@auditProgressDefaultStep:Audit en cours...`;
-  if (/\(\d+\/\d+\)/.test(base)) {
-    return base;
-  }
   const details = event.details;
-  if (!details) return base;
-
-  const done = Number(details['done']);
-  const total = Number(details['total']);
-  if (!Number.isFinite(done) || !Number.isFinite(total) || total <= 0) {
+  if (/\(\d+\/\d+\)/.test(base) || details === undefined || details.total <= 0) {
     return base;
   }
-
-  return `${base} (${Math.max(0, done)}/${Math.max(1, total)})`;
+  return `${base} (${Math.max(0, details.done)}/${details.total})`;
 }
 
 export function formatSummaryText(summaryText: string | null | undefined): string {

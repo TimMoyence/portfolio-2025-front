@@ -9,12 +9,13 @@ import {
 import { cibleMarque, lireMarque as lire } from '../../../../../testing/marqueurs-dom';
 import { setupTestBed } from '../../../../../testing/setup-test-bed';
 import type { FormationsPort, ParticipantDeSeance } from '../../../../core/ports/formations.port';
-import { FORMATIONS_PORT } from '../../../../core/ports/formations.port';
+import { ActionSurLePosteRefusee, FORMATIONS_PORT } from '../../../../core/ports/formations.port';
 import { PanneauParticipantsComponent } from './panneau-participants.component';
 
 type Fixture = ComponentFixture<PanneauParticipantsComponent>;
 
 const SESSION = 'seance-1';
+const PREMIER = buildParticipantDeSeance().id;
 
 describe('PanneauParticipantsComponent', () => {
   let port: jasmine.SpyObj<FormationsPort>;
@@ -115,7 +116,7 @@ describe('PanneauParticipantsComponent', () => {
 
     await cliquerLePremier(fixture, 'activite-evincer');
 
-    expect(port.evincerParticipant).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
+    expect(port.evincerParticipant).toHaveBeenCalledOnceWith(SESSION, PREMIER);
     expect(evinces(fixture)).toEqual(['true', 'false']);
   });
 
@@ -129,19 +130,25 @@ describe('PanneauParticipantsComponent', () => {
 
     await cliquerLePremier(fixture, 'activite-readmettre');
 
-    expect(port.readmettreParticipant).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
+    expect(port.readmettreParticipant).toHaveBeenCalledOnceWith(SESSION, PREMIER);
     expect(evinces(fixture)).toEqual(['false', 'false']);
   });
 
-  it('alerte quand la readmission est refusee, la place ayant ete reprise', async () => {
+  it('dit pourquoi la readmission est refusee, sans perdre la liste', async () => {
     const fixture = await afficherDeuxParticipants();
     await cliquerLePremier(fixture, 'activite-evincer');
-    port.readmettreParticipant.and.returnValue(throwError(() => new Error('seance complete')));
+    port.readmettreParticipant.and.returnValue(
+      throwError(() => new ActionSurLePosteRefusee('seance-complete', 409)),
+    );
 
     await cliquerLePremier(fixture, 'activite-readmettre');
 
-    expect(lire(fixture, 'activite-participants-echec')?.getAttribute('role')).toBe('alert');
-    expect(lire(fixture, 'activite-participants-masquer')).not.toBeNull();
+    expect(lire(fixture, 'activite-action-refusee')?.getAttribute('role')).toBe('alert');
+    expect(lire(fixture, 'activite-action-refusee')?.textContent).toContain(
+      'La séance est complète',
+    );
+    expect(lire(fixture, 'activite-participants-echec')).toBeNull();
+    expect(evinces(fixture)).toEqual(['true', 'false']);
   });
 
   it('S1 · libere le poste d un participant pour qu il reprenne sa place depuis un autre appareil', async () => {
@@ -149,7 +156,7 @@ describe('PanneauParticipantsComponent', () => {
 
     await cliquerLePremier(fixture, 'activite-liberer');
 
-    expect(port.libererPoste).toHaveBeenCalledOnceWith(SESSION, 'participant-1');
+    expect(port.libererPoste).toHaveBeenCalledOnceWith(SESSION, PREMIER);
     expect(lire(fixture, 'activite-poste-libere')?.getAttribute('role')).toBe('status');
     expect(lire(fixture, 'activite-poste-libere')?.textContent).toContain('Lea Dubois');
     expect(evinces(fixture)).toEqual(['false', 'false']);
@@ -160,7 +167,7 @@ describe('PanneauParticipantsComponent', () => {
     await cliquerLePremier(fixture, 'activite-evincer');
 
     const ligne = (fixture.nativeElement as HTMLElement).querySelector(
-      '[data-participant="participant-1"]',
+      `[data-participant="${PREMIER}"]`,
     );
     expect(ligne?.querySelector('[data-testid="activite-liberer"]')).toBeNull();
   });
@@ -171,7 +178,8 @@ describe('PanneauParticipantsComponent', () => {
 
     await cliquerLePremier(fixture, 'activite-liberer');
 
-    expect(lire(fixture, 'activite-participants-echec')?.getAttribute('role')).toBe('alert');
+    expect(lire(fixture, 'activite-action-refusee')?.textContent).toContain('n’a pas abouti');
+    expect(lire(fixture, 'activite-participants-echec')).toBeNull();
     expect(lire(fixture, 'activite-poste-libere')).toBeNull();
   });
 

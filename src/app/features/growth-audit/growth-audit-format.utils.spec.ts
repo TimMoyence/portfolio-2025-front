@@ -1,7 +1,6 @@
+import type { AvancementDAudit } from '../../../../contrat/types.gen';
 import {
   buildSectionBadges,
-  extractString,
-  extractStringArray,
   formatPhaseLabel,
   formatProgressStep,
   formatSectionLabel,
@@ -10,6 +9,14 @@ import {
   formatTaskLabel,
   sectionBadgeClass,
 } from './growth-audit-format.utils';
+
+const synthese = (done: number, total: number): AvancementDAudit => ({
+  phase: 'synthesis',
+  iaTask: 'synthesis',
+  iaSubTask: 'summary',
+  done,
+  total,
+});
 
 describe('growth-audit-format.utils', () => {
   describe('formatPhaseLabel', () => {
@@ -114,32 +121,9 @@ describe('growth-audit-format.utils', () => {
     });
   });
 
-  describe('extractString', () => {
-    it('devrait retourner une chaine vide pour une valeur non-string', () => {
-      expect(extractString(null)).toBe('');
-      expect(extractString(42)).toBe('');
-    });
-
-    it('devrait trim la chaine', () => {
-      expect(extractString('  hello  ')).toBe('hello');
-    });
-  });
-
-  describe('extractStringArray', () => {
-    it('devrait retourner un tableau vide pour une valeur non-array', () => {
-      expect(extractStringArray(null)).toEqual([]);
-      expect(extractStringArray('text')).toEqual([]);
-    });
-
-    it('devrait filtrer les chaines vides', () => {
-      expect(extractStringArray(['a', '', '  ', 'b'])).toEqual(['a', 'b']);
-    });
-  });
-
   describe('buildSectionBadges', () => {
-    it('devrait exclure les sections pending', () => {
-      const result = buildSectionBadges({ summary: 'pending' });
-      expect(result.length).toBe(0);
+    it('ne montre que les sections dont le statut est servi', () => {
+      expect(buildSectionBadges({})).toEqual([]);
     });
 
     it('devrait inclure les sections non-pending', () => {
@@ -160,12 +144,7 @@ describe('growth-audit-format.utils', () => {
     });
 
     it('devrait ajouter le compteur depuis details', () => {
-      expect(
-        formatProgressStep({
-          step: 'Scan',
-          details: { done: 3, total: 10 },
-        }),
-      ).toBe('Scan (3/10)');
+      expect(formatProgressStep({ step: 'Scan', details: synthese(3, 10) })).toBe('Scan (3/10)');
     });
 
     it('devrait retourner le step sans compteur si pas de details', () => {
@@ -176,22 +155,8 @@ describe('growth-audit-format.utils', () => {
       expect(formatProgressStep({})).toBe('Audit en cours...');
     });
 
-    it('devrait ignorer les details avec valeurs non-numeriques', () => {
-      expect(
-        formatProgressStep({
-          step: 'Scan',
-          details: { done: 'abc', total: 'def' },
-        }),
-      ).toBe('Scan');
-    });
-
     it('devrait ignorer les details avec total a zero', () => {
-      expect(
-        formatProgressStep({
-          step: 'Scan',
-          details: { done: 0, total: 0 },
-        }),
-      ).toBe('Scan');
+      expect(formatProgressStep({ step: 'Scan', details: synthese(0, 0) })).toBe('Scan');
     });
   });
 

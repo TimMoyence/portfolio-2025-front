@@ -1,4 +1,4 @@
-<app-legal-page [kicker]="hero.kicker" [updated]="hero.updated" [toc]="toc">
+<app-legal-page [kicker]="kicker" texte="conditions" [toc]="toc">
   <ng-container title i18n="@@termsHeroTitle"
     >Conditions générales &amp; <em>mentions légales</em>.</ng-container
   >
@@ -114,10 +114,7 @@
       >&ngsp;
       <a class="inl" routerLink="/privacy" i18n="@@termsDroitPrivacyLink"
         >politique de confidentialité</a
-      >&ngsp; <span i18n="@@termsDroitBody3">et nos</span>&ngsp;
-      <a class="inl" routerLink="/cookie-settings" i18n="@@termsDroitCookiesLink"
-        >préférences cookies</a
-      ><span i18n="@@termsDroitBody4">.</span>
+      >.
     </p>
   </section>
 </app-legal-page>

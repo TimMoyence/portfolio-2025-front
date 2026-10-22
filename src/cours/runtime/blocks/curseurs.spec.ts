@@ -7,6 +7,7 @@ const PARAMETRE = {
   max: 100,
   pas: 5,
   defaut: 20,
+  positions: Array.from({ length: 21 }, (_, rang) => 5 * rang),
 };
 
 function racineAvec(html: string): ShadowRoot {
@@ -36,14 +37,6 @@ describe('curseur', () => {
     expect(champ?.getAttribute('aria-label')).toBe('Réglez le taux');
     expect(champ?.className).toBe('fp-plot__curseur');
   });
-
-  it('laisse le pas libre quand aucun pas n’est imposé', () => {
-    const racine = racineAvec(
-      String(curseur('fp-plot', { ...PARAMETRE, pas: 0 }, 35, 'Réglez le taux')),
-    );
-
-    expect(racine.querySelector('input')?.getAttribute('step')).toBe('any');
-  });
 });
 
 describe('brancherCurseurs', () => {
@@ -52,7 +45,7 @@ describe('brancherCurseurs', () => {
     const racine = racineAvec(
       [
         String(curseur('fp-plot', PARAMETRE, 35, 'Taux')),
-        String(curseur('fp-plot', { ...PARAMETRE, cle: 'volume', pas: 0 }, 10, 'Volume')),
+        String(curseur('fp-plot', { ...PARAMETRE, cle: 'volume', pas: 0.5 }, 10, 'Volume')),
       ].join(''),
     );
 

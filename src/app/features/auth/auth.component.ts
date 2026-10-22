@@ -21,13 +21,9 @@ import type { AuthPort } from '../../core/ports/auth.port';
 import { AUTH_PORT } from '../../core/ports/auth.port';
 import { loadGoogleGis } from '../../core/utils/google-gis';
 import { handleFormSubmit, INFORMATIONS_REFUSEES } from '../../shared/utils/form-submit.utils';
+import { zInscriptionDto, zLoginDto } from '../../../../contrat/zod.gen';
 import type { Bornes } from '../../shared/utils/regles-de-saisie';
-import {
-  BORNES_D_UN_MOT_DE_PASSE_SAISI,
-  BORNES_D_UN_NOM,
-  BORNES_D_UN_TELEPHONE,
-  REGLE_D_UN_MOT_DE_PASSE,
-} from '../../shared/utils/regles-de-saisie';
+import { bornesDu, REGLE_D_UN_MOT_DE_PASSE } from '../../shared/utils/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { SvgIconComponent } from '../../shared/components/svg-icon.component';
 import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
@@ -37,6 +33,8 @@ import { MotDePasseNeufDirective } from '../../shared/directives/mot-de-passe-ne
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
+
+const INSCRIPTION = zInscriptionDto.shape;
 
 const IDENTIFIANTS_REFUSES = $localize`:@@authLoginErreurIdentifiants:Adresse e-mail ou mot de passe incorrect.`;
 
@@ -129,14 +127,14 @@ export class AuthComponent {
       label: $localize`:auth.signup.field.firstName|Signup field label@@authSignupFieldFirstName:Prénom`,
       type: 'text',
       required: true,
-      bornes: BORNES_D_UN_NOM,
+      bornes: bornesDu(INSCRIPTION.firstName),
     },
     {
       key: 'lastName',
       label: $localize`:auth.signup.field.lastName|Signup field label@@authSignupFieldLastName:Nom`,
       type: 'text',
       required: true,
-      bornes: BORNES_D_UN_NOM,
+      bornes: bornesDu(INSCRIPTION.lastName),
     },
     {
       key: 'email',
@@ -164,7 +162,7 @@ export class AuthComponent {
       label: $localize`:auth.signup.field.phone|Signup field label@@authSignupFieldPhone:Téléphone`,
       type: 'tel',
       required: false,
-      bornes: BORNES_D_UN_TELEPHONE,
+      bornes: bornesDu(INSCRIPTION.phone.unwrap().unwrap()),
       format: 'telephone',
     },
   ];
@@ -184,7 +182,7 @@ export class AuthComponent {
       label: $localize`:auth.login.field.password|Login field label@@authLoginFieldPassword:Mot de passe`,
       type: 'password',
       required: true,
-      bornes: BORNES_D_UN_MOT_DE_PASSE_SAISI,
+      bornes: bornesDu(zLoginDto.shape.password, true),
     },
   ];
 

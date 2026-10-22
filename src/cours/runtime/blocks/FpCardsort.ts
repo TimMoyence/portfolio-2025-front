@@ -1,3 +1,4 @@
+import type { AttenduClassementPresentateurResponseDto } from '../../../../contrat/types.gen';
 import { dansUnDefileur } from '../core/defileur';
 import { estPositif } from '../core/valeurs';
 import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
@@ -19,11 +20,7 @@ export interface CardsortPlanPublic extends ContenuDeBrique {
   readonly dureeJeuMs?: number;
 }
 
-interface AttenduFormateur {
-  readonly carteId: string;
-  readonly categorieId: string;
-  readonly justification: string;
-}
+type AttenduFormateur = AttenduClassementPresentateurResponseDto;
 
 type Foyer = 'carte' | 'cible' | null;
 

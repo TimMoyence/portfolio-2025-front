@@ -1,17 +1,25 @@
-import { formatPercent } from '@angular/common';
-import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { ResultatQuestion } from '../../../../cours/content/types';
-import { resultatsServis } from '../../../../cours/runtime/core/sync';
+import { formaterPart } from '../../../../cours/runtime/core/typographie';
+import { buildResultatQuestion } from '../../../../testing/factories/rapport-seance.factory';
 import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
-import { reponsesServiesPar } from '../../../../testing/fixtures/reponses-servies';
 import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
 import { questionsDuPanneau } from './questions-du-panneau';
 
-const RESULTATS_DU_PUPITRE = reponsesServiesPar(
-  'GET /api/v1/portfolio25/formations/sessions/:id/presenter-stream resultats',
-).flatMap((corps) => resultatsServis.parse(corps).questions);
+const RESULTATS_DU_PUPITRE = INSTANTANES_DES_COURS_SERVIS.flatMap(([, { deroule }]) =>
+  deroule.ecrans.flatMap((ecran) =>
+    questionsDuPanneau(ecran).map(({ corrige }) =>
+      buildResultatQuestion({
+        questionId: corrige.questionId,
+        ecranId: ecran.id,
+        part: 0.25,
+        sousLeSeuil: true,
+        remediation: { confusionId: 'servie', ecranId: deroule.ecrans.at(-1)?.id ?? '' },
+      }),
+    ),
+  ),
+);
 
 function contraireDe(servi: ResultatQuestion, dernierEcran: string): ResultatQuestion {
   return {
@@ -27,7 +35,6 @@ function contraireDe(servi: ResultatQuestion, dernierEcran: string): ResultatQue
 describe('CoursPanneauQuestionComponent', () => {
   it('Z1-D02 · suit la part, le seuil et la remédiation servis par le back, même contraires à un recalcul, sur tous les résultats servis', () => {
     const fixture = TestBed.createComponent(CoursPanneauQuestionComponent);
-    const locale = TestBed.inject(LOCALE_ID);
     fixture.componentRef.setInput('participants', 0);
     fixture.componentRef.setInput('pilotageBloque', false);
     const emises: number[] = [];
@@ -68,7 +75,7 @@ describe('CoursPanneauQuestionComponent', () => {
             ],
             servi: [
               resultat.sousLeSeuil ? 'sous-le-seuil' : null,
-              formatPercent(resultat.part, locale),
+              formaterPart(resultat.part),
               rang === -1 ? null : rang,
             ],
           };

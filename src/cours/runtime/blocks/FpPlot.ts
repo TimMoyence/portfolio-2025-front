@@ -1,8 +1,8 @@
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml, VIDE } from '../core/html';
 import { enFrancais, lierLesNombres } from '../core/typographie';
-import { bornerEntre, estTexteNonVide } from '../core/valeurs';
-import { type Reglages, borner } from './animation';
+import { bornerEntre, estNombreFini, estTexteNonVide } from '../core/valeurs';
+import { type Reglages } from './animation';
 import { type DefinitionReglable, FpReglable, arrondi, copierLeReglable } from './reglable';
 import { plafondDe, plancherDe } from './curseurs';
 import { echelle, jalons } from './echelle';
@@ -270,12 +270,9 @@ export class FpPlot extends FpReglable<PlotDefinition> {
     return Object.fromEntries(
       (this.interne?.parametres ?? []).map((parametre) => [
         parametre.cle,
-        borner(
-          parametre,
-          Object.hasOwn(prereglage.valeurs, parametre.cle)
-            ? prereglage.valeurs[parametre.cle]
-            : parametre.defaut,
-        ),
+        Object.hasOwn(prereglage.valeurs, parametre.cle)
+          ? prereglage.valeurs[parametre.cle]
+          : parametre.defaut,
       ]),
     );
   }
@@ -306,9 +303,7 @@ export class FpPlot extends FpReglable<PlotDefinition> {
         serie,
         echantillons: definition.abscisses.flatMap((abscisse, rang) => {
           const ordonnee = ordonnees[rang];
-          return typeof ordonnee === 'number' && Number.isFinite(ordonnee)
-            ? [{ abscisse, ordonnee }]
-            : [];
+          return estNombreFini(ordonnee) ? [{ abscisse, ordonnee }] : [];
         }),
       };
     });

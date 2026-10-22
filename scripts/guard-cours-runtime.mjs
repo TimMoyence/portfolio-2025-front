@@ -13,6 +13,7 @@ const RACINE_APP = 'src/app';
 const PREFIXE_COURS = `${RACINE_COURS}/`;
 const PREFIXE_CONTENU = `${RACINE_COURS}/content/`;
 const PREFIXE_TESTS = 'src/testing/';
+const PREFIXE_CONTRAT = 'contrat/';
 const PREFIXE_PUPITRE = `${RACINE_APP}/features/cours/presentateur/`;
 const PREFIXES_RENDU_ETUDIANT = [
   `${RACINE_APP}/shared/slides/`,
@@ -151,7 +152,7 @@ function cibleRelative(fichier, specification) {
  */
 function sortDeCours(fichier, specification) {
   const cible = cibleRelative(fichier, specification);
-  if (cible === null || cible.startsWith(PREFIXE_COURS)) {
+  if (cible === null || cible.startsWith(PREFIXE_COURS) || cible.startsWith(PREFIXE_CONTRAT)) {
     return false;
   }
   return !(estFichierDeTest(fichier) && cible.startsWith(PREFIXE_TESTS));

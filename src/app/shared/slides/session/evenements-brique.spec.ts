@@ -1,3 +1,4 @@
+import { zSubmitAnswerRequestDto } from '../../../../../contrat/zod.gen';
 import { buildDetailDeBrique } from '../../../../testing/factories/evenements-brique.factory';
 import type { EvenementBrique } from './contrat-hote';
 import { EVENEMENTS_DES_BRIQUES, evenementsDe } from './evenements-brique';
@@ -31,10 +32,24 @@ describe('evenementsDe : traduction des evenements de brique vers le contrat hot
 
   it('traduit une reponse numerique ou un vote en reponse de question', () => {
     expect(traduire('fp-numeric-submit')).toEqual([
-      { kind: 'reponse', screenId: ECRAN, questionId: 'Q-VA-07', valeur: 1480.24, dureeMs: 1200 },
+      {
+        kind: 'reponse',
+        screenId: ECRAN,
+        questionId: 'Q-VA-07',
+        valeur: '1 480,24',
+        dureeMs: 1200,
+      },
     ]);
     expect(traduire('fp-spaced-reponse')).toEqual([
       { kind: 'reponse', screenId: ECRAN, questionId: 'Q-ACT-01', valeur: 'act-a', dureeMs: 1200 },
+    ]);
+  });
+
+  it('plafonne la duree a la borne du contrat plutot que de faire refuser la reponse', () => {
+    const plafond = zSubmitAnswerRequestDto.shape.dureeMs.maxValue;
+
+    expect(traduire('fp-vote-submit', { dureeMs: 6 * 60 * 60 * 1000 })).toEqual([
+      jasmine.objectContaining({ kind: 'reponse', dureeMs: plafond }),
     ]);
   });
 
@@ -211,7 +226,7 @@ describe('evenementsDe : traduction des evenements de brique vers le contrat hot
 
   it('transmet a la seance une duree nulle, celle d un poste dont l horloge a recule', () => {
     expect(traduire('fp-numeric-submit', { dureeMs: 0 })).toEqual([
-      { kind: 'reponse', screenId: ECRAN, questionId: 'Q-VA-07', valeur: 1480.24, dureeMs: 0 },
+      { kind: 'reponse', screenId: ECRAN, questionId: 'Q-VA-07', valeur: '1 480,24', dureeMs: 0 },
     ]);
   });
 });

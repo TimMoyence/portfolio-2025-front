@@ -1,6 +1,7 @@
 import { PHASES_DE_VOTE, type MetadonneesBrique, type VotePhase } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { lignesDeCalculHtml } from './calculs';
+import { formaterPart } from '../core/typographie';
 import {
   avecJeNeSaisPas,
   ID_JE_NE_SAIS_PAS,
@@ -258,7 +259,7 @@ export class FpVote extends FpVerdicts {
   }
 
   private toutesLesOptions(question: VoteQuestionPublique): OptionPublique[] {
-    return avecJeNeSaisPas(question.options, this.texte('je-ne-sais-pas'));
+    return avecJeNeSaisPas(question.options);
   }
 
   private bouton(question: VoteQuestionPublique, { id, libelle }: OptionPublique): EscapedHtml {
@@ -298,8 +299,8 @@ export class FpVote extends FpVerdicts {
     return safeHtml`<div class="fp-encadre fp-vote__revelation" data-testid="revelation"><p class="fp-vote__titre">${escapeHtml(revelation.titre)}</p><ul>${revelation.lignes.map(elementDeListe)}</ul></div>`;
   }
 
-  private barre({ id, libelle }: OptionPublique, pourcentage: number): EscapedHtml {
-    return safeHtml`<div class="fp-vote__barre" data-testid="barre" data-option="${escapeHtml(id)}"><span class="fp-vote__barre__libelle" data-testid="barre-libelle">${escapeHtml(libelle)}</span><span class="fp-vote__barre__piste"><span class="fp-vote__barre__valeur" data-testid="barre-valeur" style="width:${pourcentage}%"></span></span><span class="fp-vote__barre__pourcentage">${pourcentage}%</span></div>`;
+  private barre({ id, libelle }: OptionPublique, partDesVotes: number): EscapedHtml {
+    return safeHtml`<div class="fp-vote__barre" data-testid="barre" data-option="${escapeHtml(id)}"><span class="fp-vote__barre__libelle" data-testid="barre-libelle">${escapeHtml(libelle)}</span><span class="fp-vote__barre__piste"><span class="fp-vote__barre__valeur" data-testid="barre-valeur" style="width:${partDesVotes * 100}%"></span></span><span class="fp-vote__barre__pourcentage">${escapeHtml(formaterPart(partDesVotes))}</span></div>`;
   }
 
   private histogramme(
@@ -312,10 +313,7 @@ export class FpVote extends FpVerdicts {
       return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"${marqueDuVote}></div>`;
     }
     const barres = this.toutesLesOptions(question).map((option) =>
-      this.barre(
-        option,
-        Math.round(part(resultats.parOption[option.id] ?? 0, resultats.total) * 100),
-      ),
+      this.barre(option, part(resultats.parOption[option.id] ?? 0, resultats.total)),
     );
     return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"${marqueDuVote}>${barres}</div>`;
   }

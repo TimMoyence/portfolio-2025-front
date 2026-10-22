@@ -41,7 +41,11 @@ export type Pose = readonly [propriete: string, valeur: unknown];
 type Genre<K extends RetourBrique['kind']> = Extract<RetourBrique, { kind: K }>;
 
 const QUESTIONS_SIMPLES: ReadonlySet<string> = new Set(['fp-numeric', 'fp-recall', 'fp-exit']);
-const QUESTIONS_REVELABLES: ReadonlySet<string> = new Set([...QUESTIONS_SIMPLES, 'fp-vote']);
+const QUESTIONS_REVELABLES: ReadonlySet<string> = new Set([
+  ...QUESTIONS_SIMPLES,
+  'fp-vote',
+  'fp-spaced',
+]);
 const PRODUCTIONS: ReadonlySet<string> = new Set(['fp-sheet', 'fp-table-build', 'fp-cardsort']);
 const LECTRICES_DE_L_ANNEXE: ReadonlySet<string> = new Set([
   ...PRODUCTIONS,
@@ -112,7 +116,7 @@ function rappelImprime(papier: ImpressionDeLEcran): SpacedQuestionPublique[] {
     boite: 1,
     cours: '',
     enonce: question.enonce,
-    options: question.options ?? [],
+    options: [...(question.options ?? [])],
   }));
 }
 
@@ -257,16 +261,23 @@ function etapesDevoilees(contexte: ContexteDeReinjection): number {
     : Math.max(affichees, pilotage?.etayageAtteint ?? 0);
 }
 
-function evaluationDuPoste(
+function posesDUneProductionEtayee(
   montage: MontageIdentifie,
   contexte: ContexteDeReinjection,
   genre: 'feuille-evaluee' | 'tableau-evalue',
-): RetourBrique | null {
-  return contexte.role === 'presentateur'
-    ? null
-    : (deGenre(contexte.retours, genre)
-        .filter((retour) => viseUnIdentifiant(montage.identifiants, retour.planId))
-        .at(-1) ?? null);
+): Pose[] {
+  const pilotage = contexte.direct?.pilotage;
+  const evaluation =
+    contexte.role === 'presentateur'
+      ? null
+      : (deGenre(contexte.retours, genre)
+          .filter((retour) => viseUnIdentifiant(montage.identifiants, retour.planId))
+          .at(-1) ?? null);
+  return [
+    ['etayage', pilotage?.etayage ?? 0],
+    ['saisieFermee', pilotage?.saisieFermee === true],
+    ['evaluation', evaluation],
+  ];
 }
 
 function posesDuPilotage(montage: MontageIdentifie, contexte: ContexteDeReinjection): Pose[] {
@@ -285,15 +296,11 @@ function posesDuPilotage(montage: MontageIdentifie, contexte: ContexteDeReinject
     case 'fp-worked':
       return [['etayage', etapesDevoilees(contexte)]];
     case 'fp-sheet':
-      return [
-        ['etayage', pilotage?.etayage ?? 0],
-        ['evaluation', evaluationDuPoste(montage, contexte, 'feuille-evaluee')],
-      ];
+      return posesDUneProductionEtayee(montage, contexte, 'feuille-evaluee');
     case 'fp-table-build':
-      return [
-        ['etayage', pilotage?.etayage ?? 0],
-        ['evaluation', evaluationDuPoste(montage, contexte, 'tableau-evalue')],
-      ];
+      return posesDUneProductionEtayee(montage, contexte, 'tableau-evalue');
+    case 'fp-cardsort':
+      return [['saisieFermee', pilotage?.saisieFermee === true]];
     case 'fp-recall':
       return [['optionsAffichees', pilotage?.optionsAffichees === true]];
     case 'fp-pulse':
@@ -321,7 +328,7 @@ function posesCommunes(montage: MontageIdentifie, contexte: ContexteDeReinjectio
     ? [[PROPRIETE_FORMATEUR, annexeDuMontage(montage, annexeVisible(contexte), contexte.direct)]]
     : [];
   const cloture: Pose[] = QUESTIONS_REVELABLES.has(montage.brique)
-    ? [['cloture', contexte.direct?.pilotage.revele === true || expliqueSurPlace(contexte)]]
+    ? [['cloture', contexte.direct?.pilotage.saisieFermee === true || expliqueSurPlace(contexte)]]
     : [];
   return [
     ['dejaRepondu', dejaRepondu],

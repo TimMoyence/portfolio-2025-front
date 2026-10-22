@@ -1,57 +1,26 @@
-import { z } from 'zod';
-import {
-  PACING_MODES,
-  PHASES_DE_VOTE,
-  type ComptesJalon,
-  type FreeRange,
-  type PacingMode,
-  type PilotageEcran,
-  type ProgressionEnigme,
-  type ResultatsSeance,
-  type ResumeBareme,
-  type StatistiquesSeance,
-} from '../../content/types';
+import type {
+  EtatDeSeance,
+  EtatDeSeanceResponseDto,
+  FormationsPresenterControllerPresenterStreamResponse as EvenementDeSeance,
+  RaisonDeFin as RaisonDeFinServie,
+  ResultatsEnDirectResponseDto,
+} from '../../../../contrat/types.gen';
+import { zFormationsPresenterControllerPresenterStreamResponse } from '../../../../contrat/zod.gen';
 import { urlDeLaSeance } from './adresse-de-seance';
 import { abonner, diffuserA } from './ecoutes';
 import { ENTETE_JETON_PARTICIPANT } from './jeton-participant';
-import {
-  comptesJalon,
-  entierPositif,
-  progressionEnigme,
-  resultatServi,
-  resumeBareme,
-  sortiesDeMachine,
-  statistiquesServies,
-  valeursParCle,
-} from './schemas-communs';
+import { refuseLaSession, STATUT_LIMITE_DE_DEBIT } from './statuts-http';
 import { jsonOuNull } from './valeurs';
 
-export type StatutSession = 'attente' | 'en_cours' | 'terminee';
-
-export interface EtatSession {
-  etat: StatutSession;
-  modeRythme: PacingMode;
-  ecranCourant: number;
-  intervalleLibre: FreeRange | null;
-  participants: number;
-  revision: number;
-  pilotage: Readonly<Record<string, PilotageEcran>>;
-  majLe: string;
-}
+export type StatutSession = EtatDeSeance;
+export type EtatSession = EtatDeSeanceResponseDto;
+export type ResultatsDuFlux = ResultatsEnDirectResponseDto;
+export type RaisonDeFin = RaisonDeFinServie;
 
 export type StatutFlux =
   | { readonly etat: 'connecte' }
   | { readonly etat: 'reconnexion' }
   | { readonly etat: 'refuse'; readonly statut: number };
-
-export interface ResultatsDuFlux extends ResultatsSeance {
-  readonly statistiques: StatistiquesSeance;
-  readonly jalons: Readonly<Record<string, ComptesJalon>>;
-  readonly enigmes: readonly ProgressionEnigme[];
-  readonly bareme: ResumeBareme;
-}
-
-export type RaisonDeFin = 'cloturee' | 'introuvable' | 'expiree' | 'evince' | 'revoque';
 
 export type SyncListener = (etat: EtatSession) => void;
 export type ResultatsListener = (resultats: ResultatsDuFlux) => void;
@@ -110,70 +79,16 @@ function ecouterLeReveil(surReveil: () => void): () => void {
 
 const TYPE_FLUX = 'text/event-stream';
 const EVENEMENT_FIN = 'fin';
-const EVENEMENT_RESULTATS = 'resultats';
 const CHEMIN_PAR_DEFAUT: CheminFlux = 'stream';
 const FLUX_REFUSE = "Le serveur a refusé l'ouverture du flux de séance";
 const FLUX_ABANDONNE = 'Ouverture du flux abandonnée pendant la préparation de la session';
 const SESSION_INJOIGNABLE = 'Session du compte injoignable avant l ouverture du flux';
 
-const STATUTS_VALIDES = [
-  'attente',
-  'en_cours',
-  'terminee',
-] as const satisfies readonly StatutSession[];
-
-const pilotageServi = z
-  .object({
-    phase: z.enum(PHASES_DE_VOTE).optional(),
-    revele: z.boolean().optional(),
-    etayage: entierPositif.optional(),
-    etayageAtteint: entierPositif.optional(),
-    explicationsDevoilees: entierPositif.optional(),
-    reglages: valeursParCle.optional(),
-    resultatsProjetes: z.boolean().optional(),
-    optionsAffichees: z.boolean().optional(),
-    sortiesProjetees: sortiesDeMachine.optional(),
-    questionAffichee: z.string().optional(),
-    questionOuverte: z.string().nullable().optional(),
-  })
-  .strict();
-
-export const etatServi: z.ZodType<EtatSession> = z
-  .object({
-    etat: z.enum(STATUTS_VALIDES),
-    modeRythme: z.enum(PACING_MODES),
-    ecranCourant: z.number(),
-    intervalleLibre: z.object({ premier: z.number(), dernier: z.number() }).strict().nullable(),
-    participants: z.number(),
-    revision: entierPositif,
-    pilotage: z.record(z.string(), pilotageServi),
-    majLe: z.iso.datetime(),
-  })
-  .strict();
-
-export const resultatsServis: z.ZodType<ResultatsDuFlux> = z
-  .object({
-    participants: z.number(),
-    questions: z.array(resultatServi),
-    statistiques: statistiquesServies,
-    jalons: z.record(z.string(), comptesJalon),
-    enigmes: z.array(progressionEnigme),
-    bareme: resumeBareme,
-  })
-  .strict();
-
-const RAISONS_DE_FIN = [
-  'cloturee',
-  'introuvable',
-  'expiree',
-  'evince',
-  'revoque',
-] as const satisfies readonly RaisonDeFin[];
-
-export const finServie = z.object({ raison: z.enum(RAISONS_DE_FIN) }).strict();
-
-function lireLeFlux<T>(schema: z.ZodType<T>, donnees: string): T | null {
-  const lu = schema.safeParse(jsonOuNull(donnees));
+function lireLeFlux(evenement: EvenementFlux): EvenementDeSeance | null {
+  const lu = zFormationsPresenterControllerPresenterStreamResponse.safeParse({
+    event: evenement.nom,
+    data: jsonOuNull(evenement.donnees),
+  });
   return lu.success ? lu.data : null;
 }
 
@@ -236,9 +151,7 @@ function ouvertureNative(courant: () => AbortController | null): OuvertureFlux |
   return (url, entetes) => fetch(url, { headers: entetes, signal: courant()?.signal ?? null });
 }
 
-const REFUS_SANS_RELANCE: readonly number[] = [401, 403];
 const STATUT_JETON_REFUSE = 401;
-const STATUT_SATURATION = 429;
 
 export type MotifDuRefus = 'session' | 'saturation' | 'autre';
 
@@ -248,10 +161,10 @@ export interface RefusDuFlux {
 }
 
 function motifDuRefus(statut: number): MotifDuRefus {
-  if (REFUS_SANS_RELANCE.includes(statut)) {
+  if (refuseLaSession(statut)) {
     return 'session';
   }
-  return statut === STATUT_SATURATION ? 'saturation' : 'autre';
+  return statut === STATUT_LIMITE_DE_DEBIT ? 'saturation' : 'autre';
 }
 
 export function refusDuFlux(statut: StatutFlux | null): RefusDuFlux | null {
@@ -357,24 +270,23 @@ export function createSync(options: SyncOptions): Sync {
     if (ferme) {
       return;
     }
+    const lu = lireLeFlux(evenement);
+    if (evenement.nom === EVENEMENT_FIN && lu?.event === 'fin' && lu.data.raison === 'expiree') {
+      interrompre();
+      tenterOuverture();
+      return;
+    }
     if (evenement.nom === EVENEMENT_FIN) {
       terminer();
-      diffuserA(ecoutesFin, lireLeFlux(finServie, evenement.donnees)?.raison ?? null);
+      diffuserA(ecoutesFin, lu?.event === 'fin' ? lu.data.raison : null);
       return;
     }
-    if (evenement.nom === EVENEMENT_RESULTATS) {
-      const resultats = lireLeFlux(resultatsServis, evenement.donnees);
-      if (resultats !== null) {
-        diffuserA(ecoutesResultats, resultats);
-      }
-      return;
+    if (lu?.event === 'resultats') {
+      diffuserA(ecoutesResultats, lu.data);
+    } else if (lu?.event === 'etat') {
+      etatCourant = lu.data;
+      diffuserA(ecoutes, etatCourant);
     }
-    const etat = lireLeFlux(etatServi, evenement.donnees);
-    if (etat === null) {
-      return;
-    }
-    etatCourant = etat;
-    diffuserA(ecoutes, etatCourant);
   };
 
   const consommer = async (propre: Tentative, reponse: Response): Promise<void> => {

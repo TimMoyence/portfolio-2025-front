@@ -8,6 +8,7 @@ export interface ParametreReglable {
   readonly max: number;
   readonly pas: number;
   readonly defaut: number;
+  readonly positions: readonly number[];
 }
 
 export function plancherDe(bornes: { readonly min: number; readonly max: number }): number {
@@ -26,7 +27,7 @@ export function curseur(
   enonce: string,
 ): EscapedHtml {
   const classe = `${prefixe}__curseur`;
-  return safeHtml`<input class="${escapeHtml(classe)}" data-testid="curseur" data-cle="${escapeHtml(parametre.cle)}" type="range" min="${parametre.min}" max="${parametre.max}" step="${escapeHtml(parametre.pas > 0 ? parametre.pas : 'any')}" value="${valeur}" aria-label="${escapeHtml(enonce)}">`;
+  return safeHtml`<input class="${escapeHtml(classe)}" data-testid="curseur" data-cle="${escapeHtml(parametre.cle)}" type="range" min="${parametre.min}" max="${parametre.max}" step="${parametre.pas}" value="${valeur}" aria-label="${escapeHtml(enonce)}">`;
 }
 
 export function brancherCurseurs(

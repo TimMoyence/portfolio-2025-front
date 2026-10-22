@@ -1,3 +1,5 @@
+import { lierLesNombres } from '../runtime/core/typographie';
+
 interface Morceau {
   readonly texte: string;
   readonly ponctuation: string;
@@ -9,8 +11,6 @@ interface Ligne {
 }
 
 const OPERATEUR = /[×÷=≈^]/;
-const MILLIERS = /(\d) (?=\d{3}(?!\d))/g;
-const ESPACE_FINE_INSECABLE = ' ';
 const PONCTUATIONS_DE_COUPURE = new Set([',', ';', ':', '.', '?', '!']);
 const OUVRANTES = new Set(['(', '[']);
 const FERMANTES = new Set([')', ']']);
@@ -45,7 +45,7 @@ function coupe(derniere: Ligne, ponctuationPrecedente: string, calcul: boolean):
 }
 
 export function lignesDeCalcul(texte: string): readonly string[] {
-  const colle = texte.replace(MILLIERS, `$1${ESPACE_FINE_INSECABLE}`);
+  const colle = lierLesNombres(texte);
   if (!OPERATEUR.test(colle)) {
     return [colle];
   }

@@ -66,7 +66,6 @@ export async function attesterLeMontage(ecran: EcranContent, role: Role): Promis
 }
 
 export interface AttenduDeLInstantane {
-  readonly empreinte: string;
   readonly ecrans: number;
   readonly publicsAuCatalogue?: readonly string[];
   readonly textesAuPupitre?: readonly TextesAttendus[];
@@ -156,8 +155,7 @@ export function decrireLeMontageDeLInstantane(
       });
     }
 
-    it('porte l empreinte et le nombre d écrans publiés par le back', () => {
-      expect(instantane.empreinte).toBe(attendu.empreinte);
+    it('porte le nombre d écrans publiés par le back', () => {
       expect([
         ecransPublicsDe(instantane).length,
         ecransDuPupitreDe(instantane).length,

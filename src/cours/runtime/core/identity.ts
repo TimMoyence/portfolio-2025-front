@@ -1,14 +1,18 @@
-import { estUneAdresseEmail } from './adresse-email';
+import { zJoinSessionRequestDto } from '../../../../contrat/zod.gen';
 import { creerCle } from './cle';
 import { longueurDeTexte } from './longueur-de-texte';
 import { persistJson, readJson, removeKey } from './storage';
 
 const CLE = 'fp.identite';
 
+export const DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS = 12 * 60 * 60 * 1000;
+
+const SAISIE_D_IDENTITE = zJoinSessionRequestDto.shape;
+
 export const LONGUEURS_MAX_DE_L_IDENTITE: Readonly<Record<keyof IdentityInput, number>> = {
-  prenom: 80,
-  nom: 80,
-  email: 180,
+  prenom: SAISIE_D_IDENTITE.prenom.maxLength ?? Infinity,
+  nom: SAISIE_D_IDENTITE.nom.maxLength ?? Infinity,
+  email: SAISIE_D_IDENTITE.email.maxLength ?? Infinity,
 };
 
 export interface Identity {
@@ -30,10 +34,22 @@ export interface IdentityRegistration {
   persistee: boolean;
 }
 
+interface IdentiteConservee extends Identity {
+  readonly expireLe?: number;
+}
+
 let enMemoire: Identity | null = null;
 
 export function readIdentity(): Identity | null {
-  return readJson<Identity>(CLE) ?? enMemoire;
+  const conservee = readJson<IdentiteConservee>(CLE);
+  if (conservee === null) {
+    return enMemoire;
+  }
+  if (!(typeof conservee.expireLe === 'number' && conservee.expireLe > Date.now())) {
+    clearIdentity();
+    return null;
+  }
+  return conservee;
 }
 
 export function saveIdentity(input: IdentityInput): IdentityRegistration {
@@ -50,7 +66,7 @@ export function saveIdentity(input: IdentityInput): IdentityRegistration {
   ) {
     throw new Error('Identité trop longue');
   }
-  if (!estUneAdresseEmail(email)) {
+  if (!SAISIE_D_IDENTITE.email.safeParse(email).success) {
     throw new Error('Adresse électronique invalide');
   }
   const existante = readIdentity();
@@ -83,7 +99,11 @@ export function lireSecretDeReprise(code: string): string | undefined {
 
 function enregistrer(identite: Identity): boolean {
   enMemoire = identite;
-  return persistJson(CLE, identite);
+  const conservee: IdentiteConservee = {
+    ...identite,
+    expireLe: Date.now() + DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS,
+  };
+  return persistJson(CLE, conservee);
 }
 
 export function clearIdentity(): void {

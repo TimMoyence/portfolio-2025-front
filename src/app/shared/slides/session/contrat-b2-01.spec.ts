@@ -156,6 +156,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
       const enDirect = {
         participants: 24,
         questions: resultats,
+        confusions: [],
         statistiques: buildStatistiquesSeance(),
         jalons: { 'b2-01-jalon-1': JALON },
         enigmes: [
@@ -193,6 +194,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
               reference: 'E3',
               formuleReference: '=C3/$C$5',
               valeur: 0.2,
+              affichage: '20 %',
               tolerance: { type: 'relative', valeur: 0.0001 },
               forme: formes[1],
             },
@@ -587,13 +589,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
       expect(strategies.filter((strategie) => strategie.fausse === true)).toHaveSize(1);
       expect(synthese.boite1 + synthese.boite2 + synthese.boite3 + synthese.nonVus).toBe(24);
       expect(new Set(motifs).size).toBe(12);
-      expect([...notation.typesNotables]).toEqual([
-        'vote',
-        'numeric',
-        'classement',
-        'feuille',
-        'tableau',
-      ]);
+      expect(notation.statistiquesSurQuestionsNotees).toBeTrue();
     });
   });
 });

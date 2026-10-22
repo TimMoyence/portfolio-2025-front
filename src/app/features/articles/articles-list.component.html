@@ -26,7 +26,7 @@
         <article class="article-card">
           <div class="article-card__meta">
             <time [attr.datetime]="article.published_at">{{
-              article.published_at | date: 'longDate'
+              article.published_at | dateDuSite
             }}</time>
             @for (tag of article.tags; track tag) {
               <span>{{ tag }}</span>

@@ -33,7 +33,7 @@ const COEUR_SANS_CHEMIN_VERS_SHARED_NI_FEATURES = [
 
 module.exports = tseslint.config(
   {
-    ignores: ['.claude/**', ...IGNORES_DE_GIT],
+    ignores: ['.claude/**', 'contrat/**', ...IGNORES_DE_GIT],
   },
   {
     files: ['src/**/*.ts', 'e2e/**/*.ts', 'scripts/**/*.{mjs,cjs,mts}'],
@@ -73,6 +73,18 @@ module.exports = tseslint.config(
     ignores: ['src/cours/runtime/core/html.ts'],
     rules: {
       'no-restricted-syntax': ['error', SANS_CAST_VERS_ESCAPED_HTML],
+    },
+  },
+  {
+    files: ['src/cours/**/*.ts', 'src/app/**/cours*/**/*.ts'],
+    ignores: ['**/*.spec.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unsafe-argument': 'error',
+      '@typescript-eslint/no-unsafe-assignment': 'error',
+      '@typescript-eslint/no-unsafe-call': 'error',
+      '@typescript-eslint/no-unsafe-member-access': 'error',
+      '@typescript-eslint/no-unsafe-return': 'error',
     },
   },
   {

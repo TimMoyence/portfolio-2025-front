@@ -1,5 +1,5 @@
 import type { ResumeBareme } from '../../../../cours/content/types';
-import { avecUnite } from '../../../../cours/runtime/core/valeurs';
+import { formaterPart } from '../../../../cours/runtime/core/typographie';
 import {
   buildRegleNotation,
   buildResumeBareme,
@@ -7,9 +7,6 @@ import {
 import type { RegleNotation } from '../../../core/ports/formations.port';
 import { phraseDeNotation } from './regle-de-notation';
 
-const NOTES_MAX = [0, 1, 20, 100];
-const PARTS_DE_COHORTE = [0, 0.05, 0.333, 1];
-const RATIOS_DE_SEUIL = [0, 0.4, 1];
 const POINTS_DE_NON_REPONSE = [0, 0.5, 2];
 const SEUILS_DE_PROBLEME = [0, 0.7, 1];
 const QUESTIONS_NOTEES = [null, 0, 31];
@@ -24,9 +21,6 @@ interface Combinaison {
 }
 
 const AXES: readonly (readonly Surcharges[])[] = [
-  NOTES_MAX.map((noteMax) => ({ noteMax })),
-  PARTS_DE_COHORTE.map((partCohorteReference) => ({ partCohorteReference })),
-  RATIOS_DE_SEUIL.map((ratioSeuilValidation) => ({ ratioSeuilValidation })),
   POINTS_DE_NON_REPONSE.map((pointsNonReponse) => ({ pointsNonReponse })),
   SEUILS_DE_PROBLEME.map((seuilQuestionProbleme) => ({ seuilQuestionProbleme })),
   BOOLEENS.map((neSaitPasCompteCommeReponse) => ({ neSaitPasCompteCommeReponse })),
@@ -47,15 +41,8 @@ const COMBINAISONS: readonly Combinaison[] = produitDesAxes(AXES).flatMap((surch
   })),
 );
 
-function pourCent(part: number): string {
-  return avecUnite(Math.round(part * 100), '%');
-}
-
 function intitule({ regle, bareme }: Combinaison): string {
   return [
-    `note /${regle.noteMax}`,
-    `cohorte ${regle.partCohorteReference}`,
-    `seuil ${regle.ratioSeuilValidation}`,
     `non-réponse ${regle.pointsNonReponse}`,
     `problème ${regle.seuilQuestionProbleme}`,
     `je ne sais pas ${regle.neSaitPasCompteCommeReponse}`,
@@ -83,7 +70,7 @@ describe('simulation : la phrase de notation sur tout le produit des options', (
     const attendu = AXES.reduce((compte, axe) => compte * axe.length, 1) * QUESTIONS_NOTEES.length;
 
     expect(COMBINAISONS.length).toBe(attendu);
-    expect(attendu).toBeGreaterThan(1000);
+    expect(attendu).toBe(108);
   });
 
   it('ne laisse jamais passer undefined, NaN ni une cle de gabarit', () => {
@@ -95,18 +82,14 @@ describe('simulation : la phrase de notation sur tout le produit des options', (
     });
   });
 
-  it('dit la note, les pourcentages et les points que la regle porte', () => {
+  it('dit les pourcentages et les points que la regle porte, sans aucune note', () => {
     pourChaqueCombinaison((regle, phrase, contexte) => {
       const manquants = [
-        pourCent(regle.partCohorteReference),
-        pourCent(regle.ratioSeuilValidation),
-        pourCent(regle.seuilQuestionProbleme),
+        formaterPart(regle.seuilQuestionProbleme),
         `vaut ${regle.pointsNonReponse} point`,
       ].filter((attendu) => !phrase.includes(attendu));
 
-      expect(phrase.startsWith(`Note /${regle.noteMax} `))
-        .withContext(contexte)
-        .toBeTrue();
+      expect(phrase).withContext(contexte).not.toContain('Note /');
       expect(manquants).withContext(contexte).toEqual([]);
     });
   });

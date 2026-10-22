@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import {
-  reponseLibreEnregistreeServie,
-  verdictReponseServi,
-} from '../src/app/core/adapters/formations-schemas';
+  zFreeResponseSavedResponseDto as reponseLibreEnregistreeServie,
+  zSubmitAnswerResponseDto as verdictReponseServi,
+} from '../contrat/zod.gen';
 import {
   BILLET_DE_SORTIE,
   ETAT_EN_COURS,

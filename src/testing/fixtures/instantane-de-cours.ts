@@ -6,12 +6,7 @@ import type {
   EcranDeroule,
 } from '../../cours/content/types';
 import { derouleDuFil, sujetDuFil } from '../../app/core/adapters/formations-fil';
-import {
-  coursPublicServi,
-  derouleServi,
-  sujetServi,
-} from '../../app/core/adapters/formations-schemas';
-import { optionDeLaBonneReponse } from '../../app/features/cours/presentateur/annexe-formateur';
+import { zDerouleResponseDto, zSujetResponseDto } from '../../../contrat/zod.gen';
 import { ecranDIdentifiant } from '../../app/shared/slides/session/lecture-ecran';
 
 export interface InstantaneDuCoursB2 {
@@ -22,13 +17,13 @@ export interface InstantaneDuCoursB2 {
   readonly catalogue: CoursContent;
 }
 
-export const instantaneDuFil = z
+const instantaneDuFil = z
   .object({
     graine: z.number(),
     empreinte: z.string(),
-    sujet: sujetServi,
-    deroule: derouleServi,
-    catalogue: coursPublicServi,
+    sujet: zSujetResponseDto,
+    deroule: zDerouleResponseDto,
+    catalogue: zSujetResponseDto,
   })
   .strict();
 
@@ -63,10 +58,10 @@ export function ecranReveleAuPosteEtudiant(
     ...ecran,
     revelation: {
       ecranId: ecran.id,
-      questions: source.corriges.map(({ questionId, bonneReponse }) => ({
+      questions: source.corriges.map(({ questionId, bonneReponse, optionId }) => ({
         questionId,
         cible: bonneReponse,
-        optionId: optionDeLaBonneReponse(source, questionId, bonneReponse),
+        optionId,
       })),
       annexe: corrige,
       reflexion:

@@ -34,7 +34,6 @@ describe('app routes', () => {
       'offer',
       'contact',
       'projets',
-      'cookie-settings',
       'terms',
       'privacy',
       'growth-audit',

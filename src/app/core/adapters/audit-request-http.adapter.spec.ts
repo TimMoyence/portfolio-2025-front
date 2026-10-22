@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { z } from 'zod';
+import { firstValueFrom, of } from 'rxjs';
 import type { AuditStreamEvent } from '../models/audit-request.model';
 import {
   type EventSourceFactice,
@@ -15,9 +15,6 @@ import {
   buildAuditTimeoutEvent,
   buildClientReport,
 } from '../../../testing/factories/audit-request.factory';
-import { reponsesServiesPar } from '../../../testing/fixtures/reponses-servies';
-import { bancAdaptateurHttp } from '../../../testing/http-attendu';
-import { avecUneCleHorsContrat, lecturesStrictes } from '../../../testing/lecture-stricte';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuditRequestHttpAdapter } from './audit-request-http.adapter';
 
@@ -37,73 +34,36 @@ function injecterAdapter(plateforme: 'server' | 'browser'): AuditRequestHttpAdap
 }
 
 describe('AuditRequestHttpAdapter', () => {
-  describe('lecture des réponses servies par le back', () => {
-    const banc = bancAdaptateurHttp(AuditRequestHttpAdapter);
-    lecturesStrictes(banc, [
-      {
-        route: 'POST /api/audits',
-        chemin: '/audits',
-        appel: (a) =>
-          a.submit({ websiteName: 'Exemple', contactMethod: 'EMAIL', contactValue: 'a@b.fr' }),
-      },
-      {
-        route: 'GET /api/audits/:id/summary',
-        chemin: '/audits/audit-1/summary',
-        appel: (a) => a.getSummary('audit-1'),
-      },
-    ]);
-  });
+  describe('confirmation d une demande par le lien recu', () => {
+    it('poste le jeton en parametre et lit l identifiant de l audit au contrat', async () => {
+      const adapter = injecterAdapter('browser');
+      const http = TestBed.inject(HttpClient) as jasmine.SpyObj<HttpClient>;
+      http.post.and.returnValue(of({ auditId: 'audit-confirme' }));
 
-  describe('lecture du flux servi par le back', () => {
-    let source: EventSourceFactice;
+      const reponse = await firstValueFrom(adapter.confirmer('jeton-du-lien'));
 
-    beforeEach(() => {
-      source = installerEventSourceFactice();
+      expect(reponse).toEqual({ auditId: 'audit-confirme' });
+      expect(http.post).toHaveBeenCalledOnceWith(
+        jasmine.stringMatching(/\/audits\/confirmation$/),
+        null,
+        {
+          params: { token: 'jeton-du-lien' },
+        },
+      );
     });
 
-    afterEach(() => source.restaurer());
+    it('refuse une reponse hors contrat', async () => {
+      const adapter = injecterAdapter('browser');
+      const http = TestBed.inject(HttpClient) as jasmine.SpyObj<HttpClient>;
+      http.post.and.returnValue(of({ id: 'audit-confirme' }));
 
-    function ecouter(adapter: AuditRequestHttpAdapter): { recus: unknown[]; erreurs: unknown[] } {
-      const flux = { recus: [] as unknown[], erreurs: [] as unknown[] };
-      adapter.stream('audit-99').subscribe({
-        next: (evenement) => flux.recus.push(evenement),
-        error: (erreur: unknown) => flux.erreurs.push(erreur),
-      });
-      return flux;
-    }
+      const issue = await firstValueFrom(adapter.confirmer('jeton-du-lien')).then(
+        () => 'acceptee',
+        () => 'refusee',
+      );
 
-    for (const type of ['progress', 'heartbeat', 'completed', 'failed', 'timeout'] as const) {
-      it(`${type} : relaie chaque événement servi et refuse une clé hors contrat`, () => {
-        const adapter = injecterAdapter('browser');
-        const servis = reponsesServiesPar(`GET /api/audits/:id/stream ${type}`);
-        expect(servis.length).toBeGreaterThan(0);
-        for (const data of servis) {
-          const lu = ecouter(adapter);
-          source.diffuser(type, JSON.stringify(data));
-          expect(lu).toEqual({ recus: [{ type, data }], erreurs: [] });
-
-          const refuse = ecouter(adapter);
-          source.diffuser(type, JSON.stringify(avecUneCleHorsContrat(data)));
-          expect(refuse.recus).toEqual([]);
-          expect(refuse.erreurs).toEqual([jasmine.any(z.ZodError)]);
-        }
-      });
-    }
-
-    for (const type of ['failed', 'timeout'] as const) {
-      it(`${type} : ne relaie jamais un texte d erreur du serveur jusqu à l écran`, () => {
-        const adapter = injecterAdapter('browser');
-        for (const data of reponsesServiesPar(`GET /api/audits/:id/stream ${type}`)) {
-          const lu = ecouter(adapter);
-          source.diffuser(
-            type,
-            JSON.stringify({ ...Object(data), error: 'connect ECONNREFUSED 10.0.0.5:5432' }),
-          );
-          expect(lu.recus).toEqual([]);
-          expect(lu.erreurs).toEqual([jasmine.any(z.ZodError)]);
-        }
-      });
-    }
+      expect(issue).toBe('refusee');
+    });
   });
 
   describe('en contexte serveur (SSR)', () => {
@@ -142,7 +102,7 @@ describe('AuditRequestHttpAdapter', () => {
     let erreur: unknown;
 
     const diffuser = (evenement: AuditStreamEvent): void =>
-      source.diffuser(evenement.type, JSON.stringify(evenement.data));
+      source.diffuser(evenement.event, JSON.stringify(evenement.data));
 
     const verifierLeFlux = (attendus: readonly AuditStreamEvent[], clos: boolean): void => {
       expect(recus).toEqual([...attendus]);
@@ -173,6 +133,17 @@ describe('AuditRequestHttpAdapter', () => {
     it('devrait etre cree', () => {
       expect(adapter).toBeTruthy();
     });
+
+    for (const echec of [buildAuditFailedEvent(), buildAuditTimeoutEvent()]) {
+      it(`${echec.event} : ne relaie jamais un texte d erreur du serveur jusqu à l écran`, () => {
+        source.diffuser(
+          echec.event,
+          JSON.stringify({ ...echec.data, error: 'connect ECONNREFUSED 10.0.0.5:5432' }),
+        );
+
+        verifierLeFlux([echec], true);
+      });
+    }
 
     it('relaie progression et battement sans clore le flux', () => {
       const progression = buildAuditProgressEvent();

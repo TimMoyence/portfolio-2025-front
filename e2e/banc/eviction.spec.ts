@@ -45,14 +45,14 @@ test.describe('Banc — éviction en séance (AC-37)', () => {
     expect(await agirSurLePoste(request, jeton, { seance, poste: evince }, 'eviction')).toBe(204);
 
     const apres = await lireDepuisLePoste(request, seance, evince, 'moi');
-    expect(apres.status()).toBe(404);
-    expect(((await apres.json()) as { code: string }).code).toBe('PARTICIPANT_INTROUVABLE');
+    expect(apres.status()).toBe(403);
+    expect(((await apres.json()) as { code: string }).code).toBe('PARTICIPANT_EVINCE');
 
     const refus = await repondreDepuisLePoste(request, seance, evince, {
       questionId: autre.questionId,
       valeur: autre.valeur,
     });
-    expect(refus.status()).toBe(404);
+    expect(refus.status()).toBe(403);
 
     const remplacant = await inscrireUnPoste(request, seance, 34);
     expect(remplacant.participantId).not.toBe(evince.participantId);

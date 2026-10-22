@@ -7,7 +7,7 @@ import type {
   PresentationPort,
 } from '../ports/presentation.port';
 import { luPar } from './lu-par';
-import { interactionsServies } from './site-schemas';
+import { zPresentationInteractionsResponseDto as interactionsServies } from '../../../../contrat/zod.gen';
 
 @Injectable()
 export class PresentationHttpAdapter implements PresentationPort {
@@ -17,7 +17,7 @@ export class PresentationHttpAdapter implements PresentationPort {
 
   getInteractions(slug: string): Observable<PresentationInteractionsResponse> {
     return this.http
-      .get<unknown>(`${this.baseUrl}/presentations/${slug}/interactions`)
+      .get<unknown>(`${this.baseUrl}/presentations/${encodeURIComponent(slug)}/interactions`)
       .pipe(luPar(interactionsServies));
   }
 }

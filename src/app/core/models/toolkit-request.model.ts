@@ -1,15 +1,7 @@
-import type { ChampsAntiRobot } from './champs-anti-robot.model';
+import type {
+  LeadMagnetResponseDto,
+  RequestToolkitRequestDto,
+} from '../../../../contrat/types.gen';
 
-export interface ToolkitRequest extends ChampsAntiRobot {
-  firstName: string;
-  email: string;
-  formationSlug: string;
-  termsVersion: string;
-  termsLocale: string;
-  termsAcceptedAt: string;
-}
-
-export interface ToolkitResponse {
-  message: string;
-  accessToken?: string;
-}
+export type ToolkitRequest = RequestToolkitRequestDto;
+export type ToolkitResponse = LeadMagnetResponseDto;

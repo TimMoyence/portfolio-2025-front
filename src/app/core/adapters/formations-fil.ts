@@ -1,5 +1,10 @@
 import type {
-  CorrigeEcranPresentateur,
+  CorrectionServieResponseDto,
+  DerouleResponseDto,
+  LivretResponseDto,
+  SujetResponseDto,
+} from '../../../../contrat/types.gen';
+import type {
   CoursContent,
   DerouleCours,
   EcranContent,
@@ -7,34 +12,16 @@ import type {
 } from '../../../cours/content/types';
 import type { LivretDuCours } from '../ports/formations.port';
 
-interface QuestionCorrigeeDuFil {
-  readonly questionId: string;
-  readonly bonneReponse: string;
-  readonly optionId: string | null;
-}
-
-interface CorrectionDuFil {
-  readonly ecranId: string;
-  readonly questions: readonly QuestionCorrigeeDuFil[];
-  readonly corrige: CorrigeEcranPresentateur | null;
-  readonly reflexion: RevelationServie['reflexion'];
-  readonly explications?: NonNullable<RevelationServie['explications']>;
-}
+export type SujetDuFil = SujetResponseDto;
+export type DerouleDuFil = DerouleResponseDto;
+export type LivretDuFil = LivretResponseDto;
 
 type EcranDuFil<E extends EcranContent> = Omit<E, 'ecranSource' | 'revelation'> & {
   readonly ecranCorrige?: string;
-  readonly correction?: CorrectionDuFil;
+  readonly correction?: CorrectionServieResponseDto;
 };
 
-export type SujetDuFil = Omit<CoursContent, 'ecrans'> & {
-  readonly ecrans: readonly EcranDuFil<EcranContent>[];
-};
-
-export type DerouleDuFil = Omit<DerouleCours, 'ecrans'> & {
-  readonly ecrans: readonly EcranDuFil<DerouleCours['ecrans'][number]>[];
-};
-
-function revelationDuFil(correction: CorrectionDuFil): RevelationServie {
+function revelationDuFil(correction: CorrectionServieResponseDto): RevelationServie {
   return {
     ecranId: correction.ecranId,
     questions: correction.questions.map(({ questionId, bonneReponse, optionId }) => ({
@@ -58,17 +45,14 @@ function ecranDuFil<E extends EcranContent>(ecran: EcranDuFil<E>): E {
 }
 
 export function sujetDuFil(sujet: SujetDuFil): CoursContent {
-  return { ...sujet, ecrans: sujet.ecrans.map(ecranDuFil) };
+  return { ...sujet, ecrans: sujet.ecrans.map((ecran) => ecranDuFil<EcranContent>(ecran)) };
 }
 
 export function derouleDuFil(deroule: DerouleDuFil): DerouleCours {
-  return { ...deroule, ecrans: deroule.ecrans.map(ecranDuFil) };
-}
-
-export interface LivretDuFil {
-  readonly version: number;
-  readonly sujet: SujetDuFil;
-  readonly corrige: DerouleDuFil;
+  return {
+    ...deroule,
+    ecrans: deroule.ecrans.map((ecran) => ecranDuFil<DerouleCours['ecrans'][number]>(ecran)),
+  };
 }
 
 export function livretDuFil(livret: LivretDuFil): LivretDuCours {

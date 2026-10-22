@@ -542,7 +542,7 @@ export async function ouvrirLeLivret(page: Page): Promise<void> {
 export async function ouvrirLePupitre(page: Page): Promise<Seance> {
   await connecterLeFormateur(page);
   await page.goto(`/fr/cours/presenter/${SLUG_B2}`);
-  await page.locator('app-cookie-banner').getByRole('button', { name: 'Tout refuser' }).click();
+  await page.getByTestId('bandeau-cookies-compris').click();
   await expect(page.getByTestId('presentateur-code')).toHaveText(/^\d{4}$/);
   const code = ((await page.getByTestId('presentateur-code').textContent()) ?? '').trim();
   await expect(page).toHaveURL(/seance=/);

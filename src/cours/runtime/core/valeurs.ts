@@ -23,8 +23,12 @@ export function estTexteNonVide(valeur: unknown): valeur is string {
   return typeof valeur === 'string' && valeur.trim() !== '';
 }
 
+export function estNombreFini(valeur: unknown): valeur is number {
+  return typeof valeur === 'number' && Number.isFinite(valeur);
+}
+
 export function estPositif(valeur: unknown): valeur is number {
-  return typeof valeur === 'number' && Number.isFinite(valeur) && valeur > 0;
+  return estNombreFini(valeur) && valeur > 0;
 }
 
 export function estEntierPositif(valeur: unknown): valeur is number {
@@ -62,25 +66,6 @@ export function part(compte: number, total: number): number {
   return total > 0 ? compte / total : 0;
 }
 
-const MOTIF_NOMBRE_SAISI = /^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/;
-const ESPACES_SAISIS = /\s/g;
-const MOINS_TYPOGRAPHIQUE = /−/g;
-
-export function lireNombreSaisi(brut: string): number | null {
-  const compact = brut
-    .replace(ESPACES_SAISIS, '')
-    .replace(MOINS_TYPOGRAPHIQUE, '-')
-    .replaceAll(',', '.');
-  if (!MOTIF_NOMBRE_SAISI.test(compact)) {
-    return null;
-  }
-  const nombre = Number(compact);
-  if (!Number.isFinite(nombre)) {
-    return null;
-  }
-  return nombre === 0 ? 0 : nombre;
-}
-
 export function bornerEntre(valeur: number, minimum: number, maximum: number): number {
   return Math.max(minimum, Math.min(maximum, valeur));
 }
@@ -92,10 +77,4 @@ export function entierBorne(
   repli: number,
 ): number {
   return Number.isFinite(valeur) ? bornerEntre(Math.trunc(valeur), minimum, maximum) : repli;
-}
-
-const ESPACE_INSECABLE = String.fromCharCode(0x00a0);
-
-export function avecUnite(valeur: number | string, unite: string): string {
-  return `${valeur}${ESPACE_INSECABLE}${unite}`;
 }

@@ -1,6 +1,6 @@
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { FpEnvoi } from './contenu';
-import { dossierDeRappel, type LigneDuDossier, lireRappel } from './dossier';
+import { copierRappel, dossierDeRappel, type LigneDuDossier } from './dossier';
 import { type ContenuDeBrique, copierLeSocle } from './projection';
 import { chaineDe, estObjet, estTexteNonVide } from '../core/valeurs';
 import type { StrategieServie } from './retours';
@@ -40,7 +40,7 @@ function copierProbleme(source: ChallengeProblemePublic): ChallengeProblemePubli
     ...copierLeSocle(source),
     enonce: source.enonce,
     invite: source.invite,
-    ...(source.rappel === undefined ? {} : { rappel: lireRappel(source.rappel) }),
+    ...copierRappel(source),
     strategies: [],
   };
 }

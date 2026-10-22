@@ -46,6 +46,7 @@ import type {
   VerdictReponse,
 } from '../ports/formations.port';
 import {
+  ActionSurLePosteRefusee,
   FORMATIONS_PORT,
   limiteDuRefus,
   PieceJointeRefusee,
@@ -524,7 +525,7 @@ describe('FormationsHttpAdapter', () => {
   it('lireParticipants GETe les participants de la seance', () => {
     const participants = [
       buildParticipantDeSeance(),
-      buildParticipantDeSeance({ id: 'participant-2', prenom: 'Nora' }),
+      buildParticipantDeSeance({ id: '1f2e3d4c-5b6a-4978-8a9b-0c1d2e3f4a5b', prenom: 'Nora' }),
     ];
     const recus: ParticipantDeSeance[] = [];
 
@@ -615,13 +616,7 @@ describe('FormationsHttpAdapter', () => {
     adapter.enregistrerAnnotation(SESSION_ID, annotation).subscribe();
     const annotationRequest = attendre(`${URL_SEANCE}/annotations`, 'POST');
     expect(annotationRequest.request.body).toEqual(annotation);
-    annotationRequest.flush({
-      id: 'annotation-1',
-      sessionId: SESSION_ID,
-      teacherId: 'teacher-1',
-      ...annotation,
-      updatedAt: '2026-09-19T00:00:00.000Z',
-    });
+    annotationRequest.flush(buildAnnotationFormateur({ sessionId: SESSION_ID, ...annotation }));
   });
 
   it('rejoindre POSTe l inscription sur le code et rend le jeton du participant', () => {
@@ -631,17 +626,13 @@ describe('FormationsHttpAdapter', () => {
     expect(recus).toEqual([RATTACHEMENT]);
   });
 
-  it('rejoindre refuse un rattachement qui porte une graine, que le back ne sert pas', () => {
-    const erreurs = erreursApres(
-      adapter.rejoindre(CODE, INSCRIPTION),
-      `${RACINE}/${CODE}/join`,
-      (requete) => requete.flush({ ...RATTACHEMENT, seed: 1_234_567 }),
-    );
+  it('rejoindre ne relaie jamais une graine, que le back ne sert pas', () => {
+    const recus: unknown[] = [];
+    adapter.rejoindre(CODE, INSCRIPTION).subscribe((rattachement) => recus.push(rattachement));
 
-    expect(erreurs).toEqual([jasmine.any(Error)]);
-    expect(erreurs[0]).toBeInstanceOf(RattachementRefuse);
-    const { motif, statut } = erreurs[0] as RattachementRefuse;
-    expect([motif, statut]).toEqual(['rattachement-impossible', 0]);
+    attendre(`${RACINE}/${CODE}/join`, 'POST').flush({ ...RATTACHEMENT, seed: 1_234_567 });
+
+    expect(recus).toEqual([RATTACHEMENT]);
   });
 
   it('rejoindre presente le secret de reprise du poste quand il en a un', () => {
@@ -773,21 +764,24 @@ describe('FormationsHttpAdapter', () => {
     ]);
   });
 
-  it('repondre refuse un verdict incomplet ou qui porte une cle que le back ne sert pas', () => {
-    const verdicts = [
-      { correcte: true, misconception: null },
-      { correcte: false, misconception: null, libelleConfusion: null, solution: 1338.23 },
-    ];
-
-    const erreurs = verdicts.flatMap((verdict) =>
-      erreursApres(
-        adapter.repondre(SESSION_ID, JETON, { questionId: 'Q-CAP-03', valeur: 1, dureeMs: 1 }),
-        `${URL_SEANCE}/answers`,
-        (requete) => requete.flush(verdict),
-      ),
+  it('repondre refuse un verdict incomplet et ne relaie jamais une solution, que le back ne sert pas', () => {
+    const reponse = { questionId: 'Q-CAP-03', valeur: 1, dureeMs: 1 };
+    const erreurs = erreursApres(
+      adapter.repondre(SESSION_ID, JETON, reponse),
+      `${URL_SEANCE}/answers`,
+      (requete) => requete.flush({ correcte: true, misconception: null }),
     );
+    const recus: unknown[] = [];
+    adapter.repondre(SESSION_ID, JETON, reponse).subscribe((verdict) => recus.push(verdict));
+    attendre(`${URL_SEANCE}/answers`, 'POST').flush({
+      correcte: false,
+      misconception: null,
+      libelleConfusion: null,
+      solution: 1338.23,
+    });
 
-    expect(erreurs).toEqual([jasmine.any(Error), jasmine.any(Error)]);
+    expect(erreurs).toEqual([jasmine.any(Error)]);
+    expect(recus).toEqual([{ reussite: false, libelleConfusion: null }]);
   });
 
   describe('refus d une reponse', () => {
@@ -907,7 +901,7 @@ describe('FormationsHttpAdapter', () => {
   });
 
   it('signalerIncidents POSTe le journal sur incidents avec l en-tete de participant', () => {
-    const incidents = [{ type: 'tab_hidden', horodatage: '2026-09-11T10:00:00.000Z' }];
+    const incidents = [{ type: 'tab_hidden' as const, horodatage: '2026-09-11T10:00:00.000Z' }];
 
     adapter.signalerIncidents(SESSION_ID, JETON, incidents).subscribe();
 
@@ -1040,7 +1034,10 @@ describe('FormationsHttpAdapter', () => {
         methode: 'GET',
         corps: null,
         jeton: JETON,
-        reponse: buildEtatParticipant(),
+        reponse: buildEtatParticipant({
+          sessionId: SESSION_ID,
+          participantId: '8f1c3b2a-5d4e-4f6a-9b8c-7d6e5f4a3b2c',
+        }),
       },
       {
         nom: 'lireSyntheseRappels',
@@ -1098,6 +1095,26 @@ describe('FormationsHttpAdapter', () => {
         reponse: null,
       },
     ];
+
+    it('traduit le refus d une action sur un poste en sa cause', () => {
+      const motifs: string[] = [];
+      for (const [code, statut] of [
+        ['GRAINE_REPRISE', 409],
+        ['SEANCE_COMPLETE', 409],
+        ['AUTRE', 500],
+      ] as const) {
+        adapter.readmettreParticipant(SESSION_ID, PARTICIPANT).subscribe({
+          error: (erreur: unknown) =>
+            motifs.push(erreur instanceof ActionSurLePosteRefusee ? erreur.motif : 'brut'),
+        });
+        attendre(`${URL_SEANCE}/participants/${PARTICIPANT}/readmission`, 'POST').flush(
+          { code },
+          { status: statut, statusText: 'Refus' },
+        );
+      }
+
+      expect(motifs).toEqual(['graine-reprise', 'seance-complete', 'action-impossible']);
+    });
 
     it('appelle chaque route avec son verbe, son corps et son en-tete, et rend la reponse servie', () => {
       for (const appel of appels()) {

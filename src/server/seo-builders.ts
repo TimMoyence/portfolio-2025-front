@@ -186,9 +186,7 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
   );
   const aboutPages = indexablePages.filter((p) => ['presentation', 'projets'].includes(p.id));
   const contactPages = indexablePages.filter((p) => p.id === 'contact');
-  const legalPages = indexablePages.filter((p) =>
-    ['terms', 'privacy', 'cookie-settings'].includes(p.id),
-  );
+  const legalPages = indexablePages.filter((p) => ['terms', 'privacy'].includes(p.id));
 
   const section = (title: string, pages: typeof indexablePages): string[] => {
     if (pages.length === 0) return [];
@@ -222,10 +220,6 @@ export const buildRobotsTxt = (metadata: SeoMetadataFile, baseUrl: string): stri
     if (estIndexable(page)) continue;
 
     if (page.path.includes(':')) continue;
-
-    // Une page bloquee par robots.txt ne voit jamais son `noindex` lu par Google :
-    // https://developers.google.com/search/docs/crawling-indexing/block-indexing
-    if (page.id === 'cookie-settings') continue;
 
     disallowPaths.add(normalizePath(page.path));
     for (const locale of locales) {

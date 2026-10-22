@@ -45,7 +45,7 @@ describe('lock', () => {
     cache.and.returnValue(true);
     document.dispatchEvent(new Event('visibilitychange'));
     expect(lock.incidents().length).toBe(1);
-    expect(lock.incidents()[0].type).toBe('visibility');
+    expect(lock.incidents()[0].type).toBe('tab_hidden');
   });
 
   it('le regime focus journalise une perte de focus de la fenetre', () => {
@@ -53,7 +53,7 @@ describe('lock', () => {
     lock.arm();
     window.dispatchEvent(new Event('blur'));
     expect(lock.incidents().length).toBe(1);
-    expect(lock.incidents()[0].type).toBe('blur');
+    expect(lock.incidents()[0].type).toBe('window_blur');
   });
 
   it('le regime focus ne bloque ni ne journalise le copier', () => {
@@ -65,13 +65,17 @@ describe('lock', () => {
     expect(lock.incidents()).toEqual([]);
   });
 
-  const EVENEMENTS_EMPECHES: readonly IncidentType[] = ['copy', 'paste', 'contextmenu'];
+  const EVENEMENTS_EMPECHES: readonly (readonly [string, IncidentType])[] = [
+    ['copy', 'copy_attempt'],
+    ['paste', 'paste_attempt'],
+    ['contextmenu', 'context_menu'],
+  ];
 
-  for (const type of EVENEMENTS_EMPECHES) {
-    it(`le regime examen empeche et journalise l evenement ${type}`, () => {
+  for (const [evenementDuNavigateur, type] of EVENEMENTS_EMPECHES) {
+    it(`le regime examen empeche ${evenementDuNavigateur} et le journalise en ${type}`, () => {
       lock = createLock('examen');
       lock.arm();
-      const evenement = new Event(type, { cancelable: true });
+      const evenement = new Event(evenementDuNavigateur, { cancelable: true });
       document.dispatchEvent(evenement);
       expect(evenement.defaultPrevented).toBe(true);
       expect(lock.incidents().length).toBe(1);
@@ -115,7 +119,7 @@ describe('lock', () => {
     expect(nonAnnule).toBe(true);
     expect(evenement.defaultPrevented).toBe(false);
     expect(lock.incidents().length).toBe(1);
-    expect(lock.incidents()[0].type).toBe('devtools_key');
+    expect(lock.incidents()[0].type).toBe('devtools_suspected');
   });
 
   it('le regime examen avertit avant de quitter la page et journalise la tentative', () => {
@@ -228,7 +232,7 @@ describe('lock', () => {
     lock.onIncident((incident) => recus.push(incident));
     window.dispatchEvent(new Event('blur'));
     expect(recus.length).toBe(1);
-    expect(recus[0].type).toBe('blur');
+    expect(recus[0].type).toBe('window_blur');
   });
 
   it('onIncident permet de se desabonner', () => {

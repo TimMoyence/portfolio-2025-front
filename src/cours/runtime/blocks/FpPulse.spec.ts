@@ -1,10 +1,11 @@
 import { detailsEmis, installerBrique, texteOmbre } from '../../../testing/banc-de-brique';
 import { buildPulseSondage } from '../../../testing/factories/cours.factory';
 import { classesEmises, classesOrphelines } from '../../../testing/classes-briques';
+import { SEUIL_D_ANONYMAT } from '../core/anonymat';
 import { FpPulse } from './FpPulse';
 
 const SONDAGE = buildPulseSondage();
-const COMPTES = { perdu: 4, 'ca-va': 11, clair: 7 };
+const COMPTES = { perdu: 4, 'ca-va': 11, clair: 7, total: 22 };
 const INSTANT_INITIAL = '2026-09-13T09:00:00.000Z';
 const NOM_ETUDIANT = 'Nadia Mbarek';
 const CHARGE_XSS = '<img src=x onerror="alert(1)">';
@@ -188,7 +189,9 @@ describe('FpPulse', () => {
     hote.comptes = { perdu: 1, 'ca-va': 2, clair: 1, total: 4 };
     hote.setAttribute('data-cours-role', 'presentateur');
 
-    expect(texteOmbre(hote, 'masque')).toBe('Comptes affichés à partir de 5 réponses');
+    expect(texteOmbre(hote, 'masque')).toBe(
+      `Comptes affichés à partir de ${SEUIL_D_ANONYMAT} réponses`,
+    );
     expect(hote.shadowRoot?.querySelector('[data-testid="agregat"]')).toBeNull();
     expect(hote.shadowRoot?.querySelector('[data-testid="total"]')).toBeNull();
 

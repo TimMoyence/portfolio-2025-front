@@ -47,10 +47,15 @@ describe('SlidePollComponent', () => {
     expect(fixture.nativeElement.querySelectorAll('.slide-poll__option').length).toBe(3);
   }));
 
-  it('incrémente le compteur local après vote', fakeAsync(() => {
+  it('ne montre ni pourcentage ni vote enregistré : le choix reste sur ce poste', fakeAsync(() => {
     const { fixture } = voter(0);
-    const bar = fixture.nativeElement.querySelector(".slide-poll__bar[data-index='0']");
-    expect(bar.style.width).toBe('100%');
+    const racine = fixture.nativeElement as HTMLElement;
+
+    expect(racine.querySelector('.slide-poll__bar')).toBeNull();
+    expect(racine.querySelector('.slide-poll__pct')).toBeNull();
+    expect(racine.querySelector('.slide-poll__status')?.textContent?.trim()).toBe(
+      'Votre choix : ChatGPT',
+    );
   }));
 
   it("marque l'option votée avec aria-current et laisse les autres sans", fakeAsync(() => {

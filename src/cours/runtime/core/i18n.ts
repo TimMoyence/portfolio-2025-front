@@ -1,11 +1,11 @@
+import { SEUIL_D_ANONYMAT } from './anonymat';
+
 const LIBELLES: Readonly<Record<string, () => string>> = {
   valider: () => $localize`:@@coursRuntimeValider:Valider`,
   suivant: () => $localize`:@@coursRuntimeSuivant:Suivant`,
   precedent: () => $localize`:@@coursRuntimePrecedent:Précédent`,
   'je-ne-sais-pas': () => $localize`:@@coursRuntimeJeNeSaisPas:Je ne sais pas`,
   'reponse-enregistree': () => $localize`:@@coursRuntimeReponseEnregistree:Réponse enregistrée`,
-  'saisie-non-numerique': () =>
-    $localize`:@@coursRuntimeSaisieNonNumerique:Saisissez un nombre — la virgule décimale est acceptée`,
   'a-revoir': () => $localize`:@@coursRuntimeARevoir:Pas encore — regardons pourquoi`,
   confirme: () => $localize`:@@coursRuntimeConfirme:C’est juste`,
   'discussion-en-cours': () =>
@@ -229,7 +229,7 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeSpacedCarteMaitrise:Carte de maîtrise par concept`,
   'spaced-non-vus': () => $localize`:@@coursRuntimeSpacedNonVus:Non vus`,
   'pulse-masque': () =>
-    $localize`:@@coursRuntimePulseMasque:Comptes affichés à partir de 5 réponses`,
+    $localize`:@@coursRuntimePulseMasque:Comptes affichés à partir de ${SEUIL_D_ANONYMAT}:seuil: réponses`,
   'production-vide': () =>
     $localize`:@@coursRuntimeProductionVide:Saisissez au moins une valeur ou choisissez « Je ne sais pas »`,
   'production-renvoyer': () =>

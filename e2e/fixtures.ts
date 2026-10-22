@@ -1,15 +1,16 @@
 import type { Page, Route } from '@playwright/test';
 import type { z } from 'zod';
+import type { DonneesFpExit } from '../contrat/types.gen';
 import {
-  etatParticipantServi,
-  rattachementServi,
-  sujetServi,
-} from '../src/app/core/adapters/formations-schemas';
+  zEtatParticipantResponseDto as etatParticipantServi,
+  zJoinSessionResponseDto as rattachementServi,
+  zSujetResponseDto as sujetServi,
+} from '../contrat/zod.gen';
 import type { SujetDuFil } from '../src/app/core/adapters/formations-fil';
 import type { RapportSeance } from '../src/app/core/ports/formations.port';
 import { TYPES_QUESTION } from '../src/cours/content/types';
 import type { EtatParticipant, ResumeBareme } from '../src/cours/content/types';
-import { etatServi } from '../src/cours/runtime/core/sync';
+import { zEtatDeSeanceResponseDto as etatServi } from '../contrat/zod.gen';
 import type { EtatSession } from '../src/cours/runtime/core/sync';
 import { buildAuthSession, buildAuthUser } from '../src/testing/factories/auth.factory';
 import {
@@ -168,7 +169,6 @@ export const ETAT_EN_COURS: EtatSession = {
   modeRythme: 'pilote',
   ecranCourant: 0,
   intervalleLibre: null,
-  participants: 1,
   revision: 0,
   pilotage: {},
   majLe: '2026-09-20T08:00:00.000Z',
@@ -186,19 +186,8 @@ export function rapportDeSeance(surcharges: Partial<RapportSeance>): RapportSean
     conceptsFragiles: [],
     libellesDesConcepts: {},
     resultats: buildResultatsSeance({ participants: 0, questions: [] }),
-    statistiques: buildStatistiquesSeance({
-      moyenne: 0,
-      mediane: 0,
-      dispersion: 0,
-      tauxParticipation: 0,
-      tauxReussite: 0,
-    }),
-    notation: buildRegleNotation({
-      partCohorteReference: 0.1,
-      ratioSeuilValidation: 0.5,
-      seuilQuestionProbleme: 0.5,
-      typesNotables: ['vote', 'numeric'],
-    }),
+    statistiques: buildStatistiquesSeance({ tauxParticipation: 0, tauxReussite: 0 }),
+    notation: buildRegleNotation({ seuilQuestionProbleme: 0.5 }),
     bareme: buildResumeBareme({ questionsNotees: 0, parType: SANS_QUESTION_NOTEE }),
     ...surcharges,
   });
@@ -258,10 +247,11 @@ export async function servirLaJonction(route: Route, jonction: Jonction): Promis
   );
 }
 
-export const BILLET_DE_SORTIE = {
+export const BILLET_DE_SORTIE: DonneesFpExit['billet'] = {
   id: 'B-SORTIE-09',
   question: 'Le taux équivalent mensuel d’un taux annuel de 12 % vaut :',
   invite: 'Qu’est-ce qui reste flou ?',
+  longueurMax: 500,
   options: [
     { id: 'a', libelle: 'Un peu moins de 1 %' },
     { id: 'b', libelle: 'Exactement 1 %' },
@@ -273,7 +263,7 @@ export const BILLET_DE_SORTIE = {
     modalite: 'solo',
     regime: 'ouvert',
   },
-} as const;
+};
 
 const SUJET_DE_SORTIE: SujetDuFil = {
   id: B2_SLUG,
@@ -360,14 +350,18 @@ export async function ouvrirEcranEtudiantB2(
     if (methode === 'POST' && chemin.endsWith(`/sessions/${code}/join`)) {
       await servirLaJonction(route, { participantId, sessionId, ecranCourant, jeton });
     } else if (methode === 'GET' && chemin.endsWith(`/sessions/${sessionId}/sujet`)) {
-      await servirJson(route, sujetServi, {
-        id: B2_SLUG,
-        titre: 'Lire et contrôler l’information chiffrée',
-        niveau: 'B2',
-        duree: 210,
-        concepts: ['proportions', 'taux', 'evolutions'],
-        ecrans,
-      });
+      await servirJson(
+        route,
+        sujetServi,
+        sujetServi.parse({
+          id: B2_SLUG,
+          titre: 'Lire et contrôler l’information chiffrée',
+          niveau: 'B2',
+          duree: 210,
+          concepts: ['proportions', 'taux', 'evolutions'],
+          ecrans,
+        }),
+      );
     } else if (methode === 'GET' && chemin.endsWith(`/sessions/${sessionId}/stream`)) {
       await servirFlux(route, { ...ETAT_EN_COURS, ecranCourant });
     } else {

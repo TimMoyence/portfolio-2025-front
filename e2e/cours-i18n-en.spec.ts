@@ -13,7 +13,6 @@ const SEPARATEUR_DE_CIBLES = ' \u0000 ';
 const ROUTES_EN = [
   '/en',
   '/en/contact',
-  '/en/cookie-settings',
   '/en/cours/demo',
   '/en/forgot-password',
   '/en/formations',

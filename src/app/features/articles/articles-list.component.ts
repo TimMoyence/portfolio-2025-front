@@ -3,16 +3,17 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@
 import { RouterLink } from '@angular/router';
 import type { ArticleListResponse, ArticleSummary } from '../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../core/adapters/article-http.adapter';
+import { DateDuSitePipe } from '../../shared/pipes/date-du-site.pipe';
 import { AsiliHeroComponent } from '../../shared/sections';
 import { ArticlesCtaComponent } from './articles-cta.component';
-import { injecterLocaleDesArticles } from './locale-des-articles';
+import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 
 const ARTICLES_PAGE_SIZE = 12;
 
 @Component({
   selector: 'app-articles-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, AsiliHeroComponent, ArticlesCtaComponent],
+  imports: [CommonModule, RouterLink, AsiliHeroComponent, ArticlesCtaComponent, DateDuSitePipe],
   templateUrl: './articles-list.component.html',
   styleUrl: './articles-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +30,7 @@ export class ArticlesListComponent {
   protected nextCursor: string | null = null;
   protected isLoadingMore = false;
   protected hasLoadMoreError = false;
-  protected readonly locale = injecterLocaleDesArticles();
+  protected readonly locale = injecterLocaleDeLaPage();
   private readonly api = inject(ArticleHttpAdapter);
   private readonly cdr = inject(ChangeDetectorRef);
 

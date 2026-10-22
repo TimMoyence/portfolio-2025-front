@@ -6,9 +6,12 @@ import type {
   FichierTelecharge,
   ParticipantRapporte,
   RapportSeance,
-  ReponseLibreRapportee,
-  ReponseRapportee,
 } from '../../../core/ports/formations.port';
+import type {
+  RapportQuestionResponseDto as ReponseRapportee,
+  RapportReponseLibreResponseDto as ReponseLibreRapportee,
+} from '../../../../../contrat/types.gen';
+import { LIBELLES_DES_INCIDENTS } from '../../../core/models/libelles-des-incidents';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import type {
   ConfusionComptee,
@@ -59,32 +62,25 @@ function confusion(id: string, nombre: number): ConfusionComptee {
   return { id, libelle: `Libelle ${id}`, nombre };
 }
 
-function etudiant(
-  prenom: string,
-  note: number,
-  sousSeuil: boolean,
-  reponses: readonly ReponseRapportee[],
-): ParticipantRapporte {
+function etudiant(prenom: string, reponses: ReponseRapportee[]): ParticipantRapporte {
   return buildParticipantRapporte({
     prenom,
     email: `${prenom.toLowerCase()}@example.com`,
     completion: reponses.length / 4,
-    note,
-    sousSeuil,
     reponses,
   });
 }
 
-const MALIK = etudiant('Malik', 4, true, [
+const MALIK = etudiant('Malik', [
   reponse('interets-composes', '1400'),
   reponse('actualisation', '910'),
 ]);
-const NORA = etudiant('Nora', 6, true, [reponse('interets-composes', '1450')]);
-const CHLOE = etudiant('Chloe', 12, false, [reponse('actualisation', '905', 3100)]);
-const THEO = etudiant('Theo', 0, false, []);
+const NORA = etudiant('Nora', [reponse('interets-composes', '1450')]);
+const CHLOE = etudiant('Chloe', [{ ...reponse('actualisation', '905', 3100), correcte: true }]);
+const THEO = etudiant('Theo', []);
 
 function rapportDe(
-  participants: readonly ParticipantRapporte[],
+  participants: ParticipantRapporte[],
   resultats: ResultatsSeance = buildResultatsSeance({ participants: participants.length }),
 ): RapportSeance {
   return buildRapportSeance({
@@ -144,26 +140,19 @@ function monterMalikFace(
 }
 
 describe('CoursSyntheseComponent', () => {
-  it('classe les etudiants du plus bas score au plus haut', async () => {
-    const fixture = await monter(rapportDe([CHLOE, MALIK, NORA]));
+  it('classe les etudiants du moins avance au plus avance, sans aucune note', async () => {
+    const fixture = await monter(rapportDe([MALIK, CHLOE, NORA]));
 
     expect(textes(fixture, 'synthese-nom')).toEqual([
-      'Malik Durand',
-      'Nora Durand',
       'Chloe Durand',
+      'Nora Durand',
+      'Malik Durand',
     ]);
-    expect(textes(fixture, 'synthese-score')).toEqual(['4', '6', '12']);
+    expect(textes(fixture, 'synthese-score')).toEqual([]);
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('Score');
   });
 
-  it('écrit la note sur 20 à la française, avec une virgule', async () => {
-    const QA = etudiant('Qa', 18.9, false, [reponse('actualisation', '905')]);
-
-    const fixture = await monter(rapportDe([QA]));
-
-    expect(textes(fixture, 'synthese-score')).toEqual(['18,9']);
-  });
-
-  it('affiche les concepts fragiles avec leur effectif, du plus lourd au plus leger', async () => {
+  it('compte pour un concept fragile les etudiants qui s y sont trompes, pas ceux qui ont reussi', async () => {
     const fixture = await monter(rapportDe([MALIK, NORA, CHLOE]));
 
     expect(textes(fixture, 'synthese-fragile-concept')).toEqual([
@@ -189,21 +178,20 @@ describe('CoursSyntheseComponent', () => {
     const fixture = await monter(rapportDe([MALIK, NORA]));
 
     expect(textes(fixture, 'synthese-avancement').map((texte) => texte.replace(/\s/g, ''))).toEqual(
-      ['50%', '25%'],
+      ['25%', '50%'],
     );
   });
 
-  it('additionne les confusions au travers des questions et les trie par nombre decroissant', async () => {
-    const fixture = await monterMalikFace(3, [
-      {
-        questionId: 'Q-1',
-        confusions: [confusion('interet-simple', 3), confusion('base-arrivee', 1)],
-      },
-      {
-        questionId: 'Q-2',
-        confusions: [confusion('interet-simple', 2), confusion('base-arrivee', 5)],
-      },
-    ]);
+  it('montre les confusions de la seance dans l ordre servi, sans les recompter par question', async () => {
+    const fixture = await monter(
+      rapportDe(
+        [MALIK],
+        buildResultatsSeance({
+          questions: [buildResultatQuestion({ confusions: [confusion('zeta', 1)] })],
+          confusions: [confusion('base-arrivee', 6), confusion('interet-simple', 5)],
+        }),
+      ),
+    );
 
     expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
       'Libelle base-arrivee',
@@ -212,31 +200,22 @@ describe('CoursSyntheseComponent', () => {
     expect(textes(fixture, 'synthese-confusion-nombre')).toEqual(['6', '5']);
   });
 
-  it('classe les confusions a egalite de nombre par id croissant', async () => {
-    const fixture = await monterMalikFace(3, [
-      { questionId: 'Q-1', confusions: [confusion('zeta', 4), confusion('alpha', 4)] },
-    ]);
-
-    expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
-      'Libelle alpha',
-      'Libelle zeta',
-    ]);
-  });
-
-  it('garde cinq confusions au plus meme si la classe en genere davantage', async () => {
-    const fixture = await monterMalikFace(6, [
-      {
-        questionId: 'Q-1',
-        confusions: [
-          confusion('c1', 9),
-          confusion('c2', 8),
-          confusion('c3', 7),
-          confusion('c4', 6),
-          confusion('c5', 5),
-          confusion('c6', 4),
-        ],
-      },
-    ]);
+  it('garde cinq confusions au plus meme si la seance en sert davantage', async () => {
+    const fixture = await monter(
+      rapportDe(
+        [MALIK],
+        buildResultatsSeance({
+          confusions: [
+            confusion('c1', 9),
+            confusion('c2', 8),
+            confusion('c3', 7),
+            confusion('c4', 6),
+            confusion('c5', 5),
+            confusion('c6', 4),
+          ],
+        }),
+      ),
+    );
 
     expect(textes(fixture, 'synthese-confusion-libelle')).toEqual([
       'Libelle c1',
@@ -300,7 +279,7 @@ describe('CoursSyntheseComponent', () => {
     });
 
     it('nomme par son enonce le QCM d un ecran servi en presentation v2', async () => {
-      const participant = etudiant('Ana', 9, false, [
+      const participant = etudiant('Ana', [
         { ...reponse('echelle', 'o2'), questionId: 'b2-s03-prediction' },
       ]);
       const fixture = await monter(
@@ -323,13 +302,50 @@ describe('CoursSyntheseComponent', () => {
     });
   });
 
-  it('marque l etudiant sans aucune reponse au lieu de lui donner un score de zero', async () => {
+  it('montre au formateur les incidents de chaque poste : heure de Paris, type lisible et contexte', async () => {
+    const fixture = await monter(
+      rapportDe([
+        MALIK,
+        {
+          ...NORA,
+          incidents: [
+            { type: 'tab_hidden', horodatage: '2026-09-12T08:05:30.000Z', contexte: null },
+            {
+              type: 'paste_attempt',
+              horodatage: '2026-09-12T08:07:00.000Z',
+              contexte: { champ: 'reponse', longueur: 42 },
+            },
+          ],
+        },
+      ]),
+    );
+
+    expect(textes(fixture, 'synthese-incidents-etudiant')).toEqual(['Nora Durand']);
+    expect(textes(fixture, 'synthese-incident-type')).toEqual([
+      LIBELLES_DES_INCIDENTS.tab_hidden,
+      LIBELLES_DES_INCIDENTS.paste_attempt,
+    ]);
+    expect(textes(fixture, 'synthese-incident-heure')[0]).toContain('10:05:30');
+    expect(textes(fixture, 'synthese-incident-contexte')).toEqual([
+      'champ : reponse, longueur : 42',
+    ]);
+  });
+
+  it('ne montre aucune section d incidents quand aucun poste n en a releve', async () => {
+    const fixture = await monter(rapportDe([MALIK, NORA]));
+
+    expect(textes(fixture, 'synthese-incidents')).toEqual([]);
+  });
+
+  it('marque l etudiant sans aucune reponse au lieu de lui donner un avancement de zero', async () => {
     const fixture = await monter(rapportDe([MALIK, THEO]));
 
     const marques = textes(fixture, 'synthese-sans-reponse');
     expect(marques.length).toBe(1);
     expect(marques[0]).toContain('aucune question');
-    expect(textes(fixture, 'synthese-score')).toEqual(['4']);
+    expect(textes(fixture, 'synthese-avancement').map((texte) => texte.replace(/\s/g, ''))).toEqual(
+      ['50%'],
+    );
     expect(textes(fixture, 'synthese-nom')).toEqual(['Malik Durand', 'Theo Durand']);
   });
 
@@ -351,21 +367,21 @@ describe('CoursSyntheseComponent', () => {
     }
 
     const ANA = {
-      ...etudiant('Ana', 14, false, [reponse('cle-et-relation', '660')]),
+      ...etudiant('Ana', [reponse('cle-et-relation', '660')]),
       reponsesLibres: [
         libre(REGLE_VISUALISER, 'Je pose la question avant le graphique.'),
         libre(REGLE_DECIDER, 'Je chiffre le constat avant l action.'),
       ],
     };
     const BASILE = {
-      ...etudiant('Basile', 0, false, []),
+      ...etudiant('Basile', []),
       reponsesLibres: [
         libre(REGLE_VISUALISER, 'Je lis l axe avant la barre.'),
         libre(FLOU, 'Le modèle de données.', 'B3-01-A3-13-CE-QUI-RESTE-FLOU'),
       ],
     };
 
-    function monterLeB301(participants: readonly ParticipantRapporte[]): Promise<Fixture> {
+    function monterLeB301(participants: ParticipantRapporte[]): Promise<Fixture> {
       return monter(rapportDe(participants), of(INSTANTANE_B3_01.deroule));
     }
 
@@ -393,7 +409,7 @@ describe('CoursSyntheseComponent', () => {
         'Une ligne porte une date_livraison antérieure à sa date_commande. La corrige-t-on automatiquement ?';
       const INVITE_DU_BILLET = 'En une phrase : pourquoi ce choix ?';
       const CLEMENT = {
-        ...etudiant('Clement', 11, false, [
+        ...etudiant('Clement', [
           { ...reponse('qualite-des-donnees', 'non-on-la-signale'), questionId: BILLET },
         ]),
         reponsesLibres: [
@@ -450,7 +466,7 @@ describe('CoursSyntheseComponent', () => {
   for (const { deroule, screenId, activityId, invite } of DEFIS_SERVIS) {
     it(`${screenId} : titre la tentative au défi par l invite de son problème, jamais par son identifiant`, async () => {
       const LEA = {
-        ...etudiant('Lea', 10, false, []),
+        ...etudiant('Lea', []),
         reponsesLibres: [
           { screenId, activityId, reponse: 'La marge se calcule sur le prix de vente.' },
         ],

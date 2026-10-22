@@ -1,20 +1,22 @@
-import { PLATFORM_ID } from '@angular/core';
+import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
+import { DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS } from '../../../cours/runtime/core/identity';
+import { LIBELLES_DES_INCIDENTS } from '../../core/models/libelles-des-incidents';
 import { isolateAnimReady } from '../../../testing/anim-ready';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { PrivacyComponent } from './privacy.component';
 
 const DONNEES_NOMMEES: readonly (readonly [string, readonly string[]])[] = [
   [
-    'l adresse IP, le user-agent et le referer qu enregistrent le message de contact, la demande d audit et le choix de cookies',
+    'l adresse IP, le user-agent et le referer qu enregistrent le message de contact et la demande d audit',
     [
       'Données de contact : les informations que vous nous transmettez via le formulaire.',
-      "Données techniques de la demande : l'adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact, chaque demande d'audit et chaque choix de cookies.",
+      "Données techniques de la demande : l'adresse IP, le navigateur (user-agent) et la page de provenance (referer), enregistrés avec chaque message de contact et chaque demande d'audit.",
     ],
   ],
   [
-    'ce que gardent le journal des connexions et la surveillance des requêtes suspectes',
+    'ce que gardent le journal des connexions, sans l email en clair, et la surveillance des requêtes suspectes',
     [
-      "Données de sécurité : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l'adresse IP, le navigateur (user-agent) et l'email saisi, inscrits au journal du serveur ; l'adresse IP et le navigateur d'une requête jugée suspecte.",
+      "Données de sécurité : à chaque événement de connexion ou de sécurité de votre compte, réussi ou non, l'adresse IP, le navigateur (user-agent) et une empreinte non réversible de l'email saisi, inscrits au journal du serveur ; l'adresse IP et le navigateur d'une requête jugée suspecte.",
     ],
   ],
   [
@@ -32,17 +34,16 @@ const DONNEES_NOMMEES: readonly (readonly [string, readonly string[]])[] = [
   [
     'les données des séances de cours, relevé des incidents compris',
     [
-      "Données des séances de cours : le prénom, le nom et l'adresse email saisis pour rejoindre une séance ; vos réponses aux questions, avec leur durée, et aux sondages, vos productions, vos tentatives d'énigme, vos scores et votre progression par notion ; le relevé des incidents survenus pendant la séance (onglet masqué, fenêtre quittée, sortie du plein écran, tentative de copier ou de coller, raccourci bloqué, outils de développement soupçonnés, connexion perdue, réponse trop rapide), avec leur contexte.",
+      "Données des séances de cours : le prénom, le nom et l'adresse email saisis pour rejoindre une séance ; vos réponses aux questions, avec leur durée, et aux sondages, vos productions, vos tentatives d'énigme, vos scores et votre progression par notion ; le relevé des incidents survenus pendant la séance (onglet masqué, fenêtre quittée, tentative de copier, tentative de coller, menu contextuel ouvert, raccourci bloqué, outils de développement soupçonnés, page quittée ou rechargée, réponse trop rapide), avec leur heure et leur contexte, que le formateur voit dans la synthèse de la séance.",
     ],
   ],
 ];
 
 const FINALITES_NOMMEES: readonly (readonly [string, readonly string[]])[] = [
   [
-    'ces données techniques : la sécurité et la preuve du choix de cookies',
+    'ces données techniques : la sécurité',
     [
       'Protéger le site et vos comptes : repérer les connexions, les requêtes et les envois de formulaire suspects.',
-      'Garder la preuve de votre choix de cookies.',
     ],
   ],
   [
@@ -62,7 +63,10 @@ describe('PrivacyComponent', () => {
       http: false,
       router: true,
       imports: [PrivacyComponent],
-      providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
+      providers: [
+        { provide: PLATFORM_ID, useValue: 'browser' },
+        { provide: LOCALE_ID, useValue: 'fr' },
+      ],
     }).createComponent(PrivacyComponent);
     fixture.detectChanges();
     return fixture.nativeElement as HTMLElement;
@@ -108,7 +112,39 @@ describe('PrivacyComponent', () => {
     expect(texteNormalise(page.querySelector('#base'))).not.toContain('amélioration du site');
   });
 
+  it('annonce l effacement des données techniques des demandes au bout de six mois', () => {
+    expect(texteNormalise(rendre().querySelector('#conservation'))).toContain(
+      "L'adresse IP, le navigateur et la page de provenance enregistrés avec un message de contact ou une demande d'audit sont effacés 6 mois après",
+    );
+  });
+
+  it('annonce la durée de conservation de l identité de séance que le poste applique', () => {
+    const heures = DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS / (60 * 60 * 1000);
+
+    expect(texteNormalise(rendre().querySelector('#cookies'))).toContain(
+      `s'efface au plus tard ${heures} heures après votre dernière action`,
+    );
+  });
+
+  it('nomme chaque type d incident que le poste consigne, et aucun autre', () => {
+    const collecte = texteNormalise(rendre().querySelector('#collecte'));
+    const releve = /incidents survenus pendant la séance \(([^)]*)\)/u.exec(collecte)?.[1] ?? '';
+
+    expect(releve.split(', ')).toEqual(Object.values(LIBELLES_DES_INCIDENTS));
+  });
+
   it('date la politique du jour où elle a nommé ces données', () => {
-    expect(rendre().textContent).toContain('Dernière mise à jour : 17 octobre 2026');
+    expect(rendre().textContent).toContain('Dernière mise à jour : 22 octobre 2026');
+  });
+
+  it('nomme chaque cookie et stockage local du poste, sans choix à proposer', () => {
+    const cookies = rendre().querySelector('#cookies');
+
+    expect([...(cookies?.querySelectorAll('li strong') ?? [])].map(texteNormalise)).toEqual([
+      'Session du compte',
+      'Séance de cours',
+      "Bandeau d'information",
+    ]);
+    expect(texteNormalise(cookies)).toContain('ils ne demandent donc pas votre consentement');
   });
 });

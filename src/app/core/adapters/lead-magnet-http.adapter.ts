@@ -6,7 +6,10 @@ import type { ToolkitPageData } from '../models/toolkit-page.model';
 import type { ToolkitRequest, ToolkitResponse } from '../models/toolkit-request.model';
 import type { LeadMagnetPort } from '../ports/lead-magnet.port';
 import { luPar } from './lu-par';
-import { guideDemandeServi, guideServi } from './site-schemas';
+import {
+  zLeadMagnetResponseDto as guideDemandeServi,
+  zToolkitPageResponseDto as guideServi,
+} from '../../../../contrat/zod.gen';
 
 @Injectable()
 export class LeadMagnetHttpAdapter implements LeadMagnetPort {

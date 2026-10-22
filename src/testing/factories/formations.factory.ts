@@ -1,4 +1,5 @@
 import { of } from 'rxjs';
+import type { RapportQuestionResponseDto } from '../../../contrat/types.gen';
 import type {
   DerouleCours,
   EcranDeroule,
@@ -23,7 +24,6 @@ import type {
   ParticipantDeSeance,
   ParticipantRapporte,
   ReponseLibreFormateur,
-  ReponseRapportee,
   StrategiePublique,
   SyntheseConcept,
   VerdictProduction,
@@ -110,9 +110,11 @@ function resultatsDeLEcran(ecran: EcranDeroule): readonly ResultatQuestion[] {
 export function buildResultatsDeChaqueQuestion(
   ecrans: readonly EcranDeroule[],
 ): ResultatsSeance & Pick<ResultatsDuFlux, 'jalons' | 'enigmes'> {
+  const questions = ecrans.flatMap(resultatsDeLEcran);
   return {
     participants: 2,
-    questions: ecrans.flatMap(resultatsDeLEcran),
+    questions,
+    confusions: questions.flatMap(({ confusions }) => confusions).slice(0, 1),
     jalons: Object.fromEntries(
       ecrans
         .filter(({ type }) => type === 'fp-pulse')
@@ -219,18 +221,24 @@ export function buildSpacedQuestionPublique(
   };
 }
 
+const UUID_DE_SEANCE = '4d0f2a9e-0d7f-4d2f-9a3c-1f6b2a7c8d90';
+const UUID_DE_PARTICIPANT = '8f1c3b2a-5d4e-4f6a-9b8c-7d6e5f4a3b2c';
+const UUID_DE_FORMATEUR = '2b7e1c9d-3a4f-4e5b-8c6d-9e0f1a2b3c4d';
+
 export function buildEtatParticipant(overrides: Partial<EtatParticipant> = {}): EtatParticipant {
   return {
     ...etatParticipantVierge({
-      sessionId: 'seance-1',
-      participantId: 'participant-1',
+      sessionId: UUID_DE_SEANCE,
+      participantId: UUID_DE_PARTICIPANT,
       revision: 0,
     }),
     ...overrides,
   };
 }
 
-export function buildReponseRapportee(overrides: Partial<ReponseRapportee> = {}): ReponseRapportee {
+export function buildReponseRapportee(
+  overrides: Partial<RapportQuestionResponseDto> = {},
+): RapportQuestionResponseDto {
   return {
     questionId: 'Q-CAP-03',
     concept: 'capitalisation',
@@ -254,11 +262,9 @@ export function buildParticipantRapporte(
     nom: 'Durand',
     email: 'malik@example.com',
     completion: 1,
-    note: 12,
-    sousSeuil: false,
     reponses: [buildReponseRapportee()],
     reponsesLibres: [],
-    incidents: 0,
+    incidents: [],
     ...overrides,
   };
 }
@@ -276,6 +282,7 @@ export function buildEcranDeroule(overrides: Partial<EcranDeroule> = {}): EcranD
       {
         questionId: 'Q-CAP-03',
         bonneReponse: '1 480,24',
+        optionId: 'b',
         confusions: [{ id: 'interet-simple', libelle: 'Intérêts simples au lieu de composés' }],
       },
     ],
@@ -298,9 +305,9 @@ export function buildAnnotationFormateur(
   overrides: Partial<AnnotationFormateur> = {},
 ): AnnotationFormateur {
   return {
-    id: 'annotation-1',
-    sessionId: 'seance-1',
-    teacherId: 'formateur-1',
+    id: '6a1b2c3d-4e5f-4a6b-8c7d-0e1f2a3b4c5d',
+    sessionId: UUID_DE_SEANCE,
+    teacherId: UUID_DE_FORMATEUR,
     screenId: 'ecran-1',
     note: 'Relancer le rang du fond sur la base de calcul.',
     updatedAt: HORODATAGE,
@@ -312,16 +319,14 @@ export function buildReponseLibreFormateur(
   overrides: Partial<ReponseLibreFormateur> = {},
 ): ReponseLibreFormateur {
   return {
-    id: 'reponse-libre-1',
-    sessionId: 'seance-1',
-    participantId: 'participant-1',
+    id: '9c8b7a6d-5e4f-4a3b-9c2d-1e0f9a8b7c6d',
+    sessionId: UUID_DE_SEANCE,
+    participantId: UUID_DE_PARTICIPANT,
     screenId: 'ecran-1',
     activityId: 'reflexion-1',
     response: 'Je compare d’abord les bases avant les pourcentages.',
     premiereReponse: null,
-    strategiesServiesLe: null,
     dureeMs: 42_000,
-    status: 'enregistre',
     submittedAt: HORODATAGE,
     ...overrides,
   };
@@ -331,7 +336,7 @@ export function buildParticipantDeSeance(
   overrides: Partial<ParticipantDeSeance> = {},
 ): ParticipantDeSeance {
   return {
-    id: 'participant-1',
+    id: UUID_DE_PARTICIPANT,
     prenom: 'Lea',
     nom: 'Dubois',
     evince: false,

@@ -1,9 +1,11 @@
+import { zSubmitAnswerRequestDto } from '../../../../../contrat/zod.gen';
 import { ETATS_PULSE, type ValeurProduction } from '../../../../cours/content/types';
 import { lireTextes } from '../../../../cours/runtime/blocks/retours';
 import {
   estChaineNonVide,
   estEntierPositif,
   estMembre,
+  estNombreFini,
   estObjet,
   estTexteNonVide,
   objet,
@@ -41,13 +43,15 @@ export const EVENEMENTS_DES_BRIQUES: readonly string[] = [
   'fp-plot-reglage',
 ];
 
+const DUREE_MAX_MS = zSubmitAnswerRequestDto.shape.dureeMs.maxValue ?? Number.MAX_SAFE_INTEGER;
+
 function duree(detail: Detail): number | null {
   const dureeMs = detail['dureeMs'];
-  return estEntierPositif(dureeMs) ? dureeMs : null;
+  return estEntierPositif(dureeMs) ? Math.min(dureeMs, DUREE_MAX_MS) : null;
 }
 
 function estValeurDeReponse(valeur: unknown): valeur is number | string {
-  return typeof valeur === 'string' || (typeof valeur === 'number' && Number.isFinite(valeur));
+  return typeof valeur === 'string' || estNombreFini(valeur);
 }
 
 function reponse(
@@ -70,10 +74,6 @@ function libre(
   return estTexteNonVide(texte)
     ? [{ kind: 'libre', screenId, activityId, response: texte, dureeMs }]
     : [];
-}
-
-function estNombreFini(valeur: unknown): valeur is number {
-  return typeof valeur === 'number' && Number.isFinite(valeur);
 }
 
 function estTexte(valeur: unknown): valeur is string {
@@ -160,8 +160,7 @@ function reglage(
     return [];
   }
   const valeurs = Object.entries(reglages);
-  return valeurs.length > 0 &&
-    valeurs.every(([, valeur]) => typeof valeur === 'number' && Number.isFinite(valeur))
+  return valeurs.length > 0 && valeurs.every(([, valeur]) => estNombreFini(valeur))
     ? [{ kind, screenId, reglages: reglages as Readonly<Record<string, number>> }]
     : [];
 }

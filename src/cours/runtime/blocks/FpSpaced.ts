@@ -1,9 +1,9 @@
-import { BOITES_DE_REVISION, type BoiteDeRevision } from '../../content/types';
+import type { SpacedQuestionPubliqueResponseDto } from '../../../../contrat/types.gen';
+import { BOITES_DE_REVISION } from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import {
   type ContenuDeBrique,
-  type OptionPublique,
   avecJeNeSaisPas,
   copierLeSocle,
   projeterOptions,
@@ -21,14 +21,7 @@ export interface SpacedRappel extends ContenuDeBrique {
   readonly intitule: string;
 }
 
-export interface SpacedQuestionPublique {
-  readonly questionId: string;
-  readonly concept: string;
-  readonly boite: BoiteDeRevision;
-  readonly cours: string;
-  readonly enonce: string;
-  readonly options: readonly OptionPublique[];
-}
+export type SpacedQuestionPublique = SpacedQuestionPubliqueResponseDto;
 
 const BONNE_EN_LIGNE = safeHtml`class="fp-spaced__bonne"`;
 
@@ -183,7 +176,7 @@ export class FpSpaced extends FpVerdicts {
   }
 
   private pupitreAvantRevelation(): EscapedHtml {
-    return this.bonnes === null ? this.pupitre() : VIDE;
+    return this.bonnes === null && !this.cloture ? this.pupitre() : VIDE;
   }
 
   private pupitre(): EscapedHtml {
@@ -226,7 +219,7 @@ export class FpSpaced extends FpVerdicts {
   }
 
   private options(question: SpacedQuestionPublique): EscapedHtml {
-    const boutons = avecJeNeSaisPas(question.options, this.texte('je-ne-sais-pas')).map(
+    const boutons = avecJeNeSaisPas(question.options).map(
       (option) =>
         safeHtml`<button type="button" class="fp-spaced__option" data-testid="option" data-option="${escapeHtml(option.id)}">${escapeHtml(option.libelle)}</button>`,
     );

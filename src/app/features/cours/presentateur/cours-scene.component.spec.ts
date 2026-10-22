@@ -87,7 +87,7 @@ function ecranDAtelier(surcharges: Partial<EcranDeroule> = {}): EcranDeroule {
     donnees: {
       questions: [{ brique: 'fp-vote', donnees: { question: buildVoteQuestion() } }],
     },
-    corriges: [{ questionId: 'Q-CAP-03', bonneReponse: 'b', confusions: [] }],
+    corriges: [{ questionId: 'Q-CAP-03', bonneReponse: 'b', optionId: 'b', confusions: [] }],
     corrigeEcran: null,
     ...surcharges,
   });

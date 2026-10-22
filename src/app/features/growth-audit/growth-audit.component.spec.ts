@@ -1,5 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { LOCALE_ID } from '@angular/core';
+import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
+import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { aLaPage } from '../../../testing/chemin-de-la-page';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { NgForm } from '@angular/forms';
@@ -44,27 +46,101 @@ describe('GrowthAuditComponent', () => {
 
   beforeEach(async () => {
     auditServiceMock.submit.calls.reset();
+    auditServiceMock.confirmer.calls.reset();
     auditServiceMock.getSummary.calls.reset();
     auditServiceMock.stream.calls.reset();
 
     auditServiceMock.submit.and.returnValue(of(buildAuditCreateResponse({ auditId: 'audit-id' })));
+    auditServiceMock.confirmer.and.returnValue(of({ auditId: 'audit-confirme' }));
     auditServiceMock.getSummary.and.returnValue(of(buildAuditSummaryResponse()));
     auditServiceMock.stream.and.returnValue(of(buildAuditStreamHeartbeat()));
 
     await TestBed.configureTestingModule({
       imports: [GrowthAuditComponent],
-      providers: [{ provide: AUDIT_REQUEST_PORT, useValue: auditServiceMock }],
+      providers: [{ provide: AUDIT_REQUEST_PORT, useValue: auditServiceMock }, provideRouter([])],
     }).compileComponents();
   });
 
-  it('envoie avec la demande d audit la langue du site lue de LOCALE_ID, sans sa région', () => {
-    TestBed.overrideProvider(LOCALE_ID, { useValue: 'en-GB' });
-    const fixture = TestBed.createComponent(GrowthAuditComponent);
+  describe('S3 — une demande par courriel ne part qu après confirmation', () => {
+    const JETON = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
-    remplirEtSoumettre(fixture.componentInstance, true);
+    function ouvrirLeLien(plateforme: 'browser' | 'server' = 'browser') {
+      TestBed.overrideProvider(PLATFORM_ID, { useValue: plateforme });
+      const route = { snapshot: { queryParamMap: convertToParamMap({ token: JETON }) } };
+      TestBed.overrideProvider(ActivatedRoute, { useValue: route });
+      const navigation = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      fixture.detectChanges();
+      return { component: fixture.componentInstance, navigation, route };
+    }
 
-    expect(auditServiceMock.submit.calls.mostRecent().args[0].locale).toBe('en');
+    it('annonce le lien de confirmation sans ouvrir le suivi tant que l adresse n est pas confirmée', () => {
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+      auditServiceMock.submit.and.returnValue(
+        of(buildAuditCreateResponse({ auditId: 'audit-en-attente', status: 'UNCONFIRMED' })),
+      );
+
+      remplirEtSoumettre(fixture.componentInstance, true);
+
+      expect(fixture.componentInstance.successMessage).toBe(
+        fixture.componentInstance.formLabels.confirmationEnvoyee,
+      );
+      expect(fixture.componentInstance.auditId).toBeUndefined();
+      expect(auditServiceMock.stream).not.toHaveBeenCalled();
+    });
+
+    it('confirme la demande par le jeton du lien, le retire de l adresse et suit l audit', () => {
+      const { component, navigation, route } = ouvrirLeLien();
+
+      expect(auditServiceMock.confirmer).toHaveBeenCalledOnceWith(JETON);
+      expect(navigation).toHaveBeenCalledOnceWith([], {
+        relativeTo: route as unknown as ActivatedRoute,
+        queryParams: { token: null },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+      expect(component.successMessage).toBe(component.formLabels.confirmee);
+      expect(component.auditId).toBe('audit-confirme');
+      expect(auditServiceMock.stream).toHaveBeenCalledWith('audit-confirme');
+    });
+
+    it('dit un lien invalide ou expiré (404) sans ouvrir de suivi', () => {
+      auditServiceMock.confirmer.and.returnValue(
+        throwError(() => refusDuBack(404, 'Lien invalide ou expiré.')),
+      );
+
+      const { component } = ouvrirLeLien();
+
+      expect(component.errorMessage).toBe(component.formLabels.lienDeConfirmationRefuse);
+      expect(auditServiceMock.stream).not.toHaveBeenCalled();
+    });
+
+    it('ne consomme pas le jeton au rendu serveur', () => {
+      ouvrirLeLien('server');
+
+      expect(auditServiceMock.confirmer).not.toHaveBeenCalled();
+    });
+
+    it('ne confirme rien quand la page s ouvre sans jeton', () => {
+      TestBed.createComponent(GrowthAuditComponent).detectChanges();
+
+      expect(auditServiceMock.confirmer).not.toHaveBeenCalled();
+    });
   });
+
+  for (const { localeId, chemin } of [
+    { localeId: 'en-GB', chemin: '/growth-audit' },
+    { localeId: 'fr', chemin: '/en/growth-audit' },
+  ]) {
+    it(`envoie avec la demande d audit la langue de la page, sans sa région (LOCALE_ID ${localeId}, ${chemin})`, async () => {
+      TestBed.overrideProvider(LOCALE_ID, { useValue: localeId });
+      const fixture = await aLaPage(chemin, () => TestBed.createComponent(GrowthAuditComponent));
+
+      remplirEtSoumettre(fixture.componentInstance, true);
+
+      expect(auditServiceMock.submit.calls.mostRecent().args[0].locale).toBe('en');
+    });
+  }
 
   function soumettreEtDiffuser(event: AuditStreamEvent, auditId: string) {
     const fixture = TestBed.createComponent(GrowthAuditComponent);
@@ -80,45 +156,48 @@ describe('GrowthAuditComponent', () => {
     };
   }
 
-  it('renders current URL and synthesis section badges from enriched progress details', () => {
+  it('affiche l URL en cours et les dernieres pages terminees pendant l analyse des pages', () => {
     const { component, root } = soumettreEtDiffuser(
       buildAuditProgressEvent({
         auditId: 'audit-1',
-        progress: 72,
-        step: 'Recap IA des pages',
+        progress: 40,
+        step: 'Analyse des pages',
         details: {
-          phase: 'synthesis',
-          iaTask: 'synthesis',
-          iaSubTask: 'prioritySection',
+          phase: 'technical_pages',
+          iaTask: 'technical_scan',
+          iaSubTask: 'scan',
+          done: 2,
+          total: 10,
           currentUrl: 'https://example.com/pricing',
           recentCompletedUrls: ['https://example.com/', 'https://example.com/about'],
-          sectionStatuses: {
-            summary: 'completed',
-            prioritySection: 'started',
-          },
         },
       }),
       'audit-1',
     );
 
     expect(component.auditCurrentUrl).toBe('https://example.com/pricing');
-    expect(component.auditIaTask).toBe('Synthèse IA');
-    expect(component.auditSectionBadges.length).toBeGreaterThan(0);
+    expect(component.auditRecentCompletedUrls).toEqual([
+      'https://example.com/',
+      'https://example.com/about',
+    ]);
     const content = root.textContent as string;
     expect(content).toContain('URL en cours');
     expect(content).toContain('https://example.com/pricing');
-    expect(content).toContain('Résumé: completed');
-    expect(content).toContain('Priorités: started');
   });
 
   it('affiche la section annoncée par l évènement sans altérer les statuts reçus', () => {
-    const statutsRecus = { summary: 'completed' };
-    const { root } = soumettreEtDiffuser(
+    const statutsRecus = { summary: 'completed' as const };
+    const { component, root } = soumettreEtDiffuser(
       buildAuditProgressEvent({
         auditId: 'audit-3',
         progress: 80,
         step: 'Recap IA des pages',
         details: {
+          phase: 'synthesis',
+          iaTask: 'synthesis',
+          iaSubTask: 'prioritySection',
+          done: 2,
+          total: 5,
           sectionStatuses: statutsRecus,
           section: 'prioritySection',
           sectionStatus: 'started',
@@ -127,17 +206,25 @@ describe('GrowthAuditComponent', () => {
       'audit-3',
     );
 
+    expect(component.auditIaTask).toBe('Synthèse IA');
+    expect(root.textContent).toContain('Résumé: completed');
     expect(root.textContent).toContain('Priorités: started');
     expect(statutsRecus).toEqual({ summary: 'completed' });
   });
 
-  it('keeps backward compatibility when progress details only expose done/total', () => {
+  it('n affiche ni URL ni section pour une synthese sans section', () => {
     const { component } = soumettreEtDiffuser(
       buildAuditProgressEvent({
         auditId: 'audit-2',
         progress: 45,
         step: 'Analyse des pages',
-        details: { done: 3, total: 10 },
+        details: {
+          phase: 'synthesis',
+          iaTask: 'synthesis',
+          iaSubTask: 'summary',
+          done: 3,
+          total: 10,
+        },
       }),
       'audit-2',
     );
@@ -176,25 +263,6 @@ describe('GrowthAuditComponent', () => {
     expect(component.clientReport).toBeNull();
     expect(root.querySelector('app-audit-client-report-section')).toBeNull();
     expect(root.textContent).toContain('Résumé de votre audit');
-  });
-
-  it('does not crash on unknown details keys', () => {
-    const { component } = soumettreEtDiffuser(
-      buildAuditProgressEvent({
-        auditId: 'audit-3',
-        progress: 30,
-        step: 'Analyse',
-        details: {
-          foo: 'bar',
-          nested: { ok: true },
-        },
-      }),
-      'audit-3',
-    );
-
-    expect(component.auditPhaseLabel).toBe('');
-    expect(component.auditCurrentUrl).toBe('');
-    expect(component.auditRecentCompletedUrls).toEqual([]);
   });
 
   describe('bornes et grammaires du back sur la demande d audit', () => {

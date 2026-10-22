@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LEAD_MAGNET_PORT } from '../../../../core/ports/lead-magnet.port';
+import { HTTP_RESPONSE_STATUS } from '../../../../core/ssr/http-response-status';
 import type { ToolkitPageData } from '../../../../core/models/toolkit-page.model';
 import { PictoComponent } from '../../../../shared/components/picto/picto.component';
 
@@ -26,6 +27,7 @@ export class ToolkitPrivateComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly port = inject(LEAD_MAGNET_PORT);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly responseStatus = inject(HTTP_RESPONSE_STATUS, { optional: true });
 
   readonly state = signal<PageState>('loading');
   readonly data = signal<ToolkitPageData | null>(null);
@@ -52,6 +54,7 @@ export class ToolkitPrivateComponent {
         this.state.set('loaded');
       },
       error: () => {
+        this.responseStatus?.set(404);
         this.state.set('error');
       },
     });

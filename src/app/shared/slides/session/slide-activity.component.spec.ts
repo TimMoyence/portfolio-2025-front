@@ -101,8 +101,10 @@ function revelerAuPoste(
   fixture.detectChanges();
 }
 
+const PILOTAGE_REVELE = { revele: true, saisieFermee: true } as const;
+
 function directRevele(revele: boolean) {
-  return { pilotage: revele ? { revele: true } : {}, resultats: null, comptesJalon: null };
+  return { pilotage: revele ? PILOTAGE_REVELE : {}, resultats: null, comptesJalon: null };
 }
 
 function evenements(fixture: Fixture): EvenementBrique[] {
@@ -394,7 +396,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
       buildResultatQuestion({ questionId: 'Q-CAP-03', total: 4, parOption: { a: 1, b: 3 } }),
     ];
     const direct = (revele: boolean) => ({
-      pilotage: revele ? { revele: true } : {},
+      pilotage: revele ? PILOTAGE_REVELE : {},
       resultats,
       comptesJalon: null,
     });
@@ -584,7 +586,7 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
         kind: 'reponse',
         screenId: 'b2-01-numerique',
         questionId: 'Q-VA-07',
-        valeur: 1480.24,
+        valeur: '1 480,24',
         dureeMs: jasmine.any(Number),
       },
     ]);

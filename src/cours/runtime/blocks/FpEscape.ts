@@ -1,3 +1,5 @@
+import type { EnigmePresentateurResponseDto } from '../../../../contrat/types.gen';
+import { zTenterEnigmeRequestDto } from '../../../../contrat/zod.gen';
 import { DESACTIVE, type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { chaineDe, estChaineOuNul, estObjet } from '../core/valeurs';
 import { Battement, formaterChrono, SECONDE_MS } from './battement';
@@ -25,18 +27,14 @@ export interface EscapeParcoursPublic extends ContenuDeBrique {
   readonly enigmes: readonly EscapeEnigmePublique[];
 }
 
-interface SolutionnaireEnigme {
-  readonly enigmeId: string;
-  readonly solution: string;
-  readonly fragment: string;
-}
+type SolutionnaireEnigme = EnigmePresentateurResponseDto;
 
 interface Solutionnaire {
   readonly enigmes: readonly SolutionnaireEnigme[];
   readonly codeFinal: string;
 }
 
-const LONGUEUR_MAX_REPONSE = 40;
+const LONGUEUR_MAX_REPONSE = zTenterEnigmeRequestDto.shape.reponse.maxLength ?? Infinity;
 
 function projeterParcours(source: EscapeParcoursPublic): EscapeParcoursPublic {
   return {
@@ -500,7 +498,7 @@ export class FpEscape extends FpContenu<EscapeParcoursPublic> {
     this.emit('fp-escape-tentative', {
       parcoursId: parcours.id,
       enigmeId: enigme.id,
-      reponse: reponse.slice(0, LONGUEUR_MAX_REPONSE),
+      reponse: [...reponse].slice(0, LONGUEUR_MAX_REPONSE).join(''),
       dureeMs: this.depuisAffichage(),
     });
     this.refresh();

@@ -5,6 +5,10 @@ import { provideRouter } from '@angular/router';
 import { NEVER, of, throwError } from 'rxjs';
 import { LEAD_MAGNET_PORT } from '../../../../core/ports/lead-magnet.port';
 import {
+  HTTP_RESPONSE_STATUS,
+  type HttpResponseStatus,
+} from '../../../../core/ssr/http-response-status';
+import {
   buildToolkitPageData,
   createLeadMagnetPortStub,
 } from '../../../../../testing/factories/lead-magnet.factory';
@@ -15,6 +19,7 @@ interface SetupOptions {
   token?: string | null;
   behaviour?: 'success' | 'error' | 'pending';
   platform?: 'browser' | 'server';
+  statut?: HttpResponseStatus;
 }
 
 function setup(opts: SetupOptions = {}): {
@@ -22,7 +27,7 @@ function setup(opts: SetupOptions = {}): {
   component: ToolkitPrivateComponent;
   port: ReturnType<typeof createLeadMagnetPortStub>;
 } {
-  const { token = 'valid-token', behaviour = 'success', platform = 'browser' } = opts;
+  const { token = 'valid-token', behaviour = 'success', platform = 'browser', statut } = opts;
 
   const port = createLeadMagnetPortStub();
   if (behaviour === 'success') {
@@ -40,6 +45,7 @@ function setup(opts: SetupOptions = {}): {
       { provide: LEAD_MAGNET_PORT, useValue: port },
       { provide: PLATFORM_ID, useValue: platform },
       fournirLaRoute({ parametres: token ? { token } : {} }),
+      ...(statut === undefined ? [] : [{ provide: HTTP_RESPONSE_STATUS, useValue: statut }]),
     ],
   });
 
@@ -81,7 +87,9 @@ describe('ToolkitPrivateComponent', () => {
   });
 
   it('devrait passer en erreur quand la resolution du token echoue', () => {
-    const { component, fixture } = setup({ behaviour: 'error' });
+    const statut = jasmine.createSpyObj<HttpResponseStatus>('statut', ['set']);
+    const { component, fixture } = setup({ behaviour: 'error', statut });
+    expect(statut.set).toHaveBeenCalledOnceWith(404);
     expect(component.state()).toBe('error');
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.textContent).toContain('Impossible de charger');

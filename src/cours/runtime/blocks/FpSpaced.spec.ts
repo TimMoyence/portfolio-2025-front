@@ -179,6 +179,14 @@ describe('FpSpaced', () => {
     expect(noeuds(hote, 'bonne-reponse')).toEqual([]);
   });
 
+  it('ne propose plus rien des que la seance ferme les reponses, avant meme le corrige', () => {
+    hote.questions = DUES;
+    hote.cloture = true;
+
+    expect(noeuds(hote, 'option')).toEqual([]);
+    expect(noeuds(hote, 'reponses-closes').length).toBe(1);
+  });
+
   it('emet la reponse avec l identifiant stable de l option, puis passe a la suivante', () => {
     hote.questions = DUES;
     jasmine.clock().tick(REFLEXION_MS);

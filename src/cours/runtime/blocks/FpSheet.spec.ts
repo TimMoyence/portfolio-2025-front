@@ -756,10 +756,11 @@ describe('FpSheet', () => {
     attendreLeRenvoiEpuise(hote, recus, 2);
   });
 
-  it('RET-31 · ne renvoie plus de reprise des que la correction est revelee', () => {
+  it('RET-31 · ne renvoie plus de reprise des que le serveur ferme la saisie, etayage revenu a zero compris', () => {
     const recus = envois(hote);
     recevoirLeVerdict(hote);
-    hote.etayage = 1;
+    hote.etayage = 0;
+    hote.saisieFermee = true;
     expect(cellule(hote, 'D3').hasAttribute('readonly')).toBe(true);
     saisir(hote, 'D3', '=C3*(1+$B$1)');
 
@@ -770,9 +771,9 @@ describe('FpSheet', () => {
     expect(recus.length).toBe(1);
   });
 
-  it('RET-31 · ferme la feuille aux reponses des que sa correction est revelee', () => {
+  it('RET-31 · ferme la feuille aux reponses des que le serveur sert la saisie fermee', () => {
     const recus = envois(hote);
-    hote.etayage = 1;
+    hote.saisieFermee = true;
 
     expect(cellule(hote, 'C3').hasAttribute('readonly')).toBe(true);
     expect(bouton(hote, 'valider').disabled).toBe(true);

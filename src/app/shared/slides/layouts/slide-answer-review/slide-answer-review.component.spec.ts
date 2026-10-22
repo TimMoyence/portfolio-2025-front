@@ -45,7 +45,7 @@ describe('SlideAnswerReviewComponent', () => {
         (ligne) => ligne.dataset['reference'],
       ),
     ).toEqual([EVOLUTION, PART]);
-    expect(explication(element, PART)?.textContent).toContain('45,5 % du CA');
+    expect(explication(element, PART)?.textContent).toContain('45,5\u00a0% du CA');
   });
 
   it('T6 · montre a l etudiant la reponse attendue de son tirage', () => {

@@ -2,12 +2,15 @@ import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import type { DerouleDuFil, SujetDuFil } from '../src/app/core/adapters/formations-fil';
 import {
-  derouleServi,
-  rapportServi,
-  sujetServi,
-  verdictReponseServi,
-} from '../src/app/core/adapters/formations-schemas';
-import { sessionServie, utilisateurServi } from '../src/app/core/adapters/site-schemas';
+  zDerouleResponseDto as derouleServi,
+  zSessionResultsResponseDto as rapportServi,
+  zSubmitAnswerResponseDto as verdictReponseServi,
+  zSujetResponseDto as sujetServi,
+} from '../contrat/zod.gen';
+import {
+  zAuthResponseDto as sessionServie,
+  zUserResponseDto as utilisateurServi,
+} from '../contrat/zod.gen';
 import type { AuthSession } from '../src/app/core/models/auth.model';
 import { buildAuthSession, buildAuthUser } from '../src/testing/factories/auth.factory';
 import {
@@ -78,6 +81,7 @@ const DEROULE: DerouleDuFil = {
         {
           questionId: QUESTION.id,
           bonneReponse: 'b',
+          optionId: 'b',
           confusions: [{ id: 'interet-simple', libelle: 'Intérêt simple' }],
         },
       ],
@@ -208,7 +212,7 @@ test.describe('Séance de cours dans un navigateur réel', () => {
             code: CODE,
             ouverteLe: '2026-09-15T08:00:00.000Z',
             fermeeLe: '2026-09-15T10:00:00.000Z',
-            resultats: { participants: 1, questions: [] },
+            resultats: { participants: 1, questions: [], confusions: [] },
           }),
         );
       } else if (chemin.endsWith(`/sessions/${SESSION}/deroule`)) {

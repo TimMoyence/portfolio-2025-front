@@ -93,6 +93,7 @@ test.describe('une page ouverte par un lien à jeton ne transmet son URL ni à l
       expect(fuites).toEqual([]);
       expect(entetesDeLAppel['referer']).toBeUndefined();
       expect(document?.headers()['referrer-policy']).toBe('no-referrer');
+      expect(document?.headers()['cache-control']).toBe('private, no-store');
     });
   }
 });

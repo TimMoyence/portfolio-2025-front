@@ -21,10 +21,10 @@ describe('lecteurDePublicationsDeCours (H1)', () => {
   let journal: JournalEspion;
   let maintenant: number;
 
-  function lecteur(apiBaseUrl: string | undefined) {
+  function lecteur(apiBaseUrl: string | undefined, slugs: readonly string[] = [SLUG]) {
     return lecteurDePublicationsDeCours({
       apiBaseUrl,
-      slugs: [SLUG],
+      slugs,
       fetch: appels,
       journal,
       maintenant: () => maintenant,
@@ -70,14 +70,12 @@ describe('lecteurDePublicationsDeCours (H1)', () => {
     );
   });
 
-  it('se replie quand la réponse porte un champ que le contrat du catalogue ne connaît pas', async () => {
-    appels.and.resolveTo(
-      reponseJson(coursPublie({ version: 3, publieLe: '2026-10-02T08:15:00.000Z', inconnu: 1 })),
-    );
+  it('se replie quand la réponse ne respecte pas le contrat du catalogue', async () => {
+    appels.and.resolveTo(reponseJson(coursPublie({ version: 'trois', publieLe: '2026-10-02' })));
 
     expect(await lecteur(API_AVEC_BARRE)()).toEqual([]);
     expect(journal.warn).toHaveBeenCalledOnceWith(
-      jasmine.stringContaining("réponse de l'API hors contrat (inconnu)"),
+      jasmine.stringContaining("réponse de l'API hors contrat (version, publieLe)"),
     );
   });
 
@@ -99,6 +97,14 @@ describe('lecteurDePublicationsDeCours (H1)', () => {
     expect(journal.warn).toHaveBeenCalledOnceWith(
       `[sitemap] /formations/${SLUG} : API injoignable (délai dépassé), ${REPLI}`,
     );
+  });
+
+  it('encode le slug dans l URL du catalogue', async () => {
+    appels.and.resolveTo(reponseJson({}));
+
+    await lecteur(API, ['b2 01/x'])();
+
+    expect(appels.calls.mostRecent().args[0]).toBe(`${API}/formations/catalogue/b2%2001%2Fx`);
   });
 
   it('se replie sans appel réseau quand l URL de l API n est pas configurée', async () => {

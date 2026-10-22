@@ -1,4 +1,3 @@
-import { PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import type {
   EcranDeroule,
@@ -13,6 +12,7 @@ import {
   identifiantsDuMontage,
   planDeMontage,
 } from '../../../../shared/slides/session/lecture-ecran';
+import { formaterPart } from '../../../../../cours/runtime/core/typographie';
 
 type Confiance = 'aucune' | 'a-confirmer' | 'solide';
 
@@ -48,10 +48,7 @@ function ligneDeResultat(resultat: ResultatQuestion | undefined): LigneDeLecture
   const reponses = resultat?.total ?? 0;
   return {
     reponses,
-    taux:
-      resultat === undefined || reponses === 0
-        ? null
-        : (resultat.scoreMoyen ?? part(resultat.correctes, reponses)),
+    taux: resultat === undefined || reponses === 0 ? null : resultat.part,
     avecTaux: true,
   };
 }
@@ -104,7 +101,6 @@ function confianceDe(lignes: readonly LigneDeLecture[], participants: number): C
 @Component({
   selector: 'app-panneau-lecture-classe',
   standalone: true,
-  imports: [PercentPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './panneau-lecture-classe.component.scss',
   template: `
@@ -128,7 +124,7 @@ function confianceDe(lignes: readonly LigneDeLecture[], participants: number): C
                 <td>{{ ligne.reponses }} / {{ participants() }}</td>
                 <td>
                   @if (ligne.avecTaux) {
-                    {{ ligne.taux === null ? '—' : (ligne.taux | percent) }}
+                    {{ ligne.taux === null ? '—' : formaterPart(ligne.taux) }}
                   }
                 </td>
               </tr>
@@ -146,6 +142,7 @@ function confianceDe(lignes: readonly LigneDeLecture[], participants: number): C
   `,
 })
 export class PanneauLectureClasseComponent {
+  protected readonly formaterPart = formaterPart;
   readonly ecran = input.required<EcranDeroule>();
   readonly resultats = input.required<readonly ResultatQuestion[]>();
   readonly enigmes = input<readonly ProgressionEnigme[]>([]);

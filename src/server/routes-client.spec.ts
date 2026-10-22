@@ -64,6 +64,16 @@ describe('entetesDeLaRoute', () => {
     }
   });
 
+  it('interdit tout cache d une page ouverte par un lien a jeton : elle est nominative et revocable', () => {
+    for (const page of [
+      '/verify-email',
+      '/reset-password',
+      '/formations/ia-solopreneurs/toolkit/6f0e3c1a-9b2d-4c8e-a1f7-3d5b9e2c4a10',
+    ]) {
+      expect(entetesDeLaRoute(page)['Cache-Control']).withContext(page).toBe('private, no-store');
+    }
+  });
+
   it('laisse la page publique du toolkit, sans jeton, sous la politique de referent du site', () => {
     expect(entetesDeLaRoute('/formations/ia-solopreneurs/toolkit')).toEqual({});
   });

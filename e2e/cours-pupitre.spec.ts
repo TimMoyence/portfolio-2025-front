@@ -2,14 +2,17 @@ import { expect, test } from '@playwright/test';
 import type { Page, Route } from '@playwright/test';
 import type { DerouleDuFil } from '../src/app/core/adapters/formations-fil';
 import {
-  annotationServie,
-  annotationsServies,
-  derouleServi,
-  participantsServis,
-  rapportServi,
-  reponsesLibresServies,
-} from '../src/app/core/adapters/formations-schemas';
-import { sessionServie, utilisateurServi } from '../src/app/core/adapters/site-schemas';
+  zDerouleResponseDto as derouleServi,
+  zFreeResponsesResponseDto as reponsesLibresServies,
+  zSessionParticipantsResponseDto as participantsServis,
+  zSessionResultsResponseDto as rapportServi,
+  zTeacherAnnotationResponseDto as annotationServie,
+  zTeacherAnnotationsResponseDto as annotationsServies,
+} from '../contrat/zod.gen';
+import {
+  zAuthResponseDto as sessionServie,
+  zUserResponseDto as utilisateurServi,
+} from '../contrat/zod.gen';
 import type { AnnotationFormateur } from '../src/app/core/ports/formations.port';
 import { buildAuthSession, buildAuthUser } from '../src/testing/factories/auth.factory';
 import {
@@ -28,7 +31,7 @@ const ENONCE_PROBLEME = 'Le prix monte de 20 %, puis baisse de 20 %. Où arrive-
 const NOTE = 'Relancer Léa sur la base de départ.';
 
 const FORMATEUR = buildAuthUser({
-  id: '1',
+  id: '44444444-4444-4444-8444-444444444444',
   email: 'formateur@example.com',
   firstName: 'Tim',
   lastName: 'Moyence',
@@ -54,7 +57,7 @@ const ECRAN: DerouleDuFil['ecrans'][number] = {
   notes: 'Laisser voter avant de commenter.',
   diffusion: 'seance',
   seuil: 0.7,
-  corriges: [{ questionId: QUESTION.id, bonneReponse: 'a', confusions: [] }],
+  corriges: [{ questionId: QUESTION.id, bonneReponse: 'a', optionId: 'a', confusions: [] }],
   questions: [{ id: QUESTION.id, enonce: ENONCE_PROBLEME, options: QUESTION.options }],
   corrigeEcran: null,
   reflexion: null,
@@ -70,9 +73,6 @@ const DEROULE: DerouleDuFil = {
 };
 
 const STATISTIQUES = {
-  moyenne: 13.5,
-  mediane: 14,
-  dispersion: 3.25,
   tauxParticipation: 0.92,
   tauxReussite: 0.64,
   questionsProblemes: [QUESTION.id],
@@ -85,6 +85,7 @@ const RAPPORT = rapportDeSeance({
   libellesDesConcepts: { 'taux-evolution': 'Taux d’évolution' },
   resultats: {
     participants: 24,
+    confusions: [],
     questions: [
       {
         questionId: QUESTION.id,
@@ -119,7 +120,7 @@ interface SaisieAnnotation {
 
 function annotationDuFormateur(saisie: SaisieAnnotation, rang: number): AnnotationFormateur {
   return {
-    id: `annotation-${rang + 1}`,
+    id: `55555555-5555-4555-8555-${String(rang + 1).padStart(12, '0')}`,
     sessionId: SESSION,
     teacherId: FORMATEUR.id,
     screenId: saisie.screenId,
@@ -264,10 +265,7 @@ test.describe('pupitre du formateur (QA-10, QA-11)', () => {
     await ouvrirLePupitre(page);
 
     const statistiques = page.getByTestId('presentateur-statistiques');
-    await expect(statistiques).toContainText('13,5');
-    await expect(statistiques).toContainText('3,25');
-    await expect(statistiques).not.toContainText('13.5');
-    await expect(statistiques).not.toContainText('3.25');
+    await expect(statistiques).not.toContainText(/Moyenne|Médiane|Dispersion/);
     await expect(statistiques).toContainText(/92\s*%/);
     await expect(statistiques).toContainText(/64\s*%/);
     await expect(statistiques).toContainText(ENONCE_PROBLEME);
@@ -275,7 +273,8 @@ test.describe('pupitre du formateur (QA-10, QA-11)', () => {
     const notationHelp = page.getByTestId('presentateur-notation-help');
     await notationHelp.hover();
     const notation = page.getByTestId('presentateur-notation-tooltip');
-    await expect(notation).toContainText('20');
+    await expect(notation).toContainText('L’avancement d’un étudiant');
+    await expect(notation).not.toContainText('Note /');
     await expect(notation).not.toContainText('undefined');
     await expect(notation).not.toContainText('NaN');
     await expect(page.getByTestId('presentateur-notation-echec')).toHaveCount(0);

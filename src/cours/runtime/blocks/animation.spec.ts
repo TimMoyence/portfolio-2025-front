@@ -1,4 +1,4 @@
-import { DUREE_ETAPE_MS, caler, jouerSuite, suiteVersLeMaximum } from './animation';
+import { DUREE_ETAPE_MS, jouerSuite, suiteVersLeMaximum } from './animation';
 import type { ParametreReglable } from './curseurs';
 import { sousHorlogeSimulee } from '../../../testing/horloge-simulee';
 
@@ -9,20 +9,30 @@ const TAUX: ParametreReglable = {
   max: 30,
   pas: 2,
   defaut: 16,
+  positions: Array.from({ length: 11 }, (_, rang) => 10 + 2 * rang),
 };
 
 describe('animation des curseurs', () => {
-  describe('caler', () => {
-    it('ramène une valeur sur le pas le plus proche, dans les bornes', () => {
-      expect(caler(TAUX, 17.2)).toBe(18);
-      expect(caler(TAUX, 5)).toBe(10);
-      expect(caler(TAUX, 99)).toBe(30);
-      expect(caler(TAUX, Number.NaN)).toBe(10);
-    });
-  });
-
   describe('suiteVersLeMaximum', () => {
-    it('mène chaque curseur de sa valeur courante à son maximum en six changements calés', () => {
+    it('ne quitte jamais les positions servies : de 0 à 10 au pas de 4, finit sur 8', () => {
+      const pasDeQuatre: ParametreReglable = {
+        cle: 'k',
+        libelle: 'k',
+        min: 0,
+        max: 10,
+        pas: 4,
+        defaut: 5,
+        positions: [0, 4, 5, 8],
+      };
+
+      expect(suiteVersLeMaximum([pasDeQuatre], { k: 0 }).at(-1)).toEqual({ k: 8 });
+    });
+
+    it('ne joue rien pour un curseur déjà sur sa dernière position servie', () => {
+      expect(suiteVersLeMaximum([TAUX], { taux: 30 })).toEqual([]);
+    });
+
+    it('mène chaque curseur de sa valeur courante à sa dernière position en six changements', () => {
       expect(suiteVersLeMaximum([TAUX], { taux: 16 })).toEqual([
         { taux: 18 },
         { taux: 20 },

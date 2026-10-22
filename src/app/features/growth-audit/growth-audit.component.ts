@@ -1,21 +1,25 @@
-import { CommonModule } from '@angular/common';
-import type { OnDestroy } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import type { OnDestroy, OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  LOCALE_ID,
   inject,
+  PLATFORM_ID,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import type { Subscription } from 'rxjs';
+import { jetonDuLien } from '../auth/jeton-du-lien';
 import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
-import { estObjet } from '../../../cours/runtime/core/valeurs';
-import { langueDuSite } from '../../core/config/locales';
+import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
+import type {
+  AvancementDAudit,
+  MethodeDeContact as AuditContactMethod,
+} from '../../../../contrat/types.gen';
 import {
-  type AuditContactMethod,
   type AuditRequestPayload,
   type AuditStreamEvent,
   type AuditSummaryResponse,
@@ -33,16 +37,12 @@ import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisi
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
 import { readCheckboxChecked } from '../../shared/utils/dom-event.utils';
-import {
-  BORNES_D_UN_CONTACT_D_AUDIT,
-  BORNES_D_UN_NOM_DE_SITE,
-} from '../../shared/utils/regles-de-saisie';
+import { zAuditRequestRequestDto } from '../../../../contrat/zod.gen';
+import { bornesDu } from '../../shared/utils/regles-de-saisie';
 import { AuditClientReportSectionComponent } from './components/audit-client-report-section/audit-client-report-section.component';
 import {
   type AuditSectionBadge,
   buildSectionBadges,
-  extractString,
-  extractStringArray,
   formatPhaseLabel,
   formatProgressStep,
   formatSummaryText,
@@ -83,15 +83,17 @@ function formulaireVierge(): AuditRequestPayload {
   styleUrl: './growth-audit.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GrowthAuditComponent implements OnDestroy {
+export class GrowthAuditComponent implements OnInit, OnDestroy {
   private readonly auditService: AuditRequestPort = inject(AUDIT_REQUEST_PORT);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly dansLeNavigateur = isPlatformBrowser(inject(PLATFORM_ID));
   private debutDeSaisie = instantMonotone();
-  private readonly langue: NonNullable<AuditRequestPayload['locale']> =
-    langueDuSite(inject(LOCALE_ID)) === 'en' ? 'en' : 'fr';
+  private readonly langue = injecterLocaleDeLaPage();
   protected readonly iaTaskFallback = $localize`:@@auditIaTaskFallback:IA`;
-  protected readonly bornesDuNomDeSite = BORNES_D_UN_NOM_DE_SITE;
-  protected readonly bornesDuContact = BORNES_D_UN_CONTACT_D_AUDIT;
+  protected readonly bornesDuNomDeSite = bornesDu(zAuditRequestRequestDto.shape.websiteName);
+  protected readonly bornesDuContact = bornesDu(zAuditRequestRequestDto.shape.contactValue);
 
   private streamSub?: Subscription;
   private reconnectAttempts = 0;
@@ -209,6 +211,9 @@ export class GrowthAuditComponent implements OnDestroy {
     phonePlaceholder: $localize`:audit.form.phonePlaceholder@@auditFormPhonePlaceholder:ex. +33 6 98 50 32 82`,
     submit: $localize`:audit.form.submit@@auditFormSubmit:Demander mon audit (scan IA immédiat + audit humain sous 24h)`,
     success: $localize`:audit.form.success@@auditFormSuccess:Merci ! Scan IA lancé — audit humain envoyé sous 24h.`,
+    confirmationEnvoyee: $localize`:@@auditFormConfirmationEnvoyee:Vérifiez votre boîte e-mail : l’audit démarre dès que vous ouvrez le lien de confirmation reçu, valable 24 heures.`,
+    confirmee: $localize`:@@auditFormConfirmee:Adresse confirmée ! Scan IA lancé — audit humain envoyé sous 24h.`,
+    lienDeConfirmationRefuse: $localize`:@@auditFormLienDeConfirmationRefuse:Ce lien de confirmation est invalide ou a expiré : refaites la demande d’audit.`,
     error: $localize`:audit.form.error@@auditFormError:Impossible d'envoyer la demande. Réessayez dans un instant.`,
     rgpdLabel: $localize`:audit.form.rgpdLabel@@auditFormRgpdLabel:J'accepte que mes coordonnées soient utilisées pour traiter ma demande d'audit (voir <a href="/fr/privacy" class="underline">politique de confidentialité</a>).`,
     rgpdError: $localize`:audit.form.rgpdError@@auditFormRgpdError:Votre consentement RGPD est obligatoire pour lancer l'audit.`,
@@ -234,12 +239,11 @@ export class GrowthAuditComponent implements OnDestroy {
   }
 
   get scoreEntries(): Array<{ key: PillarKey; score: number }> {
-    if (!this.auditSummary) return [];
-    const scores = this.auditSummary.pillarScores;
-    return PILLAR_KEYS.filter((key) => Number.isFinite(scores[key])).map((key) => ({
-      key,
-      score: scores[key],
-    }));
+    const scores = this.auditSummary?.pillarScores ?? {};
+    return PILLAR_KEYS.flatMap((key) => {
+      const score = scores[key];
+      return score === undefined ? [] : [{ key, score }];
+    });
   }
 
   get formattedSummaryText(): string {
@@ -296,14 +300,12 @@ export class GrowthAuditComponent implements OnDestroy {
         400: $localize`:@@auditFormErreurRefus:La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.`,
       },
       onSuccess: (response) => {
+        if (response.status === 'UNCONFIRMED') {
+          this.successMessage = this.formLabels.confirmationEnvoyee;
+          return;
+        }
         this.successMessage = this.formLabels.success;
-        this.auditId = response.auditId;
-        this.auditProgress = 0;
-        this.auditStep = $localize`:growthAudit.step.pending|Audit pending step@@auditStepPending:Audit en attente...`;
-        this.resetAuditTimeline();
-        this.isAuditRunning = true;
-        this.reconnectAttempts = 0;
-        this.startStream(response.auditId);
+        this.suivreLAudit(response.auditId);
       },
       onError: (message) => {
         this.errorMessage = message;
@@ -321,8 +323,42 @@ export class GrowthAuditComponent implements OnDestroy {
     });
   }
 
+  ngOnInit(): void {
+    const jeton = jetonDuLien(this.route);
+    if (jeton === null || !this.dansLeNavigateur) {
+      return;
+    }
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { token: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+    handleFormSubmit(this.auditService.confirmer(jeton), this.cdr, {
+      fallbackError: this.formLabels.error,
+      refus: { 404: this.formLabels.lienDeConfirmationRefuse },
+      onSuccess: ({ auditId }) => {
+        this.successMessage = this.formLabels.confirmee;
+        this.suivreLAudit(auditId);
+      },
+      onError: (message) => {
+        this.errorMessage = message;
+      },
+    });
+  }
+
   ngOnDestroy(): void {
     this.stopStream();
+  }
+
+  private suivreLAudit(auditId: string): void {
+    this.auditId = auditId;
+    this.auditProgress = 0;
+    this.auditStep = $localize`:growthAudit.step.pending|Audit pending step@@auditStepPending:Audit en attente...`;
+    this.resetAuditTimeline();
+    this.isAuditRunning = true;
+    this.reconnectAttempts = 0;
+    this.startStream(auditId);
   }
 
   private startStream(auditId: string): void {
@@ -335,11 +371,11 @@ export class GrowthAuditComponent implements OnDestroy {
   }
 
   private handleStreamEvent(event: AuditStreamEvent): void {
-    if (event.type === 'heartbeat') {
+    if (event.event === 'heartbeat') {
       return;
     }
 
-    if (event.type === 'progress') {
+    if (event.event === 'progress') {
       this.auditProgress = event.data.progress ?? 0;
       this.auditStep = formatProgressStep(event.data);
       this.applyProgressDetails(event.data.details);
@@ -348,7 +384,7 @@ export class GrowthAuditComponent implements OnDestroy {
       return;
     }
 
-    if (event.type === 'completed') {
+    if (event.event === 'completed') {
       this.terminerLAudit(event.data.progress ?? 100);
       this.auditSummary = {
         auditId: event.data.auditId,
@@ -365,7 +401,7 @@ export class GrowthAuditComponent implements OnDestroy {
       return;
     }
 
-    const delaiDepasse = event.type === 'timeout';
+    const delaiDepasse = event.event === 'timeout';
     this.arreterLAudit(delaiDepasse ? this.connexionPerdue : this.echecDeLAudit);
   }
 
@@ -420,26 +456,25 @@ export class GrowthAuditComponent implements OnDestroy {
     this.streamSub = undefined;
   }
 
-  private applyProgressDetails(payload?: Record<string, unknown>): void {
-    if (!estObjet(payload)) {
+  private applyProgressDetails(details?: AvancementDAudit): void {
+    if (details === undefined) {
       this.resetAuditTimeline();
       return;
     }
 
-    const phase = extractString(payload['phase']);
-    this.auditPhaseLabel = formatPhaseLabel(phase);
-    this.auditCurrentUrl = extractString(payload['currentUrl']);
-    this.auditIaTask = formatTaskLabel(extractString(payload['iaTask']));
-    this.auditIaSubTask = formatSubTaskLabel(extractString(payload['iaSubTask']));
-    this.auditRecentCompletedUrls = extractStringArray(payload['recentCompletedUrls']).slice(-5);
-
-    const statutsRecus = payload['sectionStatuses'];
-    const section = extractString(payload['section']);
-    const sectionStatus = extractString(payload['sectionStatus']);
-    this.auditSectionBadges = buildSectionBadges({
-      ...(estObjet(statutsRecus) ? statutsRecus : {}),
-      ...(section && sectionStatus ? { [section]: sectionStatus } : {}),
-    });
+    this.auditPhaseLabel = formatPhaseLabel(details.phase);
+    this.auditIaTask = formatTaskLabel(details.iaTask);
+    this.auditIaSubTask = formatSubTaskLabel(details.iaSubTask);
+    this.auditCurrentUrl = 'currentUrl' in details ? details.currentUrl : '';
+    this.auditRecentCompletedUrls =
+      'recentCompletedUrls' in details ? details.recentCompletedUrls.slice(-5) : [];
+    this.auditSectionBadges =
+      'section' in details
+        ? buildSectionBadges({
+            ...details.sectionStatuses,
+            [details.section]: details.sectionStatus,
+          })
+        : [];
   }
 
   sectionBadgeClass(status: string): string {

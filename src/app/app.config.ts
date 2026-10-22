@@ -13,7 +13,6 @@ import { AuditRequestHttpAdapter } from './core/adapters/audit-request-http.adap
 import { ContactHttpAdapter } from './core/adapters/contact-http.adapter';
 import { LeadMagnetHttpAdapter } from './core/adapters/lead-magnet-http.adapter';
 import { PresentationHttpAdapter } from './core/adapters/presentation-http.adapter';
-import { CookieConsentHttpAdapter } from './core/adapters/cookie-consent-http.adapter';
 import { FormationsHttpAdapter } from './core/adapters/formations-http.adapter';
 import { APP_CONFIG } from './core/config/app-config.token';
 import { authInterceptor } from './core/http/interceptors/auth.interceptor';
@@ -24,7 +23,6 @@ import { CONTACT_PORT } from './core/ports/contact.port';
 import { FORMATIONS_PORT } from './core/ports/formations.port';
 import { LEAD_MAGNET_PORT } from './core/ports/lead-magnet.port';
 import { PRESENTATION_PORT } from './core/ports/presentation.port';
-import { COOKIE_CONSENT_PORT } from './core/ports/cookie-consent.port';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -60,10 +58,6 @@ export const appConfig: ApplicationConfig = {
     {
       provide: AUDIT_REQUEST_PORT,
       useClass: AuditRequestHttpAdapter,
-    },
-    {
-      provide: COOKIE_CONSENT_PORT,
-      useClass: CookieConsentHttpAdapter,
     },
     {
       provide: LEAD_MAGNET_PORT,

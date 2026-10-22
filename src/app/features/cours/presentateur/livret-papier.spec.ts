@@ -6,7 +6,7 @@ import type {
   EcranDeroule,
   ValeurFormule,
 } from '../../../../cours/content/types';
-import { avecUnite, echapperPourRegex, objet } from '../../../../cours/runtime/core/valeurs';
+import { echapperPourRegex, objet } from '../../../../cours/runtime/core/valeurs';
 import { type Recolte, recolterDansLArbre } from '../../../../testing/arbre-json';
 import { INSTANTANE_B2_01 } from '../../../../testing/fixtures/instantane-b2-01';
 import { INSTANTANE_B2_02 } from '../../../../testing/fixtures/instantane-b2-02';
@@ -64,7 +64,7 @@ function formesDeLaReponse(valeur: ValeurFormule): readonly string[] {
     return [valeur];
   }
   const pourcentage =
-    valeur !== 0 && Math.abs(valeur) < 1 ? [avecUnite(ecritEnFrancais(valeur * 100, 2), '%')] : [];
+    valeur !== 0 && Math.abs(valeur) < 1 ? [`${ecritEnFrancais(valeur * 100, 2)}\u00a0%`] : [];
   return [...new Set([ecritEnFrancais(valeur), ecritEnFrancais(valeur, 2), ...pourcentage])];
 }
 
@@ -331,7 +331,11 @@ function sansReponse(jeu: EcranDeroule): EcranDeroule {
 const SOURCES_DE_REPONSE: readonly (readonly [string, Partial<EcranDeroule>])[] = [
   [
     'une bonne réponse',
-    { corriges: [{ questionId: 'jeu-comparable', bonneReponse: REPRISE, confusions: [] }] },
+    {
+      corriges: [
+        { questionId: 'jeu-comparable', bonneReponse: REPRISE, optionId: null, confusions: [] },
+      ],
+    },
   ],
   ['une explication', { explications: [{ reference: 'jeu-comparable', texte: REPRISE }] }],
   [
@@ -360,6 +364,7 @@ const SOURCES_DE_REPONSE: readonly (readonly [string, Partial<EcranDeroule>])[] 
             reference: 'A1',
             formuleReference: REPRISE,
             valeur: 0,
+            affichage: '0',
             tolerance: { type: 'absolue', valeur: 0 },
             forme: 'references',
           },
@@ -528,6 +533,7 @@ describe('livret papier des cours servis', () => {
             {
               questionId: 'jeu-comparable',
               bonneReponse: 'non comparable',
+              optionId: null,
               confusions: [{ id: 'meme-prix', libelle: 'Identique au prix de départ' }],
             },
           ],

@@ -47,6 +47,11 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Contrat genere a jour
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run contrat:check
+
       - name: Duplication (jscpd)
         run: npm run quality:dup
 
@@ -128,7 +133,7 @@ jobs:
           node -e "const { chromium } = require('@playwright/test'); const { existsSync } = require('node:fs'); const chemin = chromium.executablePath(); if (!existsSync(chemin)) { throw new Error('chromium absent du runner: ' + chemin); } console.log('chromium: ' + chemin);"
 
       # Le build fournit dist/ au serveur SSR que `test:e2e:portail` demarre sur
-      # le port 4000 : sans lui, e2e/cours-sitemap.spec.ts n a pas de sitemap a lire.
+      # le port 4400 : sans lui, e2e/cours-sitemap.spec.ts n a pas de sitemap a lire.
       - name: Build
         run: npm run build
 
@@ -170,23 +175,19 @@ jobs:
         with:
           path: portfolio-2025-front
 
-      - name: Branche du back jumelle de la PR
+      # Le back joue au commit epingle par contrat.json : le front est
+      # genere depuis ce commit, le banc doit servir le meme contrat.
+      - name: Commit du back epingle par le contrat
         id: back
-        working-directory: .
-        env:
-          BRANCHE: ${{ github.head_ref || 'master' }}
         run: |
-          if git ls-remote --exit-code --heads https://github.com/TimMoyence/portfolio-2025-back.git "$BRANCHE" > /dev/null; then
-            echo "ref=$BRANCHE" >> "$GITHUB_OUTPUT"
-          else
-            echo "ref=master" >> "$GITHUB_OUTPUT"
-          fi
+          echo "depot=$(node -p "require('./contrat.json').depot")" >> "$GITHUB_OUTPUT"
+          echo "commit=$(node -p "require('./contrat.json').commit")" >> "$GITHUB_OUTPUT"
 
       - name: Checkout du back
         uses: actions/checkout@v4
         with:
-          repository: TimMoyence/portfolio-2025-back
-          ref: ${{ steps.back.outputs.ref }}
+          repository: ${{ steps.back.outputs.depot }}
+          ref: ${{ steps.back.outputs.commit }}
           path: portfolio-2025-back
 
       - name: Setup pnpm

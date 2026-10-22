@@ -22,7 +22,6 @@ const pathToSources = {
   '/formations/ia-solopreneurs/toolkit': ['src/app/features/formations/ia-solopreneurs/toolkit'],
   '/formations/automatiser-avec-ia': ['src/app/features/formations/automatiser-avec-ia'],
   '/formations/audit-seo-diy': ['src/app/features/formations/audit-seo-diy'],
-  '/cookie-settings': ['src/app/features/cookie-settings'],
   '/terms': ['src/app/features/terms'],
   '/privacy': ['src/app/features/privacy'],
   '/login': ['src/app/features/auth'],

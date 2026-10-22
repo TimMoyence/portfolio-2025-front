@@ -158,7 +158,7 @@
       "index": true,
       "changefreq": "weekly",
       "priority": 1,
-      "lastmod": "2026-09-25",
+      "lastmod": "2026-10-16",
       "locales": {
         "fr": {
           "title": "Accueil — Tim Moyence Portfolio",
@@ -220,7 +220,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-09-25",
+      "lastmod": "2026-10-15",
       "locales": {
         "fr": {
           "title": "Présentation — Tim Moyence Portfolio",
@@ -632,7 +632,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-09-25",
+      "lastmod": "2026-10-15",
       "locales": {
         "fr": {
           "title": "Offres — Services professionnels web",
@@ -852,7 +852,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-09-25",
+      "lastmod": "2026-10-22",
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
@@ -1027,34 +1027,12 @@
       }
     },
     {
-      "id": "cookie-settings",
-      "path": "/cookie-settings",
-      "index": false,
-      "changefreq": "yearly",
-      "priority": 0.2,
-      "lastmod": "2026-03-17",
-      "locales": {
-        "fr": {
-          "title": "Cookies & confidentialité — Paramètres",
-          "description": "Informations GDPR et gestion des préférences de cookies.",
-          "ogTitle": "Paramètres de cookies et confidentialité",
-          "ogDescription": "Consultez les informations GDPR et gérez vos préférences de cookies."
-        },
-        "en": {
-          "title": "Cookies & privacy — Settings",
-          "description": "GDPR information and cookie preference management.",
-          "ogTitle": "Cookie settings and privacy",
-          "ogDescription": "Read GDPR information and manage your cookie preferences."
-        }
-      }
-    },
-    {
       "id": "terms",
       "path": "/terms",
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-09-25",
+      "lastmod": "2026-10-22",
       "locales": {
         "fr": {
           "title": "Conditions de services — Moyence",
@@ -1076,7 +1054,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-09-25",
+      "lastmod": "2026-10-22",
       "locales": {
         "fr": {
           "title": "Politique de confidentialité — Moyence",
@@ -1098,7 +1076,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-09-25",
+      "lastmod": "2026-10-22",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -1218,7 +1196,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-09-29",
+      "lastmod": "2026-10-22",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1286,7 +1264,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-09-25",
+      "lastmod": "2026-10-22",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -2025,7 +2003,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-09-25",
+      "lastmod": "2026-10-22",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -2221,7 +2199,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-09-25",
+      "lastmod": "2026-10-16",
       "breadcrumb": [
         {
           "name": "Accueil",

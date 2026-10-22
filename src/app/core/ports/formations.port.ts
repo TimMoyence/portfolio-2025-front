@@ -1,37 +1,51 @@
+import type {
+  ControlSessionRequestDto,
+  EvaluerFeuilleRequestDto,
+  FreeResponseResponseDto,
+  FreeResponseSavedResponseDto,
+  IncidentEntryDto,
+  JoinSessionRequestDto,
+  JoinSessionResponseDto,
+  OpenSessionResponseDto,
+  RappelsResponseDto,
+  RapportParticipantResponseDto,
+  RegleDeNotationResponseDto,
+  SaisieBruteDeTableauDto,
+  SaveFreeResponseRequestDto,
+  SessionParticipantResponseDto,
+  SessionResultsResponseDto,
+  StrategieDefiResponseDto,
+  StrategiesDefiResponseDto,
+  SubmitAnswerRequestDto,
+  SubmitDefiRequestDto,
+  SubmitProductionRequestDto,
+  SubmitProductionResponseDto,
+  SyntheseConceptResponseDto,
+  TeacherAnnotationResponseDto,
+  TentativeEnigmeResponseDto,
+  TenterEnigmeRequestDto,
+} from '../../../../contrat/types.gen';
 import { InjectionToken } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { type LimiteDeDebit, messageDeLaLimite } from '../models/limite-de-debit';
 import type {
-  ComptesJalon,
   CoursContent,
   DerouleCours,
   EtatParticipant,
   EtatPulse,
   FeuilleEvaluee,
-  FreeRange,
-  PacingMode,
-  PilotageEcran,
-  ProgressionEnigme,
-  RegleDeNotation,
-  ResultatsSeance,
-  ResumeBareme,
   SortiesMachine,
-  StatistiquesSeance,
   TableauEvalue,
-  TypeQuestion,
-  ValeurProduction,
 } from '../../../cours/content/types';
 import type { Reglages } from '../../../cours/runtime/blocks/animation';
 import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donnees-publiques';
 import type {
-  EtatDesEnigmes,
   EvaluationDeFeuille,
   EvaluationDeTableau,
   ProgressionDesEnigmes,
   StrategieServie,
   VerdictDeTentative,
 } from '../../../cours/runtime/blocks/retours';
-import type { ChampsAntiRobot } from '../models/champs-anti-robot.model';
 
 export type ValeurReponse = number | string;
 
@@ -41,207 +55,35 @@ export interface LivretDuCours {
   corrige: DerouleCours;
 }
 
-export interface SeanceOuverte {
-  sessionId: string;
-  code: string;
-}
-
-export interface CommandePilotage {
-  ecran?: number;
-  mode?: PacingMode;
-  intervalle?: FreeRange;
-  pilotage?: { screenId: string } & PilotageEcran;
-}
-
-export interface VerdictProduction {
-  correcte: boolean;
-  score: number;
-  details: readonly {
-    cle: string;
-    juste: boolean;
-    libelleConfusion: string | null;
-  }[];
-  libelleConfusion: string | null;
-}
-
-export interface VerdictTentative extends EtatDesEnigmes {
-  correcte: boolean;
-  fragment: string | null;
-  tentativesRestantes: number;
-}
-
-export interface StrategiePublique {
-  id: string;
-  libelle: string;
-  fausse?: boolean;
-}
-
-export interface StrategiesDuDefi {
-  strategies: readonly StrategiePublique[];
-}
-
-export interface RappelsDus {
-  questions: readonly SpacedQuestionPublique[];
-}
-
-export interface ProductionEtudiante {
-  questionId: string;
-  valeur: ValeurProduction;
-  dureeMs: number;
-}
-
-export interface TentativeEnigme {
-  enigmeId: string;
-  reponse: string;
-  dureeMs: number;
-}
-
-export interface SaisieDeTableau {
-  readonly rang: number;
-  readonly cle: string;
-  readonly saisie: string;
-}
-
-export interface DemandeDeFeuille {
-  readonly cellules: Readonly<Record<string, string>>;
-  readonly recopie?: { readonly de: string };
-}
-
-export interface TentativeDefi {
-  texte: string;
-  dureeMs: number;
-}
-
-export interface SyntheseConcept {
-  concept: string;
-  libelle: string;
-  boite1: number;
-  boite2: number;
-  boite3: number;
-  nonVus: number;
-}
-
-export interface InscriptionParticipant extends ChampsAntiRobot {
-  prenom: string;
-  nom: string;
-  email: string;
-  secretDeReprise?: string;
-}
-
-export interface Rattachement {
-  participantId: string;
-  sessionId: string;
-  ecranCourant: number;
-  modeRythme: PacingMode;
-  jeton: string;
-  secretDeReprise: string;
-}
-
-export interface ReponseEtudiant {
-  questionId: string;
-  valeur: ValeurReponse;
-  dureeMs: number;
-}
-
-export interface ReponseLibreEtudiant {
-  screenId: string;
-  activityId: string;
-  response: string;
-  dureeMs: number;
-}
-
-export interface ReponseLibreEnregistree {
-  status: 'enregistre';
-}
-
-export interface AnnotationFormateur {
-  id: string;
-  sessionId: string;
-  teacherId: string;
-  screenId: string;
-  note: string;
-  updatedAt: string;
-}
-
-export interface ReponseLibreFormateur {
-  id: string;
-  sessionId: string;
-  participantId: string;
-  screenId: string;
-  activityId: string;
-  response: string;
-  premiereReponse: string | null;
-  strategiesServiesLe: string | null;
-  dureeMs: number;
-  status: 'enregistre' | 'en_attente' | 'echec';
-  submittedAt: string;
-}
-
-export interface ParticipantDeSeance {
-  id: string;
-  prenom: string;
-  nom: string;
-  evince: boolean;
-}
-
-export type RegleNotation = RegleDeNotation;
+export type SeanceOuverte = OpenSessionResponseDto;
+export type CommandePilotage = ControlSessionRequestDto;
+export type VerdictProduction = SubmitProductionResponseDto;
+export type VerdictTentative = TentativeEnigmeResponseDto;
+export type StrategiePublique = StrategieDefiResponseDto;
+export type StrategiesDuDefi = StrategiesDefiResponseDto;
+export type RappelsDus = RappelsResponseDto;
+export type ProductionEtudiante = SubmitProductionRequestDto;
+export type TentativeEnigme = TenterEnigmeRequestDto;
+export type DemandeDeFeuille = EvaluerFeuilleRequestDto;
+export type SaisieDeTableau = SaisieBruteDeTableauDto;
+export type TentativeDefi = SubmitDefiRequestDto;
+export type SyntheseConcept = SyntheseConceptResponseDto;
+export type InscriptionParticipant = JoinSessionRequestDto;
+export type Rattachement = JoinSessionResponseDto;
+export type ReponseEtudiant = SubmitAnswerRequestDto;
+export type ReponseLibreEtudiant = SaveFreeResponseRequestDto;
+export type ReponseLibreEnregistree = FreeResponseSavedResponseDto;
+export type AnnotationFormateur = TeacherAnnotationResponseDto;
+export type ReponseLibreFormateur = FreeResponseResponseDto;
+export type ParticipantDeSeance = SessionParticipantResponseDto;
+export type RegleNotation = RegleDeNotationResponseDto;
+export type IncidentEtudiant = IncidentEntryDto;
+export type ParticipantRapporte = RapportParticipantResponseDto;
+export type RapportSeance = SessionResultsResponseDto;
 
 export interface VerdictReponse {
   reussite: boolean | null;
   libelleConfusion: string | null;
-}
-
-export interface IncidentEtudiant {
-  type: string;
-  contexte?: Record<string, unknown>;
-  horodatage: string;
-}
-
-export interface ReponseRapportee {
-  questionId: string;
-  concept: string;
-  type: TypeQuestion;
-  score: number | null;
-  valeur: string;
-  reponse: string;
-  correcte: boolean;
-  misconception: string | null;
-  libelleConfusion: string | null;
-  dureeMs: number;
-}
-
-export interface ReponseLibreRapportee {
-  screenId: string;
-  activityId: string;
-  reponse: string;
-}
-
-export interface ParticipantRapporte {
-  prenom: string;
-  nom: string;
-  email: string;
-  completion: number;
-  note: number;
-  sousSeuil: boolean;
-  reponses: readonly ReponseRapportee[];
-  reponsesLibres: readonly ReponseLibreRapportee[];
-  incidents: number;
-}
-
-export interface RapportSeance {
-  courseSlug: string;
-  code: string;
-  ouverteLe: string;
-  fermeeLe: string;
-  participants: readonly ParticipantRapporte[];
-  conceptsFragiles: readonly string[];
-  libellesDesConcepts: Readonly<Record<string, string>>;
-  resultats: ResultatsSeance;
-  statistiques: StatistiquesSeance;
-  notation: RegleNotation;
-  bareme: ResumeBareme;
-  jalons: Readonly<Record<string, ComptesJalon>>;
-  enigmes: readonly ProgressionEnigme[];
 }
 
 export type MotifRefusRattachement =
@@ -278,6 +120,20 @@ const MESSAGES_REFUS_RATTACHEMENT: Readonly<Record<MotifRefusRattachement, strin
   'rattachement-impossible': $localize`:cours.refusRattachementImpossible|@@coursRefusRattachementImpossible:Le rattachement à la séance a échoué.`,
 };
 
+export type MotifRefusSurLePoste = 'seance-complete' | 'graine-reprise' | 'action-impossible';
+
+export const MESSAGES_REFUS_SUR_LE_POSTE: Readonly<Record<MotifRefusSurLePoste, string>> = {
+  'seance-complete': $localize`:cours.refusPosteSeanceComplete|@@coursRefusPosteSeanceComplete:La séance est complète : libérez une place avant de réadmettre ce poste.`,
+  'graine-reprise': $localize`:cours.refusPosteGraineReprise|@@coursRefusPosteGraineReprise:Le sujet de ce poste a été attribué à un autre poste depuis son éviction : la réadmission est impossible.`,
+  'action-impossible': $localize`:cours.refusPosteActionImpossible|@@coursRefusPosteActionImpossible:L’action sur ce poste n’a pas abouti : réessayez.`,
+};
+
+export class ActionSurLePosteRefusee extends RefusDuServeur<MotifRefusSurLePoste> {
+  constructor(motif: MotifRefusSurLePoste, statut: number) {
+    super('ActionSurLePosteRefusee', motif, statut, null, MESSAGES_REFUS_SUR_LE_POSTE[motif]);
+  }
+}
+
 export class RattachementRefuse extends RefusDuServeur<MotifRefusRattachement> {
   constructor(motif: MotifRefusRattachement, statut: number, limite: LimiteDeDebit | null = null) {
     super('RattachementRefuse', motif, statut, limite, MESSAGES_REFUS_RATTACHEMENT[motif]);
@@ -308,6 +164,7 @@ export type MotifRefusReponse =
   | 'tentatives-epuisees'
   | 'reprises-epuisees'
   | 'production-vide'
+  | 'saisie-non-numerique'
   | 'evince'
   | 'refusee';
 
@@ -322,6 +179,7 @@ const MESSAGES_REFUS_REPONSE: Readonly<Record<MotifRefusReponse, string>> = {
   'tentatives-epuisees': $localize`:cours.reponseTentativesEpuisees|@@coursReponseTentativesEpuisees:Tentatives épuisées : l’énigme suivante s’ouvre, sans fragment`,
   'reprises-epuisees': $localize`:cours.reponseReprisesEpuisees|@@coursReponseReprisesEpuisees:Production déjà envoyée trois fois : votre dernière version reste enregistrée jusqu’à la correction.`,
   'production-vide': $localize`:cours.reponseProductionVide|@@coursReponseProductionVide:Saisissez au moins une valeur ou choisissez « Je ne sais pas »`,
+  'saisie-non-numerique': $localize`:cours.reponseSaisieNonNumerique|@@coursRuntimeSaisieNonNumerique:Saisissez un nombre — la virgule décimale est acceptée`,
   evince: $localize`:cours.reponseEvince|@@coursReponseEvince:Votre formateur a retiré ce poste de la séance : votre réponse n’a pas été enregistrée.`,
   refusee: $localize`:cours.reponseRefusee|@@coursReponseRefusee:Votre réponse n’a pas été acceptée par le serveur : prévenez votre formateur.`,
 };

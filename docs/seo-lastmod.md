@@ -23,8 +23,8 @@ touche aucun fichier du front ; le `lastmod` issu du commit ne le verrait pas.
 ### Contrat lu
 
 `GET /formations/catalogue/:slug` renvoie, en plus du cours public, `version` et `publieLe`
-(ISO 8601, `publiee_le` de la table de publication : la date de la bascule, pas celle de la
-migration). Contrat fixé par `portfolio-2025-back/docs/cours-b2-01-conception.md` (§ 4.6, H1).
+(ISO 8601, `publiee_le` de la table de publication : la date à laquelle le back a publié la
+version). Contrat fixé par `portfolio-2025-back/docs/cours-b2-01-conception.md` (§ 4.6, H1).
 
 ### Lecture côté serveur SSR
 
@@ -51,9 +51,6 @@ Le sitemap garde alors le `lastmod` de `seo-metadata.json` et le journal (`conso
 | API injoignable ou délai de 2 s dépassé     | message de l'erreur réseau                       |
 | `publieLe` absent ou qui n'est pas une date | `publieLe` absent ou invalide                    |
 
-Tant que le back n'expose pas `publieLe` (lot 2b), c'est le dernier cas qui s'applique : le
-sitemap reste celui d'avant, avec un avertissement toutes les 5 min.
-
 ### Tests
 
 - `src/server/seo-builders.spec.ts` : `buildSitemapXml` sans API (lastmod de `seo-metadata.json`),
@@ -63,6 +60,6 @@ sitemap reste celui d'avant, avec un avertissement toutes les 5 min.
 
 ### Réserve
 
-Si une version est publiée par une migration de données, `publieLe` date la bascule sur
-l'environnement concerné : en production, la mise en ligne ; sur un environnement recréé, la
-recréation.
+Le back publie une version au démarrage qui suit une modification du cours : `publieLe` date ce
+démarrage sur l'environnement concerné. En production, c'est la mise en ligne ; sur un
+environnement recréé, c'est la recréation.
