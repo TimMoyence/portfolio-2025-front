@@ -120,6 +120,20 @@ const MESSAGES_REFUS_RATTACHEMENT: Readonly<Record<MotifRefusRattachement, strin
   'rattachement-impossible': $localize`:cours.refusRattachementImpossible|@@coursRefusRattachementImpossible:Le rattachement à la séance a échoué.`,
 };
 
+export type MotifRefusSurLePoste = 'seance-complete' | 'graine-reprise' | 'action-impossible';
+
+export const MESSAGES_REFUS_SUR_LE_POSTE: Readonly<Record<MotifRefusSurLePoste, string>> = {
+  'seance-complete': $localize`:cours.refusPosteSeanceComplete|@@coursRefusPosteSeanceComplete:La séance est complète : libérez une place avant de réadmettre ce poste.`,
+  'graine-reprise': $localize`:cours.refusPosteGraineReprise|@@coursRefusPosteGraineReprise:Le sujet de ce poste a été attribué à un autre poste depuis son éviction : la réadmission est impossible.`,
+  'action-impossible': $localize`:cours.refusPosteActionImpossible|@@coursRefusPosteActionImpossible:L’action sur ce poste n’a pas abouti : réessayez.`,
+};
+
+export class ActionSurLePosteRefusee extends RefusDuServeur<MotifRefusSurLePoste> {
+  constructor(motif: MotifRefusSurLePoste, statut: number) {
+    super('ActionSurLePosteRefusee', motif, statut, null, MESSAGES_REFUS_SUR_LE_POSTE[motif]);
+  }
+}
+
 export class RattachementRefuse extends RefusDuServeur<MotifRefusRattachement> {
   constructor(motif: MotifRefusRattachement, statut: number, limite: LimiteDeDebit | null = null) {
     super('RattachementRefuse', motif, statut, limite, MESSAGES_REFUS_RATTACHEMENT[motif]);

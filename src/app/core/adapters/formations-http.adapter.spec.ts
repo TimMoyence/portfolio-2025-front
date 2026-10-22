@@ -46,6 +46,7 @@ import type {
   VerdictReponse,
 } from '../ports/formations.port';
 import {
+  ActionSurLePosteRefusee,
   FORMATIONS_PORT,
   limiteDuRefus,
   PieceJointeRefusee,
@@ -1094,6 +1095,26 @@ describe('FormationsHttpAdapter', () => {
         reponse: null,
       },
     ];
+
+    it('traduit le refus d une action sur un poste en sa cause', () => {
+      const motifs: string[] = [];
+      for (const [code, statut] of [
+        ['GRAINE_REPRISE', 409],
+        ['SEANCE_COMPLETE', 409],
+        ['AUTRE', 500],
+      ] as const) {
+        adapter.readmettreParticipant(SESSION_ID, PARTICIPANT).subscribe({
+          error: (erreur: unknown) =>
+            motifs.push(erreur instanceof ActionSurLePosteRefusee ? erreur.motif : 'brut'),
+        });
+        attendre(`${URL_SEANCE}/participants/${PARTICIPANT}/readmission`, 'POST').flush(
+          { code },
+          { status: statut, statusText: 'Refus' },
+        );
+      }
+
+      expect(motifs).toEqual(['graine-reprise', 'seance-complete', 'action-impossible']);
+    });
 
     it('appelle chaque route avec son verbe, son corps et son en-tete, et rend la reponse servie', () => {
       for (const appel of appels()) {

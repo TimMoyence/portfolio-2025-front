@@ -23,6 +23,7 @@ import type {
   InscriptionParticipant,
   LivretDuCours,
   MotifRefusRattachement,
+  MotifRefusSurLePoste,
   MotifRefusReponse,
   MotifRefusReponseLibre,
   ParticipantDeSeance,
@@ -45,6 +46,7 @@ import type {
   VerdictTentative,
 } from '../ports/formations.port';
 import {
+  ActionSurLePosteRefusee,
   PieceJointeRefusee,
   RattachementRefuse,
   ReponseLibreRefusee,
@@ -157,6 +159,27 @@ function refuserSujet(erreur: unknown): SujetRefuse {
       }
       return new SujetRefuse(
         reponse.status === 409 ? 'cours-modifie' : 'sujet-indisponible',
+        reponse.status,
+      );
+    },
+  );
+}
+
+const MOTIFS_SUR_LE_POSTE_PAR_CODE: Readonly<Record<string, MotifRefusSurLePoste>> = {
+  SEANCE_COMPLETE: 'seance-complete',
+  GRAINE_REPRISE: 'graine-reprise',
+};
+
+function refuserActionSurLePoste(erreur: unknown): ActionSurLePosteRefusee {
+  return selonLaReponse(
+    erreur,
+    () => new ActionSurLePosteRefusee('action-impossible', 0),
+    (reponse) => {
+      const code = codeDuProbleme(reponse);
+      return new ActionSurLePosteRefusee(
+        code !== null && Object.hasOwn(MOTIFS_SUR_LE_POSTE_PAR_CODE, code)
+          ? MOTIFS_SUR_LE_POSTE_PAR_CODE[code]
+          : 'action-impossible',
         reponse.status,
       );
     },
@@ -511,21 +534,21 @@ export class FormationsHttpAdapter implements FormationsPort {
   }
 
   evincerParticipant(sessionId: string, participantId: string): Observable<void> {
-    return this.http.delete<void>(this.urlDuParticipant(sessionId, participantId));
+    return this.http
+      .delete<void>(this.urlDuParticipant(sessionId, participantId))
+      .pipe(refusRelance(refuserActionSurLePoste));
   }
 
   readmettreParticipant(sessionId: string, participantId: string): Observable<void> {
-    return this.http.post<void>(
-      `${this.urlDuParticipant(sessionId, participantId)}/readmission`,
-      {},
-    );
+    return this.http
+      .post<void>(`${this.urlDuParticipant(sessionId, participantId)}/readmission`, {})
+      .pipe(refusRelance(refuserActionSurLePoste));
   }
 
   libererPoste(sessionId: string, participantId: string): Observable<void> {
-    return this.http.post<void>(
-      `${this.urlDuParticipant(sessionId, participantId)}/liberation`,
-      {},
-    );
+    return this.http
+      .post<void>(`${this.urlDuParticipant(sessionId, participantId)}/liberation`, {})
+      .pipe(refusRelance(refuserActionSurLePoste));
   }
 
   private urlDuParticipant(sessionId: string, participantId: string): string {
