@@ -14789,8 +14789,8 @@
     </unit>
     <unit id="presentateurNotationBareme">
       <segment>
-        <source>sur <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> questions notées comptent (<ph id="1" equiv="typesNotes" disp="notes"/>) ; « je ne sais pas » compte aussi pour une production ; une production vide est refusée.</source>
-        <target>over <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> graded questions count (<ph id="1" equiv="typesNotes" disp="notes"/>); “I don’t know” also counts for a production; an empty production is refused.</target>
+        <source>sur <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> questions notées comptent (<ph id="1" equiv="typesNotes" disp="notes"/>) ; une production vide est refusée.</source>
+        <target>over <ph id="0" equiv="questionsNotees" disp="bareme.questionsNotees"/> graded questions count (<ph id="1" equiv="typesNotes" disp="notes"/>); an empty production is refused.</target>
       </segment>
     </unit>
     <unit id="presentateurNotationExclus">

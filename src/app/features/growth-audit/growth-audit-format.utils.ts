@@ -37,22 +37,15 @@ export function formatSubTaskLabel(subTask: string): string {
   return subTask.replaceAll('_', ' ');
 }
 
-export function formatSectionLabel(section: string): string {
-  switch (section) {
-    case 'summary':
-      return $localize`:audit.section.summary|Section label@@auditSectionSummary:Résumé`;
-    case 'executiveSection':
-      return $localize`:audit.section.executive|Section label@@auditSectionExecutive:Executive`;
-    case 'prioritySection':
-      return $localize`:audit.section.priority|Section label@@auditSectionPriority:Priorités`;
-    case 'executionSection':
-      return $localize`:audit.section.execution|Section label@@auditSectionExecution:Exécution`;
-    case 'clientCommsSection':
-      return $localize`:audit.section.clientComms|Section label@@auditSectionClientComms:Message client`;
-    default:
-      return section;
-  }
-}
+type SectionDeSynthese = Extract<AvancementDAudit, { section: string }>;
+
+const LIBELLES_DES_SECTIONS: Readonly<Record<SectionDeSynthese['section'], string>> = {
+  summary: $localize`:audit.section.summary|Section label@@auditSectionSummary:Résumé`,
+  executiveSection: $localize`:audit.section.executive|Section label@@auditSectionExecutive:Executive`,
+  prioritySection: $localize`:audit.section.priority|Section label@@auditSectionPriority:Priorités`,
+  executionSection: $localize`:audit.section.execution|Section label@@auditSectionExecution:Exécution`,
+  clientCommsSection: $localize`:audit.section.clientComms|Section label@@auditSectionClientComms:Message client`,
+};
 
 export function sectionBadgeClass(status: string): string {
   switch (status) {
@@ -69,23 +62,11 @@ export function sectionBadgeClass(status: string): string {
   }
 }
 
-type StatutDeSection = Extract<AvancementDAudit, { section: string }>['sectionStatus'];
-
-const SECTIONS = [
-  'summary',
-  'executiveSection',
-  'prioritySection',
-  'executionSection',
-  'clientCommsSection',
-] as const;
-
 export function buildSectionBadges(
-  statuses: Readonly<Record<string, StatutDeSection>>,
+  statuses: SectionDeSynthese['sectionStatuses'],
 ): AuditSectionBadge[] {
-  return SECTIONS.flatMap((key) =>
-    Object.hasOwn(statuses, key)
-      ? [{ key, label: formatSectionLabel(key), status: statuses[key] }]
-      : [],
+  return Object.entries(LIBELLES_DES_SECTIONS).flatMap(([key, label]) =>
+    Object.hasOwn(statuses, key) ? [{ key, label, status: statuses[key] }] : [],
   );
 }
 

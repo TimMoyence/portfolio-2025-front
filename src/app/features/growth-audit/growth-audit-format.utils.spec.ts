@@ -3,7 +3,6 @@ import {
   buildSectionBadges,
   formatPhaseLabel,
   formatProgressStep,
-  formatSectionLabel,
   formatSubTaskLabel,
   formatSummaryText,
   formatTaskLabel,
@@ -73,32 +72,6 @@ describe('growth-audit-format.utils', () => {
     });
   });
 
-  describe('formatSectionLabel', () => {
-    it('devrait traduire summary', () => {
-      expect(formatSectionLabel('summary')).toBe('Résumé');
-    });
-
-    it('devrait traduire executiveSection', () => {
-      expect(formatSectionLabel('executiveSection')).toBe('Executive');
-    });
-
-    it('devrait traduire prioritySection', () => {
-      expect(formatSectionLabel('prioritySection')).toBeTruthy();
-    });
-
-    it('devrait traduire executionSection', () => {
-      expect(formatSectionLabel('executionSection')).toBeTruthy();
-    });
-
-    it('devrait traduire clientCommsSection', () => {
-      expect(formatSectionLabel('clientCommsSection')).toBeTruthy();
-    });
-
-    it('devrait retourner la cle brute pour une section inconnue', () => {
-      expect(formatSectionLabel('unknownSection')).toBe('unknownSection');
-    });
-  });
-
   describe('sectionBadgeClass', () => {
     it('devrait retourner les classes pour completed', () => {
       expect(sectionBadgeClass('completed')).toContain('bg-emerald-100');
@@ -135,6 +108,19 @@ describe('growth-audit-format.utils', () => {
       expect(result[0].key).toBe('summary');
       expect(result[0].status).toBe('completed');
       expect(result[1].key).toBe('executiveSection');
+    });
+
+    it('nomme chaque section du contrat dans l ordre de la synthese, et ignore une cle inconnue', () => {
+      expect(
+        buildSectionBadges({
+          clientCommsSection: 'completed',
+          unknownSection: 'completed',
+          executionSection: 'completed',
+          prioritySection: 'completed',
+          executiveSection: 'completed',
+          summary: 'completed',
+        }).map(({ label }) => label),
+      ).toEqual(['Résumé', 'Executive', 'Priorités', 'Exécution', 'Message client']);
     });
   });
 

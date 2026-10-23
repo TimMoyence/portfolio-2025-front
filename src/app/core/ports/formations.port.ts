@@ -14,13 +14,11 @@ import type {
   SaveFreeResponseRequestDto,
   SessionParticipantResponseDto,
   SessionResultsResponseDto,
-  StrategieDefiResponseDto,
   StrategiesDefiResponseDto,
   SubmitAnswerRequestDto,
   SubmitDefiRequestDto,
   SubmitProductionRequestDto,
   SubmitProductionResponseDto,
-  SyntheseConceptResponseDto,
   TeacherAnnotationResponseDto,
   TentativeEnigmeResponseDto,
   TenterEnigmeRequestDto,
@@ -44,8 +42,11 @@ import type {
   EvaluationDeTableau,
   ProgressionDesEnigmes,
   StrategieServie,
+  SyntheseConcept,
   VerdictDeTentative,
 } from '../../../cours/runtime/blocks/retours';
+
+export type { StrategieServie, SyntheseConcept };
 
 export type ValeurReponse = number | string;
 
@@ -59,7 +60,6 @@ export type SeanceOuverte = OpenSessionResponseDto;
 export type CommandePilotage = ControlSessionRequestDto;
 export type VerdictProduction = SubmitProductionResponseDto;
 export type VerdictTentative = TentativeEnigmeResponseDto;
-export type StrategiePublique = StrategieDefiResponseDto;
 export type StrategiesDuDefi = StrategiesDefiResponseDto;
 export type RappelsDus = RappelsResponseDto;
 export type ProductionEtudiante = SubmitProductionRequestDto;
@@ -67,7 +67,6 @@ export type TentativeEnigme = TenterEnigmeRequestDto;
 export type DemandeDeFeuille = EvaluerFeuilleRequestDto;
 export type SaisieDeTableau = SaisieBruteDeTableauDto;
 export type TentativeDefi = SubmitDefiRequestDto;
-export type SyntheseConcept = SyntheseConceptResponseDto;
 export type InscriptionParticipant = JoinSessionRequestDto;
 export type Rattachement = JoinSessionResponseDto;
 export type ReponseEtudiant = SubmitAnswerRequestDto;

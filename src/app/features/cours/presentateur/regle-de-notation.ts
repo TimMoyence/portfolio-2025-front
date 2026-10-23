@@ -31,7 +31,7 @@ function phraseDuBareme(bareme: ResumeBareme | null): string {
   }
   const notes = typesOu(bareme, ({ notees }) => notees > 0);
   const exclus = typesOu(bareme, ({ notees, nonNotees }) => notees === 0 && nonNotees > 0);
-  const phrase = $localize`:@@presentateurNotationBareme:sur ${bareme.questionsNotees}:questionsNotees: questions notées comptent (${notes}:typesNotes:) ; « je ne sais pas » compte aussi pour une production ; une production vide est refusée.`;
+  const phrase = $localize`:@@presentateurNotationBareme:sur ${bareme.questionsNotees}:questionsNotees: questions notées comptent (${notes}:typesNotes:) ; une production vide est refusée.`;
   if (exclus === '') {
     return ` ${phrase}`;
   }

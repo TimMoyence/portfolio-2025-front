@@ -14,7 +14,7 @@ import {
   buildReponseLibreFormateur,
   buildSpacedQuestionPublique,
   buildStatistiquesSeance,
-  buildStrategiePublique,
+  buildStrategieServie,
   buildSyntheseConcept,
   buildVerdictProduction,
   buildVerdictTentative,
@@ -1016,7 +1016,7 @@ describe('FormationsHttpAdapter', () => {
         methode: 'POST',
         corps: TEXTE_DE_DEFI,
         jeton: JETON,
-        reponse: { strategies: [buildStrategiePublique()] },
+        reponse: { strategies: [buildStrategieServie()] },
       },
       {
         nom: 'lireStrategies',
@@ -1025,7 +1025,7 @@ describe('FormationsHttpAdapter', () => {
         methode: 'GET',
         corps: null,
         jeton: JETON,
-        reponse: { strategies: [buildStrategiePublique({ fausse: true })] },
+        reponse: { strategies: [buildStrategieServie({ fausse: true })] },
       },
       {
         nom: 'lireMonEtat',
