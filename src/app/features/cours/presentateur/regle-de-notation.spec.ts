@@ -31,6 +31,15 @@ describe('phraseDeNotation', () => {
     expect(phrase).toContain('les réponses libres sont notées');
   });
 
+  it('ne redit pas le sort de « je ne sais pas » dans la phrase du barème, qui ne lit pas la règle', () => {
+    const phrase = phraseDeNotation(
+      buildRegleNotation({ neSaitPasCompteCommeReponse: false }),
+      buildResumeBareme(),
+    );
+
+    expect(phrase.match(/« je ne sais pas »/gu)).toEqual(['« je ne sais pas »']);
+  });
+
   it('donne le denominateur des questions notees quand le bareme est servi', () => {
     const sansBareme = phraseDeNotation(buildRegleNotation());
     const avecBareme = phraseDeNotation(buildRegleNotation(), buildResumeBareme());

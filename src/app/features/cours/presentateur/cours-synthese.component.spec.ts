@@ -88,8 +88,10 @@ function rapportDe(
     ouverteLe: '2026-09-12T08:00:00.000Z',
     fermeeLe: '2026-09-12T09:30:00.000Z',
     participants,
-    conceptsFragiles: ['interets-composes', 'actualisation'],
-    libellesDesConcepts: {},
+    conceptsFragiles: [
+      { concept: 'interets-composes', libelle: 'Intérêts composés', effectif: 7 },
+      { concept: 'actualisation', libelle: 'actualisation', effectif: 3 },
+    ],
     resultats,
   });
 }
@@ -152,26 +154,14 @@ describe('CoursSyntheseComponent', () => {
     expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('Score');
   });
 
-  it('compte pour un concept fragile les etudiants qui s y sont trompes, pas ceux qui ont reussi', async () => {
+  it('affiche les concepts fragiles servis, leur libellé et leur effectif, sans les recompter', async () => {
     const fixture = await monter(rapportDe([MALIK, NORA, CHLOE]));
-
-    expect(textes(fixture, 'synthese-fragile-concept')).toEqual([
-      'interets-composes',
-      'actualisation',
-    ]);
-    expect(textes(fixture, 'synthese-fragile-effectif')).toEqual(['2', '1']);
-  });
-
-  it('nomme un concept fragile par son libellé quand le rapport le sert', async () => {
-    const fixture = await monter({
-      ...rapportDe([MALIK, NORA, CHLOE]),
-      libellesDesConcepts: { 'interets-composes': 'Intérêts composés' },
-    });
 
     expect(textes(fixture, 'synthese-fragile-concept')).toEqual([
       'Intérêts composés',
       'actualisation',
     ]);
+    expect(textes(fixture, 'synthese-fragile-effectif')).toEqual(['7', '3']);
   });
 
   it('exprime l avancement en pourcentage des questions notées', async () => {

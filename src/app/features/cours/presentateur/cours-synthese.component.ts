@@ -41,12 +41,6 @@ function contexteLisible(contexte: RapportIncidentResponseDto['contexte']): stri
     .join(', ');
 }
 
-interface ConceptCompte {
-  concept: string;
-  libelle: string;
-  effectif: number;
-}
-
 const NOMBRE_CONFUSIONS_FREQUENTES = 5;
 
 interface EnoncesDeLaSeance {
@@ -275,19 +269,7 @@ export class CoursSyntheseComponent {
     ];
   });
 
-  readonly fragiles = computed<readonly ConceptCompte[]>(() => {
-    const rapport = this.rapport();
-    if (rapport === null) {
-      return [];
-    }
-    return rapport.conceptsFragiles
-      .map((concept) => ({
-        concept,
-        libelle: rapport.libellesDesConcepts[concept] ?? concept,
-        effectif: this.compterLesFreins(rapport, concept),
-      }))
-      .sort((gauche, droite) => droite.effectif - gauche.effectif);
-  });
+  readonly fragiles = computed(() => this.rapport()?.conceptsFragiles ?? []);
 
   readonly questions = computed<readonly ResultatQuestion[]>(
     () => this.rapport()?.resultats.questions ?? [],
@@ -332,12 +314,6 @@ export class CoursSyntheseComponent {
       next: ({ nom, contenu }) => telechargerFichier(this.document, contenu, nom, contenu.type),
       error: () => this.echecExport.set(true),
     });
-  }
-
-  private compterLesFreins(rapport: RapportSeance, concept: string): number {
-    return rapport.participants.filter((participant) =>
-      participant.reponses.some((reponse) => reponse.concept === concept && !reponse.correcte),
-    ).length;
   }
 
   private async lire(): Promise<void> {

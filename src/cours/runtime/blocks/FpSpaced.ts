@@ -12,7 +12,7 @@ import { estObjet } from '../core/valeurs';
 import {
   bonneReponseRevelee,
   type CibleRevelee,
-  type ConceptMaitrise,
+  type SyntheseConcept,
   lireCibleRevelee,
 } from './retours';
 import { FpVerdicts } from './verdicts';
@@ -48,7 +48,7 @@ function lireBonnesReponses(valeur: unknown): ReadonlyMap<string, CibleRevelee> 
   );
 }
 
-function estConceptMaitrise(valeur: unknown): valeur is ConceptMaitrise {
+function estSyntheseConcept(valeur: unknown): valeur is SyntheseConcept {
   return (
     estObjet(valeur) &&
     typeof valeur['concept'] === 'string' &&
@@ -61,7 +61,7 @@ export class FpSpaced extends FpVerdicts {
   private interneRappel: SpacedRappel | null = null;
   private interne: readonly SpacedQuestionPublique[] | null = null;
   private repondues = new Set<string>();
-  private carte: readonly ConceptMaitrise[] = [];
+  private carte: readonly SyntheseConcept[] = [];
   private bonnes: ReadonlyMap<string, CibleRevelee> | null = null;
   private message = '';
 
@@ -93,12 +93,12 @@ export class FpSpaced extends FpVerdicts {
     this.suivreEtRafraichir(this.cleAffichage());
   }
 
-  set maitrise(valeur: readonly ConceptMaitrise[] | null) {
-    this.carte = (valeur ?? []).filter(estConceptMaitrise);
+  set maitrise(valeur: readonly SyntheseConcept[] | null) {
+    this.carte = (valeur ?? []).filter(estSyntheseConcept);
     this.refreshSiConnecte();
   }
 
-  get maitrise(): readonly ConceptMaitrise[] {
+  get maitrise(): readonly SyntheseConcept[] {
     return this.carte;
   }
 

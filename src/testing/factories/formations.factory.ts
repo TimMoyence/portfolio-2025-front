@@ -24,7 +24,7 @@ import type {
   ParticipantDeSeance,
   ParticipantRapporte,
   ReponseLibreFormateur,
-  StrategiePublique,
+  StrategieServie,
   SyntheseConcept,
   VerdictProduction,
   VerdictTentative,
@@ -182,9 +182,7 @@ export function buildVerdictTentative(overrides: Partial<VerdictTentative> = {})
   };
 }
 
-export function buildStrategiePublique(
-  overrides: Partial<StrategiePublique> = {},
-): StrategiePublique {
+export function buildStrategieServie(overrides: Partial<StrategieServie> = {}): StrategieServie {
   return {
     id: 'somme-des-taux',
     libelle: 'Additionner les taux annoncés',
@@ -431,8 +429,8 @@ export function createFormationsPortStub(): jasmine.SpyObj<FormationsPort> {
   port.evaluerFeuille.and.returnValue(of(buildFeuilleEvaluee()));
   port.declarerJalon.and.returnValue(of(undefined));
   port.lireRappels.and.returnValue(of({ questions: [buildSpacedQuestionPublique()] }));
-  port.envoyerDefi.and.returnValue(of({ strategies: [buildStrategiePublique()] }));
-  port.lireStrategies.and.returnValue(of({ strategies: [buildStrategiePublique()] }));
+  port.envoyerDefi.and.returnValue(of({ strategies: [buildStrategieServie()] }));
+  port.lireStrategies.and.returnValue(of({ strategies: [buildStrategieServie()] }));
   port.lireMonEtat.and.returnValue(of(buildEtatParticipant()));
   port.lireSyntheseRappels.and.returnValue(of({ concepts: [buildSyntheseConcept()] }));
   port.evincerParticipant.and.returnValue(of(undefined));

@@ -75,16 +75,17 @@ describe('GrowthAuditComponent', () => {
     }
 
     it('annonce le lien de confirmation sans ouvrir le suivi tant que l adresse n est pas confirmée', () => {
+      const enAttente = buildAuditCreateResponse({
+        auditId: 'audit-en-attente',
+        status: 'UNCONFIRMED',
+        heuresDeValiditeDeLaConfirmation: 48,
+      });
+      auditServiceMock.submit.and.returnValue(of(enAttente));
       const fixture = TestBed.createComponent(GrowthAuditComponent);
-      auditServiceMock.submit.and.returnValue(
-        of(buildAuditCreateResponse({ auditId: 'audit-en-attente', status: 'UNCONFIRMED' })),
-      );
 
       remplirEtSoumettre(fixture.componentInstance, true);
 
-      expect(fixture.componentInstance.successMessage).toBe(
-        fixture.componentInstance.formLabels.confirmationEnvoyee,
-      );
+      expect(fixture.componentInstance.successMessage).toContain('valable 48 heures');
       expect(fixture.componentInstance.auditId).toBeUndefined();
       expect(auditServiceMock.stream).not.toHaveBeenCalled();
     });

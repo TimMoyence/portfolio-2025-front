@@ -54,7 +54,7 @@ export interface EvaluationDeTableau {
 
 export type StrategieServie = StrategieDefiResponseDto;
 
-export type ConceptMaitrise = SyntheseConceptResponseDto;
+export type SyntheseConcept = SyntheseConceptResponseDto;
 
 export const PROPRIETE_FORMATEUR = 'corrige';
 

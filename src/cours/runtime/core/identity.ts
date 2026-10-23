@@ -9,10 +9,11 @@ export const DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS = 12 * 60 * 60 * 1000;
 
 const SAISIE_D_IDENTITE = zJoinSessionRequestDto.shape;
 
-export const LONGUEURS_MAX_DE_L_IDENTITE: Readonly<Record<keyof IdentityInput, number>> = {
+export const LONGUEURS_MAX_DE_L_IDENTITE: Readonly<
+  Record<Exclude<keyof IdentityInput, 'email'>, number>
+> = {
   prenom: SAISIE_D_IDENTITE.prenom.maxLength ?? Infinity,
   nom: SAISIE_D_IDENTITE.nom.maxLength ?? Infinity,
-  email: SAISIE_D_IDENTITE.email.maxLength ?? Infinity,
 };
 
 export interface Identity {
@@ -61,8 +62,7 @@ export function saveIdentity(input: IdentityInput): IdentityRegistration {
   }
   if (
     longueurDeTexte(prenom) > LONGUEURS_MAX_DE_L_IDENTITE.prenom ||
-    longueurDeTexte(nom) > LONGUEURS_MAX_DE_L_IDENTITE.nom ||
-    longueurDeTexte(email) > LONGUEURS_MAX_DE_L_IDENTITE.email
+    longueurDeTexte(nom) > LONGUEURS_MAX_DE_L_IDENTITE.nom
   ) {
     throw new Error('Identité trop longue');
   }

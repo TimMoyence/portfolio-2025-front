@@ -2,7 +2,7 @@ import { firstValueFrom } from 'rxjs';
 import {
   buildEtatParticipant,
   buildSpacedQuestionPublique,
-  buildStrategiePublique,
+  buildStrategieServie,
   buildSyntheseConcept,
   buildVerdictProduction,
   buildVerdictTentative,
@@ -10,7 +10,7 @@ import {
 } from '../../../testing/factories/formations.factory';
 import type {
   FormationsPort,
-  StrategiePublique,
+  StrategieServie,
   SyntheseConcept,
   VerdictProduction,
   VerdictTentative,
@@ -93,10 +93,10 @@ describe('createFormationsPortStub', () => {
     const rappels: { questions: readonly SpacedQuestionPublique[] } = await firstValueFrom(
       port.lireRappels('seance-1', 'jeton-1'),
     );
-    const defi: { strategies: readonly StrategiePublique[] } = await firstValueFrom(
+    const defi: { strategies: readonly StrategieServie[] } = await firstValueFrom(
       port.envoyerDefi('seance-1', 'jeton-1', 'b2-01-a5-defi', { texte: 'Essai.', dureeMs: 1000 }),
     );
-    const strategies: { strategies: readonly StrategiePublique[] } = await firstValueFrom(
+    const strategies: { strategies: readonly StrategieServie[] } = await firstValueFrom(
       port.lireStrategies('seance-1', 'jeton-1', 'b2-01-a5-defi'),
     );
     const moi: EtatParticipant = await firstValueFrom(port.lireMonEtat('seance-1', 'jeton-1'));
@@ -125,8 +125,8 @@ describe('createFormationsPortStub', () => {
     expect(production).toEqual(buildVerdictProduction());
     expect(tentative).toEqual(buildVerdictTentative());
     expect(rappels).toEqual({ questions: [buildSpacedQuestionPublique()] });
-    expect(defi).toEqual({ strategies: [buildStrategiePublique()] });
-    expect(strategies).toEqual({ strategies: [buildStrategiePublique()] });
+    expect(defi).toEqual({ strategies: [buildStrategieServie()] });
+    expect(strategies).toEqual({ strategies: [buildStrategieServie()] });
     expect(moi).toEqual(buildEtatParticipant());
     expect(synthese).toEqual({ concepts: [buildSyntheseConcept()] });
   });

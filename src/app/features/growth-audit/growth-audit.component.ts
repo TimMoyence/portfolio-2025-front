@@ -211,7 +211,8 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
     phonePlaceholder: $localize`:audit.form.phonePlaceholder@@auditFormPhonePlaceholder:ex. +33 6 98 50 32 82`,
     submit: $localize`:audit.form.submit@@auditFormSubmit:Demander mon audit (scan IA immédiat + audit humain sous 24h)`,
     success: $localize`:audit.form.success@@auditFormSuccess:Merci ! Scan IA lancé — audit humain envoyé sous 24h.`,
-    confirmationEnvoyee: $localize`:@@auditFormConfirmationEnvoyee:Vérifiez votre boîte e-mail : l’audit démarre dès que vous ouvrez le lien de confirmation reçu, valable 24 heures.`,
+    confirmationEnvoyee: (heures: number) =>
+      $localize`:@@auditFormConfirmationEnvoyee:Vérifiez votre boîte e-mail : l’audit démarre dès que vous ouvrez le lien de confirmation reçu, valable ${heures}:heures: heures.`,
     confirmee: $localize`:@@auditFormConfirmee:Adresse confirmée ! Scan IA lancé — audit humain envoyé sous 24h.`,
     lienDeConfirmationRefuse: $localize`:@@auditFormLienDeConfirmationRefuse:Ce lien de confirmation est invalide ou a expiré : refaites la demande d’audit.`,
     error: $localize`:audit.form.error@@auditFormError:Impossible d'envoyer la demande. Réessayez dans un instant.`,
@@ -300,8 +301,10 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
         400: $localize`:@@auditFormErreurRefus:La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.`,
       },
       onSuccess: (response) => {
-        if (response.status === 'UNCONFIRMED') {
-          this.successMessage = this.formLabels.confirmationEnvoyee;
+        if (response.heuresDeValiditeDeLaConfirmation !== null) {
+          this.successMessage = this.formLabels.confirmationEnvoyee(
+            response.heuresDeValiditeDeLaConfirmation,
+          );
           return;
         }
         this.successMessage = this.formLabels.success;

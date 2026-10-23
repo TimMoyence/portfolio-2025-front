@@ -176,8 +176,7 @@ describe('identity', () => {
   });
 
   it('borne le prenom et le nom a 80 caracteres et l adresse a 180, comme le serveur', () => {
-    const { prenom, nom, email } = LONGUEURS_MAX_DE_L_IDENTITE;
-    expect([prenom, nom, email]).toEqual([80, 80, 180]);
+    expect(LONGUEURS_MAX_DE_L_IDENTITE).toEqual({ prenom: 80, nom: 80 });
 
     const adresseDe181 = `${'a'.repeat(56)}@${'b'.repeat(60)}.${'c'.repeat(60)}.fr`;
     expect(adresseDe181.length).toBe(181);

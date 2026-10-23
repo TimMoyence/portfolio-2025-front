@@ -59,7 +59,7 @@ import {
   buildEtatParticipant,
   buildRattachement,
   buildSpacedQuestionPublique,
-  buildStrategiePublique,
+  buildStrategieServie,
   buildVerdictTentative,
   createFormationsPortStub,
 } from '../../../../testing/factories/formations.factory';
@@ -2853,7 +2853,7 @@ describe('CoursEtudiantComponent', () => {
         echouerUneFois: (refus) =>
           port.envoyerDefi.and.returnValues(
             throwError(() => refus),
-            of({ strategies: [buildStrategiePublique()] }),
+            of({ strategies: [buildStrategieServie()] }),
           ),
         evenement: DEFI_DE_LA_DIZAINE,
         coupure: TENTATIVE_A_REPROPOSER,

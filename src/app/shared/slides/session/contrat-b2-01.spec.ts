@@ -59,7 +59,7 @@ import type {
   MotifRefusReponse,
   RegleNotation,
   RetourBrique,
-  StrategiePublique,
+  StrategieServie,
   SyntheseConcept,
   VerdictProduction,
   VerdictTentative,
@@ -559,7 +559,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
       const strategies = [
         { id: 'coefficients', libelle: 'Multiplier les coefficients' },
         { id: 'somme-des-taux', libelle: 'Additionner les taux', fausse: true },
-      ] satisfies StrategiePublique[];
+      ] satisfies StrategieServie[];
       const synthese = {
         concept: 'evolution-reciproque',
         libelle: 'Évolution réciproque',

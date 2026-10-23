@@ -17,6 +17,7 @@ export function buildAuditCreateResponse(
     httpCode: 201,
     auditId: 'audit-1',
     status: 'PENDING',
+    heuresDeValiditeDeLaConfirmation: null,
     ...overrides,
   };
 }
