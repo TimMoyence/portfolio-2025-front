@@ -81,8 +81,7 @@ const STATISTIQUES = {
 const RAPPORT = rapportDeSeance({
   courseSlug: SLUG,
   code: '4821',
-  conceptsFragiles: ['taux-evolution'],
-  libellesDesConcepts: { 'taux-evolution': 'Taux d’évolution' },
+  conceptsFragiles: [{ concept: 'taux-evolution', libelle: 'Taux d’évolution', effectif: 9 }],
   resultats: {
     participants: 24,
     confusions: [],

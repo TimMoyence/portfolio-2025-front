@@ -186,6 +186,7 @@ export const zAuditRequestResponseDto = z.object({
   httpCode: z.number(),
   auditId: z.string(),
   status: zStatutDAudit,
+  heuresDeValiditeDeLaConfirmation: z.int().nullable(),
 });
 
 export const zAuditConfirmeResponseDto = z.object({
@@ -780,6 +781,12 @@ export const zResultatsEnDirectResponseDto = z.object({
   enigmes: z.array(zProgressionEnigmeResponseDto),
 });
 
+export const zConceptFragileResponseDto = z.object({
+  concept: z.string(),
+  libelle: z.string(),
+  effectif: z.int().gte(0),
+});
+
 export const zRapportReponseLibreResponseDto = z.object({
   screenId: z.string(),
   activityId: z.string(),
@@ -846,8 +853,7 @@ export const zSessionResultsResponseDto = z.object({
   code: z.string(),
   ouverteLe: z.iso.datetime(),
   fermeeLe: z.iso.datetime().nullable(),
-  conceptsFragiles: z.array(z.string()),
-  libellesDesConcepts: z.record(z.string(), z.string()),
+  conceptsFragiles: z.array(zConceptFragileResponseDto),
   statistiques: zStatistiquesSeanceResponseDto,
   participants: z.array(zRapportParticipantResponseDto),
   resultats: zResultatsSeanceResponseDto,
@@ -971,6 +977,51 @@ export const zTeacherAnnotationsResponseDto = z.object({
 export const zSaveTeacherAnnotationRequestDto = z.object({
   screenId: z.string().min(1).max(120),
   note: z.string().min(1).max(10000),
+});
+
+/**
+ * Motif métier du refus, que le client traduit
+ */
+export const zCodeDErreur = z.enum([
+  'ACTIVITE_INCONNUE',
+  'COURS_INTROUVABLE',
+  'COURS_MODIFIE',
+  'DEFI_SANS_TENTATIVE',
+  'ECRAN_INCONNU',
+  'ECRAN_NON_SERVI',
+  'ENIGME_DEJA_RESOLUE',
+  'ENIGME_VERROUILLEE',
+  'GRAINE_REPRISE',
+  'PARTICIPANT_EVINCE',
+  'PARTICIPANT_INTROUVABLE',
+  'PHASE_FERMEE',
+  'PHASE_NON_MONOTONE',
+  'PIECE_JOINTE_INTROUVABLE',
+  'PIECE_JOINTE_RETENUE',
+  'PLACE_DEJA_PRISE',
+  'PLAFOND_DE_FLUX_ATTEINT',
+  'PRODUCTION_INVALIDE',
+  'PRODUCTION_VIDE',
+  'REPONSE_DEJA_ENREGISTREE',
+  'REPONSE_INTROUVABLE',
+  'REPRISES_EPUISEES',
+  'REVISION_OBSOLETE',
+  'SAISIE_NON_NUMERIQUE',
+  'SEANCE_COMPLETE',
+  'SEANCE_INTROUVABLE',
+  'SEANCE_NON_DEMARREE',
+  'SEANCE_TERMINEE',
+  'TENTATIVES_EPUISEES',
+  'TYPE_DE_QUESTION',
+]);
+
+export const zProblemeDeFormationResponseDto = z.object({
+  type: z.string(),
+  title: z.string(),
+  status: z.int(),
+  detail: z.string(),
+  instance: z.string(),
+  code: zCodeDErreur.optional(),
 });
 
 export const zJoinSessionRequestDto = z.object({

@@ -184,7 +184,6 @@ export function rapportDeSeance(surcharges: Partial<RapportSeance>): RapportSean
     ouverteLe: '2026-09-20T08:00:00.000Z',
     fermeeLe: '2026-09-20T10:00:00.000Z',
     conceptsFragiles: [],
-    libellesDesConcepts: {},
     resultats: buildResultatsSeance({ participants: 0, questions: [] }),
     statistiques: buildStatistiquesSeance({ tauxParticipation: 0, tauxReussite: 0 }),
     notation: buildRegleNotation({ seuilQuestionProbleme: 0.5 }),

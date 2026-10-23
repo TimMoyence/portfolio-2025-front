@@ -203,6 +203,10 @@ export type AuditRequestResponseDto = {
   httpCode: number;
   auditId: string;
   status: StatutDAudit;
+  /**
+   * Heures de validite du lien de confirmation envoye par courriel ; null quand aucune confirmation n est attendue.
+   */
+  heuresDeValiditeDeLaConfirmation: number | null;
 };
 
 export type AuditConfirmeResponseDto = {
@@ -1129,6 +1133,15 @@ export type ComptesJalonResponseDto = {
   total: number;
 };
 
+export type ConceptFragileResponseDto = {
+  concept: string;
+  libelle: string;
+  /**
+   * Participants ayant au moins une réponse non correcte sur ce concept
+   */
+  effectif: number;
+};
+
 export type RapportReponseLibreResponseDto = {
   screenId: string;
   activityId: string;
@@ -1238,13 +1251,10 @@ export type SessionResultsResponseDto = {
    * Date de cloture, null tant que la seance est ouverte
    */
   fermeeLe: string | null;
-  conceptsFragiles: Array<string>;
   /**
-   * Libellé lisible de chaque concept fragile
+   * Concepts fragiles de la classe, du plus touché au moins touché
    */
-  libellesDesConcepts: {
-    [key: string]: string;
-  };
+  conceptsFragiles: Array<ConceptFragileResponseDto>;
   /**
    * Indicateurs calculés côté serveur pour le pilotage formateur
    */
@@ -1536,6 +1546,53 @@ export type TeacherAnnotationsResponseDto = {
 export type SaveTeacherAnnotationRequestDto = {
   screenId: string;
   note: string;
+};
+
+/**
+ * Motif métier du refus, que le client traduit
+ */
+export type CodeDErreur =
+  | 'ACTIVITE_INCONNUE'
+  | 'COURS_INTROUVABLE'
+  | 'COURS_MODIFIE'
+  | 'DEFI_SANS_TENTATIVE'
+  | 'ECRAN_INCONNU'
+  | 'ECRAN_NON_SERVI'
+  | 'ENIGME_DEJA_RESOLUE'
+  | 'ENIGME_VERROUILLEE'
+  | 'GRAINE_REPRISE'
+  | 'PARTICIPANT_EVINCE'
+  | 'PARTICIPANT_INTROUVABLE'
+  | 'PHASE_FERMEE'
+  | 'PHASE_NON_MONOTONE'
+  | 'PIECE_JOINTE_INTROUVABLE'
+  | 'PIECE_JOINTE_RETENUE'
+  | 'PLACE_DEJA_PRISE'
+  | 'PLAFOND_DE_FLUX_ATTEINT'
+  | 'PRODUCTION_INVALIDE'
+  | 'PRODUCTION_VIDE'
+  | 'REPONSE_DEJA_ENREGISTREE'
+  | 'REPONSE_INTROUVABLE'
+  | 'REPRISES_EPUISEES'
+  | 'REVISION_OBSOLETE'
+  | 'SAISIE_NON_NUMERIQUE'
+  | 'SEANCE_COMPLETE'
+  | 'SEANCE_INTROUVABLE'
+  | 'SEANCE_NON_DEMARREE'
+  | 'SEANCE_TERMINEE'
+  | 'TENTATIVES_EPUISEES'
+  | 'TYPE_DE_QUESTION';
+
+export type ProblemeDeFormationResponseDto = {
+  type: string;
+  title: string;
+  status: number;
+  detail: string;
+  instance: string;
+  /**
+   * Motif métier du refus, que le client traduit
+   */
+  code?: CodeDErreur;
 };
 
 export type JoinSessionRequestDto = {

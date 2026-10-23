@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import type { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { from, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import type { CodeDErreur } from '../../../../contrat/types.gen';
 import type {
   CoursContent,
   DerouleCours,
@@ -58,6 +59,7 @@ import { STATUT_LIMITE_DE_DEBIT } from '../../../cours/runtime/core/statuts-http
 import { limiteDeLaReponse } from '../http/limite-de-debit';
 import { derouleDuFil, livretDuFil, sujetDuFil } from './formations-fil';
 import {
+  zCodeDErreur,
   zDerouleResponseDto as derouleServi,
   zEtatParticipantResponseDto as etatParticipantServi,
   zFeuilleEvalueeResponseDto as feuilleEvalueeServie,
@@ -86,20 +88,22 @@ import { ENTETE_JETON_PARTICIPANT } from '../../../cours/runtime/core/jeton-part
 import { urlDeLaSeance } from '../../../cours/runtime/core/adresse-de-seance';
 import { chaineDe, jsonOuNull } from '../../../cours/runtime/core/valeurs';
 
-const MOTIFS_DE_REFUS_DE_REPONSE_LIBRE: Readonly<Record<string, MotifRefusReponseLibre>> = {
+type MotifsParCode<M> = Readonly<Partial<Record<CodeDErreur, M>>>;
+
+const MOTIFS_DE_REFUS_DE_REPONSE_LIBRE: MotifsParCode<MotifRefusReponseLibre> = {
   SEANCE_NON_DEMARREE: 'seance-non-demarree',
   SEANCE_TERMINEE: 'seance-terminee',
   ECRAN_NON_SERVI: 'ecran-non-servi',
 };
 
-const MOTIFS_DE_RATTACHEMENT_PAR_CODE: Readonly<Record<string, MotifRefusRattachement>> = {
+const MOTIFS_DE_RATTACHEMENT_PAR_CODE: MotifsParCode<MotifRefusRattachement> = {
   SEANCE_COMPLETE: 'seance-complete',
   SEANCE_TERMINEE: 'seance-terminee',
   PLACE_DEJA_PRISE: 'place-deja-prise',
   PARTICIPANT_EVINCE: 'participant-evince',
 };
 
-const MOTIFS_D_ECRITURE_PAR_CODE: Readonly<Record<string, MotifRefusReponse>> = {
+const MOTIFS_D_ECRITURE_PAR_CODE: MotifsParCode<MotifRefusReponse> = {
   REPONSE_DEJA_ENREGISTREE: 'deja-repondue',
   ENIGME_DEJA_RESOLUE: 'deja-repondue',
   SEANCE_NON_DEMARREE: 'seance-non-demarree',
@@ -136,9 +140,9 @@ function refuserRattachement(erreur: unknown): RattachementRefuse {
       if (limite !== null) {
         return new RattachementRefuse('rattachement-impossible', reponse.status, limite);
       }
-      const code = codeDuProbleme(reponse);
-      if (code !== null && Object.hasOwn(MOTIFS_DE_RATTACHEMENT_PAR_CODE, code)) {
-        return new RattachementRefuse(MOTIFS_DE_RATTACHEMENT_PAR_CODE[code], reponse.status);
+      const motif = motifDuCode(MOTIFS_DE_RATTACHEMENT_PAR_CODE, codeDe(reponse.error));
+      if (motif !== undefined) {
+        return new RattachementRefuse(motif, reponse.status);
       }
       return new RattachementRefuse(
         reponse.status === 404 ? 'code-inconnu' : 'rattachement-impossible',
@@ -165,7 +169,7 @@ function refuserSujet(erreur: unknown): SujetRefuse {
   );
 }
 
-const MOTIFS_SUR_LE_POSTE_PAR_CODE: Readonly<Record<string, MotifRefusSurLePoste>> = {
+const MOTIFS_SUR_LE_POSTE_PAR_CODE: MotifsParCode<MotifRefusSurLePoste> = {
   SEANCE_COMPLETE: 'seance-complete',
   GRAINE_REPRISE: 'graine-reprise',
 };
@@ -174,20 +178,21 @@ function refuserActionSurLePoste(erreur: unknown): ActionSurLePosteRefusee {
   return selonLaReponse(
     erreur,
     () => new ActionSurLePosteRefusee('action-impossible', 0),
-    (reponse) => {
-      const code = codeDuProbleme(reponse);
-      return new ActionSurLePosteRefusee(
-        code !== null && Object.hasOwn(MOTIFS_SUR_LE_POSTE_PAR_CODE, code)
-          ? MOTIFS_SUR_LE_POSTE_PAR_CODE[code]
-          : 'action-impossible',
+    (reponse) =>
+      new ActionSurLePosteRefusee(
+        motifDuCode(MOTIFS_SUR_LE_POSTE_PAR_CODE, codeDe(reponse.error)) ?? 'action-impossible',
         reponse.status,
-      );
-    },
+      ),
   );
 }
 
-function codeDuProbleme(erreur: HttpErrorResponse): string | null {
-  return chaineDe(erreur.error, 'code');
+function codeDe(corps: unknown): CodeDErreur | null {
+  const lu = zCodeDErreur.safeParse(chaineDe(corps, 'code'));
+  return lu.success ? lu.data : null;
+}
+
+function motifDuCode<M>(motifs: MotifsParCode<M>, code: CodeDErreur | null): M | undefined {
+  return code === null ? undefined : motifs[code];
 }
 
 async function corpsDuFichierRefuse(corps: unknown): Promise<unknown> {
@@ -205,7 +210,7 @@ function refuserPieceJointe(erreur: unknown): Promise<PieceJointeRefusee> {
       if (limite !== null) {
         return new PieceJointeRefusee('indisponible', reponse.status, limite);
       }
-      const code = chaineDe(await corpsDuFichierRefuse(reponse.error), 'code');
+      const code = codeDe(await corpsDuFichierRefuse(reponse.error));
       return new PieceJointeRefusee(
         code === 'PIECE_JOINTE_RETENUE' ? 'retenue' : 'indisponible',
         reponse.status,
@@ -216,16 +221,17 @@ function refuserPieceJointe(erreur: unknown): Promise<PieceJointeRefusee> {
 
 function motifDeRefusSelonCode<M extends string>(
   erreur: HttpErrorResponse,
-  motifsParCode: Readonly<Record<string, M>>,
+  motifsParCode: MotifsParCode<M>,
   absenceSansCode?: M,
 ): M | 'reseau' | 'refusee' {
   const statut = erreur.status;
-  const code = codeDuProbleme(erreur);
+  const code = codeDe(erreur.error);
+  const parCode = motifDuCode(motifsParCode, code);
   let motif: M | 'reseau' | 'refusee' = 'refusee';
   if (statut === 0 || statut === STATUT_LIMITE_DE_DEBIT || statut >= 500) {
     motif = 'reseau';
-  } else if (code !== null && Object.hasOwn(motifsParCode, code)) {
-    motif = motifsParCode[code];
+  } else if (parCode !== undefined) {
+    motif = parCode;
   } else if (code === null && statut === 404 && absenceSansCode !== undefined) {
     motif = absenceSansCode;
   }
