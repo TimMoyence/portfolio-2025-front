@@ -40,7 +40,7 @@ export type Pose = readonly [propriete: string, valeur: unknown];
 
 type Genre<K extends RetourBrique['kind']> = Extract<RetourBrique, { kind: K }>;
 
-const QUESTIONS_SIMPLES: ReadonlySet<string> = new Set(['fp-numeric', 'fp-recall', 'fp-exit']);
+const QUESTIONS_SIMPLES: ReadonlySet<string> = new Set(['fp-numeric', 'fp-recall']);
 const QUESTIONS_REVELABLES: ReadonlySet<string> = new Set([
   ...QUESTIONS_SIMPLES,
   'fp-vote',
@@ -84,20 +84,6 @@ function resultatsDe(
   return resultat === undefined
     ? null
     : { total: resultat.total, parOption: resultat.parOption ?? {} };
-}
-
-function resultatsDuVote(
-  montage: MontageIdentifie,
-  direct: DirectEcran | null,
-): ResultatsDeVote | null {
-  return resultatsDe(questionAffichee(montage, direct), direct);
-}
-
-function resultatsDuPremierVote(
-  montage: MontageIdentifie,
-  direct: DirectEcran | null,
-): ResultatsDeVote | null {
-  return montage.identifiants.length < 2 ? null : resultatsDe(montage.identifiants[0], direct);
 }
 
 function phaseDuVote(direct: DirectEcran | null): VotePhase | null {
@@ -162,17 +148,7 @@ function annexeDuMontage(
   donnees: unknown,
   direct: DirectEcran | null,
 ): unknown {
-  if (!estObjet(donnees)) {
-    return donnees;
-  }
-  if (donnees['type'] === 'revelation' && 'reponses' in donnees) {
-    const { reponses, ...revelation } = donnees;
-    return {
-      ...revelation,
-      optionId: cibleDeLaQuestionAffichee(montage, reponses, direct)?.optionId ?? null,
-    };
-  }
-  if (donnees['type'] !== 'reponses') {
+  if (!estObjet(donnees) || donnees['type'] !== 'reponses' || montage.brique === 'fp-vote') {
     return donnees;
   }
   const bonne = cibleDeLaQuestionAffichee(montage, donnees['reponses'], direct);
@@ -200,8 +176,8 @@ function posesDesQuestions(montage: MontageIdentifie, contexte: ContexteDeReinje
       ['verdicts', visantLeMontage(verdicts, montage)],
       ['phase', phaseDuVote(contexte.direct)],
       ['questionAffichee', questionAffichee(montage, contexte.direct)],
-      ['resultats', resultatsDuVote(montage, contexte.direct)],
-      ['resultatsPremierVote', resultatsDuPremierVote(montage, contexte.direct)],
+      ['resultats', resultatsDe(montage.identifiants[0], contexte.direct)],
+      ['resultatsJumelle', resultatsDe(montage.identifiants[1], contexte.direct)],
     ];
   }
   if (QUESTIONS_SIMPLES.has(montage.brique)) {

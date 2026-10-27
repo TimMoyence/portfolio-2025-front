@@ -24,7 +24,6 @@ const PERIMETRE_V1 = [
   'fp-pulse',
   'fp-recall',
   'fp-spaced',
-  'fp-exit',
   'fp-quote',
   'fp-story',
   'fp-pro',

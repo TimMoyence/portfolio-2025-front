@@ -81,12 +81,12 @@ describe('CoursLivretComponent', () => {
     expect(un(fixture, 'livret-version')?.textContent).toContain('1');
   });
 
-  it('met en page pour l’étudiant les 34 écrans du B2-02 à traiter sur papier, rappel et illustrations compris, sans jalon', async () => {
+  it('met en page pour l’étudiant les 32 écrans du B2-02 à traiter sur papier, rappel et illustrations compris, sans jalon', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     const ids = tous(fixture, 'livret-ecran').map((page) => page.dataset['ecran']);
 
-    expect(ids.length).toBe(34);
+    expect(ids.length).toBe(32);
     expect(ids).not.toContain('B2-02-A1-09-JALON');
     expect(ids.indexOf('B2-02-A1-06-ILLUSTRATION-RESUMER')).toBe(
       ids.indexOf('B2-02-A1-06-COURS-RESUMER') + 1,
@@ -103,13 +103,13 @@ describe('CoursLivretComponent', () => {
     const feuilleDe = (ecran: string): number =>
       feuilles.findIndex((feuille) => feuille.querySelector(`[data-ecran="${ecran}"]`) !== null);
 
-    expect(feuilles.length).toBe(15);
-    expect(tous(fixture, 'livret-ecran').length).toBe(34);
+    expect(feuilles.length).toBe(14);
+    expect(tous(fixture, 'livret-ecran').length).toBe(32);
     expect(
       feuilles.map((feuille) =>
         feuille.querySelector('[data-testid="livret-feuille-entete"]')?.textContent?.trim(),
       ),
-    ).toEqual(feuilles.map((_, rang) => `Fiche ${rang + 1} / 15`));
+    ).toEqual(feuilles.map((_, rang) => `Fiche ${rang + 1} / 14`));
     for (const [exercice, suite] of [
       ['B2-02-A1-05-UN-SEUL-NOMBRE', 'B2-02-A1-06-COURS-RESUMER'],
       ['B2-02-A1-07-EXEMPLE-RESUME', 'B2-02-A1-08-ATELIER-RESUME'],
@@ -118,10 +118,7 @@ describe('CoursLivretComponent', () => {
       ['B2-02-A3-01-JUSQU-OU', 'B2-02-A3-02-COURS-DROITE'],
       ['B2-02-A4-04-RAPPEL', 'B2-02-A4-05-FICHE-MEMO'],
       ['B2-02-A2-05-ATELIER-NUAGE', 'B2-02-A2-06-ECARTS-POINT-MOYEN'],
-      ['B2-02-A3-04-ATELIER-DROITE', 'B2-02-A3-05-DEFI-IA'],
       ['B2-02-A4-02-TABLEUR-FIBRE', 'B2-02-A4-03-COFFRE-FIBRE'],
-      ['B2-02-A1-08-ATELIER-RESUME', 'B2-02-A4-06-BILLET-DE-SORTIE'],
-      ['B2-02-A3-04-ATELIER-DROITE', 'B2-02-A4-06-BILLET-DE-SORTIE'],
     ]) {
       expect(feuilleDe(exercice)).withContext(exercice).toBeGreaterThanOrEqual(0);
       expect(feuilleDe(exercice)).withContext(suite).toBeLessThan(feuilleDe(suite));
@@ -167,7 +164,6 @@ describe('CoursLivretComponent', () => {
       ['B2-02-A2-03-COURS-NUAGE', 'révèle la réponse du vote A2-02'],
       ['B2-02-A2-06-ECARTS-POINT-MOYEN', 'rappelle les résultats de l’exercice 2'],
       ['B2-02-A3-02-COURS-DROITE', 'répond à la réflexion A3-01'],
-      ['B2-02-A3-05-DEFI-IA', 'cite la droite que l’exercice 4 demande de trouver'],
       ['B2-02-A4-05-FICHE-MEMO', 'résume les réponses du rappel'],
     ]) {
       expect(ficheDe(ecran)?.classList.contains(FICHE_A_LA_SUITE))
@@ -196,7 +192,7 @@ describe('CoursLivretComponent', () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     expect(annonce(fixture)).toEqual([
-      '15 fiches · chacune commence sur une nouvelle page, sauf la question qui ouvre une notion quand sa page ne porte aucun exemple guidé et qu’elle n’en reprend aucune réponse ; les plus longues en occupent plusieurs',
+      '14 fiches · chacune commence sur une nouvelle page, sauf la question qui ouvre une notion quand sa page ne porte aucun exemple guidé et qu’elle n’en reprend aucune réponse ; les plus longues en occupent plusieurs',
     ]);
 
     basculerSurLeCorrige(fixture);
@@ -216,19 +212,16 @@ describe('CoursLivretComponent', () => {
 
     const titres = tous(fixture, 'livret-titre-ecran').map((titre) => titre.textContent?.trim());
 
-    expect(titres).toEqual([
-      'Exercice 3 — Les écarts au point moyen',
-      'Exercice 5 — Corriger la prévision d’une IA',
-    ]);
+    expect(titres).toEqual(['Exercice 3 — Les écarts au point moyen']);
   });
 
-  it('bascule sur le corrigé des 34 écrans du B2-02, rappel et illustrations compris', async () => {
+  it('bascule sur le corrigé des 32 écrans du B2-02, rappel et illustrations compris', async () => {
     const { fixture } = await monter(of(LIVRET_B2_02));
 
     basculerSurLeCorrige(fixture);
 
     const ids = tous(fixture, 'livret-corrige').map((page) => page.dataset['ecran']);
-    expect(ids.length).toBe(34);
+    expect(ids.length).toBe(32);
     expect(ids).toContain('B2-02-A4-04-RAPPEL');
     expect(tous(fixture, 'livret-ecran')).toEqual([]);
   });

@@ -1,6 +1,5 @@
 import { PHASES_DE_VOTE, type MetadonneesBrique, type VotePhase } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
-import { lignesDeCalculHtml } from './calculs';
 import { formaterPart } from '../core/typographie';
 import {
   avecJeNeSaisPas,
@@ -9,12 +8,12 @@ import {
   projeterMetadonnees,
   projeterOptions,
 } from './projection';
-import { chaineDe, estMembre, estObjet, memeIdentifiant, part } from '../core/valeurs';
+import { estMembre, estObjet, memeIdentifiant, part } from '../core/valeurs';
 import {
   bonneReponseRevelee,
   bonneReponseSansOptionMarquee,
-  lireBonneOption,
-  lireBonneReponse,
+  type CibleRevelee,
+  lireCibleRevelee,
   marqueDOption,
   VerdictsParQuestion,
 } from './retours';
@@ -32,16 +31,6 @@ export interface VoteResultats {
   readonly parOption: Readonly<Record<string, number>>;
 }
 
-interface Revelation {
-  readonly titre: string;
-  readonly lignes: readonly string[];
-}
-
-const ANNONCE_DE_PHASE: Readonly<Partial<Record<VotePhase, string>>> = {
-  discussion: 'discussion-en-cours',
-  revele: 'vote-phase-revele',
-};
-
 function projeter(valeur: VoteQuestionPublique | null): VoteQuestionPublique | null {
   if (valeur === null) {
     return null;
@@ -55,25 +44,17 @@ function projeter(valeur: VoteQuestionPublique | null): VoteQuestionPublique | n
   };
 }
 
-function elementDeListe(ligne: string): EscapedHtml {
-  return safeHtml`<li>${lignesDeCalculHtml(ligne)}</li>`;
-}
-
-function lireRevelation(valeur: unknown): Revelation | null {
-  if (!estObjet(valeur) || valeur['type'] !== 'revelation') {
-    return null;
+function lireCorrections(valeur: unknown): ReadonlyMap<string, CibleRevelee> {
+  const reponses = estObjet(valeur) && valeur['type'] === 'reponses' ? valeur['reponses'] : null;
+  if (!estObjet(reponses)) {
+    return new Map();
   }
-  const titre = chaineDe(valeur, 'titre');
-  const lignes = valeur['lignes'];
-  return titre !== null &&
-    Array.isArray(lignes) &&
-    lignes.every((ligne) => typeof ligne === 'string')
-    ? { titre, lignes }
-    : null;
-}
-
-function optionDeLaRevelation(valeur: unknown): string | null {
-  return lireRevelation(valeur) === null ? null : chaineDe(valeur, 'optionId');
+  return new Map(
+    Object.entries(reponses).flatMap(([questionId, reponse]) => {
+      const cible = lireCibleRevelee(reponse);
+      return cible === null ? [] : [[questionId, cible] as const];
+    }),
+  );
 }
 
 export class FpVote extends FpVerdicts {
@@ -81,11 +62,9 @@ export class FpVote extends FpVerdicts {
   private jumelle: VoteQuestionPublique | null = null;
   private internePhase: VotePhase | null = null;
   private questionServie: string | null = null;
-  private interneResultats: VoteResultats | null = null;
-  private premierVote: VoteResultats | null = null;
-  private revelation: Revelation | null = null;
-  private bonneReponse: string | null = null;
-  private bonneOption: string | null = null;
+  private resultatsPrincipale: VoteResultats | null = null;
+  private resultatsDeLaJumelle: VoteResultats | null = null;
+  private corrections: ReadonlyMap<string, CibleRevelee> = new Map();
   private choix = new Map<string, string>();
 
   set question(valeur: VoteQuestionPublique | null) {
@@ -120,21 +99,21 @@ export class FpVote extends FpVerdicts {
   }
 
   set resultats(valeur: VoteResultats | null) {
-    this.interneResultats = valeur;
+    this.resultatsPrincipale = valeur;
     this.refreshSiConnecte();
   }
 
   get resultats(): VoteResultats | null {
-    return this.interneResultats;
+    return this.resultatsPrincipale;
   }
 
-  set resultatsPremierVote(valeur: VoteResultats | null) {
-    this.premierVote = valeur;
+  set resultatsJumelle(valeur: VoteResultats | null) {
+    this.resultatsDeLaJumelle = valeur;
     this.refreshSiConnecte();
   }
 
-  get resultatsPremierVote(): VoteResultats | null {
-    return this.premierVote;
+  get resultatsJumelle(): VoteResultats | null {
+    return this.resultatsDeLaJumelle;
   }
 
   protected verdictAttendu(questionId: string): boolean {
@@ -142,9 +121,7 @@ export class FpVote extends FpVerdicts {
   }
 
   set corrige(valeur: unknown) {
-    this.revelation = lireRevelation(valeur);
-    this.bonneReponse = lireBonneReponse(valeur);
-    this.bonneOption = lireBonneOption(valeur) ?? optionDeLaRevelation(valeur);
+    this.corrections = lireCorrections(valeur);
     this.refreshSiConnecte();
   }
 
@@ -163,6 +140,16 @@ export class FpVote extends FpVerdicts {
       : this.principale;
   }
 
+  private lesDeux(): VoteQuestionPublique[] {
+    return [this.principale, this.jumelle].filter(
+      (question): question is VoteQuestionPublique => question !== null,
+    );
+  }
+
+  private revelee(): boolean {
+    return this.lesDeux().some((question) => this.corrections.has(question.id));
+  }
+
   render(): EscapedHtml {
     const question = this.affichee();
     if (!question) {
@@ -171,25 +158,29 @@ export class FpVote extends FpVerdicts {
     if (this.surPapier() && !this.presentateur()) {
       return this.questionsImprimees();
     }
-    const proposees = this.presentateur() ? question.options : this.toutesLesOptions(question);
+    const questions = this.revelee() ? this.lesDeux() : [question];
     return safeHtml`<div class="fp-carte fp-scene"${this.marqueDePhase()}>
-      ${this.annoncePhase()}
-      <fieldset class="fp-vote__options">
-        <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
-        <div class="fp-vote__corps">
-          ${proposees.map((option) => this.bouton(question, option))}
-        </div>
-      </fieldset>
-      ${this.presentateur() ? this.suiviProjete(question) : this.suiviEtudiant(question)}
-      ${bonneReponseRevelee(this.texte('bonne-reponse'), bonneReponseSansOptionMarquee(this.bonneReponse, this.bonneOption, proposees))}${this.revelationRevelee()}
+      ${questions.map((affichee) => this.carteDeQuestion(affichee))}
+      ${this.presentateur() ? VIDE : this.annonces()}
     </div>`;
   }
 
+  private carteDeQuestion(question: VoteQuestionPublique): EscapedHtml {
+    const proposees = this.presentateur() ? question.options : this.toutesLesOptions(question);
+    const correction = this.corrections.get(question.id) ?? null;
+    const bonneOption = correction?.optionId ?? null;
+    return safeHtml`<fieldset class="fp-vote__options">
+        <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
+        <div class="fp-vote__corps">
+          ${proposees.map((option) => this.bouton(question, option, bonneOption))}
+        </div>
+      </fieldset>
+      ${this.presentateur() ? this.suiviProjete(question) : this.suiviEtudiant(question)}
+      ${bonneReponseRevelee(this.texte('bonne-reponse'), bonneReponseSansOptionMarquee(correction?.cible ?? null, bonneOption, proposees))}`;
+  }
+
   private questionsImprimees(): EscapedHtml {
-    const questions = [this.principale, this.jumelle].filter(
-      (question): question is VoteQuestionPublique => question !== null,
-    );
-    return safeHtml`<div class="fp-carte fp-scene">${questions.map(
+    return safeHtml`<div class="fp-carte fp-scene">${this.lesDeux().map(
       (question) => safeHtml`<fieldset class="fp-vote__options">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
         <ul class="fp-cases">${this.casesAImprimer(question.options)}</ul>
@@ -199,21 +190,19 @@ export class FpVote extends FpVerdicts {
 
   private suiviEtudiant(question: VoteQuestionPublique): EscapedHtml {
     const retour = this.choix.has(question.id) ? this.messageApresEnvoi() : '';
-    return safeHtml`<p aria-live="polite" data-testid="retour">${escapeHtml(retour)}</p>${this.verdictDeReponse(this.recus.de(question.id))}${this.annonces()}`;
+    return safeHtml`<p aria-live="polite" data-testid="retour">${escapeHtml(retour)}</p>${this.verdictDeReponse(this.recus.de(question.id))}`;
+  }
+
+  private resultatsDe(question: VoteQuestionPublique): VoteResultats | null {
+    return question === this.jumelle ? this.resultatsDeLaJumelle : this.resultatsPrincipale;
   }
 
   private suiviProjete(question: VoteQuestionPublique): EscapedHtml {
-    if (this.internePhase === 'discussion' && this.surDeuxTemps()) {
-      return this.histogramme(question, this.interneResultats, 'premier');
+    const resultats = this.resultatsDe(question);
+    if (!this.revelee() && !this.cloture) {
+      return this.decompte(resultats);
     }
-    if (this.internePhase !== 'revele' && !this.cloture) {
-      return this.decompte();
-    }
-    const comparaison =
-      question === this.jumelle && this.principale !== null && this.premierVote !== null
-        ? safeHtml`${this.histogramme(this.principale, this.premierVote, 'premier')}${this.histogramme(question, this.interneResultats, 'second')}`
-        : this.histogramme(question, this.interneResultats);
-    return safeHtml`${comparaison}${this.decompte()}`;
+    return safeHtml`${this.histogramme(question, resultats)}${this.decompte(resultats)}`;
   }
 
   bind(racine: ShadowRoot): void {
@@ -224,13 +213,9 @@ export class FpVote extends FpVerdicts {
     );
   }
 
-  private surDeuxTemps(): boolean {
-    return this.jumelle !== null && this.internePhase !== null;
-  }
-
   private ouverte(): boolean {
     const question = this.affichee();
-    if (question === null || this.internePhase === 'discussion') {
+    if (question === null || this.revelee()) {
       return false;
     }
     if (this.enApercu()) {
@@ -242,33 +227,26 @@ export class FpVote extends FpVerdicts {
   }
 
   private marqueDePhase(): EscapedHtml {
-    if (!this.surDeuxTemps() || this.internePhase === null) {
+    if (this.jumelle === null || this.internePhase === null) {
       return VIDE;
     }
     return safeHtml` data-phase="${escapeHtml(this.internePhase)}"`;
-  }
-
-  private annoncePhase(): EscapedHtml {
-    const annonce =
-      this.surDeuxTemps() && this.internePhase !== null
-        ? ANNONCE_DE_PHASE[this.internePhase]
-        : undefined;
-    if (annonce === undefined) {
-      return VIDE;
-    }
-    return safeHtml`<p class="fp-vote__phase" role="status" data-testid="phase">${escapeHtml(this.texte(annonce))}</p>`;
   }
 
   private toutesLesOptions(question: VoteQuestionPublique): OptionPublique[] {
     return avecJeNeSaisPas(question.options);
   }
 
-  private bouton(question: VoteQuestionPublique, { id, libelle }: OptionPublique): EscapedHtml {
+  private bouton(
+    question: VoteQuestionPublique,
+    { id, libelle }: OptionPublique,
+    bonneOption: string | null,
+  ): EscapedHtml {
     const choisie = this.choix.get(question.id) === id;
     const neutre = id === ID_JE_NE_SAIS_PAS;
     const classes = neutre ? 'fp-vote__option fp-vote__option--neutre' : 'fp-vote__option';
     const marque = neutre ? 'je-ne-sais-pas' : 'option';
-    return safeHtml`<button type="button" class="${escapeHtml(classes)}" data-testid="${escapeHtml(marque)}" data-option="${escapeHtml(id)}" aria-pressed="${escapeHtml(String(choisie))}"${marqueDOption(id, this.bonneOption, choisie)}>${escapeHtml(libelle)}</button>`;
+    return safeHtml`<button type="button" class="${escapeHtml(classes)}" data-testid="${escapeHtml(marque)}" data-option="${escapeHtml(id)}" aria-pressed="${escapeHtml(String(choisie))}"${marqueDOption(id, bonneOption, choisie)}>${escapeHtml(libelle)}</button>`;
   }
 
   private choisir(valeur: string): void {
@@ -285,19 +263,11 @@ export class FpVote extends FpVerdicts {
     this.refresh();
   }
 
-  private decompte(): EscapedHtml {
-    if (this.interneResultats === null) {
+  private decompte(resultats: VoteResultats | null): EscapedHtml {
+    if (resultats === null) {
       return VIDE;
     }
-    return safeHtml`<p class="fp-vote__decompte" data-testid="decompte">${escapeHtml(this.texte('pulse-total'))} ${this.interneResultats.total}</p>`;
-  }
-
-  private revelationRevelee(): EscapedHtml {
-    const revelation = this.revelation;
-    if (revelation === null) {
-      return VIDE;
-    }
-    return safeHtml`<div class="fp-encadre fp-vote__revelation" data-testid="revelation"><p class="fp-vote__titre">${escapeHtml(revelation.titre)}</p><ul>${revelation.lignes.map(elementDeListe)}</ul></div>`;
+    return safeHtml`<p class="fp-vote__decompte" data-testid="decompte">${escapeHtml(this.texte('pulse-total'))} ${resultats.total}</p>`;
   }
 
   private barre({ id, libelle }: OptionPublique, partDesVotes: number): EscapedHtml {
@@ -307,15 +277,13 @@ export class FpVote extends FpVerdicts {
   private histogramme(
     question: VoteQuestionPublique,
     resultats: VoteResultats | null,
-    vote?: 'premier' | 'second',
   ): EscapedHtml {
-    const marqueDuVote = vote === undefined ? VIDE : safeHtml` data-vote="${escapeHtml(vote)}"`;
     if (!resultats || resultats.total === 0) {
-      return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"${marqueDuVote}></div>`;
+      return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"></div>`;
     }
     const barres = this.toutesLesOptions(question).map((option) =>
       this.barre(option, part(resultats.parOption[option.id] ?? 0, resultats.total)),
     );
-    return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme"${marqueDuVote}>${barres}</div>`;
+    return safeHtml`<div class="fp-vote__histogramme" data-testid="histogramme">${barres}</div>`;
   }
 }

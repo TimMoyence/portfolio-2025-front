@@ -12,8 +12,8 @@ import {
   buildEcran,
   buildEcranQuestionnaire,
   buildEcranQuestionnaireSansConsigne,
-  buildExitBillet,
   buildNumericQuestion,
+  buildProCasAQuestionsLibres,
   buildRevelationServie,
   buildSheetPlan,
   createBrouillonsStub,
@@ -52,10 +52,11 @@ const ECRAN_NUMERIQUE = buildEcran({
   type: 'fp-numeric',
   donnees: { question: buildNumericQuestion() },
 });
-const ECRAN_BILLET = buildEcran({
-  id: 'b2-01-sortie',
-  type: 'fp-exit',
-  donnees: { billet: buildExitBillet() },
+const MISSION = buildProCasAQuestionsLibres();
+const ECRAN_MISSION = buildEcran({
+  id: 'b2-01-mission',
+  type: 'fp-pro',
+  donnees: { cas: MISSION },
 });
 const ECRAN_CLASSEMENT = buildEcran({
   id: 'b2-01-classement',
@@ -745,23 +746,26 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
 
   it('reprend le brouillon de la brique au montage et memorise chaque frappe', async () => {
     const brouillons = createBrouillonsStub();
-    brouillons.lire.and.returnValue({ texteLibre: 'Repris apres rechargement', choix: 'b' });
-    const fixture = monter({ slide: ECRAN_BILLET, brouillons });
-    const billet = await brique(fixture, 'fp-exit');
+    const [mesure] = MISSION.questionsLibres ?? [];
+    brouillons.lire.and.returnValue({ reponses: { [mesure.id]: 'Repris apres rechargement' } });
+    const fixture = monter({ slide: ECRAN_MISSION, brouillons });
+    const cas = await brique(fixture, 'fp-pro');
+    const champ = (): HTMLTextAreaElement | null | undefined =>
+      cas.shadowRoot?.querySelector<HTMLTextAreaElement>(`[data-question="${mesure.id}"]`);
 
-    expect(brouillons.lire).toHaveBeenCalledWith('fp-exit', 'B-SORTIE-09');
-    expect((noeudOmbre(billet, 'texte-libre') as HTMLTextAreaElement).value).toBe(
-      'Repris apres rechargement',
-    );
+    expect(brouillons.lire).toHaveBeenCalledWith('fp-pro', MISSION.id);
+    expect(champ()?.value).toBe('Repris apres rechargement');
 
-    const champ = noeudOmbre(billet, 'texte-libre') as HTMLTextAreaElement;
-    champ.value = 'Nouvelle frappe';
-    champ.dispatchEvent(new Event('input'));
+    const zone = champ();
+    if (zone) {
+      zone.value = 'Nouvelle frappe';
+      zone.dispatchEvent(new Event('input'));
+    }
 
     expect(brouillons.ecrire).toHaveBeenCalledWith(
-      'fp-exit',
-      'B-SORTIE-09',
-      jasmine.objectContaining({ texteLibre: 'Nouvelle frappe' }),
+      'fp-pro',
+      MISSION.id,
+      jasmine.objectContaining({ reponses: { [mesure.id]: 'Nouvelle frappe' } }),
     );
   });
 

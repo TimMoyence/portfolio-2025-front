@@ -7,7 +7,7 @@ import {
 } from '../../../../testing/montage-d-instantane';
 
 decrireLeMontageDeLInstantane('B2-02', INSTANTANE_B2_02, {
-  ecrans: 37,
+  ecrans: 35,
   publicsAuCatalogue: [
     'A1-02-ACCROCHE',
     'A1-04-FACTURES',

@@ -9,12 +9,6 @@ const DETAILS: Readonly<Partial<Record<string, Readonly<Record<string, unknown>>
     rappel: 'On capitalise chaque annee',
     dureeMs: DUREE_MS,
   },
-  'fp-exit-submit': {
-    billetId: 'B-SORTIE-09',
-    valeur: 'a',
-    texteLibre: 'Le passage au taux mensuel reste flou',
-    dureeMs: DUREE_MS,
-  },
   'fp-spaced-reponse': { questionId: 'Q-ACT-01', optionId: 'act-a', dureeMs: DUREE_MS },
   'fp-sheet-submit': { planId: 'K-TABLEUR-01', cellules: { C3: '=A3*B3' }, dureeMs: DUREE_MS },
   'fp-sheet-evaluation': { planId: 'K-TABLEUR-01', rang: 3, cellules: { C3: '=A3*B3' } },

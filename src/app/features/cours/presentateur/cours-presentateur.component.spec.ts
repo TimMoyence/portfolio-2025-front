@@ -5,12 +5,13 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
-import type {
-  ConfusionComptee,
-  DerouleCours,
-  PilotageEcran,
-  ResultatQuestion,
-  ResultatsSeance,
+import {
+  PHASES_DE_VOTE,
+  type ConfusionComptee,
+  type DerouleCours,
+  type PilotageEcran,
+  type ResultatQuestion,
+  type ResultatsSeance,
 } from '../../../../cours/content/types';
 import type { EtatSession, StatutFlux } from '../../../../cours/runtime/core/sync';
 import {
@@ -63,8 +64,8 @@ import { uneImage } from '../../../../testing/deux-images';
 import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formations.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { demanderLaPieceJointe } from '../../../../testing/piece-jointe-demandee';
-import { identifiantPorte } from '../../../shared/slides/session/lecture-ecran';
 import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import { correctionsAffichees } from './corrections-affichees';
 import { CoursPresentateurComponent } from './cours-presentateur.component';
 
 type Fixture = ComponentFixture<CoursPresentateurComponent>;
@@ -1306,96 +1307,52 @@ describe('CoursPresentateurComponent', () => {
       expect(apercu(fixture).apercu()).toBeFalse();
     });
 
-    it('donne au rendu tableau le pilotage, les resultats et l annexe formateur de l ecran', async () => {
-      const annexe = { type: 'revelation' as const, titre: 'Méthode', lignes: ['Capitaliser'] };
+    it('donne au rendu tableau le pilotage, les resultats et les reponses du vote', async () => {
       const fixture = await ouvrirSurLEcran({
         id: 'ecran-vote',
         type: 'fp-vote',
         donnees: { question: buildVoteQuestion() },
-        corrigeEcran: annexe,
       });
       const resultats = resultatsDeLaQuestion(12, 8);
 
-      diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase: 'discussion' } } });
+      diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase: 'question-2' } } });
       publierSurLaVue(double, fixture, resultats);
 
       expect(apercu(fixture).donneesFormateur()).toEqual({
-        ...annexe,
+        type: 'reponses',
         reponses: { 'Q-CAP-03': { cible: '1 480,24', optionId: 'b' } },
       });
       expect(apercu(fixture).direct()).toEqual({
-        pilotage: { phase: 'discussion' },
+        pilotage: { phase: 'question-2' },
         resultats: resultats.questions,
         comptesJalon: null,
       });
     });
 
-    for (const [titre, phase, pilote] of [
-      [
-        'pilote la phase du vote servie depuis le panneau d activite',
-        'vote',
-        { phase: 'discussion' },
-      ],
-      [
-        'Q1 · « Passer à : Révélation » pilote la même révélation que « Révéler la correction »',
-        'revote',
-        { revele: true },
-      ],
-    ] as const) {
-      it(titre, async () => {
-        const fixture = await ouvrirSurLEcran(buildEcranDeVoteJumele());
-        diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase } } });
+    it('M2 · passe a la question 2 depuis le panneau d activite', async () => {
+      const fixture = await ouvrirSurLEcran(buildEcranDeVoteJumele());
+      diffuserSurLaVue(double, fixture, { pilotage: { 'ecran-vote': { phase: 'question-1' } } });
 
-        await cliquer(fixture, 'activite-phase-suivante');
+      await cliquer(fixture, 'activite-phase-suivante');
 
-        expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
-          pilotage: { screenId: 'ecran-vote', ...pilote },
-        });
+      expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
+        pilotage: { screenId: 'ecran-vote', phase: 'question-2' },
       });
-    }
+    });
 
     for (const jumele of VOTES_JUMELES_DU_PUPITRE) {
-      const principale = identifiantPorte(jumele.donnees, 'question');
-      const jumelle = identifiantPorte(jumele.donnees, 'questionJumelle');
+      for (const phase of PHASES_DE_VOTE) {
+        it(`M2 · ${jumele.id} : revele la correction depuis la ${phase}`, async () => {
+          const fixture = await ouvrirSurLEcran(jumele);
+          diffuserSurLaVue(double, fixture, { pilotage: { [jumele.id]: { phase } } });
 
-      it(`Q1 · ${jumele.id} : ne révèle la correction qu une fois la deuxième question posée`, async () => {
-        const fixture = await ouvrirSurLEcran(jumele);
+          await cliquer(fixture, 'presentateur-questions-reveler');
 
-        for (const phase of ['vote', 'discussion'] as const) {
-          diffuserSurLaVue(double, fixture, {
-            pilotage: { [jumele.id]: { phase, questionAffichee: principale ?? undefined } },
+          expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
+            pilotage: { screenId: jumele.id, revele: true },
           });
-          expect(bouton(fixture, 'presentateur-questions-reveler').disabled)
-            .withContext(phase)
-            .toBeTrue();
-        }
-        diffuserSurLaVue(double, fixture, {
-          pilotage: { [jumele.id]: { phase: 'revote', questionAffichee: jumelle ?? undefined } },
         });
-        await cliquer(fixture, 'presentateur-questions-reveler');
-
-        expect(port.piloter).toHaveBeenCalledOnceWith(SESSION, {
-          pilotage: { screenId: jumele.id, revele: true },
-        });
-      });
-
-      it(`F-29 · ${jumele.id} : attend la deuxième question selon la question affichée que le back sert, pas selon la phase`, async () => {
-        const fixture = await ouvrirSurLEcran(jumele);
-
-        diffuserSurLaVue(double, fixture, {
-          pilotage: { [jumele.id]: { phase: 'revote', questionAffichee: principale ?? undefined } },
-        });
-        const avantLaJumelle = bouton(fixture, 'presentateur-questions-reveler').disabled;
-        diffuserSurLaVue(double, fixture, {
-          pilotage: { [jumele.id]: { phase: 'vote', questionAffichee: jumelle ?? undefined } },
-        });
-
-        expect([principale, jumelle].every((id) => id !== null)).toBeTrue();
-        expect([
-          avantLaJumelle,
-          bouton(fixture, 'presentateur-questions-reveler').disabled,
-        ]).toEqual([true, false]);
-      });
+      }
     }
 
     it('RET-21 · envoie au serveur le reglage de la machine fait au pupitre', async () => {
@@ -1458,14 +1415,16 @@ describe('CoursPresentateurComponent', () => {
       'activite-phase',
       'activite-production',
       'activite-production-cles',
-      'activite-billets',
       'activite-etayage',
       'activite-questions',
     ];
     const vuesDuPupitre = (servi: DerouleCours): readonly string[] =>
-      servi.ecrans.some(({ type }) => type === 'fp-worked')
-        ? VUES_DU_PUPITRE
-        : VUES_DU_PUPITRE.filter((vue) => vue !== 'activite-etayage');
+      VUES_DU_PUPITRE.filter(
+        (vue) =>
+          (vue !== 'activite-etayage' || servi.ecrans.some(({ type }) => type === 'fp-worked')) &&
+          (vue !== 'cours-correction' ||
+            servi.ecrans.some((ecran) => correctionsAffichees(ecran).length > 0)),
+      );
 
     for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {
       it(

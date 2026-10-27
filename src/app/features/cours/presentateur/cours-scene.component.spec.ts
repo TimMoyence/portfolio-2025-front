@@ -34,8 +34,8 @@ import {
   DELAI_DE_MONTAGE_MS,
 } from '../../../../testing/briques-montees';
 import {
-  buildExitBillet,
   buildPlotEnBarres,
+  buildSpacedRappel,
   buildVoteQuestion,
 } from '../../../../testing/factories/cours.factory';
 import { buildVisualSlide } from '../../../../testing/factories/visual-slide.factory';
@@ -429,9 +429,9 @@ describe('CoursSceneComponent', () => {
   it('R1 · projette dans la toile la réponse attendue une fois la correction révélée, pas avant', async () => {
     const fixture = await monterSur([
       buildEcranDeroule({
-        id: 'ecran-billet',
-        type: 'fp-exit',
-        donnees: { billet: buildExitBillet() },
+        id: 'ecran-rappel',
+        type: 'fp-spaced',
+        donnees: { rappel: buildSpacedRappel() },
       }),
     ]);
 
@@ -441,7 +441,7 @@ describe('CoursSceneComponent', () => {
 
     diffuserSurLaVue(double, fixture, {
       ecranCourant: 0,
-      pilotage: { 'ecran-billet': { revele: true } },
+      pilotage: { 'ecran-rappel': { revele: true } },
     });
 
     expect(bandeauDeLaToile(fixture)).toContain('1 480,24');
@@ -464,7 +464,7 @@ describe('CoursSceneComponent', () => {
   });
 
   it('ne projette les comptes d un jalon qu a partir de cinq reponses', async () => {
-    const annexe = { type: 'revelation' as const, titre: 'Méthode', lignes: ['Capitaliser'] };
+    const annexe = { type: 'reflexion' as const, attendu: 'Méthode', suite: 'Capitaliser' };
     const fixture = await monterSur([
       buildEcranDeroule({
         id: 'ecran-jalon',

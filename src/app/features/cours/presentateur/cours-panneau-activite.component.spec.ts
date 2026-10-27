@@ -15,7 +15,6 @@ import { lignesDe } from '../../../../testing/lignes-de-texte';
 import {
   buildCardsortPlan,
   buildEscapeParcours,
-  buildExitBillet,
   buildVoteQuestion,
   buildWorkedExemple,
 } from '../../../../testing/factories/cours.factory';
@@ -75,23 +74,34 @@ describe('CoursPanneauActiviteComponent', () => {
     }).compileComponents();
   });
 
-  describe('instruction par les pairs', () => {
+  describe('vote a deux questions', () => {
     const vote = buildEcranDeVoteJumele();
 
-    it('annonce la phase pilotee et propose la suivante', () => {
-      const { fixture, commandes } = monter(vote, { pilotage: { phase: 'discussion' } });
+    it('M2 · annonce la question pilotee et propose la question 2, sans discussion', () => {
+      const { fixture, commandes } = monter(vote, { pilotage: { phase: 'question-1' } });
 
-      expect(texte(fixture, 'activite-phase-courante')).toBe('Discussion entre voisins');
+      expect(texte(fixture, 'activite-phase-courante')).toBe('Question 1');
+      expect(texte(fixture, 'activite-phase-suivante')).toContain('Question 2');
+      expect(texte(fixture, 'activite-phase')).not.toContain('Discussion');
       cliquer(fixture, 'activite-phase-suivante');
 
-      expect(commandes).toEqual([{ screenId: 'ecran-vote', phase: 'revote' }]);
+      expect(commandes).toEqual([{ screenId: 'ecran-vote', phase: 'question-2' }]);
     });
 
     it('ne propose plus de phase apres la revelation et bloque pendant une commande', () => {
       expect(
-        lire(monter(vote, { pilotage: { phase: 'revele' } }).fixture, 'activite-phase-suivante'),
+        lire(
+          monter(vote, { pilotage: { phase: 'question-1', revele: true } }).fixture,
+          'activite-phase-suivante',
+        ),
       ).toBeNull();
-      const { fixture } = monter(vote, { pilotage: { phase: 'vote' }, pilotageBloque: true });
+      expect(
+        lire(
+          monter(vote, { pilotage: { phase: 'question-2' } }).fixture,
+          'activite-phase-suivante',
+        ),
+      ).toBeNull();
+      const { fixture } = monter(vote, { pilotage: { phase: 'question-1' }, pilotageBloque: true });
       expect(
         (cibleMarque(fixture, 'activite-phase-suivante', 'le panneau') as HTMLButtonElement)
           .disabled,
@@ -111,25 +121,16 @@ describe('CoursPanneauActiviteComponent', () => {
     });
 
     for (const jumele of VOTES_JUMELES_DU_PUPITRE) {
-      it(`Q1 · ${jumele.id} : passer à la révélation envoie le même ordre que « Révéler la correction »`, () => {
-        const { fixture, commandes } = monter(jumele, { pilotage: { phase: 'revote' } });
-
-        expect(texte(fixture, 'activite-phase-suivante')).toContain('Révélation');
-        cliquer(fixture, 'activite-phase-suivante');
-
-        expect(commandes).toEqual([{ screenId: jumele.id, revele: true }]);
-      });
-
       it(`QA-01 · ${jumele.id} : lit la phase servie et n en suppose aucune tant qu aucune n est servie`, () => {
         const sansPhase = monter(jumele, { pilotage: {} }).fixture;
 
         expect(lire(sansPhase, 'activite-phase')).toBeNull();
         expect(lire(sansPhase, 'activite-correction')).toBeNull();
 
-        const servie = monter(jumele, { pilotage: { phase: 'vote' } }).fixture;
+        const servie = monter(jumele, { pilotage: { phase: 'question-1' } }).fixture;
 
-        expect(texte(servie, 'activite-phase-courante')).toBe('Vote individuel');
-        expect(texte(servie, 'activite-phase-suivante')).toContain('Discussion entre voisins');
+        expect(texte(servie, 'activite-phase-courante')).toBe('Question 1');
+        expect(texte(servie, 'activite-phase-suivante')).toContain('Question 2');
         expect(lire(servie, 'activite-correction')).toBeNull();
       });
     }
@@ -476,18 +477,6 @@ describe('CoursPanneauActiviteComponent', () => {
 
     expect(lignes.length).toBe(1);
     expect(cellulesDe(lignes[0])).toEqual(['Le seuil de rentabilite', '12', '9', '1', '2,5']);
-  });
-
-  it('compte les billets de sortie recus face aux participants', () => {
-    const sortie = buildEcranDeroule({ type: 'fp-exit', donnees: { billet: buildExitBillet() } });
-    const { fixture } = monter(sortie, {
-      participants: 22,
-      resultats: buildResultatsDuFlux({
-        questions: [buildResultatQuestion({ questionId: 'B-SORTIE-09', total: 17 })],
-      }),
-    });
-
-    expect(texte(fixture, 'activite-billets-recus')).toBe('17 billets reçus / 22 participants');
   });
 
   it('ne liste plus les participants, confies a leur propre panneau', () => {

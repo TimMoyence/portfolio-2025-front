@@ -33,10 +33,7 @@ async function installerLaSeance(page: Page, refus: Record<string, unknown>): Pr
     participantId: PARTICIPANT,
     jeton: `${PARTICIPANT}.empreinte`,
     etat: () => etatDuParticipant(SEANCE, PARTICIPANT, 3),
-    flux: [
-      etatDeLaSeance(3, {}),
-      etatDeLaSeance(4, { 'ecran-sortie': { phase: 'revote', revele: false } }),
-    ],
+    flux: [etatDeLaSeance(3, {}), etatDeLaSeance(4, { 'ecran-sortie': { revele: false } })],
     ecritures: { answers: (route) => servirRefus(route, Number(refus['status']), refus) },
   });
 }
@@ -44,12 +41,11 @@ async function installerLaSeance(page: Page, refus: Record<string, unknown>): Pr
 async function rejoindre(page: Page): Promise<void> {
   await page.goto('/cours/rejoindre');
   await remplirLaJonction(page, SEANCE.code);
-  await expect(page.locator('fp-exit [data-testid="envoyer"]')).toBeVisible();
+  await expect(page.locator('fp-recall [data-option="b"]')).toBeVisible();
 }
 
 async function repondre(page: Page): Promise<void> {
-  await page.locator('fp-exit [data-option="b"]').click();
-  await page.locator('fp-exit [data-testid="envoyer"]').click();
+  await page.locator('fp-recall [data-option="b"]').click();
 }
 
 const REFUS = [
@@ -77,7 +73,7 @@ test.describe('refus servis par le back sur une écriture étudiante', () => {
       await rejoindre(page);
       await repondre(page);
 
-      await expect(page.locator('fp-exit [data-testid="erreur"]')).toContainText(refus.message);
+      await expect(page.locator('fp-recall [data-testid="erreur"]')).toContainText(refus.message);
     });
   }
 });

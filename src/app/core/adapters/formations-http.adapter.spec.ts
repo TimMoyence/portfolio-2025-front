@@ -1087,10 +1087,12 @@ describe('FormationsHttpAdapter', () => {
       {
         nom: 'piloter une phase d ecran',
         appeler: () =>
-          adapter.piloter(SESSION_ID, { pilotage: { screenId: 'B2-01-A3-01', phase: 'revote' } }),
+          adapter.piloter(SESSION_ID, {
+            pilotage: { screenId: 'B2-01-A3-01', phase: 'question-2' },
+          }),
         url: `${URL_SEANCE}/control`,
         methode: 'PATCH',
-        corps: { pilotage: { screenId: 'B2-01-A3-01', phase: 'revote' } },
+        corps: { pilotage: { screenId: 'B2-01-A3-01', phase: 'question-2' } },
         jeton: null,
         reponse: null,
       },

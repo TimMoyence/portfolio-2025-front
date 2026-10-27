@@ -521,12 +521,6 @@ export const zCorrigeDefiPresentateurResponseDto = z.object({
   strategies: z.array(zStrategiePresentateurResponseDto),
 });
 
-export const zCorrigeRevelationPresentateurResponseDto = z.object({
-  type: z.enum(['revelation']),
-  titre: z.string(),
-  lignes: z.array(z.string()),
-});
-
 export const zCorrigeReflexionPresentateurResponseDto = z.object({
   type: z.enum(['reflexion']),
   attendu: z.string(),
@@ -559,7 +553,6 @@ export const zCorrectionServieResponseDto = z.object({
       zCorrigeClassementPresentateurResponseDto,
       zCorrigeEnigmesPresentateurResponseDto,
       zCorrigeDefiPresentateurResponseDto,
-      zCorrigeRevelationPresentateurResponseDto,
       zCorrigeReflexionPresentateurResponseDto,
     ])
     .nullable(),
@@ -585,7 +578,7 @@ export const zEcranPublicResponseDto = z.object({
 /**
  * Phase d un vote a question jumelle, jamais ramenee en arriere
  */
-export const zPhaseDeVote = z.enum(['vote', 'discussion', 'revote', 'revele']);
+export const zPhaseDeVote = z.enum(['question-1', 'question-2']);
 
 export const zPointDeCourbeResponseDto = z.object({
   x: z.number(),
@@ -913,7 +906,6 @@ export const zEcranDerouleResponseDto = z.object({
       zCorrigeClassementPresentateurResponseDto,
       zCorrigeEnigmesPresentateurResponseDto,
       zCorrigeDefiPresentateurResponseDto,
-      zCorrigeRevelationPresentateurResponseDto,
       zCorrigeReflexionPresentateurResponseDto,
     ])
     .nullable(),
@@ -1517,7 +1509,6 @@ export const zPresentationServie = z.union([
       props: z.object({
         title: z.string().min(1),
         subtitle: z.string().min(1).optional(),
-        bullets: z.array(z.string().min(1)).min(1),
         bgImage: z
           .union([
             z.url(),
@@ -2435,22 +2426,6 @@ export const zDonneesFpRecall = z.object({
   consigne: z.string().optional(),
 });
 
-export const zDonneesFpExit = z.object({
-  billet: z.object({
-    id: z.string(),
-    question: z.string(),
-    invite: z.string(),
-    longueurMax: z.literal(500),
-    options: z.array(
-      z.object({
-        id: z.string(),
-        libelle: z.string(),
-      }),
-    ),
-    metadonnees: zMetadonneesBrique,
-  }),
-});
-
 export const zDonneesQuestionnaire = z.object({
   intitule: z.string(),
   consigne: z.string().optional(),
@@ -2578,12 +2553,6 @@ export const zCoursPublicCatalogueResponseDto = z.object({
       ),
       zEcranPublicResponseDto.and(
         z.object({
-          type: z.enum(['fp-exit']),
-          donnees: zDonneesFpExit,
-        }),
-      ),
-      zEcranPublicResponseDto.and(
-        z.object({
           type: z.enum(['questionnaire']),
           donnees: zDonneesQuestionnaire,
         }),
@@ -2706,12 +2675,6 @@ export const zDerouleResponseDto = z.object({
       ),
       zEcranDerouleResponseDto.and(
         z.object({
-          type: z.enum(['fp-exit']),
-          donnees: zDonneesFpExit,
-        }),
-      ),
-      zEcranDerouleResponseDto.and(
-        z.object({
           type: z.enum(['questionnaire']),
           donnees: zDonneesQuestionnaire,
         }),
@@ -2828,12 +2791,6 @@ export const zSujetResponseDto = z.object({
         z.object({
           type: z.enum(['fp-recall']),
           donnees: zDonneesFpRecall,
-        }),
-      ),
-      zEcranPublicResponseDto.and(
-        z.object({
-          type: z.enum(['fp-exit']),
-          donnees: zDonneesFpExit,
         }),
       ),
       zEcranPublicResponseDto.and(

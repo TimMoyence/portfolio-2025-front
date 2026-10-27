@@ -8,8 +8,6 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'reponse-enregistree': () => $localize`:@@coursRuntimeReponseEnregistree:Réponse enregistrée`,
   'a-revoir': () => $localize`:@@coursRuntimeARevoir:Pas encore — regardons pourquoi`,
   confirme: () => $localize`:@@coursRuntimeConfirme:C’est juste`,
-  'discussion-en-cours': () =>
-    $localize`:@@coursRuntimeDiscussionEnCours:Discutez avec votre voisin`,
   envoyer: () => $localize`:@@coursRuntimeEnvoyer:Envoyer`,
   'rappel-consigne': () =>
     $localize`:@@coursRuntimeRappelConsigne:Écrivez votre calcul avant de voir les propositions.`,
@@ -18,11 +16,6 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeRappelRestant:Temps d’écriture libre : propositions de réponse dans`,
   'rappel-termine': () =>
     $localize`:@@coursRuntimeRappelTermine:Choisissez maintenant la proposition qui correspond`,
-  'choix-obligatoire': () =>
-    $localize`:@@coursRuntimeChoixObligatoire:Choisissez une réponse avant d’envoyer`,
-  'texte-libre-trop-long': () =>
-    $localize`:@@coursRuntimeTexteLibreTropLong:Réduisez votre réponse à`,
-  'caracteres-maximum': () => $localize`:@@coursRuntimeCaracteresMaximum:caractères maximum`,
   chargement: () => $localize`:@@coursRuntimeChargement:Chargement…`,
   'hors-ligne': () =>
     $localize`:@@coursRuntimeHorsLigne:Hors ligne — vos réponses seront envoyées à la reconnexion`,
@@ -212,9 +205,6 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeEscapeTentativesEpuiseesDerniere:Tentatives épuisées : cette dernière énigme ne livre pas son fragment`,
   'challenge-attente-revelation': () =>
     $localize`:@@coursRuntimeChallengeAttenteRevelation:Les pistes fausses seront signalées à la révélation`,
-  'vote-phase-revele': () => $localize`:@@coursRuntimeVotePhaseRevele:Réponse révélée`,
-  'vote-phase-fermee': () =>
-    $localize`:@@coursRuntimeVotePhaseFermee:Le vote est fermé pour cette question`,
   'reponses-closes': () =>
     $localize`:@@coursRuntimeReponsesCloses:Correction révélée : les réponses sont closes`,
   'deja-repondu': () =>

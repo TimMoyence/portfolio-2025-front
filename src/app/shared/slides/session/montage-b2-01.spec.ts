@@ -21,7 +21,7 @@ import { SlideActivityComponent } from './slide-activity.component';
 const SUBSTITUTION = buildInstantaneDeSubstitution();
 
 decrireLeMontageDeLInstantane('B2-01', INSTANTANE_B2_01, {
-  ecrans: 59,
+  ecrans: 56,
   specifiques: () => {
     it(
       'garde la diapositive de Samir réglable au pupitre et la consigne courte de l atelier',
@@ -53,11 +53,11 @@ decrireLeMontageDeLInstantane('B2-01', INSTANTANE_B2_01, {
 describe('les factories du front couvrent chaque type d écran du contrat § 9.4', () => {
   beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
 
-  it('produit les 18 types, dont ceux absents de l instantané réel', () => {
+  it('produit les 17 types, dont ceux absents de l instantané réel', () => {
     const typesReels = new Set(ecransPublicsB2_01().map((ecran) => ecran.type));
     const typesFabriques = new Set(SUBSTITUTION.map((ecran) => ecran.type));
 
-    expect(typesFabriques.size).toBe(18);
+    expect(typesFabriques.size).toBe(17);
     for (const type of typesReels) {
       expect(typesFabriques.has(type))
         .withContext(`type absent des factories : ${type}`)

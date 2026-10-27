@@ -78,12 +78,6 @@ describe('enonces des activites libres du cours B2-01', () => {
     }
   });
 
-  it('nomme la réponse libre du billet de sortie par son invite, pas par la question à choix', () => {
-    const enonces = enoncesDesActivites(ecran('BILLET-DE-SORTIE'));
-
-    expect(enonces.get('b2-01-a6-billet')).toContain('Quels deux chiffres du dossier');
-  });
-
   it('ne trouve aucune activite libre sur un ecran de vote', () => {
     const vote = ecransDuPupitreB2_01().find(({ type }) => type === 'fp-vote');
 

@@ -30,12 +30,6 @@ export const vote = `
   border-style: dashed;
 }
 
-:where(.fp-root) .fp-vote__verdict {
-  font-size: var(--fp-titre);
-  font-weight: 600;
-  color: var(--fp-texte-fort);
-}
-
 :where(.fp-root) .fp-vote__histogramme {
   display: grid;
   gap: var(--fp-s-2);
@@ -107,24 +101,9 @@ export const vote = `
   margin-bottom: calc(var(--fp-s-3) + var(--fp-s-2));
 }
 
-:where(.fp-root) .fp-vote__phase {
-  color: var(--fp-ink-soft);
-  font-weight: 600;
-}
-
 :where(.fp-root) .fp-vote__decompte {
   justify-self: end;
   color: var(--fp-ink-mute);
   font-variant-numeric: tabular-nums;
-}
-
-:where(.fp-root) .fp-vote__revelation {
-  display: grid;
-  gap: var(--fp-s-1);
-}
-
-:where(.fp-root) .fp-vote__titre {
-  margin: 0;
-  font-weight: 700;
 }
 `;

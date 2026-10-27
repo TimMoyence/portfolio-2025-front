@@ -5,7 +5,7 @@ import {
 } from '../../../../testing/montage-d-instantane';
 
 decrireLeMontageDeLInstantane('B1-01', INSTANTANE_B1_01, {
-  ecrans: 37,
+  ecrans: 32,
   publicsAuCatalogue: [
     'A1-02-ACCROCHE',
     'A1-04-DOSSIER',
@@ -21,7 +21,6 @@ decrireLeMontageDeLInstantane('B1-01', INSTANTANE_B1_01, {
     'A3-02-COURS-POINTS',
     'A3-03-ILLUSTRATION-ETIQUETTE',
     'A3-03-COURS-MARGE-MARQUE',
-    'A4-01-SITUATION-FESTIVAL',
     'A4-05-FICHE-MEMO',
   ],
   textesAuPupitre: [

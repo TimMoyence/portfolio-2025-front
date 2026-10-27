@@ -53,7 +53,7 @@ describe('evenementsDe : traduction des evenements de brique vers le contrat hot
     ]);
   });
 
-  it('separe la reponse fermee et le texte libre du rappel et du billet de sortie', () => {
+  it('separe la reponse fermee et le texte libre du rappel', () => {
     expect(traduire('fp-recall-submit').map((evenement) => evenement.kind)).toEqual([
       'reponse',
       'libre',
@@ -61,7 +61,7 @@ describe('evenementsDe : traduction des evenements de brique vers le contrat hot
     expect(traduire('fp-recall-submit')[1]).toEqual(
       jasmine.objectContaining({ activityId: 'Q-RAPPEL-04:rappel' }),
     );
-    expect(traduire('fp-exit-submit', { texteLibre: '   ' }).map((evenement) => evenement.kind))
+    expect(traduire('fp-recall-submit', { rappel: '   ' }).map((evenement) => evenement.kind))
       .withContext('un texte libre vide ne part pas')
       .toEqual(['reponse']);
   });

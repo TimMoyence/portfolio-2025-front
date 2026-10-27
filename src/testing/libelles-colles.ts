@@ -249,7 +249,7 @@ export function libellesColles(racine: Node, jonctions: Jonctions = 'toutes'): r
 }
 
 const PILOTAGE_REVELE: PilotageEcran = {
-  phase: 'revele',
+  phase: 'question-2',
   revele: true,
   resultatsProjetes: true,
   optionsAffichees: true,

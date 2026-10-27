@@ -16,7 +16,6 @@ const BRIQUES = [
   'fp-table-build',
   'fp-escape',
   'fp-spaced',
-  'fp-exit',
   'fp-vote',
   'fp-numeric',
   'fp-story',
@@ -312,20 +311,6 @@ async function espace(zone: Locator, numero: number): Promise<void> {
   await expect(termine).toBeVisible({ timeout: DELAI_DE_RETOUR_MS });
 }
 
-async function billetDeSortie(zone: Locator, numero: number): Promise<void> {
-  const bloc = zone.locator('fp-exit');
-  await cliquerUneOption(bloc, numero);
-  await taperVite(
-    bloc.locator('[data-testid="texte-libre"]'),
-    texteRapide(numero, 'Sortie'),
-    numero,
-  );
-  await bloc.locator('[data-testid="envoyer"]').click();
-  await expect(bloc.locator('[data-testid="recap"]')).toBeVisible({
-    timeout: DELAI_DE_RETOUR_MS,
-  });
-}
-
 async function parcourirLeRecit(zone: Locator, selecteur: string): Promise<void> {
   const boutons = zone.locator(selecteur);
   for (let rang = 0; rang < (await boutons.count()); rang += 1) {
@@ -370,8 +355,6 @@ export async function interagirAvecLEcran(
       return evasion(zone, numero);
     case 'fp-spaced':
       return espace(zone, numero);
-    case 'fp-exit':
-      return billetDeSortie(zone, numero);
     case 'method-path':
       return parcourirLeRecit(zone, 'button.slide-method-path__step');
     case 'grid':
@@ -500,12 +483,9 @@ export async function attendreLaRevelation(
     case 'etayage':
       return expect(zone.locator('fp-worked [data-resolue="true"]').first()).toBeVisible(options);
     case 'jumelle':
-      return expect(zone.locator('fp-vote [data-testid="verdict"]')).toBeVisible(options);
+      return expect(zone.locator('fp-vote [data-testid="verdict"]')).toHaveCount(2, options);
     case 'correction':
       if (SANS_MARQUE_DE_REVELATION.has(nature)) return undefined;
-      if (nature === 'fp-exit') {
-        return expect(zone.locator('fp-exit [data-testid="reponses-closes"]')).toBeVisible(options);
-      }
       return expect(zone.locator(SIGNES_DE_CORRECTION).first()).toBeVisible(options);
     case 'aucune':
       return undefined;

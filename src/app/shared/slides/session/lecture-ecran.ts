@@ -1,5 +1,4 @@
 import type {
-  CorrigeEcranPresentateur,
   CoursContent,
   DerouleCours,
   EcranContent,
@@ -61,14 +60,12 @@ export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> 
   'fp-numeric': ['question'],
   'fp-vote': ['question', 'questionJumelle'],
   'fp-recall': ['question', 'delaiMs', 'consigne'],
-  'fp-exit': ['billet'],
 };
 
 const PORTEURS: Readonly<Record<string, readonly string[]>> = {
   'fp-numeric': ['question'],
   'fp-vote': ['question', 'questionJumelle'],
   'fp-recall': ['question'],
-  'fp-exit': ['billet'],
   'fp-cardsort': ['plan'],
   'fp-sheet': ['plan'],
   'fp-table-build': ['plan'],
@@ -84,7 +81,6 @@ const BRIQUES_A_QUESTION: readonly string[] = [
   'fp-numeric',
   'fp-vote',
   'fp-recall',
-  'fp-exit',
   'fp-cardsort',
   'fp-sheet',
   'fp-table-build',
@@ -95,7 +91,6 @@ const PORTEURS_DE_QUESTION: Readonly<Record<string, readonly string[]>> = Object
 );
 
 const CHAMP_ENONCE: Readonly<Record<string, string>> = {
-  billet: 'question',
   plan: 'intitule',
 };
 
@@ -103,9 +98,6 @@ export interface ReponsesDuQuestionnaire {
   readonly type: 'reponses';
   readonly reponses: Readonly<Record<string, CibleRevelee>>;
 }
-
-export type RevelationDuVote = Extract<CorrigeEcranPresentateur, { readonly type: 'revelation' }> &
-  Pick<ReponsesDuQuestionnaire, 'reponses'>;
 
 const QUESTIONNAIRE = 'questionnaire';
 export const ECRAN_VERROUILLE = 'ecran-verrouille';
@@ -249,8 +241,6 @@ export function enoncesDesActivites(ecran: EcranContent): ReadonlyMap<string, st
       return new Map(activitesDuTravaille(donnees));
     case 'fp-recall':
       return new Map(activitesDuRappel(donnees));
-    case 'fp-exit':
-      return new Map(entreesPortees(donnees['billet'], 'invite'));
     case 'fp-challenge':
       return new Map(entreesPortees(donnees['probleme'], 'invite'));
     case 'fp-story': {

@@ -602,12 +602,6 @@ export type CorrigeDefiPresentateurResponseDto = {
   strategies: Array<StrategiePresentateurResponseDto>;
 };
 
-export type CorrigeRevelationPresentateurResponseDto = {
-  type: 'revelation';
-  titre: string;
-  lignes: Array<string>;
-};
-
 export type CorrigeReflexionPresentateurResponseDto = {
   type: 'reflexion';
   attendu: string;
@@ -639,7 +633,6 @@ export type CorrectionServieResponseDto = {
     | CorrigeClassementPresentateurResponseDto
     | CorrigeEnigmesPresentateurResponseDto
     | CorrigeDefiPresentateurResponseDto
-    | CorrigeRevelationPresentateurResponseDto
     | CorrigeReflexionPresentateurResponseDto
     | null;
   reflexion: ReflexionPresentateurResponseDto | null;
@@ -758,10 +751,6 @@ export type CoursPublicCatalogueResponseDto = {
         donnees: DonneesFpRecall;
       })
     | (EcranPublicResponseDto & {
-        type: 'fp-exit';
-        donnees: DonneesFpExit;
-      })
-    | (EcranPublicResponseDto & {
         type: 'questionnaire';
         donnees: DonneesQuestionnaire;
       })
@@ -783,7 +772,7 @@ export type CoursPublicCatalogueResponseDto = {
 /**
  * Phase d un vote a question jumelle, jamais ramenee en arriere
  */
-export type PhaseDeVote = 'vote' | 'discussion' | 'revote' | 'revele';
+export type PhaseDeVote = 'question-1' | 'question-2';
 
 export type PointDeCourbeResponseDto = {
   x: number;
@@ -846,7 +835,7 @@ export type PilotageServiResponseDto = {
    */
   phase?: PhaseDeVote;
   /**
-   * Revelation des pistes fausses d un defi, jamais retiree
+   * Revelation de la correction de l ecran (defi, vote a deux questions, questionnaire), jamais retiree
    */
   revele?: boolean;
   /**
@@ -1092,7 +1081,7 @@ export type PilotageEcranRequestDto = {
    */
   phase?: PhaseDeVote;
   /**
-   * Revelation des pistes fausses d un defi, jamais retiree
+   * Revelation de la correction de l ecran (defi, vote a deux questions, questionnaire), jamais retiree
    */
   revele?: boolean;
   /**
@@ -1361,7 +1350,6 @@ export type EcranDerouleResponseDto = {
     | CorrigeClassementPresentateurResponseDto
     | CorrigeEnigmesPresentateurResponseDto
     | CorrigeDefiPresentateurResponseDto
-    | CorrigeRevelationPresentateurResponseDto
     | CorrigeReflexionPresentateurResponseDto
     | null;
   /**
@@ -1453,10 +1441,6 @@ export type DerouleResponseDto = {
     | (EcranDerouleResponseDto & {
         type: 'fp-recall';
         donnees: DonneesFpRecall;
-      })
-    | (EcranDerouleResponseDto & {
-        type: 'fp-exit';
-        donnees: DonneesFpExit;
       })
     | (EcranDerouleResponseDto & {
         type: 'questionnaire';
@@ -2065,10 +2049,6 @@ export type SujetResponseDto = {
         donnees: DonneesFpRecall;
       })
     | (EcranPublicResponseDto & {
-        type: 'fp-exit';
-        donnees: DonneesFpExit;
-      })
-    | (EcranPublicResponseDto & {
         type: 'questionnaire';
         donnees: DonneesQuestionnaire;
       })
@@ -2281,7 +2261,6 @@ export type PresentationServie =
       props: {
         title: string;
         subtitle?: string;
-        bullets: Array<string>;
         bgImage?: string | string;
         bgImageAlt?: string;
       };
@@ -3019,20 +2998,6 @@ export type DonneesFpRecall = {
   };
   delaiMs: number;
   consigne?: string;
-};
-
-export type DonneesFpExit = {
-  billet: {
-    id: string;
-    question: string;
-    invite: string;
-    longueurMax: 500;
-    options: Array<{
-      id: string;
-      libelle: string;
-    }>;
-    metadonnees: MetadonneesBrique;
-  };
 };
 
 export type DonneesQuestionnaire = {

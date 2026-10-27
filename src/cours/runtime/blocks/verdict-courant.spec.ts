@@ -6,7 +6,6 @@ import {
 import { ecransPublicsDe } from '../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../testing/fixtures/instantanes-des-cours';
 import { FpCardsort } from './FpCardsort';
-import { FpExit } from './FpExit';
 import { FpRecall } from './FpRecall';
 import { FpSheet } from './FpSheet';
 import { FpTableBuild } from './FpTableBuild';
@@ -30,7 +29,6 @@ const PRODUCTION = (questionId: string) => buildVerdictDeProduction({ questionId
 
 const BRIQUES_JUGEES: Readonly<Record<string, Famille>> = {
   'fp-recall': { classe: FpRecall, propriete: 'question', verdictDe: REPONSE },
-  'fp-exit': { classe: FpExit, propriete: 'billet', verdictDe: REPONSE },
   'fp-sheet': { classe: FpSheet, propriete: 'plan', verdictDe: PRODUCTION },
   'fp-table-build': { classe: FpTableBuild, propriete: 'plan', verdictDe: PRODUCTION },
   'fp-cardsort': { classe: FpCardsort, propriete: 'plan', verdictDe: PRODUCTION },

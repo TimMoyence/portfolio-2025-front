@@ -17,7 +17,7 @@ import {
 } from './contexte';
 import type { EcranDuCours, EcranRepere, ReponseDuCours, SeanceOuverte } from './contexte';
 
-const PHASES = ['vote', 'discussion', 'revote', 'revele'] as const;
+const PHASES_DE_VOTE = ['question-1', 'question-2'] as const;
 
 interface QuestionDesResultats {
   readonly questionId: string;
@@ -99,7 +99,7 @@ test.describe('Banc — vote à question jumelle', () => {
     await Promise.all([premier.context().close(), second.context().close()]);
   });
 
-  test('le pupitre mène les quatre phases et le poste bascule sur la jumelle au revote', async ({
+  test('le pupitre mène question 1, question 2 puis la révélation des deux questions', async ({
     browser,
     request,
   }) => {
@@ -110,25 +110,27 @@ test.describe('Banc — vote à question jumelle', () => {
     await expect(optionsDuPoste(poste).first()).toBeEnabled();
     expect(await optionsAffichees(poste)).toEqual(expect.arrayContaining([...principale.options]));
 
-    for (const phase of PHASES) {
+    for (const phase of PHASES_DE_VOTE) {
       const pilotee = await piloterLaPhase(request, jeton, seance.sessionId, {
         screenId: principale.id,
         phase,
       });
       expect(pilotee.status(), `phase ${phase}`).toBe(204);
       await expect(phaseDuPoste(poste)).toHaveAttribute('data-phase', phase);
-      if (phase === 'discussion') {
-        await expect(optionsDuPoste(poste).first()).toBeDisabled();
-      }
-      if (phase === 'revote') {
-        expect(await optionsAffichees(poste)).toEqual(expect.arrayContaining([...jumelle.options]));
-        expect((await voterDans(poste, 0)).correcte).toBeNull();
-        await expect(optionsDuPoste(poste).first()).toBeDisabled();
-        await expect(verdictDuPoste(poste)).toHaveCount(0);
-      }
     }
+    expect(await optionsAffichees(poste)).toEqual(expect.arrayContaining([...jumelle.options]));
+    expect((await voterDans(poste, 0)).correcte).toBeNull();
+    await expect(verdictDuPoste(poste)).toHaveCount(0);
 
-    await expect(verdictDuPoste(poste)).toHaveAttribute('data-etat', /confirme|a-revoir/);
+    const revelee = await piloterLaPhase(request, jeton, seance.sessionId, {
+      screenId: principale.id,
+      revele: true,
+    });
+    expect(revelee.status(), await revelee.text()).toBe(204);
+
+    await expect(poste.locator('fp-vote legend')).toHaveCount(2);
+    await expect(poste.locator('fp-vote [data-correction="juste"]')).toHaveCount(2);
+    await expect(verdictDuPoste(poste).first()).toHaveAttribute('data-etat', /confirme|a-revoir/);
     await poste.context().close();
   });
 
@@ -153,7 +155,7 @@ test.describe('Banc — vote à question jumelle', () => {
 
     const horsVote = await piloterLaPhase(request, jeton, seance.sessionId, {
       screenId: sansCorrige.id,
-      phase: 'vote',
+      phase: 'question-1',
     });
     expect(horsVote.status(), await horsVote.text()).toBe(400);
     expect(((await horsVote.json()) as { detail: string }).detail).toContain(

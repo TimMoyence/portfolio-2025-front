@@ -1412,7 +1412,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H40M",
+            "duration": "PT2H",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b1-01-proportions-pourcentages"
@@ -1434,7 +1434,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H40M",
+            "duration": "PT2H",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b1-01-proportions-pourcentages"
@@ -1480,7 +1480,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT3H20M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-01-traitement-information-chiffree"
@@ -1502,7 +1502,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT3H20M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-01-traitement-information-chiffree"
@@ -1548,7 +1548,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT3H15M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-02-series-statistiques"
@@ -1570,7 +1570,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT3H15M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-02-series-statistiques"
@@ -1616,7 +1616,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H20M",
+            "duration": "PT2H15M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-03-logique"
@@ -1638,7 +1638,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H20M",
+            "duration": "PT2H15M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-03-logique"
@@ -1684,7 +1684,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT3H15M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-04-suites"
@@ -1706,7 +1706,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT3H15M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-04-suites"
@@ -1752,7 +1752,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT2H45M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-05-mathematiques-financieres"
@@ -1774,7 +1774,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT2H45M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-05-mathematiques-financieres"
@@ -1820,7 +1820,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT2H45M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-06-exponentielle-logarithme"
@@ -1842,7 +1842,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT2H45M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-06-exponentielle-logarithme"
@@ -1888,7 +1888,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT3H25M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b3-01-donnee-brute-decision"
@@ -1910,7 +1910,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT3H25M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b3-01-donnee-brute-decision"

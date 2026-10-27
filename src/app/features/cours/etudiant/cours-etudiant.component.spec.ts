@@ -2190,17 +2190,17 @@ describe('CoursEtudiantComponent', () => {
 
       await diffuserPuisStabiliser(fixture, {
         revision: 4,
-        pilotage: { 'ecran-1': { phase: 'revote' } },
+        pilotage: { 'ecran-1': { phase: 'question-2' } },
       });
 
-      expect(pilotageVu()).toEqual({ phase: 'revote' });
+      expect(pilotageVu()).toEqual({ phase: 'question-2' });
 
       await diffuserPuisStabiliser(fixture, {
         revision: 5,
-        pilotage: { 'ecran-1': { phase: 'revele', revele: true, etayage: 2 } },
+        pilotage: { 'ecran-1': { phase: 'question-2', revele: true, etayage: 2 } },
       });
 
-      expect(pilotageVu()).toEqual({ phase: 'revele', revele: true, etayage: 2 });
+      expect(pilotageVu()).toEqual({ phase: 'question-2', revele: true, etayage: 2 });
     });
 
     it('RET-23 · relit le sujet quand le formateur revele une etape de l exemple travaille', async () => {
@@ -2281,26 +2281,26 @@ describe('CoursEtudiantComponent', () => {
     });
 
     it('confie a l ecran des brouillons propres a la seance et au participant', async () => {
-      localStorage.setItem('fp.autre-seance.participant-9.fp-exit.B-SORTIE-09', '"ancien"');
-      localStorage.setItem(`fp.${SESSION}.participant-1.fp-exit.B-SORTIE-09`, '"courant"');
+      localStorage.setItem('fp.autre-seance.participant-9.fp-pro.M-METIER-06', '"ancien"');
+      localStorage.setItem(`fp.${SESSION}.participant-1.fp-pro.M-METIER-06`, '"courant"');
       const fixture = await rattacherALaSeanceEnCours();
       const brouillons = (
         ecranDe(fixture).componentInstance as SlideActivityComponent
       ).brouillons();
 
-      expect(brouillons?.lire('fp-exit', 'B-SORTIE-09')).toBe('courant');
-      expect(localStorage.getItem('fp.autre-seance.participant-9.fp-exit.B-SORTIE-09')).toBeNull();
+      expect(brouillons?.lire('fp-pro', 'M-METIER-06')).toBe('courant');
+      expect(localStorage.getItem('fp.autre-seance.participant-9.fp-pro.M-METIER-06')).toBeNull();
     });
 
     it('purge les brouillons de la seance quand le flux en annonce la fin', async () => {
-      localStorage.setItem(`fp.${SESSION}.participant-1.fp-exit.B-SORTIE-09`, '"courant"');
+      localStorage.setItem(`fp.${SESSION}.participant-1.fp-pro.M-METIER-06`, '"courant"');
       const fixture = await rattacherALaSeanceEnCours();
 
       double.diffuserFin('cloturee');
       fixture.detectChanges();
 
       expect(lire(fixture, 'etudiant-fin')).toBeTruthy();
-      expect(localStorage.getItem(`fp.${SESSION}.participant-1.fp-exit.B-SORTIE-09`)).toBeNull();
+      expect(localStorage.getItem(`fp.${SESSION}.participant-1.fp-pro.M-METIER-06`)).toBeNull();
     });
   });
 
@@ -2472,7 +2472,7 @@ describe('CoursEtudiantComponent', () => {
       return fixture;
     }
 
-    const REVELE = { phase: 'revele', revele: true } as const;
+    const REVELE = { phase: 'question-2', revele: true } as const;
 
     async function revelerLeVerdictServi(fixture: Fixture, vote: VoteServi): Promise<void> {
       port.lireMonEtat.and.returnValue(etatAvecLeVote(vote.principale, false));
@@ -2513,7 +2513,7 @@ describe('CoursEtudiantComponent', () => {
 
         port.lireMonEtat.calls.reset();
         port.lireMonEtat.and.returnValue(etatAvecLeVote(vote.principale, null));
-        await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, { phase: 'discussion' });
+        await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, { phase: 'question-2' });
 
         expect(port.lireMonEtat).toHaveBeenCalledTimes(1);
         expect(genresDe(fixture, vote.ecran.id)).not.toContain('verdict-reponse');
@@ -2530,11 +2530,11 @@ describe('CoursEtudiantComponent', () => {
         expect(port.lireMonEtat).toHaveBeenCalledTimes(2);
       });
 
-      it(`${vote.cours} · ${vote.ecran.id} : Q1 · ne relit son corrigé qu à la révélation, jamais à la seule phase de révélation`, async () => {
+      it(`${vote.cours} · ${vote.ecran.id} : Q1 · ne relit son corrigé qu à la révélation, jamais au passage à la question 2`, async () => {
         const fixture = await suivreLeCoursJusquAuVote(vote);
         port.lireSujet.calls.reset();
 
-        await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, { phase: 'revele' });
+        await piloterSurLEcran(fixture, vote.rang, vote.ecran.id, { phase: 'question-2' });
 
         expect(port.lireSujet).not.toHaveBeenCalled();
 

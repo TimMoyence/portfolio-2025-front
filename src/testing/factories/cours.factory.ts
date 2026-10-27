@@ -14,7 +14,6 @@ import type { CardsortPlanPublic } from '../../cours/runtime/blocks/FpCardsort';
 import type { ChallengeProblemePublic } from '../../cours/runtime/blocks/FpChallenge';
 import type { Concept4Definition } from '../../cours/runtime/blocks/FpConcept4';
 import type { EscapeParcoursPublic } from '../../cours/runtime/blocks/FpEscape';
-import type { ExitBilletPublic } from '../../cours/runtime/blocks/FpExit';
 import type { NumericQuestionPublique } from '../../cours/runtime/blocks/FpNumeric';
 import type { PlotDefinition } from '../../cours/runtime/blocks/FpPlot';
 import type { ProCas } from '../../cours/runtime/blocks/FpPro';
@@ -163,22 +162,6 @@ export function buildRecallQuestion(
       { id: 'c', libelle: 'On divise par (1 + i) puissance n' },
     ],
     metadonnees: metadonnees({ dureeMinutes: 4, regime: 'examen' }),
-    ...overrides,
-  };
-}
-
-export function buildExitBillet(overrides: Partial<ExitBilletPublic> = {}): ExitBilletPublic {
-  return {
-    id: 'B-SORTIE-09',
-    question: 'Le taux equivalent mensuel d un taux annuel de 12 % vaut :',
-    invite: 'Qu est-ce qui reste flou ?',
-    longueurMax: 500,
-    options: [
-      { id: 'a', libelle: 'Un peu moins de 1 %' },
-      { id: 'b', libelle: 'Exactement 1 %' },
-      { id: 'c', libelle: 'Un peu plus de 1 %' },
-    ],
-    metadonnees: metadonnees({ concepts: ['taux-equivalent'], dureeMinutes: 5 }),
     ...overrides,
   };
 }

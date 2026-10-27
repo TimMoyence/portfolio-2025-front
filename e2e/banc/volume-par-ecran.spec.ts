@@ -131,12 +131,11 @@ async function ouvrirLaClasse(browser: Browser, seance: Seance, journal: Journal
 }
 
 async function voteJumele(pupitre: Page, postes: readonly Page[], journal: Journal) {
-  await passerALaPhase(pupitre, 'Discussion entre voisins');
-  await passerALaPhase(pupitre, 'Deuxième question');
+  await passerALaPhase(pupitre, 'Question 2');
   await journal.surChaquePoste(postes, 'second vote', (page, numero) =>
     interagirAvecLEcran(page, 'fp-vote', numero + 1),
   );
-  await passerALaPhase(pupitre, 'Révélation');
+  expect(await revelerDepuisLePupitre(pupitre)).toBe('correction');
 }
 
 async function veilleEtReprise(

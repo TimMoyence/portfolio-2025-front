@@ -5,7 +5,7 @@ import {
 } from '../../../../testing/montage-d-instantane';
 
 decrireLeMontageDeLInstantane('B2-06', INSTANTANE_B2_06, {
-  ecrans: 34,
+  ecrans: 29,
   publicsAuCatalogue: [
     'A1-02-ACCROCHE',
     'A1-04-ACQUIS',
@@ -17,7 +17,6 @@ decrireLeMontageDeLInstantane('B2-06', INSTANTANE_B2_06, {
     'A3-01-GRAPHIQUE',
     'A3-03-COURS-MODELE',
     'A3-04-COURS-AJUSTEMENT',
-    'A4-01-SITUATION-KITS',
     'A4-05-FICHE-MEMO',
   ],
   textesAuPupitre: [
@@ -41,13 +40,6 @@ decrireLeMontageDeLInstantane('B2-06', INSTANTANE_B2_06, {
       for (const cours of ['B2-02 · Ajustement', 'B2-04 · Suites', 'B2-05 · Placer']) {
         expect(rappel).toContain(cours);
       }
-    });
-
-    it('sert au poste étudiant le dossier des kits avec le modèle retenu', () => {
-      const dossier = texteServiAuPosteEtudiant(INSTANTANE_B2_06, 'B2-06-A4-01-SITUATION-KITS');
-
-      expect(dossier).toContain('20e^(−0,7x)');
-      expect(dossier).toContain('centaines de kits');
     });
   },
 });

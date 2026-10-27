@@ -48,8 +48,6 @@ import {
   ecranAuRang,
   ecranDIdentifiant,
   enoncesDuDeroule,
-  estVoteJumele,
-  identifiantPorte,
 } from '../../../shared/slides/session/lecture-ecran';
 import {
   CoursPresentationComponent,
@@ -550,7 +548,6 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
                   [ecran]="ecranAffiche"
                   [resultats]="resultats()"
                   [pilotage]="pilotageDeLEcran()"
-                  [participants]="participants()"
                   [sessionId]="sessionId()"
                   [pilotageBloque]="pilotageBloque()"
                   [corrigeAilleurs]="sourcesCorrigees().has(ecranAffiche.id)"
@@ -567,11 +564,7 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
                         type="button"
                         class="control-btn"
                         data-testid="presentateur-questions-reveler"
-                        [disabled]="
-                          pilotageBloque() ||
-                          pilotageDeLEcran().revele === true ||
-                          jumelleAttendue()
-                        "
+                        [disabled]="pilotageBloque() || pilotageDeLEcran().revele === true"
                         (click)="revelerLaCorrection(ecranAffiche.id)"
                       >
                         @if (pilotageDeLEcran().revele === true) {
@@ -784,13 +777,6 @@ export class CoursPresentateurComponent {
   readonly pilotageDeLEcran = computed<PilotageEcran>(() => {
     const ecran = this.ecranCourant();
     return ecran === null ? {} : (this.pilotage()[ecran.id] ?? {});
-  });
-
-  protected readonly jumelleAttendue = computed(() => {
-    const ecran = this.ecranCourant();
-    if (ecran === null || !estVoteJumele(ecran)) return false;
-    const jumelle = identifiantPorte(ecran.donnees, 'questionJumelle');
-    return jumelle !== null && this.pilotageDeLEcran().questionAffichee !== jumelle;
   });
 
   readonly direct = computed(() =>

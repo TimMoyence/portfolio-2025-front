@@ -13,7 +13,9 @@ function ecransCorrigesDes(types: readonly string[]) {
 
 describe('correctionsAffichees', () => {
   it('R1 · met en bandeau la réponse attendue d un écran porteur d un corrigé', () => {
-    expect(correctionsAffichees(buildEcranDeroule({ type: 'fp-exit' })).length).toBeGreaterThan(0);
+    expect(correctionsAffichees(buildEcranDeroule({ type: 'fp-spaced' })).length).toBeGreaterThan(
+      0,
+    );
   });
 
   it('RET-32 · laisse au questionnaire sa correction sous chaque question, sans bandeau', () => {
@@ -30,7 +32,7 @@ describe('correctionsAffichees', () => {
   });
 
   it('Q1 · garde le bandeau des écrans dont il est la seule correction écrite', () => {
-    const ecrans = ecransCorrigesDes(['fp-exit', 'fp-spaced']);
+    const ecrans = ecransCorrigesDes(['fp-spaced']);
 
     expect(ecrans.length).toBeGreaterThan(0);
     expect(
