@@ -335,7 +335,7 @@ test.describe('livret papier imprimé', () => {
         ),
       );
 
-    expect(pagesNeuves).toEqual([2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15]);
+    expect(pagesNeuves).toEqual([2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14]);
   });
 
   test('une fiche n’imprime que des blocs d’un seul tenant, son en-tête ne restant jamais seul en bas d’une page', async ({

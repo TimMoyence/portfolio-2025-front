@@ -47,7 +47,7 @@ function texteDe(evenement: Evenement): string {
       intervalleLibre: null,
       participants: 12,
       revision: evenement.revision,
-      pilotage: { 'B2-01-A3-01': { phase: 'revote' } },
+      pilotage: { 'B2-01-A3-01': { phase: 'question-2' } },
       majLe: '2026-09-20T08:00:00.000Z',
     });
   }

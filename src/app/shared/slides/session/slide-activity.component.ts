@@ -40,7 +40,6 @@ import {
   planDeMontage,
   PROPRIETES_PAR_BRIQUE,
   type ReponsesDuQuestionnaire,
-  type RevelationDuVote,
 } from './lecture-ecran';
 import {
   type ImpressionDeLEcran,
@@ -49,8 +48,7 @@ import {
   posesDeReinjection,
 } from './reinjection';
 
-type DonneesFormateur =
-  CorrigeEcranPresentateur | ReponsesDuQuestionnaire | RevelationDuVote | null;
+type DonneesFormateur = CorrigeEcranPresentateur | ReponsesDuQuestionnaire | null;
 
 interface MontageActif extends MontageIdentifie {
   readonly element: HTMLElement;
@@ -96,7 +94,6 @@ interface ReponseVisuelle {
       (fp-numeric-submit)="relayer($event)"
       (fp-vote-submit)="relayer($event)"
       (fp-recall-submit)="relayer($event)"
-      (fp-exit-submit)="relayer($event)"
       (fp-spaced-reponse)="relayer($event)"
       (fp-sheet-submit)="relayer($event)"
       (fp-sheet-evaluation)="relayer($event)"

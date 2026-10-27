@@ -11506,14 +11506,14 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:80</note>
       </notes>
       <segment>
-        <source>Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Summarise a series, relate two variables with a scatter plot and a linear fit, then forecast in a spreadsheet, as in the CCF exam. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+        <source>Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 15, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Summarise a series, relate two variables with a scatter plot and a linear fit, then forecast in a spreadsheet, as in the CCF exam. To follow in a 3 h 15 guided session, including a 30 min break, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-02.duration">
       <segment>
-        <source>3 h 00</source>
-        <target>3 h</target>
+        <source>2 h 45</source>
+        <target>2 h 45 min</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-03.title">
@@ -11536,8 +11536,8 @@
     </unit>
     <unit id="formations-list.b2-03.duration">
       <segment>
-        <source>2 h 20</source>
-        <target>2 h 20 min</target>
+        <source>2 h 15</source>
+        <target>2 h 15 min</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-04.title">
@@ -11548,14 +11548,14 @@
     </unit>
     <unit id="formations-list.b2-04.description">
       <segment>
-        <source>Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Model a change with an arithmetic or geometric sequence, compare two growth assumptions, find the rank where a threshold is crossed and sum terms in a spreadsheet, as in the CCF exam. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+        <source>Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 15, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Model a change with an arithmetic or geometric sequence, compare two growth assumptions, find the rank where a threshold is crossed and sum terms in a spreadsheet, as in the CCF exam. To follow in a 3 h 15 guided session, including a 30 min break, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-04.duration">
       <segment>
-        <source>3 h 00</source>
-        <target>3 h</target>
+        <source>2 h 45</source>
+        <target>2 h 45 min</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-05.title">
@@ -11566,14 +11566,14 @@
     </unit>
     <unit id="formations-list.b2-05.description">
       <segment>
-        <source>Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Compute a future value and a present value, price a series of payments, build a loan amortisation schedule and its cost, with PMT in a spreadsheet, as in the CCF exam. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+        <source>Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur, comme en CCF. À suivre en séance accompagnée de 2 h 45, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Compute a future value and a present value, price a series of payments, build a loan amortisation schedule and its cost, with PMT in a spreadsheet, as in the CCF exam. To follow in a 2 h 45 guided session, including a 30 min break, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-05.duration">
       <segment>
-        <source>3 h 00</source>
-        <target>3 h</target>
+        <source>2 h 15</source>
+        <target>2 h 15 min</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-06.title">
@@ -11584,14 +11584,14 @@
     </unit>
     <unit id="formations-list.b2-06.description">
       <segment>
-        <source>Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Compute with an exponential model and its rate, find a threshold with the natural logarithm, fit a series with z = ln y and forecast with EXP and LN in a spreadsheet, as in the CCF exam. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+        <source>Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur, comme en CCF. À suivre en séance accompagnée de 2 h 45, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Compute with an exponential model and its rate, find a threshold with the natural logarithm, fit a series with z = ln y and forecast with EXP and LN in a spreadsheet, as in the CCF exam. To follow in a 2 h 45 guided session, including a 30 min break, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-06.duration">
       <segment>
-        <source>3 h 00</source>
-        <target>3 h</target>
+        <source>2 h 15</source>
+        <target>2 h 15 min</target>
       </segment>
     </unit>
     <unit id="formations-list.b3.badge">
@@ -11614,8 +11614,8 @@
     </unit>
     <unit id="formations-list.b1-01.duration">
       <segment>
-        <source>2 h 40</source>
-        <target>2 h 40 min</target>
+        <source>2 h 00</source>
+        <target>2 h</target>
       </segment>
     </unit>
     <unit id="formations-list.b3-01.title">
@@ -11626,14 +11626,14 @@
     </unit>
     <unit id="formations-list.b3-01.description">
       <segment>
-        <source>Nettoyer un export de ventes dans Excel, le croiser avec ses référentiels, le résumer par un tableau croisé dynamique, puis bâtir un tableau de bord et une recommandation pour un comité de direction. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Clean a sales export in Excel, join it with its reference tables, summarise it with a PivotTable, then build a dashboard and a recommendation for an executive committee. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+        <source>Nettoyer un export de ventes dans Excel, le croiser avec ses référentiels, le résumer par un tableau croisé dynamique, puis bâtir un tableau de bord et une recommandation pour un comité de direction. À suivre en séance accompagnée de 3 h 25, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Clean a sales export in Excel, join it with its reference tables, summarise it with a PivotTable, then build a dashboard and a recommendation for an executive committee. To follow in a 3 h 25 guided session, including a 30 min break, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b3-01.duration">
       <segment>
-        <source>3 h 00</source>
-        <target>3 h</target>
+        <source>2 h 55</source>
+        <target>2 h 55 min</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.duration">
@@ -11641,8 +11641,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:32</note>
       </notes>
       <segment>
-        <source>3 h 30</source>
-        <target>3 h 30 min</target>
+        <source>3 h 20</source>
+        <target>3 h 20 min</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.format">
@@ -13371,12 +13371,6 @@
         <target>That’s right</target>
       </segment>
     </unit>
-    <unit id="coursRuntimeDiscussionEnCours">
-      <segment>
-        <source>Discutez avec votre voisin</source>
-        <target>Discuss with your neighbour</target>
-      </segment>
-    </unit>
     <unit id="coursRuntimeEnvoyer">
       <segment>
         <source>Envoyer</source>
@@ -13405,24 +13399,6 @@
       <segment>
         <source>Choisissez maintenant la proposition qui correspond</source>
         <target>Now choose the matching option</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeChoixObligatoire">
-      <segment>
-        <source>Choisissez une réponse avant d’envoyer</source>
-        <target>Choose an answer before sending</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeTexteLibreTropLong">
-      <segment>
-        <source>Réduisez votre réponse à</source>
-        <target>Shorten your answer to</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeCaracteresMaximum">
-      <segment>
-        <source>caractères maximum</source>
-        <target>characters maximum</target>
       </segment>
     </unit>
     <unit id="coursRuntimeChargement">
@@ -14247,18 +14223,6 @@
         <target>Wrong leads will be flagged at the reveal</target>
       </segment>
     </unit>
-    <unit id="coursRuntimeVotePhaseRevele">
-      <segment>
-        <source>Réponse révélée</source>
-        <target>Answer revealed</target>
-      </segment>
-    </unit>
-    <unit id="coursRuntimeVotePhaseFermee">
-      <segment>
-        <source>Le vote est fermé pour cette question</source>
-        <target>Voting is closed for this question</target>
-      </segment>
-    </unit>
     <unit id="coursRuntimeReponsesCloses">
       <segment>
         <source>Correction révélée : les réponses sont closes</source>
@@ -14421,34 +14385,22 @@
         <target> Your previously sent answers could not be reloaded: they remain saved and will reappear on the next load. </target>
       </segment>
     </unit>
-    <unit id="panneauActivitePhaseVote">
+    <unit id="panneauActivitePhaseQuestion1">
       <segment>
-        <source>Vote individuel</source>
-        <target>Individual vote</target>
+        <source>Question 1</source>
+        <target>Question 1</target>
       </segment>
     </unit>
-    <unit id="panneauActivitePhaseDiscussion">
+    <unit id="panneauActivitePhaseQuestion2">
       <segment>
-        <source>Discussion entre voisins</source>
-        <target>Discussion with neighbours</target>
+        <source>Question 2</source>
+        <target>Question 2</target>
       </segment>
     </unit>
-    <unit id="panneauActivitePhaseRevote">
+    <unit id="panneauActiviteVoteTitre">
       <segment>
-        <source>Deuxième question</source>
-        <target>Second question</target>
-      </segment>
-    </unit>
-    <unit id="panneauActivitePhaseRevele">
-      <segment>
-        <source>Révélation</source>
-        <target>Reveal</target>
-      </segment>
-    </unit>
-    <unit id="panneauActivitePhaseTitre">
-      <segment>
-        <source>Instruction par les pairs</source>
-        <target>Peer instruction</target>
+        <source>Vote à deux questions</source>
+        <target>Two-question vote</target>
       </segment>
     </unit>
     <unit id="panneauActivitePhaseCourante">
@@ -14629,18 +14581,6 @@
       <segment>
         <source>Tent.</source>
         <target>Avg.</target>
-      </segment>
-    </unit>
-    <unit id="panneauActiviteBilletsTitre">
-      <segment>
-        <source>Billets de sortie</source>
-        <target>Exit tickets</target>
-      </segment>
-    </unit>
-    <unit id="panneauActiviteBilletsRecus">
-      <segment>
-        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ billetsRecus() }}"/> billets reçus / <ph id="1" equiv="INTERPOLATION_1" disp="{{ participants() }}"/> participants </source>
-        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ billetsRecus() }}"/> tickets received / <ph id="1" equiv="INTERPOLATION_1" disp="{{ participants() }}"/> participants </target>
       </segment>
     </unit>
     <unit id="panneauActiviteParticipantsTitre">

@@ -16,7 +16,9 @@ const ECRANS_DE_SEANCE_SEULEMENT: ReadonlySet<string> = new Set(['fp-pulse']);
 
 const QUESTIONS_TIREES_EN_SEANCE: ReadonlySet<string> = new Set(['fp-spaced']);
 
-const CORRIGES_DONNES_A_LA_SUITE: ReadonlySet<string> = new Set(['reflexion', 'revelation']);
+const CORRIGES_DONNES_A_LA_SUITE: ReadonlySet<string> = new Set(['reflexion']);
+
+const ECRANS_REVELES_A_LA_SUITE: ReadonlySet<string> = new Set(['fp-vote']);
 
 const CORRIGES_SUR_PLACE: ReadonlySet<string> = new Set(['fp-worked']);
 
@@ -57,7 +59,10 @@ function avecSaBanqueDeQuestions(ecran: EcranContent, corrige: DerouleCours): Ec
 
 function corrigeDonneALaSuite(deroule: EcranDeroule | undefined): boolean {
   const type = deroule?.corrigeEcran?.type;
-  return type !== undefined && CORRIGES_DONNES_A_LA_SUITE.has(type);
+  return (
+    (deroule !== undefined && ECRANS_REVELES_A_LA_SUITE.has(deroule.type)) ||
+    (type !== undefined && CORRIGES_DONNES_A_LA_SUITE.has(type))
+  );
 }
 
 function reponseDonneeALaSuite(ecran: EcranContent, corrige: DerouleCours): boolean {
@@ -105,8 +110,6 @@ function redactionsDuCorrige(corrige: CorrigeEcranPresentateur | null): readonly
   switch (corrige.type) {
     case 'reflexion':
       return [corrige.attendu, corrige.suite];
-    case 'revelation':
-      return [corrige.titre, ...corrige.lignes];
     case 'feuille':
       return corrige.attendus.map(({ formuleReference }) => formuleReference);
     case 'classement':

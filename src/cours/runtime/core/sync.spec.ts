@@ -31,7 +31,7 @@ const ETAT: EtatSession = {
   intervalleLibre: null,
   revision: 7,
   pilotage: {
-    'B2-01-A3-01-VOTE-HAUSSE-BAISSE': { phase: 'revote' },
+    'B2-01-A3-01-VOTE-HAUSSE-BAISSE': { phase: 'question-2' },
     'B2-01-A5-08-RECOMMANDATION': { revele: true },
     'B2-01-A3-06-INDICE-ET-TAUX-MOYEN': { etayage: 2 },
   },
@@ -396,7 +396,7 @@ describe('sync', () => {
         pilotage: {
           ...ETAT.pilotage,
           'B2-03-JUMELLE': {
-            phase: 'vote' as const,
+            phase: 'question-1' as const,
             questionAffichee: 'Q-A',
             questionOuverte: null,
           },
@@ -414,12 +414,12 @@ describe('sync', () => {
         bloc('etat', {
           ...ETAT,
           inconnu: 1,
-          pilotage: { ...ETAT.pilotage, 'B2-01-A3-01': { phase: 'vote', inconnu: true } },
+          pilotage: { ...ETAT.pilotage, 'B2-01-A3-01': { phase: 'question-1', inconnu: true } },
         }),
       ]);
 
       expect(etats).toEqual([
-        { ...ETAT, pilotage: { ...ETAT.pilotage, 'B2-01-A3-01': { phase: 'vote' } } },
+        { ...ETAT, pilotage: { ...ETAT.pilotage, 'B2-01-A3-01': { phase: 'question-1' } } },
       ]);
     });
 

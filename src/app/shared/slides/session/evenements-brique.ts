@@ -26,7 +26,6 @@ export const EVENEMENTS_DES_BRIQUES: readonly string[] = [
   'fp-numeric-submit',
   'fp-vote-submit',
   'fp-recall-submit',
-  'fp-exit-submit',
   'fp-spaced-reponse',
   'fp-sheet-submit',
   'fp-sheet-evaluation',
@@ -238,11 +237,6 @@ function selon(nom: string, screenId: string, detail: Detail, dureeMs: number): 
       return [
         ...reponse(screenId, detail['questionId'], detail['valeur'], dureeMs),
         ...libre(screenId, `${String(detail['questionId'])}:rappel`, detail['rappel'], dureeMs),
-      ];
-    case 'fp-exit-submit':
-      return [
-        ...reponse(screenId, detail['billetId'], detail['valeur'], dureeMs),
-        ...libre(screenId, String(detail['billetId']), detail['texteLibre'], dureeMs),
       ];
     case 'fp-spaced-reponse':
       return reponse(screenId, detail['questionId'], detail['optionId'], dureeMs);

@@ -5,7 +5,7 @@ import {
   zSubmitAnswerResponseDto as verdictReponseServi,
 } from '../contrat/zod.gen';
 import {
-  BILLET_DE_SORTIE,
+  RAPPEL_DE_SORTIE,
   ETAT_EN_COURS,
   etatDuParticipant,
   installerLaSeanceDeSortie,
@@ -22,7 +22,7 @@ const CONFUSION = 'Taux annuel divisé par 12';
 const DELAI_ENTREE_MS = 20_000;
 
 const REPONSE_ENREGISTREE = {
-  questionId: BILLET_DE_SORTIE.id,
+  questionId: RAPPEL_DE_SORTIE.id,
   valeur: 'b',
   correcte: false,
   score: null,
@@ -64,19 +64,19 @@ async function rejoindre(page: Page, seance: SeanceDeSortie): Promise<void> {
     await bannièreCookies.getByRole('button').last().click();
   }
   await remplirLaJonction(page, seance.code);
-  await expect(page.locator('fp-exit [data-testid="texte-libre"]')).toBeVisible({
+  await expect(page.locator('fp-recall [data-testid="rappel"]')).toBeVisible({
     timeout: DELAI_ENTREE_MS,
   });
 }
 
 function cleDuBrouillon(seance: SeanceDeSortie): string {
-  return `fp.${seance.id}.${PARTICIPANT}.fp-exit.${BILLET_DE_SORTIE.id}`;
+  return `fp.${seance.id}.${PARTICIPANT}.fp-recall.${RAPPEL_DE_SORTIE.id}`;
 }
 
 async function ecrireUnBrouillon(page: Page, seance: SeanceDeSortie): Promise<void> {
   await installerLaSeance(page, seance);
   await rejoindre(page, seance);
-  await page.locator('fp-exit [data-testid="texte-libre"]').fill(TEXTE);
+  await page.locator('fp-recall [data-testid="rappel"]').fill(TEXTE);
   await expect
     .poll(() => page.evaluate((cle) => localStorage.getItem(cle), cleDuBrouillon(seance)))
     .not.toBeNull();
@@ -91,23 +91,22 @@ test.describe('AC-33 : reprise d’un poste étudiant rechargé', () => {
     await page.reload();
     await rejoindre(page, SEANCE_A);
 
-    await expect(page.locator('fp-exit [data-testid="texte-libre"]')).toHaveValue(TEXTE);
-    await expect(page.locator('fp-exit [data-testid="brouillon-restaure"]')).toHaveText(
+    await expect(page.locator('fp-recall [data-testid="rappel"]')).toHaveValue(TEXTE);
+    await expect(page.locator('fp-recall [data-testid="brouillon-restaure"]')).toHaveText(
       'Brouillon restauré',
     );
 
-    await page.locator('fp-exit [data-option="b"]').click();
-    await page.locator('fp-exit [data-testid="envoyer"]').click();
-    await expect(page.locator('fp-exit [data-testid="verdict"]')).toContainText(CONFUSION);
+    await page.locator('fp-recall [data-option="b"]').click();
+    await expect(page.locator('fp-recall [data-testid="verdict"]')).toContainText(CONFUSION);
 
     await page.reload();
     await rejoindre(page, SEANCE_A);
 
-    await expect(page.locator('fp-exit [data-testid="verdict"]')).toContainText(CONFUSION);
-    await expect(page.locator('fp-exit [data-testid="deja-repondu"]')).toHaveText(
+    await expect(page.locator('fp-recall [data-testid="verdict"]')).toContainText(CONFUSION);
+    await expect(page.locator('fp-recall [data-testid="deja-repondu"]')).toHaveText(
       'Réponse déjà enregistrée : voici votre verdict',
     );
-    await expect(page.locator('fp-exit [data-testid="texte-libre"]')).toBeDisabled();
+    await expect(page.locator('fp-recall [data-testid="rappel"]')).toBeDisabled();
   });
 
   test('ne reprend pas dans une seconde séance le brouillon de la première', async ({ page }) => {
@@ -117,8 +116,8 @@ test.describe('AC-33 : reprise d’un poste étudiant rechargé', () => {
     await installerLaSeance(page, SEANCE_B);
     await rejoindre(page, SEANCE_B);
 
-    await expect(page.locator('fp-exit [data-testid="texte-libre"]')).toHaveValue('');
-    await expect(page.locator('fp-exit [data-testid="brouillon-restaure"]')).toHaveCount(0);
+    await expect(page.locator('fp-recall [data-testid="rappel"]')).toHaveValue('');
+    await expect(page.locator('fp-recall [data-testid="brouillon-restaure"]')).toHaveCount(0);
     expect(
       await page.evaluate((cle) => localStorage.getItem(cle), cleDuBrouillon(SEANCE_A)),
     ).toBeNull();

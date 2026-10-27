@@ -90,34 +90,23 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     });
   }
 
-  it('pose sur le vote la phase pilotee et les resultats de la question jumelle au revote', () => {
-    const suivi = voteJumele({ phase: 'revote', questionAffichee: 'Q-CAP-03-bis' });
+  it('pose sur le vote la phase pilotee', () => {
+    const suivi = voteJumele({ phase: 'question-2', questionAffichee: 'Q-CAP-03-bis' });
     expect(pose('fp-vote', ['Q-CAP-03', 'Q-CAP-03-bis'], 'phase', { direct: suivi })).toBe(
-      'revote',
+      'question-2',
     );
-    expect(pose('fp-vote', ['Q-CAP-03', 'Q-CAP-03-bis'], 'resultats', { direct: suivi })).toEqual({
-      total: 18,
-      parOption: { a: 18 },
-    });
   });
 
-  it('F-29 · pose sur le vote la question que le back sert et ses resultats, sans la deduire de la phase', () => {
+  it('F-29 · pose sur le vote la question que le back sert, sans la deduire de la phase', () => {
     const identifiants = ['Q-CAP-03', 'Q-CAP-03-bis'];
-    const servi = (pilotage: DirectEcran['pilotage'] | null): unknown => {
-      const surcharges = { direct: pilotage === null ? null : voteJumele(pilotage) };
-      return [
-        pose('fp-vote', identifiants, 'questionAffichee', surcharges),
-        (pose('fp-vote', identifiants, 'resultats', surcharges) as { total: number } | null)
-          ?.total ?? null,
-      ];
-    };
+    const servie = (pilotage: DirectEcran['pilotage'] | null): unknown =>
+      pose('fp-vote', identifiants, 'questionAffichee', {
+        direct: pilotage === null ? null : voteJumele(pilotage),
+      });
 
-    expect(servi({ phase: 'revote', questionAffichee: 'Q-CAP-03' })).toEqual(['Q-CAP-03', 20]);
-    expect(servi({ phase: 'vote', questionAffichee: 'Q-CAP-03-bis' })).toEqual([
-      'Q-CAP-03-bis',
-      18,
-    ]);
-    expect(servi(null)).toEqual(['Q-CAP-03', null]);
+    expect(servie({ phase: 'question-2', questionAffichee: 'Q-CAP-03' })).toBe('Q-CAP-03');
+    expect(servie({ phase: 'question-1', questionAffichee: 'Q-CAP-03-bis' })).toBe('Q-CAP-03-bis');
+    expect(servie(null)).toBe('Q-CAP-03');
   });
 
   it('QA-01 · pose sur le vote la phase que le serveur sert, sans en deduire une de la revelation ni en supposer une', () => {
@@ -127,18 +116,47 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
         direct: pilotage === null ? null : direct({ pilotage }),
       });
 
-    expect(phaseServie({ phase: 'vote', revele: true })).toBe('vote');
+    expect(phaseServie({ phase: 'question-1', revele: true })).toBe('question-1');
     expect(phaseServie({ revele: true })).toBeNull();
     expect(phaseServie({})).toBeNull();
     expect(phaseServie(null)).toBeNull();
   });
 
-  it('RET-20 · pose sur le vote jumele les resultats du premier vote, quelle que soit la phase', () => {
-    const revele = voteJumele({ phase: 'revele' }, { parOption: { b: 20 } });
+  it('M3 · pose les resultats de chaque question du vote, quelle que soit la question affichee', () => {
+    const identifiants = ['Q-CAP-03', 'Q-CAP-03-bis'];
+    for (const questionAffichee of identifiants) {
+      const suivi = voteJumele({ questionAffichee, revele: true }, { parOption: { b: 20 } });
+
+      expect(pose('fp-vote', identifiants, 'resultats', { direct: suivi })).toEqual({
+        total: 20,
+        parOption: { b: 20 },
+      });
+      expect(pose('fp-vote', identifiants, 'resultatsJumelle', { direct: suivi })).toEqual({
+        total: 18,
+        parOption: { a: 18 },
+      });
+    }
     expect(
-      pose('fp-vote', ['Q-CAP-03', 'Q-CAP-03-bis'], 'resultatsPremierVote', { direct: revele }),
-    ).toEqual({ total: 20, parOption: { b: 20 } });
-    expect(pose('fp-vote', ['Q-CAP-03'], 'resultatsPremierVote', { direct: revele })).toBeNull();
+      pose('fp-vote', ['Q-CAP-03'], 'resultatsJumelle', { direct: voteJumele({ revele: true }) }),
+    ).toBeNull();
+  });
+
+  it('M3 · confie au vote les reponses de ses deux questions, sans les reduire a la question affichee', () => {
+    const reponses = {
+      type: 'reponses',
+      reponses: {
+        'Q-CAP-03': { cible: '1 480,24 €', optionId: 'b' },
+        'Q-CAP-03-bis': { cible: '2 960,49 €', optionId: 'j-b' },
+      },
+    };
+
+    expect(
+      pose('fp-vote', ['Q-CAP-03', 'Q-CAP-03-bis'], 'corrige', {
+        role: 'presentateur',
+        donneesFormateur: reponses,
+        direct: voteJumele({ questionAffichee: 'Q-CAP-03-bis', revele: true }),
+      }),
+    ).toEqual(reponses);
   });
 
   describe('ecranRevele : le presentateur ne recoit le corrige qu une fois la correction pilotee', () => {
@@ -151,8 +169,7 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
       { nom: 'sans direct', direct: null },
       { nom: 'pilotage vide', direct: direct() },
       { nom: 'revele faux', direct: direct({ pilotage: { revele: false } }) },
-      { nom: 'phase discussion', direct: direct({ pilotage: { phase: 'discussion' } }) },
-      { nom: 'Q1 · phase revele sans revele', direct: direct({ pilotage: { phase: 'revele' } }) },
+      { nom: 'question 2 sans revele', direct: direct({ pilotage: { phase: 'question-2' } }) },
       { nom: 'etayage nul', direct: direct({ pilotage: { etayage: 0 } }) },
     ];
 
@@ -225,7 +242,7 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
 
     it('pose sur une question la bonne reponse et l option qui la porte', () => {
       expect(
-        pose('fp-vote', ['Q-CAP-03'], 'corrige', { revelation: buildRevelationServie() }),
+        pose('fp-numeric', ['Q-CAP-03'], 'corrige', { revelation: buildRevelationServie() }),
       ).toEqual({ type: 'cible', cible: '1 480,24 €', optionId: 'b' });
     });
 
@@ -258,65 +275,44 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
     });
   });
 
-  describe('Q1 · le vote revele projette son encadre et sa bonne option, rien d autre', () => {
+  describe('M3 · le vote revele recoit la bonne option de chacune de ses questions', () => {
     const votes = INSTANTANES_DES_COURS_SERVIS.flatMap(([, instantane]) =>
       ecransDuPupitreDe(instantane),
-    ).filter(({ type, corrigeEcran }) => type === 'fp-vote' && corrigeEcran?.type === 'revelation');
+    ).filter(({ type, questions }) => type === 'fp-vote' && questions.length === 2);
 
-    it('couvre les votes a revelation de tous les cours servis', () => {
+    it('couvre les votes a deux questions de tous les cours servis', () => {
       expect(votes.length).toBeGreaterThan(0);
     });
 
     for (const ecran of votes) {
-      it(`pose sur ${ecran.id} la revelation et l option juste de la question affichee`, () => {
+      it(`pose sur ${ecran.id} la bonne option de ses deux questions, sans prose`, () => {
         const identifiants = ecran.questions.map(({ id }) => id);
-        const affichee = ecran.questions.at(-1);
-        const bonne = ecran.corriges.find(({ questionId }) => questionId === affichee?.id);
-        const option = affichee?.options?.find(({ libelle }) => libelle === bonne?.bonneReponse);
+        const options = ecran.questions.map(
+          (question) =>
+            question.options?.find(
+              ({ libelle }) =>
+                libelle ===
+                ecran.corriges.find(({ questionId }) => questionId === question.id)?.bonneReponse,
+            )?.id,
+        );
 
-        expect(option).withContext('option juste du corrigé').toBeDefined();
-        expect(
-          pose('fp-vote', identifiants, 'corrige', {
-            role: 'presentateur',
-            donneesFormateur: annexeFormateurDeLEcran(ecran),
-            direct: direct({
-              pilotage: { phase: 'revele', revele: true, questionAffichee: affichee?.id },
-            }),
-          }),
-        ).toEqual({ ...ecran.corrigeEcran, optionId: option?.id });
+        expect(options.every((option) => option !== undefined))
+          .withContext('option juste du corrigé')
+          .toBeTrue();
+        const corrige = pose('fp-vote', identifiants, 'corrige', {
+          role: 'presentateur',
+          donneesFormateur: annexeFormateurDeLEcran(ecran),
+          direct: direct({ pilotage: { revele: true, questionAffichee: identifiants[0] } }),
+        }) as { reponses: Readonly<Record<string, { optionId: string }>> };
+
+        expect(identifiants.map((id) => corrige.reponses[id].optionId)).toEqual(
+          options as string[],
+        );
       });
     }
   });
 
   describe('annexeDuMontage : un questionnaire corrige se decoupe par question affichee', () => {
-    const revelation = buildRevelationServie({
-      questions: [
-        { questionId: 'Q-CAP-03', cible: '1 480,24 €', optionId: 'b' },
-        { questionId: 'Q-CAP-03-bis', cible: '2 960,49 €', optionId: 'j-b' },
-      ],
-    });
-    const jumeles = ['Q-CAP-03', 'Q-CAP-03-bis'];
-
-    it('pose la bonne reponse de la question principale avant le revote', () => {
-      expect(
-        pose('fp-vote', jumeles, 'corrige', {
-          revelation,
-          direct: direct({ pilotage: { phase: 'discussion' } }),
-        }),
-      ).toEqual({ type: 'cible', cible: '1 480,24 €', optionId: 'b' });
-    });
-
-    for (const phase of ['revote', 'revele'] as const) {
-      it(`pose la bonne reponse de la jumelle en phase ${phase}`, () => {
-        expect(
-          pose('fp-vote', jumeles, 'corrige', {
-            revelation,
-            direct: direct({ pilotage: { phase, questionAffichee: 'Q-CAP-03-bis' } }),
-          }),
-        ).toEqual({ type: 'cible', cible: '2 960,49 €', optionId: 'j-b' });
-      });
-    }
-
     const CIBLE_SANS_OPTION = { type: 'cible', cible: '1 124,86', optionId: null };
     const reponsesAuPresentateur: readonly (readonly [string, unknown, unknown])[] = [
       [
@@ -347,7 +343,7 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
 
   it('ne pose le corrige que sur les briques qui le lisent', () => {
     const revele = direct({ pilotage: { revele: true } });
-    for (const brique of ['fp-exit', 'fp-pro', 'fp-worked', 'fp-spaced', 'fp-pulse']) {
+    for (const brique of ['fp-pro', 'fp-worked', 'fp-spaced', 'fp-pulse']) {
       expect(
         posesDeReinjection(
           montage(brique, ['Q-VA-07']),
@@ -380,7 +376,7 @@ describe('posesDeReinjection : retours du serveur poses sur une brique deja mont
   it('pose la cloture sur les seules questions revelables, d apres la saisie fermee servie', () => {
     const fermee = direct({ pilotage: { saisieFermee: true } });
     const reveleSansFermeture = direct({ pilotage: { revele: true } });
-    for (const brique of ['fp-vote', 'fp-numeric', 'fp-recall', 'fp-exit', 'fp-spaced']) {
+    for (const brique of ['fp-vote', 'fp-numeric', 'fp-recall', 'fp-spaced']) {
       expect(pose(brique, ['Q-VA-07'], 'cloture', { direct: fermee }))
         .withContext(brique)
         .toBeTrue();

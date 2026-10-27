@@ -1,0 +1,105 @@
+{
+  "cours": "gravures",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours-gabarit-v3.md § 8.2 — Gravure de l’accroche",
+  "medias": [
+    {
+      "id": "B1-01-M7",
+      "ecran": "A1-02",
+      "licence": "domaine public",
+      "attribution": "William Playfair, The Statistical Breviary, 1801 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Playfair_piecharts.jpg",
+      "fichiers": [
+        {
+          "fichier": "playfair-camemberts-1801.jpg",
+          "octets": 309627,
+          "sha256": "22939c818399c42d2939033c1eea29786b211acb5dfcb53645dafdf96e06f353"
+        }
+      ]
+    },
+    {
+      "id": "B2-02-M7",
+      "ecran": "A1-02",
+      "licence": "domaine public",
+      "attribution": "Francis Galton, 1875 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Galton%27s_correlation_diagram_1875.jpg",
+      "fichiers": [
+        {
+          "fichier": "galton-correlation-1875.jpg",
+          "octets": 88462,
+          "sha256": "c17ffce45781f5069f1a3d7eb5da46dd89e4844ed0a39b65a06edc7e88e99eab"
+        }
+      ]
+    },
+    {
+      "id": "B2-03-M7",
+      "ecran": "A1-02",
+      "licence": "domaine public",
+      "attribution": "George Boole, An Investigation of the Laws of Thought, 1854 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:An_Investigation_of_the_Laws_of_Thought_(1854,_Boole,_investigationofl00boolrich).djvu",
+      "fichiers": [
+        {
+          "fichier": "boole-lois-de-la-pensee-1854.jpg",
+          "octets": 109843,
+          "sha256": "37893cbc2d3894af4b5a5716361ecc775ccfbd50b3924aeaa827a695470f14e2"
+        }
+      ]
+    },
+    {
+      "id": "B2-04-M6",
+      "ecran": "A1-02",
+      "licence": "domaine public",
+      "attribution": "Leonardo Fibonacci, Liber abbaci, XIIIᵉ siècle · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Liber_abbaci_magliab_f124r.jpg",
+      "fichiers": [
+        {
+          "fichier": "fibonacci-liber-abbaci.jpg",
+          "octets": 350167,
+          "sha256": "2edbab5735b8e0da79cdf770f11ed690d242d0a7a7a94c26078b1a366875c4c7"
+        }
+      ]
+    },
+    {
+      "id": "B2-05-M6",
+      "ecran": "A1-02",
+      "licence": "domaine public",
+      "attribution": "Quentin Metsys, Le Prêteur et sa femme, 1514 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Massysm_Quentin_%E2%80%94_The_Moneylender_and_his_Wife_%E2%80%94_1514.jpg",
+      "fichiers": [
+        {
+          "fichier": "massys-le-preteur-1514.jpg",
+          "octets": 562665,
+          "sha256": "d618bf772ca2b6b0bf5946a04057cbfda9b48bf7f3f0030e5d076dbcb9804b4d"
+        }
+      ]
+    },
+    {
+      "id": "B2-06-M1",
+      "ecran": "A1-02",
+      "licence": "domaine public",
+      "attribution": "John Napier, Mirifici logarithmorum canonis descriptio, 1614 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Mirifici_Logarithmorum_canonis_Descriptio.jpg",
+      "fichiers": [
+        {
+          "fichier": "napier-logarithmes-1614.jpg",
+          "octets": 661465,
+          "sha256": "fde96a5e9940315a5e31302f48afa7a16cdc54b0585b7a7dd8201c89c5857e6c"
+        }
+      ]
+    },
+    {
+      "id": "B3-01-M1",
+      "ecran": "A1-02",
+      "licence": "domaine public",
+      "attribution": "Scientific American, machines de Herman Hollerith, 1890 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:1890_Census_Hollerith_Electrical_Counting_Machines_Sci_Amer.jpg",
+      "fichiers": [
+        {
+          "fichier": "hollerith-recensement-1890.jpg",
+          "octets": 94536,
+          "sha256": "dd44063f62164a76da1d9e924517d799e654de58ac9cd98037d7676cec9bdfe1"
+        }
+      ]
+    }
+  ]
+}

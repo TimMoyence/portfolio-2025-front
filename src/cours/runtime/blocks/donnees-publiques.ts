@@ -6,7 +6,6 @@ import type {
   EscapeEnigmePublique,
   EscapeParcoursPublic as EscapeParcoursBrique,
 } from './FpEscape';
-import type { ExitBilletPublic } from './FpExit';
 import type { NumericQuestionPublique } from './FpNumeric';
 import type { PlotDefinition as PlotDefinitionBrique } from './FpPlot';
 import type { ProCas } from './FpPro';
@@ -18,14 +17,7 @@ import type { TableBuildPlanPublic, TableColonne } from './FpTableBuild';
 import type { WorkedExemple } from './FpWorked';
 import type { OptionPublique } from './projection';
 
-export type {
-  Concept4Definition,
-  ExitBilletPublic,
-  OptionPublique,
-  PulseSondage,
-  StoryRecit,
-  WorkedExemple,
-};
+export type { Concept4Definition, OptionPublique, PulseSondage, StoryRecit, WorkedExemple };
 
 export type NumeriquePublic = NumericQuestionPublique;
 
@@ -95,7 +87,6 @@ export interface DonneesParBrique {
     readonly question: VotePublic & { readonly metadonnees: MetadonneesBrique };
     readonly delaiMs: number;
   };
-  readonly 'fp-exit': { readonly billet: ExitBilletPublic };
   readonly questionnaire: {
     readonly intitule: string;
     readonly consigne?: string;

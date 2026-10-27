@@ -1,6 +1,6 @@
 import type { Page, Route } from '@playwright/test';
 import type { z } from 'zod';
-import type { DonneesFpExit } from '../contrat/types.gen';
+import type { DonneesFpRecall } from '../contrat/types.gen';
 import {
   zEtatParticipantResponseDto as etatParticipantServi,
   zJoinSessionResponseDto as rattachementServi,
@@ -246,11 +246,9 @@ export async function servirLaJonction(route: Route, jonction: Jonction): Promis
   );
 }
 
-export const BILLET_DE_SORTIE: DonneesFpExit['billet'] = {
-  id: 'B-SORTIE-09',
-  question: 'Le taux équivalent mensuel d’un taux annuel de 12 % vaut :',
-  invite: 'Qu’est-ce qui reste flou ?',
-  longueurMax: 500,
+export const RAPPEL_DE_SORTIE: DonneesFpRecall['question'] = {
+  id: 'R-SORTIE-09',
+  enonce: 'Le taux équivalent mensuel d’un taux annuel de 12 % vaut :',
   options: [
     { id: 'a', libelle: 'Un peu moins de 1 %' },
     { id: 'b', libelle: 'Exactement 1 %' },
@@ -273,11 +271,11 @@ const SUJET_DE_SORTIE: SujetDuFil = {
   ecrans: [
     {
       id: 'ecran-sortie',
-      type: 'fp-exit',
-      titre: 'Billet de sortie',
+      type: 'fp-recall',
+      titre: 'Rappel de sortie',
       duree: 5,
       interactif: true,
-      donnees: { billet: BILLET_DE_SORTIE },
+      donnees: { question: RAPPEL_DE_SORTIE, delaiMs: 1000 },
     },
   ],
 };

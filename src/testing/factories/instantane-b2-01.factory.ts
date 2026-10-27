@@ -7,7 +7,6 @@ import {
   buildDonneesQuestionnaire,
   buildEcran,
   buildEscapeParcours,
-  buildExitBillet,
   buildNumericQuestion,
   buildPlotDefinition,
   buildProCas,
@@ -43,7 +42,6 @@ function buildDonneesParBrique(): DonneesParBrique {
     'fp-numeric': { question: numerique },
     'fp-vote': { question: vote, questionJumelle: buildVoteQuestion({ id: 'Q-CAP-03-bis' }) },
     'fp-recall': { question: buildRecallQuestion(), delaiMs: 8000 },
-    'fp-exit': { billet: buildExitBillet() },
     questionnaire: buildDonneesQuestionnaire(numerique, vote),
     'ecran-verrouille': {},
   };

@@ -75,8 +75,6 @@ function reponsesDuCorrige(corrige: CorrigeEcranPresentateur | null): readonly s
   switch (corrige.type) {
     case 'reflexion':
       return [corrige.attendu];
-    case 'revelation':
-      return corrige.lignes;
     case 'tableau':
       return corrige.attendus.flatMap(({ valeur }) => formesDeLaReponse(valeur));
     case 'feuille':
@@ -177,7 +175,6 @@ function reponsesRedigees(ecran: EcranDeroule | undefined): readonly string[] {
   const corrige = ecran?.corrigeEcran ?? null;
   return [
     ...(ecran?.explications ?? []).map(({ texte }) => texte),
-    ...(corrige?.type === 'revelation' ? corrige.lignes : []),
     ...(corrige?.type === 'reflexion' ? [corrige.attendu] : []),
   ];
 }
@@ -345,14 +342,6 @@ const SOURCES_DE_REPONSE: readonly (readonly [string, Partial<EcranDeroule>])[] 
   [
     'la suite d une réflexion',
     { corrigeEcran: { type: 'reflexion', attendu: '', suite: REPRISE } },
-  ],
-  [
-    'le titre d une révélation',
-    { corrigeEcran: { type: 'revelation', titre: REPRISE, lignes: [] } },
-  ],
-  [
-    'une ligne de révélation',
-    { corrigeEcran: { type: 'revelation', titre: '', lignes: [REPRISE] } },
   ],
   [
     'une formule de référence',

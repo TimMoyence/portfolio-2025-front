@@ -41,10 +41,8 @@ function colonnesACorrigerDe(ecran: EcranDeroule): readonly string[] {
 }
 
 const LIBELLES_DE_PHASE: Readonly<Record<VotePhase, string>> = {
-  vote: $localize`:@@panneauActivitePhaseVote:Vote individuel`,
-  discussion: $localize`:@@panneauActivitePhaseDiscussion:Discussion entre voisins`,
-  revote: $localize`:@@panneauActivitePhaseRevote:Deuxième question`,
-  revele: $localize`:@@panneauActivitePhaseRevele:Révélation`,
+  'question-1': $localize`:@@panneauActivitePhaseQuestion1:Question 1`,
+  'question-2': $localize`:@@panneauActivitePhaseQuestion2:Question 2`,
 };
 
 interface LigneDeCle extends Decompte {
@@ -104,7 +102,7 @@ interface LigneDEnigme extends ProgressionEnigme {
   template: `
     @if (phaseCourante(); as courante) {
       <section class="activite-section" data-testid="activite-phase">
-        <h3 i18n="@@panneauActivitePhaseTitre">Instruction par les pairs</h3>
+        <h3 i18n="@@panneauActiviteVoteTitre">Vote à deux questions</h3>
         <p>
           <span i18n="@@panneauActivitePhaseCourante">Phase en cours :</span>&ngsp;
           <strong data-testid="activite-phase-courante">{{ libelleDe(courante) }}</strong>
@@ -115,7 +113,7 @@ interface LigneDEnigme extends ProgressionEnigme {
             class="control-btn"
             data-testid="activite-phase-suivante"
             [disabled]="pilotageBloque()"
-            (click)="passerA(suivante)"
+            (click)="piloter({ phase: suivante })"
           >
             <span i18n="@@panneauActivitePasserA">Passer à :</span> {{ libelleDe(suivante) }}
           </button>
@@ -374,14 +372,6 @@ interface LigneDEnigme extends ProgressionEnigme {
         </table>
       </section>
     }
-    @if (ecran().type === 'fp-exit') {
-      <section class="activite-section" data-testid="activite-billets">
-        <h3 i18n="@@panneauActiviteBilletsTitre">Billets de sortie</h3>
-        <p data-testid="activite-billets-recus" i18n="@@panneauActiviteBilletsRecus">
-          {{ billetsRecus() }} billets reçus / {{ participants() }} participants
-        </p>
-      </section>
-    }
   `,
 })
 export class CoursPanneauActiviteComponent {
@@ -389,7 +379,6 @@ export class CoursPanneauActiviteComponent {
   readonly ecran = input.required<EcranDeroule>();
   readonly resultats = input<ResultatsDuFlux | null>(null);
   readonly pilotage = input<PilotageEcran>({});
-  readonly participants = input(0);
   readonly sessionId = input<string | null>(null);
   readonly pilotageBloque = input(false);
   readonly corrigeAilleurs = input(false);
@@ -438,7 +427,7 @@ export class CoursPanneauActiviteComponent {
 
   protected readonly phaseSuivante = computed<VotePhase | null>(() => {
     const courante = this.phaseCourante();
-    return courante === null
+    return courante === null || this.pilotage().revele === true
       ? null
       : (PHASES_DE_VOTE[PHASES_DE_VOTE.indexOf(courante) + 1] ?? null);
   });
@@ -483,21 +472,8 @@ export class CoursPanneauActiviteComponent {
       }));
   });
 
-  protected readonly billetsRecus = computed(() => {
-    const [billetId] = this.identifiants();
-    return deLaQuestion(this.resultats()?.questions, billetId)?.total ?? 0;
-  });
-
   protected libelleDe(phase: VotePhase): string {
     return LIBELLES_DE_PHASE[phase];
-  }
-
-  protected passerA(phase: VotePhase): void {
-    if (phase === 'revele') {
-      this.reveler();
-    } else {
-      this.piloter({ phase });
-    }
   }
 
   protected reveler(): void {
@@ -528,7 +504,7 @@ export class CoursPanneauActiviteComponent {
     }
   }
 
-  private piloter(patch: PilotageEcran): void {
+  protected piloter(patch: PilotageEcran): void {
     this.commande.emit({ screenId: this.ecran().id, ...patch });
   }
 }

@@ -1,4 +1,4 @@
-import type { VotePhase } from '../../content/types';
+import { PHASES_DE_VOTE } from '../../content/types';
 import {
   buildVerdictDeReponse,
   buildVoteQuestion,
@@ -29,21 +29,21 @@ const QUESTION_LARGE = buildVoteQuestion({
   options: ['f', 'b', 'd', 'a', 'e', 'c'].map((id) => ({ id, libelle: `option ${id}` })),
 });
 
-const REVELATION = {
-  type: 'revelation',
-  titre: 'Ce que montre le cas jumeau',
-  lignes: ['Le capital double, la valeur acquise double.'],
-};
+const BONNE_REPONSE = { cible: '1 480,24 €', optionId: 'b' };
+
+function corrigeDe(reponses: Readonly<Record<string, unknown>>): unknown {
+  return { type: 'reponses', reponses };
+}
+
+const CORRIGE_DU_VOTE = corrigeDe({
+  [QUESTION.id]: BONNE_REPONSE,
+  [JUMELLE.id]: { cible: '2 960,49 €', optionId: 'j-b' },
+});
 
 const DELAI_CLIC_MS = 300;
 const ID_JE_NE_SAIS_PAS = '__je_ne_sais_pas__';
 const RESULTATS = { total: 12, parOption: { a: 7, b: 4, c: 1 } };
-const PHASES: Readonly<Record<VotePhase, VotePhase>> = {
-  vote: 'vote',
-  discussion: 'discussion',
-  revote: 'revote',
-  revele: 'revele',
-};
+const RESULTATS_JUMELLE = { total: 10, parOption: { 'j-a': 2, 'j-b': 8 } };
 
 function ordreAffiche(element: FpVote): string[] {
   return [...(element.shadowRoot?.querySelectorAll('[data-testid="option"]') ?? [])].map(
@@ -61,10 +61,6 @@ function legende(element: FpVote): string {
 
 function marque(element: FpVote, nom: string): Element | null {
   return element.shadowRoot?.querySelector(`[data-testid="${nom}"]`) ?? null;
-}
-
-function voteProjete(histogramme: Element): string | null {
-  return histogramme.getAttribute('data-vote');
 }
 
 function mesurerDuree(lectureMs: number, rendus: number, reculMs = 0): number | undefined {
@@ -277,7 +273,7 @@ describe('FpVote', () => {
     it(`Q1 · au role ${role}, marque en vert la bonne option sans encadre qui la repete`, () => {
       hote.setAttribute('data-cours-role', role);
 
-      hote.corrige = { type: 'cible', cible: '1 480,24 €', optionId: 'b' };
+      hote.corrige = corrigeDe({ [QUESTION.id]: BONNE_REPONSE });
 
       expect(marque(hote, 'bonne-reponse')).toBeNull();
       expect(
@@ -289,10 +285,23 @@ describe('FpVote', () => {
     });
   }
 
+  it('M3 · revele au presentateur un vote simple : sa seule question, sa bonne option en vert et son histogramme', () => {
+    presenter();
+    hote.resultats = RESULTATS;
+
+    hote.corrige = corrigeDe({ [QUESTION.id]: BONNE_REPONSE });
+
+    expect(hote.shadowRoot?.querySelectorAll('legend').length).toBe(1);
+    expect(noeudsOmbre(hote, 'histogramme').length).toBe(1);
+    expect(
+      hote.shadowRoot?.querySelector('[data-option="b"]')?.getAttribute('data-correction'),
+    ).toBe('juste');
+  });
+
   it('marque comme fausse l option choisie par l etudiant quand ce n est pas la bonne', () => {
     options(hote)[0].click();
 
-    hote.corrige = { type: 'cible', cible: '1 480,24 €', optionId: 'b' };
+    hote.corrige = corrigeDe({ [QUESTION.id]: BONNE_REPONSE });
 
     attendreLaSeuleOptionFausse(hote, 'a', 'c');
   });
@@ -300,42 +309,54 @@ describe('FpVote', () => {
   it('Q1 · sans option a marquer, l encadre porte seul la bonne reponse', () => {
     expect(marque(hote, 'bonne-reponse')).toBeNull();
 
-    hote.corrige = { type: 'cible', cible: '1 480,24 €' };
+    hote.corrige = corrigeDe({ [QUESTION.id]: { cible: BONNE_REPONSE.cible } });
 
     expect(marque(hote, 'bonne-reponse')?.textContent).toContain('1 480,24 €');
     expect(marque(hote, 'bonne-reponse')?.getAttribute('data-etat')).toBe('confirme');
     expect(hote.shadowRoot?.querySelector('[data-correction]')).toBeNull();
   });
 
-  describe('instruction par les pairs', () => {
+  describe('vote a deux questions', () => {
     beforeEach(() => {
       hote.questionJumelle = JUMELLE;
     });
 
-    it('fait voter sur la principale en phase vote, sans montrer la jumelle', () => {
-      hote.phase = 'vote';
+    function legendes(): (string | undefined)[] {
+      return [...(hote.shadowRoot?.querySelectorAll('legend') ?? [])].map((element) =>
+        element.textContent?.trim(),
+      );
+    }
 
-      expect(legende(hote)).toBe(QUESTION.enonce);
+    function optionsJustes(): (string | undefined)[] {
+      return options(hote)
+        .filter((option) => option.getAttribute('data-correction') === 'juste')
+        .map((option) => option.dataset['option']);
+    }
+
+    it('fait voter sur la question 1, sans montrer la question 2', () => {
+      hote.phase = 'question-1';
+
+      expect(legendes()).toEqual([QUESTION.enonce]);
       expect(hote.shadowRoot?.innerHTML).not.toContain(JUMELLE.enonce);
     });
 
     it('F-29 · affiche la question que le back sert, sans la deduire de la phase', () => {
-      hote.phase = 'revote';
+      hote.phase = 'question-2';
       hote.questionAffichee = QUESTION.id;
 
       expect(legende(hote)).toBe(QUESTION.enonce);
 
-      hote.phase = 'vote';
+      hote.phase = 'question-1';
       hote.questionAffichee = JUMELLE.id;
 
       expect(legende(hote)).toBe(JUMELLE.enonce);
     });
 
-    it('Q2 · n annonce ni le vote ni le revote, et ne titre aucun des deux histogrammes', () => {
+    it('Q2 · n annonce aucune phase et ne titre aucun histogramme', () => {
       const rendus: string[] = [];
       for (const [phase, affichee] of [
-        ['vote', QUESTION],
-        ['revote', JUMELLE],
+        ['question-1', QUESTION],
+        ['question-2', JUMELLE],
       ] as const) {
         hote.phase = phase;
         hote.questionAffichee = affichee.id;
@@ -350,6 +371,8 @@ describe('FpVote', () => {
         'sans en parler',
         'Première question',
         'Deuxième question',
+        'Discutez avec votre voisin',
+        'Réponse révélée',
       ]) {
         expect(rendus.join('')).not.toContain(phrase);
       }
@@ -358,7 +381,7 @@ describe('FpVote', () => {
       ).toBe(0);
     });
 
-    for (const phase of Object.values(PHASES)) {
+    for (const phase of PHASES_DE_VOTE) {
       it(`marque la phase ${phase} sur la carte du vote, que le banc lit`, () => {
         hote.phase = phase;
 
@@ -366,22 +389,15 @@ describe('FpVote', () => {
       });
     }
 
-    it('ferme le vote pendant la discussion', () => {
-      hote.phase = 'discussion';
-
-      expect(options(hote).every((bouton) => bouton.disabled)).toBeTrue();
-      expect(marque(hote, 'phase')?.textContent).toContain('Discutez avec votre voisin');
-    });
-
-    it('ouvre la jumelle en revote, meme apres un vote sur la principale', () => {
-      hote.phase = 'vote';
+    it('ouvre la question 2, meme apres un vote sur la question 1', () => {
+      hote.phase = 'question-1';
       options(hote)[0].click();
       const emis: string[] = [];
       hote.addEventListener('fp-vote-submit', (event) =>
         emis.push((event as CustomEvent).detail.questionId),
       );
 
-      hote.phase = 'revote';
+      hote.phase = 'question-2';
       hote.questionAffichee = JUMELLE.id;
 
       expect(legende(hote)).toBe(JUMELLE.enonce);
@@ -393,32 +409,33 @@ describe('FpVote', () => {
     it('n emet rien quand l hote change la phase', () => {
       const emis: string[] = [];
       hote.addEventListener('fp-vote-phase', () => emis.push('phase'));
-      hote.phase = 'discussion';
-      hote.phase = 'revote';
+      hote.phase = 'question-1';
+      hote.phase = 'question-2';
       expect(emis).toEqual([]);
     });
 
-    it('QA-12 · ne montre aucun verdict tant que le serveur le retient, puis celui qu il sert a la revelation', () => {
-      hote.phase = 'vote';
+    it('QA-12 · ne montre aucun verdict tant que le serveur le retient, puis ceux qu il sert a la revelation', () => {
+      hote.phase = 'question-1';
       options(hote)[0].click();
 
       expect(marque(hote, 'verdict')).toBeNull();
       expect(options(hote).every((bouton) => bouton.disabled)).toBeTrue();
 
-      hote.phase = 'revele';
-      hote.questionAffichee = JUMELLE.id;
+      hote.corrige = CORRIGE_DU_VOTE;
       hote.verdicts = [
         buildVerdictDeReponse({ questionId: QUESTION.id }),
         buildVerdictDeReponse({ questionId: JUMELLE.id, correcte: true, libelleConfusion: null }),
       ];
 
-      expect(marque(hote, 'verdict')?.getAttribute('data-etat')).toBe('confirme');
+      expect(
+        noeudsOmbre(hote, 'verdict').map((verdict) => verdict.getAttribute('data-etat')),
+      ).toEqual(['a-revoir', 'confirme']);
     });
 
-    for (const phase of [null, ...Object.values(PHASES)]) {
+    for (const phase of [null, ...PHASES_DE_VOTE]) {
       it(`QA-12 · montre en phase ${phase} le verdict que le serveur a servi : le retenir revient au serveur seul`, () => {
         hote.phase = phase;
-        const question = phase === 'revote' || phase === 'revele' ? JUMELLE : QUESTION;
+        const question = phase === 'question-2' ? JUMELLE : QUESTION;
         hote.questionAffichee = question.id;
         hote.verdicts = [buildVerdictDeReponse({ questionId: question.id })];
 
@@ -426,60 +443,81 @@ describe('FpVote', () => {
       });
     }
 
-    it('QA-01 · au presentateur, un vote jumele clos avant le revote projette son seul premier vote, sans le comparer a lui-meme', () => {
+    it('QA-01 · au presentateur, un vote clos avant la question 2 projette le seul histogramme de la question 1', () => {
       presenter();
-      hote.resultatsPremierVote = RESULTATS;
       hote.resultats = RESULTATS;
-      hote.phase = 'vote';
+      hote.phase = 'question-1';
       hote.cloture = true;
 
       const histogrammes = noeudsOmbre(hote, 'histogramme');
-      expect(histogrammes.map(voteProjete)).toEqual([null]);
+      expect(histogrammes.length).toBe(1);
       expect(histogrammes[0].textContent).toContain('58\u00a0%');
     });
 
-    it('au presentateur, ne montre l histogramme qu en phase revele', () => {
+    it('au presentateur, ne montre les histogrammes qu a la revelation', () => {
       presenter();
-      hote.resultats = RESULTATS;
-      hote.phase = 'revote';
+      hote.resultatsJumelle = RESULTATS_JUMELLE;
+      hote.phase = 'question-2';
       hote.questionAffichee = JUMELLE.id;
 
       expect(marque(hote, 'histogramme')).toBeNull();
-      expect(marque(hote, 'decompte')?.textContent).toContain('12');
+      expect(marque(hote, 'decompte')?.textContent).toContain('10');
 
-      hote.phase = 'revele';
+      hote.corrige = CORRIGE_DU_VOTE;
 
-      expect(marque(hote, 'histogramme')).not.toBeNull();
+      expect(noeudsOmbre(hote, 'histogramme').length).toBe(2);
     });
 
-    it('RET-20 · projette les resultats du premier vote pendant la discussion, sans la bonne reponse tant que le corrige n est pas pose', () => {
+    for (const role of ['etudiant', 'presentateur'] as const) {
+      for (const [phase, affichee] of [
+        ['question-1', QUESTION],
+        ['question-2', JUMELLE],
+      ] as const) {
+        it(`M3 · revele en ${phase}, affiche au role ${role} les deux questions, chacune avec sa bonne option en vert`, () => {
+          hote.setAttribute('data-cours-role', role);
+          hote.phase = phase;
+          hote.questionAffichee = affichee.id;
+
+          hote.corrige = CORRIGE_DU_VOTE;
+
+          expect(legendes()).toEqual([QUESTION.enonce, JUMELLE.enonce]);
+          expect(optionsJustes()).toEqual(['b', 'j-b']);
+          expect(options(hote).every((bouton) => bouton.disabled)).toBeTrue();
+          expect(marque(hote, 'bonne-reponse')).toBeNull();
+          expect(marque(hote, 'revelation')).toBeNull();
+        });
+      }
+    }
+
+    it('M3 · au presentateur, projette a la revelation l histogramme de chaque question, vide sans reponse', () => {
       presenter();
       hote.resultats = RESULTATS;
-      hote.phase = 'discussion';
 
-      const histogramme = marque(hote, 'histogramme');
-      expect(histogramme?.getAttribute('data-vote')).toBe('premier');
-      expect(histogramme?.querySelectorAll('[data-testid="barre"]').length).toBe(4);
-      expect(marque(hote, 'bonne-reponse')).toBeNull();
+      hote.corrige = CORRIGE_DU_VOTE;
+
+      const histogrammes = noeudsOmbre(hote, 'histogramme');
+      expect(histogrammes.length).toBe(2);
+      expect(histogrammes[0].textContent).toContain('58 %');
+      expect(histogrammes[1].querySelectorAll('[data-testid="barre"]').length).toBe(0);
     });
 
     function revelerLaJumelle(): void {
-      hote.resultats = { total: 10, parOption: { 'j-a': 2, 'j-b': 8 } };
-      hote.phase = 'revele';
+      hote.resultatsJumelle = RESULTATS_JUMELLE;
+      hote.phase = 'question-2';
       hote.questionAffichee = JUMELLE.id;
+      hote.corrige = CORRIGE_DU_VOTE;
     }
 
     function projeterLesDeuxVotesReveles(): void {
       presenter();
-      hote.resultatsPremierVote = RESULTATS;
+      hote.resultats = RESULTATS;
       revelerLaJumelle();
     }
 
-    it('RET-20 · projette cote a cote les deux votes une fois la reponse revelee', () => {
+    it('RET-20 · projette les deux votes une fois la reponse revelee', () => {
       projeterLesDeuxVotesReveles();
 
       const histogrammes = noeudsOmbre(hote, 'histogramme');
-      expect(histogrammes.map(voteProjete)).toEqual(['premier', 'second']);
       expect(histogrammes[0].textContent).toContain('58\u00a0%');
       expect(histogrammes[1].textContent).toContain('80\u00a0%');
     });
@@ -519,48 +557,13 @@ describe('FpVote', () => {
       }
     });
 
-    for (const role of ['etudiant', 'presentateur'] as const) {
-      it(`montre la revelation au role ${role} des que le corrige est pose, quelle que soit la phase`, () => {
-        hote.setAttribute('data-cours-role', role);
-        hote.phase = 'vote';
-        expect(marque(hote, 'revelation')).toBeNull();
-
-        hote.corrige = REVELATION;
-
-        expect(marque(hote, 'revelation')?.textContent).toContain('Le capital double');
-      });
-    }
-
-    it('ne montre pas une revelation dont le titre n est pas un texte', () => {
-      hote.setAttribute('data-cours-role', 'etudiant');
-      hote.phase = 'vote';
-
-      hote.corrige = { ...REVELATION, titre: 12 };
-
-      expect(marque(hote, 'revelation')).toBeNull();
-    });
-
-    function revelerAuPresentateur(optionId: unknown): string | null | undefined {
-      presenter();
-      hote.phase = 'revele';
-      hote.questionAffichee = JUMELLE.id;
-      hote.corrige = { ...REVELATION, optionId };
-      return marque(hote, 'revelation')?.textContent;
-    }
-
-    it('Q1 · au presentateur, marque en vert la bonne option sous l encadre, sans autre correction', () => {
-      expect(revelerAuPresentateur('j-b')).toContain('Le capital double');
-      expect(
-        options(hote)
-          .filter((option) => option.getAttribute('data-correction') === 'juste')
-          .map((option) => option.dataset['option']),
-      ).toEqual(['j-b']);
-      expect(marque(hote, 'bonne-reponse')).toBeNull();
-    });
-
     it('Q1 · ne marque aucune option quand l option revelee n est pas un texte', () => {
-      expect(revelerAuPresentateur(7)).toContain('Le capital double');
+      presenter();
+
+      hote.corrige = corrigeDe({ [QUESTION.id]: { cible: BONNE_REPONSE.cible, optionId: 7 } });
+
       expect(options(hote).filter((option) => option.hasAttribute('data-correction'))).toEqual([]);
+      expect(marque(hote, 'bonne-reponse')?.textContent).toContain(BONNE_REPONSE.cible);
     });
   });
 
@@ -580,7 +583,7 @@ describe('FpVote', () => {
 
   it('ignore une cle html ou un nom d etudiant inconnu dans resultats.parOption', () => {
     presenter();
-    hote.phase = 'revele';
+    hote.cloture = true;
     const cleMalicieuse = '<img src=x onerror="alert(1)">';
     hote.resultats = {
       total: 14,
@@ -594,7 +597,7 @@ describe('FpVote', () => {
 
   it('donne a chaque barre une largeur qui reflete sa proportion', () => {
     presenter();
-    hote.phase = 'revele';
+    hote.cloture = true;
     hote.resultats = RESULTATS;
     const largeurs = new Map(
       [...(hote.shadowRoot?.querySelectorAll<HTMLElement>('[data-testid="barre"]') ?? [])].map(
@@ -611,7 +614,7 @@ describe('FpVote', () => {
 
   it('etiquette chaque barre avec le libelle de son option', () => {
     presenter();
-    hote.phase = 'revele';
+    hote.cloture = true;
     hote.resultats = { total: 12, parOption: { a: 7, b: 4, [ID_JE_NE_SAIS_PAS]: 1 } };
     const libelles = [
       ...(hote.shadowRoot?.querySelectorAll('[data-testid="barre-libelle"]') ?? []),
@@ -623,7 +626,7 @@ describe('FpVote', () => {
     hote.style.display = 'block';
     hote.style.width = '600px';
     presenter();
-    hote.phase = 'revele';
+    hote.cloture = true;
     hote.question = buildVoteQuestion({
       id: 'Q-RAIL-01',
       options: [
@@ -643,9 +646,10 @@ describe('FpVote', () => {
   it('toute classe fp emise par la brique porte une regle dans la feuille', () => {
     hote.setAttribute('data-cours-role', 'presentateur');
     hote.questionJumelle = JUMELLE;
-    hote.phase = 'revele';
-    hote.corrige = REVELATION;
+    hote.phase = 'question-2';
+    hote.corrige = CORRIGE_DU_VOTE;
     hote.resultats = RESULTATS;
+    hote.resultatsJumelle = RESULTATS_JUMELLE;
     hote.verdicts = [buildVerdictDeReponse({ questionId: JUMELLE.id })];
     expect(classesOrphelines(hote, 'vote')).toEqual([]);
   });

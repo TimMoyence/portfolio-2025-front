@@ -37,7 +37,7 @@ async function comptesDesColonnes(
 }
 
 decrireLeMontageDeLInstantane('B3-01', INSTANTANE_B3_01, {
-  ecrans: 38,
+  ecrans: 36,
   publicsAuCatalogue: [
     'A1-02-COURRIEL',
     'A1-03-CARTE',
@@ -55,7 +55,7 @@ decrireLeMontageDeLInstantane('B3-01', INSTANTANE_B3_01, {
     'A3-11-FICHE-MEMO',
   ],
   textesAuPupitre: [
-    { ecran: 'B3-01-A1-02-COURRIEL', textes: ['Nadia Ferrand', 'Données fictives'] },
+    { ecran: 'B3-01-A1-02-COURRIEL', textes: ['Nadia Ferrand'] },
     { ecran: 'B3-01-A1-10-COURS-GRILLE', textes: ['Faux ou suspect', 'La grille 2 × 2'] },
     { ecran: 'B3-01-A2-09-COURS-TCD', textes: ['T_Commandes'] },
     { ecran: 'B3-01-A3-01-GRAPHIQUE-TROMPEUR', textes: ['Rennes', 'Nantes'] },

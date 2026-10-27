@@ -22,7 +22,6 @@ import type {
   Concept4Definition,
   DonneesParBrique,
   EscapeParcoursPublic,
-  ExitBilletPublic,
   NumeriquePublic,
   OptionPublique,
   PlotDefinition,
@@ -39,7 +38,6 @@ import type { ResultatsDuFlux } from '../../../../cours/runtime/core/sync';
 import {
   COLONNE_COEFFICIENT_TOILE,
   buildConcept4Definition,
-  buildExitBillet,
   buildProCas,
   buildPulseSondage,
   buildTableauEvalue,
@@ -87,7 +85,7 @@ const PRODUCTION = {
   cellules: { B5: '=SOMME(B2:B4)', E2: '=C2/$C$5' },
 } satisfies ValeurProduction;
 
-const PILOTAGE = { phase: 'revote' } satisfies PilotageEcran;
+const PILOTAGE = { phase: 'question-2' } satisfies PilotageEcran;
 
 const JALON = { perdu: 3, 'ca-va': 12, clair: 9, total: 24 } satisfies ComptesJalon;
 
@@ -221,7 +219,7 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
           type: 'defi',
           strategies: [{ id: 'somme-des-taux', libelle: 'Additionner les taux', fausse: true }],
         },
-        { type: 'revelation', titre: 'Hausse puis baisse', lignes: ['1,2 × 0,8 = 0,96'] },
+        { type: 'reflexion', attendu: 'Hausse puis baisse', suite: '1,2 × 0,8 = 0,96' },
       ] satisfies CorrigeEcranPresentateur[];
       const diffusions: Diffusion[] = ['catalogue', 'seance'];
       const ecran = buildEcranDeroule({
@@ -238,13 +236,13 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
         'classement',
         'enigmes',
         'defi',
-        'revelation',
+        'reflexion',
       ]);
       expect(deroule.ecrans[0].corrigeEcran?.type).toBe('feuille');
     });
 
     it('restitue au participant ses seules données de séance', () => {
-      const phases: VotePhase[] = ['vote', 'discussion', 'revote', 'revele'];
+      const phases: VotePhase[] = ['question-1', 'question-2'];
       const moi = {
         sessionId: '0f6c1e02-6d0f-4a4b-8f6e-0c2f1e5b7a10',
         participantId: '9b1d0c3e-6d0f-4a4b-8f6e-0c2f1e5b7a10',
@@ -380,7 +378,6 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
         unite: '%',
         metadonnees: METADONNEES,
       };
-      const billet: ExitBilletPublic = buildExitBillet();
       const exemple: WorkedExemple = buildWorkedExemple();
       const concept4: Concept4Definition = buildConcept4Definition();
       const sondage: PulseSondage = buildPulseSondage();
@@ -410,7 +407,6 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
         'fp-numeric': { question: numerique },
         'fp-vote': { question: VOTE, questionJumelle: VOTE },
         'fp-recall': { question: { ...VOTE, metadonnees: METADONNEES }, delaiMs: 45000 },
-        'fp-exit': { billet },
         questionnaire: {
           intitule: 'Atelier 1 — Comparer sans tromper',
           consigne: 'Répondez seul, sans vos notes.',
