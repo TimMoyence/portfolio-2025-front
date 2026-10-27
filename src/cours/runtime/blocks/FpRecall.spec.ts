@@ -370,15 +370,17 @@ describe('FpRecall', () => {
   });
 
   for (const role of ROLES_DE_MONTAGE) {
-    it(`revele au role ${role} la bonne reponse et marque la bonne option quand le corrige est pose`, () => {
+    it(`Q1 · au role ${role}, l encadre porte la bonne reponse tant que les options sont masquees, puis la bonne option verte le remplace`, () => {
       hote.setAttribute('data-cours-role', role);
-      jasmine.clock().tick(DELAI_DEFAUT_MS);
-      expect(noeudOmbre(hote, 'bonne-reponse')).toBeNull();
-
       hote.corrige = CORRIGE;
 
+      expect(noeudOmbre(hote, 'options')).toBeNull();
       expect(texteOmbre(hote, 'bonne-reponse')).toContain(LIBELLE_PREMIERE);
+
+      jasmine.clock().tick(DELAI_DEFAUT_MS);
+
       expect(attributDOption(hote, 'a', 'data-correction')).toBe('juste');
+      expect(noeudOmbre(hote, 'bonne-reponse')).toBeNull();
     });
   }
 

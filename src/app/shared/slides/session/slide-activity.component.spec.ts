@@ -446,15 +446,19 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
     revelerAuPoste(poste, {
       questions: [CIBLE_VA_07, { questionId: 'Q-CAP-03', cible: '1 480,24 €', optionId: 'b' }],
     });
-    await attendreQue(fixture, () => noeudOmbre(vote, 'bonne-reponse') !== null, 'la correction');
+    await attendreQue(
+      fixture,
+      () => attributDOption(vote, 'b', 'data-correction') === 'juste',
+      'la correction',
+    );
 
     expect(await brique(fixture, 'fp-vote')).toBe(vote);
     attendreLeCorrigeDuQuestionnaire(vote, numerique);
   });
 
   function attendreLeCorrigeDuQuestionnaire(vote: HTMLElement, numerique: HTMLElement): void {
-    expect(noeudOmbre(vote, 'bonne-reponse')?.textContent).toContain('1 480,24 €');
     expect(attributDOption(vote, 'b', 'data-correction')).toBe('juste');
+    expect(noeudOmbre(vote, 'bonne-reponse')).toBeNull();
     expect(noeudOmbre(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
   }
 

@@ -23,4 +23,4 @@ Front Angular 19 du portfolio (SSR, prerender, fr/en). Les règles transverses s
 ## GitNexus
 
 - Index local dans `.gitnexus/`, absent des worktrees : `node .gitnexus/run.cjs analyze --index-only` le rafraîchit (`npx gitnexus analyze --index-only` s'il manque). Toujours `--index-only` : sans lui, `analyze` réinjecte un bloc généré dans ce fichier et dans `CLAUDE.md`.
-- Usage par les skills `.claude/skills/gitnexus-*`. Un `risk: UNKNOWN` ou zéro appelant n'est pas un feu vert : il se confirme par `git grep`.
+- Usage par les skills `gitnexus-*` du plugin `atelier@outillage` ; la livraison passe par sa skill `livrer`. Un `risk: UNKNOWN` ou zéro appelant n'est pas un feu vert : il se confirme par `git grep`.
