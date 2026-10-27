@@ -12,6 +12,7 @@ import {
 import { chaineDe, estMembre, estObjet, memeIdentifiant, part } from '../core/valeurs';
 import {
   bonneReponseRevelee,
+  bonneReponseSansOptionMarquee,
   lireBonneOption,
   lireBonneReponse,
   marqueDOption,
@@ -180,7 +181,7 @@ export class FpVote extends FpVerdicts {
         </div>
       </fieldset>
       ${this.presentateur() ? this.suiviProjete(question) : this.suiviEtudiant(question)}
-      ${bonneReponseRevelee(this.texte('bonne-reponse'), this.bonneReponse)}${this.revelationRevelee()}
+      ${bonneReponseRevelee(this.texte('bonne-reponse'), bonneReponseSansOptionMarquee(this.bonneReponse, this.bonneOption, proposees))}${this.revelationRevelee()}
     </div>`;
   }
 

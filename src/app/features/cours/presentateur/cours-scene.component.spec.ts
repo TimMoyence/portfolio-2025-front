@@ -454,11 +454,12 @@ describe('CoursSceneComponent', () => {
       pilotage: { 'ecran-vote': { revele: true } },
     });
     const vote = await briqueMontee(fixture, 'fp-vote');
-    const bonneReponse = (): string | null | undefined =>
-      vote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]')?.textContent;
-    await attendreQue(fixture, () => bonneReponse() != null, 'la bonne réponse dans le vote');
+    const bonneOption = (): string | null | undefined =>
+      vote.shadowRoot?.querySelector('[data-option="b"]')?.getAttribute('data-correction');
+    await attendreQue(fixture, () => bonneOption() != null, 'la bonne option dans le vote');
 
-    expect(bonneReponse()).toContain('1 480,24');
+    expect(bonneOption()).toBe('juste');
+    expect(vote.shadowRoot?.querySelector('[data-testid="bonne-reponse"]')).toBeNull();
     expect(bandeauDeLaToile(fixture)).toBeUndefined();
   });
 

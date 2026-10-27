@@ -9,7 +9,13 @@ import {
   copierLeSocle,
   projeterOptions,
 } from './projection';
-import { bonneReponseRevelee, lireBonneOption, lireBonneReponse, marqueDOption } from './retours';
+import {
+  bonneReponseRevelee,
+  bonneReponseSansOptionMarquee,
+  lireBonneOption,
+  lireBonneReponse,
+  marqueDOption,
+} from './retours';
 
 export interface RecallQuestionPublique extends ContenuDeBrique {
   readonly enonce: string;
@@ -115,6 +121,7 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
         ? VIDE
         : safeHtml`<textarea class="fp-recall__champ" data-testid="rappel" rows="4" aria-label="${escapeHtml(this.texte('rappel-champ'))}">${escapeHtml(this.rappel)}</textarea>`;
     const suivi = this.presentateur() ? VIDE : this.suiviDeLEnvoi();
+    const proposees = this.proposees();
     return safeHtml`
       <fieldset class="fp-carte fp-recall__billet">
         <legend class="fp-enonce">${escapeHtml(question.enonce)}</legend>
@@ -122,9 +129,9 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
           ${this.consigneRendue(ecritAvantLesOptions)}
           ${saisie}
           ${ecritAvantLesOptions ? this.compteur() : VIDE}
-          ${this.optionsVisibles()}
+          ${this.optionsVisibles(proposees)}
           ${suivi}
-          ${bonneReponseRevelee(this.texte('bonne-reponse'), this.bonneReponse)}
+          ${bonneReponseRevelee(this.texte('bonne-reponse'), bonneReponseSansOptionMarquee(this.bonneReponse, this.bonneOption, proposees))}
         </div>
       </fieldset>
     `;
@@ -183,12 +190,18 @@ export class FpRecall extends FpReponse<RecallQuestionPublique> {
     return safeHtml`<p class="fp-recall__compte" aria-live="polite" data-testid="compte-a-rebours">${escapeHtml(this.annonce())}</p>`;
   }
 
-  private optionsVisibles(): EscapedHtml {
+  private proposees(): readonly OptionPublique[] {
     const question = this.question;
     if (question === null || this.restantMs() > 0) {
+      return [];
+    }
+    return this.presentateur() ? question.options : avecJeNeSaisPas(question.options);
+  }
+
+  private optionsVisibles(proposees: readonly OptionPublique[]): EscapedHtml {
+    if (proposees.length === 0) {
       return VIDE;
     }
-    const proposees = this.presentateur() ? question.options : avecJeNeSaisPas(question.options);
     const boutons = proposees.map(
       (option) =>
         safeHtml`<button type="button" class="fp-recall__option" data-testid="option" data-option="${escapeHtml(option.id)}" aria-pressed="${escapeHtml(String(option.id === this.choisie))}"${marqueDOption(option.id, this.bonneOption, option.id === this.choisie)} ${this.presentateur() ? DESACTIVE : VIDE}>${escapeHtml(option.libelle)}</button>`,

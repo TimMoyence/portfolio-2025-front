@@ -8,6 +8,7 @@ import type {
 import type { FeuilleEvaluee, QuestionRevelee, TableauEvalue } from '../../content/types';
 import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
 import { chaineDe, estChaineOuNul, estObjet } from '../core/valeurs';
+import type { OptionPublique } from './projection';
 
 export interface VerdictDeReponse {
   readonly questionId: string;
@@ -107,6 +108,14 @@ export function marqueDOption(
 }
 
 const ENCADRE_CONFIRME = safeHtml`class="fp-encadre" data-etat="confirme"`;
+
+export function bonneReponseSansOptionMarquee(
+  bonneReponse: string | null,
+  bonneOption: string | null,
+  affichees: readonly OptionPublique[],
+): string | null {
+  return affichees.some(({ id }) => id === bonneOption) ? null : bonneReponse;
+}
 
 export function bonneReponseRevelee(
   libelle: string,

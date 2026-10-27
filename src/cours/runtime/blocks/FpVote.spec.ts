@@ -274,14 +274,12 @@ describe('FpVote', () => {
   });
 
   for (const role of ['etudiant', 'presentateur'] as const) {
-    it(`revele au role ${role} la bonne reponse et marque la bonne option quand le corrige est pose`, () => {
+    it(`Q1 · au role ${role}, marque en vert la bonne option sans encadre qui la repete`, () => {
       hote.setAttribute('data-cours-role', role);
-      expect(marque(hote, 'bonne-reponse')).toBeNull();
 
       hote.corrige = { type: 'cible', cible: '1 480,24 €', optionId: 'b' };
 
-      expect(marque(hote, 'bonne-reponse')?.textContent).toContain('1 480,24 €');
-      expect(marque(hote, 'bonne-reponse')?.getAttribute('data-etat')).toBe('confirme');
+      expect(marque(hote, 'bonne-reponse')).toBeNull();
       expect(
         hote.shadowRoot?.querySelector('[data-option="b"]')?.getAttribute('data-correction'),
       ).toBe('juste');
@@ -299,10 +297,13 @@ describe('FpVote', () => {
     attendreLaSeuleOptionFausse(hote, 'a', 'c');
   });
 
-  it('ne marque aucune option quand le corrige ne porte pas d identifiant d option', () => {
+  it('Q1 · sans option a marquer, l encadre porte seul la bonne reponse', () => {
+    expect(marque(hote, 'bonne-reponse')).toBeNull();
+
     hote.corrige = { type: 'cible', cible: '1 480,24 €' };
 
-    expect(marque(hote, 'bonne-reponse')).not.toBeNull();
+    expect(marque(hote, 'bonne-reponse')?.textContent).toContain('1 480,24 €');
+    expect(marque(hote, 'bonne-reponse')?.getAttribute('data-etat')).toBe('confirme');
     expect(hote.shadowRoot?.querySelector('[data-correction]')).toBeNull();
   });
 
