@@ -445,6 +445,83 @@ describe('FpSheet', () => {
     expect(bouton(hote, 'recopier').disabled).toBeFalse();
   });
 
+  it('B102-M4 · confie au back la recopie vers la droite, puis pose la formule qu il sert', () => {
+    const demandes = evaluations(hote);
+    saisir(hote, 'C3', MONTANT_HT);
+    cliquer(hote, 'recopier-droite');
+
+    expect(demandes).toEqual([
+      { ...demandeDe({ C3: MONTANT_HT }), recopie: { de: 'C3', sens: 'droite' } },
+    ]);
+    expect(bouton(hote, 'recopier-droite').disabled).toBeTrue();
+    expect(bouton(hote, 'recopier').disabled).toBeTrue();
+
+    repondre(hote, demandes.at(-1), { C3: HT, D3: HT_RECOPIE }, { D3: RECOPIEE });
+
+    expect(texteDe(hote, 'reference')).toBe('D3');
+    expect(barre(hote).value).toBe(RECOPIEE);
+    expect(bouton(hote, 'recopier-droite').disabled).toBeFalse();
+  });
+
+  it('B102-M6 · refuse de recopier depuis la derniere colonne, en le disant', () => {
+    const demandes = evaluations(hote);
+    saisir(hote, 'D3', MONTANT_TTC);
+    cliquer(hote, 'recopier-droite');
+
+    expect(texteDe(hote, 'retour')).toContain('Aucune cellule à droite');
+    expect(demandes).toEqual([]);
+  });
+
+  it('B102-M6 · dit que la voisine est imposee, sans la toucher', () => {
+    const demandes = evaluations(hote);
+    saisir(hote, 'C1', '=1');
+    cliquer(hote, 'recopier');
+
+    expect(texteDe(hote, 'retour')).toContain('La cellule voisine est imposée');
+    expect(demandes).toEqual([]);
+  });
+
+  it('B102-M5 · refuse de recopier depuis une cellule verrouillee, la voisine garde sa formule', () => {
+    const demandes = evaluations(hote);
+    saisir(hote, 'C3', MONTANT_HT);
+    selectionner(hote, 'B3');
+    cliquer(hote, 'recopier-droite');
+
+    expect(texteDe(hote, 'retour')).toContain('Choisissez une cellule qui contient votre formule');
+    expect(formuleDe(hote, 'C3')).toBe(MONTANT_HT);
+    expect(demandes.filter((demande) => demande['recopie'] !== undefined)).toEqual([]);
+  });
+
+  it('B102-M5 · une source verrouillee dont la voisine est imposee dit de choisir sa formule', () => {
+    const demandes = evaluations(hote);
+    selectionner(hote, 'B3');
+    cliquer(hote, 'recopier');
+
+    expect(texteDe(hote, 'retour')).toContain('Choisissez une cellule qui contient votre formule');
+    expect(demandes).toEqual([]);
+  });
+
+  it('B102-M5 · refuse de recopier depuis une cellule vide, dans les deux sens', () => {
+    const demandes = evaluations(hote);
+    selectionner(hote, 'C4');
+
+    for (const sens of ['recopier', 'recopier-droite']) {
+      cliquer(hote, sens);
+
+      expect(texteDe(hote, 'retour')).toContain(
+        'Choisissez une cellule qui contient votre formule',
+      );
+    }
+    expect(demandes).toEqual([]);
+  });
+
+  it('B102-M6 · nomme l absence de voisine avant la cellule vide', () => {
+    selectionner(hote, 'D4');
+    cliquer(hote, 'recopier-droite');
+
+    expect(texteDe(hote, 'retour')).toContain('Aucune cellule à droite');
+  });
+
   it('F-36 · differe pendant une recopie l evaluation d une autre cellule, sans perdre ni l une ni l autre', () => {
     const demandes = evaluations(hote);
     saisir(hote, 'C3', MONTANT_HT);

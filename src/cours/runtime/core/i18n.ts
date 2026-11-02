@@ -106,8 +106,16 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
   'sheet-coin': () => $localize`:@@coursRuntimeSheetCoin:Cellule`,
   'sheet-cellule': () => $localize`:@@coursRuntimeSheetCellule:Cellule`,
   'sheet-recopier': () => $localize`:@@coursRuntimeSheetRecopier:Recopier vers le bas`,
+  'sheet-recopier-droite': () =>
+    $localize`:@@coursRuntimeSheetRecopierDroite:Recopier vers la droite`,
   'sheet-recopie-impossible': () =>
     $localize`:@@coursRuntimeSheetRecopieImpossible:Aucune cellule sous celle-ci : la recopie n’a rien où aller`,
+  'sheet-recopie-impossible-droite': () =>
+    $localize`:@@coursRuntimeSheetRecopieImpossibleDroite:Aucune cellule à droite de celle-ci : la recopie n’a rien où aller`,
+  'sheet-recopie-cible-imposee': () =>
+    $localize`:@@coursRuntimeSheetRecopieCibleImposee:La cellule voisine est imposée : la recopie s’arrête ici`,
+  'sheet-recopie-source': () =>
+    $localize`:@@coursRuntimeSheetRecopieSource:Choisissez une cellule qui contient votre formule`,
   'sheet-cellule-fautive': () =>
     $localize`:@@coursRuntimeSheetCelluleFautive:Formule refusée par le tableur`,
   'sheet-erreurs': () => $localize`:@@coursRuntimeSheetErreurs:Formules à revoir :`,

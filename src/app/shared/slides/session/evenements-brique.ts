@@ -1,4 +1,4 @@
-import { zSubmitAnswerRequestDto } from '../../../../../contrat/zod.gen';
+import { zRecopieDeCelluleDto, zSubmitAnswerRequestDto } from '../../../../../contrat/zod.gen';
 import { ETATS_PULSE, type ValeurProduction } from '../../../../cours/content/types';
 import { lireTextes } from '../../../../cours/runtime/blocks/retours';
 import {
@@ -174,9 +174,9 @@ function evaluationDeFeuille(screenId: string, detail: Detail): EvenementBrique[
   if (recopie === undefined) {
     return [{ ...evaluation, demande: { cellules: lireTextes(cellules) } }];
   }
-  const de = objet(recopie)?.['de'];
-  return estChaineNonVide(de)
-    ? [{ ...evaluation, demande: { cellules: lireTextes(cellules), recopie: { de } } }]
+  const lue = zRecopieDeCelluleDto.safeParse(recopie);
+  return lue.success
+    ? [{ ...evaluation, demande: { cellules: lireTextes(cellules), recopie: lue.data } }]
     : [];
 }
 

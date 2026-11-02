@@ -1720,11 +1720,20 @@ export type SubmitProductionResponseDto = {
   libelleConfusion: string | null;
 };
 
+/**
+ * Sens de la recopie, vers le bas si absent
+ */
+export type SensDeRecopie = 'bas' | 'droite';
+
 export type RecopieDeCelluleDto = {
   /**
-   * Cellule recopiee vers la cellule du dessous
+   * Cellule recopiee vers sa voisine
    */
   de: string;
+  /**
+   * Sens de la recopie, vers le bas si absent
+   */
+  sens?: SensDeRecopie;
 };
 
 export type EvaluerFeuilleRequestDto = {

@@ -98,6 +98,7 @@ describe('app routes', () => {
 
     for (const slug of [
       'b1-01-proportions-pourcentages',
+      'b1-02-evolutions-coefficients-indices',
       'b2-01-traitement-information-chiffree',
       'b2-02-series-statistiques',
       'b2-03-logique',

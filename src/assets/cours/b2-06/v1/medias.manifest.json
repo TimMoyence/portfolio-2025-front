@@ -1,0 +1,119 @@
+{
+  "cours": "b2-06",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours-b2-06-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Des puissances pour tous les nombres · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "prolonger-les-puissances.webp",
+          "octets": 201248,
+          "sha256": "8750f003ebe0f1917bfbe090035b9381e1c419d5e13b69cca905fd85c0293bf6"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-08",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Lire a et k avant de calculer · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "lire-a-et-k.webp",
+          "octets": 177410,
+          "sha256": "f034d03540d63fb16ae293de1947166bafb2ee6e69faaf0f2ec395e3c175ede8"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A2-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "ln défait l’exponentielle · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "ln-defait-l-exponentielle.webp",
+          "octets": 176892,
+          "sha256": "b8122a72c80638c72fa71a471b30d8b2ab6635997e623b9eb0731222afd18014"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A2-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "ln change × en + · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "ln-change-produit-en-somme.webp",
+          "octets": 166054,
+          "sha256": "f5482c951db4058497a6b31f0723abca137d32a004d8b1fcc78a0135d6975219"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Passer l’exposant devant · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "seuil-exposant-devant.webp",
+          "octets": 166894,
+          "sha256": "5251cdaab9b4a80a9826f6d24f296c1f119c0f8dfe92b63047c7a0405a354cfd"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "q < 1 : le sens change · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "le-sens-change.webp",
+          "octets": 181210,
+          "sha256": "0a2fd965198a82349734d9270fc21dc657150f7b75cfb03101c1f7a556dd6f25"
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "ecran": "A3-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Ajouter ou multiplier ? · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "ajouter-ou-multiplier.webp",
+          "octets": 216356,
+          "sha256": "32e674a20ad0209d34b0a98ab58bf5a82b627b810be2da856a035d8cbef18535"
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "ecran": "A3-04",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La courbe devient une droite · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "la-courbe-devient-une-droite.webp",
+          "octets": 205964,
+          "sha256": "d8f53dd75fa913cbddbe8ea61b5e1a88f8a42c6510c597e87977faac9f347327"
+        }
+      ]
+    }
+  ]
+}

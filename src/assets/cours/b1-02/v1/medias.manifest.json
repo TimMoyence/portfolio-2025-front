@@ -1,0 +1,91 @@
+{
+  "cours": "b1-02",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours-b1-02-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-06",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Multiplier, pas ajouter · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "cinema-coefficient.webp",
+          "octets": 166058,
+          "sha256": "7240b9431a6266ce67fefd2bf4114be1a5766fcc7169e9c0cc88fa20af6b1b91"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Aller : ×, retour : ÷ · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "casque-ht-ttc.webp",
+          "octets": 161330,
+          "sha256": "c4fe08cd675986327d9fa925a0af969604c0a0c39a83bc1a94a81156b6d436cb"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A2-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "+ 10 %, + 20 % : pas + 30 % · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "loyer-successives.webp",
+          "octets": 180906,
+          "sha256": "429749659fc98fda41950fe8c793d3d0be30f455049ebc4ecfb1da609e208258"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le retour n’a pas le même taux · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "velo-reciproque.webp",
+          "octets": 183716,
+          "sha256": "ee21a39fb485f012eef17ddd2389974174b21e6d30c5f5eb9e662c3c1ef08c00"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A3-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Ni un prix, ni un taux · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "ticket-indice.webp",
+          "octets": 161752,
+          "sha256": "f73b860e65413c9a65bf436c419bc178c94d4503d2f27d473b2acbdc24d7daaa"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "ecran": "A3-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La même hausse chaque année · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "epargne-taux-moyen.webp",
+          "octets": 196964,
+          "sha256": "8a5a7fea24d718b738cb928cfcfa4b16eeac49cc954028b2a1224323dfac84a7"
+        }
+      ]
+    }
+  ]
+}

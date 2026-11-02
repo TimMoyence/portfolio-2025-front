@@ -1117,8 +1117,14 @@ export const zSubmitProductionResponseDto = z.object({
   libelleConfusion: z.string().nullable(),
 });
 
+/**
+ * Sens de la recopie, vers le bas si absent
+ */
+export const zSensDeRecopie = z.enum(['bas', 'droite']);
+
 export const zRecopieDeCelluleDto = z.object({
   de: z.string().min(2).max(12),
+  sens: zSensDeRecopie.optional(),
 });
 
 export const zEvaluerFeuilleRequestDto = z.object({

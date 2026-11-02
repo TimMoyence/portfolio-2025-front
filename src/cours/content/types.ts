@@ -16,9 +16,11 @@ import type {
   PhaseDeVote,
   PilotageServiResponseDto,
   ProgressionEnigmeResponseDto,
+  RecopieDeCelluleDto,
   ResultatQuestionResponseDto,
   ResultatsSeanceResponseDto,
   ResumeBaremeResponseDto,
+  SensDeRecopie,
   StatistiquesSeanceResponseDto,
   SubmitProductionRequestDto,
   TableauEvalueResponseDto,
@@ -35,6 +37,8 @@ import {
 } from '../../../contrat/zod.gen';
 
 export type ValeurFormule = number | string | boolean;
+
+export type { RecopieDeCelluleDto, SensDeRecopie };
 
 export const TYPES_QUESTION = zTypeQuestion.options;
 export type TypeQuestion = TypeQuestionServi;
