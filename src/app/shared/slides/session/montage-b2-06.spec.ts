@@ -5,17 +5,25 @@ import {
 } from '../../../../testing/montage-d-instantane';
 
 decrireLeMontageDeLInstantane('B2-06', INSTANTANE_B2_06, {
-  ecrans: 29,
+  ecrans: 37,
   publicsAuCatalogue: [
     'A1-02-ACCROCHE',
     'A1-04-ACQUIS',
     'A1-05-DOSSIER',
+    'A1-07-ILLUSTRATION-PUISSANCES',
     'A1-07-COURS-EXPONENTIELLE',
+    'A1-08-ILLUSTRATION-MODELE',
     'A1-08-COURS-MODELE-EXP',
+    'A2-02-ILLUSTRATION-RECIPROQUE',
+    'A2-02-ILLUSTRATION-PROPRIETES',
     'A2-02-COURS-LOGARITHME',
+    'A2-03-ILLUSTRATION-SEUIL',
+    'A2-03-ILLUSTRATION-SENS',
     'A2-03-COURS-SEUIL',
     'A3-01-GRAPHIQUE',
+    'A3-03-ILLUSTRATION-MODELES',
     'A3-03-COURS-MODELE',
+    'A3-04-ILLUSTRATION-AJUSTEMENT',
     'A3-04-COURS-AJUSTEMENT',
     'A4-05-FICHE-MEMO',
   ],

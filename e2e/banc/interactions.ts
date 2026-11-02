@@ -302,13 +302,21 @@ async function evasion(zone: Locator, numero: number): Promise<void> {
 async function espace(zone: Locator, numero: number): Promise<void> {
   const bloc = zone.locator('fp-spaced');
   const termine = bloc.locator('[data-testid="termine"]');
+  const progression = bloc.locator('[data-testid="progression"]');
+  let total = 0;
   for (let tour = 0; tour < 20 && !(await termine.isVisible()); tour += 1) {
     const option = bloc.locator('[data-testid="options"] [data-testid="option"]').first();
     await expect(option.or(termine)).toBeVisible({ timeout: DELAI_DE_RETOUR_MS });
     if (await termine.isVisible()) break;
+    total = Number((await progression.textContent())?.trim().split(/\s+/).at(-1));
     await cliquerUneOption(bloc.locator('[data-testid="options"]'), numero + tour);
   }
   await expect(termine).toBeVisible({ timeout: DELAI_DE_RETOUR_MS });
+  if (total !== 0) {
+    await expect(bloc.locator('[data-testid="bilan"] [data-testid="ligne"]')).toHaveCount(total, {
+      timeout: DELAI_DE_RETOUR_MS,
+    });
+  }
 }
 
 async function parcourirLeRecit(zone: Locator, selecteur: string): Promise<void> {

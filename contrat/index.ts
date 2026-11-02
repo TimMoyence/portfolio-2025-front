@@ -457,6 +457,7 @@ export type {
   SaisieTableauDto,
   SaveFreeResponseRequestDto,
   SaveTeacherAnnotationRequestDto,
+  SensDeRecopie,
   SessionParticipantResponseDto,
   SessionParticipantsResponseDto,
   SessionResultsResponseDto,

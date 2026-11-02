@@ -83,6 +83,12 @@ export const FORMATIONS: readonly FormationCard[] = [
     duree: $localize`:@@formations-list.b1-01.duration:2 h 00`,
   }),
   coursBtsEnSeance({
+    link: '/formations/b1-02-evolutions-coefficients-indices',
+    title: $localize`:@@formations-list.b1-02.title:B1-02 — Évolutions : taux, coefficients, indices`,
+    description: $localize`:@@formations-list.b1-02.description:Passer d’un taux à un coefficient, du HT au TTC, enchaîner des évolutions, revenir au départ, lire un indice et calculer un taux moyen, puis traiter au tableur un tableau de sujet de BTS. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b1-02.duration:2 h 00`,
+  }),
+  coursBtsEnSeance({
     link: '/formations/b2-01-traitement-information-chiffree',
     title: $localize`:@@formations-list.b2.title:B2-01 — Lire et contrôler l’information chiffrée`,
     description: $localize`:@@formations-list.b2.description:Lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.`,

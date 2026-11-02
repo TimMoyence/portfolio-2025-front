@@ -18,6 +18,20 @@
       ]
     },
     {
+      "id": "B1-02-M7",
+      "ecran": "A1-02",
+      "licence": "domaine public",
+      "attribution": "William Playfair, 1822 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Chart_Showing_at_One_View_the_Price_of_the_Quarter_of_Wheat,_and_Wages_of_Labour_by_the_Week,_from_1565_to_1821.png",
+      "fichiers": [
+        {
+          "fichier": "playfair-ble-salaires-1822.jpg",
+          "octets": 222108,
+          "sha256": "87dfc5d50ba35413fe586f4cc733e0d133a9b831e1ad49fb2f55a1a1387a921d"
+        }
+      ]
+    },
+    {
       "id": "B2-02-M7",
       "ecran": "A1-02",
       "licence": "domaine public",
@@ -74,7 +88,7 @@
       ]
     },
     {
-      "id": "B2-06-M1",
+      "id": "B2-06-M9",
       "ecran": "A1-02",
       "licence": "domaine public",
       "attribution": "John Napier, Mirifici logarithmorum canonis descriptio, 1614 · Wikimedia Commons (domaine public)",

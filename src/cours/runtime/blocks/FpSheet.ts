@@ -1,4 +1,10 @@
-import type { FeuilleEvaluee, NatureDeCellule, ValeurFormule } from '../../content/types';
+import type {
+  FeuilleEvaluee,
+  NatureDeCellule,
+  RecopieDeCelluleDto,
+  SensDeRecopie,
+  ValeurFormule,
+} from '../../content/types';
 import { dansUnDefileur } from '../core/defileur';
 import {
   DESACTIVE,
@@ -43,6 +49,7 @@ type Contenus = Readonly<Record<string, string>>;
 interface Recopie {
   readonly de: string;
   readonly vers: string;
+  readonly sens: SensDeRecopie;
 }
 
 const STYLE_CELLULE = 'fp-sheet__cellule';
@@ -56,6 +63,10 @@ const TABLEAU_RESSERRE = safeHtml` fp-sheet__tableau--dense`;
 const LARGEUR_MIN_DE_COLONNE_CH = 8;
 const LARGEUR_MAX_DE_COLONNE_CH = 24;
 const SANS_EVALUATION: FeuilleEvaluee = { saisies: {}, affichages: {}, natures: {}, formules: [] };
+
+function demandeDeRecopie({ de, sens }: Recopie): RecopieDeCelluleDto {
+  return sens === 'droite' ? { de, sens } : { de };
+}
 
 function natureDUneValeur(valeur: ValeurFormule): NatureDeCellule {
   switch (typeof valeur) {
@@ -190,7 +201,7 @@ export class FpSheet extends FpProductionEvaluee<
         ${this.consignes(plan)}
         ${this.barre()}
         ${this.tableau(true)}
-        ${this.actionsDeProduction(this.boutonRecopier())}
+        ${this.actionsDeProduction(this.boutonsRecopier())}
         ${this.bilanErreurs()}
         ${this.suiviDeProduction({ justes: this.justes(), total: this.interneVerdict?.details.length ?? 0 }, this.correctionServie())}
       </section>
@@ -204,7 +215,10 @@ export class FpSheet extends FpProductionEvaluee<
     this.brancherBarre(racine.querySelector<HTMLInputElement>('[data-testid="barre"]'));
     racine
       .querySelector<HTMLButtonElement>('[data-testid="recopier"]')
-      ?.addEventListener('click', () => this.recopier());
+      ?.addEventListener('click', () => this.recopier('bas'));
+    racine
+      .querySelector<HTMLButtonElement>('[data-testid="recopier-droite"]')
+      ?.addEventListener('click', () => this.recopier('droite'));
   }
 
   protected relacherLaSaisie(): void {
@@ -232,9 +246,9 @@ export class FpSheet extends FpProductionEvaluee<
     return this.enAttente?.complement != null;
   }
 
-  private boutonRecopier(): EscapedHtml {
-    const bloque = this.verrouille() || this.recopieEnAttente();
-    return safeHtml`<button type="button" class="fp-sheet__recopier" data-testid="recopier" ${bloque ? DESACTIVE : VIDE}>${escapeHtml(this.texte('sheet-recopier'))}</button>`;
+  private boutonsRecopier(): EscapedHtml {
+    const etat = this.verrouille() || this.recopieEnAttente() ? DESACTIVE : VIDE;
+    return safeHtml`<button type="button" class="fp-sheet__recopier" data-testid="recopier" ${etat}>${escapeHtml(this.texte('sheet-recopier'))}</button><button type="button" class="fp-sheet__recopier" data-testid="recopier-droite" ${etat}>${escapeHtml(this.texte('sheet-recopier-droite'))}</button>`;
   }
 
   private brancherBarre(barre: HTMLInputElement | null): void {
@@ -266,18 +280,19 @@ export class FpSheet extends FpProductionEvaluee<
     }
     evenement.preventDefault();
     this.validerLaCellule();
-    this.selection = this.dessous(nom);
+    this.selection = this.voisine(nom, 'bas');
     this.foyer = 'cellule';
     this.message = '';
     this.refresh();
   }
 
-  private dessous(nom: string): string {
+  private voisine(nom: string, sens: SensDeRecopie): string {
     const depart = this.coordonnees(nom);
     if (depart === null) {
       return nom;
     }
-    return this.interne?.grille[depart.ligne + 1]?.[depart.colonne] ?? nom;
+    const [lignes, colonnes] = sens === 'droite' ? [0, 1] : [1, 0];
+    return this.interne?.grille[depart.ligne + lignes]?.[depart.colonne + colonnes] ?? nom;
   }
 
   private coordonnees(nom: string): { ligne: number; colonne: number } | null {
@@ -337,22 +352,33 @@ export class FpSheet extends FpProductionEvaluee<
   private demanderPour(recopie: Recopie | null): void {
     this.demanderLEvaluation(this.contenus, recopie, {
       cellules: this.saisiesDeLEtudiant(),
-      ...(recopie === null ? {} : { recopie: { de: recopie.de } }),
+      ...(recopie === null ? {} : { recopie: demandeDeRecopie(recopie) }),
     });
   }
 
-  private recopier(): void {
+  private refusDeRecopie(cible: string, sens: SensDeRecopie): string | null {
+    if (this.verrouille() || cible === this.selection) {
+      return sens === 'droite' ? 'sheet-recopie-impossible-droite' : 'sheet-recopie-impossible';
+    }
+    if (this.verrouillee(this.selection) || this.brut(this.selection).trim().length === 0) {
+      return 'sheet-recopie-source';
+    }
+    return this.verrouillee(cible) ? 'sheet-recopie-cible-imposee' : null;
+  }
+
+  private recopier(sens: SensDeRecopie): void {
     if (this.recopieEnAttente()) {
       return;
     }
-    const cible = this.dessous(this.selection);
-    if (this.verrouille() || cible === this.selection || this.verrouillee(cible)) {
-      this.message = this.texte('sheet-recopie-impossible');
+    const cible = this.voisine(this.selection, sens);
+    const refus = this.refusDeRecopie(cible, sens);
+    if (refus !== null) {
+      this.message = this.texte(refus);
       this.refresh();
       return;
     }
     this.message = '';
-    this.demanderPour({ de: this.selection, vers: cible });
+    this.demanderPour({ de: this.selection, vers: cible, sens });
     this.refresh();
   }
 

@@ -1196,7 +1196,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-10-22",
+      "lastmod": "2026-11-02",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1438,6 +1438,74 @@
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b1-01-proportions-pourcentages"
+          }
+        }
+      }
+    },
+    {
+      "id": "formations-b1-02-evolutions-coefficients-indices",
+      "path": "/formations/b1-02-evolutions-coefficients-indices",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-10-30",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Évolutions : taux, coefficients, indices",
+          "path": "/formations/b1-02-evolutions-coefficients-indices"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Évolutions : taux, coefficients, indices — B1 — Tim Moyence",
+          "description": "Formation B1 interactive : passer d’un taux à un coefficient, du HT au TTC, enchaîner des évolutions, revenir au départ, lire un indice et calculer un taux moyen.",
+          "ogTitle": "Évolutions : taux, coefficients, indices — B1",
+          "ogDescription": "Un cours interactif pour multiplier au lieu d’ajouter, et traiter au tableur un tableau de sujet de BTS.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Évolutions : taux, coefficients, indices",
+            "description": "Formation B1 interactive sur les taux d’évolution, les coefficients multiplicateurs, les évolutions successives et réciproques, les indices et le taux moyen.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b1-02-evolutions-coefficients-indices"
+          }
+        },
+        "en": {
+          "title": "Changes: rates, multipliers, indices — B1 — Tim Moyence",
+          "description": "Interactive B1 course: move from a rate to a multiplier, from net to gross prices, chain changes, reverse a change, read an index and compute an average rate.",
+          "ogTitle": "Changes: rates, multipliers, indices — B1",
+          "ogDescription": "An interactive course to multiply instead of adding, and work through a BTS exam table in a spreadsheet.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Changes: rates, multipliers, indices",
+            "description": "Interactive B1 course on rates of change, multipliers, successive and reverse changes, indices and the average rate.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b1-02-evolutions-coefficients-indices"
           }
         }
       }

@@ -11618,6 +11618,24 @@
         <target>2 h</target>
       </segment>
     </unit>
+    <unit id="formations-list.b1-02.title">
+      <segment>
+        <source>B1-02 — Évolutions : taux, coefficients, indices</source>
+        <target>B1-02 — Changes: rates, multipliers, indices</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b1-02.description">
+      <segment>
+        <source>Passer d’un taux à un coefficient, du HT au TTC, enchaîner des évolutions, revenir au départ, lire un indice et calculer un taux moyen, puis traiter au tableur un tableau de sujet de BTS. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Move from a rate to a multiplier and from net to gross prices, chain changes, reverse a change, read an index and compute an average rate, then work through a BTS exam table in a spreadsheet. To follow in a guided session, with the code given by your trainer.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b1-02.duration">
+      <segment>
+        <source>2 h 00</source>
+        <target>2 h</target>
+      </segment>
+    </unit>
     <unit id="formations-list.b3-01.title">
       <segment>
         <source>B3-01 — Expert Data : de la donnée brute à la décision</source>
@@ -13825,6 +13843,30 @@
       <segment>
         <source>Aucune cellule sous celle-ci : la recopie n’a rien où aller</source>
         <target>No cell below this one: there is nowhere to fill down</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetRecopierDroite">
+      <segment>
+        <source>Recopier vers la droite</source>
+        <target>Fill right</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetRecopieImpossibleDroite">
+      <segment>
+        <source>Aucune cellule à droite de celle-ci : la recopie n’a rien où aller</source>
+        <target>No cell to the right of this one: there is nowhere to fill</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetRecopieCibleImposee">
+      <segment>
+        <source>La cellule voisine est imposée : la recopie s’arrête ici</source>
+        <target>The next cell is fixed: the fill stops here</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetRecopieSource">
+      <segment>
+        <source>Choisissez une cellule qui contient votre formule</source>
+        <target>Choose a cell that holds your formula</target>
       </segment>
     </unit>
     <unit id="coursRuntimeSheetCelluleFautive">

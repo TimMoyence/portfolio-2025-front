@@ -149,6 +149,12 @@ describe('evenementsDe : traduction des evenements de brique vers le contrat hot
     expect(traduire('fp-sheet-evaluation', { recopie: { de: 'C3' } })).toEqual([
       { ...evaluation, demande: { cellules: { C3: '=A3*B3' }, recopie: { de: 'C3' } } },
     ]);
+    expect(traduire('fp-sheet-evaluation', { recopie: { de: 'C3', sens: 'droite' } })).toEqual([
+      {
+        ...evaluation,
+        demande: { cellules: { C3: '=A3*B3' }, recopie: { de: 'C3', sens: 'droite' } },
+      },
+    ]);
     expect(traduire('fp-sheet-evaluation', { cellules: { C3: 7, D3: '=C3' } })).toEqual([
       jasmine.objectContaining({ demande: { cellules: { D3: '=C3' } } }),
     ]);
@@ -161,6 +167,7 @@ describe('evenementsDe : traduction des evenements de brique vers le contrat hot
       { recopie: {} },
       { recopie: { de: '' } },
       { recopie: 'C3' },
+      { recopie: { de: 'C3', sens: 'gauche' } },
     ]);
   });
 
