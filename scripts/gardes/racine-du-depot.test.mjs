@@ -11,6 +11,7 @@ const CE_QU_UN_OUTIL_CHERCHE_A_LA_RACINE = {
   '.dockerignore': 'docker build le lit à côté du contexte',
   '.editorconfig': 'les éditeurs le cherchent en remontant',
   '.github/': 'GitHub Actions n’en lit pas d’autre',
+  '.git-blame-ignore-revs': 'GitHub blame et seo:lastmod la lisent à la racine',
   '.gitignore': 'git',
   '.gitleaks.toml': 'gitleaks le découvre sans option',
   '.gitleaksignore': 'gitleaks le découvre sans option',
