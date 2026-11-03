@@ -1,4 +1,4 @@
-import { pageMontee } from '../../../testing/montage-page';
+import { pageMontee } from '../../../testing/page/montage-page';
 import { ProjetsComponent } from './projets.component';
 
 describe('ProjetsComponent', () => {

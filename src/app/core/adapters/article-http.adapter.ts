@@ -4,7 +4,7 @@ import type { Observable } from 'rxjs';
 import { getApiBaseUrl } from '../http/api-config';
 import { cheminDesArticles, parametresDesArticles } from '../http/url-des-articles';
 import type { ArticleListResponse, PublishedArticle } from '../models/article.model';
-import { luPar } from './lu-par';
+import { luPar } from './formations/lu-par';
 import {
   zArticleListResponseDto as pageDArticlesServie,
   zPublishedArticleResponseDto as articleServi,

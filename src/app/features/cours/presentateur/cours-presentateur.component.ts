@@ -30,14 +30,14 @@ import {
   type StatutFlux,
   type StatutSession,
   type Sync,
-} from '../../../../cours/runtime/core/sync';
+} from '../../../../cours/runtime/core/reseau/sync';
 import type {
   CommandePilotage,
   RapportSeance,
   RegleNotation,
   SyntheseConcept,
 } from '../../../core/ports/formations.port';
-import { part } from '../../../../cours/runtime/core/valeurs';
+import { part } from '../../../../cours/runtime/core/texte/valeurs';
 import { cheminDuPupitre } from '../../../core/config/cours-en-seance';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { messageDeLaLimiteAtteinte } from '../../../core/http/limite-de-debit';
@@ -53,23 +53,23 @@ import {
   CoursPresentationComponent,
   type TelechargementDePieceJointe,
 } from '../../../shared/slides/session/cours-presentation.component';
-import { annexeFormateurDeLEcran } from './annexe-formateur';
+import { annexeFormateurDeLEcran } from './livret/annexe-formateur';
 import { chantierApresRendu } from './chantier-apres-rendu';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
-import type { CommandeDEcran } from './cours-panneau-activite.component';
-import { CoursPanneauActiviteComponent } from './cours-panneau-activite.component';
-import type { QuestionDuPanneau } from './cours-panneau-question.component';
-import { CoursPanneauQuestionComponent } from './cours-panneau-question.component';
-import { CoursPanneauPedagogiqueComponent } from './cours-panneau-pedagogique.component';
-import { PanneauParticipantsComponent } from './panneau-pedagogique/panneau-participants.component';
-import { questionsDuPanneau } from './questions-du-panneau';
-import { phraseDeNotation } from './regle-de-notation';
+import type { CommandeDEcran } from './panneau/cours-panneau-activite.component';
+import { CoursPanneauActiviteComponent } from './panneau/cours-panneau-activite.component';
+import type { QuestionDuPanneau } from './panneau/cours-panneau-question.component';
+import { CoursPanneauQuestionComponent } from './panneau/cours-panneau-question.component';
+import { CoursPanneauPedagogiqueComponent } from './panneau/cours-panneau-pedagogique.component';
+import { PanneauParticipantsComponent } from './panneau/pedagogique/participants/panneau-participants.component';
+import { questionsDuPanneau } from './panneau/questions-du-panneau';
+import { phraseDeNotation } from './correction/regle-de-notation';
 import { readInputValue } from '../../../shared/utils/dom-event.utils';
-import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
-import { correctionsAffichees } from './corrections-affichees';
-import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
-import { sourcesDeCorrection } from './sources-de-correction';
-import { formaterPart } from '../../../../cours/runtime/core/typographie';
+import { CoursBandeauCorrectionComponent } from './correction/cours-bandeau-correction.component';
+import { correctionsAffichees } from './correction/corrections-affichees';
+import { CoursResultatsProjetesComponent } from './bilan/cours-resultats-projetes.component';
+import { sourcesDeCorrection } from './correction/sources-de-correction';
+import { formaterPart } from '../../../../cours/runtime/core/texte/typographie';
 
 type EtatSeance = 'fermee' | 'ouverte' | 'en_cours' | 'terminee';
 

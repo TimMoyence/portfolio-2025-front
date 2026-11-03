@@ -18,14 +18,16 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./features/auth/auth.component').then((m) => m.AuthComponent),
+    loadComponent: () =>
+      import('./features/auth/connexion/auth.component').then((m) => m.AuthComponent),
     data: {
       seoKey: 'login',
     },
   },
   {
     path: 'register',
-    loadComponent: () => import('./features/auth/auth.component').then((m) => m.AuthComponent),
+    loadComponent: () =>
+      import('./features/auth/connexion/auth.component').then((m) => m.AuthComponent),
     data: {
       seoKey: 'register',
     },
@@ -33,7 +35,9 @@ export const routes: Routes = [
   {
     path: 'forgot-password',
     loadComponent: () =>
-      import('./features/auth/forgot-password.component').then((m) => m.ForgotPasswordComponent),
+      import('./features/auth/mot-de-passe-oublie/forgot-password.component').then(
+        (m) => m.ForgotPasswordComponent,
+      ),
     data: {
       seoKey: 'forgot-password',
     },
@@ -41,7 +45,9 @@ export const routes: Routes = [
   {
     path: 'reset-password',
     loadComponent: () =>
-      import('./features/auth/reset-password.component').then((m) => m.ResetPasswordComponent),
+      import('./features/auth/reinitialisation/reset-password.component').then(
+        (m) => m.ResetPasswordComponent,
+      ),
     data: {
       seoKey: 'reset-password',
     },
@@ -49,7 +55,9 @@ export const routes: Routes = [
   {
     path: 'verify-email',
     loadComponent: () =>
-      import('./features/auth/verify-email.component').then((m) => m.VerifyEmailComponent),
+      import('./features/auth/verification/verify-email.component').then(
+        (m) => m.VerifyEmailComponent,
+      ),
     data: {
       seoKey: 'verify-email',
     },
@@ -112,7 +120,8 @@ export const routes: Routes = [
   },
   {
     path: 'terms',
-    loadComponent: () => import('./features/terms/terms.component').then((m) => m.TermsComponent),
+    loadComponent: () =>
+      import('./features/annexes/terms/terms.component').then((m) => m.TermsComponent),
     data: {
       seoKey: 'terms',
     },
@@ -120,7 +129,7 @@ export const routes: Routes = [
   {
     path: 'privacy',
     loadComponent: () =>
-      import('./features/privacy/privacy.component').then((m) => m.PrivacyComponent),
+      import('./features/annexes/privacy/privacy.component').then((m) => m.PrivacyComponent),
     data: {
       seoKey: 'privacy',
     },
@@ -240,7 +249,7 @@ export const routes: Routes = [
     path: 'cours/presenter/:slug/livret',
     canActivate: [authGuard, roleGuard('teacher')],
     loadComponent: () =>
-      import('./features/cours/presentateur/cours-livret.component').then(
+      import('./features/cours/presentateur/livret/cours-livret.component').then(
         (m) => m.CoursLivretComponent,
       ),
     data: {
@@ -266,7 +275,7 @@ export const routes: Routes = [
     path: 'cours/seance/:sessionId/synthese',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/cours/presentateur/cours-synthese.component').then(
+      import('./features/cours/presentateur/bilan/cours-synthese.component').then(
         (m) => m.CoursSyntheseComponent,
       ),
     data: {
@@ -277,7 +286,7 @@ export const routes: Routes = [
   {
     path: '**',
     loadComponent: () =>
-      import('./features/not-found/not-found.component').then((m) => m.NotFoundComponent),
+      import('./features/annexes/not-found/not-found.component').then((m) => m.NotFoundComponent),
     data: {
       seoKey: 'not-found',
     },

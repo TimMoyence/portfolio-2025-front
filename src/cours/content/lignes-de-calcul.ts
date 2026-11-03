@@ -1,4 +1,4 @@
-import { lierLesNombres } from '../runtime/core/typographie';
+import { lierLesNombres } from '../runtime/core/texte/typographie';
 
 interface Morceau {
   readonly texte: string;

@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { type Observable, Subject, of, throwError } from 'rxjs';
-import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
+import { refusDuBack } from '../../../testing/factories/serveur/probleme-http.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import {
   type Chargement,

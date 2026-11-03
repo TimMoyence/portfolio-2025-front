@@ -3,7 +3,7 @@ import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { buildPublishedArticle } from '../../../testing/factories/article.factory';
-import { fournirLaRoute } from '../../../testing/factories/route.factory';
+import { fournirLaRoute } from '../../../testing/factories/serveur/route.factory';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';

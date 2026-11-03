@@ -4,20 +4,20 @@ import type {
   EcranContent,
   EcranDeroule,
 } from '../../../../cours/content/types';
-import { rappelEcritAvantLesOptions } from '../../../../cours/runtime/blocks/FpRecall';
-import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/FpTableBuild';
+import { rappelEcritAvantLesOptions } from '../../../../cours/runtime/blocks/questions/FpRecall';
+import type { TableBuildPlanPublic } from '../../../../cours/runtime/blocks/activites/FpTableBuild';
 import type { CibleRevelee } from '../../../../cours/runtime/blocks/retours';
 import {
   chaineDe,
   estChaineNonVide,
   estChaineOuNul,
   objet,
-} from '../../../../cours/runtime/core/valeurs';
+} from '../../../../cours/runtime/core/texte/valeurs';
 import {
   cleDeCellule,
   enonceDeCellule,
   saisiesDuPlan,
-} from '../../../../cours/runtime/blocks/FpTableBuild';
+} from '../../../../cours/runtime/blocks/activites/FpTableBuild';
 import type { Donnees } from '../visual/presentation-v2';
 import {
   aUnePresentation,

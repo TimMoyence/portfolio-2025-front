@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RevealOnScrollDirective } from '../../../shared/directives/reveal-on-scroll.directive';
-import { ToolkitFormComponent } from '../../../shared/components/toolkit-form/toolkit-form.component';
+import { ToolkitFormComponent } from '../../../shared/components/sections/toolkit-form/toolkit-form.component';
 import { TOOLKIT_IA_SOLO } from './toolkits-formations.data';
 
 @Component({

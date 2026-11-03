@@ -1,5 +1,5 @@
 import type { EcranContent } from '../../../../cours/content/types';
-import { chaineDe, objet } from '../../../../cours/runtime/core/valeurs';
+import { chaineDe, objet } from '../../../../cours/runtime/core/texte/valeurs';
 
 export type Donnees = Readonly<Record<string, unknown>>;
 

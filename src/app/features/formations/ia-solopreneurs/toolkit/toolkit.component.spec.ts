@@ -1,4 +1,4 @@
-import { decrireToolkitDeFormation } from '../../../../../testing/toolkit-de-formation';
+import { decrireToolkitDeFormation } from '../../../../../testing/seance/toolkit-de-formation';
 import { ToolkitComponent } from './toolkit.component';
 
 describe('ToolkitComponent', () => {

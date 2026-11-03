@@ -8,8 +8,11 @@ import {
   choisirLOptionDuQuiz,
   configurerLHoteDInteraction,
   monterApresChargement,
-} from '../../../../../testing/hote-d-interaction';
-import { horlogesDeSaisie, sousHorlogeArreteeA } from '../../../../../testing/horloge-simulee';
+} from '../../../../../testing/dom/hote-d-interaction';
+import {
+  horlogesDeSaisie,
+  sousHorlogeArreteeA,
+} from '../../../../../testing/environnement/horloge-simulee';
 import type { ModeInteraction } from '../mode-interaction';
 import { SlideQuizComponent } from './slide-quiz.component';
 

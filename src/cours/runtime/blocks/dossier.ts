@@ -1,5 +1,5 @@
-import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
-import { estObjet } from '../core/valeurs';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/texte/html';
+import { estObjet } from '../core/texte/valeurs';
 
 export interface LigneDuDossier {
   readonly libelle: string;

@@ -1,17 +1,17 @@
-import { cardsort } from './cardsort';
-import { challenge } from './challenge';
-import { concept4 } from './concept4';
-import { escape } from './escape';
-import { pro, quote, story } from './narration';
-import { numeric } from './numeric';
-import { plot } from './plot';
-import { pulse } from './pulse';
-import { recall } from './recall';
-import { sheet } from './sheet';
-import { spaced } from './spaced';
-import { tableBuild } from './table-build';
-import { vote } from './vote';
-import { worked } from './worked';
+import { cardsort } from './questions/cardsort';
+import { challenge } from './activites/challenge';
+import { concept4 } from './contenus/concept4';
+import { escape } from './activites/escape';
+import { pro, quote, story } from './contenus/narration';
+import { numeric } from './questions/numeric';
+import { plot } from './contenus/plot';
+import { pulse } from './questions/pulse';
+import { recall } from './questions/recall';
+import { sheet } from './activites/sheet';
+import { spaced } from './questions/spaced';
+import { tableBuild } from './activites/table-build';
+import { vote } from './questions/vote';
+import { worked } from './activites/worked';
 
 const FEUILLES: Readonly<Record<string, string>> = {
   cardsort,

@@ -14,7 +14,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import type { SafeHtml } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
-import { estUrlAutorisee } from '../../../cours/runtime/core/html';
+import { estUrlAutorisee } from '../../../cours/runtime/core/texte/html';
 
 const ATTRIBUTS_DE_LIEN: ReadonlySet<string> = new Set(['href', 'xlink:href']);
 

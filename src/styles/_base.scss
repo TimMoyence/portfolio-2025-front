@@ -1,7 +1,7 @@
-@use '../app/styles-shared/breakpoints' as bp;
-@use '../app/styles-shared/heads' as heads;
-@use '../app/styles-shared/mise-en-page';
-@use '../app/styles-shared/mono';
+@use '../app/styles-shared/mise-en-page/breakpoints' as bp;
+@use '../app/styles-shared/mise-en-page/heads' as heads;
+@use '../app/styles-shared/mise-en-page/mise-en-page';
+@use '../app/styles-shared/mise-en-page/mono';
 
 @layer base {
   * {

@@ -1,6 +1,6 @@
-@forward '../../styles-shared/mono' show police;
+@forward '../../styles-shared/mise-en-page/mono' show police;
 @use 'slide-toile' as toile;
-@use '../../styles-shared/mono';
+@use '../../styles-shared/mise-en-page/mono';
 
 @mixin cadre-centre($marge) {
   width: 100%;

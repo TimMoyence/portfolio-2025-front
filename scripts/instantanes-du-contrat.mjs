@@ -1,10 +1,10 @@
 import { readdirSync, rmSync, writeFileSync } from 'node:fs';
 
 import { cheminDuDepot, lireTexte } from './lib/depot.mjs';
-import { instantanesObsoletes, SUFFIXE_D_INSTANTANE } from './lib/instantanes.mjs';
+import { instantanesObsoletes, SUFFIXE_D_INSTANTANE } from './lib/contrat/instantanes.mjs';
 
 const DOSSIER_DU_BACK = 'test/fixtures/formations';
-const DOSSIER_DU_FRONT = 'src/testing/fixtures';
+const DOSSIER_DU_FRONT = 'src/testing/fixtures/instantanes/json';
 
 const { depot, commit } = JSON.parse(lireTexte(cheminDuDepot('contrat.json')));
 

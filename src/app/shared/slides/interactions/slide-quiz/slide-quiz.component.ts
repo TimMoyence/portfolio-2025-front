@@ -9,7 +9,10 @@ import {
   signal,
   output,
 } from '@angular/core';
-import { dureeMonotoneDepuis, instantMonotone } from '../../../../../cours/runtime/core/duree';
+import {
+  dureeMonotoneDepuis,
+  instantMonotone,
+} from '../../../../../cours/runtime/core/saisie/duree';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import { chargerInteraction } from '../interactions.util';
 import type { ModeInteraction } from '../mode-interaction';

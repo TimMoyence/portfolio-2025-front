@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 import { setTimeout as patienter } from 'node:timers/promises';
 
 import { RACINE as RACINE_FRONT } from '../lib/depot.mjs';
-import { messageDErreur } from '../../src/server/lecture-api.ts';
+import { messageDErreur } from '../../src/server/api/lecture-api.ts';
 import { executer } from '../lib/processus.mjs';
 import { amorcerFormateur } from './amorcage.mts';
 import { attendreQue, sondeHttp } from './attente.mjs';

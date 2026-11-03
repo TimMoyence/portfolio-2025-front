@@ -18,8 +18,8 @@ import {
 } from '@angular/core';
 import type { Observable } from 'rxjs';
 import type { EcranContent, ResultatsSeance, Role } from '../../../../cours/content/types';
-import type { Brouillons } from '../../../../cours/runtime/core/storage';
-import { bornerEntre } from '../../../../cours/runtime/core/valeurs';
+import type { Brouillons } from '../../../../cours/runtime/core/participant/storage';
+import { bornerEntre } from '../../../../cours/runtime/core/texte/valeurs';
 import type {
   FichierTelecharge,
   RetourBrique,
@@ -29,11 +29,11 @@ import { type LimiteDeDebit, messageDeLaLimite } from '../../../core/models/limi
 import { limiteDuRefus, PieceJointeRefusee } from '../../../core/ports/formations.port';
 import { telechargerFichier } from '../../utils/telechargement.utils';
 import type { DirectEcran, EvenementBrique } from './contrat-hote';
-import { extraireDuRenvoi } from './extrait-du-renvoi';
-import { SlideActivityComponent } from './slide-activity.component';
-import { reductionPourTenir } from './tenir-dans-sa-place.directive';
+import { extraireDuRenvoi } from './reprise/extrait-du-renvoi';
+import { SlideActivityComponent } from './activite/slide-activity.component';
+import { reductionPourTenir } from './activite/tenir-dans-sa-place.directive';
 import { SlideComponent } from '../deck/slide.component';
-import { arrondi } from '../../../../cours/runtime/blocks/reglable';
+import { arrondi } from '../../../../cours/runtime/blocks/saisie/reglable';
 
 export type CoursPresentationMode = 'etudiant' | 'formateur' | 'projection';
 

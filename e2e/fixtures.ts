@@ -6,12 +6,12 @@ import {
   zJoinSessionResponseDto as rattachementServi,
   zSujetResponseDto as sujetServi,
 } from '../contrat/zod.gen';
-import type { SujetDuFil } from '../src/app/core/adapters/formations-fil';
+import type { SujetDuFil } from '../src/app/core/adapters/formations/formations-fil';
 import type { RapportSeance } from '../src/app/core/ports/formations.port';
 import { TYPES_QUESTION } from '../src/cours/content/types';
 import type { EtatParticipant, ResumeBareme } from '../src/cours/content/types';
 import { zEtatDeSeanceResponseDto as etatServi } from '../contrat/zod.gen';
-import type { EtatSession } from '../src/cours/runtime/core/sync';
+import type { EtatSession } from '../src/cours/runtime/core/reseau/sync';
 import { buildAuthSession, buildAuthUser } from '../src/testing/factories/auth.factory';
 import {
   buildRapportSeance,
@@ -20,7 +20,7 @@ import {
   buildResultatsSeance,
   buildResumeBareme,
   buildStatistiquesSeance,
-} from '../src/testing/factories/rapport-seance.factory';
+} from '../src/testing/factories/formations/rapport-seance.factory';
 import { etatParticipantVierge } from '../src/testing/fixtures/etat-participant';
 
 export const API_BASE = 'http://localhost:3000/api/v1/portfolio25';

@@ -10,7 +10,7 @@ import { provideRouter, Router } from '@angular/router';
 import { AUTH_PORT } from './core/ports/auth.port';
 import { AppComponent } from './app.component';
 import { createAuthPortStub } from '../testing/factories/auth.factory';
-import { cliquerSansQuitterLaPage } from '../testing/montage-page';
+import { cliquerSansQuitterLaPage } from '../testing/page/montage-page';
 import { setupTestBed } from '../testing/setup-test-bed';
 
 @Component({

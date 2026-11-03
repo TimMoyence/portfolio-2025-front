@@ -1,35 +1,35 @@
 import { Component, input } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import type { EcranContent, PieceJointe } from '../../../../cours/content/types';
-import { noeudOmbre, noeudsOmbre } from '../../../../testing/banc-de-brique';
-import { attendreQue, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
-import { deuxImages } from '../../../../testing/deux-images';
+import { noeudOmbre, noeudsOmbre } from '../../../../testing/briques/banc-de-brique';
+import { attendreQue, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques/briques-montees';
+import { deuxImages } from '../../../../testing/texte/deux-images';
 import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
-} from '../../../../testing/fixtures/instantane-b2-01';
-import { INSTANTANE_B2_04 } from '../../../../testing/fixtures/instantane-b2-04';
-import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantane-b3-01';
+} from '../../../../testing/fixtures/instantanes/instantane-b2-01';
+import { INSTANTANE_B2_04 } from '../../../../testing/fixtures/instantanes/instantane-b2-04';
+import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantanes/instantane-b3-01';
 import {
   ecranReveleAuPosteEtudiant,
   ecransDuPupitreDe,
   ecransPublicsDe,
 } from '../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
-import { libellesColles } from '../../../../testing/libelles-colles';
-import { lignesDe } from '../../../../testing/lignes-de-texte';
-import { chargerLesPolicesDeLApplication } from '../../../../testing/polices';
+import { libellesColles } from '../../../../testing/texte/libelles-colles';
+import { lignesDe } from '../../../../testing/texte/lignes-de-texte';
+import { chargerLesPolicesDeLApplication } from '../../../../testing/rendu/polices';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
-import { valeursSurUneForme } from '../../../../testing/valeurs-sur-les-formes';
-import { annexeFormateurDeLEcran } from '../../../features/cours/presentateur/annexe-formateur';
+import { valeursSurUneForme } from '../../../../testing/rendu/valeurs-sur-les-formes';
+import { annexeFormateurDeLEcran } from '../../../features/cours/presentateur/livret/annexe-formateur';
 import { presentationDe } from '../visual/presentation-v2';
 import type { DirectEcran } from './contrat-hote';
 import { ecranDIdentifiant } from './lecture-ecran';
 import { of, Subject, throwError } from 'rxjs';
 import type { FichierTelecharge } from '../../../core/ports/formations.port';
 import { PieceJointeRefusee } from '../../../core/ports/formations.port';
-import { buildFichierTelecharge } from '../../../../testing/factories/formations.factory';
-import { jouerLesGraphiquesJusquAuBout } from '../../../../testing/graphique-monte';
+import { buildFichierTelecharge } from '../../../../testing/factories/formations/formations.factory';
+import { jouerLesGraphiquesJusquAuBout } from '../../../../testing/rendu/graphique-monte';
 import {
   CoursPresentationComponent,
   type CoursPresentationMode,

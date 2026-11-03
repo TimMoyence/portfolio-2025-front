@@ -1,7 +1,7 @@
-@use '../../styles-shared/cartes';
-@use '../../styles-shared/forms';
-@use '../../styles-shared/lists';
-@use '../../styles-shared/toolkit';
+@use '../../styles-shared/composants/cartes';
+@use '../../styles-shared/composants/forms';
+@use '../../styles-shared/composants/lists';
+@use '../../styles-shared/composants/toolkit';
 
 .tk-wrap {
   min-height: 100vh;

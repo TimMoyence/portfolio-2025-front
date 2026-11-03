@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { rendreLHoteNavigateur } from '../../../../testing/montage-page';
+import { rendreLHoteNavigateur } from '../../../../testing/page/montage-page';
 import { ListePucesComponent } from './liste-puces.component';
 
 @Component({

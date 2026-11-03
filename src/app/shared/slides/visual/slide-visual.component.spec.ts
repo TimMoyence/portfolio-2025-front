@@ -4,12 +4,12 @@ import type { ResultatsSeance, Role } from '../../../../cours/content/types';
 import {
   buildProgressionDesEnigmes,
   buildRevelationServie,
-} from '../../../../testing/factories/cours.factory';
+} from '../../../../testing/factories/formations/cours.factory';
 import {
   buildResultatQuestion,
   buildResultatsSeance,
-} from '../../../../testing/factories/formations.factory';
-import { poserLesEntrees } from '../../../../testing/montage-page';
+} from '../../../../testing/factories/formations/formations.factory';
+import { poserLesEntrees } from '../../../../testing/page/montage-page';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
   ATELIER_CORRIGE,
@@ -25,7 +25,7 @@ import {
   buildVisualQuizSlide,
   buildVisualSlide,
   buildVisualSortCorrectionSlide,
-} from '../../../../testing/factories/visual-slide.factory';
+} from '../../../../testing/factories/formations/visual-slide.factory';
 import type { RetourBrique } from '../../../core/ports/formations.port';
 import { SlideVisualComponent } from './slide-visual.component';
 

@@ -11,9 +11,9 @@ import type {
   EtatParticipant,
   PilotageEcran,
 } from '../../../../cours/content/types';
-import { noeudsOmbre } from '../../../../testing/banc-de-brique';
-import { briqueMontee, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
-import type { EscapeParcoursPublic } from '../../../../cours/runtime/blocks/FpEscape';
+import { noeudsOmbre } from '../../../../testing/briques/banc-de-brique';
+import { briqueMontee, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques/briques-montees';
+import type { EscapeParcoursPublic } from '../../../../cours/runtime/blocks/activites/FpEscape';
 import type { EtatDesEnigmes, EtatEnigme } from '../../../../cours/runtime/blocks/retours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import {
@@ -23,25 +23,25 @@ import {
   retarderLaMesure,
   sousHorlogeArreteeA,
   UNE_HEURE_MS,
-} from '../../../../testing/horloge-simulee';
+} from '../../../../testing/environnement/horloge-simulee';
 import { identifiantsDuMontage, planDeMontage } from '../../../shared/slides/session/lecture-ecran';
 import { presentationDe } from '../../../shared/slides/visual/presentation-v2';
 import {
   etatDeLaReflexion,
   garderLaReflexion,
   jusqua,
-} from '../../../../testing/hote-d-interaction';
+} from '../../../../testing/dom/hote-d-interaction';
 import {
   clearIdentity,
   LONGUEURS_MAX_DE_L_IDENTITE,
   lireSecretDeReprise,
   readIdentity,
   saveIdentity,
-} from '../../../../cours/runtime/core/identity';
-import { enqueue, pending } from '../../../../cours/runtime/core/queue';
-import { EnvoisDeSeanceService } from '../../../shared/slides/session/envois-de-seance.service';
-import { buildReponseLibreEnFile } from '../../../../testing/factories/queue.factory';
-import type { EtatSession } from '../../../../cours/runtime/core/sync';
+} from '../../../../cours/runtime/core/participant/identity';
+import { enqueue, pending } from '../../../../cours/runtime/core/reseau/queue';
+import { EnvoisDeSeanceService } from '../../../shared/slides/session/activite/envois-de-seance.service';
+import { buildReponseLibreEnFile } from '../../../../testing/factories/formations/queue.factory';
+import type { EtatSession } from '../../../../cours/runtime/core/reseau/sync';
 import {
   buildEcran,
   buildEcranQuestionnaire,
@@ -52,7 +52,7 @@ import {
   buildSpacedRappel,
   buildTableauEvalue,
   buildWorkedExemple,
-} from '../../../../testing/factories/cours.factory';
+} from '../../../../testing/factories/formations/cours.factory';
 import {
   buildCoursContent,
   buildEtatDesEnigmes,
@@ -62,20 +62,23 @@ import {
   buildStrategieServie,
   buildVerdictTentative,
   createFormationsPortStub,
-} from '../../../../testing/factories/formations.factory';
-import { buildEnvoiReponse } from '../../../../testing/factories/queue.factory';
-import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
-import type { FluxDouble } from '../../../../testing/factories/sync.factory';
-import { createFluxDouble } from '../../../../testing/factories/sync.factory';
-import { lireLesLibelles, lireLesLibellesDeChaqueEcran } from '../../../../testing/libelles-colles';
-import { lireMarque as lire } from '../../../../testing/marqueurs-dom';
+} from '../../../../testing/factories/formations/formations.factory';
+import { buildEnvoiReponse } from '../../../../testing/factories/formations/queue.factory';
+import { buildVisualQuizSlide } from '../../../../testing/factories/formations/visual-slide.factory';
+import type { FluxDouble } from '../../../../testing/factories/formations/sync.factory';
+import { createFluxDouble } from '../../../../testing/factories/formations/sync.factory';
+import {
+  lireLesLibelles,
+  lireLesLibellesDeChaqueEcran,
+} from '../../../../testing/texte/libelles-colles';
+import { lireMarque as lire } from '../../../../testing/dom/marqueurs-dom';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
   attendreLaFermetureDuFlux,
   diffuserSurLaVue,
   stabiliserLaMiseEnPage,
   stabiliserLaVue,
-} from '../../../../testing/vue-de-seance';
+} from '../../../../testing/seance/vue-de-seance';
 import type { LimiteDeDebit } from '../../../core/models/limite-de-debit';
 import type {
   FormationsPort,
@@ -92,9 +95,9 @@ import {
 } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX } from '../cours-flux.token';
 import type { EvenementBrique } from '../../../shared/slides/session/contrat-hote';
-import { demanderLaPieceJointe } from '../../../../testing/piece-jointe-demandee';
+import { demanderLaPieceJointe } from '../../../../testing/seance/piece-jointe-demandee';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
-import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
+import { SlideActivityComponent } from '../../../shared/slides/session/activite/slide-activity.component';
 import { CoursEtudiantComponent } from './cours-etudiant.component';
 
 type Fixture = ComponentFixture<CoursEtudiantComponent>;

@@ -15,7 +15,7 @@ import {
   buildAuthUser,
   createAuthPortStub,
 } from '../../../testing/factories/auth.factory';
-import { reveillerApres } from '../../../testing/horloge-simulee';
+import { reveillerApres } from '../../../testing/environnement/horloge-simulee';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { AuthStateService } from './auth-state.service';
 import { PLUS_LONGUE_FENETRE_MS } from './fenetre-de-renouvellement';

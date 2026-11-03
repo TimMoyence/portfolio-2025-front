@@ -6,9 +6,9 @@ import type {
   SyntheseConceptResponseDto,
 } from '../../../../contrat/types.gen';
 import type { FeuilleEvaluee, QuestionRevelee, TableauEvalue } from '../../content/types';
-import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/html';
-import { chaineDe, estChaineOuNul, estObjet } from '../core/valeurs';
-import type { OptionPublique } from './projection';
+import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../core/texte/html';
+import { chaineDe, estChaineOuNul, estObjet } from '../core/texte/valeurs';
+import type { OptionPublique } from './rendu/projection';
 
 export interface VerdictDeReponse {
   readonly questionId: string;

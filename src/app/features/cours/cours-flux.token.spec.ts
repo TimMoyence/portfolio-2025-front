@@ -3,13 +3,13 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
-import { createFluxDouble } from '../../../testing/factories/sync.factory';
-import { reveillerApres } from '../../../testing/horloge-simulee';
+import { createFluxDouble } from '../../../testing/factories/formations/sync.factory';
+import { reveillerApres } from '../../../testing/environnement/horloge-simulee';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 import { getApiBaseUrl } from '../../core/http/api-config';
 import { AUTH_PORT } from '../../core/ports/auth.port';
 import { AuthStateService } from '../../core/services/auth-state.service';
-import type { StatutFlux, Sync } from '../../../cours/runtime/core/sync';
+import type { StatutFlux, Sync } from '../../../cours/runtime/core/reseau/sync';
 import { CREATEUR_FLUX, CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from './cours-flux.token';
 
 describe('ouvrirLeFluxFormateur', () => {

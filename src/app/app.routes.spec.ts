@@ -5,7 +5,7 @@ import { setupTestBed } from '../testing/setup-test-bed';
 import { authGuard } from './core/guards/auth.guard';
 import { coursEntreeGuard } from './core/guards/cours-entree.guard';
 import { AuthStateService } from './core/services/auth-state.service';
-import { resolveRedirect } from '../server/redirects';
+import { resolveRedirect } from '../server/rendu/redirects';
 import { routes } from './app.routes';
 
 describe('app routes', () => {

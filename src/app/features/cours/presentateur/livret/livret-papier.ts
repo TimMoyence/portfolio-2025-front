@@ -1,0 +1,213 @@
+import type {
+  CorrigeEcranPresentateur,
+  CoursContent,
+  DerouleCours,
+  EcranContent,
+  EcranDeroule,
+  ReflexionServie,
+} from '../../../../../cours/content/types';
+import { estObjet } from '../../../../../cours/runtime/core/texte/valeurs';
+import { ecranDIdentifiant } from '../../../../shared/slides/session/lecture-ecran';
+import { annexeFormateurDeLEcran } from './annexe-formateur';
+import type { QuestionDuPanneau } from '../panneau/cours-panneau-question.component';
+import { questionsDuPanneau } from '../panneau/questions-du-panneau';
+
+const ECRANS_DE_SEANCE_SEULEMENT: ReadonlySet<string> = new Set(['fp-pulse']);
+
+const QUESTIONS_TIREES_EN_SEANCE: ReadonlySet<string> = new Set(['fp-spaced']);
+
+const CORRIGES_DONNES_A_LA_SUITE: ReadonlySet<string> = new Set(['reflexion']);
+
+const ECRANS_REVELES_A_LA_SUITE: ReadonlySet<string> = new Set(['fp-vote']);
+
+const CORRIGES_SUR_PLACE: ReadonlySet<string> = new Set(['fp-worked']);
+
+const ECRANS_SANS_INTITULE: ReadonlySet<string> = new Set(['fp-table-build', 'fp-challenge']);
+
+const CHAMPS_NON_IMPRIMES: ReadonlySet<string> = new Set(['id', 'type', 'screenId', 'metadonnees']);
+
+const MOTS_D_UNE_REPRISE = 4;
+
+export interface PageDuLivretEtudiant {
+  readonly ecran: EcranContent;
+  readonly titre: string | null;
+}
+
+export interface FicheDuLivretEtudiant {
+  readonly pages: readonly PageDuLivretEtudiant[];
+  readonly aLaSuite: boolean;
+}
+
+export interface PageDuCorrige {
+  readonly ecran: EcranDeroule;
+  readonly annexe: ReturnType<typeof annexeFormateurDeLEcran>;
+  readonly reponses: readonly QuestionDuPanneau[];
+  readonly attendu: ReflexionServie | null;
+  readonly repeteLaSource: boolean;
+}
+
+function aTraiterSurPapier(ecran: EcranContent): boolean {
+  return !ECRANS_DE_SEANCE_SEULEMENT.has(ecran.type);
+}
+
+function avecSaBanqueDeQuestions(ecran: EcranContent, corrige: DerouleCours): EcranContent {
+  if (!QUESTIONS_TIREES_EN_SEANCE.has(ecran.type)) {
+    return ecran;
+  }
+  return ecranDIdentifiant(corrige.ecrans, ecran.id) ?? ecran;
+}
+
+function corrigeDonneALaSuite(deroule: EcranDeroule | undefined): boolean {
+  const type = deroule?.corrigeEcran?.type;
+  return (
+    (deroule !== undefined && ECRANS_REVELES_A_LA_SUITE.has(deroule.type)) ||
+    (type !== undefined && CORRIGES_DONNES_A_LA_SUITE.has(type))
+  );
+}
+
+function reponseDonneeALaSuite(ecran: EcranContent, corrige: DerouleCours): boolean {
+  if (QUESTIONS_TIREES_EN_SEANCE.has(ecran.type) || CORRIGES_SUR_PLACE.has(ecran.type)) {
+    return true;
+  }
+  const deroule = ecranDIdentifiant(corrige.ecrans, ecran.id);
+  return (deroule?.explications?.length ?? 0) > 0 || corrigeDonneALaSuite(deroule);
+}
+
+function ouvreUneNotion(fiche: readonly PageDuLivretEtudiant[], corrige: DerouleCours): boolean {
+  const [seule] = fiche;
+  return (
+    fiche.length === 1 && corrigeDonneALaSuite(ecranDIdentifiant(corrige.ecrans, seule.ecran.id))
+  );
+}
+
+function estUnExempleGuide({ ecran }: PageDuLivretEtudiant): boolean {
+  return CORRIGES_SUR_PLACE.has(ecran.type);
+}
+
+function textesDe(valeur: unknown, champ = ''): readonly string[] {
+  if (CHAMPS_NON_IMPRIMES.has(champ)) {
+    return [];
+  }
+  if (typeof valeur === 'string') {
+    return [valeur];
+  }
+  if (Array.isArray(valeur)) {
+    return valeur.flatMap((element: unknown) => textesDe(element, champ));
+  }
+  return estObjet(valeur)
+    ? Object.entries(valeur).flatMap(([cle, contenu]) => textesDe(contenu, cle))
+    : [];
+}
+
+function textesImprimes({ ecran, titre }: PageDuLivretEtudiant): readonly string[] {
+  return [...(titre === null ? [] : [titre]), ...textesDe(ecran.donnees)];
+}
+
+function redactionsDuCorrige(corrige: CorrigeEcranPresentateur | null): readonly string[] {
+  if (corrige === null) {
+    return [];
+  }
+  switch (corrige.type) {
+    case 'reflexion':
+      return [corrige.attendu, corrige.suite];
+    case 'feuille':
+      return corrige.attendus.map(({ formuleReference }) => formuleReference);
+    case 'classement':
+      return corrige.attendus.map(({ justification }) => justification);
+    case 'enigmes':
+      return corrige.enigmes.map(({ solution }) => solution);
+    case 'defi':
+      return corrige.strategies.filter(({ fausse }) => !fausse).map(({ libelle }) => libelle);
+    case 'tableau':
+      return [];
+  }
+}
+
+function suitesDeMots(texte: string): readonly string[] {
+  const mots =
+    texte
+      .normalize('NFKC')
+      .toLowerCase()
+      .match(/[\p{L}\p{N}]+/gu) ?? [];
+  return mots
+    .slice(MOTS_D_UNE_REPRISE - 1)
+    .map((_, rang) => mots.slice(rang, rang + MOTS_D_UNE_REPRISE).join(' '));
+}
+
+function redactionsDesReponses(
+  page: PageDuLivretEtudiant,
+  corrige: DerouleCours,
+): readonly string[] {
+  const deroule = ecranDIdentifiant(corrige.ecrans, page.ecran.id);
+  return deroule === undefined
+    ? []
+    : [
+        ...(deroule.explications ?? []).map(({ texte }) => texte),
+        ...deroule.corriges.map(({ bonneReponse }) => bonneReponse),
+        ...redactionsDuCorrige(deroule.corrigeEcran),
+      ];
+}
+
+function reprendUneReponse(
+  fiche: readonly PageDuLivretEtudiant[],
+  pageImprimee: readonly PageDuLivretEtudiant[],
+  corrige: DerouleCours,
+): boolean {
+  const suites = new Set(fiche.flatMap(textesImprimes).flatMap(suitesDeMots));
+  return pageImprimee
+    .flatMap((page) => redactionsDesReponses(page, corrige))
+    .flatMap(suitesDeMots)
+    .some((suite) => suites.has(suite));
+}
+
+function pageDuLivretEtudiant(ecran: EcranContent, corrige: DerouleCours): PageDuLivretEtudiant {
+  return {
+    ecran: avecSaBanqueDeQuestions(ecran, corrige),
+    titre: ECRANS_SANS_INTITULE.has(ecran.type) ? (ecran.titre ?? null) : null,
+  };
+}
+
+export function feuillesDuLivretEtudiant(
+  sujet: CoursContent,
+  corrige: DerouleCours,
+): readonly FicheDuLivretEtudiant[] {
+  const feuilles: PageDuLivretEtudiant[][] = [[]];
+  for (const ecran of sujet.ecrans) {
+    if (ecran.ecranSource !== undefined) {
+      feuilles.push([]);
+    } else if (aTraiterSurPapier(ecran)) {
+      feuilles[feuilles.length - 1].push(pageDuLivretEtudiant(ecran, corrige));
+      if (reponseDonneeALaSuite(ecran, corrige)) {
+        feuilles.push([]);
+      }
+    }
+  }
+  const fiches = feuilles.filter((feuille) => feuille.length > 0);
+  const livret: FicheDuLivretEtudiant[] = [];
+  let pageImprimee: readonly PageDuLivretEtudiant[] = [];
+  for (const [rang, pages] of fiches.entries()) {
+    const aLaSuite: boolean =
+      rang > 0 &&
+      ouvreUneNotion(pages, corrige) &&
+      !pageImprimee.some(estUnExempleGuide) &&
+      !reprendUneReponse(pages, pageImprimee, corrige);
+    pageImprimee = aLaSuite ? [...pageImprimee, ...pages] : pages;
+    livret.push({ pages, aLaSuite });
+  }
+  return livret;
+}
+
+function repeteLaSource(ecran: EcranDeroule, corrige: DerouleCours): boolean {
+  const source = ecranDIdentifiant(corrige.ecrans, ecran.ecranSource);
+  return source !== undefined && source.type === ecran.type;
+}
+
+export function pagesDuCorrige(corrige: DerouleCours): readonly PageDuCorrige[] {
+  return corrige.ecrans.filter(aTraiterSurPapier).map((ecran) => ({
+    ecran,
+    annexe: annexeFormateurDeLEcran(ecran),
+    reponses: questionsDuPanneau(ecran),
+    attendu: ecran.reflexion,
+    repeteLaSource: repeteLaSource(ecran, corrige),
+  }));
+}

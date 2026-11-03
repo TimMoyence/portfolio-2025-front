@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
-import { isolateAnimReady } from '../../../testing/anim-ready';
+import { isolateAnimReady } from '../../../testing/dom/anim-ready';
 import { installerIntersectionObserverSimule } from '../../../testing/factories/intersection-observer.factory';
-import { monterSurPlateforme, type PlateformeDeRendu } from '../../../testing/plateforme';
+import {
+  monterSurPlateforme,
+  type PlateformeDeRendu,
+} from '../../../testing/environnement/plateforme';
 import { RevealOnScrollDirective } from './reveal-on-scroll.directive';
 
 @Component({

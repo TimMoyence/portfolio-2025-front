@@ -1,0 +1,298 @@
+import { CommonModule, isPlatformBrowser, ViewportScroller } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  ElementRef,
+  HostListener,
+  Inject,
+  LOCALE_ID,
+  PLATFORM_ID,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { LOCALES_DU_SITE, langueDuSite } from '../../../../core/config/locales';
+import { cheminEnLocale } from '../../../../core/seo/chemins';
+import { BreakpointService } from '../../../../core/services/breakpoint.service';
+import { AuthStateService } from '../../../../core/services/auth-state.service';
+import type { DropdownSection, NavLink } from '../../../models/navbar.model';
+import { A11yDialogService } from '../../../services/a11y-dialog.service';
+import { initialeDe } from '../../../utils/initiale.utils';
+import { SvgIconComponent } from '../../svg-icon.component';
+
+@Component({
+  selector: 'app-navbar',
+  standalone: true,
+  imports: [CommonModule, RouterModule, SvgIconComponent],
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class NavbarComponent {
+  readonly navLinks: NavLink[] = [
+    {
+      label: $localize`:navbar.link.presentation|Navbar primary link@@navLinkPresentation:Présentation`,
+      href: '/presentation',
+    },
+    {
+      label: $localize`:navbar.link.projects|Navbar primary link@@navLinkProjects:Projets`,
+      href: '/projets',
+    },
+    {
+      label: $localize`:navbar.link.articles|Navbar primary link@@navLinkArticles:Articles`,
+      href: '/articles',
+    },
+    {
+      label: $localize`:navbar.link.offer|Navbar primary link@@navLinkOfferSpan:Services`,
+      href: '/offer',
+    },
+  ];
+
+  readonly formationsDropdown: DropdownSection = {
+    label: $localize`:navbar.formations.label|Formations dropdown label@@navFormationsLabel:Formations`,
+    isOpen: false,
+    items: [
+      {
+        title: $localize`:navbar.formations.ia.title|@@navFormationsIaTitle:IA pour Solopreneurs`,
+        description: $localize`:navbar.formations.ia.desc|@@navFormationsIaDesc:Panorama des outils IA pour entrepreneurs`,
+        icon: 'sparkles',
+        iconAlt: 'IA',
+        href: '/formations/ia-solopreneurs',
+      },
+      {
+        title: $localize`:navbar.formations.auto.title|@@navFormationsAutoTitle:Automatiser avec l'IA`,
+        description: $localize`:navbar.formations.auto.desc|@@navFormationsAutoDesc:5 workflows non-tech pour gagner 2h/semaine`,
+        icon: 'sparkles',
+        iconAlt: 'Automation',
+        href: '/formations/automatiser-avec-ia',
+      },
+      {
+        title: $localize`:navbar.formations.seo.title|@@navFormationsSeoTitle:Audit SEO DIY`,
+        description: $localize`:navbar.formations.seo.desc|@@navFormationsSeoDesc:7 checks en 20 min avec 5 outils gratuits`,
+        icon: 'sparkles',
+        iconAlt: 'SEO',
+        href: '/formations/audit-seo-diy',
+      },
+      {
+        title: $localize`:navbar.formations.all.title|@@navFormationsAllTitle:Toutes les formations`,
+        description: $localize`:navbar.formations.all.desc|@@navFormationsAllDesc:Voir le catalogue complet`,
+        icon: 'sparkles',
+        iconAlt: 'Liste',
+        href: '/formations',
+      },
+    ],
+  };
+
+  readonly openMenuLabel = $localize`:navbar.menu.open|Burger button label@@navMenuOpen:Ouvrir le menu principal`;
+  readonly closeMenuLabel = $localize`:navbar.menu.close|Burger button label@@navMenuClose:Fermer le menu principal`;
+  readonly mobileNavHeading = $localize`:navbar.menu.heading|Mobile nav heading@@navMenuHeading:Menu principal`;
+  readonly closeMenuIconLabel = $localize`:navbar.menu.icon.close|Icon label@@navMenuCloseIcon:Fermer le menu`;
+  readonly openMenuIconLabel = $localize`:navbar.menu.icon.open|Icon label@@navMenuOpenIcon:Ouvrir le menu`;
+  readonly currentLocale = inject(LOCALE_ID);
+  readonly authState = inject(AuthStateService);
+  private readonly breakpointService = inject(BreakpointService);
+
+  readonly userInitials = computed(() => {
+    const user = this.authState.user();
+    return `${initialeDe(user?.firstName)}${initialeDe(user?.lastName)}`;
+  });
+
+  readonly avatarColor = computed(() => {
+    const user = this.authState.user();
+    if (!user) return '#6b7280';
+    const name = `${user.firstName ?? ''}${user.lastName ?? ''}`;
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const hue = Math.abs(hash) % 360;
+    return `hsl(${hue}, 55%, 45%)`;
+  });
+
+  scrolled = false;
+  mobileMenuOpen = false;
+  userDropdownOpen = false;
+
+  get isMobile(): boolean {
+    return this.breakpointService.isTabletOrBelow();
+  }
+
+  @ViewChild('mobileMenuPanel', { static: false })
+  mobileMenuPanel?: ElementRef<HTMLElement>;
+
+  @ViewChild('burgerButton', { static: false })
+  burgerButton?: ElementRef<HTMLButtonElement>;
+
+  constructor(
+    private a11yDialog: A11yDialogService,
+    private readonly cdr: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private readonly platformId: object,
+  ) {
+    effect(() => {
+      const mobile = this.isMobile;
+      if (!mobile && this.mobileMenuOpen) {
+        this.mobileMenuOpen = false;
+        if (isPlatformBrowser(this.platformId)) {
+          document.body.style.overflow = '';
+        }
+        this.cdr.markForCheck();
+      }
+    });
+
+    // Force le re-render quand l'etat auth change.
+    // Necessaire car ngSkipHydration (ajoute par Angular SSR) empeche
+    // les signal reads dans les ngTemplateOutlet embedded views de
+    // declencher correctement markForCheck sur le composant hote.
+    effect(() => {
+      this.authState.isLoggedIn();
+      this.authState.user();
+      this.cdr.markForCheck();
+    });
+    if (isPlatformBrowser(this.platformId)) {
+      const defilement = inject(ViewportScroller);
+      const hote = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+      defilement.setOffset(() => [
+        0,
+        hote.querySelector('nav')?.getBoundingClientRect().bottom ?? 0,
+      ]);
+      inject(DestroyRef).onDestroy(() => defilement.setOffset([0, 0]));
+    }
+  }
+
+  getAlternateLocaleUrl(): string {
+    if (!isPlatformBrowser(this.platformId)) return '#';
+    const targetLocale = langueDuSite(this.currentLocale) === 'fr' ? 'en' : 'fr';
+    return cheminEnLocale(window.location.pathname, targetLocale, LOCALES_DU_SITE);
+  }
+
+  getAlternateLocaleLabel(): string {
+    return langueDuSite(this.currentLocale) === 'fr' ? 'EN' : 'FR';
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const wasScrolled = this.scrolled;
+    this.scrolled = window.scrollY > 50;
+    if (this.scrolled !== wasScrolled) {
+      this.cdr.markForCheck();
+    }
+  }
+
+  logout(): void {
+    this.closeUserDropdown();
+    this.closeMobileMenu();
+    this.authState.logoutEtAccueil();
+  }
+
+  toggleUserDropdown(): void {
+    this.userDropdownOpen = !this.userDropdownOpen;
+    this.cdr.markForCheck();
+  }
+
+  closeUserDropdown(): void {
+    if (this.userDropdownOpen) {
+      this.userDropdownOpen = false;
+      this.cdr.markForCheck();
+    }
+  }
+
+  toggleDropdown(dropdown: DropdownSection): void {
+    dropdown.isOpen = !dropdown.isOpen;
+    this.cdr.markForCheck();
+  }
+
+  openDropdown(dropdown: DropdownSection): void {
+    this.setDropdownOpen(dropdown, true);
+  }
+
+  closeDropdown(dropdown: DropdownSection): void {
+    this.setDropdownOpen(dropdown, false);
+  }
+
+  private setDropdownOpen(dropdown: DropdownSection, isOpen: boolean): void {
+    if (dropdown.isOpen !== isOpen) {
+      dropdown.isOpen = isOpen;
+      this.cdr.markForCheck();
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleGlobalKeydown(event: KeyboardEvent): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    if (this.openMobileMenuOnSpace(event)) return;
+    if (this.closeTopmostOverlayOnEscape(event)) return;
+    this.trapFocusInMobileMenu(event);
+  }
+
+  private openMobileMenuOnSpace(event: KeyboardEvent): boolean {
+    const burger = this.burgerButton?.nativeElement;
+    const isSpace = event.key === ' ' || event.key === 'Spacebar' || event.code === 'Space';
+    if (!burger || !isSpace || document.activeElement !== burger) {
+      return false;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    this.openMobileMenu();
+    return true;
+  }
+
+  private closeTopmostOverlayOnEscape(event: KeyboardEvent): boolean {
+    if (event.key !== 'Escape') {
+      return false;
+    }
+    if (this.userDropdownOpen) {
+      event.preventDefault();
+      this.closeUserDropdown();
+      return true;
+    }
+    const openDropdown = [this.formationsDropdown].find((dropdown) => dropdown.isOpen);
+    if (openDropdown) {
+      event.preventDefault();
+      this.closeDropdown(openDropdown);
+      return true;
+    }
+    if (this.mobileMenuOpen) {
+      event.preventDefault();
+      this.closeMobileMenu();
+      return true;
+    }
+    return false;
+  }
+
+  private trapFocusInMobileMenu(event: KeyboardEvent): void {
+    if (this.mobileMenuOpen && event.key === 'Tab') {
+      this.a11yDialog.trapFocus(event, this.mobileMenuPanel?.nativeElement ?? null);
+    }
+  }
+
+  openMobileMenu(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (this.mobileMenuOpen) return this.closeMobileMenu();
+
+    this.mobileMenuOpen = true;
+    this.cdr.markForCheck();
+    document.body.style.overflow = 'hidden';
+
+    this.a11yDialog.saveFocus();
+
+    requestAnimationFrame(() => {
+      const panel = this.mobileMenuPanel?.nativeElement ?? null;
+      this.a11yDialog.focusFirstDescendant(panel);
+    });
+  }
+
+  closeMobileMenu(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    this.mobileMenuOpen = false;
+    this.cdr.markForCheck();
+    document.body.style.overflow = '';
+
+    this.a11yDialog.restoreFocus();
+  }
+}

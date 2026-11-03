@@ -13,7 +13,7 @@ import {
   type ResultatQuestion,
   type ResultatsSeance,
 } from '../../../../cours/content/types';
-import type { EtatSession, StatutFlux } from '../../../../cours/runtime/core/sync';
+import type { EtatSession, StatutFlux } from '../../../../cours/runtime/core/reseau/sync';
 import {
   attendreAucunEnTeteSansSession,
   buildEcranDeVoteCorrige,
@@ -23,13 +23,13 @@ import {
   buildEcranDeVoteJumele,
   monterLeBancSurLeDeroule,
   monterSurLeBanc,
-} from '../../../../testing/banc-du-pupitre';
+} from '../../../../testing/seance/banc-du-pupitre';
 import { buildAuthSession } from '../../../../testing/factories/auth.factory';
 import {
   buildPlotDefinition,
   buildNumericQuestion,
   buildVoteQuestion,
-} from '../../../../testing/factories/cours.factory';
+} from '../../../../testing/factories/formations/cours.factory';
 import {
   buildDerouleCours,
   buildEcranDeroule,
@@ -39,17 +39,17 @@ import {
   buildResultatsDeChaqueQuestion,
   buildResultatsSeance,
   buildStatistiquesSeance,
-} from '../../../../testing/factories/formations.factory';
-import { refusDuBack } from '../../../../testing/factories/probleme-http.factory';
-import type { FluxDouble } from '../../../../testing/factories/sync.factory';
-import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
-import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques-montees';
+} from '../../../../testing/factories/formations/formations.factory';
+import { refusDuBack } from '../../../../testing/factories/serveur/probleme-http.factory';
+import type { FluxDouble } from '../../../../testing/factories/formations/sync.factory';
+import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantanes/instantane-b2-01';
+import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques/briques-montees';
 import {
   INSTANTANES_DES_COURS_SERVIS,
   VOTES_JUMELES_DU_PUPITRE,
 } from '../../../../testing/fixtures/instantanes-des-cours';
-import { buildVisualQuizSlide } from '../../../../testing/factories/visual-slide.factory';
-import { cibleMarque, lireMarque as lire } from '../../../../testing/marqueurs-dom';
+import { buildVisualQuizSlide } from '../../../../testing/factories/formations/visual-slide.factory';
+import { cibleMarque, lireMarque as lire } from '../../../../testing/dom/marqueurs-dom';
 import {
   attendreAucunFluxApresLaDestruction,
   attendreChaqueCalqueEntierDansLaToile,
@@ -59,13 +59,13 @@ import {
   idsDesEcransMontes,
   publierSurLaVue,
   stabiliserLaVue,
-} from '../../../../testing/vue-de-seance';
-import { uneImage } from '../../../../testing/deux-images';
+} from '../../../../testing/seance/vue-de-seance';
+import { uneImage } from '../../../../testing/texte/deux-images';
 import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formations.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
-import { demanderLaPieceJointe } from '../../../../testing/piece-jointe-demandee';
-import { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
-import { correctionsAffichees } from './corrections-affichees';
+import { demanderLaPieceJointe } from '../../../../testing/seance/piece-jointe-demandee';
+import { SlideActivityComponent } from '../../../shared/slides/session/activite/slide-activity.component';
+import { correctionsAffichees } from './correction/corrections-affichees';
 import { CoursPresentateurComponent } from './cours-presentateur.component';
 
 type Fixture = ComponentFixture<CoursPresentateurComponent>;

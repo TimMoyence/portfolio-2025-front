@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { buildClientReport } from '../../../../../testing/factories/audit-request.factory';
-import { monterAvecRouteur } from '../../../../../testing/montage-page';
+import { monterAvecRouteur } from '../../../../../testing/page/montage-page';
 import type { ClientReport } from '../../../../core/models/audit-client-report.model';
 import { AuditClientReportSectionComponent } from './audit-client-report-section.component';
 

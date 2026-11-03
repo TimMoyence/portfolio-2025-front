@@ -1,6 +1,6 @@
 import { environment } from '../../../environments/environment';
 import { buildToolkitPageData } from '../../../testing/factories/lead-magnet.factory';
-import { bancAdaptateurHttp, verifierPostRelaye } from '../../../testing/http-attendu';
+import { bancAdaptateurHttp, verifierPostRelaye } from '../../../testing/http/http-attendu';
 import type { ToolkitRequest, ToolkitResponse } from '../models/toolkit-request.model';
 import { LeadMagnetHttpAdapter } from './lead-magnet-http.adapter';
 

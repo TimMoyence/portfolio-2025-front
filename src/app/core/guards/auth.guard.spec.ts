@@ -4,7 +4,7 @@ import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/route
 import { UrlTree } from '@angular/router';
 import { Observable, firstValueFrom, throwError } from 'rxjs';
 import type { AuthStateService } from '../services/auth-state.service';
-import { etatAuth } from '../../../testing/etat-auth';
+import { etatAuth } from '../../../testing/http/etat-auth';
 import { buildAuthSession, createAuthPortStub } from '../../../testing/factories/auth.factory';
 import { authGuard } from './auth.guard';
 

@@ -1,4 +1,4 @@
-import { safeHtml } from '../core/html';
+import { safeHtml } from '../core/texte/html';
 import {
   bonneReponseRevelee,
   estVerdictDeProduction,
@@ -12,7 +12,7 @@ import {
   PROPRIETE_FORMATEUR,
   VerdictsParQuestion,
 } from './retours';
-import { buildVerdictDeReponse } from '../../../testing/factories/cours.factory';
+import { buildVerdictDeReponse } from '../../../testing/factories/formations/cours.factory';
 
 describe('lireTextes', () => {
   it('ne garde que les entrees textuelles d un brouillon', () => {

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { UrlTree } from '@angular/router';
 import type { AuthStateService } from '../services/auth-state.service';
-import { etatAuth } from '../../../testing/etat-auth';
+import { etatAuth } from '../../../testing/http/etat-auth';
 import { buildAuthSession, buildAuthUser } from '../../../testing/factories/auth.factory';
 import { coursEntreeGuard } from './cours-entree.guard';
 

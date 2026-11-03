@@ -1,6 +1,6 @@
 # Banc d'essai réel d'une séance de cours
 
-Les suites Playwright du portail (`e2e/cours-*.spec.ts`) jouent sur des réponses HTTP
+Les suites Playwright du portail (`e2e/cours/*.spec.ts`) jouent sur des réponses HTTP
 bouchonnées : elles prouvent que le front réagit correctement à un contrat, pas que ce contrat
 est celui du serveur. Le banc comble ce trou. Il lève PostgreSQL, Redis, l'API NestJS et le front
 en rendu serveur, puis joue une séance d'un cours BTS dans de vrais navigateurs, sans aucun

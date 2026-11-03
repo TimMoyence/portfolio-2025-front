@@ -20,21 +20,24 @@ import {
   type RegimeVerrou,
   type ValeurProduction,
 } from '../../../../cours/content/types';
-import type { Deck } from '../../../../cours/runtime/core/deck';
-import { createDeck } from '../../../../cours/runtime/core/deck';
-import { texte } from '../../../../cours/runtime/core/i18n';
-import type { Identity } from '../../../../cours/runtime/core/identity';
+import type { Deck } from '../../../../cours/runtime/core/ecran/deck';
+import { createDeck } from '../../../../cours/runtime/core/ecran/deck';
+import { texte } from '../../../../cours/runtime/core/texte/i18n';
+import type { Identity } from '../../../../cours/runtime/core/participant/identity';
 import {
   clearIdentity,
   lireSecretDeReprise,
   memoriserSecretDeReprise,
   saveIdentity,
-} from '../../../../cours/runtime/core/identity';
-import type { Lock } from '../../../../cours/runtime/core/lock';
-import { createLock } from '../../../../cours/runtime/core/lock';
-import type { EnvoiReponse, NatureEnvoi } from '../../../../cours/runtime/core/queue';
-import type { Brouillons } from '../../../../cours/runtime/core/storage';
-import { creerBrouillons, purgerLesAutresBrouillons } from '../../../../cours/runtime/core/storage';
+} from '../../../../cours/runtime/core/participant/identity';
+import type { Lock } from '../../../../cours/runtime/core/reseau/lock';
+import { createLock } from '../../../../cours/runtime/core/reseau/lock';
+import type { EnvoiReponse, NatureEnvoi } from '../../../../cours/runtime/core/reseau/queue';
+import type { Brouillons } from '../../../../cours/runtime/core/participant/storage';
+import {
+  creerBrouillons,
+  purgerLesAutresBrouillons,
+} from '../../../../cours/runtime/core/participant/storage';
 import {
   refusDuFlux,
   type EtatSession,
@@ -42,13 +45,18 @@ import {
   type RefusDuFlux,
   type StatutSession,
   type Sync,
-} from '../../../../cours/runtime/core/sync';
-import { bornerEntre, estMembre, estObjet, objet } from '../../../../cours/runtime/core/valeurs';
-import { dureeMonotoneDepuis, instantMonotone } from '../../../../cours/runtime/core/duree';
+} from '../../../../cours/runtime/core/reseau/sync';
+import {
+  bornerEntre,
+  estMembre,
+  estObjet,
+  objet,
+} from '../../../../cours/runtime/core/texte/valeurs';
+import { dureeMonotoneDepuis, instantMonotone } from '../../../../cours/runtime/core/saisie/duree';
 import { cheminDuPupitre, COURS_EN_SEANCE } from '../../../core/config/cours-en-seance';
 import { versLaConnexion } from '../../../core/guards/vers-la-connexion';
 import { getApiFormationsUrl } from '../../../core/http/api-config';
-import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
+import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran/plein-ecran-de-la-page';
 import type {
   IncidentEtudiant,
   MotifRefusRattachement,
@@ -78,7 +86,7 @@ import {
   retourDeTentative,
   retoursDeLEtat,
   verdictsServis,
-} from '../../../core/adapters/retours-brique';
+} from '../../../core/adapters/formations/retours-brique';
 import type { EvenementBrique } from '../../../shared/slides/session/contrat-hote';
 import {
   ecranAuRang,
@@ -88,14 +96,14 @@ import {
   identifiantPorte,
   identifiantsDesQuestions,
 } from '../../../shared/slides/session/lecture-ecran';
-import { memeValeur } from '../../../shared/slides/session/reinjection';
+import { memeValeur } from '../../../shared/slides/session/reprise/reinjection';
 import type { LimiteDeDebit } from '../../../core/models/limite-de-debit';
-import type { EtatEnvoiLibre } from '../../../shared/slides/session/envois-de-seance.service';
+import type { EtatEnvoiLibre } from '../../../shared/slides/session/activite/envois-de-seance.service';
 import {
   cleDeReponseLibre,
   EnvoisDeSeanceService,
   ETATS_EN_FILE,
-} from '../../../shared/slides/session/envois-de-seance.service';
+} from '../../../shared/slides/session/activite/envois-de-seance.service';
 import {
   CoursPresentationComponent,
   type TelechargementDePieceJointe,

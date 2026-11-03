@@ -1,5 +1,5 @@
-import { faqRendue } from '../../../testing/faq-rendue';
-import { decrirePage } from '../../../testing/page-decrite';
+import { faqRendue } from '../../../testing/page/faq-rendue';
+import { decrirePage } from '../../../testing/page/page-decrite';
 import { PresentationComponent } from './presentation.component';
 
 describe('PresentationComponent', () => {

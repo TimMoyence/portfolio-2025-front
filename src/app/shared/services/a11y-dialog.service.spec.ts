@@ -1,4 +1,4 @@
-import { injecterSurPlateforme } from '../../../testing/plateforme';
+import { injecterSurPlateforme } from '../../../testing/environnement/plateforme';
 import { A11yDialogService } from './a11y-dialog.service';
 
 describe('A11yDialogService', () => {

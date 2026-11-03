@@ -6,18 +6,18 @@ import {
   buildNumericQuestion,
   buildSpacedRappel,
   buildVoteQuestion,
-} from '../../../../testing/factories/cours.factory';
+} from '../../../../testing/factories/formations/cours.factory';
 import {
   buildDerouleCours,
   buildEcranDeroule,
   buildResultatsDeChaqueQuestion,
-} from '../../../../testing/factories/formations.factory';
+} from '../../../../testing/factories/formations/formations.factory';
 import {
   buildVisualNestedQuizSlide,
   buildVisualQuizSlide,
   buildVisualSlide,
-} from '../../../../testing/factories/visual-slide.factory';
-import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
+} from '../../../../testing/factories/formations/visual-slide.factory';
+import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantanes/instantane-b2-01';
 import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import {

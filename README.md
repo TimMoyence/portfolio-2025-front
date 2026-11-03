@@ -62,7 +62,7 @@ Pages d'articles : un slug inconnu rend une vraie 404, et une API indisponible r
 
 ### Médias du cours B2-01
 
-La capsule vidéo et les images du cours sont versionnées dans `src/assets/cours/b2-01/v3/` et servies comme le reste des assets. `medias.manifest.json`, servi à côté d'elles, porte pour chaque média son format, ses dimensions, sa source et sa licence ; `e2e/cours-medias.spec.ts` vérifie que chaque entrée du manifeste est réellement livrée et atteignable en SSR.
+La capsule vidéo et les images du cours sont versionnées dans `src/assets/cours/b2-01/v3/` et servies comme le reste des assets. `medias.manifest.json`, servi à côté d'elles, porte pour chaque média son format, ses dimensions, sa source et sa licence ; `e2e/cours/cours-medias.spec.ts` vérifie que chaque entrée du manifeste est réellement livrée et atteignable en SSR.
 
 ### Cours en séance
 
@@ -86,7 +86,7 @@ Pages non indexables (`noindex, nofollow`), en rendu client (`RenderMode.Client`
 Les anciennes URL (`/home`, `/client-project`, `/commonbudgetTM`, `/atelier` et ses sous-routes, l'ancien
 slug du B2-02, les toolkits retirés `/formations/automatiser-avec-ia/toolkit` et
 `/formations/audit-seo-diy/toolkit`) sont redirigées en 301 par le serveur Express
-(`src/server/redirects.ts`), avant le routeur Angular.
+(`src/server/rendu/redirects.ts`), avant le routeur Angular.
 
 ## Prise en main rapide
 
@@ -111,10 +111,10 @@ npm run ci:check
 
 `playwright.config.ts` declare deux projets, volontairement disjoints :
 
-| Projet     | Contenu              | Commande            | Ce qu'il sert                                                    |
-| ---------- | -------------------- | ------------------- | ---------------------------------------------------------------- |
-| `chromium` | `e2e/*.spec.ts`      | `npm run test:e2e`  | parcours navigateur sur reponses HTTP bouchonnees, joue en CI    |
-| `banc`     | `e2e/banc/*.spec.ts` | `npm run test:banc` | seance reelle : front SSR + API + PostgreSQL, sans aucun bouchon |
+| Projet     | Contenu                                 | Commande            | Ce qu'il sert                                                    |
+| ---------- | --------------------------------------- | ------------------- | ---------------------------------------------------------------- |
+| `chromium` | `e2e/{cours,impression,site}/*.spec.ts` | `npm run test:e2e`  | parcours navigateur sur reponses HTTP bouchonnees, joue en CI    |
+| `banc`     | `e2e/banc/**/*.spec.ts`                 | `npm run test:banc` | seance reelle : front SSR + API + PostgreSQL, sans aucun bouchon |
 
 `npm run test:e2e:portail` est la porte jouee par la CI : elle demarre les serveurs SSR `fr` et
 `en` puis rejoue le projet `chromium`, qui ignore le banc.
@@ -217,7 +217,7 @@ Flux a suivre a chaque ajout ou modification d'un texte marque `i18n="..."` ou
    npm run test:guards
    ```
 
-   La garde `scripts/guard-i18n-sync.test.mjs` compare `messages.xlf` et
+   La garde `scripts/gardes/guard-i18n-sync.test.mjs` compare `messages.xlf` et
    `messages.en.xlf` (placeholders ramenes a leur nom, entites et espaces
    normalises) et echoue sur trois ecarts : un id extrait sans `unit` anglaise ou
    sans `<target>`, une `unit` anglaise dont la `<source>` n'est plus le texte

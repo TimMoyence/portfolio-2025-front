@@ -14,13 +14,19 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { ReflexionServie } from '../../../../../cours/content/types';
-import { dureeMonotoneDepuis, instantMonotone } from '../../../../../cours/runtime/core/duree';
-import { suivreLaSaisie } from '../../../../../cours/runtime/core/zone-de-saisie';
+import {
+  dureeMonotoneDepuis,
+  instantMonotone,
+} from '../../../../../cours/runtime/core/saisie/duree';
+import { suivreLaSaisie } from '../../../../../cours/runtime/core/saisie/zone-de-saisie';
 import { PRESENTATION_PORT } from '../../../../core/ports/presentation.port';
 import { readInputValue } from '../../../utils/dom-event.utils';
-import type { EtatEnvoiLibre } from '../../session/envois-de-seance.service';
-import { cleDeReponseLibre, EnvoisDeSeanceService } from '../../session/envois-de-seance.service';
-import { estTexteNonVide } from '../../../../../cours/runtime/core/valeurs';
+import type { EtatEnvoiLibre } from '../../session/activite/envois-de-seance.service';
+import {
+  cleDeReponseLibre,
+  EnvoisDeSeanceService,
+} from '../../session/activite/envois-de-seance.service';
+import { estTexteNonVide } from '../../../../../cours/runtime/core/texte/valeurs';
 import { chargerInteraction } from '../interactions.util';
 import type { ModeInteraction } from '../mode-interaction';
 

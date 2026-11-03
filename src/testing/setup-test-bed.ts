@@ -12,7 +12,7 @@ import {
 } from '../app/core/services/fenetre-de-renouvellement';
 import { VERROU_INTER_ONGLETS } from '../app/core/services/verrou-inter-onglets';
 import { buildAppConfig } from './factories/app-config.factory';
-import { createVerrouEnMemoire } from './factories/verrou.factory';
+import { createVerrouEnMemoire } from './factories/formations/verrou.factory';
 
 export interface SetupTestBedOptions extends TestModuleMetadata {
   appConfig?: Partial<AppConfig>;

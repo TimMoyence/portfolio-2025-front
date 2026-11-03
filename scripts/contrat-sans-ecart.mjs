@@ -1,4 +1,4 @@
-import { ecartsDeLaCopieDeTravail } from './lib/ecarts-du-contrat.mjs';
+import { ecartsDeLaCopieDeTravail } from './lib/contrat/ecarts-du-contrat.mjs';
 import { executer } from './lib/processus.mjs';
 
 const ecarts = ecartsDeLaCopieDeTravail(

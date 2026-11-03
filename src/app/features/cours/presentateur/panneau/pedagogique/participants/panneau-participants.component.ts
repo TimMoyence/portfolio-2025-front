@@ -1,0 +1,204 @@
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { firstValueFrom, type Observable } from 'rxjs';
+import type { ParticipantDeSeance } from '../../../../../../core/ports/formations.port';
+import {
+  ActionSurLePosteRefusee,
+  FORMATIONS_PORT,
+  MESSAGES_REFUS_SUR_LE_POSTE,
+} from '../../../../../../core/ports/formations.port';
+import { type Chargement, lectureSuivie } from '../../../../lecture-suivie';
+
+@Component({
+  selector: 'app-panneau-participants',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './panneau-participants.component.scss',
+  template: `
+    <section class="panneau-participants" data-testid="activite-participants">
+      <div class="panneau-participants__tete">
+        <h3 i18n="@@panneauActiviteParticipantsTitre">Participants</h3>
+        @if (lecture() === 'repos') {
+          <button
+            type="button"
+            class="control-btn"
+            data-testid="activite-participants-afficher"
+            [disabled]="sessionId() === null"
+            (click)="afficherLesParticipants()"
+            i18n="@@panneauActiviteParticipantsAfficher"
+          >
+            Afficher les participants
+          </button>
+        } @else {
+          <button
+            type="button"
+            class="control-btn"
+            data-testid="activite-participants-masquer"
+            (click)="masquerLesParticipants()"
+            i18n="@@panneauActiviteParticipantsMasquer"
+          >
+            Masquer les participants
+          </button>
+        }
+      </div>
+      @switch (lecture()) {
+        @case ('chargement') {
+          <p role="status" i18n="@@panneauActiviteParticipantsChargement">Chargement…</p>
+        }
+        @case ('echec') {
+          <p
+            role="alert"
+            data-testid="activite-participants-echec"
+            i18n="@@panneauActiviteParticipantsEchec"
+          >
+            La liste des participants n’a pas pu être lue.
+          </p>
+          <button
+            type="button"
+            class="control-btn"
+            data-testid="activite-participants-reessayer"
+            (click)="afficherLesParticipants()"
+            i18n="@@panneauActiviteParticipantsReessayer"
+          >
+            Réessayer
+          </button>
+        }
+        @case ('succes') {
+          <ul class="panneau-participants__liste">
+            @for (participant of listeDesParticipants(); track participant.id) {
+              <li
+                data-testid="activite-participant"
+                [attr.data-participant]="participant.id"
+                [attr.data-evince]="participant.evince"
+              >
+                <span>{{ participant.prenom }} {{ participant.nom }}</span>
+                @if (participant.evince) {
+                  <button
+                    type="button"
+                    class="control-btn"
+                    data-testid="activite-readmettre"
+                    (click)="readmettre(participant)"
+                    i18n="@@panneauActiviteReadmettre"
+                  >
+                    Réadmettre dans la séance
+                  </button>
+                } @else {
+                  <button
+                    type="button"
+                    class="control-btn"
+                    data-testid="activite-liberer"
+                    (click)="libererLePoste(participant)"
+                    i18n="@@panneauActiviteLibererPoste"
+                  >
+                    Libérer le poste
+                  </button>
+                  <button
+                    type="button"
+                    class="control-danger"
+                    data-testid="activite-evincer"
+                    (click)="evincer(participant)"
+                    i18n="@@panneauActiviteEvincer"
+                  >
+                    Retirer de la séance
+                  </button>
+                }
+              </li>
+            }
+          </ul>
+          @if (refusDAction(); as refus) {
+            <p role="alert" data-testid="activite-action-refusee">{{ refus }}</p>
+          }
+          @if (posteLibere(); as libere) {
+            <p
+              role="status"
+              data-testid="activite-poste-libere"
+              i18n="@@panneauActivitePosteLibere"
+            >
+              Poste de {{ libere.prenom }} {{ libere.nom }} libéré : il peut rejoindre depuis un
+              autre appareil.
+            </p>
+          }
+        }
+      }
+    </section>
+  `,
+})
+export class PanneauParticipantsComponent {
+  readonly sessionId = input<string | null>(null);
+
+  protected readonly lecture = signal<Chargement>('repos');
+  protected readonly listeDesParticipants = signal<readonly ParticipantDeSeance[]>([]);
+  protected readonly posteLibere = signal<ParticipantDeSeance | null>(null);
+  protected readonly refusDAction = signal<string | null>(null);
+
+  private readonly port = inject(FORMATIONS_PORT);
+  private readonly charger = lectureSuivie();
+
+  protected async afficherLesParticipants(): Promise<void> {
+    const sessionId = this.sessionId();
+    if (sessionId === null) {
+      return;
+    }
+    const lue = await this.charger(this.port.lireParticipants(sessionId), this.lecture);
+    if (lue !== null) {
+      this.listeDesParticipants.set(lue.participants);
+    }
+  }
+
+  protected masquerLesParticipants(): void {
+    this.lecture.set('repos');
+  }
+
+  protected evincer(participant: ParticipantDeSeance): Promise<void> {
+    return this.basculerLEviction(participant, true);
+  }
+
+  protected readmettre(participant: ParticipantDeSeance): Promise<void> {
+    return this.basculerLEviction(participant, false);
+  }
+
+  protected async libererLePoste(participant: ParticipantDeSeance): Promise<void> {
+    const sessionId = this.sessionId();
+    if (sessionId === null) {
+      return;
+    }
+    this.posteLibere.set(null);
+    if (await this.agir(this.port.libererPoste(sessionId, participant.id))) {
+      this.posteLibere.set(participant);
+    }
+  }
+
+  private async agir(commande: Observable<void>): Promise<boolean> {
+    this.refusDAction.set(null);
+    try {
+      await firstValueFrom(commande, { defaultValue: undefined });
+      return true;
+    } catch (erreur) {
+      this.refusDAction.set(
+        erreur instanceof ActionSurLePosteRefusee
+          ? erreur.message
+          : MESSAGES_REFUS_SUR_LE_POSTE['action-impossible'],
+      );
+      return false;
+    }
+  }
+
+  private async basculerLEviction(
+    participant: ParticipantDeSeance,
+    evince: boolean,
+  ): Promise<void> {
+    const sessionId = this.sessionId();
+    if (sessionId === null) {
+      return;
+    }
+    const commande = evince
+      ? this.port.evincerParticipant(sessionId, participant.id)
+      : this.port.readmettreParticipant(sessionId, participant.id);
+    if (await this.agir(commande)) {
+      this.listeDesParticipants.update((liste) =>
+        liste.map((candidat) =>
+          candidat.id === participant.id ? { ...candidat, evince } : candidat,
+        ),
+      );
+    }
+  }
+}

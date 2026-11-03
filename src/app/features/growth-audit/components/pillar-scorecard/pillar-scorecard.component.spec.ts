@@ -1,5 +1,5 @@
 import { buildClientReport } from '../../../../../testing/factories/audit-request.factory';
-import { monterAvecRouteur } from '../../../../../testing/montage-page';
+import { monterAvecRouteur } from '../../../../../testing/page/montage-page';
 import type { ClientReport } from '../../../../core/models/audit-client-report.model';
 import { PillarScorecardComponent } from './pillar-scorecard.component';
 

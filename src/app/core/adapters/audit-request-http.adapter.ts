@@ -9,7 +9,7 @@ import {
   zAuditSummaryResponseDto,
 } from '../../../../contrat/zod.gen';
 import { getApiBaseUrl } from '../http/api-config';
-import { jsonOuNull } from '../../../cours/runtime/core/valeurs';
+import { jsonOuNull } from '../../../cours/runtime/core/texte/valeurs';
 import type {
   AuditConfirmeResponse,
   AuditCreateResponse,
@@ -18,7 +18,7 @@ import type {
   AuditSummaryResponse,
 } from '../models/audit-request.model';
 import type { AuditRequestPort } from '../ports/audit-request.port';
-import { luPar } from './lu-par';
+import { luPar } from './formations/lu-par';
 
 @Injectable()
 export class AuditRequestHttpAdapter implements AuditRequestPort {

@@ -1,4 +1,4 @@
-import { ID_JE_NE_SAIS_PAS } from '../blocks/projection';
+import { ID_JE_NE_SAIS_PAS } from '../blocks/rendu/projection';
 
 export const tokens = `
 :where(.fp-root) {

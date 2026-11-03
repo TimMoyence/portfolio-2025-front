@@ -2,29 +2,32 @@ export { SlideDeckComponent } from './deck/slide-deck.component';
 export { SlideComponent } from './deck/slide.component';
 export { SlideDeckService } from './deck/slide-deck.service';
 
-export { SlideHeroComponent } from './layouts/slide-hero/slide-hero.component';
+export { SlideHeroComponent } from './layouts/texte/slide-hero/slide-hero.component';
 export {
   SlideImageComponent,
   type RichListItem,
-} from './layouts/slide-image/slide-image.component';
-export { SlideIllustrationComponent } from './layouts/slide-illustration/slide-illustration.component';
-export { SlideStatsComponent } from './layouts/slide-stats/slide-stats.component';
-export { SlideQuoteComponent } from './layouts/slide-quote/slide-quote.component';
+} from './layouts/medias/slide-image/slide-image.component';
+export { SlideIllustrationComponent } from './layouts/medias/slide-illustration/slide-illustration.component';
+export { SlideStatsComponent } from './layouts/donnees/slide-stats/slide-stats.component';
+export { SlideQuoteComponent } from './layouts/texte/slide-quote/slide-quote.component';
 export {
   SlideComparisonComponent,
   type ComparisonColumn,
-} from './layouts/slide-comparison/slide-comparison.component';
-export { SlideGridComponent } from './layouts/slide-grid/slide-grid.component';
-export { SlideMethodPathComponent } from './layouts/slide-method-path/slide-method-path.component';
-export { SlideGuideComponent } from './layouts/slide-guide/slide-guide.component';
-export { SlideCtaComponent } from './layouts/slide-cta/slide-cta.component';
-export { SlideTableComponent, type TableColumn } from './layouts/slide-table/slide-table.component';
-export { SlideChartComponent } from './layouts/slide-chart/slide-chart.component';
-export { SlideBoxplotComponent } from './layouts/slide-boxplot/slide-boxplot.component';
-export { SlideLessonComponent } from './layouts/slide-lesson/slide-lesson.component';
-export { SlideScatterComponent } from './layouts/slide-scatter/slide-scatter.component';
-export { SlideSortReviewComponent } from './layouts/slide-sort-review/slide-sort-review.component';
-export { SlideAnswerReviewComponent } from './layouts/slide-answer-review/slide-answer-review.component';
+} from './layouts/donnees/slide-comparison/slide-comparison.component';
+export { SlideGridComponent } from './layouts/medias/slide-grid/slide-grid.component';
+export { SlideMethodPathComponent } from './layouts/texte/slide-method-path/slide-method-path.component';
+export { SlideGuideComponent } from './layouts/texte/slide-guide/slide-guide.component';
+export { SlideCtaComponent } from './layouts/medias/slide-cta/slide-cta.component';
+export {
+  SlideTableComponent,
+  type TableColumn,
+} from './layouts/donnees/slide-table/slide-table.component';
+export { SlideChartComponent } from './layouts/donnees/slide-chart/slide-chart.component';
+export { SlideBoxplotComponent } from './layouts/donnees/slide-boxplot/slide-boxplot.component';
+export { SlideLessonComponent } from './layouts/texte/slide-lesson/slide-lesson.component';
+export { SlideScatterComponent } from './layouts/donnees/slide-scatter/slide-scatter.component';
+export { SlideSortReviewComponent } from './layouts/revue/slide-sort-review/slide-sort-review.component';
+export { SlideAnswerReviewComponent } from './layouts/revue/slide-answer-review/slide-answer-review.component';
 
 export { SlidePollComponent } from './interactions/slide-poll/slide-poll.component';
 export { SlideReflectionComponent } from './interactions/slide-reflection/slide-reflection.component';

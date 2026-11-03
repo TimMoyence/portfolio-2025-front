@@ -1,7 +1,7 @@
 import type { TestRequest } from '@angular/common/http/testing';
 import { environment } from '../../../environments/environment';
 import { buildPublishedArticle } from '../../../testing/factories/article.factory';
-import { bancAdaptateurHttp } from '../../../testing/http-attendu';
+import { bancAdaptateurHttp } from '../../../testing/http/http-attendu';
 import type { ArticleListResponse } from '../models/article.model';
 import { ArticleHttpAdapter } from './article-http.adapter';
 

@@ -4,7 +4,7 @@ import { of, throwError, type Observable } from 'rxjs';
 import {
   buildInteractionsResponse,
   createPresentationPortStub,
-} from '../../../../testing/factories/presentation.factory';
+} from '../../../../testing/factories/formations/presentation.factory';
 import {
   chargerInteraction,
   flattenInteractions,

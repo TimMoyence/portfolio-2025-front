@@ -11,8 +11,8 @@ import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import type { Subscription } from 'rxjs';
-import { jetonDuLien } from '../auth/jeton-du-lien';
-import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/duree';
+import { jetonDuLien } from '../auth/reinitialisation/jeton-du-lien';
+import { dureeMonotoneDepuis, instantMonotone } from '../../../cours/runtime/core/saisie/duree';
 import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
 import type { ClientReport } from '../../core/models/audit-client-report.model';
 import type {
@@ -29,10 +29,10 @@ import {
 import type { AuditRequestPort } from '../../core/ports/audit-request.port';
 import { AUDIT_REQUEST_PORT } from '../../core/ports/audit-request.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
-import type { FaqItem } from '../../shared/components/faq-section/faq-section.component';
-import { FaqSectionComponent } from '../../shared/components/faq-section/faq-section.component';
+import type { FaqItem } from '../../shared/components/sections/faq-section/faq-section.component';
+import { FaqSectionComponent } from '../../shared/components/sections/faq-section/faq-section.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
-import { HeroSectionComponent } from '../../shared/components/hero-section/hero-section.component';
+import { HeroSectionComponent } from '../../shared/components/sections/hero-section/hero-section.component';
 import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';

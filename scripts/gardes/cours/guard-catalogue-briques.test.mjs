@@ -1,0 +1,310 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
+import test from 'node:test';
+
+import { listerFichiers } from '../../lib/arborescence.mjs';
+
+const DOSSIER_BRIQUES = 'src/cours/runtime/blocks';
+const REGISTRE = 'src/cours/runtime/core/ecran/register.ts';
+const DOSSIER_FEUILLES = 'src/cours/runtime/design/blocks';
+const INDEX_FEUILLES = `${DOSSIER_FEUILLES}/index.ts`;
+const SOCLE = 'FpBlock';
+const PLANCHER_FEUILLE = 20;
+
+const PERIMETRE_V1 = [
+  'fp-vote',
+  'fp-numeric',
+  'fp-concept4',
+  'fp-worked',
+  'fp-plot',
+  'fp-table-build',
+  'fp-sheet',
+  'fp-cardsort',
+  'fp-escape',
+  'fp-challenge',
+  'fp-pulse',
+  'fp-recall',
+  'fp-spaced',
+  'fp-quote',
+  'fp-story',
+  'fp-pro',
+];
+
+const POURQUOI =
+  'Une brique absente de BLOCS n est jamais enregistree comme element personnalise : le deck la monte, le navigateur rend un element inconnu, et rien ne le signale. Deux briques livrees et testees vertes sont restees inutilisables jusqu a ce qu on les compte.';
+
+const POURQUOI_SPEC =
+  'Comparer la table au disque ne voit jamais une brique prevue par la specification mais jamais ecrite : les deux cotes sont d accord sur rien. Seule la liste du perimetre V1 tenue a la main attrape l oubli.';
+
+const FICHIERS_DE_BRIQUE = listerFichiers(DOSSIER_BRIQUES, (nom) =>
+  /^Fp[A-Za-z0-9]+\.ts$/.test(nom),
+);
+
+const cheminDeBrique = (classe) =>
+  join(
+    DOSSIER_BRIQUES,
+    FICHIERS_DE_BRIQUE.find((relatif) => basename(relatif) === `${classe}.ts`) ?? `${classe}.ts`,
+  );
+
+function classesDeBrique() {
+  return FICHIERS_DE_BRIQUE.map((relatif) => basename(relatif, '.ts'))
+    .filter((classe) => classe !== SOCLE)
+    .sort();
+}
+
+function classesEnregistrees(contenu) {
+  return [...contenu.matchAll(/\)\)\.(Fp[A-Za-z0-9]+)\b/g)].map((trouve) => trouve[1]).sort();
+}
+
+function nomsEnregistres() {
+  const contenu = readFileSync(REGISTRE, 'utf8');
+  return [...contenu.matchAll(/nom:\s*'([^']+)'/g)].map((trouve) => trouve[1]);
+}
+
+function inscriptions() {
+  const contenu = readFileSync(REGISTRE, 'utf8');
+  return [...contenu.matchAll(/nom:\s*'([^']+)'[\s\S]*?\)\)\.(Fp[A-Za-z0-9]+)\b/g)].map(
+    (trouve) => ({
+      nom: trouve[1],
+      classe: trouve[2],
+    }),
+  );
+}
+
+const DECLARE_LES_METADONNEES = /metadonnees\??:\s*MetadonneesBrique/;
+
+function interfacesDe(source) {
+  return [...source.matchAll(/interface (\w+)/g)].map((trouve) => {
+    const [entete, nom] = trouve;
+    const finDuNom = trouve.index + entete.length;
+    const debutDuCorps = source.indexOf('{', finDuNom) + 1;
+    const suite = source.slice(finDuNom, debutDuCorps - 1);
+    const finDuCorps = source.indexOf('\n}', debutDuCorps);
+    const clauseExtends = suite.split('extends ')[1] ?? '';
+    return {
+      nom,
+      parents: clauseExtends
+        .split(',')
+        .map((parent) => /\w+/.exec(parent)?.[0])
+        .filter((parent) => parent !== undefined),
+      corps: source.slice(debutDuCorps, finDuCorps === -1 ? source.length : finDuCorps),
+    };
+  });
+}
+
+const CONTRAT = 'contrat/types.gen.ts';
+const ALIAS_DU_CONTRAT = /export type \w+ = (Donnees\w+)\[/g;
+
+function porteLesMetadonneesDuContrat(source, contrat) {
+  return [...source.matchAll(ALIAS_DU_CONTRAT)].some(([, nom]) => {
+    const debut = contrat.indexOf(`export type ${nom} = {`);
+    if (debut === -1) {
+      return false;
+    }
+    const fin = contrat.indexOf('\n};', debut);
+    return DECLARE_LES_METADONNEES.test(contrat.slice(debut, fin === -1 ? contrat.length : fin));
+  });
+}
+
+function porteLesMetadonnees(source, corpus, contrat = '') {
+  if (porteLesMetadonneesDuContrat(source, contrat)) {
+    return true;
+  }
+  const parNom = new Map(interfacesDe(corpus).map((iface) => [iface.nom, iface]));
+  const porte = (iface, vues) => {
+    if (DECLARE_LES_METADONNEES.test(iface.corps)) {
+      return true;
+    }
+    return iface.parents.some((parent) => {
+      const trouve = parNom.get(parent);
+      return trouve !== undefined && !vues.has(parent) && porte(trouve, new Set([...vues, parent]));
+    });
+  };
+  return interfacesDe(source).some((iface) => porte(iface, new Set([iface.nom])));
+}
+
+function corpusDesBriques() {
+  return listerFichiers(DOSSIER_BRIQUES, (nom) => nom.endsWith('.ts') && !nom.endsWith('.spec.ts'))
+    .map((relatif) => readFileSync(join(DOSSIER_BRIQUES, relatif), 'utf8'))
+    .join('\n');
+}
+
+function identifiantsDeFeuille() {
+  const contenu = readFileSync(INDEX_FEUILLES, 'utf8');
+  const debut = contenu.indexOf('const FEUILLES');
+  const fin = contenu.indexOf('};', debut);
+  const entrees = new Map();
+  for (const ligne of contenu.slice(debut, fin).split('\n')) {
+    const avecCle = /^\s*'([^']+)':\s*(\w+),/.exec(ligne);
+    if (avecCle) {
+      entrees.set(avecCle[1], avecCle[2]);
+      continue;
+    }
+    const raccourci = /^\s*(\w+),\s*$/.exec(ligne);
+    if (raccourci) {
+      entrees.set(raccourci[1], raccourci[1]);
+    }
+  }
+  return entrees;
+}
+
+function corpsDesFeuilles() {
+  return listerFichiers(DOSSIER_FEUILLES, (nom) => nom.endsWith('.ts'))
+    .filter((relatif) => relatif !== 'index.ts')
+    .map((relatif) => readFileSync(join(DOSSIER_FEUILLES, relatif), 'utf8'))
+    .join('\n');
+}
+
+function feuilleDe(identifiant, corpus) {
+  const motif = new RegExp(`export const ${identifiant}\\s*=\\s*\`([\\s\\S]*?)\``);
+  return motif.exec(corpus)?.[1] ?? null;
+}
+
+test('chaque brique du dossier figure dans la table d enregistrement', () => {
+  const surDisque = classesDeBrique();
+  const contenu = readFileSync(REGISTRE, 'utf8');
+  const inscrites = classesEnregistrees(contenu);
+
+  assert.ok(
+    surDisque.length > 0,
+    `${DOSSIER_BRIQUES} ne contient aucune brique : la garde ne garde rien.`,
+  );
+  assert.ok(inscrites.length > 0, `${REGISTRE} n inscrit aucune brique : la garde ne garde rien.`);
+
+  const manquantes = surDisque.filter((classe) => !inscrites.includes(classe));
+  assert.deepEqual(manquantes, [], `absentes de BLOCS : ${manquantes.join(', ')}. ${POURQUOI}`);
+});
+
+test('la table n inscrit aucune brique qui n existe pas sur le disque', () => {
+  const surDisque = classesDeBrique();
+  const inscrites = classesEnregistrees(readFileSync(REGISTRE, 'utf8'));
+
+  const fantomes = inscrites.filter((classe) => !surDisque.includes(classe));
+  assert.deepEqual(fantomes, [], `inscrites sans fichier : ${fantomes.join(', ')}`);
+});
+
+test('chaque brique du perimetre V1 de la specification est inscrite', () => {
+  const noms = nomsEnregistres();
+
+  assert.ok(PERIMETRE_V1.length > 0, 'la liste du perimetre V1 est vide : la garde ne garde rien.');
+  assert.ok(noms.length > 0, `${REGISTRE} n inscrit aucun nom : la garde ne garde rien.`);
+
+  const jamaisEcrites = PERIMETRE_V1.filter((nom) => !noms.includes(nom));
+  assert.deepEqual(
+    jamaisEcrites,
+    [],
+    `prevues par la specification et jamais inscrites : ${jamaisEcrites.join(', ')}. ${POURQUOI_SPEC}`,
+  );
+});
+
+test('chaque brique inscrite dispose d une feuille de styles non vide', () => {
+  const noms = nomsEnregistres();
+  const identifiants = identifiantsDeFeuille();
+  const corpus = corpsDesFeuilles();
+
+  assert.ok(noms.length > 0, `${REGISTRE} n inscrit aucun nom : la garde ne garde rien.`);
+  assert.ok(
+    identifiants.size > 0,
+    `${INDEX_FEUILLES} ne declare aucune feuille : la garde ne garde rien.`,
+  );
+
+  for (const nom of noms) {
+    const cle = nom.replace(/^fp-/, '');
+    const identifiant = identifiants.get(cle);
+    assert.ok(
+      identifiant !== undefined,
+      `${nom} n a aucune entree « ${cle} » dans ${INDEX_FEUILLES} : feuilleDe('${cle}') rend la chaine vide et la brique s affiche sans style.`,
+    );
+    const feuille = feuilleDe(identifiant, corpus);
+    assert.ok(
+      feuille !== null,
+      `${nom} declare la feuille « ${identifiant} » introuvable sous ${DOSSIER_FEUILLES}.`,
+    );
+    assert.ok(
+      feuille.includes('{') && feuille.trim().length >= PLANCHER_FEUILLE,
+      `${nom} pointe une feuille « ${identifiant} » sans regle : la brique s affiche sans style.`,
+    );
+  }
+});
+
+test('chaque brique inscrite declare ses metadonnees pedagogiques', () => {
+  const inscrites = inscriptions();
+
+  assert.ok(inscrites.length > 0, `${REGISTRE} n inscrit aucune brique : la garde ne garde rien.`);
+
+  const corpus = corpusDesBriques();
+  const contrat = readFileSync(CONTRAT, 'utf8');
+  const muettes = inscrites
+    .filter(({ classe }) => {
+      const source = readFileSync(cheminDeBrique(classe), 'utf8');
+      return !porteLesMetadonnees(source, corpus, contrat);
+    })
+    .map(({ nom }) => nom);
+
+  assert.deepEqual(
+    muettes,
+    [],
+    `sans metadonnees pedagogiques : ${muettes.join(', ')}. Une brique qui n annonce ni concept, ni duree, ni modalite, ni regime de verrou ne peut etre choisie pour un cours autrement qu au jugé.`,
+  );
+});
+
+test('chaque brique inscrite porte un nom d element distinct en fp-', () => {
+  const noms = nomsEnregistres();
+
+  assert.ok(noms.length > 0, `${REGISTRE} n inscrit aucun nom : la garde ne garde rien.`);
+  for (const nom of noms) {
+    assert.match(nom, /^fp-[a-z0-9-]+$/, `nom d element invalide : ${nom}`);
+  }
+  assert.equal(new Set(noms).size, noms.length, `nom d element en double dans ${REGISTRE}`);
+});
+
+test('la lecture des metadonnees suit la chaine extends et refuse une brique qui ne la porte pas', () => {
+  const corpus = `
+export interface Socle {
+  readonly metadonnees: MetadonneesBrique;
+}
+export interface Etage extends Socle {
+  readonly intitule: string;
+}
+export interface Orphelin {
+  readonly id: string;
+}
+`;
+  assert.ok(
+    porteLesMetadonnees('interface Plan extends Etage, Autre {\n  readonly x: number;\n}', corpus),
+  );
+  assert.ok(
+    porteLesMetadonnees('interface Plan {\n  readonly metadonnees?: MetadonneesBrique;\n}', corpus),
+  );
+  assert.ok(
+    !porteLesMetadonnees('interface Plan extends Orphelin {\n  readonly x: number;\n}', corpus),
+  );
+  assert.ok(!porteLesMetadonnees('export class FpRien {}', corpus));
+});
+
+test('une brique typee par le contrat porte les metadonnees que le contrat lui donne, et seulement celles-la', () => {
+  const contrat = `
+export type DonneesFpPorte = {
+  billet: {
+    id: string;
+    metadonnees: MetadonneesBrique;
+  };
+};
+
+export type DonneesFpMuette = {
+  billet: {
+    id: string;
+  };
+};
+`;
+  assert.ok(
+    porteLesMetadonnees("export type BilletPublic = DonneesFpPorte['billet'];", '', contrat),
+  );
+  assert.ok(
+    !porteLesMetadonnees("export type BilletPublic = DonneesFpMuette['billet'];", '', contrat),
+  );
+  assert.ok(
+    !porteLesMetadonnees("export type BilletPublic = DonneesFpAbsente['billet'];", '', contrat),
+  );
+});

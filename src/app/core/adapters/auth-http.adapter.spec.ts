@@ -1,5 +1,5 @@
 import { environment } from '../../../environments/environment';
-import { bancAdaptateurHttp, verifierPostRelaye } from '../../../testing/http-attendu';
+import { bancAdaptateurHttp, verifierPostRelaye } from '../../../testing/http/http-attendu';
 import {
   buildAuthSession,
   buildAuthUser,

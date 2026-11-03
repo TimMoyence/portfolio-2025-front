@@ -1,0 +1,193 @@
+import type { SeoMetadataFile, SeoPageEntry } from '../../app/core/seo/seo-metadata.model';
+import { LOCALES_DU_SITE } from '../../app/core/config/locales';
+import { routeSansLocale, urlLocalisee } from '../../app/core/seo/chemins';
+import { serialiserJsonLd } from '../../app/core/seo/json-ld';
+import { NOM_DU_SITE } from '../../app/core/seo/nom-du-site';
+import {
+  cheminPublicDeLaPage,
+  estIndexable,
+  localeParDefaut,
+  pageSeoDeLaRoute,
+} from '../../app/core/seo/pages-seo';
+import { chaineDe } from '../../cours/runtime/core/texte/valeurs';
+
+const FRESHNESS_ENABLED_TYPES = new Set([
+  'WebPage',
+  'ProfilePage',
+  'AboutPage',
+  'ContactPage',
+  'Article',
+  'BlogPosting',
+  'NewsArticle',
+  'CreativeWork',
+  'Course',
+  'Service',
+  'ProfessionalService',
+  'ItemList',
+  'FAQPage',
+  'WebSite',
+]);
+
+const DEFAULT_BASE_URL = 'https://asilidesign.fr';
+
+const enrichJsonLdBlock = (
+  block: Record<string, unknown>,
+  page: { lastmod?: string },
+): Record<string, unknown> => {
+  const typeStr = chaineDe(block, '@type');
+  if (!typeStr || !FRESHNESS_ENABLED_TYPES.has(typeStr)) return block;
+
+  const enriched: Record<string, unknown> = { ...block };
+
+  if (!enriched['dateModified'] && page.lastmod) {
+    enriched['dateModified'] = page.lastmod;
+  }
+  if (!enriched['datePublished'] && enriched['dateModified']) {
+    enriched['datePublished'] = enriched['dateModified'];
+  }
+  if (
+    !enriched['author'] &&
+    typeStr !== 'WebSite' &&
+    typeStr !== 'LocalBusiness' &&
+    typeStr !== 'ProfessionalService'
+  ) {
+    enriched['author'] = { '@id': `${DEFAULT_BASE_URL}/#person` };
+  }
+
+  return enriched;
+};
+
+const routeDeLURL = (
+  metadata: SeoMetadataFile,
+  originalUrl: string,
+): { locale: string; route: string } => {
+  const { locale, route } = routeSansLocale(originalUrl, LOCALES_DU_SITE);
+  return { locale: locale ?? localeParDefaut(metadata), route };
+};
+
+const toJsonLdScript = (data: Record<string, unknown>): string =>
+  `<script type="application/ld+json">${serialiserJsonLd(data)}</script>`;
+
+const globalBlocks = (metadata: SeoMetadataFile, route: string): Record<string, unknown>[] => {
+  const global = metadata.global;
+  if (!global) return [];
+  const blocks: Record<string, unknown>[] = [];
+  if (global.localBusiness) blocks.push(global.localBusiness);
+  if (global.siteNavigation) blocks.push(global.siteNavigation);
+  if (global.person && route !== '/presentation') blocks.push(global.person);
+  return blocks;
+};
+
+const pageBlocks = (
+  page: SeoPageEntry,
+  locale: string,
+  defaultLocale: string,
+): Record<string, unknown>[] => {
+  const localeMeta = page.locales[locale] ?? page.locales[defaultLocale];
+  if (!localeMeta?.jsonLd) return [];
+  return Array.isArray(localeMeta.jsonLd) ? localeMeta.jsonLd : [localeMeta.jsonLd];
+};
+
+const breadcrumbBlocks = (
+  page: SeoPageEntry,
+  metadata: SeoMetadataFile,
+  locale: string,
+): Record<string, unknown>[] => {
+  const breadcrumb = page.breadcrumb;
+  if (!breadcrumb || breadcrumb.length === 0) return [];
+  const baseUrl = metadata.site.baseUrl ?? DEFAULT_BASE_URL;
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumb.map((entry, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: entry.name,
+        item: urlLocalisee(baseUrl, locale, entry.path),
+      })),
+    },
+  ];
+};
+
+const buildJsonLdScripts = (metadata: SeoMetadataFile, originalUrl: string): string => {
+  const { locale, route } = routeDeLURL(metadata, originalUrl);
+  const page = pageSeoDeLaRoute(metadata, route);
+
+  const blocks = [...globalBlocks(metadata, route)];
+  if (page) {
+    for (const block of pageBlocks(page, locale, localeParDefaut(metadata))) {
+      blocks.push(enrichJsonLdBlock(block, page));
+    }
+    blocks.push(...breadcrumbBlocks(page, metadata, locale));
+  }
+
+  return blocks.map(toJsonLdScript).join('\n');
+};
+
+const buildSeoLinkTags = (
+  metadata: SeoMetadataFile,
+  originalUrl: string,
+  baseUrl: string,
+): string => {
+  const locales = metadata.site.locales ?? [];
+  const defaultLocale = localeParDefaut(metadata);
+
+  const { locale: currentLocale, route } = routeDeLURL(metadata, originalUrl);
+  const page = pageSeoDeLaRoute(metadata, route);
+  if (!page || !estIndexable(page)) return '';
+
+  const pagePath = cheminPublicDeLaPage(page);
+  const hrefFor = (locale: string): string => urlLocalisee(baseUrl, locale, pagePath);
+
+  return [
+    `<link rel="canonical" href="${hrefFor(currentLocale)}" />`,
+    ...locales.map(
+      (locale) => `<link rel="alternate" hreflang="${locale}" href="${hrefFor(locale)}" />`,
+    ),
+    `<link rel="alternate" hreflang="x-default" href="${hrefFor(defaultLocale)}" />`,
+  ].join('\n');
+};
+
+const ARTICLE_FEED_PATH = '/api/v1/portfolio25/articles/feed.xml';
+const ARTICLE_FEED_TITLES: Record<string, string> = {
+  fr: `Veille IA — ${NOM_DU_SITE}`,
+  en: `AI Watch — ${NOM_DU_SITE}`,
+};
+
+const buildArticleFeedLink = (
+  metadata: SeoMetadataFile,
+  originalUrl: string,
+  baseUrl: string,
+): string => {
+  const defaultLocale = localeParDefaut(metadata);
+  const prefixed = routeDeLURL(metadata, originalUrl).locale;
+  const locale = prefixed in ARTICLE_FEED_TITLES ? prefixed : defaultLocale;
+  const href = new URL(ARTICLE_FEED_PATH, baseUrl);
+  href.searchParams.set('locale', locale);
+  return `<link rel="alternate" type="application/rss+xml" title="${ARTICLE_FEED_TITLES[locale] ?? ARTICLE_FEED_TITLES['fr']}" href="${href.toString()}" />`;
+};
+
+export const isKnownRoute = (routePath: string, metadata: SeoMetadataFile): boolean =>
+  pageSeoDeLaRoute(metadata, routePath) !== undefined;
+
+export const injectSeoHead = (
+  html: string,
+  metadata: SeoMetadataFile,
+  originalUrl: string,
+  baseUrl: string,
+): string => {
+  const links = buildSeoLinkTags(metadata, originalUrl, baseUrl);
+  const feed = buildArticleFeedLink(metadata, originalUrl, baseUrl);
+  const scripts = buildJsonLdScripts(metadata, originalUrl);
+  const combined = [links, feed, scripts].filter((value) => value).join('\n');
+
+  let cleaned = html;
+  cleaned = cleaned.replace(/<link\s+rel="canonical"[^>]*>\s*/gi, '');
+  cleaned = cleaned.replace(/<link\s+rel="alternate"\s+hreflang="[^"]*"[^>]*>\s*/gi, '');
+  cleaned = cleaned.replace(
+    /<link\s+rel="alternate"\s+type="application\/rss\+xml"[^>]*>\s*/gi,
+    '',
+  );
+  return cleaned.replace('</head>', `${combined}\n</head>`);
+};
