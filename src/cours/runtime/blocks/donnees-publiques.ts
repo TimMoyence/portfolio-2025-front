@@ -1,21 +1,21 @@
 import type { MetadonneesBrique, RegimeVerrou } from '../../content/types';
-import type { CardsortPlanPublic as CardsortPlanBrique } from './FpCardsort';
-import type { ChallengeProblemePublic } from './FpChallenge';
-import type { Concept4Definition } from './FpConcept4';
+import type { CardsortPlanPublic as CardsortPlanBrique } from './questions/FpCardsort';
+import type { ChallengeProblemePublic } from './activites/FpChallenge';
+import type { Concept4Definition } from './contenus/FpConcept4';
 import type {
   EscapeEnigmePublique,
   EscapeParcoursPublic as EscapeParcoursBrique,
-} from './FpEscape';
-import type { NumericQuestionPublique } from './FpNumeric';
-import type { PlotDefinition as PlotDefinitionBrique } from './FpPlot';
-import type { ProCas } from './FpPro';
-import type { PulseSondage } from './FpPulse';
-import type { SheetPlanPublic as SheetPlanBrique } from './FpSheet';
-import type { SpacedQuestionPublique as SpacedQuestionBrique } from './FpSpaced';
-import type { StoryRecit } from './FpStory';
-import type { TableBuildPlanPublic, TableColonne } from './FpTableBuild';
-import type { WorkedExemple } from './FpWorked';
-import type { OptionPublique } from './projection';
+} from './activites/FpEscape';
+import type { NumericQuestionPublique } from './questions/FpNumeric';
+import type { PlotDefinition as PlotDefinitionBrique } from './contenus/FpPlot';
+import type { ProCas } from './activites/FpPro';
+import type { PulseSondage } from './questions/FpPulse';
+import type { SheetPlanPublic as SheetPlanBrique } from './activites/FpSheet';
+import type { SpacedQuestionPublique as SpacedQuestionBrique } from './questions/FpSpaced';
+import type { StoryRecit } from './contenus/FpStory';
+import type { TableBuildPlanPublic, TableColonne } from './activites/FpTableBuild';
+import type { WorkedExemple } from './activites/FpWorked';
+import type { OptionPublique } from './rendu/projection';
 
 export type { Concept4Definition, OptionPublique, PulseSondage, StoryRecit, WorkedExemple };
 

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subject, of } from 'rxjs';
-import { fournirLaRoute } from '../../../testing/factories/route.factory';
+import { fournirLaRoute } from '../../../testing/factories/serveur/route.factory';
 import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-registry.service';
 import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';

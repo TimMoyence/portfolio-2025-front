@@ -1,5 +1,5 @@
-@forward '../../styles-shared/mono' show police;
-@use '../../styles-shared/mono';
+@forward '../../styles-shared/mise-en-page/mono' show police;
+@use '../../styles-shared/mise-en-page/mono';
 
 @mixin cadre($ecart) {
   display: grid;

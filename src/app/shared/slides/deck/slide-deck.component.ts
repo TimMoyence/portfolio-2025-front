@@ -16,8 +16,8 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import { bornerEntre, estEntierPositif } from '../../../../cours/runtime/core/valeurs';
-import { FullscreenAdapter } from './fullscreen.adapter';
+import { bornerEntre, estEntierPositif } from '../../../../cours/runtime/core/texte/valeurs';
+import { FullscreenAdapter } from './plein-ecran/fullscreen.adapter';
 import { SlideComponent } from './slide.component';
 import { SlideDeckService, type SlideDeckMode } from './slide-deck.service';
 import { SLIDE_DECK_CONFIG, SLIDE_DECK_HOST } from './slide-deck.tokens';

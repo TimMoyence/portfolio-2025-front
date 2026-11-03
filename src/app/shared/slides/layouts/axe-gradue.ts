@@ -1,5 +1,5 @@
-import { enFrancais } from '../../../../cours/runtime/core/typographie';
-import { bornerEntre } from '../../../../cours/runtime/core/valeurs';
+import { enFrancais } from '../../../../cours/runtime/core/texte/typographie';
+import { bornerEntre } from '../../../../cours/runtime/core/texte/valeurs';
 
 export type Plage = readonly [number, number];
 

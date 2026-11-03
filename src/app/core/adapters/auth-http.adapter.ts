@@ -7,7 +7,7 @@ import {
 } from '../../../../contrat/zod.gen';
 import type { AuthPort } from '../ports/auth.port';
 import { getApiBaseUrl } from '../http/api-config';
-import { luPar } from './lu-par';
+import { luPar } from './formations/lu-par';
 
 @Injectable()
 export class AuthHttpAdapter implements AuthPort {

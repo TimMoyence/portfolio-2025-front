@@ -6,7 +6,7 @@ import type { AuditStreamEvent } from '../models/audit-request.model';
 import {
   type EventSourceFactice,
   installerEventSourceFactice,
-} from '../../../testing/event-source-factice';
+} from '../../../testing/seance/event-source-factice';
 import {
   buildAuditCompletedEvent,
   buildAuditFailedEvent,

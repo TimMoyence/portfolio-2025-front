@@ -1,9 +1,0 @@
-@use '../../../styles-shared/heads' as heads;
-
-:host {
-  display: block;
-}
-
-.sec-head.faq-head {
-  @include heads.section-head-centered;
-}

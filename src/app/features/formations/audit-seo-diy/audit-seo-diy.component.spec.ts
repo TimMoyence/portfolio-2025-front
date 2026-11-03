@@ -1,7 +1,7 @@
 import {
   decrireDeckDeFormation,
   decrireDesAppelsAuContact,
-} from '../../../../testing/deck-de-formation';
+} from '../../../../testing/seance/deck-de-formation';
 import { AuditSeoDiyComponent } from './audit-seo-diy.component';
 
 describe('AuditSeoDiyComponent', () => {

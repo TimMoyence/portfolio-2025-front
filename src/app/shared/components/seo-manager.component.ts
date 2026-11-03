@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { filter, map, mergeMap, switchMap } from 'rxjs/operators';
-import { chaineDe } from '../../../cours/runtime/core/valeurs';
+import { chaineDe } from '../../../cours/runtime/core/texte/valeurs';
 import { APP_CONFIG } from '../../core/config/app-config.token';
 import {
   buildLocalizedPath,

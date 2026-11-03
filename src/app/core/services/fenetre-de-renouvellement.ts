@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { InjectionToken, PLATFORM_ID, inject } from '@angular/core';
-import { persistJson, readJson } from '../../../cours/runtime/core/storage';
-import { estObjet } from '../../../cours/runtime/core/valeurs';
+import { persistJson, readJson } from '../../../cours/runtime/core/participant/storage';
+import { estObjet } from '../../../cours/runtime/core/texte/valeurs';
 
 export interface FenetreDeRenouvellement {
   readonly pasAvant: number;

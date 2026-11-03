@@ -4,7 +4,7 @@ import type { SeoMetadataFile } from '../../core/seo/seo-metadata.model';
 import { FormationsListComponent } from './formations-list.component';
 import { FORMATION_BENEFITS, FORMATIONS } from './formations-list.data';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../testing/fixtures/instantanes-des-cours';
-import { montagePage } from '../../../testing/montage-page';
+import { montagePage } from '../../../testing/page/montage-page';
 
 const COURS_EN_SEANCE = INSTANTANES_DES_COURS_SERVIS.map(([code, instantane]) => ({
   code,

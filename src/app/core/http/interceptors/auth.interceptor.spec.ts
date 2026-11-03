@@ -19,10 +19,10 @@ import {
   buildReponseEn401,
   createAuthPortStub,
 } from '../../../../testing/factories/auth.factory';
-import { createVerrouEnMemoire } from '../../../../testing/factories/verrou.factory';
-import { reveillerApres } from '../../../../testing/horloge-simulee';
+import { createVerrouEnMemoire } from '../../../../testing/factories/formations/verrou.factory';
+import { reveillerApres } from '../../../../testing/environnement/horloge-simulee';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
-import { ENTETE_JETON_PARTICIPANT } from '../../../../cours/runtime/core/jeton-participant';
+import { ENTETE_JETON_PARTICIPANT } from '../../../../cours/runtime/core/participant/jeton-participant';
 import { authInterceptor } from './auth.interceptor';
 
 describe('authInterceptor', () => {

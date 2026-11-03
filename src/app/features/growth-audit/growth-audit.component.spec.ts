@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
-import { aLaPage } from '../../../testing/chemin-de-la-page';
+import { aLaPage } from '../../../testing/page/chemin-de-la-page';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import type { NgForm } from '@angular/forms';
@@ -9,7 +9,7 @@ import { of, throwError } from 'rxjs';
 import type { AuditStreamEvent } from '../../core/models/audit-request.model';
 import { AUDIT_REQUEST_PORT } from '../../core/ports/audit-request.port';
 import { GrowthAuditComponent } from './growth-audit.component';
-import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/champ-de-formulaire';
+import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/dom/champ-de-formulaire';
 import {
   buildAuditCompletedEvent,
   buildAuditCreateResponse,
@@ -21,8 +21,11 @@ import {
   buildClientReport,
   createAuditRequestPortStub,
 } from '../../../testing/factories/audit-request.factory';
-import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
-import { champsAntiRobotDeChaqueSaisie, SAISIES_MESUREES } from '../../../testing/saisies-mesurees';
+import { refusDuBack } from '../../../testing/factories/serveur/probleme-http.factory';
+import {
+  champsAntiRobotDeChaqueSaisie,
+  SAISIES_MESUREES,
+} from '../../../testing/dom/saisies-mesurees';
 
 function buildValidForm(): NgForm {
   return jasmine.createSpyObj<NgForm>('NgForm', ['resetForm'], {

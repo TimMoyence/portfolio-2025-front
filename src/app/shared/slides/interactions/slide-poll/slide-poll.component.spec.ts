@@ -4,7 +4,7 @@ import { fakeAsync } from '@angular/core/testing';
 import {
   configurerLHoteDInteraction,
   monterApresChargement,
-} from '../../../../../testing/hote-d-interaction';
+} from '../../../../../testing/dom/hote-d-interaction';
 import { SlidePollComponent } from './slide-poll.component';
 
 @Component({

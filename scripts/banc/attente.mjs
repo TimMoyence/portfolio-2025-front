@@ -1,4 +1,4 @@
-import { messageDErreur } from '../../src/server/lecture-api.ts';
+import { messageDErreur } from '../../src/server/api/lecture-api.ts';
 
 export class AttenteEpuisee extends Error {
   /**

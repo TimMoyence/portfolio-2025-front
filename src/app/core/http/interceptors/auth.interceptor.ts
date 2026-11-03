@@ -7,7 +7,7 @@ import { catchError, from, switchMap, throwError } from 'rxjs';
 import { APP_CONFIG } from '../../config/app-config.token';
 import { CHEMIN_DE_CONNEXION, retourApresConnexion } from '../../guards/vers-la-connexion';
 import { AuthStateService, type IssueDuRafraichissement } from '../../services/auth-state.service';
-import { ENTETE_JETON_PARTICIPANT } from '../../../../cours/runtime/core/jeton-participant';
+import { ENTETE_JETON_PARTICIPANT } from '../../../../cours/runtime/core/participant/jeton-participant';
 import { enteteDAutorisation } from '../entete-d-autorisation';
 
 const REFRESH_PATH = '/auth/refresh';

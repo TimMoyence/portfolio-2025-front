@@ -2,7 +2,7 @@ import type { DestroyRef, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { of, type Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { chaineDe, estObjet } from '../../../../cours/runtime/core/valeurs';
+import { chaineDe, estObjet } from '../../../../cours/runtime/core/texte/valeurs';
 import type { PresentationPort } from '../../../core/ports/presentation.port';
 
 export interface ChargementInteraction<T> {

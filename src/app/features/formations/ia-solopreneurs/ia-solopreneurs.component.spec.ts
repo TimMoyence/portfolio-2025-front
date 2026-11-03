@@ -1,4 +1,4 @@
-import { montageDeckDeFormation } from '../../../../testing/deck-de-formation';
+import { montageDeckDeFormation } from '../../../../testing/seance/deck-de-formation';
 import { IaSolopreneursComponent } from './ia-solopreneurs.component';
 
 describe('IaSolopreneursComponent', () => {

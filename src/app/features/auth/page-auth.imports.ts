@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthShellComponent } from '../../shared/components/auth-shell/auth-shell.component';
-import { AuthSuccessComponent } from '../../shared/components/auth-success/auth-success.component';
+import { AuthShellComponent } from '../../shared/components/auth/auth-shell/auth-shell.component';
+import { AuthSuccessComponent } from '../../shared/components/auth/auth-success/auth-success.component';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
-import { IllustrationAuthComponent } from './illustration-auth.component';
+import { IllustrationAuthComponent } from './connexion/illustration-auth.component';
 
 export const IMPORTS_PAGE_AUTH = [
   CommonModule,

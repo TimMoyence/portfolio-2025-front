@@ -1,7 +1,7 @@
-@use '../../styles-shared/breakpoints' as bp;
-@use '../../styles-shared/cartes';
-@use '../../styles-shared/surfaces' as surfaces;
-@use '../../styles-shared/mono';
+@use '../../styles-shared/mise-en-page/breakpoints' as bp;
+@use '../../styles-shared/composants/cartes';
+@use '../../styles-shared/mise-en-page/surfaces' as surfaces;
+@use '../../styles-shared/mise-en-page/mono';
 
 :host {
   display: block;

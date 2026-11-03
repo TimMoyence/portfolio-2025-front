@@ -7,30 +7,33 @@ import type {
   FormationsPort,
   MotifRefusReponseLibre,
 } from '../../../../core/ports/formations.port';
-import { createFormationsPortStub } from '../../../../../testing/factories/formations.factory';
+import { createFormationsPortStub } from '../../../../../testing/factories/formations/formations.factory';
 import {
   configurerLHoteDInteraction,
   etatDeLaReflexion,
   garderLaReflexion,
   jusqua,
   monterApresChargement,
-} from '../../../../../testing/hote-d-interaction';
-import { horlogesDeSaisie, sousHorlogeArreteeA } from '../../../../../testing/horloge-simulee';
+} from '../../../../../testing/dom/hote-d-interaction';
+import {
+  horlogesDeSaisie,
+  sousHorlogeArreteeA,
+} from '../../../../../testing/environnement/horloge-simulee';
 import type { ModeInteraction } from '../mode-interaction';
 import {
   clearIdentity,
   readIdentity,
   saveIdentity,
-} from '../../../../../cours/runtime/core/identity';
+} from '../../../../../cours/runtime/core/participant/identity';
 import { ecransPublicsDe } from '../../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../../testing/fixtures/instantanes-des-cours';
-import { EnvoisDeSeanceService } from '../../session/envois-de-seance.service';
-import { enqueue } from '../../../../../cours/runtime/core/queue';
+import { EnvoisDeSeanceService } from '../../session/activite/envois-de-seance.service';
+import { enqueue } from '../../../../../cours/runtime/core/reseau/queue';
 import {
   buildReponseLibreEnFile,
   reponsesLibresEnFile,
   viderLaFileDEnvois,
-} from '../../../../../testing/factories/queue.factory';
+} from '../../../../../testing/factories/formations/queue.factory';
 import { presentationDe } from '../../visual/presentation-v2';
 import type { ReflectionInteraction } from './slide-reflection.component';
 import { SlideReflectionComponent } from './slide-reflection.component';

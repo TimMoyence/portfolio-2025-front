@@ -3,13 +3,16 @@ import { TestBed } from '@angular/core/testing';
 import { throwError } from 'rxjs';
 import { CONTACT_PORT, type ContactPort } from '../../core/ports/contact.port';
 import { ContactComponent } from './contact.component';
-import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/champ-de-formulaire';
+import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/dom/champ-de-formulaire';
 import { createContactPortStubWithDefault } from '../../../testing/factories/contact.factory';
-import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
-import { fournirLaRoute } from '../../../testing/factories/route.factory';
-import { champsAntiRobotDeChaqueSaisie, SAISIES_MESUREES } from '../../../testing/saisies-mesurees';
-import { pageMontee } from '../../../testing/montage-page';
-import { formulaireSoumis } from '../../../testing/page-auth';
+import { refusDuBack } from '../../../testing/factories/serveur/probleme-http.factory';
+import { fournirLaRoute } from '../../../testing/factories/serveur/route.factory';
+import {
+  champsAntiRobotDeChaqueSaisie,
+  SAISIES_MESUREES,
+} from '../../../testing/dom/saisies-mesurees';
+import { pageMontee } from '../../../testing/page/montage-page';
+import { formulaireSoumis } from '../../../testing/http/page-auth';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 
 function soumettreAvecLesConditions(composant: ContactComponent): void {

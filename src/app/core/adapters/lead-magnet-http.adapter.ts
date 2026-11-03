@@ -5,7 +5,7 @@ import { getApiBaseUrl } from '../http/api-config';
 import type { ToolkitPageData } from '../models/toolkit-page.model';
 import type { ToolkitRequest, ToolkitResponse } from '../models/toolkit-request.model';
 import type { LeadMagnetPort } from '../ports/lead-magnet.port';
-import { luPar } from './lu-par';
+import { luPar } from './formations/lu-par';
 import {
   zLeadMagnetResponseDto as guideDemandeServi,
   zToolkitPageResponseDto as guideServi,

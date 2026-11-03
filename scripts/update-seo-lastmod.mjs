@@ -7,6 +7,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { format, resolveConfig } from 'prettier';
 
 import { RACINE, cheminDuDepot } from './lib/depot.mjs';
+import { datePortee, revsIgnorees } from './lib/lastmod.mjs';
 
 const metadataPath = cheminDuDepot('src/assets/seo/seo-metadata.json');
 
@@ -22,8 +23,8 @@ const pathToSources = {
   '/formations/ia-solopreneurs/toolkit': ['src/app/features/formations/ia-solopreneurs/toolkit'],
   '/formations/automatiser-avec-ia': ['src/app/features/formations/automatiser-avec-ia'],
   '/formations/audit-seo-diy': ['src/app/features/formations/audit-seo-diy'],
-  '/terms': ['src/app/features/terms'],
-  '/privacy': ['src/app/features/privacy'],
+  '/terms': ['src/app/features/annexes/terms'],
+  '/privacy': ['src/app/features/annexes/privacy'],
   '/login': ['src/app/features/auth'],
   '/register': ['src/app/features/auth'],
   '/forgot-password': ['src/app/features/auth'],
@@ -32,15 +33,22 @@ const pathToSources = {
   '/profil': ['src/app/features/profile'],
 };
 
+const REVS_IGNOREES = revsIgnorees(
+  existsSync(cheminDuDepot('.git-blame-ignore-revs'))
+    ? readFileSync(cheminDuDepot('.git-blame-ignore-revs'), 'utf8')
+    : '',
+);
+
 function lastCommitDate(paths) {
   try {
-    const gitArgs = ['log', '-1', '--format=%ad', '--date=short', '--', ...paths];
+    const gitArgs = ['log', '--format=%H %ad', '--date=short', '--', ...paths];
     // eslint-disable-next-line sonarjs/no-os-command-from-path -- outil de depot lance depuis le poste dev / la CI : figer un chemin absolu casserait les installations Homebrew (/opt/homebrew/bin), nvm ou corepack
-    const result = execFileSync('git', gitArgs, {
+    const journal = execFileSync('git', gitArgs, {
       encoding: 'utf-8',
       cwd: RACINE,
-    }).trim();
-    return result || null;
+      maxBuffer: 1 << 26,
+    });
+    return datePortee(journal, REVS_IGNOREES);
   } catch {
     return null;
   }

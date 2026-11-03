@@ -4,27 +4,27 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import fs from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import bootstrap from './main.server';
+import bootstrap from './demarrage/main.server';
 import type { SeoMetadataFile } from './app/core/seo/seo-metadata.model';
 import { HTTP_RESPONSE_STATUS } from './app/core/ssr/http-response-status';
-import { documentCacheControlFor } from './server/document-cache';
+import { documentCacheControlFor } from './server/rendu/document-cache';
 import { COURS_EN_SEANCE } from './app/core/config/cours-en-seance';
-import { lecteurDePublicationsDeCours } from './server/cours-publication';
-import { loadCsrShell } from './server/csr-shell';
-import { lecteurDeMetadonneesSeo } from './server/metadonnees-seo';
-import { entetesDeLaRoute, isClientOnlyRoute } from './server/routes-client';
-import { registerPermanentRedirects } from './server/redirects';
-import { lecteurDArticlesDuSitemap } from './server/article-sitemap';
-import { buildLlmsFullTxt, buildLlmsTxt, buildRobotsTxt } from './server/seo-builders';
-import { buildSecurityHeaders } from './server/security-headers';
-import { injectSeoHead, isKnownRoute } from './server/seo-injector';
-import { routeDuSitemap } from './server/sitemap-route';
+import { lecteurDePublicationsDeCours } from './server/api/cours-publication';
+import { loadCsrShell } from './server/rendu/csr-shell';
+import { lecteurDeMetadonneesSeo } from './server/seo/metadonnees-seo';
+import { entetesDeLaRoute, isClientOnlyRoute } from './server/rendu/routes-client';
+import { registerPermanentRedirects } from './server/rendu/redirects';
+import { lecteurDArticlesDuSitemap } from './server/seo/article-sitemap';
+import { buildLlmsFullTxt, buildLlmsTxt, buildRobotsTxt } from './server/seo/seo-builders';
+import { buildSecurityHeaders } from './server/rendu/security-headers';
+import { injectSeoHead, isKnownRoute } from './server/seo/seo-injector';
+import { routeDuSitemap } from './server/seo/sitemap-route';
 import {
   ALLOWED_HOSTS,
   buildBaseUrlFromRequest,
   cheminCanonique,
   urlRefusee,
-} from './server/url-utils';
+} from './server/rendu/url-utils';
 import { LOCALES_DU_SITE } from './app/core/config/locales';
 import { routeSansLocale } from './app/core/seo/chemins';
 import { localeParDefaut } from './app/core/seo/pages-seo';

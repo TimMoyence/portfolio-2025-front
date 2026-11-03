@@ -1,7 +1,7 @@
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { bancAdaptateurHttp } from '../../../../testing/http-attendu';
-import { MOTIF_UUID_V4, sansRandomUuid } from '../../../../testing/sans-random-uuid';
+import { bancAdaptateurHttp } from '../../../../testing/http/http-attendu';
+import { MOTIF_UUID_V4, sansRandomUuid } from '../../../../testing/environnement/sans-random-uuid';
 import { requestIdInterceptor } from './request-id.interceptor';
 
 describe('requestIdInterceptor', () => {

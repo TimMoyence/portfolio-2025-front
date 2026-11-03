@@ -1,6 +1,6 @@
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { sansStockageLocal } from '../../../testing/sans-stockage';
+import { sansStockageLocal } from '../../../testing/environnement/sans-stockage';
 import {
   CLE_DE_LA_FENETRE,
   FENETRE_OUVERTE,

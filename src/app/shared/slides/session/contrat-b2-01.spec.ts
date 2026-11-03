@@ -34,7 +34,7 @@ import type {
   VotePublic,
   WorkedExemple,
 } from '../../../../cours/runtime/blocks/donnees-publiques';
-import type { ResultatsDuFlux } from '../../../../cours/runtime/core/sync';
+import type { ResultatsDuFlux } from '../../../../cours/runtime/core/reseau/sync';
 import {
   COLONNE_COEFFICIENT_TOILE,
   buildConcept4Definition,
@@ -42,7 +42,7 @@ import {
   buildPulseSondage,
   buildTableauEvalue,
   buildWorkedExemple,
-} from '../../../../testing/factories/cours.factory';
+} from '../../../../testing/factories/formations/cours.factory';
 import {
   buildDerouleCours,
   buildEcranDeroule,
@@ -51,7 +51,7 @@ import {
   buildResultatQuestion,
   buildResumeBareme,
   buildStatistiquesSeance,
-} from '../../../../testing/factories/formations.factory';
+} from '../../../../testing/factories/formations/formations.factory';
 import type {
   CommandePilotage,
   MotifRefusReponse,

@@ -1,8 +1,8 @@
-@use '../../styles-shared/breakpoints' as bp;
-@use '../../styles-shared/cartes';
-@use '../../styles-shared/lists';
-@use '../../styles-shared/surfaces' as surfaces;
-@use '../../styles-shared/mono';
+@use '../../styles-shared/mise-en-page/breakpoints' as bp;
+@use '../../styles-shared/composants/cartes';
+@use '../../styles-shared/composants/lists';
+@use '../../styles-shared/mise-en-page/surfaces' as surfaces;
+@use '../../styles-shared/mise-en-page/mono';
 
 .intro-split {
   display: grid;

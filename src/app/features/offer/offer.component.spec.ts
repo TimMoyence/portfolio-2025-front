@@ -1,5 +1,5 @@
-import { faqRendue } from '../../../testing/faq-rendue';
-import { pageMontee } from '../../../testing/montage-page';
+import { faqRendue } from '../../../testing/page/faq-rendue';
+import { pageMontee } from '../../../testing/page/montage-page';
 import { OfferComponent } from './offer.component';
 
 describe('OfferComponent', () => {

@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { ValidationErrors } from '@angular/forms';
-import { REGLE_ATTENDUE_DU_MOT_DE_PASSE as REGLE_ATTENDUE } from '../../../../testing/champ-de-formulaire';
+import { REGLE_ATTENDUE_DU_MOT_DE_PASSE as REGLE_ATTENDUE } from '../../../../testing/dom/champ-de-formulaire';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import { LONGUEUR_MIN_D_UN_MOT_DE_PASSE } from '../../utils/regles-de-saisie';
 import { FieldErrorsComponent } from './field-errors.component';

@@ -24,8 +24,8 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/portfolio-app",
-            "index": "src/index.html",
-            "browser": "src/main.ts",
+            "index": "src/demarrage/index.html",
+            "browser": "src/demarrage/main.ts",
             "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.json",
             "inlineStyleLanguage": "scss",
@@ -50,7 +50,7 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "server": "src/main.server.ts",
+            "server": "src/demarrage/main.server.ts",
             "prerender": true,
             "ssr": {
               "entry": "src/server.ts"
@@ -144,7 +144,7 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "karmaConfig": "karma.conf.cjs",
-            "main": "src/test.ts",
+            "main": "src/demarrage/test.ts",
             "polyfills": ["zone.js", "zone.js/testing", "@angular/localize/init"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",

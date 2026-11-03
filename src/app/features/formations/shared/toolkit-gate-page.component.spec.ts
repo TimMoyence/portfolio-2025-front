@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { LEAD_MAGNET_PORT } from '../../../core/ports/lead-magnet.port';
 import { createLeadMagnetPortStub } from '../../../../testing/factories/lead-magnet.factory';
-import { ToolkitFormComponent } from '../../../shared/components/toolkit-form/toolkit-form.component';
+import { ToolkitFormComponent } from '../../../shared/components/sections/toolkit-form/toolkit-form.component';
 import { ToolkitGatePageComponent } from './toolkit-gate-page.component';
 import { TOOLKIT_IA_SOLO } from './toolkits-formations.data';
 

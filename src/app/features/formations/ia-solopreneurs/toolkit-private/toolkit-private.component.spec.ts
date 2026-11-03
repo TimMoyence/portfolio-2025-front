@@ -12,7 +12,7 @@ import {
   buildToolkitPageData,
   createLeadMagnetPortStub,
 } from '../../../../../testing/factories/lead-magnet.factory';
-import { fournirLaRoute } from '../../../../../testing/factories/route.factory';
+import { fournirLaRoute } from '../../../../../testing/factories/serveur/route.factory';
 import { ToolkitPrivateComponent } from './toolkit-private.component';
 
 interface SetupOptions {

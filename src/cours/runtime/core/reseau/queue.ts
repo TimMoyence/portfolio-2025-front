@@ -1,0 +1,95 @@
+import { persistJson, readJson, writeJson } from '../participant/storage';
+
+const CLE = 'fp.file-reponses';
+const CAPACITE_MAX = 200;
+const ECHEC_ECRITURE =
+  "Le stockage local de ce poste n'a pas accepté l'écriture — la réponse n'a pas été mise en file";
+
+export type NatureEnvoi = 'reponse' | 'production' | 'jalon' | 'libre';
+
+export interface EnvoiReponse {
+  id: number;
+  nature: NatureEnvoi;
+  sessionId: string;
+  studentKey: string;
+  questionId: string;
+  valeur: unknown;
+  dureeMs: number;
+  horodatage: string;
+  screenId?: string;
+}
+
+export type Envoyeur = (envoi: EnvoiReponse) => boolean | Promise<boolean>;
+
+type EnvoiStocke = Omit<EnvoiReponse, 'nature'> & Partial<Pick<EnvoiReponse, 'nature'>>;
+
+export function pending(): readonly EnvoiReponse[] {
+  return (readJson<EnvoiStocke[]>(CLE) ?? []).map((envoi) => ({
+    ...envoi,
+    nature: envoi.nature ?? 'reponse',
+  }));
+}
+
+function memeReponseLibre(a: Omit<EnvoiReponse, 'id'>, b: Omit<EnvoiReponse, 'id'>): boolean {
+  return (
+    a.nature === 'libre' &&
+    b.nature === 'libre' &&
+    a.sessionId === b.sessionId &&
+    a.studentKey === b.studentKey &&
+    a.screenId === b.screenId &&
+    a.questionId === b.questionId
+  );
+}
+
+export function enqueue(envoi: Omit<EnvoiReponse, 'id'>): void {
+  const file = pending().filter((existant) => !memeReponseLibre(existant, envoi));
+  if (file.length >= CAPACITE_MAX) {
+    throw new Error(
+      "La file d'attente des réponses est pleine (200 au maximum) — la réponse n'a pas été mise en file",
+    );
+  }
+  const prochainId = file.reduce((max, existant) => Math.max(max, existant.id), 0) + 1;
+  ecrireOuRefuser([...file, { ...envoi, id: prochainId }]);
+}
+
+function ecrireOuRefuser(file: readonly EnvoiReponse[]): void {
+  let ecrite: boolean;
+  try {
+    ecrite = writeJson(CLE, file);
+  } catch (cause) {
+    throw new Error(ECHEC_ECRITURE, { cause });
+  }
+  if (!ecrite) {
+    throw new Error(ECHEC_ECRITURE);
+  }
+}
+
+function retirer(id: number): void {
+  ecrireOuRefuser(pending().filter((envoi) => envoi.id !== id));
+}
+
+export function retirerLaReponseLibre(envoi: Omit<EnvoiReponse, 'id'>): void {
+  const file = pending();
+  const restants = file.filter((existant) => !memeReponseLibre(existant, envoi));
+  if (restants.length !== file.length) {
+    ecrireOuRefuser(restants);
+  }
+}
+
+export function purgerLesAutresEnvois(sessionId: string): boolean {
+  const file = pending();
+  const restants = file.filter((envoi) => envoi.sessionId === sessionId);
+  return restants.length === file.length || persistJson(CLE, restants);
+}
+
+export async function flush(envoyer: Envoyeur, studentKey?: string): Promise<void> {
+  for (const envoi of pending()) {
+    if (studentKey !== undefined && envoi.studentKey !== studentKey) {
+      continue;
+    }
+    const reussi = await envoyer(envoi);
+    if (reussi) {
+      retirer(envoi.id);
+    }
+  }
+}

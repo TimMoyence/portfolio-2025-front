@@ -1,4 +1,4 @@
-import { decrirePage } from '../../../testing/page-decrite';
+import { decrirePage } from '../../../testing/page/page-decrite';
 import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {

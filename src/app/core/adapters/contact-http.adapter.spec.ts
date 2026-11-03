@@ -2,7 +2,7 @@ import {
   bancAdaptateurHttp,
   verifierErreurRelayee,
   verifierPostRelaye,
-} from '../../../testing/http-attendu';
+} from '../../../testing/http/http-attendu';
 import type { ContactRequestDto } from '../../../../contrat/types.gen';
 import { ContactHttpAdapter } from './contact-http.adapter';
 

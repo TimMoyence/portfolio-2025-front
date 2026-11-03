@@ -3,7 +3,7 @@
 ## Fonctionnement
 
 - `/sitemap.xml` est servi par le serveur SSR (`src/server.ts`, `buildSitemapXml` dans
-  `src/server/seo-builders.ts`). Il lit `src/assets/seo/seo-metadata.json` (copié dans
+  `src/server/seo/seo-builders.ts`). Il lit `src/assets/seo/seo-metadata.json` (copié dans
   `dist/…/assets/seo/`) et y ajoute les articles publiés quand `PORTFOLIO_ARTICLE_API_URL`
   est défini : leur `lastmod` vient du champ `updated_at` renvoyé par l'API.
 - Pour les pages déclarées dans `seo-metadata.json`, `lastmod` est écrit par
@@ -28,7 +28,7 @@ version). Contrat fixé par `portfolio-2025-back/docs/cours-b2-01-conception.md`
 
 ### Lecture côté serveur SSR
 
-- `src/server/cours-publication.ts` : `lecteurDePublicationsDeCours` interroge la route pour chaque
+- `src/server/api/cours-publication.ts` : `lecteurDePublicationsDeCours` interroge la route pour chaque
   cours de `COURS_SERVIS_PAR_L_API`, sur le modèle de `loadArticleSitemap` :
   - URL de l'API : `PORTFOLIO_ARTICLE_API_URL` (la même base `…/api/v1/portfolio25` que pour les
     articles) ;
@@ -53,9 +53,9 @@ Le sitemap garde alors le `lastmod` de `seo-metadata.json` et le journal (`conso
 
 ### Tests
 
-- `src/server/seo-builders.spec.ts` : `buildSitemapXml` sans API (lastmod de `seo-metadata.json`),
+- `src/server/seo/seo-builders.spec.ts` : `buildSitemapXml` sans API (lastmod de `seo-metadata.json`),
   avec une publication plus récente, plus ancienne, et pour une page sans `lastmod`.
-- `src/server/cours-publication.spec.ts` : lecture de `publieLe`, chaque repli et son
+- `src/server/api/cours-publication.spec.ts` : lecture de `publieLe`, chaque repli et son
   avertissement, cache de 5 min.
 
 ### Réserve

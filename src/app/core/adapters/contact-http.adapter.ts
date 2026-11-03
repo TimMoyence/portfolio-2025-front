@@ -5,7 +5,7 @@ import type { ContactRequestDto, ContactResponseDto } from '../../../../contrat/
 import { zContactResponseDto } from '../../../../contrat/zod.gen';
 import { getApiBaseUrl } from '../http/api-config';
 import type { ContactPort } from '../ports/contact.port';
-import { luPar } from './lu-par';
+import { luPar } from './formations/lu-par';
 
 @Injectable()
 export class ContactHttpAdapter implements ContactPort {

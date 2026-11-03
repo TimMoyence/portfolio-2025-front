@@ -4,9 +4,12 @@ import { computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { catchError, finalize, firstValueFrom, from, map, of, tap, timeout } from 'rxjs';
-import { refuseLaSession, STATUT_LIMITE_DE_DEBIT } from '../../../cours/runtime/core/statuts-http';
-import type { IssueDuRenouvellement } from '../../../cours/runtime/core/sync';
-import { bornerEntre, objet } from '../../../cours/runtime/core/valeurs';
+import {
+  refuseLaSession,
+  STATUT_LIMITE_DE_DEBIT,
+} from '../../../cours/runtime/core/reseau/statuts-http';
+import type { IssueDuRenouvellement } from '../../../cours/runtime/core/reseau/sync';
+import { bornerEntre, objet } from '../../../cours/runtime/core/texte/valeurs';
 import type { AuthSession, AuthUser } from '../models/auth.model';
 import { secondesDeRetryAfter } from '../http/limite-de-debit';
 import { AUTH_PORT, type AuthPort } from '../ports/auth.port';

@@ -10,11 +10,11 @@ import {
   MOTS_DE_PASSE,
   telephoneBienFormeDeLongueur,
   texteDuBlocDuChamp,
-} from '../../../testing/champ-de-formulaire';
+} from '../../../testing/dom/champ-de-formulaire';
 import { buildAuthUser, buildSetPasswordPayload } from '../../../testing/factories/auth.factory';
-import { refusDuBack } from '../../../testing/factories/probleme-http.factory';
-import type { PageAuthMontee } from '../../../testing/page-auth';
-import { formulaireSoumis, monterPageAuth } from '../../../testing/page-auth';
+import { refusDuBack } from '../../../testing/factories/serveur/probleme-http.factory';
+import type { PageAuthMontee } from '../../../testing/http/page-auth';
+import { formulaireSoumis, monterPageAuth } from '../../../testing/http/page-auth';
 import { ProfileComponent } from './profile.component';
 
 const NEW_PASSWORD = buildSetPasswordPayload().newPassword;

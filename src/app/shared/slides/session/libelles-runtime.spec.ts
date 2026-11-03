@@ -1,5 +1,5 @@
 import { clearTranslations, loadTranslations } from '@angular/localize';
-import { texte } from '../../../../cours/runtime/core/i18n';
+import { texte } from '../../../../cours/runtime/core/texte/i18n';
 
 describe('libellés des briques runtime', () => {
   afterEach(() => clearTranslations());

@@ -1,5 +1,5 @@
-import { FpBlock } from './FpBlock';
-import { estObjet, memeIdentifiant } from '../core/valeurs';
+import { FpBlock } from './contenus/FpBlock';
+import { estObjet, memeIdentifiant } from '../core/texte/valeurs';
 
 interface CiblesDeSaisie {
   readonly champ: string;

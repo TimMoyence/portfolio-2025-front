@@ -35,7 +35,7 @@ import type {
   SortiesMachine,
   TableauEvalue,
 } from '../../../cours/content/types';
-import type { Reglages } from '../../../cours/runtime/blocks/animation';
+import type { Reglages } from '../../../cours/runtime/blocks/rendu/animation';
 import type { SpacedQuestionPublique } from '../../../cours/runtime/blocks/donnees-publiques';
 import type {
   EvaluationDeFeuille,

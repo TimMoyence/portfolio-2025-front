@@ -1,0 +1,149 @@
+import type {
+  IncidentEntryDto,
+  TypeDIncident as IncidentType,
+} from '../../../../../contrat/types.gen';
+import { abonner, diffuserA } from '../saisie/ecoutes';
+
+export type LockRegime = 'ouvert' | 'focus' | 'examen';
+
+export type { TypeDIncident as IncidentType } from '../../../../../contrat/types.gen';
+
+type ContexteDIncident = Readonly<NonNullable<IncidentEntryDto['contexte']>>;
+
+export interface Incident {
+  type: IncidentType;
+  horodatage: string;
+  detail?: ContexteDIncident;
+}
+
+export type IncidentListener = (incident: Incident) => void;
+
+export interface LockOptions {
+  seuilReponseRapideMs?: number;
+}
+
+export interface Lock {
+  arm(): void;
+  disarm(): void;
+  incidents(): readonly Incident[];
+  onIncident(listener: IncidentListener): () => void;
+  recordAnswerDuration(dureeMs: number): void;
+}
+
+type Nettoyeur = () => void;
+
+interface DechargementHerite {
+  returnValue: string;
+}
+
+const CAPACITE_JOURNAL_MAX = 200;
+const SEUIL_REPONSE_RAPIDE_MS_DEFAUT = 1200;
+const TOUCHES_BLOQUEES: readonly string[] = ['p', 's', 'u'];
+
+function ecouter(cible: EventTarget, type: string, ecouteur: EventListener): Nettoyeur {
+  cible.addEventListener(type, ecouteur);
+  return () => cible.removeEventListener(type, ecouteur);
+}
+
+function environnementNavigateurDisponible(): boolean {
+  return typeof document !== 'undefined' && typeof window !== 'undefined';
+}
+
+export function createLock(regime: LockRegime, options: LockOptions = {}): Lock {
+  const seuilReponseRapideMs = options.seuilReponseRapideMs ?? SEUIL_REPONSE_RAPIDE_MS_DEFAUT;
+  const ecoutes = new Set<IncidentListener>();
+  const journal: Incident[] = [];
+  let estArme = false;
+  let nettoyeurs: Nettoyeur[] = [];
+
+  const consigner = (type: IncidentType, detail?: ContexteDIncident): void => {
+    const incident: Incident =
+      detail === undefined
+        ? { type, horodatage: new Date().toISOString() }
+        : { type, horodatage: new Date().toISOString(), detail };
+    journal.push(incident);
+    if (journal.length > CAPACITE_JOURNAL_MAX) {
+      journal.shift();
+    }
+    diffuserA(ecoutes, incident);
+  };
+
+  const surVisibilite = (): void => {
+    if (document.hidden) {
+      consigner('tab_hidden');
+    }
+  };
+
+  const surPerteFocus = (): void => {
+    consigner('window_blur');
+  };
+
+  const bloquerEtConsigner =
+    (type: IncidentType) =>
+    (event: Event): void => {
+      event.preventDefault();
+      consigner(type);
+    };
+
+  const surDechargement = (event: Event): void => {
+    event.preventDefault();
+    (event as unknown as DechargementHerite).returnValue = '';
+    consigner('page_unload');
+  };
+
+  const surTouche = (event: Event): void => {
+    const clavier = event as KeyboardEvent;
+    if (clavier.key === 'F12') {
+      consigner('devtools_suspected');
+      return;
+    }
+    const touche = clavier.key.toLowerCase();
+    if ((clavier.ctrlKey || clavier.metaKey) && TOUCHES_BLOQUEES.includes(touche)) {
+      clavier.preventDefault();
+      consigner('blocked_shortcut', { touche });
+    }
+  };
+
+  return {
+    arm(): void {
+      if (estArme || regime === 'ouvert' || !environnementNavigateurDisponible()) {
+        return;
+      }
+      estArme = true;
+      nettoyeurs = [
+        ecouter(document, 'visibilitychange', surVisibilite),
+        ecouter(window, 'blur', surPerteFocus),
+      ];
+      if (regime === 'examen') {
+        nettoyeurs.push(
+          ecouter(document, 'copy', bloquerEtConsigner('copy_attempt')),
+          ecouter(document, 'paste', bloquerEtConsigner('paste_attempt')),
+          ecouter(document, 'contextmenu', bloquerEtConsigner('context_menu')),
+          ecouter(document, 'keydown', surTouche),
+          ecouter(window, 'beforeunload', surDechargement),
+        );
+      }
+    },
+    disarm(): void {
+      for (const retirer of nettoyeurs) {
+        retirer();
+      }
+      nettoyeurs = [];
+      estArme = false;
+    },
+    incidents(): readonly Incident[] {
+      return [...journal];
+    },
+    onIncident(listener: IncidentListener): () => void {
+      return abonner(ecoutes, listener);
+    },
+    recordAnswerDuration(dureeMs: number): void {
+      if (!estArme || regime !== 'examen') {
+        return;
+      }
+      if (dureeMs < seuilReponseRapideMs) {
+        consigner('fast_answer', { dureeMs });
+      }
+    },
+  };
+}

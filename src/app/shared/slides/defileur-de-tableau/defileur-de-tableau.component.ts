@@ -7,7 +7,7 @@ import {
   inject,
   ViewEncapsulation,
 } from '@angular/core';
-import { suivreLaSuite } from '../../../../cours/runtime/core/defileur';
+import { suivreLaSuite } from '../../../../cours/runtime/core/ecran/defileur';
 import { defileurDeTableau } from '../../../../cours/runtime/design/defileur';
 
 @Component({

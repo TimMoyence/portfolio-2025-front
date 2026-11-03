@@ -1,6 +1,6 @@
-@use '../../styles-shared/forms' as forms;
+@use '../../styles-shared/composants/forms' as forms;
 @use './auth-msg';
-@use '../../styles-shared/mono';
+@use '../../styles-shared/mise-en-page/mono';
 
 .auth-split {
   display: grid;

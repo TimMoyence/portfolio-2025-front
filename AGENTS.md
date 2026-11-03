@@ -7,7 +7,7 @@ Front Angular 19 du portfolio (SSR, prerender, fr/en). Les règles transverses s
 - Le contrat OpenAPI du back `portfolio-2025-back` est la source unique des types de réponse. Le front ne réécrit jamais un type de réponse ni un schéma de lecture à la main, et ne recalcule pas une règle métier servie : il affiche le champ servi. Un type recopié faisait perdre 7 incidents sur 9 en production.
 - Ces types et schémas viennent de `contrat/`, généré par `npm run contrat` depuis le commit du back épinglé dans `contrat.json` (ADR 0005) ; `npm run contrat:check` refuse un contrat qui s'en écarte.
 - Un changement de contrat part du back : PR back d'abord, puis la PR front qui déplace l'épingle de `contrat.json`. Le job `banc` de `.github/workflows/ci.yml` joue le front contre ce commit épinglé du back.
-- La frontière `core` → `shared`/`features` est jugée par `eslint.config.js` et `scripts/frontiere-du-coeur.test.mjs` ; les traductions par `scripts/guard-i18n-sync.test.mjs`.
+- La frontière `core` → `shared`/`features` est jugée par `eslint.config.js` et `scripts/gardes/frontiere-du-coeur.test.mjs` ; les traductions par `scripts/gardes/guard-i18n-sync.test.mjs`.
 
 ## Commandes
 

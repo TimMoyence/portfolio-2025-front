@@ -7,7 +7,7 @@ import type {
   EcranDeroule,
   ResultatsSeance,
 } from '../../../../cours/content/types';
-import type { EtatSession } from '../../../../cours/runtime/core/sync';
+import type { EtatSession } from '../../../../cours/runtime/core/reseau/sync';
 import {
   attendreAucunEnTeteSansSession,
   buildEcranDeMission,
@@ -18,29 +18,29 @@ import {
   JETON_FORMATEUR,
   monterLeBancSurLeDeroule,
   monterSurLeBanc,
-} from '../../../../testing/banc-du-pupitre';
+} from '../../../../testing/seance/banc-du-pupitre';
 import {
   buildDerouleCours,
   buildEcranDeroule,
   buildResultatQuestion,
   buildResultatsDeChaqueQuestion,
   buildResultatsSeance,
-} from '../../../../testing/factories/formations.factory';
+} from '../../../../testing/factories/formations/formations.factory';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
-import type { FpPlot } from '../../../../cours/runtime/blocks/FpPlot';
+import type { FpPlot } from '../../../../cours/runtime/blocks/contenus/FpPlot';
 import {
   attendreQue,
   briqueMontee,
   DELAI_DE_MONTAGE_MS,
-} from '../../../../testing/briques-montees';
+} from '../../../../testing/briques/briques-montees';
 import {
   buildPlotEnBarres,
   buildSpacedRappel,
   buildVoteQuestion,
-} from '../../../../testing/factories/cours.factory';
-import { buildVisualSlide } from '../../../../testing/factories/visual-slide.factory';
-import type { FluxDouble } from '../../../../testing/factories/sync.factory';
-import { cibleMarque } from '../../../../testing/marqueurs-dom';
+} from '../../../../testing/factories/formations/cours.factory';
+import { buildVisualSlide } from '../../../../testing/factories/formations/visual-slide.factory';
+import type { FluxDouble } from '../../../../testing/factories/formations/sync.factory';
+import { cibleMarque } from '../../../../testing/dom/marqueurs-dom';
 import {
   attendreAucunFluxApresLaDestruction,
   attendreChaqueCalqueEntierDansLaToile,
@@ -51,14 +51,14 @@ import {
   idsDesEcransMontes,
   mettreLaToileALEchelle,
   stabiliserLaVue,
-} from '../../../../testing/vue-de-seance';
+} from '../../../../testing/seance/vue-de-seance';
 import type { FormationsPort } from '../../../core/ports/formations.port';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
-import type { SlideActivityComponent } from '../../../shared/slides/session/slide-activity.component';
-import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantane-b2-01';
-import { ecranNomme } from '../../../../testing/montage-d-instantane';
+import type { SlideActivityComponent } from '../../../shared/slides/session/activite/slide-activity.component';
+import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantanes/instantane-b2-01';
+import { ecranNomme } from '../../../../testing/page/montage-d-instantane';
 import { CoursSceneComponent } from './cours-scene.component';
-import { sourceCorrigeePar } from './sources-de-correction';
+import { sourceCorrigeePar } from './correction/sources-de-correction';
 
 type Fixture = ComponentFixture<CoursSceneComponent>;
 

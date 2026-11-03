@@ -4,13 +4,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import type { ActivatedRouteSnapshot } from '@angular/router';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
-import { AdresseAVerifierComponent } from './shared/components/adresse-a-verifier/adresse-a-verifier.component';
-import { AsiliBackgroundComponent } from './shared/components/asili-background/asili-background.component';
-import { FooterComponent } from './shared/components/footer/footer.component';
-import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner.component';
-import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { AdresseAVerifierComponent } from './shared/components/auth/adresse-a-verifier/adresse-a-verifier.component';
+import { AsiliBackgroundComponent } from './shared/components/cadre/asili-background/asili-background.component';
+import { FooterComponent } from './shared/components/cadre/footer/footer.component';
+import { CookieBannerComponent } from './shared/components/cadre/cookie-banner/cookie-banner.component';
+import { NavbarComponent } from './shared/components/cadre/navbar/navbar.component';
 import { SeoManagerComponent } from './shared/components/seo-manager.component';
-import { SessionRetryComponent } from './shared/components/session-retry/session-retry.component';
+import { SessionRetryComponent } from './shared/components/auth/session-retry/session-retry.component';
 import { SkipLinkComponent } from './shared/components/skip-link.component';
 
 function porteLaCoquille(racine: ActivatedRouteSnapshot): boolean {

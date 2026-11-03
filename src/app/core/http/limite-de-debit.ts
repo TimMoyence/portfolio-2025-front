@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { STATUT_LIMITE_DE_DEBIT } from '../../../cours/runtime/core/statuts-http';
-import { estPositif } from '../../../cours/runtime/core/valeurs';
+import { STATUT_LIMITE_DE_DEBIT } from '../../../cours/runtime/core/reseau/statuts-http';
+import { estPositif } from '../../../cours/runtime/core/texte/valeurs';
 import { type LimiteDeDebit, messageDeLaLimite } from '../models/limite-de-debit';
 
 export function secondesDeRetryAfter(erreur: unknown): number | null {

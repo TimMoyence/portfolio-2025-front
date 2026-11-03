@@ -1,0 +1,246 @@
+import { MOTIF_UUID_V4 } from '../../../../testing/environnement/sans-random-uuid';
+import {
+  sansStockageLocal,
+  saturationDuStockage,
+} from '../../../../testing/environnement/sans-stockage';
+import {
+  clearIdentity,
+  DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS,
+  LONGUEURS_MAX_DE_L_IDENTITE,
+  lireSecretDeReprise,
+  memoriserSecretDeReprise,
+  readIdentity,
+  saveIdentity,
+} from './identity';
+
+const THEO = { prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' };
+
+describe('identity', () => {
+  beforeEach(() => {
+    clearIdentity();
+  });
+
+  afterEach(() => {
+    clearIdentity();
+  });
+
+  it('retourne null quand rien n est enregistre', () => {
+    expect(readIdentity()).toBeNull();
+  });
+
+  it('enregistre et relit une identite', () => {
+    saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' });
+    expect(readIdentity()?.prenom).toBe('Theo');
+  });
+
+  it('genere une cle etudiant stable', () => {
+    const premiere = saveIdentity(THEO);
+    const seconde = saveIdentity(THEO);
+    expect(seconde.identite.studentKey).toBe(premiere.identite.studentKey);
+  });
+
+  it('produit une cle au format uuid v4', () => {
+    const enregistrement = saveIdentity(THEO);
+    expect(enregistrement.identite.studentKey).toMatch(MOTIF_UUID_V4);
+    expect(enregistrement.persistee).toBe(true);
+  });
+
+  it('donne une cle neuve a qui saisit une autre identite sur le meme poste', () => {
+    const premiere = saveIdentity(THEO);
+    const seconde = saveIdentity({ prenom: 'Lea', nom: 'Dubois', email: 'lea@example.com' });
+    expect(seconde.identite.studentKey).not.toBe(premiere.identite.studentKey);
+    expect(seconde.identite.nom).toBe('Dubois');
+  });
+
+  it('donne une cle neuve des qu un seul champ du triplet change', () => {
+    const premiere = saveIdentity(THEO);
+    const nom = saveIdentity({ prenom: 'Theo', nom: 'Durand', email: 'theo@example.com' });
+    expect(nom.identite.studentKey).not.toBe(premiere.identite.studentKey);
+    const email = saveIdentity({ prenom: 'Theo', nom: 'Durand', email: 'autre@example.com' });
+    expect(email.identite.studentKey).not.toBe(nom.identite.studentKey);
+  });
+
+  it('garde la cle quand le meme etudiant revient, a la casse de l adresse pres', () => {
+    const premiere = saveIdentity(THEO);
+    const reprise = saveIdentity({ prenom: ' Theo ', nom: 'Martin ', email: 'THEO@example.com' });
+    expect(reprise.identite.studentKey).toBe(premiere.identite.studentKey);
+  });
+
+  describe('conservation bornée sur le poste', () => {
+    beforeEach(() => {
+      jasmine.clock().install();
+      jasmine.clock().mockDate(new Date('2026-10-22T08:00:00.000Z'));
+    });
+
+    afterEach(() => {
+      jasmine.clock().uninstall();
+    });
+
+    it('oublie identité et secrets douze heures après la dernière écriture, onglet fermé avant la fin de séance', () => {
+      saveIdentity(THEO);
+      memoriserSecretDeReprise('4821', 'secret-a');
+
+      jasmine.clock().tick(DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS - 1);
+      expect(lireSecretDeReprise('4821')).toBe('secret-a');
+
+      jasmine.clock().tick(1);
+      expect(readIdentity()).toBeNull();
+      expect(lireSecretDeReprise('4821')).toBeUndefined();
+      expect(localStorage.getItem('fp.identite')).toBeNull();
+    });
+
+    it('repousse l échéance à chaque écriture, comme une rotation du secret', () => {
+      saveIdentity(THEO);
+      jasmine.clock().tick(DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS - 1);
+      memoriserSecretDeReprise('4821', 'secret-tourne');
+
+      jasmine.clock().tick(DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS - 1);
+
+      expect(lireSecretDeReprise('4821')).toBe('secret-tourne');
+    });
+
+    it('purge une identité conservée sans échéance par une version précédente', () => {
+      localStorage.setItem(
+        'fp.identite',
+        JSON.stringify({ ...THEO, studentKey: 'cle', secretsDeReprise: { '4821': 'secret' } }),
+      );
+
+      expect(readIdentity()).toBeNull();
+      expect(localStorage.getItem('fp.identite')).toBeNull();
+    });
+  });
+
+  it('oublie l identite apres effacement', () => {
+    saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' });
+    clearIdentity();
+    expect(readIdentity()).toBeNull();
+  });
+
+  it('memorise le secret de reprise de chaque seance rejointe par le poste', () => {
+    saveIdentity(THEO);
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    memoriserSecretDeReprise('XYZ789', 'secret-b');
+    expect(lireSecretDeReprise('ABC123')).toBe('secret-a');
+    expect(lireSecretDeReprise('XYZ789')).toBe('secret-b');
+    expect(lireSecretDeReprise('INCONNU')).toBeUndefined();
+  });
+
+  it('remplace le secret d une seance a chaque rotation servie par le serveur', () => {
+    saveIdentity(THEO);
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    memoriserSecretDeReprise('ABC123', 'secret-a-tourne');
+    expect(lireSecretDeReprise('ABC123')).toBe('secret-a-tourne');
+  });
+
+  it('garde les secrets quand le meme etudiant ressaisit son identite', () => {
+    saveIdentity(THEO);
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    saveIdentity(THEO);
+    expect(lireSecretDeReprise('ABC123')).toBe('secret-a');
+  });
+
+  it('ne transmet pas les secrets d un etudiant a l identite suivante du poste', () => {
+    saveIdentity(THEO);
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    saveIdentity({ prenom: 'Lea', nom: 'Dubois', email: 'lea@example.com' });
+    expect(lireSecretDeReprise('ABC123')).toBeUndefined();
+  });
+
+  it('ignore un secret sans identite enregistree', () => {
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    expect(lireSecretDeReprise('ABC123')).toBeUndefined();
+  });
+
+  it('efface les secrets avec l identite', () => {
+    saveIdentity(THEO);
+    memoriserSecretDeReprise('ABC123', 'secret-a');
+    clearIdentity();
+    expect(lireSecretDeReprise('ABC123')).toBeUndefined();
+  });
+
+  it('refuse une adresse invalide', () => {
+    expect(() =>
+      saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'pas-une-adresse' }),
+    ).toThrow();
+  });
+
+  it('refuse un prenom vide', () => {
+    expect(() =>
+      saveIdentity({ prenom: '  ', nom: 'Martin', email: 'theo@example.com' }),
+    ).toThrow();
+  });
+
+  it('refuse une adresse que le serveur refuse, avec la grammaire unique du site', () => {
+    for (const email of ['theo@gmail', 'theo@exemple.c', 'theo..martin@exemple.fr']) {
+      expect(() => saveIdentity({ ...THEO, email }))
+        .withContext(email)
+        .toThrow();
+    }
+  });
+
+  it('borne le prenom et le nom a 80 caracteres et l adresse a 180, comme le serveur', () => {
+    expect(LONGUEURS_MAX_DE_L_IDENTITE).toEqual({ prenom: 80, nom: 80 });
+
+    const adresseDe181 = `${'a'.repeat(56)}@${'b'.repeat(60)}.${'c'.repeat(60)}.fr`;
+    expect(adresseDe181.length).toBe(181);
+    for (const [cas, identite] of [
+      ['prenom', { ...THEO, prenom: 'P'.repeat(81) }],
+      ['nom', { ...THEO, nom: 'N'.repeat(81) }],
+      ['email', { ...THEO, email: adresseDe181 }],
+    ] as const) {
+      expect(() => saveIdentity(identite))
+        .withContext(cas)
+        .toThrow();
+    }
+
+    expect(
+      saveIdentity({ prenom: 'P'.repeat(80), nom: 'N'.repeat(80), email: adresseDe181.slice(1) })
+        .identite.prenom,
+    ).toBe('P'.repeat(80));
+  });
+
+  it('compte le prenom et le nom rognes en caracteres, comme les colonnes varchar du serveur', () => {
+    const sourires = String.fromCodePoint(0x1f600).repeat(80);
+    const coeurs = String.fromCodePoint(0x2764, 0xfe0f).repeat(41);
+
+    expect(saveIdentity({ ...THEO, prenom: ` ${sourires} `, nom: sourires }).identite.prenom).toBe(
+      sourires,
+    );
+    expect(() => saveIdentity({ ...THEO, prenom: coeurs })).toThrow();
+  });
+
+  it('sous saturation du stockage, l identite tient en memoire et signale qu elle n est pas persistee', () => {
+    spyOn(globalThis.localStorage, 'setItem').and.throwError(saturationDuStockage());
+    const enregistrement = saveIdentity(THEO);
+    expect(enregistrement.persistee).toBe(false);
+    expect(enregistrement.identite.prenom).toBe('Theo');
+    expect(readIdentity()?.studentKey).toBe(enregistrement.identite.studentKey);
+  });
+
+  it('sous stockage absent, la cle etudiant reste identique entre deux lectures', () => {
+    sansStockageLocal(() => {
+      const premiere = saveIdentity(THEO);
+      const seconde = saveIdentity(THEO);
+      expect(premiere.persistee).toBe(false);
+      expect(seconde.persistee).toBe(false);
+      expect(seconde.identite.studentKey).toBe(premiere.identite.studentKey);
+      expect(readIdentity()?.studentKey).toBe(premiere.identite.studentKey);
+    });
+  });
+
+  it('refuse de generer une cle sans source d aleatoire disponible', () => {
+    const original = Object.getOwnPropertyDescriptor(globalThis, 'crypto');
+    Object.defineProperty(globalThis, 'crypto', { value: undefined, configurable: true });
+    try {
+      expect(() =>
+        saveIdentity({ prenom: 'Theo', nom: 'Martin', email: 'theo@example.com' }),
+      ).toThrowError(/identifiant sécurisé/);
+    } finally {
+      if (original) {
+        Object.defineProperty(globalThis, 'crypto', original);
+      } else {
+        delete (globalThis as { crypto?: Crypto }).crypto;
+      }
+    }
+  });
+});

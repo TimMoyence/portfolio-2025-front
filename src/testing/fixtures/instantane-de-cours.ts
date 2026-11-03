@@ -5,7 +5,7 @@ import type {
   EcranContent,
   EcranDeroule,
 } from '../../cours/content/types';
-import { derouleDuFil, sujetDuFil } from '../../app/core/adapters/formations-fil';
+import { derouleDuFil, sujetDuFil } from '../../app/core/adapters/formations/formations-fil';
 import { zDerouleResponseDto, zSujetResponseDto } from '../../../contrat/zod.gen';
 import { ecranDIdentifiant } from '../../app/shared/slides/session/lecture-ecran';
 

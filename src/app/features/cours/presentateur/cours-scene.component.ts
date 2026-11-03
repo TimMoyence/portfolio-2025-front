@@ -10,21 +10,21 @@ import type {
   ResultatsDuFlux,
   StatutFlux,
   Sync,
-} from '../../../../cours/runtime/core/sync';
-import { SEUIL_D_ANONYMAT } from '../../../../cours/runtime/core/anonymat';
+} from '../../../../cours/runtime/core/reseau/sync';
+import { SEUIL_D_ANONYMAT } from '../../../../cours/runtime/core/participant/anonymat';
 import { FORMATIONS_PORT } from '../../../core/ports/formations.port';
 import { CREATEUR_FLUX_FORMATEUR, ouvrirLeFluxFormateur } from '../cours-flux.token';
 import { type Chargement, lectureSuivie, suivreLaDestruction } from '../lecture-suivie';
-import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran-de-la-page';
+import { pleinEcranDeLaPage } from '../../../shared/slides/deck/plein-ecran/plein-ecran-de-la-page';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import { ecranAuRang, ecranDIdentifiant } from '../../../shared/slides/session/lecture-ecran';
-import { annexeFormateurDeLEcran } from './annexe-formateur';
+import { annexeFormateurDeLEcran } from './livret/annexe-formateur';
 import { chantierApresRendu } from './chantier-apres-rendu';
 import { directDeLEcranCourant } from '../direct-de-l-ecran';
-import { CoursBandeauCorrectionComponent } from './cours-bandeau-correction.component';
-import { correctionsAffichees } from './corrections-affichees';
-import { CoursResultatsProjetesComponent } from './cours-resultats-projetes.component';
-import { sourceCorrigeePar } from './sources-de-correction';
+import { CoursBandeauCorrectionComponent } from './correction/cours-bandeau-correction.component';
+import { correctionsAffichees } from './correction/corrections-affichees';
+import { CoursResultatsProjetesComponent } from './bilan/cours-resultats-projetes.component';
+import { sourceCorrigeePar } from './correction/sources-de-correction';
 
 function ecranProjete(ecran: EcranDeroule): EcranContent {
   return {

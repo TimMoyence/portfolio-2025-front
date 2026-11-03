@@ -1,0 +1,856 @@
+import { NgZone } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  attributDOption,
+  noeudOmbre,
+  noeudsOmbre,
+  roleAffiche,
+} from '../../../../../testing/briques/banc-de-brique';
+import {
+  attendreQue,
+  briqueMontee,
+  ROLES_DE_MONTAGE,
+} from '../../../../../testing/briques/briques-montees';
+import {
+  buildCardsortPlan,
+  buildEcran,
+  buildEcranQuestionnaire,
+  buildEcranQuestionnaireSansConsigne,
+  buildNumericQuestion,
+  buildProCasAQuestionsLibres,
+  buildRevelationServie,
+  buildSheetPlan,
+  createBrouillonsStub,
+} from '../../../../../testing/factories/formations/cours.factory';
+import { buildDetailDeBrique } from '../../../../../testing/factories/formations/evenements-brique.factory';
+import {
+  buildResultatQuestion,
+  buildResultatsSeance,
+} from '../../../../../testing/factories/formations/formations.factory';
+import {
+  TRI_CORRIGE,
+  buildVerdictDuTri,
+  buildVisualImageHeroSlide,
+  buildVisualImageSlide,
+  buildVisualQuizSlide,
+  buildVisualSlide,
+  buildVisualSortCorrectionSlide,
+} from '../../../../../testing/factories/formations/visual-slide.factory';
+import {
+  ecransDuPupitreB2_01,
+  ecransPublicsB2_01,
+} from '../../../../../testing/fixtures/instantanes/instantane-b2-01';
+import { choisirLOptionDuQuiz } from '../../../../../testing/dom/hote-d-interaction';
+import { ecranNomme } from '../../../../../testing/page/montage-d-instantane';
+import { poserLesEntrees } from '../../../../../testing/page/montage-page';
+import { setupTestBed } from '../../../../../testing/setup-test-bed';
+import type { RetourBrique } from '../../../../core/ports/formations.port';
+import type { EvenementBrique } from '../contrat-hote';
+import { EVENEMENTS_DES_BRIQUES } from './evenements-brique';
+import { SlideActivityComponent } from './slide-activity.component';
+
+type Fixture = ComponentFixture<SlideActivityComponent>;
+
+const ECRAN_NUMERIQUE = buildEcran({
+  id: 'b2-01-numerique',
+  type: 'fp-numeric',
+  donnees: { question: buildNumericQuestion() },
+});
+const MISSION = buildProCasAQuestionsLibres();
+const ECRAN_MISSION = buildEcran({
+  id: 'b2-01-mission',
+  type: 'fp-pro',
+  donnees: { cas: MISSION },
+});
+const ECRAN_CLASSEMENT = buildEcran({
+  id: 'b2-01-classement',
+  type: 'fp-cardsort',
+  donnees: { plan: buildCardsortPlan() },
+});
+const ATTENDUS = {
+  type: 'classement',
+  attendus: [{ carteId: 'loyer', categorieId: 'fixe', justification: 'Indépendant du volume' }],
+};
+const VERDICT: RetourBrique = {
+  kind: 'verdict-reponse',
+  questionId: 'Q-VA-07',
+  correcte: false,
+  libelleConfusion: 'Intérêts simples au lieu de composés',
+};
+function monter(entrees: Readonly<Record<string, unknown>>): Fixture {
+  return poserLesEntrees(TestBed.createComponent(SlideActivityComponent), entrees);
+}
+
+const brique = briqueMontee;
+
+async function briquesDuQuestionnaire(fixture: Fixture) {
+  return { vote: await brique(fixture, 'fp-vote'), numerique: await brique(fixture, 'fp-numeric') };
+}
+
+async function questionnaireDuPosteEtudiant() {
+  const ecran = buildEcranQuestionnaire();
+  const fixture = monter({ slide: ecran, role: 'etudiant', sessionId: 'seance-1' });
+  return { ecran, fixture, ...(await briquesDuQuestionnaire(fixture)) };
+}
+
+const CIBLE_VA_07 = { questionId: 'Q-VA-07', cible: '1 480,24', optionId: null };
+
+function revelerAuPoste(
+  { ecran, fixture }: Awaited<ReturnType<typeof questionnaireDuPosteEtudiant>>,
+  revelation: Parameters<typeof buildRevelationServie>[0],
+): void {
+  fixture.componentRef.setInput('slide', {
+    ...ecran,
+    revelation: buildRevelationServie({ ecranId: ecran.id, ...revelation }),
+  });
+  fixture.detectChanges();
+}
+
+const PILOTAGE_REVELE = { revele: true, saisieFermee: true } as const;
+
+function directRevele(revele: boolean) {
+  return { pilotage: revele ? PILOTAGE_REVELE : {}, resultats: null, comptesJalon: null };
+}
+
+function evenements(fixture: Fixture): EvenementBrique[] {
+  const recus: EvenementBrique[] = [];
+  fixture.componentInstance.evenement.subscribe((evenement) => recus.push(evenement));
+  return recus;
+}
+
+function repondre(numerique: HTMLElement, saisie: string): void {
+  const champ = noeudOmbre(numerique, 'champ') as HTMLInputElement;
+  champ.value = saisie;
+  champ.dispatchEvent(new Event('input'));
+  noeudOmbre<HTMLButtonElement>(numerique, 'valider')?.click();
+}
+
+describe('SlideActivityComponent : deck visuel B2', () => {
+  beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
+
+  it('projette le quiz v2 sans interaction pour le formateur et compte les reponses recues', () => {
+    const fixture = monter({
+      slide: buildVisualQuizSlide(),
+      role: 'presentateur',
+      resultats: buildResultatsSeance({
+        participants: 12,
+        questions: [buildResultatQuestion({ questionId: 'b2-s03-prediction', total: 7 })],
+      }),
+    });
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelectorAll('button.slide-quiz__option').length).toBe(0);
+    expect(element.querySelectorAll('.slide-quiz__option').length).toBe(2);
+    expect(
+      element
+        .querySelector('[data-testid="slide-quiz-reponses-recues"]')
+        ?.textContent?.replace(/\s+/g, ' '),
+    ).toContain('7 / 12');
+  });
+
+  it('L4 · transmet les retours du tri a l ecran de correction pour border les cartes mal placees', () => {
+    const fixture = monter({
+      slide: buildVisualSortCorrectionSlide(),
+      role: 'etudiant',
+      sessionId: 'seance-1',
+      retours: new Map([[TRI_CORRIGE.screenId, [buildVerdictDuTri({ inflation: false })]]]),
+    });
+
+    const erreurs = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>(
+      '.slide-sort-review__carte--erreur',
+    );
+    expect([...erreurs].map((carte) => carte.dataset['carte'])).toEqual(['inflation']);
+  });
+
+  for (const slide of [buildVisualImageHeroSlide(), buildVisualImageSlide()]) {
+    it(`imprime au papier les images de l écran ${slide.id} sans les différer, Safari n imprimant pas une image différée`, () => {
+      const fixture = monter({ slide, role: 'etudiant', apercu: true, papier: true });
+
+      const images = [...(fixture.nativeElement as HTMLElement).querySelectorAll('img')];
+      expect(images.length).toBeGreaterThan(0);
+      expect(images.every((img) => img.getAttribute('loading') === 'eager')).toBeTrue();
+    });
+  }
+
+  it('utilise le même renderer visuel que le catalogue pour l’étudiant', () => {
+    const fixture = monter({ slide: buildVisualSlide(), role: 'etudiant' });
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('app-slide-visual app-slide-hero')).not.toBeNull();
+    expect(element.textContent).toContain('Lire un chiffre');
+    expect(element.querySelector('fp-story')).toBeNull();
+  });
+
+  describe('T9 · raisonnement attendu d une réflexion révélée (écrans 9 et 40)', () => {
+    const REFLEXIONS = ['B2-01-A1-08-QUESTION-DE-GESTION', 'B2-01-A3-09-NOTE-CONJONCTURE'];
+
+    function debrief(fixture: Fixture): HTMLDetailsElement | null {
+      return (fixture.nativeElement as HTMLElement).querySelector(
+        '[data-testid="slide-reflection-debrief"]',
+      );
+    }
+
+    for (const id of REFLEXIONS) {
+      it(`${id} : l étudiant lit l attendu servi à la révélation, et rien avant`, () => {
+        const publie = ecranNomme(ecransPublicsB2_01(), id);
+        const corrige = ecranNomme(ecransDuPupitreB2_01(), id).corrigeEcran;
+        if (corrige?.type !== 'reflexion') {
+          throw new Error(`réflexion sans corrigé : ${id}`);
+        }
+        const avant = monter({ slide: publie, role: 'etudiant', sessionId: 'seance-1' });
+        expect(debrief(avant)).toBeNull();
+
+        const apres = monter({
+          slide: {
+            ...publie,
+            revelation: buildRevelationServie({
+              ecranId: id,
+              questions: [],
+              annexe: corrige,
+              reflexion: { attendu: corrige.attendu, suite: corrige.suite },
+            }),
+          },
+          role: 'etudiant',
+          sessionId: 'seance-1',
+        });
+
+        expect(debrief(apres)?.open).toBeTrue();
+        expect(debrief(apres)?.textContent).toContain(corrige.attendu);
+      });
+
+      it(`${id} : le formateur projette l attendu une fois l écran révélé`, () => {
+        const pupitre = ecranNomme(ecransDuPupitreB2_01(), id);
+        if (pupitre.corrigeEcran?.type !== 'reflexion') {
+          throw new Error(`réflexion sans corrigé : ${id}`);
+        }
+        const entrees = {
+          slide: pupitre,
+          role: 'presentateur',
+          sessionId: 'seance-1',
+          donneesFormateur: pupitre.corrigeEcran,
+        };
+
+        expect(debrief(monter({ ...entrees, direct: directRevele(false) }))).toBeNull();
+        const revele = monter({ ...entrees, direct: directRevele(true) });
+        expect(debrief(revele)?.open).toBeTrue();
+        expect(debrief(revele)?.textContent).toContain(pupitre.corrigeEcran.attendu);
+      });
+
+      it(`F-29 · ${id} : le formateur projette l attendu que le back sert, sans le rebâtir depuis le corrigé`, () => {
+        const pupitre = ecranNomme(ecransDuPupitreB2_01(), id);
+        const servi = { attendu: 'Attendu servi par le back', suite: null };
+
+        const revele = monter({
+          slide: { ...pupitre, reflexion: servi },
+          role: 'presentateur',
+          sessionId: 'seance-1',
+          donneesFormateur: pupitre.corrigeEcran,
+          direct: directRevele(true),
+        });
+
+        expect(pupitre.reflexion).withContext('réflexion servie au pupitre').not.toBeNull();
+        expect(debrief(revele)?.textContent).toContain(servi.attendu);
+      });
+    }
+  });
+
+  it('transmet le choix QCM à la séance comme événement de brique, sans bonne réponse côté client', () => {
+    const fixture = monter({
+      slide: buildVisualQuizSlide(),
+      role: 'etudiant',
+      sessionId: 'seance-1',
+    });
+    const recus = evenements(fixture);
+
+    choisirLOptionDuQuiz(fixture, 1);
+
+    expect(recus).toEqual([
+      jasmine.objectContaining({
+        kind: 'reponse',
+        screenId: 'B2-01-S03-PREDICTION',
+        questionId: 'b2-s03-prediction',
+        valeur: 'o2',
+      }),
+    ]);
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain(
+      'La bonne réponse est',
+    );
+  });
+});
+
+describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
+  beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
+
+  for (const role of ROLES_DE_MONTAGE) {
+    it(`monte la brique de l ecran avec le seul role du poste ${role}, sans mode de rendu (F3)`, async () => {
+      const fixture = monter({ slide: ECRAN_NUMERIQUE, role });
+      const numerique = await brique(fixture, 'fp-numeric');
+
+      expect(numerique.getAttribute('data-cours-role')).toBe(role);
+      expect(numerique.hasAttribute('render')).toBeFalse();
+      expect(numerique.hasAttribute('data-apercu')).toBeFalse();
+      expect(roleAffiche(numerique)).toBe(role);
+    });
+  }
+
+  it('laisse l application stable pendant que le minuteur du coffre bat à la seconde', async () => {
+    const coffre = ecransPublicsB2_01().find(({ type }) => type === 'fp-escape');
+    const fixture = monter({ slide: ECRAN_NUMERIQUE, role: 'etudiant', sessionId: 'seance-1' });
+    await brique(fixture, 'fp-numeric');
+    const zones: string[] = [];
+    const originel = window.setInterval.bind(window);
+    spyOn(window, 'setInterval').and.callFake(((...args: Parameters<typeof setInterval>) => {
+      zones.push(NgZone.isInAngularZone() ? 'angular' : 'hors');
+      return originel(...args);
+    }) as typeof setInterval);
+    TestBed.inject(NgZone).run(() => {
+      fixture.componentRef.setInput('slide', coffre);
+      fixture.detectChanges();
+    });
+    const minuteur = (): Element | null => {
+      const brique = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('fp-escape');
+      return brique === null ? null : noeudOmbre(brique, 'minuteur');
+    };
+    for (let essai = 0; essai < 100 && minuteur() == null; essai += 1) {
+      fixture.detectChanges();
+      await new Promise((suite) => setTimeout(suite, 20));
+    }
+    await new Promise((suite) => setTimeout(suite, 1500));
+
+    expect(minuteur()).not.toBeNull();
+    expect(zones).toEqual(['hors']);
+    expect(TestBed.inject(NgZone).hasPendingMacrotasks).toBeFalse();
+    expect(fixture.isStable()).toBeTrue();
+  });
+
+  it('rend une brique hors de la zone Angular quand l écran change ou qu un retour lui est posé depuis la zone', async () => {
+    const fixture = monter({ slide: ECRAN_NUMERIQUE });
+    const zones: boolean[] = [];
+    const rendre = Object.getPrototypeOf(await brique(fixture, 'fp-numeric')) as {
+      refresh: () => void;
+    };
+    const originel = rendre.refresh;
+    spyOn(rendre, 'refresh').and.callFake(function (this: unknown) {
+      zones.push(NgZone.isInAngularZone());
+      originel.call(this);
+    });
+    const suivant = buildEcran({
+      id: 'b2-01-numerique-suivant',
+      type: 'fp-numeric',
+      donnees: { question: buildNumericQuestion() },
+    });
+
+    TestBed.inject(NgZone).run(() => {
+      fixture.componentRef.setInput('slide', suivant);
+      fixture.detectChanges();
+    });
+    const numerique = await brique(fixture, 'fp-numeric');
+    const auChangement = zones.splice(0);
+    TestBed.inject(NgZone).run(() => {
+      fixture.componentRef.setInput('retours', new Map([[suivant.id, [VERDICT]]]));
+      fixture.detectChanges();
+    });
+
+    expect(noeudOmbre(numerique, 'confusion')?.textContent).toBe(
+      'Intérêts simples au lieu de composés',
+    );
+    expect(auChangement.length).toBeGreaterThan(0);
+    expect(auChangement).not.toContain(true);
+    expect(zones.length).toBeGreaterThan(0);
+    expect(zones).not.toContain(true);
+  });
+
+  const questionnaireMonte = async (
+    entrees: Parameters<typeof monter>[0],
+  ): Promise<{ readonly element: HTMLElement; readonly intitule: string | null | undefined }> => {
+    const fixture = monter(entrees);
+    await brique(fixture, 'fp-vote');
+    const element = fixture.nativeElement as HTMLElement;
+    return {
+      element,
+      intitule: element.querySelector('[data-testid="slide-activity-entete"] h2')?.textContent,
+    };
+  };
+
+  it('pose l entete d un questionnaire et monte une brique par question', async () => {
+    const { element, intitule } = await questionnaireMonte({ slide: buildEcranQuestionnaire() });
+
+    expect(intitule).toBe('Atelier 1 — Lire, rapporter, estimer');
+    expect(element.querySelectorAll('fp-numeric, fp-vote').length).toBe(2);
+  });
+
+  for (const [support, entrees] of [
+    ['à l écran', {}],
+    ['au livret', { role: 'etudiant', apercu: true, papier: true }],
+  ] as const) {
+    it(`pose l intitule seul d un questionnaire sans consigne, ${support}`, async () => {
+      const { element, intitule } = await questionnaireMonte({
+        slide: buildEcranQuestionnaireSansConsigne(),
+        ...entrees,
+      });
+
+      expect(intitule).toBe('Atelier 1 — Lire, rapporter, estimer');
+      expect(element.querySelector('.slide-activity__consigne')).toBeNull();
+      expect(element.classList).toContain('slide-activity--questionnaire');
+      expect(element.querySelectorAll('fp-numeric, fp-vote').length).toBe(2);
+    });
+  }
+
+  it('RET-20 · projette l histogramme des votes d un questionnaire une fois la correction revelee', async () => {
+    const resultats = [
+      buildResultatQuestion({ questionId: 'Q-CAP-03', total: 4, parOption: { a: 1, b: 3 } }),
+    ];
+    const direct = (revele: boolean) => ({
+      pilotage: revele ? PILOTAGE_REVELE : {},
+      resultats,
+      comptesJalon: null,
+    });
+    const fixture = monter({
+      slide: buildEcranQuestionnaire(),
+      role: 'presentateur',
+      direct: direct(false),
+    });
+    const vote = await brique(fixture, 'fp-vote');
+    const barres = (): number => noeudsOmbre(vote, 'barre').length;
+
+    expect(barres()).toBe(0);
+    fixture.componentRef.setInput('direct', direct(true));
+    fixture.detectChanges();
+    expect(barres()).toBeGreaterThan(0);
+  });
+
+  it('RET-32 · projette la bonne reponse de chaque question du questionnaire une fois revelee', async () => {
+    const reponses = {
+      type: 'reponses',
+      reponses: {
+        'Q-VA-07': { cible: '1 480,24', optionId: null },
+        'Q-CAP-03': { cible: '1 480,24 €', optionId: 'b' },
+      },
+    };
+    const direct = directRevele;
+    const fixture = monter({
+      slide: buildEcranQuestionnaire(),
+      role: 'presentateur',
+      direct: direct(false),
+      donneesFormateur: reponses,
+    });
+    const { vote, numerique } = await briquesDuQuestionnaire(fixture);
+
+    expect(noeudOmbre(vote, 'bonne-reponse')).toBeNull();
+    expect(noeudOmbre(numerique, 'bonne-reponse')).toBeNull();
+    fixture.componentRef.setInput('direct', direct(true));
+    fixture.detectChanges();
+    attendreLeCorrigeDuQuestionnaire(vote, numerique);
+  });
+
+  it('RET-32 · montre a l etudiant la bonne reponse servie avec l ecran, comme au presentateur', async () => {
+    const poste = await questionnaireDuPosteEtudiant();
+    const { fixture, vote, numerique } = poste;
+
+    expect(noeudOmbre(vote, 'bonne-reponse')).toBeNull();
+    revelerAuPoste(poste, {
+      questions: [CIBLE_VA_07, { questionId: 'Q-CAP-03', cible: '1 480,24 €', optionId: 'b' }],
+    });
+    await attendreQue(
+      fixture,
+      () => attributDOption(vote, 'b', 'data-correction') === 'juste',
+      'la correction',
+    );
+
+    expect(await brique(fixture, 'fp-vote')).toBe(vote);
+    attendreLeCorrigeDuQuestionnaire(vote, numerique);
+  });
+
+  function attendreLeCorrigeDuQuestionnaire(vote: HTMLElement, numerique: HTMLElement): void {
+    expect(attributDOption(vote, 'b', 'data-correction')).toBe('juste');
+    expect(noeudOmbre(vote, 'bonne-reponse')).toBeNull();
+    expect(noeudOmbre(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
+  }
+
+  it('ne montre pas a l etudiant les donnees du formateur, meme une fois la correction revelee', async () => {
+    const fixture = monter({
+      slide: buildEcranQuestionnaire(),
+      role: 'etudiant',
+      direct: directRevele(true),
+      donneesFormateur: {
+        type: 'reponses',
+        reponses: { 'Q-CAP-03': { cible: '1 480,24 €', optionId: 'b' } },
+      },
+    });
+    const vote = await brique(fixture, 'fp-vote');
+
+    expect(noeudOmbre(vote, 'bonne-reponse')).toBeNull();
+    expect(vote.shadowRoot?.querySelector('[data-correction]')).toBeNull();
+  });
+
+  it('S-02 · corrige sur place la seule question révélée : son explication, sa bonne réponse, son champ fermé', async () => {
+    const poste = await questionnaireDuPosteEtudiant();
+    const { fixture, vote, numerique } = poste;
+
+    revelerAuPoste(poste, {
+      questions: [CIBLE_VA_07],
+      explications: [{ reference: 'Q-VA-07', texte: '1 000 × 1,04^10 ≈ 1 480,24 €.' }],
+    });
+    await attendreQue(
+      fixture,
+      () => noeudOmbre(numerique, 'explication') !== null,
+      'l explication',
+    );
+
+    expect(noeudOmbre(numerique, 'explication')?.textContent).toBe('1 000 × 1,04^10 ≈ 1 480,24 €.');
+    expect(noeudOmbre(numerique, 'bonne-reponse')?.textContent).toContain('1 480,24');
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).disabled).toBeTrue();
+    expect(noeudOmbre(vote, 'explications')).toBeNull();
+    expect(
+      [...(vote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-option]') ?? [])].some(
+        (option) => !option.disabled,
+      ),
+    ).toBeTrue();
+  });
+
+  it('S-02 · projette au pupitre les explications au rythme des questions corrigées', async () => {
+    const fixture = monter({
+      slide: {
+        ...buildEcranQuestionnaire(),
+        explications: [
+          { reference: 'Q-CAP-03', texte: 'Capitaliser, c’est réinvestir les intérêts.' },
+          { reference: 'Q-VA-07', texte: '1 000 × 1,04^10 ≈ 1 480,24 €.' },
+        ],
+      },
+      role: 'presentateur',
+      direct: { pilotage: { explicationsDevoilees: 1 }, resultats: null, comptesJalon: null },
+    });
+    const { vote, numerique } = await briquesDuQuestionnaire(fixture);
+
+    expect(noeudOmbre(vote, 'explication')?.textContent).toBe(
+      'Capitaliser, c’est réinvestir les intérêts.',
+    );
+    expect(noeudOmbre(numerique, 'explications')).toBeNull();
+  });
+
+  it('RET-32 · ferme aux reponses le poste etudiant une fois la correction du questionnaire revelee', async () => {
+    const direct = directRevele;
+    const fixture = monter({
+      slide: buildEcranQuestionnaire(),
+      role: 'etudiant',
+      sessionId: 'seance-1',
+      direct: direct(false),
+    });
+    const { vote, numerique } = await briquesDuQuestionnaire(fixture);
+    const options = (): HTMLButtonElement[] => [
+      ...(vote.shadowRoot?.querySelectorAll<HTMLButtonElement>('[data-option]') ?? []),
+    ];
+
+    expect(options().every((option) => !option.disabled)).toBeTrue();
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).disabled).toBeFalse();
+    fixture.componentRef.setInput('direct', direct(true));
+    fixture.detectChanges();
+    expect(options().length).toBeGreaterThan(0);
+    expect(options().every((option) => option.disabled)).toBeTrue();
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).disabled).toBeTrue();
+    expect(noeudOmbre(numerique, 'reponses-closes')).not.toBeNull();
+  });
+
+  it('RET-31 · projette la correction de la feuille au rythme de l etayage du pupitre', async () => {
+    const direct = (etayage: number) => ({
+      pilotage: etayage === 0 ? {} : { etayage },
+      resultats: null,
+      comptesJalon: null,
+    });
+    const fixture = monter({
+      slide: buildEcran({
+        id: 'b2-01-feuille',
+        type: 'fp-sheet',
+        donnees: { plan: buildSheetPlan() },
+      }),
+      role: 'presentateur',
+      direct: direct(0),
+      donneesFormateur: {
+        type: 'feuille',
+        attendus: [
+          { reference: 'D3', formuleReference: '=C3*(1+$B$1)', valeur: 64.8, affichage: '64,8' },
+        ],
+      },
+    });
+    const feuille = await brique(fixture, 'fp-sheet');
+
+    expect(noeudOmbre(feuille, 'correction-feuille')).toBeNull();
+    fixture.componentRef.setInput('direct', direct(1));
+    fixture.detectChanges();
+    expect(noeudOmbre(feuille, 'correction-feuille')?.textContent?.trim()).toBe('=C3*(1+$B$1)');
+    fixture.componentRef.setInput('direct', direct(2));
+    fixture.detectChanges();
+    expect(noeudOmbre(feuille, 'correction-feuille')?.textContent?.trim()).toBe(
+      '=C3*(1+$B$1) 64,8',
+    );
+  });
+
+  it('traduit la soumission d une brique en evenement de seance', async () => {
+    const fixture = monter({ slide: ECRAN_NUMERIQUE, sessionId: 'seance-1' });
+    const recus = evenements(fixture);
+    repondre(await brique(fixture, 'fp-numeric'), '1 480,24');
+
+    expect(recus).toEqual([
+      {
+        kind: 'reponse',
+        screenId: 'b2-01-numerique',
+        questionId: 'Q-VA-07',
+        valeur: '1 480,24',
+        dureeMs: jasmine.any(Number),
+      },
+    ]);
+  });
+
+  async function numeriqueEcoutee(): Promise<{
+    recus: EvenementBrique[];
+    numerique: HTMLElement;
+  }> {
+    const fixture = monter({ slide: ECRAN_NUMERIQUE });
+    const recus = evenements(fixture);
+    return { recus, numerique: await brique(fixture, 'fp-numeric') };
+  }
+
+  it('F-37 · relaie la demande d evaluation de la machine a la seance', async () => {
+    const { recus, numerique } = await numeriqueEcoutee();
+
+    numerique.dispatchEvent(
+      new CustomEvent('fp-concept4-evaluation', {
+        detail: buildDetailDeBrique('fp-concept4-evaluation'),
+        bubbles: true,
+        composed: true,
+      }),
+    );
+
+    expect(recus).toEqual([
+      {
+        kind: 'evaluation-machine',
+        screenId: ECRAN_NUMERIQUE.id,
+        reglages: { tauxUn: 50, tauxDeux: -50 },
+      },
+    ]);
+  });
+
+  it('L3 · relaie les reponses libres d un cas professionnel a la seance', async () => {
+    const { recus, numerique } = await numeriqueEcoutee();
+
+    numerique.dispatchEvent(
+      new CustomEvent('fp-pro-submit', {
+        detail: buildDetailDeBrique('fp-pro-submit'),
+        bubbles: true,
+        composed: true,
+      }),
+    );
+
+    expect(recus).toEqual([
+      jasmine.objectContaining({ kind: 'libre', activityId: 'b2-01-a1-mission:mesure' }),
+    ]);
+  });
+
+  it('relaie chaque evenement declare par les briques', async () => {
+    const { recus, numerique } = await numeriqueEcoutee();
+
+    for (const nom of EVENEMENTS_DES_BRIQUES) {
+      const avant = recus.length;
+      numerique.dispatchEvent(
+        new CustomEvent(nom, { detail: buildDetailDeBrique(nom), bubbles: true, composed: true }),
+      );
+      expect(recus.length).withContext(nom).toBeGreaterThan(avant);
+    }
+  });
+
+  it('pose les retours sans remonter la brique ni perdre la saisie en cours (F6)', async () => {
+    const fixture = monter({ slide: ECRAN_NUMERIQUE });
+    const numerique = await brique(fixture, 'fp-numeric');
+    const champ = noeudOmbre(numerique, 'champ') as HTMLInputElement;
+    champ.value = '1 400';
+    champ.dispatchEvent(new Event('input'));
+
+    fixture.componentRef.setInput('retours', new Map([['b2-01-numerique', [VERDICT]]]));
+    fixture.detectChanges();
+
+    expect(await brique(fixture, 'fp-numeric')).toBe(numerique);
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).value).toBe('1 400');
+    expect(noeudOmbre(numerique, 'confusion')?.textContent).toBe(
+      'Intérêts simples au lieu de composés',
+    );
+  });
+
+  it('laisse intacte la brique voisine pendant sa saisie quand le verdict d une autre question du questionnaire arrive', async () => {
+    const { ecran, fixture, vote, numerique } = await questionnaireDuPosteEtudiant();
+    const champ = noeudOmbre(numerique, 'champ') as HTMLInputElement;
+    champ.value = '1 48';
+    champ.dispatchEvent(new Event('input'));
+
+    const verdictDuVote: RetourBrique = { ...VERDICT, questionId: 'Q-CAP-03', correcte: true };
+    fixture.componentRef.setInput('retours', new Map([[ecran.id, [verdictDuVote]]]));
+    fixture.detectChanges();
+    expect(noeudOmbre(numerique, 'champ')).toBe(champ);
+
+    const votee = vote.shadowRoot?.querySelector('[data-option]');
+    fixture.componentRef.setInput('retours', new Map([[ecran.id, [verdictDuVote, VERDICT]]]));
+    fixture.detectChanges();
+    expect(vote.shadowRoot?.querySelector('[data-option]')).toBe(votee ?? null);
+  });
+
+  it('annonce deja repondu sur la brique visee', async () => {
+    const fixture = monter({
+      slide: ECRAN_NUMERIQUE,
+      retours: new Map([['b2-01-numerique', [{ kind: 'deja-repondu', questionId: 'Q-VA-07' }]]]),
+    });
+    const numerique = await brique(fixture, 'fp-numeric');
+
+    expect(noeudOmbre(numerique, 'deja-repondu')?.textContent).toBe(
+      'Réponse déjà enregistrée : voici votre verdict',
+    );
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).disabled).toBeTrue();
+  });
+
+  it('montre un refus a la seule brique qui vient d emettre', async () => {
+    const fixture = monter({ slide: ECRAN_NUMERIQUE });
+    const numerique = await brique(fixture, 'fp-numeric');
+    repondre(numerique, '12');
+
+    fixture.componentRef.setInput(
+      'retours',
+      new Map([
+        [
+          'b2-01-numerique',
+          [
+            {
+              kind: 'refus',
+              motif: 'phase-fermee',
+              message: 'Le vote est fermé pour cette question',
+            },
+          ],
+        ],
+      ]),
+    );
+    fixture.detectChanges();
+
+    expect(noeudOmbre(numerique, 'erreur')?.textContent).toBe(
+      'Le vote est fermé pour cette question',
+    );
+    expect((noeudOmbre(numerique, 'champ') as HTMLInputElement).disabled).toBeFalse();
+  });
+
+  it('n emet rien et marque les briques en apercu hors seance', async () => {
+    const brouillons = createBrouillonsStub();
+    const fixture = monter({ slide: ECRAN_NUMERIQUE, apercu: true, brouillons });
+    const recus = evenements(fixture);
+    const numerique = await brique(fixture, 'fp-numeric');
+    repondre(numerique, '1 480,24');
+
+    expect(numerique.hasAttribute('data-apercu')).toBeTrue();
+    expect(recus).toEqual([]);
+    expect(noeudOmbre(numerique, 'retour')?.textContent).toBe(
+      'Aperçu : les réponses s’envoient pendant la séance',
+    );
+    expect(brouillons.lire).not.toHaveBeenCalled();
+  });
+
+  it('reprend le brouillon de la brique au montage et memorise chaque frappe', async () => {
+    const brouillons = createBrouillonsStub();
+    const [mesure] = MISSION.questionsLibres ?? [];
+    brouillons.lire.and.returnValue({ reponses: { [mesure.id]: 'Repris apres rechargement' } });
+    const fixture = monter({ slide: ECRAN_MISSION, brouillons });
+    const cas = await brique(fixture, 'fp-pro');
+    const champ = (): HTMLTextAreaElement | null | undefined =>
+      cas.shadowRoot?.querySelector<HTMLTextAreaElement>(`[data-question="${mesure.id}"]`);
+
+    expect(brouillons.lire).toHaveBeenCalledWith('fp-pro', MISSION.id);
+    expect(champ()?.value).toBe('Repris apres rechargement');
+
+    const zone = champ();
+    if (zone) {
+      zone.value = 'Nouvelle frappe';
+      zone.dispatchEvent(new Event('input'));
+    }
+
+    expect(brouillons.ecrire).toHaveBeenCalledWith(
+      'fp-pro',
+      MISSION.id,
+      jasmine.objectContaining({ reponses: { [mesure.id]: 'Nouvelle frappe' } }),
+    );
+  });
+
+  it('ne range au pupitre les cartes a leur place de reference qu une fois la correction revelee', async () => {
+    const pupitre = monter({
+      slide: ECRAN_CLASSEMENT,
+      role: 'presentateur',
+      direct: directRevele(false),
+      donneesFormateur: ATTENDUS,
+    });
+    const classement = await brique(pupitre, 'fp-cardsort');
+    const pileDuLoyer = (): string | null =>
+      classement.shadowRoot
+        ?.querySelector('[data-carte="loyer"]')
+        ?.closest('[data-testid="pile"]')
+        ?.getAttribute('data-zone') ?? null;
+
+    expect(pileDuLoyer()).toBe('');
+    expect(classement.shadowRoot?.querySelector('[data-correction]')).toBeNull();
+
+    pupitre.componentRef.setInput('direct', directRevele(true));
+    pupitre.detectChanges();
+
+    expect(pileDuLoyer()).toBe('fixe');
+    expect(
+      classement.shadowRoot?.querySelector('[data-carte="loyer"]')?.getAttribute('data-correction'),
+    ).toBe('juste');
+  });
+
+  it('ne donne jamais le classement de reference du formateur au poste etudiant', async () => {
+    const etudiant = monter({
+      slide: ECRAN_CLASSEMENT,
+      direct: directRevele(true),
+      donneesFormateur: ATTENDUS,
+    });
+    const classement = await brique(etudiant, 'fp-cardsort');
+
+    expect(classement.shadowRoot?.innerHTML).not.toContain('Indépendant du volume');
+    expect(classement.shadowRoot?.querySelector('[data-correction]')).toBeNull();
+  });
+
+  it('remonte la brique quand le role change', async () => {
+    const fixture = monter({ slide: ECRAN_NUMERIQUE });
+    const avant = await brique(fixture, 'fp-numeric');
+    fixture.componentRef.setInput('role', 'presentateur');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const apres = await brique(fixture, 'fp-numeric');
+
+    expect(apres).not.toBe(avant);
+    expect(apres.getAttribute('data-cours-role')).toBe('presentateur');
+  });
+
+  it('presente un ecran verrouille par son titre et sa duree, sans brique', () => {
+    const fixture = monter({
+      slide: buildEcran({
+        id: 'b2-01-verrou',
+        type: 'ecran-verrouille',
+        titre: 'Atelier 3',
+        duree: 12,
+      }),
+    });
+    const verrou = (fixture.nativeElement as HTMLElement).querySelector(
+      '[data-testid="slide-activity-verrouille"]',
+    );
+
+    expect(verrou?.textContent?.replace(/\s+/g, ' ')).toContain('Atelier 3');
+    expect(verrou?.textContent?.replace(/\s+/g, ' ')).toContain(
+      '12 min · Disponible pendant la séance',
+    );
+  });
+
+  it('signale un ecran dont la brique n est pas connue', async () => {
+    const fixture = monter({ slide: buildEcran({ id: 'b2-01-inconnu', type: 'fp-inconnue' }) });
+    const inconnu = (): Element | null =>
+      (fixture.nativeElement as HTMLElement).querySelector(
+        '[data-testid="slide-activity-unknown"]',
+      );
+
+    await attendreQue(fixture, () => inconnu() !== null, 'l ecran inconnu');
+
+    expect(inconnu()?.getAttribute('role')).toBe('alert');
+  });
+});

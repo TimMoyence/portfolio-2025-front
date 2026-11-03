@@ -1,4 +1,4 @@
-import { buildEcran } from '../../../testing/factories/cours.factory';
+import { buildEcran } from '../../../testing/factories/formations/cours.factory';
 import { directDeLEcran, directDeLEcranCourant } from './direct-de-l-ecran';
 
 const COMPTES = { perdu: 1, 'ca-va': 1, clair: 1, total: 3 };

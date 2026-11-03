@@ -6,8 +6,8 @@ import type {
   Sync,
   SyncListener,
   SyncOptions,
-} from '../../../cours/runtime/core/sync';
-import { createSync } from '../../../cours/runtime/core/sync';
+} from '../../../cours/runtime/core/reseau/sync';
+import { createSync } from '../../../cours/runtime/core/reseau/sync';
 import { getApiFormationsUrl } from '../../core/http/api-config';
 import { enteteDAutorisation } from '../../core/http/entete-d-autorisation';
 import { AuthStateService } from '../../core/services/auth-state.service';

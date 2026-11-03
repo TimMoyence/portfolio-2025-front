@@ -1,5 +1,5 @@
 import type { EcranContent, PilotageEcran, ResultatsSeance } from '../../../cours/content/types';
-import type { ResultatsDuFlux } from '../../../cours/runtime/core/sync';
+import type { ResultatsDuFlux } from '../../../cours/runtime/core/reseau/sync';
 import type { DirectEcran } from '../../shared/slides/session/contrat-hote';
 import { identifiantPorte } from '../../shared/slides/session/lecture-ecran';
 

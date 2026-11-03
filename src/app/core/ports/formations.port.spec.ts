@@ -7,7 +7,7 @@ import {
   buildVerdictProduction,
   buildVerdictTentative,
   createFormationsPortStub,
-} from '../../../testing/factories/formations.factory';
+} from '../../../testing/factories/formations/formations.factory';
 import type {
   FormationsPort,
   StrategieServie,
@@ -19,7 +19,7 @@ import {
   buildFeuilleEvaluee,
   buildSortiesMachine,
   buildTableauEvalue,
-} from '../../../testing/factories/cours.factory';
+} from '../../../testing/factories/formations/cours.factory';
 import type {
   EtatParticipant,
   FeuilleEvaluee,

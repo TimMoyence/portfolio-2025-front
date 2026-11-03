@@ -37,9 +37,12 @@ import {
 import type { QuizInteraction } from '../interactions/slide-quiz/slide-quiz.component';
 import { SlideQuizComponent } from '../interactions/slide-quiz/slide-quiz.component';
 import type { ModeInteraction } from '../interactions/mode-interaction';
-import { reussitesDeLEcran, verdictsDeLEcran } from '../../../core/adapters/retours-brique';
+import {
+  reussitesDeLEcran,
+  verdictsDeLEcran,
+} from '../../../core/adapters/formations/retours-brique';
 import type { RetourBrique } from '../../../core/ports/formations.port';
-import { chaineDe, objet } from '../../../../cours/runtime/core/valeurs';
+import { chaineDe, objet } from '../../../../cours/runtime/core/texte/valeurs';
 import {
   ecranSourceDe,
   presentationDe,

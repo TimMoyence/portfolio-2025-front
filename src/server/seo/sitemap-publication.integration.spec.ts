@@ -1,0 +1,126 @@
+import type { SeoMetadataFile } from '../../app/core/seo/seo-metadata.model';
+import metadataDuSite from '../../assets/seo/seo-metadata.json';
+import { buildReponseDuCatalogue } from '../../testing/factories/formations/formation-catalogue.factory';
+import {
+  buildRequeteExpress,
+  createReponseExpressStub,
+} from '../../testing/factories/serveur/express.factory';
+import {
+  createJournalSpy,
+  type JournalEspion,
+} from '../../testing/factories/serveur/journal.factory';
+import { CHEMIN_DU_COURS_B2, SLUG_DU_COURS_B2 } from '../../testing/factories/seo-metadata.factory';
+import { lastmodDeLaPage } from '../../testing/page/sitemap-xml';
+import { COURS_EN_SEANCE } from '../../app/core/config/cours-en-seance';
+import { lecteurDePublicationsDeCours } from '../api/cours-publication';
+import { routeDuSitemap } from './sitemap-route';
+import { buildBaseUrlFromRequest } from '../rendu/url-utils';
+
+const API = 'https://api.asilidesign.fr/api/v1/portfolio25';
+const DELAI_DU_LECTEUR_MS = 2_000;
+
+const metadata = metadataDuSite as unknown as SeoMetadataFile;
+const metadataAvecLeCoursIndexe: SeoMetadataFile = {
+  ...metadata,
+  pages: metadata.pages.map((page) =>
+    page.path === CHEMIN_DU_COURS_B2 ? { ...page, index: true } : page,
+  ),
+};
+
+function lastmodDuCoursDansLeFichier(): string {
+  const page = metadata.pages.find(({ path }) => path === CHEMIN_DU_COURS_B2);
+  if (page?.lastmod === undefined) {
+    throw new Error(`Aucun lastmod pour ${CHEMIN_DU_COURS_B2} dans seo-metadata.json`);
+  }
+  return page.lastmod;
+}
+
+async function sitemap(appels: typeof fetch, journal: Pick<Console, 'warn'>): Promise<string> {
+  const reponse = createReponseExpressStub();
+  await routeDuSitemap({
+    lireMetadata: () => metadataAvecLeCoursIndexe,
+    lireArticles: () => Promise.resolve([]),
+    lirePublicationsDeCours: lecteurDePublicationsDeCours({
+      apiBaseUrl: API,
+      slugs: COURS_EN_SEANCE,
+      fetch: appels,
+      journal,
+    }),
+    baseUrlDe: buildBaseUrlFromRequest,
+  })(buildRequeteExpress(), reponse.express);
+  return reponse.corps ?? '';
+}
+
+function catalogueQuiRepond(publieLe?: string): jasmine.Spy<typeof fetch> {
+  return jasmine
+    .createSpy<typeof fetch>('fetch')
+    .and.callFake(() => Promise.resolve(buildReponseDuCatalogue(publieLe)));
+}
+
+function avertiPourChaqueCours(motif: string): jasmine.ArrayContaining<unknown> {
+  return jasmine.arrayWithExactContents(
+    COURS_EN_SEANCE.map((slug) => [jasmine.stringContaining(`/formations/${slug} : ${motif}`)]),
+  );
+}
+
+function lastmodDuCours(xml: string): string {
+  const lastmod = lastmodDeLaPage(xml, CHEMIN_DU_COURS_B2);
+  if (lastmod === null) {
+    throw new Error(`Le sitemap ne contient pas ${CHEMIN_DU_COURS_B2}`);
+  }
+  return lastmod;
+}
+
+describe('sitemap du cours servi par l API (H1, intégration)', () => {
+  let journal: JournalEspion;
+
+  beforeEach(() => {
+    journal = createJournalSpy();
+  });
+
+  it('date la page du cours par publieLe quand l API la publie après le dernier commit front', async () => {
+    const appels = catalogueQuiRepond('2026-12-24T07:30:00.000Z');
+
+    const xml = await sitemap(appels, journal);
+
+    expect(appels.calls.allArgs().map(([url]) => url)).toEqual(
+      COURS_EN_SEANCE.map((slug) => `${API}/formations/catalogue/${slug}`),
+    );
+    expect(COURS_EN_SEANCE).toContain(SLUG_DU_COURS_B2);
+    expect(lastmodDuCours(xml)).toBe('2026-12-24');
+    expect(journal.warn).not.toHaveBeenCalled();
+  });
+
+  it('garde le lastmod du fichier SEO quand la publication lui est antérieure', async () => {
+    const appels = catalogueQuiRepond('2020-01-01T00:00:00.000Z');
+
+    expect(lastmodDuCours(await sitemap(appels, journal))).toBe(lastmodDuCoursDansLeFichier());
+  });
+
+  it('garde le lastmod du fichier SEO quand le back ne renvoie pas encore publieLe', async () => {
+    const appels = catalogueQuiRepond();
+
+    expect(lastmodDuCours(await sitemap(appels, journal))).toBe(lastmodDuCoursDansLeFichier());
+    expect(journal.warn.calls.allArgs()).toEqual(
+      avertiPourChaqueCours("réponse de l'API hors contrat (publieLe)"),
+    );
+  });
+
+  it('abandonne au bout de deux secondes quand l API ne répond pas, sans casser le sitemap', async () => {
+    const appels = jasmine.createSpy<typeof fetch>('fetch').and.callFake(
+      (_url, init) =>
+        new Promise<Response>((_, rejeter) => {
+          init?.signal?.addEventListener('abort', () =>
+            rejeter(new DOMException('The operation was aborted.', 'AbortError')),
+          );
+        }),
+    );
+    const depart = Date.now();
+
+    const xml = await sitemap(appels, journal);
+
+    expect(Date.now() - depart).toBeGreaterThanOrEqual(DELAI_DU_LECTEUR_MS - 50);
+    expect(lastmodDuCours(xml)).toBe(lastmodDuCoursDansLeFichier());
+    expect(journal.warn.calls.allArgs()).toEqual(avertiPourChaqueCours('API injoignable'));
+  });
+});

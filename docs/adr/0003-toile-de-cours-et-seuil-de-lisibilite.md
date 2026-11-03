@@ -54,7 +54,7 @@ page en largeur. Décision de Tim : « Élargir, sinon défiler ».
   jusqu'à `1 ÷ réduction lisible` (`plafondDElargissement`) : la taille affichée ne passe jamais
   sous 0,8.
 - Un tableau qui reste plus large que la carte défile seul dans `.defileur-de-tableau`
-  (`src/cours/runtime/core/defileur.ts`, `src/cours/runtime/design/defileur.ts`, composant
+  (`src/cours/runtime/core/ecran/defileur.ts`, `src/cours/runtime/design/defileur.ts`, composant
   `app-defileur-de-tableau`) : ombre au bord tant qu'il reste une suite (`data-suite-avant`,
   `data-suite-apres`), en-têtes de ligne figés, colonne figée resserrée sous 40 rem. C'est la
   seule brique qui défile en interne, avec le graphique au téléphone (amendement suivant) ;

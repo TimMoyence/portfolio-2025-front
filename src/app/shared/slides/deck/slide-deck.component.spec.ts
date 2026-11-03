@@ -4,9 +4,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SlideComponent } from './slide.component';
 import { SlideDeckComponent } from './slide-deck.component';
 import { SlideDeckService } from './slide-deck.service';
-import { FullscreenAdapter } from './fullscreen.adapter';
-import { buildSlideDeckConfig } from '../../../../testing/factories/slide-deck.factory';
-import { simulerLePleinEcran } from '../../../../testing/plein-ecran-simule';
+import { FullscreenAdapter } from './plein-ecran/fullscreen.adapter';
+import { buildSlideDeckConfig } from '../../../../testing/factories/formations/slide-deck.factory';
+import { simulerLePleinEcran } from '../../../../testing/environnement/plein-ecran-simule';
 import { SLIDE_DECK_CONFIG } from './slide-deck.tokens';
 
 @Component({

@@ -133,14 +133,14 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
 
 ## Consequences
 
-- `e2e/cours-livret-impression.spec.ts` garde chacune de ces règles : voile, zoom, images,
+- `e2e/impression/cours-livret-impression.spec.ts` garde chacune de ces règles : voile, zoom, images,
   largeur fixe, marges entières, blocs d'un seul tenant rognés et sans ombre, légendes
   flottantes, hauteurs identiques d'une fenêtre à l'autre, zones de saisie à la hauteur de leurs
   lignes, fond blanc, gouttière, réglages de la projection, cartes de cours sur une rangée,
   aucun élément hors de son écran, parcours de méthode imprimé en entier et indépendant de son
   minuteur.
-- `src/server/routes-client.spec.ts` vérifie que chaque route qui déclare des en-têtes les
-  reçoit et que le pupitre et la projection n'en reçoivent pas ; `e2e/entetes-ssr.spec.ts`
+- `src/server/rendu/routes-client.spec.ts` vérifie que chaque route qui déclare des en-têtes les
+  reçoit et que le pupitre et la projection n'en reçoivent pas ; `e2e/site/entetes-ssr.spec.ts`
   vérifie l'en-tête sur la réponse du serveur SSR construit.
 - Un harnais WebKit (WKWebView sur le build de production, API simulée) suit le chemin du
   formateur : pupitre, « Livret papier », « Imprimer », enregistrement du PDF, en appliquant la
@@ -158,9 +158,9 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
   cours servi, qu'aucune fiche imprimée à la suite ne cite une réponse d'une fiche de sa page
   (bonne réponse, corrigé, formule, arrondi, pourcentage, explication, nombre qu'une étape
   fait calculer), seuls des extraits exacts et justifiés étant admis ;
-  `e2e/cours-livret-impression.spec.ts` vérifie que seules les autres fiches reçoivent un saut
+  `e2e/impression/cours-livret-impression.spec.ts` vérifie que seules les autres fiches reçoivent un saut
   de page.
-- `e2e/banc/livret-impression.spec.ts` vérifie qu'aucun écran ne dépasse une page A4, que les
+- `e2e/banc/charge/livret-impression.spec.ts` vérifie qu'aucun écran ne dépasse une page A4, que les
   écrans se tassent à plusieurs par page, le PDF ne comptant pas plus de pages qu'un tassement
   où chaque fiche imprimée à la suite continue la page de la précédente.
 - Le nombre de pages reste décidé par le moteur : un texte qui ne se coupe pas aux mêmes mots

@@ -1,4 +1,4 @@
-import { DEFILEUR_DE_TABLEAU } from '../core/defileur';
+import { DEFILEUR_DE_TABLEAU } from '../core/ecran/defileur';
 
 const defileur = `.${DEFILEUR_DE_TABLEAU}`;
 const enTetesDeLigne = `${defileur} > table > * > tr > :first-child`;
