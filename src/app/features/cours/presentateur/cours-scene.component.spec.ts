@@ -55,7 +55,7 @@ import {
 import type { FormationsPort } from '../../../core/ports/formations.port';
 import { CoursPresentationComponent } from '../../../shared/slides/session/cours-presentation.component';
 import type { SlideActivityComponent } from '../../../shared/slides/session/activite/slide-activity.component';
-import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantanes/instantane-b2-01';
+import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import { ecranNomme } from '../../../../testing/page/montage-d-instantane';
 import { CoursSceneComponent } from './cours-scene.component';
 import { sourceCorrigeePar } from './correction/sources-de-correction';

@@ -5,7 +5,7 @@ import {
   monterEcran,
   type RevelationDuPupitre,
 } from '../../../../../testing/briques/briques-montees';
-import { INSTANTANE_B3_01 } from '../../../../../testing/fixtures/instantanes/instantane-b3-01';
+import { INSTANTANE_B3_01 } from '../../../../../testing/fixtures/instantanes/b3/instantane-b3-01';
 import {
   ecransDuPupitreDe,
   ecransPublicsDe,

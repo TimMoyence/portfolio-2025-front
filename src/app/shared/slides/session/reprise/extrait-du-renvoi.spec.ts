@@ -1,5 +1,5 @@
 import type { EcranContent } from '../../../../../cours/content/types';
-import { ecransPublicsB2_01 } from '../../../../../testing/fixtures/instantanes/instantane-b2-01';
+import { ecransPublicsB2_01 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import { ecranNomme } from '../../../../../testing/page/montage-d-instantane';
 import { extraireDuRenvoi } from './extrait-du-renvoi';
 

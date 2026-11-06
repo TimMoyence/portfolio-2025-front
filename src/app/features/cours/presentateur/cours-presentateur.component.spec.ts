@@ -42,7 +42,7 @@ import {
 } from '../../../../testing/factories/formations/formations.factory';
 import { refusDuBack } from '../../../../testing/factories/serveur/probleme-http.factory';
 import type { FluxDouble } from '../../../../testing/factories/formations/sync.factory';
-import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantanes/instantane-b2-01';
+import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import { DELAI_DE_MONTAGE_MS } from '../../../../testing/briques/briques-montees';
 import {
   INSTANTANES_DES_COURS_SERVIS,
@@ -65,6 +65,7 @@ import type { FormationsPort, SeanceOuverte } from '../../../core/ports/formatio
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { demanderLaPieceJointe } from '../../../../testing/seance/piece-jointe-demandee';
 import { SlideActivityComponent } from '../../../shared/slides/session/activite/slide-activity.component';
+import { estVoteJumele, libellesDesElements } from '../../../shared/slides/session/lecture-ecran';
 import { correctionsAffichees } from './correction/corrections-affichees';
 import { CoursPresentateurComponent } from './cours-presentateur.component';
 
@@ -1423,7 +1424,10 @@ describe('CoursPresentateurComponent', () => {
         (vue) =>
           (vue !== 'activite-etayage' || servi.ecrans.some(({ type }) => type === 'fp-worked')) &&
           (vue !== 'cours-correction' ||
-            servi.ecrans.some((ecran) => correctionsAffichees(ecran).length > 0)),
+            servi.ecrans.some((ecran) => correctionsAffichees(ecran).length > 0)) &&
+          (vue !== 'activite-phase' || servi.ecrans.some(estVoteJumele)) &&
+          (vue !== 'activite-production-cles' ||
+            servi.ecrans.some((ecran) => libellesDesElements(ecran).size > 0)),
       );
 
     for (const [prefixe, { deroule: servi }] of INSTANTANES_DES_COURS_SERVIS) {

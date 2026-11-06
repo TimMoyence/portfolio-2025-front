@@ -1,0 +1,189 @@
+{
+  "cours": "b3-02",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours/cours-b3-02-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M2",
+      "ecran": "A1-05",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Nettoyer le texte · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "nettoyer-le-texte.webp",
+          "octets": 219600,
+          "sha256": "37b2f80b452c3782c4217d9e0895cc1b4fb34e49754345f8f80ac8fba914135e"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A1-06",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Du texte au nombre · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "convertir-un-montant.webp",
+          "octets": 201148,
+          "sha256": "7a6d815dbdf9f9e96eea3d050c75c4bea74341d74adf31f5e0e2c9a5a9ecb07a"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Signaler, pas corriger · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "signaler-par-si-ou.webp",
+          "octets": 218930,
+          "sha256": "e1d34a172f185877bb1398ba22773bcc3e5e067f5fea7b6bf78743fa89faa7d6"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A1-10",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "RECHERCHEV en quatre questions · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "recherchev-quatre-arguments.webp",
+          "octets": 257772,
+          "sha256": "a0c44fd56f5be409ce7c7e4aa9e4653544fa759444fa2e8b3d05077d3c07d5d5"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "ecran": "A1-11",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Additionner sous conditions · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "additionner-sous-conditions.webp",
+          "octets": 264372,
+          "sha256": "93f2a5c9ad8812a3e33d537ac7a68fa5a24ce21ab80ae40d1a7ef60309a2381c"
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "ecran": "A2-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Compter en jours ouvrés · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "jours-ouvres.webp",
+          "octets": 254498,
+          "sha256": "f128d602d649b48abb47c9921472a991a1521c5a39d7258192cae64f7217dd5a"
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Lire le calendrier · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "calendrier-joursem-datedif-temps.webp",
+          "octets": 237050,
+          "sha256": "02495d2b5d34db30f5bd76beef035d7e331025dc589ad5160ddc11607cdcb59c"
+        }
+      ]
+    },
+    {
+      "id": "M9",
+      "ecran": "A2-04",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Moyenne ou médiane ? · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "moyenne-ou-mediane.webp",
+          "octets": 231226,
+          "sha256": "fb3324c49f2deaab0af9b954984dceb43633a78fa9ef56918aa4e84cf79e5e19"
+        }
+      ]
+    },
+    {
+      "id": "M10",
+      "ecran": "A2-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Un tableau qui grandit · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "tableau-structure.webp",
+          "octets": 280480,
+          "sha256": "0126ba7cf91b2d6a27c69f2d5c7238bbb929dbaf53bd7ff5c00e24f02bc7d089"
+        }
+      ]
+    },
+    {
+      "id": "M11",
+      "ecran": "A2-08",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le TCD en quatre zones · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "tcd-quatre-zones.webp",
+          "octets": 248858,
+          "sha256": "d68334d2dd7a08219943fe52b660b14e5e2901828e66de12529ce440c0bc66f3"
+        }
+      ]
+    },
+    {
+      "id": "M12",
+      "ecran": "A2-12",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "D’abord la question · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "graphique-qui-repond.webp",
+          "octets": 262896,
+          "sha256": "2e8471e6960b67fde4e7ccd5e43c4c6a49526cc380917e4b22c9841f41029aab"
+        }
+      ]
+    },
+    {
+      "id": "M13",
+      "ecran": "A2-15",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Un taux, c’est un ratio de sommes · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "ratios-de-sommes.webp",
+          "octets": 268126,
+          "sha256": "f55ac381853e5319f0e20f640566fa20db8b7bad6723a729a857987196193dc7"
+        }
+      ]
+    },
+    {
+      "id": "M14",
+      "ecran": "A2-16",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Lu en trente secondes · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "tableau-de-bord.webp",
+          "octets": 310498,
+          "sha256": "085bb7f85530f959fb9bcaf9d3fa9dd9139fff65515a092e69096c86fbc0ae35"
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { fondEffectif, rapportDeContraste } from '../../../../../../testing/rendu/contraste';
 import { uneImage } from '../../../../../../testing/texte/deux-images';
-import { INSTANTANE_B2_01 } from '../../../../../../testing/fixtures/instantanes/instantane-b2-01';
-import { INSTANTANE_B2_04 } from '../../../../../../testing/fixtures/instantanes/instantane-b2-04';
-import { INSTANTANE_B2_05 } from '../../../../../../testing/fixtures/instantanes/instantane-b2-05';
+import { INSTANTANE_B2_01 } from '../../../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
+import { INSTANTANE_B2_04 } from '../../../../../../testing/fixtures/instantanes/b2/instantane-b2-04';
+import { INSTANTANE_B2_05 } from '../../../../../../testing/fixtures/instantanes/b2/instantane-b2-05';
 import {
   ecransPublicsDe,
   type InstantaneDuCoursB2,

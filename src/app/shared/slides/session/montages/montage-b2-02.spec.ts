@@ -1,6 +1,6 @@
 import { DELAI_DE_MONTAGE_MS, monterEcran } from '../../../../../testing/briques/briques-montees';
 import { ecransDuPupitreDe } from '../../../../../testing/fixtures/instantane-de-cours';
-import { INSTANTANE_B2_02 } from '../../../../../testing/fixtures/instantanes/instantane-b2-02';
+import { INSTANTANE_B2_02 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-02';
 import {
   decrireLeMontageDeLInstantane,
   ecranNomme,

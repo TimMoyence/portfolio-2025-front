@@ -1,4 +1,4 @@
-import { INSTANTANE_B2_05 } from '../../../../../testing/fixtures/instantanes/instantane-b2-05';
+import { INSTANTANE_B2_05 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-05';
 import {
   decrireLeMontageDeLInstantane,
   texteServiAuPosteEtudiant,

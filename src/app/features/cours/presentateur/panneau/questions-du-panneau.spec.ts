@@ -1,4 +1,4 @@
-import { INSTANTANE_B2_04 } from '../../../../../testing/fixtures/instantanes/instantane-b2-04';
+import { INSTANTANE_B2_04 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-04';
 import { ecransDuPupitreDe } from '../../../../../testing/fixtures/instantane-de-cours';
 import { questionsDuPanneau } from './questions-du-panneau';
 

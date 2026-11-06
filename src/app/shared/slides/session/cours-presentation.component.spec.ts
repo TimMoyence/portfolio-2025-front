@@ -7,9 +7,9 @@ import { deuxImages } from '../../../../testing/texte/deux-images';
 import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
-} from '../../../../testing/fixtures/instantanes/instantane-b2-01';
-import { INSTANTANE_B2_04 } from '../../../../testing/fixtures/instantanes/instantane-b2-04';
-import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantanes/instantane-b3-01';
+} from '../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
+import { INSTANTANE_B2_04 } from '../../../../testing/fixtures/instantanes/b2/instantane-b2-04';
+import { INSTANTANE_B3_01 } from '../../../../testing/fixtures/instantanes/b3/instantane-b3-01';
 import {
   ecranReveleAuPosteEtudiant,
   ecransDuPupitreDe,

@@ -1,0 +1,203 @@
+{
+  "cours": "b2-07",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours/cours-b2-07-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "L’exponentielle multiplie · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "plante-qui-multiplie.webp",
+          "octets": 145896,
+          "sha256": "75af10f0c4cd1d52f1e70fe62c28a6638695f0d7ec0e3fcec43ad4be7f8eee1d"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le départ et la vitesse · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "deux-ballons.webp",
+          "octets": 223016,
+          "sha256": "90cb1f5778a435a51585e3a9758c4cebea4b7bf4c05ae427a7cfaf5d68121bc6"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A1-04",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "ln, le bouton retour · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "bouton-retour.webp",
+          "octets": 230952,
+          "sha256": "48d0731d05929cd7ff241a9c5c06a50cde113f609878e7442b054650fa767859"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A1-05",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Quand touchera-t-on la fenêtre ? · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "plante-et-fenetre.webp",
+          "octets": 244166,
+          "sha256": "b6476f49e089d87238ba1b5e5ff85495fefe478f5512650c4f09af94dacce281"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La boucle répète · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "verre-cuillere.webp",
+          "octets": 284814,
+          "sha256": "5927d3c615e66490f1610f529805a9a9a2f845a2670ae22e080376529a92e0e7"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "ecran": "A1-08",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Tant que veut dire pas encore · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "pas-encore-plein.webp",
+          "octets": 310230,
+          "sha256": "a36960eb4a097883c247b890b0e8bd138b4dae37eaf1d4e3de3aaf780fb907a1"
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "ecran": "A1-09",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Deux chemins, le même rang · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "deux-chemins.webp",
+          "octets": 381104,
+          "sha256": "199fc20c6efd4469f6c45108693913714c52a04ea383e3003891d4f4ed022795"
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La pente sous le vélo · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "velo-sur-la-colline.webp",
+          "octets": 274304,
+          "sha256": "4ae4df63fbce4523634434a60b6eb6ce8b3cd08e7b27b7c0affdd62866ba1727"
+        }
+      ]
+    },
+    {
+      "id": "M9",
+      "ecran": "A2-04",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La recette des puissances · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "exposant-qui-saute.webp",
+          "octets": 263644,
+          "sha256": "6b0f523bf326c2347c3b91cb50dadb8e4ce9be4587f221fc1823255671e63d29"
+        }
+      ]
+    },
+    {
+      "id": "M10",
+      "ecran": "A2-09",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La boule de neige · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "boule-de-neige.webp",
+          "octets": 276790,
+          "sha256": "2bc7988f1f7b57b8060ce34ef98b2898c5707c426b647f15bfd23b91d5179d47"
+        }
+      ]
+    },
+    {
+      "id": "M11",
+      "ecran": "A3-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le panneau de la route · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "panneaux-de-la-route.webp",
+          "octets": 370862,
+          "sha256": "32bd4af7ec7f3adb712cd4a40b22a3592ed683ed1364ff6788b22d745ea110b0"
+        }
+      ]
+    },
+    {
+      "id": "M12",
+      "ecran": "A3-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La carte du trajet · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "carte-du-trajet.webp",
+          "octets": 515974,
+          "sha256": "ace8711edb5c92e84ecc2583c3cce6ddc1181eab802f1ae1a4a4e39eb2cefeb3"
+        }
+      ]
+    },
+    {
+      "id": "M13",
+      "ecran": "A4-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le sommet de la colline · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "sommet-de-la-colline.webp",
+          "octets": 358236,
+          "sha256": "116340cd509837110820a2a55070dfa49d1e20694c09dbacbd13ad1f8f1df59d"
+        }
+      ]
+    },
+    {
+      "id": "M14",
+      "ecran": "A4-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La barrière sur le chemin · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "barriere-sur-le-chemin.webp",
+          "octets": 361224,
+          "sha256": "144805480886fefa9fdd566e9948246d50552019fa1abd9de38ff29f2e436795"
+        }
+      ]
+    }
+  ]
+}

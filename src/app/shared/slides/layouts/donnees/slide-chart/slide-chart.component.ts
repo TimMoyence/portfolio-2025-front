@@ -23,6 +23,16 @@ import {
   type Graduation,
   type Plage,
 } from '../../axe-gradue';
+import {
+  cadreDuTexte,
+  cadreDuTrace,
+  decale,
+  memesReculs,
+  mesurerAChaqueRendu,
+  reculDansLeTrace,
+  reculDe,
+  type Cadre,
+} from '../garder-dans-le-trace';
 
 export interface SlideChartSeries {
   readonly label: string;
@@ -74,13 +84,7 @@ const ECART_AUX_FORMES_PX = 3;
 const FORMES = '.slide-chart__bar, .slide-chart__marqueur--barre, .slide-chart__point';
 const VALEURS = '.slide-chart__value, .slide-chart__point-value';
 const TEXTES_DU_TRACE = '.slide-chart__tick, .slide-chart__axis-title, .slide-chart__serie-label';
-
-interface Cadre {
-  readonly left: number;
-  readonly right: number;
-  readonly top: number;
-  readonly bottom: number;
-}
+const TRACE = '.slide-chart__plot';
 
 let compteurDeGraphiques = 0;
 
@@ -154,12 +158,6 @@ function pasQuiDegage(colonnes: readonly (readonly Cadre[])[], echelle: number):
   return Array.from({ length: colonnes.length }, (_, rang) => rang + 1).find(degage) ?? 1;
 }
 
-function cadreDuTexte(texte: HTMLElement): Cadre {
-  const plage = document.createRange();
-  plage.selectNodeContents(texte);
-  return plage.getBoundingClientRect();
-}
-
 function cadresParRang(textes: Iterable<HTMLElement>): Cadre[][] {
   const colonnes: Cadre[][] = [];
   for (const texte of textes) {
@@ -211,44 +209,6 @@ function plusLarge(rendu: HTMLElement, selecteur: string): number {
 
 function memesCles(une: ReadonlySet<string>, autre: ReadonlySet<string>): boolean {
   return une.size === autre.size && [...une].every((cle) => autre.has(cle));
-}
-
-function memesReculs<Cle>(un: ReadonlyMap<Cle, number>, autre: ReadonlyMap<Cle, number>): boolean {
-  return un.size === autre.size && [...un].every(([cle, recul]) => autre.get(cle) === recul);
-}
-
-interface CadreDuTrace {
-  readonly cadre: Cadre;
-  readonly echelle: number;
-}
-
-function cadreDuTrace(rendu: HTMLElement): CadreDuTrace | undefined {
-  const plot = rendu.querySelector<HTMLElement>('.slide-chart__plot');
-  if (plot === null) {
-    return undefined;
-  }
-  const cadre = plot.getBoundingClientRect();
-  return { cadre, echelle: plot.offsetWidth === 0 ? 1 : cadre.width / plot.offsetWidth };
-}
-
-function decale({ left, right, top, bottom }: Cadre, recul: number, trace?: CadreDuTrace): Cadre {
-  const aLEcran = recul * (trace?.echelle ?? 1);
-  return { left: left + aLEcran, right: right + aLEcran, top, bottom };
-}
-
-function reculDe(texte: HTMLElement): number {
-  return Number.parseFloat(texte.style.getPropertyValue('--recul')) || 0;
-}
-
-function reculDansLeTrace(cadre: Cadre, trace: CadreDuTrace | undefined): number {
-  if (trace === undefined) {
-    return 0;
-  }
-  const { cadre: limite, echelle } = trace;
-  if (cadre.right > limite.right) {
-    return Math.floor((limite.right - cadre.right) / echelle);
-  }
-  return cadre.left < limite.left ? Math.ceil((limite.left - cadre.left) / echelle) : 0;
 }
 
 @Component({
@@ -384,20 +344,12 @@ export class SlideChartComponent {
       this.labels();
       this.series();
       this.kind();
-      const degager = (): void => this.degagerLesLibelles();
-      degager();
-      document.fonts.addEventListener('loadingdone', degager);
-      onCleanup(() => document.fonts.removeEventListener('loadingdone', degager));
-      if (typeof ResizeObserver !== 'undefined') {
-        const observateur = new ResizeObserver(degager);
-        const rendu: HTMLElement = this.elementRef.nativeElement;
-        observateur.observe(rendu);
-        const zone = rendu.querySelector('.slide-chart__zone');
-        if (zone !== null) {
-          observateur.observe(zone);
-        }
-        onCleanup(() => observateur.disconnect());
-      }
+      mesurerAChaqueRendu(
+        this.elementRef.nativeElement as HTMLElement,
+        () => this.degagerLesLibelles(),
+        onCleanup,
+        ['.slide-chart__zone'],
+      );
     });
   }
 
@@ -436,7 +388,7 @@ export class SlideChartComponent {
 
   private degagerLesLibelles(): void {
     const rendu: HTMLElement = this.elementRef.nativeElement;
-    const trace = cadreDuTrace(rendu);
+    const trace = cadreDuTrace(rendu, TRACE);
     const echelle = trace?.echelle ?? 1;
     const reculs = new Map<number, number>();
     const abscisses: Cadre[][] = [];
@@ -491,7 +443,7 @@ export class SlideChartComponent {
         trace.points.map((point) => [point.cle, point] as const),
       ),
     );
-    const trace = cadreDuTrace(rendu);
+    const trace = cadreDuTrace(rendu, TRACE);
     const echelle = trace?.echelle ?? 1;
     const retournees = new Set<string>();
     const horsPlace = new Set<string>();

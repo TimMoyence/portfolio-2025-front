@@ -1,5 +1,5 @@
 import { buildEcranDeroule } from '../../../../../testing/factories/formations/formations.factory';
-import { ecransDuPupitreB2_01 } from '../../../../../testing/fixtures/instantanes/instantane-b2-01';
+import { ecransDuPupitreB2_01 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import { sourcesDeCorrection } from './sources-de-correction';
 
 describe('sources des écrans de correction du déroulé', () => {
