@@ -39,7 +39,7 @@ import {
 import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
-} from '../../../../../testing/fixtures/instantanes/instantane-b2-01';
+} from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import { choisirLOptionDuQuiz } from '../../../../../testing/dom/hote-d-interaction';
 import { ecranNomme } from '../../../../../testing/page/montage-d-instantane';
 import { poserLesEntrees } from '../../../../../testing/page/montage-page';

@@ -17,7 +17,7 @@ import {
   buildVisualQuizSlide,
   buildVisualSlide,
 } from '../../../../testing/factories/formations/visual-slide.factory';
-import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantanes/instantane-b2-01';
+import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import {

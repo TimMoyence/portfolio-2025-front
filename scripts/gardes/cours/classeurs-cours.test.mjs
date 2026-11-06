@@ -8,6 +8,7 @@ import { cheminDuDepot, lireTexte } from '../../lib/depot.mjs';
 const DOSSIER_DES_ASSETS = cheminDuDepot('src/assets');
 const DOSSIER_DES_COURS = cheminDuDepot('src/assets/cours');
 const DOSSIER_DES_FIXTURES = cheminDuDepot('src/testing/fixtures/instantanes/json');
+const DOSSIER_DES_MANIFESTES = cheminDuDepot('src/testing/fixtures/classeurs');
 const SUFFIXE_DU_MANIFESTE = '.classeurs.manifest.json';
 const PREFIXE_PUBLIC = '/assets/cours';
 
@@ -20,12 +21,12 @@ const RESERVEE_A_LA_SEANCE =
 const empreinteDe = (chemin) => createHash('sha256').update(readFileSync(chemin)).digest('hex');
 
 const coursAClasseurs = () =>
-  readdirSync(DOSSIER_DES_FIXTURES)
+  readdirSync(DOSSIER_DES_MANIFESTES)
     .filter((fichier) => fichier.endsWith(SUFFIXE_DU_MANIFESTE))
     .map((fichier) => fichier.slice(0, -SUFFIXE_DU_MANIFESTE.length));
 
 const manifesteDe = (cours) =>
-  JSON.parse(lireTexte(join(DOSSIER_DES_FIXTURES, `${cours}${SUFFIXE_DU_MANIFESTE}`)));
+  JSON.parse(lireTexte(join(DOSSIER_DES_MANIFESTES, `${cours}${SUFFIXE_DU_MANIFESTE}`)));
 
 const instantaneDe = (cours) =>
   JSON.parse(lireTexte(join(DOSSIER_DES_FIXTURES, `${cours}.instantane.json`)));
@@ -62,7 +63,7 @@ const servisDe = (cours) => readdirSync(join(DOSSIER_DES_COURS, cours));
 test('le B3-01 garde le manifeste de ses classeurs parmi les fixtures de test', () => {
   assert.ok(
     coursAClasseurs().includes('b3-01'),
-    `src/testing/fixtures/instantanes/json/b3-01${SUFFIXE_DU_MANIFESTE} absent : la garde ne garde rien.`,
+    `src/testing/fixtures/classeurs/b3-01${SUFFIXE_DU_MANIFESTE} absent : la garde ne garde rien.`,
   );
 });
 

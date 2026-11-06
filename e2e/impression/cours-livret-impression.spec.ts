@@ -24,13 +24,16 @@ import {
 const COURS = [
   'b1-01',
   'b1-02',
+  'b1-03',
   'b2-01',
   'b2-02',
   'b2-03',
   'b2-04',
   'b2-05',
   'b2-06',
+  'b2-07',
   'b3-01',
+  'b3-02',
 ] as const;
 
 type Cours = (typeof COURS)[number];

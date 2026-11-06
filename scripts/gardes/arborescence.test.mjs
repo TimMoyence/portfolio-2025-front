@@ -8,9 +8,20 @@ import { git } from '../lib/git.cjs';
 
 const PLAFOND = 12;
 
-const DOSSIERS_DONT_UN_OUTIL_FIXE_LA_FORME = {
-  '.': 'racine : chaque outil y cherche sa config, racine-du-depot.test.mjs en juge la liste',
-};
+const DOSSIERS_DONT_UN_OUTIL_FIXE_LA_FORME = [
+  [/^\.$/, 'racine : chaque outil y cherche sa config, racine-du-depot.test.mjs en juge la liste'],
+  [
+    /^src\/assets\/cours$/,
+    'contrat des médias (SchemasCommuns.ts du back) : chaque cours est servi à /assets/cours/<cours>',
+  ],
+  [
+    /^src\/assets\/cours\/[a-z0-9-]+\/v\d+$/,
+    'contrat des médias (SchemasCommuns.ts du back) : les médias d une version sont servis à plat dans /assets/cours/<cours>/v<n>',
+  ],
+];
+
+const formeFixeeParUnOutil = (dossier) =>
+  DOSSIERS_DONT_UN_OUTIL_FIXE_LA_FORME.some(([motif]) => motif.test(dossier));
 
 const parOrdreAlphabetique = (a, b) => a.localeCompare(b);
 
@@ -38,10 +49,7 @@ const entrees = entreesParDossier(fichiersDuDepot());
 
 test(`aucun dossier ne dépasse ${PLAFOND} entrées, fichiers et sous-dossiers compris`, () => {
   const trop = [...entrees]
-    .filter(
-      ([dossier, contenu]) =>
-        contenu.size > PLAFOND && !Object.hasOwn(DOSSIERS_DONT_UN_OUTIL_FIXE_LA_FORME, dossier),
-    )
+    .filter(([dossier, contenu]) => contenu.size > PLAFOND && !formeFixeeParUnOutil(dossier))
     .map(
       ([dossier, contenu]) =>
         `${dossier} : ${contenu.size} entrées, plafond ${PLAFOND} — découpe-le par sujet avec la skill atelier:ranger`,

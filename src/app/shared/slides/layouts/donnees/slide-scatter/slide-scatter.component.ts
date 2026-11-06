@@ -1,4 +1,22 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  afterRenderEffect,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
+import {
+  cadreDuTexte,
+  cadreDuTrace,
+  decale,
+  memesReculs,
+  mesurerAChaqueRendu,
+  reculDansLeTrace,
+  reculDe,
+} from '../garder-dans-le-trace';
 import { DonneesDeFigureComponent } from '../../../donnees-de-figure/donnees-de-figure.component';
 import { enFrancais } from '../../../../../../cours/runtime/core/texte/typographie';
 import { graduer, position, type Plage } from '../../axe-gradue';
@@ -107,6 +125,39 @@ export class SlideScatterComponent {
   });
 
   protected readonly formater = enFrancais;
+
+  protected readonly reculsDesEtiquettes = signal<ReadonlyMap<number, number>>(new Map(), {
+    equal: memesReculs,
+  });
+
+  private readonly elementRef = inject(ElementRef);
+
+  constructor() {
+    afterRenderEffect((onCleanup) => {
+      this.places();
+      mesurerAChaqueRendu(
+        this.elementRef.nativeElement as HTMLElement,
+        () => this.degagerLesEtiquettes(),
+        onCleanup,
+      );
+    });
+  }
+
+  private degagerLesEtiquettes(): void {
+    const rendu: HTMLElement = this.elementRef.nativeElement;
+    const trace = cadreDuTrace(rendu, '.slide-scatter__plot');
+    const reculs = new Map<number, number>();
+    for (const etiquette of rendu.querySelectorAll<HTMLElement>(
+      '.slide-scatter__point-label[data-rang]',
+    )) {
+      const brut = decale(cadreDuTexte(etiquette), -reculDe(etiquette), trace);
+      const recul = reculDansLeTrace(brut, trace);
+      if (recul !== 0) {
+        reculs.set(Number(etiquette.dataset['rang']), recul);
+      }
+    }
+    this.reculsDesEtiquettes.set(reculs);
+  }
 
   private placer(point: SlideScatterPoint): PointPlace {
     return { point, x: position(point.x, this.xRange()), y: position(point.y, this.yRange()) };

@@ -52,7 +52,12 @@
           [style.--y]="place.y + '%'"
         >
           @if (place.point.label) {
-            <span class="slide-scatter__point-label">{{ place.point.label }}</span>
+            <span
+              class="slide-scatter__point-label"
+              [attr.data-rang]="$index"
+              [style.--recul]="(reculsDesEtiquettes().get($index) ?? 0) + 'px'"
+              >{{ place.point.label }}</span
+            >
           }
         </span>
       }

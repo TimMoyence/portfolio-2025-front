@@ -82,9 +82,7 @@ h2 {
 }
 
 .slide-scatter__x-tick {
-  @include figure.graduation;
-  top: 0.4rem;
-  transform: translateX(-50%);
+  @include figure.graduation-horizontale;
 }
 
 .slide-scatter__line {
@@ -124,6 +122,7 @@ h2 {
   margin-bottom: 0.25rem;
   color: var(--ink-soft, #3c3529);
   transform: translateX(-50%);
+  translate: var(--recul, 0px) 0;
 }
 
 .slide-scatter__mean {

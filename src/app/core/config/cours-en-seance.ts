@@ -1,13 +1,16 @@
 export const COURS_EN_SEANCE: readonly string[] = [
   'b1-01-proportions-pourcentages',
   'b1-02-evolutions-coefficients-indices',
+  'b1-03-tcd-serie-une-variable',
   'b2-01-traitement-information-chiffree',
   'b2-02-series-statistiques',
   'b2-03-logique',
   'b2-04-suites',
   'b2-05-mathematiques-financieres',
   'b2-06-exponentielle-logarithme',
+  'b2-07-derivee-optimisation',
   'b3-01-donnee-brute-decision',
+  'b3-02-formules-et-ia-analyste',
 ];
 
 export function cheminDuCoursEnSeance(slug: string): string {

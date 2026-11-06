@@ -139,10 +139,8 @@ h2 {
 }
 
 .slide-boxplot__tick {
-  @include figure.graduation;
-  top: 0.4rem;
+  @include figure.graduation-horizontale;
   left: var(--x);
-  transform: translateX(-50%);
 }
 
 .slide-boxplot__legend {

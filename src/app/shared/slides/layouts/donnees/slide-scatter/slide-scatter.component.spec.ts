@@ -1,14 +1,19 @@
+import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { poserLesEntrees } from '../../../../../../testing/page/montage-page';
+import { debordementADroite } from '../../../../../../testing/rendu/debordement';
 import { setupTestBed } from '../../../../../../testing/setup-test-bed';
+import { uneImage } from '../../../../../../testing/texte/deux-images';
 import { textes } from '../../../../../../testing/texte/textes-dom';
 import { SlideScatterComponent } from './slide-scatter.component';
 
 const VENTES = [610, 652, 694, 736, 790, 826].map((y, rang) => ({ x: rang + 1, y }));
 
-function monter(surcharges: Readonly<Record<string, unknown>> = {}): HTMLElement {
+function monterLeNuage(
+  surcharges: Readonly<Record<string, unknown>> = {},
+): ComponentFixture<SlideScatterComponent> {
   setupTestBed({ http: false, imports: [SlideScatterComponent] });
-  const fixture = poserLesEntrees(TestBed.createComponent(SlideScatterComponent), {
+  return poserLesEntrees(TestBed.createComponent(SlideScatterComponent), {
     title: 'Ventes mensuelles',
     xLabel: 'Rang du mois',
     yLabel: 'Ventes (k€)',
@@ -18,7 +23,10 @@ function monter(surcharges: Readonly<Record<string, unknown>> = {}): HTMLElement
     description: 'Six points alignés qui montent de 610 à 826 k€.',
     ...surcharges,
   });
-  return fixture.nativeElement as HTMLElement;
+}
+
+function monter(surcharges: Readonly<Record<string, unknown>> = {}): HTMLElement {
+  return monterLeNuage(surcharges).nativeElement as HTMLElement;
 }
 
 function coordonnees(element: Element | null): { x: number; y: number } {
@@ -95,6 +103,32 @@ describe('SlideScatterComponent', () => {
     expect(ordonnees.at(-1)).toBe('900');
     expect(racine.textContent).toContain('Rang du mois');
     expect(racine.textContent).toContain('Ventes (k€)');
+  });
+
+  it('QP-18 · garde la dernière graduation des abscisses dans son axe, sans la laisser déborder à droite', () => {
+    const racine = monter({ xRange: [0, 2000], points: [{ x: 1000, y: 700 }] });
+    expect(
+      debordementADroite(
+        racine,
+        '[data-testid="slide-scatter-graduation-x"]',
+        '.slide-scatter__x-axis',
+      ),
+    ).toBe(0);
+  });
+
+  it('QP-18 · garde dans le tracé l étiquette d un point posé sur la borne droite', async () => {
+    const fixture = monterLeNuage({
+      points: [...VENTES, { x: 7, y: 860, label: 'Décembre, prévision du budget' }],
+    });
+    await uneImage();
+    fixture.detectChanges();
+    expect(
+      debordementADroite(
+        fixture.nativeElement as HTMLElement,
+        '.slide-scatter__point-label',
+        '.slide-scatter__plot',
+      ),
+    ).toBe(0);
   });
 
   it('decrit le nuage aux lecteurs d ecran', () => {

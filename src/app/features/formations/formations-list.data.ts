@@ -89,6 +89,12 @@ export const FORMATIONS: readonly FormationCard[] = [
     duree: $localize`:@@formations-list.b1-02.duration:2 h 00`,
   }),
   coursBtsEnSeance({
+    link: '/formations/b1-03-tcd-serie-une-variable',
+    title: $localize`:@@formations-list.b1-03.title:B1-03 — Traiter un fichier : TCD et série à une variable`,
+    description: $localize`:@@formations-list.b1-03.description:Regrouper un fichier de ventes par un tableau croisé dynamique dans Excel, calculer le taux de marge par un champ calculé, résumer une série par la médiane, les quartiles et l’écart type, puis comparer deux séries par leurs boîtes à moustaches. Chaque notion s’explique d’abord par une image du quotidien. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b1-03.duration:2 h 00`,
+  }),
+  coursBtsEnSeance({
     link: '/formations/b2-01-traitement-information-chiffree',
     title: $localize`:@@formations-list.b2.title:B2-01 — Lire et contrôler l’information chiffrée`,
     description: $localize`:@@formations-list.b2.description:Lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
@@ -124,11 +130,23 @@ export const FORMATIONS: readonly FormationCard[] = [
     description: $localize`:@@formations-list.b2-06.description:Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur, comme en CCF. À suivre en séance accompagnée de 2 h 45, pause de 30 min comprise, avec le code donné par votre formateur.`,
     duree: $localize`:@@formations-list.b2-06.duration:2 h 15`,
   }),
+  coursBtsEnSeance({
+    link: '/formations/b2-07-derivee-optimisation',
+    title: $localize`:@@formations-list.b2-07.title:B2-07 — Dérivée et optimisation : la pente, le sens, le sommet`,
+    description: $localize`:@@formations-list.b2-07.description:Revoir d’abord l’exponentielle, le logarithme et la boucle « Tant que » par des images du quotidien, puis dériver un polynôme et a e^(kx), étudier le signe de la dérivée, dresser un tableau de variation et trouver un prix optimal, même sous contrainte, comme en CCF. À suivre en séance accompagnée de 2 h 45, pause de 30 min comprise, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b2-07.duration:2 h 15`,
+  }),
   coursBachelorEnSeance({
     link: '/formations/b3-01-donnee-brute-decision',
     title: $localize`:@@formations-list.b3-01.title:B3-01 — Expert Data : de la donnée brute à la décision`,
     description: $localize`:@@formations-list.b3-01.description:Nettoyer un export de ventes dans Excel, le croiser avec ses référentiels, le résumer par un tableau croisé dynamique, puis bâtir un tableau de bord et une recommandation pour un comité de direction. À suivre en séance accompagnée de 3 h 25, pause de 30 min comprise, avec le code donné par votre formateur.`,
     duree: $localize`:@@formations-list.b3-01.duration:2 h 55`,
+  }),
+  coursBachelorEnSeance({
+    link: '/formations/b3-02-formules-et-ia-analyste',
+    title: $localize`:@@formations-list.b3-02.title:B3-02 — Toutes les formules, puis l’IA analyste`,
+    description: $localize`:@@formations-list.b3-02.description:Toutes les formules Excel du manager, une page chacune : syntaxe, arguments, exemple chiffré, piège ; puis nettoyer, relier, compter les jours ouvrés, croiser par un TCD et bâtir un tableau de bord, pas à pas. Une heure enfin pour confier l’analyse à une IA, la guider par son cahier de règles et vérifier ses chiffres. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
+    duree: $localize`:@@formations-list.b3-02.duration:3 h 00`,
   }),
   formationGratuite({
     link: '/formations/ia-solopreneurs',

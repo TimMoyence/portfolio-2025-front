@@ -28,7 +28,7 @@ import type { ProblemeHttp } from '../../../../testing/factories/serveur/problem
 import { buildProblemeHttp } from '../../../../testing/factories/serveur/probleme-http.factory';
 import { bancAdaptateurHttp } from '../../../../testing/http/http-attendu';
 import filB201 from '../../../../testing/fixtures/instantanes/json/b2-01.instantane.json';
-import { INSTANTANE_B2_01 } from '../../../../testing/fixtures/instantanes/instantane-b2-01';
+import { INSTANTANE_B2_01 } from '../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import type { CoursContent, EcranContent } from '../../../../cours/content/types';
 import type {

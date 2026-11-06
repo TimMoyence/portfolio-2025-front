@@ -11594,6 +11594,24 @@
         <target>2 h 15 min</target>
       </segment>
     </unit>
+    <unit id="formations-list.b2-07.title">
+      <segment>
+        <source>B2-07 — Dérivée et optimisation : la pente, le sens, le sommet</source>
+        <target>B2-07 — Derivative and optimisation: slope, direction, peak</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-07.description">
+      <segment>
+        <source>Revoir d’abord l’exponentielle, le logarithme et la boucle « Tant que » par des images du quotidien, puis dériver un polynôme et a e^(kx), étudier le signe de la dérivée, dresser un tableau de variation et trouver un prix optimal, même sous contrainte, comme en CCF. À suivre en séance accompagnée de 2 h 45, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>First revisit the exponential, the logarithm and the while loop through everyday pictures, then differentiate a polynomial and a e^(kx), study the sign of the derivative, build a variation table and find an optimal price, even under a constraint, as in the CCF exam. To follow in a 2 h 45 guided session, including a 30 min break, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-07.duration">
+      <segment>
+        <source>2 h 15</source>
+        <target>2 h 15 min</target>
+      </segment>
+    </unit>
     <unit id="formations-list.b3.badge">
       <segment>
         <source>Bachelor 3 · Cours interactif</source>
@@ -11636,6 +11654,24 @@
         <target>2 h</target>
       </segment>
     </unit>
+    <unit id="formations-list.b1-03.title">
+      <segment>
+        <source>B1-03 — Traiter un fichier : TCD et série à une variable</source>
+        <target>B1-03 — Working with a file: pivot tables and one-variable series</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b1-03.description">
+      <segment>
+        <source>Regrouper un fichier de ventes par un tableau croisé dynamique dans Excel, calculer le taux de marge par un champ calculé, résumer une série par la médiane, les quartiles et l’écart type, puis comparer deux séries par leurs boîtes à moustaches. Chaque notion s’explique d’abord par une image du quotidien. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Group a sales file with a pivot table in Excel, compute the markup rate with a calculated field, summarise a series by its median, quartiles and standard deviation, then compare two series with their box plots. Each idea is first explained with an everyday picture. To follow in a guided session, with the code given by your trainer.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b1-03.duration">
+      <segment>
+        <source>2 h 00</source>
+        <target>2 h</target>
+      </segment>
+    </unit>
     <unit id="formations-list.b3-01.title">
       <segment>
         <source>B3-01 — Expert Data : de la donnée brute à la décision</source>
@@ -11652,6 +11688,24 @@
       <segment>
         <source>2 h 55</source>
         <target>2 h 55 min</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-02.title">
+      <segment>
+        <source>B3-02 — Toutes les formules, puis l’IA analyste</source>
+        <target>B3-02 — Every formula, then the AI analyst</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-02.description">
+      <segment>
+        <source>Toutes les formules Excel du manager, une page chacune : syntaxe, arguments, exemple chiffré, piège ; puis nettoyer, relier, compter les jours ouvrés, croiser par un TCD et bâtir un tableau de bord, pas à pas. Une heure enfin pour confier l’analyse à une IA, la guider par son cahier de règles et vérifier ses chiffres. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Every Excel formula a manager needs, one page each: syntax, arguments, worked figures, common trap; then clean, join, count working days, cross with a PivotTable and build a dashboard, step by step. A final hour to hand the analysis to an AI, guide it with your rulebook and check its figures. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-02.duration">
+      <segment>
+        <source>3 h 00</source>
+        <target>3 h 00 min</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.duration">

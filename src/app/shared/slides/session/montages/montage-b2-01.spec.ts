@@ -9,7 +9,7 @@ import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
   INSTANTANE_B2_01,
-} from '../../../../../testing/fixtures/instantanes/instantane-b2-01';
+} from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import {
   attesterLeMontage,
   decrireLeMontageDeLInstantane,

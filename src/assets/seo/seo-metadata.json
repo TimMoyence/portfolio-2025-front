@@ -1196,7 +1196,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-11-02",
+      "lastmod": "2026-11-06",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1506,6 +1506,74 @@
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b1-02-evolutions-coefficients-indices"
+          }
+        }
+      }
+    },
+    {
+      "id": "formations-b1-03-tcd-serie-une-variable",
+      "path": "/formations/b1-03-tcd-serie-une-variable",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-11-06",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Traiter un fichier : TCD et série à une variable",
+          "path": "/formations/b1-03-tcd-serie-une-variable"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Traiter un fichier : TCD et série à une variable — B1 — Tim Moyence",
+          "description": "Formation B1 interactive : regrouper un fichier de ventes par un tableau croisé dynamique, calculer le taux de marge par un champ calculé, résumer et comparer des séries.",
+          "ogTitle": "Traiter un fichier : TCD et série à une variable — B1",
+          "ogDescription": "Un cours interactif qui explique chaque notion comme à un enfant avant sa formule : TCD, médiane, quartiles, écart type, boîte à moustaches.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Traiter un fichier : TCD et série à une variable",
+            "description": "Formation B1 interactive sur le tableau croisé dynamique, le champ calculé du taux de marge, la moyenne, la médiane, les quartiles, l’écart type, la boîte à moustaches et les classes.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b1-03-tcd-serie-une-variable"
+          }
+        },
+        "en": {
+          "title": "Working with a file: pivot tables and one-variable series — B1 — Tim Moyence",
+          "description": "Interactive B1 course: group a sales file with a pivot table, compute the markup rate with a calculated field, summarise and compare series.",
+          "ogTitle": "Working with a file: pivot tables and one-variable series — B1",
+          "ogDescription": "An interactive course that explains each idea as if to a child before its formula: pivot table, median, quartiles, standard deviation, box plot.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Working with a file: pivot tables and one-variable series",
+            "description": "Interactive B1 course on pivot tables, the markup-rate calculated field, mean, median, quartiles, standard deviation, box plots and classes.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b1-03-tcd-serie-une-variable"
           }
         }
       }
@@ -1919,6 +1987,74 @@
       }
     },
     {
+      "id": "formations-b2-07-derivee-optimisation",
+      "path": "/formations/b2-07-derivee-optimisation",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-11-06",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Dérivée et optimisation : la pente, le sens, le sommet",
+          "path": "/formations/b2-07-derivee-optimisation"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Dérivée et optimisation : la pente, le sens, le sommet — B2 — Tim Moyence",
+          "description": "Formation B2 interactive : dériver un polynôme et a e^(kx), étudier le signe de la dérivée, dresser un tableau de variation et trouver un prix optimal, même sous contrainte.",
+          "ogTitle": "Dérivée et optimisation : la pente, le sens, le sommet — B2",
+          "ogDescription": "Un cours interactif qui revoit d’abord l’exponentielle et la boucle « Tant que » par des images du quotidien, puis cherche le meilleur prix d’un produit, comme en CCF.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Dérivée et optimisation : la pente, le sens, le sommet",
+            "description": "Formation B2 interactive sur le nombre dérivé, la fonction dérivée, le signe de la dérivée, le tableau de variation et l’optimisation d’un bénéfice ou d’un coût.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H45M",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b2-07-derivee-optimisation"
+          }
+        },
+        "en": {
+          "title": "Derivative and optimisation: slope, direction, peak — B2 — Tim Moyence",
+          "description": "Interactive B2 course: differentiate a polynomial and a e^(kx), study the sign of the derivative, build a variation table and find an optimal price, even under a constraint.",
+          "ogTitle": "Derivative and optimisation: slope, direction, peak — B2",
+          "ogDescription": "An interactive course that first revisits the exponential and the while loop with everyday pictures, then looks for the best price of a product, as in the CCF exam.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Derivative and optimisation: slope, direction, peak",
+            "description": "Interactive B2 course on the derivative number, the derivative function, the sign of the derivative, the variation table and the optimisation of a profit or a cost.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H45M",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b2-07-derivee-optimisation"
+          }
+        }
+      }
+    },
+    {
       "id": "formations-b3-01-donnee-brute-decision",
       "path": "/formations/b3-01-donnee-brute-decision",
       "index": false,
@@ -1982,6 +2118,74 @@
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b3-01-donnee-brute-decision"
+          }
+        }
+      }
+    },
+    {
+      "id": "formations-b3-02-formules-et-ia-analyste",
+      "path": "/formations/b3-02-formules-et-ia-analyste",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-11-06",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Toutes les formules, puis l’IA analyste",
+          "path": "/formations/b3-02-formules-et-ia-analyste"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Toutes les formules, puis l’IA analyste — Bachelor 3 — Tim Moyence",
+          "description": "Cours interactif de Bachelor 3 : toutes les formules Excel du manager, une page chacune, des exercices pas à pas, puis une IA à qui confier l’analyse et dont on vérifie les chiffres.",
+          "ogTitle": "Toutes les formules, puis l’IA analyste — Bachelor 3",
+          "ogDescription": "Un cours interactif pour maîtriser les formules d’Excel sur un vrai export de ventes, puis faire travailler une IA comme un analyste et vérifier ses résultats.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Toutes les formules, puis l’IA analyste",
+            "description": "Cours interactif de Bachelor 3 sur le nettoyage, la recherche, l’agrégation sous conditions, les dates, la médiane, le tableau croisé dynamique, les graphiques et le tableau de bord dans Excel, puis sur l’analyse confiée à une IA et sa vérification.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b3-02-formules-et-ia-analyste"
+          }
+        },
+        "en": {
+          "title": "Every formula, then the AI analyst — Bachelor 3 — Tim Moyence",
+          "description": "Interactive Bachelor 3 course: every Excel formula a manager needs, one page each, step-by-step exercises, then an AI to hand the analysis to and whose figures you check.",
+          "ogTitle": "Every formula, then the AI analyst — Bachelor 3",
+          "ogDescription": "An interactive course to master Excel formulas on a real sales export, then have an AI work like an analyst and check its results.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Every formula, then the AI analyst",
+            "description": "Interactive Bachelor 3 course on cleaning, lookup, conditional aggregation, dates, the median, PivotTables, charts and dashboards in Excel, then on handing the analysis to an AI and checking it.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H30M",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b3-02-formules-et-ia-analyste"
           }
         }
       }

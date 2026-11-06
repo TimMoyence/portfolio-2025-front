@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { debordementADroite } from '../../../../../../testing/rendu/debordement';
 import { setupTestBed } from '../../../../../../testing/setup-test-bed';
 import { SlideBoxplotComponent, type SlideBoxplotSeries } from './slide-boxplot.component';
 
@@ -112,5 +113,16 @@ describe('SlideBoxplotComponent', () => {
     });
     expect(racine.querySelector('.slide-boxplot__reading')?.textContent).toContain('42,5 jours');
     expect(racine.querySelector('.slide-boxplot__source')?.textContent).toContain('Atelier Rivage');
+  });
+
+  it('QP-18 · garde la dernière graduation dans son axe, sans la laisser déborder à droite', () => {
+    const racine = monter({ axisRange: [0, 500] });
+    expect(
+      debordementADroite(
+        racine,
+        '[data-testid="slide-boxplot-graduation"]',
+        '.slide-boxplot__axis',
+      ),
+    ).toBe(0);
   });
 });

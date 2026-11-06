@@ -52,6 +52,16 @@
   white-space: nowrap;
 }
 
+@mixin graduation-horizontale {
+  @include graduation;
+  top: 0.4rem;
+  transform: translateX(-50%);
+
+  &:last-child {
+    transform: translateX(-100%);
+  }
+}
+
 @mixin legende {
   display: flex;
   flex-wrap: wrap;

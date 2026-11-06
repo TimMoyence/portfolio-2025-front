@@ -32,6 +32,7 @@ const PARTICIPANT = '22222222-2222-4222-8222-222222222222';
 const JETON = 'participant-token';
 const CODE = '4821';
 const REPONSE_LENTE_MS = 4000;
+const PREMIER_RENOUVELLEMENT_LENT_MS = 1000;
 
 const QUESTION = {
   id: 'Q-CAP-03',
@@ -245,6 +246,9 @@ test.describe('Séance de cours dans un navigateur réel', () => {
     await intercepterApi(page, async (route, chemin) => {
       if (chemin.endsWith('/auth/refresh')) {
         renouvellements += 1;
+        if (renouvellements === 1) {
+          await new Promise((fin) => setTimeout(fin, PREMIER_RENOUVELLEMENT_LENT_MS));
+        }
         await servirJson(route, sessionServie, accesFormatrice(`renewed-${renouvellements}`));
       } else {
         await route.continue();
@@ -262,7 +266,12 @@ test.describe('Séance de cours dans un navigateur réel', () => {
       );
     });
 
+    const premierRenouvellement = page.waitForResponse((reponse) =>
+      reponse.url().endsWith('/auth/refresh'),
+    );
     await page.goto('/profil');
+    await premierRenouvellement;
+    await expect(page.locator('body')).not.toContainText('Se connecter');
     await page.clock.fastForward(930_000);
     await expect.poll(() => renouvellements).toBe(2);
     await expect(page.locator('body')).not.toContainText('Se connecter');

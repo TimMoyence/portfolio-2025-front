@@ -4,7 +4,7 @@ import type { Observable } from 'rxjs';
 import { of, throwError } from 'rxjs';
 import type { LivretDuCours } from '../../../../core/ports/formations.port';
 import { FORMATIONS_PORT } from '../../../../core/ports/formations.port';
-import { INSTANTANE_B2_02 } from '../../../../../testing/fixtures/instantanes/instantane-b2-02';
+import { INSTANTANE_B2_02 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-02';
 import {
   buildDerouleCours,
   buildEcranDeroule,

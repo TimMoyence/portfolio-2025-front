@@ -23,7 +23,7 @@ import {
   relacherCurseur,
 } from '../../../../testing/briques/reglages-briques';
 import { sousHorlogeSimulee } from '../../../../testing/environnement/horloge-simulee';
-import { ecransPublicsB2_01 } from '../../../../testing/fixtures/instantanes/instantane-b2-01';
+import { ecransPublicsB2_01 } from '../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
 import type { SortiesMachine } from '../../../content/types';
 import { type Concept4Definition, FpConcept4 } from './FpConcept4';

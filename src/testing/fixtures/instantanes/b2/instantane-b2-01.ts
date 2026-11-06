@@ -1,13 +1,13 @@
-import type { EcranContent, EcranDeroule } from '../../../cours/content/types';
-import fichier from './json/b2-01.instantane.json';
+import type { EcranContent, EcranDeroule } from '../../../../cours/content/types';
+import fichier from '../json/b2-01.instantane.json';
 import {
   ecransDuPupitreDe,
   ecransPublicsDe,
   type InstantaneDuCoursB2,
   lireInstantaneDuFil,
-} from '../instantane-de-cours';
+} from '../../instantane-de-cours';
 
-export type { InstantaneDuCoursB2 } from '../instantane-de-cours';
+export type { InstantaneDuCoursB2 } from '../../instantane-de-cours';
 
 export const INSTANTANE_B2_01: InstantaneDuCoursB2 = lireInstantaneDuFil(fichier);
 

@@ -1,0 +1,91 @@
+{
+  "cours": "b1-03",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours/b1/cours-b1-03-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-06",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Un tas par couleur · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "bonbons-tas.webp",
+          "octets": 177608,
+          "sha256": "789cfcd8bfe6206f3338e64bd573664b2bd300a07d48eced1717441823fd1c5d"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Calculer avec tout ce qu’on a · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "limonade-pots.webp",
+          "octets": 193728,
+          "sha256": "ee5ade647bb8611c9412cf255c7547b9656e29bfab9447a63a18cb4004ce4d3f"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A2-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Ranger, puis couper · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "file-rubans.webp",
+          "octets": 146928,
+          "sha256": "d8d0c5131bd1a92a5b28b800c1bb0fc7247d2f639c848692c35abf002ebf19fb"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Loin du milieu ou tout près · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "equipes-tailles.webp",
+          "octets": 155396,
+          "sha256": "84792ba09d0070aaf075d0a004a8606260c40a1720c9758d0e5161f938b2a82a"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A3-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Une boîte pour ceux du milieu · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "file-boite.webp",
+          "octets": 135754,
+          "sha256": "b27ddc9df2e9a37ad440e0d05f85fceb6523ca523b9584046490db54a18d5d8a"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "ecran": "A3-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Des boîtes de billes · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "billes-boites.webp",
+          "octets": 170658,
+          "sha256": "389bbfdb489c7e57bf5e7ee4c3c8f2a6184ec31c96e2c01dfe10095a7c1af48c"
+        }
+      ]
+    }
+  ]
+}

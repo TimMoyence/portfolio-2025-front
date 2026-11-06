@@ -36,7 +36,7 @@ import {
   createFormationsPortStub,
 } from '../../../../../testing/factories/formations/formations.factory';
 import { buildVisualQuizSlide } from '../../../../../testing/factories/formations/visual-slide.factory';
-import { INSTANTANE_B3_01 } from '../../../../../testing/fixtures/instantanes/instantane-b3-01';
+import { INSTANTANE_B3_01 } from '../../../../../testing/fixtures/instantanes/b3/instantane-b3-01';
 import { DELAI_DE_MONTAGE_MS } from '../../../../../testing/briques/briques-montees';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../../testing/fixtures/instantanes-des-cours';
 import { lireLesLibelles } from '../../../../../testing/texte/libelles-colles';

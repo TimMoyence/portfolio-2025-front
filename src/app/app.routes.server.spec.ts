@@ -1,18 +1,9 @@
 import { RenderMode } from '@angular/ssr';
 import { serverRoutes } from './app.routes.server';
+import { SLUGS_DES_COURS_SERVIS } from '../testing/fixtures/instantanes-des-cours';
 
 describe('serverRoutes', () => {
-  for (const slug of [
-    'b1-01-proportions-pourcentages',
-    'b1-02-evolutions-coefficients-indices',
-    'b2-01-traitement-information-chiffree',
-    'b2-02-series-statistiques',
-    'b2-03-logique',
-    'b2-04-suites',
-    'b2-05-mathematiques-financieres',
-    'b2-06-exponentielle-logarithme',
-    'b3-01-donnee-brute-decision',
-  ]) {
+  for (const slug of SLUGS_DES_COURS_SERVIS) {
     it(`laisse le client choisir l espace de ${slug} selon le rôle de la session`, () => {
       const route = serverRoutes.find((candidate) => candidate.path === `formations/${slug}`);
 

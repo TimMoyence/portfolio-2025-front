@@ -1,4 +1,0 @@
-import fichier from './json/b1-02.instantane.json';
-import { type InstantaneDuCoursB2, lireInstantaneDuFil } from '../instantane-de-cours';
-
-export const INSTANTANE_B1_02: InstantaneDuCoursB2 = lireInstantaneDuFil(fichier);

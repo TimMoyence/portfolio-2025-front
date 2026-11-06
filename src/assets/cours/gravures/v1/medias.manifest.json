@@ -102,6 +102,20 @@
       ]
     },
     {
+      "id": "B2-07-M15",
+      "ecran": "A1-01",
+      "licence": "domaine public",
+      "attribution": "Gottfried Wilhelm Leibniz, Nova Methodus pro Maximis et Minimis, 1684 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Leibniz-Acta-1684-NovaMethodus.jpg",
+      "fichiers": [
+        {
+          "fichier": "leibniz-nova-methodus-1684.jpg",
+          "octets": 507763,
+          "sha256": "657298cc4ad680a2174419f056a3be17cb87e0ab005ecb8221e02308827be655"
+        }
+      ]
+    },
+    {
       "id": "B3-01-M1",
       "ecran": "A1-02",
       "licence": "domaine public",

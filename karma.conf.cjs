@@ -1,8 +1,11 @@
 const path = require('node:path');
 
+const SILENCE_TOLERE_MS = 60_000;
+
 module.exports = function configureKarma(config) {
   config.set({
     basePath: '',
+    browserNoActivityTimeout: SILENCE_TOLERE_MS,
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),

@@ -8,9 +8,9 @@ import type {
 } from '../../../../../cours/content/types';
 import { echapperPourRegex, objet } from '../../../../../cours/runtime/core/texte/valeurs';
 import { type Recolte, recolterDansLArbre } from '../../../../../testing/dom/arbre-json';
-import { INSTANTANE_B2_01 } from '../../../../../testing/fixtures/instantanes/instantane-b2-01';
-import { INSTANTANE_B2_02 } from '../../../../../testing/fixtures/instantanes/instantane-b2-02';
-import { INSTANTANE_B2_03 } from '../../../../../testing/fixtures/instantanes/instantane-b2-03';
+import { INSTANTANE_B2_01 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
+import { INSTANTANE_B2_02 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-02';
+import { INSTANTANE_B2_03 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-03';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../../testing/fixtures/instantanes-des-cours';
 import {
   buildDerouleCours,
