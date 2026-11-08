@@ -5,6 +5,10 @@ import type {
 
 export type PublishedArticle = PublishedArticleResponseDto;
 
+export type SectionDeLArticle = PublishedArticle['sections'][number];
+
+export type ItemDeSection = SectionDeLArticle['items'][number];
+
 export type ArticleSummary = Pick<
   PublishedArticle,
   | 'article_id'
