@@ -69,6 +69,7 @@ export class ArticleDetailComponent {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly seo = inject(SeoService);
   private readonly config = inject(APP_CONFIG);
+  private readonly logo = urlAbsolue(this.config.baseUrl, '/assets/images/logo.webp');
   private readonly responseStatus = inject(HTTP_RESPONSE_STATUS, { optional: true });
 
   constructor(route: ActivatedRoute) {
@@ -100,7 +101,6 @@ export class ArticleDetailComponent {
 
   private poserLeSeo(article: PublishedArticle): void {
     const canonicalUrl = urlLocalisee(this.config.baseUrl, this.locale, article.seo.canonical_path);
-    const image = urlAbsolue(this.config.baseUrl, '/assets/images/logo.webp');
     this.seo.updateSeoMetadata({
       title: `${article.title} — ${NOM_DU_SITE}`,
       description: article.seo.description,
@@ -108,8 +108,8 @@ export class ArticleDetailComponent {
       canonicalUrl,
       ogUrl: canonicalUrl,
       ogType: 'article',
-      ogImage: image,
-      twitterImage: image,
+      ogImage: this.logo,
+      twitterImage: this.logo,
       twitterCard: 'summary_large_image',
       robots: 'index, follow',
       hreflangs: { [this.locale]: canonicalUrl },
@@ -139,6 +139,8 @@ export class ArticleDetailComponent {
       robots: 'noindex, nofollow',
       canonicalUrl,
       ogUrl: canonicalUrl,
+      ogImage: this.logo,
+      twitterImage: this.logo,
       hreflangs: {},
     });
   }

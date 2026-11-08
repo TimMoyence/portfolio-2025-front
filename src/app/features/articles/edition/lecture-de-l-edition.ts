@@ -50,9 +50,14 @@ export function lectureDeLEdition(article: PublishedArticle): LectureDeLEdition 
 }
 
 const ETIQUETTE_DE_L_IMPACT = 'Ce que ça change';
+const PREFIXE_D_UN_IMPACT_COURT = `${ETIQUETTE_DE_L_IMPACT} : `;
 
 function impactDe(item: ItemDeSection | null): string {
-  return item?.entity.trim() === ETIQUETTE_DE_L_IMPACT ? item.text.trim() : '';
+  if (item?.entity.trim() !== ETIQUETTE_DE_L_IMPACT) return '';
+  const texte = item.text.trim();
+  return texte.startsWith(PREFIXE_D_UN_IMPACT_COURT)
+    ? texte.slice(PREFIXE_D_UN_IMPACT_COURT.length).trim()
+    : texte;
 }
 
 export function siteDe(url: string): string {

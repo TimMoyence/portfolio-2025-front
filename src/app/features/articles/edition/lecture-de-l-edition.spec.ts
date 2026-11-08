@@ -73,6 +73,27 @@ describe('Lecture de l’édition — ce que la une et la fiche tirent des secti
     }
   });
 
+  it('rend un impact court sans le préfixe que le Pi lui ajoute pour tenir le schéma', () => {
+    const lecture = lectureDeLEdition(
+      buildEditionMorningBrief({
+        sections: [
+          buildSectionDeLArticle({
+            id: 'deep-dive',
+            kind: 'deep_dive',
+            title: 'V8 accélère',
+            items: [
+              buildItemDeSection({
+                entity: 'Ce que ça change',
+                text: 'Ce que ça change : Moins de latence.',
+              }),
+            ],
+          }),
+        ],
+      }),
+    );
+    expect(lecture.impact).toBe('Moins de latence.');
+  });
+
   it('garde les rubriques et les radars dans l’ordre servi', () => {
     const lecture = lectureDeLEdition(buildEditionMorningBrief());
 

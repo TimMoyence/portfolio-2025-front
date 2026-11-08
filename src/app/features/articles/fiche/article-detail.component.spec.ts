@@ -146,6 +146,8 @@ describe('ArticleDetailComponent — métadonnées SEO', () => {
     expect(config.canonicalUrl).toBe('https://example.com/fr/articles/veille');
     expect(config.hreflangs).toEqual({});
     expect(config.jsonLd).toBeUndefined();
+    expect(config.ogImage).toBe('https://example.com/assets/images/logo.webp');
+    expect(config.twitterImage).toBe('https://example.com/assets/images/logo.webp');
   });
 
   it('signe du nom du site le titre de l article et son éditeur', () => {
