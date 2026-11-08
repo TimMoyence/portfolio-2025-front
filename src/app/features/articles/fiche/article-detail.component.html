@@ -74,14 +74,18 @@
                 <p class="partie__kicker" i18n="@@articleDetailDecryptage">Le décryptage</p>
                 <h2 class="decryptage__titre">{{ section.title }}</h2>
                 <div class="article-markdown" [innerHTML]="lecture.corpsDuDecryptage"></div>
-                @if (lecture.impact; as impact) {
-                  <aside class="encadre">
-                    <p class="encadre__titre" i18n="@@articleDetailCeQueCaChange">
-                      Ce que ça change
-                    </p>
-                    <p class="encadre__texte">{{ impact.text }}</p>
-                    <app-provenance [item]="impact" />
-                  </aside>
+                @if (lecture.sourceDuDecryptage; as source) {
+                  @if (lecture.impact) {
+                    <aside class="encadre">
+                      <p class="encadre__titre" i18n="@@articleDetailCeQueCaChange">
+                        Ce que ça change
+                      </p>
+                      <p class="encadre__texte">{{ lecture.impact }}</p>
+                      <app-provenance [item]="source" />
+                    </aside>
+                  } @else {
+                    <app-provenance class="decryptage__source" [item]="source" />
+                  }
                 }
               </section>
             }
@@ -127,15 +131,17 @@
           }
         }
 
-        <div id="mb-anatomie" class="edition__anatomie">
+        <div id="edition-anatomie" class="edition__anatomie">
           <app-anatomie [article]="article" />
         </div>
 
         @if (sources.length) {
-          <section id="mb-sources" class="sources">
+          <section id="edition-sources" class="sources">
             <details>
-              <summary i18n="@@articleDetailToutesLesSources">
-                Toutes les sources ({{ article.sources.length }})
+              <summary>
+                <h2 class="sources__titre" i18n="@@articleDetailToutesLesSources">
+                  Toutes les sources ({{ sources.length }})
+                </h2>
               </summary>
               <div class="sources__groupes">
                 @for (groupe of sources; track groupe.nom) {

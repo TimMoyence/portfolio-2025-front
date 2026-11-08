@@ -280,7 +280,12 @@
 }
 
 .encadre__titre {
-  @include mono.capitales-mono(11px, 0.16em, var(--gold-deep));
+  @include mono.capitales-mono(11px, 0.16em, var(--text));
+}
+
+.decryptage__source {
+  display: block;
+  margin-top: 1.25rem;
 }
 
 .encadre__texte {
@@ -411,6 +416,13 @@
   }
 }
 
+.sources__titre {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
 .sources__groupes {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
@@ -528,8 +540,10 @@
   }
 
   ::ng-deep a {
-    color: var(--accent-text);
+    color: var(--text-strong);
     text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 0.2em;
   }
 }
 

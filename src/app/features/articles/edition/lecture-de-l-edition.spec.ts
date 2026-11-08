@@ -33,14 +33,34 @@ describe('Lecture de l’édition — ce que la une et la fiche tirent des secti
     const lecture = lectureDeLEdition(buildEditionMorningBrief());
 
     expect(lecture.corpsDuDecryptage).toContain('<p>Le moteur compile d’abord');
-    expect(lecture.impact?.text).toBe('Les applications web démarrent plus vite sans réécriture.');
+    expect(lecture.impact).toBe('Les applications web démarrent plus vite sans réécriture.');
+    expect(lecture.sourceDuDecryptage?.url).toBe('https://v8.dev/blog/indices-de-compilation');
   });
 
   it('accepte un décryptage servi sans item, comme les éditions antérieures', () => {
     const edition = buildEditionMorningBrief({
       sections: [buildSectionDeLArticle({ id: 'deep-dive', kind: 'deep_dive', title: 'Titre' })],
     });
-    expect(lectureDeLEdition(edition).impact).toBeNull();
+    const lecture = lectureDeLEdition(edition);
+    expect(lecture.impact).toBe('');
+    expect(lecture.sourceDuDecryptage).toBeNull();
+  });
+
+  it('ne tient pas pour un impact l’item qui ne porte que le titre du décryptage', () => {
+    const source = buildItemDeSection({ entity: 'Source du décryptage', text: ' Titre ' });
+    const edition = buildEditionMorningBrief({
+      sections: [
+        buildSectionDeLArticle({
+          id: 'deep-dive',
+          kind: 'deep_dive',
+          title: 'Titre',
+          items: [source],
+        }),
+      ],
+    });
+    const lecture = lectureDeLEdition(edition);
+    expect(lecture.impact).toBe('');
+    expect(lecture.sourceDuDecryptage).toEqual(source);
   });
 
   it('garde les rubriques et les radars dans l’ordre servi', () => {
@@ -70,6 +90,18 @@ describe('Lecture de l’édition — ce que la une et la fiche tirent des secti
     expect(groupes.at(-1)?.liens).toEqual([
       { url: 'https://vercel.com/changelog/fait', libelle: 'Vercel / DeepSeek V4.1' },
       { url: 'https://vercel.com/changelog/ling-3-1', libelle: 'Ling 3.1 Flash' },
+    ]);
+  });
+
+  it('nomme la source du décryptage par son titre, pas par l’étiquette de son encadré', () => {
+    const v8 = sourcesParPublication(buildEditionMorningBrief()).find(
+      (groupe) => groupe.nom === 'V8 Blog',
+    );
+    expect(v8?.liens).toEqual([
+      {
+        url: 'https://v8.dev/blog/indices-de-compilation',
+        libelle: 'V8 travaille désormais pour le temps réel',
+      },
     ]);
   });
 

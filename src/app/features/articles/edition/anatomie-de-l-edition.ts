@@ -34,14 +34,16 @@ export const AUTRES_SIGNAUX = $localize`:@@articlesAutresSignaux:Autres signaux`
 export function anatomieDeLEdition(article: PublishedArticle): AnatomieDeLEdition {
   const items = article.sections.flatMap((section) => section.items);
   const parPublication = publicationsParNombre(items);
-  const autres = parPublication.slice(PUBLICATIONS_EN_TETE);
+  const enTete =
+    parPublication.length > PUBLICATIONS_EN_TETE + 1 ? PUBLICATIONS_EN_TETE : parPublication.length;
+  const autres = parPublication.slice(enTete);
   return {
     informations: items.length,
     publications: new Set(article.sources.map((source) => source.name)).size,
     minutes: article.reading_time_minutes,
     partDes24Heures: partDes24Heures(items, article.published_at),
     rubriques: partsDesRubriques(article),
-    publicationsEnTete: parPublication.slice(0, PUBLICATIONS_EN_TETE),
+    publicationsEnTete: parPublication.slice(0, enTete),
     autresPublications: autres.length
       ? {
           publications: autres.length,

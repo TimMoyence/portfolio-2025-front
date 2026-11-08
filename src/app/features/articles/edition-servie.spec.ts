@@ -55,8 +55,8 @@ describe('L’édition servie en prod, rendue telle quelle', () => {
       'mb-web-internet',
       'mb-business-niches',
       'mb-radar',
-      'mb-anatomie',
-      'mb-sources',
+      'edition-anatomie',
+      'edition-sources',
     ]);
     expect(page.querySelector('.encadre')).toBeNull();
   });

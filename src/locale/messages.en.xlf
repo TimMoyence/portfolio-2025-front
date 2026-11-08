@@ -13148,11 +13148,11 @@
     </unit>
     <unit id="articleDetailToutesLesSources">
       <notes>
-        <note category="location">src/app/features/articles/article-detail.component.html:138,139</note>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:143,144</note>
       </notes>
       <segment>
-        <source>Toutes les sources (<ph id="0" equiv="INTERPOLATION" disp="{{ article.sources.length }}"/>)</source>
-        <target>All sources (<ph id="0" equiv="INTERPOLATION" disp="{{ article.sources.length }}"/>)</target>
+        <source> Toutes les sources (<ph id="0" equiv="INTERPOLATION" disp="{{ sources.length }}"/>) </source>
+        <target> All sources (<ph id="0" equiv="INTERPOLATION" disp="{{ sources.length }}"/>) </target>
       </segment>
     </unit>
     <unit id="articleDetailSommaireDecryptage">

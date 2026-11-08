@@ -83,24 +83,41 @@ describe('Anatomie de l’édition — calculée depuis les sections servies', (
     expect(anatomieDeLEdition(buildEditionMorningBrief()).autresPublications).toBeNull();
   });
 
-  it('regroupe au-delà de six publications', () => {
-    const items = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map((nom, rang) =>
-      buildItemDeSection({ source: nom, url: `https://exemple.fr/${rang}` }),
-    );
-    items.push(buildItemDeSection({ source: 'H', url: 'https://exemple.fr/h2' }));
-    const edition = buildEditionMorningBrief({ sections: [buildSectionDeLArticle({ items })] });
+  describe('publications en tête', () => {
+    const SEPT = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    const anatomieDesPublications = (noms: readonly string[]) =>
+      anatomieDeLEdition(
+        buildEditionMorningBrief({
+          sections: [
+            buildSectionDeLArticle({
+              items: noms.map((nom, rang) =>
+                buildItemDeSection({ source: nom, url: `https://exemple.fr/${rang}` }),
+              ),
+            }),
+          ],
+        }),
+      );
 
-    const anatomie = anatomieDeLEdition(edition);
+    it('regroupe au-delà de sept publications, six nommées et le reste compté', () => {
+      const anatomie = anatomieDesPublications([...SEPT, 'H', 'H']);
 
-    expect(anatomie.publicationsEnTete.map((part) => part.nom)).toEqual([
-      'H',
-      'A',
-      'B',
-      'C',
-      'D',
-      'E',
-    ]);
-    expect(anatomie.autresPublications).toEqual({ publications: 2, informations: 2 });
+      expect(anatomie.publicationsEnTete.map((part) => part.nom)).toEqual([
+        'H',
+        'A',
+        'B',
+        'C',
+        'D',
+        'E',
+      ]);
+      expect(anatomie.autresPublications).toEqual({ publications: 2, informations: 2 });
+    });
+
+    it('montre la septième publication plutôt que de la regrouper seule', () => {
+      const anatomie = anatomieDesPublications(SEPT);
+
+      expect(anatomie.publicationsEnTete.map((part) => part.nom)).toEqual(SEPT);
+      expect(anatomie.autresPublications).toBeNull();
+    });
   });
 
   it('rend une anatomie vide pour une édition sans sections', () => {

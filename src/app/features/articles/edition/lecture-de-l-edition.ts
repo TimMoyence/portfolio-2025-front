@@ -12,7 +12,8 @@ export interface LectureDeLEdition {
   readonly points: readonly string[];
   readonly decryptage: SectionDeLArticle | null;
   readonly corpsDuDecryptage: string;
-  readonly impact: ItemDeSection | null;
+  readonly sourceDuDecryptage: ItemDeSection | null;
+  readonly impact: string;
   readonly rubriques: readonly SectionDeLArticle[];
   readonly radars: readonly SectionDeLArticle[];
   readonly anatomie: AnatomieDeLEdition;
@@ -33,17 +34,24 @@ export function lectureDeLEdition(article: PublishedArticle): LectureDeLEdition 
     .filter((ligne) => !PUCE.test(ligne))
     .join('\n')
     .trim();
+  const sourceDuDecryptage = decryptage?.items[0] ?? null;
   return {
     titre: decryptage?.title.trim() || article.title,
     chapeau: chapeau ? renderArticleMarkdown(chapeau) : '',
     points: lignes.flatMap((ligne) => PUCE.exec(ligne)?.slice(1, 2) ?? []).map((p) => p.trim()),
     decryptage,
     corpsDuDecryptage: decryptage?.body ? renderArticleMarkdown(decryptage.body) : '',
-    impact: decryptage?.items[0] ?? null,
+    sourceDuDecryptage,
+    impact: impactDe(decryptage, sourceDuDecryptage),
     rubriques: article.sections.filter((section) => section.kind === 'rubric'),
     radars: article.sections.filter((section) => section.kind === 'radar'),
     anatomie: anatomieDeLEdition(article),
   };
+}
+
+function impactDe(decryptage: SectionDeLArticle | null, item: ItemDeSection | null): string {
+  const texte = item?.text.trim() ?? '';
+  return texte === decryptage?.title.trim() ? '' : texte;
 }
 
 export function siteDe(url: string): string {
@@ -56,8 +64,11 @@ export function siteDe(url: string): string {
 
 export function sourcesParPublication(article: PublishedArticle): GroupeDeSources[] {
   const faits = new Map<string, string>();
-  for (const item of article.sections.flatMap((section) => section.items)) {
-    if (!faits.has(item.url)) faits.set(item.url, item.entity);
+  for (const section of article.sections) {
+    for (const item of section.items) {
+      const libelle = section.kind === 'deep_dive' ? section.title : item.entity;
+      if (!faits.has(item.url)) faits.set(item.url, libelle);
+    }
   }
   const groupes = new Map<string, { url: string; libelle: string }[]>();
   for (const source of article.sources) {

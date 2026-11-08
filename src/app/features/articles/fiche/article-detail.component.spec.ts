@@ -6,7 +6,9 @@ import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../../environments/environment';
 import {
   buildEditionMorningBrief,
+  buildItemDeSection,
   buildPublishedArticle,
+  buildSectionDeLArticle,
 } from '../../../../testing/factories/article.factory';
 import { fournirLaRoute } from '../../../../testing/factories/serveur/route.factory';
 import { ancresDuSommaire, rendreLaFiche } from '../../../../testing/page/edition-rendue';
@@ -173,6 +175,32 @@ describe('ArticleDetailComponent — l’édition rendue depuis ses sections', (
     );
   });
 
+  it('garde la source du décryptage sans encadré quand il n’a pas d’impact', () => {
+    const sansImpact = buildSectionDeLArticle({
+      id: 'deep-dive',
+      kind: 'deep_dive',
+      title: 'Quand le benchmark écoute mal',
+      body: 'Le corps du décryptage.',
+      items: [
+        buildItemDeSection({
+          entity: 'Source du décryptage',
+          text: 'Quand le benchmark écoute mal',
+          url: 'https://www.reddit.com/r/LocalLLaMA/1',
+        }),
+      ],
+    });
+    const decryptage = section(
+      rendre(buildEditionMorningBrief({ sections: [sansImpact] })),
+      'deep-dive',
+    );
+
+    expect(decryptage.querySelector('.encadre')).toBeNull();
+    expect(texteDe(decryptage)).not.toContain('Ce que ça change');
+    expect(decryptage.querySelector('.decryptage__source a')?.getAttribute('href')).toBe(
+      'https://www.reddit.com/r/LocalLLaMA/1',
+    );
+  });
+
   it('met la source sous chaque fait : publication, site, date, lien externe', () => {
     const rubrique = section(rendre(buildEditionMorningBrief()), 'modeles-ia');
     const faits = Array.from(rubrique.querySelectorAll('.fait'));
@@ -210,18 +238,37 @@ describe('ArticleDetailComponent — l’édition rendue depuis ses sections', (
       'mb-outils-ia',
       'mb-radar-modeles-ia',
       'mb-radar',
-      'mb-anatomie',
-      'mb-sources',
+      'edition-anatomie',
+      'edition-sources',
     ]);
   });
 
-  it('montre l’anatomie et replie les sources, groupées par publication', () => {
-    const page = rendre(buildEditionMorningBrief());
-    const sources = section(page, 'sources').querySelector('details')!;
+  it('garde des ancres uniques quand une rubrique s’appelle sources ou anatomie', () => {
+    const page = rendre(
+      buildEditionMorningBrief({
+        sections: ['sources', 'anatomie', 'anatomie-titre'].map((id) =>
+          buildSectionDeLArticle({
+            id,
+            items: [buildItemDeSection({ url: `https://exemple.fr/${id}` })],
+          }),
+        ),
+      }),
+    );
+    const ids = Array.from(page.querySelectorAll('[id]')).map((element) => element.id);
 
-    expect(page.querySelector('#mb-anatomie app-anatomie')).not.toBeNull();
-    expect(sources.open).toBeFalse();
-    expect(texteDe(sources.querySelector('summary'))).toBe('Toutes les sources (7)');
+    expect(ids.length).toBe(new Set(ids).size);
+    expect(
+      ancresDuSommaire(page).every((ancre) => page.querySelector(`[id="${ancre}"]`)),
+    ).toBeTrue();
+  });
+
+  it('montre l’anatomie et replie les sources, titrées et comptées par publication', () => {
+    const page = rendre(buildEditionMorningBrief());
+    const sources = page.querySelector<HTMLDetailsElement>('#edition-sources details')!;
+
+    expect(page.querySelector('#edition-anatomie app-anatomie')).not.toBeNull();
+    expect(sources.hasAttribute('open')).toBeFalse();
+    expect(texteDe(sources.querySelector('summary h2'))).toBe('Toutes les sources (6)');
     expect(textes(sources, '.sources__publication')).toContain('Vercel Blog');
   });
 

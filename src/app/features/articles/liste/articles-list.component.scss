@@ -130,7 +130,7 @@
 }
 
 .une__colonne-titre {
-  @include mono.capitales-mono(11px, 0.18em, var(--gold-deep));
+  @include mono.capitales-mono(11px, 0.18em, var(--text));
   margin: 0;
 
   &:not(:first-child) {

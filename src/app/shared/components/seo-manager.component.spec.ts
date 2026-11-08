@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavigationEnd, Router } from '@angular/router';
-import { Subject, of } from 'rxjs';
+import { ReplaySubject, Subject, of } from 'rxjs';
 import { fournirLaRoute } from '../../../testing/factories/serveur/route.factory';
 import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-registry.service';
 import type { SeoConfig } from '../../core/seo/seo.interface';
@@ -43,7 +43,7 @@ describe('SeoManagerComponent', () => {
 
   beforeEach(async () => {
     routerEvents$ = new Subject<NavigationEnd>();
-    routeData$ = new Subject<Record<string, unknown>>();
+    routeData$ = new ReplaySubject<Record<string, unknown>>(1);
 
     seoServiceSpy = jasmine.createSpyObj<SeoService>('SeoService', ['updateSeoMetadata']);
 
@@ -122,6 +122,24 @@ describe('SeoManagerComponent', () => {
     expect(seoRegistrySpy.getSeoByKey).toHaveBeenCalledWith('test-page');
     expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(1);
     expect(call.title).toBe('Page de test');
+  });
+
+  it('garde le SEO de la page quand la navigation ne change que l’ancre', () => {
+    const page = '/fr/articles/morning-brief-2026-11-08';
+    const ancre = `${page}#mb-essential`;
+    naviguer(page, {});
+    routerEvents$.next(new NavigationEnd(2, ancre, ancre));
+    routerEvents$.next(new NavigationEnd(3, page, page));
+
+    expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(1);
+  });
+
+  it('applique le SEO de la page suivante, même quand elle porte une ancre', () => {
+    naviguer('/fr/articles/morning-brief-2026-11-08#mb-essential', {});
+    const suivante = '/fr/articles#archives';
+    routerEvents$.next(new NavigationEnd(2, suivante, suivante));
+
+    expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(2);
   });
 
   it('devrait appliquer la config SEO par defaut si aucune config fournie', () => {

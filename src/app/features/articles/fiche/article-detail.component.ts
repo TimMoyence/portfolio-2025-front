@@ -138,10 +138,13 @@ export class ArticleDetailComponent {
   private sommaireDe(article: PublishedArticle): EntreeDuSommaire[] {
     const entrees = article.sections.map((section) => {
       if (section.kind === 'essential') {
-        return this.entree(section.id, section.title);
+        return this.entree(`mb-${section.id}`, section.title);
       }
       if (section.kind === 'deep_dive') {
-        return this.entree(section.id, $localize`:@@articleDetailSommaireDecryptage:Le décryptage`);
+        return this.entree(
+          `mb-${section.id}`,
+          $localize`:@@articleDetailSommaireDecryptage:Le décryptage`,
+        );
       }
       return {
         ancre: `mb-${section.id}`,
@@ -150,14 +153,18 @@ export class ArticleDetailComponent {
         rubrique: section.id,
       };
     });
-    entrees.push(this.entree('anatomie', $localize`:@@articleDetailSommaireAnatomie:En chiffres`));
+    entrees.push(
+      this.entree('edition-anatomie', $localize`:@@articleDetailSommaireAnatomie:En chiffres`),
+    );
     if (this.sources.length) {
-      entrees.push(this.entree('sources', $localize`:@@articleDetailSommaireSources:Sources`));
+      entrees.push(
+        this.entree('edition-sources', $localize`:@@articleDetailSommaireSources:Sources`),
+      );
     }
     return entrees;
   }
 
-  private entree(id: string, libelle: string): EntreeDuSommaire {
-    return { ancre: `mb-${id}`, libelle, nombre: null, rubrique: null };
+  private entree(ancre: string, libelle: string): EntreeDuSommaire {
+    return { ancre, libelle, nombre: null, rubrique: null };
   }
 }

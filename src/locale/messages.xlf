@@ -1050,7 +1050,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">166,168</context>
+          <context context-type="linenumber">172,174</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailMarque" datatype="html">
@@ -1085,28 +1085,28 @@
         <source> Ce que ça change </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">80,81</context>
+          <context context-type="linenumber">81,82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailToutesLesSources" datatype="html">
-        <source>Toutes les sources (<x id="INTERPOLATION" equiv-text="{{ article.sources.length }}"/>)</source>
+        <source> Toutes les sources (<x id="INTERPOLATION" equiv-text="{{ sources.length }}"/>) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">138,139</context>
+          <context context-type="linenumber">143,144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailReadingTime" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ article.reading_time_minutes }}"/> min</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">171,172</context>
+          <context context-type="linenumber">177,178</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSources" datatype="html">
         <source>Sources</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">183,185</context>
+          <context context-type="linenumber">189,191</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCtaKicker" datatype="html">
@@ -1141,14 +1141,14 @@
         <source>En chiffres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">157</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSommaireSources" datatype="html">
         <source>Sources</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">161</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesListHeroTitle" datatype="html">
@@ -1414,21 +1414,21 @@
         <source>{VAR_PLURAL, plural, =0 {0 information} =1 {1 information} other {<x id="INTERPOLATION"/> informations}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/marques-de-l-edition.component.ts</context>
-          <context context-type="linenumber">153,155</context>
+          <context context-type="linenumber">152,155</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesCompteurSources" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {0 source} =1 {1 source} other {<x id="INTERPOLATION"/> sources}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/marques-de-l-edition.component.ts</context>
-          <context context-type="linenumber">157,158</context>
+          <context context-type="linenumber">158,161</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesCompteurMinutes" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ minutes }}"/> min de lecture</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/marques-de-l-edition.component.ts</context>
-          <context context-type="linenumber">161,163</context>
+          <context context-type="linenumber">165,167</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authAsideRegisterKicker" datatype="html">
@@ -11895,7 +11895,7 @@
         <source>Professional Portfolio | Web Developer &amp; Designer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">Fallback SEO title</note>
         <note priority="1" from="meaning">seo.default.title</note>
@@ -11904,7 +11904,7 @@
         <source>Explore my portfolio showcasing web development projects, courses, and professional services. Specializing in modern web technologies and creative solutions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <note priority="1" from="description">Fallback SEO description</note>
         <note priority="1" from="meaning">seo.default.description</note>
@@ -11913,7 +11913,7 @@
         <source>web development</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">158</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.webDev</note>
@@ -11922,7 +11922,7 @@
         <source>portfolio</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">159</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.portfolio</note>
@@ -11931,7 +11931,7 @@
         <source>frontend</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.frontend</note>
@@ -11940,7 +11940,7 @@
         <source>backend</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">161</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.backend</note>
@@ -11949,7 +11949,7 @@
         <source>full stack</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.fullstack</note>
@@ -11958,7 +11958,7 @@
         <source>developer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/seo-manager.component.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">163</context>
         </context-group>
         <note priority="1" from="description">SEO keyword</note>
         <note priority="1" from="meaning">seo.default.keyword.developer</note>
