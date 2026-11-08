@@ -90,7 +90,9 @@ export const routes: Routes = [
   {
     path: 'articles',
     loadComponent: () =>
-      import('./features/articles/articles-list.component').then((m) => m.ArticlesListComponent),
+      import('./features/articles/liste/articles-list.component').then(
+        (m) => m.ArticlesListComponent,
+      ),
     data: {
       seoKey: 'articles',
     },

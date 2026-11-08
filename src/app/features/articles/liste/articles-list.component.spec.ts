@@ -1,10 +1,17 @@
+import { registerLocaleData } from '@angular/common';
 import { HttpTestingController, type TestRequest } from '@angular/common/http/testing';
+import localeFr from '@angular/common/locales/fr';
+import { LOCALE_ID } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { environment } from '../../../environments/environment';
-import { buildPublishedArticle } from '../../../testing/factories/article.factory';
-import { setupTestBed } from '../../../testing/setup-test-bed';
-import type { PublishedArticle } from '../../core/models/article.model';
+import { environment } from '../../../../environments/environment';
+import {
+  buildEditionMorningBrief,
+  buildPublishedArticle,
+} from '../../../../testing/factories/article.factory';
+import { setupTestBed } from '../../../../testing/setup-test-bed';
+import { texteDe, textes } from '../../../../testing/texte/textes-dom';
+import type { PublishedArticle } from '../../../core/models/article.model';
 import { ArticlesListComponent } from './articles-list.component';
 
 const summary = (day: number): PublishedArticle =>
@@ -36,7 +43,9 @@ describe('ArticlesListComponent — pagination', () => {
 
   const titles = (): string[] =>
     Array.from(
-      fixture.nativeElement.querySelectorAll('.article-card h2') as NodeListOf<Element>,
+      fixture.nativeElement.querySelectorAll(
+        '.une__titre, .precedente__titre',
+      ) as NodeListOf<Element>,
     ).map((node) => node.textContent?.trim() ?? '');
 
   const loadMore = (): HTMLButtonElement | null =>
@@ -101,5 +110,69 @@ describe('ArticlesListComponent — pagination', () => {
     expect(
       fixture.nativeElement.querySelector('[data-testid="articles-load-more-error"]'),
     ).toBeNull();
+  });
+});
+
+describe('ArticlesListComponent — la une du journal', () => {
+  beforeAll(() => registerLocaleData(localeFr));
+
+  function rendre(items: PublishedArticle[]): HTMLElement {
+    setupTestBed({
+      router: true,
+      imports: [ArticlesListComponent],
+      providers: [{ provide: LOCALE_ID, useValue: 'fr' }],
+    });
+    const httpMock = TestBed.inject(HttpTestingController);
+    const fixture = TestBed.createComponent(ArticlesListComponent);
+    fixture.detectChanges();
+    httpMock
+      .expectOne((request) => request.url === `${environment.apiBaseUrl}/articles`)
+      .flush({ items, next_cursor: null });
+    fixture.detectChanges();
+    httpMock.verify();
+    return fixture.nativeElement as HTMLElement;
+  }
+
+  const veille = buildEditionMorningBrief({
+    slug: 'morning-brief-2026-11-07',
+    published_at: '2026-11-07T04:15:00.000Z',
+  });
+
+  it('met la dernière édition à la une : décryptage en titre, rubriques, compteurs, points clés', () => {
+    const une = rendre([buildEditionMorningBrief(), veille]).querySelector<HTMLElement>(
+      '[data-testid="une"]',
+    )!;
+
+    expect(texteDe(une.querySelector('h2'))).toBe('V8 travaille désormais pour le temps réel');
+    expect(une.querySelector('h2 a')?.getAttribute('href')).toBe(
+      '/articles/morning-brief-2026-11-08',
+    );
+    expect(une.querySelector('[data-testid="legende-des-rubriques"]')).not.toBeNull();
+    expect(texteDe(une.querySelector('app-compteurs-de-l-edition'))).toBe(
+      '7 informations · 6 sources · 9 min de lecture',
+    );
+    expect(textes(une, '.une__points li').length).toBe(3);
+  });
+
+  it('range les éditions précédentes en colonnes, chacune avec sa bande, sans étiquettes brutes', () => {
+    const page = rendre([buildEditionMorningBrief(), veille]);
+
+    const precedentes = Array.from(page.querySelectorAll('[data-testid="edition-precedente"]'));
+    expect(precedentes.length).toBe(1);
+    expect(precedentes[0].querySelector('[data-testid="bande-des-rubriques"]')).not.toBeNull();
+    expect(precedentes[0].querySelector('a')?.getAttribute('href')).toBe(
+      '/articles/morning-brief-2026-11-07',
+    );
+    expect(texteDe(page)).not.toContain('modeles-ia');
+  });
+
+  it('garde le titre et le résumé d’une édition sans sections, sans bande', () => {
+    const une = rendre([
+      buildPublishedArticle({ title: 'Veille IA', excerpt: 'Les faits.' }),
+    ]).querySelector('[data-testid="une"]')!;
+
+    expect(texteDe(une.querySelector('h2'))).toBe('Veille IA');
+    expect(texteDe(une)).toContain('Les faits.');
+    expect(une.querySelector('[data-testid="bande-des-rubriques"]')).toBeNull();
   });
 });
