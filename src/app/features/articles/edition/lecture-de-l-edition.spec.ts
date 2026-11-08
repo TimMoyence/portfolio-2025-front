@@ -46,21 +46,31 @@ describe('Lecture de l’édition — ce que la une et la fiche tirent des secti
     expect(lecture.sourceDuDecryptage).toBeNull();
   });
 
-  it('ne tient pas pour un impact l’item qui ne porte que le titre du décryptage', () => {
-    const source = buildItemDeSection({ entity: 'Source du décryptage', text: ' Titre ' });
-    const edition = buildEditionMorningBrief({
-      sections: [
-        buildSectionDeLArticle({
-          id: 'deep-dive',
-          kind: 'deep_dive',
-          title: 'Titre',
-          items: [source],
+  it('ne lit un impact que dans l’item que le Pi étiquette « Ce que ça change »', () => {
+    const long = 'Un titre de décryptage très long '.repeat(5);
+    const formesSansImpact = [
+      { titre: 'V8 accélère', texte: 'Source du décryptage : V8 accélère' },
+      { titre: 'Le décryptage', texte: 'Source du décryptage : Le décryptage' },
+      { titre: `${long.slice(0, 119)}…`, texte: long.trim() },
+      { titre: 'Quand le benchmark écoute mal', texte: 'Quand le benchmark écoute mal' },
+    ];
+    for (const { titre, texte } of formesSansImpact) {
+      const source = buildItemDeSection({ entity: 'Source du décryptage', text: texte });
+      const lecture = lectureDeLEdition(
+        buildEditionMorningBrief({
+          sections: [
+            buildSectionDeLArticle({
+              id: 'deep-dive',
+              kind: 'deep_dive',
+              title: titre,
+              items: [source],
+            }),
+          ],
         }),
-      ],
-    });
-    const lecture = lectureDeLEdition(edition);
-    expect(lecture.impact).toBe('');
-    expect(lecture.sourceDuDecryptage).toEqual(source);
+      );
+      expect(lecture.impact).withContext(titre).toBe('');
+      expect(lecture.sourceDuDecryptage).toEqual(source);
+    }
   });
 
   it('garde les rubriques et les radars dans l’ordre servi', () => {

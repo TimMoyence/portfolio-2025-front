@@ -5,7 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { APP_CONFIG } from '../../../core/config/app-config.token';
 import type { PublishedArticle, SectionDeLArticle } from '../../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../../core/adapters/article-http.adapter';
-import { urlLocalisee } from '../../../core/seo/chemins';
+import { urlAbsolue, urlLocalisee } from '../../../core/seo/chemins';
 import { NOM_DU_SITE } from '../../../core/seo/nom-du-site';
 import { SeoService } from '../../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../../core/ssr/http-response-status';
@@ -74,46 +74,20 @@ export class ArticleDetailComponent {
   constructor(route: ActivatedRoute) {
     const slug = route.snapshot.paramMap.get('slug');
     if (!slug) {
-      this.isLoading = false;
-      this.hasError = true;
-      this.responseStatus?.set(404);
+      this.signalerLAbsence(404, '');
       return;
     }
     this.api.getBySlug(slug, this.locale).subscribe({
       next: (article) => {
         this.afficher(article);
         this.isLoading = false;
-        const canonicalUrl = urlLocalisee(
-          this.config.baseUrl,
-          this.locale,
-          article.seo.canonical_path,
-        );
-        this.seo.updateSeoMetadata({
-          title: `${article.title} — ${NOM_DU_SITE}`,
-          description: article.seo.description,
-          keywords: article.seo.keywords,
-          canonicalUrl,
-          ogUrl: canonicalUrl,
-          ogType: 'article',
-          jsonLd: {
-            '@context': 'https://schema.org',
-            '@type': 'Article',
-            headline: article.title,
-            description: article.seo.description,
-            datePublished: article.published_at,
-            dateModified: article.updated_at,
-            mainEntityOfPage: canonicalUrl,
-            author: { '@type': 'Person', name: 'Tim Moyence' },
-            publisher: { '@type': 'Organization', name: NOM_DU_SITE },
-          },
-        });
+        this.poserLeSeo(article);
         this.cdr.markForCheck();
       },
       error: (error: unknown) => {
-        this.isLoading = false;
-        this.hasError = true;
-        this.responseStatus?.set(
+        this.signalerLAbsence(
           error instanceof HttpErrorResponse && error.status === 404 ? 404 : 503,
+          slug,
         );
         this.cdr.markForCheck();
       },
@@ -122,6 +96,51 @@ export class ArticleDetailComponent {
 
   protected libelleDe(section: SectionDeLArticle): string {
     return identiteDeRubrique(section.id, section.title).libelle;
+  }
+
+  private poserLeSeo(article: PublishedArticle): void {
+    const canonicalUrl = urlLocalisee(this.config.baseUrl, this.locale, article.seo.canonical_path);
+    const image = urlAbsolue(this.config.baseUrl, '/assets/images/logo.webp');
+    this.seo.updateSeoMetadata({
+      title: `${article.title} — ${NOM_DU_SITE}`,
+      description: article.seo.description,
+      keywords: article.seo.keywords,
+      canonicalUrl,
+      ogUrl: canonicalUrl,
+      ogType: 'article',
+      ogImage: image,
+      twitterImage: image,
+      twitterCard: 'summary_large_image',
+      robots: 'index, follow',
+      hreflangs: { [this.locale]: canonicalUrl },
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: article.title,
+        description: article.seo.description,
+        datePublished: article.published_at,
+        dateModified: article.updated_at,
+        mainEntityOfPage: canonicalUrl,
+        author: { '@type': 'Person', name: 'Tim Moyence' },
+        publisher: { '@type': 'Organization', name: NOM_DU_SITE },
+      },
+    });
+  }
+
+  private signalerLAbsence(statut: 404 | 503, slug: string): void {
+    this.isLoading = false;
+    this.hasError = true;
+    this.responseStatus?.set(statut);
+    const canonicalUrl = urlLocalisee(this.config.baseUrl, this.locale, `/articles/${slug}`);
+    const introuvable = $localize`:@@articleDetailNotFound:Article introuvable`;
+    this.seo.updateSeoMetadata({
+      title: `${introuvable} — ${NOM_DU_SITE}`,
+      description: $localize`:@@articleDetailAbsenceDescription:Cette édition du Morning Brief est introuvable ou momentanément indisponible.`,
+      robots: 'noindex, nofollow',
+      canonicalUrl,
+      ogUrl: canonicalUrl,
+      hreflangs: {},
+    });
   }
 
   private afficher(article: PublishedArticle): void {

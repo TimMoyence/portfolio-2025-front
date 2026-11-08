@@ -105,6 +105,7 @@ export const routes: Routes = [
       ),
     data: {
       seoKey: 'article-detail',
+      seoParLaPage: true,
     },
   },
   {

@@ -42,16 +42,17 @@ export function lectureDeLEdition(article: PublishedArticle): LectureDeLEdition 
     decryptage,
     corpsDuDecryptage: decryptage?.body ? renderArticleMarkdown(decryptage.body) : '',
     sourceDuDecryptage,
-    impact: impactDe(decryptage, sourceDuDecryptage),
+    impact: impactDe(sourceDuDecryptage),
     rubriques: article.sections.filter((section) => section.kind === 'rubric'),
     radars: article.sections.filter((section) => section.kind === 'radar'),
     anatomie: anatomieDeLEdition(article),
   };
 }
 
-function impactDe(decryptage: SectionDeLArticle | null, item: ItemDeSection | null): string {
-  const texte = item?.text.trim() ?? '';
-  return texte === decryptage?.title.trim() ? '' : texte;
+const ETIQUETTE_DE_L_IMPACT = 'Ce que ça change';
+
+function impactDe(item: ItemDeSection | null): string {
+  return item?.entity.trim() === ETIQUETTE_DE_L_IMPACT ? item.text.trim() : '';
 }
 
 export function siteDe(url: string): string {

@@ -12956,6 +12956,15 @@
         <target>Article not found</target>
       </segment>
     </unit>
+    <unit id="articleDetailAbsenceDescription">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.ts</note>
+      </notes>
+      <segment>
+        <source>Cette édition du Morning Brief est introuvable ou momentanément indisponible.</source>
+        <target>This Morning Brief edition cannot be found or is temporarily unavailable.</target>
+      </segment>
+    </unit>
     <unit id="articleDetailBackToList">
       <notes>
         <note category="location">src/app/features/articles/article-detail.component.html:9,10</note>

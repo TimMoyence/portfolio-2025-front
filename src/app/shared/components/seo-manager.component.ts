@@ -52,6 +52,7 @@ export class SeoManagerComponent {
         }),
         filter((route) => route.outlet === 'primary'),
         mergeMap((route) => route.data),
+        filter((data) => data['seoParLaPage'] !== true),
         switchMap((data) => {
           const currentUrl = this.router.url;
           const seoKey = data['seoKey'];
@@ -90,7 +91,7 @@ export class SeoManagerComponent {
   private changeDePage(url: string): boolean {
     const precedente = this.derniereUrl;
     this.derniereUrl = url;
-    return url === precedente || sansAncre(url) !== sansAncre(precedente);
+    return sansAncre(url) !== sansAncre(precedente);
   }
 
   private applySeoConfig(

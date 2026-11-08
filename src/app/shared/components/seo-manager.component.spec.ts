@@ -142,6 +142,15 @@ describe('SeoManagerComponent', () => {
     expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(2);
   });
 
+  it('laisse la page poser son SEO quand sa route le déclare', () => {
+    fixture.detectChanges();
+    const page = '/fr/articles/morning-brief-2026-11-08';
+    routerEvents$.next(new NavigationEnd(1, page, page));
+    routeData$.next({ seoKey: 'article-detail', seoParLaPage: true });
+
+    expect(seoServiceSpy.updateSeoMetadata).not.toHaveBeenCalled();
+  });
+
   it('devrait appliquer la config SEO par defaut si aucune config fournie', () => {
     const call = naviguer('/fr/unknown', {});
 

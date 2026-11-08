@@ -1,5 +1,5 @@
 import { registerLocaleData } from '@angular/common';
-import { HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, type TestRequest } from '@angular/common/http/testing';
 import localeFr from '@angular/common/locales/fr';
 import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -86,7 +86,7 @@ describe('ArticleDetailComponent — statut HTTP rendu côté serveur', () => {
 });
 
 describe('ArticleDetailComponent — métadonnées SEO', () => {
-  function seoDeLArticle(): SeoConfig {
+  function seoApres(repondre: (requete: TestRequest) => void): SeoConfig {
     setupTestBed({
       router: true,
       appConfig: { baseUrl: 'https://example.com/' },
@@ -101,23 +101,51 @@ describe('ArticleDetailComponent — métadonnées SEO', () => {
     const httpMock = TestBed.inject(HttpTestingController);
     TestBed.createComponent(ArticleDetailComponent).detectChanges();
 
-    httpMock
-      .expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/veille`)
-      .flush(
+    repondre(
+      httpMock.expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/veille`),
+    );
+
+    httpMock.verify();
+    expect(miseAJour).toHaveBeenCalledTimes(1);
+    return miseAJour.calls.mostRecent().args[0];
+  }
+
+  const seoDeLArticle = () =>
+    seoApres((requete) =>
+      requete.flush(
         buildPublishedArticle({
           slug: 'veille',
           seo: { ...buildPublishedArticle().seo, canonical_path: '/articles/veille/' },
         }),
-      );
-
-    httpMock.verify();
-    return miseAJour.calls.mostRecent().args[0];
-  }
+      ),
+    );
 
   it('construit le canonical comme le reste du site, base terminee par un slash comprise', () => {
     const config = seoDeLArticle();
     expect(config.canonicalUrl).toBe('https://example.com/fr/articles/veille');
     expect(config.ogUrl).toBe('https://example.com/fr/articles/veille');
+  });
+
+  it('pose seule tout le SEO de la page, que le gestionnaire du site lui laisse', () => {
+    const config = seoDeLArticle();
+
+    expect(config.robots).toBe('index, follow');
+    expect(config.hreflangs).toEqual({ fr: 'https://example.com/fr/articles/veille' });
+    expect(config.ogImage).toBe('https://example.com/assets/images/logo.webp');
+    expect(config.twitterImage).toBe('https://example.com/assets/images/logo.webp');
+    expect(config.twitterCard).toBe('summary_large_image');
+  });
+
+  it('retire de l’index une édition introuvable, sans JSON-LD ni hreflang hérités', () => {
+    const config = seoApres((requete) =>
+      requete.flush({ message: 'Not Found' }, { status: 404, statusText: 'Not Found' }),
+    );
+
+    expect(config.title).toBe('Article introuvable — Asili Design');
+    expect(config.robots).toBe('noindex, nofollow');
+    expect(config.canonicalUrl).toBe('https://example.com/fr/articles/veille');
+    expect(config.hreflangs).toEqual({});
+    expect(config.jsonLd).toBeUndefined();
   });
 
   it('signe du nom du site le titre de l article et son éditeur', () => {
@@ -179,12 +207,12 @@ describe('ArticleDetailComponent — l’édition rendue depuis ses sections', (
     const sansImpact = buildSectionDeLArticle({
       id: 'deep-dive',
       kind: 'deep_dive',
-      title: 'Quand le benchmark écoute mal',
+      title: 'V8 accélère',
       body: 'Le corps du décryptage.',
       items: [
         buildItemDeSection({
           entity: 'Source du décryptage',
-          text: 'Quand le benchmark écoute mal',
+          text: 'Source du décryptage : V8 accélère',
           url: 'https://www.reddit.com/r/LocalLLaMA/1',
         }),
       ],
