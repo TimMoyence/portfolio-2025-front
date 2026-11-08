@@ -1,0 +1,197 @@
+@if (isLoading) {
+  <main class="article-state" aria-live="polite" i18n="@@articleDetailLoading">
+    Chargement de l’article…
+  </main>
+} @else if (hasError || !article) {
+  <main class="article-state" role="alert">
+    <h1 i18n="@@articleDetailNotFound">Article introuvable</h1>
+    <a class="link-arrow" routerLink="/articles"
+      ><ng-container i18n="@@articleDetailBackToList">Retour aux articles</ng-container>
+      <span aria-hidden="true">→</span></a
+    >
+  </main>
+} @else if (lecture) {
+  <main class="edition" aria-labelledby="article-title">
+    <header class="edition__entete wrap">
+      <a class="link-arrow" routerLink="/articles" i18n="@@articleDetailAllArticles"
+        >← Tous les articles</a
+      >
+      <p class="edition__manchette">
+        <span class="edition__marque" i18n="@@articleDetailMarque">Morning Brief</span>
+        <time [attr.datetime]="article.published_at">{{ article.published_at | jourDuSite }}</time>
+      </p>
+      <h1 id="article-title" class="edition__titre">{{ lecture.titre }}</h1>
+      <app-bande-des-rubriques class="edition__bande" [parts]="lecture.anatomie.rubriques" />
+      <app-compteurs-de-l-edition class="edition__compteurs" [anatomie]="lecture.anatomie" />
+    </header>
+
+    <div class="edition__corps wrap">
+      <nav class="sommaire" aria-labelledby="sommaire-titre">
+        <p id="sommaire-titre" class="sommaire__titre" i18n="@@articleDetailSommaire">Sommaire</p>
+        <ol>
+          @for (entree of sommaire; track entree.ancre) {
+            <li>
+              <a [routerLink]="[]" [fragment]="entree.ancre">
+                @if (entree.rubrique !== null) {
+                  <app-picto-de-rubrique class="sommaire__picto" [id]="entree.rubrique" />
+                }
+                <span class="sommaire__libelle">{{ entree.libelle }}</span>
+                @if (entree.nombre !== null) {
+                  <span class="sommaire__nombre">{{ entree.nombre }}</span>
+                }
+              </a>
+            </li>
+          }
+        </ol>
+      </nav>
+
+      <article class="edition__texte">
+        @for (section of article.sections; track section.id) {
+          @switch (section.kind) {
+            @case ('essential') {
+              <section class="essentiel partie" [id]="'mb-' + section.id">
+                <h2 class="partie__kicker">{{ section.title }}</h2>
+                @if (lecture.chapeau) {
+                  <div class="essentiel__chapeau" [innerHTML]="lecture.chapeau"></div>
+                }
+                @if (lecture.points.length) {
+                  <div class="a-retenir">
+                    <h3 class="a-retenir__titre" i18n="@@articleDetailARetenir">À retenir</h3>
+                    <ol>
+                      @for (point of lecture.points; track $index) {
+                        <li>
+                          <span class="a-retenir__numero" aria-hidden="true">{{ $index + 1 }}</span
+                          >&ngsp;<span>{{ point }}</span>
+                        </li>
+                      }
+                    </ol>
+                  </div>
+                }
+              </section>
+            }
+            @case ('deep_dive') {
+              <section class="decryptage partie" [id]="'mb-' + section.id">
+                <p class="partie__kicker" i18n="@@articleDetailDecryptage">Le décryptage</p>
+                <h2 class="decryptage__titre">{{ section.title }}</h2>
+                <div class="article-markdown" [innerHTML]="lecture.corpsDuDecryptage"></div>
+                @if (lecture.impact; as impact) {
+                  <aside class="encadre">
+                    <p class="encadre__titre" i18n="@@articleDetailCeQueCaChange">
+                      Ce que ça change
+                    </p>
+                    <p class="encadre__texte">{{ impact.text }}</p>
+                    <app-provenance [item]="impact" />
+                  </aside>
+                }
+              </section>
+            }
+            @case ('rubric') {
+              <section class="rubrique partie" [id]="'mb-' + section.id">
+                <header class="partie__entete">
+                  <app-picto-de-rubrique [id]="section.id" />
+                  <h2 class="partie__titre">{{ libelleDe(section) }}</h2>
+                  <span class="partie__nombre">{{ section.items.length }}</span>
+                </header>
+                @if (section.intro) {
+                  <p class="rubrique__chapeau">{{ section.intro }}</p>
+                }
+                <ol class="faits">
+                  @for (item of section.items; track item.url) {
+                    <li class="fait">
+                      <p class="fait__acteur">{{ item.entity }}</p>
+                      <p class="fait__texte">{{ item.text }}</p>
+                      <app-provenance [item]="item" />
+                    </li>
+                  }
+                </ol>
+              </section>
+            }
+            @case ('radar') {
+              <section class="radar partie" [id]="'mb-' + section.id">
+                <header class="partie__entete">
+                  <app-picto-de-rubrique [id]="section.id" />
+                  <h2 class="partie__titre">{{ section.title }}</h2>
+                  <span class="partie__nombre">{{ section.items.length }}</span>
+                </header>
+                <ul class="breves">
+                  @for (item of section.items; track item.url) {
+                    <li class="breve">
+                      <span class="breve__acteur">{{ item.entity }}</span>
+                      <span class="breve__texte">{{ item.text }}</span>
+                      <app-provenance [item]="item" [courte]="true" />
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+          }
+        }
+
+        <div id="mb-anatomie" class="edition__anatomie">
+          <app-anatomie [article]="article" />
+        </div>
+
+        @if (sources.length) {
+          <section id="mb-sources" class="sources">
+            <details>
+              <summary i18n="@@articleDetailToutesLesSources">
+                Toutes les sources ({{ article.sources.length }})
+              </summary>
+              <div class="sources__groupes">
+                @for (groupe of sources; track groupe.nom) {
+                  <div class="sources__groupe">
+                    <h3 class="sources__publication">{{ groupe.nom }}</h3>
+                    <ul>
+                      @for (lien of groupe.liens; track lien.url) {
+                        <li>
+                          <a [href]="lien.url" rel="noopener noreferrer">{{ lien.libelle }}</a>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+              </div>
+            </details>
+          </section>
+        }
+      </article>
+    </div>
+  </main>
+
+  <app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />
+} @else {
+  <main class="article-detail" aria-labelledby="article-title">
+    <header class="article-detail__header wrap">
+      <a class="link-arrow" routerLink="/articles" i18n="@@articleDetailAllArticles"
+        >← Tous les articles</a
+      >
+      <div class="article-detail__meta">
+        <time [attr.datetime]="article.published_at">{{ article.published_at | jourDuSite }}</time>
+        @if (article.reading_time_minutes) {
+          <span i18n="@@articleDetailReadingTime">{{ article.reading_time_minutes }} min</span>
+        }
+      </div>
+      <h1 id="article-title">{{ article.title }}</h1>
+      <p class="article-detail__excerpt">{{ article.excerpt }}</p>
+    </header>
+
+    <article class="article-detail__content wrap">
+      <div class="article-markdown" [innerHTML]="renderedContent"></div>
+
+      @if (article.sources.length) {
+        <section class="article-sources" aria-labelledby="article-sources-title">
+          <h2 id="article-sources-title" i18n="@@articleDetailSources">Sources</h2>
+          <ul>
+            @for (source of article.sources; track source.url) {
+              <li>
+                <a [href]="source.url" rel="noopener noreferrer">{{ source.name }}</a>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </article>
+  </main>
+
+  <app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />
+}
