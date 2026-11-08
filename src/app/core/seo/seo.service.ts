@@ -35,6 +35,7 @@ export class SeoService {
         name: 'keywords',
         content: config.keywords.join(', '),
       });
+    else this.meta.removeTag("name='keywords'");
 
     this.updateOpenGraphTags(config);
     this.updateTwitterTags(config);

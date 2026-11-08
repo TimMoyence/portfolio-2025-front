@@ -1,19 +1,44 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import type { ArticleListResponse, ArticleSummary } from '../../core/models/article.model';
-import { ArticleHttpAdapter } from '../../core/adapters/article-http.adapter';
-import { DateDuSitePipe } from '../../shared/pipes/date-du-site.pipe';
-import { AsiliHeroComponent } from '../../shared/sections';
-import { ArticlesCtaComponent } from './articles-cta.component';
-import { injecterLocaleDeLaPage } from '../../core/config/locale-de-la-page';
+import type { ArticleListResponse, PublishedArticle } from '../../../core/models/article.model';
+import { ArticleHttpAdapter } from '../../../core/adapters/article-http.adapter';
+import { DateDuSitePipe, JourDuSitePipe } from '../../../shared/pipes/date-du-site.pipe';
+import { AsiliHeroComponent } from '../../../shared/sections';
+import type { AnatomieDeLEdition } from '../edition/anatomie-de-l-edition';
+import { ArticlesCtaComponent } from '../articles-cta.component';
+import { injecterLocaleDeLaPage } from '../../../core/config/locale-de-la-page';
+import { lectureDeLEdition } from '../edition/lecture-de-l-edition';
+import {
+  BandeDesRubriquesComponent,
+  CompteursDeLEditionComponent,
+} from '../marques/marques-de-l-edition.component';
 
 const ARTICLES_PAGE_SIZE = 12;
+
+interface EditionDuJournal {
+  readonly article: PublishedArticle;
+  readonly titre: string;
+  readonly points: readonly string[];
+  readonly anatomie: AnatomieDeLEdition;
+}
+
+function editionDuJournal(article: PublishedArticle): EditionDuJournal {
+  const { titre, points, anatomie } = lectureDeLEdition(article);
+  return { article, titre, points, anatomie };
+}
 
 @Component({
   selector: 'app-articles-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, AsiliHeroComponent, ArticlesCtaComponent, DateDuSitePipe],
+  imports: [
+    RouterLink,
+    AsiliHeroComponent,
+    ArticlesCtaComponent,
+    BandeDesRubriquesComponent,
+    CompteursDeLEditionComponent,
+    DateDuSitePipe,
+    JourDuSitePipe,
+  ],
   templateUrl: './articles-list.component.html',
   styleUrl: './articles-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,7 +49,8 @@ export class ArticlesListComponent {
   protected readonly ctaKicker = $localize`:@@articlesListCtaKicker:Une question concrète ?`;
   protected readonly ctaTitle = $localize`:@@articlesListCtaTitle:On peut transformer une veille en outil utile.`;
   protected readonly ctaLead = $localize`:@@articlesListCtaLead:Parlons de votre contexte, de vos usages et de ce qui mérite vraiment d’être automatisé.`;
-  protected readonly articles: ArticleSummary[] = [];
+  protected une: EditionDuJournal | null = null;
+  protected readonly precedentes: EditionDuJournal[] = [];
   protected isLoading = true;
   protected hasError = false;
   protected nextCursor: string | null = null;
@@ -66,7 +92,9 @@ export class ArticlesListComponent {
   }
 
   private ajouterLaPage(page: ArticleListResponse): void {
-    this.articles.push(...page.items);
+    const editions = page.items.map(editionDuJournal);
+    this.une ??= editions.shift() ?? null;
+    this.precedentes.push(...editions);
     this.nextCursor = page.next_cursor;
   }
 }

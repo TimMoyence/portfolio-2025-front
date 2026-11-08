@@ -16,6 +16,11 @@ import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-regist
 import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';
 
+function sansAncre(url: string): string {
+  const diese = url.indexOf('#');
+  return diese === -1 ? url : url.slice(0, diese);
+}
+
 @Component({
   selector: 'app-seo-manager',
   standalone: true,
@@ -31,11 +36,13 @@ export class SeoManagerComponent {
   private readonly seoService = inject(SeoService);
   private readonly seoRegistry = inject(SeoRegistryService);
   private readonly destroyRef = inject(DestroyRef);
+  private derniereUrl = '';
 
   constructor() {
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
+        filter((event) => this.changeDePage(event.urlAfterRedirects)),
         map(() => this.activatedRoute),
         map((route) => {
           while (route.firstChild) {
@@ -45,6 +52,7 @@ export class SeoManagerComponent {
         }),
         filter((route) => route.outlet === 'primary'),
         mergeMap((route) => route.data),
+        filter((data) => data['seoParLaPage'] !== true),
         switchMap((data) => {
           const currentUrl = this.router.url;
           const seoKey = data['seoKey'];
@@ -78,6 +86,12 @@ export class SeoManagerComponent {
 
         this.setDefaultSeo(currentUrl, data);
       });
+  }
+
+  private changeDePage(url: string): boolean {
+    const precedente = this.derniereUrl;
+    this.derniereUrl = url;
+    return sansAncre(url) !== sansAncre(precedente);
   }
 
   private applySeoConfig(

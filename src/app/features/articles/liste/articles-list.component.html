@@ -1,0 +1,128 @@
+<app-asili-hero [kicker]="heroKicker" [lead]="heroLead">
+  <ng-container title>
+    <ng-container i18n="@@articlesListHeroTitle"
+      >Des idées qui servent<br /><span class="accent">le terrain</span>.</ng-container
+    >
+  </ng-container>
+</app-asili-hero>
+
+<main class="journal wrap" aria-labelledby="articles-heading">
+  <header class="manchette">
+    <p class="manchette__marque" i18n="@@articlesListMarque">Morning Brief</p>
+    <h1 id="articles-heading" class="manchette__titre" i18n="@@articlesListSectionTitle">
+      Lire, comprendre, décider.
+    </h1>
+    <p class="manchette__devise" i18n="@@articlesListDevise">
+      La veille IA de la nuit, triée, sourcée et expliquée chaque matin.
+    </p>
+  </header>
+
+  @if (isLoading) {
+    <p class="state" aria-live="polite" i18n="@@articlesListLoading">Chargement des articles…</p>
+  } @else if (hasError) {
+    <p class="state" role="status" i18n="@@articlesListError">
+      Les articles seront disponibles dans un instant.
+    </p>
+  } @else {
+    @if (une; as une) {
+      <article class="une" data-testid="une" aria-labelledby="une-titre">
+        <div class="une__texte">
+          <p class="une__surtitre">
+            <span class="une__etiquette" i18n="@@articlesListALaUne">À la une</span>
+            <time [attr.datetime]="une.article.published_at">{{
+              une.article.published_at | jourDuSite
+            }}</time>
+          </p>
+          <h2 id="une-titre" class="une__titre">
+            <a [routerLink]="['/articles', une.article.slug]">{{ une.titre }}</a>
+          </h2>
+          <p class="une__chapeau">{{ une.article.excerpt }}</p>
+          @if (une.anatomie.informations) {
+            <app-compteurs-de-l-edition class="une__compteurs" [anatomie]="une.anatomie" />
+          }
+          <a class="link-arrow une__lire" [routerLink]="['/articles', une.article.slug]">
+            <ng-container i18n="@@articlesListLireLEdition">Lire l’édition</ng-container>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        @if (une.points.length || une.anatomie.rubriques.length) {
+          <aside class="une__colonne">
+            @if (une.points.length) {
+              <h3 class="une__colonne-titre" i18n="@@articlesListARetenir">À retenir</h3>
+              <ol class="une__points">
+                @for (point of une.points; track $index) {
+                  <li>{{ point }}</li>
+                }
+              </ol>
+            }
+            @if (une.anatomie.rubriques.length) {
+              <h3 class="une__colonne-titre" i18n="@@articlesListAuSommaire">Au sommaire</h3>
+              <app-bande-des-rubriques [parts]="une.anatomie.rubriques" [legende]="true" />
+            }
+          </aside>
+        }
+      </article>
+
+      @if (precedentes.length) {
+        <section class="archives" aria-labelledby="archives-titre">
+          <h2 id="archives-titre" class="archives__titre" i18n="@@articlesListArchives">
+            Les éditions précédentes
+          </h2>
+          <ol class="archives__liste">
+            @for (edition of precedentes; track edition.article.article_id) {
+              <li class="precedente" data-testid="edition-precedente">
+                <time class="precedente__date" [attr.datetime]="edition.article.published_at">{{
+                  edition.article.published_at | dateDuSite
+                }}</time>
+                <h3 class="precedente__titre">
+                  <a [routerLink]="['/articles', edition.article.slug]">{{ edition.titre }}</a>
+                </h3>
+                @if (edition.anatomie.rubriques.length) {
+                  <app-bande-des-rubriques
+                    class="precedente__bande"
+                    [parts]="edition.anatomie.rubriques"
+                    [fine]="true"
+                  />
+                }
+                <p class="precedente__resume">{{ edition.article.excerpt }}</p>
+              </li>
+            }
+          </ol>
+        </section>
+      }
+
+      @if (nextCursor) {
+        <div class="load-more">
+          @if (hasLoadMoreError) {
+            <p
+              class="state"
+              role="status"
+              data-testid="articles-load-more-error"
+              i18n="@@articlesListLoadMoreError"
+            >
+              Les éditions précédentes n’ont pas pu être chargées. Réessayez dans un instant.
+            </p>
+          }
+          <button
+            type="button"
+            class="btn btn-ghost"
+            data-testid="articles-load-more"
+            [disabled]="isLoadingMore"
+            [attr.aria-busy]="isLoadingMore"
+            (click)="loadMore()"
+          >
+            @if (isLoadingMore) {
+              <ng-container i18n="@@articlesListLoadingMore">Chargement…</ng-container>
+            } @else {
+              <ng-container i18n="@@articlesListLoadMore">Éditions précédentes</ng-container>
+            }
+          </button>
+        </div>
+      }
+    } @else {
+      <p class="state" i18n="@@articlesListEmpty">La première édition arrive bientôt.</p>
+    }
+  }
+</main>
+
+<app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />

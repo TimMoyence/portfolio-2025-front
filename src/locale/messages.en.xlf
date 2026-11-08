@@ -12956,6 +12956,15 @@
         <target>Article not found</target>
       </segment>
     </unit>
+    <unit id="articleDetailAbsenceDescription">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.ts</note>
+      </notes>
+      <segment>
+        <source>Cette édition du Morning Brief est introuvable ou momentanément indisponible.</source>
+        <target>This Morning Brief edition cannot be found or is temporarily unavailable.</target>
+      </segment>
+    </unit>
     <unit id="articleDetailBackToList">
       <notes>
         <note category="location">src/app/features/articles/article-detail.component.html:9,10</note>
@@ -13038,13 +13047,337 @@
         <target>Ideas that serve<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">the field</pc>.</target>
       </segment>
     </unit>
-    <unit id="articlesListSectionKicker">
+    <unit id="articlesListMarque">
       <notes>
         <note category="location">src/app/features/articles/articles-list.component.html:11,12</note>
       </notes>
       <segment>
-        <source>Dernières éditions</source>
-        <target>Latest editions</target>
+        <source>Morning Brief</source>
+        <target>Morning Brief</target>
+      </segment>
+    </unit>
+    <unit id="articlesListDevise">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:16,20</note>
+      </notes>
+      <segment>
+        <source> La veille IA de la nuit, triée, sourcée et expliquée chaque matin. </source>
+        <target> Last night’s AI news, sorted, sourced and explained every morning. </target>
+      </segment>
+    </unit>
+    <unit id="articlesListALaUne">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:31,32</note>
+      </notes>
+      <segment>
+        <source>À la une</source>
+        <target>Top story</target>
+      </segment>
+    </unit>
+    <unit id="articlesListLireLEdition">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:44,45</note>
+      </notes>
+      <segment>
+        <source>Lire l’édition</source>
+        <target>Read the edition</target>
+      </segment>
+    </unit>
+    <unit id="articlesListARetenir">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:51,52</note>
+      </notes>
+      <segment>
+        <source>À retenir</source>
+        <target>Key takeaways</target>
+      </segment>
+    </unit>
+    <unit id="articlesListAuSommaire">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:59,60</note>
+      </notes>
+      <segment>
+        <source>Au sommaire</source>
+        <target>In this edition</target>
+      </segment>
+    </unit>
+    <unit id="articlesListArchives">
+      <notes>
+        <note category="location">src/app/features/articles/articles-list.component.html:69,71</note>
+      </notes>
+      <segment>
+        <source> Les éditions précédentes </source>
+        <target> Past editions </target>
+      </segment>
+    </unit>
+    <unit id="articleDetailMarque">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:20,21</note>
+      </notes>
+      <segment>
+        <source>Morning Brief</source>
+        <target>Morning Brief</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailSommaire">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:30,32</note>
+      </notes>
+      <segment>
+        <source>Sommaire</source>
+        <target>Contents</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailARetenir">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:59,61</note>
+      </notes>
+      <segment>
+        <source>À retenir</source>
+        <target>Key takeaways</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailDecryptage">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:74,75</note>
+      </notes>
+      <segment>
+        <source>Le décryptage</source>
+        <target>The deep dive</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailCeQueCaChange">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.html:80,81</note>
+      </notes>
+      <segment>
+        <source> Ce que ça change </source>
+        <target> Why it matters </target>
+      </segment>
+    </unit>
+    <unit id="articleDetailToutesLesSources">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:143,144</note>
+      </notes>
+      <segment>
+        <source> Toutes les sources (<ph id="0" equiv="INTERPOLATION" disp="{{ sources.length }}"/>) </source>
+        <target> All sources (<ph id="0" equiv="INTERPOLATION" disp="{{ sources.length }}"/>) </target>
+      </segment>
+    </unit>
+    <unit id="articleDetailSommaireDecryptage">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.ts:146</note>
+      </notes>
+      <segment>
+        <source>Le décryptage</source>
+        <target>The deep dive</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailSommaireAnatomie">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.ts:156</note>
+      </notes>
+      <segment>
+        <source>En chiffres</source>
+        <target>By the numbers</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailSommaireSources">
+      <notes>
+        <note category="location">src/app/features/articles/article-detail.component.ts:158</note>
+      </notes>
+      <segment>
+        <source>Sources</source>
+        <target>All sources</target>
+      </segment>
+    </unit>
+    <unit id="articlesAutresSignaux">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie-de-l-edition.ts:32</note>
+      </notes>
+      <segment>
+        <source>Autres signaux</source>
+        <target>Other signals</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieKicker">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:2,3</note>
+      </notes>
+      <segment>
+        <source>En chiffres</source>
+        <target>By the numbers</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieTitre">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:4,7</note>
+      </notes>
+      <segment>
+        <source> Anatomie de l’édition </source>
+        <target> Anatomy of the edition </target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieInformations">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:9,10</note>
+      </notes>
+      <segment>
+        <source>Informations</source>
+        <target>Stories</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieSources">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:13,14</note>
+      </notes>
+      <segment>
+        <source>Sources</source>
+        <target>Outlets</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieMinutes">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:18,20</note>
+      </notes>
+      <segment>
+        <source>Minutes de lecture</source>
+        <target>Minutes to read</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieFraicheur">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:24,25</note>
+      </notes>
+      <segment>
+        <source>Publiées dans les 24 h</source>
+        <target>Published within 24 h</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieNoteRubriques">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:53,55</note>
+      </notes>
+      <segment>
+        <source> Cartes et brèves de chaque rubrique, hors décryptage. </source>
+        <target> Stories and briefs in each section, deep dive excluded. </target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieColonneRubrique">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:63,64</note>
+      </notes>
+      <segment>
+        <source>Rubrique</source>
+        <target>Section</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieColonneInformations">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:64,67</note>
+      </notes>
+      <segment>
+        <source>Informations</source>
+        <target>Stories</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieNotePublications">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:98,100</note>
+      </notes>
+      <segment>
+        <source> Informations retenues par publication. </source>
+        <target> Stories kept per outlet. </target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieColonnePublication">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:108,109</note>
+      </notes>
+      <segment>
+        <source>Publication</source>
+        <target>Outlet</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieColonneInformationsRetenues">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.html:110,113</note>
+      </notes>
+      <segment>
+        <source> Informations </source>
+        <target> Stories </target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieRubriques">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.ts:40</note>
+      </notes>
+      <segment>
+        <source>Répartition par rubrique</source>
+        <target>Breakdown by section</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomiePublications">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.ts:41</note>
+      </notes>
+      <segment>
+        <source>D’où viennent les informations</source>
+        <target>Where the stories come from</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieAutresPublications">
+      <notes>
+        <note category="location">src/app/features/articles/anatomie.component.ts:79</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="nombre" disp="autres.publications"/> autres publications</source>
+        <target><ph id="0" equiv="nombre" disp="autres.publications"/> other outlets</target>
+      </segment>
+    </unit>
+    <unit id="articlesAnatomieDescription">
+      <notes>
+        <note category="location">src/app/features/articles/marques/anatomie.component.ts:46</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="titre" disp="textes.titre"/> : <ph id="1" equiv="lignes" disp="lignes"/></source>
+        <target><ph id="0" equiv="titre" disp="textes.titre"/>: <ph id="1" equiv="lignes" disp="lignes"/></target>
+      </segment>
+    </unit>
+    <unit id="articlesBandeDescription">
+      <notes>
+        <note category="location">src/app/features/articles/marques-de-l-edition.component.ts:136</note>
+      </notes>
+      <segment>
+        <source>Informations par rubrique : <ph id="0" equiv="liste" disp="liste"/></source>
+        <target>Stories by section: <ph id="0" equiv="liste" disp="liste"/></target>
+      </segment>
+    </unit>
+    <unit id="articlesCompteurInformations">
+      <notes>
+        <note category="location">src/app/features/articles/marques-de-l-edition.component.ts:153,155</note>
+      </notes>
+      <segment>
+        <source>{VAR_PLURAL, plural, =0 {0 information} =1 {1 information} other {<ph id="0" equiv="INTERPOLATION"/> informations}}</source>
+        <target>{VAR_PLURAL, plural, =0 {0 stories} =1 {1 story} other {<ph id="0" equiv="INTERPOLATION"/> stories}}</target>
+      </segment>
+    </unit>
+    <unit id="articlesCompteurSources">
+      <notes>
+        <note category="location">src/app/features/articles/marques-de-l-edition.component.ts:157,158</note>
+      </notes>
+      <segment>
+        <source>{VAR_PLURAL, plural, =0 {0 source} =1 {1 source} other {<ph id="0" equiv="INTERPOLATION"/> sources}}</source>
+        <target>{VAR_PLURAL, plural, =0 {0 sources} =1 {1 source} other {<ph id="0" equiv="INTERPOLATION"/> sources}}</target>
+      </segment>
+    </unit>
+    <unit id="articlesCompteurMinutes">
+      <notes>
+        <note category="location">src/app/features/articles/marques-de-l-edition.component.ts:161,163</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="INTERPOLATION" disp="{{ minutes }}"/> min de lecture</source>
+        <target><ph id="0" equiv="INTERPOLATION" disp="{{ minutes }}"/> min read</target>
       </segment>
     </unit>
     <unit id="articlesListSectionTitle">
@@ -13108,15 +13441,6 @@
       <segment>
         <source>Éditions précédentes</source>
         <target>Earlier editions</target>
-      </segment>
-    </unit>
-    <unit id="articlesListReadArticle">
-      <notes>
-        <note category="location">src/app/features/articles/articles-list.component.html:40,41</note>
-      </notes>
-      <segment>
-        <source>Lire l’article</source>
-        <target>Read article</target>
       </segment>
     </unit>
     <unit id="articlesListHeroKicker">

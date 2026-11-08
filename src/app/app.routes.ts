@@ -90,7 +90,9 @@ export const routes: Routes = [
   {
     path: 'articles',
     loadComponent: () =>
-      import('./features/articles/articles-list.component').then((m) => m.ArticlesListComponent),
+      import('./features/articles/liste/articles-list.component').then(
+        (m) => m.ArticlesListComponent,
+      ),
     data: {
       seoKey: 'articles',
     },
@@ -98,9 +100,12 @@ export const routes: Routes = [
   {
     path: 'articles/:slug',
     loadComponent: () =>
-      import('./features/articles/article-detail.component').then((m) => m.ArticleDetailComponent),
+      import('./features/articles/fiche/article-detail.component').then(
+        (m) => m.ArticleDetailComponent,
+      ),
     data: {
       seoKey: 'article-detail',
+      seoParLaPage: true,
     },
   },
   {

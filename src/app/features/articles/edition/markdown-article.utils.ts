@@ -1,5 +1,5 @@
-import { escapeHtml } from '../../../cours/runtime/core/texte/html';
-import { estTexteNonVide } from '../../../cours/runtime/core/texte/valeurs';
+import { escapeHtml } from '../../../../cours/runtime/core/texte/html';
+import { estTexteNonVide } from '../../../../cours/runtime/core/texte/valeurs';
 
 const TOKEN_PREFIX = 'MBTOKEN';
 const TOKEN_SUFFIX = 'X';

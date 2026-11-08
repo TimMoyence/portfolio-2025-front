@@ -67,7 +67,7 @@ describe('SeoService', () => {
     let mockDocument: Document;
 
     beforeEach(() => {
-      metaSpy = jasmine.createSpyObj<Meta>('Meta', ['updateTag']);
+      metaSpy = jasmine.createSpyObj<Meta>('Meta', ['updateTag', 'removeTag']);
       titleSpy = jasmine.createSpyObj<Title>('Title', ['setTitle']);
       mockDocument = createMockDocument();
 
@@ -87,6 +87,13 @@ describe('SeoService', () => {
     it('devrait se creer', () => {
       expect(service).toBeTruthy();
     });
+
+    function attendreLeRetraitDesKeywords(): void {
+      expect(metaSpy.updateTag).not.toHaveBeenCalledWith(
+        jasmine.objectContaining({ name: 'keywords' }),
+      );
+      expect(metaSpy.removeTag).toHaveBeenCalledWith("name='keywords'");
+    }
 
     describe('updateSeoMetadata - cas nominal', () => {
       const fullConfig: SeoConfig = {
@@ -129,6 +136,7 @@ describe('SeoService', () => {
           name: 'keywords',
           content: 'angular, seo, test',
         });
+        expect(metaSpy.removeTag).not.toHaveBeenCalled();
       });
 
       it('devrait mettre a jour les Open Graph tags', () => {
@@ -248,10 +256,8 @@ describe('SeoService', () => {
         });
       });
 
-      it('ne devrait pas mettre a jour les keywords si absent', () => {
-        expect(metaSpy.updateTag).not.toHaveBeenCalledWith(
-          jasmine.objectContaining({ name: 'keywords' }),
-        );
+      it('retire les keywords de la page precedente si absents', () => {
+        attendreLeRetraitDesKeywords();
       });
 
       it('ne devrait pas mettre a jour og:image si absent', () => {
@@ -288,16 +294,14 @@ describe('SeoService', () => {
     });
 
     describe('updateSeoMetadata - keywords vide', () => {
-      it('ne devrait pas mettre a jour les keywords si le tableau est vide', () => {
+      it('retire les keywords de la page precedente si le tableau est vide', () => {
         service.updateSeoMetadata({
           title: 'Test',
           description: 'Desc',
           keywords: [],
         });
 
-        expect(metaSpy.updateTag).not.toHaveBeenCalledWith(
-          jasmine.objectContaining({ name: 'keywords' }),
-        );
+        attendreLeRetraitDesKeywords();
       });
     });
 

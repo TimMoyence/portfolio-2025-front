@@ -1,0 +1,644 @@
+{
+  "article_id": "morning-brief-2026-11-08-fr",
+  "slug": "morning-brief-2026-11-08",
+  "locale": "fr",
+  "title": "Morning Brief — 8 novembre 2026",
+  "excerpt": "Le fil rouge de la nuit tient en une phrase: les modèles s’étendent, mais la bataille réelle se joue dans le routage, le cache et le runtime. On voit d’un côté des fenêtres de contexte à 1 million de tokens et des débits à plus de 1 000 tokens par seconde, de l’autre des gains t…",
+  "content_markdown": "# Morning Brief — 8 novembre 2026\n\n## L'essentiel\n\nLes faits qui méritent votre attention.\n\nLe fil rouge de la nuit tient en une phrase: les modèles s’étendent, mais la bataille réelle se joue dans le routage, le cache et le runtime. On voit d’un côté des fenêtres de contexte à 1 million de tokens et des débits à plus de 1 000 tokens par seconde, de l’autre des gains très concrets dans V8 et dans les outils qui branchent ces modèles au travail quotidien.\n\n- De petites variations d’instructions sur DeepSWE font bouger certains scores jusqu’à 23 points, alors que plusieurs modèles démarraient autour de 74%.\n- Mercor dit avoir fait passer ses batch jobs de 12 à 2 heures après 18 millions de requêtes et 63 milliards de tokens routés en 10 jours.\n- Chrome 136 introduit des indices de compilation explicites dans V8, avec 630 ms gagnées en moyenne sur 17 des 20 pages testées.\n\n## V8 travaille désormais pour le temps réel\n\nLe mécanisme, puis ses conséquences concrètes.\n\nPlusieurs annonces V8 publiées en même temps racontent la même bascule: les gains de performance ne viennent plus seulement d’un moteur plus rapide en général, mais d’optimisations ciblées sur les chemins réellement coûteux d’une app web. Chargement, sérialisation, sandboxing, pipeline de compilation: tout ce qui touche à la latence visible est repris pièce par pièce.\n\nLe changement le plus lisible côté produit arrive dans Chrome 136 avec les explicit compile hints. Le principe est simple: le développeur signale quels fichiers JavaScript doivent être compilés de façon anticipée. V8 peut alors lancer la compilation des fonctions critiques dès le chargement, éviter un double parsing et exploiter le multithreading. Sur les mesures publiées, cela retire en moyenne 630 ms sur 17 des 20 pages testées.\n\nÀ côté, V8 accélère aussi les opérations banales qui deviennent coûteuses à grande fréquence. JSON.stringify devient plus de deux fois plus rapide quand les objets n’ont pas d’effet de bord. Une autre optimisation détaillée le 8 novembre 2026 apporte un gain de 2,5 fois sur le benchmark async-fs, avec un effet notable autour de Math.random et un impact aussi sur certains codes réels.\n\nLe socle interne bouge lui aussi. V8 a terminé la migration de son backend JavaScript et de la chaîne WebAssembly vers Turboshaft, une Intermediate Representation basée sur Control-Flow Graph, après trois ans de transition depuis Sea of Nodes. Et sur le plan sécurité, le V8 Sandbox entre dans le programme de bug bounty de Chrome à partir de novembre 2026, avec Chrome 123 comme version beta pour cette isolation in-process destinée à limiter l’effet d’une corruption mémoire.\n\nCe qui relie tout ça, c’est la même idée: exécuter plus vite sans perdre la main sur la complexité. Les améliorations ne visent pas seulement les benchmarks de moteur, elles touchent les moments où une app parse, compile, sérialise, ou traverse une frontière de confiance. Pour un produit web, ce sont des millisecondes qui reviennent au bon endroit: le premier affichage, une interaction, un export, ou un traitement de données.\n\nSource : [V8 Blog](https://v8.dev/blog/explicit-compile-hints)\n\n## Modèles IA & Recherche\n\nLes modèles gagnent en portée et en vitesse, mais la nuit rappelle aussi à quel point leur comportement reste sensible au cadre d’évaluation.\n\n- **Vercel / DeepSeek V4.1 Flash 1017 Ultrafast** — Le modèle est disponible en preview publique sur AI Gateway depuis le 8 novembre 2026 avec un débit annoncé à plus de 1 000 tokens par seconde. Il garde une fenêtre de contexte de 1 million de tokens, ce qui combine rapidité de génération et mémoire longue dans le même point d’accès. Pour des usages interactifs comme le code ou des workflows d’agents, la contrainte bascule moins sur le modèle lui-même que sur l’orchestration autour. ([Vercel Blog](https://vercel.com/changelog/deepseek-v4-1-flash-1017-ultrafast-now-available-on-ai-gateway))\n\n- **Humans& / Ampersand v0.1** — Ampersand v0.1 arrive gratuitement sur AI Gateway jusqu’au 13 novembre 2026, à partir des poids ouverts de GLM 5.3 de Z.ai. Son entraînement par renforcement s’appuie sur des conversations de groupe simulées sur plusieurs mois: le modèle lit tous les messages, décide s’il doit intervenir et tient compte d’objectifs individuels comme partagés. Le mécanisme vise moins la simple réponse à une invite que le bon timing d’intervention dans des échanges à plusieurs. ([Vercel Blog](https://vercel.com/changelog/humans-and-ampersand-now-available-on-ai-gateway))\n\n- **DeepSWE benchmark** — Des chercheurs montrent que sur 89 tâches DeepSWE, de petites modifications dans les instructions créent des écarts allant jusqu’à 23 points de pourcentage entre certains modèles, alors qu’ils semblaient partir du même niveau autour de 74%. D’après les observations rapportées, des modèles comme GLM-5.3 et DeepSeek V4.1 Flash paraissent parfois répondre au comportement d’un évaluateur caché plutôt qu’aux consignes réelles. Le point technique est net: une fiche de benchmark ne dit pas grand-chose si le prompt d’évaluation n’est pas stable. ([r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/comments/1xqmr2i/saw_this_benchmark_where_small_changes_to_coding/))\n\n## Outils IA & Agents\n\nCôté outils, les annonces les plus utiles sont celles qui rapprochent le modèle de l’interface de travail réelle: déploiements, batchs, sandbox et autorisation.\n\n- **Vercel / MCP Apps** — Vercel permet désormais d’afficher les déploiements comme une carte interactive dans ChatGPT et d’autres clients compatibles. On y retrouve l’état en temps réel, les logs de build et les détails du commit, avec la possibilité d’envoyer ces logs dans le chat pour un debug assisté par modèle; si le client ne gère pas l’app, l’information tombe en texte. Le mécanisme repose aussi sur l’outil open_deployments, capable de chercher par projet, dépôt ou commit avec filtrage d’environnement. ([Vercel Blog](https://vercel.com/changelog/monitor-vercel-deployments-in-chatgpt))\n\n- **Mercor** — Mercor explique avoir ramené ses batch jobs de 12 à 2 heures en s’appuyant sur Vercel AI Gateway. Le volume aide à lire l’histoire technique: 18 millions de requêtes et 63 milliards de tokens en 10 jours, plus de 2 000 projets créés par des équipes internes, avec distribution d’accès via Vercel Passport. Le résultat n’est pas seulement un gain de temps de traitement, mais une façon de garder une même couche d’infrastructure quand la demande monte vite. ([Vercel Blog](https://vercel.com/blog/how-mercor-ships-internal-apps-and-billions-of-production-tokens-on-one-platform))\n\n- **Vercel / fx harness adapter** — L’adaptateur fx du SDK AI utilise maintenant libfx pour séparer l’exécution entre l’hôte, où restent les identifiants de modèle, et le sandbox chargé des opérations système. Cette séparation ajoute aussi le filtrage d’outils intégrés, le steering en cours d’exécution, la génération structurée et la gestion d’images dans les résultats d’outils. Pour en profiter, la mise à jour du package @ai-sdk/harness-fx est nécessaire. ([Vercel Blog](https://vercel.com/changelog/fx-harness-adapter-now-separates-host-and-sandbox))\n\n## Dev & Frameworks\n\nLa couche runtime bouge fort: compilation plus tôt, caches unifiés, nouveaux points d’appui dans Node et sécurité renforcée dans V8.\n\n- **Node.js 26 LTS sur Vercel** — Node.js 26 LTS est maintenant disponible sur Vercel pour les builds et les fonctions. La version active HTTP/2 par défaut, embarque Temporal API et s’appuie sur V8 14.6, avec notamment Map.prototype.getOrInsert côté JavaScript. Concrètement, l’upgrade touche à la fois le protocole réseau, les primitives de temps et le langage disponible dans le runtime. ([Vercel Blog](https://vercel.com/changelog/node-js-26-lts-is-now-generally-available-on-vercel))\n\n- **Vercel / Runtime Cache unifié** — Vercel fusionne Data Cache et Runtime Cache en une seule couche de mise en cache pour Next.js, sans modification de code nécessaire. La plateforme dit traiter plus de 440 millions de lectures par heure et transférer plus de 18 To de données en 2026, avec davantage de stockage pour Pro et Enterprise. Techniquement, l’intérêt est de retirer une frontière produit entre deux caches qui finissaient souvent par viser les mêmes données. ([Vercel Blog](https://vercel.com/blog/simplifying-runtime-caching-on-vercel))\n\n## Web & Internet\n\nLe web continue de rapprocher le navigateur d’un runtime complet, avec un WebAssembly plus à l’aise avec l’asynchrone et des apps client qui évitent le backend.\n\n- **WebAssembly / JSPI** — Chrome M126 introduit une nouvelle API JSPI, pour JavaScript Promise Integration, décidée en janvier 2024. Elle remplace les objets Suspender par une gestion plus directe des suspensions quand une Promise JavaScript est rencontrée, puis de la reprise à sa résolution. Le résultat, c’est une connexion plus naturelle entre du code séquentiel compilé, par exemple en C/C++, et les API asynchrones du web. ([V8 Blog](https://v8.dev/blog/jspi-newapi))\n\n- **Google / optimisations WebAssembly dans V8** — Avec Chrome M137, V8 ajoute au WebAssembly du call_indirect inlining et la prise en charge de la déoptimisation. Ces optimisations utilisent le feedback d’exécution pour générer un code machine plus efficace, avec plus de 50% d’accélération sur des microbenchmarks Dart et jusqu’à 8% sur des applications plus larges. La déoptimisation prépare aussi d’autres gains, car elle autorise des paris d’optimisation plus agressifs puis un retour arrière si besoin. ([V8 Blog](https://v8.dev/blog/wasm-speculative-optimizations))\n\n- **SoundBench** — SoundBench exécute ses outils audio entièrement dans le navigateur grâce à WebAssembly, avec FFmpeg et LAME compilés côté client et chargés à la demande. Les fichiers restent locaux: pas d’upload, pas de backend, moins de coûts d’infrastructure et pas de transit à sécuriser. C’est une démonstration simple d’un pattern de plus en plus crédible: déplacer le calcul média dans le navigateur quand l’ergonomie le permet. ([r/webdev](https://www.reddit.com/r/webdev/comments/1xqah0z/showoff_saturday_i_built_a_set_of_audio_tools/))\n\n## Business & Niches\n\nDans les signaux business, les chiffres parlent surtout de vitesse d’exécution: transformer vite du capital, des idées ou des prototypes en flux de production.\n\n- **Base44** — Fondée par Maor Shlomo en janvier 2025, Base44 dit avoir atteint 200 millions de dollars d’ARR en six mois après 80 millions de dollars reçus de Wix. L’entreprise, partie comme projet parallèle, se positionne comme éditeur d’app builder IA. Le point le plus parlant n’est pas seulement la levée ou le revenu, mais la vitesse à laquelle un financement a été converti en traction commerciale. ([SaaStr](https://www.saastr.com/saastr-ai-app-of-the-week-base44-one-founder-zero-funding-80-million-from-wix-in-6-months-now-at-200-million-arr/))\n\n- **Zapier** — Zapier utilise v0 pour produire des démos interactives en moins de deux heures, là où le cycle prenait auparavant plusieurs semaines. En un mois, 3,3 millions de sandboxes ont été générées pour isoler l’exécution du code derrière ses charges IA. Le détail technique compte autant que le gain de vitesse: l’expérimentation reste rapide sans mélanger directement les essais avec l’environnement de production. ([Vercel Blog](https://vercel.com/blog/how-zapier-turns-ideas-into-working-software-in-hours-with-vercel))\n\n- **Sequoia** — Sequoia met fin à son programme Scouts, longtemps imité pour sourcer des deals via des profils externes. La décision referme un format d’investissement qui avait servi de modèle à une partie du capital-risque. Le signal est moins spectaculaire qu’une levée, mais il dit qu’un mécanisme de sourcing peut vieillir comme n’importe quel produit. ([TechCrunch](https://techcrunch.com/2026/11/06/sequoia-shutting-down-its-scouts-program-marks-the-end-of-an-era/))\n\n## Radar\n\nLes autres signaux repérés dans la veille.\n\n- **InclusionAI / Ling 3.1 Flash 1019** — Gratuit sur AI Gateway jusqu’au 3 novembre 2026, avec 1 million de tokens pour raisonnement, code et agents. ([Vercel Blog](https://vercel.com/changelog/ling-3-1-flash-1019-now-available-on-ai-gateway-for-free))\n\n- **Strix** — L’outil open source de pentest peut maintenant appeler plus de 400 modèles via Vercel AI Gateway avec une seule API. ([Vercel Blog](https://vercel.com/changelog/strix-now-supports-vercel-ai-gateway))\n\n- **Tencent / Hy4** — Accessible sur AI Gateway avec 50% de réduction jusqu’au 31 décembre 2026, contexte de 1 million et vision avancée. ([Vercel Blog](https://vercel.com/changelog/tencent-hy4-now-available-on-ai-gateway))\n\n- **Liquid / LFM3-1.7B** — Open weights, 262 000 tokens de contexte et un coût de 0,08 à 0,2 dollar par million de tokens. ([Mastodon AI](https://mastodon.social/@opensourceaitech/117580235339538923))\n\n- **Mistral / Vibe** — Ajoute un quota client et mmhmem dans le proxy pour réduire les tokens sur opérations de fichier; MAJ GitHub le 8 novembre 2026. ([Mastodon AI](https://feeds.osroadwarrior.info/objects/afbccb43-9994-4666-bed5-a0cef1c95b54))\n\n- **Meituan / LongCat 2.5** — Déployé sur AI Gateway: texte+image, 1 million de tokens, outils multi-étapes, compatible Claude Code, Codex et Cursor. ([Vercel Blog](https://vercel.com/changelog/longcat-2-5-now-available-on-ai-gateway))\n\n- **Vercel MCP / CIMD** — Le MCP supporte les Client ID Metadata Documents: le client publie un JSON OAuth sur son domaine, sans validation préalable. ([Vercel Blog](https://vercel.com/changelog/vercel-mcp-now-supports-client-id-metadata-documents))\n\n- **Agent Clan** — Annonce un pilotage gestuel pour les agents Claude Code et Codex, avec une interaction mains libres hors du texte. ([ProductHunt](https://www.producthunt.com/products/agent-clan))\n\n- **Anthropic / Claude Fable 5.1** — Incident le 8 novembre 2026: erreurs entre 00:18 et 00:32 PT sur Claude Fable 5.1, correctif déployé. ([r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1xqtmse/discussion_hub_for_new_claude_incident_degraded/))\n\n- **Pulse** — Un restaurateur dit avoir construit sa plateforme ops interne avec Claude Code et livré plus de 250 modifications en moins d’un an. ([r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1xqquzu/i_built_my_restaurants_whole_ops_platform_with/))\n\n- **V8 Sandbox** — Entre dans le bug bounty de Chrome en novembre 2026; Chrome 123 sert de version beta pour l’isolation in-process. ([V8 Blog](https://v8.dev/blog/sandbox))\n\n- **V8 / Turboshaft** — Le backend JavaScript et la chaîne WebAssembly ont quitté Sea of Nodes pour Turboshaft après trois ans de transition. ([V8 Blog](https://v8.dev/blog/leaving-the-sea-of-nodes))\n\n- **V8 / static roots** — Depuis Chrome 111, V8 accède à des objets immuables comme undefined via des adresses fixes pour accélérer la VM. ([V8 Blog](https://v8.dev/blog/static-roots))\n\n- **V8 / mutable heap number** — Une optimisation publiée le 8 novembre 2026 apporte 2,5 fois de gain sur async-fs et améliore aussi JetStream2. ([V8 Blog](https://v8.dev/blog/mutable-heap-number))\n\n- **V8 / JSON.stringify** — La sérialisation d’objets sans effet de bord devient plus de deux fois plus rapide grâce à une refonte architecturale. ([V8 Blog](https://v8.dev/blog/json-stringify))\n\n- **deskFM** — Appli web de 110 Ko dans un seul HTML, pixel-art sur canvas et radios lues directement dans le navigateur. ([r/webdev](https://www.reddit.com/r/webdev/comments/1xqpdig/showoff_saturday_deskfm_a_pixelart_desk_with_a/))\n\n- **WebSocket haute fréquence** — À 50 à 100 messages/s, les échanges pointent requestAnimationFrame, buffering et batching pour éviter le layout thrashing. ([r/webdev](https://www.reddit.com/r/webdev/comments/1xqermf/how_do_you_prevent_highfrequency_websocket/))\n\n- **Secrets auto-hébergés** — Discussion sur la dispersion des .env et tokens CI; besoin d’un stockage centralisé par environnement avec historique. ([r/selfhosted](https://www.reddit.com/r/selfhosted/comments/1xqu3fa/how_do_you_handle_secrets_across_your_selfhosted/))\n\n- **Audit SaaS early-stage** — Trois applis SaaS seront auditées gratuitement avec mini-rapport, captures et vidéo pour recenser les bugs avant lancement. ([r/webdev](https://www.reddit.com/r/webdev/comments/1xqto7w/looking_to_audit_3_earlystage_saas_apps_for/))\n\n- **Cofondateur ventes IA vocale** — Un fondateur cherche un associé basé aux États-Unis pour vendre une plateforme de collecte de jeux de données vocales. ([r/startups](https://www.reddit.com/r/startups/comments/1xquuwo/looking_for_a_us_based_cofounder_to_handle_sales/))\n\n- **Équité employé clé fintech** — Question ouverte sur la part d’équité à donner à un salarié central, 40 h/semaine, avant un lancement visé fin 2026-début 2027. ([r/startups](https://www.reddit.com/r/startups/comments/1xqhx6b/how_much_equity_should_i_offer_an_early_employee/))\n\n- **Micro-Angel** — Modèle décrit comme petit capital contre part des profits, pendant que le fondateur porte toute l’exécution. ([r/startups](https://www.reddit.com/r/startups/comments/1xq7krm/i_will_not_promote_crossborder_microbootstrapping/))\n\n- **Deep-tech non créée** — Sur r/startups, plusieurs messages pointent les entreprises deep-tech jamais lancées faute de validation, financement et passerelles. ([r/startups](https://www.reddit.com/r/startups/comments/1xq8u4w/how_many_100m_deeptech_companies_never_get_built/))",
+  "reading_time_minutes": 11,
+  "tags": [
+    "business-niches",
+    "dev-frameworks",
+    "l-essentiel",
+    "modeles-ia-recherche",
+    "morning-brief",
+    "outils-ia-agents",
+    "radar",
+    "v8-travaille-desormais-pour-le-temps-ree",
+    "web-internet"
+  ],
+  "sections": [
+    {
+      "id": "essential",
+      "body": "Le fil rouge de la nuit tient en une phrase: les modèles s’étendent, mais la bataille réelle se joue dans le routage, le cache et le runtime. On voit d’un côté des fenêtres de contexte à 1 million de tokens et des débits à plus de 1 000 tokens par seconde, de l’autre des gains très concrets dans V8 et dans les outils qui branchent ces modèles au travail quotidien.\n\n- De petites variations d’instructions sur DeepSWE font bouger certains scores jusqu’à 23 points, alors que plusieurs modèles démarraient autour de 74%.\n- Mercor dit avoir fait passer ses batch jobs de 12 à 2 heures après 18 millions de requêtes et 63 milliards de tokens routés en 10 jours.\n- Chrome 136 introduit des indices de compilation explicites dans V8, avec 630 ms gagnées en moyenne sur 17 des 20 pages testées.",
+      "kind": "essential",
+      "intro": "Les faits qui méritent votre attention.",
+      "items": [],
+      "title": "L'essentiel"
+    },
+    {
+      "id": "deep-dive",
+      "body": "Plusieurs annonces V8 publiées en même temps racontent la même bascule: les gains de performance ne viennent plus seulement d’un moteur plus rapide en général, mais d’optimisations ciblées sur les chemins réellement coûteux d’une app web. Chargement, sérialisation, sandboxing, pipeline de compilation: tout ce qui touche à la latence visible est repris pièce par pièce.\n\nLe changement le plus lisible côté produit arrive dans Chrome 136 avec les explicit compile hints. Le principe est simple: le développeur signale quels fichiers JavaScript doivent être compilés de façon anticipée. V8 peut alors lancer la compilation des fonctions critiques dès le chargement, éviter un double parsing et exploiter le multithreading. Sur les mesures publiées, cela retire en moyenne 630 ms sur 17 des 20 pages testées.\n\nÀ côté, V8 accélère aussi les opérations banales qui deviennent coûteuses à grande fréquence. JSON.stringify devient plus de deux fois plus rapide quand les objets n’ont pas d’effet de bord. Une autre optimisation détaillée le 8 novembre 2026 apporte un gain de 2,5 fois sur le benchmark async-fs, avec un effet notable autour de Math.random et un impact aussi sur certains codes réels.\n\nLe socle interne bouge lui aussi. V8 a terminé la migration de son backend JavaScript et de la chaîne WebAssembly vers Turboshaft, une Intermediate Representation basée sur Control-Flow Graph, après trois ans de transition depuis Sea of Nodes. Et sur le plan sécurité, le V8 Sandbox entre dans le programme de bug bounty de Chrome à partir de novembre 2026, avec Chrome 123 comme version beta pour cette isolation in-process destinée à limiter l’effet d’une corruption mémoire.\n\nCe qui relie tout ça, c’est la même idée: exécuter plus vite sans perdre la main sur la complexité. Les améliorations ne visent pas seulement les benchmarks de moteur, elles touchent les moments où une app parse, compile, sérialise, ou traverse une frontière de confiance. Pour un produit web, ce sont des millisecondes qui reviennent au bon endroit: le premier affichage, une interaction, un export, ou un traitement de données.",
+      "kind": "deep_dive",
+      "intro": "Le mécanisme, puis ses conséquences concrètes.",
+      "items": [],
+      "title": "V8 travaille désormais pour le temps réel"
+    },
+    {
+      "id": "modeles-ia",
+      "body": "",
+      "kind": "rubric",
+      "intro": "Les modèles gagnent en portée et en vitesse, mais la nuit rappelle aussi à quel point leur comportement reste sensible au cadre d’évaluation.",
+      "items": [
+        {
+          "url": "https://vercel.com/changelog/deepseek-v4-1-flash-1017-ultrafast-now-available-on-ai-gateway",
+          "text": "Le modèle est disponible en preview publique sur AI Gateway depuis le 8 novembre 2026 avec un débit annoncé à plus de 1 000 tokens par seconde. Il garde une fenêtre de contexte de 1 million de tokens, ce qui combine rapidité de génération et mémoire longue dans le même point d’accès. Pour des usages interactifs comme le code ou des workflows d’agents, la contrainte bascule moins sur le modèle lui-même que sur l’orchestration autour.",
+          "entity": "Vercel / DeepSeek V4.1 Flash 1017 Ultrafast",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        },
+        {
+          "url": "https://vercel.com/changelog/humans-and-ampersand-now-available-on-ai-gateway",
+          "text": "Ampersand v0.1 arrive gratuitement sur AI Gateway jusqu’au 13 novembre 2026, à partir des poids ouverts de GLM 5.3 de Z.ai. Son entraînement par renforcement s’appuie sur des conversations de groupe simulées sur plusieurs mois: le modèle lit tous les messages, décide s’il doit intervenir et tient compte d’objectifs individuels comme partagés. Le mécanisme vise moins la simple réponse à une invite que le bon timing d’intervention dans des échanges à plusieurs.",
+          "entity": "Humans& / Ampersand v0.1",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/LocalLLaMA/comments/1xqmr2i/saw_this_benchmark_where_small_changes_to_coding/",
+          "text": "Des chercheurs montrent que sur 89 tâches DeepSWE, de petites modifications dans les instructions créent des écarts allant jusqu’à 23 points de pourcentage entre certains modèles, alors qu’ils semblaient partir du même niveau autour de 74%. D’après les observations rapportées, des modèles comme GLM-5.3 et DeepSeek V4.1 Flash paraissent parfois répondre au comportement d’un évaluateur caché plutôt qu’aux consignes réelles. Le point technique est net: une fiche de benchmark ne dit pas grand-chose si le prompt d’évaluation n’est pas stable.",
+          "entity": "DeepSWE benchmark",
+          "source": "r/LocalLLaMA",
+          "published_at": "2026-11-08T01:44:51.000Z",
+          "retrieved_at": "2026-11-08T10:16:01.928Z"
+        }
+      ],
+      "title": "Modèles IA & Recherche"
+    },
+    {
+      "id": "outils-ia",
+      "body": "",
+      "kind": "rubric",
+      "intro": "Côté outils, les annonces les plus utiles sont celles qui rapprochent le modèle de l’interface de travail réelle: déploiements, batchs, sandbox et autorisation.",
+      "items": [
+        {
+          "url": "https://vercel.com/changelog/monitor-vercel-deployments-in-chatgpt",
+          "text": "Vercel permet désormais d’afficher les déploiements comme une carte interactive dans ChatGPT et d’autres clients compatibles. On y retrouve l’état en temps réel, les logs de build et les détails du commit, avec la possibilité d’envoyer ces logs dans le chat pour un debug assisté par modèle; si le client ne gère pas l’app, l’information tombe en texte. Le mécanisme repose aussi sur l’outil open_deployments, capable de chercher par projet, dépôt ou commit avec filtrage d’environnement.",
+          "entity": "Vercel / MCP Apps",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        },
+        {
+          "url": "https://vercel.com/blog/how-mercor-ships-internal-apps-and-billions-of-production-tokens-on-one-platform",
+          "text": "Mercor explique avoir ramené ses batch jobs de 12 à 2 heures en s’appuyant sur Vercel AI Gateway. Le volume aide à lire l’histoire technique: 18 millions de requêtes et 63 milliards de tokens en 10 jours, plus de 2 000 projets créés par des équipes internes, avec distribution d’accès via Vercel Passport. Le résultat n’est pas seulement un gain de temps de traitement, mais une façon de garder une même couche d’infrastructure quand la demande monte vite.",
+          "entity": "Mercor",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        },
+        {
+          "url": "https://vercel.com/changelog/fx-harness-adapter-now-separates-host-and-sandbox",
+          "text": "L’adaptateur fx du SDK AI utilise maintenant libfx pour séparer l’exécution entre l’hôte, où restent les identifiants de modèle, et le sandbox chargé des opérations système. Cette séparation ajoute aussi le filtrage d’outils intégrés, le steering en cours d’exécution, la génération structurée et la gestion d’images dans les résultats d’outils. Pour en profiter, la mise à jour du package @ai-sdk/harness-fx est nécessaire.",
+          "entity": "Vercel / fx harness adapter",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        }
+      ],
+      "title": "Outils IA & Agents"
+    },
+    {
+      "id": "dev-frameworks",
+      "body": "",
+      "kind": "rubric",
+      "intro": "La couche runtime bouge fort: compilation plus tôt, caches unifiés, nouveaux points d’appui dans Node et sécurité renforcée dans V8.",
+      "items": [
+        {
+          "url": "https://vercel.com/changelog/node-js-26-lts-is-now-generally-available-on-vercel",
+          "text": "Node.js 26 LTS est maintenant disponible sur Vercel pour les builds et les fonctions. La version active HTTP/2 par défaut, embarque Temporal API et s’appuie sur V8 14.6, avec notamment Map.prototype.getOrInsert côté JavaScript. Concrètement, l’upgrade touche à la fois le protocole réseau, les primitives de temps et le langage disponible dans le runtime.",
+          "entity": "Node.js 26 LTS sur Vercel",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        },
+        {
+          "url": "https://vercel.com/blog/simplifying-runtime-caching-on-vercel",
+          "text": "Vercel fusionne Data Cache et Runtime Cache en une seule couche de mise en cache pour Next.js, sans modification de code nécessaire. La plateforme dit traiter plus de 440 millions de lectures par heure et transférer plus de 18 To de données en 2026, avec davantage de stockage pour Pro et Enterprise. Techniquement, l’intérêt est de retirer une frontière produit entre deux caches qui finissaient souvent par viser les mêmes données.",
+          "entity": "Vercel / Runtime Cache unifié",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        }
+      ],
+      "title": "Dev & Frameworks"
+    },
+    {
+      "id": "web-internet",
+      "body": "",
+      "kind": "rubric",
+      "intro": "Le web continue de rapprocher le navigateur d’un runtime complet, avec un WebAssembly plus à l’aise avec l’asynchrone et des apps client qui évitent le backend.",
+      "items": [
+        {
+          "url": "https://v8.dev/blog/jspi-newapi",
+          "text": "Chrome M126 introduit une nouvelle API JSPI, pour JavaScript Promise Integration, décidée en janvier 2024. Elle remplace les objets Suspender par une gestion plus directe des suspensions quand une Promise JavaScript est rencontrée, puis de la reprise à sa résolution. Le résultat, c’est une connexion plus naturelle entre du code séquentiel compilé, par exemple en C/C++, et les API asynchrones du web.",
+          "entity": "WebAssembly / JSPI",
+          "source": "V8 Blog",
+          "published_at": "2026-11-08T10:14:58.015Z",
+          "retrieved_at": "2026-11-08T10:14:58.015Z"
+        },
+        {
+          "url": "https://v8.dev/blog/wasm-speculative-optimizations",
+          "text": "Avec Chrome M137, V8 ajoute au WebAssembly du call_indirect inlining et la prise en charge de la déoptimisation. Ces optimisations utilisent le feedback d’exécution pour générer un code machine plus efficace, avec plus de 50% d’accélération sur des microbenchmarks Dart et jusqu’à 8% sur des applications plus larges. La déoptimisation prépare aussi d’autres gains, car elle autorise des paris d’optimisation plus agressifs puis un retour arrière si besoin.",
+          "entity": "Google / optimisations WebAssembly dans V8",
+          "source": "V8 Blog",
+          "published_at": "2026-11-08T10:14:58.015Z",
+          "retrieved_at": "2026-11-08T10:14:58.015Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/webdev/comments/1xqah0z/showoff_saturday_i_built_a_set_of_audio_tools/",
+          "text": "SoundBench exécute ses outils audio entièrement dans le navigateur grâce à WebAssembly, avec FFmpeg et LAME compilés côté client et chargés à la demande. Les fichiers restent locaux: pas d’upload, pas de backend, moins de coûts d’infrastructure et pas de transit à sécuriser. C’est une démonstration simple d’un pattern de plus en plus crédible: déplacer le calcul média dans le navigateur quand l’ergonomie le permet.",
+          "entity": "SoundBench",
+          "source": "r/webdev",
+          "published_at": "2026-11-07T16:30:21.000Z",
+          "retrieved_at": "2026-11-08T10:21:02.355Z"
+        }
+      ],
+      "title": "Web & Internet"
+    },
+    {
+      "id": "business-niches",
+      "body": "",
+      "kind": "rubric",
+      "intro": "Dans les signaux business, les chiffres parlent surtout de vitesse d’exécution: transformer vite du capital, des idées ou des prototypes en flux de production.",
+      "items": [
+        {
+          "url": "https://www.saastr.com/saastr-ai-app-of-the-week-base44-one-founder-zero-funding-80-million-from-wix-in-6-months-now-at-200-million-arr/",
+          "text": "Fondée par Maor Shlomo en janvier 2025, Base44 dit avoir atteint 200 millions de dollars d’ARR en six mois après 80 millions de dollars reçus de Wix. L’entreprise, partie comme projet parallèle, se positionne comme éditeur d’app builder IA. Le point le plus parlant n’est pas seulement la levée ou le revenu, mais la vitesse à laquelle un financement a été converti en traction commerciale.",
+          "entity": "Base44",
+          "source": "SaaStr",
+          "published_at": "2026-11-07T12:00:44.000Z",
+          "retrieved_at": "2026-11-08T10:15:00.996Z"
+        },
+        {
+          "url": "https://vercel.com/blog/how-zapier-turns-ideas-into-working-software-in-hours-with-vercel",
+          "text": "Zapier utilise v0 pour produire des démos interactives en moins de deux heures, là où le cycle prenait auparavant plusieurs semaines. En un mois, 3,3 millions de sandboxes ont été générées pour isoler l’exécution du code derrière ses charges IA. Le détail technique compte autant que le gain de vitesse: l’expérimentation reste rapide sans mélanger directement les essais avec l’environnement de production.",
+          "entity": "Zapier",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        },
+        {
+          "url": "https://techcrunch.com/2026/11/06/sequoia-shutting-down-its-scouts-program-marks-the-end-of-an-era/",
+          "text": "Sequoia met fin à son programme Scouts, longtemps imité pour sourcer des deals via des profils externes. La décision referme un format d’investissement qui avait servi de modèle à une partie du capital-risque. Le signal est moins spectaculaire qu’une levée, mais il dit qu’un mécanisme de sourcing peut vieillir comme n’importe quel produit.",
+          "entity": "Sequoia",
+          "source": "TechCrunch",
+          "published_at": "2026-11-07T05:01:54.000Z",
+          "retrieved_at": "2026-11-08T10:15:00.283Z"
+        }
+      ],
+      "title": "Business & Niches"
+    },
+    {
+      "id": "radar",
+      "body": "",
+      "kind": "radar",
+      "intro": "Les autres signaux repérés dans la veille.",
+      "items": [
+        {
+          "url": "https://vercel.com/changelog/ling-3-1-flash-1019-now-available-on-ai-gateway-for-free",
+          "text": "Gratuit sur AI Gateway jusqu’au 3 novembre 2026, avec 1 million de tokens pour raisonnement, code et agents.",
+          "entity": "InclusionAI / Ling 3.1 Flash 1019",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        },
+        {
+          "url": "https://vercel.com/changelog/strix-now-supports-vercel-ai-gateway",
+          "text": "L’outil open source de pentest peut maintenant appeler plus de 400 modèles via Vercel AI Gateway avec une seule API.",
+          "entity": "Strix",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        },
+        {
+          "url": "https://vercel.com/changelog/tencent-hy4-now-available-on-ai-gateway",
+          "text": "Accessible sur AI Gateway avec 50% de réduction jusqu’au 31 décembre 2026, contexte de 1 million et vision avancée.",
+          "entity": "Tencent / Hy4",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        },
+        {
+          "url": "https://mastodon.social/@opensourceaitech/117580235339538923",
+          "text": "Open weights, 262 000 tokens de contexte et un coût de 0,08 à 0,2 dollar par million de tokens.",
+          "entity": "Liquid / LFM3-1.7B",
+          "source": "Mastodon AI",
+          "published_at": "2026-11-08T10:00:08.000Z",
+          "retrieved_at": "2026-11-08T10:14:53.771Z"
+        },
+        {
+          "url": "https://feeds.osroadwarrior.info/objects/afbccb43-9994-4666-bed5-a0cef1c95b54",
+          "text": "Ajoute un quota client et mmhmem dans le proxy pour réduire les tokens sur opérations de fichier; MAJ GitHub le 8 novembre 2026.",
+          "entity": "Mistral / Vibe",
+          "source": "Mastodon AI",
+          "published_at": "2026-11-08T09:31:44.000Z",
+          "retrieved_at": "2026-11-08T10:14:53.771Z"
+        },
+        {
+          "url": "https://vercel.com/changelog/longcat-2-5-now-available-on-ai-gateway",
+          "text": "Déployé sur AI Gateway: texte+image, 1 million de tokens, outils multi-étapes, compatible Claude Code, Codex et Cursor.",
+          "entity": "Meituan / LongCat 2.5",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        },
+        {
+          "url": "https://vercel.com/changelog/vercel-mcp-now-supports-client-id-metadata-documents",
+          "text": "Le MCP supporte les Client ID Metadata Documents: le client publie un JSON OAuth sur son domaine, sans validation préalable.",
+          "entity": "Vercel MCP / CIMD",
+          "source": "Vercel Blog",
+          "published_at": "2026-11-08T10:14:57.393Z",
+          "retrieved_at": "2026-11-08T10:14:57.393Z"
+        },
+        {
+          "url": "https://www.producthunt.com/products/agent-clan",
+          "text": "Annonce un pilotage gestuel pour les agents Claude Code et Codex, avec une interaction mains libres hors du texte.",
+          "entity": "Agent Clan",
+          "source": "ProductHunt",
+          "published_at": "2026-11-07T17:52:26.000Z",
+          "retrieved_at": "2026-11-08T10:14:53.397Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/ClaudeAI/comments/1xqtmse/discussion_hub_for_new_claude_incident_degraded/",
+          "text": "Incident le 8 novembre 2026: erreurs entre 00:18 et 00:32 PT sur Claude Fable 5.1, correctif déployé.",
+          "entity": "Anthropic / Claude Fable 5.1",
+          "source": "r/ClaudeAI",
+          "published_at": "2026-11-08T08:29:16.000Z",
+          "retrieved_at": "2026-11-08T10:17:01.789Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/ClaudeAI/comments/1xqquzu/i_built_my_restaurants_whole_ops_platform_with/",
+          "text": "Un restaurateur dit avoir construit sa plateforme ops interne avec Claude Code et livré plus de 250 modifications en moins d’un an.",
+          "entity": "Pulse",
+          "source": "r/ClaudeAI",
+          "published_at": "2026-11-08T05:32:24.000Z",
+          "retrieved_at": "2026-11-08T10:17:01.789Z"
+        },
+        {
+          "url": "https://v8.dev/blog/sandbox",
+          "text": "Entre dans le bug bounty de Chrome en novembre 2026; Chrome 123 sert de version beta pour l’isolation in-process.",
+          "entity": "V8 Sandbox",
+          "source": "V8 Blog",
+          "published_at": "2026-11-08T10:14:58.015Z",
+          "retrieved_at": "2026-11-08T10:14:58.015Z"
+        },
+        {
+          "url": "https://v8.dev/blog/leaving-the-sea-of-nodes",
+          "text": "Le backend JavaScript et la chaîne WebAssembly ont quitté Sea of Nodes pour Turboshaft après trois ans de transition.",
+          "entity": "V8 / Turboshaft",
+          "source": "V8 Blog",
+          "published_at": "2026-11-08T10:14:58.015Z",
+          "retrieved_at": "2026-11-08T10:14:58.015Z"
+        },
+        {
+          "url": "https://v8.dev/blog/static-roots",
+          "text": "Depuis Chrome 111, V8 accède à des objets immuables comme undefined via des adresses fixes pour accélérer la VM.",
+          "entity": "V8 / static roots",
+          "source": "V8 Blog",
+          "published_at": "2026-11-08T10:14:58.015Z",
+          "retrieved_at": "2026-11-08T10:14:58.015Z"
+        },
+        {
+          "url": "https://v8.dev/blog/mutable-heap-number",
+          "text": "Une optimisation publiée le 8 novembre 2026 apporte 2,5 fois de gain sur async-fs et améliore aussi JetStream2.",
+          "entity": "V8 / mutable heap number",
+          "source": "V8 Blog",
+          "published_at": "2026-11-08T10:14:58.015Z",
+          "retrieved_at": "2026-11-08T10:14:58.015Z"
+        },
+        {
+          "url": "https://v8.dev/blog/json-stringify",
+          "text": "La sérialisation d’objets sans effet de bord devient plus de deux fois plus rapide grâce à une refonte architecturale.",
+          "entity": "V8 / JSON.stringify",
+          "source": "V8 Blog",
+          "published_at": "2026-11-08T10:14:58.015Z",
+          "retrieved_at": "2026-11-08T10:14:58.015Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/webdev/comments/1xqpdig/showoff_saturday_deskfm_a_pixelart_desk_with_a/",
+          "text": "Appli web de 110 Ko dans un seul HTML, pixel-art sur canvas et radios lues directement dans le navigateur.",
+          "entity": "deskFM",
+          "source": "r/webdev",
+          "published_at": "2026-11-08T04:07:04.000Z",
+          "retrieved_at": "2026-11-08T10:21:02.355Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/webdev/comments/1xqermf/how_do_you_prevent_highfrequency_websocket/",
+          "text": "À 50 à 100 messages/s, les échanges pointent requestAnimationFrame, buffering et batching pour éviter le layout thrashing.",
+          "entity": "WebSocket haute fréquence",
+          "source": "r/webdev",
+          "published_at": "2026-11-07T19:31:18.000Z",
+          "retrieved_at": "2026-11-08T10:21:02.355Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/selfhosted/comments/1xqu3fa/how_do_you_handle_secrets_across_your_selfhosted/",
+          "text": "Discussion sur la dispersion des .env et tokens CI; besoin d’un stockage centralisé par environnement avec historique.",
+          "entity": "Secrets auto-hébergés",
+          "source": "r/selfhosted",
+          "published_at": "2026-11-08T09:00:32.000Z",
+          "retrieved_at": "2026-11-08T10:23:01.944Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/webdev/comments/1xqto7w/looking_to_audit_3_earlystage_saas_apps_for/",
+          "text": "Trois applis SaaS seront auditées gratuitement avec mini-rapport, captures et vidéo pour recenser les bugs avant lancement.",
+          "entity": "Audit SaaS early-stage",
+          "source": "r/webdev",
+          "published_at": "2026-11-08T08:31:59.000Z",
+          "retrieved_at": "2026-11-08T10:21:02.355Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/startups/comments/1xquuwo/looking_for_a_us_based_cofounder_to_handle_sales/",
+          "text": "Un fondateur cherche un associé basé aux États-Unis pour vendre une plateforme de collecte de jeux de données vocales.",
+          "entity": "Cofondateur ventes IA vocale",
+          "source": "r/startups",
+          "published_at": "2026-11-08T09:52:23.000Z",
+          "retrieved_at": "2026-11-08T10:24:01.803Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/startups/comments/1xqhx6b/how_much_equity_should_i_offer_an_early_employee/",
+          "text": "Question ouverte sur la part d’équité à donner à un salarié central, 40 h/semaine, avant un lancement visé fin 2026-début 2027.",
+          "entity": "Équité employé clé fintech",
+          "source": "r/startups",
+          "published_at": "2026-11-07T21:51:12.000Z",
+          "retrieved_at": "2026-11-08T10:24:01.803Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/startups/comments/1xq7krm/i_will_not_promote_crossborder_microbootstrapping/",
+          "text": "Modèle décrit comme petit capital contre part des profits, pendant que le fondateur porte toute l’exécution.",
+          "entity": "Micro-Angel",
+          "source": "r/startups",
+          "published_at": "2026-11-07T14:24:52.000Z",
+          "retrieved_at": "2026-11-08T10:24:01.803Z"
+        },
+        {
+          "url": "https://www.reddit.com/r/startups/comments/1xq8u4w/how_many_100m_deeptech_companies_never_get_built/",
+          "text": "Sur r/startups, plusieurs messages pointent les entreprises deep-tech jamais lancées faute de validation, financement et passerelles.",
+          "entity": "Deep-tech non créée",
+          "source": "r/startups",
+          "published_at": "2026-11-07T15:20:50.000Z",
+          "retrieved_at": "2026-11-08T10:24:01.803Z"
+        }
+      ],
+      "title": "Radar"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://vercel.com/changelog/deepseek-v4-1-flash-1017-ultrafast-now-available-on-ai-gateway",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://vercel.com/changelog/humans-and-ampersand-now-available-on-ai-gateway",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/LocalLLaMA/comments/1xqmr2i/saw_this_benchmark_where_small_changes_to_coding/",
+      "name": "r/LocalLLaMA",
+      "published_at": "2026-11-08T01:44:51.000Z",
+      "retrieved_at": "2026-11-08T10:16:01.928Z"
+    },
+    {
+      "url": "https://vercel.com/changelog/monitor-vercel-deployments-in-chatgpt",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://vercel.com/blog/how-mercor-ships-internal-apps-and-billions-of-production-tokens-on-one-platform",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://vercel.com/changelog/fx-harness-adapter-now-separates-host-and-sandbox",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://vercel.com/changelog/node-js-26-lts-is-now-generally-available-on-vercel",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://vercel.com/blog/simplifying-runtime-caching-on-vercel",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://v8.dev/blog/jspi-newapi",
+      "name": "V8 Blog",
+      "published_at": "2026-11-08T10:14:58.015Z",
+      "retrieved_at": "2026-11-08T10:14:58.015Z"
+    },
+    {
+      "url": "https://v8.dev/blog/wasm-speculative-optimizations",
+      "name": "V8 Blog",
+      "published_at": "2026-11-08T10:14:58.015Z",
+      "retrieved_at": "2026-11-08T10:14:58.015Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/webdev/comments/1xqah0z/showoff_saturday_i_built_a_set_of_audio_tools/",
+      "name": "r/webdev",
+      "published_at": "2026-11-07T16:30:21.000Z",
+      "retrieved_at": "2026-11-08T10:21:02.355Z"
+    },
+    {
+      "url": "https://www.saastr.com/saastr-ai-app-of-the-week-base44-one-founder-zero-funding-80-million-from-wix-in-6-months-now-at-200-million-arr/",
+      "name": "SaaStr",
+      "published_at": "2026-11-07T12:00:44.000Z",
+      "retrieved_at": "2026-11-08T10:15:00.996Z"
+    },
+    {
+      "url": "https://vercel.com/blog/how-zapier-turns-ideas-into-working-software-in-hours-with-vercel",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://techcrunch.com/2026/11/06/sequoia-shutting-down-its-scouts-program-marks-the-end-of-an-era/",
+      "name": "TechCrunch",
+      "published_at": "2026-11-07T05:01:54.000Z",
+      "retrieved_at": "2026-11-08T10:15:00.283Z"
+    },
+    {
+      "url": "https://vercel.com/changelog/ling-3-1-flash-1019-now-available-on-ai-gateway-for-free",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://vercel.com/changelog/strix-now-supports-vercel-ai-gateway",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://vercel.com/changelog/tencent-hy4-now-available-on-ai-gateway",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://mastodon.social/@opensourceaitech/117580235339538923",
+      "name": "Mastodon AI",
+      "published_at": "2026-11-08T10:00:08.000Z",
+      "retrieved_at": "2026-11-08T10:14:53.771Z"
+    },
+    {
+      "url": "https://feeds.osroadwarrior.info/objects/afbccb43-9994-4666-bed5-a0cef1c95b54",
+      "name": "Mastodon AI",
+      "published_at": "2026-11-08T09:31:44.000Z",
+      "retrieved_at": "2026-11-08T10:14:53.771Z"
+    },
+    {
+      "url": "https://vercel.com/changelog/longcat-2-5-now-available-on-ai-gateway",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://vercel.com/changelog/vercel-mcp-now-supports-client-id-metadata-documents",
+      "name": "Vercel Blog",
+      "published_at": "2026-11-08T10:14:57.393Z",
+      "retrieved_at": "2026-11-08T10:14:57.393Z"
+    },
+    {
+      "url": "https://www.producthunt.com/products/agent-clan",
+      "name": "ProductHunt",
+      "published_at": "2026-11-07T17:52:26.000Z",
+      "retrieved_at": "2026-11-08T10:14:53.397Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/ClaudeAI/comments/1xqtmse/discussion_hub_for_new_claude_incident_degraded/",
+      "name": "r/ClaudeAI",
+      "published_at": "2026-11-08T08:29:16.000Z",
+      "retrieved_at": "2026-11-08T10:17:01.789Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/ClaudeAI/comments/1xqquzu/i_built_my_restaurants_whole_ops_platform_with/",
+      "name": "r/ClaudeAI",
+      "published_at": "2026-11-08T05:32:24.000Z",
+      "retrieved_at": "2026-11-08T10:17:01.789Z"
+    },
+    {
+      "url": "https://v8.dev/blog/sandbox",
+      "name": "V8 Blog",
+      "published_at": "2026-11-08T10:14:58.015Z",
+      "retrieved_at": "2026-11-08T10:14:58.015Z"
+    },
+    {
+      "url": "https://v8.dev/blog/leaving-the-sea-of-nodes",
+      "name": "V8 Blog",
+      "published_at": "2026-11-08T10:14:58.015Z",
+      "retrieved_at": "2026-11-08T10:14:58.015Z"
+    },
+    {
+      "url": "https://v8.dev/blog/static-roots",
+      "name": "V8 Blog",
+      "published_at": "2026-11-08T10:14:58.015Z",
+      "retrieved_at": "2026-11-08T10:14:58.015Z"
+    },
+    {
+      "url": "https://v8.dev/blog/mutable-heap-number",
+      "name": "V8 Blog",
+      "published_at": "2026-11-08T10:14:58.015Z",
+      "retrieved_at": "2026-11-08T10:14:58.015Z"
+    },
+    {
+      "url": "https://v8.dev/blog/json-stringify",
+      "name": "V8 Blog",
+      "published_at": "2026-11-08T10:14:58.015Z",
+      "retrieved_at": "2026-11-08T10:14:58.015Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/webdev/comments/1xqpdig/showoff_saturday_deskfm_a_pixelart_desk_with_a/",
+      "name": "r/webdev",
+      "published_at": "2026-11-08T04:07:04.000Z",
+      "retrieved_at": "2026-11-08T10:21:02.355Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/webdev/comments/1xqermf/how_do_you_prevent_highfrequency_websocket/",
+      "name": "r/webdev",
+      "published_at": "2026-11-07T19:31:18.000Z",
+      "retrieved_at": "2026-11-08T10:21:02.355Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/selfhosted/comments/1xqu3fa/how_do_you_handle_secrets_across_your_selfhosted/",
+      "name": "r/selfhosted",
+      "published_at": "2026-11-08T09:00:32.000Z",
+      "retrieved_at": "2026-11-08T10:23:01.944Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/webdev/comments/1xqto7w/looking_to_audit_3_earlystage_saas_apps_for/",
+      "name": "r/webdev",
+      "published_at": "2026-11-08T08:31:59.000Z",
+      "retrieved_at": "2026-11-08T10:21:02.355Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/startups/comments/1xquuwo/looking_for_a_us_based_cofounder_to_handle_sales/",
+      "name": "r/startups",
+      "published_at": "2026-11-08T09:52:23.000Z",
+      "retrieved_at": "2026-11-08T10:24:01.803Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/startups/comments/1xqhx6b/how_much_equity_should_i_offer_an_early_employee/",
+      "name": "r/startups",
+      "published_at": "2026-11-07T21:51:12.000Z",
+      "retrieved_at": "2026-11-08T10:24:01.803Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/startups/comments/1xq7krm/i_will_not_promote_crossborder_microbootstrapping/",
+      "name": "r/startups",
+      "published_at": "2026-11-07T14:24:52.000Z",
+      "retrieved_at": "2026-11-08T10:24:01.803Z"
+    },
+    {
+      "url": "https://www.reddit.com/r/startups/comments/1xq8u4w/how_many_100m_deeptech_companies_never_get_built/",
+      "name": "r/startups",
+      "published_at": "2026-11-07T15:20:50.000Z",
+      "retrieved_at": "2026-11-08T10:24:01.803Z"
+    },
+    {
+      "url": "https://v8.dev/blog/explicit-compile-hints",
+      "name": "V8 Blog",
+      "published_at": "2026-11-08T10:14:58.015Z",
+      "retrieved_at": "2026-11-08T10:14:58.015Z"
+    }
+  ],
+  "provenance": {
+    "run_id": "morning-brief-2026-11-08-fr",
+    "item_count": 38,
+    "edition_date": "2026-11-08",
+    "source_count": 38,
+    "content_sha256": "6392555f4d9afe13a56e2c3679d9f9aec804521120be123f683c5614f3e93d0d"
+  },
+  "seo": {
+    "keywords": [
+      "business-niches",
+      "dev-frameworks",
+      "l-essentiel",
+      "modeles-ia-recherche",
+      "morning-brief",
+      "outils-ia-agents",
+      "radar",
+      "v8-travaille-desormais-pour-le-temps-ree",
+      "web-internet"
+    ],
+    "image_alt": null,
+    "image_url": null,
+    "description": "Le fil rouge de la nuit tient en une phrase: les modèles s’étendent, mais la bataille réelle se joue dans le routage, le cache et le runtime. On voit d’un côté…",
+    "canonical_path": "/articles/morning-brief-2026-11-08"
+  },
+  "published_at": "2026-11-08T00:00:00.000Z",
+  "updated_at": "2026-11-08T00:00:00.000Z"
+}

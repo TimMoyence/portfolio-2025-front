@@ -1,0 +1,28 @@
+@mixin point-dore {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+@mixin rangee($gap: 0.75rem) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $gap;
+}
+
+@mixin focus-encre {
+  outline: 2px solid var(--teal-ink);
+  outline-offset: 2px;
+}
+
+@mixin bloc-filete($padding-block) {
+  padding-block: $padding-block;
+  border-top: 1px solid var(--border);
+
+  &:first-child {
+    border-top: 0;
+  }
+}

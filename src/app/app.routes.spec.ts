@@ -78,6 +78,12 @@ describe('app routes', () => {
     }
   });
 
+  it('laisse la fiche d’article poser seule son SEO, que l’hydratation pose avant la navigation', () => {
+    const fiche = routes.find((route) => route.path === 'articles/:slug');
+
+    expect(fiche?.data?.['seoParLaPage']).toBeTrue();
+  });
+
   it('devrait avoir un fallback ** vers not-found', () => {
     const derniereRoute = routes[routes.length - 1];
 
