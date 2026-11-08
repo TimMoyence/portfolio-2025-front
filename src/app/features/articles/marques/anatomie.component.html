@@ -1,0 +1,79 @@
+<section class="anatomie" aria-labelledby="mb-anatomie-titre">
+  <p class="anatomie__kicker" i18n="@@articlesAnatomieKicker">En chiffres</p>
+  <h2 id="mb-anatomie-titre" class="anatomie__titre" i18n="@@articlesAnatomieTitre">
+    Anatomie de l’édition
+  </h2>
+
+  <dl class="chiffres" data-testid="chiffres-cles">
+    <div class="chiffre">
+      <dt i18n="@@articlesAnatomieInformations">Informations</dt>
+      <dd>{{ anatomie().informations }}</dd>
+    </div>
+    <div class="chiffre">
+      <dt i18n="@@articlesAnatomieSources">Sources</dt>
+      <dd>{{ anatomie().publications }}</dd>
+    </div>
+    @if (anatomie().minutes; as minutes) {
+      <div class="chiffre">
+        <dt i18n="@@articlesAnatomieMinutes">Minutes de lecture</dt>
+        <dd>{{ minutes }}</dd>
+      </div>
+    }
+    @if (pourcentage() !== null) {
+      <div class="chiffre">
+        <dt i18n="@@articlesAnatomieFraicheur">Publiées dans les 24 h</dt>
+        <dd>{{ pourcentage() }} %</dd>
+      </div>
+    }
+  </dl>
+
+  <div class="figures">
+    @for (figure of figures(); track figure.cle) {
+      <figure class="figure" [attr.data-testid]="'figure-' + figure.cle">
+        <figcaption class="figure__titre">{{ figure.titre }}</figcaption>
+        <div class="barres" role="img" [attr.aria-label]="figure.description">
+          @for (barre of figure.barres; track barre.cle) {
+            <div class="barre">
+              <span class="barre__nom">
+                @if (barre.picto) {
+                  <app-picto-de-rubrique [id]="barre.picto" />
+                }
+                {{ barre.libelle }}
+              </span>
+              <span class="barre__piste">
+                <span
+                  class="barre__valeur"
+                  [style.width.%]="barre.largeur"
+                  [style.background-color]="barre.couleur"
+                ></span>
+              </span>
+              <span class="barre__nombre">{{ barre.nombre }}</span>
+            </div>
+          }
+        </div>
+        <p class="figure__note">{{ figure.note }}</p>
+        <table class="sr-only">
+          <caption>
+            {{
+              figure.titre
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ figure.colonneLibelle }}</th>
+              <th scope="col">{{ figure.colonneNombre }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (barre of figure.barres; track barre.cle) {
+              <tr>
+                <th scope="row">{{ barre.libelle }}</th>
+                <td>{{ barre.nombre }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </figure>
+    }
+  </div>
+</section>
