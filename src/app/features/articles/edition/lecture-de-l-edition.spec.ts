@@ -73,25 +73,26 @@ describe('Lecture de l’édition — ce que la une et la fiche tirent des secti
     }
   });
 
-  it('rend un impact court sans le préfixe que le Pi lui ajoute pour tenir le schéma', () => {
-    const lecture = lectureDeLEdition(
-      buildEditionMorningBrief({
-        sections: [
-          buildSectionDeLArticle({
-            id: 'deep-dive',
-            kind: 'deep_dive',
-            title: 'V8 accélère',
-            items: [
-              buildItemDeSection({
-                entity: 'Ce que ça change',
-                text: 'Ce que ça change : Moins de latence.',
-              }),
-            ],
-          }),
-        ],
-      }),
-    );
-    expect(lecture.impact).toBe('Moins de latence.');
+  it('rend l’impact comme le mail : sans le préfixe que le Pi ajoute sous 20 caractères', () => {
+    const impactPour = (texte: string) =>
+      lectureDeLEdition(
+        buildEditionMorningBrief({
+          sections: [
+            buildSectionDeLArticle({
+              id: 'deep-dive',
+              kind: 'deep_dive',
+              title: 'V8 accélère',
+              items: [buildItemDeSection({ entity: 'Ce que ça change', text: texte })],
+            }),
+          ],
+        }),
+      ).impact;
+    const commenceParLEtiquette = 'Ce que ça change : les équipes testent sans réécrire.';
+    const avecDeuxPoints = 'Pour les équipes : moins de latence au démarrage.';
+
+    expect(impactPour('Ce que ça change : Moins de latence.')).toBe('Moins de latence.');
+    expect(impactPour(commenceParLEtiquette)).toBe(commenceParLEtiquette);
+    expect(impactPour(avecDeuxPoints)).toBe(avecDeuxPoints);
   });
 
   it('garde les rubriques et les radars dans l’ordre servi', () => {
