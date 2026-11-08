@@ -88,11 +88,22 @@ describe('Lecture de l’édition — ce que la une et la fiche tirent des secti
         }),
       ).impact;
     const commenceParLEtiquette = 'Ce que ça change : les équipes testent sans réécrire.';
-    const avecDeuxPoints = 'Pour les équipes : moins de latence au démarrage.';
+    const emojiSur19PointsDeCode = 'Démarrage 🚀 rapide.';
+    const accentDecomposeSur20PointsDeCode = 'Equipes deja prêtes';
+    const tenuSur20PointsDeCode = `Ce que ça change : ${accentDecomposeSur20PointsDeCode}`;
+    expect([...emojiSur19PointsDeCode].length).toBe(19);
+    expect([...accentDecomposeSur20PointsDeCode].length).toBe(20);
 
     expect(impactPour('Ce que ça change : Moins de latence.')).toBe('Moins de latence.');
+    expect(impactPour(`Ce que ça change : ${emojiSur19PointsDeCode}`)).toBe(emojiSur19PointsDeCode);
+    expect(impactPour(tenuSur20PointsDeCode)).toBe(tenuSur20PointsDeCode);
     expect(impactPour(commenceParLEtiquette)).toBe(commenceParLEtiquette);
-    expect(impactPour(avecDeuxPoints)).toBe(avecDeuxPoints);
+    for (const avecDeuxPoints of [
+      'Pour les équipes : moins de latence au démarrage.',
+      'Pour les équipes : moins cher.',
+    ]) {
+      expect(impactPour(avecDeuxPoints)).toBe(avecDeuxPoints);
+    }
   });
 
   it('garde les rubriques et les radars dans l’ordre servi', () => {
