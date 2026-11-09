@@ -9,9 +9,7 @@ const veille = buildEditionMorningBrief({
   published_at: '2026-11-07T04:15:00.000Z',
 });
 
-test.beforeEach(async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-});
+test.use({ reducedMotion: 'reduce' });
 
 test('le texte de /articles et du bandeau cookies tient 4,5:1', async ({ page }) => {
   await intercepterApi(page, (route, chemin) =>
