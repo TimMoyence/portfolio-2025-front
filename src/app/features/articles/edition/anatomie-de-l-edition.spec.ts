@@ -59,7 +59,25 @@ describe('Anatomie de l’édition — calculée depuis les sections servies', (
   });
 
   it('mesure la part des informations datées publiées dans les 24 h avant l’édition', () => {
-    expect(anatomieDeLEdition(buildEditionMorningBrief()).partDes24Heures).toBeCloseTo(5 / 6, 6);
+    expect(anatomieDeLEdition(buildEditionMorningBrief()).partDes24Heures).toBeCloseTo(4 / 6, 6);
+  });
+
+  it('borne la part des 24 h à [publication − 24 h, publication], bornes comprises', () => {
+    const datees = [
+      '2026-11-08T04:00:00.000Z',
+      '2026-11-09T04:00:00.000Z',
+      '2026-11-08T03:59:59.999Z',
+      '2026-11-09T04:00:00.001Z',
+    ];
+    const edition = buildEditionMorningBrief({
+      published_at: '2026-11-09T04:00:00.000Z',
+      sections: [
+        buildSectionDeLArticle({
+          items: datees.map((published_at) => buildItemDeSection({ published_at })),
+        }),
+      ],
+    });
+    expect(anatomieDeLEdition(edition).partDes24Heures).toBe(2 / 4);
   });
 
   it('ne donne aucune part quand aucune information n’est datée', () => {

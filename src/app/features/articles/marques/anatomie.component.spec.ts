@@ -34,7 +34,7 @@ describe('AnatomieComponent — l’édition en figures accessibles', () => {
       ['Informations', '7'],
       ['Sources', '6'],
       ['Minutes de lecture', '9'],
-      ['Publiées dans les 24 h', '83 %'],
+      ['Publiées dans les 24 h', '67 %'],
     ]);
   });
 

@@ -101,8 +101,9 @@ function publicationsParNombre(items: readonly ItemDeSection[]): PartDePublicati
 }
 
 function partDes24Heures(items: readonly ItemDeSection[], edition: string): number | null {
-  const depuis = Date.parse(edition) - VINGT_QUATRE_HEURES;
+  const publication = Date.parse(edition);
+  const depuis = publication - VINGT_QUATRE_HEURES;
   const dates = items.flatMap((item) => (item.published_at ? [Date.parse(item.published_at)] : []));
   if (dates.length === 0) return null;
-  return dates.filter((date) => date >= depuis).length / dates.length;
+  return dates.filter((date) => date >= depuis && date <= publication).length / dates.length;
 }
