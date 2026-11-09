@@ -1475,7 +1475,7 @@ describe('le pupitre s adapte à la largeur disponible', () => {
     pupitre.style.cssText = `display:block;width:${largeur}px;`;
     pupitre.innerHTML = `
       <div class="presentateur-workspace">
-        <main class="presentateur-stage"><div class="presentateur-stage__body"></div></main>
+        <section class="presentateur-stage"><div class="presentateur-stage__body"></div></section>
         <aside class="presentateur-sidebar">
           <section class="presentateur-questions-panel">
             <div class="presentateur-sidebar__head"><h3>Lecture de la classe</h3></div>
