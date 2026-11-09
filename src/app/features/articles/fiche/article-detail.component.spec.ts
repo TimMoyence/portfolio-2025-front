@@ -409,14 +409,20 @@ describe('ArticleDetailComponent — l’édition rendue depuis ses sections', (
 describe('ArticleDetailComponent — sommaire repliable sur mobile', () => {
   type Rappel = (entrees: readonly Partial<IntersectionObserverEntry>[]) => void;
   let rappels: Rappel[];
+  let deconnexions: number;
 
   beforeAll(() => registerLocaleData(localeFr));
 
   beforeEach(() => {
     rappels = [];
+    deconnexions = 0;
     spyOn(window, 'IntersectionObserver').and.callFake(function faux(rappel: Rappel) {
       rappels.push(rappel);
-      return { observe: () => undefined, unobserve: () => undefined, disconnect: () => undefined };
+      return {
+        observe: () => undefined,
+        unobserve: () => undefined,
+        disconnect: () => (deconnexions += 1),
+      };
     } as unknown as () => IntersectionObserver);
   });
 
@@ -447,11 +453,22 @@ describe('ArticleDetailComponent — sommaire repliable sur mobile', () => {
     bascule().click();
     lire('mb-deep-dive');
 
+    const avant = deconnexions;
     parametres.next({ slug: 'morning-brief-2026-11-09' });
+    expect(deconnexions).toBe(avant + 1);
     servir('morning-brief-2026-11-09');
 
     expect(bascule().getAttribute('aria-expanded')).toBe('false');
     expect(texteDe(bascule())).toContain('Sommaire · 8 parties');
+  });
+
+  it('pose le focus sur la partie choisie, la liste refermée', () => {
+    const { page, bascule } = monter();
+    bascule().click();
+
+    page.querySelector<HTMLAnchorElement>('.sommaire ol a')!.click();
+
+    expect(document.activeElement).toBe(page.querySelector('#mb-essential'));
   });
 
   it('ouvre la liste par une seule commande, et la referme au choix d’une partie', () => {

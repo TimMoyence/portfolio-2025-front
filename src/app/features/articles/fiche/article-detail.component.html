@@ -48,7 +48,7 @@
         <ol id="sommaire-liste">
           @for (entree of sommaire; track entree.ancre) {
             <li>
-              <a [routerLink]="[]" [fragment]="entree.ancre" (click)="sommaireOuvert.set(false)">
+              <a [routerLink]="[]" [fragment]="entree.ancre" (click)="allerA(entree.ancre)">
                 @if (entree.rubrique !== null) {
                   <app-picto-de-rubrique class="sommaire__picto" [id]="entree.rubrique" />
                 }

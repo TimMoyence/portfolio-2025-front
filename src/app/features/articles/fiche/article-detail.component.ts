@@ -143,7 +143,16 @@ export class ArticleDetailComponent {
     this.hasError = false;
     this.sommaireOuvert.set(false);
     this.partieEnCours.set(null);
+    this.observateur?.disconnect();
+    this.observateur = null;
     this.cdr.markForCheck();
+  }
+
+  protected allerA(ancre: string): void {
+    this.sommaireOuvert.set(false);
+    const partie = document.getElementById(ancre);
+    partie?.setAttribute('tabindex', '-1');
+    partie?.focus({ preventScroll: true });
   }
 
   private poserLeSeoProvisoire(slug: string): void {
