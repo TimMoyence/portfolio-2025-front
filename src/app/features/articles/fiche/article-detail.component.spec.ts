@@ -21,6 +21,23 @@ import { SeoService } from '../../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../../core/ssr/http-response-status';
 import { ArticleDetailComponent } from './article-detail.component';
 
+function monterLaFiche(slug: string) {
+  const parametres = new BehaviorSubject<Params>({ slug });
+  setupTestBed({
+    router: true,
+    appConfig: { baseUrl: 'https://example.com/' },
+    imports: [ArticleDetailComponent],
+    providers: [
+      { provide: LOCALE_ID, useValue: 'fr' },
+      fournirLaRoute({ parametres: { slug }, parametresSuccessifs: parametres }),
+    ],
+  });
+  const http = TestBed.inject(HttpTestingController);
+  const requete = (demande: string) =>
+    http.expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/${demande}`);
+  return { parametres, http, requete, seo: TestBed.inject(SeoService) };
+}
+
 describe('ArticleDetailComponent — statut HTTP rendu côté serveur', () => {
   let statuses: number[];
   let httpMock: HttpTestingController;
@@ -89,30 +106,31 @@ describe('ArticleDetailComponent — statut HTTP rendu côté serveur', () => {
 
 describe('ArticleDetailComponent — d’une édition à l’autre sans repasser par la liste', () => {
   function monter() {
-    const parametres = new BehaviorSubject<Params>({ slug: 'edition-a' });
-    setupTestBed({
-      router: true,
-      appConfig: { baseUrl: 'https://example.com/' },
-      imports: [ArticleDetailComponent],
-      providers: [
-        { provide: LOCALE_ID, useValue: 'fr' },
-        fournirLaRoute({ parametres: { slug: 'edition-a' }, parametresSuccessifs: parametres }),
-      ],
-    });
-    const seo = spyOn(TestBed.inject(SeoService), 'updateSeoMetadata');
-    const http = TestBed.inject(HttpTestingController);
+    const banc = monterLaFiche('edition-a');
+    const seo = spyOn(banc.seo, 'updateSeoMetadata');
     const fixture = TestBed.createComponent(ArticleDetailComponent);
     fixture.detectChanges();
-    const requete = (slug: string) =>
-      http.expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/${slug}`);
     const page = () => fixture.nativeElement as HTMLElement;
-    return { parametres, seo, http, fixture, requete, page };
+    const afficherB = () => {
+      banc.requete('edition-b').flush(article('edition-b', 'Édition B'));
+      fixture.detectChanges();
+      expect(texteDe(page().querySelector('h1'))).toBe('Édition B');
+      banc.http.verify();
+    };
+    return { ...banc, seo, fixture, page, afficherB };
   }
 
   const article = (slug: string, title: string) => buildPublishedArticle({ slug, title });
+  const seoProvisoire = (slug: string) =>
+    jasmine.objectContaining({
+      title: 'Édition du Morning Brief — Asili Design',
+      canonicalUrl: `https://example.com/fr/articles/${slug}`,
+      ogUrl: `https://example.com/fr/articles/${slug}`,
+      robots: 'noindex, nofollow',
+    });
 
   it('repart d’une page vide et charge B quand l’adresse passe de A à B', () => {
-    const { parametres, http, fixture, requete, page } = monter();
+    const { parametres, fixture, requete, page, afficherB } = monter();
     requete('edition-a').flush(article('edition-a', 'Édition A'));
     fixture.detectChanges();
     expect(texteDe(page().querySelector('h1'))).toBe('Édition A');
@@ -122,71 +140,41 @@ describe('ArticleDetailComponent — d’une édition à l’autre sans repasser
     expect(page().textContent).not.toContain('Édition A');
     expect(page().textContent).toContain('Chargement de l’article…');
 
-    requete('edition-b').flush(article('edition-b', 'Édition B'));
-    fixture.detectChanges();
-    expect(texteDe(page().querySelector('h1'))).toBe('Édition B');
-    http.verify();
+    afficherB();
   });
 
   it('abandonne la réponse de A quand B est demandée avant qu’elle arrive', () => {
-    const { parametres, http, fixture, requete, page } = monter();
+    const { parametres, requete, afficherB } = monter();
     const premiere = requete('edition-a');
 
     parametres.next({ slug: 'edition-b' });
-    requete('edition-b').flush(article('edition-b', 'Édition B'));
-    fixture.detectChanges();
+    afficherB();
 
     expect(premiere.cancelled).toBeTrue();
-    expect(texteDe(page().querySelector('h1'))).toBe('Édition B');
-    http.verify();
   });
 
   it('pose un titre et une adresse provisoires dès le début de chaque chargement', () => {
-    const { parametres, seo, requete } = monter();
+    const { parametres, seo, requete, afficherB } = monter();
 
-    expect(seo.calls.mostRecent().args[0]).toEqual(
-      jasmine.objectContaining({
-        title: 'Édition du Morning Brief — Asili Design',
-        canonicalUrl: 'https://example.com/fr/articles/edition-a',
-        ogUrl: 'https://example.com/fr/articles/edition-a',
-        robots: 'noindex, nofollow',
-      }),
-    );
+    expect(seo.calls.mostRecent().args[0]).toEqual(seoProvisoire('edition-a'));
     requete('edition-a').flush(article('edition-a', 'Édition A'));
 
     parametres.next({ slug: 'edition-b' });
 
-    expect(seo.calls.mostRecent().args[0]).toEqual(
-      jasmine.objectContaining({
-        title: 'Édition du Morning Brief — Asili Design',
-        canonicalUrl: 'https://example.com/fr/articles/edition-b',
-      }),
-    );
-    requete('edition-b').flush(article('edition-b', 'Édition B'));
+    expect(seo.calls.mostRecent().args[0]).toEqual(seoProvisoire('edition-b'));
+    afficherB();
   });
 });
 
 describe('ArticleDetailComponent — métadonnées SEO', () => {
   function seoApres(repondre: (requete: TestRequest) => void): SeoConfig {
-    setupTestBed({
-      router: true,
-      appConfig: { baseUrl: 'https://example.com/' },
-      imports: [ArticleDetailComponent],
-      providers: [
-        { provide: LOCALE_ID, useValue: 'fr' },
-        fournirLaRoute({ parametres: { slug: 'veille' } }),
-      ],
-    });
-    const seo = TestBed.inject(SeoService);
+    const { seo, http, requete } = monterLaFiche('veille');
     const miseAJour = spyOn(seo, 'updateSeoMetadata');
-    const httpMock = TestBed.inject(HttpTestingController);
     TestBed.createComponent(ArticleDetailComponent).detectChanges();
 
-    repondre(
-      httpMock.expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/veille`),
-    );
+    repondre(requete('veille'));
 
-    httpMock.verify();
+    http.verify();
     expect(miseAJour).toHaveBeenCalledTimes(2);
     return miseAJour.calls.mostRecent().args[0];
   }
