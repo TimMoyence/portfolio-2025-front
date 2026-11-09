@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator } from '@playwright/test';
 import { zArticleListResponseDto } from '../../contrat/zod.gen';
 import { buildEditionMorningBrief } from '../../src/testing/factories/article.factory';
 import { contrastesInsuffisants } from '../../src/testing/texte/contrastes-insuffisants';
@@ -9,7 +9,13 @@ const veille = buildEditionMorningBrief({
   published_at: '2026-11-07T04:15:00.000Z',
 });
 
-test.use({ reducedMotion: 'reduce' });
+test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
+const sansContrasteInsuffisant = async (zone: Locator): Promise<void> => {
+  await expect(async () => {
+    expect(await zone.evaluate(contrastesInsuffisants)).toEqual([]);
+  }).toPass();
+};
 
 test('le texte de /articles et du bandeau cookies tient 4,5:1', async ({ page }) => {
   await intercepterApi(page, (route, chemin) =>
@@ -36,7 +42,8 @@ test('le bouton du bandeau cookies tient 4,5:1 au survol', async ({ page }) => {
   const bandeau = page.locator('app-cookie-banner');
   await bandeau.getByTestId('bandeau-cookies-compris').hover();
 
-  await expect.poll(() => bandeau.evaluate(contrastesInsuffisants)).toEqual([]);
+  await sansContrasteInsuffisant(bandeau);
+  await expect(bandeau.getByTestId('bandeau-cookies-compris')).toBeVisible();
 });
 
 test('le texte de la section sombre du site tient 4,5:1', async ({ page }) => {
@@ -46,5 +53,6 @@ test('le texte de la section sombre du site tient 4,5:1', async ({ page }) => {
   await sombre.scrollIntoViewIfNeeded();
   await page.evaluate(() => document.fonts.ready);
 
-  await expect.poll(() => sombre.evaluate(contrastesInsuffisants)).toEqual([]);
+  await sansContrasteInsuffisant(sombre);
+  await expect(sombre).toHaveCount(1);
 });
