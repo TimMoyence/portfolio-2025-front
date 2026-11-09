@@ -16,8 +16,6 @@ interface Barre {
 interface TextesDeFigure {
   readonly titre: string;
   readonly note: string;
-  readonly colonneLibelle: string;
-  readonly colonneNombre: string;
 }
 
 interface Figure extends TextesDeFigure {
@@ -38,13 +36,7 @@ function ligne(barre: Barre): string {
 }
 
 function figure(cle: string, textes: TextesDeFigure, barres: readonly Barre[]): Figure {
-  const lignes = barres.map(ligne).join(', ');
-  return {
-    cle,
-    ...textes,
-    barres,
-    description: $localize`:@@articlesAnatomieDescription:${textes.titre}:titre: : ${lignes}:lignes:`,
-  };
+  return { cle, ...textes, barres, description: barres.map(ligne).join(', ') };
 }
 
 @Component({
@@ -61,15 +53,11 @@ export class AnatomieComponent {
   private readonly textesDesRubriques: TextesDeFigure = {
     titre: $localize`:@@articlesAnatomieRubriques:Répartition par rubrique`,
     note: $localize`:@@articlesAnatomieNoteRubriques:Cartes et brèves de chaque rubrique, hors décryptage.`,
-    colonneLibelle: $localize`:@@articlesAnatomieColonneRubrique:Rubrique`,
-    colonneNombre: $localize`:@@articlesAnatomieColonneInformations:Informations`,
   };
 
   private readonly textesDesPublications: TextesDeFigure = {
     titre: $localize`:@@articlesAnatomiePublications:D’où viennent les informations`,
     note: $localize`:@@articlesAnatomieNotePublications:Informations retenues par publication.`,
-    colonneLibelle: $localize`:@@articlesAnatomieColonnePublication:Publication`,
-    colonneNombre: $localize`:@@articlesAnatomieColonneInformationsRetenues:Informations`,
   };
 
   protected readonly anatomie = computed(() => anatomieDeLEdition(this.article()));

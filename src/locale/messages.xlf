@@ -1344,74 +1344,39 @@
           <context context-type="linenumber">24,25</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="articlesAnatomieDescription" datatype="html">
-        <source><x id="titre" equiv-text="textes.titre"/> : <x id="lignes" equiv-text="lignes"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="articlesAnatomieRubriques" datatype="html">
         <source>Répartition par rubrique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesAnatomieNoteRubriques" datatype="html">
         <source>Cartes et brèves de chaque rubrique, hors décryptage.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">63</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="articlesAnatomieColonneRubrique" datatype="html">
-        <source>Rubrique</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">64</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="articlesAnatomieColonneInformations" datatype="html">
-        <source>Informations</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesAnatomiePublications" datatype="html">
         <source>D’où viennent les informations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesAnatomieNotePublications" datatype="html">
         <source>Informations retenues par publication.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">70</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="articlesAnatomieColonnePublication" datatype="html">
-        <source>Publication</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">71</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="articlesAnatomieColonneInformationsRetenues" datatype="html">
-        <source>Informations</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesAnatomieAutresPublications" datatype="html">
         <source><x id="nombre" equiv-text="autres.publications"/> autres publications</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesBandeDescription" datatype="html">

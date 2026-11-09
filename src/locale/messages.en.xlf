@@ -13263,24 +13263,6 @@
         <target> Stories and briefs in each section, deep dive excluded. </target>
       </segment>
     </unit>
-    <unit id="articlesAnatomieColonneRubrique">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:63,64</note>
-      </notes>
-      <segment>
-        <source>Rubrique</source>
-        <target>Section</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieColonneInformations">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:64,67</note>
-      </notes>
-      <segment>
-        <source>Informations</source>
-        <target>Stories</target>
-      </segment>
-    </unit>
     <unit id="articlesAnatomieNotePublications">
       <notes>
         <note category="location">src/app/features/articles/anatomie.component.html:98,100</note>
@@ -13288,24 +13270,6 @@
       <segment>
         <source> Informations retenues par publication. </source>
         <target> Stories kept per outlet. </target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieColonnePublication">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:108,109</note>
-      </notes>
-      <segment>
-        <source>Publication</source>
-        <target>Outlet</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieColonneInformationsRetenues">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:110,113</note>
-      </notes>
-      <segment>
-        <source> Informations </source>
-        <target> Stories </target>
       </segment>
     </unit>
     <unit id="articlesAnatomieRubriques">
@@ -13333,15 +13297,6 @@
       <segment>
         <source><ph id="0" equiv="nombre" disp="autres.publications"/> autres publications</source>
         <target><ph id="0" equiv="nombre" disp="autres.publications"/> other outlets</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieDescription">
-      <notes>
-        <note category="location">src/app/features/articles/marques/anatomie.component.ts:46</note>
-      </notes>
-      <segment>
-        <source><ph id="0" equiv="titre" disp="textes.titre"/> : <ph id="1" equiv="lignes" disp="lignes"/></source>
-        <target><ph id="0" equiv="titre" disp="textes.titre"/>: <ph id="1" equiv="lignes" disp="lignes"/></target>
       </segment>
     </unit>
     <unit id="articlesBandeDescription">

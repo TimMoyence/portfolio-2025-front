@@ -52,27 +52,6 @@
           }
         </div>
         <p class="figure__note">{{ figure.note }}</p>
-        <table class="sr-only">
-          <caption>
-            {{
-              figure.titre
-            }}
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">{{ figure.colonneLibelle }}</th>
-              <th scope="col">{{ figure.colonneNombre }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (barre of figure.barres; track barre.cle) {
-              <tr>
-                <th scope="row">{{ barre.libelle }}</th>
-                <td>{{ barre.nombre }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
       </figure>
     }
   </div>
