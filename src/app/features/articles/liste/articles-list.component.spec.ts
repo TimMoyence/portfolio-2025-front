@@ -145,7 +145,9 @@ describe('ArticlesListComponent — la une du journal', () => {
     expect(page.querySelector('app-asili-hero h1')).not.toBeNull();
     const manchette = page.querySelector('#articles-heading');
     expect(manchette?.tagName).toBe('H2');
-    expect(page.querySelector('main')?.getAttribute('aria-labelledby')).toBe('articles-heading');
+    expect(
+      page.querySelector('[aria-labelledby="articles-heading"]')?.contains(manchette),
+    ).toBeTrue();
   });
 
   it('met la dernière édition à la une : décryptage en titre, rubriques, compteurs, points clés', () => {
