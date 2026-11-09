@@ -9,6 +9,7 @@ import {
   type InstantaneDuCoursB2,
 } from '../../../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../../../testing/fixtures/instantanes-des-cours';
+import { DELAI_DE_MONTAGE_MS } from '../../../../../../testing/briques/briques-montees';
 import {
   jouerLesGraphiquesJusquAuBout,
   monterLeGraphique,
@@ -683,56 +684,64 @@ describe('SlideChartComponent · QP-18, une valeur ne touche que sa propre forme
     ]);
   });
 
-  it('fait reculer au moins une valeur et une abscisse des graphiques servis, au téléphone ou en projection', async () => {
-    const sortes = new Set<string>();
-    for (const [, entrees] of GRAPHIQUES_SERVIS) {
-      const fixture = monterLeGraphique(entrees);
-      for (const largeur of LARGEURS_DES_RECULS) {
-        await rendreALaLargeur(fixture, largeur);
-        reculsDesTextes(element(fixture)).forEach((recul) => sortes.add(recul.split(' ')[0]));
+  it(
+    'fait reculer au moins une valeur et une abscisse des graphiques servis, au téléphone ou en projection',
+    async () => {
+      const sortes = new Set<string>();
+      for (const [, entrees] of GRAPHIQUES_SERVIS) {
+        const fixture = monterLeGraphique(entrees);
+        for (const largeur of LARGEURS_DES_RECULS) {
+          await rendreALaLargeur(fixture, largeur);
+          reculsDesTextes(element(fixture)).forEach((recul) => sortes.add(recul.split(' ')[0]));
+        }
+        fixture.destroy();
       }
-      fixture.destroy();
-    }
 
-    expect([sortes.has('abscisse'), sortes.has('valeur')]).toEqual([true, true]);
-  });
+      expect([sortes.has('abscisse'), sortes.has('valeur')]).toEqual([true, true]);
+    },
+    DELAI_DE_MONTAGE_MS,
+  );
 
   for (const [id, entrees] of GRAPHIQUES_SERVIS) {
-    it(`${id} : recule, montre, masque et retourne les mêmes valeurs, abscisses et graduations à toute échelle de la toile et à chaque nouvelle mesure, sans qu aucune sorte du tracé, comme l emprunt du B2-05 en projection ou les hypothèses du B2-04 sur un portable 14 pouces`, async () => {
-      const fixture = monterLeGraphique(entrees);
-      const rendu = element(fixture);
-      rendu.style.transformOrigin = '0 0';
-      const lectures: object[] = [];
-      const attendues: object[] = [];
-      for (const largeur of LARGEURS_DES_RECULS) {
-        rendu.style.transform = '';
-        await rendreALaLargeur(fixture, largeur);
-        const aLEchelleUn = reculsDesTextes(rendu);
-        const placesALEchelleUn = placementDesTextes(rendu);
-        for (const echelle of ECHELLES_DES_TOILES) {
-          rendu.style.transform = `scale(${echelle})`;
-          for (const mesure of [1, 2, 3]) {
-            document.fonts.dispatchEvent(new Event('loadingdone'));
-            await rendreALaLargeur(fixture, largeur);
-            const lecture = { largeur, echelle, mesure };
-            lectures.push({
-              ...lecture,
-              reculs: reculsDesTextes(rendu),
-              places: placementDesTextes(rendu),
-              hors: textesHorsDuTrace(rendu),
-            });
-            attendues.push({
-              ...lecture,
-              reculs: aLEchelleUn,
-              places: placesALEchelleUn,
-              hors: [],
-            });
+    it(
+      `${id} : recule, montre, masque et retourne les mêmes valeurs, abscisses et graduations à toute échelle de la toile et à chaque nouvelle mesure, sans qu aucune sorte du tracé, comme l emprunt du B2-05 en projection ou les hypothèses du B2-04 sur un portable 14 pouces`,
+      async () => {
+        const fixture = monterLeGraphique(entrees);
+        const rendu = element(fixture);
+        rendu.style.transformOrigin = '0 0';
+        const lectures: object[] = [];
+        const attendues: object[] = [];
+        for (const largeur of LARGEURS_DES_RECULS) {
+          rendu.style.transform = '';
+          await rendreALaLargeur(fixture, largeur);
+          const aLEchelleUn = reculsDesTextes(rendu);
+          const placesALEchelleUn = placementDesTextes(rendu);
+          for (const echelle of ECHELLES_DES_TOILES) {
+            rendu.style.transform = `scale(${echelle})`;
+            for (const mesure of [1, 2, 3]) {
+              document.fonts.dispatchEvent(new Event('loadingdone'));
+              await rendreALaLargeur(fixture, largeur);
+              const lecture = { largeur, echelle, mesure };
+              lectures.push({
+                ...lecture,
+                reculs: reculsDesTextes(rendu),
+                places: placementDesTextes(rendu),
+                hors: textesHorsDuTrace(rendu),
+              });
+              attendues.push({
+                ...lecture,
+                reculs: aLEchelleUn,
+                places: placesALEchelleUn,
+                hors: [],
+              });
+            }
           }
         }
-      }
 
-      expect(lectures).toEqual(attendues);
-    });
+        expect(lectures).toEqual(attendues);
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
   }
 
   it('écarte la valeur d un point du point d une autre courbe, ou la masque, et les rend toutes dès que le tracé est assez haut, comme « 80 » au prix du sac du B2-01', async () => {
