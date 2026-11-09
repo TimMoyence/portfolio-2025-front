@@ -9,34 +9,44 @@ const veille = buildEditionMorningBrief({
   published_at: '2026-11-07T04:15:00.000Z',
 });
 
-for (const schema of ['light', 'dark'] as const) {
-  test(`le texte de /articles et du bandeau cookies tient 4,5:1 · ${schema}`, async ({ page }) => {
-    await intercepterApi(page, (route, chemin) =>
-      chemin.endsWith('/articles')
-        ? servirJson(route, zArticleListResponseDto, {
-            items: [buildEditionMorningBrief(), veille],
-            next_cursor: null,
-          })
-        : servirSansContenu(route),
-    );
-    await page.emulateMedia({ colorScheme: schema, reducedMotion: 'reduce' });
-    await page.goto('/articles');
-    await page.getByTestId('une').waitFor();
-    await page.evaluate(() => document.fonts.ready);
+test.beforeEach(async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+});
 
-    const bandeau = page.locator('app-cookie-banner');
-    await expect(bandeau.getByTestId('bandeau-cookies-compris')).toBeVisible();
-    expect(await bandeau.evaluate(contrastesInsuffisants)).toEqual([]);
-    expect(await page.locator('#main-content').evaluate(contrastesInsuffisants)).toEqual([]);
-  });
+test('le texte de /articles et du bandeau cookies tient 4,5:1', async ({ page }) => {
+  await intercepterApi(page, (route, chemin) =>
+    chemin.endsWith('/articles')
+      ? servirJson(route, zArticleListResponseDto, {
+          items: [buildEditionMorningBrief(), veille],
+          next_cursor: null,
+        })
+      : servirSansContenu(route),
+  );
+  await page.goto('/articles');
+  await page.getByTestId('une').waitFor();
+  await page.evaluate(() => document.fonts.ready);
 
-  test(`le bouton du bandeau cookies tient 4,5:1 au survol · ${schema}`, async ({ page }) => {
-    await intercepterApi(page, (route) => servirSansContenu(route));
-    await page.emulateMedia({ colorScheme: schema, reducedMotion: 'reduce' });
-    await page.goto('/');
-    const bandeau = page.locator('app-cookie-banner');
-    await bandeau.getByTestId('bandeau-cookies-compris').hover();
+  const bandeau = page.locator('app-cookie-banner');
+  await expect(bandeau.getByTestId('bandeau-cookies-compris')).toBeVisible();
+  expect(await bandeau.evaluate(contrastesInsuffisants)).toEqual([]);
+  expect(await page.locator('#main-content').evaluate(contrastesInsuffisants)).toEqual([]);
+});
 
-    await expect.poll(() => bandeau.evaluate(contrastesInsuffisants)).toEqual([]);
-  });
-}
+test('le bouton du bandeau cookies tient 4,5:1 au survol', async ({ page }) => {
+  await intercepterApi(page, (route) => servirSansContenu(route));
+  await page.goto('/');
+  const bandeau = page.locator('app-cookie-banner');
+  await bandeau.getByTestId('bandeau-cookies-compris').hover();
+
+  await expect.poll(() => bandeau.evaluate(contrastesInsuffisants)).toEqual([]);
+});
+
+test('le texte de la section sombre du site tient 4,5:1', async ({ page }) => {
+  await intercepterApi(page, (route) => servirSansContenu(route));
+  await page.goto('/presentation');
+  const sombre = page.locator('.theme-night').first();
+  await sombre.scrollIntoViewIfNeeded();
+  await page.evaluate(() => document.fonts.ready);
+
+  await expect.poll(() => sombre.evaluate(contrastesInsuffisants)).toEqual([]);
+});

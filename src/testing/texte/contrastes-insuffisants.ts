@@ -59,11 +59,11 @@ export function contrastesInsuffisants(racine: Element): readonly string[] {
     return opacite;
   };
 
-  const mesurer = (parent: Element, contenu: string): string | null => {
+  const mesurer = (parent: Element, contenu: string): string | null | undefined => {
     const style = getComputedStyle(parent);
     const texte = lire(style.color);
     const fond = fondDe(parent);
-    if (texte === null || fond === null) return null;
+    if (texte === null || fond === null) return undefined;
     const vu = poser({ ...texte, a: texte.a * opaciteDe(parent) }, fond);
     const taille = parseFloat(style.fontSize);
     const gras = Number(style.fontWeight) >= 700;
@@ -76,10 +76,11 @@ export function contrastesInsuffisants(racine: Element): readonly string[] {
 
   const vus = new Set<Element>();
   const insuffisants: string[] = [];
+  let mesures = 0;
   const aMesurer = (enfant: Text): Element | null => {
     const parent = enfant.parentElement;
     if (enfant.data.trim() === '' || parent === null || vus.has(parent)) return null;
-    if (parent.closest('[aria-hidden="true"]') !== null) return null;
+    if (parent.closest('[aria-hidden="true"], :disabled') !== null) return null;
     return parent.checkVisibility({ opacityProperty: true, visibilityProperty: true })
       ? parent
       : null;
@@ -94,9 +95,10 @@ export function contrastesInsuffisants(racine: Element): readonly string[] {
       if (parent === null) continue;
       vus.add(parent);
       const ecart = mesurer(parent, enfant.textContent?.trim() ?? '');
-      if (ecart !== null) insuffisants.push(ecart);
+      if (ecart !== undefined) mesures += 1;
+      if (typeof ecart === 'string') insuffisants.push(ecart);
     }
   };
   parcourir(racine);
-  return insuffisants;
+  return mesures === 0 ? ['aucun texte mesuré'] : insuffisants;
 }

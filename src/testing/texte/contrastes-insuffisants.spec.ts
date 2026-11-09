@@ -51,8 +51,22 @@ describe('contrastesInsuffisants — rapport de contraste du texte réellement a
   it('ignore le texte caché aux lecteurs et à l’œil', () => {
     expect(
       poser(
-        '<span aria-hidden="true" style="color:#eee">décor</span><span style="display:none;color:#eee">caché</span>',
+        '<p style="color:#000">lu</p><span aria-hidden="true" style="color:#eee">décor</span><span style="display:none;color:#eee">caché</span>',
       ),
     ).toEqual([]);
+  });
+
+  it('ne juge pas un contrôle inactif, que la WCAG exempte', () => {
+    expect(
+      poser(
+        '<p style="color:#000">lu</p><button disabled style="opacity:0.4;background:#4fb3a2;color:#06231f">Envoyer</button>',
+      ),
+    ).toEqual([]);
+  });
+
+  it('dit quand rien n’a pu être mesuré, plutôt que de passer en silence', () => {
+    expect(
+      poser('<p style="background-image:linear-gradient(#fff,#fff);color:#000">sur image</p>'),
+    ).toEqual(['aucun texte mesuré']);
   });
 });
