@@ -422,38 +422,30 @@ describe('ArticleDetailComponent — sommaire repliable sur mobile', () => {
 
   function monter() {
     const edition = buildEditionMorningBrief();
-    const parametres = new BehaviorSubject<Params>({ slug: edition.slug });
-    setupTestBed({
-      router: true,
-      imports: [ArticleDetailComponent],
-      providers: [
-        { provide: LOCALE_ID, useValue: 'fr' },
-        fournirLaRoute({ parametres: { slug: edition.slug }, parametresSuccessifs: parametres }),
-      ],
-    });
-    const http = TestBed.inject(HttpTestingController);
+    const { parametres, requete } = monterLaFiche(edition.slug);
     const fixture = TestBed.createComponent(ArticleDetailComponent);
     fixture.autoDetectChanges();
     const servir = (slug: string) => {
-      http
-        .expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/${slug}`)
-        .flush({ ...edition, slug });
+      requete(slug).flush({ ...edition, slug });
       fixture.detectChanges();
     };
     servir(edition.slug);
     const page = fixture.nativeElement as HTMLElement;
     const bascule = () => page.querySelector<HTMLButtonElement>('.sommaire__bascule')!;
-    return { fixture, page, bascule, parametres, servir };
+    const lire = (ancre: string) => {
+      for (const rappel of rappels) {
+        rappel([{ isIntersecting: true, target: page.querySelector(`#${ancre}`)! }]);
+      }
+      fixture.detectChanges();
+    };
+    return { fixture, page, bascule, parametres, servir, lire };
   }
 
   it('repart d’un sommaire fermé et sans partie lue sur l’édition suivante', async () => {
-    const { fixture, page, bascule, parametres, servir } = monter();
+    const { fixture, bascule, parametres, servir, lire } = monter();
     await fixture.whenStable();
     bascule().click();
-    for (const rappel of rappels) {
-      rappel([{ isIntersecting: true, target: page.querySelector('#mb-deep-dive')! }]);
-    }
-    fixture.detectChanges();
+    lire('mb-deep-dive');
 
     parametres.next({ slug: 'morning-brief-2026-11-09' });
     servir('morning-brief-2026-11-09');
@@ -481,15 +473,12 @@ describe('ArticleDetailComponent — sommaire repliable sur mobile', () => {
   });
 
   it('nomme la partie en cours de lecture, puis le nombre de parties avant toute lecture', async () => {
-    const { fixture, page, bascule } = monter();
+    const { fixture, bascule, lire } = monter();
     await fixture.whenStable();
 
     expect(texteDe(bascule())).toContain('Sommaire · 8 parties');
 
-    for (const rappel of rappels) {
-      rappel([{ isIntersecting: true, target: page.querySelector('#mb-deep-dive')! }]);
-    }
-    fixture.detectChanges();
+    lire('mb-deep-dive');
 
     expect(texteDe(bascule())).toContain('Sommaire · Le décryptage');
   });
