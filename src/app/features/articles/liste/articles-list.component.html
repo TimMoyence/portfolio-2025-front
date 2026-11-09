@@ -45,20 +45,14 @@
             <span aria-hidden="true">→</span>
           </a>
         </div>
-        @if (une.points.length || une.anatomie.rubriques.length) {
+        @if (une.points.length) {
           <aside class="une__colonne">
-            @if (une.points.length) {
-              <h3 class="une__colonne-titre" i18n="@@articlesListARetenir">À retenir</h3>
-              <ol class="une__points">
-                @for (point of une.points; track $index) {
-                  <li>{{ point }}</li>
-                }
-              </ol>
-            }
-            @if (une.anatomie.rubriques.length) {
-              <h3 class="une__colonne-titre" i18n="@@articlesListAuSommaire">Au sommaire</h3>
-              <app-bande-des-rubriques [parts]="une.anatomie.rubriques" [legende]="true" />
-            }
+            <h3 class="une__colonne-titre" i18n="@@articlesListARetenir">À retenir</h3>
+            <ol class="une__points">
+              @for (point of une.points; track $index) {
+                <li>{{ point }}</li>
+              }
+            </ol>
           </aside>
         }
       </article>
@@ -77,13 +71,6 @@
                 <h3 class="precedente__titre">
                   <a [routerLink]="['/articles', edition.article.slug]">{{ edition.titre }}</a>
                 </h3>
-                @if (edition.anatomie.rubriques.length) {
-                  <app-bande-des-rubriques
-                    class="precedente__bande"
-                    [parts]="edition.anatomie.rubriques"
-                    [fine]="true"
-                  />
-                }
                 <p class="precedente__resume">{{ edition.article.excerpt }}</p>
               </li>
             }

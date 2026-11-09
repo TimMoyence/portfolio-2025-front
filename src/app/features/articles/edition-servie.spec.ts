@@ -69,17 +69,10 @@ describe('L’édition servie en prod, rendue telle quelle', () => {
     expect(liens).toEqual(faits.map((fait) => fait.url));
   });
 
-  it('porte à la une les trois points à retenir et la bande des rubriques, radar sans rubrique à part', () => {
+  it('MB-03 · porte à la une les trois points à retenir, sans bande ni légende de couleurs', () => {
     const page = une();
 
     expect(page.querySelectorAll('.une__points li').length).toBe(3);
-    expect(textes(page, '.legende__libelle')).toEqual([
-      'Modèles IA & Recherche',
-      'Outils IA & Agents',
-      'Dev & Frameworks',
-      'Web & Internet',
-      'Business & Niches',
-      'Autres signaux',
-    ]);
+    expect(textes(page, '.legende__libelle')).toEqual([]);
   });
 });

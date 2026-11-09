@@ -381,7 +381,11 @@ export type ArticleDeliveryResponseDto = {
   processed_at: string | null;
 };
 
-export type TypeDeSection = 'essential' | 'deep_dive' | 'rubric' | 'radar';
+export type TypeDeSection = 'essential' | 'deep_dive' | 'rubric' | 'radar' | 'brief' | 'infos';
+
+export type PublicDUneInfo = 'tous' | 'dirigeants' | 'developpeurs';
+
+export type HorizonDUneInfo = 'aujourdhui' | 'trimestre' | 'a_surveiller';
 
 export type ArticleSectionItemResponseDto = {
   entity: string;
@@ -390,6 +394,15 @@ export type ArticleSectionItemResponseDto = {
   url: string;
   published_at?: string;
   retrieved_at?: string;
+  title?: string;
+  figure?: string;
+  for_business?: string;
+  under_the_hood?: string;
+  audience?: PublicDUneInfo;
+  horizon?: HorizonDUneInfo;
+  episode?: number;
+  recap?: string;
+  rubric?: string;
 };
 
 export type ArticleSectionResponseDto = {
@@ -2136,7 +2149,7 @@ export type ArticleIngestEnvelopeV1 = {
     updated_at: string;
     sections: Array<{
       id: string;
-      kind: 'essential' | 'deep_dive' | 'rubric' | 'radar';
+      kind: 'essential' | 'deep_dive' | 'rubric' | 'radar' | 'brief' | 'infos';
       title: string;
       intro: string;
       body: string;
@@ -2147,6 +2160,15 @@ export type ArticleIngestEnvelopeV1 = {
         url: string;
         published_at?: string;
         retrieved_at?: string;
+        title?: string;
+        figure?: string;
+        for_business?: string;
+        under_the_hood?: string;
+        audience?: 'tous' | 'dirigeants' | 'developpeurs';
+        horizon?: 'aujourdhui' | 'trimestre' | 'a_surveiller';
+        episode?: number;
+        recap?: string;
+        rubric?: string;
       }>;
     }>;
     sources: Array<{

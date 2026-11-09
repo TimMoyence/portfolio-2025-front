@@ -150,7 +150,7 @@ describe('ArticlesListComponent — la une du journal', () => {
     ).toBeTrue();
   });
 
-  it('met la dernière édition à la une : décryptage en titre, rubriques, compteurs, points clés', () => {
+  it('MB-03 · met la dernière édition à la une : décryptage en titre, compteurs, points clés, sans légende de couleurs', () => {
     const une = rendre([buildEditionMorningBrief(), veille]).querySelector<HTMLElement>(
       '[data-testid="une"]',
     )!;
@@ -159,19 +159,19 @@ describe('ArticlesListComponent — la une du journal', () => {
     expect(une.querySelector('h2 a')?.getAttribute('href')).toBe(
       '/articles/morning-brief-2026-11-08',
     );
-    expect(une.querySelector('[data-testid="legende-des-rubriques"]')).not.toBeNull();
+    expect(une.querySelector('[data-testid="legende-des-rubriques"]')).toBeNull();
     expect(texteDe(une.querySelector('app-compteurs-de-l-edition'))).toBe(
       '7 informations · 6 sources · 9 min de lecture',
     );
     expect(textes(une, '.une__points li').length).toBe(3);
   });
 
-  it('range les éditions précédentes en colonnes, chacune avec sa bande, sans étiquettes brutes', () => {
+  it('MB-03 · range les éditions précédentes en colonnes, sans bande de couleurs ni étiquettes brutes', () => {
     const page = rendre([buildEditionMorningBrief(), veille]);
 
     const precedentes = Array.from(page.querySelectorAll('[data-testid="edition-precedente"]'));
     expect(precedentes.length).toBe(1);
-    expect(precedentes[0].querySelector('[data-testid="bande-des-rubriques"]')).not.toBeNull();
+    expect(precedentes[0].querySelector('[data-testid="bande-des-rubriques"]')).toBeNull();
     expect(precedentes[0].querySelector('a')?.getAttribute('href')).toBe(
       '/articles/morning-brief-2026-11-07',
     );

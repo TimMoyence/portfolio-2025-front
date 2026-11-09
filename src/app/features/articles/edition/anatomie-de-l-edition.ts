@@ -1,4 +1,9 @@
-import type { ItemDeSection, PublishedArticle } from '../../../core/models/article.model';
+import type {
+  ItemDeSection,
+  PublishedArticle,
+  SectionDeLArticle,
+} from '../../../core/models/article.model';
+import { nomDeRubrique } from './noms-des-rubriques';
 
 export interface PartDeRubrique {
   readonly id: string;
@@ -32,7 +37,9 @@ const VINGT_QUATRE_HEURES = 24 * 60 * 60 * 1000;
 export const AUTRES_SIGNAUX = $localize`:@@articlesAutresSignaux:Autres signaux`;
 
 export function anatomieDeLEdition(article: PublishedArticle): AnatomieDeLEdition {
-  const items = article.sections.flatMap((section) => section.items);
+  const items = article.sections
+    .filter((section) => section.kind !== 'brief')
+    .flatMap((section) => section.items);
   const parPublication = publicationsParNombre(items);
   const enTete =
     parPublication.length > PUBLICATIONS_EN_TETE + 1 ? PUBLICATIONS_EN_TETE : parPublication.length;
@@ -53,21 +60,44 @@ export function anatomieDeLEdition(article: PublishedArticle): AnatomieDeLEditio
   };
 }
 
+function partsDUneSection(section: SectionDeLArticle): PartDeRubrique[] {
+  if (section.kind === 'rubric') {
+    return [{ id: section.id, titre: section.title, nombre: section.items.length }];
+  }
+  if (section.kind === 'infos') {
+    return section.items.flatMap((info) => {
+      const titre = nomDeRubrique(info.rubric ?? '');
+      return info.rubric && titre ? [{ id: info.rubric, titre, nombre: 1 }] : [];
+    });
+  }
+  if (section.kind === 'radar' && section.id.startsWith(PREFIXE_DU_RADAR)) {
+    const titre = section.title.startsWith(PREFIXE_DU_TITRE_DU_RADAR)
+      ? section.title.slice(PREFIXE_DU_TITRE_DU_RADAR.length)
+      : section.title;
+    return [{ id: section.id.slice(PREFIXE_DU_RADAR.length), titre, nombre: section.items.length }];
+  }
+  return [];
+}
+
+function autresSignauxDe(section: SectionDeLArticle): number {
+  if (section.kind === 'radar') {
+    return section.id.startsWith(PREFIXE_DU_RADAR) ? 0 : section.items.length;
+  }
+  if (section.kind === 'infos') {
+    return section.items.filter((info) => nomDeRubrique(info.rubric ?? '') === null).length;
+  }
+  return 0;
+}
+
 function partsDesRubriques(article: PublishedArticle): PartDeRubrique[] {
   const parts = new Map<string, { titre: string; nombre: number }>();
-  let autresSignaux = 0;
-  for (const section of article.sections) {
-    if (section.kind === 'rubric') {
-      ajouter(parts, section.id, section.title, section.items.length);
-    } else if (section.kind === 'radar' && section.id.startsWith(PREFIXE_DU_RADAR)) {
-      const titre = section.title.startsWith(PREFIXE_DU_TITRE_DU_RADAR)
-        ? section.title.slice(PREFIXE_DU_TITRE_DU_RADAR.length)
-        : section.title;
-      ajouter(parts, section.id.slice(PREFIXE_DU_RADAR.length), titre, section.items.length);
-    } else if (section.kind === 'radar') {
-      autresSignaux += section.items.length;
-    }
+  for (const part of article.sections.flatMap(partsDUneSection)) {
+    ajouter(parts, part.id, part.titre, part.nombre);
   }
+  const autresSignaux = article.sections.reduce(
+    (total, section) => total + autresSignauxDe(section),
+    0,
+  );
   const rubriques = [...parts]
     .filter(([, part]) => part.nombre > 0)
     .map(([id, part]) => ({ id, titre: part.titre, nombre: part.nombre }));

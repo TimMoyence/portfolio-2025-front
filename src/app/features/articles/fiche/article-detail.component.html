@@ -21,8 +21,32 @@
         <time [attr.datetime]="article.published_at">{{ article.published_at | jourDuSite }}</time>
       </p>
       <h1 id="article-title" class="edition__titre">{{ lecture.titre }}</h1>
-      <app-bande-des-rubriques class="edition__bande" [parts]="lecture.anatomie.rubriques" />
       <app-compteurs-de-l-edition class="edition__compteurs" [anatomie]="lecture.anatomie" />
+      @if (aDesCapots) {
+        <div
+          class="lecture"
+          role="group"
+          aria-label="Profondeur de lecture"
+          i18n-aria-label="@@articleDetailProfondeurDeLecture"
+        >
+          <button
+            type="button"
+            [attr.aria-pressed]="vue() === 'essentiel'"
+            (click)="choisirLaVue('essentiel')"
+            i18n="@@articleDetailVueEssentiel"
+          >
+            Essentiel
+          </button>
+          <button
+            type="button"
+            [attr.aria-pressed]="vue() === 'capot'"
+            (click)="choisirLaVue('capot')"
+            i18n="@@articleDetailVueSousLeCapot"
+          >
+            Sous le capot
+          </button>
+        </div>
+      }
     </header>
 
     <div class="edition__corps wrap">
@@ -65,25 +89,92 @@
       <article class="edition__texte">
         @for (section of article.sections; track section.id) {
           @switch (section.kind) {
+            @case ('brief') {
+              <section class="brief partie" [id]="'mb-' + section.id">
+                <h2 class="partie__kicker" i18n="@@articleDetailBrief">Le brief en 30 s</h2>
+                @for (item of section.items; track $index) {
+                  @if (item.figure) {
+                    <div class="brief__une">
+                      <p class="brief__chiffre">{{ item.figure }}</p>
+                      <p class="brief__legende">{{ item.text }}</p>
+                      <app-provenance [item]="item" [courte]="true" />
+                    </div>
+                  }
+                }
+                <ng-container
+                  *ngTemplateOutlet="aRetenir; context: { $implicit: lignesDuBrief() }"
+                />
+              </section>
+            }
+            @case ('infos') {
+              <section class="infos partie" [id]="'mb-' + section.id">
+                <h2 class="partie__kicker" i18n="@@articleDetailInfosDuJour">Les infos du jour</h2>
+                <ol class="infos__liste">
+                  @for (info of section.items; track info.url; let rang = $index) {
+                    <li class="info" [id]="'mb-info-' + (rang + 1)" tabindex="-1">
+                      <p class="info__rang">
+                        @if (rang === 0) {
+                          <ng-container i18n="@@articleDetailALaUne">À la une</ng-container>
+                        } @else {
+                          <ng-container i18n="@@articleDetailInfoNumero"
+                            >Info {{ rang + 1 }}</ng-container
+                          >
+                        }
+                      </p>
+                      @if (info.episode) {
+                        <p class="info__episode">
+                          <strong i18n="@@articleDetailEpisode">Épisode {{ info.episode }}</strong>
+                          @if (info.recap) {
+                            ·
+                            <ng-container i18n="@@articleDetailPrecedemment"
+                              >Précédemment :</ng-container
+                            >
+                            {{ info.recap }}
+                          }
+                        </p>
+                      }
+                      <h3 class="info__titre">
+                        @if (info.rubric) {
+                          <app-picto-de-rubrique class="info__picto" [id]="info.rubric" />
+                        }
+                        {{ info.title || info.entity }}
+                      </h3>
+                      @if (jaugeDe(info); as jauge) {
+                        <p class="info__jauge">{{ jauge }}</p>
+                      }
+                      <p class="info__pour-tous">{{ info.text }}</p>
+                      @if (info.for_business) {
+                        <aside class="info__entreprise">
+                          <p
+                            class="info__entreprise-titre"
+                            i18n="@@articleDetailPourVotreEntreprise"
+                          >
+                            Pour votre entreprise
+                          </p>
+                          <p>{{ info.for_business }}</p>
+                        </aside>
+                      }
+                      @if (info.under_the_hood) {
+                        <details class="info__capot" [open]="vue() === 'capot'">
+                          <summary i18n="@@articleDetailSousLeCapot">Sous le capot</summary>
+                          <p>{{ info.under_the_hood }}</p>
+                        </details>
+                      }
+                      <app-provenance [item]="info" />
+                    </li>
+                  }
+                </ol>
+              </section>
+            }
             @case ('essential') {
               <section class="essentiel partie" [id]="'mb-' + section.id">
                 <h2 class="partie__kicker">{{ section.title }}</h2>
                 @if (lecture.chapeau) {
                   <div class="essentiel__chapeau" [innerHTML]="lecture.chapeau"></div>
                 }
-                @if (lecture.points.length) {
-                  <div class="a-retenir">
-                    <h3 class="a-retenir__titre" i18n="@@articleDetailARetenir">À retenir</h3>
-                    <ol>
-                      @for (point of lecture.points; track $index) {
-                        <li>
-                          <span class="a-retenir__numero" aria-hidden="true">{{ $index + 1 }}</span
-                          >&ngsp;<span>{{ point }}</span>
-                        </li>
-                      }
-                    </ol>
-                  </div>
-                }
+                <ng-container
+                  *ngTemplateOutlet="aRetenir; context: { $implicit: lignesDeLEssentiel() }"
+                />
               </section>
             }
             @case ('deep_dive') {
@@ -221,3 +312,24 @@
 
   <app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />
 }
+
+<ng-template #aRetenir let-lignes>
+  @if (lignes.length) {
+    <div class="a-retenir">
+      <h3 class="a-retenir__titre" i18n="@@articleDetailARetenir">À retenir</h3>
+      <ol>
+        @for (ligne of lignes; track $index) {
+          <li>
+            <span class="a-retenir__numero" aria-hidden="true">{{ $index + 1 }}</span
+            >&ngsp;<span
+              ><span [class.brief__ligne]="ligne.source !== null">{{ ligne.texte }}</span>
+              @if (ligne.source) {
+                <app-provenance [item]="ligne.source" [courte]="true" />
+              }
+            </span>
+          </li>
+        }
+      </ol>
+    </div>
+  }
+</ng-template>

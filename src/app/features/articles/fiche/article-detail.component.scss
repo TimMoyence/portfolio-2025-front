@@ -43,9 +43,26 @@
   text-wrap: balance;
 }
 
-.edition__bande {
-  display: block;
-  max-width: 46rem;
+.lecture {
+  display: inline-flex;
+  margin-top: 1.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+
+  button {
+    padding: 0.45rem 1rem;
+    border-radius: var(--r-pill);
+    color: var(--text);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  button[aria-pressed='true'] {
+    background: var(--teal-ink);
+    color: var(--cream);
+  }
 }
 
 .edition__compteurs {
@@ -281,6 +298,102 @@
   font-size: 2rem;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+}
+
+.brief__une {
+  margin-top: 1.25rem;
+}
+
+.brief__chiffre {
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 5.5rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.brief__legende {
+  max-width: 32ch;
+  margin-block: 0.5rem;
+  color: var(--text-strong);
+  font-size: clamp(1.15rem, 2vw, 1.35rem);
+  line-height: 1.45;
+}
+
+.infos__liste {
+  @include lists.list-reset;
+  display: grid;
+  gap: clamp(2rem, 5vw, 3rem);
+  margin-top: 1.5rem;
+}
+
+.info {
+  scroll-margin-top: 5rem;
+}
+
+.info__rang {
+  @include mono.capitales-mono(11px, 0.16em, var(--teal-ink));
+}
+
+.info__episode {
+  margin-top: 0.5rem;
+  color: var(--text-mute);
+  font-size: 0.9375rem;
+
+  strong {
+    color: var(--text-strong);
+  }
+}
+
+.info__titre {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: clamp(1.4rem, 3vw, 1.85rem);
+  text-wrap: balance;
+}
+
+.info__jauge {
+  margin-top: 0.4rem;
+  color: var(--text-mute);
+  font-size: 0.875rem;
+}
+
+.info__pour-tous {
+  margin-top: 0.85rem;
+  color: var(--text-strong);
+  font-size: clamp(1.1rem, 2vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.info__entreprise {
+  margin-top: 1rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 3px solid var(--teal-ink);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+}
+
+.info__entreprise-titre {
+  @include mono.capitales-mono(11px, 0.16em, var(--teal-ink));
+  margin-bottom: 0.35rem;
+}
+
+.info__capot {
+  margin-top: 1rem;
+
+  summary {
+    cursor: pointer;
+    color: var(--teal-ink);
+    font-weight: 600;
+  }
+
+  p {
+    margin-top: 0.6rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
 }
 
 .decryptage__titre {

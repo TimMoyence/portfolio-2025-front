@@ -165,6 +165,9 @@
     "panneauActiviteParticipantsTitre": "emprunt",
     "coursRuntimeTableBuildFaux": "emprunt",
     "panneauLectureQuestion": "emprunt",
-    "panneauLectureRang": "placeholder"
+    "panneauLectureRang": "placeholder",
+    "articlesRubriqueDevFrameworks": "emprunt",
+    "articlesRubriqueWebInternet": "emprunt",
+    "articlesRubriqueBusinessNiches": "emprunt"
   }
 }

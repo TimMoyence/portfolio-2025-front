@@ -22,6 +22,7 @@ export function rendreLEdition(
   fixture.detectChanges();
   httpMock.expectOne((request) => request.url === url).flush(reponse);
   fixture.detectChanges();
+  fixture.autoDetectChanges();
   httpMock.verify();
   return fixture.nativeElement as HTMLElement;
 }
