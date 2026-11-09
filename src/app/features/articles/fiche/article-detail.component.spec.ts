@@ -298,8 +298,19 @@ describe('ArticleDetailComponent — l’édition rendue depuis ses sections', (
 
     expect(page.querySelector('#edition-anatomie app-anatomie')).not.toBeNull();
     expect(sources.hasAttribute('open')).toBeFalse();
-    expect(texteDe(sources.querySelector('summary h2'))).toBe('Toutes les sources (6)');
+    expect(texteDe(sources.querySelector('summary'))).toBe('Afficher la liste');
     expect(textes(sources, '.sources__publication')).toContain('Vercel Blog');
+  });
+
+  it('titre le bloc des sources par un vrai h2, hors du bouton qui le déplie', () => {
+    const page = rendre(buildEditionMorningBrief());
+    const section = page.querySelector('#edition-sources')!;
+    const titre = section.querySelector('h2');
+
+    expect(texteDe(titre)).toBe('Toutes les sources (6)');
+    expect(titre?.closest('summary')).toBeNull();
+    expect(section.getAttribute('aria-labelledby')).toBe(titre?.id ?? 'absent');
+    expect(section.querySelector('summary h2, summary [role="heading"]')).toBeNull();
   });
 
   it('se replie sur le markdown quand l’article n’a pas de sections', () => {

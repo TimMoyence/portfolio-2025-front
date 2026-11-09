@@ -417,10 +417,10 @@
 }
 
 .sources__titre {
-  margin: 0;
-  color: inherit;
-  font: inherit;
-  letter-spacing: inherit;
+  margin: 0 0 0.75rem;
+  color: var(--text-strong);
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .sources__groupes {

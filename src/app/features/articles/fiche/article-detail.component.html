@@ -136,13 +136,16 @@
         </div>
 
         @if (sources.length) {
-          <section id="edition-sources" class="sources">
+          <section id="edition-sources" class="sources" aria-labelledby="edition-sources-titre">
+            <h2
+              id="edition-sources-titre"
+              class="sources__titre"
+              i18n="@@articleDetailToutesLesSources"
+            >
+              Toutes les sources ({{ sources.length }})
+            </h2>
             <details>
-              <summary>
-                <h2 class="sources__titre" i18n="@@articleDetailToutesLesSources">
-                  Toutes les sources ({{ sources.length }})
-                </h2>
-              </summary>
+              <summary i18n="@@articleDetailAfficherLesSources">Afficher la liste</summary>
               <div class="sources__groupes">
                 @for (groupe of sources; track groupe.nom) {
                   <div class="sources__groupe">

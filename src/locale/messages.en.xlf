@@ -13164,6 +13164,15 @@
         <target> All sources (<ph id="0" equiv="INTERPOLATION" disp="{{ sources.length }}"/>) </target>
       </segment>
     </unit>
+    <unit id="articleDetailAfficherLesSources">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:144</note>
+      </notes>
+      <segment>
+        <source>Afficher la liste</source>
+        <target>Show the list</target>
+      </segment>
+    </unit>
     <unit id="articleDetailSommaireDecryptage">
       <notes>
         <note category="location">src/app/features/articles/article-detail.component.ts:146</note>
