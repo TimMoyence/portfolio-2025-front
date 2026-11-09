@@ -3,6 +3,8 @@ import { HttpTestingController, type TestRequest } from '@angular/common/http/te
 import localeFr from '@angular/common/locales/fr';
 import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import type { Params } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
   buildEditionMorningBrief,
@@ -85,6 +87,85 @@ describe('ArticleDetailComponent — statut HTTP rendu côté serveur', () => {
   });
 });
 
+describe('ArticleDetailComponent — d’une édition à l’autre sans repasser par la liste', () => {
+  function monter() {
+    const parametres = new BehaviorSubject<Params>({ slug: 'edition-a' });
+    setupTestBed({
+      router: true,
+      appConfig: { baseUrl: 'https://example.com/' },
+      imports: [ArticleDetailComponent],
+      providers: [
+        { provide: LOCALE_ID, useValue: 'fr' },
+        fournirLaRoute({ parametres: { slug: 'edition-a' }, parametresSuccessifs: parametres }),
+      ],
+    });
+    const seo = spyOn(TestBed.inject(SeoService), 'updateSeoMetadata');
+    const http = TestBed.inject(HttpTestingController);
+    const fixture = TestBed.createComponent(ArticleDetailComponent);
+    fixture.detectChanges();
+    const requete = (slug: string) =>
+      http.expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/${slug}`);
+    const page = () => fixture.nativeElement as HTMLElement;
+    return { parametres, seo, http, fixture, requete, page };
+  }
+
+  const article = (slug: string, title: string) => buildPublishedArticle({ slug, title });
+
+  it('repart d’une page vide et charge B quand l’adresse passe de A à B', () => {
+    const { parametres, http, fixture, requete, page } = monter();
+    requete('edition-a').flush(article('edition-a', 'Édition A'));
+    fixture.detectChanges();
+    expect(texteDe(page().querySelector('h1'))).toBe('Édition A');
+
+    parametres.next({ slug: 'edition-b' });
+    fixture.detectChanges();
+    expect(page().textContent).not.toContain('Édition A');
+    expect(page().textContent).toContain('Chargement de l’article…');
+
+    requete('edition-b').flush(article('edition-b', 'Édition B'));
+    fixture.detectChanges();
+    expect(texteDe(page().querySelector('h1'))).toBe('Édition B');
+    http.verify();
+  });
+
+  it('abandonne la réponse de A quand B est demandée avant qu’elle arrive', () => {
+    const { parametres, http, fixture, requete, page } = monter();
+    const premiere = requete('edition-a');
+
+    parametres.next({ slug: 'edition-b' });
+    requete('edition-b').flush(article('edition-b', 'Édition B'));
+    fixture.detectChanges();
+
+    expect(premiere.cancelled).toBeTrue();
+    expect(texteDe(page().querySelector('h1'))).toBe('Édition B');
+    http.verify();
+  });
+
+  it('pose un titre et une adresse provisoires dès le début de chaque chargement', () => {
+    const { parametres, seo, requete } = monter();
+
+    expect(seo.calls.mostRecent().args[0]).toEqual(
+      jasmine.objectContaining({
+        title: 'Édition du Morning Brief — Asili Design',
+        canonicalUrl: 'https://example.com/fr/articles/edition-a',
+        ogUrl: 'https://example.com/fr/articles/edition-a',
+        robots: 'noindex, nofollow',
+      }),
+    );
+    requete('edition-a').flush(article('edition-a', 'Édition A'));
+
+    parametres.next({ slug: 'edition-b' });
+
+    expect(seo.calls.mostRecent().args[0]).toEqual(
+      jasmine.objectContaining({
+        title: 'Édition du Morning Brief — Asili Design',
+        canonicalUrl: 'https://example.com/fr/articles/edition-b',
+      }),
+    );
+    requete('edition-b').flush(article('edition-b', 'Édition B'));
+  });
+});
+
 describe('ArticleDetailComponent — métadonnées SEO', () => {
   function seoApres(repondre: (requete: TestRequest) => void): SeoConfig {
     setupTestBed({
@@ -106,7 +187,7 @@ describe('ArticleDetailComponent — métadonnées SEO', () => {
     );
 
     httpMock.verify();
-    expect(miseAJour).toHaveBeenCalledTimes(1);
+    expect(miseAJour).toHaveBeenCalledTimes(2);
     return miseAJour.calls.mostRecent().args[0];
   }
 

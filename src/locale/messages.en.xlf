@@ -13155,6 +13155,24 @@
         <target> Why it matters </target>
       </segment>
     </unit>
+    <unit id="articleDetailTitreProvisoire">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.ts:128</note>
+      </notes>
+      <segment>
+        <source>Édition du Morning Brief</source>
+        <target>Morning Brief edition</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailDescriptionProvisoire">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.ts:129</note>
+      </notes>
+      <segment>
+        <source>Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.</source>
+        <target>A Morning Brief edition: the overnight AI watch, sorted, sourced and explained.</target>
+      </segment>
+    </unit>
     <unit id="articleDetailToutesLesSources">
       <notes>
         <note category="location">src/app/features/articles/fiche/article-detail.component.html:143,144</note>

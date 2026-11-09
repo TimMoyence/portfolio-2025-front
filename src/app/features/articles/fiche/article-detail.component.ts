@@ -1,7 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import {
+  catchError,
+  distinctUntilChanged,
+  EMPTY,
+  map,
+  switchMap,
+  tap,
+  type Observable,
+} from 'rxjs';
 import { APP_CONFIG } from '../../../core/config/app-config.token';
 import type { PublishedArticle, SectionDeLArticle } from '../../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../../core/adapters/article-http.adapter';
@@ -73,25 +83,63 @@ export class ArticleDetailComponent {
   private readonly responseStatus = inject(HTTP_RESPONSE_STATUS, { optional: true });
 
   constructor(route: ActivatedRoute) {
-    const slug = route.snapshot.paramMap.get('slug');
+    route.paramMap
+      .pipe(
+        map((parametres) => parametres.get('slug')),
+        distinctUntilChanged(),
+        switchMap((slug) => this.charger(slug)),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
+  }
+
+  private charger(slug: string | null): Observable<unknown> {
+    this.repartirDeZero();
     if (!slug) {
       this.signalerLAbsence(404, '');
-      return;
+      this.cdr.markForCheck();
+      return EMPTY;
     }
-    this.api.getBySlug(slug, this.locale).subscribe({
-      next: (article) => {
+    this.poserLeSeoProvisoire(slug);
+    return this.api.getBySlug(slug, this.locale).pipe(
+      tap((article) => {
         this.afficher(article);
         this.isLoading = false;
         this.poserLeSeo(article);
         this.cdr.markForCheck();
-      },
-      error: (error: unknown) => {
+      }),
+      catchError((error: unknown) => {
         this.signalerLAbsence(
           error instanceof HttpErrorResponse && error.status === 404 ? 404 : 503,
           slug,
         );
         this.cdr.markForCheck();
-      },
+        return EMPTY;
+      }),
+    );
+  }
+
+  private repartirDeZero(): void {
+    this.article = null;
+    this.lecture = null;
+    this.sommaire = [];
+    this.sources = [];
+    this.renderedContent = '';
+    this.isLoading = true;
+    this.hasError = false;
+    this.cdr.markForCheck();
+  }
+
+  private poserLeSeoProvisoire(slug: string): void {
+    const canonicalUrl = urlLocalisee(this.config.baseUrl, this.locale, `/articles/${slug}`);
+    const edition = $localize`:@@articleDetailTitreProvisoire:Édition du Morning Brief`;
+    this.seo.updateSeoMetadata({
+      title: `${edition} — ${NOM_DU_SITE}`,
+      description: $localize`:@@articleDetailDescriptionProvisoire:Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.`,
+      robots: 'noindex, nofollow',
+      canonicalUrl,
+      ogUrl: canonicalUrl,
+      hreflangs: {},
     });
   }
 
