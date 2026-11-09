@@ -463,7 +463,7 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
           @if (ecranCourant(); as ecranAffiche) {
             <div class="presentateur-workspace">
               <div class="presentateur-colonne-scene">
-                <main class="presentateur-stage" aria-labelledby="presentateur-stage-titre">
+                <section class="presentateur-stage" aria-labelledby="presentateur-stage-titre">
                   <div class="presentateur-stage__head">
                     <h3
                       id="presentateur-stage-titre"
@@ -530,7 +530,7 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
                       </p>
                     }
                   </div>
-                </main>
+                </section>
                 <app-panneau-participants [sessionId]="sessionId()" />
               </div>
               <aside

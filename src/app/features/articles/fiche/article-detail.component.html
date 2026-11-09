@@ -1,17 +1,17 @@
 @if (isLoading) {
-  <main class="article-state" aria-live="polite" i18n="@@articleDetailLoading">
+  <div class="article-state" aria-live="polite" i18n="@@articleDetailLoading">
     Chargement de l’article…
-  </main>
+  </div>
 } @else if (hasError || !article) {
-  <main class="article-state" role="alert">
+  <div class="article-state" role="alert">
     <h1 i18n="@@articleDetailNotFound">Article introuvable</h1>
     <a class="link-arrow" routerLink="/articles"
       ><ng-container i18n="@@articleDetailBackToList">Retour aux articles</ng-container>
       <span aria-hidden="true">→</span></a
     >
-  </main>
+  </div>
 } @else if (lecture) {
-  <main class="edition" aria-labelledby="article-title">
+  <div class="edition">
     <header class="edition__entete wrap">
       <a class="link-arrow" routerLink="/articles" i18n="@@articleDetailAllArticles"
         >← Tous les articles</a
@@ -165,11 +165,11 @@
         }
       </article>
     </div>
-  </main>
+  </div>
 
   <app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />
 } @else {
-  <main class="article-detail" aria-labelledby="article-title">
+  <div class="article-detail">
     <header class="article-detail__header wrap">
       <a class="link-arrow" routerLink="/articles" i18n="@@articleDetailAllArticles"
         >← Tous les articles</a
@@ -200,7 +200,7 @@
         </section>
       }
     </article>
-  </main>
+  </div>
 
   <app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />
 }
