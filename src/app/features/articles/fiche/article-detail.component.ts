@@ -1,6 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  Injector,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -75,6 +84,10 @@ export class ArticleDetailComponent {
   protected isLoading = true;
   protected hasError = false;
   protected readonly locale = injecterLocaleDeLaPage();
+  protected readonly sommaireOuvert = signal(false);
+  protected readonly partieEnCours = signal<string | null>(null);
+  private observateur: IntersectionObserver | null = null;
+  private readonly injector = inject(Injector);
   private readonly api = inject(ArticleHttpAdapter);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly seo = inject(SeoService);
@@ -83,6 +96,7 @@ export class ArticleDetailComponent {
   private readonly responseStatus = inject(HTTP_RESPONSE_STATUS, { optional: true });
 
   constructor(route: ActivatedRoute) {
+    inject(DestroyRef).onDestroy(() => this.observateur?.disconnect());
     route.paramMap
       .pipe(
         map((parametres) => parametres.get('slug')),
@@ -127,6 +141,8 @@ export class ArticleDetailComponent {
     this.renderedContent = '';
     this.isLoading = true;
     this.hasError = false;
+    this.sommaireOuvert.set(false);
+    this.partieEnCours.set(null);
     this.cdr.markForCheck();
   }
 
@@ -141,6 +157,31 @@ export class ArticleDetailComponent {
       ogUrl: canonicalUrl,
       hreflangs: {},
     });
+  }
+
+  protected resumeDuSommaire(): string {
+    return (
+      this.partieEnCours() ??
+      $localize`:@@articleDetailSommaireParties:${this.sommaire.length}:nombre: parties`
+    );
+  }
+
+  private suivreLaLecture(): void {
+    if (typeof IntersectionObserver === 'undefined') return;
+    this.observateur?.disconnect();
+    const libelles = new Map(this.sommaire.map((entree) => [entree.ancre, entree.libelle]));
+    this.observateur = new IntersectionObserver(
+      (entrees) => {
+        const lue = entrees.find((entree) => entree.isIntersecting);
+        const libelle = lue ? libelles.get(lue.target.id) : undefined;
+        if (libelle !== undefined) this.partieEnCours.set(libelle);
+      },
+      { rootMargin: '-20% 0px -70% 0px' },
+    );
+    for (const ancre of libelles.keys()) {
+      const partie = document.getElementById(ancre);
+      if (partie) this.observateur.observe(partie);
+    }
   }
 
   protected libelleDe(section: SectionDeLArticle): string {
@@ -202,6 +243,7 @@ export class ArticleDetailComponent {
     this.lecture = lectureDeLEdition(article);
     this.sources = sourcesParPublication(article);
     this.sommaire = this.sommaireDe(article);
+    afterNextRender(() => this.suivreLaLecture(), { injector: this.injector });
   }
 
   private sommaireDe(article: PublishedArticle): EntreeDuSommaire[] {

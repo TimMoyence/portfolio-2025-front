@@ -1036,7 +1036,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailBackToList" datatype="html">
@@ -1054,7 +1054,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">175,177</context>
+          <context context-type="linenumber">192,194</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailMarque" datatype="html">
@@ -1068,119 +1068,130 @@
         <source>Sommaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">30,32</context>
+          <context context-type="linenumber">34,36</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
+          <context context-type="linenumber">43,44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailARetenir" datatype="html">
         <source>À retenir</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">59,61</context>
+          <context context-type="linenumber">76,78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailDecryptage" datatype="html">
         <source>Le décryptage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">74,75</context>
+          <context context-type="linenumber">91,92</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCeQueCaChange" datatype="html">
         <source> Ce que ça change </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">81,82</context>
+          <context context-type="linenumber">98,99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailToutesLesSources" datatype="html">
         <source> Toutes les sources (<x id="INTERPOLATION" equiv-text="{{ sources.length }}"/>) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">145,146</context>
+          <context context-type="linenumber">162,163</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailAfficherLesSources" datatype="html">
         <source>Afficher la liste</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">148,149</context>
+          <context context-type="linenumber">165,166</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailReadingTime" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ article.reading_time_minutes }}"/> min</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">180,181</context>
+          <context context-type="linenumber">197,198</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSources" datatype="html">
         <source>Sources</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">192,194</context>
+          <context context-type="linenumber">209,211</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCtaKicker" datatype="html">
         <source>Un sujet à clarifier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCtaTitle" datatype="html">
         <source>La bonne technologie commence par le bon problème.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCtaLead" datatype="html">
         <source>Parlons de ce que cette veille peut changer concrètement dans votre activité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailTitreProvisoire" datatype="html">
         <source>Édition du Morning Brief</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">151</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailDescriptionProvisoire" datatype="html">
         <source>Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="articleDetailSommaireParties" datatype="html">
+        <source><x id="nombre" equiv-text="this.sommaire.length"/> parties</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
+          <context context-type="linenumber">165</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailAbsenceDescription" datatype="html">
         <source>Cette édition du Morning Brief est introuvable ou momentanément indisponible.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">227</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSommaireDecryptage" datatype="html">
         <source>Le décryptage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">257</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSommaireAnatomie" datatype="html">
         <source>En chiffres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">226</context>
+          <context context-type="linenumber">268</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSommaireSources" datatype="html">
         <source>Sources</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">230</context>
+          <context context-type="linenumber">272</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesListHeroTitle" datatype="html">

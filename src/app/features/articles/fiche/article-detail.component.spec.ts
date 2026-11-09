@@ -405,3 +405,92 @@ describe('ArticleDetailComponent — l’édition rendue depuis ses sections', (
     );
   });
 });
+
+describe('ArticleDetailComponent — sommaire repliable sur mobile', () => {
+  type Rappel = (entrees: readonly Partial<IntersectionObserverEntry>[]) => void;
+  let rappels: Rappel[];
+
+  beforeAll(() => registerLocaleData(localeFr));
+
+  beforeEach(() => {
+    rappels = [];
+    spyOn(window, 'IntersectionObserver').and.callFake(function faux(rappel: Rappel) {
+      rappels.push(rappel);
+      return { observe: () => undefined, unobserve: () => undefined, disconnect: () => undefined };
+    } as unknown as () => IntersectionObserver);
+  });
+
+  function monter() {
+    const edition = buildEditionMorningBrief();
+    const parametres = new BehaviorSubject<Params>({ slug: edition.slug });
+    setupTestBed({
+      router: true,
+      imports: [ArticleDetailComponent],
+      providers: [
+        { provide: LOCALE_ID, useValue: 'fr' },
+        fournirLaRoute({ parametres: { slug: edition.slug }, parametresSuccessifs: parametres }),
+      ],
+    });
+    const http = TestBed.inject(HttpTestingController);
+    const fixture = TestBed.createComponent(ArticleDetailComponent);
+    fixture.autoDetectChanges();
+    const servir = (slug: string) => {
+      http
+        .expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/${slug}`)
+        .flush({ ...edition, slug });
+      fixture.detectChanges();
+    };
+    servir(edition.slug);
+    const page = fixture.nativeElement as HTMLElement;
+    const bascule = () => page.querySelector<HTMLButtonElement>('.sommaire__bascule')!;
+    return { fixture, page, bascule, parametres, servir };
+  }
+
+  it('repart d’un sommaire fermé et sans partie lue sur l’édition suivante', async () => {
+    const { fixture, page, bascule, parametres, servir } = monter();
+    await fixture.whenStable();
+    bascule().click();
+    for (const rappel of rappels) {
+      rappel([{ isIntersecting: true, target: page.querySelector('#mb-deep-dive')! }]);
+    }
+    fixture.detectChanges();
+
+    parametres.next({ slug: 'morning-brief-2026-11-09' });
+    servir('morning-brief-2026-11-09');
+
+    expect(bascule().getAttribute('aria-expanded')).toBe('false');
+    expect(texteDe(bascule())).toContain('Sommaire · 8 parties');
+  });
+
+  it('ouvre la liste par une seule commande, et la referme au choix d’une partie', () => {
+    const { fixture, page, bascule } = monter();
+    const liste = page.querySelector('.sommaire ol')!;
+
+    expect(bascule().getAttribute('aria-expanded')).toBe('false');
+    expect(bascule().getAttribute('aria-controls')).toBe(liste.id);
+    expect(page.querySelector('.sommaire--ouvert')).toBeNull();
+
+    bascule().click();
+    fixture.detectChanges();
+    expect(bascule().getAttribute('aria-expanded')).toBe('true');
+    expect(page.querySelector('.sommaire--ouvert')).not.toBeNull();
+
+    liste.querySelector<HTMLAnchorElement>('a')!.click();
+    fixture.detectChanges();
+    expect(bascule().getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('nomme la partie en cours de lecture, puis le nombre de parties avant toute lecture', async () => {
+    const { fixture, page, bascule } = monter();
+    await fixture.whenStable();
+
+    expect(texteDe(bascule())).toContain('Sommaire · 8 parties');
+
+    for (const rappel of rappels) {
+      rappel([{ isIntersecting: true, target: page.querySelector('#mb-deep-dive')! }]);
+    }
+    fixture.detectChanges();
+
+    expect(texteDe(bascule())).toContain('Sommaire · Le décryptage');
+  });
+});

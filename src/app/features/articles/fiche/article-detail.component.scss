@@ -105,34 +105,55 @@
   @include bp.tablet {
     top: 4rem;
     z-index: 2;
-    padding-block: 0.65rem;
+    padding-block: 0.5rem;
     border-bottom: 1px solid var(--border);
     background: var(--bg);
 
     ol {
-      display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      scrollbar-width: none;
-      scroll-snap-type: x proximity;
+      display: none;
+      max-height: 60vh;
+      margin-top: 0.5rem;
+      overflow-y: auto;
     }
 
-    li {
-      flex: none;
-      scroll-snap-align: start;
+    &.sommaire--ouvert ol {
+      display: grid;
     }
+  }
+}
 
-    a {
-      padding: 0.4rem 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: var(--r-pill);
-      background: var(--bg);
-      white-space: nowrap;
+.sommaire__bascule {
+  display: none;
 
-      &:hover {
-        border-color: var(--teal);
-      }
+  @include bp.tablet {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.6rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    background: var(--bg);
+    color: var(--text-strong);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+
+    &:focus-visible {
+      @include edition.focus-encre;
     }
+  }
+}
+
+.sommaire__chevron {
+  color: var(--teal-ink);
+  transition: transform 0.2s;
+
+  .sommaire--ouvert & {
+    transform: rotate(180deg);
   }
 }
 

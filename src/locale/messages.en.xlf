@@ -13128,6 +13128,15 @@
         <target>Contents</target>
       </segment>
     </unit>
+    <unit id="articleDetailSommaireParties">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.ts:115</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="nombre" disp="this.sommaire.length"/> parties</source>
+        <target><ph id="0" equiv="nombre" disp="this.sommaire.length"/> sections</target>
+      </segment>
+    </unit>
     <unit id="articleDetailARetenir">
       <notes>
         <note category="location">src/app/features/articles/article-detail.component.html:59,61</note>
