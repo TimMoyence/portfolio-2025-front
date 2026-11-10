@@ -3,13 +3,12 @@ import { HeroSectionComponent } from './hero-section.component';
 
 describe('HeroSectionComponent', () => {
   const hero = pageMontee(HeroSectionComponent, {
-    avantRendu: ({ componentInstance }) => {
-      componentInstance.title = 'Test heading';
-      componentInstance.description = 'A short description';
-      componentInstance.actions = [
-        { label: 'Primary', href: '/presentation' },
-        { label: 'Secondary', variant: 'secondary', href: '/contact' },
-      ];
+    avantRendu: ({ componentRef }) => {
+      componentRef.setInput('contenu', {
+        label: 'Connexion',
+        title: 'Test heading',
+        description: 'A short description',
+      });
     },
   });
 
@@ -17,14 +16,11 @@ describe('HeroSectionComponent', () => {
     expect(hero.composant).toBeTruthy();
   });
 
-  it('should render provided title', () => {
-    const heading = hero.racine.querySelector('[data-testid="hero-title"]');
-    expect(heading?.textContent).toContain('Test heading');
-  });
-
-  it('should render actions', () => {
-    const buttons = hero.racine.querySelectorAll('button');
-    expect(buttons.length).toBe(2);
-    expect(buttons[0].textContent).toContain('Primary');
+  it('rend le libellé, le titre en h1 et la description', () => {
+    expect(hero.racine.querySelector('h1[data-testid="hero-title"]')?.textContent).toContain(
+      'Test heading',
+    );
+    expect(hero.racine.textContent).toContain('Connexion');
+    expect(hero.racine.textContent).toContain('A short description');
   });
 });

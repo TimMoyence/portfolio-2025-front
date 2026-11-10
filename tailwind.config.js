@@ -16,7 +16,7 @@ module.exports = {
         'scheme-text-muted': 'var(--text-mute)',
         'scheme-border': 'var(--border)',
         'scheme-accent': 'var(--accent)',
-        'scheme-accent-hover': 'var(--teal-deep)',
+        'scheme-accent-hover': 'var(--teal-clair)',
         'scheme-accent-active': 'var(--teal-ink)',
         'scheme-accent-focus': '#4fb3a233',
         'scheme-on-accent': 'var(--on-accent)',

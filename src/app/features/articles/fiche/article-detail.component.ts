@@ -1,7 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  Injector,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import {
+  catchError,
+  distinctUntilChanged,
+  EMPTY,
+  map,
+  switchMap,
+  tap,
+  type Observable,
+} from 'rxjs';
 import { APP_CONFIG } from '../../../core/config/app-config.token';
 import type { PublishedArticle, SectionDeLArticle } from '../../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../../core/adapters/article-http.adapter';
@@ -65,6 +84,10 @@ export class ArticleDetailComponent {
   protected isLoading = true;
   protected hasError = false;
   protected readonly locale = injecterLocaleDeLaPage();
+  protected readonly sommaireOuvert = signal(false);
+  protected readonly partieEnCours = signal<string | null>(null);
+  private observateur: IntersectionObserver | null = null;
+  private readonly injector = inject(Injector);
   private readonly api = inject(ArticleHttpAdapter);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly seo = inject(SeoService);
@@ -73,26 +96,101 @@ export class ArticleDetailComponent {
   private readonly responseStatus = inject(HTTP_RESPONSE_STATUS, { optional: true });
 
   constructor(route: ActivatedRoute) {
-    const slug = route.snapshot.paramMap.get('slug');
+    inject(DestroyRef).onDestroy(() => this.observateur?.disconnect());
+    route.paramMap
+      .pipe(
+        map((parametres) => parametres.get('slug')),
+        distinctUntilChanged(),
+        switchMap((slug) => this.charger(slug)),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
+  }
+
+  private charger(slug: string | null): Observable<unknown> {
+    this.repartirDeZero();
     if (!slug) {
       this.signalerLAbsence(404, '');
-      return;
+      this.cdr.markForCheck();
+      return EMPTY;
     }
-    this.api.getBySlug(slug, this.locale).subscribe({
-      next: (article) => {
+    this.poserLeSeoProvisoire(slug);
+    return this.api.getBySlug(slug, this.locale).pipe(
+      tap((article) => {
         this.afficher(article);
         this.isLoading = false;
         this.poserLeSeo(article);
         this.cdr.markForCheck();
-      },
-      error: (error: unknown) => {
+      }),
+      catchError((error: unknown) => {
         this.signalerLAbsence(
           error instanceof HttpErrorResponse && error.status === 404 ? 404 : 503,
           slug,
         );
         this.cdr.markForCheck();
-      },
+        return EMPTY;
+      }),
+    );
+  }
+
+  private repartirDeZero(): void {
+    this.article = null;
+    this.lecture = null;
+    this.sommaire = [];
+    this.sources = [];
+    this.renderedContent = '';
+    this.isLoading = true;
+    this.hasError = false;
+    this.sommaireOuvert.set(false);
+    this.partieEnCours.set(null);
+    this.observateur?.disconnect();
+    this.observateur = null;
+    this.cdr.markForCheck();
+  }
+
+  protected allerA(ancre: string): void {
+    this.sommaireOuvert.set(false);
+    const partie = document.getElementById(ancre);
+    partie?.setAttribute('tabindex', '-1');
+    partie?.focus({ preventScroll: true });
+  }
+
+  private poserLeSeoProvisoire(slug: string): void {
+    const canonicalUrl = urlLocalisee(this.config.baseUrl, this.locale, `/articles/${slug}`);
+    const edition = $localize`:@@articleDetailTitreProvisoire:Édition du Morning Brief`;
+    this.seo.updateSeoMetadata({
+      title: `${edition} — ${NOM_DU_SITE}`,
+      description: $localize`:@@articleDetailDescriptionProvisoire:Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.`,
+      robots: 'noindex, nofollow',
+      canonicalUrl,
+      ogUrl: canonicalUrl,
+      hreflangs: {},
     });
+  }
+
+  protected resumeDuSommaire(): string {
+    return (
+      this.partieEnCours() ??
+      $localize`:@@articleDetailSommaireParties:${this.sommaire.length}:nombre: parties`
+    );
+  }
+
+  private suivreLaLecture(): void {
+    if (typeof IntersectionObserver === 'undefined') return;
+    this.observateur?.disconnect();
+    const libelles = new Map(this.sommaire.map((entree) => [entree.ancre, entree.libelle]));
+    this.observateur = new IntersectionObserver(
+      (entrees) => {
+        const lue = entrees.find((entree) => entree.isIntersecting);
+        const libelle = lue ? libelles.get(lue.target.id) : undefined;
+        if (libelle !== undefined) this.partieEnCours.set(libelle);
+      },
+      { rootMargin: '-20% 0px -70% 0px' },
+    );
+    for (const ancre of libelles.keys()) {
+      const partie = document.getElementById(ancre);
+      if (partie) this.observateur.observe(partie);
+    }
   }
 
   protected libelleDe(section: SectionDeLArticle): string {
@@ -154,6 +252,7 @@ export class ArticleDetailComponent {
     this.lecture = lectureDeLEdition(article);
     this.sources = sourcesParPublication(article);
     this.sommaire = this.sommaireDe(article);
+    afterNextRender(() => this.suivreLaLecture(), { injector: this.injector });
   }
 
   private sommaireDe(article: PublishedArticle): EntreeDuSommaire[] {

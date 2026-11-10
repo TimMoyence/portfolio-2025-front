@@ -13128,6 +13128,15 @@
         <target>Contents</target>
       </segment>
     </unit>
+    <unit id="articleDetailSommaireParties">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.ts:115</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="nombre" disp="this.sommaire.length"/> parties</source>
+        <target><ph id="0" equiv="nombre" disp="this.sommaire.length"/> sections</target>
+      </segment>
+    </unit>
     <unit id="articleDetailARetenir">
       <notes>
         <note category="location">src/app/features/articles/article-detail.component.html:59,61</note>
@@ -13155,6 +13164,24 @@
         <target> Why it matters </target>
       </segment>
     </unit>
+    <unit id="articleDetailTitreProvisoire">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.ts:128</note>
+      </notes>
+      <segment>
+        <source>Édition du Morning Brief</source>
+        <target>Morning Brief edition</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailDescriptionProvisoire">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.ts:129</note>
+      </notes>
+      <segment>
+        <source>Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.</source>
+        <target>A Morning Brief edition: the overnight AI watch, sorted, sourced and explained.</target>
+      </segment>
+    </unit>
     <unit id="articleDetailToutesLesSources">
       <notes>
         <note category="location">src/app/features/articles/fiche/article-detail.component.html:143,144</note>
@@ -13162,6 +13189,15 @@
       <segment>
         <source> Toutes les sources (<ph id="0" equiv="INTERPOLATION" disp="{{ sources.length }}"/>) </source>
         <target> All sources (<ph id="0" equiv="INTERPOLATION" disp="{{ sources.length }}"/>) </target>
+      </segment>
+    </unit>
+    <unit id="articleDetailAfficherLesSources">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:144</note>
+      </notes>
+      <segment>
+        <source>Afficher la liste</source>
+        <target>Show the list</target>
       </segment>
     </unit>
     <unit id="articleDetailSommaireDecryptage">
@@ -13263,24 +13299,6 @@
         <target> Stories and briefs in each section, deep dive excluded. </target>
       </segment>
     </unit>
-    <unit id="articlesAnatomieColonneRubrique">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:63,64</note>
-      </notes>
-      <segment>
-        <source>Rubrique</source>
-        <target>Section</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieColonneInformations">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:64,67</note>
-      </notes>
-      <segment>
-        <source>Informations</source>
-        <target>Stories</target>
-      </segment>
-    </unit>
     <unit id="articlesAnatomieNotePublications">
       <notes>
         <note category="location">src/app/features/articles/anatomie.component.html:98,100</note>
@@ -13288,24 +13306,6 @@
       <segment>
         <source> Informations retenues par publication. </source>
         <target> Stories kept per outlet. </target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieColonnePublication">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:108,109</note>
-      </notes>
-      <segment>
-        <source>Publication</source>
-        <target>Outlet</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieColonneInformationsRetenues">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:110,113</note>
-      </notes>
-      <segment>
-        <source> Informations </source>
-        <target> Stories </target>
       </segment>
     </unit>
     <unit id="articlesAnatomieRubriques">
@@ -13333,15 +13333,6 @@
       <segment>
         <source><ph id="0" equiv="nombre" disp="autres.publications"/> autres publications</source>
         <target><ph id="0" equiv="nombre" disp="autres.publications"/> other outlets</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieDescription">
-      <notes>
-        <note category="location">src/app/features/articles/marques/anatomie.component.ts:46</note>
-      </notes>
-      <segment>
-        <source><ph id="0" equiv="titre" disp="textes.titre"/> : <ph id="1" equiv="lignes" disp="lignes"/></source>
-        <target><ph id="0" equiv="titre" disp="textes.titre"/>: <ph id="1" equiv="lignes" disp="lignes"/></target>
       </segment>
     </unit>
     <unit id="articlesBandeDescription">

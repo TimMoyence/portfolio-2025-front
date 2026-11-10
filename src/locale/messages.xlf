@@ -1036,7 +1036,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">233</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailBackToList" datatype="html">
@@ -1054,7 +1054,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">172,174</context>
+          <context context-type="linenumber">192,194</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailMarque" datatype="html">
@@ -1068,98 +1068,130 @@
         <source>Sommaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">30,32</context>
+          <context context-type="linenumber">34,36</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
+          <context context-type="linenumber">43,44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailARetenir" datatype="html">
         <source>À retenir</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">59,61</context>
+          <context context-type="linenumber">76,78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailDecryptage" datatype="html">
         <source>Le décryptage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">74,75</context>
+          <context context-type="linenumber">91,92</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCeQueCaChange" datatype="html">
         <source> Ce que ça change </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">81,82</context>
+          <context context-type="linenumber">98,99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailToutesLesSources" datatype="html">
         <source> Toutes les sources (<x id="INTERPOLATION" equiv-text="{{ sources.length }}"/>) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">143,144</context>
+          <context context-type="linenumber">162,163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="articleDetailAfficherLesSources" datatype="html">
+        <source>Afficher la liste</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
+          <context context-type="linenumber">165,166</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailReadingTime" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ article.reading_time_minutes }}"/> min</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">177,178</context>
+          <context context-type="linenumber">197,198</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSources" datatype="html">
         <source>Sources</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.html</context>
-          <context context-type="linenumber">189,191</context>
+          <context context-type="linenumber">209,211</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCtaKicker" datatype="html">
         <source>Un sujet à clarifier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCtaTitle" datatype="html">
         <source>La bonne technologie commence par le bon problème.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCtaLead" datatype="html">
         <source>Parlons de ce que cette veille peut changer concrètement dans votre activité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="articleDetailTitreProvisoire" datatype="html">
+        <source>Édition du Morning Brief</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="articleDetailDescriptionProvisoire" datatype="html">
+        <source>Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="articleDetailSommaireParties" datatype="html">
+        <source><x id="nombre" equiv-text="this.sommaire.length"/> parties</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
+          <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailAbsenceDescription" datatype="html">
         <source>Cette édition du Morning Brief est introuvable ou momentanément indisponible.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">236</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSommaireDecryptage" datatype="html">
         <source>Le décryptage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">266</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSommaireAnatomie" datatype="html">
         <source>En chiffres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">277</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSommaireSources" datatype="html">
         <source>Sources</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">281</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesListHeroTitle" datatype="html">
@@ -1344,74 +1376,39 @@
           <context context-type="linenumber">24,25</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="articlesAnatomieDescription" datatype="html">
-        <source><x id="titre" equiv-text="textes.titre"/> : <x id="lignes" equiv-text="lignes"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="articlesAnatomieRubriques" datatype="html">
         <source>Répartition par rubrique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesAnatomieNoteRubriques" datatype="html">
         <source>Cartes et brèves de chaque rubrique, hors décryptage.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">63</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="articlesAnatomieColonneRubrique" datatype="html">
-        <source>Rubrique</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">64</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="articlesAnatomieColonneInformations" datatype="html">
-        <source>Informations</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesAnatomiePublications" datatype="html">
         <source>D’où viennent les informations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesAnatomieNotePublications" datatype="html">
         <source>Informations retenues par publication.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">70</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="articlesAnatomieColonnePublication" datatype="html">
-        <source>Publication</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">71</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="articlesAnatomieColonneInformationsRetenues" datatype="html">
-        <source>Informations</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesAnatomieAutresPublications" datatype="html">
         <source><x id="nombre" equiv-text="autres.publications"/> autres publications</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/marques/anatomie.component.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesBandeDescription" datatype="html">
@@ -1578,7 +1575,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">62,66</context>
+          <context context-type="linenumber">56,60</context>
         </context-group>
         <note priority="1" from="description">Optional field helper</note>
         <note priority="1" from="meaning">auth.field.optional</note>
@@ -2192,32 +2189,32 @@
         <source> Formulaire de contact </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">13,15</context>
+          <context context-type="linenumber">7,9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormSubject" datatype="html">
         <source> Sujet de votre demande </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">80,83</context>
+          <context context-type="linenumber">74,77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormSubjectPlaceholder" datatype="html">
         <source> Sélectionnez un sujet </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">99,102</context>
+          <context context-type="linenumber">93,96</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authErrorRequired" datatype="html">
         <source>Ce champ est obligatoire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">110,115</context>
+          <context context-type="linenumber">104,109</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">317,320</context>
+          <context context-type="linenumber">311,314</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/field-errors/field-errors.component.html</context>
@@ -2229,119 +2226,119 @@
         <source>Qui êtes-vous ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">117,119</context>
+          <context context-type="linenumber">111,113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormRoleLegend" datatype="html">
         <source>Sélectionnez votre rôle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">120,121</context>
+          <context context-type="linenumber">114,115</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormMessageLabel" datatype="html">
         <source> Votre message </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">183,186</context>
+          <context context-type="linenumber">177,180</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormTerms" datatype="html">
         <source>J&apos;accepte les conditions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">203,205</context>
+          <context context-type="linenumber">197,199</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7243381769177289361" datatype="html">
         <source>Envoyer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">209</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormSubmit" datatype="html">
         <source>Envoyer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">219,221</context>
+          <context context-type="linenumber">213,215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormLoading" datatype="html">
         <source>Envoi en cours...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">221,223</context>
+          <context context-type="linenumber">215,217</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormResponseTime" datatype="html">
         <source> Réponse sous 48h ouvrées. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">237,240</context>
+          <context context-type="linenumber">231,234</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFaqHeading" datatype="html">
         <source> Questions fréquentes avant de me contacter </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">254,256</context>
+          <context context-type="linenumber">248,250</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFaq1Q" datatype="html">
         <source> Sous quel délai ai-je une réponse ? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">259,261</context>
+          <context context-type="linenumber">253,255</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFaq1A" datatype="html">
         <source> Je réponds sous 48h ouvrées, du lundi au vendredi. Les demandes reçues le week-end sont traitées le lundi matin. Pour les audits Growth, la synthèse IA arrive sous 5 minutes et l&apos;analyse humaine sous 24h. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">265,267</context>
+          <context context-type="linenumber">259,261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFaq2Q" datatype="html">
         <source> Quels types de projets acceptez-vous ? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">272,274</context>
+          <context context-type="linenumber">266,268</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFaq2A" datatype="html">
         <source> Applications web sur mesure (Angular, NestJS, TypeScript), audits SEO/IA, intégrations OpenAI / Langchain / agents IA, accompagnement d&apos;équipes sur l&apos;outillage IA. TPE, PME, solopreneurs et équipes de moins de 20 personnes en priorité. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">278,280</context>
+          <context context-type="linenumber">272,274</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFaq3Q" datatype="html">
         <source> Intervenez-vous en présentiel à Bordeaux ? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">285,287</context>
+          <context context-type="linenumber">279,281</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFaq3A" datatype="html">
         <source> Oui, sur Bordeaux et la métropole pour des ateliers d&apos;équipe ou des réunions de cadrage. Le reste du travail est en remote, avec des points Google Meet réguliers. Possibilité de déplacement au national pour les missions longues (devis personnalisé). </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">291,293</context>
+          <context context-type="linenumber">285,287</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFaq4Q" datatype="html">
         <source> Comment se déroule un premier contact ? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">298,300</context>
+          <context context-type="linenumber">292,294</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFaq4A" datatype="html">
         <source> Vous remplissez ce formulaire avec le sujet de votre demande. Je vous réponds sous 48h avec soit un devis direct (petit projet), soit une proposition d&apos;appel découverte de 30 minutes gratuit pour cadrer le besoin et vous envoyer une estimation précise. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/contact/contact.component.html</context>
-          <context context-type="linenumber">304,306</context>
+          <context context-type="linenumber">298,300</context>
         </context-group>
       </trans-unit>
       <trans-unit id="contactFormSubjectAccess" datatype="html">
@@ -7928,56 +7925,56 @@
         <source>Audit ID: <x id="INTERPOLATION" equiv-text="{{ auditId }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">149,152</context>
+          <context context-type="linenumber">143,146</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditProgressLabel" datatype="html">
         <source>Progression de l&apos;audit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">156,158</context>
+          <context context-type="linenumber">150,152</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditCurrentUrlLabel" datatype="html">
         <source>URL en cours:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">193,194</context>
+          <context context-type="linenumber">187,188</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditRecentPagesLabel" datatype="html">
         <source> Dernières pages terminées: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">217,218</context>
+          <context context-type="linenumber">211,212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditResumeTitle" datatype="html">
         <source>Résumé de votre audit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">242,244</context>
+          <context context-type="linenumber">236,238</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPillarsTitle" datatype="html">
         <source> Audit Growth en 7 piliers </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">269,271</context>
+          <context context-type="linenumber">263,265</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPillarsSubtitle" datatype="html">
         <source> Un diagnostic concret et actionnable, aligné avec les 7 piliers du rapport livré. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">272,274</context>
+          <context context-type="linenumber">266,268</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditStepsTitle" datatype="html">
         <source> Comment ça fonctionne </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.html</context>
-          <context context-type="linenumber">289,291</context>
+          <context context-type="linenumber">283,285</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditIaTaskFallback" datatype="html">

@@ -16,7 +16,7 @@ type VueDuLivret = 'sujet' | 'corrige';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './cours-livret.component.scss',
   template: `
-    <main class="livret">
+    <div class="livret">
       @if (echec()) {
         @if (limiteDuLivret(); as limite) {
           <p class="livret__echec" data-testid="livret-echec" role="alert">{{ limite }}</p>
@@ -171,7 +171,7 @@ type VueDuLivret = 'sujet' | 'corrige';
           }
         }
       }
-    </main>
+    </div>
   `,
 })
 export class CoursLivretComponent {

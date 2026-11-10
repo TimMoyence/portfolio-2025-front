@@ -1,17 +1,17 @@
 @if (isLoading) {
-  <main class="article-state" aria-live="polite" i18n="@@articleDetailLoading">
+  <div class="article-state" aria-live="polite" i18n="@@articleDetailLoading">
     Chargement de l’article…
-  </main>
+  </div>
 } @else if (hasError || !article) {
-  <main class="article-state" role="alert">
+  <div class="article-state" role="alert">
     <h1 i18n="@@articleDetailNotFound">Article introuvable</h1>
     <a class="link-arrow" routerLink="/articles"
       ><ng-container i18n="@@articleDetailBackToList">Retour aux articles</ng-container>
       <span aria-hidden="true">→</span></a
     >
-  </main>
+  </div>
 } @else if (lecture) {
-  <main class="edition" aria-labelledby="article-title">
+  <div class="edition">
     <header class="edition__entete wrap">
       <a class="link-arrow" routerLink="/articles" i18n="@@articleDetailAllArticles"
         >← Tous les articles</a
@@ -26,12 +26,29 @@
     </header>
 
     <div class="edition__corps wrap">
-      <nav class="sommaire" aria-labelledby="sommaire-titre">
+      <nav
+        class="sommaire"
+        [class.sommaire--ouvert]="sommaireOuvert()"
+        aria-labelledby="sommaire-titre"
+      >
         <p id="sommaire-titre" class="sommaire__titre" i18n="@@articleDetailSommaire">Sommaire</p>
-        <ol>
+        <button
+          type="button"
+          class="sommaire__bascule"
+          aria-controls="sommaire-liste"
+          [attr.aria-expanded]="sommaireOuvert()"
+          (click)="sommaireOuvert.set(!sommaireOuvert())"
+        >
+          <span
+            ><ng-container i18n="@@articleDetailSommaire">Sommaire</ng-container> ·
+            {{ resumeDuSommaire() }}</span
+          >
+          <span class="sommaire__chevron" aria-hidden="true">▾</span>
+        </button>
+        <ol id="sommaire-liste">
           @for (entree of sommaire; track entree.ancre) {
             <li>
-              <a [routerLink]="[]" [fragment]="entree.ancre">
+              <a [routerLink]="[]" [fragment]="entree.ancre" (click)="allerA(entree.ancre)">
                 @if (entree.rubrique !== null) {
                   <app-picto-de-rubrique class="sommaire__picto" [id]="entree.rubrique" />
                 }
@@ -136,13 +153,16 @@
         </div>
 
         @if (sources.length) {
-          <section id="edition-sources" class="sources">
+          <section id="edition-sources" class="sources" aria-labelledby="edition-sources-titre">
+            <h2
+              id="edition-sources-titre"
+              class="sources__titre"
+              i18n="@@articleDetailToutesLesSources"
+            >
+              Toutes les sources ({{ sources.length }})
+            </h2>
             <details>
-              <summary>
-                <h2 class="sources__titre" i18n="@@articleDetailToutesLesSources">
-                  Toutes les sources ({{ sources.length }})
-                </h2>
-              </summary>
+              <summary i18n="@@articleDetailAfficherLesSources">Afficher la liste</summary>
               <div class="sources__groupes">
                 @for (groupe of sources; track groupe.nom) {
                   <div class="sources__groupe">
@@ -162,11 +182,11 @@
         }
       </article>
     </div>
-  </main>
+  </div>
 
   <app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />
 } @else {
-  <main class="article-detail" aria-labelledby="article-title">
+  <div class="article-detail">
     <header class="article-detail__header wrap">
       <a class="link-arrow" routerLink="/articles" i18n="@@articleDetailAllArticles"
         >← Tous les articles</a
@@ -197,7 +217,7 @@
         </section>
       }
     </article>
-  </main>
+  </div>
 
   <app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />
 }

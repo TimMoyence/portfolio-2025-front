@@ -3,6 +3,8 @@ import { HttpTestingController, type TestRequest } from '@angular/common/http/te
 import localeFr from '@angular/common/locales/fr';
 import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import type { Params } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
   buildEditionMorningBrief,
@@ -18,6 +20,23 @@ import type { SeoConfig } from '../../../core/seo/seo.interface';
 import { SeoService } from '../../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../../core/ssr/http-response-status';
 import { ArticleDetailComponent } from './article-detail.component';
+
+function monterLaFiche(slug: string) {
+  const parametres = new BehaviorSubject<Params>({ slug });
+  setupTestBed({
+    router: true,
+    appConfig: { baseUrl: 'https://example.com/' },
+    imports: [ArticleDetailComponent],
+    providers: [
+      { provide: LOCALE_ID, useValue: 'fr' },
+      fournirLaRoute({ parametres: { slug }, parametresSuccessifs: parametres }),
+    ],
+  });
+  const http = TestBed.inject(HttpTestingController);
+  const requete = (demande: string) =>
+    http.expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/${demande}`);
+  return { parametres, http, requete, seo: TestBed.inject(SeoService) };
+}
 
 describe('ArticleDetailComponent — statut HTTP rendu côté serveur', () => {
   let statuses: number[];
@@ -85,28 +104,78 @@ describe('ArticleDetailComponent — statut HTTP rendu côté serveur', () => {
   });
 });
 
+describe('ArticleDetailComponent — d’une édition à l’autre sans repasser par la liste', () => {
+  function monter() {
+    const banc = monterLaFiche('edition-a');
+    const seo = spyOn(banc.seo, 'updateSeoMetadata');
+    const fixture = TestBed.createComponent(ArticleDetailComponent);
+    fixture.detectChanges();
+    const page = () => fixture.nativeElement as HTMLElement;
+    const afficherB = () => {
+      banc.requete('edition-b').flush(article('edition-b', 'Édition B'));
+      fixture.detectChanges();
+      expect(texteDe(page().querySelector('h1'))).toBe('Édition B');
+      banc.http.verify();
+    };
+    return { ...banc, seo, fixture, page, afficherB };
+  }
+
+  const article = (slug: string, title: string) => buildPublishedArticle({ slug, title });
+  const seoProvisoire = (slug: string) =>
+    jasmine.objectContaining({
+      title: 'Édition du Morning Brief — Asili Design',
+      canonicalUrl: `https://example.com/fr/articles/${slug}`,
+      ogUrl: `https://example.com/fr/articles/${slug}`,
+      robots: 'noindex, nofollow',
+    });
+
+  it('repart d’une page vide et charge B quand l’adresse passe de A à B', () => {
+    const { parametres, fixture, requete, page, afficherB } = monter();
+    requete('edition-a').flush(article('edition-a', 'Édition A'));
+    fixture.detectChanges();
+    expect(texteDe(page().querySelector('h1'))).toBe('Édition A');
+
+    parametres.next({ slug: 'edition-b' });
+    fixture.detectChanges();
+    expect(page().textContent).not.toContain('Édition A');
+    expect(page().textContent).toContain('Chargement de l’article…');
+
+    afficherB();
+  });
+
+  it('abandonne la réponse de A quand B est demandée avant qu’elle arrive', () => {
+    const { parametres, requete, afficherB } = monter();
+    const premiere = requete('edition-a');
+
+    parametres.next({ slug: 'edition-b' });
+    afficherB();
+
+    expect(premiere.cancelled).toBeTrue();
+  });
+
+  it('pose un titre et une adresse provisoires dès le début de chaque chargement', () => {
+    const { parametres, seo, requete, afficherB } = monter();
+
+    expect(seo.calls.mostRecent().args[0]).toEqual(seoProvisoire('edition-a'));
+    requete('edition-a').flush(article('edition-a', 'Édition A'));
+
+    parametres.next({ slug: 'edition-b' });
+
+    expect(seo.calls.mostRecent().args[0]).toEqual(seoProvisoire('edition-b'));
+    afficherB();
+  });
+});
+
 describe('ArticleDetailComponent — métadonnées SEO', () => {
   function seoApres(repondre: (requete: TestRequest) => void): SeoConfig {
-    setupTestBed({
-      router: true,
-      appConfig: { baseUrl: 'https://example.com/' },
-      imports: [ArticleDetailComponent],
-      providers: [
-        { provide: LOCALE_ID, useValue: 'fr' },
-        fournirLaRoute({ parametres: { slug: 'veille' } }),
-      ],
-    });
-    const seo = TestBed.inject(SeoService);
+    const { seo, http, requete } = monterLaFiche('veille');
     const miseAJour = spyOn(seo, 'updateSeoMetadata');
-    const httpMock = TestBed.inject(HttpTestingController);
     TestBed.createComponent(ArticleDetailComponent).detectChanges();
 
-    repondre(
-      httpMock.expectOne((request) => request.url === `${environment.apiBaseUrl}/articles/veille`),
-    );
+    repondre(requete('veille'));
 
-    httpMock.verify();
-    expect(miseAJour).toHaveBeenCalledTimes(1);
+    http.verify();
+    expect(miseAJour).toHaveBeenCalledTimes(2);
     return miseAJour.calls.mostRecent().args[0];
   }
 
@@ -298,8 +367,19 @@ describe('ArticleDetailComponent — l’édition rendue depuis ses sections', (
 
     expect(page.querySelector('#edition-anatomie app-anatomie')).not.toBeNull();
     expect(sources.hasAttribute('open')).toBeFalse();
-    expect(texteDe(sources.querySelector('summary h2'))).toBe('Toutes les sources (6)');
+    expect(texteDe(sources.querySelector('summary'))).toBe('Afficher la liste');
     expect(textes(sources, '.sources__publication')).toContain('Vercel Blog');
+  });
+
+  it('titre le bloc des sources par un vrai h2, hors du bouton qui le déplie', () => {
+    const page = rendre(buildEditionMorningBrief());
+    const section = page.querySelector('#edition-sources')!;
+    const titre = section.querySelector('h2');
+
+    expect(texteDe(titre)).toBe('Toutes les sources (6)');
+    expect(titre?.closest('summary')).toBeNull();
+    expect(section.getAttribute('aria-labelledby')).toBe(titre?.id ?? 'absent');
+    expect(section.querySelector('summary h2, summary [role="heading"]')).toBeNull();
   });
 
   it('se replie sur le markdown quand l’article n’a pas de sections', () => {
@@ -323,5 +403,100 @@ describe('ArticleDetailComponent — l’édition rendue depuis ses sections', (
     expect(page.querySelector('.article-sources a')?.getAttribute('href')).toBe(
       'https://www.lemonde.fr/x',
     );
+  });
+});
+
+describe('ArticleDetailComponent — sommaire repliable sur mobile', () => {
+  type Rappel = (entrees: readonly Partial<IntersectionObserverEntry>[]) => void;
+  let rappels: Rappel[];
+  let deconnexions: number;
+
+  beforeAll(() => registerLocaleData(localeFr));
+
+  beforeEach(() => {
+    rappels = [];
+    deconnexions = 0;
+    spyOn(window, 'IntersectionObserver').and.callFake(function faux(rappel: Rappel) {
+      rappels.push(rappel);
+      return {
+        observe: () => undefined,
+        unobserve: () => undefined,
+        disconnect: () => (deconnexions += 1),
+      };
+    } as unknown as () => IntersectionObserver);
+  });
+
+  function monter() {
+    const edition = buildEditionMorningBrief();
+    const { parametres, requete } = monterLaFiche(edition.slug);
+    const fixture = TestBed.createComponent(ArticleDetailComponent);
+    fixture.autoDetectChanges();
+    const servir = (slug: string) => {
+      requete(slug).flush({ ...edition, slug });
+      fixture.detectChanges();
+    };
+    servir(edition.slug);
+    const page = fixture.nativeElement as HTMLElement;
+    const bascule = () => page.querySelector<HTMLButtonElement>('.sommaire__bascule')!;
+    const lire = (ancre: string) => {
+      for (const rappel of rappels) {
+        rappel([{ isIntersecting: true, target: page.querySelector(`#${ancre}`)! }]);
+      }
+      fixture.detectChanges();
+    };
+    return { fixture, page, bascule, parametres, servir, lire };
+  }
+
+  it('repart d’un sommaire fermé et sans partie lue sur l’édition suivante', async () => {
+    const { fixture, bascule, parametres, servir, lire } = monter();
+    await fixture.whenStable();
+    bascule().click();
+    lire('mb-deep-dive');
+
+    const avant = deconnexions;
+    parametres.next({ slug: 'morning-brief-2026-11-09' });
+    expect(deconnexions).toBe(avant + 1);
+    servir('morning-brief-2026-11-09');
+
+    expect(bascule().getAttribute('aria-expanded')).toBe('false');
+    expect(texteDe(bascule())).toContain('Sommaire · 8 parties');
+  });
+
+  it('pose le focus sur la partie choisie, la liste refermée', () => {
+    const { page, bascule } = monter();
+    bascule().click();
+
+    page.querySelector<HTMLAnchorElement>('.sommaire ol a')!.click();
+
+    expect(document.activeElement).toBe(page.querySelector('#mb-essential'));
+  });
+
+  it('ouvre la liste par une seule commande, et la referme au choix d’une partie', () => {
+    const { fixture, page, bascule } = monter();
+    const liste = page.querySelector('.sommaire ol')!;
+
+    expect(bascule().getAttribute('aria-expanded')).toBe('false');
+    expect(bascule().getAttribute('aria-controls')).toBe(liste.id);
+    expect(page.querySelector('.sommaire--ouvert')).toBeNull();
+
+    bascule().click();
+    fixture.detectChanges();
+    expect(bascule().getAttribute('aria-expanded')).toBe('true');
+    expect(page.querySelector('.sommaire--ouvert')).not.toBeNull();
+
+    liste.querySelector<HTMLAnchorElement>('a')!.click();
+    fixture.detectChanges();
+    expect(bascule().getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('nomme la partie en cours de lecture, puis le nombre de parties avant toute lecture', async () => {
+    const { fixture, bascule, lire } = monter();
+    await fixture.whenStable();
+
+    expect(texteDe(bascule())).toContain('Sommaire · 8 parties');
+
+    lire('mb-deep-dive');
+
+    expect(texteDe(bascule())).toContain('Sommaire · Le décryptage');
   });
 });

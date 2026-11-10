@@ -138,6 +138,18 @@ describe('ArticlesListComponent — la une du journal', () => {
     published_at: '2026-11-07T04:15:00.000Z',
   });
 
+  it('n a qu un h1, celui du hero ; la manchette nomme le journal en h2', () => {
+    const page = rendre([buildEditionMorningBrief(), veille]);
+
+    expect(page.querySelectorAll('h1').length).toBe(1);
+    expect(page.querySelector('app-asili-hero h1')).not.toBeNull();
+    const manchette = page.querySelector('#articles-heading');
+    expect(manchette?.tagName).toBe('H2');
+    expect(
+      page.querySelector('[aria-labelledby="articles-heading"]')?.contains(manchette),
+    ).toBeTrue();
+  });
+
   it('met la dernière édition à la une : décryptage en titre, rubriques, compteurs, points clés', () => {
     const une = rendre([buildEditionMorningBrief(), veille]).querySelector<HTMLElement>(
       '[data-testid="une"]',

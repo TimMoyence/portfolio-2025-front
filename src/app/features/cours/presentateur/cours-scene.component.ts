@@ -266,7 +266,7 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
             </button>
           </div>
         </header>
-        <main class="scene-canvas" data-testid="scene-canvas">
+        <div class="scene-canvas" data-testid="scene-canvas">
           @if (ecranCourant(); as ecranAffiche) {
             <app-cours-presentation
               mode="projection"
@@ -293,7 +293,7 @@ function ecranProjete(ecran: EcranDeroule): EcranContent {
               }
             </ng-template>
           }
-        </main>
+        </div>
       </div>
       @if (lectureDeroule() === 'succes') {
         <p

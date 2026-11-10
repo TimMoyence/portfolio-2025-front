@@ -59,7 +59,40 @@ describe('Anatomie de l’édition — calculée depuis les sections servies', (
   });
 
   it('mesure la part des informations datées publiées dans les 24 h avant l’édition', () => {
-    expect(anatomieDeLEdition(buildEditionMorningBrief()).partDes24Heures).toBeCloseTo(5 / 6, 6);
+    expect(anatomieDeLEdition(buildEditionMorningBrief()).partDes24Heures).toBeCloseTo(4 / 6, 6);
+  });
+
+  const partPubliee = (publication: string, datees: readonly string[]) =>
+    anatomieDeLEdition(
+      buildEditionMorningBrief({
+        published_at: publication,
+        sections: [
+          buildSectionDeLArticle({
+            items: datees.map((published_at) => buildItemDeSection({ published_at })),
+          }),
+        ],
+      }),
+    ).partDes24Heures;
+
+  it('borne la part des 24 h à [publication − 24 h, publication], bornes comprises', () => {
+    expect(
+      partPubliee('2026-11-09T04:00:00.000Z', [
+        '2026-11-08T04:00:00.000Z',
+        '2026-11-09T04:00:00.000Z',
+        '2026-11-08T03:59:59.999Z',
+        '2026-11-09T04:00:00.001Z',
+      ]),
+    ).toBe(2 / 4);
+  });
+
+  it('compte le fetch de 20 h d’une édition de nuit, datée par le Pi à minuit UTC', () => {
+    expect(
+      partPubliee('2026-11-09T00:00:00.000Z', [
+        '2026-11-08T19:00:00.000Z',
+        '2026-11-08T08:30:00.000Z',
+        '2026-11-07T22:00:00.000Z',
+      ]),
+    ).toBeCloseTo(2 / 3, 6);
   });
 
   it('ne donne aucune part quand aucune information n’est datée', () => {

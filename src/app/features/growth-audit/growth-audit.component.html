@@ -1,10 +1,4 @@
-<app-hero-section
-  [label]="hero.label"
-  [title]="hero.title"
-  [description]="hero.description"
-  titleLevel="h1"
-  align="center"
-></app-hero-section>
+<app-hero-section [contenu]="hero" />
 
 <section class="container px-2 py-4 grid gap-6 grid-cols-12">
   <div class="rounded-form border border-scheme-border bg-scheme-surface p-6 col-span-12">
@@ -132,7 +126,7 @@
 
       <button
         type="submit"
-        class="mt-2 inline-flex items-center justify-center rounded-button bg-scheme-accent px-6 py-3 text-sm md:text-base font-semibold text-white transition-colors hover:bg-scheme-accent-hover disabled:opacity-60"
+        class="mt-2 inline-flex items-center justify-center rounded-button bg-scheme-accent px-6 py-3 text-sm md:text-base font-semibold text-scheme-on-accent transition-colors hover:bg-scheme-accent-hover disabled:opacity-60"
         [disabled]="isSubmitting || !auditForm.form.valid || !rgpdConsent"
       >
         {{ formLabels.submit }}

@@ -6,12 +6,12 @@
   </ng-container>
 </app-asili-hero>
 
-<main class="journal wrap" aria-labelledby="articles-heading">
+<section class="journal wrap" aria-labelledby="articles-heading">
   <header class="manchette">
     <p class="manchette__marque" i18n="@@articlesListMarque">Morning Brief</p>
-    <h1 id="articles-heading" class="manchette__titre" i18n="@@articlesListSectionTitle">
+    <h2 id="articles-heading" class="manchette__titre" i18n="@@articlesListSectionTitle">
       Lire, comprendre, décider.
-    </h1>
+    </h2>
     <p class="manchette__devise" i18n="@@articlesListDevise">
       La veille IA de la nuit, triée, sourcée et expliquée chaque matin.
     </p>
@@ -123,6 +123,6 @@
       <p class="state" i18n="@@articlesListEmpty">La première édition arrive bientôt.</p>
     }
   }
-</main>
+</section>
 
 <app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />

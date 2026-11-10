@@ -17,12 +17,6 @@ function rendre(article: PublishedArticle): HTMLElement {
   return fixture.nativeElement as HTMLElement;
 }
 
-function lignesDuTableau(figure: Element): string[][] {
-  return Array.from(figure.querySelectorAll('table tbody tr')).map((ligne) =>
-    Array.from(ligne.querySelectorAll('th, td')).map(texte),
-  );
-}
-
 describe('AnatomieComponent — l’édition en figures accessibles', () => {
   it('donne les chiffres clés : informations, sources, minutes, part publiée dans les 24 h', () => {
     const page = rendre(buildEditionMorningBrief());
@@ -34,7 +28,7 @@ describe('AnatomieComponent — l’édition en figures accessibles', () => {
       ['Informations', '7'],
       ['Sources', '6'],
       ['Minutes de lecture', '9'],
-      ['Publiées dans les 24 h', '83 %'],
+      ['Publiées dans les 24 h', '67 %'],
     ]);
   });
 
@@ -47,24 +41,23 @@ describe('AnatomieComponent — l’édition en figures accessibles', () => {
       'D’où viennent les informations',
     ]);
     expect(figures[0].querySelector('[role="img"]')?.getAttribute('aria-label')).toBe(
-      'Répartition par rubrique : Modèles IA & Recherche 4, Outils IA & Agents 1, Autres signaux 1',
+      'Modèles IA & Recherche 4, Outils IA & Agents 1, Autres signaux 1',
     );
     expect(figures[1].querySelector('[role="img"]')?.getAttribute('aria-label')).toContain(
       'Vercel Blog 2',
     );
   });
 
-  it('double chaque graphique d’un tableau pour les lecteurs d’écran', () => {
+  it('annonce chaque graphique une seule fois : ni tableau en double, ni titre répété', () => {
     const page = rendre(buildEditionMorningBrief());
-    const [rubriques, publications] = Array.from(page.querySelectorAll('figure'));
 
-    expect(lignesDuTableau(rubriques)).toEqual([
-      ['Modèles IA & Recherche', '4'],
-      ['Outils IA & Agents', '1'],
-      ['Autres signaux', '1'],
-    ]);
-    expect(lignesDuTableau(publications)[0]).toEqual(['Vercel Blog', '2']);
-    expect(rubriques.querySelector('table')?.classList).toContain('sr-only');
+    for (const figure of Array.from(page.querySelectorAll('figure'))) {
+      expect(figure.querySelector('table')).toBeNull();
+      expect(figure.querySelectorAll('[role="img"]').length).toBe(1);
+      expect(figure.querySelector('[role="img"]')?.getAttribute('aria-label')).not.toContain(
+        texte(figure.querySelector('figcaption')),
+      );
+    }
   });
 
   it('rapporte chaque barre à la plus grande part', () => {
@@ -96,7 +89,12 @@ describe('AnatomieComponent — l’édition en figures accessibles', () => {
       buildEditionMorningBrief({ sections: [buildSectionDeLArticle({ items })] }),
     );
 
-    const lignes = lignesDuTableau(page.querySelector('[data-testid="figure-publications"]')!);
+    const lignes = Array.from(
+      page.querySelectorAll('[data-testid="figure-publications"] .barre'),
+    ).map((barre) => [
+      texte(barre.querySelector('.barre__nom')),
+      texte(barre.querySelector('.barre__nombre')),
+    ]);
     expect(lignes.at(-1)).toEqual(['2 autres publications', '2']);
   });
 });

@@ -1,10 +1,4 @@
-<app-hero-section
-  [label]="hero.label"
-  align="center"
-  [title]="hero.title"
-  [description]="hero.description"
-  titleLevel="h1"
-></app-hero-section>
+<app-hero-section [contenu]="hero" />
 
 <section class="px-[5%] py-6 md:py-8 lg:py-12">
   <div class="container mb-6 md:mb-8">
@@ -209,7 +203,7 @@
       <div class="grid col-span-1 md:col-span-2 gap-4">
         <button
           type="submit"
-          class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border bg-scheme-accent px-6 py-3 text-white transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60 hover:bg-scheme-accent-hover"
+          class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border bg-scheme-accent px-6 py-3 text-scheme-on-accent transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60 hover:bg-scheme-accent-hover"
           i18n-title
           title="Envoyer"
           [disabled]="isContactLoading || !contactFormRef.form.valid"

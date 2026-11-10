@@ -102,7 +102,7 @@ type FormState = 'idle' | 'loading' | 'success' | 'error';
           <button
             type="submit"
             [disabled]="!isValid() || state() === 'loading'"
-            class="w-full rounded-full bg-scheme-accent px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-scheme-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full rounded-full bg-scheme-accent px-6 py-3 text-sm font-semibold text-scheme-on-accent transition-all hover:bg-scheme-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
           >
             @if (state() === 'loading') {
               <span i18n="@@toolkit-form.submit.loading">Envoi en cours...</span>
