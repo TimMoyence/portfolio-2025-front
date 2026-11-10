@@ -164,6 +164,88 @@ function sectionsDeLEdition(): SectionDeLArticle[] {
   ];
 }
 
+function buildInfoDuJour(overrides: Partial<ItemDeSection> = {}): ItemDeSection {
+  return buildItemDeSection({
+    entity: 'Apiiro',
+    title: 'Claude Code laisse fuiter des secrets',
+    text: 'Des mots de passe ont fuité sur GitHub, enregistrés par l’outil.',
+    for_business: 'Vos équipes vérifient leurs dépôts publics cette semaine.',
+    under_the_hood: 'Le fichier settings.local.json garde les commandes autorisées.',
+    audience: 'dirigeants',
+    horizon: 'trimestre',
+    rubric: 'outils-ia',
+    source: 'Apiiro',
+    url: 'https://apiiro.com/blog/fuite',
+    ...overrides,
+  });
+}
+
+function sectionsDeLEditionRefondue(): SectionDeLArticle[] {
+  return [
+    buildSectionDeLArticle({
+      id: 'brief',
+      kind: 'brief',
+      title: 'Le brief en 30 s',
+      items: [
+        buildItemDeSection({
+          entity: '',
+          figure: '23 points',
+          text: 'd’écart en reformulant la consigne',
+          source: 'DeepSWE',
+          url: 'https://deepswe.ai/consignes',
+        }),
+        buildItemDeSection({
+          entity: '',
+          text: 'Une IA mal briefée se trompe autant qu’un stagiaire.',
+          source: 'DeepSWE',
+          url: 'https://deepswe.ai/consignes',
+        }),
+      ],
+    }),
+    buildSectionDeLArticle({
+      id: 'infos',
+      kind: 'infos',
+      title: 'Les infos du jour',
+      items: [
+        buildInfoDuJour({ episode: 3, recap: 'Claude Code range ses réglages en clair.' }),
+        buildInfoDuJour({
+          entity: 'Vercel',
+          title: 'Vercel accélère les réponses',
+          text: 'Un modèle répond à plus de 1 000 mots par seconde.',
+          for_business: undefined,
+          under_the_hood: undefined,
+          audience: 'developpeurs',
+          horizon: 'aujourdhui',
+          rubric: 'modeles-ia',
+          source: 'Vercel Blog',
+          url: 'https://vercel.com/changelog/rapide',
+        }),
+      ],
+    }),
+    buildSectionDeLArticle({
+      id: 'radar-outils-ia',
+      kind: 'radar',
+      title: 'Radar — Outils IA & Agents',
+      items: [
+        buildItemDeSection({
+          entity: 'Hoist',
+          text: 'Hoist publie une app Node en une commande.',
+          url: 'https://hoist.dev/lancement',
+        }),
+      ],
+    }),
+  ];
+}
+
+export function buildEditionRefondue(overrides: Partial<PublishedArticle> = {}): PublishedArticle {
+  return buildEditionMorningBrief({
+    slug: 'morning-brief-2026-11-10',
+    reading_time_minutes: 3,
+    sections: sectionsDeLEditionRefondue(),
+    ...overrides,
+  });
+}
+
 export function buildEditionMorningBrief(
   overrides: Partial<PublishedArticle> = {},
 ): PublishedArticle {

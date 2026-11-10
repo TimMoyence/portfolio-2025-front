@@ -9,6 +9,8 @@ import { renderArticleMarkdown } from './markdown-article.utils';
 export interface LectureDeLEdition {
   readonly titre: string;
   readonly chapeau: string;
+  readonly puces: readonly string[];
+  readonly lignesDuBrief: readonly ItemDeSection[];
   readonly points: readonly string[];
   readonly decryptage: SectionDeLArticle | null;
   readonly corpsDuDecryptage: string;
@@ -35,10 +37,17 @@ export function lectureDeLEdition(article: PublishedArticle): LectureDeLEdition 
     .join('\n')
     .trim();
   const sourceDuDecryptage = decryptage?.items[0] ?? null;
+  const aLaUne = article.sections.find((section) => section.kind === 'infos')?.items[0];
+  const puces = lignes.flatMap((ligne) => PUCE.exec(ligne)?.slice(1, 2) ?? []).map((p) => p.trim());
+  const lignesDuBrief = article.sections
+    .filter((section) => section.kind === 'brief')
+    .flatMap((section) => section.items.filter((item) => !item.figure));
   return {
-    titre: decryptage?.title.trim() || article.title,
+    titre: decryptage?.title.trim() || aLaUne?.title?.trim() || article.title,
     chapeau: chapeau ? renderArticleMarkdown(chapeau) : '',
-    points: lignes.flatMap((ligne) => PUCE.exec(ligne)?.slice(1, 2) ?? []).map((p) => p.trim()),
+    puces,
+    lignesDuBrief,
+    points: [...puces, ...lignesDuBrief.map((item) => item.text)],
     decryptage,
     corpsDuDecryptage: decryptage?.body ? renderArticleMarkdown(decryptage.body) : '',
     sourceDuDecryptage,
@@ -74,7 +83,7 @@ export function sourcesParPublication(article: PublishedArticle): GroupeDeSource
   for (const section of article.sections) {
     for (const item of section.items) {
       const libelle = section.kind === 'deep_dive' ? section.title : item.entity;
-      if (!faits.has(item.url)) faits.set(item.url, libelle);
+      if (libelle && !faits.get(item.url)) faits.set(item.url, libelle);
     }
   }
   const groupes = new Map<string, { url: string; libelle: string }[]>();

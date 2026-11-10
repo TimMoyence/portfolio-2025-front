@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import type { ItemDeSection } from '../../../core/models/article.model';
 import { JourDuSitePipe } from '../../../shared/pipes/date-du-site.pipe';
-import type { AnatomieDeLEdition, PartDeRubrique } from '../edition/anatomie-de-l-edition';
+import type { AnatomieDeLEdition } from '../edition/anatomie-de-l-edition';
 import { identiteDeRubrique } from '../edition/identite-des-rubriques';
 import { siteDe } from '../edition/lecture-de-l-edition';
 
@@ -39,110 +39,6 @@ import { siteDe } from '../edition/lecture-de-l-edition';
 export class PictoDeRubriqueComponent {
   readonly id = input.required<string>();
   protected readonly identite = computed(() => identiteDeRubrique(this.id(), ''));
-}
-
-@Component({
-  selector: 'app-bande-des-rubriques',
-  standalone: true,
-  template: `
-    <div
-      class="bande"
-      [class.bande--fine]="fine()"
-      role="img"
-      [attr.aria-label]="description()"
-      data-testid="bande-des-rubriques"
-    >
-      @for (part of parts(); track part.id) {
-        <span
-          class="bande__segment"
-          [style.flex-grow]="part.nombre"
-          [style.background-color]="couleur(part)"
-        ></span>
-      }
-    </div>
-    @if (legende()) {
-      <ul class="legende" data-testid="legende-des-rubriques">
-        @for (part of parts(); track part.id) {
-          <li>
-            <span class="legende__pastille" [style.background-color]="couleur(part)"></span>
-            <span class="legende__libelle">{{ libelle(part) }}</span>
-            <span class="legende__nombre">{{ part.nombre }}</span>
-          </li>
-        }
-      </ul>
-    }
-  `,
-  styles: `
-    :host {
-      display: block;
-    }
-    .bande {
-      display: flex;
-      gap: 2px;
-      height: 8px;
-    }
-    .bande--fine {
-      height: 4px;
-    }
-    .bande__segment {
-      flex-basis: 0;
-      min-width: 4px;
-    }
-    .bande__segment:first-child {
-      border-radius: 4px 0 0 4px;
-    }
-    .bande__segment:last-child {
-      border-radius: 0 4px 4px 0;
-    }
-    .bande__segment:only-child {
-      border-radius: 4px;
-    }
-    .legende {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem 1.25rem;
-      margin: 0.85rem 0 0;
-      padding: 0;
-      list-style: none;
-      color: var(--text);
-      font-size: 0.875rem;
-    }
-    .legende li {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-    }
-    .legende__pastille {
-      width: 0.6rem;
-      height: 0.6rem;
-      border-radius: 50%;
-    }
-    .legende__nombre {
-      color: var(--text-mute);
-      font-variant-numeric: tabular-nums;
-    }
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class BandeDesRubriquesComponent {
-  readonly parts = input.required<readonly PartDeRubrique[]>();
-  readonly legende = input(false);
-  readonly fine = input(false);
-
-  protected readonly description = computed(() => {
-    const liste = this.parts()
-      .map((part) => `${this.libelle(part)} ${part.nombre}`)
-      .join(', ');
-    return $localize`:@@articlesBandeDescription:Informations par rubrique : ${liste}:liste:`;
-  });
-
-  protected couleur(part: PartDeRubrique): string {
-    return identiteDeRubrique(part.id, part.titre).couleur;
-  }
-
-  protected libelle(part: PartDeRubrique): string {
-    return identiteDeRubrique(part.id, part.titre).libelle;
-  }
 }
 
 @Component({

@@ -13092,15 +13092,6 @@
         <target>Key takeaways</target>
       </segment>
     </unit>
-    <unit id="articlesListAuSommaire">
-      <notes>
-        <note category="location">src/app/features/articles/articles-list.component.html:59,60</note>
-      </notes>
-      <segment>
-        <source>Au sommaire</source>
-        <target>In this edition</target>
-      </segment>
-    </unit>
     <unit id="articlesListArchives">
       <notes>
         <note category="location">src/app/features/articles/articles-list.component.html:69,71</note>
@@ -13333,15 +13324,6 @@
       <segment>
         <source><ph id="0" equiv="nombre" disp="autres.publications"/> autres publications</source>
         <target><ph id="0" equiv="nombre" disp="autres.publications"/> other outlets</target>
-      </segment>
-    </unit>
-    <unit id="articlesBandeDescription">
-      <notes>
-        <note category="location">src/app/features/articles/marques-de-l-edition.component.ts:136</note>
-      </notes>
-      <segment>
-        <source>Informations par rubrique : <ph id="0" equiv="liste" disp="liste"/></source>
-        <target>Stories by section: <ph id="0" equiv="liste" disp="liste"/></target>
       </segment>
     </unit>
     <unit id="articlesCompteurInformations">
@@ -15467,6 +15449,222 @@
       <segment>
         <source>Trop de tentatives en peu de temps : réessayez dans <ph id="0" equiv="minutes" disp="minutes"/> min.</source>
         <target>Too many attempts in a short time: try again in <ph id="0" equiv="minutes" disp="minutes"/> min.</target>
+      </segment>
+    </unit>
+    <unit id="articlesPublicTous">
+      <notes>
+        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:4</note>
+      </notes>
+      <segment>
+        <source>Tous</source>
+        <target>Everyone</target>
+      </segment>
+    </unit>
+    <unit id="articlesPublicDirigeants">
+      <notes>
+        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:5</note>
+      </notes>
+      <segment>
+        <source>Dirigeants</source>
+        <target>Business leaders</target>
+      </segment>
+    </unit>
+    <unit id="articlesPublicDeveloppeurs">
+      <notes>
+        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:6</note>
+      </notes>
+      <segment>
+        <source>Développeurs</source>
+        <target>Developers</target>
+      </segment>
+    </unit>
+    <unit id="articlesHorizonAujourdhui">
+      <notes>
+        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:10</note>
+      </notes>
+      <segment>
+        <source>Aujourd’hui</source>
+        <target>Today</target>
+      </segment>
+    </unit>
+    <unit id="articlesHorizonTrimestre">
+      <notes>
+        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:11</note>
+      </notes>
+      <segment>
+        <source>Ce trimestre</source>
+        <target>This quarter</target>
+      </segment>
+    </unit>
+    <unit id="articlesHorizonASurveiller">
+      <notes>
+        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:12</note>
+      </notes>
+      <segment>
+        <source>À surveiller</source>
+        <target>Worth watching</target>
+      </segment>
+    </unit>
+    <unit id="articlesRubriqueModelesIa">
+      <notes>
+        <note category="location">src/app/features/articles/edition/noms-des-rubriques.ts:2</note>
+      </notes>
+      <segment>
+        <source>Modèles IA &amp; Recherche</source>
+        <target>AI Models &amp; Research</target>
+      </segment>
+    </unit>
+    <unit id="articlesRubriqueOutilsIa">
+      <notes>
+        <note category="location">src/app/features/articles/edition/noms-des-rubriques.ts:3</note>
+      </notes>
+      <segment>
+        <source>Outils IA &amp; Agents</source>
+        <target>AI Tools &amp; Agents</target>
+      </segment>
+    </unit>
+    <unit id="articlesRubriqueDevFrameworks">
+      <notes>
+        <note category="location">src/app/features/articles/edition/noms-des-rubriques.ts:4</note>
+      </notes>
+      <segment>
+        <source>Dev &amp; Frameworks</source>
+        <target>Dev &amp; Frameworks</target>
+      </segment>
+    </unit>
+    <unit id="articlesRubriqueWebInternet">
+      <notes>
+        <note category="location">src/app/features/articles/edition/noms-des-rubriques.ts:5</note>
+      </notes>
+      <segment>
+        <source>Web &amp; Internet</source>
+        <target>Web &amp; Internet</target>
+      </segment>
+    </unit>
+    <unit id="articlesRubriqueBusinessNiches">
+      <notes>
+        <note category="location">src/app/features/articles/edition/noms-des-rubriques.ts:6</note>
+      </notes>
+      <segment>
+        <source>Business &amp; Niches</source>
+        <target>Business &amp; Niches</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailProfondeurDeLecture">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:29,30</note>
+      </notes>
+      <segment>
+        <source>Profondeur de lecture</source>
+        <target>Reading depth</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailVueEssentiel">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:38,40</note>
+      </notes>
+      <segment>
+        <source> Essentiel </source>
+        <target> Essentials </target>
+      </segment>
+    </unit>
+    <unit id="articleDetailVueSousLeCapot">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:46,48</note>
+      </notes>
+      <segment>
+        <source> Sous le capot </source>
+        <target> Under the hood </target>
+      </segment>
+    </unit>
+    <unit id="articleDetailBrief">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:94,95</note>
+      </notes>
+      <segment>
+        <source>Le brief en 30 s</source>
+        <target>The 30-second brief</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailInfosDuJour">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:111,112</note>
+      </notes>
+      <segment>
+        <source>Les infos du jour</source>
+        <target>Today’s stories</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailALaUne">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:117,118</note>
+      </notes>
+      <segment>
+        <source>À la une</source>
+        <target>Top story</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailInfoNumero">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:120,121</note>
+      </notes>
+      <segment>
+        <source>Info <ph id="0" equiv="INTERPOLATION" disp="{{ rang + 1 }}"/></source>
+        <target>Story <ph id="0" equiv="INTERPOLATION" disp="{{ rang + 1 }}"/></target>
+      </segment>
+    </unit>
+    <unit id="articleDetailEpisode">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:126,127</note>
+      </notes>
+      <segment>
+        <source>Épisode <ph id="0" equiv="INTERPOLATION" disp="{{ info.episode }}"/></source>
+        <target>Episode <ph id="0" equiv="INTERPOLATION" disp="{{ info.episode }}"/></target>
+      </segment>
+    </unit>
+    <unit id="articleDetailPrecedemment">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:130,131</note>
+      </notes>
+      <segment>
+        <source>Précédemment :</source>
+        <target>Previously:</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailPourVotreEntreprise">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:152,153</note>
+      </notes>
+      <segment>
+        <source> Pour votre entreprise </source>
+        <target> For your business </target>
+      </segment>
+    </unit>
+    <unit id="articleDetailSousLeCapot">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:159,160</note>
+      </notes>
+      <segment>
+        <source>Sous le capot</source>
+        <target>Under the hood</target>
+      </segment>
+    </unit>
+    <unit id="articleDetailJaugePour">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.ts:302</note>
+      </notes>
+      <segment>
+        <source>Pour : <ph id="0" equiv="public" disp="PUBLICS_D_UNE_INFO[info.audience]"/></source>
+        <target>For: <ph id="0" equiv="public" disp="PUBLICS_D_UNE_INFO[info.audience]"/></target>
+      </segment>
+    </unit>
+    <unit id="articleDetailJaugeHorizon">
+      <notes>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.ts:304</note>
+      </notes>
+      <segment>
+        <source>Horizon : <ph id="0" equiv="horizon" disp="HORIZONS_D_UNE_INFO[info.horizon]"/></source>
+        <target>Horizon: <ph id="0" equiv="horizon" disp="HORIZONS_D_UNE_INFO[info.horizon]"/></target>
       </segment>
     </unit>
   </file>

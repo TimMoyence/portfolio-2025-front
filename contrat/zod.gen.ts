@@ -343,15 +343,35 @@ export const zArticleDeliveryResponseDto = z.object({
   processed_at: z.iso.datetime().nullable(),
 });
 
-export const zTypeDeSection = z.enum(['essential', 'deep_dive', 'rubric', 'radar']);
+export const zTypeDeSection = z.enum([
+  'essential',
+  'deep_dive',
+  'rubric',
+  'radar',
+  'brief',
+  'infos',
+]);
+
+export const zPublicDUneInfo = z.enum(['tous', 'dirigeants', 'developpeurs']);
+
+export const zHorizonDUneInfo = z.enum(['aujourdhui', 'trimestre', 'a_surveiller']);
 
 export const zArticleSectionItemResponseDto = z.object({
   entity: z.string(),
   text: z.string(),
   source: z.string(),
-  url: z.url(),
+  url: z.url().regex(/^[Hh][Tt][Tt][Pp][Ss]?:\/\//),
   published_at: z.iso.datetime().optional(),
   retrieved_at: z.iso.datetime().optional(),
+  title: z.string().optional(),
+  figure: z.string().optional(),
+  for_business: z.string().optional(),
+  under_the_hood: z.string().optional(),
+  audience: zPublicDUneInfo.optional(),
+  horizon: zHorizonDUneInfo.optional(),
+  episode: z.number().gte(2).optional(),
+  recap: z.string().optional(),
+  rubric: z.string().optional(),
 });
 
 export const zArticleSectionResponseDto = z.object({
@@ -365,7 +385,7 @@ export const zArticleSectionResponseDto = z.object({
 
 export const zArticleSourceResponseDto = z.object({
   name: z.string(),
-  url: z.url(),
+  url: z.url().regex(/^[Hh][Tt][Tt][Pp][Ss]?:\/\//),
   published_at: z.iso.datetime().nullable(),
   retrieved_at: z.iso.datetime().nullable(),
 });
@@ -382,7 +402,10 @@ export const zArticleSeoResponseDto = z.object({
   description: z.string(),
   canonical_path: z.string(),
   keywords: z.array(z.string()),
-  image_url: z.url().nullable(),
+  image_url: z
+    .url()
+    .regex(/^[Hh][Tt][Tt][Pp][Ss]?:\/\//)
+    .nullable(),
   image_alt: z.string().nullable(),
 });
 
@@ -1333,7 +1356,7 @@ export const zArticleIngestEnvelopeV1 = z.object({
       .array(
         z.object({
           id: z.string().regex(/^[a-z0-9][a-z0-9-]{1,79}$/),
-          kind: z.enum(['essential', 'deep_dive', 'rubric', 'radar']),
+          kind: z.enum(['essential', 'deep_dive', 'rubric', 'radar', 'brief', 'infos']),
           title: z.string().min(1).max(120),
           intro: z.string().max(4000),
           body: z.string().max(20000),
@@ -1346,6 +1369,18 @@ export const zArticleIngestEnvelopeV1 = z.object({
                 url: z.url(),
                 published_at: z.string().optional(),
                 retrieved_at: z.string().optional(),
+                title: z.string().min(1).max(160).optional(),
+                figure: z.string().min(1).max(40).optional(),
+                for_business: z.string().min(1).max(1000).optional(),
+                under_the_hood: z.string().min(1).max(4000).optional(),
+                audience: z.enum(['tous', 'dirigeants', 'developpeurs']).optional(),
+                horizon: z.enum(['aujourdhui', 'trimestre', 'a_surveiller']).optional(),
+                episode: z.int().gte(2).lte(999).optional(),
+                recap: z.string().min(1).max(300).optional(),
+                rubric: z
+                  .string()
+                  .regex(/^[a-z0-9][a-z0-9-]{1,79}$/)
+                  .optional(),
               }),
             )
             .max(30),

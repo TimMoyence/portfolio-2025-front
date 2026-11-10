@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   afterNextRender,
@@ -8,8 +8,10 @@ import {
   DestroyRef,
   inject,
   Injector,
+  PLATFORM_ID,
   signal,
 } from '@angular/core';
+import { persistJson, readJson } from '../../../../cours/runtime/core/participant/storage';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -22,7 +24,11 @@ import {
   type Observable,
 } from 'rxjs';
 import { APP_CONFIG } from '../../../core/config/app-config.token';
-import type { PublishedArticle, SectionDeLArticle } from '../../../core/models/article.model';
+import type {
+  ItemDeSection,
+  PublishedArticle,
+  SectionDeLArticle,
+} from '../../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../../core/adapters/article-http.adapter';
 import { urlAbsolue, urlLocalisee } from '../../../core/seo/chemins';
 import { NOM_DU_SITE } from '../../../core/seo/nom-du-site';
@@ -33,6 +39,7 @@ import { AnatomieComponent } from '../marques/anatomie.component';
 import { ArticlesCtaComponent } from '../articles-cta.component';
 import { injecterLocaleDeLaPage } from '../../../core/config/locale-de-la-page';
 import { identiteDeRubrique } from '../edition/identite-des-rubriques';
+import { HORIZONS_D_UNE_INFO, PUBLICS_D_UNE_INFO } from '../edition/jauge-d-une-info';
 import {
   lectureDeLEdition,
   sourcesParPublication,
@@ -40,7 +47,6 @@ import {
   type LectureDeLEdition,
 } from '../edition/lecture-de-l-edition';
 import {
-  BandeDesRubriquesComponent,
   CompteursDeLEditionComponent,
   PictoDeRubriqueComponent,
   ProvenanceComponent,
@@ -54,6 +60,15 @@ interface EntreeDuSommaire {
   readonly rubrique: string | null;
 }
 
+interface LigneARetenir {
+  readonly texte: string;
+  readonly source: ItemDeSection | null;
+}
+
+const CLE_DE_LA_VUE_DE_LECTURE = 'mb.vue-de-lecture';
+
+type VueDeLecture = 'essentiel' | 'capot';
+
 @Component({
   selector: 'app-article-detail',
   standalone: true,
@@ -62,7 +77,6 @@ interface EntreeDuSommaire {
     RouterLink,
     AnatomieComponent,
     ArticlesCtaComponent,
-    BandeDesRubriquesComponent,
     CompteursDeLEditionComponent,
     JourDuSitePipe,
     PictoDeRubriqueComponent,
@@ -86,6 +100,9 @@ export class ArticleDetailComponent {
   protected readonly locale = injecterLocaleDeLaPage();
   protected readonly sommaireOuvert = signal(false);
   protected readonly partieEnCours = signal<string | null>(null);
+  protected readonly vue = signal<VueDeLecture>('essentiel');
+  protected aDesCapots = false;
+  private readonly navigateur = isPlatformBrowser(inject(PLATFORM_ID));
   private observateur: IntersectionObserver | null = null;
   private readonly injector = inject(Injector);
   private readonly api = inject(ArticleHttpAdapter);
@@ -143,9 +160,23 @@ export class ArticleDetailComponent {
     this.hasError = false;
     this.sommaireOuvert.set(false);
     this.partieEnCours.set(null);
+    this.aDesCapots = false;
     this.observateur?.disconnect();
     this.observateur = null;
     this.cdr.markForCheck();
+  }
+
+  protected lignesDuBrief(): LigneARetenir[] {
+    return (this.lecture?.lignesDuBrief ?? []).map((item) => ({ texte: item.text, source: item }));
+  }
+
+  protected lignesDeLEssentiel(): LigneARetenir[] {
+    return (this.lecture?.puces ?? []).map((texte) => ({ texte, source: null }));
+  }
+
+  protected choisirLaVue(vue: VueDeLecture): void {
+    this.vue.set(vue);
+    persistJson(CLE_DE_LA_VUE_DE_LECTURE, vue);
   }
 
   protected allerA(ancre: string): void {
@@ -250,28 +281,40 @@ export class ArticleDetailComponent {
       return;
     }
     this.lecture = lectureDeLEdition(article);
+    this.aDesCapots = article.sections.some((section) =>
+      section.items.some((item) => Boolean(item.under_the_hood)),
+    );
+    if (this.navigateur) {
+      this.vue.set(
+        readJson<VueDeLecture>(CLE_DE_LA_VUE_DE_LECTURE) === 'capot' ? 'capot' : 'essentiel',
+      );
+    }
     this.sources = sourcesParPublication(article);
     this.sommaire = this.sommaireDe(article);
     afterNextRender(() => this.suivreLaLecture(), { injector: this.injector });
   }
 
+  protected jaugeDe(info: ItemDeSection): string {
+    const parties = [
+      info.audience &&
+        $localize`:@@articleDetailJaugePour:Pour : ${PUBLICS_D_UNE_INFO[info.audience]}:public:`,
+      info.horizon &&
+        $localize`:@@articleDetailJaugeHorizon:Horizon : ${HORIZONS_D_UNE_INFO[info.horizon]}:horizon:`,
+    ];
+    return parties.filter(Boolean).join(' · ');
+  }
+
   private sommaireDe(article: PublishedArticle): EntreeDuSommaire[] {
-    const entrees = article.sections.map((section) => {
-      if (section.kind === 'essential') {
-        return this.entree(`mb-${section.id}`, section.title);
+    const entrees = article.sections.flatMap((section): EntreeDuSommaire[] => {
+      if (section.kind === 'infos') {
+        return section.items.map((info, rang) => ({
+          ancre: `mb-info-${rang + 1}`,
+          libelle: info.title || info.entity,
+          nombre: null,
+          rubrique: info.rubric ?? null,
+        }));
       }
-      if (section.kind === 'deep_dive') {
-        return this.entree(
-          `mb-${section.id}`,
-          $localize`:@@articleDetailSommaireDecryptage:Le décryptage`,
-        );
-      }
-      return {
-        ancre: `mb-${section.id}`,
-        libelle: section.kind === 'radar' ? section.title : this.libelleDe(section),
-        nombre: section.items.length,
-        rubrique: section.id,
-      };
+      return [this.entreeDeSection(section)];
     });
     entrees.push(
       this.entree('edition-anatomie', $localize`:@@articleDetailSommaireAnatomie:En chiffres`),
@@ -282,6 +325,24 @@ export class ArticleDetailComponent {
       );
     }
     return entrees;
+  }
+
+  private entreeDeSection(section: SectionDeLArticle): EntreeDuSommaire {
+    if (section.kind === 'essential' || section.kind === 'brief') {
+      return this.entree(`mb-${section.id}`, section.title);
+    }
+    if (section.kind === 'deep_dive') {
+      return this.entree(
+        `mb-${section.id}`,
+        $localize`:@@articleDetailSommaireDecryptage:Le décryptage`,
+      );
+    }
+    return {
+      ancre: `mb-${section.id}`,
+      libelle: section.kind === 'radar' ? section.title : this.libelleDe(section),
+      nombre: section.items.length,
+      rubrique: section.id,
+    };
   }
 
   private entree(ancre: string, libelle: string): EntreeDuSommaire {

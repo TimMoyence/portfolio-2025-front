@@ -8,10 +8,7 @@ import type { AnatomieDeLEdition } from '../edition/anatomie-de-l-edition';
 import { ArticlesCtaComponent } from '../articles-cta.component';
 import { injecterLocaleDeLaPage } from '../../../core/config/locale-de-la-page';
 import { lectureDeLEdition } from '../edition/lecture-de-l-edition';
-import {
-  BandeDesRubriquesComponent,
-  CompteursDeLEditionComponent,
-} from '../marques/marques-de-l-edition.component';
+import { CompteursDeLEditionComponent } from '../marques/marques-de-l-edition.component';
 
 const ARTICLES_PAGE_SIZE = 12;
 
@@ -34,7 +31,6 @@ function editionDuJournal(article: PublishedArticle): EditionDuJournal {
     RouterLink,
     AsiliHeroComponent,
     ArticlesCtaComponent,
-    BandeDesRubriquesComponent,
     CompteursDeLEditionComponent,
     DateDuSitePipe,
     JourDuSitePipe,

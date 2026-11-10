@@ -239,11 +239,11 @@ describe('ArticleDetailComponent — l’édition rendue depuis ses sections', (
   const section = (page: HTMLElement, id: string): HTMLElement =>
     page.querySelector<HTMLElement>(`#mb-${id}`)!;
 
-  it('titre la fiche par le décryptage, avec la bande des rubriques et les compteurs', () => {
+  it('MB-03 · titre la fiche par le décryptage, avec ses compteurs et sans bande de couleurs', () => {
     const page = rendre(buildEditionMorningBrief());
 
     expect(texteDe(page.querySelector('h1'))).toBe('V8 travaille désormais pour le temps réel');
-    expect(page.querySelector('header [data-testid="bande-des-rubriques"]')).not.toBeNull();
+    expect(page.querySelector('[data-testid="bande-des-rubriques"]')).toBeNull();
     expect(texteDe(page.querySelector('header app-compteurs-de-l-edition'))).toBe(
       '7 informations · 6 sources · 9 min de lecture',
     );
