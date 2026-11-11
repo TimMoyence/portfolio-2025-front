@@ -1,12 +1,12 @@
 import { expect, test, type Locator } from '@playwright/test';
 import { zArticleListResponseDto } from '../../contrat/zod.gen';
-import { buildEditionMorningBrief } from '../../src/testing/factories/article.factory';
+import { buildRecitDuMatin } from '../../src/testing/factories/article.factory';
 import { contrastesInsuffisants } from '../../src/testing/texte/contrastes-insuffisants';
 import { intercepterApi, servirJson, servirSansContenu } from '../fixtures';
 
-const veille = buildEditionMorningBrief({
-  slug: 'morning-brief-2026-11-07',
-  published_at: '2026-11-07T04:15:00.000Z',
+const veille = buildRecitDuMatin({
+  slug: 'morning-brief-2026-11-10',
+  published_at: '2026-11-10T05:15:00.000Z',
 });
 
 test.use({ contextOptions: { reducedMotion: 'reduce' } });
@@ -21,7 +21,7 @@ test('le texte de /articles et du bandeau cookies tient 4,5:1', async ({ page })
   await intercepterApi(page, (route, chemin) =>
     chemin.endsWith('/articles')
       ? servirJson(route, zArticleListResponseDto, {
-          items: [buildEditionMorningBrief(), veille],
+          items: [buildRecitDuMatin(), veille],
           next_cursor: null,
         })
       : servirSansContenu(route),

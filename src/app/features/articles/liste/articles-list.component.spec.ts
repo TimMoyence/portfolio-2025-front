@@ -6,11 +6,11 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../../environments/environment';
 import {
-  buildEditionMorningBrief,
   buildPublishedArticle,
+  buildRecitDuMatin,
 } from '../../../../testing/factories/article.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
-import { texteDe, textes } from '../../../../testing/texte/textes-dom';
+import { texteDe } from '../../../../testing/texte/textes-dom';
 import type { PublishedArticle } from '../../../core/models/article.model';
 import { ArticlesListComponent } from './articles-list.component';
 
@@ -133,13 +133,14 @@ describe('ArticlesListComponent — la une du journal', () => {
     return fixture.nativeElement as HTMLElement;
   }
 
-  const veille = buildEditionMorningBrief({
-    slug: 'morning-brief-2026-11-07',
-    published_at: '2026-11-07T04:15:00.000Z',
+  const veille = buildRecitDuMatin({
+    slug: 'morning-brief-2026-11-10',
+    title: 'Gemini répond',
+    published_at: '2026-11-10T05:15:00.000Z',
   });
 
   it('n a qu un h1, celui du hero ; la manchette nomme le journal en h2', () => {
-    const page = rendre([buildEditionMorningBrief(), veille]);
+    const page = rendre([buildRecitDuMatin(), veille]);
 
     expect(page.querySelectorAll('h1').length).toBe(1);
     expect(page.querySelector('app-asili-hero h1')).not.toBeNull();
@@ -150,41 +151,24 @@ describe('ArticlesListComponent — la une du journal', () => {
     ).toBeTrue();
   });
 
-  it('MB-03 · met la dernière édition à la une : décryptage en titre, compteurs, points clés, sans légende de couleurs', () => {
-    const une = rendre([buildEditionMorningBrief(), veille]).querySelector<HTMLElement>(
-      '[data-testid="une"]',
-    )!;
-
-    expect(texteDe(une.querySelector('h2'))).toBe('V8 travaille désormais pour le temps réel');
-    expect(une.querySelector('h2 a')?.getAttribute('href')).toBe(
-      '/articles/morning-brief-2026-11-08',
-    );
-    expect(une.querySelector('[data-testid="legende-des-rubriques"]')).toBeNull();
-    expect(texteDe(une.querySelector('app-compteurs-de-l-edition'))).toBe(
-      '7 informations · 6 sources · 9 min de lecture',
-    );
-    expect(textes(une, '.une__points li').length).toBe(3);
-  });
-
-  it('MB-03 · range les éditions précédentes en colonnes, sans bande de couleurs ni étiquettes brutes', () => {
-    const page = rendre([buildEditionMorningBrief(), veille]);
+  it('range les éditions précédentes en colonnes, titrées et liées', () => {
+    const page = rendre([buildRecitDuMatin(), veille]);
 
     const precedentes = Array.from(page.querySelectorAll('[data-testid="edition-precedente"]'));
     expect(precedentes.length).toBe(1);
-    expect(precedentes[0].querySelector('[data-testid="bande-des-rubriques"]')).toBeNull();
+    expect(texteDe(precedentes[0].querySelector('h3'))).toBe('Gemini répond');
     expect(precedentes[0].querySelector('a')?.getAttribute('href')).toBe(
-      '/articles/morning-brief-2026-11-07',
+      '/articles/morning-brief-2026-11-10',
     );
-    expect(texteDe(page)).not.toContain('modeles-ia');
   });
 
-  it('garde le titre et le résumé d’une édition sans sections, sans bande', () => {
+  it('garde le titre et le résumé d’une édition sans sections', () => {
     const une = rendre([
       buildPublishedArticle({ title: 'Veille IA', excerpt: 'Les faits.' }),
     ]).querySelector('[data-testid="une"]')!;
 
     expect(texteDe(une.querySelector('h2'))).toBe('Veille IA');
     expect(texteDe(une)).toContain('Les faits.');
-    expect(une.querySelector('[data-testid="bande-des-rubriques"]')).toBeNull();
+    expect(une.querySelector('img')).toBeNull();
   });
 });

@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   afterNextRender,
@@ -8,10 +8,8 @@ import {
   DestroyRef,
   inject,
   Injector,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { persistJson, readJson } from '../../../../cours/runtime/core/participant/storage';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -24,50 +22,26 @@ import {
   type Observable,
 } from 'rxjs';
 import { APP_CONFIG } from '../../../core/config/app-config.token';
-import type {
-  ItemDeSection,
-  PublishedArticle,
-  SectionDeLArticle,
-} from '../../../core/models/article.model';
+import type { PublishedArticle } from '../../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../../core/adapters/article-http.adapter';
 import { urlAbsolue, urlLocalisee } from '../../../core/seo/chemins';
 import { NOM_DU_SITE } from '../../../core/seo/nom-du-site';
 import { SeoService } from '../../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../../core/ssr/http-response-status';
 import { JourDuSitePipe } from '../../../shared/pipes/date-du-site.pipe';
-import { AnatomieComponent } from '../marques/anatomie.component';
 import { ArticlesCtaComponent } from '../articles-cta.component';
 import { injecterLocaleDeLaPage } from '../../../core/config/locale-de-la-page';
-import { identiteDeRubrique } from '../edition/identite-des-rubriques';
-import { HORIZONS_D_UNE_INFO, PUBLICS_D_UNE_INFO } from '../edition/jauge-d-une-info';
 import {
-  lectureDeLEdition,
-  sourcesParPublication,
-  type GroupeDeSources,
-  type LectureDeLEdition,
-} from '../edition/lecture-de-l-edition';
+  blocsDuRecit,
+  partiesDuRecit,
+  type BlocsDuRecit,
+  type PartieDuRecit,
+} from '../edition/recit-du-matin';
 import {
-  CompteursDeLEditionComponent,
   PictoDeRubriqueComponent,
   ProvenanceComponent,
 } from '../marques/marques-de-l-edition.component';
 import { renderArticleMarkdown } from '../edition/markdown-article.utils';
-
-interface EntreeDuSommaire {
-  readonly ancre: string;
-  readonly libelle: string;
-  readonly nombre: number | null;
-  readonly rubrique: string | null;
-}
-
-interface LigneARetenir {
-  readonly texte: string;
-  readonly source: ItemDeSection | null;
-}
-
-const CLE_DE_LA_VUE_DE_LECTURE = 'mb.vue-de-lecture';
-
-type VueDeLecture = 'essentiel' | 'capot';
 
 @Component({
   selector: 'app-article-detail',
@@ -75,9 +49,7 @@ type VueDeLecture = 'essentiel' | 'capot';
   imports: [
     CommonModule,
     RouterLink,
-    AnatomieComponent,
     ArticlesCtaComponent,
-    CompteursDeLEditionComponent,
     JourDuSitePipe,
     PictoDeRubriqueComponent,
     ProvenanceComponent,
@@ -91,18 +63,14 @@ export class ArticleDetailComponent {
   protected readonly ctaTitle = $localize`:@@articleDetailCtaTitle:La bonne technologie commence par le bon problème.`;
   protected readonly ctaLead = $localize`:@@articleDetailCtaLead:Parlons de ce que cette veille peut changer concrètement dans votre activité.`;
   protected article: PublishedArticle | null = null;
-  protected lecture: LectureDeLEdition | null = null;
-  protected sommaire: EntreeDuSommaire[] = [];
-  protected sources: GroupeDeSources[] = [];
+  protected blocs: BlocsDuRecit = {};
+  protected parties: PartieDuRecit[] = [];
   protected renderedContent = '';
   protected isLoading = true;
   protected hasError = false;
   protected readonly locale = injecterLocaleDeLaPage();
   protected readonly sommaireOuvert = signal(false);
   protected readonly partieEnCours = signal<string | null>(null);
-  protected readonly vue = signal<VueDeLecture>('essentiel');
-  protected aDesCapots = false;
-  private readonly navigateur = isPlatformBrowser(inject(PLATFORM_ID));
   private observateur: IntersectionObserver | null = null;
   private readonly injector = inject(Injector);
   private readonly api = inject(ArticleHttpAdapter);
@@ -152,31 +120,16 @@ export class ArticleDetailComponent {
 
   private repartirDeZero(): void {
     this.article = null;
-    this.lecture = null;
-    this.sommaire = [];
-    this.sources = [];
+    this.blocs = {};
+    this.parties = [];
     this.renderedContent = '';
     this.isLoading = true;
     this.hasError = false;
     this.sommaireOuvert.set(false);
     this.partieEnCours.set(null);
-    this.aDesCapots = false;
     this.observateur?.disconnect();
     this.observateur = null;
     this.cdr.markForCheck();
-  }
-
-  protected lignesDuBrief(): LigneARetenir[] {
-    return (this.lecture?.lignesDuBrief ?? []).map((item) => ({ texte: item.text, source: item }));
-  }
-
-  protected lignesDeLEssentiel(): LigneARetenir[] {
-    return (this.lecture?.puces ?? []).map((texte) => ({ texte, source: null }));
-  }
-
-  protected choisirLaVue(vue: VueDeLecture): void {
-    this.vue.set(vue);
-    persistJson(CLE_DE_LA_VUE_DE_LECTURE, vue);
   }
 
   protected allerA(ancre: string): void {
@@ -186,30 +139,28 @@ export class ArticleDetailComponent {
     partie?.focus({ preventScroll: true });
   }
 
-  private poserLeSeoProvisoire(slug: string): void {
-    const canonicalUrl = urlLocalisee(this.config.baseUrl, this.locale, `/articles/${slug}`);
-    const edition = $localize`:@@articleDetailTitreProvisoire:Édition du Morning Brief`;
-    this.seo.updateSeoMetadata({
-      title: `${edition} — ${NOM_DU_SITE}`,
-      description: $localize`:@@articleDetailDescriptionProvisoire:Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.`,
-      robots: 'noindex, nofollow',
-      canonicalUrl,
-      ogUrl: canonicalUrl,
-      hreflangs: {},
-    });
-  }
-
   protected resumeDuSommaire(): string {
     return (
       this.partieEnCours() ??
-      $localize`:@@articleDetailSommaireParties:${this.sommaire.length}:nombre: parties`
+      $localize`:@@articleDetailSommaireParties:${this.parties.length}:nombre: parties`
     );
+  }
+
+  private afficher(article: PublishedArticle): void {
+    this.article = article;
+    if (article.sections.length === 0) {
+      this.renderedContent = renderArticleMarkdown(article.content_markdown);
+      return;
+    }
+    this.blocs = blocsDuRecit(article);
+    this.parties = partiesDuRecit(this.blocs);
+    afterNextRender(() => this.suivreLaLecture(), { injector: this.injector });
   }
 
   private suivreLaLecture(): void {
     if (typeof IntersectionObserver === 'undefined') return;
     this.observateur?.disconnect();
-    const libelles = new Map(this.sommaire.map((entree) => [entree.ancre, entree.libelle]));
+    const libelles = new Map(this.parties.map((partie) => [partie.ancre, partie.titre]));
     this.observateur = new IntersectionObserver(
       (entrees) => {
         const lue = entrees.find((entree) => entree.isIntersecting);
@@ -224,8 +175,17 @@ export class ArticleDetailComponent {
     }
   }
 
-  protected libelleDe(section: SectionDeLArticle): string {
-    return identiteDeRubrique(section.id, section.title).libelle;
+  private poserLeSeoProvisoire(slug: string): void {
+    const canonicalUrl = urlLocalisee(this.config.baseUrl, this.locale, `/articles/${slug}`);
+    const edition = $localize`:@@articleDetailTitreProvisoire:Édition du Morning Brief`;
+    this.seo.updateSeoMetadata({
+      title: `${edition} — ${NOM_DU_SITE}`,
+      description: $localize`:@@articleDetailDescriptionProvisoire:Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.`,
+      robots: 'noindex, nofollow',
+      canonicalUrl,
+      ogUrl: canonicalUrl,
+      hreflangs: {},
+    });
   }
 
   private poserLeSeo(article: PublishedArticle): void {
@@ -272,80 +232,5 @@ export class ArticleDetailComponent {
       twitterImage: this.logo,
       hreflangs: {},
     });
-  }
-
-  private afficher(article: PublishedArticle): void {
-    this.article = article;
-    if (article.sections.length === 0) {
-      this.renderedContent = renderArticleMarkdown(article.content_markdown);
-      return;
-    }
-    this.lecture = lectureDeLEdition(article);
-    this.aDesCapots = article.sections.some((section) =>
-      section.items.some((item) => Boolean(item.under_the_hood)),
-    );
-    if (this.navigateur) {
-      this.vue.set(
-        readJson<VueDeLecture>(CLE_DE_LA_VUE_DE_LECTURE) === 'capot' ? 'capot' : 'essentiel',
-      );
-    }
-    this.sources = sourcesParPublication(article);
-    this.sommaire = this.sommaireDe(article);
-    afterNextRender(() => this.suivreLaLecture(), { injector: this.injector });
-  }
-
-  protected jaugeDe(info: ItemDeSection): string {
-    const parties = [
-      info.audience &&
-        $localize`:@@articleDetailJaugePour:Pour : ${PUBLICS_D_UNE_INFO[info.audience]}:public:`,
-      info.horizon &&
-        $localize`:@@articleDetailJaugeHorizon:Horizon : ${HORIZONS_D_UNE_INFO[info.horizon]}:horizon:`,
-    ];
-    return parties.filter(Boolean).join(' · ');
-  }
-
-  private sommaireDe(article: PublishedArticle): EntreeDuSommaire[] {
-    const entrees = article.sections.flatMap((section): EntreeDuSommaire[] => {
-      if (section.kind === 'infos') {
-        return section.items.map((info, rang) => ({
-          ancre: `mb-info-${rang + 1}`,
-          libelle: info.title || info.entity,
-          nombre: null,
-          rubrique: info.rubric ?? null,
-        }));
-      }
-      return [this.entreeDeSection(section)];
-    });
-    entrees.push(
-      this.entree('edition-anatomie', $localize`:@@articleDetailSommaireAnatomie:En chiffres`),
-    );
-    if (this.sources.length) {
-      entrees.push(
-        this.entree('edition-sources', $localize`:@@articleDetailSommaireSources:Sources`),
-      );
-    }
-    return entrees;
-  }
-
-  private entreeDeSection(section: SectionDeLArticle): EntreeDuSommaire {
-    if (section.kind === 'essential' || section.kind === 'brief') {
-      return this.entree(`mb-${section.id}`, section.title);
-    }
-    if (section.kind === 'deep_dive') {
-      return this.entree(
-        `mb-${section.id}`,
-        $localize`:@@articleDetailSommaireDecryptage:Le décryptage`,
-      );
-    }
-    return {
-      ancre: `mb-${section.id}`,
-      libelle: section.kind === 'radar' ? section.title : this.libelleDe(section),
-      nombre: section.items.length,
-      rubrique: section.id,
-    };
-  }
-
-  private entree(ancre: string, libelle: string): EntreeDuSommaire {
-    return { ancre, libelle, nombre: null, rubrique: null };
   }
 }

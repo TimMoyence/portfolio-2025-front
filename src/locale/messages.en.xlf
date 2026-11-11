@@ -13083,15 +13083,6 @@
         <target>Read the edition</target>
       </segment>
     </unit>
-    <unit id="articlesListARetenir">
-      <notes>
-        <note category="location">src/app/features/articles/articles-list.component.html:51,52</note>
-      </notes>
-      <segment>
-        <source>À retenir</source>
-        <target>Key takeaways</target>
-      </segment>
-    </unit>
     <unit id="articlesListArchives">
       <notes>
         <note category="location">src/app/features/articles/articles-list.component.html:69,71</note>
@@ -13128,33 +13119,6 @@
         <target><ph id="0" equiv="nombre" disp="this.sommaire.length"/> sections</target>
       </segment>
     </unit>
-    <unit id="articleDetailARetenir">
-      <notes>
-        <note category="location">src/app/features/articles/article-detail.component.html:59,61</note>
-      </notes>
-      <segment>
-        <source>À retenir</source>
-        <target>Key takeaways</target>
-      </segment>
-    </unit>
-    <unit id="articleDetailDecryptage">
-      <notes>
-        <note category="location">src/app/features/articles/article-detail.component.html:74,75</note>
-      </notes>
-      <segment>
-        <source>Le décryptage</source>
-        <target>The deep dive</target>
-      </segment>
-    </unit>
-    <unit id="articleDetailCeQueCaChange">
-      <notes>
-        <note category="location">src/app/features/articles/article-detail.component.html:80,81</note>
-      </notes>
-      <segment>
-        <source> Ce que ça change </source>
-        <target> Why it matters </target>
-      </segment>
-    </unit>
     <unit id="articleDetailTitreProvisoire">
       <notes>
         <note category="location">src/app/features/articles/fiche/article-detail.component.ts:128</note>
@@ -13171,186 +13135,6 @@
       <segment>
         <source>Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.</source>
         <target>A Morning Brief edition: the overnight AI watch, sorted, sourced and explained.</target>
-      </segment>
-    </unit>
-    <unit id="articleDetailToutesLesSources">
-      <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:143,144</note>
-      </notes>
-      <segment>
-        <source> Toutes les sources (<ph id="0" equiv="INTERPOLATION" disp="{{ sources.length }}"/>) </source>
-        <target> All sources (<ph id="0" equiv="INTERPOLATION" disp="{{ sources.length }}"/>) </target>
-      </segment>
-    </unit>
-    <unit id="articleDetailAfficherLesSources">
-      <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:144</note>
-      </notes>
-      <segment>
-        <source>Afficher la liste</source>
-        <target>Show the list</target>
-      </segment>
-    </unit>
-    <unit id="articleDetailSommaireDecryptage">
-      <notes>
-        <note category="location">src/app/features/articles/article-detail.component.ts:146</note>
-      </notes>
-      <segment>
-        <source>Le décryptage</source>
-        <target>The deep dive</target>
-      </segment>
-    </unit>
-    <unit id="articleDetailSommaireAnatomie">
-      <notes>
-        <note category="location">src/app/features/articles/article-detail.component.ts:156</note>
-      </notes>
-      <segment>
-        <source>En chiffres</source>
-        <target>By the numbers</target>
-      </segment>
-    </unit>
-    <unit id="articleDetailSommaireSources">
-      <notes>
-        <note category="location">src/app/features/articles/article-detail.component.ts:158</note>
-      </notes>
-      <segment>
-        <source>Sources</source>
-        <target>All sources</target>
-      </segment>
-    </unit>
-    <unit id="articlesAutresSignaux">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie-de-l-edition.ts:32</note>
-      </notes>
-      <segment>
-        <source>Autres signaux</source>
-        <target>Other signals</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieKicker">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:2,3</note>
-      </notes>
-      <segment>
-        <source>En chiffres</source>
-        <target>By the numbers</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieTitre">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:4,7</note>
-      </notes>
-      <segment>
-        <source> Anatomie de l’édition </source>
-        <target> Anatomy of the edition </target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieInformations">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:9,10</note>
-      </notes>
-      <segment>
-        <source>Informations</source>
-        <target>Stories</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieSources">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:13,14</note>
-      </notes>
-      <segment>
-        <source>Sources</source>
-        <target>Outlets</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieMinutes">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:18,20</note>
-      </notes>
-      <segment>
-        <source>Minutes de lecture</source>
-        <target>Minutes to read</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieFraicheur">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:24,25</note>
-      </notes>
-      <segment>
-        <source>Publiées dans les 24 h</source>
-        <target>Published within 24 h</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieNoteRubriques">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:53,55</note>
-      </notes>
-      <segment>
-        <source> Cartes et brèves de chaque rubrique, hors décryptage. </source>
-        <target> Stories and briefs in each section, deep dive excluded. </target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieNotePublications">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.html:98,100</note>
-      </notes>
-      <segment>
-        <source> Informations retenues par publication. </source>
-        <target> Stories kept per outlet. </target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieRubriques">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.ts:40</note>
-      </notes>
-      <segment>
-        <source>Répartition par rubrique</source>
-        <target>Breakdown by section</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomiePublications">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.ts:41</note>
-      </notes>
-      <segment>
-        <source>D’où viennent les informations</source>
-        <target>Where the stories come from</target>
-      </segment>
-    </unit>
-    <unit id="articlesAnatomieAutresPublications">
-      <notes>
-        <note category="location">src/app/features/articles/anatomie.component.ts:79</note>
-      </notes>
-      <segment>
-        <source><ph id="0" equiv="nombre" disp="autres.publications"/> autres publications</source>
-        <target><ph id="0" equiv="nombre" disp="autres.publications"/> other outlets</target>
-      </segment>
-    </unit>
-    <unit id="articlesCompteurInformations">
-      <notes>
-        <note category="location">src/app/features/articles/marques-de-l-edition.component.ts:153,155</note>
-      </notes>
-      <segment>
-        <source>{VAR_PLURAL, plural, =0 {0 information} =1 {1 information} other {<ph id="0" equiv="INTERPOLATION"/> informations}}</source>
-        <target>{VAR_PLURAL, plural, =0 {0 stories} =1 {1 story} other {<ph id="0" equiv="INTERPOLATION"/> stories}}</target>
-      </segment>
-    </unit>
-    <unit id="articlesCompteurSources">
-      <notes>
-        <note category="location">src/app/features/articles/marques-de-l-edition.component.ts:157,158</note>
-      </notes>
-      <segment>
-        <source>{VAR_PLURAL, plural, =0 {0 source} =1 {1 source} other {<ph id="0" equiv="INTERPOLATION"/> sources}}</source>
-        <target>{VAR_PLURAL, plural, =0 {0 sources} =1 {1 source} other {<ph id="0" equiv="INTERPOLATION"/> sources}}</target>
-      </segment>
-    </unit>
-    <unit id="articlesCompteurMinutes">
-      <notes>
-        <note category="location">src/app/features/articles/marques-de-l-edition.component.ts:161,163</note>
-      </notes>
-      <segment>
-        <source><ph id="0" equiv="INTERPOLATION" disp="{{ minutes }}"/> min de lecture</source>
-        <target><ph id="0" equiv="INTERPOLATION" disp="{{ minutes }}"/> min read</target>
       </segment>
     </unit>
     <unit id="articlesListSectionTitle">
@@ -15451,220 +15235,166 @@
         <target>Too many attempts in a short time: try again in <ph id="0" equiv="minutes" disp="minutes"/> min.</target>
       </segment>
     </unit>
-    <unit id="articlesPublicTous">
+    <unit id="recitSujet">
       <notes>
-        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:4</note>
+        <note category="location">src/app/features/articles/edition/recit-du-matin.ts:14</note>
       </notes>
       <segment>
-        <source>Tous</source>
-        <target>Everyone</target>
+        <source>Le sujet du jour</source>
+        <target>Today's story</target>
       </segment>
     </unit>
-    <unit id="articlesPublicDirigeants">
+    <unit id="recitShot">
       <notes>
-        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:5</note>
+        <note category="location">src/app/features/articles/edition/recit-du-matin.ts:15</note>
       </notes>
       <segment>
-        <source>Dirigeants</source>
-        <target>Business leaders</target>
+        <source>Le Shot</source>
+        <target>The Shot</target>
       </segment>
     </unit>
-    <unit id="articlesPublicDeveloppeurs">
+    <unit id="recitDecodeur">
       <notes>
-        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:6</note>
+        <note category="location">src/app/features/articles/edition/recit-du-matin.ts:16</note>
       </notes>
       <segment>
-        <source>Développeurs</source>
-        <target>Developers</target>
+        <source>Le décodeur</source>
+        <target>The decoder</target>
       </segment>
     </unit>
-    <unit id="articlesHorizonAujourdhui">
+    <unit id="recitATester">
       <notes>
-        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:10</note>
+        <note category="location">src/app/features/articles/edition/recit-du-matin.ts:20</note>
       </notes>
       <segment>
-        <source>Aujourd’hui</source>
-        <target>Today</target>
+        <source>À tester ce matin</source>
+        <target>Worth trying this morning</target>
       </segment>
     </unit>
-    <unit id="articlesHorizonTrimestre">
+    <unit id="recitSorties">
       <notes>
-        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:11</note>
+        <note category="location">src/app/features/articles/edition/recit-du-matin.ts:22</note>
       </notes>
       <segment>
-        <source>Ce trimestre</source>
-        <target>This quarter</target>
+        <source>Les sorties</source>
+        <target>New releases</target>
       </segment>
     </unit>
-    <unit id="articlesHorizonASurveiller">
+    <unit id="recitChiffre">
       <notes>
-        <note category="location">src/app/features/articles/edition/jauge-d-une-info.ts:12</note>
+        <note category="location">src/app/features/articles/edition/recit-du-matin.ts:23</note>
       </notes>
       <segment>
-        <source>À surveiller</source>
-        <target>Worth watching</target>
+        <source>Le chiffre</source>
+        <target>The number</target>
       </segment>
     </unit>
-    <unit id="articlesRubriqueModelesIa">
+    <unit id="recitCitation">
       <notes>
-        <note category="location">src/app/features/articles/edition/noms-des-rubriques.ts:2</note>
+        <note category="location">src/app/features/articles/edition/recit-du-matin.ts:24</note>
       </notes>
       <segment>
-        <source>Modèles IA &amp; Recherche</source>
-        <target>AI Models &amp; Research</target>
+        <source>La citation</source>
+        <target>The quote</target>
       </segment>
     </unit>
-    <unit id="articlesRubriqueOutilsIa">
+    <unit id="recitAPartCa">
       <notes>
-        <note category="location">src/app/features/articles/edition/noms-des-rubriques.ts:3</note>
+        <note category="location">src/app/features/articles/edition/recit-du-matin.ts:25</note>
       </notes>
       <segment>
-        <source>Outils IA &amp; Agents</source>
-        <target>AI Tools &amp; Agents</target>
+        <source>Et à part ça…</source>
+        <target>And also…</target>
       </segment>
     </unit>
-    <unit id="articlesRubriqueDevFrameworks">
+    <unit id="articleDetailMinutesDeLecture">
       <notes>
-        <note category="location">src/app/features/articles/edition/noms-des-rubriques.ts:4</note>
+        <note category="location"></note>
       </notes>
       <segment>
-        <source>Dev &amp; Frameworks</source>
-        <target>Dev &amp; Frameworks</target>
+        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ article.reading_time_minutes }}"/> min de lecture </source>
+        <target><ph id="0" equiv="INTERPOLATION" disp="{{ article.reading_time_minutes }}"/> min read</target>
       </segment>
     </unit>
-    <unit id="articlesRubriqueWebInternet">
+    <unit id="recitBonjour">
       <notes>
-        <note category="location">src/app/features/articles/edition/noms-des-rubriques.ts:5</note>
+        <note category="location"></note>
       </notes>
       <segment>
-        <source>Web &amp; Internet</source>
-        <target>Web &amp; Internet</target>
+        <source>Bonjour.</source>
+        <target>Good morning.</target>
       </segment>
     </unit>
-    <unit id="articlesRubriqueBusinessNiches">
+    <unit id="recitPourquoi">
       <notes>
-        <note category="location">src/app/features/articles/edition/noms-des-rubriques.ts:6</note>
+        <note category="location"></note>
       </notes>
       <segment>
-        <source>Business &amp; Niches</source>
-        <target>Business &amp; Niches</target>
+        <source>Pourquoi on en parle ?</source>
+        <target>Why it matters</target>
       </segment>
     </unit>
-    <unit id="articleDetailProfondeurDeLecture">
+    <unit id="recitContexte">
       <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:29,30</note>
+        <note category="location"></note>
       </notes>
       <segment>
-        <source>Profondeur de lecture</source>
-        <target>Reading depth</target>
+        <source>Contexte :</source>
+        <target>Context:</target>
       </segment>
     </unit>
-    <unit id="articleDetailVueEssentiel">
+    <unit id="recitFaits">
       <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:38,40</note>
+        <note category="location"></note>
       </notes>
       <segment>
-        <source> Essentiel </source>
-        <target> Essentials </target>
+        <source>Dans les faits :</source>
+        <target>The facts:</target>
       </segment>
     </unit>
-    <unit id="articleDetailVueSousLeCapot">
+    <unit id="recitEtMaintenant">
       <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:46,48</note>
+        <note category="location"></note>
       </notes>
       <segment>
-        <source> Sous le capot </source>
-        <target> Under the hood </target>
+        <source>Et maintenant ?</source>
+        <target>What now?</target>
       </segment>
     </unit>
-    <unit id="articleDetailBrief">
+    <unit id="recitEnBref">
       <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:94,95</note>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:117</note>
       </notes>
       <segment>
-        <source>Le brief en 30 s</source>
-        <target>The 30-second brief</target>
+        <source>En bref :</source>
+        <target>In short:</target>
       </segment>
     </unit>
-    <unit id="articleDetailInfosDuJour">
+    <unit id="recitEssayer">
       <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:111,112</note>
+        <note category="location">src/app/features/articles/fiche/article-detail.component.html:169</note>
       </notes>
       <segment>
-        <source>Les infos du jour</source>
-        <target>Today’s stories</target>
+        <source>Essayer</source>
+        <target>Try it</target>
       </segment>
     </unit>
-    <unit id="articleDetailALaUne">
+    <unit id="recitTraduitDe">
       <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:117,118</note>
+        <note category="location"></note>
       </notes>
       <segment>
-        <source>À la une</source>
-        <target>Top story</target>
+        <source>Traduit de <ph id="0" equiv="INTERPOLATION" disp="{{ citation.traduite_de }}"/></source>
+        <target>Translated from <ph id="0" equiv="INTERPOLATION" disp="{{ citation.traduite_de }}"/></target>
       </segment>
     </unit>
-    <unit id="articleDetailInfoNumero">
+    <unit id="recitOnVousEnParlait">
       <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:120,121</note>
+        <note category="location"></note>
       </notes>
       <segment>
-        <source>Info <ph id="0" equiv="INTERPOLATION" disp="{{ rang + 1 }}"/></source>
-        <target>Story <ph id="0" equiv="INTERPOLATION" disp="{{ rang + 1 }}"/></target>
-      </segment>
-    </unit>
-    <unit id="articleDetailEpisode">
-      <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:126,127</note>
-      </notes>
-      <segment>
-        <source>Épisode <ph id="0" equiv="INTERPOLATION" disp="{{ info.episode }}"/></source>
-        <target>Episode <ph id="0" equiv="INTERPOLATION" disp="{{ info.episode }}"/></target>
-      </segment>
-    </unit>
-    <unit id="articleDetailPrecedemment">
-      <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:130,131</note>
-      </notes>
-      <segment>
-        <source>Précédemment :</source>
-        <target>Previously:</target>
-      </segment>
-    </unit>
-    <unit id="articleDetailPourVotreEntreprise">
-      <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:152,153</note>
-      </notes>
-      <segment>
-        <source> Pour votre entreprise </source>
-        <target> For your business </target>
-      </segment>
-    </unit>
-    <unit id="articleDetailSousLeCapot">
-      <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.html:159,160</note>
-      </notes>
-      <segment>
-        <source>Sous le capot</source>
-        <target>Under the hood</target>
-      </segment>
-    </unit>
-    <unit id="articleDetailJaugePour">
-      <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.ts:302</note>
-      </notes>
-      <segment>
-        <source>Pour : <ph id="0" equiv="public" disp="PUBLICS_D_UNE_INFO[info.audience]"/></source>
-        <target>For: <ph id="0" equiv="public" disp="PUBLICS_D_UNE_INFO[info.audience]"/></target>
-      </segment>
-    </unit>
-    <unit id="articleDetailJaugeHorizon">
-      <notes>
-        <note category="location">src/app/features/articles/fiche/article-detail.component.ts:304</note>
-      </notes>
-      <segment>
-        <source>Horizon : <ph id="0" equiv="horizon" disp="HORIZONS_D_UNE_INFO[info.horizon]"/></source>
-        <target>Horizon: <ph id="0" equiv="horizon" disp="HORIZONS_D_UNE_INFO[info.horizon]"/></target>
+        <source>On vous en parlait le <ph id="0" equiv="INTERPOLATION" disp="{{ feuilleton.date | jourDuSite: &apos;court&apos; }}"/> :</source>
+        <target>We covered it on <ph id="0" equiv="INTERPOLATION" disp="{{ feuilleton.date | jourDuSite: &apos;court&apos; }}"/>:</target>
       </segment>
     </unit>
   </file>

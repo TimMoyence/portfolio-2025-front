@@ -4,37 +4,26 @@ import type { ArticleListResponse, PublishedArticle } from '../../../core/models
 import { ArticleHttpAdapter } from '../../../core/adapters/article-http.adapter';
 import { DateDuSitePipe, JourDuSitePipe } from '../../../shared/pipes/date-du-site.pipe';
 import { AsiliHeroComponent } from '../../../shared/sections';
-import type { AnatomieDeLEdition } from '../edition/anatomie-de-l-edition';
 import { ArticlesCtaComponent } from '../articles-cta.component';
 import { injecterLocaleDeLaPage } from '../../../core/config/locale-de-la-page';
-import { lectureDeLEdition } from '../edition/lecture-de-l-edition';
-import { CompteursDeLEditionComponent } from '../marques/marques-de-l-edition.component';
+import { blocsDuRecit } from '../edition/recit-du-matin';
 
 const ARTICLES_PAGE_SIZE = 12;
 
 interface EditionDuJournal {
   readonly article: PublishedArticle;
   readonly titre: string;
-  readonly points: readonly string[];
-  readonly anatomie: AnatomieDeLEdition;
+  readonly image: { readonly url: string; readonly credit: string } | null;
 }
 
 function editionDuJournal(article: PublishedArticle): EditionDuJournal {
-  const { titre, points, anatomie } = lectureDeLEdition(article);
-  return { article, titre, points, anatomie };
+  return { article, titre: article.title, image: blocsDuRecit(article).sujet?.image ?? null };
 }
 
 @Component({
   selector: 'app-articles-list',
   standalone: true,
-  imports: [
-    RouterLink,
-    AsiliHeroComponent,
-    ArticlesCtaComponent,
-    CompteursDeLEditionComponent,
-    DateDuSitePipe,
-    JourDuSitePipe,
-  ],
+  imports: [RouterLink, AsiliHeroComponent, ArticlesCtaComponent, DateDuSitePipe, JourDuSitePipe],
   templateUrl: './articles-list.component.html',
   styleUrl: './articles-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -18,6 +18,21 @@
   outline-offset: 2px;
 }
 
+@mixin image-creditee {
+  img {
+    display: block;
+    width: 100%;
+    border-radius: var(--r-lg);
+    object-fit: cover;
+  }
+
+  figcaption {
+    margin-top: 0.4rem;
+    color: var(--text-mute);
+    font-size: 0.8125rem;
+  }
+}
+
 @mixin bloc-filete($padding-block) {
   padding-block: $padding-block;
   border-top: 1px solid var(--border);

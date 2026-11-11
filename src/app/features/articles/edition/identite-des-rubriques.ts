@@ -1,18 +1,9 @@
-import {
-  AUTRES_SIGNAUX,
-  PREFIXE_DU_RADAR,
-  PREFIXE_DU_TITRE_DU_RADAR,
-} from './anatomie-de-l-edition';
-
 export interface IdentiteDeRubrique {
   readonly couleur: string;
   readonly picto: string;
-  readonly libelle: string;
 }
 
-type Marque = Omit<IdentiteDeRubrique, 'libelle'>;
-
-const MARQUES: Readonly<Record<string, Marque>> = {
+const MARQUES: Readonly<Record<string, IdentiteDeRubrique>> = {
   'modeles-ia': {
     couleur: '#1a9a83',
     picto:
@@ -37,20 +28,12 @@ const MARQUES: Readonly<Record<string, Marque>> = {
   },
 };
 
-const NEUTRE: Marque = {
+const NEUTRE: IdentiteDeRubrique = {
   couleur: '#9c9384',
   picto: 'M12 10a2 2 0 1 0 0 4a2 2 0 1 0 0-4M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4',
 };
 
-export function identiteDeRubrique(id: string, titre: string): IdentiteDeRubrique {
-  const rubrique = id.startsWith(PREFIXE_DU_RADAR) ? id.slice(PREFIXE_DU_RADAR.length) : id;
-  const marque = Object.hasOwn(MARQUES, rubrique) ? MARQUES[rubrique] : NEUTRE;
-  return { ...marque, libelle: libelleDe(id, titre) };
-}
-
-function libelleDe(id: string, titre: string): string {
-  if (id === '' || id === 'radar') return AUTRES_SIGNAUX;
-  return titre.startsWith(PREFIXE_DU_TITRE_DU_RADAR)
-    ? titre.slice(PREFIXE_DU_TITRE_DU_RADAR.length)
-    : titre;
+export function identiteDeRubrique(rubrique: string): IdentiteDeRubrique {
+  const id = rubrique.replaceAll('_', '-');
+  return Object.hasOwn(MARQUES, id) ? MARQUES[id] : NEUTRE;
 }

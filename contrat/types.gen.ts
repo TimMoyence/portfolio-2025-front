@@ -381,51 +381,126 @@ export type ArticleDeliveryResponseDto = {
   processed_at: string | null;
 };
 
-export type TypeDeSection = 'essential' | 'deep_dive' | 'rubric' | 'radar' | 'brief' | 'infos';
-
-export type PublicDUneInfo = 'tous' | 'dirigeants' | 'developpeurs';
-
-export type HorizonDUneInfo = 'aujourdhui' | 'trimestre' | 'a_surveiller';
-
-export type ArticleSectionItemResponseDto = {
-  entity: string;
-  text: string;
-  source: string;
-  url: string;
-  published_at?: string;
-  retrieved_at?: string;
-  title?: string;
-  figure?: string;
-  for_business?: string;
-  under_the_hood?: string;
-  audience?: PublicDUneInfo;
-  horizon?: HorizonDUneInfo;
-  episode?: number;
-  recap?: string;
-  rubric?: string;
+export type EditoDto = {
+  kind: 'edito';
+  texte: string;
+  signature: string;
 };
 
-export type ArticleSectionResponseDto = {
-  id: string;
-  kind: TypeDeSection;
-  title: string;
-  intro: string;
-  body: string;
-  items: Array<ArticleSectionItemResponseDto>;
+export type SourceDuRecitDto = {
+  nom: string;
+  url: string;
+  publie_le: string | null;
 };
 
-export type ArticleSourceResponseDto = {
-  name: string;
+export type ImageDuRecitDto = {
   url: string;
-  published_at: string | null;
-  retrieved_at: string | null;
+  credit: string;
+};
+
+export type FeuilletonDuRecitDto = {
+  date: string;
+  rappel: string;
+};
+
+export type UniteDuGraphique = '' | '%' | '$' | '€';
+
+export type BarreDuRecitDto = {
+  libelle: string;
+  valeur: number;
+  affichage: string;
+  largeur: number;
+};
+
+export type GraphiqueDuRecitDto = {
+  titre: string;
+  unite: UniteDuGraphique;
+  barres: Array<BarreDuRecitDto>;
+};
+
+export type SujetDuJourDto = {
+  source: SourceDuRecitDto;
+  image: ImageDuRecitDto | null;
+  feuilleton: FeuilletonDuRecitDto | null;
+  kind: 'sujet';
+  titre: string;
+  accroche: string;
+  pourquoi: string;
+  contexte: string;
+  faits: string;
+  et_maintenant: string;
+  bref: string;
+  graphique: GraphiqueDuRecitDto | null;
+};
+
+export type HistoireDuShotDto = {
+  source: SourceDuRecitDto;
+  image: ImageDuRecitDto | null;
+  feuilleton: FeuilletonDuRecitDto | null;
+  accroche: string;
+  texte: string;
+  rubrique: string | null;
+};
+
+export type ShotDto = {
+  kind: 'shot';
+  histoires: Array<HistoireDuShotDto>;
+};
+
+export type DecodeurDto = {
+  kind: 'decodeur';
+  terme: string;
+  explication: string;
+};
+
+export type ATesterDto = {
+  kind: 'a_tester';
+  nom: string;
+  texte: string;
+  source: SourceDuRecitDto;
+};
+
+export type SortieDto = {
+  produit: string;
+  version: string;
+  changement: string;
+  source: SourceDuRecitDto;
+};
+
+export type SortiesDto = {
+  kind: 'sorties';
+  lignes: Array<SortieDto>;
+};
+
+export type ChiffreDto = {
+  kind: 'chiffre';
+  valeur: string;
+  texte: string;
+  source: SourceDuRecitDto;
+};
+
+export type CitationDto = {
+  kind: 'citation';
+  texte: string;
+  auteur: string;
+  traduite_de: "l'anglais" | "l'allemand" | "l'espagnol" | "l'italien" | null;
+  contexte: string;
+  source: SourceDuRecitDto;
+};
+
+export type BreveDto = {
+  texte: string;
+  source: SourceDuRecitDto;
+};
+
+export type APartCaDto = {
+  kind: 'a_part_ca';
+  breves: Array<BreveDto>;
 };
 
 export type ArticleProvenanceResponseDto = {
   run_id: string;
   edition_date: string;
-  item_count: number;
-  source_count: number;
   content_sha256: string;
 };
 
@@ -446,8 +521,18 @@ export type PublishedArticleResponseDto = {
   content_markdown: string;
   reading_time_minutes: number | null;
   tags: Array<string>;
-  sections: Array<ArticleSectionResponseDto>;
-  sources: Array<ArticleSourceResponseDto>;
+  sections: Array<
+    | EditoDto
+    | SujetDuJourDto
+    | ShotDto
+    | DecodeurDto
+    | ATesterDto
+    | SortiesDto
+    | ChiffreDto
+    | CitationDto
+    | APartCaDto
+  >;
+  sources: Array<SourceDuRecitDto>;
   provenance: ArticleProvenanceResponseDto;
   seo: ArticleSeoResponseDto;
   published_at: string;
@@ -2126,73 +2211,215 @@ export type EtatDeSanteResponseDto = {
   details: IndicateursDeSanteResponseDto;
 };
 
-export type ArticleIngestEnvelopeV1 = {
-  schema_version: '1.0';
-  delivery_id: string;
-  producer: {
-    name: 'morning-brief';
-    version: string;
-    device: string;
-  };
-  sent_at: string;
-  article: {
-    article_id: string;
-    slug: string;
-    locale: 'fr' | 'en';
-    status: 'published';
-    title: string;
-    excerpt: string;
-    content_markdown: string;
-    reading_time_minutes: number;
-    tags: Array<string>;
-    published_at: string;
-    updated_at: string;
-    sections: Array<{
-      id: string;
-      kind: 'essential' | 'deep_dive' | 'rubric' | 'radar' | 'brief' | 'infos';
-      title: string;
-      intro: string;
-      body: string;
-      items: Array<{
-        entity: string;
-        text: string;
-        source: string;
-        url: string;
-        published_at?: string;
-        retrieved_at?: string;
-        title?: string;
-        figure?: string;
-        for_business?: string;
-        under_the_hood?: string;
-        audience?: 'tous' | 'dirigeants' | 'developpeurs';
-        horizon?: 'aujourdhui' | 'trimestre' | 'a_surveiller';
-        episode?: number;
-        recap?: string;
-        rubric?: string;
-      }>;
-    }>;
-    sources: Array<{
-      name: string;
-      url: string;
-      published_at: string | null;
-      retrieved_at: string | null;
-    }>;
-    provenance: {
-      run_id: string;
-      edition_date: string;
-      item_count: number;
-      source_count: number;
-      content_sha256: string;
+export type ArticleIngestEnvelope =
+  | {
+      schema_version: '2.0';
+      delivery_id: string;
+      producer: {
+        name: 'morning-brief';
+        version: string;
+        device: string;
+      };
+      sent_at: string;
+      article: {
+        article_id: string;
+        slug: string;
+        locale: 'fr' | 'en';
+        status: 'published';
+        title: string;
+        excerpt: string;
+        content_markdown: string;
+        reading_time_minutes: number;
+        tags: Array<string>;
+        published_at: string;
+        updated_at: string;
+        sections: Array<
+          | {
+              kind: 'edito';
+              texte: string;
+              signature: string;
+            }
+          | {
+              kind: 'sujet';
+              titre: string;
+              accroche: string;
+              pourquoi: string;
+              contexte: string;
+              faits: string;
+              et_maintenant: string;
+              bref: string;
+              source: {
+                nom: string;
+                url: string;
+                publie_le: string | null;
+              };
+              image: {
+                url: string;
+                credit: string;
+              } | null;
+              graphique: {
+                titre: string;
+                unite: '' | '%' | '$' | '€';
+                barres: Array<{
+                  libelle: string;
+                  valeur: number;
+                  affichage: string;
+                  largeur: number;
+                }>;
+              } | null;
+              feuilleton: {
+                date: string;
+                rappel: string;
+              } | null;
+            }
+          | {
+              kind: 'shot';
+              histoires: Array<{
+                accroche: string;
+                texte: string;
+                rubrique: string | null;
+                source: {
+                  nom: string;
+                  url: string;
+                  publie_le: string | null;
+                };
+                image: {
+                  url: string;
+                  credit: string;
+                } | null;
+                feuilleton: {
+                  date: string;
+                  rappel: string;
+                } | null;
+              }>;
+            }
+          | {
+              kind: 'decodeur';
+              terme: string;
+              explication: string;
+            }
+          | {
+              kind: 'a_tester';
+              nom: string;
+              texte: string;
+              source: {
+                nom: string;
+                url: string;
+                publie_le: string | null;
+              };
+            }
+          | {
+              kind: 'sorties';
+              lignes: Array<{
+                produit: string;
+                version: string;
+                changement: string;
+                source: {
+                  nom: string;
+                  url: string;
+                  publie_le: string | null;
+                };
+              }>;
+            }
+          | {
+              kind: 'chiffre';
+              valeur: string;
+              texte: string;
+              source: {
+                nom: string;
+                url: string;
+                publie_le: string | null;
+              };
+            }
+          | {
+              kind: 'citation';
+              texte: string;
+              auteur: string;
+              traduite_de: "l'anglais" | "l'allemand" | "l'espagnol" | "l'italien" | null;
+              contexte: string;
+              source: {
+                nom: string;
+                url: string;
+                publie_le: string | null;
+              };
+            }
+          | {
+              kind: 'a_part_ca';
+              breves: Array<{
+                texte: string;
+                source: {
+                  nom: string;
+                  url: string;
+                  publie_le: string | null;
+                };
+              }>;
+            }
+        >;
+        sources: Array<{
+          nom: string;
+          url: string;
+          publie_le: string | null;
+        }>;
+        provenance: {
+          run_id: string;
+          edition_date: string;
+          content_sha256: string;
+        };
+        seo: {
+          description: string;
+          canonical_path: string;
+          keywords: Array<string>;
+          image_url: string | null;
+          image_alt: string | null;
+        };
+      };
+    }
+  | {
+      schema_version: '1.0';
+      delivery_id: string;
+      producer: {
+        name: 'morning-brief';
+        version: string;
+        device: string;
+      };
+      sent_at: string;
+      article: {
+        article_id: string;
+        slug: string;
+        locale: 'fr' | 'en';
+        status: 'published';
+        title: string;
+        excerpt: string;
+        content_markdown: string;
+        reading_time_minutes: number;
+        tags: Array<string>;
+        published_at: string;
+        updated_at: string;
+        sections: Array<{
+          [key: string]: unknown;
+        }>;
+        sources: Array<{
+          name: string;
+          url: string;
+          published_at: string | null;
+          retrieved_at: string | null;
+        }>;
+        provenance: {
+          run_id: string;
+          edition_date: string;
+          content_sha256: string;
+          item_count: number;
+          source_count: number;
+        };
+        seo: {
+          description: string;
+          canonical_path: string;
+          keywords: Array<string>;
+          image_url: string | null;
+          image_alt: string | null;
+        };
+      };
     };
-    seo: {
-      description: string;
-      canonical_path: string;
-      keywords: Array<string>;
-      image_url: string | null;
-      image_alt: string | null;
-    };
-  };
-};
 
 export type AvancementDAudit =
   | {
@@ -3684,9 +3911,9 @@ export type ArticleModerationControllerRestoreResponse =
 
 export type ArticlesControllerIngest0Data = {
   /**
-   * Enveloppe Morning-Brief v1 (docs/contracts/article-ingest-envelope-v1.json)
+   * Enveloppe Morning-Brief 2.0 du récit du matin (docs/contracts/article-ingest-envelope-v2.json) ; une enveloppe 1.0 est convertie en texte suivi
    */
-  body: ArticleIngestEnvelopeV1;
+  body: ArticleIngestEnvelope;
   headers: {
     'idempotency-key': string;
     'x-morning-brief-nonce': string;
@@ -3719,9 +3946,9 @@ export type ArticlesControllerIngest0Response =
 
 export type ArticlesControllerIngest1Data = {
   /**
-   * Enveloppe Morning-Brief v1 (docs/contracts/article-ingest-envelope-v1.json)
+   * Enveloppe Morning-Brief 2.0 du récit du matin (docs/contracts/article-ingest-envelope-v2.json) ; une enveloppe 1.0 est convertie en texte suivi
    */
-  body: ArticleIngestEnvelopeV1;
+  body: ArticleIngestEnvelope;
   headers: {
     'idempotency-key': string;
     'x-morning-brief-nonce': string;

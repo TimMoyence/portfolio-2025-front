@@ -52,7 +52,7 @@ describe('security-headers', () => {
       const csp = buildSecurityHeaders({ isHttps: true })['Content-Security-Policy-Report-Only'];
       expect(csp).not.toContain('nominatim.openstreetmap.org');
       expect(csp).not.toContain('rainviewer');
-      expect(csp).toContain("img-src 'self' data:;");
+      expect(csp).toContain("img-src 'self' data: https:;");
     });
   });
 });

@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import type { ItemDeSection } from '../../../core/models/article.model';
+import type { SourceDuRecit } from '../../../core/models/article.model';
 import { JourDuSitePipe } from '../../../shared/pipes/date-du-site.pipe';
-import type { AnatomieDeLEdition } from '../edition/anatomie-de-l-edition';
 import { identiteDeRubrique } from '../edition/identite-des-rubriques';
-import { siteDe } from '../edition/lecture-de-l-edition';
 
 @Component({
   selector: 'app-picto-de-rubrique',
@@ -38,40 +36,15 @@ import { siteDe } from '../edition/lecture-de-l-edition';
 })
 export class PictoDeRubriqueComponent {
   readonly id = input.required<string>();
-  protected readonly identite = computed(() => identiteDeRubrique(this.id(), ''));
+  protected readonly identite = computed(() => identiteDeRubrique(this.id()));
 }
 
-@Component({
-  selector: 'app-compteurs-de-l-edition',
-  standalone: true,
-  template: `
-    <span class="compteur" i18n="@@articlesCompteurInformations">{anatomie().informations, plural,
-      =0 {0 information}
-      =1 {1 information}
-      other {{{ anatomie().informations }} informations}
-    }</span>
-    &ngsp;<span class="separateur" aria-hidden="true">·</span>&ngsp;
-    <span class="compteur" i18n="@@articlesCompteurSources">{anatomie().publications, plural,
-      =0 {0 source}
-      =1 {1 source}
-      other {{{ anatomie().publications }} sources}
-    }</span>
-    @if (anatomie().minutes; as minutes) {
-      &ngsp;<span class="separateur" aria-hidden="true">·</span>&ngsp;
-      <span class="compteur" i18n="@@articlesCompteurMinutes">{{ minutes }} min de lecture</span>
-    }
-  `,
-  styles: `
-    :host {
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 0 0.5rem;
-    }
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class CompteursDeLEditionComponent {
-  readonly anatomie = input.required<AnatomieDeLEdition>();
+function siteDe(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return '';
+  }
 }
 
 @Component({
@@ -79,15 +52,21 @@ export class CompteursDeLEditionComponent {
   standalone: true,
   imports: [JourDuSitePipe],
   template: `
-    <a class="provenance" [href]="item().url" rel="noopener noreferrer" data-testid="provenance">
-      <span class="provenance__publication">{{ item().source }}</span
+    <a
+      class="provenance"
+      [href]="source().url"
+      target="_blank"
+      rel="noopener noreferrer"
+      data-testid="provenance"
+    >
+      <span class="provenance__publication">{{ libelle() || source().nom }}</span
       >&ngsp;
       @if (!courte()) {
         @if (site(); as site) {
           <span class="provenance__site">{{ site }}</span
           >&ngsp;
         }
-        @if (item().published_at; as date) {
+        @if (source().publie_le; as date) {
           <time class="provenance__date" [attr.datetime]="date">{{
             date | jourDuSite: 'court'
           }}</time
@@ -128,7 +107,8 @@ export class CompteursDeLEditionComponent {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProvenanceComponent {
-  readonly item = input.required<ItemDeSection>();
+  readonly source = input.required<SourceDuRecit>();
   readonly courte = input(false);
-  protected readonly site = computed(() => siteDe(this.item().url));
+  readonly libelle = input('');
+  protected readonly site = computed(() => siteDe(this.source().url));
 }
