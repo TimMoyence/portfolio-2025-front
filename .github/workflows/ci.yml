@@ -121,16 +121,11 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
 
-      # Le cache ne restaure pas les dependances systeme du navigateur :
-      # `--with-deps` est rejoue meme sur un cache touche, et n installe que
-      # chromium, le seul navigateur des deux projets de playwright.config.ts.
-      # `test:e2e:portail` joue `chromium` ; `banc` a son propre job.
       - name: Installation de chromium
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
-      - name: Chromium est bien installe
-        run: |
-          node -e "const { chromium } = require('@playwright/test'); const { existsSync } = require('node:fs'); const chemin = chromium.executablePath(); if (!existsSync(chemin)) { throw new Error('chromium absent du runner: ' + chemin); } console.log('chromium: ' + chemin);"
+      - name: Chromium se lance
+        run: node scripts/ci/chromium-lance.mjs
 
       # Le build fournit dist/ au serveur SSR que `test:e2e:portail` demarre sur
       # le port 4400 : sans lui, e2e/cours/cours-sitemap.spec.ts n a pas de sitemap a lire.
@@ -210,7 +205,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Installation de chromium
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
+
+      - name: Chromium se lance
+        run: node scripts/ci/chromium-lance.mjs
 
       - name: Banc navigateur reel (porte bloquante)
         env:

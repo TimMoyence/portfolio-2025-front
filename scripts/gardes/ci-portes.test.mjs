@@ -449,6 +449,27 @@ test('ci-portes : Playwright est joue par une etape du job e2e du workflow', () 
   );
 });
 
+test('ci-portes : chromium s installe sans apt, puis se lance vraiment avant ses suites (e2e et banc)', () => {
+  const texteWorkflow = readFileSync(CHEMIN_WORKFLOW, 'utf8');
+  for (const job of [JOB_E2E, JOB_BANC]) {
+    const etapes = etapesDuJob(texteWorkflow, job);
+    const installations = etapes.filter((etape) => /playwright install\b/.test(etape.commande));
+    assert.deepEqual(
+      installations.map((etape) => etape.commande),
+      ['npx playwright install chromium'],
+      `ci-portes : le job « ${job} » installe chromium sans --with-deps, qui passe par le miroir apt du runner.`,
+    );
+    const indexInstallation = etapes.indexOf(installations[0]);
+    const indexLancement = etapes.findIndex(
+      (etape) => etape.commande === 'node scripts/ci/chromium-lance.mjs',
+    );
+    assert.ok(
+      indexLancement > indexInstallation,
+      `ci-portes : le job « ${job} » lance chromium juste apres l avoir installe, pour qu une dependance systeme absente rougisse a cet endroit.`,
+    );
+  }
+});
+
 test('ci-portes : aucun job bloquant ni aucune de ses commandes n est conditionne ni autorise a echouer', () => {
   const texteWorkflow = readFileSync(CHEMIN_WORKFLOW, 'utf8');
   for (const job of [JOB_WORKFLOW, JOB_E2E, JOB_BANC]) {
