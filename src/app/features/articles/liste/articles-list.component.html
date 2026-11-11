@@ -37,23 +37,22 @@
             <a [routerLink]="['/articles', une.article.slug]">{{ une.titre }}</a>
           </h2>
           <p class="une__chapeau">{{ une.article.excerpt }}</p>
-          @if (une.anatomie.informations) {
-            <app-compteurs-de-l-edition class="une__compteurs" [anatomie]="une.anatomie" />
-          }
           <a class="link-arrow une__lire" [routerLink]="['/articles', une.article.slug]">
             <ng-container i18n="@@articlesListLireLEdition">Lire l’édition</ng-container>
             <span aria-hidden="true">→</span>
           </a>
         </div>
-        @if (une.points.length) {
-          <aside class="une__colonne">
-            <h3 class="une__colonne-titre" i18n="@@articlesListARetenir">À retenir</h3>
-            <ol class="une__points">
-              @for (point of une.points; track $index) {
-                <li>{{ point }}</li>
-              }
-            </ol>
-          </aside>
+        @if (une.image; as image) {
+          <figure class="une__image">
+            <img
+              [src]="image.url"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+            />
+            <figcaption>© {{ image.credit }}</figcaption>
+          </figure>
         }
       </article>
 

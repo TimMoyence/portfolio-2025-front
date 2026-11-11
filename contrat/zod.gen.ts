@@ -343,58 +343,126 @@ export const zArticleDeliveryResponseDto = z.object({
   processed_at: z.iso.datetime().nullable(),
 });
 
-export const zTypeDeSection = z.enum([
-  'essential',
-  'deep_dive',
-  'rubric',
-  'radar',
-  'brief',
-  'infos',
-]);
-
-export const zPublicDUneInfo = z.enum(['tous', 'dirigeants', 'developpeurs']);
-
-export const zHorizonDUneInfo = z.enum(['aujourdhui', 'trimestre', 'a_surveiller']);
-
-export const zArticleSectionItemResponseDto = z.object({
-  entity: z.string(),
-  text: z.string(),
-  source: z.string(),
-  url: z.url().regex(/^[Hh][Tt][Tt][Pp][Ss]?:\/\//),
-  published_at: z.iso.datetime().optional(),
-  retrieved_at: z.iso.datetime().optional(),
-  title: z.string().optional(),
-  figure: z.string().optional(),
-  for_business: z.string().optional(),
-  under_the_hood: z.string().optional(),
-  audience: zPublicDUneInfo.optional(),
-  horizon: zHorizonDUneInfo.optional(),
-  episode: z.number().gte(2).optional(),
-  recap: z.string().optional(),
-  rubric: z.string().optional(),
+export const zEditoDto = z.object({
+  kind: z.enum(['edito']),
+  texte: z.string(),
+  signature: z.string(),
 });
 
-export const zArticleSectionResponseDto = z.object({
-  id: z.string(),
-  kind: zTypeDeSection,
-  title: z.string(),
-  intro: z.string(),
-  body: z.string(),
-  items: z.array(zArticleSectionItemResponseDto),
+export const zSourceDuRecitDto = z.object({
+  nom: z.string(),
+  url: z.url().regex(/^[Hh][Tt][Tt][Pp][Ss]?:\/\//),
+  publie_le: z.iso.datetime().nullable(),
 });
 
-export const zArticleSourceResponseDto = z.object({
-  name: z.string(),
-  url: z.url().regex(/^[Hh][Tt][Tt][Pp][Ss]?:\/\//),
-  published_at: z.iso.datetime().nullable(),
-  retrieved_at: z.iso.datetime().nullable(),
+export const zImageDuRecitDto = z.object({
+  url: z.url().regex(/^https:\/\//),
+  credit: z.string(),
+});
+
+export const zFeuilletonDuRecitDto = z.object({
+  date: z.iso.date(),
+  rappel: z.string(),
+});
+
+export const zUniteDuGraphique = z.enum(['', '%', '$', '€']);
+
+export const zBarreDuRecitDto = z.object({
+  libelle: z.string(),
+  valeur: z.number(),
+  affichage: z.string(),
+  largeur: z.int().gte(2).lte(100),
+});
+
+export const zGraphiqueDuRecitDto = z.object({
+  titre: z.string(),
+  unite: zUniteDuGraphique,
+  barres: z.array(zBarreDuRecitDto),
+});
+
+export const zSujetDuJourDto = z.object({
+  source: zSourceDuRecitDto,
+  image: zImageDuRecitDto.nullable(),
+  feuilleton: zFeuilletonDuRecitDto.nullable(),
+  kind: z.enum(['sujet']),
+  titre: z.string(),
+  accroche: z.string(),
+  pourquoi: z.string(),
+  contexte: z.string(),
+  faits: z.string(),
+  et_maintenant: z.string(),
+  bref: z.string(),
+  graphique: zGraphiqueDuRecitDto.nullable(),
+});
+
+export const zHistoireDuShotDto = z.object({
+  source: zSourceDuRecitDto,
+  image: zImageDuRecitDto.nullable(),
+  feuilleton: zFeuilletonDuRecitDto.nullable(),
+  accroche: z.string(),
+  texte: z.string(),
+  rubrique: z.string().nullable(),
+});
+
+export const zShotDto = z.object({
+  kind: z.enum(['shot']),
+  histoires: z.array(zHistoireDuShotDto),
+});
+
+export const zDecodeurDto = z.object({
+  kind: z.enum(['decodeur']),
+  terme: z.string(),
+  explication: z.string(),
+});
+
+export const zATesterDto = z.object({
+  kind: z.enum(['a_tester']),
+  nom: z.string(),
+  texte: z.string(),
+  source: zSourceDuRecitDto,
+});
+
+export const zSortieDto = z.object({
+  produit: z.string(),
+  version: z.string(),
+  changement: z.string(),
+  source: zSourceDuRecitDto,
+});
+
+export const zSortiesDto = z.object({
+  kind: z.enum(['sorties']),
+  lignes: z.array(zSortieDto),
+});
+
+export const zChiffreDto = z.object({
+  kind: z.enum(['chiffre']),
+  valeur: z.string(),
+  texte: z.string(),
+  source: zSourceDuRecitDto,
+});
+
+export const zCitationDto = z.object({
+  kind: z.enum(['citation']),
+  texte: z.string(),
+  auteur: z.string(),
+  traduite_de: z.enum(["l'anglais", "l'allemand", "l'espagnol", "l'italien"]).nullable(),
+  contexte: z.string(),
+  source: zSourceDuRecitDto,
+});
+
+export const zBreveDto = z.object({
+  texte: z.string(),
+  source: zSourceDuRecitDto,
+});
+
+export const zAPartCaDto = z.object({
+  kind: z.enum(['a_part_ca']),
+  breves: z.array(zBreveDto),
 });
 
 export const zArticleProvenanceResponseDto = z.object({
   run_id: z.string(),
   edition_date: z.string(),
-  item_count: z.number(),
-  source_count: z.number(),
   content_sha256: z.string().regex(/^[a-f0-9]{64}$/),
 });
 
@@ -418,8 +486,20 @@ export const zPublishedArticleResponseDto = z.object({
   content_markdown: z.string(),
   reading_time_minutes: z.number().nullable(),
   tags: z.array(z.string()),
-  sections: z.array(zArticleSectionResponseDto),
-  sources: z.array(zArticleSourceResponseDto),
+  sections: z.array(
+    z.union([
+      zEditoDto,
+      zSujetDuJourDto,
+      zShotDto,
+      zDecodeurDto,
+      zATesterDto,
+      zSortiesDto,
+      zChiffreDto,
+      zCitationDto,
+      zAPartCaDto,
+    ]),
+  ),
+  sources: z.array(zSourceDuRecitDto),
   provenance: zArticleProvenanceResponseDto,
   seo: zArticleSeoResponseDto,
   published_at: z.iso.datetime(),
@@ -1331,88 +1411,314 @@ export const zEtatDeSanteResponseDto = z.object({
   details: zIndicateursDeSanteResponseDto,
 });
 
-export const zArticleIngestEnvelopeV1 = z.object({
-  schema_version: z.enum(['1.0']),
-  delivery_id: z.string().regex(/^mb-\d{4}-\d{2}-\d{2}-(fr|en)$/),
-  producer: z.object({
-    name: z.enum(['morning-brief']),
-    version: z.string().min(1),
-    device: z.string().min(1),
-  }),
-  sent_at: z.string(),
-  article: z.object({
-    article_id: z.string().regex(/^morning-brief-\d{4}-\d{2}-\d{2}-(fr|en)$/),
-    slug: z.string().regex(/^morning-brief-\d{4}-\d{2}-\d{2}$/),
-    locale: z.enum(['fr', 'en']),
-    status: z.enum(['published']),
-    title: z.string().min(1).max(180),
-    excerpt: z.string().min(1).max(280),
-    content_markdown: z.string().min(100),
-    reading_time_minutes: z.int().gte(1).lte(60),
-    tags: z.array(z.string().min(1).max(40)).max(12),
-    published_at: z.string(),
-    updated_at: z.string(),
-    sections: z
-      .array(
-        z.object({
-          id: z.string().regex(/^[a-z0-9][a-z0-9-]{1,79}$/),
-          kind: z.enum(['essential', 'deep_dive', 'rubric', 'radar', 'brief', 'infos']),
-          title: z.string().min(1).max(120),
-          intro: z.string().max(4000),
-          body: z.string().max(20000),
-          items: z
-            .array(
-              z.object({
-                entity: z.string().max(160),
-                text: z.string().min(20).max(4000),
-                source: z.string().min(1).max(160),
-                url: z.url(),
-                published_at: z.string().optional(),
-                retrieved_at: z.string().optional(),
-                title: z.string().min(1).max(160).optional(),
-                figure: z.string().min(1).max(40).optional(),
-                for_business: z.string().min(1).max(1000).optional(),
-                under_the_hood: z.string().min(1).max(4000).optional(),
-                audience: z.enum(['tous', 'dirigeants', 'developpeurs']).optional(),
-                horizon: z.enum(['aujourdhui', 'trimestre', 'a_surveiller']).optional(),
-                episode: z.int().gte(2).lte(999).optional(),
-                recap: z.string().min(1).max(300).optional(),
-                rubric: z
+export const zArticleIngestEnvelope = z.union([
+  z.object({
+    schema_version: z.enum(['2.0']),
+    delivery_id: z.string().regex(/^mb-\d{4}-\d{2}-\d{2}-(fr|en)$/),
+    producer: z.object({
+      name: z.enum(['morning-brief']),
+      version: z.string().min(1),
+      device: z.string().min(1),
+    }),
+    sent_at: z.string(),
+    article: z.object({
+      article_id: z.string().regex(/^morning-brief-\d{4}-\d{2}-\d{2}-(fr|en)$/),
+      slug: z.string().regex(/^morning-brief-\d{4}-\d{2}-\d{2}$/),
+      locale: z.enum(['fr', 'en']),
+      status: z.enum(['published']),
+      title: z.string().min(1).max(180),
+      excerpt: z.string().min(1).max(280),
+      content_markdown: z.string().min(100),
+      reading_time_minutes: z.int().gte(1).lte(60),
+      tags: z.array(z.string().min(1).max(40)).max(12),
+      published_at: z.string(),
+      updated_at: z.string(),
+      sections: z
+        .array(
+          z.union([
+            z.object({
+              kind: z.enum(['edito']),
+              texte: z.string().max(2000),
+              signature: z.string().max(80),
+            }),
+            z.object({
+              kind: z.enum(['sujet']),
+              titre: z.string().min(1).max(160),
+              accroche: z.string().min(1).max(400),
+              pourquoi: z.string().min(1).max(2000),
+              contexte: z.string().max(2000),
+              faits: z.string().min(1).max(2000),
+              et_maintenant: z.string().max(2000),
+              bref: z.string().min(1).max(400),
+              source: z.object({
+                nom: z.string().min(1).max(160),
+                url: z
                   .string()
-                  .regex(/^[a-z0-9][a-z0-9-]{1,79}$/)
-                  .optional(),
+                  .max(2048)
+                  .regex(/^https?:\/\/\S+$/),
+                publie_le: z.string().nullable(),
               }),
-            )
-            .max(30),
-        }),
-      )
-      .min(1),
-    sources: z
-      .array(
-        z.object({
-          name: z.string().min(1).max(160),
-          url: z.url(),
-          published_at: z.string().nullable(),
-          retrieved_at: z.string().nullable(),
-        }),
-      )
-      .min(1),
-    provenance: z.object({
-      run_id: z.string().min(1),
-      edition_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-      item_count: z.int().gte(1).lte(9007199254740991),
-      source_count: z.int().gte(1).lte(9007199254740991),
-      content_sha256: z.string().regex(/^[a-f0-9]{64}$/),
-    }),
-    seo: z.object({
-      description: z.string().max(160),
-      canonical_path: z.string().regex(/^\/articles\/[a-z0-9-]+$/),
-      keywords: z.array(z.string()),
-      image_url: z.url().nullable(),
-      image_alt: z.string().nullable(),
+              image: z
+                .object({
+                  url: z
+                    .string()
+                    .max(2048)
+                    .regex(/^https:\/\/\S+$/),
+                  credit: z.string().min(1).max(160),
+                })
+                .nullable(),
+              graphique: z
+                .object({
+                  titre: z.string().min(1).max(160),
+                  unite: z.enum(['', '%', '$', '€']),
+                  barres: z
+                    .array(
+                      z.object({
+                        libelle: z.string().min(1).max(80),
+                        valeur: z.number(),
+                        affichage: z.string().min(1).max(60),
+                        largeur: z.int().gte(2).lte(100),
+                      }),
+                    )
+                    .min(3)
+                    .max(12),
+                })
+                .nullable(),
+              feuilleton: z
+                .object({
+                  date: z.iso
+                    .date()
+                    .regex(
+                      /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$/,
+                    ),
+                  rappel: z.string().max(400),
+                })
+                .nullable(),
+            }),
+            z.object({
+              kind: z.enum(['shot']),
+              histoires: z
+                .array(
+                  z.object({
+                    accroche: z.string().max(120),
+                    texte: z.string().min(1).max(1500),
+                    rubrique: z
+                      .string()
+                      .regex(/^[a-z][a-z_]{1,39}$/)
+                      .nullable(),
+                    source: z.object({
+                      nom: z.string().min(1).max(160),
+                      url: z
+                        .string()
+                        .max(2048)
+                        .regex(/^https?:\/\/\S+$/),
+                      publie_le: z.string().nullable(),
+                    }),
+                    image: z
+                      .object({
+                        url: z
+                          .string()
+                          .max(2048)
+                          .regex(/^https:\/\/\S+$/),
+                        credit: z.string().min(1).max(160),
+                      })
+                      .nullable(),
+                    feuilleton: z
+                      .object({
+                        date: z.iso
+                          .date()
+                          .regex(
+                            /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$/,
+                          ),
+                        rappel: z.string().max(400),
+                      })
+                      .nullable(),
+                  }),
+                )
+                .min(2)
+                .max(4),
+            }),
+            z.object({
+              kind: z.enum(['decodeur']),
+              terme: z.string().min(1).max(80),
+              explication: z.string().min(1).max(1000),
+            }),
+            z.object({
+              kind: z.enum(['a_tester']),
+              nom: z.string().min(1).max(160),
+              texte: z.string().min(1).max(600),
+              source: z.object({
+                nom: z.string().min(1).max(160),
+                url: z
+                  .string()
+                  .max(2048)
+                  .regex(/^https?:\/\/\S+$/),
+                publie_le: z.string().nullable(),
+              }),
+            }),
+            z.object({
+              kind: z.enum(['sorties']),
+              lignes: z
+                .array(
+                  z.object({
+                    produit: z.string().min(1).max(80),
+                    version: z.string().min(1).max(40),
+                    changement: z.string().min(1).max(120),
+                    source: z.object({
+                      nom: z.string().min(1).max(160),
+                      url: z
+                        .string()
+                        .max(2048)
+                        .regex(/^https?:\/\/\S+$/),
+                      publie_le: z.string().nullable(),
+                    }),
+                  }),
+                )
+                .min(1)
+                .max(6),
+            }),
+            z.object({
+              kind: z.enum(['chiffre']),
+              valeur: z.string().min(1).max(60),
+              texte: z.string().min(1).max(400),
+              source: z.object({
+                nom: z.string().min(1).max(160),
+                url: z
+                  .string()
+                  .max(2048)
+                  .regex(/^https?:\/\/\S+$/),
+                publie_le: z.string().nullable(),
+              }),
+            }),
+            z.object({
+              kind: z.enum(['citation']),
+              texte: z.string().min(1).max(600),
+              auteur: z.string().min(1).max(160),
+              traduite_de: z
+                .enum(["l'anglais", "l'allemand", "l'espagnol", "l'italien"])
+                .nullable(),
+              contexte: z.string().max(400),
+              source: z.object({
+                nom: z.string().min(1).max(160),
+                url: z
+                  .string()
+                  .max(2048)
+                  .regex(/^https?:\/\/\S+$/),
+                publie_le: z.string().nullable(),
+              }),
+            }),
+            z.object({
+              kind: z.enum(['a_part_ca']),
+              breves: z
+                .array(
+                  z.object({
+                    texte: z.string().min(1).max(400),
+                    source: z.object({
+                      nom: z.string().min(1).max(160),
+                      url: z
+                        .string()
+                        .max(2048)
+                        .regex(/^https?:\/\/\S+$/),
+                      publie_le: z.string().nullable(),
+                    }),
+                  }),
+                )
+                .min(1)
+                .max(5),
+            }),
+          ]),
+        )
+        .min(2),
+      sources: z
+        .array(
+          z.object({
+            nom: z.string().min(1).max(160),
+            url: z
+              .string()
+              .max(2048)
+              .regex(/^https?:\/\/\S+$/),
+            publie_le: z.string().nullable(),
+          }),
+        )
+        .min(1),
+      provenance: z.object({
+        run_id: z.string().min(1),
+        edition_date: z.iso
+          .date()
+          .regex(
+            /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$/,
+          ),
+        content_sha256: z.string().regex(/^[a-f0-9]{64}$/),
+      }),
+      seo: z.object({
+        description: z.string().max(160),
+        canonical_path: z.string().regex(/^\/articles\/[a-z0-9-]+$/),
+        keywords: z.array(z.string()),
+        image_url: z
+          .string()
+          .max(2048)
+          .regex(/^https:\/\/\S+$/)
+          .nullable(),
+        image_alt: z.string().nullable(),
+      }),
     }),
   }),
-});
+  z.object({
+    schema_version: z.enum(['1.0']),
+    delivery_id: z.string().regex(/^mb-\d{4}-\d{2}-\d{2}-(fr|en)$/),
+    producer: z.object({
+      name: z.enum(['morning-brief']),
+      version: z.string().min(1),
+      device: z.string().min(1),
+    }),
+    sent_at: z.string(),
+    article: z.object({
+      article_id: z.string().regex(/^morning-brief-\d{4}-\d{2}-\d{2}-(fr|en)$/),
+      slug: z.string().regex(/^morning-brief-\d{4}-\d{2}-\d{2}$/),
+      locale: z.enum(['fr', 'en']),
+      status: z.enum(['published']),
+      title: z.string().min(1).max(180),
+      excerpt: z.string().min(1).max(280),
+      content_markdown: z.string().min(100),
+      reading_time_minutes: z.int().gte(1).lte(60),
+      tags: z.array(z.string().min(1).max(40)).max(12),
+      published_at: z.string(),
+      updated_at: z.string(),
+      sections: z.array(z.record(z.string(), z.unknown())).min(1),
+      sources: z
+        .array(
+          z.object({
+            name: z.string().min(1).max(160),
+            url: z
+              .string()
+              .max(2048)
+              .regex(/^https?:\/\/\S+$/),
+            published_at: z.string().nullable(),
+            retrieved_at: z.string().nullable(),
+          }),
+        )
+        .min(1),
+      provenance: z.object({
+        run_id: z.string().min(1),
+        edition_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        content_sha256: z.string().regex(/^[a-f0-9]{64}$/),
+        item_count: z.int().gte(1).lte(9007199254740991),
+        source_count: z.int().gte(1).lte(9007199254740991),
+      }),
+      seo: z.object({
+        description: z.string().max(160),
+        canonical_path: z.string().regex(/^\/articles\/[a-z0-9-]+$/),
+        keywords: z.array(z.string()),
+        image_url: z
+          .string()
+          .max(2048)
+          .regex(/^https?:\/\/\S+$/)
+          .nullable(),
+        image_alt: z.string().nullable(),
+      }),
+    }),
+  }),
+]);
 
 export const zAvancementDAudit = z.union([
   z.object({
@@ -1552,7 +1858,10 @@ export const zPresentationServie = z.union([
         subtitle: z.string().min(1).optional(),
         bgImage: z
           .union([
-            z.url(),
+            z
+              .string()
+              .max(2048)
+              .regex(/^https:\/\/\S+$/),
             z
               .string()
               .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
@@ -1724,7 +2033,11 @@ export const zPresentationServie = z.union([
               title: z.string().min(1),
               description: z.string().min(1),
               back: z.string().min(1).optional(),
-              href: z.url().optional(),
+              href: z
+                .string()
+                .max(2048)
+                .regex(/^https?:\/\/\S+$/)
+                .optional(),
               external: z.boolean().optional(),
             }),
           )
@@ -1813,7 +2126,10 @@ export const zPresentationServie = z.union([
         rows: z.array(z.record(z.string(), z.string().min(1))).min(1),
         sourceLink: z
           .object({
-            href: z.url(),
+            href: z
+              .string()
+              .max(2048)
+              .regex(/^https?:\/\/\S+$/),
             label: z.string().min(1),
           })
           .optional(),
@@ -1827,7 +2143,10 @@ export const zPresentationServie = z.union([
         title: z.string().min(1),
         subtitle: z.string().min(1).optional(),
         image: z.union([
-          z.url(),
+          z
+            .string()
+            .max(2048)
+            .regex(/^https:\/\/\S+$/),
           z
             .string()
             .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
@@ -1837,7 +2156,10 @@ export const zPresentationServie = z.union([
         items: z.array(z.string().min(1)).min(1).optional(),
         sourceLink: z
           .object({
-            href: z.url(),
+            href: z
+              .string()
+              .max(2048)
+              .regex(/^https?:\/\/\S+$/),
             label: z.string().min(1),
           })
           .optional(),
@@ -1861,7 +2183,10 @@ export const zPresentationServie = z.union([
         title: z.string().min(1),
         subtitle: z.string().min(1).optional(),
         image: z.union([
-          z.url(),
+          z
+            .string()
+            .max(2048)
+            .regex(/^https:\/\/\S+$/),
           z
             .string()
             .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
@@ -1871,7 +2196,10 @@ export const zPresentationServie = z.union([
         items: z.array(z.string().min(1)).min(1).optional(),
         sourceLink: z
           .object({
-            href: z.url(),
+            href: z
+              .string()
+              .max(2048)
+              .regex(/^https?:\/\/\S+$/),
             label: z.string().min(1),
           })
           .optional(),
@@ -1883,7 +2211,10 @@ export const zPresentationServie = z.union([
       renderer: z.enum(['illustration']),
       props: z.object({
         image: z.union([
-          z.url(),
+          z
+            .string()
+            .max(2048)
+            .regex(/^https:\/\/\S+$/),
           z
             .string()
             .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
@@ -1996,7 +2327,10 @@ export const zDonneesFpStory = z.object({
     visuel: z
       .object({
         src: z.union([
-          z.url(),
+          z
+            .string()
+            .max(2048)
+            .regex(/^https:\/\/\S+$/),
           z
             .string()
             .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
@@ -2009,14 +2343,20 @@ export const zDonneesFpStory = z.object({
     video: z
       .object({
         src: z.union([
-          z.url(),
+          z
+            .string()
+            .max(2048)
+            .regex(/^https:\/\/\S+$/),
           z
             .string()
             .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
         ]),
         srcPoste: z
           .union([
-            z.url(),
+            z
+              .string()
+              .max(2048)
+              .regex(/^https:\/\/\S+$/),
             z
               .string()
               .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
@@ -2026,19 +2366,31 @@ export const zDonneesFpStory = z.object({
         titre: z.string().min(1),
         poster: z
           .union([
-            z.url(),
+            z
+              .string()
+              .max(2048)
+              .regex(/^https:\/\/\S+$/),
             z
               .string()
               .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
           ])
           .optional(),
         transcript: z.string().min(1),
-        source: z.union([z.url(), z.string().regex(/^\/formations\/[a-z0-9-]+$/)]),
+        source: z.union([
+          z
+            .string()
+            .max(2048)
+            .regex(/^https:\/\/\S+$/),
+          z.string().regex(/^\/formations\/[a-z0-9-]+$/),
+        ]),
         licence: z.string().min(1),
         sousTitres: z
           .object({
             src: z.union([
-              z.url(),
+              z
+                .string()
+                .max(2048)
+                .regex(/^https:\/\/\S+$/),
               z
                 .string()
                 .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
@@ -2988,9 +3340,9 @@ export const zArticleModerationControllerRestorePath = z.object({
 export const zArticleModerationControllerRestoreResponse = zArticleModerationResponseDto;
 
 /**
- * Enveloppe Morning-Brief v1 (docs/contracts/article-ingest-envelope-v1.json)
+ * Enveloppe Morning-Brief 2.0 du récit du matin (docs/contracts/article-ingest-envelope-v2.json) ; une enveloppe 1.0 est convertie en texte suivi
  */
-export const zArticlesControllerIngest0Body = zArticleIngestEnvelopeV1;
+export const zArticlesControllerIngest0Body = zArticleIngestEnvelope;
 
 export const zArticlesControllerIngest0Headers = z.object({
   'idempotency-key': z.string(),
@@ -3003,9 +3355,9 @@ export const zArticlesControllerIngest0Headers = z.object({
 export const zArticlesControllerIngest0Response = zArticleIngestResponseDto;
 
 /**
- * Enveloppe Morning-Brief v1 (docs/contracts/article-ingest-envelope-v1.json)
+ * Enveloppe Morning-Brief 2.0 du récit du matin (docs/contracts/article-ingest-envelope-v2.json) ; une enveloppe 1.0 est convertie en texte suivi
  */
-export const zArticlesControllerIngest1Body = zArticleIngestEnvelopeV1;
+export const zArticlesControllerIngest1Body = zArticleIngestEnvelope;
 
 export const zArticlesControllerIngest1Headers = z.object({
   'idempotency-key': z.string(),

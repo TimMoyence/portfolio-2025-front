@@ -10,7 +10,7 @@
       <span aria-hidden="true">→</span></a
     >
   </div>
-} @else if (lecture) {
+} @else if (parties.length) {
   <div class="edition">
     <header class="edition__entete wrap">
       <a class="link-arrow" routerLink="/articles" i18n="@@articleDetailAllArticles"
@@ -20,32 +20,11 @@
         <span class="edition__marque" i18n="@@articleDetailMarque">Morning Brief</span>
         <time [attr.datetime]="article.published_at">{{ article.published_at | jourDuSite }}</time>
       </p>
-      <h1 id="article-title" class="edition__titre">{{ lecture.titre }}</h1>
-      <app-compteurs-de-l-edition class="edition__compteurs" [anatomie]="lecture.anatomie" />
-      @if (aDesCapots) {
-        <div
-          class="lecture"
-          role="group"
-          aria-label="Profondeur de lecture"
-          i18n-aria-label="@@articleDetailProfondeurDeLecture"
-        >
-          <button
-            type="button"
-            [attr.aria-pressed]="vue() === 'essentiel'"
-            (click)="choisirLaVue('essentiel')"
-            i18n="@@articleDetailVueEssentiel"
-          >
-            Essentiel
-          </button>
-          <button
-            type="button"
-            [attr.aria-pressed]="vue() === 'capot'"
-            (click)="choisirLaVue('capot')"
-            i18n="@@articleDetailVueSousLeCapot"
-          >
-            Sous le capot
-          </button>
-        </div>
+      <h1 id="article-title" class="edition__titre">{{ article.title }}</h1>
+      @if (article.reading_time_minutes) {
+        <p class="edition__lecture" i18n="@@articleDetailMinutesDeLecture">
+          {{ article.reading_time_minutes }} min de lecture
+        </p>
       }
     </header>
 
@@ -70,210 +49,202 @@
           <span class="sommaire__chevron" aria-hidden="true">▾</span>
         </button>
         <ol id="sommaire-liste">
-          @for (entree of sommaire; track entree.ancre) {
+          @for (partie of parties; track partie.ancre) {
             <li>
-              <a [routerLink]="[]" [fragment]="entree.ancre" (click)="allerA(entree.ancre)">
-                @if (entree.rubrique !== null) {
-                  <app-picto-de-rubrique class="sommaire__picto" [id]="entree.rubrique" />
-                }
-                <span class="sommaire__libelle">{{ entree.libelle }}</span>
-                @if (entree.nombre !== null) {
-                  <span class="sommaire__nombre">{{ entree.nombre }}</span>
-                }
-              </a>
+              <a [routerLink]="[]" [fragment]="partie.ancre" (click)="allerA(partie.ancre)">{{
+                partie.titre
+              }}</a>
             </li>
           }
         </ol>
       </nav>
 
-      <article class="edition__texte">
-        @for (section of article.sections; track section.id) {
-          @switch (section.kind) {
-            @case ('brief') {
-              <section class="brief partie" [id]="'mb-' + section.id">
-                <h2 class="partie__kicker" i18n="@@articleDetailBrief">Le brief en 30 s</h2>
-                @for (item of section.items; track $index) {
-                  @if (item.figure) {
-                    <div class="brief__une">
-                      <p class="brief__chiffre">{{ item.figure }}</p>
-                      <p class="brief__legende">{{ item.text }}</p>
-                      <app-provenance [item]="item" [courte]="true" />
-                    </div>
-                  }
-                }
-                <ng-container
-                  *ngTemplateOutlet="aRetenir; context: { $implicit: lignesDuBrief() }"
-                />
-              </section>
-            }
-            @case ('infos') {
-              <section class="infos partie" [id]="'mb-' + section.id">
-                <h2 class="partie__kicker" i18n="@@articleDetailInfosDuJour">Les infos du jour</h2>
-                <ol class="infos__liste">
-                  @for (info of section.items; track info.url; let rang = $index) {
-                    <li class="info" [id]="'mb-info-' + (rang + 1)" tabindex="-1">
-                      <p class="info__rang">
-                        @if (rang === 0) {
-                          <ng-container i18n="@@articleDetailALaUne">À la une</ng-container>
-                        } @else {
-                          <ng-container i18n="@@articleDetailInfoNumero"
-                            >Info {{ rang + 1 }}</ng-container
-                          >
-                        }
-                      </p>
-                      @if (info.episode) {
-                        <p class="info__episode">
-                          <strong i18n="@@articleDetailEpisode">Épisode {{ info.episode }}</strong>
-                          @if (info.recap) {
-                            ·
-                            <ng-container i18n="@@articleDetailPrecedemment"
-                              >Précédemment :</ng-container
-                            >
-                            {{ info.recap }}
-                          }
-                        </p>
-                      }
-                      <h3 class="info__titre">
-                        @if (info.rubric) {
-                          <app-picto-de-rubrique class="info__picto" [id]="info.rubric" />
-                        }
-                        {{ info.title || info.entity }}
-                      </h3>
-                      @if (jaugeDe(info); as jauge) {
-                        <p class="info__jauge">{{ jauge }}</p>
-                      }
-                      <p class="info__pour-tous">{{ info.text }}</p>
-                      @if (info.for_business) {
-                        <aside class="info__entreprise">
-                          <p
-                            class="info__entreprise-titre"
-                            i18n="@@articleDetailPourVotreEntreprise"
-                          >
-                            Pour votre entreprise
-                          </p>
-                          <p>{{ info.for_business }}</p>
-                        </aside>
-                      }
-                      @if (info.under_the_hood) {
-                        <details class="info__capot" [open]="vue() === 'capot'">
-                          <summary i18n="@@articleDetailSousLeCapot">Sous le capot</summary>
-                          <p>{{ info.under_the_hood }}</p>
-                        </details>
-                      }
-                      <app-provenance [item]="info" />
-                    </li>
-                  }
-                </ol>
-              </section>
-            }
-            @case ('essential') {
-              <section class="essentiel partie" [id]="'mb-' + section.id">
-                <h2 class="partie__kicker">{{ section.title }}</h2>
-                @if (lecture.chapeau) {
-                  <div class="essentiel__chapeau" [innerHTML]="lecture.chapeau"></div>
-                }
-                <ng-container
-                  *ngTemplateOutlet="aRetenir; context: { $implicit: lignesDeLEssentiel() }"
-                />
-              </section>
-            }
-            @case ('deep_dive') {
-              <section class="decryptage partie" [id]="'mb-' + section.id">
-                <p class="partie__kicker" i18n="@@articleDetailDecryptage">Le décryptage</p>
-                <h2 class="decryptage__titre">{{ section.title }}</h2>
-                <div class="article-markdown" [innerHTML]="lecture.corpsDuDecryptage"></div>
-                @if (lecture.sourceDuDecryptage; as source) {
-                  @if (lecture.impact) {
-                    <aside class="encadre">
-                      <p class="encadre__titre" i18n="@@articleDetailCeQueCaChange">
-                        Ce que ça change
-                      </p>
-                      <p class="encadre__texte">{{ lecture.impact }}</p>
-                      <app-provenance [item]="source" />
-                    </aside>
-                  } @else {
-                    <app-provenance class="decryptage__source" [item]="source" />
-                  }
-                }
-              </section>
-            }
-            @case ('rubric') {
-              <section class="rubrique partie" [id]="'mb-' + section.id">
-                <header class="partie__entete">
-                  <app-picto-de-rubrique [id]="section.id" />
-                  <h2 class="partie__titre">{{ libelleDe(section) }}</h2>
-                  <span class="partie__nombre">{{ section.items.length }}</span>
-                </header>
-                @if (section.intro) {
-                  <p class="rubrique__chapeau">{{ section.intro }}</p>
-                }
-                <ol class="faits">
-                  @for (item of section.items; track item.url) {
-                    <li class="fait">
-                      <p class="fait__acteur">{{ item.entity }}</p>
-                      <p class="fait__texte">{{ item.text }}</p>
-                      <app-provenance [item]="item" />
-                    </li>
-                  }
-                </ol>
-              </section>
-            }
-            @case ('radar') {
-              <section class="radar partie" [id]="'mb-' + section.id">
-                <header class="partie__entete">
-                  <app-picto-de-rubrique [id]="section.id" />
-                  <h2 class="partie__titre">{{ section.title }}</h2>
-                  <span class="partie__nombre">{{ section.items.length }}</span>
-                </header>
-                <ul class="breves">
-                  @for (item of section.items; track item.url) {
-                    <li class="breve">
-                      <span class="breve__acteur">{{ item.entity }}</span>
-                      <span class="breve__texte">{{ item.text }}</span>
-                      <app-provenance [item]="item" [courte]="true" />
-                    </li>
-                  }
-                </ul>
-              </section>
-            }
-          }
+      <article class="edition__texte recit">
+        @if (blocs.edito; as edito) {
+          <section class="recit__edito">
+            <p class="recit__bonjour" i18n="@@recitBonjour">Bonjour.</p>
+            <p>{{ edito.texte }}</p>
+            <p class="recit__signature">{{ edito.signature }}</p>
+          </section>
         }
 
-        <div id="edition-anatomie" class="edition__anatomie">
-          <app-anatomie [article]="article" />
-        </div>
-
-        @if (sources.length) {
-          <section id="edition-sources" class="sources" aria-labelledby="edition-sources-titre">
-            <h2
-              id="edition-sources-titre"
-              class="sources__titre"
-              i18n="@@articleDetailToutesLesSources"
-            >
-              Toutes les sources ({{ sources.length }})
-            </h2>
-            <details>
-              <summary i18n="@@articleDetailAfficherLesSources">Afficher la liste</summary>
-              <div class="sources__groupes">
-                @for (groupe of sources; track groupe.nom) {
-                  <div class="sources__groupe">
-                    <h3 class="sources__publication">{{ groupe.nom }}</h3>
-                    <ul>
-                      @for (lien of groupe.liens; track lien.url) {
-                        <li>
-                          <a [href]="lien.url" rel="noopener noreferrer">{{ lien.libelle }}</a>
-                        </li>
-                      }
-                    </ul>
-                  </div>
+        @for (partie of parties; track partie.ancre) {
+          <section class="recit__partie" [id]="partie.ancre">
+            <h2 class="partie__kicker">{{ partie.titre }}</h2>
+            @switch (partie.kind) {
+              @case ('sujet') {
+                @if (blocs.sujet; as sujet) {
+                  <h3 class="recit__titre">{{ sujet.titre }}</h3>
+                  <p class="recit__accroche">{{ sujet.accroche }}</p>
+                  @if (sujet.feuilleton; as feuilleton) {
+                    <ng-container *ngTemplateOutlet="rappel; context: { $implicit: feuilleton }" />
+                  }
+                  @if (sujet.image; as image) {
+                    <ng-container *ngTemplateOutlet="illustration; context: { $implicit: image }" />
+                  }
+                  <h4 class="recit__intertitre" i18n="@@recitPourquoi">Pourquoi on en parle ?</h4>
+                  <p>{{ sujet.pourquoi }}</p>
+                  @if (sujet.contexte) {
+                    <h4 class="recit__intertitre" i18n="@@recitContexte">Contexte :</h4>
+                    <p>{{ sujet.contexte }}</p>
+                  }
+                  <h4 class="recit__intertitre" i18n="@@recitFaits">Dans les faits :</h4>
+                  <p>{{ sujet.faits }}</p>
+                  @if (sujet.graphique; as graphique) {
+                    <figure class="graphique">
+                      <figcaption class="graphique__titre">{{ graphique.titre }}</figcaption>
+                      <ul>
+                        @for (barre of graphique.barres; track barre.libelle) {
+                          <li class="graphique__barre">
+                            <span class="graphique__libelle">{{ barre.libelle }}</span>
+                            <span class="graphique__piste" aria-hidden="true"
+                              ><span
+                                class="graphique__remplissage"
+                                [style.width.%]="barre.largeur"
+                              ></span
+                            ></span>
+                            <span class="graphique__valeur">{{ barre.affichage }}</span>
+                          </li>
+                        }
+                      </ul>
+                    </figure>
+                  }
+                  @if (sujet.et_maintenant) {
+                    <h4 class="recit__intertitre" i18n="@@recitEtMaintenant">Et maintenant ?</h4>
+                    <p>{{ sujet.et_maintenant }}</p>
+                  }
+                  <p class="recit__bref">
+                    <strong i18n="@@recitEnBref">En bref :</strong> {{ sujet.bref }}
+                  </p>
+                  <app-provenance [source]="sujet.source" />
                 }
-              </div>
-            </details>
+              }
+              @case ('shot') {
+                @if (blocs.shot; as shot) {
+                  <ol class="recit__histoires">
+                    @for (histoire of shot.histoires; track histoire.source.url) {
+                      <li class="recit__histoire">
+                        @if (histoire.rubrique; as rubrique) {
+                          <app-picto-de-rubrique class="recit__picto" [id]="rubrique" />
+                        }
+                        <p>
+                          @if (histoire.accroche) {
+                            <strong>{{ histoire.accroche }}</strong
+                            >&ngsp;
+                          }
+                          {{ histoire.texte }}
+                        </p>
+                        @if (histoire.feuilleton; as feuilleton) {
+                          <ng-container
+                            *ngTemplateOutlet="rappel; context: { $implicit: feuilleton }"
+                          />
+                        }
+                        @if (histoire.image; as image) {
+                          <ng-container
+                            *ngTemplateOutlet="illustration; context: { $implicit: image }"
+                          />
+                        }
+                        <app-provenance [source]="histoire.source" [courte]="true" />
+                      </li>
+                    }
+                  </ol>
+                }
+              }
+              @case ('decodeur') {
+                @if (blocs.decodeur; as decodeur) {
+                  <p>
+                    <strong>{{ decodeur.terme }}</strong> — {{ decodeur.explication }}
+                  </p>
+                }
+              }
+              @case ('a_tester') {
+                @if (blocs.a_tester; as outil) {
+                  <p>
+                    <strong>{{ outil.nom }}</strong> — {{ outil.texte }}
+                  </p>
+                  <app-provenance
+                    [source]="outil.source"
+                    [courte]="true"
+                    libelle="Essayer"
+                    i18n-libelle="@@recitEssayer"
+                  />
+                }
+              }
+              @case ('sorties') {
+                @if (blocs.sorties; as sorties) {
+                  <table class="recit__sorties">
+                    <tbody>
+                      @for (ligne of sorties.lignes; track ligne.produit + ligne.version) {
+                        <tr>
+                          <th scope="row">{{ ligne.produit }} {{ ligne.version }}</th>
+                          <td>{{ ligne.changement }}</td>
+                          <td><app-provenance [source]="ligne.source" [courte]="true" /></td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                }
+              }
+              @case ('chiffre') {
+                @if (blocs.chiffre; as chiffre) {
+                  <p class="recit__chiffre">{{ chiffre.valeur }}</p>
+                  <p>{{ chiffre.texte }}</p>
+                  <app-provenance [source]="chiffre.source" [courte]="true" />
+                }
+              }
+              @case ('citation') {
+                @if (blocs.citation; as citation) {
+                  <blockquote class="recit__citation">
+                    <p>
+                      <em>« {{ citation.texte }} »</em>
+                      @if (citation.traduite_de) {
+                        <span class="recit__traduction" i18n="@@recitTraduitDe"
+                          >Traduit de {{ citation.traduite_de }}</span
+                        >
+                      }
+                    </p>
+                    <footer>— {{ citation.auteur }}</footer>
+                  </blockquote>
+                  @if (citation.contexte) {
+                    <p>{{ citation.contexte }}</p>
+                  }
+                  <app-provenance [source]="citation.source" [courte]="true" />
+                }
+              }
+              @case ('a_part_ca') {
+                @if (blocs.a_part_ca; as aPartCa) {
+                  <ul class="recit__breves">
+                    @for (breve of aPartCa.breves; track breve.source.url) {
+                      <li>
+                        {{ breve.texte }}&ngsp;
+                        <app-provenance [source]="breve.source" [courte]="true" />
+                      </li>
+                    }
+                  </ul>
+                }
+              }
+            }
           </section>
         }
       </article>
     </div>
   </div>
+
+  <ng-template #illustration let-image>
+    <figure class="recit__image">
+      <img [src]="image.url" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+      <figcaption>© {{ image.credit }}</figcaption>
+    </figure>
+  </ng-template>
+
+  <ng-template #rappel let-feuilleton>
+    <p class="recit__feuilleton">
+      <ng-container i18n="@@recitOnVousEnParlait"
+        >On vous en parlait le {{ feuilleton.date | jourDuSite: 'court' }} :</ng-container
+      >
+      {{ feuilleton.rappel }}
+    </p>
+  </ng-template>
 
   <app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />
 } @else {
@@ -301,7 +272,7 @@
           <ul>
             @for (source of article.sources; track source.url) {
               <li>
-                <a [href]="source.url" rel="noopener noreferrer">{{ source.name }}</a>
+                <a [href]="source.url" rel="noopener noreferrer">{{ source.nom }}</a>
               </li>
             }
           </ul>
@@ -312,24 +283,3 @@
 
   <app-articles-cta [kicker]="ctaKicker" [title]="ctaTitle" [lead]="ctaLead" />
 }
-
-<ng-template #aRetenir let-lignes>
-  @if (lignes.length) {
-    <div class="a-retenir">
-      <h3 class="a-retenir__titre" i18n="@@articleDetailARetenir">À retenir</h3>
-      <ol>
-        @for (ligne of lignes; track $index) {
-          <li>
-            <span class="a-retenir__numero" aria-hidden="true">{{ $index + 1 }}</span
-            >&ngsp;<span
-              ><span [class.brief__ligne]="ligne.source !== null">{{ ligne.texte }}</span>
-              @if (ligne.source) {
-                <app-provenance [item]="ligne.source" [courte]="true" />
-              }
-            </span>
-          </li>
-        }
-      </ol>
-    </div>
-  }
-</ng-template>

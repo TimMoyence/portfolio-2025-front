@@ -7,15 +7,13 @@ import type { Params } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
-  buildEditionMorningBrief,
-  buildItemDeSection,
   buildPublishedArticle,
-  buildSectionDeLArticle,
+  buildRecitDuMatin,
 } from '../../../../testing/factories/article.factory';
 import { fournirLaRoute } from '../../../../testing/factories/serveur/route.factory';
 import { ancresDuSommaire, rendreLaFiche } from '../../../../testing/page/edition-rendue';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
-import { texteDe, textes } from '../../../../testing/texte/textes-dom';
+import { texteDe } from '../../../../testing/texte/textes-dom';
 import type { SeoConfig } from '../../../core/seo/seo.interface';
 import { SeoService } from '../../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../../core/ssr/http-response-status';
@@ -231,178 +229,23 @@ describe('ArticleDetailComponent — métadonnées SEO', () => {
   });
 });
 
-describe('ArticleDetailComponent — l’édition rendue depuis ses sections', () => {
+describe('ArticleDetailComponent — l’édition d’avant la refonte, en texte suivi', () => {
   beforeAll(() => registerLocaleData(localeFr));
 
-  const rendre = rendreLaFiche;
-
-  const section = (page: HTMLElement, id: string): HTMLElement =>
-    page.querySelector<HTMLElement>(`#mb-${id}`)!;
-
-  it('MB-03 · titre la fiche par le décryptage, avec ses compteurs et sans bande de couleurs', () => {
-    const page = rendre(buildEditionMorningBrief());
-
-    expect(texteDe(page.querySelector('h1'))).toBe('V8 travaille désormais pour le temps réel');
-    expect(page.querySelector('[data-testid="bande-des-rubriques"]')).toBeNull();
-    expect(texteDe(page.querySelector('header app-compteurs-de-l-edition'))).toBe(
-      '7 informations · 6 sources · 9 min de lecture',
-    );
-  });
-
-  it('ouvre sur l’essentiel et ses points à retenir, numérotés', () => {
-    const essentiel = section(rendre(buildEditionMorningBrief()), 'essential');
-
-    expect(texteDe(essentiel.querySelector('.essentiel__chapeau'))).toContain(
-      'le routage et le cache',
-    );
-    expect(textes(essentiel, '.a-retenir li')).toEqual([
-      '1 Les scores bougent de 23 points selon la consigne.',
-      '2 Mercor passe ses lots de 12 à 2 heures.',
-      '3 Chrome 136 gagne 630 ms au chargement.',
-    ]);
-  });
-
-  it('donne au décryptage son encadré « Ce que ça change » et sa source', () => {
-    const decryptage = section(rendre(buildEditionMorningBrief()), 'deep-dive');
-    const encadre = decryptage.querySelector('.encadre')!;
-
-    expect(texteDe(decryptage)).toContain('Le moteur compile d’abord ce que la page utilise.');
-    expect(texteDe(encadre)).toContain('Ce que ça change');
-    expect(texteDe(encadre)).toContain('Les applications web démarrent plus vite sans réécriture.');
-    expect(encadre.querySelector('a')?.getAttribute('href')).toBe(
-      'https://v8.dev/blog/indices-de-compilation',
-    );
-  });
-
-  it('garde la source du décryptage sans encadré quand il n’a pas d’impact', () => {
-    const sansImpact = buildSectionDeLArticle({
-      id: 'deep-dive',
-      kind: 'deep_dive',
-      title: 'V8 accélère',
-      body: 'Le corps du décryptage.',
-      items: [
-        buildItemDeSection({
-          entity: 'Source du décryptage',
-          text: 'Source du décryptage : V8 accélère',
-          url: 'https://www.reddit.com/r/LocalLLaMA/1',
-        }),
-      ],
-    });
-    const decryptage = section(
-      rendre(buildEditionMorningBrief({ sections: [sansImpact] })),
-      'deep-dive',
-    );
-
-    expect(decryptage.querySelector('.encadre')).toBeNull();
-    expect(texteDe(decryptage)).not.toContain('Ce que ça change');
-    expect(decryptage.querySelector('.decryptage__source a')?.getAttribute('href')).toBe(
-      'https://www.reddit.com/r/LocalLLaMA/1',
-    );
-  });
-
-  it('met la source sous chaque fait : publication, site, date, lien externe', () => {
-    const rubrique = section(rendre(buildEditionMorningBrief()), 'modeles-ia');
-    const faits = Array.from(rubrique.querySelectorAll('.fait'));
-
-    expect(texteDe(rubrique.querySelector('h2'))).toBe('Modèles IA & Recherche');
-    expect(faits.length).toBe(2);
-    const provenance = faits[0].querySelector<HTMLAnchorElement>('[data-testid="provenance"]')!;
-    expect(texteDe(faits[0].querySelector('.fait__acteur'))).toBe('Vercel / DeepSeek V4.1');
-    expect(texteDe(provenance)).toBe('Vercel Blog vercel.com 7 nov. ↗');
-    expect(provenance.getAttribute('href')).toBe('https://vercel.com/changelog/fait');
-    expect(provenance.getAttribute('rel')).toBe('noopener noreferrer');
-  });
-
-  it('range le radar par rubrique, une ligne par brève avec son lien', () => {
-    const page = rendre(buildEditionMorningBrief());
-
-    expect(texteDe(section(page, 'radar-modeles-ia').querySelector('h2'))).toBe(
-      'Radar — Modèles IA & Recherche',
-    );
-    const breves = Array.from(section(page, 'radar').querySelectorAll('li'));
-    expect(breves.length).toBe(1);
-    expect(texteDe(breves[0])).toContain('Show HN');
-    expect(breves[0].querySelector('a')?.getAttribute('href')).toBe(
-      'https://news.ycombinator.com/item?id=1',
-    );
-  });
-
-  it('ouvre un sommaire d’ancres vers chaque partie de l’édition', () => {
-    const page = rendre(buildEditionMorningBrief());
-
-    expect(ancresDuSommaire(page)).toEqual([
-      'mb-essential',
-      'mb-deep-dive',
-      'mb-modeles-ia',
-      'mb-outils-ia',
-      'mb-radar-modeles-ia',
-      'mb-radar',
-      'edition-anatomie',
-      'edition-sources',
-    ]);
-  });
-
-  it('garde des ancres uniques quand une rubrique s’appelle sources ou anatomie', () => {
-    const page = rendre(
-      buildEditionMorningBrief({
-        sections: ['sources', 'anatomie', 'anatomie-titre'].map((id) =>
-          buildSectionDeLArticle({
-            id,
-            items: [buildItemDeSection({ url: `https://exemple.fr/${id}` })],
-          }),
-        ),
-      }),
-    );
-    const ids = Array.from(page.querySelectorAll('[id]')).map((element) => element.id);
-
-    expect(ids.length).toBe(new Set(ids).size);
-    expect(
-      ancresDuSommaire(page).every((ancre) => page.querySelector(`[id="${ancre}"]`)),
-    ).toBeTrue();
-  });
-
-  it('montre l’anatomie et replie les sources, titrées et comptées par publication', () => {
-    const page = rendre(buildEditionMorningBrief());
-    const sources = page.querySelector<HTMLDetailsElement>('#edition-sources details')!;
-
-    expect(page.querySelector('#edition-anatomie app-anatomie')).not.toBeNull();
-    expect(sources.hasAttribute('open')).toBeFalse();
-    expect(texteDe(sources.querySelector('summary'))).toBe('Afficher la liste');
-    expect(textes(sources, '.sources__publication')).toContain('Vercel Blog');
-  });
-
-  it('titre le bloc des sources par un vrai h2, hors du bouton qui le déplie', () => {
-    const page = rendre(buildEditionMorningBrief());
-    const section = page.querySelector('#edition-sources')!;
-    const titre = section.querySelector('h2');
-
-    expect(texteDe(titre)).toBe('Toutes les sources (6)');
-    expect(titre?.closest('summary')).toBeNull();
-    expect(section.getAttribute('aria-labelledby')).toBe(titre?.id ?? 'absent');
-    expect(section.querySelector('summary h2, summary [role="heading"]')).toBeNull();
-  });
-
-  it('se replie sur le markdown quand l’article n’a pas de sections', () => {
-    const page = rendre(
+  it('MB-20 · se replie sur le markdown et nomme ses sources quand l’article n’a pas de sections', () => {
+    const page = rendreLaFiche(
       buildPublishedArticle({
         content_markdown: '## Veille\n\nUn paragraphe.',
-        sources: [
-          {
-            name: 'Le Monde',
-            url: 'https://www.lemonde.fr/x',
-            published_at: null,
-            retrieved_at: null,
-          },
-        ],
+        sources: [{ nom: 'Le Monde', url: 'https://www.lemonde.fr/x', publie_le: null }],
       }),
     );
 
     expect(texteDe(page.querySelector('h1'))).toBe('Veille IA');
     expect(texteDe(page.querySelector('.article-markdown'))).toContain('Un paragraphe.');
     expect(page.querySelector('.sommaire')).toBeNull();
-    expect(page.querySelector('.article-sources a')?.getAttribute('href')).toBe(
-      'https://www.lemonde.fr/x',
-    );
+    const lien = page.querySelector('.article-sources a');
+    expect(lien?.getAttribute('href')).toBe('https://www.lemonde.fr/x');
+    expect(texteDe(lien)).toBe('Le Monde');
   });
 });
 
@@ -427,7 +270,7 @@ describe('ArticleDetailComponent — sommaire repliable sur mobile', () => {
   });
 
   function monter() {
-    const edition = buildEditionMorningBrief();
+    const edition = buildRecitDuMatin();
     const { parametres, requete } = monterLaFiche(edition.slug);
     const fixture = TestBed.createComponent(ArticleDetailComponent);
     fixture.autoDetectChanges();
@@ -447,16 +290,34 @@ describe('ArticleDetailComponent — sommaire repliable sur mobile', () => {
     return { fixture, page, bascule, parametres, servir, lire };
   }
 
+  it('ouvre un sommaire d’ancres vers chaque partie du récit, chacune présente sur la page', () => {
+    const { page } = monter();
+
+    expect(ancresDuSommaire(page)).toEqual([
+      'recit-sujet',
+      'recit-shot',
+      'recit-decodeur',
+      'recit-a-tester',
+      'recit-sorties',
+      'recit-chiffre',
+      'recit-citation',
+      'recit-a-part-ca',
+    ]);
+    expect(
+      ancresDuSommaire(page).every((ancre) => page.querySelector(`[id="${ancre}"]`)),
+    ).toBeTrue();
+  });
+
   it('repart d’un sommaire fermé et sans partie lue sur l’édition suivante', async () => {
     const { fixture, bascule, parametres, servir, lire } = monter();
     await fixture.whenStable();
     bascule().click();
-    lire('mb-deep-dive');
+    lire('recit-shot');
 
     const avant = deconnexions;
-    parametres.next({ slug: 'morning-brief-2026-11-09' });
+    parametres.next({ slug: 'morning-brief-2026-11-12' });
     expect(deconnexions).toBe(avant + 1);
-    servir('morning-brief-2026-11-09');
+    servir('morning-brief-2026-11-12');
 
     expect(bascule().getAttribute('aria-expanded')).toBe('false');
     expect(texteDe(bascule())).toContain('Sommaire · 8 parties');
@@ -468,7 +329,7 @@ describe('ArticleDetailComponent — sommaire repliable sur mobile', () => {
 
     page.querySelector<HTMLAnchorElement>('.sommaire ol a')!.click();
 
-    expect(document.activeElement).toBe(page.querySelector('#mb-essential'));
+    expect(document.activeElement).toBe(page.querySelector('#recit-sujet'));
   });
 
   it('ouvre la liste par une seule commande, et la referme au choix d’une partie', () => {
@@ -495,8 +356,8 @@ describe('ArticleDetailComponent — sommaire repliable sur mobile', () => {
 
     expect(texteDe(bascule())).toContain('Sommaire · 8 parties');
 
-    lire('mb-deep-dive');
+    lire('recit-shot');
 
-    expect(texteDe(bascule())).toContain('Sommaire · Le décryptage');
+    expect(texteDe(bascule())).toContain('Sommaire · Le Shot');
   });
 });

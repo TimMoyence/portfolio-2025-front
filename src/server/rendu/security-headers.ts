@@ -11,7 +11,7 @@
 const CSP_REPORT_ONLY = [
   "default-src 'self'",
   "frame-ancestors 'self'",
-  "img-src 'self' data:",
+  "img-src 'self' data: https:",
   "style-src 'self' 'unsafe-inline'",
   "script-src 'self' https://accounts.google.com https://apis.google.com",
   "connect-src 'self'",

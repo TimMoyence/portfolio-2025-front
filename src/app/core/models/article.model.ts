@@ -1,13 +1,14 @@
 import type {
   ArticleListResponseDto,
   PublishedArticleResponseDto,
+  SourceDuRecitDto,
 } from '../../../../contrat/types.gen';
 
 export type PublishedArticle = PublishedArticleResponseDto;
 
-export type SectionDeLArticle = PublishedArticle['sections'][number];
+export type SectionDuRecit = PublishedArticle['sections'][number];
 
-export type ItemDeSection = SectionDeLArticle['items'][number];
+export type SourceDuRecit = SourceDuRecitDto;
 
 export type ArticleSummary = Pick<
   PublishedArticle,
