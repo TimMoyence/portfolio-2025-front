@@ -31,7 +31,7 @@ decrireLeMontageDeLInstantane('B3-02', INSTANTANE_B3_02, {
   textesAuPupitre: [
     {
       ecran: 'B3-02-A1-10-FORMULE-RECHERCHE',
-      textes: ['Syntaxe', 'Arguments', 'Le piège', 'Exemple', 'RECHERCHEV'],
+      textes: ['Syntaxe', 'Le piège', 'Exemple', 'RECHERCHEV', '→ la clé, ici F2'],
     },
     { ecran: 'B3-02-A2-18-FICHE-RECAP-1', textes: ['RECHERCHEX', 'INDEX'] },
     { ecran: 'B3-02-A2-19-FICHE-RECAP-2', textes: ['EQUATION.RANG', 'AGREGAT'] },

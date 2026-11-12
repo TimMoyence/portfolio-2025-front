@@ -1085,7 +1085,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailBackToList" datatype="html">
@@ -1212,49 +1212,49 @@
         <source>Un sujet à clarifier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCtaTitle" datatype="html">
         <source>La bonne technologie commence par le bon problème.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCtaLead" datatype="html">
         <source>Parlons de ce que cette veille peut changer concrètement dans votre activité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSommaireParties" datatype="html">
         <source><x id="nombre" equiv-text="this.parties.length"/> parties</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">145</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailTitreProvisoire" datatype="html">
         <source>Édition du Morning Brief</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">180</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailDescriptionProvisoire" datatype="html">
         <source>Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailAbsenceDescription" datatype="html">
         <source>Cette édition du Morning Brief est introuvable ou momentanément indisponible.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">232</context>
+          <context context-type="linenumber">227</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesListHeroTitle" datatype="html">
@@ -5941,7 +5941,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b3-02.description" datatype="html">
-        <source>Toutes les formules Excel du manager, une page chacune : syntaxe, arguments, exemple chiffré, piège ; puis nettoyer, relier, compter les jours ouvrés, croiser par un TCD et bâtir un tableau de bord, pas à pas. Une heure enfin pour confier l’analyse à une IA, la guider par son cahier de règles et vérifier ses chiffres. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <source>Toutes les formules Excel du manager, une page chacune : syntaxe, piège, exemple chiffré, et ce que chaque élément de l’infographie devient dans Excel ; puis nettoyer, relier, compter les jours ouvrés, croiser par un TCD et bâtir un tableau de bord, pas à pas. Une heure enfin pour confier l’analyse à une IA, la guider par son cahier de règles et vérifier ses chiffres. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/formations-list.data.ts</context>
           <context context-type="linenumber">148</context>
