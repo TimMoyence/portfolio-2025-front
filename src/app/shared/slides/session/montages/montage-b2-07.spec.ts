@@ -4,7 +4,7 @@ import {
   texteServiAuPosteEtudiant,
 } from '../../../../../testing/page/montage-d-instantane';
 
-const ECRANS_COMME_A_CINQ_ANS = [
+const ECRANS_D_IMAGE = [
   'B2-07-A1-02-ENFANT-MULTIPLIER',
   'B2-07-A1-03-ENFANT-A-ET-K',
   'B2-07-A1-04-ENFANT-LN',
@@ -59,9 +59,12 @@ decrireLeMontageDeLInstantane('B2-07', INSTANTANE_B2_07, {
     },
   ],
   specifiques: () => {
-    it('B207-M2 · sert au poste étudiant chaque écran comme à cinq ans avec son pont vers la notation', () => {
-      for (const ecran of ECRANS_COMME_A_CINQ_ANS) {
-        expect(texteServiAuPosteEtudiant(INSTANTANE_B2_07, ecran)).toContain('En maths, on écrit');
+    it('B207-M2 · sert au poste étudiant chaque écran d’image avec sa règle en notation et ses correspondances image → cours', () => {
+      for (const ecran of ECRANS_D_IMAGE) {
+        const texte = texteServiAuPosteEtudiant(INSTANTANE_B2_07, ecran);
+
+        expect(texte).toContain('En maths, on écrit');
+        expect(texte).toContain(' → ');
       }
     });
   },

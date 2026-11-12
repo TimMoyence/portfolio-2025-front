@@ -145,7 +145,7 @@ export const FORMATIONS: readonly FormationCard[] = [
   coursBachelorEnSeance({
     link: '/formations/b3-02-formules-et-ia-analyste',
     title: $localize`:@@formations-list.b3-02.title:B3-02 — Toutes les formules, puis l’IA analyste`,
-    description: $localize`:@@formations-list.b3-02.description:Toutes les formules Excel du manager, une page chacune : syntaxe, arguments, exemple chiffré, piège ; puis nettoyer, relier, compter les jours ouvrés, croiser par un TCD et bâtir un tableau de bord, pas à pas. Une heure enfin pour confier l’analyse à une IA, la guider par son cahier de règles et vérifier ses chiffres. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b3-02.description:Toutes les formules Excel du manager, une page chacune : syntaxe, piège, exemple chiffré, et ce que chaque élément de l’infographie devient dans Excel ; puis nettoyer, relier, compter les jours ouvrés, croiser par un TCD et bâtir un tableau de bord, pas à pas. Une heure enfin pour confier l’analyse à une IA, la guider par son cahier de règles et vérifier ses chiffres. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.`,
     duree: $localize`:@@formations-list.b3-02.duration:3 h 00`,
   }),
   formationGratuite({

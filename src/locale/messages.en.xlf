@@ -11698,8 +11698,8 @@
     </unit>
     <unit id="formations-list.b3-02.description">
       <segment>
-        <source>Toutes les formules Excel du manager, une page chacune : syntaxe, arguments, exemple chiffré, piège ; puis nettoyer, relier, compter les jours ouvrés, croiser par un TCD et bâtir un tableau de bord, pas à pas. Une heure enfin pour confier l’analyse à une IA, la guider par son cahier de règles et vérifier ses chiffres. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Every Excel formula a manager needs, one page each: syntax, arguments, worked figures, common trap; then clean, join, count working days, cross with a PivotTable and build a dashboard, step by step. A final hour to hand the analysis to an AI, guide it with your rulebook and check its figures. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
+        <source>Toutes les formules Excel du manager, une page chacune : syntaxe, piège, exemple chiffré, et ce que chaque élément de l’infographie devient dans Excel ; puis nettoyer, relier, compter les jours ouvrés, croiser par un TCD et bâtir un tableau de bord, pas à pas. Une heure enfin pour confier l’analyse à une IA, la guider par son cahier de règles et vérifier ses chiffres. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
+        <target>Every Excel formula a manager needs, one page each: syntax, common trap, worked figures, and what each part of the infographic becomes in Excel; then clean, join, count working days, cross with a PivotTable and build a dashboard, step by step. A final hour to hand the analysis to an AI, guide it with your rulebook and check its figures. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b3-02.duration">

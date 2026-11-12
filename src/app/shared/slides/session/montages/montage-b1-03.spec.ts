@@ -25,7 +25,10 @@ decrireLeMontageDeLInstantane('B1-03', INSTANTANE_B1_03, {
   ],
   textesAuPupitre: [
     { ecran: 'B1-03-A1-04-DOSSIER', textes: ['Partie Libre', 'Données fictives'] },
-    { ecran: 'B1-03-A1-06-ENFANT-TAS', textes: ['Tu fais un tas par couleur'] },
+    {
+      ecran: 'B1-03-A1-06-ENFANT-TAS',
+      textes: ['Un tas par couleur', 'Un tas par couleur → une ligne du TCD par canal'],
+    },
     { ecran: 'B1-03-A1-07-COURS-CHAMP-CALCULE', textes: ['Le calcul se fait sur les sommes'] },
     { ecran: 'B1-03-A2-02-COURS-MEDIANE-QUARTILES', textes: ['D’abord ranger, puis couper'] },
   ],
