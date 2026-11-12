@@ -42,8 +42,6 @@ interface AttenduDeFeuille {
   readonly affichage: string;
 }
 
-type Foyer = 'cellule' | 'barre' | null;
-
 type Contenus = Readonly<Record<string, string>>;
 
 interface Recopie {
@@ -132,8 +130,10 @@ export class FpSheet extends FpProductionEvaluee<
   } as const;
   private contenus: Contenus = {};
   private selection = '';
-  private foyer: Foyer = null;
+  private celluleARejoindre = false;
+  private renvoiDiffere = false;
   private evaluee: FeuilleEvaluee = SANS_EVALUATION;
+  private evalueeSur: Contenus = {};
 
   set plan(valeur: SheetPlanPublic | null) {
     this.poserLePlan(valeur, copierPlan);
@@ -147,20 +147,39 @@ export class FpSheet extends FpProductionEvaluee<
     valeur: EvaluationDeFeuille,
     attente: DemandeEnAttente<Recopie | null>,
   ): void {
-    this.evaluee = valeur.evaluee;
     const recopie = attente.complement;
-    if (recopie === null) {
+    if (recopie !== null && !this.celluleAccessible(recopie.vers)) {
+      this.saisiesEvaluees = this.evalueeSur;
+      this.demanderPour(null);
       return;
     }
-    const recopiee = valeur.evaluee.saisies[recopie.vers] ?? '';
+    this.evaluee = valeur.evaluee;
+    if (recopie !== null) {
+      this.poserLaRecopie(recopie, valeur.evaluee.saisies[recopie.vers] ?? '', attente.saisies);
+    }
+    this.evalueeSur = this.saisiesEvaluees;
+    if (this.renvoiDiffere) {
+      this.renvoiDiffere = false;
+      this.valider();
+    }
+  }
+
+  protected override appliquerErreur(valeur: string | null): void {
+    if (valeur !== null) {
+      this.renvoiDiffere = false;
+    }
+    super.appliquerErreur(valeur);
+  }
+
+  private poserLaRecopie(recopie: Recopie, recopiee: string, saisies: Contenus): void {
     this.contenus = { ...this.contenus, [recopie.vers]: recopiee };
-    this.saisiesEvaluees = { ...attente.saisies, [recopie.vers]: recopiee };
+    this.saisiesEvaluees = { ...saisies, [recopie.vers]: recopiee };
     this.saisiesDemandees = this.saisiesEvaluees;
     if (this.selection === recopie.de) {
       this.selection = recopie.vers;
-      this.foyer = 'cellule';
+      this.celluleARejoindre = true;
     }
-    this.signalerLeBrouillon(this.saisiesDeLEtudiant());
+    this.noterLaSaisie(recopie.vers, this.saisiesDeLEtudiant());
   }
 
   protected validerApresEvaluation(): void {
@@ -222,7 +241,8 @@ export class FpSheet extends FpProductionEvaluee<
   }
 
   protected relacherLaSaisie(): void {
-    this.foyer = null;
+    this.celluleARejoindre = false;
+    this.renvoiDiffere = false;
   }
 
   protected effacerLaSaisie(): void {
@@ -231,6 +251,7 @@ export class FpSheet extends FpProductionEvaluee<
     this.contenus = { ...(plan?.cellules ?? {}) };
     this.selection = plan?.grille[0]?.[0] ?? '';
     this.evaluee = plan?.initiale ?? SANS_EVALUATION;
+    this.evalueeSur = this.contenus;
     this.repartirDe(this.contenus);
   }
 
@@ -246,8 +267,12 @@ export class FpSheet extends FpProductionEvaluee<
     return this.enAttente?.complement != null;
   }
 
+  private recopieOuverte(): boolean {
+    return this.celluleAccessible(this.selection) && !this.recopieEnAttente();
+  }
+
   private boutonsRecopier(): EscapedHtml {
-    const etat = this.verrouille() || this.recopieEnAttente() ? DESACTIVE : VIDE;
+    const etat = this.recopieOuverte() ? VIDE : DESACTIVE;
     return safeHtml`<button type="button" class="fp-sheet__recopier" data-testid="recopier" ${etat}>${escapeHtml(this.texte('sheet-recopier'))}</button><button type="button" class="fp-sheet__recopier" data-testid="recopier-droite" ${etat}>${escapeHtml(this.texte('sheet-recopier-droite'))}</button>`;
   }
 
@@ -256,19 +281,16 @@ export class FpSheet extends FpProductionEvaluee<
       return;
     }
     barre.disabled = !this.celluleAccessible(this.selection);
-    barre.addEventListener('input', () => this.ecrire(this.selection, barre.value, 'barre'));
-    if (this.foyer === 'barre' && this.celluleAccessible(this.selection)) {
-      barre.focus();
-      barre.setSelectionRange(barre.value.length, barre.value.length);
-    }
+    barre.addEventListener('input', () => this.ecrire(this.selection, barre.value));
   }
 
   private brancherCellule(champ: HTMLInputElement): void {
     const nom = champ.dataset['nom'] ?? this.selection;
-    champ.addEventListener('input', () => this.ecrire(nom, champ.value, 'cellule'));
+    champ.addEventListener('input', () => this.ecrire(nom, champ.value));
     champ.addEventListener('focus', () => this.selectionner(nom));
     champ.addEventListener('keydown', (evenement) => this.auClavier(evenement, nom));
-    if (nom === this.selection && this.foyer === 'cellule' && this.celluleAccessible(nom)) {
+    if (nom === this.selection && this.celluleARejoindre && this.celluleAccessible(nom)) {
+      this.celluleARejoindre = false;
       champ.focus();
       champ.setSelectionRange(champ.value.length, champ.value.length);
     }
@@ -279,10 +301,14 @@ export class FpSheet extends FpProductionEvaluee<
       return;
     }
     evenement.preventDefault();
-    this.validerLaCellule();
-    this.selection = this.voisine(nom, 'bas');
-    this.foyer = 'cellule';
     this.message = '';
+    this.rejoindre(this.voisine(nom, 'bas'));
+  }
+
+  private rejoindre(nom: string): void {
+    this.validerLaCellule();
+    this.selection = nom;
+    this.celluleARejoindre = true;
     this.refresh();
   }
 
@@ -303,10 +329,7 @@ export class FpSheet extends FpProductionEvaluee<
 
   private selectionner(nom: string): void {
     if (nom !== this.selection && this.celluleAccessible(nom)) {
-      this.validerLaCellule();
-      this.selection = nom;
-      this.foyer = 'cellule';
-      this.refresh();
+      this.rejoindre(nom);
     }
   }
 
@@ -324,7 +347,7 @@ export class FpSheet extends FpProductionEvaluee<
     );
   }
 
-  private ecrire(nom: string, contenu: string, source: Foyer): void {
+  private ecrire(nom: string, contenu: string): void {
     if (!this.modifiable(nom)) {
       return;
     }
@@ -334,7 +357,6 @@ export class FpSheet extends FpProductionEvaluee<
     const longueur = this.interne?.longueurMaxSaisie ?? 0;
     this.contenus = { ...this.contenus, [nom]: contenu.slice(0, longueur) };
     this.selection = nom;
-    this.foyer = source;
     this.noterLaSaisie(nom, this.saisiesDeLEtudiant());
   }
 
@@ -357,17 +379,25 @@ export class FpSheet extends FpProductionEvaluee<
   }
 
   private refusDeRecopie(cible: string, sens: SensDeRecopie): string | null {
-    if (this.verrouille() || cible === this.selection) {
+    if (cible === this.selection) {
       return sens === 'droite' ? 'sheet-recopie-impossible-droite' : 'sheet-recopie-impossible';
     }
     if (this.verrouillee(this.selection) || this.brut(this.selection).trim().length === 0) {
       return 'sheet-recopie-source';
     }
-    return this.verrouillee(cible) ? 'sheet-recopie-cible-imposee' : null;
+    if (this.verrouillee(cible)) {
+      return 'sheet-recopie-cible-imposee';
+    }
+    if (this.celluleAccessible(cible)) {
+      return null;
+    }
+    return this.detailDe(cible)?.juste === true
+      ? 'sheet-recopie-cible-juste'
+      : 'sheet-recopie-cible-non-notee';
   }
 
   private recopier(sens: SensDeRecopie): void {
-    if (this.recopieEnAttente()) {
+    if (!this.recopieOuverte()) {
       return;
     }
     const cible = this.voisine(this.selection, sens);
@@ -569,6 +599,10 @@ export class FpSheet extends FpProductionEvaluee<
   }
 
   protected valider(): void {
+    if (this.recopieEnAttente()) {
+      this.renvoiDiffere = true;
+      return;
+    }
     const plan = this.planAValider();
     if (plan === null) {
       return;

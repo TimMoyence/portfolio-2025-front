@@ -114,6 +114,10 @@ const LIBELLES: Readonly<Record<string, () => string>> = {
     $localize`:@@coursRuntimeSheetRecopieImpossibleDroite:Aucune cellule à droite de celle-ci : la recopie n’a rien où aller`,
   'sheet-recopie-cible-imposee': () =>
     $localize`:@@coursRuntimeSheetRecopieCibleImposee:La cellule voisine est imposée : la recopie s’arrête ici`,
+  'sheet-recopie-cible-juste': () =>
+    $localize`:@@coursRuntimeSheetRecopieCibleJuste:La cellule voisine est déjà juste : la recopie s’arrête ici`,
+  'sheet-recopie-cible-non-notee': () =>
+    $localize`:@@coursRuntimeSheetRecopieCibleNonNotee:La cellule voisine n’est pas à reprendre : la recopie s’arrête ici`,
   'sheet-recopie-source': () =>
     $localize`:@@coursRuntimeSheetRecopieSource:Choisissez une cellule qui contient votre formule`,
   'sheet-cellule-fautive': () =>

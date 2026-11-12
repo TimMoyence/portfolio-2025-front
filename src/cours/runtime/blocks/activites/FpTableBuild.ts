@@ -280,12 +280,6 @@ export class FpTableBuild extends FpProductionEvaluee<
       );
       champ.addEventListener('keydown', (evenement) => this.auClavier(evenement));
     }
-    if (cle === this.suivie && !champ.disabled) {
-      champ.focus();
-      if (champ instanceof HTMLInputElement) {
-        champ.setSelectionRange(champ.value.length, champ.value.length);
-      }
-    }
   }
 
   private rejoindre(cle: string): void {
