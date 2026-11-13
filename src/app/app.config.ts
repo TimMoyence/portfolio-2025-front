@@ -8,10 +8,11 @@ import {
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
-import { AuthHttpAdapter } from './core/adapters/auth-http.adapter';
+import { AuthHttpAdapter } from './core/adapters/auth/auth-http.adapter';
 import { AuditRequestHttpAdapter } from './core/adapters/audit-request-http.adapter';
 import { ContactHttpAdapter } from './core/adapters/contact-http.adapter';
 import { LeadMagnetHttpAdapter } from './core/adapters/lead-magnet-http.adapter';
+import { NewsletterHttpAdapter } from './core/adapters/newsletter-http.adapter';
 import { PresentationHttpAdapter } from './core/adapters/formations/presentation-http.adapter';
 import { FormationsHttpAdapter } from './core/adapters/formations/formations-http.adapter';
 import { APP_CONFIG } from './core/config/app-config.token';
@@ -22,6 +23,7 @@ import { AUDIT_REQUEST_PORT } from './core/ports/audit-request.port';
 import { CONTACT_PORT } from './core/ports/contact.port';
 import { FORMATIONS_PORT } from './core/ports/formations.port';
 import { LEAD_MAGNET_PORT } from './core/ports/lead-magnet.port';
+import { NEWSLETTER_PORT } from './core/ports/newsletter.port';
 import { PRESENTATION_PORT } from './core/ports/presentation.port';
 
 export const appConfig: ApplicationConfig = {
@@ -70,6 +72,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: FORMATIONS_PORT,
       useClass: FormationsHttpAdapter,
+    },
+    {
+      provide: NEWSLETTER_PORT,
+      useClass: NewsletterHttpAdapter,
     },
   ],
 };

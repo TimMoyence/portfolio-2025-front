@@ -24,8 +24,9 @@ import {
   MOT_DE_PASSE_NEUF_REFUSE,
 } from '../../shared/utils/form-submit.utils';
 import { initialeDe } from '../../shared/utils/initiale.utils';
+import type { Locale } from '../../../../contrat/types.gen';
 import { zChangePasswordDto, zUpdateProfileDto } from '../../../../contrat/zod.gen';
-import { bornesDu, REGLE_D_UN_MOT_DE_PASSE } from '../../shared/utils/regles-de-saisie';
+import { bornesDu, REGLE_D_UN_MOT_DE_PASSE } from '../../shared/utils/saisie/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 
 const PROFIL = zUpdateProfileDto.shape;
@@ -67,6 +68,7 @@ export class ProfileComponent {
   editFirstName = '';
   editLastName = '';
   editPhone = '';
+  editLocale: Locale = 'fr';
   editProfileSubmitted = false;
   editProfileLoading = false;
   editProfileSuccess?: string;
@@ -89,13 +91,23 @@ export class ProfileComponent {
     prenom: $localize`:@@profileFirstNameLabel:Prénom`,
     nom: $localize`:@@profileLastNameLabel:Nom`,
     email: $localize`:@@profileEmailLabel:Email`,
+    langue: $localize`:@@profileLangueDesEmails:Langue des emails du compte`,
   };
+
+  protected readonly LANGUES: readonly { readonly code: Locale; readonly nom: string }[] = [
+    { code: 'en', nom: 'English' },
+    { code: 'fr', nom: 'Français' },
+  ];
 
   protected lignesIdentite(user: AuthUser): readonly { libelle: string; valeur: string }[] {
     return [
       { libelle: this.libellesIdentite.prenom, valeur: user.firstName },
       { libelle: this.libellesIdentite.nom, valeur: user.lastName },
       { libelle: this.libellesIdentite.email, valeur: user.email },
+      {
+        libelle: this.libellesIdentite.langue,
+        valeur: this.LANGUES.find(({ code }) => code === user.locale)?.nom ?? user.locale,
+      },
     ];
   }
 
@@ -113,6 +125,7 @@ export class ProfileComponent {
     this.editFirstName = user.firstName;
     this.editLastName = user.lastName;
     this.editPhone = user.phone ?? '';
+    this.editLocale = user.locale;
     this.editProfileSubmitted = false;
     this.editProfileSuccess = undefined;
     this.editProfileError = undefined;
@@ -138,6 +151,7 @@ export class ProfileComponent {
         firstName: this.editFirstName.trim(),
         lastName: this.editLastName.trim(),
         phone: telephoneFacultatif(this.editPhone),
+        locale: this.editLocale,
       }),
       this.cdr,
       {

@@ -1008,6 +1008,44 @@
       }
     },
     {
+      "id": "newsletter-confirm",
+      "path": "/newsletter/confirm",
+      "index": false,
+      "locales": {
+        "fr": {
+          "title": "Confirmer la newsletter — Asili Design",
+          "description": "Confirmation de votre abonnement à la newsletter.",
+          "ogTitle": "Confirmer la newsletter",
+          "ogDescription": "Confirmation de votre abonnement à la newsletter."
+        },
+        "en": {
+          "title": "Confirm the newsletter — Asili Design",
+          "description": "Confirmation of your newsletter subscription.",
+          "ogTitle": "Confirm the newsletter",
+          "ogDescription": "Confirmation of your newsletter subscription."
+        }
+      }
+    },
+    {
+      "id": "newsletter-unsubscribe",
+      "path": "/newsletter/unsubscribe",
+      "index": false,
+      "locales": {
+        "fr": {
+          "title": "Se désabonner de la newsletter — Asili Design",
+          "description": "Désabonnement de la newsletter.",
+          "ogTitle": "Se désabonner de la newsletter",
+          "ogDescription": "Désabonnement de la newsletter."
+        },
+        "en": {
+          "title": "Unsubscribe from the newsletter — Asili Design",
+          "description": "Newsletter unsubscription.",
+          "ogTitle": "Unsubscribe from the newsletter",
+          "ogDescription": "Newsletter unsubscription."
+        }
+      }
+    },
+    {
       "id": "profile",
       "path": "/profil",
       "index": false,

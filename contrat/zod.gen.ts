@@ -11,6 +11,11 @@ export const zLoginDto = z.object({
   password: z.string().min(1).max(256),
 });
 
+/**
+ * Langue des emails du compte.
+ */
+export const zLocale = z.enum(['fr', 'en']);
+
 export const zUserResponseDto = z.object({
   id: z.string(),
   email: z.string(),
@@ -24,6 +29,7 @@ export const zUserResponseDto = z.object({
   updatedOrCreatedBy: z.string().nullable(),
   hasPassword: z.boolean(),
   emailVerified: z.boolean(),
+  locale: zLocale,
 });
 
 export const zAuthResponseDto = z.object({
@@ -34,6 +40,7 @@ export const zAuthResponseDto = z.object({
 
 export const zGoogleAuthDto = z.object({
   idToken: z.string().min(1),
+  locale: zLocale.optional(),
 });
 
 export const zAuthMessageResponseDto = z.object({
@@ -94,6 +101,7 @@ export const zInscriptionDto = z.object({
       /^$|^[\s().-]*(?:\+[\s().-]*(?:\d[\s().-]*){6,15}|0[\s().-]*0[\s().-]*(?:\d[\s().-]*){6,15}|(?!0[\s().-]*0)(?:\d[\s().-]*){6,15})$/,
     )
     .nullish(),
+  locale: zLocale.optional(),
 });
 
 export const zResendVerificationDto = z.object({
@@ -115,9 +123,8 @@ export const zUpdateProfileDto = z.object({
       /^$|^[\s().-]*(?:\+[\s().-]*(?:\d[\s().-]*){6,15}|0[\s().-]*0[\s().-]*(?:\d[\s().-]*){6,15}|(?!0[\s().-]*0)(?:\d[\s().-]*){6,15})$/,
     )
     .nullish(),
+  locale: zLocale.optional(),
 });
-
-export const zLocale = z.enum(['fr', 'en']);
 
 export const zContactRequestDto = z.object({
   website: z.string().max(200).optional(),
@@ -290,6 +297,31 @@ export const zToolkitPageResponseDto = z.object({
   prompts: z.array(zPromptEntryDto),
   workflows: z.array(zWorkflowEntryDto),
   templates: z.array(zTemplateEntryDto),
+});
+
+export const zSubscribeNewsletterRequestDto = z.object({
+  website: z.string().max(200).optional(),
+  formFillDurationMs: z.int().gte(0).optional(),
+  email: z
+    .string()
+    .regex(
+      /^(?=[^@]{1,64}@)(?=.{1,254}$)[A-Za-z0-9!#$%&'*+\/=?^_`{|}~¡-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﷏ﷰ-﻾＀-￯-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?^_`{|}~¡-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﷏ﷰ-﻾＀-￯-]+)*@(?:[A-Za-z0-9¡-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﻾＀｟-￸￼-￿](?:[A-Za-z0-9¡-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﻾＀｟-￸￼-￿-]{0,61}[A-Za-z0-9¡-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﻾＀｟-￸￼-￿])?\.)+(?:[A-Za-z¡-¨ª-¬®-׿؆-؛؝-ۜ۞-܎ܐ-࢏࢒-ࣣ࣡-ᙿᚁ-᠍᠏-῿‐-‧‰-⁞⁥⁰-⿿、-퟿豈-﷏ﷰ-﻾＀｟-￯]{2,63}|xn--[A-Za-z0-9-]{2,59})$/,
+    ),
+  locale: zLocale,
+  termsVersion: z.string().min(1).max(50),
+});
+
+export const zAbonnementNewsletterResponseDto = z.object({
+  message: z.string(),
+});
+
+export const zConfirmationNewsletterResponseDto = z.object({
+  status: z.enum(['confirmed']),
+  locale: z.enum(['fr', 'en']),
+});
+
+export const zDesabonnementNewsletterResponseDto = z.object({
+  status: z.enum(['unsubscribed']),
 });
 
 export const zPollInteractionDto = z.object({
@@ -3315,6 +3347,22 @@ export const zLeadMagnetsControllerGetByTokenPath = z.object({
 });
 
 export const zLeadMagnetsControllerGetByTokenResponse = zToolkitPageResponseDto;
+
+export const zNewsletterControllerSubscribeBody = zSubscribeNewsletterRequestDto;
+
+export const zNewsletterControllerSubscribeResponse = zAbonnementNewsletterResponseDto;
+
+export const zNewsletterControllerConfirmQuery = z.object({
+  token: z.string(),
+});
+
+export const zNewsletterControllerConfirmResponse = zConfirmationNewsletterResponseDto;
+
+export const zNewsletterControllerUnsubscribeQuery = z.object({
+  token: z.string(),
+});
+
+export const zNewsletterControllerUnsubscribeResponse = zDesabonnementNewsletterResponseDto;
 
 export const zPresentationsControllerGetInteractionsPath = z.object({
   slug: z.string(),

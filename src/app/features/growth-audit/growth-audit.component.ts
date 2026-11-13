@@ -38,7 +38,7 @@ import { FormatDeContactDirective } from '../../shared/directives/format-de-cont
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
 import { readCheckboxChecked } from '../../shared/utils/dom-event.utils';
 import { zAuditRequestRequestDto } from '../../../../contrat/zod.gen';
-import { bornesDu } from '../../shared/utils/regles-de-saisie';
+import { bornesDu } from '../../shared/utils/saisie/regles-de-saisie';
 import { AuditClientReportSectionComponent } from './components/audit-client-report-section/audit-client-report-section.component';
 import {
   type AuditSectionBadge,

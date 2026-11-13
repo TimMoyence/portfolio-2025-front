@@ -282,6 +282,7 @@ describe('ProfileComponent', () => {
         firstName: 'Pierre',
         lastName: 'Martin',
         phone: '+33600000000',
+        locale: 'fr',
       });
       expect(authState.updateUser).toHaveBeenCalledWith(updatedUser);
       expect(component.editProfileSuccess).toBeDefined();

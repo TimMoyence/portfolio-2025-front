@@ -5,6 +5,7 @@ import { ArticleHttpAdapter } from '../../../core/adapters/article-http.adapter'
 import { DateDuSitePipe, JourDuSitePipe } from '../../../shared/pipes/date-du-site.pipe';
 import { AsiliHeroComponent } from '../../../shared/sections';
 import { ArticlesCtaComponent } from '../articles-cta.component';
+import { NewsletterFormComponent } from '../../../shared/components/sections/newsletter-form/newsletter-form.component';
 import { injecterLocaleDeLaPage } from '../../../core/config/locale-de-la-page';
 import { blocsDuRecit } from '../edition/recit-du-matin';
 
@@ -23,7 +24,14 @@ function editionDuJournal(article: PublishedArticle): EditionDuJournal {
 @Component({
   selector: 'app-articles-list',
   standalone: true,
-  imports: [RouterLink, AsiliHeroComponent, ArticlesCtaComponent, DateDuSitePipe, JourDuSitePipe],
+  imports: [
+    RouterLink,
+    AsiliHeroComponent,
+    ArticlesCtaComponent,
+    DateDuSitePipe,
+    JourDuSitePipe,
+    NewsletterFormComponent,
+  ],
   templateUrl: './articles-list.component.html',
   styleUrl: './articles-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

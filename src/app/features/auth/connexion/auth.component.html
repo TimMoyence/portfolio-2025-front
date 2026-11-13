@@ -139,6 +139,29 @@
             >
           </div>
         } @else {
+          <fieldset class="auth-field">
+            <legend i18n="@@authLangueDesEmails">Langue des emails</legend>
+            <label class="auth-check">
+              <input
+                type="radio"
+                name="locale"
+                value="en"
+                [checked]="signupForm.locale === 'en'"
+                (change)="choisirLaLangue('en')"
+              />
+              <span>English</span>
+            </label>
+            <label class="auth-check">
+              <input
+                type="radio"
+                name="locale"
+                value="fr"
+                [checked]="signupForm.locale === 'fr'"
+                (change)="choisirLaLangue('fr')"
+              />
+              <span>Français</span>
+            </label>
+          </fieldset>
           <label class="auth-check" style="margin-bottom: 22px">
             <input type="checkbox" required name="acceptTerms" ngModel />
             <span i18n="@@authAcceptTerms">

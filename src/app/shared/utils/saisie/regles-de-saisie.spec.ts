@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { zContactRequestDto } from '../../../../contrat/zod.gen';
+import { zContactRequestDto } from '../../../../../contrat/zod.gen';
 import { bornesDu, erreursDeLongueur } from './regles-de-saisie';
 
 const BORNES_D_UN_MESSAGE_DE_CONTACT = bornesDu(zContactRequestDto.shape.message);

@@ -15,6 +15,7 @@ import type { LoginFormState } from '../../../core/models/loginForm.model';
 import type { SignupFormState } from '../../../core/models/signupForm.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { APP_CONFIG } from '../../../core/config/app-config.token';
+import { injecterLocaleDeLaPage, type LocaleDuSite } from '../../../core/config/locale-de-la-page';
 import { estCheminInterne } from '../../../core/seo/chemins';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import type { AuthPort } from '../../../core/ports/auth.port';
@@ -22,8 +23,8 @@ import { AUTH_PORT } from '../../../core/ports/auth.port';
 import { loadGoogleGis } from '../../../core/utils/google-gis';
 import { handleFormSubmit, INFORMATIONS_REFUSEES } from '../../../shared/utils/form-submit.utils';
 import { zInscriptionDto, zLoginDto } from '../../../../../contrat/zod.gen';
-import type { Bornes } from '../../../shared/utils/regles-de-saisie';
-import { bornesDu, REGLE_D_UN_MOT_DE_PASSE } from '../../../shared/utils/regles-de-saisie';
+import type { Bornes } from '../../../shared/utils/saisie/regles-de-saisie';
+import { bornesDu, REGLE_D_UN_MOT_DE_PASSE } from '../../../shared/utils/saisie/regles-de-saisie';
 import { telephoneFacultatif } from '../../../shared/utils/telephone.utils';
 import { SvgIconComponent } from '../../../shared/components/svg-icon.component';
 import { BornesDeSaisieDirective } from '../../../shared/directives/bornes-de-saisie.directive';
@@ -101,6 +102,7 @@ export class AuthComponent {
     firstName: '',
     lastName: '',
     phone: '',
+    locale: injecterLocaleDeLaPage(),
   };
 
   private readonly defaultLoginState: LoginFormState = {
@@ -195,6 +197,10 @@ export class AuthComponent {
     return this.activeTab === tab;
   }
 
+  protected choisirLaLangue(locale: LocaleDuSite): void {
+    this.signupForm = { ...this.signupForm, locale };
+  }
+
   protected panneauDe(onglet: AuthTab): PanneauAuth {
     return onglet === 'log-in'
       ? {
@@ -243,6 +249,7 @@ export class AuthComponent {
       firstName: this.signupForm.firstName.trim(),
       lastName: this.signupForm.lastName.trim(),
       phone: telephoneFacultatif(this.signupForm.phone),
+      locale: this.signupForm.locale,
     };
 
     this.isSignupLoading = true;

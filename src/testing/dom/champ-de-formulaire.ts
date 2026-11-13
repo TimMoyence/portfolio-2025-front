@@ -2,7 +2,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import type { ValidationErrors } from '@angular/forms';
 import { NgModel } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { LONGUEUR_MIN_D_UN_MOT_DE_PASSE } from '../../app/shared/utils/regles-de-saisie';
+import { LONGUEUR_MIN_D_UN_MOT_DE_PASSE } from '../../app/shared/utils/saisie/regles-de-saisie';
 
 export const REGLE_ATTENDUE_DU_MOT_DE_PASSE = `Le mot de passe doit contenir au moins ${LONGUEUR_MIN_D_UN_MOT_DE_PASSE} caractères, dont une majuscule, un chiffre et un caractère spécial.`;
 

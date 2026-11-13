@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FieldErrorsComponent } from '../../../shared/components/field-errors/field-errors.component';
 import { MotDePasseNeufDirective } from '../../../shared/directives/mot-de-passe-neuf.directive';
 import { MOT_DE_PASSE_NEUF_REFUSE } from '../../../shared/utils/form-submit.utils';
-import { REGLE_D_UN_MOT_DE_PASSE } from '../../../shared/utils/regles-de-saisie';
+import { REGLE_D_UN_MOT_DE_PASSE } from '../../../shared/utils/saisie/regles-de-saisie';
 import { FormulaireAuthComponent } from '../connexion/formulaire-auth.component';
 import { FormulaireDeMotDePasse } from './formulaire-de-mot-de-passe';
 import { jetonDuLien } from './jeton-du-lien';

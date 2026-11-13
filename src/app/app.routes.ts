@@ -8,6 +8,11 @@ import { authGuard } from './core/guards/auth.guard';
 import { coursEntreeGuard } from './core/guards/cours-entree.guard';
 import { roleGuard } from './core/guards/role.guard';
 
+const pageDuLienDeLaNewsletter = () =>
+  import('./features/articles/newsletter/lien-de-la-newsletter.component').then(
+    (m) => m.LienDeLaNewsletterComponent,
+  );
+
 export const routes: Routes = [
   {
     path: '',
@@ -61,6 +66,16 @@ export const routes: Routes = [
     data: {
       seoKey: 'verify-email',
     },
+  },
+  {
+    path: 'newsletter/confirm',
+    loadComponent: pageDuLienDeLaNewsletter,
+    data: { seoKey: 'newsletter-confirm', lien: 'confirmation' },
+  },
+  {
+    path: 'newsletter/unsubscribe',
+    loadComponent: pageDuLienDeLaNewsletter,
+    data: { seoKey: 'newsletter-unsubscribe', lien: 'desabonnement' },
   },
   {
     path: 'profil',

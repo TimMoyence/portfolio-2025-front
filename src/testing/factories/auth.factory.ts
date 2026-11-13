@@ -26,6 +26,7 @@ export function buildAuthUser(overrides?: Partial<AuthUser>): AuthUser {
     updatedOrCreatedBy: null,
     hasPassword: true,
     emailVerified: true,
+    locale: 'fr',
     ...overrides,
   };
 }

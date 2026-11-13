@@ -9,6 +9,11 @@ export type LoginDto = {
   password: string;
 };
 
+/**
+ * Langue des emails du compte.
+ */
+export type Locale = 'fr' | 'en';
+
 export type UserResponseDto = {
   id: string;
   email: string;
@@ -28,6 +33,10 @@ export type UserResponseDto = {
    * Indique si l'adresse email a ete verifiee.
    */
   emailVerified: boolean;
+  /**
+   * Langue des emails du compte.
+   */
+  locale: Locale;
 };
 
 export type AuthResponseDto = {
@@ -41,6 +50,7 @@ export type GoogleAuthDto = {
    * Google ID token reçu du client GIS
    */
   idToken: string;
+  locale?: Locale;
 };
 
 export type AuthMessageResponseDto = {
@@ -71,6 +81,7 @@ export type InscriptionDto = {
   firstName: string;
   lastName: string;
   phone?: string | null;
+  locale?: Locale;
 };
 
 export type ResendVerificationDto = {
@@ -84,9 +95,8 @@ export type UpdateProfileDto = {
   firstName?: string;
   lastName?: string;
   phone?: string | null;
+  locale?: Locale;
 };
-
-export type Locale = 'fr' | 'en';
 
 export type ContactRequestDto = {
   /**
@@ -320,6 +330,36 @@ export type ToolkitPageResponseDto = {
   prompts: Array<PromptEntryDto>;
   workflows: Array<WorkflowEntryDto>;
   templates: Array<TemplateEntryDto>;
+};
+
+export type SubscribeNewsletterRequestDto = {
+  /**
+   * Champ piège anti-robot, doit rester vide
+   */
+  website?: string;
+  /**
+   * Durée de saisie en ms, mesurée par le poste sur une horloge monotone
+   */
+  formFillDurationMs?: number;
+  email: string;
+  locale: Locale;
+  termsVersion: string;
+};
+
+export type AbonnementNewsletterResponseDto = {
+  /**
+   * La même réponse pour toute adresse, dans la langue de la demande.
+   */
+  message: string;
+};
+
+export type ConfirmationNewsletterResponseDto = {
+  status: 'confirmed';
+  locale: 'fr' | 'en';
+};
+
+export type DesabonnementNewsletterResponseDto = {
+  status: 'unsubscribed';
 };
 
 export type PollInteractionDto = {
@@ -3803,6 +3843,85 @@ export type LeadMagnetsControllerGetByTokenResponses = {
 
 export type LeadMagnetsControllerGetByTokenResponse =
   LeadMagnetsControllerGetByTokenResponses[keyof LeadMagnetsControllerGetByTokenResponses];
+
+export type NewsletterControllerSubscribeData = {
+  body: SubscribeNewsletterRequestDto;
+  path?: never;
+  query?: never;
+  url: '/api/v1/portfolio25/newsletter/subscribe';
+};
+
+export type NewsletterControllerSubscribeErrors = {
+  /**
+   * Validation echouee
+   */
+  400: unknown;
+  /**
+   * Trop de requetes
+   */
+  429: unknown;
+};
+
+export type NewsletterControllerSubscribeResponses = {
+  202: AbonnementNewsletterResponseDto;
+};
+
+export type NewsletterControllerSubscribeResponse =
+  NewsletterControllerSubscribeResponses[keyof NewsletterControllerSubscribeResponses];
+
+export type NewsletterControllerConfirmData = {
+  body?: never;
+  path?: never;
+  query: {
+    token: string;
+  };
+  url: '/api/v1/portfolio25/newsletter/confirm';
+};
+
+export type NewsletterControllerConfirmErrors = {
+  /**
+   * Lien invalide ou expiré.
+   */
+  404: unknown;
+  /**
+   * Trop de requetes
+   */
+  429: unknown;
+};
+
+export type NewsletterControllerConfirmResponses = {
+  200: ConfirmationNewsletterResponseDto;
+};
+
+export type NewsletterControllerConfirmResponse =
+  NewsletterControllerConfirmResponses[keyof NewsletterControllerConfirmResponses];
+
+export type NewsletterControllerUnsubscribeData = {
+  body?: never;
+  path?: never;
+  query: {
+    token: string;
+  };
+  url: '/api/v1/portfolio25/newsletter/unsubscribe';
+};
+
+export type NewsletterControllerUnsubscribeErrors = {
+  /**
+   * Lien invalide ou expiré.
+   */
+  404: unknown;
+  /**
+   * Trop de requetes
+   */
+  429: unknown;
+};
+
+export type NewsletterControllerUnsubscribeResponses = {
+  200: DesabonnementNewsletterResponseDto;
+};
+
+export type NewsletterControllerUnsubscribeResponse =
+  NewsletterControllerUnsubscribeResponses[keyof NewsletterControllerUnsubscribeResponses];
 
 export type PresentationsControllerGetInteractionsData = {
   body?: never;

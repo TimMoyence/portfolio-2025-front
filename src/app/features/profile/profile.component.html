@@ -106,6 +106,21 @@
                   "
                 />
               </div>
+              <fieldset class="pf-field">
+                <legend i18n="@@profileLangueDesEmails">Langue des emails du compte</legend>
+                @for (langue of LANGUES; track langue.code) {
+                  <label>
+                    <input
+                      type="radio"
+                      name="editLocale"
+                      [value]="langue.code"
+                      [checked]="editLocale === langue.code"
+                      (change)="editLocale = langue.code"
+                    />
+                    {{ langue.nom }}
+                  </label>
+                }
+              </fieldset>
               <p class="pf-note">
                 <strong i18n="@@profileEmailLabel">Email</strong> :
                 {{ user.email }}

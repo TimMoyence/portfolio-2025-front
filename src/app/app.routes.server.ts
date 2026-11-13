@@ -44,6 +44,16 @@ export const serverRoutes: ServerRoute[] = [
   },
   { path: 'verify-email', renderMode: RenderMode.Prerender, headers: OUVERTE_PAR_UN_LIEN_A_JETON },
   {
+    path: 'newsletter/confirm',
+    renderMode: RenderMode.Prerender,
+    headers: OUVERTE_PAR_UN_LIEN_A_JETON,
+  },
+  {
+    path: 'newsletter/unsubscribe',
+    renderMode: RenderMode.Prerender,
+    headers: OUVERTE_PAR_UN_LIEN_A_JETON,
+  },
+  {
     path: 'reset-password',
     renderMode: RenderMode.Prerender,
     headers: OUVERTE_PAR_UN_LIEN_A_JETON,

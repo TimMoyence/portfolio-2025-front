@@ -23,6 +23,8 @@ const ROUTES_EN = [
   '/en/formations/ia-solopreneurs/toolkit',
   '/en/growth-audit',
   '/en/login',
+  '/en/newsletter/confirm',
+  '/en/newsletter/unsubscribe',
   '/en/offer',
   '/en/presentation',
   '/en/privacy',

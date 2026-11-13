@@ -470,179 +470,186 @@
           <context context-type="linenumber">71,73</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="privacyUsageNewsletter" datatype="html">
+        <source> Vous envoyer la newsletter à laquelle vous vous êtes abonné, dans la langue choisie, jusqu’à votre désabonnement. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
+          <context context-type="linenumber">74,77</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="privacyUsageItem3" datatype="html">
         <source>Répondre à vos messages.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">73,74</context>
+          <context context-type="linenumber">77,78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyUsageSecurite" datatype="html">
         <source> Protéger le site et vos comptes : repérer les connexions, les requêtes et les envois de formulaire suspects. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">75,78</context>
+          <context context-type="linenumber">79,82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyUsageJournal" datatype="html">
         <source> Faire fonctionner le serveur et diagnostiquer ses pannes. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">79,82</context>
+          <context context-type="linenumber">83,86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyBaseTitle" datatype="html">
         <source>4. Base légale</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">85,86</context>
+          <context context-type="linenumber">89,90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyBaseBody" datatype="html">
-        <source> Le traitement repose, selon les cas, sur l&apos;exécution d&apos;un contrat (votre achat), votre consentement (toolkit), ou notre intérêt légitime (sécurité et bon fonctionnement du site). </source>
+        <source> Le traitement repose, selon les cas, sur l&apos;exécution d&apos;un contrat (votre achat), votre consentement (newsletter, toolkit), ou notre intérêt légitime (sécurité et bon fonctionnement du site). </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">87,90</context>
+          <context context-type="linenumber">91,95</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyPartageTitle" datatype="html">
         <source>5. Partage des données</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">93,94</context>
+          <context context-type="linenumber">98,99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyPartageBody" datatype="html">
         <source> Nous ne vendons ni ne louons vos données. Elles peuvent être traitées par des prestataires techniques de confiance (hébergement, paiement, envoi d&apos;emails), strictement pour fournir le service, et situés dans l&apos;Union européenne autant que possible. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">95,99</context>
+          <context context-type="linenumber">100,104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyConservationTitle" datatype="html">
         <source>6. Conservation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">102,103</context>
+          <context context-type="linenumber">107,108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyConservationBody" datatype="html">
         <source> Vos données sont conservées le temps nécessaire à la finalité concernée : la durée de vie de votre compte, puis les délais légaux applicables (par exemple, comptables). Au-delà, elles sont supprimées ou anonymisées. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">104,108</context>
+          <context context-type="linenumber">109,113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyConservationTechnique" datatype="html">
         <source> L&apos;adresse IP, le navigateur et la page de provenance enregistrés avec un message de contact ou une demande d&apos;audit sont effacés 6 mois après ; les sauvegardes de la base, gardées 6 mois au plus, peuvent les contenir jusque-là. Les journaux du serveur tournent et n&apos;en gardent que les dernières requêtes. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">109,114</context>
+          <context context-type="linenumber">114,119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsTitle" datatype="html">
         <source>7. Vos droits</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">117,118</context>
+          <context context-type="linenumber">122,123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsBody" datatype="html">
         <source> Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification, d&apos;effacement, de portabilité et d&apos;opposition sur vos données. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">119,123</context>
+          <context context-type="linenumber">124,128</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsItem1" datatype="html">
         <source>Consulter ou corriger vos informations depuis votre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">124,126</context>
+          <context context-type="linenumber">129,131</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsProfilLink" datatype="html">
         <source>espace personnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">126,127</context>
+          <context context-type="linenumber">131,132</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsItem1End" datatype="html">
         <source>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">128,129</context>
+          <context context-type="linenumber">133,134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsItem2" datatype="html">
         <source>Demander la suppression de votre compte à tout moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">129,130</context>
+          <context context-type="linenumber">134,135</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyDroitsItem3" datatype="html">
         <source>Vous désinscrire des emails en un clic.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">130,134</context>
+          <context context-type="linenumber">135,139</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyContactTitle" datatype="html">
         <source>8. Nous contacter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">135,137</context>
+          <context context-type="linenumber">140,142</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyContactBody1" datatype="html">
         <source>Pour exercer vos droits ou poser une question sur vos données, écrivez-nous via la</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">138,140</context>
+          <context context-type="linenumber">143,145</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyContactContactLink" datatype="html">
         <source>page de contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">140,144</context>
+          <context context-type="linenumber">145,149</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCookiesTitle" datatype="html">
         <source>9. Cookies et stockage local</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">145,146</context>
+          <context context-type="linenumber">150,151</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCookiesBody" datatype="html">
         <source> Ce site n&apos;utilise que des cookies et un stockage local strictement nécessaires à son fonctionnement. Aucun ne mesure votre audience ni ne sert à la publicité : ils ne demandent donc pas votre consentement. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">147,151</context>
+          <context context-type="linenumber">152,156</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCookiesSession" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Session du compte<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : un cookie sécurisé, illisible par les scripts, garde votre connexion à l&apos;espace formateur pendant 30 jours au plus. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">153,156</context>
+          <context context-type="linenumber">158,161</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCookiesSeance" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Séance de cours<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : le poste garde votre identité de séance (prénom, nom, e-mail et secret qui vous rend votre place), vos brouillons et les réponses en attente de réseau jusqu&apos;à la fin de la séance ; si vous quittez la page avant, votre identité s&apos;efface au plus tard 12 heures après votre dernière action. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">157,160</context>
+          <context context-type="linenumber">162,165</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyCookiesBandeau" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Bandeau d&apos;information<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> : le poste retient que vous l&apos;avez lu, jusqu&apos;à la prochaine mise à jour de cette politique. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/annexes/privacy/privacy.component.html</context>
-          <context context-type="linenumber">163,166</context>
+          <context context-type="linenumber">168,171</context>
         </context-group>
       </trans-unit>
       <trans-unit id="privacyHeroLabel" datatype="html">
@@ -1085,7 +1092,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">226</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailBackToList" datatype="html">
@@ -1212,49 +1219,49 @@
         <source>Un sujet à clarifier ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCtaTitle" datatype="html">
         <source>La bonne technologie commence par le bon problème.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailCtaLead" datatype="html">
         <source>Parlons de ce que cette veille peut changer concrètement dans votre activité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailSommaireParties" datatype="html">
         <source><x id="nombre" equiv-text="this.parties.length"/> parties</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailTitreProvisoire" datatype="html">
         <source>Édition du Morning Brief</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">182</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailDescriptionProvisoire" datatype="html">
         <source>Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articleDetailAbsenceDescription" datatype="html">
         <source>Cette édition du Morning Brief est introuvable ou momentanément indisponible.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/fiche/article-detail.component.ts</context>
-          <context context-type="linenumber">227</context>
+          <context context-type="linenumber">229</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesListHeroTitle" datatype="html">
@@ -1352,35 +1359,112 @@
         <source>Articles · Morning-Brief</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/liste/articles-list.component.ts</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesListHeroLead" datatype="html">
         <source>Une veille sourcée, transformée en décisions et en pistes concrètes pour les équipes qui veulent utiliser l’IA sans perdre le fil.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/liste/articles-list.component.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesListCtaKicker" datatype="html">
         <source>Une question concrète ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/liste/articles-list.component.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesListCtaTitle" datatype="html">
         <source>On peut transformer une veille en outil utile.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/liste/articles-list.component.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="articlesListCtaLead" datatype="html">
         <source>Parlons de votre contexte, de vos usages et de ce qui mérite vraiment d’être automatisé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/articles/liste/articles-list.component.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterConfirmationTitre" datatype="html">
+        <source>Confirmer votre abonnement à la newsletter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/newsletter/lien-de-la-newsletter.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterConfirmationBouton" datatype="html">
+        <source>Confirmer mon abonnement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/newsletter/lien-de-la-newsletter.component.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterConfirmationSucces" datatype="html">
+        <source>Votre abonnement est confirmé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/newsletter/lien-de-la-newsletter.component.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterConfirmationRefus" datatype="html">
+        <source>Ce lien de confirmation a expiré ou n’est pas valable.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/newsletter/lien-de-la-newsletter.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterDesabonnementTitre" datatype="html">
+        <source>Se désabonner de la newsletter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/newsletter/lien-de-la-newsletter.component.ts</context>
           <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterDesabonnementBouton" datatype="html">
+        <source>Me désabonner</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/newsletter/lien-de-la-newsletter.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterDesabonnementSucces" datatype="html">
+        <source>Vous êtes désabonné.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/newsletter/lien-de-la-newsletter.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterDesabonnementRefus" datatype="html">
+        <source>Ce lien de désabonnement n’est pas valable.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/newsletter/lien-de-la-newsletter.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterLienSeReabonner" datatype="html">
+        <source>Se réabonner</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/newsletter/lien-de-la-newsletter.component.ts</context>
+          <context context-type="linenumber">64,65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterLienIncomplet" datatype="html">
+        <source> Ce lien est incomplet : ouvrez-le depuis l’email reçu. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/newsletter/lien-de-la-newsletter.component.ts</context>
+          <context context-type="linenumber">71,73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterLienIndisponible" datatype="html">
+        <source>Le lien n’a pas pu être pris en compte pour le moment : réessayez dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/articles/newsletter/lien-de-la-newsletter.component.ts</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authAsideRegisterKicker" datatype="html">
@@ -1531,18 +1615,25 @@
           <context context-type="linenumber">138,141</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="authLangueDesEmails" datatype="html">
+        <source>Langue des emails</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.html</context>
+          <context context-type="linenumber">143,144</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="authAcceptTerms" datatype="html">
         <source> J&apos;accepte les <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/terms&quot; class=&quot;auth-link&quot;&gt;"/>conditions<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> &amp; la <x id="START_LINK_1" equiv-text="&lt;a routerLink=&quot;/privacy&quot; class=&quot;auth-link&quot;&gt;"/>confidentialité<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.html</context>
-          <context context-type="linenumber">145,148</context>
+          <context context-type="linenumber">168,171</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authLoginSubmit" datatype="html">
         <source>Se connecter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.html</context>
-          <context context-type="linenumber">160,162</context>
+          <context context-type="linenumber">183,185</context>
         </context-group>
         <note priority="1" from="description">Login submit label</note>
         <note priority="1" from="meaning">auth.login.submit</note>
@@ -1551,7 +1642,7 @@
         <source>Créer mon compte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.html</context>
-          <context context-type="linenumber">163,166</context>
+          <context context-type="linenumber">186,189</context>
         </context-group>
         <note priority="1" from="description">Signup submit label</note>
         <note priority="1" from="meaning">auth.signup.submit</note>
@@ -1560,7 +1651,7 @@
         <source>Connexion en cours...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.html</context>
-          <context context-type="linenumber">169,172</context>
+          <context context-type="linenumber">192,195</context>
         </context-group>
         <note priority="1" from="description">Login loading state</note>
         <note priority="1" from="meaning">auth.login.loading</note>
@@ -1569,7 +1660,7 @@
         <source>Création en cours...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.html</context>
-          <context context-type="linenumber">173,178</context>
+          <context context-type="linenumber">196,201</context>
         </context-group>
         <note priority="1" from="description">Signup loading state</note>
         <note priority="1" from="meaning">auth.signup.loading</note>
@@ -1578,56 +1669,56 @@
         <source>Pas encore de compte ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.html</context>
-          <context context-type="linenumber">188,189</context>
+          <context context-type="linenumber">211,212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authAltCreate" datatype="html">
         <source> Créer un compte </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.html</context>
-          <context context-type="linenumber">190,191</context>
+          <context context-type="linenumber">213,214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authAltHasAccount" datatype="html">
         <source>Déjà inscrit ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.html</context>
-          <context context-type="linenumber">193,194</context>
+          <context context-type="linenumber">216,217</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authAltLogin" datatype="html">
         <source> Se connecter </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.html</context>
-          <context context-type="linenumber">195,196</context>
+          <context context-type="linenumber">218,219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authLoginErreurIdentifiants" datatype="html">
         <source>Adresse e-mail ou mot de passe incorrect.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authShowPassword" datatype="html">
         <source>Afficher le mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">115</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authHidePassword" datatype="html">
         <source>Masquer le mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authSignupFieldFirstName" datatype="html">
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.firstName</note>
@@ -1636,7 +1727,7 @@
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.lastName</note>
@@ -1645,7 +1736,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.email</note>
@@ -1654,7 +1745,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.password</note>
@@ -1663,7 +1754,7 @@
         <source>Vérification du mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">158</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.passwordConfirm</note>
@@ -1672,7 +1763,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <note priority="1" from="description">Signup field label</note>
         <note priority="1" from="meaning">auth.signup.field.phone</note>
@@ -1681,7 +1772,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">177</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.email</note>
@@ -1690,7 +1781,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">184</context>
         </context-group>
         <note priority="1" from="description">Login field label</note>
         <note priority="1" from="meaning">auth.login.field.password</note>
@@ -1699,21 +1790,21 @@
         <source>Connectez-vous avec Google</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">210</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7215127729541696793" datatype="html">
         <source>Inscrivez-vous avec Google</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">214</context>
+          <context context-type="linenumber">220</context>
         </context-group>
       </trans-unit>
       <trans-unit id="authSignupErrorPasswordMismatch" datatype="html">
         <source>Les mots de passe ne correspondent pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">236</context>
+          <context context-type="linenumber">242</context>
         </context-group>
         <note priority="1" from="description">Signup error message</note>
         <note priority="1" from="meaning">auth.signup.error.passwordMismatch</note>
@@ -1722,11 +1813,11 @@
         <source>Une erreur est survenue. Veuillez réessayer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">251</context>
+          <context context-type="linenumber">258</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">294</context>
+          <context context-type="linenumber">301</context>
         </context-group>
         <note priority="1" from="description">Generic error message</note>
         <note priority="1" from="meaning">auth.genericError</note>
@@ -1735,7 +1826,7 @@
         <source>Inscription réussie. Vérifiez votre e-mail pour activer votre compte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">254</context>
+          <context context-type="linenumber">261</context>
         </context-group>
         <note priority="1" from="description">Signup success message</note>
         <note priority="1" from="meaning">auth.signup.success</note>
@@ -1744,7 +1835,7 @@
         <source>Bienvenue <x id="PH" equiv-text="session.user.firstName"/> !</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">297</context>
+          <context context-type="linenumber">304</context>
         </context-group>
         <note priority="1" from="description">Login success message</note>
         <note priority="1" from="meaning">auth.login.success</note>
@@ -1753,7 +1844,7 @@
         <source>L&apos;authentification Google n&apos;est pas configurée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">316</context>
+          <context context-type="linenumber">323</context>
         </context-group>
         <note priority="1" from="description">auth.google.notConfigured</note>
       </trans-unit>
@@ -1761,7 +1852,7 @@
         <source>Impossible de charger Google Sign-In.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">326</context>
+          <context context-type="linenumber">333</context>
         </context-group>
         <note priority="1" from="description">auth.google.loadError</note>
       </trans-unit>
@@ -1769,7 +1860,7 @@
         <source>Échec de l&apos;authentification Google.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/connexion/auth.component.ts</context>
-          <context context-type="linenumber">345</context>
+          <context context-type="linenumber">352</context>
         </context-group>
         <note priority="1" from="description">auth.google.error</note>
       </trans-unit>
@@ -10113,183 +10204,194 @@
           <context context-type="linenumber">92,94</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="profileEmailLabel" datatype="html">
-        <source>Email</source>
+      <trans-unit id="profileLangueDesEmails" datatype="html">
+        <source>Langue des emails du compte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
           <context context-type="linenumber">110,111</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profileEmailLabel" datatype="html">
+        <source>Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
+          <context context-type="linenumber">125,126</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
+          <context context-type="linenumber">93</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileEmailReadonly" datatype="html">
         <source>(non modifiable)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">112,114</context>
+          <context context-type="linenumber">127,129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileEditSaveButton" datatype="html">
         <source>Enregistrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">122,124</context>
+          <context context-type="linenumber">137,139</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileEditSavingButton" datatype="html">
         <source>Enregistrement...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">124,126</context>
+          <context context-type="linenumber">139,141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileEditCancelButton" datatype="html">
         <source> Annuler </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">134,135</context>
+          <context context-type="linenumber">149,150</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSetPasswordTitle" datatype="html">
         <source>Définir un mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">150,151</context>
+          <context context-type="linenumber">165,166</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSetPasswordSub" datatype="html">
         <source> Sécurisez votre compte avec un mot de passe. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">152,155</context>
+          <context context-type="linenumber">167,170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSetPasswordLabel" datatype="html">
         <source>Nouveau mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">162,164</context>
+          <context context-type="linenumber">177,179</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSetPasswordSubmit" datatype="html">
         <source>Enregistrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">195,197</context>
+          <context context-type="linenumber">210,212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSetPasswordLoading" datatype="html">
         <source>Enregistrement...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">197,199</context>
+          <context context-type="linenumber">212,214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordTitle" datatype="html">
         <source> Changer le mot de passe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">214,216</context>
+          <context context-type="linenumber">229,231</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordSub" datatype="html">
         <source> Mettez à jour votre mot de passe régulièrement. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">217,219</context>
+          <context context-type="linenumber">232,234</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileCurrentPasswordLabel" datatype="html">
         <source>Mot de passe actuel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">230,232</context>
+          <context context-type="linenumber">245,247</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileNewPasswordLabel" datatype="html">
         <source>Nouveau mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">254,256</context>
+          <context context-type="linenumber">269,271</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordSubmit" datatype="html">
         <source>Modifier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">288,290</context>
+          <context context-type="linenumber">303,305</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordLoading" datatype="html">
         <source>Modification...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">290,292</context>
+          <context context-type="linenumber">305,307</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSessionTitle" datatype="html">
         <source>Préférences &amp; session</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">305,306</context>
+          <context context-type="linenumber">320,321</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSessionSub" datatype="html">
         <source>Gérez votre accès à l&apos;écosystème Asili.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">306,307</context>
+          <context context-type="linenumber">321,322</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSessionLabel" datatype="html">
         <source>Session</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">309,310</context>
+          <context context-type="linenumber">324,325</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileSessionValue" datatype="html">
         <source>Connecté sur cet appareil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">310,312</context>
+          <context context-type="linenumber">325,327</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileLogout" datatype="html">
         <source> Se déconnecter </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.html</context>
-          <context context-type="linenumber">313,314</context>
+          <context context-type="linenumber">328,329</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileChangePasswordErreurSaisie" datatype="html">
         <source>Vérifiez votre mot de passe actuel et la règle du nouveau mot de passe.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileFirstNameLabel" datatype="html">
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileLastNameLabel" datatype="html">
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">92</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profileEditErrorGeneric" datatype="html">
         <source>Impossible de mettre à jour le profil pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">158</context>
         </context-group>
         <note priority="1" from="description">profile.edit.error.generic</note>
       </trans-unit>
@@ -10297,7 +10399,7 @@
         <source>Profil mis à jour avec succès.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <note priority="1" from="description">profile.edit.success</note>
       </trans-unit>
@@ -10305,7 +10407,7 @@
         <source>Impossible de définir le mot de passe pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">184</context>
         </context-group>
         <note priority="1" from="description">profile.password.error.generic</note>
       </trans-unit>
@@ -10313,14 +10415,14 @@
         <source>Un mot de passe est déjà défini pour ce compte : utilisez « Changer le mot de passe ».</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">187</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profilePasswordSuccess" datatype="html">
         <source>Mot de passe défini avec succès.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <note priority="1" from="description">profile.password.success</note>
       </trans-unit>
@@ -10328,7 +10430,7 @@
         <source>Impossible de changer le mot de passe pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">221</context>
         </context-group>
         <note priority="1" from="description">profile.changePassword.error.generic</note>
       </trans-unit>
@@ -10336,7 +10438,7 @@
         <source>Mot de passe modifié avec succès.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile/profile.component.ts</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">227</context>
         </context-group>
         <note priority="1" from="description">profile.changePassword.success</note>
       </trans-unit>
@@ -11287,7 +11389,7 @@
         <source>« Asili » — la racine, l&apos;essentiel. Le design est fonctionnel et réfléchi, jamais décoratif pour décorer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <note priority="1" from="description">Footer brand baseline</note>
         <note priority="1" from="meaning">footer.brand.baseline</note>
@@ -11296,7 +11398,7 @@
         <source>© 2026 Asili Design · Bordeaux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <note priority="1" from="description">Footer copyright line</note>
         <note priority="1" from="meaning">footer.copyright.asili</note>
@@ -11305,7 +11407,7 @@
         <source>Travailler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <note priority="1" from="description">Footer column heading</note>
         <note priority="1" from="meaning">footer.column.work</note>
@@ -11314,7 +11416,7 @@
         <source>Services</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.services</note>
@@ -11323,7 +11425,7 @@
         <source>Formations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">36</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.formations</note>
@@ -11332,7 +11434,7 @@
         <source>Projets</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.projects</note>
@@ -11341,7 +11443,7 @@
         <source>Articles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.articles</note>
@@ -11350,7 +11452,7 @@
         <source>Audit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.growthAudit</note>
@@ -11359,7 +11461,7 @@
         <source>Contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.contact</note>
@@ -11368,7 +11470,7 @@
         <source>En savoir plus</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <note priority="1" from="description">Footer column heading</note>
         <note priority="1" from="meaning">footer.column.more</note>
@@ -11377,7 +11479,7 @@
         <source>Présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.presentation</note>
@@ -11386,7 +11488,7 @@
         <source>Mentions légales</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.legal</note>
@@ -11395,7 +11497,7 @@
         <source>Confidentialité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">69</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.privacy</note>
@@ -11404,7 +11506,7 @@
         <source>LinkedIn</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="description">Footer nav link</note>
         <note priority="1" from="meaning">footer.nav.linkedin</note>
@@ -11413,7 +11515,7 @@
         <source>Facebook</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.facebook</note>
@@ -11422,7 +11524,7 @@
         <source>LinkedIn</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">88</context>
         </context-group>
         <note priority="1" from="description">Footer social link</note>
         <note priority="1" from="meaning">footer.social.linkedin</note>
@@ -11431,7 +11533,7 @@
         <source>Conditions d&apos;utilisation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">96</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.terms</note>
@@ -11440,7 +11542,7 @@
         <source>Politique de confidentialité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/footer/footer.component.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">100</context>
         </context-group>
         <note priority="1" from="description">Footer legal link</note>
         <note priority="1" from="meaning">footer.legal.privacy</note>
@@ -11787,60 +11889,109 @@
         <note priority="1" from="description">Map image alt text</note>
         <note priority="1" from="meaning">contact.map.alt</note>
       </trans-unit>
+      <trans-unit id="newsletterFormTitre" datatype="html">
+        <source> Newsletter </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/sections/newsletter-form/newsletter-form.component.ts</context>
+          <context context-type="linenumber">39,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterFormEmail" datatype="html">
+        <source>Votre email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/sections/newsletter-form/newsletter-form.component.ts</context>
+          <context context-type="linenumber">52,54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterFormLangue" datatype="html">
+        <source>Langue de la newsletter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/sections/newsletter-form/newsletter-form.component.ts</context>
+          <context context-type="linenumber">64,65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterFormConsentement" datatype="html">
+        <source>J’accepte de recevoir la newsletter selon la <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/privacy&quot; class=&quot;underline&quot;&gt;"/>politique de confidentialité<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/sections/newsletter-form/newsletter-form.component.ts</context>
+          <context context-type="linenumber">94,96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterFormEnvoi" datatype="html">
+        <source>Envoi en cours…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/sections/newsletter-form/newsletter-form.component.ts</context>
+          <context context-type="linenumber">107,109</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterFormSAbonner" datatype="html">
+        <source>S’abonner</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/sections/newsletter-form/newsletter-form.component.ts</context>
+          <context context-type="linenumber">109,111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newsletterFormErreur" datatype="html">
+        <source>L’abonnement n’a pas pu partir. Réessayez dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/sections/newsletter-form/newsletter-form.component.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="toolkit-form.success.title" datatype="html">
         <source> Envoyé ! </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/sections/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">40,42</context>
+          <context context-type="linenumber">37,39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.success.checkInbox" datatype="html">
         <source>Vérifiez votre boîte mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/sections/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">43,45</context>
+          <context context-type="linenumber">40,42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.firstName.placeholder" datatype="html">
         <source>Votre prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/sections/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">62,63</context>
+          <context context-type="linenumber">59,60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.email.placeholder" datatype="html">
         <source>Votre email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/sections/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">77,78</context>
+          <context context-type="linenumber">74,75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.terms.label" datatype="html">
         <source> J&apos;accepte que mes données soient utilisées pour recevoir la boîte à outils. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/sections/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">94,96</context>
+          <context context-type="linenumber">91,93</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.submit.loading" datatype="html">
         <source>Envoi en cours...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/sections/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">108,110</context>
+          <context context-type="linenumber">105,107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.submit.idle" datatype="html">
         <source>Recevoir la boîte à outils</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/sections/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">110,112</context>
+          <context context-type="linenumber">107,109</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toolkit-form.error.message" datatype="html">
         <source>Une erreur est survenue. Réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/sections/toolkit-form/toolkit-form.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">167</context>
         </context-group>
       </trans-unit>
       <trans-unit id="seoDefaultTitle" datatype="html">
@@ -12554,7 +12705,7 @@
       <trans-unit id="regleDUnMotDePasse" datatype="html">
         <source>Le mot de passe doit contenir au moins <x id="longueur" equiv-text="LONGUEUR_MIN_D_UN_MOT_DE_PASSE"/> caractères, dont une majuscule, un chiffre et un caractère spécial.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/utils/regles-de-saisie.ts</context>
+          <context context-type="sourcefile">src/app/shared/utils/saisie/regles-de-saisie.ts</context>
           <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>

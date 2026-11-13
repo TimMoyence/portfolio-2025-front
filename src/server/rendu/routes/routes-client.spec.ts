@@ -1,5 +1,5 @@
 import { RenderMode } from '@angular/ssr';
-import { serverRoutes } from '../../app/app.routes.server';
+import { serverRoutes } from '../../../app/app.routes.server';
 import { entetesDeLaRoute, isClientOnlyRoute } from './routes-client';
 
 function cheminConcret(motif: string): string {

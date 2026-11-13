@@ -1,6 +1,6 @@
 import { RenderMode } from '@angular/ssr';
-import { serverRoutes } from '../../app/app.routes.server';
-import { trimLeadingSlashes } from '../../app/core/utils/barres';
+import { serverRoutes } from '../../../app/app.routes.server';
+import { trimLeadingSlashes } from '../../../app/core/utils/barres';
 
 const motifDeRoute = (chemin: string): RegExp =>
   new RegExp(`^${chemin.replace(/:[A-Za-z]+/g, '[^/]+')}/?$`);
