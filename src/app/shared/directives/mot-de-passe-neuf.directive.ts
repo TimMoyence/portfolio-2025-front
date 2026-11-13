@@ -1,7 +1,7 @@
 import { booleanAttribute, Directive, input } from '@angular/core';
 import type { AbstractControl, ValidationErrors } from '@angular/forms';
 import { NG_VALIDATORS } from '@angular/forms';
-import { erreursDeLongueur, MOT_DE_PASSE_NEUF } from '../utils/regles-de-saisie';
+import { erreursDeLongueur, MOT_DE_PASSE_NEUF } from '../utils/saisie/regles-de-saisie';
 import { ValidateurDeSaisie } from './validateur-de-saisie';
 
 @Directive({

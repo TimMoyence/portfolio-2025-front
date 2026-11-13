@@ -12,7 +12,7 @@ import { COURS_EN_SEANCE } from './app/core/config/cours-en-seance';
 import { lecteurDePublicationsDeCours } from './server/api/cours-publication';
 import { loadCsrShell } from './server/rendu/csr-shell';
 import { lecteurDeMetadonneesSeo } from './server/seo/metadonnees-seo';
-import { entetesDeLaRoute, isClientOnlyRoute } from './server/rendu/routes-client';
+import { entetesDeLaRoute, isClientOnlyRoute } from './server/rendu/routes/routes-client';
 import { registerPermanentRedirects } from './server/rendu/redirects';
 import { lecteurDArticlesDuSitemap } from './server/seo/article-sitemap';
 import { buildLlmsFullTxt, buildLlmsTxt, buildRobotsTxt } from './server/seo/seo-builders';

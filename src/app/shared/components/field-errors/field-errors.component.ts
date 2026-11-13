@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import type { ValidationErrors } from '@angular/forms';
-import { REGLE_D_UN_MOT_DE_PASSE } from '../../utils/regles-de-saisie';
+import { REGLE_D_UN_MOT_DE_PASSE } from '../../utils/saisie/regles-de-saisie';
 
 @Component({
   selector: 'p[appFieldErrors]',

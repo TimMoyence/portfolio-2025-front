@@ -11,7 +11,9 @@ import {
   creerMemoireDuRenouvellementEnMemoire,
 } from '../app/core/services/fenetre-de-renouvellement';
 import { VERROU_INTER_ONGLETS } from '../app/core/services/verrou-inter-onglets';
+import { NEWSLETTER_PORT } from '../app/core/ports/newsletter.port';
 import { buildAppConfig } from './factories/app-config.factory';
+import { createNewsletterPortStub } from './factories/newsletter.factory';
 import { createVerrouEnMemoire } from './factories/formations/verrou.factory';
 
 export interface SetupTestBedOptions extends TestModuleMetadata {
@@ -27,6 +29,7 @@ export function setupTestBed(options: SetupTestBedOptions = {}) {
     { provide: APP_CONFIG, useValue: buildAppConfig(appConfig) },
     { provide: MEMOIRE_DU_RENOUVELLEMENT, useFactory: creerMemoireDuRenouvellementEnMemoire },
     { provide: VERROU_INTER_ONGLETS, useFactory: createVerrouEnMemoire },
+    { provide: NEWSLETTER_PORT, useFactory: createNewsletterPortStub },
   ];
 
   if (http) {

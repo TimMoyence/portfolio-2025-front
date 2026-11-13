@@ -1,5 +1,5 @@
-import { environment } from '../../../environments/environment';
-import { bancAdaptateurHttp, verifierPostRelaye } from '../../../testing/http/http-attendu';
+import { environment } from '../../../../environments/environment';
+import { bancAdaptateurHttp, verifierPostRelaye } from '../../../../testing/http/http-attendu';
 import {
   buildAuthSession,
   buildAuthUser,
@@ -7,7 +7,7 @@ import {
   buildLoginCredentials,
   buildResetPasswordPayload,
   buildSetPasswordPayload,
-} from '../../../testing/factories/auth.factory';
+} from '../../../../testing/factories/auth.factory';
 import { AuthHttpAdapter } from './auth-http.adapter';
 
 describe('AuthHttpAdapter', () => {
@@ -58,7 +58,7 @@ describe('AuthHttpAdapter', () => {
       banc.adapter.googleAuth('google-id-token'),
       banc.httpMock,
       '/auth/google',
-      { idToken: 'google-id-token' },
+      { idToken: 'google-id-token', locale: 'en' },
       session,
     );
   });

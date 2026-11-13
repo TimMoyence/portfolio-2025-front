@@ -48,6 +48,7 @@ describe('AuthComponent', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '',
+      locale: 'fr',
       ...champs,
     };
   }
@@ -81,6 +82,7 @@ describe('AuthComponent', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '+33 6 12 34 56 78',
+      locale: 'fr',
     });
   });
 

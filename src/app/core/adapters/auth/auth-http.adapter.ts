@@ -4,14 +4,16 @@ import {
   zAuthMessageResponseDto as messageServi,
   zAuthResponseDto as sessionServie,
   zUserResponseDto as utilisateurServi,
-} from '../../../../contrat/zod.gen';
-import type { AuthPort } from '../ports/auth.port';
-import { getApiBaseUrl } from '../http/api-config';
-import { luPar } from './formations/lu-par';
+} from '../../../../../contrat/zod.gen';
+import { injecterLocaleDeLaPage } from '../../config/locale-de-la-page';
+import type { AuthPort } from '../../ports/auth.port';
+import { getApiBaseUrl } from '../../http/api-config';
+import { luPar } from '../formations/lu-par';
 
 @Injectable()
 export class AuthHttpAdapter implements AuthPort {
   private readonly baseUrl = getApiBaseUrl();
+  private readonly langueDeLaPage = injecterLocaleDeLaPage();
 
   constructor(private readonly http: HttpClient) {}
 
@@ -28,7 +30,11 @@ export class AuthHttpAdapter implements AuthPort {
 
   readonly googleAuth: AuthPort['googleAuth'] = (idToken) =>
     this.http
-      .post<unknown>(`${this.baseUrl}/auth/google`, { idToken }, { withCredentials: true })
+      .post<unknown>(
+        `${this.baseUrl}/auth/google`,
+        { idToken, locale: this.langueDeLaPage },
+        { withCredentials: true },
+      )
       .pipe(luPar(sessionServie));
 
   readonly requestPasswordReset: AuthPort['requestPasswordReset'] = (payload) =>

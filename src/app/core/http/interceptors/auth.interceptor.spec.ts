@@ -5,7 +5,7 @@ import { TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Subject, of, throwError } from 'rxjs';
 import type { Provider } from '@angular/core';
-import { AuthHttpAdapter } from '../../../core/adapters/auth-http.adapter';
+import { AuthHttpAdapter } from '../../adapters/auth/auth-http.adapter';
 import { AUTH_PORT } from '../../../core/ports/auth.port';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import {

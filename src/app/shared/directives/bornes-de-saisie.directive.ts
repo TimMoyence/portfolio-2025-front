@@ -1,8 +1,8 @@
 import { Directive, input } from '@angular/core';
 import type { AbstractControl, ValidationErrors } from '@angular/forms';
 import { NG_VALIDATORS } from '@angular/forms';
-import type { Bornes } from '../utils/regles-de-saisie';
-import { erreursDeLongueur } from '../utils/regles-de-saisie';
+import type { Bornes } from '../utils/saisie/regles-de-saisie';
+import { erreursDeLongueur } from '../utils/saisie/regles-de-saisie';
 import { ValidateurDeSaisie } from './validateur-de-saisie';
 
 @Directive({

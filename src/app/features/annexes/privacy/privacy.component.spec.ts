@@ -1,9 +1,10 @@
-import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
 import { DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS } from '../../../../cours/runtime/core/participant/identity';
 import { LIBELLES_DES_INCIDENTS } from '../../../core/models/libelles-des-incidents';
 import { isolateAnimReady } from '../../../../testing/dom/anim-ready';
-import { setupTestBed } from '../../../../testing/setup-test-bed';
-import { PrivacyComponent } from './privacy.component';
+import {
+  rendreLaPolitique,
+  texteNormalise,
+} from '../../../../testing/page/politique-de-confidentialite';
 
 const DONNEES_NOMMEES: readonly (readonly [string, readonly string[]])[] = [
   [
@@ -58,22 +59,7 @@ const FINALITES_NOMMEES: readonly (readonly [string, readonly string[]])[] = [
 describe('PrivacyComponent', () => {
   isolateAnimReady();
 
-  function rendre(): HTMLElement {
-    const fixture = setupTestBed({
-      http: false,
-      router: true,
-      imports: [PrivacyComponent],
-      providers: [
-        { provide: PLATFORM_ID, useValue: 'browser' },
-        { provide: LOCALE_ID, useValue: 'fr' },
-      ],
-    }).createComponent(PrivacyComponent);
-    fixture.detectChanges();
-    return fixture.nativeElement as HTMLElement;
-  }
-
-  const texteNormalise = (element: Element | null): string =>
-    (element?.textContent ?? '').replace(/\s+/g, ' ').trim();
+  const rendre = rendreLaPolitique;
 
   for (const [donnees, textes] of DONNEES_NOMMEES) {
     it(`nomme ${donnees}`, () => {
@@ -92,12 +78,6 @@ describe('PrivacyComponent', () => {
       expect(usages).toEqual(jasmine.arrayContaining([...finalites]));
     });
   }
-
-  it('ne fonde plus le consentement sur une newsletter, que le site n envoie plus (LEG-05)', () => {
-    expect(texteNormalise(rendre().querySelector('#base p'))).toBe(
-      "Le traitement repose, selon les cas, sur l'exécution d'un contrat (votre achat), votre consentement (toolkit), ou notre intérêt légitime (sécurité et bon fonctionnement du site).",
-    );
-  });
 
   it('n annonce aucune statistique de navigation, que le site ne collecte pas', () => {
     const page = rendre();

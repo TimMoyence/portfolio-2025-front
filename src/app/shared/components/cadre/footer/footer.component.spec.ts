@@ -13,6 +13,14 @@ describe('FooterComponent', () => {
     expect(pied.composant).toBeTruthy();
   });
 
+  it('NL-01 · le pied de page porte le bloc newsletter', () => {
+    const champs = pied.racine.querySelectorAll(
+      'app-newsletter-form input[type="email"], app-newsletter-form [data-newsletter-consentement]',
+    );
+
+    expect(champs.length).toBe(2);
+  });
+
   it('should render all navigation columns and links', () => {
     const columns = pied.racine.querySelectorAll('[data-testid="footer-column"]');
     expect(columns.length).toBe(pied.composant.navColumns.length);

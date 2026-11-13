@@ -1,9 +1,9 @@
 import type { ValidationErrors } from '@angular/forms';
-import { zInscriptionDto } from '../../../../contrat/zod.gen';
+import { zInscriptionDto } from '../../../../../contrat/zod.gen';
 import {
   longueurDeLaSaisie,
   longueurDeTexte,
-} from '../../../cours/runtime/core/texte/longueur-de-texte';
+} from '../../../../cours/runtime/core/texte/longueur-de-texte';
 
 export interface Bornes {
   readonly min: number;

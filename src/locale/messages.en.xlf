@@ -116,7 +116,7 @@
 
     <unit id="regleDUnMotDePasse">
       <notes>
-        <note category="location">src/app/shared/utils/regles-de-saisie.ts:10</note>
+        <note category="location">src/app/shared/utils/saisie/regles-de-saisie.ts:10</note>
       </notes>
       <segment>
         <source>Le mot de passe doit contenir au moins <ph id="0" equiv="longueur" disp="LONGUEUR_MIN_D_UN_MOT_DE_PASSE"/> caractères, dont une majuscule, un chiffre et un caractère spécial.</source>
@@ -8657,8 +8657,8 @@
         <note category="location">src/app/features/annexes/privacy/privacy.component.html:93,96</note>
       </notes>
       <segment>
-        <source> Le traitement repose, selon les cas, sur l&apos;exécution d&apos;un contrat (votre achat), votre consentement (toolkit), ou notre intérêt légitime (sécurité et bon fonctionnement du site). </source>
-        <target> Processing relies, depending on the case, on the performance of a contract (your purchase), your consent (toolkit), or our legitimate interest (security and proper operation of the site). </target>
+        <source> Le traitement repose, selon les cas, sur l&apos;exécution d&apos;un contrat (votre achat), votre consentement (newsletter, toolkit), ou notre intérêt légitime (sécurité et bon fonctionnement du site). </source>
+        <target> Processing relies, depending on the case, on the performance of a contract (your purchase), your consent (newsletter, toolkit), or our legitimate interest (security and proper operation of the site). </target>
       </segment>
     </unit>
     <unit id="privacyBaseTitle">
@@ -15407,6 +15407,132 @@
       <segment>
         <source>On vous en parlait le <ph id="0" equiv="INTERPOLATION" disp="{{ feuilleton.date | jourDuSite: &apos;court&apos; }}"/> :</source>
         <target>We covered it on <ph id="0" equiv="INTERPOLATION" disp="{{ feuilleton.date | jourDuSite: &apos;court&apos; }}"/>:</target>
+      </segment>
+    </unit>
+    <unit id="authLangueDesEmails">
+      <segment>
+        <source>Langue des emails</source>
+        <target> Email language </target>
+      </segment>
+    </unit>
+    <unit id="profileLangueDesEmails">
+      <segment>
+        <source>Langue des emails du compte</source>
+        <target> Account email language </target>
+      </segment>
+    </unit>
+    <unit id="privacyUsageNewsletter">
+      <segment>
+        <source> Vous envoyer la newsletter à laquelle vous vous êtes abonné, dans la langue choisie, jusqu’à votre désabonnement. </source>
+        <target> Send you the newsletter you subscribed to, in the language you chose, until you unsubscribe. </target>
+      </segment>
+    </unit>
+    <unit id="newsletterConfirmationTitre">
+      <segment>
+        <source>Confirmer votre abonnement à la newsletter</source>
+        <target> Confirm your newsletter subscription </target>
+      </segment>
+    </unit>
+    <unit id="newsletterConfirmationBouton">
+      <segment>
+        <source>Confirmer mon abonnement</source>
+        <target> Confirm my subscription </target>
+      </segment>
+    </unit>
+    <unit id="newsletterConfirmationSucces">
+      <segment>
+        <source>Votre abonnement est confirmé.</source>
+        <target> Your subscription is confirmed. </target>
+      </segment>
+    </unit>
+    <unit id="newsletterConfirmationRefus">
+      <segment>
+        <source>Ce lien de confirmation a expiré ou n’est pas valable.</source>
+        <target> This confirmation link has expired or is not valid. </target>
+      </segment>
+    </unit>
+    <unit id="newsletterDesabonnementTitre">
+      <segment>
+        <source>Se désabonner de la newsletter</source>
+        <target> Unsubscribe from the newsletter </target>
+      </segment>
+    </unit>
+    <unit id="newsletterDesabonnementBouton">
+      <segment>
+        <source>Me désabonner</source>
+        <target> Unsubscribe </target>
+      </segment>
+    </unit>
+    <unit id="newsletterDesabonnementSucces">
+      <segment>
+        <source>Vous êtes désabonné.</source>
+        <target> You are unsubscribed. </target>
+      </segment>
+    </unit>
+    <unit id="newsletterDesabonnementRefus">
+      <segment>
+        <source>Ce lien de désabonnement n’est pas valable.</source>
+        <target> This unsubscribe link is not valid. </target>
+      </segment>
+    </unit>
+    <unit id="newsletterLienSeReabonner">
+      <segment>
+        <source>Se réabonner</source>
+        <target> Subscribe again </target>
+      </segment>
+    </unit>
+    <unit id="newsletterLienIncomplet">
+      <segment>
+        <source> Ce lien est incomplet : ouvrez-le depuis l’email reçu. </source>
+        <target> This link is incomplete: open it from the email you received. </target>
+      </segment>
+    </unit>
+    <unit id="newsletterLienIndisponible">
+      <segment>
+        <source>Le lien n’a pas pu être pris en compte pour le moment : réessayez dans un instant.</source>
+        <target> The link could not be processed right now: try again in a moment. </target>
+      </segment>
+    </unit>
+    <unit id="newsletterFormTitre">
+      <segment>
+        <source> Newsletter </source>
+        <target> Newsletter </target>
+      </segment>
+    </unit>
+    <unit id="newsletterFormEmail">
+      <segment>
+        <source>Votre email</source>
+        <target> Your email </target>
+      </segment>
+    </unit>
+    <unit id="newsletterFormLangue">
+      <segment>
+        <source>Langue de la newsletter</source>
+        <target> Newsletter language </target>
+      </segment>
+    </unit>
+    <unit id="newsletterFormConsentement">
+      <segment>
+        <source>J’accepte de recevoir la newsletter selon la <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="fmt" dispStart="&lt;a routerLink=&quot;/privacy&quot; class=&quot;underline&quot;&gt;" dispEnd="&lt;/a&gt;">politique de confidentialité</pc>.</source>
+        <target>I agree to receive the newsletter under the <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="fmt" dispStart="&lt;a routerLink=&quot;/privacy&quot; class=&quot;underline&quot;&gt;" dispEnd="&lt;/a&gt;">privacy policy</pc>.</target>
+      </segment>
+    </unit>
+    <unit id="newsletterFormEnvoi">
+      <segment>
+        <source>Envoi en cours…</source>
+        <target> Sending… </target>
+      </segment>
+    </unit>
+    <unit id="newsletterFormSAbonner">
+      <segment>
+        <source>S’abonner</source>
+        <target> Subscribe </target>
+      </segment>
+    </unit>
+    <unit id="newsletterFormErreur">
+      <segment>
+        <source>L’abonnement n’a pas pu partir. Réessayez dans un instant.</source>
+        <target> The subscription could not be sent. Try again in a moment. </target>
       </segment>
     </unit>
   </file>

@@ -7,10 +7,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import {
-  dureeMonotoneDepuis,
-  instantMonotone,
-} from '../../../../../cours/runtime/core/saisie/duree';
+import { saisieAntiRobot } from '../../../utils/saisie/saisie-anti-robot';
 import { injecterLocaleDeLaPage } from '../../../../core/config/locale-de-la-page';
 import { VERSIONS_DES_TEXTES_LEGAUX } from '../../../../core/config/textes-legaux';
 import { LEAD_MAGNET_PORT } from '../../../../core/ports/lead-magnet.port';
@@ -19,7 +16,7 @@ import { HoneypotDirective } from '../../../directives/honeypot.directive';
 import { readInputValue, readCheckboxChecked } from '../../../utils/dom-event.utils';
 import { handleFormSubmit, INFORMATIONS_REFUSEES } from '../../../utils/form-submit.utils';
 import { zRequestToolkitRequestDto } from '../../../../../../contrat/zod.gen';
-import { bornesDu, erreursDeLongueur } from '../../../utils/regles-de-saisie';
+import { bornesDu, erreursDeLongueur } from '../../../utils/saisie/regles-de-saisie';
 import { FieldErrorsComponent } from '../../field-errors/field-errors.component';
 import { erreurDeFormat } from '../../../directives/format-de-contact.directive';
 
@@ -125,8 +122,8 @@ export class ToolkitFormComponent {
 
   readonly firstName = signal('');
   readonly email = signal('');
-  readonly website = signal('');
-  private readonly debutDeSaisie = instantMonotone();
+  private readonly antiRobot = saisieAntiRobot();
+  readonly website = this.antiRobot.website;
   readonly termsAccepted = signal(false);
   readonly state = signal<FormState>('idle');
   readonly submittedEmail = signal('');
@@ -157,8 +154,7 @@ export class ToolkitFormComponent {
     this.submittedEmail.set(this.email());
 
     const request: ToolkitRequest = {
-      website: this.website(),
-      formFillDurationMs: dureeMonotoneDepuis(this.debutDeSaisie),
+      ...this.antiRobot.champs(),
       firstName: this.firstName().trim(),
       email: this.email().trim(),
       formationSlug: this.formationSlug,

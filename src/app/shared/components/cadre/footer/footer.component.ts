@@ -4,12 +4,13 @@ import { RouterModule } from '@angular/router';
 import { NOM_DU_SITE } from '../../../../core/seo/nom-du-site';
 import { CONTACT_METHODS } from '../../../data/contact-methods';
 import type { FooterColumn, FooterLink, SocialLink } from '../../../models/footer.model';
+import { NewsletterFormComponent } from '../../sections/newsletter-form/newsletter-form.component';
 import { SvgIconComponent } from '../../svg-icon.component';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, RouterModule, SvgIconComponent],
+  imports: [CommonModule, RouterModule, SvgIconComponent, NewsletterFormComponent],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

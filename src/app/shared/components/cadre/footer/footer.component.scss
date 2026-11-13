@@ -125,6 +125,11 @@
   color: var(--teal-deep);
 }
 
+.asili-footer__newsletter {
+  max-width: 28rem;
+  margin-top: var(--s-5);
+}
+
 .asili-footer__address {
   display: flex;
   flex-wrap: wrap;

@@ -30,6 +30,7 @@ import { SeoService } from '../../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../../core/ssr/http-response-status';
 import { JourDuSitePipe } from '../../../shared/pipes/date-du-site.pipe';
 import { ArticlesCtaComponent } from '../articles-cta.component';
+import { NewsletterFormComponent } from '../../../shared/components/sections/newsletter-form/newsletter-form.component';
 import { injecterLocaleDeLaPage } from '../../../core/config/locale-de-la-page';
 import {
   blocsDuRecit,
@@ -51,6 +52,7 @@ import { renderArticleMarkdown } from '../edition/markdown-article.utils';
     RouterLink,
     ArticlesCtaComponent,
     JourDuSitePipe,
+    NewsletterFormComponent,
     PictoDeRubriqueComponent,
     ProvenanceComponent,
   ],

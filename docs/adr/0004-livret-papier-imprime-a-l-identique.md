@@ -139,7 +139,7 @@ Le premier export réel (B2-02, 23 pages sous Safari) a ensuite montré :
   lignes, fond blanc, gouttière, réglages de la projection, cartes de cours sur une rangée,
   aucun élément hors de son écran, parcours de méthode imprimé en entier et indépendant de son
   minuteur.
-- `src/server/rendu/routes-client.spec.ts` vérifie que chaque route qui déclare des en-têtes les
+- `src/server/rendu/routes/routes-client.spec.ts` vérifie que chaque route qui déclare des en-têtes les
   reçoit et que le pupitre et la projection n'en reçoivent pas ; `e2e/site/entetes-ssr.spec.ts`
   vérifie l'en-tête sur la réponse du serveur SSR construit.
 - Un harnais WebKit (WKWebView sur le build de production, API simulée) suit le chemin du
