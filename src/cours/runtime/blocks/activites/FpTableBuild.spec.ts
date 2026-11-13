@@ -370,6 +370,17 @@ describe('FpTableBuild', () => {
     expect(cellule(hote, 1, 'prix').value).toBe('20,5');
   });
 
+  it('TAB-01 · garde le curseur où l étudiant tape au milieu d un nombre', () => {
+    const champ = cellule(hote, 1, 'prix');
+    champ.focus();
+    champ.value = '20,55';
+    champ.setSelectionRange(3, 3);
+    champ.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(hote.shadowRoot?.activeElement).toBe(cellule(hote, 1, 'prix'));
+    expect(cellule(hote, 1, 'prix').selectionStart).toBe(3);
+  });
+
   it('F-37 · refuse un envoi vide puis un envoi incomplet, et envoie les valeurs que le back a lues', () => {
     const recus = envois(hote);
     const demandes = demandesDEvaluation(hote);

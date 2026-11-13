@@ -13998,6 +13998,18 @@
         <target>The next cell is fixed: the fill stops here</target>
       </segment>
     </unit>
+    <unit id="coursRuntimeSheetRecopieCibleJuste">
+      <segment>
+        <source>La cellule voisine est déjà juste : la recopie s’arrête ici</source>
+        <target>The next cell is already correct: the fill stops here</target>
+      </segment>
+    </unit>
+    <unit id="coursRuntimeSheetRecopieCibleNonNotee">
+      <segment>
+        <source>La cellule voisine n’est pas à reprendre : la recopie s’arrête ici</source>
+        <target>The next cell is not open for correction: the fill stops here</target>
+      </segment>
+    </unit>
     <unit id="coursRuntimeSheetRecopieSource">
       <segment>
         <source>Choisissez une cellule qui contient votre formule</source>
