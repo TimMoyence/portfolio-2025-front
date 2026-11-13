@@ -852,7 +852,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-11-09",
+      "lastmod": "2026-11-13",
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
@@ -1092,7 +1092,7 @@
       "index": true,
       "changefreq": "yearly",
       "priority": 0.2,
-      "lastmod": "2026-10-22",
+      "lastmod": "2026-11-13",
       "locales": {
         "fr": {
           "title": "Politique de confidentialité — Moyence",
@@ -1114,7 +1114,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-11-09",
+      "lastmod": "2026-11-13",
       "breadcrumb": [
         {
           "name": "Accueil",
