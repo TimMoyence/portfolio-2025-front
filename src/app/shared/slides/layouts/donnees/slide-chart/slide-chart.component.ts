@@ -29,8 +29,15 @@ import {
   decale,
   memesReculs,
   mesurerAChaqueRendu,
+  cadreFixe,
+  cadresParRang,
+  cotesDuPoint,
+  ECART_LISIBLE_PX,
+  pasQuiDegage,
   reculDansLeTrace,
   reculDe,
+  seGenent,
+  touchent,
   type Cadre,
 } from '../garder-dans-le-trace';
 
@@ -78,9 +85,6 @@ const MARQUEURS: readonly MarqueurDeSerie[] = ['rond', 'carre', 'losange'];
 const PAS_AUTOMATIQUES = [1, 2, 2.5, 5, 10];
 const ECART_DES_ETIQUETTES = 7.5;
 const BAS_DE_ZONE = 12;
-const ECART_LISIBLE_PX = 4;
-const ECART_EMPILE_PX = 2;
-const ECART_AUX_FORMES_PX = 3;
 const FORMES = '.slide-chart__bar, .slide-chart__marqueur--barre, .slide-chart__point';
 const VALEURS = '.slide-chart__value, .slide-chart__point-value';
 const TEXTES_DU_TRACE = '.slide-chart__tick, .slide-chart__axis-title, .slide-chart__serie-label';
@@ -137,36 +141,6 @@ function valeurSousLePoint(hauteurs: readonly number[], rang: number): boolean {
   return hauteur - Math.max(...audessous) > Math.min(...audessus) - hauteur;
 }
 
-function seGenent(un: Cadre, autre: Cadre, echelle: number): boolean {
-  return (
-    Math.min(un.right, autre.right) - Math.max(un.left, autre.left) > -ECART_LISIBLE_PX * echelle &&
-    Math.min(un.bottom, autre.bottom) - Math.max(un.top, autre.top) > -ECART_EMPILE_PX * echelle
-  );
-}
-
-function pasQuiDegage(colonnes: readonly (readonly Cadre[])[], echelle: number): number {
-  const degage = (pas: number): boolean => {
-    const gardes = colonnes.flatMap((cadres, rang) =>
-      rang % pas === 0 ? cadres.map((cadre) => ({ rang, cadre })) : [],
-    );
-    return gardes.every(({ rang, cadre }, index) =>
-      gardes
-        .slice(index + 1)
-        .every((autre) => autre.rang === rang || !seGenent(cadre, autre.cadre, echelle)),
-    );
-  };
-  return Array.from({ length: colonnes.length }, (_, rang) => rang + 1).find(degage) ?? 1;
-}
-
-function cadresParRang(textes: Iterable<HTMLElement>): Cadre[][] {
-  const colonnes: Cadre[][] = [];
-  for (const texte of textes) {
-    const rang = Number(texte.dataset['rang']);
-    colonnes[rang] = [...(colonnes[rang] ?? []), cadreDuTexte(texte)];
-  }
-  return colonnes;
-}
-
 function cadreDeLaForme(forme: HTMLElement): Cadre {
   const socle = forme.parentElement?.getBoundingClientRect();
   if (!forme.classList.contains('slide-chart__bar') || socle === undefined) {
@@ -174,30 +148,6 @@ function cadreDeLaForme(forme: HTMLElement): Cadre {
   }
   const hauteur = Number.parseFloat(forme.style.getPropertyValue('--hauteur')) || 0;
   return { ...cadreFixe(socle), top: socle.bottom - (socle.height * hauteur) / 100 };
-}
-
-function cadreFixe({ left, right, top, bottom }: Cadre): Cadre {
-  return { left, right, top, bottom };
-}
-
-function touchent(valeur: Cadre, forme: Cadre, echelle: number): boolean {
-  return (
-    Math.min(valeur.right, forme.right) - Math.max(valeur.left, forme.left) >
-      -ECART_AUX_FORMES_PX * echelle &&
-    Math.min(valeur.bottom, forme.bottom) - Math.max(valeur.top, forme.top) >
-      -ECART_AUX_FORMES_PX * echelle
-  );
-}
-
-function cotesDuPoint(valeur: HTMLElement, point: Cadre | undefined, dessous: boolean): Cadre[] {
-  const ici = cadreFixe(cadreDuTexte(valeur));
-  if (point === undefined) {
-    return [ici];
-  }
-  const boite = valeur.getBoundingClientRect();
-  const decalage = point.top + point.bottom - boite.top - boite.bottom;
-  const enFace = { ...ici, top: ici.top + decalage, bottom: ici.bottom + decalage };
-  return valeur.classList.contains('is-below') === dessous ? [ici, enFace] : [enFace, ici];
 }
 
 function plusLarge(rendu: HTMLElement, selecteur: string): number {

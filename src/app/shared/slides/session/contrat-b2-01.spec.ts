@@ -426,11 +426,9 @@ describe('Contrats figés du cours B2-01 côté front (§ 9, lot 0)', () => {
       const briquesMontables = Object.keys(PROPRIETES_PAR_BRIQUE);
 
       expect([...briquesDuContrat].sort((a, b) => a.localeCompare(b))).toEqual(
-        briquesMontables
-          .filter((brique) => brique !== 'fp-quote')
-          .sort((a, b) => a.localeCompare(b)),
+        [...briquesMontables].sort((a, b) => a.localeCompare(b)),
       );
-      expect(briquesMontables).toContain('fp-quote');
+      expect(briquesMontables).not.toContain('fp-quote');
       expect(SPACED.boite).toBe(1);
       expect(JSON.stringify(donnees['fp-escape'])).not.toContain('fragment');
     });

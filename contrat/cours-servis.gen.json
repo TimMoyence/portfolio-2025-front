@@ -1,14 +1,74 @@
 [
-  "b1-01-proportions-pourcentages",
-  "b1-02-evolutions-coefficients-indices",
-  "b1-03-tcd-serie-une-variable",
-  "b2-01-traitement-information-chiffree",
-  "b2-02-series-statistiques",
-  "b2-03-logique",
-  "b2-04-suites",
-  "b2-05-mathematiques-financieres",
-  "b2-06-exponentielle-logarithme",
-  "b2-07-derivee-optimisation",
-  "b3-01-donnee-brute-decision",
-  "b3-02-formules-et-ia-analyste"
+  {
+    "slug": "b1-01-proportions-pourcentages",
+    "duree": 121
+  },
+  {
+    "slug": "b1-02-evolutions-coefficients-indices",
+    "duree": 121
+  },
+  {
+    "slug": "b1-03-tcd-serie-une-variable",
+    "duree": 121
+  },
+  {
+    "slug": "b1-04-series-deux-variables",
+    "duree": 121
+  },
+  {
+    "slug": "b1-05-logique-conditions",
+    "duree": 121
+  },
+  {
+    "slug": "b2-01-traitement-information-chiffree",
+    "duree": 202
+  },
+  {
+    "slug": "b2-02-series-statistiques",
+    "duree": 166
+  },
+  {
+    "slug": "b2-03-logique",
+    "duree": 136
+  },
+  {
+    "slug": "b2-04-suites",
+    "duree": 166
+  },
+  {
+    "slug": "b2-05-mathematiques-financieres",
+    "duree": 133
+  },
+  {
+    "slug": "b2-06-exponentielle-logarithme",
+    "duree": 135
+  },
+  {
+    "slug": "b2-07-derivee-optimisation",
+    "duree": 135
+  },
+  {
+    "slug": "b2-08-derivees-composees-fonctions-economiques",
+    "duree": 135
+  },
+  {
+    "slug": "b2-09-probabilites-conditionnelles",
+    "duree": 135
+  },
+  {
+    "slug": "b3-01-donnee-brute-decision",
+    "duree": 176
+  },
+  {
+    "slug": "b3-02-formules-et-ia-analyste",
+    "duree": 180
+  },
+  {
+    "slug": "b3-03-traitement-de-texte",
+    "duree": 180
+  },
+  {
+    "slug": "b3-04-publipostage",
+    "duree": 180
+  }
 ]

@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import test from 'node:test';
+import { instantanesParCours } from '../../lib/contrat/instantanes.mjs';
 import { cheminDuDepot, lireTexte } from '../../lib/depot.mjs';
 
 const DOSSIER_DES_ASSETS = cheminDuDepot('src/assets');
@@ -29,7 +30,7 @@ const manifesteDe = (cours) =>
   JSON.parse(lireTexte(join(DOSSIER_DES_MANIFESTES, `${cours}${SUFFIXE_DU_MANIFESTE}`)));
 
 const instantaneDe = (cours) =>
-  JSON.parse(lireTexte(join(DOSSIER_DES_FIXTURES, `${cours}.instantane.json`)));
+  JSON.parse(lireTexte(instantanesParCours(DOSSIER_DES_FIXTURES).get(cours)));
 
 const ecransAPieceJointe = (cours) =>
   instantaneDe(cours).deroule.ecrans.filter((ecran) => ecran.pieceJointe !== undefined);
@@ -59,6 +60,55 @@ const empreintesDesAssets = () =>
   fichiersPublies().map(({ chemin }) => ({ chemin, empreinte: empreinteDe(chemin) }));
 
 const servisDe = (cours) => readdirSync(join(DOSSIER_DES_COURS, cours));
+
+const coursServis = () => [...instantanesParCours(DOSSIER_DES_FIXTURES).keys()];
+
+const piecesPubliquesServies = () => [
+  ...new Set(
+    coursServis().flatMap((cours) =>
+      piecesJointesDe(cours)
+        .filter((piece) => piece.reservee !== true)
+        .map((piece) => piece.fichier),
+    ),
+  ),
+];
+
+const piecesCopiees = () =>
+  readdirSync(DOSSIER_DES_COURS, { withFileTypes: true })
+    .filter((entree) => entree.isDirectory())
+    .flatMap((dossier) =>
+      readdirSync(join(DOSSIER_DES_COURS, dossier.name), { withFileTypes: true })
+        .filter((entree) => entree.isFile())
+        .map((entree) => `${PREFIXE_PUBLIC}/${dossier.name}/${entree.name}`),
+    );
+
+test('PJ-01 · chaque pièce jointe publique d un cours servi est copiée sous src/assets, octet pour octet', () => {
+  const publiques = piecesPubliquesServies();
+
+  assert.ok(
+    publiques.length >= 3,
+    `${publiques.length} pièces publiques : la garde ne lit plus les instantanés`,
+  );
+  for (const fichier of publiques) {
+    const chemin = join(DOSSIER_DES_ASSETS, fichier.slice('/assets/'.length));
+    const [, debut] = /\.([0-9a-f]{8})\.[a-z]+$/.exec(fichier) ?? [];
+
+    assert.ok(
+      existsSync(chemin),
+      `${fichier} servi par l instantané mais absent de src/assets. ${POURQUOI}`,
+    );
+    assert.ok(debut !== undefined, `${fichier} ne porte pas le début de son empreinte`);
+    assert.equal(empreinteDe(chemin).slice(0, 8), debut, `${fichier} diffère. ${POURQUOI}`);
+  }
+});
+
+test('PJ-01 · src/assets/cours ne copie aucune pièce jointe qu aucun cours ne sert en public', () => {
+  assert.deepEqual(
+    piecesCopiees().filter((fichier) => !piecesPubliquesServies().includes(fichier)),
+    [],
+    RESERVEE_A_LA_SEANCE,
+  );
+});
 
 test('le B3-01 garde le manifeste de ses classeurs parmi les fixtures de test', () => {
   assert.ok(

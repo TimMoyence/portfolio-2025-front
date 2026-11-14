@@ -7,8 +7,6 @@ import {
 import {
   buildEtatDesEnigmes,
   buildEtatParticipant,
-  buildResultatQuestion,
-  buildResultatsSeance,
   buildVerdictTentative,
 } from '../../../../testing/factories/formations/formations.factory';
 import {
@@ -21,8 +19,6 @@ import {
   retourDeReponse,
   retourDeTentative,
   retoursDeLEtat,
-  reussitesDeLEcran,
-  verdictsDeLEcran,
   verdictsServis,
 } from './retours-brique';
 
@@ -324,113 +320,6 @@ describe('AC-33 : reconstruction des retours à la reprise', () => {
 
   it('rend une carte vide pour un état sans réponse ni énigme', () => {
     expect(retoursDeLEtat(buildEtatParticipant(), ecranDe).size).toBe(0);
-  });
-});
-
-describe('lecture des verdicts et réussites d’un écran révélé', () => {
-  it('rend le verdict de chaque réponse et production, sans les autres retours', () => {
-    const lot: RetourBrique[] = [
-      { kind: 'verdict-reponse', questionId: QUESTION, correcte: true, libelleConfusion: null },
-      retourDeProduction(
-        PRODUCTION,
-        { correcte: false, score: 0.5, details: [DETAIL], libelleConfusion: null },
-        FEUILLE_ENVOYEE,
-      ),
-      { kind: 'deja-repondu', questionId: QUESTION },
-      retourDeRefus('reseau', 'Hors ligne'),
-    ];
-
-    expect(verdictsDeLEcran(lot)).toEqual({ [QUESTION]: true, [PRODUCTION]: false });
-  });
-
-  it('T6 · rend le verdict de chaque énigme du coffre, résolue ou manquée', () => {
-    const lot: RetourBrique[] = [
-      retourDeTentative(
-        PARCOURS,
-        'b2-01-a6-e1-mix',
-        buildVerdictTentative({ correcte: false, fragment: null, tentativesRestantes: 2 }),
-      ),
-      retourDeTentative(
-        PARCOURS,
-        'b2-01-a6-e1-mix',
-        buildVerdictTentative({ correcte: true, fragment: 'A', tentativesRestantes: 1 }),
-      ),
-      retourDeTentative(
-        PARCOURS,
-        'b2-01-a6-e2-points',
-        buildVerdictTentative({ correcte: false, fragment: null, tentativesRestantes: 2 }),
-      ),
-      {
-        kind: 'progression-enigmes',
-        ...buildProgressionDesEnigmes({
-          parcoursId: PARCOURS,
-          resolues: [{ enigmeId: 'b2-01-a6-e3-rouleau', fragment: 'C' }],
-          tentativesRestantes: {
-            'b2-01-a6-e3-rouleau': 2,
-            'b2-01-a6-e4-tva': 0,
-            'b2-01-a6-e5-jamais': 3,
-          },
-          etats: {
-            'b2-01-a6-e3-rouleau': { etat: 'resolue', tentativesRestantes: 2 },
-            'b2-01-a6-e4-tva': { etat: 'epuisee', tentativesRestantes: 0 },
-            'b2-01-a6-e5-jamais': { etat: 'ouverte', tentativesRestantes: 3 },
-          },
-          enigmeOuverte: 'b2-01-a6-e5-jamais',
-        }),
-      },
-    ];
-
-    expect(verdictsDeLEcran(lot)).toEqual({
-      'b2-01-a6-e1-mix': true,
-      'b2-01-a6-e2-points': false,
-      'b2-01-a6-e3-rouleau': true,
-      'b2-01-a6-e4-tva': false,
-    });
-  });
-
-  it('F-29 · lit la résolution et l’épuisement de chaque énigme dans l’état servi, sans les déduire des tentatives restantes', () => {
-    const lot: RetourBrique[] = [
-      {
-        kind: 'progression-enigmes',
-        ...buildProgressionDesEnigmes({
-          parcoursId: PARCOURS,
-          resolues: [],
-          tentativesRestantes: { 'enigme-1': 0 },
-          etats: {
-            'enigme-1': { etat: 'ouverte', tentativesRestantes: 0 },
-            'enigme-2': { etat: 'epuisee', tentativesRestantes: 4 },
-            'enigme-3': { etat: 'resolue', tentativesRestantes: 6 },
-          },
-          enigmeOuverte: 'enigme-1',
-        }),
-      },
-    ];
-
-    expect(verdictsDeLEcran(lot)).toEqual({ 'enigme-2': false, 'enigme-3': true });
-  });
-
-  it('rend la réussite de la classe par question de l’écran, sans les questions sans réponse', () => {
-    const resultats = buildResultatsSeance({
-      questions: [
-        buildResultatQuestion({ questionId: QUESTION, ecranId: ECRAN, total: 20, correctes: 13 }),
-        buildResultatQuestion({ questionId: PRODUCTION, ecranId: ECRAN, total: 0, correctes: 0 }),
-        buildResultatQuestion({
-          questionId: 'autre',
-          ecranId: 'B2-01-A1-02',
-          total: 9,
-          correctes: 9,
-        }),
-      ],
-    });
-
-    expect(reussitesDeLEcran(resultats, ECRAN)).toEqual({
-      [QUESTION]: { justes: 13, total: 20 },
-    });
-  });
-
-  it('ne rend aucune réussite sans résultats ni écran source', () => {
-    expect(reussitesDeLEcran(null, ECRAN)).toEqual({});
-    expect(reussitesDeLEcran(buildResultatsSeance(), null)).toEqual({});
   });
 });
 

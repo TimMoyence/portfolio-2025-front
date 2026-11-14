@@ -1,6 +1,18 @@
 @forward '../../styles-shared/mise-en-page/mono' show police;
 @use '../../styles-shared/mise-en-page/mono';
 
+$trace-minimal: 12rem;
+
+@mixin cadre-de-toile {
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 100cqh;
+  padding: var(--slide-marge-bloc, 2rem) var(--slide-marge-ligne, 3.5rem);
+}
+
 @mixin cadre($ecart) {
   display: grid;
   align-content: center;

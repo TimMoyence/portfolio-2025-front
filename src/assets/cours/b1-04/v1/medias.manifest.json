@@ -1,0 +1,91 @@
+{
+  "cours": "b1-04",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours/b1/cours-b1-04-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-06",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Tenir en équilibre sur un doigt · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "plateau-equilibre.webp",
+          "octets": 112792,
+          "sha256": "f57cde14419e4c42ec7db2635e0e92d0ed74b5d969a9723a588b97223bbaa245"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le bâton au plus près des cailloux · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "baton-ficelles.webp",
+          "octets": 139508,
+          "sha256": "5e24abcdbc0ee979c18a47c2a1d315a91dd2bc62c46ae813db9a3106e15ab44e"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A2-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "En file ou en désordre · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "oiseaux-vols.webp",
+          "octets": 109460,
+          "sha256": "9c92cd7f45793e39c8b34ebc09c56d94f13d2739c52f3f30b97c5dd0088a2db1"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Ce n’est pas le parapluie · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "pluie-parapluies.webp",
+          "octets": 243070,
+          "sha256": "5f9d0196859b4c50e6933f73745ce3c8655f3a5746897f641941563ae4bd5e2a"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A3-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le gué dans le brouillard · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "pierres-brouillard.webp",
+          "octets": 207938,
+          "sha256": "b59f6157ab3d00fa77e6877f4b58f2e68405ce3957c45afa0cb005d738c3121e"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "ecran": "A3-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La marque sur la porte · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "chambranle-traits.webp",
+          "octets": 110446,
+          "sha256": "dbe2a3148f25dd81dc50c82dacd1e911efc47a5534a618c8cf8266b9b2af9373"
+        }
+      ]
+    }
+  ]
+}

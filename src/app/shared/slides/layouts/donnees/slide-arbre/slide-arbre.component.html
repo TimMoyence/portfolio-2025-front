@@ -1,0 +1,44 @@
+<figure class="slide-arbre">
+  <header>
+    <h2>{{ title() }}</h2>
+    @if (subtitle()) {
+      <p class="slide-arbre__subtitle">{{ subtitle() }}</p>
+    }
+  </header>
+
+  <p class="slide-arbre__description" data-testid="slide-arbre-description" [id]="idDescription">
+    {{ description() }}
+  </p>
+
+  <ul class="slide-arbre__arbre" data-testid="slide-arbre" [attr.aria-describedby]="idDescription">
+    @for (tete of branches(); track $index) {
+      <li class="slide-arbre__tete" data-testid="slide-arbre-tete">
+        <span class="slide-arbre__noeud">
+          <span class="slide-arbre__evenement">{{ tete.evenement }}</span>
+          <span class="slide-arbre__probabilite">{{ ecrire(tete.probabilite) }}</span>
+        </span>
+        @if (tete.branches?.length) {
+          <ul class="slide-arbre__feuilles">
+            @for (feuille of tete.branches; track $index) {
+              <li class="slide-arbre__feuille" data-testid="slide-arbre-feuille">
+                <span class="slide-arbre__noeud">
+                  <span class="slide-arbre__evenement">{{ feuille.evenement }}</span>
+                  <span class="slide-arbre__probabilite">{{ ecrire(feuille.probabilite) }}</span>
+                  @if (feuille.produit !== undefined) {
+                    <span class="slide-arbre__produit">→ {{ ecrire(feuille.produit) }}</span>
+                  }
+                </span>
+              </li>
+            }
+          </ul>
+        }
+      </li>
+    }
+  </ul>
+
+  @if (reading()) {
+    <p class="slide-arbre__reading">
+      <strong i18n="@@slideChartLecture">Lecture professionnelle</strong>{{ reading() }}
+    </p>
+  }
+</figure>

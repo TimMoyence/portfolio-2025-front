@@ -4,24 +4,7 @@
   [appSlideEnTete]="{ bloc: 'slide-table', titre: title(), sousTitre: subtitle() }"
 >
   <app-defileur-de-tableau class="slide-table__scroll">
-    <table>
-      <thead>
-        <tr>
-          @for (col of columns(); track col.key) {
-            <th scope="col">{{ col.label }}</th>
-          }
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of rows(); track $index) {
-          <tr>
-            @for (col of columns(); track col.key) {
-              <td>{{ cellValue(row, col.key) }}</td>
-            }
-          </tr>
-        }
-      </tbody>
-    </table>
+    <table appTableauDeCellules [entete]="entete()" [lignes]="lignes()"></table>
   </app-defileur-de-tableau>
   @if (note()) {
     <p class="slide-table__note">{{ note() }}</p>

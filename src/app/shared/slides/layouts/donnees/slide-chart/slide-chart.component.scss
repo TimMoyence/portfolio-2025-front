@@ -1,8 +1,6 @@
 @use '../../../slide-figure' as figure;
 @use '../../../slide-toile' as toile;
 
-$trace-minimal: 12rem;
-
 :host {
   display: block;
   width: 100%;
@@ -434,13 +432,7 @@ h2 {
 
 @container (min-height: 0px) {
   .slide-chart {
-    display: flex;
-    flex-direction: column;
-    justify-content: safe center;
-    gap: 0.75rem;
-    width: 100%;
-    min-height: 100cqh;
-    padding: var(--slide-marge-bloc, 2rem) var(--slide-marge-ligne, 3.5rem);
+    @include figure.cadre-de-toile;
   }
 
   h2 {
@@ -461,7 +453,7 @@ h2 {
   }
 
   .slide-chart__plot {
-    grid-template-rows: minmax($trace-minimal, 1fr) auto;
+    grid-template-rows: minmax(figure.$trace-minimal, 1fr) auto;
     padding-top: 1.75rem;
   }
 }

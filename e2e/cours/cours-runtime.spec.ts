@@ -1,17 +1,7 @@
+import '@angular/localize/init';
 import { expect, test } from '@playwright/test';
-import { readFileSync } from 'node:fs';
-import { COURS_EN_SEANCE } from '../../src/app/core/config/cours-en-seance';
-
-const dureeDuCoursServi = (slug: string): string => {
-  const { sujet } = JSON.parse(
-    readFileSync(
-      `src/testing/fixtures/instantanes/json/${slug.slice(0, 5)}.instantane.json`,
-      'utf8',
-    ),
-  ) as { readonly sujet: { readonly duree: number } };
-  const minutes = Math.round(sujet.duree / 5) * 5;
-  return `${Math.floor(minutes / 60)} h ${String(minutes % 60).padStart(2, '0')}`;
-};
+import { COURS_EN_SEANCE, dureeDuCoursEnSeance } from '../../src/app/core/config/cours-en-seance';
+import { baseAnglaise, exigerLaPorteSsr } from '../porte-ssr';
 
 test.describe('Parcours public des formations', () => {
   test('l ancienne demonstration technique redirige vers le catalogue', async ({ page }) => {
@@ -33,7 +23,7 @@ test.describe('Parcours public des formations', () => {
 
       const card = page.locator('.formation--live').filter({ hasText: code });
       await expect(card).toBeVisible();
-      await expect(card).toContainText(dureeDuCoursServi(slug));
+      await expect(card).toContainText(dureeDuCoursEnSeance(slug));
       await expect(card).not.toContainText(/\d écrans/);
       await expect(card).toContainText('À suivre en séance accompagnée');
       await expect(card).not.toContainText('librement');
@@ -43,6 +33,23 @@ test.describe('Parcours public des formations', () => {
       await expect(page.locator('app-slide-deck')).toHaveCount(0);
     });
   }
+
+  test.describe('en anglais', () => {
+    exigerLaPorteSsr({ anglaise: true });
+
+    test('PUB-01 · chaque carte en séance écrit sa durée « 2 h 00 min », d une seule façon', async ({
+      page,
+    }) => {
+      await page.goto(`${baseAnglaise}/en/formations`, { waitUntil: 'domcontentloaded' });
+
+      for (const slug of COURS_EN_SEANCE) {
+        const carte = page
+          .locator('.formation--live')
+          .filter({ hasText: slug.slice(0, 5).toUpperCase() });
+        await expect(carte).toContainText(`${dureeDuCoursEnSeance(slug)} min`);
+      }
+    });
+  });
 
   test('le catalogue reste lisible sur téléphone sans débordement', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });

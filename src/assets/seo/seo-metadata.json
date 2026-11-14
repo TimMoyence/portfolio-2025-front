@@ -1234,7 +1234,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-11-12",
+      "lastmod": "2026-11-14",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
@@ -1617,6 +1617,142 @@
       }
     },
     {
+      "id": "formations-b1-04-series-deux-variables",
+      "path": "/formations/b1-04-series-deux-variables",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-11-06",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Séries à deux variables : ajuster et prévoir",
+          "path": "/formations/b1-04-series-deux-variables"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Séries à deux variables : ajuster et prévoir — B1 — Tim Moyence",
+          "description": "Formation B1 interactive : nuage de points, droite des moindres carrés, coefficient de corrélation, prévision et seuil au tableur.",
+          "ogTitle": "Séries à deux variables : ajuster et prévoir — B1",
+          "ogDescription": "Un cours interactif qui relie la publicité et les ventes d’un site web, puis prévoit par la droite d’ajustement, comme en CCF.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Séries à deux variables : ajuster et prévoir",
+            "description": "Formation B1 interactive sur le nuage de points, l’ajustement affine par les moindres carrés, la corrélation et la prévision.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b1-04-series-deux-variables"
+          }
+        },
+        "en": {
+          "title": "Two-variable series: fit and forecast — B1 — Tim Moyence",
+          "description": "Interactive B1 course: scatter plot, least-squares line, correlation coefficient, forecast and threshold in a spreadsheet.",
+          "ogTitle": "Two-variable series: fit and forecast — B1",
+          "ogDescription": "An interactive course that links a website’s advertising and sales, then forecasts with the fitted line, as in the CCF exam.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Two-variable series: fit and forecast",
+            "description": "Interactive B1 course on scatter plots, least-squares linear fitting, correlation and forecasting.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b1-04-series-deux-variables"
+          }
+        }
+      }
+    },
+    {
+      "id": "formations-b1-05-logique-conditions",
+      "path": "/formations/b1-05-logique-conditions",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-11-06",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Logique : conditions et contrôles",
+          "path": "/formations/b1-05-logique-conditions"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Logique : conditions et contrôles — B1 — Tim Moyence",
+          "description": "Formation B1 interactive : connecteurs, implication, lois de Morgan, quantificateurs et contrôle d’une règle au tableur.",
+          "ogTitle": "Logique : conditions et contrôles — B1",
+          "ogDescription": "Un cours interactif qui écrit et contrôle les règles commerciales d’une entreprise, comme en CCF.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Logique : conditions et contrôles",
+            "description": "Formation B1 interactive sur les propositions, les connecteurs logiques, la négation et les quantificateurs.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b1-05-logique-conditions"
+          }
+        },
+        "en": {
+          "title": "Logic: conditions and checks — B1 — Tim Moyence",
+          "description": "Interactive B1 course: connectives, implication, De Morgan’s laws, quantifiers and checking a rule in a spreadsheet.",
+          "ogTitle": "Logic: conditions and checks — B1",
+          "ogDescription": "An interactive course that writes and checks a company’s sales rules, as in the CCF exam.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Logic: conditions and checks",
+            "description": "Interactive B1 course on propositions, logical connectives, negation and quantifiers.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b1-05-logique-conditions"
+          }
+        }
+      }
+    },
+    {
       "id": "formations-b2-01-traitement-information-chiffree",
       "path": "/formations/b2-01-traitement-information-chiffree",
       "index": false,
@@ -1722,7 +1858,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H15M",
+            "duration": "PT2H45M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-02-series-statistiques"
@@ -1744,7 +1880,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H15M",
+            "duration": "PT2H45M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-02-series-statistiques"
@@ -1858,7 +1994,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H15M",
+            "duration": "PT2H45M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-04-suites"
@@ -1880,7 +2016,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H15M",
+            "duration": "PT2H45M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-04-suites"
@@ -1926,7 +2062,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H45M",
+            "duration": "PT2H15M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-05-mathematiques-financieres"
@@ -1948,7 +2084,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H45M",
+            "duration": "PT2H15M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-05-mathematiques-financieres"
@@ -1994,7 +2130,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H45M",
+            "duration": "PT2H15M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-06-exponentielle-logarithme"
@@ -2016,7 +2152,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H45M",
+            "duration": "PT2H15M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-06-exponentielle-logarithme"
@@ -2062,7 +2198,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H45M",
+            "duration": "PT2H15M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-07-derivee-optimisation"
@@ -2084,10 +2220,146 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H45M",
+            "duration": "PT2H15M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-07-derivee-optimisation"
+          }
+        }
+      }
+    },
+    {
+      "id": "formations-b2-08-derivees-composees-fonctions-economiques",
+      "path": "/formations/b2-08-derivees-composees-fonctions-economiques",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-11-06",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Dérivées composées et fonctions économiques",
+          "path": "/formations/b2-08-derivees-composees-fonctions-economiques"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Dérivées composées et fonctions économiques — B2 — Tim Moyence",
+          "description": "Formation B2 interactive : dérivée d’un produit, d’un quotient, de e^u et ln u, coûts, marché et résolution de f(x) = k.",
+          "ogTitle": "Dérivées composées et fonctions économiques — B2",
+          "ogDescription": "Un cours interactif qui dérive les fonctions d’un dossier d’entreprise pour lire ses coûts et son prix d’équilibre, comme en CCF.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Dérivées composées et fonctions économiques",
+            "description": "Formation B2 interactive sur les dérivées composées, le coût marginal, le prix d’équilibre et la résolution approchée d’une équation.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H15M",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b2-08-derivees-composees-fonctions-economiques"
+          }
+        },
+        "en": {
+          "title": "Composite derivatives and economic functions — B2 — Tim Moyence",
+          "description": "Interactive B2 course: derivative of a product, a quotient, e^u and ln u, costs, market and solving f(x) = k.",
+          "ogTitle": "Composite derivatives and economic functions — B2",
+          "ogDescription": "An interactive course that differentiates the functions of a company file to read its costs and its equilibrium price, as in the CCF exam.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Composite derivatives and economic functions",
+            "description": "Interactive B2 course on composite derivatives, marginal cost, equilibrium price and approximate solving of an equation.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H15M",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b2-08-derivees-composees-fonctions-economiques"
+          }
+        }
+      }
+    },
+    {
+      "id": "formations-b2-09-probabilites-conditionnelles",
+      "path": "/formations/b2-09-probabilites-conditionnelles",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-11-06",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Probabilités conditionnelles",
+          "path": "/formations/b2-09-probabilites-conditionnelles"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Probabilités conditionnelles — B2 — Tim Moyence",
+          "description": "Formation B2 interactive : arbre pondéré, tableau croisé, probabilités totales, P_B(A) et indépendance.",
+          "ogTitle": "Probabilités conditionnelles — B2",
+          "ogDescription": "Un cours interactif qui lit les clients d’une boutique par un arbre pondéré et un tableau croisé, comme en CCF.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Probabilités conditionnelles",
+            "description": "Formation B2 interactive sur la probabilité conditionnelle, l’arbre pondéré, la formule des probabilités totales et l’indépendance.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H15M",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b2-09-probabilites-conditionnelles"
+          }
+        },
+        "en": {
+          "title": "Conditional probability — B2 — Tim Moyence",
+          "description": "Interactive B2 course: weighted tree, cross table, total probability, P_B(A) and independence.",
+          "ogTitle": "Conditional probability — B2",
+          "ogDescription": "An interactive course that reads a shop’s customers through a weighted tree and a cross table, as in the CCF exam.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Conditional probability",
+            "description": "Interactive B2 course on conditional probability, weighted trees, the law of total probability and independence.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT2H15M",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b2-09-probabilites-conditionnelles"
           }
         }
       }
@@ -2130,7 +2402,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H25M",
+            "duration": "PT2H55M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b3-01-donnee-brute-decision"
@@ -2152,7 +2424,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H25M",
+            "duration": "PT2H55M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b3-01-donnee-brute-decision"
@@ -2198,7 +2470,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT3H",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b3-02-formules-et-ia-analyste"
@@ -2220,10 +2492,146 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H30M",
+            "duration": "PT3H",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b3-02-formules-et-ia-analyste"
+          }
+        }
+      }
+    },
+    {
+      "id": "formations-b3-03-traitement-de-texte",
+      "path": "/formations/b3-03-traitement-de-texte",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-11-06",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Traitement de texte : mettre en forme et mettre en page",
+          "path": "/formations/b3-03-traitement-de-texte"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Traitement de texte : mettre en forme et mettre en page — Bachelor — Tim Moyence",
+          "description": "Formation Bachelor interactive : importer et nettoyer un texte, styles, thème, en-tête, sections, numéros de page et PDF dans Word.",
+          "ogTitle": "Traitement de texte : mettre en forme et mettre en page — Bachelor",
+          "ogDescription": "Un cours interactif qui transforme une note brute en document Word propre, page après page.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Traitement de texte : mettre en forme et mettre en page",
+            "description": "Formation Bachelor interactive sur la mise en forme et la mise en page d’un document dans un traitement de texte.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b3-03-traitement-de-texte"
+          }
+        },
+        "en": {
+          "title": "Word processing: format and lay out — Bachelor — Tim Moyence",
+          "description": "Interactive Bachelor course: import and clean a text, styles, theme, header, sections, page numbers and PDF in Word.",
+          "ogTitle": "Word processing: format and lay out — Bachelor",
+          "ogDescription": "An interactive course that turns a raw note into a clean Word document, page after page.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Word processing: format and lay out",
+            "description": "Interactive Bachelor course on formatting and laying out a document in a word processor.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b3-03-traitement-de-texte"
+          }
+        }
+      }
+    },
+    {
+      "id": "formations-b3-04-publipostage",
+      "path": "/formations/b3-04-publipostage",
+      "index": false,
+      "changefreq": "monthly",
+      "priority": 0.8,
+      "lastmod": "2026-11-06",
+      "breadcrumb": [
+        {
+          "name": "Accueil",
+          "path": "/"
+        },
+        {
+          "name": "Formations",
+          "path": "/formations"
+        },
+        {
+          "name": "Publipostage et e-mailing",
+          "path": "/formations/b3-04-publipostage"
+        }
+      ],
+      "locales": {
+        "fr": {
+          "title": "Publipostage et e-mailing — Bachelor — Tim Moyence",
+          "description": "Formation Bachelor interactive : source de données, champs de fusion, filtres, règles, fusion en PDF et e-mailing depuis Word.",
+          "ogTitle": "Publipostage et e-mailing — Bachelor",
+          "ogDescription": "Un cours interactif qui envoie une lettre personnalisée à toute une liste de contacts, par la fusion de Word.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Publipostage et e-mailing",
+            "description": "Formation Bachelor interactive sur le publipostage, les champs de fusion, les règles et l’e-mailing.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H",
+            "courseMode": "online",
+            "inLanguage": "fr",
+            "url": "https://asilidesign.fr/fr/formations/b3-04-publipostage"
+          }
+        },
+        "en": {
+          "title": "Mail merge and e-mailing — Bachelor — Tim Moyence",
+          "description": "Interactive Bachelor course: data source, merge fields, filters, rules, merging to PDF and e-mailing from Word.",
+          "ogTitle": "Mail merge and e-mailing — Bachelor",
+          "ogDescription": "An interactive course that sends a personalised letter to a whole contact list, with Word’s mail merge.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Mail merge and e-mailing",
+            "description": "Interactive Bachelor course on mail merge, merge fields, rules and e-mailing.",
+            "provider": {
+              "@type": "Organization",
+              "name": "Asili Design",
+              "url": "https://asilidesign.fr"
+            },
+            "isAccessibleForFree": true,
+            "duration": "PT3H",
+            "courseMode": "online",
+            "inLanguage": "en",
+            "url": "https://asilidesign.fr/en/formations/b3-04-publipostage"
           }
         }
       }

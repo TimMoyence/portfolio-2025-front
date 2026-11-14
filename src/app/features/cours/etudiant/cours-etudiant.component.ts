@@ -1118,11 +1118,7 @@ export class CoursEtudiantComponent {
     this.verrou?.disarm();
     const verrou = createLock(regimeDeLEcran(ecran));
     verrou.onIncident((incident) => {
-      this.incidents.push({
-        type: incident.type,
-        horodatage: incident.horodatage,
-        ...(incident.detail === undefined ? {} : { contexte: incident.detail }),
-      });
+      this.incidents.push({ type: incident.type, horodatage: incident.horodatage });
     });
     verrou.arm();
     this.verrou = verrou;
@@ -1398,9 +1394,6 @@ export class CoursEtudiantComponent {
       return;
     }
     this.retours.update((existants) => retirerLesRefus(existants, evenement.screenId));
-    if ('dureeMs' in evenement) {
-      this.verrou?.recordAnswerDuration(evenement.dureeMs);
-    }
     this.remonterLesIncidents();
     switch (evenement.kind) {
       case 'reponse':

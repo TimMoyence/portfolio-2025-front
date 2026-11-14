@@ -35,7 +35,6 @@ import {
   buildResultatsSeance,
   createFormationsPortStub,
 } from '../../../../../testing/factories/formations/formations.factory';
-import { buildVisualQuizSlide } from '../../../../../testing/factories/formations/visual-slide.factory';
 import { INSTANTANE_B3_01 } from '../../../../../testing/fixtures/instantanes/b3/instantane-b3-01';
 import { DELAI_DE_MONTAGE_MS } from '../../../../../testing/briques/briques-montees';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../../testing/fixtures/instantanes-des-cours';
@@ -266,18 +265,6 @@ describe('CoursSyntheseComponent', () => {
 
       expect(textes(fixture, 'synthese-question-libelle')).toEqual([VOTE.enonce, NUMERIQUE.enonce]);
       expect(textes(fixture, 'synthese-question-id')).toEqual(['Q-1', 'Q-2']);
-    });
-
-    it('nomme par son enonce le QCM d un ecran servi en presentation v2', async () => {
-      const participant = etudiant('Ana', [
-        { ...reponse('echelle', 'o2'), questionId: 'b2-s03-prediction' },
-      ]);
-      const fixture = await monter(
-        rapportDe([participant], resultatsDe(1, [{ questionId: 'b2-s03-prediction' }])),
-        of(buildDerouleCours({ ecrans: [buildEcranDeroule(buildVisualQuizSlide())] })),
-      );
-
-      expect(textes(fixture, 'synthese-question-libelle')).toEqual(['Quelle échelle ?']);
     });
 
     it('nomme la question par son identifiant quand le deroule ne peut pas etre lu', async () => {

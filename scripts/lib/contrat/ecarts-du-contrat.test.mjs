@@ -10,14 +10,14 @@ test('signale un contrat régénéré autrement que la copie de travail, ou un f
         ' M contrat/types.gen.ts',
         'MM contrat/zod.gen.ts',
         '?? src/testing/fixtures/b9-01.instantane.json',
-        ' D src/testing/fixtures/instantanes/json/b2-02.instantane.json',
+        ' D src/testing/fixtures/instantanes/json/b2/b2-02.instantane.json',
       ].join('\n'),
     ),
     [
       ' M contrat/types.gen.ts',
       'MM contrat/zod.gen.ts',
       '?? src/testing/fixtures/b9-01.instantane.json',
-      ' D src/testing/fixtures/instantanes/json/b2-02.instantane.json',
+      ' D src/testing/fixtures/instantanes/json/b2/b2-02.instantane.json',
     ],
   );
 });

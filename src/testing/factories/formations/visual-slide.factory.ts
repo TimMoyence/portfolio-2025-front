@@ -55,19 +55,14 @@ export function buildVisualImageHeroSlide(id = 'B2-01-S01-ACCROCHE'): EcranConte
 export function buildVisualImageSlide(
   renderer: 'image-left' | 'image-right' = 'image-left',
   id = 'B2-01-A5-01-NIGHTINGALE',
+  props: PropsVisuelles = {},
 ): EcranContent {
   return buildRecitVisuel(id, renderer, {
     title: '1858 : Florence Nightingale fait décider par les données',
     paragraphs: ['Un secteur par mois de la guerre de Crimée.'],
     image: `https://images.example/${id}.webp`,
     imageAlt: 'Diagramme polaire de Florence Nightingale',
-    richItems: [
-      {
-        title: 'Royal Statistical Society',
-        description: 'Première femme élue membre.',
-        logo: 'https://images.example/rss.webp',
-      },
-    ],
+    ...props,
   });
 }
 
@@ -116,45 +111,6 @@ export function buildVisualSortCorrectionSlide(
   return buildRecitVisuel(id, 'sort-review', props);
 }
 
-export const ATELIER_CORRIGE = {
-  screenId: 'B2-01-A2-03-ATELIER-1',
-  questions: ['b2-01-a2-evolution-marge', 'b2-01-a2-part-marketplace'],
-} as const;
-
-export function buildAnswerReviewProps(overrides: PropsVisuelles = {}): PropsVisuelles {
-  return {
-    title: 'Correction de l’atelier 1',
-    subtitle: 'Chaque calcul, avec son contrôle.',
-    source: { screenId: ATELIER_CORRIGE.screenId },
-    explications: [
-      {
-        reference: ATELIER_CORRIGE.questions[0],
-        texte: '(291 000 − 285 000) ÷ 285 000 ≈ 0,021 : +2,1 % en trois ans.',
-      },
-      {
-        reference: ATELIER_CORRIGE.questions[1],
-        texte: '523 000 ÷ 1 150 000 ≈ 0,455, soit 45,5 % du CA.',
-      },
-    ],
-    ...overrides,
-  };
-}
-
-export function buildVisualAnswerReviewSlide(
-  overrides: Partial<EcranContent> = {},
-  id = 'B2-01-A2-03-CORRECTION-1',
-  props: PropsVisuelles = buildAnswerReviewProps(),
-): EcranContent {
-  return buildRecitVisuel(id, 'answer-review', props, {
-    ecranSource: ATELIER_CORRIGE.screenId,
-    ...overrides,
-  });
-}
-
-export function buildVerdictDeQuestion(questionId: string, correcte: boolean): RetourBrique {
-  return { kind: 'verdict-reponse', questionId, correcte, libelleConfusion: null };
-}
-
 export function buildVerdictDuTri(
   justes: Readonly<Record<string, boolean>>,
   questionId = TRI_CORRIGE.sortId,
@@ -179,37 +135,4 @@ export function buildVisualChartSlide(
   id = 'K-GRAPHIQUE-DE-REFERENCE',
 ): EcranContent {
   return buildRecitVisuel(id, 'chart', props);
-}
-
-export function buildVisualNestedQuizSlide(overrides: Partial<EcranContent> = {}): EcranContent {
-  return buildRecitVisuel(
-    'B2-01-S07-GRAPHIQUE',
-    'image-left',
-    {
-      title: 'Le repère d’abord',
-      nestedQuiz: {
-        id: 'b2-s07-repere',
-        type: 'quiz',
-        question: 'Que faut-il vérifier en premier ?',
-        options: ['L’axe', 'La couleur'],
-      },
-    },
-    { interactif: true, ...overrides },
-  );
-}
-
-export function buildVisualQuizSlide(overrides: Partial<EcranContent> = {}): EcranContent {
-  return buildRecitVisuel(
-    'B2-01-S03-PREDICTION',
-    'quiz',
-    {
-      questionData: {
-        id: 'b2-s03-prediction',
-        type: 'quiz',
-        question: 'Quelle échelle ?',
-        options: ['A', 'B'],
-      },
-    },
-    { interactif: true, ...overrides },
-  );
 }

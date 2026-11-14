@@ -1,4 +1,4 @@
-import { Component, type Type } from '@angular/core';
+import { Component, input, type Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { type RichListItem, SlideImageComponent } from './slide-image.component';
 
@@ -71,10 +71,16 @@ class HostRightFullComponent extends ContenuComplet {}
   standalone: true,
   imports: [SlideImageComponent],
   template: `
-    <app-slide-image-left image="/images/x.webp" imageAlt="alt" [richItems]="richItems" />
+    <app-slide-image-left
+      image="/images/x.webp"
+      imageAlt="alt"
+      [richItems]="richItems"
+      [priority]="priority()"
+    />
   `,
 })
 class HostRichComponent {
+  readonly priority = input(false);
   readonly richItems: RichListItem[] = [
     { title: '  banque du territoire', description: 'Partenaire' },
     { title: 'Agence', description: 'Avec logo', logo: '/images/agence.webp' },
@@ -171,4 +177,18 @@ describe('SlideImageComponent', () => {
     expect(logos.map((logo) => logo.querySelector('span')?.textContent)).toEqual(['B', undefined]);
     expect(logos[1].querySelector('img')?.getAttribute('src')).toBe('/images/agence.webp');
   });
+
+  for (const [priority, chargement] of [
+    [true, 'eager'],
+    [false, 'lazy'],
+  ] as const) {
+    it(`charge les logos comme l image principale : ${chargement}`, () => {
+      const fixture = TestBed.createComponent(HostRichComponent);
+      fixture.componentRef.setInput('priority', priority);
+      fixture.detectChanges();
+      const images = [...(fixture.nativeElement as HTMLElement).querySelectorAll('img')];
+
+      expect(images.map((img) => img.getAttribute('loading'))).toEqual([chargement, chargement]);
+    });
+  }
 });

@@ -18,7 +18,6 @@ import type { NumericQuestionPublique } from '../../../cours/runtime/blocks/ques
 import type { PlotDefinition } from '../../../cours/runtime/blocks/contenus/FpPlot';
 import type { ProCas } from '../../../cours/runtime/blocks/activites/FpPro';
 import type { PulseSondage } from '../../../cours/runtime/blocks/questions/FpPulse';
-import type { QuoteCitation } from '../../../cours/runtime/blocks/contenus/FpQuote';
 import type { RecallQuestionPublique } from '../../../cours/runtime/blocks/questions/FpRecall';
 import type { SheetPlanPublic } from '../../../cours/runtime/blocks/activites/FpSheet';
 import type {
@@ -164,7 +163,7 @@ export function buildRecallQuestion(
       { id: 'b', libelle: 'On multiplie par 1 + i fois n' },
       { id: 'c', libelle: 'On divise par (1 + i) puissance n' },
     ],
-    metadonnees: metadonnees({ dureeMinutes: 4, regime: 'examen' }),
+    metadonnees: metadonnees({ dureeMinutes: 4, regime: 'focus' }),
     ...overrides,
   };
 }
@@ -176,7 +175,7 @@ export function buildPulseSondage(overrides: Partial<PulseSondage> = {}): PulseS
     metadonnees: metadonnees({
       concepts: ['taux-equivalent'],
       dureeMinutes: 1,
-      modalite: 'classe',
+      modalite: 'solo',
     }),
     ...overrides,
   };
@@ -210,17 +209,6 @@ export function buildStrategiesServies(revelees = false): StrategieServie[] {
   );
 }
 
-export function buildQuoteCitation(overrides: Partial<QuoteCitation> = {}): QuoteCitation {
-  return {
-    id: 'C-CITATION-01',
-    texte: 'L interet compose est la huitieme merveille du monde : qui le comprend le percoit.',
-    auteur: 'Mayer Amschel Rothschild',
-    source: 'attribue',
-    metadonnees: metadonnees({ dureeMinutes: 1, modalite: 'classe' }),
-    ...overrides,
-  };
-}
-
 export function buildStoryRecit(overrides: Partial<StoryRecit> = {}): StoryRecit {
   return {
     id: 'R-RECIT-03',
@@ -232,7 +220,7 @@ export function buildStoryRecit(overrides: Partial<StoryRecit> = {}): StoryRecit
     ],
     metadonnees: metadonnees({
       concepts: ['capitalisation', 'valeur-acquise'],
-      modalite: 'classe',
+      modalite: 'solo',
     }),
     ...overrides,
   };
@@ -856,7 +844,7 @@ export function buildEscapeParcours(
         indice: 'Retranchez la TVA deductible de la TVA collectee',
       },
     ],
-    metadonnees: metadonnees({ dureeMinutes: 25, modalite: 'groupe' }),
+    metadonnees: metadonnees({ dureeMinutes: 25, modalite: 'binome' }),
     ...overrides,
   };
 }
@@ -865,7 +853,7 @@ export function buildSpacedRappel(overrides: Partial<SpacedRappel> = {}): Spaced
   return {
     id: 'b2-01-rappel',
     intitule: 'Rappel espacé : ce que vous avez travaillé ce matin',
-    metadonnees: metadonnees({ dureeMinutes: 3, regime: 'examen' }),
+    metadonnees: metadonnees({ dureeMinutes: 3, regime: 'focus' }),
     ...overrides,
   };
 }

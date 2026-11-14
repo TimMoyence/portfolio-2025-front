@@ -70,8 +70,10 @@ import type { CorrectionAffichee } from './corrections-affichees';
     }
 
     .cours-correction__ligne dt {
+      min-inline-size: 0;
       font-size: 1rem;
       line-height: 1.3;
+      overflow-wrap: anywhere;
     }
 
     .cours-correction__ligne dd {

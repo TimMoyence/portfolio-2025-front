@@ -64,7 +64,6 @@ import {
   createFormationsPortStub,
 } from '../../../../testing/factories/formations/formations.factory';
 import { buildEnvoiReponse } from '../../../../testing/factories/formations/queue.factory';
-import { buildVisualQuizSlide } from '../../../../testing/factories/formations/visual-slide.factory';
 import type { FluxDouble } from '../../../../testing/factories/formations/sync.factory';
 import { createFluxDouble } from '../../../../testing/factories/formations/sync.factory';
 import {
@@ -272,16 +271,6 @@ describe('CoursEtudiantComponent', () => {
         "[data-testid='etudiant-verdict']",
       ),
     ];
-  }
-
-  function libellesDesVerdicts(fixture: Fixture): (string | null)[][] {
-    return verdictsAffiches(fixture).map((verdict) => [
-      verdict.getAttribute('data-question'),
-      verdict
-        .querySelector("[data-testid='etudiant-verdict-libelle']")
-        ?.textContent?.replace(/\s+/g, ' ')
-        .trim() ?? null,
-    ]);
   }
 
   function sujetEnAttente(): { arrivee: Subject<CoursContent>; lectureDemandee: Promise<void> } {
@@ -846,21 +835,15 @@ describe('CoursEtudiantComponent', () => {
     expect(refus?.textContent).toContain('dès que la connexion sera rétablie');
   });
 
-  const ecranAuRegime = (id: string, regime: 'focus' | 'examen') =>
+  const ecranAuRegime = (id: string, regime: 'ouvert' | 'focus') =>
     buildEcranQuestionnaire({ id, donnees: { ...buildEcranQuestionnaire().donnees, regime } });
-
-  const copieBloquee = (): boolean => {
-    const copie = new Event('copy', { cancelable: true });
-    document.dispatchEvent(copie);
-    return copie.defaultPrevented;
-  };
 
   it('applique le regime de verrou propre a chaque ecran', async () => {
     sujet = {
       ...sujet,
       ecrans: [
         ecranAuRegime('ecran-focus', 'focus'),
-        ecranAuRegime('ecran-examen', 'examen'),
+        ecranAuRegime('ecran-ouvert', 'ouvert'),
         ...sujet.ecrans.slice(2),
       ],
     };
@@ -872,44 +855,10 @@ describe('CoursEtudiantComponent', () => {
     expect(port.signalerIncidents.calls.mostRecent().args[2][0].type).toBe('window_blur');
 
     diffuserSurLaVue(double, fixture, { ecranCourant: 1 });
-
-    expect(copieBloquee()).toBeTrue();
-  });
-
-  const rattacherSurUnEcranDExamen = () => {
-    sujet = {
-      ...sujet,
-      ecrans: [ecranAuRegime('ecran-examen', 'examen'), ...sujet.ecrans.slice(1)],
-    };
-    port.lireSujet.and.returnValue(of(sujet));
-    return rattacherALaSeanceEnCours();
-  };
-
-  it('remonte le contexte de l incident au contrat, pas seulement son type', async () => {
-    const fixture = await rattacherSurUnEcranDExamen();
-
-    document.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 's', ctrlKey: true, cancelable: true }),
-    );
+    window.dispatchEvent(new Event('blur'));
     await repondre(fixture, REPONSE_NUMERIQUE);
 
-    expect(port.signalerIncidents.calls.mostRecent().args[2]).toEqual([
-      { type: 'blocked_shortcut', contexte: { touche: 's' }, horodatage: jasmine.any(String) },
-      {
-        type: 'fast_answer',
-        contexte: { dureeMs: jasmine.any(Number) },
-        horodatage: jasmine.any(String),
-      },
-    ]);
-  });
-
-  it('rend le copier a la page quand le poste quitte un ecran d examen', async () => {
-    const fixture = await rattacherSurUnEcranDExamen();
-    const pendantLaSeance = copieBloquee();
-
-    fixture.destroy();
-
-    expect([pendantLaSeance, copieBloquee()]).toEqual([true, false]);
+    expect(port.signalerIncidents).toHaveBeenCalledTimes(1);
   });
 
   const verrouiller = <E extends object>(ecran: E) => ({
@@ -918,14 +867,6 @@ describe('CoursEtudiantComponent', () => {
     interactif: false,
     donnees: {},
   });
-
-  function servirUnQcmVisuelEnPremier(): void {
-    sujet = {
-      ...sujet,
-      ecrans: [buildVisualQuizSlide({ id: 'ecran-1' }), ...sujet.ecrans.slice(1)],
-    };
-    port.lireSujet.and.returnValue(of(sujet));
-  }
 
   const sujetAuSecondEcranVerrouille = () => ({
     ...sujet,
@@ -1490,20 +1431,6 @@ describe('CoursEtudiantComponent', () => {
     expect(retoursDe(fixture, sujet.ecrans[1].id)).toEqual([]);
   });
 
-  it('affiche le verdict serveur du QCM d un ecran servi en presentation v2', async () => {
-    servirUnQcmVisuelEnPremier();
-    port.repondre.and.returnValue(of(CONFUSION));
-    const fixture = await rattacherALaSeanceEnCours();
-
-    await repondre(fixture, { questionId: 'b2-s03-prediction', valeur: 'o2', dureeMs: 800 });
-
-    expect(libellesDesVerdicts(fixture)).toEqual([['b2-s03-prediction', 'Question 1 : Manqué']]);
-    expect(lire(fixture, 'etudiant-confusion')?.textContent).toContain('composés');
-    expect(
-      lireLesLibelles(fixture.nativeElement, ['etudiant-verdict', 'etudiant-confusion']),
-    ).toEqual({ colles: [], vuesAbsentes: [] });
-  });
-
   it('envoie au retour du reseau la reponse mise en file hors ligne, une seule fois', async () => {
     const fixture = await repondreHorsLigne();
 
@@ -1668,18 +1595,6 @@ describe('CoursEtudiantComponent', () => {
         attendreLaFileVideeEnLigne(fixture);
       });
     }
-
-    it('explique en bandeau le refus d un QCM d ecran visuel, qui n a pas de brique', async () => {
-      servirUnQcmVisuelEnPremier();
-      refuser('refusee', 400);
-      const fixture = await rattacherALaSeanceEnCours();
-
-      await repondre(fixture, { questionId: 'b2-s03-prediction', valeur: 'o2', dureeMs: 800 });
-      const alerte = lire(fixture, 'etudiant-reponse-refusee');
-
-      expect(alerte?.getAttribute('role')).toBe('alert');
-      expect(alerte?.getAttribute('data-motif')).toBe('refusee');
-    });
 
     it('efface le refus pose sur l ecran des que la brique emet de nouveau', async () => {
       port.repondre.and.returnValues(

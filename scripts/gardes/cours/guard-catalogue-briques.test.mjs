@@ -26,7 +26,6 @@ const PERIMETRE_V1 = [
   'fp-pulse',
   'fp-recall',
   'fp-spaced',
-  'fp-quote',
   'fp-story',
   'fp-pro',
 ];
@@ -196,6 +195,12 @@ test('chaque brique du perimetre V1 de la specification est inscrite', () => {
     [],
     `prevues par la specification et jamais inscrites : ${jamaisEcrites.join(', ')}. ${POURQUOI_SPEC}`,
   );
+});
+
+test('CTR-03 · la table n inscrit aucune brique hors du perimetre que le contrat sert', () => {
+  const horsPerimetre = nomsEnregistres().filter((nom) => !PERIMETRE_V1.includes(nom));
+
+  assert.deepEqual(horsPerimetre, [], `inscrites hors du perimetre : ${horsPerimetre.join(', ')}`);
 });
 
 test('chaque brique inscrite dispose d une feuille de styles non vide', () => {

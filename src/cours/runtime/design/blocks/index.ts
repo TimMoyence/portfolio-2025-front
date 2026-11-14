@@ -2,7 +2,7 @@ import { cardsort } from './questions/cardsort';
 import { challenge } from './activites/challenge';
 import { concept4 } from './contenus/concept4';
 import { escape } from './activites/escape';
-import { pro, quote, story } from './contenus/narration';
+import { pro, story } from './contenus/narration';
 import { numeric } from './questions/numeric';
 import { plot } from './contenus/plot';
 import { pulse } from './questions/pulse';
@@ -22,7 +22,6 @@ const FEUILLES: Readonly<Record<string, string>> = {
   plot,
   pro,
   pulse,
-  quote,
   recall,
   sheet,
   spaced,

@@ -91,7 +91,7 @@ export interface DonneesParBrique {
     readonly intitule: string;
     readonly consigne?: string;
     readonly regime: RegimeVerrou;
-    readonly ordre: 'fixe' | 'melange';
+    readonly ordre: 'fixe';
     readonly questions: readonly QuestionDeQuestionnaire[];
   };
   readonly 'ecran-verrouille': Readonly<Record<string, never>>;

@@ -1,9 +1,8 @@
+import type { ChampExtraitDuCas } from '../../../../../../contrat';
 import type { CadrageDuRenvoi, EcranContent } from '../../../../../cours/content/types';
 import { estObjet, objet } from '../../../../../cours/runtime/core/texte/valeurs';
 
 type Objet = Readonly<Record<string, unknown>>;
-
-const CHAMPS_DU_CAS = ['metier', 'situation', 'geste'] as const;
 
 function sans(source: Objet, cles: readonly string[]): Objet {
   return Object.fromEntries(Object.entries(source).filter(([cle]) => !cles.includes(cle)));
@@ -30,21 +29,20 @@ function lignesDuTableau(donnees: Objet, lignes: readonly number[]): Objet {
   };
 }
 
-function champsDuCas(donnees: Objet, champs: readonly string[]): Objet {
+function champsDuCas(donnees: Objet, champs: readonly ChampExtraitDuCas[]): Objet {
   const cas = donnees['cas'];
   if (!estObjet(cas)) {
     return donnees;
   }
   const reste = sans(cas, ['questionsLibres']);
-  const gardes = new Set(champs);
   return {
     ...donnees,
     cas: {
       ...reste,
-      ...Object.fromEntries(
-        CHAMPS_DU_CAS.filter((champ) => !gardes.has(champ)).map((champ) => [champ, '']),
-      ),
-      consequence: gardes.has('consequence') ? reste['consequence'] : null,
+      metier: '',
+      situation: champs.includes('situation') ? reste['situation'] : '',
+      geste: '',
+      consequence: null,
     },
   };
 }
