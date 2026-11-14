@@ -134,7 +134,10 @@ function miseEnPage(page: Page): Promise<MiseEnPageImprimee> {
   }));
 }
 
+const MESURES_EGALES_DE_SUITE = 3;
+
 async function miseEnPageStable(page: Page): Promise<MiseEnPageImprimee> {
+  await page.waitForLoadState('networkidle');
   await page.evaluate(() => document.fonts.ready);
   await expect
     .poll(() =>
@@ -146,17 +149,19 @@ async function miseEnPageStable(page: Page): Promise<MiseEnPageImprimee> {
     )
     .toBe(true);
   let precedente = await miseEnPage(page);
+  let egalesDeSuite = 0;
   await expect
     .poll(
       async () => {
         const courante = await miseEnPage(page);
-        const stable = JSON.stringify(courante) === JSON.stringify(precedente);
+        egalesDeSuite =
+          JSON.stringify(courante) === JSON.stringify(precedente) ? egalesDeSuite + 1 : 0;
         precedente = courante;
-        return stable;
+        return egalesDeSuite;
       },
       { intervals: [500] },
     )
-    .toBe(true);
+    .toBe(MESURES_EGALES_DE_SUITE);
   return precedente;
 }
 
