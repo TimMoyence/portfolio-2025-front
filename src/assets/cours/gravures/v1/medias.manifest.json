@@ -128,6 +128,62 @@
           "sha256": "dd44063f62164a76da1d9e924517d799e654de58ac9cd98037d7676cec9bdfe1"
         }
       ]
+    },
+    {
+      "id": "B2-08-M9",
+      "ecran": "A1-01",
+      "licence": "domaine public",
+      "attribution": "Antoine-Augustin Cournot, Recherches sur les principes mathématiques de la théorie des richesses, 1838 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Recherches_sur_les_principes_math%C3%A9matiques_de_la_th%C3%A9orie_des_richesses,_1838.jpg",
+      "fichiers": [
+        {
+          "fichier": "cournot-richesses-1838.jpg",
+          "octets": 171470,
+          "sha256": "7103561835802e2812015ad610159c5ce36178d52ccbee3e6863814982bab903"
+        }
+      ]
+    },
+    {
+      "id": "B2-09-M9",
+      "ecran": "A1-01",
+      "licence": "domaine public",
+      "attribution": "Jacques Bernoulli, Ars Conjectandi, 1713 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Ars_Conjectandi_of_Jakob_Bernoulli,_1713_(1160x1130).png",
+      "fichiers": [
+        {
+          "fichier": "bernoulli-ars-conjectandi-1713.jpg",
+          "octets": 237342,
+          "sha256": "e2d0afed759c818f44a87bf60989d1d736bc538b75ac4d9fc0d8c9dcb4baa4fc"
+        }
+      ]
+    },
+    {
+      "id": "B3-03-M1",
+      "ecran": "A1-02",
+      "licence": "domaine public",
+      "attribution": "Scientific American, machine à écrire Sholes et Glidden, 1872 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Sholesglidden4.png",
+      "fichiers": [
+        {
+          "fichier": "machine-a-ecrire-1872.jpg",
+          "octets": 435887,
+          "sha256": "d28f82d2e3594968ff79f0e79b8e8ab3215dc9897a90c88052cdef065e628aba"
+        }
+      ]
+    },
+    {
+      "id": "B3-04-M1",
+      "ecran": "A1-02",
+      "licence": "domaine public",
+      "attribution": "Henry Monnier, « Le facteur », gravure sur bois, 1860 · Wikimedia Commons (domaine public)",
+      "origine": "https://commons.wikimedia.org/wiki/File:Le_facteur,_Paris_Musées_20230525203912.jpg",
+      "fichiers": [
+        {
+          "fichier": "facteur-1860.jpg",
+          "octets": 235943,
+          "sha256": "296827d7c0e8e9ee2f44be60549f004b7beaf5269186d9376951ac92053f7984"
+        }
+      ]
     }
   ]
 }

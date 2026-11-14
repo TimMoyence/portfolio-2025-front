@@ -545,7 +545,9 @@ export const zArticleListResponseDto = z.object({
 
 export const zPieceJointePubliqueResponseDto = z.object({
   libelle: z.string(),
-  fichier: z.string(),
+  fichier: z
+    .string()
+    .regex(/^\/assets\/cours\/[a-z0-9-]+\/([A-Za-z0-9_-]+)\.[0-9a-f]{8}\.(xlsx|csv|pdf|txt)$/),
 });
 
 export const zPieceJointeReserveeResponseDto = z.object({
@@ -556,7 +558,7 @@ export const zPieceJointeReserveeResponseDto = z.object({
 /**
  * Champs du cas repris de l ecran renvoye
  */
-export const zChampExtraitDuCas = z.enum(['metier', 'situation', 'geste', 'consequence']);
+export const zChampExtraitDuCas = z.enum(['situation']);
 
 export const zExtraitDuRenvoiResponseDto = z.object({
   lignes: z.array(z.number()).optional(),
@@ -1868,487 +1870,524 @@ export const zMetadonneesBrique = z.object({
   concepts: z.array(z.string()),
   misconceptionsCiblees: z.array(z.string()),
   dureeMinutes: z.number(),
-  modalite: z.enum(['solo', 'binome', 'groupe', 'classe']),
-  regime: z.enum(['ouvert', 'focus', 'examen']),
+  modalite: z.enum(['solo', 'binome']),
+  regime: z.enum(['ouvert', 'focus']),
 });
 
 export const zPresentationServie = z.union([
   z.object({
-    version: z.literal(1),
+    version: z.literal(2),
     screenId: z.string().min(1),
-    renderer: z.string().min(1),
-    title: z.string().min(1).optional(),
-    subtitle: z.string().min(1).optional(),
+    renderer: z.enum(['hero']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      bgImage: z
+        .union([
+          z
+            .string()
+            .max(2048)
+            .regex(/^https:\/\/\S+$/),
+          z
+            .string()
+            .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+        ])
+        .optional(),
+      bgImageAlt: z.string().min(1).optional(),
+    }),
   }),
-  z.union([
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['hero']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        bgImage: z
-          .union([
-            z
-              .string()
-              .max(2048)
-              .regex(/^https:\/\/\S+$/),
-            z
-              .string()
-              .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
-          ])
-          .optional(),
-        bgImageAlt: z.string().min(1).optional(),
-      }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['method-path']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      steps: z
+        .array(
+          z.object({
+            id: z.string().min(1),
+            title: z.string().min(1),
+            question: z.string().min(1),
+            proof: z.string().min(1),
+            result: z.string().min(1),
+          }),
+        )
+        .min(1),
     }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['method-path']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        steps: z
-          .array(
-            z.object({
-              id: z.string().min(1),
-              title: z.string().min(1),
-              question: z.string().min(1),
-              proof: z.string().min(1),
-              result: z.string().min(1),
-            }),
-          )
-          .min(1),
-      }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['chart']),
+    props: z.object({
+      title: z.string().min(1),
+      caption: z.string().min(1).optional(),
+      context: z.string().min(1).optional(),
+      labels: z.array(z.string().min(1)).min(1),
+      series: z
+        .array(
+          z.object({
+            label: z.string().min(1),
+            values: z.array(z.number()).min(1),
+            tone: z.enum(['teal', 'gold', 'ink']).optional(),
+          }),
+        )
+        .min(1),
+      axisRanges: z.array(z.tuple([z.number(), z.number()])).optional(),
+      axisLabels: z.array(z.string().min(1)).min(1).optional(),
+      unit: z.string().min(1).optional(),
+      formula: z.string().min(1).optional(),
+      reading: z.string().min(1).optional(),
+      source: z.string().min(1).optional(),
+      kind: z.enum(['bars', 'line']).optional(),
+      description: z.string().min(1).optional(),
     }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['quiz']),
-      props: z.object({
-        questionData: z.object({
-          id: z.string().min(1),
-          type: z.enum(['quiz']),
-          question: z.string().min(1),
-          options: z.array(z.string().min(1)).min(2),
-          context: z.string().min(1).optional(),
-          competency: z.string().min(1).optional(),
-        }),
-      }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['boxplot']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      unit: z.string().min(1).optional(),
+      axisRange: z.tuple([z.number(), z.number()]),
+      series: z
+        .array(
+          z.object({
+            label: z.string().min(1),
+            min: z.number(),
+            q1: z.number(),
+            median: z.number(),
+            q3: z.number(),
+            max: z.number(),
+            mean: z.number().optional(),
+            tone: z.enum(['teal', 'gold', 'ink']).optional(),
+          }),
+        )
+        .min(1),
+      reading: z.string().min(1).optional(),
+      source: z.string().min(1).optional(),
+      description: z.string().min(1),
     }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['chart']),
-      props: z.object({
-        title: z.string().min(1),
-        caption: z.string().min(1).optional(),
-        context: z.string().min(1).optional(),
-        labels: z.array(z.string().min(1)).min(1),
-        series: z
-          .array(
-            z.object({
-              label: z.string().min(1),
-              values: z.array(z.number()).min(1),
-              tone: z.enum(['teal', 'gold', 'ink']).optional(),
-            }),
-          )
-          .min(1),
-        axisRanges: z.array(z.tuple([z.number(), z.number()])).optional(),
-        axisLabels: z.array(z.string().min(1)).min(1).optional(),
-        unit: z.string().min(1).optional(),
-        formula: z.string().min(1).optional(),
-        reading: z.string().min(1).optional(),
-        source: z.string().min(1).optional(),
-        kind: z.enum(['bars', 'line']).optional(),
-        description: z.string().min(1).optional(),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['boxplot']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        unit: z.string().min(1).optional(),
-        axisRange: z.tuple([z.number(), z.number()]),
-        series: z
-          .array(
-            z.object({
-              label: z.string().min(1),
-              min: z.number(),
-              q1: z.number(),
-              median: z.number(),
-              q3: z.number(),
-              max: z.number(),
-              mean: z.number().optional(),
-              tone: z.enum(['teal', 'gold', 'ink']).optional(),
-            }),
-          )
-          .min(1),
-        reading: z.string().min(1).optional(),
-        source: z.string().min(1).optional(),
-        description: z.string().min(1),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['scatter']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        xLabel: z.string().min(1),
-        yLabel: z.string().min(1),
-        xRange: z.tuple([z.number(), z.number()]),
-        yRange: z.tuple([z.number(), z.number()]),
-        points: z
-          .array(
-            z.object({
-              x: z.number(),
-              y: z.number(),
-              label: z.string().min(1).optional(),
-            }),
-          )
-          .min(2),
-        meanPoint: z
-          .object({
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['scatter']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      xLabel: z.string().min(1),
+      yLabel: z.string().min(1),
+      xRange: z.tuple([z.number(), z.number()]),
+      yRange: z.tuple([z.number(), z.number()]),
+      points: z
+        .array(
+          z.object({
             x: z.number(),
             y: z.number(),
-          })
-          .optional(),
-        line: z
-          .object({
-            slope: z.number(),
-            intercept: z.number(),
             label: z.string().min(1).optional(),
-          })
-          .optional(),
-        reading: z.string().min(1).optional(),
-        source: z.string().min(1).optional(),
-        description: z.string().min(1),
+          }),
+        )
+        .min(2),
+      meanPoint: z
+        .object({
+          x: z.number(),
+          y: z.number(),
+        })
+        .optional(),
+      line: z
+        .object({
+          slope: z.number(),
+          intercept: z.number(),
+          label: z.string().min(1).optional(),
+        })
+        .optional(),
+      reading: z.string().min(1).optional(),
+      source: z.string().min(1).optional(),
+      description: z.string().min(1),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['arbre']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      branches: z.array(
+        z.object({
+          evenement: z.string().min(1),
+          probabilite: z.union([z.number(), z.enum(['?'])]),
+          branches: z
+            .array(
+              z.object({
+                evenement: z.string().min(1),
+                probabilite: z.union([z.number(), z.enum(['?'])]),
+                produit: z.union([z.number(), z.enum(['?'])]).optional(),
+              }),
+            )
+            .optional(),
+        }),
+      ),
+      reading: z.string().min(1).optional(),
+      description: z.string().min(1),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['lesson']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      blocks: z
+        .array(
+          z.object({
+            kind: z.enum(['definition', 'property', 'method', 'example', 'exam']),
+            title: z.string().min(1),
+            text: z.string().min(1),
+            formula: z.string().min(1).optional(),
+            steps: z.array(z.string().min(1)).min(1).optional(),
+          }),
+        )
+        .min(1)
+        .max(4),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['grid']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      items: z
+        .array(
+          z.object({
+            title: z.string().min(1),
+            description: z.string().min(1),
+            back: z.string().min(1).optional(),
+            href: z
+              .string()
+              .max(2048)
+              .regex(/^https?:\/\/\S+$/)
+              .optional(),
+            external: z.boolean().optional(),
+          }),
+        )
+        .min(1),
+      imprimable: z.boolean().optional(),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['comparison']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      note: z.string().min(1).optional(),
+      columns: z
+        .array(
+          z.object({
+            label: z.string().min(1),
+            tone: z.enum(['warning', 'info', 'success']).optional(),
+            items: z.array(z.string().min(1)).min(1),
+          }),
+        )
+        .min(1),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['stats']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      stats: z
+        .array(
+          z.object({
+            value: z.string().min(1),
+            label: z.string().min(1),
+          }),
+        )
+        .min(1),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['reflection']),
+    props: z.object({
+      promptData: z.object({
+        id: z.string().min(1),
+        type: z.enum(['reflection']),
+        question: z.string().min(1),
+        placeholder: z.string().min(1).optional(),
+        context: z.string().min(1).optional(),
+        competency: z.string().min(1).optional(),
       }),
     }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['lesson']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['table']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      note: z.string().min(1).optional(),
+      columns: z
+        .array(
+          z.object({
+            key: z.string().min(1),
+            label: z.string().min(1),
+          }),
+        )
+        .min(1),
+      rows: z.array(z.record(z.string(), z.string().min(1))).min(1),
+      sourceLink: z
+        .object({
+          href: z
+            .string()
+            .max(2048)
+            .regex(/^https?:\/\/\S+$/),
+          label: z.string().min(1),
+        })
+        .optional(),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['image-left']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      image: z.union([
+        z
+          .string()
+          .max(2048)
+          .regex(/^https:\/\/\S+$/),
+        z
+          .string()
+          .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+      ]),
+      imageAlt: z.string().min(1),
+      paragraphs: z.array(z.string().min(1)).min(1),
+      items: z.array(z.string().min(1)).min(1).optional(),
+      sourceLink: z
+        .object({
+          href: z
+            .string()
+            .max(2048)
+            .regex(/^https?:\/\/\S+$/),
+          label: z.string().min(1),
+        })
+        .optional(),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['image-right']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      image: z.union([
+        z
+          .string()
+          .max(2048)
+          .regex(/^https:\/\/\S+$/),
+        z
+          .string()
+          .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+      ]),
+      imageAlt: z.string().min(1),
+      paragraphs: z.array(z.string().min(1)).min(1),
+      items: z.array(z.string().min(1)).min(1).optional(),
+      sourceLink: z
+        .object({
+          href: z
+            .string()
+            .max(2048)
+            .regex(/^https?:\/\/\S+$/),
+          label: z.string().min(1),
+        })
+        .optional(),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['page']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      page: z.object({
+        orientation: z.enum(['portrait', 'landscape']),
+        marks: z.boolean().optional(),
+        marginMarker: z.int().gte(1).lte(4).optional(),
+        header: z
+          .union([
+            z.object({
+              style: z.enum([
+                'title',
+                'subtitle',
+                'heading1',
+                'heading2',
+                'normal',
+                'list',
+                'empty',
+              ]),
+              align: z.enum(['center', 'right', 'justify']).optional(),
+              indent: z.boolean().optional(),
+              runs: z.array(
+                z.object({
+                  text: z.string().min(1),
+                  bold: z.boolean().optional(),
+                  italic: z.boolean().optional(),
+                  underline: z.boolean().optional(),
+                  tone: z.enum(['accent', 'alert', 'muted']).optional(),
+                  field: z.boolean().optional(),
+                }),
+              ),
+              marker: z.int().gte(1).lte(4).optional(),
+            }),
+            z.object({
+              style: z.enum(['table']),
+              rows: z.array(z.array(z.string().min(1)).min(1)).min(2),
+              marker: z.int().gte(1).lte(4).optional(),
+            }),
+          ])
+          .optional(),
+        footer: z
+          .union([
+            z.object({
+              style: z.enum([
+                'title',
+                'subtitle',
+                'heading1',
+                'heading2',
+                'normal',
+                'list',
+                'empty',
+              ]),
+              align: z.enum(['center', 'right', 'justify']).optional(),
+              indent: z.boolean().optional(),
+              runs: z.array(
+                z.object({
+                  text: z.string().min(1),
+                  bold: z.boolean().optional(),
+                  italic: z.boolean().optional(),
+                  underline: z.boolean().optional(),
+                  tone: z.enum(['accent', 'alert', 'muted']).optional(),
+                  field: z.boolean().optional(),
+                }),
+              ),
+              marker: z.int().gte(1).lte(4).optional(),
+            }),
+            z.object({
+              style: z.enum(['table']),
+              rows: z.array(z.array(z.string().min(1)).min(1)).min(2),
+              marker: z.int().gte(1).lte(4).optional(),
+            }),
+          ])
+          .optional(),
         blocks: z
           .array(
-            z.object({
-              kind: z.enum(['definition', 'property', 'method', 'example', 'exam']),
-              title: z.string().min(1),
-              text: z.string().min(1),
-              formula: z.string().min(1).optional(),
-              steps: z.array(z.string().min(1)).min(1).optional(),
-            }),
-          )
-          .min(1)
-          .max(4),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['grid']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        items: z
-          .array(
-            z.object({
-              title: z.string().min(1),
-              description: z.string().min(1),
-              back: z.string().min(1).optional(),
-              href: z
-                .string()
-                .max(2048)
-                .regex(/^https?:\/\/\S+$/)
-                .optional(),
-              external: z.boolean().optional(),
-            }),
-          )
-          .min(1),
-        imprimable: z.boolean().optional(),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['comparison']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        note: z.string().min(1).optional(),
-        columns: z
-          .array(
-            z.object({
-              label: z.string().min(1),
-              tone: z.enum(['danger', 'warning', 'info', 'neutral', 'success']).optional(),
-              items: z.array(z.string().min(1)).min(1),
-            }),
+            z.union([
+              z.object({
+                style: z.enum([
+                  'title',
+                  'subtitle',
+                  'heading1',
+                  'heading2',
+                  'normal',
+                  'list',
+                  'empty',
+                ]),
+                align: z.enum(['center', 'right', 'justify']).optional(),
+                indent: z.boolean().optional(),
+                runs: z.array(
+                  z.object({
+                    text: z.string().min(1),
+                    bold: z.boolean().optional(),
+                    italic: z.boolean().optional(),
+                    underline: z.boolean().optional(),
+                    tone: z.enum(['accent', 'alert', 'muted']).optional(),
+                    field: z.boolean().optional(),
+                  }),
+                ),
+                marker: z.int().gte(1).lte(4).optional(),
+              }),
+              z.object({
+                style: z.enum(['table']),
+                rows: z.array(z.array(z.string().min(1)).min(1)).min(2),
+                marker: z.int().gte(1).lte(4).optional(),
+              }),
+            ]),
           )
           .min(1),
       }),
+      pageAlt: z.string().min(1),
+      paragraphs: z.array(z.string().min(1)).min(1),
+      items: z.array(z.string().min(1)).min(3).max(4),
     }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['stats']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        stats: z
-          .array(
-            z.object({
-              value: z.string().min(1),
-              label: z.string().min(1),
-            }),
-          )
-          .min(1),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['reflection']),
-      props: z.object({
-        promptData: z.object({
-          id: z.string().min(1),
-          type: z.enum(['reflection']),
-          question: z.string().min(1),
-          placeholder: z.string().min(1).optional(),
-          context: z.string().min(1).optional(),
-          competency: z.string().min(1).optional(),
-        }),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['quote']),
-      props: z.object({
-        quote: z.string().min(1),
-        author: z.string().min(1).optional(),
-        role: z.string().min(1).optional(),
-        context: z.string().min(1).optional(),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['table']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        note: z.string().min(1).optional(),
-        columns: z
-          .array(
-            z.object({
-              key: z.string().min(1),
-              label: z.string().min(1),
-            }),
-          )
-          .min(1),
-        rows: z.array(z.record(z.string(), z.string().min(1))).min(1),
-        sourceLink: z
-          .object({
-            href: z
-              .string()
-              .max(2048)
-              .regex(/^https?:\/\/\S+$/),
-            label: z.string().min(1),
-          })
-          .optional(),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['image-left']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        image: z.union([
-          z
-            .string()
-            .max(2048)
-            .regex(/^https:\/\/\S+$/),
-          z
-            .string()
-            .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
-        ]),
-        imageAlt: z.string().min(1),
-        paragraphs: z.array(z.string().min(1)).min(1),
-        items: z.array(z.string().min(1)).min(1).optional(),
-        sourceLink: z
-          .object({
-            href: z
-              .string()
-              .max(2048)
-              .regex(/^https?:\/\/\S+$/),
-            label: z.string().min(1),
-          })
-          .optional(),
-        nestedQuiz: z
-          .object({
-            id: z.string().min(1),
-            type: z.enum(['quiz']),
-            question: z.string().min(1),
-            options: z.array(z.string().min(1)).min(2),
-            context: z.string().min(1).optional(),
-            competency: z.string().min(1).optional(),
-          })
-          .optional(),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['image-right']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        image: z.union([
-          z
-            .string()
-            .max(2048)
-            .regex(/^https:\/\/\S+$/),
-          z
-            .string()
-            .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
-        ]),
-        imageAlt: z.string().min(1),
-        paragraphs: z.array(z.string().min(1)).min(1),
-        items: z.array(z.string().min(1)).min(1).optional(),
-        sourceLink: z
-          .object({
-            href: z
-              .string()
-              .max(2048)
-              .regex(/^https?:\/\/\S+$/),
-            label: z.string().min(1),
-          })
-          .optional(),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['illustration']),
-      props: z.object({
-        image: z.union([
-          z
-            .string()
-            .max(2048)
-            .regex(/^https:\/\/\S+$/),
-          z
-            .string()
-            .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
-        ]),
-        imageAlt: z.string().min(1),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['cta']),
-      props: z.object({
-        title: z.string().min(1),
-        description: z.string().min(1),
-        ctaLabel: z.string().min(1),
-        ctaHref: z.string().min(1),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['guide']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        context: z.string().min(1).optional(),
-        takeaway: z.string().min(1).optional(),
-        nextAction: z.string().min(1).optional(),
-        items: z
-          .array(
-            z.object({
-              title: z.string().min(1),
-              description: z.string().min(1),
-              detail: z.string().min(1).optional(),
-            }),
-          )
-          .min(1),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['sort-review']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        source: z.object({
-          screenId: z.string().min(1),
-          sortId: z.string().min(1),
-        }),
-        categories: z
-          .array(
-            z.object({
-              id: z.string().min(1),
-              label: z.string().min(1),
-            }),
-          )
-          .min(1),
-        cards: z
-          .array(
-            z.object({
-              id: z.string().min(1),
-              label: z.string().min(1),
-              category: z.string().min(1),
-              justification: z.string().min(1),
-            }),
-          )
-          .min(1),
-      }),
-    }),
-    z.object({
-      version: z.literal(2),
-      screenId: z.string().min(1),
-      renderer: z.enum(['answer-review']),
-      props: z.object({
-        title: z.string().min(1),
-        subtitle: z.string().min(1).optional(),
-        source: z.object({
-          screenId: z.string().min(1),
-        }),
-        explications: z
-          .array(
-            z.object({
-              reference: z.string().min(1),
-              texte: z.string().min(1),
-            }),
-          )
-          .min(1),
-      }),
-    }),
-  ]),
-]);
-
-export const zDonneesFpQuote = z.object({
-  citation: z.object({
-    id: z.string(),
-    texte: z.string(),
-    auteur: z.string().nullable(),
-    source: z.string().nullable(),
-    metadonnees: zMetadonneesBrique,
   }),
-});
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['illustration']),
+    props: z.object({
+      image: z.union([
+        z
+          .string()
+          .max(2048)
+          .regex(/^https:\/\/\S+$/),
+        z
+          .string()
+          .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
+      ]),
+      imageAlt: z.string().min(1),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
+    renderer: z.enum(['sort-review']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      source: z.object({
+        screenId: z.string().min(1),
+        sortId: z.string().min(1),
+      }),
+      categories: z
+        .array(
+          z.object({
+            id: z.string().min(1),
+            label: z.string().min(1),
+          }),
+        )
+        .min(1),
+      cards: z
+        .array(
+          z.object({
+            id: z.string().min(1),
+            label: z.string().min(1),
+            category: z.string().min(1),
+            justification: z.string().min(1),
+          }),
+        )
+        .min(1),
+    }),
+  }),
+]);
 
 export const zDonneesFpStory = z.object({
   recit: z.object({
@@ -2394,7 +2433,7 @@ export const zDonneesFpStory = z.object({
               .regex(/^\/assets\/cours\/[a-z0-9-]+\/v\d+\/[a-z0-9.-]+\.(webp|jpg|png|webm|vtt)$/),
           ])
           .optional(),
-        type: z.enum(['video/webm', 'video/mp4']),
+        type: z.enum(['video/webm']),
         titre: z.string().min(1),
         poster: z
           .union([
@@ -2431,7 +2470,7 @@ export const zDonneesFpStory = z.object({
             libelle: z.string().min(1),
           })
           .optional(),
-        preload: z.enum(['none', 'metadata']).optional(),
+        preload: z.enum(['none']).optional(),
       })
       .optional(),
     metadonnees: zMetadonneesBrique,
@@ -2854,8 +2893,8 @@ export const zDonneesFpRecall = z.object({
 export const zDonneesQuestionnaire = z.object({
   intitule: z.string(),
   consigne: z.string().optional(),
-  regime: z.enum(['ouvert', 'focus', 'examen']),
-  ordre: z.enum(['fixe', 'melange']),
+  regime: z.enum(['ouvert', 'focus']),
+  ordre: z.enum(['fixe']),
   questions: z.array(
     z.union([
       z.object({
@@ -2880,12 +2919,6 @@ export const zCoursPublicCatalogueResponseDto = z.object({
   concepts: z.array(z.string()),
   ecrans: z.array(
     z.union([
-      zEcranPublicResponseDto.and(
-        z.object({
-          type: z.enum(['fp-quote']),
-          donnees: zDonneesFpQuote,
-        }),
-      ),
       zEcranPublicResponseDto.and(
         z.object({
           type: z.enum(['fp-story']),
@@ -3004,12 +3037,6 @@ export const zDerouleResponseDto = z.object({
     z.union([
       zEcranDerouleResponseDto.and(
         z.object({
-          type: z.enum(['fp-quote']),
-          donnees: zDonneesFpQuote,
-        }),
-      ),
-      zEcranDerouleResponseDto.and(
-        z.object({
           type: z.enum(['fp-story']),
           donnees: zDonneesFpStory,
         }),
@@ -3122,12 +3149,6 @@ export const zSujetResponseDto = z.object({
   concepts: z.array(z.string()),
   ecrans: z.array(
     z.union([
-      zEcranPublicResponseDto.and(
-        z.object({
-          type: z.enum(['fp-quote']),
-          donnees: zDonneesFpQuote,
-        }),
-      ),
       zEcranPublicResponseDto.and(
         z.object({
           type: z.enum(['fp-story']),

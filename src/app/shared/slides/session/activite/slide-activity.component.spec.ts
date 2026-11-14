@@ -23,16 +23,12 @@ import {
   createBrouillonsStub,
 } from '../../../../../testing/factories/formations/cours.factory';
 import { buildDetailDeBrique } from '../../../../../testing/factories/formations/evenements-brique.factory';
-import {
-  buildResultatQuestion,
-  buildResultatsSeance,
-} from '../../../../../testing/factories/formations/formations.factory';
+import { buildResultatQuestion } from '../../../../../testing/factories/formations/formations.factory';
 import {
   TRI_CORRIGE,
   buildVerdictDuTri,
   buildVisualImageHeroSlide,
   buildVisualImageSlide,
-  buildVisualQuizSlide,
   buildVisualSlide,
   buildVisualSortCorrectionSlide,
 } from '../../../../../testing/factories/formations/visual-slide.factory';
@@ -40,7 +36,6 @@ import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
-import { choisirLOptionDuQuiz } from '../../../../../testing/dom/hote-d-interaction';
 import { ecranNomme } from '../../../../../testing/page/montage-d-instantane';
 import { poserLesEntrees } from '../../../../../testing/page/montage-page';
 import { setupTestBed } from '../../../../../testing/setup-test-bed';
@@ -127,26 +122,6 @@ function repondre(numerique: HTMLElement, saisie: string): void {
 
 describe('SlideActivityComponent : deck visuel B2', () => {
   beforeEach(() => setupTestBed({ imports: [SlideActivityComponent] }));
-
-  it('projette le quiz v2 sans interaction pour le formateur et compte les reponses recues', () => {
-    const fixture = monter({
-      slide: buildVisualQuizSlide(),
-      role: 'presentateur',
-      resultats: buildResultatsSeance({
-        participants: 12,
-        questions: [buildResultatQuestion({ questionId: 'b2-s03-prediction', total: 7 })],
-      }),
-    });
-
-    const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('button.slide-quiz__option').length).toBe(0);
-    expect(element.querySelectorAll('.slide-quiz__option').length).toBe(2);
-    expect(
-      element
-        .querySelector('[data-testid="slide-quiz-reponses-recues"]')
-        ?.textContent?.replace(/\s+/g, ' '),
-    ).toContain('7 / 12');
-  });
 
   it('L4 · transmet les retours du tri a l ecran de correction pour border les cartes mal placees', () => {
     const fixture = monter({
@@ -252,29 +227,6 @@ describe('SlideActivityComponent : deck visuel B2', () => {
         expect(debrief(revele)?.textContent).toContain(servi.attendu);
       });
     }
-  });
-
-  it('transmet le choix QCM à la séance comme événement de brique, sans bonne réponse côté client', () => {
-    const fixture = monter({
-      slide: buildVisualQuizSlide(),
-      role: 'etudiant',
-      sessionId: 'seance-1',
-    });
-    const recus = evenements(fixture);
-
-    choisirLOptionDuQuiz(fixture, 1);
-
-    expect(recus).toEqual([
-      jasmine.objectContaining({
-        kind: 'reponse',
-        screenId: 'B2-01-S03-PREDICTION',
-        questionId: 'b2-s03-prediction',
-        valeur: 'o2',
-      }),
-    ]);
-    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain(
-      'La bonne réponse est',
-    );
   });
 });
 

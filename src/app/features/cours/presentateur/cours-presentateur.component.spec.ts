@@ -48,7 +48,6 @@ import {
   INSTANTANES_DES_COURS_SERVIS,
   VOTES_JUMELES_DU_PUPITRE,
 } from '../../../../testing/fixtures/instantanes-des-cours';
-import { buildVisualQuizSlide } from '../../../../testing/factories/formations/visual-slide.factory';
 import { cibleMarque, lireMarque as lire } from '../../../../testing/dom/marqueurs-dom';
 import {
   attendreAucunFluxApresLaDestruction,
@@ -593,31 +592,6 @@ describe('CoursPresentateurComponent', () => {
         panneau.querySelector("[data-testid='presentateur-question-enonce']")?.textContent?.trim(),
       ),
     ).toEqual([vote.enonce, numerique.enonce]);
-  });
-
-  it('montre l enonce du QCM d un ecran servi en presentation v2 dans son panneau', async () => {
-    port.lireDeroule.and.returnValue(
-      of(
-        buildDerouleCours({
-          ecrans: [
-            buildEcranDeroule({
-              ...buildVisualQuizSlide(),
-              corriges: [
-                {
-                  questionId: 'b2-s03-prediction',
-                  bonneReponse: 'o2',
-                  optionId: 'o2',
-                  confusions: [],
-                },
-              ],
-            }),
-          ],
-        }),
-      ),
-    );
-    const fixture = await ouvrirLaSeance();
-
-    expect(texte(fixture, 'presentateur-question-enonce')).toBe('Quelle échelle ?');
   });
 
   it('relit notes et reponses libres a chaque resultat du flux', async () => {

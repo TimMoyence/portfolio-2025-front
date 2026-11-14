@@ -19,7 +19,7 @@ import {
   buildVoteQuestion,
   buildWorkedExemple,
 } from './cours.factory';
-import { buildVisualQuizSlide, buildVisualSlide } from './visual-slide.factory';
+import { buildVisualSlide } from './visual-slide.factory';
 
 function buildDonneesParBrique(): DonneesParBrique {
   const numerique = buildNumericQuestion();
@@ -58,5 +58,5 @@ export function buildInstantaneDeSubstitution(): readonly EcranContent[] {
       donnees: { ...donnees },
     }),
   );
-  return [...parBrique, buildVisualSlide(), buildVisualQuizSlide()];
+  return [...parBrique, buildVisualSlide()];
 }

@@ -45,6 +45,14 @@ const COURS_MESURES = INSTANTANES_DES_COURS_SERVIS.map(([code, instantane]) => (
   publics: ecransPublicsDe(instantane),
 }));
 
+const ECRAN_MONTE = [
+  '[data-testid="slide-activity-host"] > *',
+  'app-slide-activity app-slide-visual',
+  '[data-testid="slide-activity-verrouille"]',
+  '[data-testid="slide-activity-unknown"]',
+  '[data-testid="slide-activity-error"]',
+].join(', ');
+
 const COURS_A_RENVOIS = COURS_MESURES.filter(({ pupitre }) =>
   pupitre.some(({ renvoi }) => renvoi !== undefined),
 );
@@ -163,7 +171,7 @@ async function monterDans(
     );
   await attendreQue(
     fixture,
-    () => racine.querySelector('app-slide-activity *') !== null,
+    () => racine.querySelector(ECRAN_MONTE) !== null,
     `l écran ${ecran.id} en ${mode}`,
   );
   await new Promise((suite) => setTimeout(suite, 50));
@@ -690,7 +698,7 @@ describe('CoursPresentationComponent : un seul écran pour la projection et le p
     fixture.componentRef.setInput('slide', ecranDuPupitre('A2-03-ATELIER-1'));
     await attendreQue(
       fixture,
-      () => racine.querySelector('app-slide-activity *') !== null,
+      () => racine.querySelector(ECRAN_MONTE) !== null,
       'l écran sous sa surimpression',
     );
     for (let tour = 0; tour < 4; tour += 1) {
@@ -976,6 +984,7 @@ function decrireLaTenueDuCours({ code, pupitre, publics }: (typeof COURS_MESURES
           pupitre,
           (ecran, renvoi) => monterDansUnCadre(ecran, mode, 1280, 720, renvoi),
           async (ecran, monte) => {
+            await stabiliser(monte, 2);
             const toile = monte.toile();
             const horsToile = elementsPerdus(monte);
             const defileurs = toile === null ? [] : defileursInternes(toile);
@@ -1015,6 +1024,7 @@ function decrireLaTenueDuCours({ code, pupitre, publics }: (typeof COURS_MESURES
         renvoi,
       ),
     async (_ecran, monte) => {
+      await stabiliser(monte, 1);
       const echelle = echelleAffichee(monte);
       return [
         ...(monte.cadre.scrollHeight > monte.cadre.clientHeight + 1 ? ['defile'] : []),
@@ -1401,7 +1411,13 @@ const TYPES_A_TABLEAU: ReadonlySet<string> = new Set([
   'fp-spaced',
   'fp-cardsort',
 ]);
-const RENDUS_A_TABLEAU: ReadonlySet<string> = new Set(['table', 'chart', 'boxplot', 'scatter']);
+const RENDUS_A_TABLEAU: ReadonlySet<string> = new Set([
+  'table',
+  'chart',
+  'boxplot',
+  'scatter',
+  'page',
+]);
 
 function peutMontrerUnTableau(ecran: EcranContent): boolean {
   return (

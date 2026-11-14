@@ -16,7 +16,6 @@ export const BLOCS: ReadonlyArray<{
     nom: 'fp-challenge',
     charge: async () => (await import('../../blocks/activites/FpChallenge')).FpChallenge,
   },
-  { nom: 'fp-quote', charge: async () => (await import('../../blocks/contenus/FpQuote')).FpQuote },
   { nom: 'fp-story', charge: async () => (await import('../../blocks/contenus/FpStory')).FpStory },
   { nom: 'fp-pro', charge: async () => (await import('../../blocks/activites/FpPro')).FpPro },
   {

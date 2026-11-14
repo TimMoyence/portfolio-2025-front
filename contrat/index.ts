@@ -192,7 +192,6 @@ export type {
   DonneesFpPlot,
   DonneesFpPro,
   DonneesFpPulse,
-  DonneesFpQuote,
   DonneesFpRecall,
   DonneesFpSheet,
   DonneesFpSpaced,

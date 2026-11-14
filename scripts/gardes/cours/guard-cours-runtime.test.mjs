@@ -137,7 +137,8 @@ void test('AD-2 : un spec peut atteindre src/testing, un fichier de production n
 const VUE_ETUDIANT = 'src/app/features/cours/etudiant/cours-etudiant.component.ts';
 const ACTIVITE_PARTAGEE = 'src/app/shared/slides/session/activite/slide-activity.component.ts';
 const RENDU_VISUEL = 'src/app/shared/slides/visual/slide-visual.component.ts';
-const GABARIT_QUIZ = 'src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html';
+const GABARIT_REVUE =
+  'src/app/shared/slides/layouts/revue/slide-sort-review/slide-sort-review.component.html';
 
 const FUITES_AD4 = [
   { fichier: VUE_ETUDIANT, terme: 'misconception' },
@@ -150,7 +151,7 @@ const FUITES_AD4 = [
   { fichier: 'src/cours/content/b1-09.ts', terme: 'correction' },
   { fichier: ACTIVITE_PARTAGEE, terme: 'bonneReponse' },
   { fichier: RENDU_VISUEL, terme: 'bonneRéponse' },
-  { fichier: GABARIT_QUIZ, terme: 'reponseAttendue' },
+  { fichier: GABARIT_REVUE, terme: 'reponseAttendue' },
 ];
 
 for (const cas of FUITES_AD4) {
@@ -193,7 +194,7 @@ void test('AD-4 : une affectation sans litteral sort en code 1', () => {
 
 void test('AD-4 : une comparaison qui designe la bonne reponse sort en code 1', () => {
   const resultat = garder({
-    'src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.ts':
+    'src/app/shared/slides/layouts/revue/slide-sort-review/slide-sort-review.component.ts':
       'const etat = { correcte: index === 2 };\n',
   });
   assert.equal(resultat.code, 1);
@@ -266,7 +267,7 @@ void test('AD-4 : la ligne qui suit la fermeture de l interface reste inspectee'
 
 void test('AD-4 : un fichier de test garde le droit de porter le corrige', () => {
   const resultat = garder({
-    'src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.spec.ts':
+    'src/app/shared/slides/layouts/revue/slide-sort-review/slide-sort-review.component.spec.ts':
       'const q = { misconception: null };\n',
   });
   assert.equal(resultat.code, 0);
@@ -314,7 +315,7 @@ void test('AD-4 : le reste de src/app n est pas dans le perimetre de la surface 
 });
 
 void test('AD-4 : le rendu etudiant partage est dans la surface cours', () => {
-  for (const fichier of [ACTIVITE_PARTAGEE, RENDU_VISUEL, GABARIT_QUIZ]) {
+  for (const fichier of [ACTIVITE_PARTAGEE, RENDU_VISUEL, GABARIT_REVUE]) {
     assert.equal(estSurfaceCours(fichier), true, `${fichier} echappe a la garde AD-4`);
   }
 });

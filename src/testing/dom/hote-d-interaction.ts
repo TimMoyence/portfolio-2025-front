@@ -21,18 +21,6 @@ export function configurerLHoteDInteraction(
   return port;
 }
 
-export function choisirLOptionDuQuiz<T>(
-  fixture: ComponentFixture<T>,
-  index: number,
-): ComponentFixture<T> {
-  const options = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>(
-    '.slide-quiz__option',
-  );
-  options[index].click();
-  fixture.detectChanges();
-  return fixture;
-}
-
 export function garderLaReflexion(fixture: ComponentFixture<unknown>, texte: string): void {
   const racine = fixture.nativeElement as HTMLElement;
   const zone = racine.querySelector('textarea') as HTMLTextAreaElement;

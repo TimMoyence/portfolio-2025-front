@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import type {
   DerouleDuFil,
@@ -9,6 +8,7 @@ import {
   zAuthResponseDto as sessionServie,
   zUserResponseDto as utilisateurServi,
 } from '../../contrat/zod.gen';
+import { FILS_DES_COURS_SERVIS } from '../../src/testing/fixtures/fils-des-cours';
 import { libellesColles } from '../../src/testing/texte/libelles-colles';
 import { valeursSurUneForme } from '../../src/testing/rendu/valeurs-sur-les-formes';
 import { intercepterApi, servirJson, servirSansContenu, SESSION_FORMATEUR } from '../fixtures';
@@ -21,22 +21,11 @@ import {
   lesPlusHautes,
 } from './impression-a4';
 
-const COURS = [
-  'b1-01',
-  'b1-02',
-  'b1-03',
-  'b2-01',
-  'b2-02',
-  'b2-03',
-  'b2-04',
-  'b2-05',
-  'b2-06',
-  'b2-07',
-  'b3-01',
-  'b3-02',
-] as const;
+const INSTANTANES = new Map(
+  FILS_DES_COURS_SERVIS.map(([code, fil]) => [code.toLowerCase(), fil as InstantaneDuCours]),
+);
 
-type Cours = (typeof COURS)[number];
+const COURS = [...INSTANTANES.keys()];
 
 type Vue = 'sujet' | 'corrige';
 
@@ -79,10 +68,12 @@ interface LivretImprime {
   readonly elements: readonly ElementImprime[];
 }
 
-function instantaneDe(cours: Cours): InstantaneDuCours {
-  return JSON.parse(
-    readFileSync(`src/testing/fixtures/instantanes/json/${cours}.instantane.json`, 'utf8'),
-  ) as InstantaneDuCours;
+function instantaneDe(cours: string): InstantaneDuCours {
+  const instantane = INSTANTANES.get(cours);
+  if (instantane === undefined) {
+    throw new Error(`${cours} n est pas un cours servi`);
+  }
+  return instantane;
 }
 
 function preuvesEtResultatsDesParcours(valeur: unknown): readonly string[] {
@@ -99,7 +90,7 @@ function preuvesEtResultatsDesParcours(valeur: unknown): readonly string[] {
   return Object.values(objet).flatMap(preuvesEtResultatsDesParcours);
 }
 
-async function servirLeLivret(page: Page, cours: Cours): Promise<string> {
+async function servirLeLivret(page: Page, cours: string): Promise<string> {
   const { sujet, deroule } = instantaneDe(cours);
   await intercepterApi(page, async (route, chemin) => {
     if (chemin.endsWith('/auth/refresh')) {
@@ -129,7 +120,7 @@ async function imprimerLeLivret(
   await page.emulateMedia({ media: 'print' });
 }
 
-async function imprimerEnFenetreLarge(page: Page, cours: Cours, vue: Vue): Promise<void> {
+async function imprimerEnFenetreLarge(page: Page, cours: string, vue: Vue): Promise<void> {
   const slug = await servirLeLivret(page, cours);
   await imprimerLeLivret(page, slug, vue, FENETRE_LARGE);
 }

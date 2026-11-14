@@ -54,6 +54,8 @@
           @if (place.point.label) {
             <span
               class="slide-scatter__point-label"
+              [class.slide-scatter__point-label--dessous]="etiquettesRetournees().has($index)"
+              [class.slide-scatter__point-label--hors-place]="etiquettesHorsPlace().has($index)"
               [attr.data-rang]="$index"
               [style.--recul]="(reculsDesEtiquettes().get($index) ?? 0) + 'px'"
               >{{ place.point.label }}</span
@@ -75,6 +77,7 @@
       @for (graduation of graduationsX(); track $index) {
         <span
           class="slide-scatter__x-tick"
+          [class.slide-scatter__x-tick--masquee]="$index % pasDesGraduationsX() !== 0"
           data-testid="slide-scatter-graduation-x"
           [style.left.%]="graduation.position"
           >{{ graduation.libelle }}</span

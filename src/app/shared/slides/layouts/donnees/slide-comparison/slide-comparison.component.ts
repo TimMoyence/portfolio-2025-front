@@ -3,7 +3,7 @@ import { SlideEnTeteComponent } from '../../texte/slide-en-tete/slide-en-tete.co
 
 const COLONNES_AVANT_RESSERREMENT = 3;
 
-type ComparisonTone = 'danger' | 'success' | 'info' | 'warning' | 'neutral';
+type ComparisonTone = 'danger' | 'success' | 'info' | 'warning';
 
 export interface ComparisonColumn {
   label: string;

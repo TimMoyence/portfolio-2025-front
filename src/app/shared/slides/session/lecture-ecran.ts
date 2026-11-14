@@ -19,12 +19,7 @@ import {
   saisiesDuPlan,
 } from '../../../../cours/runtime/blocks/activites/FpTableBuild';
 import type { Donnees } from '../visual/presentation-v2';
-import {
-  aUnePresentation,
-  presentationDe,
-  quizImbrique,
-  quizPrincipal,
-} from '../visual/presentation-v2';
+import { presentationDe } from '../visual/presentation-v2';
 
 export interface Montage {
   readonly brique: string;
@@ -44,7 +39,6 @@ export interface EnteteDeQuestionnaire {
 const RESOLU_AILLEURS = 'resoluAilleurs';
 
 export const PROPRIETES_PAR_BRIQUE: Readonly<Record<string, readonly string[]>> = {
-  'fp-quote': ['citation'],
   'fp-story': ['recit'],
   'fp-pro': ['cas'],
   'fp-worked': ['exemple', 'etayage', 'pilote'],
@@ -169,23 +163,11 @@ function questionsDuMontage(montage: Montage): readonly QuestionDeLEcran[] {
 }
 
 export function questionsDeLEcran(ecran: EcranContent): readonly QuestionDeLEcran[] {
-  if (aUnePresentation(ecran)) {
-    const presentation = presentationDe(ecran);
-    return [
-      ...questionPortee(quizPrincipal(presentation), 'question'),
-      ...questionPortee(quizImbrique(presentation), 'question'),
-    ];
-  }
   return (planDeMontage(ecran) ?? []).flatMap(questionsDuMontage);
 }
 
 export function titreDeLEcran(ecran: EcranContent): string | null {
-  const presentation = presentationDe(ecran);
-  const candidats = [
-    ecran.titre,
-    presentation?.props['title'],
-    quizPrincipal(presentation)?.['question'],
-  ];
+  const candidats = [ecran.titre, presentationDe(ecran)?.props['title']];
   return candidats.find(estChaineNonVide) ?? null;
 }
 

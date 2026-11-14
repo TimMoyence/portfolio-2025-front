@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import seoMetadata from '../../../assets/seo/seo-metadata.json';
+import { dureeDuCoursEnSeance } from '../../core/config/cours-en-seance';
 import type { SeoMetadataFile } from '../../core/seo/seo-metadata.model';
 import { FormationsListComponent } from './formations-list.component';
 import { FORMATION_BENEFITS, FORMATIONS } from './formations-list.data';
@@ -21,17 +22,6 @@ const enIso8601 = (minutes: number): string => {
 
 const arrondiACinqMinutes = (minutes: number): number => Math.round(minutes / 5) * 5;
 
-const seanceAnnoncee = (
-  description: string,
-): { readonly minutes: number; readonly pause: number } | null => {
-  const trouve = /séance accompagnée de (\d+) h (\d+)(?:, pause de (\d+) min comprise)?/.exec(
-    description,
-  );
-  return trouve === null
-    ? null
-    : { minutes: Number(trouve[1]) * 60 + Number(trouve[2]), pause: Number(trouve.at(3) ?? 0) };
-};
-
 const BADGE_BTS = 'BTS CG · Cours interactif';
 const BADGE_BACHELOR = 'Bachelor 3 · Cours interactif';
 
@@ -50,8 +40,10 @@ describe('FormationsListComponent', () => {
   });
 
   it('devrait exposer la liste des formations depuis les donnees statiques', () => {
+    const enSeance = component['formations'].filter(({ variant }) => variant === 'live');
     expect(component['formations']).toBe(FORMATIONS);
-    expect(component['formations'].length).toBe(16);
+    expect(component['formations'].length - enSeance.length).toBe(4);
+    expect(enSeance.length).toBe(COURS_EN_SEANCE.length);
   });
 
   it('devrait composer les sections Asili (hero, grille, format, bande CTA)', () => {
@@ -180,19 +172,11 @@ describe('FormationsListComponent', () => {
         expect(Number(heures) * 60 + Number(minutes)).toBe(
           arrondiACinqMinutes(instantane.sujet.duree),
         );
-      });
-
-      it('L1 · ne chiffre sa séance, s il la chiffre, qu à la durée du cours servi plus sa pause', () => {
-        const seance = seanceAnnoncee(carte()?.description ?? '');
-        const cours = arrondiACinqMinutes(instantane.sujet.duree);
-
-        expect(seance === null ? cours : seance.minutes - seance.pause).toBe(cours);
+        expect(annonce).toBe(dureeDuCoursEnSeance(instantane.sujet.id));
       });
 
       it('L1 · annonce aux moteurs, en chaque langue, la durée que la carte annonce', () => {
-        const annoncee =
-          seanceAnnoncee(carte()?.description ?? '')?.minutes ??
-          arrondiACinqMinutes(instantane.sujet.duree);
+        const annoncee = arrondiACinqMinutes(instantane.sujet.duree);
         const locales = SEO.pages.find((entree) => entree.path === lien)?.locales ?? {};
 
         expect(Object.keys(locales)).toEqual(SEO.site.locales);

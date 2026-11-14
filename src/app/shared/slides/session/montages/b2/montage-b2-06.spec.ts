@@ -1,0 +1,53 @@
+import { INSTANTANE_B2_06 } from '../../../../../../testing/fixtures/instantanes/b2/instantane-b2-06';
+import {
+  decrireLeMontageDeLInstantane,
+  texteServiAuPosteEtudiant,
+} from '../../../../../../testing/page/montage-d-instantane';
+
+decrireLeMontageDeLInstantane('B2-06', INSTANTANE_B2_06, {
+  ecrans: 37,
+  publicsAuCatalogue: [
+    'A1-02-ACCROCHE',
+    'A1-04-ACQUIS',
+    'A1-05-DOSSIER',
+    'A1-07-ILLUSTRATION-PUISSANCES',
+    'A1-07-COURS-EXPONENTIELLE',
+    'A1-08-ILLUSTRATION-MODELE',
+    'A1-08-COURS-MODELE-EXP',
+    'A2-02-ILLUSTRATION-RECIPROQUE',
+    'A2-02-ILLUSTRATION-PROPRIETES',
+    'A2-02-COURS-LOGARITHME',
+    'A2-03-ILLUSTRATION-SEUIL',
+    'A2-03-ILLUSTRATION-SENS',
+    'A2-03-COURS-SEUIL',
+    'A3-01-GRAPHIQUE',
+    'A3-03-ILLUSTRATION-MODELES',
+    'A3-03-COURS-MODELE',
+    'A3-04-ILLUSTRATION-AJUSTEMENT',
+    'A3-04-COURS-AJUSTEMENT',
+    'A4-05-FICHE-MEMO',
+  ],
+  textesAuPupitre: [
+    { ecran: 'B2-06-A1-04-ACQUIS', textes: ['B2-02', 'B2-04', 'B2-05'] },
+    { ecran: 'B2-06-A1-05-DOSSIER', textes: ['400e^(0,06x)', 'Données fictives'] },
+    { ecran: 'B2-06-A1-07-COURS-EXPONENTIELLE', textes: ['eˣ'] },
+    { ecran: 'B2-06-A2-03-COURS-SEUIL', textes: ['ln s ÷ ln q'] },
+    { ecran: 'B2-06-A3-01-GRAPHIQUE', textes: ['Demande relevée'] },
+  ],
+  saisiesDuPosteEtudiant: [
+    {
+      ecran: 'B2-06-A3-06-TABLEAU-LOGARITHMES',
+      textes: [],
+      selecteur: '[data-testid="cellule"][data-role="saisie"]',
+    },
+  ],
+  specifiques: () => {
+    it('sert au poste étudiant le rappel qui nomme le B2-02, le B2-04 et le B2-05', () => {
+      const rappel = texteServiAuPosteEtudiant(INSTANTANE_B2_06, 'B2-06-A1-04-ACQUIS');
+
+      for (const cours of ['B2-02 · Ajustement', 'B2-04 · Suites', 'B2-05 · Placer']) {
+        expect(rappel).toContain(cours);
+      }
+    });
+  },
+});

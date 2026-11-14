@@ -1,8 +1,4 @@
-import type {
-  DecomptesParCle,
-  EtatParticipant,
-  ResultatsSeance,
-} from '../../../../cours/content/types';
+import type { EtatParticipant } from '../../../../cours/content/types';
 import type {
   MotifRefusReponse,
   RetourBrique,
@@ -132,40 +128,6 @@ export function retirerLesRefus(existants: RetoursParEcran, screenId: string): R
     retours.filter((retour) => retour.kind !== 'refus'),
   );
   return suite;
-}
-
-function verdictsDuRetour(retour: RetourBrique): readonly (readonly [string, boolean])[] {
-  switch (retour.kind) {
-    case 'verdict-reponse':
-    case 'verdict-production':
-      return [[retour.questionId, retour.correcte]];
-    case 'tentative':
-      return [[retour.enigmeId, retour.correcte]];
-    case 'progression-enigmes':
-      return Object.entries(retour.etats).flatMap(
-        ([enigmeId, { etat }]): (readonly [string, boolean])[] =>
-          etat === 'resolue' || etat === 'epuisee' ? [[enigmeId, etat === 'resolue']] : [],
-      );
-    default:
-      return [];
-  }
-}
-
-export function verdictsDeLEcran(
-  retours: readonly RetourBrique[],
-): Readonly<Record<string, boolean>> {
-  return Object.fromEntries(retours.flatMap(verdictsDuRetour));
-}
-
-export function reussitesDeLEcran(
-  resultats: ResultatsSeance | null,
-  ecranId: string | null,
-): DecomptesParCle {
-  return Object.fromEntries(
-    (resultats?.questions ?? [])
-      .filter((question) => question.ecranId === ecranId && question.total > 0)
-      .map(({ questionId, correctes, total }) => [questionId, { justes: correctes, total }]),
-  );
 }
 
 export function questionsAuVerdictRetenu(etat: EtatParticipant): readonly string[] {

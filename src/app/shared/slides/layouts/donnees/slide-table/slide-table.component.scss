@@ -47,7 +47,7 @@
     min-width: 640px;
   }
 
-  thead {
+  ::ng-deep thead {
     background: var(--accent, #4fb3a2);
     color: white;
 
@@ -66,7 +66,7 @@
     }
   }
 
-  tbody {
+  ::ng-deep tbody {
     tr {
       transition: background 0.15s;
 
@@ -92,11 +92,11 @@
   @include slide.section-resserree;
 
   .slide-table__scroll {
-    thead th {
+    ::ng-deep thead th {
       padding: 0.4rem 0.9rem;
     }
 
-    tbody td {
+    ::ng-deep tbody td {
       padding: 0.2rem 0.9rem;
       line-height: 1.3;
     }

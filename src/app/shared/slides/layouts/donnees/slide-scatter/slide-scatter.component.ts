@@ -11,11 +11,16 @@ import {
 import {
   cadreDuTexte,
   cadreDuTrace,
+  cotesDuPoint,
   decale,
   memesReculs,
   mesurerAChaqueRendu,
+  pasQuiDegage,
   reculDansLeTrace,
   reculDe,
+  seGenent,
+  touchent,
+  type Cadre,
 } from '../garder-dans-le-trace';
 import { DonneesDeFigureComponent } from '../../../donnees-de-figure/donnees-de-figure.component';
 import { enFrancais } from '../../../../../../cours/runtime/core/texte/typographie';
@@ -48,6 +53,13 @@ interface SegmentTrace {
 }
 
 const prochainIdentifiantDeDescription = generateurDIdentifiants('slide-scatter');
+
+const TEXTES_FIXES =
+  '.slide-scatter__y-tick, .slide-scatter__y-label, .slide-scatter__x-label, .slide-scatter__mean-label';
+
+function memesRangs(un: ReadonlySet<number>, autre: ReadonlySet<number>): boolean {
+  return un.size === autre.size && [...un].every((rang) => autre.has(rang));
+}
 
 function abscissesDansLeCadre(
   { slope, intercept }: SlideScatterLine,
@@ -129,6 +141,13 @@ export class SlideScatterComponent {
   protected readonly reculsDesEtiquettes = signal<ReadonlyMap<number, number>>(new Map(), {
     equal: memesReculs,
   });
+  protected readonly etiquettesRetournees = signal<ReadonlySet<number>>(new Set(), {
+    equal: memesRangs,
+  });
+  protected readonly etiquettesHorsPlace = signal<ReadonlySet<number>>(new Set(), {
+    equal: memesRangs,
+  });
+  protected readonly pasDesGraduationsX = signal(1);
 
   private readonly elementRef = inject(ElementRef);
 
@@ -146,17 +165,54 @@ export class SlideScatterComponent {
   private degagerLesEtiquettes(): void {
     const rendu: HTMLElement = this.elementRef.nativeElement;
     const trace = cadreDuTrace(rendu, '.slide-scatter__plot');
+    const echelle = trace?.echelle ?? 1;
+    const graduations = Array.from(
+      rendu.querySelectorAll<HTMLElement>('.slide-scatter__x-tick'),
+      (graduation) => [cadreDuTexte(graduation)],
+    );
+    const pas = pasQuiDegage(graduations, echelle);
+    const poses: Cadre[] = [
+      ...graduations.flatMap((cadres, rang) => (rang % pas === 0 ? cadres : [])),
+      ...Array.from(rendu.querySelectorAll<HTMLElement>(TEXTES_FIXES), cadreDuTexte),
+    ];
+    const points = Array.from(rendu.querySelectorAll<HTMLElement>('.slide-scatter__point'));
     const reculs = new Map<number, number>();
+    const retournees = new Set<number>();
+    const horsPlace = new Set<number>();
     for (const etiquette of rendu.querySelectorAll<HTMLElement>(
       '.slide-scatter__point-label[data-rang]',
     )) {
-      const brut = decale(cadreDuTexte(etiquette), -reculDe(etiquette), trace);
-      const recul = reculDansLeTrace(brut, trace);
+      const rang = Number(etiquette.dataset['rang']);
+      const sonPoint = etiquette.parentElement;
+      const cotes = cotesDuPoint(etiquette, sonPoint?.getBoundingClientRect(), false).map((cadre) =>
+        decale(cadre, -reculDe(etiquette), trace),
+      );
+      const recul = reculDansLeTrace(cotes[0], trace);
       if (recul !== 0) {
-        reculs.set(Number(etiquette.dataset['rang']), recul);
+        reculs.set(rang, recul);
       }
+      const place = cotes
+        .map((cadre) => decale(cadre, recul, trace))
+        .find(
+          (cadre) =>
+            points.every(
+              (point) =>
+                point === sonPoint || !touchent(cadre, point.getBoundingClientRect(), echelle),
+            ) && poses.every((voisin) => !seGenent(cadre, voisin, echelle)),
+        );
+      if (place === undefined) {
+        horsPlace.add(rang);
+        continue;
+      }
+      if (place.top > cotes[0].top) {
+        retournees.add(rang);
+      }
+      poses.push(place);
     }
+    this.pasDesGraduationsX.set(pas);
     this.reculsDesEtiquettes.set(reculs);
+    this.etiquettesRetournees.set(retournees);
+    this.etiquettesHorsPlace.set(horsPlace);
   }
 
   private placer(point: SlideScatterPoint): PointPlace {
