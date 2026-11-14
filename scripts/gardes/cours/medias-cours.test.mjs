@@ -3,11 +3,11 @@ import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
+import { instantanesParCours } from '../../lib/contrat/instantanes.mjs';
 import { cheminDuDepot, lireTexte } from '../../lib/depot.mjs';
 
 const DOSSIER_DES_FIXTURES = cheminDuDepot('src/testing/fixtures/instantanes/json');
 const DOSSIER_DES_COURS = cheminDuDepot('src/assets/cours');
-const SUFFIXE_DE_L_INSTANTANE = '.instantane.json';
 const CATALOGUE = 'medias.manifest.json';
 const MEDIA_DE_COURS = /^\/assets\/cours\/[^/]+\/[^/]+\/[^/]+\.(webp|webm|jpg|png|vtt)$/;
 
@@ -29,15 +29,10 @@ const chaines = (valeur) => {
 };
 
 const mediasServis = () =>
-  readdirSync(DOSSIER_DES_FIXTURES)
-    .filter((fichier) => fichier.endsWith(SUFFIXE_DE_L_INSTANTANE))
-    .flatMap((fichier) => {
-      const cours = fichier.slice(0, -SUFFIXE_DE_L_INSTANTANE.length);
-      const chemins = chaines(lireJson(join(DOSSIER_DES_FIXTURES, fichier))).filter((chaine) =>
-        MEDIA_DE_COURS.test(chaine),
-      );
-      return [...new Set(chemins)].map((chemin) => ({ cours, chemin }));
-    });
+  [...instantanesParCours(DOSSIER_DES_FIXTURES)].flatMap(([cours, instantane]) => {
+    const chemins = chaines(lireJson(instantane)).filter((chaine) => MEDIA_DE_COURS.test(chaine));
+    return [...new Set(chemins)].map((chemin) => ({ cours, chemin }));
+  });
 
 const cataloguesDesCours = () =>
   readdirSync(DOSSIER_DES_COURS, { recursive: true })

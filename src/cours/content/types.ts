@@ -6,6 +6,7 @@ import type {
   EcranDerouleResponseDto,
   EtatParticipantResponseDto,
   EtatPulse as EtatPulseServi,
+  ExtraitDuRenvoiResponseDto,
   FeuilleEvalueeResponseDto,
   FreeRangeDto,
   JustesParCleResponseDto,
@@ -110,10 +111,7 @@ export interface RevelationServie {
 }
 
 export interface CadrageDuRenvoi {
-  readonly extrait?: {
-    readonly lignes?: readonly number[];
-    readonly champs?: readonly string[];
-  };
+  readonly extrait?: Readonly<ExtraitDuRenvoiResponseDto>;
 }
 
 interface PieceJointePublique {

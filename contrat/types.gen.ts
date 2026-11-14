@@ -603,7 +603,7 @@ export type PieceJointeReserveeResponseDto = {
 /**
  * Champs du cas repris de l ecran renvoye
  */
-export type ChampExtraitDuCas = 'metier' | 'situation' | 'geste' | 'consequence';
+export type ChampExtraitDuCas = 'situation';
 
 export type ExtraitDuRenvoiResponseDto = {
   /**
@@ -824,10 +824,6 @@ export type CoursPublicCatalogueResponseDto = {
    * Ecrans, chacun avec les donnees de la brique nommee par son type ; sans solution, piege, confusion ni notes
    */
   ecrans: Array<
-    | (EcranPublicResponseDto & {
-        type: 'fp-quote';
-        donnees: DonneesFpQuote;
-      })
     | (EcranPublicResponseDto & {
         type: 'fp-story';
         donnees: DonneesFpStory;
@@ -1517,10 +1513,6 @@ export type DerouleResponseDto = {
    */
   ecrans: Array<
     | (EcranDerouleResponseDto & {
-        type: 'fp-quote';
-        donnees: DonneesFpQuote;
-      })
-    | (EcranDerouleResponseDto & {
         type: 'fp-story';
         donnees: DonneesFpStory;
       })
@@ -2132,10 +2124,6 @@ export type SujetResponseDto = {
    */
   ecrans: Array<
     | (EcranPublicResponseDto & {
-        type: 'fp-quote';
-        donnees: DonneesFpQuote;
-      })
-    | (EcranPublicResponseDto & {
         type: 'fp-story';
         donnees: DonneesFpStory;
       })
@@ -2540,18 +2528,11 @@ export type MetadonneesBrique = {
   concepts: Array<string>;
   misconceptionsCiblees: Array<string>;
   dureeMinutes: number;
-  modalite: 'solo' | 'binome' | 'groupe' | 'classe';
-  regime: 'ouvert' | 'focus' | 'examen';
+  modalite: 'solo' | 'binome';
+  regime: 'ouvert' | 'focus';
 };
 
 export type PresentationServie =
-  | {
-      version: 1;
-      screenId: string;
-      renderer: string;
-      title?: string;
-      subtitle?: string;
-    }
   | {
       version: 2;
       screenId: string;
@@ -2577,21 +2558,6 @@ export type PresentationServie =
           proof: string;
           result: string;
         }>;
-      };
-    }
-  | {
-      version: 2;
-      screenId: string;
-      renderer: 'quiz';
-      props: {
-        questionData: {
-          id: string;
-          type: 'quiz';
-          question: string;
-          options: Array<string>;
-          context?: string;
-          competency?: string;
-        };
       };
     }
   | {
@@ -2675,6 +2641,26 @@ export type PresentationServie =
   | {
       version: 2;
       screenId: string;
+      renderer: 'arbre';
+      props: {
+        title: string;
+        subtitle?: string;
+        branches: Array<{
+          evenement: string;
+          probabilite: number | '?';
+          branches?: Array<{
+            evenement: string;
+            probabilite: number | '?';
+            produit?: number | '?';
+          }>;
+        }>;
+        reading?: string;
+        description: string;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
       renderer: 'lesson';
       props: {
         title: string;
@@ -2715,7 +2701,7 @@ export type PresentationServie =
         note?: string;
         columns: Array<{
           label: string;
-          tone?: 'danger' | 'warning' | 'info' | 'neutral' | 'success';
+          tone?: 'warning' | 'info' | 'success';
           items: Array<string>;
         }>;
       };
@@ -2746,17 +2732,6 @@ export type PresentationServie =
           context?: string;
           competency?: string;
         };
-      };
-    }
-  | {
-      version: 2;
-      screenId: string;
-      renderer: 'quote';
-      props: {
-        quote: string;
-        author?: string;
-        role?: string;
-        context?: string;
       };
     }
   | {
@@ -2795,14 +2770,6 @@ export type PresentationServie =
           href: string;
           label: string;
         };
-        nestedQuiz?: {
-          id: string;
-          type: 'quiz';
-          question: string;
-          options: Array<string>;
-          context?: string;
-          competency?: string;
-        };
       };
     }
   | {
@@ -2825,38 +2792,88 @@ export type PresentationServie =
   | {
       version: 2;
       screenId: string;
+      renderer: 'page';
+      props: {
+        title: string;
+        subtitle?: string;
+        page: {
+          orientation: 'portrait' | 'landscape';
+          marks?: boolean;
+          marginMarker?: number;
+          header?:
+            | {
+                style: 'title' | 'subtitle' | 'heading1' | 'heading2' | 'normal' | 'list' | 'empty';
+                align?: 'center' | 'right' | 'justify';
+                indent?: boolean;
+                runs: Array<{
+                  text: string;
+                  bold?: boolean;
+                  italic?: boolean;
+                  underline?: boolean;
+                  tone?: 'accent' | 'alert' | 'muted';
+                  field?: boolean;
+                }>;
+                marker?: number;
+              }
+            | {
+                style: 'table';
+                rows: Array<Array<string>>;
+                marker?: number;
+              };
+          footer?:
+            | {
+                style: 'title' | 'subtitle' | 'heading1' | 'heading2' | 'normal' | 'list' | 'empty';
+                align?: 'center' | 'right' | 'justify';
+                indent?: boolean;
+                runs: Array<{
+                  text: string;
+                  bold?: boolean;
+                  italic?: boolean;
+                  underline?: boolean;
+                  tone?: 'accent' | 'alert' | 'muted';
+                  field?: boolean;
+                }>;
+                marker?: number;
+              }
+            | {
+                style: 'table';
+                rows: Array<Array<string>>;
+                marker?: number;
+              };
+          blocks: Array<
+            | {
+                style: 'title' | 'subtitle' | 'heading1' | 'heading2' | 'normal' | 'list' | 'empty';
+                align?: 'center' | 'right' | 'justify';
+                indent?: boolean;
+                runs: Array<{
+                  text: string;
+                  bold?: boolean;
+                  italic?: boolean;
+                  underline?: boolean;
+                  tone?: 'accent' | 'alert' | 'muted';
+                  field?: boolean;
+                }>;
+                marker?: number;
+              }
+            | {
+                style: 'table';
+                rows: Array<Array<string>>;
+                marker?: number;
+              }
+          >;
+        };
+        pageAlt: string;
+        paragraphs: Array<string>;
+        items: Array<string>;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
       renderer: 'illustration';
       props: {
         image: string | string;
         imageAlt: string;
-      };
-    }
-  | {
-      version: 2;
-      screenId: string;
-      renderer: 'cta';
-      props: {
-        title: string;
-        description: string;
-        ctaLabel: string;
-        ctaHref: string;
-      };
-    }
-  | {
-      version: 2;
-      screenId: string;
-      renderer: 'guide';
-      props: {
-        title: string;
-        subtitle?: string;
-        context?: string;
-        takeaway?: string;
-        nextAction?: string;
-        items: Array<{
-          title: string;
-          description: string;
-          detail?: string;
-        }>;
       };
     }
   | {
@@ -2881,33 +2898,7 @@ export type PresentationServie =
           justification: string;
         }>;
       };
-    }
-  | {
-      version: 2;
-      screenId: string;
-      renderer: 'answer-review';
-      props: {
-        title: string;
-        subtitle?: string;
-        source: {
-          screenId: string;
-        };
-        explications: Array<{
-          reference: string;
-          texte: string;
-        }>;
-      };
     };
-
-export type DonneesFpQuote = {
-  citation: {
-    id: string;
-    texte: string;
-    auteur: string | null;
-    source: string | null;
-    metadonnees: MetadonneesBrique;
-  };
-};
 
 export type DonneesFpStory = {
   recit: {
@@ -2924,7 +2915,7 @@ export type DonneesFpStory = {
     video?: {
       src: string | string;
       srcPoste?: string | string;
-      type: 'video/webm' | 'video/mp4';
+      type: 'video/webm';
       titre: string;
       poster?: string | string;
       transcript: string;
@@ -2935,7 +2926,7 @@ export type DonneesFpStory = {
         srclang: string;
         libelle: string;
       };
-      preload?: 'none' | 'metadata';
+      preload?: 'none';
     };
     metadonnees: MetadonneesBrique;
   };
@@ -3301,8 +3292,8 @@ export type DonneesFpRecall = {
 export type DonneesQuestionnaire = {
   intitule: string;
   consigne?: string;
-  regime: 'ouvert' | 'focus' | 'examen';
-  ordre: 'fixe' | 'melange';
+  regime: 'ouvert' | 'focus';
+  ordre: 'fixe';
   questions: Array<
     | {
         brique: 'fp-numeric';

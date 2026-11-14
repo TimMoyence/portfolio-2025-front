@@ -1,10 +1,13 @@
-import { readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
 
 import { cheminDuDepot, lireTexte } from './lib/depot.mjs';
 import {
   coursServis,
+  instantanesDuDossier,
+  instantanesDuFront,
   instantanesObsoletes,
-  SUFFIXE_D_INSTANTANE,
+  rangementDuFront,
 } from './lib/contrat/instantanes.mjs';
 
 const DOSSIER_DU_BACK = 'test/fixtures/formations';
@@ -28,20 +31,23 @@ async function lire(url) {
   return reponse;
 }
 
-const fichiers = await (
-  await lire(`https://api.github.com/repos/${depot}/contents/${DOSSIER_DU_BACK}?ref=${commit}`)
+const arbre = await (
+  await lire(`https://api.github.com/repos/${depot}/git/trees/${commit}?recursive=1`)
 ).json();
 
-const distants = fichiers
-  .map(({ name }) => name)
-  .filter((nom) => nom.endsWith(SUFFIXE_D_INSTANTANE));
+const servis = instantanesDuDossier(arbre, DOSSIER_DU_BACK);
+const distants = servis.map(({ chemin }) => rangementDuFront(chemin, DOSSIER_DU_BACK));
 
 const instantanes = [];
-for (const nom of distants) {
+for (const { nom, chemin } of servis) {
   const corps = await (
-    await lire(`https://raw.githubusercontent.com/${depot}/${commit}/${DOSSIER_DU_BACK}/${nom}`)
+    await lire(`https://raw.githubusercontent.com/${depot}/${commit}/${chemin}`)
   ).text();
-  writeFileSync(cheminDuDepot(`${DOSSIER_DU_FRONT}/${nom}`), corps);
+  const destination = cheminDuDepot(
+    `${DOSSIER_DU_FRONT}/${rangementDuFront(chemin, DOSSIER_DU_BACK)}`,
+  );
+  mkdirSync(dirname(destination), { recursive: true });
+  writeFileSync(destination, corps);
   instantanes.push([nom, corps]);
 }
 
@@ -50,6 +56,9 @@ writeFileSync(
   `${JSON.stringify(coursServis(instantanes), null, 2)}\n`,
 );
 
-for (const nom of instantanesObsoletes(readdirSync(cheminDuDepot(DOSSIER_DU_FRONT)), distants)) {
-  rmSync(cheminDuDepot(`${DOSSIER_DU_FRONT}/${nom}`));
+for (const relatif of instantanesObsoletes(
+  instantanesDuFront(cheminDuDepot(DOSSIER_DU_FRONT)),
+  distants,
+)) {
+  rmSync(cheminDuDepot(`${DOSSIER_DU_FRONT}/${relatif}`));
 }

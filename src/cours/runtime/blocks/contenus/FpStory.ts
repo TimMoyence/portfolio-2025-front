@@ -6,7 +6,7 @@ import { estTexteNonVide } from '../../core/texte/valeurs';
 export interface StoryVideo {
   readonly src: string;
   readonly srcPoste?: string;
-  readonly type: 'video/webm' | 'video/mp4';
+  readonly type: 'video/webm';
   readonly titre: string;
   readonly poster?: string;
   readonly transcript: string;
@@ -17,7 +17,7 @@ export interface StoryVideo {
     readonly srclang: string;
     readonly libelle: string;
   };
-  readonly preload?: 'none' | 'metadata';
+  readonly preload?: 'none';
 }
 
 export interface StoryRecit extends ContenuDeBrique {

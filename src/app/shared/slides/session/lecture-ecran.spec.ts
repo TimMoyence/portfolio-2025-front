@@ -12,11 +12,7 @@ import {
   buildEcranDeroule,
   buildResultatsDeChaqueQuestion,
 } from '../../../../testing/factories/formations/formations.factory';
-import {
-  buildVisualNestedQuizSlide,
-  buildVisualQuizSlide,
-  buildVisualSlide,
-} from '../../../../testing/factories/formations/visual-slide.factory';
+import { buildVisualSlide } from '../../../../testing/factories/formations/visual-slide.factory';
 import { ecransDuPupitreB2_01 } from '../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import { ecransDuPupitreDe } from '../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
@@ -35,7 +31,6 @@ import {
   identifiantsDuMontage,
   planDeMontage,
   PROPRIETES_PAR_BRIQUE,
-  questionsDeLEcran,
   questionServie,
   titreDeLEcran,
 } from './lecture-ecran';
@@ -145,45 +140,8 @@ describe('QP-01 · ne compte pas l activité libre d un rappel sans délai, sur 
 });
 
 describe('lecture de l ecran', () => {
-  it('lit la question du QCM principal d un ecran servi en presentation v2, sans correction', () => {
-    const ecran = buildVisualQuizSlide();
-
-    expect(ecran.type).toBe('fp-story');
-    expect(questionsDeLEcran(ecran)).toEqual([
-      { id: 'b2-s03-prediction', enonce: 'Quelle échelle ?' },
-    ]);
-  });
-
-  it('lit la question du quiz imbrique dans un autre rendu v2', () => {
-    expect(questionsDeLEcran(buildVisualNestedQuizSlide())).toEqual([
-      { id: 'b2-s07-repere', enonce: 'Que faut-il vérifier en premier ?' },
-    ]);
-  });
-
   it('ne trouve aucune question dans un ecran v2 d exposition', () => {
     expect(identifiantsDesQuestions(buildVisualSlide())).toEqual([]);
-  });
-
-  function quizV2(
-    questionData: Readonly<Record<string, unknown>>,
-  ): ReturnType<typeof buildVisualQuizSlide> {
-    return buildVisualQuizSlide({
-      donnees: {
-        recit: {
-          presentation: { version: 2, screenId: 'S', renderer: 'quiz', props: { questionData } },
-        },
-      },
-    });
-  }
-
-  it('ignore un quiz v2 sans identifiant', () => {
-    expect(questionsDeLEcran(quizV2({ question: 'Sans id ?' }))).toEqual([]);
-  });
-
-  it('donne un enonce vide a un quiz v2 dont la question n est pas un texte', () => {
-    expect(questionsDeLEcran(quizV2({ id: 'Q-NOMBRE', question: 12 }))).toEqual([
-      { id: 'Q-NOMBRE', enonce: '' },
-    ]);
   });
 
   it('lit toujours les questions des briques d un questionnaire', () => {
@@ -218,22 +176,20 @@ describe('lecture de l ecran', () => {
     expect(planDeMontage(buildVisualSlide({ type: 'brique-inconnue' }))).toBeNull();
   });
 
-  it('titre un ecran v2 par son titre, a defaut par sa question, sinon ne l invente pas', () => {
+  it('titre un ecran v2 par son titre, sinon ne l invente pas', () => {
     expect(titreDeLEcran(buildVisualSlide())).toBe('Lire un chiffre');
-    expect(titreDeLEcran(buildVisualQuizSlide())).toBe('Quelle échelle ?');
     expect(titreDeLEcran(buildEcranQuestionnaire())).toBeNull();
   });
 
-  it('associe chaque question du deroule a son enonce, v2 comme brique', () => {
+  it('associe chaque question du deroule a son enonce, sans en preter a un ecran v2', () => {
     const deroule = buildDerouleCours({
       ecrans: [
-        buildEcranDeroule(buildVisualQuizSlide()),
+        buildEcranDeroule(buildVisualSlide()),
         buildEcranDeroule({ type: 'fp-vote', donnees: { question: buildVoteQuestion() } }),
       ],
     });
 
     expect([...enoncesDuDeroule(deroule)]).toEqual([
-      ['b2-s03-prediction', 'Quelle échelle ?'],
       [buildVoteQuestion().id, buildVoteQuestion().enonce],
     ]);
   });

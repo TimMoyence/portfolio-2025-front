@@ -5692,18 +5692,6 @@
         <target> This poll could not be loaded. </target>
       </segment>
     </unit>
-    <unit id="slideQuizCorrect">
-      <segment>
-        <source>Bonne réponse !</source>
-        <target>Correct answer!</target>
-      </segment>
-    </unit>
-    <unit id="slideQuizIncorrect">
-      <segment>
-        <source>Pas tout à fait. La bonne réponse est : <ph id="0" equiv="INTERPOLATION" disp="{{ q.options[q.correctIndex] }}"/></source>
-        <target>Not quite. The right answer is: <ph id="0" equiv="INTERPOLATION" disp="{{ q.options[q.correctIndex] }}"/></target>
-      </segment>
-    </unit>
     <unit id="slideReflectionSave">
       <segment>
         <source> Garder cette réflexion </source>
@@ -5717,7 +5705,6 @@
       </segment>
     </unit>
     <unit id="slideReflectionSaveFailed"><segment><source> Échec d’enregistrement : nouvelle tentative nécessaire. </source><target>Save failed: please try again.</target></segment></unit>
-    <unit id="slideQuizAwaitServer"><segment><source>Réponse sélectionnée. Le résultat vient de la séance.</source><target>Answer selected. The session will provide the result.</target></segment></unit>
 
     <!-- ia-solo: 3rd column Gemini (chat-produire) -->
     <unit id="ia-solo.chat-produire.gemini.0">
@@ -11506,14 +11493,8 @@
         <note category="location">src/app/features/formations/formations-list.data.ts:80</note>
       </notes>
       <segment>
-        <source>Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 15, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Summarise a series, relate two variables with a scatter plot and a linear fit, then forecast in a spreadsheet, as in the CCF exam. To follow in a 3 h 15 guided session, including a 30 min break, with the code your teacher gives you.</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.b2-02.duration">
-      <segment>
-        <source>2 h 45</source>
-        <target>2 h 45 min</target>
+        <source>Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Summarise a series, relate two variables with a scatter plot and a linear fit, then forecast in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-03.title">
@@ -11534,12 +11515,6 @@
         <target>Express a business rule with and, or, not, if… then, negate it with De Morgan’s laws, say “all” or “at least one”, then check it in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
-    <unit id="formations-list.b2-03.duration">
-      <segment>
-        <source>2 h 15</source>
-        <target>2 h 15 min</target>
-      </segment>
-    </unit>
     <unit id="formations-list.b2-04.title">
       <segment>
         <source>B2-04 — Suites : modéliser une évolution régulière</source>
@@ -11548,14 +11523,8 @@
     </unit>
     <unit id="formations-list.b2-04.description">
       <segment>
-        <source>Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur, comme en CCF. À suivre en séance accompagnée de 3 h 15, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Model a change with an arithmetic or geometric sequence, compare two growth assumptions, find the rank where a threshold is crossed and sum terms in a spreadsheet, as in the CCF exam. To follow in a 3 h 15 guided session, including a 30 min break, with the code your teacher gives you.</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.b2-04.duration">
-      <segment>
-        <source>2 h 45</source>
-        <target>2 h 45 min</target>
+        <source>Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Model a change with an arithmetic or geometric sequence, compare two growth assumptions, find the rank where a threshold is crossed and sum terms in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-05.title">
@@ -11566,14 +11535,8 @@
     </unit>
     <unit id="formations-list.b2-05.description">
       <segment>
-        <source>Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur, comme en CCF. À suivre en séance accompagnée de 2 h 45, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Compute a future value and a present value, price a series of payments, build a loan amortisation schedule and its cost, with PMT in a spreadsheet, as in the CCF exam. To follow in a 2 h 45 guided session, including a 30 min break, with the code your teacher gives you.</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.b2-05.duration">
-      <segment>
-        <source>2 h 15</source>
-        <target>2 h 15 min</target>
+        <source>Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Compute a future value and a present value, price a series of payments, build a loan amortisation schedule and its cost, with PMT in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-06.title">
@@ -11584,14 +11547,8 @@
     </unit>
     <unit id="formations-list.b2-06.description">
       <segment>
-        <source>Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur, comme en CCF. À suivre en séance accompagnée de 2 h 45, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Compute with an exponential model and its rate, find a threshold with the natural logarithm, fit a series with z = ln y and forecast with EXP and LN in a spreadsheet, as in the CCF exam. To follow in a 2 h 45 guided session, including a 30 min break, with the code your teacher gives you.</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.b2-06.duration">
-      <segment>
-        <source>2 h 15</source>
-        <target>2 h 15 min</target>
+        <source>Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Compute with an exponential model and its rate, find a threshold with the natural logarithm, fit a series with z = ln y and forecast with EXP and LN in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2-07.title">
@@ -11602,14 +11559,86 @@
     </unit>
     <unit id="formations-list.b2-07.description">
       <segment>
-        <source>Revoir d’abord l’exponentielle, le logarithme et la boucle « Tant que » par des images du quotidien, puis dériver un polynôme et a e^(kx), étudier le signe de la dérivée, dresser un tableau de variation et trouver un prix optimal, même sous contrainte, comme en CCF. À suivre en séance accompagnée de 2 h 45, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>First revisit the exponential, the logarithm and the while loop through everyday pictures, then differentiate a polynomial and a e^(kx), study the sign of the derivative, build a variation table and find an optimal price, even under a constraint, as in the CCF exam. To follow in a 2 h 45 guided session, including a 30 min break, with the code your teacher gives you.</target>
+        <source>Revoir d’abord l’exponentielle, le logarithme et la boucle « Tant que » par des images du quotidien, puis dériver un polynôme et a e^(kx), étudier le signe de la dérivée, dresser un tableau de variation et trouver un prix optimal, même sous contrainte, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>First revisit the exponential, the logarithm and the while loop through everyday pictures, then differentiate a polynomial and a e^(kx), study the sign of the derivative, build a variation table and find an optimal price, even under a constraint, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
-    <unit id="formations-list.b2-07.duration">
+    <unit id="cours-en-seance.duree">
       <segment>
-        <source>2 h 15</source>
-        <target>2 h 15 min</target>
+        <source><ph id="0" equiv="heures" disp="heures"/> h <ph id="1" equiv="minutes" disp="minutes"/></source>
+        <target><ph id="0" equiv="heures" disp="heures"/> h <ph id="1" equiv="minutes" disp="minutes"/> min</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b1-04.title">
+      <segment>
+        <source>B1-04 — Séries à deux variables : ajuster et prévoir</source>
+        <target>B1-04 — Two-variable series: fit and forecast</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b1-04.description">
+      <segment>
+        <source>Relier la publicité et les ventes d’un site par un nuage de points, tracer la droite des moindres carrés, lire le coefficient de corrélation sans confondre liaison et causalité, puis prévoir et trouver quand un seuil est atteint, au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Link a website’s advertising and sales with a scatter plot, draw the least-squares line, read the correlation coefficient without mistaking a link for a cause, then forecast and find when a threshold is reached, in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b1-05.title">
+      <segment>
+        <source>B1-05 — Logique : conditions et contrôles</source>
+        <target>B1-05 — Logic: conditions and checks</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b1-05.description">
+      <segment>
+        <source>Écrire les règles commerciales d’une entreprise avec et, ou, non, si… alors, les nier par les lois de Morgan, dire « pour tout » ou « il existe » et trouver le contre-exemple qui suffit, puis contrôler une règle au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Write a company’s sales rules with and, or, not, if… then, negate them with De Morgan’s laws, say “for all” or “there exists” and find the counterexample that is enough, then check a rule in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-08.title">
+      <segment>
+        <source>B2-08 — Dérivées composées et fonctions économiques</source>
+        <target>B2-08 — Composite derivatives and economic functions</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-08.description">
+      <segment>
+        <source>Dériver un produit, un quotient, e^u et ln u, lire le coût total, le coût moyen et le coût marginal, trouver le prix d’équilibre entre l’offre et la demande, puis dire combien de solutions a f(x) = k et les approcher au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Differentiate a product, a quotient, e^u and ln u, read total, average and marginal cost, find the equilibrium price between supply and demand, then say how many solutions f(x) = k has and approximate them in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-09.title">
+      <segment>
+        <source>B2-09 — Probabilités conditionnelles</source>
+        <target>B2-09 — Conditional probability</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b2-09.description">
+      <segment>
+        <source>Lire une probabilité conditionnelle dans un arbre pondéré et dans un tableau croisé, calculer une probabilité totale par tous les chemins, remonter l’arbre pour trouver P_B(A), puis justifier que deux événements sont indépendants, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Read a conditional probability in a weighted tree and in a cross table, compute a total probability along every path, go back up the tree to find P_B(A), then justify that two events are independent, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-03.title">
+      <segment>
+        <source>B3-03 — Traitement de texte : mettre en forme et mettre en page</source>
+        <target>B3-03 — Word processing: format and lay out</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-03.description">
+      <segment>
+        <source>Importer une note brute dans Word, la nettoyer marques ¶ affichées, poser les styles et le thème, régler paragraphes, listes, en-tête, pied, sections et numéros de page, puis l’enregistrer en PDF ; enfin confier la rédaction à une IA et relire avant de mettre en page. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Import a raw note into Word, clean it with paragraph marks shown, apply styles and the theme, set paragraphs, lists, header, footer, sections and page numbers, then save it as a PDF; finally hand the writing to an AI and proofread before laying it out. To follow in a guided session, with the code your teacher gives you.</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-04.title">
+      <segment>
+        <source>B3-04 — Publipostage et e-mailing</source>
+        <target>B3-04 — Mail merge and e-mailing</target>
+      </segment>
+    </unit>
+    <unit id="formations-list.b3-04.description">
+      <segment>
+        <source>Lier une liste de contacts du tableur à une lettre type, insérer les champs de fusion, filtrer les destinataires, écrire une règle Si…Alors…Sinon, fusionner en documents et en PDF, puis envoyer par e-mailing ou en PDF joint ; enfin faire écrire la lettre type par une IA. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Link a spreadsheet contact list to a form letter, insert merge fields, filter recipients, write an If…Then…Else rule, merge into documents and PDFs, then send by e-mailing or as an attached PDF; finally have an AI write the form letter. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b3.badge">
@@ -11630,12 +11659,6 @@
         <target>Compute a share and say which whole it refers to, multiply two shares, compute an overall rate, tell percentage points from percentages and markup from margin rate, then split a headcount in a spreadsheet, as in the CCF exam. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
-    <unit id="formations-list.b1-01.duration">
-      <segment>
-        <source>2 h 00</source>
-        <target>2 h</target>
-      </segment>
-    </unit>
     <unit id="formations-list.b1-02.title">
       <segment>
         <source>B1-02 — Évolutions : taux, coefficients, indices</source>
@@ -11646,12 +11669,6 @@
       <segment>
         <source>Passer d’un taux à un coefficient, du HT au TTC, enchaîner des évolutions, revenir au départ, lire un indice et calculer un taux moyen, puis traiter au tableur un tableau de sujet de BTS. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <target>Move from a rate to a multiplier and from net to gross prices, chain changes, reverse a change, read an index and compute an average rate, then work through a BTS exam table in a spreadsheet. To follow in a guided session, with the code given by your trainer.</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.b1-02.duration">
-      <segment>
-        <source>2 h 00</source>
-        <target>2 h</target>
       </segment>
     </unit>
     <unit id="formations-list.b1-03.title">
@@ -11666,12 +11683,6 @@
         <target>Group a sales file with a pivot table in Excel, compute the markup rate with a calculated field, summarise a series by its median, quartiles and standard deviation, then compare two series with their box plots. Each idea is first explained with an everyday picture. To follow in a guided session, with the code given by your trainer.</target>
       </segment>
     </unit>
-    <unit id="formations-list.b1-03.duration">
-      <segment>
-        <source>2 h 00</source>
-        <target>2 h</target>
-      </segment>
-    </unit>
     <unit id="formations-list.b3-01.title">
       <segment>
         <source>B3-01 — Expert Data : de la donnée brute à la décision</source>
@@ -11680,14 +11691,8 @@
     </unit>
     <unit id="formations-list.b3-01.description">
       <segment>
-        <source>Nettoyer un export de ventes dans Excel, le croiser avec ses référentiels, le résumer par un tableau croisé dynamique, puis bâtir un tableau de bord et une recommandation pour un comité de direction. À suivre en séance accompagnée de 3 h 25, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Clean a sales export in Excel, join it with its reference tables, summarise it with a PivotTable, then build a dashboard and a recommendation for an executive committee. To follow in a 3 h 25 guided session, including a 30 min break, with the code your teacher gives you.</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.b3-01.duration">
-      <segment>
-        <source>2 h 55</source>
-        <target>2 h 55 min</target>
+        <source>Nettoyer un export de ventes dans Excel, le croiser avec ses référentiels, le résumer par un tableau croisé dynamique, puis bâtir un tableau de bord et une recommandation pour un comité de direction. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Clean a sales export in Excel, join it with its reference tables, summarise it with a PivotTable, then build a dashboard and a recommendation for an executive committee. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b3-02.title">
@@ -11698,23 +11703,8 @@
     </unit>
     <unit id="formations-list.b3-02.description">
       <segment>
-        <source>Toutes les formules Excel du manager, une page chacune : syntaxe, piège, exemple chiffré, et ce que chaque élément de l’infographie devient dans Excel ; puis nettoyer, relier, compter les jours ouvrés, croiser par un TCD et bâtir un tableau de bord, pas à pas. Une heure enfin pour confier l’analyse à une IA, la guider par son cahier de règles et vérifier ses chiffres. À suivre en séance accompagnée de 3 h 30, pause de 30 min comprise, avec le code donné par votre formateur.</source>
-        <target>Every Excel formula a manager needs, one page each: syntax, common trap, worked figures, and what each part of the infographic becomes in Excel; then clean, join, count working days, cross with a PivotTable and build a dashboard, step by step. A final hour to hand the analysis to an AI, guide it with your rulebook and check its figures. To follow in a 3 h 30 guided session, including a 30 min break, with the code your teacher gives you.</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.b3-02.duration">
-      <segment>
-        <source>3 h 00</source>
-        <target>3 h 00 min</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.b2.duration">
-      <notes>
-        <note category="location">src/app/features/formations/formations-list.data.ts:32</note>
-      </notes>
-      <segment>
-        <source>3 h 20</source>
-        <target>3 h 20 min</target>
+        <source>Toutes les formules Excel du manager, une page chacune : syntaxe, piège, exemple chiffré, et ce que chaque élément de l’infographie devient dans Excel ; puis nettoyer, relier, compter les jours ouvrés, croiser par un TCD et bâtir un tableau de bord, pas à pas. Enfin, confier l’analyse à une IA, la guider par son cahier de règles et vérifier ses chiffres. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <target>Every Excel formula a manager needs, one page each: syntax, common trap, worked figures, and what each part of the infographic becomes in Excel; then clean, join, count working days, cross with a PivotTable and build a dashboard, step by step. Finally, hand the analysis to an AI, guide it with your rulebook and check its figures. To follow in a guided session, with the code your teacher gives you.</target>
       </segment>
     </unit>
     <unit id="formations-list.b2.format">
@@ -11724,33 +11714,6 @@
       <segment>
         <source>Slides + séance accompagnée</source>
         <target>Slides + guided session</target>
-      </segment>
-    </unit>
-    <unit id="slideQuizReponsesRecues">
-      <notes>
-        <note category="location">src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html:17,18</note>
-      </notes>
-      <segment>
-        <source>Réponses reçues</source>
-        <target>Answers received</target>
-      </segment>
-    </unit>
-    <unit id="slideQuizApercu">
-      <notes>
-        <note category="location">src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html:37,40</note>
-      </notes>
-      <segment>
-        <source> Aperçu : aucune séance n’est ouverte. Votre choix n’est pas envoyé et le résultat n’est donné qu’en séance. </source>
-        <target> Preview: no session is open. Your choice is not sent and the result is only given during a session. </target>
-      </segment>
-    </unit>
-    <unit id="slideQuizPourProgresser">
-      <notes>
-        <note category="location">src/app/shared/slides/interactions/slide-quiz/slide-quiz.component.html:67,68</note>
-      </notes>
-      <segment>
-        <source>Pour progresser :</source>
-        <target>To improve:</target>
       </segment>
     </unit>
     <unit id="slideReflectionProjection">
@@ -12039,24 +12002,6 @@
       <segment>
         <source>Afficher le détail de <ph id="0" equiv="titre" disp="title"/></source>
         <target>Show the details of <ph id="0" equiv="titre" disp="title"/></target>
-      </segment>
-    </unit>
-    <unit id="slideGuideARetenir">
-      <notes>
-        <note category="location">src/app/shared/slides/layouts/texte/slide-guide/slide-guide.component.html:33,34</note>
-      </notes>
-      <segment>
-        <source>À retenir</source>
-        <target>Key takeaway</target>
-      </segment>
-    </unit>
-    <unit id="slideGuideGesteProfessionnel">
-      <notes>
-        <note category="location">src/app/shared/slides/layouts/texte/slide-guide/slide-guide.component.html:37,39</note>
-      </notes>
-      <segment>
-        <source>Geste professionnel</source>
-        <target>Professional practice</target>
       </segment>
     </unit>
     <unit id="slideMethodPathEtapes">
@@ -14866,30 +14811,6 @@
       <segment>
         <source> <ph id="0" equiv="INTERPOLATION" disp="{{ compte.justes }}"/> / <ph id="1" equiv="INTERPOLATION_1" disp="{{ compte.total }}"/> bien placée </source>
         <target> <ph id="0" equiv="INTERPOLATION" disp="{{ compte.justes }}"/> / <ph id="1" equiv="INTERPOLATION_1" disp="{{ compte.total }}"/> correctly placed </target>
-      </segment>
-    </unit>
-    <unit id="slideAnswerReviewCible">
-      <segment>
-        <source>Réponse attendue :</source>
-        <target>Expected answer:</target>
-      </segment>
-    </unit>
-    <unit id="slideAnswerReviewJuste">
-      <segment>
-        <source> Votre réponse est juste </source>
-        <target> Your answer is correct </target>
-      </segment>
-    </unit>
-    <unit id="slideAnswerReviewARevoir">
-      <segment>
-        <source> Votre réponse est à revoir </source>
-        <target> Your answer needs another look </target>
-      </segment>
-    </unit>
-    <unit id="slideAnswerReviewReussite">
-      <segment>
-        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ reussite.justes }}"/> / <ph id="1" equiv="INTERPOLATION_1" disp="{{ reussite.total }}"/> réponses justes </source>
-        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ reussite.justes }}"/> / <ph id="1" equiv="INTERPOLATION_1" disp="{{ reussite.total }}"/> correct answers </target>
       </segment>
     </unit>
     <unit id="panneauActiviteOptionsRappelTitre">

@@ -1,0 +1,49 @@
+{
+  "cours": "b2-08",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours/b2/cours-b2-08-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M6",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le potager qui s’agrandit · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "potager-qui-s-agrandit.webp",
+          "octets": 330638,
+          "sha256": "6deae355124840b6013493760ccb26f12c5a252b308bd0c352790409ad0ecacf"
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "ecran": "A2-08",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Les deux engrenages · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "deux-engrenages.webp",
+          "octets": 376734,
+          "sha256": "e9978f2dc76cd34ceb02e6feeddcfd94d5f2bd941615bdc60efce368ef122c02"
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "ecran": "A4-04",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le nombre secret · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "nombre-secret.webp",
+          "octets": 366516,
+          "sha256": "fe13c96236956146d777315eb6bbbd235fef61ff697228383f2a42e8bacbe75d"
+        }
+      ]
+    }
+  ]
+}

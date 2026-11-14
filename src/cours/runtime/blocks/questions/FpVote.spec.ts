@@ -247,10 +247,10 @@ describe('FpVote', () => {
 
     hote.question = buildVoteQuestion({
       id: 'Q-CAP-04',
-      metadonnees: metadonnees({ dureeMinutes: 2, modalite: 'classe' }),
+      metadonnees: metadonnees({ dureeMinutes: 2, modalite: 'binome' }),
     });
 
-    expect(hote.question?.metadonnees?.modalite).toBe('classe');
+    expect(hote.question?.metadonnees?.modalite).toBe('binome');
     expect(hote.question?.metadonnees?.dureeMinutes).toBe(2);
     expect(marque(hote, 'modalite')).toBeNull();
     expect(marque(hote, 'duree')).toBeNull();

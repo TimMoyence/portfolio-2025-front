@@ -1,5 +1,10 @@
+import type { Type } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import type { EcranContent, Role } from '../../cours/content/types';
 import { ecranDIdentifiant } from '../../app/shared/slides/session/lecture-ecran';
+import { presentationDe, type RenduServi } from '../../app/shared/slides/visual/presentation-v2';
+import { uneImage } from '../texte/deux-images';
+import { poserLesEntrees } from './montage-page';
 import { SlideActivityComponent } from '../../app/shared/slides/session/activite/slide-activity.component';
 import { recolterDansLArbre } from '../dom/arbre-json';
 import { roleAffiche } from '../briques/banc-de-brique';
@@ -29,6 +34,41 @@ export function ecranNomme<T extends EcranContent>(ecrans: readonly T[], id: str
     throw new Error(`écran absent de l instantané : ${id}`);
   }
   return ecran;
+}
+
+export function proprietesServies(
+  instantane: InstantaneDuCoursB2,
+  id: string,
+  renderer: RenduServi,
+): Readonly<Record<string, unknown>> {
+  const presentation = presentationDe(ecranNomme(ecransPublicsDe(instantane), id));
+  if (presentation?.renderer !== renderer) {
+    throw new Error(`${renderer} absent du cours servi : ${id}`);
+  }
+  return presentation.props;
+}
+
+export async function monterUnRendu<T>(
+  composant: Type<T>,
+  props: Readonly<Record<string, unknown>>,
+  largeur: string,
+): Promise<HTMLElement> {
+  setupTestBed({ http: false, imports: [composant] });
+  const fixture = poserLesEntrees(TestBed.createComponent(composant), props);
+  const racine = fixture.nativeElement as HTMLElement;
+  racine.style.width = largeur;
+  document.body.appendChild(racine);
+  await uneImage();
+  fixture.detectChanges();
+  return racine;
+}
+
+export function retirerDuCorps(selecteur: string): void {
+  document.querySelectorAll(`${selecteur}, [ng-version]`).forEach((element) => {
+    if (element.parentElement === document.body) {
+      element.remove();
+    }
+  });
 }
 
 export function texteServiAuPosteEtudiant(instantane: InstantaneDuCoursB2, id: string): string {

@@ -6,6 +6,7 @@ const ABSENT = '—';
 const LOCALE_SOURCE = 'fr';
 
 const DECIMALES_AU_PLUS = 2;
+const FORMAT_DU_MILLIONIEME = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 6 });
 const SIGNE_D_UN_ZERO = /^-(?=0([,.]0+)?\D*$)/;
 const FORMATS_FRANCAIS = new Map<number | undefined, Intl.NumberFormat>();
 const FORMATS_DE_PART = new Map<string, Intl.NumberFormat>();
@@ -39,6 +40,10 @@ export function enFrancais(valeur: number | undefined, decimales?: number): stri
   )
     .format(valeur)
     .replace(SIGNE_D_UN_ZERO, '');
+}
+
+export function enFrancaisAuMillionieme(valeur: number): string {
+  return FORMAT_DU_MILLIONIEME.format(valeur).replace(SIGNE_D_UN_ZERO, '');
 }
 
 export function lierLesNombres(texte: string): string {

@@ -1,0 +1,91 @@
+{
+  "cours": "b1-05",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours/b1/cours-b1-05-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-06",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Deux clés ou deux portes · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "serrures-portes.webp",
+          "octets": 140406,
+          "sha256": "4b9fe30be779ecba60beeeb7ef701d3a604ff2dcf2afb155f10f9c5c1ea6db1f"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le chemin mouillé · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "pluie-arrosoir.webp",
+          "octets": 328066,
+          "sha256": "ac1dbf501f348290aa7067314c6c44c3af9f4e5e1ac7049e63261bee45a56078"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A2-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le billet et le casque · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "portillon-casque.webp",
+          "octets": 280312,
+          "sha256": "50420c1af2e0acff6c7ffce51f5540998f5ab9d4cfb5fb4cb29053008a4a6a7f"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Sous la barre de la girafe · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "toise-manege.webp",
+          "octets": 298436,
+          "sha256": "b92ebabfc59a79368495dada68fc462135f194d9cddff5318e83d15c40d2a0b1"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A3-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Une pomme dans le panier · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "panier-pommes.webp",
+          "octets": 272862,
+          "sha256": "fe957c3c0ca7feef000c072d61346569c3e086b10e12b6d067c7d5ff8eb3e031"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "ecran": "A3-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Une clé chacun ou une clé pour tous · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "cles-cadenas.webp",
+          "octets": 170598,
+          "sha256": "bd05cc13d7811b0da945d5d3f01a4faf6afd97221a01305bb13678001d0cf924"
+        }
+      ]
+    }
+  ]
+}

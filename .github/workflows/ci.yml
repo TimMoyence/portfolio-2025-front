@@ -17,7 +17,7 @@ concurrency:
 jobs:
   quality-gate:
     name: quality-gate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         shell: bash
@@ -91,7 +91,7 @@ jobs:
 
   e2e:
     name: e2e
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         shell: bash
@@ -159,7 +159,7 @@ jobs:
   # (../portfolio-2025-back) : les deux depots sont extraits cote a cote.
   banc:
     name: banc
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         shell: bash
@@ -227,7 +227,7 @@ jobs:
 
   security:
     name: security
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       pull-requests: read
@@ -249,7 +249,7 @@ jobs:
           fail-on-severity: high
 
   docker:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.event_name == 'push'
     needs:
       - quality-gate
@@ -288,7 +288,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: docker
     steps:

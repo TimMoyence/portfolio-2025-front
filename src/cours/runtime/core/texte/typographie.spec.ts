@@ -1,4 +1,4 @@
-import { enFrancais, formaterPart, lierLesNombres } from './typographie';
+import { enFrancais, enFrancaisAuMillionieme, formaterPart, lierLesNombres } from './typographie';
 
 const ESPACE_FINE = ' ';
 
@@ -39,6 +39,17 @@ describe('enFrancais', () => {
     expect(enFrancais(1.08, 4)).toBe('1,0800');
     expect(enFrancais(8, 0)).toBe('8');
     expect(enFrancais(Number.NaN, 2)).toBe('—');
+  });
+});
+
+describe('enFrancaisAuMillionieme', () => {
+  it('ARB-03 \u00b7 \u00e9crit une probabilit\u00e9 servie avec toutes ses d\u00e9cimales, jusqu\u2019au millioni\u00e8me', () => {
+    expect(enFrancaisAuMillionieme(0.4225)).toBe('0,4225');
+    expect(enFrancaisAuMillionieme(0.8)).toBe('0,8');
+    expect(enFrancaisAuMillionieme(0.123456)).toBe('0,123456');
+    expect(enFrancaisAuMillionieme(1 / 3)).toBe('0,333333');
+    expect(enFrancaisAuMillionieme(1)).toBe('1');
+    expect(enFrancaisAuMillionieme(-0)).toBe('0');
   });
 });
 

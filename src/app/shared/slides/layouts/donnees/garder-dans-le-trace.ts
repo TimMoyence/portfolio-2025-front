@@ -10,6 +10,10 @@ export interface CadreDuTrace {
   readonly echelle: number;
 }
 
+export const ECART_LISIBLE_PX = 4;
+const ECART_EMPILE_PX = 2;
+const ECART_AUX_FORMES_PX = 3;
+
 export function cadreDuTexte(texte: HTMLElement): Cadre {
   const plage = document.createRange();
   plage.selectNodeContents(texte);
@@ -77,4 +81,68 @@ export function mesurerAChaqueRendu(
     }
   }
   onCleanup(() => observateur.disconnect());
+}
+
+function seRecouvrent(
+  un: Cadre,
+  autre: Cadre,
+  ecartEnLargeur: number,
+  ecartEnHauteur: number,
+): boolean {
+  return (
+    Math.min(un.right, autre.right) - Math.max(un.left, autre.left) > -ecartEnLargeur &&
+    Math.min(un.bottom, autre.bottom) - Math.max(un.top, autre.top) > -ecartEnHauteur
+  );
+}
+
+export function seGenent(un: Cadre, autre: Cadre, echelle: number): boolean {
+  return seRecouvrent(un, autre, ECART_LISIBLE_PX * echelle, ECART_EMPILE_PX * echelle);
+}
+
+export function pasQuiDegage(colonnes: readonly (readonly Cadre[])[], echelle: number): number {
+  const degage = (pas: number): boolean => {
+    const gardes = colonnes.flatMap((cadres, rang) =>
+      rang % pas === 0 ? cadres.map((cadre) => ({ rang, cadre })) : [],
+    );
+    return gardes.every(({ rang, cadre }, index) =>
+      gardes
+        .slice(index + 1)
+        .every((autre) => autre.rang === rang || !seGenent(cadre, autre.cadre, echelle)),
+    );
+  };
+  return Array.from({ length: colonnes.length }, (_, rang) => rang + 1).find(degage) ?? 1;
+}
+
+export function cadresParRang(textes: Iterable<HTMLElement>): Cadre[][] {
+  const colonnes: Cadre[][] = [];
+  for (const texte of textes) {
+    const rang = Number(texte.dataset['rang']);
+    colonnes[rang] = [...(colonnes[rang] ?? []), cadreDuTexte(texte)];
+  }
+  return colonnes;
+}
+
+export function cadreFixe({ left, right, top, bottom }: Cadre): Cadre {
+  return { left, right, top, bottom };
+}
+
+export function touchent(valeur: Cadre, forme: Cadre, echelle: number): boolean {
+  const ecart = ECART_AUX_FORMES_PX * echelle;
+  return seRecouvrent(valeur, forme, ecart, ecart);
+}
+
+export function cotesDuPoint(
+  valeur: HTMLElement,
+  point: Cadre | undefined,
+  dessous: boolean,
+): Cadre[] {
+  const ici = cadreFixe(cadreDuTexte(valeur));
+  if (point === undefined) {
+    return [ici];
+  }
+  const boite = valeur.getBoundingClientRect();
+  const decalage = point.top + point.bottom - boite.top - boite.bottom;
+  const enFace = { ...ici, top: ici.top + decalage, bottom: ici.bottom + decalage };
+  const placeeDessous = boite.top + boite.bottom > point.top + point.bottom;
+  return placeeDessous === dessous ? [ici, enFace] : [enFace, ici];
 }

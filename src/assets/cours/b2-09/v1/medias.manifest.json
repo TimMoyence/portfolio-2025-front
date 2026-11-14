@@ -1,0 +1,119 @@
+{
+  "cours": "b2-09",
+  "version": 1,
+  "source": "portfolio-2025-back/docs/cours/b2/cours-b2-09-conception.md § 8.2 — Catalogue des médias",
+  "medias": [
+    {
+      "id": "M1",
+      "ecran": "A1-02",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La part du gâteau · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "part-du-gateau.webp",
+          "octets": 393688,
+          "sha256": "9cc62c81a063418bb218b56505027bd68fee03791341e9e6e8aa2fc253bcd56e"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "ecran": "A1-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Le sac de billes · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "sac-de-billes.webp",
+          "octets": 331624,
+          "sha256": "4f93800d92ce0c83c98725b74cdf9e5cc0223f3842083071143166a2606d4526"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "ecran": "A1-04",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Les deux cerceaux · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "deux-cerceaux.webp",
+          "octets": 426994,
+          "sha256": "4b9a8f07ce88d0aa0da59a93723e00f1241cb94718c27efe0b84d017be942ea4"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "ecran": "A1-06",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Les cerceaux réunis · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "cerceaux-reunis.webp",
+          "octets": 331606,
+          "sha256": "7f6144701507947cb56adddc04e0edfca9c2b2c8c8c6df4b29f100a2ef236886"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "ecran": "A1-07",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La commode à tiroirs · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "commode-a-tiroirs.webp",
+          "octets": 380622,
+          "sha256": "af8d5ea2e3533f75e5a54661e908f963787315aefbfa9263deac95a06c297e86"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "ecran": "A2-03",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Les ruisseaux qui se partagent · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "ruisseaux-qui-se-partagent.webp",
+          "octets": 501660,
+          "sha256": "a595b640d09bb3bc9689576d6628d31afd82220f1d0578a1a04f76fe6a67bd49"
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "ecran": "A2-09",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La loupe sur une ligne · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "loupe-sur-une-ligne.webp",
+          "octets": 420794,
+          "sha256": "c9c748f3ee7fb95eb2a21cbdcdf3a11e613b70d737286887d06aa363ccba22f4"
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "ecran": "A4-04",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "La pièce et la météo · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "piece-et-meteo.webp",
+          "octets": 347752,
+          "sha256": "32510980dac2235960a586d15b680001bf5ffcf76c998ff8a1fa9406e78aa24d"
+        }
+      ]
+    }
+  ]
+}

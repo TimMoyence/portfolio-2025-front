@@ -1,0 +1,84 @@
+<ng-template #pastille let-marker>
+  @if (marker !== undefined) {
+    <span class="slide-page__pastille" data-testid="slide-page-pastille">{{ marker }}</span>
+  }
+</ng-template>
+
+<div class="slide-page">
+  <figure
+    class="slide-page__feuille"
+    data-testid="slide-page-feuille"
+    role="img"
+    [attr.data-orientation]="page().orientation"
+    [attr.aria-label]="pageAlt()"
+  >
+    @if (page().marginMarker !== undefined) {
+      <span
+        class="slide-page__pastille slide-page__pastille--marge"
+        data-testid="slide-page-pastille-marge"
+        >{{ page().marginMarker }}</span
+      >
+    }
+    @for (zone of zones(); track zone.zone) {
+      @if (zone.blocs.length > 0) {
+        <div [class]="'slide-page__' + zone.zone" [attr.data-testid]="'slide-page-' + zone.zone">
+          @for (bloc of zone.blocs; track $index) {
+            @if (bloc.style === 'table') {
+              <div class="slide-page__bloc" data-testid="slide-page-bloc" data-style="table">
+                <ng-container *ngTemplateOutlet="pastille; context: { $implicit: bloc.marker }" />
+                <app-defileur-de-tableau>
+                  <table
+                    class="slide-page__tableau"
+                    appTableauDeCellules
+                    [entete]="bloc.rows[0] ?? []"
+                    [lignes]="bloc.rows.slice(1)"
+                  ></table>
+                </app-defileur-de-tableau>
+              </div>
+            } @else {
+              <p
+                class="slide-page__bloc"
+                data-testid="slide-page-bloc"
+                [attr.data-style]="bloc.style"
+                [class.slide-page__bloc--retrait]="bloc.indent"
+                [style.text-align]="bloc.align"
+              >
+                <ng-container *ngTemplateOutlet="pastille; context: { $implicit: bloc.marker }" />
+                @for (morceau of bloc.runs; track $index) {
+                  <span
+                    class="slide-page__morceau"
+                    data-testid="slide-page-morceau"
+                    [class.slide-page__morceau--gras]="morceau.bold"
+                    [class.slide-page__morceau--italique]="morceau.italic"
+                    [class.slide-page__morceau--souligne]="morceau.underline"
+                    [class.slide-page__morceau--champ]="morceau.field"
+                    [attr.data-ton]="morceau.tone"
+                    >{{ morceau.text }}</span
+                  >
+                }
+                @if (page().marks) {
+                  <span class="slide-page__marque">¶</span>
+                }
+              </p>
+            }
+          }
+        </div>
+      }
+    }
+  </figure>
+
+  <div
+    class="slide-page__texte"
+    data-testid="slide-page-texte"
+    [appSlideEnTete]="{ bloc: 'slide-page', titre: title(), sousTitre: subtitle() ?? '' }"
+  >
+    @for (paragraphe of paragraphs(); track $index) {
+      <p class="slide-page__paragraphe">{{ paragraphe }}</p>
+    }
+    <ul class="slide-page__correspondances">
+      @for (correspondance of items(); track $index) {
+        <li>{{ correspondance }}</li>
+      }
+    </ul>
+  </div>
+</div>

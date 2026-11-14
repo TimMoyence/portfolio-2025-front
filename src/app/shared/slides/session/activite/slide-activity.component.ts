@@ -57,12 +57,6 @@ interface MontageActif extends MontageIdentifie {
   readonly element: HTMLElement;
 }
 
-interface ReponseVisuelle {
-  readonly questionId: string;
-  readonly valeur: string;
-  readonly dureeMs: number;
-}
-
 @Component({
   selector: 'app-slide-activity',
   standalone: true,
@@ -124,7 +118,6 @@ interface ReponseVisuelle {
         [prioritaire]="prioritaire() || papier()"
         [retours]="retours()"
         [debrief]="debrief()"
-        (reponse)="relayerVisuel($event)"
       />
     }
     @if (unknown()) {
@@ -304,19 +297,6 @@ export class SlideActivityComponent {
     for (const evenement of evenementsDe(event.type, event.detail, this.slide().id)) {
       this.evenement.emit(evenement);
     }
-  }
-
-  protected relayerVisuel(reponse: ReponseVisuelle): void {
-    if (this.apercu()) {
-      return;
-    }
-    this.evenement.emit({
-      kind: 'reponse',
-      screenId: this.slide().id,
-      questionId: reponse.questionId,
-      valeur: reponse.valeur,
-      dureeMs: reponse.dureeMs,
-    });
   }
 
   protected memoriser(event: Event): void {

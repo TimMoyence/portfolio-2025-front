@@ -41,6 +41,13 @@ const EXTRAITS_ADMIS: Readonly<Partial<Record<string, readonly ExtraitAdmis[]>>>
         'la phrase fausse de Théo, que la réflexion fait corriger ; elle ne livre pas la cellule C2 du tableur A1-10',
     },
   ],
+  'B2-08-A4-01-VOTE-SOLUTIONS': [
+    {
+      extrait: 'f(2) = 25',
+      raison:
+        'la valeur d une fonction croissante quelconque, donnée de la question jumelle ; elle ne livre pas le prix de 25 € qui annule R′(p) dans l atelier A3-10',
+    },
+  ],
   'B2-03-A2-01-CONTRAIRE': [
     {
       extrait: 'sans employer le mot « non »',
@@ -50,7 +57,7 @@ const EXTRAITS_ADMIS: Readonly<Partial<Record<string, readonly ExtraitAdmis[]>>>
   ],
 };
 
-const CHAMPS_TECHNIQUES: ReadonlySet<string> = new Set(['id', 'type']);
+const CHAMPS_TECHNIQUES: ReadonlySet<string> = new Set(['id', 'type', 'duree']);
 
 function ecritEnFrancais(nombre: number, decimales = 6): string {
   return nombre.toLocaleString('fr-FR', { maximumFractionDigits: decimales });
@@ -119,7 +126,7 @@ const texteDuChamp: Recolte = (cle, contenu, descendre) => {
     return CHAMPS_TECHNIQUES.has(cle) ? [] : [contenu];
   }
   if (typeof contenu === 'number') {
-    return [ecritEnFrancais(contenu)];
+    return CHAMPS_TECHNIQUES.has(cle) ? [] : [ecritEnFrancais(contenu)];
   }
   if (Array.isArray(contenu)) {
     return contenu.flatMap((element: unknown) => texteDuChamp(cle, element, descendre));

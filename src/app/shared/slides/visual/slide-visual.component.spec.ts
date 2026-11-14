@@ -1,10 +1,5 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import type { ResultatsSeance, Role } from '../../../../cours/content/types';
-import {
-  buildProgressionDesEnigmes,
-  buildRevelationServie,
-} from '../../../../testing/factories/formations/cours.factory';
 import {
   buildResultatQuestion,
   buildResultatsSeance,
@@ -12,17 +7,12 @@ import {
 import { poserLesEntrees } from '../../../../testing/page/montage-page';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
 import {
-  ATELIER_CORRIGE,
   TRI_CORRIGE,
-  buildAnswerReviewProps,
-  buildVerdictDeQuestion,
   buildVerdictDuTri,
   buildRecitVisuel,
-  buildVisualAnswerReviewSlide,
   buildVisualIllustrationSlide,
   buildVisualImageHeroSlide,
   buildVisualImageSlide,
-  buildVisualQuizSlide,
   buildVisualSlide,
   buildVisualSortCorrectionSlide,
 } from '../../../../testing/factories/formations/visual-slide.factory';
@@ -41,22 +31,6 @@ describe('SlideVisualComponent', () => {
     expect(element.querySelector('app-slide-hero')).not.toBeNull();
     expect(element.textContent).toContain('Lire un chiffre');
     expect(element.textContent).toContain('Contrôler avant de décider');
-  });
-
-  it('sans seance, presente le quiz v2 en apercu explicite et n emet aucune reponse', () => {
-    const fixture = TestBed.createComponent(SlideVisualComponent);
-    fixture.componentRef.setInput('slide', buildVisualQuizSlide());
-    const reponses = jasmine.createSpy('reponses');
-    fixture.componentInstance.reponse.subscribe(reponses);
-    fixture.detectChanges();
-
-    const element = fixture.nativeElement as HTMLElement;
-    element.querySelectorAll<HTMLButtonElement>('.slide-quiz__option')[0].click();
-    fixture.detectChanges();
-
-    expect(element.querySelector('[data-testid="slide-quiz-apercu"]')).not.toBeNull();
-    expect(element.textContent).not.toContain('Le résultat vient de la séance');
-    expect(reponses).not.toHaveBeenCalled();
   });
 
   it('affiche un message lorsque le layout reçu est inconnu', () => {
@@ -100,8 +74,7 @@ describe('SlideVisualComponent', () => {
       fixture.detectChanges();
 
       const images = [...(fixture.nativeElement as HTMLElement).querySelectorAll('img')];
-      expect(images.length).toBe(2);
-      expect(images.map((img) => img.getAttribute('loading'))).toEqual(['eager', 'eager']);
+      expect(images.map((img) => img.getAttribute('loading'))).toEqual(['eager']);
       expect(
         (fixture.nativeElement as HTMLElement)
           .querySelector('.slide-image__media img')
@@ -115,7 +88,7 @@ describe('SlideVisualComponent', () => {
       fixture.detectChanges();
 
       const images = [...(fixture.nativeElement as HTMLElement).querySelectorAll('img')];
-      expect(images.map((img) => img.getAttribute('loading'))).toEqual(['lazy', 'lazy']);
+      expect(images.map((img) => img.getAttribute('loading'))).toEqual(['lazy']);
       expect(images.some((img) => img.hasAttribute('fetchpriority'))).toBeFalse();
     });
   }
@@ -160,7 +133,7 @@ describe('SlideVisualComponent', () => {
       const fixture = TestBed.createComponent(SlideVisualComponent);
       fixture.componentRef.setInput(
         'slide',
-        buildRecitVisuel('B2-01-S01-ACCROCHE', 'hero', { title: 'Lire un chiffre', sourceLink }),
+        buildVisualImageSlide('image-left', 'B2-01-A5-01-NIGHTINGALE', { sourceLink }),
       );
       fixture.detectChanges();
       return (fixture.nativeElement as HTMLElement).querySelector('.slide-visual__source a');
@@ -273,134 +246,6 @@ describe('SlideVisualComponent', () => {
     });
   });
 
-  describe('correction des reponses', () => {
-    const [EVOLUTION, PART] = ATELIER_CORRIGE.questions;
-
-    function monter(
-      role: Role,
-      retours: ReadonlyMap<string, RetourBrique[]> = new Map(),
-      resultats: ResultatsSeance | null = null,
-    ): HTMLElement {
-      const fixture = TestBed.createComponent(SlideVisualComponent);
-      fixture.componentRef.setInput(
-        'slide',
-        buildVisualAnswerReviewSlide({
-          revelation: buildRevelationServie({
-            ecranId: ATELIER_CORRIGE.screenId,
-            questions: [{ questionId: PART, cible: '45,5 %', optionId: null }],
-          }),
-        }),
-      );
-      fixture.componentRef.setInput('role', role);
-      fixture.componentRef.setInput('retours', retours);
-      fixture.componentRef.setInput('resultats', resultats);
-      fixture.detectChanges();
-      return fixture.nativeElement as HTMLElement;
-    }
-
-    function ligne(element: HTMLElement, reference: string): HTMLElement | null {
-      return element.querySelector<HTMLElement>(`[data-reference="${reference}"]`);
-    }
-
-    it('T6 · rend l ecran answer-review avec le layout de correction', () => {
-      const element = monter('etudiant');
-
-      expect(element.querySelector('app-slide-answer-review')).not.toBeNull();
-      expect(element.querySelector('[role="alert"]')).toBeNull();
-    });
-
-    it('T6 · montre a l etudiant sa reponse attendue et ses verdicts sur l ecran source', () => {
-      const element = monter(
-        'etudiant',
-        new Map([
-          [
-            ATELIER_CORRIGE.screenId,
-            [buildVerdictDeQuestion(EVOLUTION, true), buildVerdictDeQuestion(PART, false)],
-          ],
-          ['B2-01-AUTRE', [buildVerdictDeQuestion(EVOLUTION, false)]],
-        ]),
-      );
-
-      expect(ligne(element, PART)?.textContent).toContain('45,5 %');
-      expect(ligne(element, EVOLUTION)?.classList).toContain(
-        'slide-answer-review__explication--juste',
-      );
-      expect(ligne(element, PART)?.classList).toContain('slide-answer-review__explication--erreur');
-    });
-
-    it('T10 · projette au presentateur la reussite de la classe sur les questions de la source', () => {
-      const element = monter(
-        'presentateur',
-        new Map(),
-        buildResultatsSeance({
-          questions: [
-            buildResultatQuestion({
-              questionId: EVOLUTION,
-              ecranId: ATELIER_CORRIGE.screenId,
-              total: 20,
-              correctes: 14,
-            }),
-            buildResultatQuestion({ questionId: PART, ecranId: 'B2-01-AUTRE', total: 9 }),
-          ],
-        }),
-      );
-
-      expect(ligne(element, EVOLUTION)?.textContent).toContain('14 / 20');
-      expect(ligne(element, PART)?.querySelector('.slide-answer-review__reussite')).toBeNull();
-    });
-
-    it('T6 · colore en vert et rouge chaque énigme d un coffre corrigé sur un écran suivant', () => {
-      const correction = buildVisualAnswerReviewSlide(
-        { ecranSource: 'B2-01-A6-02-COFFRE' },
-        'ecran-correction-du-coffre',
-        buildAnswerReviewProps({
-          source: { screenId: 'B2-01-A6-02-COFFRE' },
-          explications: [
-            { reference: 'b2-01-a6-e1-mix', texte: 'Mix : 60 % × 12 + 40 % × 20.' },
-            { reference: 'b2-01-a6-e2-points', texte: 'Points : la moyenne pondérée.' },
-          ],
-        }),
-      );
-      const fixture = TestBed.createComponent(SlideVisualComponent);
-      fixture.componentRef.setInput('slide', correction);
-      fixture.componentRef.setInput('role', 'etudiant');
-      fixture.componentRef.setInput(
-        'retours',
-        new Map<string, RetourBrique[]>([
-          [
-            'B2-01-A6-02-COFFRE',
-            [
-              {
-                kind: 'progression-enigmes',
-                ...buildProgressionDesEnigmes({
-                  parcoursId: 'b2-01-a6-coffre',
-                  resolues: [{ enigmeId: 'b2-01-a6-e1-mix', fragment: 'A' }],
-                  tentativesRestantes: { 'b2-01-a6-e1-mix': 2, 'b2-01-a6-e2-points': 0 },
-                  etats: {
-                    'b2-01-a6-e1-mix': { etat: 'resolue', tentativesRestantes: 2 },
-                    'b2-01-a6-e2-points': { etat: 'epuisee', tentativesRestantes: 0 },
-                    'b2-01-a6-e3-rouleau': { etat: 'ouverte', tentativesRestantes: 10 },
-                    'b2-01-a6-e4-tva': { etat: 'verrouillee', tentativesRestantes: 10 },
-                  },
-                  enigmeOuverte: 'b2-01-a6-e3-rouleau',
-                }),
-              },
-            ],
-          ],
-        ]),
-      );
-      fixture.detectChanges();
-      const element = fixture.nativeElement as HTMLElement;
-
-      expect(ligne(element, 'b2-01-a6-e1-mix')?.classList).toContain(
-        'slide-answer-review__explication--juste',
-      );
-      expect(ligne(element, 'b2-01-a6-e2-points')?.classList).toContain(
-        'slide-answer-review__explication--erreur',
-      );
-    });
-  });
-
   it('rend la trace ecrite et le nuage de points avec leur composant', () => {
     const rendus = [
       {
@@ -440,10 +285,12 @@ describe('SlideVisualComponent', () => {
 
   it('ne transmet la priorite qu a un hero, sans casser les autres layouts', () => {
     const fixture = TestBed.createComponent(SlideVisualComponent);
-    fixture.componentRef.setInput('slide', buildVisualQuizSlide());
+    fixture.componentRef.setInput('slide', buildVisualSortCorrectionSlide());
     fixture.componentRef.setInput('prioritaire', true);
     fixture.detectChanges();
 
-    expect((fixture.nativeElement as HTMLElement).querySelector('app-slide-quiz')).not.toBeNull();
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelector('app-slide-sort-review'),
+    ).not.toBeNull();
   });
 });

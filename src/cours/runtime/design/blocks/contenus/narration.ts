@@ -1,39 +1,3 @@
-export const quote = `
-:where(.fp-root) .fp-quote__figure {
-  display: grid;
-  gap: var(--fp-s-3);
-  justify-items: start;
-}
-
-:where(.fp-root) .fp-quote__texte {
-  max-width: 46ch;
-  color: var(--fp-texte-fort);
-  font-family: var(--fp-font-display);
-  font-size: calc(1.5rem * var(--fp-echelle));
-  line-height: 1.3;
-  text-wrap: balance;
-}
-
-:where(.fp-root) .fp-quote__texte::before {
-  content: '« ';
-}
-
-:where(.fp-root) .fp-quote__texte::after {
-  content: ' »';
-}
-
-:where(.fp-root) .fp-quote__attribution {
-  color: var(--fp-ink-mute);
-  font-size: calc(0.95rem * var(--fp-echelle));
-  font-style: italic;
-  letter-spacing: 0.01em;
-}
-
-:where(.fp-root) .fp-quote__attribution::before {
-  content: '— ';
-}
-`;
-
 export const story = `
 :where(.fp-root) .fp-story__recit {
   display: grid;

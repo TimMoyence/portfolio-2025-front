@@ -17,7 +17,7 @@
     "lint:fix": "eslint . --ext .ts,.html,.js,.mjs --fix",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\" \"*.{json,js,cjs,md,yml,yaml}\" \"config/*.{json,js,cjs,mjs}\" \".github/**/*.{md,yml,yaml}\" \"docs/**/*.md\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "contrat": "openapi-ts -f config/openapi-ts.config.mjs && node scripts/instantanes-du-contrat.mjs && prettier --write --log-level warn \"src/testing/fixtures/instantanes/json/*.instantane.json\"",
+    "contrat": "openapi-ts -f config/openapi-ts.config.mjs && node scripts/instantanes-du-contrat.mjs && prettier --write --log-level warn \"src/testing/fixtures/instantanes/json/**/*.instantane.json\"",
     "contrat:check": "npm run contrat && git diff --exit-code -- contrat src/testing/fixtures && node scripts/contrat-sans-ecart.mjs",
     "guard:comments": "node scripts/gardes/guard-no-comments.cli.mjs --root .",
     "guard:comments:count": "node scripts/gardes/guard-no-comments.cli.mjs --root . --count",

@@ -3,12 +3,8 @@ import {
   aUnePresentation,
   ecranSourceDe,
   presentationDe,
-  quizImbrique,
-  quizPrincipal,
   RENDUS_DE_REVELATION,
 } from './presentation-v2';
-
-const QUESTION = { id: 'b2-s3-quiz', type: 'quiz', question: 'Quelle échelle vérifier ?' };
 
 function ecran(presentation: unknown): EcranContent {
   return {
@@ -38,9 +34,28 @@ describe('aUnePresentation', () => {
 
 describe('presentationDe', () => {
   it('rend la présentation complète', () => {
-    const attendue = presentation({ props: { title: 'Lire un chiffre' } });
+    const attendue = presentation({ renderer: 'hero', props: { title: 'Lire un chiffre' } });
 
     expect(presentationDe(ecran(attendue))).toEqual(attendue as never);
+  });
+
+  it('CTR-03 · ne lit que les présentations dont le contrat sert le rendu', () => {
+    const arbre = presentation({
+      renderer: 'arbre',
+      props: {
+        title: 'Le paiement',
+        branches: [{ evenement: 'M', probabilite: 0.35 }],
+        description: 'Arbre pondéré à une génération.',
+      },
+    });
+    const retirees = ['quiz', 'guide', 'answer-review', 'quote', 'cta', 'introuvable'].map(
+      (renderer) => presentation({ renderer, props: { title: 'Lire un chiffre' } }),
+    );
+
+    expect(presentationDe(ecran(arbre))).toEqual(arbre as never);
+    expect(retirees.map((retiree) => presentationDe(ecran(retiree)))).toEqual(
+      retirees.map(() => null),
+    );
   });
 
   it('refuse une présentation dont un champ manque ou change de type', () => {
@@ -64,40 +79,9 @@ describe('presentationDe', () => {
   });
 });
 
-describe('quizPrincipal et quizImbrique', () => {
-  it('lit le quiz principal d’un rendu quiz', () => {
-    const vue = presentationDe(ecran(presentation({ props: { questionData: QUESTION } })));
-
-    expect(quizPrincipal(vue)).toEqual(QUESTION);
-  });
-
-  it('ne lit aucun quiz principal quand le rendu n’est pas un quiz', () => {
-    const vue = presentationDe(
-      ecran(presentation({ renderer: 'hero', props: { questionData: QUESTION } })),
-    );
-
-    expect(quizPrincipal(vue)).toBeNull();
-  });
-
-  it('lit le quiz imbriqué quel que soit le rendu, et rend null quand il n’y en a pas', () => {
-    const avec = presentationDe(
-      ecran(presentation({ renderer: 'chart', props: { nestedQuiz: QUESTION } })),
-    );
-    const sans = presentationDe(ecran(presentation({ renderer: 'chart' })));
-
-    expect(quizImbrique(avec)).toEqual(QUESTION);
-    expect(quizImbrique(sans)).toBeNull();
-  });
-
-  it('rend null sur une présentation absente, sans lever', () => {
-    expect(quizPrincipal(null)).toBeNull();
-    expect(quizImbrique(null)).toBeNull();
-  });
-});
-
 describe('ecranSourceDe et RENDUS_DE_REVELATION', () => {
-  it('ne tient pour rendus de révélation que la revue du tri et celle de la réponse', () => {
-    expect([...RENDUS_DE_REVELATION]).toEqual(['sort-review', 'answer-review']);
+  it('ne tient pour rendu de révélation que la revue du tri, seule servie par le contrat', () => {
+    expect([...RENDUS_DE_REVELATION]).toEqual(['sort-review']);
   });
 
   it('lit l’écran source d’une correction, et rend null sans source ni identifiant textuel', () => {

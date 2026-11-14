@@ -16,8 +16,8 @@ export {
 } from './layouts/donnees/slide-comparison/slide-comparison.component';
 export { SlideGridComponent } from './layouts/medias/slide-grid/slide-grid.component';
 export { SlideMethodPathComponent } from './layouts/texte/slide-method-path/slide-method-path.component';
-export { SlideGuideComponent } from './layouts/texte/slide-guide/slide-guide.component';
 export { SlideCtaComponent } from './layouts/medias/slide-cta/slide-cta.component';
+export { SlidePageComponent } from './layouts/medias/slide-page/slide-page.component';
 export {
   SlideTableComponent,
   type TableColumn,
@@ -26,8 +26,8 @@ export { SlideChartComponent } from './layouts/donnees/slide-chart/slide-chart.c
 export { SlideBoxplotComponent } from './layouts/donnees/slide-boxplot/slide-boxplot.component';
 export { SlideLessonComponent } from './layouts/texte/slide-lesson/slide-lesson.component';
 export { SlideScatterComponent } from './layouts/donnees/slide-scatter/slide-scatter.component';
+export { SlideArbreComponent } from './layouts/donnees/slide-arbre/slide-arbre.component';
 export { SlideSortReviewComponent } from './layouts/revue/slide-sort-review/slide-sort-review.component';
-export { SlideAnswerReviewComponent } from './layouts/revue/slide-answer-review/slide-answer-review.component';
 
 export { SlidePollComponent } from './interactions/slide-poll/slide-poll.component';
 export { SlideReflectionComponent } from './interactions/slide-reflection/slide-reflection.component';

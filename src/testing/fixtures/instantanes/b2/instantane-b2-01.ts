@@ -1,5 +1,5 @@
 import type { EcranContent, EcranDeroule } from '../../../../cours/content/types';
-import fichier from '../json/b2-01.instantane.json';
+import fichier from '../json/b2/b2-01.instantane.json';
 import {
   ecransDuPupitreDe,
   ecransPublicsDe,

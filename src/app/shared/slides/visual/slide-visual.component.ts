@@ -1,12 +1,5 @@
-import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  output,
-  type Type,
-} from '@angular/core';
+import { NgComponentOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, type Type } from '@angular/core';
 import type {
   DecomptesParCle,
   EcranContent,
@@ -15,63 +8,47 @@ import type {
   Role,
 } from '../../../../cours/content/types';
 import {
+  SlideArbreComponent,
   SlideBoxplotComponent,
   SlideChartComponent,
   SlideComparisonComponent,
-  SlideCtaComponent,
   SlideGridComponent,
-  SlideGuideComponent,
   SlideHeroComponent,
   SlideIllustrationComponent,
   SlideImageComponent,
   SlideLessonComponent,
   SlideMethodPathComponent,
-  SlideQuoteComponent,
-  SlideAnswerReviewComponent,
+  SlidePageComponent,
   SlideReflectionComponent,
   SlideScatterComponent,
   SlideSortReviewComponent,
   SlideStatsComponent,
   SlideTableComponent,
 } from '..';
-import type { QuizInteraction } from '../interactions/slide-quiz/slide-quiz.component';
-import { SlideQuizComponent } from '../interactions/slide-quiz/slide-quiz.component';
 import type { ModeInteraction } from '../interactions/mode-interaction';
-import {
-  reussitesDeLEcran,
-  verdictsDeLEcran,
-} from '../../../core/adapters/formations/retours-brique';
 import type { RetourBrique } from '../../../core/ports/formations.port';
 import { chaineDe, objet } from '../../../../cours/runtime/core/texte/valeurs';
-import {
-  ecranSourceDe,
-  presentationDe,
-  quizImbrique,
-  quizPrincipal,
-  RENDUS_DE_REVELATION,
-} from './presentation-v2';
+import type { RenduServi } from './presentation-v2';
+import { ecranSourceDe, presentationDe, RENDUS_DE_REVELATION } from './presentation-v2';
 
-const layouts: Readonly<Record<string, Type<unknown>>> = {
+const layouts: Readonly<Record<RenduServi, Type<unknown>>> = {
   hero: SlideHeroComponent,
   'method-path': SlideMethodPathComponent,
-  quiz: SlideQuizComponent,
   chart: SlideChartComponent,
   boxplot: SlideBoxplotComponent,
   scatter: SlideScatterComponent,
+  arbre: SlideArbreComponent,
   lesson: SlideLessonComponent,
   grid: SlideGridComponent,
   comparison: SlideComparisonComponent,
   stats: SlideStatsComponent,
   reflection: SlideReflectionComponent,
-  quote: SlideQuoteComponent,
   table: SlideTableComponent,
   'image-left': SlideImageComponent,
   'image-right': SlideImageComponent,
   illustration: SlideIllustrationComponent,
-  cta: SlideCtaComponent,
-  guide: SlideGuideComponent,
+  page: SlidePageComponent,
   'sort-review': SlideSortReviewComponent,
-  'answer-review': SlideAnswerReviewComponent,
 };
 
 const RENDUS_A_IMAGE_PRIORISABLE: ReadonlySet<string> = new Set([
@@ -109,34 +86,14 @@ function comptesDuTri(
   return question?.parCle ?? {};
 }
 
-function commeQuiz(quiz: Readonly<Record<string, unknown>> | null): QuizInteraction | null {
-  return quiz === null ? null : (quiz as unknown as QuizInteraction);
-}
-
 @Component({
   selector: 'app-slide-visual',
   standalone: true,
-  imports: [NgComponentOutlet, NgTemplateOutlet, SlideQuizComponent],
+  imports: [NgComponentOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ng-template #quizDeLEcran let-quiz>
-      <app-slide-quiz
-        [questionData]="quiz"
-        [mode]="mode()"
-        [reponsesRecues]="reponsesRecues().get(quiz.id) ?? 0"
-        [participants]="resultats()?.participants ?? 0"
-        (selection)="reponse.emit($event)"
-      />
-    </ng-template>
     @if (layout(); as component) {
-      @if (quizData(); as quiz) {
-        <ng-container *ngTemplateOutlet="quizDeLEcran; context: { $implicit: quiz }" />
-      } @else {
-        <ng-container *ngComponentOutlet="component; inputs: layoutInputs()" />
-      }
-      @if (nestedQuiz(); as quiz) {
-        <ng-container *ngTemplateOutlet="quizDeLEcran; context: { $implicit: quiz }" />
-      }
+      <ng-container *ngComponentOutlet="component; inputs: layoutInputs()" />
       @if (sourceLink(); as link) {
         <p class="slide-visual__source">
           <a [href]="link.href" target="_blank" rel="noreferrer">{{ link.label }}</a>
@@ -183,12 +140,6 @@ export class SlideVisualComponent {
   readonly prioritaire = input(false);
   readonly retours = input<ReadonlyMap<string, readonly RetourBrique[]>>(new Map());
   readonly debrief = input<ReflexionServie | null>(null);
-  readonly reponse = output<{
-    questionId: string;
-    valeur: string;
-    dureeMs: number;
-    type?: 'libre' | 'qcm';
-  }>();
 
   private readonly presentation = computed(() => presentationDe(this.slide()));
   protected readonly mode = computed<ModeInteraction>(() => {
@@ -197,18 +148,9 @@ export class SlideVisualComponent {
     }
     return this.sessionId() === null ? 'apercu' : 'seance';
   });
-  protected readonly reponsesRecues = computed<ReadonlyMap<string, number>>(
-    () =>
-      new Map(
-        (this.resultats()?.questions ?? []).map((question) => [
-          question.questionId,
-          question.total,
-        ]),
-      ),
-  );
   protected readonly layout = computed(() => {
     const renderer = this.presentation()?.renderer;
-    return renderer === undefined ? null : (layouts[renderer] ?? null);
+    return renderer === undefined ? null : layouts[renderer];
   });
   protected readonly layoutInputs = computed(() => {
     const renderer = this.presentation()?.renderer;
@@ -216,30 +158,9 @@ export class SlideVisualComponent {
     const inputs = Object.fromEntries(
       Object.entries(props).filter(
         ([key]) =>
-          key !== 'sourceLink' &&
-          key !== 'nestedQuiz' &&
-          !(RENDUS_DE_REVELATION.has(renderer ?? '') && key === 'source'),
+          key !== 'sourceLink' && !(RENDUS_DE_REVELATION.has(renderer ?? '') && key === 'source'),
       ),
     );
-    const ecranSource = ecranSourceDe(objet(props['source']));
-    const answerInputs =
-      renderer === 'answer-review'
-        ? {
-            verdicts: verdictsDeLEcran(
-              ecranSource === null ? [] : (this.retours().get(ecranSource) ?? []),
-            ),
-            cibles: Object.fromEntries(
-              (this.slide().revelation?.questions ?? []).map(({ questionId, cible }) => [
-                questionId,
-                cible,
-              ]),
-            ),
-            reussites:
-              this.role() === 'presentateur'
-                ? reussitesDeLEcran(this.resultats(), ecranSource)
-                : {},
-          }
-        : {};
     const reflectionInputs =
       renderer === 'reflection'
         ? {
@@ -265,15 +186,12 @@ export class SlideVisualComponent {
       ...inputs,
       ...reflectionInputs,
       ...reviewInputs,
-      ...answerInputs,
       ...(renderer === 'image-right' ? { reverse: true } : {}),
       ...(RENDUS_A_IMAGE_PRIORISABLE.has(renderer ?? '') && this.prioritaire()
         ? { priority: true }
         : {}),
     };
   });
-  protected readonly quizData = computed(() => commeQuiz(quizPrincipal(this.presentation())));
-  protected readonly nestedQuiz = computed(() => commeQuiz(quizImbrique(this.presentation())));
   protected readonly sourceLink = computed(() => {
     const link = this.presentation()?.props['sourceLink'];
     const href = chaineDe(link, 'href');
