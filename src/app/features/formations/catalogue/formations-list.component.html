@@ -1,0 +1,113 @@
+<section class="catalogue-tete">
+  <div class="wrap">
+    <h1 i18n="@@formations.titre">Formations</h1>
+    <p class="lead" i18n="@@formations.phrase">
+      Les cours interactifs du BTS CG et du Bachelor, à suivre en séance, et des formations IA et
+      web gratuites.
+    </p>
+    <label
+      class="catalogue-tete__libelle"
+      for="recherche-de-formation"
+      i18n="@@formations.recherche"
+      >Rechercher une formation</label
+    >
+    <input
+      #champ
+      id="recherche-de-formation"
+      class="catalogue-tete__champ"
+      type="search"
+      autocomplete="off"
+      [value]="recherche()"
+      (input)="chercher($event)"
+    />
+    <div
+      class="catalogue-tete__puces"
+      role="group"
+      aria-label="Parcours"
+      i18n-aria-label="@@formations.parcours"
+    >
+      <button
+        type="button"
+        class="puce"
+        [attr.aria-pressed]="choisi() === null"
+        [disabled]="total() === 0"
+        (click)="choisir(null)"
+      >
+        <ng-container i18n="@@formations.toutes">Toutes</ng-container>
+        <span class="nombre">{{ total() }}</span>
+      </button>
+      @for (puce of parcours(); track puce.id) {
+        <button
+          type="button"
+          class="puce"
+          [attr.aria-pressed]="choisi() === puce.id"
+          [disabled]="puce.cartes.length === 0"
+          (click)="choisir(puce.id)"
+        >
+          {{ puce.titre }} <span class="nombre">{{ puce.cartes.length }}</span>
+        </button>
+      }
+    </div>
+    <p class="catalogue-tete__statut" role="status" i18n="@@formations.nombre">
+      {affichees(), plural,
+        =0 {Aucune formation}
+        =1 {1 formation}
+        other {{{ affichees() }} formations}
+      }
+    </p>
+  </div>
+</section>
+
+@for (section of sections(); track section.id) {
+  <section class="parcours" [attr.aria-labelledby]="'parcours-' + section.id">
+    <div class="wrap">
+      <h2 class="parcours__titre" [id]="'parcours-' + section.id">
+        {{ section.titre }} <span class="nombre">{{ section.cartes.length }}</span>
+      </h2>
+      <div class="formation-grid">
+        @for (formation of section.cartes; track formation.link) {
+          <article
+            class="formation"
+            [class.formation--bonus]="formation.variant === 'bonus'"
+            [class.formation--live]="formation.variant === 'live'"
+            appReveal
+          >
+            <span class="badge">{{ formation.badge }}</span>
+            <h3>{{ formation.title }}</h3>
+            <p>{{ formation.description }}</p>
+            <div class="f-meta">
+              @for (row of formation.meta; track row.key) {
+                <div>
+                  <span class="fk">{{ row.key }}</span>
+                  <span class="fv">{{ row.value }}</span>
+                </div>
+              }
+            </div>
+            <div class="f-foot">
+              <span class="price">{{ formation.price }}</span>
+              <a class="link-arrow" [routerLink]="formation.link">
+                {{ formation.cta }} <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+} @empty {
+  <section class="catalogue-vide">
+    <div class="wrap">
+      <p class="lead" i18n="@@formations.aucune">
+        Aucune formation ne correspond à « {{ texteCite() }} »
+      </p>
+      <button
+        type="button"
+        class="catalogue-vide__action"
+        i18n="@@formations.tout-afficher"
+        (click)="toutAfficher()"
+      >
+        Tout afficher
+      </button>
+    </div>
+  </section>
+}
