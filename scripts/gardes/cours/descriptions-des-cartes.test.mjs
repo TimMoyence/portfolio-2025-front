@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cheminDuDepot, lireTexte } from '../../lib/depot.mjs';
 
-const CARTES = cheminDuDepot('src/app/features/formations/formations-list.data.ts');
+const CARTES = cheminDuDepot('src/app/features/formations/catalogue/formations-list.data.ts');
 const TRADUCTION_EN = cheminDuDepot('src/locale/messages.en.xlf');
 const COURS_SERVIS = cheminDuDepot('contrat/cours-servis.gen.json');
 const DESCRIPTION_FRANCAISE = /:@@formations-list\.(b\d(?:-\d\d)?)\.description:([^`]*)`/g;

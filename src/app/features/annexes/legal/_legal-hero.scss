@@ -1,17 +1,9 @@
+@use '../../../styles-shared/mise-en-page/heads';
 @use '../../../styles-shared/mise-en-page/mono';
 
 .lg-hero {
-  padding-top: clamp(130px, 16vh, 190px);
-  padding-bottom: clamp(30px, 5vh, 50px);
+  @include heads.tete-courte;
   border-bottom: 1px solid var(--line);
-}
-.lg-hero h1 {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 6vw, 80px);
-  line-height: 1;
-  letter-spacing: -0.025em;
-  max-width: 18ch;
-  margin-top: 16px;
 }
 .lg-hero h1 ::ng-deep em {
   font-style: italic;

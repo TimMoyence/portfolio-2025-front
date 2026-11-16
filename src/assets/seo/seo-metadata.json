@@ -1238,9 +1238,9 @@
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
-          "description": "Formations gratuites sur l'IA et le digital, plus accompagnement sur mesure du management des usages, pour solopreneurs et entrepreneurs à Bordeaux. Présentations concrètes consultables en ligne.",
+          "description": "Les cours interactifs du BTS CG et du Bachelor, à suivre en séance, et des formations IA et web gratuites. Recherchez une formation ou parcourez-les par parcours.",
           "ogTitle": "Formations gratuites — Tim Moyence",
-          "ogDescription": "Ressources gratuites sur l'IA et accompagnement du management des usages pour entrepreneurs.",
+          "ogDescription": "Cours interactifs du BTS CG et du Bachelor, et formations IA et web gratuites.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "ItemList",
@@ -1267,9 +1267,9 @@
         },
         "en": {
           "title": "Free Courses — Tim Moyence",
-          "description": "Free AI and digital training, plus tailored support for managing AI adoption, for solopreneurs and entrepreneurs in Bordeaux.",
+          "description": "Interactive BTS CG and Bachelor courses, taught in live sessions, and free AI and web courses. Search for a course or browse them by track.",
           "ogTitle": "Free Courses — Tim Moyence",
-          "ogDescription": "Free AI resources and tailored support for managing AI adoption.",
+          "ogDescription": "Interactive BTS CG and Bachelor courses, and free AI and web courses.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "ItemList",

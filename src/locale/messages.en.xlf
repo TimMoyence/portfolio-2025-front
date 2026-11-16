@@ -8023,66 +8023,6 @@
         <target>Discover the audit</target>
       </segment>
     </unit>
-    <unit id="formationsHeroKicker">
-      <segment>
-        <source>Formations · gratuites</source>
-        <target>Training · free</target>
-      </segment>
-    </unit>
-    <unit id="formationsHeroLead">
-      <segment>
-        <source>Des formations gratuites au format slides interactives — avec quiz, sondages et séances accompagnées — plus un accompagnement sur mesure pour ancrer les usages IA dans le management. Consultables en ligne ou projetables en présentation. Des réponses actionnables, pas un cours universitaire. Sans inscription : votre email sert seulement à recevoir le toolkit PDF.</source>
-        <target>Free trainings as interactive slides — with quizzes, polls and guided sessions — plus tailored support to anchor AI practices in management. View them online or project them in a presentation. Actionable answers, not a university lecture. No sign-up: your email is only used to send you the PDF toolkit.</target>
-      </segment>
-    </unit>
-    <unit id="formationsHeroTitle">
-      <segment>
-        <source>Du concret,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>en <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">format diapo</pc>.</source>
-        <target>Real substance,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>in <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="fmt" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">slide format</pc>.</target>
-      </segment>
-    </unit>
-    <unit id="formationsFormatKicker">
-      <segment>
-        <source>Le format</source>
-        <target>The format</target>
-      </segment>
-    </unit>
-    <unit id="formationsFormatHeading">
-      <segment>
-        <source> Des slides vivantes, pas un PDF qu'on ne lit jamais. </source>
-        <target> Living slides, not a PDF nobody ever reads. </target>
-      </segment>
-    </unit>
-    <unit id="formationsCtaKicker">
-      <segment>
-        <source>Tout est gratuit</source>
-        <target>It's all free</target>
-      </segment>
-    </unit>
-    <unit id="formationsCtaTitle">
-      <segment>
-        <source>Choisissez une formation et lancez les slides.</source>
-        <target>Pick a training and start the slides.</target>
-      </segment>
-    </unit>
-    <unit id="formationsCtaLead">
-      <segment>
-        <source>Aucune inscription. Votre email n'est demandé que si vous voulez le toolkit PDF.</source>
-        <target>No sign-up. Your email is only requested if you want the PDF toolkit.</target>
-      </segment>
-    </unit>
-    <unit id="formationsCtaPrimary">
-      <segment>
-        <source>Commencer par l'IA</source>
-        <target>Start with AI</target>
-      </segment>
-    </unit>
-    <unit id="formationsCtaSecondary">
-      <segment>
-        <source>Poser une question</source>
-        <target>Ask a question</target>
-      </segment>
-    </unit>
     <unit id="formations-list.meta.duration">
       <segment>
         <source>Durée</source>
@@ -8189,42 +8129,6 @@
       <segment>
         <source>Email uniquement</source>
         <target>Email only</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.benefit.interactive.title">
-      <segment>
-        <source>Interactif</source>
-        <target>Interactive</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.benefit.interactive.desc">
-      <segment>
-        <source>Des quiz et des sondages ponctuent chaque formation : on participe au lieu de subir.</source>
-        <target>Quizzes and polls punctuate every training: you take part instead of zoning out.</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.benefit.screen.title">
-      <segment>
-        <source>En ligne ou projeté</source>
-        <target>Online or projected</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.benefit.screen.desc">
-      <segment>
-        <source>À consulter tranquillement chez soi, ou à projeter en présentation devant une équipe.</source>
-        <target>View it quietly at home, or project it in a presentation in front of a team.</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.benefit.toolkit.title">
-      <segment>
-        <source>Un toolkit à emporter</source>
-        <target>A toolkit to take away</target>
-      </segment>
-    </unit>
-    <unit id="formations-list.benefit.toolkit.desc">
-      <segment>
-        <source>La formation IA pour solopreneurs se termine par un toolkit PDF actionnable, pour passer de l'écoute à la pratique.</source>
-        <target>The AI for solopreneurs training ends with an actionable PDF toolkit, to move from listening to doing.</target>
       </segment>
     </unit>
     <unit id="formations.toolkit.item1">
@@ -11454,7 +11358,7 @@
     </unit>
     <unit id="formations-list.b2.badge">
       <notes>
-        <note category="location">src/app/features/formations/formations-list.data.ts:26</note>
+        <note category="location">src/app/features/formations/catalogue/formations-list.data.ts:26</note>
       </notes>
       <segment>
         <source>BTS CG · Cours interactif</source>
@@ -11463,7 +11367,7 @@
     </unit>
     <unit id="formations-list.b2.title">
       <notes>
-        <note category="location">src/app/features/formations/formations-list.data.ts:27</note>
+        <note category="location">src/app/features/formations/catalogue/formations-list.data.ts:27</note>
       </notes>
       <segment>
         <source>B2-01 — Lire et contrôler l’information chiffrée</source>
@@ -11472,7 +11376,7 @@
     </unit>
     <unit id="formations-list.b2.description">
       <notes>
-        <note category="location">src/app/features/formations/formations-list.data.ts:28</note>
+        <note category="location">src/app/features/formations/catalogue/formations-list.data.ts:28</note>
       </notes>
       <segment>
         <source>Lire, contrôler et expliquer une information chiffrée : proportions, pourcentages, évolutions. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
@@ -11481,7 +11385,7 @@
     </unit>
     <unit id="formations-list.b2-02.title">
       <notes>
-        <note category="location">src/app/features/formations/formations-list.data.ts:79</note>
+        <note category="location">src/app/features/formations/catalogue/formations-list.data.ts:79</note>
       </notes>
       <segment>
         <source>B2-02 — Séries statistiques : résumer, relier, prévoir</source>
@@ -11490,7 +11394,7 @@
     </unit>
     <unit id="formations-list.b2-02.description">
       <notes>
-        <note category="location">src/app/features/formations/formations-list.data.ts:80</note>
+        <note category="location">src/app/features/formations/catalogue/formations-list.data.ts:80</note>
       </notes>
       <segment>
         <source>Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
@@ -11499,7 +11403,7 @@
     </unit>
     <unit id="formations-list.b2-03.title">
       <notes>
-        <note category="location">src/app/features/formations/formations-list.data.ts:85</note>
+        <note category="location">src/app/features/formations/catalogue/formations-list.data.ts:85</note>
       </notes>
       <segment>
         <source>B2-03 — Logique : écrire et contrôler une règle</source>
@@ -11508,7 +11412,7 @@
     </unit>
     <unit id="formations-list.b2-03.description">
       <notes>
-        <note category="location">src/app/features/formations/formations-list.data.ts:86</note>
+        <note category="location">src/app/features/formations/catalogue/formations-list.data.ts:86</note>
       </notes>
       <segment>
         <source>Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
@@ -11709,7 +11613,7 @@
     </unit>
     <unit id="formations-list.b2.format">
       <notes>
-        <note category="location">src/app/features/formations/formations-list.data.ts:36</note>
+        <note category="location">src/app/features/formations/catalogue/formations-list.data.ts:36</note>
       </notes>
       <segment>
         <source>Slides + séance accompagnée</source>
@@ -15454,6 +15358,92 @@
       <segment>
         <source>L’abonnement n’a pas pu partir. Réessayez dans un instant.</source>
         <target> The subscription could not be sent. Try again in a moment. </target>
+      </segment>
+    </unit>
+    <unit id="formations.titre">
+      <segment>
+        <source>Formations</source>
+        <target>Courses</target>
+      </segment>
+    </unit>
+    <unit id="formations.phrase">
+      <segment>
+        <source> Les cours interactifs du BTS CG et du Bachelor, à suivre en séance, et des formations IA et web gratuites. </source>
+        <target> Interactive BTS CG and Bachelor courses, taught in live sessions, and free AI and web courses. </target>
+      </segment>
+    </unit>
+    <unit id="formations.recherche">
+      <segment>
+        <source>Rechercher une formation</source>
+        <target>Search courses</target>
+      </segment>
+    </unit>
+    <unit id="formations.parcours">
+      <segment>
+        <source>Parcours</source>
+        <target>Tracks</target>
+      </segment>
+    </unit>
+    <unit id="formations.toutes">
+      <segment>
+        <source>Toutes</source>
+        <target>All</target>
+      </segment>
+    </unit>
+    <unit id="formations.parcours.bts-cg-1">
+      <segment>
+        <source>BTS CG 1re année</source>
+        <target>BTS CG year 1</target>
+      </segment>
+    </unit>
+    <unit id="formations.parcours.bts-cg-2">
+      <segment>
+        <source>BTS CG 2e année</source>
+        <target>BTS CG year 2</target>
+      </segment>
+    </unit>
+    <unit id="formations.parcours.bachelor-3">
+      <segment>
+        <source>Bachelor 3</source>
+        <target>Bachelor year 3</target>
+      </segment>
+    </unit>
+    <unit id="formations.parcours.ia-web">
+      <segment>
+        <source>IA &amp; web</source>
+        <target>AI &amp; web</target>
+      </segment>
+    </unit>
+    <unit id="2204151401647317417">
+      <segment>
+        <source>{VAR_PLURAL, plural, =0 {Aucune formation} =1 {1 formation} other {<ph id="0" equiv="INTERPOLATION"/> formations}}</source>
+        <target>{VAR_PLURAL, plural, =0 {No courses} =1 {1 course} other {<ph id="0" equiv="INTERPOLATION"/> courses}}</target>
+      </segment>
+    </unit>
+    <unit id="formations.aucune">
+      <segment>
+        <source> Aucune formation ne correspond à « <ph id="0" equiv="INTERPOLATION" disp="{{ texteCite() }}"/> » </source>
+        <target> No course matches “<ph id="0" equiv="INTERPOLATION" disp="{{ texteCite() }}"/>” </target>
+      </segment>
+    </unit>
+    <unit id="formations.tout-afficher">
+      <segment>
+        <source> Tout afficher </source>
+        <target> Show all </target>
+      </segment>
+    </unit>
+    <unit id="formations.nombre">
+      <segment>
+        <source> <ph id="0" equiv="ICU" disp="{affichees(), plural,
+        =0 {Aucune formation}
+        =1 {1 formation}
+        other {{{ affichees() }} formations}
+      }" subFlows="17252123965533843"/> </source>
+        <target> <ph id="0" equiv="ICU" disp="{affichees(), plural,
+        =0 {Aucune formation}
+        =1 {1 formation}
+        other {{{ affichees() }} formations}
+      }" subFlows="17252123965533843"/> </target>
       </segment>
     </unit>
   </file>

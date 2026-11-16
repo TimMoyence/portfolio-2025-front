@@ -16,6 +16,20 @@
   }
 }
 
+@mixin tete-courte {
+  padding-top: clamp(130px, 16vh, 190px);
+  padding-bottom: clamp(30px, 5vh, 50px);
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    max-width: 18ch;
+    margin-top: 16px;
+  }
+}
+
 @mixin split-head($margin-bottom: var(--s-5)) {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;

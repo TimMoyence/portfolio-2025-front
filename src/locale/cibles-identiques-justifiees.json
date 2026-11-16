@@ -12,6 +12,7 @@
     "placeholder": "Le texte se reduit a un placeholder d'interpolation et a des mots identiques dans les deux langues."
   },
   "unites": {
+    "formations.nombre": "placeholder",
     "homeHeroStat1Num": "nombre",
     "homeHeroStat2Num": "nombre",
     "presentateurNotationTypeVote": "emprunt",

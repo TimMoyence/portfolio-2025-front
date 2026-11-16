@@ -165,7 +165,7 @@ export const routes: Routes = [
   {
     path: 'formations',
     loadComponent: () =>
-      import('./features/formations/formations-list.component').then(
+      import('./features/formations/catalogue/formations-list.component').then(
         (m) => m.FormationsListComponent,
       ),
     data: {

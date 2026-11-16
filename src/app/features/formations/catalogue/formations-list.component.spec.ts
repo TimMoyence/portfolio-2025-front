@@ -1,11 +1,12 @@
 import type { ComponentFixture } from '@angular/core/testing';
-import seoMetadata from '../../../assets/seo/seo-metadata.json';
-import { dureeDuCoursEnSeance } from '../../core/config/cours-en-seance';
-import type { SeoMetadataFile } from '../../core/seo/seo-metadata.model';
+import seoMetadata from '../../../../assets/seo/seo-metadata.json';
+import { dureeDuCoursEnSeance } from '../../../core/config/cours-en-seance';
+import type { SeoMetadataFile } from '../../../core/seo/seo-metadata.model';
 import { FormationsListComponent } from './formations-list.component';
-import { FORMATION_BENEFITS, FORMATIONS } from './formations-list.data';
-import { INSTANTANES_DES_COURS_SERVIS } from '../../../testing/fixtures/instantanes-des-cours';
-import { montagePage } from '../../../testing/page/montage-page';
+import { FORMATIONS } from './formations-list.data';
+import { liensAffiches } from '../../../../testing/dom/catalogue-des-formations';
+import { INSTANTANES_DES_COURS_SERVIS } from '../../../../testing/fixtures/instantanes-des-cours';
+import { montagePage } from '../../../../testing/page/montage-page';
 
 const COURS_EN_SEANCE = INSTANTANES_DES_COURS_SERVIS.map(([code, instantane]) => ({
   code,
@@ -40,30 +41,51 @@ describe('FormationsListComponent', () => {
   });
 
   it('devrait exposer la liste des formations depuis les donnees statiques', () => {
-    const enSeance = component['formations'].filter(({ variant }) => variant === 'live');
-    expect(component['formations']).toBe(FORMATIONS);
-    expect(component['formations'].length - enSeance.length).toBe(4);
+    const enSeance = FORMATIONS.filter(({ variant }) => variant === 'live');
+    expect(liensAffiches(fixture.nativeElement as HTMLElement)).toEqual(
+      jasmine.arrayWithExactContents(FORMATIONS.map(({ link }) => link)),
+    );
+    expect(FORMATIONS.length - enSeance.length).toBe(4);
     expect(enSeance.length).toBe(COURS_EN_SEANCE.length);
   });
 
-  it('devrait composer les sections Asili (hero, grille, format, bande CTA)', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('app-asili-hero')).not.toBeNull();
-    expect(compiled.querySelector('.formation-grid')).not.toBeNull();
-    expect(compiled.querySelector('.fo-benefits')).not.toBeNull();
-    expect(compiled.querySelector('app-asili-cta-band')).not.toBeNull();
-  });
+  describe('CAT-01 · bandeau court', () => {
+    const racine = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const champ = (): HTMLInputElement | null => racine().querySelector('input[type="search"]');
 
-  it('devrait rendre un unique titre de hero (format diapo)', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const headings = compiled.querySelectorAll('h1');
-    expect(headings.length).toBe(1);
-    expect(headings[0]?.textContent).toContain('Du concret');
-    expect(headings[0]?.textContent).toContain('format diapo');
-  });
+    it('CAT-01 · ouvre la page sur le seul titre « Formations » et une phrase qui décrit le catalogue seul', () => {
+      const titres = Array.from(racine().querySelectorAll('h1'));
+      const phrase = titres[0]?.parentElement?.querySelector('p')?.textContent ?? '';
 
-  it('devrait rendre visible la formation IA et management sur mesure', () => {
-    expect(component['heroLead'].toLowerCase()).toContain('management');
+      expect(titres.map((titre) => titre.textContent?.trim())).toEqual(['Formations']);
+      expect(phrase).toContain('BTS CG');
+      expect(phrase).toContain('Bachelor');
+      expect(phrase).toContain('gratuites');
+      expect(phrase).not.toMatch(/accès libre|management|email|inscription/i);
+    });
+
+    it('CAT-01 · nomme le champ de recherche par son libellé visible, hors de tout formulaire', () => {
+      const id = champ()?.id ?? '';
+
+      expect(id).not.toBe('');
+      expect(racine().querySelector(`label[for="${id}"]`)?.textContent?.trim()).toBe(
+        'Rechercher une formation',
+      );
+      expect(champ()?.closest('form')).toBeNull();
+    });
+
+    it('CAT-01 · pose le champ avant toute carte, sans « Le format » ni bande finale', () => {
+      const cartes = racine().querySelectorAll('.formation');
+      const premiere = cartes[0];
+
+      expect(cartes.length).toBe(FORMATIONS.length);
+      expect(premiere && champ()?.compareDocumentPosition(premiere)).toBe(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+      expect(racine().querySelector('app-asili-cta-band')).toBeNull();
+      expect(racine().textContent).not.toContain('Des slides vivantes');
+      expect(racine().textContent).not.toContain('Commencer par l');
+    });
   });
 
   it('devrait rendre une carte pour chaque formation', () => {
@@ -121,13 +143,10 @@ describe('FormationsListComponent', () => {
       carte.meta.some((meta) => meta.key === 'Toolkit'),
     ).map((carte) => carte.link);
     const bonus = FORMATIONS.find((carte) => carte.variant === 'bonus');
-    const avantage = FORMATION_BENEFITS.find((benefice) => benefice.icon === 'toolkit');
 
     expect(avecToolkit).toEqual(['/formations/ia-solopreneurs']);
     expect(bonus?.description).not.toMatch(/chaque formation/i);
     expect(bonus?.description).toContain('solopreneurs');
-    expect(avantage?.desc).not.toMatch(/chaque session/i);
-    expect(avantage?.desc).toContain('solopreneurs');
   });
 
   it('présente en séance exactement les cours du BTS et du Bachelor servis par l API', () => {
@@ -196,14 +215,4 @@ describe('FormationsListComponent', () => {
       });
     });
   }
-
-  it('devrait rendre les trois benefices du format diapo', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const benefits = compiled.querySelectorAll('.fo-benefits .fo-benefit');
-    expect(benefits.length).toBe(FORMATION_BENEFITS.length);
-    for (const benefit of FORMATION_BENEFITS) {
-      expect(compiled.textContent).toContain(benefit.title);
-      expect(compiled.textContent).toContain(benefit.desc);
-    }
-  });
 });
