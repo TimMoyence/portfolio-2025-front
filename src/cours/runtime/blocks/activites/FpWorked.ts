@@ -184,7 +184,7 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
       etape,
       rang,
       (resolue) => safeHtml`
-        <p class="fp-worked__invite" data-testid="question">${escapeHtml(etape.invite)}</p>
+        <p class="fp-worked__invite fp-texte-servi" data-testid="question">${escapeHtml(etape.invite)}</p>
         ${resolue ? this.correction(etape) : VIDE}
       `,
     );
@@ -197,14 +197,14 @@ export class FpWorked extends FpRedaction<WorkedExemple> {
   private redaction(etape: WorkedEtape): EscapedHtml {
     const identifiant = `fp-worked-saisie-${etape.id}`;
     return safeHtml`
-      <label class="fp-worked__invite" for="${escapeHtml(identifiant)}">${escapeHtml(etape.invite)}</label>
+      <label class="fp-worked__invite fp-texte-servi" for="${escapeHtml(identifiant)}">${escapeHtml(etape.invite)}</label>
       <textarea class="fp-worked__champ" id="${escapeHtml(identifiant)}" data-testid="saisie" data-etape="${escapeHtml(etape.id)}" rows="3">${escapeHtml(this.texteDe(etape.id))}</textarea>
     `;
   }
 
   private saisieFigee(etape: WorkedEtape): EscapedHtml {
     return safeHtml`
-      <p class="fp-worked__invite">${escapeHtml(etape.invite)}</p>
+      <p class="fp-worked__invite fp-texte-servi">${escapeHtml(etape.invite)}</p>
       <p class="fp-worked__reponse" data-testid="saisie-figee" data-etape="${escapeHtml(etape.id)}">${escapeHtml(this.texteDe(etape.id))}</p>
     `;
   }

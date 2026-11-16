@@ -89,6 +89,20 @@ describe('PanneauReponsesLibresComponent', () => {
     expect(groupes[2].querySelector('[data-testid="reponses-libres-vide"]')).not.toBeNull();
   });
 
+  it('montre chaque point d un énoncé servi sur sa propre ligne', () => {
+    const fixture = monter(
+      'ecran-1',
+      undefined,
+      new Map([['mesure', 'Rédigez :\n1) le constat ;\n2) la décision.']]),
+    );
+
+    expect(
+      hote(fixture)
+        .querySelector<HTMLElement>('[data-testid="reponses-libres-question"]')
+        ?.innerText.split('\n'),
+    ).toEqual(['Rédigez :', '1) le constat ;', '2) la décision.']);
+  });
+
   it('relit au pupitre d une correction les reponses de l ecran auquel elle renvoie', () => {
     expect(textes(monter('ecran-3', 'ecran-2'))).toEqual(['Lire la source.']);
   });

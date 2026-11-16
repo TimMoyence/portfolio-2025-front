@@ -127,6 +127,32 @@ describe('FpWorked', () => {
     expect(montrees(hote)).toEqual([]);
   });
 
+  for (const [support, poser] of [
+    ['à rédiger', (): void => undefined],
+    [
+      'figée sous sa correction',
+      (): void => {
+        hote.etayage = 1;
+      },
+    ],
+    ['au présentateur', (): void => hote.setAttribute('data-cours-role', 'presentateur')],
+  ] as const) {
+    it(`pose chaque ligne de l invite sur sa propre ligne, ${support}`, () => {
+      const [premiere, ...suite] = EXEMPLE.etapes;
+      hote.exemple = {
+        ...EXEMPLE,
+        etapes: [{ ...premiere, invite: 'Relevez :\n1) le taux ;\n2) la durée.' }, ...suite],
+      };
+      poser();
+
+      expect(
+        noeudsOmbre(hote, 'etape')[0]
+          ?.querySelector<HTMLElement>('.fp-worked__invite')
+          ?.innerText.split('\n'),
+      ).toEqual(['Relevez :', '1) le taux ;', '2) la durée.']);
+    });
+  }
+
   it('RET-25 · ne montre aucune correction a la premiere presentation', () => {
     attendreAucuneEtapePreRemplie();
   });

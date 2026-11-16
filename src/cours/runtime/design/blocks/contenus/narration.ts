@@ -95,6 +95,14 @@ export const story = `
   color: var(--fp-sand);
 }
 
+:where(.fp-root) .fp-story__plan {
+  display: block;
+}
+
+:where(.fp-root) .fp-story__plan + .fp-story__plan {
+  margin-top: var(--fp-s-1);
+}
+
 :where(.fp-root) .fp-story__licence {
   padding: 0 var(--fp-s-3) var(--fp-s-3);
   color: var(--fp-sand);

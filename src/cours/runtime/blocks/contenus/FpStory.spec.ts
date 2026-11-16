@@ -127,6 +127,33 @@ describe('FpStory', () => {
     expect(video?.textContent).toContain(VIDEO.titre);
   });
 
+  for (const [support, papier] of [
+    ['à l écran, dépliée', false],
+    ['sur papier', true],
+  ] as const) {
+    it(`garde les paragraphes servis de la transcription, ${support}`, () => {
+      hote.recit = {
+        ...RECIT,
+        video: { ...VIDEO, transcript: '[Plan 1] Le titre.\n\n[Plan 2] La formule.' },
+      };
+      if (papier) {
+        hote.setAttribute('data-papier', '');
+      }
+      noeudOmbre(hote, 'video')?.querySelector('details')?.setAttribute('open', '');
+      const transcription = noeudOmbre<HTMLElement>(hote, 'transcription');
+
+      expect(
+        [...(transcription?.querySelectorAll('.fp-story__plan') ?? [])].map(
+          (plan) => plan.textContent,
+        ),
+      ).toEqual(['[Plan 1] Le titre.', '[Plan 2] La formule.']);
+      expect(transcription?.innerText.split('\n')).toEqual([
+        '[Plan 1] Le titre.',
+        '[Plan 2] La formule.',
+      ]);
+    });
+  }
+
   it('donne la grande typographie au titre pour le presentateur comme pour l etudiant', () => {
     attendreLaMemeTypographieAuPresentateur(hote, 'titre');
   });

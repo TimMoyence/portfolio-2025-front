@@ -121,6 +121,29 @@ describe('CoursResultatsProjetesComponent', () => {
     expect(carte.textContent).not.toContain('participant-1');
   });
 
+  it('projette chaque point d un énoncé servi sur sa propre ligne', () => {
+    port.lireReponsesLibres.and.returnValue(of(buildReponsesALaMission('Un montant.')));
+    const fixture = monter(
+      buildEcranDeroule({
+        ...ECRAN_MISSION,
+        donnees: {
+          cas: {
+            questionsLibres: [
+              { id: 'mission:mesure', question: 'Rédigez :\n1) le constat ;\n2) la décision.' },
+            ],
+          },
+        },
+      }),
+    );
+    fixture.detectChanges();
+
+    expect(
+      (fixture.nativeElement as HTMLElement)
+        .querySelector<HTMLElement>('.resultats-projetes__enonce')
+        ?.innerText.split('\n'),
+    ).toEqual(['Rédigez :', '1) le constat ;', '2) la décision.']);
+  });
+
   it('signale une relecture des reponses libres en echec', () => {
     port.lireReponsesLibres.and.returnValue(throwError(() => new Error('500')));
     const fixture = monter(ECRAN_MISSION);

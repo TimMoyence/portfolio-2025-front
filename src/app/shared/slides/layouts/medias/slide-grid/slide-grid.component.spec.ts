@@ -37,8 +37,11 @@ const VERSO_LONG =
   `,
 })
 class HoteRetournableComponent {
-  readonly verso = VERSO_LONG;
+  verso = VERSO_LONG;
 }
+
+const VERSO_EN_ETAPES =
+  '1. Calculer f′(x).\n2. Résoudre f′(x) = 0.\n3. Dresser le tableau de variations.\n4. Lire le maximum et conclure.';
 
 function monter(imprimable = false): HTMLElement {
   const fixture = TestBed.createComponent(HostComponent);
@@ -76,11 +79,12 @@ describe('SlideGridComponent', () => {
     expect([3, 5, 7, 11, 12, 15].map(colonnesPour)).toEqual(['3', '5', '4', '6', '6', '5']);
   });
 
-  function carteRetournable(): {
+  function carteRetournable(verso = VERSO_LONG): {
     fixture: ComponentFixture<HoteRetournableComponent>;
     carte: HTMLElement | null;
   } {
     const fixture = TestBed.createComponent(HoteRetournableComponent);
+    fixture.componentInstance.verso = verso;
     fixture.detectChanges();
     const carte = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
       '.slide-grid__card--flip',
@@ -88,15 +92,37 @@ describe('SlideGridComponent', () => {
     return { fixture, carte };
   }
 
-  it('R8 · garde le verso d une carte retournee dans sa carte', () => {
-    const { fixture, carte } = carteRetournable();
+  for (const [nature, texte] of [
+    ['long sur une ligne', VERSO_LONG],
+    ['en quatre étapes', VERSO_EN_ETAPES],
+  ] as const) {
+    it(`R8 · garde le verso ${nature} d une carte retournee dans sa carte`, () => {
+      const { fixture, carte } = carteRetournable(texte);
+      carte?.click();
+      fixture.detectChanges();
+      const verso = carte?.querySelector<HTMLElement>('.slide-grid__face--back');
+
+      expect(carte?.getAttribute('aria-pressed')).toBe('true');
+      expect(verso?.scrollHeight ?? Infinity).toBeLessThanOrEqual(verso?.clientHeight ?? 0);
+      expect(carte?.scrollHeight ?? Infinity).toBeLessThanOrEqual(carte?.clientHeight ?? 0);
+    });
+  }
+
+  it('pose chaque étape du verso sur sa propre ligne', () => {
+    const fixture = TestBed.createComponent(SlideGridComponent);
+    fixture.componentRef.setInput('items', [
+      { title: 'Rédiger', description: 'Quelles étapes ?', back: '1. Calculer.\n2. Résoudre.' },
+    ]);
+    fixture.detectChanges();
+    const carte = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
+      '.slide-grid__card--flip',
+    );
     carte?.click();
     fixture.detectChanges();
-    const verso = carte?.querySelector<HTMLElement>('.slide-grid__face--back');
 
-    expect(carte?.getAttribute('aria-pressed')).toBe('true');
-    expect(verso?.scrollHeight ?? Infinity).toBeLessThanOrEqual(verso?.clientHeight ?? 0);
-    expect(carte?.scrollHeight ?? Infinity).toBeLessThanOrEqual(carte?.clientHeight ?? 0);
+    expect(
+      carte?.querySelector<HTMLElement>('.slide-grid__face--back span')?.innerText.split('\n'),
+    ).toEqual(['1. Calculer.', '2. Résoudre.']);
   });
 
   it('R8 · ne reserve pas la hauteur du verso a une carte non retournee', () => {

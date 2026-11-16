@@ -4,6 +4,7 @@ $marge-bloc: var(--slide-marge-bloc, clamp(4rem, 8cqi, 7rem));
 
 .slide-illustration {
   @include figure.cadre(0);
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
 
   img {

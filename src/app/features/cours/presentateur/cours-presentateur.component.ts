@@ -541,7 +541,7 @@ const ECRAN_DE_RAPPEL = 'fp-spaced';
                 @if (ecranAffiche.notes !== '') {
                   <section class="presentateur-notes" data-testid="presentateur-notes">
                     <h3 i18n="presentateur.notes|@@presentateurNotes">Notes du formateur</h3>
-                    <p class="notes">{{ ecranAffiche.notes }}</p>
+                    <p class="notes texte-servi">{{ ecranAffiche.notes }}</p>
                   </section>
                 }
                 <app-cours-panneau-activite

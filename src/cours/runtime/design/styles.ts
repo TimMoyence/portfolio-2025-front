@@ -182,6 +182,9 @@ export const base = `
   font-size: var(--fp-titre);
   line-height: 1.2;
   color: var(--fp-texte-fort);
+}
+
+:where(.fp-root) :is(.fp-enonce, .fp-texte-servi) {
   white-space: pre-line;
 }
 

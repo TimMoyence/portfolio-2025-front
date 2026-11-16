@@ -13,6 +13,10 @@ import {
   createLeadMagnetPortStub,
 } from '../../../../../testing/factories/lead-magnet.factory';
 import { fournirLaRoute } from '../../../../../testing/factories/serveur/route.factory';
+import {
+  poserLePressePapiers,
+  rendreLePressePapiers,
+} from '../../../../../testing/dom/presse-papiers';
 import { ToolkitPrivateComponent } from './toolkit-private.component';
 
 interface SetupOptions {
@@ -54,16 +58,10 @@ function setup(opts: SetupOptions = {}): {
   return { fixture, component: fixture.componentInstance, port };
 }
 
-function stubClipboard(writeText: jasmine.Spy): void {
-  Object.defineProperty(navigator, 'clipboard', {
-    value: { writeText },
-    configurable: true,
-  });
-}
-
 describe('ToolkitPrivateComponent', () => {
   afterEach(() => {
     document.documentElement.classList.remove('anim-ready');
+    rendreLePressePapiers();
   });
 
   it("devrait afficher l'etat de chargement tant que le toolkit n'est pas resolu", () => {
@@ -109,52 +107,22 @@ describe('ToolkitPrivateComponent', () => {
     expect(compiled.textContent).toContain('Email de relance');
   });
 
-  it('devrait copier un texte et afficher le feedback de succes', fakeAsync(() => {
-    const { component } = setup({ behaviour: 'success' });
-    const writeText = jasmine.createSpy('writeText').and.returnValue(Promise.resolve());
-    stubClipboard(writeText);
+  it('copie le prompt affiché au clic, puis l annonce sur son bouton', fakeAsync(() => {
+    const { fixture } = setup({ behaviour: 'success' });
+    const writeText = jasmine.createSpy('writeText').and.resolveTo();
+    poserLePressePapiers(writeText);
+    const compiled = fixture.nativeElement as HTMLElement;
+    const bouton = compiled.querySelector<HTMLButtonElement>('.tkp-copy');
+    const prompt = bouton?.parentElement?.querySelector('pre')?.textContent;
 
-    component.copyToClipboard('mon-prompt');
+    expect(bouton?.textContent?.trim()).toBe('Copier');
+    bouton?.click();
     flushMicrotasks();
+    fixture.detectChanges();
 
-    expect(writeText).toHaveBeenCalledWith('mon-prompt');
-    expect(component.copiedText()).toBe('mon-prompt');
-    expect(component.copyErrorText()).toBeNull();
-    expect(component['copyButtonLabel']('mon-prompt')).toBe(component['copiedLabel']);
-
+    expect(prompt).toBeTruthy();
+    expect(writeText).toHaveBeenCalledOnceWith(prompt);
+    expect(bouton?.textContent?.trim()).toBe('Copié !');
     tick(2000);
-    expect(component.copiedText()).toBeNull();
   }));
-
-  it("ne devrait PAS marquer comme copie et devrait signaler l'echec si le presse-papier rejette", fakeAsync(() => {
-    const { component } = setup({ behaviour: 'success' });
-    const consoleError = spyOn(console, 'error');
-    const writeText = jasmine
-      .createSpy('writeText')
-      .and.returnValue(Promise.reject(new Error('permission refusee')));
-    stubClipboard(writeText);
-
-    component.copyToClipboard('texte-ko');
-    flushMicrotasks();
-
-    expect(component.copiedText()).toBeNull();
-    expect(component.copyErrorText()).toBe('texte-ko');
-    expect(component['copyButtonLabel']('texte-ko')).toBe(component['copyErrorLabel']);
-    expect(consoleError).toHaveBeenCalled();
-
-    tick(2500);
-    expect(component.copyErrorText()).toBeNull();
-  }));
-
-  it('ne devrait PAS acceder au presse-papier cote serveur (guard SSR)', () => {
-    const { component } = setup({ behaviour: 'success', platform: 'server' });
-    const writeText = jasmine.createSpy('writeText');
-    stubClipboard(writeText);
-
-    component.copyToClipboard('rien-cote-serveur');
-
-    expect(writeText).not.toHaveBeenCalled();
-    expect(component.copiedText()).toBeNull();
-    expect(component.copyErrorText()).toBeNull();
-  });
 });

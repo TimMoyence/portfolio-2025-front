@@ -184,6 +184,34 @@
           "sha256": "085bb7f85530f959fb9bcaf9d3fa9dd9139fff65515a092e69096c86fbc0ae35"
         }
       ]
+    },
+    {
+      "id": "M15",
+      "ecran": "A2-18",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Fiche récap 1 : nettoyer, chercher, additionner · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "fiche-recap-1.webp",
+          "octets": 237100,
+          "sha256": "b7b343c1f6f01e14bd98c45ae007566c34bd31d6b6e810fd22aa0cbe786275e9"
+        }
+      ]
+    },
+    {
+      "id": "M16",
+      "ecran": "A2-19",
+      "licence": "CC BY-SA 4.0",
+      "attribution": "Fiche récap 2 : dater, résumer, croiser, montrer · Asili Design, 2026 · CC BY-SA 4.0",
+      "origine": "production propre du cours",
+      "fichiers": [
+        {
+          "fichier": "fiche-recap-2.webp",
+          "octets": 231570,
+          "sha256": "3542a2158f3e76c3164c44f74c0a7ee13b45166e97a60ee6ccfc4ad41d136600"
+        }
+      ]
     }
   ]
 }

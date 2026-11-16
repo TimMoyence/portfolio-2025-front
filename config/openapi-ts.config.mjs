@@ -1,11 +1,9 @@
-import { readFileSync } from 'node:fs';
-
 import { defineConfig } from '@hey-api/openapi-ts';
 
-const { depot, commit } = JSON.parse(readFileSync('contrat.json', 'utf8'));
+import { sourceEpinglee } from '../scripts/lib/contrat/source.mjs';
 
 export default defineConfig({
-  input: `https://raw.githubusercontent.com/${depot}/${commit}/openapi.json`,
+  input: sourceEpinglee().openapi,
   output: { path: 'contrat', postProcess: ['prettier'] },
   plugins: ['@hey-api/typescript', 'zod'],
 });

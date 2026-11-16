@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "bc1c15a000b26491006740877e6a89f18423f6a5694e4e36c315e6c024a9b500",
+  "empreinte": "4302db37ee9cbb8de355c0dfcc37dba18fdf10ef01904e30e454fce40c343fd0",
   "sujet": {
     "id": "b2-09-probabilites-conditionnelles",
     "titre": "Probabilités conditionnelles",
@@ -486,7 +486,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "L’arbre pondéré et P_A(B)",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -760,7 +759,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Du tableau croisé à P_A(B)",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -1046,7 +1044,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les probabilités totales",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -1327,7 +1324,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Remonter l’arbre : P_B(A)",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -1677,7 +1673,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Justifier l’indépendance",
-                "subtitle": "Trace écrite · notion 3",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2653,7 +2648,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "L’arbre pondéré et P_A(B)",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -3132,7 +3126,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Du tableau croisé à P_A(B)",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -3599,7 +3592,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les probabilités totales",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -4052,7 +4044,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Remonter l’arbre : P_B(A)",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -4588,7 +4579,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Justifier l’indépendance",
-                "subtitle": "Trace écrite · notion 3",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5892,7 +5882,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "L’arbre pondéré et P_A(B)",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -6015,7 +6004,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Du tableau croisé à P_A(B)",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -6159,7 +6147,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les probabilités totales",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -6308,7 +6295,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Remonter l’arbre : P_B(A)",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -6557,7 +6543,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Justifier l’indépendance",
-                "subtitle": "Trace écrite · notion 3",
                 "blocks": [
                   {
                     "kind": "definition",

@@ -19,6 +19,7 @@ import {
   SlideLessonComponent,
   SlideMethodPathComponent,
   SlidePageComponent,
+  SlidePromptComponent,
   SlideReflectionComponent,
   SlideScatterComponent,
   SlideSortReviewComponent,
@@ -49,6 +50,7 @@ const layouts: Readonly<Record<RenduServi, Type<unknown>>> = {
   illustration: SlideIllustrationComponent,
   page: SlidePageComponent,
   'sort-review': SlideSortReviewComponent,
+  prompt: SlidePromptComponent,
 };
 
 const RENDUS_A_IMAGE_PRIORISABLE: ReadonlySet<string> = new Set([

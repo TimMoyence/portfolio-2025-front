@@ -2359,6 +2359,16 @@ export const zPresentationServie = z.union([
   z.object({
     version: z.literal(2),
     screenId: z.string().min(1),
+    renderer: z.enum(['prompt']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      prompt: z.string().min(1),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
     renderer: z.enum(['sort-review']),
     props: z.object({
       title: z.string().min(1),

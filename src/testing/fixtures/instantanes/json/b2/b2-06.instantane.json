@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "50e519745df8d548fc7484940546718e35b61630450d71570edf27b4e7570328",
+  "empreinte": "176691e8d15ab722635c6891045530ef517183733efc179c89c679492888a41d",
   "sujet": {
     "id": "b2-06-exponentielle-logarithme",
     "titre": "Exponentielle et logarithme",
@@ -335,7 +335,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La fonction exponentielle : des puissances pour tous les nombres",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -420,7 +419,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les modèles a e^(kx) : valeur de départ, coefficient, taux",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -839,7 +837,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Le logarithme népérien : défaire l’exponentielle",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -953,7 +950,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Résoudre qⁿ ≥ s : passer l’exposant devant",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -1385,7 +1381,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Modèle exponentiel : le reconnaître, l’utiliser",
-                "subtitle": "Trace écrite · notion 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -1470,7 +1465,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Ajuster par z = ln y : une droite, puis l’exponentielle",
-                "subtitle": "Trace écrite · notion 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2432,7 +2426,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La fonction exponentielle : des puissances pour tous les nombres",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2531,7 +2524,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les modèles a e^(kx) : valeur de départ, coefficient, taux",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -3316,7 +3308,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Le logarithme népérien : défaire l’exponentielle",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -3451,7 +3442,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Résoudre qⁿ ≥ s : passer l’exposant devant",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -4281,7 +4271,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Modèle exponentiel : le reconnaître, l’utiliser",
-                "subtitle": "Trace écrite · notion 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -4380,7 +4369,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Ajuster par z = ln y : une droite, puis l’exponentielle",
-                "subtitle": "Trace écrite · notion 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5750,7 +5738,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La fonction exponentielle : des puissances pour tous les nombres",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5835,7 +5822,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les modèles a e^(kx) : valeur de départ, coefficient, taux",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5988,7 +5974,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Le logarithme népérien : défaire l’exponentielle",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -6102,7 +6087,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Résoudre qⁿ ≥ s : passer l’exposant devant",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -6269,7 +6253,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Modèle exponentiel : le reconnaître, l’utiliser",
-                "subtitle": "Trace écrite · notion 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -6354,7 +6337,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Ajuster par z = ln y : une droite, puis l’exponentielle",
-                "subtitle": "Trace écrite · notion 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",

@@ -2879,6 +2879,16 @@ export type PresentationServie =
   | {
       version: 2;
       screenId: string;
+      renderer: 'prompt';
+      props: {
+        title: string;
+        subtitle?: string;
+        prompt: string;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
       renderer: 'sort-review';
       props: {
         title: string;

@@ -99,6 +99,21 @@ describe('FpChallenge', () => {
     expect(noeudOmbre(hote, 'retour')).toBeNull();
   });
 
+  for (const [support, attribut, valeur] of [
+    ['à l étudiant', 'data-cours-role', 'etudiant'],
+    ['au présentateur', 'data-cours-role', 'presentateur'],
+    ['sur papier', 'data-papier', ''],
+  ] as const) {
+    it(`pose chaque point de l invite sur sa propre ligne, ${support}`, () => {
+      hote.setAttribute(attribut, valeur);
+      hote.probleme = { ...PROBLEME, invite: 'Rédigez :\n1) le constat ;\n2) la décision.' };
+
+      expect(
+        hote.shadowRoot?.querySelector<HTMLElement>('.fp-challenge__invite')?.innerText.split('\n'),
+      ).toEqual(['Rédigez :', '1) le constat ;', '2) la décision.']);
+    });
+  }
+
   it('imprime sur papier l invite de l etudiant, sans zone de tentative ni envoi', () => {
     hote.setAttribute('data-papier', '');
 

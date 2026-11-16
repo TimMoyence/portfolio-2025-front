@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "29bcc785adeff3d48ca754866c6d5ac18ce43d2fb76098802614512dd5d78f9f",
+  "empreinte": "69a71e1252a9a59e907e69515ed6e1a8bfe2574e87d0ba3100eca0e125fe3da4",
   "sujet": {
     "id": "b2-03-logique",
     "titre": "Logique : écrire et contrôler une règle",
@@ -358,7 +358,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Propositions et connecteurs : non, et, ou",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -434,7 +433,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Implication et réciproque",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -822,7 +820,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La négation : nier une condition",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -897,7 +894,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les lois de Morgan : nier « et », nier « ou »",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -1248,7 +1244,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Prédicats et quantificateurs",
-                "subtitle": "Trace écrite · notion 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -1333,7 +1328,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Quantificateurs au tableur",
-                "subtitle": "Trace écrite · notion 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "method",
@@ -2797,7 +2791,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Propositions et connecteurs : non, et, ou",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2887,7 +2880,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Implication et réciproque",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -3609,7 +3601,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La négation : nier une condition",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -3698,7 +3689,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les lois de Morgan : nier « et », nier « ou »",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -4408,7 +4398,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Prédicats et quantificateurs",
-                "subtitle": "Trace écrite · notion 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -4507,7 +4496,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Quantificateurs au tableur",
-                "subtitle": "Trace écrite · notion 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "method",
@@ -6683,7 +6671,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Propositions et connecteurs : non, et, ou",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -6759,7 +6746,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Implication et réciproque",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -6866,7 +6852,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La négation : nier une condition",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -6941,7 +6926,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les lois de Morgan : nier « et », nier « ou »",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -7048,7 +7032,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Prédicats et quantificateurs",
-                "subtitle": "Trace écrite · notion 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -7133,7 +7116,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Quantificateurs au tableur",
-                "subtitle": "Trace écrite · notion 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "method",

@@ -1,0 +1,77 @@
+@use '../../../slide-figure' as figure;
+@use '../../../slide-toile' as toile;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.slide-prompt {
+  @include figure.cadre(clamp(0.75rem, toile.part-de-hauteur(0.02), 1.2rem));
+  justify-items: start;
+}
+
+h2 {
+  @include figure.titre(28ch);
+}
+
+.slide-prompt__subtitle {
+  @include figure.sous-titre;
+}
+
+.slide-prompt__texte {
+  @include figure.police;
+  box-sizing: border-box;
+  inline-size: 100%;
+  margin: 0;
+  padding: clamp(0.75rem, 1.8cqi, 1.2rem);
+  columns: 2 22rem;
+  column-gap: clamp(1rem, 2.4cqi, 2rem);
+  border: 1px solid var(--border, rgba(var(--ink-rgb), 0.16));
+  border-left: 0.3rem solid #277c70;
+  border-radius: 0.5rem;
+  background-color: color-mix(in srgb, #277c70 6%, var(--slide-deck-bg, #fffaf2));
+  color: var(--ink, #0c0902);
+  font-size: clamp(0.78rem, 1.1cqi, 0.95rem);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+
+.slide-prompt__copier {
+  padding: 0.6rem 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  background-color: #277c70;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--ink, #0c0902);
+    outline-offset: 3px;
+  }
+}
+
+@media print {
+  .slide-prompt {
+    min-height: 0;
+    padding: 0;
+  }
+
+  h2 {
+    max-width: none;
+  }
+
+  .slide-prompt__texte {
+    border-color: #000;
+    background: none;
+    color: #000;
+  }
+
+  .slide-prompt__copier {
+    display: none;
+  }
+}

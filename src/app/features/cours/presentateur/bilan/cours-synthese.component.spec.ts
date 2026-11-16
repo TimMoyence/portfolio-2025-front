@@ -421,8 +421,12 @@ describe('CoursSyntheseComponent', () => {
       };
 
       const fixture = await monter(rapportDe([LEA]), of(deroule));
+      const question = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
+        "[data-testid='synthese-libre-question']",
+      );
 
       expect(textes(fixture, 'synthese-libre-question')).toEqual([invite]);
+      expect(question?.innerText.split('\n')).toEqual(invite.split('\n'));
     });
   }
 
