@@ -1,5 +1,9 @@
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
+import {
+  poserLePressePapiers,
+  rendreLePressePapiers,
+} from '../../../../testing/dom/presse-papiers';
 import {
   buildResultatQuestion,
   buildResultatsSeance,
@@ -13,7 +17,9 @@ import {
   buildVisualIllustrationSlide,
   buildVisualImageHeroSlide,
   buildVisualImageSlide,
+  buildVisualPromptSlide,
   buildVisualSlide,
+  PROMPT_DE_L_ANALYSTE,
   buildVisualSortCorrectionSlide,
 } from '../../../../testing/factories/formations/visual-slide.factory';
 import type { RetourBrique } from '../../../core/ports/formations.port';
@@ -126,6 +132,69 @@ describe('SlideVisualComponent', () => {
       expect(image?.getAttribute('loading')).toBe('lazy');
       expect(image?.hasAttribute('fetchpriority')).toBeFalse();
     });
+  });
+
+  describe('prompt', () => {
+    afterEach(() => rendreLePressePapiers());
+
+    const ecranDuPrompt = (): ComponentFixture<SlideVisualComponent> => {
+      const fixture = TestBed.createComponent(SlideVisualComponent);
+      fixture.componentRef.setInput('slide', buildVisualPromptSlide());
+      fixture.detectChanges();
+      return fixture;
+    };
+    const boutonDe = (fixture: ComponentFixture<SlideVisualComponent>): HTMLButtonElement | null =>
+      (fixture.nativeElement as HTMLElement).querySelector('app-slide-prompt button');
+    const copierPuisLire = (fixture: ComponentFixture<SlideVisualComponent>): string => {
+      boutonDe(fixture)?.click();
+      flushMicrotasks();
+      fixture.detectChanges();
+      return boutonDe(fixture)?.textContent?.trim() ?? '';
+    };
+
+    it('F2 · affiche le titre, le sous-titre et le texte entier du prompt, avec son bouton de copie', () => {
+      const element = ecranDuPrompt().nativeElement as HTMLElement;
+
+      expect(element.querySelector('app-slide-prompt h2')?.textContent).toBe(
+        'L’IA analyste, tous ensemble',
+      );
+      expect(element.querySelector('app-slide-prompt header p')?.textContent).toBe(
+        'Le formateur lance le prompt sur son compte.',
+      );
+      expect(element.querySelector('app-slide-prompt pre')?.textContent).toBe(PROMPT_DE_L_ANALYSTE);
+      expect(element.querySelector('app-slide-prompt button')?.textContent?.trim()).toBe(
+        'Copier le prompt',
+      );
+    });
+
+    it('F2 · place le texte exact dans le presse-papiers puis annonce « Prompt copié »', fakeAsync(() => {
+      const writeText = jasmine.createSpy('writeText').and.returnValue(Promise.resolve());
+      poserLePressePapiers(writeText);
+      const fixture = ecranDuPrompt();
+
+      expect(copierPuisLire(fixture)).toBe('Prompt copié');
+      expect(writeText).toHaveBeenCalledOnceWith(PROMPT_DE_L_ANALYSTE);
+      tick(2000);
+    }));
+
+    for (const [cas, presse] of [
+      ['sans presse-papiers', () => null],
+      [
+        'quand le presse-papiers refuse',
+        () => jasmine.createSpy('writeText').and.rejectWith(new Error('refus')),
+      ],
+    ] as const) {
+      it(`F2 · annonce l échec ${cas} et laisse le texte sélectionnable`, fakeAsync(() => {
+        spyOn(console, 'error');
+        poserLePressePapiers(presse());
+        const fixture = ecranDuPrompt();
+
+        expect(copierPuisLire(fixture)).toBe('Échec — copiez à la main');
+        const texte = (fixture.nativeElement as HTMLElement).querySelector('app-slide-prompt pre');
+        expect(texte === null ? null : getComputedStyle(texte).userSelect).not.toBe('none');
+        tick(2500);
+      }));
+    }
   });
 
   describe('lien vers la source', () => {

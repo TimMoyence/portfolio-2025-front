@@ -1,11 +1,21 @@
+import {
+  DELAI_DE_MONTAGE_MS,
+  monterEcran,
+} from '../../../../../../testing/briques/briques-montees';
+import { ecransDuPupitreDe } from '../../../../../../testing/fixtures/instantane-de-cours';
 import { INSTANTANE_B3_02 } from '../../../../../../testing/fixtures/instantanes/b3/instantane-b3-02';
 import {
   decrireLeMontageDeLInstantane,
+  ecranNomme,
   texteServiAuPosteEtudiant,
 } from '../../../../../../testing/page/montage-d-instantane';
 
+async function monterAuPupitre(id: string): Promise<Awaited<ReturnType<typeof monterEcran>>> {
+  return monterEcran(ecranNomme(ecransDuPupitreDe(INSTANTANE_B3_02), id), 'presentateur');
+}
+
 decrireLeMontageDeLInstantane('B3-02', INSTANTANE_B3_02, {
-  ecrans: 40,
+  ecrans: 36,
   publicsAuCatalogue: [
     'A1-02-REPRISE',
     'A1-05-FORMULES-TEXTE',
@@ -33,8 +43,6 @@ decrireLeMontageDeLInstantane('B3-02', INSTANTANE_B3_02, {
       ecran: 'B3-02-A1-10-FORMULE-RECHERCHE',
       textes: ['Syntaxe', 'Le piège', 'Exemple', 'RECHERCHEV', '→ la clé, ici F2'],
     },
-    { ecran: 'B3-02-A2-18-FICHE-RECAP-1', textes: ['RECHERCHEX', 'INDEX'] },
-    { ecran: 'B3-02-A2-19-FICHE-RECAP-2', textes: ['EQUATION.RANG', 'AGREGAT'] },
     { ecran: 'B3-02-A3-03-COURS-CAHIER-DE-REGLES', textes: ['Trois contrôles'] },
   ],
   saisiesDuPosteEtudiant: [
@@ -52,11 +60,41 @@ decrireLeMontageDeLInstantane('B3-02', INSTANTANE_B3_02, {
       expect(reprise).toContain('/assets/cours/b3-01/B3-01_export_ventes.dfa709a7.xlsx');
     });
 
-    it('B302-M7 · fait déclarer au poste étudiant l IA utilisée avant ses chiffres', () => {
-      const analyse = texteServiAuPosteEtudiant(INSTANTANE_B3_02, 'B3-02-A3-06-ANALYSE-IA');
+    for (const [ecran, rang, fonctions] of [
+      ['B3-02-A2-18-FICHE-RECAP-1', 1, ['RECHERCHEX', 'INDEX']],
+      ['B3-02-A2-19-FICHE-RECAP-2', 2, ['EQUATION.RANG', 'AGREGAT']],
+    ] as const) {
+      it(
+        `projette au pupitre la fiche récap ${rang} en page A4, texte alternatif complet`,
+        async () => {
+          const monte = await monterAuPupitre(ecran);
+          const image = monte.element.querySelector('img');
 
-      expect(analyse).toContain('Quelle IA avez-vous utilisée');
-      expect(analyse).toContain('binôme');
-    });
+          expect(monte.erreurs).toEqual([]);
+          expect(image?.getAttribute('src')).toBe(
+            `/assets/cours/b3-02/v1/fiche-recap-${rang}.webp`,
+          );
+          for (const fonction of fonctions) {
+            expect(image?.getAttribute('alt')).toContain(fonction);
+          }
+          monte.detruire();
+        },
+        DELAI_DE_MONTAGE_MS,
+      );
+    }
+
+    it(
+      'B302-M7 · projette au pupitre le prompt de l IA analyste à copier, sans saisie',
+      async () => {
+        const monte = await monterAuPupitre('B3-02-A3-04-PROMPT-TOUS-ENSEMBLE');
+
+        expect(monte.erreurs).toEqual([]);
+        expect(monte.element.querySelector('pre')?.textContent).toContain('Le classeur joint');
+        expect(monte.element.querySelector('button')?.textContent?.trim()).toBe('Copier le prompt');
+        expect(monte.element.querySelector('textarea, input')).toBeNull();
+        monte.detruire();
+      },
+      DELAI_DE_MONTAGE_MS,
+    );
   },
 });

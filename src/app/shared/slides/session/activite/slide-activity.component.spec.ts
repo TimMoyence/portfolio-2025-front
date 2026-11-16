@@ -14,6 +14,7 @@ import {
 import {
   buildCardsortPlan,
   buildEcran,
+  buildDonneesQuestionnaire,
   buildEcranQuestionnaire,
   buildEcranQuestionnaireSansConsigne,
   buildNumericQuestion,
@@ -345,6 +346,25 @@ describe('SlideActivityComponent : hôte des briques runtime (§ 9.7)', () => {
       expect(element.querySelector('.slide-activity__consigne')).toBeNull();
       expect(element.classList).toContain('slide-activity--questionnaire');
       expect(element.querySelectorAll('fp-numeric, fp-vote').length).toBe(2);
+    });
+
+    it(`F1 · pose chaque étape d une consigne sur sa propre ligne, ${support}`, async () => {
+      const { element } = await questionnaireMonte({
+        slide: buildEcranQuestionnaire({
+          donnees: {
+            ...buildDonneesQuestionnaire(),
+            consigne: 'Dans le classeur.\nÉtape 1 : tapez la formule.\nÉtape 2 : répondez.',
+          },
+        }),
+        ...entrees,
+      });
+      const consigne = element.querySelector<HTMLElement>('.slide-activity__consigne');
+
+      expect(consigne?.innerText.split('\n')).toEqual([
+        'Dans le classeur.',
+        'Étape 1 : tapez la formule.',
+        'Étape 2 : répondez.',
+      ]);
     });
   }
 

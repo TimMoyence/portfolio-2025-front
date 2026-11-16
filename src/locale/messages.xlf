@@ -7578,21 +7578,14 @@
         <source>Copier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.copied" datatype="html">
         <source>Copié !</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="formations.toolkitPrivate.copyError" datatype="html">
-        <source>Échec — copiez à la main</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/formations/ia-solopreneurs/toolkit-private/toolkit-private.component.ts</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkit.title" datatype="html">
@@ -12161,6 +12154,13 @@
           <context context-type="linenumber">78,79</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="formations.toolkitPrivate.copyError" datatype="html">
+        <source>Échec — copiez à la main</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/services/presse-papiers.service.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="slideDeckFullscreenExit" datatype="html">
         <source>Quitter le mode présentation</source>
         <context-group purpose="location">
@@ -12522,6 +12522,20 @@
           <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="slidePromptCopier" datatype="html">
+        <source>Copier le prompt</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/slides/layouts/texte/slide-prompt/slide-prompt.component.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="slidePromptCopie" datatype="html">
+        <source>Prompt copié</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/slides/layouts/texte/slide-prompt/slide-prompt.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="coursEcranInconnu" datatype="html">
         <source> Cet écran ne peut pas être affiché : son contenu n’est pas reconnu. </source>
         <context-group purpose="location">
@@ -12588,7 +12602,7 @@
         <source> Cet écran ne peut pas être affiché : son contenu n’est pas reconnu. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/visual/slide-visual.component.ts</context>
-          <context context-type="linenumber">104,108</context>
+          <context context-type="linenumber">106,110</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formulaireRefusInformations" datatype="html">

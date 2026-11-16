@@ -25,6 +25,7 @@ export {
 export { SlideChartComponent } from './layouts/donnees/slide-chart/slide-chart.component';
 export { SlideBoxplotComponent } from './layouts/donnees/slide-boxplot/slide-boxplot.component';
 export { SlideLessonComponent } from './layouts/texte/slide-lesson/slide-lesson.component';
+export { SlidePromptComponent } from './layouts/texte/slide-prompt/slide-prompt.component';
 export { SlideScatterComponent } from './layouts/donnees/slide-scatter/slide-scatter.component';
 export { SlideArbreComponent } from './layouts/donnees/slide-arbre/slide-arbre.component';
 export { SlideSortReviewComponent } from './layouts/revue/slide-sort-review/slide-sort-review.component';

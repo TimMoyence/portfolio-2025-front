@@ -475,5 +475,16 @@ export function safeHtml(
 }
 
 export const VIDE = escapeHtml('');
+
+export function enParagraphes(texte: string, classe: string): EscapedHtml {
+  return safeHtml`${texte
+    .split('\n')
+    .map((paragraphe) => paragraphe.trim())
+    .filter((paragraphe) => paragraphe !== '')
+    .map(
+      (paragraphe) =>
+        safeHtml`<span class="${escapeHtml(classe)}">${escapeHtml(paragraphe)}</span>`,
+    )}`;
+}
 export const DESACTIVE = safeHtml`disabled`;
 export const LECTURE_SEULE = safeHtml`readonly`;

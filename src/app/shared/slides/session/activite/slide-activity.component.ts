@@ -68,7 +68,7 @@ interface MontageActif extends MontageIdentifie {
       <header class="slide-activity__entete" data-testid="slide-activity-entete">
         <h2 class="slide-activity__intitule">{{ questionnaire.intitule }}</h2>
         @if (questionnaire.consigne; as consigne) {
-          <p class="slide-activity__consigne">{{ consigne }}</p>
+          <p class="slide-activity__consigne texte-servi">{{ consigne }}</p>
         }
       </header>
     }

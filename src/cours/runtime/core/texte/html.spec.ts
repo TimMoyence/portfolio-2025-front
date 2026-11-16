@@ -1,5 +1,6 @@
 import {
   DESACTIVE,
+  enParagraphes,
   escapeHtml,
   escapeUrl,
   LECTURE_SEULE,
@@ -34,6 +35,32 @@ function accepteChaque(cas: readonly (readonly [string, Rendu, string])[]): void
     });
   }
 }
+
+describe('enParagraphes', () => {
+  it('pose un paragraphe par ligne servie, une ligne vide ne faisant qu un seul saut', () => {
+    expect(enParagraphes('Le titre.\n\nLa formule.\nLa recopie.', 'x')).toBe(
+      '<span class="x">Le titre.</span><span class="x">La formule.</span><span class="x">La recopie.</span>',
+    );
+  });
+
+  it('rend un texte sans retour à la ligne en un seul paragraphe, et un texte vide en rien', () => {
+    expect(enParagraphes('Un seul temps.', 'x')).toBe('<span class="x">Un seul temps.</span>');
+    expect(enParagraphes('', 'x')).toBe(VIDE);
+    expect(enParagraphes('\n\n', 'x')).toBe(VIDE);
+  });
+
+  it('ne fait ni paragraphe d une ligne de blancs, ni blanc de bord, retour chariot compris', () => {
+    expect(enParagraphes('Le titre. \r\n  \r\n La formule.\r\n', 'x')).toBe(
+      '<span class="x">Le titre.</span><span class="x">La formule.</span>',
+    );
+  });
+
+  it('echappe le texte de chaque paragraphe', () => {
+    expect(enParagraphes('<b>&</b>\nfin', 'x')).toBe(
+      '<span class="x">&lt;b&gt;&amp;&lt;/b&gt;</span><span class="x">fin</span>',
+    );
+  });
+});
 
 describe('escapeHtml', () => {
   it('echappe tous les caracteres HTML sensibles', () => {

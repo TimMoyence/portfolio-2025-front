@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "d43ef478d3be4da8d50657f17f3baaea9a91f1ee775c275b874c50a2b64fcd0e",
+  "empreinte": "9c7681b7e3a700e1d46b572f3fda7d98544fdb8477cbb24172f2897dc27bc322",
   "sujet": {
     "id": "b3-01-donnee-brute-decision",
     "titre": "Expert Data : de la donnée brute à la décision",
@@ -209,7 +209,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Lire un jeu de données avant de calculer",
-                "subtitle": "Trace écrite · niveau 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -271,7 +270,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Des tables reliées par des clés",
-                "subtitle": "Trace écrite · niveau 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -505,7 +503,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La grille de la qualité des données",
-                "subtitle": "Trace écrite · niveau 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -561,7 +558,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les outils du nettoyage",
-                "subtitle": "Trace écrite · niveau 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "method",
@@ -971,7 +967,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Chercher dans une table, additionner sous conditions",
-                "subtitle": "Trace écrite · niveau 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "method",
@@ -1106,7 +1101,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Le temps et les indicateurs",
-                "subtitle": "Trace écrite · niveau 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -1242,7 +1236,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Tableau structuré et tableau croisé dynamique",
-                "subtitle": "Trace écrite · niveau 4",
                 "blocks": [
                   {
                     "kind": "method",
@@ -1467,7 +1460,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Un graphique répond à une question",
-                "subtitle": "Trace écrite · niveau 5",
                 "blocks": [
                   {
                     "kind": "method",
@@ -1600,7 +1592,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "L’anatomie d’un tableau de bord",
-                "subtitle": "Trace écrite · niveau 6",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2240,7 +2231,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Lire un jeu de données avant de calculer",
-                "subtitle": "Trace écrite · niveau 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2309,7 +2299,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Des tables reliées par des clés",
-                "subtitle": "Trace écrite · niveau 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2756,7 +2745,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La grille de la qualité des données",
-                "subtitle": "Trace écrite · niveau 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2819,7 +2807,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les outils du nettoyage",
-                "subtitle": "Trace écrite · niveau 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "method",
@@ -3460,7 +3447,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Chercher dans une table, additionner sous conditions",
-                "subtitle": "Trace écrite · niveau 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "method",
@@ -3711,7 +3697,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Le temps et les indicateurs",
-                "subtitle": "Trace écrite · niveau 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -3963,7 +3948,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Tableau structuré et tableau croisé dynamique",
-                "subtitle": "Trace écrite · niveau 4",
                 "blocks": [
                   {
                     "kind": "method",
@@ -4319,7 +4303,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Un graphique répond à une question",
-                "subtitle": "Trace écrite · niveau 5",
                 "blocks": [
                   {
                     "kind": "method",
@@ -4568,7 +4551,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "L’anatomie d’un tableau de bord",
-                "subtitle": "Trace écrite · niveau 6",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5169,7 +5151,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Lire un jeu de données avant de calculer",
-                "subtitle": "Trace écrite · niveau 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5231,7 +5212,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Des tables reliées par des clés",
-                "subtitle": "Trace écrite · niveau 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5311,7 +5291,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La grille de la qualité des données",
-                "subtitle": "Trace écrite · niveau 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5367,7 +5346,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Les outils du nettoyage",
-                "subtitle": "Trace écrite · niveau 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "method",
@@ -5565,7 +5543,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Chercher dans une table, additionner sous conditions",
-                "subtitle": "Trace écrite · niveau 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "method",
@@ -5640,7 +5617,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Le temps et les indicateurs",
-                "subtitle": "Trace écrite · niveau 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -5716,7 +5692,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Tableau structuré et tableau croisé dynamique",
-                "subtitle": "Trace écrite · niveau 4",
                 "blocks": [
                   {
                     "kind": "method",
@@ -5838,7 +5813,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Un graphique répond à une question",
-                "subtitle": "Trace écrite · niveau 5",
                 "blocks": [
                   {
                     "kind": "method",
@@ -5907,7 +5881,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "L’anatomie d’un tableau de bord",
-                "subtitle": "Trace écrite · niveau 6",
                 "blocks": [
                   {
                     "kind": "definition",

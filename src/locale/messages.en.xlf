@@ -8191,6 +8191,18 @@
         <target>Failed — copy manually</target>
       </segment>
     </unit>
+    <unit id="slidePromptCopier">
+      <segment>
+        <source>Copier le prompt</source>
+        <target>Copy the prompt</target>
+      </segment>
+    </unit>
+    <unit id="slidePromptCopie">
+      <segment>
+        <source>Prompt copié</source>
+        <target>Prompt copied</target>
+      </segment>
+    </unit>
 
     <unit id="authAcceptTerms">
       <notes>

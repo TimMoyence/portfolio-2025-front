@@ -1,5 +1,5 @@
 import { zSaveFreeResponseRequestDto } from '../../../../../contrat/zod.gen';
-import { type EscapedHtml, escapeHtml, safeHtml, VIDE } from '../../core/texte/html';
+import { type EscapedHtml, enParagraphes, escapeHtml, safeHtml, VIDE } from '../../core/texte/html';
 import { estTexteNonVide } from '../../core/texte/valeurs';
 import { type ContenuDeBrique, copierLeSocle } from '../rendu/projection';
 import { FpRedaction } from '../saisie/redaction';
@@ -80,21 +80,13 @@ export class FpPro extends FpRedaction<ProCas> {
       <aside class="fp-scene fp-pro__cas">
         ${this.metier(cas)}
         <div class="fp-prose fp-pro__corps">
-          <p data-testid="situation">${this.paragraphes(cas.situation)}</p>
+          <p data-testid="situation">${enParagraphes(cas.situation, 'fp-pro__paragraphe')}</p>
           ${this.geste(cas)}
           ${this.consequence(cas)}
         </div>
         ${suite}
       </aside>
     `;
-  }
-
-  private paragraphes(situation: string): EscapedHtml {
-    return safeHtml`${situation
-      .split('\n')
-      .map(
-        (paragraphe) => safeHtml`<span class="fp-pro__paragraphe">${escapeHtml(paragraphe)}</span>`,
-      )}`;
   }
 
   private metier(cas: ProCas): EscapedHtml {
@@ -146,14 +138,14 @@ export class FpPro extends FpRedaction<ProCas> {
   }
 
   private enonce(question: QuestionLibre): EscapedHtml {
-    return safeHtml`<li class="fp-pro__question" data-testid="question-libre">${escapeHtml(question.question)}</li>`;
+    return safeHtml`<li class="fp-pro__question fp-texte-servi" data-testid="question-libre">${escapeHtml(question.question)}</li>`;
   }
 
   private champ(question: QuestionLibre): EscapedHtml {
     const identifiant = `fp-pro-reponse-${question.id}`;
     return safeHtml`
       <li class="fp-pro__question">
-        <label class="fp-pro__libelle" for="${escapeHtml(identifiant)}">${escapeHtml(question.question)}</label>
+        <label class="fp-pro__libelle fp-texte-servi" for="${escapeHtml(identifiant)}">${escapeHtml(question.question)}</label>
         <textarea class="fp-pro__champ" id="${escapeHtml(identifiant)}" data-question="${escapeHtml(question.id)}" placeholder="${escapeHtml(question.placeholder ?? '')}" maxlength="${LONGUEUR_MAX_REPONSE_LIBRE}" rows="3">${escapeHtml(this.texteDe(question.id))}</textarea>
       </li>
     `;

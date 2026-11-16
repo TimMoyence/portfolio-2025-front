@@ -72,6 +72,24 @@ describe('SlideLessonComponent', () => {
     ]);
   });
 
+  it('garde les lignes servies du texte et de la formule d un bloc', () => {
+    const racine = monter({
+      blocks: [
+        {
+          kind: 'definition',
+          title: 'Point moyen',
+          text: 'Moyenne des x.\nMoyenne des y.',
+          formula: 'x̄ = 3,5\nȳ = 718',
+        },
+      ],
+    });
+    const lignes = (selecteur: string): string[] | undefined =>
+      racine.querySelector<HTMLElement>(selecteur)?.innerText.split('\n');
+
+    expect(lignes('.slide-lesson__text')).toEqual(['Moyenne des x.', 'Moyenne des y.']);
+    expect(lignes('[data-testid="slide-lesson-formule"]')).toEqual(['x̄ = 3,5', 'ȳ = 718']);
+  });
+
   it('numerote les etapes d une methode en liste ordonnee', () => {
     const racine = monter();
     const etapes = racine.querySelectorAll('ol[data-testid="slide-lesson-etapes"] li');

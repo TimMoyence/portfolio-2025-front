@@ -48,7 +48,10 @@ export function grouperLesReponses(
             [attr.data-activite]="groupe.activityId"
           >
             @if (groupe.enonce !== null) {
-              <p class="panneau-reponses__question" data-testid="reponses-libres-question">
+              <p
+                class="panneau-reponses__question texte-servi"
+                data-testid="reponses-libres-question"
+              >
                 {{ groupe.enonce }}
               </p>
             }

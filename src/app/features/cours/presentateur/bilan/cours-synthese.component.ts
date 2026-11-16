@@ -178,7 +178,7 @@ function enoncesDeLaSeance(deroule: DerouleCours): EnoncesDeLaSeance {
                 </h4>
                 <dl>
                   @for (libre of participant.reponsesLibres; track $index) {
-                    <dt data-testid="synthese-libre-question">
+                    <dt class="texte-servi" data-testid="synthese-libre-question">
                       {{ enonces().activites.get(libre.activityId) ?? libre.activityId }}
                     </dt>
                     <dd data-testid="synthese-libre-reponse">{{ libre.reponse }}</dd>

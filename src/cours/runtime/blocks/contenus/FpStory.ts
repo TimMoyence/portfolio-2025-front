@@ -1,4 +1,11 @@
-import { type EscapedHtml, escapeHtml, escapeUrl, safeHtml, VIDE } from '../../core/texte/html';
+import {
+  type EscapedHtml,
+  enParagraphes,
+  escapeHtml,
+  escapeUrl,
+  safeHtml,
+  VIDE,
+} from '../../core/texte/html';
 import { FpBlock } from './FpBlock';
 import { type ContenuDeBrique, copierLeSocle } from '../rendu/projection';
 import { estTexteNonVide } from '../../core/texte/valeurs';
@@ -147,7 +154,7 @@ export class FpStory extends FpBlock {
     if (video === undefined) {
       return VIDE;
     }
-    const transcription = safeHtml`<p data-testid="transcription">${escapeHtml(video.transcript)}</p>`;
+    const transcription = safeHtml`<p data-testid="transcription">${enParagraphes(video.transcript, 'fp-story__plan')}</p>`;
     return safeHtml`
       <figure class="fp-story__video" data-testid="video">
         <figcaption class="fp-story__video-titre">${escapeHtml(video.titre)}</figcaption>

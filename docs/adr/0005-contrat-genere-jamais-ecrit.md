@@ -13,8 +13,11 @@ la saisie numérique, verrou des productions, option de la bonne réponse).
 ## Décision
 
 - Le contrat vient du `openapi.json` du back (ADR back 0003), épinglé sur un commit dans
-  `contrat.json`. `npm run contrat` télécharge la spécification et les instantanés des cours à ce
-  commit, puis génère `contrat/` avec `@hey-api/openapi-ts` (types et zod).
+  `contrat.json` (un SHA complet). `npm run contrat` lit la spécification et les instantanés des
+  cours à ce commit, dans le back voisin (`../portfolio-2025-back` ou `BANC_RACINE_BACK`) quand
+  il le contient, sur GitHub sinon, puis génère `contrat/` avec `@hey-api/openapi-ts` (types et
+  zod). Front et back se testent ainsi ensemble avant tout push, et se poussent dans la même
+  foulée, back d'abord.
 - `npm run contrat:check` refuse un `contrat/` qui ne correspond plus à l'épingle.
 - Aucun type de réponse ni schéma de lecture n'est écrit à la main : les modèles, ports et
   adaptateurs sont des alias du généré, et les adaptateurs lisent par `luPar(z…)`.

@@ -143,15 +143,13 @@ describe('SlidePageComponent', () => {
     expect(large.width).toBeGreaterThan(large.height);
   });
 
-  it('PAG-01 · à côté de la page, le titre, le sous-titre, les trois paragraphes puis une correspondance par pastille', async () => {
+  it('PAG-01 · à côté de la page, le titre sans sous-titre, les trois paragraphes puis une correspondance par pastille', async () => {
     const racine = await monter('B3-03-A2-06-PAGE-EN-TETE-PIED');
     const feuille = racine.querySelector(FEUILLE);
     const texte = racine.querySelector('[data-testid="slide-page-texte"]');
 
     expect(propre(texte?.querySelector('h2')?.textContent)).toBe('Page : en-tête et pied de page');
-    expect(propre(texte?.querySelector('.slide-page__subtitle')?.textContent)).toBe(
-      'Traitement de texte · page 8 sur 11',
-    );
+    expect(texte?.querySelector('.slide-page__subtitle')).toBeNull();
     expect(textes(texte ?? racine, '.slide-page__paragraphe').map((p) => p.split(' :')[0])).toEqual(
       ['Syntaxe', 'Le piège', 'Exemple'],
     );

@@ -878,6 +878,21 @@ describe('CoursPresentateurComponent', () => {
     expect(allersALaSynthese(navigation)).toBe(1);
   });
 
+  it('montre chaque puce des notes servies sur sa propre ligne', async () => {
+    const servi = derouleDeSeance();
+    const [premier, ...suite] = servi.ecrans;
+    const fixture = await ouvrirLaSeanceSur({
+      ...servi,
+      ecrans: [{ ...premier, notes: '• Lancer le vote.\n• Relire la formule.' }, ...suite],
+    });
+
+    expect(
+      (fixture.nativeElement as HTMLElement)
+        .querySelector<HTMLElement>('.presentateur-notes .notes')
+        ?.innerText.split('\n'),
+    ).toEqual(['• Lancer le vote.', '• Relire la formule.']);
+  });
+
   it('G2 · montre au pupitre l ecran courant dans le rendu projeté avec ses notes, sans le remonter a chaque etat', async () => {
     const fixture = await ouvrirLaSeance();
     const ecran = apercu(fixture);

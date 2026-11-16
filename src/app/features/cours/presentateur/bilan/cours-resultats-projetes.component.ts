@@ -145,7 +145,7 @@ function resultatsProjetes(
             @for (groupe of groupes(); track groupe.activityId) {
               <section class="resultats-projetes__carte" data-testid="resultats-projetes-libres">
                 @if (groupe.enonce !== null) {
-                  <p class="resultats-projetes__enonce">{{ groupe.enonce }}</p>
+                  <p class="resultats-projetes__enonce texte-servi">{{ groupe.enonce }}</p>
                 }
                 <p class="resultats-projetes__compte">
                   <strong>{{ groupe.reponses.length }}</strong>

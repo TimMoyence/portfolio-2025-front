@@ -75,6 +75,17 @@ export function buildVisualIllustrationSlide(
   });
 }
 
+export const PROMPT_DE_L_ANALYSTE =
+  'Rôle : tu es analyste data.\nRègles : une phrase, un chiffre.\nQ1. Quel CA ?';
+
+export function buildVisualPromptSlide(): EcranContent {
+  return buildRecitVisuel('B3-02-A3-04-PROMPT-TOUS-ENSEMBLE', 'prompt', {
+    title: 'L’IA analyste, tous ensemble',
+    subtitle: 'Le formateur lance le prompt sur son compte.',
+    prompt: PROMPT_DE_L_ANALYSTE,
+  });
+}
+
 export const TRI_CORRIGE = { screenId: 'B2-01-A1-05-ANATOMIE', sortId: 'b2-01-a1-anatomie' };
 
 export function buildSortCorrectionProps(overrides: PropsVisuelles = {}): PropsVisuelles {

@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "1df5d8e8783e3dbbf4f6c020de6a200769023ca1781b9ed8e7fd48c0422d94a3",
+  "empreinte": "682177bfc67884f3479b0dbfbed6c93144e00fef4fdac8e215905b8969c33c3d",
   "sujet": {
     "id": "b1-02-evolutions-coefficients-indices",
     "titre": "Évolutions : taux, coefficients, indices",
@@ -275,7 +275,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Taux et coefficient : multiplier, pas ajouter",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -360,7 +359,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "HT, TTC, remise : toujours un coefficient",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -756,7 +754,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Évolutions successives : on multiplie",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -840,7 +837,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Évolution réciproque : revenir au départ",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -1276,7 +1272,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Indice base 100 : comparer à une année",
-                "subtitle": "Trace écrite · notion 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -1360,7 +1355,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Taux moyen : la même hausse chaque année",
-                "subtitle": "Trace écrite · notion 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2128,7 +2122,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Taux et coefficient : multiplier, pas ajouter",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2227,7 +2220,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "HT, TTC, remise : toujours un coefficient",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2897,7 +2889,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Évolutions successives : on multiplie",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -2995,7 +2986,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Évolution réciproque : revenir au départ",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -3798,7 +3788,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Indice base 100 : comparer à une année",
-                "subtitle": "Trace écrite · notion 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -3896,7 +3885,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Taux moyen : la même hausse chaque année",
-                "subtitle": "Trace écrite · notion 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -4865,7 +4853,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Taux et coefficient : multiplier, pas ajouter",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -4950,7 +4937,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "HT, TTC, remise : toujours un coefficient",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5074,7 +5060,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Évolutions successives : on multiplie",
-                "subtitle": "Trace écrite · notion 2 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5158,7 +5143,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Évolution réciproque : revenir au départ",
-                "subtitle": "Trace écrite · notion 2 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5282,7 +5266,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Indice base 100 : comparer à une année",
-                "subtitle": "Trace écrite · notion 3 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5366,7 +5349,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Taux moyen : la même hausse chaque année",
-                "subtitle": "Trace écrite · notion 3 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",

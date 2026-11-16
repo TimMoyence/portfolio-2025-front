@@ -89,9 +89,9 @@
                       <button
                         type="button"
                         class="tkp-copy"
-                        (click)="copyToClipboard(prompt.prompt)"
+                        (click)="pressePapiers.copier(prompt.prompt)"
                       >
-                        {{ copyButtonLabel(prompt.prompt) }}
+                        {{ pressePapiers.libelle(prompt.prompt, libellesDeCopie) }}
                       </button>
                     </div>
                   </article>

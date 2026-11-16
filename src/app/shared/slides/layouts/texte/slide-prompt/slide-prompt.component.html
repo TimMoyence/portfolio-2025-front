@@ -1,0 +1,14 @@
+<section class="slide-prompt">
+  <header>
+    <h2>{{ title() }}</h2>
+    @if (subtitle()) {
+      <p class="slide-prompt__subtitle">{{ subtitle() }}</p>
+    }
+  </header>
+
+  <pre class="slide-prompt__texte" tabindex="0">{{ prompt() }}</pre>
+
+  <button type="button" class="slide-prompt__copier" (click)="pressePapiers.copier(prompt())">
+    {{ pressePapiers.libelle(prompt(), libelles) }}
+  </button>
+</section>

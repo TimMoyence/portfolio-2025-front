@@ -1302,7 +1302,7 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
-      "lastmod": "2026-10-22",
+      "lastmod": "2026-11-16",
       "breadcrumb": [
         {
           "name": "Accueil",
@@ -2470,7 +2470,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H",
+            "duration": "PT2H35M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b3-02-formules-et-ia-analyste"
@@ -2492,7 +2492,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT3H",
+            "duration": "PT2H35M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b3-02-formules-et-ia-analyste"

@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "4335302c5cc956ace1402a89068ab30a8f2e2142c5a9a467dafd457ebfd9b170",
+  "empreinte": "e263cf762ed149b7a8d90ea739ed3679c1c62bd0c856d704700c14db0695f02e",
   "sujet": {
     "id": "b2-07-derivee-optimisation",
     "titre": "Dérivée et optimisation",
@@ -547,7 +547,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La dérivée : la pente de la courbe en chaque point",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -818,7 +817,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Dériver a e^(kx) : la recette de l’exponentielle",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -1099,7 +1097,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Le signe de f′ donne le sens de f",
-                "subtitle": "Trace écrite · notion 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -1425,7 +1422,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Extremum et optimum : le sommet ou le bord",
-                "subtitle": "Trace écrite · notion 3",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -1883,7 +1879,7 @@
                   {
                     "title": "Rédiger au CCF",
                     "description": "Quelles quatre étapes ?",
-                    "back": "1. Calculer f′(x). 2. Résoudre f′(x) = 0. 3. Étudier le signe de f′(x). 4. Dresser le tableau de variation et conclure par le x et la valeur."
+                    "back": "1. Calculer f′(x).\n2. Résoudre f′(x) = 0.\n3. Étudier le signe de f′(x).\n4. Dresser le tableau de variation et conclure par le x et la valeur."
                   },
                   {
                     "title": "Tableur",
@@ -2601,7 +2597,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La dérivée : la pente de la courbe en chaque point",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -3081,7 +3076,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Dériver a e^(kx) : la recette de l’exponentielle",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -3570,7 +3564,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Le signe de f′ donne le sens de f",
-                "subtitle": "Trace écrite · notion 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -4054,7 +4047,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Extremum et optimum : le sommet ou le bord",
-                "subtitle": "Trace écrite · notion 3",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5310,7 +5302,7 @@
                   {
                     "title": "Rédiger au CCF",
                     "description": "Quelles quatre étapes ?",
-                    "back": "1. Calculer f′(x). 2. Résoudre f′(x) = 0. 3. Étudier le signe de f′(x). 4. Dresser le tableau de variation et conclure par le x et la valeur."
+                    "back": "1. Calculer f′(x).\n2. Résoudre f′(x) = 0.\n3. Étudier le signe de f′(x).\n4. Dresser le tableau de variation et conclure par le x et la valeur."
                   },
                   {
                     "title": "Tableur",
@@ -5831,7 +5823,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "La dérivée : la pente de la courbe en chaque point",
-                "subtitle": "Trace écrite · notion 1 · page 1 sur 2",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -5950,7 +5941,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Dériver a e^(kx) : la recette de l’exponentielle",
-                "subtitle": "Trace écrite · notion 1 · page 2 sur 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -6107,7 +6097,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Le signe de f′ donne le sens de f",
-                "subtitle": "Trace écrite · notion 2",
                 "blocks": [
                   {
                     "kind": "property",
@@ -6276,7 +6265,6 @@
               "renderer": "lesson",
               "props": {
                 "title": "Extremum et optimum : le sommet ou le bord",
-                "subtitle": "Trace écrite · notion 3",
                 "blocks": [
                   {
                     "kind": "definition",
@@ -6425,7 +6413,7 @@
                   {
                     "title": "Rédiger au CCF",
                     "description": "Quelles quatre étapes ?",
-                    "back": "1. Calculer f′(x). 2. Résoudre f′(x) = 0. 3. Étudier le signe de f′(x). 4. Dresser le tableau de variation et conclure par le x et la valeur."
+                    "back": "1. Calculer f′(x).\n2. Résoudre f′(x) = 0.\n3. Étudier le signe de f′(x).\n4. Dresser le tableau de variation et conclure par le x et la valeur."
                   },
                   {
                     "title": "Tableur",

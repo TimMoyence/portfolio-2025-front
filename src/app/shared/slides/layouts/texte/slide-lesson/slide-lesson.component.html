@@ -13,9 +13,9 @@
           {{ natures[bloc.kind] }}
         </p>
         <h3 data-testid="slide-lesson-titre-bloc">{{ bloc.title }}</h3>
-        <p class="slide-lesson__text">{{ bloc.text }}</p>
+        <p class="slide-lesson__text texte-servi">{{ bloc.text }}</p>
         @if (bloc.formula) {
-          <p class="slide-lesson__formula" data-testid="slide-lesson-formule">
+          <p class="slide-lesson__formula texte-servi" data-testid="slide-lesson-formule">
             {{ bloc.formula }}
           </p>
         }

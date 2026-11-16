@@ -164,6 +164,23 @@ describe('FpPro', () => {
     });
   }
 
+  for (const role of ROLES_DE_MONTAGE) {
+    it(`pose chaque ligne d une question libre sur sa propre ligne pour le role ${role}`, () => {
+      hote.setAttribute('data-cours-role', role);
+      hote.cas = buildProCasAQuestionsLibres({
+        questionsLibres: [
+          { id: 'q-lignes', question: 'Pour chaque chiffre :\n1) ce qu il mesure ;\n2) sa base.' },
+        ],
+      });
+
+      expect(
+        hote.shadowRoot
+          ?.querySelector<HTMLElement>('[data-testid="question-libre"], .fp-pro__libelle')
+          ?.innerText.split('\n'),
+      ).toEqual(['Pour chaque chiffre :', '1) ce qu il mesure ;', '2) sa base.']);
+    });
+  }
+
   it('efface une donnee de correction nichee dans les metadonnees', () => {
     attendreLaCorrectionNicheeEffacee(buildProCas({ id: 'M-METIER-09' }), (contamine) => {
       hote.cas = contamine;
