@@ -11,7 +11,9 @@ interface ClientKarma {
   readonly __karma__?: { readonly config?: { readonly tranche?: string } };
 }
 
-jouerLaTranche(jasmine.getEnv(), (window as ClientKarma).__karma__?.config?.tranche);
+jouerLaTranche(jasmine.getEnv(), (window as ClientKarma).__karma__?.config?.tranche, (ligne) =>
+  console.log(ligne),
+);
 
 getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
   errorOnUnknownElements: true,

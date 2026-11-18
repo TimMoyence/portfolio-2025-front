@@ -526,42 +526,43 @@ describe('SeoService — page en noindex', () => {
       TestBed.inject(DOCUMENT).head.querySelectorAll('link[rel="canonical"], link[hreflang]'),
       (lien) => lien.outerHTML,
     );
-  const poser = (index: boolean): void =>
+  const poserLaPageNonIndexee = (): void =>
     TestBed.inject(SeoService).updateSeoMetadata({
       title: 'Connexion',
       description: 'Connexion',
-      index,
+      index: false,
+    });
+
+  it('ART-IDX-3 · une page en noindex ne garde ni le canonical ni les hreflang de la page précédente', () => {
+    TestBed.inject(SeoService).updateSeoMetadata({
+      title: 'Accueil',
+      description: 'Accueil',
+      index: true,
       canonicalUrl: PAGE,
       hreflangs: { fr: PAGE },
     });
-
-  it('ART-IDX-3 · une page en noindex ne porte ni canonical ni hreflang', () => {
-    poser(true);
     expect(liensDuHead()).toEqual([
       `<link rel="canonical" href="${PAGE}">`,
       `<link rel="alternate" hreflang="fr" href="${PAGE}">`,
     ]);
 
-    poser(false);
+    poserLaPageNonIndexee();
 
     expect(liensDuHead()).toEqual([]);
   });
 
-  it('ART-JSONLD-3 · une page en noindex ne porte aucune donnée structurée, même celles du site', () => {
+  it('ART-JSONLD-3 · une page en noindex ne garde aucune donnée structurée de la page précédente', () => {
     const blocs = (): number =>
       TestBed.inject(DOCUMENT).head.querySelectorAll('script[type="application/ld+json"]').length;
-    const poserAvecLeSite = (index: boolean): void =>
-      TestBed.inject(SeoService).updateSeoMetadata({
-        title: 'Connexion',
-        description: 'Connexion',
-        index,
-        jsonLd: [{ '@type': 'LocalBusiness' }, { '@type': 'Person' }],
-      });
-
-    poserAvecLeSite(true);
+    TestBed.inject(SeoService).updateSeoMetadata({
+      title: 'Accueil',
+      description: 'Accueil',
+      index: true,
+      jsonLd: [{ '@type': 'LocalBusiness' }, { '@type': 'Person' }],
+    });
     expect(blocs()).toBe(2);
 
-    poserAvecLeSite(false);
+    poserLaPageNonIndexee();
 
     expect(blocs()).toBe(0);
   });

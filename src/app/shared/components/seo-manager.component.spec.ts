@@ -17,14 +17,14 @@ describe('SeoManagerComponent', () => {
   let routeData$: Subject<Record<string, unknown>>;
   let routerStub: { events: unknown; url: string };
 
-  const baseSeoConfig: SeoConfig = {
+  const baseSeoConfig = {
     index: true,
     title: 'Page de test',
     description: 'Description de test',
     keywords: ['test', 'seo'],
     ogImage: '/assets/images/test.webp',
     twitterCard: 'summary_large_image',
-  };
+  } satisfies SeoConfig;
 
   const resolvedConfig: SeoConfig = baseSeoConfig;
 
@@ -36,7 +36,6 @@ describe('SeoManagerComponent', () => {
 
     seoRegistrySpy = jasmine.createSpyObj<SeoRegistryService>('SeoRegistryService', [
       'getSeoByKey',
-      'getSeoByPath',
       'getLocales',
       'getDefaultLocale',
       'getLocaleId',
@@ -45,7 +44,6 @@ describe('SeoManagerComponent', () => {
     seoRegistrySpy.getDefaultLocale.and.returnValue('fr');
     seoRegistrySpy.getLocaleId.and.returnValue('fr');
     seoRegistrySpy.getSeoByKey.and.returnValue(of(resolvedConfig));
-    seoRegistrySpy.getSeoByPath.and.returnValue(of(null));
 
     routerStub = {
       events: routerEvents$.asObservable(),
@@ -97,7 +95,7 @@ describe('SeoManagerComponent', () => {
   it('garde le SEO de la page quand la navigation ne change que l’ancre', () => {
     const page = '/fr/articles/morning-brief-2026-11-08';
     const ancre = `${page}#mb-essential`;
-    naviguer(page, {});
+    naviguer(page);
     routerEvents$.next(new NavigationEnd(2, ancre, ancre));
     routerEvents$.next(new NavigationEnd(3, page, page));
 
@@ -105,41 +103,45 @@ describe('SeoManagerComponent', () => {
   });
 
   it('applique le SEO de la page suivante, même quand elle porte une ancre', () => {
-    naviguer('/fr/articles/morning-brief-2026-11-08#mb-essential', {});
+    naviguer('/fr/articles/morning-brief-2026-11-08#mb-essential');
     const suivante = '/fr/articles#archives';
     routerEvents$.next(new NavigationEnd(2, suivante, suivante));
 
     expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(2);
   });
 
-  it('laisse la page poser son SEO quand sa route le déclare', () => {
+  it('laisse la page poser son SEO quand sa route ne porte aucune clé SEO', () => {
     fixture.detectChanges();
     const page = '/fr/articles/morning-brief-2026-11-08';
     routerEvents$.next(new NavigationEnd(1, page, page));
-    routeData$.next({ seoKey: 'article-detail', seoParLaPage: true });
+    routeData$.next({});
 
+    expect(seoRegistrySpy.getSeoByKey).not.toHaveBeenCalled();
     expect(seoServiceSpy.updateSeoMetadata).not.toHaveBeenCalled();
   });
 
-  it('devrait appliquer la config SEO par defaut si aucune config fournie', () => {
-    const call = naviguer('/fr/unknown', {});
-
-    expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(1);
-    expect(call.index).toBeTrue();
-    expect(call.canonicalUrl).toContain('https://example.com');
-  });
-
   it('ART-IDX-4 · lit l indexation dans seo-metadata seul, qu aucune donnée de route ne contredit', () => {
-    seoRegistrySpy.getSeoByKey.and.returnValue(of({ ...resolvedConfig, index: false }));
+    seoRegistrySpy.getSeoByKey.and.returnValue(of({ ...baseSeoConfig, index: false }));
     expect(naviguer('/fr/test').index).toBeFalse();
 
     seoRegistrySpy.getSeoByKey.and.returnValue(of(resolvedConfig));
     expect(
       naviguer('/fr/test', { seoKey: 'test-page', robots: 'noindex, nofollow' }).index,
     ).toBeTrue();
+  });
 
-    seoRegistrySpy.getSeoByPath.and.returnValue(of({ ...resolvedConfig, index: false }));
-    expect(naviguer('/fr/login', { seo: baseSeoConfig }).index).toBeFalse();
+  it('ne donne à une page non indexée ni canonique ni hreflang, qu elle ne servirait pas', () => {
+    seoRegistrySpy.getSeoByKey.and.returnValue(
+      of({ title: 'Connexion', description: 'Connexion', index: false }),
+    );
+    routerStub.url = '/fr/login';
+
+    const call = naviguer('/fr/login');
+
+    expect(Object.keys(call).filter((cle) => ['canonicalUrl', 'hreflangs'].includes(cle))).toEqual(
+      [],
+    );
+    expect(call.ogUrl).toBe('https://example.com/fr/login');
   });
 
   it('devrait construire les hreflangs pour toutes les locales', () => {

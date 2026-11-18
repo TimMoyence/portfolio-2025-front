@@ -1,3 +1,5 @@
+import contrat from './tranche-de-la-suite.json';
+
 export interface Tranche {
   readonly rang: number;
   readonly total: number;
@@ -25,7 +27,11 @@ function nomsDesSpecs(noeud: jasmine.Spec | jasmine.Suite): string[] {
 const parCodeUnite = (gauche: string, droite: string): number =>
   Number(gauche > droite) - Number(gauche < droite);
 
-export function jouerLaTranche(env: jasmine.Env, lue: string | undefined): void {
+export function jouerLaTranche(
+  env: jasmine.Env,
+  lue: string | undefined,
+  publier: (ligne: string) => void,
+): void {
   const tranche = lireLaTranche(lue);
   if (tranche === null) {
     return;
@@ -33,12 +39,28 @@ export function jouerLaTranche(env: jasmine.Env, lue: string | undefined): void 
   let retenues: ReadonlySet<string> | null = null;
   env.configure({
     specFilter: (spec) => {
-      retenues ??= new Set(
-        specsDeLaTranche([...new Set(nomsDesSpecs(env.topSuite()))].sort(parCodeUnite), tranche),
-      );
+      retenues ??= new Set(specsDeLaTranche(nomsTries(env, publier), tranche));
       return retenues.has(spec.getFullName());
     },
   });
+}
+
+const GRAINE_FNV = 0x811c9dc5;
+const PREMIER_FNV = 0x01000193;
+
+function empreinteDesNoms(noms: readonly string[]): string {
+  const texte = noms.join('\n');
+  let empreinte = GRAINE_FNV;
+  for (let rang = 0; rang < texte.length; rang += 1) {
+    empreinte = Math.imul(empreinte ^ texte.charCodeAt(rang), PREMIER_FNV) >>> 0;
+  }
+  return `${noms.length}-${empreinte.toString(16)}`;
+}
+
+function nomsTries(env: jasmine.Env, publier: (ligne: string) => void): string[] {
+  const noms = [...new Set(nomsDesSpecs(env.topSuite()))].sort(parCodeUnite);
+  publier(`${contrat.marqueDeLEmpreinte} ${empreinteDesNoms(noms)}`);
+  return noms;
 }
 
 export function specsDeLaTranche<T>(specs: readonly T[], { rang, total }: Tranche): T[] {

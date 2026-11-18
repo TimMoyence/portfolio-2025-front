@@ -118,10 +118,6 @@ export const routes: Routes = [
       import('./features/articles/fiche/article-detail.component').then(
         (m) => m.ArticleDetailComponent,
       ),
-    data: {
-      seoKey: 'article-detail',
-      seoParLaPage: true,
-    },
   },
   {
     path: 'offer',

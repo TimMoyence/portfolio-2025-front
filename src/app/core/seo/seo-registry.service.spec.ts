@@ -20,7 +20,7 @@ describe('SeoRegistryService', () => {
   const seoParCle = (locale: string, cle: string) =>
     seoTrouve(createService(locale).getSeoByKey(cle));
 
-  const seoParChemin = (path: string) => seoTrouve(createService('fr').getSeoByPath(path));
+  const CHAMPS_DE_L_INDEX = ['canonicalUrl', 'hreflangs', 'jsonLd'];
 
   describe('getLocales', () => {
     it('devrait retourner les locales configurees', () => {
@@ -80,11 +80,16 @@ describe('SeoRegistryService', () => {
       expect(seo.title).toBe('Home — Tim Moyence, freelance web developer Bordeaux');
     });
 
-    it('devrait retourner null pour une cle inexistante', async () => {
-      const service = createService('fr');
-      const result = await firstValueFrom(service.getSeoByKey('cle-inexistante'));
+    it('refuse une clé que seo-metadata.json ne connaît pas, au lieu d’inventer un SEO', () => {
+      expect(() => createService('fr').getSeoByKey('cle-inexistante')).toThrowError(
+        'clé SEO « cle-inexistante » absente de seo-metadata.json',
+      );
+    });
 
-      expect(result).toBeNull();
+    it('ne donne à une page non indexée ni canonique, ni hreflang, ni données structurées', async () => {
+      const seo = await seoParCle('fr', 'login');
+
+      expect(Object.keys(seo).filter((cle) => CHAMPS_DE_L_INDEX.includes(cle))).toEqual([]);
     });
 
     it('devrait inclure les defaults (keywords, ogImage) si la page ne les definit pas', async () => {
@@ -108,66 +113,6 @@ describe('SeoRegistryService', () => {
         'Découvrez mes services professionnels et mes réalisations en développement web.',
       );
     });
-  });
-
-  describe('getSeoByPath', () => {
-    const pathCases: { label: string; path: string; expectedId: string }[] = [
-      {
-        label: "devrait retourner la config SEO pour le chemin '/'",
-        path: '/',
-        expectedId: 'home',
-      },
-      {
-        label: 'devrait normaliser le chemin en supprimant le prefixe de locale',
-        path: '/fr/presentation',
-        expectedId: 'presentation',
-      },
-      {
-        label: 'devrait ignorer les query params et fragments',
-        path: '/contact?source=test#section',
-        expectedId: 'contact',
-      },
-      {
-        label: 'devrait normaliser les slashs en trop',
-        path: '///contact///',
-        expectedId: 'contact',
-      },
-      {
-        label: 'devrait normaliser un chemin fait uniquement de slashs',
-        path: '//////',
-        expectedId: 'home',
-      },
-      {
-        label: 'devrait normaliser un slash final isole',
-        path: '/contact/',
-        expectedId: 'contact',
-      },
-    ];
-
-    for (const { label, path, expectedId } of pathCases) {
-      it(label, async () => {
-        const service = createService('fr');
-
-        expect(await firstValueFrom(service.getSeoByPath(path))).toEqual(
-          await firstValueFrom(service.getSeoByKey(expectedId)),
-        );
-      });
-    }
-
-    it("devrait retourner la config SEO pour '/presentation'", async () => {
-      const seo = await seoParChemin('/presentation');
-
-      expect(seo.title).toBe('Présentation — Tim Moyence Portfolio');
-    });
-
-    for (const chemin of ['/chemin-inexistant', '/home']) {
-      it(`devrait retourner null pour ${chemin}, que le routeur ne sert pas`, async () => {
-        const service = createService('fr');
-        const result = await firstValueFrom(service.getSeoByPath(chemin));
-
-        expect(result).toBeNull();
-      });
-    }
   });
 
   describe('resolution de locale avec fallback', () => {

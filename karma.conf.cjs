@@ -1,10 +1,14 @@
-const path = require('node:path');
+const { join } = require('node:path');
 
 const SILENCE_TOLERE_MS = 60_000;
 
-const couvertureDeLaTranche = process.env['KARMA_COUVERTURE'];
+const RELAIS_DE_CHROME = join(__dirname, 'scripts/tests/chrome-sans-tubes.sh');
+
+const { DEFAULT_CMD } = require('karma-chrome-launcher')['launcher:ChromeHeadless'][1].prototype;
 
 module.exports = function configureKarma(config) {
+  process.env['CHROME_REEL'] ??= process.env['CHROME_BIN'] ?? DEFAULT_CMD[process.platform] ?? '';
+  process.env['CHROME_BIN'] = RELAIS_DE_CHROME;
   config.set({
     basePath: '',
     browserNoActivityTimeout: SILENCE_TOLERE_MS,
@@ -21,18 +25,16 @@ module.exports = function configureKarma(config) {
     client: {
       clearContext: false,
       tranche: process.env['KARMA_TRANCHE'],
+      jasmine: { random: true, seed: process.env['KARMA_GRAINE'] },
     },
     jasmineHtmlReporter: {
       suppressAll: true,
     },
-    coverageReporter:
-      couvertureDeLaTranche === undefined
-        ? {
-            dir: path.join(__dirname, 'coverage/portfolio-app'),
-            subdir: '.',
-            reporters: [{ type: 'html' }, { type: 'lcovonly' }, { type: 'text-summary' }],
-          }
-        : { dir: couvertureDeLaTranche, subdir: '.', reporters: [{ type: 'json' }] },
+    coverageReporter: {
+      dir: process.env['KARMA_COUVERTURE'],
+      subdir: '.',
+      reporters: [{ type: 'json' }],
+    },
     reporters: ['progress', 'kjhtml'],
     browsers: ['Chrome'],
     customLaunchers: {

@@ -1,4 +1,3 @@
-import { spawn } from 'node:child_process';
 import { randomFillSync } from 'node:crypto';
 import { existsSync, mkdirSync, openSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -6,7 +5,12 @@ import { setTimeout as patienter } from 'node:timers/promises';
 
 import { RACINE as RACINE_FRONT } from '../lib/depot.mjs';
 import { messageDErreur } from '../../src/server/api/lecture-api.ts';
-import { executer } from '../lib/processus.mjs';
+import {
+  arreterLesGroupes,
+  executer,
+  lancerEnGroupe,
+  sortirEn130ALInterruption,
+} from '../lib/processus.mjs';
 import { amorcerFormateur } from './amorcage.mts';
 import { attendreQue, sondeHttp } from './attente.mjs';
 import {
@@ -34,46 +38,6 @@ const JOURNAL_API = resolve(DOSSIER_JOURNAUX, 'api.log');
 
 const source = { octets: (taille) => randomFillSync(new Uint8Array(taille)) };
 
-const enfants = new Set();
-
-/**
- * @param {string} commande
- * @param {string[]} args
- * @param {Record<string, unknown>} options
- * @returns {import('node:child_process').ChildProcess}
- */
-function lancerSuivi(commande, args, options) {
-  const enfant = spawn(commande, args, { ...options, detached: true });
-  enfants.add(enfant);
-  enfant.on('close', () => enfants.delete(enfant));
-  return enfant;
-}
-
-/**
- * @param {NodeJS.Signals} signal
- * @returns {void}
- */
-function signalerLesGroupes(signal) {
-  for (const enfant of enfants) {
-    if (enfant.pid === undefined || enfant.exitCode !== null) continue;
-    try {
-      process.kill(-enfant.pid, signal);
-    } catch {
-      enfant.kill(signal);
-    }
-  }
-}
-
-/**
- * @returns {Promise<void>}
- */
-async function arreterLesEnfants() {
-  signalerLesGroupes('SIGINT');
-  await patienter(3_000);
-  signalerLesGroupes('SIGKILL');
-  await patienter(300);
-}
-
 /**
  * @param {string} commande
  * @param {string[]} args
@@ -81,7 +45,7 @@ async function arreterLesEnfants() {
  * @returns {Promise<string>}
  */
 const executerSuivi = (commande, args, options = {}) =>
-  executer(commande, args, { ...options, lancer: lancerSuivi });
+  executer(commande, args, { ...options, lancer: lancerEnGroupe });
 
 /**
  * @param {string[]} args
@@ -122,7 +86,7 @@ function executerSql(sql) {
 function lancerLApi(environnement) {
   mkdirSync(DOSSIER_JOURNAUX, { recursive: true });
   const journal = openSync(JOURNAL_API, 'w');
-  return lancerSuivi('node', ['dist/main.js'], {
+  return lancerEnGroupe('node', ['dist/main.js'], {
     cwd: RACINE_BACK,
     env: { ...process.env, ...environnement },
     stdio: ['ignore', journal, journal],
@@ -133,7 +97,7 @@ function lancerLApi(environnement) {
  * @returns {Promise<void>}
  */
 async function redescendre() {
-  await arreterLesEnfants();
+  await arreterLesGroupes();
   await compose(['down', '-v', '--remove-orphans']).catch(() => undefined);
 }
 
@@ -265,18 +229,10 @@ async function jouer() {
   }
 }
 
-let interruption = null;
-
-const interrompre = () => {
-  interruption ??= (async () => {
-    annoncer('interruption');
-    await redescendre();
-    process.exit(130);
-  })();
-};
-
-process.on('SIGINT', interrompre);
-process.on('SIGTERM', interrompre);
+sortirEn130ALInterruption(async () => {
+  annoncer('interruption');
+  await redescendre();
+});
 
 const action = process.argv[2] === '--nettoyer' ? redescendre : jouer;
 

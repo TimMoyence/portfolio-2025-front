@@ -30,19 +30,33 @@ describe('tranche de la suite Karma', () => {
       ({ id: 'suite', children }) as unknown as jasmine.Suite;
     const specsDe = (noeud: jasmine.Spec | jasmine.Suite): jasmine.Spec[] =>
       'children' in noeud ? noeud.children.flatMap(specsDe) : [noeud];
-    const retenues = (arbre: jasmine.Suite, tranche: string): string[] => {
+    const jouer = (arbre: jasmine.Suite, tranche: string) => {
       let filtre: jasmine.SpecFilter | undefined;
+      const publiees: string[] = [];
       const env = {
         topSuite: () => arbre,
         configure: (configuration: jasmine.Configuration) => {
           filtre = configuration.specFilter;
         },
       } as unknown as jasmine.Env;
-      jouerLaTranche(env, tranche);
-      return specsDe(arbre)
+      jouerLaTranche(env, tranche, (ligne) => publiees.push(ligne));
+      const noms = specsDe(arbre)
         .filter((retenue) => filtre?.(retenue) === true)
         .map((retenue) => retenue.getFullName());
+      return { noms, publiees };
     };
+    const retenues = (arbre: jasmine.Suite, tranche: string): string[] =>
+      jouer(arbre, tranche).noms;
+
+    it('publie une fois l empreinte de la suite, la même dans chaque processus quel que soit l ordre', () => {
+      const premier = jouer(suite(spec('a'), suite(spec('b'), spec('c'))), '0/2').publiees;
+      const second = jouer(suite(suite(spec('c'), spec('b')), spec('a')), '1/2').publiees;
+      const autre = jouer(suite(spec('a'), suite(spec('b'), spec('c '))), '0/2').publiees;
+
+      expect(premier).toEqual([jasmine.stringMatching(/^empreinte de la suite : 3-[0-9a-f]+$/)]);
+      expect(second).toEqual(premier);
+      expect(autre).not.toEqual(premier);
+    });
 
     it('joue chaque spec dans une seule tranche, même quand chaque processus les déclare dans un autre ordre', () => {
       const premier = suite(spec('a'), suite(spec('b'), spec('c')), spec('d'));
@@ -63,7 +77,7 @@ describe('tranche de la suite Karma', () => {
   it('laisse l environnement jasmine intact sans tranche', () => {
     const configure = jasmine.createSpy('configure');
 
-    jouerLaTranche({ configure } as unknown as jasmine.Env, undefined);
+    jouerLaTranche({ configure } as unknown as jasmine.Env, undefined, () => undefined);
 
     expect(configure).not.toHaveBeenCalled();
   });

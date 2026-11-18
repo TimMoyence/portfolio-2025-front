@@ -180,15 +180,12 @@ export class ArticleDetailComponent {
   }
 
   private poserLeSeoProvisoire(slug: string): void {
-    const canonicalUrl = urlLocalisee(this.config.baseUrl, this.locale, `/articles/${slug}`);
     const edition = $localize`:@@articleDetailTitreProvisoire:Édition du Morning Brief`;
     this.seo.updateSeoMetadata({
       title: `${edition} — ${NOM_DU_SITE}`,
       description: $localize`:@@articleDetailDescriptionProvisoire:Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.`,
       index: false,
-      canonicalUrl,
-      ogUrl: canonicalUrl,
-      hreflangs: {},
+      ogUrl: urlLocalisee(this.config.baseUrl, this.locale, `/articles/${slug}`),
     });
   }
 
@@ -227,17 +224,14 @@ export class ArticleDetailComponent {
     this.isLoading = false;
     this.hasError = true;
     this.responseStatus?.set(statut);
-    const canonicalUrl = urlLocalisee(this.config.baseUrl, this.locale, `/articles/${slug}`);
     const introuvable = $localize`:@@articleDetailNotFound:Article introuvable`;
     this.seo.updateSeoMetadata({
       title: `${introuvable} — ${NOM_DU_SITE}`,
       description: $localize`:@@articleDetailAbsenceDescription:Cette édition du Morning Brief est introuvable ou momentanément indisponible.`,
       index: false,
-      canonicalUrl,
-      ogUrl: canonicalUrl,
+      ogUrl: urlLocalisee(this.config.baseUrl, this.locale, `/articles/${slug}`),
       ogImage: this.logo,
       twitterImage: this.logo,
-      hreflangs: {},
     });
   }
 }

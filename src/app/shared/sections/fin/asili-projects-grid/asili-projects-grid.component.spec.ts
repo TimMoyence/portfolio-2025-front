@@ -21,7 +21,7 @@ const PROJECTS: readonly AsiliProject[] = [
     title: 'Audit de visibilité',
     desc: 'Analyse technique et recommandations priorisées.',
     tags: [{ label: 'Audit' }],
-    image: '/assets/audit.jpg',
+    image: '/assets/images/audit.webp',
     imageAlt: "Capture de l'audit",
     href: '/growth-audit',
     size: 'small',
@@ -39,7 +39,7 @@ const IMAGE_PROJECTS: readonly AsiliProject[] = [
     title: 'Carte 1',
     desc: 'Premiere carte, au-dessus de la ligne de flottaison.',
     tags: [],
-    image: '/assets/images/projects/un.webp',
+    image: '/assets/images/projects/morning-brief.webp',
     imageAlt: 'capture 1',
     size: 'small',
   },
@@ -47,7 +47,7 @@ const IMAGE_PROJECTS: readonly AsiliProject[] = [
     title: 'Carte 2',
     desc: 'Deuxieme carte, encore visible au chargement.',
     tags: [],
-    image: '/assets/images/projects/deux.webp',
+    image: '/assets/images/projects/jeu-des-fourmis.webp',
     imageAlt: 'capture 2',
     size: 'big',
   },
@@ -55,7 +55,7 @@ const IMAGE_PROJECTS: readonly AsiliProject[] = [
     title: 'Carte 3',
     desc: 'Troisieme carte, sous la ligne de flottaison.',
     tags: [],
-    image: '/assets/images/projects/trois.webp',
+    image: '/assets/images/projects/voice-ia.webp',
     imageAlt: 'capture 3',
     size: 'small',
   },
@@ -63,7 +63,7 @@ const IMAGE_PROJECTS: readonly AsiliProject[] = [
     title: 'Carte 4',
     desc: 'Quatrieme carte, sous la ligne de flottaison.',
     tags: [],
-    image: '/assets/images/projects/quatre.webp',
+    image: '/assets/images/projects/IFS-Academy.webp',
     imageAlt: 'capture 4',
     size: 'big',
   },
@@ -120,7 +120,7 @@ describe('AsiliProjectsGridComponent', () => {
     const host = fixture.nativeElement as HTMLElement;
     const img = host.querySelector<HTMLImageElement>('.proj-shot img');
     expect(img).not.toBeNull();
-    expect(img?.getAttribute('src')).toBe('/assets/audit.jpg');
+    expect(img?.getAttribute('src')).toBe('/assets/images/audit.webp');
     expect(img?.getAttribute('alt')).toBe("Capture de l'audit");
   });
 

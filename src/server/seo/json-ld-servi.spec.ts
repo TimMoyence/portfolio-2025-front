@@ -30,7 +30,7 @@ describe('JSON-LD servi', () => {
       'ProfilePage',
       'ProfessionalService',
     ]);
-    expect(typesDe(blocsDeLaPage('fr', 'login'))).toEqual([...duSite, 'Person']);
+    expect(blocsDeLaPage('fr', 'login')).toBeUndefined();
 
     const servi = injectSeoHead(EMPTY_HTML, METADONNEES, '/fr/contact', 'https://asilidesign.fr');
     expect(servi).toContain('application/rss+xml');

@@ -3,9 +3,8 @@ import type { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import seoMetadata from '../../../assets/seo/seo-metadata.json';
 import { langueDuSite } from '../config/locales';
-import { routeSansLocale } from './chemins';
 import { type BlocJsonLd, jsonLdDeLaPage } from './json-ld';
-import { estIndexable, localeParDefaut, pageSeoDeLaRoute } from './pages-seo';
+import { estIndexable, localeParDefaut } from './pages-seo';
 import type { SeoConfig } from './seo.interface';
 import type { SeoMetadataFile, SeoPageEntry } from './seo-metadata.model';
 
@@ -38,24 +37,19 @@ export class SeoRegistryService {
     return jsonLdDeLaPage(this.data, this.getLocaleId());
   }
 
-  getSeoByKey(key: string): Observable<SeoConfig | null> {
+  getSeoByKey(key: string): Observable<SeoConfig> {
     const page = this.data.pages.find((entry) => entry.id === key);
-    return of(page ? this.seoDeLaPage(page) : null);
-  }
-
-  getSeoByPath(rawPath: string): Observable<SeoConfig | null> {
-    const { route } = routeSansLocale(rawPath, this.data.site.locales ?? []);
-    const page = pageSeoDeLaRoute(this.data, route);
-    return of(page ? this.seoDeLaPage(page) : null);
+    if (page === undefined) {
+      throw new Error(`clé SEO « ${key} » absente de seo-metadata.json`);
+    }
+    return of(this.seoDeLaPage(page));
   }
 
   private seoDeLaPage(page: SeoPageEntry): SeoConfig {
     const localeKey = this.resolveLocaleKey(page);
     const localeMeta = page.locales[localeKey];
     const defaults = this.data.defaults ?? {};
-
-    return {
-      index: estIndexable(page),
+    const seo = {
       title: localeMeta.title,
       description: localeMeta.description,
       keywords: localeMeta.keywords ?? defaults.keywords ?? [],
@@ -66,8 +60,10 @@ export class SeoRegistryService {
       twitterTitle: localeMeta.twitterTitle,
       twitterDescription: localeMeta.twitterDescription,
       twitterImage: localeMeta.twitterImage ?? localeMeta.ogImage ?? defaults.ogImage,
-      jsonLd: jsonLdDeLaPage(this.data, localeKey, page),
     };
+    return estIndexable(page)
+      ? { ...seo, index: true, jsonLd: jsonLdDeLaPage(this.data, localeKey, page) }
+      : { ...seo, index: false };
   }
 
   private resolveLocaleKey(page: SeoPageEntry): string {

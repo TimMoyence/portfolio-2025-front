@@ -41,8 +41,8 @@ export class SeoManagerComponent {
       .pipe(
         filter((event) => event instanceof NavigationEnd),
         filter((event) => this.changeDePage(event.urlAfterRedirects)),
-        map(() => this.activatedRoute),
-        map((route) => {
+        map(() => {
+          let route = this.activatedRoute;
           while (route.firstChild) {
             route = route.firstChild;
           }
@@ -50,25 +50,16 @@ export class SeoManagerComponent {
         }),
         filter((route) => route.outlet === 'primary'),
         mergeMap((route) => route.data),
-        filter((data) => data['seoParLaPage'] !== true),
-        switchMap((data) => {
+        map((data) => data['seoKey']),
+        filter((seoKey): seoKey is string => typeof seoKey === 'string'),
+        switchMap((seoKey) => {
           const currentUrl = this.router.url;
-          const seoKey = data['seoKey'];
-
-          const resolution = seoKey
-            ? this.seoRegistry.getSeoByKey(seoKey)
-            : this.seoRegistry.getSeoByPath(currentUrl);
-          return resolution.pipe(map((seo) => ({ seo, currentUrl })));
+          return this.seoRegistry.getSeoByKey(seoKey).pipe(map((seo) => ({ seo, currentUrl })));
         }),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(({ seo, currentUrl }) => {
-        if (seo) {
-          this.applySeoConfig(seo, currentUrl);
-          return;
-        }
-
-        this.setDefaultSeo(currentUrl);
+        this.applySeoConfig(seo, currentUrl);
       });
   }
 
@@ -82,15 +73,11 @@ export class SeoManagerComponent {
     const { baseUrl, canonicalUrl, hreflangs } = this.resolvePageUrls(currentUrl);
     const ogImage = this.resolveAbsoluteUrl(baseUrl, seo.ogImage);
     const twitterImage = this.resolveAbsoluteUrl(baseUrl, seo.twitterImage ?? ogImage);
+    const images = { ogImage, twitterImage, ogUrl: canonicalUrl };
 
-    this.seoService.updateSeoMetadata({
-      ...seo,
-      ogImage,
-      twitterImage,
-      ogUrl: canonicalUrl,
-      canonicalUrl,
-      hreflangs,
-    });
+    this.seoService.updateSeoMetadata(
+      seo.index ? { ...seo, ...images, canonicalUrl, hreflangs } : { ...seo, ...images },
+    );
   }
 
   private resolvePageUrls(currentUrl: string): {
@@ -119,31 +106,6 @@ export class SeoManagerComponent {
       hreflangs['x-default'] = urlLocalisee(baseUrl, defaultLocale, relativePath);
     }
     return hreflangs;
-  }
-
-  private setDefaultSeo(currentUrl: string): void {
-    const { baseUrl, canonicalUrl, hreflangs } = this.resolvePageUrls(currentUrl);
-
-    const seoConfig: SeoConfig = {
-      title: $localize`:seo.default.title|Fallback SEO title@@seoDefaultTitle:Professional Portfolio | Web Developer & Designer`,
-      description: $localize`:seo.default.description|Fallback SEO description@@seoDefaultDescription:Explore my portfolio showcasing web development projects, courses, and professional services. Specializing in modern web technologies and creative solutions.`,
-      keywords: [
-        $localize`:seo.default.keyword.webDev|SEO keyword@@seoKeywordWebDev:web development`,
-        $localize`:seo.default.keyword.portfolio|SEO keyword@@seoKeywordPortfolio:portfolio`,
-        $localize`:seo.default.keyword.frontend|SEO keyword@@seoKeywordFrontend:frontend`,
-        $localize`:seo.default.keyword.backend|SEO keyword@@seoKeywordBackend:backend`,
-        $localize`:seo.default.keyword.fullstack|SEO keyword@@seoKeywordFullstack:full stack`,
-        $localize`:seo.default.keyword.developer|SEO keyword@@seoKeywordDeveloper:developer`,
-      ],
-      ogImage: `${baseUrl}/assets/images/logo.webp`,
-      twitterCard: 'summary_large_image',
-      index: true,
-      canonicalUrl,
-      ogUrl: canonicalUrl,
-      hreflangs,
-    };
-
-    this.seoService.updateSeoMetadata(seoConfig);
   }
 
   private resolveCanonicalState(currentUrl: string): {

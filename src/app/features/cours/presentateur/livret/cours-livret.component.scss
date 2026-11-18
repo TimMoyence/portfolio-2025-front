@@ -100,8 +100,8 @@ $hauteur-de-toile-imprimee: math.div($largeur-imprimee * 9, 16);
   .livret {
     --slide-hauteur-de-toile: #{$hauteur-de-toile-imprimee};
     --fp-hauteur-de-toile-imposee: #{$hauteur-de-toile-imprimee};
-    --slide-marge-bloc: 0;
-    --slide-marge-ligne: 0;
+    --slide-marge-bloc: 0px;
+    --slide-marge-ligne: 0px;
     --fp-densite-imposee: 0.75;
     display: block;
     inline-size: $largeur-imprimee;
