@@ -18,6 +18,7 @@ jobs:
   quality-gate:
     name: quality-gate
     runs-on: ubuntu-24.04
+    timeout-minutes: 40
     defaults:
       run:
         shell: bash
@@ -92,6 +93,7 @@ jobs:
   e2e:
     name: e2e
     runs-on: ubuntu-24.04
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
@@ -166,6 +168,7 @@ jobs:
   banc:
     name: banc
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     defaults:
       run:
         shell: bash
@@ -234,6 +237,7 @@ jobs:
   security:
     name: security
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     permissions:
       contents: read
       pull-requests: read
@@ -256,6 +260,7 @@ jobs:
 
   docker:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     if: github.event_name == 'push'
     needs:
       - quality-gate
@@ -295,6 +300,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: docker
     steps:

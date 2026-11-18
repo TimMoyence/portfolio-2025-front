@@ -43,10 +43,14 @@ const couvertureDe = (chemin, compteurs) => ({
   },
 });
 
-test('une tranche par cœur, huit au plus, quand rien n est demandé', () => {
-  assert.equal(nombreDeTranches(undefined, 4), 4);
-  assert.equal(nombreDeTranches(undefined, 18), 8);
-  assert.equal(nombreDeTranches('', 1), 1);
+const GIO = 1024 ** 3;
+
+test('une tranche par cœur, huit au plus, et pas plus que la mémoire n en porte à 5 Gio par tranche, quand rien n est demandé', () => {
+  assert.equal(nombreDeTranches(undefined, 4, 64 * GIO), 4);
+  assert.equal(nombreDeTranches(undefined, 18, 48 * GIO), 8);
+  assert.equal(nombreDeTranches('', 1, 64 * GIO), 1);
+  assert.equal(nombreDeTranches(undefined, 4, 15.6 * GIO), 3);
+  assert.equal(nombreDeTranches(undefined, 4, 4 * GIO), 1);
 });
 
 test('KARMA_TRANCHES impose le nombre de tranches', () => {
