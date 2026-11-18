@@ -40,19 +40,20 @@ export class SeoService {
     this.updateOpenGraphTags(config);
     this.updateTwitterTags(config);
 
-    if (config.robots) {
-      this.meta.updateTag({ name: 'robots', content: config.robots });
-    }
+    this.meta.updateTag({
+      name: 'robots',
+      content: config.index ? 'index, follow' : 'noindex, nofollow',
+    });
 
-    if (config.canonicalUrl) {
-      this.updateCanonicalLink(config.canonicalUrl);
+    if (config.index) {
+      if (config.canonicalUrl) this.updateCanonicalLink(config.canonicalUrl);
+      if (config.hreflangs) this.updateHreflangLinks(config.hreflangs);
+      this.updateJsonLd(config.jsonLd);
+    } else {
+      this.updateCanonicalLink(null);
+      this.updateHreflangLinks({});
+      this.updateJsonLd(undefined);
     }
-
-    if (config.hreflangs) {
-      this.updateHreflangLinks(config.hreflangs);
-    }
-
-    this.updateJsonLd(config);
   }
 
   private updateOpenGraphTags(config: SeoConfig): void {
@@ -123,8 +124,9 @@ export class SeoService {
       });
   }
 
-  private updateCanonicalLink(canonicalUrl: string): void {
+  private updateCanonicalLink(canonicalUrl: string | null): void {
     this.document.querySelector('link[rel="canonical"]')?.remove();
+    if (canonicalUrl === null) return;
 
     const link = this.document.createElement('link');
     link.setAttribute('rel', 'canonical');
@@ -146,16 +148,14 @@ export class SeoService {
     }
   }
 
-  private updateJsonLd(config: SeoConfig): void {
-    if (!this.document) return;
-
+  private updateJsonLd(jsonLd: SeoConfig['jsonLd']): void {
     this.document.head
       .querySelectorAll('script[type="application/ld+json"]')
       .forEach((node) => node.remove());
 
-    if (!config.jsonLd) return;
+    if (!jsonLd) return;
 
-    const blocks = Array.isArray(config.jsonLd) ? config.jsonLd : [config.jsonLd];
+    const blocks = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
 
     for (const block of blocks) {
       const script = this.document.createElement('script');

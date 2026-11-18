@@ -22,13 +22,6 @@ describe('SeoRegistryService', () => {
 
   const seoParChemin = (path: string) => seoTrouve(createService('fr').getSeoByPath(path));
 
-  describe('getBaseUrl', () => {
-    it("devrait retourner l'URL de base du site", () => {
-      const service = createService('fr');
-      expect(service.getBaseUrl()).toBe('https://asilidesign.fr');
-    });
-  });
-
   describe('getLocales', () => {
     it('devrait retourner les locales configurees', () => {
       const service = createService('fr');
@@ -72,18 +65,17 @@ describe('SeoRegistryService', () => {
 
   describe('getSeoByKey', () => {
     it("devrait retourner la config SEO pour la cle 'home'", async () => {
-      const { seo, index, page } = await seoParCle('fr', 'home');
+      const seo = await seoParCle('fr', 'home');
 
       expect(seo.title).toBe('Accueil — Tim Moyence Portfolio');
       expect(seo.description).toBe(
         'Découvrez mes services professionnels, réalisations et solutions digitales sur mesure. Tim Moyence, développeur web freelance à Bordeaux.',
       );
-      expect(index).toBeTrue();
-      expect(page.id).toBe('home');
+      expect(seo.index).toBeTrue();
     });
 
     it("devrait retourner la config SEO en anglais pour la cle 'home'", async () => {
-      const { seo } = await seoParCle('en', 'home');
+      const seo = await seoParCle('en', 'home');
 
       expect(seo.title).toBe('Home — Tim Moyence, freelance web developer Bordeaux');
     });
@@ -96,7 +88,7 @@ describe('SeoRegistryService', () => {
     });
 
     it('devrait inclure les defaults (keywords, ogImage) si la page ne les definit pas', async () => {
-      const { seo } = await seoParCle('fr', 'home');
+      const seo = await seoParCle('fr', 'home');
 
       expect(seo.keywords).toBeDefined();
       expect(seo.keywords!.length).toBeGreaterThan(0);
@@ -105,13 +97,11 @@ describe('SeoRegistryService', () => {
     });
 
     it('devrait retourner index false pour la page login', async () => {
-      const { index } = await seoParCle('fr', 'login');
-
-      expect(index).toBeFalse();
+      expect((await seoParCle('fr', 'login')).index).toBeFalse();
     });
 
     it('devrait retourner les ogTitle et ogDescription depuis la page', async () => {
-      const { seo } = await seoParCle('fr', 'home');
+      const seo = await seoParCle('fr', 'home');
 
       expect(seo.ogTitle).toBe('Accueil de Tim Moyence');
       expect(seo.ogDescription).toBe(
@@ -156,16 +146,17 @@ describe('SeoRegistryService', () => {
 
     for (const { label, path, expectedId } of pathCases) {
       it(label, async () => {
-        const { page } = await seoParChemin(path);
+        const service = createService('fr');
 
-        expect(page.id).toBe(expectedId);
+        expect(await firstValueFrom(service.getSeoByPath(path))).toEqual(
+          await firstValueFrom(service.getSeoByKey(expectedId)),
+        );
       });
     }
 
     it("devrait retourner la config SEO pour '/presentation'", async () => {
-      const { page, seo } = await seoParChemin('/presentation');
+      const seo = await seoParChemin('/presentation');
 
-      expect(page.id).toBe('presentation');
       expect(seo.title).toBe('Présentation — Tim Moyence Portfolio');
     });
 
@@ -181,11 +172,28 @@ describe('SeoRegistryService', () => {
 
   describe('resolution de locale avec fallback', () => {
     it("devrait fallback sur la locale par defaut si la locale demandee n'existe pas dans la page", async () => {
-      expect((await seoParCle('ja', 'home')).seo.title).toBe('Accueil — Tim Moyence Portfolio');
+      expect((await seoParCle('ja', 'home')).title).toBe('Accueil — Tim Moyence Portfolio');
     });
 
     it('devrait fallback depuis une locale composee vers la langue de base', async () => {
-      expect((await seoParCle('fr-CA', 'home')).seo.title).toBe('Accueil — Tim Moyence Portfolio');
+      expect((await seoParCle('fr-CA', 'home')).title).toBe('Accueil — Tim Moyence Portfolio');
     });
+  });
+
+  describe('JSON-LD de la page', () => {
+    const itemsDuFil = async (locale: string): Promise<unknown[]> => {
+      const blocs = (await seoParCle(locale, 'projets')).jsonLd as Record<string, unknown>[];
+      const fil = blocs.find((bloc) => bloc['@type'] === 'BreadcrumbList');
+      return (fil?.['itemListElement'] as { item: string }[]).map((element) => element.item);
+    };
+
+    for (const locale of ['fr', 'en']) {
+      it(`ART-JSONLD-1 · sert le fil d Ariane dans la langue du bundle (${locale})`, async () => {
+        expect(await itemsDuFil(locale)).toEqual([
+          `https://asilidesign.fr/${locale}/`,
+          `https://asilidesign.fr/${locale}/projets`,
+        ]);
+      });
+    }
   });
 });

@@ -175,14 +175,6 @@
             "inLanguage": ["fr-FR", "en-US"],
             "publisher": {
               "@id": "https://asilidesign.fr/#organization"
-            },
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": {
-                "@type": "EntryPoint",
-                "urlTemplate": "https://asilidesign.fr/fr/contact?q={search_term_string}"
-              },
-              "query-input": "required name=search_term_string"
             }
           }
         },
@@ -201,14 +193,6 @@
             "inLanguage": ["fr-FR", "en-US"],
             "publisher": {
               "@id": "https://asilidesign.fr/#organization"
-            },
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": {
-                "@type": "EntryPoint",
-                "urlTemplate": "https://asilidesign.fr/en/contact?q={search_term_string}"
-              },
-              "query-input": "required name=search_term_string"
             }
           }
         }

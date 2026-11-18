@@ -1,13 +1,29 @@
 import type express from 'express';
 import { LOCALES_DU_SITE } from '../../app/core/config/locales';
 import { buildLocalizedPath, normalizePath, routeSansLocale } from '../../app/core/seo/chemins';
+import { URL_DU_SITE } from '../../app/core/seo/nom-du-site';
+
+const NON_RESERVE_ENCODE = /%(?:3\d|4[1-9A-F]|5[\dAF]|6[1-9A-F]|7[\dAE]|2[DE])/gi;
+
+const commeLeMoteurSsr = (path: string): string =>
+  new URL(path.replace(NON_RESERVE_ENCODE, decodeURIComponent), URL_DU_SITE).pathname;
 
 export const cheminCanonique = (path: string): string => {
-  const replie = path.replace(/\/{2,}/g, '/');
+  const replie = commeLeMoteurSsr(path.replace(/\/{2,}/g, '/')).replace(/\/index\.html$/, '/');
   const { locale, route } = routeSansLocale(replie, LOCALES_DU_SITE);
   if (locale !== undefined && route === '/') return buildLocalizedPath(locale, route);
   return normalizePath(replie);
 };
+
+const decode = (path: string): string => {
+  try {
+    return decodeURIComponent(path);
+  } catch {
+    return path;
+  }
+};
+
+export const demandeUnDocument = (path: string): boolean => /\.html$/i.test(decode(path));
 
 export const LONGUEUR_MAX_D_UNE_URL = 2048;
 
@@ -56,5 +72,5 @@ export const buildBaseUrlFromRequest = (req: express.Request, fallback?: string)
     return `${protocol}://${host}`;
   }
 
-  return fallback ?? 'https://asilidesign.fr';
+  return fallback ?? URL_DU_SITE;
 };

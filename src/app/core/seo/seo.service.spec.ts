@@ -108,7 +108,7 @@ describe('SeoService', () => {
         twitterTitle: 'Twitter Titre',
         twitterDescription: 'Twitter Description',
         twitterImage: '/assets/images/twitter.webp',
-        robots: 'index, follow',
+        index: true,
         canonicalUrl: 'https://example.com/page',
         hreflangs: {
           fr: 'https://example.com/fr/page',
@@ -213,6 +213,7 @@ describe('SeoService', () => {
 
     describe('updateSeoMetadata - config minimale (fallbacks)', () => {
       const minimalConfig: SeoConfig = {
+        index: true,
         title: 'Titre minimal',
         description: 'Description minimale',
       };
@@ -278,12 +279,6 @@ describe('SeoService', () => {
         );
       });
 
-      it('ne devrait pas mettre a jour robots si absent', () => {
-        expect(metaSpy.updateTag).not.toHaveBeenCalledWith(
-          jasmine.objectContaining({ name: 'robots' }),
-        );
-      });
-
       it('ne devrait pas creer de lien canonical si absent', () => {
         expect(mockDocument.createElement).not.toHaveBeenCalledWith('link');
       });
@@ -296,6 +291,7 @@ describe('SeoService', () => {
     describe('updateSeoMetadata - keywords vide', () => {
       it('retire les keywords de la page precedente si le tableau est vide', () => {
         service.updateSeoMetadata({
+          index: true,
           title: 'Test',
           description: 'Desc',
           keywords: [],
@@ -311,6 +307,7 @@ describe('SeoService', () => {
         (mockDocument.querySelector as jasmine.Spy).and.returnValue(existingLink);
 
         service.updateSeoMetadata({
+          index: true,
           title: 'Test',
           description: 'Desc',
           canonicalUrl: 'https://example.com/new',
@@ -330,6 +327,7 @@ describe('SeoService', () => {
         ]);
 
         service.updateSeoMetadata({
+          index: true,
           title: 'Test',
           description: 'Desc',
           hreflangs: { fr: 'https://example.com/fr' },
@@ -364,6 +362,7 @@ describe('SeoService', () => {
         };
 
         service.updateSeoMetadata({
+          index: true,
           title: 'Test',
           description: 'Desc',
           jsonLd: jsonLdData,
@@ -378,7 +377,7 @@ describe('SeoService', () => {
       it('echappe chaque < du JSON-LD pour que le rendu serveur ne ferme jamais le script', () => {
         const jsonLd = { '@type': 'Article', headline: '</script><!--<script>' };
 
-        service.updateSeoMetadata({ title: 'Test', description: 'Desc', jsonLd });
+        service.updateSeoMetadata({ index: true, title: 'Test', description: 'Desc', jsonLd });
 
         const texte = scriptJsonLdAjoute()!['textContent'] as string;
         expect(texte).not.toContain('<');
@@ -387,6 +386,7 @@ describe('SeoService', () => {
 
       it('ne devrait pas injecter de script JSON-LD si jsonLd est absent', () => {
         service.updateSeoMetadata({
+          index: true,
           title: 'Test',
           description: 'Desc',
         });
@@ -409,6 +409,7 @@ describe('SeoService', () => {
         ];
 
         service.updateSeoMetadata({
+          index: true,
           title: 'Test',
           description: 'Desc',
           jsonLd: jsonLdArray,
@@ -422,12 +423,14 @@ describe('SeoService', () => {
 
       it('devrait supprimer les anciens JSON-LD avant injection', () => {
         service.updateSeoMetadata({
+          index: true,
           title: 'T1',
           description: 'D1',
           jsonLd: { '@type': 'WebSite' },
         });
 
         service.updateSeoMetadata({
+          index: true,
           title: 'T2',
           description: 'D2',
           jsonLd: [{ '@type': 'FAQPage' }],
@@ -451,12 +454,14 @@ describe('SeoService', () => {
         };
 
         service.updateSeoMetadata({
+          index: true,
           title: 'Test',
           description: 'Desc',
           jsonLd: jsonLdA,
         });
 
         service.updateSeoMetadata({
+          index: true,
           title: 'Test',
           description: 'Desc',
           jsonLd: jsonLdB,
@@ -488,6 +493,7 @@ describe('SeoService', () => {
 
     it('ne devrait rien faire si document est null', () => {
       svc.updateSeoMetadata({
+        index: true,
         title: 'Titre',
         description: 'Description',
       });
@@ -499,6 +505,7 @@ describe('SeoService', () => {
     it('ne devrait pas throw si jsonLd est fourni avec document null', () => {
       expect(() =>
         svc.updateSeoMetadata({
+          index: true,
           title: 'Titre',
           description: 'Description',
           jsonLd: {
@@ -509,5 +516,72 @@ describe('SeoService', () => {
         }),
       ).not.toThrow();
     });
+  });
+});
+
+describe('SeoService — page en noindex', () => {
+  const PAGE = 'https://asilidesign.fr/fr/login';
+  const liensDuHead = (): string[] =>
+    Array.from(
+      TestBed.inject(DOCUMENT).head.querySelectorAll('link[rel="canonical"], link[hreflang]'),
+      (lien) => lien.outerHTML,
+    );
+  const poser = (index: boolean): void =>
+    TestBed.inject(SeoService).updateSeoMetadata({
+      title: 'Connexion',
+      description: 'Connexion',
+      index,
+      canonicalUrl: PAGE,
+      hreflangs: { fr: PAGE },
+    });
+
+  it('ART-IDX-3 · une page en noindex ne porte ni canonical ni hreflang', () => {
+    poser(true);
+    expect(liensDuHead()).toEqual([
+      `<link rel="canonical" href="${PAGE}">`,
+      `<link rel="alternate" hreflang="fr" href="${PAGE}">`,
+    ]);
+
+    poser(false);
+
+    expect(liensDuHead()).toEqual([]);
+  });
+
+  it('ART-JSONLD-3 · une page en noindex ne porte aucune donnée structurée, même celles du site', () => {
+    const blocs = (): number =>
+      TestBed.inject(DOCUMENT).head.querySelectorAll('script[type="application/ld+json"]').length;
+    const poserAvecLeSite = (index: boolean): void =>
+      TestBed.inject(SeoService).updateSeoMetadata({
+        title: 'Connexion',
+        description: 'Connexion',
+        index,
+        jsonLd: [{ '@type': 'LocalBusiness' }, { '@type': 'Person' }],
+      });
+
+    poserAvecLeSite(true);
+    expect(blocs()).toBe(2);
+
+    poserAvecLeSite(false);
+
+    expect(blocs()).toBe(0);
+  });
+});
+
+describe('SeoService — JSON-LD écrit dans la page', () => {
+  it('ART-JSONLD-1 · un texte qui contient </script> ne ferme pas le bloc une fois la page sérialisée', () => {
+    const source = { '@type': 'LocalBusiness', name: '</script><script>alert(1)</script><!--' };
+
+    TestBed.inject(SeoService).updateSeoMetadata({
+      index: true,
+      title: 'x',
+      description: 'x',
+      jsonLd: source,
+    });
+    const scripts = Array.from(
+      TestBed.inject(DOCUMENT).head.querySelectorAll('script[type="application/ld+json"]'),
+    );
+
+    expect(scripts.map((script) => script.outerHTML.includes('<script>alert'))).toEqual([false]);
+    expect(JSON.parse(scripts[0].textContent ?? '')).toEqual(source);
   });
 });

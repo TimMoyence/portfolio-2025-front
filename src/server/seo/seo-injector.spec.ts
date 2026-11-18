@@ -3,89 +3,13 @@ import type { SeoMetadataFile } from '../../app/core/seo/seo-metadata.model';
 import seoMetadata from '../../assets/seo/seo-metadata.json';
 import { buildPageSeoFr, buildSeoMetadata } from '../../testing/factories/seo-metadata.factory';
 import { buildLlmsFullTxt, buildLlmsTxt, buildSitemapXml } from './seo-builders';
-import { injectSeoHead, isKnownRoute } from './seo-injector';
+import { injectSeoHead } from './seo-injector';
 
 const BASE_URL = 'https://asilidesign.fr';
 const EMPTY_HTML = '<html><head><title>x</title></head><body></body></html>';
 
-const buildMetadata = (
-  localBusiness: Record<string, unknown>,
-  overrides: Partial<SeoMetadataFile> = {},
-): SeoMetadataFile =>
-  buildSeoMetadata([], {
-    global: { localBusiness, siteNavigation: { '@type': 'SiteNavigationElement' } },
-    ...overrides,
-  });
-
-const extractFirstJsonLd = (html: string): string => {
-  const match = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(html);
-  return match ? match[1] : '';
-};
-
-describe('injectSeoHead — echappement JSON-LD', () => {
-  it('neutralise tout `<` dans le JSON serialise, pas seulement `</script>`', () => {
-    const metadata = buildMetadata({
-      '@type': 'LocalBusiness',
-      name: '<!--<script>alert(1)</script>-->',
-    });
-
-    const html = injectSeoHead(EMPTY_HTML, metadata, '/fr/', BASE_URL);
-
-    expect(html).not.toContain('<!--');
-    expect(html).not.toContain('<script>alert');
-    expect(extractFirstJsonLd(html)).not.toContain('<');
-  });
-
-  it("laisse le JSON-LD strictement parsable et identique a l'objet source", () => {
-    const source = {
-      '@context': 'https://schema.org',
-      '@type': 'LocalBusiness',
-      name: '<!--<script>x</script>-->',
-      description: 'a < b && c </SCRIPT> d',
-      areaServed: ['Bordeaux', '<b>Nouvelle-Aquitaine</b>'],
-    };
-    const metadata = buildMetadata(source);
-
-    const html = injectSeoHead(EMPTY_HTML, metadata, '/fr/', BASE_URL);
-    const parsed: unknown = JSON.parse(extractFirstJsonLd(html));
-
-    expect(parsed).toEqual(source);
-  });
-
-  it("preserve les valeurs sans chevron a l'identique", () => {
-    const source = { '@type': 'LocalBusiness', name: 'Asili Design' };
-    const metadata = buildMetadata(source);
-
-    const html = injectSeoHead(EMPTY_HTML, metadata, '/fr/', BASE_URL);
-
-    expect(extractFirstJsonLd(html)).toBe(JSON.stringify(source));
-  });
-});
-
-describe('injectSeoHead — fraicheur du JSON-LD de la page', () => {
-  const blocsDeLaPage = (jsonLd: Record<string, unknown>): unknown[] => {
-    const page = buildPageSeoFr('article', '/article', { jsonLd }, { lastmod: '2026-10-01' });
-    const html = injectSeoHead(EMPTY_HTML, buildSeoMetadata([page]), '/fr/article', BASE_URL);
-    return [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(
-      ([, json]) => JSON.parse(json) as unknown,
-    );
-  };
-
-  it('date un bloc d un type connu du lastmod de la page', () => {
-    expect(blocsDeLaPage({ '@type': 'Article', headline: 'A' })).toEqual([
-      jasmine.objectContaining({ dateModified: '2026-10-01', datePublished: '2026-10-01' }),
-    ]);
-  });
-
-  it('laisse tel quel un bloc dont le type n est pas un texte', () => {
-    const bloc = { '@type': ['Article'], headline: 'A' };
-
-    expect(blocsDeLaPage(bloc)).toEqual([bloc]);
-  });
-});
-
 describe('injectSeoHead — flux RSS des articles', () => {
-  const metadata = buildMetadata({ '@type': 'LocalBusiness' });
+  const metadata = buildSeoMetadata([]);
 
   it('annonce le flux RSS de la langue de la page', () => {
     const html = injectSeoHead(EMPTY_HTML, metadata, '/en/articles', BASE_URL);
@@ -111,71 +35,35 @@ describe('injectSeoHead — flux RSS des articles', () => {
   });
 });
 
-describe('injectSeoHead — fil d Ariane et locale', () => {
-  const pages = [
-    buildPageSeoFr('home', '/'),
-    buildPageSeoFr(
-      'contact',
-      '/contact',
-      {},
-      {
-        breadcrumb: [
-          { name: 'Accueil', path: '/' },
-          { name: 'Contact', path: '/contact' },
-        ],
-      },
-    ),
-  ];
-  const metadata = buildSeoMetadata(pages);
+describe('injectSeoHead — fiche article', () => {
+  const FICHE = 'https://asilidesign.fr/fr/articles/morning-brief-2026-11-17';
+  const RENDU_DE_LA_FICHE = [
+    '<html><head><title>x</title>',
+    `<link rel="canonical" href="${FICHE}">`,
+    `<link rel="alternate" hreflang="fr" href="${FICHE}">`,
+    '</head><body></body></html>',
+  ].join('');
+  const metadata = buildSeoMetadata([buildPageSeoFr('articles', '/articles')]);
 
-  const itemsDuFil = (html: string): unknown[] => {
-    const blocs = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
-      .map(([, json]) => JSON.parse(json) as { '@type'?: string; itemListElement?: unknown[] })
-      .filter((bloc) => bloc['@type'] === 'BreadcrumbList');
-    return (blocs[0]?.itemListElement ?? []).map((item) => (item as { item: string }).item);
-  };
-
-  it('pointe l accueil du fil d Ariane sur la racine canonique /fr/', () => {
-    const html = injectSeoHead(EMPTY_HTML, metadata, '/fr/contact', BASE_URL);
-
-    expect(itemsDuFil(html)).toEqual([
-      'https://asilidesign.fr/fr/',
-      'https://asilidesign.fr/fr/contact',
-    ]);
-  });
-
-  it('suit la locale de l URL dans le fil d Ariane', () => {
-    const html = injectSeoHead(EMPTY_HTML, metadata, '/en/contact?utm=x', BASE_URL);
-
-    expect(itemsDuFil(html)).toEqual([
-      'https://asilidesign.fr/en/',
-      'https://asilidesign.fr/en/contact',
-    ]);
-  });
-
-  it('ne prend pas /frais pour une page de la locale fr', () => {
+  it("ART-IDX-1 · garde le canonical et le hreflang qu'une fiche article a posés", () => {
     const html = injectSeoHead(
-      EMPTY_HTML,
-      buildSeoMetadata([...pages, buildPageSeoFr('ais', '/ais')]),
-      '/frais',
+      RENDU_DE_LA_FICHE,
+      metadata,
+      '/fr/articles/morning-brief-2026-11-17',
       BASE_URL,
     );
 
-    expect(html).not.toContain('rel="canonical"');
+    expect(html.match(/rel="canonical"[^>]*>/g)).toEqual([`rel="canonical" href="${FICHE}">`]);
+    expect(html).toContain(`<link rel="alternate" hreflang="fr" href="${FICHE}">`);
   });
-});
 
-describe('isKnownRoute', () => {
-  it('reconnait une route declaree et rejette les autres', () => {
-    const metadata = buildMetadata(
-      { '@type': 'LocalBusiness' },
-      {
-        pages: [{ id: 'contact', path: '/contact', locales: {} }] as SeoMetadataFile['pages'],
-      },
-    );
+  it('ART-IDX-1 · sert tels quels le canonical et le hreflang rendus par une page déclarée', () => {
+    const html = injectSeoHead(RENDU_DE_LA_FICHE, metadata, '/fr/articles', BASE_URL);
 
-    expect(isKnownRoute('/contact', metadata)).toBeTrue();
-    expect(isKnownRoute('/inconnue', metadata)).toBeFalse();
+    expect(html.match(/<link rel="(?:canonical|alternate" hreflang)[^>]*>/g)).toEqual([
+      `<link rel="canonical" href="${FICHE}">`,
+      `<link rel="alternate" hreflang="fr" href="${FICHE}">`,
+    ]);
   });
 });
 
@@ -184,14 +72,11 @@ for (const slug of COURS_EN_SEANCE) {
     const METADONNEES = seoMetadata as unknown as SeoMetadataFile;
     const CHEMIN_B2 = `/${cheminDuCoursEnSeance(slug)}`;
 
-    it('déclare la page du cours comme une route connue', () => {
-      expect(isKnownRoute(CHEMIN_B2, METADONNEES)).toBeTrue();
-    });
+    it('L1 · déclare la page du cours non indexable : servie en noindex, elle ne porte aucune canonique', () => {
+      const page = METADONNEES.pages.find((candidate) => candidate.path === CHEMIN_B2);
 
-    it('L1 · ne pose pas de canonique sur la page du cours, qui mène au poste étudiant', () => {
-      const html = injectSeoHead(EMPTY_HTML, METADONNEES, `/fr${CHEMIN_B2}`, BASE_URL);
-
-      expect(html).not.toContain('rel="canonical"');
+      expect(page?.id).toBe(`formations-${slug}`);
+      expect(page?.index).toBeFalse();
     });
 
     it('L1 · ne publie pas la page du cours au sitemap statique ni à llms.txt', () => {

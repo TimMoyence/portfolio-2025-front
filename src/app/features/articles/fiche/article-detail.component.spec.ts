@@ -124,7 +124,7 @@ describe('ArticleDetailComponent — d’une édition à l’autre sans repasser
       title: 'Édition du Morning Brief — Asili Design',
       canonicalUrl: `https://example.com/fr/articles/${slug}`,
       ogUrl: `https://example.com/fr/articles/${slug}`,
-      robots: 'noindex, nofollow',
+      index: false,
     });
 
   it('repart d’une page vide et charge B quand l’adresse passe de A à B', () => {
@@ -196,7 +196,7 @@ describe('ArticleDetailComponent — métadonnées SEO', () => {
   it('pose seule tout le SEO de la page, que le gestionnaire du site lui laisse', () => {
     const config = seoDeLArticle();
 
-    expect(config.robots).toBe('index, follow');
+    expect(config.index).toBeTrue();
     expect(config.hreflangs).toEqual({ fr: 'https://example.com/fr/articles/veille' });
     expect(config.ogImage).toBe('https://example.com/assets/images/logo.webp');
     expect(config.twitterImage).toBe('https://example.com/assets/images/logo.webp');
@@ -209,7 +209,7 @@ describe('ArticleDetailComponent — métadonnées SEO', () => {
     );
 
     expect(config.title).toBe('Article introuvable — Asili Design');
-    expect(config.robots).toBe('noindex, nofollow');
+    expect(config.index).toBeFalse();
     expect(config.canonicalUrl).toBe('https://example.com/fr/articles/veille');
     expect(config.hreflangs).toEqual({});
     expect(config.jsonLd).toBeUndefined();
@@ -221,8 +221,9 @@ describe('ArticleDetailComponent — métadonnées SEO', () => {
     const config = seoDeLArticle();
 
     expect(config.title).toBe('Veille IA — Asili Design');
-    expect(config.jsonLd).toEqual(
+    expect(config.jsonLd).toContain(
       jasmine.objectContaining({
+        '@type': 'Article',
         publisher: { '@type': 'Organization', name: 'Asili Design' },
       }),
     );

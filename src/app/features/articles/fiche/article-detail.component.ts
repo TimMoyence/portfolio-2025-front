@@ -26,6 +26,7 @@ import type { PublishedArticle } from '../../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../../core/adapters/article-http.adapter';
 import { urlAbsolue, urlLocalisee } from '../../../core/seo/chemins';
 import { NOM_DU_SITE } from '../../../core/seo/nom-du-site';
+import { SeoRegistryService } from '../../../core/seo/seo-registry.service';
 import { SeoService } from '../../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../../core/ssr/http-response-status';
 import { JourDuSitePipe } from '../../../shared/pipes/date-du-site.pipe';
@@ -78,6 +79,7 @@ export class ArticleDetailComponent {
   private readonly api = inject(ArticleHttpAdapter);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly seo = inject(SeoService);
+  private readonly seoRegistry = inject(SeoRegistryService);
   private readonly config = inject(APP_CONFIG);
   private readonly logo = urlAbsolue(this.config.baseUrl, '/assets/images/logo.webp');
   private readonly responseStatus = inject(HTTP_RESPONSE_STATUS, { optional: true });
@@ -183,7 +185,7 @@ export class ArticleDetailComponent {
     this.seo.updateSeoMetadata({
       title: `${edition} — ${NOM_DU_SITE}`,
       description: $localize`:@@articleDetailDescriptionProvisoire:Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.`,
-      robots: 'noindex, nofollow',
+      index: false,
       canonicalUrl,
       ogUrl: canonicalUrl,
       hreflangs: {},
@@ -202,19 +204,22 @@ export class ArticleDetailComponent {
       ogImage: this.logo,
       twitterImage: this.logo,
       twitterCard: 'summary_large_image',
-      robots: 'index, follow',
+      index: true,
       hreflangs: { [this.locale]: canonicalUrl },
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: article.title,
-        description: article.seo.description,
-        datePublished: article.published_at,
-        dateModified: article.updated_at,
-        mainEntityOfPage: canonicalUrl,
-        author: { '@type': 'Person', name: 'Tim Moyence' },
-        publisher: { '@type': 'Organization', name: NOM_DU_SITE },
-      },
+      jsonLd: [
+        ...this.seoRegistry.getJsonLdDuSite(),
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: article.title,
+          description: article.seo.description,
+          datePublished: article.published_at,
+          dateModified: article.updated_at,
+          mainEntityOfPage: canonicalUrl,
+          author: { '@type': 'Person', name: 'Tim Moyence' },
+          publisher: { '@type': 'Organization', name: NOM_DU_SITE },
+        },
+      ],
     });
   }
 
@@ -227,7 +232,7 @@ export class ArticleDetailComponent {
     this.seo.updateSeoMetadata({
       title: `${introuvable} — ${NOM_DU_SITE}`,
       description: $localize`:@@articleDetailAbsenceDescription:Cette édition du Morning Brief est introuvable ou momentanément indisponible.`,
-      robots: 'noindex, nofollow',
+      index: false,
       canonicalUrl,
       ogUrl: canonicalUrl,
       ogImage: this.logo,

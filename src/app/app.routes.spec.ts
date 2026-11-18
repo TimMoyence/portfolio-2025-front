@@ -7,6 +7,8 @@ import { authGuard } from './core/guards/auth.guard';
 import { coursEntreeGuard } from './core/guards/cours-entree.guard';
 import { AuthStateService } from './core/services/auth-state.service';
 import { resolveRedirect } from '../server/rendu/redirects';
+import seoMetadata from '../assets/seo/seo-metadata.json';
+import type { SeoMetadataFile } from './core/seo/seo-metadata.model';
 import { routes } from './app.routes';
 
 describe('app routes', () => {
@@ -110,7 +112,6 @@ describe('app routes', () => {
         expect(route?.canActivate).toEqual([coursEntreeGuard]);
         expect(route?.data?.['coursSlug']).toBe(slug);
         expect(route?.data?.['seoKey']).toBe(`formations-${slug}`);
-        expect(route?.data?.['robots']).toBe('noindex, nofollow');
       });
 
       it(`L1 · ne charge pas de page de lecture libre pour ${slug}`, () => {
@@ -187,14 +188,20 @@ describe('app routes', () => {
       ]);
     });
 
-    it('n indexe aucune page de cours', () => {
-      const pages = routes.filter((route) => route.path?.startsWith('cours/'));
+    it('n indexe aucune page de cours ni aucun espace de cours servi', () => {
+      const pages = routes.filter(
+        (route) =>
+          route.path?.startsWith('cours/') ||
+          SLUGS_DES_COURS_SERVIS.some((slug) => route.path === `formations/${slug}`),
+      );
 
       expect(pages.length).toBeGreaterThanOrEqual(4);
+      const entrees = (seoMetadata as unknown as SeoMetadataFile).pages;
       for (const page of pages) {
-        expect(page.data?.['robots'])
+        const entree = entrees.find((candidate) => candidate.id === page.data?.['seoKey']);
+        expect(entree?.index)
           .withContext(`la route '${page.path}' ne doit pas etre indexee`)
-          .toBe('noindex, nofollow');
+          .toBeFalse();
       }
     });
   });

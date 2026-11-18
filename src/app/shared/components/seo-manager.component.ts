@@ -2,9 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { of } from 'rxjs';
 import { filter, map, mergeMap, switchMap } from 'rxjs/operators';
-import { chaineDe } from '../../../cours/runtime/core/texte/valeurs';
 import { APP_CONFIG } from '../../core/config/app-config.token';
 import {
   buildLocalizedPath,
@@ -12,7 +10,7 @@ import {
   urlAbsolue,
   urlLocalisee,
 } from '../../core/seo/chemins';
-import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-registry.service';
+import { SeoRegistryService } from '../../core/seo/seo-registry.service';
 import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';
 
@@ -57,34 +55,20 @@ export class SeoManagerComponent {
           const currentUrl = this.router.url;
           const seoKey = data['seoKey'];
 
-          if (seoKey) {
-            return this.seoRegistry
-              .getSeoByKey(seoKey)
-              .pipe(map((resolved) => ({ data, resolved, currentUrl })));
-          }
-
-          if (data['seo']) {
-            return of({ data, resolved: null, currentUrl });
-          }
-
-          return this.seoRegistry
-            .getSeoByPath(currentUrl)
-            .pipe(map((resolved) => ({ data, resolved, currentUrl })));
+          const resolution = seoKey
+            ? this.seoRegistry.getSeoByKey(seoKey)
+            : this.seoRegistry.getSeoByPath(currentUrl);
+          return resolution.pipe(map((seo) => ({ seo, currentUrl })));
         }),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(({ data, resolved, currentUrl }) => {
-        if (resolved?.seo) {
-          this.applySeoConfig(resolved.seo, currentUrl, resolved, data);
+      .subscribe(({ seo, currentUrl }) => {
+        if (seo) {
+          this.applySeoConfig(seo, currentUrl);
           return;
         }
 
-        if (data['seo']) {
-          this.applySeoConfig(data['seo'], currentUrl, resolved, data, data['seoIndex'] === false);
-          return;
-        }
-
-        this.setDefaultSeo(currentUrl, data);
+        this.setDefaultSeo(currentUrl);
       });
   }
 
@@ -94,15 +78,8 @@ export class SeoManagerComponent {
     return sansAncre(url) !== sansAncre(precedente);
   }
 
-  private applySeoConfig(
-    seo: SeoConfig,
-    currentUrl: string,
-    resolved: SeoResolvedConfig | null,
-    data: Record<string, unknown>,
-    forceNoIndex?: boolean,
-  ): void {
+  private applySeoConfig(seo: SeoConfig, currentUrl: string): void {
     const { baseUrl, canonicalUrl, hreflangs } = this.resolvePageUrls(currentUrl);
-    const index = typeof forceNoIndex === 'boolean' ? !forceNoIndex : (resolved?.index ?? true);
     const ogImage = this.resolveAbsoluteUrl(baseUrl, seo.ogImage);
     const twitterImage = this.resolveAbsoluteUrl(baseUrl, seo.twitterImage ?? ogImage);
 
@@ -112,7 +89,6 @@ export class SeoManagerComponent {
       twitterImage,
       ogUrl: canonicalUrl,
       canonicalUrl,
-      robots: this.resolveRobots(data, index),
       hreflangs,
     });
   }
@@ -122,17 +98,13 @@ export class SeoManagerComponent {
     canonicalUrl: string;
     hreflangs: Record<string, string>;
   } {
-    const baseUrl = this.resolveBaseUrl();
+    const baseUrl = this.appConfig.baseUrl;
     const canonicalState = this.resolveCanonicalState(currentUrl);
     return {
       baseUrl,
       canonicalUrl: urlAbsolue(baseUrl, canonicalState.canonicalPath),
       hreflangs: this.buildHreflangs(baseUrl, canonicalState.relativePath),
     };
-  }
-
-  private resolveRobots(data: Record<string, unknown>, index: boolean): string {
-    return chaineDe(data, 'robots') ?? (index ? 'index, follow' : 'noindex, nofollow');
   }
 
   private buildHreflangs(baseUrl: string, relativePath: string): Record<string, string> {
@@ -149,7 +121,7 @@ export class SeoManagerComponent {
     return hreflangs;
   }
 
-  private setDefaultSeo(currentUrl: string, data: Record<string, unknown> = {}): void {
+  private setDefaultSeo(currentUrl: string): void {
     const { baseUrl, canonicalUrl, hreflangs } = this.resolvePageUrls(currentUrl);
 
     const seoConfig: SeoConfig = {
@@ -165,17 +137,13 @@ export class SeoManagerComponent {
       ],
       ogImage: `${baseUrl}/assets/images/logo.webp`,
       twitterCard: 'summary_large_image',
-      robots: this.resolveRobots(data, true),
+      index: true,
       canonicalUrl,
       ogUrl: canonicalUrl,
       hreflangs,
     };
 
     this.seoService.updateSeoMetadata(seoConfig);
-  }
-
-  private resolveBaseUrl(): string {
-    return this.appConfig.baseUrl || this.seoRegistry.getBaseUrl() || 'https://asilidesign.fr';
   }
 
   private resolveCanonicalState(currentUrl: string): {
