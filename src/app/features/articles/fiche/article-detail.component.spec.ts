@@ -119,13 +119,13 @@ describe('ArticleDetailComponent — d’une édition à l’autre sans repasser
   }
 
   const article = (slug: string, title: string) => buildPublishedArticle({ slug, title });
-  const seoProvisoire = (slug: string) =>
-    jasmine.objectContaining({
-      title: 'Édition du Morning Brief — Asili Design',
-      canonicalUrl: `https://example.com/fr/articles/${slug}`,
-      ogUrl: `https://example.com/fr/articles/${slug}`,
-      robots: 'noindex, nofollow',
-    });
+  const seoProvisoire = (slug: string) => ({
+    title: 'Édition du Morning Brief — Asili Design',
+    description:
+      'Une édition du Morning Brief : la veille IA de la nuit, triée, sourcée et expliquée.',
+    ogUrl: `https://example.com/fr/articles/${slug}`,
+    index: false,
+  });
 
   it('repart d’une page vide et charge B quand l’adresse passe de A à B', () => {
     const { parametres, fixture, requete, page, afficherB } = monter();
@@ -196,7 +196,7 @@ describe('ArticleDetailComponent — métadonnées SEO', () => {
   it('pose seule tout le SEO de la page, que le gestionnaire du site lui laisse', () => {
     const config = seoDeLArticle();
 
-    expect(config.robots).toBe('index, follow');
+    expect(config.index).toBeTrue();
     expect(config.hreflangs).toEqual({ fr: 'https://example.com/fr/articles/veille' });
     expect(config.ogImage).toBe('https://example.com/assets/images/logo.webp');
     expect(config.twitterImage).toBe('https://example.com/assets/images/logo.webp');
@@ -208,21 +208,23 @@ describe('ArticleDetailComponent — métadonnées SEO', () => {
       requete.flush({ message: 'Not Found' }, { status: 404, statusText: 'Not Found' }),
     );
 
-    expect(config.title).toBe('Article introuvable — Asili Design');
-    expect(config.robots).toBe('noindex, nofollow');
-    expect(config.canonicalUrl).toBe('https://example.com/fr/articles/veille');
-    expect(config.hreflangs).toEqual({});
-    expect(config.jsonLd).toBeUndefined();
-    expect(config.ogImage).toBe('https://example.com/assets/images/logo.webp');
-    expect(config.twitterImage).toBe('https://example.com/assets/images/logo.webp');
+    expect(config).toEqual({
+      title: 'Article introuvable — Asili Design',
+      description: 'Cette édition du Morning Brief est introuvable ou momentanément indisponible.',
+      index: false,
+      ogUrl: 'https://example.com/fr/articles/veille',
+      ogImage: 'https://example.com/assets/images/logo.webp',
+      twitterImage: 'https://example.com/assets/images/logo.webp',
+    });
   });
 
   it('signe du nom du site le titre de l article et son éditeur', () => {
     const config = seoDeLArticle();
 
     expect(config.title).toBe('Veille IA — Asili Design');
-    expect(config.jsonLd).toEqual(
+    expect(config.jsonLd).toContain(
       jasmine.objectContaining({
+        '@type': 'Article',
         publisher: { '@type': 'Organization', name: 'Asili Design' },
       }),
     );

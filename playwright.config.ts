@@ -1,4 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
+import { lireLaTranche } from './src/testing/environnement/tranche-de-la-suite';
+
+const tranche = lireLaTranche(process.env['PLAYWRIGHT_TRANCHE']);
 
 const SPECS_BANC = 'banc/**/*.spec.ts';
 
@@ -67,6 +70,7 @@ export default defineConfig({
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 2 : 0,
   workers: process.env['CI'] ? 1 : undefined,
+  shard: tranche === null ? null : { current: tranche.rang + 1, total: tranche.total },
   reporter: process.env['CI'] ? [['github'], ['line']] : 'html',
   expect: {
     timeout: 10_000,

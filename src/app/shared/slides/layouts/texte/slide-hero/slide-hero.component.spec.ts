@@ -9,7 +9,7 @@ import { SlideHeroComponent } from './slide-hero.component';
     <app-slide-hero
       title="IA pour Solopreneurs"
       subtitle="Panorama 2026"
-      bgImage="/images/hero.webp"
+      bgImage="/assets/images/offer/strategy-illustration.webp"
       bgImageAlt="Espace de travail moderne"
     />
   `,
@@ -23,7 +23,7 @@ class HostComponent {}
     <app-slide-hero
       title="Promesse"
       [bullets]="bullets"
-      bgImage="/images/promesse.webp"
+      bgImage="/assets/images/offer/automation-illustration.webp"
       bgImageAlt="Scene de presentation"
     />
   `,
@@ -40,7 +40,7 @@ class HostBulletsComponent {
       title="Promesse"
       subtitle="Sous-titre"
       [bullets]="bullets"
-      bgImage="/images/promesse.webp"
+      bgImage="/assets/images/offer/automation-illustration.webp"
       bgImageAlt="Scene"
     />
   `,
@@ -68,7 +68,7 @@ describe('SlideHeroComponent', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     const img = fixture.nativeElement.querySelector('.slide-hero__bg img');
-    expect(img.getAttribute('src')).toBe('/images/hero.webp');
+    expect(img.getAttribute('src')).toBe('/assets/images/offer/strategy-illustration.webp');
     expect(img.getAttribute('alt')).toBe('Espace de travail moderne');
   });
 
@@ -102,7 +102,7 @@ describe('SlideHeroComponent', () => {
   it("charge l'image en priorite quand le hero ouvre la page", () => {
     const fixture = TestBed.createComponent(SlideHeroComponent);
     fixture.componentRef.setInput('title', 'Lire un chiffre');
-    fixture.componentRef.setInput('bgImage', '/images/b2.webp');
+    fixture.componentRef.setInput('bgImage', '/assets/images/audit.webp');
     fixture.componentRef.setInput('priority', true);
     fixture.detectChanges();
     const img: HTMLImageElement = fixture.nativeElement.querySelector('.slide-hero__bg img');

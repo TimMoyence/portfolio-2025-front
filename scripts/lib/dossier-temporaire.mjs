@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 
@@ -30,6 +30,19 @@ export function planterDossier(prefixe, fichiers = {}) {
   const racine = mkdtempSync(join(tmpdir(), prefixe));
   ecrireFichiers(racine, fichiers);
   return racine;
+}
+
+/**
+ * @param {string} racine
+ * @param {string} nom
+ * @param {string} contenu
+ * @returns {string}
+ */
+export function planterExecutable(racine, nom, contenu) {
+  const chemin = join(racine, nom);
+  writeFileSync(chemin, contenu);
+  chmodSync(chemin, 0o755);
+  return chemin;
 }
 
 /**

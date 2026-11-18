@@ -3,16 +3,10 @@ import type { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import seoMetadata from '../../../assets/seo/seo-metadata.json';
 import { langueDuSite } from '../config/locales';
-import { routeSansLocale } from './chemins';
-import { estIndexable, localeParDefaut, pageSeoDeLaRoute } from './pages-seo';
+import { type BlocJsonLd, jsonLdDeLaPage } from './json-ld';
+import { estIndexable, localeParDefaut } from './pages-seo';
 import type { SeoConfig } from './seo.interface';
 import type { SeoMetadataFile, SeoPageEntry } from './seo-metadata.model';
-
-export interface SeoResolvedConfig {
-  seo: SeoConfig;
-  index: boolean;
-  page: SeoPageEntry;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -21,10 +15,6 @@ export class SeoRegistryService {
   private readonly data = seoMetadata as SeoMetadataFile;
 
   constructor(@Inject(LOCALE_ID) private localeId: string) {}
-
-  getBaseUrl(): string | undefined {
-    return this.data.site.baseUrl;
-  }
 
   getLocales(): string[] {
     return this.data.site.locales ?? [];
@@ -43,23 +33,23 @@ export class SeoRegistryService {
     return localeParDefaut(this.data);
   }
 
-  getSeoByKey(key: string): Observable<SeoResolvedConfig | null> {
+  getJsonLdDuSite(): BlocJsonLd[] {
+    return jsonLdDeLaPage(this.data, this.getLocaleId());
+  }
+
+  getSeoByKey(key: string): Observable<SeoConfig> {
     const page = this.data.pages.find((entry) => entry.id === key);
-    return of(page ? this.buildResolved(page) : null);
+    if (page === undefined) {
+      throw new Error(`clé SEO « ${key} » absente de seo-metadata.json`);
+    }
+    return of(this.seoDeLaPage(page));
   }
 
-  getSeoByPath(rawPath: string): Observable<SeoResolvedConfig | null> {
-    const { route } = routeSansLocale(rawPath, this.data.site.locales ?? []);
-    const page = pageSeoDeLaRoute(this.data, route);
-    return of(page ? this.buildResolved(page) : null);
-  }
-
-  private buildResolved(page: SeoPageEntry): SeoResolvedConfig {
+  private seoDeLaPage(page: SeoPageEntry): SeoConfig {
     const localeKey = this.resolveLocaleKey(page);
     const localeMeta = page.locales[localeKey];
     const defaults = this.data.defaults ?? {};
-
-    const seo: SeoConfig = {
+    const seo = {
       title: localeMeta.title,
       description: localeMeta.description,
       keywords: localeMeta.keywords ?? defaults.keywords ?? [],
@@ -71,12 +61,9 @@ export class SeoRegistryService {
       twitterDescription: localeMeta.twitterDescription,
       twitterImage: localeMeta.twitterImage ?? localeMeta.ogImage ?? defaults.ogImage,
     };
-
-    return {
-      seo,
-      index: estIndexable(page),
-      page,
-    };
+    return estIndexable(page)
+      ? { ...seo, index: true, jsonLd: jsonLdDeLaPage(this.data, localeKey, page) }
+      : { ...seo, index: false };
   }
 
   private resolveLocaleKey(page: SeoPageEntry): string {

@@ -4,6 +4,7 @@ import {
   LONGUEUR_MAX_D_UNE_URL,
   buildBaseUrlFromRequest,
   cheminCanonique,
+  demandeUnDocument,
   urlRefusee,
 } from './url-utils';
 
@@ -66,6 +67,57 @@ describe('url-utils', () => {
     it('replie les slashs multiples', () => {
       expect(cheminCanonique('//fr//contact//')).toBe('/fr/contact');
       expect(cheminCanonique('/fr//')).toBe('/fr/');
+    });
+
+    it('resout les segments point, qu aucun fichier prerendu ne doit servir', () => {
+      expect(cheminCanonique('/fr/contact/.')).toBe('/fr/contact');
+      expect(cheminCanonique('/fr/login/..')).toBe('/fr/');
+      expect(cheminCanonique('/fr/zz/../contact')).toBe('/fr/contact');
+      expect(cheminCanonique('/../..')).toBe('/');
+      expect(cheminCanonique('/fr/.well-known')).toBe('/fr/.well-known');
+      expect(cheminCanonique('/fr/a..b')).toBe('/fr/a..b');
+    });
+
+    it('resout les segments point encodes, comme les lit le moteur SSR', () => {
+      expect(cheminCanonique('/x/%2e%2e/fr/contact')).toBe('/fr/contact');
+      expect(cheminCanonique('/fr/zz/%2E%2e/contact')).toBe('/fr/contact');
+      expect(cheminCanonique('/fr/zz/.%2e/contact')).toBe('/fr/contact');
+      expect(cheminCanonique('/fr/contact/%2e')).toBe('/fr/contact');
+      expect(cheminCanonique('/fr/caf%C3%A9')).toBe('/fr/caf%C3%A9');
+    });
+
+    it('decode les caracteres non reserves, que le routeur Angular lit decodes (RFC 3986 6.2.2.2)', () => {
+      expect(cheminCanonique('/fr/%63ontact')).toBe('/fr/contact');
+      expect(cheminCanonique('/fr/%41-%7a%30%2D%5f%7E')).toBe('/fr/A-z0-_~');
+      expect(cheminCanonique('/fr/a%2eb')).toBe('/fr/a.b');
+      expect(cheminCanonique('/fr/contact/index%2ehtml')).toBe('/fr/contact');
+      expect(cheminCanonique('/fr/a%2fb')).toBe('/fr/a%2fb');
+      expect(cheminCanonique('/fr/a%20b%25')).toBe('/fr/a%20b%25');
+    });
+
+    it('ramene un index.html a la page qu Angular rend pour lui', () => {
+      expect(cheminCanonique('/fr/contact/index.html')).toBe('/fr/contact');
+      expect(cheminCanonique('/fr/index.html')).toBe('/fr/');
+      expect(cheminCanonique('/index.html')).toBe('/');
+      expect(cheminCanonique('/fr/contact/index.htm')).toBe('/fr/contact/index.htm');
+      expect(cheminCanonique('/fr/monindex.html')).toBe('/fr/monindex.html');
+    });
+  });
+
+  describe('demandeUnDocument', () => {
+    it('reconnait un fichier HTML du build, meme encode ou en capitales', () => {
+      expect(demandeUnDocument('/fr/contact/index.html')).toBeTrue();
+      expect(demandeUnDocument('/fr/contact/index%2ehtml')).toBeTrue();
+      expect(demandeUnDocument('/fr/contact/%69ndex.html')).toBeTrue();
+      expect(demandeUnDocument('/fr/INDEX.HTML')).toBeTrue();
+      expect(demandeUnDocument('/fr/index.csr.html')).toBeTrue();
+    });
+
+    it('laisse au statique les ressources et les chemins mal encodes', () => {
+      expect(demandeUnDocument('/fr/main-abc.js')).toBeFalse();
+      expect(demandeUnDocument('/assets/images/logo.webp')).toBeFalse();
+      expect(demandeUnDocument('/fr/contact/index.html/')).toBeFalse();
+      expect(demandeUnDocument('/fr/%E0%A4%A')).toBeFalse();
     });
   });
 

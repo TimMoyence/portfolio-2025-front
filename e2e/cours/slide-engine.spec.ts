@@ -16,14 +16,25 @@ test.describe('Slide engine', () => {
     await expect.poll(currentHash).not.toBe(afterFirstPress);
   });
 
-  test.skip('/formations/ia-solopreneurs : toggle fullscreen via bouton — non rejouable en Chromium headless (requestFullscreen sans gesture natif)', async ({
+  test('/formations/ia-solopreneurs : le bouton passe le deck en plein écran puis l en sort', async ({
     page,
   }) => {
+    const enPleinEcran = (): Promise<boolean> =>
+      page.evaluate(() => !!document.fullscreenElement?.closest('app-slide-deck'));
+
     await page.goto('/formations/ia-solopreneurs');
+    await page.getByTestId('bandeau-cookies-compris').click();
     const btn = page.getByTestId('slide-deck-fullscreen-toggle');
-    await expect(btn).toBeVisible();
+    await expect(btn).toHaveAttribute('aria-label', 'Présenter en plein écran');
+
     await btn.click();
+    await expect.poll(enPleinEcran).toBe(true);
+    await expect(btn).toHaveAttribute('aria-label', 'Quitter le mode présentation');
     await expect(page.locator('swiper-container')).toBeVisible();
+
+    await btn.click();
+    await expect.poll(enPleinEcran).toBe(false);
+    await expect(btn).toHaveAttribute('aria-label', 'Présenter en plein écran');
   });
 
   test('/formations/audit-seo-diy : CTA vers le contact cliquable', async ({ page }) => {

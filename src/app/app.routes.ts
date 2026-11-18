@@ -118,10 +118,6 @@ export const routes: Routes = [
       import('./features/articles/fiche/article-detail.component').then(
         (m) => m.ArticleDetailComponent,
       ),
-    data: {
-      seoKey: 'article-detail',
-      seoParLaPage: true,
-    },
   },
   {
     path: 'offer',
@@ -209,7 +205,6 @@ export const routes: Routes = [
     data: {
       seoKey: cleSeoDuCoursEnSeance(slug),
       coursSlug: slug,
-      robots: 'noindex, nofollow',
     },
   })),
   {
@@ -238,7 +233,6 @@ export const routes: Routes = [
     redirectTo: 'formations',
     data: {
       seoKey: 'cours-demo',
-      robots: 'noindex, nofollow',
     },
   },
   {
@@ -249,7 +243,6 @@ export const routes: Routes = [
       ),
     data: {
       seoKey: 'cours-rejoindre',
-      robots: 'noindex, nofollow',
       coquille: false,
     },
   },
@@ -262,7 +255,6 @@ export const routes: Routes = [
       ),
     data: {
       seoKey: 'cours-presenter',
-      robots: 'noindex, nofollow',
     },
   },
   {
@@ -274,7 +266,6 @@ export const routes: Routes = [
       ),
     data: {
       seoKey: 'cours-livret',
-      robots: 'noindex, nofollow',
       coquille: false,
     },
   },
@@ -287,7 +278,6 @@ export const routes: Routes = [
       ),
     data: {
       seoKey: 'cours-scene',
-      robots: 'noindex, nofollow',
       coquille: false,
     },
   },
@@ -300,7 +290,6 @@ export const routes: Routes = [
       ),
     data: {
       seoKey: 'cours-synthese',
-      robots: 'noindex, nofollow',
     },
   },
   {

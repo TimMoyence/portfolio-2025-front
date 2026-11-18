@@ -7,7 +7,7 @@ import { type RichListItem, SlideImageComponent } from './slide-image.component'
   imports: [SlideImageComponent],
   template: `
     <app-slide-image-left
-      image="/images/why.webp"
+      image="/assets/images/portrait-tim-asili-design.webp"
       imageAlt="Diagramme pourquoi"
       title="Pourquoi maintenant ?"
     >
@@ -27,7 +27,7 @@ class ContenuComplet {
   imports: [SlideImageComponent],
   template: `
     <app-slide-image-left
-      image="/images/x.webp"
+      image="/assets/images/bordeaux-placeholder.webp"
       imageAlt="alt"
       title="Titre"
       [paragraphs]="paragraphs"
@@ -43,7 +43,11 @@ class HostLeftFullComponent extends ContenuComplet {}
   standalone: true,
   imports: [SlideImageComponent],
   template: `
-    <app-slide-image-right image="/images/tools.webp" imageAlt="Outils IA" title="Quels outils ?">
+    <app-slide-image-right
+      image="/assets/images/offer/automation-illustration.webp"
+      imageAlt="Outils IA"
+      title="Quels outils ?"
+    >
       <p>Liste des outils.</p>
     </app-slide-image-right>
   `,
@@ -55,7 +59,7 @@ class HostRightComponent {}
   imports: [SlideImageComponent],
   template: `
     <app-slide-image-right
-      image="/images/x.webp"
+      image="/assets/images/bordeaux-placeholder.webp"
       imageAlt="alt"
       title="Titre"
       [paragraphs]="paragraphs"
@@ -72,7 +76,7 @@ class HostRightFullComponent extends ContenuComplet {}
   imports: [SlideImageComponent],
   template: `
     <app-slide-image-left
-      image="/images/x.webp"
+      image="/assets/images/bordeaux-placeholder.webp"
       imageAlt="alt"
       [richItems]="richItems"
       [priority]="priority()"
@@ -83,7 +87,7 @@ class HostRichComponent {
   readonly priority = input(false);
   readonly richItems: RichListItem[] = [
     { title: '  banque du territoire', description: 'Partenaire' },
-    { title: 'Agence', description: 'Avec logo', logo: '/images/agence.webp' },
+    { title: 'Agence', description: 'Avec logo', logo: '/assets/images/logo.webp' },
   ];
 }
 
@@ -125,7 +129,7 @@ describe('SlideImageComponent', () => {
       const root = fixture.nativeElement.querySelector('.slide-image');
       expect(root).toBeTruthy();
       const img = root.querySelector('img');
-      expect(img.getAttribute('src')).toBe('/images/why.webp');
+      expect(img.getAttribute('src')).toBe('/assets/images/portrait-tim-asili-design.webp');
       expect(img.getAttribute('alt')).toBe('Diagramme pourquoi');
       const h2 = root.querySelector('h2');
       expect(h2.textContent).toContain('Pourquoi maintenant ?');
@@ -159,7 +163,7 @@ describe('SlideImageComponent', () => {
       const root = fixture.nativeElement.querySelector('.slide-image');
       expect(root.querySelector('h2').textContent).toContain('Quels outils ?');
       const img = root.querySelector('img');
-      expect(img.getAttribute('src')).toBe('/images/tools.webp');
+      expect(img.getAttribute('src')).toBe('/assets/images/offer/automation-illustration.webp');
       expect(img.getAttribute('alt')).toBe('Outils IA');
       expect(root.querySelector('p').textContent).toContain('Liste des outils.');
     });
@@ -175,7 +179,7 @@ describe('SlideImageComponent', () => {
     ];
 
     expect(logos.map((logo) => logo.querySelector('span')?.textContent)).toEqual(['B', undefined]);
-    expect(logos[1].querySelector('img')?.getAttribute('src')).toBe('/images/agence.webp');
+    expect(logos[1].querySelector('img')?.getAttribute('src')).toBe('/assets/images/logo.webp');
   });
 
   for (const [priority, chargement] of [

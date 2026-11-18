@@ -17,12 +17,13 @@ import { registerPermanentRedirects } from './server/rendu/redirects';
 import { lecteurDArticlesDuSitemap } from './server/seo/article-sitemap';
 import { buildLlmsFullTxt, buildLlmsTxt, buildRobotsTxt } from './server/seo/seo-builders';
 import { buildSecurityHeaders } from './server/rendu/security-headers';
-import { injectSeoHead, isKnownRoute } from './server/seo/seo-injector';
+import { injectSeoHead } from './server/seo/seo-injector';
 import { routeDuSitemap } from './server/seo/sitemap-route';
 import {
   ALLOWED_HOSTS,
   buildBaseUrlFromRequest,
   cheminCanonique,
+  demandeUnDocument,
   urlRefusee,
 } from './server/rendu/url-utils';
 import { LOCALES_DU_SITE } from './app/core/config/locales';
@@ -157,12 +158,15 @@ app.get('/BingSiteAuth.xml', (_req, res) => {
     );
 });
 
-const servirLeDossier = (dossier: string) =>
-  express.static(resolve(browserDistFolder, dossier), {
+const servirLeDossier = (dossier: string) => {
+  const statique = express.static(resolve(browserDistFolder, dossier), {
     maxAge: '1y',
     index: false,
     redirect: false,
   });
+  return (req: Request, res: Response, next: NextFunction): void =>
+    demandeUnDocument(req.path) ? next() : statique(req, res, next);
+};
 
 for (const locale of LOCALES_DU_SITE) {
   app.use(`/${locale}`, servirLeDossier(locale));
@@ -210,14 +214,10 @@ const avecLeSeo = (req: Request, html: string, metadata: SeoMetadataFile | null)
 const sendPrerendered = (
   req: Request,
   res: Response,
-  input: { urlLocale: string; route: string; file: string },
+  input: { urlLocale: string; file: string },
 ): void => {
-  const { urlLocale, route, file } = input;
-  const metadata = loadSeoMetadata();
-  if (metadata && !isKnownRoute(route, metadata)) {
-    res.status(404);
-  }
-  envoyerLeDocument(res, avecLeSeo(req, fs.readFileSync(file, 'utf-8'), metadata), {
+  const { urlLocale, file } = input;
+  envoyerLeDocument(res, avecLeSeo(req, fs.readFileSync(file, 'utf-8'), loadSeoMetadata()), {
     'Content-Language': urlLocale,
     'Cache-Control': documentCacheControlFor(res.statusCode),
   });
@@ -285,7 +285,7 @@ app.get('**', (req, res, next) => {
   if (urlLocale) {
     const prerendered = prerenderedFileOf(urlLocale, route);
     if (prerendered) {
-      sendPrerendered(req, res, { urlLocale, route, file: prerendered });
+      sendPrerendered(req, res, { urlLocale, file: prerendered });
       return;
     }
     if (isClientOnlyRoute(route) && sendCsrShell(res, { urlLocale, baseHref })) {

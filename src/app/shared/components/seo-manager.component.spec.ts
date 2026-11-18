@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavigationEnd, Router } from '@angular/router';
 import { ReplaySubject, Subject, of } from 'rxjs';
 import { fournirLaRoute } from '../../../testing/factories/serveur/route.factory';
-import { SeoRegistryService, SeoResolvedConfig } from '../../core/seo/seo-registry.service';
+import { SeoRegistryService } from '../../core/seo/seo-registry.service';
 import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';
 import { setupTestBed } from '../../../testing/setup-test-bed';
@@ -17,29 +17,16 @@ describe('SeoManagerComponent', () => {
   let routeData$: Subject<Record<string, unknown>>;
   let routerStub: { events: unknown; url: string };
 
-  const baseSeoConfig: SeoConfig = {
+  const baseSeoConfig = {
+    index: true,
     title: 'Page de test',
     description: 'Description de test',
     keywords: ['test', 'seo'],
     ogImage: '/assets/images/test.webp',
     twitterCard: 'summary_large_image',
-  };
+  } satisfies SeoConfig;
 
-  const resolvedConfig: SeoResolvedConfig = {
-    seo: baseSeoConfig,
-    index: true,
-    page: {
-      id: 'test-page',
-      path: '/test',
-      index: true,
-      locales: {
-        fr: {
-          title: 'Page de test',
-          description: 'Description de test',
-        },
-      },
-    },
-  };
+  const resolvedConfig: SeoConfig = baseSeoConfig;
 
   beforeEach(async () => {
     routerEvents$ = new Subject<NavigationEnd>();
@@ -49,18 +36,14 @@ describe('SeoManagerComponent', () => {
 
     seoRegistrySpy = jasmine.createSpyObj<SeoRegistryService>('SeoRegistryService', [
       'getSeoByKey',
-      'getSeoByPath',
       'getLocales',
       'getDefaultLocale',
       'getLocaleId',
-      'getBaseUrl',
     ]);
     seoRegistrySpy.getLocales.and.returnValue(['fr', 'en']);
     seoRegistrySpy.getDefaultLocale.and.returnValue('fr');
     seoRegistrySpy.getLocaleId.and.returnValue('fr');
-    seoRegistrySpy.getBaseUrl.and.returnValue('https://example.com');
     seoRegistrySpy.getSeoByKey.and.returnValue(of(resolvedConfig));
-    seoRegistrySpy.getSeoByPath.and.returnValue(of(null));
 
     routerStub = {
       events: routerEvents$.asObservable(),
@@ -101,21 +84,6 @@ describe('SeoManagerComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('devrait appliquer la config SEO depuis les route data', () => {
-    const routeDataSeo: SeoConfig = {
-      title: 'Titre depuis route data',
-      description: 'Description depuis route data',
-      ogImage: '/assets/images/route.webp',
-      twitterCard: 'summary_large_image',
-    };
-
-    const call = naviguer('/fr/test', { seo: routeDataSeo });
-
-    expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(1);
-    expect(call.title).toBe('Titre depuis route data');
-    expect(call.description).toBe('Description depuis route data');
-  });
-
   it('devrait appliquer la config SEO depuis le registre par cle', () => {
     const call = naviguer('/fr/test');
 
@@ -127,7 +95,7 @@ describe('SeoManagerComponent', () => {
   it('garde le SEO de la page quand la navigation ne change que l’ancre', () => {
     const page = '/fr/articles/morning-brief-2026-11-08';
     const ancre = `${page}#mb-essential`;
-    naviguer(page, {});
+    naviguer(page);
     routerEvents$.next(new NavigationEnd(2, ancre, ancre));
     routerEvents$.next(new NavigationEnd(3, page, page));
 
@@ -135,35 +103,45 @@ describe('SeoManagerComponent', () => {
   });
 
   it('applique le SEO de la page suivante, même quand elle porte une ancre', () => {
-    naviguer('/fr/articles/morning-brief-2026-11-08#mb-essential', {});
+    naviguer('/fr/articles/morning-brief-2026-11-08#mb-essential');
     const suivante = '/fr/articles#archives';
     routerEvents$.next(new NavigationEnd(2, suivante, suivante));
 
     expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(2);
   });
 
-  it('laisse la page poser son SEO quand sa route le déclare', () => {
+  it('laisse la page poser son SEO quand sa route ne porte aucune clé SEO', () => {
     fixture.detectChanges();
     const page = '/fr/articles/morning-brief-2026-11-08';
     routerEvents$.next(new NavigationEnd(1, page, page));
-    routeData$.next({ seoKey: 'article-detail', seoParLaPage: true });
+    routeData$.next({});
 
+    expect(seoRegistrySpy.getSeoByKey).not.toHaveBeenCalled();
     expect(seoServiceSpy.updateSeoMetadata).not.toHaveBeenCalled();
   });
 
-  it('devrait appliquer la config SEO par defaut si aucune config fournie', () => {
-    const call = naviguer('/fr/unknown', {});
+  it('ART-IDX-4 · lit l indexation dans seo-metadata seul, qu aucune donnée de route ne contredit', () => {
+    seoRegistrySpy.getSeoByKey.and.returnValue(of({ ...baseSeoConfig, index: false }));
+    expect(naviguer('/fr/test').index).toBeFalse();
 
-    expect(seoServiceSpy.updateSeoMetadata).toHaveBeenCalledTimes(1);
-    expect(call.robots).toBe('index, follow');
-    expect(call.canonicalUrl).toContain('https://example.com');
+    seoRegistrySpy.getSeoByKey.and.returnValue(of(resolvedConfig));
+    expect(
+      naviguer('/fr/test', { seoKey: 'test-page', robots: 'noindex, nofollow' }).index,
+    ).toBeTrue();
   });
 
-  it('garde la directive robots declaree par la route, et ignore celle qui n est pas un texte', () => {
-    expect(naviguer('/fr/unknown', { robots: 'noindex, nofollow' }).robots).toBe(
-      'noindex, nofollow',
+  it('ne donne à une page non indexée ni canonique ni hreflang, qu elle ne servirait pas', () => {
+    seoRegistrySpy.getSeoByKey.and.returnValue(
+      of({ title: 'Connexion', description: 'Connexion', index: false }),
     );
-    expect(naviguer('/fr/unknown', { robots: false }).robots).toBe('index, follow');
+    routerStub.url = '/fr/login';
+
+    const call = naviguer('/fr/login');
+
+    expect(Object.keys(call).filter((cle) => ['canonicalUrl', 'hreflangs'].includes(cle))).toEqual(
+      [],
+    );
+    expect(call.ogUrl).toBe('https://example.com/fr/login');
   });
 
   it('devrait construire les hreflangs pour toutes les locales', () => {
@@ -183,12 +161,9 @@ describe('SeoManagerComponent', () => {
   });
 
   it('devrait resoudre les URLs absolues pour ogImage', () => {
-    const configAvecImageRelative: SeoResolvedConfig = {
-      ...resolvedConfig,
-      seo: {
-        ...baseSeoConfig,
-        ogImage: '/assets/images/og.webp',
-      },
+    const configAvecImageRelative: SeoConfig = {
+      ...baseSeoConfig,
+      ogImage: '/assets/images/og.webp',
     };
     seoRegistrySpy.getSeoByKey.and.returnValue(of(configAvecImageRelative));
 

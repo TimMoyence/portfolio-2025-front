@@ -365,7 +365,7 @@ test.describe('livret papier imprimé', () => {
     expect(lignesSeules).toEqual([]);
   });
 
-  test('le livret imprimé reprend la densité des briques et les marges de cadre de la projection', async ({
+  test('le livret imprimé reprend la densité des briques et les marges de cadre de la projection, en longueurs qui bornent chaque illustration', async ({
     page,
   }) => {
     await imprimerEnFenetreLarge(page, 'b2-02', 'sujet');
@@ -377,8 +377,13 @@ test.describe('livret papier imprimé', () => {
           getComputedStyle(livret).getPropertyValue(propriete).trim(),
         ),
       );
+    const plafonds = await page
+      .locator('.livret app-slide-illustration img')
+      .evaluateAll((images) => images.map((image) => getComputedStyle(image).maxHeight));
 
-    expect(reglages).toEqual(['0', '0', '0.75']);
+    expect(reglages).toEqual(['0px', '0px', '0.75']);
+    expect(plafonds.length).toBeGreaterThan(0);
+    expect(plafonds.filter((plafond) => plafond === 'none')).toEqual([]);
   });
 
   test('un parcours de méthode imprime chaque étape avec sa preuve et son résultat, quel que soit l’instant de l’impression', async ({

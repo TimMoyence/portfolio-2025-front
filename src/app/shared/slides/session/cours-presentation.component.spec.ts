@@ -3,7 +3,11 @@ import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import type { EcranContent, PieceJointe } from '../../../../cours/content/types';
 import { noeudOmbre, noeudsOmbre } from '../../../../testing/briques/banc-de-brique';
 import { attendreQue, DELAI_DE_MONTAGE_MS } from '../../../../testing/briques/briques-montees';
-import { deuxImages } from '../../../../testing/texte/deux-images';
+import {
+  attendreQueLaMiseEnPageSePose,
+  deuxImages,
+  empreinteSurDeuxImages,
+} from '../../../../testing/texte/deux-images';
 import {
   ecransDuPupitreB2_01,
   ecransPublicsB2_01,
@@ -37,6 +41,8 @@ import {
 } from './cours-presentation.component';
 
 const POSTES = ['cours-etudiant', 'cours-presentateur'] as const;
+
+const IMAGES_DU_MONTAGE = 30;
 
 const COURS_MESURES = INSTANTANES_DES_COURS_SERVIS.map(([code, instantane]) => ({
   code,
@@ -174,12 +180,29 @@ async function monterDans(
     () => racine.querySelector(ECRAN_MONTE) !== null,
     `l écran ${ecran.id} en ${mode}`,
   );
-  await new Promise((suite) => setTimeout(suite, 50));
-  fixture.detectChanges();
-  const rafraichir = async (): Promise<void> => {
-    await new Promise((suite) => setTimeout(suite, 50));
-    fixture.detectChanges();
-  };
+  const empreinte = empreinteSurDeuxImages(() => {
+    const contenu = racine.querySelector<HTMLElement>('[data-testid="cours-contenu"]');
+    const surface = toile();
+    return [
+      surface?.style.transform,
+      surface?.scrollWidth,
+      surface?.scrollHeight,
+      contenu?.scrollWidth,
+      contenu?.scrollHeight,
+      contenu?.getBoundingClientRect().height,
+    ].join('|');
+  });
+  const rafraichir = (): Promise<void> =>
+    attendreQueLaMiseEnPageSePose(
+      `l écran ${ecran.id} en ${mode}`,
+      empreinte,
+      async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+      },
+      IMAGES_DU_MONTAGE,
+    );
+  await rafraichir();
   return {
     cadre,
     hote: racine,
