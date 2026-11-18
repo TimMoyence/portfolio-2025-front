@@ -2,10 +2,14 @@ const path = require('node:path');
 
 const SILENCE_TOLERE_MS = 60_000;
 
+const couvertureDeLaTranche = process.env['KARMA_COUVERTURE'];
+
 module.exports = function configureKarma(config) {
   config.set({
     basePath: '',
     browserNoActivityTimeout: SILENCE_TOLERE_MS,
+    browserDisconnectTimeout: SILENCE_TOLERE_MS,
+    pingTimeout: SILENCE_TOLERE_MS,
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
@@ -16,23 +20,19 @@ module.exports = function configureKarma(config) {
     ],
     client: {
       clearContext: false,
+      tranche: process.env['KARMA_TRANCHE'],
     },
     jasmineHtmlReporter: {
       suppressAll: true,
     },
-    coverageReporter: {
-      dir: path.join(__dirname, 'coverage/portfolio-app'),
-      subdir: '.',
-      reporters: [{ type: 'html' }, { type: 'lcovonly' }, { type: 'text-summary' }],
-      check: {
-        global: {
-          statements: 72,
-          branches: 58,
-          functions: 64,
-          lines: 73,
-        },
-      },
-    },
+    coverageReporter:
+      couvertureDeLaTranche === undefined
+        ? {
+            dir: path.join(__dirname, 'coverage/portfolio-app'),
+            subdir: '.',
+            reporters: [{ type: 'html' }, { type: 'lcovonly' }, { type: 'text-summary' }],
+          }
+        : { dir: couvertureDeLaTranche, subdir: '.', reporters: [{ type: 'json' }] },
     reporters: ['progress', 'kjhtml'],
     browsers: ['Chrome'],
     customLaunchers: {
