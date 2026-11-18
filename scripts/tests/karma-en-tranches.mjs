@@ -1,5 +1,5 @@
 import { globSync } from 'node:fs';
-import { availableParallelism } from 'node:os';
+import { availableParallelism, totalmem } from 'node:os';
 import { join } from 'node:path';
 
 import libCoverage from 'istanbul-lib-coverage';
@@ -10,13 +10,16 @@ const SEUILS_DE_COUVERTURE = { statements: 72, branches: 58, functions: 64, line
 
 const TRANCHES_AU_PLUS = 8;
 
+const MEMOIRE_D_UNE_TRANCHE = 5 * 1024 ** 3;
+
 const SILENCE_TOLERE_D_UNE_TRANCHE_MS = 5 * 60_000;
 
 const NG_TEST = ['exec', '--', 'ng', 'test', '--watch=false', '--browsers=ChromeHeadlessNoSandbox'];
 
-export function nombreDeTranches(demande, coeurs = availableParallelism()) {
+export function nombreDeTranches(demande, coeurs = availableParallelism(), memoire = totalmem()) {
   if (demande === undefined || demande === '') {
-    return Math.max(1, Math.min(TRANCHES_AU_PLUS, coeurs));
+    const portees = Math.floor(memoire / MEMOIRE_D_UNE_TRANCHE);
+    return Math.max(1, Math.min(TRANCHES_AU_PLUS, coeurs, portees));
   }
   const total = Number(demande);
   if (!Number.isInteger(total) || total < 1) {

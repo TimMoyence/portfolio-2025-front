@@ -1419,6 +1419,22 @@ test('ci-portes : ci:check et pre-push:check jouent Playwright apres le build', 
   }
 });
 
+test('ci-portes : chaque job du workflow porte un timeout-minutes, sinon un runner affame tient six heures', () => {
+  const texteWorkflow = readFileSync(CHEMIN_WORKFLOW, 'utf8');
+  const jobs = [...texteWorkflow.split(/^jobs:$/m)[1].matchAll(/^ {2}([\w-]+):\s*$/gm)].map(
+    ([, job]) => job,
+  );
+  assert.ok(jobs.includes(JOB_WORKFLOW) && jobs.includes(JOB_E2E) && jobs.includes(JOB_BANC));
+  assert.deepEqual(
+    jobs.filter(
+      (job) =>
+        !blocDuJob(texteWorkflow, job).some((ligne) => /^ {4}timeout-minutes: \d+\s*$/.test(ligne)),
+    ),
+    [],
+    'ci-portes : un job sans « timeout-minutes: » garde son runner jusqu a six heures quand il cesse d avancer.',
+  );
+});
+
 test('PLANCHER ANTI-VACUITE : un perimetre e2e vide leve une erreur citant le gate', () => {
   avecDossierPlante('ci-portes-vide-', {}, (racine) => {
     assert.throws(() => suitesPlaywright(racine), /ci-portes/);
