@@ -1,26 +1,22 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import type { PresentationServie } from '../../../../../../../contrat';
+import { FigureDeCourbeComponent } from '../../donnees/figure-de-courbe/figure-de-courbe.component';
 
-export type SlideLessonKind = 'definition' | 'property' | 'method' | 'example' | 'exam';
+type Lecon = Extract<PresentationServie, { renderer: 'lesson' }>['props'];
+type NatureDeBloc = Lecon['blocks'][number]['kind'];
 
-export interface SlideLessonBlock {
-  readonly kind: SlideLessonKind;
-  readonly title: string;
-  readonly text: string;
-  readonly formula?: string;
-  readonly steps?: readonly string[];
-}
-
-const NATURES: Readonly<Record<SlideLessonKind, string>> = {
+const NATURES: Readonly<Record<NatureDeBloc, string>> = {
   definition: $localize`:@@slideLessonDefinition:Définition`,
   property: $localize`:@@slideLessonPropriete:Propriété`,
   method: $localize`:@@slideLessonMethode:Méthode`,
   example: $localize`:@@slideLessonExemple:Exemple`,
-  exam: $localize`:@@slideLessonAuCcf:Au CCF`,
+  piege: $localize`:@@slideLessonPieges:Les pièges`,
 };
 
 @Component({
   selector: 'app-slide-lesson',
   standalone: true,
+  imports: [FigureDeCourbeComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './slide-lesson.component.html',
   styleUrl: './slide-lesson.component.scss',
@@ -28,7 +24,8 @@ const NATURES: Readonly<Record<SlideLessonKind, string>> = {
 export class SlideLessonComponent {
   readonly title = input.required<string>();
   readonly subtitle = input<string>('');
-  readonly blocks = input.required<readonly SlideLessonBlock[]>();
+  readonly blocks = input.required<Lecon['blocks']>();
+  readonly figure = input<Lecon['figure']>();
 
   protected readonly natures = NATURES;
 }

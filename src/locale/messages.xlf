@@ -5833,7 +5833,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b1-01.description" datatype="html">
-        <source>Calculer une part et dire de quel tout elle parle, multiplier deux parts, calculer un taux global, distinguer points et pourcentages, taux de marge et taux de marque, puis répartir un effectif au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>Calculer une part et dire de quel tout elle parle, multiplier deux parts, calculer un taux global, distinguer points et pourcentages, taux de marge et taux de marque, puis répartir un effectif au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/catalogue/formations-list.data.ts</context>
           <context context-type="linenumber">111</context>
@@ -5875,7 +5875,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b1-04.description" datatype="html">
-        <source>Relier la publicité et les ventes d’un site par un nuage de points, tracer la droite des moindres carrés, lire le coefficient de corrélation sans confondre liaison et causalité, puis prévoir et trouver quand un seuil est atteint, au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>Relier la publicité et les ventes d’un site par un nuage de points, tracer la droite des moindres carrés, lire le coefficient de corrélation sans confondre liaison et causalité, puis prévoir et trouver quand un seuil est atteint, au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/catalogue/formations-list.data.ts</context>
           <context context-type="linenumber">126</context>
@@ -5889,7 +5889,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b1-05.description" datatype="html">
-        <source>Écrire les règles commerciales d’une entreprise avec et, ou, non, si… alors, les nier par les lois de Morgan, dire « pour tout » ou « il existe » et trouver le contre-exemple qui suffit, puis contrôler une règle au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>Écrire les règles commerciales d’une entreprise avec et, ou, non, si… alors, les nier par les lois de Morgan, dire « pour tout » ou « il existe » et trouver le contre-exemple qui suffit, puis contrôler une règle au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/catalogue/formations-list.data.ts</context>
           <context context-type="linenumber">131</context>
@@ -5917,7 +5917,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-02.description" datatype="html">
-        <source>Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/catalogue/formations-list.data.ts</context>
           <context context-type="linenumber">141</context>
@@ -5931,7 +5931,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-03.description" datatype="html">
-        <source>Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/catalogue/formations-list.data.ts</context>
           <context context-type="linenumber">146</context>
@@ -5945,7 +5945,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-04.description" datatype="html">
-        <source>Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/catalogue/formations-list.data.ts</context>
           <context context-type="linenumber">151</context>
@@ -5959,7 +5959,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-05.description" datatype="html">
-        <source>Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/catalogue/formations-list.data.ts</context>
           <context context-type="linenumber">156</context>
@@ -5973,7 +5973,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-06.description" datatype="html">
-        <source>Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/catalogue/formations-list.data.ts</context>
           <context context-type="linenumber">161</context>
@@ -5987,7 +5987,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-07.description" datatype="html">
-        <source>Revoir d’abord l’exponentielle, le logarithme et la boucle « Tant que » par des images du quotidien, puis dériver un polynôme et a e^(kx), étudier le signe de la dérivée, dresser un tableau de variation et trouver un prix optimal, même sous contrainte, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>Revoir d’abord l’exponentielle, le logarithme et la boucle « Tant que » par des images du quotidien, puis dériver un polynôme et a e^(kx), étudier le signe de la dérivée, dresser un tableau de variation et trouver un prix optimal, même sous contrainte. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/catalogue/formations-list.data.ts</context>
           <context context-type="linenumber">166</context>
@@ -6001,7 +6001,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-08.description" datatype="html">
-        <source>Dériver un produit, un quotient, e^u et ln u, lire le coût total, le coût moyen et le coût marginal, trouver le prix d’équilibre entre l’offre et la demande, puis dire combien de solutions a f(x) = k et les approcher au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>Dériver un produit, un quotient, e^u et ln u, lire le coût total, le coût moyen et le coût marginal, trouver le prix d’équilibre entre l’offre et la demande, puis dire combien de solutions a f(x) = k et les approcher au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/catalogue/formations-list.data.ts</context>
           <context context-type="linenumber">171</context>
@@ -6015,7 +6015,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="formations-list.b2-09.description" datatype="html">
-        <source>Lire une probabilité conditionnelle dans un arbre pondéré et dans un tableau croisé, calculer une probabilité totale par tous les chemins, remonter l’arbre pour trouver P_B(A), puis justifier que deux événements sont indépendants, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
+        <source>Lire une probabilité conditionnelle dans un arbre pondéré et dans un tableau croisé, calculer une probabilité totale par tous les chemins, remonter l’arbre pour trouver P_B(A), puis justifier que deux événements sont indépendants. À suivre en séance accompagnée, avec le code donné par votre formateur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/formations/catalogue/formations-list.data.ts</context>
           <context context-type="linenumber">176</context>
@@ -12310,32 +12310,53 @@
           <context context-type="linenumber">187</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="slideCourbeEtape" datatype="html">
+        <source> Étape <x id="INTERPOLATION" equiv-text="{{ rang() + 1 }}"/>/<x id="INTERPOLATION_1" equiv-text="{{ steps().length }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/slides/layouts/donnees/slide-courbe/slide-courbe.component.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="slideCourbePrecedent" datatype="html">
+        <source> Précédent </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/slides/layouts/donnees/slide-courbe/slide-courbe.component.html</context>
+          <context context-type="linenumber">28,30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="slideCourbeSuivant" datatype="html">
+        <source> Suivant </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/slides/layouts/donnees/slide-courbe/slide-courbe.component.html</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="slideScatterLegendePointMoyen" datatype="html">
         <source>G : point moyen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/layouts/donnees/slide-scatter/slide-scatter.component.html</context>
-          <context context-type="linenumber">95,98</context>
+          <context context-type="linenumber">114,117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideScatterLecture" datatype="html">
         <source>Lecture professionnelle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/layouts/donnees/slide-scatter/slide-scatter.component.html</context>
-          <context context-type="linenumber">106,108</context>
+          <context context-type="linenumber">125,127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideScatterVoirDonnees" datatype="html">
         <source>Voir les valeurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/layouts/donnees/slide-scatter/slide-scatter.component.html</context>
-          <context context-type="linenumber">112,113</context>
+          <context context-type="linenumber">131,132</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideScatterSource" datatype="html">
         <source>Source : <x id="INTERPOLATION" equiv-text="{{ source() }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/layouts/donnees/slide-scatter/slide-scatter.component.html</context>
-          <context context-type="linenumber">132,134</context>
+          <context context-type="linenumber">151,153</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideGridImprimer" datatype="html">
@@ -12384,35 +12405,35 @@
         <source>Définition</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/layouts/texte/slide-lesson/slide-lesson.component.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideLessonPropriete" datatype="html">
         <source>Propriété</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/layouts/texte/slide-lesson/slide-lesson.component.ts</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideLessonMethode" datatype="html">
         <source>Méthode</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/layouts/texte/slide-lesson/slide-lesson.component.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideLessonExemple" datatype="html">
         <source>Exemple</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/layouts/texte/slide-lesson/slide-lesson.component.ts</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="slideLessonAuCcf" datatype="html">
-        <source>Au CCF</source>
+      <trans-unit id="slideLessonPieges" datatype="html">
+        <source>Les pièges</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/layouts/texte/slide-lesson/slide-lesson.component.ts</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slideMethodPathEtapes" datatype="html">
@@ -12530,7 +12551,7 @@
         <source> Cet écran ne peut pas être affiché : son contenu n’est pas reconnu. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/slides/visual/slide-visual.component.ts</context>
-          <context context-type="linenumber">106,110</context>
+          <context context-type="linenumber">108,112</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formulaireRefusInformations" datatype="html">

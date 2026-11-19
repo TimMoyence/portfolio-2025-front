@@ -283,7 +283,7 @@ export function createSync(options: SyncOptions): Sync {
     }
     if (lu?.event === 'resultats') {
       diffuserA(ecoutesResultats, lu.data);
-    } else if (lu?.event === 'etat') {
+    } else if (lu?.event === 'etat' && lu.data.revision >= (etatCourant?.revision ?? 0)) {
       etatCourant = lu.data;
       diffuserA(ecoutes, etatCourant);
     }

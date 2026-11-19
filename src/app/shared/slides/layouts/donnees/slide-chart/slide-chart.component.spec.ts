@@ -1,6 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { fondEffectif, rapportDeContraste } from '../../../../../../testing/rendu/contraste';
-import { uneImage } from '../../../../../../testing/texte/deux-images';
+import { rendreALaLargeur } from '../../../../../../testing/texte/deux-images';
 import { INSTANTANE_B2_01 } from '../../../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import { INSTANTANE_B2_04 } from '../../../../../../testing/fixtures/instantanes/b2/instantane-b2-04';
 import { INSTANTANE_B2_05 } from '../../../../../../testing/fixtures/instantanes/b2/instantane-b2-05';
@@ -407,17 +407,6 @@ function graphiqueServi(
     throw new Error(`graphique absent du cours servi : ${id}`);
   }
   return presentation.props;
-}
-
-async function rendreALaLargeur(
-  fixture: ComponentFixture<SlideChartComponent>,
-  largeur: string,
-): Promise<void> {
-  element(fixture).style.width = largeur;
-  for (let image = 0; image < 3; image += 1) {
-    await uneImage();
-    fixture.detectChanges();
-  }
 }
 
 function rangsVisibles(rendu: HTMLElement, selecteur: string): number[] {

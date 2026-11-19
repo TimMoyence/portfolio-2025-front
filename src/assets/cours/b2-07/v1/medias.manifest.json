@@ -88,20 +88,6 @@
       ]
     },
     {
-      "id": "M7",
-      "ecran": "A1-09",
-      "licence": "CC BY-SA 4.0",
-      "attribution": "Deux chemins, le même rang · Asili Design, 2026 · CC BY-SA 4.0",
-      "origine": "production propre du cours",
-      "fichiers": [
-        {
-          "fichier": "deux-chemins.webp",
-          "octets": 381104,
-          "sha256": "199fc20c6efd4469f6c45108693913714c52a04ea383e3003891d4f4ed022795"
-        }
-      ]
-    },
-    {
       "id": "M8",
       "ecran": "A2-03",
       "licence": "CC BY-SA 4.0",

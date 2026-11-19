@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "682177bfc67884f3479b0dbfbed6c93144e00fef4fdac8e215905b8969c33c3d",
+  "empreinte": "d1539c038b999230f47b07bfd79e8d6ebc47c0fcd2fd0703eade10912acd525d",
   "sujet": {
     "id": "b1-02-evolutions-coefficients-indices",
     "titre": "Évolutions : taux, coefficients, indices",
@@ -1625,7 +1625,7 @@
               "renderer": "grid",
               "props": {
                 "title": "Fiche mémo : évolutions, coefficients, indices",
-                "subtitle": "À garder pour le CCF : chaque carte part d’une question et donne la méthode et son piège.",
+                "subtitle": "Chaque carte part d’une question et donne la méthode et son piège.",
                 "items": [
                   {
                     "title": "Taux d’évolution",
@@ -1671,12 +1671,6 @@
                     "title": "Tableur",
                     "description": "La formule à recopier ?",
                     "back": "La valeur de base figée par des $. Taux moyen : =PUISSANCE(C;1/n)-1."
-                  },
-                  {
-                    "title": "Référentiel du BTS CG",
-                    "description": "Le programme de mathématiques et l’épreuve E3.",
-                    "href": "https://enqdip.sup.adc.education.fr/bts/referentiel/BTS_ComptabiliteGestion.pdf",
-                    "external": true
                   }
                 ],
                 "imprimable": true
@@ -1877,7 +1871,7 @@
             ]
           }
         },
-        "notes": "• Temps « réfléchir » de la notion 1 : votes non notés.\n• Question 1 en vote individuel, puis question 2, sans débat entre les deux.\n• La révélation s’ouvre après la question 2 : les deux corrections se commentent ensemble.\n• Papier : vote à main levée sur chaque question.",
+        "notes": "",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [
@@ -2099,7 +2093,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « De 10 € à 12 €, on ajoute 2 € ou on multiplie par 1,2 ? » Seul le coefficient resservira.",
+        "notes": "• Question : « De 10 € à 12 €, on ajoute 2 € ou on multiplie par 1,2 ? » Seul le coefficient resservira.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -2162,7 +2156,7 @@
             }
           }
         },
-        "notes": "• 2 min après l’illustration ; la trace écrite est imprimée dans le livret : on lit et on commente, on ne recopie pas.\n• Faire répéter le moyen mnémotechnique : toujours le départ en bas.\n• Lien à la mission : « De 100 € à 112 € : quel coefficient ? »",
+        "notes": "• Faire répéter le moyen mnémotechnique : toujours le départ en bas.\n• Lien à la mission : « De 100 € à 112 € : quel coefficient ? »",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -2197,7 +2191,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « 36 € moins 20 %, on retrouve 30 € ? » Non : 28,80 €, le retour divise.",
+        "notes": "• Question : « 36 € moins 20 %, on retrouve 30 € ? » Non : 28,80 €, le retour divise.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -2259,7 +2253,7 @@
             }
           }
         },
-        "notes": "• 2 min après l’illustration, enchaînées sur la page 1 : 6 min pour les deux pages et leurs illustrations.\n• Faire répéter le moyen mnémotechnique : aller, ×, retour, ÷.\n• Lien à la mission : la console de Théo, à 180 € TTC.",
+        "notes": "• Faire répéter le moyen mnémotechnique : aller, ×, retour, ÷.\n• Lien à la mission : la console de Théo, à 180 € TTC.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -2319,7 +2313,7 @@
           },
           "etayage": 0
         },
-        "notes": "• Chacun répond sous chaque étape, puis la correction se dévoile étape par étape sur ce même écran.\n• Papier : réponses sous chaque étape du livret.\n• S’arrêter sur le retour au HT (étape 4) : on divise, on ne retire pas 20 %.\n• Transition : « À vous, sur la nouvelle grille : exercice 1. »",
+        "notes": "• S’arrêter sur le retour au HT (étape 4) : on divise, on ne retire pas 20 %.\n• Transition : « À vous, sur la nouvelle grille : exercice 1. »",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -2416,7 +2410,7 @@
           ]
         },
         "renvoi": "B1-02-A1-04-DOSSIER",
-        "notes": "• Temps : réflexion 2 min · travail 6 min · correction 2 min\n• Réflexion : écrire « départ » et « arrivée » devant chaque prix.\n• Pièges : écart en euros ; base d’arrivée ; − 20 % sur le TTC.\n• Papier : exercice 1 du livret.\n• Corriger question par question, en commençant par la moins réussie (score sous chaque correction).\n• Transition : « Faisons calculer tous les taux par le tableur : exercice 2. »",
+        "notes": "• Réflexion : écrire « départ » et « arrivée » devant chaque prix.\n• Pièges : écart en euros ; base d’arrivée ; − 20 % sur le TTC.\n• Papier : exercice 1 du livret.\n• Transition : « Faisons calculer tous les taux par le tableur : exercice 2. »",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [
@@ -2652,7 +2646,7 @@
             }
           }
         },
-        "notes": "• Temps : réflexion 2 min · travail 5 min · correction 2 min\n• Réflexion : écrire sur papier la formule de D2, puis ce qu’elle devient en D3 une fois recopiée.\n• Erreurs à chercher : base d’arrivée ; écart sans division ; total tapé au clavier ; ARRONDI oublié.\n• Papier : formules écrites sur la copie, puis les taux à la calculatrice.\n• Corriger question par question, en commençant par la moins réussie (score sous chaque correction).\n• Transition : jalon 1, puis pause de 15 minutes.",
+        "notes": "• Réflexion : écrire sur papier la formule de D2, puis ce qu’elle devient en D3 une fois recopiée.\n• Erreurs à chercher : base d’arrivée ; écart sans division ; total tapé au clavier ; ARRONDI oublié.\n• Papier : formules écrites sur la copie, puis les taux à la calculatrice.",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [],
@@ -2784,7 +2778,7 @@
             }
           }
         },
-        "notes": "• 30 s de vote anonyme.\n• Si plus de 30 % « Perdu » : reprendre la page A1-06 après la pause.\n• Pause de 15 minutes, hors durée programmée.",
+        "notes": "• Si plus de 30 % « Perdu » : reprendre la page A1-06 après la pause.",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -2824,7 +2818,7 @@
             }
           }
         },
-        "notes": "• Temps « réfléchir » de la notion 2 : 3 min d’écriture individuelle, puis lire trois réponses au pupitre.\n• Ne rien trancher : la trace écrite suivante répond.\n• Relance : « Les 10 % de la baisse se calculent sur quel prix ? »\n• Papier : cadre de réponse du livret.",
+        "notes": "• Ne rien trancher : la trace écrite suivante répond.\n• Relance : « Les 10 % de la baisse se calculent sur quel prix ? »\n• Papier : cadre de réponse du livret.",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -2866,7 +2860,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « + 10 % puis + 20 %, pourquoi pas + 30 % ? » La seconde hausse porte sur un prix déjà monté.",
+        "notes": "• Question : « + 10 % puis + 20 %, pourquoi pas + 30 % ? » La seconde hausse porte sur un prix déjà monté.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -2928,7 +2922,7 @@
             }
           }
         },
-        "notes": "• 2 min après l’illustration ; la trace écrite est imprimée dans le livret : on lit et on commente, on ne recopie pas.\n• Faire répéter le moyen mnémotechnique : coefficients, jamais taux.",
+        "notes": "• Faire répéter le moyen mnémotechnique : coefficients, jamais taux.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -2963,7 +2957,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « − 50 %, puis + 50 % : on revient au départ ? » Non : il faut + 100 %.",
+        "notes": "• Question : « − 50 %, puis + 50 % : on revient au départ ? » Non : il faut + 100 %.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -3025,7 +3019,7 @@
             }
           }
         },
-        "notes": "• 2 min après l’illustration, enchaînées sur la page 1 : 6 min pour les deux pages et leurs illustrations.\n• Faire répéter le moyen mnémotechnique : le retour n’a pas le même taux.",
+        "notes": "• Faire répéter le moyen mnémotechnique : le retour n’a pas le même taux.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -3085,7 +3079,7 @@
           },
           "etayage": 0
         },
-        "notes": "• Chacun répond sous chaque étape, puis la correction se dévoile étape par étape sur ce même écran.\n• Papier : réponses sous chaque étape du livret.\n• S’arrêter sur l’addition des taux (étape 3) et sur le retour (étape 5).\n• Transition : « À vous : exercice 3. »",
+        "notes": "• S’arrêter sur l’addition des taux (étape 3) et sur le retour (étape 5).\n• Transition : « À vous : exercice 3. »",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -3245,7 +3239,7 @@
             }
           }
         },
-        "notes": "• Temps : réflexion 1 min · travail 5 min · correction 2 min\n• Réflexion : dire sur quel prix porte chaque évolution.\n• Pièges : soldes calculés sur le prix de départ ; montant de la baisse saisi au lieu du nouveau prix.\n• Papier : tableau du livret, rempli à la main.\n• Projeter le tableau juste ; comparer à l’addition des taux, − 5 %.\n• Transition : « Le coefficient global se lit : exercice 4. »",
+        "notes": "• Réflexion : dire sur quel prix porte chaque évolution.\n• Pièges : soldes calculés sur le prix de départ ; montant de la baisse saisi au lieu du nouveau prix.\n• Papier : tableau du livret, rempli à la main.\n• Projeter le tableau juste ; comparer à l’addition des taux, − 5 %.\n• Transition : « Le coefficient global se lit : exercice 4. »",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [],
@@ -3490,7 +3484,7 @@
             }
           ]
         },
-        "notes": "• Temps : réflexion 2 min · travail 6 min · correction 2 min\n• Réflexion : écrire chaque évolution en coefficient avant de calculer.\n• Pièges : taux additionnés ; coefficient lu comme un taux ; même taux au retour.\n• Papier : exercice 4 du livret.\n• Corriger question par question, en commençant par la moins réussie.\n• Transition : « Faisons le point : enchaîner et revenir. »",
+        "notes": "• Réflexion : écrire chaque évolution en coefficient avant de calculer.\n• Pièges : taux additionnés ; coefficient lu comme un taux ; même taux au retour.\n• Papier : exercice 4 du livret.\n• Transition : « Faisons le point : enchaîner et revenir. »",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [
@@ -3622,7 +3616,7 @@
             }
           }
         },
-        "notes": "• 30 s de vote anonyme.\n• Si plus de 30 % « Perdu » : reprendre l’exemple du loyer de la trace écrite A2-02.",
+        "notes": "• Si plus de 30 % « Perdu » : reprendre l’exemple du loyer de la trace écrite A2-02.",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -3670,7 +3664,7 @@
             ]
           }
         },
-        "notes": "• Temps « réfléchir » de la notion 3 : votes non notés.\n• Question 1 en vote individuel, puis question 2, sans débat entre les deux.\n• La révélation s’ouvre après la question 2 : les deux corrections se commentent ensemble.\n• Papier : vote à main levée sur chaque question.",
+        "notes": "",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [
@@ -3765,7 +3759,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « 150, c’est un prix ? un taux ? » Ni l’un ni l’autre.",
+        "notes": "• Question : « 150, c’est un prix ? un taux ? » Ni l’un ni l’autre.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -3827,7 +3821,7 @@
             }
           }
         },
-        "notes": "• 2 min après l’illustration ; la trace écrite est imprimée dans le livret : on lit et on commente, on ne recopie pas.\n• Faire répéter le moyen mnémotechnique : ni un prix, ni un taux.",
+        "notes": "• Faire répéter le moyen mnémotechnique : ni un prix, ni un taux.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -3862,7 +3856,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « + 69 % en 2 ans, ça fait + 34,5 % par an ? » Non : + 30 % par an.",
+        "notes": "• Question : « + 69 % en 2 ans, ça fait + 34,5 % par an ? » Non : + 30 % par an.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -3924,7 +3918,7 @@
             }
           }
         },
-        "notes": "• 2 min après l’illustration, enchaînées sur la page 1 : 6 min pour les deux pages et leurs illustrations.\n• Question : « De 2021 à 2024, combien d’évolutions ? » Trois, pas quatre.\n• Faire répéter le moyen mnémotechnique : n compte les évolutions.",
+        "notes": "• Question : « De 2021 à 2024, combien d’évolutions ? » Trois, pas quatre.\n• Faire répéter le moyen mnémotechnique : n compte les évolutions.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -3984,7 +3978,7 @@
           },
           "etayage": 0
         },
-        "notes": "• Chacun répond sous chaque étape, puis la correction se dévoile étape par étape sur ce même écran.\n• Papier : réponses sous chaque étape du livret.\n• S’arrêter sur n = 3 (étape 4) et sur la division par 3 (étape 5).\n• Transition : « À vous, sur un vrai sujet de BTS : exercice 5. »",
+        "notes": "• S’arrêter sur n = 3 (étape 4) et sur la division par 3 (étape 5).\n• Transition : « À vous, sur un vrai sujet de BTS : exercice 5. »",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -4104,7 +4098,7 @@
             }
           }
         },
-        "notes": "• Temps : réflexion 2 min · travail 6 min · correction 2 min\n• Réflexion : le tableau est en ligne, comme au sujet : la recopie va vers la droite.\n• Erreurs à chercher : base non figée ; ARRONDI oublié ; taux global divisé par 3.\n• Papier : formules écrites sur la copie avec la grille des cellules.\n• Corriger question par question, en commençant par la moins réussie (score sous chaque correction).\n• Transition : jalon 3, puis pause de 15 minutes.",
+        "notes": "• Réflexion : le tableau est en ligne, comme au sujet : la recopie va vers la droite.\n• Erreurs à chercher : base non figée ; ARRONDI oublié ; taux global divisé par 3.\n• Papier : formules écrites sur la copie avec la grille des cellules.",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [],
@@ -4229,7 +4223,7 @@
             }
           }
         },
-        "notes": "• 30 s de vote anonyme.\n• Pause de 15 minutes, hors durée programmée.",
+        "notes": "",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -4265,7 +4259,7 @@
             }
           }
         },
-        "notes": "• 5 min individuelles, puis projeter la carte de maîtrise.\n• Tous reçoivent les douze questions de la banque : le rappel couvre tout le cours pour chacun.",
+        "notes": "",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [
@@ -4590,7 +4584,7 @@
               "renderer": "grid",
               "props": {
                 "title": "Fiche mémo : évolutions, coefficients, indices",
-                "subtitle": "À garder pour le CCF : chaque carte part d’une question et donne la méthode et son piège.",
+                "subtitle": "Chaque carte part d’une question et donne la méthode et son piège.",
                 "items": [
                   {
                     "title": "Taux d’évolution",
@@ -4636,12 +4630,6 @@
                     "title": "Tableur",
                     "description": "La formule à recopier ?",
                     "back": "La valeur de base figée par des $. Taux moyen : =PUISSANCE(C;1/n)-1."
-                  },
-                  {
-                    "title": "Référentiel du BTS CG",
-                    "description": "Le programme de mathématiques et l’épreuve E3.",
-                    "href": "https://enqdip.sup.adc.education.fr/bts/referentiel/BTS_ComptabiliteGestion.pdf",
-                    "external": true
                   }
                 ],
                 "imprimable": true
@@ -4665,7 +4653,7 @@
             }
           }
         },
-        "notes": "• 90 s de lecture ; la fiche s’imprime pour le classeur de CCF.",
+        "notes": "",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -5436,7 +5424,7 @@
               "renderer": "grid",
               "props": {
                 "title": "Fiche mémo : évolutions, coefficients, indices",
-                "subtitle": "À garder pour le CCF : chaque carte part d’une question et donne la méthode et son piège.",
+                "subtitle": "Chaque carte part d’une question et donne la méthode et son piège.",
                 "items": [
                   {
                     "title": "Taux d’évolution",
@@ -5482,12 +5470,6 @@
                     "title": "Tableur",
                     "description": "La formule à recopier ?",
                     "back": "La valeur de base figée par des $. Taux moyen : =PUISSANCE(C;1/n)-1."
-                  },
-                  {
-                    "title": "Référentiel du BTS CG",
-                    "description": "Le programme de mathématiques et l’épreuve E3.",
-                    "href": "https://enqdip.sup.adc.education.fr/bts/referentiel/BTS_ComptabiliteGestion.pdf",
-                    "external": true
                   }
                 ],
                 "imprimable": true

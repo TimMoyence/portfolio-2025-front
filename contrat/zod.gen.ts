@@ -2013,6 +2013,64 @@ export const zPresentationServie = z.union([
   z.object({
     version: z.literal(2),
     screenId: z.string().min(1),
+    renderer: z.enum(['courbe']),
+    props: z.object({
+      title: z.string().min(1),
+      subtitle: z.string().min(1).optional(),
+      figure: z.object({
+        formula: z.string().min(1),
+        xLabel: z.string().min(1),
+        yLabel: z.string().min(1),
+        xRange: z.tuple([z.number(), z.number()]),
+        yRange: z.tuple([z.number(), z.number()]),
+        points: z
+          .array(
+            z.object({
+              x: z.number(),
+              y: z.number(),
+            }),
+          )
+          .min(2),
+        tangents: z
+          .array(
+            z.object({
+              x: z.number(),
+              y: z.number(),
+              slope: z.number(),
+              label: z.string().min(1).optional(),
+            }),
+          )
+          .optional(),
+        zone: z
+          .object({
+            from: z.number(),
+            to: z.number(),
+            label: z.string().min(1),
+          })
+          .optional(),
+        description: z.string().min(1),
+      }),
+      steps: z
+        .array(
+          z.object({
+            title: z.string().min(1),
+            text: z.string().min(1),
+            tangent: z
+              .object({
+                x: z.number(),
+                y: z.number(),
+                slope: z.number(),
+                label: z.string().min(1).optional(),
+              })
+              .optional(),
+          }),
+        )
+        .min(1),
+    }),
+  }),
+  z.object({
+    version: z.literal(2),
+    screenId: z.string().min(1),
     renderer: z.enum(['arbre']),
     props: z.object({
       title: z.string().min(1),
@@ -2046,7 +2104,7 @@ export const zPresentationServie = z.union([
       blocks: z
         .array(
           z.object({
-            kind: z.enum(['definition', 'property', 'method', 'example', 'exam']),
+            kind: z.enum(['definition', 'property', 'method', 'example', 'piege']),
             title: z.string().min(1),
             text: z.string().min(1),
             formula: z.string().min(1).optional(),
@@ -2055,6 +2113,41 @@ export const zPresentationServie = z.union([
         )
         .min(1)
         .max(4),
+      figure: z
+        .object({
+          formula: z.string().min(1),
+          xLabel: z.string().min(1),
+          yLabel: z.string().min(1),
+          xRange: z.tuple([z.number(), z.number()]),
+          yRange: z.tuple([z.number(), z.number()]),
+          points: z
+            .array(
+              z.object({
+                x: z.number(),
+                y: z.number(),
+              }),
+            )
+            .min(2),
+          tangents: z
+            .array(
+              z.object({
+                x: z.number(),
+                y: z.number(),
+                slope: z.number(),
+                label: z.string().min(1).optional(),
+              }),
+            )
+            .optional(),
+          zone: z
+            .object({
+              from: z.number(),
+              to: z.number(),
+              label: z.string().min(1),
+            })
+            .optional(),
+          description: z.string().min(1),
+        })
+        .optional(),
     }),
   }),
   z.object({
@@ -2180,6 +2273,7 @@ export const zPresentationServie = z.union([
       imageAlt: z.string().min(1),
       paragraphs: z.array(z.string().min(1)).min(1),
       items: z.array(z.string().min(1)).min(1).optional(),
+      conclusion: z.string().min(1).optional(),
       sourceLink: z
         .object({
           href: z
@@ -2210,6 +2304,7 @@ export const zPresentationServie = z.union([
       imageAlt: z.string().min(1),
       paragraphs: z.array(z.string().min(1)).min(1),
       items: z.array(z.string().min(1)).min(1).optional(),
+      conclusion: z.string().min(1).optional(),
       sourceLink: z
         .object({
           href: z

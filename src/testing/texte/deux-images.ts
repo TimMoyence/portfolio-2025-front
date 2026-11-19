@@ -1,5 +1,18 @@
+import type { ComponentFixture } from '@angular/core/testing';
+
 export function uneImage(): Promise<void> {
   return new Promise((suite) => requestAnimationFrame(() => suite()));
+}
+
+export async function rendreALaLargeur(
+  fixture: ComponentFixture<unknown>,
+  largeur: string,
+): Promise<void> {
+  (fixture.nativeElement as HTMLElement).style.width = largeur;
+  for (let image = 0; image < 3; image += 1) {
+    await uneImage();
+    fixture.detectChanges();
+  }
 }
 
 export async function deuxImages(): Promise<void> {

@@ -1,0 +1,74 @@
+@use '../../../slide-figure' as figure;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.slide-courbe {
+  @include figure.cadre(1rem);
+}
+
+h2 {
+  @include figure.titre(24ch);
+}
+
+.slide-courbe__subtitle {
+  @include figure.sous-titre;
+}
+
+.slide-courbe__corps {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: clamp(1rem, 2.5cqi, 2rem);
+  align-items: start;
+}
+
+.slide-courbe__etape {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.slide-courbe__rang {
+  @include figure.surtitre(var(--gold-dark, #8a5e00));
+}
+
+h3 {
+  @include figure.intertitre;
+}
+
+.slide-courbe__texte {
+  @include figure.texte-de-bloc;
+}
+
+.slide-courbe__navigation {
+  display: flex;
+  gap: 0.6rem;
+
+  button {
+    padding: 0.45rem 1rem;
+    border: 2px solid var(--ink, #0c0902);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink, #0c0902);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    &:focus-visible {
+      outline: 3px solid #277c70;
+      outline-offset: 2px;
+    }
+  }
+}
+
+@container (max-width: 48rem) {
+  .slide-courbe__corps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

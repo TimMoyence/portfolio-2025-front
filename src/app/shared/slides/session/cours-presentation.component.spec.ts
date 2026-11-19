@@ -1439,12 +1439,16 @@ const RENDUS_A_TABLEAU: ReadonlySet<string> = new Set([
   'chart',
   'boxplot',
   'scatter',
+  'courbe',
   'page',
 ]);
 
 function peutMontrerUnTableau(ecran: EcranContent): boolean {
+  const presentation = presentationDe(ecran);
   return (
-    TYPES_A_TABLEAU.has(ecran.type) || RENDUS_A_TABLEAU.has(presentationDe(ecran)?.renderer ?? '')
+    TYPES_A_TABLEAU.has(ecran.type) ||
+    RENDUS_A_TABLEAU.has(presentation?.renderer ?? '') ||
+    (presentation?.renderer === 'lesson' && presentation.props['figure'] !== undefined)
   );
 }
 

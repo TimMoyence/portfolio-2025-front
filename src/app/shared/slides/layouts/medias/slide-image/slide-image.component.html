@@ -45,6 +45,9 @@
         }
       </ul>
     }
+    @if (conclusion()) {
+      <p class="slide-image__conclusion texte-servi">{{ conclusion() }}</p>
+    }
     <ng-content />
   </div>
   @if (isReverse()) {

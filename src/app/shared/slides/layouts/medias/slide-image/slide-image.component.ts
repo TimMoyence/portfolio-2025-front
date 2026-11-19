@@ -34,6 +34,7 @@ export class SlideImageComponent {
   readonly paragraphs = input<string[]>([]);
   readonly items = input<string[]>([]);
   readonly richItems = input<RichListItem[]>([]);
+  readonly conclusion = input('');
   readonly accent = input<string>('default');
   readonly reverse = input<boolean>(false);
   readonly priority = input(false);

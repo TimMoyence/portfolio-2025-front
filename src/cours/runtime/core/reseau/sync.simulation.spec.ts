@@ -31,6 +31,20 @@ const evenementSansFin: fc.Arbitrary<Evenement> = fc.oneof(
   fc.nat({ max: 40 }).map((participants) => ({ nom: 'resultats' as const, participants })),
 );
 
+function enOrdreDuBack(evenements: readonly Evenement[]): Evenement[] {
+  let revision = 0;
+  return evenements.map((evenement) => {
+    if (evenement.nom !== 'etat') {
+      return evenement;
+    }
+    revision += evenement.revision;
+    return { ...evenement, revision };
+  });
+}
+
+const serieServie = (maxLength: number): fc.Arbitrary<Evenement[]> =>
+  fc.array(evenementSansFin, { minLength: 1, maxLength }).map(enOrdreDuBack);
+
 const raison: fc.Arbitrary<RaisonDeFin> = fc.constantFrom<RaisonDeFin[]>(
   'cloturee',
   'introuvable',
@@ -110,7 +124,7 @@ describe('simulation : le flux de séance livre exactement ce que le back a émi
   it('rend chaque état et chaque résultat dans l’ordre, quelles que soient les coupures d’octets', async () => {
     await fc.assert(
       fc.asyncProperty(
-        fc.array(evenementSansFin, { minLength: 1, maxLength: 8 }),
+        serieServie(8),
         fc.array(fc.nat({ max: 4000 }), { maxLength: 10 }),
         async (evenements, coupes) => {
           const texte = evenements.map(texteDe).join('');
@@ -140,29 +154,47 @@ describe('simulation : le flux de séance livre exactement ce que le back a émi
     );
   });
 
+  it('n’écarte que les états de révision plus ancienne que la plus haute déjà livrée, quel que soit l’ordre servi', async () => {
+    const etat = fc
+      .record({ ecranCourant: fc.integer({ min: 0, max: 51 }), revision: fc.nat({ max: 9 }) })
+      .map((champs) => ({ nom: 'etat' as const, ...champs }));
+    await fc.assert(
+      fc.asyncProperty(fc.array(etat, { minLength: 1, maxLength: 8 }), async (servis) => {
+        let plusHaute = 0;
+        const attendus = servis.filter(({ revision }) => {
+          const livre = revision >= plusHaute;
+          plusHaute = Math.max(plusHaute, revision);
+          return livre;
+        });
+        const { recolte, sync } = await jouer([servis.map(texteDe).join('')], attendus.length);
+        sync.close();
+
+        expect(recolte.etats.map(({ revision, ecranCourant }) => [revision, ecranCourant])).toEqual(
+          attendus.map(({ revision, ecranCourant }) => [revision, ecranCourant]),
+        );
+      }),
+      { seed: GRAINE, numRuns: TOURS },
+    );
+  });
+
   it('coupe tout à la fin de séance : rien de ce qui suit n’atteint le poste', async () => {
     await fc.assert(
-      fc.asyncProperty(
-        fc.array(evenementSansFin, { minLength: 1, maxLength: 5 }),
-        fc.array(evenementSansFin, { minLength: 1, maxLength: 5 }),
-        raison,
-        async (avant, apres, motif) => {
-          const texte = [...avant, { nom: 'fin' as const, raison: motif }, ...apres]
-            .map(texteDe)
-            .join('');
-          const porteurs = avant.filter((evenement) => evenement.nom !== 'heartbeat').length;
-          const { recolte, sync } = await jouer([texte], porteurs + 1);
-          sync.close();
+      fc.asyncProperty(serieServie(5), serieServie(5), raison, async (avant, apres, motif) => {
+        const texte = [...avant, { nom: 'fin' as const, raison: motif }, ...apres]
+          .map(texteDe)
+          .join('');
+        const porteurs = avant.filter((evenement) => evenement.nom !== 'heartbeat').length;
+        const { recolte, sync } = await jouer([texte], porteurs + 1);
+        sync.close();
 
-          expect(recolte.fins).toEqual([motif]);
-          expect(recolte.etats.length).toBe(
-            avant.filter((evenement) => evenement.nom === 'etat').length,
-          );
-          expect(recolte.resultats.length).toBe(
-            avant.filter((evenement) => evenement.nom === 'resultats').length,
-          );
-        },
-      ),
+        expect(recolte.fins).toEqual([motif]);
+        expect(recolte.etats.length).toBe(
+          avant.filter((evenement) => evenement.nom === 'etat').length,
+        );
+        expect(recolte.resultats.length).toBe(
+          avant.filter((evenement) => evenement.nom === 'resultats').length,
+        );
+      }),
       { seed: GRAINE, numRuns: TOURS },
     );
   });

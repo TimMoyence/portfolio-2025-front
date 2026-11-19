@@ -1,4 +1,4 @@
-<section class="slide-lesson">
+<section class="slide-lesson" [class.slide-lesson--avec-figure]="figure() !== undefined">
   <header>
     <h2>{{ title() }}</h2>
     @if (subtitle()) {
@@ -29,4 +29,8 @@
       </article>
     }
   </div>
+
+  @if (figure(); as courbe) {
+    <app-figure-de-courbe class="slide-lesson__figure" [figure]="courbe" />
+  }
 </section>

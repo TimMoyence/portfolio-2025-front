@@ -199,6 +199,45 @@ describe('sync', () => {
     expect(flux[0].url).toBe('https://api.test/sessions/s1/stream');
   });
 
+  const enRevision = (revision: number, etayage: number): EtatSession => ({
+    ...ETAT,
+    revision,
+    pilotage: { 'B2-01-A3-06-INDICE-ET-TAUX-MOYEN': { etayage } },
+  });
+
+  const etayages = (recus: readonly EtatSession[]): (readonly [number, number | undefined])[] =>
+    recus.map(({ revision, pilotage }) => [
+      revision,
+      pilotage['B2-01-A3-06-INDICE-ET-TAUX-MOYEN']?.etayage,
+    ]);
+
+  it('livre l état resservi à la même révision par le flux rouvert', async () => {
+    const recus = await collecter([
+      bloc('etat', enRevision(7, 3)) + bloc('fin', { raison: 'expiree' }),
+    ]);
+    await attendreJusqua(() => flux.length > 1);
+    await flux[1].envoyer(bloc('etat', enRevision(7, 4)));
+    await attendreJusqua(() => etayages(recus).at(-1)?.[1] === 4);
+
+    expect(etayages(recus).at(-1)).toEqual([7, 4]);
+  });
+
+  it('écarte un état de révision plus ancienne arrivé après un plus récent, sans revenir en arrière', async () => {
+    const recus = await collecter(
+      [
+        bloc('etat', enRevision(8, 4)),
+        bloc('etat', enRevision(7, 3)),
+        bloc('etat', enRevision(9, 5)),
+      ],
+      2,
+    );
+
+    expect(etayages(recus)).toEqual([
+      [8, 4],
+      [9, 5],
+    ]);
+  });
+
   it('ignore un battement de coeur sans notifier les abonnes', async () => {
     const recus = await collecter([bloc('heartbeat', { ts: '2026-09-11T08:00:00.000Z' })], 0);
     expect(recus).toEqual([]);
