@@ -1,0 +1,42 @@
+<section class="slide-courbe">
+  <header>
+    <h2>{{ title() }}</h2>
+    @if (subtitle()) {
+      <p class="slide-courbe__subtitle">{{ subtitle() }}</p>
+    }
+  </header>
+
+  <div class="slide-courbe__corps">
+    <app-figure-de-courbe [figure]="figure()" [tangentes]="tangentesDevoilees()" />
+
+    <div class="slide-courbe__etape" aria-live="polite">
+      <p class="slide-courbe__rang" data-testid="slide-courbe-etape" i18n="@@slideCourbeEtape">
+        Étape {{ rang() + 1 }}/{{ steps().length }}
+      </p>
+      @if (etape(); as courante) {
+        <h3 data-testid="slide-courbe-titre-etape">{{ courante.title }}</h3>
+        <p class="slide-courbe__texte texte-servi">{{ courante.text }}</p>
+      }
+      <div class="slide-courbe__navigation">
+        <button
+          type="button"
+          data-testid="slide-courbe-precedent"
+          [disabled]="rang() === 0"
+          (click)="avancer(-1)"
+          i18n="@@slideCourbePrecedent"
+        >
+          Précédent
+        </button>
+        <button
+          type="button"
+          data-testid="slide-courbe-suivant"
+          [disabled]="rang() === dernier()"
+          (click)="avancer(1)"
+          i18n="@@slideCourbeSuivant"
+        >
+          Suivant
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

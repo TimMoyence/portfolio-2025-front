@@ -2,9 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { poserLesEntrees } from '../../../../../../testing/page/montage-page';
 import { setupTestBed } from '../../../../../../testing/setup-test-bed';
 import { textes } from '../../../../../../testing/texte/textes-dom';
-import { SlideLessonComponent, type SlideLessonBlock } from './slide-lesson.component';
+import type { PresentationServie } from '../../../../../../../contrat';
+import { SlideLessonComponent } from './slide-lesson.component';
 
-const TRACE_ECRITE: readonly SlideLessonBlock[] = [
+type BlocsDeLecon = Extract<PresentationServie, { renderer: 'lesson' }>['props']['blocks'];
+
+const TRACE_ECRITE: BlocsDeLecon = [
   {
     kind: 'definition',
     title: 'Le point moyen',
@@ -24,9 +27,9 @@ const TRACE_ECRITE: readonly SlideLessonBlock[] = [
     steps: ['Calculer x̄ et ȳ.', 'Calculer b = ȳ − a·x̄.', 'Placer G et un second point.'],
   },
   {
-    kind: 'exam',
-    title: 'Ce qui est attendu',
-    text: 'Justifier chaque calcul et arrondir à 10⁻² près.',
+    kind: 'piege',
+    title: 'Ce qui fait perdre des points',
+    text: 'Oublier de justifier un calcul, ou arrondir avant la fin.',
   },
 ];
 
@@ -47,13 +50,13 @@ describe('SlideLessonComponent', () => {
       'Le point moyen',
       'La droite passe par G',
       'Tracer la droite',
-      'Ce qui est attendu',
+      'Ce qui fait perdre des points',
     ]);
     expect(textes(racine, '[data-testid="slide-lesson-nature"]')).toEqual([
       'Définition',
       'Propriété',
       'Méthode',
-      'Au CCF',
+      'Les pièges',
     ]);
   });
 

@@ -27,6 +27,7 @@ import {
   cadreDuTexte,
   cadreDuTrace,
   decale,
+  memesElements,
   memesReculs,
   mesurerAChaqueRendu,
   cadreFixe,
@@ -157,10 +158,6 @@ function plusLarge(rendu: HTMLElement, selecteur: string): number {
   );
 }
 
-function memesCles(une: ReadonlySet<string>, autre: ReadonlySet<string>): boolean {
-  return une.size === autre.size && [...une].every((cle) => autre.has(cle));
-}
-
 @Component({
   selector: 'app-slide-chart',
   standalone: true,
@@ -194,10 +191,10 @@ export class SlideChartComponent {
   protected readonly largeurDesEtiquettes = signal(0);
   private readonly ecartDesEtiquettes = signal(ECART_DES_ETIQUETTES);
   protected readonly valeursRetournees = signal<ReadonlySet<string>>(new Set(), {
-    equal: memesCles,
+    equal: memesElements,
   });
   protected readonly valeursHorsPlace = signal<ReadonlySet<string>>(new Set(), {
-    equal: memesCles,
+    equal: memesElements,
   });
   protected readonly reculsDesValeurs = signal<ReadonlyMap<string, number>>(new Map(), {
     equal: memesReculs,

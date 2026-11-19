@@ -233,6 +233,17 @@ describe('FpSheet', () => {
     expect(cellule(hote, 'E3').clientWidth).toBeGreaterThan(cellule(hote, 'C3').clientWidth);
   });
 
+  it('RET-08 · sur une toile large, le tableau prend toute la largeur de l atelier', () => {
+    poserLaFeuilleAvecCumulSur(1216);
+    const largeur = (element: Element | null | undefined): number =>
+      element?.getBoundingClientRect().width ?? 0;
+
+    expect(largeur(noeudOmbre(hote, 'tableau'))).toBeCloseTo(
+      largeur(hote.shadowRoot?.querySelector('.fp-sheet__barre')),
+      0,
+    );
+  });
+
   it('QF-6 · sur une toile étroite, resserre les colonnes plutôt que de faire défiler la grille', () => {
     poserLaFeuilleAvecCumulSur(700);
     const tableau = noeudOmbre(hote, 'tableau');

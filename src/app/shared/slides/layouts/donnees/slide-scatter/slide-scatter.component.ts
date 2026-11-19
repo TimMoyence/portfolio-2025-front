@@ -13,6 +13,7 @@ import {
   cadreDuTrace,
   cotesDuPoint,
   decale,
+  memesElements,
   memesReculs,
   mesurerAChaqueRendu,
   pasQuiDegage,
@@ -25,7 +26,15 @@ import {
 import { DonneesDeFigureComponent } from '../../../donnees-de-figure/donnees-de-figure.component';
 import { enFrancais } from '../../../../../../cours/runtime/core/texte/typographie';
 import { graduer, position, type Plage } from '../../axe-gradue';
+import { segmentDansLeCadre, type Droite } from '../../droite-dans-le-cadre';
 import { generateurDIdentifiants } from '../../identifiant-de-description';
+import type { PresentationServie } from '../../../../../../../contrat';
+
+type FigureServie = Extract<PresentationServie, { renderer: 'courbe' }>['props']['figure'];
+export type TangenteServie = NonNullable<FigureServie['tangents']>[number];
+type ZoneServie = NonNullable<FigureServie['zone']>;
+
+const DEMI_FENETRE_DE_LA_TANGENTE = 0.2;
 
 export interface SlideScatterPoint {
   readonly x: number;
@@ -33,9 +42,7 @@ export interface SlideScatterPoint {
   readonly label?: string;
 }
 
-export interface SlideScatterLine {
-  readonly slope: number;
-  readonly intercept: number;
+export interface SlideScatterLine extends Droite {
   readonly label?: string;
 }
 
@@ -45,56 +52,10 @@ interface PointPlace {
   readonly y: number;
 }
 
-interface SegmentTrace {
-  readonly x1: number;
-  readonly y1: number;
-  readonly x2: number;
-  readonly y2: number;
-}
-
 const prochainIdentifiantDeDescription = generateurDIdentifiants('slide-scatter');
 
 const TEXTES_FIXES =
-  '.slide-scatter__y-tick, .slide-scatter__y-label, .slide-scatter__x-label, .slide-scatter__mean-label';
-
-function memesRangs(un: ReadonlySet<number>, autre: ReadonlySet<number>): boolean {
-  return un.size === autre.size && [...un].every((rang) => autre.has(rang));
-}
-
-function abscissesDansLeCadre(
-  { slope, intercept }: SlideScatterLine,
-  [xMin, xMax]: Plage,
-  [yMin, yMax]: Plage,
-): Plage | null {
-  if (slope === 0) {
-    return intercept >= yMin && intercept <= yMax ? [xMin, xMax] : null;
-  }
-  const auPlancher = (yMin - intercept) / slope;
-  const auPlafond = (yMax - intercept) / slope;
-  const debut = Math.max(xMin, Math.min(auPlancher, auPlafond));
-  const fin = Math.min(xMax, Math.max(auPlancher, auPlafond));
-  return debut < fin ? [debut, fin] : null;
-}
-
-function segmentDansLeCadre(
-  droite: SlideScatterLine,
-  plageX: Plage,
-  plageY: Plage,
-): SegmentTrace | null {
-  const abscisses = abscissesDansLeCadre(droite, plageX, plageY);
-  if (abscisses === null) {
-    return null;
-  }
-  const [debut, fin] = abscisses;
-  const hauteur = (x: number): number =>
-    100 - position(droite.slope * x + droite.intercept, plageY);
-  return {
-    x1: position(debut, plageX),
-    y1: hauteur(debut),
-    x2: position(fin, plageX),
-    y2: hauteur(fin),
-  };
-}
+  '.slide-scatter__y-tick, .slide-scatter__y-label, .slide-scatter__x-label, .slide-scatter__mean-label, .slide-scatter__zone';
 
 @Component({
   selector: 'app-slide-scatter',
@@ -117,23 +78,62 @@ export class SlideScatterComponent {
   readonly points = input.required<readonly SlideScatterPoint[]>();
   readonly meanPoint = input<{ readonly x: number; readonly y: number } | null>(null);
   readonly line = input<SlideScatterLine | null>(null);
+  readonly courbe = input<readonly SlideScatterPoint[]>([]);
+  readonly tangentes = input<readonly TangenteServie[]>([]);
+  readonly zone = input<ZoneServie | null>(null);
 
   protected readonly graduationsX = computed(() => graduer(this.xRange()));
   protected readonly graduationsY = computed(() => graduer(this.yRange()));
   protected readonly idDescription = prochainIdentifiantDeDescription();
 
   protected readonly places = computed<readonly PointPlace[]>(() =>
-    this.points().map((point) => this.placer(point)),
+    [...this.points(), ...this.tangentes()].map(({ x, y, label }) =>
+      this.placer(label === undefined ? { x, y } : { x, y, label }),
+    ),
   );
+
+  protected readonly valeurs = computed(() =>
+    this.courbe().length > 0 ? this.courbe() : this.points(),
+  );
+
+  protected readonly trace = computed(() =>
+    this.courbe()
+      .map(({ x, y }) => `${position(x, this.xRange())},${100 - position(y, this.yRange())}`)
+      .join(' '),
+  );
+
+  protected readonly lignes = computed(() => {
+    const [debut, fin] = this.xRange();
+    const demiFenetre = (fin - debut) * DEMI_FENETRE_DE_LA_TANGENTE;
+    const droite = this.line();
+    return [
+      ...(droite === null
+        ? []
+        : [{ role: 'droite', segment: segmentDansLeCadre(droite, this.xRange(), this.yRange()) }]),
+      ...this.tangentes().map(({ x, y, slope }) => ({
+        role: 'tangente',
+        segment: segmentDansLeCadre(
+          { slope, intercept: y - slope * x },
+          this.xRange(),
+          this.yRange(),
+          [x - demiFenetre, x + demiFenetre],
+        ),
+      })),
+    ].flatMap(({ role, segment }) => (segment === null ? [] : [{ role, segment }]));
+  });
+
+  protected readonly permise = computed(() => {
+    const zone = this.zone();
+    if (zone === null) {
+      return null;
+    }
+    const debut = position(zone.from, this.xRange());
+    return { label: zone.label, debut, largeur: position(zone.to, this.xRange()) - debut };
+  });
 
   protected readonly moyen = computed<PointPlace | null>(() => {
     const point = this.meanPoint();
     return point === null ? null : this.placer(point);
-  });
-
-  protected readonly segment = computed<SegmentTrace | null>(() => {
-    const droite = this.line();
-    return droite === null ? null : segmentDansLeCadre(droite, this.xRange(), this.yRange());
   });
 
   protected readonly formater = enFrancais;
@@ -142,10 +142,10 @@ export class SlideScatterComponent {
     equal: memesReculs,
   });
   protected readonly etiquettesRetournees = signal<ReadonlySet<number>>(new Set(), {
-    equal: memesRangs,
+    equal: memesElements,
   });
   protected readonly etiquettesHorsPlace = signal<ReadonlySet<number>>(new Set(), {
-    equal: memesRangs,
+    equal: memesElements,
   });
   protected readonly pasDesGraduationsX = signal(1);
 

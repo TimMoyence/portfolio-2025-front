@@ -1422,7 +1422,7 @@
           "title": "Proportions et pourcentages — B1 — Tim Moyence",
           "description": "Formation B1 interactive : calculer une part et nommer son tout, multiplier deux parts, calculer un taux global, distinguer points et pourcentages, taux de marge et taux de marque.",
           "ogTitle": "Proportions et pourcentages — B1",
-          "ogDescription": "Un cours interactif pour se demander « parmi qui ? » devant chaque pourcentage et répartir un effectif au tableur, comme en CCF.",
+          "ogDescription": "Un cours interactif pour se demander « parmi qui ? » devant chaque pourcentage et répartir un effectif au tableur.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -1444,7 +1444,7 @@
           "title": "Proportions and percentages — B1 — Tim Moyence",
           "description": "Interactive B1 course: compute a share and name its whole, multiply two shares, compute an overall rate, tell percentage points from percentages, markup from margin rate.",
           "ogTitle": "Proportions and percentages — B1",
-          "ogDescription": "An interactive course to ask “out of whom?” before every percentage and split a headcount in a spreadsheet, as in the CCF exam.",
+          "ogDescription": "An interactive course to ask “out of whom?” before every percentage and split a headcount in a spreadsheet.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -1626,7 +1626,7 @@
           "title": "Séries à deux variables : ajuster et prévoir — B1 — Tim Moyence",
           "description": "Formation B1 interactive : nuage de points, droite des moindres carrés, coefficient de corrélation, prévision et seuil au tableur.",
           "ogTitle": "Séries à deux variables : ajuster et prévoir — B1",
-          "ogDescription": "Un cours interactif qui relie la publicité et les ventes d’un site web, puis prévoit par la droite d’ajustement, comme en CCF.",
+          "ogDescription": "Un cours interactif qui relie la publicité et les ventes d’un site web, puis prévoit par la droite d’ajustement.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -1648,7 +1648,7 @@
           "title": "Two-variable series: fit and forecast — B1 — Tim Moyence",
           "description": "Interactive B1 course: scatter plot, least-squares line, correlation coefficient, forecast and threshold in a spreadsheet.",
           "ogTitle": "Two-variable series: fit and forecast — B1",
-          "ogDescription": "An interactive course that links a website’s advertising and sales, then forecasts with the fitted line, as in the CCF exam.",
+          "ogDescription": "An interactive course that links a website’s advertising and sales, then forecasts with the fitted line.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -1694,7 +1694,7 @@
           "title": "Logique : conditions et contrôles — B1 — Tim Moyence",
           "description": "Formation B1 interactive : connecteurs, implication, lois de Morgan, quantificateurs et contrôle d’une règle au tableur.",
           "ogTitle": "Logique : conditions et contrôles — B1",
-          "ogDescription": "Un cours interactif qui écrit et contrôle les règles commerciales d’une entreprise, comme en CCF.",
+          "ogDescription": "Un cours interactif qui écrit et contrôle les règles commerciales d’une entreprise.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -1716,7 +1716,7 @@
           "title": "Logic: conditions and checks — B1 — Tim Moyence",
           "description": "Interactive B1 course: connectives, implication, De Morgan’s laws, quantifiers and checking a rule in a spreadsheet.",
           "ogTitle": "Logic: conditions and checks — B1",
-          "ogDescription": "An interactive course that writes and checks a company’s sales rules, as in the CCF exam.",
+          "ogDescription": "An interactive course that writes and checks a company’s sales rules.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -1830,7 +1830,7 @@
           "title": "Séries statistiques : résumer, relier, prévoir — B2 — Tim Moyence",
           "description": "Formation B2 interactive : résumer une série, relier deux variables par un nuage de points et un ajustement affine, prévoir au tableur.",
           "ogTitle": "Séries statistiques : résumer, relier, prévoir — B2",
-          "ogDescription": "Un cours interactif pour résumer une série, lire une corrélation et prévoir au tableur, comme en CCF.",
+          "ogDescription": "Un cours interactif pour résumer une série, lire une corrélation et prévoir au tableur.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -1852,7 +1852,7 @@
           "title": "Statistical series: summarise, relate, forecast — B2 — Tim Moyence",
           "description": "Interactive B2 course: summarise a series, relate two variables with a scatter plot and a linear fit, forecast in a spreadsheet.",
           "ogTitle": "Statistical series: summarise, relate, forecast — B2",
-          "ogDescription": "An interactive course to summarise a series, read a correlation and forecast in a spreadsheet, as in the CCF exam.",
+          "ogDescription": "An interactive course to summarise a series, read a correlation and forecast in a spreadsheet.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -1898,7 +1898,7 @@
           "title": "Logique : écrire et contrôler une règle — B2 — Tim Moyence",
           "description": "Formation B2 interactive : traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan et la contrôler au tableur.",
           "ogTitle": "Logique : écrire et contrôler une règle — B2",
-          "ogDescription": "Un cours interactif pour écrire une règle, la nier, dire « tous » ou « au moins un » et la contrôler au tableur, comme en CCF.",
+          "ogDescription": "Un cours interactif pour écrire une règle, la nier, dire « tous » ou « au moins un » et la contrôler au tableur.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -1920,7 +1920,7 @@
           "title": "Logic: write and check a rule — B2 — Tim Moyence",
           "description": "Interactive B2 course: express a business rule with and, or, not, if… then, negate it with De Morgan’s laws and check it in a spreadsheet.",
           "ogTitle": "Logic: write and check a rule — B2",
-          "ogDescription": "An interactive course to write a rule, negate it, say “all” or “at least one” and check it in a spreadsheet, as in the CCF exam.",
+          "ogDescription": "An interactive course to write a rule, negate it, say “all” or “at least one” and check it in a spreadsheet.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -1966,7 +1966,7 @@
           "title": "Suites : modéliser une évolution régulière — B2 — Tim Moyence",
           "description": "Formation B2 interactive : modéliser une évolution par une suite arithmétique ou géométrique, trouver un rang de seuil et cumuler des termes au tableur.",
           "ogTitle": "Suites : modéliser une évolution régulière — B2",
-          "ogDescription": "Un cours interactif pour comparer deux hypothèses de croissance, trouver quand un seuil est franchi et cumuler des termes au tableur, comme en CCF.",
+          "ogDescription": "Un cours interactif pour comparer deux hypothèses de croissance, trouver quand un seuil est franchi et cumuler des termes au tableur.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -1988,7 +1988,7 @@
           "title": "Sequences: model a steady change — B2 — Tim Moyence",
           "description": "Interactive B2 course: model a change with an arithmetic or geometric sequence, find the rank where a threshold is crossed and sum terms in a spreadsheet.",
           "ogTitle": "Sequences: model a steady change — B2",
-          "ogDescription": "An interactive course to compare two growth assumptions, find when a threshold is crossed and sum terms in a spreadsheet, as in the CCF exam.",
+          "ogDescription": "An interactive course to compare two growth assumptions, find when a threshold is crossed and sum terms in a spreadsheet.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -2034,7 +2034,7 @@
           "title": "Mathématiques financières : placer, emprunter — B2 — Tim Moyence",
           "description": "Formation B2 interactive : valeur acquise, valeur actuelle, suites d’annuités, tableau d’amortissement et coût du crédit, avec VPM au tableur.",
           "ogTitle": "Mathématiques financières : placer, emprunter — B2",
-          "ogDescription": "Un cours interactif pour chiffrer un placement, une épargne régulière et un emprunt, puis construire son tableau d’amortissement au tableur, comme en CCF.",
+          "ogDescription": "Un cours interactif pour chiffrer un placement, une épargne régulière et un emprunt, puis construire son tableau d’amortissement au tableur.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -2056,7 +2056,7 @@
           "title": "Financial mathematics: invest, borrow — B2 — Tim Moyence",
           "description": "Interactive B2 course: future value, present value, series of payments, loan amortisation schedule and cost of credit, with PMT in a spreadsheet.",
           "ogTitle": "Financial mathematics: invest, borrow — B2",
-          "ogDescription": "An interactive course to price an investment, regular savings and a loan, then build its amortisation schedule in a spreadsheet, as in the CCF exam.",
+          "ogDescription": "An interactive course to price an investment, regular savings and a loan, then build its amortisation schedule in a spreadsheet.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -2102,7 +2102,7 @@
           "title": "Exponentielle et logarithme : croître, viser, ajuster — B2 — Tim Moyence",
           "description": "Formation B2 interactive : modèles exponentiels et leur taux, seuils par le logarithme népérien, ajustement par z = ln y, avec EXP et LN au tableur.",
           "ogTitle": "Exponentielle et logarithme : croître, viser, ajuster — B2",
-          "ogDescription": "Un cours interactif pour prévoir une croissance, trouver le moment où un seuil est franchi et ajuster une demande par un modèle exponentiel au tableur, comme en CCF.",
+          "ogDescription": "Un cours interactif pour prévoir une croissance, trouver le moment où un seuil est franchi et ajuster une demande par un modèle exponentiel au tableur.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -2124,7 +2124,7 @@
           "title": "Exponential and logarithm: grow, target, fit — B2 — Tim Moyence",
           "description": "Interactive B2 course: exponential models and their rate, thresholds with the natural logarithm, fitting with z = ln y, using EXP and LN in a spreadsheet.",
           "ogTitle": "Exponential and logarithm: grow, target, fit — B2",
-          "ogDescription": "An interactive course to forecast growth, find when a threshold is crossed and fit demand with an exponential model in a spreadsheet, as in the CCF exam.",
+          "ogDescription": "An interactive course to forecast growth, find when a threshold is crossed and fit demand with an exponential model in a spreadsheet.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -2170,7 +2170,7 @@
           "title": "Dérivée et optimisation : la pente, le sens, le sommet — B2 — Tim Moyence",
           "description": "Formation B2 interactive : dériver un polynôme et a e^(kx), étudier le signe de la dérivée, dresser un tableau de variation et trouver un prix optimal, même sous contrainte.",
           "ogTitle": "Dérivée et optimisation : la pente, le sens, le sommet — B2",
-          "ogDescription": "Un cours interactif qui revoit d’abord l’exponentielle et la boucle « Tant que » par des images du quotidien, puis cherche le meilleur prix d’un produit, comme en CCF.",
+          "ogDescription": "Un cours interactif qui revoit d’abord l’exponentielle et la boucle « Tant que » par des images du quotidien, puis cherche le meilleur prix d’un produit.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -2182,7 +2182,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H15M",
+            "duration": "PT2H10M",
             "courseMode": "online",
             "inLanguage": "fr",
             "url": "https://asilidesign.fr/fr/formations/b2-07-derivee-optimisation"
@@ -2192,7 +2192,7 @@
           "title": "Derivative and optimisation: slope, direction, peak — B2 — Tim Moyence",
           "description": "Interactive B2 course: differentiate a polynomial and a e^(kx), study the sign of the derivative, build a variation table and find an optimal price, even under a constraint.",
           "ogTitle": "Derivative and optimisation: slope, direction, peak — B2",
-          "ogDescription": "An interactive course that first revisits the exponential and the while loop with everyday pictures, then looks for the best price of a product, as in the CCF exam.",
+          "ogDescription": "An interactive course that first revisits the exponential and the while loop with everyday pictures, then looks for the best price of a product.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -2204,7 +2204,7 @@
               "url": "https://asilidesign.fr"
             },
             "isAccessibleForFree": true,
-            "duration": "PT2H15M",
+            "duration": "PT2H10M",
             "courseMode": "online",
             "inLanguage": "en",
             "url": "https://asilidesign.fr/en/formations/b2-07-derivee-optimisation"
@@ -2238,7 +2238,7 @@
           "title": "Dérivées composées et fonctions économiques — B2 — Tim Moyence",
           "description": "Formation B2 interactive : dérivée d’un produit, d’un quotient, de e^u et ln u, coûts, marché et résolution de f(x) = k.",
           "ogTitle": "Dérivées composées et fonctions économiques — B2",
-          "ogDescription": "Un cours interactif qui dérive les fonctions d’un dossier d’entreprise pour lire ses coûts et son prix d’équilibre, comme en CCF.",
+          "ogDescription": "Un cours interactif qui dérive les fonctions d’un dossier d’entreprise pour lire ses coûts et son prix d’équilibre.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -2260,7 +2260,7 @@
           "title": "Composite derivatives and economic functions — B2 — Tim Moyence",
           "description": "Interactive B2 course: derivative of a product, a quotient, e^u and ln u, costs, market and solving f(x) = k.",
           "ogTitle": "Composite derivatives and economic functions — B2",
-          "ogDescription": "An interactive course that differentiates the functions of a company file to read its costs and its equilibrium price, as in the CCF exam.",
+          "ogDescription": "An interactive course that differentiates the functions of a company file to read its costs and its equilibrium price.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -2306,7 +2306,7 @@
           "title": "Probabilités conditionnelles — B2 — Tim Moyence",
           "description": "Formation B2 interactive : arbre pondéré, tableau croisé, probabilités totales, P_B(A) et indépendance.",
           "ogTitle": "Probabilités conditionnelles — B2",
-          "ogDescription": "Un cours interactif qui lit les clients d’une boutique par un arbre pondéré et un tableau croisé, comme en CCF.",
+          "ogDescription": "Un cours interactif qui lit les clients d’une boutique par un arbre pondéré et un tableau croisé.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",
@@ -2328,7 +2328,7 @@
           "title": "Conditional probability — B2 — Tim Moyence",
           "description": "Interactive B2 course: weighted tree, cross table, total probability, P_B(A) and independence.",
           "ogTitle": "Conditional probability — B2",
-          "ogDescription": "An interactive course that reads a shop’s customers through a weighted tree and a cross table, as in the CCF exam.",
+          "ogDescription": "An interactive course that reads a shop’s customers through a weighted tree and a cross table.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "Course",

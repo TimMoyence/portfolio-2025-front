@@ -3,13 +3,37 @@
 
 $trace-minimal: 12rem;
 
+@mixin surtitre($teinte) {
+  margin: 0;
+  color: $teinte;
+  @include mono.police;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@mixin intertitre {
+  margin: 0;
+  color: var(--ink, #0c0902);
+  font-size: clamp(1.1rem, 1.9cqi, 1.45rem);
+  line-height: 1.2;
+}
+
+@mixin texte-de-bloc {
+  margin: 0;
+  color: var(--ink-soft, #3c3529);
+  font-size: clamp(0.95rem, 1.35cqi, 1.1rem);
+  line-height: 1.5;
+}
+
 @mixin cadre-de-toile {
   display: flex;
   flex-direction: column;
   justify-content: safe center;
   gap: 0.75rem;
   width: 100%;
-  min-height: 100cqh;
+  min-height: var(--slide-hauteur-du-cadre, 100cqh);
   padding: var(--slide-marge-bloc, 2rem) var(--slide-marge-ligne, 3.5rem);
 }
 
@@ -18,7 +42,7 @@ $trace-minimal: 12rem;
   align-content: center;
   gap: $ecart;
   width: min(100%, 74rem);
-  min-height: 100cqh;
+  min-height: var(--slide-hauteur-du-cadre, 100cqh);
   margin: 0 auto;
   padding: var(--slide-marge-bloc, clamp(4rem, 8cqi, 7rem))
     var(--slide-marge-ligne, clamp(1.25rem, 6cqi, 7rem));

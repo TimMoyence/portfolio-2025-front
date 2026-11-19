@@ -3,6 +3,7 @@ import {
   cadreFixe,
   cadresParRang,
   cotesDuPoint,
+  memesElements,
   pasQuiDegage,
   seGenent,
   touchent,
@@ -90,5 +91,12 @@ describe('garder dans le tracé', () => {
     expect(enFace?.top).toBeCloseTo((dessus?.top ?? 0) + decalage, 5);
     expect(enFaceDabord).toEqual(enFace);
     expect(ici).toEqual(dessus);
+  });
+
+  it('deux ensembles de rangs ou de clés sont les mêmes quand ils portent les mêmes éléments, dans n importe quel ordre', () => {
+    expect(memesElements(new Set([1, 2]), new Set([2, 1]))).toBeTrue();
+    expect(memesElements(new Set<number>(), new Set<number>())).toBeTrue();
+    expect(memesElements(new Set(['a']), new Set(['a', 'b']))).toBeFalse();
+    expect(memesElements(new Set(['a', 'c']), new Set(['a', 'b']))).toBeFalse();
   });
 });

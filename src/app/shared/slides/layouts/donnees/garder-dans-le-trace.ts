@@ -60,6 +60,13 @@ export function memesReculs<Cle>(
   return un.size === autre.size && [...un].every(([cle, recul]) => autre.get(cle) === recul);
 }
 
+export function memesElements<Element>(
+  un: ReadonlySet<Element>,
+  autre: ReadonlySet<Element>,
+): boolean {
+  return un.size === autre.size && [...un].every((element) => autre.has(element));
+}
+
 export function mesurerAChaqueRendu(
   rendu: HTMLElement,
   mesurer: () => void,

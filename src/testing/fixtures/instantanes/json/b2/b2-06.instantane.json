@@ -1,6 +1,6 @@
 {
   "graine": 0,
-  "empreinte": "176691e8d15ab722635c6891045530ef517183733efc179c89c679492888a41d",
+  "empreinte": "5946832cdd6310963b11dd786e002375428c823bfa91eb64f66072a79dfe43be",
   "sujet": {
     "id": "b2-06-exponentielle-logarithme",
     "titre": "Exponentielle et logarithme",
@@ -141,7 +141,7 @@
               "props": {
                 "title": "Ce que vous savez déjà",
                 "subtitle": "Trois acquis qui servent à croître, viser et ajuster.",
-                "note": "Les fiches mémo du B2-02, du B2-04 et du B2-05 sont dans votre classeur de CCF.",
+                "note": "Les fiches mémo du B2-02, du B2-04 et du B2-05 reprennent ces rappels.",
                 "columns": [
                   {
                     "label": "B2-04 · Suites",
@@ -439,7 +439,7 @@
                   {
                     "kind": "method",
                     "title": "Au tableur : EXP et des paramètres figés",
-                    "text": "EXP(nombre) calcule e à la puissance nombre. a et k sont rangés dans deux cellules, figées par des $, pour recopier la formule vers le bas. Au CCF : lire a et k dans l’énoncé avant d’écrire la formule.",
+                    "text": "EXP(nombre) calcule e à la puissance nombre. a et k sont rangés dans deux cellules, figées par des $, pour recopier la formule vers le bas. Avant d’écrire la formule, lire a et k dans l’énoncé.",
                     "steps": [
                       "x en A2 ; a en H1 ; k en H2.",
                       "En B2 : =$H$1*EXP($H$2*A2), puis recopier vers le bas.",
@@ -968,8 +968,8 @@
                     ]
                   },
                   {
-                    "kind": "exam",
-                    "title": "Au CCF : même méthode pour a e^(kx) ≥ s",
+                    "kind": "piege",
+                    "title": "Même méthode pour a e^(kx) ≥ s",
                     "text": "a e^(kx) ≥ s ⇔ e^(kx) ≥ s ÷ a ⇔ kx ≥ ln(s ÷ a), puis on divise par k, en changeant le sens si k < 0. Pièges : diviser s par q au lieu de passer par ln ; garder le sens en divisant par un nombre négatif ; arrondir le seuil à l’entier inférieur.",
                     "steps": [
                       "Isoler la puissance ou l’exponentielle.",
@@ -1469,7 +1469,7 @@
                   {
                     "kind": "definition",
                     "title": "Le changement de variable z = ln y",
-                    "text": "Si y = a e^(kx), alors z = ln y vaut kx + ln a : les points (x ; z) sont alignés. On ajuste donc z en x par la méthode des moindres carrés du B2-02, z = αx + β, puis on revient à y en exponentiant : y = e^β × e^(αx). Au CCF, le changement de variable est toujours donné.",
+                    "text": "Si y = a e^(kx), alors z = ln y vaut kx + ln a : les points (x ; z) sont alignés. On ajuste donc z en x par la méthode des moindres carrés du B2-02, z = αx + β, puis on revient à y en exponentiant : y = e^β × e^(αx). L’énoncé donne toujours le changement de variable.",
                     "formula": "z = ln y · z = αx + β · y = e^β × e^(αx) : a = e^β et k = α"
                   },
                   {
@@ -1484,8 +1484,8 @@
                     ]
                   },
                   {
-                    "kind": "exam",
-                    "title": "Au CCF : rédiger le retour au modèle",
+                    "kind": "piege",
+                    "title": "Rédiger le retour au modèle",
                     "text": "Le sujet donne z = ln y, demande la droite de z en x au tableur ou à la calculatrice, puis le modèle en y. Écrire les arrondis demandés, puis contrôler sur un relevé.",
                     "steps": [
                       "Écrire z = αx + β avec les arrondis.",
@@ -1881,7 +1881,7 @@
               "renderer": "grid",
               "props": {
                 "title": "Fiche mémo : exponentielle et logarithme",
-                "subtitle": "À garder pour le CCF : chaque carte part d’une question et donne la méthode et son piège.",
+                "subtitle": "Chaque carte part d’une question et donne la méthode et son piège.",
                 "items": [
                   {
                     "title": "Fonction exponentielle",
@@ -1927,12 +1927,6 @@
                     "title": "Tableur",
                     "description": "Quelles fonctions ?",
                     "back": "EXP, LN, PENTE(z ; x), ORDONNEE.ORIGINE(z ; x). Paramètres figés par des $ avant de recopier."
-                  },
-                  {
-                    "title": "Référentiel du BTS CG",
-                    "description": "Le programme de mathématiques et l’épreuve E3.",
-                    "href": "https://enqdip.sup.adc.education.fr/bts/referentiel/BTS_ComptabiliteGestion.pdf",
-                    "external": true
                   }
                 ],
                 "imprimable": true
@@ -2128,7 +2122,7 @@
             ]
           }
         },
-        "notes": "• Rappel rapide : deux votes non notés, un par cours.\n• Dire où chaque acquis resservira : la raison devient le coefficient e^k, PENTE ajuste z = ln y.\n• Question 1 en vote individuel, puis question 2, sans débat entre les deux.\n• La révélation s’ouvre après la question 2 : les deux corrections se commentent ensemble.\n• Papier : vote à main levée sur chaque question.",
+        "notes": "• Dire où chaque acquis resservira : la raison devient le coefficient e^k, PENTE ajuste z = ln y.",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [
@@ -2204,7 +2198,7 @@
               "props": {
                 "title": "Ce que vous savez déjà",
                 "subtitle": "Trois acquis qui servent à croître, viser et ajuster.",
-                "note": "Les fiches mémo du B2-02, du B2-04 et du B2-05 sont dans votre classeur de CCF.",
+                "note": "Les fiches mémo du B2-02, du B2-04 et du B2-05 reprennent ces rappels.",
                 "columns": [
                   {
                     "label": "B2-04 · Suites",
@@ -2245,7 +2239,7 @@
             }
           }
         },
-        "notes": "• 2 min : lire la dernière ligne de chaque colonne, c’est le fil du cours.\n• Question : « Lequel de ces acquis devient une fonction aujourd’hui ? » La puissance qⁿ, prolongée à tout x.\n• Ne pas refaire les cours : renvoyer aux fiches mémo du classeur de CCF.",
+        "notes": "• 2 min : lire la dernière ligne de chaque colonne, c’est le fil du cours.\n• Question : « Lequel de ces acquis devient une fonction aujourd’hui ? » La puissance qⁿ, prolongée à tout x.\n• Ne pas refaire les cours : renvoyer à leurs fiches mémo.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -2403,7 +2397,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Faire lire le piège du bas : e^0,4 n’est pas e × 0,1 × 4.",
+        "notes": "• Faire lire le piège du bas : e^0,4 n’est pas e × 0,1 × 4.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -2466,7 +2460,7 @@
             }
           }
         },
-        "notes": "• 2 min après l’illustration ; la trace écrite est imprimée dans le livret : on lit et on commente, on ne recopie pas.\n• Avant l’exemple, demander : « Une suite géométrique a-t-elle une valeur au rang 2,5 ? » Non : la fonction exponentielle comble les trous.\n• Relier au B2-04 et au B2-05 : qⁿ et (1 + t)ⁿ multiplient, ils n’ajoutent pas.\n• Faire trouver la touche eˣ sur les calculatrices de la salle.",
+        "notes": "• Avant l’exemple, demander : « Une suite géométrique a-t-elle une valeur au rang 2,5 ? » Non : la fonction exponentielle comble les trous.\n• Relier au B2-04 et au B2-05 : qⁿ et (1 + t)ⁿ multiplient, ils n’ajoutent pas.\n• Faire trouver la touche eˣ sur les calculatrices de la salle.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -2501,7 +2495,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « Que lit-on en 0, et que dit le signe de k ? » La valeur de départ et le sens de variation.",
+        "notes": "• Question : « Que lit-on en 0, et que dit le signe de k ? » La valeur de départ et le sens de variation.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -2544,7 +2538,7 @@
                   {
                     "kind": "method",
                     "title": "Au tableur : EXP et des paramètres figés",
-                    "text": "EXP(nombre) calcule e à la puissance nombre. a et k sont rangés dans deux cellules, figées par des $, pour recopier la formule vers le bas. Au CCF : lire a et k dans l’énoncé avant d’écrire la formule.",
+                    "text": "EXP(nombre) calcule e à la puissance nombre. a et k sont rangés dans deux cellules, figées par des $, pour recopier la formule vers le bas. Avant d’écrire la formule, lire a et k dans l’énoncé.",
                     "steps": [
                       "x en A2 ; a en H1 ; k en H2.",
                       "En B2 : =$H$1*EXP($H$2*A2), puis recopier vers le bas.",
@@ -2564,7 +2558,7 @@
             }
           }
         },
-        "notes": "• 2 min après l’illustration, enchaînées sur la page 1 : 6 min pour les deux pages et leurs illustrations.\n• Faire comparer k = 0,02 et le taux 2,02 % : proches, mais pas égaux ; l’écart grandit avec k.\n• Faire taper la formule sans $ sur un poste volontaire, puis la recopier : la colonne devient fausse, l’erreur fixe la règle.",
+        "notes": "• Faire comparer k = 0,02 et le taux 2,02 % : proches, mais pas égaux ; l’écart grandit avec k.\n• Faire taper la formule sans $ sur un poste volontaire, puis la recopier : la colonne devient fausse, l’erreur fixe la règle.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -2624,7 +2618,7 @@
           },
           "etayage": 0
         },
-        "notes": "• Chacun répond sous chaque étape, puis la correction se dévoile étape par étape sur ce même écran.\n• Papier : réponses sous chaque étape du livret.\n• S’arrêter sur l’écart entre k = 0,05 et le taux 5,13 % (étape 3) et sur le signe de k (étape 4).\n• Transition : « À vous, sur les ventes en ligne de la gamme Sillage : exercice 1. »",
+        "notes": "• S’arrêter sur l’écart entre k = 0,05 et le taux 5,13 % (étape 3) et sur le signe de k (étape 4).\n• Transition : « À vous, sur les ventes en ligne de la gamme Sillage : exercice 1. »",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -2723,7 +2717,7 @@
           ]
         },
         "renvoi": "B2-06-A1-05-DOSSIER",
-        "notes": "• Temps : réflexion 2 min · travail 6 min · correction 2 min\n• Réflexion : écrire a et k du modèle, puis l’exposant à calculer, avant la calculatrice.\n• Pièges : e × k × x ; 1,06⁵ au lieu de e^0,3 ; k pris pour le taux ; une exponentielle qui croîtrait toujours.\n• Papier : exercice 1 du livret.\n• Corriger question par question, en commençant par la moins réussie (score sous chaque correction).\n• Transition : « Faisons calculer tous les mois par le tableur : exercice 2. »",
+        "notes": "• Réflexion : écrire a et k du modèle, puis l’exposant à calculer, avant la calculatrice.\n• Pièges : e × k × x ; 1,06⁵ au lieu de e^0,3 ; k pris pour le taux ; une exponentielle qui croîtrait toujours.\n• Papier : exercice 1 du livret.\n• Transition : « Faisons calculer tous les mois par le tableur : exercice 2. »",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [
@@ -2955,7 +2949,7 @@
             }
           }
         },
-        "notes": "• Temps : réflexion 1 min · travail 5 min · correction 2 min\n• Réflexion : écrire sur papier la formule de B2, puis ce qu’elle devient en B3 une fois recopiée.\n• Erreurs à chercher : EXP(1)*k*x ; PUISSANCE(1+k;x) ; E1 sans $ : la colonne tombe à 0 ; G1 sans $ ou A2 figé à tort : elle reste à 400 ; =B3/B2 pour le taux.\n• Papier : formules écrites sur la copie, puis les valeurs à la calculatrice.\n• Projeter la feuille d’un poste volontaire, relire la formule de B2 et montrer les $ qui la font recopier.\n• Transition : jalon 1, puis pause de 15 minutes.",
+        "notes": "• Réflexion : écrire sur papier la formule de B2, puis ce qu’elle devient en B3 une fois recopiée.\n• Erreurs à chercher : EXP(1)*k*x ; PUISSANCE(1+k;x) ; E1 sans $ : la colonne tombe à 0 ; G1 sans $ ou A2 figé à tort : elle reste à 400 ; =B3/B2 pour le taux.\n• Papier : formules écrites sur la copie, puis les valeurs à la calculatrice.\n• Projeter la feuille d’un poste volontaire, relire la formule de B2 et montrer les $ qui la font recopier.",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [],
@@ -3167,7 +3161,7 @@
             }
           }
         },
-        "notes": "• 30 s de vote anonyme.\n• Si plus de 30 % « Perdu » : reprendre la trace écrite A1-08 sur le taux e^k − 1 après la pause.\n• Pause de 15 minutes, hors durée programmée.",
+        "notes": "• Si plus de 30 % « Perdu » : reprendre la trace écrite A1-08 sur le taux e^k − 1 après la pause.",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -3208,7 +3202,7 @@
           }
         },
         "renvoi": "B2-06-A1-05-DOSSIER",
-        "notes": "• Temps « réfléchir » de la notion 2 : 3 min d’écriture individuelle, puis lire trois réponses au pupitre.\n• Ne rien trancher : la trace écrite suivante répond.\n• Relance : « Pour défaire × 5, on divise. Pour défaire une puissance de e, on fait quoi ? »\n• Papier : cadre de réponse du livret.",
+        "notes": "• Ne rien trancher : la trace écrite suivante répond.\n• Relance : « Pour défaire × 5, on divise. Pour défaire une puissance de e, on fait quoi ? »\n• Papier : cadre de réponse du livret.",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -3250,7 +3244,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « × 4 a pour inverse ÷ 4 ; quel est l’inverse de eˣ ? » Laisser venir ln.",
+        "notes": "• Question : « × 4 a pour inverse ÷ 4 ; quel est l’inverse de eˣ ? » Laisser venir ln.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -3285,7 +3279,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « Que devient × 2 quand on passe au ln ? » Une addition de 0,693.",
+        "notes": "• Question : « Que devient × 2 quand on passe au ln ? » Une addition de 0,693.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -3384,7 +3378,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « Comment trouver le rang sans tâtonner ? » On passe l’exposant devant ln.",
+        "notes": "• Question : « Comment trouver le rang sans tâtonner ? » On passe l’exposant devant ln.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -3419,7 +3413,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « Quel est le signe de ln 0,7 ? » Négatif : diviser par ln 0,7 change le sens.",
+        "notes": "• Question : « Quel est le signe de ln 0,7 ? » Négatif : diviser par ln 0,7 change le sens.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -3460,8 +3454,8 @@
                     ]
                   },
                   {
-                    "kind": "exam",
-                    "title": "Au CCF : même méthode pour a e^(kx) ≥ s",
+                    "kind": "piege",
+                    "title": "Même méthode pour a e^(kx) ≥ s",
                     "text": "a e^(kx) ≥ s ⇔ e^(kx) ≥ s ÷ a ⇔ kx ≥ ln(s ÷ a), puis on divise par k, en changeant le sens si k < 0. Pièges : diviser s par q au lieu de passer par ln ; garder le sens en divisant par un nombre négatif ; arrondir le seuil à l’entier inférieur.",
                     "steps": [
                       "Isoler la puissance ou l’exponentielle.",
@@ -3542,7 +3536,7 @@
           },
           "etayage": 0
         },
-        "notes": "• Chacun répond sous chaque étape, puis la correction se dévoile étape par étape sur ce même écran.\n• Papier : réponses sous chaque étape du livret.\n• S’arrêter sur le premier entier (étape 3) et sur le sens qui change (étape 4).\n• Transition : « À vous, sur la capacité de l’atelier : exercice 3. »",
+        "notes": "• S’arrêter sur le premier entier (étape 3) et sur le sens qui change (étape 4).\n• Transition : « À vous, sur la capacité de l’atelier : exercice 3. »",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -3641,7 +3635,7 @@
           ]
         },
         "renvoi": "B2-06-A1-05-DOSSIER",
-        "notes": "• Temps : réflexion 2 min · travail 7 min · correction 2 min\n• Réflexion : pour chaque question, écrire l’inéquation, puis le signe du nombre par lequel on divisera.\n• Pièges : diviser au lieu de passer par ln ; garder le sens avec ln 0,8 ; arrondir le seuil en dessous.\n• Papier : exercice 3 du livret.\n• Corriger question par question, en commençant par la moins réussie.\n• Transition : « Et pour d’autres objectifs que 1 000 sacs ? Le tableur : exercice 4. »",
+        "notes": "• Réflexion : pour chaque question, écrire l’inéquation, puis le signe du nombre par lequel on divisera.\n• Pièges : diviser au lieu de passer par ln ; garder le sens avec ln 0,8 ; arrondir le seuil en dessous.\n• Papier : exercice 3 du livret.\n• Transition : « Et pour d’autres objectifs que 1 000 sacs ? Le tableur : exercice 4. »",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [
@@ -3869,7 +3863,7 @@
             }
           }
         },
-        "notes": "• Temps : réflexion 2 min · travail 6 min · correction 2 min\n• Réflexion : écrire en français les deux étapes de la résolution de 400e^(0,06x) = s, puis les formules de B2 et C2.\n• Erreurs à chercher : =A2/$E$1 sans LN ; =LN(A2)/LN($E$1) ; E1 ou G1 sans $ : la recopie affiche une erreur.\n• Papier : formules écrites sur la copie, puis les valeurs à la calculatrice.\n• Projeter la feuille d’un poste volontaire ; comparer la ligne des 1 000 sacs à la réponse de l’exercice 3.\n• Transition : jalon 2.",
+        "notes": "• Réflexion : écrire en français les deux étapes de la résolution de 400e^(0,06x) = s, puis les formules de B2 et C2.\n• Erreurs à chercher : =A2/$E$1 sans LN ; =LN(A2)/LN($E$1) ; E1 ou G1 sans $ : la recopie affiche une erreur.\n• Papier : formules écrites sur la copie, puis les valeurs à la calculatrice.\n• Projeter la feuille d’un poste volontaire ; comparer la ligne des 1 000 sacs à la réponse de l’exercice 3.\n• Transition : jalon 2.",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [],
@@ -4068,7 +4062,7 @@
             }
           }
         },
-        "notes": "• 30 s de vote anonyme.\n• Si plus de 30 % « Perdu » : reprendre l’exemple 1,5ⁿ ≥ 10 de la trace écrite A2-03.",
+        "notes": "• Si plus de 30 % « Perdu » : reprendre l’exemple 1,5ⁿ ≥ 10 de la trace écrite A2-03.",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -4161,7 +4155,7 @@
             ]
           }
         },
-        "notes": "• Temps « réfléchir » de la notion 3 : votes non notés.\n• Question 1 en vote individuel, puis question 2, sans débat entre les deux.\n• La révélation s’ouvre après la question 2 : les deux corrections se commentent ensemble.\n• Papier : vote à main levée sur chaque question.",
+        "notes": "",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [
@@ -4248,7 +4242,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « Comment voir si on ajoute ou si on multiplie ? » On calcule les rapports successifs.",
+        "notes": "• Question : « Comment voir si on ajoute ou si on multiplie ? » On calcule les rapports successifs.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -4311,7 +4305,7 @@
             }
           }
         },
-        "notes": "• 2 min après l’illustration ; la trace écrite est imprimée dans le livret : on lit et on commente, on ne recopie pas.\n• Faire calculer au tableau deux rapports successifs du graphique : 860 ÷ 1 100 et 670 ÷ 860.\n• Lien au dossier : « La demande des boutiques : modèle affine ou exponentiel ? »",
+        "notes": "• Faire calculer au tableau deux rapports successifs du graphique : 860 ÷ 1 100 et 670 ÷ 860.\n• Lien au dossier : « La demande des boutiques : modèle affine ou exponentiel ? »",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -4346,7 +4340,7 @@
             }
           }
         },
-        "notes": "• 1 min, avant la trace écrite : faire décrire l’image, la page suivante en donne la règle.\n• Question : « Comment rendre droite une série qui courbe ? » On passe aux logarithmes.",
+        "notes": "• Question : « Comment rendre droite une série qui courbe ? » On passe aux logarithmes.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -4373,7 +4367,7 @@
                   {
                     "kind": "definition",
                     "title": "Le changement de variable z = ln y",
-                    "text": "Si y = a e^(kx), alors z = ln y vaut kx + ln a : les points (x ; z) sont alignés. On ajuste donc z en x par la méthode des moindres carrés du B2-02, z = αx + β, puis on revient à y en exponentiant : y = e^β × e^(αx). Au CCF, le changement de variable est toujours donné.",
+                    "text": "Si y = a e^(kx), alors z = ln y vaut kx + ln a : les points (x ; z) sont alignés. On ajuste donc z en x par la méthode des moindres carrés du B2-02, z = αx + β, puis on revient à y en exponentiant : y = e^β × e^(αx). L’énoncé donne toujours le changement de variable.",
                     "formula": "z = ln y · z = αx + β · y = e^β × e^(αx) : a = e^β et k = α"
                   },
                   {
@@ -4388,8 +4382,8 @@
                     ]
                   },
                   {
-                    "kind": "exam",
-                    "title": "Au CCF : rédiger le retour au modèle",
+                    "kind": "piege",
+                    "title": "Rédiger le retour au modèle",
                     "text": "Le sujet donne z = ln y, demande la droite de z en x au tableur ou à la calculatrice, puis le modèle en y. Écrire les arrondis demandés, puis contrôler sur un relevé.",
                     "steps": [
                       "Écrire z = αx + β avec les arrondis.",
@@ -4409,7 +4403,7 @@
             }
           }
         },
-        "notes": "• 2 min après l’illustration, enchaînées sur la page 1 : 6 min pour les deux pages et leurs illustrations.\n• Relier au B2-02 : la droite des moindres carrés est la même ; seules les ordonnées changent, z au lieu de y.\n• Question : « β est-il le coefficient a ? » Non : a = e^β.",
+        "notes": "• Relier au B2-02 : la droite des moindres carrés est la même ; seules les ordonnées changent, z au lieu de y.\n• Question : « β est-il le coefficient a ? » Non : a = e^β.",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -4469,7 +4463,7 @@
           },
           "etayage": 0
         },
-        "notes": "• Chacun répond sous chaque étape, puis la correction se dévoile étape par étape sur ce même écran.\n• Papier : réponses sous chaque étape du livret.\n• S’arrêter sur le retour au modèle (étape 4) : a = e^β, pas β.\n• Transition : « À vous, sur la demande des boutiques : exercice 5. »",
+        "notes": "• S’arrêter sur le retour au modèle (étape 4) : a = e^β, pas β.\n• Transition : « À vous, sur la demande des boutiques : exercice 5. »",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -4640,7 +4634,7 @@
             }
           }
         },
-        "notes": "• Temps : réflexion 1 min · travail 5 min · correction 2 min\n• Réflexion : vérifier sur la calculatrice que ln 1 100 est un peu au-dessus de 7.\n• Piège : la touche log, qui donne des valeurs autour de 3.\n• Papier : tableau du livret, rempli à la main, au millième.\n• Projeter le tableau juste ; faire remarquer que z baisse d’environ 0,25 à chaque hausse de 5 €.\n• Transition : « Une droite pour z : exercice 6. »",
+        "notes": "• Réflexion : vérifier sur la calculatrice que ln 1 100 est un peu au-dessus de 7.\n• Piège : la touche log, qui donne des valeurs autour de 3.\n• Papier : tableau du livret, rempli à la main, au millième.\n• Projeter le tableau juste ; faire remarquer que z baisse d’environ 0,25 à chaque hausse de 5 €.\n• Transition : « Une droite pour z : exercice 6. »",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [],
@@ -4902,7 +4896,7 @@
           ]
         },
         "renvoi": "B2-06-A1-05-DOSSIER",
-        "notes": "• Temps : réflexion 2 min · travail 6 min · correction 2 min\n• Réflexion : écrire le retour de z à y, puis l’équation du prix, avant de calculer.\n• Pièges : a = 8 ; a = −0,05 ; 0,95³⁸ ; le signe de k oublié ; diviser sans ln.\n• Papier : exercice 6 du livret.\n• Corriger question par question, en commençant par la moins réussie.\n• Transition : « Faisons le point sur les modèles exponentiels. »",
+        "notes": "• Réflexion : écrire le retour de z à y, puis l’équation du prix, avant de calculer.\n• Pièges : a = 8 ; a = −0,05 ; 0,95³⁸ ; le signe de k oublié ; diviser sans ln.\n• Papier : exercice 6 du livret.\n• Transition : « Faisons le point sur les modèles exponentiels. »",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [
@@ -5055,7 +5049,7 @@
             }
           }
         },
-        "notes": "• 30 s de vote anonyme.\n• Pause de 15 minutes, hors durée programmée.",
+        "notes": "",
         "diffusion": "seance",
         "seuil": null,
         "corriges": [],
@@ -5089,7 +5083,7 @@
             }
           }
         },
-        "notes": "• 5 min individuelles, puis projeter la carte de maîtrise.\n• Tous reçoivent les deux questions obligatoires (seuil par ln, retour au coefficient a), en plus de leurs points faibles.",
+        "notes": "• Tous reçoivent les deux questions obligatoires (seuil par ln, retour au coefficient a), en plus de leurs points faibles.",
         "diffusion": "seance",
         "seuil": 0.7,
         "corriges": [
@@ -5414,7 +5408,7 @@
               "renderer": "grid",
               "props": {
                 "title": "Fiche mémo : exponentielle et logarithme",
-                "subtitle": "À garder pour le CCF : chaque carte part d’une question et donne la méthode et son piège.",
+                "subtitle": "Chaque carte part d’une question et donne la méthode et son piège.",
                 "items": [
                   {
                     "title": "Fonction exponentielle",
@@ -5460,12 +5454,6 @@
                     "title": "Tableur",
                     "description": "Quelles fonctions ?",
                     "back": "EXP, LN, PENTE(z ; x), ORDONNEE.ORIGINE(z ; x). Paramètres figés par des $ avant de recopier."
-                  },
-                  {
-                    "title": "Référentiel du BTS CG",
-                    "description": "Le programme de mathématiques et l’épreuve E3.",
-                    "href": "https://enqdip.sup.adc.education.fr/bts/referentiel/BTS_ComptabiliteGestion.pdf",
-                    "external": true
                   }
                 ],
                 "imprimable": true
@@ -5486,7 +5474,7 @@
             }
           }
         },
-        "notes": "• 90 s de lecture ; la fiche s’imprime pour le classeur de CCF.",
+        "notes": "",
         "diffusion": "catalogue",
         "seuil": null,
         "corriges": [],
@@ -5580,7 +5568,7 @@
               "props": {
                 "title": "Ce que vous savez déjà",
                 "subtitle": "Trois acquis qui servent à croître, viser et ajuster.",
-                "note": "Les fiches mémo du B2-02, du B2-04 et du B2-05 sont dans votre classeur de CCF.",
+                "note": "Les fiches mémo du B2-02, du B2-04 et du B2-05 reprennent ces rappels.",
                 "columns": [
                   {
                     "label": "B2-04 · Suites",
@@ -5842,7 +5830,7 @@
                   {
                     "kind": "method",
                     "title": "Au tableur : EXP et des paramètres figés",
-                    "text": "EXP(nombre) calcule e à la puissance nombre. a et k sont rangés dans deux cellules, figées par des $, pour recopier la formule vers le bas. Au CCF : lire a et k dans l’énoncé avant d’écrire la formule.",
+                    "text": "EXP(nombre) calcule e à la puissance nombre. a et k sont rangés dans deux cellules, figées par des $, pour recopier la formule vers le bas. Avant d’écrire la formule, lire a et k dans l’énoncé.",
                     "steps": [
                       "x en A2 ; a en H1 ; k en H2.",
                       "En B2 : =$H$1*EXP($H$2*A2), puis recopier vers le bas.",
@@ -6105,8 +6093,8 @@
                     ]
                   },
                   {
-                    "kind": "exam",
-                    "title": "Au CCF : même méthode pour a e^(kx) ≥ s",
+                    "kind": "piege",
+                    "title": "Même méthode pour a e^(kx) ≥ s",
                     "text": "a e^(kx) ≥ s ⇔ e^(kx) ≥ s ÷ a ⇔ kx ≥ ln(s ÷ a), puis on divise par k, en changeant le sens si k < 0. Pièges : diviser s par q au lieu de passer par ln ; garder le sens en divisant par un nombre négatif ; arrondir le seuil à l’entier inférieur.",
                     "steps": [
                       "Isoler la puissance ou l’exponentielle.",
@@ -6341,7 +6329,7 @@
                   {
                     "kind": "definition",
                     "title": "Le changement de variable z = ln y",
-                    "text": "Si y = a e^(kx), alors z = ln y vaut kx + ln a : les points (x ; z) sont alignés. On ajuste donc z en x par la méthode des moindres carrés du B2-02, z = αx + β, puis on revient à y en exponentiant : y = e^β × e^(αx). Au CCF, le changement de variable est toujours donné.",
+                    "text": "Si y = a e^(kx), alors z = ln y vaut kx + ln a : les points (x ; z) sont alignés. On ajuste donc z en x par la méthode des moindres carrés du B2-02, z = αx + β, puis on revient à y en exponentiant : y = e^β × e^(αx). L’énoncé donne toujours le changement de variable.",
                     "formula": "z = ln y · z = αx + β · y = e^β × e^(αx) : a = e^β et k = α"
                   },
                   {
@@ -6356,8 +6344,8 @@
                     ]
                   },
                   {
-                    "kind": "exam",
-                    "title": "Au CCF : rédiger le retour au modèle",
+                    "kind": "piege",
+                    "title": "Rédiger le retour au modèle",
                     "text": "Le sujet donne z = ln y, demande la droite de z en x au tableur ou à la calculatrice, puis le modèle en y. Écrire les arrondis demandés, puis contrôler sur un relevé.",
                     "steps": [
                       "Écrire z = αx + β avec les arrondis.",
@@ -6433,7 +6421,7 @@
               "renderer": "grid",
               "props": {
                 "title": "Fiche mémo : exponentielle et logarithme",
-                "subtitle": "À garder pour le CCF : chaque carte part d’une question et donne la méthode et son piège.",
+                "subtitle": "Chaque carte part d’une question et donne la méthode et son piège.",
                 "items": [
                   {
                     "title": "Fonction exponentielle",
@@ -6479,12 +6467,6 @@
                     "title": "Tableur",
                     "description": "Quelles fonctions ?",
                     "back": "EXP, LN, PENTE(z ; x), ORDONNEE.ORIGINE(z ; x). Paramètres figés par des $ avant de recopier."
-                  },
-                  {
-                    "title": "Référentiel du BTS CG",
-                    "description": "Le programme de mathématiques et l’épreuve E3.",
-                    "href": "https://enqdip.sup.adc.education.fr/bts/referentiel/BTS_ComptabiliteGestion.pdf",
-                    "external": true
                   }
                 ],
                 "imprimable": true

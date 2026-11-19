@@ -48,6 +48,7 @@ export const sheet = `
 }
 
 :where(.fp-root) .fp-sheet__tableau {
+  width: 100%;
   border-collapse: collapse;
 }
 

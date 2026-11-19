@@ -108,7 +108,7 @@ export const FORMATIONS: readonly FormationCard[] = [
   coursEnSeance({
     slug: 'b1-01-proportions-pourcentages',
     title: $localize`:@@formations-list.b1-01.title:B1-01 — Proportions et pourcentages`,
-    description: $localize`:@@formations-list.b1-01.description:Calculer une part et dire de quel tout elle parle, multiplier deux parts, calculer un taux global, distinguer points et pourcentages, taux de marge et taux de marque, puis répartir un effectif au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b1-01.description:Calculer une part et dire de quel tout elle parle, multiplier deux parts, calculer un taux global, distinguer points et pourcentages, taux de marge et taux de marque, puis répartir un effectif au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
   }),
   coursEnSeance({
     slug: 'b1-02-evolutions-coefficients-indices',
@@ -123,12 +123,12 @@ export const FORMATIONS: readonly FormationCard[] = [
   coursEnSeance({
     slug: 'b1-04-series-deux-variables',
     title: $localize`:@@formations-list.b1-04.title:B1-04 — Séries à deux variables : ajuster et prévoir`,
-    description: $localize`:@@formations-list.b1-04.description:Relier la publicité et les ventes d’un site par un nuage de points, tracer la droite des moindres carrés, lire le coefficient de corrélation sans confondre liaison et causalité, puis prévoir et trouver quand un seuil est atteint, au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b1-04.description:Relier la publicité et les ventes d’un site par un nuage de points, tracer la droite des moindres carrés, lire le coefficient de corrélation sans confondre liaison et causalité, puis prévoir et trouver quand un seuil est atteint, au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
   }),
   coursEnSeance({
     slug: 'b1-05-logique-conditions',
     title: $localize`:@@formations-list.b1-05.title:B1-05 — Logique : conditions et contrôles`,
-    description: $localize`:@@formations-list.b1-05.description:Écrire les règles commerciales d’une entreprise avec et, ou, non, si… alors, les nier par les lois de Morgan, dire « pour tout » ou « il existe » et trouver le contre-exemple qui suffit, puis contrôler une règle au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b1-05.description:Écrire les règles commerciales d’une entreprise avec et, ou, non, si… alors, les nier par les lois de Morgan, dire « pour tout » ou « il existe » et trouver le contre-exemple qui suffit, puis contrôler une règle au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
   }),
   coursEnSeance({
     slug: 'b2-01-traitement-information-chiffree',
@@ -138,42 +138,42 @@ export const FORMATIONS: readonly FormationCard[] = [
   coursEnSeance({
     slug: 'b2-02-series-statistiques',
     title: $localize`:@@formations-list.b2-02.title:B2-02 — Séries statistiques : résumer, relier, prévoir`,
-    description: $localize`:@@formations-list.b2-02.description:Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b2-02.description:Résumer une série, relier deux variables par un nuage de points et un ajustement affine, puis prévoir au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
   }),
   coursEnSeance({
     slug: 'b2-03-logique',
     title: $localize`:@@formations-list.b2-03.title:B2-03 — Logique : écrire et contrôler une règle`,
-    description: $localize`:@@formations-list.b2-03.description:Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b2-03.description:Traduire une règle de gestion avec et, ou, non, si… alors, la nier avec les lois de Morgan, dire « tous » ou « au moins un », puis la contrôler au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
   }),
   coursEnSeance({
     slug: 'b2-04-suites',
     title: $localize`:@@formations-list.b2-04.title:B2-04 — Suites : modéliser une évolution régulière`,
-    description: $localize`:@@formations-list.b2-04.description:Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b2-04.description:Modéliser une évolution par une suite arithmétique ou géométrique, comparer deux hypothèses de croissance, trouver le rang où un seuil est franchi et cumuler des termes au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
   }),
   coursEnSeance({
     slug: 'b2-05-mathematiques-financieres',
     title: $localize`:@@formations-list.b2-05.title:B2-05 — Mathématiques financières : placer, emprunter`,
-    description: $localize`:@@formations-list.b2-05.description:Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b2-05.description:Calculer une valeur acquise et une valeur actuelle, chiffrer une suite de versements, construire le tableau d’amortissement d’un emprunt et son coût, avec VPM au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
   }),
   coursEnSeance({
     slug: 'b2-06-exponentielle-logarithme',
     title: $localize`:@@formations-list.b2-06.title:B2-06 — Exponentielle et logarithme : croître, viser, ajuster`,
-    description: $localize`:@@formations-list.b2-06.description:Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b2-06.description:Calculer avec un modèle exponentiel et son taux, trouver un seuil avec le logarithme népérien, ajuster une série par z = ln y et prévoir avec EXP et LN au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
   }),
   coursEnSeance({
     slug: 'b2-07-derivee-optimisation',
     title: $localize`:@@formations-list.b2-07.title:B2-07 — Dérivée et optimisation : la pente, le sens, le sommet`,
-    description: $localize`:@@formations-list.b2-07.description:Revoir d’abord l’exponentielle, le logarithme et la boucle « Tant que » par des images du quotidien, puis dériver un polynôme et a e^(kx), étudier le signe de la dérivée, dresser un tableau de variation et trouver un prix optimal, même sous contrainte, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b2-07.description:Revoir d’abord l’exponentielle, le logarithme et la boucle « Tant que » par des images du quotidien, puis dériver un polynôme et a e^(kx), étudier le signe de la dérivée, dresser un tableau de variation et trouver un prix optimal, même sous contrainte. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
   }),
   coursEnSeance({
     slug: 'b2-08-derivees-composees-fonctions-economiques',
     title: $localize`:@@formations-list.b2-08.title:B2-08 — Dérivées composées et fonctions économiques`,
-    description: $localize`:@@formations-list.b2-08.description:Dériver un produit, un quotient, e^u et ln u, lire le coût total, le coût moyen et le coût marginal, trouver le prix d’équilibre entre l’offre et la demande, puis dire combien de solutions a f(x) = k et les approcher au tableur, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b2-08.description:Dériver un produit, un quotient, e^u et ln u, lire le coût total, le coût moyen et le coût marginal, trouver le prix d’équilibre entre l’offre et la demande, puis dire combien de solutions a f(x) = k et les approcher au tableur. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
   }),
   coursEnSeance({
     slug: 'b2-09-probabilites-conditionnelles',
     title: $localize`:@@formations-list.b2-09.title:B2-09 — Probabilités conditionnelles`,
-    description: $localize`:@@formations-list.b2-09.description:Lire une probabilité conditionnelle dans un arbre pondéré et dans un tableau croisé, calculer une probabilité totale par tous les chemins, remonter l’arbre pour trouver P_B(A), puis justifier que deux événements sont indépendants, comme en CCF. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
+    description: $localize`:@@formations-list.b2-09.description:Lire une probabilité conditionnelle dans un arbre pondéré et dans un tableau croisé, calculer une probabilité totale par tous les chemins, remonter l’arbre pour trouver P_B(A), puis justifier que deux événements sont indépendants. À suivre en séance accompagnée, avec le code donné par votre formateur.`,
   }),
   coursEnSeance({
     slug: 'b3-01-donnee-brute-decision',

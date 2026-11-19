@@ -2641,6 +2641,48 @@ export type PresentationServie =
   | {
       version: 2;
       screenId: string;
+      renderer: 'courbe';
+      props: {
+        title: string;
+        subtitle?: string;
+        figure: {
+          formula: string;
+          xLabel: string;
+          yLabel: string;
+          xRange: [number, number];
+          yRange: [number, number];
+          points: Array<{
+            x: number;
+            y: number;
+          }>;
+          tangents?: Array<{
+            x: number;
+            y: number;
+            slope: number;
+            label?: string;
+          }>;
+          zone?: {
+            from: number;
+            to: number;
+            label: string;
+          };
+          description: string;
+        };
+        steps: Array<{
+          title: string;
+          text: string;
+          tangent?: {
+            x: number;
+            y: number;
+            slope: number;
+            label?: string;
+          };
+        }>;
+      };
+    }
+  | {
+      version: 2;
+      screenId: string;
       renderer: 'arbre';
       props: {
         title: string;
@@ -2666,12 +2708,35 @@ export type PresentationServie =
         title: string;
         subtitle?: string;
         blocks: Array<{
-          kind: 'definition' | 'property' | 'method' | 'example' | 'exam';
+          kind: 'definition' | 'property' | 'method' | 'example' | 'piege';
           title: string;
           text: string;
           formula?: string;
           steps?: Array<string>;
         }>;
+        figure?: {
+          formula: string;
+          xLabel: string;
+          yLabel: string;
+          xRange: [number, number];
+          yRange: [number, number];
+          points: Array<{
+            x: number;
+            y: number;
+          }>;
+          tangents?: Array<{
+            x: number;
+            y: number;
+            slope: number;
+            label?: string;
+          }>;
+          zone?: {
+            from: number;
+            to: number;
+            label: string;
+          };
+          description: string;
+        };
       };
     }
   | {
@@ -2766,6 +2831,7 @@ export type PresentationServie =
         imageAlt: string;
         paragraphs: Array<string>;
         items?: Array<string>;
+        conclusion?: string;
         sourceLink?: {
           href: string;
           label: string;
@@ -2783,6 +2849,7 @@ export type PresentationServie =
         imageAlt: string;
         paragraphs: Array<string>;
         items?: Array<string>;
+        conclusion?: string;
         sourceLink?: {
           href: string;
           label: string;
