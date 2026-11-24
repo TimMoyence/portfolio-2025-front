@@ -37,7 +37,10 @@ function cheminDe(racine: ActivatedRouteSnapshot): string {
   return `/${segments.join('/')}`;
 }
 
+const transitionAbandonnee = (): void => undefined;
+
 export function transitionDeVignette({ transition, from, to }: ViewTransitionInfo): void {
+  transition.ready.catch(transitionAbandonnee);
   const navigation = inject(Router).getCurrentNavigation();
   const retour = navigation?.trigger === 'popstate';
   const joue = joueLaTransition({

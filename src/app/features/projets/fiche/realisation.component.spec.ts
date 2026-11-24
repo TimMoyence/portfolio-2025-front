@@ -206,7 +206,10 @@ describe('REC-11 · une réalisation se raconte sur sa propre page', () => {
         depuis: string,
         vers: string,
       ): boolean {
-        const transition = { skipTransition: jasmine.createSpy('skipTransition') };
+        const transition = {
+          ready: Promise.resolve(),
+          skipTransition: jasmine.createSpy('skipTransition'),
+        };
         TestBed.resetTestingModule();
         setupTestBed({
           http: false,
