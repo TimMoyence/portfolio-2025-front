@@ -3,6 +3,7 @@ import type {
   DerouleDuFil,
   SujetDuFil,
 } from '../../src/app/core/adapters/formations/formations-fil';
+import type { PresentationServie } from '../../contrat';
 import { zLivretResponseDto as livretServi } from '../../contrat/zod.gen';
 import {
   zAuthResponseDto as sessionServie,
@@ -76,18 +77,27 @@ function instantaneDe(cours: string): InstantaneDuCours {
   return instantane;
 }
 
-function preuvesEtResultatsDesParcours(valeur: unknown): readonly string[] {
+type PropsDuRendu<R extends PresentationServie['renderer']> = Extract<
+  PresentationServie,
+  { renderer: R }
+>['props'];
+
+function propsDesRendus<R extends PresentationServie['renderer']>(
+  valeur: unknown,
+  renderer: R,
+): PropsDuRendu<R>[] {
   if (typeof valeur !== 'object' || valeur === null) {
     return [];
   }
   const objet = valeur as Readonly<Record<string, unknown>>;
-  if (objet['renderer'] === 'method-path') {
-    const { steps } = objet['props'] as {
-      readonly steps: readonly { readonly proof: string; readonly result: string }[];
-    };
-    return steps.flatMap(({ proof, result }) => [proof, result]);
+  if (objet['renderer'] === renderer) {
+    return [objet['props'] as PropsDuRendu<R>];
   }
-  return Object.values(objet).flatMap(preuvesEtResultatsDesParcours);
+  const trouves: PropsDuRendu<R>[] = [];
+  for (const enfant of Object.values(objet)) {
+    trouves.push(...propsDesRendus(enfant, renderer));
+  }
+  return trouves;
 }
 
 async function servirLeLivret(page: Page, cours: string): Promise<string> {
@@ -208,12 +218,12 @@ function livretImprime(page: Page): Promise<LivretImprime> {
 }
 
 test.describe('livret papier imprimé', () => {
-  test('le voile décoratif du fond ne s’imprime pas', async ({ page }) => {
+  test('le grain décoratif du fond ne s’imprime pas', async ({ page }) => {
     await imprimerEnFenetreLarge(page, 'b2-02', 'sujet');
 
-    const voile = await page.evaluate(() => getComputedStyle(document.body, '::before').display);
+    const grain = await page.evaluate(() => getComputedStyle(document.body).backgroundImage);
 
-    expect(voile).toBe('none');
+    expect(grain).toBe('none');
   });
 
   test('aucun élément du livret imprimé n’est zoomé', async ({ page }) => {
@@ -389,7 +399,9 @@ test.describe('livret papier imprimé', () => {
   test('un parcours de méthode imprime chaque étape avec sa preuve et son résultat, quel que soit l’instant de l’impression', async ({
     page,
   }) => {
-    const attendus = preuvesEtResultatsDesParcours(instantaneDe('b2-01').sujet);
+    const attendus = propsDesRendus(instantaneDe('b2-01').sujet, 'method-path').flatMap(
+      ({ steps }) => steps.flatMap(({ proof, result }) => [proof, result]),
+    );
     await page.clock.install();
     await imprimerEnFenetreLarge(page, 'b2-01', 'sujet');
 
@@ -402,6 +414,31 @@ test.describe('livret papier imprimé', () => {
     expect(attendus.length).toBeGreaterThan(0);
     expect(attendus.filter((attendu) => !avantDefilement.includes(attendu))).toEqual([]);
     expect(await texteImprime()).toBe(avantDefilement);
+  });
+
+  test('RET-03 · une courbe pas à pas imprime sa figure avec chaque tangente et chaque étape, sans navigation', async ({
+    page,
+  }) => {
+    const [{ steps }] = propsDesRendus(instantaneDe('b2-07').sujet, 'courbe');
+    await imprimerEnFenetreLarge(page, 'b2-07', 'sujet');
+
+    const imprime = await page.locator('.livret app-slide-courbe').evaluate((courbe) => ({
+      texte: (courbe as HTMLElement).innerText,
+      tangentes: [...courbe.querySelectorAll('.slide-scatter__point-label')]
+        .filter((etiquette) => etiquette.checkVisibility({ visibilityProperty: true }))
+        .map((etiquette) => etiquette.textContent?.trim()),
+      boutons: [...courbe.querySelectorAll('button')]
+        .filter((bouton) => bouton.checkVisibility())
+        .map((bouton) => bouton.textContent?.trim()),
+    }));
+
+    expect(
+      steps
+        .flatMap(({ title, text }) => [title, ...text.split('\n')])
+        .filter((ligne) => !imprime.texte.includes(ligne)),
+    ).toEqual([]);
+    expect(imprime.tangentes).toEqual(steps.flatMap(({ tangent }) => tangent?.label ?? []));
+    expect(imprime.boutons).toEqual([]);
   });
 
   for (const cours of COURS) {

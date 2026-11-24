@@ -1,6 +1,8 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
+import { nomCourtServi } from '../../core/seo/site-servi';
+import { FiletDeSectionDirective } from '../../shared/directives/filet-de-section.directive';
 import {
   AsiliAiMethodComponent,
   type AsiliAiMethodStep,
@@ -8,6 +10,7 @@ import {
   AsiliClosingComponent,
   AsiliHeroComponent,
   type AsiliHeroMetaRow,
+  type MorceauDeTitre,
   AsiliSectionTeteComponent,
 } from '../../shared/sections';
 
@@ -16,7 +19,6 @@ interface PresentationSkill {
   desc: string;
   stack: readonly string[];
   icon: 'code' | 'ai' | 'chart';
-  revealDelay: 1 | 2 | 3 | 4 | null;
 }
 
 interface IconeCompetence {
@@ -58,8 +60,9 @@ interface PresentationMilestone {
   selector: 'app-presentation',
   standalone: true,
   imports: [
+    NgOptimizedImage,
     RouterLink,
-    RevealOnScrollDirective,
+    FiletDeSectionDirective,
     AsiliHeroComponent,
     AsiliAiMethodComponent,
     AsiliSectionTeteComponent,
@@ -72,11 +75,12 @@ interface PresentationMilestone {
 export class PresentationComponent {
   protected readonly heroKicker = $localize`:@@presentationHeroKicker:Le fondateur`;
 
-  protected readonly heroTitlePre = $localize`:@@presentationHeroTitlePre:Développeur full-stack & IA.`;
-
-  protected readonly heroTitleAccent = $localize`:@@presentationHeroTitleAccent:Manager`;
-
-  protected readonly heroTitlePost = $localize`:@@presentationHeroTitlePost:avant tout.`;
+  protected readonly titre: readonly MorceauDeTitre[] = [
+    { texte: $localize`:@@presentationHeroTitlePre:Développeur full-stack & IA.` },
+    { texte: $localize`:@@presentationHeroTitleAccent:Manager`, aLaLigne: true },
+    { texte: ' ' },
+    { texte: $localize`:@@presentationHeroTitlePost:avant tout.`, accent: true },
+  ];
 
   protected readonly heroLead = $localize`:@@presentationHeroLead:Je m'appelle Tim Moyence — développeur full-stack & IA, freelance à Bordeaux (remote). Six ans manager chez Decathlon avant de me reconvertir au code. J'aide TPE, PME et solopreneurs à transformer un besoin flou en outils nets, robustes et durables — avec une exigence d'ingénierie forte.`;
 
@@ -86,12 +90,12 @@ export class PresentationComponent {
       value: $localize`:@@presentationHeroMeta1Value:Bordeaux · France`,
     },
     {
-      key: $localize`:@@presentationHeroMeta2Key:Stack`,
-      value: $localize`:@@presentationHeroMeta2Value:Angular · NestJS · .NET · IA`,
+      key: $localize`:@@presentationHeroMeta2Key:Métier`,
+      value: $localize`:@@presentationHeroMeta2Value:Sites web · apps mobiles · outils sur mesure`,
     },
     {
-      key: $localize`:@@presentationHeroMeta3Key:Exigence`,
-      value: $localize`:@@presentationHeroMeta3Value:DDD · Clean Archi · TDD`,
+      key: $localize`:@@presentationHeroMeta3Key:Méthode`,
+      value: $localize`:@@presentationHeroMeta3Value:Écouter · Écrire · Lancer`,
     },
     {
       key: $localize`:@@presentationHeroMeta4Key:Aussi`,
@@ -118,46 +122,40 @@ export class PresentationComponent {
   protected readonly skills: readonly PresentationSkill[] = [
     {
       icon: 'code',
-      revealDelay: null,
-      title: $localize`:@@presentationSkill1Title:Développement produit`,
-      desc: $localize`:@@presentationSkill1Desc:Des applications web robustes, lisibles et maintenables. De l'architecture front à l'API, avec une obsession pour la clarté du code et de l'usage.`,
+      title: $localize`:@@presentationSkill1Title:Sites et applications`,
+      desc: $localize`:@@presentationSkill1Desc:Des sites rapides et clairs, des apps mobiles et des outils sur mesure. Construits pour durer, faciles à faire évoluer.`,
       stack: [
-        $localize`:@@presentationSkill1Stack1:Angular 19`,
-        $localize`:@@presentationSkill1Stack2:NestJS`,
-        $localize`:@@presentationSkill1Stack3:.NET / C#`,
-        $localize`:@@presentationSkill1Stack4:React Native`,
-        $localize`:@@presentationSkill1Stack5:PostgreSQL`,
-        $localize`:@@presentationSkill1Stack6:Docker`,
+        $localize`:@@presentationSkill1Stack1:Sites vitrines`,
+        $localize`:@@presentationSkill1Stack2:Réservation en ligne`,
+        $localize`:@@presentationSkill1Stack3:Apps mobiles`,
+        $localize`:@@presentationSkill1Stack4:Outils sur mesure`,
       ],
     },
     {
       icon: 'ai',
-      revealDelay: 1,
       title: $localize`:@@presentationSkill2Title:IA utile & mesurée`,
       desc: $localize`:@@presentationSkill2Desc:L'IA comme levier, pas comme gadget. J'intègre des automatisations et des assistants qui font gagner du temps réel — sous contrôle humain, toujours.`,
       stack: [
-        $localize`:@@presentationSkill2Stack1:LangChain`,
+        $localize`:@@presentationSkill2Stack1:Automatisations`,
         $localize`:@@presentationSkill2Stack2:Agents autonomes`,
-        $localize`:@@presentationSkill2Stack3:Claude Code`,
-        $localize`:@@presentationSkill2Stack4:Multi-LLM`,
+        $localize`:@@presentationSkill2Stack3:Assistants`,
       ],
     },
     {
       icon: 'chart',
-      revealDelay: 2,
       title: $localize`:@@presentationSkill3Title:Conseil & stratégie`,
-      desc: $localize`:@@presentationSkill3Desc:Avant la technique, la direction. Audit, cadrage, priorisation : je vous aide à décider quoi construire — et surtout quoi ne pas construire.`,
+      desc: $localize`:@@presentationSkill3Desc:Avant la technique, la direction. Diagnostic, cadrage, priorisation : je vous aide à décider quoi construire — et surtout quoi ne pas construire.`,
       stack: [
-        $localize`:@@presentationSkill3Stack1:Audit`,
+        $localize`:@@presentationSkill3Stack1:Diagnostic`,
         $localize`:@@presentationSkill3Stack2:Cadrage`,
-        $localize`:@@presentationSkill3Stack3:SEO`,
+        $localize`:@@presentationSkill3Stack3:Référencement`,
       ],
     },
   ];
 
   protected readonly aiMethodKicker = $localize`:@@presentationAiMethodKicker:Ma manière de travailler avec l'IA`;
 
-  protected readonly aiMethodLead = $localize`:@@presentationAiMethodLead:Je travaille en orchestration multi-agents : un agent par tâche, revue croisée, vérification adversariale avant de valider. Chaque changement commence par un test qui échoue (TDD), et l'architecture est pensée pour durer (DDD, clean architecture) — même sur mes projets perso.`;
+  protected readonly aiMethodLead = $localize`:@@presentationAiMethodLead:Je travaille avec plusieurs agents IA : un agent par tâche, une relecture croisée, une vérification qui cherche la faille avant de valider. Chaque changement commence par un test qui échoue, et le code est pensé pour durer — même sur mes projets perso.`;
 
   protected readonly aiMethodSteps: readonly AsiliAiMethodStep[] = [
     {
@@ -177,8 +175,8 @@ export class PresentationComponent {
     },
     {
       num: '04',
-      title: $localize`:@@presentationAiMethodStep4Title:TDD + architecture durable`,
-      desc: $localize`:@@presentationAiMethodStep4Desc:Un test qui échoue d'abord ; DDD & clean archi ensuite.`,
+      title: $localize`:@@presentationAiMethodStep4Title:Test d’abord, code qui dure`,
+      desc: $localize`:@@presentationAiMethodStep4Desc:Un test qui échoue d’abord ; une architecture qui tient ensuite.`,
     },
   ];
 
@@ -188,7 +186,7 @@ export class PresentationComponent {
 
   protected readonly timelineKicker = $localize`:@@presentationTimelineKicker:Le parcours`;
 
-  protected readonly timelineHeadLink = $localize`:@@presentationTimelineHeadLink:Voir les projets`;
+  protected readonly timelineHeadLink = $localize`:@@presentationTimelineHeadLink:Voir mes réalisations`;
 
   protected readonly milestones: readonly PresentationMilestone[] = [
     {
@@ -196,27 +194,26 @@ export class PresentationComponent {
       title: $localize`:@@presentationMilestone1Title:Asili Design & projets actifs`,
       descHtml: $localize`:@@presentationMilestone1Desc:Le studio sous sa forme actuelle, plus un chantier très actif : <strong>Musaium / InnovMind</strong> (médiation culturelle IA pour musées).`,
       tags: [
-        $localize`:@@presentationMilestone1Tag1:Monorepo`,
-        $localize`:@@presentationMilestone1Tag2:Multi-LLM`,
-        $localize`:@@presentationMilestone1Tag3:React 19`,
+        $localize`:@@presentationMilestone1Tag2:Musées`,
+        $localize`:@@presentationMilestone1Tag3:IA`,
       ],
     },
     {
       year: $localize`:@@presentationMilestone2Year:2025`,
       title: $localize`:@@presentationMilestone2Title:Plateforme SaaS multi-apps`,
-      descHtml: $localize`:@@presentationMilestone2Desc:Un socle Angular 19 SSR + NestJS 11 réunissant plusieurs apps en production : Growth Audit, Formations — avec auth, RGPD et lead-magnets.`,
+      descHtml: $localize`:@@presentationMilestone2Desc:Un socle commun qui réunit plusieurs apps en production : le diagnostic gratuit, les formations — avec comptes, RGPD et ressources offertes.`,
       tags: [
-        $localize`:@@presentationMilestone2Tag1:Angular 19 SSR`,
-        $localize`:@@presentationMilestone2Tag2:NestJS 11`,
+        $localize`:@@presentationMilestone2Tag1:Plusieurs apps`,
+        $localize`:@@presentationMilestone2Tag2:En production`,
       ],
     },
     {
       year: $localize`:@@presentationMilestone3Year:2023`,
       title: $localize`:@@presentationMilestone3Title:Reconversion au code`,
-      descHtml: $localize`:@@presentationMilestone3Desc:Du management au développement, avec d'emblée une exigence d'ingénierie : DDD, Clean Architecture, TDD obligatoire, CI/CD complet. Aussi formateur à l'Ipac et l'EPSI.`,
+      descHtml: $localize`:@@presentationMilestone3Desc:Du management au développement, avec d’emblée une exigence forte : un test avant chaque changement, des mises en ligne automatisées. Aussi formateur à l’Ipac et l’EPSI.`,
       tags: [
-        $localize`:@@presentationMilestone3Tag1:DDD`,
-        $localize`:@@presentationMilestone3Tag2:TDD`,
+        $localize`:@@presentationMilestone3Tag1:Exigence`,
+        $localize`:@@presentationMilestone3Tag2:Tests`,
         $localize`:@@presentationMilestone3Tag3:Formateur`,
       ],
     },
@@ -237,20 +234,20 @@ export class PresentationComponent {
       title: $localize`:@@presentationFaqTitle:Ce qu'on me demande souvent.`,
       items: [
         {
-          q: $localize`:@@presentationFaq1Q:Travaillez-vous avec des non-techniciens ?`,
-          a: $localize`:@@presentationFaq1A:Absolument — c'est même mon terrain de prédilection. Je traduis le technique en décisions claires, sans jargon. Vous n'avez pas besoin de comprendre le code pour piloter un bon projet.`,
+          question: $localize`:@@presentationFaq1Q:Travaillez-vous avec des non-techniciens ?`,
+          reponse: $localize`:@@presentationFaq1A:Absolument — c'est même mon terrain de prédilection. Je traduis le technique en décisions claires, sans jargon. Vous n'avez pas besoin de comprendre le code pour piloter un bon projet.`,
         },
         {
-          q: $localize`:@@presentationFaq2Q:Quels types de projets prenez-vous ?`,
-          a: $localize`:@@presentationFaq2A:Des interventions ciblées aux projets structurants, en passant par l'accompagnement dans la durée. Le périmètre est défini sur votre besoin réel, pas sur un catalogue figé.`,
+          question: $localize`:@@presentationFaq2Q:Quels types de projets prenez-vous ?`,
+          reponse: $localize`:@@presentationFaq2A:Des interventions ciblées aux projets structurants, en passant par l'accompagnement dans la durée. Le périmètre est défini sur votre besoin réel, pas sur un catalogue figé.`,
         },
         {
-          q: $localize`:@@presentationFaq3Q:L'IA est-elle obligatoire dans vos projets ?`,
-          a: $localize`:@@presentationFaq3A:Jamais. L'IA est un levier parmi d'autres. Si elle apporte une valeur mesurable, on l'intègre proprement. Sinon, on s'en passe — la sobriété est une qualité.`,
+          question: $localize`:@@presentationFaq3Q:L'IA est-elle obligatoire dans vos projets ?`,
+          reponse: $localize`:@@presentationFaq3A:Jamais. L'IA est un levier parmi d'autres. Si elle apporte une valeur mesurable, on l'intègre proprement. Sinon, on s'en passe — la sobriété est une qualité.`,
         },
         {
-          q: $localize`:@@presentationFaq4Q:Comment démarre-t-on ?`,
-          a: $localize`:@@presentationFaq4A:Par une conversation. Décrivez votre situation via la page contact ; je reviens vers vous avec un regard honnête et une proposition de cadrage — pas un devis générique.`,
+          question: $localize`:@@presentationFaq4Q:Comment démarre-t-on ?`,
+          reponse: $localize`:@@presentationFaq4A:Par une conversation. Décrivez votre situation via la page contact ; je reviens vers vous avec un regard honnête et une proposition de cadrage — pas un devis générique.`,
         },
       ],
     },
@@ -264,7 +261,7 @@ export class PresentationComponent {
           variante: 'principale',
         },
         {
-          libelle: $localize`:@@presentationCtaSecondary:Voir les services`,
+          libelle: nomCourtServi('/offer'),
           lien: '/offer',
           variante: 'secondaire',
         },

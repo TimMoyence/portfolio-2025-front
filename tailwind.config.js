@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{html,ts}'],
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     container: {
       center: true,
@@ -16,10 +17,12 @@ module.exports = {
         'scheme-text-muted': 'var(--text-mute)',
         'scheme-border': 'var(--border)',
         'scheme-accent': 'var(--accent)',
-        'scheme-accent-hover': 'var(--teal-clair)',
-        'scheme-accent-active': 'var(--teal-ink)',
-        'scheme-accent-focus': '#4fb3a233',
+        'scheme-accent-hover': 'var(--ink)',
+        'scheme-accent-active': 'var(--ink)',
+        'scheme-accent-focus': 'rgba(var(--teal-rgb), 0.2)',
         'scheme-on-accent': 'var(--on-accent)',
+        'scheme-danger': 'var(--danger)',
+        'scheme-success': 'var(--success)',
       },
       fontFamily: {
         display: ['"Instrument Serif"', '"Indices Serif"', 'Georgia', 'serif'],

@@ -1,0 +1,74 @@
+import { expect, test, type Page } from '@playwright/test';
+import { ECRANS_DE_LIGHTHOUSE, ouvrir, sansContenu } from './ouvrir';
+import { baseSsr, exigerLaPorteSsr } from '../porte-ssr';
+
+const PAGES_A_HEROS = ['/', '/offer', '/projets', '/presentation', '/articles'];
+
+const RETARD_DES_POLICES_MS = 1500;
+
+const SEUIL_DE_LIGHTHOUSE = 0.1;
+
+interface DecalageDeMiseEnPage extends PerformanceEntry {
+  readonly value: number;
+  readonly hadRecentInput: boolean;
+}
+
+interface FenetreQuiMesure extends Window {
+  cls: number;
+}
+
+const mesurerLeCls = (): void => {
+  const fenetre = window as unknown as FenetreQuiMesure;
+  const session = { debut: 0, dernier: 0, somme: 0 };
+  fenetre.cls = 0;
+  new PerformanceObserver((liste) => {
+    for (const entree of liste.getEntries() as DecalageDeMiseEnPage[]) {
+      if (entree.hadRecentInput) continue;
+      const nouvelleSession =
+        entree.startTime - session.dernier > 1000 || entree.startTime - session.debut > 5000;
+      if (nouvelleSession) Object.assign(session, { debut: entree.startTime, somme: 0 });
+      session.dernier = entree.startTime;
+      session.somme += entree.value;
+      fenetre.cls = Math.max(fenetre.cls, session.somme);
+    }
+  }).observe({ type: 'layout-shift', buffered: true });
+};
+
+const clsUneFoisLesPolicesArrivees = async (page: Page): Promise<number> => {
+  await page.waitForFunction(
+    () =>
+      document.fonts.status === 'loaded' &&
+      [...document.fonts].some((police) => police.status === 'loaded'),
+  );
+  return page.evaluate(async () => {
+    await new Promise(requestAnimationFrame);
+    await new Promise(requestAnimationFrame);
+    return (window as unknown as FenetreQuiMesure).cls;
+  });
+};
+
+for (const ecran of ECRANS_DE_LIGHTHOUSE) {
+  test.describe(`REC-15 · ${ecran.nom} : des polices en retard ne décalent pas la page`, () => {
+    test.use({ viewport: ecran.viewport, deviceScaleFactor: ecran.deviceScaleFactor });
+
+    test.beforeEach(async ({ page }) => {
+      await sansContenu(page);
+      await page.route(/\.woff2?$/, async (route) => {
+        await new Promise((suite) => setTimeout(suite, RETARD_DES_POLICES_MS));
+        await route.continue();
+      });
+      await page.addInitScript(mesurerLeCls);
+    });
+
+    for (const chemin of PAGES_A_HEROS) {
+      test(`REC-15 · ${chemin} en ${ecran.nom} : CLS sous le seuil de Lighthouse quand les polices arrivent`, async ({
+        page,
+      }) => {
+        exigerLaPorteSsr();
+        await ouvrir(page, `${baseSsr}/fr${chemin}`);
+
+        expect(await clsUneFoisLesPolicesArrivees(page)).toBeLessThan(SEUIL_DE_LIGHTHOUSE);
+      });
+    }
+  });
+}

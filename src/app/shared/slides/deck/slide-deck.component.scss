@@ -1,4 +1,5 @@
 @use '../../../styles-shared/mise-en-page/mono';
+@use '../../../styles-shared/composants/survol';
 
 :host {
   display: block;
@@ -73,8 +74,7 @@
     transform 0.15s ease;
   box-shadow: 0 4px 12px rgba(var(--ink-rgb), 0.08);
 
-  &:hover,
-  &:focus-visible {
+  @include survol.survol-ou-focus {
     background: var(--accent, #4fb3a2);
     color: #ffffff;
     transform: translateY(-2px);
@@ -119,8 +119,7 @@
   }
   .slide-deck-fullscreen {
     transition: none;
-    &:hover,
-    &:focus-visible {
+    @include survol.survol-ou-focus {
       transform: none;
     }
   }

@@ -40,10 +40,6 @@ describe('ToolkitGatePageComponent', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    document.documentElement.classList.remove('anim-ready');
-  });
-
   it('devrait etre cree', () => {
     expect(host).toBeTruthy();
   });

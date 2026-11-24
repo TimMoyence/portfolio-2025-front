@@ -11,61 +11,40 @@ import { AsiliProjectsGridComponent } from './asili-projects-grid.component';
 
 const PROJECTS: readonly AsiliProject[] = [
   {
-    title: 'Plateforme metier refondue',
-    desc: 'Du cadrage des usages a un produit qui tient la charge.',
-    tags: [{ label: 'Angular' }, { label: 'NestJS' }, { label: 'IA' }],
-    href: '/projets',
+    title: 'Atelier de reliure',
+    desc: 'Un site qui fait venir les commandes.',
+    tags: [
+      { label: 'Artisanat', prod: false },
+      { label: 'En ligne', prod: true },
+    ],
+    image: '/assets/images/projects/reliure.webp',
+    srcset: '/assets/images/projects/vignettes/reliure/360.webp 360w',
+    imageAlt: 'Capture du site de reliure',
+    href: '/projets/reliure',
+    vignette: 'realisation-reliure',
     size: 'big',
   },
   {
-    title: 'Audit de visibilité',
-    desc: 'Analyse technique et recommandations priorisées.',
-    tags: [{ label: 'Audit' }],
-    image: '/assets/images/audit.webp',
-    imageAlt: "Capture de l'audit",
-    href: '/growth-audit',
+    title: 'Cave du port',
+    desc: 'Une boutique trouvée sur Google.',
+    tags: [{ label: 'Commerce', prod: false }],
+    image: '/assets/images/projects/cave.webp',
+    srcset: '/assets/images/projects/vignettes/cave/360.webp 360w',
+    imageAlt: 'Capture de la cave',
+    href: '/projets/cave',
+    vignette: 'realisation-cave',
     size: 'small',
   },
   {
-    title: 'Morning-Brief',
-    desc: 'Newsletter IA livree chaque matin par Telegram.',
-    tags: [{ label: 'En production', prod: true }, { label: 'Raspberry Pi' }],
+    title: 'Suivi de chantier',
+    desc: 'Un outil métier pour une équipe de terrain.',
+    tags: [{ label: 'Bâtiment', prod: false }],
+    image: '/assets/images/projects/chantier.webp',
+    srcset: '/assets/images/projects/vignettes/chantier/360.webp 360w',
+    imageAlt: 'Capture du suivi de chantier',
+    href: '/projets/chantier',
+    vignette: 'realisation-chantier',
     size: 'small',
-  },
-];
-
-const IMAGE_PROJECTS: readonly AsiliProject[] = [
-  {
-    title: 'Carte 1',
-    desc: 'Premiere carte, au-dessus de la ligne de flottaison.',
-    tags: [],
-    image: '/assets/images/projects/morning-brief.webp',
-    imageAlt: 'capture 1',
-    size: 'small',
-  },
-  {
-    title: 'Carte 2',
-    desc: 'Deuxieme carte, encore visible au chargement.',
-    tags: [],
-    image: '/assets/images/projects/jeu-des-fourmis.webp',
-    imageAlt: 'capture 2',
-    size: 'big',
-  },
-  {
-    title: 'Carte 3',
-    desc: 'Troisieme carte, sous la ligne de flottaison.',
-    tags: [],
-    image: '/assets/images/projects/voice-ia.webp',
-    imageAlt: 'capture 3',
-    size: 'small',
-  },
-  {
-    title: 'Carte 4',
-    desc: 'Quatrieme carte, sous la ligne de flottaison.',
-    tags: [],
-    image: '/assets/images/projects/IFS-Academy.webp',
-    imageAlt: 'capture 4',
-    size: 'big',
   },
 ];
 
@@ -74,181 +53,112 @@ describe('AsiliProjectsGridComponent', () => {
 
   const monter = decrireSectionAsili(AsiliProjectsGridComponent, { projects: PROJECTS });
 
-  decrireLiensDansLaLangueDeLaPage(
-    monter,
-    { projects: [PROJECTS[0], { ...PROJECTS[1], href: 'https://github.com/' }] },
-    '.proj-link',
-    ['/en/projets', 'https://github.com/'],
-  );
+  decrireLiensDansLaLangueDeLaPage(monter, { projects: PROJECTS.slice(0, 2) }, '.proj-link', [
+    '/en/projets/reliure',
+    '/en/projets/cave',
+  ]);
 
-  function setup(projects: readonly AsiliProject[] = PROJECTS): void {
-    fixture = monter('browser', { projects });
+  function hote(): HTMLElement {
+    fixture = monter('browser', { projects: PROJECTS });
+    fixture.detectChanges();
+    return fixture.nativeElement as HTMLElement;
   }
 
   it('rend une carte .proj par projet avec son titre en <h3>', () => {
-    setup();
-    fixture.detectChanges();
-    const host = fixture.nativeElement as HTMLElement;
-    const cards = host.querySelectorAll<HTMLElement>('.proj');
-    expect(cards.length).toBe(PROJECTS.length);
-    const titles = host.querySelectorAll<HTMLElement>('.proj .proj-body h3');
-    expect(titles.length).toBe(PROJECTS.length);
-    expect(titles[0].textContent?.trim()).toBe(PROJECTS[0].title);
+    const titres = [...hote().querySelectorAll('.proj .proj-body h3')].map((titre) =>
+      titre.textContent?.trim(),
+    );
+
+    expect(titres).toEqual(['Atelier de reliure', 'Cave du port', 'Suivi de chantier']);
   });
 
   it('applique la taille via .big / .small', () => {
-    setup();
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelectorAll('.proj.big').length).toBe(1);
-    expect(fixture.nativeElement.querySelectorAll('.proj.small').length).toBe(2);
+    const racine = hote();
+
+    expect(racine.querySelectorAll('.proj.big').length).toBe(1);
+    expect(racine.querySelectorAll('.proj.small').length).toBe(2);
   });
 
-  it('rend les etiquettes et marque celles en production via .tag-prod', () => {
-    setup();
-    fixture.detectChanges();
-    const host = fixture.nativeElement as HTMLElement;
-    const tags = host.querySelectorAll<HTMLElement>('.tag');
-    expect(tags.length).toBe(6);
-    const prod = host.querySelectorAll<HTMLElement>('.tag.tag-prod');
-    expect(prod.length).toBe(1);
-    expect(prod[0].textContent?.trim()).toBe('En production');
+  it('rend les etiquettes et marque les resultats via .tag-prod', () => {
+    const racine = hote();
+
+    expect(racine.querySelectorAll('.tag').length).toBe(4);
+    expect(
+      [...racine.querySelectorAll('.tag.tag-prod')].map((tag) => tag.textContent?.trim()),
+    ).toEqual(['En ligne']);
   });
 
-  it('rend une image avec alt quand fournie', () => {
-    setup();
-    fixture.detectChanges();
-    const host = fixture.nativeElement as HTMLElement;
-    const img = host.querySelector<HTMLImageElement>('.proj-shot img');
-    expect(img).not.toBeNull();
-    expect(img?.getAttribute('src')).toBe('/assets/images/audit.webp');
-    expect(img?.getAttribute('alt')).toBe("Capture de l'audit");
-  });
+  it('enveloppe chaque capture d un lien vers sa fiche et la nomme pour la transition', () => {
+    const liens = [...hote().querySelectorAll<HTMLAnchorElement>('.proj .proj-link')];
 
-  it('rend un placeholder raye legende pour chaque carte sans image', () => {
-    setup();
-    fixture.detectChanges();
-    const host = fixture.nativeElement as HTMLElement;
-    const placeholders = host.querySelectorAll<HTMLElement>('.placeholder');
-    expect(placeholders.length).toBe(2);
-    const legends = Array.from(placeholders).map((p) => p.textContent?.trim());
-    expect(legends).toContain('Plateforme metier refondue');
-    expect(legends).toContain('Morning-Brief');
-    expect(placeholders[0].getAttribute('aria-hidden')).toBe('true');
-  });
-
-  it('utilise imageAlt comme legende du placeholder quand fourni', () => {
-    setup([
-      {
-        title: 'Projet interne',
-        desc: 'Sans capture publique.',
-        tags: [],
-        imageAlt: 'Apercu confidentiel',
-        size: 'small',
-      },
+    expect(liens.map((lien) => lien.getAttribute('href'))).toEqual([
+      '/projets/reliure',
+      '/projets/cave',
+      '/projets/chantier',
     ]);
-    fixture.detectChanges();
-    const host = fixture.nativeElement as HTMLElement;
-    const placeholder = host.querySelector<HTMLElement>('.placeholder span');
-    expect(placeholder?.textContent?.trim()).toBe('Apercu confidentiel');
-  });
-
-  it('rend un lien sur le visuel quand href est fourni', () => {
-    setup();
-    fixture.detectChanges();
-    const host = fixture.nativeElement as HTMLElement;
-    const links = host.querySelectorAll<HTMLAnchorElement>('.proj .proj-link');
-    expect(links.length).toBe(2);
-    expect(links[0].getAttribute('href')).toBe('/projets');
-  });
-
-  it("n'enveloppe pas le visuel d'un lien quand href est absent", () => {
-    setup([
-      {
-        title: 'Sans lien',
-        desc: 'Projet sans page dediee.',
-        tags: [],
-        size: 'small',
-      },
+    expect(
+      liens.map((lien) => [
+        lien.querySelector('img')?.getAttribute('alt'),
+        lien.querySelector<HTMLImageElement>('img')?.style.getPropertyValue('view-transition-name'),
+      ]),
+    ).toEqual([
+      ['Capture du site de reliure', 'realisation-reliure'],
+      ['Capture de la cave', 'realisation-cave'],
+      ['Capture du suivi de chantier', 'realisation-chantier'],
     ]);
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.proj-link')).toBeNull();
-    expect(fixture.nativeElement.querySelector('.proj-shot')).not.toBeNull();
   });
 
   it("affiche le kicker et le titre d'entete quand fournis en inputs", () => {
-    setup();
-    fixture.componentRef.setInput('kicker', 'Preuve de savoir-faire');
-    fixture.componentRef.setInput('heading', 'Des realisations.');
+    fixture = monter('browser', { projects: PROJECTS });
+    fixture.componentRef.setInput('kicker', 'Quand un site ne suffit plus');
+    fixture.componentRef.setInput('heading', 'Sur-mesure');
     fixture.detectChanges();
-    const host = fixture.nativeElement as HTMLElement;
-    expect(host.querySelector('.kicker')?.textContent).toContain('Preuve de savoir-faire');
-    const h2 = host.querySelector<HTMLElement>('h2.projects-head__title');
-    expect(h2?.textContent?.trim()).toBe('Des realisations.');
+    const racine = fixture.nativeElement as HTMLElement;
+
+    expect(racine.querySelector('.kicker')?.textContent).toContain('Quand un site ne suffit plus');
+    expect(racine.querySelector('h2.projects-head__title')?.textContent?.trim()).toBe('Sur-mesure');
   });
 
-  describe('chargement des images', () => {
-    function images(): readonly HTMLImageElement[] {
-      const host = fixture.nativeElement as HTMLElement;
-      return Array.from(host.querySelectorAll<HTMLImageElement>('.proj-shot img'));
-    }
+  it('charge les captures en differe, decodees en asynchrone, au ratio de leur boite', () => {
+    const images = [...hote().querySelectorAll<HTMLImageElement>('.proj-shot img')];
 
-    it('charge toutes les captures en lazy par defaut', () => {
-      setup(IMAGE_PROJECTS);
-      fixture.detectChanges();
-      expect(images().map((img) => img.getAttribute('loading'))).toEqual([
-        'lazy',
-        'lazy',
-        'lazy',
-        'lazy',
-      ]);
-      expect(images().every((img) => img.getAttribute('fetchpriority') === null)).toBeTrue();
-    });
-
-    it('bascule les premieres cartes en eager quand la page le demande', () => {
-      setup(IMAGE_PROJECTS);
-      fixture.componentRef.setInput('eagerImages', 2);
-      fixture.detectChanges();
-      expect(images().map((img) => img.getAttribute('loading'))).toEqual([
-        'eager',
-        'eager',
-        'lazy',
-        'lazy',
-      ]);
-    });
-
-    it('priorise la premiere image via fetchpriority=high uniquement en mode eager', () => {
-      setup(IMAGE_PROJECTS);
-      fixture.componentRef.setInput('eagerImages', 2);
-      fixture.detectChanges();
-      const [first, ...rest] = images();
-      expect(first.getAttribute('fetchpriority')).toBe('high');
-      expect(rest.map((img) => img.getAttribute('fetchpriority'))).toEqual([null, null, null]);
-    });
-
-    it('decode toutes les images en asynchrone', () => {
-      setup(IMAGE_PROJECTS);
-      fixture.detectChanges();
-      expect(images().every((img) => img.getAttribute('decoding') === 'async')).toBeTrue();
-    });
-
-    it('declare des dimensions intrinseques au ratio de la boite de rendu', () => {
-      setup(IMAGE_PROJECTS);
-      fixture.detectChanges();
-      const declared = images().map((img) => [
-        img.getAttribute('width'),
-        img.getAttribute('height'),
-      ]);
-      expect(declared).toEqual([
-        ['800', '600'],
-        ['1600', '1000'],
-        ['800', '600'],
-        ['1600', '1000'],
-      ]);
-    });
+    expect(
+      images.map((image) => [
+        image.getAttribute('loading'),
+        image.getAttribute('decoding'),
+        image.getAttribute('width'),
+        image.getAttribute('height'),
+      ]),
+    ).toEqual([
+      ['lazy', 'async', '1600', '1000'],
+      ['lazy', 'async', '800', '600'],
+      ['lazy', 'async', '800', '600'],
+    ]);
   });
 
-  decrireRenduServeur(monter, (hote) => {
-    expect(hote.querySelectorAll('.proj').length).toBe(PROJECTS.length);
+  it('sert chaque capture par ses variantes, à la largeur de sa carte dans la grille', () => {
+    const images = [...hote().querySelectorAll<HTMLImageElement>('.proj-shot img')];
+    const grille = 'min(100vw, 1280px) - 2 * clamp(20px, 5vw, 72px)';
+    const tablette = `(max-width: 860px) calc(${grille})`;
+
+    expect(images.map((image) => [image.getAttribute('srcset'), image.sizes])).toEqual([
+      [
+        '/assets/images/projects/vignettes/reliure/360.webp 360w',
+        `${tablette}, calc((${grille} - 110px) * 2 / 3 + 66px)`,
+      ],
+      [
+        '/assets/images/projects/vignettes/cave/360.webp 360w',
+        `${tablette}, calc((${grille} - 110px) / 3 + 22px)`,
+      ],
+      [
+        '/assets/images/projects/vignettes/chantier/360.webp 360w',
+        `${tablette}, calc((${grille} - 110px) / 3 + 22px)`,
+      ],
+    ]);
+  });
+
+  decrireRenduServeur(monter, (racine) => {
+    expect(racine.querySelectorAll('.proj').length).toBe(PROJECTS.length);
   });
 
   describe('avec projection (page hote)', () => {
@@ -268,11 +178,13 @@ describe('AsiliProjectsGridComponent', () => {
     }
 
     it("projette le kicker, le titre riche et le lien d'entete", () => {
-      const host = rendreLHoteNavigateur(HostComponent);
-      expect(host.querySelector('.kicker')?.textContent).toContain('Slot kicker');
-      expect(host.querySelector('h2.h-xl em')?.textContent).toBe('projete');
-      const headLink = host.querySelector<HTMLAnchorElement>('.projects-head a[headLink]');
-      expect(headLink?.getAttribute('href')).toBe('/projets');
+      const racine = rendreLHoteNavigateur(HostComponent);
+
+      expect(racine.querySelector('.kicker')?.textContent).toContain('Slot kicker');
+      expect(racine.querySelector('h2.h-xl em')?.textContent).toBe('projete');
+      expect(racine.querySelector('.projects-head a[headLink]')?.getAttribute('href')).toBe(
+        '/projets',
+      );
     });
   });
 });

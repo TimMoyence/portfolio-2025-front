@@ -1,7 +1,11 @@
 import type express from 'express';
 import { LOCALES_DU_SITE } from '../../app/core/config/locales';
-import { buildLocalizedPath, normalizePath, routeSansLocale } from '../../app/core/seo/chemins';
-import { URL_DU_SITE } from '../../app/core/seo/nom-du-site';
+import {
+  buildLocalizedPath,
+  normalizePath,
+  routeSansLocale,
+} from '../../app/core/seo/pages/chemins';
+import { URL_DU_SITE } from '../../app/core/seo/pages/nom-du-site';
 
 const NON_RESERVE_ENCODE = /%(?:3\d|4[1-9A-F]|5[\dAF]|6[1-9A-F]|7[\dAE]|2[DE])/gi;
 
@@ -56,12 +60,12 @@ const isAllowedHost = (host: string | undefined): host is string => {
 const firstAllowedHost = (...candidates: (string | undefined)[]): string | undefined =>
   candidates.find(isAllowedHost);
 
+const premiereValeurTransmise = (req: express.Request, entete: string): string | undefined =>
+  (req.headers[entete] as string | undefined)?.split(',')[0]?.trim();
+
 export const buildBaseUrlFromRequest = (req: express.Request, fallback?: string): string => {
-  const forwardedProto = (req.headers['x-forwarded-proto'] as string)
-    ?.split(',')[0]
-    ?.trim()
-    ?.toLowerCase();
-  const forwardedHost = (req.headers['x-forwarded-host'] as string)?.split(',')[0]?.trim();
+  const forwardedProto = premiereValeurTransmise(req, 'x-forwarded-proto')?.toLowerCase();
+  const forwardedHost = premiereValeurTransmise(req, 'x-forwarded-host');
   const rawHost = req.get('host');
 
   const host = firstAllowedHost(forwardedHost, rawHost);

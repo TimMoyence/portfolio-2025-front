@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { RevealOnScrollDirective } from '../../../directives/reveal-on-scroll.directive';
+import { FiletDeSectionDirective } from '../../../directives/filet-de-section.directive';
 
 export interface AsiliCtaAction {
   readonly libelle: string;
@@ -18,7 +18,7 @@ export interface AsiliCta {
 @Component({
   selector: 'app-asili-cta-band',
   standalone: true,
-  imports: [RevealOnScrollDirective, RouterLink],
+  imports: [RouterLink, FiletDeSectionDirective],
   templateUrl: './asili-cta-band.component.html',
   styleUrls: ['./asili-cta-band.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

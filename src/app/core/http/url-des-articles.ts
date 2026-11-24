@@ -1,4 +1,4 @@
-import { urlAbsolue } from '../seo/chemins';
+import { urlAbsolue } from '../seo/pages/chemins';
 
 export interface PageDArticlesDemandee {
   readonly locale: string;

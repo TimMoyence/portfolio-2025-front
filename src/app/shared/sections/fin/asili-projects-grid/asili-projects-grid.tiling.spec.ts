@@ -1,14 +1,10 @@
+import { TestBed } from '@angular/core/testing';
 import { HomeComponent } from '../../../../features/home/home.component';
 import { ProjetsComponent } from '../../../../features/projets/projets.component';
 import type { AsiliProject, AsiliProjectSize } from './asili-projects-grid.component';
 
-/**
- * Nombre de colonnes de la grille desktop
- * (`asili-projects-grid.component.scss` : `grid-template-columns: repeat(6, 1fr)`).
- */
-const GRID_COLUMNS = 6;
+const COLONNES_DE_LA_GRILLE_ORDINATEUR = 6;
 
-/** `asili-projects-grid.component.scss` : `.proj.big` span 4, `.proj.small` span 2. */
 const SPANS: Readonly<Record<AsiliProjectSize, number>> = { big: 4, small: 2 };
 
 function columnsFilledPerRow(projects: readonly AsiliProject[]): readonly number[] {
@@ -17,7 +13,7 @@ function columnsFilledPerRow(projects: readonly AsiliProject[]): readonly number
 
   for (const project of projects) {
     const span = SPANS[project.size];
-    if (filled + span > GRID_COLUMNS) {
+    if (filled + span > COLONNES_DE_LA_GRILLE_ORDINATEUR) {
       rows.push(filled);
       filled = 0;
     }
@@ -31,13 +27,15 @@ function columnsFilledPerRow(projects: readonly AsiliProject[]): readonly number
 }
 
 function incompleteRows(projects: readonly AsiliProject[]): readonly number[] {
-  return columnsFilledPerRow(projects).filter((filled) => filled !== GRID_COLUMNS);
+  return columnsFilledPerRow(projects).filter(
+    (filled) => filled !== COLONNES_DE_LA_GRILLE_ORDINATEUR,
+  );
 }
 
 function incompleteRowsExceptLast(projects: readonly AsiliProject[]): readonly number[] {
   return columnsFilledPerRow(projects)
     .slice(0, -1)
-    .filter((filled) => filled !== GRID_COLUMNS);
+    .filter((filled) => filled !== COLONNES_DE_LA_GRILLE_ORDINATEUR);
 }
 
 function projectsOf(page: object): readonly AsiliProject[] {
@@ -46,10 +44,19 @@ function projectsOf(page: object): readonly AsiliProject[] {
 
 describe('Pavage de la grille projets', () => {
   it('ne laisse aucune rangee incomplete pour le teaser de la home', () => {
-    expect(incompleteRows(projectsOf(new HomeComponent()))).toEqual([]);
+    const accueil = TestBed.runInInjectionContext(() => new HomeComponent());
+
+    expect(incompleteRows(projectsOf(accueil))).toEqual([]);
   });
 
-  it('ne laisse aucune rangee intermediaire incomplete sur /projets', () => {
-    expect(incompleteRowsExceptLast(projectsOf(new ProjetsComponent()))).toEqual([]);
+  it('ne laisse aucune rangee intermediaire incomplete dans chaque famille de /projets', () => {
+    const { familles } = new ProjetsComponent() as unknown as {
+      readonly familles: readonly { readonly cartes: readonly AsiliProject[] }[];
+    };
+
+    expect(familles.length).toBeGreaterThan(0);
+    for (const { cartes } of familles) {
+      expect(incompleteRowsExceptLast(cartes)).toEqual([]);
+    }
   });
 });

@@ -1,14 +1,13 @@
+import { METADONNEES_DU_SITE } from '../../../core/seo/site-servi';
 import { DOCUMENT } from '@angular/common';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../../environments/environment';
 import { injectSeoHead } from '../../../../server/seo/seo-injector';
-import seoMetadata from '../../../../assets/seo/seo-metadata.json';
 import { buildPublishedArticle } from '../../../../testing/factories/article.factory';
 import { fournirLaRoute } from '../../../../testing/factories/serveur/route.factory';
 import { setupTestBed } from '../../../../testing/setup-test-bed';
-import type { SeoMetadataFile } from '../../../core/seo/seo-metadata.model';
 import { ArticleDetailComponent } from './article-detail.component';
 
 const SLUG = 'morning-brief-2026-11-17';
@@ -31,15 +30,15 @@ const documentServiPourLaFiche = (): string => {
   const rendu = `<html>${TestBed.inject(DOCUMENT).head.outerHTML}<body></body></html>`;
   return injectSeoHead(
     rendu,
-    seoMetadata as unknown as SeoMetadataFile,
+    METADONNEES_DU_SITE,
     `/fr/articles/${SLUG}`,
     'https://asilidesign.fr',
   );
 };
 
-const typesJsonLd = (html: string): unknown[] =>
+const blocsJsonLd = (html: string): Record<string, unknown>[] =>
   [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(
-    ([, json]) => (JSON.parse(json) as { '@type'?: unknown })['@type'],
+    ([, json]) => JSON.parse(json) as Record<string, unknown>,
   );
 
 it('ART-IDX-1 · la fiche servie par le serveur porte un seul canonical, le sien, et son hreflang', () => {
@@ -51,11 +50,40 @@ it('ART-IDX-1 · la fiche servie par le serveur porte un seul canonical, le sien
   expect(servi).toContain(`<link rel="alternate" hreflang="fr" href="${FICHE}">`);
 });
 
-it('ART-JSONLD-2 · la fiche servie porte les données structurées du site avec son bloc Article', () => {
-  expect(typesJsonLd(documentServiPourLaFiche())).toEqual([
-    'LocalBusiness',
-    'SiteNavigationElement',
-    'Person',
-    'Article',
-  ]);
+describe('ART-JSONLD-2 · SEO-3 · SEO-6 · la fiche servie porte les blocs du site, son Article et son fil d Ariane', () => {
+  it('ART-JSONLD-2 · les blocs servis sont ceux du site, puis l Article et son fil', () => {
+    expect(blocsJsonLd(documentServiPourLaFiche()).map((bloc) => bloc['@type'])).toEqual([
+      'LocalBusiness',
+      'SiteNavigationElement',
+      'Person',
+      'Article',
+      'BreadcrumbList',
+    ]);
+  });
+
+  it('SEO-6 · l Article désigne son auteur et son éditeur par leur seul @id', () => {
+    const article = blocsJsonLd(documentServiPourLaFiche()).find(
+      (bloc) => bloc['@type'] === 'Article',
+    );
+
+    expect(article?.['author']).toEqual({ '@id': 'https://asilidesign.fr/#person' });
+    expect(article?.['publisher']).toEqual({ '@id': 'https://asilidesign.fr/#organization' });
+  });
+
+  it('SEO-3 · le fil de la fiche passe par Articles et finit sur le titre, à l URL canonique', () => {
+    const titre = buildPublishedArticle({ slug: SLUG }).title;
+    const fil = blocsJsonLd(documentServiPourLaFiche()).find(
+      (bloc) => bloc['@type'] === 'BreadcrumbList',
+    );
+
+    const etapes = [
+      ['Accueil', 'https://asilidesign.fr/fr/'],
+      ['Articles', 'https://asilidesign.fr/fr/articles'],
+      [titre, FICHE],
+    ];
+
+    expect(fil?.['itemListElement']).toEqual(
+      etapes.map(([name, item], rang) => ({ '@type': 'ListItem', position: rang + 1, name, item })),
+    );
+  });
 });

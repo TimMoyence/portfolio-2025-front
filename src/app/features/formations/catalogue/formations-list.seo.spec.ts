@@ -1,13 +1,11 @@
-import seoMetadata from '../../../../assets/seo/seo-metadata.json';
-import type { SeoMetadataFile } from '../../../core/seo/seo-metadata.model';
-
-const SEO = seoMetadata as SeoMetadataFile;
+import { METADONNEES_DU_SITE } from '../../../core/seo/site-servi';
 
 describe('CAT-01 · ce que les moteurs disent de /formations', () => {
-  const locales = SEO.pages.find(({ path }) => path === '/formations')?.locales ?? {};
+  const locales =
+    METADONNEES_DU_SITE.pages.find(({ path }) => path === '/formations')?.locales ?? {};
 
   it('CAT-01 · décrit en chaque langue le catalogue seul, cours du BTS CG et du Bachelor compris, sans l offre sur mesure', () => {
-    expect(Object.keys(locales)).toEqual(SEO.site.locales);
+    expect(Object.keys(locales)).toEqual(METADONNEES_DU_SITE.site.locales);
     for (const [locale, { description, ogDescription }] of Object.entries(locales)) {
       for (const texte of [description, ogDescription]) {
         expect(texte).withContext(locale).toContain('BTS CG');

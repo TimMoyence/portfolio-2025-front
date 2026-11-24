@@ -3,13 +3,14 @@ import {
   AsiliCtaBandComponent,
   type AsiliCtaAction,
 } from '../asili-cta-band/asili-cta-band.component';
-import { AsiliFaqComponent, type AsiliFaqItem } from '../asili-faq/asili-faq.component';
+import type { QuestionDeFaq } from '../../../offre/prix-et-delai';
+import { AsiliFaqComponent } from '../asili-faq/asili-faq.component';
 
 export interface AsiliClosing {
   readonly faq: {
     readonly kicker: string;
     readonly title: string;
-    readonly items: readonly AsiliFaqItem[];
+    readonly items: readonly QuestionDeFaq[];
   };
   readonly cta: {
     readonly kicker: string;

@@ -1,212 +1,106 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, LOCALE_ID, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FiletDeSectionDirective } from '../../shared/directives/filet-de-section.directive';
+import { ENTREES_DE_FORMATION } from '../../core/config/familles-de-formation';
+import { faqDuSite } from '../../shared/offre/prix-et-delai';
 import {
   AsiliCtaBandComponent,
   type AsiliCta,
+  AsiliFaqComponent,
   AsiliHeroComponent,
-  AsiliManifestoComponent,
-  type AsiliManifestoLine,
   AsiliMethodComponent,
   type AsiliMethodStep,
-  AsiliPillarsComponent,
-  type AsiliPillar,
   AsiliProjectsGridComponent,
   type AsiliProject,
+  LARGEUR_DU_CONTENEUR,
+  type MorceauDeTitre,
+  PLEINE_LARGEUR_SUR_TABLETTE,
 } from '../../shared/sections';
+import {
+  carteDeRealisation,
+  REALISATIONS,
+  variantesDeLaCapture,
+  vitrineDeLAccueil,
+} from '../projets/realisations.data';
+import { realisationDuHeros } from './realisation-du-heros';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
     RouterLink,
+    FiletDeSectionDirective,
     AsiliHeroComponent,
     AsiliMethodComponent,
-    AsiliPillarsComponent,
-    AsiliManifestoComponent,
     AsiliProjectsGridComponent,
+    AsiliFaqComponent,
     AsiliCtaBandComponent,
   ],
   templateUrl: './home.component.html',
+  styleUrl: './home.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
-  protected readonly heroChip = $localize`:@@homeHeroChip:Studio digital & IA · Bordeaux`;
+  protected readonly titre: readonly MorceauDeTitre[] = [
+    {
+      texte: $localize`:Titre de l’accueil, avant l’accent@@homeHeroTitreDebut:Votre métier mérite mieux qu’une page `,
+    },
+    {
+      texte: $localize`:Titre de l’accueil, en accent@@homeHeroTitreAccent:qu’on ne trouve pas`,
+      accent: true,
+    },
+    { texte: '.' },
+  ];
 
-  protected readonly heroTitlePre = $localize`:@@homeHeroTitlePre:Clarifier`;
+  protected readonly heroChip = $localize`:@@homeHeroKicker:Création de sites web · Bordeaux`;
 
-  protected readonly heroTitleAccent = $localize`:@@homeHeroTitleAccent:avant`;
+  protected readonly heroLead = $localize`:@@homeHeroAccroche:Je crée le site des artisans, commerces et indépendants : clair à lire, facile à trouver, sur Google comme dans les réponses des IA, avant vos concurrents. Vous parlez de votre métier, je m’occupe du reste.`;
 
-  protected readonly heroTitlePost = $localize`:@@homeHeroTitlePost:de construire.`;
+  protected readonly siteDuHeros = realisationDuHeros(REALISATIONS);
 
-  protected readonly heroLead = $localize`:@@homeHeroLead:Développeur & consultant spécialisé Angular, NestJS et IA. Je structure les usages avant de déployer la techno — pour des TPE, PME et solopreneurs qui veulent des leviers concrets, pas du jargon.`;
+  protected readonly variantesDuHeros = this.siteDuHeros && variantesDeLaCapture(this.siteDuHeros);
 
-  protected readonly heroScrollHint = $localize`:@@homeHeroScrollHint:Défiler`;
+  protected readonly largeurDuVisuel = `${PLEINE_LARGEUR_SUR_TABLETTE}, calc((${LARGEUR_DU_CONTENEUR} - 32px) * 0.425)`;
 
-  protected readonly heroStat1Num = $localize`:@@homeHeroStat1Num:2`;
-  protected readonly heroStat1Label = $localize`:@@homeHeroStat1Label:piliers : services & formations`;
+  protected readonly planKicker = $localize`:@@homePlanKicker:Le plan`;
 
-  protected readonly heroStat2Num = $localize`:@@homeHeroStat2Num:4`;
-  protected readonly heroStat2Label = $localize`:@@homeHeroStat2Label:formats d'intervention`;
-
-  protected readonly heroCtaPrimary = $localize`:@@homeHeroCtaPrimary:Voir comment je travaille`;
-  protected readonly heroCtaSecondary = $localize`:@@homeHeroCtaSecondary:Voir les projets`;
-
-  protected readonly methodKicker = $localize`:@@homeMethodKicker:La méthode`;
-  protected readonly methodIntro = $localize`:@@homeMethodIntro:Le digital et l'IA sont des leviers, jamais des finalités. On commence par comprendre, on déploie ensuite — et on garde ce qui marche.`;
-
-  protected readonly methodSteps: readonly AsiliMethodStep[] = [
+  protected readonly planSteps: readonly AsiliMethodStep[] = [
     {
       num: '01',
-      index: $localize`:@@homeMethodStep1Index:— Clarifier`,
-      title: $localize`:@@homeMethodStep1Title:Comprendre`,
-      desc: $localize`:@@homeMethodStep1Desc:On cartographie le besoin réel et les usages avant la moindre ligne de code.`,
+      index: $localize`:@@homePlanEtape1Index:— Écouter`,
+      title: $localize`:@@homePlanEtape1Titre:On se parle`,
+      desc: $localize`:@@homePlanEtape1Texte:Vous me racontez votre métier, vos clients et ce qui vous fait gagner du travail. Une heure suffit.`,
     },
     {
       num: '02',
-      index: $localize`:@@homeMethodStep2Index:— Construire`,
-      title: $localize`:@@homeMethodStep2Title:Déployer`,
-      desc: $localize`:@@homeMethodStep2Desc:Des outils robustes et lisibles, dimensionnés sur le périmètre réel.`,
+      index: $localize`:@@homePlanEtape2Index:— Écrire`,
+      title: $localize`:@@homePlanEtape2Titre:Je raconte et je construis`,
+      desc: $localize`:@@homePlanEtape2Texte:J’écris des pages qui parlent comme vous, puis je construis un site rapide que Google et les IA comprennent.`,
     },
     {
       num: '03',
-      index: $localize`:@@homeMethodStep3Index:— Tester`,
-      title: $localize`:@@homeMethodStep3Title:Éprouver`,
-      desc: $localize`:@@homeMethodStep3Desc:On confronte à l'usage, on mesure, on ajuste sans dogme.`,
-    },
-    {
-      num: '04',
-      index: $localize`:@@homeMethodStep4Index:— Évoluer`,
-      title: $localize`:@@homeMethodStep4Title:Faire durer`,
-      desc: $localize`:@@homeMethodStep4Desc:Continuité humaine : l'outil grandit avec vous, pas contre vous.`,
-    },
-  ];
-
-  protected readonly pillarsKicker = $localize`:@@homePillarsKicker:Deux façons de travailler ensemble`;
-
-  protected readonly pillars: readonly AsiliPillar[] = [
-    {
-      variant: 'services',
-      tag: $localize`:@@homePillarServicesTag:01 — Services premium`,
-      title: $localize`:@@homePillarServicesTitle:On bâtit exactement ce qu'il vous faut.`,
-      desc: $localize`:@@homePillarServicesDesc:Interventions ciblées, projets structurants, accompagnement dans la durée. Un périmètre défini sur votre situation réelle — pas un catalogue de prix figés.`,
-      items: [
-        $localize`:@@homePillarServicesItem1:Audit & cadrage avant tout chantier`,
-        $localize`:@@homePillarServicesItem2:Développement Angular / NestJS sur-mesure`,
-        $localize`:@@homePillarServicesItem3:Intégration d'IA utile, mesurée, maîtrisée`,
-      ],
-      link: {
-        label: $localize`:@@homePillarServicesLink:Découvrir l'offre`,
-        href: '/offer',
-      },
-    },
-    {
-      variant: 'formations',
-      tag: $localize`:@@homePillarFormationsTag:02 — Formations premium`,
-      title: $localize`:@@homePillarFormationsTitle:On vous rend autonome, pour de bon.`,
-      desc: $localize`:@@homePillarFormationsDesc:Des formations qui font monter en gamme : de l'usage flou à un système qui travaille pour vous. Le gratuit reste un point d'entrée — le premium va au fond des choses.`,
-      items: [
-        $localize`:@@homePillarFormationsItem1:IA pour solopreneurs`,
-        $localize`:@@homePillarFormationsItem2:Automatiser avec l'IA`,
-        $localize`:@@homePillarFormationsItem3:Audit SEO DIY — diagnostiquer soi-même`,
-      ],
-      link: {
-        label: $localize`:@@homePillarFormationsLink:Voir les formations`,
-        href: '/formations',
-      },
-    },
-  ];
-
-  protected readonly manifestoLines: readonly AsiliManifestoLine[] = [
-    {
-      step: $localize`:@@homeManifestoStep1:Le problème`,
-      html: $localize`:@@homeManifestoLine1:La technologie promet beaucoup,`,
-    },
-    {
-      html: $localize`:@@homeManifestoLine2:et laisse souvent un <span class="t">flou</span>.`,
-    },
-    {
-      step: $localize`:@@homeManifestoStep2:La clarté`,
-      html: $localize`:@@homeManifestoLine3:Mon métier commence là :`,
-    },
-    {
-      html: $localize`:@@homeManifestoLine4:comprendre <span class="t">avant</span> de construire.`,
-    },
-    {
-      step: $localize`:@@homeManifestoStep3:La preuve`,
-      html: $localize`:@@homeManifestoLine5:Et le prouver en le rendant <span class="t">jouable</span>.`,
+      index: $localize`:@@homePlanEtape3Index:— Lancer`,
+      title: $localize`:@@homePlanEtape3Titre:Vous êtes en ligne, et autonome`,
+      desc: $localize`:@@homePlanEtape3Texte:Le site est en ligne, et je vous montre comment le faire vivre sans dépendre de moi.`,
     },
   ];
 
   protected readonly projectsKicker = $localize`:@@homeProjectsKicker:Preuve de savoir-faire`;
-  protected readonly projectsHeadLink = $localize`:@@homeProjectsHeadLink:Voir tous les projets`;
+  protected readonly projectsHeadLink = $localize`:@@homeProjectsHeadLink:Voir toutes les réalisations`;
 
-  protected readonly projects: readonly AsiliProject[] = [
-    {
-      size: 'big',
-      tags: [
-        { label: $localize`:@@homeProjectMorningBriefTag1:En production`, prod: true },
-        { label: $localize`:@@homeProjectMorningBriefTag2:Raspberry Pi` },
-        { label: $localize`:@@homeProjectMorningBriefTag3:Newsletter IA` },
-      ],
-      title: $localize`:@@homeProjectMorningBriefTitle:Morning-Brief`,
-      desc: $localize`:@@homeProjectMorningBriefDesc:Une veille IA collectée, synthétisée et livrée chaque matin, bientôt publiée comme une collection d'articles utiles.`,
-      image: '/assets/images/projects/morning-brief.webp',
-      imageAlt: $localize`:@@homeProjectMorningBriefImageAlt:illustration — Morning-Brief`,
-    },
-    {
-      size: 'small',
-      tags: [
-        { label: $localize`:@@homeProjectAuditTag1:Audit` },
-        { label: $localize`:@@homeProjectAuditTag2:SSE` },
-        { label: $localize`:@@homeProjectAuditTag3:IA` },
-      ],
-      title: $localize`:@@homeProjectAuditTitle:Audit de visibilité web`,
-      desc: $localize`:@@homeProjectAuditDesc:Un diagnostic technique et IA qui transforme les signaux d'un site en actions priorisées.`,
-      href: '/growth-audit',
-      image: '/assets/images/projects/growth-audit.webp',
-      imageAlt: $localize`:@@homeProjectAuditImageAlt:capture — Audit de visibilité web`,
-    },
-    {
-      size: 'small',
-      tags: [
-        { label: $localize`:@@homeProject4Tag1:Automatisation` },
-        { label: $localize`:@@homeProject4Tag2:IA` },
-      ],
-      title: $localize`:@@homeProject4Title:Un système qui travaille en silence`,
-      desc: $localize`:@@homeProject4Desc:Des tâches répétitives remplacées par une automatisation lisible, mesurée, sous contrôle humain.`,
-      href: '/offer',
-      image: '/assets/images/projects/project-automation-validation-diplomas.webp',
-      imageAlt: $localize`:@@homeProject4ImageAlt:capture — automatisation IA`,
-    },
-    {
-      size: 'big',
-      tags: [
-        { label: $localize`:@@homeProjectFormationsTag1:Formation` },
-        { label: $localize`:@@homeProjectFormationsTag2:IA` },
-      ],
-      title: $localize`:@@homeProjectFormationsTitle:Formations actionnables`,
-      desc: $localize`:@@homeProjectFormationsDesc:Des formats courts pour comprendre l'IA, tester un workflow et repartir avec un toolkit concret.`,
-      href: '/formations',
-      image: '/assets/images/projects/Automation-validation.webp',
-      imageAlt: $localize`:@@homeProjectFormationsImageAlt:illustration — formations IA`,
-    },
-  ];
+  protected readonly projects: readonly AsiliProject[] = vitrineDeLAccueil().map((realisation) =>
+    carteDeRealisation(realisation, 'small'),
+  );
 
-  protected readonly cta: AsiliCta = {
-    kicker: $localize`:@@homeCtaKicker:Parlons de votre situation`,
-    title: $localize`:@@homeCtaTitle:Et si on clarifiait, ensemble, avant de construire ?`,
-    lead: $localize`:@@homeCtaLead:Décrivez votre contexte en quelques lignes. Je reviens vers vous avec un regard honnête — pas un devis générique.`,
-    actions: [
-      {
-        libelle: $localize`:@@homeCtaPrimary:Démarrer la conversation`,
-        lien: '/contact',
-        variante: 'principale',
-      },
-      {
-        libelle: $localize`:@@homeCtaSecondary:Voir les projets`,
-        lien: '/projets',
-        variante: 'secondaire',
-      },
-    ],
+  protected readonly formations = ENTREES_DE_FORMATION;
+
+  protected readonly faqKicker = $localize`:@@homeFaqKicker:Questions fréquentes`;
+  protected readonly faqTitre = $localize`:@@homeFaqTitre:Vos questions, avant de vous lancer.`;
+  protected readonly faq = faqDuSite(inject(LOCALE_ID));
+
+  protected readonly appel: AsiliCta = {
+    kicker: $localize`:@@homeAppelKicker:Votre site, maintenant`,
+    title: $localize`:@@homeAppelTitre:Parlons de votre site.`,
+    lead: $localize`:@@homeAppelTexte:Dites-moi en quelques lignes ce que vous faites et qui vous voulez toucher. Je vous réponds avec une proposition claire.`,
   };
 }

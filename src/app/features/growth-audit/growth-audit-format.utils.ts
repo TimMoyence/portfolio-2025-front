@@ -11,7 +11,7 @@ export function formatPhaseLabel(phase: string): string {
     case 'technical_pages':
       return $localize`:audit.phase.technicalPages|Phase label@@auditPhaseTechnicalPages:Scan technique des pages`;
     case 'page_ai_recaps':
-      return $localize`:audit.phase.pageAiRecaps|Phase label@@auditPhasePageAiRecaps:Micro-audits IA page par page`;
+      return $localize`:audit.phase.pageAiRecaps|Phase label@@auditPhasePageAiRecaps:Analyse IA page par page`;
     case 'synthesis':
       return $localize`:audit.phase.synthesis|Phase label@@auditPhaseSynthesis:Synthèse finale IA`;
     default:
@@ -74,7 +74,7 @@ export function formatProgressStep(event: {
   step?: string | null;
   details?: AvancementDAudit;
 }): string {
-  const base = event.step ?? $localize`:@@auditProgressDefaultStep:Audit en cours...`;
+  const base = event.step ?? $localize`:@@auditProgressDefaultStep:Diagnostic en cours...`;
   const details = event.details;
   if (/\(\d+\/\d+\)/.test(base) || details === undefined || details.total <= 0) {
     return base;

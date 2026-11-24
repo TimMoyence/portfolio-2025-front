@@ -9,6 +9,13 @@
   border: 1px solid transparent;
 }
 
+@mixin pastille-opaque($couleur) {
+  border-radius: var(--r-pill);
+  background: var(--cream);
+  border: 1px solid color-mix(in srgb, #{$couleur} 30%, transparent);
+  color: $couleur;
+}
+
 @mixin tone-positive {
   background-color: #dcfce7;
   color: #15803d;

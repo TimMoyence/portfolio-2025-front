@@ -1,6 +1,7 @@
 @use '../../styles-shared/composants/forms' as forms;
 @use './auth-msg';
 @use '../../styles-shared/mise-en-page/mono';
+@use '../../styles-shared/composants/survol';
 
 .auth-split {
   display: grid;
@@ -43,7 +44,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--teal);
+  background: var(--teal-deep);
   box-shadow: 0 0 0 4px rgba(var(--teal-rgb), 0.2);
 }
 .auth-aside .auth-logo small {
@@ -75,7 +76,7 @@
 }
 .auth-aside-mid h2 em {
   font-style: italic;
-  color: var(--teal);
+  color: var(--teal-deep);
 }
 .auth-aside-mid p {
   color: rgba(251, 243, 230, 0.66);
@@ -103,9 +104,6 @@
   width: 100%;
   max-width: 408px;
 }
-/* Sélecteurs sans l'ancêtre `.auth-card` : ces noeuds sont projetés par
-   `ng-content`, et en encapsulation Angular Emulated ils portent l'attribut
-   `_ngcontent` du composant qui les déclare, pas celui du shell. */
 h1 {
   font-family: var(--font-display);
   font-size: clamp(30px, 3.4vw, 40px);
@@ -143,16 +141,18 @@ h1 em {
     box-shadow 0.3s;
   margin-top: 26px;
 }
-.auth-google:hover {
-  background: var(--ivory);
-  box-shadow: var(--shadow-soft);
+.auth-google {
+  @include survol.survol {
+    background: var(--ivory);
+    box-shadow: var(--shadow-soft);
+  }
 }
 .auth-or {
   display: flex;
   align-items: center;
   gap: 16px;
   margin: 22px 0;
-  color: var(--ink-faint);
+  color: var(--ink-mute);
   font-size: 13px;
 }
 .auth-or::before,
@@ -186,19 +186,19 @@ h1 em {
   right: 14px;
   top: 50%;
   translate: 0 -50%;
-  color: var(--ink-faint);
+  color: var(--ink-mute);
   display: grid;
 }
 .auth-field .toggle-pw {
   background: none;
   border: 0;
   cursor: pointer;
-  color: var(--ink-faint);
+  color: var(--ink-mute);
   padding: 0;
 }
 .auth-field .hint {
   font-size: 12.5px;
-  color: var(--ink-faint);
+  color: var(--ink-mute);
   margin-top: 7px;
 }
 .auth-field .err {
@@ -229,7 +229,7 @@ h1 em {
   background: var(--success);
 }
 .pw-strength.s4 i {
-  background: var(--teal);
+  background: var(--teal-deep);
 }
 .pw-label {
   font-size: 12px;
@@ -256,13 +256,15 @@ h1 em {
 .auth-check input {
   width: 17px;
   height: 17px;
-  accent-color: var(--teal);
+  accent-color: var(--teal-deep);
 }
 .auth-link {
   @include forms.text-button;
 }
-.auth-link:hover {
-  text-decoration: underline;
+.auth-link {
+  @include survol.survol {
+    text-decoration: underline;
+  }
 }
 .auth-submit {
   width: 100%;
@@ -279,9 +281,11 @@ h1 em {
   @include forms.text-button;
   font: inherit;
 }
-.auth-alt a:hover,
-.auth-alt button:hover {
-  text-decoration: underline;
+.auth-alt a,
+.auth-alt button {
+  @include survol.survol {
+    text-decoration: underline;
+  }
 }
 
 .auth-illus {

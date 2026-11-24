@@ -1,5 +1,12 @@
 @use '../../../slide-section' as slide;
 @use '../../../slide-toile' as toile;
+@use '../../../../../styles-shared/composants/survol';
+
+@mixin etape-en-avant {
+  border-color: var(--border, rgba(var(--ink-rgb), 0.16));
+  background: var(--card-bg, #fff);
+  transform: translateX(0.2rem);
+}
 
 .slide-method-path {
   @include slide.section;
@@ -54,12 +61,12 @@
     border-color 180ms ease,
     transform 180ms ease;
 
-  &:hover,
-  &:focus-visible,
   &.is-current {
-    border-color: var(--border, rgba(var(--ink-rgb), 0.16));
-    background: var(--card-bg, #fff);
-    transform: translateX(0.2rem);
+    @include etape-en-avant;
+  }
+
+  @include survol.survol-ou-focus {
+    @include etape-en-avant;
   }
 }
 

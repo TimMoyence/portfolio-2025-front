@@ -1,90 +1,57 @@
-import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { AsiliLiensDirective, LIENS_ASILI } from '../../asili-en-tete.directive';
+import { AsiliEnTeteDirective, LIENS_ASILI } from '../../asili-en-tete.directive';
 
 export type AsiliProjectSize = 'big' | 'small';
 
 interface AsiliProjectTag {
-  label: string;
-  prod?: boolean;
-}
-
-interface AsiliProjectCaseStudy {
-  context: string;
-  problem: string;
-  solution: string;
-  role: string;
-  result: string;
+  readonly label: string;
+  readonly prod: boolean;
 }
 
 export interface AsiliProject {
-  title: string;
-  desc: string;
-  tags: readonly AsiliProjectTag[];
-  image?: string;
-  imageAlt?: string;
-  href?: string;
-  size: AsiliProjectSize;
-  caseStudy?: AsiliProjectCaseStudy;
+  readonly title: string;
+  readonly desc: string;
+  readonly tags: readonly AsiliProjectTag[];
+  readonly image: string;
+  readonly srcset: string;
+  readonly imageAlt: string;
+  readonly href: string;
+  readonly vignette: string;
+  readonly size: AsiliProjectSize;
 }
 
-/**
- * Dimensions intrinseques declarees sur les `<img>`, par taille de carte.
- *
- * Les captures sources ont des ratios heterogenes (de 0.87 a 1.44) alors que le
- * visuel est toujours recadre en `object-fit: cover` dans une boite a ratio fixe
- * (`.proj-shot` : 16/10 en `big`, 4/3 en `small`). Declarer les dimensions du
- * fichier ferait donc mentir le ratio intrinseque sur la place reellement
- * occupee : on declare celui de la boite, ce qui reserve la bonne hauteur meme
- * si la feuille de style arrive apres le HTML (zero CLS).
- */
-const IMAGE_DIMENSIONS: Readonly<
-  Record<AsiliProjectSize, { readonly width: number; readonly height: number }>
+export const LARGEUR_DU_CONTENEUR = 'min(100vw, 1280px) - 2 * clamp(20px, 5vw, 72px)';
+
+export const PLEINE_LARGEUR_SUR_TABLETTE = `(max-width: 860px) calc(${LARGEUR_DU_CONTENEUR})`;
+
+const CADRE_DE_LA_VIGNETTE: Readonly<
+  Record<
+    AsiliProjectSize,
+    { readonly width: number; readonly height: number; readonly sizes: string }
+  >
 > = {
-  big: { width: 1600, height: 1000 },
-  small: { width: 800, height: 600 },
+  big: {
+    width: 1600,
+    height: 1000,
+    sizes: `${PLEINE_LARGEUR_SUR_TABLETTE}, calc((${LARGEUR_DU_CONTENEUR} - 110px) * 2 / 3 + 66px)`,
+  },
+  small: {
+    width: 800,
+    height: 600,
+    sizes: `${PLEINE_LARGEUR_SUR_TABLETTE}, calc((${LARGEUR_DU_CONTENEUR} - 110px) / 3 + 22px)`,
+  },
 };
 
 @Component({
   selector: 'app-asili-projects-grid',
   standalone: true,
-  imports: [LIENS_ASILI, NgTemplateOutlet],
+  imports: [LIENS_ASILI],
   templateUrl: './asili-projects-grid.component.html',
   styleUrls: ['./asili-projects-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AsiliProjectsGridComponent extends AsiliLiensDirective {
+export class AsiliProjectsGridComponent extends AsiliEnTeteDirective {
   readonly projects = input.required<readonly AsiliProject[]>();
 
-  /**
-   * Nombre de cartes de tete dont la capture est chargee en `eager` — les
-   * suivantes passent en `loading="lazy"`.
-   *
-   * Le defaut est `0` : sur les deux pages qui montent cette grille, aucune
-   * capture n'est visible au chargement. `/projets` la place sous un
-   * `<app-asili-hero>` haut de `89svh` (asili-hero.component.scss) et sans
-   * image — son candidat LCP est le titre du hero, pas une carte ; l'accueil
-   * la place en bas de document. Charger des captures hors ecran en `eager`
-   * ne ferait que disputer la bande passante au vrai LCP.
-   *
-   * Une page qui placerait la grille au-dessus de la ligne de flottaison doit
-   * passer explicitement le nombre de cartes de sa premiere rangee.
-   */
-  readonly eagerImages = input(0);
-
-  protected imageLoading(index: number): 'eager' | 'lazy' {
-    return index < this.eagerImages() ? 'eager' : 'lazy';
-  }
-
-  protected imageFetchPriority(index: number): 'high' | null {
-    return index === 0 && this.eagerImages() > 0 ? 'high' : null;
-  }
-
-  protected imageWidth(size: AsiliProjectSize): number {
-    return IMAGE_DIMENSIONS[size].width;
-  }
-
-  protected imageHeight(size: AsiliProjectSize): number {
-    return IMAGE_DIMENSIONS[size].height;
-  }
+  protected readonly cadres = CADRE_DE_LA_VIGNETTE;
 }

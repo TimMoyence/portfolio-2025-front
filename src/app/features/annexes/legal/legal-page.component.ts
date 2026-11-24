@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { VERSIONS_DES_TEXTES_LEGAUX } from '../../../core/config/textes-legaux';
-import { RevealOnScrollDirective } from '../../../shared/directives/reveal-on-scroll.directive';
 import { dateDuSite } from '../../../shared/pipes/date-du-site.pipe';
 
 export interface LegalTocItem {
@@ -19,7 +18,7 @@ export interface LegalTocItem {
 @Component({
   selector: 'app-legal-page',
   standalone: true,
-  imports: [RevealOnScrollDirective, RouterLink],
+  imports: [RouterLink],
   templateUrl: './legal-page.component.html',
   styleUrl: './legal-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,4 +38,4 @@ export class LegalPageComponent {
   );
 }
 
-export const LEGAL_PAGE_IMPORTS = [RouterModule, RevealOnScrollDirective, LegalPageComponent];
+export const LEGAL_PAGE_IMPORTS = [RouterModule, LegalPageComponent];

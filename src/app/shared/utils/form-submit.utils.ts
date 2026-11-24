@@ -28,6 +28,13 @@ function messageCommun(erreur: unknown, statut: number): string | undefined {
   return messageDeLaLimiteAtteinte(erreur) ?? messageDuStatut(REFUS_COMMUNS, statut);
 }
 
+export function confirmationIntacte(
+  confirmation: string | undefined,
+  form: { readonly pristine: boolean | null },
+): boolean {
+  return !!confirmation && form.pristine === true;
+}
+
 export function messageDuRefus(erreur: unknown, refus: MessagesDeRefus, repli: string): string {
   const statut = statutDuRefus(erreur);
   return messageDuStatut(refus, statut) ?? messageCommun(erreur, statut) ?? repli;

@@ -1,5 +1,6 @@
 @use '../../../styles-shared/mise-en-page/breakpoints' as bp;
 @use '../../../styles-shared/composants/cartes';
+@use '../../../styles-shared/composants/badges';
 @use '../../../styles-shared/composants/forms';
 @use '../../../styles-shared/mise-en-page/heads';
 @use '../../../styles-shared/mise-en-page/mono';
@@ -161,9 +162,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 6px 12px;
-  border-radius: var(--r-pill);
-  background: rgba(var(--teal-rgb), 0.12);
-  color: var(--teal-deep);
+  @include badges.pastille-opaque(var(--teal-deep));
 }
 
 .f-meta {
@@ -183,7 +182,7 @@
     font-size: 10.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--ink-faint);
+    color: var(--ink-mute);
   }
 
   .fv {

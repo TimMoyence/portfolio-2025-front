@@ -4,6 +4,7 @@ export type JsonLdBlock = Record<string, unknown> | Record<string, unknown>[];
 
 export interface SeoLocaleMeta {
   title: string;
+  nom?: string;
   description: string;
   keywords?: string[];
   ogTitle?: string;
@@ -16,11 +17,6 @@ export interface SeoLocaleMeta {
   jsonLd?: JsonLdBlock;
 }
 
-interface SeoBreadcrumbEntry {
-  name: string;
-  path: string;
-}
-
 export interface SeoPageEntry {
   id: string;
   path: string;
@@ -28,7 +24,6 @@ export interface SeoPageEntry {
   changefreq?: SeoChangeFreq;
   priority?: number;
   lastmod?: string;
-  breadcrumb?: SeoBreadcrumbEntry[];
   locales: Record<string, SeoLocaleMeta>;
 }
 
@@ -44,15 +39,13 @@ interface SeoMetadataSite {
   locales: string[];
 }
 
+type BlocDuSite = 'localBusiness' | 'person';
+
 interface SeoMetadataGlobal {
   localBusiness: Record<string, unknown>;
-  siteNavigation: Record<string, unknown>;
-  /**
-   * Schema Person standalone injecte en top-level sur toutes les pages
-   * (P1.11). Referenciable via `@id=https://asilidesign.fr/#person` depuis
-   * `author`/`founder` des autres blocs.
-   */
+  navigation: readonly string[];
   person?: Record<string, unknown>;
+  textes?: Record<string, Partial<Record<BlocDuSite, Record<string, unknown>>>>;
 }
 
 export interface SeoMetadataFile {

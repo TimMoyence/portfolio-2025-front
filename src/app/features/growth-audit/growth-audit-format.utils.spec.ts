@@ -28,7 +28,7 @@ describe('growth-audit-format.utils', () => {
     });
 
     it('devrait traduire page_ai_recaps', () => {
-      expect(formatPhaseLabel('page_ai_recaps')).toBe('Micro-audits IA page par page');
+      expect(formatPhaseLabel('page_ai_recaps')).toBe('Analyse IA page par page');
     });
 
     it('devrait traduire synthesis', () => {
@@ -138,7 +138,7 @@ describe('growth-audit-format.utils', () => {
     });
 
     it('devrait utiliser le fallback si pas de step', () => {
-      expect(formatProgressStep({})).toBe('Audit en cours...');
+      expect(formatProgressStep({})).toBe('Diagnostic en cours...');
     });
 
     it('devrait ignorer les details avec total a zero', () => {

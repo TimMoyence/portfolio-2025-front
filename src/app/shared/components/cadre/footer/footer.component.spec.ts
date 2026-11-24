@@ -31,12 +31,12 @@ describe('FooterComponent', () => {
     });
   });
 
-  it('should point the « Projets » work link to /projets', () => {
-    expect(lienDeTravail('Projets')?.href).toBe('/projets');
+  it('should point the « Réalisations » work link to /projets', () => {
+    expect(lienDeTravail('Réalisations')?.href).toBe('/projets');
   });
 
-  it('should expose the audit link in the work column', () => {
-    expect(lienDeTravail('Audit')?.href).toBe('/growth-audit');
+  it('should expose the free diagnostic link in the work column', () => {
+    expect(lienDeTravail('Diagnostic gratuit')?.href).toBe('/growth-audit');
   });
 
   it('should render a social link entry for each configured link', () => {
@@ -62,24 +62,13 @@ describe('FooterComponent', () => {
     expect(baseline?.textContent?.trim()).toBe(pied.composant.brandBaseline);
   });
 
-  it('should keep the structured <address> with postal address microdata', () => {
-    const address = pied.racine.querySelector('address[itemscope]');
-    expect(address).toBeTruthy();
-    expect(address?.querySelector('[itemprop="address"][itemscope]')).toBeTruthy();
-    expect(address?.querySelector('[itemprop="addressLocality"]')?.textContent).toContain(
-      'Bordeaux',
-    );
+  it('SEO-6 · l adresse ne porte aucune microdonnée : le JSON-LD décrit seul l entreprise', () => {
+    expect(pied.racine.querySelector('[itemscope], [itemprop]')).toBeNull();
   });
 
   it('sépare le code postal de la ville dans l adresse affichée', () => {
-    const adresse = pied.racine.querySelector('[itemprop="address"][itemscope]');
+    const adresse = pied.racine.querySelector('address .asili-footer__address-line');
 
     expect(adresse?.textContent).toMatch(/33100\s+Bordeaux/);
-  });
-
-  it('nomme l entreprise des microdonnées par le nom du site', () => {
-    const nom = pied.racine.querySelector('address[itemscope] > meta[itemprop="name"]');
-
-    expect(nom?.getAttribute('content')).toBe('Asili Design');
   });
 });

@@ -1,6 +1,5 @@
+import { METADONNEES_DU_SITE } from '../../app/core/seo/site-servi';
 import { cheminDuCoursEnSeance, COURS_EN_SEANCE } from '../../app/core/config/cours-en-seance';
-import type { SeoMetadataFile } from '../../app/core/seo/seo-metadata.model';
-import seoMetadata from '../../assets/seo/seo-metadata.json';
 import { buildPageSeoFr, buildSeoMetadata } from '../../testing/factories/seo-metadata.factory';
 import { buildLlmsFullTxt, buildLlmsTxt, buildSitemapXml } from './seo-builders';
 import { injectSeoHead } from './seo-injector';
@@ -69,26 +68,25 @@ describe('injectSeoHead — fiche article', () => {
 
 for (const slug of COURS_EN_SEANCE) {
   describe(`seo-metadata.json — cours ${slug} servi par le serveur`, () => {
-    const METADONNEES = seoMetadata as unknown as SeoMetadataFile;
     const CHEMIN_B2 = `/${cheminDuCoursEnSeance(slug)}`;
 
     it('L1 · déclare la page du cours non indexable : servie en noindex, elle ne porte aucune canonique', () => {
-      const page = METADONNEES.pages.find((candidate) => candidate.path === CHEMIN_B2);
+      const page = METADONNEES_DU_SITE.pages.find((candidate) => candidate.path === CHEMIN_B2);
 
       expect(page?.id).toBe(`formations-${slug}`);
       expect(page?.index).toBeFalse();
     });
 
     it('L1 · ne publie pas la page du cours au sitemap statique ni à llms.txt', () => {
-      const sitemap = buildSitemapXml(METADONNEES, BASE_URL);
-      const llms = buildLlmsTxt(METADONNEES, BASE_URL);
-      const llmsComplet = buildLlmsFullTxt(METADONNEES, BASE_URL);
+      const sitemap = buildSitemapXml(METADONNEES_DU_SITE, BASE_URL);
+      const llms = buildLlmsTxt(METADONNEES_DU_SITE, BASE_URL);
+      const llmsComplet = buildLlmsFullTxt(METADONNEES_DU_SITE, BASE_URL);
 
       expect([sitemap, llms, llmsComplet].filter((texte) => texte.includes(CHEMIN_B2))).toEqual([]);
     });
 
     it('L1 · n annonce aucun nombre d écrans, qui suit le contenu servi', () => {
-      const page = METADONNEES.pages.find((candidate) => candidate.path === CHEMIN_B2);
+      const page = METADONNEES_DU_SITE.pages.find((candidate) => candidate.path === CHEMIN_B2);
       const textes = JSON.stringify(page?.locales);
 
       expect(page).toBeDefined();

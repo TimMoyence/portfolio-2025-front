@@ -1,15 +1,11 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { RevealOnScrollDirective } from '../../../directives/reveal-on-scroll.directive';
-
-export interface AsiliFaqItem {
-  readonly q: string;
-  readonly a: string;
-}
+import type { QuestionDeFaq } from '../../../offre/prix-et-delai';
+import { FiletDeSectionDirective } from '../../../directives/filet-de-section.directive';
 
 @Component({
   selector: 'app-asili-faq',
   standalone: true,
-  imports: [RevealOnScrollDirective],
+  imports: [FiletDeSectionDirective],
   templateUrl: './asili-faq.component.html',
   styleUrls: ['./asili-faq.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,5 +15,5 @@ export class AsiliFaqComponent {
 
   readonly title = input.required<string>();
 
-  readonly items = input.required<readonly AsiliFaqItem[]>();
+  readonly items = input.required<readonly QuestionDeFaq[]>();
 }

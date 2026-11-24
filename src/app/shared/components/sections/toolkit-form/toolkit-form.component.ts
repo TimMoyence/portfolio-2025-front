@@ -32,7 +32,7 @@ type FormState = 'idle' | 'loading' | 'success' | 'error';
   template: `
     @switch (state()) {
       @case ('success') {
-        <div class="text-center py-6" data-toolkit-success>
+        <div class="text-center py-6" role="status" data-toolkit-success>
           <p class="text-lg font-medium text-scheme-accent" i18n="@@toolkit-form.success.title">
             Envoyé !
           </p>
@@ -62,7 +62,7 @@ type FormState = 'idle' | 'loading' | 'success' | 'error';
               required
             />
             @if (firstName().length > 0 && erreursDuPrenom(); as erreurs) {
-              <p appFieldErrors class="mt-1 text-sm text-red-600" [errors]="erreurs"></p>
+              <p appFieldErrors class="mt-1 text-sm text-scheme-danger" [errors]="erreurs"></p>
             }
           </div>
           <div>
@@ -77,7 +77,7 @@ type FormState = 'idle' | 'loading' | 'success' | 'error';
               required
             />
             @if (erreurDAdresse(); as erreurs) {
-              <p appFieldErrors class="mt-1 text-sm text-red-600" [errors]="erreurs"></p>
+              <p appFieldErrors class="mt-1 text-sm text-scheme-danger" [errors]="erreurs"></p>
             }
           </div>
           <label class="flex items-start gap-2 text-xs text-scheme-text-muted cursor-pointer">
@@ -93,7 +93,9 @@ type FormState = 'idle' | 'loading' | 'success' | 'error';
           </label>
 
           @if (state() === 'error') {
-            <p class="text-sm text-red-600" data-toolkit-error>{{ erreurDEnvoi() }}</p>
+            <p class="text-sm text-scheme-danger" role="alert" data-toolkit-error>
+              {{ erreurDEnvoi() }}
+            </p>
           }
 
           <button

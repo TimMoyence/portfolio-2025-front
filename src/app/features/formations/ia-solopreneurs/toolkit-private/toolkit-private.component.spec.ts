@@ -60,7 +60,6 @@ function setup(opts: SetupOptions = {}): {
 
 describe('ToolkitPrivateComponent', () => {
   afterEach(() => {
-    document.documentElement.classList.remove('anim-ready');
     rendreLePressePapiers();
   });
 

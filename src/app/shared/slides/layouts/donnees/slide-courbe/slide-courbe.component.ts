@@ -5,6 +5,10 @@ import { FigureDeCourbeComponent } from '../figure-de-courbe/figure-de-courbe.co
 type Courbe = Extract<PresentationServie, { renderer: 'courbe' }>['props'];
 type Tangente = NonNullable<Courbe['steps'][number]['tangent']>;
 
+function tangentesDe(etapes: Courbe['steps']): readonly Tangente[] {
+  return etapes.flatMap(({ tangent }) => (tangent === undefined ? [] : [tangent]));
+}
+
 @Component({
   selector: 'app-slide-courbe',
   standalone: true,
@@ -22,11 +26,10 @@ export class SlideCourbeComponent {
   protected readonly rang = signal(0);
   protected readonly etape = computed(() => this.steps()[this.rang()]);
   protected readonly dernier = computed(() => this.steps().length - 1);
-  protected readonly tangentesDevoilees = computed<readonly Tangente[]>(() =>
-    this.steps()
-      .slice(0, this.rang() + 1)
-      .flatMap(({ tangent }) => (tangent === undefined ? [] : [tangent])),
+  protected readonly tangentesDevoilees = computed(() =>
+    tangentesDe(this.steps().slice(0, this.rang() + 1)),
   );
+  protected readonly toutesLesTangentes = computed(() => tangentesDe(this.steps()));
 
   protected avancer(pas: 1 | -1): void {
     this.rang.update((rang) => Math.min(Math.max(rang + pas, 0), this.dernier()));

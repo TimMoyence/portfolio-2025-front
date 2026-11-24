@@ -39,7 +39,7 @@ it('ART-ROBOTS-1 · une page indexable porte robots index et son canonical, une 
     robots: 'index, follow',
     canonical: ['https://asilidesign.fr/fr/contact'],
     hreflang: ['fr', 'en', 'x-default'],
-    jsonLd: 4,
+    jsonLd: 5,
   };
 
   await router.navigateByUrl('/contact');

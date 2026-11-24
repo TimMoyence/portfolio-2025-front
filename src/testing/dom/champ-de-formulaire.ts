@@ -1,3 +1,4 @@
+import { texteDe as texteNormalise } from '../texte/textes-dom';
 import type { ComponentFixture } from '@angular/core/testing';
 import type { ValidationErrors } from '@angular/forms';
 import { NgModel } from '@angular/forms';
@@ -54,9 +55,6 @@ function blocDuChamp<T>(
 ): Element | null {
   return (fixture.nativeElement as HTMLElement).querySelector(selecteur)?.closest(blocs) ?? null;
 }
-
-const texteNormalise = (element: Element | null | undefined): string =>
-  (element?.textContent ?? '').replace(/\s+/g, ' ').trim();
 
 export function texteDuBlocDuChamp<T>(
   fixture: ComponentFixture<T>,

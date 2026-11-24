@@ -1,7 +1,6 @@
+import { METADONNEES_DU_SITE } from '../../../core/seo/site-servi';
 import type { ComponentFixture } from '@angular/core/testing';
-import seoMetadata from '../../../../assets/seo/seo-metadata.json';
 import { dureeDuCoursEnSeance } from '../../../core/config/cours-en-seance';
-import type { SeoMetadataFile } from '../../../core/seo/seo-metadata.model';
 import { FormationsListComponent } from './formations-list.component';
 import { FORMATIONS } from './formations-list.data';
 import { liensAffiches } from '../../../../testing/dom/catalogue-des-formations';
@@ -13,8 +12,6 @@ const COURS_EN_SEANCE = INSTANTANES_DES_COURS_SERVIS.map(([code, instantane]) =>
   lien: `/formations/${instantane.sujet.id}`,
   instantane,
 }));
-
-const SEO = seoMetadata as SeoMetadataFile;
 
 const enIso8601 = (minutes: number): string => {
   const reste = minutes % 60 === 0 ? '' : `${minutes % 60}M`;
@@ -196,9 +193,10 @@ describe('FormationsListComponent', () => {
 
       it('L1 · annonce aux moteurs, en chaque langue, la durée que la carte annonce', () => {
         const annoncee = arrondiACinqMinutes(instantane.sujet.duree);
-        const locales = SEO.pages.find((entree) => entree.path === lien)?.locales ?? {};
+        const locales =
+          METADONNEES_DU_SITE.pages.find((entree) => entree.path === lien)?.locales ?? {};
 
-        expect(Object.keys(locales)).toEqual(SEO.site.locales);
+        expect(Object.keys(locales)).toEqual(METADONNEES_DU_SITE.site.locales);
         for (const [locale, { jsonLd }] of Object.entries(locales)) {
           expect(Array.isArray(jsonLd) ? undefined : jsonLd?.['duration'])
             .withContext(locale)

@@ -1,10 +1,7 @@
 import { DUREE_DE_CONSERVATION_DE_L_IDENTITE_MS } from '../../../../cours/runtime/core/participant/identity';
 import { LIBELLES_DES_INCIDENTS } from '../../../core/models/libelles-des-incidents';
-import { isolateAnimReady } from '../../../../testing/dom/anim-ready';
-import {
-  rendreLaPolitique,
-  texteNormalise,
-} from '../../../../testing/page/politique-de-confidentialite';
+import { rendreLaPolitique } from '../../../../testing/page/politique-de-confidentialite';
+import { texteDe as texteNormalise } from '../../../../testing/texte/textes-dom';
 
 const DONNEES_NOMMEES: readonly (readonly [string, readonly string[]])[] = [
   [
@@ -57,8 +54,6 @@ const FINALITES_NOMMEES: readonly (readonly [string, readonly string[]])[] = [
 ];
 
 describe('PrivacyComponent', () => {
-  isolateAnimReady();
-
   const rendre = rendreLaPolitique;
 
   for (const [donnees, textes] of DONNEES_NOMMEES) {

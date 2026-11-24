@@ -1,6 +1,7 @@
 @use '../../../styles-shared/composants/lists';
 @use '../../../styles-shared/mise-en-page/breakpoints' as bp;
 @use '../../../styles-shared/mise-en-page/mono';
+@use '../../../styles-shared/composants/survol';
 @use '../edition';
 
 .article-state {
@@ -27,7 +28,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  color: var(--teal-ink);
+  color: var(--teal-deep);
 
   &::after {
     @include edition.point-dore;
@@ -85,8 +86,8 @@
       background 0.2s,
       border-color 0.2s;
 
-    &:hover {
-      border-left-color: var(--teal);
+    @include survol.survol {
+      border-left-color: var(--teal-deep);
       background: var(--surface);
       color: var(--text-strong);
     }
@@ -143,7 +144,7 @@
 }
 
 .sommaire__chevron {
-  color: var(--teal-ink);
+  color: var(--teal-deep);
   transition: transform 0.2s;
 
   .sommaire--ouvert & {
@@ -194,7 +195,7 @@
 }
 
 .recit__bonjour {
-  color: var(--teal-ink);
+  color: var(--teal-deep);
   font-family: var(--font-display);
   font-size: 1.6em;
 }
@@ -214,7 +215,7 @@
 }
 
 .partie__kicker {
-  @include mono.capitales-mono(12px, 0.18em, var(--teal-ink));
+  @include mono.capitales-mono(12px, 0.18em, var(--teal-deep));
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
@@ -244,7 +245,7 @@
 
 .recit__intertitre {
   margin-top: 1.75rem;
-  color: var(--teal-ink);
+  color: var(--teal-deep);
   font-family: var(--font-sans);
   font-size: 1.0625rem;
   font-weight: 700;
@@ -310,7 +311,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--teal-ink);
+  background: var(--teal-deep);
 }
 
 .graphique__valeur {
@@ -358,7 +359,7 @@
 }
 
 .recit__chiffre {
-  color: var(--teal-ink);
+  color: var(--teal-deep);
   font-family: var(--font-display);
   font-size: clamp(2.6rem, 8vw, 4.5rem);
   line-height: 1;
@@ -367,7 +368,7 @@
 .recit__citation {
   margin: 0;
   padding-left: 1.25rem;
-  border-left: 3px solid var(--teal-ink);
+  border-left: 3px solid var(--teal-deep);
   font-size: clamp(1.15rem, 2vw, 1.35rem);
 
   footer {

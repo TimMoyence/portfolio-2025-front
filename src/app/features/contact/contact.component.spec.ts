@@ -3,8 +3,12 @@ import { TestBed } from '@angular/core/testing';
 import { throwError } from 'rxjs';
 import { CONTACT_PORT, type ContactPort } from '../../core/ports/contact.port';
 import { ContactComponent } from './contact.component';
+import { annonces } from '../../../testing/dom/annonces';
 import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/dom/champ-de-formulaire';
-import { createContactPortStubWithDefault } from '../../../testing/factories/contact.factory';
+import {
+  CONTACT_PORT_PAR_DEFAUT,
+  createContactPortStubWithDefault,
+} from '../../../testing/factories/contact.factory';
 import { refusDuBack } from '../../../testing/factories/serveur/probleme-http.factory';
 import { fournirLaRoute } from '../../../testing/factories/serveur/route.factory';
 import {
@@ -22,7 +26,7 @@ function soumettreAvecLesConditions(composant: ContactComponent): void {
 
 describe('ContactComponent', () => {
   const page = pageMontee(ContactComponent, {
-    providers: [{ provide: CONTACT_PORT, useFactory: createContactPortStubWithDefault }],
+    providers: [CONTACT_PORT_PAR_DEFAUT],
   });
 
   it('should create', () => {
@@ -175,6 +179,29 @@ describe('ContactComponent', () => {
       expect(page.racine.textContent).toContain('Message envoyé. Je reviens vers vous rapidement.');
       expect(envoiEnCours()).toBe('false');
     });
+
+    it('annonce le succès aux lecteurs d écran par un statut', () => {
+      soumettreAvecLesConditions(page.composant);
+      page.fixture.detectChanges();
+
+      expect(annonces(page.racine, 'status')).toEqual([
+        'Message envoyé. Je reviens vers vous rapidement.',
+      ]);
+    });
+
+    it('annonce l échec de l envoi aux lecteurs d écran par une alerte', () => {
+      const port = TestBed.inject(CONTACT_PORT) as jasmine.SpyObj<ContactPort>;
+      port.contact.and.returnValue(
+        throwError(() => new HttpErrorResponse({ status: 0, url: 'https://asilidesign.fr' })),
+      );
+
+      soumettreAvecLesConditions(page.composant);
+      page.fixture.detectChanges();
+
+      expect(annonces(page.racine, 'alert')).toContain(
+        'Une erreur est survenue. Veuillez réessayer plus tard.',
+      );
+    });
   });
 
   it('should render main title', () => {
@@ -195,17 +222,9 @@ describe('ContactComponent', () => {
     }
   });
 
-  it('devrait afficher le selecteur de sujet', () => {
-    const subjectSelect = page.racine.querySelector('select[name="subject"]');
-    expect(subjectSelect).not.toBeNull();
-
-    const options = subjectSelect?.querySelectorAll('option');
-    expect(options?.length).toBeGreaterThanOrEqual(4);
-  });
-
   it('devrait afficher les boutons radio de role', () => {
     const roleRadios = page.racine.querySelectorAll('input[name="role"]');
-    expect(roleRadios.length).toBe(page.composant.contactInfo.roles.length);
+    expect(roleRadios.length).toBe(page.composant.activites.length);
   });
 
   it('devrait afficher le champ message (textarea)', () => {
@@ -233,20 +252,15 @@ describe('ContactComponent', () => {
     expect(contactForm.terms).toBeFalse();
   });
 
-  // Contraste mesuré sur le fond de particules qu'un champ transparent laisse
-  // voir : `--text-mute` y donne 3,53:1, sous le minimum 4,5:1 de WCAG 2.1 pour
-  // du texte normal. La valeur choisie doit donc passer en couleur pleine ; le
-  // placeholder est seulement contraint à ne pas l'être, sa teinte restant un
-  // point ouvert.
-  it('devrait afficher la valeur du sujet en couleur pleine et le placeholder en attenue', () => {
+  it('devrait afficher la valeur du besoin en couleur pleine et le placeholder en attenue', () => {
     const { composant, fixture } = page;
-    const select = page.racine.querySelector('select[name="subject"]') as HTMLSelectElement;
+    const select = page.racine.querySelector('select[name="besoin"]') as HTMLSelectElement;
 
     expect(select.classList.contains('text-scheme-text')).toBeFalse();
 
     composant.contactForm = {
       ...composant.contactForm,
-      subject: composant.contactInfo.subjects[0],
+      besoin: composant.besoins[0].id,
     };
     fixture.componentRef.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -259,7 +273,7 @@ describe('ContactComponent', () => {
     const labelledIds = [
       ...page.composant.contactFields.map((field) => field.key),
       'message',
-      'subject',
+      'besoin',
     ];
 
     for (const id of labelledIds) {
@@ -271,12 +285,6 @@ describe('ContactComponent', () => {
       expect(label?.classList.contains('text-scheme-text-muted'))
         .withContext(`label du champ ${id}`)
         .toBeFalse();
-      // La variante `peer-placeholder-shown:` est plus specifique que la classe
-      // posee par [ngClass] : si elle reste attenuee, elle gagne au repos.
-      // Le nom est reconstitue par concatenation : Tailwind scanne aussi les
-      // `.spec.ts` (tailwind.config.js `content`), et le litteral entier
-      // suffirait a garder vivante dans le CSS de production l'utilitaire que
-      // ce test verifie justement comme absent.
       const varianteAttenuee = `peer-placeholder-shown:${'text-scheme-text-muted'}`;
       expect(label?.classList.contains(varianteAttenuee))
         .withContext(`label du champ ${id}`)
@@ -285,7 +293,7 @@ describe('ContactComponent', () => {
   });
 
   it('devrait afficher le libelle du groupe de roles en couleur pleine', () => {
-    const groupLabel = page.racine.querySelector('fieldset')?.previousElementSibling;
+    const groupLabel = page.racine.querySelector('fieldset legend');
 
     expect(groupLabel).not.toBeNull();
     expect(groupLabel?.classList.contains('text-scheme-text')).toBeTrue();
@@ -295,7 +303,7 @@ describe('ContactComponent', () => {
   it('devrait afficher les libelles de role en couleur pleine', () => {
     const roleLabels = page.racine.querySelectorAll('fieldset label p');
 
-    expect(roleLabels.length).toBe(page.composant.contactInfo.roles.length);
+    expect(roleLabels.length).toBe(page.composant.activites.length);
     for (const roleLabel of Array.from(roleLabels)) {
       expect(roleLabel.classList.contains('text-scheme-text'))
         .withContext(`role « ${roleLabel.textContent?.trim()} »`)
@@ -332,7 +340,7 @@ describe('ContactComponent — demande d acces redirigee par le garde de role', 
     fixture.detectChanges();
 
     const select = (fixture.nativeElement as HTMLElement).querySelector<HTMLSelectElement>(
-      'select#subject',
+      'select#besoin',
     );
     expect(select?.selectedOptions[0]?.textContent?.trim()).toBe("Demande d'accès application");
   });

@@ -38,11 +38,26 @@ export function contrastesInsuffisants(racine: Element): readonly string[] {
     return (clair + 0.05) / (sombre + 0.05);
   };
 
+  const grainDe = (image: string): Couleur | null => {
+    const matrice = /values='([^']+)'/.exec(decodeURIComponent(image))?.[1];
+    const v = matrice?.trim().split(/\s+/).map(Number) ?? [];
+    if (v.length !== 20 || !image.includes('feTurbulence')) return null;
+    const alpha = v.slice(15).reduce((somme, coef) => somme + Math.max(coef, 0), 0);
+    return { r: (v[4] ?? 0) * 255, g: (v[9] ?? 0) * 255, b: (v[14] ?? 0) * 255, a: alpha };
+  };
+
   const fondDe = (element: Element): Couleur | null => {
     const couches: Couleur[] = [];
     for (let e: Element | null = element; e !== null; e = e.parentElement) {
       const style = getComputedStyle(e);
-      if (style.backgroundImage !== 'none') return null;
+      if (style.backgroundImage !== 'none') {
+        const grain =
+          e === document.body || e === document.documentElement
+            ? grainDe(style.backgroundImage)
+            : null;
+        if (grain === null) return null;
+        couches.push(grain);
+      }
       const couleur = lire(style.backgroundColor);
       if (couleur === null) return null;
       if (couleur.a > 0) couches.push(couleur);

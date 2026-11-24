@@ -1,19 +1,21 @@
 import { escapeHtml } from '../../cours/runtime/core/texte/html';
+import { chaineDe } from '../../cours/runtime/core/texte/valeurs';
+import { jsonLdDeLaPage } from '../../app/core/seo/json-ld';
 import type {
   SeoLocaleMeta,
   SeoMetadataFile,
   SeoPageEntry,
 } from '../../app/core/seo/seo-metadata.model';
 import type { PublicationDeCours } from '../api/cours-publication';
-import { buildLocalizedPath, normalizePath, urlLocalisee } from '../../app/core/seo/chemins';
-import { NOM_DU_SITE } from '../../app/core/seo/nom-du-site';
+import { buildLocalizedPath, normalizePath, urlLocalisee } from '../../app/core/seo/pages/chemins';
+import { NOM_DU_SITE } from '../../app/core/seo/pages/nom-du-site';
 import {
   cheminPublicDeLaPage,
   estIndexable,
   estPageDAccueil,
   localeParDefaut,
   pagesIndexables,
-} from '../../app/core/seo/pages-seo';
+} from '../../app/core/seo/pages/pages-seo';
 
 const AI_USER_AGENTS: ReadonlyArray<string> = [
   'GPTBot',
@@ -150,7 +152,12 @@ export const buildSitemapXml = (
   ].join('\n');
 };
 
-/** Format defini par le standard https://llmstxt.org/. */
+const champDuSite = (metadata: SeoMetadataFile, type: string, champ: string): string | null =>
+  chaineDe(
+    jsonLdDeLaPage(metadata, localeParDefaut(metadata)).find((bloc) => bloc['@type'] === type),
+    champ,
+  );
+
 export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string => {
   const defaultLocale = localeParDefaut(metadata);
   const indexablePages = pagesIndexables(metadata);
@@ -172,11 +179,9 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
     return `- [${title}](${href})${desc}`;
   };
 
-  const site = metadata.global?.localBusiness as
-    { name?: string; description?: string; founder?: { name?: string } } | undefined;
-  const siteName = site?.name ?? NOM_DU_SITE;
-  const siteDescription = site?.description ?? '';
-  const founderName = site?.founder?.name ?? 'Tim Moyence';
+  const siteName = champDuSite(metadata, 'LocalBusiness', 'name') ?? NOM_DU_SITE;
+  const siteDescription = champDuSite(metadata, 'LocalBusiness', 'description') ?? '';
+  const founderName = champDuSite(metadata, 'Person', 'name') ?? 'Tim Moyence';
 
   const servicePages = indexablePages.filter(
     (p) =>
@@ -184,9 +189,10 @@ export const buildLlmsTxt = (metadata: SeoMetadataFile, baseUrl: string): string
       p.id === 'formations' ||
       p.id.startsWith('formations-'),
   );
-  const aboutPages = indexablePages.filter((p) => ['presentation', 'projets'].includes(p.id));
-  const contactPages = indexablePages.filter((p) => p.id === 'contact');
-  const legalPages = indexablePages.filter((p) => ['terms', 'privacy'].includes(p.id));
+  const pagesDe = (...ids: string[]) => indexablePages.filter((p) => ids.includes(p.id));
+  const aboutPages = pagesDe('presentation', 'projets');
+  const contactPages = pagesDe('contact');
+  const legalPages = pagesDe('terms', 'privacy');
 
   const section = (title: string, pages: typeof indexablePages): string[] => {
     if (pages.length === 0) return [];
@@ -258,9 +264,7 @@ export const buildLlmsFullTxt = (metadata: SeoMetadataFile, baseUrl: string): st
   const indexablePages = pagesIndexables(metadata);
 
   const lines: string[] = [];
-  const site = metadata.global?.localBusiness as
-    { name?: string; description?: string } | undefined;
-  lines.push(`# ${site?.name ?? NOM_DU_SITE} — llms-full`);
+  lines.push(`# ${champDuSite(metadata, 'LocalBusiness', 'name') ?? NOM_DU_SITE} — llms-full`);
   lines.push('');
   lines.push('> Agregation complete du contenu indexable (title, description, URL,');
   lines.push('> dateModified, mots-cles) pour ingestion par moteurs IA generatifs.');

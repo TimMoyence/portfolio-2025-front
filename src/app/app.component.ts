@@ -5,7 +5,6 @@ import type { ActivatedRouteSnapshot } from '@angular/router';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { AdresseAVerifierComponent } from './shared/components/auth/adresse-a-verifier/adresse-a-verifier.component';
-import { AsiliBackgroundComponent } from './shared/components/cadre/asili-background/asili-background.component';
 import { FooterComponent } from './shared/components/cadre/footer/footer.component';
 import { CookieBannerComponent } from './shared/components/cadre/cookie-banner/cookie-banner.component';
 import { NavbarComponent } from './shared/components/cadre/navbar/navbar.component';
@@ -27,7 +26,6 @@ function porteLaCoquille(racine: ActivatedRouteSnapshot): boolean {
   imports: [
     CommonModule,
     RouterOutlet,
-    AsiliBackgroundComponent,
     NavbarComponent,
     SeoManagerComponent,
     FooterComponent,
@@ -37,9 +35,6 @@ function porteLaCoquille(racine: ActivatedRouteSnapshot): boolean {
     AdresseAVerifierComponent,
   ],
   template: `
-    @if (coquille()) {
-      <app-asili-background />
-    }
     <app-seo-manager></app-seo-manager>
     @if (coquille()) {
       <app-skip-link></app-skip-link>
@@ -49,8 +44,6 @@ function porteLaCoquille(racine: ActivatedRouteSnapshot): boolean {
         <app-navbar></app-navbar>
       }
       <main id="main-content" role="main" tabindex="-1">
-        <!-- Cale sous la navbar fixe : purement dimensionnelle, sans fond
-             opaque qui masquerait le champ de particules global. -->
         @if (coquille()) {
           <div class="pt-24 lg:pt-28"></div>
           <app-adresse-a-verifier />
@@ -58,13 +51,6 @@ function porteLaCoquille(racine: ActivatedRouteSnapshot): boolean {
         <app-session-retry />
         <router-outlet></router-outlet>
       </main>
-      <!--
-        Footer rendu sans @defer pour qu'il soit inclus dans le HTML
-        prerendu (SSR). Contient <address itemprop="PostalAddress"> et
-        <time datetime> critiques pour SEO/AI-Search (P2.10/P2.11 +
-        7 liens internal linking P2.12/P6.4). Le bundle footer est
-        leger, le gain de defer serait < 1KB et casse le prerender.
-      -->
       @if (coquille()) {
         <app-footer></app-footer>
         @defer (on idle) {

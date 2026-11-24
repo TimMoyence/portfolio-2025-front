@@ -80,32 +80,21 @@
 }
 
 <ng-template #navContent let-isMobile="isMobile">
-  @for (item of navLinks; track $index) {
-    <div class="asili-nav__item" [class.is-mobile]="isMobile">
-      <a
-        [routerLink]="item.href"
-        routerLinkActive="active"
-        #rla="routerLinkActive"
-        [attr.aria-current]="rla.isActive ? 'page' : null"
-        [id]="item.label + $index"
-        class="asili-nav__link"
-        [class.is-mobile]="isMobile"
-        (click)="isMobile && closeMobileMenu()"
-      >
-        {{ item.label }}
-      </a>
-    </div>
+  @for (item of navLinks; track item.href) {
+    <ng-container *ngTemplateOutlet="navLink; context: { $implicit: item, isMobile }" />
   }
 
   @if (!isMobile) {
     <div
-      class="asili-nav__item"
+      class="asili-nav__item asili-nav__item--formation"
       (mouseenter)="openDropdown(formationsDropdown)"
       (mouseleave)="closeDropdown(formationsDropdown)"
+      (focusout)="closeDropdownWhenFocusLeaves(formationsDropdown, $event)"
     >
       <button
+        #formationTrigger
         type="button"
-        (click)="toggleDropdown(formationsDropdown)"
+        (click)="cliquerFormation(formationsDropdown, $event)"
         [attr.aria-expanded]="formationsDropdown.isOpen"
         aria-haspopup="true"
         class="asili-nav__link asili-nav__trigger"
@@ -128,44 +117,17 @@
     ></ng-container>
   }
 
-  @if (isMobile) {
-    <div class="asili-nav__item is-mobile">
-      <a
-        routerLink="/contact"
-        routerLinkActive="active"
-        #rlaContact="routerLinkActive"
-        [attr.aria-current]="rlaContact.isActive ? 'page' : null"
-        class="asili-nav__link is-mobile"
-        (click)="closeMobileMenu()"
-      >
-        <span i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel">Contact</span>
-      </a>
-    </div>
-  }
+  <ng-container *ngTemplateOutlet="navLink; context: { $implicit: aPropos, isMobile }" />
 
   <div class="asili-nav__side" [class.is-mobile]="isMobile">
-    <button
-      type="button"
+    <a
       class="btn btn-teal asili-nav__cta"
-      title="Demander un devis"
-      i18n-title="navbar.link.audit|Navbar primary link@@navLinkAudit:Audit"
-      [routerLink]="'/growth-audit'"
+      [routerLink]="cheminDuContact"
+      [queryParams]="{ besoin: 'creer' }"
       (click)="isMobile && closeMobileMenu()"
+      i18n="@@navCtaParlerDeMonSite"
+      >Parler de mon site</a
     >
-      <span i18n="navbar.link.audit|Navbar primary link@@navLinkAuditSpan:Audit">Audit</span>
-    </button>
-
-    @if (!isMobile) {
-      <button
-        type="button"
-        class="btn btn-ghost asili-nav__cta asili-nav__cta--ghost"
-        title="Me contacter"
-        i18n-title="navbar.cta.contact.title|Contact CTA tooltip@@navCtaContactTitle"
-        [routerLink]="'/contact'"
-      >
-        <span i18n="navbar.cta.contact.label|Contact CTA label@@navCtaContactLabel">Contact</span>
-      </button>
-    }
 
     <div class="asili-lang">
       <span class="asili-lang__current" aria-hidden="true">{{
@@ -231,17 +193,32 @@
         </div>
       }
     } @else {
-      <button
-        type="button"
+      <a
         class="asili-avatar asili-avatar--login"
-        [routerLink]="'/login'"
+        routerLink="/login"
         (click)="isMobile && closeMobileMenu()"
         aria-label="Espace utilisateur"
         i18n-aria-label="navbar.auth.label|Auth button label@@navAuthLabel"
       >
         <app-svg-icon name="person" [size]="1.2"></app-svg-icon>
-      </button>
+      </a>
     }
+  </div>
+</ng-template>
+
+<ng-template #navLink let-item let-isMobile="isMobile">
+  <div class="asili-nav__item" [class.is-mobile]="isMobile">
+    <a
+      [routerLink]="item.href"
+      routerLinkActive="active"
+      #rla="routerLinkActive"
+      [attr.aria-current]="rla.isActive ? 'page' : null"
+      class="asili-nav__link"
+      [class.is-mobile]="isMobile"
+      (click)="isMobile && closeMobileMenu()"
+    >
+      {{ item.label }}
+    </a>
   </div>
 </ng-template>
 
@@ -250,10 +227,19 @@
     class="asili-logo_img"
     aria-hidden="true"
     src="/assets/images/logo.webp"
+    srcset="
+      /assets/images/logo/64.webp   64w,
+      /assets/images/logo/128.webp 128w,
+      /assets/images/logo/192.webp 192w
+    "
+    sizes="4rem"
     alt="Logo Asili Design"
     i18n-alt="@@navLogoAlt"
   />
-  <span class="asili-logo__name" i18n="@@NavbarCompanyTitle">Asili design</span>
+  <span class="asili-logo__texte">
+    <span class="asili-logo__name" i18n="@@NavbarCompanyTitle">Asili Design</span>
+    <small class="asili-logo__metier" i18n="@@marqueMetier">Sites web & apps mobiles</small>
+  </span>
 </ng-template>
 
 <ng-template #smallAvatar>
@@ -286,19 +272,19 @@
 
 <ng-template #dropdownMenu let-dropdown>
   <div class="asili-dropdown" [class.open]="dropdown.isOpen" role="menu">
-    @for (item of dropdown.items; track item.href) {
+    @for (item of dropdown.items; track item.lien) {
       <a
-        [routerLink]="item.href"
+        [routerLink]="item.lien"
         (click)="closeDropdown(dropdown)"
         class="asili-drop-item"
         role="menuitem"
       >
         <span class="asili-drop-item__ic">
-          <app-svg-icon [name]="item.icon" [size]="1.25"></app-svg-icon>
+          <app-svg-icon name="sparkles" [size]="1.25"></app-svg-icon>
         </span>
         <span class="asili-drop-item__body">
-          <span class="asili-drop-item__title">{{ item.title }}</span>
-          <span class="asili-drop-item__desc">{{ item.description }}</span>
+          <span class="asili-drop-item__title">{{ item.titre }}</span>
+          <span class="asili-drop-item__desc">{{ item.detail }}</span>
         </span>
       </a>
     }
@@ -306,41 +292,27 @@
 </ng-template>
 
 <ng-template #drawerGroup let-dropdown>
-  <div class="asili-nav__item is-mobile asili-drawer__group">
+  <div class="asili-nav__item asili-nav__item--formation is-mobile asili-drawer__group">
     <button
       type="button"
       (click)="toggleDropdown(dropdown)"
       [attr.aria-expanded]="dropdown.isOpen"
       class="asili-nav__link asili-nav__trigger is-mobile"
     >
-      <span class="asili-drawer__group-label"
-        >{{ dropdown.label }}
-        @if (dropdown.subtitle) {
-          <span class="asili-drawer__sub">{{ dropdown.subtitle }}</span>
-        }
-      </span>
+      <span>{{ dropdown.label }}</span>
       <ng-container
         *ngTemplateOutlet="navChevron; context: { open: dropdown.isOpen, size: 13 }"
       ></ng-container>
     </button>
     @if (dropdown.isOpen) {
       <div class="asili-drawer__sublist">
-        @if (dropdown.href) {
+        @for (item of dropdown.items; track item.lien) {
           <a
-            [routerLink]="dropdown.href"
-            (click)="closeMobileMenu(); closeDropdown(dropdown)"
-            class="asili-drawer__sublink asili-drawer__sublink--hub"
-          >
-            {{ dropdown.label }}
-          </a>
-        }
-        @for (item of dropdown.items; track item.href) {
-          <a
-            [routerLink]="item.href"
+            [routerLink]="item.lien"
             (click)="closeMobileMenu(); closeDropdown(dropdown)"
             class="asili-drawer__sublink"
           >
-            {{ item.title }}
+            {{ item.titre }}
           </a>
         }
       </div>

@@ -18,11 +18,4 @@ export interface AsiliMethodStep {
 })
 export class AsiliMethodComponent extends AsiliEnTeteDirective {
   readonly steps = input.required<readonly AsiliMethodStep[]>();
-
-  readonly intro = input<string | null>(null);
-
-  protected revealDelay(index: number): 1 | 2 | 3 | 4 | null {
-    const delay = index % 4;
-    return delay === 0 ? null : (delay as 1 | 2 | 3);
-  }
 }

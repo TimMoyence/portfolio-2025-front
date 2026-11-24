@@ -7,6 +7,11 @@ import {
 import { authGuard } from './core/guards/auth.guard';
 import { coursEntreeGuard } from './core/guards/cours-entree.guard';
 import { roleGuard } from './core/guards/role.guard';
+import {
+  cheminDeLaFiche,
+  cleSeoDeLaRealisation,
+  REALISATIONS,
+} from './features/projets/realisations.data';
 
 const pageDuLienDeLaNewsletter = () =>
   import('./features/articles/newsletter/lien-de-la-newsletter.component').then(
@@ -102,6 +107,15 @@ export const routes: Routes = [
       seoKey: 'projets',
     },
   },
+  ...REALISATIONS.map(({ slug }) => ({
+    path: cheminDeLaFiche(slug),
+    loadComponent: () =>
+      import('./features/projets/fiche/realisation.component').then((m) => m.RealisationComponent),
+    data: {
+      seoKey: cleSeoDeLaRealisation(slug),
+      slug,
+    },
+  })),
   {
     path: 'articles',
     loadComponent: () =>
@@ -168,6 +182,14 @@ export const routes: Routes = [
       seoKey: 'formations',
     },
   },
+  ...(['digitale', 'cours'] as const).map((famille) => ({
+    path: `formations/${famille}`,
+    loadComponent: () =>
+      import('./features/formations/catalogue/formations-list.component').then(
+        (m) => m.FormationsListComponent,
+      ),
+    data: { seoKey: `formations-${famille}`, famille },
+  })),
   {
     path: 'formations/ia-solopreneurs/toolkit/:token',
     loadComponent: () =>

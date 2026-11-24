@@ -7,8 +7,12 @@ import {
 } from '../../../../../../testing/page/montage-d-instantane';
 import { montagePage, poserLesEntrees } from '../../../../../../testing/page/montage-page';
 import { rendreALaLargeur } from '../../../../../../testing/texte/deux-images';
-import { etiquettesMasquees, textes } from '../../../../../../testing/texte/textes-dom';
-import { SlideCourbeComponent } from '../../../layouts/donnees/slide-courbe/slide-courbe.component';
+import {
+  etiquettesMasquees,
+  etiquettesRendues,
+  textes,
+} from '../../../../../../testing/texte/textes-dom';
+import { monterLaCourbeDuB207 } from '../../../../../../testing/rendu/courbe-du-b2-07';
 import { SlideLessonComponent } from '../../../layouts/texte/slide-lesson/slide-lesson.component';
 
 const LARGEURS = ['1216px', '358px'] as const;
@@ -89,14 +93,7 @@ decrireLeMontageDeLInstantane('B2-07', INSTANTANE_B2_07, {
     });
 
     describe('B207-M4 · courbe pas à pas servie (RET-03)', () => {
-      const courbe = montagePage(SlideCourbeComponent, {
-        http: false,
-        avantRendu: (montee) =>
-          poserLesEntrees(
-            montee,
-            proprietesServies(INSTANTANE_B2_07, 'B2-07-A2-04-COURBE-PENTES', 'courbe'),
-          ),
-      });
+      const courbe = monterLaCourbeDuB207();
 
       it('B207-M4 · à sa dernière étape, montre chaque pente servie, aucune masquée faute de place, sur la toile comme au téléphone', async () => {
         const racine = courbe().nativeElement as HTMLElement;
@@ -108,7 +105,7 @@ decrireLeMontageDeLInstantane('B2-07', INSTANTANE_B2_07, {
           courbe().detectChanges();
         }
 
-        expect(textes(racine, '.slide-scatter__point-label')).toEqual([
+        expect(etiquettesRendues(racine)).toEqual([
           'pente 4',
           'pente 2',
           'pente 0',

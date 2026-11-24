@@ -1,0 +1,22 @@
+@mixin survol {
+  @media (hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin en-mouvement {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+@mixin survol-ou-focus {
+  &:focus-visible {
+    @content;
+  }
+  @include survol {
+    @content;
+  }
+}

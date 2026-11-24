@@ -1,5 +1,4 @@
 import type { ComponentFixture } from '@angular/core/testing';
-import { decrireEnTeteDeSection } from '../../../../../testing/page/en-tete-de-section';
 import {
   decrireRenduServeur,
   decrireSectionAsili,
@@ -80,14 +79,14 @@ describe('AsiliMethodComponent', () => {
     expect(fixture.nativeElement.querySelector('.step h3')?.textContent).toContain('Comprendre');
   });
 
-  decrireEnTeteDeSection(
-    () => {
-      setup();
-      return fixture;
-    },
-    '.method-head__intro',
-    { kicker: 'La methode', heading: 'Un fil conducteur', intro: 'Le digital est un levier.' },
-  );
+  it('affiche le kicker fourni en input, et aucun sans lui', () => {
+    setup();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.kicker')).toBeNull();
+    fixture.componentRef.setInput('kicker', 'La methode');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.kicker')?.textContent).toContain('La methode');
+  });
 
   it("rend la ligne pointillee masquee aux lecteurs d'ecran", () => {
     setup();
@@ -99,17 +98,5 @@ describe('AsiliMethodComponent', () => {
 
   decrireRenduServeur(monter, (hote) => {
     expect(hote.querySelectorAll('.step').length).toBe(STEPS.length);
-  });
-
-  it("calcule un delai d'echelonnement cyclique 1..3", () => {
-    setup();
-    const c = fixture.componentInstance as unknown as {
-      revealDelay(i: number): number | null;
-    };
-    expect(c.revealDelay(0)).toBeNull();
-    expect(c.revealDelay(1)).toBe(1);
-    expect(c.revealDelay(2)).toBe(2);
-    expect(c.revealDelay(3)).toBe(3);
-    expect(c.revealDelay(4)).toBeNull();
   });
 });

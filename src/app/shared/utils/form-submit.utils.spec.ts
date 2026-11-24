@@ -3,7 +3,26 @@ import type { ChangeDetectorRef } from '@angular/core';
 import { of, throwError, EMPTY } from 'rxjs';
 import { refusDuBack } from '../../../testing/factories/serveur/probleme-http.factory';
 import type { MessagesDeRefus } from './form-submit.utils';
-import { handleFormSubmit, messageDuRefus } from './form-submit.utils';
+import { confirmationIntacte, handleFormSubmit, messageDuRefus } from './form-submit.utils';
+
+describe('confirmationIntacte', () => {
+  it('tient tant que le formulaire confirmé n a pas été retouché', () => {
+    expect(confirmationIntacte('Message envoyé.', { pristine: true })).toBeTrue();
+  });
+
+  it('cède dès qu un champ est retouché', () => {
+    expect(confirmationIntacte('Message envoyé.', { pristine: false })).toBeFalse();
+  });
+
+  it('ne tient rien sans confirmation affichée, même vide', () => {
+    expect(confirmationIntacte(undefined, { pristine: true })).toBeFalse();
+    expect(confirmationIntacte('', { pristine: true })).toBeFalse();
+  });
+
+  it('ne tient rien sur un formulaire dont l état est inconnu', () => {
+    expect(confirmationIntacte('Message envoyé.', { pristine: null })).toBeFalse();
+  });
+});
 
 const REPLI = 'Le formulaire n’a pas pu partir.';
 const REFUS_DU_FORMULAIRE = 'Vérifiez les champs du formulaire.';

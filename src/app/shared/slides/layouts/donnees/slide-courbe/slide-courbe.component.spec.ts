@@ -1,6 +1,6 @@
 import type { PresentationServie } from '../../../../../../../contrat';
 import { montagePage, poserLesEntrees } from '../../../../../../testing/page/montage-page';
-import { textes } from '../../../../../../testing/texte/textes-dom';
+import { etiquettesRendues, textes } from '../../../../../../testing/texte/textes-dom';
 import { SlideCourbeComponent } from './slide-courbe.component';
 
 type Courbe = Extract<PresentationServie, { renderer: 'courbe' }>['props'];
@@ -34,7 +34,7 @@ const COLLINE: Courbe = {
 const etat = (racine: HTMLElement) => ({
   etape: textes(racine, '[data-testid="slide-courbe-etape"]'),
   titre: textes(racine, '[data-testid="slide-courbe-titre-etape"]'),
-  tangentes: textes(racine, '.slide-scatter__point-label'),
+  tangentes: etiquettesRendues(racine),
   precedent: racine.querySelector<HTMLButtonElement>('[data-testid="slide-courbe-precedent"]')
     ?.disabled,
   suivant: racine.querySelector<HTMLButtonElement>('[data-testid="slide-courbe-suivant"]')

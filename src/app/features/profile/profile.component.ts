@@ -17,8 +17,8 @@ import { FieldErrorsComponent } from '../../shared/components/field-errors/field
 import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { MotDePasseNeufDirective } from '../../shared/directives/mot-de-passe-neuf.directive';
-import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 import {
+  confirmationIntacte,
   handleFormSubmit,
   INFORMATIONS_REFUSEES,
   MOT_DE_PASSE_NEUF_REFUSE,
@@ -40,7 +40,6 @@ const CHANGEMENT_DE_MOT_DE_PASSE_REFUSE = $localize`:@@profileChangePasswordErre
     CommonModule,
     FormsModule,
     RouterModule,
-    RevealOnScrollDirective,
     FieldErrorsComponent,
     BornesDeSaisieDirective,
     FormatDeContactDirective,
@@ -203,6 +202,7 @@ export class ProfileComponent {
   }
 
   changePassword(form: NgForm): void {
+    if (confirmationIntacte(this.changePasswordSuccess, form)) return;
     this.changePasswordSubmitted = true;
     this.setPasswordSuccess = undefined;
     this.changePasswordSuccess = undefined;

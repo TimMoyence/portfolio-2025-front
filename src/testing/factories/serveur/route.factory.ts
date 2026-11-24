@@ -26,6 +26,7 @@ export function fournirLaRoute({
         data: donneesFigees,
       },
       paramMap: (parametresSuccessifs ?? of(parametres)).pipe(map(convertToParamMap)),
+      queryParamMap: of(convertToParamMap(requete)),
       firstChild: null,
       outlet: PRIMARY_OUTLET,
       data: donnees,

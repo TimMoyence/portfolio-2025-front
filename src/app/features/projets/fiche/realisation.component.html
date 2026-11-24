@@ -1,0 +1,57 @@
+@if (realisation(); as realisation) {
+  <article class="fiche">
+    <header class="fiche-tete wrap">
+      <a class="link-arrow fiche-retour" routerLink="/projets">
+        <span aria-hidden="true">←</span>
+        <ng-container i18n="@@realisationFicheRetour">Toutes les réalisations</ng-container>
+      </a>
+      <p class="kicker">{{ famille()?.titre }}</p>
+      <h1 class="h-xl">{{ realisation.titre }}</h1>
+      <p class="lead">{{ realisation.description }}</p>
+      <ul class="fiche-etiquettes">
+        @for (etiquette of realisation.etiquettes; track etiquette.libelle) {
+          <li class="tag" [class.tag-prod]="etiquette.genre === 'resultat'">
+            {{ etiquette.libelle }}
+          </li>
+        }
+      </ul>
+    </header>
+
+    <figure class="fiche-visuel wrap">
+      <img
+        [src]="realisation.image"
+        [alt]="realisation.imageAlt"
+        [style.view-transition-name]="vignette(realisation.slug)"
+        width="1600"
+        height="1000"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </figure>
+
+    <div class="fiche-recit wrap">
+      <section class="fiche-partie">
+        <h2 i18n="@@realisationFicheDefi">Le défi</h2>
+        <p>{{ realisation.recit.defi }}</p>
+      </section>
+      <section class="fiche-partie">
+        <h2 i18n="@@realisationFicheConstruit">Ce que j’ai construit</h2>
+        <p>{{ realisation.recit.construit }}</p>
+      </section>
+      <section class="fiche-partie">
+        <h2 i18n="@@realisationFicheResultat">Le résultat</h2>
+        <p>{{ realisation.recit.resultat }}</p>
+      </section>
+    </div>
+
+    <footer class="fiche-fin wrap">
+      <a
+        class="btn btn-teal fiche-appel"
+        routerLink="/contact"
+        [queryParams]="{ besoin: famille()?.besoin }"
+        i18n="@@realisationFicheAppel"
+        >Un projet comparable ? Parlons de votre site</a
+      >
+    </footer>
+  </article>
+}

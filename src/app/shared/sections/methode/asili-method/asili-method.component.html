@@ -1,27 +1,16 @@
 <section class="method section-pad">
   <div class="wrap">
     <div class="method-head">
-      <div appReveal>
-        <ng-content select="[kicker]"><app-asili-kicker [texte]="kicker()" /></ng-content>
-        <ng-content select="[heading]">
-          @if (heading(); as h) {
-            <h2 class="h-lg method-head__title">{{ h }}</h2>
-          }
-        </ng-content>
+      <div>
+        <app-asili-kicker [texte]="kicker()" />
+        <ng-content select="[heading]" />
       </div>
-      <ng-content select="[intro]">
-        @if (intro(); as i) {
-          <p class="lead method-head__intro" appReveal [appRevealDelay]="1">
-            {{ i }}
-          </p>
-        }
-      </ng-content>
     </div>
 
     <div class="method-steps">
       <div class="method-line" aria-hidden="true"></div>
       @for (step of steps(); track step.num; let i = $index) {
-        <div class="step" appReveal [appRevealDelay]="revealDelay(i)">
+        <div class="step">
           <div class="num">{{ step.num }}</div>
           @if (step.index) {
             <span class="ix">{{ step.index }}</span>

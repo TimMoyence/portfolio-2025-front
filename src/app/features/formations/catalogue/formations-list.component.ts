@@ -3,12 +3,16 @@ import {
   Component,
   computed,
   type ElementRef,
+  input,
   signal,
   viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { RevealOnScrollDirective } from '../../../shared/directives/reveal-on-scroll.directive';
 import { readInputValue } from '../../../shared/utils/dom-event.utils';
+import {
+  type FamilleDeFormation,
+  LIENS_DE_LA_FAMILLE,
+} from '../../../core/config/familles-de-formation';
 import { FORMATIONS, PARCOURS, type FormationCard, type Parcours } from './formations-list.data';
 
 const formeCherchable = (texte: string): string =>
@@ -25,26 +29,62 @@ const texteVisible = ({ badge, title, description, meta, price }: FormationCard)
 
 const CHERCHABLES = FORMATIONS.map((carte) => ({ carte, texte: texteVisible(carte) }));
 
+const TETES: Readonly<
+  Record<FamilleDeFormation | 'toutes', { readonly titre: string; readonly phrase: string }>
+> = {
+  toutes: {
+    titre: $localize`:@@formations.titre:Formations`,
+    phrase: $localize`:@@formations.phrase:Les cours interactifs du BTS CG et du Bachelor, à suivre en séance, et des formations IA et web gratuites.`,
+  },
+  digitale: {
+    titre: $localize`:@@formations.digitale.titre:Formation digitale`,
+    phrase: $localize`:@@formations.digitale.phrase:Des formations IA et web gratuites, pour les pros qui veulent gagner du temps et être trouvés.`,
+  },
+  cours: {
+    titre: $localize`:@@formations.cours.titre:Formation cours`,
+    phrase: $localize`:@@formations.cours.phrase:Les cours interactifs du BTS CG et du Bachelor, à suivre en séance avec votre formateur.`,
+  },
+};
+
 @Component({
   selector: 'app-formations-list',
   standalone: true,
-  imports: [RouterLink, RevealOnScrollDirective],
+  imports: [RouterLink],
   templateUrl: './formations-list.component.html',
   styleUrl: './formations-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormationsListComponent {
+  readonly famille = input<FamilleDeFormation>();
+
+  protected readonly tete = computed(() => TETES[this.famille() ?? 'toutes']);
+
+  private readonly cherchables = computed(() => {
+    const famille = this.famille();
+    return famille
+      ? CHERCHABLES.filter(({ carte }) => LIENS_DE_LA_FAMILLE[famille].includes(carte.link))
+      : CHERCHABLES;
+  });
+
+  private readonly parcoursServis = computed(() =>
+    PARCOURS.filter(({ id }) => this.cherchables().some(({ carte }) => carte.parcours === id)),
+  );
+
+  protected readonly avecPuces = computed(() => this.parcoursServis().length > 1);
+
   protected readonly recherche = signal('');
 
   private readonly trouvees = computed(() => {
     const cherche = formeCherchable(this.recherche());
-    return CHERCHABLES.filter(({ texte }) => texte.includes(cherche)).map(({ carte }) => carte);
+    return this.cherchables()
+      .filter(({ texte }) => texte.includes(cherche))
+      .map(({ carte }) => carte);
   });
 
   protected readonly total = computed(() => this.trouvees().length);
 
   protected readonly parcours = computed(() =>
-    PARCOURS.map((parcours) => ({
+    this.parcoursServis().map((parcours) => ({
       ...parcours,
       cartes: this.trouvees().filter((carte) => carte.parcours === parcours.id),
     })),

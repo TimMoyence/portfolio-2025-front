@@ -9,6 +9,7 @@ import { of, throwError } from 'rxjs';
 import type { AuditStreamEvent } from '../../core/models/audit-request.model';
 import { AUDIT_REQUEST_PORT } from '../../core/ports/audit-request.port';
 import { GrowthAuditComponent } from './growth-audit.component';
+import { annonces } from '../../../testing/dom/annonces';
 import { erreursApresSaisie, texteDuBlocDuChamp } from '../../../testing/dom/champ-de-formulaire';
 import {
   buildAuditCompletedEvent,
@@ -408,11 +409,15 @@ describe('GrowthAuditComponent', () => {
     });
 
     for (const [cas, evenement, message] of [
-      ['le message générique d un audit échoué', buildAuditFailedEvent(), "L'audit a échoué."],
+      [
+        'le message générique d un audit échoué',
+        buildAuditFailedEvent(),
+        'Le diagnostic a échoué.',
+      ],
       [
         'la connexion interrompue sur un délai dépassé',
         buildAuditTimeoutEvent(),
-        "Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.",
+        'Connexion interrompue pendant le diagnostic. Rechargez la page pour vérifier le résultat.',
       ],
     ] as const) {
       it(`affiche ${cas}, efface la chronologie, sans relire le résumé ni rouvrir le flux`, () => {
@@ -434,7 +439,7 @@ describe('GrowthAuditComponent', () => {
       const component = soumettreSansFlux();
 
       expect(component.auditProgress).toBe(100);
-      expect(component.auditStep).toBe('Audit terminé');
+      expect(component.auditStep).toBe('Diagnostic terminé');
       expect(component.isAuditRunning).toBeFalse();
       expect(component.errorMessage).toBeUndefined();
     });
@@ -447,7 +452,7 @@ describe('GrowthAuditComponent', () => {
       const component = soumettreSansFlux();
 
       expect(component.isAuditRunning).toBeFalse();
-      expect(component.errorMessage).toBe("L'audit a échoué.");
+      expect(component.errorMessage).toBe('Le diagnostic a échoué.');
     });
 
     it('rouvre le flux trois fois avant de declarer la connexion perdue', () => {
@@ -537,6 +542,34 @@ describe('GrowthAuditComponent', () => {
 
       expect(auditServiceMock.submit).toHaveBeenCalledTimes(1);
       expect(component.errorMessage).toBeUndefined();
+    });
+
+    it('annonce le consentement manquant une seule fois, par une alerte', () => {
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+
+      remplirEtSoumettre(fixture.componentInstance, false);
+      fixture.detectChanges();
+
+      expect(annonces(fixture.nativeElement, 'alert')).toEqual([
+        fixture.componentInstance.formLabels.rgpdError,
+      ]);
+    });
+
+    it('annonce la demande reçue par un statut', () => {
+      auditServiceMock.submit.and.returnValue(
+        of(
+          buildAuditCreateResponse({ status: 'UNCONFIRMED', heuresDeValiditeDeLaConfirmation: 48 }),
+        ),
+      );
+      const fixture = TestBed.createComponent(GrowthAuditComponent);
+
+      remplirEtSoumettre(fixture.componentInstance, true);
+      fixture.detectChanges();
+
+      expect(annonces(fixture.nativeElement, 'status')).toContain(
+        fixture.componentInstance.successMessage ?? '',
+      );
+      expect(fixture.componentInstance.successMessage).toContain('valable 48 heures');
     });
   });
 });

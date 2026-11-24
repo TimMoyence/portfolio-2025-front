@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NOM_DU_SITE } from '../../../../core/seo/nom-du-site';
+import { NOM_DU_SITE } from '../../../../core/seo/pages/nom-du-site';
 import { CONTACT_METHODS } from '../../../data/contact-methods';
+import { COORDONNEES_DU_SITE, profilSur } from '../../../data/coordonnees';
 import type { FooterColumn, FooterLink, SocialLink } from '../../../models/footer.model';
 import { NewsletterFormComponent } from '../../sections/newsletter-form/newsletter-form.component';
 import { SvgIconComponent } from '../../svg-icon.component';
+import { nomCourtServi } from '../../../../core/seo/site-servi';
+
+const lienDePage = (href: string): FooterLink => ({ label: nomCourtServi(href), href });
 
 @Component({
   selector: 'app-footer',
@@ -20,58 +24,31 @@ export class FooterComponent {
 
   protected readonly nomDuSite = NOM_DU_SITE;
 
-  readonly brandBaseline = $localize`:footer.brand.baseline|Footer brand baseline@@footerBrandBaseline:« Asili » — la racine, l'essentiel. Le design est fonctionnel et réfléchi, jamais décoratif pour décorer.`;
+  protected readonly adresse = COORDONNEES_DU_SITE.adresse;
 
-  readonly copyright = $localize`:footer.copyright.asili|Footer copyright line@@footerCopyrightAsili:© 2026 Asili Design · Bordeaux`;
+  readonly brandBaseline = $localize`:footer.brand.baseline|Footer brand baseline@@footerBrandBaseline:« Asili » — la racine, l'essentiel : des sites et des apps qui disent votre métier, et qu'on trouve.`;
+
+  readonly copyright = $localize`:footer.copyright.asili|Footer copyright line@@footerCopyrightAsili:© 2026 ${NOM_DU_SITE}:marque: — Sites web & apps mobiles · Bordeaux`;
 
   readonly navColumns: FooterColumn[] = [
     {
       heading: $localize`:footer.column.work|Footer column heading@@footerColumnWork:Travailler`,
       links: [
-        {
-          label: $localize`:footer.nav.services|Footer nav link@@footerNavServices:Services`,
-          href: '/offer',
-        },
-        {
-          label: $localize`:footer.nav.formations|Footer nav link@@footerNavFormations:Formations`,
-          href: '/formations',
-        },
-        {
-          label: $localize`:footer.nav.projects|Footer nav link@@footerNavProjects:Projets`,
-          href: '/projets',
-        },
-        {
-          label: $localize`:footer.nav.articles|Footer nav link@@footerNavArticles:Articles`,
-          href: '/articles',
-        },
-        {
-          label: $localize`:footer.nav.growthAudit|Footer nav link@@footerNavGrowthAudit:Audit`,
-          href: '/growth-audit',
-        },
-        {
-          label: $localize`:footer.nav.contact|Footer nav link@@footerNavContact:Contact`,
-          href: '/contact',
-        },
+        lienDePage('/offer'),
+        lienDePage('/formations'),
+        lienDePage('/projets'),
+        lienDePage('/articles'),
+        lienDePage('/growth-audit'),
+        lienDePage('/contact'),
       ],
     },
     {
       heading: $localize`:footer.column.more|Footer column heading@@footerColumnMore:En savoir plus`,
       links: [
-        {
-          label: $localize`:footer.nav.presentation|Footer nav link@@footerNavPresentation:Présentation`,
-          href: '/presentation',
-        },
-        {
-          label: $localize`:footer.nav.legal|Footer nav link@@footerNavLegal:Mentions légales`,
-          href: '/terms',
-        },
-        {
-          label: $localize`:footer.nav.privacy|Footer nav link@@footerNavPrivacy:Confidentialité`,
-          href: '/privacy',
-        },
+        lienDePage('/presentation'),
         {
           label: $localize`:footer.nav.linkedin|Footer nav link@@footerNavLinkedin:LinkedIn`,
-          href: 'https://www.linkedin.com/in/tim-moyence',
+          href: profilSur(COORDONNEES_DU_SITE, 'linkedin.com'),
           external: true,
         },
       ],
@@ -81,24 +58,15 @@ export class FooterComponent {
   readonly socialLinks: SocialLink[] = [
     {
       label: $localize`:footer.social.facebook|Footer social link@@footerSocialFacebook:Facebook`,
-      href: 'https://www.facebook.com/tim.moyence/',
+      href: profilSur(COORDONNEES_DU_SITE, 'facebook.com'),
       icon: 'network/facebook',
     },
     {
       label: $localize`:footer.social.linkedin|Footer social link@@footerSocialLinkedin:LinkedIn`,
-      href: 'https://www.linkedin.com/in/tim-moyence',
+      href: profilSur(COORDONNEES_DU_SITE, 'linkedin.com'),
       icon: 'network/linkedin',
     },
   ];
 
-  readonly legalLinks: FooterLink[] = [
-    {
-      label: $localize`:footer.legal.terms|Footer legal link@@footerLegalTerms:Conditions d'utilisation`,
-      href: '/terms',
-    },
-    {
-      label: $localize`:footer.legal.privacy|Footer legal link@@footerLegalPrivacy:Politique de confidentialité`,
-      href: '/privacy',
-    },
-  ];
+  readonly legalLinks: FooterLink[] = [lienDePage('/terms'), lienDePage('/privacy')];
 }

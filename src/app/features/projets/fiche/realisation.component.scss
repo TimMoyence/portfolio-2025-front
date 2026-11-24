@@ -1,0 +1,72 @@
+@use '../../../styles-shared/mise-en-page/breakpoints' as bp;
+@use '../../../styles-shared/composants/cartes';
+
+:host {
+  display: block;
+}
+
+.fiche {
+  padding-block: clamp(48px, 9vh, 112px) clamp(80px, 12vh, 160px);
+}
+
+.fiche-tete {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+}
+
+.fiche-retour {
+  margin-bottom: clamp(16px, 4vh, 40px);
+}
+
+.fiche-tete .lead {
+  margin: 0;
+}
+
+.fiche-etiquettes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fiche-visuel {
+  margin-block: clamp(40px, 7vh, 80px);
+}
+
+.fiche-visuel img {
+  @include cartes.capture-de-site;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+}
+
+.fiche-recit {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 56px);
+  border-top: 1px solid var(--line);
+  padding-top: clamp(32px, 5vh, 56px);
+}
+
+.fiche-partie h2 {
+  font-size: clamp(22px, 2vw, 28px);
+  margin: 0 0 12px;
+}
+
+.fiche-partie p {
+  margin: 0;
+  color: var(--text-mute);
+  line-height: 1.65;
+}
+
+.fiche-fin {
+  margin-top: clamp(48px, 8vh, 96px);
+}
+
+@include bp.tablet {
+  .fiche-recit {
+    grid-template-columns: 1fr;
+  }
+}

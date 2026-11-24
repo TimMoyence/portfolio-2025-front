@@ -327,445 +327,6 @@
       </segment>
     </unit>
 
-    <unit id="homeMethodHeading">
-      <notes>
-        <note category="location">src/app/features/home/home.component.html:47,50</note>
-      </notes>
-      <segment>
-        <source>Un fil conducteur, du flou jusqu&apos;à ce qui <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">tient dans le temps</pc>.</source>
-        <target>A common thread, from the fuzziness to what <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">lasts over time</pc>.</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarsHeading">
-      <notes>
-        <note category="location">src/app/features/home/home.component.html:57,59</note>
-      </notes>
-      <segment>
-        <source>Services &amp; Formations, <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">à parts égales</pc>.</source>
-        <target>Services &amp; Training, <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">on equal footing</pc>.</target>
-      </segment>
-    </unit>
-
-    <unit id="homeProjectsHeading">
-      <notes>
-        <note category="location">src/app/features/home/home.component.html:135</note>
-      </notes>
-      <segment>
-        <source>Des réalisations,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>pas des promesses.</source>
-        <target>Real work,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>not promises.</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroChip">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:56</note>
-      </notes>
-      <segment>
-        <source>Studio digital &amp; IA · Bordeaux</source>
-        <target>Digital &amp; AI studio · Bordeaux</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroTitlePre">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:59</note>
-      </notes>
-      <segment>
-        <source>Clarifier</source>
-        <target>Clarify</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroTitleAccent">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:62</note>
-      </notes>
-      <segment>
-        <source>avant</source>
-        <target>before</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroTitlePost">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:65</note>
-      </notes>
-      <segment>
-        <source>de construire.</source>
-        <target>you build.</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroLead">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:68</note>
-      </notes>
-      <segment>
-        <source>Développeur &amp; consultant spécialisé Angular, NestJS et IA. Je structure les usages avant de déployer la techno — pour des TPE, PME et solopreneurs qui veulent des leviers concrets, pas du jargon.</source>
-        <target>Developer &amp; consultant specialised in Angular, NestJS and AI. I structure the uses before deploying the tech — for very small businesses, SMEs and solopreneurs who want concrete levers, not jargon.</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroScrollHint">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:71</note>
-      </notes>
-      <segment>
-        <source>Défiler</source>
-        <target>Scroll</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroStat1Num">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:74</note>
-      </notes>
-      <segment>
-        <source>2</source>
-        <target>2</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroStat1Label">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:76</note>
-      </notes>
-      <segment>
-        <source>piliers : services &amp; formations</source>
-        <target>pillars: services &amp; training</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroStat2Num">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:79</note>
-      </notes>
-      <segment>
-        <source>4</source>
-        <target>4</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroStat2Label">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:81</note>
-      </notes>
-      <segment>
-        <source>formats d&apos;intervention</source>
-        <target>engagement formats</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroCtaPrimary">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:84</note>
-      </notes>
-      <segment>
-        <source>Voir comment je travaille</source>
-        <target>See how I work</target>
-      </segment>
-    </unit>
-
-    <unit id="homeHeroCtaSecondary">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:86</note>
-      </notes>
-      <segment>
-        <source>Voir les projets</source>
-        <target>View projects</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodKicker">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:91</note>
-      </notes>
-      <segment>
-        <source>La méthode</source>
-        <target>The method</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodIntro">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:93</note>
-      </notes>
-      <segment>
-        <source>Le digital et l&apos;IA sont des leviers, jamais des finalités. On commence par comprendre, on déploie ensuite — et on garde ce qui marche.</source>
-        <target>Digital and AI are levers, never ends in themselves. We start by understanding, then we deploy — and we keep what works.</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep1Index">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:99</note>
-      </notes>
-      <segment>
-        <source>— Clarifier</source>
-        <target>— Clarify</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep1Title">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:100</note>
-      </notes>
-      <segment>
-        <source>Comprendre</source>
-        <target>Understand</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep1Desc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:101</note>
-      </notes>
-      <segment>
-        <source>On cartographie le besoin réel et les usages avant la moindre ligne de code.</source>
-        <target>We map the real need and the uses before a single line of code.</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep2Index">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:105</note>
-      </notes>
-      <segment>
-        <source>— Construire</source>
-        <target>— Build</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep2Title">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:106</note>
-      </notes>
-      <segment>
-        <source>Déployer</source>
-        <target>Deploy</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep2Desc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:107</note>
-      </notes>
-      <segment>
-        <source>Des outils robustes et lisibles, dimensionnés sur le périmètre réel.</source>
-        <target>Robust, readable tools, sized to the actual scope.</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep3Index">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:111</note>
-      </notes>
-      <segment>
-        <source>— Tester</source>
-        <target>— Test</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep3Title">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:112</note>
-      </notes>
-      <segment>
-        <source>Éprouver</source>
-        <target>Validate</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep3Desc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:113</note>
-      </notes>
-      <segment>
-        <source>On confronte à l&apos;usage, on mesure, on ajuste sans dogme.</source>
-        <target>We confront it with real use, we measure, we adjust without dogma.</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep4Index">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:117</note>
-      </notes>
-      <segment>
-        <source>— Évoluer</source>
-        <target>— Evolve</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep4Title">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:118</note>
-      </notes>
-      <segment>
-        <source>Faire durer</source>
-        <target>Make it last</target>
-      </segment>
-    </unit>
-
-    <unit id="homeMethodStep4Desc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:119</note>
-      </notes>
-      <segment>
-        <source>Continuité humaine : l&apos;outil grandit avec vous, pas contre vous.</source>
-        <target>Human continuity: the tool grows with you, not against you.</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarsKicker">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:126</note>
-      </notes>
-      <segment>
-        <source>Deux façons de travailler ensemble</source>
-        <target>Two ways to work together</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarServicesTag">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:132</note>
-      </notes>
-      <segment>
-        <source>01 — Services premium</source>
-        <target>01 — Premium services</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarServicesTitle">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:133</note>
-      </notes>
-      <segment>
-        <source>On bâtit exactement ce qu&apos;il vous faut.</source>
-        <target>We build exactly what you need.</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarServicesDesc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:134</note>
-      </notes>
-      <segment>
-        <source>Interventions ciblées, projets structurants, accompagnement dans la durée. Un périmètre défini sur votre situation réelle — pas un catalogue de prix figés.</source>
-        <target>Targeted interventions, structuring projects, long-term support. A scope defined on your real situation — not a catalogue of fixed prices.</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarServicesItem1">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:136</note>
-      </notes>
-      <segment>
-        <source>Audit &amp; cadrage avant tout chantier</source>
-        <target>Audit &amp; scoping before any project</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarServicesItem2">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:137</note>
-      </notes>
-      <segment>
-        <source>Développement Angular / NestJS sur-mesure</source>
-        <target>Bespoke Angular / NestJS development</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarServicesItem3">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:138</note>
-      </notes>
-      <segment>
-        <source>Intégration d&apos;IA utile, mesurée, maîtrisée</source>
-        <target>Useful AI integration, measured and under control</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarServicesLink">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:141</note>
-      </notes>
-      <segment>
-        <source>Découvrir l&apos;offre</source>
-        <target>Discover the offer</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarFormationsTag">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:147</note>
-      </notes>
-      <segment>
-        <source>02 — Formations premium</source>
-        <target>02 — Premium training</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarFormationsTitle">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:148</note>
-      </notes>
-      <segment>
-        <source>On vous rend autonome, pour de bon.</source>
-        <target>We make you truly autonomous.</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarFormationsDesc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:149</note>
-      </notes>
-      <segment>
-        <source>Des formations qui font monter en gamme : de l&apos;usage flou à un système qui travaille pour vous. Le gratuit reste un point d&apos;entrée — le premium va au fond des choses.</source>
-        <target>Training that levels you up: from fuzzy use to a system that works for you. The free content stays an entry point — the premium goes to the heart of things.</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarFormationsItem1">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:151</note>
-      </notes>
-      <segment>
-        <source>IA pour solopreneurs</source>
-        <target>AI for solopreneurs</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarFormationsItem2">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:152</note>
-      </notes>
-      <segment>
-        <source>Automatiser avec l&apos;IA</source>
-        <target>Automating with AI</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarFormationsItem3">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:153</note>
-      </notes>
-      <segment>
-        <source>Audit SEO DIY — diagnostiquer soi-même</source>
-        <target>DIY SEO audit — diagnose it yourself</target>
-      </segment>
-    </unit>
-
-    <unit id="homePillarFormationsLink">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:156</note>
-      </notes>
-      <segment>
-        <source>Voir les formations</source>
-        <target>See the training</target>
-      </segment>
-    </unit>
 
 
 
@@ -777,85 +338,55 @@
 
 
 
-    <unit id="homeManifestoStep1">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:192</note>
-      </notes>
-      <segment>
-        <source>Le problème</source>
-        <target>The problem</target>
-      </segment>
-    </unit>
 
-    <unit id="homeManifestoLine1">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:193</note>
-      </notes>
-      <segment>
-        <source>La technologie promet beaucoup,</source>
-        <target>Technology promises a lot,</target>
-      </segment>
-    </unit>
 
-    <unit id="homeManifestoLine2">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:196</note>
-      </notes>
-      <segment>
-        <source>et laisse souvent un &lt;span class=&quot;t&quot;&gt;flou&lt;/span&gt;.</source>
-        <target>and often leaves a &lt;span class=&quot;t&quot;&gt;blur&lt;/span&gt;.</target>
-      </segment>
-    </unit>
 
-    <unit id="homeManifestoStep2">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:199</note>
-      </notes>
-      <segment>
-        <source>La clarté</source>
-        <target>Clarity</target>
-      </segment>
-    </unit>
 
-    <unit id="homeManifestoLine3">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:200</note>
-      </notes>
-      <segment>
-        <source>Mon métier commence là :</source>
-        <target>My job begins right there:</target>
-      </segment>
-    </unit>
 
-    <unit id="homeManifestoLine4">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:203</note>
-      </notes>
-      <segment>
-        <source>comprendre &lt;span class=&quot;t&quot;&gt;avant&lt;/span&gt; de construire.</source>
-        <target>understanding &lt;span class=&quot;t&quot;&gt;before&lt;/span&gt; building.</target>
-      </segment>
-    </unit>
 
-    <unit id="homeManifestoStep3">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:206</note>
-      </notes>
-      <segment>
-        <source>La preuve</source>
-        <target>The proof</target>
-      </segment>
-    </unit>
 
-    <unit id="homeManifestoLine5">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:207</note>
-      </notes>
-      <segment>
-        <source>Et le prouver en le rendant &lt;span class=&quot;t&quot;&gt;jouable&lt;/span&gt;.</source>
-        <target>And proving it by making it &lt;span class=&quot;t&quot;&gt;playable&lt;/span&gt;.</target>
-      </segment>
-    </unit>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <unit id="homeProjectsKicker">
       <notes>
@@ -868,12 +399,9 @@
     </unit>
 
     <unit id="homeProjectsHeadLink">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:216</note>
-      </notes>
       <segment>
-        <source>Voir tous les projets</source>
-        <target>See all projects</target>
+        <source>Voir toutes les réalisations</source>
+        <target>See all work</target>
       </segment>
     </unit>
 
@@ -891,105 +419,15 @@
 
 
 
-    <unit id="homeProject4Tag1">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:251</note>
-      </notes>
-      <segment>
-        <source>Automatisation</source>
-        <target>Automation</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject4Tag2">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:252</note>
-      </notes>
-      <segment>
-        <source>IA</source>
-        <target>AI</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject4Title">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:254</note>
-      </notes>
-      <segment>
-        <source>Un système qui travaille en silence</source>
-        <target>A system that works in silence</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject4Desc">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:255</note>
-      </notes>
-      <segment>
-        <source>Des tâches répétitives remplacées par une automatisation lisible, mesurée, sous contrôle humain.</source>
-        <target>Repetitive tasks replaced by readable, measured automation, under human control.</target>
-      </segment>
-    </unit>
 
-    <unit id="homeProject4ImageAlt">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:257</note>
-      </notes>
-      <segment>
-        <source>capture — automatisation IA</source>
-        <target>screenshot — AI automation</target>
-      </segment>
-    </unit>
 
-    <unit id="homeCtaKicker">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:264</note>
-      </notes>
-      <segment>
-        <source>Parlons de votre situation</source>
-        <target>Let’s talk about your situation</target>
-      </segment>
-    </unit>
 
-    <unit id="homeCtaTitle">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:266</note>
-      </notes>
-      <segment>
-        <source>Et si on clarifiait, ensemble, avant de construire ?</source>
-        <target>What if we clarified, together, before building?</target>
-      </segment>
-    </unit>
 
-    <unit id="homeCtaLead">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:268</note>
-      </notes>
-      <segment>
-        <source>Décrivez votre contexte en quelques lignes. Je reviens vers vous avec un regard honnête — pas un devis générique.</source>
-        <target>Describe your context in a few lines. I’ll come back to you with an honest view — not a generic quote.</target>
-      </segment>
-    </unit>
 
-    <unit id="homeCtaPrimary">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:270</note>
-      </notes>
-      <segment>
-        <source>Démarrer la conversation</source>
-        <target>Start the conversation</target>
-      </segment>
-    </unit>
 
-    <unit id="homeCtaSecondary">
-      <notes>
-        <note category="location">src/app/features/home/home.component.ts:272</note>
-      </notes>
-      <segment>
-        <source>Voir les projets</source>
-        <target>View projects</target>
-      </segment>
-    </unit>
 
     <unit id="authSignupFieldFirstName">
       <notes>
@@ -1136,15 +574,6 @@
       </segment>
     </unit>
 
-    <unit id="contactFormHeading">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:11,13</note>
-      </notes>
-      <segment>
-        <source> Formulaire de contact </source>
-        <target>Contact Form</target>
-      </segment>
-    </unit>
 
     <unit id="contactFaqHeading">
       <notes>
@@ -1167,12 +596,9 @@
     </unit>
 
     <unit id="contactFaq1A">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:307,309</note>
-      </notes>
       <segment>
-        <source> Je réponds sous 48h ouvrées, du lundi au vendredi. Les demandes reçues le week-end sont traitées le lundi matin. Pour les audits Growth, la synthèse IA arrive sous 5 minutes et l&apos;analyse humaine sous 24h. </source>
-        <target> I reply within 48 working hours, Monday to Friday. Requests received over the weekend are handled Monday morning. For Growth Audits, the AI summary arrives within 5 minutes and the human analysis within 24 hours. </target>
+        <source> Je réponds sous 48 h ouvrées, du lundi au vendredi. Les demandes reçues le week-end sont traitées le lundi matin. Pour le diagnostic gratuit, la première analyse arrive en quelques minutes et ma relecture sous 24 h. </source>
+        <target> I reply within 48 working hours, Monday to Friday. Requests received over the weekend are handled on Monday morning. For the free diagnosis, the first analysis arrives within minutes and my review within 24 h. </target>
       </segment>
     </unit>
 
@@ -1187,12 +613,9 @@
     </unit>
 
     <unit id="contactFaq2A">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:323,326</note>
-      </notes>
       <segment>
-        <source> Applications web sur mesure (Angular, NestJS, TypeScript), audits SEO/IA, intégrations OpenAI / Langchain / agents IA, accompagnement d&apos;équipes sur l&apos;outillage IA. TPE, PME, solopreneurs et équipes de moins de 20 personnes en priorité. </source>
-        <target> Custom web applications (Angular, NestJS, TypeScript), SEO/AI audits, OpenAI / Langchain / AI agents integrations, and team coaching on AI tooling. Small businesses, SMEs, solopreneurs, and teams of fewer than 20 people are my priority. </target>
+        <source> Des sites web qui font appeler, des apps mobiles, des outils sur mesure quand un site ne suffit plus, et des formations pour rendre votre équipe autonome. Artisans, commerces, indépendants et PME en priorité. </source>
+        <target> Websites that make the phone ring, mobile apps, custom tools when a website is no longer enough, and training to make your team independent. Craftspeople, shops, independents and small businesses first. </target>
       </segment>
     </unit>
 
@@ -1227,52 +650,19 @@
     </unit>
 
     <unit id="contactFaq4A">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:357,360</note>
-      </notes>
       <segment>
-        <source> Vous remplissez ce formulaire avec le sujet de votre demande. Je vous réponds sous 48h avec soit un devis direct (petit projet), soit une proposition d&apos;appel découverte de 30 minutes gratuit pour cadrer le besoin et vous envoyer une estimation précise. </source>
-        <target> You fill out this form with the subject of your request. I reply within 48 hours with either a direct quote (small project) or a proposal for a free 30-minute discovery call to scope the need and send you a precise estimate. </target>
+        <source> Vous remplissez ce formulaire avec votre besoin. Je vous réponds sous 48 h ouvrées avec soit un devis direct (petit projet), soit une proposition d&apos;appel découverte de 30 minutes gratuit pour cadrer le besoin et vous envoyer une estimation précise. </source>
+        <target> You fill in this form with your need. I reply within 48 working hours with either a direct quote (small project) or a free 30-minute discovery call to scope the need and send you a precise estimate. </target>
       </segment>
     </unit>
 
-    <unit id="contactFormSubject">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:50,53</note>
-      </notes>
-      <segment>
-        <source> Sujet de votre demande </source>
-        <target> Subject of your request </target>
-      </segment>
-    </unit>
 
-    <unit id="contactFormSubjectPlaceholder">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:58,60</note>
-      </notes>
-      <segment>
-        <source> Sélectionnez un sujet </source>
-        <target> Select a subject </target>
-      </segment>
-    </unit>
 
-    <unit id="contactFormRole">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:73,74</note>
-      </notes>
-      <segment>
-        <source>Qui êtes-vous ?</source>
-        <target>Who are you?</target>
-      </segment>
-    </unit>
 
     <unit id="contactFormMessageLabel">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:113,116</note>
-      </notes>
       <segment>
-        <source> Votre message </source>
-        <target> Your message </target>
+        <source> Votre projet </source>
+        <target> Your project </target>
       </segment>
     </unit>
 
@@ -1308,126 +698,41 @@
     </unit>
 
     <unit id="contactFormResponseTime">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:148,152</note>
-      </notes>
       <segment>
-        <source>Réponse sous 48h ouvrées.</source>
-        <target>Response within 48 business hours.</target>
+        <source> Réponse sous 48 h ouvrées. </source>
+        <target> Reply within 48 working hours. </target>
       </segment>
     </unit>
 
     <unit id="contactHeroLabel">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:40</note>
-        <note category="description">contact.hero.label</note>
-      </notes>
-      <segment>
-        <source>Connexion</source>
-        <target>Connection</target>
-      </segment>
-    </unit>
-
-    <unit id="contactHeroTitle">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:41</note>
-        <note category="description">contact.hero.title</note>
-      </notes>
-      <segment>
-        <source>Parler de votre situation</source>
-        <target>Share your situation</target>
-      </segment>
-    </unit>
-
-    <unit id="contactHeroDescription">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:42</note>
-        <note category="description">contact.hero.description</note>
-      </notes>
-      <segment>
-        <source>Un premier échange pour comprendre votre contexte,clarifier votre besoin et envisager la suite la plus pertinente.</source>
-        <target>Through an initial conversation, we uncover your context and define the most impactful path forward.</target>
-      </segment>
-    </unit>
-
-    <unit id="contactFormLabel">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:46</note>
-        <note category="description">contact.form.label</note>
-      </notes>
       <segment>
         <source>Contact</source>
         <target>Contact</target>
       </segment>
     </unit>
 
-    <unit id="contactFormDescription">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:48</note>
-        <note category="description">contact.form.description</note>
-      </notes>
+    <unit id="contactHeroTitle">
       <segment>
-        <source>Vous avez un projet, une contrainte ou une idée à clarifier ? Partagez quelques éléments, je vous répondrai rapidement.</source>
-        <target>Are you facing a challenge, a constraint, or a question that needs clarity?</target>
+        <source>Parlons de votre site</source>
+        <target>Let’s talk about your website</target>
       </segment>
     </unit>
 
-    <unit id="contactFormRoleDeveloper">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:50</note>
-        <note category="description">contact.form.role.developer</note>
-      </notes>
+    <unit id="contactHeroDescription">
       <segment>
-        <source>Développeur</source>
-        <target>Developer</target>
+        <source>Dites-moi ce que vous faites et ce dont vous avez besoin. Je vous réponds sous 48 h ouvrées avec une proposition claire.</source>
+        <target>Tell me what you do and what you need. I reply within 48 working hours with a clear proposal.</target>
       </segment>
     </unit>
 
-    <unit id="contactFormRoleManager">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:51</note>
-        <note category="description">contact.form.role.manager</note>
-      </notes>
-      <segment>
-        <source>Manager</source>
-        <target>Manager</target>
-      </segment>
-    </unit>
-
-    <unit id="contactFormRoleEntrepreneur">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:52</note>
-        <note category="description">contact.form.role.entrepreneur</note>
-      </notes>
-      <segment>
-        <source>Entrepreneur</source>
-        <target>Entrepreneur</target>
-      </segment>
-    </unit>
-
-<unit id="contactFormRoleCTO">
-  <notes>
-    <note category="location">src/app/features/contact/contact.component.ts:52</note>
-    <note category="description">contact.form.role.cto</note>
-  </notes>
-  <segment>
-    <source>CTO</source>
-    <target>CTO</target>
-  </segment>
-</unit>
 
 
 
-    <unit id="contactFormRoleFreelance">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:54</note>
-        <note category="description">contact.form.role.freelance</note>
-      </notes>
-      <segment>
-        <source>Freelance</source>
-        <target>Freelancer</target>
-      </segment>
-    </unit>
+
+
+
+
+
 
     <unit id="contactFormRoleOther">
       <notes>
@@ -1440,38 +745,8 @@
       </segment>
     </unit>
 
-    <unit id="contactFormSubjectFirst">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:58</note>
-        <note category="description">contact.form.subject.first</note>
-      </notes>
-      <segment>
-        <source>Premier contact</source>
-        <target>Initial contact</target>
-      </segment>
-    </unit>
 
-    <unit id="contactFormSubjectSecond">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:59</note>
-        <note category="description">contact.form.subject.second</note>
-      </notes>
-      <segment>
-        <source>Demande de devis</source>
-        <target>Quote request</target>
-      </segment>
-    </unit>
 
-    <unit id="contactFormSubjectThird">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.ts:60</note>
-        <note category="description">contact.form.subject.third</note>
-      </notes>
-      <segment>
-        <source>Urgent - Besoin rapide</source>
-        <target>Urgent — Immediate need</target>
-      </segment>
-    </unit>
 
     <unit id="contactFormFieldFirstName">
       <notes>
@@ -1553,38 +828,20 @@
 
 
 
-<unit id="auditHeroLabel">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:52</note>
-    <note category="description">audit.hero.label</note>
-  </notes>
-  <segment>
-    <source>Audit gratuit (IA + humain, 24h)</source>
-    <target>Free Audit (AI + Human, 24h)</target>
-  </segment>
-</unit>
 
-<unit id="auditHeroTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:53</note>
-    <note category="description">audit.hero.title</note>
-  </notes>
-  <segment>
-    <source>Audit Growth — scorecard 7 piliers</source>
-    <target>Growth Audit — 7-pillar scorecard</target>
-  </segment>
-</unit>
+    <unit id="auditHeroTitle">
+      <segment>
+        <source>Diagnostic gratuit : ce qui freine votre site, et quoi corriger d’abord</source>
+        <target>Free diagnosis: what holds your website back, and what to fix first</target>
+      </segment>
+    </unit>
 
-<unit id="auditHeroDescription">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:54</note>
-    <note category="description">audit.hero.description</note>
-  </notes>
-  <segment>
-    <source>Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, conversion, visibilité IA). Ensuite, sous 24h, je repasse l&apos;audit moi-même et je vous envoie une scorecard claire, un rapport PDF détaillé et des recommandations concrètes priorisées par impact/effort.</source>
-    <target>Share your website → I first run an AI scan (page analysis, SEO, performance, conversion, AI visibility). Then, within 24 hours, I personally review the audit and send you a clear scorecard, a detailed PDF report, and concrete recommendations prioritized by impact/effort.</target>
-  </segment>
-</unit>
+    <unit id="auditHeroDescription">
+      <segment>
+        <source>Vous laissez l’adresse de votre site. Une première analyse automatique passe vos pages en revue : visibilité sur Google et dans les IA, vitesse, clarté, appels à l’action. Sous 24 h, je relis tout moi-même et je vous envoie une note claire, un rapport détaillé et les corrections à faire en premier.</source>
+        <target>You leave your website address. A first automatic analysis reviews your pages: visibility on Google and in AI answers, speed, clarity, calls to action. Within 24 h, I review everything myself and send you a clear score, a detailed report and the fixes to make first.</target>
+      </segment>
+    </unit>
 
 <unit id="auditStepOneTitle">
   <notes>
@@ -1608,38 +865,26 @@
   </segment>
 </unit>
 
-<unit id="auditStepTwoTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:63</note>
-    <note category="description">audit.steps.two.title</note>
-  </notes>
-  <segment>
-    <source>2. Audit instantané (IA)</source>
-    <target>2. Instant AI scan</target>
-  </segment>
-</unit>
+    <unit id="auditStepTwoTitle">
+      <segment>
+        <source>2. Première analyse automatique</source>
+        <target>2. First automatic analysis</target>
+      </segment>
+    </unit>
 
-<unit id="auditStepTwoDesc">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:64</note>
-    <note category="description">audit.steps.two.desc</note>
-  </notes>
-  <segment>
-    <source>Je scanne vos pages (SEO, performance, conversion, visibilité IA) et je sors un premier diagnostic rapide.</source>
-    <target>I scan your pages (SEO, performance, conversion, AI visibility) and generate a first quick diagnostic.</target>
-  </segment>
-</unit>
+    <unit id="auditStepTwoDesc">
+      <segment>
+        <source>Je passe vos pages en revue (visibilité, vitesse, clarté, visibilité IA) et je sors un premier diagnostic rapide.</source>
+        <target>I review your pages (visibility, speed, clarity, AI visibility) and produce a quick first diagnosis.</target>
+      </segment>
+    </unit>
 
-<unit id="auditStepThreeTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:67</note>
-    <note category="description">audit.steps.three.title</note>
-  </notes>
-  <segment>
-    <source>3. Audit humain sous 24h</source>
-    <target>3. Human review within 24h</target>
-  </segment>
-</unit>
+    <unit id="auditStepThreeTitle">
+      <segment>
+        <source>3. Diagnostic relu par moi sous 24 h</source>
+        <target>3. Diagnosis reviewed by me within 24 h</target>
+      </segment>
+    </unit>
 
 <unit id="auditStepThreeDesc">
   <notes>
@@ -1696,137 +941,89 @@
   </segment>
 </unit>
 
-<unit id="auditFaqTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:116</note>
-    <note category="description">audit.faq.title</note>
-  </notes>
-  <segment>
-    <source>Questions fréquentes sur l&apos;audit gratuit</source>
-    <target>Frequently asked questions about the free audit</target>
-  </segment>
-</unit>
+    <unit id="auditFaqTitle">
+      <segment>
+        <source>Questions fréquentes sur le diagnostic gratuit</source>
+        <target>Frequently asked questions about the free diagnosis</target>
+      </segment>
+    </unit>
 
-<unit id="auditFaqDescription">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:117</note>
-    <note category="description">audit.faq.description</note>
-  </notes>
-  <segment>
-    <source>Ce que vous devez savoir avant de demander votre audit Growth — scorecard 7 piliers + recommandations priorisées.</source>
-    <target>What you need to know before requesting your Growth Audit — 7-pillar scorecard + prioritized recommendations.</target>
-  </segment>
-</unit>
+    <unit id="auditFaqDescription">
+      <segment>
+        <source>Ce qu’il faut savoir avant de demander votre diagnostic : sept points passés en revue et des corrections classées par priorité.</source>
+        <target>What to know before requesting your diagnosis: seven points reviewed and fixes ranked by priority.</target>
+      </segment>
+    </unit>
 
-<unit id="auditFaqQ1">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:120</note>
-    <note category="description">audit.faq.q1</note>
-  </notes>
-  <segment>
-    <source>Comment fonctionne l&apos;audit gratuit en 24 heures ?</source>
-    <target>How does the free 24-hour audit work?</target>
-  </segment>
-</unit>
+    <unit id="auditFaqQ1">
+      <segment>
+        <source>Comment se déroule le diagnostic gratuit en 24 heures ?</source>
+        <target>How does the free 24-hour diagnosis work?</target>
+      </segment>
+    </unit>
 
-<unit id="auditFaqA1">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:121</note>
-    <note category="description">audit.faq.a1</note>
-  </notes>
-  <segment>
-    <source>Vous laissez l&apos;URL de votre site et votre contact. Un premier scan IA analyse vos pages en moins de 5 minutes (SEO, performance, signaux de conversion, visibilité IA). Puis, sous 24h, je reprends l&apos;analyse moi-même et vous envoie une scorecard claire, un rapport PDF détaillé et un plan d&apos;actions priorisé par impact/effort.</source>
-    <target>You share your website URL and your contact details. A first AI scan analyzes your pages in under 5 minutes (SEO, performance, conversion signals, AI visibility). Then, within 24 hours, I personally review the analysis and send you a clear scorecard, a detailed PDF report, and an action plan prioritized by impact/effort.</target>
-  </segment>
-</unit>
+    <unit id="auditFaqA1">
+      <segment>
+        <source>Vous laissez l’adresse de votre site et votre contact. Une première analyse automatique passe vos pages en revue en quelques minutes. Puis, sous 24 h, je relis tout moi-même et vous envoie une note claire, un rapport détaillé et les corrections classées par priorité.</source>
+        <target>You leave your website address and your contact. A first automatic analysis reviews your pages in a few minutes. Then, within 24 h, I review everything myself and send you a clear score, a detailed report and fixes ranked by priority.</target>
+      </segment>
+    </unit>
 
-<unit id="auditFaqQ2">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:124</note>
-    <note category="description">audit.faq.q2</note>
-  </notes>
-  <segment>
-    <source>Que contient concrètement l&apos;audit Growth ?</source>
-    <target>What does the Growth Audit actually include?</target>
-  </segment>
-</unit>
+    <unit id="auditFaqQ2">
+      <segment>
+        <source>Que contient le diagnostic ?</source>
+        <target>What does the diagnosis cover?</target>
+      </segment>
+    </unit>
 
-<unit id="auditFaqA2">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:125</note>
-    <note category="description">audit.faq.a2</note>
-  </notes>
-  <segment>
-    <source>L&apos;audit couvre sept piliers : SEO fondations (titres, meta, indexation, SEO local), vitesse et performance (Core Web Vitals), tech et scalabilité, crédibilité et confiance, conversion et clarté, visibilité IA (ChatGPT / Perplexity / Gemini) et citabilité (llms.txt, FAQ, sources). Vous recevez une scorecard, des quick wins et des recommandations priorisées.</source>
-    <target>The audit covers seven pillars: SEO foundations (titles, meta, indexation, local SEO), speed and performance (Core Web Vitals), tech and scalability, credibility and trust, conversion and clarity, AI visibility (ChatGPT / Perplexity / Gemini), and citability (llms.txt, FAQ, sources). You get a scorecard, quick wins, and prioritized recommendations.</target>
-  </segment>
-</unit>
+    <unit id="auditFaqA2">
+      <segment>
+        <source>Le diagnostic passe en revue sept points : les fondations du référencement, la vitesse, la solidité du site, la confiance qu’il inspire, la clarté et les appels à l’action, la visibilité dans les réponses des IA et la matière qu’elles peuvent citer. Vous recevez une note, des gains rapides et des recommandations classées.</source>
+        <target>The diagnosis reviews seven points: search foundations, speed, how solid the website is, the trust it inspires, clarity and calls to action, visibility in AI answers and the material they can quote. You receive a score, quick wins and ranked recommendations.</target>
+      </segment>
+    </unit>
 
-<unit id="auditFaqQ3">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:128</note>
-    <note category="description">audit.faq.q3</note>
-  </notes>
-  <segment>
-    <source>L&apos;audit est-il vraiment gratuit ?</source>
-    <target>Is the audit really free?</target>
-  </segment>
-</unit>
+    <unit id="auditFaqQ3">
+      <segment>
+        <source>Le diagnostic est-il vraiment gratuit ?</source>
+        <target>Is the diagnosis really free?</target>
+      </segment>
+    </unit>
 
-<unit id="auditFaqA3">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:129</note>
-    <note category="description">audit.faq.a3</note>
-  </notes>
-  <segment>
-    <source>Oui, totalement. Aucun engagement, aucune carte bancaire demandée. Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h. L&apos;objectif est de vous apporter de la valeur immédiatement, et de démarrer un échange pertinent si vous le souhaitez.</source>
-    <target>Yes, completely. No commitment, no credit card required. I cap it at 5 audits per week to guarantee a proper human review within 24 hours. The goal is to deliver value immediately, and start a meaningful conversation if you&apos;re interested.</target>
-  </segment>
-</unit>
+    <unit id="auditFaqA3">
+      <segment>
+        <source>Oui, totalement. Aucun engagement, aucune carte bancaire. Je limite à 5 diagnostics par semaine pour relire chacun moi-même sous 24 h. Le but : vous être utile tout de suite, et ouvrir un échange si vous le souhaitez.</source>
+        <target>Yes, completely. No commitment, no credit card. I limit it to 5 diagnoses a week so I can review each one myself within 24 h. The goal: to be useful right away, and to start a conversation if you wish.</target>
+      </segment>
+    </unit>
 
-<unit id="auditFaqQ4">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:132</note>
-    <note category="description">audit.faq.q4</note>
-  </notes>
-  <segment>
-    <source>Qui réalise l&apos;audit : une IA ou un humain ?</source>
-    <target>Who performs the audit: an AI or a human?</target>
-  </segment>
-</unit>
+    <unit id="auditFaqQ4">
+      <segment>
+        <source>Qui réalise le diagnostic : une IA ou un humain ?</source>
+        <target>Who runs the diagnosis: an AI or a human?</target>
+      </segment>
+    </unit>
 
-<unit id="auditFaqA4">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:133</note>
-    <note category="description">audit.faq.a4</note>
-  </notes>
-  <segment>
-    <source>Les deux. Un premier scan automatisé tourne instantanément via un pipeline IA (Langchain + OpenAI). Ensuite, je réalise l&apos;audit humain moi-même pour prioriser, contextualiser et formuler des recommandations concrètes adaptées à votre situation.</source>
-    <target>Both. A first automated scan runs instantly through an AI pipeline (Langchain + OpenAI). Then I personally perform the human audit to prioritize, contextualize, and write concrete recommendations tailored to your situation.</target>
-  </segment>
-</unit>
+    <unit id="auditFaqA4">
+      <segment>
+        <source>Les deux. Une première analyse automatique tourne tout de suite. Ensuite, je relis le diagnostic moi-même pour classer les priorités et formuler des recommandations adaptées à votre situation.</source>
+        <target>Both. A first automatic analysis runs right away. Then I review the diagnosis myself to rank the priorities and write recommendations suited to your situation.</target>
+      </segment>
+    </unit>
 
-<unit id="auditFaqQ5">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:136</note>
-    <note category="description">audit.faq.q5</note>
-  </notes>
-  <segment>
-    <source>Pour quels types de sites l&apos;audit est-il pertinent ?</source>
-    <target>Which types of websites is the audit suited for?</target>
-  </segment>
-</unit>
+    <unit id="auditFaqQ5">
+      <segment>
+        <source>Pour quels sites le diagnostic est-il utile ?</source>
+        <target>Which websites is the diagnosis useful for?</target>
+      </segment>
+    </unit>
 
-<unit id="auditFaqA5">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:137</note>
-    <note category="description">audit.faq.a5</note>
-  </notes>
-  <segment>
-    <source>L&apos;audit est pertinent pour les sites vitrines, sites e-commerce, landing pages et applications métier web. Il est particulièrement adapté aux TPE, PME, indépendants et artisans qui veulent améliorer leur visibilité SEO et leur taux de conversion sans se perdre dans la technique.</source>
-    <target>The audit is relevant for showcase sites, e-commerce stores, landing pages, and business web applications. It&apos;s particularly well-suited to small businesses, SMEs, independents, and craftspeople who want to improve their SEO visibility and conversion rate without getting lost in the technical details.</target>
-  </segment>
-</unit>
+    <unit id="auditFaqA5">
+      <segment>
+        <source>Le diagnostic sert aux sites vitrines, aux boutiques en ligne, aux pages de présentation et aux outils en ligne. Il est fait pour les artisans, commerces, indépendants et petites entreprises qui veulent être mieux trouvés et recevoir plus d’appels, sans se perdre dans la technique.</source>
+        <target>The diagnosis suits showcase websites, online shops, landing pages and online tools. It is made for craftspeople, shops, independents and small businesses who want to be found more easily and get more calls, without getting lost in technical details.</target>
+      </segment>
+    </unit>
 
 <unit id="auditPillarConversionTitle">
   <notes>
@@ -1982,27 +1179,19 @@
   </segment>
 </unit>
 
-<unit id="auditFormTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:102</note>
-    <note category="description">audit.form.title</note>
-  </notes>
-  <segment>
-    <source>Demander un audit gratuit</source>
-    <target>Request a free audit</target>
-  </segment>
-</unit>
+    <unit id="auditFormTitle">
+      <segment>
+        <source>Demander un diagnostic gratuit</source>
+        <target>Request a free diagnosis</target>
+      </segment>
+    </unit>
 
-<unit id="auditFormDescription">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:103</note>
-    <note category="description">audit.form.description</note>
-  </notes>
-  <segment>
-    <source>Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h.</source>
-    <target>I only take 5 audits per week to guarantee a proper human review within 24 hours.</target>
-  </segment>
-</unit>
+    <unit id="auditFormDescription">
+      <segment>
+        <source>Je limite à 5 diagnostics par semaine pour relire chacun moi-même sous 24 h.</source>
+        <target>I limit it to 5 diagnoses a week so I can review each one myself within 24 h.</target>
+      </segment>
+    </unit>
 
 <unit id="auditFormWebsiteLabel">
   <notes>
@@ -2087,32 +1276,24 @@
     <note category="description">audit.form.phonePlaceholder</note>
   </notes>
   <segment>
-    <source>ex. +33 6 98 50 32 82</source>
-    <target>e.g. +33 6 98 50 32 82</target>
+    <source>ex. <ph id="0" equiv="telephone" disp="COORDONNEES_DU_SITE.telephone"/></source>
+    <target>e.g. <ph id="0" equiv="telephone" disp="COORDONNEES_DU_SITE.telephone"/></target>
   </segment>
 </unit>
 
-<unit id="auditFormSubmit">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:112</note>
-    <note category="description">audit.form.submit</note>
-  </notes>
-  <segment>
-    <source>Demander mon audit (scan IA immédiat + audit humain sous 24h)</source>
-    <target>Request my audit (instant AI scan + human review within 24h)</target>
-  </segment>
-</unit>
+    <unit id="auditFormSubmit">
+      <segment>
+        <source>Demander mon diagnostic (analyse immédiate, relue par moi sous 24 h)</source>
+        <target>Request my diagnosis (instant analysis, reviewed by me within 24 h)</target>
+      </segment>
+    </unit>
 
-<unit id="auditFormSuccess">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:113</note>
-    <note category="description">audit.form.success</note>
-  </notes>
-  <segment>
-    <source>Merci ! Scan IA lancé — audit humain envoyé sous 24h.</source>
-    <target>Thank you! Your AI scan has started — your full review will be sent within 24h.</target>
-  </segment>
-</unit>
+    <unit id="auditFormSuccess">
+      <segment>
+        <source>Merci ! L’analyse est lancée, votre diagnostic relu arrive sous 24 h.</source>
+        <target>Thank you! The analysis has started; your reviewed diagnosis arrives within 24 h.</target>
+      </segment>
+    </unit>
 
 <unit id="auditFormError">
   <notes>
@@ -2125,27 +1306,19 @@
   </segment>
 </unit>
 
-<unit id="auditFormRgpdLabel">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:178</note>
-    <note category="description">audit.form.rgpdLabel</note>
-  </notes>
-  <segment>
-    <source>J&apos;accepte que mes coordonnées soient utilisées pour traiter ma demande d&apos;audit (voir &lt;a href=&quot;/fr/privacy&quot; class=&quot;underline&quot;&gt;politique de confidentialité&lt;/a&gt;).</source>
-    <target>I agree that my contact details may be used to process my audit request (see &lt;a href=&quot;/en/privacy&quot; class=&quot;underline&quot;&gt;privacy policy&lt;/a&gt;).</target>
-  </segment>
-</unit>
+    <unit id="auditFormRgpdLabel">
+      <segment>
+        <source>J&apos;accepte que mes coordonnées soient utilisées pour traiter ma demande de diagnostic (voir &lt;a href=&quot;/fr/privacy&quot; class=&quot;underline&quot;&gt;politique de confidentialité&lt;/a&gt;).</source>
+        <target>I agree that my contact details may be used to process my diagnosis request (see &lt;a href="/en/privacy" class="underline"&gt;privacy policy&lt;/a&gt;).</target>
+      </segment>
+    </unit>
 
-<unit id="auditFormRgpdError">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:179</note>
-    <note category="description">audit.form.rgpdError</note>
-  </notes>
-  <segment>
-    <source>Votre consentement RGPD est obligatoire pour lancer l&apos;audit.</source>
-    <target>Your GDPR consent is required to start the audit.</target>
-  </segment>
-</unit>
+    <unit id="auditFormRgpdError">
+      <segment>
+        <source>Votre consentement est obligatoire pour lancer le diagnostic.</source>
+        <target>Your consent is required to start the diagnosis.</target>
+      </segment>
+    </unit>
 
 
 
@@ -2412,18 +1585,6 @@
       </segment>
     </unit>
 
-    <unit id="contactMethodEmailValue">
-      <notes>
-        <note category="location">src/app/shared/components/sections/cta-contact/cta-contact.component.ts:20</note>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:22</note>
-        <note category="description">Contact method value</note>
-        <note category="meaning">contact.method.email.value</note>
-      </notes>
-      <segment>
-        <source>moyencet@gmail.com</source>
-        <target>moyencet@gmail.com</target>
-      </segment>
-    </unit>
 
     <unit id="contactMethodPhoneLabel">
       <notes>
@@ -2438,18 +1599,6 @@
       </segment>
     </unit>
 
-    <unit id="contactMethodPhoneValue">
-      <notes>
-        <note category="location">src/app/shared/components/sections/cta-contact/cta-contact.component.ts:26</note>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:28</note>
-        <note category="description">Contact method value</note>
-        <note category="meaning">contact.method.phone.value</note>
-      </notes>
-      <segment>
-        <source>+33 6 98 50 32 82</source>
-        <target>+33 6 98 50 32 82</target>
-      </segment>
-    </unit>
 
     <unit id="contactMethodOfficeLabel">
       <notes>
@@ -2464,18 +1613,6 @@
       </segment>
     </unit>
 
-    <unit id="contactMethodOfficeValue">
-      <notes>
-        <note category="location">src/app/shared/components/sections/cta-contact/cta-contact.component.ts:32</note>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:34</note>
-        <note category="description">Contact method value</note>
-        <note category="meaning">contact.method.office.value</note>
-      </notes>
-      <segment>
-        <source>Bordeaux, 33100, France</source>
-        <target>Bordeaux, 33100, France</target>
-      </segment>
-    </unit>
 
     <unit id="contactMapAlt">
       <notes>
@@ -2508,8 +1645,8 @@
         <note category="meaning">footer.brand.baseline</note>
       </notes>
       <segment>
-        <source>« Asili » — la racine, l&apos;essentiel. Le design est fonctionnel et réfléchi, jamais décoratif pour décorer.</source>
-        <target>“Asili” — the root, the essential. Design that is functional and thoughtful, never decorative just to decorate.</target>
+        <source>« Asili » — la racine, l&apos;essentiel : des sites et des apps qui disent votre métier, et qu&apos;on trouve.</source>
+        <target>“Asili” — the root, the essential: websites and apps that tell what you do, and that people find.</target>
       </segment>
     </unit>
 
@@ -2545,36 +1682,24 @@
         <note category="meaning">footer.copyright.asili</note>
       </notes>
       <segment>
-        <source>© 2026 Asili Design · Bordeaux</source>
-        <target>© 2026 Asili Design · Bordeaux</target>
+        <source>© 2026 <ph id="0" equiv="marque" disp="NOM_DU_SITE"/> — Sites web &amp; apps mobiles · Bordeaux</source>
+        <target>© 2026 <ph id="0" equiv="marque" disp="NOM_DU_SITE"/> — Websites &amp; mobile apps · Bordeaux</target>
       </segment>
     </unit>
 
-
-
-    <unit id="footerNavLegal">
+    <unit id="marqueMetier">
       <notes>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:101</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.legal</note>
+        <note category="location">src/app/shared/components/cadre/navbar/navbar.component.html:256</note>
       </notes>
       <segment>
-        <source>Mentions légales</source>
-        <target>Legal notice</target>
+        <source>Sites web &amp; apps mobiles</source>
+        <target>Websites &amp; mobile apps</target>
       </segment>
     </unit>
 
-    <unit id="footerNavPrivacy">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:105</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.privacy</note>
-      </notes>
-      <segment>
-        <source>Confidentialité</source>
-        <target>Privacy</target>
-      </segment>
-    </unit>
+
+
+
 
 
     <unit id="footerNavLinkedin">
@@ -2589,77 +1714,11 @@
       </segment>
     </unit>
 
-    <unit id="footerNavPresentation">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:47</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.presentation</note>
-      </notes>
-      <segment>
-        <source>Présentation</source>
-        <target>About</target>
-      </segment>
-    </unit>
 
-    <unit id="footerNavProjects">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:51</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.projects</note>
-      </notes>
-      <segment>
-        <source>Projets</source>
-        <target>Projects</target>
-      </segment>
-    </unit>
 
-    <unit id="footerNavServices">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:55</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.services</note>
-      </notes>
-      <segment>
-        <source>Services</source>
-        <target>Services</target>
-      </segment>
-    </unit>
 
-    <unit id="footerNavFormations">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:59</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.formations</note>
-      </notes>
-      <segment>
-        <source>Formations</source>
-        <target>Courses</target>
-      </segment>
-    </unit>
 
-    <unit id="footerNavGrowthAudit">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:63</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.growthAudit</note>
-      </notes>
-      <segment>
-        <source>Audit</source>
-        <target>Audit</target>
-      </segment>
-    </unit>
 
-    <unit id="footerNavContact">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:67</note>
-        <note category="description">Footer nav link</note>
-        <note category="meaning">footer.nav.contact</note>
-      </notes>
-      <segment>
-        <source>Contact</source>
-        <target>Contact</target>
-      </segment>
-    </unit>
 
     <unit id="footerSocialFacebook">
       <notes>
@@ -2686,17 +1745,6 @@
       </segment>
     </unit>
 
-    <unit id="footerLegalTerms">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/footer/footer.component.ts:82</note>
-        <note category="description">Footer legal link</note>
-        <note category="meaning">footer.legal.terms</note>
-      </notes>
-      <segment>
-        <source>Conditions d&apos;utilisation</source>
-        <target>Terms of use</target>
-      </segment>
-    </unit>
 
 
 
@@ -2712,68 +1760,13 @@
       </segment>
     </unit>
 
-<unit id="navLinkOfferSpan">
-  <notes>
-    <note category="location">src/app/shared/components/cadre/navbar/navbar.component.ts:33</note>
-    <note category="description">Navbar primary link</note>
-    <note category="meaning">navbar.link.offer</note>
-  </notes>
-  <segment>
-    <source>Services</source>
-    <target>Services</target>
-  </segment>
-</unit>
 
 
 
 
-    <unit id="navCtaContactTitle">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/navbar/navbar.component.html:128</note>
-        <note category="description">Contact CTA tooltip</note>
-        <note category="meaning">navbar.cta.contact.title</note>
-      </notes>
-      <segment>
-        <source>Me contacter</source>
-        <target>Contact me</target>
-      </segment>
-    </unit>
 
-    <unit id="navCtaContactLabel">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/navbar/navbar.component.html:130,133</note>
-        <note category="description">Contact CTA label</note>
-        <note category="meaning">navbar.cta.contact.label</note>
-      </notes>
-      <segment>
-        <source>Contact</source>
-        <target>Contact</target>
-      </segment>
-    </unit>
 
-    <unit id="navLinkPresentation">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/navbar/navbar.component.ts:25</note>
-        <note category="description">Navbar primary link</note>
-        <note category="meaning">navbar.link.presentation</note>
-      </notes>
-      <segment>
-        <source>Présentation</source>
-        <target>About</target>
-      </segment>
-    </unit>
 
-    <unit id="navLinkProjects">
-      <notes>
-        <note category="location">src/app/shared/components/cadre/navbar/navbar.component.ts:29</note>
-        <note category="description">Navbar primary link</note>
-        <note category="meaning">navbar.link.projects</note>
-      </notes>
-      <segment>
-        <source>Projets</source>
-        <target>Projects</target>
-      </segment>
-    </unit>
 
     <unit id="navMenuOpen">
       <notes>
@@ -2878,12 +1871,6 @@
         <target>Privacy <pc id="0" equivStart="START_EMPHASISED_TEXT" equivEnd="CLOSE_EMPHASISED_TEXT" type="fmt" dispStart="&lt;em&gt;" dispEnd="&lt;/em&gt;">policy</pc>.</target>
       </segment>
     </unit>
-    <unit id="footerLegalPrivacy">
-      <segment>
-        <source>Politique de confidentialité</source>
-        <target>Privacy policy</target>
-      </segment>
-    </unit>
     <unit id="auditStepsTitle">
       <segment>
         <source>Comment ça fonctionne</source>
@@ -2892,14 +1879,14 @@
     </unit>
     <unit id="auditPillarsTitle">
       <segment>
-        <source>Audit Growth en 7 piliers</source>
-        <target>Growth Audit in 7 pillars</target>
+        <source> Le diagnostic en 7 points </source>
+        <target> The diagnosis in 7 points </target>
       </segment>
     </unit>
     <unit id="auditPillarsSubtitle">
       <segment>
-        <source>Un diagnostic concret et actionnable, aligné avec les 7 piliers du rapport livré.</source>
-        <target>A concrete, actionable diagnosis aligned with the 7 pillars of the delivered report.</target>
+        <source> Un diagnostic concret, qui suit les 7 points du rapport que vous recevez. </source>
+        <target> A concrete diagnosis that follows the 7 points of the report you receive. </target>
       </segment>
     </unit>
     <unit id="authErrorPhone">
@@ -2910,14 +1897,14 @@
     </unit>
     <unit id="auditProgressLabel">
       <segment>
-        <source>Progression de l'audit</source>
-        <target>Audit progress</target>
+        <source>Progression du diagnostic</source>
+        <target>Diagnosis progress</target>
       </segment>
     </unit>
     <unit id="auditResumeTitle">
       <segment>
-        <source>Résumé de votre audit</source>
-        <target>Your audit summary</target>
+        <source>Résumé de votre diagnostic</source>
+        <target>Your diagnosis summary</target>
       </segment>
     </unit>
     <unit id="notFoundImageAlt">
@@ -2934,8 +1921,8 @@
     </unit>
     <unit id="auditPhasePageAiRecaps">
       <segment>
-        <source>Micro-audits IA page par page</source>
-        <target>AI micro-audits page by page</target>
+        <source>Analyse IA page par page</source>
+        <target>AI analysis page by page</target>
       </segment>
     </unit>
     <unit id="auditPhaseSynthesis">
@@ -2994,44 +1981,38 @@
     </unit>
     <unit id="auditStepPending">
       <segment>
-        <source>Audit en attente...</source>
-        <target>Audit pending...</target>
+        <source>Diagnostic en attente...</source>
+        <target>Diagnosis pending...</target>
       </segment>
     </unit>
     <unit id="auditStepCompleted">
       <segment>
-        <source>Audit terminé</source>
-        <target>Audit completed</target>
+        <source>Diagnostic terminé</source>
+        <target>Diagnosis complete</target>
       </segment>
     </unit>
     <unit id="auditErrorFailed">
       <segment>
-        <source>L'audit a échoué.</source>
-        <target>The audit failed.</target>
+        <source>Le diagnostic a échoué.</source>
+        <target>The diagnosis failed.</target>
       </segment>
     </unit>
     <unit id="auditErrorConnectionLost">
       <segment>
-        <source>Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.</source>
-        <target>Connection lost during the audit. Reload the page to check the result.</target>
+        <source>Connexion interrompue pendant le diagnostic. Rechargez la page pour vérifier le résultat.</source>
+        <target>Connection lost during the diagnosis. Reload the page to check the result.</target>
       </segment>
     </unit>
     <unit id="auditErrorSummaryFetch">
       <segment>
-        <source>Impossible de récupérer le résumé de l'audit pour le moment.</source>
-        <target>Unable to retrieve the audit summary at this time.</target>
+        <source>Impossible de récupérer le résumé du diagnostic pour le moment.</source>
+        <target>Unable to retrieve the diagnosis summary right now.</target>
       </segment>
     </unit>
     <unit id="NavbarCompanyTitle">
       <segment>
-        <source>Asili design</source>
-        <target>Asili design</target>
-      </segment>
-    </unit>
-    <unit id="contactFormRoleLegend">
-      <segment>
-        <source>Sélectionnez votre rôle</source>
-        <target>Select your role</target>
+        <source>Asili Design</source>
+        <target>Asili Design</target>
       </segment>
     </unit>
     <unit id="navProfileLabel">
@@ -4092,20 +3073,8 @@
     </unit>
     <unit id="navFormationsLabel">
       <segment>
-        <source>Formations</source>
-        <target>Courses</target>
-      </segment>
-    </unit>
-    <unit id="navFormationsIaTitle">
-      <segment>
-        <source>IA pour Solopreneurs</source>
-        <target>AI for Solopreneurs</target>
-      </segment>
-    </unit>
-    <unit id="navFormationsIaDesc">
-      <segment>
-        <source>Panorama des outils IA pour entrepreneurs</source>
-        <target>An overview of AI tools for entrepreneurs</target>
+        <source>Formation</source>
+        <target>Training</target>
       </segment>
     </unit>
     <unit id="formations.toolkit.title">
@@ -5548,42 +4517,6 @@
         <target>Fathom ($19) + Waalaxy (€19) — ~€120/month</target>
       </segment>
     </unit>
-    <unit id="navFormationsAutoTitle">
-      <segment>
-        <source>Automatiser avec l&apos;IA</source>
-        <target>Automate with AI</target>
-      </segment>
-    </unit>
-    <unit id="navFormationsAutoDesc">
-      <segment>
-        <source>5 workflows non-tech pour gagner 2h/semaine</source>
-        <target>5 non-tech workflows to save 2h a week</target>
-      </segment>
-    </unit>
-    <unit id="navFormationsSeoTitle">
-      <segment>
-        <source>Audit SEO DIY</source>
-        <target>DIY SEO Audit</target>
-      </segment>
-    </unit>
-    <unit id="navFormationsSeoDesc">
-      <segment>
-        <source>7 checks en 20 min avec 5 outils gratuits</source>
-        <target>7 checks in 20 min with 5 free tools</target>
-      </segment>
-    </unit>
-    <unit id="navFormationsAllTitle">
-      <segment>
-        <source>Toutes les formations</source>
-        <target>All courses</target>
-      </segment>
-    </unit>
-    <unit id="navFormationsAllDesc">
-      <segment>
-        <source>Voir le catalogue complet</source>
-        <target>See the full catalog</target>
-      </segment>
-    </unit>
     <unit id="slidePollVotreChoix">
       <segment>
         <source>Votre choix : <ph id="0" equiv="INTERPOLATION" disp="{{ label }}"/></source>
@@ -5852,384 +4785,6 @@
       </segment>
     </unit>
 
-    <unit id="offerMethodHeading">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.html:71</note>
-      </notes>
-      <segment>
-        <source>Comment on avance,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>concrètement.</source>
-        <target>How we move forward,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>concretely.</target>
-      </segment>
-    </unit>
-    <unit id="offerDiffHeading">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.html:83,85</note>
-      </notes>
-      <segment>
-        <source> Trois engagements<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>qui changent tout. </source>
-        <target> Three commitments<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>that change everything. </target>
-      </segment>
-    </unit>
-    <unit id="offerHeroKicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:93</note>
-      </notes>
-      <segment>
-        <source>Services premium</source>
-        <target>Premium services</target>
-      </segment>
-    </unit>
-    <unit id="offerHeroTitlePre">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:96</note>
-      </notes>
-      <segment>
-        <source>Un périmètre défini sur</source>
-        <target>A scope defined around</target>
-      </segment>
-    </unit>
-    <unit id="offerHeroTitleAccent">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:99</note>
-      </notes>
-      <segment>
-        <source>votre</source>
-        <target>your</target>
-      </segment>
-    </unit>
-    <unit id="offerHeroTitlePost">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:102</note>
-      </notes>
-      <segment>
-        <source>besoin.</source>
-        <target>needs.</target>
-      </segment>
-    </unit>
-    <unit id="offerHeroLead">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:105</note>
-      </notes>
-      <segment>
-        <source>Pas un catalogue de prix figés. Quatre façons de travailler ensemble, choisies selon votre situation réelle — de l&apos;intervention ciblée à l&apos;accompagnement dans la durée.</source>
-        <target>Not a catalogue of fixed prices. Four ways to work together, chosen to fit your real situation — from a targeted intervention to ongoing support.</target>
-      </segment>
-    </unit>
-    <unit id="offerHeroMeta1Key">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:110</note>
-      </notes>
-      <segment>
-        <source>Format</source>
-        <target>Format</target>
-      </segment>
-    </unit>
-    <unit id="offerHeroMeta1Value">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:111</note>
-      </notes>
-      <segment>
-        <source>Sur-mesure</source>
-        <target>Tailor-made</target>
-      </segment>
-    </unit>
-    <unit id="offerHeroMeta2Key">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:114</note>
-      </notes>
-      <segment>
-        <source>Engagement</source>
-        <target>Commitment</target>
-      </segment>
-    </unit>
-    <unit id="offerHeroMeta2Value">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:115</note>
-      </notes>
-      <segment>
-        <source>Du ponctuel au continu</source>
-        <target>From one-off to continuous</target>
-      </segment>
-    </unit>
-    <unit id="offerHeroMeta3Key">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:118</note>
-      </notes>
-      <segment>
-        <source>Toujours inclus</source>
-        <target>Always included</target>
-      </segment>
-    </unit>
-    <unit id="offerHeroMeta3Value">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:119</note>
-      </notes>
-      <segment>
-        <source>Cadrage honnête</source>
-        <target>Honest scoping</target>
-      </segment>
-    </unit>
-    <unit id="offerMode1Title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:131</note>
-      </notes>
-      <segment>
-        <source>Interventions ciblées</source>
-        <target>Targeted interventions</target>
-      </segment>
-    </unit>
-    <unit id="offerMode1Desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:132</note>
-      </notes>
-      <segment>
-        <source>Un blocage précis, une fonctionnalité, un audit. Une action courte et nette, avec un livrable clair.</source>
-        <target>A specific blocker, a feature, an audit. A short, sharp action with a clear deliverable.</target>
-      </segment>
-    </unit>
-    <unit id="offerMode2Title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:138</note>
-      </notes>
-      <segment>
-        <source>Projets structurants</source>
-        <target>Structuring projects</target>
-      </segment>
-    </unit>
-    <unit id="offerMode2Desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:139</note>
-      </notes>
-      <segment>
-        <source>Une plateforme, une refonte, une intégration d&apos;IA. Du cadrage à la mise en production, avec une architecture qui dure.</source>
-        <target>A platform, a redesign, an AI integration. From scoping to production, with an architecture built to last.</target>
-      </segment>
-    </unit>
-    <unit id="offerMode3Title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:145</note>
-      </notes>
-      <segment>
-        <source>Accompagnement continu</source>
-        <target>Ongoing support</target>
-      </segment>
-    </unit>
-    <unit id="offerMode3Desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:146</note>
-      </notes>
-      <segment>
-        <source>Une présence dans la durée : évolutions, conseil, montée en compétence de votre équipe. Le partenaire, pas le prestataire.</source>
-        <target>A lasting presence: evolutions, advice, upskilling your team. The partner, not the vendor.</target>
-      </segment>
-    </unit>
-    <unit id="offerMode4Title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:152</note>
-      </notes>
-      <segment>
-        <source>Formation sur-mesure</source>
-        <target>Tailored training</target>
-      </segment>
-    </unit>
-    <unit id="offerMode4Desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:153</note>
-      </notes>
-      <segment>
-        <source>Rendre votre équipe autonome sur l&apos;IA, l&apos;automatisation, le SEO et le management des usages. Adapté à votre contexte, pas un cours générique.</source>
-        <target>Make your team self-reliant on AI, automation, SEO and managing how these tools are used. Adapted to your context, not a generic course.</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodKicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:160</note>
-      </notes>
-      <segment>
-        <source>La méthode</source>
-        <target>The method</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodIntro">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:163</note>
-      </notes>
-      <segment>
-        <source>Un fil conducteur stable, quel que soit le mode d&apos;intervention choisi.</source>
-        <target>A steady through-line, whichever way of working you choose.</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep1Index">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:169</note>
-      </notes>
-      <segment>
-        <source>— Clarifier</source>
-        <target>— Clarify</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep1Title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:170</note>
-      </notes>
-      <segment>
-        <source>Comprendre</source>
-        <target>Understand</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep1Desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:171</note>
-      </notes>
-      <segment>
-        <source>On cartographie le besoin réel et les usages avant toute proposition technique.</source>
-        <target>We map the real need and the actual usage before any technical proposal.</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep2Index">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:175</note>
-      </notes>
-      <segment>
-        <source>— Construire</source>
-        <target>— Build</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep2Title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:176</note>
-      </notes>
-      <segment>
-        <source>Déployer</source>
-        <target>Deploy</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep2Desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:177</note>
-      </notes>
-      <segment>
-        <source>Des outils robustes et lisibles, dimensionnés sur le périmètre réel.</source>
-        <target>Robust, readable tools, sized to the real scope.</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep3Index">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:181</note>
-      </notes>
-      <segment>
-        <source>— Tester</source>
-        <target>— Test</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep3Title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:182</note>
-      </notes>
-      <segment>
-        <source>Éprouver</source>
-        <target>Battle-test</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep3Desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:183</note>
-      </notes>
-      <segment>
-        <source>On confronte à l&apos;usage, on mesure, on ajuste sans dogme.</source>
-        <target>We confront it with real usage, we measure, we adjust without dogma.</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep4Index">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:187</note>
-      </notes>
-      <segment>
-        <source>— Évoluer</source>
-        <target>— Evolve</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep4Title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:188</note>
-      </notes>
-      <segment>
-        <source>Faire durer</source>
-        <target>Make it last</target>
-      </segment>
-    </unit>
-    <unit id="offerMethodStep4Desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:189</note>
-      </notes>
-      <segment>
-        <source>Continuité humaine : l&apos;outil grandit avec vous, pas contre vous.</source>
-        <target>Human continuity: the tool grows with you, not against you.</target>
-      </segment>
-    </unit>
-    <unit id="offerDiffKicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:196</note>
-      </notes>
-      <segment>
-        <source>Ce qui différencie</source>
-        <target>What sets it apart</target>
-      </segment>
-    </unit>
-    <unit id="offerDiff1Title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:203</note>
-      </notes>
-      <segment>
-        <source>Expertise réelle</source>
-        <target>Real expertise</target>
-      </segment>
-    </unit>
-    <unit id="offerDiff1Desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:204</note>
-      </notes>
-      <segment>
-        <source>Angular, NestJS, IA : une maîtrise technique qui se voit dans la robustesse et la lisibilité de ce qu&apos;on livre.</source>
-        <target>Angular, NestJS, AI: technical mastery you can see in the robustness and readability of what we ship.</target>
-      </segment>
-    </unit>
-    <unit id="offerDiff2Title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:209</note>
-      </notes>
-      <segment>
-        <source>Continuité humaine</source>
-        <target>Human continuity</target>
-      </segment>
-    </unit>
-    <unit id="offerDiff2Desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:210</note>
-      </notes>
-      <segment>
-        <source>Un interlocuteur unique, qui connaît votre contexte et reste là après la livraison. Pas de tunnel, pas de turnover.</source>
-        <target>A single point of contact, who knows your context and stays around after delivery. No tunnel, no turnover.</target>
-      </segment>
-    </unit>
-    <unit id="offerDiff3Title">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:215</note>
-      </notes>
-      <segment>
-        <source>Stratégie avant techno</source>
-        <target>Strategy before tech</target>
-      </segment>
-    </unit>
-    <unit id="offerDiff3Desc">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:216</note>
-      </notes>
-      <segment>
-        <source>On décide ensemble quoi construire — et quoi ne pas construire. La sobriété est une décision, pas un défaut.</source>
-        <target>We decide together what to build — and what not to build. Restraint is a decision, not a flaw.</target>
-      </segment>
-    </unit>
     <unit id="offerFaqKicker">
       <notes>
         <note category="location">src/app/features/offer/offer.component.ts:223</note>
@@ -6248,60 +4803,6 @@
         <target>Before we get started.</target>
       </segment>
     </unit>
-    <unit id="offerFaq1Q">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:231</note>
-      </notes>
-      <segment>
-        <source>Pourquoi pas de grille de prix ?</source>
-        <target>Why no price list?</target>
-      </segment>
-    </unit>
-    <unit id="offerFaq1A">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:232</note>
-      </notes>
-      <segment>
-        <source>Parce qu&apos;un prix figé répond rarement à un besoin réel. Je préfère cadrer votre situation, puis proposer un périmètre et un budget justes. Transparent, mais sur-mesure.</source>
-        <target>Because a fixed price rarely matches a real need. I prefer to scope your situation, then propose a fair scope and budget. Transparent, but tailor-made.</target>
-      </segment>
-    </unit>
-    <unit id="offerFaq2Q">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:235</note>
-      </notes>
-      <segment>
-        <source>Combien de temps dure un projet ?</source>
-        <target>How long does a project take?</target>
-      </segment>
-    </unit>
-    <unit id="offerFaq2A">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:236</note>
-      </notes>
-      <segment>
-        <source>D&apos;une intervention de quelques jours à un accompagnement de plusieurs mois. On définit ensemble le rythme adapté à vos contraintes et à votre maturité.</source>
-        <target>From a few-day intervention to a months-long engagement. We define the right pace together, around your constraints and your maturity.</target>
-      </segment>
-    </unit>
-    <unit id="offerFaq3Q">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:239</note>
-      </notes>
-      <segment>
-        <source>Reprenez-vous un projet existant ?</source>
-        <target>Do you take over an existing project?</target>
-      </segment>
-    </unit>
-    <unit id="offerFaq3A">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:240</note>
-      </notes>
-      <segment>
-        <source>Oui, fréquemment. J&apos;audite l&apos;existant, j&apos;identifie ce qui mérite d&apos;être gardé, et je propose un chemin réaliste vers plus de clarté et de robustesse.</source>
-        <target>Yes, often. I audit what's there, identify what's worth keeping, and propose a realistic path towards more clarity and robustness.</target>
-      </segment>
-    </unit>
     <unit id="offerFaq4Q">
       <notes>
         <note category="location">src/app/features/offer/offer.component.ts:243</note>
@@ -6318,24 +4819,6 @@
       <segment>
         <source>Basé à Bordeaux, je travaille avec des clients partout en France, à distance comme en présentiel selon les besoins. La proximité humaine ne dépend pas de la géographie.</source>
         <target>Based in Bordeaux, I work with clients all over France, remotely or on site as needed. Human closeness doesn't depend on geography.</target>
-      </segment>
-    </unit>
-    <unit id="offerCtaKicker">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:251</note>
-      </notes>
-      <segment>
-        <source>Prêt à clarifier ?</source>
-        <target>Ready to get clear?</target>
-      </segment>
-    </unit>
-    <unit id="offerCtaTitle">
-      <notes>
-        <note category="location">src/app/features/offer/offer.component.ts:254</note>
-      </notes>
-      <segment>
-        <source>Décrivez votre besoin. Je propose un cadrage, pas un devis générique.</source>
-        <target>Describe your need. I'll propose a scoping, not a generic quote.</target>
       </segment>
     </unit>
     <unit id="offerCtaPrimary">
@@ -6370,12 +4853,9 @@
       </segment>
     </unit>
     <unit id="presentationIntroP2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.html:47,51</note>
-      </notes>
       <segment>
-        <source> Aujourd&apos;hui je conçois des applications en production, avec de vrais utilisateurs, sous une exigence d&apos;ingénierie forte : DDD, Clean Architecture, TDD obligatoire, CI/CD complet. L&apos;IA est mon copilote au quotidien — Claude Code, LangChain, agents autonomes — jamais un gadget. </source>
-        <target> Today I design applications in production, with real users, under a strong engineering standard: DDD, Clean Architecture, mandatory TDD, full CI/CD. AI is my day-to-day copilot — Claude Code, LangChain, autonomous agents — never a gimmick. </target>
+        <source> Aujourd&apos;hui je crée des sites et des applications utilisés chaque jour par de vrais clients, avec la même exigence : un test avant chaque changement, rien en ligne sans relecture. L&apos;IA m&apos;aide à aller plus vite, au quotidien — jamais à la place du jugement. </source>
+        <target> Today I build websites and apps that real customers use every day, with the same standards: a test before every change, nothing goes live without review. AI helps me move faster, every day — never in place of judgement. </target>
       </segment>
     </unit>
     <unit id="presentationIntroP3">
@@ -6487,39 +4967,27 @@
       </segment>
     </unit>
     <unit id="presentationHeroMeta2Key">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:115</note>
-      </notes>
       <segment>
-        <source>Stack</source>
-        <target>Stack</target>
+        <source>Métier</source>
+        <target>Trade</target>
       </segment>
     </unit>
     <unit id="presentationHeroMeta2Value">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:116</note>
-      </notes>
       <segment>
-        <source>Angular · NestJS · .NET · IA</source>
-        <target>Angular · NestJS · .NET · AI</target>
+        <source>Sites web · apps mobiles · outils sur mesure</source>
+        <target>Websites · mobile apps · custom tools</target>
       </segment>
     </unit>
     <unit id="presentationHeroMeta3Key">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:119</note>
-      </notes>
       <segment>
-        <source>Exigence</source>
-        <target>Standard</target>
+        <source>Méthode</source>
+        <target>Method</target>
       </segment>
     </unit>
     <unit id="presentationHeroMeta3Value">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:120</note>
-      </notes>
       <segment>
-        <source>DDD · Clean Archi · TDD</source>
-        <target>DDD · Clean Architecture · TDD</target>
+        <source>Écouter · Écrire · Lancer</source>
+        <target>Listen · Write · Launch</target>
       </segment>
     </unit>
     <unit id="presentationHeroMeta4Key">
@@ -6586,75 +5054,39 @@
       </segment>
     </unit>
     <unit id="presentationSkill1Title">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:150</note>
-      </notes>
       <segment>
-        <source>Développement produit</source>
-        <target>Product development</target>
+        <source>Sites et applications</source>
+        <target>Websites and apps</target>
       </segment>
     </unit>
     <unit id="presentationSkill1Desc">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:151</note>
-      </notes>
       <segment>
-        <source>Des applications web robustes, lisibles et maintenables. De l&apos;architecture front à l&apos;API, avec une obsession pour la clarté du code et de l&apos;usage.</source>
-        <target>Robust, readable, maintainable web applications. From front-end architecture to the API, with an obsession for clarity of code and of usage.</target>
+        <source>Des sites rapides et clairs, des apps mobiles et des outils sur mesure. Construits pour durer, faciles à faire évoluer.</source>
+        <target>Fast, clear websites, mobile apps and custom tools. Built to last, easy to grow.</target>
       </segment>
     </unit>
     <unit id="presentationSkill1Stack1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:153</note>
-      </notes>
       <segment>
-        <source>Angular 19</source>
-        <target>Angular 19</target>
+        <source>Sites vitrines</source>
+        <target>Showcase websites</target>
       </segment>
     </unit>
     <unit id="presentationSkill1Stack2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:154</note>
-      </notes>
       <segment>
-        <source>NestJS</source>
-        <target>NestJS</target>
+        <source>Réservation en ligne</source>
+        <target>Online booking</target>
       </segment>
     </unit>
     <unit id="presentationSkill1Stack3">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:155</note>
-      </notes>
       <segment>
-        <source>.NET / C#</source>
-        <target>.NET / C#</target>
+        <source>Apps mobiles</source>
+        <target>Mobile apps</target>
       </segment>
     </unit>
     <unit id="presentationSkill1Stack4">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:156</note>
-      </notes>
       <segment>
-        <source>React Native</source>
-        <target>React Native</target>
-      </segment>
-    </unit>
-    <unit id="presentationSkill1Stack5">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:157</note>
-      </notes>
-      <segment>
-        <source>PostgreSQL</source>
-        <target>PostgreSQL</target>
-      </segment>
-    </unit>
-    <unit id="presentationSkill1Stack6">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:158</note>
-      </notes>
-      <segment>
-        <source>Docker</source>
-        <target>Docker</target>
+        <source>Outils sur mesure</source>
+        <target>Custom tools</target>
       </segment>
     </unit>
     <unit id="presentationSkill2Title">
@@ -6676,12 +5108,9 @@
       </segment>
     </unit>
     <unit id="presentationSkill2Stack1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:167</note>
-      </notes>
       <segment>
-        <source>LangChain</source>
-        <target>LangChain</target>
+        <source>Automatisations</source>
+        <target>Automations</target>
       </segment>
     </unit>
     <unit id="presentationSkill2Stack2">
@@ -6694,21 +5123,9 @@
       </segment>
     </unit>
     <unit id="presentationSkill2Stack3">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:169</note>
-      </notes>
       <segment>
-        <source>Claude Code</source>
-        <target>Claude Code</target>
-      </segment>
-    </unit>
-    <unit id="presentationSkill2Stack4">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:170</note>
-      </notes>
-      <segment>
-        <source>Multi-LLM</source>
-        <target>Multi-LLM</target>
+        <source>Assistants</source>
+        <target>Assistants</target>
       </segment>
     </unit>
     <unit id="presentationSkill3Title">
@@ -6721,21 +5138,15 @@
       </segment>
     </unit>
     <unit id="presentationSkill3Desc">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:177</note>
-      </notes>
       <segment>
-        <source>Avant la technique, la direction. Audit, cadrage, priorisation : je vous aide à décider quoi construire — et surtout quoi ne pas construire.</source>
-        <target>Before the tech, the direction. Audit, scoping, prioritisation: I help you decide what to build — and above all what not to build.</target>
+        <source>Avant la technique, la direction. Diagnostic, cadrage, priorisation : je vous aide à décider quoi construire — et surtout quoi ne pas construire.</source>
+        <target>Before technology, direction. Diagnosis, scoping, prioritisation: I help you decide what to build — and above all what not to build.</target>
       </segment>
     </unit>
     <unit id="presentationSkill3Stack1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:179</note>
-      </notes>
       <segment>
-        <source>Audit</source>
-        <target>Audit</target>
+        <source>Diagnostic</source>
+        <target>Diagnosis</target>
       </segment>
     </unit>
     <unit id="presentationSkill3Stack2">
@@ -6748,12 +5159,9 @@
       </segment>
     </unit>
     <unit id="presentationSkill3Stack3">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:181</note>
-      </notes>
       <segment>
-        <source>SEO</source>
-        <target>SEO</target>
+        <source>Référencement</source>
+        <target>Search visibility</target>
       </segment>
     </unit>
     <unit id="presentationAiMethodKicker">
@@ -6766,12 +5174,9 @@
       </segment>
     </unit>
     <unit id="presentationAiMethodLead">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:192</note>
-      </notes>
       <segment>
-        <source>Je travaille en orchestration multi-agents : un agent par tâche, revue croisée, vérification adversariale avant de valider. Chaque changement commence par un test qui échoue (TDD), et l&apos;architecture est pensée pour durer (DDD, clean architecture) — même sur mes projets perso.</source>
-        <target>I work in multi-agent orchestration: one agent per task, cross-review, adversarial verification before validating. Every change starts with a failing test (TDD), and the architecture is designed to last (DDD, clean architecture) — even on my personal projects.</target>
+        <source>Je travaille avec plusieurs agents IA : un agent par tâche, une relecture croisée, une vérification qui cherche la faille avant de valider. Chaque changement commence par un test qui échoue, et le code est pensé pour durer — même sur mes projets perso.</source>
+        <target>I work with several AI agents: one agent per task, cross-review, a check that hunts for flaws before anything is approved. Every change starts with a failing test, and the code is designed to last — even on my personal projects.</target>
       </segment>
     </unit>
     <unit id="presentationAiMethodStep1Title">
@@ -6829,21 +5234,15 @@
       </segment>
     </unit>
     <unit id="presentationAiMethodStep4Title">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:213</note>
-      </notes>
       <segment>
-        <source>TDD + architecture durable</source>
-        <target>TDD + lasting architecture</target>
+        <source>Test d’abord, code qui dure</source>
+        <target>Test first, code that lasts</target>
       </segment>
     </unit>
     <unit id="presentationAiMethodStep4Desc">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:214</note>
-      </notes>
       <segment>
-        <source>Un test qui échoue d&apos;abord ; DDD &amp; clean archi ensuite.</source>
-        <target>A failing test first; DDD &amp; clean architecture next.</target>
+        <source>Un test qui échoue d’abord ; une architecture qui tient ensuite.</source>
+        <target>A failing test first; an architecture that holds up next.</target>
       </segment>
     </unit>
     <unit id="presentationAiMethodRule">
@@ -6878,8 +5277,8 @@
         <note category="location">src/app/features/presentation/presentation.component.ts:234</note>
       </notes>
       <segment>
-        <source>Voir les projets</source>
-        <target>See the projects</target>
+        <source>Voir mes réalisations</source>
+        <target>View my work</target>
       </segment>
     </unit>
     <unit id="presentationMilestone1Year">
@@ -6909,31 +5308,16 @@
         <target>The studio in its current form, plus one very active build: &lt;strong&gt;Musaium / InnovMind&lt;/strong&gt; (AI cultural mediation for museums).</target>
       </segment>
     </unit>
-    <unit id="presentationMilestone1Tag1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:243</note>
-      </notes>
-      <segment>
-        <source>Monorepo</source>
-        <target>Monorepo</target>
-      </segment>
-    </unit>
     <unit id="presentationMilestone1Tag2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:244</note>
-      </notes>
       <segment>
-        <source>Multi-LLM</source>
-        <target>Multi-LLM</target>
+        <source>Musées</source>
+        <target>Museums</target>
       </segment>
     </unit>
     <unit id="presentationMilestone1Tag3">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:245</note>
-      </notes>
       <segment>
-        <source>React 19</source>
-        <target>React 19</target>
+        <source>IA</source>
+        <target>AI</target>
       </segment>
     </unit>
     <unit id="presentationMilestone2Year">
@@ -6955,30 +5339,21 @@
       </segment>
     </unit>
     <unit id="presentationMilestone2Desc">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:251</note>
-      </notes>
       <segment>
-        <source>Un socle Angular 19 SSR + NestJS 11 réunissant plusieurs apps en production : Growth Audit, Formations — avec auth, RGPD et lead-magnets.</source>
-        <target>An Angular 19 SSR + NestJS 11 foundation bringing together several apps in production: Growth Audit, Training — with auth, GDPR and lead magnets.</target>
+        <source>Un socle commun qui réunit plusieurs apps en production : le diagnostic gratuit, les formations — avec comptes, RGPD et ressources offertes.</source>
+        <target>A shared foundation bringing several apps into production: the free diagnosis, the training courses — with accounts, GDPR and free resources.</target>
       </segment>
     </unit>
     <unit id="presentationMilestone2Tag1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:253</note>
-      </notes>
       <segment>
-        <source>Angular 19 SSR</source>
-        <target>Angular 19 SSR</target>
+        <source>Plusieurs apps</source>
+        <target>Several apps</target>
       </segment>
     </unit>
     <unit id="presentationMilestone2Tag2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:254</note>
-      </notes>
       <segment>
-        <source>NestJS 11</source>
-        <target>NestJS 11</target>
+        <source>En production</source>
+        <target>In production</target>
       </segment>
     </unit>
     <unit id="presentationMilestone3Year">
@@ -7000,30 +5375,21 @@
       </segment>
     </unit>
     <unit id="presentationMilestone3Desc">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:260</note>
-      </notes>
       <segment>
-        <source>Du management au développement, avec d&apos;emblée une exigence d&apos;ingénierie : DDD, Clean Architecture, TDD obligatoire, CI/CD complet. Aussi formateur à l&apos;Ipac et l&apos;EPSI.</source>
-        <target>From management to development, with an engineering standard from the outset: DDD, Clean Architecture, mandatory TDD, full CI/CD. Also a trainer at Ipac and EPSI.</target>
+        <source>Du management au développement, avec d’emblée une exigence forte : un test avant chaque changement, des mises en ligne automatisées. Aussi formateur à l’Ipac et l’EPSI.</source>
+        <target>From management to development, with high standards from day one: a test before every change, automated releases. Also a trainer at Ipac and EPSI.</target>
       </segment>
     </unit>
     <unit id="presentationMilestone3Tag1">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:262</note>
-      </notes>
       <segment>
-        <source>DDD</source>
-        <target>DDD</target>
+        <source>Exigence</source>
+        <target>High standards</target>
       </segment>
     </unit>
     <unit id="presentationMilestone3Tag2">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:263</note>
-      </notes>
       <segment>
-        <source>TDD</source>
-        <target>TDD</target>
+        <source>Tests</source>
+        <target>Tests</target>
       </segment>
     </unit>
     <unit id="presentationMilestone3Tag3">
@@ -7197,15 +5563,6 @@
         <target>Start the conversation</target>
       </segment>
     </unit>
-    <unit id="presentationCtaSecondary">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:318</note>
-      </notes>
-      <segment>
-        <source>Voir les services</source>
-        <target>See the services</target>
-      </segment>
-    </unit>
 
 
 
@@ -7291,15 +5648,6 @@
 
 
 
-    <unit id="projetsHeroTitle">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.html:14,16</note>
-      </notes>
-      <segment>
-        <source>Des preuves,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>pas des <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">promesses</pc>.</source>
-        <target>Proof,<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/>not <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">promises</pc>.</target>
-      </segment>
-    </unit>
 
     <unit id="projetsMethodHeading">
       <notes>
@@ -7348,415 +5696,46 @@
 
 
 
-    <unit id="projetsProject4Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:103</note>
-      </notes>
-      <segment>
-        <source>En production</source>
-        <target>In production</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject4Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:104</note>
-      </notes>
-      <segment>
-        <source>Raspberry Pi</source>
-        <target>Raspberry Pi</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject4Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:106</note>
-      </notes>
-      <segment>
-        <source>Morning-Brief</source>
-        <target>Morning-Brief</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject4Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:107</note>
-      </notes>
-      <segment>
-        <source>Newsletter IA : 50+ sources agrégées, dédupliquées, synthétisées, livrées chaque matin par Telegram. 24/7 sur un Raspberry Pi.</source>
-        <target>AI newsletter: 50+ sources aggregated, deduplicated, synthesised and delivered every morning via Telegram. 24/7 on a Raspberry Pi.</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject4ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:108</note>
-      </notes>
-      <segment>
-        <source>illustration — Morning-Brief</source>
-        <target>illustration — Morning-Brief</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject5Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:113</note>
-      </notes>
-      <segment>
-        <source>En production</source>
-        <target>In production</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject5Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:114</note>
-      </notes>
-      <segment>
-        <source>Automatisation</source>
-        <target>Automation</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject5Tag3">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:115</note>
-      </notes>
-      <segment>
-        <source>Telegram</source>
-        <target>Telegram</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject5Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:117</note>
-      </notes>
-      <segment>
-        <source>IFS Academy</source>
-        <target>IFS Academy</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject5Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:118</note>
-      </notes>
-      <segment>
-        <source>Audit d&apos;appartenance aux groupes, relances automatiques, liens d&apos;invitation signés, parcours d&apos;onboarding multi-étapes et récap quotidien par email. Accueille des centaines d&apos;élèves sans intervention manuelle.</source>
-        <target>Group-membership auditing, automatic follow-ups, signed invitation links, a multi-step onboarding journey and a daily email recap. Welcomes hundreds of students with no manual intervention.</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject5ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:119</note>
-      </notes>
-      <segment>
-        <source>capture — Onboarding Telegram IFS</source>
-        <target>screenshot — Telegram IFS onboarding</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject6Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:124</note>
-      </notes>
-      <segment>
-        <source>Mobile</source>
-        <target>Mobile</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject6Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:125</note>
-      </notes>
-      <segment>
-        <source>Multi-LLM</source>
-        <target>Multi-LLM</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject6Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:127</note>
-      </notes>
-      <segment>
-        <source>InnovMind</source>
-        <target>InnovMind</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject6Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:128</note>
-      </notes>
-      <segment>
-        <source>Produit de médiation culturelle par l&apos;IA : reconnaissance d&apos;œuvres par photo, chat contextuel et réponses multilingues.</source>
-        <target>An AI-powered cultural mediation product: artwork recognition from a photo, contextual chat and multilingual answers.</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject6ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:130</note>
-      </notes>
-      <segment>
-        <source>illustration — InnovMind</source>
-        <target>illustration — InnovMind</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject7Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:135</note>
-      </notes>
-      <segment>
-        <source>En production</source>
-        <target>In production</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject7Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:136</note>
-      </notes>
-      <segment>
-        <source>Outil métier</source>
-        <target>Business tool</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject7Tag3">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:137</note>
-      </notes>
-      <segment>
-        <source>Traçabilité</source>
-        <target>Traceability</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject7Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:139</note>
-      </notes>
-      <segment>
-        <source>Gestion de chais</source>
-        <target>Cellar management</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject7Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:140</note>
-      </notes>
-      <segment>
-        <source>Suivi de la production de la vigne à la mise en bouteille : centralisation des informations, traçabilité complète, accompagnement des usages métier au quotidien.</source>
-        <target>Tracking production from vine to bottling: centralised information, full traceability, day-to-day support for business workflows.</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject7ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:141</note>
-      </notes>
-      <segment>
-        <source>capture — Gestion de chais de Cognac</source>
-        <target>screenshot — Cognac cellar management</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject8Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:146</note>
-      </notes>
-      <segment>
-        <source>En production</source>
-        <target>In production</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject8Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:147</note>
-      </notes>
-      <segment>
-        <source>Web sur-mesure</source>
-        <target>Bespoke web</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject8Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:149</note>
-      </notes>
-      <segment>
-        <source>Slide-Shot</source>
-        <target>Slide-Shot</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject8Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:150</note>
-      </notes>
-      <segment>
-        <source>Outil local qui transforme un PDF de présentation en images PNG haute définition, avec sélection de slides, export 300 DPI et nommage sans écrasement.</source>
-        <target>A local tool that turns a presentation PDF into high-definition PNG images, with slide selection, 300 DPI export and file naming that never overwrites.</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject8ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:151</note>
-      </notes>
-      <segment>
-        <source>illustration — Slide-Shot</source>
-        <target>illustration — Slide-Shot</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject9Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:156</note>
-      </notes>
-      <segment>
-        <source>MMO web</source>
-        <target>Web MMO</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject9Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:157</note>
-      </notes>
-      <segment>
-        <source>Simulation</source>
-        <target>Simulation</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject9Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:159</note>
-      </notes>
-      <segment>
-        <source>Fourmizzz Suite</source>
-        <target>Fourmizzz Suite</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject9Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:160</note>
-      </notes>
-      <segment>
-        <source>Suite de conception d&apos;un MMO myrmécologique : simulation persistante, espèces asymétriques, météo, biomes et territoires sur une carte réelle.</source>
-        <target>A design suite for a myrmecological MMO: persistent simulation, asymmetric species, weather, biomes and territories on a real-world map.</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject9ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:161</note>
-      </notes>
-      <segment>
-        <source>illustration — Fourmizzz Suite</source>
-        <target>illustration — Fourmizzz Suite</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject10Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:166</note>
-      </notes>
-      <segment>
-        <source>SSE</source>
-        <target>SSE</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject10Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:167</note>
-      </notes>
-      <segment>
-        <source>LangChain</source>
-        <target>LangChain</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject10Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:169</note>
-      </notes>
-      <segment>
-        <source>Schema-Atlas</source>
-        <target>Schema-Atlas</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject10Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:170</note>
-      </notes>
-      <segment>
-        <source>Produit qui rend un schéma de base de données lisible : domaines, relations, diagrammes déterministes et détail des tables.</source>
-        <target>A product that makes a database schema readable: domains, relationships, deterministic diagrams and table details.</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject10ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:172</note>
-      </notes>
-      <segment>
-        <source>illustration — Schema-Atlas</source>
-        <target>illustration — Schema-Atlas</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject11Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:176</note>
-      </notes>
-      <segment>
-        <source>NestJS 11</source>
-        <target>NestJS 11</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject11Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:177</note>
-      </notes>
-      <segment>
-        <source>ZenFirst Renta</source>
-        <target>ZenFirst Renta</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject11Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:178</note>
-      </notes>
-      <segment>
-        <source>Module de rentabilité pour cabinets d&apos;expertise-gestion : analyse métier, calculs structurés et parcours web sécurisé.</source>
-        <target>A profitability module for accounting and advisory firms: business analysis, structured calculations and a secure web journey.</target>
-      </segment>
-    </unit>
 
-    <unit id="projetsProject11ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:179</note>
-      </notes>
-      <segment>
-        <source>illustration — ZenFirst Renta</source>
-        <target>illustration — ZenFirst Renta</target>
-      </segment>
-    </unit>
 
     <unit id="projetsMethodKicker">
       <notes>
@@ -7918,15 +5897,6 @@
       </segment>
     </unit>
 
-    <unit id="projetsCtaSecondary">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:232</note>
-      </notes>
-      <segment>
-        <source>Découvrir l&apos;audit</source>
-        <target>Discover the audit</target>
-      </segment>
-    </unit>
     <unit id="formations-list.meta.duration">
       <segment>
         <source>Durée</source>
@@ -9377,105 +7347,6 @@
         <target>Services &amp; training</target>
       </segment>
     </unit>
-    <unit id="projetsProject12Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:175</note>
-      </notes>
-      <segment>
-        <source>Refonte en cours</source>
-        <target>Rebuild in progress</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject12Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:176</note>
-      </notes>
-      <segment>
-        <source>Réservation en ligne</source>
-        <target>Online booking</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject12Tag3">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:177</note>
-      </notes>
-      <segment>
-        <source>Migration SEO</source>
-        <target>SEO migration</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject12Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:179</note>
-      </notes>
-      <segment>
-        <source>AtlanticBike</source>
-        <target>AtlanticBike</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject12Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:180</note>
-      </notes>
-      <segment>
-        <source>Loueur-réparateur sur la côte atlantique : présenter l'activité, structurer l'offre et permettre la réservation en ligne. Demande en 6 étapes dont le devis est recalculé côté serveur uniquement, back-office du parc et de l'atelier, reprise des URL indexées.</source>
-        <target>Bike rental and repair business on the Atlantic coast: present the business, structure the offering and enable online booking. A six-step request whose quote is recalculated server-side only, a back office for the fleet and the workshop, and indexed URLs carried over.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject12ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:182</note>
-      </notes>
-      <segment>
-        <source>capture — AtlanticBike</source>
-        <target>screenshot — AtlanticBike</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject13Tag1">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:187</note>
-      </notes>
-      <segment>
-        <source>Prototype</source>
-        <target>Prototype</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject13Tag2">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:188</note>
-      </notes>
-      <segment>
-        <source>Analyse de contenu</source>
-        <target>Content analysis</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject13Title">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:190</note>
-      </notes>
-      <segment>
-        <source>Portail-EG</source>
-        <target>Portail-EG</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject13Desc">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:191</note>
-      </notes>
-      <segment>
-        <source>Portail métier pour cabinets d&apos;expertise-gestion : comptes, rôles, rentabilité, audit et parcours sécurisés.</source>
-        <target>A business portal for accounting and advisory firms: accounts, roles, profitability, audit and secure journeys.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject13ImageAlt">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:193</note>
-      </notes>
-      <segment>
-        <source>illustration — Portail-EG</source>
-        <target>illustration — Portail-EG</target>
-      </segment>
-    </unit>
     <unit id="385129033471599880">
       <notes>
         <note category="location">src/app/features/auth/connexion/auth.component.html:208</note>
@@ -9494,114 +7365,8 @@
         <target>Sign up with Google</target>
       </segment>
     </unit>
-    <unit id="7243381769177289361">
-      <notes>
-        <note category="location">src/app/features/contact/contact.component.html:134</note>
-      </notes>
-      <segment>
-        <source>Envoyer</source>
-        <target>Send</target>
-      </segment>
-    </unit>
-<unit id="navLinkAudit:Audit">
-  <notes>
-    <note category="location">src/app/shared/components/cadre/navbar/navbar.component.html:120</note>
-    <note category="description">Navbar primary link</note>
-    <note category="meaning">navbar.link.audit</note>
-  </notes>
-  <segment>
-    <source>Demander un devis</source>
-    <target>Request a Quote</target>
-  </segment>
-</unit>
-<unit id="navLinkAuditSpan:Audit">
-  <notes>
-    <note category="location">src/app/shared/components/cadre/navbar/navbar.component.html:122,126</note>
-    <note category="description">Navbar primary link</note>
-    <note category="meaning">navbar.link.audit</note>
-  </notes>
-  <segment>
-    <source>Audit</source>
-    <target>Audit</target>
-  </segment>
-</unit>
-    <unit id="homeProjectMorningBriefTag1">
-      <segment>
-        <source>En production</source>
-        <target>In production</target>
-      </segment>
-    </unit>
-    <unit id="homeProjectMorningBriefTag2">
-      <segment>
-        <source>Raspberry Pi</source>
-        <target>Raspberry Pi</target>
-      </segment>
-    </unit>
-    <unit id="homeProjectMorningBriefTag3">
-      <segment>
-        <source>Newsletter IA</source>
-        <target>AI newsletter</target>
-      </segment>
-    </unit>
-    <unit id="homeProjectMorningBriefTitle">
-      <segment>
-        <source>Morning-Brief</source>
-        <target>Morning Brief</target>
-      </segment>
-    </unit>
-    <unit id="homeProjectMorningBriefDesc">
-      <segment>
-        <source>Une veille IA collectée, synthétisée et livrée chaque matin, bientôt publiée comme une collection d&apos;articles utiles.</source>
-        <target>AI intelligence gathered, synthesized, and delivered every morning, soon published as a collection of useful articles.</target>
-      </segment>
-    </unit>
-    <unit id="homeProjectMorningBriefImageAlt">
-      <segment>
-        <source>illustration — Morning-Brief</source>
-        <target>illustration — Morning Brief</target>
-      </segment>
-    </unit>
-    <unit id="homeProjectAuditTag1">
-      <segment><source>Audit</source><target>Audit</target></segment>
-    </unit>
-    <unit id="homeProjectAuditTag2">
-      <segment><source>SSE</source><target>SSE</target></segment>
-    </unit>
-    <unit id="homeProjectAuditTag3">
-      <segment><source>IA</source><target>AI</target></segment>
-    </unit>
-    <unit id="homeProjectAuditTitle">
-      <segment><source>Audit de visibilité web</source><target>Web visibility audit</target></segment>
-    </unit>
-    <unit id="homeProjectAuditDesc">
-      <segment><source>Un diagnostic technique et IA qui transforme les signaux d&apos;un site en actions priorisées.</source><target>A technical and AI-powered diagnosis that turns website signals into prioritized actions.</target></segment>
-    </unit>
-    <unit id="homeProjectAuditImageAlt">
-      <segment><source>capture — Audit de visibilité web</source><target>screenshot — Web visibility audit</target></segment>
-    </unit>
-    <unit id="homeProjectFormationsTag1">
-      <segment><source>Formation</source><target>Training</target></segment>
-    </unit>
-    <unit id="homeProjectFormationsTag2">
-      <segment><source>IA</source><target>AI</target></segment>
-    </unit>
-    <unit id="homeProjectFormationsTitle">
-      <segment><source>Formations actionnables</source><target>Actionable training</target></segment>
-    </unit>
-    <unit id="homeProjectFormationsDesc">
-      <segment><source>Des formats courts pour comprendre l&apos;IA, tester un workflow et repartir avec un toolkit concret.</source><target>Short formats to understand AI, test a workflow, and leave with a practical toolkit.</target></segment>
-    </unit>
-    <unit id="homeProjectFormationsImageAlt">
-      <segment><source>illustration — formations IA</source><target>illustration — AI training</target></segment>
-    </unit>
     <unit id="notFoundCtaProjects">
-      <segment><source> Voir les projets </source><target> View projects </target></segment>
-    </unit>
-    <unit id="footerNavArticles">
-      <segment><source>Articles</source><target>Articles</target></segment>
-    </unit>
-    <unit id="navLinkArticles">
-      <segment><source>Articles</source><target>Articles</target></segment>
+      <segment><source> Voir mes réalisations </source><target> View my work </target></segment>
     </unit>
     <unit id="coursPrenom">
       <notes>
@@ -12217,510 +9982,6 @@
         <target>User area</target>
       </segment>
     </unit>
-    <unit id="projetsProject4CaseContext">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:41</note>
-      </notes>
-      <segment>
-        <source>Une veille technique quotidienne devait fonctionner sans surveillance sur un Raspberry Pi.</source>
-        <target>A daily tech watch had to run unattended on a Raspberry Pi.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject4CaseProblem">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:42</note>
-      </notes>
-      <segment>
-        <source>Les sources étaient nombreuses, redondantes et trop longues à trier manuellement.</source>
-        <target>Sources were numerous, redundant and too long to sort by hand.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject4CaseSolution">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:43</note>
-      </notes>
-      <segment>
-        <source>Une chaîne collecte, déduplique, synthétise et livre une édition sourcée par Telegram.</source>
-        <target>A pipeline collects, deduplicates, summarizes and delivers a sourced edition via Telegram.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject4CaseRole">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:44</note>
-      </notes>
-      <segment>
-        <source>Conception du produit, du pipeline éditorial et de son exploitation.</source>
-        <target>Design of the product, the editorial pipeline and its operation.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject4CaseResult">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:45</note>
-      </notes>
-      <segment>
-        <source>50+ sources sont traitées et une édition arrive chaque matin sans intervention.</source>
-        <target>50+ sources are processed and an edition arrives every morning with no intervention.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject5CaseContext">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:60</note>
-      </notes>
-      <segment>
-        <source>Une académie accueillait des centaines d’élèves dans plusieurs groupes Telegram.</source>
-        <target>An academy was welcoming hundreds of students across several Telegram groups.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject5CaseProblem">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:61</note>
-      </notes>
-      <segment>
-        <source>Les vérifications d’accès et les relances consommaient du temps et créaient des oublis.</source>
-        <target>Access checks and follow-ups were eating up time and letting things slip.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject5CaseSolution">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:62</note>
-      </notes>
-      <segment>
-        <source>Un parcours signé vérifie les groupes, relance les inscrits et consolide les états par email.</source>
-        <target>A signed journey checks group membership, follows up with enrollees and consolidates statuses by email.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject5CaseRole">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:63</note>
-      </notes>
-      <segment>
-        <source>Architecture, développement backend, automatisations et intégration Telegram.</source>
-        <target>Architecture, backend development, automations and Telegram integration.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject5CaseResult">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:64</note>
-      </notes>
-      <segment>
-        <source>L’onboarding multi-étapes fonctionne sans intervention manuelle au quotidien.</source>
-        <target>The multi-step onboarding runs day to day with no manual intervention.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject6CaseContext">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:78</note>
-      </notes>
-      <segment>
-        <source>Un parcours culturel mobile devait rendre une œuvre compréhensible sur place.</source>
-        <target>A mobile cultural tour had to make an artwork understandable on the spot.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject6CaseProblem">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:79</note>
-      </notes>
-      <segment>
-        <source>Une notice statique ne répondait ni au contexte de la photo ni aux questions du visiteur.</source>
-        <target>A static label answered neither the context of the photo nor the visitor’s questions.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject6CaseSolution">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:80</note>
-      </notes>
-      <segment>
-        <source>Une reconnaissance visuelle ouvre un chat contextualisé et multilingue autour de l’œuvre.</source>
-        <target>Visual recognition opens a contextual, multilingual chat about the artwork.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject6CaseRole">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:81</note>
-      </notes>
-      <segment>
-        <source>Co-conception du produit InnovMind, intégration des modèles et développement mobile/web.</source>
-        <target>Co-design of the InnovMind product, model integration and mobile/web development.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject6CaseResult">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:82</note>
-      </notes>
-      <segment>
-        <source>Le visiteur passe de la photo à une médiation personnalisée en quelques secondes.</source>
-        <target>The visitor goes from a photo to personalized mediation in a few seconds.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject7CaseContext">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:97</note>
-      </notes>
-      <segment>
-        <source>Un producteur devait suivre ses opérations de la vigne à la mise en bouteille.</source>
-        <target>A producer needed to track operations from vine to bottling.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject7CaseProblem">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:98</note>
-      </notes>
-      <segment>
-        <source>Les informations métier dispersées rendaient la traçabilité difficile à maintenir.</source>
-        <target>Scattered business information made traceability hard to maintain.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject7CaseSolution">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:99</note>
-      </notes>
-      <segment>
-        <source>Un outil métier centralise les étapes, les données de production et les historiques.</source>
-        <target>A business tool centralizes the steps, production data and history.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject7CaseRole">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:100</note>
-      </notes>
-      <segment>
-        <source>Cadrage des usages, conception produit et développement de la plateforme.</source>
-        <target>Usage scoping, product design and platform development.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject7CaseResult">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:101</note>
-      </notes>
-      <segment>
-        <source>La traçabilité devient exploitable au quotidien et accompagne les pratiques terrain.</source>
-        <target>Traceability becomes usable day to day and supports practices in the field.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject8CaseContext">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:115</note>
-      </notes>
-      <segment>
-        <source>La préparation d’un support demandait de convertir et renommer les slides manuellement.</source>
-        <target>Preparing a deck meant converting and renaming slides by hand.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject8CaseProblem">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:116</note>
-      </notes>
-      <segment>
-        <source>Les exports ponctuels perdaient du temps et risquaient d’écraser des fichiers existants.</source>
-        <target>One-off exports wasted time and risked overwriting existing files.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject8CaseSolution">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:117</note>
-      </notes>
-      <segment>
-        <source>Une interface locale permet de sélectionner les pages et d’exporter des PNG nommés de façon déterministe.</source>
-        <target>A local interface lets you select pages and export PNGs with deterministic names.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject8CaseRole">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:118</note>
-      </notes>
-      <segment>
-        <source>Conception du produit, orchestration du rendu PDF et sécurisation du flux local.</source>
-        <target>Product design, PDF rendering orchestration and securing the local flow.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject8CaseResult">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:119</note>
-      </notes>
-      <segment>
-        <source>Un support devient exploitable en quelques clics sans envoyer le document sur un serveur.</source>
-        <target>A deck becomes usable in a few clicks without sending the document to a server.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject9CaseContext">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:133</note>
-      </notes>
-      <segment>
-        <source>Fourmizzz Suite devait transformer une simulation myrmécologique en produit web réellement jouable.</source>
-        <target>Fourmizzz Suite had to turn a myrmecological simulation into a genuinely playable web product.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject9CaseProblem">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:134</note>
-      </notes>
-      <segment>
-        <source>Une simulation riche risquait de devenir illisible sans monde vivant ni règles visibles.</source>
-        <target>A rich simulation risked becoming unreadable without a living world or visible rules.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject9CaseSolution">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:135</note>
-      </notes>
-      <segment>
-        <source>Un MMO web combine espèces asymétriques, météo, biomes et territoires temps réel.</source>
-        <target>A web MMO combines asymmetric species, weather, biomes and real-time territories.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject9CaseRole">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:136</note>
-      </notes>
-      <segment>
-        <source>Conception des mécaniques, architecture web et développement de la simulation.</source>
-        <target>Game mechanics design, web architecture and simulation development.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject9CaseResult">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:137</note>
-      </notes>
-      <segment>
-        <source>Le périmètre produit relie simulation, monde persistant et choix stratégiques différenciés.</source>
-        <target>The product scope ties together simulation, a persistent world and differentiated strategic choices.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject10CaseContext">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:151</note>
-      </notes>
-      <segment>
-        <source>Une équipe devait comprendre un schéma de données sans parcourir seule des centaines de lignes.</source>
-        <target>A team needed to understand a data schema without wading through hundreds of lines alone.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject10CaseProblem">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:152</note>
-      </notes>
-      <segment>
-        <source>Un diagramme unique devenait illisible et perdait les commentaires métier du schéma.</source>
-        <target>A single diagram became unreadable and lost the schema’s business comments.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject10CaseSolution">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:153</note>
-      </notes>
-      <segment>
-        <source>Schema-Atlas dérive une carte des domaines, des diagrammes par domaine et le détail d’une table.</source>
-        <target>Schema-Atlas derives a map of domains, per-domain diagrams and table-level detail.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject10CaseRole">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:154</note>
-      </notes>
-      <segment>
-        <source>Conception produit, noyau déterministe et architecture API/web.</source>
-        <target>Product design, deterministic core and API/web architecture.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject10CaseResult">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:155</note>
-      </notes>
-      <segment>
-        <source>Le modèle devient navigable, diffable et exploitable par une équipe produit.</source>
-        <target>The model becomes navigable, diffable and usable by a product team.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject11CaseContext">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:166</note>
-      </notes>
-      <segment>
-        <source>Un cabinet devait rendre une analyse de rentabilité complexe accessible dans un outil métier.</source>
-        <target>A firm needed to make a complex profitability analysis accessible in a business tool.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject11CaseProblem">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:167</note>
-      </notes>
-      <segment>
-        <source>Les hypothèses, charges et financements devaient rester cohérents et auditables.</source>
-        <target>Assumptions, costs and financing had to stay consistent and auditable.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject11CaseSolution">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:168</note>
-      </notes>
-      <segment>
-        <source>Un monorepo structure les contrats, le calcul métier, le web et les contrôles de sécurité.</source>
-        <target>A monorepo structures the contracts, the business calculations, the web app and the security checks.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject11CaseRole">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:169</note>
-      </notes>
-      <segment>
-        <source>Architecture produit, conception des contrats et développement du socle métier.</source>
-        <target>Product architecture, contract design and development of the business core.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject11CaseResult">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:170</note>
-      </notes>
-      <segment>
-        <source>Le calcul devient explicable, testable et prêt à évoluer par domaines.</source>
-        <target>The calculation becomes explainable, testable and ready to evolve domain by domain.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject12CaseContext">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:185</note>
-      </notes>
-      <segment>
-        <source>Un loueur-réparateur devait clarifier son offre et faire entrer la réservation en ligne.</source>
-        <target>A bike rental and repair business needed to clarify its offering and bring booking online.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject12CaseProblem">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:186</note>
-      </notes>
-      <segment>
-        <source>Le parcours de demande devait rester simple tout en protégeant le calcul du devis.</source>
-        <target>The request journey had to stay simple while protecting the quote calculation.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject12CaseSolution">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:187</note>
-      </notes>
-      <segment>
-        <source>Une refonte relie offre, réservation en six étapes, back-office et migration SEO.</source>
-        <target>A redesign connects the offering, six-step booking, the back office and the SEO migration.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject12CaseRole">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:188</note>
-      </notes>
-      <segment>
-        <source>Cadrage, architecture full-stack, sécurité du calcul serveur et migration des URL.</source>
-        <target>Scoping, full-stack architecture, server-side calculation security and URL migration.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject12CaseResult">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:189</note>
-      </notes>
-      <segment>
-        <source>Le parcours couvre réservation, parc, atelier et continuité des pages indexées.</source>
-        <target>The journey covers booking, fleet, workshop and continuity of indexed pages.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject13CaseContext">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:203</note>
-      </notes>
-      <segment>
-        <source>Un portail d’entreprise devait réunir plusieurs usages métier dans une base sécurisée.</source>
-        <target>A company portal had to bring several business uses together on a secure foundation.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject13CaseProblem">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:204</note>
-      </notes>
-      <segment>
-        <source>Les parcours d’accès, de rôles et de données sensibles devaient rester cohérents.</source>
-        <target>Access journeys, roles and sensitive data had to stay consistent.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject13CaseSolution">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:205</note>
-      </notes>
-      <segment>
-        <source>Un monorepo web/API structure les contrats, l’authentification, les rôles et les parcours métier.</source>
-        <target>A web/API monorepo structures the contracts, authentication, roles and business journeys.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject13CaseRole">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:206</note>
-      </notes>
-      <segment>
-        <source>Architecture full-stack, conception des garde-fous et développement des flux critiques.</source>
-        <target>Full-stack architecture, guardrail design and development of critical flows.</target>
-      </segment>
-    </unit>
-    <unit id="projetsProject13CaseResult">
-      <notes>
-        <note category="location">src/app/features/projets/projets.component.ts:207</note>
-      </notes>
-      <segment>
-        <source>Le produit dispose d’un socle lisible pour ajouter des fonctionnalités sans diluer les règles.</source>
-        <target>The product has a readable foundation for adding features without diluting the rules.</target>
-      </segment>
-    </unit>
-    <unit id="projectsGridCaseStudyToggle">
-      <notes>
-        <note category="location">src/app/shared/sections/fin/asili-projects-grid/asili-projects-grid.component.html:54,56</note>
-      </notes>
-      <segment>
-        <source>Voir le cas d’usage</source>
-        <target>See the use case</target>
-      </segment>
-    </unit>
-    <unit id="projectsGridCaseContext">
-      <notes>
-        <note category="location">src/app/shared/sections/fin/asili-projects-grid/asili-projects-grid.component.html:57,58</note>
-      </notes>
-      <segment>
-        <source>Contexte</source>
-        <target>Context</target>
-      </segment>
-    </unit>
-    <unit id="projectsGridCaseProblem">
-      <notes>
-        <note category="location">src/app/shared/sections/fin/asili-projects-grid/asili-projects-grid.component.html:61,62</note>
-      </notes>
-      <segment>
-        <source>Problème</source>
-        <target>Problem</target>
-      </segment>
-    </unit>
-    <unit id="projectsGridCaseSolution">
-      <notes>
-        <note category="location">src/app/shared/sections/fin/asili-projects-grid/asili-projects-grid.component.html:65,66</note>
-      </notes>
-      <segment>
-        <source>Solution</source>
-        <target>Solution</target>
-      </segment>
-    </unit>
-    <unit id="projectsGridCaseRole">
-      <notes>
-        <note category="location">src/app/shared/sections/fin/asili-projects-grid/asili-projects-grid.component.html:69,70</note>
-      </notes>
-      <segment>
-        <source>Rôle</source>
-        <target>Role</target>
-      </segment>
-    </unit>
-    <unit id="projectsGridCaseResult">
-      <notes>
-        <note category="location">src/app/shared/sections/fin/asili-projects-grid/asili-projects-grid.component.html:73,74</note>
-      </notes>
-      <segment>
-        <source>Résultat</source>
-        <target>Result</target>
-      </segment>
-    </unit>
     <unit id="articleDetailLoading">
       <notes>
         <note category="location">src/app/features/articles/article-detail.component.html:3,5</note>
@@ -12819,15 +10080,6 @@
       <segment>
         <source>Parlons de ce que cette veille peut changer concrètement dans votre activité.</source>
         <target>Let’s talk about what this intelligence can change in your business.</target>
-      </segment>
-    </unit>
-    <unit id="articlesListHeroTitle">
-      <notes>
-        <note category="location">src/app/features/articles/articles-list.component.html:4,5</note>
-      </notes>
-      <segment>
-        <source>Des idées qui servent<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">le terrain</pc>.</source>
-        <target>Ideas that serve<ph id="0" equiv="LINE_BREAK" type="fmt" disp="&lt;br /&gt;"/><pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;accent&quot;&gt;" dispEnd="&lt;/span&gt;">the field</pc>.</target>
       </segment>
     </unit>
     <unit id="articlesListMarque">
@@ -13029,12 +10281,9 @@
       </segment>
     </unit>
     <unit id="auditReportTitle">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.html:4,6</note>
-      </notes>
       <segment>
-        <source> Votre rapport d&apos;audit </source>
-        <target> Your audit report </target>
+        <source> Votre rapport de diagnostic </source>
+        <target> Your diagnosis report </target>
       </segment>
     </unit>
     <unit id="auditReportPillars">
@@ -13164,21 +10413,15 @@
       </segment>
     </unit>
     <unit id="auditProgressDefaultStep">
-      <notes>
-        <note category="location">src/app/features/growth-audit/growth-audit-format.utils.ts:110</note>
-      </notes>
       <segment>
-        <source>Audit en cours...</source>
-        <target>Audit in progress...</target>
+        <source>Diagnostic en cours...</source>
+        <target>Diagnosis in progress...</target>
       </segment>
     </unit>
     <unit id="auditIdLabel">
-      <notes>
-        <note category="location">src/app/features/growth-audit/growth-audit.component.html:167,170</note>
-      </notes>
       <segment>
-        <source>Audit ID: <ph id="0" equiv="INTERPOLATION" disp="{{ auditId }}"/></source>
-        <target>Audit ID: <ph id="0" equiv="INTERPOLATION" disp="{{ auditId }}"/></target>
+        <source> N° de diagnostic : <ph id="0" equiv="INTERPOLATION" disp="{{ auditId }}"/> </source>
+        <target> Diagnosis no.: <ph id="0" equiv="INTERPOLATION" disp="{{ auditId }}"/> </target>
       </segment>
     </unit>
     <unit id="auditCurrentUrlLabel">
@@ -13209,30 +10452,21 @@
       </segment>
     </unit>
     <unit id="auditFormConfirmationEnvoyee">
-      <notes>
-        <note category="location">src/app/features/growth-audit/growth-audit.component.ts:214</note>
-      </notes>
       <segment>
-        <source>Vérifiez votre boîte e-mail : l’audit démarre dès que vous ouvrez le lien de confirmation reçu, valable <ph id="0" equiv="heures" disp="heures"/> heures.</source>
-        <target>Check your inbox: the audit starts as soon as you open the confirmation link you received, valid for <ph id="0" equiv="heures" disp="heures"/> hours.</target>
+        <source>Vérifiez votre boîte e-mail : le diagnostic démarre dès que vous ouvrez le lien de confirmation reçu, valable <ph id="0" equiv="heures" disp="heures"/> heures.</source>
+        <target>Check your inbox: the diagnosis starts as soon as you open the confirmation link you received, valid for <ph id="0" equiv="heures" disp="heures"/> hours.</target>
       </segment>
     </unit>
     <unit id="auditFormConfirmee">
-      <notes>
-        <note category="location">src/app/features/growth-audit/growth-audit.component.ts:215</note>
-      </notes>
       <segment>
-        <source>Adresse confirmée ! Scan IA lancé — audit humain envoyé sous 24h.</source>
-        <target>Address confirmed! AI scan started — human audit sent within 24h.</target>
+        <source>Adresse confirmée ! L’analyse est lancée, votre diagnostic relu arrive sous 24 h.</source>
+        <target>Address confirmed! The analysis has started; your reviewed diagnosis arrives within 24 h.</target>
       </segment>
     </unit>
     <unit id="auditFormLienDeConfirmationRefuse">
-      <notes>
-        <note category="location">src/app/features/growth-audit/growth-audit.component.ts:216</note>
-      </notes>
       <segment>
-        <source>Ce lien de confirmation est invalide ou a expiré : refaites la demande d’audit.</source>
-        <target>This confirmation link is invalid or has expired: please request the audit again.</target>
+        <source>Ce lien de confirmation est invalide ou a expiré : refaites la demande de diagnostic.</source>
+        <target>This confirmation link is invalid or has expired: please request the diagnosis again.</target>
       </segment>
     </unit>
     <unit id="slideDeckFullscreenExit">
@@ -15378,6 +12612,924 @@
         =1 {1 formation}
         other {{{ affichees() }} formations}
       }" subFlows="17252123965533843"/> </target>
+      </segment>
+    </unit>
+    <unit id="navCtaParlerDeMonSite">
+      <segment>
+        <source>Parler de mon site</source>
+        <target>Talk about my website</target>
+      </segment>
+    </unit>
+    <unit id="formationsCompteesUne">
+      <segment>
+        <source>1 formation</source>
+        <target>1 course</target>
+      </segment>
+    </unit>
+    <unit id="formationsCompteesPlusieurs">
+      <segment>
+        <source><ph id="0" equiv="nombre" disp="nombre"/> formations</source>
+        <target><ph id="0" equiv="nombre" disp="nombre"/> courses</target>
+      </segment>
+    </unit>
+    <unit id="coursComptes">
+      <segment>
+        <source><ph id="0" equiv="nombre" disp="nombre"/> cours</source>
+        <target><ph id="0" equiv="nombre" disp="nombre"/> lessons</target>
+      </segment>
+    </unit>
+    <unit id="navFormationDigitaleDetail">
+      <segment>
+        <source>IA &amp; web pour les pros · <ph id="0" equiv="formations" disp="formationsComptees(LIENS_DE_LA_FAMILLE.digitale.length)"/></source>
+        <target>AI &amp; web for professionals · <ph id="0" equiv="formations" disp="formationsComptees(LIENS_DE_LA_FAMILLE.digitale.length)"/></target>
+      </segment>
+    </unit>
+    <unit id="navFormationCoursDetail">
+      <segment>
+        <source>BTS CG &amp; Bachelor, en séance · <ph id="0" equiv="cours" disp="coursComptes(LIENS_DE_LA_FAMILLE.cours.length)"/></source>
+        <target>BTS CG &amp; Bachelor, in class · <ph id="0" equiv="cours" disp="coursComptes(LIENS_DE_LA_FAMILLE.cours.length)"/></target>
+      </segment>
+    </unit>
+    <unit id="formations.digitale.titre">
+      <segment>
+        <source>Formation digitale</source>
+        <target>Digital training</target>
+      </segment>
+    </unit>
+    <unit id="formations.digitale.phrase">
+      <segment>
+        <source>Des formations IA et web gratuites, pour les pros qui veulent gagner du temps et être trouvés.</source>
+        <target>Free AI and web courses for professionals who want to save time and be found.</target>
+      </segment>
+    </unit>
+    <unit id="formations.cours.titre">
+      <segment>
+        <source>Formation cours</source>
+        <target>Classroom courses</target>
+      </segment>
+    </unit>
+    <unit id="formations.cours.phrase">
+      <segment>
+        <source>Les cours interactifs du BTS CG et du Bachelor, à suivre en séance avec votre formateur.</source>
+        <target>Interactive BTS CG and Bachelor courses, taught in live sessions with your instructor.</target>
+      </segment>
+    </unit>
+    <unit id="realisationEnLigne">
+      <segment>
+        <source>En ligne</source>
+        <target>Live</target>
+      </segment>
+    </unit>
+    <unit id="realisationEnProduction">
+      <segment>
+        <source>En production</source>
+        <target>In production</target>
+      </segment>
+    </unit>
+    <unit id="realisationsFamilleSites">
+      <segment>
+        <source>Sites web</source>
+        <target>Websites</target>
+      </segment>
+    </unit>
+    <unit id="realisationsFamilleApps">
+      <segment>
+        <source>Apps mobiles</source>
+        <target>Mobile apps</target>
+      </segment>
+    </unit>
+    <unit id="realisationsFamilleSurMesure">
+      <segment>
+        <source>Sur-mesure</source>
+        <target>Custom-built</target>
+      </segment>
+    </unit>
+    <unit id="realisationsFamilleSurMesurePrecision">
+      <segment>
+        <source>Quand un site ne suffit plus</source>
+        <target>When a website is no longer enough</target>
+      </segment>
+    </unit>
+    <unit id="realisationAtlanticbikeSecteur">
+      <segment>
+        <source>Location de vélos</source>
+        <target>Bike rental</target>
+      </segment>
+    </unit>
+    <unit id="realisationAtlanticbikeResultat">
+      <segment>
+        <source>Mise en ligne en cours</source>
+        <target>Launch in progress</target>
+      </segment>
+    </unit>
+    <unit id="realisationAtlanticbikeDefi">
+      <segment>
+        <source>Les familles cherchaient un vélo pour leurs vacances, mais l&apos;offre et les disponibilités se demandaient encore par téléphone.</source>
+        <target>Families were looking for a bike for their holidays, but the offer and availability still had to be asked for over the phone.</target>
+      </segment>
+    </unit>
+    <unit id="realisationAtlanticbikeConstruit">
+      <segment>
+        <source>Un site clair, une demande de réservation guidée pas à pas dont le devis se calcule côté serveur, et un espace de gestion pour le parc et l&apos;atelier. Les anciennes adresses sont redirigées pour garder les pages déjà trouvées sur Google.</source>
+        <target>A clear website, a step-by-step booking request whose quote is calculated on the server, and a back office for the fleet and the workshop. Old addresses are redirected to keep the pages already found on Google.</target>
+      </segment>
+    </unit>
+    <unit id="realisationAtlanticbikeResultatRecit">
+      <segment>
+        <source>La réservation passe en ligne sans perdre le référencement acquis. La nouvelle version est en cours de mise en ligne.</source>
+        <target>Booking moves online without losing the search ranking already earned. The new version is being rolled out.</target>
+      </segment>
+    </unit>
+    <unit id="realisationAtlanticbikeImageAlt">
+      <segment>
+        <source>Capture du site AtlanticBike</source>
+        <target>Screenshot of the AtlanticBike website</target>
+      </segment>
+    </unit>
+    <unit id="realisationMariaSecteur">
+      <segment>
+        <source>Formation &amp; coaching</source>
+        <target>Learning &amp; coaching</target>
+      </segment>
+    </unit>
+    <unit id="realisationMariaResultat">
+      <segment>
+        <source>Site multilingue</source>
+        <target>Multilingual website</target>
+      </segment>
+    </unit>
+    <unit id="realisationMariaDefi">
+      <segment>
+        <source>Maria exerce deux métiers, la conception de formations et le coaching, et craignait qu&apos;un seul site les mélange au point de ne plus rien dire.</source>
+        <target>Maria works in two professions, learning design and coaching, and feared a single website would blur them until it said nothing.</target>
+      </segment>
+    </unit>
+    <unit id="realisationMariaConstruit">
+      <segment>
+        <source>Un site en français, en anglais et en russe qui assume les deux métiers dès l&apos;accueil, un parcours pour chacun, une auto-évaluation courte et la prise de rendez-vous pour une séance découverte.</source>
+        <target>A website in French, English and Russian that embraces both professions from the home page, a path for each, a short self-assessment and booking for a discovery session.</target>
+      </segment>
+    </unit>
+    <unit id="realisationMariaResultatRecit">
+      <segment>
+        <source>Le site est en ligne : chaque visiteur voit d&apos;un coup d&apos;œil le métier qui le concerne et la prochaine étape.</source>
+        <target>The website is live: every visitor sees at a glance the profession that concerns them and the next step.</target>
+      </segment>
+    </unit>
+    <unit id="realisationMariaImageAlt">
+      <segment>
+        <source>Capture du site de Maria Naumenko</source>
+        <target>Screenshot of Maria Naumenko&apos;s website</target>
+      </segment>
+    </unit>
+    <unit id="realisationAsiliSecteur">
+      <segment>
+        <source>Studio web</source>
+        <target>Web studio</target>
+      </segment>
+    </unit>
+    <unit id="realisationAsiliResultat">
+      <segment>
+        <source>Site bilingue</source>
+        <target>Bilingual website</target>
+      </segment>
+    </unit>
+    <unit id="realisationAsiliDefi">
+      <segment>
+        <source>Mon site parlait de technologies plutôt que de ce qu&apos;un artisan ou un commerçant gagne à être trouvé.</source>
+        <target>My website talked about technologies rather than what a craftsperson or a shop owner gains from being found.</target>
+      </segment>
+    </unit>
+    <unit id="realisationAsiliConstruit">
+      <segment>
+        <source>Un récit centré sur une promesse claire, des réalisations rangées par famille, des formations séparées des cours, et des pages prérendues en français et en anglais pour s&apos;afficher vite.</source>
+        <target>A story built around a clear promise, work grouped by family, training separated from classroom courses, and pages prerendered in French and English to load fast.</target>
+      </segment>
+    </unit>
+    <unit id="realisationAsiliResultatRecit">
+      <segment>
+        <source>Le site est en ligne et sert de démonstration : ce que je promets, il le fait.</source>
+        <target>The website is live and serves as a demonstration: what I promise, it does.</target>
+      </segment>
+    </unit>
+    <unit id="realisationAsiliImageAlt">
+      <segment>
+        <source>Capture du site asilidesign.fr</source>
+        <target>Screenshot of the asilidesign.fr website</target>
+      </segment>
+    </unit>
+    <unit id="realisationInnovmindSecteur">
+      <segment>
+        <source>Culture &amp; musées</source>
+        <target>Culture &amp; museums</target>
+      </segment>
+    </unit>
+    <unit id="realisationInnovmindResultat">
+      <segment>
+        <source>Reconnaissance d&apos;œuvres par photo</source>
+        <target>Artwork recognition by photo</target>
+      </segment>
+    </unit>
+    <unit id="realisationInnovmindDefi">
+      <segment>
+        <source>Devant une œuvre, une notice figée ne répond ni à la curiosité du visiteur ni à sa langue.</source>
+        <target>In front of an artwork, a fixed label answers neither the visitor&apos;s curiosity nor their language.</target>
+      </segment>
+    </unit>
+    <unit id="realisationInnovmindConstruit">
+      <segment>
+        <source>Une app mobile qui reconnaît l&apos;œuvre à partir d&apos;une photo, puis ouvre une conversation à son sujet dans la langue du visiteur. Co-conception du produit et développement de l&apos;app.</source>
+        <target>A mobile app that recognises the artwork from a photo, then opens a conversation about it in the visitor&apos;s language. Product co-design and app development.</target>
+      </segment>
+    </unit>
+    <unit id="realisationInnovmindResultatRecit">
+      <segment>
+        <source>Le visiteur passe de la photo à une explication qui lui parle, en quelques secondes.</source>
+        <target>The visitor goes from the photo to an explanation that speaks to them, in a few seconds.</target>
+      </segment>
+    </unit>
+    <unit id="realisationInnovmindImageAlt">
+      <segment>
+        <source>Illustration de l&apos;app InnovMind</source>
+        <target>Illustration of the InnovMind app</target>
+      </segment>
+    </unit>
+    <unit id="realisationChaisSecteur">
+      <segment>
+        <source>Viticulture</source>
+        <target>Winemaking</target>
+      </segment>
+    </unit>
+    <unit id="realisationChaisResultat">
+      <segment>
+        <source>Traçabilité de la vigne à la bouteille</source>
+        <target>Traceability from vine to bottle</target>
+      </segment>
+    </unit>
+    <unit id="realisationChaisDefi">
+      <segment>
+        <source>Les informations de production étaient dispersées entre carnets et tableurs : retracer un lot demandait des heures.</source>
+        <target>Production information was scattered across notebooks and spreadsheets: tracing a batch took hours.</target>
+      </segment>
+    </unit>
+    <unit id="realisationChaisConstruit">
+      <segment>
+        <source>Un outil qui centralise chaque étape, de la vigne au chai puis à la bouteille, avec l&apos;historique de chaque lot.</source>
+        <target>A tool that centralises every stage, from the vine to the cellar and the bottle, with the history of each batch.</target>
+      </segment>
+    </unit>
+    <unit id="realisationChaisResultatRecit">
+      <segment>
+        <source>La traçabilité devient un geste quotidien plutôt qu&apos;un chantier de fin de saison.</source>
+        <target>Traceability becomes a daily habit rather than an end-of-season project.</target>
+      </segment>
+    </unit>
+    <unit id="realisationChaisImageAlt">
+      <segment>
+        <source>Capture de l&apos;outil de gestion de chais</source>
+        <target>Screenshot of the cellar management tool</target>
+      </segment>
+    </unit>
+    <unit id="realisationIfsSecteur">
+      <segment>
+        <source>Formation en ligne</source>
+        <target>Online training</target>
+      </segment>
+    </unit>
+    <unit id="realisationIfsResultat">
+      <segment>
+        <source>Accueil des élèves automatisé</source>
+        <target>Automated student onboarding</target>
+      </segment>
+    </unit>
+    <unit id="realisationIfsDefi">
+      <segment>
+        <source>Vérifier les accès de chaque élève et relancer les retardataires prenait du temps et laissait passer des oublis.</source>
+        <target>Checking each student&apos;s access and chasing latecomers took time and let things slip.</target>
+      </segment>
+    </unit>
+    <unit id="realisationIfsConstruit">
+      <segment>
+        <source>Un parcours d&apos;arrivée en plusieurs étapes, des liens d&apos;invitation signés, des relances automatiques et un récapitulatif quotidien par e-mail.</source>
+        <target>A multi-step onboarding path, signed invitation links, automatic reminders and a daily email summary.</target>
+      </segment>
+    </unit>
+    <unit id="realisationIfsResultatRecit">
+      <segment>
+        <source>Les élèves arrivent, sont vérifiés et relancés sans que personne n&apos;y passe ses journées.</source>
+        <target>Students arrive, get checked and reminded without anyone spending their days on it.</target>
+      </segment>
+    </unit>
+    <unit id="realisationIfsImageAlt">
+      <segment>
+        <source>Capture du parcours d&apos;arrivée d&apos;IFS Academy</source>
+        <target>Screenshot of the IFS Academy onboarding</target>
+      </segment>
+    </unit>
+    <unit id="realisationZenfirstSecteur">
+      <segment>
+        <source>Expertise comptable</source>
+        <target>Accounting</target>
+      </segment>
+    </unit>
+    <unit id="realisationZenfirstResultat">
+      <segment>
+        <source>Calcul de rentabilité vérifiable</source>
+        <target>Verifiable profitability calculation</target>
+      </segment>
+    </unit>
+    <unit id="realisationZenfirstDefi">
+      <segment>
+        <source>Une analyse de rentabilité mêle charges, financements et hypothèses : un tableur ne permettait plus d&apos;en garder la cohérence.</source>
+        <target>A profitability analysis mixes costs, financing and assumptions: a spreadsheet could no longer keep it consistent.</target>
+      </segment>
+    </unit>
+    <unit id="realisationZenfirstConstruit">
+      <segment>
+        <source>Un outil web sécurisé qui structure les hypothèses, calcule la rentabilité et garde la trace de chaque choix.</source>
+        <target>A secure web tool that structures assumptions, calculates profitability and keeps track of every choice.</target>
+      </segment>
+    </unit>
+    <unit id="realisationZenfirstResultatRecit">
+      <segment>
+        <source>Le cabinet explique chaque résultat à son client, et le calcul peut évoluer sans tout reprendre.</source>
+        <target>The firm explains every result to its client, and the calculation can evolve without starting over.</target>
+      </segment>
+    </unit>
+    <unit id="realisationZenfirstImageAlt">
+      <segment>
+        <source>Illustration de ZenFirst Renta</source>
+        <target>Illustration of ZenFirst Renta</target>
+      </segment>
+    </unit>
+    <unit id="realisationMorningSecteur">
+      <segment>
+        <source>Veille &amp; médias</source>
+        <target>Monitoring &amp; media</target>
+      </segment>
+    </unit>
+    <unit id="realisationMorningResultat">
+      <segment>
+        <source>Édition livrée chaque matin</source>
+        <target>Edition delivered every morning</target>
+      </segment>
+    </unit>
+    <unit id="realisationMorningDefi">
+      <segment>
+        <source>Suivre son secteur demandait de lire chaque jour des dizaines de sources qui se répétaient.</source>
+        <target>Keeping up with one&apos;s sector meant reading dozens of overlapping sources every day.</target>
+      </segment>
+    </unit>
+    <unit id="realisationMorningConstruit">
+      <segment>
+        <source>Une chaîne qui collecte, dédoublonne, résume et livre une édition sourcée chaque matin, sans surveillance.</source>
+        <target>A pipeline that collects, deduplicates, summarises and delivers a sourced edition every morning, unattended.</target>
+      </segment>
+    </unit>
+    <unit id="realisationMorningResultatRecit">
+      <segment>
+        <source>La veille arrive prête à lire, sans tri à la main.</source>
+        <target>The digest arrives ready to read, with no manual sorting.</target>
+      </segment>
+    </unit>
+    <unit id="realisationMorningImageAlt">
+      <segment>
+        <source>Illustration de Morning-Brief</source>
+        <target>Illustration of Morning-Brief</target>
+      </segment>
+    </unit>
+    <unit id="realisationFicheRetour">
+      <segment>
+        <source>Toutes les réalisations</source>
+        <target>All work</target>
+      </segment>
+    </unit>
+    <unit id="realisationFicheDefi">
+      <segment>
+        <source>Le défi</source>
+        <target>The challenge</target>
+      </segment>
+    </unit>
+    <unit id="realisationFicheConstruit">
+      <segment>
+        <source>Ce que j’ai construit</source>
+        <target>What I built</target>
+      </segment>
+    </unit>
+    <unit id="realisationFicheResultat">
+      <segment>
+        <source>Le résultat</source>
+        <target>The result</target>
+      </segment>
+    </unit>
+    <unit id="realisationFicheAppel">
+      <segment>
+        <source>Un projet comparable ? Parlons de votre site</source>
+        <target>A similar project? Let’s talk about your website</target>
+      </segment>
+    </unit>
+    <unit id="homeHeroParlerDeMonSite">
+      <segment>
+        <source>Parler de mon site</source>
+        <target>Talk about my website</target>
+      </segment>
+    </unit>
+    <unit id="homeHeroVoirMesRealisations">
+      <segment>
+        <source>Voir mes réalisations</source>
+        <target>See my work</target>
+      </segment>
+    </unit>
+    <unit id="homeHeroKicker">
+      <segment>
+        <source>Création de sites web · Bordeaux</source>
+        <target>Website creation · Bordeaux</target>
+      </segment>
+    </unit>
+    <unit id="homeHeroAccroche">
+      <segment>
+        <source>Je crée le site des artisans, commerces et indépendants : clair à lire, facile à trouver, sur Google comme dans les réponses des IA, avant vos concurrents. Vous parlez de votre métier, je m’occupe du reste.</source>
+        <target>I build websites for craftspeople, shops and independents: clear to read, easy to find, on Google and in AI answers, ahead of your competitors. You talk about your trade, I take care of the rest.</target>
+      </segment>
+    </unit>
+    <unit id="homeProblemeKicker">
+      <segment>
+        <source>Le problème</source>
+        <target>The problem</target>
+      </segment>
+    </unit>
+    <unit id="homeProblemeTitre">
+      <segment>
+        <source> Un site qui ne dit rien ne vous rapporte rien. </source>
+        <target> A website that says nothing earns you nothing. </target>
+      </segment>
+    </unit>
+    <unit id="homeProbleme1">
+      <segment>
+        <source>Il ne dit pas ce que vous faites.</source>
+        <target>It doesn’t say what you do.</target>
+      </segment>
+    </unit>
+    <unit id="homeProbleme2">
+      <segment>
+        <source>On ne le trouve pas.</source>
+        <target>Nobody can find it.</target>
+      </segment>
+    </unit>
+    <unit id="homeProbleme3">
+      <segment>
+        <source>Il ne fait pas appeler.</source>
+        <target>It doesn’t make the phone ring.</target>
+      </segment>
+    </unit>
+    <unit id="homeGuideKicker">
+      <segment>
+        <source>Votre guide</source>
+        <target>Your guide</target>
+      </segment>
+    </unit>
+    <unit id="homeGuideTitre">
+      <segment>
+        <source> Je suis Tim, et j’explique sans jargon. </source>
+        <target> I’m Tim, and I explain without jargon. </target>
+      </segment>
+    </unit>
+    <unit id="homeGuideTexte">
+      <segment>
+        <source> Six ans manager chez Decathlon, puis formateur à l’Ipac et à l’EPSI. J’enseigne, donc j’explique sans jargon. Je traduis votre métier en un site que vos clients comprennent du premier coup. </source>
+        <target> Six years as a manager at Decathlon, then a trainer at Ipac and EPSI. I teach, so I explain without jargon. I turn your trade into a website your customers understand at first glance. </target>
+      </segment>
+    </unit>
+    <unit id="homeGuideLien">
+      <segment>
+        <source>À propos de mon parcours</source>
+        <target>About my background</target>
+      </segment>
+    </unit>
+    <unit id="homePlanKicker">
+      <segment>
+        <source>Le plan</source>
+        <target>The plan</target>
+      </segment>
+    </unit>
+    <unit id="homePlanTitre">
+      <segment>
+        <source> Trois étapes, et votre site est en ligne. </source>
+        <target> Three steps, and your website is live. </target>
+      </segment>
+    </unit>
+    <unit id="homePlanEtape1Index">
+      <segment>
+        <source>— Écouter</source>
+        <target>— Listen</target>
+      </segment>
+    </unit>
+    <unit id="homePlanEtape1Titre">
+      <segment>
+        <source>On se parle</source>
+        <target>We talk</target>
+      </segment>
+    </unit>
+    <unit id="homePlanEtape1Texte">
+      <segment>
+        <source>Vous me racontez votre métier, vos clients et ce qui vous fait gagner du travail. Une heure suffit.</source>
+        <target>You tell me about your trade, your customers and what brings you work. One hour is enough.</target>
+      </segment>
+    </unit>
+    <unit id="homePlanEtape2Index">
+      <segment>
+        <source>— Écrire</source>
+        <target>— Write</target>
+      </segment>
+    </unit>
+    <unit id="homePlanEtape2Titre">
+      <segment>
+        <source>Je raconte et je construis</source>
+        <target>I tell your story and build</target>
+      </segment>
+    </unit>
+    <unit id="homePlanEtape2Texte">
+      <segment>
+        <source>J’écris des pages qui parlent comme vous, puis je construis un site rapide que Google et les IA comprennent.</source>
+        <target>I write pages that sound like you, then build a fast website that Google and AI understand.</target>
+      </segment>
+    </unit>
+    <unit id="homePlanEtape3Index">
+      <segment>
+        <source>— Lancer</source>
+        <target>— Launch</target>
+      </segment>
+    </unit>
+    <unit id="homePlanEtape3Titre">
+      <segment>
+        <source>Vous êtes en ligne, et autonome</source>
+        <target>You’re live, and independent</target>
+      </segment>
+    </unit>
+    <unit id="homePlanEtape3Texte">
+      <segment>
+        <source>Le site est en ligne, et je vous montre comment le faire vivre sans dépendre de moi.</source>
+        <target>Your website is live, and I show you how to keep it alive without depending on me.</target>
+      </segment>
+    </unit>
+    <unit id="homeRealisationsTitre">
+      <segment>
+        <source> Des réalisations, pas des promesses. </source>
+        <target> Real work, not promises. </target>
+      </segment>
+    </unit>
+    <unit id="homeFormationKicker">
+      <segment>
+        <source>Formation</source>
+        <target>Training</target>
+      </segment>
+    </unit>
+    <unit id="homeFormationTitre">
+      <segment>
+        <source> Après la mise en ligne, je vous rends autonome. </source>
+        <target> After launch, I make you independent. </target>
+      </segment>
+    </unit>
+    <unit id="homeFaqKicker">
+      <segment>
+        <source>Questions fréquentes</source>
+        <target>Frequently asked questions</target>
+      </segment>
+    </unit>
+    <unit id="homeFaqTitre">
+      <segment>
+        <source>Vos questions, avant de vous lancer.</source>
+        <target>Your questions, before you start.</target>
+      </segment>
+    </unit>
+    <unit id="homeAppelKicker">
+      <segment>
+        <source>Votre site, maintenant</source>
+        <target>Your website, now</target>
+      </segment>
+    </unit>
+    <unit id="homeAppelTitre">
+      <segment>
+        <source>Parlons de votre site.</source>
+        <target>Let’s talk about your website.</target>
+      </segment>
+    </unit>
+    <unit id="homeAppelTexte">
+      <segment>
+        <source>Dites-moi en quelques lignes ce que vous faites et qui vous voulez toucher. Je vous réponds avec une proposition claire.</source>
+        <target>Tell me in a few lines what you do and who you want to reach. I’ll reply with a clear proposal.</target>
+      </segment>
+    </unit>
+    <unit id="offrePrixPlancher">
+      <segment>
+        <source>à partir de <ph id="0" equiv="montant" disp="montant"/> HT</source>
+        <target>from <ph id="0" equiv="montant" disp="montant"/> excl. VAT</target>
+      </segment>
+    </unit>
+    <unit id="offreDelaiDeMiseEnLigne">
+      <segment>
+        <source>en ligne en <ph id="0" equiv="min" disp="min"/> à <ph id="1" equiv="max" disp="max"/> semaines</source>
+        <target>live in <ph id="0" equiv="min" disp="min"/> to <ph id="1" equiv="max" disp="max"/> weeks</target>
+      </segment>
+    </unit>
+    <unit id="faqDuSitePrixQuestion">
+      <segment>
+        <source>Combien coûte un site ?</source>
+        <target>How much does a website cost?</target>
+      </segment>
+    </unit>
+    <unit id="faqDuSitePrixReponse">
+      <segment>
+        <source>Comptez <ph id="0" equiv="prix" disp="prix"/> pour un site clair, rapide et trouvable. Le devis précis suit un premier échange sur votre besoin, sans engagement.</source>
+        <target>Expect <ph id="0" equiv="prix" disp="prix"/> for a clear, fast website people can find. The exact quote follows a first conversation about your needs, with no commitment.</target>
+      </segment>
+    </unit>
+    <unit id="faqDuSiteDelaiQuestion">
+      <segment>
+        <source>En combien de temps mon site est-il en ligne ?</source>
+        <target>How long until my website is live?</target>
+      </segment>
+    </unit>
+    <unit id="faqDuSiteDelaiReponse">
+      <segment>
+        <source>Votre site est <ph id="0" equiv="delai" disp="delai"/>, du premier échange à la mise en ligne, dès que vos textes et vos photos sont prêts.</source>
+        <target>Your website is <ph id="0" equiv="delai" disp="delai"/>, from our first conversation to launch, as soon as your texts and photos are ready.</target>
+      </segment>
+    </unit>
+    <unit id="faqDuSiteApresQuestion">
+      <segment>
+        <source>Et après la mise en ligne ?</source>
+        <target>And after launch?</target>
+      </segment>
+    </unit>
+    <unit id="faqDuSiteApresReponse">
+      <segment>
+        <source>Je reste à vos côtés : corrections, petites évolutions et suivi de votre visibilité sur Google et dans les réponses des IA. Une formation courte vous apprend à faire vivre le site vous-même.</source>
+        <target>I stay by your side: fixes, small improvements and follow-up of your visibility on Google and in AI answers. A short training teaches you to keep the website alive yourself.</target>
+      </segment>
+    </unit>
+    <unit id="offreTitre">
+      <segment>
+        <source>Créer mon site</source>
+        <target>Build my website</target>
+      </segment>
+    </unit>
+    <unit id="offreFormulesTitre">
+      <segment>
+        <source>Les formules</source>
+        <target>The packages</target>
+      </segment>
+    </unit>
+    <unit id="offreFormuleLien">
+      <segment>
+        <source>Parler de ce projet</source>
+        <target>Talk about this project</target>
+      </segment>
+    </unit>
+    <unit id="offreInclusTitre">
+      <segment>
+        <source>Inclus</source>
+        <target>Included</target>
+      </segment>
+    </unit>
+    <unit id="offreInclusRedaction">
+      <segment>
+        <source>Rédaction avec vous</source>
+        <target>Writing with you</target>
+      </segment>
+    </unit>
+    <unit id="offreInclusReferencement">
+      <segment>
+        <source>Référencement Google &amp; IA</source>
+        <target>Google &amp; AI visibility</target>
+      </segment>
+    </unit>
+    <unit id="offreInclusMiseEnLigne">
+      <segment>
+        <source>Mise en ligne</source>
+        <target>Launch</target>
+      </segment>
+    </unit>
+    <unit id="offreInclusPriseEnMain">
+      <segment>
+        <source>Prise en main</source>
+        <target>Handover</target>
+      </segment>
+    </unit>
+    <unit id="offreDiagnosticTitre">
+      <segment>
+        <source>Diagnostic gratuit de votre site actuel</source>
+        <target>Free diagnosis of your current website</target>
+      </segment>
+    </unit>
+    <unit id="offreDiagnosticTexte">
+      <segment>
+        <source>Vous avez déjà un site ? Je regarde ce qui freine vos visites et vos appels, et je vous dis quoi corriger d’abord.</source>
+        <target>Already have a website? I look at what holds back your visits and calls, and tell you what to fix first.</target>
+      </segment>
+    </unit>
+    <unit id="offreKicker">
+      <segment>
+        <source>Votre site, de A à Z</source>
+        <target>Your website, from A to Z</target>
+      </segment>
+    </unit>
+    <unit id="offreAccroche">
+      <segment>
+        <source>Un site qui dit ce que vous faites, qu’on trouve sur Google et dans les réponses des IA, et qui fait appeler. Je l’écris avec vous, je le construis, puis je vous apprends à le faire vivre.</source>
+        <target>A website that says what you do, that people find on Google and in AI answers, and that makes the phone ring. I write it with you, build it, then teach you to keep it alive.</target>
+      </segment>
+    </unit>
+    <unit id="offreSurDevis">
+      <segment>
+        <source>Sur devis</source>
+        <target>On quote</target>
+      </segment>
+    </unit>
+    <unit id="offreVitrineTitre">
+      <segment>
+        <source>Site vitrine</source>
+        <target>Showcase website</target>
+      </segment>
+    </unit>
+    <unit id="offreVitrinePromesse">
+      <segment>
+        <source>Quelques pages claires qui présentent votre métier et font appeler.</source>
+        <target>A few clear pages that present your trade and make the phone ring.</target>
+      </segment>
+    </unit>
+    <unit id="offreReservationTitre">
+      <segment>
+        <source>Site + réservation</source>
+        <target>Website + booking</target>
+      </segment>
+    </unit>
+    <unit id="offreReservationPromesse">
+      <segment>
+        <source>Votre site, avec la prise de rendez-vous ou la réservation en ligne.</source>
+        <target>Your website, with online appointments or booking.</target>
+      </segment>
+    </unit>
+    <unit id="offreAppTitre">
+      <segment>
+        <source>App mobile</source>
+        <target>Mobile app</target>
+      </segment>
+    </unit>
+    <unit id="offreAppPromesse">
+      <segment>
+        <source>Une application pour vos clients ou vos équipes, sur iPhone et Android.</source>
+        <target>An app for your customers or your teams, on iPhone and Android.</target>
+      </segment>
+    </unit>
+    <unit id="offreFaqRepriseQuestion">
+      <segment>
+        <source>Pouvez-vous reprendre mon site actuel ?</source>
+        <target>Can you take over my current website?</target>
+      </segment>
+    </unit>
+    <unit id="offreFaqRepriseReponse">
+      <segment>
+        <source>Oui. Je garde ce qui fonctionne, je refais le reste, et vos visiteurs ne perdent pas leurs repères. Le diagnostic gratuit est un bon point de départ.</source>
+        <target>Yes. I keep what works, rebuild the rest, and your visitors keep their bearings. The free diagnosis is a good place to start.</target>
+      </segment>
+    </unit>
+    <unit id="offreAppelKicker">
+      <segment>
+        <source>Prêt à vous lancer ?</source>
+        <target>Ready to start?</target>
+      </segment>
+    </unit>
+    <unit id="offreAppelTitre">
+      <segment>
+        <source>Décrivez votre métier. Je vous réponds avec une proposition claire.</source>
+        <target>Describe your trade. I’ll reply with a clear proposal.</target>
+      </segment>
+    </unit>
+    <unit id="diagnosticKicker">
+      <segment>
+        <source><ph id="0" equiv="nom" disp="nomCourtServi(&apos;/growth-audit&apos;)"/> · IA et relecture humaine, sous 24 h</source>
+        <target><ph id="0" equiv="nom" disp="nomCourtServi(&apos;/growth-audit&apos;)"/> · AI and human review, within 24 h</target>
+      </segment>
+    </unit>
+    <unit id="contactFormBesoin">
+      <segment>
+        <source> Votre besoin </source>
+        <target> Your need </target>
+      </segment>
+    </unit>
+    <unit id="contactFormBesoinPlaceholder">
+      <segment>
+        <source> Choisissez votre besoin </source>
+        <target> Choose your need </target>
+      </segment>
+    </unit>
+    <unit id="contactFormActivite">
+      <segment>
+        <source> Votre activité </source>
+        <target> Your business </target>
+      </segment>
+    </unit>
+    <unit id="contactActiviteArtisan">
+      <segment>
+        <source>Artisan</source>
+        <target>Craftsperson</target>
+      </segment>
+    </unit>
+    <unit id="contactActiviteCommerce">
+      <segment>
+        <source>Commerce</source>
+        <target>Shop</target>
+      </segment>
+    </unit>
+    <unit id="contactActiviteIndependant">
+      <segment>
+        <source>Indépendant</source>
+        <target>Independent</target>
+      </segment>
+    </unit>
+    <unit id="contactActivitePme">
+      <segment>
+        <source>PME</source>
+        <target>Small business</target>
+      </segment>
+    </unit>
+    <unit id="contactActiviteAssociation">
+      <segment>
+        <source>Association</source>
+        <target>Non-profit</target>
+      </segment>
+    </unit>
+    <unit id="besoinRefaire">
+      <segment>
+        <source>Refaire mon site</source>
+        <target>Rebuild my website</target>
+      </segment>
+    </unit>
+    <unit id="besoinAppMobile">
+      <segment>
+        <source>Une app mobile</source>
+        <target>A mobile app</target>
+      </segment>
+    </unit>
+    <unit id="besoinSurMesure">
+      <segment>
+        <source>Un outil sur mesure</source>
+        <target>A custom tool</target>
+      </segment>
+    </unit>
+    <unit id="besoinFormer">
+      <segment>
+        <source>Former mon équipe</source>
+        <target>Train my team</target>
+      </segment>
+    </unit>
+    <unit id="besoinCours">
+      <segment>
+        <source>Un cours BTS / Bachelor</source>
+        <target>A BTS / Bachelor course</target>
+      </segment>
+    </unit>
+    <unit id="homeHeroTitreDebut">
+      <segment>
+        <source>Votre métier mérite mieux qu’une page </source>
+        <target>Your trade deserves better than a page </target>
+      </segment>
+    </unit>
+    <unit id="homeHeroTitreAccent">
+      <segment>
+        <source>qu’on ne trouve pas</source>
+        <target>nobody can find</target>
+      </segment>
+    </unit>
+    <unit id="projetsHeroTitreDebut">
+      <segment>
+        <source>Des preuves,</source>
+        <target>Proof,</target>
+      </segment>
+    </unit>
+    <unit id="projetsHeroTitreSuite">
+      <segment>
+        <source>pas des </source>
+        <target>not </target>
+      </segment>
+    </unit>
+    <unit id="projetsHeroTitreAccent">
+      <segment>
+        <source>promesses</source>
+        <target>promises</target>
+      </segment>
+    </unit>
+    <unit id="articlesListHeroTitreDebut">
+      <segment>
+        <source>Des idées qui servent</source>
+        <target>Ideas that serve</target>
+      </segment>
+    </unit>
+    <unit id="articlesListHeroTitreAccent">
+      <segment>
+        <source>le terrain</source>
+        <target>the field</target>
       </segment>
     </unit>
   </file>

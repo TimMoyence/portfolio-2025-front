@@ -9,7 +9,7 @@ import {
   routeSansLocale,
   urlAbsolue,
   urlLocalisee,
-} from '../../core/seo/chemins';
+} from '../../core/seo/pages/chemins';
 import { SeoRegistryService } from '../../core/seo/seo-registry.service';
 import type { SeoConfig } from '../../core/seo/seo.interface';
 import { SeoService } from '../../core/seo/seo.service';

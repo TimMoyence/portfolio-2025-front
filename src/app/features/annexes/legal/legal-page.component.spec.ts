@@ -4,7 +4,6 @@ import { TestBed } from '@angular/core/testing';
 import { LOCALE_ID, PLATFORM_ID } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { isolateAnimReady } from '../../../../testing/dom/anim-ready';
 import { cliquerSansQuitterLaPage } from '../../../../testing/page/montage-page';
 import { LegalPageComponent, type LegalTocItem } from './legal-page.component';
 
@@ -34,8 +33,6 @@ class PageHoteComponent {
 describe('LegalPageComponent', () => {
   let harnais: RouterTestingHarness;
   let page: HTMLElement;
-
-  isolateAnimReady();
 
   beforeEach(async () => {
     TestBed.configureTestingModule({

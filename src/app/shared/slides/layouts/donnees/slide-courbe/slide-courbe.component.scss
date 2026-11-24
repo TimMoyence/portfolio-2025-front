@@ -17,11 +17,43 @@ h2 {
   @include figure.sous-titre;
 }
 
-.slide-courbe__corps {
+.slide-courbe__corps,
+.slide-courbe__imprime {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
   gap: clamp(1rem, 2.5cqi, 2rem);
+  grid-area: 2 / 1;
   align-items: start;
+}
+
+.slide-courbe__imprime {
+  block-size: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.slide-courbe__etapes {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding-inline-start: 1.4rem;
+  list-style: decimal;
+
+  li::marker {
+    font-weight: 700;
+  }
+}
+
+@media print {
+  .slide-courbe__corps {
+    display: none;
+  }
+
+  .slide-courbe__imprime {
+    block-size: auto;
+    overflow: visible;
+    visibility: visible;
+  }
 }
 
 .slide-courbe__etape {
@@ -68,7 +100,8 @@ h3 {
 }
 
 @container (max-width: 48rem) {
-  .slide-courbe__corps {
+  .slide-courbe__corps,
+  .slide-courbe__imprime {
     grid-template-columns: minmax(0, 1fr);
   }
 }

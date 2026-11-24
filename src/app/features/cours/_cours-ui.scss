@@ -1,5 +1,6 @@
 @use '../../styles-shared/composants/segments';
 @use '../../styles-shared/mise-en-page/mono';
+@use '../../styles-shared/composants/survol';
 
 .cours-presentateur,
 .cours-etudiant,
@@ -47,13 +48,14 @@
     transform 180ms var(--ease);
 }
 
-.cours-presentateur button:not(.btn, app-cours-presentation *):hover,
-.cours-etudiant button:not(.btn, app-cours-presentation *):hover,
-.cours-synthese button:not(.btn, app-cours-presentation *):hover {
-  border-color: var(--teal-deep);
-  background: var(--cream);
-  box-shadow: var(--shadow-soft);
-  transform: translateY(-1px);
+:is(.cours-presentateur, .cours-etudiant, .cours-synthese)
+  button:not(.btn, app-cours-presentation *) {
+  @include survol.survol {
+    border-color: var(--teal-deep);
+    background: var(--cream);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-1px);
+  }
 }
 
 .cours-presentateur button:not(.btn, app-cours-presentation *):active,
@@ -264,12 +266,22 @@
   visibility: hidden;
 }
 
-.notation-help:hover .notation-help__tooltip,
 .notation-help:focus-within .notation-help__tooltip {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
   visibility: visible;
+}
+
+.notation-help {
+  @include survol.survol {
+    .notation-help__tooltip {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+      visibility: visible;
+    }
+  }
 }
 
 .course-heading {

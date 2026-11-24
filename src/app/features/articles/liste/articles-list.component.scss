@@ -1,6 +1,7 @@
 @use '../../../styles-shared/composants/lists';
 @use '../../../styles-shared/mise-en-page/breakpoints' as bp;
 @use '../../../styles-shared/mise-en-page/mono';
+@use '../../../styles-shared/composants/survol';
 @use '../edition';
 
 .journal {
@@ -18,7 +19,7 @@
 }
 
 .manchette__marque {
-  @include mono.capitales-mono(12px, 0.22em, var(--teal-ink));
+  @include mono.capitales-mono(12px, 0.22em, var(--teal-deep));
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
@@ -67,7 +68,7 @@
 .une__etiquette {
   padding: 0.3rem 0.6rem;
   border-radius: var(--r-pill);
-  background: var(--teal-ink);
+  background: var(--teal-deep);
   color: var(--ivory);
 }
 
@@ -89,9 +90,10 @@
     transition: background-size 0.3s ease;
   }
 
-  a:hover,
-  a:focus-visible {
-    background-size: 100% 2px;
+  a {
+    @include survol.survol-ou-focus {
+      background-size: 100% 2px;
+    }
   }
 }
 
@@ -156,9 +158,10 @@
     text-decoration: none;
   }
 
-  a:hover,
-  a:focus-visible {
-    color: var(--teal-ink);
+  a {
+    @include survol.survol-ou-focus {
+      color: var(--teal-deep);
+    }
   }
 }
 

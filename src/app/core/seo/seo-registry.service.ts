@@ -1,18 +1,18 @@
+import { METADONNEES_DU_SITE } from './site-servi';
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { of } from 'rxjs';
-import seoMetadata from '../../../assets/seo/seo-metadata.json';
 import { langueDuSite } from '../config/locales';
-import { type BlocJsonLd, jsonLdDeLaPage } from './json-ld';
-import { estIndexable, localeParDefaut } from './pages-seo';
+import { type BlocJsonLd, type FicheServie, jsonLdDeLaPage, jsonLdDUneFiche } from './json-ld';
+import { estIndexable, localeParDefaut } from './pages/pages-seo';
 import type { SeoConfig } from './seo.interface';
-import type { SeoMetadataFile, SeoPageEntry } from './seo-metadata.model';
+import type { SeoPageEntry } from './seo-metadata.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SeoRegistryService {
-  private readonly data = seoMetadata as SeoMetadataFile;
+  private readonly data = METADONNEES_DU_SITE;
 
   constructor(@Inject(LOCALE_ID) private localeId: string) {}
 
@@ -33,8 +33,8 @@ export class SeoRegistryService {
     return localeParDefaut(this.data);
   }
 
-  getJsonLdDuSite(): BlocJsonLd[] {
-    return jsonLdDeLaPage(this.data, this.getLocaleId());
+  getJsonLdDeLaFiche(fiche: FicheServie): BlocJsonLd[] {
+    return jsonLdDUneFiche(this.data, this.getLocaleId(), fiche);
   }
 
   getSeoByKey(key: string): Observable<SeoConfig> {

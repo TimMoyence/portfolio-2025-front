@@ -1,11 +1,3 @@
-export interface IntersectionObserverSimule {
-  readonly observe: jasmine.Spy;
-  readonly disconnect: jasmine.Spy;
-  readonly init: () => IntersectionObserverInit | undefined;
-  readonly declencher: (entrees: readonly Partial<IntersectionObserverEntry>[]) => void;
-  readonly restaurer: () => void;
-}
-
 type FenetreObservable = { IntersectionObserver: unknown };
 
 class ObservateurInerte {
@@ -28,55 +20,6 @@ function remplacerIntersectionObserver(
   (window as unknown as FenetreObservable).IntersectionObserver = classe;
   return () => {
     (window as unknown as FenetreObservable).IntersectionObserver = original;
-  };
-}
-
-export function installerIntersectionObserverSimule(): IntersectionObserverSimule {
-  let rappel: IntersectionObserverCallback | null = null;
-  let initRecue: IntersectionObserverInit | undefined;
-  const observe = jasmine.createSpy('observe');
-  const disconnect = jasmine.createSpy('disconnect');
-
-  const restaurer = remplacerIntersectionObserver(
-    class extends ObservateurInerte {
-      constructor(cb: IntersectionObserverCallback, init?: IntersectionObserverInit) {
-        super();
-        rappel = cb;
-        initRecue = init;
-      }
-      override observe = observe;
-      override disconnect = disconnect;
-    },
-  );
-
-  return {
-    observe,
-    disconnect,
-    init: () => initRecue,
-    declencher: (entrees) => {
-      if (rappel === null) {
-        throw new Error('Aucun IntersectionObserver construit');
-      }
-      rappel(entrees as IntersectionObserverEntry[], {} as IntersectionObserver);
-    },
-    restaurer,
-  };
-}
-
-export function simulerIntersectionObserverAChaqueTest(): () => IntersectionObserverSimule {
-  let observateur: IntersectionObserverSimule | null = null;
-  beforeEach(() => {
-    observateur = installerIntersectionObserverSimule();
-  });
-  afterEach(() => {
-    observateur?.restaurer();
-    observateur = null;
-  });
-  return () => {
-    if (observateur === null) {
-      throw new Error('IntersectionObserver simulé lu hors d un test');
-    }
-    return observateur;
   };
 }
 

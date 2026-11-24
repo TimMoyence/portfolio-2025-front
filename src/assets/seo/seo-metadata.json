@@ -60,7 +60,6 @@
       "url": "https://asilidesign.fr",
       "telephone": "+33698503282",
       "email": "moyencet@gmail.com",
-      "description": "Agence digitale à Bordeaux spécialisée en développement web sur mesure, applications métier et accompagnement IA pour indépendants et TPE/PME.",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Allée Serr",
@@ -68,6 +67,7 @@
         "postalCode": "33100",
         "addressCountry": "FR"
       },
+      "hasMap": "https://www.google.com/maps/place/Allée+Serr,+33100+Bordeaux,+France/@44.8353083,-0.5750133,17z/data=!3m1!4b1!4m6!3m5!1s0xd5527dace2f6b7f:0x8c6f3e3f8a4f4e2!8m2!3d44.8353042!4d-0.5728246!16s%2Fg%2F11c52_5y9r",
       "geo": {
         "@type": "GeoCoordinates",
         "latitude": 44.8353,
@@ -85,31 +85,17 @@
         "https://www.facebook.com/tim.moyence/"
       ],
       "founder": {
-        "@type": "Person",
-        "@id": "https://asilidesign.fr/#person",
-        "name": "Tim Moyence",
-        "jobTitle": "Développeur Full-Stack & Consultant Digital",
-        "url": "https://asilidesign.fr/fr/presentation",
-        "image": "https://asilidesign.fr/assets/images/portrait-tim-asili-design.webp",
-        "sameAs": [
-          "https://www.linkedin.com/in/tim-moyence",
-          "https://www.facebook.com/tim.moyence/"
-        ]
+        "@id": "https://asilidesign.fr/#person"
       }
     },
-    "siteNavigation": {
-      "@context": "https://schema.org",
-      "@type": "SiteNavigationElement",
-      "name": ["Présentation", "Projets", "Offres", "Formations", "Audit gratuit", "Contact"],
-      "url": [
-        "https://asilidesign.fr/fr/presentation",
-        "https://asilidesign.fr/fr/projets",
-        "https://asilidesign.fr/fr/offer",
-        "https://asilidesign.fr/fr/formations",
-        "https://asilidesign.fr/fr/growth-audit",
-        "https://asilidesign.fr/fr/contact"
-      ]
-    },
+    "navigation": [
+      "/offer",
+      "/projets",
+      "/formations/digitale",
+      "/formations/cours",
+      "/presentation",
+      "/contact"
+    ],
     "person": {
       "@context": "https://schema.org",
       "@type": "Person",
@@ -117,38 +103,49 @@
       "name": "Tim Moyence",
       "givenName": "Tim",
       "familyName": "Moyence",
-      "jobTitle": "Développeur Full-Stack & Consultant Digital",
-      "description": "Développeur web freelance à Bordeaux, 3 ans d'expérience en Angular, NestJS et IA. J'accompagne TPE, PME et indépendants dans la clarification, la structuration et l'évolution de leurs outils digitaux.",
-      "url": "https://asilidesign.fr/fr/presentation",
+      "url": "/presentation",
       "image": "https://asilidesign.fr/assets/images/portrait-tim-asili-design.webp",
-      "email": "moyencet@gmail.com",
-      "telephone": "+33698503282",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Bordeaux",
-        "postalCode": "33100",
-        "addressCountry": "FR"
-      },
       "worksFor": {
-        "@type": "Organization",
-        "@id": "https://asilidesign.fr/#organization",
-        "name": "Asili Design"
+        "@id": "https://asilidesign.fr/#organization"
       },
-      "knowsAbout": [
-        "Angular",
-        "NestJS",
-        "TypeScript",
-        "Node.js",
-        "Intelligence Artificielle",
-        "LLM",
-        "RAG",
-        "Développement Web",
-        "SEO",
-        "Accompagnement Digital",
-        "Formation IA"
-      ],
       "knowsLanguage": ["fr", "en"],
       "sameAs": ["https://www.linkedin.com/in/tim-moyence", "https://www.facebook.com/tim.moyence/"]
+    },
+    "textes": {
+      "fr": {
+        "localBusiness": {
+          "description": "Création de sites web & apps mobiles à Bordeaux pour artisans, commerces et indépendants : des sites clairs, faciles à trouver sur Google comme dans les réponses des IA, et des formations pour les faire vivre."
+        },
+        "person": {
+          "jobTitle": "Créateur de sites web & formateur",
+          "description": "Créateur de sites web freelance à Bordeaux. Six ans manager chez Decathlon, puis développeur et formateur à l’Ipac et à l’EPSI. Je crée les sites des artisans, commerces et indépendants : clairs, faciles à trouver et simples à faire vivre.",
+          "knowsAbout": [
+            "Création de sites web",
+            "Applications mobiles",
+            "Référencement",
+            "Intelligence Artificielle",
+            "Formation IA",
+            "Accompagnement Digital"
+          ]
+        }
+      },
+      "en": {
+        "localBusiness": {
+          "description": "Websites & mobile apps in Bordeaux for craftspeople, shops and independents: clear sites, easy to find on Google and in AI answers, plus training to keep them alive."
+        },
+        "person": {
+          "jobTitle": "Website creator & trainer",
+          "description": "Freelance website creator in Bordeaux. Six years as a manager at Decathlon, then developer and trainer at Ipac and EPSI. I build websites for craftspeople, shops and independents: clear, easy to find and simple to keep alive.",
+          "knowsAbout": [
+            "Website creation",
+            "Mobile apps",
+            "Search engine optimization",
+            "Artificial intelligence",
+            "AI training",
+            "Digital coaching"
+          ]
+        }
+      }
     }
   },
   "pages": [
@@ -161,17 +158,18 @@
       "lastmod": "2026-10-16",
       "locales": {
         "fr": {
-          "title": "Accueil — Tim Moyence Portfolio",
-          "description": "Découvrez mes services professionnels, réalisations et solutions digitales sur mesure. Tim Moyence, développeur web freelance à Bordeaux.",
-          "ogTitle": "Accueil de Tim Moyence",
-          "ogDescription": "Découvrez mes services professionnels et mes réalisations en développement web.",
+          "title": "Asili Design — Création de sites web & apps mobiles à Bordeaux",
+          "nom": "Accueil",
+          "description": "Je crée le site des artisans, commerces et indépendants de Bordeaux : clair à lire, facile à trouver sur Google comme dans les réponses des IA, avant vos concurrents.",
+          "ogTitle": "Asili Design — Votre métier mérite mieux qu'une page qu'on ne trouve pas",
+          "ogDescription": "Création de sites web & apps mobiles à Bordeaux : clairs à lire, faciles à trouver, sur Google comme dans les IA.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "WebSite",
             "@id": "https://asilidesign.fr/#website",
             "name": "Asili Design — Tim Moyence",
             "url": "https://asilidesign.fr",
-            "description": "Solutions digitales sur mesure pour entreprises et indépendants à Bordeaux",
+            "description": "Création de sites web & apps mobiles pour artisans, commerces et indépendants à Bordeaux",
             "inLanguage": ["fr-FR", "en-US"],
             "publisher": {
               "@id": "https://asilidesign.fr/#organization"
@@ -179,17 +177,18 @@
           }
         },
         "en": {
-          "title": "Home — Tim Moyence, freelance web developer Bordeaux",
-          "description": "Freelance web developer in Bordeaux — Angular, NestJS and AI solutions for small businesses and independents. Free growth audit available.",
-          "ogTitle": "Home of Tim Moyence — Asili Design",
-          "ogDescription": "Custom Angular, NestJS and AI solutions for small businesses and independents in Bordeaux.",
+          "title": "Asili Design — Websites & mobile apps in Bordeaux",
+          "nom": "Home",
+          "description": "I build websites for craftspeople, shops and independents in Bordeaux: clear to read, easy to find on Google and in AI answers, ahead of your competitors.",
+          "ogTitle": "Asili Design — Your trade deserves better than a page nobody finds",
+          "ogDescription": "Websites & mobile apps in Bordeaux: clear to read, easy to find, on Google and in AI answers.",
           "jsonLd": {
             "@context": "https://schema.org",
             "@type": "WebSite",
             "@id": "https://asilidesign.fr/#website",
             "name": "Asili Design — Tim Moyence",
             "url": "https://asilidesign.fr",
-            "description": "Custom digital solutions for businesses and independents in Bordeaux",
+            "description": "Websites & mobile apps for craftspeople, shops and independents in Bordeaux",
             "inLanguage": ["fr-FR", "en-US"],
             "publisher": {
               "@id": "https://asilidesign.fr/#organization"
@@ -207,142 +206,32 @@
       "lastmod": "2026-10-15",
       "locales": {
         "fr": {
-          "title": "Présentation — Tim Moyence Portfolio",
-          "description": "Développeur web freelance à Bordeaux — 3 ans d'expérience en Angular, NestJS et IA. Projets sur mesure pour TPE, PME et indépendants.",
-          "ogTitle": "Présentation de Tim Moyence",
+          "title": "À propos — Tim Moyence Portfolio",
+          "description": "Tim Moyence, créateur de sites web à Bordeaux : six ans manager chez Decathlon, formateur à l’Ipac et à l’EPSI. Des sites clairs et faciles à trouver pour artisans, commerces et indépendants.",
+          "ogTitle": "À propos de Tim Moyence",
           "ogDescription": "Parcours, compétences et approche pour créer des expériences web modernes.",
-          "jsonLd": [
-            {
-              "@context": "https://schema.org",
-              "@type": "ProfilePage",
-              "@id": "https://asilidesign.fr/fr/presentation#profile",
-              "mainEntity": {
-                "@type": "Person",
-                "@id": "https://asilidesign.fr/#person",
-                "name": "Tim Moyence",
-                "givenName": "Tim",
-                "familyName": "Moyence",
-                "jobTitle": "Développeur Full-Stack & Consultant Digital",
-                "description": "Développeur web freelance à Bordeaux, 3 ans d'expérience en Angular, NestJS et IA. J'accompagne TPE, PME et indépendants dans la clarification, la structuration et l'évolution de leurs outils digitaux.",
-                "url": "https://asilidesign.fr/fr/presentation",
-                "image": "https://asilidesign.fr/assets/images/portrait-tim-asili-design.webp",
-                "email": "moyencet@gmail.com",
-                "telephone": "+33698503282",
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressLocality": "Bordeaux",
-                  "postalCode": "33100",
-                  "addressCountry": "FR"
-                },
-                "worksFor": {
-                  "@type": "Organization",
-                  "@id": "https://asilidesign.fr/#organization",
-                  "name": "Asili Design"
-                },
-                "knowsAbout": [
-                  "Angular",
-                  "NestJS",
-                  "TypeScript",
-                  "Node.js",
-                  "Intelligence Artificielle",
-                  "LLM",
-                  "RAG",
-                  "Développement Web",
-                  "SEO",
-                  "Accompagnement Digital",
-                  "Formation IA"
-                ],
-                "knowsLanguage": ["fr", "en"],
-                "sameAs": [
-                  "https://www.linkedin.com/in/tim-moyence",
-                  "https://www.facebook.com/tim.moyence/"
-                ]
-              }
-            },
-            {
-              "@context": "https://schema.org",
-              "@type": "ProfessionalService",
-              "@id": "https://asilidesign.fr/#organization",
-              "name": "Asili Design",
-              "founder": {
-                "@id": "https://asilidesign.fr/#person"
-              },
-              "areaServed": {
-                "@type": "City",
-                "name": "Bordeaux"
-              },
-              "url": "https://asilidesign.fr/fr/presentation"
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "ProfilePage",
+            "@id": "https://asilidesign.fr/fr/presentation#profile",
+            "mainEntity": {
+              "@id": "https://asilidesign.fr/#person"
             }
-          ]
+          }
         },
         "en": {
           "title": "About — Tim Moyence Portfolio",
-          "description": "Freelance web developer in Bordeaux — 3 years experience with Angular, NestJS and AI. Custom projects for small businesses and independents.",
+          "description": "Tim Moyence, website creator in Bordeaux: six years as a manager at Decathlon, trainer at Ipac and EPSI. Clear websites that are easy to find, for craftspeople, shops and independents.",
           "ogTitle": "About Tim Moyence",
           "ogDescription": "Background, skills, and approach to building modern web experiences.",
-          "jsonLd": [
-            {
-              "@context": "https://schema.org",
-              "@type": "ProfilePage",
-              "@id": "https://asilidesign.fr/en/presentation#profile",
-              "mainEntity": {
-                "@type": "Person",
-                "@id": "https://asilidesign.fr/#person",
-                "name": "Tim Moyence",
-                "givenName": "Tim",
-                "familyName": "Moyence",
-                "jobTitle": "Full-Stack Developer & Digital Consultant",
-                "description": "Freelance web developer in Bordeaux, 3 years experience with Angular, NestJS and AI. I help small businesses and independents clarify, structure and scale their digital tools.",
-                "url": "https://asilidesign.fr/en/presentation",
-                "image": "https://asilidesign.fr/assets/images/portrait-tim-asili-design.webp",
-                "email": "moyencet@gmail.com",
-                "telephone": "+33698503282",
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressLocality": "Bordeaux",
-                  "postalCode": "33100",
-                  "addressCountry": "FR"
-                },
-                "worksFor": {
-                  "@type": "Organization",
-                  "@id": "https://asilidesign.fr/#organization",
-                  "name": "Asili Design"
-                },
-                "knowsAbout": [
-                  "Angular",
-                  "NestJS",
-                  "TypeScript",
-                  "Node.js",
-                  "Artificial Intelligence",
-                  "LLM",
-                  "RAG",
-                  "Web Development",
-                  "SEO",
-                  "Digital Consulting",
-                  "AI Training"
-                ],
-                "knowsLanguage": ["fr", "en"],
-                "sameAs": [
-                  "https://www.linkedin.com/in/tim-moyence",
-                  "https://www.facebook.com/tim.moyence/"
-                ]
-              }
-            },
-            {
-              "@context": "https://schema.org",
-              "@type": "ProfessionalService",
-              "@id": "https://asilidesign.fr/#organization",
-              "name": "Asili Design",
-              "founder": {
-                "@id": "https://asilidesign.fr/#person"
-              },
-              "areaServed": {
-                "@type": "City",
-                "name": "Bordeaux"
-              },
-              "url": "https://asilidesign.fr/en/presentation"
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "ProfilePage",
+            "@id": "https://asilidesign.fr/en/presentation#profile",
+            "mainEntity": {
+              "@id": "https://asilidesign.fr/#person"
             }
-          ]
+          }
         }
       }
     },
@@ -353,260 +242,162 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-09-25",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Projets",
-          "path": "/projets"
-        }
-      ],
       "locales": {
         "fr": {
-          "title": "Projets — Réalisations web & IA",
+          "title": "Réalisations — Sites web, apps & outils sur mesure",
           "description": "Réalisations de Tim Moyence (Asili Design) : plateformes métier, automatisations IA et produits web. Des preuves, pas des promesses.",
-          "ogTitle": "Projets — Réalisations d'Asili Design",
-          "ogDescription": "Plateformes métier, automatisations IA et produits web — chaque projet part d'un besoin réel et finit par un outil qui tient dans le temps.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            "name": "Réalisations — Asili Design",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Morning-Brief",
-                  "description": "Newsletter IA : 50+ sources agrégées, dédupliquées, synthétisées, livrées chaque matin par Telegram, 24/7 sur un Raspberry Pi."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Onboarding Telegram IFS — académie de formation",
-                  "description": "Audit d'appartenance aux groupes, relances automatiques, liens d'invitation signés, onboarding multi-étapes et récap quotidien par email."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Musaium",
-                  "description": "Médiation culturelle par l'IA : reconnaissance d'œuvres par photo, chat contextuel, multilingue."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 4,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Gestion de chais de Cognac — traçabilité",
-                  "description": "Suivi de la production de la vigne à la mise en bouteille : centralisation, traçabilité complète, accompagnement des usages métier."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 5,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Gestion de chais — la vinification au quotidien",
-                  "description": "Le même outil côté terrain : les opérations de vinification se saisissent au poste comme sur mobile, pour que la traçabilité se remplisse là où le travail se fait."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 6,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Louison",
-                  "description": "Le site complet d'une praticienne : design, contenu, paiement en ligne et génération de documents PDF."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 7,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Le Jeu des Fourmis",
-                  "description": "MMO myrmécologique : 15 espèces = 15 façons de jouer, monde persistant avec météo et biomes, territoires en temps réel."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 8,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Growth Audit",
-                  "description": "Audit SEO en temps réel : l'analyse s'écrit live (streaming SSE), pilotée par BullMQ."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 9,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Voice IA",
-                  "description": "Assistant vocal Telegram : capture, transcrit et organise les idées vers Notion & Google Calendar."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 10,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "AtlanticBike — location et réparation de vélos",
-                  "description": "Loueur-réparateur sur la côte atlantique : présenter l'activité, structurer l'offre et permettre la réservation en ligne, avec back-office du parc et de l'atelier.",
-                  "url": "https://www.atlanticbike.fr/"
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 11,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Assistant IA Geev",
-                  "description": "Prototype d'assistant intelligent pour faciliter le tri et l'analyse d'annonces à partir de contenus visuels."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 12,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Modélisation prédictive de risques sanitaires",
-                  "description": "Modélisation et analyse de données visant à anticiper l'apparition de risques sanitaires à partir de données épidémiologiques."
-                }
-              }
-            ]
-          }
+          "ogTitle": "Réalisations d'Asili Design",
+          "ogDescription": "Plateformes métier, automatisations IA et produits web — chaque projet part d'un besoin réel et finit par un outil qui tient dans le temps."
         },
         "en": {
-          "title": "Projects — Web & AI work",
+          "title": "Work — Websites, apps & custom tools",
           "description": "Work by Tim Moyence (Asili Design): business platforms, AI automations and web products. Proof, not promises.",
-          "ogTitle": "Projects — Asili Design's work",
-          "ogDescription": "Business platforms, AI automations and web products — every project starts from a real need and ends as a tool that lasts.",
-          "jsonLd": {
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            "name": "Work — Asili Design",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Morning-Brief",
-                  "description": "AI newsletter: 50+ sources aggregated, deduplicated, synthesised, delivered every morning via Telegram, 24/7 on a Raspberry Pi."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "IFS Telegram Onboarding — training academy",
-                  "description": "Group-membership audit, automatic reminders, signed invitation links, multi-step onboarding and daily email recap."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Musaium",
-                  "description": "AI cultural mediation: artwork recognition by photo, contextual chat, multilingual."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 4,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Cognac cellar management — traceability",
-                  "description": "Production tracking from vine to bottling: centralised information, full traceability, day-to-day business support."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 5,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Cellar management — winemaking day to day",
-                  "description": "The same tool out in the field: winemaking operations can be logged from a desktop or a phone, so traceability fills in where the work actually happens."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 6,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Louison",
-                  "description": "A practitioner's full website: design, content, online payment and PDF document generation."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 7,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "The Ant Game",
-                  "description": "Myrmecological MMO: 15 species = 15 ways to play, a persistent world with weather and biomes, real-time territories."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 8,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Growth Audit",
-                  "description": "Real-time SEO audit: the analysis writes itself live (SSE streaming), driven by BullMQ."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 9,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Voice AI",
-                  "description": "Telegram voice assistant: captures, transcribes and organises ideas into Notion & Google Calendar."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 10,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "AtlanticBike — bike rental and repair",
-                  "description": "Bike rental and repair business on the Atlantic coast: present the business, structure the offering and enable online booking, with a back office for the fleet and the workshop.",
-                  "url": "https://www.atlanticbike.fr/"
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 11,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Geev AI Assistant",
-                  "description": "Intelligent assistant prototype to ease the sorting and analysis of listings from visual content."
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 12,
-                "item": {
-                  "@type": "CreativeWork",
-                  "name": "Predictive modeling of health risks",
-                  "description": "Data modeling and analysis aimed at anticipating emerging health risks from epidemiological data."
-                }
-              }
-            ]
-          }
+          "ogTitle": "Asili Design's work",
+          "ogDescription": "Business platforms, AI automations and web products — every project starts from a real need and ends as a tool that lasts."
+        }
+      }
+    },
+    {
+      "id": "projet-atlanticbike",
+      "path": "/projets/atlanticbike",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-23",
+      "locales": {
+        "fr": {
+          "title": "AtlanticBike — Asili Design",
+          "description": "Loueur et réparateur de vélos à Carcans-Maubuisson : un site qui présente l'activité, clarifie l'offre et fait entrer la réservation en ligne."
+        },
+        "en": {
+          "title": "AtlanticBike — Asili Design",
+          "description": "Bike rental and repair shop in Carcans-Maubuisson: a website that presents the business, clarifies the offer and brings booking online."
+        }
+      }
+    },
+    {
+      "id": "projet-maria-naumenko",
+      "path": "/projets/maria-naumenko",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-23",
+      "locales": {
+        "fr": {
+          "title": "Maria Naumenko — Asili Design",
+          "description": "Conceptrice de formations et coach : un site en trois langues qui réunit ses deux métiers et mène vers une séance découverte."
+        },
+        "en": {
+          "title": "Maria Naumenko — Asili Design",
+          "description": "Learning designer and coach: a website in three languages that brings her two professions together and leads to a discovery session."
+        }
+      }
+    },
+    {
+      "id": "projet-asilidesign",
+      "path": "/projets/asilidesign",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-23",
+      "locales": {
+        "fr": {
+          "title": "asilidesign.fr — Asili Design",
+          "description": "Mon propre site : une vitrine bilingue qui raconte la création de sites, les réalisations et les formations, rapide sur mobile comme sur ordinateur."
+        },
+        "en": {
+          "title": "asilidesign.fr — Asili Design",
+          "description": "My own website: a bilingual showcase about website creation, past work and training, fast on mobile and desktop."
+        }
+      }
+    },
+    {
+      "id": "projet-innovmind",
+      "path": "/projets/innovmind",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-23",
+      "locales": {
+        "fr": {
+          "title": "InnovMind — Asili Design",
+          "description": "Une app de médiation culturelle : on photographie une œuvre, l'app la reconnaît et répond aux questions du visiteur, dans sa langue."
+        },
+        "en": {
+          "title": "InnovMind — Asili Design",
+          "description": "A cultural mediation app: take a photo of an artwork, the app recognises it and answers the visitor's questions in their language."
+        }
+      }
+    },
+    {
+      "id": "projet-gestion-de-chais",
+      "path": "/projets/gestion-de-chais",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-23",
+      "locales": {
+        "fr": {
+          "title": "Gestion de chais — Asili Design",
+          "description": "Un outil métier pour un producteur de Cognac : suivre la production de la vigne à la mise en bouteille, en un seul endroit."
+        },
+        "en": {
+          "title": "Winery management — Asili Design",
+          "description": "A business tool for a Cognac producer: follow production from vine to bottling, in one place."
+        }
+      }
+    },
+    {
+      "id": "projet-ifs-academy",
+      "path": "/projets/ifs-academy",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-23",
+      "locales": {
+        "fr": {
+          "title": "IFS Academy — Asili Design",
+          "description": "Une académie en ligne qui accueille ses élèves sans intervention : vérification des accès, relances et parcours d'arrivée automatisés."
+        },
+        "en": {
+          "title": "IFS Academy — Asili Design",
+          "description": "An online academy that welcomes its students without manual work: access checks, reminders and onboarding are automated."
+        }
+      }
+    },
+    {
+      "id": "projet-zenfirst-renta",
+      "path": "/projets/zenfirst-renta",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-23",
+      "locales": {
+        "fr": {
+          "title": "ZenFirst Renta — Asili Design",
+          "description": "Un module de rentabilité pour cabinets d'expertise comptable : des hypothèses aux résultats, un calcul clair et vérifiable."
+        },
+        "en": {
+          "title": "ZenFirst Renta — Asili Design",
+          "description": "A profitability module for accounting firms: from assumptions to results, a clear and verifiable calculation."
+        }
+      }
+    },
+    {
+      "id": "projet-morning-brief",
+      "path": "/projets/morning-brief",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-23",
+      "locales": {
+        "fr": {
+          "title": "Morning-Brief — Asili Design",
+          "description": "Une veille automatique : des dizaines de sources lues, dédoublonnées et résumées, livrées chaque matin."
+        },
+        "en": {
+          "title": "Morning-Brief — Asili Design",
+          "description": "Automated news monitoring: dozens of sources read, deduplicated and summarised, delivered every morning."
         }
       }
     },
@@ -619,182 +410,82 @@
       "lastmod": "2026-10-15",
       "locales": {
         "fr": {
-          "title": "Offres — Services professionnels web",
-          "description": "Création de sites web, applications métier et accompagnement digital à Bordeaux. Devis personnalisé, interventions dès 50 €.",
-          "ogTitle": "Offres de services web professionnels",
-          "ogDescription": "Solutions numériques personnalisées et plans tarifaires adaptés.",
-          "jsonLd": [
-            {
-              "@context": "https://schema.org",
-              "@type": "Service",
-              "serviceType": "Développement web sur mesure",
-              "provider": {
-                "@type": "LocalBusiness",
-                "name": "Asili Design"
-              },
-              "areaServed": {
-                "@type": "City",
-                "name": "Bordeaux"
-              },
-              "hasOfferCatalog": {
-                "@type": "OfferCatalog",
-                "name": "Services de développement web",
-                "itemListElement": [
-                  {
-                    "@type": "Offer",
-                    "name": "Interventions ciblées",
-                    "description": "Corrections, ajustements et améliorations ponctuelles",
-                    "priceSpecification": {
-                      "@type": "PriceSpecification",
-                      "price": "50",
-                      "priceCurrency": "EUR",
-                      "minPrice": "50"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "name": "Projets structurants",
-                    "description": "Conception et développement de solutions complètes",
-                    "priceSpecification": {
-                      "@type": "PriceSpecification",
-                      "priceCurrency": "EUR",
-                      "minPrice": "2000",
-                      "maxPrice": "4000"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "name": "Accompagnement dans le temps",
-                    "description": "Évolutions, maintenance et conseil sur la durée"
-                  },
-                  {
-                    "@type": "Offer",
-                    "name": "Formation et coaching",
-                    "description": "Montée en compétences sur les outils digitaux et l'IA"
-                  }
-                ]
-              }
+          "title": "Créer mon site — Sites web à Bordeaux",
+          "description": "Création de sites web à Bordeaux pour artisans, commerces et indépendants : rédaction avec vous, référencement Google et IA, mise en ligne et prise en main.",
+          "ogTitle": "Créer mon site avec Asili Design",
+          "ogDescription": "Un site qui dit ce que vous faites, qu’on trouve sur Google et dans les réponses des IA, et qui fait appeler.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Création de sites web",
+            "provider": {
+              "@id": "https://asilidesign.fr/#organization"
             },
-            {
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": [
+            "areaServed": {
+              "@type": "City",
+              "name": "Bordeaux"
+            },
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Formules de création de site",
+              "itemListElement": [
                 {
-                  "@type": "Question",
-                  "name": "Combien coûte un site web sur mesure à Bordeaux ?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Les projets structurants sont généralement compris entre 2 000 € et 4 000 €. Les interventions ciblées démarrent à partir de 50 €. Chaque projet fait l'objet d'un devis personnalisé."
-                  }
+                  "@type": "Offer",
+                  "name": "Site vitrine",
+                  "description": "Quelques pages claires qui présentent votre métier et font appeler."
                 },
                 {
-                  "@type": "Question",
-                  "name": "Quel est le délai pour créer un site web ?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Les interventions ciblées ont des délais courts (quelques jours). Les projets structurants prennent généralement 2 à 6 semaines selon la complexité."
-                  }
+                  "@type": "Offer",
+                  "name": "Site + réservation",
+                  "description": "Votre site, avec la prise de rendez-vous ou la réservation en ligne."
                 },
                 {
-                  "@type": "Question",
-                  "name": "Proposez-vous un accompagnement après la livraison ?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Oui, l'accompagnement dans le temps est un engagement mensuel adapté à votre rythme, incluant évolutions, maintenance et conseil."
-                  }
+                  "@type": "Offer",
+                  "name": "App mobile",
+                  "description": "Une application pour vos clients ou vos équipes, sur iPhone et Android."
                 }
               ]
             }
-          ]
+          }
         },
         "en": {
-          "title": "Offers — Professional web services",
-          "description": "Custom website creation, business applications and digital consulting in Bordeaux. Personalized quote, targeted interventions from €50.",
-          "ogTitle": "Professional web service offers",
-          "ogDescription": "Customized digital solutions and tailored pricing plans.",
-          "jsonLd": [
-            {
-              "@context": "https://schema.org",
-              "@type": "Service",
-              "serviceType": "Custom Web Development",
-              "provider": {
-                "@type": "LocalBusiness",
-                "name": "Asili Design"
-              },
-              "areaServed": {
-                "@type": "City",
-                "name": "Bordeaux"
-              },
-              "hasOfferCatalog": {
-                "@type": "OfferCatalog",
-                "name": "Web development services",
-                "itemListElement": [
-                  {
-                    "@type": "Offer",
-                    "name": "Targeted interventions",
-                    "description": "Corrections, adjustments and one-off improvements",
-                    "priceSpecification": {
-                      "@type": "PriceSpecification",
-                      "price": "50",
-                      "priceCurrency": "EUR",
-                      "minPrice": "50"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "name": "Structural projects",
-                    "description": "Design and development of complete solutions",
-                    "priceSpecification": {
-                      "@type": "PriceSpecification",
-                      "priceCurrency": "EUR",
-                      "minPrice": "2000",
-                      "maxPrice": "4000"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "name": "Ongoing support",
-                    "description": "Evolutions, maintenance and long-term consulting"
-                  },
-                  {
-                    "@type": "Offer",
-                    "name": "Training and coaching",
-                    "description": "Skill development on digital tools and AI"
-                  }
-                ]
-              }
+          "title": "Build my website — Websites in Bordeaux",
+          "description": "Website creation in Bordeaux for craftspeople, shops and independents: writing with you, Google and AI visibility, launch and handover.",
+          "ogTitle": "Build my website with Asili Design",
+          "ogDescription": "A website that says what you do, that people find on Google and in AI answers, and that makes the phone ring.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Website creation",
+            "provider": {
+              "@id": "https://asilidesign.fr/#organization"
             },
-            {
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": [
+            "areaServed": {
+              "@type": "City",
+              "name": "Bordeaux"
+            },
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Website packages",
+              "itemListElement": [
                 {
-                  "@type": "Question",
-                  "name": "How much does a custom website cost in Bordeaux?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Structural projects are generally between €2,000 and €4,000. Targeted interventions start from €50. Each project receives a personalized quote."
-                  }
+                  "@type": "Offer",
+                  "name": "Showcase website",
+                  "description": "A few clear pages that present your trade and make the phone ring."
                 },
                 {
-                  "@type": "Question",
-                  "name": "How long does it take to build a website?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Targeted interventions have short timelines (a few days). Structural projects generally take 2 to 6 weeks depending on complexity."
-                  }
+                  "@type": "Offer",
+                  "name": "Website + booking",
+                  "description": "Your website, with online appointments or booking."
                 },
                 {
-                  "@type": "Question",
-                  "name": "Do you offer support after delivery?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, ongoing support is a monthly commitment adapted to your pace, including evolutions, maintenance and consulting."
-                  }
+                  "@type": "Offer",
+                  "name": "Mobile app",
+                  "description": "An app for your customers or your teams, on iPhone and Android."
                 }
               ]
             }
-          ]
+          }
         }
       }
     },
@@ -805,16 +496,6 @@
       "changefreq": "daily",
       "priority": 0.8,
       "lastmod": "2026-09-09",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Articles",
-          "path": "/articles"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Articles — Morning-Brief | Asili Design",
@@ -840,7 +521,7 @@
       "locales": {
         "fr": {
           "title": "Contact — Échanges et devis",
-          "description": "Contactez Asili Design à Bordeaux — échangeons sur votre projet web. Réponse sous 48h, premier échange sans engagement.",
+          "description": "Contactez Asili Design à Bordeaux — échangeons sur votre projet web. Réponse sous 48 h ouvrées, premier échange sans engagement.",
           "ogTitle": "Contactez Tim Moyence",
           "ogDescription": "Discutez de vos projets numériques et obtenez un devis personnalisé.",
           "jsonLd": {
@@ -849,23 +530,13 @@
             "name": "Contact — Asili Design",
             "url": "https://asilidesign.fr/fr/contact",
             "mainEntity": {
-              "@type": "LocalBusiness",
-              "name": "Asili Design",
-              "telephone": "+33698503282",
-              "email": "moyencet@gmail.com",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Allée Serr",
-                "addressLocality": "Bordeaux",
-                "postalCode": "33100",
-                "addressCountry": "FR"
-              }
+              "@id": "https://asilidesign.fr/#organization"
             }
           }
         },
         "en": {
           "title": "Contact — Discussion and quotes",
-          "description": "Contact Asili Design in Bordeaux — let's discuss your web project. Reply within 48h, first exchange with no commitment.",
+          "description": "Contact Asili Design in Bordeaux — let's discuss your web project. Reply within 48 working hours, first exchange with no commitment.",
           "ogTitle": "Contact Tim Moyence",
           "ogDescription": "Discuss your digital projects and get a personalized quote.",
           "jsonLd": {
@@ -874,17 +545,7 @@
             "name": "Contact — Asili Design",
             "url": "https://asilidesign.fr/en/contact",
             "mainEntity": {
-              "@type": "LocalBusiness",
-              "name": "Asili Design",
-              "telephone": "+33698503282",
-              "email": "moyencet@gmail.com",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Allée Serr",
-                "addressLocality": "Bordeaux",
-                "postalCode": "33100",
-                "addressCountry": "FR"
-              }
+              "@id": "https://asilidesign.fr/#organization"
             }
           }
         }
@@ -1058,12 +719,14 @@
       "locales": {
         "fr": {
           "title": "Conditions de services — Moyence",
+          "nom": "Conditions d'utilisation",
           "description": "Conditions générales d'utilisation du site Asili Design — services de développement web et conseil digital à Bordeaux.",
           "ogTitle": "Conditions de services",
           "ogDescription": "Consultez les conditions d'utilisation et les règles d'accès aux services."
         },
         "en": {
           "title": "Terms of service — Moyence",
+          "nom": "Terms of use",
           "description": "General terms of use for the Asili Design website — web development and digital consulting services in Bordeaux.",
           "ogTitle": "Terms of service",
           "ogDescription": "Read the terms of use and service access conditions."
@@ -1099,116 +762,58 @@
       "changefreq": "monthly",
       "priority": 0.7,
       "lastmod": "2026-11-13",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Audit gratuit",
-          "path": "/growth-audit"
-        }
-      ],
       "locales": {
         "fr": {
-          "title": "Audit gratuit SEO & croissance — 7 piliers",
-          "description": "Audit gratuit de votre site web en 24h — scan IA + analyse humaine sur 7 piliers. Vidéo personnalisée, scorecard et quick wins priorisés. Bordeaux.",
-          "ogTitle": "Audit gratuit de croissance",
-          "ogDescription": "Recevez un diagnostic rapide : conversion, vitesse, SEO, confiance et tech.",
-          "jsonLd": [
-            {
-              "@context": "https://schema.org",
-              "@type": "Service",
-              "name": "Audit de croissance gratuit — 7 piliers",
-              "description": "Audit gratuit en 24h : scan IA + audit humain, vidéo personnalisée et scorecard actionnable sur 7 piliers.",
-              "provider": {
-                "@type": "LocalBusiness",
-                "name": "Asili Design"
-              },
-              "areaServed": {
-                "@type": "City",
-                "name": "Bordeaux"
-              },
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "EUR",
-                "description": "Audit gratuit limité à 5 par semaine"
-              }
+          "title": "Diagnostic gratuit de votre site — relu sous 24 h",
+          "nom": "Diagnostic gratuit",
+          "description": "Un diagnostic gratuit de votre site web : une analyse automatique, puis ma relecture sous 24 h. Une note claire et les corrections à faire en premier. Bordeaux.",
+          "ogTitle": "Diagnostic gratuit de votre site",
+          "ogDescription": "Ce qui freine votre site, et quoi corriger d’abord : visibilité, vitesse, clarté, confiance.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "Diagnostic gratuit de votre site",
+            "description": "Diagnostic gratuit en 24 h : une analyse automatique, puis une relecture humaine, avec une note claire et des corrections classées par priorité.",
+            "provider": {
+              "@id": "https://asilidesign.fr/#organization"
             },
-            {
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "Comment fonctionne l'audit gratuit ?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Vous laissez vos infos, un premier scan IA analyse votre site, puis un audit humain est réalisé sous 24h avec vidéo personnalisée, scorecard claire et recommandations concrètes."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Que contient l'audit ?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "L'audit couvre 7 piliers : conversion et clarté, vitesse et performance, fondations SEO, crédibilité et confiance, tech et scalabilité, visibilité IA et citabilité. Vous recevez une vidéo, une scorecard et des quick wins priorisés."
-                  }
-                }
-              ]
+            "areaServed": {
+              "@type": "City",
+              "name": "Bordeaux"
+            },
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR",
+              "description": "Diagnostic gratuit, 5 par semaine"
             }
-          ]
+          }
         },
         "en": {
-          "title": "Free SEO & growth audit — 7 pillars",
-          "description": "Free audit of your website in 24h — AI scan + human analysis across 7 pillars. Personalized video, scorecard and prioritized quick wins. Bordeaux.",
-          "ogTitle": "Free growth audit",
-          "ogDescription": "Get a fast diagnosis: conversion, speed, SEO, trust, and tech.",
-          "jsonLd": [
-            {
-              "@context": "https://schema.org",
-              "@type": "Service",
-              "name": "Free growth audit — 7 pillars",
-              "description": "Free audit in 24h: AI scan + human audit, personalized video and actionable scorecard across 7 pillars.",
-              "provider": {
-                "@type": "LocalBusiness",
-                "name": "Asili Design"
-              },
-              "areaServed": {
-                "@type": "City",
-                "name": "Bordeaux"
-              },
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "EUR",
-                "description": "Free audit limited to 5 per week"
-              }
+          "title": "Free diagnosis of your website — reviewed within 24 h",
+          "nom": "Free diagnosis",
+          "description": "Free diagnosis of your website: an automatic analysis, then my own review within 24 h. A clear score and the fixes to make first. Bordeaux.",
+          "ogTitle": "Free diagnosis of your website",
+          "ogDescription": "What holds your website back, and what to fix first: visibility, speed, clarity, trust.",
+          "jsonLd": {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "Free diagnosis of your website",
+            "description": "Free diagnosis within 24 h: an automatic analysis, then a human review, with a clear score and prioritized fixes.",
+            "provider": {
+              "@id": "https://asilidesign.fr/#organization"
             },
-            {
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "How does the free audit work?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "You leave your info, a first AI scan analyzes your site, then a human audit is completed within 24h with a personalized video, clear scorecard and concrete recommendations."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What does the audit cover?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "The audit covers 7 pillars: conversion and clarity, speed and performance, SEO foundations, credibility and trust, tech and scalability, AI visibility and citation-worthiness. You receive a video, a scorecard and prioritized quick wins."
-                  }
-                }
-              ]
+            "areaServed": {
+              "@type": "City",
+              "name": "Bordeaux"
+            },
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR",
+              "description": "Free diagnosis, 5 per week"
             }
-          ]
+          }
         }
       }
     },
@@ -1218,10 +823,11 @@
       "index": true,
       "changefreq": "monthly",
       "priority": 0.7,
-      "lastmod": "2026-11-16",
+      "lastmod": "2026-11-19",
       "locales": {
         "fr": {
           "title": "Formations gratuites — Tim Moyence",
+          "nom": "Formations",
           "description": "Les cours interactifs du BTS CG et du Bachelor, à suivre en séance, et des formations IA et web gratuites. Recherchez une formation ou parcourez-les par parcours.",
           "ogTitle": "Formations gratuites — Tim Moyence",
           "ogDescription": "Cours interactifs du BTS CG et du Bachelor, et formations IA et web gratuites.",
@@ -1238,8 +844,7 @@
                   "name": "L'IA au service des solopreneurs",
                   "description": "Panorama des meilleurs outils IA pour entrepreneurs, suivi d'un cas pratique en live.",
                   "provider": {
-                    "@type": "Organization",
-                    "name": "Asili Design"
+                    "@id": "https://asilidesign.fr/#organization"
                   },
                   "isAccessibleForFree": true,
                   "duration": "PT30M",
@@ -1251,6 +856,7 @@
         },
         "en": {
           "title": "Free Courses — Tim Moyence",
+          "nom": "Courses",
           "description": "Interactive BTS CG and Bachelor courses, taught in live sessions, and free AI and web courses. Search for a course or browse them by track.",
           "ogTitle": "Free Courses — Tim Moyence",
           "ogDescription": "Interactive BTS CG and Bachelor courses, and free AI and web courses.",
@@ -1267,8 +873,7 @@
                   "name": "AI for Solopreneurs",
                   "description": "Overview of the best AI tools for entrepreneurs, followed by a live practical case study.",
                   "provider": {
-                    "@type": "Organization",
-                    "name": "Asili Design"
+                    "@id": "https://asilidesign.fr/#organization"
                   },
                   "isAccessibleForFree": true,
                   "duration": "PT30M",
@@ -1281,26 +886,56 @@
       }
     },
     {
+      "id": "formations-digitale",
+      "path": "/formations/digitale",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.7,
+      "lastmod": "2026-11-23",
+      "locales": {
+        "fr": {
+          "title": "Formation digitale — IA & web pour les pros",
+          "description": "Des formations IA et web gratuites pour artisans, commerces et indépendants : gagner du temps avec l'IA et vérifier soi-même que son site est trouvé.",
+          "ogTitle": "Formation digitale — Asili Design",
+          "ogDescription": "Formations IA et web gratuites, pour les pros qui veulent gagner du temps et être trouvés."
+        },
+        "en": {
+          "title": "Digital training — AI & web for professionals",
+          "description": "Free AI and web courses for craftspeople, shops and independents: save time with AI and check for yourself that your website gets found.",
+          "ogTitle": "Digital training — Asili Design",
+          "ogDescription": "Free AI and web courses for professionals who want to save time and be found."
+        }
+      }
+    },
+    {
+      "id": "formations-cours",
+      "path": "/formations/cours",
+      "index": true,
+      "changefreq": "monthly",
+      "priority": 0.7,
+      "lastmod": "2026-11-23",
+      "locales": {
+        "fr": {
+          "title": "Formation cours — BTS CG & Bachelor en séance",
+          "description": "Les cours interactifs du BTS CG et du Bachelor, à suivre en séance avec votre formateur : mathématiques appliquées, gestion et tableaux de bord.",
+          "ogTitle": "Formation cours — Asili Design",
+          "ogDescription": "Cours interactifs du BTS CG et du Bachelor, à suivre en séance."
+        },
+        "en": {
+          "title": "Classroom courses — BTS CG & Bachelor, in class",
+          "description": "Interactive BTS CG and Bachelor courses, taught in live sessions with your instructor: applied maths, management and dashboards.",
+          "ogTitle": "Classroom courses — Asili Design",
+          "ogDescription": "Interactive BTS CG and Bachelor courses, taught in live sessions."
+        }
+      }
+    },
+    {
       "id": "formations-ia-solopreneurs",
       "path": "/formations/ia-solopreneurs",
       "index": true,
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-11-16",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "L'IA au service des solopreneurs",
-          "path": "/formations/ia-solopreneurs"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "L'IA au service des solopreneurs — Tim Moyence",
@@ -1314,9 +949,7 @@
               "name": "L'IA au service des solopreneurs",
               "description": "Panorama des meilleurs outils IA pour solopreneurs et micro-entrepreneurs. 21 slides, cas pratique en live.",
               "provider": {
-                "@type": "Organization",
-                "name": "Asili Design",
-                "url": "https://asilidesign.fr"
+                "@id": "https://asilidesign.fr/#organization"
               },
               "isAccessibleForFree": true,
               "duration": "PT30M",
@@ -1360,9 +993,7 @@
               "name": "AI for Solopreneurs",
               "description": "Overview of the best AI tools for solopreneurs and micro-entrepreneurs. 21 slides, live practical case study.",
               "provider": {
-                "@type": "Organization",
-                "name": "Asili Design",
-                "url": "https://asilidesign.fr"
+                "@id": "https://asilidesign.fr/#organization"
               },
               "isAccessibleForFree": true,
               "duration": "PT30M",
@@ -1403,20 +1034,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-10-20",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Proportions et pourcentages",
-          "path": "/formations/b1-01-proportions-pourcentages"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Proportions et pourcentages — B1 — Tim Moyence",
@@ -1429,9 +1046,7 @@
             "name": "Proportions et pourcentages",
             "description": "Formation B1 interactive sur les proportions, la population de référence, le taux global, les points de pourcentage et les taux de marge et de marque.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H",
@@ -1451,9 +1066,7 @@
             "name": "Proportions and percentages",
             "description": "Interactive B1 course on proportions, the reference population, overall rates, percentage points, markup and margin rates.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H",
@@ -1471,20 +1084,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-10-30",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Évolutions : taux, coefficients, indices",
-          "path": "/formations/b1-02-evolutions-coefficients-indices"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Évolutions : taux, coefficients, indices — B1 — Tim Moyence",
@@ -1497,9 +1096,7 @@
             "name": "Évolutions : taux, coefficients, indices",
             "description": "Formation B1 interactive sur les taux d’évolution, les coefficients multiplicateurs, les évolutions successives et réciproques, les indices et le taux moyen.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H",
@@ -1519,9 +1116,7 @@
             "name": "Changes: rates, multipliers, indices",
             "description": "Interactive B1 course on rates of change, multipliers, successive and reverse changes, indices and the average rate.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H",
@@ -1539,20 +1134,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-11-06",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Traiter un fichier : TCD et série à une variable",
-          "path": "/formations/b1-03-tcd-serie-une-variable"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Traiter un fichier : TCD et série à une variable — B1 — Tim Moyence",
@@ -1565,9 +1146,7 @@
             "name": "Traiter un fichier : TCD et série à une variable",
             "description": "Formation B1 interactive sur le tableau croisé dynamique, le champ calculé du taux de marge, la moyenne, la médiane, les quartiles, l’écart type, la boîte à moustaches et les classes.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H",
@@ -1587,9 +1166,7 @@
             "name": "Working with a file: pivot tables and one-variable series",
             "description": "Interactive B1 course on pivot tables, the markup-rate calculated field, mean, median, quartiles, standard deviation, box plots and classes.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H",
@@ -1607,20 +1184,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-11-06",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Séries à deux variables : ajuster et prévoir",
-          "path": "/formations/b1-04-series-deux-variables"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Séries à deux variables : ajuster et prévoir — B1 — Tim Moyence",
@@ -1633,9 +1196,7 @@
             "name": "Séries à deux variables : ajuster et prévoir",
             "description": "Formation B1 interactive sur le nuage de points, l’ajustement affine par les moindres carrés, la corrélation et la prévision.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H",
@@ -1655,9 +1216,7 @@
             "name": "Two-variable series: fit and forecast",
             "description": "Interactive B1 course on scatter plots, least-squares linear fitting, correlation and forecasting.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H",
@@ -1675,20 +1234,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-11-06",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Logique : conditions et contrôles",
-          "path": "/formations/b1-05-logique-conditions"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Logique : conditions et contrôles — B1 — Tim Moyence",
@@ -1701,9 +1246,7 @@
             "name": "Logique : conditions et contrôles",
             "description": "Formation B1 interactive sur les propositions, les connecteurs logiques, la négation et les quantificateurs.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H",
@@ -1723,9 +1266,7 @@
             "name": "Logic: conditions and checks",
             "description": "Interactive B1 course on propositions, logical connectives, negation and quantifiers.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H",
@@ -1743,20 +1284,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-09-22",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Lire et contrôler l’information chiffrée",
-          "path": "/formations/b2-01-traitement-information-chiffree"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Lire et contrôler l’information chiffrée — B2 — Tim Moyence",
@@ -1769,9 +1296,7 @@
             "name": "Lire et contrôler l’information chiffrée",
             "description": "Formation B2 interactive sur les proportions, pourcentages et évolutions.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT3H20M",
@@ -1791,9 +1316,7 @@
             "name": "Read and control numerical information",
             "description": "Interactive B2 course on proportions, percentages and changes.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT3H20M",
@@ -1811,20 +1334,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-09-28",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Séries statistiques : résumer, relier, prévoir",
-          "path": "/formations/b2-02-series-statistiques"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Séries statistiques : résumer, relier, prévoir — B2 — Tim Moyence",
@@ -1837,9 +1346,7 @@
             "name": "Séries statistiques : résumer, relier, prévoir",
             "description": "Formation B2 interactive sur les séries statistiques à une et deux variables.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H45M",
@@ -1859,9 +1366,7 @@
             "name": "Statistical series: summarise, relate, forecast",
             "description": "Interactive B2 course on one- and two-variable statistical series.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H45M",
@@ -1879,20 +1384,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-09-29",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Logique : écrire et contrôler une règle",
-          "path": "/formations/b2-03-logique"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Logique : écrire et contrôler une règle — B2 — Tim Moyence",
@@ -1905,9 +1396,7 @@
             "name": "Logique : écrire et contrôler une règle",
             "description": "Formation B2 interactive sur le calcul propositionnel et les quantificateurs appliqués au contrôle de gestion.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H15M",
@@ -1927,9 +1416,7 @@
             "name": "Logic: write and check a rule",
             "description": "Interactive B2 course on propositional logic and quantifiers applied to business controls.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H15M",
@@ -1947,20 +1434,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-09-30",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Suites : modéliser une évolution régulière",
-          "path": "/formations/b2-04-suites"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Suites : modéliser une évolution régulière — B2 — Tim Moyence",
@@ -1973,9 +1446,7 @@
             "name": "Suites : modéliser une évolution régulière",
             "description": "Formation B2 interactive sur les suites arithmétiques et géométriques appliquées aux prévisions de gestion.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H45M",
@@ -1995,9 +1466,7 @@
             "name": "Sequences: model a steady change",
             "description": "Interactive B2 course on arithmetic and geometric sequences applied to business forecasts.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H45M",
@@ -2015,20 +1484,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-09-30",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Mathématiques financières : placer, emprunter",
-          "path": "/formations/b2-05-mathematiques-financieres"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Mathématiques financières : placer, emprunter — B2 — Tim Moyence",
@@ -2041,9 +1496,7 @@
             "name": "Mathématiques financières : placer, emprunter",
             "description": "Formation B2 interactive sur les intérêts composés, les suites d’annuités et les emprunts appliqués au financement d’une entreprise.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H15M",
@@ -2063,9 +1516,7 @@
             "name": "Financial mathematics: invest, borrow",
             "description": "Interactive B2 course on compound interest, series of payments and loans applied to financing a business.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H15M",
@@ -2083,20 +1534,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-10-01",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Exponentielle et logarithme : croître, viser, ajuster",
-          "path": "/formations/b2-06-exponentielle-logarithme"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Exponentielle et logarithme : croître, viser, ajuster — B2 — Tim Moyence",
@@ -2109,9 +1546,7 @@
             "name": "Exponentielle et logarithme : croître, viser, ajuster",
             "description": "Formation B2 interactive sur la fonction exponentielle, le logarithme népérien et l’ajustement exponentiel appliqués aux ventes et aux prix d’une entreprise.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H15M",
@@ -2131,9 +1566,7 @@
             "name": "Exponential and logarithm: grow, target, fit",
             "description": "Interactive B2 course on the exponential function, the natural logarithm and exponential fitting applied to a business’s sales and prices.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H15M",
@@ -2151,20 +1584,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-11-06",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Dérivée et optimisation : la pente, le sens, le sommet",
-          "path": "/formations/b2-07-derivee-optimisation"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Dérivée et optimisation : la pente, le sens, le sommet — B2 — Tim Moyence",
@@ -2177,9 +1596,7 @@
             "name": "Dérivée et optimisation : la pente, le sens, le sommet",
             "description": "Formation B2 interactive sur le nombre dérivé, la fonction dérivée, le signe de la dérivée, le tableau de variation et l’optimisation d’un bénéfice ou d’un coût.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H10M",
@@ -2199,9 +1616,7 @@
             "name": "Derivative and optimisation: slope, direction, peak",
             "description": "Interactive B2 course on the derivative number, the derivative function, the sign of the derivative, the variation table and the optimisation of a profit or a cost.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H10M",
@@ -2219,20 +1634,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-11-06",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Dérivées composées et fonctions économiques",
-          "path": "/formations/b2-08-derivees-composees-fonctions-economiques"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Dérivées composées et fonctions économiques — B2 — Tim Moyence",
@@ -2245,9 +1646,7 @@
             "name": "Dérivées composées et fonctions économiques",
             "description": "Formation B2 interactive sur les dérivées composées, le coût marginal, le prix d’équilibre et la résolution approchée d’une équation.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H15M",
@@ -2267,9 +1666,7 @@
             "name": "Composite derivatives and economic functions",
             "description": "Interactive B2 course on composite derivatives, marginal cost, equilibrium price and approximate solving of an equation.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H15M",
@@ -2287,20 +1684,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-11-06",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Probabilités conditionnelles",
-          "path": "/formations/b2-09-probabilites-conditionnelles"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Probabilités conditionnelles — B2 — Tim Moyence",
@@ -2313,9 +1696,7 @@
             "name": "Probabilités conditionnelles",
             "description": "Formation B2 interactive sur la probabilité conditionnelle, l’arbre pondéré, la formule des probabilités totales et l’indépendance.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H15M",
@@ -2335,9 +1716,7 @@
             "name": "Conditional probability",
             "description": "Interactive B2 course on conditional probability, weighted trees, the law of total probability and independence.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H15M",
@@ -2355,20 +1734,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-10-08",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Expert Data : de la donnée brute à la décision",
-          "path": "/formations/b3-01-donnee-brute-decision"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Expert Data : de la donnée brute à la décision — Bachelor 3 — Tim Moyence",
@@ -2381,9 +1746,7 @@
             "name": "Expert Data : de la donnée brute à la décision",
             "description": "Cours interactif de Bachelor 3 sur la qualité des données, la recherche et l’agrégation, le tableau croisé dynamique et le tableau de bord dans Excel, appliqués au réseau commercial d’une entreprise.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H55M",
@@ -2403,9 +1766,7 @@
             "name": "Data expert: from raw data to decision",
             "description": "Interactive Bachelor 3 course on data quality, lookup and aggregation, PivotTables and dashboards in Excel, applied to a company’s sales network.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H55M",
@@ -2423,20 +1784,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-11-06",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Toutes les formules, puis l’IA analyste",
-          "path": "/formations/b3-02-formules-et-ia-analyste"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Toutes les formules, puis l’IA analyste — Bachelor 3 — Tim Moyence",
@@ -2449,9 +1796,7 @@
             "name": "Toutes les formules, puis l’IA analyste",
             "description": "Cours interactif de Bachelor 3 sur le nettoyage, la recherche, l’agrégation sous conditions, les dates, la médiane, le tableau croisé dynamique, les graphiques et le tableau de bord dans Excel, puis sur l’analyse confiée à une IA et sa vérification.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H35M",
@@ -2471,9 +1816,7 @@
             "name": "Every formula, then the AI analyst",
             "description": "Interactive Bachelor 3 course on cleaning, lookup, conditional aggregation, dates, the median, PivotTables, charts and dashboards in Excel, then on handing the analysis to an AI and checking it.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT2H35M",
@@ -2491,20 +1834,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-11-06",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Traitement de texte : mettre en forme et mettre en page",
-          "path": "/formations/b3-03-traitement-de-texte"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Traitement de texte : mettre en forme et mettre en page — Bachelor — Tim Moyence",
@@ -2517,9 +1846,7 @@
             "name": "Traitement de texte : mettre en forme et mettre en page",
             "description": "Formation Bachelor interactive sur la mise en forme et la mise en page d’un document dans un traitement de texte.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT3H",
@@ -2539,9 +1866,7 @@
             "name": "Word processing: format and lay out",
             "description": "Interactive Bachelor course on formatting and laying out a document in a word processor.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT3H",
@@ -2559,20 +1884,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-11-06",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Publipostage et e-mailing",
-          "path": "/formations/b3-04-publipostage"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Publipostage et e-mailing — Bachelor — Tim Moyence",
@@ -2585,9 +1896,7 @@
             "name": "Publipostage et e-mailing",
             "description": "Formation Bachelor interactive sur le publipostage, les champs de fusion, les règles et l’e-mailing.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT3H",
@@ -2607,9 +1916,7 @@
             "name": "Mail merge and e-mailing",
             "description": "Interactive Bachelor course on mail merge, merge fields, rules and e-mailing.",
             "provider": {
-              "@type": "Organization",
-              "name": "Asili Design",
-              "url": "https://asilidesign.fr"
+              "@id": "https://asilidesign.fr/#organization"
             },
             "isAccessibleForFree": true,
             "duration": "PT3H",
@@ -2627,27 +1934,10 @@
       "changefreq": "monthly",
       "priority": 0.6,
       "lastmod": "2026-09-25",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "L'IA au service des solopreneurs",
-          "path": "/formations/ia-solopreneurs"
-        },
-        {
-          "name": "Toolkit IA",
-          "path": "/formations/ia-solopreneurs/toolkit"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Toolkit IA pour solopreneurs — Boite a outils gratuite",
+          "nom": "Toolkit IA",
           "description": "Recevez la boite a outils IA pour solopreneurs : outils, prix, budgets. Gratuit, dans votre inbox en 30 secondes.",
           "ogTitle": "Toolkit IA pour solopreneurs",
           "ogDescription": "Les meilleurs outils IA, les prix et les budgets — dans votre inbox en 30 secondes.",
@@ -2664,6 +1954,7 @@
         },
         "en": {
           "title": "AI Toolkit for solopreneurs — Free toolbox",
+          "nom": "AI Toolkit",
           "description": "Get the AI toolkit for solopreneurs: tools, pricing, budgets. Free, in your inbox in 30 seconds.",
           "ogTitle": "AI Toolkit for solopreneurs",
           "ogDescription": "The best AI tools, pricing and budgets — in your inbox in 30 seconds.",
@@ -2706,20 +1997,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-10-22",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Automatiser avec l'IA",
-          "path": "/formations/automatiser-avec-ia"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Automatiser avec l'IA — 5 workflows pour entrepreneurs non-tech",
@@ -2733,9 +2010,7 @@
               "name": "Automatiser avec l'IA — 5 workflows pour entrepreneurs non-tech",
               "description": "Formation gratuite de 25 minutes qui montre 5 workflows IA concrets (devis, emails recurrents, reseaux sociaux, factures, veille hebdo) sans coder et sans abonnement paye.",
               "provider": {
-                "@type": "Organization",
-                "name": "Asili Design",
-                "url": "https://asilidesign.fr"
+                "@id": "https://asilidesign.fr/#organization"
               },
               "isAccessibleForFree": true,
               "duration": "PT25M",
@@ -2819,9 +2094,7 @@
               "name": "Automate with AI — 5 workflows for non-technical entrepreneurs",
               "description": "Free 25-minute training showing 5 concrete AI workflows (quotes, recurring emails, social media, invoices, weekly monitoring) without coding and without paid subscription.",
               "provider": {
-                "@type": "Organization",
-                "name": "Asili Design",
-                "url": "https://asilidesign.fr"
+                "@id": "https://asilidesign.fr/#organization"
               },
               "isAccessibleForFree": true,
               "duration": "PT25M",
@@ -2902,20 +2175,6 @@
       "changefreq": "monthly",
       "priority": 0.8,
       "lastmod": "2026-10-16",
-      "breadcrumb": [
-        {
-          "name": "Accueil",
-          "path": "/"
-        },
-        {
-          "name": "Formations",
-          "path": "/formations"
-        },
-        {
-          "name": "Audit SEO DIY",
-          "path": "/formations/audit-seo-diy"
-        }
-      ],
       "locales": {
         "fr": {
           "title": "Audit SEO DIY — 7 checks en 20 minutes avec 5 outils gratuits",
@@ -2929,9 +2188,7 @@
               "name": "Audit SEO DIY — 7 checks en 20 minutes avec 5 outils gratuits",
               "description": "Formation gratuite de 20 minutes pour entrepreneurs et TPE qui veulent auditer leur site web sans payer un pro. Sept checks concrets avec 5 outils gratuits.",
               "provider": {
-                "@type": "Organization",
-                "name": "Asili Design",
-                "url": "https://asilidesign.fr"
+                "@id": "https://asilidesign.fr/#organization"
               },
               "isAccessibleForFree": true,
               "duration": "PT20M",
@@ -3016,9 +2273,7 @@
               "name": "DIY SEO Audit — 7 checks in 20 minutes with 5 free tools",
               "description": "Free 20-minute training for entrepreneurs and small businesses who want to audit their website without paying for a professional. Seven concrete checks with 5 free tools.",
               "provider": {
-                "@type": "Organization",
-                "name": "Asili Design",
-                "url": "https://asilidesign.fr"
+                "@id": "https://asilidesign.fr/#organization"
               },
               "isAccessibleForFree": true,
               "duration": "PT20M",

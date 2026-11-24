@@ -52,7 +52,6 @@ describe('AppComponent sur une route sans coquille', () => {
   const ELEMENTS_DE_LA_COQUILLE = [
     'app-navbar',
     'app-footer',
-    'app-asili-background',
     'app-skip-link',
     'main .pt-24',
     'main app-adresse-a-verifier',

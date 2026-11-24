@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { LOCALE_ID, inject } from '@angular/core';
-import { routeSansLocale } from '../seo/chemins';
+import { routeSansLocale } from '../seo/pages/chemins';
 import { LOCALES_DU_SITE, langueDuSite } from './locales';
 
 export type LocaleDuSite = (typeof LOCALES_DU_SITE)[number];

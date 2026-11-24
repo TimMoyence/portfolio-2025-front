@@ -69,7 +69,7 @@ describe('AuthShellComponent', () => {
     expect(body?.textContent).toContain('Corps de carte projeté');
   });
 
-  it("n'importe pas RevealOnScrollDirective (chrome statique, appReveal reste porte par la page)", () => {
+  it("n'affiche pas de bloc central dans l'aside", () => {
     const el = setupBare().nativeElement as HTMLElement;
     expect(el.querySelector('.auth-aside > .auth-aside-mid')).toBeNull();
   });
